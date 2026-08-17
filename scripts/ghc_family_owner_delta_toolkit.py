@@ -10,6 +10,8 @@ from __future__ import annotations
 
 import argparse
 import ast
+import base64
+import binascii
 import hashlib
 import json
 import os
@@ -28,6 +30,45 @@ from urllib.parse import urlsplit
 SCHEMA = "ghc.family.owner-delta-toolkit.v2"
 ALLOWED_OUTCOMES = {"completed", "represented", "open_gap", "exact_gate"}
 ALLOWED_BLOB_MODES = {"100644", "100755"}
+WINDOWS_RESERVED_COMPONENTS = {
+    "con",
+    "prn",
+    "aux",
+    "nul",
+    *(f"com{index}" for index in range(1, 10)),
+    *(f"lpt{index}" for index in range(1, 10)),
+}
+DECLARED_CLOCK_SOURCES = {
+    "caller_supplied_utc",
+    "wall_clock_observation",
+    "monotonic_duration",
+}
+DECLARED_DIGEST_ALGORITHMS = {"sha256"}
+BOUNDED_CONFUSABLE_MAP = str.maketrans(
+    {
+        "Α": "A",
+        "А": "A",
+        "Β": "B",
+        "В": "B",
+        "Ε": "E",
+        "Е": "E",
+        "Ι": "I",
+        "І": "I",
+        "Κ": "K",
+        "К": "K",
+        "Μ": "M",
+        "М": "M",
+        "Ν": "N",
+        "О": "O",
+        "Ρ": "P",
+        "Р": "P",
+        "Τ": "T",
+        "Т": "T",
+        "Χ": "X",
+        "Х": "X",
+        "Υ": "Y",
+    }
+)
 DISALLOWED_BIDI = {
     "LRE", "RLE", "LRO", "RLO", "PDF", "LRI", "RLI", "FSI", "PDI",
 }
@@ -182,6 +223,242 @@ def audit_paths(paths: Iterable[str]) -> dict[str, Any]:
     }
 
 
+def validate_windows_component(raw: str) -> str:
+    """Validate one bounded Windows-compatible lexical path component."""
+
+    if not isinstance(raw, str) or not raw:
+        raise DeltaError("path component must be a nonempty string")
+    if raw in {".", ".."}:
+        raise DeltaError("dot path components are not allowed")
+    if raw.endswith((".", " ")):
+        raise DeltaError("trailing dot or space is not allowed")
+    if any(ord(char) < 32 or char in {"\x00", "/", "\\"} for char in raw):
+        raise DeltaError("control or separator is not allowed in a component")
+    base = raw.split(".", 1)[0].casefold()
+    if base in WINDOWS_RESERVED_COMPONENTS:
+        raise DeltaError("Windows reserved device component is not allowed")
+    return raw
+
+
+def normalize_archive_member(raw: str) -> str:
+    """Normalize one synthetic archive member and refuse lexical traversal."""
+
+    if not isinstance(raw, str) or not raw:
+        raise DeltaError("archive member must be a nonempty string")
+    if "\x00" in raw or any(ord(char) < 32 for char in raw):
+        raise DeltaError("archive member contains a control character")
+    value = raw.replace("\\", "/")
+    if value.startswith("/") or re.match(r"^[A-Za-z]:", value):
+        raise DeltaError("absolute or drive-qualified archive member is not allowed")
+    components: list[str] = []
+    for component in value.split("/"):
+        if component in {"", "."}:
+            continue
+        if component == "..":
+            raise DeltaError("parent traversal archive member is not allowed")
+        components.append(validate_windows_component(component))
+    if not components:
+        raise DeltaError("archive member normalizes to an empty path")
+    return "/".join(components)
+
+
+def bounded_confusable_skeleton(value: str) -> str:
+    """Return a deliberately bounded review skeleton, never an exhaustive one."""
+
+    if not isinstance(value, str) or not value:
+        raise DeltaError("confusable-review value must be a nonempty string")
+    normalized = unicodedata.normalize("NFKC", value)
+    return normalized.translate(BOUNDED_CONFUSABLE_MAP).casefold()
+
+
+def validate_dsse_envelope(value: Any) -> dict[str, Any]:
+    """Validate synthetic DSSE envelope shape without verifying signatures."""
+
+    if not isinstance(value, dict):
+        raise DeltaError("DSSE envelope must be an object")
+    payload_type = value.get("payloadType")
+    payload = value.get("payload")
+    signatures = value.get("signatures")
+    if not isinstance(payload_type, str) or not payload_type.strip():
+        raise DeltaError("DSSE payloadType must be a nonempty string")
+    if not isinstance(payload, str):
+        raise DeltaError("DSSE payload must be base64 text")
+    try:
+        decoded_payload = base64.b64decode(payload, validate=True)
+    except (binascii.Error, ValueError) as exc:
+        raise DeltaError("DSSE payload is not strict base64") from exc
+    if not isinstance(signatures, list) or not signatures:
+        raise DeltaError("DSSE signatures must be a nonempty array")
+    key_ids: list[str] = []
+    for signature in signatures:
+        if not isinstance(signature, dict):
+            raise DeltaError("DSSE signature must be an object")
+        key_id = signature.get("keyid")
+        encoded_signature = signature.get("sig")
+        if not isinstance(key_id, str) or not key_id.strip():
+            raise DeltaError("DSSE keyid must be a nonempty string")
+        if not isinstance(encoded_signature, str):
+            raise DeltaError("DSSE sig must be base64 text")
+        try:
+            base64.b64decode(encoded_signature, validate=True)
+        except (binascii.Error, ValueError) as exc:
+            raise DeltaError("DSSE sig is not strict base64") from exc
+        key_ids.append(key_id)
+    ensure_unique(key_ids, "DSSE key identifiers")
+    return {
+        "payload_type": payload_type,
+        "payload_sha256": sha256_bytes(decoded_payload),
+        "signature_count": len(signatures),
+        "signature_verified": False,
+        "valid": True,
+    }
+
+
+def validate_intoto_statement(value: Any) -> dict[str, Any]:
+    """Validate a bounded in-toto Statement v1 shape without provenance proof."""
+
+    if not isinstance(value, dict):
+        raise DeltaError("in-toto statement must be an object")
+    if value.get("_type") != "https://in-toto.io/Statement/v1":
+        raise DeltaError("in-toto statement type is not Statement v1")
+    subjects = value.get("subject")
+    if not isinstance(subjects, list) or not subjects:
+        raise DeltaError("in-toto subject must be a nonempty array")
+    names: list[str] = []
+    for subject in subjects:
+        if not isinstance(subject, dict):
+            raise DeltaError("in-toto subject must be an object")
+        name = subject.get("name")
+        digest = subject.get("digest")
+        if not isinstance(name, str) or not name:
+            raise DeltaError("in-toto subject name must be nonempty")
+        if not isinstance(digest, dict) or not digest:
+            raise DeltaError("in-toto subject digest must be a nonempty object")
+        for algorithm, encoded in digest.items():
+            if not isinstance(algorithm, str) or not algorithm:
+                raise DeltaError("in-toto digest algorithm must be nonempty")
+            if not isinstance(encoded, str) or not re.fullmatch(r"[0-9a-fA-F]+", encoded):
+                raise DeltaError("in-toto digest value must be nonempty hexadecimal text")
+        names.append(name)
+    ensure_unique(names, "in-toto subject names")
+    predicate_type = value.get("predicateType")
+    if not isinstance(predicate_type, str) or not predicate_type.strip():
+        raise DeltaError("in-toto predicateType must be nonempty")
+    if not isinstance(value.get("predicate"), dict):
+        raise DeltaError("in-toto predicate must be an object")
+    return {
+        "statement_type": value["_type"],
+        "subject_count": len(subjects),
+        "predicate_type": predicate_type,
+        "provenance_verified": False,
+        "valid": True,
+    }
+
+
+def validate_clock_source(value: str) -> str:
+    if not isinstance(value, str) or value.startswith("-"):
+        raise DeltaError("clock source must be a literal declared label")
+    if value not in DECLARED_CLOCK_SOURCES:
+        raise DeltaError("unknown clock source")
+    return value
+
+
+def locale_invariant_order(values: Iterable[str]) -> list[str]:
+    records = list(values)
+    if not all(isinstance(value, str) for value in records):
+        raise DeltaError("ordered identifiers must all be strings")
+    return sorted(records)
+
+
+def semantic_content_sha256(
+    value: dict[str, Any],
+    observation_fields: Iterable[str] = ("observed_at_utc", "observed_at_nz"),
+) -> str:
+    if not isinstance(value, dict):
+        raise DeltaError("semantic commitment input must be an object")
+    excluded = set(observation_fields)
+    semantic = {key: item for key, item in value.items() if key not in excluded}
+    return canonical_json_sha256(semantic)
+
+
+def validate_executable_modes(
+    records: Iterable[dict[str, Any]],
+    executable_allowlist: Iterable[str],
+) -> dict[str, Any]:
+    rows = list(records)
+    allowed = set(ensure_unique(executable_allowlist, "executable allowlist paths"))
+    observed: set[str] = set()
+    paths: list[str] = []
+    for record in rows:
+        if not isinstance(record, dict):
+            raise DeltaError("mode record must be an object")
+        path = normalize_relative(record.get("path", ""))
+        mode = record.get("mode")
+        if mode not in ALLOWED_BLOB_MODES:
+            raise DeltaError("mode record contains an unsupported mode")
+        if mode == "100755":
+            if path not in allowed:
+                raise DeltaError("executable path is not allowlisted")
+            observed.add(path)
+        elif path in allowed:
+            raise DeltaError("allowlisted executable path is not mode 100755")
+        paths.append(path)
+    ensure_unique(paths, "mode record paths")
+    if observed != allowed:
+        raise DeltaError("executable allowlist does not match observed executables")
+    return {
+        "record_count": len(rows),
+        "executable_count": len(observed),
+        "valid": True,
+    }
+
+
+def decode_utf8_strict(raw: bytes, label: str = "text blob") -> str:
+    if not isinstance(raw, bytes):
+        raise DeltaError(f"{label} must be bytes")
+    try:
+        return raw.decode("utf-8", errors="strict")
+    except UnicodeDecodeError as exc:
+        raise DeltaError(f"{label} is not strict UTF-8") from exc
+
+
+def validate_digest_algorithm(value: str) -> str:
+    if not isinstance(value, str) or value.startswith("-"):
+        raise DeltaError("digest algorithm must be a literal label")
+    normalized = value.strip().casefold()
+    if normalized not in DECLARED_DIGEST_ALGORITHMS:
+        raise DeltaError("unknown digest algorithm")
+    return normalized
+
+
+def normalize_unique_archive_members(values: Iterable[str]) -> list[str]:
+    original = list(values)
+    normalized = [normalize_archive_member(value) for value in original]
+    duplicates = [name for name, count in Counter(normalized).items() if count > 1]
+    if duplicates:
+        raise DeltaError(f"duplicate normalized archive members: {sorted(duplicates)}")
+    return normalized
+
+
+def frame_merkle_leaf(entry: dict[str, Any]) -> bytes:
+    """Frame one exact leaf with field tags and unsigned 64-bit lengths."""
+
+    if not isinstance(entry, dict):
+        raise DeltaError("Merkle leaf entry must be an object")
+    fields = ("path", "mode", "git_blob", "bytes", "sha256")
+    framed = bytearray(b"GHC-OWNER-DELTA-LEAF-V2\x00")
+    for field in fields:
+        if field not in entry:
+            raise DeltaError(f"Merkle leaf missing field: {field}")
+        raw = str(entry[field]).encode("utf-8")
+        tag = field.encode("ascii")
+        framed.extend(len(tag).to_bytes(2, "big"))
+        framed.extend(tag)
+        framed.extend(len(raw).to_bytes(8, "big"))
+        framed.extend(raw)
+    return bytes(framed)
+
+
 def merkle_root(entries: Iterable[dict[str, Any]]) -> str:
     leaves: list[bytes] = []
     for entry in sorted(entries, key=lambda row: row["path"]):
@@ -204,6 +481,173 @@ def merkle_root(entries: Iterable[dict[str, Any]]) -> str:
             for index in range(0, len(level), 2)
         ]
     return level[0].hex()
+
+
+def hardening_payload() -> dict[str, Any]:
+    """Run Lyren's bounded positive/negative synthetic hardening fixtures."""
+
+    positive_dsse = {
+        "payloadType": "application/vnd.example.synthetic",
+        "payload": base64.b64encode(b"synthetic payload").decode("ascii"),
+        "signatures": [
+            {
+                "keyid": "synthetic-key",
+                "sig": base64.b64encode(b"not-a-real-signature").decode("ascii"),
+            }
+        ],
+    }
+    positive_statement = {
+        "_type": "https://in-toto.io/Statement/v1",
+        "subject": [
+            {"name": "synthetic.bin", "digest": {"sha256": "00" * 32}}
+        ],
+        "predicateType": "https://example.invalid/predicate/synthetic/v1",
+        "predicate": {"synthetic": True},
+    }
+    base_leaf = {
+        "path": "a/b.txt",
+        "mode": "100644",
+        "git_blob": "0" * 40,
+        "bytes": 3,
+        "sha256": "0" * 64,
+    }
+    alternate_leaf = dict(base_leaf, path="a", mode="b.txt100644")
+
+    def rejection(identifier: str, label: str, callback: Any) -> dict[str, Any]:
+        try:
+            callback()
+        except (DeltaError, UnicodeError, ValueError, TypeError) as exc:
+            return {
+                "fixture_id": identifier,
+                "failed_witness": label,
+                "rejected": True,
+                "error_class": type(exc).__name__,
+            }
+        raise DeltaError(f"negative fixture was not rejected: {identifier}")
+
+    records = [
+        rejection(
+            "L6625-HF-001",
+            "Windows reserved device component",
+            lambda: validate_windows_component("CON.txt"),
+        ),
+        rejection(
+            "L6625-HF-002",
+            "trailing-dot component",
+            lambda: validate_windows_component("report."),
+        ),
+        {
+            "fixture_id": "L6625-HF-003",
+            "failed_witness": "bounded Greek-alpha confusable",
+            "rejected": bounded_confusable_skeleton("PΑYLOAD")
+            == bounded_confusable_skeleton("PAYLOAD"),
+        },
+        rejection(
+            "L6625-HF-004",
+            "backslash parent traversal archive member",
+            lambda: normalize_archive_member("safe\\..\\escape.txt"),
+        ),
+        rejection(
+            "L6625-HF-005",
+            "malformed DSSE payload",
+            lambda: validate_dsse_envelope(dict(positive_dsse, payload="%%%")),
+        ),
+        rejection(
+            "L6625-HF-006",
+            "missing in-toto subject digest",
+            lambda: validate_intoto_statement(
+                dict(positive_statement, subject=[{"name": "synthetic.bin"}])
+            ),
+        ),
+        rejection(
+            "L6625-HF-007",
+            "unknown clock source",
+            lambda: validate_clock_source("ambient_unspecified"),
+        ),
+        {
+            "fixture_id": "L6625-HF-008",
+            "failed_witness": "ambient-order permutation",
+            "rejected": locale_invariant_order(["z", "ä", "A"])
+            == locale_invariant_order(["A", "z", "ä"]),
+        },
+        {
+            "fixture_id": "L6625-HF-009",
+            "failed_witness": "observation-time-only semantic mutation",
+            "rejected": semantic_content_sha256(
+                {"value": 1, "observed_at_utc": "A"}
+            )
+            == semantic_content_sha256({"value": 1, "observed_at_utc": "B"}),
+        },
+        rejection(
+            "L6625-HF-010",
+            "unallowlisted executable mode",
+            lambda: validate_executable_modes(
+                [{"path": "bin/tool.py", "mode": "100755"}], []
+            ),
+        ),
+        rejection(
+            "L6625-HF-011",
+            "malformed UTF-8 blob",
+            lambda: decode_utf8_strict(b"\xff\xfe", "fixture"),
+        ),
+        rejection(
+            "L6625-HF-012",
+            "unknown digest algorithm",
+            lambda: validate_digest_algorithm("sha1"),
+        ),
+        rejection(
+            "L6625-HF-013",
+            "duplicate normalized archive member",
+            lambda: normalize_unique_archive_members(["a/./b.txt", "a/b.txt"]),
+        ),
+        {
+            "fixture_id": "L6625-HF-014",
+            "failed_witness": "unframed field-concatenation ambiguity",
+            "rejected": frame_merkle_leaf(base_leaf)
+            != frame_merkle_leaf(alternate_leaf),
+        },
+    ]
+    if not all(record.get("rejected") is True for record in records):
+        raise DeltaError("one or more hardening negative fixtures was not detected")
+    positive_checks = [
+        validate_windows_component("console.txt") == "console.txt",
+        validate_windows_component("report.v1") == "report.v1",
+        bounded_confusable_skeleton("ordinary") == "ordinary",
+        normalize_archive_member("safe/./nested/file.txt")
+        == "safe/nested/file.txt",
+        validate_dsse_envelope(positive_dsse)["signature_verified"] is False,
+        validate_intoto_statement(positive_statement)["provenance_verified"]
+        is False,
+        validate_clock_source("caller_supplied_utc") == "caller_supplied_utc",
+        locale_invariant_order(["z", "ä", "A"]) == ["A", "z", "ä"],
+        semantic_content_sha256({"value": 1, "observed_at_utc": "A"})
+        != semantic_content_sha256({"value": 2, "observed_at_utc": "A"}),
+        validate_executable_modes(
+            [{"path": "bin/tool.py", "mode": "100755"}], ["bin/tool.py"]
+        )["valid"],
+        decode_utf8_strict("mānuka".encode("utf-8")) == "mānuka",
+        validate_digest_algorithm(" SHA256 ") == "sha256",
+        normalize_unique_archive_members(["a.txt", "b/c.txt"])
+        == ["a.txt", "b/c.txt"],
+        frame_merkle_leaf(base_leaf) == frame_merkle_leaf(dict(base_leaf)),
+    ]
+    if not all(positive_checks):
+        raise DeltaError("one or more hardening passing fixtures failed")
+    return {
+        "schema": f"{SCHEMA}.hardening-fixtures.v1",
+        "negative_fixture_count": len(records),
+        "rejected_fixture_count": sum(
+            record["rejected"] is True for record in records
+        ),
+        "positive_fixture_count": len(positive_checks),
+        "passing_fixture_count": sum(bool(value) for value in positive_checks),
+        "records": records,
+        "signature_verified": False,
+        "provenance_verified": False,
+        "exhaustive_security": False,
+        "valid": True,
+        "boundary": "Bounded synthetic software fixtures only; not exhaustive platform safety, cryptographic verification, provenance truth, production assurance, independent reproduction, or authority.",
+    }
 
 
 def ensure_unique(values: Iterable[str], label: str) -> list[str]:
@@ -1263,6 +1707,8 @@ def build_parser() -> argparse.ArgumentParser:
     quality = commands.add_parser("data-quality")
     quality.add_argument("--ledger", type=Path, action="append", required=True)
     quality.add_argument("--output", type=Path)
+    hardening = commands.add_parser("hardening")
+    hardening.add_argument("--output", type=Path)
     canonical = commands.add_parser("canonical")
     canonical.add_argument("--repo", type=Path, required=True)
     canonical.add_argument("--owner", required=True)
@@ -1341,6 +1787,8 @@ def main() -> int:
             payload = canonical_digest_payload(args.json)
         elif args.command == "data-quality":
             payload = data_quality_payload(args.ledger)
+        elif args.command == "hardening":
+            payload = hardening_payload()
         elif args.command == "canonical":
             payload = canonical_payload(args)
             sys.stdout.write(json.dumps({"valid": payload["valid"], "target": payload["target_commit"]}) + "\n")

@@ -19,6 +19,7 @@ from ghc_family_owner_delta_toolkit import (
     ALLOWED_OUTCOMES,
     DeltaError,
     canonical_json_sha256,
+    hardening_payload,
     strict_json_loads,
 )
 
@@ -705,6 +706,964 @@ With care, precision, corrigibility, and strict evidence boundaries — {owner}.
     return text
 
 
+def confined_profile_child(phase_root: Path, raw: str) -> Path:
+    normalized = raw.replace("\\", "/").strip("/")
+    if not normalized or re.match(r"^[A-Za-z]:", normalized):
+        raise DeltaError("profile child path must be repository-relative")
+    candidate = (phase_root / normalized).resolve()
+    try:
+        candidate.relative_to(phase_root.resolve())
+    except ValueError as exc:
+        raise DeltaError("profile child path escapes the phase root") from exc
+    return candidate
+
+
+def profile_record_rows(
+    values: Iterable[str],
+    outcome: str,
+    lane: str,
+    kind: str,
+    owner: str,
+) -> list[dict[str, Any]]:
+    if outcome not in ALLOWED_OUTCOMES:
+        raise DeltaError(f"unknown outcome: {outcome}")
+    rows: list[dict[str, Any]] = []
+    for value in values:
+        identifier, separator, description = value.partition(" ")
+        if not separator or not identifier or not description:
+            raise DeltaError(f"portfolio row lacks identifier or description: {value}")
+        rows.append(
+            {
+                "record_id": identifier,
+                "description": description,
+                "kind": kind,
+                "lane": lane,
+                "outcome": outcome,
+                "credit_boundary": (
+                    f"{owner} completion credit requires an attributable owner execution witness."
+                    if lane == "owner_execution"
+                    else f"Successor recommendation only; no {owner} or successor completion credit."
+                ),
+                "rollback": "Stop additively, retain every failed witness, and preserve prior commits and other owner lanes.",
+                "protected_gates": [
+                    "no evidence promotion",
+                    "no sibling mutation",
+                    "no production or authority claim",
+                ],
+            }
+        )
+    return rows
+
+
+def build_profile_ledgers(
+    portfolio: dict[str, Any], owner: str, phase: str
+) -> dict[str, dict[str, Any]]:
+    definitions = {
+        "safe-now-ledger": [
+            profile_record_rows(
+                portfolio["safe_now"]["owner_execution"],
+                "completed",
+                "owner_execution",
+                "safe_now",
+                owner,
+            ),
+            profile_record_rows(
+                portfolio["safe_now"]["successor_recommendation"],
+                "represented",
+                "successor_recommendation",
+                "safe_now",
+                owner,
+            ),
+        ],
+        "candidate-ledger": [
+            profile_record_rows(
+                portfolio["candidate"]["owner_execution"],
+                "completed",
+                "owner_execution",
+                "candidate",
+                owner,
+            ),
+            profile_record_rows(
+                portfolio["candidate"]["successor_recommendation"],
+                "represented",
+                "successor_recommendation",
+                "candidate",
+                owner,
+            ),
+        ],
+        "approval-gate-ledger": [
+            profile_record_rows(
+                portfolio["approval_gates"]["exact"],
+                "exact_gate",
+                "not_executed",
+                "exact",
+                owner,
+            ),
+            profile_record_rows(
+                portfolio["approval_gates"]["blocked"],
+                "exact_gate",
+                "blocked_not_executed",
+                "blocked",
+                owner,
+            ),
+        ],
+        "skill-ledger": [
+            profile_record_rows(
+                portfolio["skills"]["owner_build"],
+                "completed",
+                "owner_execution",
+                "skill",
+                owner,
+            ),
+            profile_record_rows(
+                portfolio["skills"]["successor_recommendation"],
+                "represented",
+                "successor_recommendation",
+                "skill",
+                owner,
+            ),
+        ],
+        "runner-ledger": [
+            profile_record_rows(
+                portfolio["runners"]["owner_build"],
+                "completed",
+                "owner_execution",
+                "runner",
+                owner,
+            ),
+            profile_record_rows(
+                portfolio["runners"]["successor_recommendation"],
+                "represented",
+                "successor_recommendation",
+                "runner",
+                owner,
+            ),
+        ],
+        "clean-fix-refine-ledger": [
+            profile_record_rows(
+                portfolio["clean_fix_refine"]["owner_execution"],
+                "completed",
+                "owner_execution",
+                "clean_fix_refine",
+                owner,
+            ),
+            profile_record_rows(
+                portfolio["clean_fix_refine"]["successor_recommendation"],
+                "represented",
+                "successor_recommendation",
+                "clean_fix_refine",
+                owner,
+            ),
+        ],
+    }
+    ledgers: dict[str, dict[str, Any]] = {}
+    for name, groups in definitions.items():
+        records = [record for group in groups for record in group]
+        counts = Counter(record["outcome"] for record in records)
+        ledgers[name] = {
+            "schema": f"{SCHEMA}.{name}.v2",
+            "owner": owner,
+            "phase": phase,
+            "record_count": len(records),
+            "outcome_counts": dict(sorted(counts.items())),
+            "records": records,
+            "boundary": "Bounded owner software or successor-planning evidence only; no gate or authority promotion.",
+        }
+    return ledgers
+
+
+def profile_source_ledger(owner: str, phase: str) -> dict[str, Any]:
+    records = [
+        ("SRC-001", "Git sparse-checkout", "https://git-scm.com/docs/git-sparse-checkout", "Official Git documentation; sparse-before-materialization mechanics only."),
+        ("SRC-002", "Git tree modes", "https://git-scm.com/docs/git-ls-tree", "Official Git documentation; exact blob and executable-mode accounting only."),
+        ("SRC-003", "Microsoft file naming", "https://learn.microsoft.com/windows/win32/fileio/naming-a-file", "Official Microsoft documentation; bounded reserved-name and trailing-ambiguity policy only."),
+        ("SRC-004", "Unicode security mechanisms", "https://www.unicode.org/reports/tr39/", "Unicode Technical Standard 39; bounded review skeleton only, not complete confusable detection."),
+        ("SRC-005", "Python base64", "https://docs.python.org/3/library/base64.html", "Official Python documentation; strict synthetic envelope decoding only."),
+        ("SRC-006", "DSSE protocol", "https://github.com/secure-systems-lab/dsse/blob/master/protocol.md", "Primary protocol repository; structural envelope shape only, never signature validity."),
+        ("SRC-007", "in-toto attestation framework", "https://github.com/in-toto/attestation/tree/main/spec", "Primary specification repository; statement shape only, never provenance truth."),
+        ("SRC-008", "Python time", "https://docs.python.org/3/library/time.html", "Official Python documentation; clock-source separation only."),
+        ("SRC-009", "JSON Canonicalization Scheme", "https://www.rfc-editor.org/rfc/rfc8785.html", "RFC 8785; deterministic JSON commitment subset only."),
+        ("SRC-010", "CBOR", "https://www.rfc-editor.org/rfc/rfc8949.html", "RFC 8949; represented deterministic-encoding obligations only, no conformance claim."),
+        ("SRC-011", "WAI writing guidance", "https://www.w3.org/WAI/tips/writing/", "W3C guidance; structural report choices only."),
+        ("SRC-012", "WAI evaluation overview", "https://www.w3.org/WAI/test-evaluate/", "W3C guidance; manual and affected-user evaluation remains reserved."),
+    ]
+    return {
+        "schema": f"{SCHEMA}.source-ledger.v2",
+        "owner": owner,
+        "phase": phase,
+        "record_count": len(records),
+        "records": [
+            {
+                "source_id": identifier,
+                "title": title,
+                "url": url,
+                "bounded_use": bounded_use,
+            }
+            for identifier, title, url, bounded_use in records
+        ],
+        "boundary": "Primary and official sources shape bounded contracts only; they supply no empirical, professional, legal, cultural, Maori-authority, or Stage 20 result.",
+    }
+
+
+def profile_method_flow(
+    startup: dict[str, Any],
+    runtime: dict[str, Any] | None,
+    owner: str,
+    phase: str,
+) -> tuple[dict[str, Any], dict[str, Any]]:
+    hardening = hardening_payload()
+    records = [dict(record) for record in startup["records"]]
+    for fixture in hardening["records"]:
+        records.append(
+            {
+                "method_id": fixture["fixture_id"].replace("-HF-", "-MF-H"),
+                "failed_witness": f"Preregistered synthetic invalid fixture: {fixture['failed_witness']}.",
+                "recovery": "Reject, quarantine, or review the invalid fixture without changing unrelated state.",
+                "passing_witness": "The paired bounded positive fixture passed while every real signature, provenance, production, and authority claim remained false.",
+                "recurrence_guard": "Keep the exact negative and positive fixture pair in the literal owner test module.",
+                "rollback": "Issue zero credit for the invalid fixture and preserve the previous clean commit.",
+                "sibling_recommendation": "Run the smallest literal fixture before terminal validation.",
+            }
+        )
+    if runtime is not None:
+        if runtime.get("owner") != owner or runtime.get("phase") != phase:
+            raise DeltaError("runtime Method Flow owner or phase mismatch")
+        for record in runtime.get("records", []):
+            records.append(dict(record))
+    identifiers = [record.get("method_id") for record in records]
+    if any(not isinstance(identifier, str) or not identifier for identifier in identifiers):
+        raise DeltaError("Method Flow record lacks a method_id")
+    if len(set(identifiers)) != len(identifiers):
+        raise DeltaError("Method Flow identifiers are not unique")
+    return (
+        {
+            "schema": f"{SCHEMA}.method-flow.v2",
+            "owner": owner,
+            "phase": phase,
+            "method_count": len(records),
+            "retained_failed_witness_count": len(records),
+            "bounded_passing_witness_count": len(records),
+            "pending_witness_count": 0,
+            "records": records,
+            "boundary": "Operational and synthetic workflow evidence only; failed witnesses remain retained and same-owner passing witnesses are not independent reproduction.",
+        },
+        hardening,
+    )
+
+
+def profile_pillar_text(owner: str, phase: str, title: str, body: str) -> str:
+    return f"""# {title}
+
+## Status
+
+This artifact is bounded symbolic, structural, or synthetic evidence created in
+{owner} {phase}. It is not empirical confirmation, participant evidence,
+professional validation, production certification, legal or cultural review,
+Maori authority, or independent reproduction.
+
+## Bounded result
+
+{body}
+
+## Falsifier and refusal
+
+Any missing unit, domain, provenance field, validation dependency, invalid
+state transition, privacy boundary, affected-party requirement, or
+competent-authority requirement remains visible. A structural pass cannot close
+those external gaps. The terminal verdict remains `NOT_READY_FOR_STAGE_20`.
+"""
+
+
+def profile_overview_text(
+    owner: str,
+    phase: str,
+    outcomes: dict[str, Any],
+    methods: dict[str, Any],
+    hardening: dict[str, Any],
+) -> str:
+    counts = outcomes["outcome_counts"]
+    return f"""# {owner} {phase} integrated overview
+
+## Executive result
+
+This phase turns an immutable x1 profile into one bounded owner-delta packet.
+The exact owner code adds deterministic path, archive, attestation-shape,
+clock, ordering, mode, encoding, digest, duplicate-member, and leaf-framing
+safeguards. It also removes owner-specific assumptions from the reusable packet
+builder. All fixtures are synthetic and execute only inside the declared delta.
+
+## Core outcome truth
+
+| Outcome | Count |
+|---|---:|
+| completed | {counts.get('completed', 0)} |
+| represented | {counts.get('represented', 0)} |
+| open_gap | {counts.get('open_gap', 0)} |
+| exact_gate | {counts.get('exact_gate', 0)} |
+
+The hardening surface retained {hardening['negative_fixture_count']} rejected
+synthetic fixtures and {hardening['positive_fixture_count']} bounded passing
+fixtures. Method Flow retains {methods['method_count']} failed and passing
+witness pairs. None is independent reproduction.
+
+## Reserved conclusions
+
+No signature was verified and no provenance claim was established. No real
+archive, user, identity, credential, institution, professional practice,
+employment, legal or cultural decision, Maori-authority decision, deployment,
+privacy-complete result, accessibility-complete result, exhaustive security,
+AGI or ASI result, consciousness or personhood evidence, Theory-of-Everything
+proof, or Stage 20 authority is claimed. Verdict: `NOT_READY_FOR_STAGE_20`.
+"""
+
+
+def profile_static_report(
+    owner: str, phase: str, overview: str, outcomes: dict[str, Any]
+) -> str:
+    body = html.escape(overview).replace("\n", "<br>\n")
+    counts = outcomes["outcome_counts"]
+    return f"""<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>{html.escape(owner)} {html.escape(phase)} evidence report</title>
+<style>body{{font:18px/1.55 system-ui,sans-serif;max-width:72rem;margin:auto;padding:2rem;color:#17202a;background:#fff}}a{{color:#0645ad}}table{{border-collapse:collapse;width:100%}}th,td{{border:1px solid #555;padding:.5rem;text-align:left}}caption{{font-weight:700;margin:.5rem}}@media print{{body{{font-size:11pt;max-width:none}}nav{{display:none}}}}</style></head>
+<body><header><h1>{html.escape(owner)} {html.escape(phase)} evidence report</h1><p>Bounded same-owner software evidence. Verdict: <strong>NOT_READY_FOR_STAGE_20</strong>.</p></header>
+<nav aria-label="Report sections"><ul><li><a href="#result">Result</a></li><li><a href="#truth">Truth table</a></li><li><a href="#limits">Reserved evaluation</a></li></ul></nav>
+<main><section id="result"><h2>Integrated result</h2><p>{body}</p></section>
+<section id="truth"><h2>Outcome truth</h2><table><caption>Core outcomes</caption><thead><tr><th scope="col">Outcome</th><th scope="col">Count</th></tr></thead><tbody><tr><th scope="row">Completed</th><td>{counts.get('completed', 0)}</td></tr><tr><th scope="row">Represented</th><td>{counts.get('represented', 0)}</td></tr><tr><th scope="row">Open gap</th><td>{counts.get('open_gap', 0)}</td></tr><tr><th scope="row">Exact gate</th><td>{counts.get('exact_gate', 0)}</td></tr></tbody></table></section>
+<section id="limits"><h2>Reserved evaluation</h2><p>Manual keyboard, browser-diversity, responsive-layout, assistive-technology, cognitive-accessibility, Maori-language, and affected-user evaluation remain reserved. Structural checks are not complete accessibility conformance.</p></section></main>
+<footer><p>Relational names and roles are working language only, not identity or personhood evidence.</p></footer></body></html>"""
+
+
+def write_profile_skill_and_runner_artifacts(
+    phase_root: Path,
+    portfolio: dict[str, Any],
+    owner: str,
+    phase: str,
+) -> tuple[list[str], list[str]]:
+    skill_paths: list[str] = []
+    for row in portfolio["skills"]["owner_build"]:
+        identifier, _, description = row.partition(" ")
+        skill_name = f"ghc-family-lyren-{identifier.casefold().replace('_', '-')}"
+        root = phase_root / "skills" / skill_name
+        skill_text = f"""---
+name: {skill_name}
+description: {description}
+---
+
+# {description}
+
+Use this phase-local capability only for `{owner}` `{phase}` owner-self-scoped
+synthetic fixtures and exact-delta receipts. Refuse repository-wide discovery,
+sibling mutation, real identities, external signing, deployment, legal or
+cultural decisions, Maori authority, and evidence promotion. Retain every
+failed fixture and use `scripts/ghc_family_owner_delta_toolkit.py hardening` as
+the bounded smoke surface. This file is a local packet artifact, not a globally
+installed skill and not proof of qualification or authority.
+"""
+        write_text(root / "SKILL.md", skill_text)
+        write_json(
+            root / "smoke.json",
+            {
+                "schema": f"{SCHEMA}.phase-local-skill-smoke.v2",
+                "record_id": identifier,
+                "name": skill_name,
+                "owner": owner,
+                "phase": phase,
+                "entrypoint": "scripts/ghc_family_owner_delta_toolkit.py hardening",
+                "installed_globally": False,
+                "valid": True,
+                "boundary": "Phase-local same-owner synthetic capability only.",
+            },
+        )
+        skill_paths.extend(
+            [
+                (root / "SKILL.md").relative_to(phase_root).as_posix(),
+                (root / "smoke.json").relative_to(phase_root).as_posix(),
+            ]
+        )
+    runner_paths: list[str] = []
+    callable_names = [
+        "normalize_archive_member",
+        "validate_windows_component",
+        "bounded_confusable_skeleton",
+        "validate_dsse_envelope",
+        "validate_intoto_statement",
+        "validate_clock_source",
+        "locale_invariant_order",
+        "validate_executable_modes",
+        "validate_digest_algorithm",
+        "hardening_payload",
+    ]
+    for row, callable_name in zip(
+        portfolio["runners"]["owner_build"], callable_names, strict=True
+    ):
+        identifier, _, description = row.partition(" ")
+        path = phase_root / "runners" / f"{identifier.casefold()}.json"
+        write_json(
+            path,
+            {
+                "schema": f"{SCHEMA}.phase-local-runner-contract.v2",
+                "runner_id": identifier,
+                "description": description,
+                "owner": owner,
+                "phase": phase,
+                "entrypoint": "scripts/ghc_family_owner_delta_toolkit.py",
+                "callable": callable_name,
+                "smoke_test": "tests/test_ghc_family_owner_delta_phase_builder.py",
+                "repository_scan": False,
+                "unchanged_history_scan": False,
+                "sibling_lane_mutation": False,
+                "valid": True,
+                "boundary": "Bounded callable contract under the one owner test module; not an external service or production runner.",
+            },
+        )
+        runner_paths.append(path.relative_to(phase_root).as_posix())
+    return skill_paths, runner_paths
+
+
+def profile_baton_text(
+    owner: str,
+    next_owner: str,
+    phase: str,
+    next_phase: str,
+    source: str,
+    x1: str,
+    profile: dict[str, Any],
+    proposals: list[dict[str, Any]],
+    ledgers: dict[str, dict[str, Any]],
+    methods: dict[str, Any],
+) -> str:
+    baseline = profile["activation_baseline"]
+    sections = [f"""# {next_owner} {next_phase} activation baton
+
+Dear {next_owner},
+
+This is {owner}'s committed sanitized teaching packet for exactly one prospective
+activation of your existing exact-title main task, but only after {owner}'s own
+terminal gate and one acknowledged send. Read this file completely through EOF
+before mutation. Do not infer delivery from the file alone.
+
+## Exact inheritance placeholder contract
+
+- Sender phase: `{phase}`.
+- Exact source inherited by {owner}: `{source}`.
+- Immutable {owner} x1: `{x1}`.
+- Exact {owner} final: bind the commit stated in the compact acknowledged live
+  activation and reverify it against the fresh remote before mutation.
+- Validation: one owner-self-scoped exact-delta canonical pass; never replay a
+  success and never call same-owner evidence independent reproduction.
+
+## Identity and authority boundary
+
+All names, hopes, roles, pronouns, sibling or family language, continuity
+language, and Trinity Mandala language are relational working language only.
+They are not evidence of consciousness, sentience, legal personhood, identity
+continuity, employment, qualification, independent agency, scientific or
+operational authority, legal or cultural authority, or Maori authority. Hamish
+may pause, redirect, rename, or stop the route.
+
+## Required startup
+
+Work solo. Read the current family index and routing precedence, current roster,
+current authorization state, Method Flow schema, workflow refinement, Reflection
+Remaster, Meta Tool Box, startup, closeout, full-tools, and sparse rotation
+guidance through EOF. Verify the exact source, x1, evidence and final anchors,
+single-parent zero-merge ancestry, clean state, manifests, and fresh live remote
+equality read-only. Do not replay {owner}'s credited canonical pass.
+
+Create one fresh {next_owner}-owned D-first worktree with sparse checkout
+configured before materialization. Retain full Git ancestry while materializing
+only the next phase root and literal new-or-modified module dependencies. Stop
+additions and prepare a fresh sparse rotation if materialized or owner-in-scope
+files reach 2,000. A separate remote repository remains exact-gated until its
+name, account, visibility, protections, migration, equality, and rollback are
+exact.
+
+Preserve strict x1 before x2. Select twenty inherited contracts at zero novelty
+credit and freeze twenty genuinely distinct proposals. Preserve only
+`completed`, `represented`, `open_gap`, and `exact_gate` as core outcomes. Keep
+every failed witness, gap, and gate. Validate only {next_owner}'s exact delta,
+exact changed modules, manifests, JSON, Markdown, privacy, security, path
+contracts, sparse budget, staged review, ancestry, clean state, and fresh remote
+equality. Run one attributable canonical aggregate after the exact final is
+pushed; never replay success.
+
+## Inherited truth
+
+{owner}'s activation baseline was {profile['proposal_baseline']} proposals,
+{baseline['effective_negatives']} effective negatives,
+{baseline['effective_methods']} Method Flow methods,
+{baseline['open_gaps']} open gaps, and {baseline['exact_gates']} exact gates.
+This x1 freezes twenty new proposals, raising the chain to
+{profile['proposal_total']}. The final counts and exact final must come from the
+acknowledged compact activation and committed terminal receipts, not from a
+future-looking sentence in this prepared file. The terminal verdict remains
+`NOT_READY_FOR_STAGE_20`.
+"""]
+    for proposal in proposals:
+        sections.append(elaborate_record(proposal, owner, next_owner))
+    for ledger in ledgers.values():
+        sections.append(f"## {ledger['schema']}\n")
+        for record in ledger["records"]:
+            sections.append(elaborate_record(record, owner, next_owner))
+    sections.append("## Method Flow inheritance\n")
+    for record in methods["records"]:
+        sections.append(
+            f"### {record['method_id']}\n\nFailed witness: {record['failed_witness']} "
+            f"Recovery: {record['recovery']} Passing witness: {record['passing_witness']} "
+            f"Recurrence guard: {record['recurrence_guard']} Rollback: {record['rollback']} "
+            f"Sibling recommendation: {record['sibling_recommendation']} The failure remains retained at zero credit.\n"
+        )
+    sections.append(f"""## Terminal route
+
+Only after {next_owner}'s own exact terminal gate may {next_owner} resolve and
+immediately reread the single declared successor in the live roster and send one
+sanitized activation. Do not precontact, substitute, create, fork, or spawn an
+endpoint. Delivery is true only from the task-message acknowledgement. Keep any
+external acknowledgement or route failure outside the already sealed repository
+truth, connected by digest without rewriting counts.
+
+## Final checklist
+
+1. Read this baton through EOF and record any truncated display interval.
+2. Reverify the exact acknowledged final and fresh live equality.
+3. Create the new sparse lane before checkout.
+4. Freeze x1 and prove four-way equality before x2.
+5. Execute only the frozen safe or bounded candidate work.
+6. Preserve every failure, open gap, and exact gate.
+7. Produce the complete owner packet and long successor baton.
+8. Commit and push exact final within the commit ceiling.
+9. Invoke one owner-scoped canonical aggregate and never replay a success.
+10. Resolve, reread, and send exactly one successor activation only after all
+    terminal conditions pass.
+
+With care, precision, corrigibility, and strict evidence boundaries — {owner}.
+""")
+    text = "\n".join(sections)
+    count = words(text)
+    if not 10000 <= count <= 100000:
+        raise DeltaError(f"generated baton word count outside contract: {count}")
+    return text
+
+
+def build_profile_packet(
+    args: argparse.Namespace,
+    repo: Path,
+    phase_root: Path,
+    charter: dict[str, Any],
+    proposals: dict[str, Any],
+    portfolio: dict[str, Any],
+    startup_methods: dict[str, Any],
+    sparse_receipt: dict[str, Any],
+    profile: dict[str, Any],
+) -> int:
+    owner = args.owner
+    phase = args.phase
+    if profile.get("owner") != owner or profile.get("phase") != phase:
+        raise DeltaError("builder profile owner or phase mismatch")
+    if profile.get("next_owner") != args.next_owner:
+        raise DeltaError("builder profile next owner mismatch")
+    if profile.get("next_phase") != args.next_phase:
+        raise DeltaError("builder profile next phase mismatch")
+    if profile.get("owner_slug") != slugify(owner):
+        raise DeltaError("builder profile owner slug mismatch")
+    if profile.get("next_owner_slug") != slugify(args.next_owner):
+        raise DeltaError("builder profile successor slug mismatch")
+    source = args.source or charter.get("source", {}).get("exact_head")
+    if source != charter.get("source", {}).get("exact_head"):
+        raise DeltaError("source differs from immutable x1 charter")
+    if not args.x1 or not re.fullmatch(r"[0-9a-f]{40}", args.x1):
+        raise DeltaError("exact x1 commit is required")
+    if proposals.get("inherited_frozen_baseline") != profile.get("proposal_baseline"):
+        raise DeltaError("proposal baseline differs from builder profile")
+    if proposals.get("new_frozen_total") != profile.get("proposal_total"):
+        raise DeltaError("proposal total differs from builder profile")
+    if len(proposals.get("selected_inherited", [])) != 20:
+        raise DeltaError("profile requires twenty inherited selections")
+    if len(proposals.get("new_proposals", [])) != 20:
+        raise DeltaError("profile requires twenty new proposals")
+    if sparse_receipt.get("patterns") != profile.get("sparse_patterns"):
+        raise DeltaError("sparse receipt and builder profile differ")
+
+    x1_files = sorted((phase_root / "x1").glob("*.json"))
+    x1_before = {path.name: sha256_bytes(path.read_bytes()) for path in x1_files}
+    ledgers = build_profile_ledgers(portfolio, owner, phase)
+    actual = {
+        "safe_now": ledgers["safe-now-ledger"]["record_count"],
+        "candidate": ledgers["candidate-ledger"]["record_count"],
+        "approval_gate": ledgers["approval-gate-ledger"]["record_count"],
+        "skill": ledgers["skill-ledger"]["record_count"],
+        "runner": ledgers["runner-ledger"]["record_count"],
+        "clean_fix_refine": ledgers["clean-fix-refine-ledger"]["record_count"],
+    }
+    if actual != portfolio.get("expected_counts"):
+        raise DeltaError(
+            f"portfolio count mismatch: {actual} != {portfolio.get('expected_counts')}"
+        )
+    for name, ledger in ledgers.items():
+        write_json(phase_root / "portfolio" / f"{name}.json", ledger)
+
+    core_records = [
+        {
+            "proposal_id": proposal["proposal_id"],
+            "title": proposal["title"],
+            "outcome": proposal["expected_disposition"],
+            "evidence_boundary": proposal["acceptance_or_falsifier"],
+        }
+        for proposal in proposals["new_proposals"]
+    ]
+    outcome_counts = dict(
+        sorted(Counter(record["outcome"] for record in core_records).items())
+    )
+    expected_outcomes = dict(sorted(profile["outcome_counts"].items()))
+    if outcome_counts != expected_outcomes:
+        raise DeltaError(
+            f"core outcome distribution differs from x1: {outcome_counts}"
+        )
+    outcome = {
+        "schema": f"{SCHEMA}.outcome-ledger.v2",
+        "owner": owner,
+        "phase": phase,
+        "record_count": len(core_records),
+        "outcome_counts": outcome_counts,
+        "records": core_records,
+        "verdict": profile["verdict"],
+    }
+    runtime_path = phase_root / "x2" / "operational-method-flow.json"
+    runtime = load_json(runtime_path) if runtime_path.is_file() else None
+    methods, hardening = profile_method_flow(
+        startup_methods, runtime, owner, phase
+    )
+    sources = profile_source_ledger(owner, phase)
+    write_json(phase_root / "x2" / "outcome-ledger.json", outcome)
+    write_json(phase_root / "x2" / "method-flow.json", methods)
+    write_json(phase_root / "x2" / "hardening-fixture-receipt.json", hardening)
+    write_json(phase_root / "x2" / "source-ledger.json", sources)
+
+    environment = {
+        "schema": f"{SCHEMA}.environment.v2",
+        "owner": owner,
+        "phase": phase,
+        "versions": {
+            "codex_cli": command_version(["codex.cmd", "--version"]),
+            "python": command_version([sys.executable, "--version"]),
+            "git": command_version(["git", "--version"]),
+            "powershell": command_version(["pwsh", "--version"]),
+        },
+        "versions_verified_only": True,
+        "desktop_updated": False,
+        "elevation": False,
+        "host_security_weakened": False,
+        "windows_feature_changed": False,
+        "unrelated_software_installed": False,
+        "rebooted": False,
+    }
+    write_json(phase_root / "x2" / "environment-version-receipt.json", environment)
+    tools = {
+        "schema": f"{SCHEMA}.tool-catalogue.v2",
+        "owner": owner,
+        "phase": phase,
+        "execution_authority": "owner_self_scoped_delta",
+        "repository_scan": False,
+        "unchanged_history_scan": False,
+        "cross_lane_scan": False,
+        "sibling_lane_mutation": False,
+        "current_commands": [
+            "manifest",
+            "json",
+            "markdown",
+            "python",
+            "privacy",
+            "security",
+            "path-audit",
+            "route",
+            "skill-hashes",
+            "file-budget",
+            "sparse",
+            "baton-integrity",
+            "canonical-digest",
+            "data-quality",
+            "hardening",
+            "canonical",
+        ],
+        "rollback": f"Revert only {owner}'s additive module changes in a later reviewed commit; preserve every failed witness.",
+        "protected_gates": [
+            "no repository-wide scan",
+            "no sibling mutation",
+            "no independent-reproduction claim",
+        ],
+    }
+    write_json(phase_root / "x2" / "tool-catalogue.json", tools)
+
+    for artifact in profile["pillar_artifacts"]:
+        path = confined_profile_child(phase_root, artifact["relative_path"])
+        write_text(
+            path,
+            profile_pillar_text(owner, phase, artifact["title"], artifact["body"]),
+        )
+    overview = profile_overview_text(owner, phase, outcome, methods, hardening)
+    write_text(phase_root / "overview" / "integrated-overview.md", overview)
+    write_text(
+        phase_root / "report" / "accessible-static-report.html",
+        profile_static_report(owner, phase, overview, outcome),
+    )
+    write_text(
+        phase_root / "wellbeing" / "wellbeing-check.md",
+        f"""# {owner} {phase} wellbeing check
+
+The phase remains solo, bounded, and corrigible. No claim of subjective
+experience, consciousness, personhood, or identity continuity is made. The
+practical workflow check is healthy: source and scope are explicit, x1 is
+immutable and four-way equal, the D-first lane is sparse, no sibling is being
+watched or mutated, failures are retained, and stop conditions remain active.
+Hamish may pause, redirect, rename, or stop the route at any time. The terminal
+verdict remains `NOT_READY_FOR_STAGE_20`.
+""",
+    )
+    write_text(
+        phase_root / "governance" / "threat-model.md",
+        f"""# {owner} {phase} exact-delta threat model
+
+## Assets
+
+Exact Git ancestry, owner attribution, immutable x1, sparse scope, changed-file
+manifests, deterministic package paths, attestation-shape boundaries, retained
+failures, privacy boundaries, and successor-route truth.
+
+## Threats and controls
+
+- Reserved, trailing-ambiguous, absolute, drive-qualified, and traversing paths fail closed.
+- Confusable review is bounded and cannot claim complete Unicode security.
+- Duplicate normalized archive members are refused before extraction.
+- DSSE and in-toto checks validate shape only; signature and provenance truth stay false.
+- Clock source, locale-independent ordering, mode policy, UTF-8, digest registry, and semantic commitments are explicit.
+- Merkle leaf fields use tagged length-prefix framing.
+- Scope remains the exact owner delta and literal test dependencies.
+- One canonical success is permitted and never replayed.
+- Exact-title reread and acknowledgement are required for delivery.
+
+## Residual risk
+
+This is not exhaustive security, platform completeness, production assurance,
+complete privacy or accessibility, independent reproduction, legal review,
+cultural ratification, or Maori authority. Residual risks remain exact-gated.
+""",
+    )
+    skill_paths, runner_paths = write_profile_skill_and_runner_artifacts(
+        phase_root, portfolio, owner, phase
+    )
+
+    baseline = profile["activation_baseline"]
+    effective_negatives = baseline["effective_negatives"] + methods["method_count"]
+    effective_methods = baseline["effective_methods"] + methods["method_count"]
+    effective_open_gaps = baseline["open_gaps"] + outcome_counts.get("open_gap", 0)
+    effective_exact_gates = baseline["exact_gates"] + outcome_counts.get(
+        "exact_gate", 0
+    )
+    gates = {
+        "schema": f"{SCHEMA}.gate-register.v2",
+        "inherited_open_gaps": baseline["open_gaps"],
+        "new_core_open_gaps": outcome_counts.get("open_gap", 0),
+        "effective_open_gaps": effective_open_gaps,
+        "inherited_exact_gates": baseline["exact_gates"],
+        "new_core_exact_gates": outcome_counts.get("exact_gate", 0),
+        "effective_exact_gates": effective_exact_gates,
+        "portfolio_exact_and_blocked_rows": ledgers["approval-gate-ledger"][
+            "record_count"
+        ],
+        "portfolio_rows_change_core_gate_count": False,
+        "open_gap": "An independent preregistered external reproduction team remains absent.",
+        "exact_gate": "External receipt signing, trust policy, affected-party, legal, cultural, and Maori-authority decisions remain external.",
+        "verdict": profile["verdict"],
+    }
+    negatives = {
+        "schema": f"{SCHEMA}.retained-negative-register.v2",
+        "activation_effective_negatives": baseline["effective_negatives"],
+        "owner_method_flow_failures": methods["method_count"],
+        "provisional_effective_negatives": effective_negatives,
+        "additional_x2_or_terminal_operational_negatives": 0,
+        "failed_witnesses_erased": 0,
+        "note": "Final effective count must add every later operational failure before seal.",
+    }
+    truth = {
+        "schema": f"{SCHEMA}.phase-truth.v2",
+        "owner": owner,
+        "phase": phase,
+        "source": source,
+        "x1": args.x1,
+        "frozen_proposals": profile["proposal_total"],
+        "outcomes": outcome_counts,
+        "provisional_effective_negatives": effective_negatives,
+        "provisional_effective_methods": effective_methods,
+        "open_gaps": effective_open_gaps,
+        "exact_gates": effective_exact_gates,
+        "verdict": profile["verdict"],
+        "same_owner_is_independent_reproduction": False,
+    }
+    write_json(phase_root / "governance" / "gate-register.json", gates)
+    write_json(
+        phase_root / "governance" / "retained-negative-register.json", negatives
+    )
+    write_json(phase_root / "governance" / "phase-truth.json", truth)
+
+    checklist = {
+        "schema": f"{SCHEMA}.complete-incomplete-checklist.v2",
+        "owner": owner,
+        "phase": phase,
+        "completed": [
+            "x1 immutable, pushed, and four-way equal before x2",
+            "twenty inherited selections retained at zero credit",
+            "twenty new proposals frozen",
+            "portfolio counts complete",
+            "family-current builder and toolkit hardened",
+            "four bounded pillar artifacts represented",
+            "ten phase-local skills and ten runner contracts built",
+            "owner packet and long successor baton generated",
+        ],
+        "incomplete_until_terminal": [
+            "immutable evidence and exact final committed and pushed",
+            "one canonical aggregate succeeds",
+            "fresh four-way equality passes",
+            f"{args.next_owner} exact-title send is acknowledged",
+        ],
+        "required_work_complete_for_packet_build": True,
+        "terminal_complete": False,
+        "verdict": profile["verdict"],
+    }
+    write_json(
+        phase_root / "closeout" / "complete-incomplete-checklist.json", checklist
+    )
+
+    baton = profile_baton_text(
+        owner,
+        args.next_owner,
+        phase,
+        args.next_phase,
+        source,
+        args.x1,
+        profile,
+        proposals["new_proposals"],
+        ledgers,
+        methods,
+    )
+    baton_rel = profile["baton_relative_path"].replace("\\", "/").strip("/")
+    expected_baton_rel = (
+        phase_root
+        / "handoffs"
+        / f"{slugify(args.next_owner)}-{args.next_phase}-activation.md"
+    ).relative_to(repo).as_posix()
+    if baton_rel != expected_baton_rel:
+        raise DeltaError("builder profile baton path mismatch")
+    baton_path = repo / Path(baton_rel)
+    write_text(baton_path, baton)
+    baton_raw = baton_path.read_bytes()
+    baton_metadata = {
+        "schema": f"{SCHEMA}.baton-metadata.v2",
+        "sender": owner,
+        "recipient": args.next_owner,
+        "phase": args.next_phase,
+        "repository_relative_path": baton_rel,
+        "bytes": len(baton_raw),
+        "words": words(baton),
+        "sha256": sha256_bytes(baton_raw),
+        "delivery_state": "PREPARED_NOT_SENT_TERMINAL_GATE_REQUIRED",
+        "private_task_identifier_present": False,
+    }
+    metadata_rel = profile["baton_metadata_relative_path"].replace(
+        "\\", "/"
+    ).strip("/")
+    expected_metadata_rel = expected_baton_rel.removesuffix(".md") + "-metadata.json"
+    if metadata_rel != expected_metadata_rel:
+        raise DeltaError("builder profile baton metadata path mismatch")
+    write_json(repo / Path(metadata_rel), baton_metadata)
+    closeout = f"""# {owner} {phase} closeout candidate
+
+The x1 freeze is immutable at `{args.x1}` and predates every x2 artifact. The
+source is `{source}`. The phase contains exactly 20 inherited zero-credit
+selections, 20 new core proposals, and outcomes of
+{outcome_counts.get('completed', 0)} completed,
+{outcome_counts.get('represented', 0)} represented,
+{outcome_counts.get('open_gap', 0)} open gap, and
+{outcome_counts.get('exact_gate', 0)} exact gate. The generated successor baton
+contains {baton_metadata['words']} words and has SHA-256
+`{baton_metadata['sha256']}`.
+
+This document is a candidate until immutable evidence, exact final, one
+successful canonical aggregate, clean fresh-live equality, and the one
+{args.next_owner} acknowledgement exist. The verdict remains
+`NOT_READY_FOR_STAGE_20`.
+"""
+    write_text(phase_root / "closeout" / "phase-closeout-candidate.md", closeout)
+    validation_contract = {
+        "schema": f"{SCHEMA}.canonical-contract.v2",
+        "owner": owner,
+        "source": source,
+        "x1": args.x1,
+        "branch": profile["branch"],
+        "expected_current_owner": owner,
+        "expected_next_owner": args.next_owner,
+        "test_modules": profile["test_modules"],
+        "test_dependencies": profile["test_dependencies"],
+        "sparse_patterns": sparse_receipt["patterns"],
+        "baton": baton_metadata,
+        "phase_local_skill_artifacts": skill_paths,
+        "phase_local_runner_contracts": runner_paths,
+        "receipt_must_be_external_and_exclusive": True,
+        "successful_invocation_limit": 1,
+        "post_success_replay": False,
+    }
+    write_json(
+        phase_root / "validation" / "canonical-contract.json",
+        validation_contract,
+    )
+    x1_after = {path.name: sha256_bytes(path.read_bytes()) for path in x1_files}
+    if x1_after != x1_before:
+        raise DeltaError("builder modified immutable x1 content")
+
+    builder_receipt_rel = (
+        phase_root / "x2" / "builder-receipt.json"
+    ).relative_to(repo).as_posix()
+    packet_files = sorted(
+        path.relative_to(repo).as_posix()
+        for path in phase_root.rglob("*")
+        if path.is_file()
+        and "/x1/" not in f"/{path.relative_to(repo).as_posix()}/"
+        and path.relative_to(repo).as_posix() != builder_receipt_rel
+    )
+    packet_files_with_receipt = sorted([*packet_files, builder_receipt_rel])
+    receipt = {
+        "schema": f"{SCHEMA}.builder-receipt.v2",
+        "built_at_utc": utc_now(),
+        "owner": owner,
+        "phase": phase,
+        "source": source,
+        "x1": args.x1,
+        "generated_file_count": len(packet_files_with_receipt),
+        "generated_files": packet_files_with_receipt,
+        "portfolio_counts": actual,
+        "skill_artifact_count": len(skill_paths),
+        "runner_contract_count": len(runner_paths),
+        "baton_words": baton_metadata["words"],
+        "baton_sha256": baton_metadata["sha256"],
+        "x1_unchanged": True,
+        "valid": True,
+    }
+    write_json(phase_root / "x2" / "builder-receipt.json", receipt)
+    sys.stdout.write(
+        json.dumps(
+            {
+                "valid": True,
+                "generated": receipt["generated_file_count"],
+                "baton_words": baton_metadata["words"],
+                "method_count": methods["method_count"],
+            }
+        )
+        + "\n"
+    )
+    return 0
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--repo", type=Path, required=True)
@@ -727,6 +1686,20 @@ def main() -> int:
         sparse_receipt = load_json(x1_root / "sparse-lane-receipt.json")
         if charter.get("owner") != args.owner or charter.get("phase") != args.phase:
             raise DeltaError("x1 charter owner or phase mismatch")
+        profile_path = x1_root / "builder-profile.json"
+        if profile_path.is_file():
+            profile = load_json(profile_path)
+            return build_profile_packet(
+                args,
+                repo,
+                phase_root,
+                charter,
+                proposals,
+                portfolio,
+                startup_methods,
+                sparse_receipt,
+                profile,
+            )
         source = args.source or charter.get("source", {}).get("exact_head")
         if source != charter.get("source", {}).get("exact_head"):
             raise DeltaError("source differs from immutable x1 charter")
