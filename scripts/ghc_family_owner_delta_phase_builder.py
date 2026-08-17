@@ -875,17 +875,23 @@ def build_profile_ledgers(
 def profile_source_ledger(owner: str, phase: str) -> dict[str, Any]:
     records = [
         ("SRC-001", "Git sparse-checkout", "https://git-scm.com/docs/git-sparse-checkout", "Official Git documentation; sparse-before-materialization mechanics only."),
-        ("SRC-002", "Git tree modes", "https://git-scm.com/docs/git-ls-tree", "Official Git documentation; exact blob and executable-mode accounting only."),
-        ("SRC-003", "Microsoft file naming", "https://learn.microsoft.com/windows/win32/fileio/naming-a-file", "Official Microsoft documentation; bounded reserved-name and trailing-ambiguity policy only."),
-        ("SRC-004", "Unicode security mechanisms", "https://www.unicode.org/reports/tr39/", "Unicode Technical Standard 39; bounded review skeleton only, not complete confusable detection."),
-        ("SRC-005", "Python base64", "https://docs.python.org/3/library/base64.html", "Official Python documentation; strict synthetic envelope decoding only."),
-        ("SRC-006", "DSSE protocol", "https://github.com/secure-systems-lab/dsse/blob/master/protocol.md", "Primary protocol repository; structural envelope shape only, never signature validity."),
-        ("SRC-007", "in-toto attestation framework", "https://github.com/in-toto/attestation/tree/main/spec", "Primary specification repository; statement shape only, never provenance truth."),
-        ("SRC-008", "Python time", "https://docs.python.org/3/library/time.html", "Official Python documentation; clock-source separation only."),
-        ("SRC-009", "JSON Canonicalization Scheme", "https://www.rfc-editor.org/rfc/rfc8785.html", "RFC 8785; deterministic JSON commitment subset only."),
-        ("SRC-010", "CBOR", "https://www.rfc-editor.org/rfc/rfc8949.html", "RFC 8949; represented deterministic-encoding obligations only, no conformance claim."),
-        ("SRC-011", "WAI writing guidance", "https://www.w3.org/WAI/tips/writing/", "W3C guidance; structural report choices only."),
-        ("SRC-012", "WAI evaluation overview", "https://www.w3.org/WAI/test-evaluate/", "W3C guidance; manual and affected-user evaluation remains reserved."),
+        ("SRC-002", "Python archive formats", "https://docs.python.org/3/library/archiving.html", "Official Python documentation; metadata-only resource budgets and zero extraction."),
+        ("SRC-003", "Microsoft file naming", "https://learn.microsoft.com/windows/win32/fileio/naming-a-file", "Official Microsoft documentation; bounded UNC, device, and extended-prefix refusal only."),
+        ("SRC-004", "URI generic syntax", "https://www.rfc-editor.org/rfc/rfc3986.html", "RFC 3986; single-pass unreserved percent normalization without dereference."),
+        ("SRC-005", "JSON", "https://www.rfc-editor.org/rfc/rfc8259.html", "RFC 8259; bounded number lexical grammar only."),
+        ("SRC-006", "JSON Canonicalization Scheme", "https://www.rfc-editor.org/rfc/rfc8785.html", "RFC 8785; finite-number and deterministic commitment obligations only, not complete conformance."),
+        ("SRC-007", "IANA media types", "https://www.iana.org/assignments/media-types/media-types.xhtml", "Official registry context; closed local allowlist never implies content safety."),
+        ("SRC-008", "DSSE protocol", "https://github.com/secure-systems-lab/dsse/blob/master/protocol.md", "Primary protocol repository; byte-exact PAE subset only, never signing or signature validity."),
+        ("SRC-009", "in-toto attestation framework", "https://in-toto.io/docs/specs/", "Primary specification index; digest and predicate-version shape only, never provenance truth."),
+        ("SRC-010", "Python time", "https://docs.python.org/3/library/time.html", "Official Python documentation; monotonic and wall-clock separation only."),
+        ("SRC-011", "Internet timestamps", "https://www.rfc-editor.org/rfc/rfc3339.html", "RFC 3339; explicit-offset normalization subset only."),
+        ("SRC-012", "Extended Internet timestamps", "https://www.rfc-editor.org/rfc/rfc9557.html", "RFC 9557; unknown-offset semantics are reserved rather than silently collapsed."),
+        ("SRC-013", "JSON Pointer", "https://www.rfc-editor.org/rfc/rfc6901.html", "RFC 6901; bounded target escaping and duplicate detection only."),
+        ("SRC-014", "GWTC-5.0 official release", "https://gwosc.org/GWTC-5.0/", "Official GWOSC release structure; zero queries, downloads, rows, likelihoods, or empirical claims."),
+        ("SRC-015", "Te Papa conservation guidelines", "https://www.tepapa.govt.nz/learn/for-museums-and-galleries/how-guides/collection-management/conservation-guidelines", "Official museum guidance informs a synthetic learning lens only; no professional or Maori-authority claim."),
+        ("SRC-016", "Spectrum 5.1 procedures", "https://collectionstrust.org.uk/spectrum/procedures/", "Collections Trust procedure index; synthetic condition and custody fields only."),
+        ("SRC-017", "Canadian Conservation Institute condition reporting", "https://www.canada.ca/en/conservation-institute/services/conservation-preservation-publications/canadian-conservation-institute-notes/condition-reporting-paintings-introduction.html", "Official condition-reporting guidance; no real examination, treatment, or professional result."),
+        ("SRC-018", "WAI evaluation overview", "https://www.w3.org/WAI/test-evaluate/", "W3C guidance; manual and affected-user evaluation remains reserved."),
     ]
     return {
         "schema": f"{SCHEMA}.source-ledger.v2",
@@ -987,10 +993,12 @@ def profile_overview_text(
 ## Executive result
 
 This phase turns an immutable x1 profile into one bounded owner-delta packet.
-The exact owner code adds deterministic path, archive, attestation-shape,
-clock, ordering, mode, encoding, digest, duplicate-member, and leaf-framing
-safeguards. It also removes owner-specific assumptions from the reusable packet
-builder. All fixtures are synthetic and execute only inside the declared delta.
+The exact owner code adds metadata-only decompression budgets, sparse-size
+distinctions, link and Windows-prefix refusal, URI normalization, JSON number
+guards, media-type quarantine, attestation digest and PAE checks, predicate
+version reservation, clock separation, timestamp normalization, and JSON
+Pointer target uniqueness. All fixtures are synthetic and execute only inside
+the declared delta.
 
 ## Core outcome truth
 
@@ -1008,9 +1016,10 @@ witness pairs. None is independent reproduction.
 
 ## Reserved conclusions
 
-No signature was verified and no provenance claim was established. No real
-archive, user, identity, credential, institution, professional practice,
-employment, legal or cultural decision, Maori-authority decision, deployment,
+No decoder, sparse file, signature, provenance verification, real timestamp,
+or network retrieval was invoked. No real museum object, user, identity,
+credential, institution, professional practice, employment, treatment, custody,
+legal or cultural decision, Maori-authority decision, deployment,
 privacy-complete result, accessibility-complete result, exhaustive security,
 AGI or ASI result, consciousness or personhood evidence, Theory-of-Everything
 proof, or Stage 20 authority is claimed. Verdict: `NOT_READY_FOR_STAGE_20`.
@@ -1040,11 +1049,15 @@ def write_profile_skill_and_runner_artifacts(
     portfolio: dict[str, Any],
     owner: str,
     phase: str,
+    test_module: str,
 ) -> tuple[list[str], list[str]]:
     skill_paths: list[str] = []
     for row in portfolio["skills"]["owner_build"]:
         identifier, _, description = row.partition(" ")
-        skill_name = f"ghc-family-lyren-{identifier.casefold().replace('_', '-')}"
+        skill_name = (
+            f"ghc-family-{slugify(owner)}-"
+            f"{identifier.casefold().replace('_', '-')}"
+        )
         root = phase_root / "skills" / skill_name
         skill_text = f"""---
 name: {skill_name}
@@ -1084,16 +1097,16 @@ installed skill and not proof of qualification or authority.
         )
     runner_paths: list[str] = []
     callable_names = [
-        "normalize_archive_member",
-        "validate_windows_component",
-        "bounded_confusable_skeleton",
-        "validate_dsse_envelope",
-        "validate_intoto_statement",
-        "validate_clock_source",
-        "locale_invariant_order",
-        "validate_executable_modes",
-        "validate_digest_algorithm",
-        "hardening_payload",
+        "validate_decompression_budget",
+        "sparse_size_record",
+        "validate_archive_entry_kind",
+        "validate_windows_archive_reference",
+        "normalize_uri_member_reference",
+        "validate_json_number_lexeme",
+        "validate_subject_digest_agreement",
+        "dsse_pae",
+        "clock_separation_record",
+        "validate_unique_json_pointer_targets",
     ]
     for row, callable_name in zip(
         portfolio["runners"]["owner_build"], callable_names, strict=True
@@ -1110,7 +1123,7 @@ installed skill and not proof of qualification or authority.
                 "phase": phase,
                 "entrypoint": "scripts/ghc_family_owner_delta_toolkit.py",
                 "callable": callable_name,
-                "smoke_test": "tests/test_ghc_family_owner_delta_phase_builder.py",
+                "smoke_test": test_module,
                 "repository_scan": False,
                 "unchanged_history_scan": False,
                 "sibling_lane_mutation": False,
@@ -1428,17 +1441,18 @@ verdict remains `NOT_READY_FOR_STAGE_20`.
 ## Assets
 
 Exact Git ancestry, owner attribution, immutable x1, sparse scope, changed-file
-manifests, deterministic package paths, attestation-shape boundaries, retained
-failures, privacy boundaries, and successor-route truth.
+manifests, metadata budgets, path and URI boundaries, numeric and timestamp
+contracts, attestation-shape boundaries, retained failures, privacy boundaries,
+and successor-route truth.
 
 ## Threats and controls
 
-- Reserved, trailing-ambiguous, absolute, drive-qualified, and traversing paths fail closed.
-- Confusable review is bounded and cannot claim complete Unicode security.
-- Duplicate normalized archive members are refused before extraction.
-- DSSE and in-toto checks validate shape only; signature and provenance truth stay false.
-- Clock source, locale-independent ordering, mode policy, UTF-8, digest registry, and semantic commitments are explicit.
-- Merkle leaf fields use tagged length-prefix framing.
+- Decompression budgets inspect synthetic metadata only and invoke no decoder.
+- Sparse logical and stored sizes remain distinct without materializing a file.
+- Archive links, rooted Windows references, URI traversal, malformed numeric lexemes, and duplicate JSON Pointer targets fail closed.
+- Media-type allowlisting never opens content or implies safety.
+- DSSE PAE and in-toto checks validate bounded shape only; signature and provenance truth stay false.
+- Wall-clock rollback, monotonic duration, and explicit-offset timestamps remain distinct and never become trusted time.
 - Scope remains the exact owner delta and literal test dependencies.
 - One canonical success is permitted and never replayed.
 - Exact-title reread and acknowledgement are required for delivery.
@@ -1451,7 +1465,11 @@ cultural ratification, or Maori authority. Residual risks remain exact-gated.
 """,
     )
     skill_paths, runner_paths = write_profile_skill_and_runner_artifacts(
-        phase_root, portfolio, owner, phase
+        phase_root,
+        portfolio,
+        owner,
+        phase,
+        profile["test_modules"][0],
     )
 
     baseline = profile["activation_baseline"]

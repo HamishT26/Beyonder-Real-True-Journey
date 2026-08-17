@@ -14,6 +14,7 @@ import base64
 import binascii
 import hashlib
 import json
+import math
 import os
 import re
 import subprocess
@@ -44,6 +45,19 @@ DECLARED_CLOCK_SOURCES = {
     "monotonic_duration",
 }
 DECLARED_DIGEST_ALGORITHMS = {"sha256"}
+DECLARED_MEDIA_TYPES = {
+    "application/vnd.in-toto+json",
+    "application/vnd.ghc.synthetic-condition+json",
+}
+DECLARED_PREDICATE_TYPES = {
+    "https://example.invalid/ghc/synthetic-condition/v1",
+}
+JSON_NUMBER_LEXEME = re.compile(
+    r"-?(?:0|[1-9][0-9]*)(?:\.[0-9]+)?(?:[eE][+-]?[0-9]+)?\Z"
+)
+URI_UNRESERVED = frozenset(
+    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-._~"
+)
 BOUNDED_CONFUSABLE_MAP = str.maketrans(
     {
         "Α": "A",
@@ -459,6 +473,328 @@ def frame_merkle_leaf(entry: dict[str, Any]) -> bytes:
     return bytes(framed)
 
 
+def validate_decompression_budget(
+    compressed_bytes: int,
+    expanded_bytes: int,
+    maximum_expanded_bytes: int,
+    maximum_ratio: int,
+) -> dict[str, Any]:
+    """Validate synthetic size metadata without decoding or allocating output."""
+
+    values = (
+        compressed_bytes,
+        expanded_bytes,
+        maximum_expanded_bytes,
+        maximum_ratio,
+    )
+    if any(isinstance(value, bool) or not isinstance(value, int) for value in values):
+        raise DeltaError("decompression budget values must be integers")
+    if compressed_bytes <= 0:
+        raise DeltaError("compressed size must be positive")
+    if expanded_bytes < 0 or maximum_expanded_bytes < 0:
+        raise DeltaError("expanded sizes must be nonnegative")
+    if maximum_ratio < 1:
+        raise DeltaError("maximum decompression ratio must be at least one")
+    if expanded_bytes > maximum_expanded_bytes:
+        raise DeltaError("expanded size exceeds declared budget")
+    if expanded_bytes > compressed_bytes * maximum_ratio:
+        raise DeltaError("declared decompression ratio exceeds budget")
+    return {
+        "compressed_bytes": compressed_bytes,
+        "expanded_bytes": expanded_bytes,
+        "maximum_expanded_bytes": maximum_expanded_bytes,
+        "maximum_ratio": maximum_ratio,
+        "decoder_invoked": False,
+        "valid": True,
+    }
+
+
+def sparse_size_record(logical_bytes: int, stored_bytes: int) -> dict[str, Any]:
+    """Represent logical and stored size without creating a sparse file."""
+
+    if any(
+        isinstance(value, bool) or not isinstance(value, int)
+        for value in (logical_bytes, stored_bytes)
+    ):
+        raise DeltaError("sparse size values must be integers")
+    if logical_bytes < 0 or stored_bytes < 0:
+        raise DeltaError("sparse size values must be nonnegative")
+    if stored_bytes > logical_bytes:
+        raise DeltaError("stored size cannot exceed logical size")
+    return {
+        "logical_bytes": logical_bytes,
+        "stored_bytes": stored_bytes,
+        "sparse": stored_bytes < logical_bytes,
+        "file_materialized": False,
+        "valid": True,
+    }
+
+
+def validate_archive_entry_kind(kind: str) -> str:
+    """Allow only non-link synthetic archive entry kinds."""
+
+    if not isinstance(kind, str) or not kind or kind.startswith("-"):
+        raise DeltaError("archive entry kind must be a literal label")
+    normalized = kind.strip().casefold()
+    if normalized in {"symlink", "hardlink"}:
+        raise DeltaError("archive link metadata is not allowed")
+    if normalized not in {"regular_file", "directory"}:
+        raise DeltaError("unknown archive entry kind")
+    return normalized
+
+
+def validate_windows_archive_reference(raw: str) -> str:
+    """Refuse UNC, device, extended, rooted, and drive-qualified forms."""
+
+    if not isinstance(raw, str) or not raw:
+        raise DeltaError("Windows archive reference must be nonempty text")
+    lowered = raw.casefold()
+    if raw.startswith(("\\\\", "//", "\\", "/")):
+        raise DeltaError("rooted or UNC archive reference is not allowed")
+    if lowered.startswith(("\\\\?\\", "\\\\.\\", "//?/", "//./")):
+        raise DeltaError("device or extended Windows path is not allowed")
+    if re.match(r"^[A-Za-z]:", raw):
+        raise DeltaError("drive-qualified Windows path is not allowed")
+    return normalize_archive_member(raw)
+
+
+def normalize_uri_member_reference(raw: str) -> str:
+    """Normalize one URI-shaped member path once, without dereferencing it."""
+
+    if not isinstance(raw, str) or not raw:
+        raise DeltaError("URI member reference must be nonempty text")
+    if any(char.isspace() or ord(char) < 32 for char in raw):
+        raise DeltaError("URI member reference contains whitespace or control data")
+    split = urlsplit(raw)
+    if split.scheme or split.netloc or split.query or split.fragment:
+        raise DeltaError("URI member reference must contain a relative path only")
+    value = split.path
+    output: list[str] = []
+    index = 0
+    while index < len(value):
+        char = value[index]
+        if char != "%":
+            output.append(char)
+            index += 1
+            continue
+        if index + 2 >= len(value) or not re.fullmatch(
+            r"[0-9A-Fa-f]{2}", value[index + 1 : index + 3]
+        ):
+            raise DeltaError("URI member reference contains malformed percent encoding")
+        octet = int(value[index + 1 : index + 3], 16)
+        decoded = chr(octet)
+        if decoded in URI_UNRESERVED:
+            output.append(decoded)
+        else:
+            output.append(f"%{octet:02X}")
+        index += 3
+    return validate_windows_archive_reference("".join(output))
+
+
+def validate_json_number_lexeme(
+    raw: str,
+    maximum_characters: int = 64,
+    maximum_absolute_exponent: int = 308,
+) -> str:
+    """Validate a bounded JSON number spelling before numeric conversion."""
+
+    if not isinstance(raw, str) or not raw:
+        raise DeltaError("JSON number lexeme must be nonempty text")
+    if len(raw) > maximum_characters:
+        raise DeltaError("JSON number lexeme exceeds the declared character budget")
+    if not JSON_NUMBER_LEXEME.fullmatch(raw):
+        raise DeltaError("invalid JSON number lexeme")
+    exponent = re.search(r"[eE]([+-]?[0-9]+)\Z", raw)
+    if exponent and abs(int(exponent.group(1))) > maximum_absolute_exponent:
+        raise DeltaError("JSON number exponent exceeds the declared budget")
+    return raw
+
+
+def validate_schema_finite_number(value: int | float) -> int | float:
+    """Refuse booleans, nonfinite floats, and schema-forbidden negative zero."""
+
+    if isinstance(value, bool) or not isinstance(value, (int, float)):
+        raise DeltaError("schema number must be an integer or float")
+    if isinstance(value, float):
+        if not math.isfinite(value):
+            raise DeltaError("nonfinite schema number is not allowed")
+        if value == 0.0 and math.copysign(1.0, value) < 0:
+            raise DeltaError("negative zero is not allowed by this schema")
+    return value
+
+
+def validate_media_type(
+    value: str,
+    allowlist: Iterable[str] = DECLARED_MEDIA_TYPES,
+) -> str:
+    """Apply a closed media-type allowlist without opening any payload."""
+
+    if not isinstance(value, str) or not value or value.startswith("-"):
+        raise DeltaError("media type must be a literal label")
+    normalized = value.strip().casefold()
+    if ";" in normalized or not re.fullmatch(
+        r"[a-z0-9][a-z0-9!#$&^_.+-]*/[a-z0-9][a-z0-9!#$&^_.+-]*",
+        normalized,
+    ):
+        raise DeltaError("media type is not in the bounded parameter-free form")
+    allowed = set(ensure_unique((item.casefold() for item in allowlist), "media type"))
+    if normalized not in allowed:
+        raise DeltaError("media type is not declared")
+    return normalized
+
+
+def validate_subject_digest_agreement(
+    subjects: Iterable[dict[str, Any]],
+    declared_algorithm: str = "sha256",
+) -> dict[str, Any]:
+    """Validate synthetic subject digests without establishing provenance."""
+
+    algorithm = validate_digest_algorithm(declared_algorithm)
+    rows = list(subjects)
+    if not rows:
+        raise DeltaError("attestation subjects must be nonempty")
+    names: list[str] = []
+    expected_length = 64 if algorithm == "sha256" else 0
+    for row in rows:
+        if not isinstance(row, dict):
+            raise DeltaError("attestation subject must be an object")
+        name = row.get("name")
+        digest = row.get("digest")
+        if not isinstance(name, str) or not name:
+            raise DeltaError("attestation subject name must be nonempty")
+        if not isinstance(digest, dict) or set(digest) != {algorithm}:
+            raise DeltaError("attestation digest algorithm disagrees with policy")
+        encoded = digest[algorithm]
+        if not isinstance(encoded, str) or not re.fullmatch(
+            rf"[0-9a-f]{{{expected_length}}}", encoded
+        ):
+            raise DeltaError("attestation digest has the wrong width or encoding")
+        names.append(name)
+    ensure_unique(names, "attestation subject names")
+    return {
+        "subject_count": len(rows),
+        "algorithm": algorithm,
+        "provenance_verified": False,
+        "valid": True,
+    }
+
+
+def dsse_pae(payload_type: str, payload: bytes) -> bytes:
+    """Build a bounded ASCII-type DSSE PAE vector without signing it."""
+
+    if not isinstance(payload_type, str) or not payload_type:
+        raise DeltaError("DSSE payload type must be nonempty text")
+    try:
+        encoded_type = payload_type.encode("ascii", errors="strict")
+    except UnicodeEncodeError as exc:
+        raise DeltaError("bounded DSSE payload type must be ASCII") from exc
+    if any(byte < 0x21 or byte > 0x7E for byte in encoded_type):
+        raise DeltaError("bounded DSSE payload type contains whitespace or control data")
+    if not isinstance(payload, bytes):
+        raise DeltaError("DSSE payload must be bytes")
+    return (
+        b"DSSEv1 "
+        + str(len(encoded_type)).encode("ascii")
+        + b" "
+        + encoded_type
+        + b" "
+        + str(len(payload)).encode("ascii")
+        + b" "
+        + payload
+    )
+
+
+def validate_predicate_type(
+    value: str,
+    allowlist: Iterable[str] = DECLARED_PREDICATE_TYPES,
+) -> str:
+    """Reserve exact synthetic in-toto predicate versions."""
+
+    if not isinstance(value, str) or not value or value.startswith("-"):
+        raise DeltaError("predicate type must be a literal URI")
+    split = urlsplit(value)
+    if split.scheme != "https" or not split.netloc or split.fragment:
+        raise DeltaError("predicate type must be an absolute HTTPS URI")
+    allowed = set(ensure_unique(allowlist, "predicate type"))
+    if value not in allowed:
+        raise DeltaError("predicate type is not declared")
+    return value
+
+
+def clock_separation_record(
+    previous_wall_seconds: int | float,
+    current_wall_seconds: int | float,
+    monotonic_elapsed_seconds: int | float,
+) -> dict[str, Any]:
+    """Keep wall-clock rollback detection separate from elapsed duration."""
+
+    values = (
+        previous_wall_seconds,
+        current_wall_seconds,
+        monotonic_elapsed_seconds,
+    )
+    for value in values:
+        validate_schema_finite_number(value)
+    if monotonic_elapsed_seconds < 0:
+        raise DeltaError("monotonic elapsed duration must be nonnegative")
+    return {
+        "wall_clock_rollback_detected": current_wall_seconds < previous_wall_seconds,
+        "monotonic_elapsed_seconds": monotonic_elapsed_seconds,
+        "trusted_time": False,
+        "valid": True,
+    }
+
+
+def normalize_rfc3339_utc(value: str) -> str:
+    """Normalize a strict explicit-offset timestamp without civil-time inference."""
+
+    if not isinstance(value, str) or not re.fullmatch(
+        r"[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}(?:\.[0-9]+)?(?:Z|[+-][0-9]{2}:[0-9]{2})",
+        value,
+    ):
+        raise DeltaError("timestamp is not in the bounded RFC 3339 form")
+    if value.endswith("-00:00"):
+        raise DeltaError("unknown local offset is outside the bounded UTC normalizer")
+    try:
+        parsed = datetime.fromisoformat(value[:-1] + "+00:00" if value.endswith("Z") else value)
+    except ValueError as exc:
+        raise DeltaError("timestamp cannot be parsed") from exc
+    if parsed.utcoffset() is None:
+        raise DeltaError("timestamp lacks an explicit offset")
+    normalized = parsed.astimezone(timezone.utc).isoformat()
+    return normalized.replace("+00:00", "Z")
+
+
+def normalize_json_pointer(pointer: str) -> str:
+    """Canonicalize a bounded non-root JSON Pointer target."""
+
+    if not isinstance(pointer, str) or not pointer.startswith("/"):
+        raise DeltaError("JSON Pointer target must be a non-root absolute pointer")
+    normalized_tokens: list[str] = []
+    for token in pointer[1:].split("/"):
+        decoded: list[str] = []
+        index = 0
+        while index < len(token):
+            if token[index] != "~":
+                decoded.append(token[index])
+                index += 1
+                continue
+            if index + 1 >= len(token) or token[index + 1] not in {"0", "1"}:
+                raise DeltaError("JSON Pointer contains an invalid escape")
+            decoded.append("~" if token[index + 1] == "0" else "/")
+            index += 2
+        canonical = "".join(decoded).replace("~", "~0").replace("/", "~1")
+        normalized_tokens.append(canonical)
+    return "/" + "/".join(normalized_tokens)
+
+
+def validate_unique_json_pointer_targets(values: Iterable[str]) -> list[str]:
+    normalized = [normalize_json_pointer(value) for value in values]
+    if len(normalized) != len(set(normalized)):
+        raise DeltaError("duplicate normalized JSON Pointer targets")
+    return normalized
+
+
 def merkle_root(entries: Iterable[dict[str, Any]]) -> str:
     leaves: list[bytes] = []
     for entry in sorted(entries, key=lambda row: row["path"]):
@@ -484,34 +820,7 @@ def merkle_root(entries: Iterable[dict[str, Any]]) -> str:
 
 
 def hardening_payload() -> dict[str, Any]:
-    """Run Lyren's bounded positive/negative synthetic hardening fixtures."""
-
-    positive_dsse = {
-        "payloadType": "application/vnd.example.synthetic",
-        "payload": base64.b64encode(b"synthetic payload").decode("ascii"),
-        "signatures": [
-            {
-                "keyid": "synthetic-key",
-                "sig": base64.b64encode(b"not-a-real-signature").decode("ascii"),
-            }
-        ],
-    }
-    positive_statement = {
-        "_type": "https://in-toto.io/Statement/v1",
-        "subject": [
-            {"name": "synthetic.bin", "digest": {"sha256": "00" * 32}}
-        ],
-        "predicateType": "https://example.invalid/predicate/synthetic/v1",
-        "predicate": {"synthetic": True},
-    }
-    base_leaf = {
-        "path": "a/b.txt",
-        "mode": "100644",
-        "git_blob": "0" * 40,
-        "bytes": 3,
-        "sha256": "0" * 64,
-    }
-    alternate_leaf = dict(base_leaf, path="a", mode="b.txt100644")
+    """Run Ilyra's bounded positive/negative synthetic hardening fixtures."""
 
     def rejection(identifier: str, label: str, callback: Any) -> dict[str, Any]:
         try:
@@ -527,114 +836,112 @@ def hardening_payload() -> dict[str, Any]:
 
     records = [
         rejection(
-            "L6625-HF-001",
-            "Windows reserved device component",
-            lambda: validate_windows_component("CON.txt"),
+            "I6626-HF-001",
+            "expanded metadata over decompression budget",
+            lambda: validate_decompression_budget(10, 101, 100, 20),
         ),
         rejection(
-            "L6625-HF-002",
-            "trailing-dot component",
-            lambda: validate_windows_component("report."),
-        ),
-        {
-            "fixture_id": "L6625-HF-003",
-            "failed_witness": "bounded Greek-alpha confusable",
-            "rejected": bounded_confusable_skeleton("PΑYLOAD")
-            == bounded_confusable_skeleton("PAYLOAD"),
-        },
-        rejection(
-            "L6625-HF-004",
-            "backslash parent traversal archive member",
-            lambda: normalize_archive_member("safe\\..\\escape.txt"),
+            "I6626-HF-002",
+            "stored sparse size greater than logical size",
+            lambda: sparse_size_record(10, 11),
         ),
         rejection(
-            "L6625-HF-005",
-            "malformed DSSE payload",
-            lambda: validate_dsse_envelope(dict(positive_dsse, payload="%%%")),
+            "I6626-HF-003",
+            "archive symlink metadata",
+            lambda: validate_archive_entry_kind("symlink"),
         ),
         rejection(
-            "L6625-HF-006",
-            "missing in-toto subject digest",
-            lambda: validate_intoto_statement(
-                dict(positive_statement, subject=[{"name": "synthetic.bin"}])
+            "I6626-HF-004",
+            "extended Windows device path",
+            lambda: validate_windows_archive_reference(r"\\?\C:\escape.txt"),
+        ),
+        rejection(
+            "I6626-HF-005",
+            "percent-encoded parent URI member",
+            lambda: normalize_uri_member_reference("safe/%2e%2e/escape.txt"),
+        ),
+        rejection(
+            "I6626-HF-006",
+            "leading-zero JSON number lexeme",
+            lambda: validate_json_number_lexeme("01"),
+        ),
+        rejection(
+            "I6626-HF-007",
+            "schema-forbidden negative zero",
+            lambda: validate_schema_finite_number(-0.0),
+        ),
+        rejection(
+            "I6626-HF-008",
+            "unknown content type",
+            lambda: validate_media_type("application/octet-stream"),
+        ),
+        rejection(
+            "I6626-HF-009",
+            "attestation subject digest algorithm disagreement",
+            lambda: validate_subject_digest_agreement(
+                [{"name": "object.json", "digest": {"sha512": "00" * 64}}]
             ),
         ),
         rejection(
-            "L6625-HF-007",
-            "unknown clock source",
-            lambda: validate_clock_source("ambient_unspecified"),
+            "I6626-HF-010",
+            "non-ASCII DSSE payload type outside the bounded subset",
+            lambda: dsse_pae("application/vnd.ghc.mānuka", b"payload"),
         ),
-        {
-            "fixture_id": "L6625-HF-008",
-            "failed_witness": "ambient-order permutation",
-            "rejected": locale_invariant_order(["z", "ä", "A"])
-            == locale_invariant_order(["A", "z", "ä"]),
-        },
-        {
-            "fixture_id": "L6625-HF-009",
-            "failed_witness": "observation-time-only semantic mutation",
-            "rejected": semantic_content_sha256(
-                {"value": 1, "observed_at_utc": "A"}
-            )
-            == semantic_content_sha256({"value": 1, "observed_at_utc": "B"}),
-        },
         rejection(
-            "L6625-HF-010",
-            "unallowlisted executable mode",
-            lambda: validate_executable_modes(
-                [{"path": "bin/tool.py", "mode": "100755"}], []
+            "I6626-HF-011",
+            "unreviewed in-toto predicate version",
+            lambda: validate_predicate_type(
+                "https://example.invalid/ghc/synthetic-condition/v2"
             ),
         ),
         rejection(
-            "L6625-HF-011",
-            "malformed UTF-8 blob",
-            lambda: decode_utf8_strict(b"\xff\xfe", "fixture"),
+            "I6626-HF-012",
+            "negative monotonic duration",
+            lambda: clock_separation_record(10, 9, -1),
         ),
         rejection(
-            "L6625-HF-012",
-            "unknown digest algorithm",
-            lambda: validate_digest_algorithm("sha1"),
+            "I6626-HF-013",
+            "offset-free timestamp",
+            lambda: normalize_rfc3339_utc("2026-08-18T10:00:00"),
         ),
         rejection(
-            "L6625-HF-013",
-            "duplicate normalized archive member",
-            lambda: normalize_unique_archive_members(["a/./b.txt", "a/b.txt"]),
+            "I6626-HF-014",
+            "duplicate JSON Pointer target",
+            lambda: validate_unique_json_pointer_targets(["/a~1b", "/a~1b"]),
         ),
-        {
-            "fixture_id": "L6625-HF-014",
-            "failed_witness": "unframed field-concatenation ambiguity",
-            "rejected": frame_merkle_leaf(base_leaf)
-            != frame_merkle_leaf(alternate_leaf),
-        },
     ]
     if not all(record.get("rejected") is True for record in records):
         raise DeltaError("one or more hardening negative fixtures was not detected")
     positive_checks = [
-        validate_windows_component("console.txt") == "console.txt",
-        validate_windows_component("report.v1") == "report.v1",
-        bounded_confusable_skeleton("ordinary") == "ordinary",
-        normalize_archive_member("safe/./nested/file.txt")
-        == "safe/nested/file.txt",
-        validate_dsse_envelope(positive_dsse)["signature_verified"] is False,
-        validate_intoto_statement(positive_statement)["provenance_verified"]
+        validate_decompression_budget(10, 100, 100, 10)["decoder_invoked"] is False,
+        sparse_size_record(100, 10)["file_materialized"] is False,
+        validate_archive_entry_kind("regular_file") == "regular_file",
+        validate_windows_archive_reference("safe/nested.txt") == "safe/nested.txt",
+        normalize_uri_member_reference("safe/%7eitem.txt") == "safe/~item.txt",
+        validate_json_number_lexeme("-1.25e+3") == "-1.25e+3",
+        validate_schema_finite_number(1.25) == 1.25,
+        validate_media_type("application/vnd.in-toto+json")
+        == "application/vnd.in-toto+json",
+        validate_subject_digest_agreement(
+            [{"name": "object.json", "digest": {"sha256": "00" * 32}}]
+        )["provenance_verified"]
         is False,
-        validate_clock_source("caller_supplied_utc") == "caller_supplied_utc",
-        locale_invariant_order(["z", "ä", "A"]) == ["A", "z", "ä"],
-        semantic_content_sha256({"value": 1, "observed_at_utc": "A"})
-        != semantic_content_sha256({"value": 2, "observed_at_utc": "A"}),
-        validate_executable_modes(
-            [{"path": "bin/tool.py", "mode": "100755"}], ["bin/tool.py"]
-        )["valid"],
-        decode_utf8_strict("mānuka".encode("utf-8")) == "mānuka",
-        validate_digest_algorithm(" SHA256 ") == "sha256",
-        normalize_unique_archive_members(["a.txt", "b/c.txt"])
-        == ["a.txt", "b/c.txt"],
-        frame_merkle_leaf(base_leaf) == frame_merkle_leaf(dict(base_leaf)),
+        dsse_pae("application/vnd.in-toto+json", b"payload")
+        == b"DSSEv1 28 application/vnd.in-toto+json 7 payload",
+        validate_predicate_type(
+            "https://example.invalid/ghc/synthetic-condition/v1"
+        )
+        == "https://example.invalid/ghc/synthetic-condition/v1",
+        clock_separation_record(10, 9, 1)["wall_clock_rollback_detected"] is True,
+        normalize_rfc3339_utc("2026-08-18T22:00:00+12:00")
+        == "2026-08-18T10:00:00Z",
+        validate_unique_json_pointer_targets(["/condition", "/custody/state"])
+        == ["/condition", "/custody/state"],
     ]
     if not all(positive_checks):
         raise DeltaError("one or more hardening passing fixtures failed")
     return {
-        "schema": f"{SCHEMA}.hardening-fixtures.v1",
+        "schema": f"{SCHEMA}.hardening-fixtures.v2",
         "negative_fixture_count": len(records),
         "rejected_fixture_count": sum(
             record["rejected"] is True for record in records
@@ -646,7 +953,7 @@ def hardening_payload() -> dict[str, Any]:
         "provenance_verified": False,
         "exhaustive_security": False,
         "valid": True,
-        "boundary": "Bounded synthetic software fixtures only; not exhaustive platform safety, cryptographic verification, provenance truth, production assurance, independent reproduction, or authority.",
+        "boundary": "Bounded synthetic metadata, byte, path, numeric, attestation-shape, and time fixtures only; not decompression, sparse-file measurement, exhaustive platform safety, cryptographic verification, provenance truth, trusted time, production assurance, independent reproduction, professional validation, or authority.",
     }
 
 
