@@ -126,6 +126,13 @@ class DeltaFixtureTests(unittest.TestCase):
         self.assertTrue(payload["valid"])
         self.assertEqual(payload["finding_count"], 0)
 
+    def test_security_rules_do_not_match_their_own_declarations(self) -> None:
+        source = MODULE_PATH.read_text(encoding="utf-8")
+        matches = {
+            label for label, pattern in toolkit.SECURITY_PATTERNS.items() if pattern.search(source)
+        }
+        self.assertEqual(matches, set())
+
     def test_file_budget_uses_materialized_files_and_exact_delta(self) -> None:
         payload = toolkit.file_budget_payload(self.fixture.root, self.fixture.source, self.target, 2000)
         self.assertTrue(payload["valid"])

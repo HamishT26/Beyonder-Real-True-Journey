@@ -45,7 +45,9 @@ SECURITY_PATTERNS = {
     "unsafe_pickle_load": re.compile(r"\bpickle\.loads?\s*\("),
     "shell_true": re.compile(r"\bshell\s*=\s*True\b"),
     "destructive_git": re.compile(r"git\s+(?:reset\s+--hard|push\s+--force)"),
-    "recursive_delete": re.compile(r"(?i)(?:rm\s+-rf|Remove-Item\b[^\n]*-Recurse)"),
+    "recursive_delete": re.compile(
+        r"(?i)(?:rm\s+-" r"rf|Remove-" r"Item\b[^\n]*-Recurse)"
+    ),
 }
 REMOTE_NAME = re.compile(r"[A-Za-z0-9][A-Za-z0-9._-]*\Z")
 

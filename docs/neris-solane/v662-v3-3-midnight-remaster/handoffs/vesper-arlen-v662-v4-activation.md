@@ -4666,11 +4666,14 @@ exposed two Windows-specific facts: a tab-bearing filename could not be created
 on the fixture filesystem, and Python's ordinary exclusive text open followed
 a dangling symlink. The bounded recovery replaced the former with a direct
 NUL-stream parser fixture and the latter with an OS-specific safe handle. The
-isolated module then passed 25/25. The corrected successor-visible overlay is
-23,083 effective negatives and 7,677 Method Flow methods. These are same-owner
+isolated module then passed 25/25. A later changed-Python pattern check matched
+the recursive-delete rule's own declaration and earned zero credit; splitting
+the sensitive literal and adding a self-declaration regression produced a
+26/26 isolated pass. The corrected successor-visible overlay is
+23,084 effective negatives and 7,678 Method Flow methods. These are same-owner
 software controls only and make no exhaustive-security or production claim.
 
-Five additional Method Flow records are retained:
+Six additional Method Flow records are retained:
 
 - `V6623M-M006`: validate the configured remote and branch before any fresh-live
   Git operation; reject option-like values and use end-of-options delimiters.
@@ -4684,6 +4687,9 @@ Five additional Method Flow records are retained:
 - `V6623M-M010`: when command policy rejects cleanup of an ignored bytecode
   file, retain and count it rather than bypassing policy, and disable future
   bytecode writes in the bounded test process.
+- `V6623M-M011`: prevent changed-Python security rules from matching their own
+  declarations, and preserve the isolated false-positive check as zero-credit
+  evidence.
 
 
 ## THOS research handoff

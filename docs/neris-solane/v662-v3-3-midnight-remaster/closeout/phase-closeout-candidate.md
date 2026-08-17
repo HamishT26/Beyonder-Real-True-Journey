@@ -16,7 +16,7 @@ descendant, not a rewritten commit.
 The durable portfolio contains 50 safe-now and successor records,
 30 candidate records, 15 exact or blocked records,
 21 skill records, 20 runner records, and 60
-CLEAN/FIX/REFINE records. The committed Vesper baton contains 39508
+CLEAN/FIX/REFINE records. The committed Vesper baton contains 39557
 words, above the 10,000-word minimum and below the 100,000-word maximum.
 
 ## Source and lifecycle
@@ -101,20 +101,25 @@ rejected the tab-filename fixture before Git ingestion, and Python's ordinary
 exclusive text open followed a dangling Windows symlink. The bounded recovery
 used a direct NUL-stream fixture and an OS-specific exclusive handle; the same
 isolated module then passed 25/25. Neither result is the canonical aggregate.
+A subsequent changed-Python pattern preflight matched the recursive-delete
+rule's own declaration and also earned zero credit. Splitting the sensitive
+literal plus a self-declaration regression removed that false positive; the
+isolated module then passed 26/26.
 A new exact-final security scan remains mandatory after the additive correction
 is committed and pushed and before the one canonical invocation.
 
 ## Method Flow
 
-Ten new operational failures are retained. The first five are a combined source probe with no
+Eleven new operational failures are retained. The first five are a combined source probe with no
 attributable output, initial full materialization before the late sparse rule,
 conflicting route examples, one rejected coordinated patch whose exact text did
 not match, and one roster-validator call using an obsolete argument shape. Each
-has a bounded passing recovery. The other five are the two initial security
+has a bounded passing recovery. The other six are the two initial security
 findings, a rejected security-progress unit change, and the first failed
 hardening test run, plus two command-policy rejections while trying to remove
 one ignored bytecode file. The file remains counted in the 37-file materialized
-total, and future bounded test runs disable bytecode writes. None of the
+total, and future bounded test runs disable bytecode writes. The last retained
+failure is the changed-Python rule matching its own declaration. None of the
 failures is erased by the recovery,
 and none earns aggregate-success credit.
 
