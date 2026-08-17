@@ -9,20 +9,29 @@ from an exact Git range or an explicit literal allowlist.
 from __future__ import annotations
 
 import argparse
+import ast
 import hashlib
 import json
 import os
 import re
 import subprocess
 import sys
+import unicodedata
+from ast import parse as parse_python_ast
 from collections import Counter
 from datetime import datetime, timezone
 from pathlib import Path, PurePosixPath
 from typing import Any, Iterable
+from urllib.parse import urlsplit
 
 
-SCHEMA = "ghc.family.owner-delta-toolkit.v1"
+SCHEMA = "ghc.family.owner-delta-toolkit.v2"
 ALLOWED_OUTCOMES = {"completed", "represented", "open_gap", "exact_gate"}
+ALLOWED_BLOB_MODES = {"100644", "100755"}
+DISALLOWED_BIDI = {
+    "LRE", "RLE", "LRO", "RLO", "PDF", "LRI", "RLI", "FSI", "PDI",
+}
+UNSAFE_LINK_SCHEMES = {"app", "codex", "data", "file", "javascript", "vscode"}
 PRIVATE_PATTERNS = {
     "private_absolute_path": re.compile(
         r"(?i)(?:[A-Z]:\\(?:Users|GHC-Archives)\\|/(?:home|Users)/)"
@@ -64,6 +73,60 @@ def sha256_bytes(data: bytes) -> str:
     return hashlib.sha256(data).hexdigest()
 
 
+def canonical_json_bytes(value: Any) -> bytes:
+    """Return a deterministic UTF-8 JSON encoding for bounded receipt commitments."""
+    try:
+        rendered = json.dumps(
+            value,
+            ensure_ascii=False,
+            allow_nan=False,
+            separators=(",", ":"),
+            sort_keys=True,
+        )
+    except (TypeError, ValueError) as exc:
+        raise DeltaError(f"value is not canonically JSON encodable: {exc}") from exc
+    return rendered.encode("utf-8")
+
+
+def canonical_json_sha256(value: Any) -> str:
+    return sha256_bytes(canonical_json_bytes(value))
+
+
+def canonical_owner(value: str) -> str:
+    owner = value.strip()
+    if not owner:
+        raise DeltaError("canonical owner must be explicit")
+    return owner
+
+
+def strict_json_loads(raw: bytes | str, label: str = "JSON") -> Any:
+    """Decode UTF-8 JSON while refusing duplicate object keys."""
+    if isinstance(raw, bytes):
+        try:
+            text = raw.decode("utf-8")
+        except UnicodeDecodeError as exc:
+            raise DeltaError(f"{label} is not UTF-8: {exc}") from exc
+    else:
+        text = raw
+
+    def reject_duplicates(pairs: list[tuple[str, Any]]) -> dict[str, Any]:
+        result: dict[str, Any] = {}
+        duplicates: list[str] = []
+        for key, value in pairs:
+            if key in result:
+                duplicates.append(key)
+            else:
+                result[key] = value
+        if duplicates:
+            raise DeltaError(f"{label} contains duplicate object keys: {sorted(set(duplicates))}")
+        return result
+
+    try:
+        return json.loads(text, object_pairs_hook=reject_duplicates)
+    except json.JSONDecodeError as exc:
+        raise DeltaError(f"{label} parse failed: {exc}") from exc
+
+
 def normalize_relative(raw: str) -> str:
     candidate = raw.replace("\\", "/")
     if re.match(r"^[A-Za-z]:", candidate):
@@ -72,6 +135,75 @@ def normalize_relative(raw: str) -> str:
     if path.is_absolute() or not path.parts or any(part in {"", ".", ".."} for part in path.parts):
         raise DeltaError(f"non-literal repository-relative path rejected: {raw}")
     return path.as_posix()
+
+
+def path_security_record(raw: str) -> dict[str, Any]:
+    path = normalize_relative(raw)
+    nfc = unicodedata.normalize("NFC", path)
+    disallowed: list[dict[str, str]] = []
+    for character in path:
+        category = unicodedata.category(character)
+        bidi = unicodedata.bidirectional(character)
+        if category == "Cc" or bidi in DISALLOWED_BIDI:
+            disallowed.append(
+                {
+                    "codepoint": f"U+{ord(character):04X}",
+                    "category": category,
+                    "bidi": bidi or "NONE",
+                }
+            )
+    return {
+        "path": path,
+        "nfc": nfc,
+        "casefold_nfc": nfc.casefold(),
+        "already_nfc": path == nfc,
+        "disallowed_controls": disallowed,
+        "valid": path == nfc and not disallowed,
+    }
+
+
+def audit_paths(paths: Iterable[str]) -> dict[str, Any]:
+    records = [path_security_record(path) for path in ensure_unique(paths, "path-audit")]
+    nfc_groups: dict[str, list[str]] = {}
+    casefold_groups: dict[str, list[str]] = {}
+    for record in records:
+        nfc_groups.setdefault(record["nfc"], []).append(record["path"])
+        casefold_groups.setdefault(record["casefold_nfc"], []).append(record["path"])
+    nfc_collisions = [sorted(group) for group in nfc_groups.values() if len(group) > 1]
+    casefold_collisions = [sorted(group) for group in casefold_groups.values() if len(group) > 1]
+    issues = [record["path"] for record in records if not record["valid"]]
+    return {
+        "records": records,
+        "nfc_collisions": sorted(nfc_collisions),
+        "casefold_collisions": sorted(casefold_collisions),
+        "invalid_paths": sorted(issues),
+        "valid": not issues and not nfc_collisions and not casefold_collisions,
+        "boundary": "Exact allowlist Unicode and collision review only; not exhaustive cross-platform path assurance.",
+    }
+
+
+def merkle_root(entries: Iterable[dict[str, Any]]) -> str:
+    leaves: list[bytes] = []
+    for entry in sorted(entries, key=lambda row: row["path"]):
+        stable = {
+            "path": entry["path"],
+            "status": entry["status"],
+            "mode": entry.get("mode"),
+            "git_blob": entry.get("git_blob"),
+            "sha256": entry.get("sha256"),
+        }
+        leaves.append(hashlib.sha256(b"\x00" + canonical_json_bytes(stable)).digest())
+    if not leaves:
+        return sha256_bytes(b"")
+    level = leaves
+    while len(level) > 1:
+        if len(level) % 2:
+            level = [*level, level[-1]]
+        level = [
+            hashlib.sha256(b"\x01" + level[index] + level[index + 1]).digest()
+            for index in range(0, len(level), 2)
+        ]
+    return level[0].hex()
 
 
 def ensure_unique(values: Iterable[str], label: str) -> list[str]:
@@ -174,17 +306,40 @@ def delta_rows(repo: Path, source: str, target: str) -> list[dict[str, Any]]:
     return rows
 
 
-def blob_at(repo: Path, commit: str, relative_path: str) -> bytes:
+def tree_entry(repo: Path, commit: str, relative_path: str) -> dict[str, str] | None:
     path = normalize_relative(relative_path)
-    result = subprocess.run(
-        ["git", "-C", str(repo), "show", f"{commit}:{path}"],
-        stdout=subprocess.PIPE,
-        stderr=subprocess.PIPE,
-        check=False,
-    )
-    if result.returncode:
-        raise DeltaError(f"unable to read exact blob {path} at {commit}")
+    raw = run_git_bytes(repo, "ls-tree", "-z", commit, "--", path).stdout
+    if not raw:
+        return None
+    records = raw.split(b"\0")
+    if records[-1] != b"" or len(records) != 2:
+        raise DeltaError(f"ambiguous tree entry for {path}")
+    try:
+        metadata, observed_raw = records[0].split(b"\t", 1)
+        mode_raw, type_raw, object_raw = metadata.split(b" ")
+        observed = observed_raw.decode("utf-8", errors="strict")
+        mode = mode_raw.decode("ascii", errors="strict")
+        object_type = type_raw.decode("ascii", errors="strict")
+        object_id = object_raw.decode("ascii", errors="strict")
+    except (ValueError, UnicodeDecodeError) as exc:
+        raise DeltaError(f"malformed tree entry for {path}") from exc
+    if normalize_relative(observed) != path or not re.fullmatch(r"[0-9a-f]{40}", object_id):
+        raise DeltaError(f"unexpected tree entry for {path}")
+    return {"mode": mode, "object_type": object_type, "object_id": object_id}
+
+
+def blob_object(repo: Path, object_id: str) -> bytes:
+    if not re.fullmatch(r"[0-9a-f]{40}", object_id):
+        raise DeltaError("invalid blob object id")
+    result = run_git_bytes(repo, "cat-file", "blob", object_id)
     return result.stdout
+
+
+def blob_at(repo: Path, commit: str, relative_path: str) -> bytes:
+    entry = tree_entry(repo, commit, relative_path)
+    if entry is None or entry["object_type"] != "blob":
+        raise DeltaError(f"unable to read exact blob {relative_path} at {commit}")
+    return blob_object(repo, entry["object_id"])
 
 
 def manifest_payload(repo: Path, source: str, target: str) -> dict[str, Any]:
@@ -193,26 +348,50 @@ def manifest_payload(repo: Path, source: str, target: str) -> dict[str, Any]:
     entries: list[dict[str, Any]] = []
     for row in delta_rows(repo, source_id, target_id):
         entry = dict(row)
+        prior_path = row["old_path"] or row["path"]
+        old_entry = tree_entry(repo, source_id, prior_path)
+        new_entry = tree_entry(repo, target_id, row["path"])
         if row["status"].startswith("D"):
-            entry.update({"bytes": 0, "sha256": None, "git_blob": None, "mode": None})
+            entry.update(
+                {
+                    "bytes": 0,
+                    "sha256": None,
+                    "git_blob": None,
+                    "mode": None,
+                    "object_type": None,
+                    "old_mode": old_entry["mode"] if old_entry else None,
+                    "old_object_type": old_entry["object_type"] if old_entry else None,
+                }
+            )
         else:
-            content = blob_at(repo, target_id, row["path"])
-            tree_line = run_git(repo, "ls-tree", target_id, "--", row["path"]).stdout.strip()
-            if not tree_line:
+            if new_entry is None:
                 raise DeltaError(f"missing target tree entry for {row['path']}")
-            metadata, observed_path = tree_line.split("\t", 1)
-            mode, object_type, git_blob = metadata.split()
-            if normalize_relative(observed_path) != row["path"] or object_type != "blob":
-                raise DeltaError(f"unexpected tree entry for {row['path']}")
+            if new_entry["object_type"] != "blob" or new_entry["mode"] not in ALLOWED_BLOB_MODES:
+                raise DeltaError(
+                    f"unsupported target entry kind for {row['path']}: "
+                    f"{new_entry['mode']} {new_entry['object_type']}"
+                )
+            content = blob_object(repo, new_entry["object_id"])
             entry.update(
                 {
                     "bytes": len(content),
                     "sha256": sha256_bytes(content),
-                    "git_blob": git_blob,
-                    "mode": mode,
+                    "git_blob": new_entry["object_id"],
+                    "mode": new_entry["mode"],
+                    "object_type": new_entry["object_type"],
+                    "old_mode": old_entry["mode"] if old_entry else None,
+                    "old_object_type": old_entry["object_type"] if old_entry else None,
                 }
             )
         entries.append(entry)
+    path_audit = audit_paths(row["path"] for row in entries)
+    if not path_audit["valid"]:
+        raise DeltaError("exact delta contains a Unicode, control-character, or collision path issue")
+    stable_commitment = {
+        "source_commit": source_id,
+        "target_commit": target_id,
+        "entries": entries,
+    }
     return {
         "schema": f"{SCHEMA}.manifest",
         "generated_at_utc": utc_now(),
@@ -220,7 +399,11 @@ def manifest_payload(repo: Path, source: str, target: str) -> dict[str, Any]:
         "target_commit": target_id,
         "entry_count": len(entries),
         "entries": entries,
+        "path_audit": path_audit,
+        "merkle_root_sha256": merkle_root(entries),
+        "canonical_commitment_sha256": canonical_json_sha256(stable_commitment),
         "scope": "exact source-to-target owner delta only",
+        "valid": True,
     }
 
 
@@ -298,10 +481,18 @@ def json_payload(repo: Path, source: str, target: str) -> dict[str, Any]:
     for path in exact_paths(repo, source, target, ".json"):
         raw = blob_at(repo, target_id, path)
         try:
-            parsed = json.loads(raw.decode("utf-8"))
-        except (UnicodeDecodeError, json.JSONDecodeError) as exc:
+            parsed = strict_json_loads(raw, path)
+        except DeltaError as exc:
             raise DeltaError(f"JSON parse failed for {path}: {exc}") from exc
-        records.append({"path": path, "bytes": len(raw), "top_level_type": type(parsed).__name__})
+        records.append(
+            {
+                "path": path,
+                "bytes": len(raw),
+                "top_level_type": type(parsed).__name__,
+                "canonical_sha256": canonical_json_sha256(parsed),
+                "duplicate_keys": 0,
+            }
+        )
     return {
         "schema": f"{SCHEMA}.json",
         "source_commit": resolve_commit(repo, source),
@@ -312,27 +503,86 @@ def json_payload(repo: Path, source: str, target: str) -> dict[str, Any]:
     }
 
 
+def markdown_target_records(repo: Path, target: str, path: str, text: str) -> list[dict[str, Any]]:
+    records: list[dict[str, Any]] = []
+    for match in re.finditer(r"!?\[[^\]\n]*\]\(([^)\n]+)\)", text):
+        raw_target = match.group(1).strip().split(maxsplit=1)[0].strip("<>")
+        parsed = urlsplit(raw_target)
+        scheme = parsed.scheme.lower()
+        issue: str | None = None
+        resolved_path: str | None = None
+        if scheme in UNSAFE_LINK_SCHEMES:
+            issue = f"unsafe scheme: {scheme}"
+        elif scheme and scheme not in {"http", "https", "mailto"}:
+            issue = f"unreviewed scheme: {scheme}"
+        elif not scheme and not raw_target.startswith("#"):
+            candidate = parsed.path.replace("\\", "/")
+            if re.match(r"^[A-Za-z]:", candidate) or candidate.startswith("/"):
+                issue = "absolute local target"
+            elif candidate:
+                parent = PurePosixPath(path).parent
+                parts: list[str] = []
+                for part in (parent / candidate).parts:
+                    if part in {"", "."}:
+                        continue
+                    if part == "..":
+                        if not parts:
+                            issue = "target escapes repository root"
+                            break
+                        parts.pop()
+                    else:
+                        parts.append(part)
+                if issue is None:
+                    resolved_path = normalize_relative(PurePosixPath(*parts).as_posix())
+                    if tree_entry(repo, target, resolved_path) is None:
+                        issue = "missing committed local target"
+        records.append(
+            {
+                "target": raw_target,
+                "scheme": scheme or "relative",
+                "resolved_path": resolved_path,
+                "issue": issue,
+                "valid": issue is None,
+            }
+        )
+    return records
+
+
 def markdown_payload(repo: Path, source: str, target: str) -> dict[str, Any]:
     target_id = resolve_commit(repo, target)
     records = []
     for path in exact_paths(repo, source, target, ".md"):
-        text = blob_at(repo, target_id, path).decode("utf-8")
+        try:
+            text = blob_at(repo, target_id, path).decode("utf-8")
+        except UnicodeDecodeError as exc:
+            raise DeltaError(f"Markdown is not UTF-8: {path}") from exc
         if not text.strip():
             raise DeltaError(f"empty Markdown file: {path}")
+        targets = markdown_target_records(repo, target_id, path, text)
         records.append(
             {
                 "path": path,
                 "words": len(re.findall(r"\b[\w'-]+\b", text, flags=re.UNICODE)),
                 "headings": len(re.findall(r"(?m)^#{1,6}\s+", text)),
+                "target_count": len(targets),
+                "target_issues": [record for record in targets if not record["valid"]],
             }
         )
+    issues = [
+        {"path": record["path"], **target}
+        for record in records
+        for target in record["target_issues"]
+    ]
     return {
         "schema": f"{SCHEMA}.markdown",
         "source_commit": resolve_commit(repo, source),
         "target_commit": target_id,
         "checked_count": len(records),
         "records": records,
-        "valid": True,
+        "target_issue_count": len(issues),
+        "target_issues": issues,
+        "valid": not issues,
+        "boundary": "Structural exact-delta Markdown target review only; not complete accessibility or external-link safety assurance.",
     }
 
 
@@ -406,9 +656,28 @@ def security_payload(repo: Path, source: str, target: str) -> dict[str, Any]:
     }
 
 
-def route_payload(roster_path: Path, auth_path: Path) -> dict[str, Any]:
-    roster = json.loads(roster_path.read_text(encoding="utf-8"))
-    auth = json.loads(auth_path.read_text(encoding="utf-8"))
+def path_audit_payload(repo: Path, source: str, target: str) -> dict[str, Any]:
+    source_id = resolve_commit(repo, source)
+    target_id = resolve_commit(repo, target)
+    result = audit_paths(row["path"] for row in delta_rows(repo, source_id, target_id))
+    return {
+        "schema": f"{SCHEMA}.path-audit",
+        "source_commit": source_id,
+        "target_commit": target_id,
+        **result,
+    }
+
+
+def route_payload(
+    roster_path: Path,
+    auth_path: Path,
+    expected_current_owner: str,
+    expected_next_owner: str,
+) -> dict[str, Any]:
+    if not expected_current_owner.strip() or not expected_next_owner.strip():
+        raise DeltaError("expected current and next owners must be explicit")
+    roster = strict_json_loads(roster_path.read_bytes(), roster_path.name)
+    auth = strict_json_loads(auth_path.read_bytes(), auth_path.name)
     execution = roster.get("validation_scope", {}).get("execution_authority", {})
     auth_execution = auth.get("validation_scope", {}).get("execution_authority", {})
     active = roster.get("active_main_tasks", [])
@@ -421,16 +690,18 @@ def route_payload(roster_path: Path, auth_path: Path) -> dict[str, Any]:
         issues.append("Tavian Sol standby record missing")
     if execution.get("policy") != "owner_self_scoped_delta" or execution != auth_execution:
         issues.append("roster and authorization validation policies differ")
-    if current.get("current", {}).get("owner") != "Neris Solane":
-        issues.append("current owner is not Neris Solane")
-    if current.get("next", {}).get("owner") != "Vesper Arlen":
-        issues.append("next owner is not Vesper Arlen")
+    if current.get("current", {}).get("owner") != expected_current_owner:
+        issues.append(f"current owner is not {expected_current_owner}")
+    if current.get("next", {}).get("owner") != expected_next_owner:
+        issues.append(f"next owner is not {expected_next_owner}")
     return {
         "schema": f"{SCHEMA}.route",
         "active_main_task_count": len(active),
         "standby": [row.get("relational_name") for row in roster.get("standby_members", [])],
         "current_owner": current.get("current", {}).get("owner"),
         "next_owner": current.get("next", {}).get("owner"),
+        "expected_current_owner": expected_current_owner,
+        "expected_next_owner": expected_next_owner,
         "validation_policy": execution.get("policy"),
         "issue_count": len(issues),
         "issues": issues,
@@ -500,6 +771,108 @@ def file_budget_payload(repo: Path, source: str, target: str, threshold: int) ->
     }
 
 
+def sparse_payload(
+    repo: Path,
+    source: str,
+    target: str,
+    threshold: int,
+    expected_patterns: Iterable[str],
+) -> dict[str, Any]:
+    expected = ensure_unique((value.strip() for value in expected_patterns), "sparse pattern")
+    if not expected or any(not value for value in expected):
+        raise DeltaError("at least one non-empty sparse pattern is required")
+    observed = [
+        line.strip()
+        for line in run_git(repo, "sparse-checkout", "list").stdout.splitlines()
+        if line.strip()
+    ]
+    budget = file_budget_payload(repo, source, target, threshold)
+    issues: list[str] = []
+    if observed != expected:
+        issues.append("observed sparse patterns differ from the explicit expected order")
+    if not budget["valid"]:
+        issues.append("materialized or owner-delta file count reached the rotation threshold")
+    return {
+        "schema": f"{SCHEMA}.sparse",
+        "source_commit": budget["source_commit"],
+        "target_commit": budget["target_commit"],
+        "expected_patterns": expected,
+        "observed_patterns": observed,
+        "patterns_match": observed == expected,
+        "materialized_file_count": budget["materialized_file_count"],
+        "owner_delta_file_count": budget["owner_delta_file_count"],
+        "threshold": threshold,
+        "rotation_required": budget["rotation_required"],
+        "issue_count": len(issues),
+        "issues": issues,
+        "valid": not issues,
+        "boundary": "Current owner worktree only; no sibling-lane inventory and no separate-remote authorization.",
+    }
+
+
+def baton_integrity_payload(
+    repo: Path,
+    source: str,
+    target: str,
+    path: str,
+    expected_sha256: str,
+    minimum_words: int,
+    maximum_words: int,
+) -> dict[str, Any]:
+    source_id = resolve_commit(repo, source)
+    target_id = resolve_commit(repo, target)
+    normalized = normalize_relative(path)
+    if normalized not in exact_paths(repo, source_id, target_id):
+        raise DeltaError("baton path is not present in the exact owner delta")
+    if not re.fullmatch(r"[0-9a-f]{64}", expected_sha256):
+        raise DeltaError("expected baton SHA-256 must be a lowercase 64-hex digest")
+    if minimum_words < 1 or maximum_words < minimum_words:
+        raise DeltaError("invalid baton word range")
+    entry = tree_entry(repo, target_id, normalized)
+    if entry is None or entry["object_type"] != "blob" or entry["mode"] not in ALLOWED_BLOB_MODES:
+        raise DeltaError("baton must be a regular committed Git blob")
+    raw = blob_object(repo, entry["object_id"])
+    try:
+        text = raw.decode("utf-8")
+    except UnicodeDecodeError as exc:
+        raise DeltaError("baton is not UTF-8") from exc
+    observed_sha256 = sha256_bytes(raw)
+    word_count = len(re.findall(r"\S+", text, flags=re.UNICODE))
+    issues: list[str] = []
+    if observed_sha256 != expected_sha256:
+        issues.append("baton SHA-256 differs from the expected digest")
+    if not minimum_words <= word_count <= maximum_words:
+        issues.append("baton word count is outside the declared range")
+    return {
+        "schema": f"{SCHEMA}.baton-integrity",
+        "source_commit": source_id,
+        "target_commit": target_id,
+        "repository_relative_path": normalized,
+        "git_blob": entry["object_id"],
+        "bytes": len(raw),
+        "sha256": observed_sha256,
+        "expected_sha256": expected_sha256,
+        "word_count": word_count,
+        "minimum_words": minimum_words,
+        "maximum_words": maximum_words,
+        "issue_count": len(issues),
+        "issues": issues,
+        "valid": not issues,
+        "boundary": "Committed file integrity only; not delivery acknowledgement, authorship, authority, or independent reproduction.",
+    }
+
+
+def canonical_digest_payload(path: Path) -> dict[str, Any]:
+    parsed = strict_json_loads(path.read_bytes(), path.name)
+    return {
+        "schema": f"{SCHEMA}.canonical-digest",
+        "label": path.name,
+        "canonical_sha256": canonical_json_sha256(parsed),
+        "valid": True,
+        "boundary": "Deterministic payload digest only; not a digital signature or trust anchor.",
+    }
+
+
 def collect_outcomes(value: Any, counts: Counter[str], unknown: set[str]) -> None:
     if isinstance(value, dict):
         for key, child in value.items():
@@ -523,7 +896,7 @@ def data_quality_payload(paths: Iterable[Path]) -> dict[str, Any]:
     unknown: set[str] = set()
     records = []
     for path in files:
-        parsed = json.loads(path.read_text(encoding="utf-8"))
+        parsed = strict_json_loads(path.read_bytes(), path.name)
         local_counts: Counter[str] = Counter()
         local_unknown: set[str] = set()
         collect_outcomes(parsed, local_counts, local_unknown)
@@ -549,8 +922,78 @@ def data_quality_payload(paths: Iterable[Path]) -> dict[str, Any]:
     }
 
 
-def run_exact_tests(repo: Path, modules: Iterable[str]) -> dict[str, Any]:
+def normalized_test_output(text: str) -> str:
+    normalized = text.replace("\r\n", "\n")
+    normalized = re.sub(r"Ran (\d+) tests? in [0-9.]+s", r"Ran \1 tests in <elapsed>", normalized)
+    normalized = re.sub(r"(?i)[A-Z]:\\[^\n\r]+?\\Temp\\tmp[^\\\s:]+", "<temp>", normalized)
+    normalized = re.sub(r"/(?:tmp|var/folders)/[^\s:]+", "<temp>", normalized)
+    return normalized
+
+
+def python_imports(path: Path) -> list[str]:
+    try:
+        tree = parse_python_ast(path.read_text(encoding="utf-8"), filename=str(path))
+    except (UnicodeDecodeError, SyntaxError) as exc:
+        raise DeltaError(f"unable to inspect imports for {path.name}: {exc}") from exc
+    imports: set[str] = set()
+    for node in getattr(tree, "body", []):
+        if node.__class__.__name__ == "Import":
+            imports.update(alias.name for alias in node.names)
+        elif node.__class__.__name__ == "ImportFrom" and node.module:
+            imports.add(node.module)
+    return sorted(imports)
+
+
+def declared_repository_dependencies(path: Path) -> list[str]:
+    try:
+        tree = ast.parse(path.read_text(encoding="utf-8"), filename=str(path))
+    except (OSError, SyntaxError, UnicodeError) as exc:
+        raise DeltaError(f"unable to parse test dependency declaration: {path.name}") from exc
+    declaration: Any = None
+    for node in tree.body:
+        if not isinstance(node, ast.Assign):
+            continue
+        if any(
+            isinstance(target, ast.Name)
+            and target.id == "DECLARED_REPOSITORY_DEPENDENCIES"
+            for target in node.targets
+        ):
+            try:
+                declaration = ast.literal_eval(node.value)
+            except (ValueError, TypeError, SyntaxError) as exc:
+                raise DeltaError("test dependency declaration must be a literal sequence") from exc
+    if declaration is None:
+        raise DeltaError(
+            f"test module lacks DECLARED_REPOSITORY_DEPENDENCIES: {path.name}"
+        )
+    if not isinstance(declaration, (list, tuple)) or not all(
+        isinstance(value, str) for value in declaration
+    ):
+        raise DeltaError("test dependency declaration must contain only paths")
+    return ensure_unique(
+        (normalize_relative(value) for value in declaration),
+        f"declared repository dependency in {path.name}",
+    )
+
+
+def run_exact_tests(
+    repo: Path,
+    modules: Iterable[str],
+    dependencies: Iterable[str] = (),
+) -> dict[str, Any]:
     normalized = ensure_unique((normalize_relative(value) for value in modules), "test module")
+    dependency_paths = ensure_unique(
+        (normalize_relative(value) for value in dependencies), "test dependency"
+    )
+    dependency_records: list[dict[str, Any]] = []
+    for dependency in dependency_paths:
+        path = repo / Path(dependency)
+        if not path.is_file():
+            raise DeltaError(f"materialized test dependency missing: {dependency}")
+        raw = path.read_bytes()
+        dependency_records.append(
+            {"path": dependency, "bytes": len(raw), "sha256": sha256_bytes(raw)}
+        )
     records = []
     for module in normalized:
         module_path = PurePosixPath(module)
@@ -564,6 +1007,12 @@ def run_exact_tests(repo: Path, modules: Iterable[str]) -> dict[str, Any]:
         path = repo / Path(module)
         if not path.is_file():
             raise DeltaError(f"materialized test module missing: {module}")
+        declared_dependencies = declared_repository_dependencies(path)
+        if declared_dependencies != dependency_paths:
+            raise DeltaError(
+                f"test dependency closure differs for {module}: "
+                f"{declared_dependencies} != {dependency_paths}"
+            )
         result = subprocess.run(
             [sys.executable, str(path)],
             cwd=repo,
@@ -574,17 +1023,41 @@ def run_exact_tests(repo: Path, modules: Iterable[str]) -> dict[str, Any]:
             errors="replace",
             check=False,
         )
+        stable_output = normalized_test_output(result.stdout)
         records.append(
             {
                 "module": module,
                 "returncode": result.returncode,
-                "output_sha256": sha256_bytes(result.stdout.encode("utf-8")),
+                "module_sha256": sha256_bytes(path.read_bytes()),
+                "declared_imports": python_imports(path),
+                "declared_repository_dependencies": declared_dependencies,
+                "normalized_output_sha256": sha256_bytes(stable_output.encode("utf-8")),
                 "output_tail": result.stdout.splitlines()[-8:],
             }
         )
         if result.returncode:
             raise DeltaError(f"selected test module failed: {module}")
-    return {"module_count": len(records), "records": records, "valid": True}
+    stable_contract = {
+        "modules": [record["module"] for record in records],
+        "dependencies": dependency_records,
+        "results": [
+            {
+                "module": record["module"],
+                "returncode": record["returncode"],
+                "module_sha256": record["module_sha256"],
+                "normalized_output_sha256": record["normalized_output_sha256"],
+            }
+            for record in records
+        ],
+    }
+    return {
+        "module_count": len(records),
+        "dependency_count": len(dependency_records),
+        "dependencies": dependency_records,
+        "records": records,
+        "contract_sha256": canonical_json_sha256(stable_contract),
+        "valid": True,
+    }
 
 
 def validate_remote_name(repo: Path, remote: str) -> str:
@@ -644,12 +1117,19 @@ def clean_and_equal_payload(repo: Path, target: str, branch: str, remote: str) -
 
 def canonical_payload(args: argparse.Namespace) -> dict[str, Any]:
     repo = args.repo.resolve()
+    owner = canonical_owner(args.owner)
+    if args.commit_limit != 8:
+        raise DeltaError("live phase commit limit must be exactly 8")
     source = resolve_commit(repo, args.source)
     target = resolve_commit(repo, args.target)
     ancestry = run_git(repo, "rev-list", "--parents", f"{source}..{target}").stdout.splitlines()
     merge_count = sum(len(line.split()) > 2 for line in ancestry)
     if merge_count:
         raise DeltaError("merge commit detected in owner delta")
+    if len(ancestry) > args.commit_limit:
+        raise DeltaError("owner delta exceeds the declared commit limit")
+    if any(len(line.split()) != 2 for line in ancestry):
+        raise DeltaError("owner delta contains a non-single-parent commit")
     x1 = resolve_commit(repo, args.x1)
     x1_parents = run_git(repo, "rev-list", "--parents", "-n", "1", x1).stdout.split()
     if len(x1_parents) != 2 or x1_parents[1] != source:
@@ -660,15 +1140,47 @@ def canonical_payload(args: argparse.Namespace) -> dict[str, Any]:
     python_check = python_payload(repo, source, target)
     privacy = privacy_payload(repo, source, target)
     security = security_payload(repo, source, target)
+    path_audit = path_audit_payload(repo, source, target)
     file_budget = file_budget_payload(repo, source, target, args.threshold)
-    route = route_payload(args.roster, args.auth)
+    sparse = sparse_payload(repo, source, target, args.threshold, args.sparse_pattern)
+    route = route_payload(
+        args.roster,
+        args.auth,
+        args.expected_current_owner,
+        args.expected_next_owner,
+    )
     skills = skill_hash_payload(args.skill)
     quality = data_quality_payload(args.ledger)
-    tests = run_exact_tests(repo, args.test_module)
+    tests = run_exact_tests(repo, args.test_module, args.test_dependency)
+    baton = baton_integrity_payload(
+        repo,
+        source,
+        target,
+        args.baton_path,
+        args.baton_sha256,
+        args.baton_min_words,
+        args.baton_max_words,
+    )
     git_gate = clean_and_equal_payload(repo, target, args.branch, args.remote)
     valid = all(
         part.get("valid", False)
-        for part in (json_check, markdown_check, python_check, privacy, security, file_budget, route, skills, quality, tests, git_gate)
+        for part in (
+            manifest,
+            json_check,
+            markdown_check,
+            python_check,
+            privacy,
+            security,
+            path_audit,
+            file_budget,
+            sparse,
+            route,
+            skills,
+            quality,
+            tests,
+            baton,
+            git_gate,
+        )
     )
     payload = {
         "schema": f"{SCHEMA}.canonical",
@@ -677,28 +1189,36 @@ def canonical_payload(args: argparse.Namespace) -> dict[str, Any]:
         "successful_invocation_count": 1 if valid else 0,
         "post_success_replay": False,
         "execution_authority": "owner_self_scoped_delta",
-        "owner": "Neris Solane",
+        "owner": owner,
         "source_commit": source,
         "x1_commit": x1,
         "target_commit": target,
         "commit_count": len(ancestry),
+        "commit_limit": args.commit_limit,
         "merge_count": merge_count,
+        "single_parent_history": True,
         "manifest": manifest,
         "json": json_check,
         "markdown": markdown_check,
         "python": python_check,
         "privacy": privacy,
         "security": security,
+        "path_audit": path_audit,
         "file_budget": file_budget,
+        "sparse": sparse,
         "route": route,
         "skills": skills,
         "data_quality": quality,
         "tests": tests,
+        "baton": baton,
         "git_gate": git_gate,
         "valid": valid,
         "verdict": "NOT_READY_FOR_STAGE_20",
         "boundary": "One same-owner exact-delta software validation pass only; not a full-repository suite, independent reproduction, empirical or professional evidence, authority, personhood evidence, Theory-of-Everything proof, or Stage 20 authority.",
     }
+    payload["canonical_payload_sha256"] = canonical_json_sha256(
+        {key: value for key, value in payload.items() if key not in {"invoked_at_utc"}}
+    )
     write_json_exclusive(args.receipt, payload)
     return payload
 
@@ -713,11 +1233,13 @@ def add_range(parser: argparse.ArgumentParser) -> None:
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description=__doc__)
     commands = parser.add_subparsers(dest="command", required=True)
-    for name in ("manifest", "json", "markdown", "python", "privacy"):
+    for name in ("manifest", "json", "markdown", "python", "privacy", "security", "path-audit"):
         add_range(commands.add_parser(name))
     route = commands.add_parser("route")
     route.add_argument("--roster", type=Path, required=True)
     route.add_argument("--auth", type=Path, required=True)
+    route.add_argument("--expected-current-owner", required=True)
+    route.add_argument("--expected-next-owner", required=True)
     route.add_argument("--output", type=Path)
     skills = commands.add_parser("skill-hashes")
     skills.add_argument("--skill", action="append", required=True)
@@ -725,22 +1247,45 @@ def build_parser() -> argparse.ArgumentParser:
     budget = commands.add_parser("file-budget")
     add_range(budget)
     budget.add_argument("--threshold", type=int, default=2000)
+    sparse = commands.add_parser("sparse")
+    add_range(sparse)
+    sparse.add_argument("--threshold", type=int, default=2000)
+    sparse.add_argument("--expected-pattern", action="append", required=True)
+    baton = commands.add_parser("baton-integrity")
+    add_range(baton)
+    baton.add_argument("--path", required=True)
+    baton.add_argument("--expected-sha256", required=True)
+    baton.add_argument("--minimum-words", type=int, default=10000)
+    baton.add_argument("--maximum-words", type=int, default=100000)
+    digest = commands.add_parser("canonical-digest")
+    digest.add_argument("--json", type=Path, required=True)
+    digest.add_argument("--output", type=Path)
     quality = commands.add_parser("data-quality")
     quality.add_argument("--ledger", type=Path, action="append", required=True)
     quality.add_argument("--output", type=Path)
     canonical = commands.add_parser("canonical")
     canonical.add_argument("--repo", type=Path, required=True)
+    canonical.add_argument("--owner", required=True)
     canonical.add_argument("--source", required=True)
     canonical.add_argument("--x1", required=True)
     canonical.add_argument("--target", required=True)
     canonical.add_argument("--branch", required=True)
     canonical.add_argument("--remote", default="origin")
     canonical.add_argument("--threshold", type=int, default=2000)
+    canonical.add_argument("--commit-limit", type=int, default=8)
     canonical.add_argument("--roster", type=Path, required=True)
     canonical.add_argument("--auth", type=Path, required=True)
+    canonical.add_argument("--expected-current-owner", required=True)
+    canonical.add_argument("--expected-next-owner", required=True)
     canonical.add_argument("--skill", action="append", required=True)
     canonical.add_argument("--ledger", type=Path, action="append", required=True)
     canonical.add_argument("--test-module", action="append", required=True)
+    canonical.add_argument("--test-dependency", action="append", default=[])
+    canonical.add_argument("--sparse-pattern", action="append", required=True)
+    canonical.add_argument("--baton-path", required=True)
+    canonical.add_argument("--baton-sha256", required=True)
+    canonical.add_argument("--baton-min-words", type=int, default=10000)
+    canonical.add_argument("--baton-max-words", type=int, default=100000)
     canonical.add_argument("--receipt", type=Path, required=True)
     return parser
 
@@ -759,12 +1304,41 @@ def main() -> int:
             payload = python_payload(args.repo, args.source, args.target)
         elif args.command == "privacy":
             payload = privacy_payload(args.repo, args.source, args.target)
+        elif args.command == "security":
+            payload = security_payload(args.repo, args.source, args.target)
+        elif args.command == "path-audit":
+            payload = path_audit_payload(args.repo, args.source, args.target)
         elif args.command == "route":
-            payload = route_payload(args.roster, args.auth)
+            payload = route_payload(
+                args.roster,
+                args.auth,
+                args.expected_current_owner,
+                args.expected_next_owner,
+            )
         elif args.command == "skill-hashes":
             payload = skill_hash_payload(args.skill)
         elif args.command == "file-budget":
             payload = file_budget_payload(args.repo, args.source, args.target, args.threshold)
+        elif args.command == "sparse":
+            payload = sparse_payload(
+                args.repo,
+                args.source,
+                args.target,
+                args.threshold,
+                args.expected_pattern,
+            )
+        elif args.command == "baton-integrity":
+            payload = baton_integrity_payload(
+                args.repo,
+                args.source,
+                args.target,
+                args.path,
+                args.expected_sha256,
+                args.minimum_words,
+                args.maximum_words,
+            )
+        elif args.command == "canonical-digest":
+            payload = canonical_digest_payload(args.json)
         elif args.command == "data-quality":
             payload = data_quality_payload(args.ledger)
         elif args.command == "canonical":

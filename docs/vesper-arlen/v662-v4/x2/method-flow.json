@@ -1,0 +1,273 @@
+{
+  "boundary": "Operational and synthetic workflow evidence only; failed witnesses remain retained and same-owner passing witnesses are not independent reproduction.",
+  "bounded_passing_witness_count": 29,
+  "method_count": 29,
+  "owner": "Vesper Arlen",
+  "pending_witness_count": 0,
+  "phase": "v662-v4",
+  "records": [
+    {
+      "failed_witness": "A pipeline-scoped $_ value was read outside its pipeline and produced a null LiteralPath.",
+      "method_id": "V6624-MF-001",
+      "passing_witness": "The scalar path read returned the intended file.",
+      "recovery": "Use the known literal scalar path directly.",
+      "recurrence_guard": "Never rely on $_ outside the active pipeline block.",
+      "rollback": "No repository mutation occurred.",
+      "sibling_recommendation": "Use literal-path scalar probes for known files."
+    },
+    {
+      "failed_witness": "Unquoted HEAD...@{u} was parsed by PowerShell and mangled instead of reaching Git literally.",
+      "method_id": "V6624-MF-002",
+      "passing_witness": "Git returned zero ahead and zero behind.",
+      "recovery": "Quote the complete revision expression as a scalar Git argument.",
+      "recurrence_guard": "Quote revision syntax containing braces.",
+      "rollback": "No repository mutation occurred.",
+      "sibling_recommendation": "Treat Git revision expressions as literal arguments."
+    },
+    {
+      "failed_witness": "An overescaped word-count regular expression returned zero for the activation baton.",
+      "method_id": "V6624-MF-003",
+      "passing_witness": "The corrected count was 39557 words.",
+      "recovery": "Use decoded-text split semantics once and compare with hash, lines, and bytes.",
+      "recurrence_guard": "Test regex quoting on a tiny fixture before a long-file count.",
+      "rollback": "The zero count received no credit.",
+      "sibling_recommendation": "Prefer a small explicit word-count function over shell-escaping layers."
+    },
+    {
+      "failed_witness": "Large activation-baton display windows were truncated at six locations.",
+      "method_id": "V6624-MF-004",
+      "passing_witness": "All six gaps and the final EOF region were directly read.",
+      "recovery": "Reread each missing interval with literal bounded line ranges.",
+      "recurrence_guard": "Use smaller numbered windows for long files.",
+      "rollback": "Do not claim EOF until every truncated interval is recovered.",
+      "sibling_recommendation": "Record missing line ranges immediately when a display truncates."
+    },
+    {
+      "failed_witness": "A combined authorization-state display exceeded the output budget.",
+      "method_id": "V6624-MF-005",
+      "passing_witness": "The full 1477-line state and schema validator were read successfully.",
+      "recovery": "Read the complete state in bounded numbered chunks and validate it separately.",
+      "recurrence_guard": "Separate large state files from other tool output.",
+      "rollback": "The truncated display supplied no completeness credit.",
+      "sibling_recommendation": "Validate structure after bounded full reads."
+    },
+    {
+      "failed_witness": "A guidance reader assumed PowerShell $args would be populated although no argument array was supplied.",
+      "method_id": "V6624-MF-006",
+      "passing_witness": "All named guidance files were then read completely.",
+      "recovery": "Embed each trusted literal path as a single-quoted scalar.",
+      "recurrence_guard": "Use explicit tool argument fields or literal scalars, never implicit $args.",
+      "rollback": "No file was modified.",
+      "sibling_recommendation": "Test a reader wrapper on one file before batching."
+    },
+    {
+      "failed_witness": "A combined guidance read exceeded the output budget and truncated orchestration content.",
+      "method_id": "V6624-MF-007",
+      "passing_witness": "Every selected SKILL.md and required reference was read through EOF.",
+      "recovery": "Reread the orchestration, closeout, and full-tools skills independently through their exact line counts.",
+      "recurrence_guard": "Keep each long skill in its own output envelope.",
+      "rollback": "The partial batch received no full-read credit.",
+      "sibling_recommendation": "Use one file per read when a skill exceeds roughly two hundred lines."
+    },
+    {
+      "failed_witness": "python -m pytest could not collect the inherited test because pytest is not installed.",
+      "method_id": "V6624-MF-008",
+      "passing_witness": "The isolated stdlib unittest entrypoint completed successfully without installing pytest or any unrelated package.",
+      "recovery": "Use the module's declared unittest entrypoint and avoid unrelated installation.",
+      "recurrence_guard": "Inspect the test framework before selecting a runner.",
+      "rollback": "Do not install unrelated software merely to satisfy a guessed runner.",
+      "sibling_recommendation": "Prefer stdlib unittest when the file imports unittest and provides __main__."
+    },
+    {
+      "failed_witness": "The assumed auth validator filename did not exist.",
+      "method_id": "V6624-MF-009",
+      "passing_witness": "The actual validator returned valid true.",
+      "recovery": "List only the exact auth skill scripts directory and select validate_auth_permission_state.py.",
+      "recurrence_guard": "Inspect exact script names before invocation.",
+      "rollback": "The missing-file invocation earned zero credit.",
+      "sibling_recommendation": "Use a narrow directory listing rather than guessing family-current script names."
+    },
+    {
+      "failed_witness": "Preregistered synthetic invalid fixture: duplicate JSON key.",
+      "method_id": "V6624-MF-010",
+      "passing_witness": "strict object-pair hook rejected the duplicate while unique-key JSON passed",
+      "recovery": "Reject or quarantine the invalid fixture without changing unrelated state.",
+      "recurrence_guard": "Keep the exact negative fixture in the bounded unittest module.",
+      "rollback": "Issue zero credit for the invalid fixture and preserve the previous clean commit.",
+      "sibling_recommendation": "Run the smallest literal fixture before terminal validation."
+    },
+    {
+      "failed_witness": "Preregistered synthetic invalid fixture: NFC-equivalent path collision.",
+      "method_id": "V6624-MF-011",
+      "passing_witness": "the collision audit failed closed while distinct NFC paths passed",
+      "recovery": "Reject or quarantine the invalid fixture without changing unrelated state.",
+      "recurrence_guard": "Keep the exact negative fixture in the bounded unittest module.",
+      "rollback": "Issue zero credit for the invalid fixture and preserve the previous clean commit.",
+      "sibling_recommendation": "Run the smallest literal fixture before terminal validation."
+    },
+    {
+      "failed_witness": "Preregistered synthetic invalid fixture: case-fold path collision.",
+      "method_id": "V6624-MF-012",
+      "passing_witness": "the collision audit failed closed while distinct case-fold paths passed",
+      "recovery": "Reject or quarantine the invalid fixture without changing unrelated state.",
+      "recurrence_guard": "Keep the exact negative fixture in the bounded unittest module.",
+      "rollback": "Issue zero credit for the invalid fixture and preserve the previous clean commit.",
+      "sibling_recommendation": "Run the smallest literal fixture before terminal validation."
+    },
+    {
+      "failed_witness": "Preregistered synthetic invalid fixture: bidi override in a filename.",
+      "method_id": "V6624-MF-013",
+      "passing_witness": "the control audit rejected the override while ordinary Unicode passed",
+      "recovery": "Reject or quarantine the invalid fixture without changing unrelated state.",
+      "recurrence_guard": "Keep the exact negative fixture in the bounded unittest module.",
+      "rollback": "Issue zero credit for the invalid fixture and preserve the previous clean commit.",
+      "sibling_recommendation": "Run the smallest literal fixture before terminal validation."
+    },
+    {
+      "failed_witness": "Preregistered synthetic invalid fixture: control character in a filename.",
+      "method_id": "V6624-MF-014",
+      "passing_witness": "the control audit rejected it while ordinary path text passed",
+      "recovery": "Reject or quarantine the invalid fixture without changing unrelated state.",
+      "recurrence_guard": "Keep the exact negative fixture in the bounded unittest module.",
+      "rollback": "Issue zero credit for the invalid fixture and preserve the previous clean commit.",
+      "sibling_recommendation": "Run the smallest literal fixture before terminal validation."
+    },
+    {
+      "failed_witness": "Preregistered synthetic invalid fixture: unsupported Git entry kind.",
+      "method_id": "V6624-MF-015",
+      "passing_witness": "the manifest refused unsupported modes while regular blobs passed",
+      "recovery": "Reject or quarantine the invalid fixture without changing unrelated state.",
+      "recurrence_guard": "Keep the exact negative fixture in the bounded unittest module.",
+      "rollback": "Issue zero credit for the invalid fixture and preserve the previous clean commit.",
+      "sibling_recommendation": "Run the smallest literal fixture before terminal validation."
+    },
+    {
+      "failed_witness": "Preregistered synthetic invalid fixture: mutated manifest leaf.",
+      "method_id": "V6624-MF-016",
+      "passing_witness": "the Merkle root changed while reordered identical leaves retained one root",
+      "recovery": "Reject or quarantine the invalid fixture without changing unrelated state.",
+      "recurrence_guard": "Keep the exact negative fixture in the bounded unittest module.",
+      "rollback": "Issue zero credit for the invalid fixture and preserve the previous clean commit.",
+      "sibling_recommendation": "Run the smallest literal fixture before terminal validation."
+    },
+    {
+      "failed_witness": "Preregistered synthetic invalid fixture: noncanonical JSON key order.",
+      "method_id": "V6624-MF-017",
+      "passing_witness": "equivalent mappings produced one stable content digest",
+      "recovery": "Reject or quarantine the invalid fixture without changing unrelated state.",
+      "recurrence_guard": "Keep the exact negative fixture in the bounded unittest module.",
+      "rollback": "Issue zero credit for the invalid fixture and preserve the previous clean commit.",
+      "sibling_recommendation": "Run the smallest literal fixture before terminal validation."
+    },
+    {
+      "failed_witness": "Preregistered synthetic invalid fixture: unsafe Markdown target scheme.",
+      "method_id": "V6624-MF-018",
+      "passing_witness": "the target audit rejected it while bounded safe targets passed",
+      "recovery": "Reject or quarantine the invalid fixture without changing unrelated state.",
+      "recurrence_guard": "Keep the exact negative fixture in the bounded unittest module.",
+      "rollback": "Issue zero credit for the invalid fixture and preserve the previous clean commit.",
+      "sibling_recommendation": "Run the smallest literal fixture before terminal validation."
+    },
+    {
+      "failed_witness": "Preregistered synthetic invalid fixture: option-like remote name.",
+      "method_id": "V6624-MF-019",
+      "passing_witness": "remote validation rejected the value before Git network execution",
+      "recovery": "Reject or quarantine the invalid fixture without changing unrelated state.",
+      "recurrence_guard": "Keep the exact negative fixture in the bounded unittest module.",
+      "rollback": "Issue zero credit for the invalid fixture and preserve the previous clean commit.",
+      "sibling_recommendation": "Run the smallest literal fixture before terminal validation."
+    },
+    {
+      "failed_witness": "Preregistered synthetic invalid fixture: option-like branch name.",
+      "method_id": "V6624-MF-020",
+      "passing_witness": "branch validation rejected the value before equality probes",
+      "recovery": "Reject or quarantine the invalid fixture without changing unrelated state.",
+      "recurrence_guard": "Keep the exact negative fixture in the bounded unittest module.",
+      "rollback": "Issue zero credit for the invalid fixture and preserve the previous clean commit.",
+      "sibling_recommendation": "Run the smallest literal fixture before terminal validation."
+    },
+    {
+      "failed_witness": "Preregistered synthetic invalid fixture: existing or dangling receipt target.",
+      "method_id": "V6624-MF-021",
+      "passing_witness": "exclusive receipt creation refused replay and symlink races",
+      "recovery": "Reject or quarantine the invalid fixture without changing unrelated state.",
+      "recurrence_guard": "Keep the exact negative fixture in the bounded unittest module.",
+      "rollback": "Issue zero credit for the invalid fixture and preserve the previous clean commit.",
+      "sibling_recommendation": "Run the smallest literal fixture before terminal validation."
+    },
+    {
+      "failed_witness": "Preregistered synthetic invalid fixture: mismatched expected route owner.",
+      "method_id": "V6624-MF-022",
+      "passing_witness": "parameterized route validation returned invalid without delivery authority",
+      "recovery": "Reject or quarantine the invalid fixture without changing unrelated state.",
+      "recurrence_guard": "Keep the exact negative fixture in the bounded unittest module.",
+      "rollback": "Issue zero credit for the invalid fixture and preserve the previous clean commit.",
+      "sibling_recommendation": "Run the smallest literal fixture before terminal validation."
+    },
+    {
+      "failed_witness": "Preregistered synthetic invalid fixture: unstable unittest elapsed time.",
+      "method_id": "V6624-MF-023",
+      "passing_witness": "normalized output produced one stable digest across elapsed-time changes",
+      "recovery": "Reject or quarantine the invalid fixture without changing unrelated state.",
+      "recurrence_guard": "Keep the exact negative fixture in the bounded unittest module.",
+      "rollback": "Issue zero credit for the invalid fixture and preserve the previous clean commit.",
+      "sibling_recommendation": "Run the smallest literal fixture before terminal validation."
+    },
+    {
+      "failed_witness": "The first packet build selected the extensionless Codex npm shim for a direct subprocess version probe and Windows refused execution.",
+      "method_id": "V6624-MF-024",
+      "passing_witness": "The recovered version-only probe returned the installed Codex CLI version.",
+      "recovery": "Select the explicit codex.cmd shim and keep OSError fail-soft for version-only metadata.",
+      "recurrence_guard": "Use an explicit executable suffix for Windows command shims.",
+      "rollback": "The partial generated packet received zero build or validation credit and was deterministically rebuilt.",
+      "sibling_recommendation": "Resolve Windows shim type before direct subprocess execution."
+    },
+    {
+      "failed_witness": "A repeated pre-evidence packet build counted the pre-existing builder receipt and then added one again, producing a non-stable generated-file count.",
+      "method_id": "V6624-MF-025",
+      "passing_witness": "Repeated packet builds now preserve one exact generated-file count and file list.",
+      "recovery": "Exclude the self-referential receipt during discovery, then append its literal path exactly once.",
+      "recurrence_guard": "Handle self-describing receipt paths explicitly instead of relying on prior filesystem state.",
+      "rollback": "The inconsistent pre-evidence count received zero validation credit and was replaced additively before commit.",
+      "sibling_recommendation": "Test build metadata from both an absent and pre-existing receipt state."
+    },
+    {
+      "failed_witness": "The first roster-validator invocation supplied the state path positionally although the validate subcommand requires --state.",
+      "method_id": "V6624-MF-026",
+      "passing_witness": "The corrected validator invocation parsed the intended roster state.",
+      "recovery": "Inspect the validate subcommand interface and pass the same literal state path through --state.",
+      "recurrence_guard": "Read subcommand-specific help before invoking a multi-command CLI.",
+      "rollback": "The argument-parser failure earned zero validation credit and changed no state.",
+      "sibling_recommendation": "Treat top-level help and subcommand help as separate contracts."
+    },
+    {
+      "failed_witness": "The first migrated roster retained Neris as current_owner_executor while its current route already named Vesper.",
+      "method_id": "V6624-MF-027",
+      "passing_witness": "Auth and roster validators both returned valid with Vesper as the owner-scoped executor.",
+      "recovery": "Patch the single attributable executor field to Vesper and rerun both structural state validators.",
+      "recurrence_guard": "Cross-check current route owner against validation_scope.execution_authority.current_owner_executor.",
+      "rollback": "The inconsistent intermediate state received zero route or validation credit.",
+      "sibling_recommendation": "Validate auth and roster together immediately after every live-owner transition."
+    },
+    {
+      "failed_witness": "The first expanded mutation suite expected a normalization_collisions key although the public payload contract names it nfc_collisions.",
+      "method_id": "V6624-MF-028",
+      "passing_witness": "The corrected NFC-equivalent path mutation was rejected and its collision was counted once.",
+      "recovery": "Inspect the actual bounded payload and assert the stable nfc_collisions field.",
+      "recurrence_guard": "Inspect real result keys before writing projections or assertions.",
+      "rollback": "The 42-pass plus one-error suite earned zero aggregate success credit.",
+      "sibling_recommendation": "Keep public receipt field names in test fixtures literal and schema-derived."
+    },
+    {
+      "failed_witness": "A diagnostic attempted to print a combining Unicode character through the Windows cp1252 console and raised UnicodeEncodeError.",
+      "method_id": "V6624-MF-029",
+      "passing_witness": "The ASCII-escaped diagnostic exposed the exact nfc_collisions field and invalid path.",
+      "recovery": "Render diagnostic JSON with ensure_ascii enabled while preserving the underlying Unicode input.",
+      "recurrence_guard": "Escape non-ASCII diagnostic output when the active Windows console encoding is not UTF-8.",
+      "rollback": "The display failure changed no repository or global state and earned zero validation credit.",
+      "sibling_recommendation": "Separate Unicode test semantics from terminal rendering semantics."
+    }
+  ],
+  "retained_failed_witness_count": 29,
+  "schema": "ghc.family.owner-delta-phase-builder.v1.method-flow.v1"
+}

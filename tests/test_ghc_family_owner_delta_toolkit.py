@@ -14,7 +14,11 @@ sys.dont_write_bytecode = True
 
 
 MODULE_PATH = Path(__file__).resolve().parents[1] / "scripts" / "ghc_family_owner_delta_toolkit.py"
-BUILDER_PATH = Path(__file__).resolve().parents[1] / "scripts" / "ghc_family_owner_delta_baton_builder.py"
+BUILDER_PATH = Path(__file__).resolve().parents[1] / "scripts" / "ghc_family_owner_delta_phase_builder.py"
+DECLARED_REPOSITORY_DEPENDENCIES = (
+    "scripts/ghc_family_owner_delta_toolkit.py",
+    "scripts/ghc_family_owner_delta_phase_builder.py",
+)
 SPEC = importlib.util.spec_from_file_location("owner_delta_toolkit", MODULE_PATH)
 assert SPEC and SPEC.loader
 toolkit = importlib.util.module_from_spec(SPEC)
@@ -80,6 +84,36 @@ class PathContractTests(unittest.TestCase):
         with self.assertRaises(toolkit.DeltaError):
             toolkit.ensure_unique(["a", "a"], "fixture")
 
+    def test_path_audit_rejects_casefold_collision(self) -> None:
+        payload = toolkit.audit_paths(["docs/Alpha.json", "docs/alpha.json"])
+        self.assertFalse(payload["valid"])
+        self.assertEqual(len(payload["casefold_collisions"]), 1)
+
+    def test_path_audit_rejects_bidi_override(self) -> None:
+        payload = toolkit.audit_paths(["docs/safe\u202Etxt.json"])
+        self.assertFalse(payload["valid"])
+        self.assertEqual(payload["invalid_paths"], ["docs/safe\u202Etxt.json"])
+
+    def test_path_audit_rejects_nfc_collision(self) -> None:
+        payload = toolkit.audit_paths(["docs/caf\u00e9.json", "docs/cafe\u0301.json"])
+        self.assertFalse(payload["valid"])
+        self.assertEqual(len(payload["nfc_collisions"]), 1)
+
+    def test_path_audit_rejects_control_character(self) -> None:
+        payload = toolkit.audit_paths(["docs/control\u0001.json"])
+        self.assertFalse(payload["valid"])
+        self.assertEqual(payload["invalid_paths"], ["docs/control\u0001.json"])
+
+    def test_canonical_json_digest_is_order_independent(self) -> None:
+        self.assertEqual(
+            toolkit.canonical_json_sha256({"b": 2, "a": 1}),
+            toolkit.canonical_json_sha256({"a": 1, "b": 2}),
+        )
+
+    def test_strict_json_rejects_duplicate_keys(self) -> None:
+        with self.assertRaises(toolkit.DeltaError):
+            toolkit.strict_json_loads('{"a":1,"a":2}', "fixture")
+
 
 class DeltaFixtureTests(unittest.TestCase):
     def setUp(self) -> None:
@@ -100,6 +134,8 @@ class DeltaFixtureTests(unittest.TestCase):
         payload = toolkit.manifest_payload(self.fixture.root, self.fixture.source, self.target)
         self.assertEqual(payload["entry_count"], 3)
         self.assertTrue(all(row["sha256"] for row in payload["entries"]))
+        self.assertRegex(payload["merkle_root_sha256"], r"^[0-9a-f]{64}$")
+        self.assertRegex(payload["canonical_commitment_sha256"], r"^[0-9a-f]{64}$")
 
     def test_json_payload_parses_only_delta_json(self) -> None:
         payload = toolkit.json_payload(self.fixture.root, self.fixture.source, self.target)
@@ -110,6 +146,30 @@ class DeltaFixtureTests(unittest.TestCase):
         payload = toolkit.markdown_payload(self.fixture.root, self.fixture.source, self.target)
         self.assertEqual(payload["checked_count"], 1)
         self.assertEqual(payload["records"][0]["headings"], 1)
+
+    def test_markdown_payload_rejects_unsafe_scheme(self) -> None:
+        previous = self.target
+        (self.fixture.root / "docs" / "unsafe.md").write_text(
+            "# Unsafe\n\n[open](javascript:alert(1))\n", encoding="utf-8"
+        )
+        git(self.fixture.root, "add", "docs/unsafe.md")
+        git(self.fixture.root, "commit", "-m", "unsafe markdown")
+        target = git(self.fixture.root, "rev-parse", "HEAD")
+        payload = toolkit.markdown_payload(self.fixture.root, previous, target)
+        self.assertFalse(payload["valid"])
+        self.assertEqual(payload["target_issue_count"], 1)
+
+    def test_markdown_payload_rejects_private_absolute_target(self) -> None:
+        previous = self.target
+        (self.fixture.root / "docs" / "private.md").write_text(
+            "# Private\n\n[local](C:\\Users\\sample\\private.txt)\n", encoding="utf-8"
+        )
+        git(self.fixture.root, "add", "docs/private.md")
+        git(self.fixture.root, "commit", "-m", "private markdown target")
+        target = git(self.fixture.root, "rev-parse", "HEAD")
+        payload = toolkit.markdown_payload(self.fixture.root, previous, target)
+        self.assertFalse(payload["valid"])
+        self.assertEqual(payload["target_issue_count"], 1)
 
     def test_python_payload_compiles_without_pycache(self) -> None:
         payload = toolkit.python_payload(self.fixture.root, self.fixture.source, self.target)
@@ -138,6 +198,37 @@ class DeltaFixtureTests(unittest.TestCase):
         self.assertTrue(payload["valid"])
         self.assertEqual(payload["owner_delta_file_count"], 3)
 
+    def test_merkle_root_is_order_independent_and_mutation_sensitive(self) -> None:
+        manifest = toolkit.manifest_payload(self.fixture.root, self.fixture.source, self.target)
+        entries = manifest["entries"]
+        self.assertEqual(toolkit.merkle_root(entries), toolkit.merkle_root(reversed(entries)))
+        mutated = [dict(row) for row in entries]
+        mutated[0]["sha256"] = "0" * 64
+        self.assertNotEqual(toolkit.merkle_root(entries), toolkit.merkle_root(mutated))
+
+    def test_manifest_refuses_symlink_mode(self) -> None:
+        previous = self.target
+        blob = git(self.fixture.root, "rev-parse", f"{previous}:base.txt")
+        git(self.fixture.root, "update-index", "--add", "--cacheinfo", f"120000,{blob},docs/link")
+        git(self.fixture.root, "commit", "-m", "synthetic symlink entry")
+        target = git(self.fixture.root, "rev-parse", "HEAD")
+        with self.assertRaises(toolkit.DeltaError):
+            toolkit.manifest_payload(self.fixture.root, previous, target)
+
+    def test_manifest_refuses_gitlink_mode(self) -> None:
+        previous = self.target
+        git(
+            self.fixture.root,
+            "update-index",
+            "--add",
+            "--cacheinfo",
+            f"160000,{previous},docs/submodule",
+        )
+        git(self.fixture.root, "commit", "-m", "synthetic gitlink entry")
+        target = git(self.fixture.root, "rev-parse", "HEAD")
+        with self.assertRaises(toolkit.DeltaError):
+            toolkit.manifest_payload(self.fixture.root, previous, target)
+
     def test_source_must_be_ancestor(self) -> None:
         git(self.fixture.root, "checkout", "--orphan", "unrelated")
         (self.fixture.root / "orphan.txt").write_text("orphan\n", encoding="utf-8")
@@ -163,6 +254,22 @@ class DeltaFixtureTests(unittest.TestCase):
         with self.assertRaises(toolkit.DeltaError):
             toolkit.run_exact_tests(self.fixture.root, ["scripts/ok.py"])
 
+    def test_exact_tests_reject_undeclared_dependency_closure(self) -> None:
+        tests = self.fixture.root / "tests"
+        tests.mkdir(exist_ok=True)
+        module = tests / "test_sample.py"
+        module.write_text(
+            "DECLARED_REPOSITORY_DEPENDENCIES = ('scripts/ok.py',)\n",
+            encoding="utf-8",
+        )
+        with self.assertRaises(toolkit.DeltaError):
+            toolkit.run_exact_tests(self.fixture.root, ["tests/test_sample.py"], [])
+
+    def test_normalized_test_output_removes_elapsed_time(self) -> None:
+        left = toolkit.normalized_test_output("Ran 4 tests in 0.001s\nOK\n")
+        right = toolkit.normalized_test_output("Ran 4 tests in 9.999s\nOK\n")
+        self.assertEqual(left, right)
+
     def test_exclusive_receipt_refuses_existing_file(self) -> None:
         receipt = self.fixture.root / "receipts" / "canonical.json"
         toolkit.write_json_exclusive(receipt, {"valid": True})
@@ -179,9 +286,39 @@ class DeltaFixtureTests(unittest.TestCase):
         with self.assertRaises(toolkit.DeltaError):
             toolkit.write_json_exclusive(receipt, {"valid": True})
 
+    def test_baton_integrity_rejects_wrong_digest(self) -> None:
+        previous = self.target
+        handoff = self.fixture.root / "docs" / "handoff.md"
+        handoff.write_text("# Handoff\n\nBounded baton words.\n", encoding="utf-8")
+        git(self.fixture.root, "add", "docs/handoff.md")
+        git(self.fixture.root, "commit", "-m", "baton")
+        target = git(self.fixture.root, "rev-parse", "HEAD")
+        payload = toolkit.baton_integrity_payload(
+            self.fixture.root, previous, target, "docs/handoff.md", "0" * 64, 1, 100
+        )
+        self.assertFalse(payload["valid"])
+        self.assertEqual(payload["issues"], ["baton SHA-256 differs from the expected digest"])
+
+    def test_baton_integrity_rejects_escape_and_uncommitted_path(self) -> None:
+        with self.assertRaises(toolkit.DeltaError):
+            toolkit.baton_integrity_payload(
+                self.fixture.root, self.fixture.source, self.target,
+                "../handoff.md", "0" * 64, 1, 100,
+            )
+        (self.fixture.root / "docs" / "uncommitted.md").write_text("not committed\n", encoding="utf-8")
+        with self.assertRaises(toolkit.DeltaError):
+            toolkit.baton_integrity_payload(
+                self.fixture.root, self.fixture.source, self.target,
+                "docs/uncommitted.md", "0" * 64, 1, 100,
+            )
+
     def test_builder_rejects_arbitrary_phase_root(self) -> None:
         result = subprocess.run(
-            [sys.executable, str(BUILDER_PATH), "--repo", str(self.fixture.root), "--phase-root", "docs/elsewhere"],
+            [
+                sys.executable, str(BUILDER_PATH), "--repo", str(self.fixture.root),
+                "--phase-root", "docs/elsewhere", "--owner", "Vesper Arlen",
+                "--phase", "v662-v4", "--next-owner", "Lyren Moss",
+            ],
             stdout=subprocess.PIPE,
             stderr=subprocess.STDOUT,
             text=True,
@@ -190,10 +327,16 @@ class DeltaFixtureTests(unittest.TestCase):
             check=False,
         )
         self.assertNotEqual(result.returncode, 0)
-        self.assertIn("phase root must be exactly", result.stdout)
+        self.assertIn("phase root must match docs/<owner-slug>/<phase>", result.stdout)
 
 
 class LedgerAndRouteTests(unittest.TestCase):
+    def test_canonical_owner_is_explicit_and_owner_neutral(self) -> None:
+        self.assertEqual(toolkit.canonical_owner(" Vesper Arlen "), "Vesper Arlen")
+        self.assertNotIn("Neris Solane", MODULE_PATH.read_text(encoding="utf-8"))
+        with self.assertRaises(toolkit.DeltaError):
+            toolkit.canonical_owner("   ")
+
     def test_data_quality_accepts_only_four_labels(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
             path = Path(directory) / "ledger.json"
@@ -245,8 +388,34 @@ class LedgerAndRouteTests(unittest.TestCase):
             auth_path = Path(directory) / "auth.json"
             roster_path.write_text(json.dumps(roster), encoding="utf-8")
             auth_path.write_text(json.dumps(auth), encoding="utf-8")
-            payload = toolkit.route_payload(roster_path, auth_path)
+            payload = toolkit.route_payload(
+                roster_path, auth_path, "Neris Solane", "Vesper Arlen"
+            )
             self.assertTrue(payload["valid"])
+
+    def test_route_payload_fails_mismatched_expected_owner(self) -> None:
+        execution = {"policy": "owner_self_scoped_delta", "current_owner_executor": "Vesper Arlen"}
+        active = [
+            "Eiren Kestrel", "Elaren Kestrel", "Neris Solane", "Vesper Arlen",
+            "Lyren Moss", "Ilyra Fen", "Auren Lark", "Sable Rook", "Caelen Ash",
+            "Orin Thale", "Liora Venn", "Tamar Vey", "Elowen Cairn", "Sylven Arc",
+            "Caelen Morrow",
+        ]
+        roster = {
+            "active_main_tasks": active,
+            "standby_members": [{"relational_name": "Tavian Sol"}],
+            "live_route_override": {"repeat_cycle": active},
+            "validation_scope": {"execution_authority": execution},
+            "current_route": {"current": {"owner": "Vesper Arlen"}, "next": {"owner": "Lyren Moss"}},
+        }
+        auth = {"validation_scope": {"execution_authority": execution}}
+        with tempfile.TemporaryDirectory() as directory:
+            roster_path = Path(directory) / "roster.json"
+            auth_path = Path(directory) / "auth.json"
+            roster_path.write_text(json.dumps(roster), encoding="utf-8")
+            auth_path.write_text(json.dumps(auth), encoding="utf-8")
+            payload = toolkit.route_payload(roster_path, auth_path, "Neris Solane", "Vesper Arlen")
+            self.assertFalse(payload["valid"])
 
 
 if __name__ == "__main__":
