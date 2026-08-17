@@ -16,6 +16,7 @@ SOURCE = "11464b395438ee0adc88a4b829e01646ec4cf485"
 X1 = "3704cacbd678a28c6e5f401c48572be6af118f5b"
 OWNER = "Neris Solane"
 PHASE = "v662-v3-3-midnight-remaster"
+EXPECTED_PHASE_ROOT = f"docs/neris-solane/{PHASE}"
 NEXT_OWNER = "Vesper Arlen"
 NEXT_PHASE = "v662-v4"
 OUTCOMES = {"completed", "represented", "open_gap", "exact_gate"}
@@ -842,7 +843,10 @@ def main() -> int:
     parser.add_argument("--phase-root", required=True)
     args = parser.parse_args()
     repo = args.repo.resolve()
-    phase_root = repo / Path(args.phase_root)
+    normalized_phase_root = args.phase_root.replace("\\", "/")
+    if normalized_phase_root != EXPECTED_PHASE_ROOT:
+        raise SystemExit(f"phase root must be exactly {EXPECTED_PHASE_ROOT}")
+    phase_root = repo / Path(normalized_phase_root)
 
     safe = {
         "schema": "ghc.family.portfolio.safe.v1",

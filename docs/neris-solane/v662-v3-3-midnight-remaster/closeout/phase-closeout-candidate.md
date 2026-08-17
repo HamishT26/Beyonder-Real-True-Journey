@@ -8,11 +8,15 @@ history. The immutable source is `11464b395438ee0adc88a4b829e01646ec4cf485` and 
 The final exact commit, push, four-way equality, one-shot canonical receipt, and
 Vesper acknowledgement are post-commit terminal facts and must be recorded
 externally rather than guessed here.
+The direct-child candidate `1ec9bcae953d7a74d95947f90bc6971bbb4996cb`
+was subsequently classified as non-terminal after its exact-diff security
+review found two issues. The corrected final is therefore an additive
+descendant, not a rewritten commit.
 
 The durable portfolio contains 50 safe-now and successor records,
 30 candidate records, 15 exact or blocked records,
 21 skill records, 20 runner records, and 60
-CLEAN/FIX/REFINE records. The committed Vesper baton contains 38992
+CLEAN/FIX/REFINE records. The committed Vesper baton contains 39508
 words, above the 10,000-word minimum and below the 100,000-word maximum.
 
 ## Source and lifecycle
@@ -81,13 +85,37 @@ canonical is intentionally deferred until the exact candidate is committed and
 pushed so it can check clean state and local, upstream, tracking, and fresh-live
 equality without a self-reference cycle.
 
+## Additive security correction
+
+The first exact-diff security scan completed against the initial final candidate
+and retained two findings: a medium-severity Git remote option-injection path
+and a low-severity canonical receipt symlink race. The correction validates an
+exact configured remote name and branch, uses end-of-options delimiters,
+parses Git name-status data with NUL framing, restricts selected execution to
+`tests/test_*.py`, binds the baton builder to this exact phase root, and creates
+the receipt with one exclusive no-follow handle. On Windows the handle uses
+`CREATE_NEW` with reparse-point handling.
+
+The first 25-case hardening run failed and earns zero success credit: Windows
+rejected the tab-filename fixture before Git ingestion, and Python's ordinary
+exclusive text open followed a dangling Windows symlink. The bounded recovery
+used a direct NUL-stream fixture and an OS-specific exclusive handle; the same
+isolated module then passed 25/25. Neither result is the canonical aggregate.
+A new exact-final security scan remains mandatory after the additive correction
+is committed and pushed and before the one canonical invocation.
+
 ## Method Flow
 
-Five new operational failures are retained: a combined source probe with no
+Ten new operational failures are retained. The first five are a combined source probe with no
 attributable output, initial full materialization before the late sparse rule,
 conflicting route examples, one rejected coordinated patch whose exact text did
 not match, and one roster-validator call using an obsolete argument shape. Each
-has a bounded passing recovery. None of the failures is erased by the recovery,
+has a bounded passing recovery. The other five are the two initial security
+findings, a rejected security-progress unit change, and the first failed
+hardening test run, plus two command-policy rejections while trying to remove
+one ignored bytecode file. The file remains counted in the 37-file materialized
+total, and future bounded test runs disable bytecode writes. None of the
+failures is erased by the recovery,
 and none earns aggregate-success credit.
 
 The route conflict is normalized using the complete roster rather than a single

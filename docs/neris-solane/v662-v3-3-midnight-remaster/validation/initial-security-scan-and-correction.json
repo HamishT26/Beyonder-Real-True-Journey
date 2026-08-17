@@ -1,0 +1,79 @@
+{
+  "schema": "ghc.family.v662-v3-3-midnight-remaster.security-correction.v1",
+  "owner": "Neris Solane",
+  "source_commit": "11464b395438ee0adc88a4b829e01646ec4cf485",
+  "initial_final_candidate": "1ec9bcae953d7a74d95947f90bc6971bbb4996cb",
+  "initial_exact_diff_scan": {
+    "outcome": "completed",
+    "finding_count": 2,
+    "finding_severities": {
+      "medium": 1,
+      "low": 1
+    },
+    "coverage_surfaces": 6,
+    "coverage_complete": true,
+    "findings_sha256": "01b142b5b0a2ca15001928ba521a035da35de5ab75339815cf20f197be36f579",
+    "coverage_sha256": "579b700cc78668ffd19239c4872911af15c1088a8641d9af9bb5604e387491d0",
+    "report_sha256": "79636b885eb7f46f047b4202b75f5acebfc1aaf26fc6ec175d5c5c1d3a9e4e41"
+  },
+  "retained_findings": [
+    {
+      "finding": "option-like Git remote reached git ls-remote before validation",
+      "severity": "medium",
+      "outcome": "represented",
+      "remediation": "configured remote-name allowlist, branch validation, and end-of-options delimiters",
+      "remediation_outcome": "completed"
+    },
+    {
+      "finding": "canonical receipt check-then-write could follow a raced symlink",
+      "severity": "low",
+      "outcome": "represented",
+      "remediation": "exclusive no-follow receipt creation, including Windows CREATE_NEW with reparse-point handling",
+      "remediation_outcome": "completed"
+    }
+  ],
+  "additional_hardening": [
+    {
+      "control": "NUL-framed Git name-status parsing with strict decoding",
+      "outcome": "completed"
+    },
+    {
+      "control": "tests/test_*.py execution allowlist",
+      "outcome": "completed"
+    },
+    {
+      "control": "exact phase-root binding for the baton builder",
+      "outcome": "completed"
+    }
+  ],
+  "isolated_test_recovery": {
+    "first_hardening_run": {
+      "tests_run": 25,
+      "zero_success_credit": true,
+      "outcome": "represented",
+      "observations": [
+        "Windows rejected a tab-bearing fixture filename before Git ingestion",
+        "Python exclusive text open followed a dangling Windows symlink"
+      ]
+    },
+    "bounded_recovery_run": {
+      "tests_passed": 25,
+      "tests_run": 25,
+      "outcome": "completed"
+    }
+  },
+  "exact_final_security_rescan": {
+    "outcome": "represented",
+    "requirement": "Complete one fresh exact-diff scan against the pushed corrected final before canonical invocation"
+  },
+  "negative_overlay": {
+    "initial_candidate_effective_negatives": 23078,
+    "new_retained_negatives": 5,
+    "corrected_final_effective_negatives": 23083,
+    "initial_candidate_effective_methods": 7672,
+    "new_preferred_methods": 5,
+    "corrected_final_effective_methods": 7677
+  },
+  "boundary": "Same-owner source and fixture review only. It is not exhaustive security, production certification, independent reproduction, empirical or professional validation, authority, personhood evidence, Theory-of-Everything proof, or Stage 20 authority.",
+  "verdict": "NOT_READY_FOR_STAGE_20"
+}

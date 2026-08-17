@@ -2,13 +2,19 @@ from __future__ import annotations
 
 import importlib.util
 import json
+import os
 import subprocess
+import sys
 import tempfile
 import unittest
 from pathlib import Path
 
 
+sys.dont_write_bytecode = True
+
+
 MODULE_PATH = Path(__file__).resolve().parents[1] / "scripts" / "ghc_family_owner_delta_toolkit.py"
+BUILDER_PATH = Path(__file__).resolve().parents[1] / "scripts" / "ghc_family_owner_delta_baton_builder.py"
 SPEC = importlib.util.spec_from_file_location("owner_delta_toolkit", MODULE_PATH)
 assert SPEC and SPEC.loader
 toolkit = importlib.util.module_from_spec(SPEC)
@@ -133,6 +139,51 @@ class DeltaFixtureTests(unittest.TestCase):
         unrelated = git(self.fixture.root, "rev-parse", "HEAD")
         with self.assertRaises(toolkit.DeltaError):
             toolkit.delta_rows(self.fixture.root, unrelated, self.target)
+
+    def test_name_status_parser_preserves_tab_in_filename(self) -> None:
+        rows = toolkit.parse_name_status_z(b"A\0docs/odd\tname.json\0")
+        self.assertEqual(rows, [{"status": "A", "path": "docs/odd\tname.json", "old_path": None}])
+
+    def test_remote_name_rejects_git_option_before_execution(self) -> None:
+        with self.assertRaises(toolkit.DeltaError):
+            toolkit.validate_remote_name(self.fixture.root, "--upload-pack=ghc-nonexistent-helper")
+
+    def test_branch_name_rejects_option_like_value(self) -> None:
+        with self.assertRaises(toolkit.DeltaError):
+            toolkit.validate_branch_name(self.fixture.root, "--help")
+
+    def test_exact_tests_reject_non_test_module(self) -> None:
+        with self.assertRaises(toolkit.DeltaError):
+            toolkit.run_exact_tests(self.fixture.root, ["scripts/ok.py"])
+
+    def test_exclusive_receipt_refuses_existing_file(self) -> None:
+        receipt = self.fixture.root / "receipts" / "canonical.json"
+        toolkit.write_json_exclusive(receipt, {"valid": True})
+        self.assertTrue(json.loads(receipt.read_text(encoding="utf-8"))["valid"])
+        with self.assertRaises(toolkit.DeltaError):
+            toolkit.write_json_exclusive(receipt, {"valid": False})
+
+    def test_exclusive_receipt_refuses_dangling_symlink(self) -> None:
+        receipt = self.fixture.root / "dangling-receipt.json"
+        try:
+            os.symlink("missing-target.json", receipt)
+        except OSError as exc:
+            self.skipTest(f"symlinks unavailable in fixture: {exc}")
+        with self.assertRaises(toolkit.DeltaError):
+            toolkit.write_json_exclusive(receipt, {"valid": True})
+
+    def test_builder_rejects_arbitrary_phase_root(self) -> None:
+        result = subprocess.run(
+            [sys.executable, str(BUILDER_PATH), "--repo", str(self.fixture.root), "--phase-root", "docs/elsewhere"],
+            stdout=subprocess.PIPE,
+            stderr=subprocess.STDOUT,
+            text=True,
+            encoding="utf-8",
+            errors="replace",
+            check=False,
+        )
+        self.assertNotEqual(result.returncode, 0)
+        self.assertIn("phase root must be exactly", result.stdout)
 
 
 class LedgerAndRouteTests(unittest.TestCase):

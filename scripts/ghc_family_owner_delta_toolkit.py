@@ -47,6 +47,7 @@ SECURITY_PATTERNS = {
     "destructive_git": re.compile(r"git\s+(?:reset\s+--hard|push\s+--force)"),
     "recursive_delete": re.compile(r"(?i)(?:rm\s+-rf|Remove-Item\b[^\n]*-Recurse)"),
 }
+REMOTE_NAME = re.compile(r"[A-Za-z0-9][A-Za-z0-9._-]*\Z")
 
 
 class DeltaError(RuntimeError):
@@ -96,12 +97,57 @@ def run_git(repo: Path, *args: str, check: bool = True) -> subprocess.CompletedP
     return result
 
 
+def run_git_bytes(repo: Path, *args: str, check: bool = True) -> subprocess.CompletedProcess[bytes]:
+    result = subprocess.run(
+        ["git", "-C", str(repo), *args],
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        check=False,
+    )
+    if check and result.returncode:
+        error = result.stderr.decode("utf-8", errors="replace").strip()
+        raise DeltaError(f"git command failed ({result.returncode}): {' '.join(args)}: {error}")
+    return result
+
+
 def resolve_commit(repo: Path, value: str) -> str:
-    result = run_git(repo, "rev-parse", "--verify", f"{value}^{{commit}}")
+    result = run_git(repo, "rev-parse", "--verify", "--end-of-options", f"{value}^{{commit}}")
     resolved = result.stdout.strip()
     if not re.fullmatch(r"[0-9a-f]{40}", resolved):
         raise DeltaError(f"commit did not resolve to a full object id: {value}")
     return resolved
+
+
+def parse_name_status_z(raw: bytes) -> list[dict[str, Any]]:
+    """Parse Git's NUL-framed name-status stream without line ambiguity."""
+    tokens = raw.split(b"\0")
+    if not tokens or tokens[-1] != b"":
+        raise DeltaError("NUL-delimited Git delta did not terminate cleanly")
+    tokens.pop()
+    rows: list[dict[str, Any]] = []
+    index = 0
+    while index < len(tokens):
+        try:
+            status = tokens[index].decode("ascii", errors="strict")
+        except UnicodeDecodeError as exc:
+            raise DeltaError("non-ASCII Git delta status rejected") from exc
+        index += 1
+        path_count = 2 if status.startswith(("R", "C")) else 1
+        if index + path_count > len(tokens):
+            raise DeltaError(f"malformed NUL-delimited delta row: {status}")
+        try:
+            path_tokens = [token.decode("utf-8", errors="strict") for token in tokens[index:index + path_count]]
+        except UnicodeDecodeError as exc:
+            raise DeltaError(f"non-UTF-8 Git delta path rejected for status {status}") from exc
+        index += path_count
+        if status.startswith(("R", "C")):
+            old_path = normalize_relative(path_tokens[0])
+            path = normalize_relative(path_tokens[1])
+        else:
+            old_path = None
+            path = normalize_relative(path_tokens[0])
+        rows.append({"status": status, "path": path, "old_path": old_path})
+    return rows
 
 
 def delta_rows(repo: Path, source: str, target: str) -> list[dict[str, Any]]:
@@ -110,26 +156,18 @@ def delta_rows(repo: Path, source: str, target: str) -> list[dict[str, Any]]:
     ancestor = run_git(repo, "merge-base", "--is-ancestor", source_id, target_id, check=False)
     if ancestor.returncode != 0:
         raise DeltaError("source is not an ancestor of target")
-    raw = run_git(repo, "diff", "--name-status", "--find-renames", source_id, target_id).stdout
-    rows: list[dict[str, Any]] = []
-    paths: list[str] = []
-    for line in raw.splitlines():
-        if not line.strip():
-            continue
-        fields = line.split("\t")
-        status = fields[0]
-        if status.startswith(("R", "C")):
-            if len(fields) != 3:
-                raise DeltaError(f"malformed rename/copy row: {line}")
-            old_path = normalize_relative(fields[1])
-            path = normalize_relative(fields[2])
-        else:
-            if len(fields) != 2:
-                raise DeltaError(f"malformed delta row: {line}")
-            old_path = None
-            path = normalize_relative(fields[1])
-        paths.append(path)
-        rows.append({"status": status, "path": path, "old_path": old_path})
+    raw = run_git_bytes(
+        repo,
+        "diff",
+        "--name-status",
+        "-z",
+        "--find-renames",
+        "--end-of-options",
+        source_id,
+        target_id,
+    ).stdout
+    rows = parse_name_status_z(raw)
+    paths = [row["path"] for row in rows]
     ensure_unique(paths, "delta path")
     return rows
 
@@ -191,6 +229,57 @@ def write_json(path: Path | None, payload: dict[str, Any]) -> None:
         return
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(rendered, encoding="utf-8", newline="\n")
+
+
+def write_json_exclusive(path: Path, payload: dict[str, Any]) -> None:
+    rendered = json.dumps(payload, ensure_ascii=False, indent=2, sort_keys=True) + "\n"
+    path.parent.mkdir(parents=True, exist_ok=True)
+    try:
+        if os.name == "nt":
+            import ctypes
+            import msvcrt
+            from ctypes import wintypes
+
+            create_file = ctypes.WinDLL("kernel32", use_last_error=True).CreateFileW
+            create_file.argtypes = [
+                wintypes.LPCWSTR,
+                wintypes.DWORD,
+                wintypes.DWORD,
+                wintypes.LPVOID,
+                wintypes.DWORD,
+                wintypes.DWORD,
+                wintypes.HANDLE,
+            ]
+            create_file.restype = wintypes.HANDLE
+            handle_value = create_file(
+                os.path.abspath(path),
+                0x40000000,
+                0,
+                None,
+                1,
+                0x00000080 | 0x00200000,
+                None,
+            )
+            invalid_handle = wintypes.HANDLE(-1).value
+            if handle_value == invalid_handle:
+                error = ctypes.get_last_error()
+                if error in {80, 183}:
+                    raise FileExistsError(error, "exclusive receipt path already exists", str(path))
+                raise OSError(error, "unable to create exclusive receipt", str(path))
+            try:
+                descriptor = msvcrt.open_osfhandle(handle_value, os.O_WRONLY | getattr(os, "O_BINARY", 0))
+            except Exception:
+                ctypes.WinDLL("kernel32", use_last_error=True).CloseHandle(handle_value)
+                raise
+        else:
+            flags = os.O_WRONLY | os.O_CREAT | os.O_EXCL
+            if hasattr(os, "O_NOFOLLOW"):
+                flags |= os.O_NOFOLLOW
+            descriptor = os.open(path, flags, 0o600)
+        with os.fdopen(descriptor, "w", encoding="utf-8", newline="\n") as handle:
+            handle.write(rendered)
+    except FileExistsError as exc:
+        raise DeltaError("canonical receipt already exists; aggregate replay is forbidden") from exc
 
 
 def exact_paths(repo: Path, source: str, target: str, suffix: str | None = None) -> list[str]:
@@ -462,8 +551,14 @@ def run_exact_tests(repo: Path, modules: Iterable[str]) -> dict[str, Any]:
     normalized = ensure_unique((normalize_relative(value) for value in modules), "test module")
     records = []
     for module in normalized:
-        if not module.endswith(".py"):
-            raise DeltaError(f"test module must be a literal Python file: {module}")
+        module_path = PurePosixPath(module)
+        if (
+            not module.endswith(".py")
+            or len(module_path.parts) < 2
+            or module_path.parts[0] != "tests"
+            or not module_path.name.startswith("test_")
+        ):
+            raise DeltaError(f"test module must be a tests/test_*.py file: {module}")
         path = repo / Path(module)
         if not path.is_file():
             raise DeltaError(f"materialized test module missing: {module}")
@@ -490,7 +585,25 @@ def run_exact_tests(repo: Path, modules: Iterable[str]) -> dict[str, Any]:
     return {"module_count": len(records), "records": records, "valid": True}
 
 
+def validate_remote_name(repo: Path, remote: str) -> str:
+    if not REMOTE_NAME.fullmatch(remote):
+        raise DeltaError(f"invalid configured remote name rejected: {remote}")
+    run_git(repo, "remote", "get-url", "--", remote)
+    return remote
+
+
+def validate_branch_name(repo: Path, branch: str) -> str:
+    if not branch or branch.startswith("-"):
+        raise DeltaError(f"option-like or empty branch name rejected: {branch}")
+    result = run_git(repo, "check-ref-format", "--branch", branch, check=False)
+    if result.returncode:
+        raise DeltaError(f"invalid branch name rejected: {branch}")
+    return branch
+
+
 def clean_and_equal_payload(repo: Path, target: str, branch: str, remote: str) -> dict[str, Any]:
+    branch = validate_branch_name(repo, branch)
+    remote = validate_remote_name(repo, remote)
     target_id = resolve_commit(repo, target)
     head = resolve_commit(repo, "HEAD")
     current_branch = run_git(repo, "branch", "--show-current").stdout.strip()
@@ -499,7 +612,7 @@ def clean_and_equal_payload(repo: Path, target: str, branch: str, remote: str) -
     untracked = [line for line in run_git(repo, "ls-files", "--others", "--exclude-standard").stdout.splitlines() if line]
     upstream = resolve_commit(repo, "@{u}")
     tracking = resolve_commit(repo, f"refs/remotes/{remote}/{branch}")
-    live_result = run_git(repo, "ls-remote", "--heads", remote, f"refs/heads/{branch}")
+    live_result = run_git(repo, "ls-remote", "--heads", "--end-of-options", remote, f"refs/heads/{branch}")
     live_fields = live_result.stdout.strip().split()
     live = live_fields[0] if live_fields else None
     issues = []
@@ -531,8 +644,6 @@ def canonical_payload(args: argparse.Namespace) -> dict[str, Any]:
     repo = args.repo.resolve()
     source = resolve_commit(repo, args.source)
     target = resolve_commit(repo, args.target)
-    if args.receipt.exists():
-        raise DeltaError("canonical receipt already exists; successful aggregate replay is forbidden")
     ancestry = run_git(repo, "rev-list", "--parents", f"{source}..{target}").stdout.splitlines()
     merge_count = sum(len(line.split()) > 2 for line in ancestry)
     if merge_count:
@@ -586,7 +697,7 @@ def canonical_payload(args: argparse.Namespace) -> dict[str, Any]:
         "verdict": "NOT_READY_FOR_STAGE_20",
         "boundary": "One same-owner exact-delta software validation pass only; not a full-repository suite, independent reproduction, empirical or professional evidence, authority, personhood evidence, Theory-of-Everything proof, or Stage 20 authority.",
     }
-    write_json(args.receipt, payload)
+    write_json_exclusive(args.receipt, payload)
     return payload
 
 

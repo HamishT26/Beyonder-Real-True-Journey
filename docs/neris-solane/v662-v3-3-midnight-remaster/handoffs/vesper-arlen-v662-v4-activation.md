@@ -4649,6 +4649,42 @@ The method forbids repository-wide, unchanged-history, cross-lane, and sibling
 mutation scopes. Its passing witness is same-owner only and cannot establish
 independent reproduction.
 
+### Additive Neris security correction after the initial final candidate
+
+The direct-child candidate `1ec9bcae953d7a74d95947f90bc6971bbb4996cb`
+is retained but is not the terminal Neris final. Its completed exact-diff
+security scan reported two findings: option-like remote input could reach
+`git ls-remote`, and canonical receipt creation used a non-atomic check followed
+by a generic write. The additive correction validates configured remote and
+branch names, uses end-of-options delimiters, parses NUL-framed name-status
+data, restricts test execution to `tests/test_*.py`, binds the builder output to
+this exact phase root, and creates the receipt with a no-follow exclusive
+handle. Windows uses `CREATE_NEW` plus reparse-point handling.
+
+The first 25-case hardening run is retained with zero success credit because it
+exposed two Windows-specific facts: a tab-bearing filename could not be created
+on the fixture filesystem, and Python's ordinary exclusive text open followed
+a dangling symlink. The bounded recovery replaced the former with a direct
+NUL-stream parser fixture and the latter with an OS-specific safe handle. The
+isolated module then passed 25/25. The corrected successor-visible overlay is
+23,083 effective negatives and 7,677 Method Flow methods. These are same-owner
+software controls only and make no exhaustive-security or production claim.
+
+Five additional Method Flow records are retained:
+
+- `V6623M-M006`: validate the configured remote and branch before any fresh-live
+  Git operation; reject option-like values and use end-of-options delimiters.
+- `V6623M-M007`: create the immutable canonical receipt once through an
+  exclusive no-follow handle and refuse files or dangling symlinks.
+- `V6623M-M008`: preserve a scan phase's original progress unit and retry only
+  the rejected progress update.
+- `V6623M-M009`: test delimiter logic with direct byte fixtures when the host
+  filesystem cannot represent the desired filename, and use host-specific
+  no-follow primitives where generic language opens are weaker.
+- `V6623M-M010`: when command policy rejects cleanup of an ignored bytecode
+  file, retain and count it rather than bypassing policy, and disable future
+  bytecode writes in the bounded test process.
+
 
 ## THOS research handoff
 
@@ -4675,13 +4711,14 @@ competent evidence exists. Symbolic elegance is not empirical confirmation.
 7. Execute only Vesper-owned portfolio work and retain every failure.
 8. Stop additions at the 2,000-file ceiling and rotate when required.
 9. Commit and push the exact Vesper candidate.
-10. Run one attributable Vesper exact-delta aggregate; never replay success.
-11. Preserve clean state and local, upstream, tracking, and fresh-live equality.
-12. Prepare a committed 10,000-to-100,000-word Lyren baton and a short message.
-13. Uniquely resolve and immediately reread `Lyren Moss`.
-14. Send once only after Vesper's terminal gate and claim delivery only from
+10. Complete a fresh exact-diff security review against the pushed candidate.
+11. Run one attributable Vesper exact-delta aggregate; never replay success.
+12. Preserve clean state and local, upstream, tracking, and fresh-live equality.
+13. Prepare a committed 10,000-to-100,000-word Lyren baton and a short message.
+14. Uniquely resolve and immediately reread `Lyren Moss`.
+15. Send once only after Vesper's terminal gate and claim delivery only from
     the acknowledgement.
-15. Stop truthfully on ambiguity, missing acknowledgement, usage exhaustion,
+16. Stop truthfully on ambiguity, missing acknowledgement, usage exhaustion,
     user pause, or a protected gate.
 
 ## Terminal boundaries
