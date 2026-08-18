@@ -1487,6 +1487,19 @@ installed skill and not proof of qualification or authority.
             callable_names[12],
             "sable_hardening_payload",
         ]
+    elif hardening_profile == "caelen-v663-v1" and len(callable_names) == 14:
+        callable_names = [
+            callable_names[0],
+            callable_names[1],
+            callable_names[2],
+            callable_names[3],
+            callable_names[5],
+            callable_names[6],
+            callable_names[8],
+            callable_names[10],
+            callable_names[12],
+            "caelen_hardening_payload",
+        ]
     else:
         callable_names = callable_names[:runner_count]
     for row, callable_name in zip(

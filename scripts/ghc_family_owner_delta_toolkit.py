@@ -1831,6 +1831,717 @@ def validate_problem_details_shape(problem: dict[str, Any]) -> dict[str, Any]:
     }
 
 
+_CAVE_TOKEN = re.compile(r"[a-z][a-z0-9_-]{0,63}\Z")
+
+
+def _cave_record(record: Any, fields: set[str], label: str) -> dict[str, Any]:
+    if not isinstance(record, dict) or set(record) != fields:
+        raise DeltaError(f"{label} has the wrong fields")
+    return record
+
+
+def _cave_token(value: Any, label: str) -> str:
+    if not isinstance(value, str) or _CAVE_TOKEN.fullmatch(value) is None:
+        raise DeltaError(f"{label} is outside the bounded token grammar")
+    return value
+
+
+def _cave_finite(
+    value: Any,
+    label: str,
+    *,
+    minimum: float | None = None,
+    maximum: float | None = None,
+    minimum_inclusive: bool = True,
+    maximum_inclusive: bool = True,
+) -> float:
+    if isinstance(value, bool) or not isinstance(value, (int, float)):
+        raise DeltaError(f"{label} must be a non-Boolean number")
+    parsed = float(value)
+    if not math.isfinite(parsed):
+        raise DeltaError(f"{label} must be finite")
+    if minimum is not None and (
+        parsed < minimum if minimum_inclusive else parsed <= minimum
+    ):
+        raise DeltaError(f"{label} is below the bounded range")
+    if maximum is not None and (
+        parsed > maximum if maximum_inclusive else parsed >= maximum
+    ):
+        raise DeltaError(f"{label} is above the bounded range")
+    return parsed
+
+
+def _cave_timestamp(value: Any, label: str) -> datetime:
+    if not isinstance(value, str) or not 20 <= len(value) <= 40:
+        raise DeltaError(f"{label} is not a bounded timestamp")
+    try:
+        parsed = datetime.fromisoformat(value.replace("Z", "+00:00"))
+    except ValueError as exc:
+        raise DeltaError(f"{label} is not an ISO timestamp") from exc
+    if parsed.tzinfo is None:
+        raise DeltaError(f"{label} lacks an explicit offset")
+    return parsed.astimezone(timezone.utc)
+
+
+def _cave_false(value: Any, label: str) -> None:
+    if value is not False:
+        raise DeltaError(f"{label} must remain explicitly false")
+
+
+def validate_cave_station_shot_topology(record: dict[str, Any]) -> dict[str, Any]:
+    """Validate a fictional station-shot graph without producing a cave survey."""
+
+    _cave_record(
+        record,
+        {
+            "project_token",
+            "stations",
+            "shots",
+            "root_station",
+            "synthetic",
+            "real_location_present",
+        },
+        "cave topology record",
+    )
+    _cave_token(record["project_token"], "cave project token")
+    stations = record["stations"]
+    if not isinstance(stations, list) or not 2 <= len(stations) <= 64:
+        raise DeltaError("cave station count is outside the bounded range")
+    station_tokens = [_cave_token(value, "cave station token") for value in stations]
+    ensure_unique(station_tokens, "cave station token")
+    root = _cave_token(record["root_station"], "cave root station")
+    if root not in station_tokens:
+        raise DeltaError("cave root station is unknown")
+    shots = record["shots"]
+    if not isinstance(shots, list) or not 1 <= len(shots) <= 128:
+        raise DeltaError("cave shot count is outside the bounded range")
+    shot_tokens: list[str] = []
+    adjacency = {station: set() for station in station_tokens}
+    for shot in shots:
+        _cave_record(
+            shot,
+            {"shot_token", "from_station", "to_station"},
+            "cave shot row",
+        )
+        shot_token = _cave_token(shot["shot_token"], "cave shot token")
+        start = _cave_token(shot["from_station"], "cave shot origin")
+        end = _cave_token(shot["to_station"], "cave shot destination")
+        if start not in adjacency or end not in adjacency:
+            raise DeltaError("cave shot references an unknown station")
+        if start == end:
+            raise DeltaError("cave shot self-loop is not allowed")
+        shot_tokens.append(shot_token)
+        adjacency[start].add(end)
+        adjacency[end].add(start)
+    ensure_unique(shot_tokens, "cave shot token")
+    reached = {root}
+    frontier = [root]
+    while frontier:
+        current = frontier.pop()
+        for neighbour in adjacency[current] - reached:
+            reached.add(neighbour)
+            frontier.append(neighbour)
+    if reached != set(station_tokens):
+        raise DeltaError("cave station-shot graph is disconnected")
+    if record["synthetic"] is not True:
+        raise DeltaError("cave topology record must be explicitly synthetic")
+    _cave_false(record["real_location_present"], "real cave location presence")
+    return {
+        "station_count": len(station_tokens),
+        "shot_count": len(shot_tokens),
+        "graph_connected": True,
+        "survey_computed": False,
+        "real_location_present": False,
+        "valid": True,
+    }
+
+
+def validate_cave_measurement_domain(record: dict[str, Any]) -> dict[str, Any]:
+    """Validate bounded declaration units without claiming a measurement."""
+
+    _cave_record(
+        record,
+        {
+            "bearing",
+            "inclination",
+            "distance",
+            "bearing_unit",
+            "inclination_unit",
+            "distance_unit",
+            "measurement_claimed",
+        },
+        "cave measurement record",
+    )
+    bearing = _cave_finite(
+        record["bearing"],
+        "cave bearing",
+        minimum=0.0,
+        maximum=360.0,
+        maximum_inclusive=False,
+    )
+    inclination = _cave_finite(
+        record["inclination"], "cave inclination", minimum=-90.0, maximum=90.0
+    )
+    distance = _cave_finite(
+        record["distance"],
+        "cave distance",
+        minimum=0.0,
+        maximum=100_000.0,
+        minimum_inclusive=False,
+    )
+    if record["bearing_unit"] != "degree" or record["inclination_unit"] != "degree":
+        raise DeltaError("cave angular units must be declared as degree")
+    if record["distance_unit"] != "m":
+        raise DeltaError("cave distance unit must be declared as m")
+    _cave_false(record["measurement_claimed"], "real cave measurement claim")
+    return {
+        "bearing": bearing,
+        "inclination": inclination,
+        "distance": distance,
+        "measurement_claimed": False,
+        "survey_accuracy_claimed": False,
+        "valid": True,
+    }
+
+
+def validate_cave_instrument_lineage(record: dict[str, Any]) -> dict[str, Any]:
+    """Validate fictional instrument lineage without calibration authority."""
+
+    _cave_record(
+        record,
+        {
+            "instrument_token",
+            "calibration_reference",
+            "effective_from",
+            "effective_until",
+            "uncertainty",
+            "calibration_status",
+            "calibration_authority_claimed",
+        },
+        "cave instrument record",
+    )
+    _cave_token(record["instrument_token"], "cave instrument token")
+    reference = record["calibration_reference"]
+    if not isinstance(reference, str) or re.fullmatch(r"cal-[a-z0-9_-]{1,63}", reference) is None:
+        raise DeltaError("cave calibration reference is invalid")
+    start = _cave_timestamp(record["effective_from"], "calibration effective-from")
+    end = _cave_timestamp(record["effective_until"], "calibration effective-until")
+    if end <= start or (end - start).total_seconds() > 366 * 86_400:
+        raise DeltaError("cave calibration interval is reversed or over budget")
+    uncertainty = _cave_finite(
+        record["uncertainty"],
+        "cave instrument uncertainty",
+        minimum=0.0,
+        maximum=100.0,
+        minimum_inclusive=False,
+    )
+    if record["calibration_status"] != "current":
+        raise DeltaError("cave instrument calibration status is not current")
+    _cave_false(
+        record["calibration_authority_claimed"], "calibration authority claim"
+    )
+    return {
+        "instrument_token": record["instrument_token"],
+        "uncertainty": uncertainty,
+        "lineage_preserved": True,
+        "calibration_performed": False,
+        "calibration_authority_claimed": False,
+        "valid": True,
+    }
+
+
+def validate_cave_passage_lrud(record: dict[str, Any]) -> dict[str, Any]:
+    """Validate an LRUD declaration without reconstructing passage geometry."""
+
+    _cave_record(
+        record,
+        {
+            "station_token",
+            "left",
+            "right",
+            "up",
+            "down",
+            "omissions",
+            "navigable_geometry",
+        },
+        "cave LRUD record",
+    )
+    _cave_token(record["station_token"], "LRUD station token")
+    omissions = record["omissions"]
+    names = ("left", "right", "up", "down")
+    if not isinstance(omissions, list) or any(name not in names for name in omissions):
+        raise DeltaError("LRUD omissions are invalid")
+    ensure_unique(omissions, "LRUD omission")
+    numeric_count = 0
+    for name in names:
+        value = record[name]
+        if value is None:
+            if name not in omissions:
+                raise DeltaError("LRUD null is not declared as omitted")
+        else:
+            _cave_finite(value, f"LRUD {name}", minimum=0.0, maximum=10_000.0)
+            numeric_count += 1
+            if name in omissions:
+                raise DeltaError("LRUD numeric value is also declared omitted")
+    if numeric_count < 1:
+        raise DeltaError("LRUD record has no declared numeric offset")
+    _cave_false(record["navigable_geometry"], "navigable cave geometry")
+    return {
+        "numeric_offset_count": numeric_count,
+        "omission_count": len(omissions),
+        "passage_reconstructed": False,
+        "navigable_geometry": False,
+        "valid": True,
+    }
+
+
+def validate_cave_loop_closure(record: dict[str, Any]) -> dict[str, Any]:
+    """Validate a synthetic loop residual without coordinate adjustment."""
+
+    _cave_record(
+        record,
+        {
+            "station_sequence",
+            "residual",
+            "residual_unit",
+            "adjustment_method",
+            "adjustment_applied",
+            "accuracy_claimed",
+        },
+        "cave loop record",
+    )
+    sequence = record["station_sequence"]
+    if not isinstance(sequence, list) or not 4 <= len(sequence) <= 64:
+        raise DeltaError("cave loop station sequence is outside the bounded range")
+    tokens = [_cave_token(value, "cave loop station") for value in sequence]
+    if tokens[0] != tokens[-1]:
+        raise DeltaError("cave loop is not closed")
+    if any(left == right for left, right in zip(tokens, tokens[1:])):
+        raise DeltaError("cave loop repeats adjacent stations")
+    if len(set(tokens[:-1])) != len(tokens) - 1:
+        raise DeltaError("cave loop repeats an internal station")
+    residual = record["residual"]
+    _cave_record(residual, {"x", "y", "z"}, "cave loop residual")
+    parsed = {
+        name: _cave_finite(value, f"cave residual {name}", minimum=-100_000.0, maximum=100_000.0)
+        for name, value in residual.items()
+    }
+    if record["residual_unit"] != "m":
+        raise DeltaError("cave loop residual unit must be m")
+    if record["adjustment_method"] not in {"none", "least_squares_reserved"}:
+        raise DeltaError("cave loop adjustment method is unsupported")
+    _cave_false(record["adjustment_applied"], "coordinate adjustment")
+    _cave_false(record["accuracy_claimed"], "survey accuracy claim")
+    return {
+        "station_count": len(tokens) - 1,
+        "residual": parsed,
+        "adjustment_applied": False,
+        "accuracy_claimed": False,
+        "valid": True,
+    }
+
+
+def validate_cave_location_minimization(record: dict[str, Any]) -> dict[str, Any]:
+    """Validate a withheld coarse location descriptor with no raw coordinates."""
+
+    _cave_record(
+        record,
+        {
+            "location_token",
+            "datum_label",
+            "precision_class",
+            "purpose",
+            "disclosure_state",
+            "review_hold",
+        },
+        "cave location record",
+    )
+    _cave_token(record["location_token"], "cave location token")
+    if record["datum_label"] not in {"NZGD2000", "unspecified"}:
+        raise DeltaError("cave datum label is unsupported")
+    if record["precision_class"] not in {"region_only", "withheld"}:
+        raise DeltaError("cave location precision is too specific")
+    if record["purpose"] not in {"synthetic_review", "authority_hold"}:
+        raise DeltaError("cave location purpose is unsupported")
+    if record["disclosure_state"] != "withheld" or record["review_hold"] is not True:
+        raise DeltaError("cave location is not withheld under review")
+    return {
+        "datum_label": record["datum_label"],
+        "precision_class": record["precision_class"],
+        "raw_coordinates_present": False,
+        "location_disclosed": False,
+        "privacy_complete": False,
+        "valid": True,
+    }
+
+
+def validate_cave_sensitive_feature(record: dict[str, Any]) -> dict[str, Any]:
+    """Validate redacted feature metadata without releasing a real feature."""
+
+    _cave_record(
+        record,
+        {
+            "feature_token",
+            "feature_class",
+            "sensitivity",
+            "location_state",
+            "redaction_reason",
+            "review_authority_class",
+            "release_authorized",
+            "real_feature",
+        },
+        "cave sensitive-feature record",
+    )
+    _cave_token(record["feature_token"], "cave feature token")
+    if record["feature_class"] not in {
+        "habitat",
+        "biodiversity",
+        "archaeology",
+        "heritage",
+        "taonga",
+        "unknown",
+    }:
+        raise DeltaError("cave feature class is unsupported")
+    if record["sensitivity"] not in {"restricted", "high"}:
+        raise DeltaError("cave feature sensitivity is not restrictive")
+    if record["location_state"] != "withheld":
+        raise DeltaError("cave feature location is not withheld")
+    reason = record["redaction_reason"]
+    if not isinstance(reason, str) or not 1 <= len(reason) <= 256 or reason != reason.strip():
+        raise DeltaError("cave feature redaction reason is invalid")
+    if record["review_authority_class"] not in {
+        "competent_external",
+        "affected_authority",
+        "tangata_whenua_iwi_hapu",
+    }:
+        raise DeltaError("cave feature review authority class is unsupported")
+    _cave_false(record["release_authorized"], "cave feature release")
+    _cave_false(record["real_feature"], "real cave feature presence")
+    return {
+        "feature_class": record["feature_class"],
+        "location_state": "withheld",
+        "release_authorized": False,
+        "authority_exercised": False,
+        "valid": True,
+    }
+
+
+def validate_cave_equipment_observation(record: dict[str, Any]) -> dict[str, Any]:
+    """Validate equipment observations without a safety assessment or instruction."""
+
+    _cave_record(
+        record,
+        {
+            "equipment_token",
+            "equipment_class",
+            "observations",
+            "unresolved",
+            "safety_assessed",
+            "use_authorized",
+            "instruction_provided",
+        },
+        "cave equipment record",
+    )
+    _cave_token(record["equipment_token"], "cave equipment token")
+    if record["equipment_class"] not in {"fixed_aid", "anchor", "rope", "rigging", "unknown"}:
+        raise DeltaError("cave equipment class is unsupported")
+    observations = record["observations"]
+    unresolved = record["unresolved"]
+    if not isinstance(observations, list) or not 1 <= len(observations) <= 16:
+        raise DeltaError("cave equipment observation count is invalid")
+    if not isinstance(unresolved, list) or not unresolved:
+        raise DeltaError("cave equipment record must retain an unresolved item")
+    observation_tokens = [_cave_token(value, "equipment observation token") for value in observations]
+    unresolved_tokens = [_cave_token(value, "unresolved equipment token") for value in unresolved]
+    ensure_unique(observation_tokens, "equipment observation token")
+    ensure_unique(unresolved_tokens, "unresolved equipment token")
+    if not set(unresolved_tokens) <= set(observation_tokens):
+        raise DeltaError("unresolved equipment item is not an observation")
+    _cave_false(record["safety_assessed"], "equipment safety assessment")
+    _cave_false(record["use_authorized"], "equipment use authorization")
+    _cave_false(record["instruction_provided"], "equipment instruction")
+    return {
+        "observation_count": len(observation_tokens),
+        "unresolved_count": len(unresolved_tokens),
+        "safety_assessed": False,
+        "use_authorized": False,
+        "valid": True,
+    }
+
+
+def validate_cave_condition_cue(record: dict[str, Any]) -> dict[str, Any]:
+    """Validate a time-bounded condition cue while refusing entry decisions."""
+
+    _cave_record(
+        record,
+        {
+            "cue_token",
+            "source_class",
+            "observed_at",
+            "expires_at",
+            "uncertainty",
+            "entry_state",
+            "forecast_made",
+            "live_feed",
+            "entry_authorized",
+        },
+        "cave condition cue",
+    )
+    _cave_token(record["cue_token"], "cave condition cue token")
+    if record["source_class"] not in {"fictional_observation", "official_notice_placeholder"}:
+        raise DeltaError("cave condition source class is unsupported")
+    observed = _cave_timestamp(record["observed_at"], "condition observed-at")
+    expires = _cave_timestamp(record["expires_at"], "condition expires-at")
+    if expires <= observed or (expires - observed).total_seconds() > 86_400:
+        raise DeltaError("cave condition cue interval is invalid or over budget")
+    if record["uncertainty"] not in {"unknown", "high", "bounded_placeholder"}:
+        raise DeltaError("cave condition uncertainty is unsupported")
+    if record["entry_state"] != "hold":
+        raise DeltaError("cave condition cue must preserve a stop-entry hold")
+    _cave_false(record["forecast_made"], "condition forecast")
+    _cave_false(record["live_feed"], "live condition feed")
+    _cave_false(record["entry_authorized"], "cave entry authorization")
+    return {
+        "entry_state": "hold",
+        "forecast_made": False,
+        "live_feed": False,
+        "entry_authorized": False,
+        "valid": True,
+    }
+
+
+def validate_cave_atmosphere_sensor(record: dict[str, Any]) -> dict[str, Any]:
+    """Validate a fictional sensor declaration while refusing atmosphere clearance."""
+
+    _cave_record(
+        record,
+        {
+            "sensor_token",
+            "unit",
+            "value",
+            "uncertainty",
+            "calibration_state",
+            "live_sensor",
+            "atmosphere_cleared",
+            "threshold_advice",
+        },
+        "cave atmosphere sensor record",
+    )
+    _cave_token(record["sensor_token"], "cave sensor token")
+    if record["unit"] not in {"ppm", "percent", "celsius", "hpa"}:
+        raise DeltaError("cave sensor unit is unsupported")
+    value = _cave_finite(record["value"], "cave sensor value", minimum=-1_000_000.0, maximum=1_000_000.0)
+    uncertainty = _cave_finite(
+        record["uncertainty"],
+        "cave sensor uncertainty",
+        minimum=0.0,
+        maximum=1_000_000.0,
+        minimum_inclusive=False,
+    )
+    if record["calibration_state"] != "current_placeholder":
+        raise DeltaError("cave sensor calibration state is not current-placeholder")
+    _cave_false(record["live_sensor"], "live cave sensor")
+    _cave_false(record["atmosphere_cleared"], "atmosphere clearance")
+    _cave_false(record["threshold_advice"], "atmosphere threshold advice")
+    return {
+        "unit": record["unit"],
+        "value": value,
+        "uncertainty": uncertainty,
+        "live_sensor": False,
+        "atmosphere_cleared": False,
+        "valid": True,
+    }
+
+
+def validate_cave_callout_state(record: dict[str, Any]) -> dict[str, Any]:
+    """Validate a fictional callout state without tracking or dispatch."""
+
+    _cave_record(
+        record,
+        {
+            "team_token",
+            "callout_token",
+            "due_at",
+            "checked_at",
+            "state",
+            "escalation_state",
+            "live_tracking",
+            "automated_dispatch",
+            "raw_identity_present",
+        },
+        "cave callout record",
+    )
+    _cave_token(record["team_token"], "fictional cave team token")
+    _cave_token(record["callout_token"], "cave callout token")
+    due = _cave_timestamp(record["due_at"], "callout due-at")
+    state = record["state"]
+    if state not in {"checked_in", "overdue_hold"}:
+        raise DeltaError("cave callout state is unsupported")
+    checked_raw = record["checked_at"]
+    if state == "checked_in":
+        checked = _cave_timestamp(checked_raw, "callout checked-at")
+        if checked > due:
+            raise DeltaError("checked-in cave callout is after its due time")
+        if record["escalation_state"] != "not_required":
+            raise DeltaError("checked-in cave callout has a contradictory escalation")
+    else:
+        if checked_raw is not None or record["escalation_state"] != "awaiting_competent_review":
+            raise DeltaError("overdue cave callout lacks its review hold")
+    _cave_false(record["live_tracking"], "live team tracking")
+    _cave_false(record["automated_dispatch"], "automated emergency dispatch")
+    _cave_false(record["raw_identity_present"], "raw team identity presence")
+    return {
+        "state": state,
+        "live_tracking": False,
+        "automated_dispatch": False,
+        "emergency_authority": False,
+        "valid": True,
+    }
+
+
+def validate_cave_incident_lineage(record: dict[str, Any]) -> dict[str, Any]:
+    """Validate append-only fictional incident lineage without adjudication."""
+
+    _cave_record(
+        record,
+        {"incident_token", "records", "closure_authorized", "real_person_data"},
+        "cave incident record",
+    )
+    _cave_token(record["incident_token"], "cave incident token")
+    rows = record["records"]
+    if not isinstance(rows, list) or not 1 <= len(rows) <= 32:
+        raise DeltaError("cave incident lineage is empty or over budget")
+    seen: set[str] = set()
+    events: list[str] = []
+    for index, row in enumerate(rows):
+        _cave_record(row, {"record_token", "parent_token", "event"}, "incident lineage row")
+        token = _cave_token(row["record_token"], "incident lineage token")
+        parent = row["parent_token"]
+        event = row["event"]
+        if token in seen or parent == token:
+            raise DeltaError("incident lineage repeats or self-references a token")
+        if index == 0:
+            if parent is not None or event != "reported":
+                raise DeltaError("incident lineage lacks an original report")
+        elif not isinstance(parent, str) or parent not in seen:
+            raise DeltaError("incident lineage parent is absent or forward-referenced")
+        if event not in {"reported", "corrected", "superseded", "evidence_preserved"}:
+            raise DeltaError("incident lineage event is unsupported")
+        seen.add(token)
+        events.append(event)
+    _cave_false(record["closure_authorized"], "incident closure authorization")
+    _cave_false(record["real_person_data"], "real person data presence")
+    return {
+        "record_count": len(rows),
+        "correction_present": "corrected" in events,
+        "original_preserved": True,
+        "closure_authorized": False,
+        "remedy_adjudicated": False,
+        "valid": True,
+    }
+
+
+def validate_cave_accessible_companion(record: dict[str, Any]) -> dict[str, Any]:
+    """Validate structural alternatives without claiming complete accessibility."""
+
+    _cave_record(
+        record,
+        {
+            "document_token",
+            "headings",
+            "station_summaries",
+            "text_alternative",
+            "noncolour_status",
+            "manual_review_required",
+            "accessibility_complete",
+            "raw_location_present",
+            "imperative_route_instruction",
+        },
+        "cave accessible companion",
+    )
+    _cave_token(record["document_token"], "accessible document token")
+    headings = record["headings"]
+    summaries = record["station_summaries"]
+    if not isinstance(headings, list) or not 1 <= len(headings) <= 16:
+        raise DeltaError("accessible cave heading count is invalid")
+    if any(not isinstance(value, str) or not value.strip() or len(value) > 128 for value in headings):
+        raise DeltaError("accessible cave heading is invalid")
+    ensure_unique(headings, "accessible cave heading")
+    if not isinstance(summaries, list) or not 1 <= len(summaries) <= 64:
+        raise DeltaError("accessible station summary count is invalid")
+    for row in summaries:
+        _cave_record(row, {"station_token", "summary"}, "accessible station summary")
+        _cave_token(row["station_token"], "accessible station token")
+        if not isinstance(row["summary"], str) or not row["summary"].strip() or len(row["summary"]) > 512:
+            raise DeltaError("accessible station summary text is invalid")
+    alternative = record["text_alternative"]
+    if not isinstance(alternative, str) or not alternative.strip() or len(alternative) > 2048:
+        raise DeltaError("cave text alternative is absent or over budget")
+    if record["noncolour_status"] is not True or record["manual_review_required"] is not True:
+        raise DeltaError("cave companion lacks noncolour status or manual review")
+    _cave_false(record["accessibility_complete"], "accessibility completeness")
+    _cave_false(record["raw_location_present"], "raw cave location presence")
+    _cave_false(record["imperative_route_instruction"], "imperative route instruction")
+    return {
+        "heading_count": len(headings),
+        "station_summary_count": len(summaries),
+        "manual_review_required": True,
+        "accessibility_complete": False,
+        "route_guidance_provided": False,
+        "valid": True,
+    }
+
+
+def validate_cave_handover(record: dict[str, Any]) -> dict[str, Any]:
+    """Validate a fictional workload handover while refusing operational release."""
+
+    _cave_record(
+        record,
+        {
+            "handover_token",
+            "queue_ceiling",
+            "active_items",
+            "unfinished_items",
+            "stop_token",
+            "correction_readback",
+            "next_owner_acknowledged",
+            "release_authorized",
+            "real_operator",
+        },
+        "cave handover record",
+    )
+    _cave_token(record["handover_token"], "cave handover token")
+    ceiling = _require_nonnegative_int(record["queue_ceiling"], "cave queue ceiling")
+    if not 1 <= ceiling <= 100:
+        raise DeltaError("cave queue ceiling is outside the bounded range")
+    active = record["active_items"]
+    unfinished = record["unfinished_items"]
+    if not isinstance(active, list) or not active or len(active) > ceiling:
+        raise DeltaError("cave active queue is empty or over its ceiling")
+    if not isinstance(unfinished, list) or not unfinished:
+        raise DeltaError("cave handover erases unfinished work")
+    active_tokens = [_cave_token(value, "cave active item") for value in active]
+    unfinished_tokens = [_cave_token(value, "cave unfinished item") for value in unfinished]
+    ensure_unique(active_tokens, "cave active item")
+    ensure_unique(unfinished_tokens, "cave unfinished item")
+    if not set(unfinished_tokens) <= set(active_tokens):
+        raise DeltaError("cave unfinished item is not in the active queue")
+    if record["stop_token"] is not True or record["correction_readback"] is not True:
+        raise DeltaError("cave handover lacks stop dominance or correction readback")
+    if record["next_owner_acknowledged"] is not True:
+        raise DeltaError("cave handover lacks fictional next-owner acknowledgement")
+    _cave_false(record["release_authorized"], "operational release authorization")
+    _cave_false(record["real_operator"], "real operator presence")
+    return {
+        "queue_ceiling": ceiling,
+        "active_count": len(active_tokens),
+        "unfinished_count": len(unfinished_tokens),
+        "release_authorized": False,
+        "real_operator": False,
+        "valid": True,
+    }
+
+
 def merkle_root(entries: Iterable[dict[str, Any]]) -> str:
     leaves: list[bytes] = []
     for entry in sorted(entries, key=lambda row: row["path"]):
@@ -2527,6 +3238,458 @@ def sable_hardening_payload() -> dict[str, Any]:
     }
 
 
+def caelen_fixture_cases() -> list[dict[str, Any]]:
+    """Return Caelen's preregistered positive and five-per-proposal rejection cases."""
+
+    topology = {
+        "project_token": "project_alpha",
+        "stations": ["s1", "s2", "s3"],
+        "shots": [
+            {"shot_token": "shot_1", "from_station": "s1", "to_station": "s2"},
+            {"shot_token": "shot_2", "from_station": "s2", "to_station": "s3"},
+        ],
+        "root_station": "s1",
+        "synthetic": True,
+        "real_location_present": False,
+    }
+    measurement = {
+        "bearing": 42.5,
+        "inclination": -12.0,
+        "distance": 8.25,
+        "bearing_unit": "degree",
+        "inclination_unit": "degree",
+        "distance_unit": "m",
+        "measurement_claimed": False,
+    }
+    instrument = {
+        "instrument_token": "instrument_alpha",
+        "calibration_reference": "cal-alpha",
+        "effective_from": "2026-01-01T00:00:00Z",
+        "effective_until": "2026-12-31T00:00:00Z",
+        "uncertainty": 0.5,
+        "calibration_status": "current",
+        "calibration_authority_claimed": False,
+    }
+    lrud = {
+        "station_token": "s1",
+        "left": 1.0,
+        "right": 2.0,
+        "up": None,
+        "down": 0.5,
+        "omissions": ["up"],
+        "navigable_geometry": False,
+    }
+    loop = {
+        "station_sequence": ["s1", "s2", "s3", "s1"],
+        "residual": {"x": 0.1, "y": -0.1, "z": 0.05},
+        "residual_unit": "m",
+        "adjustment_method": "least_squares_reserved",
+        "adjustment_applied": False,
+        "accuracy_claimed": False,
+    }
+    location = {
+        "location_token": "location_alpha",
+        "datum_label": "NZGD2000",
+        "precision_class": "region_only",
+        "purpose": "authority_hold",
+        "disclosure_state": "withheld",
+        "review_hold": True,
+    }
+    feature = {
+        "feature_token": "feature_alpha",
+        "feature_class": "habitat",
+        "sensitivity": "high",
+        "location_state": "withheld",
+        "redaction_reason": "Synthetic sensitive-feature reservation.",
+        "review_authority_class": "affected_authority",
+        "release_authorized": False,
+        "real_feature": False,
+    }
+    equipment = {
+        "equipment_token": "equipment_alpha",
+        "equipment_class": "anchor",
+        "observations": ["visual_placeholder", "unresolved_placeholder"],
+        "unresolved": ["unresolved_placeholder"],
+        "safety_assessed": False,
+        "use_authorized": False,
+        "instruction_provided": False,
+    }
+    condition = {
+        "cue_token": "cue_alpha",
+        "source_class": "fictional_observation",
+        "observed_at": "2026-08-18T00:00:00Z",
+        "expires_at": "2026-08-18T06:00:00Z",
+        "uncertainty": "high",
+        "entry_state": "hold",
+        "forecast_made": False,
+        "live_feed": False,
+        "entry_authorized": False,
+    }
+    sensor = {
+        "sensor_token": "sensor_alpha",
+        "unit": "ppm",
+        "value": 20.0,
+        "uncertainty": 1.0,
+        "calibration_state": "current_placeholder",
+        "live_sensor": False,
+        "atmosphere_cleared": False,
+        "threshold_advice": False,
+    }
+    callout = {
+        "team_token": "team_alpha",
+        "callout_token": "callout_alpha",
+        "due_at": "2026-08-18T02:00:00Z",
+        "checked_at": None,
+        "state": "overdue_hold",
+        "escalation_state": "awaiting_competent_review",
+        "live_tracking": False,
+        "automated_dispatch": False,
+        "raw_identity_present": False,
+    }
+    incident = {
+        "incident_token": "incident_alpha",
+        "records": [
+            {"record_token": "record_1", "parent_token": None, "event": "reported"},
+            {"record_token": "record_2", "parent_token": "record_1", "event": "corrected"},
+        ],
+        "closure_authorized": False,
+        "real_person_data": False,
+    }
+    accessible = {
+        "document_token": "document_alpha",
+        "headings": ["Scope", "Synthetic station summary", "Review hold"],
+        "station_summaries": [
+            {"station_token": "s1", "summary": "Synthetic station token; no route or location."}
+        ],
+        "text_alternative": "A fictional graph has three station tokens and two unlocated edges.",
+        "noncolour_status": True,
+        "manual_review_required": True,
+        "accessibility_complete": False,
+        "raw_location_present": False,
+        "imperative_route_instruction": False,
+    }
+    handover = {
+        "handover_token": "handover_alpha",
+        "queue_ceiling": 3,
+        "active_items": ["item_a", "item_b"],
+        "unfinished_items": ["item_b"],
+        "stop_token": True,
+        "correction_readback": True,
+        "next_owner_acknowledged": True,
+        "release_authorized": False,
+        "real_operator": False,
+    }
+    return [
+        {
+            "fixture_id": "CA6631-HF-001",
+            "proposal_id": "CA6631-N001",
+            "validator": "validate_cave_station_shot_topology",
+            "positive": topology,
+            "mutations": [
+                {"label": "duplicate cave station token", "record": {**topology, "stations": ["s1", "s1"]}},
+                {"label": "unknown cave shot endpoint", "record": {**topology, "shots": [{"shot_token": "shot_1", "from_station": "s1", "to_station": "missing"}]}},
+                {"label": "cave shot self-loop", "record": {**topology, "shots": [{"shot_token": "shot_1", "from_station": "s1", "to_station": "s1"}]}},
+                {"label": "disconnected cave station", "record": {**topology, "shots": [{"shot_token": "shot_1", "from_station": "s1", "to_station": "s2"}]}},
+                {"label": "real cave location flag", "record": {**topology, "real_location_present": True}},
+            ],
+        },
+        {
+            "fixture_id": "CA6631-HF-002",
+            "proposal_id": "CA6631-N002",
+            "validator": "validate_cave_measurement_domain",
+            "positive": measurement,
+            "mutations": [
+                {"label": "nonfinite cave bearing", "record": {**measurement, "bearing": float("nan")}},
+                {"label": "Boolean cave bearing", "record": {**measurement, "bearing": True}},
+                {"label": "out-of-range cave bearing", "record": {**measurement, "bearing": 360.0}},
+                {"label": "out-of-range cave inclination", "record": {**measurement, "inclination": 91.0}},
+                {"label": "nonpositive cave distance", "record": {**measurement, "distance": 0.0}},
+            ],
+        },
+        {
+            "fixture_id": "CA6631-HF-003",
+            "proposal_id": "CA6631-N003",
+            "validator": "validate_cave_instrument_lineage",
+            "positive": instrument,
+            "mutations": [
+                {"label": "missing calibration lineage field", "record": {key: value for key, value in instrument.items() if key != "calibration_reference"}},
+                {"label": "reversed calibration interval", "record": {**instrument, "effective_from": "2026-12-31T00:00:00Z", "effective_until": "2026-01-01T00:00:00Z"}},
+                {"label": "stale calibration status", "record": {**instrument, "calibration_status": "stale"}},
+                {"label": "zero calibration uncertainty", "record": {**instrument, "uncertainty": 0.0}},
+                {"label": "calibration authority claim", "record": {**instrument, "calibration_authority_claimed": True}},
+            ],
+        },
+        {
+            "fixture_id": "CA6631-HF-004",
+            "proposal_id": "CA6631-N004",
+            "validator": "validate_cave_passage_lrud",
+            "positive": lrud,
+            "mutations": [
+                {"label": "negative LRUD offset", "record": {**lrud, "left": -1.0}},
+                {"label": "nonfinite LRUD offset", "record": {**lrud, "right": float("inf")}},
+                {"label": "undeclared LRUD omission", "record": {**lrud, "omissions": []}},
+                {"label": "numeric LRUD field marked omitted", "record": {**lrud, "omissions": ["up", "left"]}},
+                {"label": "navigable cave geometry claim", "record": {**lrud, "navigable_geometry": True}},
+            ],
+        },
+        {
+            "fixture_id": "CA6631-HF-005",
+            "proposal_id": "CA6631-N005",
+            "validator": "validate_cave_loop_closure",
+            "positive": loop,
+            "mutations": [
+                {"label": "open cave loop", "record": {**loop, "station_sequence": ["s1", "s2", "s3", "s4"]}},
+                {"label": "adjacent repeated loop station", "record": {**loop, "station_sequence": ["s1", "s2", "s2", "s1"]}},
+                {"label": "nonfinite loop residual", "record": {**loop, "residual": {"x": float("nan"), "y": 0.0, "z": 0.0}}},
+                {"label": "unsupported adjustment method", "record": {**loop, "adjustment_method": "automatic"}},
+                {"label": "coordinate adjustment applied", "record": {**loop, "adjustment_applied": True}},
+            ],
+        },
+        {
+            "fixture_id": "CA6631-HF-006",
+            "proposal_id": "CA6631-N006",
+            "validator": "validate_cave_location_minimization",
+            "positive": location,
+            "mutations": [
+                {"label": "raw cave latitude field", "record": {**location, "latitude": -41.0}},
+                {"label": "raw cave address field", "record": {**location, "address": "withheld"}},
+                {"label": "exact cave precision class", "record": {**location, "precision_class": "exact"}},
+                {"label": "public cave disclosure state", "record": {**location, "disclosure_state": "public"}},
+                {"label": "removed cave location review hold", "record": {**location, "review_hold": False}},
+            ],
+        },
+        {
+            "fixture_id": "CA6631-HF-007",
+            "proposal_id": "CA6631-N007",
+            "validator": "validate_cave_sensitive_feature",
+            "positive": feature,
+            "mutations": [
+                {"label": "raw sensitive-feature location field", "record": {**feature, "raw_location": "withheld"}},
+                {"label": "public sensitive-feature classification", "record": {**feature, "sensitivity": "public"}},
+                {"label": "missing redaction reason", "record": {**feature, "redaction_reason": ""}},
+                {"label": "unauthorized sensitive-feature release", "record": {**feature, "release_authorized": True}},
+                {"label": "real sensitive feature assertion", "record": {**feature, "real_feature": True}},
+            ],
+        },
+        {
+            "fixture_id": "CA6631-HF-008",
+            "proposal_id": "CA6631-N008",
+            "validator": "validate_cave_equipment_observation",
+            "positive": equipment,
+            "mutations": [
+                {"label": "equipment load-rating field", "record": {**equipment, "load_rating": 10}},
+                {"label": "equipment safety assessment claim", "record": {**equipment, "safety_assessed": True}},
+                {"label": "equipment use authorization claim", "record": {**equipment, "use_authorized": True}},
+                {"label": "equipment instruction claim", "record": {**equipment, "instruction_provided": True}},
+                {"label": "erased unresolved equipment item", "record": {**equipment, "unresolved": []}},
+            ],
+        },
+        {
+            "fixture_id": "CA6631-HF-009",
+            "proposal_id": "CA6631-N009",
+            "validator": "validate_cave_condition_cue",
+            "positive": condition,
+            "mutations": [
+                {"label": "reversed condition-cue interval", "record": {**condition, "expires_at": "2026-08-17T23:00:00Z"}},
+                {"label": "condition forecast claim", "record": {**condition, "forecast_made": True}},
+                {"label": "live condition feed claim", "record": {**condition, "live_feed": True}},
+                {"label": "cave entry authorization claim", "record": {**condition, "entry_authorized": True}},
+                {"label": "go-state condition cue", "record": {**condition, "entry_state": "go"}},
+            ],
+        },
+        {
+            "fixture_id": "CA6631-HF-010",
+            "proposal_id": "CA6631-N010",
+            "validator": "validate_cave_atmosphere_sensor",
+            "positive": sensor,
+            "mutations": [
+                {"label": "unsupported cave sensor unit", "record": {**sensor, "unit": "unknown"}},
+                {"label": "nonfinite cave sensor value", "record": {**sensor, "value": float("inf")}},
+                {"label": "zero cave sensor uncertainty", "record": {**sensor, "uncertainty": 0.0}},
+                {"label": "stale cave sensor calibration", "record": {**sensor, "calibration_state": "stale"}},
+                {"label": "atmosphere clearance claim", "record": {**sensor, "atmosphere_cleared": True}},
+            ],
+        },
+        {
+            "fixture_id": "CA6631-HF-011",
+            "proposal_id": "CA6631-N011",
+            "validator": "validate_cave_callout_state",
+            "positive": callout,
+            "mutations": [
+                {"label": "raw callout identity", "record": {**callout, "raw_identity_present": True}},
+                {"label": "live callout tracking", "record": {**callout, "live_tracking": True}},
+                {"label": "automated callout dispatch", "record": {**callout, "automated_dispatch": True}},
+                {"label": "overdue callout without review hold", "record": {**callout, "escalation_state": "not_required"}},
+                {"label": "checked-in callout without timestamp", "record": {**callout, "state": "checked_in", "escalation_state": "not_required"}},
+            ],
+        },
+        {
+            "fixture_id": "CA6631-HF-012",
+            "proposal_id": "CA6631-N012",
+            "validator": "validate_cave_incident_lineage",
+            "positive": incident,
+            "mutations": [
+                {"label": "duplicate incident record token", "record": {**incident, "records": [{"record_token": "record_1", "parent_token": None, "event": "reported"}, {"record_token": "record_1", "parent_token": "record_1", "event": "corrected"}]}},
+                {"label": "forward incident parent reference", "record": {**incident, "records": [{"record_token": "record_1", "parent_token": None, "event": "reported"}, {"record_token": "record_2", "parent_token": "record_3", "event": "corrected"}]}},
+                {"label": "self-referencing incident correction", "record": {**incident, "records": [{"record_token": "record_1", "parent_token": None, "event": "reported"}, {"record_token": "record_2", "parent_token": "record_2", "event": "corrected"}]}},
+                {"label": "incident lineage without original report", "record": {**incident, "records": [{"record_token": "record_1", "parent_token": None, "event": "corrected"}]}},
+                {"label": "incident closure authorization claim", "record": {**incident, "closure_authorized": True}},
+            ],
+        },
+        {
+            "fixture_id": "CA6631-HF-013",
+            "proposal_id": "CA6631-N013",
+            "validator": "validate_cave_accessible_companion",
+            "positive": accessible,
+            "mutations": [
+                {"label": "missing accessible headings", "record": {**accessible, "headings": []}},
+                {"label": "missing cave text alternative", "record": {**accessible, "text_alternative": ""}},
+                {"label": "colour-only cave status", "record": {**accessible, "noncolour_status": False}},
+                {"label": "accessibility-complete claim", "record": {**accessible, "accessibility_complete": True}},
+                {"label": "imperative cave route instruction", "record": {**accessible, "imperative_route_instruction": True}},
+            ],
+        },
+        {
+            "fixture_id": "CA6631-HF-014",
+            "proposal_id": "CA6631-N014",
+            "validator": "validate_cave_handover",
+            "positive": handover,
+            "mutations": [
+                {"label": "cave queue over ceiling", "record": {**handover, "queue_ceiling": 1}},
+                {"label": "unknown unfinished cave item", "record": {**handover, "unfinished_items": ["item_missing"]}},
+                {"label": "cave stop token overridden", "record": {**handover, "stop_token": False}},
+                {"label": "missing cave correction readback", "record": {**handover, "correction_readback": False}},
+                {"label": "operational cave release claim", "record": {**handover, "release_authorized": True}},
+            ],
+        },
+    ]
+
+
+def _caelen_validators() -> dict[str, Any]:
+    return {
+        function.__name__: function
+        for function in (
+            validate_cave_station_shot_topology,
+            validate_cave_measurement_domain,
+            validate_cave_instrument_lineage,
+            validate_cave_passage_lrud,
+            validate_cave_loop_closure,
+            validate_cave_location_minimization,
+            validate_cave_sensitive_feature,
+            validate_cave_equipment_observation,
+            validate_cave_condition_cue,
+            validate_cave_atmosphere_sensor,
+            validate_cave_callout_state,
+            validate_cave_incident_lineage,
+            validate_cave_accessible_companion,
+            validate_cave_handover,
+        )
+    }
+
+
+def caelen_mutation_payload() -> dict[str, Any]:
+    """Execute all five preregistered rejecting mutations for each completed proposal."""
+
+    validators = _caelen_validators()
+    records: list[dict[str, Any]] = []
+    positives: list[dict[str, Any]] = []
+    for case_index, case in enumerate(caelen_fixture_cases(), 1):
+        validator = validators[case["validator"]]
+        positive = validator(case["positive"])
+        if positive.get("valid") is not True:
+            raise DeltaError(f"Caelen positive fixture failed: {case['fixture_id']}")
+        positives.append(
+            {
+                "proposal_id": case["proposal_id"],
+                "validator": case["validator"],
+                "valid": True,
+            }
+        )
+        mutations = case["mutations"]
+        if len(mutations) != 5:
+            raise DeltaError(f"Caelen fixture does not declare five mutations: {case['fixture_id']}")
+        for mutation_index, mutation in enumerate(mutations, 1):
+            try:
+                validator(mutation["record"])
+            except (DeltaError, UnicodeError, ValueError, TypeError) as exc:
+                records.append(
+                    {
+                        "mutation_id": f"CA6631-MUT-{case_index:03d}-{mutation_index:02d}",
+                        "proposal_id": case["proposal_id"],
+                        "validator": case["validator"],
+                        "failed_witness": mutation["label"],
+                        "rejected": True,
+                        "error_class": type(exc).__name__,
+                        "zero_credit": True,
+                    }
+                )
+            else:
+                raise DeltaError(
+                    f"Caelen negative mutation was not rejected: {case['fixture_id']}:{mutation_index}"
+                )
+    return {
+        "schema": f"{SCHEMA}.caelen-mutation-matrix.v1",
+        "profile": "caelen-v663-v1",
+        "proposal_count": len(positives),
+        "mutations_per_proposal": 5,
+        "negative_fixture_count": len(records),
+        "rejected_fixture_count": sum(record["rejected"] is True for record in records),
+        "positive_fixture_count": len(positives),
+        "passing_fixture_count": len(positives),
+        "records": records,
+        "positive_records": positives,
+        "failed_witnesses_erased": 0,
+        "valid": len(records) == 70 and len(positives) == 14,
+        "boundary": "Seventy rejected synthetic mutations and fourteen passing record-shape fixtures only; no real cave, measurement, location, person, sensor, safety decision, authority, empirical result, production result or independent reproduction.",
+    }
+
+
+def caelen_hardening_payload() -> dict[str, Any]:
+    """Run one primary rejecting mutation and one pass for each Caelen validator."""
+
+    matrix = caelen_mutation_payload()
+    primary_by_proposal = {record["proposal_id"]: record for record in matrix["records"] if record["mutation_id"].endswith("-01")}
+    records = []
+    for case in caelen_fixture_cases():
+        primary = primary_by_proposal[case["proposal_id"]]
+        records.append(
+            {
+                "fixture_id": case["fixture_id"],
+                "failed_witness": primary["failed_witness"],
+                "rejected": True,
+                "error_class": primary["error_class"],
+            }
+        )
+    if len(records) != 14 or not all(record["rejected"] is True for record in records):
+        raise DeltaError("one or more Caelen hardening fixtures was not rejected")
+    return {
+        "schema": f"{SCHEMA}.hardening-fixtures.v5",
+        "profile": "caelen-v663-v1",
+        "negative_fixture_count": len(records),
+        "rejected_fixture_count": len(records),
+        "positive_fixture_count": matrix["positive_fixture_count"],
+        "passing_fixture_count": matrix["passing_fixture_count"],
+        "records": records,
+        "full_mutation_matrix_negative_count": matrix["negative_fixture_count"],
+        "real_cave_accessed": False,
+        "survey_computed": False,
+        "measurement_claimed": False,
+        "real_location_present": False,
+        "live_sensor_used": False,
+        "safety_assessed": False,
+        "entry_authorized": False,
+        "emergency_dispatched": False,
+        "privacy_complete": False,
+        "accessibility_complete": False,
+        "professional_authority": False,
+        "cultural_authority": False,
+        "maori_authority": False,
+        "exhaustive_security": False,
+        "valid": True,
+        "boundary": "Fourteen primary and seventy total paired bounded synthetic cave-record refusal fixtures only; not caving, surveying, measurement, location publication, live monitoring, safety clearance, rescue, professional validation, legal or cultural ratification, Māori authority, production assurance or independent reproduction.",
+    }
+
+
 def hardening_payload_for_profile(profile: str) -> dict[str, Any]:
     """Select one exact bounded fixture family; reject implicit substitution."""
 
@@ -2536,6 +3699,8 @@ def hardening_payload_for_profile(profile: str) -> dict[str, Any]:
         return auren_hardening_payload()
     if profile == "sable-v662-v8":
         return sable_hardening_payload()
+    if profile == "caelen-v663-v1":
+        return caelen_hardening_payload()
     raise DeltaError(f"unknown hardening profile: {profile}")
 
 
