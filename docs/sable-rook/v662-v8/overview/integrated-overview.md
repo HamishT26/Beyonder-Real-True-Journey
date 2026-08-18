@@ -84,7 +84,7 @@ boundaries without flattening those categories into one kind of evidence.
 
 The hardening surface retained 14 rejected
 synthetic fixtures and 14 bounded passing
-fixtures. Method Flow retains 29 failed and passing
+fixtures. Method Flow retains 36 failed and passing
 witness pairs. None is independent reproduction.
 
 `Completed` means only that the exact declared software acceptance gate passed.
