@@ -1,0 +1,124 @@
+{
+  "schema": "ghc.family.owner-delta-phase-builder.profile.v3",
+  "owner": "Sable Rook",
+  "phase": "v662-v8",
+  "owner_slug": "sable-rook",
+  "next_owner": "Caelen Ash",
+  "next_phase": "v663-v1",
+  "next_owner_slug": "caelen-ash",
+  "branch": "codex/GHC-Family/sable-rook-v662-v8-full-tools",
+  "baton_relative_path": "docs/sable-rook/v662-v8/handoffs/caelen-ash-v663-v1-activation.md",
+  "baton_metadata_relative_path": "docs/sable-rook/v662-v8/handoffs/caelen-ash-v663-v1-activation-metadata.json",
+  "proposal_baseline": 3650,
+  "proposal_total": 3670,
+  "outcome_counts": {
+    "completed": 14,
+    "represented": 4,
+    "open_gap": 1,
+    "exact_gate": 1
+  },
+  "activation_baseline": {
+    "effective_negatives": 23199,
+    "effective_methods": 7793,
+    "open_gaps": 156,
+    "exact_gates": 154
+  },
+  "planned_owner_delta": {
+    "startup_operational_negatives": 8,
+    "synthetic_rejected_mutations": 14,
+    "provisional_effective_negatives": 23221,
+    "provisional_effective_methods": 7815,
+    "effective_open_gaps": 157,
+    "effective_exact_gates": 155
+  },
+  "hardening_profile": "sable-v662-v8",
+  "runner_callables": [
+    "validate_rdf_canonicalization_descriptor",
+    "validate_shacl_report_shape",
+    "validate_sparql_result_bindings",
+    "validate_dcat_distribution_descriptor",
+    "validate_openpgp_one_pass_sequence",
+    "validate_sse_event_block",
+    "validate_grpc_status_trailers",
+    "validate_xmp_identifier_lineage",
+    "validate_ttml_time_expression",
+    "validate_otel_baggage_members",
+    "validate_authentication_results_shape",
+    "validate_mta_sts_policy",
+    "validate_security_txt_fields",
+    "validate_problem_details_shape"
+  ],
+  "overview_features": "RDFC-1.0 algorithm and hash declarations without canonicalizing RDF, SHACL validation-report cardinality, SPARQL result-binding closure, DCAT distribution metadata separation, OpenPGP one-pass packet association, Server-Sent Events budgets, gRPC status-trailer shape, XMP identifier lineage, TTML timing declarations, OpenTelemetry baggage budgets, Authentication-Results syntax, MTA-STS transition declarations, security.txt field consistency, and Problem Details extension collision refusal",
+  "overview_reserved_surfaces": "No graph canonicalization, RDF or SHACL processing, query execution, URL dereference, signature, OpenPGP verification, network stream, RPC, media playback, telemetry transmission, email authentication, policy deployment, vulnerability disclosure, or real error response was invoked.",
+  "threat_controls": [
+    "RDFC descriptors declare a supported algorithm, hash and poison-dataset budget but never canonicalize or hash a real dataset.",
+    "SHACL and SPARQL checks validate bounded result shapes without executing a shape, graph, endpoint, or query.",
+    "DCAT metadata keeps access and download locations, media types, checksums, licenses, and rights declarative and never dereferences a URL.",
+    "OpenPGP packet ordering and gRPC trailer checks remain syntax-only and perform no cryptographic or network operation.",
+    "SSE, TTML and OpenTelemetry inputs enforce exact count, byte, timing and identifier budgets before any stream, media or telemetry use.",
+    "XMP lineage identifiers remain synthetic and cannot establish custody, authorship, authenticity, ownership, provenance or legal title.",
+    "Authentication-Results, MTA-STS, security.txt and Problem Details fixtures cannot authenticate mail, deploy policy, authorize disclosure or expose a real service.",
+    "The interlibrary-loan practice lens uses fictional requests and records; privacy, access, remedy, legal, cultural and Maori-authority decisions remain exact-gated.",
+    "Scope remains the exact owner delta and literal test dependencies under the 2,000-file ceiling.",
+    "One canonical success is permitted and never replayed; exact-title reread and acknowledgement are required for delivery."
+  ],
+  "source_records": [
+    {"source_id": "SRC-001", "title": "Git sparse-checkout", "url": "https://git-scm.com/docs/git-sparse-checkout", "bounded_use": "Official Git documentation; sparse-before-materialization mechanics only."},
+    {"source_id": "SRC-002", "title": "RDF Dataset Canonicalization", "url": "https://www.w3.org/TR/rdf-canon/", "bounded_use": "W3C Recommendation; algorithm-name, hash and resource-reservation descriptors only, never graph canonicalization."},
+    {"source_id": "SRC-003", "title": "Shapes Constraint Language", "url": "https://www.w3.org/TR/shacl/", "bounded_use": "W3C Recommendation; validation-report vocabulary shape only, never SHACL execution or complete conformance."},
+    {"source_id": "SRC-004", "title": "SPARQL 1.1 Query Results JSON Format", "url": "https://www.w3.org/TR/sparql11-results-json/", "bounded_use": "W3C Recommendation; SELECT and ASK result-shape checks only, with no query or endpoint."},
+    {"source_id": "SRC-005", "title": "Data Catalog Vocabulary Version 3", "url": "https://www.w3.org/TR/vocab-dcat-3/", "bounded_use": "W3C Recommendation; bounded distribution metadata distinctions only, never access, licensing interpretation or retrieval."},
+    {"source_id": "SRC-006", "title": "OpenPGP", "url": "https://www.rfc-editor.org/rfc/rfc9580.html", "bounded_use": "RFC 9580; one-pass signature packet association shape only, with zero signature or key operation."},
+    {"source_id": "SRC-007", "title": "Server-sent events", "url": "https://html.spec.whatwg.org/multipage/server-sent-events.html", "bounded_use": "WHATWG living standard; bounded synthetic event-block fields only, with no connection or browser."},
+    {"source_id": "SRC-008", "title": "gRPC status codes", "url": "https://grpc.github.io/grpc/core/md_doc_statuscodes.html", "bounded_use": "Primary gRPC documentation; synthetic trailer shape only, with no RPC or service."},
+    {"source_id": "SRC-009", "title": "XMP specification", "url": "https://developer.adobe.com/xmp/docs/XMPSpecifications/", "bounded_use": "Primary Adobe specification index; synthetic identifier-lineage fields only, never authenticity or provenance."},
+    {"source_id": "SRC-010", "title": "Timed Text Markup Language 2", "url": "https://www.w3.org/TR/ttml2/", "bounded_use": "W3C Recommendation; bounded time-expression declarations only, never playback or complete TTML conformance."},
+    {"source_id": "SRC-011", "title": "OpenTelemetry baggage", "url": "https://opentelemetry.io/docs/specs/otel/baggage/api/", "bounded_use": "Primary OpenTelemetry specification; local member and budget checks only, with no telemetry transmission."},
+    {"source_id": "SRC-012", "title": "Message Header Field for Indicating Message Authentication Status", "url": "https://www.rfc-editor.org/rfc/rfc8601.html", "bounded_use": "RFC 8601; Authentication-Results field shape only, never mail authentication."},
+    {"source_id": "SRC-013", "title": "SMTP MTA Strict Transport Security", "url": "https://www.rfc-editor.org/rfc/rfc8461.html", "bounded_use": "RFC 8461; policy-field and transition declarations only, with no DNS, SMTP or deployment."},
+    {"source_id": "SRC-014", "title": "security.txt", "url": "https://www.rfc-editor.org/rfc/rfc9116.html", "bounded_use": "RFC 9116; field consistency without retrieval, publication, signature or vulnerability disclosure."},
+    {"source_id": "SRC-015", "title": "Problem Details for HTTP APIs", "url": "https://www.rfc-editor.org/rfc/rfc9457.html", "bounded_use": "RFC 9457; bounded member and extension-collision checks only, with no HTTP service."},
+    {"source_id": "SRC-016", "title": "DANE TLSA", "url": "https://www.rfc-editor.org/rfc/rfc6698.html", "bounded_use": "RFC 6698; synthetic usage, selector and matching-type profile only, with no DNSSEC or certificate validation."},
+    {"source_id": "SRC-017", "title": "Gaia Focused Product Release", "url": "https://www.cosmos.esa.int/web/gaia/focused-product-release", "bounded_use": "Official ESA release context; zero queries, downloads, rows, likelihoods, posteriors or empirical claims."},
+    {"source_id": "SRC-018", "title": "WAI standards and evaluation", "url": "https://www.w3.org/WAI/standards-guidelines/", "bounded_use": "W3C guidance; structural alternatives only while manual, assistive-technology and affected-user evaluation remain reserved."}
+  ],
+  "pillar_artifacts": [
+    {
+      "relative_path": "pillars/gmut-unimodular-z4c-obligation-board.md",
+      "title": "GMUT unimodular and Z4c obligation board",
+      "body": "Two symbolic rows separate the unimodular volume-form constraint, cosmological integration constant, conservation assumptions and gauge scope from the Z4c constraint variables, damping parameters, characteristic speeds, gauge, boundary conditions, hyperbolicity and EFT truncation. No equation is solved and no observation, likelihood, force, parameter constraint, stability theorem, ultraviolet completion or Theory-of-Everything claim is produced."
+    },
+    {
+      "relative_path": "pillars/thos-interlibrary-loan-handover-proxy.md",
+      "title": "THOS interlibrary-loan exception and handover proxy",
+      "body": "Fictional request identifiers, lending-condition exceptions, privacy-minimized patron tokens, due-state corrections, accessible notices, queue ceilings, readback and next-owner fields exercise a bounded state machine. There is no library, patron, item, loan, employee, service outcome, blind matched-budget arm or professional result."
+    },
+    {
+      "relative_path": "pillars/freed-id-dane-tlsa-reservation-profile.md",
+      "title": "Freed ID DANE TLSA structural reservation profile",
+      "body": "Synthetic records separate certificate usage, selector, matching type, association bytes, DNSSEC dependency, owner-name scope, rollover overlap, expiry, recovery and verifier policy. No real domain, DNSSEC chain, certificate, key, identity, resolution, status, revocation, interoperability or trust decision is present."
+    },
+    {
+      "relative_path": "pillars/cbr-interlibrary-loan-authority-reservations.md",
+      "title": "CBR interlibrary-loan access, privacy and authority reservations",
+      "body": "The matrix reserves patron privacy, disability and language access, lending refusal, copyright and licensing interpretation, fees, loss or damage, remedy, cultural care, data governance, affected-party acceptance, tangata whenua, iwi, hapu and Maori-authority decisions to competent external people and authorities. Repository software makes zero real decision."
+    }
+  ],
+  "test_modules": [
+    "tests/test_ghc_family_sable_v662_v8.py"
+  ],
+  "test_dependencies": [
+    "scripts/ghc_family_owner_delta_phase_builder.py",
+    "scripts/ghc_family_owner_delta_toolkit.py"
+  ],
+  "sparse_patterns": [
+    "/docs/sable-rook/v662-v8/",
+    "/scripts/ghc_family_owner_delta_toolkit.py",
+    "/scripts/ghc_family_owner_delta_phase_builder.py",
+    "/tests/test_ghc_family_sable_v662_v8.py",
+    "/.gitattributes",
+    "/.gitignore"
+  ],
+  "verdict": "NOT_READY_FOR_STAGE_20",
+  "boundary": "Planning configuration only. It cannot implement x2, validate a final commit, prove independent reproduction, deliver a baton, or close any empirical, professional, production, legal, cultural, Maori-authority, identity, privacy-complete, accessibility-complete, exhaustive-security, AGI or ASI, consciousness or personhood, Theory-of-Everything, or Stage 20 gate."
+}
