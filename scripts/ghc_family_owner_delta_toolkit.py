@@ -1203,6 +1203,634 @@ def validate_custody_transition(
     }
 
 
+def validate_rdf_canonicalization_descriptor(record: dict[str, Any]) -> dict[str, Any]:
+    """Validate a no-input RDFC descriptor without canonicalizing an RDF dataset."""
+
+    required = {
+        "algorithm",
+        "hash_algorithm",
+        "maximum_n_degree_calls",
+        "dataset_present",
+        "canonical_output_present",
+    }
+    if not isinstance(record, dict) or set(record) != required:
+        raise DeltaError("RDFC descriptor has the wrong fields")
+    if record["algorithm"] != "RDFC-1.0":
+        raise DeltaError("RDFC algorithm declaration is unsupported")
+    if record["hash_algorithm"] not in {"sha256", "sha384"}:
+        raise DeltaError("RDFC hash declaration is unsupported")
+    maximum = _require_nonnegative_int(
+        record["maximum_n_degree_calls"], "maximum RDFC N-degree calls"
+    )
+    if maximum < 1 or maximum > 1_000_000:
+        raise DeltaError("RDFC work declaration is outside the bounded range")
+    if not isinstance(record["dataset_present"], bool) or not isinstance(
+        record["canonical_output_present"], bool
+    ):
+        raise DeltaError("RDFC input and output presence flags must be Boolean")
+    if record["dataset_present"] or record["canonical_output_present"]:
+        raise DeltaError("RDFC descriptor must not carry a dataset or canonical output")
+    return {
+        "algorithm": record["algorithm"],
+        "hash_algorithm": record["hash_algorithm"],
+        "maximum_n_degree_calls": maximum,
+        "dataset_canonicalized": False,
+        "digest_computed": False,
+        "valid": True,
+    }
+
+
+def validate_shacl_report_shape(report: dict[str, Any]) -> dict[str, Any]:
+    """Validate a bounded SHACL report vocabulary subset without graph processing."""
+
+    if not isinstance(report, dict) or set(report) != {"conforms", "results"}:
+        raise DeltaError("SHACL report has the wrong fields")
+    if not isinstance(report["conforms"], bool) or not isinstance(report["results"], list):
+        raise DeltaError("SHACL conforms and results have the wrong types")
+    results = report["results"]
+    if len(results) > 64:
+        raise DeltaError("SHACL result count exceeds budget")
+    if report["conforms"] != (len(results) == 0):
+        raise DeltaError("SHACL conforms value and result cardinality disagree")
+    mandatory = {"severity", "focus_node", "source_constraint_component"}
+    allowed = mandatory | {"result_path"}
+    for row in results:
+        if not isinstance(row, dict) or not mandatory <= set(row) <= allowed:
+            raise DeltaError("SHACL result has missing or undeclared fields")
+        for field, value in row.items():
+            if (
+                not isinstance(value, str)
+                or not value
+                or value != value.strip()
+                or len(value) > 512
+                or any(unicodedata.category(char) in {"Cc", "Cf"} for char in value)
+            ):
+                raise DeltaError(f"SHACL result {field} is invalid")
+    return {
+        "conforms": report["conforms"],
+        "result_count": len(results),
+        "graph_processed": False,
+        "complete_shacl_conformance": False,
+        "valid": True,
+    }
+
+
+def validate_sparql_result_bindings(payload: dict[str, Any]) -> dict[str, Any]:
+    """Validate a bounded SPARQL JSON result shape without issuing a query."""
+
+    if not isinstance(payload, dict) or "head" not in payload:
+        raise DeltaError("SPARQL result lacks a head object")
+    forms = [name for name in ("boolean", "results") if name in payload]
+    if len(forms) != 1 or set(payload) != {"head", forms[0]}:
+        raise DeltaError("SPARQL result must contain exactly one ASK or SELECT form")
+    head = payload["head"]
+    if not isinstance(head, dict) or set(head) != {"vars"} or not isinstance(
+        head["vars"], list
+    ):
+        raise DeltaError("SPARQL head has the wrong shape")
+    variables = head["vars"]
+    if len(variables) > 64 or any(
+        not isinstance(value, str)
+        or not re.fullmatch(r"[A-Za-z_][A-Za-z0-9_]{0,63}", value)
+        for value in variables
+    ):
+        raise DeltaError("SPARQL variable declaration is invalid or over budget")
+    ensure_unique(variables, "SPARQL head variable")
+    if forms[0] == "boolean":
+        if not isinstance(payload["boolean"], bool) or variables:
+            raise DeltaError("SPARQL ASK result is inconsistent")
+        binding_count = 0
+    else:
+        results = payload["results"]
+        if not isinstance(results, dict) or set(results) != {"bindings"} or not isinstance(
+            results["bindings"], list
+        ):
+            raise DeltaError("SPARQL SELECT results have the wrong shape")
+        if len(results["bindings"]) > 128:
+            raise DeltaError("SPARQL binding count exceeds budget")
+        declared = set(variables)
+        for row in results["bindings"]:
+            if not isinstance(row, dict) or not set(row) <= declared:
+                raise DeltaError("SPARQL binding uses an undeclared variable")
+            for term in row.values():
+                if not isinstance(term, dict) or not {"type", "value"} <= set(term):
+                    raise DeltaError("SPARQL RDF term lacks type or value")
+                if set(term) - {"type", "value", "datatype", "xml:lang"}:
+                    raise DeltaError("SPARQL RDF term contains an undeclared field")
+                if term["type"] not in {"uri", "bnode", "literal", "typed-literal"}:
+                    raise DeltaError("SPARQL RDF term type is unsupported")
+                if not isinstance(term["value"], str) or len(term["value"]) > 2048:
+                    raise DeltaError("SPARQL RDF term value is invalid or over budget")
+                if "datatype" in term and "xml:lang" in term:
+                    raise DeltaError("SPARQL literal cannot carry datatype and language")
+        binding_count = len(results["bindings"])
+    return {
+        "form": "ASK" if forms[0] == "boolean" else "SELECT",
+        "declared_variable_count": len(variables),
+        "binding_count": binding_count,
+        "query_executed": False,
+        "endpoint_accessed": False,
+        "valid": True,
+    }
+
+
+def validate_dcat_distribution_descriptor(record: dict[str, Any]) -> dict[str, Any]:
+    """Validate DCAT distribution metadata without dereferencing a resource."""
+
+    required = {"access_urls", "download_urls", "media_type", "checksum"}
+    if not isinstance(record, dict) or set(record) != required:
+        raise DeltaError("DCAT distribution descriptor has the wrong fields")
+    access_urls = record["access_urls"]
+    download_urls = record["download_urls"]
+    if not isinstance(access_urls, list) or not isinstance(download_urls, list):
+        raise DeltaError("DCAT location declarations must be lists")
+    if not access_urls and not download_urls:
+        raise DeltaError("DCAT distribution requires an access or download location")
+    if len(access_urls) + len(download_urls) > 8:
+        raise DeltaError("DCAT location count exceeds budget")
+    all_urls = ensure_unique([*access_urls, *download_urls], "DCAT distribution URL")
+    for value in all_urls:
+        split = urlsplit(value) if isinstance(value, str) else None
+        if (
+            split is None
+            or split.scheme != "https"
+            or not split.netloc
+            or split.username is not None
+            or split.password is not None
+            or split.fragment
+        ):
+            raise DeltaError("DCAT distribution URL is outside the bounded HTTPS form")
+    media_type = record["media_type"]
+    if not isinstance(media_type, str) or not re.fullmatch(
+        r"[a-z0-9][a-z0-9!#$&^_.+-]*/[a-z0-9][a-z0-9!#$&^_.+-]{0,126}", media_type
+    ):
+        raise DeltaError("DCAT media type is invalid")
+    checksum = record["checksum"]
+    if not isinstance(checksum, dict) or set(checksum) != {"algorithm", "value"}:
+        raise DeltaError("DCAT checksum descriptor has the wrong fields")
+    if checksum["algorithm"] != "sha256" or not isinstance(
+        checksum["value"], str
+    ) or not re.fullmatch(r"[0-9a-f]{64}", checksum["value"]):
+        raise DeltaError("DCAT checksum declaration is unsupported or malformed")
+    return {
+        "access_url_count": len(access_urls),
+        "download_url_count": len(download_urls),
+        "media_type": media_type,
+        "checksum_algorithm": "sha256",
+        "url_dereferenced": False,
+        "rights_interpreted": False,
+        "valid": True,
+    }
+
+
+def validate_openpgp_one_pass_sequence(packet_types: Iterable[str]) -> dict[str, Any]:
+    """Validate a synthetic one-pass packet sequence without parsing OpenPGP bytes."""
+
+    packets = list(packet_types)
+    if not packets or len(packets) > 32 or packets.count("literal") != 1:
+        raise DeltaError("OpenPGP packet sequence is empty, over budget, or lacks one literal packet")
+    literal_index = packets.index("literal")
+    opening = packets[:literal_index]
+    closing = packets[literal_index + 1 :]
+    if not opening or len(opening) != len(closing):
+        raise DeltaError("OpenPGP one-pass and signature packet counts disagree")
+    signers: list[str] = []
+    for index, packet in enumerate(opening):
+        match = re.fullmatch(r"one_pass:([A-Za-z0-9._-]{1,64}):(more|last)", packet)
+        if not match:
+            raise DeltaError("OpenPGP one-pass packet declaration is malformed")
+        expected_flag = "last" if index == len(opening) - 1 else "more"
+        if match.group(2) != expected_flag:
+            raise DeltaError("OpenPGP one-pass nesting flag is inconsistent")
+        signers.append(match.group(1))
+    if len(signers) != len(set(signers)):
+        raise DeltaError("OpenPGP one-pass signer labels repeat")
+    expected_closing = [f"signature:{signer}" for signer in reversed(signers)]
+    if closing != expected_closing:
+        raise DeltaError("OpenPGP signatures do not close in reverse one-pass order")
+    return {
+        "one_pass_packets": len(opening),
+        "signature_packets": len(closing),
+        "bytes_parsed": False,
+        "signature_verified": False,
+        "valid": True,
+    }
+
+
+def validate_sse_event_block(
+    fields: Iterable[dict[str, str]], maximum_lines: int = 64, maximum_bytes: int = 4096
+) -> dict[str, Any]:
+    """Validate a bounded synthetic SSE field block without opening a connection."""
+
+    line_limit = _require_nonnegative_int(maximum_lines, "maximum SSE lines")
+    byte_limit = _require_nonnegative_int(maximum_bytes, "maximum SSE bytes")
+    rows = list(fields)
+    if not rows or len(rows) > line_limit:
+        raise DeltaError("SSE field count is empty or over budget")
+    allowed = {"data", "event", "id", "retry", "comment"}
+    total = 0
+    data_lines = 0
+    seen_singletons: set[str] = set()
+    for row in rows:
+        if not isinstance(row, dict) or set(row) != {"name", "value"}:
+            raise DeltaError("SSE field row has the wrong shape")
+        name, value = row["name"], row["value"]
+        if name not in allowed or not isinstance(value, str) or "\r" in value or "\n" in value:
+            raise DeltaError("SSE field name or value is invalid")
+        total += len(name.encode("utf-8")) + len(value.encode("utf-8")) + 2
+        if total > byte_limit:
+            raise DeltaError("SSE field block exceeds byte budget")
+        if name == "data":
+            data_lines += 1
+        elif name in {"event", "id", "retry"}:
+            if name in seen_singletons:
+                raise DeltaError("SSE singleton field repeats")
+            seen_singletons.add(name)
+        if name == "id" and ("\x00" in value or len(value) > 256):
+            raise DeltaError("SSE event identifier is invalid or over budget")
+        if name == "event" and value and not re.fullmatch(r"[A-Za-z][A-Za-z0-9_.-]{0,63}", value):
+            raise DeltaError("SSE event type is outside the bounded grammar")
+        if name == "retry" and (
+            not re.fullmatch(r"(?:0|[1-9][0-9]{0,6})", value) or int(value) > 600_000
+        ):
+            raise DeltaError("SSE retry value is invalid or over budget")
+    if data_lines < 1:
+        raise DeltaError("SSE block contains no data field")
+    return {
+        "line_count": len(rows),
+        "data_line_count": data_lines,
+        "declared_bytes": total,
+        "network_opened": False,
+        "event_dispatched": False,
+        "valid": True,
+    }
+
+
+def validate_grpc_status_trailers(trailers: dict[str, str]) -> dict[str, Any]:
+    """Validate bounded gRPC status trailers without creating an RPC channel."""
+
+    allowed = {"grpc-status", "grpc-message", "grpc-status-details-bin"}
+    if not isinstance(trailers, dict) or "grpc-status" not in trailers or not set(trailers) <= allowed:
+        raise DeltaError("gRPC trailer map is missing status or has undeclared fields")
+    status_raw = trailers["grpc-status"]
+    if not isinstance(status_raw, str) or not re.fullmatch(r"(?:0|[1-9][0-9]?)", status_raw):
+        raise DeltaError("gRPC status is not canonical decimal text")
+    status = int(status_raw)
+    if status > 16:
+        raise DeltaError("gRPC status is outside the defined range")
+    message = trailers.get("grpc-message", "")
+    if not isinstance(message, str) or len(message.encode("utf-8")) > 512:
+        raise DeltaError("gRPC message is invalid or over budget")
+    for match in re.finditer("%", message):
+        if not re.match(r"[0-9A-Fa-f]{2}", message[match.start() + 1 : match.start() + 3]):
+            raise DeltaError("gRPC message contains a malformed percent escape")
+    details = trailers.get("grpc-status-details-bin")
+    if details is not None:
+        if status == 0:
+            raise DeltaError("gRPC success status carries failure-only details")
+        if not isinstance(details, str) or len(details) > 1368 or len(details) % 4:
+            raise DeltaError("gRPC details declaration is invalid or over budget")
+        if not re.fullmatch(r"(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?", details):
+            raise DeltaError("gRPC details declaration is not canonical base64 shape")
+    return {
+        "status": status,
+        "message_bytes": len(message.encode("utf-8")),
+        "details_declared": details is not None,
+        "details_decoded": False,
+        "rpc_invoked": False,
+        "valid": True,
+    }
+
+
+def validate_xmp_identifier_lineage(record: dict[str, Any]) -> dict[str, Any]:
+    """Validate synthetic XMP identifier lineage without provenance inference."""
+
+    required = {"document_id", "instance_id", "original_document_id", "history"}
+    if not isinstance(record, dict) or set(record) != required or not isinstance(
+        record["history"], list
+    ):
+        raise DeltaError("XMP lineage descriptor has the wrong fields")
+    identifiers = [
+        record["document_id"],
+        record["instance_id"],
+        record["original_document_id"],
+    ]
+    if any(
+        not isinstance(value, str)
+        or not re.fullmatch(r"xmp\.(?:did|iid|oid):[A-Za-z0-9._-]{1,64}", value)
+        for value in identifiers
+    ) or len(set(identifiers)) != 3:
+        raise DeltaError("XMP document identifiers are invalid or not distinct")
+    if not record["history"] or len(record["history"]) > 64:
+        raise DeltaError("XMP history is empty or over budget")
+    seen: set[str] = set()
+    for row in record["history"]:
+        if not isinstance(row, dict) or set(row) != {"event_id", "parent_event_id", "action"}:
+            raise DeltaError("XMP history row has the wrong fields")
+        event_id = row["event_id"]
+        parent = row["parent_event_id"]
+        action = row["action"]
+        if not isinstance(event_id, str) or not re.fullmatch(r"evt-[A-Za-z0-9._-]{1,64}", event_id):
+            raise DeltaError("XMP history event identifier is invalid")
+        if event_id in seen or parent == event_id:
+            raise DeltaError("XMP history repeats or self-references an event")
+        if parent is not None and parent not in seen:
+            raise DeltaError("XMP history parent is absent or forward-referenced")
+        if not isinstance(action, str) or not re.fullmatch(r"[a-z][a-z0-9_-]{0,63}", action):
+            raise DeltaError("XMP history action is invalid")
+        seen.add(event_id)
+    return {
+        "history_count": len(seen),
+        "provenance_verified": False,
+        "authenticity_verified": False,
+        "custody_authority": False,
+        "valid": True,
+    }
+
+
+def validate_ttml_time_expression(descriptor: dict[str, Any]) -> dict[str, Any]:
+    """Validate a bounded TTML timing subset without rendering media."""
+
+    required = {"begin", "end", "frame_rate", "tick_rate", "region", "known_regions"}
+    if not isinstance(descriptor, dict) or set(descriptor) != required:
+        raise DeltaError("TTML timing descriptor has the wrong fields")
+    frame_rate = _require_nonnegative_int(descriptor["frame_rate"], "TTML frame rate")
+    tick_rate = _require_nonnegative_int(descriptor["tick_rate"], "TTML tick rate")
+    if not 1 <= frame_rate <= 240 or not 1 <= tick_rate <= 1_000_000:
+        raise DeltaError("TTML rate declaration is outside the bounded range")
+    regions = descriptor["known_regions"]
+    if not isinstance(regions, list) or not regions or len(regions) > 64:
+        raise DeltaError("TTML region list is empty or over budget")
+    ensure_unique(regions, "TTML region")
+    if any(
+        not isinstance(value, str) or not re.fullmatch(r"[A-Za-z][A-Za-z0-9_.-]{0,63}", value)
+        for value in regions
+    ) or descriptor["region"] not in regions:
+        raise DeltaError("TTML region reference is invalid or unknown")
+
+    def seconds(value: Any) -> float:
+        if not isinstance(value, str) or len(value) > 64:
+            raise DeltaError("TTML time expression is invalid or over budget")
+        offset = re.fullmatch(r"([0-9]+(?:\.[0-9]+)?)s", value)
+        if offset:
+            parsed = float(offset.group(1))
+            if not math.isfinite(parsed):
+                raise DeltaError("TTML offset time is nonfinite")
+            return parsed
+        clock = re.fullmatch(r"([0-9]{2,}):([0-5][0-9]):([0-5][0-9]):([0-9]{2})", value)
+        if not clock or int(clock.group(4)) >= frame_rate:
+            raise DeltaError("TTML clock time is malformed or frame is out of range")
+        return (
+            int(clock.group(1)) * 3600
+            + int(clock.group(2)) * 60
+            + int(clock.group(3))
+            + int(clock.group(4)) / frame_rate
+        )
+
+    begin = seconds(descriptor["begin"])
+    end = seconds(descriptor["end"])
+    if begin < 0 or end <= begin or end > 86_400:
+        raise DeltaError("TTML timing interval is invalid or over budget")
+    return {
+        "begin_seconds": begin,
+        "end_seconds": end,
+        "region": descriptor["region"],
+        "media_rendered": False,
+        "accessibility_complete": False,
+        "valid": True,
+    }
+
+
+def validate_otel_baggage_members(
+    members: Iterable[dict[str, Any]], maximum_members: int = 16, maximum_bytes: int = 1024
+) -> dict[str, Any]:
+    """Validate bounded local baggage declarations without telemetry propagation."""
+
+    member_limit = _require_nonnegative_int(maximum_members, "maximum baggage members")
+    byte_limit = _require_nonnegative_int(maximum_bytes, "maximum baggage bytes")
+    rows = list(members)
+    if not rows or len(rows) > member_limit:
+        raise DeltaError("baggage member count is empty or over budget")
+    keys: list[str] = []
+    total = 0
+    for row in rows:
+        if not isinstance(row, dict) or set(row) != {"key", "value", "properties"}:
+            raise DeltaError("baggage member has the wrong fields")
+        key, value, properties = row["key"], row["value"], row["properties"]
+        if not isinstance(key, str) or not re.fullmatch(r"[a-z0-9][a-z0-9_.*/-]{0,63}", key):
+            raise DeltaError("baggage key is outside the bounded grammar")
+        if not isinstance(value, str) or len(value) > 256 or any(ord(char) < 0x20 for char in value):
+            raise DeltaError("baggage value is invalid or over budget")
+        for match in re.finditer("%", value):
+            if not re.match(r"[0-9A-Fa-f]{2}", value[match.start() + 1 : match.start() + 3]):
+                raise DeltaError("baggage value contains a malformed percent escape")
+        if not isinstance(properties, list) or len(properties) > 8 or any(
+            not isinstance(prop, str)
+            or not re.fullmatch(r"[a-z][a-z0-9_-]{0,31}(?:=[A-Za-z0-9._-]{1,64})?", prop)
+            for prop in properties
+        ):
+            raise DeltaError("baggage properties are invalid or over budget")
+        keys.append(key)
+        total += len(key.encode()) + len(value.encode()) + sum(len(prop.encode()) for prop in properties) + 2
+        if total > byte_limit:
+            raise DeltaError("baggage aggregate exceeds byte budget")
+    ensure_unique(keys, "baggage key")
+    return {
+        "member_count": len(rows),
+        "declared_bytes": total,
+        "telemetry_propagated": False,
+        "privacy_complete": False,
+        "valid": True,
+    }
+
+
+def validate_authentication_results_shape(record: dict[str, Any]) -> dict[str, Any]:
+    """Validate Authentication-Results metadata without authenticating a message."""
+
+    if not isinstance(record, dict) or set(record) != {"authserv_id", "results"}:
+        raise DeltaError("Authentication-Results descriptor has the wrong fields")
+    authserv_id = record["authserv_id"]
+    if not isinstance(authserv_id, str) or not re.fullmatch(
+        r"[A-Za-z0-9](?:[A-Za-z0-9.-]{0,251}[A-Za-z0-9])?", authserv_id
+    ):
+        raise DeltaError("Authentication-Results authserv-id is invalid")
+    rows = record["results"]
+    if not isinstance(rows, list) or not rows or len(rows) > 16:
+        raise DeltaError("Authentication-Results count is empty or over budget")
+    allowed_results = {"none", "pass", "fail", "policy", "neutral", "temperror", "permerror", "softfail"}
+    for row in rows:
+        if not isinstance(row, dict) or set(row) != {"method", "result", "properties"}:
+            raise DeltaError("Authentication-Results row has the wrong fields")
+        if not isinstance(row["method"], str) or not re.fullmatch(r"[a-z][a-z0-9_-]{0,31}", row["method"]):
+            raise DeltaError("Authentication-Results method is invalid")
+        if row["result"] not in allowed_results:
+            raise DeltaError("Authentication-Results result token is unsupported")
+        if not isinstance(row["properties"], dict) or len(row["properties"]) > 8:
+            raise DeltaError("Authentication-Results properties are invalid or over budget")
+        for key, value in row["properties"].items():
+            if not isinstance(key, str) or not re.fullmatch(r"[a-z][a-z0-9_-]{0,15}\.[a-z][a-z0-9_-]{0,31}", key):
+                raise DeltaError("Authentication-Results property name is invalid")
+            if not isinstance(value, str) or not value or len(value) > 256 or any(ord(char) < 0x20 for char in value):
+                raise DeltaError("Authentication-Results property value is invalid")
+    return {
+        "authserv_id": authserv_id,
+        "result_count": len(rows),
+        "message_authenticated": False,
+        "mail_processed": False,
+        "valid": True,
+    }
+
+
+def validate_mta_sts_policy(policy: dict[str, Any]) -> dict[str, Any]:
+    """Validate a synthetic MTA-STS policy without DNS, SMTP, or deployment."""
+
+    required = {"version", "mode", "mx", "max_age", "previous_mode"}
+    if not isinstance(policy, dict) or set(policy) != required:
+        raise DeltaError("MTA-STS policy has the wrong fields")
+    if policy["version"] != "STSv1" or policy["mode"] not in {"none", "testing", "enforce"}:
+        raise DeltaError("MTA-STS version or mode is unsupported")
+    if policy["previous_mode"] not in {"none", "testing", "enforce"}:
+        raise DeltaError("MTA-STS previous mode is unsupported")
+    max_age = _require_nonnegative_int(policy["max_age"], "MTA-STS max_age")
+    if max_age > 31_557_600:
+        raise DeltaError("MTA-STS max_age exceeds the bounded range")
+    mx = policy["mx"]
+    if not isinstance(mx, list) or len(mx) > 16:
+        raise DeltaError("MTA-STS MX list is invalid or over budget")
+    ensure_unique(mx, "MTA-STS MX pattern")
+    for value in mx:
+        if not isinstance(value, str) or not re.fullmatch(
+            r"(?:\*\.)?[A-Za-z0-9](?:[A-Za-z0-9.-]{0,251}[A-Za-z0-9])?", value
+        ):
+            raise DeltaError("MTA-STS MX pattern is invalid")
+    if policy["mode"] == "none" and mx:
+        raise DeltaError("MTA-STS none mode must not declare MX patterns")
+    if policy["mode"] in {"testing", "enforce"} and not mx:
+        raise DeltaError("MTA-STS testing or enforce mode requires an MX pattern")
+    if policy["previous_mode"] == "none" and policy["mode"] == "enforce":
+        raise DeltaError("MTA-STS none-to-enforce transition requires an explicit testing hold")
+    return {
+        "mode": policy["mode"],
+        "mx_count": len(mx),
+        "max_age": max_age,
+        "dns_accessed": False,
+        "smtp_accessed": False,
+        "policy_deployed": False,
+        "valid": True,
+    }
+
+
+def validate_security_txt_fields(fields: dict[str, Any]) -> dict[str, Any]:
+    """Validate bounded security.txt fields without retrieval or publication."""
+
+    required = {"contact", "expires", "canonical", "preferred_languages"}
+    if not isinstance(fields, dict) or set(fields) != required:
+        raise DeltaError("security.txt field map has the wrong fields")
+    contacts = fields["contact"]
+    canonical = fields["canonical"]
+    languages = fields["preferred_languages"]
+    if not isinstance(contacts, list) or not 1 <= len(contacts) <= 8:
+        raise DeltaError("security.txt contact list is empty or over budget")
+    if not isinstance(canonical, list) or not 1 <= len(canonical) <= 8:
+        raise DeltaError("security.txt canonical list is empty or over budget")
+    if not isinstance(languages, list) or not 1 <= len(languages) <= 16:
+        raise DeltaError("security.txt language list is empty or over budget")
+    ensure_unique(contacts, "security.txt contact")
+    ensure_unique(canonical, "security.txt canonical URI")
+    ensure_unique(languages, "security.txt preferred language")
+    for value in contacts:
+        split = urlsplit(value) if isinstance(value, str) else None
+        if split is None or (
+            not (value.startswith("mailto:") and "@" in split.path)
+            and not (split.scheme == "https" and split.netloc)
+        ):
+            raise DeltaError("security.txt contact is outside the bounded URI forms")
+    for value in canonical:
+        split = urlsplit(value) if isinstance(value, str) else None
+        if split is None or split.scheme != "https" or not split.netloc or not split.path.endswith(
+            "/.well-known/security.txt"
+        ) or split.query or split.fragment:
+            raise DeltaError("security.txt canonical URI is invalid")
+    expires = fields["expires"]
+    if not isinstance(expires, str) or not re.fullmatch(
+        r"[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}Z", expires
+    ):
+        raise DeltaError("security.txt expiry is not bounded UTC text")
+    try:
+        datetime.fromisoformat(expires.replace("Z", "+00:00"))
+    except ValueError as exc:
+        raise DeltaError("security.txt expiry is not a real calendar time") from exc
+    if any(
+        not isinstance(value, str)
+        or not re.fullmatch(r"[A-Za-z]{2,8}(?:-[A-Za-z0-9]{1,8}){0,3}", value)
+        for value in languages
+    ):
+        raise DeltaError("security.txt preferred language is invalid")
+    return {
+        "contact_count": len(contacts),
+        "canonical_count": len(canonical),
+        "preferred_language_count": len(languages),
+        "retrieved": False,
+        "published": False,
+        "disclosure_authority": False,
+        "valid": True,
+    }
+
+
+def validate_problem_details_shape(problem: dict[str, Any]) -> dict[str, Any]:
+    """Validate a bounded RFC 9457 shape without serving an HTTP response."""
+
+    allowed = {"type", "title", "status", "detail", "instance", "extensions"}
+    if not isinstance(problem, dict) or not {"type", "title", "status"} <= set(problem) <= allowed:
+        raise DeltaError("Problem Details object has missing or undeclared fields")
+    status = _require_nonnegative_int(problem["status"], "Problem Details status")
+    if not 100 <= status <= 599:
+        raise DeltaError("Problem Details status is outside the HTTP range")
+    type_uri = problem["type"]
+    if type_uri != "about:blank":
+        split = urlsplit(type_uri) if isinstance(type_uri, str) else None
+        if split is None or split.scheme != "https" or not split.netloc:
+            raise DeltaError("Problem Details type is outside the bounded URI form")
+    for field in ("title", "detail"):
+        if field in problem and (
+            not isinstance(problem[field], str)
+            or not problem[field]
+            or len(problem[field]) > 2048
+            or any(ord(char) < 0x20 and char not in "\t" for char in problem[field])
+        ):
+            raise DeltaError(f"Problem Details {field} is invalid or over budget")
+    detail = problem.get("detail", "")
+    if re.search(r"(?i)(?:api[_-]?key|password|access[_-]?token)\s*[:=]", detail):
+        raise DeltaError("Problem Details detail contains a secret-shaped marker")
+    if "instance" in problem:
+        instance = problem["instance"]
+        split = urlsplit(instance) if isinstance(instance, str) else None
+        if split is None or not (
+            (split.scheme == "https" and split.netloc) or (not split.scheme and not split.netloc and instance.startswith("/"))
+        ):
+            raise DeltaError("Problem Details instance is outside the bounded URI form")
+    extensions = problem.get("extensions", {})
+    if not isinstance(extensions, dict) or len(extensions) > 16:
+        raise DeltaError("Problem Details extensions are invalid or over budget")
+    core_casefold = {name.casefold() for name in allowed - {"extensions"}}
+    for key, value in extensions.items():
+        if not isinstance(key, str) or not re.fullmatch(r"[A-Za-z][A-Za-z0-9_.-]{0,63}", key):
+            raise DeltaError("Problem Details extension name is invalid")
+        if key.casefold() in core_casefold:
+            raise DeltaError("Problem Details extension collides with a core member")
+        if not isinstance(value, (str, int, bool, type(None))) or isinstance(value, float):
+            raise DeltaError("Problem Details extension value is outside the bounded scalar set")
+        if isinstance(value, str) and len(value) > 512:
+            raise DeltaError("Problem Details extension value exceeds budget")
+    return {
+        "status": status,
+        "extension_count": len(extensions),
+        "http_served": False,
+        "privacy_complete": False,
+        "valid": True,
+    }
+
+
 def merkle_root(entries: Iterable[dict[str, Any]]) -> str:
     leaves: list[bytes] = []
     for entry in sorted(entries, key=lambda row: row["path"]):
@@ -1542,6 +2170,363 @@ def auren_hardening_payload() -> dict[str, Any]:
     }
 
 
+def sable_hardening_payload() -> dict[str, Any]:
+    """Run Sable's fourteen paired bounded synthetic hardening fixtures."""
+
+    def rejection(identifier: str, label: str, callback: Any) -> dict[str, Any]:
+        try:
+            callback()
+        except (DeltaError, UnicodeError, ValueError, TypeError) as exc:
+            return {
+                "fixture_id": identifier,
+                "failed_witness": label,
+                "rejected": True,
+                "error_class": type(exc).__name__,
+            }
+        raise DeltaError(f"negative fixture was not rejected: {identifier}")
+
+    records = [
+        rejection(
+            "S6628-HF-001",
+            "unsupported RDFC algorithm declaration",
+            lambda: validate_rdf_canonicalization_descriptor(
+                {
+                    "algorithm": "URDNA2015",
+                    "hash_algorithm": "sha256",
+                    "maximum_n_degree_calls": 100,
+                    "dataset_present": False,
+                    "canonical_output_present": False,
+                }
+            ),
+        ),
+        rejection(
+            "S6628-HF-002",
+            "SHACL conforming report carrying a result",
+            lambda: validate_shacl_report_shape(
+                {
+                    "conforms": True,
+                    "results": [
+                        {
+                            "severity": "sh:Violation",
+                            "focus_node": "ex:item",
+                            "source_constraint_component": "sh:ClassConstraintComponent",
+                        }
+                    ],
+                }
+            ),
+        ),
+        rejection(
+            "S6628-HF-003",
+            "SPARQL binding for undeclared variable",
+            lambda: validate_sparql_result_bindings(
+                {
+                    "head": {"vars": ["item"]},
+                    "results": {
+                        "bindings": [
+                            {"other": {"type": "literal", "value": "synthetic"}}
+                        ]
+                    },
+                }
+            ),
+        ),
+        rejection(
+            "S6628-HF-004",
+            "non-HTTPS DCAT download location",
+            lambda: validate_dcat_distribution_descriptor(
+                {
+                    "access_urls": [],
+                    "download_urls": ["http://example.invalid/data.json"],
+                    "media_type": "application/json",
+                    "checksum": {"algorithm": "sha256", "value": "00" * 32},
+                }
+            ),
+        ),
+        rejection(
+            "S6628-HF-005",
+            "OpenPGP signatures close in forward order",
+            lambda: validate_openpgp_one_pass_sequence(
+                [
+                    "one_pass:alpha:more",
+                    "one_pass:beta:last",
+                    "literal",
+                    "signature:alpha",
+                    "signature:beta",
+                ]
+            ),
+        ),
+        rejection(
+            "S6628-HF-006",
+            "SSE identifier contains NUL",
+            lambda: validate_sse_event_block(
+                [
+                    {"name": "data", "value": "synthetic"},
+                    {"name": "id", "value": "bad\x00id"},
+                ]
+            ),
+        ),
+        rejection(
+            "S6628-HF-007",
+            "gRPC status outside the defined range",
+            lambda: validate_grpc_status_trailers({"grpc-status": "17"}),
+        ),
+        rejection(
+            "S6628-HF-008",
+            "XMP document identifiers are duplicated",
+            lambda: validate_xmp_identifier_lineage(
+                {
+                    "document_id": "xmp.did:item",
+                    "instance_id": "xmp.did:item",
+                    "original_document_id": "xmp.oid:origin",
+                    "history": [
+                        {"event_id": "evt-create", "parent_event_id": None, "action": "created"}
+                    ],
+                }
+            ),
+        ),
+        rejection(
+            "S6628-HF-009",
+            "TTML cue references an unknown region",
+            lambda: validate_ttml_time_expression(
+                {
+                    "begin": "0s",
+                    "end": "2.5s",
+                    "frame_rate": 30,
+                    "tick_rate": 1000,
+                    "region": "missing",
+                    "known_regions": ["caption"],
+                }
+            ),
+        ),
+        rejection(
+            "S6628-HF-010",
+            "OpenTelemetry baggage key repeats",
+            lambda: validate_otel_baggage_members(
+                [
+                    {"key": "trace.item", "value": "one", "properties": []},
+                    {"key": "trace.item", "value": "two", "properties": []},
+                ]
+            ),
+        ),
+        rejection(
+            "S6628-HF-011",
+            "Authentication-Results carries an unknown result",
+            lambda: validate_authentication_results_shape(
+                {
+                    "authserv_id": "mail.example.invalid",
+                    "results": [{"method": "spf", "result": "maybe", "properties": {}}],
+                }
+            ),
+        ),
+        rejection(
+            "S6628-HF-012",
+            "MTA-STS jumps directly from none to enforce",
+            lambda: validate_mta_sts_policy(
+                {
+                    "version": "STSv1",
+                    "mode": "enforce",
+                    "mx": ["mx.example.invalid"],
+                    "max_age": 86400,
+                    "previous_mode": "none",
+                }
+            ),
+        ),
+        rejection(
+            "S6628-HF-013",
+            "security.txt canonical URI uses HTTP",
+            lambda: validate_security_txt_fields(
+                {
+                    "contact": ["mailto:security@example.invalid"],
+                    "expires": "2030-01-01T00:00:00Z",
+                    "canonical": ["http://example.invalid/.well-known/security.txt"],
+                    "preferred_languages": ["en"],
+                }
+            ),
+        ),
+        rejection(
+            "S6628-HF-014",
+            "Problem Details extension collides with a core member",
+            lambda: validate_problem_details_shape(
+                {
+                    "type": "about:blank",
+                    "title": "Synthetic refusal",
+                    "status": 400,
+                    "extensions": {"Status": 401},
+                }
+            ),
+        ),
+    ]
+    if not all(record.get("rejected") is True for record in records):
+        raise DeltaError("one or more Sable hardening negative fixtures was not detected")
+
+    positive_checks = [
+        validate_rdf_canonicalization_descriptor(
+            {
+                "algorithm": "RDFC-1.0",
+                "hash_algorithm": "sha256",
+                "maximum_n_degree_calls": 100,
+                "dataset_present": False,
+                "canonical_output_present": False,
+            }
+        )["dataset_canonicalized"]
+        is False,
+        validate_shacl_report_shape(
+            {
+                "conforms": False,
+                "results": [
+                    {
+                        "severity": "sh:Violation",
+                        "focus_node": "ex:item",
+                        "source_constraint_component": "sh:ClassConstraintComponent",
+                        "result_path": "ex:kind",
+                    }
+                ],
+            }
+        )["graph_processed"]
+        is False,
+        validate_sparql_result_bindings(
+            {
+                "head": {"vars": ["item"]},
+                "results": {
+                    "bindings": [
+                        {"item": {"type": "literal", "value": "synthetic"}}
+                    ]
+                },
+            }
+        )["query_executed"]
+        is False,
+        validate_dcat_distribution_descriptor(
+            {
+                "access_urls": ["https://example.invalid/catalog/item"],
+                "download_urls": ["https://example.invalid/data/item.json"],
+                "media_type": "application/json",
+                "checksum": {"algorithm": "sha256", "value": "00" * 32},
+            }
+        )["url_dereferenced"]
+        is False,
+        validate_openpgp_one_pass_sequence(
+            [
+                "one_pass:alpha:more",
+                "one_pass:beta:last",
+                "literal",
+                "signature:beta",
+                "signature:alpha",
+            ]
+        )["signature_verified"]
+        is False,
+        validate_sse_event_block(
+            [
+                {"name": "event", "value": "update"},
+                {"name": "id", "value": "evt-1"},
+                {"name": "retry", "value": "1000"},
+                {"name": "data", "value": "synthetic"},
+            ]
+        )["network_opened"]
+        is False,
+        validate_grpc_status_trailers(
+            {
+                "grpc-status": "5",
+                "grpc-message": "not%20found",
+                "grpc-status-details-bin": "YWJj",
+            }
+        )["rpc_invoked"]
+        is False,
+        validate_xmp_identifier_lineage(
+            {
+                "document_id": "xmp.did:document-1",
+                "instance_id": "xmp.iid:instance-2",
+                "original_document_id": "xmp.oid:original-1",
+                "history": [
+                    {"event_id": "evt-create", "parent_event_id": None, "action": "created"},
+                    {"event_id": "evt-revise", "parent_event_id": "evt-create", "action": "revised"},
+                ],
+            }
+        )["provenance_verified"]
+        is False,
+        validate_ttml_time_expression(
+            {
+                "begin": "0s",
+                "end": "2.5s",
+                "frame_rate": 30,
+                "tick_rate": 1000,
+                "region": "caption",
+                "known_regions": ["caption"],
+            }
+        )["media_rendered"]
+        is False,
+        validate_otel_baggage_members(
+            [{"key": "trace.item", "value": "synthetic%20value", "properties": ["privacy=bounded"]}]
+        )["telemetry_propagated"]
+        is False,
+        validate_authentication_results_shape(
+            {
+                "authserv_id": "mail.example.invalid",
+                "results": [
+                    {"method": "spf", "result": "none", "properties": {"smtp.mailfrom": "example.invalid"}}
+                ],
+            }
+        )["message_authenticated"]
+        is False,
+        validate_mta_sts_policy(
+            {
+                "version": "STSv1",
+                "mode": "testing",
+                "mx": ["mx.example.invalid"],
+                "max_age": 86400,
+                "previous_mode": "none",
+            }
+        )["policy_deployed"]
+        is False,
+        validate_security_txt_fields(
+            {
+                "contact": ["mailto:security@example.invalid"],
+                "expires": "2030-01-01T00:00:00Z",
+                "canonical": ["https://example.invalid/.well-known/security.txt"],
+                "preferred_languages": ["en", "mi-NZ"],
+            }
+        )["published"]
+        is False,
+        validate_problem_details_shape(
+            {
+                "type": "about:blank",
+                "title": "Synthetic refusal",
+                "status": 400,
+                "detail": "The bounded fixture was refused.",
+                "instance": "/synthetic/problems/1",
+                "extensions": {"retryable": False},
+            }
+        )["http_served"]
+        is False,
+    ]
+    if not all(positive_checks):
+        raise DeltaError("one or more Sable hardening passing fixtures failed")
+    return {
+        "schema": f"{SCHEMA}.hardening-fixtures.v4",
+        "profile": "sable-v662-v8",
+        "negative_fixture_count": len(records),
+        "rejected_fixture_count": sum(record["rejected"] is True for record in records),
+        "positive_fixture_count": len(positive_checks),
+        "passing_fixture_count": sum(bool(value) for value in positive_checks),
+        "records": records,
+        "rdf_dataset_canonicalized": False,
+        "graph_processed": False,
+        "query_executed": False,
+        "url_dereferenced": False,
+        "signature_verified": False,
+        "network_accessed": False,
+        "media_rendered": False,
+        "telemetry_propagated": False,
+        "mail_authenticated": False,
+        "policy_deployed": False,
+        "privacy_complete": False,
+        "accessibility_complete": False,
+        "professional_authority": False,
+        "cultural_authority": False,
+        "exhaustive_security": False,
+        "valid": True,
+        "boundary": "Fourteen paired bounded synthetic descriptor and refusal fixtures only; not graph canonicalization, SHACL or SPARQL processing, URL dereference, OpenPGP parsing, cryptographic verification, stream or RPC execution, provenance truth, media rendering, telemetry transmission, mail authentication, policy deployment, vulnerability disclosure, privacy or accessibility completeness, professional validation, legal or cultural ratification, Maori authority, production assurance, or independent reproduction.",
+    }
+
+
 def hardening_payload_for_profile(profile: str) -> dict[str, Any]:
     """Select one exact bounded fixture family; reject implicit substitution."""
 
@@ -1549,6 +2534,8 @@ def hardening_payload_for_profile(profile: str) -> dict[str, Any]:
         return hardening_payload()
     if profile == "auren-v662-v7":
         return auren_hardening_payload()
+    if profile == "sable-v662-v8":
+        return sable_hardening_payload()
     raise DeltaError(f"unknown hardening profile: {profile}")
 
 
