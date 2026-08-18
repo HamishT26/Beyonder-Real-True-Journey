@@ -1,0 +1,115 @@
+{
+  "schema": "ghc.family.owner-delta-phase-builder.profile.v3",
+  "owner": "Auren Lark",
+  "phase": "v662-v7",
+  "owner_slug": "auren-lark",
+  "next_owner": "Sable Rook",
+  "next_phase": "v662-v8",
+  "next_owner_slug": "sable-rook",
+  "branch": "codex/GHC-Family/auren-lark-v662-v7-full-tools",
+  "baton_relative_path": "docs/auren-lark/v662-v7/handoffs/sable-rook-v662-v8-activation.md",
+  "baton_metadata_relative_path": "docs/auren-lark/v662-v7/handoffs/sable-rook-v662-v8-activation-metadata.json",
+  "proposal_baseline": 3630,
+  "proposal_total": 3650,
+  "outcome_counts": {
+    "completed": 14,
+    "represented": 4,
+    "open_gap": 1,
+    "exact_gate": 1
+  },
+  "activation_baseline": {
+    "effective_negatives": 23172,
+    "effective_methods": 7766,
+    "open_gaps": 155,
+    "exact_gates": 153
+  },
+  "planned_owner_delta": {
+    "startup_operational_negatives": 8,
+    "synthetic_rejected_mutations": 14,
+    "provisional_effective_negatives": 23194,
+    "provisional_effective_methods": 7788,
+    "effective_open_gaps": 156,
+    "effective_exact_gates": 154
+  },
+  "hardening_profile": "auren-v662-v7",
+  "runner_callables": [
+    "validate_byte_order",
+    "normalize_permission_mode",
+    "validate_nested_resource_budget",
+    "checked_size_product",
+    "validate_uri_member_components",
+    "parse_media_type_parameters",
+    "validate_digest_policy",
+    "validate_dsse_payload_type",
+    "validate_unique_attestation_subject_names",
+    "validate_rfc3339_leap_second_reservation"
+  ],
+  "overview_features": "declared binary byte order, deterministic permission-mask normalization, nested resource budgets, overflow-safe multiplication, URI query and fragment refusal, media-type parameter quarantine, digest-policy reservations, DSSE payload-type boundaries, attestation subject-name collision review, leap-second reservation, JSON Pointer array-index bounds, report revision parity, condition-term glossary versioning, and custody-transition conflict quarantine",
+  "overview_reserved_surfaces": "No binary parser, filesystem permission change, URI dereference, network retrieval, signature, provenance verification, real timestamp, museum record, custody action, or authority decision was invoked.",
+  "threat_controls": [
+    "Binary layouts require an explicit standard byte order and refuse native or absent declarations.",
+    "Permission normalization rejects non-integer, negative, and out-of-mask values without touching a filesystem.",
+    "Nested budgets and size products reject negative, excessive, and overflow-prone synthetic declarations before allocation.",
+    "URI members carrying authority, query, fragment, encoded separators, or traversal segments fail closed without dereference.",
+    "Media-type parameters use a bounded grammar and quarantine duplicates, unsupported charsets, and excess parameters.",
+    "Digest and DSSE checks validate declared shape only; signature, provenance, cryptographic agility, and trust stay unclaimed.",
+    "Attestation subject-name collisions, leap-second timestamps, and non-canonical JSON Pointer array indices remain reserved or rejected.",
+    "Report revisions, terminology revisions, and custody transitions require exact paired identifiers and conflict quarantine.",
+    "Scope remains the exact owner delta and literal test dependencies.",
+    "One canonical success is permitted and never replayed; exact-title reread and acknowledgement are required for delivery."
+  ],
+  "source_records": [
+    {"source_id": "SRC-001", "title": "Git sparse-checkout", "url": "https://git-scm.com/docs/git-sparse-checkout", "bounded_use": "Official Git documentation; sparse-before-materialization mechanics only."},
+    {"source_id": "SRC-002", "title": "Python struct", "url": "https://docs.python.org/3/library/struct.html", "bounded_use": "Official Python documentation; explicit byte order, size, and alignment declarations only."},
+    {"source_id": "SRC-003", "title": "Python stat", "url": "https://docs.python.org/3/library/stat.html", "bounded_use": "Official Python documentation; symbolic permission-bit normalization without filesystem mutation."},
+    {"source_id": "SRC-004", "title": "URI generic syntax", "url": "https://www.rfc-editor.org/rfc/rfc3986.html", "bounded_use": "RFC 3986; component parsing and refusal without dereference."},
+    {"source_id": "SRC-005", "title": "Media type procedures", "url": "https://www.rfc-editor.org/rfc/rfc6838.html", "bounded_use": "RFC 6838 context; bounded parameter parsing never implies content safety."},
+    {"source_id": "SRC-006", "title": "DSSE protocol", "url": "https://github.com/secure-systems-lab/dsse/blob/master/protocol.md", "bounded_use": "Primary protocol repository; payload-type boundary only, never signing or signature validity."},
+    {"source_id": "SRC-007", "title": "in-toto attestation framework", "url": "https://in-toto.io/docs/specs/", "bounded_use": "Primary specification index; subject-name uniqueness and digest-policy shape only, never provenance truth."},
+    {"source_id": "SRC-008", "title": "Internet timestamps", "url": "https://www.rfc-editor.org/rfc/rfc3339.html", "bounded_use": "RFC 3339; leap-second reservation and explicit refusal only, not trusted time."},
+    {"source_id": "SRC-009", "title": "JSON Pointer", "url": "https://www.rfc-editor.org/rfc/rfc6901.html", "bounded_use": "RFC 6901; bounded array-index lexical checks only."},
+    {"source_id": "SRC-010", "title": "GWTC-5.0 official release", "url": "https://gwosc.org/GWTC-5.0/", "bounded_use": "Official GWOSC release structure; zero queries, downloads, rows, likelihoods, or empirical claims."},
+    {"source_id": "SRC-011", "title": "Te Papa conservation guidelines", "url": "https://www.tepapa.govt.nz/learn/for-museums-and-galleries/how-guides/collection-management/conservation-guidelines", "bounded_use": "Official museum guidance informs a synthetic learning lens only; no professional or Maori-authority claim."},
+    {"source_id": "SRC-012", "title": "Spectrum procedures", "url": "https://collectionstrust.org.uk/spectrum/procedures/", "bounded_use": "Collections Trust procedure index; synthetic condition and custody fields only."},
+    {"source_id": "SRC-013", "title": "WAI standards and evaluation", "url": "https://www.w3.org/WAI/standards-guidelines/", "bounded_use": "W3C guidance; manual, assistive-technology, and affected-user evaluation remains reserved."}
+  ],
+  "pillar_artifacts": [
+    {
+      "relative_path": "pillars/gmut-unit-system-compatibility-board.md",
+      "title": "GMUT declared unit-system compatibility board",
+      "body": "A symbolic board separates declared unit systems, dimensions, frame assumptions, approximation domains, provenance, conversions, and falsifiers for candidate effective-field terms. It evaluates no observation, likelihood, posterior, force, physical mechanism, ultraviolet completion, or Theory-of-Everything claim."
+    },
+    {
+      "relative_path": "pillars/thos-treatment-hold-custody-handover.md",
+      "title": "THOS treatment-hold expiry and custody-transition handover proxy",
+      "body": "Synthetic object identifiers, condition terms, hold start and expiry declarations, custody states, conflicting transitions, correction readback, workload ceilings, and shift acceptance exercise bounded transitions. Every object, worker, institution, treatment, incident, and result is fictional."
+    },
+    {
+      "relative_path": "pillars/freed-id-attestation-policy-change-profile.md",
+      "title": "Freed ID attestation policy-change receipt profile",
+      "body": "Synthetic receipts separate subject-name uniqueness, digest-policy declaration, payload type, predicate version, disclosure minimization, status, recovery, and verifier-policy revision. No real key, signature, credential, issuer, holder, verifier, account, or trust decision is present."
+    },
+    {
+      "relative_path": "pillars/cbr-accessible-cultural-terminology-reservations.md",
+      "title": "CBR accessible and cultural-care terminology reservations",
+      "body": "The matrix reserves terminology, access, treatment, movement, return, repatriation, remedy, privacy, legal, cultural, data-governance, tangata whenua, iwi, hapu, and Maori-authority decisions to competent external people and authorities. Repository software makes zero real decision."
+    }
+  ],
+  "test_modules": [
+    "tests/test_ghc_family_auren_v662_v7.py"
+  ],
+  "test_dependencies": [
+    "scripts/ghc_family_owner_delta_phase_builder.py",
+    "scripts/ghc_family_owner_delta_toolkit.py"
+  ],
+  "sparse_patterns": [
+    "/docs/auren-lark/v662-v7/",
+    "/scripts/ghc_family_owner_delta_toolkit.py",
+    "/scripts/ghc_family_owner_delta_phase_builder.py",
+    "/tests/test_ghc_family_auren_v662_v7.py",
+    "/.gitattributes",
+    "/.gitignore"
+  ],
+  "verdict": "NOT_READY_FOR_STAGE_20",
+  "boundary": "Planning configuration only. It cannot implement x2, validate a final commit, prove independent reproduction, deliver a baton, or close any empirical, professional, production, legal, cultural, Maori-authority, identity, privacy-complete, accessibility-complete, exhaustive-security, AGI or ASI, consciousness or personhood, Theory-of-Everything, or Stage 20 gate."
+}

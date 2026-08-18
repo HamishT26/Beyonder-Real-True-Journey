@@ -1,0 +1,85 @@
+{
+  "schema": "ghc.family.v662-v7.startup-method-flow.v1",
+  "owner": "Auren Lark",
+  "phase": "v662-v7",
+  "recorded_at_utc": "2026-08-18T01:22:58.7822743Z",
+  "credit_policy": "Each failed witness remains a retained operational negative with zero validation or completion credit. A bounded recovery never erases the failure.",
+  "records": [
+    {
+      "method_id": "A6627-MF-001",
+      "failed_witness": "The first requested 418-line final activation-baton interval exceeded its output envelope and truncated before the exact EOF boundary could be attributed.",
+      "recovery": "Reread the affected interval as independent 200-line and 218-line windows, then request an empty post-EOF interval.",
+      "passing_witness": "All 3218 content lines and 35580 words were read through true EOF with the expected byte count and SHA-256.",
+      "recurrence_guard": "Use independent windows no larger than 200 lines for long committed activations and require an empty post-EOF read.",
+      "rollback": "The truncated read changed no state and earned zero activation-read credit.",
+      "sibling_recommendation": "Do not infer EOF from a display limit or a nominal final interval."
+    },
+    {
+      "method_id": "A6627-MF-002",
+      "failed_witness": "A broad immutable-tree inventory for skill names exceeded the output envelope and truncated before the required skill set could be attributed.",
+      "recovery": "Probe each required skill by exact local name and read every selected SKILL.md and directly required schema through EOF.",
+      "passing_witness": "All mandated skills and referenced schemas were read completely, and the first eleven committed skill hashes matched exactly.",
+      "recurrence_guard": "Resolve skill names exactly before reading; never dump an entire skill tree into one display.",
+      "rollback": "The broad read changed no skill or repository state and earned zero inventory credit.",
+      "sibling_recommendation": "Keep skill discovery exact-name and hash-bound."
+    },
+    {
+      "method_id": "A6627-MF-003",
+      "failed_witness": "A full authorization current-state JSON display truncated even though a separate post-EOF scalar was visible, so the file was not yet completely attributable.",
+      "recovery": "Read the 1487-line authorization state in four bounded windows and then verify a zero-line post-EOF window.",
+      "passing_witness": "The complete authorization state and schema were read through EOF and the local validator reported a valid 13-permission state with 43 inherited operational negatives.",
+      "recurrence_guard": "Treat a post-EOF scalar as insufficient when the preceding content display truncates.",
+      "rollback": "The truncated display changed no authorization state and earned zero complete-read credit.",
+      "sibling_recommendation": "Bind completeness to every content window plus an empty post-EOF read."
+    },
+    {
+      "method_id": "A6627-MF-004",
+      "failed_witness": "An overbroad pretty projection of the source-to-evidence manifest truncated before its complete entry set could be attributed.",
+      "recovery": "Inspect scalar commitments and independently recompute the exact immutable Git-object manifest, path audit, canonical commitment, and Merkle root.",
+      "passing_witness": "The recomputed 71-entry source-to-evidence and 93-entry source-to-final manifests matched their committed contracts with zero path-audit issue.",
+      "recurrence_guard": "Project manifest scalars first and recompute exact Git-object commitments without printing every entry.",
+      "rollback": "The display-only failure changed no Git object or manifest and earned zero manifest credit.",
+      "sibling_recommendation": "Prefer commitment equality over broad entry dumps."
+    },
+    {
+      "method_id": "A6627-MF-005",
+      "failed_witness": "A sparse-receipt lookup guessed the file at the phase root instead of its committed x1 child and returned a path-not-found error.",
+      "recovery": "Use an exact phase-scoped Git tree query to locate the receipt at x1/sparse-lane-receipt.json.",
+      "passing_witness": "The exact committed receipt path was located without enumerating sibling lanes.",
+      "recurrence_guard": "Resolve phase artifact paths from the exact Git tree before filesystem reads.",
+      "rollback": "The failed literal read changed no filesystem or Git state and earned zero receipt credit.",
+      "sibling_recommendation": "Do not infer x1 receipt placement from a shortened artifact name."
+    },
+    {
+      "method_id": "A6627-MF-006",
+      "failed_witness": "The first corrected sparse-receipt projection guessed a nonexistent sparse_patterns property and returned null.",
+      "recovery": "Read the small exact receipt completely and use its actual patterns property.",
+      "passing_witness": "All six sparse patterns and their sparse-before-materialization contract were recovered exactly.",
+      "recurrence_guard": "Inspect real JSON keys before projecting receipt fields.",
+      "rollback": "The null projection changed no state and earned zero sparse-pattern credit.",
+      "sibling_recommendation": "Treat schema-key guesses as failed witnesses, even when the file itself is correct."
+    },
+    {
+      "method_id": "A6627-MF-007",
+      "failed_witness": "The combined worktree-add, sparse-init, sparse-set, index-materialization, and receipt projection exceeded its output window after only the initial Preparing worktree line.",
+      "recovery": "Do not replay the combined mutation; inspect the exact target path, local branch, head, sparse configuration, materialized files, and status read-only.",
+      "passing_witness": "The exact Auren branch and worktree existed at the immutable source, all six sparse rules were active, exactly four initial files were materialized, and the index was clean.",
+      "recurrence_guard": "Separate bounded setup mutations from their read-only attribution receipt when the host output window is tight.",
+      "rollback": "No recovery mutation was needed; the incomplete wrapper receipt remains a zero-credit operational failure.",
+      "sibling_recommendation": "Inspect actual state before retrying a timed-out setup wrapper."
+    },
+    {
+      "method_id": "A6627-MF-008",
+      "failed_witness": "The first strict-JSON validation probe guessed a nonexistent strict_load_json file helper and failed import before reading any x1 file.",
+      "recovery": "Inspect the exact toolkit function names and invoke strict_json_loads on each file's immutable bytes.",
+      "passing_witness": "All eight x1 JSON files parsed under duplicate-key refusal with zero duplicate keys.",
+      "recurrence_guard": "Resolve the exact exported helper name before composing a strict-parser probe.",
+      "rollback": "The import failure changed no file or Git state and earned zero strict-JSON credit.",
+      "sibling_recommendation": "Use the toolkit's byte-level strict parser unless a file wrapper is verified to exist."
+    }
+  ],
+  "retained_operational_negative_count": 8,
+  "passing_witness_count": 8,
+  "pending_witness_count": 0,
+  "boundary": "Startup Method Flow is operational workflow evidence only and supplies no independent reproduction, professional, scientific, legal, cultural, Maori-authority, identity, or Stage 20 credit."
+}
