@@ -1,0 +1,38 @@
+{
+  "authoritative_evidence_commit": "60ee5d38d245b11df78291e84355c4e0ec0cfc80",
+  "authoritative_ledger": "docs/caelen-ash/v663-v1/x2/operational-method-flow.json",
+  "authoritative_ledger_git_blob": "31563986f6eb1f16728898029320d4ef015139e6",
+  "authoritative_ledger_sha256": "ee76ccb4f265f8e984a054be6acf3032cf38c6a8fbfc2170ed977387d59ddfe8",
+  "boundary": "The immutable evidence ledger contains 62 operational methods in addition to 11 startup and 14 primary hardening methods. CA6631-MF-T001 and CA6631-MF-T002 occurred after evidence and are bound only by the final commit containing this mirror. No record supplies independent reproduction, professional, scientific, operational, legal, cultural, Maori-authority, identity, privacy-complete, accessibility-complete, exhaustive-security, or Stage 20 credit.",
+  "bounded_passing_witness_count": 2,
+  "failed_witnesses_erased": 0,
+  "owner": "Caelen Ash",
+  "pending_witness_count": 0,
+  "phase": "v663-v1",
+  "post_evidence_method_ids": [
+    "CA6631-MF-T001",
+    "CA6631-MF-T002"
+  ],
+  "records": [
+    {
+      "failed_witness": "After the predecessor validation inventory succeeded, a follow-up Git-blob lookup used the nonexistent plural filename evidence-skill-hashes.json instead of the exact singular evidence-skill-hash-receipt.json.",
+      "method_id": "CA6631-MF-T001",
+      "passing_witness": "The already-returned inventory identified the exact filename, and a corrected read-only lookup of that single committed blob succeeded without changing evidence or replaying any validation.",
+      "recovery": "Use the exact filename returned by the immutable tree inventory rather than inflecting a guessed variant.",
+      "recurrence_guard": "Copy validation artifact names directly from git ls-tree output before any Git-blob read.",
+      "rollback": "Give the failed lookup zero credit and preserve the immutable evidence commit and every sibling lane.",
+      "sibling_recommendation": "Resolve exact artifact spelling from the target tree before constructing a blob spec."
+    },
+    {
+      "failed_witness": "The first staged-manifest digest helper launched one Git tree lookup per path, exceeded its 10-second yield, and the caller projected only command text instead of preserving the returned continuation handle.",
+      "method_id": "CA6631-MF-T002",
+      "passing_witness": "A bounded recovery used one bulk Git tree read, filtered all 68 exact x1-to-evidence paths locally, and produced the disclosed canonical digest without modifying repository state.",
+      "recovery": "Replace per-path Git process fan-out with one bulk ls-tree result and local exact-path filtering.",
+      "recurrence_guard": "Use bulk Git plumbing for manifest projections and always return the full process envelope when a command can outlive its yield.",
+      "rollback": "Give the timed-out projection zero credit and preserve the immutable evidence commit and every sibling lane.",
+      "sibling_recommendation": "Build exact staged manifests from one bulk tree read instead of spawning a native Git process for every path."
+    }
+  ],
+  "retained_operational_negative_count": 2,
+  "schema": "ghc.family.v663-v1.terminal-operational-method-flow.v1"
+}

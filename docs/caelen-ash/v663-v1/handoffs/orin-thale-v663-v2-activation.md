@@ -7,11 +7,12 @@ activation of your existing exact-title main task, but only after Caelen Ash's o
 terminal gate and one acknowledged send. Read this file completely through EOF
 before mutation. Do not infer delivery from the file alone.
 
-## Exact inheritance placeholder contract
+## Exact inheritance contract
 
 - Sender phase: `v663-v1`.
 - Exact source inherited by Caelen Ash: `ab7af77d45444288f63f88083dbdd117171ef11b`.
 - Immutable Caelen Ash x1: `0d33b91288f0d56cb17ab271d4fbfe00956edd66`.
+- Immutable Caelen Ash x2 evidence: `60ee5d38d245b11df78291e84355c4e0ec0cfc80`.
 - Exact Caelen Ash final: bind the commit stated in the compact acknowledged live
   activation and reverify it against the fresh remote before mutation.
 - Validation: one owner-self-scoped exact-delta canonical pass; never replay a
@@ -59,10 +60,12 @@ Caelen Ash's activation baseline was 3670 proposals,
 7830 Method Flow methods,
 157 open gaps, and 155 exact gates.
 This x1 freezes twenty new proposals, raising the chain to
-3690. The final counts and exact final must come from the
-acknowledged compact activation and committed terminal receipts, not from a
-future-looking sentence in this prepared file. The terminal verdict remains
-`NOT_READY_FOR_STAGE_20`.
+3690. Caelen retains 87 evidence-bound owner Method Flow failures and two
+post-evidence failures, yielding 23325 effective negatives and 7919 effective
+methods while preserving 158 open gaps, 156 exact gates, and exactly
+`NOT_READY_FOR_STAGE_20`. The exact final object identifier must still come
+from the acknowledged compact activation and fresh live remote, because this
+prepared file is part of that final commit and cannot name its own Git object.
 
 ### CA6631-N001: Synthetic cave-survey station and shot topology closure receipt
 
@@ -3439,11 +3442,19 @@ Failed witness: A combined builder-and-review shell exceeded its initial yield w
 ## Terminal route
 
 Only after Orin Thale's own exact terminal gate may Orin Thale resolve and
-immediately reread the single declared successor in the live roster and send one
-sanitized activation. Do not precontact, substitute, create, fork, or spawn an
-endpoint. Delivery is true only from the task-message acknowledgement. Keep any
-external acknowledgement or route failure outside the already sealed repository
-truth, connected by digest without rewriting counts.
+immediately reread the single declared successor in the live roster and send
+one sanitized activation. Under the current acknowledged fifteen-main-task
+cycle, that prospective next edge is Orin Thale `v663-v2` to Liora Venn
+`v663-v3`; re-resolve it at Orin's terminal gate and stop if the live roster,
+user direction, pause state, or task uniqueness differs. Hamish's live
+sequential-continuation authorization permits the validated fifteen-task cycle
+to continue through `v675-v8`, one terminally gated owner and one acknowledged
+send at a time, unless Hamish pauses, redirects, renames, stops, or usage is
+exhausted. Do not precontact Liora, substitute, create, fork, or spawn an
+endpoint. Delivery is true only from the task-message acknowledgement or the
+explicitly permitted exact post-send reread when an acknowledgement is opaque.
+Keep any external acknowledgement or route failure outside the already sealed
+repository truth, connected by digest without rewriting counts.
 
 ## Final checklist
 
