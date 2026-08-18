@@ -910,12 +910,10 @@ def profile_source_ledger(
     else:
         normalized_records = []
         for row in records:
-            if not isinstance(row, dict) or set(row) != {
-                "source_id",
-                "title",
-                "url",
-                "bounded_use",
-            }:
+            if not isinstance(row, dict) or set(row) not in (
+                {"source_id", "title", "url", "bounded_use"},
+                {"source_id", "title", "url", "status", "bounded_use"},
+            ):
                 raise DeltaError("profile source record has the wrong fields")
             if any(
                 not isinstance(row[field], str) or not row[field].strip()
@@ -924,7 +922,11 @@ def profile_source_ledger(
                 raise DeltaError("profile source record contains an empty value")
             if not row["url"].startswith("https://"):
                 raise DeltaError("profile source URL must use HTTPS")
-            normalized_records.append(dict(row))
+            normalized = dict(row)
+            normalized.setdefault("status", "stable")
+            if normalized["status"] not in {"current", "stable", "draft", "watch"}:
+                raise DeltaError("profile source status is outside the frozen vocabulary")
+            normalized_records.append(normalized)
     source_ids = [row["source_id"] for row in normalized_records]
     if len(source_ids) != len(set(source_ids)):
         raise DeltaError("profile source identifiers are not unique")
@@ -1032,12 +1034,23 @@ def profile_overview_text(
     specialty = focal.get(
         "specialty", "bounded structural, symbolic, synthetic and software evidence"
     )
-    practice = focal.get("bounded_human_practice", "a bounded synthetic practice")
+    practice = str(
+        focal.get("bounded_human_practice", "a bounded synthetic practice")
+    ).strip().rstrip(".")
     practice_boundary = focal.get(
         "practice_boundary",
         "The practice is a learning lens only and supplies no employment, qualification, competence, authority, or affected-party evidence.",
     )
-    secondary_text = " ".join(str(item) for item in focal.get("secondary_pillars", []))
+    secondary_pillars = focal.get("secondary_pillars")
+    if not secondary_pillars:
+        secondary_pillars = [
+            item
+            for item in focal.get("visible_pillars", [])
+            if str(item) != str(primary_pillar)
+        ]
+    secondary_text = ", ".join(str(item) for item in secondary_pillars)
+    if not secondary_text:
+        secondary_text = "the two non-primary pillars remain visible"
     source_head = source.get("exact_head", "the exact inherited source")
     file_ceiling = caps.get("materialized_or_owner_in_scope_files", "the declared")
     features = feature_summary or (
@@ -1050,6 +1063,10 @@ def profile_overview_text(
         "No decoder, sparse file, signature, provenance verification, real timestamp, "
         "or network retrieval was invoked."
     )
+    if isinstance(features, list):
+        features = "; ".join(str(item).strip().rstrip(".") for item in features)
+    if isinstance(reservations, list):
+        reservations = " ".join(str(item).strip() for item in reservations)
     if owner == "Liora Venn" and phase == "v663-v3":
         return f"""# {owner} {phase} integrated overview
 
@@ -1722,6 +1739,19 @@ installed skill and not proof of qualification or authority.
             callable_names[12],
             callable_names[13],
             "liora_hardening_payload",
+        ]
+    elif hardening_profile == "tamar-v663-v4" and len(callable_names) == 14:
+        callable_names = [
+            callable_names[0],
+            callable_names[1],
+            callable_names[2],
+            callable_names[3],
+            callable_names[4],
+            callable_names[6],
+            callable_names[8],
+            callable_names[12],
+            callable_names[13],
+            "tamar_hardening_payload",
         ]
     else:
         callable_names = callable_names[:runner_count]

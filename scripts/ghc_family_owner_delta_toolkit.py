@@ -6117,6 +6117,977 @@ def liora_hardening_payload() -> dict[str, Any]:
     }
 
 
+
+
+def _kite_required_false(record: dict[str, Any], fields: Iterable[str]) -> None:
+    """Require explicit false values for synthetic kite authority boundaries."""
+
+    for field in fields:
+        _cave_false(record[field], f"kite {field.replace('_', ' ')}")
+
+
+def _kite_valid(kind: str, *, record_count: int = 1) -> dict[str, Any]:
+    return {
+        "kind": kind,
+        "record_count": record_count,
+        "real_person_present": False,
+        "real_asset_present": False,
+        "real_measurement_present": False,
+        "flight_authorized": False,
+        "professional_authority": False,
+        "legal_authority": False,
+        "cultural_authority": False,
+        "maori_authority": False,
+        "valid": True,
+    }
+
+
+def validate_kite_workshop_packet(record: dict[str, Any]) -> dict[str, Any]:
+    """Validate a fictional workshop packet without authorizing build or flight."""
+
+    _cave_record(
+        record,
+        {
+            "workshop_token",
+            "revision",
+            "source_pin",
+            "cancellation_state",
+            "synthetic",
+            "raw_identity_present",
+            "real_workshop_present",
+            "build_authorized",
+            "flight_authorized",
+        },
+        "kite workshop packet",
+    )
+    _cave_token(record["workshop_token"], "kite workshop token")
+    revision = _require_nonnegative_int(record["revision"], "kite workshop revision")
+    if not 1 <= revision <= 10_000:
+        raise DeltaError("kite workshop revision is outside the bounded range")
+    if re.fullmatch(r"sha256:[0-9a-f]{64}", record["source_pin"]) is None:
+        raise DeltaError("kite workshop source pin is not an explicit SHA-256 commitment")
+    if record["cancellation_state"] not in {"planned", "cancelled", "superseded"}:
+        raise DeltaError("kite workshop cancellation state is unsupported")
+    if record["synthetic"] is not True:
+        raise DeltaError("kite workshop packet must remain explicitly synthetic")
+    _kite_required_false(
+        record,
+        (
+            "raw_identity_present",
+            "real_workshop_present",
+            "build_authorized",
+            "flight_authorized",
+        ),
+    )
+    return _kite_valid("kite_workshop_packet")
+
+
+def validate_kite_component_topology(record: dict[str, Any]) -> dict[str, Any]:
+    """Validate fictional kite-component topology and refuse physical release."""
+
+    _cave_record(
+        record,
+        {
+            "components",
+            "real_asset_present",
+            "assembly_authorized",
+            "flight_authorized",
+        },
+        "kite component topology",
+    )
+    components = record["components"]
+    if not isinstance(components, list) or not 3 <= len(components) <= 32:
+        raise DeltaError("kite component count is outside the bounded range")
+    seen: set[str] = set()
+    kinds: set[str] = set()
+    for index, component in enumerate(components):
+        _cave_record(
+            component,
+            {"component_token", "kind", "parent_token"},
+            "kite component row",
+        )
+        token = _cave_token(component["component_token"], "kite component token")
+        if token in seen:
+            raise DeltaError("kite component token is duplicated")
+        if component["kind"] not in {"root", "frame", "sail", "bridle", "tail", "line"}:
+            raise DeltaError("kite component kind is unsupported")
+        parent = component["parent_token"]
+        if index == 0:
+            if component["kind"] != "root" or parent is not None:
+                raise DeltaError("kite topology lacks a valid root")
+        elif not isinstance(parent, str) or parent not in seen:
+            raise DeltaError("kite component parent is absent or forward-referenced")
+        seen.add(token)
+        kinds.add(component["kind"])
+    if not {"sail", "bridle"} <= kinds:
+        raise DeltaError("kite topology lacks sail and bridle placeholders")
+    _kite_required_false(record, ("real_asset_present", "assembly_authorized", "flight_authorized"))
+    return _kite_valid("kite_component_topology", record_count=len(components))
+
+
+def validate_kite_material_lots(record: dict[str, Any]) -> dict[str, Any]:
+    """Validate synthetic material provenance and quarantine only."""
+
+    _cave_record(
+        record,
+        {
+            "lots",
+            "real_material_present",
+            "authenticity_claimed",
+            "suitability_claimed",
+            "custody_claimed",
+            "safety_cleared",
+        },
+        "kite material ledger",
+    )
+    lots = record["lots"]
+    if not isinstance(lots, list) or not 2 <= len(lots) <= 32:
+        raise DeltaError("kite material-lot count is outside the bounded range")
+    seen: set[str] = set()
+    for lot in lots:
+        _cave_record(
+            lot,
+            {
+                "lot_token",
+                "source_token",
+                "material_class",
+                "substitution_for",
+                "quarantined",
+            },
+            "kite material-lot row",
+        )
+        token = _cave_token(lot["lot_token"], "kite material-lot token")
+        if token in seen:
+            raise DeltaError("kite material-lot token is duplicated")
+        _cave_token(lot["source_token"], "kite material source token")
+        if lot["material_class"] not in {"paper", "fabric", "spar", "cord", "adhesive"}:
+            raise DeltaError("kite material class is unsupported")
+        substitute = lot["substitution_for"]
+        if substitute is not None and (not isinstance(substitute, str) or substitute not in seen):
+            raise DeltaError("kite material substitution is absent or forward-referenced")
+        if lot["quarantined"] is not True:
+            raise DeltaError("kite material quarantine is not retained")
+        seen.add(token)
+    _kite_required_false(
+        record,
+        (
+            "real_material_present",
+            "authenticity_claimed",
+            "suitability_claimed",
+            "custody_claimed",
+            "safety_cleared",
+        ),
+    )
+    return _kite_valid("kite_material_lots", record_count=len(lots))
+
+
+def validate_kite_workshop_plan(record: dict[str, Any]) -> dict[str, Any]:
+    """Validate fictional dependency windows without instructions or work release."""
+
+    _cave_record(record, {"items", "work_authorized"}, "kite workshop plan")
+    items = record["items"]
+    if not isinstance(items, list) or not 2 <= len(items) <= 32:
+        raise DeltaError("kite workshop-plan count is outside the bounded range")
+    seen: set[str] = set()
+    incomplete = 0
+    for item in items:
+        _cave_record(
+            item,
+            {
+                "item_token",
+                "kind",
+                "window_start",
+                "window_end",
+                "dependencies",
+                "incomplete",
+                "instruction_provided",
+                "recommendation_provided",
+            },
+            "kite workshop-plan row",
+        )
+        token = _cave_token(item["item_token"], "kite workshop item token")
+        if token in seen:
+            raise DeltaError("kite workshop item token is duplicated")
+        if item["kind"] not in {"pattern", "template", "cut", "assembly", "hold"}:
+            raise DeltaError("kite workshop item kind is unsupported")
+        start = _cave_timestamp(item["window_start"], "kite workshop start")
+        end = _cave_timestamp(item["window_end"], "kite workshop end")
+        if end <= start or (end - start).total_seconds() > 86_400:
+            raise DeltaError("kite workshop window is reversed or over budget")
+        deps = item["dependencies"]
+        if not isinstance(deps, list):
+            raise DeltaError("kite workshop dependencies are not a list")
+        parsed = [_cave_token(value, "kite workshop dependency") for value in deps]
+        ensure_unique(parsed, "kite workshop dependency")
+        if any(value not in seen for value in parsed):
+            raise DeltaError("kite workshop dependency is absent or forward-referenced")
+        if not isinstance(item["incomplete"], bool):
+            raise DeltaError("kite workshop incomplete state must be Boolean")
+        incomplete += int(item["incomplete"])
+        _kite_required_false(item, ("instruction_provided", "recommendation_provided"))
+        seen.add(token)
+    if incomplete == 0:
+        raise DeltaError("kite workshop plan hides all incomplete work")
+    _cave_false(record["work_authorized"], "kite workshop work authorization")
+    return _kite_valid("kite_workshop_plan", record_count=len(items))
+
+
+def validate_kite_geometry_envelope(record: dict[str, Any]) -> dict[str, Any]:
+    """Validate typed placeholders without representing a measurement or prediction."""
+
+    _cave_record(
+        record,
+        {
+            "record_token",
+            "projected_area",
+            "area_unit",
+            "span",
+            "chord",
+            "length_unit",
+            "mass",
+            "mass_unit",
+            "center_of_gravity_state",
+            "uncertainty",
+            "real_measurement_present",
+            "calibrated",
+            "prediction_made",
+            "safety_cleared",
+        },
+        "kite geometry envelope",
+    )
+    _cave_token(record["record_token"], "kite geometry record token")
+    _cave_finite(record["projected_area"], "kite projected area", minimum=0.0, maximum=10_000.0, minimum_inclusive=False)
+    _cave_finite(record["span"], "kite span", minimum=0.0, maximum=1_000.0, minimum_inclusive=False)
+    _cave_finite(record["chord"], "kite chord", minimum=0.0, maximum=1_000.0, minimum_inclusive=False)
+    _cave_finite(record["mass"], "kite mass", minimum=0.0, maximum=10_000.0, minimum_inclusive=False)
+    _cave_finite(record["uncertainty"], "kite geometry uncertainty", minimum=0.0, maximum=10_000.0, minimum_inclusive=False)
+    if record["area_unit"] != "m2" or record["length_unit"] != "m" or record["mass_unit"] != "kg":
+        raise DeltaError("kite geometry envelope uses unsupported SI units")
+    if record["center_of_gravity_state"] != "vacant":
+        raise DeltaError("kite center-of-gravity state is not vacant")
+    _kite_required_false(record, ("real_measurement_present", "calibrated", "prediction_made", "safety_cleared"))
+    return _kite_valid("kite_geometry_envelope")
+
+
+def validate_kite_material_cues(record: dict[str, Any]) -> dict[str, Any]:
+    """Validate unresolved synthetic material cues and a dominant stop."""
+
+    _cave_record(
+        record,
+        {
+            "cue_kinds",
+            "resolution_state",
+            "stop",
+            "real_material_present",
+            "diagnosis_made",
+            "treatment_provided",
+            "emergency_instruction",
+            "safety_cleared",
+        },
+        "kite material cue board",
+    )
+    cues = record["cue_kinds"]
+    allowed = {"adhesive", "paint", "dye", "coating", "allergen", "ventilation", "fire"}
+    if not isinstance(cues, list) or not cues or len(cues) > 16:
+        raise DeltaError("kite material cue list is invalid")
+    parsed = [_cave_token(value, "kite material cue") for value in cues]
+    ensure_unique(parsed, "kite material cue")
+    if any(value not in allowed for value in parsed):
+        raise DeltaError("kite material cue is unsupported")
+    if record["resolution_state"] != "unresolved" or record["stop"] is not True:
+        raise DeltaError("kite material cue lacks unresolved dominant stop")
+    _kite_required_false(record, ("real_material_present", "diagnosis_made", "treatment_provided", "emergency_instruction", "safety_cleared"))
+    return _kite_valid("kite_material_cues", record_count=len(cues))
+
+
+def validate_kite_tool_reservation(record: dict[str, Any]) -> dict[str, Any]:
+    """Validate fictional tool isolation without inspection or use release."""
+
+    _cave_record(
+        record,
+        {
+            "tools",
+            "real_tool_present",
+            "inspected",
+            "competence_claimed",
+            "maintenance_instruction",
+            "use_released",
+        },
+        "kite tool reservation",
+    )
+    tools = record["tools"]
+    if not isinstance(tools, list) or not 2 <= len(tools) <= 32:
+        raise DeltaError("kite tool count is outside the bounded range")
+    seen: set[str] = set()
+    for tool in tools:
+        _cave_record(
+            tool,
+            {
+                "tool_token",
+                "condition_state",
+                "isolation_token",
+                "hazard_class",
+                "quarantined",
+            },
+            "kite tool row",
+        )
+        token = _cave_token(tool["tool_token"], "kite tool token")
+        if token in seen:
+            raise DeltaError("kite tool token is duplicated")
+        if tool["condition_state"] not in {"unresolved", "isolated"}:
+            raise DeltaError("kite tool condition is unsupported")
+        _cave_token(tool["isolation_token"], "kite tool isolation token")
+        if tool["hazard_class"] not in {"sharps", "heat", "manual"}:
+            raise DeltaError("kite tool hazard class is unsupported")
+        if tool["quarantined"] is not True:
+            raise DeltaError("kite tool quarantine is not retained")
+        seen.add(token)
+    _kite_required_false(record, ("real_tool_present", "inspected", "competence_claimed", "maintenance_instruction", "use_released"))
+    return _kite_valid("kite_tool_reservation", record_count=len(tools))
+
+
+def validate_kite_privacy_notice(record: dict[str, Any]) -> dict[str, Any]:
+    """Validate fictional purpose and retention without personal information."""
+
+    _cave_record(
+        record,
+        {
+            "record_token",
+            "purpose",
+            "retention_days",
+            "correction_available",
+            "raw_identity_present",
+            "participation_inferred",
+            "secondary_purpose",
+            "privacy_complete",
+        },
+        "kite privacy notice",
+    )
+    _cave_token(record["record_token"], "kite privacy record token")
+    if record["purpose"] != "workshop_notice":
+        raise DeltaError("kite privacy purpose is unsupported")
+    retention = _require_nonnegative_int(record["retention_days"], "kite privacy retention")
+    if not 1 <= retention <= 3_650:
+        raise DeltaError("kite privacy retention is outside the bounded range")
+    if record["correction_available"] is not True:
+        raise DeltaError("kite privacy correction is unavailable")
+    _kite_required_false(record, ("raw_identity_present", "participation_inferred", "secondary_purpose", "privacy_complete"))
+    return _kite_valid("kite_privacy_notice")
+
+
+def validate_kite_accessibility_companion(record: dict[str, Any]) -> dict[str, Any]:
+    """Validate structural accessibility fields while reserving manual review."""
+
+    _cave_record(
+        record,
+        {
+            "headings",
+            "text_alternative",
+            "status_text",
+            "colour_only",
+            "keyboard_order",
+            "manual_review_required",
+            "assistive_technology_reviewed",
+            "affected_user_approved",
+            "accessibility_complete",
+        },
+        "kite accessibility companion",
+    )
+    headings = record["headings"]
+    order = record["keyboard_order"]
+    if not isinstance(headings, list) or not 2 <= len(headings) <= 16:
+        raise DeltaError("kite accessibility headings are invalid")
+    if not all(isinstance(value, str) and value.strip() for value in headings):
+        raise DeltaError("kite accessibility heading is empty")
+    ensure_unique(headings, "kite accessibility heading")
+    if not isinstance(order, list) or not order or len(order) > 32:
+        raise DeltaError("kite accessibility keyboard order is invalid")
+    parsed_order = [_cave_token(value, "kite accessibility focus token") for value in order]
+    ensure_unique(parsed_order, "kite accessibility focus token")
+    if not isinstance(record["text_alternative"], str) or not record["text_alternative"].strip():
+        raise DeltaError("kite accessibility text alternative is absent")
+    if not isinstance(record["status_text"], str) or not record["status_text"].strip():
+        raise DeltaError("kite accessibility status text is absent")
+    if record["manual_review_required"] is not True:
+        raise DeltaError("kite accessibility manual review is not reserved")
+    _kite_required_false(record, ("colour_only", "assistive_technology_reviewed", "affected_user_approved", "accessibility_complete"))
+    return _kite_valid("kite_accessibility_companion")
+
+
+def validate_kite_rights_hold(record: dict[str, Any]) -> dict[str, Any]:
+    """Validate unresolved rights fields without deciding permission or ownership."""
+
+    _cave_record(
+        record,
+        {
+            "pattern_token",
+            "source_token",
+            "rightsholder_state",
+            "license_state",
+            "provenance_notice",
+            "real_work_present",
+            "recording_released",
+            "publication_released",
+            "exhibition_released",
+            "derivative_use_released",
+            "ownership_decided",
+            "cultural_approval",
+        },
+        "kite rights hold",
+    )
+    _cave_token(record["pattern_token"], "kite pattern token")
+    _cave_token(record["source_token"], "kite rights source token")
+    if record["rightsholder_state"] != "unresolved" or record["license_state"] != "unresolved":
+        raise DeltaError("kite rights state is not unresolved")
+    if not isinstance(record["provenance_notice"], str) or not 1 <= len(record["provenance_notice"].strip()) <= 512:
+        raise DeltaError("kite provenance notice is invalid")
+    _kite_required_false(record, ("real_work_present", "recording_released", "publication_released", "exhibition_released", "derivative_use_released", "ownership_decided", "cultural_approval"))
+    return _kite_valid("kite_rights_hold")
+
+
+def validate_kite_external_cues(record: dict[str, Any]) -> dict[str, Any]:
+    """Validate a fictional external cue board with no flight or legal clearance."""
+
+    _cave_record(
+        record,
+        {
+            "cue_kinds",
+            "stop",
+            "real_location_present",
+            "real_weather_present",
+            "flight_authorized",
+            "emergency_instruction",
+            "safety_cleared",
+            "airspace_cleared",
+            "legal_interpretation",
+        },
+        "kite external cue board",
+    )
+    cues = record["cue_kinds"]
+    allowed = {"weather", "wind", "power_line", "road", "water", "aerodrome"}
+    if not isinstance(cues, list) or not cues or len(cues) > 16:
+        raise DeltaError("kite external cue list is invalid")
+    parsed = [_cave_token(value, "kite external cue") for value in cues]
+    ensure_unique(parsed, "kite external cue")
+    if any(value not in allowed for value in parsed):
+        raise DeltaError("kite external cue is unsupported")
+    if record["stop"] is not True:
+        raise DeltaError("kite external cue lacks a dominant stop")
+    _kite_required_false(record, ("real_location_present", "real_weather_present", "flight_authorized", "emergency_instruction", "safety_cleared", "airspace_cleared", "legal_interpretation"))
+    return _kite_valid("kite_external_cues", record_count=len(cues))
+
+
+def validate_kite_custody_placeholder(record: dict[str, Any]) -> dict[str, Any]:
+    """Validate fictional container links without ownership or transfer release."""
+
+    _cave_record(
+        record,
+        {
+            "containers",
+            "items",
+            "condition_state",
+            "real_asset_present",
+            "ownership_claimed",
+            "handling_instruction",
+            "transport_authorized",
+            "custody_released",
+        },
+        "kite custody placeholder",
+    )
+    containers = record["containers"]
+    items = record["items"]
+    if not isinstance(containers, list) or not 1 <= len(containers) <= 16:
+        raise DeltaError("kite container list is invalid")
+    parsed_containers = [_cave_token(value, "kite container token") for value in containers]
+    ensure_unique(parsed_containers, "kite container token")
+    if not isinstance(items, list) or not 1 <= len(items) <= 32:
+        raise DeltaError("kite custody item list is invalid")
+    seen: set[str] = set()
+    for item in items:
+        _cave_record(item, {"item_token", "container_token"}, "kite custody item")
+        token = _cave_token(item["item_token"], "kite custody item token")
+        if token in seen:
+            raise DeltaError("kite custody item token is duplicated")
+        if item["container_token"] not in parsed_containers:
+            raise DeltaError("kite custody item references an absent container")
+        seen.add(token)
+    if record["condition_state"] != "unresolved":
+        raise DeltaError("kite custody condition is not unresolved")
+    _kite_required_false(record, ("real_asset_present", "ownership_claimed", "handling_instruction", "transport_authorized", "custody_released"))
+    return _kite_valid("kite_custody_placeholder", record_count=len(items))
+
+
+def validate_kite_correction_lineage(record: dict[str, Any]) -> dict[str, Any]:
+    """Validate append-only fictional corrections with ambiguity retained."""
+
+    _cave_record(
+        record,
+        {"records", "real_schedule_present", "action_authorized"},
+        "kite correction lineage",
+    )
+    rows = record["records"]
+    if not isinstance(rows, list) or not 2 <= len(rows) <= 32:
+        raise DeltaError("kite correction lineage is outside the bounded range")
+    seen: set[str] = set()
+    unresolved = 0
+    for index, row in enumerate(rows):
+        _cave_record(
+            row,
+            {
+                "record_token",
+                "parent_token",
+                "event",
+                "reason",
+                "readback",
+                "original_retained",
+                "ambiguity_unresolved",
+            },
+            "kite correction row",
+        )
+        token = _cave_token(row["record_token"], "kite correction token")
+        if token in seen:
+            raise DeltaError("kite correction token is duplicated")
+        parent = row["parent_token"]
+        if index == 0:
+            if parent is not None or row["event"] != "original":
+                raise DeltaError("kite correction lineage lacks an original")
+        elif not isinstance(parent, str) or parent not in seen:
+            raise DeltaError("kite correction parent is absent or forward-referenced")
+        if row["event"] not in {"original", "corrected", "cancelled", "superseded"}:
+            raise DeltaError("kite correction event is unsupported")
+        if index > 0 and (not isinstance(row["reason"], str) or not row["reason"].strip()):
+            raise DeltaError("kite correction reason is absent")
+        if row["readback"] is not True or row["original_retained"] is not True:
+            raise DeltaError("kite correction lacks readback or original retention")
+        if not isinstance(row["ambiguity_unresolved"], bool):
+            raise DeltaError("kite correction ambiguity flag is not Boolean")
+        unresolved += int(row["ambiguity_unresolved"])
+        seen.add(token)
+    if unresolved == 0:
+        raise DeltaError("kite correction lineage hides all ambiguity")
+    _kite_required_false(record, ("real_schedule_present", "action_authorized"))
+    return _kite_valid("kite_correction_lineage", record_count=len(rows))
+
+
+def validate_kite_handover(record: dict[str, Any]) -> dict[str, Any]:
+    """Validate a bounded zero-person handover without evaluating work."""
+
+    _cave_record(
+        record,
+        {
+            "handover_token",
+            "queue_ceiling",
+            "active_queue",
+            "unfinished_queue",
+            "fatigue_cue",
+            "stop",
+            "correction_readback",
+            "next_owner_placeholder",
+            "real_worker_present",
+            "performance_evaluated",
+            "work_released",
+        },
+        "kite workload handover",
+    )
+    _cave_token(record["handover_token"], "kite handover token")
+    ceiling = _require_nonnegative_int(record["queue_ceiling"], "kite queue ceiling")
+    if not 1 <= ceiling <= 64:
+        raise DeltaError("kite queue ceiling is outside the bounded range")
+    active = record["active_queue"]
+    unfinished = record["unfinished_queue"]
+    if not isinstance(active, list) or not active or len(active) > ceiling:
+        raise DeltaError("kite active queue is empty or over ceiling")
+    if not isinstance(unfinished, list) or not unfinished:
+        raise DeltaError("kite unfinished queue must remain visible")
+    active_tokens = [_cave_token(value, "kite active task") for value in active]
+    unfinished_tokens = [_cave_token(value, "kite unfinished task") for value in unfinished]
+    ensure_unique(active_tokens, "kite active task")
+    ensure_unique(unfinished_tokens, "kite unfinished task")
+    if any(value not in active_tokens for value in unfinished_tokens):
+        raise DeltaError("kite unfinished task is absent from the active queue")
+    if record["fatigue_cue"] not in {"none", "watch", "stop"}:
+        raise DeltaError("kite fatigue cue is unsupported")
+    if record["stop"] is not True or record["correction_readback"] is not True:
+        raise DeltaError("kite handover lacks a dominant stop or correction readback")
+    _cave_token(record["next_owner_placeholder"], "kite next-owner placeholder")
+    _kite_required_false(record, ("real_worker_present", "performance_evaluated", "work_released"))
+    return _kite_valid("kite_handover", record_count=len(active_tokens))
+
+
+def tamar_fixture_cases() -> list[dict[str, Any]]:
+    """Return fourteen bounded positives and five rejecting mutations per proposal."""
+
+    source_pin = "sha256:" + ("a" * 64)
+    packet = {
+        "workshop_token": "workshop_alpha",
+        "revision": 1,
+        "source_pin": source_pin,
+        "cancellation_state": "planned",
+        "synthetic": True,
+        "raw_identity_present": False,
+        "real_workshop_present": False,
+        "build_authorized": False,
+        "flight_authorized": False,
+    }
+    topology = {
+        "components": [
+            {"component_token": "root_alpha", "kind": "root", "parent_token": None},
+            {"component_token": "sail_alpha", "kind": "sail", "parent_token": "root_alpha"},
+            {"component_token": "bridle_alpha", "kind": "bridle", "parent_token": "root_alpha"},
+        ],
+        "real_asset_present": False,
+        "assembly_authorized": False,
+        "flight_authorized": False,
+    }
+    materials = {
+        "lots": [
+            {"lot_token": "lot_alpha", "source_token": "source_alpha", "material_class": "paper", "substitution_for": None, "quarantined": True},
+            {"lot_token": "lot_beta", "source_token": "source_beta", "material_class": "cord", "substitution_for": "lot_alpha", "quarantined": True},
+        ],
+        "real_material_present": False,
+        "authenticity_claimed": False,
+        "suitability_claimed": False,
+        "custody_claimed": False,
+        "safety_cleared": False,
+    }
+    plan = {
+        "items": [
+            {"item_token": "step_alpha", "kind": "pattern", "window_start": "2026-01-01T00:00:00Z", "window_end": "2026-01-01T01:00:00Z", "dependencies": [], "incomplete": False, "instruction_provided": False, "recommendation_provided": False},
+            {"item_token": "step_beta", "kind": "hold", "window_start": "2026-01-01T01:00:00Z", "window_end": "2026-01-01T02:00:00Z", "dependencies": ["step_alpha"], "incomplete": True, "instruction_provided": False, "recommendation_provided": False},
+        ],
+        "work_authorized": False,
+    }
+    geometry = {
+        "record_token": "geometry_alpha",
+        "projected_area": 1.0,
+        "area_unit": "m2",
+        "span": 1.0,
+        "chord": 0.5,
+        "length_unit": "m",
+        "mass": 0.2,
+        "mass_unit": "kg",
+        "center_of_gravity_state": "vacant",
+        "uncertainty": 0.1,
+        "real_measurement_present": False,
+        "calibrated": False,
+        "prediction_made": False,
+        "safety_cleared": False,
+    }
+    material_cues = {
+        "cue_kinds": ["adhesive", "ventilation"],
+        "resolution_state": "unresolved",
+        "stop": True,
+        "real_material_present": False,
+        "diagnosis_made": False,
+        "treatment_provided": False,
+        "emergency_instruction": False,
+        "safety_cleared": False,
+    }
+    tools = {
+        "tools": [
+            {"tool_token": "tool_alpha", "condition_state": "unresolved", "isolation_token": "isolation_alpha", "hazard_class": "sharps", "quarantined": True},
+            {"tool_token": "tool_beta", "condition_state": "isolated", "isolation_token": "isolation_beta", "hazard_class": "manual", "quarantined": True},
+        ],
+        "real_tool_present": False,
+        "inspected": False,
+        "competence_claimed": False,
+        "maintenance_instruction": False,
+        "use_released": False,
+    }
+    privacy = {
+        "record_token": "notice_alpha",
+        "purpose": "workshop_notice",
+        "retention_days": 30,
+        "correction_available": True,
+        "raw_identity_present": False,
+        "participation_inferred": False,
+        "secondary_purpose": False,
+        "privacy_complete": False,
+    }
+    accessibility = {
+        "headings": ["Workshop packet", "Status"],
+        "text_alternative": "A fictional kite-workshop packet with unresolved status.",
+        "status_text": "Stopped pending external review.",
+        "colour_only": False,
+        "keyboard_order": ["packet", "status"],
+        "manual_review_required": True,
+        "assistive_technology_reviewed": False,
+        "affected_user_approved": False,
+        "accessibility_complete": False,
+    }
+    rights = {
+        "pattern_token": "pattern_alpha",
+        "source_token": "source_alpha",
+        "rightsholder_state": "unresolved",
+        "license_state": "unresolved",
+        "provenance_notice": "Fictional source lineage only; every right remains unresolved.",
+        "real_work_present": False,
+        "recording_released": False,
+        "publication_released": False,
+        "exhibition_released": False,
+        "derivative_use_released": False,
+        "ownership_decided": False,
+        "cultural_approval": False,
+    }
+    external = {
+        "cue_kinds": ["weather", "aerodrome"],
+        "stop": True,
+        "real_location_present": False,
+        "real_weather_present": False,
+        "flight_authorized": False,
+        "emergency_instruction": False,
+        "safety_cleared": False,
+        "airspace_cleared": False,
+        "legal_interpretation": False,
+    }
+    custody = {
+        "containers": ["container_alpha"],
+        "items": [{"item_token": "item_alpha", "container_token": "container_alpha"}],
+        "condition_state": "unresolved",
+        "real_asset_present": False,
+        "ownership_claimed": False,
+        "handling_instruction": False,
+        "transport_authorized": False,
+        "custody_released": False,
+    }
+    correction = {
+        "records": [
+            {"record_token": "record_alpha", "parent_token": None, "event": "original", "reason": "", "readback": True, "original_retained": True, "ambiguity_unresolved": True},
+            {"record_token": "record_beta", "parent_token": "record_alpha", "event": "corrected", "reason": "fictional correction", "readback": True, "original_retained": True, "ambiguity_unresolved": True},
+        ],
+        "real_schedule_present": False,
+        "action_authorized": False,
+    }
+    handover = {
+        "handover_token": "handover_alpha",
+        "queue_ceiling": 4,
+        "active_queue": ["task_alpha", "task_beta"],
+        "unfinished_queue": ["task_beta"],
+        "fatigue_cue": "watch",
+        "stop": True,
+        "correction_readback": True,
+        "next_owner_placeholder": "owner_next",
+        "real_worker_present": False,
+        "performance_evaluated": False,
+        "work_released": False,
+    }
+    return [
+        {"fixture_id": "TV6634-HF-001", "proposal_id": "TV6634-N001", "validator": "validate_kite_workshop_packet", "positive": packet, "mutations": [
+            {"label": "zero workshop revision", "record": {**packet, "revision": 0}},
+            {"label": "non-SHA256 workshop source pin", "record": {**packet, "source_pin": "sha1:00"}},
+            {"label": "kite build authorization", "record": {**packet, "build_authorized": True}},
+            {"label": "kite flight authorization", "record": {**packet, "flight_authorized": True}},
+            {"label": "raw workshop identity presence", "record": {**packet, "raw_identity_present": True}},
+        ]},
+        {"fixture_id": "TV6634-HF-002", "proposal_id": "TV6634-N002", "validator": "validate_kite_component_topology", "positive": topology, "mutations": [
+            {"label": "duplicate kite component", "record": {**topology, "components": [topology["components"][0], {**topology["components"][1], "component_token": "root_alpha"}, topology["components"][2]]}},
+            {"label": "orphan kite component", "record": {**topology, "components": [topology["components"][0], {**topology["components"][1], "parent_token": "root_missing"}, topology["components"][2]]}},
+            {"label": "real kite asset presence", "record": {**topology, "real_asset_present": True}},
+            {"label": "kite assembly authorization", "record": {**topology, "assembly_authorized": True}},
+            {"label": "kite topology flight authorization", "record": {**topology, "flight_authorized": True}},
+        ]},
+        {"fixture_id": "TV6634-HF-003", "proposal_id": "TV6634-N003", "validator": "validate_kite_material_lots", "positive": materials, "mutations": [
+            {"label": "duplicate material lot", "record": {**materials, "lots": [materials["lots"][0], {**materials["lots"][1], "lot_token": "lot_alpha"}]}},
+            {"label": "unknown material substitution", "record": {**materials, "lots": [materials["lots"][0], {**materials["lots"][1], "substitution_for": "lot_missing"}]}},
+            {"label": "real material presence", "record": {**materials, "real_material_present": True}},
+            {"label": "material authenticity claim", "record": {**materials, "authenticity_claimed": True}},
+            {"label": "material safety clearance", "record": {**materials, "safety_cleared": True}},
+        ]},
+        {"fixture_id": "TV6634-HF-004", "proposal_id": "TV6634-N004", "validator": "validate_kite_workshop_plan", "positive": plan, "mutations": [
+            {"label": "forward workshop dependency", "record": {**plan, "items": [{**plan["items"][0], "dependencies": ["step_beta"]}, plan["items"][1]]}},
+            {"label": "duplicate workshop item", "record": {**plan, "items": [plan["items"][0], {**plan["items"][1], "item_token": "step_alpha"}]}},
+            {"label": "reversed workshop window", "record": {**plan, "items": [{**plan["items"][0], "window_end": "2025-12-31T00:00:00Z"}, plan["items"][1]]}},
+            {"label": "workshop instruction provided", "record": {**plan, "items": [{**plan["items"][0], "instruction_provided": True}, plan["items"][1]]}},
+            {"label": "workshop authorization", "record": {**plan, "work_authorized": True}},
+        ]},
+        {"fixture_id": "TV6634-HF-005", "proposal_id": "TV6634-N005", "validator": "validate_kite_geometry_envelope", "positive": geometry, "mutations": [
+            {"label": "nonfinite projected area", "record": {**geometry, "projected_area": float("nan")}},
+            {"label": "unsupported geometry unit", "record": {**geometry, "area_unit": "cm2"}},
+            {"label": "real geometry measurement", "record": {**geometry, "real_measurement_present": True}},
+            {"label": "kite performance prediction", "record": {**geometry, "prediction_made": True}},
+            {"label": "kite geometry safety clearance", "record": {**geometry, "safety_cleared": True}},
+        ]},
+        {"fixture_id": "TV6634-HF-006", "proposal_id": "TV6634-N006", "validator": "validate_kite_material_cues", "positive": material_cues, "mutations": [
+            {"label": "unsupported material cue", "record": {**material_cues, "cue_kinds": ["unknown"]}},
+            {"label": "resolved material cue", "record": {**material_cues, "resolution_state": "cleared"}},
+            {"label": "material stop overridden", "record": {**material_cues, "stop": False}},
+            {"label": "material treatment provided", "record": {**material_cues, "treatment_provided": True}},
+            {"label": "material safety clearance", "record": {**material_cues, "safety_cleared": True}},
+        ]},
+        {"fixture_id": "TV6634-HF-007", "proposal_id": "TV6634-N007", "validator": "validate_kite_tool_reservation", "positive": tools, "mutations": [
+            {"label": "duplicate kite tool", "record": {**tools, "tools": [tools["tools"][0], {**tools["tools"][1], "tool_token": "tool_alpha"}]}},
+            {"label": "invalid tool isolation token", "record": {**tools, "tools": [{**tools["tools"][0], "isolation_token": ""}, tools["tools"][1]]}},
+            {"label": "tool inspection claim", "record": {**tools, "inspected": True}},
+            {"label": "tool competence claim", "record": {**tools, "competence_claimed": True}},
+            {"label": "tool use release", "record": {**tools, "use_released": True}},
+        ]},
+        {"fixture_id": "TV6634-HF-008", "proposal_id": "TV6634-N008", "validator": "validate_kite_privacy_notice", "positive": privacy, "mutations": [
+            {"label": "raw maker identity", "record": {**privacy, "raw_identity_present": True}},
+            {"label": "maker participation inference", "record": {**privacy, "participation_inferred": True}},
+            {"label": "privacy secondary purpose", "record": {**privacy, "secondary_purpose": True}},
+            {"label": "zero privacy retention", "record": {**privacy, "retention_days": 0}},
+            {"label": "privacy completeness claim", "record": {**privacy, "privacy_complete": True}},
+        ]},
+        {"fixture_id": "TV6634-HF-009", "proposal_id": "TV6634-N009", "validator": "validate_kite_accessibility_companion", "positive": accessibility, "mutations": [
+            {"label": "missing accessibility headings", "record": {**accessibility, "headings": []}},
+            {"label": "missing text alternative", "record": {**accessibility, "text_alternative": ""}},
+            {"label": "colour-only workshop status", "record": {**accessibility, "colour_only": True}},
+            {"label": "manual review not reserved", "record": {**accessibility, "manual_review_required": False}},
+            {"label": "accessibility completeness claim", "record": {**accessibility, "accessibility_complete": True}},
+        ]},
+        {"fixture_id": "TV6634-HF-010", "proposal_id": "TV6634-N010", "validator": "validate_kite_rights_hold", "positive": rights, "mutations": [
+            {"label": "missing rights source token", "record": {**rights, "source_token": ""}},
+            {"label": "cleared rightsholder state", "record": {**rights, "rightsholder_state": "cleared"}},
+            {"label": "recording release", "record": {**rights, "recording_released": True}},
+            {"label": "publication release", "record": {**rights, "publication_released": True}},
+            {"label": "cultural approval claim", "record": {**rights, "cultural_approval": True}},
+        ]},
+        {"fixture_id": "TV6634-HF-011", "proposal_id": "TV6634-N011", "validator": "validate_kite_external_cues", "positive": external, "mutations": [
+            {"label": "unsupported external cue", "record": {**external, "cue_kinds": ["unknown"]}},
+            {"label": "external stop overridden", "record": {**external, "stop": False}},
+            {"label": "real kite location present", "record": {**external, "real_location_present": True}},
+            {"label": "kite flight authorization", "record": {**external, "flight_authorized": True}},
+            {"label": "kite legal interpretation", "record": {**external, "legal_interpretation": True}},
+        ]},
+        {"fixture_id": "TV6634-HF-012", "proposal_id": "TV6634-N012", "validator": "validate_kite_custody_placeholder", "positive": custody, "mutations": [
+            {"label": "duplicate container token", "record": {**custody, "containers": ["container_alpha", "container_alpha"]}},
+            {"label": "orphan custody container", "record": {**custody, "items": [{**custody["items"][0], "container_token": "container_missing"}]}},
+            {"label": "real custody asset", "record": {**custody, "real_asset_present": True}},
+            {"label": "ownership claim", "record": {**custody, "ownership_claimed": True}},
+            {"label": "transport authorization", "record": {**custody, "transport_authorized": True}},
+        ]},
+        {"fixture_id": "TV6634-HF-013", "proposal_id": "TV6634-N013", "validator": "validate_kite_correction_lineage", "positive": correction, "mutations": [
+            {"label": "duplicate correction token", "record": {**correction, "records": [correction["records"][0], {**correction["records"][1], "record_token": "record_alpha"}]}},
+            {"label": "forward correction parent", "record": {**correction, "records": [correction["records"][0], {**correction["records"][1], "parent_token": "record_missing"}]}},
+            {"label": "erased correction original", "record": {**correction, "records": [{**correction["records"][0], "original_retained": False}, correction["records"][1]]}},
+            {"label": "correction reason absent", "record": {**correction, "records": [correction["records"][0], {**correction["records"][1], "reason": ""}]}},
+            {"label": "correction readback absent", "record": {**correction, "records": [correction["records"][0], {**correction["records"][1], "readback": False}]}},
+        ]},
+        {"fixture_id": "TV6634-HF-014", "proposal_id": "TV6634-N014", "validator": "validate_kite_handover", "positive": handover, "mutations": [
+            {"label": "zero queue ceiling", "record": {**handover, "queue_ceiling": 0}},
+            {"label": "unknown unfinished task", "record": {**handover, "unfinished_queue": ["task_missing"]}},
+            {"label": "handover stop overridden", "record": {**handover, "stop": False}},
+            {"label": "handover readback absent", "record": {**handover, "correction_readback": False}},
+            {"label": "worker performance evaluation", "record": {**handover, "performance_evaluated": True}},
+        ]},
+    ]
+
+
+def tamar_mutation_payload() -> dict[str, Any]:
+    """Execute and retain every Tamar mutation with zero negative credit."""
+
+    validators = {
+        function.__name__: function
+        for function in (
+            validate_kite_workshop_packet,
+            validate_kite_component_topology,
+            validate_kite_material_lots,
+            validate_kite_workshop_plan,
+            validate_kite_geometry_envelope,
+            validate_kite_material_cues,
+            validate_kite_tool_reservation,
+            validate_kite_privacy_notice,
+            validate_kite_accessibility_companion,
+            validate_kite_rights_hold,
+            validate_kite_external_cues,
+            validate_kite_custody_placeholder,
+            validate_kite_correction_lineage,
+            validate_kite_handover,
+        )
+    }
+    records: list[dict[str, Any]] = []
+    positives: list[dict[str, Any]] = []
+    cases = tamar_fixture_cases()
+    for case_index, case in enumerate(cases, 1):
+        validator = validators[case["validator"]]
+        result = validator(case["positive"])
+        if result.get("valid") is not True:
+            raise DeltaError(f"Tamar positive fixture failed: {case['fixture_id']}")
+        positives.append(
+            {
+                "fixture_id": case["fixture_id"],
+                "proposal_id": case["proposal_id"],
+                "validator": case["validator"],
+                "valid": True,
+            }
+        )
+        if len(case["mutations"]) != 5:
+            raise DeltaError(f"Tamar fixture does not declare five mutations: {case['fixture_id']}")
+        for mutation_index, mutation in enumerate(case["mutations"], 1):
+            try:
+                validator(mutation["record"])
+            except (DeltaError, UnicodeError, ValueError, TypeError) as exc:
+                records.append(
+                    {
+                        "fixture_id": f"TV6634-HF-{case_index:03d}-{mutation_index:02d}",
+                        "mutation_id": f"TV6634-MUT-{case_index:03d}-{mutation_index:02d}",
+                        "proposal_id": case["proposal_id"],
+                        "validator": case["validator"],
+                        "failed_witness": mutation["label"],
+                        "rejected": True,
+                        "error_class": type(exc).__name__,
+                        "zero_credit": True,
+                    }
+                )
+            else:
+                raise DeltaError(
+                    f"Tamar negative mutation was not rejected: {case['fixture_id']}:{mutation_index}"
+                )
+    return {
+        "schema": f"{SCHEMA}.tamar-mutation-matrix.v1",
+        "profile": "tamar-v663-v4",
+        "proposal_count": len(positives),
+        "mutations_per_proposal": 5,
+        "negative_fixture_count": len(records),
+        "rejected_fixture_count": sum(record["rejected"] is True for record in records),
+        "positive_fixture_count": len(positives),
+        "passing_fixture_count": len(positives),
+        "records": records,
+        "positive_records": positives,
+        "failed_witnesses_erased": 0,
+        "valid": len(records) == 70 and len(positives) == 14,
+        "boundary": "Seventy rejected synthetic mutations and fourteen passing kite-workshop record-shape fixtures only; no real person, workshop, kite, material, tool, site, airspace, weather observation, flight, measurement, authority act, empirical result, production result, or independent reproduction.",
+    }
+
+
+def tamar_hardening_payload() -> dict[str, Any]:
+    """Return every retained Tamar rejection plus fourteen bounded positives."""
+
+    matrix = tamar_mutation_payload()
+    if not matrix["valid"]:
+        raise DeltaError("one or more Tamar hardening fixtures failed")
+    return {
+        "schema": f"{SCHEMA}.hardening-fixtures.v8",
+        "profile": "tamar-v663-v4",
+        "negative_fixture_count": matrix["negative_fixture_count"],
+        "rejected_fixture_count": matrix["rejected_fixture_count"],
+        "positive_fixture_count": matrix["positive_fixture_count"],
+        "passing_fixture_count": matrix["passing_fixture_count"],
+        "records": matrix["records"],
+        "full_mutation_matrix_negative_count": matrix["negative_fixture_count"],
+        "real_person_present": False,
+        "real_workshop_present": False,
+        "real_kite_present": False,
+        "real_material_present": False,
+        "real_tool_present": False,
+        "real_location_present": False,
+        "real_measurement_present": False,
+        "build_authorized": False,
+        "flight_authorized": False,
+        "airspace_cleared": False,
+        "tool_use_released": False,
+        "privacy_complete": False,
+        "accessibility_complete": False,
+        "professional_authority": False,
+        "legal_authority": False,
+        "cultural_authority": False,
+        "maori_authority": False,
+        "exhaustive_security": False,
+        "valid": True,
+        "boundary": "All seventy preregistered kite-workshop mutations were rejected and fourteen paired positives passed as bounded software fixtures only; not construction or flight advice, material or tool clearance, airspace or legal interpretation, professional validation, legal or cultural ratification, Maori authority, privacy or accessibility completeness, production assurance, empirical evidence, or independent reproduction.",
+    }
+
+
 def hardening_payload_for_profile(profile: str) -> dict[str, Any]:
     """Select one exact bounded fixture family; reject implicit substitution."""
 
@@ -6132,6 +7103,8 @@ def hardening_payload_for_profile(profile: str) -> dict[str, Any]:
         return orin_hardening_payload()
     if profile == "liora-v663-v3":
         return liora_hardening_payload()
+    if profile == "tamar-v663-v4":
+        return tamar_hardening_payload()
     raise DeltaError(f"unknown hardening profile: {profile}")
 
 
