@@ -3180,6 +3180,14 @@ Failed witness: Preregistered synthetic invalid fixture: custody transition whil
 
 Failed witness: The first combined multi-hunk builder patch failed exact-context verification at the profile skill-and-runner function and applied no file change. Recovery: Reinspect the live function locations and apply small exact hunks for imports, source dispatch, hardening dispatch, overview and threat rendering, runner binding, and build call sites. Passing witness: The recovered builder and toolkit compiled, the Auren hardening profile passed 14 rejected and 14 positive fixtures, and the isolated 89-test Auren module passed. Recurrence guard: Use small exact-context patches after any long code inspection or line-shifting edit. Rollback: The failed patch was atomic, changed no file, and earned zero implementation credit. Sibling recommendation: Reinspect the exact current signature before applying a multi-function builder patch. The failure remains retained at zero credit.
 
+### A6627-MF-X002
+
+Failed witness: The first evidence route receipt used the structurally valid but phase-stale global current-route snapshots, returned Auren-to-Sable parity issues, and exited invalid after writing a zero-credit receipt. Recovery: Create sanitized owner-scoped snapshots bound to Hamish's acknowledged live Auren v662-v7 to Sable v662-v8 edge and validate only that exact edge. Passing witness: The bounded recovery reported fifteen active main tasks, Auren as current, Sable as next, Tavian alone on standby, zero issues, and valid owner-self-scoped policy. Recurrence guard: Treat file-backed global current-route fields as historical when a newer acknowledged live edge exists; preserve the global snapshot only as structural roster evidence. Rollback: The invalid route probe changed no task, branch, remote, roster, authorization, or sibling state and earned zero route credit. Sibling recommendation: Bind terminal route validation to a sanitized owner-scoped snapshot when global phase fields are stale. The failure remains retained at zero credit.
+
+### A6627-MF-X003
+
+Failed witness: The first skill-hash command supplied eleven bare paths where the toolkit requires LABEL=PATH mappings and exited before writing a receipt. Recovery: Reuse the verified eleven exact labels and paths and invoke only the blocked skill-hash component. Passing witness: The recovery produced eleven sanitized guidance hashes matching Ilyra's committed skill-hash receipt exactly. Recurrence guard: Inspect the skill-hash argument contract and preserve stable labels before invoking the component. Rollback: The rejected argument shape changed no skill or repository file and earned zero guidance-hash credit. Sibling recommendation: Pass every skill as a stable LABEL=PATH mapping. The failure remains retained at zero credit.
+
 ## Terminal route
 
 Only after Sable Rook's own exact terminal gate may Sable Rook resolve and
