@@ -2542,6 +2542,733 @@ def validate_cave_handover(record: dict[str, Any]) -> dict[str, Any]:
     }
 
 
+def validate_choir_packet_identity(record: dict[str, Any]) -> dict[str, Any]:
+    """Validate a fictional packet identity while refusing a real event or content."""
+
+    _cave_record(
+        record,
+        {
+            "packet_token",
+            "revision",
+            "source_pin",
+            "cancellation_state",
+            "performance_authorized",
+            "synthetic",
+            "lyrics_present",
+            "score_content_present",
+            "real_event_present",
+        },
+        "choir packet identity",
+    )
+    _cave_token(record["packet_token"], "choir packet token")
+    revision = _require_nonnegative_int(record["revision"], "choir packet revision")
+    if not 1 <= revision <= 10_000:
+        raise DeltaError("choir packet revision is outside the bounded range")
+    source_pin = record["source_pin"]
+    if not isinstance(source_pin, str) or re.fullmatch(r"sha256:[0-9a-f]{64}", source_pin) is None:
+        raise DeltaError("choir packet source pin is not an explicit SHA-256 commitment")
+    if record["cancellation_state"] not in {"active_placeholder", "cancelled_placeholder", "hold"}:
+        raise DeltaError("choir packet cancellation state is unsupported")
+    if record["synthetic"] is not True:
+        raise DeltaError("choir packet must remain explicitly synthetic")
+    _cave_false(record["performance_authorized"], "choir performance authorization")
+    _cave_false(record["lyrics_present"], "choir lyrics presence")
+    _cave_false(record["score_content_present"], "choir score-content presence")
+    _cave_false(record["real_event_present"], "real choir event presence")
+    return {
+        "packet_token": record["packet_token"],
+        "revision": revision,
+        "source_pinned": True,
+        "performance_authorized": False,
+        "real_event_present": False,
+        "valid": True,
+    }
+
+
+def validate_choir_section_topology(record: dict[str, Any]) -> dict[str, Any]:
+    """Validate surrogate section links without classifying or identifying a singer."""
+
+    _cave_record(
+        record,
+        {"sections", "singer_rows", "raw_identity_present", "vocal_classification_claimed"},
+        "choir section topology",
+    )
+    sections = record["sections"]
+    if not isinstance(sections, list) or not 2 <= len(sections) <= 16:
+        raise DeltaError("choir section count is outside the bounded range")
+    section_tokens = [_cave_token(value, "choir section token") for value in sections]
+    ensure_unique(section_tokens, "choir section token")
+    rows = record["singer_rows"]
+    if not isinstance(rows, list) or not 2 <= len(rows) <= 64:
+        raise DeltaError("choir singer-row count is outside the bounded range")
+    singer_tokens: list[str] = []
+    substitutions: list[tuple[str, str | None]] = []
+    vacancies = 0
+    for row in rows:
+        _cave_record(
+            row,
+            {"singer_token", "section_token", "seat_group", "substitute_for", "vacant"},
+            "choir singer row",
+        )
+        singer = _cave_token(row["singer_token"], "choir singer token")
+        section = _cave_token(row["section_token"], "choir singer section")
+        _cave_token(row["seat_group"], "choir seat-group token")
+        if section not in section_tokens:
+            raise DeltaError("choir singer row references an unknown section")
+        substitute_for = row["substitute_for"]
+        if substitute_for is not None:
+            substitute_for = _cave_token(substitute_for, "choir substitute target")
+        if not isinstance(row["vacant"], bool):
+            raise DeltaError("choir vacancy state must be Boolean")
+        vacancies += int(row["vacant"])
+        singer_tokens.append(singer)
+        substitutions.append((singer, substitute_for))
+    ensure_unique(singer_tokens, "choir singer token")
+    for singer, target in substitutions:
+        if target is not None and (target not in singer_tokens or target == singer):
+            raise DeltaError("choir substitute target is absent or self-referential")
+    if vacancies < 1:
+        raise DeltaError("choir topology hides every vacancy")
+    _cave_false(record["raw_identity_present"], "raw choir identity presence")
+    _cave_false(record["vocal_classification_claimed"], "vocal classification claim")
+    return {
+        "section_count": len(section_tokens),
+        "singer_token_count": len(singer_tokens),
+        "vacancy_count": vacancies,
+        "raw_identity_present": False,
+        "vocal_classification_claimed": False,
+        "valid": True,
+    }
+
+
+def validate_choir_rehearsal_sequence(record: dict[str, Any]) -> dict[str, Any]:
+    """Validate a content-free fictional dependency sequence without directing rehearsal."""
+
+    _cave_record(record, {"items", "rehearsal_authorized"}, "choir rehearsal sequence")
+    items = record["items"]
+    if not isinstance(items, list) or not 2 <= len(items) <= 32:
+        raise DeltaError("choir rehearsal item count is outside the bounded range")
+    seen: set[str] = set()
+    incomplete_count = 0
+    total_duration = 0.0
+    for item in items:
+        _cave_record(
+            item,
+            {
+                "item_token",
+                "kind",
+                "duration_minutes",
+                "prerequisites",
+                "incomplete",
+                "content_present",
+                "instruction_provided",
+            },
+            "choir rehearsal item",
+        )
+        token = _cave_token(item["item_token"], "choir rehearsal item token")
+        if token in seen:
+            raise DeltaError("choir rehearsal item token is duplicated")
+        if item["kind"] not in {"warmup_placeholder", "repertoire_placeholder", "review_placeholder"}:
+            raise DeltaError("choir rehearsal item kind is unsupported")
+        duration = _cave_finite(
+            item["duration_minutes"],
+            "choir rehearsal duration",
+            minimum=0.0,
+            maximum=240.0,
+            minimum_inclusive=False,
+        )
+        prerequisites = item["prerequisites"]
+        if not isinstance(prerequisites, list):
+            raise DeltaError("choir rehearsal prerequisites are not a list")
+        parsed_prerequisites = [
+            _cave_token(value, "choir rehearsal prerequisite") for value in prerequisites
+        ]
+        ensure_unique(parsed_prerequisites, "choir rehearsal prerequisite")
+        if any(value not in seen for value in parsed_prerequisites):
+            raise DeltaError("choir rehearsal prerequisite is absent or forward-referenced")
+        if not isinstance(item["incomplete"], bool):
+            raise DeltaError("choir rehearsal incomplete state must be Boolean")
+        incomplete_count += int(item["incomplete"])
+        _cave_false(item["content_present"], "choir rehearsal content presence")
+        _cave_false(item["instruction_provided"], "choir rehearsal instruction")
+        seen.add(token)
+        total_duration += duration
+    if incomplete_count < 1:
+        raise DeltaError("choir rehearsal sequence hides all incomplete work")
+    _cave_false(record["rehearsal_authorized"], "real choir rehearsal authorization")
+    return {
+        "item_count": len(items),
+        "incomplete_count": incomplete_count,
+        "declared_duration_minutes": total_duration,
+        "content_present": False,
+        "rehearsal_authorized": False,
+        "valid": True,
+    }
+
+
+def validate_choir_score_reference(record: dict[str, Any]) -> dict[str, Any]:
+    """Validate tokenized score references while rejecting all musical content."""
+
+    _cave_record(
+        record,
+        {
+            "edition_token",
+            "cue_token",
+            "measure_reference",
+            "page_reference",
+            "rehearsal_mark",
+            "annotation_tokens",
+            "notation_present",
+            "lyrics_present",
+            "media_present",
+            "authenticity_claimed",
+            "rights_cleared",
+        },
+        "choir score reference",
+    )
+    _cave_token(record["edition_token"], "choir edition token")
+    _cave_token(record["cue_token"], "choir cue token")
+    for name in ("measure_reference", "page_reference"):
+        value = _require_nonnegative_int(record[name], f"choir {name}")
+        if not 1 <= value <= 1_000_000:
+            raise DeltaError(f"choir {name} is outside the bounded range")
+    mark = record["rehearsal_mark"]
+    if not isinstance(mark, str) or re.fullmatch(r"[A-Za-z0-9_-]{1,32}", mark) is None:
+        raise DeltaError("choir rehearsal mark is outside the bounded grammar")
+    annotations = record["annotation_tokens"]
+    if not isinstance(annotations, list) or not 1 <= len(annotations) <= 16:
+        raise DeltaError("choir annotation-token count is invalid")
+    annotation_tokens = [_cave_token(value, "choir annotation token") for value in annotations]
+    ensure_unique(annotation_tokens, "choir annotation token")
+    for field, label in (
+        ("notation_present", "notation content"),
+        ("lyrics_present", "lyrics content"),
+        ("media_present", "media content"),
+        ("authenticity_claimed", "score authenticity claim"),
+        ("rights_cleared", "score rights-clearance claim"),
+    ):
+        _cave_false(record[field], label)
+    return {
+        "annotation_count": len(annotation_tokens),
+        "musical_content_present": False,
+        "authenticity_claimed": False,
+        "rights_cleared": False,
+        "valid": True,
+    }
+
+
+def validate_choir_tempo_domain(record: dict[str, Any]) -> dict[str, Any]:
+    """Validate finite declaration placeholders without performance inference."""
+
+    _cave_record(
+        record,
+        {
+            "tempo_bpm",
+            "metre",
+            "beat_unit",
+            "duration_minutes",
+            "clock_source",
+            "uncertainty_bpm",
+            "performance_inference",
+        },
+        "choir tempo domain",
+    )
+    tempo = _cave_finite(
+        record["tempo_bpm"], "choir tempo", minimum=1.0, maximum=400.0
+    )
+    duration = _cave_finite(
+        record["duration_minutes"],
+        "choir duration",
+        minimum=0.0,
+        maximum=240.0,
+        minimum_inclusive=False,
+    )
+    uncertainty = _cave_finite(
+        record["uncertainty_bpm"],
+        "choir tempo uncertainty",
+        minimum=0.0,
+        maximum=100.0,
+        minimum_inclusive=False,
+    )
+    if record["metre"] not in {"2/4", "3/4", "4/4", "6/8", "free_placeholder"}:
+        raise DeltaError("choir metre is unsupported")
+    if record["beat_unit"] not in {"quarter", "eighth", "half"}:
+        raise DeltaError("choir beat unit is unsupported")
+    if record["clock_source"] not in {"caller_supplied_utc", "synthetic_counter"}:
+        raise DeltaError("choir clock source is unsupported")
+    _cave_false(record["performance_inference"], "choir performance inference")
+    return {
+        "tempo_bpm": tempo,
+        "duration_minutes": duration,
+        "uncertainty_bpm": uncertainty,
+        "performance_inference": False,
+        "valid": True,
+    }
+
+
+def validate_choir_pitch_boundary(record: dict[str, Any]) -> dict[str, Any]:
+    """Validate a fictional pitch placeholder without personal vocal assessment."""
+
+    _cave_record(
+        record,
+        {
+            "pitch_hz",
+            "unit",
+            "transposition_semitones",
+            "uncertainty_hz",
+            "contradiction_state",
+            "personal_range_present",
+            "diagnosis_claimed",
+            "placement_claimed",
+        },
+        "choir pitch boundary",
+    )
+    pitch = _cave_finite(
+        record["pitch_hz"], "choir pitch", minimum=1.0, maximum=20_000.0
+    )
+    uncertainty = _cave_finite(
+        record["uncertainty_hz"],
+        "choir pitch uncertainty",
+        minimum=0.0,
+        maximum=1_000.0,
+        minimum_inclusive=False,
+    )
+    if record["unit"] != "Hz":
+        raise DeltaError("choir pitch unit must be Hz")
+    transposition = record["transposition_semitones"]
+    if isinstance(transposition, bool) or not isinstance(transposition, int) or not -24 <= transposition <= 24:
+        raise DeltaError("choir transposition is outside the bounded integer range")
+    if record["contradiction_state"] != "preserved_for_review":
+        raise DeltaError("choir pitch contradiction is not preserved")
+    _cave_false(record["personal_range_present"], "personal vocal-range presence")
+    _cave_false(record["diagnosis_claimed"], "vocal diagnosis claim")
+    _cave_false(record["placement_claimed"], "vocal placement claim")
+    return {
+        "pitch_hz": pitch,
+        "uncertainty_hz": uncertainty,
+        "transposition_semitones": transposition,
+        "personal_range_present": False,
+        "assessment_performed": False,
+        "valid": True,
+    }
+
+
+def validate_choir_room_cue(record: dict[str, Any]) -> dict[str, Any]:
+    """Validate fictional unresolved room cues while refusing venue clearance."""
+
+    _cave_record(
+        record,
+        {
+            "zone_tokens",
+            "occupancy_placeholder",
+            "acoustic_cue",
+            "noise_cue",
+            "ventilation_state",
+            "accessibility_route_state",
+            "real_address_present",
+            "safety_cleared",
+            "accessibility_complete",
+            "emergency_instruction",
+        },
+        "choir room cue",
+    )
+    zones = record["zone_tokens"]
+    if not isinstance(zones, list) or not 1 <= len(zones) <= 16:
+        raise DeltaError("choir room-zone count is invalid")
+    zone_tokens = [_cave_token(value, "choir room-zone token") for value in zones]
+    ensure_unique(zone_tokens, "choir room-zone token")
+    occupancy = _require_nonnegative_int(
+        record["occupancy_placeholder"], "choir occupancy placeholder"
+    )
+    if occupancy > 500:
+        raise DeltaError("choir occupancy placeholder is over budget")
+    if record["acoustic_cue"] not in {"unknown", "review_required"}:
+        raise DeltaError("choir acoustic cue is not unresolved")
+    if record["noise_cue"] not in {"unknown", "review_required"}:
+        raise DeltaError("choir noise cue is not unresolved")
+    if record["ventilation_state"] != "vacant_external_assessment":
+        raise DeltaError("choir ventilation assessment is not vacant")
+    if record["accessibility_route_state"] != "manual_review_required":
+        raise DeltaError("choir accessibility route lacks manual review")
+    for field, label in (
+        ("real_address_present", "real room address presence"),
+        ("safety_cleared", "room safety clearance"),
+        ("accessibility_complete", "room accessibility completeness"),
+        ("emergency_instruction", "room emergency instruction"),
+    ):
+        _cave_false(record[field], label)
+    return {
+        "zone_count": len(zone_tokens),
+        "occupancy_placeholder": occupancy,
+        "safety_cleared": False,
+        "accessibility_complete": False,
+        "real_address_present": False,
+        "valid": True,
+    }
+
+
+def validate_choir_privacy(record: dict[str, Any]) -> dict[str, Any]:
+    """Validate purpose-bound fictional placeholders with no real participation data."""
+
+    _cave_record(
+        record,
+        {
+            "availability_token",
+            "attendance_state",
+            "contact_channel",
+            "purpose",
+            "retention_days",
+            "correction_state",
+            "raw_identity_present",
+            "participation_inferred",
+            "secondary_purpose",
+        },
+        "choir privacy record",
+    )
+    _cave_token(record["availability_token"], "choir availability token")
+    if record["attendance_state"] not in {"unknown_placeholder", "not_recorded"}:
+        raise DeltaError("choir attendance state is not a nonparticipation placeholder")
+    if record["contact_channel"] not in {"none", "surrogate_portal"}:
+        raise DeltaError("choir contact-channel class is unsupported")
+    if record["purpose"] != "synthetic_coordination":
+        raise DeltaError("choir privacy purpose is unsupported")
+    retention = _require_nonnegative_int(record["retention_days"], "choir retention days")
+    if not 1 <= retention <= 365:
+        raise DeltaError("choir retention period is outside the bounded range")
+    if record["correction_state"] != "available_placeholder":
+        raise DeltaError("choir correction state is not available")
+    _cave_false(record["raw_identity_present"], "raw choir identity presence")
+    _cave_false(record["participation_inferred"], "choir participation inference")
+    _cave_false(record["secondary_purpose"], "choir secondary purpose")
+    return {
+        "retention_days": retention,
+        "raw_identity_present": False,
+        "participation_inferred": False,
+        "privacy_complete": False,
+        "valid": True,
+    }
+
+
+def validate_choir_rights_vacancy(record: dict[str, Any]) -> dict[str, Any]:
+    """Validate an external-authority rights hold without granting any right."""
+
+    _cave_record(
+        record,
+        {
+            "source_token",
+            "licence_basis_placeholder",
+            "requested_actions",
+            "effective_from",
+            "expires_at",
+            "permission_state",
+            "rights_holder_confirmed",
+            "content_present",
+            "copy_authorized",
+            "distribution_authorized",
+            "recording_authorized",
+            "streaming_authorized",
+            "legal_interpretation",
+        },
+        "choir rights vacancy",
+    )
+    _cave_token(record["source_token"], "choir rights source token")
+    if record["licence_basis_placeholder"] not in {"unknown", "external_review_required"}:
+        raise DeltaError("choir licence-basis placeholder is unsupported")
+    actions = record["requested_actions"]
+    allowed = {"copy", "distribute", "record", "stream"}
+    if not isinstance(actions, list) or not actions or any(value not in allowed for value in actions):
+        raise DeltaError("choir requested rights actions are invalid")
+    ensure_unique(actions, "choir requested rights action")
+    start = _cave_timestamp(record["effective_from"], "choir rights effective-from")
+    end = _cave_timestamp(record["expires_at"], "choir rights expiry")
+    if end <= start or (end - start).total_seconds() > 10 * 366 * 86_400:
+        raise DeltaError("choir rights interval is reversed or over budget")
+    if record["permission_state"] != "authority_hold":
+        raise DeltaError("choir permission state is not held for external authority")
+    for field, label in (
+        ("rights_holder_confirmed", "rights-holder confirmation"),
+        ("content_present", "rights-record content presence"),
+        ("copy_authorized", "copy authorization"),
+        ("distribution_authorized", "distribution authorization"),
+        ("recording_authorized", "recording authorization"),
+        ("streaming_authorized", "streaming authorization"),
+        ("legal_interpretation", "copyright legal interpretation"),
+    ):
+        _cave_false(record[field], label)
+    return {
+        "requested_action_count": len(actions),
+        "permission_state": "authority_hold",
+        "rights_granted": False,
+        "legal_interpretation": False,
+        "valid": True,
+    }
+
+
+def validate_choir_language_provenance(record: dict[str, Any]) -> dict[str, Any]:
+    """Validate source-marked language placeholders without ratifying wording."""
+
+    _cave_record(
+        record,
+        {
+            "language_tag",
+            "dialect_token",
+            "pronunciation_source_token",
+            "transliteration_state",
+            "confidence",
+            "correction_state",
+            "cultural_context_state",
+            "authority_vacant",
+            "wording_ratified",
+            "translation_quality_claimed",
+            "maori_authority_claimed",
+        },
+        "choir language provenance",
+    )
+    tag = record["language_tag"]
+    if not isinstance(tag, str) or re.fullmatch(r"(?:und|[a-z]{2,3}(?:-[A-Z]{2})?)", tag) is None:
+        raise DeltaError("choir language tag is outside the bounded grammar")
+    _cave_token(record["dialect_token"], "choir dialect token")
+    _cave_token(record["pronunciation_source_token"], "choir pronunciation-source token")
+    if record["transliteration_state"] not in {"not_supplied", "placeholder"}:
+        raise DeltaError("choir transliteration state is unsupported")
+    confidence = _cave_finite(
+        record["confidence"], "choir language confidence", minimum=0.0, maximum=1.0
+    )
+    if record["correction_state"] not in {"open", "available_placeholder"}:
+        raise DeltaError("choir language correction state is unsupported")
+    if record["cultural_context_state"] != "external_review_required":
+        raise DeltaError("choir cultural context is not reserved for external review")
+    if record["authority_vacant"] is not True:
+        raise DeltaError("choir language authority vacancy is not explicit")
+    _cave_false(record["wording_ratified"], "choir wording ratification")
+    _cave_false(record["translation_quality_claimed"], "translation quality claim")
+    _cave_false(record["maori_authority_claimed"], "Maori authority claim")
+    return {
+        "language_tag": tag,
+        "confidence": confidence,
+        "authority_vacant": True,
+        "wording_ratified": False,
+        "maori_authority_claimed": False,
+        "valid": True,
+    }
+
+
+def validate_choir_accessible_companion(record: dict[str, Any]) -> dict[str, Any]:
+    """Validate structural alternatives while reserving every human evaluation."""
+
+    _cave_record(
+        record,
+        {
+            "headings",
+            "text_alternative",
+            "large_print_placeholder",
+            "high_contrast_placeholder",
+            "audio_description_state",
+            "braille_request_state",
+            "noncolour_status",
+            "manual_review_required",
+            "affected_user_reviewed",
+            "accessibility_complete",
+        },
+        "choir accessible companion",
+    )
+    headings = record["headings"]
+    if not isinstance(headings, list) or not 2 <= len(headings) <= 16:
+        raise DeltaError("choir accessible heading count is invalid")
+    if any(not isinstance(value, str) or not value.strip() or len(value) > 128 for value in headings):
+        raise DeltaError("choir accessible heading is invalid")
+    ensure_unique(headings, "choir accessible heading")
+    alternative = record["text_alternative"]
+    if not isinstance(alternative, str) or not alternative.strip() or len(alternative) > 2048:
+        raise DeltaError("choir text alternative is absent or over budget")
+    if record["large_print_placeholder"] is not True or record["high_contrast_placeholder"] is not True:
+        raise DeltaError("choir accessible companion lacks visual placeholders")
+    if record["audio_description_state"] not in {"requested_placeholder", "unavailable_placeholder"}:
+        raise DeltaError("choir audio-description state is unsupported")
+    if record["braille_request_state"] not in {"requested_placeholder", "pending_external"}:
+        raise DeltaError("choir braille-request state is unsupported")
+    if record["noncolour_status"] is not True or record["manual_review_required"] is not True:
+        raise DeltaError("choir companion lacks noncolour status or manual review")
+    _cave_false(record["affected_user_reviewed"], "affected-user accessibility review")
+    _cave_false(record["accessibility_complete"], "accessibility completeness")
+    return {
+        "heading_count": len(headings),
+        "manual_review_required": True,
+        "affected_user_reviewed": False,
+        "accessibility_complete": False,
+        "valid": True,
+    }
+
+
+def validate_choir_correction_lineage(record: dict[str, Any]) -> dict[str, Any]:
+    """Validate append-only fictional correction lineage without scheduling authority."""
+
+    _cave_record(
+        record,
+        {"note_token", "records", "schedule_authorized", "real_event_present"},
+        "choir correction lineage",
+    )
+    _cave_token(record["note_token"], "choir note token")
+    rows = record["records"]
+    if not isinstance(rows, list) or not 2 <= len(rows) <= 32:
+        raise DeltaError("choir correction lineage is outside the bounded range")
+    seen: set[str] = set()
+    ambiguity_open = False
+    for index, row in enumerate(rows):
+        _cave_record(
+            row,
+            {
+                "record_token",
+                "parent_token",
+                "event",
+                "reason",
+                "readback",
+                "ambiguity_open",
+                "cancellation_explicit",
+            },
+            "choir correction row",
+        )
+        token = _cave_token(row["record_token"], "choir correction token")
+        parent = row["parent_token"]
+        event = row["event"]
+        if token in seen or parent == token:
+            raise DeltaError("choir correction lineage duplicates or self-references a token")
+        if index == 0:
+            if parent is not None or event != "recorded":
+                raise DeltaError("choir correction lineage lacks an original record")
+        elif not isinstance(parent, str) or parent not in seen:
+            raise DeltaError("choir correction parent is absent or forward-referenced")
+        if event not in {"recorded", "corrected", "superseded", "cancelled", "ambiguity_retained"}:
+            raise DeltaError("choir correction event is unsupported")
+        reason = row["reason"]
+        if not isinstance(reason, str) or len(reason) > 256 or reason != reason.strip():
+            raise DeltaError("choir correction reason is invalid")
+        if event != "recorded" and not reason:
+            raise DeltaError("choir correction event lacks a reason")
+        if event in {"corrected", "superseded", "cancelled"} and row["readback"] is not True:
+            raise DeltaError("choir correction event lacks readback")
+        if not isinstance(row["ambiguity_open"], bool) or not isinstance(row["cancellation_explicit"], bool):
+            raise DeltaError("choir correction state flags must be Boolean")
+        ambiguity_open = ambiguity_open or row["ambiguity_open"]
+        seen.add(token)
+    if not ambiguity_open:
+        raise DeltaError("choir correction lineage hides unresolved ambiguity")
+    _cave_false(record["schedule_authorized"], "choir schedule authorization")
+    _cave_false(record["real_event_present"], "real choir event presence")
+    return {
+        "record_count": len(rows),
+        "original_preserved": True,
+        "ambiguity_open": True,
+        "schedule_authorized": False,
+        "valid": True,
+    }
+
+
+def validate_choir_wellbeing_cue(record: dict[str, Any]) -> dict[str, Any]:
+    """Validate fictional wellbeing cues while refusing diagnosis, treatment, or clearance."""
+
+    _cave_record(
+        record,
+        {
+            "cue_token",
+            "cue_categories",
+            "break_state",
+            "stop_state",
+            "referral_state",
+            "medical_assessment",
+            "psychosocial_assessment",
+            "diagnosis",
+            "treatment",
+            "fitness_clearance",
+            "forced_disclosure",
+            "emergency_claim",
+            "real_person_present",
+        },
+        "choir wellbeing cue",
+    )
+    _cave_token(record["cue_token"], "choir wellbeing cue token")
+    categories = record["cue_categories"]
+    allowed = {"fatigue_placeholder", "hearing_placeholder", "illness_vacancy", "psychosocial_vacancy"}
+    if not isinstance(categories, list) or not categories or any(value not in allowed for value in categories):
+        raise DeltaError("choir wellbeing cue categories are invalid")
+    ensure_unique(categories, "choir wellbeing cue category")
+    if record["break_state"] not in {"optional", "requested_placeholder"}:
+        raise DeltaError("choir wellbeing break state is unsupported")
+    if record["stop_state"] != "honoured_placeholder":
+        raise DeltaError("choir wellbeing stop state is not dominant")
+    if record["referral_state"] not in {"not_requested", "external_placeholder"}:
+        raise DeltaError("choir wellbeing referral state is unsupported")
+    for field, label in (
+        ("medical_assessment", "medical assessment"),
+        ("psychosocial_assessment", "psychosocial assessment"),
+        ("diagnosis", "diagnosis"),
+        ("treatment", "treatment"),
+        ("fitness_clearance", "fitness clearance"),
+        ("forced_disclosure", "forced disclosure"),
+        ("emergency_claim", "emergency claim"),
+        ("real_person_present", "real person presence"),
+    ):
+        _cave_false(record[field], label)
+    return {
+        "cue_category_count": len(categories),
+        "stop_state": "honoured_placeholder",
+        "assessment_performed": False,
+        "real_person_present": False,
+        "valid": True,
+    }
+
+
+def validate_choir_handover(record: dict[str, Any]) -> dict[str, Any]:
+    """Validate a fictional workload handover without evaluating or assigning a person."""
+
+    _cave_record(
+        record,
+        {
+            "handover_token",
+            "queue_ceiling",
+            "active_items",
+            "unfinished_items",
+            "stop_token",
+            "correction_readback",
+            "next_owner_placeholder",
+            "performance_evaluated",
+            "release_authorized",
+            "real_person_present",
+        },
+        "choir workload handover",
+    )
+    _cave_token(record["handover_token"], "choir handover token")
+    ceiling = _require_nonnegative_int(record["queue_ceiling"], "choir queue ceiling")
+    if not 1 <= ceiling <= 100:
+        raise DeltaError("choir queue ceiling is outside the bounded range")
+    active = record["active_items"]
+    unfinished = record["unfinished_items"]
+    if not isinstance(active, list) or not active or len(active) > ceiling:
+        raise DeltaError("choir active queue is empty or over its ceiling")
+    if not isinstance(unfinished, list) or not unfinished:
+        raise DeltaError("choir handover erases unfinished work")
+    active_tokens = [_cave_token(value, "choir active item") for value in active]
+    unfinished_tokens = [_cave_token(value, "choir unfinished item") for value in unfinished]
+    ensure_unique(active_tokens, "choir active item")
+    ensure_unique(unfinished_tokens, "choir unfinished item")
+    if not set(unfinished_tokens) <= set(active_tokens):
+        raise DeltaError("choir unfinished item is not in the active queue")
+    if record["stop_token"] is not True or record["correction_readback"] is not True:
+        raise DeltaError("choir handover lacks stop dominance or correction readback")
+    _cave_token(record["next_owner_placeholder"], "choir next-owner placeholder")
+    _cave_false(record["performance_evaluated"], "choir performance evaluation")
+    _cave_false(record["release_authorized"], "choir operational release")
+    _cave_false(record["real_person_present"], "real choir person presence")
+    return {
+        "queue_ceiling": ceiling,
+        "active_count": len(active_tokens),
+        "unfinished_count": len(unfinished_tokens),
+        "performance_evaluated": False,
+        "release_authorized": False,
+        "valid": True,
+    }
+
+
 def merkle_root(entries: Iterable[dict[str, Any]]) -> str:
     leaves: list[bytes] = []
     for entry in sorted(entries, key=lambda row: row["path"]):
@@ -3690,6 +4417,514 @@ def caelen_hardening_payload() -> dict[str, Any]:
     }
 
 
+def orin_fixture_cases() -> list[dict[str, Any]]:
+    """Return Orin's positive choir fixtures and five rejections per completed proposal."""
+
+    packet = {
+        "packet_token": "packet_alpha",
+        "revision": 1,
+        "source_pin": "sha256:" + "00" * 32,
+        "cancellation_state": "hold",
+        "performance_authorized": False,
+        "synthetic": True,
+        "lyrics_present": False,
+        "score_content_present": False,
+        "real_event_present": False,
+    }
+    topology = {
+        "sections": ["section_a", "section_b"],
+        "singer_rows": [
+            {
+                "singer_token": "singer_a",
+                "section_token": "section_a",
+                "seat_group": "seat_a",
+                "substitute_for": None,
+                "vacant": False,
+            },
+            {
+                "singer_token": "singer_b",
+                "section_token": "section_b",
+                "seat_group": "seat_b",
+                "substitute_for": None,
+                "vacant": True,
+            },
+        ],
+        "raw_identity_present": False,
+        "vocal_classification_claimed": False,
+    }
+    sequence = {
+        "items": [
+            {
+                "item_token": "item_a",
+                "kind": "warmup_placeholder",
+                "duration_minutes": 10.0,
+                "prerequisites": [],
+                "incomplete": False,
+                "content_present": False,
+                "instruction_provided": False,
+            },
+            {
+                "item_token": "item_b",
+                "kind": "review_placeholder",
+                "duration_minutes": 15.0,
+                "prerequisites": ["item_a"],
+                "incomplete": True,
+                "content_present": False,
+                "instruction_provided": False,
+            },
+        ],
+        "rehearsal_authorized": False,
+    }
+    score = {
+        "edition_token": "edition_alpha",
+        "cue_token": "cue_alpha",
+        "measure_reference": 12,
+        "page_reference": 3,
+        "rehearsal_mark": "mark_a",
+        "annotation_tokens": ["annotation_a", "annotation_b"],
+        "notation_present": False,
+        "lyrics_present": False,
+        "media_present": False,
+        "authenticity_claimed": False,
+        "rights_cleared": False,
+    }
+    tempo = {
+        "tempo_bpm": 96.0,
+        "metre": "4/4",
+        "beat_unit": "quarter",
+        "duration_minutes": 20.0,
+        "clock_source": "synthetic_counter",
+        "uncertainty_bpm": 2.0,
+        "performance_inference": False,
+    }
+    pitch = {
+        "pitch_hz": 440.0,
+        "unit": "Hz",
+        "transposition_semitones": 0,
+        "uncertainty_hz": 0.5,
+        "contradiction_state": "preserved_for_review",
+        "personal_range_present": False,
+        "diagnosis_claimed": False,
+        "placement_claimed": False,
+    }
+    room = {
+        "zone_tokens": ["zone_a", "zone_b"],
+        "occupancy_placeholder": 0,
+        "acoustic_cue": "review_required",
+        "noise_cue": "unknown",
+        "ventilation_state": "vacant_external_assessment",
+        "accessibility_route_state": "manual_review_required",
+        "real_address_present": False,
+        "safety_cleared": False,
+        "accessibility_complete": False,
+        "emergency_instruction": False,
+    }
+    privacy = {
+        "availability_token": "availability_alpha",
+        "attendance_state": "unknown_placeholder",
+        "contact_channel": "none",
+        "purpose": "synthetic_coordination",
+        "retention_days": 30,
+        "correction_state": "available_placeholder",
+        "raw_identity_present": False,
+        "participation_inferred": False,
+        "secondary_purpose": False,
+    }
+    rights = {
+        "source_token": "source_alpha",
+        "licence_basis_placeholder": "external_review_required",
+        "requested_actions": ["copy", "record"],
+        "effective_from": "2026-01-01T00:00:00Z",
+        "expires_at": "2026-12-31T00:00:00Z",
+        "permission_state": "authority_hold",
+        "rights_holder_confirmed": False,
+        "content_present": False,
+        "copy_authorized": False,
+        "distribution_authorized": False,
+        "recording_authorized": False,
+        "streaming_authorized": False,
+        "legal_interpretation": False,
+    }
+    language = {
+        "language_tag": "und",
+        "dialect_token": "dialect_unknown",
+        "pronunciation_source_token": "source_unknown",
+        "transliteration_state": "not_supplied",
+        "confidence": 0.25,
+        "correction_state": "open",
+        "cultural_context_state": "external_review_required",
+        "authority_vacant": True,
+        "wording_ratified": False,
+        "translation_quality_claimed": False,
+        "maori_authority_claimed": False,
+    }
+    accessible = {
+        "headings": ["Scope", "Synthetic alternatives", "Review vacancies"],
+        "text_alternative": "A fictional content-free rehearsal packet has two placeholder items.",
+        "large_print_placeholder": True,
+        "high_contrast_placeholder": True,
+        "audio_description_state": "unavailable_placeholder",
+        "braille_request_state": "pending_external",
+        "noncolour_status": True,
+        "manual_review_required": True,
+        "affected_user_reviewed": False,
+        "accessibility_complete": False,
+    }
+    correction = {
+        "note_token": "note_alpha",
+        "records": [
+            {
+                "record_token": "record_a",
+                "parent_token": None,
+                "event": "recorded",
+                "reason": "",
+                "readback": False,
+                "ambiguity_open": True,
+                "cancellation_explicit": False,
+            },
+            {
+                "record_token": "record_b",
+                "parent_token": "record_a",
+                "event": "corrected",
+                "reason": "Synthetic correction placeholder.",
+                "readback": True,
+                "ambiguity_open": True,
+                "cancellation_explicit": False,
+            },
+        ],
+        "schedule_authorized": False,
+        "real_event_present": False,
+    }
+    wellbeing = {
+        "cue_token": "wellbeing_alpha",
+        "cue_categories": ["fatigue_placeholder", "hearing_placeholder"],
+        "break_state": "optional",
+        "stop_state": "honoured_placeholder",
+        "referral_state": "not_requested",
+        "medical_assessment": False,
+        "psychosocial_assessment": False,
+        "diagnosis": False,
+        "treatment": False,
+        "fitness_clearance": False,
+        "forced_disclosure": False,
+        "emergency_claim": False,
+        "real_person_present": False,
+    }
+    handover = {
+        "handover_token": "handover_alpha",
+        "queue_ceiling": 3,
+        "active_items": ["item_a", "item_b"],
+        "unfinished_items": ["item_b"],
+        "stop_token": True,
+        "correction_readback": True,
+        "next_owner_placeholder": "owner_next",
+        "performance_evaluated": False,
+        "release_authorized": False,
+        "real_person_present": False,
+    }
+    return [
+        {
+            "fixture_id": "OR6632-HF-001",
+            "proposal_id": "OR6632-N001",
+            "validator": "validate_choir_packet_identity",
+            "positive": packet,
+            "mutations": [
+                {"label": "zero choir packet revision", "record": {**packet, "revision": 0}},
+                {"label": "non-SHA256 choir source pin", "record": {**packet, "source_pin": "sha1:00"}},
+                {"label": "choir performance authorization claim", "record": {**packet, "performance_authorized": True}},
+                {"label": "choir lyrics presence", "record": {**packet, "lyrics_present": True}},
+                {"label": "real choir event presence", "record": {**packet, "real_event_present": True}},
+            ],
+        },
+        {
+            "fixture_id": "OR6632-HF-002",
+            "proposal_id": "OR6632-N002",
+            "validator": "validate_choir_section_topology",
+            "positive": topology,
+            "mutations": [
+                {"label": "duplicate choir section token", "record": {**topology, "sections": ["section_a", "section_a"]}},
+                {"label": "duplicate choir singer token", "record": {**topology, "singer_rows": [topology["singer_rows"][0], {**topology["singer_rows"][1], "singer_token": "singer_a"}]}},
+                {"label": "unknown choir section reference", "record": {**topology, "singer_rows": [{**topology["singer_rows"][0], "section_token": "section_missing"}, topology["singer_rows"][1]]}},
+                {"label": "raw choir identity flag", "record": {**topology, "raw_identity_present": True}},
+                {"label": "vocal classification claim", "record": {**topology, "vocal_classification_claimed": True}},
+            ],
+        },
+        {
+            "fixture_id": "OR6632-HF-003",
+            "proposal_id": "OR6632-N003",
+            "validator": "validate_choir_rehearsal_sequence",
+            "positive": sequence,
+            "mutations": [
+                {"label": "forward choir rehearsal prerequisite", "record": {**sequence, "items": [{**sequence["items"][0], "prerequisites": ["item_b"]}, sequence["items"][1]]}},
+                {"label": "duplicate choir rehearsal item", "record": {**sequence, "items": [sequence["items"][0], {**sequence["items"][1], "item_token": "item_a"}]}},
+                {"label": "zero choir rehearsal duration", "record": {**sequence, "items": [{**sequence["items"][0], "duration_minutes": 0.0}, sequence["items"][1]]}},
+                {"label": "choir rehearsal content presence", "record": {**sequence, "items": [sequence["items"][0], {**sequence["items"][1], "content_present": True}]}},
+                {"label": "choir rehearsal instruction claim", "record": {**sequence, "items": [{**sequence["items"][0], "instruction_provided": True}, sequence["items"][1]]}},
+            ],
+        },
+        {
+            "fixture_id": "OR6632-HF-004",
+            "proposal_id": "OR6632-N004",
+            "validator": "validate_choir_score_reference",
+            "positive": score,
+            "mutations": [
+                {"label": "zero choir measure reference", "record": {**score, "measure_reference": 0}},
+                {"label": "duplicate choir annotation token", "record": {**score, "annotation_tokens": ["annotation_a", "annotation_a"]}},
+                {"label": "score notation content presence", "record": {**score, "notation_present": True}},
+                {"label": "score authenticity claim", "record": {**score, "authenticity_claimed": True}},
+                {"label": "score rights-clearance claim", "record": {**score, "rights_cleared": True}},
+            ],
+        },
+        {
+            "fixture_id": "OR6632-HF-005",
+            "proposal_id": "OR6632-N005",
+            "validator": "validate_choir_tempo_domain",
+            "positive": tempo,
+            "mutations": [
+                {"label": "nonfinite choir tempo", "record": {**tempo, "tempo_bpm": float("nan")}},
+                {"label": "nonpositive choir tempo", "record": {**tempo, "tempo_bpm": 0.0}},
+                {"label": "nonpositive choir duration", "record": {**tempo, "duration_minutes": 0.0}},
+                {"label": "unsupported choir beat unit", "record": {**tempo, "beat_unit": "tick"}},
+                {"label": "choir performance inference", "record": {**tempo, "performance_inference": True}},
+            ],
+        },
+        {
+            "fixture_id": "OR6632-HF-006",
+            "proposal_id": "OR6632-N006",
+            "validator": "validate_choir_pitch_boundary",
+            "positive": pitch,
+            "mutations": [
+                {"label": "nonfinite choir pitch", "record": {**pitch, "pitch_hz": float("inf")}},
+                {"label": "unsupported choir pitch unit", "record": {**pitch, "unit": "kHz"}},
+                {"label": "Boolean choir transposition", "record": {**pitch, "transposition_semitones": True}},
+                {"label": "personal vocal-range presence", "record": {**pitch, "personal_range_present": True}},
+                {"label": "vocal placement claim", "record": {**pitch, "placement_claimed": True}},
+            ],
+        },
+        {
+            "fixture_id": "OR6632-HF-007",
+            "proposal_id": "OR6632-N007",
+            "validator": "validate_choir_room_cue",
+            "positive": room,
+            "mutations": [
+                {"label": "missing choir room zone", "record": {**room, "zone_tokens": []}},
+                {"label": "choir occupancy placeholder over budget", "record": {**room, "occupancy_placeholder": 501}},
+                {"label": "choir ventilation clearance", "record": {**room, "ventilation_state": "cleared"}},
+                {"label": "choir room safety clearance", "record": {**room, "safety_cleared": True}},
+                {"label": "real choir room address", "record": {**room, "real_address_present": True}},
+            ],
+        },
+        {
+            "fixture_id": "OR6632-HF-008",
+            "proposal_id": "OR6632-N008",
+            "validator": "validate_choir_privacy",
+            "positive": privacy,
+            "mutations": [
+                {"label": "raw choir identity presence", "record": {**privacy, "raw_identity_present": True}},
+                {"label": "choir participation inference", "record": {**privacy, "participation_inferred": True}},
+                {"label": "choir secondary purpose", "record": {**privacy, "secondary_purpose": True}},
+                {"label": "zero choir retention period", "record": {**privacy, "retention_days": 0}},
+                {"label": "raw choir email field", "record": {**privacy, "email": "withheld@example.invalid"}},
+            ],
+        },
+        {
+            "fixture_id": "OR6632-HF-009",
+            "proposal_id": "OR6632-N009",
+            "validator": "validate_choir_rights_vacancy",
+            "positive": rights,
+            "mutations": [
+                {"label": "duplicate choir requested right", "record": {**rights, "requested_actions": ["copy", "copy"]}},
+                {"label": "reversed choir rights interval", "record": {**rights, "expires_at": "2025-12-31T00:00:00Z"}},
+                {"label": "choir permission grant", "record": {**rights, "permission_state": "granted"}},
+                {"label": "choir copy authorization", "record": {**rights, "copy_authorized": True}},
+                {"label": "choir copyright interpretation", "record": {**rights, "legal_interpretation": True}},
+            ],
+        },
+        {
+            "fixture_id": "OR6632-HF-010",
+            "proposal_id": "OR6632-N010",
+            "validator": "validate_choir_language_provenance",
+            "positive": language,
+            "mutations": [
+                {"label": "invalid choir language tag", "record": {**language, "language_tag": "invalid_tag"}},
+                {"label": "choir language confidence over range", "record": {**language, "confidence": 1.5}},
+                {"label": "hidden choir language authority vacancy", "record": {**language, "authority_vacant": False}},
+                {"label": "choir wording ratification", "record": {**language, "wording_ratified": True}},
+                {"label": "choir Maori authority claim", "record": {**language, "maori_authority_claimed": True}},
+            ],
+        },
+        {
+            "fixture_id": "OR6632-HF-011",
+            "proposal_id": "OR6632-N011",
+            "validator": "validate_choir_accessible_companion",
+            "positive": accessible,
+            "mutations": [
+                {"label": "missing choir accessible headings", "record": {**accessible, "headings": []}},
+                {"label": "missing choir text alternative", "record": {**accessible, "text_alternative": ""}},
+                {"label": "missing choir high-contrast placeholder", "record": {**accessible, "high_contrast_placeholder": False}},
+                {"label": "unsupported affected-user review claim", "record": {**accessible, "affected_user_reviewed": True}},
+                {"label": "choir accessibility-complete claim", "record": {**accessible, "accessibility_complete": True}},
+            ],
+        },
+        {
+            "fixture_id": "OR6632-HF-012",
+            "proposal_id": "OR6632-N012",
+            "validator": "validate_choir_correction_lineage",
+            "positive": correction,
+            "mutations": [
+                {"label": "duplicate choir correction token", "record": {**correction, "records": [correction["records"][0], {**correction["records"][1], "record_token": "record_a"}]}},
+                {"label": "forward choir correction parent", "record": {**correction, "records": [correction["records"][0], {**correction["records"][1], "parent_token": "record_missing"}]}},
+                {"label": "choir lineage without original record", "record": {**correction, "records": [{**correction["records"][0], "event": "corrected"}, correction["records"][1]]}},
+                {"label": "choir correction without reason", "record": {**correction, "records": [correction["records"][0], {**correction["records"][1], "reason": ""}]}},
+                {"label": "choir correction without readback", "record": {**correction, "records": [correction["records"][0], {**correction["records"][1], "readback": False}]}},
+            ],
+        },
+        {
+            "fixture_id": "OR6632-HF-013",
+            "proposal_id": "OR6632-N013",
+            "validator": "validate_choir_wellbeing_cue",
+            "positive": wellbeing,
+            "mutations": [
+                {"label": "unsupported choir wellbeing category", "record": {**wellbeing, "cue_categories": ["diagnosis"]}},
+                {"label": "choir stop state overridden", "record": {**wellbeing, "stop_state": "ignored"}},
+                {"label": "choir diagnosis claim", "record": {**wellbeing, "diagnosis": True}},
+                {"label": "forced choir disclosure", "record": {**wellbeing, "forced_disclosure": True}},
+                {"label": "real choir person presence", "record": {**wellbeing, "real_person_present": True}},
+            ],
+        },
+        {
+            "fixture_id": "OR6632-HF-014",
+            "proposal_id": "OR6632-N014",
+            "validator": "validate_choir_handover",
+            "positive": handover,
+            "mutations": [
+                {"label": "choir queue over ceiling", "record": {**handover, "queue_ceiling": 1}},
+                {"label": "unknown unfinished choir item", "record": {**handover, "unfinished_items": ["item_missing"]}},
+                {"label": "choir stop token overridden", "record": {**handover, "stop_token": False}},
+                {"label": "missing choir correction readback", "record": {**handover, "correction_readback": False}},
+                {"label": "choir performance evaluation claim", "record": {**handover, "performance_evaluated": True}},
+            ],
+        },
+    ]
+
+
+def _orin_validators() -> dict[str, Any]:
+    return {
+        function.__name__: function
+        for function in (
+            validate_choir_packet_identity,
+            validate_choir_section_topology,
+            validate_choir_rehearsal_sequence,
+            validate_choir_score_reference,
+            validate_choir_tempo_domain,
+            validate_choir_pitch_boundary,
+            validate_choir_room_cue,
+            validate_choir_privacy,
+            validate_choir_rights_vacancy,
+            validate_choir_language_provenance,
+            validate_choir_accessible_companion,
+            validate_choir_correction_lineage,
+            validate_choir_wellbeing_cue,
+            validate_choir_handover,
+        )
+    }
+
+
+def orin_mutation_payload() -> dict[str, Any]:
+    """Execute all five preregistered rejecting mutations for each Orin completion."""
+
+    validators = _orin_validators()
+    records: list[dict[str, Any]] = []
+    positives: list[dict[str, Any]] = []
+    for case_index, case in enumerate(orin_fixture_cases(), 1):
+        validator = validators[case["validator"]]
+        positive = validator(case["positive"])
+        if positive.get("valid") is not True:
+            raise DeltaError(f"Orin positive fixture failed: {case['fixture_id']}")
+        positives.append(
+            {
+                "proposal_id": case["proposal_id"],
+                "validator": case["validator"],
+                "valid": True,
+            }
+        )
+        mutations = case["mutations"]
+        if len(mutations) != 5:
+            raise DeltaError(f"Orin fixture does not declare five mutations: {case['fixture_id']}")
+        for mutation_index, mutation in enumerate(mutations, 1):
+            try:
+                validator(mutation["record"])
+            except (DeltaError, UnicodeError, ValueError, TypeError) as exc:
+                records.append(
+                    {
+                        "fixture_id": f"OR6632-HF-{case_index:03d}-{mutation_index:02d}",
+                        "mutation_id": f"OR6632-MUT-{case_index:03d}-{mutation_index:02d}",
+                        "proposal_id": case["proposal_id"],
+                        "validator": case["validator"],
+                        "failed_witness": mutation["label"],
+                        "rejected": True,
+                        "error_class": type(exc).__name__,
+                        "zero_credit": True,
+                    }
+                )
+            else:
+                raise DeltaError(
+                    f"Orin negative mutation was not rejected: {case['fixture_id']}:{mutation_index}"
+                )
+    return {
+        "schema": f"{SCHEMA}.orin-mutation-matrix.v1",
+        "profile": "orin-v663-v2",
+        "proposal_count": len(positives),
+        "mutations_per_proposal": 5,
+        "negative_fixture_count": len(records),
+        "rejected_fixture_count": sum(record["rejected"] is True for record in records),
+        "positive_fixture_count": len(positives),
+        "passing_fixture_count": len(positives),
+        "records": records,
+        "positive_records": positives,
+        "failed_witnesses_erased": 0,
+        "valid": len(records) == 70 and len(positives) == 14,
+        "boundary": "Seventy rejected synthetic mutations and fourteen passing content-free choir record-shape fixtures only; no real person, choir, repertoire, venue, rehearsal, performance, right, language decision, cultural decision, health assessment, empirical result, production result, authority act or independent reproduction.",
+    }
+
+
+def orin_hardening_payload() -> dict[str, Any]:
+    """Return every retained Orin rejection plus the fourteen paired positives."""
+
+    matrix = orin_mutation_payload()
+    if not matrix["valid"]:
+        raise DeltaError("one or more Orin hardening fixtures failed")
+    return {
+        "schema": f"{SCHEMA}.hardening-fixtures.v6",
+        "profile": "orin-v663-v2",
+        "negative_fixture_count": matrix["negative_fixture_count"],
+        "rejected_fixture_count": matrix["rejected_fixture_count"],
+        "positive_fixture_count": matrix["positive_fixture_count"],
+        "passing_fixture_count": matrix["passing_fixture_count"],
+        "records": matrix["records"],
+        "full_mutation_matrix_negative_count": matrix["negative_fixture_count"],
+        "real_person_present": False,
+        "real_choir_present": False,
+        "lyrics_present": False,
+        "score_content_present": False,
+        "real_repertoire_present": False,
+        "real_venue_present": False,
+        "rehearsal_authorized": False,
+        "performance_authorized": False,
+        "rights_granted": False,
+        "health_assessed": False,
+        "privacy_complete": False,
+        "accessibility_complete": False,
+        "professional_authority": False,
+        "legal_authority": False,
+        "cultural_authority": False,
+        "maori_authority": False,
+        "exhaustive_security": False,
+        "valid": True,
+        "boundary": "All seventy preregistered choir mutations were rejected and fourteen paired positives passed as bounded content-free software fixtures only; not rehearsal, performance, vocal assessment, health or safety clearance, rights permission, legal interpretation, cultural ratification, Maori authority, privacy or accessibility completeness, production assurance, empirical evidence or independent reproduction.",
+    }
+
+
 def hardening_payload_for_profile(profile: str) -> dict[str, Any]:
     """Select one exact bounded fixture family; reject implicit substitution."""
 
@@ -3701,6 +4936,8 @@ def hardening_payload_for_profile(profile: str) -> dict[str, Any]:
         return sable_hardening_payload()
     if profile == "caelen-v663-v1":
         return caelen_hardening_payload()
+    if profile == "orin-v663-v2":
+        return orin_hardening_payload()
     raise DeltaError(f"unknown hardening profile: {profile}")
 
 
