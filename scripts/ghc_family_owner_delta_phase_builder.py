@@ -19,7 +19,7 @@ from ghc_family_owner_delta_toolkit import (
     ALLOWED_OUTCOMES,
     DeltaError,
     canonical_json_sha256,
-    hardening_payload,
+    hardening_payload_for_profile,
     strict_json_loads,
 )
 
@@ -872,8 +872,12 @@ def build_profile_ledgers(
     return ledgers
 
 
-def profile_source_ledger(owner: str, phase: str) -> dict[str, Any]:
-    records = [
+def profile_source_ledger(
+    owner: str,
+    phase: str,
+    records: Iterable[dict[str, str]] | None = None,
+) -> dict[str, Any]:
+    default_records = [
         ("SRC-001", "Git sparse-checkout", "https://git-scm.com/docs/git-sparse-checkout", "Official Git documentation; sparse-before-materialization mechanics only."),
         ("SRC-002", "Python archive formats", "https://docs.python.org/3/library/archiving.html", "Official Python documentation; metadata-only resource budgets and zero extraction."),
         ("SRC-003", "Microsoft file naming", "https://learn.microsoft.com/windows/win32/fileio/naming-a-file", "Official Microsoft documentation; bounded UNC, device, and extended-prefix refusal only."),
@@ -893,20 +897,43 @@ def profile_source_ledger(owner: str, phase: str) -> dict[str, Any]:
         ("SRC-017", "Canadian Conservation Institute condition reporting", "https://www.canada.ca/en/conservation-institute/services/conservation-preservation-publications/canadian-conservation-institute-notes/condition-reporting-paintings-introduction.html", "Official condition-reporting guidance; no real examination, treatment, or professional result."),
         ("SRC-018", "WAI evaluation overview", "https://www.w3.org/WAI/test-evaluate/", "W3C guidance; manual and affected-user evaluation remains reserved."),
     ]
-    return {
-        "schema": f"{SCHEMA}.source-ledger.v2",
-        "owner": owner,
-        "phase": phase,
-        "record_count": len(records),
-        "records": [
+    if records is None:
+        normalized_records = [
             {
                 "source_id": identifier,
                 "title": title,
                 "url": url,
                 "bounded_use": bounded_use,
             }
-            for identifier, title, url, bounded_use in records
-        ],
+            for identifier, title, url, bounded_use in default_records
+        ]
+    else:
+        normalized_records = []
+        for row in records:
+            if not isinstance(row, dict) or set(row) != {
+                "source_id",
+                "title",
+                "url",
+                "bounded_use",
+            }:
+                raise DeltaError("profile source record has the wrong fields")
+            if any(
+                not isinstance(row[field], str) or not row[field].strip()
+                for field in ("source_id", "title", "url", "bounded_use")
+            ):
+                raise DeltaError("profile source record contains an empty value")
+            if not row["url"].startswith("https://"):
+                raise DeltaError("profile source URL must use HTTPS")
+            normalized_records.append(dict(row))
+    source_ids = [row["source_id"] for row in normalized_records]
+    if len(source_ids) != len(set(source_ids)):
+        raise DeltaError("profile source identifiers are not unique")
+    return {
+        "schema": f"{SCHEMA}.source-ledger.v2",
+        "owner": owner,
+        "phase": phase,
+        "record_count": len(normalized_records),
+        "records": normalized_records,
         "boundary": "Primary and official sources shape bounded contracts only; they supply no empirical, professional, legal, cultural, Maori-authority, or Stage 20 result.",
     }
 
@@ -916,8 +943,9 @@ def profile_method_flow(
     runtime: dict[str, Any] | None,
     owner: str,
     phase: str,
+    hardening_profile: str = "ilyra-v662-v6",
 ) -> tuple[dict[str, Any], dict[str, Any]]:
-    hardening = hardening_payload()
+    hardening = hardening_payload_for_profile(hardening_profile)
     records = [dict(record) for record in startup["records"]]
     for fixture in hardening["records"]:
         records.append(
@@ -986,19 +1014,27 @@ def profile_overview_text(
     outcomes: dict[str, Any],
     methods: dict[str, Any],
     hardening: dict[str, Any],
+    feature_summary: str | None = None,
+    reserved_surfaces: str | None = None,
 ) -> str:
     counts = outcomes["outcome_counts"]
+    features = feature_summary or (
+        "metadata-only decompression budgets, sparse-size distinctions, link and "
+        "Windows-prefix refusal, URI normalization, JSON number guards, media-type "
+        "quarantine, attestation digest and PAE checks, predicate version reservation, "
+        "clock separation, timestamp normalization, and JSON Pointer target uniqueness"
+    )
+    reservations = reserved_surfaces or (
+        "No decoder, sparse file, signature, provenance verification, real timestamp, "
+        "or network retrieval was invoked."
+    )
     return f"""# {owner} {phase} integrated overview
 
 ## Executive result
 
 This phase turns an immutable x1 profile into one bounded owner-delta packet.
-The exact owner code adds metadata-only decompression budgets, sparse-size
-distinctions, link and Windows-prefix refusal, URI normalization, JSON number
-guards, media-type quarantine, attestation digest and PAE checks, predicate
-version reservation, clock separation, timestamp normalization, and JSON
-Pointer target uniqueness. All fixtures are synthetic and execute only inside
-the declared delta.
+The exact owner code adds {features}. All fixtures are synthetic and execute
+only inside the declared delta.
 
 ## Core outcome truth
 
@@ -1016,13 +1052,52 @@ witness pairs. None is independent reproduction.
 
 ## Reserved conclusions
 
-No decoder, sparse file, signature, provenance verification, real timestamp,
-or network retrieval was invoked. No real museum object, user, identity,
+{reservations} No real museum object, user, identity,
 credential, institution, professional practice, employment, treatment, custody,
 legal or cultural decision, Maori-authority decision, deployment,
 privacy-complete result, accessibility-complete result, exhaustive security,
 AGI or ASI result, consciousness or personhood evidence, Theory-of-Everything
 proof, or Stage 20 authority is claimed. Verdict: `NOT_READY_FOR_STAGE_20`.
+"""
+
+
+def profile_threat_model_text(
+    owner: str,
+    phase: str,
+    controls: Iterable[str] | None = None,
+) -> str:
+    default_controls = [
+        "Decompression budgets inspect synthetic metadata only and invoke no decoder.",
+        "Sparse logical and stored sizes remain distinct without materializing a file.",
+        "Archive links, rooted Windows references, URI traversal, malformed numeric lexemes, and duplicate JSON Pointer targets fail closed.",
+        "Media-type allowlisting never opens content or implies safety.",
+        "DSSE PAE and in-toto checks validate bounded shape only; signature and provenance truth stay false.",
+        "Wall-clock rollback, monotonic duration, and explicit-offset timestamps remain distinct and never become trusted time.",
+        "Scope remains the exact owner delta and literal test dependencies.",
+        "One canonical success is permitted and never replayed.",
+        "Exact-title reread and acknowledgement are required for delivery.",
+    ]
+    rows = default_controls if controls is None else list(controls)
+    if not rows or any(not isinstance(row, str) or not row.strip() for row in rows):
+        raise DeltaError("profile threat controls must be nonempty text")
+    bullets = "\n".join(f"- {row}" for row in rows)
+    return f"""# {owner} {phase} exact-delta threat model
+
+## Assets
+
+Exact Git ancestry, owner attribution, immutable x1, sparse scope, changed-file
+manifests, bounded declaration contracts, retained failures, privacy boundaries,
+and successor-route truth.
+
+## Threats and controls
+
+{bullets}
+
+## Residual risk
+
+This is not exhaustive security, platform completeness, production assurance,
+complete privacy or accessibility, independent reproduction, legal review,
+cultural ratification, or Maori authority. Residual risks remain exact-gated.
 """
 
 
@@ -1050,6 +1125,8 @@ def write_profile_skill_and_runner_artifacts(
     owner: str,
     phase: str,
     test_module: str,
+    runner_callables: Iterable[str] | None = None,
+    hardening_profile: str = "ilyra-v662-v6",
 ) -> tuple[list[str], list[str]]:
     skill_paths: list[str] = []
     for row in portfolio["skills"]["owner_build"]:
@@ -1069,9 +1146,9 @@ description: {description}
 Use this phase-local capability only for `{owner}` `{phase}` owner-self-scoped
 synthetic fixtures and exact-delta receipts. Refuse repository-wide discovery,
 sibling mutation, real identities, external signing, deployment, legal or
-cultural decisions, Maori authority, and evidence promotion. Retain every
-failed fixture and use `scripts/ghc_family_owner_delta_toolkit.py hardening` as
-the bounded smoke surface. This file is a local packet artifact, not a globally
+ cultural decisions, Maori authority, and evidence promotion. Retain every
+failed fixture and use `scripts/ghc_family_owner_delta_toolkit.py hardening
+--profile {hardening_profile}` as the bounded smoke surface. This file is a local packet artifact, not a globally
 installed skill and not proof of qualification or authority.
 """
         write_text(root / "SKILL.md", skill_text)
@@ -1083,7 +1160,7 @@ installed skill and not proof of qualification or authority.
                 "name": skill_name,
                 "owner": owner,
                 "phase": phase,
-                "entrypoint": "scripts/ghc_family_owner_delta_toolkit.py hardening",
+                "entrypoint": f"scripts/ghc_family_owner_delta_toolkit.py hardening --profile {hardening_profile}",
                 "installed_globally": False,
                 "valid": True,
                 "boundary": "Phase-local same-owner synthetic capability only.",
@@ -1096,7 +1173,7 @@ installed skill and not proof of qualification or authority.
             ]
         )
     runner_paths: list[str] = []
-    callable_names = [
+    default_callable_names = [
         "validate_decompression_budget",
         "sparse_size_record",
         "validate_archive_entry_kind",
@@ -1108,6 +1185,15 @@ installed skill and not proof of qualification or authority.
         "clock_separation_record",
         "validate_unique_json_pointer_targets",
     ]
+    callable_names = (
+        default_callable_names if runner_callables is None else list(runner_callables)
+    )
+    if (
+        len(callable_names) != len(portfolio["runners"]["owner_build"])
+        or len(callable_names) != len(set(callable_names))
+        or any(not isinstance(name, str) or not name for name in callable_names)
+    ):
+        raise DeltaError("profile runner callable list is invalid")
     for row, callable_name in zip(
         portfolio["runners"]["owner_build"], callable_names, strict=True
     ):
@@ -1345,10 +1431,16 @@ def build_profile_packet(
     }
     runtime_path = phase_root / "x2" / "operational-method-flow.json"
     runtime = load_json(runtime_path) if runtime_path.is_file() else None
+    hardening_profile = profile.get("hardening_profile", "ilyra-v662-v6")
     methods, hardening = profile_method_flow(
-        startup_methods, runtime, owner, phase
+        startup_methods, runtime, owner, phase, hardening_profile
     )
-    sources = profile_source_ledger(owner, phase)
+    planned = profile.get("planned_owner_delta", {})
+    if planned.get("startup_operational_negatives") != len(startup_methods["records"]):
+        raise DeltaError("planned startup failure count differs from immutable x1")
+    if planned.get("synthetic_rejected_mutations") != hardening["negative_fixture_count"]:
+        raise DeltaError("planned synthetic rejection count differs from hardening profile")
+    sources = profile_source_ledger(owner, phase, profile.get("source_records"))
     write_json(phase_root / "x2" / "outcome-ledger.json", outcome)
     write_json(phase_root / "x2" / "method-flow.json", methods)
     write_json(phase_root / "x2" / "hardening-fixture-receipt.json", hardening)
@@ -1415,7 +1507,15 @@ def build_profile_packet(
             path,
             profile_pillar_text(owner, phase, artifact["title"], artifact["body"]),
         )
-    overview = profile_overview_text(owner, phase, outcome, methods, hardening)
+    overview = profile_overview_text(
+        owner,
+        phase,
+        outcome,
+        methods,
+        hardening,
+        profile.get("overview_features"),
+        profile.get("overview_reserved_surfaces"),
+    )
     write_text(phase_root / "overview" / "integrated-overview.md", overview)
     write_text(
         phase_root / "report" / "accessible-static-report.html",
@@ -1436,33 +1536,7 @@ verdict remains `NOT_READY_FOR_STAGE_20`.
     )
     write_text(
         phase_root / "governance" / "threat-model.md",
-        f"""# {owner} {phase} exact-delta threat model
-
-## Assets
-
-Exact Git ancestry, owner attribution, immutable x1, sparse scope, changed-file
-manifests, metadata budgets, path and URI boundaries, numeric and timestamp
-contracts, attestation-shape boundaries, retained failures, privacy boundaries,
-and successor-route truth.
-
-## Threats and controls
-
-- Decompression budgets inspect synthetic metadata only and invoke no decoder.
-- Sparse logical and stored sizes remain distinct without materializing a file.
-- Archive links, rooted Windows references, URI traversal, malformed numeric lexemes, and duplicate JSON Pointer targets fail closed.
-- Media-type allowlisting never opens content or implies safety.
-- DSSE PAE and in-toto checks validate bounded shape only; signature and provenance truth stay false.
-- Wall-clock rollback, monotonic duration, and explicit-offset timestamps remain distinct and never become trusted time.
-- Scope remains the exact owner delta and literal test dependencies.
-- One canonical success is permitted and never replayed.
-- Exact-title reread and acknowledgement are required for delivery.
-
-## Residual risk
-
-This is not exhaustive security, platform completeness, production assurance,
-complete privacy or accessibility, independent reproduction, legal review,
-cultural ratification, or Maori authority. Residual risks remain exact-gated.
-""",
+        profile_threat_model_text(owner, phase, profile.get("threat_controls")),
     )
     skill_paths, runner_paths = write_profile_skill_and_runner_artifacts(
         phase_root,
@@ -1470,6 +1544,8 @@ cultural ratification, or Maori authority. Residual risks remain exact-gated.
         owner,
         phase,
         profile["test_modules"][0],
+        profile.get("runner_callables"),
+        hardening_profile,
     )
 
     baseline = profile["activation_baseline"]

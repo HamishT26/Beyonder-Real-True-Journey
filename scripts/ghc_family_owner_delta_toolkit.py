@@ -795,6 +795,414 @@ def validate_unique_json_pointer_targets(values: Iterable[str]) -> list[str]:
     return normalized
 
 
+def _require_nonnegative_int(value: Any, label: str) -> int:
+    if isinstance(value, bool) or not isinstance(value, int):
+        raise DeltaError(f"{label} must be an integer")
+    if value < 0:
+        raise DeltaError(f"{label} must be nonnegative")
+    return value
+
+
+def validate_byte_order(value: str) -> str:
+    """Require an explicit standard byte order without parsing any payload."""
+
+    if not isinstance(value, str) or not value or value != value.strip():
+        raise DeltaError("byte order must be an exact nonempty declaration")
+    normalized = value.casefold()
+    if normalized not in {"little", "big", "network"}:
+        raise DeltaError("byte order must be little, big, or network")
+    return normalized
+
+
+def normalize_permission_mode(value: int, allowed_mask: int = 0o777) -> dict[str, Any]:
+    """Normalize symbolic permission bits without touching a filesystem."""
+
+    mode = _require_nonnegative_int(value, "permission mode")
+    mask = _require_nonnegative_int(allowed_mask, "permission mask")
+    if mask > 0o7777:
+        raise DeltaError("permission mask exceeds the bounded symbolic surface")
+    if mode & ~mask:
+        raise DeltaError("permission mode contains bits outside the declared mask")
+    return {
+        "mode": mode,
+        "octal": f"{mode:04o}",
+        "allowed_mask": mask,
+        "filesystem_mutated": False,
+        "valid": True,
+    }
+
+
+def validate_nested_resource_budget(
+    nodes: Iterable[dict[str, Any]],
+    maximum_depth: int,
+    maximum_members: int,
+    maximum_total_bytes: int,
+) -> dict[str, Any]:
+    """Aggregate bounded synthetic declarations without allocating resources."""
+
+    depth_limit = _require_nonnegative_int(maximum_depth, "maximum depth")
+    member_limit = _require_nonnegative_int(maximum_members, "maximum members")
+    byte_limit = _require_nonnegative_int(maximum_total_bytes, "maximum total bytes")
+    if depth_limit < 1 or member_limit < 1:
+        raise DeltaError("nested resource depth and member limits must be positive")
+    rows = list(nodes)
+    if not rows:
+        raise DeltaError("nested resource declarations must be nonempty")
+    if len(rows) > member_limit:
+        raise DeltaError("nested resource member count exceeds budget")
+    total = 0
+    observed_depth = 0
+    for row in rows:
+        if not isinstance(row, dict) or set(row) != {"depth", "declared_bytes"}:
+            raise DeltaError("nested resource row must contain depth and declared_bytes")
+        depth = _require_nonnegative_int(row["depth"], "resource depth")
+        declared = _require_nonnegative_int(
+            row["declared_bytes"], "declared resource bytes"
+        )
+        if depth < 1 or depth > depth_limit:
+            raise DeltaError("nested resource depth exceeds budget")
+        if declared > byte_limit - total:
+            raise DeltaError("nested resource total exceeds budget")
+        total += declared
+        observed_depth = max(observed_depth, depth)
+    return {
+        "member_count": len(rows),
+        "maximum_depth_observed": observed_depth,
+        "total_declared_bytes": total,
+        "resources_allocated": False,
+        "valid": True,
+    }
+
+
+def checked_size_product(left: int, right: int, maximum: int) -> int:
+    """Multiply two declared dimensions only when the product fits a ceiling."""
+
+    left_value = _require_nonnegative_int(left, "left size factor")
+    right_value = _require_nonnegative_int(right, "right size factor")
+    limit = _require_nonnegative_int(maximum, "maximum size product")
+    if left_value and right_value > limit // left_value:
+        raise DeltaError("declared size product exceeds the configured ceiling")
+    return left_value * right_value
+
+
+def validate_uri_member_components(raw: str) -> str:
+    """Refuse external or ambiguous URI components without dereferencing them."""
+
+    if not isinstance(raw, str) or not raw or "?" in raw or "#" in raw:
+        raise DeltaError("URI member reference contains a query or fragment delimiter")
+    split = urlsplit(raw)
+    if split.scheme or split.netloc or split.query or split.fragment:
+        raise DeltaError("URI member reference must contain a relative path only")
+    for match in re.finditer(r"%([0-9A-Fa-f]{2})", raw):
+        if int(match.group(1), 16) in {0x2F, 0x5C}:
+            raise DeltaError("URI member reference contains an encoded separator")
+    return normalize_uri_member_reference(raw)
+
+
+def parse_media_type_parameters(
+    raw: str,
+    allowed_media_types: Iterable[str] = DECLARED_MEDIA_TYPES,
+    allowed_charsets: Iterable[str] = ("utf-8",),
+    maximum_parameters: int = 4,
+) -> dict[str, Any]:
+    """Parse a closed, token-only media-type parameter subset without content IO."""
+
+    if not isinstance(raw, str) or not raw or len(raw) > 512:
+        raise DeltaError("media type declaration is empty or over budget")
+    maximum = _require_nonnegative_int(maximum_parameters, "maximum parameters")
+    if maximum < 1:
+        raise DeltaError("maximum parameters must be positive")
+    parts = [part.strip() for part in raw.split(";")]
+    if not parts[0] or any(not part for part in parts[1:]):
+        raise DeltaError("media type contains an empty component")
+    media_type = parts[0].casefold()
+    allowed_types = {item.casefold() for item in allowed_media_types}
+    if media_type not in allowed_types:
+        raise DeltaError("media type is not declared")
+    if len(parts) - 1 > maximum:
+        raise DeltaError("media type parameter count exceeds budget")
+    token = re.compile(r"[A-Za-z0-9!#$&^_.+:-]+\Z")
+    parameters: dict[str, str] = {}
+    for part in parts[1:]:
+        name, separator, value = part.partition("=")
+        if not separator or not token.fullmatch(name) or not token.fullmatch(value):
+            raise DeltaError("media type parameter is outside the bounded token grammar")
+        normalized_name = name.casefold()
+        if normalized_name not in {"charset", "profile", "version"}:
+            raise DeltaError("media type parameter name is not declared")
+        if normalized_name in parameters:
+            raise DeltaError("duplicate media type parameter")
+        normalized_value = value.casefold() if normalized_name == "charset" else value
+        if normalized_name == "charset" and normalized_value not in {
+            item.casefold() for item in allowed_charsets
+        }:
+            raise DeltaError("media type charset is not declared")
+        parameters[normalized_name] = normalized_value
+    return {
+        "media_type": media_type,
+        "parameters": dict(sorted(parameters.items())),
+        "content_opened": False,
+        "valid": True,
+    }
+
+
+def validate_digest_policy(
+    digests: dict[str, str],
+    required_algorithms: Iterable[str] = ("sha256",),
+    allowed_algorithms: Iterable[str] = ("sha256", "sha512"),
+    reserved_algorithms: Iterable[str] = ("sha1", "md5"),
+) -> dict[str, Any]:
+    """Validate digest-map shape without computing or trusting any digest."""
+
+    if not isinstance(digests, dict) or not digests:
+        raise DeltaError("digest policy input must be a nonempty object")
+    required = set(ensure_unique(required_algorithms, "required digest algorithms"))
+    allowed = set(ensure_unique(allowed_algorithms, "allowed digest algorithms"))
+    reserved = set(ensure_unique(reserved_algorithms, "reserved digest algorithms"))
+    if not required <= allowed or allowed & reserved:
+        raise DeltaError("digest policy declarations conflict")
+    widths = {"sha256": 64, "sha512": 128}
+    observed: set[str] = set()
+    for algorithm, encoded in digests.items():
+        if not isinstance(algorithm, str) or algorithm != algorithm.casefold():
+            raise DeltaError("digest algorithm labels must be exact lower-case text")
+        if algorithm in reserved or algorithm not in allowed or algorithm not in widths:
+            raise DeltaError("digest algorithm is reserved or undeclared")
+        if not isinstance(encoded, str) or not re.fullmatch(
+            rf"[0-9a-f]{{{widths[algorithm]}}}", encoded
+        ):
+            raise DeltaError("digest value has the wrong width or encoding")
+        observed.add(algorithm)
+    if not required <= observed:
+        raise DeltaError("required digest algorithm is absent")
+    return {
+        "algorithms": sorted(observed),
+        "cryptographic_validity_verified": False,
+        "provenance_verified": False,
+        "valid": True,
+    }
+
+
+def validate_dsse_payload_type(value: str, maximum_bytes: int = 128) -> str:
+    """Validate a bounded visible-ASCII DSSE payload type without PAE or signing."""
+
+    maximum = _require_nonnegative_int(maximum_bytes, "maximum payload-type bytes")
+    if maximum < 1 or not isinstance(value, str) or not value:
+        raise DeltaError("DSSE payload type must be nonempty bounded text")
+    try:
+        encoded = value.encode("ascii", errors="strict")
+    except UnicodeEncodeError as exc:
+        raise DeltaError("DSSE payload type must be ASCII") from exc
+    if len(encoded) > maximum or any(byte < 0x21 or byte > 0x7E for byte in encoded):
+        raise DeltaError("DSSE payload type is over budget or contains whitespace/control data")
+    return value
+
+
+def validate_unique_attestation_subject_names(
+    values: Iterable[str],
+    maximum_items: int = 64,
+    maximum_characters: int = 256,
+) -> list[str]:
+    """Refuse normalized subject-name collisions without resolving identity."""
+
+    item_limit = _require_nonnegative_int(maximum_items, "maximum subject names")
+    character_limit = _require_nonnegative_int(
+        maximum_characters, "maximum subject-name characters"
+    )
+    rows = list(values)
+    if not rows or len(rows) > item_limit:
+        raise DeltaError("attestation subject-name count is empty or over budget")
+    normalized: list[str] = []
+    for value in rows:
+        if (
+            not isinstance(value, str)
+            or not value
+            or value != value.strip()
+            or len(value) > character_limit
+        ):
+            raise DeltaError("attestation subject name is empty, padded, or over budget")
+        nfc = unicodedata.normalize("NFC", value)
+        if value != nfc or any(unicodedata.category(char) in {"Cc", "Cf"} for char in value):
+            raise DeltaError("attestation subject name is noncanonical or contains controls")
+        normalized.append(nfc.casefold())
+    if len(normalized) != len(set(normalized)):
+        raise DeltaError("attestation subject names collide after normalization")
+    return rows
+
+
+def validate_rfc3339_leap_second_reservation(
+    value: str, allow_reserved_leap_second: bool = False
+) -> dict[str, Any]:
+    """Reserve lexical second 60 instead of silently normalizing trusted time."""
+
+    if not isinstance(allow_reserved_leap_second, bool):
+        raise DeltaError("leap-second policy must be Boolean")
+    pattern = re.compile(
+        r"(?P<prefix>[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:)"
+        r"(?P<second>[0-9]{2})(?P<fraction>\.[0-9]+)?(?P<offset>Z|[+-][0-9]{2}:[0-9]{2})\Z"
+    )
+    match = pattern.fullmatch(value) if isinstance(value, str) else None
+    if not match or value.endswith("-00:00"):
+        raise DeltaError("timestamp is outside the bounded explicit-offset form")
+    second = int(match.group("second"))
+    if second > 60:
+        raise DeltaError("timestamp second is outside the bounded range")
+    probe = (
+        match.group("prefix")
+        + ("59" if second == 60 else match.group("second"))
+        + (match.group("fraction") or "")
+        + match.group("offset")
+    )
+    normalize_rfc3339_utc(probe)
+    if second == 60 and not allow_reserved_leap_second:
+        raise DeltaError("leap-second timestamp is reserved by policy")
+    return {
+        "value": value,
+        "reserved_leap_second": second == 60,
+        "trusted_time": False,
+        "valid": True,
+    }
+
+
+def validate_json_pointer_array_index(token: str, maximum_index: int = 1_000_000) -> int:
+    """Validate canonical decimal array-index syntax without document traversal."""
+
+    maximum = _require_nonnegative_int(maximum_index, "maximum JSON array index")
+    if not isinstance(token, str) or not re.fullmatch(r"(?:0|[1-9][0-9]*)", token):
+        raise DeltaError("JSON Pointer array index is not canonical decimal text")
+    if len(token) > 19:
+        raise DeltaError("JSON Pointer array index exceeds the lexical budget")
+    value = int(token)
+    if value > maximum:
+        raise DeltaError("JSON Pointer array index exceeds the declared maximum")
+    return value
+
+
+def validate_revision_pair(
+    primary: dict[str, Any], alternative: dict[str, Any]
+) -> dict[str, Any]:
+    """Require exact report revision parity without claiming accessibility equivalence."""
+
+    required = {"record_ids", "schema_revision", "content_revision"}
+    normalized_rows: list[dict[str, Any]] = []
+    for label, row in (("primary", primary), ("alternative", alternative)):
+        if not isinstance(row, dict) or set(row) != required:
+            raise DeltaError(f"{label} report descriptor has the wrong fields")
+        identifiers = row["record_ids"]
+        if not isinstance(identifiers, list) or not identifiers:
+            raise DeltaError(f"{label} report record IDs must be a nonempty list")
+        normalized_ids = validate_unique_attestation_subject_names(identifiers)
+        revisions = (row["schema_revision"], row["content_revision"])
+        if any(
+            not isinstance(value, str)
+            or not value
+            or value != value.strip()
+            or len(value) > 64
+            for value in revisions
+        ):
+            raise DeltaError(f"{label} report revision is invalid")
+        normalized_rows.append(
+            {
+                "record_ids": sorted(normalized_ids),
+                "schema_revision": revisions[0],
+                "content_revision": revisions[1],
+            }
+        )
+    if normalized_rows[0] != normalized_rows[1]:
+        raise DeltaError("alternative-format report revision parity failed")
+    return {
+        "record_count": len(normalized_rows[0]["record_ids"]),
+        "schema_revision": normalized_rows[0]["schema_revision"],
+        "content_revision": normalized_rows[0]["content_revision"],
+        "accessibility_complete": False,
+        "valid": True,
+    }
+
+
+def validate_condition_term_revision(
+    term: str,
+    glossary_id: str,
+    glossary_revision: str,
+    glossary: dict[str, Any],
+) -> dict[str, Any]:
+    """Bind a synthetic term to one declared glossary revision without authority."""
+
+    if not isinstance(glossary, dict) or set(glossary) != {
+        "glossary_id",
+        "revision",
+        "terms",
+    }:
+        raise DeltaError("condition glossary has the wrong fields")
+    for label, value in (
+        ("term", term),
+        ("glossary ID", glossary_id),
+        ("glossary revision", glossary_revision),
+    ):
+        if not isinstance(value, str) or not value or value != value.strip() or len(value) > 128:
+            raise DeltaError(f"{label} is invalid")
+    if glossary["glossary_id"] != glossary_id or glossary["revision"] != glossary_revision:
+        raise DeltaError("condition glossary identity or revision differs")
+    terms = validate_unique_attestation_subject_names(
+        glossary["terms"], maximum_items=128, maximum_characters=128
+    )
+    if term not in terms:
+        raise DeltaError("condition term is absent from the declared glossary revision")
+    return {
+        "term": term,
+        "glossary_id": glossary_id,
+        "glossary_revision": glossary_revision,
+        "professional_authority": False,
+        "cultural_authority": False,
+        "valid": True,
+    }
+
+
+def validate_custody_transition(
+    previous_state: str,
+    next_state: str,
+    observed_revision: int,
+    expected_revision: int,
+    hold_active: bool,
+    previous_actor: str,
+    next_actor: str,
+    allowed_edges: Iterable[tuple[str, str]] = (
+        ("storage", "review"),
+        ("review", "storage"),
+        ("review", "handover"),
+    ),
+) -> dict[str, Any]:
+    """Quarantine conflicting synthetic custody transitions without real action."""
+
+    if not isinstance(hold_active, bool):
+        raise DeltaError("custody hold status must be Boolean")
+    revision = _require_nonnegative_int(observed_revision, "observed custody revision")
+    expected = _require_nonnegative_int(expected_revision, "expected custody revision")
+    states = (previous_state, next_state)
+    if any(
+        not isinstance(state, str)
+        or not re.fullmatch(r"[a-z][a-z0-9_]{0,31}", state)
+        for state in states
+    ):
+        raise DeltaError("custody state is outside the bounded grammar")
+    edges = set(tuple(edge) for edge in allowed_edges)
+    if any(len(edge) != 2 for edge in edges) or (previous_state, next_state) not in edges:
+        raise DeltaError("custody transition edge is not declared")
+    if previous_state == next_state or revision != expected or hold_active:
+        raise DeltaError("custody transition conflicts with state, revision, or hold")
+    actors = validate_unique_attestation_subject_names(
+        [previous_actor, next_actor], maximum_items=2, maximum_characters=128
+    )
+    return {
+        "previous_state": previous_state,
+        "next_state": next_state,
+        "previous_actor": actors[0],
+        "next_actor": actors[1],
+        "next_revision": revision + 1,
+        "custody_authority": False,
+        "valid": True,
+    }
+
+
 def merkle_root(entries: Iterable[dict[str, Any]]) -> str:
     leaves: list[bytes] = []
     for entry in sorted(entries, key=lambda row: row["path"]):
@@ -955,6 +1363,193 @@ def hardening_payload() -> dict[str, Any]:
         "valid": True,
         "boundary": "Bounded synthetic metadata, byte, path, numeric, attestation-shape, and time fixtures only; not decompression, sparse-file measurement, exhaustive platform safety, cryptographic verification, provenance truth, trusted time, production assurance, independent reproduction, professional validation, or authority.",
     }
+
+
+def auren_hardening_payload() -> dict[str, Any]:
+    """Run Auren's fourteen paired bounded synthetic hardening fixtures."""
+
+    def rejection(identifier: str, label: str, callback: Any) -> dict[str, Any]:
+        try:
+            callback()
+        except (DeltaError, UnicodeError, ValueError, TypeError) as exc:
+            return {
+                "fixture_id": identifier,
+                "failed_witness": label,
+                "rejected": True,
+                "error_class": type(exc).__name__,
+            }
+        raise DeltaError(f"negative fixture was not rejected: {identifier}")
+
+    primary = {
+        "record_ids": ["object-001"],
+        "schema_revision": "condition-v1",
+        "content_revision": "7",
+    }
+    glossary = {
+        "glossary_id": "condition-v1",
+        "revision": "7",
+        "terms": ["stable", "surface_change"],
+    }
+    records = [
+        rejection("A6627-HF-001", "native byte order", lambda: validate_byte_order("native")),
+        rejection(
+            "A6627-HF-002",
+            "permission bit outside the declared mask",
+            lambda: normalize_permission_mode(0o1000, 0o777),
+        ),
+        rejection(
+            "A6627-HF-003",
+            "nested resource total over budget",
+            lambda: validate_nested_resource_budget(
+                [
+                    {"depth": 1, "declared_bytes": 60},
+                    {"depth": 2, "declared_bytes": 50},
+                ],
+                2,
+                2,
+                100,
+            ),
+        ),
+        rejection(
+            "A6627-HF-004",
+            "declared size product over ceiling",
+            lambda: checked_size_product(11, 10, 100),
+        ),
+        rejection(
+            "A6627-HF-005",
+            "URI member query component",
+            lambda: validate_uri_member_components("safe/item.json?revision=1"),
+        ),
+        rejection(
+            "A6627-HF-006",
+            "duplicate media type parameter",
+            lambda: parse_media_type_parameters(
+                "application/vnd.in-toto+json; charset=utf-8; CHARSET=utf-8"
+            ),
+        ),
+        rejection(
+            "A6627-HF-007",
+            "reserved digest algorithm",
+            lambda: validate_digest_policy({"sha1": "00" * 20}),
+        ),
+        rejection(
+            "A6627-HF-008",
+            "non-ASCII DSSE payload type",
+            lambda: validate_dsse_payload_type("application/vnd.ghc.mānuka"),
+        ),
+        rejection(
+            "A6627-HF-009",
+            "case-fold-colliding attestation subject names",
+            lambda: validate_unique_attestation_subject_names(["Object", "object"]),
+        ),
+        rejection(
+            "A6627-HF-010",
+            "reserved leap-second timestamp",
+            lambda: validate_rfc3339_leap_second_reservation("2016-12-31T23:59:60Z"),
+        ),
+        rejection(
+            "A6627-HF-011",
+            "leading-zero JSON Pointer array index",
+            lambda: validate_json_pointer_array_index("01"),
+        ),
+        rejection(
+            "A6627-HF-012",
+            "alternative-format content revision mismatch",
+            lambda: validate_revision_pair(
+                primary,
+                {**primary, "content_revision": "8"},
+            ),
+        ),
+        rejection(
+            "A6627-HF-013",
+            "condition glossary revision mismatch",
+            lambda: validate_condition_term_revision("stable", "condition-v1", "8", glossary),
+        ),
+        rejection(
+            "A6627-HF-014",
+            "custody transition while a hold is active",
+            lambda: validate_custody_transition(
+                "storage", "review", 2, 2, True, "registrar-a", "registrar-b"
+            ),
+        ),
+    ]
+    if not all(record.get("rejected") is True for record in records):
+        raise DeltaError("one or more Auren hardening negative fixtures was not detected")
+    positive_checks = [
+        validate_byte_order("big") == "big",
+        normalize_permission_mode(0o640)["filesystem_mutated"] is False,
+        validate_nested_resource_budget(
+            [
+                {"depth": 1, "declared_bytes": 10},
+                {"depth": 2, "declared_bytes": 20},
+            ],
+            2,
+            2,
+            30,
+        )["total_declared_bytes"]
+        == 30,
+        checked_size_product(6, 7, 42) == 42,
+        validate_uri_member_components("safe/item.json") == "safe/item.json",
+        parse_media_type_parameters(
+            "APPLICATION/VND.IN-TOTO+JSON; charset=UTF-8; version=1"
+        )["content_opened"]
+        is False,
+        validate_digest_policy({"sha256": "00" * 32})[
+            "cryptographic_validity_verified"
+        ]
+        is False,
+        validate_dsse_payload_type("application/vnd.in-toto+json")
+        == "application/vnd.in-toto+json",
+        validate_unique_attestation_subject_names(["Object-A", "Object-B"])
+        == ["Object-A", "Object-B"],
+        validate_rfc3339_leap_second_reservation("2026-08-18T10:00:00Z")[
+            "reserved_leap_second"
+        ]
+        is False,
+        validate_json_pointer_array_index("10") == 10,
+        validate_revision_pair(primary, dict(primary))["accessibility_complete"] is False,
+        validate_condition_term_revision("stable", "condition-v1", "7", glossary)[
+            "professional_authority"
+        ]
+        is False,
+        validate_custody_transition(
+            "storage", "review", 2, 2, False, "registrar-a", "registrar-b"
+        )["custody_authority"]
+        is False,
+    ]
+    if not all(positive_checks):
+        raise DeltaError("one or more Auren hardening passing fixtures failed")
+    return {
+        "schema": f"{SCHEMA}.hardening-fixtures.v3",
+        "profile": "auren-v662-v7",
+        "negative_fixture_count": len(records),
+        "rejected_fixture_count": sum(record["rejected"] is True for record in records),
+        "positive_fixture_count": len(positive_checks),
+        "passing_fixture_count": sum(bool(value) for value in positive_checks),
+        "records": records,
+        "binary_payload_parsed": False,
+        "filesystem_mutated": False,
+        "network_accessed": False,
+        "signature_verified": False,
+        "provenance_verified": False,
+        "trusted_time": False,
+        "accessibility_complete": False,
+        "professional_authority": False,
+        "cultural_authority": False,
+        "exhaustive_security": False,
+        "valid": True,
+        "boundary": "Bounded synthetic declarations and paired refusal fixtures only; not binary parsing, filesystem authorization, resource allocation, URI dereference, content safety, cryptographic validity, provenance truth, trusted time, accessibility completeness, professional validation, legal or cultural ratification, Maori authority, production assurance, or independent reproduction.",
+    }
+
+
+def hardening_payload_for_profile(profile: str) -> dict[str, Any]:
+    """Select one exact bounded fixture family; reject implicit substitution."""
+
+    if profile == "ilyra-v662-v6":
+        return hardening_payload()
+    if profile == "auren-v662-v7":
+        return auren_hardening_payload()
+    raise DeltaError(f"unknown hardening profile: {profile}")
 
 
 def ensure_unique(values: Iterable[str], label: str) -> list[str]:
@@ -2015,6 +2610,7 @@ def build_parser() -> argparse.ArgumentParser:
     quality.add_argument("--ledger", type=Path, action="append", required=True)
     quality.add_argument("--output", type=Path)
     hardening = commands.add_parser("hardening")
+    hardening.add_argument("--profile", default="ilyra-v662-v6")
     hardening.add_argument("--output", type=Path)
     canonical = commands.add_parser("canonical")
     canonical.add_argument("--repo", type=Path, required=True)
@@ -2095,7 +2691,7 @@ def main() -> int:
         elif args.command == "data-quality":
             payload = data_quality_payload(args.ledger)
         elif args.command == "hardening":
-            payload = hardening_payload()
+            payload = hardening_payload_for_profile(args.profile)
         elif args.command == "canonical":
             payload = canonical_payload(args)
             sys.stdout.write(json.dumps({"valid": payload["valid"], "target": payload["target_commit"]}) + "\n")
