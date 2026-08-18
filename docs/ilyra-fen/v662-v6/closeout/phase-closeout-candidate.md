@@ -7,8 +7,8 @@ selections, 20 new core proposals, and outcomes of
 4 represented,
 1 open gap, and
 1 exact gate. The generated successor baton
-contains 35054 words and has SHA-256
-`e217685bd44a3b3771639f0785e35c24d9be39a84112f4c985969a9f6ef79d8e`.
+contains 35580 words and has SHA-256
+`5b76ea7c3fd4a09ff28defde8275de4d099a52f5f57ee7b1bddd99cb26898554`.
 
 This document is a candidate until immutable evidence, exact final, one
 successful canonical aggregate, clean fresh-live equality, and the one

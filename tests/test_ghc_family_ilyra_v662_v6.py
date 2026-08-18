@@ -348,8 +348,8 @@ class HardeningAndProfileTests(unittest.TestCase):
         methods, hardening = builder.profile_method_flow(
             self.startup, self.runtime, "Ilyra Fen", "v662-v6"
         )
-        self.assertEqual(methods["method_count"], 22)
-        self.assertEqual(methods["retained_failed_witness_count"], 22)
+        self.assertEqual(methods["method_count"], 26)
+        self.assertEqual(methods["retained_failed_witness_count"], 26)
         self.assertEqual(hardening["rejected_fixture_count"], 14)
 
     def test_profile_sources_are_primary_or_official(self) -> None:

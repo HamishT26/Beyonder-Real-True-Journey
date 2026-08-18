@@ -21,7 +21,7 @@ the declared delta.
 
 The hardening surface retained 14 rejected
 synthetic fixtures and 14 bounded passing
-fixtures. Method Flow retains 22 failed and passing
+fixtures. Method Flow retains 26 failed and passing
 witness pairs. None is independent reproduction.
 
 ## Reserved conclusions
