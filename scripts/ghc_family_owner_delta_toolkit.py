@@ -4925,6 +4925,1198 @@ def orin_hardening_payload() -> dict[str, Any]:
     }
 
 
+def _garden_required_false(record: dict[str, Any], fields: Iterable[str]) -> None:
+    """Require explicit false values for garden authority and real-world flags."""
+
+    for field in fields:
+        _cave_false(record[field], f"garden {field.replace('_', ' ')}")
+
+
+def validate_garden_season_packet(record: dict[str, Any]) -> dict[str, Any]:
+    """Validate a fictional season packet while refusing cultivation authority."""
+
+    _cave_record(
+        record,
+        {
+            "season_token",
+            "revision",
+            "source_pin",
+            "cancellation_state",
+            "synthetic",
+            "cultivation_authorized",
+            "real_site_present",
+            "raw_identity_present",
+        },
+        "garden season packet",
+    )
+    _cave_token(record["season_token"], "garden season token")
+    revision = _require_nonnegative_int(record["revision"], "garden season revision")
+    if not 1 <= revision <= 10_000:
+        raise DeltaError("garden season revision is outside the bounded range")
+    source_pin = record["source_pin"]
+    if not isinstance(source_pin, str) or re.fullmatch(r"sha256:[0-9a-f]{64}", source_pin) is None:
+        raise DeltaError("garden season source pin is not an explicit SHA-256 commitment")
+    if record["cancellation_state"] not in {"active_placeholder", "cancelled_placeholder", "hold"}:
+        raise DeltaError("garden season cancellation state is unsupported")
+    if record["synthetic"] is not True:
+        raise DeltaError("garden season packet must remain explicitly synthetic")
+    _garden_required_false(
+        record,
+        ("cultivation_authorized", "real_site_present", "raw_identity_present"),
+    )
+    return {
+        "season_token": record["season_token"],
+        "revision": revision,
+        "source_pinned": True,
+        "cultivation_authorized": False,
+        "real_site_present": False,
+        "valid": True,
+    }
+
+
+def validate_garden_plot_topology(record: dict[str, Any]) -> dict[str, Any]:
+    """Validate a fictional plot graph without location, land, or build claims."""
+
+    _cave_record(
+        record,
+        {"nodes", "real_location_present", "land_right_claimed", "construction_released"},
+        "garden plot topology",
+    )
+    nodes = record["nodes"]
+    if not isinstance(nodes, list) or not 3 <= len(nodes) <= 32:
+        raise DeltaError("garden plot-node count is outside the bounded range")
+    allowed_kinds = {"plot", "raised_bed", "row", "path", "compost_bay", "water_point"}
+    seen: set[str] = set()
+    kinds: Counter[str] = Counter()
+    for index, node in enumerate(nodes):
+        _cave_record(node, {"node_token", "kind", "parent_token"}, "garden plot node")
+        token = _cave_token(node["node_token"], "garden plot-node token")
+        if token in seen:
+            raise DeltaError("garden plot-node token is duplicated")
+        kind = node["kind"]
+        if kind not in allowed_kinds:
+            raise DeltaError("garden plot-node kind is unsupported")
+        parent = node["parent_token"]
+        if index == 0:
+            if parent is not None or kind != "plot":
+                raise DeltaError("garden topology lacks a root plot")
+        elif not isinstance(parent, str) or parent not in seen:
+            raise DeltaError("garden plot-node parent is absent or forward-referenced")
+        seen.add(token)
+        kinds[kind] += 1
+    if kinds["path"] < 1 or kinds["raised_bed"] < 1:
+        raise DeltaError("garden topology lacks a path or raised-bed placeholder")
+    _garden_required_false(
+        record,
+        ("real_location_present", "land_right_claimed", "construction_released"),
+    )
+    return {
+        "node_count": len(nodes),
+        "kind_counts": dict(sorted(kinds.items())),
+        "real_location_present": False,
+        "land_right_claimed": False,
+        "valid": True,
+    }
+
+
+def validate_garden_seed_lot(record: dict[str, Any]) -> dict[str, Any]:
+    """Validate surrogate seed-lot lineage without botanical or custody claims."""
+
+    _cave_record(
+        record,
+        {
+            "lots",
+            "real_organism_present",
+            "authenticity_claimed",
+            "viability_claimed",
+            "custody_claimed",
+        },
+        "garden seed-lot ledger",
+    )
+    lots = record["lots"]
+    if not isinstance(lots, list) or not 2 <= len(lots) <= 16:
+        raise DeltaError("garden seed-lot count is outside the bounded range")
+    seen: set[str] = set()
+    holds = 0
+    for lot in lots:
+        _cave_record(
+            lot,
+            {"lot_token", "label_token", "source_token", "substitution_for", "quarantine_state"},
+            "garden seed-lot row",
+        )
+        token = _cave_token(lot["lot_token"], "garden seed-lot token")
+        if token in seen:
+            raise DeltaError("garden seed-lot token is duplicated")
+        _cave_token(lot["label_token"], "garden plant-label token")
+        _cave_token(lot["source_token"], "garden seed source token")
+        substitution = lot["substitution_for"]
+        if substitution is not None and (
+            not isinstance(substitution, str) or substitution not in seen
+        ):
+            raise DeltaError("garden seed substitution target is absent or forward-referenced")
+        if lot["quarantine_state"] not in {"hold", "review_required"}:
+            raise DeltaError("garden seed-lot quarantine is not retained")
+        holds += 1
+        seen.add(token)
+    _garden_required_false(
+        record,
+        ("real_organism_present", "authenticity_claimed", "viability_claimed", "custody_claimed"),
+    )
+    return {
+        "lot_count": len(lots),
+        "quarantine_count": holds,
+        "real_organism_present": False,
+        "botanical_assessment_performed": False,
+        "valid": True,
+    }
+
+
+def validate_garden_activity_plan(record: dict[str, Any]) -> dict[str, Any]:
+    """Validate content-free activity dependencies without agronomic direction."""
+
+    _cave_record(record, {"items", "work_authorized"}, "garden activity plan")
+    items = record["items"]
+    if not isinstance(items, list) or not 2 <= len(items) <= 32:
+        raise DeltaError("garden activity count is outside the bounded range")
+    allowed_kinds = {"sowing_placeholder", "transplant_placeholder", "rotation_placeholder", "review_placeholder"}
+    seen: set[str] = set()
+    incomplete = 0
+    for item in items:
+        _cave_record(
+            item,
+            {
+                "activity_token",
+                "kind",
+                "window_start",
+                "window_end",
+                "dependencies",
+                "incomplete",
+                "instruction_provided",
+                "recommendation_provided",
+            },
+            "garden activity row",
+        )
+        token = _cave_token(item["activity_token"], "garden activity token")
+        if token in seen:
+            raise DeltaError("garden activity token is duplicated")
+        if item["kind"] not in allowed_kinds:
+            raise DeltaError("garden activity kind is unsupported")
+        start = _cave_timestamp(item["window_start"], "garden activity window start")
+        end = _cave_timestamp(item["window_end"], "garden activity window end")
+        if end <= start or (end - start).total_seconds() > 366 * 86_400:
+            raise DeltaError("garden activity window is reversed or over budget")
+        dependencies = item["dependencies"]
+        if not isinstance(dependencies, list):
+            raise DeltaError("garden activity dependencies are not a list")
+        parsed = [_cave_token(value, "garden activity dependency") for value in dependencies]
+        ensure_unique(parsed, "garden activity dependency")
+        if any(value not in seen for value in parsed):
+            raise DeltaError("garden activity dependency is absent or forward-referenced")
+        if not isinstance(item["incomplete"], bool):
+            raise DeltaError("garden activity incomplete state must be Boolean")
+        incomplete += int(item["incomplete"])
+        _garden_required_false(item, ("instruction_provided", "recommendation_provided"))
+        seen.add(token)
+    if incomplete < 1:
+        raise DeltaError("garden activity plan hides all incomplete work")
+    _cave_false(record["work_authorized"], "garden work authorization")
+    return {
+        "activity_count": len(items),
+        "incomplete_count": incomplete,
+        "instruction_provided": False,
+        "work_authorized": False,
+        "valid": True,
+    }
+
+
+def validate_garden_soil_observation(record: dict[str, Any]) -> dict[str, Any]:
+    """Validate finite fictional soil placeholders without a soil conclusion."""
+
+    _cave_record(
+        record,
+        {
+            "sample_token",
+            "depth_cm",
+            "ph_placeholder",
+            "nutrient_placeholder",
+            "nutrient_unit",
+            "uncertainty",
+            "contamination_cue",
+            "real_sample_present",
+            "fertility_inference",
+            "contamination_diagnosis",
+        },
+        "garden soil observation",
+    )
+    _cave_token(record["sample_token"], "garden sample token")
+    depth = _cave_finite(record["depth_cm"], "garden depth", minimum=0.0, maximum=500.0, minimum_inclusive=False)
+    ph = _cave_finite(record["ph_placeholder"], "garden pH placeholder", minimum=0.0, maximum=14.0)
+    nutrient = _cave_finite(record["nutrient_placeholder"], "garden nutrient placeholder", minimum=0.0, maximum=1_000.0)
+    uncertainty = _cave_finite(record["uncertainty"], "garden soil uncertainty", minimum=0.0, maximum=1_000.0, minimum_inclusive=False)
+    if record["nutrient_unit"] != "synthetic_index":
+        raise DeltaError("garden nutrient unit is unsupported")
+    if record["contamination_cue"] not in {"unknown", "review_required"}:
+        raise DeltaError("garden contamination cue is not unresolved")
+    _garden_required_false(
+        record,
+        ("real_sample_present", "fertility_inference", "contamination_diagnosis"),
+    )
+    return {
+        "depth_cm": depth,
+        "ph_placeholder": ph,
+        "nutrient_placeholder": nutrient,
+        "uncertainty": uncertainty,
+        "real_sample_present": False,
+        "inference_performed": False,
+        "valid": True,
+    }
+
+
+def validate_garden_compost_input(record: dict[str, Any]) -> dict[str, Any]:
+    """Validate fictional compost batches while refusing clearance or application."""
+
+    _cave_record(
+        record,
+        {"batches", "real_material_present", "safety_cleared", "application_authorized"},
+        "garden compost input",
+    )
+    batches = record["batches"]
+    if not isinstance(batches, list) or not 1 <= len(batches) <= 16:
+        raise DeltaError("garden compost batch count is invalid")
+    allowed_classes = {"green_placeholder", "brown_placeholder", "amendment_placeholder"}
+    seen: set[str] = set()
+    total = 0.0
+    for batch in batches:
+        _cave_record(
+            batch,
+            {"batch_token", "material_class", "source_token", "quantity", "unit", "maturity_state", "contamination_state"},
+            "garden compost batch",
+        )
+        token = _cave_token(batch["batch_token"], "garden compost batch token")
+        if token in seen:
+            raise DeltaError("garden compost batch token is duplicated")
+        if batch["material_class"] not in allowed_classes:
+            raise DeltaError("garden compost material class is unsupported")
+        _cave_token(batch["source_token"], "garden compost source token")
+        quantity = _cave_finite(batch["quantity"], "garden compost quantity", minimum=0.0, maximum=1_000.0, minimum_inclusive=False)
+        if batch["unit"] != "synthetic_kg":
+            raise DeltaError("garden compost unit is unsupported")
+        if batch["maturity_state"] != "external_review_required":
+            raise DeltaError("garden compost maturity is not vacant")
+        if batch["contamination_state"] not in {"unknown", "review_required"}:
+            raise DeltaError("garden compost contamination state is not unresolved")
+        seen.add(token)
+        total += quantity
+    _garden_required_false(record, ("real_material_present", "safety_cleared", "application_authorized"))
+    return {
+        "batch_count": len(batches),
+        "declared_quantity": total,
+        "maturity_assessed": False,
+        "application_authorized": False,
+        "valid": True,
+    }
+
+
+def validate_garden_irrigation_reservation(record: dict[str, Any]) -> dict[str, Any]:
+    """Validate fictional irrigation bounds while reserving water authority."""
+
+    _cave_record(
+        record,
+        {
+            "zone_token",
+            "source_state",
+            "volume_liters",
+            "interval_start",
+            "interval_end",
+            "leak_cue",
+            "restriction_state",
+            "real_water_source_present",
+            "allocation_authorized",
+            "operation_authorized",
+        },
+        "garden irrigation reservation",
+    )
+    _cave_token(record["zone_token"], "garden irrigation zone token")
+    if record["source_state"] != "surrogate_unverified":
+        raise DeltaError("garden irrigation source is not explicitly unverified")
+    volume = _cave_finite(record["volume_liters"], "garden irrigation volume", minimum=0.0, maximum=100_000.0, minimum_inclusive=False)
+    start = _cave_timestamp(record["interval_start"], "garden irrigation interval start")
+    end = _cave_timestamp(record["interval_end"], "garden irrigation interval end")
+    if end <= start or (end - start).total_seconds() > 31 * 86_400:
+        raise DeltaError("garden irrigation interval is reversed or over budget")
+    if record["leak_cue"] not in {"unknown", "review_required"}:
+        raise DeltaError("garden irrigation leak cue is unsupported")
+    if record["restriction_state"] != "external_review_required":
+        raise DeltaError("garden irrigation restriction state is not externally reserved")
+    _garden_required_false(
+        record,
+        ("real_water_source_present", "allocation_authorized", "operation_authorized"),
+    )
+    return {
+        "zone_token": record["zone_token"],
+        "volume_liters": volume,
+        "allocation_authorized": False,
+        "operation_authorized": False,
+        "valid": True,
+    }
+
+
+def validate_garden_tool_reservation(record: dict[str, Any]) -> dict[str, Any]:
+    """Validate fictional tool state while refusing inspection, competence, and release."""
+
+    _cave_record(
+        record,
+        {"tools", "real_tool_present", "inspected", "competence_claimed", "safety_cleared", "use_released"},
+        "garden tool reservation",
+    )
+    tools = record["tools"]
+    if not isinstance(tools, list) or not 1 <= len(tools) <= 16:
+        raise DeltaError("garden tool count is invalid")
+    seen: set[str] = set()
+    for tool in tools:
+        _cave_record(
+            tool,
+            {"tool_token", "condition_state", "isolation_token", "sharps_state"},
+            "garden tool row",
+        )
+        token = _cave_token(tool["tool_token"], "garden tool token")
+        if token in seen:
+            raise DeltaError("garden tool token is duplicated")
+        if tool["condition_state"] not in {"unknown", "review_required"}:
+            raise DeltaError("garden tool condition is not unresolved")
+        _cave_token(tool["isolation_token"], "garden tool isolation token")
+        if tool["sharps_state"] not in {"not_applicable", "review_required"}:
+            raise DeltaError("garden tool sharps state is unsupported")
+        seen.add(token)
+    _garden_required_false(
+        record,
+        ("real_tool_present", "inspected", "competence_claimed", "safety_cleared", "use_released"),
+    )
+    return {
+        "tool_count": len(tools),
+        "inspected": False,
+        "competence_claimed": False,
+        "use_released": False,
+        "valid": True,
+    }
+
+
+def validate_garden_privacy_notice(record: dict[str, Any]) -> dict[str, Any]:
+    """Validate a purpose-bound fictional notice with no participation data."""
+
+    _cave_record(
+        record,
+        {
+            "availability_token",
+            "membership_state",
+            "contact_channel",
+            "purpose",
+            "retention_days",
+            "correction_state",
+            "raw_identity_present",
+            "participation_inferred",
+            "secondary_purpose",
+        },
+        "garden privacy notice",
+    )
+    _cave_token(record["availability_token"], "garden availability token")
+    if record["membership_state"] not in {"unknown_placeholder", "not_recorded"}:
+        raise DeltaError("garden membership state is not a nonparticipation placeholder")
+    if record["contact_channel"] not in {"none", "surrogate_portal"}:
+        raise DeltaError("garden contact channel is unsupported")
+    if record["purpose"] != "synthetic_coordination":
+        raise DeltaError("garden privacy purpose is unsupported")
+    retention = _require_nonnegative_int(record["retention_days"], "garden retention days")
+    if not 1 <= retention <= 365:
+        raise DeltaError("garden retention period is outside the bounded range")
+    if record["correction_state"] != "available_placeholder":
+        raise DeltaError("garden correction state is not available")
+    _garden_required_false(record, ("raw_identity_present", "participation_inferred", "secondary_purpose"))
+    return {
+        "retention_days": retention,
+        "raw_identity_present": False,
+        "participation_inferred": False,
+        "privacy_complete": False,
+        "valid": True,
+    }
+
+
+def validate_garden_accessible_layout(record: dict[str, Any]) -> dict[str, Any]:
+    """Validate structural alternatives while reserving physical and human review."""
+
+    _cave_record(
+        record,
+        {
+            "headings",
+            "text_alternative",
+            "path_state",
+            "reach_state",
+            "surface_state",
+            "gradient_placeholder",
+            "signage_placeholder",
+            "seating_placeholder",
+            "alternative_format",
+            "noncolour_status",
+            "manual_review_required",
+            "physical_access_confirmed",
+            "affected_user_reviewed",
+            "accessibility_complete",
+        },
+        "garden accessible layout",
+    )
+    headings = record["headings"]
+    if not isinstance(headings, list) or not 2 <= len(headings) <= 16:
+        raise DeltaError("garden accessible heading count is invalid")
+    if any(not isinstance(value, str) or not value.strip() or len(value) > 128 for value in headings):
+        raise DeltaError("garden accessible heading is invalid")
+    ensure_unique(headings, "garden accessible heading")
+    alternative = record["text_alternative"]
+    if not isinstance(alternative, str) or not alternative.strip() or len(alternative) > 2048:
+        raise DeltaError("garden text alternative is absent or over budget")
+    for field in ("path_state", "reach_state", "surface_state"):
+        if record[field] != "manual_review_required":
+            raise DeltaError(f"garden {field} lacks manual review")
+    gradient = _cave_finite(record["gradient_placeholder"], "garden gradient placeholder", minimum=0.0, maximum=1.0)
+    if record["signage_placeholder"] is not True or record["seating_placeholder"] is not True:
+        raise DeltaError("garden accessibility placeholders are missing")
+    if record["alternative_format"] not in {"text_only", "large_print_placeholder"}:
+        raise DeltaError("garden alternative format is unsupported")
+    if record["noncolour_status"] is not True or record["manual_review_required"] is not True:
+        raise DeltaError("garden layout lacks noncolour state or manual review")
+    _garden_required_false(
+        record,
+        ("physical_access_confirmed", "affected_user_reviewed", "accessibility_complete"),
+    )
+    return {
+        "heading_count": len(headings),
+        "gradient_placeholder": gradient,
+        "manual_review_required": True,
+        "affected_user_reviewed": False,
+        "accessibility_complete": False,
+        "valid": True,
+    }
+
+
+def validate_garden_environment_cue(record: dict[str, Any]) -> dict[str, Any]:
+    """Validate fictional environmental cues without diagnosis or clearance."""
+
+    _cave_record(
+        record,
+        {
+            "cue_token",
+            "cue_categories",
+            "source_state",
+            "stop_state",
+            "referral_state",
+            "diagnosis",
+            "treatment",
+            "safety_clearance",
+            "emergency_claim",
+            "real_person_present",
+        },
+        "garden environment cue",
+    )
+    _cave_token(record["cue_token"], "garden environment cue token")
+    categories = record["cue_categories"]
+    allowed = {"weather_placeholder", "heat_placeholder", "frost_placeholder", "wind_placeholder", "pest_vacancy", "disease_vacancy", "allergen_vacancy"}
+    if not isinstance(categories, list) or not categories or any(value not in allowed for value in categories):
+        raise DeltaError("garden environment cue categories are invalid")
+    ensure_unique(categories, "garden environment cue category")
+    if record["source_state"] != "external_review_required":
+        raise DeltaError("garden environmental source is not externally reserved")
+    if record["stop_state"] != "honoured_placeholder":
+        raise DeltaError("garden environmental stop state is not dominant")
+    if record["referral_state"] not in {"not_requested", "external_placeholder"}:
+        raise DeltaError("garden environmental referral state is unsupported")
+    _garden_required_false(
+        record,
+        ("diagnosis", "treatment", "safety_clearance", "emergency_claim", "real_person_present"),
+    )
+    return {
+        "cue_category_count": len(categories),
+        "stop_state": "honoured_placeholder",
+        "assessment_performed": False,
+        "real_person_present": False,
+        "valid": True,
+    }
+
+
+def validate_garden_harvest_hold(record: dict[str, Any]) -> dict[str, Any]:
+    """Validate a fictional harvest lot while refusing food and consumption release."""
+
+    _cave_record(
+        record,
+        {
+            "lot_token",
+            "quantity_placeholder",
+            "unit",
+            "destination_state",
+            "allergen_state",
+            "food_safety_state",
+            "traceability_state",
+            "donation_authorized",
+            "transfer_authorized",
+            "consumption_released",
+            "real_food_present",
+        },
+        "garden harvest hold",
+    )
+    _cave_token(record["lot_token"], "garden harvest-lot token")
+    quantity = _cave_finite(record["quantity_placeholder"], "garden harvest quantity", minimum=0.0, maximum=10_000.0, minimum_inclusive=False)
+    if record["unit"] != "synthetic_kg":
+        raise DeltaError("garden harvest unit is unsupported")
+    if record["destination_state"] != "external_review_required":
+        raise DeltaError("garden harvest destination is not vacant")
+    if record["allergen_state"] not in {"unknown", "review_required"}:
+        raise DeltaError("garden harvest allergen state is not unresolved")
+    if record["food_safety_state"] != "authority_hold":
+        raise DeltaError("garden harvest food-safety state is not held")
+    if record["traceability_state"] != "placeholder_only":
+        raise DeltaError("garden harvest traceability exceeds a placeholder")
+    _garden_required_false(
+        record,
+        ("donation_authorized", "transfer_authorized", "consumption_released", "real_food_present"),
+    )
+    return {
+        "quantity_placeholder": quantity,
+        "food_safety_cleared": False,
+        "consumption_released": False,
+        "real_food_present": False,
+        "valid": True,
+    }
+
+
+def validate_garden_correction_lineage(record: dict[str, Any]) -> dict[str, Any]:
+    """Validate append-only fictional correction lineage without action authority."""
+
+    _cave_record(
+        record,
+        {"packet_token", "records", "real_schedule_present", "action_authorized"},
+        "garden correction lineage",
+    )
+    _cave_token(record["packet_token"], "garden correction packet token")
+    rows = record["records"]
+    if not isinstance(rows, list) or not 2 <= len(rows) <= 32:
+        raise DeltaError("garden correction lineage is outside the bounded range")
+    seen: set[str] = set()
+    ambiguity_open = False
+    for index, row in enumerate(rows):
+        _cave_record(
+            row,
+            {"record_token", "parent_token", "event", "reason", "readback", "ambiguity_open", "cancellation_explicit"},
+            "garden correction row",
+        )
+        token = _cave_token(row["record_token"], "garden correction token")
+        parent = row["parent_token"]
+        event = row["event"]
+        if token in seen or parent == token:
+            raise DeltaError("garden correction lineage duplicates or self-references a token")
+        if index == 0:
+            if parent is not None or event != "recorded":
+                raise DeltaError("garden correction lineage lacks an original record")
+        elif not isinstance(parent, str) or parent not in seen:
+            raise DeltaError("garden correction parent is absent or forward-referenced")
+        if event not in {"recorded", "corrected", "superseded", "cancelled", "ambiguity_retained"}:
+            raise DeltaError("garden correction event is unsupported")
+        reason = row["reason"]
+        if not isinstance(reason, str) or len(reason) > 256 or reason != reason.strip():
+            raise DeltaError("garden correction reason is invalid")
+        if event != "recorded" and not reason:
+            raise DeltaError("garden correction event lacks a reason")
+        if event in {"corrected", "superseded", "cancelled"} and row["readback"] is not True:
+            raise DeltaError("garden correction event lacks readback")
+        if not isinstance(row["ambiguity_open"], bool) or not isinstance(row["cancellation_explicit"], bool):
+            raise DeltaError("garden correction flags must be Boolean")
+        ambiguity_open = ambiguity_open or row["ambiguity_open"]
+        seen.add(token)
+    if not ambiguity_open:
+        raise DeltaError("garden correction lineage hides unresolved ambiguity")
+    _garden_required_false(record, ("real_schedule_present", "action_authorized"))
+    return {
+        "record_count": len(rows),
+        "original_preserved": True,
+        "ambiguity_open": True,
+        "action_authorized": False,
+        "valid": True,
+    }
+
+
+def validate_garden_handover(record: dict[str, Any]) -> dict[str, Any]:
+    """Validate fictional workload handover without evaluating or assigning a person."""
+
+    _cave_record(
+        record,
+        {
+            "handover_token",
+            "queue_ceiling",
+            "active_tasks",
+            "unfinished_tasks",
+            "heat_fatigue_cue",
+            "stop_token",
+            "correction_readback",
+            "next_owner_placeholder",
+            "performance_evaluated",
+            "release_authorized",
+            "real_person_present",
+        },
+        "garden workload handover",
+    )
+    _cave_token(record["handover_token"], "garden handover token")
+    ceiling = _require_nonnegative_int(record["queue_ceiling"], "garden queue ceiling")
+    if not 1 <= ceiling <= 100:
+        raise DeltaError("garden queue ceiling is outside the bounded range")
+    active = record["active_tasks"]
+    unfinished = record["unfinished_tasks"]
+    if not isinstance(active, list) or not active or len(active) > ceiling:
+        raise DeltaError("garden active queue is empty or over its ceiling")
+    if not isinstance(unfinished, list) or not unfinished:
+        raise DeltaError("garden unfinished queue must remain visible")
+    active_tokens = [_cave_token(value, "garden active task") for value in active]
+    unfinished_tokens = [_cave_token(value, "garden unfinished task") for value in unfinished]
+    ensure_unique(active_tokens, "garden active task")
+    ensure_unique(unfinished_tokens, "garden unfinished task")
+    if any(value not in active_tokens for value in unfinished_tokens):
+        raise DeltaError("garden unfinished task is absent from the active queue")
+    if record["heat_fatigue_cue"] not in {"unknown", "review_required"}:
+        raise DeltaError("garden heat and fatigue cue is unsupported")
+    if record["stop_token"] is not True or record["correction_readback"] is not True:
+        raise DeltaError("garden handover lacks a dominant stop or correction readback")
+    _cave_token(record["next_owner_placeholder"], "garden next-owner placeholder")
+    _garden_required_false(
+        record,
+        ("performance_evaluated", "release_authorized", "real_person_present"),
+    )
+    return {
+        "active_task_count": len(active_tokens),
+        "unfinished_task_count": len(unfinished_tokens),
+        "stop_token": True,
+        "performance_evaluated": False,
+        "release_authorized": False,
+        "valid": True,
+    }
+
+
+def liora_fixture_cases() -> list[dict[str, Any]]:
+    """Return Liora's positive garden fixtures and five rejections per completion."""
+
+    season = {
+        "season_token": "season_alpha",
+        "revision": 1,
+        "source_pin": "sha256:" + "00" * 32,
+        "cancellation_state": "hold",
+        "synthetic": True,
+        "cultivation_authorized": False,
+        "real_site_present": False,
+        "raw_identity_present": False,
+    }
+    topology = {
+        "nodes": [
+            {"node_token": "plot_alpha", "kind": "plot", "parent_token": None},
+            {"node_token": "bed_alpha", "kind": "raised_bed", "parent_token": "plot_alpha"},
+            {"node_token": "path_alpha", "kind": "path", "parent_token": "plot_alpha"},
+        ],
+        "real_location_present": False,
+        "land_right_claimed": False,
+        "construction_released": False,
+    }
+    seed = {
+        "lots": [
+            {
+                "lot_token": "lot_alpha",
+                "label_token": "label_alpha",
+                "source_token": "source_alpha",
+                "substitution_for": None,
+                "quarantine_state": "hold",
+            },
+            {
+                "lot_token": "lot_beta",
+                "label_token": "label_beta",
+                "source_token": "source_beta",
+                "substitution_for": "lot_alpha",
+                "quarantine_state": "review_required",
+            },
+        ],
+        "real_organism_present": False,
+        "authenticity_claimed": False,
+        "viability_claimed": False,
+        "custody_claimed": False,
+    }
+    activity = {
+        "items": [
+            {
+                "activity_token": "activity_alpha",
+                "kind": "sowing_placeholder",
+                "window_start": "2026-01-01T00:00:00Z",
+                "window_end": "2026-01-02T00:00:00Z",
+                "dependencies": [],
+                "incomplete": False,
+                "instruction_provided": False,
+                "recommendation_provided": False,
+            },
+            {
+                "activity_token": "activity_beta",
+                "kind": "review_placeholder",
+                "window_start": "2026-01-03T00:00:00Z",
+                "window_end": "2026-01-04T00:00:00Z",
+                "dependencies": ["activity_alpha"],
+                "incomplete": True,
+                "instruction_provided": False,
+                "recommendation_provided": False,
+            },
+        ],
+        "work_authorized": False,
+    }
+    soil = {
+        "sample_token": "sample_alpha",
+        "depth_cm": 10.0,
+        "ph_placeholder": 7.0,
+        "nutrient_placeholder": 0.0,
+        "nutrient_unit": "synthetic_index",
+        "uncertainty": 0.5,
+        "contamination_cue": "review_required",
+        "real_sample_present": False,
+        "fertility_inference": False,
+        "contamination_diagnosis": False,
+    }
+    compost = {
+        "batches": [
+            {
+                "batch_token": "batch_alpha",
+                "material_class": "green_placeholder",
+                "source_token": "source_alpha",
+                "quantity": 2.0,
+                "unit": "synthetic_kg",
+                "maturity_state": "external_review_required",
+                "contamination_state": "unknown",
+            },
+            {
+                "batch_token": "batch_beta",
+                "material_class": "brown_placeholder",
+                "source_token": "source_beta",
+                "quantity": 3.0,
+                "unit": "synthetic_kg",
+                "maturity_state": "external_review_required",
+                "contamination_state": "review_required",
+            },
+        ],
+        "real_material_present": False,
+        "safety_cleared": False,
+        "application_authorized": False,
+    }
+    irrigation = {
+        "zone_token": "zone_alpha",
+        "source_state": "surrogate_unverified",
+        "volume_liters": 10.0,
+        "interval_start": "2026-01-01T00:00:00Z",
+        "interval_end": "2026-01-01T01:00:00Z",
+        "leak_cue": "unknown",
+        "restriction_state": "external_review_required",
+        "real_water_source_present": False,
+        "allocation_authorized": False,
+        "operation_authorized": False,
+    }
+    tool = {
+        "tools": [
+            {"tool_token": "tool_alpha", "condition_state": "unknown", "isolation_token": "isolation_alpha", "sharps_state": "not_applicable"},
+            {"tool_token": "tool_beta", "condition_state": "review_required", "isolation_token": "isolation_beta", "sharps_state": "review_required"},
+        ],
+        "real_tool_present": False,
+        "inspected": False,
+        "competence_claimed": False,
+        "safety_cleared": False,
+        "use_released": False,
+    }
+    privacy = {
+        "availability_token": "availability_alpha",
+        "membership_state": "unknown_placeholder",
+        "contact_channel": "none",
+        "purpose": "synthetic_coordination",
+        "retention_days": 30,
+        "correction_state": "available_placeholder",
+        "raw_identity_present": False,
+        "participation_inferred": False,
+        "secondary_purpose": False,
+    }
+    accessible = {
+        "headings": ["Scope", "Synthetic layout", "Review vacancies"],
+        "text_alternative": "A fictional garden layout contains one plot, one raised-bed placeholder, and one path placeholder.",
+        "path_state": "manual_review_required",
+        "reach_state": "manual_review_required",
+        "surface_state": "manual_review_required",
+        "gradient_placeholder": 0.0,
+        "signage_placeholder": True,
+        "seating_placeholder": True,
+        "alternative_format": "text_only",
+        "noncolour_status": True,
+        "manual_review_required": True,
+        "physical_access_confirmed": False,
+        "affected_user_reviewed": False,
+        "accessibility_complete": False,
+    }
+    environment = {
+        "cue_token": "cue_alpha",
+        "cue_categories": ["weather_placeholder", "heat_placeholder", "pest_vacancy"],
+        "source_state": "external_review_required",
+        "stop_state": "honoured_placeholder",
+        "referral_state": "not_requested",
+        "diagnosis": False,
+        "treatment": False,
+        "safety_clearance": False,
+        "emergency_claim": False,
+        "real_person_present": False,
+    }
+    harvest = {
+        "lot_token": "harvest_alpha",
+        "quantity_placeholder": 1.0,
+        "unit": "synthetic_kg",
+        "destination_state": "external_review_required",
+        "allergen_state": "unknown",
+        "food_safety_state": "authority_hold",
+        "traceability_state": "placeholder_only",
+        "donation_authorized": False,
+        "transfer_authorized": False,
+        "consumption_released": False,
+        "real_food_present": False,
+    }
+    correction = {
+        "packet_token": "packet_alpha",
+        "records": [
+            {
+                "record_token": "record_alpha",
+                "parent_token": None,
+                "event": "recorded",
+                "reason": "",
+                "readback": False,
+                "ambiguity_open": True,
+                "cancellation_explicit": False,
+            },
+            {
+                "record_token": "record_beta",
+                "parent_token": "record_alpha",
+                "event": "corrected",
+                "reason": "Synthetic correction placeholder.",
+                "readback": True,
+                "ambiguity_open": True,
+                "cancellation_explicit": False,
+            },
+        ],
+        "real_schedule_present": False,
+        "action_authorized": False,
+    }
+    handover = {
+        "handover_token": "handover_alpha",
+        "queue_ceiling": 3,
+        "active_tasks": ["task_alpha", "task_beta"],
+        "unfinished_tasks": ["task_beta"],
+        "heat_fatigue_cue": "review_required",
+        "stop_token": True,
+        "correction_readback": True,
+        "next_owner_placeholder": "owner_next",
+        "performance_evaluated": False,
+        "release_authorized": False,
+        "real_person_present": False,
+    }
+    return [
+        {
+            "fixture_id": "LI6633-HF-001",
+            "proposal_id": "LI6633-N001",
+            "validator": "validate_garden_season_packet",
+            "positive": season,
+            "mutations": [
+                {"label": "zero garden season revision", "record": {**season, "revision": 0}},
+                {"label": "non-SHA256 garden source pin", "record": {**season, "source_pin": "sha1:00"}},
+                {"label": "garden cultivation authorization", "record": {**season, "cultivation_authorized": True}},
+                {"label": "real garden site presence", "record": {**season, "real_site_present": True}},
+                {"label": "raw garden identity presence", "record": {**season, "raw_identity_present": True}},
+            ],
+        },
+        {
+            "fixture_id": "LI6633-HF-002",
+            "proposal_id": "LI6633-N002",
+            "validator": "validate_garden_plot_topology",
+            "positive": topology,
+            "mutations": [
+                {"label": "duplicate garden topology token", "record": {**topology, "nodes": [topology["nodes"][0], {**topology["nodes"][1], "node_token": "plot_alpha"}, topology["nodes"][2]]}},
+                {"label": "orphan garden topology parent", "record": {**topology, "nodes": [topology["nodes"][0], {**topology["nodes"][1], "parent_token": "plot_missing"}, topology["nodes"][2]]}},
+                {"label": "raw garden coordinate field", "record": {**topology, "coordinates": [0, 0]}},
+                {"label": "garden land-right claim", "record": {**topology, "land_right_claimed": True}},
+                {"label": "garden construction release", "record": {**topology, "construction_released": True}},
+            ],
+        },
+        {
+            "fixture_id": "LI6633-HF-003",
+            "proposal_id": "LI6633-N003",
+            "validator": "validate_garden_seed_lot",
+            "positive": seed,
+            "mutations": [
+                {"label": "duplicate garden seed-lot token", "record": {**seed, "lots": [seed["lots"][0], {**seed["lots"][1], "lot_token": "lot_alpha"}]}},
+                {"label": "unknown garden seed substitution", "record": {**seed, "lots": [seed["lots"][0], {**seed["lots"][1], "substitution_for": "lot_missing"}]}},
+                {"label": "real garden organism presence", "record": {**seed, "real_organism_present": True}},
+                {"label": "garden botanical-authenticity claim", "record": {**seed, "authenticity_claimed": True}},
+                {"label": "garden viability claim", "record": {**seed, "viability_claimed": True}},
+            ],
+        },
+        {
+            "fixture_id": "LI6633-HF-004",
+            "proposal_id": "LI6633-N004",
+            "validator": "validate_garden_activity_plan",
+            "positive": activity,
+            "mutations": [
+                {"label": "forward garden activity dependency", "record": {**activity, "items": [{**activity["items"][0], "dependencies": ["activity_beta"]}, activity["items"][1]]}},
+                {"label": "duplicate garden activity token", "record": {**activity, "items": [activity["items"][0], {**activity["items"][1], "activity_token": "activity_alpha"}]}},
+                {"label": "reversed garden activity window", "record": {**activity, "items": [{**activity["items"][0], "window_end": "2025-12-31T00:00:00Z"}, activity["items"][1]]}},
+                {"label": "garden activity instruction", "record": {**activity, "items": [{**activity["items"][0], "instruction_provided": True}, activity["items"][1]]}},
+                {"label": "garden agronomic recommendation", "record": {**activity, "items": [activity["items"][0], {**activity["items"][1], "recommendation_provided": True}]}},
+            ],
+        },
+        {
+            "fixture_id": "LI6633-HF-005",
+            "proposal_id": "LI6633-N005",
+            "validator": "validate_garden_soil_observation",
+            "positive": soil,
+            "mutations": [
+                {"label": "nonfinite garden pH placeholder", "record": {**soil, "ph_placeholder": float("nan")}},
+                {"label": "zero garden depth placeholder", "record": {**soil, "depth_cm": 0.0}},
+                {"label": "unsupported garden nutrient unit", "record": {**soil, "nutrient_unit": "mg/kg"}},
+                {"label": "real garden soil sample", "record": {**soil, "real_sample_present": True}},
+                {"label": "garden fertility inference", "record": {**soil, "fertility_inference": True}},
+            ],
+        },
+        {
+            "fixture_id": "LI6633-HF-006",
+            "proposal_id": "LI6633-N006",
+            "validator": "validate_garden_compost_input",
+            "positive": compost,
+            "mutations": [
+                {"label": "duplicate garden compost batch", "record": {**compost, "batches": [compost["batches"][0], {**compost["batches"][1], "batch_token": "batch_alpha"}]}},
+                {"label": "zero garden compost quantity", "record": {**compost, "batches": [{**compost["batches"][0], "quantity": 0.0}, compost["batches"][1]]}},
+                {"label": "garden compost maturity clearance", "record": {**compost, "batches": [{**compost["batches"][0], "maturity_state": "ready"}, compost["batches"][1]]}},
+                {"label": "garden compost contamination clearance", "record": {**compost, "batches": [compost["batches"][0], {**compost["batches"][1], "contamination_state": "cleared"}]}},
+                {"label": "garden compost application authorization", "record": {**compost, "application_authorized": True}},
+            ],
+        },
+        {
+            "fixture_id": "LI6633-HF-007",
+            "proposal_id": "LI6633-N007",
+            "validator": "validate_garden_irrigation_reservation",
+            "positive": irrigation,
+            "mutations": [
+                {"label": "zero garden irrigation volume", "record": {**irrigation, "volume_liters": 0.0}},
+                {"label": "reversed garden irrigation interval", "record": {**irrigation, "interval_end": "2025-12-31T00:00:00Z"}},
+                {"label": "verified garden water source claim", "record": {**irrigation, "source_state": "verified"}},
+                {"label": "garden water allocation authorization", "record": {**irrigation, "allocation_authorized": True}},
+                {"label": "garden irrigation operation authorization", "record": {**irrigation, "operation_authorized": True}},
+            ],
+        },
+        {
+            "fixture_id": "LI6633-HF-008",
+            "proposal_id": "LI6633-N008",
+            "validator": "validate_garden_tool_reservation",
+            "positive": tool,
+            "mutations": [
+                {"label": "duplicate garden tool token", "record": {**tool, "tools": [tool["tools"][0], {**tool["tools"][1], "tool_token": "tool_alpha"}]}},
+                {"label": "invalid garden isolation token", "record": {**tool, "tools": [{**tool["tools"][0], "isolation_token": ""}, tool["tools"][1]]}},
+                {"label": "garden tool inspection claim", "record": {**tool, "inspected": True}},
+                {"label": "garden tool competence claim", "record": {**tool, "competence_claimed": True}},
+                {"label": "garden tool use release", "record": {**tool, "use_released": True}},
+            ],
+        },
+        {
+            "fixture_id": "LI6633-HF-009",
+            "proposal_id": "LI6633-N009",
+            "validator": "validate_garden_privacy_notice",
+            "positive": privacy,
+            "mutations": [
+                {"label": "raw garden identity presence", "record": {**privacy, "raw_identity_present": True}},
+                {"label": "garden participation inference", "record": {**privacy, "participation_inferred": True}},
+                {"label": "garden secondary purpose", "record": {**privacy, "secondary_purpose": True}},
+                {"label": "zero garden retention period", "record": {**privacy, "retention_days": 0}},
+                {"label": "raw garden email field", "record": {**privacy, "email": "withheld@example.invalid"}},
+            ],
+        },
+        {
+            "fixture_id": "LI6633-HF-010",
+            "proposal_id": "LI6633-N010",
+            "validator": "validate_garden_accessible_layout",
+            "positive": accessible,
+            "mutations": [
+                {"label": "missing garden accessible headings", "record": {**accessible, "headings": []}},
+                {"label": "missing garden text alternative", "record": {**accessible, "text_alternative": ""}},
+                {"label": "garden colour-only status", "record": {**accessible, "noncolour_status": False}},
+                {"label": "unsupported garden affected-user review", "record": {**accessible, "affected_user_reviewed": True}},
+                {"label": "garden accessibility-complete claim", "record": {**accessible, "accessibility_complete": True}},
+            ],
+        },
+        {
+            "fixture_id": "LI6633-HF-011",
+            "proposal_id": "LI6633-N011",
+            "validator": "validate_garden_environment_cue",
+            "positive": environment,
+            "mutations": [
+                {"label": "unsupported garden environmental cue", "record": {**environment, "cue_categories": ["diagnosis"]}},
+                {"label": "garden stop state overridden", "record": {**environment, "stop_state": "ignored"}},
+                {"label": "garden diagnosis claim", "record": {**environment, "diagnosis": True}},
+                {"label": "garden treatment claim", "record": {**environment, "treatment": True}},
+                {"label": "garden safety-clearance claim", "record": {**environment, "safety_clearance": True}},
+            ],
+        },
+        {
+            "fixture_id": "LI6633-HF-012",
+            "proposal_id": "LI6633-N012",
+            "validator": "validate_garden_harvest_hold",
+            "positive": harvest,
+            "mutations": [
+                {"label": "zero garden harvest quantity", "record": {**harvest, "quantity_placeholder": 0.0}},
+                {"label": "garden harvest destination release", "record": {**harvest, "destination_state": "released"}},
+                {"label": "garden food-safety clearance", "record": {**harvest, "food_safety_state": "cleared"}},
+                {"label": "garden donation authorization", "record": {**harvest, "donation_authorized": True}},
+                {"label": "garden consumption release", "record": {**harvest, "consumption_released": True}},
+            ],
+        },
+        {
+            "fixture_id": "LI6633-HF-013",
+            "proposal_id": "LI6633-N013",
+            "validator": "validate_garden_correction_lineage",
+            "positive": correction,
+            "mutations": [
+                {"label": "duplicate garden correction token", "record": {**correction, "records": [correction["records"][0], {**correction["records"][1], "record_token": "record_alpha"}]}},
+                {"label": "forward garden correction parent", "record": {**correction, "records": [correction["records"][0], {**correction["records"][1], "parent_token": "record_missing"}]}},
+                {"label": "garden lineage without original", "record": {**correction, "records": [{**correction["records"][0], "event": "corrected"}, correction["records"][1]]}},
+                {"label": "garden correction without reason", "record": {**correction, "records": [correction["records"][0], {**correction["records"][1], "reason": ""}]}},
+                {"label": "garden correction without readback", "record": {**correction, "records": [correction["records"][0], {**correction["records"][1], "readback": False}]}},
+            ],
+        },
+        {
+            "fixture_id": "LI6633-HF-014",
+            "proposal_id": "LI6633-N014",
+            "validator": "validate_garden_handover",
+            "positive": handover,
+            "mutations": [
+                {"label": "garden queue over ceiling", "record": {**handover, "queue_ceiling": 1}},
+                {"label": "unknown unfinished garden task", "record": {**handover, "unfinished_tasks": ["task_missing"]}},
+                {"label": "garden stop token overridden", "record": {**handover, "stop_token": False}},
+                {"label": "missing garden correction readback", "record": {**handover, "correction_readback": False}},
+                {"label": "garden performance evaluation claim", "record": {**handover, "performance_evaluated": True}},
+            ],
+        },
+    ]
+
+
+def _liora_validators() -> dict[str, Any]:
+    return {
+        function.__name__: function
+        for function in (
+            validate_garden_season_packet,
+            validate_garden_plot_topology,
+            validate_garden_seed_lot,
+            validate_garden_activity_plan,
+            validate_garden_soil_observation,
+            validate_garden_compost_input,
+            validate_garden_irrigation_reservation,
+            validate_garden_tool_reservation,
+            validate_garden_privacy_notice,
+            validate_garden_accessible_layout,
+            validate_garden_environment_cue,
+            validate_garden_harvest_hold,
+            validate_garden_correction_lineage,
+            validate_garden_handover,
+        )
+    }
+
+
+def liora_mutation_payload() -> dict[str, Any]:
+    """Execute five preregistered rejecting mutations per Liora completion."""
+
+    validators = _liora_validators()
+    records: list[dict[str, Any]] = []
+    positives: list[dict[str, Any]] = []
+    for case_index, case in enumerate(liora_fixture_cases(), 1):
+        validator = validators[case["validator"]]
+        positive = validator(case["positive"])
+        if positive.get("valid") is not True:
+            raise DeltaError(f"Liora positive fixture failed: {case['fixture_id']}")
+        positives.append(
+            {
+                "proposal_id": case["proposal_id"],
+                "validator": case["validator"],
+                "valid": True,
+            }
+        )
+        mutations = case["mutations"]
+        if len(mutations) != 5:
+            raise DeltaError(f"Liora fixture does not declare five mutations: {case['fixture_id']}")
+        for mutation_index, mutation in enumerate(mutations, 1):
+            try:
+                validator(mutation["record"])
+            except (DeltaError, UnicodeError, ValueError, TypeError) as exc:
+                records.append(
+                    {
+                        "fixture_id": f"LI6633-HF-{case_index:03d}-{mutation_index:02d}",
+                        "mutation_id": f"LI6633-MUT-{case_index:03d}-{mutation_index:02d}",
+                        "proposal_id": case["proposal_id"],
+                        "validator": case["validator"],
+                        "failed_witness": mutation["label"],
+                        "rejected": True,
+                        "error_class": type(exc).__name__,
+                        "zero_credit": True,
+                    }
+                )
+            else:
+                raise DeltaError(
+                    f"Liora negative mutation was not rejected: {case['fixture_id']}:{mutation_index}"
+                )
+    return {
+        "schema": f"{SCHEMA}.liora-mutation-matrix.v1",
+        "profile": "liora-v663-v3",
+        "proposal_count": len(positives),
+        "mutations_per_proposal": 5,
+        "negative_fixture_count": len(records),
+        "rejected_fixture_count": sum(record["rejected"] is True for record in records),
+        "positive_fixture_count": len(positives),
+        "passing_fixture_count": len(positives),
+        "records": records,
+        "positive_records": positives,
+        "failed_witnesses_erased": 0,
+        "valid": len(records) == 70 and len(positives) == 14,
+        "boundary": "Seventy rejected synthetic mutations and fourteen passing community-garden record-shape fixtures only; no real person, site, land, plant, seed, soil, compost, water, tool, harvest, food, measurement, action, authority act, empirical result, production result or independent reproduction.",
+    }
+
+
+def liora_hardening_payload() -> dict[str, Any]:
+    """Return every retained Liora rejection plus fourteen bounded positives."""
+
+    matrix = liora_mutation_payload()
+    if not matrix["valid"]:
+        raise DeltaError("one or more Liora hardening fixtures failed")
+    return {
+        "schema": f"{SCHEMA}.hardening-fixtures.v7",
+        "profile": "liora-v663-v3",
+        "negative_fixture_count": matrix["negative_fixture_count"],
+        "rejected_fixture_count": matrix["rejected_fixture_count"],
+        "positive_fixture_count": matrix["positive_fixture_count"],
+        "passing_fixture_count": matrix["passing_fixture_count"],
+        "records": matrix["records"],
+        "full_mutation_matrix_negative_count": matrix["negative_fixture_count"],
+        "real_person_present": False,
+        "real_site_present": False,
+        "real_plant_present": False,
+        "real_measurement_present": False,
+        "cultivation_authorized": False,
+        "water_allocated": False,
+        "tool_use_released": False,
+        "food_safety_cleared": False,
+        "privacy_complete": False,
+        "accessibility_complete": False,
+        "professional_authority": False,
+        "legal_authority": False,
+        "cultural_authority": False,
+        "maori_authority": False,
+        "exhaustive_security": False,
+        "valid": True,
+        "boundary": "All seventy preregistered garden mutations were rejected and fourteen paired positives passed as bounded software fixtures only; not cultivation, botanical identification, soil or water assessment, material clearance, equipment release, harvest or food-safety release, professional validation, legal or cultural ratification, Māori authority, privacy or accessibility completeness, production assurance, empirical evidence or independent reproduction.",
+    }
+
+
 def hardening_payload_for_profile(profile: str) -> dict[str, Any]:
     """Select one exact bounded fixture family; reject implicit substitution."""
 
@@ -4938,6 +6130,8 @@ def hardening_payload_for_profile(profile: str) -> dict[str, Any]:
         return caelen_hardening_payload()
     if profile == "orin-v663-v2":
         return orin_hardening_payload()
+    if profile == "liora-v663-v3":
+        return liora_hardening_payload()
     raise DeltaError(f"unknown hardening profile: {profile}")
 
 
