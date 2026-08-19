@@ -328,6 +328,17 @@ class TestGeneratedLocalTools(unittest.TestCase):
             if contract["callable"] == "elowen_hardening_payload":
                 result = callback()
                 self.assertEqual(result["negative_fixture_count"], 70)
+            elif contract["callable"] == "validate_print_privacy_accessibility":
+                result = callback(
+                    {
+                        "privacy": case_by_validator[
+                            "validate_print_privacy_notice"
+                        ]["positive"],
+                        "accessibility": case_by_validator[
+                            "validate_print_accessibility_companion"
+                        ]["positive"],
+                    }
+                )
             else:
                 result = callback(case_by_validator[contract["callable"]]["positive"])
             self.assertTrue(result["valid"])

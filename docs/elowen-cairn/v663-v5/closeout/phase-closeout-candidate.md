@@ -18,6 +18,9 @@ Sylven Arc acknowledgement exist. The verdict remains
 Immutable evidence is now frozen at `699a8afa638f419f8f367592ebfa2b42e1428f36`,
 the direct child of x1. It was pushed, clean, zero-divergent, and equal across
 local, upstream, tracking, and a separate fresh live-remote probe before final
-closeout work began. The repository-seal candidate retains 23,714 effective
-negatives, 8,308 effective Method Flow methods, 162 open gaps, and 160 exact
-gates. The exact-final canonical aggregate remains uninvoked and external.
+closeout work began. The corrected repository-seal candidate retains 23,717
+effective negatives, 8,311 effective Method Flow methods, 162 open gaps, and
+160 exact gates. The sole canonical aggregate was invoked against the initial
+closeout, failed in the owner test module, and remains at zero aggregate success
+credit. It will not be replayed; only the failed smoke test was corrected and
+rerun, and the corrected exact final requires a dependency-justified composite.

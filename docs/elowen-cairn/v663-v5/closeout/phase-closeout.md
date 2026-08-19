@@ -12,9 +12,11 @@ affected-party authority. Hamish may rename, pause, redirect, or stop the work.
 - Immutable inherited Tamar final: `c2def7190bac0b8a7c2a1e0453bd12e4c1167925`.
 - Dedicated x1-only freeze: `0465dc27bf765e1bbd6d40c985999fef4bf732e8`.
 - Immutable x2 evidence: `699a8afa638f419f8f367592ebfa2b42e1428f36`.
-- Final: the direct-child commit containing this closeout.
+- Initial closeout: `4598425478fcea5acc9a40ca87994403f446652c`, the direct child of evidence.
+- Corrected final: the direct-child commit of the initial closeout containing this update.
 
-The source, x1, evidence, and final lifecycle is single-parent and zero-merge.
+The source, x1, evidence, initial closeout, and corrected-final lifecycle is
+single-parent and zero-merge.
 X1 contained planning and preregistration only. X1 and evidence were each
 pushed, clean, zero-divergent, and fresh four-way equal before the next
 lifecycle stage.
@@ -58,11 +60,16 @@ accessible static report with manual and affected-user evaluation explicitly
 reserved, exact proposal and portfolio ledgers, a threat model, source and
 environment receipts, and a 44,472-word prepared successor baton below the
 100,000-word ceiling. The exact owner test module and its two declared
-dependencies are reserved for one exact-final canonical invocation after the
-final commit is pushed and clean.
+dependencies entered one canonical invocation after the initial closeout was
+pushed and clean. That aggregate failed in the owner test module and receives
+zero aggregate success credit. A direct diagnostic observed 54 passing tests
+and one `KeyError` in the paired privacy-accessibility runner smoke. Only that
+one failed smoke was corrected and rerun; it passed. The aggregate will not be
+replayed. The corrected target instead requires a dependency-justified
+component composite that excludes a second full-module run.
 
-The repository seal preserves 23,714 effective negatives and 8,308 effective
-Method Flow methods, with 162 open gaps and 160 exact gates. Ninety-four failed
+The repository seal preserves 23,717 effective negatives and 8,311 effective
+Method Flow methods, with 162 open gaps and 160 exact gates. Ninety-seven failed
 witnesses remain beside bounded passing witnesses; none was erased, converted
 into pass credit, or used to promote a claim. The terminal verdict remains
 exactly `NOT_READY_FOR_STAGE_20`.
