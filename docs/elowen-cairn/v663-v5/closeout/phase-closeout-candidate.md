@@ -14,3 +14,10 @@ This document is a candidate until immutable evidence, exact final, one
 successful canonical aggregate, clean fresh-live equality, and the one
 Sylven Arc acknowledgement exist. The verdict remains
 `NOT_READY_FOR_STAGE_20`.
+
+Immutable evidence is now frozen at `699a8afa638f419f8f367592ebfa2b42e1428f36`,
+the direct child of x1. It was pushed, clean, zero-divergent, and equal across
+local, upstream, tracking, and a separate fresh live-remote probe before final
+closeout work began. The repository-seal candidate retains 23,714 effective
+negatives, 8,308 effective Method Flow methods, 162 open gaps, and 160 exact
+gates. The exact-final canonical aggregate remains uninvoked and external.
