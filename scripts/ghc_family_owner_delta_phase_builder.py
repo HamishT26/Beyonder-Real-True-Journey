@@ -2024,6 +2024,19 @@ installed skill and not proof of qualification or authority.
             callable_names[10],
             "elowen_hardening_payload",
         ]
+    elif hardening_profile == "sylven-v663-v6" and len(callable_names) == 14:
+        callable_names = [
+            callable_names[0],
+            callable_names[1],
+            callable_names[2],
+            callable_names[3],
+            callable_names[4],
+            callable_names[9],
+            callable_names[7],
+            callable_names[8],
+            callable_names[12],
+            "sylven_hardening_payload",
+        ]
     else:
         callable_names = callable_names[:runner_count]
     for row, callable_name in zip(
@@ -2205,7 +2218,10 @@ def build_profile_packet(
     if charter_source is None:
         source_receipt_path = phase_root / "x1" / "source-verification.json"
         if source_receipt_path.is_file():
-            charter_source = load_json(source_receipt_path).get("anchors", {}).get("final")
+            source_anchors = load_json(source_receipt_path).get("anchors", {})
+            charter_source = source_anchors.get("final") or source_anchors.get(
+                "exact_final"
+            )
     source = args.source or charter_source
     if source != charter_source:
         raise DeltaError("source differs from immutable x1 charter")

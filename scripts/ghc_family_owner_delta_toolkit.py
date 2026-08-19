@@ -12,6 +12,7 @@ import argparse
 import ast
 import base64
 import binascii
+from copy import deepcopy
 import hashlib
 import json
 import math
@@ -8341,6 +8342,973 @@ def elowen_hardening_payload() -> dict[str, Any]:
     }
 
 
+def _glass_required_false(record: dict[str, Any], fields: Iterable[str]) -> None:
+    """Require explicit false values at every stained-glass authority boundary."""
+
+    for field in fields:
+        _cave_false(record[field], f"stained-glass {field.replace('_', ' ')}")
+
+
+def _glass_valid(kind: str, *, record_count: int = 1) -> dict[str, Any]:
+    return {
+        "kind": kind,
+        "record_count": record_count,
+        "real_person_present": False,
+        "real_panel_present": False,
+        "real_material_present": False,
+        "real_measurement_present": False,
+        "handling_authorized": False,
+        "intervention_authorized": False,
+        "professional_authority": False,
+        "legal_authority": False,
+        "cultural_authority": False,
+        "maori_authority": False,
+        "valid": True,
+    }
+
+
+def validate_stained_glass_survey_packet(record: dict[str, Any]) -> dict[str, Any]:
+    """Validate a fictional documentation packet without authorizing survey work."""
+
+    _cave_record(
+        record,
+        {
+            "packet_token",
+            "revision",
+            "source_pin",
+            "cancellation_state",
+            "synthetic",
+            "raw_identity_present",
+            "real_panel_present",
+            "survey_authorized",
+            "intervention_authorized",
+            "safety_cleared",
+        },
+        "stained-glass survey packet",
+    )
+    _cave_token(record["packet_token"], "stained-glass packet token")
+    revision = _require_nonnegative_int(record["revision"], "stained-glass revision")
+    if not 1 <= revision <= 10_000:
+        raise DeltaError("stained-glass revision is outside the bounded range")
+    if re.fullmatch(r"sha256:[0-9a-f]{64}", record["source_pin"]) is None:
+        raise DeltaError("stained-glass source pin is not an explicit SHA-256 commitment")
+    if record["cancellation_state"] not in {"planned", "cancelled", "superseded"}:
+        raise DeltaError("stained-glass cancellation state is unsupported")
+    if record["synthetic"] is not True:
+        raise DeltaError("stained-glass survey packet must remain synthetic")
+    _glass_required_false(
+        record,
+        (
+            "raw_identity_present",
+            "real_panel_present",
+            "survey_authorized",
+            "intervention_authorized",
+            "safety_cleared",
+        ),
+    )
+    return _glass_valid("stained_glass_survey_packet")
+
+
+def validate_stained_glass_topology(record: dict[str, Any]) -> dict[str, Any]:
+    """Validate fictional panel and glazing-component topology."""
+
+    _cave_record(
+        record,
+        {"components", "real_panel_present", "handling_authorized", "intervention_authorized"},
+        "stained-glass topology",
+    )
+    components = record["components"]
+    if not isinstance(components, list) or not 4 <= len(components) <= 96:
+        raise DeltaError("stained-glass component count is outside the bounded range")
+    seen: set[str] = set()
+    kinds: set[str] = set()
+    allowed = {"root", "panel", "quarry", "came", "support_bar", "tie_wire", "frame", "glazing"}
+    for index, component in enumerate(components):
+        _cave_record(component, {"component_token", "kind", "parent_token"}, "stained-glass component")
+        token = _cave_token(component["component_token"], "stained-glass component token")
+        if token in seen:
+            raise DeltaError("stained-glass component token is duplicated")
+        if component["kind"] not in allowed:
+            raise DeltaError("stained-glass component kind is unsupported")
+        parent = component["parent_token"]
+        if index == 0:
+            if component["kind"] != "root" or parent is not None:
+                raise DeltaError("stained-glass topology lacks a valid root")
+        elif not isinstance(parent, str) or parent not in seen:
+            raise DeltaError("stained-glass parent is absent or forward-referenced")
+        seen.add(token)
+        kinds.add(component["kind"])
+    if not {"panel", "quarry", "came"} <= kinds:
+        raise DeltaError("stained-glass topology lacks panel, quarry, and came placeholders")
+    _glass_required_false(record, ("real_panel_present", "handling_authorized", "intervention_authorized"))
+    return _glass_valid("stained_glass_topology", record_count=len(components))
+
+
+def validate_stained_glass_material_lots(record: dict[str, Any]) -> dict[str, Any]:
+    """Validate fictional glass and repair-material provenance lots."""
+
+    _cave_record(
+        record,
+        {
+            "lots",
+            "real_material_present",
+            "authenticity_claimed",
+            "suitability_claimed",
+            "treatment_authorized",
+            "safety_cleared",
+        },
+        "stained-glass material ledger",
+    )
+    lots = record["lots"]
+    if not isinstance(lots, list) or not 2 <= len(lots) <= 48:
+        raise DeltaError("stained-glass material-lot count is outside the bounded range")
+    seen: set[str] = set()
+    allowed = {"glass", "came", "solder", "putty", "paint", "foil", "support", "coating", "repair"}
+    for lot in lots:
+        _cave_record(
+            lot,
+            {"lot_token", "source_token", "material_class", "substitution_for", "quarantined"},
+            "stained-glass material lot",
+        )
+        token = _cave_token(lot["lot_token"], "stained-glass material-lot token")
+        if token in seen:
+            raise DeltaError("stained-glass material-lot token is duplicated")
+        _cave_token(lot["source_token"], "stained-glass material source token")
+        if lot["material_class"] not in allowed:
+            raise DeltaError("stained-glass material class is unsupported")
+        substitute = lot["substitution_for"]
+        if substitute is not None and (not isinstance(substitute, str) or substitute not in seen):
+            raise DeltaError("stained-glass substitution is absent or forward-referenced")
+        if lot["quarantined"] is not True:
+            raise DeltaError("stained-glass material quarantine is not retained")
+        seen.add(token)
+    _glass_required_false(
+        record,
+        ("real_material_present", "authenticity_claimed", "suitability_claimed", "treatment_authorized", "safety_cleared"),
+    )
+    return _glass_valid("stained_glass_material_lots", record_count=len(lots))
+
+
+def validate_stained_glass_document_dependencies(record: dict[str, Any]) -> dict[str, Any]:
+    """Validate fictional documentation dependencies and visible incompleteness."""
+
+    _cave_record(record, {"items", "action_authorized", "canon_claimed"}, "stained-glass dependency plan")
+    items = record["items"]
+    if not isinstance(items, list) or not 2 <= len(items) <= 48:
+        raise DeltaError("stained-glass dependency count is outside the bounded range")
+    seen: set[str] = set()
+    incomplete = 0
+    allowed = {"intake", "diagram", "condition", "option", "review", "correction", "cancellation", "handover"}
+    for item in items:
+        _cave_record(
+            item,
+            {"item_token", "kind", "dependencies", "incomplete", "instruction_provided", "release_provided"},
+            "stained-glass dependency row",
+        )
+        token = _cave_token(item["item_token"], "stained-glass dependency token")
+        if token in seen:
+            raise DeltaError("stained-glass dependency token is duplicated")
+        if item["kind"] not in allowed:
+            raise DeltaError("stained-glass dependency kind is unsupported")
+        dependencies = item["dependencies"]
+        if not isinstance(dependencies, list):
+            raise DeltaError("stained-glass dependencies are not a list")
+        parsed = [_cave_token(value, "stained-glass dependency") for value in dependencies]
+        ensure_unique(parsed, "stained-glass dependency")
+        if any(value not in seen for value in parsed):
+            raise DeltaError("stained-glass dependency is absent or forward-referenced")
+        if not isinstance(item["incomplete"], bool):
+            raise DeltaError("stained-glass incomplete state must be Boolean")
+        incomplete += int(item["incomplete"])
+        _glass_required_false(item, ("instruction_provided", "release_provided"))
+        seen.add(token)
+    if incomplete == 0:
+        raise DeltaError("stained-glass plan hides all incomplete work")
+    _glass_required_false(record, ("action_authorized", "canon_claimed"))
+    return _glass_valid("stained_glass_document_dependencies", record_count=len(items))
+
+
+def validate_stained_glass_si_placeholders(record: dict[str, Any]) -> dict[str, Any]:
+    """Validate SI-typed fictional placeholders without measurement or diagnosis."""
+
+    _cave_record(
+        record,
+        {
+            "record_token",
+            "panel_area",
+            "area_unit",
+            "displacement",
+            "length_unit",
+            "uncertainty",
+            "real_measurement_present",
+            "calibrated",
+            "diagnosis_made",
+            "tolerance_decided",
+            "prediction_made",
+            "safety_cleared",
+        },
+        "stained-glass SI placeholder envelope",
+    )
+    _cave_token(record["record_token"], "stained-glass SI token")
+    _cave_finite(record["panel_area"], "stained-glass panel area", minimum=0.0, maximum=10_000.0, minimum_inclusive=False)
+    _cave_finite(record["displacement"], "stained-glass displacement", minimum=-10.0, maximum=10.0)
+    _cave_finite(record["uncertainty"], "stained-glass uncertainty", minimum=0.0, maximum=10.0, minimum_inclusive=False)
+    if record["area_unit"] != "m2" or record["length_unit"] != "m":
+        raise DeltaError("stained-glass placeholder envelope uses unsupported SI units")
+    _glass_required_false(
+        record,
+        ("real_measurement_present", "calibrated", "diagnosis_made", "tolerance_decided", "prediction_made", "safety_cleared"),
+    )
+    return _glass_valid("stained_glass_si_placeholders")
+
+
+def validate_stained_glass_condition_cues(record: dict[str, Any]) -> dict[str, Any]:
+    """Validate unresolved visual cues with a dominant no-action stop."""
+
+    _cave_record(
+        record,
+        {
+            "cue_kinds",
+            "resolution_state",
+            "stop",
+            "real_panel_present",
+            "diagnosis_made",
+            "treatment_provided",
+            "emergency_instruction",
+            "safety_cleared",
+        },
+        "stained-glass condition cue board",
+    )
+    allowed = {"bowing", "bulging", "crack", "loss", "corrosion", "condensation", "paint_change", "putty_change", "frame_change"}
+    cues = record["cue_kinds"]
+    if not isinstance(cues, list) or not cues or len(cues) > 24:
+        raise DeltaError("stained-glass condition cue list is invalid")
+    parsed = [_cave_token(value, "stained-glass condition cue") for value in cues]
+    ensure_unique(parsed, "stained-glass condition cue")
+    if any(value not in allowed for value in parsed):
+        raise DeltaError("stained-glass condition cue is unsupported")
+    if record["resolution_state"] != "unresolved" or record["stop"] is not True:
+        raise DeltaError("stained-glass cue board lacks an unresolved dominant stop")
+    _glass_required_false(
+        record,
+        ("real_panel_present", "diagnosis_made", "treatment_provided", "emergency_instruction", "safety_cleared"),
+    )
+    return _glass_valid("stained_glass_condition_cues", record_count=len(cues))
+
+
+def validate_stained_glass_equipment_reservations(record: dict[str, Any]) -> dict[str, Any]:
+    """Validate fictional access and equipment isolation without use release."""
+
+    _cave_record(
+        record,
+        {"equipment", "real_equipment_present", "inspected", "competence_claimed", "use_released", "safety_cleared"},
+        "stained-glass equipment reservation",
+    )
+    equipment = record["equipment"]
+    if not isinstance(equipment, list) or not 2 <= len(equipment) <= 32:
+        raise DeltaError("stained-glass equipment count is outside the bounded range")
+    allowed = {"access_aid", "inspection_light", "magnifier", "soldering_tool", "dust_control", "edge_guard", "enclosure"}
+    seen: set[str] = set()
+    for item in equipment:
+        _cave_record(item, {"equipment_token", "kind", "condition_state", "isolation_token", "quarantined"}, "stained-glass equipment row")
+        token = _cave_token(item["equipment_token"], "stained-glass equipment token")
+        if token in seen:
+            raise DeltaError("stained-glass equipment token is duplicated")
+        if item["kind"] not in allowed or item["condition_state"] not in {"unresolved", "isolated"}:
+            raise DeltaError("stained-glass equipment kind or condition is unsupported")
+        _cave_token(item["isolation_token"], "stained-glass isolation token")
+        if item["quarantined"] is not True:
+            raise DeltaError("stained-glass equipment quarantine is not retained")
+        seen.add(token)
+    _glass_required_false(record, ("real_equipment_present", "inspected", "competence_claimed", "use_released", "safety_cleared"))
+    return _glass_valid("stained_glass_equipment_reservations", record_count=len(equipment))
+
+
+def validate_stained_glass_privacy_accessibility(record: dict[str, Any]) -> dict[str, Any]:
+    """Validate minimized synthetic notice fields and reserve all human review."""
+
+    _cave_record(
+        record,
+        {
+            "record_token",
+            "purpose",
+            "retention_days",
+            "correction_available",
+            "headings",
+            "text_alternative",
+            "status_text",
+            "manual_review_required",
+            "raw_identity_present",
+            "location_precision_present",
+            "secondary_purpose",
+            "colour_only",
+            "assistive_technology_reviewed",
+            "maori_language_reviewed",
+            "affected_user_approved",
+            "privacy_complete",
+            "accessibility_complete",
+        },
+        "stained-glass privacy and accessibility notice",
+    )
+    _cave_token(record["record_token"], "stained-glass notice token")
+    if record["purpose"] != "synthetic_conservation_documentation":
+        raise DeltaError("stained-glass notice purpose is unsupported")
+    retention = _require_nonnegative_int(record["retention_days"], "stained-glass retention")
+    if not 1 <= retention <= 3_650 or record["correction_available"] is not True:
+        raise DeltaError("stained-glass retention or correction contract is invalid")
+    headings = record["headings"]
+    if not isinstance(headings, list) or not 2 <= len(headings) <= 16 or not all(isinstance(value, str) and value.strip() for value in headings):
+        raise DeltaError("stained-glass headings are invalid")
+    ensure_unique(headings, "stained-glass heading")
+    if not isinstance(record["text_alternative"], str) or not record["text_alternative"].strip():
+        raise DeltaError("stained-glass text alternative is absent")
+    if not isinstance(record["status_text"], str) or not record["status_text"].strip():
+        raise DeltaError("stained-glass status text is absent")
+    if record["manual_review_required"] is not True:
+        raise DeltaError("stained-glass manual accessibility review is not reserved")
+    _glass_required_false(
+        record,
+        (
+            "raw_identity_present",
+            "location_precision_present",
+            "secondary_purpose",
+            "colour_only",
+            "assistive_technology_reviewed",
+            "maori_language_reviewed",
+            "affected_user_approved",
+            "privacy_complete",
+            "accessibility_complete",
+        ),
+    )
+    return _glass_valid("stained_glass_privacy_accessibility")
+
+
+def validate_stained_glass_rights_custody(record: dict[str, Any]) -> dict[str, Any]:
+    """Validate unresolved rights and fictional custody placeholders."""
+
+    _cave_record(
+        record,
+        {
+            "work_token",
+            "source_token",
+            "rightsholder_state",
+            "license_state",
+            "containers",
+            "items",
+            "condition_state",
+            "real_asset_present",
+            "ownership_decided",
+            "handling_authorized",
+            "transport_authorized",
+            "publication_released",
+            "cultural_approval",
+        },
+        "stained-glass rights and custody hold",
+    )
+    _cave_token(record["work_token"], "stained-glass work token")
+    _cave_token(record["source_token"], "stained-glass rights source token")
+    if record["rightsholder_state"] != "unresolved" or record["license_state"] != "unresolved":
+        raise DeltaError("stained-glass rights state is not unresolved")
+    containers = record["containers"]
+    if not isinstance(containers, list) or not containers:
+        raise DeltaError("stained-glass custody containers are absent")
+    parsed_containers = [_cave_token(value, "stained-glass container token") for value in containers]
+    ensure_unique(parsed_containers, "stained-glass container token")
+    items = record["items"]
+    if not isinstance(items, list) or not items:
+        raise DeltaError("stained-glass custody items are absent")
+    seen_items: list[str] = []
+    for item in items:
+        _cave_record(item, {"item_token", "item_kind", "container_token"}, "stained-glass custody item")
+        seen_items.append(_cave_token(item["item_token"], "stained-glass custody item token"))
+        if item["item_kind"] not in {"diagram", "image_placeholder", "condition_record", "option_record"}:
+            raise DeltaError("stained-glass custody item kind is unsupported")
+        if item["container_token"] not in parsed_containers:
+            raise DeltaError("stained-glass custody item references an unknown container")
+    ensure_unique(seen_items, "stained-glass custody item token")
+    if record["condition_state"] != "unresolved":
+        raise DeltaError("stained-glass custody condition is not unresolved")
+    _glass_required_false(
+        record,
+        ("real_asset_present", "ownership_decided", "handling_authorized", "transport_authorized", "publication_released", "cultural_approval"),
+    )
+    return _glass_valid("stained_glass_rights_custody", record_count=len(items))
+
+
+def validate_stained_glass_external_cues(record: dict[str, Any]) -> dict[str, Any]:
+    """Validate fictional external hazard cues without safety or legal clearance."""
+
+    _cave_record(
+        record,
+        {"cue_kinds", "stop", "real_site_present", "real_observation_present", "emergency_instruction", "safety_cleared", "legal_interpretation"},
+        "stained-glass external cue board",
+    )
+    allowed = {"access", "height", "lead", "dust", "heat", "sharp_edge", "electrical", "falling_material", "occupancy"}
+    cues = record["cue_kinds"]
+    if not isinstance(cues, list) or not cues or len(cues) > 20:
+        raise DeltaError("stained-glass external cue list is invalid")
+    parsed = [_cave_token(value, "stained-glass external cue") for value in cues]
+    ensure_unique(parsed, "stained-glass external cue")
+    if any(value not in allowed for value in parsed) or record["stop"] is not True:
+        raise DeltaError("stained-glass external cue is unsupported or stop is absent")
+    _glass_required_false(record, ("real_site_present", "real_observation_present", "emergency_instruction", "safety_cleared", "legal_interpretation"))
+    return _glass_valid("stained_glass_external_cues", record_count=len(cues))
+
+
+def validate_stained_glass_correction_lineage(record: dict[str, Any]) -> dict[str, Any]:
+    """Validate append-only fictional correction lineage and readback."""
+
+    _cave_record(record, {"records", "real_record_present", "action_authorized", "canon_claimed"}, "stained-glass correction lineage")
+    rows = record["records"]
+    if not isinstance(rows, list) or not 2 <= len(rows) <= 48:
+        raise DeltaError("stained-glass correction count is outside the bounded range")
+    seen: set[str] = set()
+    for index, row in enumerate(rows):
+        _cave_record(row, {"record_token", "parent_token", "event", "reason", "readback", "original_retained", "ambiguity_unresolved"}, "stained-glass correction row")
+        token = _cave_token(row["record_token"], "stained-glass correction token")
+        if token in seen:
+            raise DeltaError("stained-glass correction token is duplicated")
+        parent = row["parent_token"]
+        if index == 0:
+            if parent is not None:
+                raise DeltaError("stained-glass correction origin has a parent")
+        elif not isinstance(parent, str) or parent not in seen:
+            raise DeltaError("stained-glass correction parent is absent or forward-referenced")
+        if row["event"] not in {"intake", "condition", "option", "correction", "cancellation", "handover"}:
+            raise DeltaError("stained-glass correction event is unsupported")
+        if index > 0 and (not isinstance(row["reason"], str) or not row["reason"].strip()):
+            raise DeltaError("stained-glass correction reason is absent")
+        if row["readback"] is not True or row["original_retained"] is not True or row["ambiguity_unresolved"] is not True:
+            raise DeltaError("stained-glass correction retention or readback failed")
+        seen.add(token)
+    _glass_required_false(record, ("real_record_present", "action_authorized", "canon_claimed"))
+    return _glass_valid("stained_glass_correction_lineage", record_count=len(rows))
+
+
+def validate_stained_glass_handover(record: dict[str, Any]) -> dict[str, Any]:
+    """Validate a fictional workload and handover stop without evaluating people."""
+
+    _cave_record(
+        record,
+        {
+            "handover_token",
+            "queue_ceiling",
+            "active_queue",
+            "unfinished_queue",
+            "fatigue_cue",
+            "stop",
+            "correction_readback",
+            "next_owner_placeholder",
+            "real_worker_present",
+            "performance_evaluated",
+            "competence_claimed",
+            "wellbeing_concluded",
+            "work_released",
+        },
+        "stained-glass handover",
+    )
+    _cave_token(record["handover_token"], "stained-glass handover token")
+    ceiling = _require_nonnegative_int(record["queue_ceiling"], "stained-glass queue ceiling")
+    active = record["active_queue"]
+    unfinished = record["unfinished_queue"]
+    if not 1 <= ceiling <= 64 or not isinstance(active, list) or len(active) > ceiling:
+        raise DeltaError("stained-glass active queue is outside the bounded range")
+    parsed_active = [_cave_token(value, "stained-glass active task") for value in active]
+    ensure_unique(parsed_active, "stained-glass active task")
+    if not isinstance(unfinished, list):
+        raise DeltaError("stained-glass unfinished queue is not a list")
+    parsed_unfinished = [_cave_token(value, "stained-glass unfinished task") for value in unfinished]
+    ensure_unique(parsed_unfinished, "stained-glass unfinished task")
+    if any(value not in parsed_active for value in parsed_unfinished):
+        raise DeltaError("stained-glass unfinished task is absent from the active queue")
+    if record["fatigue_cue"] not in {"none", "watch", "stop"} or record["stop"] is not True or record["correction_readback"] is not True:
+        raise DeltaError("stained-glass handover stop or readback is absent")
+    _cave_token(record["next_owner_placeholder"], "stained-glass next-owner placeholder")
+    _glass_required_false(record, ("real_worker_present", "performance_evaluated", "competence_claimed", "wellbeing_concluded", "work_released"))
+    return _glass_valid("stained_glass_handover", record_count=len(active))
+
+
+def validate_stained_glass_trinity_boundaries(record: dict[str, Any]) -> dict[str, Any]:
+    """Validate nonconversion across GMUT, THOS, Freed ID, CBR, and Stage 20."""
+
+    _cave_record(
+        record,
+        {
+            "gmut_state",
+            "thos_state",
+            "freed_id_state",
+            "cbr_state",
+            "real_likelihood_evaluated",
+            "empirical_claim_made",
+            "participant_effect_claimed",
+            "live_identity_event",
+            "rights_decision_made",
+            "psyche_law_claimed",
+            "agi_asi_claimed",
+            "consciousness_personhood_claimed",
+            "theory_of_everything_claimed",
+            "stage20_promoted",
+        },
+        "stained-glass Trinity boundary board",
+    )
+    if record["gmut_state"] != "typed_symbolic" or record["thos_state"] != "proxy_only" or record["freed_id_state"] != "synthetic_nonproduction" or record["cbr_state"] != "exact_gated":
+        raise DeltaError("stained-glass Trinity boundary state is unsupported")
+    _glass_required_false(
+        record,
+        (
+            "real_likelihood_evaluated",
+            "empirical_claim_made",
+            "participant_effect_claimed",
+            "live_identity_event",
+            "rights_decision_made",
+            "psyche_law_claimed",
+            "agi_asi_claimed",
+            "consciousness_personhood_claimed",
+            "theory_of_everything_claimed",
+            "stage20_promoted",
+        ),
+    )
+    return _glass_valid("stained_glass_trinity_boundaries")
+
+
+def validate_stained_glass_zero_row_adapter(record: dict[str, Any]) -> dict[str, Any]:
+    """Validate the V&A official-source adapter's zero-row refusal state."""
+
+    _cave_record(
+        record,
+        {
+            "source_uri",
+            "network_called",
+            "downloaded_rows",
+            "ingested_rows",
+            "real_record_present",
+            "likelihood_evaluated",
+            "constraint_emitted",
+            "empirical_claim_made",
+        },
+        "stained-glass zero-row adapter",
+    )
+    if record["source_uri"] != "https://developers.vam.ac.uk/guide/v2/":
+        raise DeltaError("stained-glass zero-row adapter source is not the pinned official guide")
+    if record["network_called"] is not False:
+        raise DeltaError("stained-glass zero-row adapter made a network call")
+    if _require_nonnegative_int(record["downloaded_rows"], "downloaded rows") != 0 or _require_nonnegative_int(record["ingested_rows"], "ingested rows") != 0:
+        raise DeltaError("stained-glass zero-row adapter received or ingested rows")
+    _glass_required_false(record, ("real_record_present", "likelihood_evaluated", "constraint_emitted", "empirical_claim_made"))
+    return _glass_valid("stained_glass_zero_row_adapter", record_count=0)
+
+
+def _glass_mutation(record: dict[str, Any], spec: dict[str, Any]) -> dict[str, Any]:
+    mutated = deepcopy(record)
+    path = spec["path"]
+    cursor: Any = mutated
+    for component in path[:-1]:
+        cursor = cursor[component]
+    if spec.get("delete") is True:
+        del cursor[path[-1]]
+    else:
+        cursor[path[-1]] = spec["value"]
+    return mutated
+
+
+def sylven_fixture_cases() -> list[dict[str, Any]]:
+    """Return fourteen positive fixtures and five declared mutations per fixture."""
+
+    packet = {
+        "packet_token": "packet_alpha",
+        "revision": 1,
+        "source_pin": "sha256:" + ("a" * 64),
+        "cancellation_state": "planned",
+        "synthetic": True,
+        "raw_identity_present": False,
+        "real_panel_present": False,
+        "survey_authorized": False,
+        "intervention_authorized": False,
+        "safety_cleared": False,
+    }
+    topology = {
+        "components": [
+            {"component_token": "root_alpha", "kind": "root", "parent_token": None},
+            {"component_token": "panel_alpha", "kind": "panel", "parent_token": "root_alpha"},
+            {"component_token": "quarry_alpha", "kind": "quarry", "parent_token": "panel_alpha"},
+            {"component_token": "came_alpha", "kind": "came", "parent_token": "panel_alpha"},
+        ],
+        "real_panel_present": False,
+        "handling_authorized": False,
+        "intervention_authorized": False,
+    }
+    materials = {
+        "lots": [
+            {"lot_token": "lot_alpha", "source_token": "source_alpha", "material_class": "glass", "substitution_for": None, "quarantined": True},
+            {"lot_token": "lot_beta", "source_token": "source_beta", "material_class": "came", "substitution_for": "lot_alpha", "quarantined": True},
+        ],
+        "real_material_present": False,
+        "authenticity_claimed": False,
+        "suitability_claimed": False,
+        "treatment_authorized": False,
+        "safety_cleared": False,
+    }
+    dependencies = {
+        "items": [
+            {"item_token": "intake_alpha", "kind": "intake", "dependencies": [], "incomplete": False, "instruction_provided": False, "release_provided": False},
+            {"item_token": "condition_alpha", "kind": "condition", "dependencies": ["intake_alpha"], "incomplete": True, "instruction_provided": False, "release_provided": False},
+        ],
+        "action_authorized": False,
+        "canon_claimed": False,
+    }
+    placeholders = {
+        "record_token": "metric_alpha",
+        "panel_area": 1.0,
+        "area_unit": "m2",
+        "displacement": 0.001,
+        "length_unit": "m",
+        "uncertainty": 0.0001,
+        "real_measurement_present": False,
+        "calibrated": False,
+        "diagnosis_made": False,
+        "tolerance_decided": False,
+        "prediction_made": False,
+        "safety_cleared": False,
+    }
+    cues = {
+        "cue_kinds": ["bowing", "crack", "corrosion"],
+        "resolution_state": "unresolved",
+        "stop": True,
+        "real_panel_present": False,
+        "diagnosis_made": False,
+        "treatment_provided": False,
+        "emergency_instruction": False,
+        "safety_cleared": False,
+    }
+    equipment = {
+        "equipment": [
+            {"equipment_token": "access_alpha", "kind": "access_aid", "condition_state": "unresolved", "isolation_token": "isolation_alpha", "quarantined": True},
+            {"equipment_token": "light_alpha", "kind": "inspection_light", "condition_state": "isolated", "isolation_token": "isolation_beta", "quarantined": True},
+        ],
+        "real_equipment_present": False,
+        "inspected": False,
+        "competence_claimed": False,
+        "use_released": False,
+        "safety_cleared": False,
+    }
+    privacy_accessibility = {
+        "record_token": "notice_alpha",
+        "purpose": "synthetic_conservation_documentation",
+        "retention_days": 30,
+        "correction_available": True,
+        "headings": ["Overview", "Status"],
+        "text_alternative": "Synthetic stained-glass panel diagram status.",
+        "status_text": "Held for qualified and affected-user review.",
+        "manual_review_required": True,
+        "raw_identity_present": False,
+        "location_precision_present": False,
+        "secondary_purpose": False,
+        "colour_only": False,
+        "assistive_technology_reviewed": False,
+        "maori_language_reviewed": False,
+        "affected_user_approved": False,
+        "privacy_complete": False,
+        "accessibility_complete": False,
+    }
+    rights_custody = {
+        "work_token": "work_alpha",
+        "source_token": "source_alpha",
+        "rightsholder_state": "unresolved",
+        "license_state": "unresolved",
+        "containers": ["container_alpha"],
+        "items": [{"item_token": "diagram_alpha", "item_kind": "diagram", "container_token": "container_alpha"}],
+        "condition_state": "unresolved",
+        "real_asset_present": False,
+        "ownership_decided": False,
+        "handling_authorized": False,
+        "transport_authorized": False,
+        "publication_released": False,
+        "cultural_approval": False,
+    }
+    external = {
+        "cue_kinds": ["access", "lead", "dust", "sharp_edge"],
+        "stop": True,
+        "real_site_present": False,
+        "real_observation_present": False,
+        "emergency_instruction": False,
+        "safety_cleared": False,
+        "legal_interpretation": False,
+    }
+    correction = {
+        "records": [
+            {"record_token": "record_alpha", "parent_token": None, "event": "intake", "reason": "", "readback": True, "original_retained": True, "ambiguity_unresolved": True},
+            {"record_token": "record_beta", "parent_token": "record_alpha", "event": "correction", "reason": "synthetic correction", "readback": True, "original_retained": True, "ambiguity_unresolved": True},
+        ],
+        "real_record_present": False,
+        "action_authorized": False,
+        "canon_claimed": False,
+    }
+    handover = {
+        "handover_token": "handover_alpha",
+        "queue_ceiling": 4,
+        "active_queue": ["task_alpha", "task_beta"],
+        "unfinished_queue": ["task_beta"],
+        "fatigue_cue": "watch",
+        "stop": True,
+        "correction_readback": True,
+        "next_owner_placeholder": "owner_next",
+        "real_worker_present": False,
+        "performance_evaluated": False,
+        "competence_claimed": False,
+        "wellbeing_concluded": False,
+        "work_released": False,
+    }
+    trinity = {
+        "gmut_state": "typed_symbolic",
+        "thos_state": "proxy_only",
+        "freed_id_state": "synthetic_nonproduction",
+        "cbr_state": "exact_gated",
+        "real_likelihood_evaluated": False,
+        "empirical_claim_made": False,
+        "participant_effect_claimed": False,
+        "live_identity_event": False,
+        "rights_decision_made": False,
+        "psyche_law_claimed": False,
+        "agi_asi_claimed": False,
+        "consciousness_personhood_claimed": False,
+        "theory_of_everything_claimed": False,
+        "stage20_promoted": False,
+    }
+    zero_row = {
+        "source_uri": "https://developers.vam.ac.uk/guide/v2/",
+        "network_called": False,
+        "downloaded_rows": 0,
+        "ingested_rows": 0,
+        "real_record_present": False,
+        "likelihood_evaluated": False,
+        "constraint_emitted": False,
+        "empirical_claim_made": False,
+    }
+
+    def case(fid: int, proposal: int, validator: str, positive: dict[str, Any], mutations: list[dict[str, Any]]) -> dict[str, Any]:
+        if len(mutations) != 5:
+            raise DeltaError("Sylven fixture case must declare exactly five mutations")
+        return {"fixture_id": f"SA6636-HF-{fid:03d}", "proposal_id": f"SA6636-N{proposal:03d}", "validator": validator, "positive": positive, "mutations": mutations}
+
+    def mutation(label: str, path: tuple[Any, ...], value: Any = None, *, delete: bool = False) -> dict[str, Any]:
+        return {"label": label, "path": path, "value": value, "delete": delete}
+
+    return [
+        case(1, 1, "validate_stained_glass_survey_packet", packet, [
+            mutation("missing stained-glass packet token", ("packet_token",), delete=True),
+            mutation("unexpected stained-glass packet field", ("unexpected_guard",), True),
+            mutation("zero stained-glass packet revision", ("revision",), 0),
+            mutation("non-SHA256 stained-glass source pin", ("source_pin",), "sha1:00"),
+            mutation("stained-glass intervention authorization", ("intervention_authorized",), True),
+        ]),
+        case(2, 2, "validate_stained_glass_topology", topology, [
+            mutation("missing stained-glass topology", ("components",), delete=True),
+            mutation("unexpected stained-glass topology field", ("unexpected_guard",), True),
+            mutation("duplicate stained-glass component token", ("components", 1, "component_token"), "root_alpha"),
+            mutation("orphan stained-glass component", ("components", 1, "parent_token"), "root_missing"),
+            mutation("stained-glass handling authorization", ("handling_authorized",), True),
+        ]),
+        case(3, 3, "validate_stained_glass_material_lots", materials, [
+            mutation("missing stained-glass lots", ("lots",), delete=True),
+            mutation("unexpected stained-glass material field", ("unexpected_guard",), True),
+            mutation("duplicate stained-glass lot token", ("lots", 1, "lot_token"), "lot_alpha"),
+            mutation("unknown stained-glass substitution", ("lots", 1, "substitution_for"), "lot_missing"),
+            mutation("stained-glass treatment authorization", ("treatment_authorized",), True),
+        ]),
+        case(4, 4, "validate_stained_glass_document_dependencies", dependencies, [
+            mutation("missing stained-glass dependency items", ("items",), delete=True),
+            mutation("unexpected stained-glass dependency field", ("unexpected_guard",), True),
+            mutation("forward stained-glass dependency", ("items", 0, "dependencies"), ["condition_alpha"]),
+            mutation("hidden stained-glass incomplete work", ("items", 1, "incomplete"), False),
+            mutation("stained-glass action authorization", ("action_authorized",), True),
+        ]),
+        case(5, 5, "validate_stained_glass_si_placeholders", placeholders, [
+            mutation("missing stained-glass SI token", ("record_token",), delete=True),
+            mutation("unexpected stained-glass SI field", ("unexpected_guard",), True),
+            mutation("nonfinite stained-glass panel area", ("panel_area",), float("nan")),
+            mutation("unsupported stained-glass area unit", ("area_unit",), "cm2"),
+            mutation("stained-glass measurement claim", ("real_measurement_present",), True),
+        ]),
+        case(6, 6, "validate_stained_glass_condition_cues", cues, [
+            mutation("missing stained-glass condition cues", ("cue_kinds",), delete=True),
+            mutation("unexpected stained-glass condition field", ("unexpected_guard",), True),
+            mutation("unsupported stained-glass condition cue", ("cue_kinds",), ["unknown"]),
+            mutation("stained-glass condition stop overridden", ("stop",), False),
+            mutation("stained-glass diagnosis claim", ("diagnosis_made",), True),
+        ]),
+        case(7, 7, "validate_stained_glass_equipment_reservations", equipment, [
+            mutation("missing stained-glass equipment", ("equipment",), delete=True),
+            mutation("unexpected stained-glass equipment field", ("unexpected_guard",), True),
+            mutation("duplicate stained-glass equipment token", ("equipment", 1, "equipment_token"), "access_alpha"),
+            mutation("empty stained-glass isolation token", ("equipment", 0, "isolation_token"), ""),
+            mutation("stained-glass equipment use release", ("use_released",), True),
+        ]),
+        case(8, 8, "validate_stained_glass_privacy_accessibility", privacy_accessibility, [
+            mutation("missing stained-glass notice purpose", ("purpose",), delete=True),
+            mutation("unexpected stained-glass notice field", ("unexpected_guard",), True),
+            mutation("raw stained-glass identity", ("raw_identity_present",), True),
+            mutation("missing stained-glass text alternative", ("text_alternative",), ""),
+            mutation("stained-glass accessibility completeness claim", ("accessibility_complete",), True),
+        ]),
+        case(9, 10, "validate_stained_glass_rights_custody", rights_custody, [
+            mutation("missing stained-glass rights source", ("source_token",), delete=True),
+            mutation("unexpected stained-glass rights field", ("unexpected_guard",), True),
+            mutation("cleared stained-glass rightsholder state", ("rightsholder_state",), "cleared"),
+            mutation("orphan stained-glass custody item", ("items", 0, "container_token"), "container_missing"),
+            mutation("stained-glass cultural approval claim", ("cultural_approval",), True),
+        ]),
+        case(10, 11, "validate_stained_glass_external_cues", external, [
+            mutation("missing stained-glass external cues", ("cue_kinds",), delete=True),
+            mutation("unexpected stained-glass external field", ("unexpected_guard",), True),
+            mutation("unsupported stained-glass external cue", ("cue_kinds",), ["unknown"]),
+            mutation("stained-glass external stop overridden", ("stop",), False),
+            mutation("stained-glass safety clearance", ("safety_cleared",), True),
+        ]),
+        case(11, 13, "validate_stained_glass_correction_lineage", correction, [
+            mutation("missing stained-glass correction records", ("records",), delete=True),
+            mutation("unexpected stained-glass correction field", ("unexpected_guard",), True),
+            mutation("duplicate stained-glass correction token", ("records", 1, "record_token"), "record_alpha"),
+            mutation("erased stained-glass correction origin", ("records", 0, "original_retained"), False),
+            mutation("stained-glass correction readback absent", ("records", 1, "readback"), False),
+        ]),
+        case(12, 14, "validate_stained_glass_handover", handover, [
+            mutation("missing stained-glass handover token", ("handover_token",), delete=True),
+            mutation("unexpected stained-glass handover field", ("unexpected_guard",), True),
+            mutation("zero stained-glass queue ceiling", ("queue_ceiling",), 0),
+            mutation("unknown unfinished stained-glass task", ("unfinished_queue",), ["task_missing"]),
+            mutation("stained-glass performance evaluation", ("performance_evaluated",), True),
+        ]),
+        case(13, 18, "validate_stained_glass_trinity_boundaries", trinity, [
+            mutation("unsupported stained-glass GMUT state", ("gmut_state",), "empirical"),
+            mutation("unsupported stained-glass THOS state", ("thos_state",), "deployed"),
+            mutation("live stained-glass identity event", ("live_identity_event",), True),
+            mutation("stained-glass psyche-law claim", ("psyche_law_claimed",), True),
+            mutation("stained-glass Stage 20 promotion", ("stage20_promoted",), True),
+        ]),
+        case(14, 19, "validate_stained_glass_zero_row_adapter", zero_row, [
+            mutation("missing stained-glass source URI", ("source_uri",), delete=True),
+            mutation("stained-glass adapter network call", ("network_called",), True),
+            mutation("stained-glass adapter downloaded row", ("downloaded_rows",), 1),
+            mutation("stained-glass adapter ingested row", ("ingested_rows",), 1),
+            mutation("stained-glass empirical claim", ("empirical_claim_made",), True),
+        ]),
+    ]
+
+
+def sylven_mutation_payload() -> dict[str, Any]:
+    """Execute and retain every Sylven mutation with zero negative credit."""
+
+    validators = {
+        function.__name__: function
+        for function in (
+            validate_stained_glass_survey_packet,
+            validate_stained_glass_topology,
+            validate_stained_glass_material_lots,
+            validate_stained_glass_document_dependencies,
+            validate_stained_glass_si_placeholders,
+            validate_stained_glass_condition_cues,
+            validate_stained_glass_equipment_reservations,
+            validate_stained_glass_privacy_accessibility,
+            validate_stained_glass_rights_custody,
+            validate_stained_glass_external_cues,
+            validate_stained_glass_correction_lineage,
+            validate_stained_glass_handover,
+            validate_stained_glass_trinity_boundaries,
+            validate_stained_glass_zero_row_adapter,
+        )
+    }
+    records: list[dict[str, Any]] = []
+    positives: list[dict[str, Any]] = []
+    cases = sylven_fixture_cases()
+    for case_index, case in enumerate(cases, 1):
+        validator = validators[case["validator"]]
+        result = validator(case["positive"])
+        if result.get("valid") is not True:
+            raise DeltaError(f"Sylven positive fixture failed: {case['fixture_id']}")
+        positives.append(
+            {
+                "fixture_id": case["fixture_id"],
+                "proposal_id": case["proposal_id"],
+                "validator": case["validator"],
+                "valid": True,
+            }
+        )
+        if len(case["mutations"]) != 5:
+            raise DeltaError(f"Sylven fixture does not declare five mutations: {case['fixture_id']}")
+        for mutation_index, mutation in enumerate(case["mutations"], 1):
+            mutated = _glass_mutation(case["positive"], mutation)
+            try:
+                validator(mutated)
+            except (DeltaError, UnicodeError, ValueError, TypeError, KeyError) as exc:
+                records.append(
+                    {
+                        "fixture_id": f"SA6636-HF-{case_index:03d}-{mutation_index:02d}",
+                        "mutation_id": f"SA6636-MUT-{case_index:03d}-{mutation_index:02d}",
+                        "proposal_id": case["proposal_id"],
+                        "validator": case["validator"],
+                        "failed_witness": mutation["label"],
+                        "rejected": True,
+                        "error_class": type(exc).__name__,
+                        "zero_credit": True,
+                    }
+                )
+            else:
+                raise DeltaError(f"Sylven negative mutation was not rejected: {case['fixture_id']}:{mutation_index}")
+    return {
+        "schema": f"{SCHEMA}.sylven-mutation-matrix.v1",
+        "profile": "sylven-v663-v6",
+        "proposal_count": len(positives),
+        "mutations_per_proposal": 5,
+        "negative_fixture_count": len(records),
+        "rejected_fixture_count": sum(record["rejected"] is True for record in records),
+        "positive_fixture_count": len(positives),
+        "passing_fixture_count": len(positives),
+        "records": records,
+        "positive_records": positives,
+        "failed_witnesses_erased": 0,
+        "valid": len(records) == 70 and len(positives) == 14,
+        "boundary": "Seventy rejected synthetic mutations and fourteen passing stained-glass documentation record-shape fixtures only; no real person, site, panel, window, glass, came, material, equipment, measurement, inspection, diagnosis, treatment, handling, right, authority act, empirical result, production result, or independent reproduction.",
+    }
+
+
+def sylven_hardening_payload() -> dict[str, Any]:
+    """Return every retained Sylven rejection plus fourteen bounded positives."""
+
+    matrix = sylven_mutation_payload()
+    if not matrix["valid"]:
+        raise DeltaError("one or more Sylven hardening fixtures failed")
+    return {
+        "schema": f"{SCHEMA}.hardening-fixtures.v10",
+        "profile": "sylven-v663-v6",
+        "negative_fixture_count": matrix["negative_fixture_count"],
+        "rejected_fixture_count": matrix["rejected_fixture_count"],
+        "positive_fixture_count": matrix["positive_fixture_count"],
+        "passing_fixture_count": matrix["passing_fixture_count"],
+        "records": matrix["records"],
+        "full_mutation_matrix_negative_count": matrix["negative_fixture_count"],
+        "real_person_present": False,
+        "real_site_present": False,
+        "real_panel_present": False,
+        "real_material_present": False,
+        "real_equipment_present": False,
+        "real_measurement_present": False,
+        "survey_authorized": False,
+        "handling_authorized": False,
+        "intervention_authorized": False,
+        "safety_cleared": False,
+        "rights_released": False,
+        "privacy_complete": False,
+        "accessibility_complete": False,
+        "professional_authority": False,
+        "legal_authority": False,
+        "cultural_authority": False,
+        "maori_authority": False,
+        "exhaustive_security": False,
+        "valid": True,
+        "boundary": "All seventy preregistered stained-glass mutations were rejected and fourteen paired positives passed as bounded software fixtures only; not survey, conservation, handling, equipment, lead, dust, access, safety, rights, privacy, accessibility, professional, legal, cultural, Maori-authority, production, empirical, independent-reproduction, or Stage 20 evidence.",
+    }
+
+
 def hardening_payload_for_profile(profile: str) -> dict[str, Any]:
     """Select one exact bounded fixture family; reject implicit substitution."""
 
@@ -8360,6 +9328,8 @@ def hardening_payload_for_profile(profile: str) -> dict[str, Any]:
         return tamar_hardening_payload()
     if profile == "elowen-v663-v5":
         return elowen_hardening_payload()
+    if profile == "sylven-v663-v6":
+        return sylven_hardening_payload()
     raise DeltaError(f"unknown hardening profile: {profile}")
 
 
