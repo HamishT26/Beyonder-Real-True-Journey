@@ -7088,6 +7088,1259 @@ def tamar_hardening_payload() -> dict[str, Any]:
     }
 
 
+def _print_required_false(record: dict[str, Any], fields: Iterable[str]) -> None:
+    """Require explicit false values for synthetic print and archive boundaries."""
+
+    for field in fields:
+        _cave_false(record[field], f"print {field.replace('_', ' ')}")
+
+
+def _print_valid(kind: str, *, record_count: int = 1) -> dict[str, Any]:
+    return {
+        "kind": kind,
+        "record_count": record_count,
+        "real_person_present": False,
+        "real_asset_present": False,
+        "real_material_present": False,
+        "real_measurement_present": False,
+        "equipment_use_authorized": False,
+        "reproduction_authorized": False,
+        "professional_authority": False,
+        "legal_authority": False,
+        "cultural_authority": False,
+        "maori_authority": False,
+        "valid": True,
+    }
+
+
+def validate_print_work_packet(record: dict[str, Any]) -> dict[str, Any]:
+    """Validate a fictional print-work packet without authorizing use or reproduction."""
+
+    _cave_record(
+        record,
+        {
+            "packet_token",
+            "revision",
+            "source_pin",
+            "cancellation_state",
+            "synthetic",
+            "raw_identity_present",
+            "real_workshop_present",
+            "equipment_use_authorized",
+            "reproduction_authorized",
+        },
+        "print-work packet",
+    )
+    _cave_token(record["packet_token"], "print-work packet token")
+    revision = _require_nonnegative_int(record["revision"], "print-work packet revision")
+    if not 1 <= revision <= 10_000:
+        raise DeltaError("print-work packet revision is outside the bounded range")
+    if re.fullmatch(r"sha256:[0-9a-f]{64}", record["source_pin"]) is None:
+        raise DeltaError("print-work packet source pin is not an explicit SHA-256 commitment")
+    if record["cancellation_state"] not in {"planned", "cancelled", "superseded"}:
+        raise DeltaError("print-work packet cancellation state is unsupported")
+    if record["synthetic"] is not True:
+        raise DeltaError("print-work packet must remain explicitly synthetic")
+    _print_required_false(
+        record,
+        (
+            "raw_identity_present",
+            "real_workshop_present",
+            "equipment_use_authorized",
+            "reproduction_authorized",
+        ),
+    )
+    return _print_valid("print_work_packet")
+
+
+def validate_print_component_topology(record: dict[str, Any]) -> dict[str, Any]:
+    """Validate fictional type and print-component topology."""
+
+    _cave_record(
+        record,
+        {
+            "components",
+            "real_asset_present",
+            "assembly_authorized",
+            "equipment_use_authorized",
+        },
+        "print component topology",
+    )
+    components = record["components"]
+    if not isinstance(components, list) or not 3 <= len(components) <= 48:
+        raise DeltaError("print component count is outside the bounded range")
+    seen: set[str] = set()
+    kinds: set[str] = set()
+    for index, component in enumerate(components):
+        _cave_record(
+            component,
+            {"component_token", "kind", "parent_token"},
+            "print component row",
+        )
+        token = _cave_token(component["component_token"], "print component token")
+        if token in seen:
+            raise DeltaError("print component token is duplicated")
+        if component["kind"] not in {
+            "root",
+            "type_case",
+            "sort",
+            "furniture",
+            "chase",
+            "forme",
+            "proof",
+        }:
+            raise DeltaError("print component kind is unsupported")
+        parent = component["parent_token"]
+        if index == 0:
+            if component["kind"] != "root" or parent is not None:
+                raise DeltaError("print topology lacks a valid root")
+        elif not isinstance(parent, str) or parent not in seen:
+            raise DeltaError("print component parent is absent or forward-referenced")
+        seen.add(token)
+        kinds.add(component["kind"])
+    if not {"sort", "forme"} <= kinds:
+        raise DeltaError("print topology lacks sort and forme placeholders")
+    _print_required_false(
+        record,
+        ("real_asset_present", "assembly_authorized", "equipment_use_authorized"),
+    )
+    return _print_valid("print_component_topology", record_count=len(components))
+
+
+def validate_print_material_lots(record: dict[str, Any]) -> dict[str, Any]:
+    """Validate fictional paper, ink, plate, polymer, and solvent lots."""
+
+    _cave_record(
+        record,
+        {
+            "lots",
+            "real_material_present",
+            "authenticity_claimed",
+            "suitability_claimed",
+            "custody_claimed",
+            "safety_cleared",
+            "disposal_instruction",
+        },
+        "print material ledger",
+    )
+    lots = record["lots"]
+    if not isinstance(lots, list) or not 2 <= len(lots) <= 40:
+        raise DeltaError("print material-lot count is outside the bounded range")
+    seen: set[str] = set()
+    for lot in lots:
+        _cave_record(
+            lot,
+            {
+                "lot_token",
+                "source_token",
+                "material_class",
+                "substitution_for",
+                "quarantined",
+            },
+            "print material-lot row",
+        )
+        token = _cave_token(lot["lot_token"], "print material-lot token")
+        if token in seen:
+            raise DeltaError("print material-lot token is duplicated")
+        _cave_token(lot["source_token"], "print material source token")
+        if lot["material_class"] not in {
+            "paper",
+            "ink",
+            "plate",
+            "polymer",
+            "solvent",
+            "pigment",
+            "adhesive",
+        }:
+            raise DeltaError("print material class is unsupported")
+        substitute = lot["substitution_for"]
+        if substitute is not None and (
+            not isinstance(substitute, str) or substitute not in seen
+        ):
+            raise DeltaError("print material substitution is absent or forward-referenced")
+        if lot["quarantined"] is not True:
+            raise DeltaError("print material quarantine is not retained")
+        seen.add(token)
+    _print_required_false(
+        record,
+        (
+            "real_material_present",
+            "authenticity_claimed",
+            "suitability_claimed",
+            "custody_claimed",
+            "safety_cleared",
+            "disposal_instruction",
+        ),
+    )
+    return _print_valid("print_material_lots", record_count=len(lots))
+
+
+def validate_print_edition_dependencies(record: dict[str, Any]) -> dict[str, Any]:
+    """Validate fictional edition dependencies without production instructions."""
+
+    _cave_record(
+        record,
+        {"items", "production_authorized", "canon_claimed"},
+        "print edition dependency plan",
+    )
+    items = record["items"]
+    if not isinstance(items, list) or not 2 <= len(items) <= 40:
+        raise DeltaError("print edition dependency count is outside the bounded range")
+    seen: set[str] = set()
+    incomplete = 0
+    for item in items:
+        _cave_record(
+            item,
+            {
+                "item_token",
+                "kind",
+                "window_start",
+                "window_end",
+                "dependencies",
+                "incomplete",
+                "instruction_provided",
+                "release_provided",
+            },
+            "print edition dependency row",
+        )
+        token = _cave_token(item["item_token"], "print edition item token")
+        if token in seen:
+            raise DeltaError("print edition item token is duplicated")
+        if item["kind"] not in {
+            "manuscript",
+            "plate",
+            "imposition",
+            "proof",
+            "correction",
+            "edition",
+            "cancellation",
+        }:
+            raise DeltaError("print edition item kind is unsupported")
+        start = _cave_timestamp(item["window_start"], "print edition start")
+        end = _cave_timestamp(item["window_end"], "print edition end")
+        if end <= start or (end - start).total_seconds() > 604_800:
+            raise DeltaError("print edition window is reversed or over budget")
+        deps = item["dependencies"]
+        if not isinstance(deps, list):
+            raise DeltaError("print edition dependencies are not a list")
+        parsed = [_cave_token(value, "print edition dependency") for value in deps]
+        ensure_unique(parsed, "print edition dependency")
+        if any(value not in seen for value in parsed):
+            raise DeltaError("print edition dependency is absent or forward-referenced")
+        if not isinstance(item["incomplete"], bool):
+            raise DeltaError("print edition incomplete state must be Boolean")
+        incomplete += int(item["incomplete"])
+        _print_required_false(item, ("instruction_provided", "release_provided"))
+        seen.add(token)
+    if incomplete == 0:
+        raise DeltaError("print edition plan hides all incomplete work")
+    _print_required_false(record, ("production_authorized", "canon_claimed"))
+    return _print_valid("print_edition_dependencies", record_count=len(items))
+
+
+def validate_print_si_placeholders(record: dict[str, Any]) -> dict[str, Any]:
+    """Validate SI-typed fictional placeholders without measurement or prediction."""
+
+    _cave_record(
+        record,
+        {
+            "record_token",
+            "sheet_area",
+            "area_unit",
+            "type_height",
+            "leading",
+            "margin",
+            "length_unit",
+            "pressure",
+            "pressure_unit",
+            "ink_film",
+            "film_unit",
+            "uncertainty",
+            "real_measurement_present",
+            "calibrated",
+            "tolerance_decided",
+            "prediction_made",
+            "safety_cleared",
+        },
+        "print SI placeholder envelope",
+    )
+    _cave_token(record["record_token"], "print SI record token")
+    _cave_finite(record["sheet_area"], "print sheet area", minimum=0.0, maximum=10_000.0, minimum_inclusive=False)
+    _cave_finite(record["type_height"], "print type height", minimum=0.0, maximum=10.0, minimum_inclusive=False)
+    _cave_finite(record["leading"], "print leading", minimum=0.0, maximum=10.0, minimum_inclusive=False)
+    _cave_finite(record["margin"], "print margin", minimum=0.0, maximum=10.0, minimum_inclusive=False)
+    _cave_finite(record["pressure"], "print pressure", minimum=0.0, maximum=1.0e12, minimum_inclusive=False)
+    _cave_finite(record["ink_film"], "print ink film", minimum=0.0, maximum=1.0, minimum_inclusive=False)
+    _cave_finite(record["uncertainty"], "print placeholder uncertainty", minimum=0.0, maximum=1.0e12, minimum_inclusive=False)
+    if (
+        record["area_unit"] != "m2"
+        or record["length_unit"] != "m"
+        or record["pressure_unit"] != "Pa"
+        or record["film_unit"] != "m"
+    ):
+        raise DeltaError("print placeholder envelope uses unsupported SI units")
+    _print_required_false(
+        record,
+        (
+            "real_measurement_present",
+            "calibrated",
+            "tolerance_decided",
+            "prediction_made",
+            "safety_cleared",
+        ),
+    )
+    return _print_valid("print_si_placeholders")
+
+
+def validate_print_material_cues(record: dict[str, Any]) -> dict[str, Any]:
+    """Validate unresolved print-material cues and a dominant stop."""
+
+    _cave_record(
+        record,
+        {
+            "cue_kinds",
+            "resolution_state",
+            "stop",
+            "real_material_present",
+            "diagnosis_made",
+            "treatment_provided",
+            "disposal_instruction",
+            "emergency_instruction",
+            "safety_cleared",
+        },
+        "print material cue board",
+    )
+    cues = record["cue_kinds"]
+    allowed = {
+        "ink",
+        "solvent",
+        "cleaner",
+        "pigment",
+        "adhesive",
+        "ventilation",
+        "fire",
+        "allergy",
+        "disposal",
+    }
+    if not isinstance(cues, list) or not cues or len(cues) > 20:
+        raise DeltaError("print material cue list is invalid")
+    parsed = [_cave_token(value, "print material cue") for value in cues]
+    ensure_unique(parsed, "print material cue")
+    if any(value not in allowed for value in parsed):
+        raise DeltaError("print material cue is unsupported")
+    if record["resolution_state"] != "unresolved" or record["stop"] is not True:
+        raise DeltaError("print material cue lacks an unresolved dominant stop")
+    _print_required_false(
+        record,
+        (
+            "real_material_present",
+            "diagnosis_made",
+            "treatment_provided",
+            "disposal_instruction",
+            "emergency_instruction",
+            "safety_cleared",
+        ),
+    )
+    return _print_valid("print_material_cues", record_count=len(cues))
+
+
+def validate_print_equipment_reservations(record: dict[str, Any]) -> dict[str, Any]:
+    """Validate fictional equipment isolation without inspection or use release."""
+
+    _cave_record(
+        record,
+        {
+            "equipment",
+            "real_equipment_present",
+            "inspected",
+            "competence_claimed",
+            "maintenance_instruction",
+            "guarding_cleared",
+            "use_released",
+        },
+        "print equipment reservation",
+    )
+    equipment = record["equipment"]
+    if not isinstance(equipment, list) or not 2 <= len(equipment) <= 32:
+        raise DeltaError("print equipment count is outside the bounded range")
+    seen: set[str] = set()
+    for item in equipment:
+        _cave_record(
+            item,
+            {
+                "equipment_token",
+                "kind",
+                "condition_state",
+                "isolation_token",
+                "quarantined",
+            },
+            "print equipment row",
+        )
+        token = _cave_token(item["equipment_token"], "print equipment token")
+        if token in seen:
+            raise DeltaError("print equipment token is duplicated")
+        if item["kind"] not in {"press", "roller", "cutter", "quoin_key", "tool"}:
+            raise DeltaError("print equipment kind is unsupported")
+        if item["condition_state"] not in {"unresolved", "isolated"}:
+            raise DeltaError("print equipment condition is unsupported")
+        _cave_token(item["isolation_token"], "print equipment isolation token")
+        if item["quarantined"] is not True:
+            raise DeltaError("print equipment quarantine is not retained")
+        seen.add(token)
+    _print_required_false(
+        record,
+        (
+            "real_equipment_present",
+            "inspected",
+            "competence_claimed",
+            "maintenance_instruction",
+            "guarding_cleared",
+            "use_released",
+        ),
+    )
+    return _print_valid("print_equipment_reservations", record_count=len(equipment))
+
+
+def validate_print_privacy_notice(record: dict[str, Any]) -> dict[str, Any]:
+    """Validate fictional purpose and retention without personal information."""
+
+    _cave_record(
+        record,
+        {
+            "record_token",
+            "purpose",
+            "retention_days",
+            "correction_available",
+            "raw_identity_present",
+            "contributor_inferred",
+            "commission_inferred",
+            "secondary_purpose",
+            "disclosure_authorized",
+            "privacy_complete",
+        },
+        "print privacy notice",
+    )
+    _cave_token(record["record_token"], "print privacy record token")
+    if record["purpose"] != "synthetic_archive_notice":
+        raise DeltaError("print privacy purpose is unsupported")
+    retention = _require_nonnegative_int(record["retention_days"], "print privacy retention")
+    if not 1 <= retention <= 3_650:
+        raise DeltaError("print privacy retention is outside the bounded range")
+    if record["correction_available"] is not True:
+        raise DeltaError("print privacy correction is unavailable")
+    _print_required_false(
+        record,
+        (
+            "raw_identity_present",
+            "contributor_inferred",
+            "commission_inferred",
+            "secondary_purpose",
+            "disclosure_authorized",
+            "privacy_complete",
+        ),
+    )
+    return _print_valid("print_privacy_notice")
+
+
+def validate_print_accessibility_companion(record: dict[str, Any]) -> dict[str, Any]:
+    """Validate structural accessibility while reserving every human review."""
+
+    _cave_record(
+        record,
+        {
+            "headings",
+            "text_alternative",
+            "status_text",
+            "colour_only",
+            "keyboard_order",
+            "manual_review_required",
+            "assistive_technology_reviewed",
+            "maori_language_reviewed",
+            "affected_user_approved",
+            "accessibility_complete",
+        },
+        "print accessibility companion",
+    )
+    headings = record["headings"]
+    order = record["keyboard_order"]
+    if not isinstance(headings, list) or not 2 <= len(headings) <= 16:
+        raise DeltaError("print accessibility headings are invalid")
+    if not all(isinstance(value, str) and value.strip() for value in headings):
+        raise DeltaError("print accessibility heading is empty")
+    ensure_unique(headings, "print accessibility heading")
+    if not isinstance(order, list) or not order or len(order) > 32:
+        raise DeltaError("print accessibility keyboard order is invalid")
+    parsed_order = [_cave_token(value, "print accessibility focus token") for value in order]
+    ensure_unique(parsed_order, "print accessibility focus token")
+    if not isinstance(record["text_alternative"], str) or not record["text_alternative"].strip():
+        raise DeltaError("print accessibility text alternative is absent")
+    if not isinstance(record["status_text"], str) or not record["status_text"].strip():
+        raise DeltaError("print accessibility status text is absent")
+    if record["manual_review_required"] is not True:
+        raise DeltaError("print accessibility manual review is not reserved")
+    _print_required_false(
+        record,
+        (
+            "colour_only",
+            "assistive_technology_reviewed",
+            "maori_language_reviewed",
+            "affected_user_approved",
+            "accessibility_complete",
+        ),
+    )
+    return _print_valid("print_accessibility_companion")
+
+
+def validate_print_rights_hold(record: dict[str, Any]) -> dict[str, Any]:
+    """Validate unresolved print rights without deciding permission or ownership."""
+
+    _cave_record(
+        record,
+        {
+            "work_token",
+            "source_token",
+            "rightsholder_state",
+            "license_state",
+            "provenance_notice",
+            "real_work_present",
+            "authorship_decided",
+            "typeface_use_released",
+            "image_use_released",
+            "reproduction_released",
+            "publication_released",
+            "exhibition_released",
+            "derivative_use_released",
+            "ownership_decided",
+            "cultural_approval",
+        },
+        "print rights hold",
+    )
+    _cave_token(record["work_token"], "print work token")
+    _cave_token(record["source_token"], "print rights source token")
+    if record["rightsholder_state"] != "unresolved" or record["license_state"] != "unresolved":
+        raise DeltaError("print rights state is not unresolved")
+    if not isinstance(record["provenance_notice"], str) or not 1 <= len(record["provenance_notice"].strip()) <= 512:
+        raise DeltaError("print provenance notice is invalid")
+    _print_required_false(
+        record,
+        (
+            "real_work_present",
+            "authorship_decided",
+            "typeface_use_released",
+            "image_use_released",
+            "reproduction_released",
+            "publication_released",
+            "exhibition_released",
+            "derivative_use_released",
+            "ownership_decided",
+            "cultural_approval",
+        ),
+    )
+    return _print_valid("print_rights_hold")
+
+
+def validate_print_external_cues(record: dict[str, Any]) -> dict[str, Any]:
+    """Validate fictional workplace cues without safety or legal clearance."""
+
+    _cave_record(
+        record,
+        {
+            "cue_kinds",
+            "stop",
+            "real_workplace_present",
+            "real_observation_present",
+            "emergency_instruction",
+            "safety_cleared",
+            "legal_interpretation",
+        },
+        "print external cue board",
+    )
+    cues = record["cue_kinds"]
+    allowed = {
+        "electrical",
+        "mechanical",
+        "nip_point",
+        "fire",
+        "ventilation",
+        "ergonomic",
+        "noise",
+    }
+    if not isinstance(cues, list) or not cues or len(cues) > 16:
+        raise DeltaError("print external cue list is invalid")
+    parsed = [_cave_token(value, "print external cue") for value in cues]
+    ensure_unique(parsed, "print external cue")
+    if any(value not in allowed for value in parsed):
+        raise DeltaError("print external cue is unsupported")
+    if record["stop"] is not True:
+        raise DeltaError("print external cue lacks a dominant stop")
+    _print_required_false(
+        record,
+        (
+            "real_workplace_present",
+            "real_observation_present",
+            "emergency_instruction",
+            "safety_cleared",
+            "legal_interpretation",
+        ),
+    )
+    return _print_valid("print_external_cues", record_count=len(cues))
+
+
+def validate_print_custody_placeholder(record: dict[str, Any]) -> dict[str, Any]:
+    """Validate fictional archive containment without ownership or transfer release."""
+
+    _cave_record(
+        record,
+        {
+            "containers",
+            "items",
+            "condition_state",
+            "real_asset_present",
+            "ownership_claimed",
+            "authenticity_claimed",
+            "handling_instruction",
+            "transport_authorized",
+            "custody_released",
+        },
+        "print custody placeholder",
+    )
+    containers = record["containers"]
+    items = record["items"]
+    if not isinstance(containers, list) or not 1 <= len(containers) <= 24:
+        raise DeltaError("print container list is invalid")
+    parsed_containers = [_cave_token(value, "print container token") for value in containers]
+    ensure_unique(parsed_containers, "print container token")
+    if not isinstance(items, list) or not 1 <= len(items) <= 48:
+        raise DeltaError("print custody item list is invalid")
+    seen: set[str] = set()
+    for item in items:
+        _cave_record(
+            item,
+            {"item_token", "item_kind", "container_token"},
+            "print custody item",
+        )
+        token = _cave_token(item["item_token"], "print custody item token")
+        if token in seen:
+            raise DeltaError("print custody item token is duplicated")
+        if item["item_kind"] not in {"folder", "box", "shelf", "impression", "plate", "loan"}:
+            raise DeltaError("print custody item kind is unsupported")
+        if item["container_token"] not in parsed_containers:
+            raise DeltaError("print custody item references an absent container")
+        seen.add(token)
+    if record["condition_state"] != "unresolved":
+        raise DeltaError("print custody condition is not unresolved")
+    _print_required_false(
+        record,
+        (
+            "real_asset_present",
+            "ownership_claimed",
+            "authenticity_claimed",
+            "handling_instruction",
+            "transport_authorized",
+            "custody_released",
+        ),
+    )
+    return _print_valid("print_custody_placeholder", record_count=len(items))
+
+
+def validate_print_correction_lineage(record: dict[str, Any]) -> dict[str, Any]:
+    """Validate append-only fictional print corrections with ambiguity retained."""
+
+    _cave_record(
+        record,
+        {"records", "real_edition_present", "action_authorized", "canon_claimed"},
+        "print correction lineage",
+    )
+    rows = record["records"]
+    if not isinstance(rows, list) or not 2 <= len(rows) <= 40:
+        raise DeltaError("print correction lineage is outside the bounded range")
+    seen: set[str] = set()
+    unresolved = 0
+    for index, row in enumerate(rows):
+        _cave_record(
+            row,
+            {
+                "record_token",
+                "parent_token",
+                "event",
+                "reason",
+                "readback",
+                "original_retained",
+                "ambiguity_unresolved",
+            },
+            "print correction row",
+        )
+        token = _cave_token(row["record_token"], "print correction token")
+        if token in seen:
+            raise DeltaError("print correction token is duplicated")
+        parent = row["parent_token"]
+        if index == 0:
+            if parent is not None or row["event"] != "manuscript":
+                raise DeltaError("print correction lineage lacks a manuscript origin")
+        elif not isinstance(parent, str) or parent not in seen:
+            raise DeltaError("print correction parent is absent or forward-referenced")
+        if row["event"] not in {
+            "manuscript",
+            "type",
+            "plate",
+            "proof",
+            "edition",
+            "cancelled",
+            "superseded",
+        }:
+            raise DeltaError("print correction event is unsupported")
+        if index > 0 and (not isinstance(row["reason"], str) or not row["reason"].strip()):
+            raise DeltaError("print correction reason is absent")
+        if row["readback"] is not True or row["original_retained"] is not True:
+            raise DeltaError("print correction lacks readback or origin retention")
+        if not isinstance(row["ambiguity_unresolved"], bool):
+            raise DeltaError("print correction ambiguity flag is not Boolean")
+        unresolved += int(row["ambiguity_unresolved"])
+        seen.add(token)
+    if unresolved == 0:
+        raise DeltaError("print correction lineage hides all ambiguity")
+    _print_required_false(record, ("real_edition_present", "action_authorized", "canon_claimed"))
+    return _print_valid("print_correction_lineage", record_count=len(rows))
+
+
+def validate_print_handover(record: dict[str, Any]) -> dict[str, Any]:
+    """Validate a bounded zero-person print-archive handover."""
+
+    _cave_record(
+        record,
+        {
+            "handover_token",
+            "queue_ceiling",
+            "active_queue",
+            "unfinished_queue",
+            "fatigue_cue",
+            "stop",
+            "correction_readback",
+            "next_owner_placeholder",
+            "real_worker_present",
+            "performance_evaluated",
+            "competence_claimed",
+            "wellbeing_concluded",
+            "work_released",
+        },
+        "print workload handover",
+    )
+    _cave_token(record["handover_token"], "print handover token")
+    ceiling = _require_nonnegative_int(record["queue_ceiling"], "print queue ceiling")
+    if not 1 <= ceiling <= 64:
+        raise DeltaError("print queue ceiling is outside the bounded range")
+    active = record["active_queue"]
+    unfinished = record["unfinished_queue"]
+    if not isinstance(active, list) or not active or len(active) > ceiling:
+        raise DeltaError("print active queue is empty or over ceiling")
+    if not isinstance(unfinished, list) or not unfinished:
+        raise DeltaError("print unfinished queue must remain visible")
+    active_tokens = [_cave_token(value, "print active task") for value in active]
+    unfinished_tokens = [_cave_token(value, "print unfinished task") for value in unfinished]
+    ensure_unique(active_tokens, "print active task")
+    ensure_unique(unfinished_tokens, "print unfinished task")
+    if any(value not in active_tokens for value in unfinished_tokens):
+        raise DeltaError("print unfinished task is absent from the active queue")
+    if record["fatigue_cue"] not in {"none", "watch", "stop"}:
+        raise DeltaError("print fatigue cue is unsupported")
+    if record["stop"] is not True or record["correction_readback"] is not True:
+        raise DeltaError("print handover lacks a dominant stop or correction readback")
+    _cave_token(record["next_owner_placeholder"], "print next-owner placeholder")
+    _print_required_false(
+        record,
+        (
+            "real_worker_present",
+            "performance_evaluated",
+            "competence_claimed",
+            "wellbeing_concluded",
+            "work_released",
+        ),
+    )
+    return _print_valid("print_handover", record_count=len(active_tokens))
+
+
+def validate_print_privacy_accessibility(record: dict[str, Any]) -> dict[str, Any]:
+    """Validate paired privacy and accessibility records with separate gates."""
+
+    _cave_record(record, {"privacy", "accessibility"}, "print privacy and accessibility pair")
+    privacy = validate_print_privacy_notice(record["privacy"])
+    accessibility = validate_print_accessibility_companion(record["accessibility"])
+    return _print_valid(
+        "print_privacy_accessibility",
+        record_count=privacy["record_count"] + accessibility["record_count"],
+    )
+
+
+def validate_print_rights_custody(record: dict[str, Any]) -> dict[str, Any]:
+    """Validate paired rights and custody records without combining their authority."""
+
+    _cave_record(record, {"rights", "custody"}, "print rights and custody pair")
+    rights = validate_print_rights_hold(record["rights"])
+    custody = validate_print_custody_placeholder(record["custody"])
+    return _print_valid(
+        "print_rights_custody",
+        record_count=rights["record_count"] + custody["record_count"],
+    )
+
+
+def validate_print_trinity_boundaries(record: dict[str, Any]) -> dict[str, Any]:
+    """Validate explicit zero-evidence boundaries for GMUT, THOS, Freed ID, and CBR."""
+
+    _cave_record(
+        record,
+        {
+            "gmut_observations",
+            "gmut_likelihoods",
+            "thos_participants",
+            "thos_operators",
+            "freed_id_real_keys",
+            "freed_id_real_proofs",
+            "cbr_real_decisions",
+            "psyche_inferences",
+            "empirical_claimed",
+            "deployment_claimed",
+            "stage_20_claimed",
+        },
+        "print Trinity boundary record",
+    )
+    for field in (
+        "gmut_observations",
+        "gmut_likelihoods",
+        "thos_participants",
+        "thos_operators",
+        "freed_id_real_keys",
+        "freed_id_real_proofs",
+        "cbr_real_decisions",
+        "psyche_inferences",
+    ):
+        if _require_nonnegative_int(record[field], field) != 0:
+            raise DeltaError(f"{field} must remain zero")
+    _print_required_false(record, ("empirical_claimed", "deployment_claimed", "stage_20_claimed"))
+    return _print_valid("print_trinity_boundaries")
+
+
+def validate_print_zero_row_adapter(record: dict[str, Any]) -> dict[str, Any]:
+    """Validate a Library of Congress adapter contract that performs no operation."""
+
+    _cave_record(
+        record,
+        {
+            "source_url",
+            "network_calls",
+            "downloaded_rows",
+            "ingested_rows",
+            "credentials_requested",
+            "rights_reviewed",
+            "coverage_claimed",
+            "completeness_claimed",
+            "open_gap",
+        },
+        "print zero-row adapter",
+    )
+    if record["source_url"] not in {
+        "https://www.loc.gov/apis/additional-apis/prints-and-photographs-api/",
+        "https://www.loc.gov/apis/json-and-yaml/",
+    }:
+        raise DeltaError("print zero-row adapter source is unsupported")
+    for field in ("network_calls", "downloaded_rows", "ingested_rows"):
+        if _require_nonnegative_int(record[field], field) != 0:
+            raise DeltaError(f"{field} must remain zero")
+    _print_required_false(
+        record,
+        ("credentials_requested", "rights_reviewed", "coverage_claimed", "completeness_claimed"),
+    )
+    if record["open_gap"] is not True:
+        raise DeltaError("print zero-row adapter must retain its open gap")
+    return _print_valid("print_zero_row_adapter", record_count=0)
+
+
+def elowen_fixture_cases() -> list[dict[str, Any]]:
+    """Return fourteen bounded positives and five rejecting mutations per proposal."""
+
+    packet = {
+        "packet_token": "packet_alpha",
+        "revision": 1,
+        "source_pin": "sha256:" + ("b" * 64),
+        "cancellation_state": "planned",
+        "synthetic": True,
+        "raw_identity_present": False,
+        "real_workshop_present": False,
+        "equipment_use_authorized": False,
+        "reproduction_authorized": False,
+    }
+    topology = {
+        "components": [
+            {"component_token": "root_alpha", "kind": "root", "parent_token": None},
+            {"component_token": "sort_alpha", "kind": "sort", "parent_token": "root_alpha"},
+            {"component_token": "forme_alpha", "kind": "forme", "parent_token": "root_alpha"},
+        ],
+        "real_asset_present": False,
+        "assembly_authorized": False,
+        "equipment_use_authorized": False,
+    }
+    materials = {
+        "lots": [
+            {"lot_token": "lot_alpha", "source_token": "source_alpha", "material_class": "paper", "substitution_for": None, "quarantined": True},
+            {"lot_token": "lot_beta", "source_token": "source_beta", "material_class": "ink", "substitution_for": "lot_alpha", "quarantined": True},
+        ],
+        "real_material_present": False,
+        "authenticity_claimed": False,
+        "suitability_claimed": False,
+        "custody_claimed": False,
+        "safety_cleared": False,
+        "disposal_instruction": False,
+    }
+    dependencies = {
+        "items": [
+            {"item_token": "manuscript_alpha", "kind": "manuscript", "window_start": "2026-01-01T00:00:00Z", "window_end": "2026-01-02T00:00:00Z", "dependencies": [], "incomplete": False, "instruction_provided": False, "release_provided": False},
+            {"item_token": "proof_alpha", "kind": "proof", "window_start": "2026-01-02T00:00:00Z", "window_end": "2026-01-03T00:00:00Z", "dependencies": ["manuscript_alpha"], "incomplete": True, "instruction_provided": False, "release_provided": False},
+        ],
+        "production_authorized": False,
+        "canon_claimed": False,
+    }
+    placeholders = {
+        "record_token": "si_alpha",
+        "sheet_area": 1.0,
+        "area_unit": "m2",
+        "type_height": 0.01,
+        "leading": 0.002,
+        "margin": 0.02,
+        "length_unit": "m",
+        "pressure": 1000.0,
+        "pressure_unit": "Pa",
+        "ink_film": 0.00001,
+        "film_unit": "m",
+        "uncertainty": 1.0,
+        "real_measurement_present": False,
+        "calibrated": False,
+        "tolerance_decided": False,
+        "prediction_made": False,
+        "safety_cleared": False,
+    }
+    material_cues = {
+        "cue_kinds": ["ink", "ventilation", "fire"],
+        "resolution_state": "unresolved",
+        "stop": True,
+        "real_material_present": False,
+        "diagnosis_made": False,
+        "treatment_provided": False,
+        "disposal_instruction": False,
+        "emergency_instruction": False,
+        "safety_cleared": False,
+    }
+    equipment = {
+        "equipment": [
+            {"equipment_token": "press_alpha", "kind": "press", "condition_state": "isolated", "isolation_token": "isolation_alpha", "quarantined": True},
+            {"equipment_token": "cutter_alpha", "kind": "cutter", "condition_state": "unresolved", "isolation_token": "isolation_beta", "quarantined": True},
+        ],
+        "real_equipment_present": False,
+        "inspected": False,
+        "competence_claimed": False,
+        "maintenance_instruction": False,
+        "guarding_cleared": False,
+        "use_released": False,
+    }
+    privacy = {
+        "record_token": "notice_alpha",
+        "purpose": "synthetic_archive_notice",
+        "retention_days": 30,
+        "correction_available": True,
+        "raw_identity_present": False,
+        "contributor_inferred": False,
+        "commission_inferred": False,
+        "secondary_purpose": False,
+        "disclosure_authorized": False,
+        "privacy_complete": False,
+    }
+    accessibility = {
+        "headings": ["Overview", "Status"],
+        "text_alternative": "Synthetic print packet status.",
+        "status_text": "Held for external review.",
+        "colour_only": False,
+        "keyboard_order": ["overview", "status"],
+        "manual_review_required": True,
+        "assistive_technology_reviewed": False,
+        "maori_language_reviewed": False,
+        "affected_user_approved": False,
+        "accessibility_complete": False,
+    }
+    rights = {
+        "work_token": "work_alpha",
+        "source_token": "source_alpha",
+        "rightsholder_state": "unresolved",
+        "license_state": "unresolved",
+        "provenance_notice": "Fictional source lineage only; every right remains unresolved.",
+        "real_work_present": False,
+        "authorship_decided": False,
+        "typeface_use_released": False,
+        "image_use_released": False,
+        "reproduction_released": False,
+        "publication_released": False,
+        "exhibition_released": False,
+        "derivative_use_released": False,
+        "ownership_decided": False,
+        "cultural_approval": False,
+    }
+    external = {
+        "cue_kinds": ["electrical", "nip_point", "ventilation"],
+        "stop": True,
+        "real_workplace_present": False,
+        "real_observation_present": False,
+        "emergency_instruction": False,
+        "safety_cleared": False,
+        "legal_interpretation": False,
+    }
+    custody = {
+        "containers": ["container_alpha"],
+        "items": [{"item_token": "item_alpha", "item_kind": "impression", "container_token": "container_alpha"}],
+        "condition_state": "unresolved",
+        "real_asset_present": False,
+        "ownership_claimed": False,
+        "authenticity_claimed": False,
+        "handling_instruction": False,
+        "transport_authorized": False,
+        "custody_released": False,
+    }
+    correction = {
+        "records": [
+            {"record_token": "record_alpha", "parent_token": None, "event": "manuscript", "reason": "", "readback": True, "original_retained": True, "ambiguity_unresolved": True},
+            {"record_token": "record_beta", "parent_token": "record_alpha", "event": "proof", "reason": "fictional correction", "readback": True, "original_retained": True, "ambiguity_unresolved": True},
+        ],
+        "real_edition_present": False,
+        "action_authorized": False,
+        "canon_claimed": False,
+    }
+    handover = {
+        "handover_token": "handover_alpha",
+        "queue_ceiling": 4,
+        "active_queue": ["task_alpha", "task_beta"],
+        "unfinished_queue": ["task_beta"],
+        "fatigue_cue": "watch",
+        "stop": True,
+        "correction_readback": True,
+        "next_owner_placeholder": "owner_next",
+        "real_worker_present": False,
+        "performance_evaluated": False,
+        "competence_claimed": False,
+        "wellbeing_concluded": False,
+        "work_released": False,
+    }
+    return [
+        {"fixture_id": "EC6635-HF-001", "proposal_id": "EC6635-N001", "validator": "validate_print_work_packet", "positive": packet, "mutations": [
+            {"label": "zero packet revision", "record": {**packet, "revision": 0}},
+            {"label": "non-SHA256 packet source pin", "record": {**packet, "source_pin": "sha1:00"}},
+            {"label": "equipment use authorization", "record": {**packet, "equipment_use_authorized": True}},
+            {"label": "reproduction authorization", "record": {**packet, "reproduction_authorized": True}},
+            {"label": "raw print identity presence", "record": {**packet, "raw_identity_present": True}},
+        ]},
+        {"fixture_id": "EC6635-HF-002", "proposal_id": "EC6635-N002", "validator": "validate_print_component_topology", "positive": topology, "mutations": [
+            {"label": "duplicate print component", "record": {**topology, "components": [topology["components"][0], {**topology["components"][1], "component_token": "root_alpha"}, topology["components"][2]]}},
+            {"label": "orphan print component", "record": {**topology, "components": [topology["components"][0], {**topology["components"][1], "parent_token": "root_missing"}, topology["components"][2]]}},
+            {"label": "real print asset presence", "record": {**topology, "real_asset_present": True}},
+            {"label": "print assembly authorization", "record": {**topology, "assembly_authorized": True}},
+            {"label": "print equipment use authorization", "record": {**topology, "equipment_use_authorized": True}},
+        ]},
+        {"fixture_id": "EC6635-HF-003", "proposal_id": "EC6635-N003", "validator": "validate_print_material_lots", "positive": materials, "mutations": [
+            {"label": "duplicate print material lot", "record": {**materials, "lots": [materials["lots"][0], {**materials["lots"][1], "lot_token": "lot_alpha"}]}},
+            {"label": "unknown print material substitution", "record": {**materials, "lots": [materials["lots"][0], {**materials["lots"][1], "substitution_for": "lot_missing"}]}},
+            {"label": "real print material presence", "record": {**materials, "real_material_present": True}},
+            {"label": "print material authenticity claim", "record": {**materials, "authenticity_claimed": True}},
+            {"label": "print material safety clearance", "record": {**materials, "safety_cleared": True}},
+        ]},
+        {"fixture_id": "EC6635-HF-004", "proposal_id": "EC6635-N004", "validator": "validate_print_edition_dependencies", "positive": dependencies, "mutations": [
+            {"label": "forward print dependency", "record": {**dependencies, "items": [{**dependencies["items"][0], "dependencies": ["proof_alpha"]}, dependencies["items"][1]]}},
+            {"label": "duplicate print dependency item", "record": {**dependencies, "items": [dependencies["items"][0], {**dependencies["items"][1], "item_token": "manuscript_alpha"}]}},
+            {"label": "reversed print dependency window", "record": {**dependencies, "items": [{**dependencies["items"][0], "window_end": "2025-12-31T00:00:00Z"}, dependencies["items"][1]]}},
+            {"label": "print instruction provided", "record": {**dependencies, "items": [{**dependencies["items"][0], "instruction_provided": True}, dependencies["items"][1]]}},
+            {"label": "print production authorization", "record": {**dependencies, "production_authorized": True}},
+        ]},
+        {"fixture_id": "EC6635-HF-005", "proposal_id": "EC6635-N005", "validator": "validate_print_si_placeholders", "positive": placeholders, "mutations": [
+            {"label": "nonfinite print sheet area", "record": {**placeholders, "sheet_area": float("nan")}},
+            {"label": "unsupported print area unit", "record": {**placeholders, "area_unit": "cm2"}},
+            {"label": "real print measurement", "record": {**placeholders, "real_measurement_present": True}},
+            {"label": "print prediction made", "record": {**placeholders, "prediction_made": True}},
+            {"label": "print SI safety clearance", "record": {**placeholders, "safety_cleared": True}},
+        ]},
+        {"fixture_id": "EC6635-HF-006", "proposal_id": "EC6635-N006", "validator": "validate_print_material_cues", "positive": material_cues, "mutations": [
+            {"label": "unsupported print material cue", "record": {**material_cues, "cue_kinds": ["unknown"]}},
+            {"label": "resolved print material cue", "record": {**material_cues, "resolution_state": "cleared"}},
+            {"label": "print material stop overridden", "record": {**material_cues, "stop": False}},
+            {"label": "print material treatment provided", "record": {**material_cues, "treatment_provided": True}},
+            {"label": "print material safety clearance", "record": {**material_cues, "safety_cleared": True}},
+        ]},
+        {"fixture_id": "EC6635-HF-007", "proposal_id": "EC6635-N007", "validator": "validate_print_equipment_reservations", "positive": equipment, "mutations": [
+            {"label": "duplicate print equipment", "record": {**equipment, "equipment": [equipment["equipment"][0], {**equipment["equipment"][1], "equipment_token": "press_alpha"}]}},
+            {"label": "invalid equipment isolation token", "record": {**equipment, "equipment": [{**equipment["equipment"][0], "isolation_token": ""}, equipment["equipment"][1]]}},
+            {"label": "print equipment inspection claim", "record": {**equipment, "inspected": True}},
+            {"label": "print equipment competence claim", "record": {**equipment, "competence_claimed": True}},
+            {"label": "print equipment use release", "record": {**equipment, "use_released": True}},
+        ]},
+        {"fixture_id": "EC6635-HF-008", "proposal_id": "EC6635-N008", "validator": "validate_print_privacy_notice", "positive": privacy, "mutations": [
+            {"label": "raw contributor identity", "record": {**privacy, "raw_identity_present": True}},
+            {"label": "contributor inference", "record": {**privacy, "contributor_inferred": True}},
+            {"label": "print privacy secondary purpose", "record": {**privacy, "secondary_purpose": True}},
+            {"label": "zero print privacy retention", "record": {**privacy, "retention_days": 0}},
+            {"label": "print privacy completeness claim", "record": {**privacy, "privacy_complete": True}},
+        ]},
+        {"fixture_id": "EC6635-HF-009", "proposal_id": "EC6635-N009", "validator": "validate_print_accessibility_companion", "positive": accessibility, "mutations": [
+            {"label": "missing print accessibility headings", "record": {**accessibility, "headings": []}},
+            {"label": "missing print text alternative", "record": {**accessibility, "text_alternative": ""}},
+            {"label": "colour-only print status", "record": {**accessibility, "colour_only": True}},
+            {"label": "print manual review not reserved", "record": {**accessibility, "manual_review_required": False}},
+            {"label": "print accessibility completeness claim", "record": {**accessibility, "accessibility_complete": True}},
+        ]},
+        {"fixture_id": "EC6635-HF-010", "proposal_id": "EC6635-N010", "validator": "validate_print_rights_hold", "positive": rights, "mutations": [
+            {"label": "missing print rights source token", "record": {**rights, "source_token": ""}},
+            {"label": "cleared print rightsholder state", "record": {**rights, "rightsholder_state": "cleared"}},
+            {"label": "print reproduction release", "record": {**rights, "reproduction_released": True}},
+            {"label": "print publication release", "record": {**rights, "publication_released": True}},
+            {"label": "print cultural approval claim", "record": {**rights, "cultural_approval": True}},
+        ]},
+        {"fixture_id": "EC6635-HF-011", "proposal_id": "EC6635-N011", "validator": "validate_print_external_cues", "positive": external, "mutations": [
+            {"label": "unsupported print external cue", "record": {**external, "cue_kinds": ["unknown"]}},
+            {"label": "print external stop overridden", "record": {**external, "stop": False}},
+            {"label": "real print workplace present", "record": {**external, "real_workplace_present": True}},
+            {"label": "print emergency instruction", "record": {**external, "emergency_instruction": True}},
+            {"label": "print legal interpretation", "record": {**external, "legal_interpretation": True}},
+        ]},
+        {"fixture_id": "EC6635-HF-012", "proposal_id": "EC6635-N012", "validator": "validate_print_custody_placeholder", "positive": custody, "mutations": [
+            {"label": "duplicate print container", "record": {**custody, "containers": ["container_alpha", "container_alpha"]}},
+            {"label": "orphan print custody container", "record": {**custody, "items": [{**custody["items"][0], "container_token": "container_missing"}]}},
+            {"label": "real print custody asset", "record": {**custody, "real_asset_present": True}},
+            {"label": "print ownership claim", "record": {**custody, "ownership_claimed": True}},
+            {"label": "print transport authorization", "record": {**custody, "transport_authorized": True}},
+        ]},
+        {"fixture_id": "EC6635-HF-013", "proposal_id": "EC6635-N013", "validator": "validate_print_correction_lineage", "positive": correction, "mutations": [
+            {"label": "duplicate print correction token", "record": {**correction, "records": [correction["records"][0], {**correction["records"][1], "record_token": "record_alpha"}]}},
+            {"label": "forward print correction parent", "record": {**correction, "records": [correction["records"][0], {**correction["records"][1], "parent_token": "record_missing"}]}},
+            {"label": "erased print correction origin", "record": {**correction, "records": [{**correction["records"][0], "original_retained": False}, correction["records"][1]]}},
+            {"label": "print correction reason absent", "record": {**correction, "records": [correction["records"][0], {**correction["records"][1], "reason": ""}]}},
+            {"label": "print correction readback absent", "record": {**correction, "records": [correction["records"][0], {**correction["records"][1], "readback": False}]}},
+        ]},
+        {"fixture_id": "EC6635-HF-014", "proposal_id": "EC6635-N014", "validator": "validate_print_handover", "positive": handover, "mutations": [
+            {"label": "zero print queue ceiling", "record": {**handover, "queue_ceiling": 0}},
+            {"label": "unknown unfinished print task", "record": {**handover, "unfinished_queue": ["task_missing"]}},
+            {"label": "print handover stop overridden", "record": {**handover, "stop": False}},
+            {"label": "print handover readback absent", "record": {**handover, "correction_readback": False}},
+            {"label": "print worker performance evaluation", "record": {**handover, "performance_evaluated": True}},
+        ]},
+    ]
+
+
+def elowen_mutation_payload() -> dict[str, Any]:
+    """Execute and retain every Elowen mutation with zero negative credit."""
+
+    validators = {
+        function.__name__: function
+        for function in (
+            validate_print_work_packet,
+            validate_print_component_topology,
+            validate_print_material_lots,
+            validate_print_edition_dependencies,
+            validate_print_si_placeholders,
+            validate_print_material_cues,
+            validate_print_equipment_reservations,
+            validate_print_privacy_notice,
+            validate_print_accessibility_companion,
+            validate_print_rights_hold,
+            validate_print_external_cues,
+            validate_print_custody_placeholder,
+            validate_print_correction_lineage,
+            validate_print_handover,
+        )
+    }
+    records: list[dict[str, Any]] = []
+    positives: list[dict[str, Any]] = []
+    cases = elowen_fixture_cases()
+    for case_index, case in enumerate(cases, 1):
+        validator = validators[case["validator"]]
+        result = validator(case["positive"])
+        if result.get("valid") is not True:
+            raise DeltaError(f"Elowen positive fixture failed: {case['fixture_id']}")
+        positives.append(
+            {
+                "fixture_id": case["fixture_id"],
+                "proposal_id": case["proposal_id"],
+                "validator": case["validator"],
+                "valid": True,
+            }
+        )
+        if len(case["mutations"]) != 5:
+            raise DeltaError(f"Elowen fixture does not declare five mutations: {case['fixture_id']}")
+        for mutation_index, mutation in enumerate(case["mutations"], 1):
+            try:
+                validator(mutation["record"])
+            except (DeltaError, UnicodeError, ValueError, TypeError) as exc:
+                records.append(
+                    {
+                        "fixture_id": f"EC6635-HF-{case_index:03d}-{mutation_index:02d}",
+                        "mutation_id": f"EC6635-MUT-{case_index:03d}-{mutation_index:02d}",
+                        "proposal_id": case["proposal_id"],
+                        "validator": case["validator"],
+                        "failed_witness": mutation["label"],
+                        "rejected": True,
+                        "error_class": type(exc).__name__,
+                        "zero_credit": True,
+                    }
+                )
+            else:
+                raise DeltaError(
+                    f"Elowen negative mutation was not rejected: {case['fixture_id']}:{mutation_index}"
+                )
+    return {
+        "schema": f"{SCHEMA}.elowen-mutation-matrix.v1",
+        "profile": "elowen-v663-v5",
+        "proposal_count": len(positives),
+        "mutations_per_proposal": 5,
+        "negative_fixture_count": len(records),
+        "rejected_fixture_count": sum(record["rejected"] is True for record in records),
+        "positive_fixture_count": len(positives),
+        "passing_fixture_count": len(positives),
+        "records": records,
+        "positive_records": positives,
+        "failed_witnesses_erased": 0,
+        "valid": len(records) == 70 and len(positives) == 14,
+        "boundary": "Seventy rejected synthetic mutations and fourteen passing letterpress record-shape fixtures only; no real person, workshop, press, cutter, type, material, print, archive object, measurement, right, authority act, empirical result, production result, or independent reproduction.",
+    }
+
+
+def elowen_hardening_payload() -> dict[str, Any]:
+    """Return every retained Elowen rejection plus fourteen bounded positives."""
+
+    matrix = elowen_mutation_payload()
+    if not matrix["valid"]:
+        raise DeltaError("one or more Elowen hardening fixtures failed")
+    return {
+        "schema": f"{SCHEMA}.hardening-fixtures.v9",
+        "profile": "elowen-v663-v5",
+        "negative_fixture_count": matrix["negative_fixture_count"],
+        "rejected_fixture_count": matrix["rejected_fixture_count"],
+        "positive_fixture_count": matrix["positive_fixture_count"],
+        "passing_fixture_count": matrix["passing_fixture_count"],
+        "records": matrix["records"],
+        "full_mutation_matrix_negative_count": matrix["negative_fixture_count"],
+        "real_person_present": False,
+        "real_workshop_present": False,
+        "real_equipment_present": False,
+        "real_material_present": False,
+        "real_print_present": False,
+        "real_archive_object_present": False,
+        "real_measurement_present": False,
+        "equipment_use_authorized": False,
+        "reproduction_authorized": False,
+        "rights_released": False,
+        "privacy_complete": False,
+        "accessibility_complete": False,
+        "professional_authority": False,
+        "legal_authority": False,
+        "cultural_authority": False,
+        "maori_authority": False,
+        "exhaustive_security": False,
+        "valid": True,
+        "boundary": "All seventy preregistered letterpress mutations were rejected and fourteen paired positives passed as bounded software fixtures only; not printing, equipment, chemical, handling, conservation, rights, privacy, accessibility, professional, legal, cultural, Maori-authority, production, empirical, independent-reproduction, or Stage 20 evidence.",
+    }
+
+
 def hardening_payload_for_profile(profile: str) -> dict[str, Any]:
     """Select one exact bounded fixture family; reject implicit substitution."""
 
@@ -7105,6 +8358,8 @@ def hardening_payload_for_profile(profile: str) -> dict[str, Any]:
         return liora_hardening_payload()
     if profile == "tamar-v663-v4":
         return tamar_hardening_payload()
+    if profile == "elowen-v663-v5":
+        return elowen_hardening_payload()
     raise DeltaError(f"unknown hardening profile: {profile}")
 
 
