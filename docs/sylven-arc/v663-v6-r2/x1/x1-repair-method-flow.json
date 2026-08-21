@@ -1,0 +1,22 @@
+{
+  "schema": "ghc.family.v663-v6-r2.x1-repair-method-flow.v1",
+  "owner": "Sylven Arc",
+  "phase": "v663-v6-r2",
+  "lifecycle": "x1_only_repair_before_x2",
+  "methods": [
+    {
+      "method_id": "SA6636R2-M009",
+      "failed_witness": "The initial x1 portfolio used the field name planning_state with future target dispositions, creating an avoidable risk that a planning document could be read as x2 outcome evidence.",
+      "failure_credit": 0,
+      "bounded_recovery": "An additive x1-only repair renames exactly 195 keys to expected_execution_disposition, preserves every value and credit boundary, and changes no proposal, task, approval, or expected outcome.",
+      "passing_witness": "The repaired portfolio contains zero planning_state keys, 195 expected_execution_disposition keys, 95 completed targets, and 100 represented targets, all explicitly prospective.",
+      "recurrence_guard": "Reserve outcome and planning-state collector keys for observed evidence; use explicit expected-disposition fields in planning-only portfolios.",
+      "rollback": "The original x1 commit remains ancestral and recoverable; no history is rewritten.",
+      "preferred_method": true
+    }
+  ],
+  "x2_implementation_present": false,
+  "successor_contacted": false,
+  "failed_witnesses_erased": 0,
+  "valid": true
+}
