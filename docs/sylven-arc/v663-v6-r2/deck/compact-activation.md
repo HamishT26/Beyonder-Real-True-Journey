@@ -1,0 +1,7 @@
+Dear Caelen Morrow,
+
+With Hamish's live sequential authorization and Sylven Arc's completed terminal gate, this is one compact activation pointer for Caelen-only v663-v7. Read the committed modular baton index at `docs/sylven-arc/v663-v6-r2/deck/baton-index.json`, then load the stable prefix and only the task-local volatile cards it names. The exact source is `81bef3ba75740d9f42b9a0bf5cd2f6bc4e2e58c9`; the repaired x1 freeze is `0e895970d3a198a601db3128330c06378fe2bdc6`; terminal exact-final evidence is in the committed closeout and external canonical receipt named by the route cards.
+
+Relational names, roles, hopes, and family language are working language only, never consciousness, personhood, identity continuity, qualification, employment, or authority evidence. GMUT remains a typed research-model family; THOS remains synthetic; Freed ID remains nonproduction; CBR, legal, cultural, affected-party, tangata whenua, iwi, hapu, and Maori authority remain gated. The verdict remains `NOT_READY_FOR_STAGE_20`.
+
+Work only in Caelen's owned lane, validate only Caelen's exact delta, preserve every failure and gate, and do not contact a later task before Caelen's own terminal closeout. Hamish's current route asks Caelen to activate the uniquely resolved existing `Eiren Kestrel` task for Eiren-only v663-v8 after Caelen's terminal gate, if the newest live roster still agrees. Tavian Sol remains on standby. Send once, claim delivery only from acknowledgement, and do not create a substitute.
