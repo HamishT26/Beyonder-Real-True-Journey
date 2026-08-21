@@ -1,0 +1,19 @@
+# Orin Thale v665-v1 terminal correction overview
+
+## Retained first-final failure
+
+The first clean, pushed, four-way-equal final at `92ec05c2cbcd6d3e6c1878b7dd7e6165491a44a9` remains an immutable content closeout. Its one exclusive canonical invocation is retained at zero credit with SHA-256 `f0dc66c805f3b939ec12addbdebd828d891c2c59926b4f4249bb48ab0373d1e3`. That aggregate ran 90 owner-scoped tests successfully, passed all 15 minimal checks, replayed all 154 owner-manifest entries plus four self-exclusions, replayed all 20 final-delta entries plus four self-exclusions, parsed every phase JSON document, compiled changed Python, found zero confirmed five-class privacy or raw-identifier hits, found zero bounded-security issues, and passed ancestry, clean-state, divergence, and fresh four-way equality. It nevertheless failed one of 30 detailed checks and therefore received no canonical pass credit.
+
+## Isolated defect and bounded recovery
+
+The failed check was `markdown_structure`. The validator applied a report-Markdown rule—requiring the file to begin with a level-one heading—to every changed `.md` file. Ten phase-local `SKILL.md` files correctly begin with YAML front matter, so they were falsely classified despite having the required skill heading, workflow, boundaries, and Unicode authority wording. The defect was in the validator's document-class dispatch, not in the skill packages, manifests, tests, privacy scan, source evidence, or route state.
+
+The correction changes only the validator classification and additive correction evidence. Skill documents now require `---`, a family-current `name`, a matching heading, `## Workflow`, `## Boundaries`, and the document word ceiling. Other Markdown continues to require a level-one heading, the exact terminal verdict, and the word ceiling. A bounded isolated read across all 13 first-final Markdown files passed with zero issues before this correction was prepared. The failed aggregate remains immutable; it is not replayed or renamed as a pass.
+
+The first correction staged-review rehearsal also remains zero-credit because this overview initially described the Stage 20 boundary without spelling the required exact verdict token. The review refused before producing manifest credit. Its shell wrapper then continued after the native Python failure and exposed a second zero-credit failure when `--check-staged` read the deliberately untouched placeholder manifest. Recovery adds the exact verdict, checks native exit codes before continuing, regenerates the manifests, and reruns only this correction staging dependency.
+
+## Additive truth
+
+The retained canonical failure and two correction-stage operational failures add three effective negatives and three validated Method Flow methods. The corrected activation truth is therefore 25,187 effective negatives and 9,049 effective methods. Outcomes remain exactly 14 `completed`, 4 `represented`, 1 `open_gap`, and 1 `exact_gate`. Open gaps remain 175 and exact gates remain 173. The frozen proposal chain remains 4,030 rows. No scientific, professional, production, legal, cultural, Māori-authority, affected-party, accessibility-complete, privacy-complete, exhaustive-security, independent-reproduction, AGI/ASI, consciousness/personhood, Theory-of-Everything, proof/canon, or Stage 20 gate closes. The terminal verdict remains **NOT_READY_FOR_STAGE_20**.
+
+The corrected final will be a direct single-parent child of the retained first final, making four Orin phase commits and zero merges. Its owner and correction-delta manifests bind exact prepared Git blobs. One corrected canonical aggregate may run only after that additive final is pushed, clean, 0/0 divergent, and four-way equal. If it succeeds, it will not be replayed. Route state remains `PREPARED_NOT_SENT`; no successor is inferred or contacted by this correction.

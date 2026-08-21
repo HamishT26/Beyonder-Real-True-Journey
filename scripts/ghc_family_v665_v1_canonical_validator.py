@@ -21,12 +21,14 @@ PREFIX = "docs/orin-thale/v665-v1/"
 SOURCE_FINAL = "3ec44a944aabe16f64335383885c39d9592bf849"
 X1_HEAD = "1e9a49b0cc377ba2eafd90fb09e478c88f8f1f3b"
 EVIDENCE_HEAD = "1104a4f2963c8782ddad8939e8b4aff50715cc42"
+FIRST_FINAL = "92ec05c2cbcd6d3e6c1878b7dd7e6165491a44a9"
 BRANCH = "codex/GHC-Family/orin-thale-v665-v1-full-tools"
 TERMINAL_VERDICT = "NOT_READY_FOR_STAGE_20"
 TEST_MODULES = [
     "tests.test_ghc_family_orin_v665_v1_x1",
     "tests.test_ghc_family_orin_v665_v1_x2",
     "tests.test_ghc_family_orin_v665_v1_closeout",
+    "tests.test_ghc_family_orin_v665_v1_terminal_correction",
 ]
 
 
@@ -140,6 +142,26 @@ def replay_manifest(manifest: dict[str, Any], expected_paths: list[str]) -> dict
     }
 
 
+def markdown_structure_issues(paths: list[str]) -> list[str]:
+    """Apply front-matter rules to skills and report rules to other Markdown."""
+    issues: list[str] = []
+    for path in paths:
+        text = git("show", f"HEAD:{path}").stdout.decode("utf-8")
+        within_cap = len(re.findall(r"\S+", text)) <= 100_000
+        if path.endswith("/SKILL.md"):
+            valid = (
+                text.startswith("---\nname: ghc-family-")
+                and "\n---\n\n# ghc-family-" in text
+                and "## Workflow" in text
+                and "## Boundaries" in text
+            )
+        else:
+            valid = text.startswith("# ") and TERMINAL_VERDICT in text
+        if not valid or not within_cap:
+            issues.append(path)
+    return issues
+
+
 def canonical_checks(expected_final: str) -> dict[str, Any]:
     before_status = git("status", "--porcelain=v1", "--untracked-files=all").stdout.decode()
     if before_status:
@@ -155,7 +177,7 @@ def canonical_checks(expected_final: str) -> dict[str, Any]:
     test_output = test.stdout.decode("utf-8", "replace") + test.stderr.decode("utf-8", "replace")
     match = re.search(r"Ran (\d+) tests?", test_output)
     test_count = int(match.group(1)) if match else 0
-    test_ok = test.returncode == 0 and test_count == 90 and "OK" in test_output
+    test_ok = test.returncode == 0 and test_count == 102 and "OK" in test_output
 
     paths = changed_paths()
     phase_json_paths = sorted(path for path in paths if path.startswith(PREFIX) and path.endswith(".json"))
@@ -167,11 +189,7 @@ def canonical_checks(expected_final: str) -> dict[str, Any]:
             json_failures.append(path)
 
     markdown_paths = sorted(path for path in paths if path.startswith(PREFIX) and path.endswith(".md"))
-    markdown_issues: list[str] = []
-    for path in markdown_paths:
-        text = git("show", f"HEAD:{path}").stdout.decode("utf-8")
-        if not text.startswith("# ") or len(re.findall(r"\S+", text)) > 100_000:
-            markdown_issues.append(path)
+    markdown_issues = markdown_structure_issues(markdown_paths)
     overview_words = len(
         re.findall(
             r"\S+",
@@ -216,8 +234,8 @@ def canonical_checks(expected_final: str) -> dict[str, Any]:
     for path in text_paths:
         privacy_hits.extend(scan_text(path, git("show", f"HEAD:{path}").stdout))
 
-    owner_manifest = load_json(PHASE / "validation/final-owner-manifest.json")
-    delta_manifest = load_json(PHASE / "validation/final-delta-manifest.json")
+    owner_manifest = load_json(PHASE / "validation/correction-owner-manifest.json")
+    delta_manifest = load_json(PHASE / "validation/correction-delta-manifest.json")
     owner_replay = replay_manifest(owner_manifest, paths)
     delta_paths = sorted(
         path
@@ -234,8 +252,8 @@ def canonical_checks(expected_final: str) -> dict[str, Any]:
     commit_count = int(git("rev-list", "--count", f"{SOURCE_FINAL}..HEAD").stdout.decode().strip())
     merge_count = int(git("rev-list", "--merges", "--count", f"{SOURCE_FINAL}..HEAD").stdout.decode().strip())
 
-    truth = load_json(PHASE / "closeout/phase-truth.json")
-    route = load_json(PHASE / "orchestration/terminal-route-state.json")
+    truth = load_json(PHASE / "correction/phase-truth.json")
+    route = load_json(PHASE / "orchestration/terminal-route-state-correction.json")
     stale_label_issues = []
     if truth.get("owner") != "Orin Thale" or truth.get("proposal_chain_after") != 4_030:
         stale_label_issues.append("phase_truth_owner_or_chain")
@@ -257,7 +275,7 @@ def canonical_checks(expected_final: str) -> dict[str, Any]:
     after_status = git("status", "--porcelain=v1", "--untracked-files=all").stdout.decode()
 
     detailed = {
-        "tests_90_of_90": test_ok,
+        "tests_102_of_102": test_ok,
         "strict_json": not json_failures,
         "markdown_structure": not markdown_issues,
         "overview_three_page_equivalent": overview_words >= 1_500,
@@ -273,8 +291,8 @@ def canonical_checks(expected_final: str) -> dict[str, Any]:
         "source_ancestry": source_ancestor,
         "x1_ancestry": x1_ancestor,
         "evidence_ancestry": evidence_ancestor,
-        "final_direct_child_of_evidence": parent == EVIDENCE_HEAD,
-        "three_phase_commits": commit_count == 3,
+        "final_direct_child_of_retained_first_final": parent == FIRST_FINAL,
+        "four_phase_commits": commit_count == 4,
         "zero_merges": merge_count == 0,
         "one_final_parent": parent_count == 1,
         "exact_head": head == expected_final,
@@ -296,7 +314,7 @@ def canonical_checks(expected_final: str) -> dict[str, Any]:
         "owner_manifest": owner_replay["valid"],
         "delta_manifest": delta_replay["valid"],
         "ancestry": source_ancestor and x1_ancestor and evidence_ancestor,
-        "history": commit_count == 3 and merge_count == 0 and parent_count == 1,
+        "history": commit_count == 4 and merge_count == 0 and parent_count == 1,
         "head": head == expected_final,
         "clean": not before_status and not after_status,
         "remote": head == upstream == tracking == live and ahead == 0 and behind == 0,
@@ -335,6 +353,7 @@ def canonical_checks(expected_final: str) -> dict[str, Any]:
             "source_final": SOURCE_FINAL,
             "x1_head": X1_HEAD,
             "evidence_head": EVIDENCE_HEAD,
+            "retained_first_final": FIRST_FINAL,
             "final_head": head,
             "final_parent": parent,
             "phase_commit_count": commit_count,
