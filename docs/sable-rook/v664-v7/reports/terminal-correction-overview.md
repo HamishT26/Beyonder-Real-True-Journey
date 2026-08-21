@@ -1,0 +1,7 @@
+# Sable Rook v664-v7 terminal correction
+
+The first exact-final canonical invocation at `32f4c9f572059f655e8c8c69ca9fbe603de62946` remains an invalid, zero-credit witness. It passed 35 scoped tests and 26 of 27 checks but failed the whole-owner five-class scan because two regex literals in the immutable evidence scanner were not carried forward as scanner-definition adjudications. Their exact excerpt digests match the immutable evidence staged-review receipt; no payload, private route, credential, raw identifier, transcript, or private local path was found.
+
+This additive correction does not rewrite x1, evidence, the base final, or its failed external receipt. It changes only the terminal scanner contract and lifecycle evidence needed to carry the two exact path/class/digest adjudications. A later exact staging attempt also retained one sparse-path refusal before the correction builder was added explicitly. Working truth is now 24,936 retained negatives and 8,950 Method Flow methods, with 173 open gaps, 171 exact gates, outcomes 14 `completed`, 4 `represented`, 1 `open_gap`, and 1 `exact_gate`, and `NOT_READY_FOR_STAGE_20`.
+
+The canonical v2 aggregate may run only after this correction commit is pushed, clean, typed 0/0 divergent, and fresh-live equal. A successful run must not be replayed. The route remains `PREPARED_NOT_SENT`; no successor is named or contacted by this correction.
