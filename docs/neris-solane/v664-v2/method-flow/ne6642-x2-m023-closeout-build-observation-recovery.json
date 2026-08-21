@@ -1,0 +1,28 @@
+{
+  "artifact_name": "ne6642-x2-m023-closeout-build-observation-recovery.json",
+  "bounded_passing_witness": "A process-specific read-only probe found no continuing builder, and the recovery invocation completed with an attributable terminal result after regenerating only the declared Neris final candidate.",
+  "candidate_workaround": "Verify that no matching process remains, retain the ambiguous attempt, incorporate it into final truth, and rerun the mutable builder with an explicitly captured session or terminal result.",
+  "failed_witness_count": 1,
+  "failure_class": "closeout_build_observation_timeout_ambiguity",
+  "failure_signature": "The first closeout build projection reached its observation timeout without an attributable exit code or captured output; scoped artifacts existed afterward, but that invocation earns zero execution-success credit.",
+  "independent_reproduction": false,
+  "method_id": "NE6642-X2-M023",
+  "negative_id": "NE6642-X2-OP003",
+  "passing_witness_count": 1,
+  "proposal_id": null,
+  "protected_gates": [
+    "execution_attribution",
+    "retained_negative_accounting",
+    "final_truth"
+  ],
+  "recurrence_guard": "Capture the complete command result object when a mutable builder can exceed the direct observation window, then poll only the returned session identifier.",
+  "result": "bounded_recovery_passed",
+  "retained_failed_witnesses": [
+    "NE6642-X2-OP003"
+  ],
+  "rollback": "Do not credit the ambiguous invocation; rebuild before staging so every derived receipt includes the retained failure.",
+  "same_owner_only": true,
+  "schema": "ghc.family.neris.v664-v2.method-flow.operational-recovery.v1",
+  "valid": true,
+  "zero_credit": true
+}

@@ -1,0 +1,28 @@
+{
+  "artifact_name": "ne6642-x2-m022-closeout-search-bound-recovery.json",
+  "bounded_passing_witness": "Bounded line windows and literal stale-token searches covered the closeout builder, tests, and canonical validator without output truncation.",
+  "candidate_workaround": "Split consistency review into bounded literal searches and explicit line windows, then attribute each result independently.",
+  "failed_witness_count": 1,
+  "failure_class": "broad_closeout_consistency_search_output_bound",
+  "failure_signature": "A broad read-only closeout consistency search exceeded the available output and context bound, so its truncated result earned no review credit.",
+  "independent_reproduction": false,
+  "method_id": "NE6642-X2-M022",
+  "negative_id": "NE6642-X2-OP002",
+  "passing_witness_count": 1,
+  "proposal_id": null,
+  "protected_gates": [
+    "stale_label_review",
+    "diagnostic_attribution",
+    "evidence_credit"
+  ],
+  "recurrence_guard": "Cap diagnostic output and divide multi-file lifecycle reviews before running them in a constrained context window.",
+  "result": "bounded_recovery_passed",
+  "retained_failed_witnesses": [
+    "NE6642-X2-OP002"
+  ],
+  "rollback": "Retain the broad search at zero credit and do not infer completeness from its truncated output.",
+  "same_owner_only": true,
+  "schema": "ghc.family.neris.v664-v2.method-flow.operational-recovery.v1",
+  "valid": true,
+  "zero_credit": true
+}
