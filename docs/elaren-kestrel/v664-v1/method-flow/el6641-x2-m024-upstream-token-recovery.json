@@ -1,0 +1,28 @@
+{
+  "artifact_name": "el6641-x2-m024-upstream-token-recovery.json",
+  "bounded_passing_witness": "A direct argument-vector equality check resolved local, upstream, tracking, and fresh-live heads to the evidence commit with typed 0/0 divergence.",
+  "candidate_workaround": "Pass @{upstream} only through a direct argument vector or quote it as a literal; retain already-observed four-way equality separately.",
+  "failed_witness_count": 1,
+  "failure_class": "powershell_upstream_token_interpolation",
+  "failure_signature": "A redundant equality projection passed an encoded PowerShell hashtable token to git rev-list because @{upstream} was not isolated as a literal argument.",
+  "independent_reproduction": false,
+  "method_id": "EL6641-X2-M024",
+  "negative_id": "EL6641-X2-OP004",
+  "passing_witness_count": 1,
+  "proposal_id": null,
+  "protected_gates": [
+    "remote_equality",
+    "typed_divergence",
+    "evidence_credit"
+  ],
+  "recurrence_guard": "Never embed @{upstream} unquoted inside interpolated PowerShell command text; use a scalar variable or a subprocess argument list.",
+  "result": "bounded_recovery_passed",
+  "retained_failed_witnesses": [
+    "EL6641-X2-OP004"
+  ],
+  "rollback": "Retain the failed projection at zero credit and refuse to infer divergence from its malformed git invocation.",
+  "same_owner_only": true,
+  "schema": "ghc.family.elaren.v664-v1.method-flow.operational-recovery.v1",
+  "valid": true,
+  "zero_credit": true
+}

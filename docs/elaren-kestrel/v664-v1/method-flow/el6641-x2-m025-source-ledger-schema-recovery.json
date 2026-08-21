@@ -1,0 +1,28 @@
+{
+  "artifact_name": "el6641-x2-m025-source-ledger-schema-recovery.json",
+  "bounded_passing_witness": "The corrected renderer consumed every frozen source row without changing x1 and produced a baton inside the declared word boundary.",
+  "candidate_workaround": "Render the immutable publisher key actually present in the x1 ledger and derive no absent source-class or authority field.",
+  "failed_witness_count": 1,
+  "failure_class": "source_ledger_renderer_key_drift",
+  "failure_signature": "The first closeout build stopped because the baton renderer expected publisher_or_authority while the frozen source ledger declares publisher.",
+  "independent_reproduction": false,
+  "method_id": "EL6641-X2-M025",
+  "negative_id": "EL6641-X2-OP005",
+  "passing_witness_count": 1,
+  "proposal_id": null,
+  "protected_gates": [
+    "immutable_x1",
+    "source_projection",
+    "baton_integrity"
+  ],
+  "recurrence_guard": "Inspect immutable JSON keys before composing lifecycle projections and never infer an absent schema field from historical family variants.",
+  "result": "bounded_recovery_passed",
+  "retained_failed_witnesses": [
+    "EL6641-X2-OP005"
+  ],
+  "rollback": "Keep the final candidate uncommitted, preserve the failed renderer at zero credit, and rebuild only after the exact frozen schema is honored.",
+  "same_owner_only": true,
+  "schema": "ghc.family.elaren.v664-v1.method-flow.operational-recovery.v1",
+  "valid": true,
+  "zero_credit": true
+}
