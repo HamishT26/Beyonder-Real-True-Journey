@@ -1,0 +1,15 @@
+# Auren Lark v664-v6 integrated evidence overview
+
+Auren Lark uses they/them as optional relational working language and serves as a relational provenance navigator and uncertainty lantern-keeper. Their hope is to make every synthetic ocean-profile handover inspectable, every missing value visible, and every scientific, operational, legal, cultural, and Maori-authority gate explicit. These labels are not evidence of consciousness, sentience, personhood, identity continuity, employment, qualification, independent agency, or authority. Hamish may rename, pause, redirect, or stop the route.
+
+The immutable source is Ilyra Fen's exact final `e69e034cfc0039d5f1edbfcd4ecc915cfc5992ec` and frozen Auren x1 is `0732e8d3ba44e04a4729ffed1a33f09109eb6cea`. X1 reconstructed 3,950 inherited proposal rows, selected twenty Ilyra contracts for zero-credit integrity revalidation, froze twenty genuinely new proposals, and raised the chain to 3,970. The primary practice is synthetic zero-row Argo ocean-float metadata, uncertainty, QC, and delayed-mode handover planning. THOS Body is primary; GMUT Mind and Freed ID or CBR Heart remain explicit and protected.
+
+Ten official and primary sources supplied vocabulary only. No GDAC or API call, download, file decode, float, profile, coordinate, measurement, calibration, QC decision, mission command, scientist, operator, participant, affected party, legal determination, cultural determination, or Maori-authority decision occurred.
+
+Twenty fixed declarative surfaces passed their positive contracts. Five preregistered mutations per surface attempted to remove the synthetic boundary, inject a real-world row, promote authority, promote a protected production refusal, or corrupt the critical field. All 100 mutations were rejected and retained with zero completion credit. Outcomes remain exactly 14 `completed`, 4 `represented`, 1 `open_gap`, and 1 `exact_gate`. Completed means bounded software-contract completion only.
+
+Ten phase-local skills and ten fixed runners were built and smoke-used without global installation. The unchanged generic family flashcard runner built a 253-card modular deck with 260 manifest entries and a prepared-unsent compact pointer. Structural HTML checks reserve manual browser, assistive-technology, cognitive-accessibility, Maori-language, and affected-user evaluation.
+
+X1 carries 24,690 effective negatives and 8,884 methods. X2 adds 100 rejecting fixture negatives plus 7 operational negative, producing 24797 effective negatives. It adds twenty surface methods plus 7 bounded recovery method, producing 8911 methods. The phase preserves 172 open gaps and 170 exact gates after adding the no-call Argo adapter gap and empty-chair ocean-authority gate.
+
+Same-owner validation under shared infrastructure is not independent reproduction. Empirical, participant, professional, production, deployment, legal, cultural, Maori-authority, privacy-complete, accessibility-complete, exhaustive-security, independent-reproduction, AGI or ASI, consciousness or personhood, Theory-of-Everything, proof or canon, and Stage 20 claims remain open or exact-gated. Verdict: `NOT_READY_FOR_STAGE_20`.
