@@ -1,0 +1,28 @@
+{
+  "artifact_name": "ve6643-x2-m025-directory-scoped-stale-label-audit.json",
+  "bounded_passing_witness": "The directory-scoped replacement audit completed and reported only preserved inherited proposal titles and identifiers.",
+  "candidate_workaround": "Search the exact owner directory and explicit lifecycle modules, then classify inherited predecessor names separately from stale owner labels.",
+  "failed_witness_count": 1,
+  "failure_class": "windows_wildcard_path_argument_rejection",
+  "failure_signature": "A read-only stale-label audit passed wildcard path arguments directly to ripgrep on Windows; those path arguments were rejected before the intended files were read.",
+  "independent_reproduction": false,
+  "method_id": "VE6643-X2-M025",
+  "negative_id": "VE6643-X2-OP005",
+  "passing_witness_count": 1,
+  "proposal_id": null,
+  "protected_gates": [
+    "stale_label_review",
+    "tool_attribution",
+    "no_hidden_failure"
+  ],
+  "recurrence_guard": "Do not pass unexpanded Windows wildcard path arguments to ripgrep; use exact directories, rg globs, or materialized literal path arrays.",
+  "result": "bounded_recovery_passed",
+  "retained_failed_witnesses": [
+    "VE6643-X2-OP005"
+  ],
+  "rollback": "The rejected audit was read-only, created no file, staged nothing, and changed no repository or external state.",
+  "same_owner_only": true,
+  "schema": "ghc.family.vesper.v664-v3.method-flow.operational-recovery.v1",
+  "valid": true,
+  "zero_credit": true
+}

@@ -1,0 +1,28 @@
+{
+  "artifact_name": "ve6643-x2-m026-retained-witness-field-assertion.json",
+  "bounded_passing_witness": "The isolated closeout module passes after checking the preserved witness field across all six current operational methods.",
+  "candidate_workaround": "Assert the normalized retained_failed_witnesses field shared by evidence and closeout Method Flow rows.",
+  "failed_witness_count": 1,
+  "failure_class": "method_flow_negative_field_shape_assumption",
+  "failure_signature": "The first closeout test assumed every recent Method Flow row exposed a top-level negative_id; evidence-phase operational rows instead preserve the identifier in retained_failed_witnesses, causing a KeyError.",
+  "independent_reproduction": false,
+  "method_id": "VE6643-X2-M026",
+  "negative_id": "VE6643-X2-OP006",
+  "passing_witness_count": 1,
+  "proposal_id": null,
+  "protected_gates": [
+    "method_flow_schema",
+    "retained_failure_accounting",
+    "no_hidden_failure"
+  ],
+  "recurrence_guard": "Inspect the committed Method Flow schema before asserting optional convenience fields in lifecycle tests.",
+  "result": "bounded_recovery_passed",
+  "retained_failed_witnesses": [
+    "VE6643-X2-OP006"
+  ],
+  "rollback": "The failed test was read-only; it changed no artifact, index, Git ref, remote, or external system and earned zero passing credit.",
+  "same_owner_only": true,
+  "schema": "ghc.family.vesper.v664-v3.method-flow.operational-recovery.v1",
+  "valid": true,
+  "zero_credit": true
+}
