@@ -1,0 +1,22 @@
+{
+  "artifact_name": "ve6643-x2-m024-simple-ripgrep-patterns.json",
+  "bounded_passing_witness": "The replacement searches returned the complete function, alias, registry, and surface declaration locations.",
+  "candidate_workaround": "Use two simple single-quoted ripgrep searches for symbol declarations and literal surface keys.",
+  "failure_class": "malformed_composite_ripgrep_pattern",
+  "failure_signature": "A composite ripgrep expression used to inspect engine symbols had an unclosed group after shell quoting and was rejected before reading the file.",
+  "independent_reproduction": false,
+  "method_id": "VE6643-X2-M024",
+  "negative_id": "VE6643-X2-OP004",
+  "protected_gates": [
+    "tool_attribution",
+    "complete_symbol_inventory",
+    "no_hidden_failure"
+  ],
+  "recurrence_guard": "Prefer small literal searches over shell-sensitive composite expressions for source inventory.",
+  "result": "bounded_recovery_passed",
+  "rollback": "The rejected search was read-only, produced no credited evidence, and changed no file, index, Git ref, or external state.",
+  "same_owner_only": true,
+  "schema": "ghc.family.vesper.v664-v3.method-flow.operational-recovery.v1",
+  "valid": true,
+  "zero_credit": true
+}

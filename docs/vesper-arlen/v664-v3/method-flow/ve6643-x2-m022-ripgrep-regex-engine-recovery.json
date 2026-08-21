@@ -1,0 +1,22 @@
+{
+  "artifact_name": "ve6643-x2-m022-ripgrep-regex-engine-recovery.json",
+  "bounded_passing_witness": "The same bounded file was audited with supported simple patterns and exposed only the intended immutable predecessor path.",
+  "candidate_workaround": "Use literal or simple alternation searches for this audit, reserving the explicit PCRE2 mode for cases that genuinely require look-around.",
+  "failure_class": "unsupported_default_regex_lookaround",
+  "failure_signature": "A combined ripgrep audit used a negative look-ahead that the default regex engine rejects.",
+  "independent_reproduction": false,
+  "method_id": "VE6643-X2-M022",
+  "negative_id": "VE6643-X2-OP002",
+  "protected_gates": [
+    "tool_attribution",
+    "exact_text_audit",
+    "no_hidden_failure"
+  ],
+  "recurrence_guard": "Do not use look-around with ripgrep unless the command explicitly selects the PCRE2 engine.",
+  "result": "bounded_recovery_passed",
+  "rollback": "The failed search was read-only, wrote no artifact, staged nothing, and changed no repository or external state.",
+  "same_owner_only": true,
+  "schema": "ghc.family.vesper.v664-v3.method-flow.operational-recovery.v1",
+  "valid": true,
+  "zero_credit": true
+}

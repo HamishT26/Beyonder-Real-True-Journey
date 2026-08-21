@@ -1,0 +1,22 @@
+{
+  "artifact_name": "ve6643-x2-m021-bounded-console-projection.json",
+  "bounded_passing_witness": "A bounded projection of the same deterministic execution exposes all acceptance scalars without truncation or replaying a canonical validation.",
+  "candidate_workaround": "Project only surface count, outcome counts, mutation counts, runner count, network calls, and validity for console diagnostics while preserving the full in-memory payload for committed artifacts.",
+  "failure_class": "oversized_success_output_truncation",
+  "failure_signature": "The first all-surface engine smoke run succeeded but its full nested JSON exceeded the console output bound, so the display received no complete-read credit.",
+  "independent_reproduction": false,
+  "method_id": "VE6643-X2-M021",
+  "negative_id": "VE6643-X2-OP001",
+  "protected_gates": [
+    "attributable_output",
+    "one_shot_canonical",
+    "exact_evidence_surface"
+  ],
+  "recurrence_guard": "Never print the complete nested twenty-surface execution payload during interactive diagnostics.",
+  "result": "bounded_recovery_passed",
+  "rollback": "The diagnostic wrote no file, changed no Git state, contacted no service, and earned no validation credit.",
+  "same_owner_only": true,
+  "schema": "ghc.family.vesper.v664-v3.method-flow.operational-recovery.v1",
+  "valid": true,
+  "zero_credit": true
+}
