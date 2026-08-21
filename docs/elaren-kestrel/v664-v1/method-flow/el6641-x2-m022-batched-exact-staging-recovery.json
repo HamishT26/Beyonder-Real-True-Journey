@@ -1,0 +1,22 @@
+{
+  "artifact_name": "el6641-x2-m022-batched-exact-staging-recovery.json",
+  "bounded_passing_witness": "The bounded owner-root invocation, with Git's explicit sparse-index permission, staged the complete regenerated evidence surface and exact local allowlist comparison found no missing or unexpected path.",
+  "candidate_workaround": "Stage the already-proven owner root plus the three exact code paths in one bounded Git invocation, then compare the staged names to the committed candidate allowlist before review.",
+  "failure_class": "per_path_staging_wrapper_timeout",
+  "failure_signature": "A one-path-at-a-time PowerShell staging loop exceeded its 30-second window after staging 54 of 119 intended evidence paths.",
+  "independent_reproduction": false,
+  "method_id": "EL6641-X2-M022",
+  "negative_id": "EL6641-X2-OP002",
+  "protected_gates": [
+    "exact_staged_surface",
+    "evidence_credit",
+    "timeout_recovery"
+  ],
+  "recurrence_guard": "Avoid one-process-per-path Git staging on Windows; use one scoped invocation and require an exact post-stage allowlist check.",
+  "result": "bounded_recovery_passed",
+  "rollback": "Keep evidence uncommitted, retain the partial-index timeout at zero credit, and refuse review until the regenerated allowlist and staged index match exactly.",
+  "same_owner_only": true,
+  "schema": "ghc.family.elaren.v664-v1.method-flow.operational-recovery.v1",
+  "valid": true,
+  "zero_credit": true
+}

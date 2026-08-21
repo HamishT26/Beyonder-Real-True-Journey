@@ -1,0 +1,22 @@
+{
+  "artifact_name": "el6641-x2-m021-windows-utf8-validator-recovery.json",
+  "bounded_passing_witness": "The same bundled validator accepted all ten unchanged UTF-8 skill packages when its subprocess used explicit UTF-8 mode.",
+  "candidate_workaround": "Set PYTHONUTF8=1 and PYTHONIOENCODING=utf-8 only for the bundled validator subprocess, then rebuild from the immutable x1 head.",
+  "failure_class": "windows_default_codec_skill_validation",
+  "failure_signature": "The bundled skill validator inherited Windows CP1252 and could not decode one UTF-8 phase-local SKILL.md file.",
+  "independent_reproduction": false,
+  "method_id": "EL6641-X2-M021",
+  "negative_id": "EL6641-X2-OP001",
+  "protected_gates": [
+    "skill_validation",
+    "evidence_credit",
+    "encoding_integrity"
+  ],
+  "recurrence_guard": "Run Python text-processing helpers with an explicit UTF-8 environment on Windows whenever the helper itself does not declare an encoding.",
+  "result": "bounded_recovery_passed",
+  "rollback": "Keep the evidence commit blocked, retain the failed build at zero credit, and remove only incomplete owner-local generated output if a clean rebuild cannot complete.",
+  "same_owner_only": true,
+  "schema": "ghc.family.elaren.v664-v1.method-flow.operational-recovery.v1",
+  "valid": true,
+  "zero_credit": true
+}
