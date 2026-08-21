@@ -1,0 +1,22 @@
+{
+  "artifact_name": "ne6642-x2-m021-final-code-sequencing-recovery.json",
+  "bounded_passing_witness": "The recovered evidence build contains only the exact evidence code, tests, owner artifacts, and self-excluded review receipt; final-only code remains absent until the evidence seal.",
+  "candidate_workaround": "Delete only the three uncommitted Neris final-only files through apply_patch, rebuild evidence from the immutable x1 head, and regenerate final code only after the evidence commit is sealed.",
+  "failure_class": "premature_final_only_code_materialization",
+  "failure_signature": "The first evidence build refused three uncommitted closeout and canonical files because they were outside the evidence-stage owner allowlist.",
+  "independent_reproduction": false,
+  "method_id": "NE6642-X2-M021",
+  "negative_id": "NE6642-X2-OP001",
+  "protected_gates": [
+    "x2_evidence_scope",
+    "lifecycle_separation",
+    "exact_staged_surface"
+  ],
+  "recurrence_guard": "Materialize closeout tests, closeout builder, and canonical validator only after the immutable evidence commit exists.",
+  "result": "bounded_recovery_passed",
+  "rollback": "Keep all generated evidence uncommitted, remove only the premature untracked final files, and preserve the refusal at zero credit.",
+  "same_owner_only": true,
+  "schema": "ghc.family.neris.v664-v2.method-flow.operational-recovery.v1",
+  "valid": true,
+  "zero_credit": true
+}
