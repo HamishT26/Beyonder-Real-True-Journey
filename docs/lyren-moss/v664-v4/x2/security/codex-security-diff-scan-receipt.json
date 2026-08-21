@@ -1,0 +1,83 @@
+{
+  "schema": "ghc.family.lyren.v664-v4.codex-security-diff-scan-receipt.v1",
+  "owner": "Lyren Moss",
+  "phase": "v664-v4",
+  "mode": "working_tree_diff",
+  "snapshot_base": "a11d57463d86a37876a06e5ea3cc04ac37cd7e99",
+  "snapshot_content_digest": "codex-security-snapshot/v1:sha256:1abc77f69188b25cc8d9feb813538edcb66e5e73353bbabc083b7e883a6ee0e3",
+  "completed_at_utc": "2026-08-21T17:23:32.924795Z",
+  "status": "completed",
+  "coverage": "complete_for_three_changed_executable_python_sources",
+  "delegated_workers_used": false,
+  "solo_parent_review": true,
+  "finding_count": 1,
+  "severity_counts": {
+    "medium": 1
+  },
+  "finding": {
+    "rule_id": "improper-link-resolution.output-write",
+    "title": "Owner artifact writers can escape the phase through output-leaf links",
+    "severity": "medium",
+    "confidence": "high",
+    "cwe": [
+      "CWE-59",
+      "CWE-367"
+    ],
+    "snapshot_state": "pre_fix_reportable",
+    "direct_proof": "A bounded Windows temporary-directory proof showed that the pre-fix flashcard writer followed a dangling output-leaf symlink and created thirteen bytes at the outside target.",
+    "remediation_state": "fixed_after_snapshot_and_regression_tested",
+    "remediation": "The owner delta rejects symlink leaves, uses exclusive no-follow creation where supported, and replaces repeatable outputs from an exclusively created same-directory temporary file.",
+    "residual_boundary": "Parent-directory reparse-point behavior and every possible Windows filesystem race were not exhaustively tested."
+  },
+  "reviewed_surfaces": [
+    {
+      "surface": "scripts/build_ghc_family_v664_v4_evidence.py",
+      "disposition": "reported_in_grouped_finding"
+    },
+    {
+      "surface": "scripts/ghc_family_freed_id_flashcards.py",
+      "disposition": "reported_in_grouped_finding"
+    },
+    {
+      "surface": "scripts/ghc_family_archival_audio_evidence.py",
+      "disposition": "no_issue_found"
+    }
+  ],
+  "post_snapshot_regression": {
+    "test": "FlashcardRemasterTests.test_dangling_output_symlink_is_rejected_without_escape",
+    "tests_run": 1,
+    "tests_passed": 1,
+    "outside_target_created": false,
+    "valid": true
+  },
+  "canonical_artifact_sha256": {
+    "scan_manifest": "b995e04b3097e4d4e97f241f644bc27b47efbd504fd7416b91fb773697efaf12",
+    "findings": "e647ad97a4a01a914b64fa223c2e8aafde39028d866d5e33aaca449ec1fc04e1",
+    "coverage": "1edece4e0978ed0af75a48cf386164803ce7e48887288bae0467f8c5bd3f9243",
+    "markdown_report": "ce07e89d8d27d64ae86e380d61ad1a0abec976c4a6f4ceae89e6099268108267",
+    "sarif": "0bd7442fee90543bdb7d31a2423e1f59a33fc3c47898383d8b61c2b5d55b1d03"
+  },
+  "markdown_report": {
+    "bytes": 12332,
+    "lines": 204,
+    "words": 1678,
+    "external_path_omitted": true
+  },
+  "measured_usage": {
+    "coverage": "complete",
+    "thread_count": 1,
+    "input_tokens": 7401925,
+    "cached_input_tokens": 7310080,
+    "output_tokens": 21615,
+    "reasoning_output_tokens": 7045,
+    "total_tokens": 7423540
+  },
+  "warnings": [
+    "The working owner delta changed after the immutable scan snapshot because the finding was remediated; the completed report intentionally describes the original snapshot.",
+    "The review is same-owner structural evidence, not exhaustive security, penetration testing, an external audit, or independent reproduction."
+  ],
+  "private_scan_id_omitted": true,
+  "private_temp_path_omitted": true,
+  "successor_contacted": false,
+  "valid": true
+}

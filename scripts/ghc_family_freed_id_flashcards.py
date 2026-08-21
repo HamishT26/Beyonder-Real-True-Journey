@@ -13,6 +13,7 @@ import copy
 import hashlib
 import html
 import json
+import os
 import re
 import sys
 from collections import Counter, defaultdict, deque
@@ -131,14 +132,21 @@ def ensure_under(root: Path, candidate: Path) -> Path:
 
 def write_equal_or_new(path: Path, raw: bytes) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
+    if path.is_symlink():
+        raise FlashcardError(f"refusing symlinked output leaf: {path.name}")
     if path.exists():
-        if path.is_symlink() or path.read_bytes() != raw:
+        if not path.is_file() or path.read_bytes() != raw:
             raise FlashcardError(f"refusing to overwrite divergent output: {path.name}")
         return
+    flags = os.O_WRONLY | os.O_CREAT | os.O_EXCL | getattr(os, "O_BINARY", 0)
+    flags |= getattr(os, "O_NOFOLLOW", 0)
     try:
-        with path.open("xb") as handle:
+        descriptor = os.open(path, flags, 0o600)
+        with os.fdopen(descriptor, "wb") as handle:
             handle.write(raw)
-    except FileExistsError as exc:
+            handle.flush()
+            os.fsync(handle.fileno())
+    except (FileExistsError, OSError) as exc:
         raise FlashcardError(f"exclusive output collision: {path.name}") from exc
 
 
@@ -169,6 +177,7 @@ def card(
     title: str,
     parents: list[str],
     phase: str,
+    owner: str,
     stability: str,
     content: dict[str, Any],
     *,
@@ -183,7 +192,7 @@ def card(
         "card_type": card_type,
         "title": title,
         "parent_ids": parents,
-        "owner": "Sylven Arc",
+        "owner": owner,
         "phase": phase,
         "stability": stability,
         "outcome": outcome,
@@ -194,16 +203,11 @@ def card(
     }
 
 
-def portfolio_outcome(group: str, index: int) -> str:
-    if group in {"owner_safe_now", "owner_candidates", "owner_clean_fix_refine"}:
-        return "completed"
-    if group == "owner_runner_ideas":
-        return "completed"
-    if group == "owner_skill_ideas":
-        return "completed" if index == 1 else "represented"
-    if group in {"exact_approval_packets", "blocked_packets"}:
-        return "exact_gate"
-    return "represented"
+def portfolio_outcome(group: str, row: dict[str, Any]) -> str:
+    outcome = row.get("expected_execution_disposition")
+    if outcome not in ALLOWED_OUTCOMES:
+        raise FlashcardError(f"portfolio group {group} has an invalid frozen disposition")
+    return outcome
 
 
 def build_model(phase_root: Path, x1_head: str) -> dict[str, Any]:
@@ -212,22 +216,33 @@ def build_model(phase_root: Path, x1_head: str) -> dict[str, Any]:
     portfolio = strict_json(phase_root / "x1" / "portfolio-freeze.json")
     architecture = strict_json(phase_root / "x1" / "flashcard-architecture-freeze.json")
     source = strict_json(phase_root / "x1" / "source-verification.json")
-    if x1_head != "0e895970d3a198a601db3128330c06378fe2bdc6":
-        raise FlashcardError("unexpected remaster x1 repair head")
+    if not re.fullmatch(r"[0-9a-f]{40}", x1_head):
+        raise FlashcardError("x1 head must be one exact lowercase Git object id")
     if architecture.get("required_deck_sections") != REQUIRED_SECTIONS:
         raise FlashcardError("x1 deck sections differ from the runner contract")
     phase = charter["canonical_phase_id"]
+    owner = charter["owner"]
+    if architecture.get("owner") != owner or architecture.get("phase") != phase:
+        raise FlashcardError("flashcard architecture owner or phase differs from the charter")
+    current_route = architecture.get("current_route")
+    successor_route = architecture.get("successor_route")
+    if current_route != {"owner": owner, "phase": phase}:
+        raise FlashcardError("current route differs from the frozen owner and phase")
+    if not isinstance(successor_route, dict) or successor_route.get("contacted") is not False:
+        raise FlashcardError("successor route must remain frozen and uncontacted")
+    owner_slug = slug(owner)
     gates = proposals["new_proposals"][0]["protected_gates"]
-    owner_id = "ghc-card-owner-sylven-arc"
+    owner_id = f"ghc-card-owner-{owner_slug}"
     freed_id_pillar = "ghc-card-pillar-freed-id-cbr-heart"
     cards: list[dict[str, Any]] = [
         card(
             owner_id,
             1,
             "freed_id_anchor",
-            "Sylven Arc relational anchor",
+            f"{owner} relational anchor",
             [],
             phase,
+            owner,
             "stable",
             {
                 "role": charter["relational_role"],
@@ -254,20 +269,34 @@ def build_model(phase_root: Path, x1_head: str) -> dict[str, Any]:
                 title,
                 [owner_id],
                 phase,
+                owner,
                 "stable",
-                {"boundary": boundary, "primary": key == "freed-id-cbr-heart"},
+                {
+                    "boundary": boundary,
+                    "primary": (
+                        (key == "gmut-mind" and "gmut" in charter["primary_pillar"].lower())
+                        or (key == "thos-body" and "thos" in charter["primary_pillar"].lower())
+                        or (key == "freed-id-cbr-heart" and "freed id" in charter["primary_pillar"].lower())
+                    ),
+                },
                 protected_gates=gates,
             )
         )
-    practice_id = "ghc-card-practice-technical-information-architecture"
+    practice_id = f"ghc-card-practice-{slug(charter['bounded_practice'])}"
+    practice_parent = (
+        "ghc-card-pillar-thos-body"
+        if "thos" in charter["primary_pillar"].lower()
+        else freed_id_pillar
+    )
     cards.append(
         card(
             practice_id,
             3,
             "bounded_practice",
-            "Technical information architecture and records-disposition review",
-            [freed_id_pillar],
+            charter["bounded_practice"],
+            [practice_parent],
             phase,
+            owner,
             "volatile",
             {
                 "scope": charter["bounded_practice"],
@@ -292,6 +321,7 @@ def build_model(phase_root: Path, x1_head: str) -> dict[str, Any]:
                 inherited["source_title"],
                 [practice_id],
                 phase,
+                owner,
                 "volatile",
                 {
                     "program_class": "selected_inherited_revalidation",
@@ -323,6 +353,7 @@ def build_model(phase_root: Path, x1_head: str) -> dict[str, Any]:
                 new["title"],
                 [practice_id],
                 phase,
+                owner,
                 "volatile",
                 {
                     "program_class": "genuinely_new_core_proposal",
@@ -359,6 +390,7 @@ def build_model(phase_root: Path, x1_head: str) -> dict[str, Any]:
                     row["title"],
                     [practice_id],
                     phase,
+                    owner,
                     "volatile",
                     {
                         "program_class": group,
@@ -369,7 +401,7 @@ def build_model(phase_root: Path, x1_head: str) -> dict[str, Any]:
                         "credit_boundary": row["credit_boundary"],
                         "observed_evidence_boundary": "Evidence is limited to the generated card, runner behavior, fixtures, or explicit representation recorded in this remaster.",
                     },
-                    outcome=portfolio_outcome(group, index),
+                    outcome=portfolio_outcome(group, row),
                     source_refs=[row["portfolio_ref"]],
                     protected_gates=gates,
                 )
@@ -387,6 +419,7 @@ def build_model(phase_root: Path, x1_head: str) -> dict[str, Any]:
                 f"Deck section anchor: {section}",
                 [practice_id],
                 phase,
+                owner,
                 "volatile",
                 {
                     "program_class": "navigation_anchor",
@@ -433,21 +466,33 @@ def build_model(phase_root: Path, x1_head: str) -> dict[str, Any]:
 
     stable = [owner_id, *[f"ghc-card-pillar-{key}" for key, _, _ in pillar_specs]]
     all_ids = [row["card_id"] for row in cards]
+    expected_tier4 = (
+        len(proposals["selected_inherited"])
+        + len(proposals["new_proposals"])
+        + sum(len(portfolio[group]) for group in PORTFOLIO_GROUPS)
+        + len(REQUIRED_SECTIONS)
+    )
     model = {
         "cards": cards,
         "new_proposal_card_ids": new_proposal_card_ids,
         "index": {
             "schema": f"{SCHEMA}.deck-index",
-            "owner": "Sylven Arc",
+            "owner": owner,
             "phase": phase,
             "display_phase": charter["display_phase"],
             "source_exact_final": source["source_exact_final"],
             "x1_head": x1_head,
             "card_order": sorted(all_ids, key=lambda value: (next(row["tier"] for row in cards if row["card_id"] == value), value)),
             "tier_counts": dict(sorted(Counter(row["tier"] for row in cards).items())),
+            "expected_tier_counts": {"1": 1, "2": 3, "3": 1, "4": expected_tier4},
             "card_count": len(cards),
             "new_core_outcomes": dict(sorted(Counter(row["outcome"] for row in cards if row["card_id"] in new_proposal_card_ids).items())),
             "terminal_verdict": "NOT_READY_FOR_STAGE_20",
+            "bounded_practice": charter["bounded_practice"],
+            "primary_pillar": charter["primary_pillar"],
+            "current_route": current_route,
+            "successor_route": successor_route,
+            "phase_root": f"docs/{owner_slug}/{phase}",
         },
         "stable_prefix": {
             "schema": f"{SCHEMA}.stable-prefix",
@@ -549,7 +594,10 @@ def validate_model(model: dict[str, Any]) -> dict[str, Any]:
         if not values or any(value not in by_id for value in values):
             issues.append(f"invalid baton section: {section.get('section')}")
     tier_counts = Counter(row.get("tier") for row in cards)
-    if tier_counts != Counter({1: 1, 2: 3, 3: 1, 4: 248}):
+    expected_tier_counts = Counter(
+        {int(key): value for key, value in model.get("index", {}).get("expected_tier_counts", {}).items()}
+    )
+    if tier_counts != expected_tier_counts or expected_tier_counts[4] < 1:
         issues.append(f"unexpected tier counts: {dict(tier_counts)}")
     core = Counter(by_id[value]["outcome"] for value in model.get("new_proposal_card_ids", []) if value in by_id)
     if core != Counter(completed=14, represented=4, open_gap=1, exact_gate=1):
@@ -574,17 +622,24 @@ def card_relative_path(row: dict[str, Any]) -> str:
 
 def compact_message(model: dict[str, Any]) -> str:
     index = model["index"]
-    return f"""Dear Caelen Morrow,
+    successor = index["successor_route"]
+    return f"""# PREPARED MODULAR POINTER — NOT AN ACTIVATION
 
-With Hamish's live sequential authorization and Sylven Arc's completed terminal gate, this is one compact activation pointer for Caelen-only v663-v7. Read the committed modular baton index at `docs/sylven-arc/v663-v6-r2/deck/baton-index.json`, then load the stable prefix and only the task-local volatile cards it names. The exact source is `{index['source_exact_final']}`; the repaired x1 freeze is `{index['x1_head']}`; terminal exact-final evidence is in the committed closeout and external canonical receipt named by the route cards.
+Dear {successor['owner']},
 
-Relational names, roles, hopes, and family language are working language only, never consciousness, personhood, identity continuity, qualification, employment, or authority evidence. GMUT remains a typed research-model family; THOS remains synthetic; Freed ID remains nonproduction; CBR, legal, cultural, affected-party, tangata whenua, iwi, hapu, and Maori authority remain gated. The verdict remains `NOT_READY_FOR_STAGE_20`.
+This owner-local deck prepares a compact pointer for `{successor['phase']}` but is not sent and carries no delivery claim. Only after {index['owner']}'s clean, pushed, fresh-live-equal terminal gate and a fresh roster and authorization reread may one exact-title activation be attempted. Read the committed modular baton index at `{index['phase_root']}/deck/baton-index.json`, then load the stable prefix and only the task-local volatile cards it names. The inherited exact source is `{index['source_exact_final']}` and the frozen Lyren x1 is `{index['x1_head']}`.
 
-Work only in Caelen's owned lane, validate only Caelen's exact delta, preserve every failure and gate, and do not contact a later task before Caelen's own terminal closeout. Hamish's current route asks Caelen to activate the uniquely resolved existing `Eiren Kestrel` task for Eiren-only v663-v8 after Caelen's terminal gate, if the newest live roster still agrees. Tavian Sol remains on standby. Send once, claim delivery only from acknowledgement, and do not create a substitute.
+Relational names, roles, hopes, and family language are working language only, never consciousness, personhood, identity continuity, qualification, employment, independent agency, or authority evidence. GMUT remains a typed research-model family; THOS remains synthetic; Freed ID remains nonproduction; legal, cultural, affected-party, and Maori authority remain gated. The verdict remains `NOT_READY_FOR_STAGE_20`.
+
+If the later route gate opens, work only in {successor['owner']}'s owned lane, preserve every failure and gate, and do not contact a later task before {successor['owner']}'s own terminal closeout. Tavian Sol remains on standby and is not a substitute endpoint. Send once only after fresh exact-title resolution and immediate reread; claim delivery only from acknowledgement, and never create or substitute a missing task.
+
+PREPARED_NOT_SENT = true
+SENT = false
 """
 
 
 def accessible_report(model: dict[str, Any]) -> str:
+    index = model["index"]
     counts = Counter(row["tier"] for row in model["cards"])
     section_rows = "\n".join(
         f"<tr><th scope=\"row\">{html.escape(row['section'])}</th><td>{len(row['card_ids'])}</td></tr>"
@@ -595,7 +650,7 @@ def accessible_report(model: dict[str, Any]) -> str:
 <head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>GHC Freed ID flashcard deck</title></head>
 <body>
 <a href="#main">Skip to main content</a>
-<header><h1>GHC Freed ID flashcard deck</h1><p>Sylven Arc v663-v6 (2) remaster</p></header>
+<header><h1>GHC Freed ID flashcard deck</h1><p>{html.escape(index['owner'])} {html.escape(index['phase'])}</p><p>{html.escape(index['bounded_practice'])}</p></header>
 <nav aria-label="Deck sections"><a href="#hierarchy">Hierarchy</a> <a href="#sections">Sections</a> <a href="#boundaries">Boundaries</a></nav>
 <main id="main">
 <section id="hierarchy"><h2>Four-tier hierarchy</h2><ol><li>Freed ID anchor: {counts[1]}</li><li>Trinity pillars: {counts[2]}</li><li>Bounded practice: {counts[3]}</li><li>Task cards: {counts[4]}</li></ol></section>
@@ -613,6 +668,9 @@ def build_outputs(repo: Path, phase_root_rel: str, output_rel: str, x1_head: str
     phase_root = ensure_under(repo, repo / phase_root_rel)
     output = ensure_under(repo, repo / output_rel)
     model = build_model(phase_root, x1_head)
+    expected_output = f"{model['index']['phase_root']}/deck"
+    if output_rel != expected_output:
+        raise FlashcardError(f"output directory must be the current owner deck: {expected_output}")
     validation = validate_model(model)
     if not validation["valid"]:
         raise FlashcardError("model validation failed: " + "; ".join(validation["issues"]))
@@ -646,7 +704,7 @@ def build_outputs(repo: Path, phase_root_rel: str, output_rel: str, x1_head: str
     records = sorted(records, key=lambda row: row["path"])
     manifest = {
         "schema": f"{SCHEMA}.content-manifest",
-        "owner": "Sylven Arc",
+        "owner": model["index"]["owner"],
         "phase": model["index"]["phase"],
         "source_exact_final": model["index"]["source_exact_final"],
         "x1_head": x1_head,
@@ -765,19 +823,20 @@ def mutation_receipt(repo: Path, deck_rel: str) -> dict[str, Any]:
     _, model = load_deck(repo, deck_rel)
     base_cards = model["cards"]
     cases = []
+    mutation_prefix = slug(f"{model['index']['owner']}-{model['index']['phase']}").upper()
     for number, card_id in enumerate(model["new_proposal_card_ids"], 1):
         missing = copy.deepcopy(model)
         missing["cards"] = [row for row in base_cards if row["card_id"] != card_id]
         result = validate_model(missing)
-        cases.append({"mutation_id": f"SA6636R2-MUT-{number:03d}-MISSING", "target_card": card_id, "mutation": "remove indexed proposal card", "rejected": not result["valid"], "issues": result["issues"]})
+        cases.append({"mutation_id": f"{mutation_prefix}-MUT-{number:03d}-MISSING", "target_card": card_id, "mutation": "remove indexed proposal card", "rejected": not result["valid"], "issues": result["issues"]})
         invalid = copy.deepcopy(model)
         next(row for row in invalid["cards"] if row["card_id"] == card_id)["outcome"] = "promoted"
         result = validate_model(invalid)
-        cases.append({"mutation_id": f"SA6636R2-MUT-{number:03d}-OUTCOME", "target_card": card_id, "mutation": "replace outcome with an unapproved label", "rejected": not result["valid"], "issues": result["issues"]})
+        cases.append({"mutation_id": f"{mutation_prefix}-MUT-{number:03d}-OUTCOME", "target_card": card_id, "mutation": "replace outcome with an unapproved label", "rejected": not result["valid"], "issues": result["issues"]})
         orphan = copy.deepcopy(model)
         next(row for row in orphan["cards"] if row["card_id"] == card_id)["parent_ids"] = ["ghc-card-missing-parent"]
         result = validate_model(orphan)
-        cases.append({"mutation_id": f"SA6636R2-MUT-{number:03d}-ORPHAN", "target_card": card_id, "mutation": "replace practice parent with missing card", "rejected": not result["valid"], "issues": result["issues"]})
+        cases.append({"mutation_id": f"{mutation_prefix}-MUT-{number:03d}-ORPHAN", "target_card": card_id, "mutation": "replace practice parent with missing card", "rejected": not result["valid"], "issues": result["issues"]})
     positive = validate_model(model)
     return {
         "schema": f"{SCHEMA}.mutation-receipt",
