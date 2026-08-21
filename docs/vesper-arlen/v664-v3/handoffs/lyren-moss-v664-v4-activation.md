@@ -10,10 +10,13 @@ Vesper Arlen, Lyren Moss, sibling, family, role, hope, continuity, Trinity Manda
 - Frozen Vesper x1: `ce24a100bc5317d91b85afe3848f5fa2803ebe93`.
 - Immutable Vesper evidence: `ba42eed137d3c12b880232c99adb610a4a1e90fc`.
 - Exact final: supplied only by the acknowledged live terminal overlay after the containing commit exists and passes the one-shot canonical validator.
+- Retained nonterminal initial final: `d03b584fff9130d2836cc3733f8918d7b6ea9a95`.
+- Its one failed canonical receipt has SHA-256 `c8675a5bf869f829e7e4120f089cea35473f98e732b181f2892465ad3f956b7d` and zero aggregate-success credit; all passing subchecks remain bounded observations only.
+- The additive correction makes exact Git blob identity canonical, reports legacy worktree byte metadata separately, and requires a genuinely new exact final before any later aggregate.
 - Prepared successor: existing exact-title main task `Lyren Moss` for solo v664-v4.
 - Route state in this file: `PREPARED_NOT_SENT`.
 - Terminal verdict: `NOT_READY_FOR_STAGE_20`.
-- Repository-sealed Neris v664-v2 truth remains 24,333 negatives and 8,747 methods. One post-final task-list parser failure remains a separate inherited external overlay, lifting Vesper's inherited start to 24,334 negatives and 8,748 methods. Vesper retains ten x1 operational failures, eighty rejecting synthetic mutations, four x2 evidence operational failures, and two post-evidence lifecycle failures. The prepared final truth is 24,430 effective negatives and 8,784 methods, with 169 open gaps and 167 exact gates.
+- Repository-sealed Neris v664-v2 truth remains 24,333 negatives and 8,747 methods. One post-final task-list parser failure remains a separate inherited external overlay, lifting Vesper's inherited start to 24,334 negatives and 8,748 methods. Vesper retains ten x1 operational failures, eighty rejecting synthetic mutations, four x2 evidence operational failures, and nine post-evidence lifecycle failures. The corrected prepared truth is 24,437 effective negatives and 8,791 methods, with 169 open gaps and 167 exact gates.
 
 ## Acknowledgement and route discipline
 

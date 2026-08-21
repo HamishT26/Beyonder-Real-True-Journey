@@ -1,0 +1,28 @@
+{
+  "artifact_name": "ve6643-x2-m027-canonical-git-blob-domain-correction.json",
+  "bounded_passing_witness": "An isolated four-manifest replay validated 312 exact entries with zero blob mismatches while reporting ten legacy noncanonical worktree metadata rows.",
+  "candidate_workaround": "Retain the failed aggregate, make exact Git blob identity the canonical content domain, report noncanonical worktree byte metadata separately, and target any later aggregate only at an additive corrected final.",
+  "failed_witness_count": 1,
+  "failure_class": "exact_final_manifest_replay_domain_mismatch",
+  "failure_signature": "The one canonical aggregate at the retained initial final passed 63 tests, 140 JSON parses, and privacy/security scans, but failed manifest replay because legacy prospective byte and SHA fields described mixed Windows worktree materialization rather than canonical Git blob bytes.",
+  "independent_reproduction": false,
+  "method_id": "VE6643-X2-M027",
+  "negative_id": "VE6643-X2-OP007",
+  "passing_witness_count": 1,
+  "proposal_id": null,
+  "protected_gates": [
+    "one_shot_canonical",
+    "exact_git_blob_identity",
+    "retained_initial_final"
+  ],
+  "recurrence_guard": "Build future manifests from staged or committed Git blob bytes; never treat mutable worktree line endings as the canonical content domain.",
+  "result": "bounded_recovery_passed",
+  "retained_failed_witnesses": [
+    "VE6643-X2-OP007"
+  ],
+  "rollback": "The failed external receipt remains immutable at zero success credit; the retained initial final remains ancestral and is not rewritten.",
+  "same_owner_only": true,
+  "schema": "ghc.family.vesper.v664-v3.method-flow.terminal-correction-recovery.v1",
+  "valid": true,
+  "zero_credit": true
+}

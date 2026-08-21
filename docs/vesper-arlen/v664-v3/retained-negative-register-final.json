@@ -1,5 +1,5 @@
 {
-  "effective_negatives": 24430,
+  "effective_negatives": 24437,
   "new_records": [
     {
       "completion_credit": 0,
@@ -688,13 +688,70 @@
       "proposal_id": null,
       "reason": "The first closeout test assumed every recent Method Flow row exposed a top-level negative_id; evidence-phase operational rows instead preserve the identifier in retained_failed_witnesses, causing a KeyError.",
       "retained": true
+    },
+    {
+      "completion_credit": 0,
+      "failure_class": "exact_final_manifest_replay_domain_mismatch",
+      "negative_id": "VE6643-X2-OP007",
+      "proposal_id": null,
+      "reason": "The one canonical aggregate at the retained initial final passed 63 tests, 140 JSON parses, and privacy/security scans, but failed manifest replay because legacy prospective byte and SHA fields described mixed Windows worktree materialization rather than canonical Git blob bytes.",
+      "retained": true
+    },
+    {
+      "completion_credit": 0,
+      "failure_class": "isolated_probe_session_handle_suppressed",
+      "negative_id": "VE6643-X2-OP008",
+      "proposal_id": null,
+      "reason": "The first isolated replay probe crossed its observation window while the wrapper projected stdout only, suppressing the continuation handle; the invocation therefore earned zero passing credit.",
+      "retained": true
+    },
+    {
+      "completion_credit": 0,
+      "failure_class": "inline_byte_literal_overescape",
+      "negative_id": "VE6643-X2-OP009",
+      "proposal_id": null,
+      "reason": "A seven-path recovery probe over-escaped CR/LF byte literals through the shell, so it searched for backslash characters and earned zero compatibility credit.",
+      "retained": true
+    },
+    {
+      "completion_credit": 0,
+      "failure_class": "uniform_crlf_materialization_assumption_rejected",
+      "negative_id": "VE6643-X2-OP010",
+      "proposal_id": null,
+      "reason": "A correctly escaped seven-path probe showed that whole-file LF-to-CRLF expansion did not reproduce the legacy manifest metadata because the edited Python files had mixed line-ending materialization.",
+      "retained": true
+    },
+    {
+      "completion_credit": 0,
+      "failure_class": "sparse_index_out_of_cone_stage_refusal",
+      "negative_id": "VE6643-X2-OP011",
+      "proposal_id": null,
+      "reason": "The first exact correction staging command staged in-cone paths but refused the new correction builder outside the sparse definition because the command omitted Git's explicit sparse-index override.",
+      "retained": true
+    },
+    {
+      "completion_credit": 0,
+      "failure_class": "terminal_correction_staged_review_test_failure",
+      "negative_id": "VE6643-X2-OP012",
+      "proposal_id": null,
+      "reason": "The first terminal-correction staged review passed its allowlist, manifest, JSON, privacy, and security checks but failed because one closeout test retained the pre-correction protocol-state expectation.",
+      "retained": true
+    },
+    {
+      "completion_credit": 0,
+      "failure_class": "stale_closeout_protocol_state_assertion",
+      "negative_id": "VE6643-X2-OP013",
+      "proposal_id": null,
+      "reason": "The isolated closeout module confirmed that its protocol test expected POSTCOMMIT_REQUIRED after the correction deliberately advanced the state to CORRECTED_FINAL_POSTCOMMIT_REQUIRED.",
+      "retained": true
     }
   ],
   "no_negative_erased": true,
-  "post_evidence_operational_negatives": 2,
+  "post_evidence_operational_negatives": 9,
   "post_final_activation_overlay_negatives": 1,
   "repository_sealed_negatives": 24333,
-  "schema": "ghc.family.vesper.v664-v3.retained-negative-register.final.v1",
+  "schema": "ghc.family.vesper.v664-v3.retained-negative-register.terminal-correction.v1",
+  "terminal_correction_negative_count": 7,
   "valid": true,
   "working_inherited_negatives": 24334,
   "x1_owner_operational_negatives": 10,

@@ -1,0 +1,28 @@
+{
+  "artifact_name": "ve6643-x2-m028-session-handle-preservation.json",
+  "bounded_passing_witness": "The original process was uniquely identified and allowed to exit without duplicate execution; the later bounded replay surfaced and reused its continuation handle correctly.",
+  "candidate_workaround": "Inspect the exact process read-only, wait for that process to exit, and surface full execution-result metadata for any replacement probe.",
+  "failed_witness_count": 1,
+  "failure_class": "isolated_probe_session_handle_suppressed",
+  "failure_signature": "The first isolated replay probe crossed its observation window while the wrapper projected stdout only, suppressing the continuation handle; the invocation therefore earned zero passing credit.",
+  "independent_reproduction": false,
+  "method_id": "VE6643-X2-M028",
+  "negative_id": "VE6643-X2-OP008",
+  "passing_witness_count": 1,
+  "proposal_id": null,
+  "protected_gates": [
+    "process_attribution",
+    "no_duplicate_probe",
+    "no_hidden_success"
+  ],
+  "recurrence_guard": "Never project only stdout for a command that can return a continuation session; preserve the full result envelope until terminal exit.",
+  "result": "bounded_recovery_passed",
+  "retained_failed_witnesses": [
+    "VE6643-X2-OP008"
+  ],
+  "rollback": "The probe was read-only, changed no file or ref, and its unseen output received zero validation credit.",
+  "same_owner_only": true,
+  "schema": "ghc.family.vesper.v664-v3.method-flow.terminal-correction-recovery.v1",
+  "valid": true,
+  "zero_credit": true
+}

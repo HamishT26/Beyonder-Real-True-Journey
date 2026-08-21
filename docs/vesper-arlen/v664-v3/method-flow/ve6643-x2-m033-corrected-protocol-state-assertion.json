@@ -1,0 +1,28 @@
+{
+  "artifact_name": "ve6643-x2-m033-corrected-protocol-state-assertion.json",
+  "bounded_passing_witness": "The isolated closeout module and regenerated 63-test correction review pass after the one-line state correction.",
+  "candidate_workaround": "Bind the assertion to the explicit corrected-final postcommit state while preserving the no-preclaim and no-success-replay checks.",
+  "failed_witness_count": 1,
+  "failure_class": "stale_closeout_protocol_state_assertion",
+  "failure_signature": "The isolated closeout module confirmed that its protocol test expected POSTCOMMIT_REQUIRED after the correction deliberately advanced the state to CORRECTED_FINAL_POSTCOMMIT_REQUIRED.",
+  "independent_reproduction": false,
+  "method_id": "VE6643-X2-M033",
+  "negative_id": "VE6643-X2-OP013",
+  "passing_witness_count": 1,
+  "proposal_id": null,
+  "protected_gates": [
+    "canonical_state_machine",
+    "no_preclaim",
+    "no_post_success_replay"
+  ],
+  "recurrence_guard": "Keep lifecycle-state assertions aligned with additive correction schemas and never relax the associated no-preclaim fields.",
+  "result": "bounded_recovery_passed",
+  "retained_failed_witnesses": [
+    "VE6643-X2-OP013"
+  ],
+  "rollback": "The failed isolated test was read-only and changed no artifact, index, ref, remote, or external state.",
+  "same_owner_only": true,
+  "schema": "ghc.family.vesper.v664-v3.method-flow.terminal-correction-recovery.v1",
+  "valid": true,
+  "zero_credit": true
+}

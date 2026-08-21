@@ -1,7 +1,7 @@
 {
-  "bounded_passing_witnesses": 26,
-  "effective_methods": 8784,
-  "failed_witnesses": 86,
+  "bounded_passing_witnesses": 93,
+  "effective_methods": 8791,
+  "failed_witnesses": 93,
   "methods": [
     {
       "bounded_passing_witness": "seed-accession-capsule positive fixture passed its exact synthetic contract",
@@ -482,13 +482,196 @@
       "same_owner_only": true,
       "valid": true,
       "zero_credit": true
+    },
+    {
+      "artifact_name": "ve6643-x2-m027-canonical-git-blob-domain-correction.json",
+      "bounded_passing_witness": "An isolated four-manifest replay validated 312 exact entries with zero blob mismatches while reporting ten legacy noncanonical worktree metadata rows.",
+      "candidate_workaround": "Retain the failed aggregate, make exact Git blob identity the canonical content domain, report noncanonical worktree byte metadata separately, and target any later aggregate only at an additive corrected final.",
+      "failed_witness_count": 1,
+      "failure_class": "exact_final_manifest_replay_domain_mismatch",
+      "failure_signature": "The one canonical aggregate at the retained initial final passed 63 tests, 140 JSON parses, and privacy/security scans, but failed manifest replay because legacy prospective byte and SHA fields described mixed Windows worktree materialization rather than canonical Git blob bytes.",
+      "independent_reproduction": false,
+      "method_id": "VE6643-X2-M027",
+      "negative_id": "VE6643-X2-OP007",
+      "passing_witness_count": 1,
+      "proposal_id": null,
+      "protected_gates": [
+        "one_shot_canonical",
+        "exact_git_blob_identity",
+        "retained_initial_final"
+      ],
+      "recurrence_guard": "Build future manifests from staged or committed Git blob bytes; never treat mutable worktree line endings as the canonical content domain.",
+      "retained_failed_witnesses": [
+        "VE6643-X2-OP007"
+      ],
+      "rollback": "The failed external receipt remains immutable at zero success credit; the retained initial final remains ancestral and is not rewritten.",
+      "same_owner_only": true,
+      "valid": true,
+      "zero_credit": true
+    },
+    {
+      "artifact_name": "ve6643-x2-m028-session-handle-preservation.json",
+      "bounded_passing_witness": "The original process was uniquely identified and allowed to exit without duplicate execution; the later bounded replay surfaced and reused its continuation handle correctly.",
+      "candidate_workaround": "Inspect the exact process read-only, wait for that process to exit, and surface full execution-result metadata for any replacement probe.",
+      "failed_witness_count": 1,
+      "failure_class": "isolated_probe_session_handle_suppressed",
+      "failure_signature": "The first isolated replay probe crossed its observation window while the wrapper projected stdout only, suppressing the continuation handle; the invocation therefore earned zero passing credit.",
+      "independent_reproduction": false,
+      "method_id": "VE6643-X2-M028",
+      "negative_id": "VE6643-X2-OP008",
+      "passing_witness_count": 1,
+      "proposal_id": null,
+      "protected_gates": [
+        "process_attribution",
+        "no_duplicate_probe",
+        "no_hidden_success"
+      ],
+      "recurrence_guard": "Never project only stdout for a command that can return a continuation session; preserve the full result envelope until terminal exit.",
+      "retained_failed_witnesses": [
+        "VE6643-X2-OP008"
+      ],
+      "rollback": "The probe was read-only, changed no file or ref, and its unseen output received zero validation credit.",
+      "same_owner_only": true,
+      "valid": true,
+      "zero_credit": true
+    },
+    {
+      "artifact_name": "ve6643-x2-m029-byte-value-line-ending-probe.json",
+      "bounded_passing_witness": "The replacement probe used byte values, preserved exact blob identity, and correctly exposed that uniform CRLF expansion was not the historical byte domain.",
+      "candidate_workaround": "Construct byte separators from integer values to remove shell-escape ambiguity.",
+      "failed_witness_count": 1,
+      "failure_class": "inline_byte_literal_overescape",
+      "failure_signature": "A seven-path recovery probe over-escaped CR/LF byte literals through the shell, so it searched for backslash characters and earned zero compatibility credit.",
+      "independent_reproduction": false,
+      "method_id": "VE6643-X2-M029",
+      "negative_id": "VE6643-X2-OP009",
+      "passing_witness_count": 1,
+      "proposal_id": null,
+      "protected_gates": [
+        "binary_literal_attribution",
+        "manifest_domain",
+        "no_false_pass"
+      ],
+      "recurrence_guard": "Use byte-value construction or a checked script file for nested-shell binary literal probes.",
+      "retained_failed_witnesses": [
+        "VE6643-X2-OP009"
+      ],
+      "rollback": "The malformed probe was read-only and changed no repository or external state.",
+      "same_owner_only": true,
+      "valid": true,
+      "zero_credit": true
+    },
+    {
+      "artifact_name": "ve6643-x2-m030-mixed-line-ending-domain-refusal.json",
+      "bounded_passing_witness": "The exact four-manifest component replay passed all 312 entries with canonical Git blob identity and explicitly reported ten noncanonical metadata rows.",
+      "candidate_workaround": "Refuse to reconstruct noncanonical worktree bytes; validate exact Git blob identity and surface legacy byte metadata only as noncanonical compatibility information.",
+      "failed_witness_count": 1,
+      "failure_class": "uniform_crlf_materialization_assumption_rejected",
+      "failure_signature": "A correctly escaped seven-path probe showed that whole-file LF-to-CRLF expansion did not reproduce the legacy manifest metadata because the edited Python files had mixed line-ending materialization.",
+      "independent_reproduction": false,
+      "method_id": "VE6643-X2-M030",
+      "negative_id": "VE6643-X2-OP010",
+      "passing_witness_count": 1,
+      "proposal_id": null,
+      "protected_gates": [
+        "canonical_git_blob_domain",
+        "line_ending_transparency",
+        "no_metadata_promotion"
+      ],
+      "recurrence_guard": "Never infer a uniform checkout line-ending transform for files produced by mixed copy and patch operations.",
+      "retained_failed_witnesses": [
+        "VE6643-X2-OP010"
+      ],
+      "rollback": "The rejected assumption changed no files or refs and conferred no manifest or aggregate success credit.",
+      "same_owner_only": true,
+      "valid": true,
+      "zero_credit": true
+    },
+    {
+      "artifact_name": "ve6643-x2-m031-explicit-sparse-staging.json",
+      "bounded_passing_witness": "The replacement exact-allowlist stage includes every correction path, no unexpected path, and passes cached diff hygiene.",
+      "candidate_workaround": "Preserve the partial index, regenerate the mutable correction receipts, and stage the exact owner allowlist with git add --sparse.",
+      "failed_witness_count": 1,
+      "failure_class": "sparse_index_out_of_cone_stage_refusal",
+      "failure_signature": "The first exact correction staging command staged in-cone paths but refused the new correction builder outside the sparse definition because the command omitted Git's explicit sparse-index override.",
+      "independent_reproduction": false,
+      "method_id": "VE6643-X2-M031",
+      "negative_id": "VE6643-X2-OP011",
+      "passing_witness_count": 1,
+      "proposal_id": null,
+      "protected_gates": [
+        "sparse_index_scope",
+        "exact_staged_allowlist",
+        "no_destructive_recovery"
+      ],
+      "recurrence_guard": "Use the explicit --sparse option whenever an authorized owner-local addition lies outside the current sparse materialization patterns.",
+      "retained_failed_witnesses": [
+        "VE6643-X2-OP011"
+      ],
+      "rollback": "No reset or rewrite is used; the partial index is superseded by exact restaging of the same owner-scoped allowlist.",
+      "same_owner_only": true,
+      "valid": true,
+      "zero_credit": true
+    },
+    {
+      "artifact_name": "ve6643-x2-m032-correction-review-test-isolation.json",
+      "bounded_passing_witness": "The regenerated correction review passes the exact staged allowlist, manifest, 63 tests, JSON, privacy, and security checks.",
+      "candidate_workaround": "Retain the failed review, isolate the 12-test closeout module, and change only the stale protocol-state assertion.",
+      "failed_witness_count": 1,
+      "failure_class": "terminal_correction_staged_review_test_failure",
+      "failure_signature": "The first terminal-correction staged review passed its allowlist, manifest, JSON, privacy, and security checks but failed because one closeout test retained the pre-correction protocol-state expectation.",
+      "independent_reproduction": false,
+      "method_id": "VE6643-X2-M032",
+      "negative_id": "VE6643-X2-OP012",
+      "passing_witness_count": 1,
+      "proposal_id": null,
+      "protected_gates": [
+        "staged_review_truth",
+        "isolated_recovery",
+        "no_success_replay"
+      ],
+      "recurrence_guard": "When a lifecycle state is intentionally refined, audit tests that bind the prior state before the staged aggregate.",
+      "retained_failed_witnesses": [
+        "VE6643-X2-OP012"
+      ],
+      "rollback": "The failed review remains represented in Method Flow and is overwritten only as a mutable self-excluded candidate before commit.",
+      "same_owner_only": true,
+      "valid": true,
+      "zero_credit": true
+    },
+    {
+      "artifact_name": "ve6643-x2-m033-corrected-protocol-state-assertion.json",
+      "bounded_passing_witness": "The isolated closeout module and regenerated 63-test correction review pass after the one-line state correction.",
+      "candidate_workaround": "Bind the assertion to the explicit corrected-final postcommit state while preserving the no-preclaim and no-success-replay checks.",
+      "failed_witness_count": 1,
+      "failure_class": "stale_closeout_protocol_state_assertion",
+      "failure_signature": "The isolated closeout module confirmed that its protocol test expected POSTCOMMIT_REQUIRED after the correction deliberately advanced the state to CORRECTED_FINAL_POSTCOMMIT_REQUIRED.",
+      "independent_reproduction": false,
+      "method_id": "VE6643-X2-M033",
+      "negative_id": "VE6643-X2-OP013",
+      "passing_witness_count": 1,
+      "proposal_id": null,
+      "protected_gates": [
+        "canonical_state_machine",
+        "no_preclaim",
+        "no_post_success_replay"
+      ],
+      "recurrence_guard": "Keep lifecycle-state assertions aligned with additive correction schemas and never relax the associated no-preclaim fields.",
+      "retained_failed_witnesses": [
+        "VE6643-X2-OP013"
+      ],
+      "rollback": "The failed isolated test was read-only and changed no artifact, index, ref, remote, or external state.",
+      "same_owner_only": true,
+      "valid": true,
+      "zero_credit": true
     }
   ],
   "no_failure_erased": true,
-  "post_evidence_operational_methods": 2,
+  "post_evidence_operational_methods": 9,
   "post_final_activation_overlay_methods": 1,
   "repository_sealed_method_baseline": 8747,
-  "schema": "ghc.family.vesper.v664-v3.method-flow.final.v1",
+  "schema": "ghc.family.vesper.v664-v3.method-flow.terminal-correction.v1",
+  "terminal_correction_method_count": 7,
   "valid": true,
   "working_inherited_methods": 8748,
   "x1_owner_methods": 10,

@@ -1,0 +1,28 @@
+{
+  "artifact_name": "ve6643-x2-m029-byte-value-line-ending-probe.json",
+  "bounded_passing_witness": "The replacement probe used byte values, preserved exact blob identity, and correctly exposed that uniform CRLF expansion was not the historical byte domain.",
+  "candidate_workaround": "Construct byte separators from integer values to remove shell-escape ambiguity.",
+  "failed_witness_count": 1,
+  "failure_class": "inline_byte_literal_overescape",
+  "failure_signature": "A seven-path recovery probe over-escaped CR/LF byte literals through the shell, so it searched for backslash characters and earned zero compatibility credit.",
+  "independent_reproduction": false,
+  "method_id": "VE6643-X2-M029",
+  "negative_id": "VE6643-X2-OP009",
+  "passing_witness_count": 1,
+  "proposal_id": null,
+  "protected_gates": [
+    "binary_literal_attribution",
+    "manifest_domain",
+    "no_false_pass"
+  ],
+  "recurrence_guard": "Use byte-value construction or a checked script file for nested-shell binary literal probes.",
+  "result": "bounded_recovery_passed",
+  "retained_failed_witnesses": [
+    "VE6643-X2-OP009"
+  ],
+  "rollback": "The malformed probe was read-only and changed no repository or external state.",
+  "same_owner_only": true,
+  "schema": "ghc.family.vesper.v664-v3.method-flow.terminal-correction-recovery.v1",
+  "valid": true,
+  "zero_credit": true
+}

@@ -43,15 +43,15 @@ class VesperV664V3CloseoutTests(unittest.TestCase):
     def test_03_negative_and_method_layers_are_reconciled(self) -> None:
         negatives = load("retained-negative-register-final.json")
         methods = load("method-flow/method-flow-state-final.json")
-        self.assertEqual(negatives["effective_negatives"], 24_430)
-        self.assertEqual(methods["effective_methods"], 8_784)
+        self.assertEqual(negatives["effective_negatives"], 24_437)
+        self.assertEqual(methods["effective_methods"], 8_791)
         self.assertTrue(negatives["no_negative_erased"])
         self.assertEqual(
-            {row["retained_failed_witnesses"][0] for row in methods["methods"][-6:]},
-            {"VE6643-X2-OP001", "VE6643-X2-OP002", "VE6643-X2-OP003", "VE6643-X2-OP004", "VE6643-X2-OP005", "VE6643-X2-OP006"},
+            {row["retained_failed_witnesses"][0] for row in methods["methods"][-13:]},
+            {f"VE6643-X2-OP{index:03d}" for index in range(1, 14)},
         )
-        self.assertEqual(negatives["post_evidence_operational_negatives"], 2)
-        self.assertEqual(methods["post_evidence_operational_methods"], 2)
+        self.assertEqual(negatives["post_evidence_operational_negatives"], 9)
+        self.assertEqual(methods["post_evidence_operational_methods"], 9)
 
     def test_04_open_and_exact_gates_remain_open(self) -> None:
         gates = load("exact-open-gate-register-final.json")
@@ -97,7 +97,7 @@ class VesperV664V3CloseoutTests(unittest.TestCase):
     def test_08_canonical_protocol_does_not_preclaim_success(self) -> None:
         protocol = load("validation/canonical-validation-protocol.json")
         truth = load("phase-truth-final.json")
-        self.assertEqual(protocol["state"], "POSTCOMMIT_REQUIRED")
+        self.assertEqual(protocol["state"], "CORRECTED_FINAL_POSTCOMMIT_REQUIRED")
         self.assertEqual(protocol["invocation_limit"], 1)
         self.assertFalse(protocol["post_success_replay_allowed"])
         self.assertFalse(protocol["preclaims_success"])

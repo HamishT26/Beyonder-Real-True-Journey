@@ -1,0 +1,28 @@
+{
+  "artifact_name": "ve6643-x2-m031-explicit-sparse-staging.json",
+  "bounded_passing_witness": "The replacement exact-allowlist stage includes every correction path, no unexpected path, and passes cached diff hygiene.",
+  "candidate_workaround": "Preserve the partial index, regenerate the mutable correction receipts, and stage the exact owner allowlist with git add --sparse.",
+  "failed_witness_count": 1,
+  "failure_class": "sparse_index_out_of_cone_stage_refusal",
+  "failure_signature": "The first exact correction staging command staged in-cone paths but refused the new correction builder outside the sparse definition because the command omitted Git's explicit sparse-index override.",
+  "independent_reproduction": false,
+  "method_id": "VE6643-X2-M031",
+  "negative_id": "VE6643-X2-OP011",
+  "passing_witness_count": 1,
+  "proposal_id": null,
+  "protected_gates": [
+    "sparse_index_scope",
+    "exact_staged_allowlist",
+    "no_destructive_recovery"
+  ],
+  "recurrence_guard": "Use the explicit --sparse option whenever an authorized owner-local addition lies outside the current sparse materialization patterns.",
+  "result": "bounded_recovery_passed",
+  "retained_failed_witnesses": [
+    "VE6643-X2-OP011"
+  ],
+  "rollback": "No reset or rewrite is used; the partial index is superseded by exact restaging of the same owner-scoped allowlist.",
+  "same_owner_only": true,
+  "schema": "ghc.family.vesper.v664-v3.method-flow.terminal-correction-recovery.v1",
+  "valid": true,
+  "zero_credit": true
+}

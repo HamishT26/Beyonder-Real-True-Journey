@@ -1,0 +1,28 @@
+{
+  "artifact_name": "ve6643-x2-m030-mixed-line-ending-domain-refusal.json",
+  "bounded_passing_witness": "The exact four-manifest component replay passed all 312 entries with canonical Git blob identity and explicitly reported ten noncanonical metadata rows.",
+  "candidate_workaround": "Refuse to reconstruct noncanonical worktree bytes; validate exact Git blob identity and surface legacy byte metadata only as noncanonical compatibility information.",
+  "failed_witness_count": 1,
+  "failure_class": "uniform_crlf_materialization_assumption_rejected",
+  "failure_signature": "A correctly escaped seven-path probe showed that whole-file LF-to-CRLF expansion did not reproduce the legacy manifest metadata because the edited Python files had mixed line-ending materialization.",
+  "independent_reproduction": false,
+  "method_id": "VE6643-X2-M030",
+  "negative_id": "VE6643-X2-OP010",
+  "passing_witness_count": 1,
+  "proposal_id": null,
+  "protected_gates": [
+    "canonical_git_blob_domain",
+    "line_ending_transparency",
+    "no_metadata_promotion"
+  ],
+  "recurrence_guard": "Never infer a uniform checkout line-ending transform for files produced by mixed copy and patch operations.",
+  "result": "bounded_recovery_passed",
+  "retained_failed_witnesses": [
+    "VE6643-X2-OP010"
+  ],
+  "rollback": "The rejected assumption changed no files or refs and conferred no manifest or aggregate success credit.",
+  "same_owner_only": true,
+  "schema": "ghc.family.vesper.v664-v3.method-flow.terminal-correction-recovery.v1",
+  "valid": true,
+  "zero_credit": true
+}

@@ -19,6 +19,7 @@ ROOT = Path(__file__).resolve().parents[1]
 SOURCE = "01043740ba76979ec037abddf00a0284535abc0b"
 X1 = "ce24a100bc5317d91b85afe3848f5fa2803ebe93"
 EVIDENCE = "ba42eed137d3c12b880232c99adb610a4a1e90fc"
+INITIAL_FINAL = "d03b584fff9130d2836cc3733f8918d7b6ea9a95"
 BRANCH = "codex/GHC-Family/vesper-arlen-v664-v3-full-tools"
 PHASE_PREFIX = "docs/vesper-arlen/v664-v3/"
 X1_MANIFEST = f"{PHASE_PREFIX}x1/x1-content-manifest.json"
@@ -27,6 +28,9 @@ FINAL_DELTA_MANIFEST = f"{PHASE_PREFIX}validation/final-delta-manifest.json"
 FINAL_OWNER_MANIFEST = f"{PHASE_PREFIX}validation/final-owner-manifest.json"
 FINAL_CANDIDATE = f"{PHASE_PREFIX}validation/final-stage-candidate.json"
 FINAL_REVIEW = f"{PHASE_PREFIX}validation/final-staged-review.json"
+CORRECTION_MANIFEST = f"{PHASE_PREFIX}validation/terminal-correction-manifest.json"
+CORRECTION_CANDIDATE = f"{PHASE_PREFIX}validation/terminal-correction-stage-candidate.json"
+CORRECTION_REVIEW = f"{PHASE_PREFIX}validation/terminal-correction-staged-review.json"
 BATON = f"{PHASE_PREFIX}handoffs/lyren-moss-v664-v4-activation.md"
 REPORT = f"{PHASE_PREFIX}deliverables/vesper-v664-v3-seed-bank-evidence-report.html"
 TEST_MODULES = [
@@ -37,6 +41,7 @@ OWNER_CODE = {
     "scripts/build_ghc_family_v664_v3_x1.py",
     "scripts/build_ghc_family_v664_v3_evidence.py",
     "scripts/build_ghc_family_v664_v3_closeout.py",
+    "scripts/build_ghc_family_v664_v3_terminal_correction.py",
     "scripts/ghc_family_seed_bank_evidence.py",
     "scripts/ghc_family_v664_v3_canonical_validator.py",
     *TEST_MODULES,
@@ -109,6 +114,7 @@ def owner_scope(path: str) -> bool:
 def replay_manifest(commit: str, manifest_path: str) -> dict[str, Any]:
     manifest = git_json(commit, manifest_path)
     mismatches: list[dict[str, str]] = []
+    noncanonical_worktree_metadata: list[dict[str, Any]] = []
     seen: set[str] = set()
     for row in manifest.get("entries", []):
         path = row.get("path")
@@ -122,17 +128,30 @@ def replay_manifest(commit: str, manifest_path: str) -> dict[str, Any]:
         except (subprocess.CalledProcessError, UnicodeError):
             mismatches.append({"path": path, "reason": "blob unavailable"})
             continue
-        if object_id != row.get("git_blob"):
+        object_matches = object_id == row.get("git_blob")
+        if not object_matches:
             mismatches.append({"path": path, "reason": "Git blob identity differs"})
-        if hashlib.sha256(raw).hexdigest() != row.get("sha256"):
-            mismatches.append({"path": path, "reason": "SHA-256 differs"})
-        if len(raw) != row.get("bytes"):
-            mismatches.append({"path": path, "reason": "byte count differs"})
+        observed_sha256 = hashlib.sha256(raw).hexdigest()
+        sha_matches = observed_sha256 == row.get("sha256")
+        bytes_match = len(raw) == row.get("bytes")
+        if object_matches and not (sha_matches and bytes_match):
+            noncanonical_worktree_metadata.append(
+                {
+                    "path": path,
+                    "declared_worktree_bytes": row.get("bytes"),
+                    "declared_worktree_sha256": row.get("sha256"),
+                    "canonical_git_blob_bytes": len(raw),
+                    "canonical_git_blob_sha256": observed_sha256,
+                    "reason": "legacy prospective manifest recorded noncanonical Windows worktree bytes; exact declared Git blob identity is canonical",
+                }
+            )
     return {
         "manifest": manifest_path,
         "declared": manifest.get("entry_count"),
         "replayed": len(seen),
         "mismatches": mismatches,
+        "canonical_content_domain": "exact_git_blob",
+        "noncanonical_worktree_metadata": noncanonical_worktree_metadata,
         "valid": manifest.get("valid") is True and manifest.get("entry_count") == len(seen) and not mismatches,
     }
 
@@ -203,40 +222,54 @@ def main() -> int:
         issues.append("local, upstream, tracking, and fresh live heads differ")
     if ahead_behind != ["0", "0"]:
         issues.append("branch divergence is not 0/0")
-    if git_text("rev-parse", "HEAD^") != EVIDENCE:
-        issues.append("final is not the direct child of immutable evidence")
-    for anchor in (SOURCE, X1, EVIDENCE):
+    if git_text("rev-parse", "HEAD^") != INITIAL_FINAL:
+        issues.append("corrected final is not the direct child of the retained initial final")
+    if git_text("rev-parse", f"{INITIAL_FINAL}^") != EVIDENCE:
+        issues.append("retained initial final is not the direct child of immutable evidence")
+    for anchor in (SOURCE, X1, EVIDENCE, INITIAL_FINAL):
         if run_git("merge-base", "--is-ancestor", anchor, head, check=False).returncode != 0:
             issues.append(f"required anchor is not ancestral: {anchor}")
     phase_commit_rows = git_text("rev-list", f"{SOURCE}..{head}").splitlines()
     merge_count = int(git_text("rev-list", "--count", "--merges", f"{SOURCE}..{head}"))
     parent_counts = [len(git_text("rev-list", "--parents", "-n", "1", commit).split()) - 1 for commit in phase_commit_rows]
-    if len(phase_commit_rows) != 3 or merge_count != 0 or parent_counts != [1, 1, 1]:
-        issues.append("phase history is not exactly three single-parent commits with zero merges")
+    if len(phase_commit_rows) != 4 or merge_count != 0 or parent_counts != [1, 1, 1, 1]:
+        issues.append("phase history is not exactly four single-parent commits with zero merges")
 
     manifests = [
         replay_manifest(X1, X1_MANIFEST),
         replay_manifest(EVIDENCE, EVIDENCE_MANIFEST),
-        replay_manifest(head, FINAL_DELTA_MANIFEST),
-        replay_manifest(head, FINAL_OWNER_MANIFEST),
+        replay_manifest(INITIAL_FINAL, FINAL_DELTA_MANIFEST),
+        replay_manifest(INITIAL_FINAL, FINAL_OWNER_MANIFEST),
+        replay_manifest(head, CORRECTION_MANIFEST),
     ]
     if not all(row["valid"] for row in manifests):
         issues.append("one or more exact manifests failed replay")
 
-    candidate = git_json(head, FINAL_CANDIDATE)
-    final_delta = zpaths("diff", "--name-only", "-z", f"{EVIDENCE}..{head}")
-    expected_delta = sorted(set(candidate["intended_allowlist"]) | {FINAL_REVIEW})
-    if final_delta != expected_delta:
-        issues.append("final commit delta differs from the committed allowlist plus review self-exclusion")
+    initial_candidate = git_json(INITIAL_FINAL, FINAL_CANDIDATE)
+    initial_delta = zpaths("diff", "--name-only", "-z", f"{EVIDENCE}..{INITIAL_FINAL}")
+    expected_initial_delta = sorted(set(initial_candidate["intended_allowlist"]) | {FINAL_REVIEW})
+    if initial_delta != expected_initial_delta:
+        issues.append("retained initial-final delta differs from its committed allowlist plus review self-exclusion")
+    correction_candidate = git_json(head, CORRECTION_CANDIDATE)
+    correction_delta = zpaths("diff", "--name-only", "-z", f"{INITIAL_FINAL}..{head}")
+    expected_correction_delta = sorted(set(correction_candidate["intended_allowlist"]) | {CORRECTION_REVIEW})
+    if correction_delta != expected_correction_delta:
+        issues.append("terminal-correction delta differs from its committed allowlist plus review self-exclusion")
     owner_delta = zpaths("diff", "--name-only", "-z", f"{SOURCE}..{head}")
     out_of_scope = [path for path in owner_delta if not owner_scope(path)]
     if out_of_scope:
         issues.append("owner delta contains paths outside Vesper scope")
-    owner_manifest = git_json(head, FINAL_OWNER_MANIFEST)
+    owner_manifest = git_json(INITIAL_FINAL, FINAL_OWNER_MANIFEST)
     owner_manifest_paths = {row["path"] for row in owner_manifest["entries"]}
     owner_exclusions = set(owner_manifest["self_exclusions"])
-    if owner_manifest_paths != set(owner_delta) - owner_exclusions:
-        issues.append("final owner manifest coverage differs from the exact source-to-final owner delta")
+    initial_owner_delta = zpaths("diff", "--name-only", "-z", f"{SOURCE}..{INITIAL_FINAL}")
+    if owner_manifest_paths != set(initial_owner_delta) - owner_exclusions:
+        issues.append("retained initial-final owner manifest coverage differs from its exact owner delta")
+    correction_manifest = git_json(head, CORRECTION_MANIFEST)
+    correction_manifest_paths = {row["path"] for row in correction_manifest["entries"]}
+    correction_exclusions = set(correction_manifest["self_exclusions"])
+    if correction_manifest_paths != set(correction_delta) - correction_exclusions:
+        issues.append("terminal-correction manifest coverage differs from its exact correction delta")
 
     json_errors: list[dict[str, str]] = []
     privacy_hits: list[dict[str, str]] = []
@@ -296,8 +329,8 @@ def main() -> int:
     route = git_json(head, f"{PHASE_PREFIX}orchestration/terminal-route-state.json")
     truth_ok = (
         phase_truth.get("outcomes") == {"completed": 14, "represented": 4, "open_gap": 1, "exact_gate": 1}
-        and phase_truth.get("effective_negatives") == 24_430
-        and phase_truth.get("effective_methods") == 8_784
+        and phase_truth.get("effective_negatives") == 24_437
+        and phase_truth.get("effective_methods") == 8_791
         and phase_truth.get("effective_open_gaps") == 169
         and phase_truth.get("effective_exact_gates") == 167
         and phase_truth.get("terminal_verdict") == "NOT_READY_FOR_STAGE_20"
@@ -332,14 +365,17 @@ def main() -> int:
         "clean_before": clean_before,
         "four_way_equal": head == upstream == tracking == live,
         "zero_divergence": ahead_behind == ["0", "0"],
-        "direct_evidence_parent": git_text("rev-parse", "HEAD^") == EVIDENCE,
-        "source_x1_evidence_ancestry": all(run_git("merge-base", "--is-ancestor", anchor, head, check=False).returncode == 0 for anchor in (SOURCE, X1, EVIDENCE)),
-        "three_single_parent_commits": len(phase_commit_rows) == 3 and parent_counts == [1, 1, 1],
+        "direct_correction_parent": git_text("rev-parse", "HEAD^") == INITIAL_FINAL,
+        "initial_final_direct_evidence_child": git_text("rev-parse", f"{INITIAL_FINAL}^") == EVIDENCE,
+        "source_x1_evidence_initial_ancestry": all(run_git("merge-base", "--is-ancestor", anchor, head, check=False).returncode == 0 for anchor in (SOURCE, X1, EVIDENCE, INITIAL_FINAL)),
+        "four_single_parent_commits": len(phase_commit_rows) == 4 and parent_counts == [1, 1, 1, 1],
         "zero_merges": merge_count == 0,
         "all_manifests": all(row["valid"] for row in manifests),
-        "final_delta_allowlist": final_delta == expected_delta,
+        "initial_final_delta_allowlist": initial_delta == expected_initial_delta,
+        "correction_delta_allowlist": correction_delta == expected_correction_delta,
         "owner_scope": not out_of_scope,
-        "owner_manifest_coverage": owner_manifest_paths == set(owner_delta) - owner_exclusions,
+        "initial_owner_manifest_coverage": owner_manifest_paths == set(initial_owner_delta) - owner_exclusions,
+        "correction_manifest_coverage": correction_manifest_paths == set(correction_delta) - correction_exclusions,
         "strict_json": not json_errors,
         "five_class_privacy": not privacy_hits,
         "changed_python_security": not security_findings,
@@ -355,8 +391,8 @@ def main() -> int:
     }
     minimal_names = [
         "exact_head", "clean_before", "four_way_equal", "zero_divergence",
-        "direct_evidence_parent", "three_single_parent_commits", "zero_merges",
-        "all_manifests", "final_delta_allowlist", "owner_scope",
+        "direct_correction_parent", "initial_final_direct_evidence_child", "four_single_parent_commits", "zero_merges",
+        "all_manifests", "initial_final_delta_allowlist", "correction_delta_allowlist", "owner_scope",
         "strict_json", "five_class_privacy", "changed_python_security",
         "truth_counts", "route_prepared_not_sent", "tests", "clean_after",
     ]
