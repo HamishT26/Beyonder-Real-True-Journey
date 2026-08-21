@@ -7,7 +7,6 @@ import json
 from pathlib import Path
 import re
 import subprocess
-import sys
 import unittest
 
 
@@ -16,6 +15,7 @@ PHASE = ROOT / "docs/caelen-ash/v664-v8"
 SOURCE_FINAL = "682666c064b14f09def75fb46f3bafb0e987a7a2"
 X1_HEAD = "0832a8260dec6c5d776a6b22f6cf9b2c9e81d705"
 EVIDENCE_HEAD = "970a13c1a2ac2ef411f6d8199877d356a77d693c"
+FIRST_FINAL = "915c260845229bd31f433ff24a59290c95e21b1e"
 OUTCOMES = {"completed": 14, "represented": 4, "open_gap": 1, "exact_gate": 1}
 
 
@@ -285,46 +285,17 @@ class CaelenV664V8CloseoutTests(unittest.TestCase):
         self.assertEqual(self.stage_candidate["route_state"], "PREPARED_NOT_SENT")
         self.assertTrue(self.stage_candidate["valid"])
 
-    def test_32_manifest_replay_in_current_lifecycle_domain(self) -> None:
-        staged = subprocess.run(
-            ["git", "diff", "--cached", "--name-only"],
-            cwd=ROOT,
-            stdout=subprocess.PIPE,
-            check=True,
-            text=True,
-            encoding="utf-8",
-        ).stdout.splitlines()
-        if staged:
-            result = subprocess.run(
-                [sys.executable, str(ROOT / "scripts/build_ghc_family_v664_v8_closeout.py"), "--check-staged"],
-                cwd=ROOT,
-                stdout=subprocess.PIPE,
-                stderr=subprocess.PIPE,
-                text=True,
-                encoding="utf-8",
-                check=False,
-            )
-            self.assertEqual(result.returncode, 0, result.stderr)
-            self.assertTrue(json.loads(result.stdout)["valid"])
-            return
-        head = subprocess.run(
-            ["git", "rev-parse", "HEAD"],
-            cwd=ROOT,
-            stdout=subprocess.PIPE,
-            check=True,
-            text=True,
-            encoding="utf-8",
-        ).stdout.strip()
+    def test_32_manifest_replay_at_immutable_first_final(self) -> None:
         for manifest in (self.owner_manifest, self.delta_manifest):
             for entry in manifest["entries"]:
                 raw = subprocess.run(
-                    ["git", "show", f"{head}:{entry['path']}"],
+                    ["git", "show", f"{FIRST_FINAL}:{entry['path']}"],
                     cwd=ROOT,
                     stdout=subprocess.PIPE,
                     check=True,
                 ).stdout
                 object_id = subprocess.run(
-                    ["git", "rev-parse", f"{head}:{entry['path']}"],
+                    ["git", "rev-parse", f"{FIRST_FINAL}:{entry['path']}"],
                     cwd=ROOT,
                     stdout=subprocess.PIPE,
                     check=True,

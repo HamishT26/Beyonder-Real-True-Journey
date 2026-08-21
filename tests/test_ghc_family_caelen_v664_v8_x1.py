@@ -7,12 +7,14 @@ import hashlib
 import json
 from pathlib import Path
 import re
+import subprocess
 import unittest
 
 
 ROOT = Path(__file__).resolve().parents[1]
 PHASE = ROOT / "docs/caelen-ash/v664-v8"
 ALLOWED = {"completed", "represented", "open_gap", "exact_gate"}
+X1_HEAD = "0832a8260dec6c5d776a6b22f6cf9b2c9e81d705"
 
 
 def strict_json(path: Path):
@@ -220,8 +222,23 @@ class CaelenV664V8X1Tests(unittest.TestCase):
         self.assertTrue(self.charter["strict_lifecycle"]["x1_before_x2"])
         self.assertFalse(self.charter["strict_lifecycle"]["x1_contains_x2_implementation"])
         self.assertFalse(self.charter["strict_lifecycle"]["x1_contains_observed_outcomes"])
-        materialized_x2 = list(PHASE.glob("x2/**/*"))
-        self.assertEqual(materialized_x2, [])
+        x1_tree_x2 = subprocess.run(
+            [
+                "git",
+                "ls-tree",
+                "-r",
+                "--name-only",
+                X1_HEAD,
+                "--",
+                "docs/caelen-ash/v664-v8/x2",
+            ],
+            cwd=ROOT,
+            stdout=subprocess.PIPE,
+            check=True,
+            text=True,
+            encoding="utf-8",
+        ).stdout.splitlines()
+        self.assertEqual(x1_tree_x2, [])
 
     def test_21_terminal_boundaries(self) -> None:
         self.assertEqual(self.charter["terminal_verdict"], "NOT_READY_FOR_STAGE_20")

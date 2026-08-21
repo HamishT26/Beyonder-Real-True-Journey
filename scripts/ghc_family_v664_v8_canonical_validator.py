@@ -21,18 +21,23 @@ ROOT = Path(__file__).resolve().parents[1]
 SOURCE_FINAL = "682666c064b14f09def75fb46f3bafb0e987a7a2"
 X1_HEAD = "0832a8260dec6c5d776a6b22f6cf9b2c9e81d705"
 EVIDENCE_HEAD = "970a13c1a2ac2ef411f6d8199877d356a77d693c"
+FIRST_FINAL = "915c260845229bd31f433ff24a59290c95e21b1e"
 BRANCH = "codex/GHC-Family/caelen-ash-v664-v8-full-tools"
 PREFIX = "docs/caelen-ash/v664-v8/"
-OWNER_MANIFEST = f"{PREFIX}validation/final-owner-manifest.json"
-DELTA_MANIFEST = f"{PREFIX}validation/final-delta-manifest.json"
-PHASE_TRUTH = f"{PREFIX}closeout/phase-truth.json"
+OWNER_MANIFEST = f"{PREFIX}validation/correction-owner-manifest.json"
+DELTA_MANIFEST = f"{PREFIX}validation/correction-delta-manifest.json"
+PHASE_TRUTH = f"{PREFIX}correction/phase-truth.json"
 OUTCOME_LEDGER = f"{PREFIX}x2/outcome-ledger.json"
 EXPECTED_OUTCOMES = {"completed": 14, "represented": 4, "open_gap": 1, "exact_gate": 1}
 TEST_MODULES = [
     "tests.test_ghc_family_caelen_v664_v8_x1",
     "tests.test_ghc_family_caelen_v664_v8_x2",
     "tests.test_ghc_family_caelen_v664_v8_closeout",
+    "tests.test_ghc_family_caelen_v664_v8_terminal_correction",
 ]
+
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
 
 
 class CanonicalError(RuntimeError):
@@ -151,7 +156,7 @@ def run_tests() -> dict[str, Any]:
         "error_count": len(result.errors),
         "skipped_count": len(result.skipped),
         "output_sha256": sha256(output.encode("utf-8")),
-        "successful": result.wasSuccessful() and count == 97 and result.testsRun == 97,
+        "successful": result.wasSuccessful() and count == 117 and result.testsRun == 117,
     }
 
 
@@ -271,6 +276,7 @@ def inspect_owner_surface(head: str, owner_manifest: dict[str, Any]) -> dict[str
 def ancestry(head: str) -> dict[str, Any]:
     x1_parent = run_git("rev-parse", f"{X1_HEAD}^").stdout.decode().strip()
     evidence_parent = run_git("rev-parse", f"{EVIDENCE_HEAD}^").stdout.decode().strip()
+    first_final_parent = run_git("rev-parse", f"{FIRST_FINAL}^").stdout.decode().strip()
     final_parent = run_git("rev-parse", f"{head}^").stdout.decode().strip()
     phase_commits = int(run_git("rev-list", "--count", f"{SOURCE_FINAL}..{head}").stdout)
     merges = int(run_git("rev-list", "--count", "--merges", f"{SOURCE_FINAL}..{head}").stdout)
@@ -278,6 +284,7 @@ def ancestry(head: str) -> dict[str, Any]:
     return {
         "x1_parent": x1_parent,
         "evidence_parent": evidence_parent,
+        "first_final_parent": first_final_parent,
         "final_parent": final_parent,
         "phase_commit_count": phase_commits,
         "merge_count": merges,
@@ -285,8 +292,9 @@ def ancestry(head: str) -> dict[str, Any]:
         "valid": (
             x1_parent == SOURCE_FINAL
             and evidence_parent == X1_HEAD
-            and final_parent == EVIDENCE_HEAD
-            and phase_commits == 3
+            and first_final_parent == EVIDENCE_HEAD
+            and final_parent == FIRST_FINAL
+            and phase_commits == 4
             and merges == 0
             and final_parent_count == 1
         ),
@@ -304,8 +312,8 @@ def validate(expected_head: str) -> dict[str, Any]:
     outcomes = git_json(expected_head, OUTCOME_LEDGER)
     truth_valid = (
         truth["core_outcomes"] == EXPECTED_OUTCOMES
-        and truth["effective_negatives"] == 25_065
-        and truth["effective_methods"] == 8_999
+        and truth["effective_negatives"] == 25_071
+        and truth["effective_methods"] == 9_003
         and truth["effective_open_gaps"] == 174
         and truth["effective_exact_gates"] == 172
         and truth["frozen_proposal_total"] == 4_010
@@ -313,7 +321,7 @@ def validate(expected_head: str) -> dict[str, Any]:
         and outcomes["counts"] == EXPECTED_OUTCOMES
         and outcomes["unknown_outcome_count"] == 0
     )
-    route = git_json(expected_head, f"{PREFIX}orchestration/terminal-route-state.json")
+    route = git_json(expected_head, f"{PREFIX}orchestration/terminal-route-state-correction.json")
     route_valid = (
         route["state"] == "PREPARED_NOT_SENT"
         and route["target_exact_title"] == "Orin Thale"
@@ -337,7 +345,7 @@ def validate(expected_head: str) -> dict[str, Any]:
         )
     )
     return {
-        "schema": "ghc.family.caelen.v664-v8.exclusive-canonical-receipt.v1",
+        "schema": "ghc.family.caelen.v664-v8.exclusive-canonical-receipt.v2",
         "recorded_at_utc": datetime.now(timezone.utc).isoformat().replace("+00:00", "Z"),
         "owner": "Caelen Ash",
         "phase": "v664-v8",
@@ -346,6 +354,7 @@ def validate(expected_head: str) -> dict[str, Any]:
         "source_final": SOURCE_FINAL,
         "x1_head": X1_HEAD,
         "evidence_head": EVIDENCE_HEAD,
+        "first_final": FIRST_FINAL,
         "pre_validation_equality": before,
         "tests": tests,
         "owner_manifest": {key: value for key, value in owner.items() if key != "manifest"},
@@ -378,7 +387,7 @@ def main() -> int:
         receipt = validate(args.expected_head)
     except Exception as exc:
         receipt = {
-            "schema": "ghc.family.caelen.v664-v8.exclusive-canonical-receipt.v1",
+            "schema": "ghc.family.caelen.v664-v8.exclusive-canonical-receipt.v2",
             "recorded_at_utc": datetime.now(timezone.utc).isoformat().replace("+00:00", "Z"),
             "owner": "Caelen Ash",
             "phase": "v664-v8",
