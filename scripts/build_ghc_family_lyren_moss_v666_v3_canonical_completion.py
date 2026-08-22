@@ -24,6 +24,7 @@ BRANCH = "codex/GHC-Family/lyren-moss-v666-v3-full-tools"
 SOURCE_SHA = "96509c5b28628a6b62628dea277d1240b945b2ca"
 X1_SHA = "e121ea6e207ea032edb1a0825ed86b1334481213"
 EVIDENCE_SHA = "2ec494e75da11be4b8b18620f0ab10b68764ac69"
+INITIAL_FINAL_SHA = "b7a389e1933432764874c9927488034f92d939a0"
 
 
 def now() -> str:
@@ -63,7 +64,10 @@ def selected_suite() -> tuple[unittest.TestSuite, list[str], list[str]]:
         "tests.test_ghc_family_lyren_moss_v666_v3_evidence",
         "tests.test_ghc_family_lyren_moss_v666_v3_closeout",
     ]
-    exclusion = "tests.test_ghc_family_lyren_moss_v666_v3_x1.LyrenV666V3X1Tests.test_x2_and_later_paths_do_not_exist"
+    exclusions = {
+        "tests.test_ghc_family_lyren_moss_v666_v3_x1.LyrenV666V3X1Tests.test_x2_and_later_paths_do_not_exist",
+        "tests.test_ghc_family_lyren_moss_v666_v3_evidence.LyrenV666V3EvidenceTests.test_closeout_and_later_paths_absent",
+    }
     suite = unittest.TestSuite()
     selected, excluded = [], []
     loader = unittest.TestLoader()
@@ -76,7 +80,7 @@ def selected_suite() -> tuple[unittest.TestSuite, list[str], list[str]]:
                 stack[0:0] = list(test)
                 continue
             test_id = test.id()
-            if test_id == exclusion:
+            if test_id in exclusions:
                 excluded.append(test_id)
             else:
                 selected.append(test_id)
@@ -154,18 +158,19 @@ def canonical_payload(final: str) -> dict[str, Any]:
         "clean": clean,
         "four_way_equal": local == upstream == tracking == live == final,
         "zero_divergence": divergence == ["0", "0"],
-        "source_to_final_three_commits": phase_commits == 3,
+        "source_to_final_four_commits": phase_commits == 4,
         "source_to_final_zero_merges": not merges_text,
-        "all_phase_commits_single_parent": parent_counts == [1, 1, 1],
+        "all_phase_commits_single_parent": parent_counts == [1, 1, 1, 1],
         "x1_direct_child_source": git("rev-parse", f"{X1_SHA}^") == SOURCE_SHA,
         "evidence_direct_child_x1": git("rev-parse", f"{EVIDENCE_SHA}^") == X1_SHA,
-        "final_direct_child_evidence": git("rev-parse", f"{final}^") == EVIDENCE_SHA,
+        "initial_final_direct_child_evidence": git("rev-parse", f"{INITIAL_FINAL_SHA}^") == EVIDENCE_SHA,
+        "corrected_final_direct_child_initial_final": git("rev-parse", f"{final}^") == INITIAL_FINAL_SHA,
         "all_manifests_replay": all(row["valid"] for row in manifests),
         "all_owner_json_parse": not json_failures,
         "five_class_privacy_zero_candidates": not privacy_candidates,
         "bounded_changed_python_zero_findings": not python_findings,
         "owner_materialization_below_2000": materialized < 2000,
-        "truth_counts_exact": truth["outcome_counts"] == {"completed": 14, "represented": 4, "open_gap": 1, "exact_gate": 1} and truth["effective_negatives"] == 26392 and truth["effective_methods"] == 10934,
+        "truth_counts_exact": truth["outcome_counts"] == {"completed": 14, "represented": 4, "open_gap": 1, "exact_gate": 1} and truth["effective_negatives"] == 26395 and truth["effective_methods"] == 10937,
         "gaps_and_gates_exact": truth["open_gaps"] == 185 and truth["exact_gates"] == 183,
         "terminal_not_ready": truth["terminal_verdict"] == "NOT_READY_FOR_STAGE_20",
         "route_prepared_not_sent": route["state"] == "PREPARED_NOT_SENT" and route["send_count"] == 0 and not route["successor_contacted"],
@@ -174,16 +179,16 @@ def canonical_payload(final: str) -> dict[str, Any]:
     }
     minimal = {
         "selected_tests_pass": result.wasSuccessful(), "selected_tests_nonzero": len(selected_ids) > 0,
-        "one_lifecycle_exclusion": len(excluded_ids) == 1, "exact_replacement_selected": any("test_exact_replacement_immutable_x1_tree_has_no_later_paths" in item for item in selected_ids),
+        "two_lifecycle_exclusions": len(excluded_ids) == 2, "exact_replacements_selected": all(any(name in item for item in selected_ids) for name in ("test_exact_replacement_immutable_x1_tree_has_no_later_paths", "test_exact_replacement_evidence_tree_has_no_terminal_paths")),
         "manifests_four": len(manifests) == 4, "manifest_failures_zero": all(not row["failures"] for row in manifests),
         "json_failures_zero": not json_failures, "privacy_candidates_zero": not privacy_candidates, "security_findings_zero": not python_findings,
-        "four_way_equal": detailed["four_way_equal"], "history_exact": detailed["source_to_final_three_commits"] and detailed["source_to_final_zero_merges"] and detailed["all_phase_commits_single_parent"],
+        "four_way_equal": detailed["four_way_equal"], "history_exact": detailed["source_to_final_four_commits"] and detailed["source_to_final_zero_merges"] and detailed["all_phase_commits_single_parent"],
         "truth_exact": detailed["truth_counts_exact"], "protected_gates_retained": detailed["gaps_and_gates_exact"],
         "route_unsent": detailed["route_prepared_not_sent"], "not_stage_20": detailed["terminal_not_ready"],
     }
     return {
         "expected_final": final, "heads": {"local": local, "upstream": upstream, "tracking": tracking, "fresh_live": live}, "divergence": {"behind": int(divergence[0]), "ahead": int(divergence[1])},
-        "history": {"source": SOURCE_SHA, "x1": X1_SHA, "evidence": EVIDENCE_SHA, "final": final, "phase_commit_count": phase_commits, "merge_count": 0 if not merges_text else len(merges_text.splitlines()), "parent_counts": parent_counts},
+        "history": {"source": SOURCE_SHA, "x1": X1_SHA, "evidence": EVIDENCE_SHA, "retained_nonterminal_initial_final": INITIAL_FINAL_SHA, "corrected_final": final, "phase_commit_count": phase_commits, "merge_count": 0 if not merges_text else len(merges_text.splitlines()), "parent_counts": parent_counts},
         "tests": {"selected_count": len(selected_ids), "selected_ids": selected_ids, "excluded_zero_credit_count": len(excluded_ids), "excluded_ids": excluded_ids, "failures": len(result.failures), "errors": len(result.errors), "skipped": len(result.skipped), "successful": result.wasSuccessful(), "output": stream.getvalue()},
         "manifests": manifests, "manifest_entry_total": sum(row["entries"] for row in manifests),
         "json": {"parsed": json_count, "failures": json_failures}, "privacy": {"classes": list(privacy_patterns), "files": privacy_files, "candidates": privacy_candidates, "confirmed_hits": len(privacy_candidates), "claim_boundary": "bounded five-class owner-text scan only; not privacy-complete"},
