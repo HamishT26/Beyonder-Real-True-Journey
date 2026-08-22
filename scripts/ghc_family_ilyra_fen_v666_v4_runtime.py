@@ -178,29 +178,86 @@ def scan_python_security(paths: Iterable[Path]) -> dict[str, Any]:
     }
 
 
+def git_tree_map(commit: str) -> dict[str, tuple[str, str]]:
+    """Return path -> (mode, oid) without passing long paths back to Git."""
+    raw = subprocess.check_output(["git", "-C", str(ROOT), "ls-tree", "-r", "-z", "--full-tree", commit])
+    result: dict[str, tuple[str, str]] = {}
+    for record in raw.split(b"\0"):
+        if not record:
+            continue
+        metadata, encoded_path = record.split(b"\t", 1)
+        mode, object_type, oid = metadata.decode("ascii").split()
+        if object_type == "blob":
+            result[encoded_path.decode("utf-8")] = (mode, oid)
+    return result
+
+
+def read_exact(stream: Any, size: int) -> bytes:
+    chunks: list[bytes] = []
+    remaining = size
+    while remaining:
+        chunk = stream.read(remaining)
+        if not chunk:
+            raise EOFError(f"git cat-file stream ended with {remaining} bytes outstanding")
+        chunks.append(chunk)
+        remaining -= len(chunk)
+    return b"".join(chunks)
+
+
 def git_blob(commit: str, path: str) -> bytes:
-    return subprocess.check_output(["git", "-C", str(ROOT), "show", f"{commit}:{path}"])
+    tree = git_tree_map(commit)
+    if path not in tree:
+        raise subprocess.CalledProcessError(1, ["git", "ls-tree", commit])
+    return subprocess.check_output(["git", "-C", str(ROOT), "cat-file", "blob", tree[path][1]])
 
 
 def replay_manifest(manifest_path: Path, commit: str) -> dict[str, Any]:
     manifest = load_json(manifest_path)
     failures = []
-    for entry in manifest["entries"]:
-        try:
-            blob = git_blob(commit, entry["path"])
-            line = subprocess.check_output(["git", "-C", str(ROOT), "ls-tree", commit, "--", entry["path"]], text=True).strip()
-        except subprocess.CalledProcessError as exc:
-            failures.append({"path": entry["path"], "failure": f"missing_blob:{exc.returncode}"})
-            continue
-        parts = line.split(None, 3)
-        if (
-            hashlib.sha256(blob).hexdigest() != entry["sha256"]
-            or len(blob) != entry["size_bytes"]
-            or len(parts) < 3
-            or parts[0] != entry["git_mode"]
-            or parts[2] != entry["git_blob_oid"]
-        ):
-            failures.append({"path": entry["path"], "failure": "sha_size_mode_or_oid_mismatch"})
+    tree = git_tree_map(commit)
+    process = subprocess.Popen(
+        ["git", "-C", str(ROOT), "cat-file", "--batch"],
+        stdin=subprocess.PIPE,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+    )
+    try:
+        if process.stdin is None or process.stdout is None:
+            raise RuntimeError("git cat-file pipes unavailable")
+        for entry in manifest["entries"]:
+            state = tree.get(entry["path"])
+            if state is None:
+                failures.append({"path": entry["path"], "failure": "missing_tree_path"})
+                continue
+            mode, oid = state
+            process.stdin.write((oid + "\n").encode("ascii"))
+            process.stdin.flush()
+            header = process.stdout.readline().decode("ascii").strip().split()
+            if len(header) != 3 or header[1] != "blob":
+                failures.append({"path": entry["path"], "failure": "invalid_batch_header"})
+                continue
+            blob = read_exact(process.stdout, int(header[2]))
+            if read_exact(process.stdout, 1) != b"\n":
+                failures.append({"path": entry["path"], "failure": "missing_batch_terminator"})
+                continue
+            if (
+                hashlib.sha256(blob).hexdigest() != entry["sha256"]
+                or len(blob) != entry["size_bytes"]
+                or mode != entry["git_mode"]
+                or oid != entry["git_blob_oid"]
+                or header[0] != oid
+            ):
+                failures.append({"path": entry["path"], "failure": "sha_size_mode_or_oid_mismatch"})
+    finally:
+        if process.stdin is not None:
+            process.stdin.close()
+        return_code = process.wait(timeout=30)
+        if return_code and process.stderr is not None:
+            failures.append({"path": "<batch>", "failure": process.stderr.read().decode("utf-8", errors="replace")[:240]})
+        if process.stdout is not None:
+            process.stdout.close()
+        if process.stderr is not None:
+            process.stderr.close()
     return {"entry_count": len(manifest["entries"]), "failure_count": len(failures), "failures": failures, "valid": not failures}
 
 
