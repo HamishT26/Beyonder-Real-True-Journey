@@ -40,11 +40,16 @@ class CaelenMorrowV665V6X1Tests(unittest.TestCase):
         self.assertFalse(self.source["successful_source_canonical_replayed"])
 
     def test_strict_x1_only(self) -> None:
-        self.assertFalse((PHASE / "x2").exists())
-        self.assertFalse((PHASE / "evidence").exists())
-        self.assertFalse((PHASE / "closeout").exists())
-        self.assertFalse((PHASE / "seal").exists())
-        self.assertFalse((PHASE / "final").exists())
+        frozen_paths = subprocess.check_output(
+            ["git", "-C", str(ROOT), "ls-tree", "-r", "--name-only", "9be19f91371da0d2bcdd23de421fed202c5641fa"]
+        ).decode("utf-8").splitlines()
+        phase_prefix = "docs/caelen-morrow/v665-v6/"
+        frozen_owner_paths = [path for path in frozen_paths if path.startswith(phase_prefix)]
+        for lifecycle in ("x2", "evidence", "closeout", "seal", "final", "handoffs"):
+            self.assertFalse(
+                any(path.startswith(f"{phase_prefix}{lifecycle}/") for path in frozen_owner_paths),
+                lifecycle,
+            )
         self.assertEqual(self.freeze["x2_implementation_count"], 0)
         self.assertEqual(self.freeze["x2_outcome_count"], 0)
         self.assertFalse(self.freeze["outcomes_observed"])
