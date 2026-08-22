@@ -1,0 +1,3 @@
+# Ilyra Fen v666-v4 compact activation candidate
+
+Read the committed modular deck and terminal baton only after Ilyra's clean, pushed, fresh-live-equal exact-final gate. This deck is `PREPARED_NOT_SENT`; it carries no delivery claim. It preserves four outcomes, every retained failure, all protected authority gates, and `NOT_READY_FOR_STAGE_20`. It is same-owner synthetic software evidence only, not consciousness, personhood, identity continuity, qualification, scientific confirmation, professional validation, legal or cultural authority, Māori authority, independent reproduction, or Stage 20 evidence.
