@@ -1,0 +1,35 @@
+---
+name: de-rham-current-obligation-checker
+description: Check dimensions, test-form degree, boundary, and boundary-of-boundary typing without theorem credit.
+---
+
+# de Rham current obligation checker
+
+## Scope
+
+Use only for Tamar Vey v665-v3 owner-local synthetic, zero-row, or typed-formal artifacts. This skill confers no professional, empirical, production, legal, cultural, Māori, affected-party, accessibility-complete, security-complete, or Stage 20 authority.
+
+## Required inputs
+
+- UTF-8 JSON object using runner profile `de_rham_current`.
+- Base boundary fields: `synthetic`, `real_rows`, `authority_events`, `claim_ceiling`, `terminal_verdict`, and `source_ids`.
+- Profile fields: ambient_dimension, boundary_dimension, boundary_of_boundary_formally_zero, current_dimension, orientation_declared, support_kind, test_form_degree.
+
+## Procedure
+
+1. Read the complete input and preserve its digest.
+2. Require `synthetic=true`, zero real rows, zero authority events, and `NOT_READY_FOR_STAGE_20`.
+3. Invoke `scripts/ghc_family_de_rham_current_obligations.py` and retain every rejection before recovery.
+4. Report only the bounded runner decision and exact claim ceiling.
+
+## Fail-closed stops
+
+Stop on real rows, real objects, people, keys, proofs, identity events, treatment or destructive action, professional decisions, protected-gate promotion, malformed JSON, source vacancy, or an unexpected claim ceiling.
+
+## Output boundary
+
+An accepted fixture demonstrates only that this same-owner software contract accepted one bounded structure and rejected preregistered mutations. It is not scientific confirmation, conservation or collections guidance, professional validation, production conformance, independent reproduction, proof, or authority.
+
+## Terminal boundary
+
+The only terminal verdict permitted here is `NOT_READY_FOR_STAGE_20`.
