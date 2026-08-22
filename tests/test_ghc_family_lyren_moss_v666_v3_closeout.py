@@ -21,7 +21,7 @@ class LyrenV666V3CloseoutTests(unittest.TestCase):
     def test_phase_truth_exact(self):
         truth = load("closeout/phase-truth.json")
         self.assertEqual(truth["outcome_counts"], {"completed": 14, "represented": 4, "open_gap": 1, "exact_gate": 1})
-        self.assertEqual((truth["effective_negatives"], truth["effective_methods"]), (26395, 10937))
+        self.assertEqual((truth["effective_negatives"], truth["effective_methods"]), (26396, 10938))
         self.assertEqual((truth["open_gaps"], truth["exact_gates"]), (185, 183))
         self.assertEqual(truth["terminal_verdict"], "NOT_READY_FOR_STAGE_20")
         self.assertFalse(truth["same_owner_validation_is_independent_reproduction"])
@@ -29,11 +29,11 @@ class LyrenV666V3CloseoutTests(unittest.TestCase):
     def test_retained_failures_and_method_flow(self):
         negatives = load("closeout/retained-negative-register.json")
         flow = load("closeout/method-flow-final.json")
-        self.assertEqual(negatives["retained_owner_row_count"], 113)
+        self.assertEqual(negatives["retained_owner_row_count"], 114)
         self.assertTrue(negatives["every_failed_witness_zero_broader_credit"])
         self.assertTrue(negatives["no_failure_erased"])
-        self.assertEqual(flow["effective_methods"], 10937)
-        self.assertEqual(flow["failed_owner_witnesses"], 113)
+        self.assertEqual(flow["effective_methods"], 10938)
+        self.assertEqual(flow["failed_owner_witnesses"], 114)
 
     def test_exact_replacement_evidence_tree_has_no_terminal_paths(self):
         for name in ("closeout", "seal", "final", "handoffs"):
@@ -86,12 +86,21 @@ class LyrenV666V3CloseoutTests(unittest.TestCase):
     def test_canonical_plan_not_invoked(self):
         prerequisites = load("final/final-validation-prerequisites.json")
         plan = load("final/canonical-completion-plan.json")
-        self.assertFalse(prerequisites["canonical_invoked"])
+        composite = load("final/dependency-corrected-composite-plan.json")
+        self.assertTrue(prerequisites["canonical_invoked"])
+        self.assertEqual(prerequisites["canonical_invocation_count"], 1)
+        self.assertEqual(prerequisites["canonical_success_count"], 0)
+        self.assertTrue(prerequisites["canonical_replay_prohibited"])
+        self.assertFalse(prerequisites["dependency_corrected_composite_invoked"])
         self.assertFalse(prerequisites["successor_contacted"])
         self.assertEqual(plan["invocation_limit"], 1)
-        self.assertFalse(plan["post_success_replay_permitted"])
+        self.assertEqual(plan["success_count"], 0)
+        self.assertFalse(plan["replay_permitted"])
         self.assertEqual(len(plan["zero_credit_lifecycle_exclusions"]), 2)
         self.assertEqual(len(plan["exact_replacements"]), 2)
+        self.assertFalse(composite["canonical_retry"])
+        self.assertEqual(composite["canonical_credit"], 0)
+        self.assertEqual(composite["selected_test_count_preflight"], 33)
 
     def test_closeout_runner_passes(self):
         completed = subprocess.run(["python", str(ROOT / "scripts" / "ghc_family_lyren_moss_v666_v3_closeout.py")], cwd=ROOT, text=True, encoding="utf-8", errors="strict", capture_output=True, check=False)

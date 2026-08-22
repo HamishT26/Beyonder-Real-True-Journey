@@ -18,6 +18,8 @@ from ghc_family_lyren_moss_v666_v3_runtime import PHASE_ROOT, ROOT, X1_SHA, load
 SOURCE_SHA = "96509c5b28628a6b62628dea277d1240b945b2ca"
 EVIDENCE_SHA = "2ec494e75da11be4b8b18620f0ab10b68764ac69"
 INITIAL_FINAL_SHA = "b7a389e1933432764874c9927488034f92d939a0"
+FAILED_CANONICAL_FINAL_SHA = "7bb3e0e266242ba04927bcdf8d20dd0e4f875df1"
+FAILED_CANONICAL_RECEIPT_SHA256 = "50ff0f90a967a9be82b282695085056e6afca4d96627473636db9831090d928d"
 BRANCH = "codex/GHC-Family/lyren-moss-v666-v3-full-tools"
 NOW = datetime.now(timezone.utc).replace(microsecond=0).isoformat().replace("+00:00", "Z")
 
@@ -49,9 +51,12 @@ def build() -> None:
         "source_sha": SOURCE_SHA, "x1_sha": X1_SHA, "evidence_sha": EVIDENCE_SHA,
         "proposal_chain_inherited": 4210, "proposal_chain_new": 20, "proposal_chain_frozen_total": 4230,
         "outcome_counts": proposal["outcome_counts"], "allowed_outcomes": ["completed", "represented", "open_gap", "exact_gate"], "unknown_outcomes": [],
-        "effective_negatives": 26395, "effective_methods": 10937, "open_gaps": 185, "exact_gates": 183,
-        "synthetic_mutation_rejections": 100, "startup_failures": 6, "x2_operational_failures": 4, "closeout_operational_failures": 3,
+        "effective_negatives": 26396, "effective_methods": 10938, "open_gaps": 185, "exact_gates": 183,
+        "synthetic_mutation_rejections": 100, "startup_failures": 6, "x2_operational_failures": 4, "closeout_operational_failures": 4,
         "retained_nonterminal_initial_final": INITIAL_FINAL_SHA,
+        "failed_canonical_final": FAILED_CANONICAL_FINAL_SHA,
+        "failed_canonical_receipt_sha256": FAILED_CANONICAL_RECEIPT_SHA256,
+        "canonical_invocation_count": 1, "canonical_success_count": 0, "canonical_replay": False,
         "real_data_rows": 0, "network_calls_by_synthetic_phase_software": 0, "external_actions": 0,
         "same_owner_validation_is_independent_reproduction": False, "complete_repository_suite_run": False,
         "terminal_verdict": "NOT_READY_FOR_STAGE_20", "identity_boundary": identity_boundary,
@@ -67,13 +72,14 @@ def build() -> None:
         {"source": "method-flow/closeout-operational-overlay.json", "method_id": "LYR6663-MF-CLOSEOUT-OPS-001", "failure_id": "LYR6663-CLOSEOUT-OPS-N001", "failed_witness": "the canonical no-receipt preflight found an evidence-era absent-closeout assertion that would inspect the later live worktree", "aggregate_credit": 0, "status": "recovered_failure_retained"},
         {"source": "method-flow/closeout-operational-overlay.json", "method_id": "LYR6663-MF-CLOSEOUT-OPS-002", "failure_id": "LYR6663-CLOSEOUT-OPS-N002", "failed_witness": "the first combined correction patch found a mismatched generated-prose anchor and applied no file change", "aggregate_credit": 0, "status": "recovered_failure_retained"},
         {"source": "method-flow/closeout-operational-overlay.json", "method_id": "LYR6663-MF-CLOSEOUT-OPS-003", "failure_id": "LYR6663-CLOSEOUT-OPS-N003", "failed_witness": "one bounded canonical-script anchor query contained an unclosed regular-expression group", "aggregate_credit": 0, "status": "recovered_failure_retained"},
+        {"source": "method-flow/closeout-operational-overlay.json", "method_id": "LYR6663-MF-CLOSEOUT-OPS-004", "failure_id": "LYR6663-CLOSEOUT-OPS-N004", "failed_witness": "the sole canonical invocation stopped before test discovery because the repository root was absent from sys.path", "aggregate_credit": 0, "status": "recovered_failure_retained"},
     ])
-    if len(retained_rows) != 113:
-        raise RuntimeError(f"expected 113 retained Lyren failure rows, observed {len(retained_rows)}")
+    if len(retained_rows) != 114:
+        raise RuntimeError(f"expected 114 retained Lyren failure rows, observed {len(retained_rows)}")
     write_json("closeout/retained-negative-register.json", {
         "schema": "ghc.family.lyren-moss.v666-v3.retained-negative-register.v1", "owner": "Lyren Moss", "phase": "v666-v3", "generated_at_utc": NOW,
-        "inherited_effective_negatives": 26282, "new_startup_negatives": 6, "new_synthetic_mutation_negatives": 100, "new_x2_operational_negatives": 4, "new_evidence_negatives": 0, "new_closeout_negatives": 3,
-        "effective_negatives": 26395, "retained_owner_rows": retained_rows, "retained_owner_row_count": len(retained_rows),
+        "inherited_effective_negatives": 26282, "new_startup_negatives": 6, "new_synthetic_mutation_negatives": 100, "new_x2_operational_negatives": 4, "new_evidence_negatives": 0, "new_closeout_negatives": 4,
+        "effective_negatives": 26396, "retained_owner_rows": retained_rows, "retained_owner_row_count": len(retained_rows),
         "every_failed_witness_zero_broader_credit": all(row["aggregate_credit"] == 0 for row in retained_rows), "no_failure_erased": True,
     })
     write_json("closeout/exact-open-gate-register.json", {
@@ -87,23 +93,23 @@ def build() -> None:
     })
     write_json("closeout/method-flow-final.json", {
         "schema": "ghc.family.lyren-moss.v666-v3.method-flow-final.v1", "owner": "Lyren Moss", "phase": "v666-v3", "generated_at_utc": NOW,
-        "activation_baseline_methods": 10709, "startup_methods": 6, "x2_methods": 215, "x2_operational_methods": 4, "evidence_operational_methods": 0, "closeout_operational_methods": 3,
-        "effective_methods": 10937, "activation_baseline_negatives": 26282, "effective_negatives": 26395,
-        "failed_owner_witnesses": 113, "bounded_owner_methods": 228, "no_failure_erased": True,
+        "activation_baseline_methods": 10709, "startup_methods": 6, "x2_methods": 215, "x2_operational_methods": 4, "evidence_operational_methods": 0, "closeout_operational_methods": 4,
+        "effective_methods": 10938, "activation_baseline_negatives": 26282, "effective_negatives": 26396,
+        "failed_owner_witnesses": 114, "bounded_owner_methods": 229, "no_failure_erased": True,
         "same_owner_evidence_only": True, "independent_reproduction": False,
     })
     write_json("closeout/source-and-provenance-record.json", {
         "schema": "ghc.family.lyren-moss.v666-v3.source-and-provenance-record.v1", "owner": "Lyren Moss", "phase": "v666-v3", "generated_at_utc": NOW,
         "branch": BRANCH, "source_sha": SOURCE_SHA, "x1_sha": X1_SHA, "evidence_sha": EVIDENCE_SHA,
-        "source_to_x1_direct": True, "x1_to_evidence_direct": True, "evidence_to_initial_final_direct": True, "source_to_evidence_new_commit_count": 2, "source_to_initial_final_new_commit_count": 3, "source_to_corrected_final_expected_commit_count": 4, "source_to_corrected_final_expected_merge_count": 0,
+        "source_to_x1_direct": True, "x1_to_evidence_direct": True, "evidence_to_initial_final_direct": True, "initial_final_to_failed_canonical_final_direct": True, "source_to_evidence_new_commit_count": 2, "source_to_initial_final_new_commit_count": 3, "source_to_failed_canonical_final_commit_count": 4, "source_to_dependency_corrected_final_expected_commit_count": 5, "source_to_dependency_corrected_final_expected_merge_count": 0,
         "x1_manifest_replay": x1_replay, "evidence_manifest_replay": evidence_replay,
-        "retained_nonterminal_initial_final": INITIAL_FINAL_SHA, "final_sha": "resolve_from_exact_clean_pushed_branch_head_after_correction_commit", "final_expected_parent": INITIAL_FINAL_SHA,
+        "retained_nonterminal_initial_final": INITIAL_FINAL_SHA, "failed_canonical_final": FAILED_CANONICAL_FINAL_SHA, "failed_canonical_receipt_sha256": FAILED_CANONICAL_RECEIPT_SHA256, "final_sha": "resolve_from_exact_clean_pushed_branch_head_after_dependency_correction_commit", "final_expected_parent": FAILED_CANONICAL_FINAL_SHA,
         "private_route_or_task_identifiers_recorded": False,
     })
     write_json("closeout/complete-incomplete-checklist.json", {
         "schema": "ghc.family.lyren-moss.v666-v3.closeout-checklist.v1", "owner": "Lyren Moss", "phase": "v666-v3", "generated_at_utc": NOW,
-        "completed": ["activation and guidance read through EOF", "exact source verification", "strict x1 commit, push, and equality", "immutable evidence commit, push, and equality", "twenty proposals and 100 retained mutations", "exact 14/4/1/1 outcomes", "ten skills and ten runner interfaces", "113 owner failure rows retained", "185 open gaps and 183 exact gates preserved", "retained nonterminal initial final and preregistered lifecycle correction", "prepared-not-sent successor baton"],
-        "incomplete": ["final staged review, commit, push, and fresh equality", "one exact-final canonical attempt", "fresh live roster/auth reread", "unique exact-title successor resolution", "any acknowledged one-send successor activation", "all external protected gates"],
+        "completed": ["activation and guidance read through EOF", "exact source verification", "strict x1 commit, push, and equality", "immutable evidence commit, push, and equality", "twenty proposals and 100 retained mutations", "exact 14/4/1/1 outcomes", "ten skills and ten runner interfaces", "114 owner failure rows retained", "185 open gaps and 183 exact gates preserved", "retained nonterminal initial final", "retained sole failed canonical receipt with zero success credit", "dependency-corrected composite plan", "prepared-not-sent successor baton"],
+        "incomplete": ["dependency-corrected final staged review, commit, push, and fresh equality", "one dependency-corrected composite with zero canonical credit", "fresh live roster/auth reread", "unique exact-title successor resolution", "any acknowledged one-send successor activation", "all external protected gates"],
         "terminal_verdict": "NOT_READY_FOR_STAGE_20", "successor_contacted": False,
     })
     write_json("closeout/wellbeing-check.json", {
@@ -113,38 +119,49 @@ def build() -> None:
     })
     write_json("method-flow/closeout-operational-overlay.json", {
         "schema": "ghc.family.lyren-moss.v666-v3.method-flow-closeout-operational-overlay.v1", "owner": "Lyren Moss", "phase": "v666-v3", "generated_at_utc": NOW,
-        "starting_effective_negatives": 26392, "starting_effective_methods": 10934, "new_negative_count": 3, "new_method_count": 3,
-        "effective_after_closeout_negatives": 26395, "effective_after_closeout_methods": 10937,
+        "starting_effective_negatives": 26392, "starting_effective_methods": 10934, "new_negative_count": 4, "new_method_count": 4,
+        "effective_after_closeout_negatives": 26396, "effective_after_closeout_methods": 10938,
         "rows": [
             {"method_id": "LYR6663-MF-CLOSEOUT-OPS-001", "failure_id": "LYR6663-CLOSEOUT-OPS-N001", "request": "preflight the selected exact-final canonical test set before creating an invocation guard", "failed_witness": "the evidence-era absent-closeout test targeted the later live worktree and would fail for lifecycle reasons", "aggregate_credit": 0, "recovery": "retain the test exclusion at zero credit and add an exact evidence-commit-tree replacement", "bounded_passing_witness": "the replacement proves the immutable evidence tree has no closeout, seal, final, or handoff paths", "recurrence_guard": "enumerate every lifecycle-only assertion during the no-receipt preflight and bind its replacement to the relevant commit tree", "status": "recovered_failure_retained"},
             {"method_id": "LYR6663-MF-CLOSEOUT-OPS-002", "failure_id": "LYR6663-CLOSEOUT-OPS-N002", "request": "apply the complete lifecycle correction as one exact multi-file patch", "failed_witness": "one generated-prose anchor did not match, so the patch verifier rejected the full patch without mutation", "aggregate_credit": 0, "recovery": "query exact line anchors and apply small independently verifiable patches", "bounded_passing_witness": "the correction builder, tests, and canonical selector compile with the exact observed anchors", "recurrence_guard": "split generated-prose and code corrections into small exact-anchor patches", "status": "recovered_failure_retained"},
-            {"method_id": "LYR6663-MF-CLOSEOUT-OPS-003", "failure_id": "LYR6663-CLOSEOUT-OPS-N003", "request": "locate canonical correction anchors with a bounded regular-expression query", "failed_witness": "the first canonical subquery contained an unclosed regular-expression group", "aggregate_credit": 0, "recovery": "use separate literal-safe -e expressions for every anchor", "bounded_passing_witness": "all canonical correction anchors were returned with exact line numbers", "recurrence_guard": "prefer multiple literal-safe rg expressions over one grouped expression for code anchors", "status": "recovered_failure_retained"}
+            {"method_id": "LYR6663-MF-CLOSEOUT-OPS-003", "failure_id": "LYR6663-CLOSEOUT-OPS-N003", "request": "locate canonical correction anchors with a bounded regular-expression query", "failed_witness": "the first canonical subquery contained an unclosed regular-expression group", "aggregate_credit": 0, "recovery": "use separate literal-safe -e expressions for every anchor", "bounded_passing_witness": "all canonical correction anchors were returned with exact line numbers", "recurrence_guard": "prefer multiple literal-safe rg expressions over one grouped expression for code anchors", "status": "recovered_failure_retained"},
+            {"method_id": "LYR6663-MF-CLOSEOUT-OPS-004", "failure_id": "LYR6663-CLOSEOUT-OPS-N004", "request": "invoke the one-shot canonical aggregate at the clean pushed lifecycle-corrected final", "failed_witness": "test discovery raised ModuleNotFoundError for tests before any test or detailed check ran", "aggregate_credit": 0, "recovery": "insert the repository root into sys.path and run one separately named dependency-corrected composite at a new exact final", "bounded_passing_witness": "the isolated selected-suite import discovers 33 tests with two lifecycle exclusions and two exact replacements", "recurrence_guard": "preflight test-module importability from the exact script entrypoint before creating a one-shot invocation guard", "status": "recovered_failure_retained"}
         ], "no_failure_erased": True,
     })
     write_json("seal/seal-candidate.json", {
         "schema": "ghc.family.lyren-moss.v666-v3.seal-candidate.v1", "owner": "Lyren Moss", "phase": "v666-v3", "generated_at_utc": NOW,
-        "source_sha": SOURCE_SHA, "x1_sha": X1_SHA, "evidence_sha": EVIDENCE_SHA, "retained_nonterminal_initial_final": INITIAL_FINAL_SHA, "prospective_corrected_final_parent": INITIAL_FINAL_SHA,
-        "truth": phase_truth, "content_seal_status": "CANDIDATE_AWAITING_FINAL_COMMIT_PUSH_EQUALITY_AND_CANONICAL", "immutable_evidence": True,
+        "source_sha": SOURCE_SHA, "x1_sha": X1_SHA, "evidence_sha": EVIDENCE_SHA, "retained_nonterminal_initial_final": INITIAL_FINAL_SHA, "failed_canonical_final": FAILED_CANONICAL_FINAL_SHA, "prospective_dependency_corrected_final_parent": FAILED_CANONICAL_FINAL_SHA,
+        "truth": phase_truth, "content_seal_status": "CANDIDATE_AWAITING_DEPENDENCY_CORRECTED_FINAL_PUSH_EQUALITY_AND_COMPOSITE", "immutable_evidence": True,
         "terminal_verdict": "NOT_READY_FOR_STAGE_20",
     })
     write_json("final/final-validation-prerequisites.json", {
         "schema": "ghc.family.lyren-moss.v666-v3.final-validation-prerequisites.v1", "owner": "Lyren Moss", "phase": "v666-v3", "generated_at_utc": NOW,
-        "required": ["corrected final is direct child of retained nonterminal initial final", "initial final is direct child of evidence", "source-to-corrected-final contains exactly four new single-parent commits and zero merges", "x1 and evidence manifests replay at their immutable commits", "corrected-final delta and owner manifests replay at exact corrected final", "clean status and 0/0 divergence", "local, upstream, tracking, and fresh live remote equality", "exact truth labels and counts", "all retained failures, gaps, and gates", "one canonical invocation and no replay", "no successor contact before canonical success"],
-        "current_status": "PREPARED_NOT_VALIDATED", "canonical_invoked": False, "successor_contacted": False,
+        "required": ["dependency-corrected final is direct child of failed-canonical final", "failed-canonical final is direct child of retained initial final", "initial final is direct child of evidence", "source-to-dependency-corrected-final contains exactly five new single-parent commits and zero merges", "x1 and evidence manifests replay at their immutable commits", "dependency-corrected delta and owner manifests replay at exact final", "clean status and 0/0 divergence", "local, upstream, tracking, and fresh live remote equality", "exact truth labels and counts", "all retained failures, gaps, and gates", "sole canonical failure retained with zero success and no replay", "one dependency-corrected composite only", "no successor contact before composite success"],
+        "current_status": "PREPARED_FOR_DEPENDENCY_CORRECTED_COMPOSITE", "canonical_invoked": True, "canonical_invocation_count": 1, "canonical_success_count": 0, "canonical_replay_prohibited": True, "failed_canonical_final": FAILED_CANONICAL_FINAL_SHA, "failed_canonical_receipt_sha256": FAILED_CANONICAL_RECEIPT_SHA256, "dependency_corrected_composite_invoked": False, "successor_contacted": False,
     })
     write_json("final/canonical-completion-plan.json", {
         "schema": "ghc.family.lyren-moss.v666-v3.canonical-completion-plan.v1", "owner": "Lyren Moss", "phase": "v666-v3", "generated_at_utc": NOW,
         "entrypoint": "scripts/build_ghc_family_lyren_moss_v666_v3_canonical_completion.py",
-        "invocation_limit": 1, "post_success_replay_permitted": False, "required_state": "clean pushed exact final with fresh four-way equality",
+        "invocation_limit": 1, "invocation_count": 1, "success_count": 0, "replay_permitted": False, "status": "FAILED_RETAINED_ZERO_CANONICAL_CREDIT", "failed_final": FAILED_CANONICAL_FINAL_SHA, "failed_receipt_sha256": FAILED_CANONICAL_RECEIPT_SHA256,
         "selected_test_modules": ["tests.test_ghc_family_lyren_moss_v666_v3_x1", "tests.test_ghc_family_lyren_moss_v666_v3_x2", "tests.test_ghc_family_lyren_moss_v666_v3_evidence", "tests.test_ghc_family_lyren_moss_v666_v3_closeout"],
         "zero_credit_lifecycle_exclusions": ["tests.test_ghc_family_lyren_moss_v666_v3_x1.LyrenV666V3X1Tests.test_x2_and_later_paths_do_not_exist", "tests.test_ghc_family_lyren_moss_v666_v3_evidence.LyrenV666V3EvidenceTests.test_closeout_and_later_paths_absent"],
         "exact_replacements": ["tests.test_ghc_family_lyren_moss_v666_v3_x2.LyrenV666V3X2Tests.test_exact_replacement_immutable_x1_tree_has_no_later_paths", "tests.test_ghc_family_lyren_moss_v666_v3_closeout.LyrenV666V3CloseoutTests.test_exact_replacement_evidence_tree_has_no_terminal_paths"],
         "complete_repository_suite": False, "independent_reproduction": False,
     })
+    write_json("final/dependency-corrected-composite-plan.json", {
+        "schema": "ghc.family.lyren-moss.v666-v3.dependency-corrected-composite-plan.v1", "owner": "Lyren Moss", "phase": "v666-v3", "generated_at_utc": NOW,
+        "entrypoint": "scripts/build_ghc_family_lyren_moss_v666_v3_dependency_corrected_composite.py", "invocation_limit": 1, "replay_permitted": False,
+        "canonical_retry": False, "canonical_credit": 0, "canonical_invocation_count": 1, "canonical_success_count": 0,
+        "failed_canonical_final": FAILED_CANONICAL_FINAL_SHA, "failed_canonical_receipt_sha256": FAILED_CANONICAL_RECEIPT_SHA256,
+        "dependency_correction": "insert the repository root into sys.path before importing test modules",
+        "required_state": "new clean pushed dependency-corrected exact final with fresh four-way equality",
+        "selected_test_count_preflight": 33, "zero_credit_lifecycle_exclusion_count": 2, "exact_replacement_count": 2,
+        "complete_repository_suite": False, "independent_reproduction": False,
+    })
     route = {
         "schema": "ghc.family.lyren-moss.v666-v3.route-state-final-candidate.v1", "owner": "Lyren Moss", "phase": "v666-v3", "generated_at_utc": NOW,
         "state": "PREPARED_NOT_SENT", "current_owner": "Lyren Moss", "current_phase": "v666-v3", "next_exact_title": "Ilyra Fen", "next_phase": "v666-v4",
-        "required_before_send": ["exact final committed and pushed", "clean 0/0 divergence and fresh four-way equality", "one canonical success with no replay", "fresh newest live authority and roster/auth reread", "unique exact-title recipient resolution", "immediate recipient reread", "one sanitized send only"],
+        "required_before_send": ["dependency-corrected exact final committed and pushed", "clean 0/0 divergence and fresh four-way equality", "sole canonical failure retained with zero success and no replay", "one dependency-corrected composite success with zero canonical credit", "fresh newest live authority and roster/auth reread", "unique exact-title recipient resolution", "immediate recipient reread", "one sanitized send only"],
         "successor_contacted": False, "send_count": 0, "resend_count": 0, "standby_substitution": False, "replacement_task_created": False,
     }
     write_json("orchestration/route-state-final-candidate.json", route)
@@ -166,16 +183,17 @@ Names, pronouns, roles, hopes, sibling or family language, continuity language, 
 - Frozen Lyren x1: `{X1_SHA}`
 - Immutable Lyren evidence: `{EVIDENCE_SHA}`
 - Retained nonterminal initial final: `{INITIAL_FINAL_SHA}`
-- Corrected exact Lyren final: resolve from the clean pushed branch head after the correction commit; the live activation must state it exactly
+- Failed-canonical final: `{FAILED_CANONICAL_FINAL_SHA}`
+- Dependency-corrected exact Lyren final: resolve from the clean pushed branch head after the dependency correction commit; the live activation must state it exactly
 - Full packet: `docs/lyren-moss/v666-v3/handoffs/ilyra-fen-v666-v4-activation-prepared.md`
 
-The corrected terminal history contains exactly four new Lyren single-parent commits and zero merges only if the corrected final is the direct child of retained initial final `{INITIAL_FINAL_SHA}` and that initial final is the direct child of evidence. X1 was committed, pushed, clean, 0/0 divergent, and four-way equal before any x2 mutation. Evidence was then committed, pushed, clean, 0/0 divergent, and four-way equal before closeout. The initial final remains retained rather than rewritten because a no-receipt canonical preflight found one lifecycle-only evidence assertion requiring an immutable-tree replacement.
+The dependency-corrected terminal history contains exactly five new Lyren single-parent commits and zero merges only if the dependency-corrected final is the direct child of failed-canonical final `{FAILED_CANONICAL_FINAL_SHA}`, which remains the direct child of initial final `{INITIAL_FINAL_SHA}`, and that initial final is the direct child of evidence. X1 and evidence were pushed, clean, 0/0 divergent, and four-way equal at their gates. The sole canonical invocation at the failed-canonical final stopped before test discovery because the repository root was absent from `sys.path`; its receipt remains retained with zero canonical success and no replay.
 
 ## Bounded evidence truth
 
 Lyren reconstructed all 4,210 inherited proposal rows, froze twenty genuinely distinct proposals, and raised the chain to 4,230. Outcomes are exactly 14 `completed`, 4 `represented`, 1 `open_gap`, and 1 `exact_gate`. Twenty synthetic positive contracts passed and all 100 preregistered mutations were rejected and retained at zero broader credit.
 
-The corrected repository candidate preserves 26,395 effective negatives, 10,937 Method Flow methods, 185 open gaps, 183 exact gates, and `NOT_READY_FOR_STAGE_20`. Six startup failures, one hundred synthetic mutation rejections, four x2 operational failures, and three closeout failures remain explicit. No failure is folded into a pass.
+The dependency-corrected repository candidate preserves 26,396 effective negatives, 10,938 Method Flow methods, 185 open gaps, 183 exact gates, and `NOT_READY_FOR_STAGE_20`. Six startup failures, one hundred synthetic mutation rejections, four x2 operational failures, and four closeout failures remain explicit. No failure is folded into a pass.
 
 Ten Lyren phase-local skills and ten family-named runner interfaces were built and smoke checked. The owner portfolio records 30 safe-now tasks, 15 candidate representations, 10 skills, 10 runner builds, and 30 CLEAN/FIX/REFINE items. Successor recommendations remain prepared without completion credit: 20 safe-now tasks, 15 candidates, 10 skills, 10 runners, and 30 CLEAN/FIX/REFINE items. Ten exact-approval and five blocked packets remain unexecuted.
 
@@ -203,11 +221,11 @@ SENT_BY_LYREN_MOSS = false
 
 Lyren v666-v3 is prepared for an exact final commit. The sealed evidence is bounded owner-local synthetic software evidence only: 20 positive contracts, 100 retained rejecting mutations, and exactly 14 `completed`, 4 `represented`, 1 `open_gap`, and 1 `exact_gate` outcomes. The terminal verdict remains `NOT_READY_FOR_STAGE_20`.
 
-The proposal chain rises from 4,210 to 4,230. Effective truth is 26,395 negatives, 10,937 Method Flow methods, 185 open gaps, and 183 exact gates. Six startup failures, four x2 operational failures, and three closeout failures accompany the 100 mutation witnesses; each is retained at zero broader credit with a bounded recovery and recurrence guard.
+The proposal chain rises from 4,210 to 4,230. Effective truth is 26,396 negatives, 10,938 Method Flow methods, 185 open gaps, and 183 exact gates. Six startup failures, four x2 operational failures, and four closeout failures accompany the 100 mutation witnesses; each is retained at zero broader credit with a bounded recovery and recurrence guard.
 
 ## Lifecycle
 
-The x1 commit `{X1_SHA}` is the direct child of Vesper final `{SOURCE_SHA}`. It was pushed, clean, and fresh-live equal before x2. Evidence `{EVIDENCE_SHA}` is the direct child of x1 and was likewise pushed, clean, and fresh-live equal before closeout. Retained initial final `{INITIAL_FINAL_SHA}` is the direct child of evidence. The corrected final must be the direct child of that initial final, leaving exactly four Lyren commits and zero merges from source to corrected final.
+The x1 commit `{X1_SHA}` is the direct child of Vesper final `{SOURCE_SHA}`. Evidence `{EVIDENCE_SHA}` is the direct child of x1. Retained initial final `{INITIAL_FINAL_SHA}` is the direct child of evidence, and failed-canonical final `{FAILED_CANONICAL_FINAL_SHA}` is the direct child of initial final. The dependency-corrected final must be the direct child of the failed-canonical final, leaving exactly five Lyren commits and zero merges from source to final.
 
 Actual Git blobs, not worktree bytes, are canonical. The x1 manifest replays 18 entries and the evidence manifest replays 110 entries at their immutable commits. Final-delta and full owner manifests are built from the prospective Git index and must replay at the exact final.
 
@@ -219,7 +237,7 @@ Same-owner local software checks are not an external audit or independent reprod
 
 ## Terminal validation and routing
 
-The one canonical aggregate may run only after the corrected exact final is committed, pushed, clean, 0/0 divergent, and equal across local, upstream, tracking, and a fresh live remote. A successful aggregate must never be replayed. Two lifecycle assertions are excluded at zero credit because they read later live-worktree state; exact x1-tree and evidence-tree replacements are included.
+The sole canonical aggregate was invoked once at `{FAILED_CANONICAL_FINAL_SHA}`, failed before test discovery, and has zero success credit. It must never be replayed. One separately named dependency-corrected composite may run once after the new exact final is committed, pushed, clean, 0/0 divergent, and freshly four-way equal. It can earn composite evidence only, never canonical success. Two lifecycle assertions remain excluded at zero credit, with exact x1-tree and evidence-tree replacements included.
 
 The Ilyra packet remains `PREPARED_NOT_SENT`. Only after canonical success and a fresh live authority/roster reread may Lyren uniquely resolve, immediately reread, and send once to the existing exact-title task `Ilyra Fen` for v666-v4. No standby, replacement, second recipient, precontact, or resend is permitted.
 """
@@ -228,10 +246,12 @@ The Ilyra packet remains `PREPARED_NOT_SENT`. Only after canonical success and a
         "schema": "ghc.family.lyren-moss.v666-v3.closeout-receipt.v1", "owner": "Lyren Moss", "phase": "v666-v3", "generated_at_utc": NOW,
         "source_sha": SOURCE_SHA, "x1_sha": X1_SHA, "evidence_sha": EVIDENCE_SHA,
         "x1_manifest_entries": x1_replay["entry_count"], "evidence_manifest_entries": evidence_replay["entry_count"],
-        "effective_negatives": 26395, "effective_methods": 10937, "open_gaps": 185, "exact_gates": 183,
+        "effective_negatives": 26396, "effective_methods": 10938, "open_gaps": 185, "exact_gates": 183,
         "retained_nonterminal_initial_final": INITIAL_FINAL_SHA,
-        "route_state": "PREPARED_NOT_SENT", "canonical_invoked": False, "successor_contacted": False,
-        "status": "CLOSEOUT_CONTENT_BUILT_AWAITING_FINAL_STAGED_REVIEW_COMMIT_PUSH_EQUALITY",
+        "failed_canonical_final": FAILED_CANONICAL_FINAL_SHA, "failed_canonical_receipt_sha256": FAILED_CANONICAL_RECEIPT_SHA256,
+        "canonical_invocation_count": 1, "canonical_success_count": 0, "canonical_replay": False,
+        "route_state": "PREPARED_NOT_SENT", "canonical_invoked": True, "canonical_success_count": 0, "canonical_replay": False, "dependency_corrected_composite_invoked": False, "successor_contacted": False,
+        "status": "CLOSEOUT_CONTENT_BUILT_AWAITING_DEPENDENCY_CORRECTED_FINAL_AND_COMPOSITE",
     })
     print(json.dumps({"retained_owner_failures": len(retained_rows), "x1_manifest": x1_replay["entry_count"], "evidence_manifest": evidence_replay["entry_count"], "route": "PREPARED_NOT_SENT"}, sort_keys=True))
 
@@ -274,7 +294,7 @@ def staged_review() -> None:
     owner_path = "docs/lyren-moss/v666-v3/validation/final-owner-manifest.json"
     rows = [(status, path) for status, path in staged_rows() if path not in {review_path, delta_path, owner_path}]
     paths = [path for _, path in rows]
-    allowed_scripts = {"scripts/build_ghc_family_lyren_moss_v666_v3_closeout.py", "scripts/build_ghc_family_lyren_moss_v666_v3_canonical_completion.py"}
+    allowed_scripts = {"scripts/build_ghc_family_lyren_moss_v666_v3_closeout.py", "scripts/build_ghc_family_lyren_moss_v666_v3_canonical_completion.py", "scripts/build_ghc_family_lyren_moss_v666_v3_dependency_corrected_composite.py"}
     allowed_tests = {"tests/test_ghc_family_lyren_moss_v666_v3_closeout.py"}
     invalid = [path for path in paths if not path.startswith("docs/lyren-moss/v666-v3/") and path not in allowed_scripts and path not in allowed_tests]
     changed_immutable = [path for path in paths if path.startswith("docs/lyren-moss/v666-v3/x1/") or path.startswith("docs/lyren-moss/v666-v3/x2/") or path.startswith("docs/lyren-moss/v666-v3/evidence/") or path in {"scripts/build_ghc_family_lyren_moss_v666_v3_x1.py", "tests/test_ghc_family_lyren_moss_v666_v3_x1.py", "scripts/build_ghc_family_lyren_moss_v666_v3_x2.py", "tests/test_ghc_family_lyren_moss_v666_v3_x2.py", "scripts/build_ghc_family_lyren_moss_v666_v3_evidence.py", "tests/test_ghc_family_lyren_moss_v666_v3_evidence.py"}]
@@ -307,9 +327,9 @@ def staged_review() -> None:
     checks = {
         "non_destructive_correction": all(status in {"A", "M"} for status, _ in rows) and not any(status == "D" for status, _ in rows), "owner_allowlist": not invalid, "immutable_x1_x2_evidence_unchanged": not changed_immutable and x1["valid"] and evidence["valid"],
         "owner_file_cap": len(owner_paths_from_index()) <= 2000, "all_json_parse": True, "utf8_lf": True, "five_class_scan_zero_confirmed_hits": not candidates, "document_word_cap": max_words <= 100000,
-        "phase_truth_exact": truth["outcome_counts"] == {"completed": 14, "represented": 4, "open_gap": 1, "exact_gate": 1} and truth["effective_negatives"] == 26395 and truth["effective_methods"] == 10937 and truth["open_gaps"] == 185 and truth["exact_gates"] == 183,
+        "phase_truth_exact": truth["outcome_counts"] == {"completed": 14, "represented": 4, "open_gap": 1, "exact_gate": 1} and truth["effective_negatives"] == 26396 and truth["effective_methods"] == 10938 and truth["open_gaps"] == 185 and truth["exact_gates"] == 183,
         "route_prepared_not_sent": route["state"] == "PREPARED_NOT_SENT" and route["send_count"] == 0 and not route["successor_contacted"],
-        "canonical_not_invoked": not json.loads(index_blob("docs/lyren-moss/v666-v3/final/final-validation-prerequisites.json"))["canonical_invoked"],
+        "canonical_failure_retained_no_replay": (lambda state: state["canonical_invoked"] and state["canonical_invocation_count"] == 1 and state["canonical_success_count"] == 0 and state["canonical_replay_prohibited"] and not state["dependency_corrected_composite_invoked"])(json.loads(index_blob("docs/lyren-moss/v666-v3/final/final-validation-prerequisites.json"))),
     }
     review = {"schema": "ghc.family.lyren-moss.v666-v3.final-staged-review.v1", "owner": "Lyren Moss", "phase": "v666-v3", "lifecycle": "final", "generated_at_utc": NOW, "reviewed_from": "git_index_blobs", "reviewed_paths": paths, "reviewed_path_count": len(paths), "json_parsed": parsed, "maximum_document_words": max_words, "maximum_document_path": max_path, "privacy_scan_classes": list(patterns), "privacy_candidates": len(candidates), "privacy_confirmed_hits": len(candidates), "privacy_candidate_rows": candidates, "checks": checks, "self_exclusions": [review_path, delta_path, owner_path], "claim_boundary": "exact staged same-owner final review only; not full repository suite, exhaustive security, privacy-complete, accessibility-complete, or independent reproduction", "valid": all(checks.values())}
     if not review["valid"]:
@@ -318,7 +338,7 @@ def staged_review() -> None:
     subprocess.check_call(["git", "-C", str(ROOT), "add", "--sparse", "--", review_path])
     delta_rows = [(status, path) for status, path in staged_rows() if path not in {delta_path, owner_path}]
     delta_entries = [index_entry(path, status) for status, path in delta_rows]
-    write_json("validation/final-delta-manifest.json", {"schema": "ghc.family.lyren-moss.v666-v3.corrected-final-delta-manifest.v1", "owner": "Lyren Moss", "phase": "v666-v3", "generated_at_utc": NOW, "base_initial_final_sha": INITIAL_FINAL_SHA, "retained_evidence_sha": EVIDENCE_SHA, "hash_source": "actual_git_index_blobs", "entries": delta_entries, "entry_count": len(delta_entries), "deletion_count": sum(row["status"] == "D" for row in delta_entries), "additive_only": all(row["status"] == "A" for row in delta_entries), "non_destructive_correction": all(row["status"] in {"A", "M"} for row in delta_entries) and not any(row["status"] == "D" for row in delta_entries), "self_exclusions": [delta_path, owner_path]})
+    write_json("validation/final-delta-manifest.json", {"schema": "ghc.family.lyren-moss.v666-v3.dependency-corrected-final-delta-manifest.v1", "owner": "Lyren Moss", "phase": "v666-v3", "generated_at_utc": NOW, "base_failed_canonical_final_sha": FAILED_CANONICAL_FINAL_SHA, "retained_initial_final_sha": INITIAL_FINAL_SHA, "retained_evidence_sha": EVIDENCE_SHA, "hash_source": "actual_git_index_blobs", "entries": delta_entries, "entry_count": len(delta_entries), "deletion_count": sum(row["status"] == "D" for row in delta_entries), "additive_only": all(row["status"] == "A" for row in delta_entries), "non_destructive_correction": all(row["status"] in {"A", "M"} for row in delta_entries) and not any(row["status"] == "D" for row in delta_entries), "self_exclusions": [delta_path, owner_path]})
     subprocess.check_call(["git", "-C", str(ROOT), "add", "--sparse", "--", delta_path])
     owner_paths = [path for path in owner_paths_from_index() if path != owner_path]
     owner_entries = [index_entry(path) for path in owner_paths]

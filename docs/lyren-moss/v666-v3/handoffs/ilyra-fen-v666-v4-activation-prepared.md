@@ -13,16 +13,17 @@ Names, pronouns, roles, hopes, sibling or family language, continuity language, 
 - Frozen Lyren x1: `e121ea6e207ea032edb1a0825ed86b1334481213`
 - Immutable Lyren evidence: `2ec494e75da11be4b8b18620f0ab10b68764ac69`
 - Retained nonterminal initial final: `b7a389e1933432764874c9927488034f92d939a0`
-- Corrected exact Lyren final: resolve from the clean pushed branch head after the correction commit; the live activation must state it exactly
+- Failed-canonical final: `7bb3e0e266242ba04927bcdf8d20dd0e4f875df1`
+- Dependency-corrected exact Lyren final: resolve from the clean pushed branch head after the dependency correction commit; the live activation must state it exactly
 - Full packet: `docs/lyren-moss/v666-v3/handoffs/ilyra-fen-v666-v4-activation-prepared.md`
 
-The corrected terminal history contains exactly four new Lyren single-parent commits and zero merges only if the corrected final is the direct child of retained initial final `b7a389e1933432764874c9927488034f92d939a0` and that initial final is the direct child of evidence. X1 was committed, pushed, clean, 0/0 divergent, and four-way equal before any x2 mutation. Evidence was then committed, pushed, clean, 0/0 divergent, and four-way equal before closeout. The initial final remains retained rather than rewritten because a no-receipt canonical preflight found one lifecycle-only evidence assertion requiring an immutable-tree replacement.
+The dependency-corrected terminal history contains exactly five new Lyren single-parent commits and zero merges only if the dependency-corrected final is the direct child of failed-canonical final `7bb3e0e266242ba04927bcdf8d20dd0e4f875df1`, which remains the direct child of initial final `b7a389e1933432764874c9927488034f92d939a0`, and that initial final is the direct child of evidence. X1 and evidence were pushed, clean, 0/0 divergent, and four-way equal at their gates. The sole canonical invocation at the failed-canonical final stopped before test discovery because the repository root was absent from `sys.path`; its receipt remains retained with zero canonical success and no replay.
 
 ## Bounded evidence truth
 
 Lyren reconstructed all 4,210 inherited proposal rows, froze twenty genuinely distinct proposals, and raised the chain to 4,230. Outcomes are exactly 14 `completed`, 4 `represented`, 1 `open_gap`, and 1 `exact_gate`. Twenty synthetic positive contracts passed and all 100 preregistered mutations were rejected and retained at zero broader credit.
 
-The corrected repository candidate preserves 26,395 effective negatives, 10,937 Method Flow methods, 185 open gaps, 183 exact gates, and `NOT_READY_FOR_STAGE_20`. Six startup failures, one hundred synthetic mutation rejections, four x2 operational failures, and three closeout failures remain explicit. No failure is folded into a pass.
+The dependency-corrected repository candidate preserves 26,396 effective negatives, 10,938 Method Flow methods, 185 open gaps, 183 exact gates, and `NOT_READY_FOR_STAGE_20`. Six startup failures, one hundred synthetic mutation rejections, four x2 operational failures, and four closeout failures remain explicit. No failure is folded into a pass.
 
 Ten Lyren phase-local skills and ten family-named runner interfaces were built and smoke checked. The owner portfolio records 30 safe-now tasks, 15 candidate representations, 10 skills, 10 runner builds, and 30 CLEAN/FIX/REFINE items. Successor recommendations remain prepared without completion credit: 20 safe-now tasks, 15 candidates, 10 skills, 10 runners, and 30 CLEAN/FIX/REFINE items. Ten exact-approval and five blocked packets remain unexecuted.
 
