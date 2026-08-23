@@ -1,0 +1,21 @@
+{
+  "schema": "ghc-family-x2-operational-overlay-v1",
+  "owner": "Caelen Morrow",
+  "phase": "v667-v5-r2",
+  "failures": [
+    {
+      "failure_id": "CM6675R2-X2-F029",
+      "stage": "selected_x1_x2_tests",
+      "failed_method": "run the immutable-x1 worktree-absence assertion in the later x2 worktree",
+      "failure": "the selected aggregate recorded 28 passes and one lifecycle-only failure because the later worktree correctly contains x2",
+      "recovery": "do not replay the 28 passing tests; inspect the exact x1 Git tree and verify zero later-lifecycle paths, outcomes_observed=false, and x2_implementation_count=0",
+      "recurrence_guard": "exclude worktree-absence lifecycle assertions from later-tree selections and replace them with an exact immutable-commit tree check",
+      "recovery_scope": "only the failed lifecycle dependency",
+      "failed_aggregate_success_credit": 0,
+      "credit": 0,
+      "retained": true,
+      "failure_erased": false
+    }
+  ],
+  "boundary": "Additive post-build pre-evidence owner-process failures only; no x1 or generated positive witness is rewritten."
+}

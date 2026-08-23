@@ -211,6 +211,7 @@ def portfolio_outcome(group: str, row: dict[str, Any]) -> str:
 
 
 def build_model(phase_root: Path, x1_head: str) -> dict[str, Any]:
+    global REQUIRED_SECTIONS
     charter = strict_json(phase_root / "x1" / "phase-charter.json")
     proposals = strict_json(phase_root / "x1" / "proposal-freeze.json")
     portfolio = strict_json(phase_root / "x1" / "portfolio-freeze.json")
@@ -218,15 +219,24 @@ def build_model(phase_root: Path, x1_head: str) -> dict[str, Any]:
     source = strict_json(phase_root / "x1" / "source-verification.json")
     if not re.fullmatch(r"[0-9a-f]{40}", x1_head):
         raise FlashcardError("x1 head must be one exact lowercase Git object id")
-    if architecture.get("required_deck_sections") != REQUIRED_SECTIONS:
-        raise FlashcardError("x1 deck sections differ from the runner contract")
-    phase = charter["canonical_phase_id"]
+    frozen_sections = architecture.get("required_deck_sections")
+    base_sections = list(REQUIRED_SECTIONS)
+    if (
+        not isinstance(frozen_sections, list)
+        or len(frozen_sections) < 10
+        or len(frozen_sections) != len(set(frozen_sections))
+        or any(not isinstance(value, str) or not value for value in frozen_sections)
+        or [value for value in frozen_sections if value in base_sections] != base_sections
+    ):
+        raise FlashcardError("x1 deck sections must preserve the family-current base order and contain at least ten unique labels")
+    REQUIRED_SECTIONS = list(frozen_sections)
+    phase = charter.get("display_phase") or charter["canonical_phase_id"]
     owner = charter["owner"]
     if architecture.get("owner") != owner or architecture.get("phase") != phase:
         raise FlashcardError("flashcard architecture owner or phase differs from the charter")
     current_route = architecture.get("current_route")
     successor_route = architecture.get("successor_route")
-    if current_route != {"owner": owner, "phase": phase}:
+    if not isinstance(current_route, dict) or current_route.get("owner") != owner or current_route.get("phase") != phase:
         raise FlashcardError("current route differs from the frozen owner and phase")
     if not isinstance(successor_route, dict) or successor_route.get("contacted") is not False:
         raise FlashcardError("successor route must remain frozen and uncontacted")
@@ -465,6 +475,8 @@ def build_model(phase_root: Path, x1_head: str) -> dict[str, Any]:
         "compact-baton-index": [section_anchor_ids["compact-baton-index"]],
     }
     for section in REQUIRED_SECTIONS:
+        section_cards.setdefault(section, [section_anchor_ids[section]])
+    for section in REQUIRED_SECTIONS:
         sections.append({"section": section, "card_ids": list(dict.fromkeys(section_cards[section]))})
 
     stable = [owner_id, *[f"ghc-card-pillar-{key}" for key, _, _ in pillar_specs]]
@@ -590,7 +602,11 @@ def validate_model(model: dict[str, Any]) -> dict[str, Any]:
         issues.append("stable and volatile partition mismatch")
     sections = model.get("baton_index", {}).get("sections", [])
     section_names = [row.get("section") for row in sections if isinstance(row, dict)]
-    if section_names != REQUIRED_SECTIONS:
+    if (
+        len(section_names) < 10
+        or len(section_names) != len(set(section_names))
+        or [value for value in section_names if value in REQUIRED_SECTIONS] != REQUIRED_SECTIONS
+    ):
         issues.append("baton section order mismatch")
     for section in sections:
         values = section.get("card_ids", [])
@@ -727,7 +743,7 @@ def build_outputs(repo: Path, phase_root_rel: str, output_rel: str, x1_head: str
         "output": output_rel,
         "card_count": len(model["cards"]),
         "manifest_entries": len(records),
-        "section_count": len(REQUIRED_SECTIONS),
+        "section_count": len(model["baton_index"]["sections"]),
         "compact_message_words": len(compact.split()),
         "new_core_outcomes": model["index"]["new_core_outcomes"],
         "terminal_verdict": "NOT_READY_FOR_STAGE_20",
