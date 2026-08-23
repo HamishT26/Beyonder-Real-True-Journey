@@ -1,0 +1,44 @@
+{
+  "effective_method_count": 12795,
+  "failure_erased_count": 0,
+  "generated_at_utc": "2026-08-23T02:46:13Z",
+  "immutable_evidence_ledger": "method-flow/x2-method-flow-ledger.json",
+  "immutable_evidence_method_count": 12792,
+  "owner": "Elowen Cairn",
+  "phase": "v667-v3",
+  "phase_failed_witness_count": 110,
+  "post_evidence_failed_witnesses": [
+    {
+      "bounded_recovery": "extend only the read-only version helper to classify PermissionError and rebuild the uncommitted closeout packet",
+      "credit": 0,
+      "failed_method": "read-only Codex CLI version probe under a helper that handled missing commands and timeouts but not Windows access-denied",
+      "failure": "Windows returned PermissionError before the version receipt could classify the Codex CLI surface as unavailable",
+      "failure_erased": false,
+      "failure_id": "EC6673-CO-F001",
+      "retained": true,
+      "stage": "closeout"
+    },
+    {
+      "bounded_recovery": "split exact manifest replay, JSON parsing, and status projections into separate bounded commands with explicit output ceilings",
+      "credit": 0,
+      "failed_method": "combined final manifest-replay and repository-status wrapper",
+      "failure": "the read-only wrapper produced output beyond the model context and was truncated, leaving no complete attributable payload",
+      "failure_erased": false,
+      "failure_id": "EC6673-CO-F002",
+      "retained": true,
+      "stage": "final_staging"
+    },
+    {
+      "bounded_recovery": "do not replay the completed review; inspect its exact artifacts and validate their manifest parity with separate bounded commands, while preserving full process metadata in future wrappers",
+      "credit": 0,
+      "failed_method": "staged-review wrapper projected only process output and discarded yielded-session metadata at its boundary",
+      "failure": "the wrapper returned no attributable completion payload even though later bounded state inspection found no live process and updated review artifacts",
+      "failure_erased": false,
+      "failure_id": "EC6673-CO-F003",
+      "retained": true,
+      "stage": "final_staging"
+    }
+  ],
+  "post_evidence_failure_count": 3,
+  "schema": "ghc-family-final-method-flow-summary-v4"
+}
