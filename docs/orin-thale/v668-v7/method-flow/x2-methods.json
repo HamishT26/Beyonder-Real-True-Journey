@@ -1,0 +1,419 @@
+{
+  "field": "methods",
+  "owner": "Orin Thale",
+  "phase": "v668-v7",
+  "row_count": 14,
+  "rows": [
+    {
+      "approval_class": "safe_now",
+      "candidate_workaround": "Assign emitted rows to an array, then pipe that array to Format-Table.",
+      "failure_signature": "powershell-foreach-direct-pipeline-parser-error",
+      "method_id": "OR6687-M001",
+      "privacy_class": "sanitized_public",
+      "protected_gates": [
+        "source_lane_read_only",
+        "retained_failure_integrity",
+        "privacy"
+      ],
+      "recommendation_state": "preferred",
+      "recurrence_guard": "Never attach a pipeline directly to a PowerShell foreach statement; materialize the output first.",
+      "retained_negative_ids": [
+        "OR6687-START-N001"
+      ],
+      "rollback": "Stop after the parser error; the failed probe made no repository or remote mutation.",
+      "scope_boundary": "Read-only exact-head file inventory only; no scientific, authority, production, or independent-reproduction credit.",
+      "supersedes": [],
+      "title": "Accumulate PowerShell inventory rows before formatting",
+      "trigger_preconditions": [
+        "A read-only exact-head document inventory is projected in PowerShell",
+        "A foreach statement is followed directly by a formatting pipeline"
+      ],
+      "validation_witness_ids": [
+        "OR6687-W001-F",
+        "OR6687-W001-P"
+      ]
+    },
+    {
+      "approval_class": "safe_now",
+      "candidate_workaround": "Emit the complete exec result, retain any returned session identifier, and resume that exact session instead of starting another child.",
+      "failure_signature": "git-batch-replay-wrapper-ended-without-attributable-output",
+      "method_id": "OR6687-M002",
+      "privacy_class": "sanitized_public",
+      "protected_gates": [
+        "source_lane_read_only",
+        "single_process_attribution",
+        "retained_failure_integrity"
+      ],
+      "recommendation_state": "preferred",
+      "recurrence_guard": "For potentially long exact-blob replays, preserve the unified exec session identifier and poll only that session to completion.",
+      "retained_negative_ids": [
+        "OR6687-START-N002"
+      ],
+      "rollback": "Inspect and wait for only the attributable child processes; do not replay tests or mutate the repository.",
+      "scope_boundary": "Read-only immutable Git-blob manifest replay only; no test, scientific, production, authority, or independent-reproduction credit.",
+      "supersedes": [],
+      "title": "Retain resumable session identity for long read-only Git-blob replay",
+      "trigger_preconditions": [
+        "A read-only exact Git-blob manifest replay may exceed the initial 30-second wrapper window",
+        "The child alternates Git batch requests and exact-length reads correctly"
+      ],
+      "validation_witness_ids": [
+        "OR6687-W002-F",
+        "OR6687-W002-P"
+      ]
+    },
+    {
+      "approval_class": "safe_now",
+      "candidate_workaround": "Capture native output as an array and join it to a scalar before testing whether it is empty.",
+      "failure_signature": "powershell-trim-on-null-ls-remote-result",
+      "method_id": "OR6687-M003",
+      "privacy_class": "sanitized_public",
+      "protected_gates": [
+        "fresh_branch_collision_check",
+        "source_lane_read_only",
+        "retained_failure_integrity"
+      ],
+      "recommendation_state": "preferred",
+      "recurrence_guard": "Never invoke scalar string methods directly on an expected-empty native-command result; use an array and explicit join.",
+      "retained_negative_ids": [
+        "OR6687-START-N003"
+      ],
+      "rollback": "Stop after the read-only projection error; no branch, worktree, remote, repository, or task state was changed.",
+      "scope_boundary": "Read-only branch and worktree collision projection only; no creation or validation credit.",
+      "supersedes": [],
+      "title": "Model expected-empty Git remote queries as successful empty output",
+      "trigger_preconditions": [
+        "A fresh-branch collision probe expects git ls-remote to return zero lines",
+        "PowerShell may represent zero native-command output as null"
+      ],
+      "validation_witness_ids": [
+        "OR6687-W003-F",
+        "OR6687-W003-P"
+      ]
+    },
+    {
+      "approval_class": "safe_now",
+      "candidate_workaround": "Poll only the retained owning session until it exits, then inspect worktree metadata after the repository lock is released.",
+      "failure_signature": "concurrent-worktree-list-probe-no-attributable-output-during-active-add",
+      "method_id": "OR6687-M004",
+      "privacy_class": "sanitized_public",
+      "protected_gates": [
+        "single_process_attribution",
+        "worktree_lock_integrity",
+        "no_duplicate_creation"
+      ],
+      "recommendation_state": "preferred",
+      "recurrence_guard": "Do not launch git worktree list or equivalent competing metadata probes while the attributable worktree-add session remains live.",
+      "retained_negative_ids": [
+        "OR6687-START-N004"
+      ],
+      "rollback": "Leave the single creation session running and make no second add, checkout, reset, deletion, or lock manipulation attempt.",
+      "scope_boundary": "Worktree supervision only; it does not award repository validation, scientific, authority, or independent-reproduction credit.",
+      "supersedes": [],
+      "title": "Poll the owning worktree session instead of competing for locked metadata",
+      "trigger_preconditions": [
+        "A Git worktree add and sparse materialization operation is still active in a retained unified exec session",
+        "A status check would query worktree metadata through the same repository"
+      ],
+      "validation_witness_ids": [
+        "OR6687-W004-F",
+        "OR6687-W004-P"
+      ]
+    },
+    {
+      "approval_class": "safe_now",
+      "candidate_workaround": "Retain the exec session identity and constrain the immutable Git-tree query to docs plus known proposal-ledger filename classes before parsing exact blobs.",
+      "failure_signature": "full-tree-proposal-path-projection-exceeded-wrapper-without-result",
+      "method_id": "OR6687-M005",
+      "privacy_class": "sanitized_public",
+      "protected_gates": [
+        "semantic_novelty_integrity",
+        "single_process_attribution",
+        "source_lane_read_only"
+      ],
+      "recommendation_state": "preferred",
+      "recurrence_guard": "Do not project an unrestricted recursive Git tree through a non-resumable wrapper; scope by immutable path domain and retain the session.",
+      "retained_negative_ids": [
+        "OR6687-X1-N001"
+      ],
+      "rollback": "Wait for only the attributable read-only child processes to exit; do not start a second broad traversal or mutate the worktree.",
+      "scope_boundary": "Read-only proposal-path inventory only; incomplete output earns no novelty or completion credit.",
+      "supersedes": [],
+      "title": "Use resumable scoped Git-tree inventory for semantic novelty audit",
+      "trigger_preconditions": [
+        "A large inherited repository tree is queried recursively for proposal-like paths",
+        "The initial wrapper has a 30-second supervision window"
+      ],
+      "validation_witness_ids": [
+        "OR6687-W005-F",
+        "OR6687-W005-P"
+      ]
+    },
+    {
+      "approval_class": "safe_now",
+      "candidate_workaround": "Write the complete sanitized staged-review result to an explicit external JSON filename and project only bounded scalar counts, digests, and a capped sample to the response channel.",
+      "failure_signature": "complete-staged-review-projection-exceeded-model-output-before-attributable-receipt",
+      "method_id": "OR6687-M006",
+      "privacy_class": "sanitized_public",
+      "protected_gates": [
+        "exact_staged_review",
+        "single_process_attribution",
+        "privacy_boundary",
+        "x1_before_x2"
+      ],
+      "recommendation_state": "preferred",
+      "recurrence_guard": "Never rely on a single unbounded stdout projection for lifecycle evidence; require an explicit receipt path and cap every diagnostic collection before projection.",
+      "retained_negative_ids": [
+        "OR6687-X1-N002"
+      ],
+      "rollback": "Credit no staged-review result from the truncated projection, confirm that no attributable child remains, and leave the staged Git surface unchanged before the bounded recovery.",
+      "scope_boundary": "Staged owner-x1 software evidence only; incomplete projection earns zero review, validation, scientific, professional, production, authority, or Stage 20 credit.",
+      "supersedes": [],
+      "title": "Write exact staged-review evidence to an explicit bounded receipt",
+      "trigger_preconditions": [
+        "A staged review emits structured diagnostics across exact Git blobs, documents, privacy classes, and stale-context paths",
+        "The orchestration response has a bounded output budget"
+      ],
+      "validation_witness_ids": [
+        "OR6687-W006-F",
+        "OR6687-W006-P"
+      ]
+    },
+    {
+      "approval_class": "safe_now",
+      "candidate_workaround": "Pass literal directory roots to ripgrep and constrain filenames with separate -g filters, then require a successful exit or an explicitly modeled no-match exit.",
+      "failure_signature": "windows-ripgrep-wildcard-path-arguments-returned-os-error-and-partial-output",
+      "method_id": "OR6687-M007",
+      "privacy_class": "sanitized_public",
+      "protected_gates": [
+        "stale_label_review",
+        "windows_path_semantics",
+        "x1_before_x2"
+      ],
+      "recommendation_state": "preferred",
+      "recurrence_guard": "Do not pass Windows wildcard expressions as positional ripgrep paths; use literal roots and -g patterns.",
+      "retained_negative_ids": [
+        "OR6687-X1-N003"
+      ],
+      "rollback": "Discard the partial output, leave the staged surface unchanged, and rerun only the bounded stale-label dependency with corrected path selection.",
+      "scope_boundary": "Owner-x1 stale-label diagnostics only; partial search output receives zero lifecycle or completion credit.",
+      "supersedes": [],
+      "title": "Use directory roots and glob filters for Windows ripgrep reviews",
+      "trigger_preconditions": [
+        "A bounded stale-label review spans owner docs, scripts, and tests on Windows",
+        "Wildcard expressions are supplied as positional path arguments"
+      ],
+      "validation_witness_ids": [
+        "OR6687-W007-F",
+        "OR6687-W007-P"
+      ]
+    },
+    {
+      "approval_class": "safe_now",
+      "candidate_workaround": "Inspect the exact indexed line and surrounding immutable staged blob, retain the raw candidate count, distinguish scanner or control vocabulary from prohibited payload, and require zero confirmed payload hits before proceeding.",
+      "failure_signature": "x1-staged-review-stopped-on-one-delegation-markup-candidate-in-owner-builder",
+      "method_id": "OR6687-M008",
+      "privacy_class": "sanitized_public",
+      "protected_gates": [
+        "five_class_privacy_boundary",
+        "raw_candidate_retention",
+        "exact_staged_review",
+        "x1_before_x2"
+      ],
+      "recommendation_state": "preferred",
+      "recurrence_guard": "Keep raw privacy candidates and confirmed payload hits as separate fields; never silently suppress a candidate or treat a definition match as private payload without exact adjudication.",
+      "retained_negative_ids": [
+        "OR6687-X1-N004"
+      ],
+      "rollback": "Leave the staged surface unchanged during diagnosis; if the candidate contains prohibited material, remove it additively and rebuild the exact manifest before any commit.",
+      "scope_boundary": "Owner-x1 staged text only; adjudication cannot establish privacy completeness, production readiness, identity authority, or broader security assurance.",
+      "supersedes": [],
+      "title": "Adjudicate exact privacy candidates without converting definitions into payload",
+      "trigger_preconditions": [
+        "The five-class staged scan returns a candidate in owner-generated source",
+        "The candidate class can match either prohibited payload or a sanitized control description"
+      ],
+      "validation_witness_ids": [
+        "OR6687-W008-F",
+        "OR6687-W008-P"
+      ]
+    },
+    {
+      "approval_class": "safe_now",
+      "candidate_workaround": "Capture git show parent output as a scalar first, then apply PowerShell -split to that scalar and require both native exit success and exact parent-count equality.",
+      "failure_signature": "powershell-forwarded-split-operator-to-git-show-and-projected-false-zero-parent-count",
+      "method_id": "OR6687-M009",
+      "privacy_class": "sanitized_public",
+      "protected_gates": [
+        "single_parent_history",
+        "x1_remote_equality",
+        "native_exit_attribution",
+        "x1_before_x2"
+      ],
+      "recommendation_state": "preferred",
+      "recurrence_guard": "Never place -split syntactically inside an unparenthesized native-command argument list; bind native output before applying PowerShell operators.",
+      "retained_negative_ids": [
+        "OR6687-X1-N005"
+      ],
+      "rollback": "Retain the false parent-count projection at zero credit, preserve the independently valid remote-equality fields, and rerun only the parent-count dependency.",
+      "scope_boundary": "X1 parent-count projection only; the defect does not negate independently attributable equality evidence and earns no lifecycle credit itself.",
+      "supersedes": [],
+      "title": "Parenthesize Git scalar output before PowerShell splitting",
+      "trigger_preconditions": [
+        "A Git scalar is split inside a PowerShell array/count expression",
+        "The command output and PowerShell operator are not explicitly parenthesized"
+      ],
+      "validation_witness_ids": [
+        "OR6687-W009-F",
+        "OR6687-W009-P"
+      ]
+    },
+    {
+      "approval_class": "safe_now",
+      "candidate_workaround": "Read the exact archive export surface, bind the existing ACTIVATION_OVERLAY mapping, and derive the effective-negative baseline from its explicit field.",
+      "failure_signature": "x2-builder-imported-nonexistent-activation-baseline-symbol",
+      "method_id": "OR6687-M010",
+      "privacy_class": "sanitized_public",
+      "protected_gates": [
+        "count_lineage",
+        "x1_before_x2",
+        "no_partial_execution_credit"
+      ],
+      "recommendation_state": "preferred",
+      "recurrence_guard": "Inspect exact module symbols or import through a stable mapping before the first builder invocation; never infer a scalar export name from narrative wording.",
+      "retained_negative_ids": [
+        "OR6687-X2-N001"
+      ],
+      "rollback": "Retain the pre-execution import failure, leave generated x2 evidence absent, and change only the failed import and scalar references before a bounded retry.",
+      "scope_boundary": "Builder import binding only; the stopped invocation earns zero proposal, mutation, skill, runner, portfolio, validation, scientific, professional, production, authority, or Stage 20 credit.",
+      "supersedes": [],
+      "title": "Inspect archive exports before binding builder constants",
+      "trigger_preconditions": [
+        "A successor builder imports count baselines from an immutable owner archive",
+        "The expected export name is inferred rather than inspected"
+      ],
+      "validation_witness_ids": [
+        "OR6687-W010-F",
+        "OR6687-W010-P"
+      ]
+    },
+    {
+      "approval_class": "safe_now",
+      "candidate_workaround": "Keep the Python assertion unchanged and emit only plain ASCII scalar tokens without nested JSON quoting.",
+      "failure_signature": "powershell-python-c-embedded-json-print-string-became-unterminated",
+      "method_id": "OR6687-M011",
+      "privacy_class": "sanitized_public",
+      "protected_gates": [
+        "probe_attribution",
+        "count_lineage",
+        "no_builder_replay_before_dependency_pass"
+      ],
+      "recommendation_state": "preferred",
+      "recurrence_guard": "Do not embed decorative JSON literals in PowerShell-hosted Python -c probes; serialize outside the nested command or print simple scalars.",
+      "retained_negative_ids": [
+        "OR6687-X2-N002"
+      ],
+      "rollback": "Credit no import evidence from the syntax failure and rerun only the isolated import dependency with plain output.",
+      "scope_boundary": "Isolated Python import probe only; the quoting failure earns no x2 execution, validation, or broader claim credit.",
+      "supersedes": [],
+      "title": "Use plain scalar output for PowerShell-hosted Python probes",
+      "trigger_preconditions": [
+        "A Python -c dependency probe is launched through PowerShell",
+        "The probe embeds a multiply escaped JSON string solely for display"
+      ],
+      "validation_witness_ids": [
+        "OR6687-W011-F",
+        "OR6687-W011-P"
+      ]
+    },
+    {
+      "approval_class": "safe_now",
+      "candidate_workaround": "Inspect the exact immutable x1 JSON keys and iterate the category-to-path-list mapping explicitly while confirming each shard's declared category.",
+      "failure_signature": "x2-builder-treated-category-shards-mapping-as-list-of-path-objects",
+      "method_id": "OR6687-M012",
+      "privacy_class": "sanitized_public",
+      "protected_gates": [
+        "immutable_x1_schema",
+        "portfolio_count_integrity",
+        "no_partial_execution_credit"
+      ],
+      "recommendation_state": "preferred",
+      "recurrence_guard": "Project JSON container types and a bounded first element before traversal; bind historical assertions to the immutable Git blob, not a remembered sibling schema.",
+      "retained_negative_ids": [
+        "OR6687-X2-N003"
+      ],
+      "rollback": "Retain the pre-write TypeError, keep all proposal, mutation, skill, runner, and portfolio credit at zero, and change only the portfolio loader.",
+      "scope_boundary": "Immutable portfolio-index traversal only; no x2 outcome, portfolio, validation, or broader claim credit is earned by the stopped invocation.",
+      "supersedes": [],
+      "title": "Inspect immutable portfolio index shape before traversal",
+      "trigger_preconditions": [
+        "A builder loads a commit-bound portfolio index",
+        "The category_shards container shape is assumed from a different phase schema"
+      ],
+      "validation_witness_ids": [
+        "OR6687-W012-F",
+        "OR6687-W012-P"
+      ]
+    },
+    {
+      "approval_class": "safe_now",
+      "candidate_workaround": "Build the expected manifest-entry set from intended_paths_before_manifest plus the allowlist's own repository-relative path, while keeping the manifest itself as the sole self-exclusion.",
+      "failure_signature": "x2-manifest-test-omitted-staged-allowlist-from-expected-entry-domain",
+      "method_id": "OR6687-M013",
+      "privacy_class": "sanitized_public",
+      "protected_gates": [
+        "exact_manifest_parity",
+        "no_test_result_erasure",
+        "bounded_dependency_recovery"
+      ],
+      "recommendation_state": "preferred",
+      "recurrence_guard": "Name and compare lifecycle domains explicitly: premanifest intended paths, included allowlist, and self-excluded manifest are three distinct sets.",
+      "retained_negative_ids": [
+        "OR6687-X2-N004"
+      ],
+      "rollback": "Retain the 18-pass one-failure selection at zero aggregate credit, change only the failed assertion, refresh changed lifecycle blobs and the manifest, and rerun only impacted dependency tests.",
+      "scope_boundary": "X2 manifest comparison-domain dependency only; the failed aggregate retains zero pass credit and no proposal, scientific, professional, production, authority, or Stage 20 claim is promoted.",
+      "supersedes": [],
+      "title": "Compare evidence manifests against premanifest paths plus the allowlist entry",
+      "trigger_preconditions": [
+        "An evidence manifest includes the staged allowlist as an ordinary exact blob",
+        "The allowlist field is explicitly named intended_paths_before_manifest"
+      ],
+      "validation_witness_ids": [
+        "OR6687-W013-F",
+        "OR6687-W013-P"
+      ]
+    },
+    {
+      "approval_class": "safe_now",
+      "candidate_workaround": "Keep the complete validated ledger externally, write a compact repository index with exact counts and source digest, and shard methods, witnesses, events, and recommendations without dropping any row.",
+      "failure_signature": "complete-x2-method-flow-ledger-exceeded-6000-word-phase-document-ceiling",
+      "method_id": "OR6687-M014",
+      "privacy_class": "sanitized_public",
+      "protected_gates": [
+        "append_only_method_flow",
+        "document_ceiling",
+        "failed_witness_retention",
+        "exact_manifest_parity"
+      ],
+      "recommendation_state": "preferred",
+      "recurrence_guard": "Project word counts before sealing a growing ledger; shard by schema domain before the document ceiling is crossed and validate union/count parity.",
+      "retained_negative_ids": [
+        "OR6687-X2-N005"
+      ],
+      "rollback": "Retain the 6455-word failure at zero credit, do not delete or abbreviate evidence rows, and replace only the repository representation with lossless bounded shards.",
+      "scope_boundary": "Method Flow repository representation only; sharding cannot erase failures or confer proposal, validation, scientific, professional, production, authority, or Stage 20 credit.",
+      "supersedes": [],
+      "title": "Shard complete Method Flow evidence behind a compact repository index",
+      "trigger_preconditions": [
+        "The append-only phase ledger grows as every failure and recovery is retained",
+        "Each durable phase document must remain at or below 6000 words"
+      ],
+      "validation_witness_ids": [
+        "OR6687-W014-F",
+        "OR6687-W014-P"
+      ]
+    }
+  ],
+  "schema": "ghc.family.method-flow.methods.shard.v1"
+}
