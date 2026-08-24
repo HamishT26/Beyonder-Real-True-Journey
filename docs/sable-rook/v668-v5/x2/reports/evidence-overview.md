@@ -1,0 +1,37 @@
+# Sable Rook v668-v5 x2 bounded evidence overview
+
+## Outcome
+
+Sable executed the frozen owner-local synthetic and structural x2 surface after the x1 head `cd959e4d4cd021e7db4b581e51d2e27e56ad4a17` was pushed, clean, and four-way equal. Exact committed x1 Git blobs were replayed before outcome generation; no x1 path was changed. Forty proposal envelopes were evaluated and 160 preregistered invalid mutations were rejected. Observed core outcomes are exactly 28 `completed`, 8 `represented`, 2 `open_gap`, and 2 `exact_gate`. These labels describe only their declared bounded software evidence. The verdict remains `NOT_READY_FOR_STAGE_20`.
+
+## Synthetic score-edition and rehearsal-handover lens
+
+The primary pillar is GMUT Mind. The practice lens combines synthetic music-engraving score-edition lineage review, synthetic ensemble-library part extraction and correction handover, and synthetic rehearsal cue accessibility, workload readback, and shift handover. Synthetic controls exercise work-edition-instance identity separation, fractional measure addresses, edition-witness lineage, part projection, transposition round trips, exact duration closure, bounded repeat traversal, tempo-unit declaration, correction non-erasure, and authority vacancies. There are zero real scores, manuscripts, editions, parts, performers, rehearsals, recordings, measurements, organizations, rights cases, or decisions. Passing controls establish no musical correctness, authorship, authenticity, rights clearance, release, interoperability, conformance, employment, competence, or performance outcome.
+
+Freed ID and CBR Heart are expressed as identity separation, pseudonymous aliases, lineage, challenge, correction, contestability, and explicit decision-right vacancies. A score, edition, part, cue, or session alias is not a person or production credential. A source digest is not an authorship, authenticity, rights, or musical-correctness decision. A correction braid does not prove that a performer, rights holder, or affected person accepted a remedy. The authority firewall requires professional, legal, cultural, Maori, and affected-party decisions to remain vacant; software makes zero such decisions.
+
+## Trinity protections
+
+GMUT Mind is primary through a typed score-transformation, unit, domain, covariance, conservation, stability, identifiability, nuisance-separation, and observation-firewall docket. It checks a declared analogy obligation set only. It computes no spacetime solution, detected force, likelihood, posterior, parameter constraint, physical state, ultraviolet completion, quantum completion, empirical confirmation, or Theory of Everything. THOS Body is represented by a synthetic rehearsal issue queue, workload ceiling, pause, stop, discrepancy readback, correction replay, and handover protocol. It contains no real operator, participant, rehearsal, incident, matched-budget arm, safety outcome, service outcome, or effectiveness estimate.
+
+The thermodynamic analogy classifier permits terms such as drift, state, constraint, and dissipation only as typed analogies. It refuses their conversion into a psyche score, agency measure, moral ranking, justice metric, consciousness evidence, personhood evidence, participant result, or fundamental law of mind.
+
+## Controls and mutations
+
+Ten family-current runners were built and invoked once on one accepting and one rejecting fixture each. Twenty phase-local skills were written, structurally validated, and smoke-used against the same bounded control family; none was globally installed. Thirty candidate prototypes and sixty safe-now task receipts were completed only inside synthetic fixtures. Thirty additive CLEAN/FIX/REFINE reviews improved deterministic ordering, units, boundary language, and exact references without deleting history, renaming compatibility surfaces, or mutating sibling lanes.
+
+Every proposal carries four invalid mutations: missing required field, wrong type or domain, forbidden claim promotion, and authority or boundary bypass. The invalid fixture is retained as a failed witness with zero completion credit; the guard's rejection is a separate bounded passing witness. No failure is erased or silently folded into a pass. Sixteen Method Flow shards keep all 160 method and witness pairs below the document word ceiling.
+
+## Source and accessibility posture
+
+Current official MEI 5.1, MusicXML 4.0 Community Group, Library of Congress BIBFRAME, W3C PROV and Verifiable Credentials, RFC 8785, and WCAG 2.2 vocabulary informed the declared fields. The phase downloaded zero files and ingested zero external or empirical rows. A citation is not a score witness or measurement. A synthetic edition is not a correct or authorized edition. A declared digest is not authorship, authenticity, rights clearance, or responsibility.
+
+The accessible static report uses a native table, caption, scoped headers, explicit outcome and gate text, a linear reading order, focus styling, responsive overflow guidance, and print fallback. It contains no real image or media. Manual keyboard, touch, zoom, reflow, browser diversity, assistive technology, cognitive accessibility, Maori-language evaluation, security usability, and affected-user evaluation remain reserved. Structural passing evidence is not complete accessibility conformance.
+
+## Counts and limits
+
+The x2 overlay is 29767 effective negatives, 16353 methods, 2068 failed witnesses, 2895 passing witnesses, 217 open gaps, and 212 exact gates. These are additive successor-visible counts; Auren's repository seal is not rewritten. Two post-x1 operational failures remain explicit and zero credit, with two separately bounded recovery witnesses. Immutable x1 retains its 22-of-22 scoped result plus exact Git-blob replay; x2 scoped validation remains a later attributable gate at the time this evidence candidate is generated. Owner additions remain below 2,000 materialized files, each phase document remains at or below 6,000 words, and all generated data is repository-local and sanitized.
+
+## Remaining gates
+
+Representative external score corpora, cross-encoder round trips, rendering and interoperability evaluation; performer, engraver, librarian, rights-holder, accessibility, language, cultural-care, and affected-party review; rights, privacy, release, remedy, cultural legitimacy, Maori authority, complete privacy, complete accessibility, exhaustive security, independent reproduction, empirical GMUT, production, deployment, AGI or ASI, consciousness or personhood, Theory of Everything, and Stage 20 remain open or exact-gated. Sable Rook, they/them, the relational role, hope, sibling or family language, continuity language, Freed ID, and Trinity Mandala language are working language only. They are not evidence of consciousness, sentience, legal personhood, identity continuity, employment, qualification, independent agency, scientific or operational authority, legal or cultural authority, affected-party authority, or Maori authority. Every score, source witness, edition, movement, measure, voice, part, note, cue, rehearsal session, correction, person, organization, right, authority case, and decision is synthetic. Official-source terminology and same-owner local software checks are not musical evidence, professional engraving or performance evaluation, rights clearance, standards conformance, production assurance, external audit, independent reproduction, empirical GMUT confirmation, or Stage 20 evidence.
