@@ -18,6 +18,7 @@ PHASE_PREFIX = "docs/vesper-arlen/v668-v1-r2/"
 SOURCE = "d3fd3065a4570046335689c62af8faf636be7a86"
 X1 = "be908eb829185971c10be6d100c2c85fd35871e0"
 EVIDENCE = "813b4bd702c85476cc87791790d1e1cd27e4b5ff"
+PRIOR_FINAL = "707cfde5a5dd9418531b7bc84c98c04143a0f7d7"
 BRANCH = "codex/GHC-Family/vesper-arlen-v668-v1-r2-remaster"
 ALLOWED_OUTCOMES = {"completed", "represented", "open_gap", "exact_gate"}
 TEXT_SUFFIXES = {".json", ".md", ".txt", ".html", ".py", ".toml", ".yaml", ".yml", ".mjs", ".js"}
@@ -107,8 +108,11 @@ def python_review(commit: str, paths: list[str]) -> dict[str, Any]:
                     name = node.func.id
                 elif isinstance(node.func, ast.Attribute):
                     name = node.func.attr
-                if name in {"eval", "exec", "system", "loads"}:
-                    findings.append({"path": path, "call": name})
+                qualified = name
+                if isinstance(node.func, ast.Attribute) and isinstance(node.func.value, ast.Name):
+                    qualified = f"{node.func.value.id}.{node.func.attr}"
+                if qualified in {"eval", "exec", "os.system", "pickle.loads", "marshal.loads", "yaml.load"}:
+                    findings.append({"path": path, "call": qualified})
                 if name in {"run", "Popen", "call", "check_call", "check_output"} and any(keyword.arg == "shell" and isinstance(keyword.value, ast.Constant) and keyword.value.value is True for keyword in node.keywords):
                     findings.append({"path": path, "call": "subprocess_shell_true"})
     return {"python_files": parsed, "findings": findings, "finding_count": len(findings)}
@@ -206,8 +210,8 @@ def main() -> int:
     bool_check(detailed, "tests", test_result.returncode == 0 and tests_passed > 0, tests_passed)
     bool_check(detailed, "branch", branch == BRANCH, branch)
     bool_check(detailed, "clean_before", not status_before)
-    bool_check(detailed, "parent_evidence", parent == EVIDENCE, parent)
-    bool_check(detailed, "history_three_commits", history == [X1, EVIDENCE, head], history)
+    bool_check(detailed, "parent_prior_final", parent == PRIOR_FINAL, parent)
+    bool_check(detailed, "history_four_commits", history == [X1, EVIDENCE, PRIOR_FINAL, head], history)
     bool_check(detailed, "zero_merges", merge_count == 0, merge_count)
     bool_check(detailed, "owner_scope", not out_of_scope, out_of_scope)
     bool_check(detailed, "four_way_equality", len({head, upstream, tracking, live}) == 1, {"head": head, "upstream": upstream, "tracking": tracking, "live": live})
@@ -230,7 +234,7 @@ def main() -> int:
     bool_check(detailed, "runners", runners["count"] == 10 and runners["all_pass"])
     bool_check(detailed, "cards", cards["card_count"] == 40 and cards["minimum_sections_per_card"] >= 13)
     bool_check(detailed, "method_flow_evidence", flow["effective_before_canonical"] == {"effective_negatives": 29039, "methods": 15625, "failed_witnesses": 1340, "passing_witnesses": 2175, "open_gaps": 209, "exact_gates": 204})
-    bool_check(detailed, "method_flow_closeout", closeout_flow["effective_before_canonical"] == {"effective_negatives": 29042, "methods": 15628, "failed_witnesses": 1343, "passing_witnesses": 2178, "open_gaps": 209, "exact_gates": 204})
+    bool_check(detailed, "method_flow_closeout", closeout_flow["effective_before_canonical"] == {"effective_negatives": 29043, "methods": 15629, "failed_witnesses": 1344, "passing_witnesses": 2179, "open_gaps": 209, "exact_gates": 204})
     bool_check(detailed, "route", route["prospective_next"] == {"owner": "Lyren Moss", "phase": "v668-v2", "state": "PREPARED_NOT_SENT"} and route["lyren_next_reminder"]["owner"] == "Ilyra Fen")
     bool_check(detailed, "baton_words", 10_000 <= baton_words <= 100_000, baton_words)
     bool_check(detailed, "baton_hash", sha256(baton) == seal["baton_sha256"], seal["baton_sha256"])
@@ -243,8 +247,8 @@ def main() -> int:
     minimal_labels = [
         "tests",
         "clean_before",
-        "parent_evidence",
-        "history_three_commits",
+        "parent_prior_final",
+        "history_four_commits",
         "zero_merges",
         "owner_scope",
         "four_way_equality",
@@ -274,6 +278,7 @@ def main() -> int:
         "source": SOURCE,
         "x1": X1,
         "evidence": EVIDENCE,
+        "prior_final": PRIOR_FINAL,
         "history": history,
         "merge_count": merge_count,
         "tests": {"exit_code": test_result.returncode, "passed": tests_passed, "stdout_sha256": sha256(test_result.stdout), "stderr_sha256": sha256(test_result.stderr)},

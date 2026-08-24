@@ -11,6 +11,7 @@ PHASE = ROOT / "docs" / "vesper-arlen" / "v668-v1-r2"
 SOURCE = "d3fd3065a4570046335689c62af8faf636be7a86"
 X1 = "be908eb829185971c10be6d100c2c85fd35871e0"
 EVIDENCE = "813b4bd702c85476cc87791790d1e1cd27e4b5ff"
+PRIOR_FINAL = "707cfde5a5dd9418531b7bc84c98c04143a0f7d7"
 
 
 def load(relative: str):
@@ -22,6 +23,8 @@ def test_closeout_anchors_and_expected_history_are_exact():
     assert record["source_final"] == SOURCE
     assert record["x1_head"] == X1
     assert record["evidence_head"] == EVIDENCE
+    assert record["prior_content_seal"] == PRIOR_FINAL
+    assert subprocess.run(["git", "-C", str(ROOT), "rev-parse", f"{PRIOR_FINAL}^"], check=True, capture_output=True, text=True).stdout.strip() == EVIDENCE
     assert subprocess.run(["git", "-C", str(ROOT), "rev-parse", f"{EVIDENCE}^"], check=True, capture_output=True, text=True).stdout.strip() == X1
     assert subprocess.run(["git", "-C", str(ROOT), "rev-parse", f"{X1}^"], check=True, capture_output=True, text=True).stdout.strip() == SOURCE
 
@@ -56,7 +59,7 @@ def test_closeout_counts_preserve_all_negatives_gaps_and_gates():
     negatives = load("closeout/retained-negative-register.json")
     gaps = load("closeout/open-gap-register.json")
     gates = load("closeout/exact-gate-register.json")
-    assert negatives["effective_negatives_before_canonical"] == 29042
+    assert negatives["effective_negatives_before_canonical"] == 29043
     assert negatives["all_retained"] and negatives["original_tool_audit_rewritten"] is False
     assert gaps["effective_open_gaps"] == 209 and gaps["closed_without_evidence"] == 0
     assert gates["effective_exact_gates"] == 204 and gates["closed_without_authority"] == 0
@@ -81,7 +84,7 @@ def test_outcomes_use_only_four_labels_and_exact_distribution():
 
 def test_final_remains_not_ready_and_canonical_pending():
     record = load("final/final-record.json")
-    assert record["state"] == "CONTENT_SEALED_CANONICAL_PENDING"
+    assert record["state"] == "CORRECTED_CONTENT_SEALED_CANONICAL_PENDING"
     assert record["canonical_invocation_count"] == 0
     assert record["canonical_success_credit"] == 0
     assert record["post_success_replay"] is False
