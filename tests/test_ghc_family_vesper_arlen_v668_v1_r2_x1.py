@@ -2,9 +2,9 @@ from __future__ import annotations
 
 import hashlib
 import json
+import subprocess
 from collections import Counter
 from pathlib import Path
-
 
 ROOT = Path(__file__).resolve().parents[1]
 PHASE = ROOT / "docs" / "vesper-arlen" / "v668-v1-r2"
@@ -108,15 +108,23 @@ def test_method_flow_retains_failed_and_passing_witnesses() -> None:
     assert all(row["credit"] == 0 and row["passing_witness"] for row in flow["failures"])
 
 
-def test_x1_manifest_matches_materialized_files() -> None:
+def test_x1_manifest_matches_exact_x1_git_blobs() -> None:
     manifest = load("x1/manifest.json")
     self_path = "docs/vesper-arlen/v668-v1-r2/x1/manifest.json"
+    x1_head = "be908eb829185971c10be6d100c2c85fd35871e0"
+    tree = subprocess.run(
+        ["git", "-C", str(ROOT), "ls-tree", "-r", "--name-only", x1_head, "docs/vesper-arlen/v668-v1-r2"],
+        check=True,
+        capture_output=True,
+        text=True,
+    ).stdout.splitlines()
     expected = {}
-    for path in sorted(p for p in PHASE.rglob("*") if p.is_file()):
-        relative = path.relative_to(ROOT).as_posix()
-        if relative == self_path:
-            continue
-        data = path.read_bytes()
+    for relative in sorted(path for path in tree if path != self_path):
+        data = subprocess.run(
+            ["git", "-C", str(ROOT), "show", f"{x1_head}:{relative}"],
+            check=True,
+            capture_output=True,
+        ).stdout
         expected[relative] = (hashlib.sha256(data).hexdigest(), len(data))
     actual = {row["path"]: (row["sha256"], row["bytes"]) for row in manifest["entries"]}
     assert actual == expected

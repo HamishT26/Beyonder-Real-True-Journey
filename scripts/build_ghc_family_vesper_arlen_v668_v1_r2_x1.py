@@ -14,7 +14,6 @@ from ghc_family_vesper_arlen_v668_v1_r2_archive import (
     OWNER,
     PHASE,
     PHASE_ROOT,
-    PROPOSAL_BLUEPRINTS,
     REL_PHASE_ROOT,
     SOURCE_BRANCH,
     SOURCE_EVIDENCE,
@@ -30,7 +29,6 @@ from ghc_family_vesper_arlen_v668_v1_r2_archive import (
     write_json,
     write_text,
 )
-
 
 SAFE_TITLES = [
     "freeze exact prior Vesper source anchors",

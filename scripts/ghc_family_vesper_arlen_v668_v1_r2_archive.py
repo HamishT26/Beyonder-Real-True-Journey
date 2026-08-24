@@ -17,7 +17,6 @@ from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any, BinaryIO
 
-
 ROOT = Path(__file__).resolve().parents[1]
 PHASE = "v668-v1-r2"
 PHASE_ROOT = ROOT / "docs" / "vesper-arlen" / PHASE
