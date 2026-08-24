@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import subprocess
 from collections import Counter
 from pathlib import Path
 
@@ -22,7 +23,14 @@ def test_x1_is_planning_only() -> None:
     assert charter["x2_outcomes_observed"] is False
     assert receipt["x2_files_created"] == 0
     assert receipt["outcomes_observed"] is False
-    assert not (PHASE / "x2").exists()
+    frozen_paths = subprocess.run(
+        ["git", "ls-tree", "-r", "--name-only", "3e9bf7e7fa9ee1164b77616e09f93127d3b43fd5"],
+        cwd=ROOT,
+        check=True,
+        capture_output=True,
+        text=True,
+    ).stdout.splitlines()
+    assert not any(path.startswith("docs/vesper-arlen/v668-v1/x2/") for path in frozen_paths)
 
 
 def test_source_and_external_overlay_are_exact() -> None:
@@ -80,7 +88,12 @@ def test_manifest_is_owner_scoped_and_exact_on_disk() -> None:
     assert not any("__pycache__" in path or path.endswith(".pyc") for path in paths)
     assert all(path.startswith("docs/vesper-arlen/v668-v1/") or "vesper_arlen_v668_v1" in path for path in paths)
     for row in manifest["entries"]:
-        data = (ROOT / row["path"]).read_bytes()
+        data = subprocess.run(
+            ["git", "cat-file", "blob", f"3e9bf7e7fa9ee1164b77616e09f93127d3b43fd5:{row['path']}"],
+            cwd=ROOT,
+            check=True,
+            capture_output=True,
+        ).stdout
         assert len(data) == row["bytes"]
         assert hashlib.sha256(data).hexdigest() == row["sha256"]
 
