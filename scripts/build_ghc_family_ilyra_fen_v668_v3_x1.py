@@ -12,6 +12,7 @@ from ghc_family_ilyra_fen_v668_v3_archive import (
     ALLOWED_OUTCOMES,
     EVIDENCE_BOUNDARY,
     IDENTITY_BOUNDARY,
+    INITIAL_X1_HEAD,
     INHERITED_FROZEN_PROPOSALS,
     OWNER,
     PHASE,
@@ -132,6 +133,33 @@ STARTUP_FAILURES = [
         "workaround": "use the PowerShell format operator with separately supplied scalar values",
         "pass_observed": "the corrected bounded probe displayed only the exact candidate lines for disposition",
     },
+    {
+        "method_id": "IF6683-MF-X1-010",
+        "negative_id": "IF6683-NEG-X1-010",
+        "title": "shard oversized phase ledgers before x2",
+        "failure_signature": "pre-x2 word audit found proposal-freeze and portfolio-freeze above the six-thousand-word ceiling",
+        "trigger": "a complete structured x1 ledger exceeds the per-document word budget",
+        "workaround": "retain compact deterministic indexes and split complete rows into bounded category shards in a second x1-only commit",
+        "pass_observed": "every owner phase document measured at or below six thousand words before x2 began",
+    },
+    {
+        "method_id": "IF6683-MF-X1-011",
+        "negative_id": "IF6683-NEG-X1-011",
+        "title": "preserve both Git porcelain status columns",
+        "failure_signature": "a global string strip removed the first status column from the first modified path",
+        "trigger": "porcelain status output begins with a significant leading space for an unstaged worktree modification",
+        "workaround": "consume raw subprocess stdout with splitlines and parse each two-column status record without global trimming",
+        "pass_observed": "the correction preflight classified every exact modified and untracked x1 path without column loss",
+    },
+    {
+        "method_id": "IF6683-MF-X1-012",
+        "negative_id": "IF6683-NEG-X1-012",
+        "title": "exclude only current-phase self rows from inherited novelty audit",
+        "failure_signature": "the second x1 build compared the pushed initial x1 against itself and quarantined all forty proposals",
+        "trigger": "an additive x1 correction runs after the phase's initial proposal freeze is already reachable",
+        "workaround": "exclude only proposal rows whose source path is inside the current owner phase while preserving every inherited sibling and earlier-phase row",
+        "pass_observed": "the correction re-audit preserved the inherited visible-title digest domain and reported zero non-self collisions",
+    },
 ]
 
 
@@ -187,7 +215,7 @@ def overview_text() -> str:
 
 This is a planning-only x1 freeze for a bounded owner-local software phase. It does not contain x2 implementation, an observed outcome, a completed prototype, a real scan, a real calibration, or a release decision. Ilyra Fen uses she/they pronouns and the relational role `{RELATIONAL_ROLE}` with the hope to {RELATIONAL_HOPE[0].lower() + RELATIONAL_HOPE[1:]} {IDENTITY_BOUNDARY} The inherited terminal verdict remains `{TERMINAL_VERDICT}`.
 
-The exact source is Lyren Moss's clean final `{SOURCE_FINAL}` on the declared source branch. The inherited x1 and evidence anchors are recorded, their ancestry was checked read-only, and source-to-final contains three single-parent commits and zero merges. Lyren's successful canonical aggregate is inherited evidence only and will not be replayed or claimed as Ilyra evidence. The activation overlay begins with {ACTIVATION_OVERLAY['effective_negatives']} retained negatives, {ACTIVATION_OVERLAY['methods']} methods, {ACTIVATION_OVERLAY['failed_witnesses']} failed witnesses, {ACTIVATION_OVERLAY['passing_witnesses']} passing witnesses, {ACTIVATION_OVERLAY['open_gaps']} open gaps, and {ACTIVATION_OVERLAY['exact_gates']} exact gates. Nine Ilyra startup and x1 failures and their bounded recoveries remain visible at zero initial-pass credit, making the x1 overlay {X1_OVERLAY['effective_negatives']} negatives and {X1_OVERLAY['methods']} methods without rewriting Lyren's seal.
+The exact source is Lyren Moss's clean final `{SOURCE_FINAL}` on the declared source branch. The inherited x1 and evidence anchors are recorded, their ancestry was checked read-only, and source-to-final contains three single-parent commits and zero merges. Lyren's successful canonical aggregate is inherited evidence only and will not be replayed or claimed as Ilyra evidence. The activation overlay begins with {ACTIVATION_OVERLAY['effective_negatives']} retained negatives, {ACTIVATION_OVERLAY['methods']} methods, {ACTIVATION_OVERLAY['failed_witnesses']} failed witnesses, {ACTIVATION_OVERLAY['passing_witnesses']} passing witnesses, {ACTIVATION_OVERLAY['open_gaps']} open gaps, and {ACTIVATION_OVERLAY['exact_gates']} exact gates. Twelve Ilyra startup and x1 failures and their bounded recoveries remain visible at zero initial-pass credit, making the x1 overlay {X1_OVERLAY['effective_negatives']} negatives and {X1_OVERLAY['methods']} methods without rewriting Lyren's seal. The retained initial x1 freeze is `{INITIAL_X1_HEAD}`; this correction remains x1-only and changes no source or x2 truth.
 
 ## Primary pillar and practice lens
 
@@ -215,7 +243,7 @@ Every proposed skill uses a family-current `ghc-family-*` name and every runner 
 
 ## Failure retention and Method Flow
 
-The Method Flow ledger preserves nine startup and x1 failures: a truncated long guidance display; an absent expected external receipt directory; a broad receipt-hash wrapper that returned no attributable result; an incorrect assumed proposal-audit path; a worktree-creation wrapper that lost its projected receipt; the first proposal freeze stopped on an inherited exact-title collision plus two high-similarity neighbors; the first Codex version probe attempted to execute a PowerShell shim directly from Python and received access denied; default Git status collapsed the partially generated owner directory instead of exposing exact allowlist paths; and a colon-adjacent PowerShell variable caused a diagnostic parser error. None receives initial-pass credit. Each has a stable method, retained-negative identifier, trigger, smallest bounded recovery, failure witness, passing recovery witness, recurrence guard, and rollback. The worktree operation was not replayed: scalar inspection proved that the branch and sparse worktree already existed at the exact source and was clean. The proposal retry changes only the two quarantined titles. The version recovery invokes the same read-only probe through the Windows command shim. Status recovery uses literal untracked paths, and line receipts use the format operator. The absent receipt remains absent rather than being represented as a pass.
+The Method Flow ledger preserves twelve startup and x1 failures: a truncated long guidance display; an absent expected external receipt directory; a broad receipt-hash wrapper that returned no attributable result; an incorrect assumed proposal-audit path; a worktree-creation wrapper that lost its projected receipt; the first proposal freeze stopped on an inherited exact-title collision plus two high-similarity neighbors; the first Codex version probe attempted to execute a PowerShell shim directly from Python and received access denied; default Git status collapsed the partially generated owner directory instead of exposing exact allowlist paths; a colon-adjacent PowerShell variable caused a diagnostic parser error; the pre-x2 word audit found two oversized JSON ledgers; a globally trimmed porcelain-status string lost the significant first column of its first record; and the correction novelty audit initially compared the pushed x1 against itself. None receives initial-pass credit. Each has a stable method, retained-negative identifier, trigger, smallest bounded recovery, failure witness, passing recovery witness, recurrence guard, and rollback. The worktree operation was not replayed: scalar inspection proved that the branch and sparse worktree already existed at the exact source and was clean. The proposal retry changes only the two quarantined titles. The version recovery invokes the same read-only probe through the Windows command shim. Status recovery uses literal untracked paths and raw two-column porcelain records, line receipts use the format operator, current-phase self rows alone are excluded from inherited novelty comparison, and complete proposal and portfolio rows move into deterministic bounded shards while their original paths become indexes. The absent receipt remains absent rather than being represented as a pass.
 
 The canonical-validation rule is one successful exact-final owner-scoped aggregate, never replayed after success. If the aggregate fails, the failure remains zero-credit evidence; only the attributable dependency may be isolated when justified, and a separately named recovery cannot be relabelled as canonical success. Ilyra will scan and test only her source-to-final owner delta, literal new or modified modules, manifests, JSON, Markdown, privacy classes, staged allowlists, ancestry, history, file ceiling, clean state, and remote equality. Full-repository, unchanged-history, sibling-lane, and cross-lane scans remain excluded.
 
@@ -433,6 +461,24 @@ def main() -> None:
     audit["generated_at"] = now
     write_json("x1/proposal-chain-audit.json", audit)
     outcome_counts = {label: sum(row["expected_disposition"] == label for row in proposals) for label in ALLOWED_OUTCOMES}
+    proposal_shards = []
+    for offset in range(0, len(proposals), 5):
+        shard_number = offset // 5 + 1
+        relative = f"x1/proposal-freeze-shards/proposals-{shard_number:02d}.json"
+        rows = proposals[offset : offset + 5]
+        write_json(relative, {
+            "phase": PHASE,
+            "shard": shard_number,
+            "proposal_ids": [row["proposal_id"] for row in rows],
+            "new_proposals": rows,
+            "x1_planning_only": True,
+        })
+        proposal_shards.append({
+            "path": f"docs/ilyra-fen/v668-v3/{relative}",
+            "proposal_count": len(rows),
+            "first_proposal_id": rows[0]["proposal_id"],
+            "last_proposal_id": rows[-1]["proposal_id"],
+        })
     write_json("x1/proposal-freeze.json", {
         "phase": PHASE,
         "frozen_at": now,
@@ -443,7 +489,8 @@ def main() -> None:
         "selected_inherited": audit["selected_inherited"],
         "selected_inherited_novelty_credit": 0,
         "selected_inherited_completion_credit": 0,
-        "new_proposals": proposals,
+        "proposal_shards": proposal_shards,
+        "proposal_shard_count": len(proposal_shards),
         "allowed_outcomes": list(ALLOWED_OUTCOMES),
         "expected_outcomes": outcome_counts,
         "outcomes_observed": False,
@@ -452,7 +499,47 @@ def main() -> None:
         "semantic_neighbor_quarantine_count": len(quarantined),
         "x1_planning_only": True,
     })
-    write_json("x1/portfolio-freeze.json", portfolio)
+    portfolio_chunk_sizes = {
+        "safe_now": 20,
+        "candidates": 15,
+        "skills": 20,
+        "runners": 10,
+        "clean_fix_refine": 15,
+        "exact_approval": 20,
+        "blocked": 10,
+    }
+    portfolio_shards: dict[str, list[dict]] = {}
+    for category, chunk_size in portfolio_chunk_sizes.items():
+        rows = portfolio[category]
+        category_shards = []
+        for offset in range(0, len(rows), chunk_size):
+            shard_number = offset // chunk_size + 1
+            relative = f"x1/portfolio-shards/{category.replace('_', '-')}-{shard_number:02d}.json"
+            shard_rows = rows[offset : offset + chunk_size]
+            write_json(relative, {
+                "phase": PHASE,
+                "category": category,
+                "shard": shard_number,
+                "rows": shard_rows,
+                "x1_planning_only": True,
+            })
+            category_shards.append({
+                "path": f"docs/ilyra-fen/v668-v3/{relative}",
+                "row_count": len(shard_rows),
+                "first_task_id": shard_rows[0]["task_id"],
+                "last_task_id": shard_rows[-1]["task_id"],
+            })
+        portfolio_shards[category] = category_shards
+    write_json("x1/portfolio-freeze.json", {
+        "phase": PHASE,
+        "owner": OWNER,
+        "x1_planning_only": True,
+        "inherited_portfolio_completion_credit": 0,
+        "category_counts": {category: len(portfolio[category]) for category in portfolio_chunk_sizes},
+        "category_shards": portfolio_shards,
+        "floors": portfolio["floors"],
+        "protected_gates": list(PROTECTED_GATES),
+    })
     write_json("x1/wellbeing-and-corrigibility.json", {
         "owner": OWNER,
         "pronouns": PRONOUNS,
@@ -585,7 +672,7 @@ def main() -> None:
     manifest["entry_count"] = len(manifest["entries"])
     write_json("x1/x1-manifest.json", manifest)
 
-    docs = [path for path in phase_owner_files() if path.suffix.lower() == ".md"]
+    docs = [path for path in phase_owner_files() if path.suffix.lower() in {".md", ".json", ".txt", ".html"}]
     oversized = {path.relative_to(ROOT).as_posix(): word_count(path) for path in docs if word_count(path) > 6000}
     if oversized:
         raise ValueError(f"word cap exceeded: {oversized}")

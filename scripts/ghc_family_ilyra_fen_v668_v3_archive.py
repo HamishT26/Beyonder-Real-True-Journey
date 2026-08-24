@@ -26,6 +26,7 @@ REL_PHASE_ROOT = "docs/ilyra-fen/v668-v3"
 PHASE_ROOT = ROOT / REL_PHASE_ROOT
 SOURCE_BRANCH = "codex/GHC-Family/lyren-moss-v668-v2-full-tools"
 SOURCE_FINAL = "da0d852ccacbfc228f7257888691b809a280ad86"
+INITIAL_X1_HEAD = "c7954ae5efdffd58ca2f53d8fe9abd7530e7a49b"
 SOURCE_X1 = "0683eb961987fd4c7283d278e3b217647aef73f0"
 SOURCE_EVIDENCE = "6bb6b96b08eb26646c362967f8ed30263d348c15"
 SOURCE_ANCESTOR = "ea14c75a4f0c543ef1bb89858e35252302924aec"
@@ -78,7 +79,7 @@ ACTIVATION_OVERLAY = {
     "exact_gates": 206,
     "boundary": "Lyren's repository seal remains unchanged; two route-discovery stalls are external.",
 }
-STARTUP_FAILURE_COUNT = 9
+STARTUP_FAILURE_COUNT = 12
 X1_OVERLAY = {
     "effective_negatives": ACTIVATION_OVERLAY["effective_negatives"] + STARTUP_FAILURE_COUNT,
     "methods": ACTIVATION_OVERLAY["methods"] + STARTUP_FAILURE_COUNT,
@@ -305,6 +306,8 @@ def visible_proposal_inventory() -> tuple[dict[str, Any], dict[str, dict[str, st
             parse_failures.append({"blob": oid, "source_path": source_path, "error_class": type(exc).__name__})
             continue
         for key in ("new_proposals", "proposals", "selected_inherited"):
+            if source_path.startswith(f"{REL_PHASE_ROOT}/"):
+                continue
             rows = document.get(key, [])
             if not isinstance(rows, list):
                 continue
@@ -487,8 +490,11 @@ def word_count(path: Path) -> int:
 
 
 def assert_source_and_x1_only() -> None:
-    if git("rev-parse", "HEAD") != SOURCE_FINAL:
-        raise ValueError("x1 must begin at the exact Lyren final")
+    head = git("rev-parse", "HEAD")
+    if head not in {SOURCE_FINAL, INITIAL_X1_HEAD}:
+        raise ValueError("x1 must begin at the exact Lyren final or the retained initial x1 freeze")
+    if head == INITIAL_X1_HEAD and git("rev-parse", "HEAD^") != SOURCE_FINAL:
+        raise ValueError("initial x1 freeze is not a direct child of the exact Lyren final")
     if git("branch", "--show-current") != "codex/GHC-Family/ilyra-fen-v668-v3-full-tools":
         raise ValueError("unexpected Ilyra branch")
     allowed_x1_code = {
@@ -496,7 +502,7 @@ def assert_source_and_x1_only() -> None:
         "scripts/build_ghc_family_ilyra_fen_v668_v3_x1.py",
         "tests/test_ghc_family_ilyra_fen_v668_v3_x1.py",
     }
-    status_lines = git("status", "--porcelain", "--untracked-files=all").splitlines()
+    status_lines = run_git("status", "--porcelain", "--untracked-files=all").stdout.splitlines()
     unexpected = []
     for line in status_lines:
         path = line[3:].strip().replace("\\", "/")

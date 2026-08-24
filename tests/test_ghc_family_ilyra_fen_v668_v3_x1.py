@@ -25,6 +25,24 @@ def all_json_paths() -> list[Path]:
     return sorted(PHASE_ROOT.rglob("*.json"))
 
 
+def proposal_rows() -> list[dict]:
+    index = load("x1/proposal-freeze.json")
+    rows: list[dict] = []
+    for shard in index["proposal_shards"]:
+        relative = Path(shard["path"]).relative_to("docs/ilyra-fen/v668-v3").as_posix()
+        rows.extend(load(relative)["new_proposals"])
+    return rows
+
+
+def portfolio_rows(category: str) -> list[dict]:
+    index = load("x1/portfolio-freeze.json")
+    rows: list[dict] = []
+    for shard in index["category_shards"][category]:
+        relative = Path(shard["path"]).relative_to("docs/ilyra-fen/v668-v3").as_posix()
+        rows.extend(load(relative)["rows"])
+    return rows
+
+
 def test_source_anchors_are_exact() -> None:
     source = load("x1/source-intake.json")
     assert source["source_final"] == archive.SOURCE_FINAL
@@ -50,14 +68,15 @@ def test_exactly_forty_new_proposals() -> None:
     assert freeze["inherited_frozen_proposals"] == 4670
     assert freeze["new_proposal_count"] == 40
     assert freeze["new_frozen_total"] == 4710
-    assert len(freeze["new_proposals"]) == 40
+    assert freeze["proposal_shard_count"] == 8
+    assert len(proposal_rows()) == 40
 
 
 def test_expected_outcome_vocabulary_and_counts() -> None:
     freeze = load("x1/proposal-freeze.json")
     assert freeze["allowed_outcomes"] == ["completed", "represented", "open_gap", "exact_gate"]
     assert freeze["expected_outcomes"] == {"completed": 28, "exact_gate": 2, "open_gap": 2, "represented": 8}
-    assert {row["expected_disposition"] for row in freeze["new_proposals"]} == set(freeze["allowed_outcomes"])
+    assert {row["expected_disposition"] for row in proposal_rows()} == set(freeze["allowed_outcomes"])
 
 
 def test_proposal_contract_fields_are_complete() -> None:
@@ -68,7 +87,7 @@ def test_proposal_contract_fields_are_complete() -> None:
         "falsifier_or_acceptance_gate", "rollback_or_recovery", "protected_gates",
         "expected_disposition", "negative_fixtures", "semantic_neighbors",
     }
-    for row in freeze["new_proposals"]:
+    for row in proposal_rows():
         assert required <= row.keys()
         assert all(row[key] for key in required - {"semantic_neighbors"})
         assert row["x1_planning_only"] is True
@@ -79,8 +98,8 @@ def test_novelty_collisions_and_quarantine_are_zero() -> None:
     freeze = load("x1/proposal-freeze.json")
     assert freeze["visible_title_collision_count"] == 0
     assert freeze["semantic_neighbor_quarantine_count"] == 0
-    assert all(not row["visible_title_collision"] for row in freeze["new_proposals"])
-    assert all(not row["semantic_neighbor_quarantined"] for row in freeze["new_proposals"])
+    assert all(not row["visible_title_collision"] for row in proposal_rows())
+    assert all(not row["semantic_neighbor_quarantined"] for row in proposal_rows())
 
 
 def test_compressed_title_gap_is_not_hidden() -> None:
@@ -94,7 +113,7 @@ def test_compressed_title_gap_is_not_hidden() -> None:
 
 def test_exactly_160_mutations_are_preregistered_only() -> None:
     freeze = load("x1/proposal-freeze.json")
-    mutations = [item for row in freeze["new_proposals"] for item in row["negative_fixtures"]]
+    mutations = [item for row in proposal_rows() for item in row["negative_fixtures"]]
     assert len(mutations) == freeze["negative_mutation_count"] == 160
     assert len({row["mutation_id"] for row in mutations}) == 160
     assert {row["state"] for row in mutations} == {"preregistered_not_executed"}
@@ -104,16 +123,18 @@ def test_exactly_160_mutations_are_preregistered_only() -> None:
 def test_portfolio_floors_and_zero_credit() -> None:
     portfolio = load("x1/portfolio-freeze.json")
     expected = {"safe_now": 60, "candidates": 30, "skills": 20, "runners": 10, "clean_fix_refine": 30, "exact_approval": 20, "blocked": 10}
-    assert {key: len(portfolio[key]) for key in expected} == expected
+    assert portfolio["category_counts"] == expected
     for key in expected:
-        assert all(row["completion_credit"] == 0 for row in portfolio[key])
-        assert all(row["x1_planning_only"] is True for row in portfolio[key])
+        rows = portfolio_rows(key)
+        assert len(rows) == expected[key]
+        assert all(row["completion_credit"] == 0 for row in rows)
+        assert all(row["x1_planning_only"] is True for row in rows)
 
 
 def test_exact_and_blocked_work_remains_unexecuted() -> None:
     portfolio = load("x1/portfolio-freeze.json")
-    assert {row["state"] for row in portfolio["exact_approval"]} == {"exact_approval_unexecuted"}
-    assert {row["state"] for row in portfolio["blocked"]} == {"blocked_unexecuted"}
+    assert {row["state"] for row in portfolio_rows("exact_approval")} == {"exact_approval_unexecuted"}
+    assert {row["state"] for row in portfolio_rows("blocked")} == {"blocked_unexecuted"}
 
 
 def test_family_current_compatibility_names() -> None:
@@ -130,9 +151,9 @@ def test_method_flow_schema_and_counts() -> None:
     ledger = load("method-flow/x1-ledger.json")
     assert ledger["schema"] == "ghc.family.method-flow-state.v1"
     assert ledger["execution_authority"] == "owner_self_scoped_delta"
-    assert len(ledger["methods"]) == 9
-    assert len(ledger["witnesses"]) == 18
-    assert ledger["counts"] == {"failed_witnesses": 9, "methods": 9, "passing_witnesses": 9, "retained_negatives": 9}
+    assert len(ledger["methods"]) == 12
+    assert len(ledger["witnesses"]) == 24
+    assert ledger["counts"] == {"failed_witnesses": 12, "methods": 12, "passing_witnesses": 12, "retained_negatives": 12}
     assert all(method["recommendation_state"] == "preferred" for method in ledger["methods"])
     assert all(method["retained_negative_ids"] for method in ledger["methods"])
 
@@ -140,10 +161,10 @@ def test_method_flow_schema_and_counts() -> None:
 def test_method_flow_never_erases_failures() -> None:
     summary = load("method-flow/x1-summary.json")
     ledger = load("method-flow/x1-ledger.json")
-    assert summary["failure_count"] == 9
+    assert summary["failure_count"] == 12
     assert summary["all_failures_retained"] is True
     assert summary["correction_erases_failure"] is False
-    assert sum(w["result"] == "fail" for w in ledger["witnesses"]) == 9
+    assert sum(w["result"] == "fail" for w in ledger["witnesses"]) == 12
     assert all(w["independent_reproduction"] is False for w in ledger["witnesses"])
 
 
@@ -152,7 +173,7 @@ def test_overlay_arithmetic_is_additive() -> None:
     source = truth["activation_overlay"]
     x1 = truth["x1_overlay"]
     for key in ("effective_negatives", "methods", "failed_witnesses", "passing_witnesses"):
-        assert x1[key] == source[key] + 9
+        assert x1[key] == source[key] + 12
     assert x1["open_gaps"] == source["open_gaps"]
     assert x1["exact_gates"] == source["exact_gates"]
 
@@ -185,12 +206,12 @@ def test_workflow_plan_preserves_terminal_route_hold() -> None:
     assert route["maximum_sends"] == 1
 
 
-def test_markdown_word_caps_and_overview_floor() -> None:
-    markdown = sorted(PHASE_ROOT.rglob("*.md"))
-    assert markdown
-    counts = {path.name: archive.word_count(path) for path in markdown}
+def test_phase_document_word_caps_and_overview_floor() -> None:
+    documents = sorted(path for path in PHASE_ROOT.rglob("*") if path.is_file() and path.suffix.lower() in {".md", ".json", ".txt", ".html"})
+    assert documents
+    counts = {path.relative_to(PHASE_ROOT).as_posix(): archive.word_count(path) for path in documents}
     assert all(count <= 6000 for count in counts.values())
-    assert counts["integrated-overview.md"] >= 1200
+    assert counts["x1/integrated-overview.md"] >= 1200
 
 
 def test_all_phase_json_parses() -> None:
