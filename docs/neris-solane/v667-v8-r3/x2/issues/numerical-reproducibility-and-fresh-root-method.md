@@ -1,0 +1,9 @@
+# Fresh-root numerical reproducibility method
+
+The problem was to preserve exact continuity while honoring a request for a genuinely blank branch. The solution is a zero-parent x1 commit plus a cryptographic read-only r2 source anchor. This distinguishes continuity of evidence from Git ancestry and prevents the 72,000-file inherited checkout from silently returning.
+
+The x2 method uses deterministic synthetic arithmetic, explicit tolerances, source-class provenance, rejecting mutations, D-isolated tools, additive corrections, and a bounded same-owner validator. It must not be described as empirical physics, independent reproduction, production readiness, professional validation, exhaustive security, legal or cultural review, Māori authority, personhood evidence, or Stage 20 authority.
+
+Eleven tool-path failures remain retained at zero credit. They include wrapper execution faults, a negative-fixture weakness, version-banner advisories, a broad privacy-scanner false positive, and a genuine doubled-backslash profile-path leak that the durable sanitizer removed without rerunning tool execution.
+
+The first x2 builder invocation also earned zero build-success credit because its privacy rule matched the scanner explanation's standalone URL-scheme fragment. The additive recovery removed that self-matching literal without weakening the actual path rule and reran only the bounded x2 builder, never the completed tool transaction. A later combined test command also earned zero credit because it invoked the immutable planning-only x1 lifecycle test from the populated x2 tree; recovery uses the already sealed x1 receipt and manifest and runs only the current x2 test module. The first global skill promotion also earned zero credit after the bundled validator decoded one UTF-8 authority label through the Windows legacy code page; its partial first target is retained and repaired in place before an additive nine-target resume.
