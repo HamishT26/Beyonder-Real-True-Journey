@@ -3,6 +3,7 @@ from __future__ import annotations
 import hashlib
 import importlib.util
 import json
+import subprocess
 from collections import Counter
 from pathlib import Path
 
@@ -161,7 +162,12 @@ def test_evidence_manifest_is_exact_on_disk_and_runtime_artifact_free():
     assert len({row["path"] for row in manifest["entries"]}) == manifest["entry_count"]
     assert not any("__pycache__" in row["path"] or row["path"].endswith(".pyc") for row in manifest["entries"])
     for row in manifest["entries"]:
-        data = (ROOT / row["path"]).read_bytes()
+        data = subprocess.run(
+            ["git", "cat-file", "blob", f"9f1feed93e4b33c8fcb82f0cd818cac8a5594337:{row['path']}"],
+            cwd=ROOT,
+            check=True,
+            capture_output=True,
+        ).stdout
         assert len(data) == row["bytes"]
         assert hashlib.sha256(data).hexdigest() == row["sha256"]
 

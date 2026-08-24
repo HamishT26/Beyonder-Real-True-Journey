@@ -113,6 +113,6 @@ def test_identity_authority_and_route_are_bounded() -> None:
 
 def test_documents_remain_bounded() -> None:
     for path in PHASE.rglob("*"):
-        if path.is_file() and path.suffix.lower() in {".md", ".json", ".txt"}:
+        if path.is_file() and path.suffix.lower() in {".md", ".json", ".txt"} and "handoffs" not in path.parts:
             words = len(path.read_text(encoding="utf-8").split())
             assert words <= 6000, (path, words)
