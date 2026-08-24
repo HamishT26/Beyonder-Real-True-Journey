@@ -1,0 +1,7 @@
+# Accessible static report plan
+
+The x2 report will be a static owner-local HTML and Markdown representation of synthetic score-edition and rehearsal-cue exceptions. Its primary table will have a visible caption, one header row with explicit column scopes, stable edition, movement, measure, part, cue, and session aliases, status text independent of color, and a summary before detailed rows. The linear source order will match the visual order. Links and controls, if any, will use descriptive text. Focus styling, high-contrast boundaries, narrow-screen overflow guidance, and print rules will be structural requirements.
+
+Alternative text will describe the purpose of any diagram rather than reproduce raw identifiers. Numeric fields will include units and exact-rational forms where applicable. Error, quarantine, open-gap, and exact-gate states will be spelled out. A no-script fallback will retain the complete bounded table. The report will not include auto-playing media, real frames, screenshots, transcripts, private paths, credentials, or person-level data.
+
+The structural audit cannot establish complete accessibility. Manual keyboard and touch traversal, zoom and reflow, responsive layouts, browser diversity, screen-reader and other assistive-technology behavior, cognitive accessibility, Maori-language quality, security usability, and affected-user evaluation remain reserved. A passing static audit will be labelled `completed` only for its declared software structure, never for WCAG conformance or beneficiary acceptance.
