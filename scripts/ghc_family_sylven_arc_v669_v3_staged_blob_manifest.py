@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import argparse
+import fnmatch
 import hashlib
 import json
 import subprocess
@@ -34,12 +35,21 @@ def main() -> None:
     parser.add_argument("--review", required=True)
     parser.add_argument("--base", default="HEAD")
     parser.add_argument("--forbid-prefix", action="append", default=[])
+    parser.add_argument("--all-index", action="store_true")
+    parser.add_argument("--include-glob", action="append", default=[])
+    parser.add_argument("--exclude-path", action="append", default=[])
     args = parser.parse_args()
     repo = args.repo.resolve()
     manifest_rel = args.manifest.replace("\\", "/")
     review_rel = args.review.replace("\\", "/")
-    names = git(repo, "diff", "--cached", "--name-only", args.base).splitlines()
-    names = [name.replace("\\", "/") for name in names if name not in {manifest_rel, review_rel}]
+    if args.all_index:
+        names = git(repo, "ls-files", "--cached").splitlines()
+        if args.include_glob:
+            names = [name for name in names if any(fnmatch.fnmatch(name, pattern) for pattern in args.include_glob)]
+    else:
+        names = git(repo, "diff", "--cached", "--name-only", args.base).splitlines()
+    exclusions = {manifest_rel, review_rel, *(path.replace("\\", "/") for path in args.exclude_path)}
+    names = [name.replace("\\", "/") for name in names if name.replace("\\", "/") not in exclusions]
     forbidden = [name for name in names if any(name.startswith(prefix) for prefix in args.forbid_prefix)]
     entries = []
     for name in names:
@@ -52,7 +62,7 @@ def main() -> None:
         "domain": "exact_staged_git_blob_bytes",
         "entry_count": len(entries),
         "entries": entries,
-        "self_exclusions": [manifest_rel, review_rel],
+        "self_exclusions": sorted(exclusions),
     }
     review = {
         "schema": "ghc.family.git-blob-staged-review.v2",
@@ -63,7 +73,7 @@ def main() -> None:
         "diff_check_returncode": diff_check.returncode,
         "diff_check_output": diff_check.stdout + diff_check.stderr,
         "passed": not forbidden and diff_check.returncode == 0,
-        "self_exclusions": [manifest_rel, review_rel],
+        "self_exclusions": sorted(exclusions),
     }
     write_json(repo / manifest_rel, manifest)
     write_json(repo / review_rel, review)
