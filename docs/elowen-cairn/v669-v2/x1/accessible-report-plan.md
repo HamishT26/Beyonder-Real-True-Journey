@@ -1,0 +1,3 @@
+# Elowen Cairn v669-v2 accessible report plan
+
+The future static report will use one h1, ordered section headings, a skip link, semantic main region, captioned tables, scoped row and column headers, text-redundant outcomes and holds, visible focus, responsive overflow and reflow, plain-language boundaries, and print fallback. Structural checks may validate markup only. Manual keyboard, touch, zoom, browser-diverse, assistive-technology, cognitive, Māori-language, security-usability, print, and affected-user evaluation remain reserved. No conformance or accessibility-complete claim is authorized.
