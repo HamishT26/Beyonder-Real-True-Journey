@@ -315,7 +315,7 @@ def recover_owner_manifest_only() -> dict[str, Any]:
         "aggregate_checks_passed": 30,
         "aggregate_checks_total": 31,
         "aggregate_failed_receipt": FAILED_REVIEW_PATH,
-        "boundary": "Dependency-corrected evidence composite: 29 unreplayed aggregate checks plus isolated owner-manifest and affected-retention recovery; not a canonical aggregate or independent reproduction.",
+        "boundary": "Dependency-corrected evidence composite: 30 unreplayed aggregate checks plus isolated owner-manifest and affected-retention recovery; not a canonical aggregate or independent reproduction.",
         "composite_status": "VALID_DEPENDENCY_CORRECTED_EVIDENCE_COMPOSITE_WITH_ZERO_AGGREGATE_PASS_CREDIT" if passed else "INVALID_DEPENDENCY_RECOVERY_ZERO_CREDIT",
         "failed_component": "owner_manifest_replay",
         "generated_at_utc": utc_now(),

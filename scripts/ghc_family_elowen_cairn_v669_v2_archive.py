@@ -26,6 +26,7 @@ SOURCE_X1 = "f1a090e2396de5d76c70aa3bf7bda0a888b1249a"
 SOURCE_EVIDENCE = "cf99dad5ec53f4af60017a829889087ed50cf752"
 SOURCE_FINAL = "f8e79f41be203eaec79b39953bed372426f0f40b"
 FROZEN_X1 = "3a2d9c3b265968059aa350304513a371370e7d4f"
+FROZEN_EVIDENCE = "3915f5428912b0482cee17d3f4c8f45470c702ac"
 SOURCE_CANONICAL_RECEIPT_SHA256 = (
     "6698f9161e0d236c913c8896e51cc1b351207923e2f5796c09b86b5371707ce9"
 )
@@ -313,6 +314,27 @@ EVIDENCE_OVERLAY = {
     "exact_gates": ACTIVATION_OVERLAY["exact_gates"],
 }
 
+FINAL_FAILURES = [
+    (
+        "EC6692-FINAL-F034",
+        "Post-evidence review found that the successful composite receipt's narrative boundary said 29 unreplayed aggregate checks while its exact numeric fields correctly retained 30 of 31 passed checks.",
+        "Leave the immutable evidence commit unchanged, add this final-stage failure and correction witness, and use the exact 30-of-31 wording in final artifacts and future validator output.",
+        "Cross-check narrative check counts against structured count fields before final seal generation.",
+    ),
+    (
+        "EC6692-FINAL-F035",
+        "The first 19-check final staged review passed 18 checks but assigned zero review-pass credit because its content-seal probe hashed compact JSON instead of the declared sorted indented UTF-8 newline-terminated canonical domain.",
+        "Retain the failed staged-review receipt, replay only the seal payload with canonical_json_bytes, and recheck the affected final retention arithmetic.",
+        "Import and use the repository's declared canonical serializer for every seal payload check rather than recreating a lookalike encoding.",
+    ),
+    (
+        "EC6692-FINAL-F036",
+        "The first combined final-correction apply-patch request was atomically rejected because a multi-file hunk boundary appeared where a prefixed hunk line was required.",
+        "Split the correction into small exact file-scoped patches and verify each applied result before rebuilding.",
+        "Keep complex multi-file apply-patch requests syntactically separated and prefer bounded file-scoped patches after a context rejection.",
+    ),
+]
+
 SOURCE_LEDGER = [
     {
         "source_id": "SRC-LOC-MUSICAL-INSTRUMENTS",
@@ -494,6 +516,21 @@ PORTFOLIO_COUNTS = {
     "skills": 20,
     "runners": 10,
     "clean_fix_refine": 60,
+}
+
+FINAL_OVERLAY = {
+    "effective_negatives": EVIDENCE_OVERLAY["effective_negatives"] + 160 + len(FINAL_FAILURES),
+    "methods": EVIDENCE_OVERLAY["methods"] + 160 + len(FINAL_FAILURES),
+    "failed_witnesses": EVIDENCE_OVERLAY["failed_witnesses"] + 160 + len(FINAL_FAILURES),
+    "passing_witnesses": SOURCE_OVERLAY["passing_witnesses"]
+    + len(STARTUP_FAILURES)
+    + len(X2_FAILURES)
+    + 160
+    + 40
+    + sum(PORTFOLIO_COUNTS.values())
+    + len(FINAL_FAILURES),
+    "open_gaps": EVIDENCE_OVERLAY["open_gaps"] + 2,
+    "exact_gates": EVIDENCE_OVERLAY["exact_gates"] + 2,
 }
 
 

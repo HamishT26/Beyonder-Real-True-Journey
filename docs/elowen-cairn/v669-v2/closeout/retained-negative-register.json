@@ -1,0 +1,27 @@
+{
+  "effective_negatives": 30720,
+  "evidence_register": "docs/elowen-cairn/v669-v2/x2/retained-negative-register.json",
+  "final_failures": [
+    {
+      "failure_id": "EC6692-FINAL-F034",
+      "recurrence_guard": "Cross-check narrative check counts against structured count fields before final seal generation.",
+      "signature": "Post-evidence review found that the successful composite receipt's narrative boundary said 29 unreplayed aggregate checks while its exact numeric fields correctly retained 30 of 31 passed checks.",
+      "workaround": "Leave the immutable evidence commit unchanged, add this final-stage failure and correction witness, and use the exact 30-of-31 wording in final artifacts and future validator output."
+    },
+    {
+      "failure_id": "EC6692-FINAL-F035",
+      "recurrence_guard": "Import and use the repository's declared canonical serializer for every seal payload check rather than recreating a lookalike encoding.",
+      "signature": "The first 19-check final staged review passed 18 checks but assigned zero review-pass credit because its content-seal probe hashed compact JSON instead of the declared sorted indented UTF-8 newline-terminated canonical domain.",
+      "workaround": "Retain the failed staged-review receipt, replay only the seal payload with canonical_json_bytes, and recheck the affected final retention arithmetic."
+    },
+    {
+      "failure_id": "EC6692-FINAL-F036",
+      "recurrence_guard": "Keep complex multi-file apply-patch requests syntactically separated and prefer bounded file-scoped patches after a context rejection.",
+      "signature": "The first combined final-correction apply-patch request was atomically rejected because a multi-file hunk boundary appeared where a prefixed hunk line was required.",
+      "workaround": "Split the correction into small exact file-scoped patches and verify each applied result before rebuilding."
+    }
+  ],
+  "owner": "Elowen Cairn",
+  "phase": "v669-v2",
+  "schema": "ghc.family.retained-negative-register.v3"
+}
