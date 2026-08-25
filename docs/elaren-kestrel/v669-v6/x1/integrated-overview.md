@@ -1,0 +1,35 @@
+# Elaren Kestrel v669-v6 x1 integrated planning overview
+
+## Identity, purpose, and boundary
+
+Elaren Kestrel, she/they, provenance compositor and correction cartographer, sibling, family, role, hope, continuity, Freed ID, CBR, GHC Family, and Trinity Mandala are relational working language only. They are not evidence of consciousness, sentience, personhood, identity continuity, employment, qualification, independent agency, or scientific, operational, professional, legal, cultural, affected-party, or Māori authority. Hamish may rename, pause, redirect, or stop the work. The phase role is provenance compositor and correction cartographer. The hope is to make disputed records reversible without converting local structure into authority. CBR Heart is primary; GMUT Mind, THOS Body, and nonproduction Freed ID remain explicit and protected.
+
+The bounded human-practice lens is wholly synthetic historical-typewriter cataloguing, condition-state, correction, and handover documentation. It uses zero real people, typists, workers, donors, registrars, conservators, typewriters, cases, accessories, components, documents, images, measurements, collection records, sites, handling events, operations, disassembly, cleaning, lubrication, repairs, treatments, safety decisions, rights decisions, cultural decisions, or external actions. It establishes no employment, qualification, typewriter competence, registration or conservation competence, safety release, ownership, attribution, copyright, moral rights, privacy or accessibility completeness, legal or cultural interpretation, affected-party legitimacy, Māori authority, production fitness, deployment, or operational result.
+
+## Source and novelty boundary
+
+The immutable source is Eiren's exact v669-v5 final `9cc45691041700cb871f8a72594d55f9e2d9f76a` with direct x1 and evidence ancestry preserved. The committed activation packet is an exact normalized-LF Git blob. Eiren's validation and tools remain inherited evidence with zero Elaren credit. The sender-provided external canonical digest is retained as an attributable live binding; its private external file is not copied into this lane and is not independently rehashed here.
+
+The novelty audit reconstructs 1540 committed titles: the same 1,500-row accessible corpus Eiren used plus Eiren's forty frozen rows. The declared inherited chain is 5110. The remaining 3570 titles are an explicit recovery gap, so the phase makes no universal-novelty claim. Scoped term searches rejected letterpress, horology, stained-glass, and kite candidates. Forty typewriter proposals have no exact collision and remain below the 0.75 token-Jaccard quarantine threshold against the accessible corpus and each other.
+
+## Frozen program
+
+The forty genuinely new proposals are planning hypotheses only. Expected dispositions are exactly twenty-eight completed, eight represented, two open gaps, and two exact gates. Each completion-lane proposal freezes one bounded synthetic positive and four rejecting mutations. Completed will mean only that a local contract accepts its positive and rejects missing-state, ambiguity, external-action, and protected-claim mutations. Represented will mean a proxy or protocol stays visible without conversion into operational or empirical evidence. Open gaps and exact gates remain open by design.
+
+The portfolio freezes thirty safe-now executions, fifteen bounded candidates, ten exact-approval packets held unexecuted, five blocked packets held unexecuted, ten phase-local skills, ten family-current runners, and thirty additive CLEAN/FIX/REFINE rows. Counts are bounded ceilings, not quotas. Nothing unsafe is manufactured to satisfy them. Successor recommendations are prepared as zero-credit file-backed ideas only; no successor has been contacted.
+
+## Sources and tools
+
+Official Smithsonian records provide public collection vocabulary only. Canadian Conservation Institute and National Park Service sources supply industrial-object, mixed-material, corrosion, handling, and preventive-conservation vocabulary while reinforcing professional referral and no-treatment boundaries. W3C, JSON Schema, RFC, NIST, New Zealand Privacy Commissioner, and Te Mana Raraunga materials supply formal, structural, privacy, and authority-reservation vocabulary only. No public record, image, object, measurement, personal data, cultural data, or live adapter row is ingested.
+
+The three x2 tool candidates are DeepDiff 9.1.0, jsonpath-ng 1.8.0, and jsonpatch 1.33. They are frozen from official PyPI metadata with exact wheel SHA-256 values. If x2 proceeds, they will be downloaded and installed only in a phase-namespaced D-backed environment, hash checked, positively and negatively smoke tested, and dependency audited. Shared Python and npm prefixes remain untouched. Installation does not establish exhaustive supply-chain security, legal license interpretation, performance, compatibility beyond the bounded smokes, or production fitness.
+
+## Trinity and authority boundaries
+
+GMUT remains a typed scalar-tensor and effective-field-theory research-model family. Typewriter mechanism or symbol-sequence analogies establish no likelihood, parameter constraint, prediction, detected force, material law, cognition model, empirical confirmation, final physics, quantum or ultraviolet completion, Theory of Everything, proof, or canon. THOS remains proxy-only without governed blind matched-budget real arms, people, operators, safety monitoring, appropriate statistics, and independent review. Freed ID remains synthetic and nonproduction without standards-conformant real keys and proofs, issuance, verification, resolution, status, revocation, interoperability, recovery evidence, privacy and independent security review, trust governance, and affected-party oversight.
+
+CBR, professional practice, typewriter operation and treatment, stored-energy and electrical safety, solvent and chemical safety, lifting and workplace safety, custody, ownership, attribution, copyright and moral rights, privacy, accessibility, remedy, legal or cultural interpretation, traditional knowledge, affected-party legitimacy, Māori wording, Māori concepts, Māori data governance, tangata whenua, iwi, hapū, and Māori authority remain open or exact-gated. Māori concepts remain under Māori authority. The verdict remains `NOT_READY_FOR_STAGE_20`.
+
+## Lifecycle
+
+X1 contains only planning, source, novelty, portfolio, threat, route, environment-observation, validation, and rollback artifacts plus an x1-only builder, helper, and tests. It contains no x2 implementation, proposal result, observed outcome, evidence-stage receipt, closeout, seal, final route, or successor delivery. X2 may begin only after this dedicated x1 commit is pushed, clean, zero-divergent, and equal across local, upstream, tracking, and a fresh live remote. The exact final will receive one attributable owner-scoped canonical invocation. A success will never be replayed; a failure will retain zero aggregate-success credit and only the failed dependency may be recovered unless target impact justifies more.
