@@ -25,6 +25,7 @@ SOURCE_START = "bb475c084da39512dfa0811a8520a40fd3d4c84a"
 SOURCE_X1 = "f1a090e2396de5d76c70aa3bf7bda0a888b1249a"
 SOURCE_EVIDENCE = "cf99dad5ec53f4af60017a829889087ed50cf752"
 SOURCE_FINAL = "f8e79f41be203eaec79b39953bed372426f0f40b"
+FROZEN_X1 = "3a2d9c3b265968059aa350304513a371370e7d4f"
 SOURCE_CANONICAL_RECEIPT_SHA256 = (
     "6698f9161e0d236c913c8896e51cc1b351207923e2f5796c09b86b5371707ce9"
 )
@@ -244,6 +245,72 @@ ACTIVATION_OVERLAY = {
     "passing_witnesses": SOURCE_OVERLAY["passing_witnesses"] + len(STARTUP_FAILURES),
     "open_gaps": SOURCE_OVERLAY["open_gaps"],
     "exact_gates": SOURCE_OVERLAY["exact_gates"],
+}
+
+X2_FAILURES = [
+    (
+        "EC6692-X2-F025",
+        "The first combined post-x1-push equality wrapper returned no attributable output, so it earned zero lifecycle proof credit.",
+        "Recover with isolated local, upstream, tracking, fresh-live, divergence, and clean probes without replaying the combined wrapper.",
+        "Use isolated scalar probes when a multi-operation remote wrapper returns no attributable payload.",
+    ),
+    (
+        "EC6692-X2-F026",
+        "The first x2 proposal-list projection leaked nested Python f-string braces into PowerShell and stopped at parse time without repository mutation.",
+        "Replace the shell-sensitive formatted projection with a JSON-only Python scalar projection.",
+        "Avoid nested f-string braces inside PowerShell command strings; serialize bounded projections as JSON.",
+    ),
+    (
+        "EC6692-X2-F027",
+        "The first JSON-only proposal projection assumed a generic focus field that is absent from the committed proposal schema and stopped on KeyError.",
+        "Inspect the exact committed row keys, then project semantic_slug and other present fields only.",
+        "Inspect committed JSON keys before projecting owner-generated schemas across lifecycle stages.",
+    ),
+    (
+        "EC6692-X2-F028",
+        "The first read-only x2 evidence-overview preflight measured 977 words, below the declared 1,400-word structural floor, and stopped before artifact materialization.",
+        "Expand only the bounded source, admission, correction, workload, and nonconversion explanations, then rerun the in-memory word-count dependency.",
+        "Measure required overview floors before the first evidence builder invocation.",
+    ),
+    (
+        "EC6692-X2-F029",
+        "The first 24-test x2 aggregate earned zero aggregate-pass credit after 22 components passed and two test assertions compared a set directly with the tuple-valued allowed-outcome contract.",
+        "Convert the allowed-outcome tuple to a set in only the two failed assertions, retain all 22 successful components without replay, and rerun only those two failed dependencies.",
+        "Normalize collection types explicitly before equality or subset assertions in lifecycle tests.",
+    ),
+    (
+        "EC6692-X2-F030",
+        "The first evidence validator earned zero all-pass credit after 30 of 31 checks passed and the owner manifest exposed one stale delta-manifest hash caused by manifest write ordering.",
+        "Preserve the failed validator receipt, exclude the owner and delta manifests from one another's hash domains, rebuild the manifests, and rerun only owner-manifest replay plus affected retention arithmetic.",
+        "Declare mutually excluded manifest domains before hashing any lifecycle manifest that is rewritten later in the same builder.",
+    ),
+    (
+        "EC6692-X2-F031",
+        "The first isolated owner-manifest recovery proved the owner manifest and retention arithmetic but returned zero recovery credit because its meta-predicate expected 30 aggregate checks instead of the exact 31-check receipt.",
+        "Preserve the failed recovery receipt, inspect the immutable failed aggregate cardinality, and correct only the recovery meta-predicate to 31 total and 30 passed.",
+        "Derive or verify aggregate check cardinality from the retained receipt before evaluating a composite recovery shape.",
+    ),
+    (
+        "EC6692-X2-F032",
+        "The first check-cardinality inspection used PowerShell's read-only false constant as a variable name and produced an unusable failed-name projection.",
+        "Repeat only the bounded projection with a task-specific failedNames scalar and retain the parser/runtime fault at zero credit.",
+        "Never repurpose PowerShell automatic constants or common system variables for report scalars.",
+    ),
+    (
+        "EC6692-X2-F033",
+        "The second isolated recovery returned no immediate wrapper output and later state inspection found a zero-credit receipt whose owner-manifest check passed but whose recovery arithmetic still used the prior four truth literals.",
+        "Preserve the second failed recovery separately, update only the four current retention literals, and run a third isolated owner-manifest and retention recovery.",
+        "Search every recovery-specific literal after retained-failure arithmetic changes instead of updating only the aggregate validator branch.",
+    ),
+]
+
+EVIDENCE_OVERLAY = {
+    "effective_negatives": ACTIVATION_OVERLAY["effective_negatives"] + len(X2_FAILURES),
+    "methods": ACTIVATION_OVERLAY["methods"] + len(X2_FAILURES),
+    "failed_witnesses": ACTIVATION_OVERLAY["failed_witnesses"] + len(X2_FAILURES),
+    "passing_witnesses": ACTIVATION_OVERLAY["passing_witnesses"] + len(X2_FAILURES),
+    "open_gaps": ACTIVATION_OVERLAY["open_gaps"],
+    "exact_gates": ACTIVATION_OVERLAY["exact_gates"],
 }
 
 SOURCE_LEDGER = [
@@ -767,7 +834,11 @@ def phase_owner_files() -> list[Path]:
             relative = path.relative_to(ROOT).as_posix()
             if "__pycache__" in path.parts or path.suffix == ".pyc":
                 continue
-            if relative.startswith("docs/elowen-cairn/v669-v2/") or "elowen_cairn_v669_v2" in relative:
+            if (
+                relative.startswith("docs/elowen-cairn/v669-v2/")
+                or "elowen_cairn_v669_v2" in relative
+                or relative.startswith("scripts/ghc_family_lutherie_")
+            ):
                 paths.append(path)
     return sorted(set(paths))
 
