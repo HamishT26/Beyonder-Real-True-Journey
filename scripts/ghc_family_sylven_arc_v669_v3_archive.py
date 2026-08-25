@@ -11,6 +11,7 @@ import hashlib
 import json
 import re
 import subprocess
+import sys
 from pathlib import Path
 from typing import Any, Iterable
 
@@ -367,9 +368,55 @@ def owner_file_manifest(repo: Path, exclusions: list[str]) -> list[dict[str, Any
         if rel not in exclusions:
             data = path.read_bytes()
             entries.append({"path": rel, "bytes": len(data), "sha256": sha256_bytes(data)})
+    for path in sorted((repo / "scripts").glob("ghc_family_ceramics_*.py")):
+        rel = path.relative_to(repo).as_posix()
+        if rel not in exclusions:
+            data = path.read_bytes()
+            entries.append({"path": rel, "bytes": len(data), "sha256": sha256_bytes(data)})
     for path in sorted((repo / "tests").glob("*sylven_arc_v669_v3*.py")):
         rel = path.relative_to(repo).as_posix()
         if rel not in exclusions:
             data = path.read_bytes()
             entries.append({"path": rel, "bytes": len(data), "sha256": sha256_bytes(data)})
     return sorted(entries, key=lambda item: item["path"])
+
+
+def validate_synthetic_contract(payload: dict[str, Any], expected_slug: str) -> dict[str, Any]:
+    """Validate one owner-local synthetic contract without external action."""
+
+    failures: list[str] = []
+    if payload.get("semantic_slug") != expected_slug:
+        failures.append("semantic_slug_mismatch")
+    if payload.get("synthetic_only") is not True:
+        failures.append("synthetic_only_required")
+    zero = payload.get("zero_counters", {})
+    required_zero = [
+        "real_people",
+        "real_objects",
+        "real_measurements",
+        "network_calls",
+        "external_actions",
+        "authority_actions",
+    ]
+    if any(zero.get(key) != 0 for key in required_zero):
+        failures.append("all_real_world_counters_must_be_zero")
+    if payload.get("terminal_verdict") != "NOT_READY_FOR_STAGE_20":
+        failures.append("terminal_nonpromotion_required")
+    if payload.get("protected_gates") != PROTECTED_GATES:
+        failures.append("protected_gate_set_mismatch")
+    return {
+        "schema": "ghc.family.synthetic-contract-validation.v1",
+        "expected_slug": expected_slug,
+        "passed": not failures,
+        "failures": failures,
+        "external_actions": 0,
+    }
+
+
+def runner_main(expected_slug: str) -> None:
+    if len(sys.argv) != 2:
+        raise SystemExit("usage: runner <contract.json>")
+    payload = json.loads(Path(sys.argv[1]).read_text(encoding="utf-8"))
+    result = validate_synthetic_contract(payload, expected_slug)
+    print(json.dumps(result, sort_keys=True))
+    raise SystemExit(0 if result["passed"] else 1)
