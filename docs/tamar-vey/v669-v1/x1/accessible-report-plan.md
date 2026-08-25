@@ -1,0 +1,5 @@
+# Accessible synthetic upholstery-topology report plan
+
+The later x2 report will use a native table with a visible caption, scoped headers, stable pseudonymous component labels, explicit unit domains, visible text status independent of colour, linear source order, descriptive links, focus styling, narrow-screen overflow guidance, and a print fallback. Unknown, ambiguous, quarantined, open-gap, and exact-gate states will be explicit. A no-script representation will retain the complete bounded synthetic table.
+
+The report will contain no real upholstered item, material, product, workplace, person, order, measurement, identity record, credential, private route, treatment instruction, safety release, professional judgment, legal or cultural decision, or Māori-authority act. Manual keyboard and touch traversal, zoom and reflow, responsive layouts, browser diversity, screen readers and other assistive technology, cognitive accessibility, Māori-language quality, security usability, and affected-user evaluation remain reserved. Structural success is not WCAG conformance or beneficiary acceptance.
