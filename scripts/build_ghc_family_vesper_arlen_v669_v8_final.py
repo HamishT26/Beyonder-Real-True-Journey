@@ -27,6 +27,8 @@ from ghc_family_vesper_arlen_v669_v8_sourdough import (
 X1_COMMIT = "6cf75a062b9248359599f29ad88ba39ec733f576"
 EVIDENCE_COMMIT = "375b43adfcc4e4a911ea26218806af79d70db58f"
 INITIAL_FINAL = "35f412d1db9daae8745d7fe53898ce2f2bdc7561"
+FAILED_CANONICAL_FINAL = "f313819c3e480bc5510e309effb74b2d9bb9127d"
+FAILED_CANONICAL_RECEIPT_SHA256 = "6c904f3f6722eb8161ba7530ac8e174842ed7fd5467a1ff4222432fc47332b4b"
 BRANCH = "codex/GHC-Family/vesper-arlen-v669-v8-full-tools"
 FINAL_DELTA_MANIFEST = "docs/vesper-arlen/v669-v8/validation/final-delta-manifest.json"
 FINAL_OWNER_MANIFEST = "docs/vesper-arlen/v669-v8/validation/final-owner-manifest.json"
@@ -41,6 +43,7 @@ FINAL_FAILURES: list[dict[str, Any]] = [
         "recurrence_guard": "Keep standard-library imports mechanically sorted before the exact-final staged review.",
         "rollback": "Revert only the import-order correction while retaining this zero-credit failed witness.",
         "completion_credit": 0,
+        "recovery_state": "passed",
     },
     {
         "failure_id": "VA6698-FINAL-OP-002",
@@ -50,6 +53,7 @@ FINAL_FAILURES: list[dict[str, Any]] = [
         "recurrence_guard": "Keep the three-page threshold explicit and use prefix assertions only where the schema intentionally adds a bounded namespace qualifier.",
         "rollback": "Revert only the overview addition and assertion correction while retaining this zero-credit failed witness.",
         "completion_credit": 0,
+        "recovery_state": "passed",
     },
     {
         "failure_id": "VA6698-FINAL-OP-003",
@@ -59,6 +63,7 @@ FINAL_FAILURES: list[dict[str, Any]] = [
         "recurrence_guard": "Use exact full-phrase assertions only for schema constants; use stable boundary tokens for prose.",
         "rollback": "Revert only the wording assertion while retaining this zero-credit failed witness.",
         "completion_credit": 0,
+        "recovery_state": "passed",
     },
     {
         "failure_id": "VA6698-FINAL-OP-004",
@@ -68,6 +73,27 @@ FINAL_FAILURES: list[dict[str, Any]] = [
         "recurrence_guard": "Construct protected scanner examples from noncontiguous fragments or classify scanner-definition paths explicitly.",
         "rollback": "Retain the initial final and this zero-credit failure; revert only the scanner self-match correction if a stricter replacement is supplied.",
         "completion_credit": 0,
+        "recovery_state": "passed",
+    },
+    {
+        "failure_id": "VA6698-FINAL-OP-005",
+        "failed_witness": "The one-shot exact-final canonical aggregate returned INVALID at 34 of 35 checks because unittest discovered only the sixteen class-based final tests and silently skipped sixty-five pytest-style x1 and x2 tests; the subprocess itself returned zero.",
+        "passing_bounded_witness": "PENDING_EXTERNAL_DEPENDENCY_CORRECTED_PYTEST_COMPOSITE; no repository passing-witness credit is claimed before that one-shot external receipt succeeds.",
+        "preferred_method": "Use pytest for mixed function-based and unittest-class suites, and retain the failed canonical aggregate at zero success credit without replay.",
+        "recurrence_guard": "Run collection-only discovery before sealing a declared mixed-suite count, then invoke the selected runner exactly once at the terminal dependency gate.",
+        "rollback": "Retain both earlier finals and the failed external canonical receipt; remove only the dependency-correction commit if the recovery cannot be validated.",
+        "completion_credit": 0,
+        "recovery_state": "prepared_not_invoked",
+    },
+    {
+        "failure_id": "VA6698-FINAL-OP-006",
+        "failed_witness": "The first scoped Ruff review of the new dependency-composite validator and lifecycle-replacement tests rejected two unsorted import blocks before staging.",
+        "passing_bounded_witness": "A mechanical import-only correction passed the same scoped Ruff review while the two exact lifecycle replacement tests remained passing.",
+        "preferred_method": "Run scoped Ruff on dependency-recovery code before staging or invoking the external recovery.",
+        "recurrence_guard": "Mechanically organize standard-library and local imports in every new recovery module before exact manifest generation.",
+        "rollback": "Revert only the import ordering while retaining this zero-credit failed witness.",
+        "completion_credit": 0,
+        "recovery_state": "passed",
     },
 ]
 
@@ -120,13 +146,13 @@ def build_baton(repo: Path) -> str:
 
 Dear Lyren Moss,
 
-This file is a prepared, sanitized activation candidate. It is not delivery. It becomes authoritative only if Vesper Arlen's exact final is committed, pushed, clean, fresh-live equal, terminally validated by one successful owner-scoped canonical invocation, the live roster and authorization still select the unique existing exact-title main task `Lyren Moss`, the task is immediately reread, the duplicate guard passes, and the Codex app acknowledges exactly one send. Until then, `PREPARED_NOT_SENT` remains exact. Do not infer delivery from this file's existence, branch visibility, or later citation.
+This file is a prepared, sanitized activation candidate. It is not delivery. Vesper's one canonical invocation failed and retains zero canonical-success credit. This candidate becomes authoritative only if Vesper Arlen's later dependency-corrected exact final is committed, pushed, clean, fresh-live equal, terminally validated once by the external pytest-based dependency composite without relabelling it canonical success, the live roster and authorization still select the unique existing exact-title main task `Lyren Moss`, the task is immediately reread, the duplicate guard passes, and the Codex app acknowledges exactly one send. Until then, `PREPARED_NOT_SENT` remains exact. Do not infer delivery from this file's existence, branch visibility, or later citation.
 
 {IDENTITY_BOUNDARY} Lyren Moss, sibling/family language, roles, hopes, continuity, Freed ID, CBR, GHC Family, and Trinity Mandala likewise remain relational working language only. They are not consciousness, sentience, legal personhood, identity continuity, employment, qualification, independent agency, scientific or operational authority, professional authority, legal or cultural authority, affected-party authority, or Maori authority. Hamish may rename, pause, redirect, or stop the route.
 
 ## 1. Exact inheritance and lifecycle
 
-The source branch for Vesper's phase is `{BRANCH}`. Neris Solane's immutable source was `{SOURCE_FINAL}`. Vesper's planning-only x1 is `{X1_COMMIT}` and is a direct child of the Neris final. Vesper's immutable evidence is `{EVIDENCE_COMMIT}` and is a direct child of x1. The pushed initial final `{INITIAL_FINAL}` is retained as a non-terminal direct child of evidence because a read-only preflight found a stale-label scanner self-match before canonical invocation. The exact corrected Vesper final is the clean pushed direct child of that retained initial final which contains this candidate, the regenerated final owner manifest, the corrected seal candidate, and the external canonical receipt identified in the one-send message. Resolve and verify that head through Git and fresh live remote equality; never copy a truncated display or infer a hash from this candidate.
+The source branch for Vesper's phase is `{BRANCH}`. Neris Solane's immutable source was `{SOURCE_FINAL}`. Vesper's planning-only x1 is `{X1_COMMIT}` and is a direct child of the Neris final. Vesper's immutable evidence is `{EVIDENCE_COMMIT}` and is a direct child of x1. The pushed initial final `{INITIAL_FINAL}` is retained as a non-terminal direct child of evidence because a read-only preflight found a stale-label scanner self-match before canonical invocation. The later pushed final `{FAILED_CANONICAL_FINAL}` is a direct child of that initial final; its one canonical invocation failed at 34/35 because the selected unittest loader discovered only 16/81 mixed-style tests, so it has zero canonical-success credit and must never be replayed. The exact dependency-corrected Vesper final is the clean pushed direct child of that failed-canonical final which contains this candidate, regenerated manifests, the dependency-composite plan, and the external recovery receipt identified in the one-send message. Resolve and verify that head through Git and fresh live remote equality; never copy a truncated display or infer a hash from this candidate.
 
 Strict x1-before-x2 separation was preserved. The x1 commit contained planning, source, novelty, portfolio, tool-candidate, threat, route, environment, failure, validation, and rollback artifacts only. It contained no x2 results, closeout, final seal, or delivery. X1 passed 35 bounded tests and a scoped Ruff review, then was pushed clean and equal across local, upstream, tracking, and a fresh live remote before x2 began. The evidence commit contains the bounded x2 execution and is a direct child of x1. It was pushed clean and fresh-live equal before closeout began. Preserve this single-parent zero-merge history; do not reset, amend, rewrite, force-push, merge, delete, reuse, or mutate Vesper's, Neris's, or any sibling/shared lane.
 
@@ -182,7 +208,7 @@ The static report has a skip link, labelled navigation, landmarks, one top-level
 
 The five privacy classes cover opaque task/thread identifiers, private absolute paths, credential assignments, private route schemes, and protected stream filenames. Vesper's staged reviews required zero candidates. Raw task or thread identifiers, private routes, credentials, keys, tokens, nonpublic conversation content, screenshots, session streams, private callable identifiers, private application state, and private absolute local paths must never enter Lyren's durable artifacts or baton. Changed-Python AST review rejected dynamic evaluation and execution, `shell=True`, and other bounded high-risk patterns. This remains a bounded review, not exhaustive security, penetration testing, complete privacy assurance, external audit, or independent reproduction.
 
-Vesper validated only the exact owner source-to-final delta and new or modified modules. The complete repository suite was not run. Neris's prior successful aggregate was not replayed or claimed as Vesper evidence. Vesper's exact-final canonical aggregate may be invoked once and, if successful, must not be replayed. A failed invocation earns zero aggregate-success credit, remains retained, and permits only smallest-dependency recovery unless exact target impact requires more. A dependency-corrected composite must never be relabelled canonical success.
+Vesper validated only the exact owner source-to-final delta and new or modified modules. The complete repository suite was not run. Neris's prior successful aggregate was not replayed or claimed as Vesper evidence. Vesper's exact-final canonical aggregate was invoked once and failed at 34/35 checks because unittest discovered only the sixteen class-based final tests while skipping sixty-five pytest-style x1 and x2 tests. It earns zero aggregate-success credit and must not be replayed. A collection-only pytest diagnostic found all 81 declared tests. The additive recovery prepares exactly one pytest-based dependency-corrected composite; if it passes, it remains a dependency-corrected terminal composite with zero canonical credit and must never be relabelled canonical success.
 
 ## 9. Method Flow and retained truth
 
@@ -192,7 +218,7 @@ Important recurrence guards include: use literal memory and worktree paths; pref
 
 ## 10. Lyren v670-v1 required startup
 
-Work solo. Do not create or fork a task, delegate, spawn a collaboration subagent, contact a standby, or precontact a later successor. Read this committed candidate completely through EOF, then read every current guidance and schema it names or that current authority requires. Reverify Vesper's exact branch, final head, direct ancestry, zero-merge history, manifests, clean state, canonical receipt, 0/0 divergence, and fresh live equality read-only before mutation. Do not replay Vesper's successful canonical aggregate or inherit its credit.
+Work solo. Do not create or fork a task, delegate, spawn a collaboration subagent, contact a standby, or precontact a later successor. Read this committed candidate completely through EOF, then read every current guidance and schema it names or that current authority requires. Reverify Vesper's exact branch, final head, direct ancestry, zero-merge history, manifests, clean state, failed canonical receipt, dependency-corrected receipt, 0/0 divergence, and fresh live equality read-only before mutation. Do not replay Vesper's failed canonical aggregate, relabel the dependency composite, or inherit either as Lyren novelty or completion credit.
 
 Use one fresh additive Lyren-owned D-first sparse lane from the exact Vesper final. Keep Vesper, Neris, every sibling, shared surface, and standby lane read-only. Preserve strict x1-before-x2. Freeze Lyren's proposals and portfolios in a planning-only x1 commit, push it, prove clean four-way equality, and only then begin x2. Use exactly `completed`, `represented`, `open_gap`, and `exact_gate`. Preserve every inherited negative, failed witness, open gap, exact gate, privacy boundary, manifest, and no-overclaim clause.
 
@@ -230,21 +256,22 @@ def build(repo: Path) -> None:
     gates = json.loads((root / "x2/open-exact-gate-register.json").read_text(encoding="utf-8"))
     methods = json.loads((root / "method-flow/evidence-ledger.json").read_text(encoding="utf-8"))["methods"]
     failure_count = len(FINAL_FAILURES)
+    recovered_failure_count = sum(row["recovery_state"] == "passed" for row in FINAL_FAILURES)
     final_totals = {
         "effective_negatives": x2_truth["effective_negatives"] + failure_count,
         "methods": x2_truth["methods"] + failure_count,
         "failed_witnesses": x2_truth["failed_witnesses"] + failure_count,
-        "passing_witnesses": x2_truth["passing_witnesses"] + failure_count,
+        "passing_witnesses": x2_truth["passing_witnesses"] + recovered_failure_count,
         "open_gaps": x2_truth["open_gaps"],
         "exact_gates": x2_truth["exact_gates"],
     }
     final_method_rows = [
-        {"method_id": row["failure_id"], "failed_witness": row["failed_witness"], "passing_bounded_witness": row["passing_bounded_witness"], "preferred_method": row["preferred_method"], "recurrence_guard": row["recurrence_guard"], "rollback": row["rollback"]}
+        {"method_id": row["failure_id"], "failed_witness": row["failed_witness"], "passing_bounded_witness": row["passing_bounded_witness"], "preferred_method": row["preferred_method"], "recurrence_guard": row["recurrence_guard"], "rollback": row["rollback"], "recovery_state": row["recovery_state"]}
         for row in FINAL_FAILURES
     ]
     write_json(root / "closeout/phase-truth.json", {
         **final_totals,
-        "canonical_invocation_state": "PREPARED_NOT_INVOKED",
+        "canonical_invocation_state": "FAILED_ZERO_CREDIT_DEPENDENCY_RECOVERY_PREPARED",
         "identity_boundary": IDENTITY_BOUNDARY,
         "outcomes": outcomes["totals"],
         "owner": OWNER,
@@ -267,6 +294,8 @@ def build(repo: Path) -> None:
             "structurally accessible static report with manual evaluation reserved",
             "immutable evidence commit pushed and fresh-live equal",
             "initial final retained and additive terminal correction prepared without history rewrite",
+            "one canonical aggregate retained at zero success credit after mixed-suite discovery mismatch",
+            "pytest collection-only diagnostic confirmed all eighty-one declared tests",
             "final candidate manifests closeout seal and file-backed handoff prepared",
         ],
         "incomplete": [
@@ -274,7 +303,7 @@ def build(repo: Path) -> None:
             "professional food-safety public-health legal cultural affected-party and Maori-authority review",
             "privacy-complete accessibility-complete exhaustive-security and independent reproduction",
             "empirical GMUT THOS effectiveness production AGI ASI consciousness personhood Theory-of-Everything and Stage 20 evidence",
-            "exact-final canonical invocation and external receipt until after final push",
+            "one external dependency-corrected pytest composite until after the corrected final push",
             "successor delivery until exact terminal gate and app acknowledgement",
         ],
         "owner": OWNER,
@@ -334,6 +363,12 @@ def build(repo: Path) -> None:
         "schema": "ghc.family.reflection-remaster.v3",
     })
     write_text(root / "closeout/final-integrated-overview.md", (root / "x2/integrated-evidence-overview.md").read_text(encoding="utf-8") + "\n\n## Closeout overlay\n\nThe immutable evidence commit is a clean pushed direct child of x1. This additive closeout freezes completion and incompletion, final Method Flow arithmetic, exact open gaps and gates, structural accessibility reservations, isolated tool boundaries, the terminal validation plan, and a file-backed successor candidate. It does not preclaim canonical success or delivery. The exact-final canonical receipt will remain external so the sealed head can stay immutable and clean.\n\nThe closeout also preserves why bounded success is narrower than real-world readiness. Synthetic mass, interval, state, provenance, and refusal fixtures can show that owner-local software follows declared contracts, but they cannot establish food quality, biological truth, professional judgment, public safety, legal compliance, cultural legitimacy, affected-party acceptance, or Maori authority. The three practice lenses therefore remain vocabularies for documentation design rather than claims of competence. The accessible report remains a structural artifact pending manual and affected-user evaluation. Package metadata, wheel hashes, isolated installation, a dependency audit, and small positive and rejecting probes remain point-in-time software evidence rather than supply-chain certification or production fitness.\n\nA read-only preflight after the initial final found a self-referential stale-label scanner literal before any canonical invocation. The initial final remains immutable and pushed with zero canonical credit. One additive correction constructs the rejected label from noncontiguous fragments, regenerates the exact manifests, and requires the corrected final to be a direct single-parent child of that retained initial final. No commit was amended or rewritten, and the failure remains visible in Method Flow.\n\nThe route is equally bounded. The Lyren candidate records exact inheritance, retained failures, protected gates, rollback, and prospective sequencing, yet its presence is not delivery. Only a clean pushed exact final, one attributable owner-scoped canonical pass, fresh live authority, unique exact-title resolution, immediate reread, duplicate guard, and the application acknowledgement can support a later send claim. Any absent or ambiguous gate leaves the candidate prepared and unsent. This separation keeps the repository seal immutable, preserves corrigibility, and prevents an operational convenience from becoming authority or evidence it has not earned.\n")
+    overview_path = root / "closeout/final-integrated-overview.md"
+    write_text(
+        overview_path,
+        overview_path.read_text(encoding="utf-8")
+        + "\n\n## Post-canonical dependency correction overlay\n\nThe one canonical aggregate was invoked after the scanner correction and failed at 34 of 35 checks. All 34 non-test checks passed, including exact history, equality, manifests, JSON, privacy, bounded Python review, document ceilings, handoff integrity, accessibility structure, and protected truth. The test subprocess returned zero but unittest discovered only 16 of the declared 81 tests because the x1 and x2 modules use pytest-style functions. The canonical invocation therefore retains zero success credit and is never replayed.\n\nA collection-only pytest diagnostic found all 81 exact x1, x2, and final tests without executing them. The next additive final prepares one external pytest-based dependency-corrected composite at the exact pushed head. A successful dependency composite may support the terminal software gate only under the explicit label `VALID_DEPENDENCY_CORRECTED_TERMINAL_COMPOSITE_WITH_ZERO_CANONICAL_AGGREGATE_CREDIT`. It cannot cure, erase, or relabel the failed canonical receipt, and it remains same-owner evidence under shared infrastructure rather than independent reproduction. Until that external receipt exists and passes, successor delivery remains prohibited.\n",
+    )
     baton = build_baton(repo)
     write_text(repo / HANDOFF, baton)
     write_json(root / "handoffs/activation-candidate-integrity.json", {
@@ -362,10 +397,11 @@ def build(repo: Path) -> None:
     })
     write_json(root / "seal/seal-candidate.json", {
         "branch": BRANCH,
-        "canonical_state": "PREPARED_NOT_INVOKED",
+        "canonical_state": "FAILED_ZERO_CREDIT_DEPENDENCY_RECOVERY_PREPARED",
         "evidence_commit": EVIDENCE_COMMIT,
         "exact_final": "COMMIT_CONTAINING_THIS_SEAL_RESOLVE_FROM_FRESH_LIVE_BRANCH",
         "retained_initial_final": INITIAL_FINAL,
+        "retained_failed_canonical_final": FAILED_CANONICAL_FINAL,
         "outcomes": outcomes["totals"],
         "owner": OWNER,
         "phase": PHASE,
@@ -375,9 +411,10 @@ def build(repo: Path) -> None:
         "x1_commit": X1_COMMIT,
     })
     write_json(root / "final/canonical-invocation-state.json", {
-        "attempt_count": 0,
-        "external_receipt_state": "ABSENT_UNTIL_EXACT_FINAL_PUSH",
-        "invocation_state": "PREPARED_NOT_INVOKED",
+        "attempt_count": 1,
+        "external_receipt_sha256": FAILED_CANONICAL_RECEIPT_SHA256,
+        "external_receipt_state": "FAILED_RECEIPT_RETAINED_OUTSIDE_REPOSITORY",
+        "invocation_state": "FAILED_ZERO_AGGREGATE_CREDIT_NO_REPLAY",
         "no_success_replay": True,
         "owner": OWNER,
         "phase": PHASE,
@@ -395,13 +432,28 @@ def build(repo: Path) -> None:
         "schema": "ghc.family.terminal-correction.v3",
         "terminal_corrected_final": "COMMIT_CONTAINING_THIS_CORRECTION_RESOLVE_FROM_FRESH_LIVE_BRANCH",
     })
+    write_json(root / "final/dependency-corrected-composite-plan.json", {
+        "canonical_aggregate_credit": 0,
+        "dependency_recovery_invocation_limit": 1,
+        "expected_tests": 81,
+        "failed_canonical_final": FAILED_CANONICAL_FINAL,
+        "failed_canonical_receipt_sha256": FAILED_CANONICAL_RECEIPT_SHA256,
+        "mixed_suite_runner": "pytest",
+        "no_post_success_replay": True,
+        "owner": OWNER,
+        "phase": PHASE,
+        "recovery_state": "PREPARED_NOT_INVOKED",
+        "schema": "ghc.family.dependency-corrected-composite-plan.v3",
+        "terminal_corrected_final": "COMMIT_CONTAINING_THIS_PLAN_RESOLVE_FROM_FRESH_LIVE_BRANCH",
+    })
     write_json(root / "final/final-validation-prerequisites.json", {
         "checks": [
-            "retained initial final direct child of immutable evidence and corrected final direct child of initial final",
-            "source x1 evidence initial-final corrected-final single-parent ancestry and zero merges",
+            "retained initial final direct child of immutable evidence failed-canonical final direct child of initial final and dependency-corrected final direct child of failed-canonical final",
+            "source x1 evidence initial-final failed-canonical-final dependency-corrected-final single-parent ancestry and zero merges",
             "clean before and after",
             "local upstream tracking and fresh live equality with zero divergence",
-            "x1 x2 and final selected tests",
+            "one pytest dependency recovery across all eighty-one x1 x2 and final selected tests",
+            "failed canonical receipt retained at zero aggregate-success credit",
             "strict JSON parse over exact owner scope",
             "five-class privacy scan",
             "changed-Python AST review",
@@ -424,13 +476,15 @@ def build(repo: Path) -> None:
 - Planning-only x1: `{X1_COMMIT}`.
 - Immutable evidence: `{EVIDENCE_COMMIT}`.
 - Retained non-terminal initial final: `{INITIAL_FINAL}` with zero canonical invocation credit.
-- Exact final: resolve the clean pushed branch head containing the seal and external canonical receipt.
+- Retained failed-canonical final: `{FAILED_CANONICAL_FINAL}` with 34/35 checks and zero canonical-success credit.
+- Exact final: resolve the clean pushed branch head containing the seal and external dependency-corrected receipt.
 - Primary pillar: THOS Body; GMUT Mind and Freed ID/CBR Heart protected.
 - Lens: wholly synthetic sourdough process documentation and software assurance.
 - Outcomes: 28 `completed`, 8 `represented`, 2 `open_gap`, 2 `exact_gate`.
 - Proposal chain: {CHAIN_AFTER}; 3,570-title recovery gap retained.
 - Final candidate totals: {final_totals['effective_negatives']} negatives, {final_totals['methods']} methods, {final_totals['failed_witnesses']} failed witnesses, {final_totals['passing_witnesses']} passing witnesses, {final_totals['open_gaps']} open gaps, {final_totals['exact_gates']} exact gates.
-- Canonical validation: prepared, not invoked until exact final push; no success replay.
+- Canonical validation: invoked once, failed, retained at zero credit, and never replayed.
+- Dependency correction: pytest-based 81-test terminal composite prepared for exactly one external invocation.
 - Route: `PREPARED_NOT_SENT` prospective Lyren Moss v670-v1.
 - Terminal verdict: `NOT_READY_FOR_STAGE_20`.
 """)

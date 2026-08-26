@@ -9,10 +9,10 @@ ROOT = Path(__file__).resolve().parents[1]
 PHASE_ROOT = ROOT / "docs/vesper-arlen/v669-v8"
 OUTCOMES = {"completed": 28, "represented": 8, "open_gap": 2, "exact_gate": 2}
 COUNTS = {
-    "effective_negatives": 31854,
-    "methods": 17959,
-    "failed_witnesses": 3675,
-    "passing_witnesses": 4931,
+    "effective_negatives": 31856,
+    "methods": 17961,
+    "failed_witnesses": 3677,
+    "passing_witnesses": 4932,
     "open_gaps": 239,
     "exact_gates": 234,
 }
@@ -28,7 +28,7 @@ class VesperV669V8FinalTests(unittest.TestCase):
         self.assertEqual(truth["outcomes"], OUTCOMES)
         self.assertEqual({key: truth[key] for key in COUNTS}, COUNTS)
         self.assertEqual(truth["proposal_chain"], 5230)
-        self.assertEqual(truth["canonical_invocation_state"], "PREPARED_NOT_INVOKED")
+        self.assertEqual(truth["canonical_invocation_state"], "FAILED_ZERO_CREDIT_DEPENDENCY_RECOVERY_PREPARED")
         self.assertEqual(truth["terminal_verdict"], "NOT_READY_FOR_STAGE_20")
         self.assertEqual(truth["real_world_actions"], 0)
 
@@ -132,9 +132,11 @@ class VesperV669V8FinalTests(unittest.TestCase):
         self.assertEqual(flow["methods"], COUNTS["methods"])
         self.assertEqual(flow["failed_witnesses"], COUNTS["failed_witnesses"])
         self.assertEqual(flow["bounded_passing_witnesses"], COUNTS["passing_witnesses"])
-        self.assertEqual(failures["count"], 4)
+        self.assertEqual(failures["count"], 6)
         self.assertTrue(all(row["completion_credit"] == 0 for row in failures["rows"]))
         self.assertTrue(all(row["passing_bounded_witness"] for row in failures["rows"]))
+        pending = [row for row in failures["rows"] if row["recovery_state"] == "prepared_not_invoked"]
+        self.assertEqual([row["failure_id"] for row in pending], ["VA6698-FINAL-OP-005"])
         self.assertEqual(len(load("x1/startup-operational-failures.json")["rows"]), 12)
         self.assertEqual(len(load("x2/x2-operational-failures.json")["rows"]), 5)
 
@@ -167,15 +169,20 @@ class VesperV669V8FinalTests(unittest.TestCase):
         seal = load("seal/seal-candidate.json")
         canonical = load("final/canonical-invocation-state.json")
         correction = load("final/terminal-correction.json")
+        recovery = load("final/dependency-corrected-composite-plan.json")
         prerequisites = load("final/final-validation-prerequisites.json")
         self.assertEqual(route["delivery_state"], "PREPARED_NOT_SENT")
         self.assertEqual(route["successor_contact_count"], 0)
         self.assertFalse(route["app_acknowledgement"])
-        self.assertEqual(seal["canonical_state"], "PREPARED_NOT_INVOKED")
-        self.assertEqual(canonical["attempt_count"], 0)
+        self.assertEqual(seal["canonical_state"], "FAILED_ZERO_CREDIT_DEPENDENCY_RECOVERY_PREPARED")
+        self.assertEqual(canonical["attempt_count"], 1)
+        self.assertEqual(canonical["invocation_state"], "FAILED_ZERO_AGGREGATE_CREDIT_NO_REPLAY")
         self.assertTrue(canonical["no_success_replay"])
         self.assertEqual(correction["initial_final_state"], "RETAINED_NON_TERMINAL_ZERO_CANONICAL_CREDIT")
         self.assertEqual(correction["canonical_invocations_before_correction"], 0)
+        self.assertEqual(recovery["canonical_aggregate_credit"], 0)
+        self.assertEqual(recovery["expected_tests"], 81)
+        self.assertEqual(recovery["recovery_state"], "PREPARED_NOT_INVOKED")
         self.assertTrue(prerequisites["one_attributable_invocation"])
         self.assertTrue(prerequisites["external_receipt_required"])
         self.assertFalse(prerequisites["complete_repository_suite"])
