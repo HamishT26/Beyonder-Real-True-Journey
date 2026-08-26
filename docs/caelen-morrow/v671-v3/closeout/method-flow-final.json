@@ -1,0 +1,39 @@
+{
+  "all_failures_retained": true,
+  "closeout_operational_failures": [
+    {
+      "completion_credit": 0,
+      "observation": "The first exact closeout staged diff check found one terminal blank line in each of the new builder, validator, and final-test files and withheld closeout credit.",
+      "recovery": "Remove only those three terminal blank lines, regenerate the uncommitted closeout packet, and repeat the exact staged review.",
+      "retained": true,
+      "signature": "first-closeout-staged-diff-check-found-three-terminal-blank-lines"
+    },
+    {
+      "completion_credit": 0,
+      "observation": "The first regeneration after the blank-line repair stopped because the pre-closeout guard allowed only the three source files and rejected the fifteen already-generated candidate artifacts.",
+      "recovery": "Extend the guard only to the exact known generated candidate paths, retain the stop at zero credit, and regenerate without broadening owner scope.",
+      "retained": true,
+      "signature": "closeout-regeneration-guard-rejected-its-own-generated-candidate-paths"
+    },
+    {
+      "completion_credit": 0,
+      "observation": "The first precommit final-contract aggregate passed eighteen of twenty tests but failed the retained-closeout-count assertion and the explicit manual-browser-reservation assertion.",
+      "recovery": "Retain zero aggregate-success credit, correct only those two specification dependencies, rerun tests 07 and 12, and rerun only the eight successful checks whose exact generated artifacts or manifests changed.",
+      "retained": true,
+      "signature": "first-precommit-final-contract-aggregate-failed-two-specification-dependencies"
+    }
+  ],
+  "coverage_dependency_recovery": {
+    "covered_lines": 67,
+    "percent": 58.7719298245614,
+    "statements": 114,
+    "test_count": 1
+  },
+  "effective_methods": 20222,
+  "evidence_ledger": "docs/caelen-morrow/v671-v3/method-flow/evidence-ledger.json",
+  "failed_witnesses": 5726,
+  "passing_witnesses": 7333,
+  "schema": "ghc.family.method-flow.final-candidate.v7",
+  "source_seal_rewritten": false,
+  "x2_aggregate_success_credit": 0
+}
