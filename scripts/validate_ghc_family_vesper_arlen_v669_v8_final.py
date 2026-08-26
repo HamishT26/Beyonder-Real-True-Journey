@@ -15,14 +15,15 @@ from typing import Any
 SOURCE_FINAL = "8b1a06d1f34147f7adbb494622df4734f48344de"
 X1_COMMIT = "6cf75a062b9248359599f29ad88ba39ec733f576"
 EVIDENCE_COMMIT = "375b43adfcc4e4a911ea26218806af79d70db58f"
+INITIAL_FINAL = "35f412d1db9daae8745d7fe53898ce2f2bdc7561"
 BRANCH = "codex/GHC-Family/vesper-arlen-v669-v8-full-tools"
 OWNER_PREFIX = "docs/vesper-arlen/v669-v8/"
 OUTCOMES = {"completed": 28, "represented": 8, "open_gap": 2, "exact_gate": 2}
 COUNTS = {
-    "effective_negatives": 31853,
-    "methods": 17958,
-    "failed_witnesses": 3674,
-    "passing_witnesses": 4930,
+    "effective_negatives": 31854,
+    "methods": 17959,
+    "failed_witnesses": 3675,
+    "passing_witnesses": 4931,
     "open_gaps": 239,
     "exact_gates": 234,
 }
@@ -132,6 +133,7 @@ def exact_delta_review(repo: Path, final: str) -> dict[str, Any]:
         "scripts/build_ghc_family_vesper_arlen_v669_v8_x1.py",
         "tests/test_ghc_family_vesper_arlen_v669_v8_x1.py",
     }
+    stale_label = "Vesper " + "Rowan"
     for path, data in blobs.items():
         suffix = Path(path).suffix.lower()
         if suffix == ".json":
@@ -145,7 +147,7 @@ def exact_delta_review(repo: Path, final: str) -> dict[str, Any]:
             privacy.extend({"path": path, "class": name} for name in privacy_candidates(text))
             if len(text.split()) > 100000:
                 word_violations.append(path)
-            if "Vesper Rowan" in text and path not in allowed_stale_paths:
+            if stale_label in text and path not in allowed_stale_paths:
                 stale_paths.append(path)
         if suffix == ".py":
             python_files += 1
@@ -207,6 +209,7 @@ def main() -> None:
     route = json.loads(blobs["docs/vesper-arlen/v669-v8/orchestration/route-state-final-candidate.json"].decode("utf-8"))
     report = blobs["docs/vesper-arlen/v669-v8/x2/accessible-evidence-report.html"].decode("utf-8")
     final_review = json.loads(blobs["docs/vesper-arlen/v669-v8/validation/final-staged-review.json"].decode("utf-8"))
+    correction = json.loads(blobs["docs/vesper-arlen/v669-v8/final/terminal-correction.json"].decode("utf-8"))
 
     test_modules = [
         "tests.test_ghc_family_vesper_arlen_v669_v8_x1",
@@ -235,12 +238,13 @@ def main() -> None:
         "clean_worktree": worktree_diff == 0,
         "clean_index": index_diff == 0,
         "zero_untracked": not untracked,
-        "three_phase_commits": phase_commits == [X1_COMMIT, EVIDENCE_COMMIT, final],
+        "four_phase_commits": phase_commits == [X1_COMMIT, EVIDENCE_COMMIT, INITIAL_FINAL, final],
         "zero_merges": merge_count == 0,
-        "single_parent_phase_history": len(parent_rows) == 3 and all(len(row) == 2 for row in parent_rows),
+        "single_parent_phase_history": len(parent_rows) == 4 and all(len(row) == 2 for row in parent_rows),
         "x1_direct_source_child": parent_rows[0][1] == SOURCE_FINAL,
         "evidence_direct_x1_child": parent_rows[1][1] == X1_COMMIT,
-        "final_direct_evidence_child": parent_rows[2][1] == EVIDENCE_COMMIT,
+        "initial_final_direct_evidence_child": parent_rows[2][1] == EVIDENCE_COMMIT,
+        "corrected_final_direct_initial_final_child": parent_rows[3][1] == INITIAL_FINAL,
         "all_manifest_replays": manifests["mismatches"] == 0,
         "all_json_parses": not owner["json_errors"],
         "zero_privacy_candidates": not owner["privacy_candidates"],
@@ -258,6 +262,7 @@ def main() -> None:
         "baton_sha256": hashlib.sha256(normalized_baton.encode("utf-8")).hexdigest() == baton_receipt["sha256_normalized_lf"],
         "baton_prepared_not_sent": baton_receipt["delivery_state"] == "PREPARED_NOT_SENT" and not baton_receipt["delivery_acknowledged"],
         "route_prepared_not_sent": route["delivery_state"] == "PREPARED_NOT_SENT" and route["successor_contact_count"] == 0 and not route["app_acknowledgement"],
+        "initial_final_retained_zero_canonical_credit": correction["initial_final"] == INITIAL_FINAL and correction["canonical_invocations_before_correction"] == 0 and correction["initial_final_state"] == "RETAINED_NON_TERMINAL_ZERO_CANONICAL_CREDIT",
         "final_staged_review_passed": final_review["passed"],
         "accessible_report_structure": all(token in report for token in ('lang="en"', 'href="#main"', '<main id="main">', '<caption>', 'scope="col"', 'scope="row"')) and "<script" not in report.lower(),
     }

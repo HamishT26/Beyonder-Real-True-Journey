@@ -9,10 +9,10 @@ ROOT = Path(__file__).resolve().parents[1]
 PHASE_ROOT = ROOT / "docs/vesper-arlen/v669-v8"
 OUTCOMES = {"completed": 28, "represented": 8, "open_gap": 2, "exact_gate": 2}
 COUNTS = {
-    "effective_negatives": 31853,
-    "methods": 17958,
-    "failed_witnesses": 3674,
-    "passing_witnesses": 4930,
+    "effective_negatives": 31854,
+    "methods": 17959,
+    "failed_witnesses": 3675,
+    "passing_witnesses": 4931,
     "open_gaps": 239,
     "exact_gates": 234,
 }
@@ -132,7 +132,7 @@ class VesperV669V8FinalTests(unittest.TestCase):
         self.assertEqual(flow["methods"], COUNTS["methods"])
         self.assertEqual(flow["failed_witnesses"], COUNTS["failed_witnesses"])
         self.assertEqual(flow["bounded_passing_witnesses"], COUNTS["passing_witnesses"])
-        self.assertEqual(failures["count"], 3)
+        self.assertEqual(failures["count"], 4)
         self.assertTrue(all(row["completion_credit"] == 0 for row in failures["rows"]))
         self.assertTrue(all(row["passing_bounded_witness"] for row in failures["rows"]))
         self.assertEqual(len(load("x1/startup-operational-failures.json")["rows"]), 12)
@@ -166,6 +166,7 @@ class VesperV669V8FinalTests(unittest.TestCase):
         route = load("orchestration/route-state-final-candidate.json")
         seal = load("seal/seal-candidate.json")
         canonical = load("final/canonical-invocation-state.json")
+        correction = load("final/terminal-correction.json")
         prerequisites = load("final/final-validation-prerequisites.json")
         self.assertEqual(route["delivery_state"], "PREPARED_NOT_SENT")
         self.assertEqual(route["successor_contact_count"], 0)
@@ -173,6 +174,8 @@ class VesperV669V8FinalTests(unittest.TestCase):
         self.assertEqual(seal["canonical_state"], "PREPARED_NOT_INVOKED")
         self.assertEqual(canonical["attempt_count"], 0)
         self.assertTrue(canonical["no_success_replay"])
+        self.assertEqual(correction["initial_final_state"], "RETAINED_NON_TERMINAL_ZERO_CANONICAL_CREDIT")
+        self.assertEqual(correction["canonical_invocations_before_correction"], 0)
         self.assertTrue(prerequisites["one_attributable_invocation"])
         self.assertTrue(prerequisites["external_receipt_required"])
         self.assertFalse(prerequisites["complete_repository_suite"])

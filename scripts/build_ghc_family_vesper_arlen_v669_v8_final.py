@@ -26,6 +26,7 @@ from ghc_family_vesper_arlen_v669_v8_sourdough import (
 
 X1_COMMIT = "6cf75a062b9248359599f29ad88ba39ec733f576"
 EVIDENCE_COMMIT = "375b43adfcc4e4a911ea26218806af79d70db58f"
+INITIAL_FINAL = "35f412d1db9daae8745d7fe53898ce2f2bdc7561"
 BRANCH = "codex/GHC-Family/vesper-arlen-v669-v8-full-tools"
 FINAL_DELTA_MANIFEST = "docs/vesper-arlen/v669-v8/validation/final-delta-manifest.json"
 FINAL_OWNER_MANIFEST = "docs/vesper-arlen/v669-v8/validation/final-owner-manifest.json"
@@ -57,6 +58,15 @@ FINAL_FAILURES: list[dict[str, Any]] = [
         "preferred_method": "Assert the stable semantic boundary rather than one unnecessarily narrow sentence fragment.",
         "recurrence_guard": "Use exact full-phrase assertions only for schema constants; use stable boundary tokens for prose.",
         "rollback": "Revert only the wording assertion while retaining this zero-credit failed witness.",
+        "completion_credit": 0,
+    },
+    {
+        "failure_id": "VA6698-FINAL-OP-004",
+        "failed_witness": "A read-only preflight found that the exact-final stale-label check would classify the validator's own contiguous scanner-definition literal as an out-of-allowlist stale-label occurrence.",
+        "passing_bounded_witness": "The additive terminal correction constructs the rejected label from two fragments, preserving the intended x1 allowlist while preventing scanner self-matching.",
+        "preferred_method": "Preflight self-referential scanners against their own committed source before the one-shot canonical invocation.",
+        "recurrence_guard": "Construct protected scanner examples from noncontiguous fragments or classify scanner-definition paths explicitly.",
+        "rollback": "Retain the initial final and this zero-credit failure; revert only the scanner self-match correction if a stricter replacement is supplied.",
         "completion_credit": 0,
     },
 ]
@@ -116,7 +126,7 @@ This file is a prepared, sanitized activation candidate. It is not delivery. It 
 
 ## 1. Exact inheritance and lifecycle
 
-The source branch for Vesper's phase is `{BRANCH}`. Neris Solane's immutable source was `{SOURCE_FINAL}`. Vesper's planning-only x1 is `{X1_COMMIT}` and is a direct child of the Neris final. Vesper's immutable evidence is `{EVIDENCE_COMMIT}` and is a direct child of x1. The exact Vesper final is the clean pushed branch head that contains this candidate, the final owner manifest, the final seal candidate, and the external canonical receipt identified in the one-send message. Resolve and verify that head through Git and fresh live remote equality; never copy a truncated display or infer a hash from this candidate.
+The source branch for Vesper's phase is `{BRANCH}`. Neris Solane's immutable source was `{SOURCE_FINAL}`. Vesper's planning-only x1 is `{X1_COMMIT}` and is a direct child of the Neris final. Vesper's immutable evidence is `{EVIDENCE_COMMIT}` and is a direct child of x1. The pushed initial final `{INITIAL_FINAL}` is retained as a non-terminal direct child of evidence because a read-only preflight found a stale-label scanner self-match before canonical invocation. The exact corrected Vesper final is the clean pushed direct child of that retained initial final which contains this candidate, the regenerated final owner manifest, the corrected seal candidate, and the external canonical receipt identified in the one-send message. Resolve and verify that head through Git and fresh live remote equality; never copy a truncated display or infer a hash from this candidate.
 
 Strict x1-before-x2 separation was preserved. The x1 commit contained planning, source, novelty, portfolio, tool-candidate, threat, route, environment, failure, validation, and rollback artifacts only. It contained no x2 results, closeout, final seal, or delivery. X1 passed 35 bounded tests and a scoped Ruff review, then was pushed clean and equal across local, upstream, tracking, and a fresh live remote before x2 began. The evidence commit contains the bounded x2 execution and is a direct child of x1. It was pushed clean and fresh-live equal before closeout began. Preserve this single-parent zero-merge history; do not reset, amend, rewrite, force-push, merge, delete, reuse, or mutate Vesper's, Neris's, or any sibling/shared lane.
 
@@ -256,6 +266,7 @@ def build(repo: Path) -> None:
             "Pint transitions and portion installed used and audited in one D-isolated environment",
             "structurally accessible static report with manual evaluation reserved",
             "immutable evidence commit pushed and fresh-live equal",
+            "initial final retained and additive terminal correction prepared without history rewrite",
             "final candidate manifests closeout seal and file-backed handoff prepared",
         ],
         "incomplete": [
@@ -322,7 +333,7 @@ def build(repo: Path) -> None:
         "phase": PHASE,
         "schema": "ghc.family.reflection-remaster.v3",
     })
-    write_text(root / "closeout/final-integrated-overview.md", (root / "x2/integrated-evidence-overview.md").read_text(encoding="utf-8") + "\n\n## Closeout overlay\n\nThe immutable evidence commit is a clean pushed direct child of x1. This additive closeout freezes completion and incompletion, final Method Flow arithmetic, exact open gaps and gates, structural accessibility reservations, isolated tool boundaries, the terminal validation plan, and a file-backed successor candidate. It does not preclaim canonical success or delivery. The exact-final canonical receipt will remain external so the sealed head can stay immutable and clean.\n\nThe closeout also preserves why bounded success is narrower than real-world readiness. Synthetic mass, interval, state, provenance, and refusal fixtures can show that owner-local software follows declared contracts, but they cannot establish food quality, biological truth, professional judgment, public safety, legal compliance, cultural legitimacy, affected-party acceptance, or Maori authority. The three practice lenses therefore remain vocabularies for documentation design rather than claims of competence. The accessible report remains a structural artifact pending manual and affected-user evaluation. Package metadata, wheel hashes, isolated installation, a dependency audit, and small positive and rejecting probes remain point-in-time software evidence rather than supply-chain certification or production fitness.\n\nThe route is equally bounded. The Lyren candidate records exact inheritance, retained failures, protected gates, rollback, and prospective sequencing, yet its presence is not delivery. Only a clean pushed exact final, one attributable owner-scoped canonical pass, fresh live authority, unique exact-title resolution, immediate reread, duplicate guard, and the application acknowledgement can support a later send claim. Any absent or ambiguous gate leaves the candidate prepared and unsent. This separation keeps the repository seal immutable, preserves corrigibility, and prevents an operational convenience from becoming authority or evidence it has not earned.\n")
+    write_text(root / "closeout/final-integrated-overview.md", (root / "x2/integrated-evidence-overview.md").read_text(encoding="utf-8") + "\n\n## Closeout overlay\n\nThe immutable evidence commit is a clean pushed direct child of x1. This additive closeout freezes completion and incompletion, final Method Flow arithmetic, exact open gaps and gates, structural accessibility reservations, isolated tool boundaries, the terminal validation plan, and a file-backed successor candidate. It does not preclaim canonical success or delivery. The exact-final canonical receipt will remain external so the sealed head can stay immutable and clean.\n\nThe closeout also preserves why bounded success is narrower than real-world readiness. Synthetic mass, interval, state, provenance, and refusal fixtures can show that owner-local software follows declared contracts, but they cannot establish food quality, biological truth, professional judgment, public safety, legal compliance, cultural legitimacy, affected-party acceptance, or Maori authority. The three practice lenses therefore remain vocabularies for documentation design rather than claims of competence. The accessible report remains a structural artifact pending manual and affected-user evaluation. Package metadata, wheel hashes, isolated installation, a dependency audit, and small positive and rejecting probes remain point-in-time software evidence rather than supply-chain certification or production fitness.\n\nA read-only preflight after the initial final found a self-referential stale-label scanner literal before any canonical invocation. The initial final remains immutable and pushed with zero canonical credit. One additive correction constructs the rejected label from noncontiguous fragments, regenerates the exact manifests, and requires the corrected final to be a direct single-parent child of that retained initial final. No commit was amended or rewritten, and the failure remains visible in Method Flow.\n\nThe route is equally bounded. The Lyren candidate records exact inheritance, retained failures, protected gates, rollback, and prospective sequencing, yet its presence is not delivery. Only a clean pushed exact final, one attributable owner-scoped canonical pass, fresh live authority, unique exact-title resolution, immediate reread, duplicate guard, and the application acknowledgement can support a later send claim. Any absent or ambiguous gate leaves the candidate prepared and unsent. This separation keeps the repository seal immutable, preserves corrigibility, and prevents an operational convenience from becoming authority or evidence it has not earned.\n")
     baton = build_baton(repo)
     write_text(repo / HANDOFF, baton)
     write_json(root / "handoffs/activation-candidate-integrity.json", {
@@ -354,6 +365,7 @@ def build(repo: Path) -> None:
         "canonical_state": "PREPARED_NOT_INVOKED",
         "evidence_commit": EVIDENCE_COMMIT,
         "exact_final": "COMMIT_CONTAINING_THIS_SEAL_RESOLVE_FROM_FRESH_LIVE_BRANCH",
+        "retained_initial_final": INITIAL_FINAL,
         "outcomes": outcomes["totals"],
         "owner": OWNER,
         "phase": PHASE,
@@ -372,10 +384,21 @@ def build(repo: Path) -> None:
         "schema": "ghc.family.canonical-invocation-state.v3",
         "scope": "exact owner source-to-final delta and new or modified modules only; not full repository",
     })
+    write_json(root / "final/terminal-correction.json", {
+        "canonical_invocations_before_correction": 0,
+        "correction": "stale-label scanner self-match removed through noncontiguous literal construction",
+        "evidence_commit": EVIDENCE_COMMIT,
+        "initial_final": INITIAL_FINAL,
+        "initial_final_state": "RETAINED_NON_TERMINAL_ZERO_CANONICAL_CREDIT",
+        "owner": OWNER,
+        "phase": PHASE,
+        "schema": "ghc.family.terminal-correction.v3",
+        "terminal_corrected_final": "COMMIT_CONTAINING_THIS_CORRECTION_RESOLVE_FROM_FRESH_LIVE_BRANCH",
+    })
     write_json(root / "final/final-validation-prerequisites.json", {
         "checks": [
-            "exact final direct child of immutable evidence",
-            "source x1 evidence final single-parent ancestry and zero merges",
+            "retained initial final direct child of immutable evidence and corrected final direct child of initial final",
+            "source x1 evidence initial-final corrected-final single-parent ancestry and zero merges",
             "clean before and after",
             "local upstream tracking and fresh live equality with zero divergence",
             "x1 x2 and final selected tests",
@@ -400,6 +423,7 @@ def build(repo: Path) -> None:
 - Immutable Neris source: `{SOURCE_FINAL}`.
 - Planning-only x1: `{X1_COMMIT}`.
 - Immutable evidence: `{EVIDENCE_COMMIT}`.
+- Retained non-terminal initial final: `{INITIAL_FINAL}` with zero canonical invocation credit.
 - Exact final: resolve the clean pushed branch head containing the seal and external canonical receipt.
 - Primary pillar: THOS Body; GMUT Mind and Freed ID/CBR Heart protected.
 - Lens: wholly synthetic sourdough process documentation and software assurance.
