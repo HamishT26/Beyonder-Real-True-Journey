@@ -159,7 +159,8 @@ def test_open_gates_are_not_closed_in_x1() -> None:
 
 def test_index_reference_is_current_and_bounded() -> None:
     text = (ROOT / "ghc-family-index" / "references" / "v673-v6-vesper-arlen.md").read_text(encoding="utf-8")
-    assert "planning only" in text
+    assert "x1: `9a5d432a877d5c11ac60e0d331cf27cfb55c482b`" in text
+    assert "final: the direct child of evidence containing the committed closeout" in text
     assert SOURCE_FINAL in text
     assert "PREPARED_NOT_SENT" in text
     assert "NOT_READY_FOR_STAGE_20" in text

@@ -12,6 +12,8 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 SCRIPTS = ROOT / "scripts"
 OUT = ROOT / "docs" / "vesper-arlen" / "v673-v6"
+X1 = "9a5d432a877d5c11ac60e0d331cf27cfb55c482b"
+EVIDENCE = "5b208ceb2cababd14dd5de7e35af792533b12c68"
 if str(SCRIPTS) not in sys.path:
     sys.path.insert(0, str(SCRIPTS))
 toolbank = os.environ.get("VESPER_V6736_TOOLBANK")
@@ -270,13 +272,16 @@ def test_evidence_manifest_when_finalized() -> None:
     assert privacy["confirmed_hit_count"] == 0
     assert manifest["entry_count"] == len(manifest["entries"])
     for row in manifest["entries"]:
-        blob = git("show", f":{row['path']}")
+        blob = git("show", f"{EVIDENCE}:{row['path']}")
         assert len(blob) == row["bytes"]
         assert hashlib.sha256(blob.replace(b"\r\n", b"\n")).hexdigest() == row["sha256_normalized_lf"]
 
 
-def test_x1_commit_remains_direct_parent_during_evidence_build() -> None:
-    assert git("rev-parse", "HEAD").decode().strip() == "9a5d432a877d5c11ac60e0d331cf27cfb55c482b"
+def test_x1_remains_direct_parent_of_immutable_evidence() -> None:
+    assert git("rev-parse", f"{EVIDENCE}^").decode().strip() == X1
+    head = git("rev-parse", "HEAD").decode().strip()
+    if head != EVIDENCE:
+        assert git("rev-parse", "HEAD^").decode().strip() == EVIDENCE
     assert not git("status", "--porcelain", "--", "docs/vesper-arlen/v673-v6/x1").decode().strip()
 
 
