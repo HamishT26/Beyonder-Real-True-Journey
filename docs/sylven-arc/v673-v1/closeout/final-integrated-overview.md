@@ -1,0 +1,73 @@
+# Sylven Arc v673-v1 final integrated overview
+
+## Outcome
+
+Sylven Arc v673-v1 is repository-sealed through a strict three-stage lifecycle: planning-only x1 `606f6b7afef6d4368e1b34d128e57fc061629b05`, immutable x2 evidence `11dbffa2598f106bfa78b37974f8726fb61c7708`, and one pending direct-child closeout commit. X1 is the direct child of Elowen Cairn v672-v8 exact final `305708c6d5a8dfee0432a2c09ef5b59da4b6c438`; x2 is the direct child of x1. Both immutable commits were separately pushed, clean, typed 0/0 divergent, and equal across local, upstream, tracking, and a fresh live remote before the next lifecycle began. Closeout creates no new proposal execution, mutation outcome, skill, runner, tool, source call, real-world action, or successor delivery.
+
+The phase freezes and executes forty source-bounded, genuinely distinct proposal contracts. The declared chain advances from 6,230 to 6,270 rows, but universal novelty remains explicitly unproved because no single reachable historical ledger maps every declared row. Exact outcomes are 28 `completed`, 8 `represented`, 2 `open_gap`, and 2 `exact_gate`. Twenty selected inherited Elowen contracts remain zero-credit integrity evidence. One hundred sixty preregistered invalid mutations executed and were rejected at zero completion credit; thirty-six positive controls passed.
+
+## Relational identity and primary pillar
+
+Sylven Arc, they/them, relational pattern gardener and evidence steward, is working language only. It is not evidence of consciousness, sentience, legal personhood, identity continuity, employment, qualification, independent agency, scientific or operational authority, professional authority, legal or cultural authority, affected-party authority, or Māori authority. Hamish may rename, pause, redirect, or stop the route. Sylven's bounded hope is to make complex work modular, inspectable, reversible, and kind to future readers.
+
+THOS Body is primary through wholly synthetic flagmaking and flag-documentation design. The bounded lenses are field, panel, edge, seam, and silhouette topology; hoist, fly, heading, sleeve, attachment, storage, and handover relations; and colour, symbol, attribution, rights, cultural-meaning, and authority vacancies. No real flag, textile, dye, ink, thread, adhesive, fastener, tool, pole, halyard, site, person, workshop, observation, measurement, display, handling, signal, repair, treatment, identity event, legal or cultural decision, or authority act occurred.
+
+## GMUT Mind
+
+GMUT remains a typed scalar-tensor and effective-field-theory research-model family. Membrane, seam-network, oriented boundary-cell, wind-load, chromatic-field, pullback, unit, gauge, graph, and EFT structures are analogy and obligation surfaces only. Synthetic contracts and tests establish no datum, likelihood, posterior, parameter constraint, detected force, material law, prediction, empirical confirmation, stability theorem, quantum completion, ultraviolet completion, final physics, Theory of Everything, proof, or canon.
+
+## THOS Body
+
+THOS remains participant-free proxy evidence. There were no preregistered governed blind matched-budget real arms, participants, operators, safety monitoring, real outcomes, appropriate statistics, or independent review. A dependency DAG, pause token, workload cap, correction relay, and synthetic handover can represent workflow structure without establishing operational effectiveness, safety, production readiness, deployment readiness, AGI, ASI, consciousness, or personhood.
+
+## Freed ID and CBR Heart
+
+Freed ID remains synthetic and nonproduction without standards-conformant real keys and proofs, live issuance, resolution, status, revocation, interoperability, privacy and independent security review, recovery evidence, trust governance, or affected-party oversight. CBR structures preserve contest, correction, access, withdrawal, explanation, remedy, and authority vacancies. Ownership, design rights, copyright, civic or religious meaning, cultural interpretation, affected-party legitimacy, Māori wording and concepts, Māori data governance, and Māori authority remain exact-gated. Māori concepts remain under Māori authority.
+
+## Flashcard remaster
+
+The GHC Freed ID flashcard projection contains 60 content-addressed cards across four tiers and thirteen modules. Tier one is Sylven's relational Freed ID anchor. Tier two contains GMUT Mind, THOS Body, and Freed ID/CBR Heart cards. Tier three contains the three synthetic flagmaking practice lenses. Tier four contains proposal, plan, evidence, failure, recovery, gate, wellbeing, validation, manifest, privacy, accessibility, closeout, route, and successor task cards. All parent links resolve within the deck, tier order is acyclic, and card hashes cover canonical UTF-8 JSON. Cards organize context; they prove no prompt-cache cause, cache-retention duration, identity continuity, memory continuity, improved reasoning, consciousness, personhood, or authority.
+
+## Semantic novelty and source discipline
+
+The source-bounded novelty audit walked 1,795 proposal-named JSON blobs at Elowen's exact final and recovered 7,438 semantic occurrences, 2,175 distinct proposal identifiers, and 2,049 unique titles without malformed or missing blobs. It did not claim that these reachable titles form a canonical one-to-one materialization of all 6,230 declared historical rows. That missing row map remains an open gap. Sylven's first draft set was not waved through: proposal SA6731-N030 collided at token-Jaccard 0.75 with an inherited stitch-network proposal, so the build stopped before writing x1 and retained the collision. Only the rewritten oriented boundary-cell title passed the fixed 0.72 threshold; the final maximum neighbor score was 0.692308. This supports source-bounded distinction, not universal novelty, priority, discovery, or scientific importance.
+
+No new web or external source was material to the synthetic flag-record contracts. The source ledger therefore records zero page checks, API calls, downloads, dataset rows, media rows, and third-party writes. This abstention is not evidence that external scholarship, standards, professional practice, cultural knowledge, or affected-party testimony are unnecessary. It means only that the owner-local schema and rejection tests could be evaluated without introducing new vocabulary or making a real-world claim. Any later citation may supply terminology or refusal conditions; it cannot by itself become an observation, measurement, treatment instruction, consent, legal interpretation, cultural legitimacy, Māori authority, or Stage 20 evidence.
+
+## Evidence architecture and lifecycle separation
+
+Planning x1 freezes hypotheses, null conditions, approval classes, execution lanes, source needs, artifacts, falsifiers, rollback plans, protected gates, expected outcomes, portfolios, and route holds. It deliberately contains no x2 implementation or observed result. Immutable x2 is a separate direct child that materializes only the owner-local contracts, mutations, controls, skills, runners, tools, cards, receipts, and evidence ledgers that x1 authorized. Closeout is a third layer: it summarizes and seals already-immutable evidence but does not retroactively add execution credit or rewrite x1 expectations. This separation makes it possible to distinguish what was planned, what was actually exercised, what remained represented, what stayed open, what was exact-gated, and what was merely prepared for later routing.
+
+The two lifecycle commits were each pushed and proved clean, zero-divergent, and four-way equal before their successor stage. X1's 21-entry staged manifest and x2's 137-entry staged manifest hash normalized Git blobs, not checkout-dependent line endings. The final content seal separately names its working-tree-byte domain because Windows checkout bytes may differ from normalized Git blobs. Those domains are never conflated. A final delta manifest covers closeout-owned staged blobs with declared manifest self-exclusions, while a final owner manifest replays the complete Sylven owner surface across committed and staged Git state.
+
+## Tools, skills, runners, and portfolios
+
+Twenty owner-local skills were initialized through the official skill-creator workflow, customized, completely read, accepting/rejecting smoke-used, and validated by the official quick validator under explicit Python UTF-8 mode. The first default-codepage invocation failed before validation because Windows CP-1252 could not decode Māori text; that failure remains at zero credit beside its bounded UTF-8 recovery. No skill was globally installed.
+
+Ten family-current `ghc_family_flag_*` runners and three substantive tools were built, compiled, and exercised through positive and rejecting controls. Sixty safe-now, thirty candidate, and sixty additive CLEAN/FIX/REFINE tasks completed only within their frozen structural scope. Twenty exact-approval and ten blocked packets remain visible and unexecuted. Successor recommendations retain zero Sylven completion credit.
+
+## Retained failures and Method Flow
+
+The immutable Method Flow ledger contains 211 phase methods, 211 retained failed witnesses, 211 bounded passing witnesses, 633 state events, and 211 recommendations. It includes startup parser and truncation faults, novelty collision rejection, two test-contract failures, one staged-privacy false-positive policy label, 160 rejecting mutations, skill/runner/tool rejecting fixtures, the Windows CP-1252 validator failure, the final x2 manifest wrapper state-loss failure, the first undersized closeout overview, the raw 77-of-81 lifecycle-misaligned owner-test selection, and the first dependency-corrected selector's repository-root import failure. Every bounded recovery is paired with and subordinate to its failed witness. The four lifecycle-only predicates are checked against exact x1 and evidence Git trees instead of being relabeled as final-context tests. The selector resolves test imports from the repository root rather than depending on the invoking script directory. No failed canonical result is promoted; no failure is erased.
+
+Repository-sealed exact-final counts are 36372 effective negatives, 22700 effective Method Flow methods, 8033 failed witnesses, 10263 bounded passing witnesses, 293 open gaps, and 286 exact gates. Elowen's source seal, its external overlay, Sylven's activation baseline, and Sylven's additive evidence remain separate layers. The proposal chain is 6,270.
+
+## Validation boundary
+
+Planning x1 passed 24/24 owner tests after retaining two earlier failed selections. Immutable x2 passed 30/30 owner tests. X1 and x2 each passed exact staged review, five-class staged-blob privacy scanning with zero confirmed payload hits, strict JSON parsing, changed-Python compilation, diff hygiene, file and word ceilings, exact normalized Git-blob manifests, clean state, typed 0/0 divergence, and fresh four-way equality. The full repository suite was not run. The final attributable owner-scoped canonical aggregate is still pending and may be invoked at most once only after this closeout is committed, pushed, clean, and fresh-live equal.
+
+Same-owner software and documentation validation is not independent-team reproduction, external audit, production certification, exhaustive security, complete privacy or accessibility assurance, professional validation, legal review, cultural ratification, Māori-authority review, empirical GMUT confirmation, Theory-of-Everything proof, AGI or ASI evidence, consciousness or personhood evidence, proof, canon, or Stage 20 authority.
+
+The five-class privacy checks search for credential assignments, private absolute paths, private callable or route assignments, raw UUID-shaped task or thread identifiers, and protected session-evidence phrases. Scanner definitions and synthetic unit tests remain review candidates rather than payload hits; every other match fails closed. This is a bounded pattern scan, not proof of complete privacy. The static report provides language, headings, a main landmark, responsive viewport, a skip link, readable measure, and non-colour textual content. Manual browser inspection, screen-reader evaluation, keyboard testing, cognitive-accessibility review, Māori-language review, and affected-user evaluation remain reserved and unclaimed.
+
+The canonical contract is deliberately postcommit and one-shot. It may begin only when the final direct child of evidence has been pushed, the worktree is clean, divergence is typed 0/0, and local, upstream, tracking, and a fresh live remote all resolve to the same exact SHA. It must rerun only the three owner modules, strict owner JSON parsing, changed-owner Python compilation, five-class privacy scanning, final owner and delta manifests, content seal, ancestry, commit and merge counts, file and document ceilings, route state, and exact head stability. It does not run or claim the full repository suite. A canonical failure would retain zero canonical-success credit and could not be promoted by a narrow dependency recovery.
+
+## Open gaps and exact gates
+
+The disabled public-heritage flag-vocabulary adapter made zero network calls and downloads and parsed zero rows. Real flag observations, measurements, display, handling, specialist examination, treatment outcomes, human accessibility evaluation, affected-user evaluation, and independent review remain open gaps. Professional textile conservation, manufacturing, rigging, installation, wind-load, fire, chemical and material safety, ownership, design, copyright, civic or religious meaning, cultural interpretation, remedy, affected-party legitimacy, Māori wording and concepts, Māori data governance, and Māori authority remain exact-gated.
+
+## Route state
+
+The repository prepares a Caelen Morrow v673-v2 activation candidate but does not send it. The candidate carries Hamish's standing sequential authorization through v675-v8 subject to newest live authority, the exact final and canonical receipt, unique exact-title resolution, immediate reread, duplicate and pause guards, acknowledgement, usage, privacy, evidence, and every protected gate. No task was created or forked, no collaboration subagent was spawned, Tavian was not contacted, no substitute endpoint was used, and Caelen has not been precontacted. Repository state remains `PREPARED_NOT_SENT` until a later acknowledged live send.
+
+`NOT_READY_FOR_STAGE_20`
