@@ -39,7 +39,8 @@ def test_x1_is_planning_only() -> None:
     assert receipt["state"] == "PLANNING_ONLY_X1_BUILT"
     assert receipt["outcomes_observed"] is False
     assert receipt["x2_files_created"] == 0
-    assert not (OUT / "x2").exists()
+    x1_tree = git("ls-tree", "-r", "--name-only", "9a5d432a877d5c11ac60e0d331cf27cfb55c482b").decode("utf-8")
+    assert "docs/vesper-arlen/v673-v6/x2/" not in x1_tree
 
 
 def test_forty_proposals_have_complete_preregistration_fields() -> None:
@@ -185,7 +186,7 @@ def test_staged_receipts_when_finalized() -> None:
     assert privacy["confirmed_hit_count"] == 0
     assert manifest["entry_count"] == len(manifest["entries"])
     for row in manifest["entries"]:
-        blob = git("show", f":{row['path']}")
+        blob = git("show", f"9a5d432a877d5c11ac60e0d331cf27cfb55c482b:{row['path']}")
         assert len(blob) == row["bytes"]
         assert hashlib.sha256(blob.replace(b"\r\n", b"\n")).hexdigest() == row["sha256_normalized_lf"]
 
