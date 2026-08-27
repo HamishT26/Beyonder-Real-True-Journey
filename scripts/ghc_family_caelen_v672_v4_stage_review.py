@@ -44,6 +44,22 @@ REQUIRED_EVIDENCE_PATHS = {
     "scripts/ghc_family_caelen_v672_v4_weaving_packet_guard.py",
     "tests/test_ghc_family_caelen_ash_v672_v4_x2.py",
 }
+REQUIRED_FINAL_PATHS = {
+    "docs/caelen-ash/v672-v4/closeout/closeout-receipt.json",
+    "docs/caelen-ash/v672-v4/closeout/content-seal.json",
+    "docs/caelen-ash/v672-v4/closeout/final-overview.md",
+    "docs/caelen-ash/v672-v4/closeout/final-validation-candidate.json",
+    "docs/caelen-ash/v672-v4/closeout/owner-manifest.json",
+    "docs/caelen-ash/v672-v4/closeout/phase-index.json",
+    "docs/caelen-ash/v672-v4/closeout/phase-truth.json",
+    "docs/caelen-ash/v672-v4/closeout/stale-label-review.json",
+    "docs/caelen-ash/v672-v4/closeout/wellbeing-check.json",
+    "docs/caelen-ash/v672-v4/handoffs/terminal-route-hold.json",
+    "scripts/ghc_family_caelen_v672_v4_build_closeout.py",
+    "scripts/ghc_family_caelen_v672_v4_build_owner_manifest.py",
+    "scripts/validate_ghc_family_caelen_ash_v672_v4_final.py",
+    "tests/test_ghc_family_caelen_ash_v672_v4_final.py",
+}
 PATTERNS = {
     "raw_uuid_identifier": re.compile(rb"\b[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\b"),
     "private_absolute_windows_path": re.compile(rb"\b[A-Za-z]:\\(?:Users|GHC-Archives|Windows)\\[^\r\n\"']+"),
@@ -145,9 +161,8 @@ def build(lifecycle: str) -> None:
         if path.startswith(PHASE_PREFIX + "x1/") or path in X1_PROTECTED
     ]
     out_of_scope = [path for path in paths if path not in self_exclusions and not allowed(path, lifecycle)]
-    missing_required = (
-        sorted(REQUIRED_EVIDENCE_PATHS - set(paths)) if lifecycle == "evidence" else []
-    )
+    required_paths = REQUIRED_EVIDENCE_PATHS if lifecycle == "evidence" else REQUIRED_FINAL_PATHS
+    missing_required = sorted(required_paths - set(paths))
     write_json(
         ROOT / manifest_relative,
         {
