@@ -1,0 +1,83 @@
+{
+  "schema": "ghc.family.bounded-inherited-tool-receipt.v1",
+  "owner": "Auren Lark",
+  "phase": "v674-v1",
+  "scope": {
+    "python": [
+      "scripts/build_ghc_family_auren_lark_v674_v1_x2.py",
+      "tests/test_ghc_family_auren_lark_v674_v1_x2.py",
+      "scripts/ghc_family_seismic_*_runner.py"
+    ],
+    "markdown": "Auren x2 Markdown and seven Auren global overlay references",
+    "complete_repository_suite": false
+  },
+  "first_passes": {
+    "ruff": {
+      "findings": 3,
+      "state": "failed_retained_zero_credit"
+    },
+    "mypy": {
+      "findings": 2,
+      "state": "failed_retained_zero_credit"
+    },
+    "bandit": {
+      "findings": 117,
+      "severity": "low_only",
+      "state": "failed_retained_zero_credit"
+    },
+    "markdownlint": {
+      "findings": 108,
+      "rule": "MD013",
+      "state": "failed_retained_zero_credit"
+    },
+    "pyright_host_environment": {
+      "errors": 9,
+      "warnings": 2,
+      "state": "failed_retained_zero_credit"
+    },
+    "pyright_d_venv_before_stub_boundary": {
+      "errors": 4,
+      "warnings": 0,
+      "state": "failed_retained_zero_credit"
+    }
+  },
+  "final_passes": {
+    "ruff": {
+      "errors": 0,
+      "state": "passed"
+    },
+    "mypy": {
+      "errors": 0,
+      "files": 12,
+      "state": "passed"
+    },
+    "bandit": {
+      "findings": 0,
+      "scope": "builder and ten runners",
+      "excluded_with_explicit_disposition": [
+        "B404 subprocess import required by fixed-array validation orchestration",
+        "B603 subprocess without shell required by fixed executable and argument arrays"
+      ],
+      "shell_true": false,
+      "state": "passed_bounded_policy"
+    },
+    "markdownlint": {
+      "findings": 0,
+      "policy": "MD013 disabled; all structural rules retained",
+      "state": "passed_bounded_policy"
+    },
+    "pyright": {
+      "errors": 0,
+      "warnings": 0,
+      "environment": "D:/GHC-Archives/phase-tools/auren-lark-v674-v1/venv",
+      "state": "passed"
+    }
+  },
+  "claims": {
+    "exhaustive_security": false,
+    "complete_privacy": false,
+    "complete_accessibility": false,
+    "independent_reproduction": false,
+    "production_certification": false
+  }
+}
