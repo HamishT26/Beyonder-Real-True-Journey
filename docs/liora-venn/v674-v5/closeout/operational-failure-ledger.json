@@ -1,0 +1,27 @@
+{
+  "schema": "ghc-family-operational-failure-ledger-v1",
+  "owner": "Liora Venn",
+  "phase": "v674-v5",
+  "lifecycle": "closeout",
+  "failure_count": 2,
+  "failures": [
+    {
+      "failure_id": "LV6745-CL-N001",
+      "witness": "The first closeout builder rewrite asked apply_patch to delete and add the same path in one patch; patch verification rejected the multi-operation target before changing the repository.",
+      "initial_pass_credit": 0,
+      "repository_changed_by_failure": false,
+      "recovery": "Use separate apply_patch operations for the owner-local uncommitted copy and retain normalized staged-index seals.",
+      "recovery_scope": "single owner-local closeout builder path",
+      "failed_witness_retained": true
+    },
+    {
+      "failure_id": "LV6745-CL-N002",
+      "witness": "The first exact staged-diff hygiene check found one extra blank line at EOF in three newly added owner Python files and stopped before the precommit test module ran.",
+      "initial_pass_credit": 0,
+      "repository_changed_by_failure": false,
+      "recovery": "Remove only the three trailing blank lines, regenerate every dependent normalized-index seal, and rerun the smallest staged hygiene and precommit selection.",
+      "recovery_scope": "three owner-local closeout Python files",
+      "failed_witness_retained": true
+    }
+  ]
+}
