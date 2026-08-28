@@ -1,0 +1,23 @@
+{
+  "schema": "ghc-family-operational-failure-ledger-v1",
+  "owner": "Liora Venn",
+  "phase": "v674-v5",
+  "failed_witness_count": 2,
+  "failed_witnesses": [
+    {
+      "id": "LV6745-X2-N001",
+      "failed_witness": "The first bounded x2 execute wrote contracts and mutations, then stopped at the skill gate because the installed validator decoded valid UTF-8 SKILL.md files with Windows CP-1252.",
+      "initial_credit": 0,
+      "recovery": "Changed only Liora's owner-local validator subprocess environment to request Python UTF-8 mode, preserving the installed validator and every skill byte.",
+      "recurrence_guard": "Set PYTHONUTF8=1 for every installed-validator subprocess that reads phase-local UTF-8 skill files on Windows."
+    },
+    {
+      "id": "LV6745-X2-N002",
+      "failed_witness": "A diagnostic quick-validation loop confirmed the shared decoder fault across all twenty unchanged skill files and returned zero passes.",
+      "initial_credit": 0,
+      "recovery": "A smallest one-skill validator probe with PYTHONUTF8=1 passed on the unchanged Māori-authority skill before the aggregate recovery.",
+      "recurrence_guard": "Diagnose one shared dependency once, then prove the smallest unchanged positive before repeating the bounded aggregate."
+    }
+  ],
+  "recoveries_do_not_rewrite_failures": true
+}
