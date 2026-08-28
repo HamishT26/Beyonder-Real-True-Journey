@@ -1,0 +1,83 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "authority_claim": {
+      "const": false
+    },
+    "boundaries": {
+      "minItems": 3,
+      "type": "array"
+    },
+    "canonical_payload_sha256": {
+      "pattern": "^[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "external_calls": {
+      "const": 0
+    },
+    "fixture": {
+      "type": "object"
+    },
+    "invalid_mutations": {
+      "maxItems": 4,
+      "minItems": 4,
+      "type": "array"
+    },
+    "outcome": {
+      "enum": [
+        "completed",
+        "exact_gate",
+        "open_gap",
+        "represented"
+      ]
+    },
+    "owner": {
+      "const": "Lyren Moss"
+    },
+    "phase": {
+      "const": "v673-v7"
+    },
+    "positive_control": {
+      "type": [
+        "object",
+        "null"
+      ]
+    },
+    "proposal_id": {
+      "pattern": "^LM6737-N[0-9]{3}$",
+      "type": "string"
+    },
+    "real_rows": {
+      "const": 0
+    },
+    "schema": {
+      "const": "ghc.family.synthetic-telegraph-evidence.v1"
+    },
+    "synthetic": {
+      "const": true
+    },
+    "title": {
+      "minLength": 12,
+      "type": "string"
+    }
+  },
+  "required": [
+    "schema",
+    "owner",
+    "phase",
+    "proposal_id",
+    "title",
+    "outcome",
+    "synthetic",
+    "real_rows",
+    "external_calls",
+    "authority_claim",
+    "fixture",
+    "positive_control",
+    "invalid_mutations",
+    "boundaries",
+    "canonical_payload_sha256"
+  ],
+  "type": "object"
+}
