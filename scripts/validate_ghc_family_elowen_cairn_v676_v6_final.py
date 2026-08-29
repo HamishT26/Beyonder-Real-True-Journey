@@ -23,12 +23,15 @@ BRANCH = "codex/GHC-Family/elowen-cairn-v676-v6-full-tools"
 SOURCE = "56b4e82909b3d7197b817a2415da592f8fc7df6e"
 X1 = "0943c5da5d4c1aced1ed9a29aca2d18de1c16b26"
 EVIDENCE = "c32fde8ba3aa9518e65f212b8a87d1a108dbc69a"
+ORIGINAL_FINAL = "b37d777b2800372003451d95d3ad5b854ff77d7b"
+FAILED_CANONICAL_RECEIPT_SHA256 = "95b95bb8c0be81a413e45f72bfe0204d9ed9c92e439f45bc0a50656539c0dbbf"
+OWNER_TEST_TIMEOUT_SECONDS = 900
 OUTCOMES = {"completed": 28, "represented": 8, "open_gap": 2, "exact_gate": 2}
 COUNTS = {
-    "effective_negatives": 42648,
-    "effective_methods": 33772,
-    "retained_failed_witnesses": 14309,
-    "bounded_passing_witnesses": 20152,
+    "effective_negatives": 42650,
+    "effective_methods": 33776,
+    "retained_failed_witnesses": 14311,
+    "bounded_passing_witnesses": 20154,
     "open_gaps": 359,
     "exact_gates": 351,
 }
@@ -182,8 +185,8 @@ def check(name: str, passed: bool, observed: Any) -> dict[str, Any]:
     return {"name": name, "passed": bool(passed), "observed": observed}
 
 
-def seal_replay(head: str) -> dict[str, Any]:
-    seal = load("closeout/content-seal.json")
+def seal_replay(head: str, relative: str) -> dict[str, Any]:
+    seal = load(relative)
     objects = tree_objects(head)
     rows = seal["entries"]
     missing = [row["path"] for row in rows if row["path"] not in objects]
@@ -266,6 +269,7 @@ def canonical_payload() -> dict[str, Any]:
             "tests/test_ghc_family_elowen_cairn_v676_v6_x1.py",
             "tests/test_ghc_family_elowen_cairn_v676_v6_x2.py",
             "tests/test_ghc_family_elowen_cairn_v676_v6_final.py",
+            "tests/test_ghc_family_elowen_cairn_v676_v6_correction1.py",
             "-k",
             "not test_no_x2_material_and_no_private_payload_in_x1_docs and not test_no_final_closeout_handoff_or_private_payload_exists_at_evidence",
         ],
@@ -273,7 +277,7 @@ def canonical_payload() -> dict[str, Any]:
         capture_output=True,
         text=True,
         encoding="utf-8",
-        timeout=300,
+        timeout=OWNER_TEST_TIMEOUT_SECONDS,
     )
     test_output = test_result.stdout + test_result.stderr
     match = re.search(r"(\d+) passed", test_output)
@@ -294,32 +298,37 @@ def canonical_payload() -> dict[str, Any]:
 
     x1_manifest = replay_manifest(X1, "x1-manifest.json")
     evidence_manifest = replay_manifest(EVIDENCE, "evidence-manifest.json")
-    delta_manifest = replay_manifest(head, "final-delta-manifest.json")
-    owner_manifest = replay_manifest(head, "final-owner-manifest.json")
-    changed_delta = {path for path in git_text("diff", "--name-only", f"{EVIDENCE}..{head}").splitlines() if path}
+    original_delta_manifest = replay_manifest(ORIGINAL_FINAL, "final-delta-manifest.json")
+    original_owner_manifest = replay_manifest(ORIGINAL_FINAL, "final-owner-manifest.json")
+    correction_delta_manifest = replay_manifest(head, "correction1-delta-manifest.json")
+    correction_owner_manifest = replay_manifest(head, "correction1-owner-manifest.json")
+    original_changed_delta = {path for path in git_text("diff", "--name-only", f"{EVIDENCE}..{ORIGINAL_FINAL}").splitlines() if path}
+    correction_changed_delta = {path for path in git_text("diff", "--name-only", f"{ORIGINAL_FINAL}..{head}").splitlines() if path}
     changed_owner = {
         path for path in git_text("diff", "--name-only", f"{SOURCE}..{head}").splitlines()
         if path and allowed_owner_path(path)
     }
-    expected_delta = delta_manifest["paths"] | delta_manifest["exclusions"]
-    expected_owner = owner_manifest["paths"] | owner_manifest["exclusions"]
+    expected_original_delta = original_delta_manifest["paths"] | original_delta_manifest["exclusions"]
+    expected_correction_delta = correction_delta_manifest["paths"] | correction_delta_manifest["exclusions"]
+    expected_owner = correction_owner_manifest["paths"] | correction_owner_manifest["exclusions"]
 
-    truth = load("final/phase-truth.json")
-    method_flow = load("final/method-flow-ledger.json")
+    truth = load("correction1/phase-truth.json")
+    method_flow = load("correction1/method-flow-overlay.json")
     gaps = load("final/open-gap-register.json")
     gates = load("final/exact-gate-register.json")
     portfolio = load("final/portfolio-truth.json")
-    staged_review = load("validation/final-staged-review.json")
+    staged_review = load("validation/correction1-staged-review.json")
     route = load("orchestration/terminal-route-hold.json")
     closeout = load("closeout/closeout-receipt.json")
     skill_summary = load("x2/skill-summary.json")
     runner_summary = load("x2/runner-summary.json")
     mutation_summary = load("x2/mutation-summary.json")
-    seal = seal_replay(head)
+    original_seal = seal_replay(ORIGINAL_FINAL, "closeout/content-seal.json")
+    correction_seal = seal_replay(head, "correction1/content-seal.json")
 
-    final_prefixes = tuple(OWNER_PREFIX + part for part in ("final/", "closeout/", "handoffs/", "orchestration/"))
+    final_prefixes = tuple(OWNER_PREFIX + part for part in ("final/", "closeout/", "handoffs/", "orchestration/", "correction1/"))
     final_public_paths = [
-        path for path in changed_delta
+        path for path in changed_owner
         if path.startswith(final_prefixes) and path.endswith((".json", ".md", ".html", ".txt", ".yaml", ".yml"))
     ]
     stale_patterns = [
@@ -335,16 +344,17 @@ def canonical_payload() -> dict[str, Any]:
             if pattern.search(value):
                 stale_hits.append({"path": path, "pattern": pattern.pattern})
 
-    diff_check = git("diff", "--check", f"{EVIDENCE}..{head}", check=False)
+    diff_check = git("diff", "--check", f"{SOURCE}..{head}", check=False)
     detailed = [
         check("exact_branch", branch == BRANCH, branch),
-        check("final_parent_is_evidence", parent == EVIDENCE, parent),
+        check("correction_parent_is_original_final", parent == ORIGINAL_FINAL, parent),
         check("x1_parent_is_source", x1_parent == SOURCE, x1_parent),
         check("evidence_parent_is_x1", evidence_parent == X1, evidence_parent),
         check("source_is_ancestor", git("merge-base", "--is-ancestor", SOURCE, head, check=False).returncode == 0, SOURCE),
         check("x1_is_ancestor", git("merge-base", "--is-ancestor", X1, head, check=False).returncode == 0, X1),
         check("evidence_is_ancestor", git("merge-base", "--is-ancestor", EVIDENCE, head, check=False).returncode == 0, EVIDENCE),
-        check("three_phase_commits", commit_count == 3, commit_count),
+        check("original_final_is_ancestor", git("merge-base", "--is-ancestor", ORIGINAL_FINAL, head, check=False).returncode == 0, ORIGINAL_FINAL),
+        check("four_phase_commits", commit_count == 4, commit_count),
         check("zero_merges", merge_count == 0, merge_count),
         check("one_final_parent", parent_count == 1, parent_count),
         check("clean_before", clean_before, clean_before),
@@ -352,18 +362,22 @@ def canonical_payload() -> dict[str, Any]:
         check("four_way_equal_before", before_equality["four_way_equal"], before_equality),
         check("x1_manifest_replay", x1_manifest["valid"] and x1_manifest["entries"] == 20, x1_manifest),
         check("evidence_manifest_replay", evidence_manifest["valid"] and evidence_manifest["entries"] == 540, evidence_manifest),
-        check("final_delta_manifest_replay", delta_manifest["valid"], delta_manifest),
-        check("final_owner_manifest_replay", owner_manifest["valid"], owner_manifest),
-        check("final_delta_coverage", changed_delta == expected_delta, {"changed": len(changed_delta), "expected": len(expected_delta)}),
-        check("final_owner_coverage", changed_owner == expected_owner, {"changed": len(changed_owner), "expected": len(expected_owner)}),
-        check("staged_review_valid", staged_review["status"] == "VALID_PRECOMMIT_FINAL_STAGED_REVIEW" and not staged_review["unexpected_paths"] and staged_review["confirmed_five_class_privacy_or_raw_identifier_hits"] == 0, staged_review["status"]),
+        check("original_final_delta_manifest_replay", original_delta_manifest["valid"], original_delta_manifest),
+        check("original_final_owner_manifest_replay", original_owner_manifest["valid"], original_owner_manifest),
+        check("correction_delta_manifest_replay", correction_delta_manifest["valid"], correction_delta_manifest),
+        check("correction_owner_manifest_replay", correction_owner_manifest["valid"], correction_owner_manifest),
+        check("original_final_delta_coverage", original_changed_delta == expected_original_delta, {"changed": len(original_changed_delta), "expected": len(expected_original_delta)}),
+        check("correction_delta_coverage", correction_changed_delta == expected_correction_delta, {"changed": len(correction_changed_delta), "expected": len(expected_correction_delta)}),
+        check("correction_owner_coverage", changed_owner == expected_owner, {"changed": len(changed_owner), "expected": len(expected_owner)}),
+        check("staged_review_valid", staged_review["status"] == "VALID_PRECOMMIT_CORRECTION1_STAGED_REVIEW" and not staged_review["unexpected_paths"] and staged_review["confirmed_five_class_privacy_or_raw_identifier_hits"] == 0, staged_review["status"]),
         check("phase_outcomes_exact", truth["core_outcomes"] == OUTCOMES, truth["core_outcomes"]),
         check("phase_counts_exact", truth["current_overlay"] == COUNTS, truth["current_overlay"]),
         check("proposal_chain_exact", truth["declared_proposal_chain"] == 7630, truth["declared_proposal_chain"]),
-        check("method_partition_exact", method_flow["phase_ledger_counts"] == {"methods": 654, "failed": 207, "passing": 447}, method_flow["phase_ledger_counts"]),
+        check("method_partition_exact", method_flow["current_phase_partition"] == {"methods": 658, "failed": 209, "passing": 449}, method_flow["current_phase_partition"]),
+        check("failed_canonical_receipt_binding", truth["failed_canonical_receipt_sha256"] == FAILED_CANONICAL_RECEIPT_SHA256 and truth["failed_canonical_status"] == "INVALID_EXACT_FINAL_OWNER_SCOPED_CANONICAL" and truth["failed_canonical_success_count"] == 0 and truth["failed_canonical_replay_count"] == 0, truth["failed_canonical_receipt_sha256"]),
         check("gap_gate_totals_exact", gaps["current"] == 359 and gates["current"] == 351, {"open_gaps": gaps["current"], "exact_gates": gates["current"]}),
         check("route_prepared_not_sent", route["state"] == "PREPARED_NOT_SENT" and route["provisional_exact_title"] == "Sylven Arc" and route["provisional_phase"] == "v676-v7" and route["send_count"] == 0, route),
-        check("content_seal_replay", seal["valid"] and seal["entries"] == 8, seal),
+        check("content_seal_replay", original_seal["valid"] and original_seal["entries"] == 8 and correction_seal["valid"] and correction_seal["entries"] == 4, {"original": original_seal, "correction": correction_seal}),
         check("stale_label_review", not stale_hits, stale_hits),
         check("diff_hygiene", diff_check.returncode == 0, diff_check.stderr.decode("utf-8", "replace")),
         check("terminal_verdict_exact", truth["terminal_verdict"] == "NOT_READY_FOR_STAGE_20", truth["terminal_verdict"]),
@@ -417,7 +431,7 @@ def canonical_payload() -> dict[str, Any]:
     skill_rows = skill_summary["skills"]
     runner_rows = runner_summary["runners"]
     minimal = [
-        check("owner_tests_34", test_result.returncode == 0 and current_tree_test_count == 32 and deselected_count == 2 and lifecycle_passed == 2 and test_count == 34, {"current_tree_tests": current_tree_test_count, "deselected_lifecycle_tests": deselected_count, "immutable_lifecycle_checks": lifecycle_passed, "tests": test_count, "exit": test_result.returncode}),
+        check("owner_tests_38", test_result.returncode == 0 and current_tree_test_count == 36 and deselected_count == 2 and lifecycle_passed == 2 and test_count == 38, {"current_tree_tests": current_tree_test_count, "deselected_lifecycle_tests": deselected_count, "immutable_lifecycle_checks": lifecycle_passed, "tests": test_count, "exit": test_result.returncode}),
         check("strict_json", not json_issues, {"documents": len(json_paths), "issues": len(json_issues)}),
         check("five_class_privacy", not confirmed_privacy, {"scanned": len(changed_text), "candidates": len(privacy_candidates), "confirmed": len(confirmed_privacy)}),
         check("bounded_python_security", not security_findings, {"files": len(changed_python), "findings": len(security_findings)}),
@@ -436,7 +450,7 @@ def canonical_payload() -> dict[str, Any]:
 
     detailed_passed = sum(row["passed"] for row in detailed)
     minimal_passed = sum(row["passed"] for row in minimal)
-    valid = detailed_passed == 30 and minimal_passed == 15
+    valid = detailed_passed == 35 and minimal_passed == 15
     payload: dict[str, Any] = {
         "schema": "ghc.family.exact-final-owner-scoped-canonical-receipt.v3",
         "owner": OWNER,
@@ -452,14 +466,14 @@ def canonical_payload() -> dict[str, Any]:
         "source": SOURCE,
         "x1": X1,
         "evidence": EVIDENCE,
-        "tests": {"passed": test_count if test_result.returncode == 0 and lifecycle_passed == 2 else 0, "total": 34, "current_tree_passed": current_tree_test_count, "immutable_lifecycle_passed": lifecycle_passed, "deselected_lifecycle_tests": deselected_count, "lifecycle_checks": lifecycle_checks, "exit_code": test_result.returncode, "output_sha256": hashlib.sha256((test_output + json.dumps(lifecycle_checks, sort_keys=True)).encode("utf-8")).hexdigest()},
+        "tests": {"passed": test_count if test_result.returncode == 0 and lifecycle_passed == 2 else 0, "total": 38, "current_tree_passed": current_tree_test_count, "immutable_lifecycle_passed": lifecycle_passed, "deselected_lifecycle_tests": deselected_count, "lifecycle_checks": lifecycle_checks, "exit_code": test_result.returncode, "output_sha256": hashlib.sha256((test_output + json.dumps(lifecycle_checks, sort_keys=True)).encode("utf-8")).hexdigest()},
         "detailed_checks": {"passed": detailed_passed, "total": 30, "rows": detailed},
         "minimal_checks": {"passed": minimal_passed, "total": 15, "rows": minimal},
         "json_documents": len(json_paths),
         "json_issues": json_issues,
         "privacy": {"scanned_text_files": len(changed_text), "pattern_classes": sorted(privacy_patterns), "candidates": privacy_candidates, "confirmed_hits": confirmed_privacy},
         "security": {"changed_python_files": len(changed_python), "findings": security_findings},
-        "manifests": {"x1": x1_manifest["entries"], "evidence": evidence_manifest["entries"], "final_delta": delta_manifest["entries"], "final_owner": owner_manifest["entries"]},
+        "manifests": {"x1": x1_manifest["entries"], "evidence": evidence_manifest["entries"], "original_final_delta": original_delta_manifest["entries"], "original_final_owner": original_owner_manifest["entries"], "correction_delta": correction_delta_manifest["entries"], "correction_owner": correction_owner_manifest["entries"]},
         "lifecycle": {"phase_commits": commit_count, "merges": merge_count, "final_parents": parent_count, "clean_before": clean_before, "clean_after": clean_after, "before_equality": before_equality, "after_equality": after_equality},
         "caps": {"owner_added_files": owner_added_files, "file_guard": 2000, "max_document_words": max_words, "word_guard": 100000},
         "outcomes": OUTCOMES,
