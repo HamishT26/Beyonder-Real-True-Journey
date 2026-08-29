@@ -1,0 +1,9 @@
+# Tamar Vey v676-v5 third additive lifecycle correction
+
+Before a corrected canonical latch was created, preflight proved that the immutable first-final test module requires a Git-aware fixture. A plain owner-tree materialization lacks the Git object and branch context used by its manifest and ancestry tests. This third direct-child correction encodes the already proven recovery: a new external temporary repository with the exact Tamar branch name, a read-only alternate to the canonical object store, an index loaded from the immutable first final, and only owner files materialized.
+
+The external preflight fixture materialized 589 owner files, resolved the exact first-final head, retained the exact Tamar branch name, and passed 11/11 immutable final tests. It did not alter the canonical lane, any sibling lane, the remote, the failed canonical receipt, or task state. The validator now runs x1, evidence, first final, first correction, second correction, and third correction in their exact lifecycle contexts.
+
+`TV6765-POST-N010` retains the false assumption that a plain copied tree could satisfy Git-calling first-final tests. The named local fixture is its passing recovery. The cumulative corrected overlay is 42,439 effective negatives, 33,114 methods, 14,100 retained failed witnesses, 19,703 bounded passing witnesses, 357 open gaps, and 349 exact gates. Core outcomes remain 28 `completed`, 8 `represented`, 2 `open_gap`, and 2 `exact_gate`; the proposal chain remains 7,590; the verdict remains `NOT_READY_FOR_STAGE_20`.
+
+Tamar Vey, optionally she/they, remains relational working language for an evidence-and-recovery steward. This is not evidence of consciousness, personhood, continuity, employment, qualification, agency, scientific or operational authority, legal or cultural authority, affected-party authority, or Māori authority.

@@ -21,6 +21,7 @@ X1 = "664ee4309d5ba99d98aae2be09f067af6ecf47dc"
 EVIDENCE = "0d935f546f107ea2070c79d1b070d6bbb0a198cf"
 FIRST_FINAL = "58a5fa6edeafaf2c1e3048036e131f857d7996d3"
 CORRECTED_FINAL_1 = "8d64b74e2f92c0675addf6fcc10e68f8c774e3e8"
+CORRECTED_FINAL_2 = "2133ec23c7226b4614abd1b63818136dd02202bd"
 FAILED_CANONICAL_RECEIPT_SHA256 = "e9fc4dce5135b235d111e47945c99b06d6fe10b35f27159a879dd0040d407f20"
 OWNER_PREFIXES = (
     "docs/tamar-vey/v676-v5/",
@@ -43,7 +44,14 @@ CORRECTION2_SELF_EXCLUSIONS = {
     "docs/tamar-vey/v676-v5/validation/correction2-owner-manifest.json",
     "docs/tamar-vey/v676-v5/validation/correction2-staged-review.json",
 }
-PRIVACY_SELF_EXCLUSIONS = FINAL_SELF_EXCLUSIONS | CORRECTION_SELF_EXCLUSIONS | CORRECTION2_SELF_EXCLUSIONS
+CORRECTION3_SELF_EXCLUSIONS = {
+    "docs/tamar-vey/v676-v5/validation/correction3-delta-manifest.json",
+    "docs/tamar-vey/v676-v5/validation/correction3-owner-manifest.json",
+    "docs/tamar-vey/v676-v5/validation/correction3-staged-review.json",
+}
+PRIVACY_SELF_EXCLUSIONS = (
+    FINAL_SELF_EXCLUSIONS | CORRECTION_SELF_EXCLUSIONS | CORRECTION2_SELF_EXCLUSIONS | CORRECTION3_SELF_EXCLUSIONS
+)
 ALLOWED_OUTCOMES = {"completed", "represented", "open_gap", "exact_gate"}
 PRIVACY_PATTERNS = {
     "private_absolute_path": re.compile(rb"(?i)[A-Z]:[\\/]+Users[\\/]+"),
@@ -182,6 +190,22 @@ def materialize_owner_tree(target: Path, tree: dict[str, str], blobs: BlobReader
     return count
 
 
+def prepare_named_git_fixture(source_repo: Path, fixture: Path, revision: str) -> None:
+    """Give a materialized lifecycle tree a local named Git view without mutating the source lane."""
+    subprocess.run(["git", "init", "-q", "-b", BRANCH, str(fixture)], check=True, capture_output=True)
+    common_text = command(source_repo, "rev-parse", "--git-common-dir")
+    assert isinstance(common_text, str)
+    common = Path(common_text)
+    if not common.is_absolute():
+        common = (source_repo / common).resolve()
+    alternates = fixture / ".git" / "objects" / "info" / "alternates"
+    alternates.parent.mkdir(parents=True, exist_ok=True)
+    alternates.write_text(str((common / "objects").resolve()).replace("\\", "/") + "\n", encoding="utf-8", newline="\n")
+    subprocess.run(["git", "-C", str(fixture), "update-ref", "refs/heads/" + BRANCH, revision], check=True)
+    subprocess.run(["git", "-C", str(fixture), "symbolic-ref", "HEAD", "refs/heads/" + BRANCH], check=True)
+    subprocess.run(["git", "-C", str(fixture), "read-tree", revision], check=True)
+
+
 def run_pytest(cwd: Path, test_path: str) -> dict[str, Any]:
     env = dict(os.environ)
     env["PYTHONDONTWRITEBYTECODE"] = "1"
@@ -255,6 +279,7 @@ def main() -> int:
             EVIDENCE: tree_map(repo, EVIDENCE),
             FIRST_FINAL: tree_map(repo, FIRST_FINAL),
             CORRECTED_FINAL_1: tree_map(repo, CORRECTED_FINAL_1),
+            CORRECTED_FINAL_2: tree_map(repo, CORRECTED_FINAL_2),
             head: tree_map(repo, head),
         }
         with BlobReader(repo) as blobs:
@@ -265,8 +290,10 @@ def main() -> int:
                 validate_manifest(repo, FIRST_FINAL, SOURCE, "docs/tamar-vey/v676-v5/validation/final-owner-manifest.json", trees[FIRST_FINAL], blobs),
                 validate_manifest(repo, CORRECTED_FINAL_1, FIRST_FINAL, "docs/tamar-vey/v676-v5/validation/correction-delta-manifest.json", trees[CORRECTED_FINAL_1], blobs),
                 validate_manifest(repo, CORRECTED_FINAL_1, SOURCE, "docs/tamar-vey/v676-v5/validation/correction-owner-manifest.json", trees[CORRECTED_FINAL_1], blobs),
-                validate_manifest(repo, head, CORRECTED_FINAL_1, "docs/tamar-vey/v676-v5/validation/correction2-delta-manifest.json", trees[head], blobs),
-                validate_manifest(repo, head, SOURCE, "docs/tamar-vey/v676-v5/validation/correction2-owner-manifest.json", trees[head], blobs),
+                validate_manifest(repo, CORRECTED_FINAL_2, CORRECTED_FINAL_1, "docs/tamar-vey/v676-v5/validation/correction2-delta-manifest.json", trees[CORRECTED_FINAL_2], blobs),
+                validate_manifest(repo, CORRECTED_FINAL_2, SOURCE, "docs/tamar-vey/v676-v5/validation/correction2-owner-manifest.json", trees[CORRECTED_FINAL_2], blobs),
+                validate_manifest(repo, head, CORRECTED_FINAL_2, "docs/tamar-vey/v676-v5/validation/correction3-delta-manifest.json", trees[head], blobs),
+                validate_manifest(repo, head, SOURCE, "docs/tamar-vey/v676-v5/validation/correction3-owner-manifest.json", trees[head], blobs),
             ]
 
             materialization_root.mkdir(parents=True, exist_ok=True)
@@ -276,18 +303,22 @@ def main() -> int:
             evidence_dir = materialized_root / "evidence"
             first_final_dir = materialized_root / "first-final"
             correction1_dir = materialized_root / "correction-1"
+            correction2_dir = materialized_root / "correction-2"
             materialized = {
                 "x1": materialize_owner_tree(x1_dir, trees[X1], blobs),
                 "evidence": materialize_owner_tree(evidence_dir, trees[EVIDENCE], blobs),
                 "first_final": materialize_owner_tree(first_final_dir, trees[FIRST_FINAL], blobs),
                 "correction_1": materialize_owner_tree(correction1_dir, trees[CORRECTED_FINAL_1], blobs),
+                "correction_2": materialize_owner_tree(correction2_dir, trees[CORRECTED_FINAL_2], blobs),
             }
+            prepare_named_git_fixture(repo, first_final_dir, FIRST_FINAL)
             tests = [
                 run_pytest(x1_dir, "tests/test_ghc_family_tamar_vey_v676_v5_x1.py"),
                 run_pytest(evidence_dir, "tests/test_ghc_family_tamar_vey_v676_v5_x2.py"),
                 run_pytest(first_final_dir, "tests/test_ghc_family_tamar_vey_v676_v5_final.py"),
                 run_pytest(correction1_dir, "tests/test_ghc_family_tamar_vey_v676_v5_correction.py"),
-                run_pytest(repo, "tests/test_ghc_family_tamar_vey_v676_v5_correction2.py"),
+                run_pytest(correction2_dir, "tests/test_ghc_family_tamar_vey_v676_v5_correction2.py"),
+                run_pytest(repo, "tests/test_ghc_family_tamar_vey_v676_v5_correction3.py"),
             ]
 
             final_tree = trees[head]
@@ -339,7 +370,7 @@ def main() -> int:
                 raise AssertionError(f"unknown outcome labels: {unknown_outcomes[:8]}")
             if security_findings:
                 raise AssertionError(f"bounded owner-code security findings: {security_findings}")
-            review_path = "docs/tamar-vey/v676-v5/validation/correction2-staged-review.json"
+            review_path = "docs/tamar-vey/v676-v5/validation/correction3-staged-review.json"
             review = json.loads(blobs.get(final_tree[review_path]).decode("utf-8"))
             if review["privacy_candidate_count"] != len(privacy_candidates):
                 raise AssertionError(
@@ -363,36 +394,44 @@ def main() -> int:
                     raise AssertionError(f"correction content seal mismatch: {row['path']}")
 
             correction2_seal_path = "docs/tamar-vey/v676-v5/correction2/content-seal.json"
-            correction2_seal = json.loads(blobs.get(final_tree[correction2_seal_path]).decode("utf-8"))
+            correction2_seal = json.loads(blobs.get(trees[CORRECTED_FINAL_2][correction2_seal_path]).decode("utf-8"))
             for row in correction2_seal["entries"]:
-                raw = blobs.get(final_tree[row["path"]])
+                raw = blobs.get(trees[CORRECTED_FINAL_2][row["path"]])
                 if hashlib.sha256(normalized(raw)).hexdigest() != row["sha256_normalized_lf"]:
                     raise AssertionError(f"second correction content seal mismatch: {row['path']}")
 
-            phase_truth = json.loads(blobs.get(final_tree["docs/tamar-vey/v676-v5/correction2/phase-truth.json"]).decode("utf-8"))
-            method_flow = json.loads(blobs.get(final_tree["docs/tamar-vey/v676-v5/correction2/method-flow-overlay.json"]).decode("utf-8"))
-            route = json.loads(blobs.get(final_tree["docs/tamar-vey/v676-v5/orchestration/terminal-route-hold-corrected2.json"]).decode("utf-8"))
-            correction_receipt = json.loads(blobs.get(final_tree["docs/tamar-vey/v676-v5/correction2/correction-receipt.json"]).decode("utf-8"))
-            diff_check = subprocess.run(["git", "-C", str(repo), "diff", "--check", CORRECTED_FINAL_1 + ".." + head], capture_output=True)
+            correction3_seal_path = "docs/tamar-vey/v676-v5/correction3/content-seal.json"
+            correction3_seal = json.loads(blobs.get(final_tree[correction3_seal_path]).decode("utf-8"))
+            for row in correction3_seal["entries"]:
+                raw = blobs.get(final_tree[row["path"]])
+                if hashlib.sha256(normalized(raw)).hexdigest() != row["sha256_normalized_lf"]:
+                    raise AssertionError(f"third correction content seal mismatch: {row['path']}")
+
+            phase_truth = json.loads(blobs.get(final_tree["docs/tamar-vey/v676-v5/correction3/phase-truth.json"]).decode("utf-8"))
+            method_flow = json.loads(blobs.get(final_tree["docs/tamar-vey/v676-v5/correction3/method-flow-overlay.json"]).decode("utf-8"))
+            route = json.loads(blobs.get(final_tree["docs/tamar-vey/v676-v5/orchestration/terminal-route-hold-corrected3.json"]).decode("utf-8"))
+            correction_receipt = json.loads(blobs.get(final_tree["docs/tamar-vey/v676-v5/correction3/correction-receipt.json"]).decode("utf-8"))
+            diff_check = subprocess.run(["git", "-C", str(repo), "diff", "--check", CORRECTED_FINAL_2 + ".." + head], capture_output=True)
             detailed_checks = {
                 "source_to_x1_direct": direct_parent(repo, X1, SOURCE),
                 "x1_to_evidence_direct": direct_parent(repo, EVIDENCE, X1),
                 "evidence_to_first_final_direct": direct_parent(repo, FIRST_FINAL, EVIDENCE),
                 "first_final_to_correction1_direct": direct_parent(repo, CORRECTED_FINAL_1, FIRST_FINAL),
-                "correction1_to_corrected_final_direct": direct_parent(repo, head, CORRECTED_FINAL_1),
-                "phase_commit_count_five": int(command(repo, "rev-list", "--count", SOURCE + ".." + head)) == 5,
+                "correction1_to_correction2_direct": direct_parent(repo, CORRECTED_FINAL_2, CORRECTED_FINAL_1),
+                "correction2_to_corrected_final_direct": direct_parent(repo, head, CORRECTED_FINAL_2),
+                "phase_commit_count_six": int(command(repo, "rev-list", "--count", SOURCE + ".." + head)) == 6,
                 "zero_merges": command(repo, "rev-list", "--merges", SOURCE + ".." + head) == "",
                 "one_final_parent": len(str(command(repo, "show", "-s", "--format=%P", head)).split()) == 1,
                 "owner_below_file_ceiling": len(owner_paths) < 2000,
                 "proposal_chain_7590": phase_truth["declared_proposal_chain"] == 7590,
                 "outcomes_exact": phase_truth["core_outcomes"] == {"completed": 28, "represented": 8, "open_gap": 2, "exact_gate": 2},
-                "effective_negatives_exact": phase_truth["current_overlay"]["effective_negatives"] == 42438,
-                "effective_methods_exact": phase_truth["current_overlay"]["effective_methods"] == 33112,
-                "failed_witnesses_exact": phase_truth["current_overlay"]["retained_failed_witnesses"] == 14099,
-                "passing_witnesses_exact": phase_truth["current_overlay"]["bounded_passing_witnesses"] == 19702,
+                "effective_negatives_exact": phase_truth["current_overlay"]["effective_negatives"] == 42439,
+                "effective_methods_exact": phase_truth["current_overlay"]["effective_methods"] == 33114,
+                "failed_witnesses_exact": phase_truth["current_overlay"]["retained_failed_witnesses"] == 14100,
+                "passing_witnesses_exact": phase_truth["current_overlay"]["bounded_passing_witnesses"] == 19703,
                 "open_gaps_exact": phase_truth["current_overlay"]["open_gaps"] == 357,
                 "exact_gates_exact": phase_truth["current_overlay"]["exact_gates"] == 349,
-                "method_flow_partition_exact": method_flow["corrected_phase_ledger_counts"] == {"methods": 660, "failed": 210, "passing": 450},
+                "method_flow_partition_exact": method_flow["corrected_phase_ledger_counts"] == {"methods": 662, "failed": 211, "passing": 451},
                 "failed_canonical_retained": correction_receipt["failed_canonical_receipt_sha256"] == FAILED_CANONICAL_RECEIPT_SHA256,
                 "failed_canonical_zero_credit": correction_receipt["failed_canonical_success_count"] == 0,
                 "terminal_not_ready": phase_truth["terminal_verdict"] == "NOT_READY_FOR_STAGE_20",
