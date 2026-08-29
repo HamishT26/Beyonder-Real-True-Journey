@@ -26,16 +26,17 @@ EVIDENCE = "c32fde8ba3aa9518e65f212b8a87d1a108dbc69a"
 ORIGINAL_FINAL = "b37d777b2800372003451d95d3ad5b854ff77d7b"
 CORRECTION1_FINAL = "74a389089cca17558a93c9300af2a4232b3d145e"
 CORRECTION2_FINAL = "674c21f98c115a24d057a71489b759f855b9b69f"
+CORRECTION3_FINAL = "ac724eccb7b21cfad2f2b166d49e12f333cf4b52"
 FAILED_CANONICAL_RECEIPT_SHA256 = "95b95bb8c0be81a413e45f72bfe0204d9ed9c92e439f45bc0a50656539c0dbbf"
 FAILED_CORRECTION1_RECEIPT_SHA256 = "3dc85c6780d59715817f075fba0465ddbe2e21e32dc41c93eaba0ea9b603e09f"
 FAILED_CORRECTION2_RECEIPT_SHA256 = "1879b71dbc7fb4f5acf9dd7ca841ad927e5a32f1bc199b520dfd06d6f64af544"
 OWNER_TEST_TIMEOUT_SECONDS = 900
 OUTCOMES = {"completed": 28, "represented": 8, "open_gap": 2, "exact_gate": 2}
 COUNTS = {
-    "effective_negatives": 42652,
-    "effective_methods": 33780,
-    "retained_failed_witnesses": 14313,
-    "bounded_passing_witnesses": 20156,
+    "effective_negatives": 42664,
+    "effective_methods": 33804,
+    "retained_failed_witnesses": 14325,
+    "bounded_passing_witnesses": 20168,
     "open_gaps": 359,
     "exact_gates": 351,
 }
@@ -261,6 +262,7 @@ def canonical_payload() -> dict[str, Any]:
     parent_count = len(git_text("show", "-s", "--format=%P", "HEAD").split())
     x1_parent = git_text("rev-parse", f"{X1}^")
     evidence_parent = git_text("rev-parse", f"{EVIDENCE}^")
+    correction3_parent = git_text("rev-parse", f"{CORRECTION3_FINAL}^")
     commit_count = int(git_text("rev-list", "--count", f"{SOURCE}..HEAD"))
     merge_count = int(git_text("rev-list", "--count", "--merges", f"{SOURCE}..HEAD"))
 
@@ -276,6 +278,7 @@ def canonical_payload() -> dict[str, Any]:
             "tests/test_ghc_family_elowen_cairn_v676_v6_correction1.py",
             "tests/test_ghc_family_elowen_cairn_v676_v6_correction2.py",
             "tests/test_ghc_family_elowen_cairn_v676_v6_correction3.py",
+            "tests/test_ghc_family_elowen_cairn_v676_v6_correction4.py",
             "-k",
             "not test_no_x2_material_and_no_private_payload_in_x1_docs and not test_no_final_closeout_handoff_or_private_payload_exists_at_evidence and not test_final_delta_and_owner_manifests_have_exact_set_and_blob_parity and not test_lifecycle_is_direct_single_parent_and_merge_free",
         ],
@@ -310,12 +313,15 @@ def canonical_payload() -> dict[str, Any]:
     correction1_owner_manifest = replay_manifest(CORRECTION1_FINAL, "correction1-owner-manifest.json")
     correction2_delta_manifest = replay_manifest(CORRECTION2_FINAL, "correction2-delta-manifest.json")
     correction2_owner_manifest = replay_manifest(CORRECTION2_FINAL, "correction2-owner-manifest.json")
-    correction3_delta_manifest = replay_manifest(head, "correction3-delta-manifest.json")
-    correction3_owner_manifest = replay_manifest(head, "correction3-owner-manifest.json")
+    correction3_delta_manifest = replay_manifest(CORRECTION3_FINAL, "correction3-delta-manifest.json")
+    correction3_owner_manifest = replay_manifest(CORRECTION3_FINAL, "correction3-owner-manifest.json")
+    correction4_delta_manifest = replay_manifest(head, "correction4-delta-manifest.json")
+    correction4_owner_manifest = replay_manifest(head, "correction4-owner-manifest.json")
     original_changed_delta = {path for path in git_text("diff", "--name-only", f"{EVIDENCE}..{ORIGINAL_FINAL}").splitlines() if path}
     correction1_changed_delta = {path for path in git_text("diff", "--name-only", f"{ORIGINAL_FINAL}..{CORRECTION1_FINAL}").splitlines() if path}
     correction2_changed_delta = {path for path in git_text("diff", "--name-only", f"{CORRECTION1_FINAL}..{CORRECTION2_FINAL}").splitlines() if path}
-    correction3_changed_delta = {path for path in git_text("diff", "--name-only", f"{CORRECTION2_FINAL}..{head}").splitlines() if path}
+    correction3_changed_delta = {path for path in git_text("diff", "--name-only", f"{CORRECTION2_FINAL}..{CORRECTION3_FINAL}").splitlines() if path}
+    correction4_changed_delta = {path for path in git_text("diff", "--name-only", f"{CORRECTION3_FINAL}..{head}").splitlines() if path}
     changed_owner = {
         path for path in git_text("diff", "--name-only", f"{SOURCE}..{head}").splitlines()
         if path and allowed_owner_path(path)
@@ -324,14 +330,15 @@ def canonical_payload() -> dict[str, Any]:
     expected_correction1_delta = set(correction1_delta_manifest["paths"]) | set(correction1_delta_manifest["exclusions"])
     expected_correction2_delta = set(correction2_delta_manifest["paths"]) | set(correction2_delta_manifest["exclusions"])
     expected_correction3_delta = set(correction3_delta_manifest["paths"]) | set(correction3_delta_manifest["exclusions"])
-    expected_owner = set(correction3_owner_manifest["paths"]) | set(correction3_owner_manifest["exclusions"])
+    expected_correction4_delta = set(correction4_delta_manifest["paths"]) | set(correction4_delta_manifest["exclusions"])
+    expected_owner = set(correction4_owner_manifest["paths"]) | set(correction4_owner_manifest["exclusions"])
 
-    truth = load("correction3/phase-truth.json")
-    method_flow = load("correction3/method-flow-overlay.json")
+    truth = load("correction4/phase-truth.json")
+    method_flow = load("correction4/method-flow-overlay.json")
     gaps = load("final/open-gap-register.json")
     gates = load("final/exact-gate-register.json")
     portfolio = load("final/portfolio-truth.json")
-    staged_review = load("validation/correction3-staged-review.json")
+    staged_review = load("validation/correction4-staged-review.json")
     route = load("orchestration/terminal-route-hold.json")
     closeout = load("closeout/closeout-receipt.json")
     skill_summary = load("x2/skill-summary.json")
@@ -340,9 +347,10 @@ def canonical_payload() -> dict[str, Any]:
     original_seal = seal_replay(ORIGINAL_FINAL, "closeout/content-seal.json")
     correction1_seal = seal_replay(CORRECTION1_FINAL, "correction1/content-seal.json")
     correction2_seal = seal_replay(CORRECTION2_FINAL, "correction2/content-seal.json")
-    correction3_seal = seal_replay(head, "correction3/content-seal.json")
+    correction3_seal = seal_replay(CORRECTION3_FINAL, "correction3/content-seal.json")
+    correction4_seal = seal_replay(head, "correction4/content-seal.json")
 
-    final_prefixes = tuple(OWNER_PREFIX + part for part in ("final/", "closeout/", "handoffs/", "orchestration/", "correction1/", "correction2/", "correction3/"))
+    final_prefixes = tuple(OWNER_PREFIX + part for part in ("final/", "closeout/", "handoffs/", "orchestration/", "correction1/", "correction2/", "correction3/", "correction4/"))
     final_public_paths = [
         path for path in changed_owner
         if path.startswith(final_prefixes) and path.endswith((".json", ".md", ".html", ".txt", ".yaml", ".yml"))
@@ -363,7 +371,8 @@ def canonical_payload() -> dict[str, Any]:
     diff_check = git("diff", "--check", f"{SOURCE}..{head}", check=False)
     detailed = [
         check("exact_branch", branch == BRANCH, branch),
-        check("correction3_parent_is_correction2_final", parent == CORRECTION2_FINAL, parent),
+        check("correction4_parent_is_correction3_final", parent == CORRECTION3_FINAL, parent),
+        check("correction3_parent_is_correction2_final", correction3_parent == CORRECTION2_FINAL, correction3_parent),
         check("x1_parent_is_source", x1_parent == SOURCE, x1_parent),
         check("evidence_parent_is_x1", evidence_parent == X1, evidence_parent),
         check("source_is_ancestor", git("merge-base", "--is-ancestor", SOURCE, head, check=False).returncode == 0, SOURCE),
@@ -372,7 +381,8 @@ def canonical_payload() -> dict[str, Any]:
         check("original_final_is_ancestor", git("merge-base", "--is-ancestor", ORIGINAL_FINAL, head, check=False).returncode == 0, ORIGINAL_FINAL),
         check("correction1_final_is_ancestor", git("merge-base", "--is-ancestor", CORRECTION1_FINAL, head, check=False).returncode == 0, CORRECTION1_FINAL),
         check("correction2_final_is_ancestor", git("merge-base", "--is-ancestor", CORRECTION2_FINAL, head, check=False).returncode == 0, CORRECTION2_FINAL),
-        check("six_phase_commits", commit_count == 6, commit_count),
+        check("correction3_final_is_ancestor", git("merge-base", "--is-ancestor", CORRECTION3_FINAL, head, check=False).returncode == 0, CORRECTION3_FINAL),
+        check("seven_phase_commits", commit_count == 7, commit_count),
         check("zero_merges", merge_count == 0, merge_count),
         check("one_final_parent", parent_count == 1, parent_count),
         check("clean_before", clean_before, clean_before),
@@ -388,20 +398,23 @@ def canonical_payload() -> dict[str, Any]:
         check("correction2_owner_manifest_replay", correction2_owner_manifest["valid"], correction2_owner_manifest),
         check("correction3_delta_manifest_replay", correction3_delta_manifest["valid"], correction3_delta_manifest),
         check("correction3_owner_manifest_replay", correction3_owner_manifest["valid"], correction3_owner_manifest),
+        check("correction4_delta_manifest_replay", correction4_delta_manifest["valid"], correction4_delta_manifest),
+        check("correction4_owner_manifest_replay", correction4_owner_manifest["valid"], correction4_owner_manifest),
         check("original_final_delta_coverage", original_changed_delta == expected_original_delta, {"changed": len(original_changed_delta), "expected": len(expected_original_delta)}),
         check("correction1_delta_coverage", correction1_changed_delta == expected_correction1_delta, {"changed": len(correction1_changed_delta), "expected": len(expected_correction1_delta)}),
         check("correction2_delta_coverage", correction2_changed_delta == expected_correction2_delta, {"changed": len(correction2_changed_delta), "expected": len(expected_correction2_delta)}),
         check("correction3_delta_coverage", correction3_changed_delta == expected_correction3_delta, {"changed": len(correction3_changed_delta), "expected": len(expected_correction3_delta)}),
-        check("correction3_owner_coverage", changed_owner == expected_owner, {"changed": len(changed_owner), "expected": len(expected_owner)}),
-        check("staged_review_valid", staged_review["status"] == "VALID_PRECOMMIT_CORRECTION3_STAGED_REVIEW" and not staged_review["unexpected_paths"] and staged_review["confirmed_five_class_privacy_or_raw_identifier_hits"] == 0, staged_review["status"]),
+        check("correction4_delta_coverage", correction4_changed_delta == expected_correction4_delta, {"changed": len(correction4_changed_delta), "expected": len(expected_correction4_delta)}),
+        check("correction4_owner_coverage", changed_owner == expected_owner, {"changed": len(changed_owner), "expected": len(expected_owner)}),
+        check("staged_review_valid", staged_review["status"] == "VALID_PRECOMMIT_CORRECTION4_STAGED_REVIEW" and not staged_review["unexpected_paths"] and staged_review["confirmed_five_class_privacy_or_raw_identifier_hits"] == 0, staged_review["status"]),
         check("phase_outcomes_exact", truth["core_outcomes"] == OUTCOMES, truth["core_outcomes"]),
         check("phase_counts_exact", truth["current_overlay"] == COUNTS, truth["current_overlay"]),
         check("proposal_chain_exact", truth["declared_proposal_chain"] == 7630, truth["declared_proposal_chain"]),
-        check("method_partition_exact", method_flow["current_phase_partition"] == {"methods": 662, "failed": 211, "passing": 451}, method_flow["current_phase_partition"]),
+        check("method_partition_exact", method_flow["current_phase_partition"] == {"methods": 686, "failed": 223, "passing": 463}, method_flow["current_phase_partition"]),
         check("failed_canonical_receipt_binding", [row["sha256"] for row in truth["failed_canonical_receipts"]] == [FAILED_CANONICAL_RECEIPT_SHA256, FAILED_CORRECTION1_RECEIPT_SHA256, FAILED_CORRECTION2_RECEIPT_SHA256] and all(row["status"] == "INVALID_EXACT_FINAL_OWNER_SCOPED_CANONICAL" and row["success_count"] == 0 and row["replay_count"] == 0 for row in truth["failed_canonical_receipts"]), truth["failed_canonical_receipts"]),
         check("gap_gate_totals_exact", gaps["current"] == 359 and gates["current"] == 351, {"open_gaps": gaps["current"], "exact_gates": gates["current"]}),
         check("route_prepared_not_sent", route["state"] == "PREPARED_NOT_SENT" and route["provisional_exact_title"] == "Sylven Arc" and route["provisional_phase"] == "v676-v7" and route["send_count"] == 0, route),
-        check("content_seal_replay", original_seal["valid"] and original_seal["entries"] == 8 and correction1_seal["valid"] and correction1_seal["entries"] == 4 and correction2_seal["valid"] and correction2_seal["entries"] == 4 and correction3_seal["valid"] and correction3_seal["entries"] == 4, {"original": original_seal, "correction1": correction1_seal, "correction2": correction2_seal, "correction3": correction3_seal}),
+        check("content_seal_replay", original_seal["valid"] and original_seal["entries"] == 8 and correction1_seal["valid"] and correction1_seal["entries"] == 4 and correction2_seal["valid"] and correction2_seal["entries"] == 4 and correction3_seal["valid"] and correction3_seal["entries"] == 4 and correction4_seal["valid"] and correction4_seal["entries"] == 4, {"original": original_seal, "correction1": correction1_seal, "correction2": correction2_seal, "correction3": correction3_seal, "correction4": correction4_seal}),
         check("stale_label_review", not stale_hits, stale_hits),
         check("diff_hygiene", diff_check.returncode == 0, diff_check.stderr.decode("utf-8", "replace")),
         check("terminal_verdict_exact", truth["terminal_verdict"] == "NOT_READY_FOR_STAGE_20", truth["terminal_verdict"]),
@@ -455,7 +468,7 @@ def canonical_payload() -> dict[str, Any]:
     skill_rows = skill_summary["skills"]
     runner_rows = runner_summary["runners"]
     minimal = [
-        check("owner_tests_44", test_result.returncode == 0 and current_tree_test_count == 42 and deselected_count == 4 and lifecycle_passed == 2 and test_count == 44, {"current_tree_tests": current_tree_test_count, "deselected_lifecycle_tests": deselected_count, "immutable_lifecycle_checks": lifecycle_passed, "tests": test_count, "exit": test_result.returncode}),
+        check("owner_tests_48", test_result.returncode == 0 and current_tree_test_count == 46 and deselected_count == 4 and lifecycle_passed == 2 and test_count == 48, {"current_tree_tests": current_tree_test_count, "deselected_lifecycle_tests": deselected_count, "immutable_lifecycle_checks": lifecycle_passed, "tests": test_count, "exit": test_result.returncode}),
         check("strict_json", not json_issues, {"documents": len(json_paths), "issues": len(json_issues)}),
         check("five_class_privacy", not confirmed_privacy, {"scanned": len(changed_text), "candidates": len(privacy_candidates), "confirmed": len(confirmed_privacy)}),
         check("bounded_python_security", not security_findings, {"files": len(changed_python), "findings": len(security_findings)}),
@@ -474,7 +487,7 @@ def canonical_payload() -> dict[str, Any]:
 
     detailed_passed = sum(row["passed"] for row in detailed)
     minimal_passed = sum(row["passed"] for row in minimal)
-    valid = detailed_passed == 43 and minimal_passed == 15
+    valid = detailed_passed == 48 and minimal_passed == 15
     payload: dict[str, Any] = {
         "schema": "ghc.family.exact-final-owner-scoped-canonical-receipt.v3",
         "owner": OWNER,
@@ -490,14 +503,14 @@ def canonical_payload() -> dict[str, Any]:
         "source": SOURCE,
         "x1": X1,
         "evidence": EVIDENCE,
-        "tests": {"passed": test_count if test_result.returncode == 0 and lifecycle_passed == 2 else 0, "total": 44, "current_tree_passed": current_tree_test_count, "immutable_lifecycle_passed": lifecycle_passed, "deselected_lifecycle_tests": deselected_count, "lifecycle_checks": lifecycle_checks, "exit_code": test_result.returncode, "output_sha256": hashlib.sha256((test_output + json.dumps(lifecycle_checks, sort_keys=True)).encode("utf-8")).hexdigest()},
-        "detailed_checks": {"passed": detailed_passed, "total": 30, "rows": detailed},
+        "tests": {"passed": test_count if test_result.returncode == 0 and lifecycle_passed == 2 else 0, "total": 48, "current_tree_passed": current_tree_test_count, "immutable_lifecycle_passed": lifecycle_passed, "deselected_lifecycle_tests": deselected_count, "lifecycle_checks": lifecycle_checks, "exit_code": test_result.returncode, "output_sha256": hashlib.sha256((test_output + json.dumps(lifecycle_checks, sort_keys=True)).encode("utf-8")).hexdigest()},
+        "detailed_checks": {"passed": detailed_passed, "total": 48, "rows": detailed},
         "minimal_checks": {"passed": minimal_passed, "total": 15, "rows": minimal},
         "json_documents": len(json_paths),
         "json_issues": json_issues,
         "privacy": {"scanned_text_files": len(changed_text), "pattern_classes": sorted(privacy_patterns), "candidates": privacy_candidates, "confirmed_hits": confirmed_privacy},
         "security": {"changed_python_files": len(changed_python), "findings": security_findings},
-        "manifests": {"x1": x1_manifest["entries"], "evidence": evidence_manifest["entries"], "original_final_delta": original_delta_manifest["entries"], "original_final_owner": original_owner_manifest["entries"], "correction1_delta": correction1_delta_manifest["entries"], "correction1_owner": correction1_owner_manifest["entries"], "correction2_delta": correction2_delta_manifest["entries"], "correction2_owner": correction2_owner_manifest["entries"], "correction3_delta": correction3_delta_manifest["entries"], "correction3_owner": correction3_owner_manifest["entries"]},
+        "manifests": {"x1": x1_manifest["entries"], "evidence": evidence_manifest["entries"], "original_final_delta": original_delta_manifest["entries"], "original_final_owner": original_owner_manifest["entries"], "correction1_delta": correction1_delta_manifest["entries"], "correction1_owner": correction1_owner_manifest["entries"], "correction2_delta": correction2_delta_manifest["entries"], "correction2_owner": correction2_owner_manifest["entries"], "correction3_delta": correction3_delta_manifest["entries"], "correction3_owner": correction3_owner_manifest["entries"], "correction4_delta": correction4_delta_manifest["entries"], "correction4_owner": correction4_owner_manifest["entries"]},
         "lifecycle": {"phase_commits": commit_count, "merges": merge_count, "final_parents": parent_count, "clean_before": clean_before, "clean_after": clean_after, "before_equality": before_equality, "after_equality": after_equality},
         "caps": {"owner_added_files": owner_added_files, "file_guard": 2000, "max_document_words": max_words, "word_guard": 100000},
         "outcomes": OUTCOMES,
