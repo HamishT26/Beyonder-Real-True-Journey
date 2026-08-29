@@ -1,0 +1,49 @@
+{
+  "authority_promotions": 0,
+  "baseline_preserved": true,
+  "difference": {
+    "dictionary_item_added": [
+      "root['release']['rollback_checkpoint']"
+    ],
+    "values_changed": {
+      "root['release']['state']": {
+        "new_value": "bounded_evidence",
+        "old_value": "planned"
+      },
+      "root['settings']['feature_flags']['bounded_export']": {
+        "new_value": true,
+        "old_value": false
+      },
+      "root['settings']['timeout_seconds']": {
+        "new_value": 45,
+        "old_value": 30
+      }
+    }
+  },
+  "external_action": false,
+  "forward_operation_count": 4,
+  "real_deployment": false,
+  "rollback_exact": true,
+  "rollback_operations": [
+    {
+      "op": "remove",
+      "path": "/release/rollback_checkpoint"
+    },
+    {
+      "op": "replace",
+      "path": "/release/state",
+      "value": "planned"
+    },
+    {
+      "op": "replace",
+      "path": "/settings/timeout_seconds",
+      "value": 30
+    },
+    {
+      "op": "replace",
+      "path": "/settings/feature_flags/bounded_export",
+      "value": false
+    }
+  ],
+  "schema": "ghc-family-synthetic-drift-and-rollback-v1"
+}
