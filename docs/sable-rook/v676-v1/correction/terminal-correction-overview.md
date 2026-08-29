@@ -1,0 +1,7 @@
+# Sable Rook v676-v1 additive terminal correction
+
+The sole canonical invocation at the three-commit sealed head failed before selected tests because direct-script execution exposed the scripts directory, but not the repository root, on Python's import path. The failed receipt and one-shot latch remain external, immutable, zero-credit evidence. That exact head will not be replayed.
+
+This additive correction changes only the process-local import context, historical-manifest anchor selection, current-head ancestry expectation, and correction receipts needed to validate a new direct-child head. X1, evidence, and the failed-canonical sealed commit remain immutable ancestors. Historical x1, evidence, and final manifests are replayed against their own anchor commits; correction manifests cover the new prospective tree. The correction establishes no empirical, professional, production, legal, cultural, Māori-authority, privacy-complete, accessibility-complete, exhaustive-security, independent-reproduction, AGI/ASI, consciousness/personhood, Theory-of-Everything, proof/canon, or Stage 20 claim.
+
+Truth remains 42 completed, 12 represented, 3 open gaps, and 3 exact gates across a 7,430-row chain. Additive truth is 41,660 effective negatives, 30,750 methods, 13,321 failed witnesses, 18,118 bounded passing witnesses, 349 open gaps, 341 exact gates, and NOT_READY_FOR_STAGE_20. The route remains PREPARED_NOT_SENT until a one-shot canonical invocation at the corrected head succeeds and all live route guards pass.

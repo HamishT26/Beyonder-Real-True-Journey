@@ -21,8 +21,11 @@ from typing import Any
 SOURCE = "0f330a562377a90c8c8eb31515a0ff02551fbdbf"
 X1 = "18c4e98ead5d81875c1ffaf7cb2238c34d9b5407"
 EVIDENCE = "bb04bce8a0f4b3f6d50d839b1ee237da817e369f"
+SEALED_FINAL = "e75ca31a34c8569eee5b603fec2ab96a4ac1f77e"
 BRANCH = "codex/GHC-Family/sable-rook-v676-v1-full-tools"
 REPO = Path(__file__).resolve().parents[1]
+if str(REPO) not in sys.path:
+    sys.path.insert(0, str(REPO))
 PHASE_PREFIX = "docs/sable-rook/v676-v1/"
 TEST_SELECTIONS = (
     (
@@ -30,13 +33,19 @@ TEST_SELECTIONS = (
         ("tests.test_ghc_family_sable_rook_v676_v1_x1.SableRookV676V1X1Tests.test_x1_only_lifecycle",),
     ),
     ("tests.test_ghc_family_sable_rook_v676_v1_x2", ()),
-    ("tests.test_ghc_family_sable_rook_v676_v1_final", ()),
+    (
+        "tests.test_ghc_family_sable_rook_v676_v1_final",
+        ("tests.test_ghc_family_sable_rook_v676_v1_final.SableRookV676V1FinalTests.test_ancestry_candidate_or_final",),
+    ),
+    ("tests.test_ghc_family_sable_rook_v676_v1_correction", ()),
 )
 MANIFESTS = (
-    "docs/sable-rook/v676-v1/validation/x1-index-manifest.json",
-    "docs/sable-rook/v676-v1/validation/evidence-index-manifest.json",
-    "docs/sable-rook/v676-v1/validation/final-delta-manifest.json",
-    "docs/sable-rook/v676-v1/validation/final-owner-manifest.json",
+    ("docs/sable-rook/v676-v1/validation/x1-index-manifest.json", X1),
+    ("docs/sable-rook/v676-v1/validation/evidence-index-manifest.json", EVIDENCE),
+    ("docs/sable-rook/v676-v1/validation/final-delta-manifest.json", SEALED_FINAL),
+    ("docs/sable-rook/v676-v1/validation/final-owner-manifest.json", SEALED_FINAL),
+    ("docs/sable-rook/v676-v1/validation/correction-delta-manifest.json", "HEAD"),
+    ("docs/sable-rook/v676-v1/validation/correction-owner-manifest.json", "HEAD"),
 )
 
 
@@ -51,8 +60,8 @@ def git(*args: str) -> str:
     return run(["git", *args]).stdout.strip()
 
 
-def blob(path: str) -> bytes:
-    return subprocess.check_output(["git", "show", f"HEAD:{path}"], cwd=REPO)
+def blob(path: str, anchor: str = "HEAD") -> bytes:
+    return subprocess.check_output(["git", "show", f"{anchor}:{path}"], cwd=REPO)
 
 
 def normalized(data: bytes) -> bytes:
@@ -69,13 +78,13 @@ def owner_path(path: str) -> bool:
     )
 
 
-def validate_manifest(path: str) -> dict[str, int]:
-    data = json.loads(blob(path).decode("utf-8"))
+def validate_manifest(path: str, anchor: str) -> dict[str, Any]:
+    data = json.loads(blob(path, anchor).decode("utf-8"))
     for entry in data["entries"]:
-        value = normalized(blob(entry["path"]))
+        value = normalized(blob(entry["path"], anchor))
         if len(value) != entry["bytes"] or hashlib.sha256(value).hexdigest() != entry["sha256"]:
             raise RuntimeError(f"manifest mismatch: {path}: {entry['path']}")
-    return {"entries": len(data["entries"]), "self_exclusions": len(data["declared_self_exclusions"])}
+    return {"anchor": anchor if anchor != "HEAD" else git("rev-parse", "HEAD"), "entries": len(data["entries"]), "self_exclusions": len(data["declared_self_exclusions"])}
 
 
 def flatten(suite: unittest.TestSuite) -> list[unittest.TestCase]:
@@ -123,14 +132,14 @@ def canonical() -> dict[str, Any]:
     if git("branch", "--show-current") != BRANCH:
         raise RuntimeError("branch mismatch")
     checks.append("exact_branch")
-    if git("rev-parse", "HEAD^") != EVIDENCE or git("rev-parse", f"{EVIDENCE}^") != X1 or git("rev-parse", f"{X1}^") != SOURCE:
+    if git("rev-parse", "HEAD^") != SEALED_FINAL or git("rev-parse", f"{SEALED_FINAL}^") != EVIDENCE or git("rev-parse", f"{EVIDENCE}^") != X1 or git("rev-parse", f"{X1}^") != SOURCE:
         raise RuntimeError("direct ancestry mismatch")
-    checks.extend(["final_parent", "evidence_parent", "x1_parent"])
-    if int(git("rev-list", "--count", f"{SOURCE}..HEAD")) != 3:
+    checks.extend(["correction_parent", "sealed_final_parent", "evidence_parent", "x1_parent"])
+    if int(git("rev-list", "--count", f"{SOURCE}..HEAD")) != 4:
         raise RuntimeError("commit ceiling mismatch")
     if git("rev-list", "--merges", f"{SOURCE}..HEAD"):
         raise RuntimeError("merge detected")
-    checks.extend(["three_commits", "zero_merges"])
+    checks.extend(["four_commits", "zero_merges"])
     if git("status", "--porcelain=v1"):
         raise RuntimeError("worktree not clean")
     checks.append("clean_before")
@@ -142,7 +151,7 @@ def canonical() -> dict[str, Any]:
         total_tests += result["eligible"]
         test_results.append(result)
 
-    manifests = {path: validate_manifest(path) for path in MANIFESTS}
+    manifests = {path: validate_manifest(path, anchor) for path, anchor in MANIFESTS}
     manifest_entries = sum(value["entries"] for value in manifests.values())
     owner_paths = sorted(path for path in git("ls-tree", "-r", "--name-only", "HEAD").splitlines() if owner_path(path))
     json_parses = 0
@@ -215,6 +224,9 @@ def canonical() -> dict[str, Any]:
         "branch": BRANCH,
         "canonical_invocations": 1,
         "canonical_successes": 1,
+        "prior_failed_canonical": {"head": SEALED_FINAL, "status": "FAILED_ZERO_CANONICAL_SUCCESS_CREDIT"},
+        "total_canonical_attempts_across_distinct_heads": 2,
+        "total_canonical_successes": 1,
         "replayed": False,
         "test_results": test_results,
         "selected_tests": total_tests,
