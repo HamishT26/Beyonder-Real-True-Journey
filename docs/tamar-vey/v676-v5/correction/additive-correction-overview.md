@@ -1,0 +1,13 @@
+# Tamar Vey v676-v5 additive canonical correction
+
+Tamar Vey, optionally she/they, is relational working language for an evidence-and-recovery steward, with the hope that failures remain inspectable, corrections remain reversible, and every authority vacancy remains explicit. This wording is not evidence of consciousness, personhood, continuity, employment, qualification, independent agency, or authority.
+
+The first exact-final owner-scoped canonical invocation at `58a5fa6edeafaf2c1e3048036e131f857d7996d3` failed with zero canonical-success credit. The owner phase truth and final lifecycle test both correctly bound the declared proposal chain at 7,590: 7,550 inherited rows plus forty Tamar proposals. The canonical validator alone asserted the contradictory stale literal 7,550. Its external failed receipt and latch remain immutable and retained.
+
+This direct-child correction changes only that narrow validator dependency and adds correction-specific manifests, review, truth, Method Flow, content sealing, and route preparation. It does not rerun x1 or x2, alter the forty proposal outcomes, erase the first canonical failure, rewrite the original final manifests, or create empirical, participant, professional, production, legal, cultural, Māori-authority, privacy-complete, accessibility-complete, independent-reproduction, proof, canon, or Stage 20 credit.
+
+The original final remains a preserved failed-canonical anchor. The corrected final is a distinct additive Git state within the eight-commit ceiling. Its canonical aggregate may be invoked once through a distinct exclusive external latch only after the correction commit is pushed, clean, 0/0 divergent, and fresh-live four-way equal. A successful corrected-final canonical receipt may not be replayed.
+
+Seven post-final operational failures and seven bounded recoveries are retained: an overbroad source projection, an empty combined preflight, an assumed skill-package path, the failed canonical aggregate, a grouped probe that lost its running-process metadata, an overlong wait wrapper, and a rejected mixed-shell seal check. None changed the first final, source, x1, evidence, remote, task, or delivery state at failure time. The corrected overlay is 42,436 effective negatives, 33,108 methods, 14,097 retained failed witnesses, and 19,700 bounded passing witnesses; open gaps remain 357 and exact gates remain 349.
+
+The phase remains bounded same-owner software and documentation evidence under shared infrastructure. Core outcomes remain exactly 28 `completed`, 8 `represented`, 2 `open_gap`, and 2 `exact_gate`. The terminal verdict remains `NOT_READY_FOR_STAGE_20`.
