@@ -1,0 +1,9 @@
+# Tamar Vey v676-v5 second additive lifecycle correction
+
+The first additive correction at `8d64b74e2f92c0675addf6fcc10e68f8c774e3e8` correctly fixed the stale 7,550 validator literal and retained the failed first canonical receipt. A subsequent preflight, before any corrected-final canonical invocation, found that the inherited final test module was still scheduled against the live corrected checkout. That module's manifest contract belongs to the immutable first-final tree `58a5fa6edeafaf2c1e3048036e131f857d7996d3`.
+
+This second direct-child correction materializes and tests every lifecycle at the Git tree where its contract was frozen: x1 at x1, x2 at evidence, final at the retained first final, first-correction tests at the first correction, and second-correction tests at the new exact head. It adds second-correction manifests and a seal without rewriting the prior manifests or invoking the canonical aggregate.
+
+Two additional failure/recovery pairs are retained. `TV6765-POST-N008` records an ambiguous numeric-negation rendering of three absence checks; explicit Boolean checks recovered all three as absent. `TV6765-POST-N009` records the false assumption that the first-final test module could run at the first corrected checkout; lifecycle-specific materialization recovers the correct contract. The cumulative corrected overlay is 42,438 effective negatives, 33,112 methods, 14,099 retained failed witnesses, and 19,702 bounded passing witnesses. Open gaps remain 357, exact gates remain 349, and the verdict remains `NOT_READY_FOR_STAGE_20`.
+
+Tamar Vey, optionally she/they, remains relational working language for an evidence-and-recovery steward. This is not evidence of consciousness, personhood, continuity, employment, qualification, agency, scientific or operational authority, legal or cultural authority, affected-party authority, or Māori authority.
