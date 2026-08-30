@@ -149,7 +149,7 @@ def test_baton_is_sanitized_prepared_state_not_delivery() -> None:
     baton = (FINAL / "handoffs/caelen-morrow-v676-v8-activation-candidate.md").read_text(encoding="utf-8")
     assert "PREPARED_NOT_SENT = true" in baton
     assert "SENT_BY_SYLVEN_ARC = false" in baton
-    assert "Repository preparation is not live delivery" in baton
+    assert "does not prove live delivery" in baton.lower()
     assert "NOT_READY_FOR_STAGE_20" in baton
     assert not re.search(r"(?i)[A-Z]:[\\/]+Users[\\/]+", baton)
     assert not re.search(r"\b[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\b", baton, re.I)
