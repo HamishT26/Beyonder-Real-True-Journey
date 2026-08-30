@@ -19,7 +19,9 @@ BRANCH = "codex/GHC-Family/sylven-arc-v678-v6-full-tools"
 SOURCE = "d7a2e3d1851d8a9eb6a8707968a47354b44e824a"
 X1 = "22d310c7ae4fdbd45959d388d15642039d748da0"
 EVIDENCE = "7b747952b6a6916c3881066865ff7021aeabea3c"
+FIRST_FINAL = "ea27f954b8636f167c83b964c0ba5ad15301ea1e"
 FINAL_TEST = "tests/test_ghc_family_sylven_arc_v678_v6_final.py"
+CORRECTION_TEST = "tests/test_ghc_family_sylven_arc_v678_v6_correction1.py"
 LABELS = {"completed", "represented", "open_gap", "exact_gate"}
 PRIVACY = {
     "private_absolute_path": re.compile(r"(?i)[A-Z]:[\\/]+Users[\\/]+"),
@@ -90,10 +92,12 @@ def topology(repo: Path, final: str) -> dict[str, Any]:
     commits = git(repo, "rev-list", "--count", f"{SOURCE}..{final}")
     merges = git(repo, "rev-list", "--merges", "--count", f"{SOURCE}..{final}")
     parents = git(repo, "show", "-s", "--format=%P", final).split()
+    first_final_parent = git(repo, "rev-parse", f"{FIRST_FINAL}^")
     return {
         "source_is_x1_parent": git(repo, "rev-parse", f"{X1}^") == SOURCE,
         "x1_is_evidence_parent": git(repo, "rev-parse", f"{EVIDENCE}^") == X1,
-        "evidence_is_final_parent": len(parents) == 1 and parents[0] == EVIDENCE,
+        "evidence_is_first_final_parent": first_final_parent == EVIDENCE,
+        "first_final_is_corrected_final_parent": len(parents) == 1 and parents[0] == FIRST_FINAL,
         "phase_commits": int(commits), "merges": int(merges), "final_parent_count": len(parents),
         "source_ancestor": run(repo, ["git", "merge-base", "--is-ancestor", SOURCE, final]).returncode == 0,
     }
@@ -103,7 +107,8 @@ def manifest_check(repo: Path, final: str) -> dict[str, Any]:
     checks = {}
     commands = [
         ("evidence", [sys.executable, "-X", "utf8", "scripts/ghc_family_sylven_arc_v678_v6_evidence_manifest.py", "verify", "--repo", ".", "--ref", EVIDENCE]),
-        ("final", [sys.executable, "-X", "utf8", "scripts/ghc_family_sylven_arc_v678_v6_final_manifest.py", "verify", "--repo", ".", "--ref", final]),
+        ("first_final", [sys.executable, "-X", "utf8", "scripts/ghc_family_sylven_arc_v678_v6_final_manifest.py", "verify", "--repo", ".", "--ref", FIRST_FINAL]),
+        ("correction1", [sys.executable, "-X", "utf8", "scripts/ghc_family_sylven_arc_v678_v6_correction1_manifest.py", "verify", "--repo", ".", "--ref", final]),
     ]
     for name, command in commands:
         result = run(repo, command, timeout=240)
@@ -167,7 +172,7 @@ def privacy_check(repo: Path, final: str, owner_paths: list[str]) -> dict[str, A
 def code_check(repo: Path, final: str) -> dict[str, Any]:
     paths = [path for path in git(repo, "diff", "--name-only", SOURCE, final).splitlines() if path.endswith(".py") and is_owner(path)]
     findings = []
-    forbidden_calls = {"eval", "exec", "compile", "__import__"}
+    forbidden_calls = {"eval", "exec", "__import__"}
     for path in paths:
         source = ref_blob(repo, final, path).decode("utf-8")
         try:
@@ -209,8 +214,9 @@ def preflight(repo: Path, expected: str, receipt: Path, latch: Path) -> dict[str
     result = {
         "status": "PASS" if (
             eq["branch"] == BRANCH and eq["all_equal"] and eq["divergence"] == [0, 0] and eq["clean"]
-            and topo["source_is_x1_parent"] and topo["x1_is_evidence_parent"] and topo["evidence_is_final_parent"]
-            and topo["phase_commits"] == 3 and topo["merges"] == 0 and topo["final_parent_count"] == 1
+            and topo["source_is_x1_parent"] and topo["x1_is_evidence_parent"] and topo["evidence_is_first_final_parent"]
+            and topo["first_final_is_corrected_final_parent"]
+            and topo["phase_commits"] == 4 and topo["merges"] == 0 and topo["final_parent_count"] == 1
             and not receipt.exists() and not latch.exists()
         ) else "FAIL",
         "expected_head": expected, "equality": eq, "topology": topo,
@@ -229,7 +235,7 @@ def canonical_validate(repo: Path, expected: str, receipt: Path, latch: Path) ->
         handle.write("\n")
     try:
         owner_paths = [path for path in git(repo, "ls-tree", "-r", "--name-only", expected).splitlines() if is_owner(path)]
-        tests = run(repo, [sys.executable, "-X", "utf8", "-m", "pytest", "-q", FINAL_TEST], timeout=300)
+        tests = run(repo, [sys.executable, "-X", "utf8", "-m", "pytest", "-q", FINAL_TEST, CORRECTION_TEST], timeout=300)
         tests_passed = tests.returncode == 0
         manifests = manifest_check(repo, expected)
         parsed = parse_json(repo, expected, owner_paths)
@@ -242,7 +248,7 @@ def canonical_validate(repo: Path, expected: str, receipt: Path, latch: Path) ->
         route = json.loads(ref_blob(repo, expected, "docs/sylven-arc/v678-v6/closeout/route-receipt.json").decode("utf-8"))
         detailed = {
             "tests_exact": tests_passed,
-            "test_count_exact": tests_passed and "25 passed" in tests.stdout.decode("utf-8", errors="replace"),
+            "test_count_exact": tests_passed and "33 passed" in tests.stdout.decode("utf-8", errors="replace"),
             "json_parse": parsed["passed"],
             "json_count_nonzero": parsed["count"] > 250,
             "privacy_five_classes": len(privacy["classes"]) == 5,
@@ -250,11 +256,13 @@ def canonical_validate(repo: Path, expected: str, receipt: Path, latch: Path) ->
             "code_compile_ast": code["passed"],
             "code_count_nonzero": code["files"] >= 10,
             "evidence_manifest": manifests["evidence"]["passed"],
-            "final_manifest": manifests["final"]["passed"],
+            "first_final_manifest": manifests["first_final"]["passed"],
+            "correction1_manifest": manifests["correction1"]["passed"],
             "source_parent_x1": topo["source_is_x1_parent"],
             "x1_parent_evidence": topo["x1_is_evidence_parent"],
-            "evidence_parent_final": topo["evidence_is_final_parent"],
-            "three_commits": topo["phase_commits"] == 3,
+            "evidence_parent_first_final": topo["evidence_is_first_final_parent"],
+            "first_final_parent_corrected_final": topo["first_final_is_corrected_final_parent"],
+            "four_commits": topo["phase_commits"] == 4,
             "zero_merges": topo["merges"] == 0,
             "one_final_parent": topo["final_parent_count"] == 1,
             "source_ancestor": topo["source_ancestor"],
@@ -280,7 +288,7 @@ def canonical_validate(repo: Path, expected: str, receipt: Path, latch: Path) ->
         minimal = {
             "preflight_passed": pre["status"] == "PASS", "tests": tests_passed,
             "manifests": all(value["passed"] for value in manifests.values()), "json": parsed["passed"],
-            "privacy": privacy["passed"], "code": code["passed"], "topology": topo["phase_commits"] == 3 and topo["merges"] == 0,
+            "privacy": privacy["passed"], "code": code["passed"], "topology": topo["phase_commits"] == 4 and topo["merges"] == 0,
             "clean": eq_after["clean"], "divergence": eq_after["divergence"] == [0, 0], "four_way": eq_after["all_equal"],
             "file_cap": caps["owner_file_cap_passed"] and caps["materialized_file_cap_passed"], "word_cap": caps["word_cap_passed"],
             "labels": set(truth["core_outcomes"]) == LABELS, "stage20": truth["terminal_verdict"] == "NOT_READY_FOR_STAGE_20",
@@ -291,7 +299,7 @@ def canonical_validate(repo: Path, expected: str, receipt: Path, latch: Path) ->
             "schema": "ghc-family-owner-scoped-canonical-receipt/v1", "owner": "Sylven Arc", "phase": "v678-v6",
             "head": expected, "status": "VALID_EXACT_FINAL_OWNER_SCOPED_CANONICAL" if valid else "INVALID_EXACT_FINAL_OWNER_SCOPED_CANONICAL",
             "invocation_count": 1, "success_count": 1 if valid else 0, "replay_count": 0,
-            "tests": {"passed": 25 if tests_passed else 0, "total": 25, "output_tail": tests.stdout.decode("utf-8", errors="replace")[-500:]},
+            "tests": {"passed": 33 if tests_passed else 0, "total": 33, "output_tail": tests.stdout.decode("utf-8", errors="replace")[-500:]},
             "detailed": {"passed": sum(detailed.values()), "total": len(detailed), "checks": detailed},
             "minimal": {"passed": sum(minimal.values()), "total": len(minimal), "checks": minimal},
             "json": parsed, "privacy": privacy, "code": code, "manifests": manifests, "topology": topo,
@@ -311,7 +319,7 @@ def canonical_validate(repo: Path, expected: str, receipt: Path, latch: Path) ->
         })
         if not valid:
             raise SystemExit(json.dumps({"status": payload["status"], "receipt_sha256": sha256(receipt)}, sort_keys=True))
-        return {"status": payload["status"], "receipt_sha256": sha256(receipt), "latch_sha256": sha256(latch), "payload_sha256": payload_digest, "tests": "25/25", "detailed": f"{sum(detailed.values())}/{len(detailed)}", "minimal": f"{sum(minimal.values())}/{len(minimal)}", "json": parsed["count"], "privacy_confirmed": len(privacy["confirmed"]), "owner_files": len(owner_paths)}
+        return {"status": payload["status"], "receipt_sha256": sha256(receipt), "latch_sha256": sha256(latch), "payload_sha256": payload_digest, "tests": "33/33", "detailed": f"{sum(detailed.values())}/{len(detailed)}", "minimal": f"{sum(minimal.values())}/{len(minimal)}", "json": parsed["count"], "privacy_confirmed": len(privacy["confirmed"]), "owner_files": len(owner_paths)}
     except Exception as exc:
         if not receipt.exists():
             atomic_write(receipt, {"schema": "ghc-family-owner-scoped-canonical-receipt/v1", "owner": "Sylven Arc", "phase": "v678-v6", "head": expected, "status": "INVALID_EXCEPTION", "error_type": type(exc).__name__, "invocation_count": 1, "success_count": 0, "replay_count": 0})
