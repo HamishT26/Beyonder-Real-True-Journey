@@ -1,0 +1,152 @@
+{
+  "effective_counts": {
+    "bounded_passing_witnesses": 26362,
+    "effective_methods": 43036,
+    "effective_negatives": 45718,
+    "exact_gates": 380,
+    "open_gaps": 389,
+    "retained_failed_witnesses": 17379
+  },
+  "failure": {
+    "canonical_success_credit": 0,
+    "failed_head": "4aaf45add92b18c5f8bef68ba15dd112e0f5703c",
+    "failure_id": "AUR6777-CANON-N001",
+    "lifecycle": "external_exact_final_canonical",
+    "retained": true,
+    "state": "FAILED_ZERO_CANONICAL_SUCCESS_CREDIT",
+    "summary": "The sole canonical invocation at the three-commit final ran 26 owner-final tests; 25 passed and one stale assertion expected two precloseout pairs after the retained third pair had been added.",
+    "tests_failed": 1,
+    "tests_passed_with_bounded_component_credit": 25
+  },
+  "failure_erasure": false,
+  "failures": [
+    {
+      "canonical_success_credit": 0,
+      "failed_head": "4aaf45add92b18c5f8bef68ba15dd112e0f5703c",
+      "failure_id": "AUR6777-CANON-N001",
+      "lifecycle": "external_exact_final_canonical",
+      "retained": true,
+      "state": "FAILED_ZERO_CANONICAL_SUCCESS_CREDIT",
+      "summary": "The sole canonical invocation at the three-commit final ran 26 owner-final tests; 25 passed and one stale assertion expected two precloseout pairs after the retained third pair had been added.",
+      "tests_failed": 1,
+      "tests_passed_with_bounded_component_credit": 25
+    },
+    {
+      "failure_id": "AUR6777-CORR-N001",
+      "lifecycle": "precommit_correction_index_replay",
+      "retained": true,
+      "state": "FAILED_ZERO_VALIDATION_CREDIT",
+      "summary": "The first external correction-index replay wrote every cat-file request before consuming output, allowing the input and output pipes to fill and deadlock. The exact read-only process was interrupted; no repository state changed.",
+      "validation_credit": 0
+    },
+    {
+      "failure_id": "AUR6777-CORR-N002",
+      "lifecycle": "precommit_correction_streaming_index_replay",
+      "retained": true,
+      "state": "FAILED_ZERO_VALIDATION_CREDIT",
+      "summary": "The first one-request/one-response recovery assumed one pipe read would return the complete declared blob length. The pipe returned a partial chunk on the first object, producing a framing failure before any hash claim.",
+      "validation_credit": 0
+    }
+  ],
+  "pairs": [
+    {
+      "failure": {
+        "canonical_success_credit": 0,
+        "failed_head": "4aaf45add92b18c5f8bef68ba15dd112e0f5703c",
+        "failure_id": "AUR6777-CANON-N001",
+        "lifecycle": "external_exact_final_canonical",
+        "retained": true,
+        "state": "FAILED_ZERO_CANONICAL_SUCCESS_CREDIT",
+        "summary": "The sole canonical invocation at the three-commit final ran 26 owner-final tests; 25 passed and one stale assertion expected two precloseout pairs after the retained third pair had been added.",
+        "tests_failed": 1,
+        "tests_passed_with_bounded_component_credit": 25
+      },
+      "recovery": {
+        "broader_credit": 0,
+        "failure_id": "AUR6777-CANON-N001",
+        "old_head_replay": false,
+        "previously_passing_final_tests_replayed": false,
+        "procedure": "Change only the stale pair-count assertion from two to three, bind historical manifests to the failed final, and validate a new direct-child correction without retrying the failed head.",
+        "state": "bounded_passing_dependency_preflight",
+        "witness_id": "AUR6777-CANON-P001"
+      }
+    },
+    {
+      "failure": {
+        "failure_id": "AUR6777-CORR-N001",
+        "lifecycle": "precommit_correction_index_replay",
+        "retained": true,
+        "state": "FAILED_ZERO_VALIDATION_CREDIT",
+        "summary": "The first external correction-index replay wrote every cat-file request before consuming output, allowing the input and output pipes to fill and deadlock. The exact read-only process was interrupted; no repository state changed.",
+        "validation_credit": 0
+      },
+      "recovery": {
+        "broader_credit": 0,
+        "failed_batch_replayed": false,
+        "failure_id": "AUR6777-CORR-N001",
+        "precanonical_tests_run": false,
+        "procedure": "Stream one cat-file request and consume its complete framed response before sending the next request, then replay the exact correction manifests without running tests.",
+        "state": "bounded_passing_streaming_recovery",
+        "witness_id": "AUR6777-CORR-P001"
+      }
+    },
+    {
+      "failure": {
+        "failure_id": "AUR6777-CORR-N002",
+        "lifecycle": "precommit_correction_streaming_index_replay",
+        "retained": true,
+        "state": "FAILED_ZERO_VALIDATION_CREDIT",
+        "summary": "The first one-request/one-response recovery assumed one pipe read would return the complete declared blob length. The pipe returned a partial chunk on the first object, producing a framing failure before any hash claim.",
+        "validation_credit": 0
+      },
+      "recovery": {
+        "broader_credit": 0,
+        "failed_streaming_attempt_replayed": false,
+        "failure_id": "AUR6777-CORR-N002",
+        "precanonical_tests_run": false,
+        "procedure": "Retain request-response ordering and read each declared blob through a bounded loop until the exact byte length is received before consuming the framing newline.",
+        "state": "bounded_passing_exact_length_streaming_recovery",
+        "witness_id": "AUR6777-CORR-P002"
+      }
+    }
+  ],
+  "recoveries": [
+    {
+      "broader_credit": 0,
+      "failure_id": "AUR6777-CANON-N001",
+      "old_head_replay": false,
+      "previously_passing_final_tests_replayed": false,
+      "procedure": "Change only the stale pair-count assertion from two to three, bind historical manifests to the failed final, and validate a new direct-child correction without retrying the failed head.",
+      "state": "bounded_passing_dependency_preflight",
+      "witness_id": "AUR6777-CANON-P001"
+    },
+    {
+      "broader_credit": 0,
+      "failed_batch_replayed": false,
+      "failure_id": "AUR6777-CORR-N001",
+      "precanonical_tests_run": false,
+      "procedure": "Stream one cat-file request and consume its complete framed response before sending the next request, then replay the exact correction manifests without running tests.",
+      "state": "bounded_passing_streaming_recovery",
+      "witness_id": "AUR6777-CORR-P001"
+    },
+    {
+      "broader_credit": 0,
+      "failed_streaming_attempt_replayed": false,
+      "failure_id": "AUR6777-CORR-N002",
+      "precanonical_tests_run": false,
+      "procedure": "Retain request-response ordering and read each declared blob through a bounded loop until the exact byte length is received before consuming the framing newline.",
+      "state": "bounded_passing_exact_length_streaming_recovery",
+      "witness_id": "AUR6777-CORR-P002"
+    }
+  ],
+  "recovery": {
+    "broader_credit": 0,
+    "failure_id": "AUR6777-CANON-N001",
+    "old_head_replay": false,
+    "previously_passing_final_tests_replayed": false,
+    "procedure": "Change only the stale pair-count assertion from two to three, bind historical manifests to the failed final, and validate a new direct-child correction without retrying the failed head.",
+    "state": "bounded_passing_dependency_preflight",
+    "witness_id": "AUR6777-CANON-P001"
+  },
+  "schema": "ghc-family-method-flow-correction/v1"
+}

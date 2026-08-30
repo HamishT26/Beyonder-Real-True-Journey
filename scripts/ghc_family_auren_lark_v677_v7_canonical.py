@@ -17,6 +17,7 @@ VALIDATION = REPO / ROOT_REL / "validation"
 SOURCE = "62ac8de91e2fec0d6a024f51eff6a3ad8d807a4d"
 X1 = "73bf85d9371b74dda26953e743958ce684ea1436"
 EVIDENCE = "3f91c32cb1acda2900ce69bedc60971353084775"
+FAILED_FINAL = "4aaf45add92b18c5f8bef68ba15dd112e0f5703c"
 EXPECTED_BRANCH = "codex/GHC-Family/auren-lark-v677-v7-full-tools"
 RECEIPT_BASE = Path(
     "D:/GHC-Archives/validation-receipts/auren-lark/v677-v7"
@@ -211,14 +212,15 @@ def main() -> None:
         if (
             git("rev-parse", f"{X1}^") != SOURCE
             or git("rev-parse", f"{EVIDENCE}^") != X1
-            or git("rev-parse", f"{final_sha}^") != EVIDENCE
+            or git("rev-parse", f"{FAILED_FINAL}^") != EVIDENCE
+            or git("rev-parse", f"{final_sha}^") != FAILED_FINAL
         ):
             raise RuntimeError("direct-parent lifecycle mismatch")
-        if int(git("rev-list", "--count", f"{SOURCE}..{final_sha}")) != 3:
-            raise RuntimeError("phase commit count is not exactly three")
+        if int(git("rev-list", "--count", f"{SOURCE}..{final_sha}")) != 4:
+            raise RuntimeError("phase commit count is not exactly four")
         if git("rev-list", "--merges", f"{SOURCE}..{final_sha}"):
             raise RuntimeError("merge commit detected")
-        for sha in (X1, EVIDENCE, final_sha):
+        for sha in (X1, EVIDENCE, FAILED_FINAL, final_sha):
             if len(
                 git("rev-list", "--parents", "-n", "1", sha).split()
             ) != 2:
@@ -227,45 +229,127 @@ def main() -> None:
                 )
 
         equality = fresh_equality(final_sha)
-        delta, delta_count = replay_manifest(
-            final_sha,
+        historical_delta, historical_delta_count = replay_manifest(
+            FAILED_FINAL,
             f"{ROOT_REL}/validation/final-delta-manifest.json",
         )
-        owner, owner_count = replay_manifest(
-            final_sha,
+        historical_owner, historical_owner_count = replay_manifest(
+            FAILED_FINAL,
             f"{ROOT_REL}/validation/final-owner-manifest.json",
         )
-        seal, seal_count = replay_manifest(
-            final_sha, f"{ROOT_REL}/final/content-seal.json"
+        historical_seal, historical_seal_count = replay_manifest(
+            FAILED_FINAL, f"{ROOT_REL}/final/content-seal.json"
+        )
+        correction_delta, correction_delta_count = replay_manifest(
+            final_sha,
+            f"{ROOT_REL}/validation/correction-delta-manifest.json",
+        )
+        correction_owner, correction_owner_count = replay_manifest(
+            final_sha,
+            f"{ROOT_REL}/validation/correction-owner-manifest.json",
         )
         if (
-            delta["status"] != "REPOSITORY_PREPARED_FINAL_DELTA"
-            or owner["status"]
+            historical_delta["status"] != "REPOSITORY_PREPARED_FINAL_DELTA"
+            or historical_owner["status"]
             != "FINAL_OWNER_FROM_ILYRA_V677_V6_SOURCE"
-            or seal["status"] != "SEALED_REPOSITORY_PREPARED_FINAL"
+            or historical_seal["status"]
+            != "SEALED_REPOSITORY_PREPARED_FINAL"
+            or correction_delta["status"]
+            != "CORRECTION_DELTA_FROM_FAILED_CANONICAL_FINAL"
+            or correction_owner["status"]
+            != "CORRECTED_OWNER_FROM_ILYRA_V677_V6_SOURCE"
         ):
             raise RuntimeError("manifest or seal lifecycle status mismatch")
 
         json_parses = 0
-        for row in owner["entries"]:
+        for row in correction_owner["entries"]:
             if row["path"].endswith(".json"):
                 json.loads(
                     git_bytes(f"{final_sha}:{row['path']}").decode("utf-8")
                 )
                 json_parses += 1
-        candidates, confirmed = privacy_scan(final_sha, owner)
+        for path in correction_owner["self_exclusions"]:
+            json.loads(git_bytes(f"{final_sha}:{path}").decode("utf-8"))
+            json_parses += 1
+        candidates, confirmed = privacy_scan(final_sha, correction_owner)
         if confirmed:
             raise RuntimeError(f"confirmed privacy findings: {confirmed}")
-        security = load_blob(
-            final_sha, f"{ROOT_REL}/final/bounded-security-review.json"
+        historical_security = load_blob(
+            FAILED_FINAL, f"{ROOT_REL}/final/bounded-security-review.json"
         )
         if (
-            security["findings"]
-            or security["medium_or_high_findings"] != 0
+            historical_security["findings"]
+            or historical_security["medium_or_high_findings"] != 0
         ):
             raise RuntimeError(
-                "bounded owner Python security review has findings"
+                "historical bounded owner Python security review has findings"
             )
+        correction_security = load_blob(
+            final_sha,
+            f"{ROOT_REL}/validation/correction-security-scan.json",
+        )
+        if correction_security["findings"]:
+            raise RuntimeError(
+                "bounded correction Python security review has findings"
+            )
+        failed_receipt = load_blob(
+            final_sha,
+            f"{ROOT_REL}/correction/failed-canonical-receipt.json",
+        )
+        if (
+            failed_receipt["head"] != FAILED_FINAL
+            or failed_receipt["status"]
+            != "FAILED_ZERO_CANONICAL_SUCCESS_CREDIT"
+            or failed_receipt["tests_passed"] != 25
+            or failed_receipt["tests_failed"] != 1
+            or failed_receipt["same_head_retry_permitted"] is not False
+        ):
+            raise RuntimeError("failed canonical retention mismatch")
+        correction_truth = load_blob(
+            final_sha,
+            f"{ROOT_REL}/correction/terminal-correction.json",
+        )
+        expected_counts = {
+            "effective_negatives": 45718,
+            "effective_methods": 43036,
+            "retained_failed_witnesses": 17379,
+            "bounded_passing_witnesses": 26362,
+            "open_gaps": 389,
+            "exact_gates": 380,
+        }
+        if any(
+            correction_truth.get(key) != value
+            for key, value in expected_counts.items()
+        ):
+            raise RuntimeError("corrected terminal truth mismatch")
+        replay_recovery = load_blob(
+            final_sha,
+            f"{ROOT_REL}/correction/index-replay-recovery.json",
+        )
+        if (
+            len(replay_recovery["pairs"]) != 2
+            or replay_recovery["exact_streaming_replay_state"]
+            != "EXACT_LENGTH_EXTERNAL_PRECOMMIT_EVIDENCE_ONLY"
+            or replay_recovery["pairs"][1]["failure"]["state"]
+            != "FAILED_ZERO_VALIDATION_CREDIT"
+            or replay_recovery["pairs"][1]["failure"]["retained"] is not True
+            or replay_recovery["pairs"][1]["recovery"]["state"]
+            != "bounded_passing_exact_length_streaming_recovery"
+            or replay_recovery["pairs"][1]["recovery"][
+                "failed_streaming_attempt_replayed"
+            ]
+            is not False
+            or
+            replay_recovery["failure"]["state"]
+            != "FAILED_ZERO_VALIDATION_CREDIT"
+            or replay_recovery["failure"]["retained"] is not True
+            or replay_recovery["recovery"]["state"]
+            != "bounded_passing_streaming_recovery"
+            or replay_recovery["recovery"]["failed_batch_replayed"] is not False
+            or replay_recovery["repository_mutation_during_failure"] is not False
+            or replay_recovery["tests_run_during_failure_or_recovery"] != 0
+        ):
+            raise RuntimeError("correction index-replay retention mismatch")
 
         test = run(
             sys.executable,
@@ -275,7 +359,8 @@ def main() -> None:
             "-q",
             "-p",
             "no:cacheprovider",
-            "tests/test_ghc_family_auren_lark_v677_v7_final.py",
+            "tests/test_ghc_family_auren_lark_v677_v7_final.py::test_method_flow_preserves_failures_and_closeout_witnesses",
+            "tests/test_ghc_family_auren_lark_v677_v7_correction.py",
             check=False,
         )
         if test.returncode != 0:
@@ -300,28 +385,43 @@ def main() -> None:
             "source": SOURCE,
             "x1": X1,
             "evidence": EVIDENCE,
+            "failed_canonical_final": FAILED_FINAL,
             "exact_final": final_sha,
             "tests_passed": tests_passed,
-            "delta_manifest_entries": delta_count,
-            "owner_manifest_entries": owner_count,
-            "content_seal_entries": seal_count,
+            "previous_failed_head_tests_passed": 25,
+            "previous_failed_head_tests_failed": 1,
+            "previously_passing_final_tests_replayed": False,
+            "historical_delta_manifest_entries": historical_delta_count,
+            "historical_owner_manifest_entries": historical_owner_count,
+            "historical_content_seal_entries": historical_seal_count,
+            "correction_delta_manifest_entries": correction_delta_count,
+            "correction_owner_manifest_entries": correction_owner_count,
             "strict_json_parses": json_parses,
             "privacy_classes": 5,
             "privacy_candidates": len(candidates),
             "confirmed_privacy_hits": 0,
-            "bounded_security_reviewed_files": security[
+            "historical_bounded_security_reviewed_files": historical_security[
                 "reviewed_file_count"
             ],
+            "correction_bounded_security_reviewed_files": correction_security[
+                "changed_python_parses"
+            ],
             "bounded_security_findings": 0,
-            "phase_commits": 3,
+            "phase_commits": 4,
             "merges": 0,
-            "single_parent_commits": 3,
+            "single_parent_commits": 4,
             "clean_before_and_after": True,
             "four_way_equality_before": equality,
             "four_way_equality_after": equality_after,
             "complete_repository_suite": False,
             "same_owner_validation": True,
             "independent_reproduction": False,
+            "prior_failed_canonical": {
+                "head": FAILED_FINAL,
+                "status": "FAILED_ZERO_CANONICAL_SUCCESS_CREDIT",
+            },
+            "total_canonical_attempts_across_distinct_heads": 2,
+            "total_canonical_successes": 1,
             "one_success_no_replay": True,
             "terminal_verdict": "NOT_READY_FOR_STAGE_20",
         }
@@ -353,7 +453,7 @@ def main() -> None:
                     "external_receipt_sha256": digest(receipt_bytes),
                     "tests_passed": tests_passed,
                     "json_parses": json_parses,
-                    "owner_manifest_entries": owner_count,
+                    "owner_manifest_entries": correction_owner_count,
                 },
                 sort_keys=True,
             )

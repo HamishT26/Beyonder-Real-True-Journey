@@ -73,7 +73,7 @@ def test_method_flow_preserves_failures_and_closeout_witnesses() -> None:
     assert flow["precloseout_passing_witnesses"] == 3
     assert flow["closeout_failed_witnesses"] == 0
     assert flow["closeout_passing_witnesses"] == 3
-    assert len(flow["precloseout_pairs"]) == 2
+    assert len(flow["precloseout_pairs"]) == 3
 
 
 def test_precloseout_overlay_retains_wrapper_lock_and_projection_failures() -> None:

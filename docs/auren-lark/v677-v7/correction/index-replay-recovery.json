@@ -1,0 +1,63 @@
+{
+  "exact_streaming_replay_state": "EXACT_LENGTH_EXTERNAL_PRECOMMIT_EVIDENCE_ONLY",
+  "failure": {
+    "failure_id": "AUR6777-CORR-N001",
+    "lifecycle": "precommit_correction_index_replay",
+    "retained": true,
+    "state": "FAILED_ZERO_VALIDATION_CREDIT",
+    "summary": "The first external correction-index replay wrote every cat-file request before consuming output, allowing the input and output pipes to fill and deadlock. The exact read-only process was interrupted; no repository state changed.",
+    "validation_credit": 0
+  },
+  "pairs": [
+    {
+      "failure": {
+        "failure_id": "AUR6777-CORR-N001",
+        "lifecycle": "precommit_correction_index_replay",
+        "retained": true,
+        "state": "FAILED_ZERO_VALIDATION_CREDIT",
+        "summary": "The first external correction-index replay wrote every cat-file request before consuming output, allowing the input and output pipes to fill and deadlock. The exact read-only process was interrupted; no repository state changed.",
+        "validation_credit": 0
+      },
+      "recovery": {
+        "broader_credit": 0,
+        "failed_batch_replayed": false,
+        "failure_id": "AUR6777-CORR-N001",
+        "precanonical_tests_run": false,
+        "procedure": "Stream one cat-file request and consume its complete framed response before sending the next request, then replay the exact correction manifests without running tests.",
+        "state": "bounded_passing_streaming_recovery",
+        "witness_id": "AUR6777-CORR-P001"
+      }
+    },
+    {
+      "failure": {
+        "failure_id": "AUR6777-CORR-N002",
+        "lifecycle": "precommit_correction_streaming_index_replay",
+        "retained": true,
+        "state": "FAILED_ZERO_VALIDATION_CREDIT",
+        "summary": "The first one-request/one-response recovery assumed one pipe read would return the complete declared blob length. The pipe returned a partial chunk on the first object, producing a framing failure before any hash claim.",
+        "validation_credit": 0
+      },
+      "recovery": {
+        "broader_credit": 0,
+        "failed_streaming_attempt_replayed": false,
+        "failure_id": "AUR6777-CORR-N002",
+        "precanonical_tests_run": false,
+        "procedure": "Retain request-response ordering and read each declared blob through a bounded loop until the exact byte length is received before consuming the framing newline.",
+        "state": "bounded_passing_exact_length_streaming_recovery",
+        "witness_id": "AUR6777-CORR-P002"
+      }
+    }
+  ],
+  "recovery": {
+    "broader_credit": 0,
+    "failed_batch_replayed": false,
+    "failure_id": "AUR6777-CORR-N001",
+    "precanonical_tests_run": false,
+    "procedure": "Stream one cat-file request and consume its complete framed response before sending the next request, then replay the exact correction manifests without running tests.",
+    "state": "bounded_passing_streaming_recovery",
+    "witness_id": "AUR6777-CORR-P001"
+  },
+  "repository_mutation_during_failure": false,
+  "schema": "ghc-family-correction-index-replay-recovery/v1",
+  "tests_run_during_failure_or_recovery": 0
+}
