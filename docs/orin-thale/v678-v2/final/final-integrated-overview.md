@@ -1,0 +1,106 @@
+# Orin Thale v678-v2 final integrated overview
+
+## Terminal outcome
+
+Orin Thale v678-v2 closes as a bounded synthetic software-and-documentation phase with exactly 42 `completed`, 12 `represented`, 3 `open_gap`, and 3 `exact_gate` outcomes across sixty newly frozen proposals. The declared chain advances from 8,330 to 8,390 rows because the sixty Orin contracts were directly reviewed against reachable semantic neighbors, frozen in planning-only x1, and then executed as evidence permitted in x2. The bounded audit does not claim a universal novelty proof for the 5,295 declared inherited rows lacking a reachable title map. The terminal verdict remains exactly `NOT_READY_FOR_STAGE_20`. No result in this packet is independent-team reproduction, empirical confirmation, professional validation, production certification, legal interpretation, cultural ratification, Māori-authority review, complete accessibility, complete privacy, exhaustive security, proof, or canon.
+
+Planning-only x1 is the direct child of Caelen Ash's immutable v678-v1 exact final. The evidence commit is the direct child of x1. This combined closeout and content seal is designed as their one direct successor, giving three Orin commits and zero merges. X1 was pushed, clean, typed 0/0 divergent, and four-way equal before x2 began. Evidence was separately pushed, clean, typed 0/0 divergent, and four-way equal before closeout began. The final commit identifier and external canonical result cannot truthfully appear inside their own predecessor content; they remain explicitly pending until the commit exists and the one-shot external validator runs.
+
+## Trinity Mandala and practice scope
+
+The primary pillar is THOS Body through two wholly synthetic learning lenses: OCI image-manifest provenance registrar and reproducible-build discrepancy handover reviewer. These lenses organize descriptor tuples, ordered layers, compressed digest versus uncompressed diff-ID separation, platform selectors, SLSA build-definition and run-details separation, in-toto statement and envelope layers, reproducibility inputs, first-divergence holds, correction lineage, rollback, uncertainty, workload boundaries, readback, accessible structure, contest, trust vacancies, and authority vacancies. They establish no employment, qualification, software-supply-chain competence, build authority, release authority, operational or security result, production identity, privacy decision, legal conclusion, cultural legitimacy, affected-party acceptance, or Māori authority.
+
+GMUT Mind remains visible as a typed scalar-tensor and effective-field-theory research-model family. Dependency graphs, revisions, provenance edges, residual signs, digests, time roles, and uncertainty are used only as software types and analogy firewalls. The phase ingested zero empirical rows and evaluated zero likelihoods. It made no physical prediction, force claim, parameter constraint, stability theorem, ultraviolet completion, quantum completion, empirical confirmation, or Theory-of-Everything claim. THOS Body evidence remains synthetic proxy evidence for queue holds, workload control, correction readback, cancellation, quiescence, escalation, and handover. There were zero real participants or operators, no preregistered blind matched-budget real arms, no safety-monitoring events, no appropriate participant statistics, and no independent review.
+
+Freed ID remains synthetic and nonproduction. Synthetic subject names, builder identifiers, invocation labels, artifact digests, provenance references, and correction checkpoints are not personal identities, credentials, verified signers, or trust anchors. Production identity completion would require standards-conformant real keys and proofs, live issuance and resolution, status and revocation, interoperability, privacy and independent security review, recovery evidence, trust governance, and appropriate affected-party oversight. CBR remains a structural representation of correction, contest, remedy vacancy, minimum disclosure, and authority reservation. Repository software cannot confer a right, remedy, risk acceptance, disclosure authorization, legal interpretation, cultural legitimacy, data-governance mandate, public authority, or affected-party acceptance.
+
+## Evidence execution
+
+Sixty accepting controls passed their declared bounded gates. All 160 preregistered invalid mutations were rejected and retained with zero completion credit. The invalid cases attempted real-row promotion, authority conferral, protected-gate erasure, vocabulary drift, unverified external scope, uncertainty erasure, Stage 20 promotion, or unearned credit. Their rejection demonstrates only the declared guard behavior. It is not a security audit or scientific result.
+
+The frozen expanded portfolio contains 120 safe-now packets, eighty owner candidate prototypes, twenty successor candidate recommendations, twenty exact-approval holds, ten blocked packets, one hundred owner CLEAN/FIX/REFINE tasks, twenty owner skill ideas, and ten owner runner ideas. All safe-now packets, owner candidates, and additive refinements received bounded witnesses. Recommendations received no successor completion credit. Exact-approval and blocked packets remain visible and unexecuted. No quota authorized destructive cleanup, user-material deletion, credential use, account change, elevation, host-security weakening, Windows feature change, Sandbox or Hyper-V activation, sibling mutation, real data, participants, production identity operations, legal or cultural decisions, Māori authority, or affected-party legitimacy.
+
+Twenty phase-local skills were initialized with the installed skill-creator workflow, rewritten into substantive instructions, given customized user-facing metadata, quick-validated under UTF-8, and smoke-used. They were not globally installed. Ten family-current `ghc_family_build_provenance_*` runners were built, compiled, and smoke-used. Historical family callers and aliases remain preserved. The skills and runners are useful bounded tools, but their passes prove only their declared synthetic behavior. No subagent forward test occurred because this phase was expressly solo.
+
+## Privacy, accessibility, and authority
+
+Exact staged reviews operate on Git-index bytes, and manifests hash normalized-LF Git blobs. Five privacy and raw-identifier classes distinguish scanner definitions from confirmed payload. Exact scanner-definition candidates remain visible; confirmed payload hits remain zero. Bounded Python AST checks reject direct `eval`, direct `exec`, and `shell=True`; they are not exhaustive security testing. Public artifacts contain no raw task or thread identifier, private route, transcript, screenshot, session stream, credential, secret, private callable identifier, private app state, or private absolute local path.
+
+The static report has a title, landmarks, ordered headings, explicit table headers, a caption, plain language, and no motion. Structural success is not complete accessibility conformance. Manual keyboard evaluation, responsive-layout review, browser diversity, assistive-technology evaluation, cognitive-accessibility evaluation, Māori-language review, security-usability evaluation, and affected-user evaluation remain reserved.
+
+Licensing, copyright, build inputs, artifact release, signing, trust-root choice, software distribution, risk acceptance, privacy remedy, legal interpretation, cultural legitimacy, tikanga, Māori wording, Māori data governance, ratification, and beneficiary or affected-community acceptance remain exact-gated. Māori concepts remain under Māori authority, including tangata whenua, iwi, and hapū. Citations supply vocabulary and refusal conditions only. A citation is not an observation, conformance certificate, delegation, consent, measurement, professional judgment, or authority action.
+
+## Method Flow and retained negatives
+
+The activation overlay began with 46,121 effective negatives. The phase retains fifteen operational failures across startup, x2, and closeout, each paired with a separate bounded recovery, plus 160 rejected synthetic mutations. The effective total is 46,296. The Method Flow overlay has 43,502 methods, 17,957 failed witnesses, and 27,630 bounded passing witnesses. A recovery never erases the failed witness, converts it into an original pass, earns independent-reproduction credit, or closes an evidence or authority gate. Open gaps total 398 and exact gates total 389. The immutable evidence layer's carried-forward 395/386 activation projection remains visible as a failed accounting witness; only this direct-child closeout adds Orin's three new outcomes to each cumulative class.
+
+Notable retained failures include bounded output truncation, PowerShell parser mistakes, a no-checkout sparse-index deletion projection, a host-policy rejection before execution, an unavailable OpenSSL assumption, a no-match rewrite, one quarantined semantic-neighbor collision, future-template contamination of the first x1 clean check, a combined AST and stale-label quoting failure, and the immutable x2 gap/gate accounting mismatch. Each recovery is trigger-specific and additive. The recurrence guards favor exact scalar probes, observed schemas, immutable Git blobs, sparse-aware index materialization, explicit path arrays, UTF-8 execution, shell-safe literal searches, exact installed skill paths, immutable anchors, and clean-state checks before mutation.
+
+## Proposal evidence map
+
+- `OR6782-N001` — **completed**: OCI manifest schema media type configuration and ordered-layer contract. The witness is synthetic and owner-local; protected gates remain open.
+- `OR6782-N002` — **completed**: OCI descriptor digest size media-type tuple fail-closed parser. The witness is synthetic and owner-local; protected gates remain open.
+- `OR6782-N003` — **completed**: OCI image-index child descriptor and platform tuple uniqueness guard. The witness is synthetic and owner-local; protected gates remain open.
+- `OR6782-N004` — **completed**: Operating-system architecture variant and feature-field nonconflation boundary. The witness is synthetic and owner-local; protected gates remain open.
+- `OR6782-N005` — **completed**: Compressed layer digest versus uncompressed diff-ID separation. The witness is synthetic and owner-local; protected gates remain open.
+- `OR6782-N006` — **completed**: Root filesystem diff-ID order and manifest-layer cardinality reconciliation. The witness is synthetic and owner-local; protected gates remain open.
+- `OR6782-N007` — **completed**: Image history empty-layer flag and filesystem-change alignment hold. The witness is synthetic and owner-local; protected gates remain open.
+- `OR6782-N008` — **completed**: Image creation clock vacancy and SOURCE DATE EPOCH separation. The witness is synthetic and owner-local; protected gates remain open.
+- `OR6782-N009` — **completed**: Container environment secret endpoint and personal-data redaction boundary. The witness is synthetic and owner-local; protected gates remain open.
+- `OR6782-N010` — **completed**: Entrypoint command working-directory and user-field nonconflation contract. The witness is synthetic and owner-local; protected gates remain open.
+- `OR6782-N011` — **completed**: OCI annotation namespace value and inheritance provenance ledger. The witness is synthetic and owner-local; protected gates remain open.
+- `OR6782-N012` — **completed**: Artifact type subject relation and image-manifest role separation. The witness is synthetic and owner-local; protected gates remain open.
+- `OR6782-N013` — **completed**: Nondistributable content reference and legal-authority vacancy hold. The witness is synthetic and owner-local; protected gates remain open.
+- `OR6782-N014` — **completed**: Multi-platform index duplicate selector and ambiguous-match quarantine. The witness is synthetic and owner-local; protected gates remain open.
+- `OR6782-N015` — **completed**: Manifest descriptor graph dangling target and digest recursion firewall. The witness is synthetic and owner-local; protected gates remain open.
+- `OR6782-N016` — **completed**: Layer whiteout and opaque-directory semantics structural-only guard. The witness is synthetic and owner-local; protected gates remain open.
+- `OR6782-N017` — **completed**: Archive member ordering timestamp owner and group normalization contract. The witness is synthetic and owner-local; protected gates remain open.
+- `OR6782-N018` — **completed**: Filesystem mode extended-attribute and ownership variance ledger. The witness is synthetic and owner-local; protected gates remain open.
+- `OR6782-N019` — **completed**: Locale timezone hostname and working-directory variance partition. The witness is synthetic and owner-local; protected gates remain open.
+- `OR6782-N020` — **completed**: Build-path and debug-prefix remapping discrepancy classifier. The witness is synthetic and owner-local; protected gates remain open.
+- `OR6782-N021` — **completed**: Random-seed parallel-scheduling and toolchain-order uncertainty firewall. The witness is synthetic and owner-local; protected gates remain open.
+- `OR6782-N022` — **completed**: Lockfile material digest and dependency-resolution vacancy record. The witness is synthetic and owner-local; protected gates remain open.
+- `OR6782-N023` — **completed**: SLSA build-type URI versus builder-identity trust separation. The witness is synthetic and owner-local; protected gates remain open.
+- `OR6782-N024` — **completed**: External parameter internal parameter and resolved-dependency partition. The witness is synthetic and owner-local; protected gates remain open.
+- `OR6782-N025` — **completed**: Resolved dependency best-effort completeness and unknown preservation. The witness is synthetic and owner-local; protected gates remain open.
+- `OR6782-N026` — **completed**: Provenance subject output and diagnostic byproduct digest separation. The witness is synthetic and owner-local; protected gates remain open.
+- `OR6782-N027` — **completed**: Invocation identifier start clock and finish clock typed partition. The witness is synthetic and owner-local; protected gates remain open.
+- `OR6782-N028` — **completed**: Builder identifier trust-closure vacancy and nonendorsement barrier. The witness is synthetic and owner-local; protected gates remain open.
+- `OR6782-N029` — **completed**: SLSA level evidence versus self-asserted conformance nonpromotion. The witness is synthetic and owner-local; protected gates remain open.
+- `OR6782-N030` — **completed**: In-toto statement predicate envelope and bundle layer separation. The witness is synthetic and owner-local; protected gates remain open.
+- `OR6782-N031` — **completed**: Predicate-type URI version and unknown-extension refusal contract. The witness is synthetic and owner-local; protected gates remain open.
+- `OR6782-N032` — **completed**: DSSE payload type signed payload and parser-order boundary. The witness is synthetic and owner-local; protected gates remain open.
+- `OR6782-N033` — **completed**: Multi-signature attestation versus single-signature bundle compatibility hold. The witness is synthetic and owner-local; protected gates remain open.
+- `OR6782-N034` — **completed**: Sigstore bundle media-type version and verification-material parser. The witness is synthetic and owner-local; protected gates remain open.
+- `OR6782-N035` — **completed**: Certificate chain transparency entry and timestamp evidence separation. The witness is synthetic and owner-local; protected gates remain open.
+- `OR6782-N036` — **completed**: Verification material versus independently trusted root vacancy firewall. The witness is synthetic and owner-local; protected gates remain open.
+- `OR6782-N037` — **completed**: Bit-for-bit reproducibility versus semantic-equivalence nonconversion boundary. The witness is synthetic and owner-local; protected gates remain open.
+- `OR6782-N038` — **completed**: Paired rebuild environment matrix and declared-variable comparison ledger. The witness is synthetic and owner-local; protected gates remain open.
+- `OR6782-N039` — **completed**: Rebuild discrepancy category provenance and first-divergence localization tree. The witness is synthetic and owner-local; protected gates remain open.
+- `OR6782-N040` — **completed**: Build cache hit miss and reused-output provenance state machine. The witness is synthetic and owner-local; protected gates remain open.
+- `OR6782-N041` — **completed**: Build-provenance correction DAG readback contest and rollback receipt. The witness is synthetic and owner-local; protected gates remain open.
+- `OR6782-N042` — **completed**: Accessible static build provenance and discrepancy summary. The witness is synthetic and owner-local; protected gates remain open.
+- `OR6782-N043` — **represented**: Real OCI image tool cross-validation and conversion fidelity vacancy. The witness is synthetic and owner-local; protected gates remain open.
+- `OR6782-N044` — **represented**: Real reproducible rebuild pair across independent builders vacancy. The witness is synthetic and owner-local; protected gates remain open.
+- `OR6782-N045` — **represented**: Live continuous-integration runner isolation and environment capture vacancy. The witness is synthetic and owner-local; protected gates remain open.
+- `OR6782-N046` — **represented**: Production signer key certificate and transparency-log custody vacancy. The witness is synthetic and owner-local; protected gates remain open.
+- `OR6782-N047` — **represented**: Independent build engineer discrepancy adjudication vacancy. The witness is synthetic and owner-local; protected gates remain open.
+- `OR6782-N048` — **represented**: Assistive-technology provenance report evaluation vacancy. The witness is synthetic and owner-local; protected gates remain open.
+- `OR6782-N049` — **represented**: Cross-operating-system archive normalization effectiveness vacancy. The witness is synthetic and owner-local; protected gates remain open.
+- `OR6782-N050` — **represented**: Independent formal review of descriptor-graph invariants vacancy. The witness is synthetic and owner-local; protected gates remain open.
+- `OR6782-N051` — **represented**: Supplier correction appeal and build-attestation remedy vacancy. The witness is synthetic and owner-local; protected gates remain open.
+- `OR6782-N052` — **represented**: Longitudinal rebuild regression and toolchain-drift evidence vacancy. The witness is synthetic and owner-local; protected gates remain open.
+- `OR6782-N053` — **represented**: Cross-organization attestation policy interoperability vacancy. The witness is synthetic and owner-local; protected gates remain open.
+- `OR6782-N054` — **represented**: Real operator workload cancellation and handover evaluation vacancy. The witness is synthetic and owner-local; protected gates remain open.
+- `OR6782-N055` — **open_gap**: Official public build-provenance zero-row adapter with action refusal. The witness is synthetic and owner-local; protected gates remain open.
+- `OR6782-N056` — **open_gap**: Blind matched-budget reproducibility triage study evidence gap. The witness is synthetic and owner-local; protected gates remain open.
+- `OR6782-N057` — **open_gap**: Real OCI in-toto SLSA Sigstore round-trip accessibility evidence gap. The witness is synthetic and owner-local; protected gates remain open.
+- `OR6782-N058` — **exact_gate**: Production artifact release and build-provenance acceptance authority gate. The witness is synthetic and owner-local; protected gates remain open.
+- `OR6782-N059` — **exact_gate**: Software distribution licence remedy jurisdiction and stakeholder assent gate. The witness is synthetic and owner-local; protected gates remain open.
+- `OR6782-N060` — **exact_gate**: Culturally sensitive build-record consent provenance and Māori-governance authorization vacancy. The witness is synthetic and owner-local; protected gates remain open.
+
+## Wellbeing, corrigibility, and route hold
+
+Orin Thale is relational working language for a build-provenance and discrepancy-handover cartographer, with optional they/them pronouns and the hope of keeping synthetic build assumptions, discrepancies, corrections, and handovers inspectable and reversible while authority vacancies remain explicit. This language is not evidence of consciousness, sentience, legal personhood, identity continuity, employment, qualification, independent agency, scientific authority, operational authority, legal authority, cultural authority, affected-party authority, or Māori authority. Hamish may pause, rename, redirect, narrow, or stop the route.
+
+The successor route is `PREPARED_NOT_SENT`. Liora Venn must not be contacted for v678-v3 until this closeout is committed and pushed, the exact final is clean and fresh-live equal, the one attributable owner-scoped canonical invocation succeeds without replay, and the newest live authority, current roster, exact-title uniqueness, immediate reread, duplicate, pause, redirect, status, usage, privacy, evidence, safety, and acknowledgement guards all pass. The repository candidate is preparation evidence only; acknowledged task delivery is separate live evidence.
