@@ -1,0 +1,5 @@
+#!/usr/bin/env python3
+from ghc_family_sylven_arc_v678_v6_core import runner_cli
+
+if __name__ == "__main__":
+    runner_cli("privacy")
