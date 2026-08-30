@@ -1,0 +1,41 @@
+{
+  "boundary": "This is a bounded same-owner static review of four changed Python files. It is not exhaustive security, an independent audit, a production certification, or permission for external action.",
+  "files": [
+    "scripts/build_ghc_family_caelen_morrow_v676_v8_final.py",
+    "scripts/ghc_family_caelen_morrow_v676_v8_final_manifest.py",
+    "scripts/ghc_family_caelen_morrow_v676_v8_canonical.py",
+    "tests/test_ghc_family_caelen_morrow_v676_v8_final.py"
+  ],
+  "pre_repair_first_summary_invocation": {
+    "exit_code": 1,
+    "finding_count": 113,
+    "high_findings": 0,
+    "low_findings": 113,
+    "medium_findings": 0
+  },
+  "pre_repair_followup_projection": "A second read-only Bandit JSON projection grouped the pre-repair review scope by test identifier and file; it did not mutate repository bytes or establish broader assurance.",
+  "current_post_repair_review": {
+    "exit_code": 1,
+    "finding_count": 121,
+    "high_findings": 0,
+    "low_findings": 121,
+    "medium_findings": 0
+  },
+  "current_finding_classes": {
+    "B101": 109,
+    "B404": 3,
+    "B603": 5,
+    "B607": 4
+  },
+  "low_finding_review": [
+    "B101 notices identify assertions in owner tests and bounded validation checks; assertions remain intentional test and fail-closed contract surfaces.",
+    "B404, B603, and B607 notices identify explicit local subprocess use for Git, Python, Bandit, and pytest lifecycle checks. The reviewed calls use argument lists, no shell=True, bounded repository-relative or caller-supplied paths, captured output, and checked return states where required.",
+    "Low-severity notices remain visible and are not converted into zero-finding or exhaustive-security claims."
+  ],
+  "medium_or_high_findings": 0,
+  "phase": "v676-v8",
+  "schema": "ghc-family-bounded-security-review/v1",
+  "tool": "bandit",
+  "tool_version": "1.9.4",
+  "tool_invocations": 4
+}
