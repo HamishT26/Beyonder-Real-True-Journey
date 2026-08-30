@@ -766,7 +766,7 @@ def main() -> None:
     args = parser.parse_args()
     repo = args.repo.resolve()
     if git(repo, "rev-parse", "HEAD") != SOURCE:
-        raise SystemExit("x1 builder requires the immutable Eiren Kestrel v677-v1 exact final as HEAD")
+        raise SystemExit("x1 builder requires the immutable Elaren Kestrel v677-v2 exact final as HEAD")
     if git(repo, "branch", "--show-current") != BRANCH:
         raise SystemExit("unexpected branch")
     root = repo / "docs" / OWNER_SLUG / PHASE
