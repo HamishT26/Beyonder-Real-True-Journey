@@ -15,6 +15,7 @@ from pathlib import Path
 SOURCE = "76e4e605a63074f4664296f9b61c59d41886d097"
 X1_HEAD = "7671bef564b83340410c69d0de57d7592ec5c4eb"
 EVIDENCE_HEAD = "b29b90b81169d94bae13d8e7f74a33216157a84f"
+ORIGINAL_FINAL = "2911bbceb394fb967962fb56c5db1ad508e1f024"
 ROOT = "docs/neris-solane/v677-v3"
 FINAL_ROOT = f"{ROOT}/final"
 DELTA_MANIFEST = f"{ROOT}/validation/final-delta-manifest.json"
@@ -27,6 +28,25 @@ CODE_PATHS = {
     "scripts/ghc_family_neris_solane_v677_v3_canonical.py",
     "scripts/ghc_family_neris_solane_v677_v3_final_manifest.py",
     "tests/test_ghc_family_neris_solane_v677_v3_final.py",
+}
+CORRECTION_PATHS = CODE_PATHS | {
+    f"{FINAL_ROOT}/accessible-final-report.html",
+    f"{FINAL_ROOT}/baton-integrity.json",
+    f"{FINAL_ROOT}/bounded-security-review.json",
+    f"{FINAL_ROOT}/closeout-receipt.json",
+    f"{FINAL_ROOT}/complete-incomplete-checklist.json",
+    f"{FINAL_ROOT}/content-seal.json",
+    f"{FINAL_ROOT}/dependency-corrected-final-overlay.json",
+    f"{FINAL_ROOT}/final-integrated-overview.md",
+    f"{FINAL_ROOT}/final-validation-prerequisites.json",
+    f"{FINAL_ROOT}/handoffs/vesper-arlen-v677-v4-activation-candidate.md",
+    f"{FINAL_ROOT}/lifecycle-replay.json",
+    f"{FINAL_ROOT}/method-flow-final.json",
+    f"{FINAL_ROOT}/phase-truth.json",
+    f"{FINAL_ROOT}/retained-negative-register.json",
+    DELTA_MANIFEST,
+    OWNER_MANIFEST,
+    STAGED_REVIEW,
 }
 PRIVACY_PATTERNS = {
     "private_absolute_path": re.compile(r"(?i)[A-Z]:[\\/]+Users[\\/]+"),
@@ -93,15 +113,15 @@ def main() -> int:
     parser.add_argument("--repo", type=Path, required=True)
     args = parser.parse_args()
     repo = args.repo.resolve()
-    if git(repo, "rev-parse", "HEAD") != EVIDENCE_HEAD:
-        raise SystemExit("final manifest must be built at immutable x2 evidence head")
+    if git(repo, "rev-parse", "HEAD") != ORIGINAL_FINAL:
+        raise SystemExit("corrected-final manifest must be built at the immutable original final")
 
     final_paths = {
         path.relative_to(repo).as_posix()
         for path in (repo / FINAL_ROOT).rglob("*")
         if path.is_file()
     }
-    expected_staged = final_paths | CODE_PATHS | {DELTA_MANIFEST, OWNER_MANIFEST, STAGED_REVIEW}
+    expected_staged = CORRECTION_PATHS - SELF_EXCLUSIONS
     staged = set(filter(None, git(repo, "diff", "--cached", "--name-only", "--diff-filter=ACMR").splitlines()))
     if staged != expected_staged:
         raise SystemExit(
@@ -131,7 +151,7 @@ def main() -> int:
         {
             "schema": "ghc-family-normalized-lf-manifest/v1",
             "phase": "v677-v3",
-            "lifecycle": "final_delta",
+            "lifecycle": "dependency_corrected_final_delta",
             "source": SOURCE,
             "x1": X1_HEAD,
             "evidence": EVIDENCE_HEAD,
@@ -221,7 +241,7 @@ def main() -> int:
 
     staged_review = {
         "schema": "ghc-family-final-staged-review/v1",
-        "status": "VALID_REPOSITORY_PREPARED_FINAL_STAGED_REVIEW",
+        "status": "VALID_DEPENDENCY_CORRECTED_FINAL_STAGED_REVIEW",
         "phase": "v677-v3",
         "source": SOURCE,
         "x1": X1_HEAD,

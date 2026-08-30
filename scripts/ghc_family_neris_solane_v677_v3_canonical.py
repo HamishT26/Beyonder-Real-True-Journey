@@ -17,6 +17,7 @@ from typing import Any
 SOURCE = "76e4e605a63074f4664296f9b61c59d41886d097"
 X1_HEAD = "7671bef564b83340410c69d0de57d7592ec5c4eb"
 EVIDENCE_HEAD = "b29b90b81169d94bae13d8e7f74a33216157a84f"
+ORIGINAL_FINAL = "2911bbceb394fb967962fb56c5db1ad508e1f024"
 ROOT = "docs/neris-solane/v677-v3"
 FINAL_TEST = "tests/test_ghc_family_neris_solane_v677_v3_final.py"
 OWNER_MANIFEST = f"{ROOT}/validation/final-owner-manifest.json"
@@ -149,13 +150,15 @@ def main() -> int:
             raise RuntimeError("source to x1 direct-parent mismatch")
         if git(repo, "rev-parse", f"{EVIDENCE_HEAD}^") != X1_HEAD:
             raise RuntimeError("x1 to evidence direct-parent mismatch")
-        if git(repo, "rev-parse", "HEAD^") != EVIDENCE_HEAD:
-            raise RuntimeError("evidence to final direct-parent mismatch")
+        if git(repo, "rev-parse", f"{ORIGINAL_FINAL}^") != EVIDENCE_HEAD:
+            raise RuntimeError("evidence to original-final direct-parent mismatch")
+        if git(repo, "rev-parse", "HEAD^") != ORIGINAL_FINAL:
+            raise RuntimeError("original-final to dependency-corrected-final direct-parent mismatch")
         commit_count = int(str(git(repo, "rev-list", "--count", f"{SOURCE}..HEAD")))
         merges = list(filter(None, str(git(repo, "rev-list", "--merges", f"{SOURCE}..HEAD")).splitlines()))
         parents = list(filter(None, str(git(repo, "rev-list", "--parents", "--reverse", f"{SOURCE}..HEAD")).splitlines()))
-        if commit_count != 3 or merges or any(len(line.split()) != 2 for line in parents):
-            raise RuntimeError("final topology is not three direct single-parent commits with zero merges")
+        if commit_count != 4 or merges or any(len(line.split()) != 2 for line in parents):
+            raise RuntimeError("corrected-final topology is not four direct single-parent commits with zero merges")
 
         delta = load_one(repo, DELTA_MANIFEST)
         owner = load_one(repo, OWNER_MANIFEST)

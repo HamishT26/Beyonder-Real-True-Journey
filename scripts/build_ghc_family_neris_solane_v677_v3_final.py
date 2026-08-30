@@ -21,10 +21,10 @@ ROOT = Path("docs/neris-solane/v677-v3")
 FINAL = ROOT / "final"
 VALIDATION = ROOT / "validation"
 SEALED = {
-    "effective_negatives": 44469,
-    "effective_methods": 39271,
-    "retained_failed_witnesses": 16130,
-    "bounded_passing_witnesses": 23841,
+    "effective_negatives": 44472,
+    "effective_methods": 39277,
+    "retained_failed_witnesses": 16133,
+    "bounded_passing_witnesses": 23844,
     "open_gaps": 377,
     "exact_gates": 368,
 }
@@ -62,8 +62,8 @@ def write(path: Path, value: str) -> None:
 
 def bounded_security_review(repo: Path) -> dict[str, Any]:
     paths = sorted(
-        [path for path in (repo / "scripts").glob("*elaren_kestrel_v677_v2*.py") if path.is_file()]
-        + [path for path in (repo / "tests").glob("*elaren_kestrel_v677_v2*.py") if path.is_file()]
+        [path for path in (repo / "scripts").glob("*neris_solane_v677_v3*.py") if path.is_file()]
+        + [path for path in (repo / "tests").glob("*neris_solane_v677_v3*.py") if path.is_file()]
     )
     risky = {
         "shell_enabled_subprocess": re.compile(r"shell\s*=\s*True"),

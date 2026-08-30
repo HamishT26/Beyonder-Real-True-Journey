@@ -13,11 +13,12 @@ VALIDATION = ROOT / "validation"
 SOURCE = "76e4e605a63074f4664296f9b61c59d41886d097"
 X1 = "7671bef564b83340410c69d0de57d7592ec5c4eb"
 EVIDENCE = "b29b90b81169d94bae13d8e7f74a33216157a84f"
+ORIGINAL_FINAL = "2911bbceb394fb967962fb56c5db1ad508e1f024"
 SEALED = {
-    "effective_negatives": 44462,
-    "effective_methods": 39257,
-    "retained_failed_witnesses": 16123,
-    "bounded_passing_witnesses": 23834,
+    "effective_negatives": 44472,
+    "effective_methods": 39277,
+    "retained_failed_witnesses": 16133,
+    "bounded_passing_witnesses": 23844,
     "open_gaps": 377,
     "exact_gates": 368,
 }
@@ -38,7 +39,7 @@ def test_final_phase_truth_has_exact_anchors_and_verdict() -> None:
     assert truth["evidence"] == EVIDENCE
     assert truth["exact_final"] == "COMMIT_CONTAINING_THIS_FILE"
     assert truth["terminal_verdict"] == "NOT_READY_FOR_STAGE_20"
-    assert truth["canonical_state"] == "PENDING_ONE_EXTERNAL_EXACT_FINAL_INVOCATION"
+    assert truth["canonical_state"] == "PENDING_ONE_CORRECTED_EXACT_FINAL_INVOCATION"
     assert truth["route_state"] == "PREPARED_NOT_SENT"
 
 
@@ -77,8 +78,8 @@ def test_retained_negative_register_matches_seal() -> None:
 def test_open_and_exact_gate_totals_remain_open() -> None:
     gaps = load(FINAL / "open-gap-register.json")
     gates = load(FINAL / "exact-gate-register.json")
-    assert gaps["total"] == 374 and len(gaps["phase_local"]) == 3
-    assert gates["total"] == 365 and len(gates["phase_local"]) == 3
+    assert gaps["total"] == 377 and len(gaps["phase_local"]) == 3
+    assert gates["total"] == 368 and len(gates["phase_local"]) == 3
     assert all(row["state"] == "open_gap" for row in gaps["phase_local"])
     assert all(row["state"] == "exact_gate" for row in gates["phase_local"])
 
@@ -86,7 +87,7 @@ def test_open_and_exact_gate_totals_remain_open() -> None:
 def test_complete_incomplete_checklist_keeps_terminal_work_separate() -> None:
     checklist = load(FINAL / "complete-incomplete-checklist.json")
     assert len(checklist["complete"]) >= 10
-    assert "external exact-final canonical invocation" in checklist["incomplete"]
+    assert "one corrected exact-final canonical invocation after the retained original-final failure" in checklist["incomplete"]
     assert "live successor registry refresh and acknowledgement" in checklist["incomplete"]
 
 
@@ -193,7 +194,8 @@ def test_lifecycle_replay_requires_three_direct_commits_and_zero_merges() -> Non
     assert replay["source"] == SOURCE
     assert replay["x1"] == X1
     assert replay["evidence"] == EVIDENCE
-    assert replay["expected_new_commits"] == 3
+    assert replay["expected_new_commits"] == 4
+    assert replay["original_final"] == ORIGINAL_FINAL
     assert replay["expected_merges"] == 0
     assert replay["strict_x1_before_x2"] is True
     assert replay["predecessor_canonical_or_sealed_components_replayed"] is False
@@ -244,7 +246,17 @@ def test_final_validation_prerequisites_fail_closed_before_external_canonical() 
 def test_closeout_receipt_preserves_prepared_not_sent_state() -> None:
     value = load(FINAL / "closeout-receipt.json")
     assert value["repository_seal"] == SEALED
-    assert value["canonical_state"] == "PENDING_EXTERNAL_EXACT_FINAL_INVOCATION"
+    assert value["canonical_state"] == "PENDING_CORRECTED_EXACT_FINAL_INVOCATION"
+
+
+def test_dependency_corrected_overlay_retains_original_canonical_failure() -> None:
+    value = load(FINAL / "dependency-corrected-final-overlay.json")
+    assert value["original_final"] == ORIGINAL_FINAL
+    assert value["failed_canonical"]["status"] == "INVALID_EXACT_FINAL_OWNER_SCOPED_CANONICAL"
+    assert value["failed_canonical"]["tests_passed"] == 17
+    assert value["failed_canonical"]["tests_failed"] == 6
+    assert value["failed_canonical"]["same_final_retry_count"] == 0
+    assert value["corrected_repository_seal"] == SEALED
     assert value["route_state"] == "PREPARED_NOT_SENT"
     assert value["real_world_rows"] == 0
     assert value["external_actions"] == 0

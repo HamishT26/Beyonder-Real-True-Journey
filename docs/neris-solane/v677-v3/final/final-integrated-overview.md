@@ -2,7 +2,7 @@
 
 ## Outcome and lifecycle
 
-This phase is an additive three-commit Neris lifecycle rooted at Elaren Kestrel's immutable v677-v2 exact final. The source is `76e4e605a63074f4664296f9b61c59d41886d097`; planning-only x1 is `7671bef564b83340410c69d0de57d7592ec5c4eb`; and immutable x2 evidence is `b29b90b81169d94bae13d8e7f74a33216157a84f`. This repository-prepared closeout is the intended direct child of evidence. Elaren's canonical receipt, immutable seal, acknowledged activation, and retained evidence were not replayed or rewritten.
+This phase is an additive four-commit Neris lifecycle rooted at Elaren Kestrel's immutable v677-v2 exact final. The source is `76e4e605a63074f4664296f9b61c59d41886d097`; planning-only x1 is `7671bef564b83340410c69d0de57d7592ec5c4eb`; immutable x2 evidence is `b29b90b81169d94bae13d8e7f74a33216157a84f`; and the retained original final is `2911bbceb394fb967962fb56c5db1ad508e1f024`. The corrected repository-prepared final is the direct child of that original final. Elaren's canonical receipt, immutable seal, acknowledged activation, and retained evidence were not replayed or rewritten.
 
 ## Program and outcomes
 
@@ -22,11 +22,11 @@ Within bounded synthetic scope, 120 safe-now rows, 80 candidate rows, and 100 CL
 
 ## Retained failures and validation truth
 
-Every startup, semantic-audit, parser, display, sensor-armse-materialization, and x1 tooling failure remains paired with a bounded recovery and zero failure credit. The owner x2 selection passed 21 of 21 checks once and was not replayed. Exact normalized-LF manifests cover the immutable x1 and evidence lifecycles. The final closeout adds four bounded passing witnesses for truth synthesis, accessible reporting, manifest/seal assembly, and terminal prerequisite checks without inventing a failed witness or closing a protected gate.
+Every startup, semantic-audit, parser, display, materialization, and x1 tooling failure remains paired with a bounded recovery and zero failure credit. The first x2 owner-test aggregate passed nineteen checks and failed two stale-count dependencies, earning zero aggregate-success credit; only those two dependencies were corrected and selected for a 2/2 isolated recovery, while the nineteen unaffected successes were not replayed. Exact normalized-LF manifests cover the immutable x1 and evidence lifecycles. The original-final canonical was invoked once, passed seventeen owner tests, failed six dependencies, earned zero aggregate-success credit, and was never retried on that SHA. This additive correction preserves that receipt and changes only the declared dependencies needed for a distinct corrected final.
 
 ## Repository seal and terminal verdict
 
-The repository-prepared seal preserves 44,469 effective negatives, 39,271 Method Flow methods, 16,130 retained failed witnesses, 23,841 bounded passing witnesses, 377 open gaps, and 368 exact gates. The verdict remains NOT_READY_FOR_STAGE_20. Exact-final canonical validation and any later live route acknowledgement remain external overlays and do not rewrite this seal.
+The dependency-corrected repository seal preserves 44,472 effective negatives, 39,277 Method Flow methods, 16,133 retained failed witnesses, 23,844 bounded passing witnesses, 377 open gaps, and 368 exact gates. The verdict remains NOT_READY_FOR_STAGE_20. One corrected exact-final canonical invocation and any later live route acknowledgement remain external overlays and do not rewrite this seal.
 
 ## Source boundaries
 
