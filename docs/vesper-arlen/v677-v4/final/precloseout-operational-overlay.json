@@ -1,0 +1,52 @@
+{
+  "additional_failure": {
+    "credit": 0,
+    "method_id": "VSP6774-FINAL-N002",
+    "state": "retained_failure",
+    "summary": "A one-blob-at-a-time read-only precommit manifest replay crossed the command boundary and earned zero validation credit."
+  },
+  "additional_failure_2": {
+    "credit": 0,
+    "method_id": "VSP6774-FINAL-N003",
+    "state": "retained_failure",
+    "summary": "The first batch-object wrapper serviced input and output sequentially, deadlocked at the pipe boundary, and earned zero validation credit."
+  },
+  "additional_recovery": {
+    "credit": 1,
+    "does_not_erase": "VSP6774-FINAL-N002",
+    "method_id": "VSP6774-FINAL-P002",
+    "state": "bounded_recovery",
+    "summary": "The slow probe was replaced with a single Git batch-object design rather than repeated."
+  },
+  "additional_recovery_2": {
+    "credit": 1,
+    "does_not_erase": "VSP6774-FINAL-N003",
+    "method_id": "VSP6774-FINAL-P003",
+    "state": "bounded_recovery",
+    "summary": "A concurrently serviced communicate-style Git batch-object stream replayed 264 unique blobs, 262 owner entries, 32 final-delta entries, and 30 content-seal entries."
+  },
+  "failure": {
+    "credit": 0,
+    "method_id": "VSP6774-FINAL-N001",
+    "state": "retained_failure",
+    "summary": "The first post-test diff-hygiene review found one excess EOF blank line in each of two x2 Python files."
+  },
+  "recovery": {
+    "credit": 1,
+    "does_not_erase": "VSP6774-FINAL-N001",
+    "method_id": "VSP6774-FINAL-P001",
+    "state": "bounded_recovery",
+    "summary": "The two whitespace-only lines were removed; exact manifests, Python syntax, and diff hygiene were regenerated without replaying the successful x2 aggregate."
+  },
+  "repository_seal": {
+    "bounded_passing_witnesses": 24476,
+    "effective_methods": 40222,
+    "effective_negatives": 44785,
+    "exact_gates": 371,
+    "open_gaps": 380,
+    "retained_failed_witnesses": 16446
+  },
+  "schema": "ghc-family-precloseout-operational-overlay/v1",
+  "semantic_change": false,
+  "successful_x2_aggregate_replayed": false
+}

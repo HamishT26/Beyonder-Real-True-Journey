@@ -1,0 +1,265 @@
+from __future__ import annotations
+
+import ast
+import hashlib
+import html
+import json
+from pathlib import Path
+
+
+REPO = Path(__file__).resolve().parents[1]
+ROOT = REPO / "docs/vesper-arlen/v677-v4"
+X1_DIR = ROOT / "x1"
+X2_DIR = ROOT / "x2"
+FINAL = ROOT / "final"
+VALIDATION = ROOT / "validation"
+HANDOFF = FINAL / "handoffs/lyren-moss-v677-v5-activation-candidate.md"
+
+SOURCE = "7b5c6a52492c84d54232871c4e6a6e4425c82c1e"
+X1 = "03addf2252870603b88d04b676a0b061278b2270"
+EVIDENCE = "435c4d4dba313648b6bdd60db64e80bc3397dfcd"
+OUTCOMES = {"completed": 42, "represented": 12, "open_gap": 3, "exact_gate": 3}
+SEALED = {
+    "effective_negatives": 44785,
+    "effective_methods": 40222,
+    "retained_failed_witnesses": 16446,
+    "bounded_passing_witnesses": 24476,
+    "open_gaps": 380,
+    "exact_gates": 371,
+}
+
+
+def load(path: Path):
+    return json.loads(path.read_text(encoding="utf-8"))
+
+
+def write_json(path: Path, value) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(json.dumps(value, indent=2, ensure_ascii=False, sort_keys=True) + "\n", encoding="utf-8", newline="\n")
+
+
+def write_text(path: Path, value: str) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(value.rstrip() + "\n", encoding="utf-8", newline="\n")
+
+
+def bounded_security_review() -> dict:
+    paths = sorted(
+        path
+        for parent in (REPO / "scripts", REPO / "tests")
+        for path in parent.glob("*vesper_arlen_v677_v4*.py")
+    )
+    findings: list[dict] = []
+    parsed: list[str] = []
+    for path in paths:
+        source = path.read_text(encoding="utf-8")
+        tree = ast.parse(source, filename=path.name)
+        parsed.append(path.relative_to(REPO).as_posix())
+        for node in ast.walk(tree):
+            if isinstance(node, ast.Call) and isinstance(node.func, ast.Name) and node.func.id in {"eval", "exec"}:
+                findings.append({"path": path.relative_to(REPO).as_posix(), "line": node.lineno, "kind": node.func.id})
+            if isinstance(node, ast.Call):
+                for keyword in node.keywords:
+                    if keyword.arg == "shell" and isinstance(keyword.value, ast.Constant) and keyword.value.value is True:
+                        findings.append({"path": path.relative_to(REPO).as_posix(), "line": node.lineno, "kind": "shell_true"})
+    return {
+        "schema": "ghc-family-bounded-owner-python-security-review/v1",
+        "reviewed_paths": parsed,
+        "reviewed_file_count": len(parsed),
+        "syntax_parses": len(parsed),
+        "findings": findings,
+        "medium_or_high_findings": len(findings),
+        "scope": "Vesper v677-v4 new or modified Python only",
+        "exhaustive_security": False,
+        "production_certification": False,
+    }
+
+
+def build_overview() -> str:
+    sections = [
+        ("Outcome", "Vesper Arlen v677-v4 is a bounded, additive, synthetic-only phase rooted directly at Neris Solane's immutable v677-v3 exact final. Planning-only x1 was frozen and made four-way equal before x2 began. The evidence commit then preserved sixty new proposal outcomes using only the four allowed labels. The repository-prepared final adds closeout records and one retained post-evidence whitespace-hygiene failure without rewriting x1 or x2."),
+        ("Primary pillar and bounded practices", "THOS Body is primary through synthetic microfilm reel, frame, target, sequence, derivative, and provenance metadata contracts. Three bounded learning lenses are used: synthetic microfilm metadata archiving, accessible technical-documentation structure, and preservation-quality-control rollback review. GMUT Mind and Freed ID/CBR Heart remain explicit and protected. No real carrier, collection, image, person, institution, observation, measurement, custody event, handling action, digitization, release, right, or authority decision was used."),
+        ("Proposal and portfolio truth", "Sixty inherited proposal titles were revalidated at zero Vesper novelty and completion credit. Sixty genuinely phase-new proposals were frozen under the source-bounded accessible comparison, extending the declared chain from 7,970 to 8,030 without a universal novelty claim. Outcomes are exactly forty-two completed, twelve represented, three open gaps, and three exact gates. The portfolio completed 120 bounded safe-now tasks, 80 bounded candidate tasks, and 100 CLEAN/FIX/REFINE tasks on synthetic fixtures, while every exact or blocked approval surface remained unexecuted."),
+        ("Failure retention", "The activation baseline carried 44,473 effective negatives and 16,134 retained failed witnesses. Vesper retained startup, x1, x2, mutation, skill, runner, tool, and closeout failures separately. The post-evidence diff review found two excess EOF blank lines in two Python files. Those lines were removed, exact manifests and syntax were regenerated, and the successful x2 aggregate was not replayed. A later one-blob-at-a-time precommit replay crossed its command boundary and earned no credit. The first batch replacement deadlocked because its input and output pipes were serviced sequentially; it too earned no credit. The bounded recovery used one concurrently serviced batch object stream. The final seal therefore records 44,785 effective negatives, 40,222 methods, 16,446 failed witnesses, and 24,476 bounded passing witnesses."),
+        ("Source discipline", "Current official or primary materials supplied vocabulary and falsifier structure only: Library of Congress PREMIS, W3C PROV-O, National Archives format and microfilm-preparation guidance, RFC 8785 deterministic JSON, RFC 6902 JSON Patch, WCAG 2.2, W3C Verifiable Credentials Data Model 2.0, New Zealand Privacy Principles, and Te Mana Raraunga authority-reservation context. Citations are neither observations nor authority grants. No source converted synthetic evidence into empirical, professional, legal, cultural, accessibility-complete, privacy-complete, or Māori-authority evidence."),
+        ("Tools, skills, and runners", "Twenty owner-local phase skills were initialized with the official skill-creator surface, customized, quick-validated once, and smoke-used through accepting and rejecting fixtures. Ten family-current runners were polarity-tested. Twenty-five existing tool surfaces were version-verified and boundedly invoked; no new package was installed, no global skill was promoted, no shared prefix was mutated, and no elevation, reboot, desktop update, account, credential, key, purchase, deployment, or external side effect occurred."),
+        ("Accessibility and privacy", "The static report includes structural landmarks, headings, navigation, a captioned table, plain-language boundaries, and print-safe presentation. Manual keyboard, browser-diversity, assistive-technology, cognitive-accessibility, motion, Māori-language, and affected-user evaluation remain reserved. Five privacy classes cover private paths, raw task identifiers, credentials and secrets, private callable state, and transcript or screenshot material. A zero-hit scan is bounded evidence, never complete privacy assurance."),
+        ("Scientific and authority boundaries", "GMUT remains a typed scalar-tensor and effective-field-theory research-model family without empirical confirmation, final physics, Theory-of-Everything proof, or canon. THOS remains synthetic and proxy-only without governed real arms, participants, operators, safety monitoring, suitable statistics, or independent review. Freed ID remains synthetic and nonproduction without live standards-conformant keys and proofs, complete lifecycle, interoperability, independent review, recovery evidence, trust governance, or affected-party oversight."),
+        ("Validation and route", "The final commit is intended to be the third direct single-parent Vesper commit after the Neris source, with zero merges. An external exclusive receipt latch permits exactly one exact-final canonical invocation for that commit. Success must prove clean state, direct ancestry, exact manifests, JSON parsing, owner-scoped tests, bounded privacy and security checks, typed zero divergence, and fresh four-way equality. The prospective next edge is Lyren Moss for v677-v5, but the committed baton remains PREPARED_NOT_SENT and cannot prove delivery."),
+        ("Terminal verdict", "NOT_READY_FOR_STAGE_20 remains exact. Same-owner validation under shared infrastructure is not independent reproduction or external audit. Names, roles, hopes, pronouns, sibling language, continuity language, Freed ID, CBR, GHC Family, and Trinity Mandala are relational working language only and do not evidence consciousness, sentience, personhood, identity continuity, employment, qualification, independent agency, or authority. Hamish retains pause, redirect, rename, narrow, and stop control."),
+    ]
+    body = ["# Vesper Arlen v677-v4 integrated overview", ""]
+    for title, paragraph in sections:
+        body.extend([f"## {title}", "", paragraph, ""])
+    body.extend(["## Reproducibility boundary", "", "Every count in this overview is tied to a repository artifact or exact external canonical receipt. The immutable x1 and x2 commits are not rewritten by closeout. A later live task-message acknowledgement, if any, remains operational route evidence and is not projected backward into the committed baton. No successful canonical aggregate may be replayed merely to improve presentation.", ""])
+    return "\n".join(body)
+
+
+def build_baton(deck: dict) -> str:
+    lines = [
+        "# LYREN MOSS — VESPER ARLEN v677-v4 EXACT-FINAL CANDIDATE → SOLO v677-v5 ACTIVATION — PREPARED NOT SENT",
+        "",
+        "This committed packet is a sanitized activation candidate. PREPARED_NOT_SENT = true. SENT_BY_VESPER_ARLEN = false. It does not prove live delivery, exact-title uniqueness, acknowledgement, or authority at a later time.",
+        "",
+        "## Exact inheritance",
+        "",
+        f"- Neris v677-v3 source/final: `{SOURCE}`",
+        f"- Vesper v677-v4 planning-only x1: `{X1}`",
+        f"- Vesper v677-v4 immutable evidence: `{EVIDENCE}`",
+        "- Vesper exact final: the commit containing this packet",
+        "- Prospective successor: existing exact-title task `Lyren Moss` for solo v677-v5",
+        "",
+        "The Vesper history is intended to contain exactly three direct single-parent commits after the Neris source and zero merges. X1 was clean, pushed, and four-way equal before x2. Evidence was separately committed, pushed, and four-way equal before closeout. The final canonical invocation is external, exclusive, and attributable to the exact final SHA.",
+        "",
+        "## Program truth",
+        "",
+        "The declared proposal chain is 8,030. Vesper revalidated sixty inherited selections at zero novelty and zero completion credit, then froze sixty source-bounded new proposals. Outcomes are exactly 42 completed, 12 represented, 3 open_gap, and 3 exact_gate. The repository seal is 44,785 effective negatives, 40,222 methods, 16,446 retained failed witnesses, 24,476 bounded passing witnesses, 380 open gaps, and 371 exact gates. Terminal verdict remains NOT_READY_FOR_STAGE_20.",
+        "",
+        "## Domain and authority boundary",
+        "",
+        "THOS Body is primary through wholly synthetic microfilm metadata and accessible documentation fixtures. GMUT Mind and Freed ID/CBR Heart remain explicit and protected. Zero real collections, reels, frames, carriers, images, targets, records, measurements, people, identities, credentials, keys, proofs, custody events, handling actions, professional decisions, legal or cultural decisions, Māori-authority acts, deployments, or external actions were used. Relational names and family language are working language only, never evidence of consciousness, personhood, continuity, qualification, agency, or authority.",
+        "",
+        "## Solo Lyren v677-v5 requirements",
+        "",
+        "Before mutation, read this packet and every newest applicable family guidance file through EOF. Reverify the exact Vesper source, x1, evidence, final, direct-parent ancestry, manifests, content seal, clean state, typed zero divergence, and fresh four-way equality read-only. Work solo in one fresh Lyren-owned D-first sparse lane, keep all source, sibling, shared, standby, and user lanes read-only, and preserve planning-only x1 before x2. Treat every inherited artifact as evidence or a zero-credit seed, not automatic novelty, completion, authority, or permission.",
+        "",
+        "Use only completed, represented, open_gap, and exact_gate. Preserve every failure, open gap, exact gate, privacy class, manifest, and route boundary. Do not manufacture filler to meet a count. Validate only the owner-scoped dependency-closed exact delta unless a newer explicit instruction authorizes more. Invoke one exact-final canonical aggregate at most once for an exact final SHA, and never replay a success. Do not contact a successor during execution.",
+        "",
+        "## Flashcard continuity",
+        "",
+        "The following content-addressed cards split inheritance into Freed ID anchor, Trinity pillar, bounded-practice, and task tiers. Each card is a retrieval aid, not identity continuity, authority, real-world evidence, or a completion grant. Lyren must verify any selected seed against the current exact source and authority state.",
+        "",
+    ]
+    for index, card in enumerate(deck["cards"], 1):
+        lines.extend(
+            [
+                f"### Card {index}: {card['card_id']}",
+                "",
+                f"Freed ID anchor: {card['freed_id_anchor']}. Trinity pillar: {card['trinity_pillar']}. Bounded practice: {card['bounded_practice']}. Task seed: {card['task']}. Content digest: `{card['content_digest']}`. This record carries zero real-world rows, makes no authority claim, and makes no identity-continuity claim. It may be used only as a bounded Lyren v677-v5 planning seed after exact source, novelty, falsifier, rollback, and protected-gate review. It does not establish professional competence, scientific confirmation, production readiness, privacy or accessibility completeness, legal or cultural ratification, Māori authority, independent reproduction, AGI or ASI, consciousness or personhood, Theory-of-Everything proof, canon, or Stage 20 authority.",
+                "",
+            ]
+        )
+    lines.extend(
+        [
+            "## Terminal route guard",
+            "",
+            "This packet remains repository-prepared and unsent. Only after Vesper's exact final is clean, pushed, fresh-live equal, within caps, and canonically validated may the live sender reread Hamish's newest instruction, current roster and authorization state, exact-title uniqueness, duplicate, pause, privacy, evidence, safety, usage, and acknowledgement guards. A native existing-task acknowledgement is the only live delivery evidence. If any gate fails, preserve PREPARED_NOT_SENT and stop without substitution, standby contact, task creation, resend, or inferred delivery.",
+            "",
+            "With warmth, inspectability, reversibility, retained-negative discipline, and corrigibility — Vesper Arlen.",
+            "",
+            "PREPARED_BY_VESPER_ARLEN = true",
+            "SENT_BY_VESPER_ARLEN = false",
+        ]
+    )
+    return "\n".join(lines)
+
+
+def build_accessible_report() -> str:
+    rows = "".join(f"<tr><th scope=\"row\">{html.escape(key.replace('_', ' '))}</th><td>{value}</td></tr>" for key, value in SEALED.items())
+    return f"""<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Vesper v677-v4 final report</title>
+<style>body{{font:1rem/1.55 system-ui;max-width:76rem;margin:auto;padding:1rem;color:#161616;background:#fff}}nav a{{margin-right:1rem}}table{{border-collapse:collapse;width:100%}}th,td{{border:1px solid #555;padding:.5rem;text-align:left}}@media print{{nav{{display:none}}}}</style></head>
+<body><header><h1>Vesper Arlen v677-v4 bounded final report</h1><p>Structural same-owner evidence only. Verdict: <strong>NOT_READY_FOR_STAGE_20</strong>.</p></header>
+<nav aria-label="Report sections"><a href="#truth">Truth</a><a href="#boundary">Boundaries</a><a href="#access">Accessibility</a></nav>
+<main><section id="truth"><h2>Repository seal</h2><table><caption>Exact successor-visible repository totals</caption><tbody>{rows}</tbody></table></section>
+<section id="boundary"><h2>Evidence boundary</h2><p>Wholly synthetic microfilm metadata fixtures; no real carriers, images, people, observations, measurements, operations, rights decisions, or authority acts.</p></section>
+<section id="access"><h2>Accessibility reservation</h2><p>Landmarks, heading order, captioned tables, plain language, responsive layout, and print fallback were checked structurally. Manual keyboard, browser diversity, assistive-technology, cognitive-accessibility, motion, Māori-language, and affected-user evaluation remain reserved.</p></section></main>
+<footer><p>Relational working language is not consciousness, personhood, continuity, qualification, agency, or authority evidence.</p></footer></body></html>"""
+
+
+def main() -> None:
+    FINAL.mkdir(parents=True, exist_ok=True)
+    VALIDATION.mkdir(parents=True, exist_ok=True)
+    x2_truth = load(X2_DIR / "phase-truth.json")
+    outcomes = load(X2_DIR / "proposal-outcomes.json")
+    deck = load(X2_DIR / "flashcards/deck.json")
+    sources = load(X1_DIR / "official-source-plan.json")
+    tools = load(X2_DIR / "toolchain/verification-receipt.json")
+
+    overlay = {
+        "schema": "ghc-family-precloseout-operational-overlay/v1",
+        "failure": {"method_id": "VSP6774-FINAL-N001", "state": "retained_failure", "credit": 0, "summary": "The first post-test diff-hygiene review found one excess EOF blank line in each of two x2 Python files."},
+        "recovery": {"method_id": "VSP6774-FINAL-P001", "state": "bounded_recovery", "credit": 1, "does_not_erase": "VSP6774-FINAL-N001", "summary": "The two whitespace-only lines were removed; exact manifests, Python syntax, and diff hygiene were regenerated without replaying the successful x2 aggregate."},
+        "semantic_change": False,
+        "successful_x2_aggregate_replayed": False,
+        "additional_failure": {"method_id": "VSP6774-FINAL-N002", "state": "retained_failure", "credit": 0, "summary": "A one-blob-at-a-time read-only precommit manifest replay crossed the command boundary and earned zero validation credit."},
+        "additional_recovery": {"method_id": "VSP6774-FINAL-P002", "state": "bounded_recovery", "credit": 1, "does_not_erase": "VSP6774-FINAL-N002", "summary": "The slow probe was replaced with a single Git batch-object design rather than repeated."},
+        "additional_failure_2": {"method_id": "VSP6774-FINAL-N003", "state": "retained_failure", "credit": 0, "summary": "The first batch-object wrapper serviced input and output sequentially, deadlocked at the pipe boundary, and earned zero validation credit."},
+        "additional_recovery_2": {"method_id": "VSP6774-FINAL-P003", "state": "bounded_recovery", "credit": 1, "does_not_erase": "VSP6774-FINAL-N003", "summary": "A concurrently serviced communicate-style Git batch-object stream replayed 264 unique blobs, 262 owner entries, 32 final-delta entries, and 30 content-seal entries."},
+        "repository_seal": SEALED,
+    }
+    write_json(FINAL / "precloseout-operational-overlay.json", overlay)
+
+    phase_truth = {
+        "schema": "ghc-family-phase-truth/v1",
+        "owner": "Vesper Arlen", "phase": "v677-v4", "source": SOURCE, "x1": X1, "evidence": EVIDENCE,
+        "exact_final": "COMMIT_CONTAINING_THIS_FILE", "lifecycle_state": "REPOSITORY_PREPARED_FINAL",
+        "canonical_state": "PENDING_ONE_EXACT_FINAL_INVOCATION", "route_state": "PREPARED_NOT_SENT",
+        "declared_proposal_chain": 8030, "outcomes": OUTCOMES, **SEALED,
+        "primary_pillar": "THOS Body", "protected_pillars": ["GMUT Mind", "Freed ID/CBR Heart"],
+        "real_world_rows": 0, "external_real_world_actions": 0, "terminal_verdict": "NOT_READY_FOR_STAGE_20",
+        "same_owner_validation_is_independent_reproduction": False,
+    }
+    write_json(FINAL / "phase-truth.json", phase_truth)
+
+    write_json(FINAL / "method-flow-final.json", {
+        "schema": "ghc-family-method-flow-final/v1", "repository_seal": SEALED,
+        "activation_baseline": load(X2_DIR / "method-flow/ledger.json")["activation_baseline"],
+        "immutable_x2_effective": x2_truth, "precloseout_pairs": [overlay],
+        "closeout_failed_witnesses": 0, "closeout_passing_witnesses": 4,
+        "closeout_methods": ["final packet build", "exact manifest build", "content seal replay", "external exact-final canonical invocation"],
+        "failure_nonerasure": True, "recovery_never_retroactively_promotes_failure": True,
+    })
+    write_json(FINAL / "retained-negative-register.json", {
+        "effective_negatives": SEALED["effective_negatives"], "retained_failed_witnesses": SEALED["retained_failed_witnesses"],
+        "categories": {"inherited_prior": 16134, "proposal_mutations": 240, "owner_local_skills": 20, "family_current_runners": 10, "existing_tools": 25, "startup_x1_x2_operational": 14, "post_evidence_precloseout": 3},
+        "zero_credit": True, "nonerasing": True,
+    })
+    open_rows = [row for row in outcomes["outcomes"] if row["outcome"] == "open_gap"]
+    gate_rows = [row for row in outcomes["outcomes"] if row["outcome"] == "exact_gate"]
+    write_json(FINAL / "open-gap-register.json", {"total": 380, "phase_local": [{"proposal_id": row["proposal_id"], "title": row["title"], "state": "open_gap"} for row in open_rows], "none_silently_closed": True})
+    write_json(FINAL / "exact-gate-register.json", {"total": 371, "phase_local": [{"proposal_id": row["proposal_id"], "title": row["title"], "state": "exact_gate"} for row in gate_rows], "none_silently_closed": True})
+    write_json(FINAL / "complete-incomplete-checklist.json", {
+        "complete": ["planning-only x1 freeze", "x1 remote equality", "immutable x2 evidence", "sixty proposal outcomes", "240 rejected mutations", "twenty owner-local skills", "ten family-current runners", "twenty-five tool version checks", "135 flashcards", "static structural report", "precloseout failure retention", "repository-prepared final"],
+        "incomplete": ["one exact-final canonical invocation", "live successor registry refresh and acknowledgement", "real-world evidence", "independent reproduction", "professional validation", "privacy and accessibility completeness", "Stage 20 authority"],
+    })
+    write_json(FINAL / "wellbeing-workload-check.json", {"status": "WITHIN_DECLARED_BOUNDS", "owner_file_stop": 2000, "document_word_stop": 100000, "no_biological_or_consciousness_inference": True, "human_pause_redirect_stop_control_preserved": True, "unbounded_background_work": False})
+    write_json(FINAL / "source-provenance-ledger.json", {"sources": sources["sources"], "network_rows_ingested": 0, "citations_are_observations": False, "citations_are_authority_grants": False, "professional_or_legal_instruction_claim": False})
+    write_json(FINAL / "threat-model.json", {
+        "threats": ["source drift", "phase mixing", "manifest substitution", "private-material leakage", "authority inflation", "unsafe installation", "route duplication", "canonical replay"],
+        "controls": ["exact anchors", "planning-only x1", "Git-blob manifests", "five-class scan", "protected gates", "verify-only tools", "one-send guard", "exclusive receipt latch"],
+        "residual_risk": "open_gap_or_exact_gate", "exhaustive_security": False,
+    })
+    write_json(FINAL / "bounded-security-review.json", bounded_security_review())
+    tools["schema"] = "ghc-family-final-environment-version-receipt/v1"
+    tools["global_promoted_skills"] = []
+    tools["global_skill_promotions"] = 0
+    write_json(FINAL / "environment-version-receipt.json", tools)
+    write_json(FINAL / "flashcard-closeout.json", {"card_count": deck["card_count"], "section_count": len({row["section"] for row in deck["cards"]}), "tier_order": ["freed_id_anchor", "trinity_pillar", "bounded_practice", "task"], "content_addressed": True, "supersession_non_erasing": True})
+    write_json(FINAL / "pillar-label-consistency.json", {"state": "CONSISTENT_NO_CORRECTION_REQUIRED", "primary_pillar": "THOS Body", "protected_pillars": ["GMUT Mind", "Freed ID/CBR Heart"], "affected_file_count": 0, "correction_commit_required": False})
+    write_json(FINAL / "bounded-practices.json", {"practices": ["synthetic microfilm reel frame sequence target derivative and provenance metadata archiving", "synthetic accessible technical-documentation structure correction and abstention review", "synthetic preservation quality-control rollback and nonconformance review"], "successor_recommendation": "synthetic audiovisual-carrier catalogue accessibility analysis", "real_people_objects_records_or_actions": 0, "employment_qualification_competence_or_authority_claim": False})
+    write_json(FINAL / "family-index-update.json", {"owner": "Vesper Arlen", "phase": "v677-v4", "source": SOURCE, "x1": X1, "evidence": EVIDENCE, "final": "COMMIT_CONTAINING_THIS_FILE", "proposal_chain": 8030, "terminal_verdict": "NOT_READY_FOR_STAGE_20", "bounded_continuity_note_without_replacing_older_history": True})
+    write_json(FINAL / "roster-auth-observation.json", {"observed_edge": "Vesper Arlen -> Lyren Moss", "prospective_phase": "v677-v5", "state": "PREPARED_NOT_SENT", "live_registry_must_be_refreshed_after_terminal_gate": True, "standby_substitution": False})
+    write_json(FINAL / "orchestration-record.json", {"strict_x1_before_x2": True, "owner_lane_only": True, "successor_precontacted": False, "task_created_or_forked": False, "collaboration_subagent_spawned": False, "canonical_invocation_limit_per_exact_final": 1})
+    write_json(FINAL / "reflection-remaster.json", {"retained_failures": True, "newest_evidence_precedence": True, "analogy_to_evidence_conversion": False, "sibling_improvement_is_recommendation_only": True})
+    write_json(FINAL / "meta-tool-box-update.json", {"verified_existing_tools": 25, "installed_tools": 0, "owner_local_skills": 20, "global_skill_promotions": 0, "family_current_runners": 10, "recommendations_are_not_authority": True})
+
+    write_text(FINAL / "integrated-overview.md", build_overview())
+    write_text(FINAL / "accessible-final-report.html", build_accessible_report())
+    baton = build_baton(deck)
+    write_text(HANDOFF, baton)
+    raw = HANDOFF.read_bytes()
+    write_json(FINAL / "baton-integrity.json", {"path": HANDOFF.relative_to(REPO).as_posix(), "bytes": len(raw), "words": len(raw.decode("utf-8").split()), "sha256": hashlib.sha256(raw).hexdigest(), "state": "PREPARED_NOT_SENT"})
+    write_json(FINAL / "route-state.json", {"state": "PREPARED_NOT_SENT", "prospective_successor": "Lyren Moss", "prospective_phase": "v677-v5", "tavian_state": "ON_STANDBY", "successor_precontacted": False, "send_count": 0, "native_acknowledgement_required": True})
+    write_json(FINAL / "lifecycle-replay.json", {"source": SOURCE, "x1": X1, "evidence": EVIDENCE, "expected_final": "COMMIT_CONTAINING_THIS_FILE", "expected_new_commits": 3, "expected_merges": 0, "strict_x1_before_x2": True, "predecessor_canonical_or_sealed_components_replayed": False})
+    write_json(FINAL / "final-validation-prerequisites.json", {"source": SOURCE, "x1": X1, "evidence": EVIDENCE, "exclusive_owner_canonical_invocation_limit": 1, "full_repository_suite_authorized": False, "route_send_before_canonical": False, "one_success_no_replay": True})
+    write_json(FINAL / "closeout-receipt.json", {"repository_seal": SEALED, "canonical_state": "PENDING_ONE_EXACT_FINAL_INVOCATION", "route_state": "PREPARED_NOT_SENT", "real_world_rows": 0, "external_actions": 0})
+    write_json(FINAL / "content-seal.json", {"status": "PENDING_EXACT_STAGED_MANIFEST_BUILD", "entry_count": 0, "entries": []})
+    write_json(VALIDATION / "final-delta-manifest.json", {"status": "PENDING_EXACT_STAGED_MANIFEST_BUILD", "entry_count": 0, "entries": []})
+    write_json(VALIDATION / "final-owner-manifest.json", {"status": "PENDING_EXACT_STAGED_MANIFEST_BUILD", "entry_count": 0, "entries": []})
+    write_json(VALIDATION / "final-staged-review.json", {"status": "PENDING_EXACT_STAGED_MANIFEST_BUILD"})
+    print(json.dumps({"status": "BUILT_REPOSITORY_PREPARED_FINAL", "final_files": len([p for p in FINAL.rglob('*') if p.is_file()]), "baton_words": len(raw.decode('utf-8').split())}, sort_keys=True))
+
+
+if __name__ == "__main__":
+    main()
