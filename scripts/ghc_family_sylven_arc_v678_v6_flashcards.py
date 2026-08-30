@@ -8,6 +8,7 @@ import hashlib
 import html
 import json
 import re
+from collections import Counter
 from pathlib import Path
 from typing import Any
 
@@ -187,7 +188,7 @@ def build(repo: Path, phase_root: Path, output: Path, x1: str) -> dict[str, Any]
     index = {
         "schema": "ghc-freed-id-flashcard-deck-index/v1", "phase": "v678-v6", "owner": "Sylven Arc",
         "x1_commit": x1, "card_count": len(cards), "tier_counts": tier_counts,
-        "outcome_counts": dict(sorted(__import__("collections").Counter(card["outcome"] for card in cards).items())),
+        "outcome_counts": dict(sorted(Counter(card["outcome"] for card in cards).items())),
         "cards": [{"card_id": c["card_id"], "tier": c["tier"], "title": c["title"]} for c in cards],
         "prompt_cache_guarantee": False, "identity_continuity_claim": False,
     }
