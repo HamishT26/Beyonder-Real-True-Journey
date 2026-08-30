@@ -11,13 +11,14 @@ This committed file is a sanitized repository candidate only. It does not prove 
 - Elaren Kestrel v677-v2 exact final and Neris source: `76e4e605a63074f4664296f9b61c59d41886d097`.
 - Frozen planning-only Neris x1: `7671bef564b83340410c69d0de57d7592ec5c4eb`.
 - Immutable Neris x2 evidence: `b29b90b81169d94bae13d8e7f74a33216157a84f`.
-- The retained original Neris final is `2911bbceb394fb967962fb56c5db1ad508e1f024`; the corrected exact final is the direct child containing this candidate and must be named by the live activation.
+- The retained original Neris final is `2911bbceb394fb967962fb56c5db1ad508e1f024`; the retained first corrected final is `ac168abc35c47cbc2f697176bfe0f82cfc27a220`; the second corrected exact final is the direct child containing this candidate and must be named by the live activation.
 - Elaren's canonical receipt, immutable seal, acknowledged activation, retained failures, and external overlay are inherited evidence and were not replayed.
 - The original-final Neris canonical ran once, passed 17 owner tests, failed 6 dependencies, earned zero aggregate-success credit, and was not retried on the same SHA. Its failed receipt SHA-256 is `f287d248723d8dc96f3caa89e4855b070f1aea77bd464620a4978e37c0a29728`.
+- The first-corrected-final Neris canonical ran once, passed 23 owner tests, failed 1 misplaced-assertion dependency, earned zero aggregate-success credit, and was not retried on the same SHA. Its failed receipt SHA-256 is `c5345cc0300c6768f0df3800e6e2f8d97c19c4d2248c004f2fbeff2b46e85c6c`.
 
 ## Current truth
 
-The dependency-corrected repository seal contains 44,472 negatives, 39,277 methods, 16,133 failed witnesses, 23,844 passing witnesses, 377 open gaps, and 368 exact gates. Outcomes are exactly 42 completed, 12 represented, 3 open_gap, and 3 exact_gate. Terminal verdict remains NOT_READY_FOR_STAGE_20.
+The second dependency-corrected repository seal contains 44,473 negatives, 39,279 methods, 16,134 failed witnesses, 23,845 passing witnesses, 377 open gaps, and 368 exact gates. Outcomes are exactly 42 completed, 12 represented, 3 open_gap, and 3 exact_gate. Terminal verdict remains NOT_READY_FOR_STAGE_20.
 
 ## Work program for Vesper
 

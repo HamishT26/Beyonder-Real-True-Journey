@@ -21,10 +21,10 @@ ROOT = Path("docs/neris-solane/v677-v3")
 FINAL = ROOT / "final"
 VALIDATION = ROOT / "validation"
 SEALED = {
-    "effective_negatives": 44472,
-    "effective_methods": 39277,
-    "retained_failed_witnesses": 16133,
-    "bounded_passing_witnesses": 23844,
+    "effective_negatives": 44473,
+    "effective_methods": 39279,
+    "retained_failed_witnesses": 16134,
+    "bounded_passing_witnesses": 23845,
     "open_gaps": 377,
     "exact_gates": 368,
 }

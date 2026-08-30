@@ -16,6 +16,7 @@ SOURCE = "76e4e605a63074f4664296f9b61c59d41886d097"
 X1_HEAD = "7671bef564b83340410c69d0de57d7592ec5c4eb"
 EVIDENCE_HEAD = "b29b90b81169d94bae13d8e7f74a33216157a84f"
 ORIGINAL_FINAL = "2911bbceb394fb967962fb56c5db1ad508e1f024"
+PREVIOUS_CORRECTED_FINAL = "ac168abc35c47cbc2f697176bfe0f82cfc27a220"
 ROOT = "docs/neris-solane/v677-v3"
 FINAL_ROOT = f"{ROOT}/final"
 DELTA_MANIFEST = f"{ROOT}/validation/final-delta-manifest.json"
@@ -48,6 +49,7 @@ CORRECTION_PATHS = CODE_PATHS | {
     OWNER_MANIFEST,
     STAGED_REVIEW,
 }
+SECOND_CORRECTION_PATHS = CORRECTION_PATHS - {f"{FINAL_ROOT}/bounded-security-review.json"}
 PRIVACY_PATTERNS = {
     "private_absolute_path": re.compile(r"(?i)[A-Z]:[\\/]+Users[\\/]+"),
     "raw_task_route": re.compile(r"(?i)(source_thread_id|thread_id|clientThreadId)"),
@@ -113,15 +115,15 @@ def main() -> int:
     parser.add_argument("--repo", type=Path, required=True)
     args = parser.parse_args()
     repo = args.repo.resolve()
-    if git(repo, "rev-parse", "HEAD") != ORIGINAL_FINAL:
-        raise SystemExit("corrected-final manifest must be built at the immutable original final")
+    if git(repo, "rev-parse", "HEAD") != PREVIOUS_CORRECTED_FINAL:
+        raise SystemExit("second-corrected-final manifest must be built at the immutable first corrected final")
 
     final_paths = {
         path.relative_to(repo).as_posix()
         for path in (repo / FINAL_ROOT).rglob("*")
         if path.is_file()
     }
-    expected_staged = CORRECTION_PATHS - SELF_EXCLUSIONS
+    expected_staged = SECOND_CORRECTION_PATHS - SELF_EXCLUSIONS
     staged = set(filter(None, git(repo, "diff", "--cached", "--name-only", "--diff-filter=ACMR").splitlines()))
     if staged != expected_staged:
         raise SystemExit(
@@ -151,7 +153,7 @@ def main() -> int:
         {
             "schema": "ghc-family-normalized-lf-manifest/v1",
             "phase": "v677-v3",
-            "lifecycle": "dependency_corrected_final_delta",
+            "lifecycle": "second_dependency_corrected_final_delta",
             "source": SOURCE,
             "x1": X1_HEAD,
             "evidence": EVIDENCE_HEAD,
@@ -241,7 +243,7 @@ def main() -> int:
 
     staged_review = {
         "schema": "ghc-family-final-staged-review/v1",
-        "status": "VALID_DEPENDENCY_CORRECTED_FINAL_STAGED_REVIEW",
+        "status": "VALID_SECOND_DEPENDENCY_CORRECTED_FINAL_STAGED_REVIEW",
         "phase": "v677-v3",
         "source": SOURCE,
         "x1": X1_HEAD,

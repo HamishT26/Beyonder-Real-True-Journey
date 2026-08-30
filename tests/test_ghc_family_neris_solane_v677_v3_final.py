@@ -14,11 +14,12 @@ SOURCE = "76e4e605a63074f4664296f9b61c59d41886d097"
 X1 = "7671bef564b83340410c69d0de57d7592ec5c4eb"
 EVIDENCE = "b29b90b81169d94bae13d8e7f74a33216157a84f"
 ORIGINAL_FINAL = "2911bbceb394fb967962fb56c5db1ad508e1f024"
+PREVIOUS_CORRECTED_FINAL = "ac168abc35c47cbc2f697176bfe0f82cfc27a220"
 SEALED = {
-    "effective_negatives": 44472,
-    "effective_methods": 39277,
-    "retained_failed_witnesses": 16133,
-    "bounded_passing_witnesses": 23844,
+    "effective_negatives": 44473,
+    "effective_methods": 39279,
+    "retained_failed_witnesses": 16134,
+    "bounded_passing_witnesses": 23845,
     "open_gaps": 377,
     "exact_gates": 368,
 }
@@ -39,7 +40,7 @@ def test_final_phase_truth_has_exact_anchors_and_verdict() -> None:
     assert truth["evidence"] == EVIDENCE
     assert truth["exact_final"] == "COMMIT_CONTAINING_THIS_FILE"
     assert truth["terminal_verdict"] == "NOT_READY_FOR_STAGE_20"
-    assert truth["canonical_state"] == "PENDING_ONE_CORRECTED_EXACT_FINAL_INVOCATION"
+    assert truth["canonical_state"] == "PENDING_ONE_SECOND_CORRECTED_EXACT_FINAL_INVOCATION"
     assert truth["route_state"] == "PREPARED_NOT_SENT"
 
 
@@ -87,7 +88,7 @@ def test_open_and_exact_gate_totals_remain_open() -> None:
 def test_complete_incomplete_checklist_keeps_terminal_work_separate() -> None:
     checklist = load(FINAL / "complete-incomplete-checklist.json")
     assert len(checklist["complete"]) >= 10
-    assert "one corrected exact-final canonical invocation after the retained original-final failure" in checklist["incomplete"]
+    assert "one second-corrected exact-final canonical invocation after both retained prior exact-final failures" in checklist["incomplete"]
     assert "live successor registry refresh and acknowledgement" in checklist["incomplete"]
 
 
@@ -194,8 +195,9 @@ def test_lifecycle_replay_requires_three_direct_commits_and_zero_merges() -> Non
     assert replay["source"] == SOURCE
     assert replay["x1"] == X1
     assert replay["evidence"] == EVIDENCE
-    assert replay["expected_new_commits"] == 4
+    assert replay["expected_new_commits"] == 5
     assert replay["original_final"] == ORIGINAL_FINAL
+    assert replay["previous_corrected_final"] == PREVIOUS_CORRECTED_FINAL
     assert replay["expected_merges"] == 0
     assert replay["strict_x1_before_x2"] is True
     assert replay["predecessor_canonical_or_sealed_components_replayed"] is False
@@ -246,7 +248,10 @@ def test_final_validation_prerequisites_fail_closed_before_external_canonical() 
 def test_closeout_receipt_preserves_prepared_not_sent_state() -> None:
     value = load(FINAL / "closeout-receipt.json")
     assert value["repository_seal"] == SEALED
-    assert value["canonical_state"] == "PENDING_CORRECTED_EXACT_FINAL_INVOCATION"
+    assert value["canonical_state"] == "PENDING_SECOND_CORRECTED_EXACT_FINAL_INVOCATION"
+    assert value["route_state"] == "PREPARED_NOT_SENT"
+    assert value["real_world_rows"] == 0
+    assert value["external_actions"] == 0
 
 
 def test_dependency_corrected_overlay_retains_original_canonical_failure() -> None:
@@ -257,6 +262,5 @@ def test_dependency_corrected_overlay_retains_original_canonical_failure() -> No
     assert value["failed_canonical"]["tests_failed"] == 6
     assert value["failed_canonical"]["same_final_retry_count"] == 0
     assert value["corrected_repository_seal"] == SEALED
-    assert value["route_state"] == "PREPARED_NOT_SENT"
-    assert value["real_world_rows"] == 0
-    assert value["external_actions"] == 0
+    assert value["first_corrected_canonical_failure"]["failed_receipt_sha256"] == "c5345cc0300c6768f0df3800e6e2f8d97c19c4d2248c004f2fbeff2b46e85c6c"
+    assert value["first_corrected_canonical_failure"]["same_final_retry_count"] == 0

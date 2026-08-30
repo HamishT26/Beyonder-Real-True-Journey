@@ -2,7 +2,7 @@
 
 ## Outcome and lifecycle
 
-This phase is an additive four-commit Neris lifecycle rooted at Elaren Kestrel's immutable v677-v2 exact final. The source is `76e4e605a63074f4664296f9b61c59d41886d097`; planning-only x1 is `7671bef564b83340410c69d0de57d7592ec5c4eb`; immutable x2 evidence is `b29b90b81169d94bae13d8e7f74a33216157a84f`; and the retained original final is `2911bbceb394fb967962fb56c5db1ad508e1f024`. The corrected repository-prepared final is the direct child of that original final. Elaren's canonical receipt, immutable seal, acknowledged activation, and retained evidence were not replayed or rewritten.
+This phase is an additive five-commit Neris lifecycle rooted at Elaren Kestrel's immutable v677-v2 exact final. The source is `76e4e605a63074f4664296f9b61c59d41886d097`; planning-only x1 is `7671bef564b83340410c69d0de57d7592ec5c4eb`; immutable x2 evidence is `b29b90b81169d94bae13d8e7f74a33216157a84f`; the retained original final is `2911bbceb394fb967962fb56c5db1ad508e1f024`; and the retained first corrected final is `ac168abc35c47cbc2f697176bfe0f82cfc27a220`. The second corrected repository-prepared final is the direct child of that first correction. Elaren's canonical receipt, immutable seal, acknowledged activation, and retained evidence were not replayed or rewritten.
 
 ## Program and outcomes
 
@@ -22,11 +22,11 @@ Within bounded synthetic scope, 120 safe-now rows, 80 candidate rows, and 100 CL
 
 ## Retained failures and validation truth
 
-Every startup, semantic-audit, parser, display, materialization, and x1 tooling failure remains paired with a bounded recovery and zero failure credit. The first x2 owner-test aggregate passed nineteen checks and failed two stale-count dependencies, earning zero aggregate-success credit; only those two dependencies were corrected and selected for a 2/2 isolated recovery, while the nineteen unaffected successes were not replayed. Exact normalized-LF manifests cover the immutable x1 and evidence lifecycles. The original-final canonical was invoked once, passed seventeen owner tests, failed six dependencies, earned zero aggregate-success credit, and was never retried on that SHA. This additive correction preserves that receipt and changes only the declared dependencies needed for a distinct corrected final.
+Every startup, semantic-audit, parser, display, materialization, and x1 tooling failure remains paired with a bounded recovery and zero failure credit. The first x2 owner-test aggregate passed nineteen checks and failed two stale-count dependencies, earning zero aggregate-success credit; only those two dependencies were corrected and selected for a 2/2 isolated recovery, while the nineteen unaffected successes were not replayed. Exact normalized-LF manifests cover the immutable x1 and evidence lifecycles. The original-final canonical was invoked once, passed seventeen owner tests, failed six dependencies, earned zero aggregate-success credit, and was never retried on that SHA. The first-corrected-final canonical was also invoked once, passed twenty-three tests, failed one misplaced-assertion dependency, earned zero aggregate-success credit, and was never retried on that SHA. This second additive correction preserves both receipts and moves only those assertions back to their owning closeout-receipt test.
 
 ## Repository seal and terminal verdict
 
-The dependency-corrected repository seal preserves 44,472 effective negatives, 39,277 Method Flow methods, 16,133 retained failed witnesses, 23,844 bounded passing witnesses, 377 open gaps, and 368 exact gates. The verdict remains NOT_READY_FOR_STAGE_20. One corrected exact-final canonical invocation and any later live route acknowledgement remain external overlays and do not rewrite this seal.
+The second dependency-corrected repository seal preserves 44,473 effective negatives, 39,279 Method Flow methods, 16,134 retained failed witnesses, 23,845 bounded passing witnesses, 377 open gaps, and 368 exact gates. The verdict remains NOT_READY_FOR_STAGE_20. One second-corrected exact-final canonical invocation and any later live route acknowledgement remain external overlays and do not rewrite this seal.
 
 ## Source boundaries
 
