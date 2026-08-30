@@ -1,0 +1,104 @@
+{
+  "external_canonical_success_in_repository_seal": false,
+  "failures": [
+    {
+      "credit": 0,
+      "method_id": "AUR6777-POST-N001",
+      "state": "retained_failure",
+      "summary": "The first exact x2 staging wrapper yielded without a usable result while its legitimate Git add process continued in the background; no staged state was inferred from the missing wrapper output."
+    },
+    {
+      "credit": 0,
+      "method_id": "AUR6777-POST-N002",
+      "state": "retained_failure",
+      "summary": "An explicit duplicate add attempt was rejected because the live staging process still held the Git index lock; the rejected call changed no repository state and earned zero credit."
+    },
+    {
+      "credit": 0,
+      "method_id": "AUR6777-POST-N003",
+      "state": "retained_failure",
+      "summary": "A read-only PowerShell status projection used question marks as wildcard characters and incorrectly classified staged additions as untracked; it earned zero validation credit and changed no repository state."
+    }
+  ],
+  "pairs": [
+    {
+      "failure": {
+        "credit": 0,
+        "method_id": "AUR6777-POST-N001",
+        "state": "retained_failure",
+        "summary": "The first exact x2 staging wrapper yielded without a usable result while its legitimate Git add process continued in the background; no staged state was inferred from the missing wrapper output."
+      },
+      "recovery": {
+        "credit": 1,
+        "does_not_erase": "AUR6777-POST-N001",
+        "method_id": "AUR6777-POST-P001",
+        "state": "bounded_recovery",
+        "summary": "Persisted process and Git-index state were inspected read-only, the legitimate staging process was allowed to finish, and the exact 211-path staged set was then verified directly."
+      }
+    },
+    {
+      "failure": {
+        "credit": 0,
+        "method_id": "AUR6777-POST-N002",
+        "state": "retained_failure",
+        "summary": "An explicit duplicate add attempt was rejected because the live staging process still held the Git index lock; the rejected call changed no repository state and earned zero credit."
+      },
+      "recovery": {
+        "credit": 1,
+        "does_not_erase": "AUR6777-POST-N002",
+        "method_id": "AUR6777-POST-P002",
+        "state": "bounded_recovery",
+        "summary": "The live lock and its exact owning Git processes were verified, the lock was not deleted, bounded waiting completed, and the final exact stage was proven with zero x1 or unrelated paths."
+      }
+    },
+    {
+      "failure": {
+        "credit": 0,
+        "method_id": "AUR6777-POST-N003",
+        "state": "retained_failure",
+        "summary": "A read-only PowerShell status projection used question marks as wildcard characters and incorrectly classified staged additions as untracked; it earned zero validation credit and changed no repository state."
+      },
+      "recovery": {
+        "credit": 1,
+        "does_not_erase": "AUR6777-POST-N003",
+        "method_id": "AUR6777-POST-P003",
+        "state": "bounded_recovery",
+        "summary": "Git's exact untracked-file query proved that only the four declared self-excluded manifest and seal placeholders remained untracked, while the 32 initial final inputs were staged with zero x1, x2, or unrelated paths."
+      }
+    }
+  ],
+  "recoveries": [
+    {
+      "credit": 1,
+      "does_not_erase": "AUR6777-POST-N001",
+      "method_id": "AUR6777-POST-P001",
+      "state": "bounded_recovery",
+      "summary": "Persisted process and Git-index state were inspected read-only, the legitimate staging process was allowed to finish, and the exact 211-path staged set was then verified directly."
+    },
+    {
+      "credit": 1,
+      "does_not_erase": "AUR6777-POST-N002",
+      "method_id": "AUR6777-POST-P002",
+      "state": "bounded_recovery",
+      "summary": "The live lock and its exact owning Git processes were verified, the lock was not deleted, bounded waiting completed, and the final exact stage was proven with zero x1 or unrelated paths."
+    },
+    {
+      "credit": 1,
+      "does_not_erase": "AUR6777-POST-N003",
+      "method_id": "AUR6777-POST-P003",
+      "state": "bounded_recovery",
+      "summary": "Git's exact untracked-file query proved that only the four declared self-excluded manifest and seal placeholders remained untracked, while the 32 initial final inputs were staged with zero x1, x2, or unrelated paths."
+    }
+  ],
+  "repository_seal": {
+    "bounded_passing_witnesses": 26359,
+    "effective_methods": 43030,
+    "effective_negatives": 45715,
+    "exact_gates": 380,
+    "open_gaps": 389,
+    "retained_failed_witnesses": 17376
+  },
+  "schema": "ghc-family-precloseout-operational-overlay/v1",
+  "semantic_change": false,
+  "successful_x2_aggregate_replayed": false
+}
