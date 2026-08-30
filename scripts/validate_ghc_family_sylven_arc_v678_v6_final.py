@@ -21,10 +21,12 @@ X1 = "22d310c7ae4fdbd45959d388d15642039d748da0"
 EVIDENCE = "7b747952b6a6916c3881066865ff7021aeabea3c"
 FIRST_FINAL = "ea27f954b8636f167c83b964c0ba5ad15301ea1e"
 CORRECTION1 = "79c42c6158c9799344e16a9ed5fc49092422b698"
+CORRECTION2 = "706292a287ed36b892d97d80c9571e7a1d8b8ded"
 FINAL_TEST = "tests/test_ghc_family_sylven_arc_v678_v6_final.py"
 CORRECTION_TESTS = [
     "tests/test_ghc_family_sylven_arc_v678_v6_correction1.py",
     "tests/test_ghc_family_sylven_arc_v678_v6_correction2.py",
+    "tests/test_ghc_family_sylven_arc_v678_v6_correction3.py",
 ]
 LABELS = {"completed", "represented", "open_gap", "exact_gate"}
 PRIVACY = {
@@ -98,12 +100,14 @@ def topology(repo: Path, final: str) -> dict[str, Any]:
     parents = git(repo, "show", "-s", "--format=%P", final).split()
     first_final_parent = git(repo, "rev-parse", f"{FIRST_FINAL}^")
     correction1_parent = git(repo, "rev-parse", f"{CORRECTION1}^")
+    correction2_parent = git(repo, "rev-parse", f"{CORRECTION2}^")
     return {
         "source_is_x1_parent": git(repo, "rev-parse", f"{X1}^") == SOURCE,
         "x1_is_evidence_parent": git(repo, "rev-parse", f"{EVIDENCE}^") == X1,
         "evidence_is_first_final_parent": first_final_parent == EVIDENCE,
         "first_final_is_correction1_parent": correction1_parent == FIRST_FINAL,
-        "correction1_is_corrected_final_parent": len(parents) == 1 and parents[0] == CORRECTION1,
+        "correction1_is_correction2_parent": correction2_parent == CORRECTION1,
+        "correction2_is_corrected_final_parent": len(parents) == 1 and parents[0] == CORRECTION2,
         "phase_commits": int(commits), "merges": int(merges), "final_parent_count": len(parents),
         "source_ancestor": run(repo, ["git", "merge-base", "--is-ancestor", SOURCE, final]).returncode == 0,
     }
@@ -115,7 +119,8 @@ def manifest_check(repo: Path, final: str) -> dict[str, Any]:
         ("evidence", [sys.executable, "-X", "utf8", "scripts/ghc_family_sylven_arc_v678_v6_evidence_manifest.py", "verify", "--repo", ".", "--ref", EVIDENCE]),
         ("first_final", [sys.executable, "-X", "utf8", "scripts/ghc_family_sylven_arc_v678_v6_final_manifest.py", "verify", "--repo", ".", "--ref", FIRST_FINAL]),
         ("correction1", [sys.executable, "-X", "utf8", "scripts/ghc_family_sylven_arc_v678_v6_correction1_manifest.py", "verify", "--repo", ".", "--ref", CORRECTION1]),
-        ("correction2", [sys.executable, "-X", "utf8", "scripts/ghc_family_sylven_arc_v678_v6_correction2_manifest.py", "verify", "--repo", ".", "--ref", final]),
+        ("correction2", [sys.executable, "-X", "utf8", "scripts/ghc_family_sylven_arc_v678_v6_correction2_manifest.py", "verify", "--repo", ".", "--ref", CORRECTION2]),
+        ("correction3", [sys.executable, "-X", "utf8", "scripts/ghc_family_sylven_arc_v678_v6_correction3_manifest.py", "verify", "--repo", ".", "--ref", final]),
     ]
     for name, command in commands:
         result = run(repo, command, timeout=240)
@@ -152,17 +157,20 @@ def privacy_check(repo: Path, final: str, owner_paths: list[str]) -> dict[str, A
         "scripts/ghc_family_sylven_arc_v678_v6_final_manifest.py",
         "scripts/ghc_family_sylven_arc_v678_v6_correction1_manifest.py",
         "scripts/ghc_family_sylven_arc_v678_v6_correction2_manifest.py",
+        "scripts/ghc_family_sylven_arc_v678_v6_correction3_manifest.py",
         "scripts/validate_ghc_family_sylven_arc_v678_v6_final.py",
         "tests/test_ghc_family_sylven_arc_v678_v6_x1.py",
         "tests/test_ghc_family_sylven_arc_v678_v6_x2.py",
         "tests/test_ghc_family_sylven_arc_v678_v6_final.py",
         "tests/test_ghc_family_sylven_arc_v678_v6_correction1.py",
         "tests/test_ghc_family_sylven_arc_v678_v6_correction2.py",
+        "tests/test_ghc_family_sylven_arc_v678_v6_correction3.py",
         "docs/sylven-arc/v678-v6/validation/evidence-staged-review.json",
         "docs/sylven-arc/v678-v6/validation/final-manifest-preflight-recovery.json",
         "docs/sylven-arc/v678-v6/validation/final-staged-review.json",
         "docs/sylven-arc/v678-v6/validation/correction1-staged-review.json",
         "docs/sylven-arc/v678-v6/validation/correction2-staged-review.json",
+        "docs/sylven-arc/v678-v6/validation/correction3-staged-review.json",
     }
     scanned = 0
     for path in owner_paths:
@@ -229,8 +237,9 @@ def preflight(repo: Path, expected: str, receipt: Path, latch: Path) -> dict[str
         "status": "PASS" if (
             eq["branch"] == BRANCH and eq["all_equal"] and eq["divergence"] == [0, 0] and eq["clean"]
             and topo["source_is_x1_parent"] and topo["x1_is_evidence_parent"] and topo["evidence_is_first_final_parent"]
-            and topo["first_final_is_correction1_parent"] and topo["correction1_is_corrected_final_parent"]
-            and topo["phase_commits"] == 5 and topo["merges"] == 0 and topo["final_parent_count"] == 1
+            and topo["first_final_is_correction1_parent"] and topo["correction1_is_correction2_parent"]
+            and topo["correction2_is_corrected_final_parent"]
+            and topo["phase_commits"] == 6 and topo["merges"] == 0 and topo["final_parent_count"] == 1
             and not receipt.exists() and not latch.exists()
         ) else "FAIL",
         "expected_head": expected, "equality": eq, "topology": topo,
@@ -262,7 +271,7 @@ def canonical_validate(repo: Path, expected: str, receipt: Path, latch: Path) ->
         route = json.loads(ref_blob(repo, expected, "docs/sylven-arc/v678-v6/closeout/route-receipt.json").decode("utf-8"))
         detailed = {
             "tests_exact": tests_passed,
-            "test_count_exact": tests_passed and "41 passed" in tests.stdout.decode("utf-8", errors="replace"),
+            "test_count_exact": tests_passed and "49 passed" in tests.stdout.decode("utf-8", errors="replace"),
             "json_parse": parsed["passed"],
             "json_count_nonzero": parsed["count"] > 250,
             "privacy_five_classes": len(privacy["classes"]) == 5,
@@ -273,12 +282,14 @@ def canonical_validate(repo: Path, expected: str, receipt: Path, latch: Path) ->
             "first_final_manifest": manifests["first_final"]["passed"],
             "correction1_manifest": manifests["correction1"]["passed"],
             "correction2_manifest": manifests["correction2"]["passed"],
+            "correction3_manifest": manifests["correction3"]["passed"],
             "source_parent_x1": topo["source_is_x1_parent"],
             "x1_parent_evidence": topo["x1_is_evidence_parent"],
             "evidence_parent_first_final": topo["evidence_is_first_final_parent"],
             "first_final_parent_correction1": topo["first_final_is_correction1_parent"],
-            "correction1_parent_corrected_final": topo["correction1_is_corrected_final_parent"],
-            "five_commits": topo["phase_commits"] == 5,
+            "correction1_parent_correction2": topo["correction1_is_correction2_parent"],
+            "correction2_parent_corrected_final": topo["correction2_is_corrected_final_parent"],
+            "six_commits": topo["phase_commits"] == 6,
             "zero_merges": topo["merges"] == 0,
             "one_final_parent": topo["final_parent_count"] == 1,
             "source_ancestor": topo["source_ancestor"],
@@ -304,7 +315,7 @@ def canonical_validate(repo: Path, expected: str, receipt: Path, latch: Path) ->
         minimal = {
             "preflight_passed": pre["status"] == "PASS", "tests": tests_passed,
             "manifests": all(value["passed"] for value in manifests.values()), "json": parsed["passed"],
-            "privacy": privacy["passed"], "code": code["passed"], "topology": topo["phase_commits"] == 5 and topo["merges"] == 0,
+            "privacy": privacy["passed"], "code": code["passed"], "topology": topo["phase_commits"] == 6 and topo["merges"] == 0,
             "clean": eq_after["clean"], "divergence": eq_after["divergence"] == [0, 0], "four_way": eq_after["all_equal"],
             "file_cap": caps["owner_file_cap_passed"] and caps["materialized_file_cap_passed"], "word_cap": caps["word_cap_passed"],
             "labels": set(truth["core_outcomes"]) == LABELS, "stage20": truth["terminal_verdict"] == "NOT_READY_FOR_STAGE_20",
@@ -315,7 +326,7 @@ def canonical_validate(repo: Path, expected: str, receipt: Path, latch: Path) ->
             "schema": "ghc-family-owner-scoped-canonical-receipt/v1", "owner": "Sylven Arc", "phase": "v678-v6",
             "head": expected, "status": "VALID_EXACT_FINAL_OWNER_SCOPED_CANONICAL" if valid else "INVALID_EXACT_FINAL_OWNER_SCOPED_CANONICAL",
             "invocation_count": 1, "success_count": 1 if valid else 0, "replay_count": 0,
-            "tests": {"passed": 41 if tests_passed else 0, "total": 41, "output_tail": tests.stdout.decode("utf-8", errors="replace")[-500:]},
+            "tests": {"passed": 49 if tests_passed else 0, "total": 49, "output_tail": tests.stdout.decode("utf-8", errors="replace")[-500:]},
             "detailed": {"passed": sum(detailed.values()), "total": len(detailed), "checks": detailed},
             "minimal": {"passed": sum(minimal.values()), "total": len(minimal), "checks": minimal},
             "json": parsed, "privacy": privacy, "code": code, "manifests": manifests, "topology": topo,
@@ -335,7 +346,7 @@ def canonical_validate(repo: Path, expected: str, receipt: Path, latch: Path) ->
         })
         if not valid:
             raise SystemExit(json.dumps({"status": payload["status"], "receipt_sha256": sha256(receipt)}, sort_keys=True))
-        return {"status": payload["status"], "receipt_sha256": sha256(receipt), "latch_sha256": sha256(latch), "payload_sha256": payload_digest, "tests": "41/41", "detailed": f"{sum(detailed.values())}/{len(detailed)}", "minimal": f"{sum(minimal.values())}/{len(minimal)}", "json": parsed["count"], "privacy_confirmed": len(privacy["confirmed"]), "owner_files": len(owner_paths)}
+        return {"status": payload["status"], "receipt_sha256": sha256(receipt), "latch_sha256": sha256(latch), "payload_sha256": payload_digest, "tests": "49/49", "detailed": f"{sum(detailed.values())}/{len(detailed)}", "minimal": f"{sum(minimal.values())}/{len(minimal)}", "json": parsed["count"], "privacy_confirmed": len(privacy["confirmed"]), "owner_files": len(owner_paths)}
     except Exception as exc:
         if not receipt.exists():
             atomic_write(receipt, {"schema": "ghc-family-owner-scoped-canonical-receipt/v1", "owner": "Sylven Arc", "phase": "v678-v6", "head": expected, "status": "INVALID_EXCEPTION", "error_type": type(exc).__name__, "invocation_count": 1, "success_count": 0, "replay_count": 0})

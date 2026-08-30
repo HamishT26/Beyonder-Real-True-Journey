@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import ast
 import json
+import subprocess
 from pathlib import Path
 
 
@@ -9,10 +10,18 @@ ROOT = Path(__file__).resolve().parents[1]
 CORRECTION = ROOT / "docs/sylven-arc/v678-v6/correction1"
 VALIDATOR = ROOT / "scripts/validate_ghc_family_sylven_arc_v678_v6_final.py"
 FIRST_FINAL = "ea27f954b8636f167c83b964c0ba5ad15301ea1e"
+CORRECTION1 = "79c42c6158c9799344e16a9ed5fc49092422b698"
 
 
 def load(path: Path):
     return json.loads(path.read_text(encoding="utf-8"))
+
+
+def git_text(ref: str, path: str) -> str:
+    result = subprocess.run(
+        ["git", "show", f"{ref}:{path}"], cwd=ROOT, check=True, capture_output=True, text=True, encoding="utf-8"
+    )
+    return result.stdout
 
 
 def test_01_correction_is_additive_to_exact_first_final():
@@ -59,7 +68,7 @@ def test_04_validator_forbids_dynamic_execution_but_allows_compile_only_check():
 
 
 def test_05_validator_binds_first_final_and_correction_manifests():
-    source = VALIDATOR.read_text(encoding="utf-8")
+    source = git_text(CORRECTION1, "scripts/validate_ghc_family_sylven_arc_v678_v6_final.py")
     assert 'FIRST_FINAL = "ea27f954b8636f167c83b964c0ba5ad15301ea1e"' in source
     assert "ghc_family_sylven_arc_v678_v6_final_manifest.py" in source
     assert "ghc_family_sylven_arc_v678_v6_correction1_manifest.py" in source

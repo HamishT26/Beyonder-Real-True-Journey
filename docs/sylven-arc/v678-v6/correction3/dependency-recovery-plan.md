@@ -1,0 +1,7 @@
+# Sylven Arc v678-v6 dependency-corrected recovery
+
+Correction2 `706292a287ed36b892d97d80c9571e7a1d8b8ded` remains immutable. The single attributable canonical aggregate is retained as invalid at zero canonical-success credit under receipt SHA-256 `06e5b4d462ac51765d914e1f6e1d48d8831229dc24918daaee2eea97d63aa16e`. It completed 40 passing test observations and one failed historical topology assertion; every non-test component passed. The canonical aggregate and its successful components are not replayed.
+
+Correction3 binds correction1 and correction2 topology assertions to the exact immutable Git trees they describe. The dependency-corrected composite may run only the failed correction1 test, the one correction2 topology test affected by the new current validator, and the new correction3 tests. Exact-head manifests, JSON, privacy, bounded code, caps, topology, clean state, typed divergence, and fresh-live equality are target-dependent and must be reevaluated for the additive corrected head.
+
+The result, if valid, is named `VALID_DEPENDENCY_CORRECTED_EXACT_FINAL_COMPOSITE_WITH_ZERO_FAILED_CANONICAL_CREDIT`. It never becomes canonical success, independent reproduction, empirical or participant evidence, professional or production authority, complete privacy or accessibility assurance, legal or cultural ratification, Māori authority, Theory-of-Everything proof, canon, or Stage 20 authority. The route remains `PREPARED_NOT_SENT` until the separate guarded live-delivery gate.
