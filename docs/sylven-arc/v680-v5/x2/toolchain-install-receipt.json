@@ -1,0 +1,69 @@
+{
+  "dependency_check_output": "No broken requirements found.",
+  "dependency_check_passed": true,
+  "global_install": false,
+  "installed_count": 3,
+  "owner": "Sylven Arc",
+  "package_sha256_basis": "SHA-256 over the sorted installed-distribution relative file names and each installed file SHA-256; this is not a wheel or source-release digest",
+  "phase": "v680-v5",
+  "retained_failures": [
+    {
+      "failure_id": "SA6805-X2-N004",
+      "initial_credit": 0,
+      "observed": "The first deadcode smoke invoked the installed package with python -m, but the distribution has no deadcode.__main__ module.",
+      "recovery": "Invoke the installed deadcode console entry point once against the same disposable synthetic fixture; do not replay the successful mdformat smoke."
+    },
+    {
+      "failure_id": "SA6805-X2-N005",
+      "initial_credit": 0,
+      "observed": "The first proselint smokes omitted the required check subcommand and were rejected by the current command parser before linting.",
+      "recovery": "Use proselint check once for the bounded accepting fixture and once for the rejecting fixture; retain the parser failure at zero credit."
+    }
+  ],
+  "rollback": "Remove only this phase-isolated environment and disposable fixtures; do not mutate system Python, global package state, Codex desktop, accounts, credentials, Windows features, or sibling lanes.",
+  "schema": "ghc.family.phase-toolchain-install-receipt.v680.v5.x2",
+  "smoke_used_count": 3,
+  "target_environment": "D-first phase-isolated virtual environment",
+  "tools": [
+    {
+      "installed": true,
+      "installed_file_count": 42,
+      "license": "MIT",
+      "license_evidence": "installed core metadata License-Expression and bundled LICENSE",
+      "name": "mdformat",
+      "package_sha256": "ace9e0131158fc4c1d0d9039c1a4754b8ff407c4439d3122a140326b8baf9857",
+      "smoke": "Current parser accepted an already normalized disposable Markdown fixture with exit code 0.",
+      "smoke_passed": true,
+      "version": "1.0.0"
+    },
+    {
+      "installed": true,
+      "installed_file_count": 62,
+      "license": "GNU Affero General Public License v3",
+      "license_evidence": "installed classifier and bundled LICENSE; no core License-Expression was declared",
+      "name": "deadcode",
+      "package_sha256": "3df47c83075309ae8cfe977e9d97c590c12e5f888b254edcdc00a4d369bba5bc",
+      "smoke": "Current console entry point inspected a disposable synthetic Python fixture, reported the deliberately unused helper, and exited 0.",
+      "smoke_passed": true,
+      "version": "2.4.1"
+    },
+    {
+      "installed": true,
+      "installed_file_count": 217,
+      "license": "BSD License",
+      "license_evidence": "installed OSI-approved BSD classifier and embedded license metadata",
+      "name": "proselint",
+      "package_sha256": "3c78856810f873d82dfe27d9f0e2d2acafa2a217ce36113e6612063d053ec7a5",
+      "smoke": "Current check subcommand accepted a bounded synthetic prose fixture with exit 0 and rejected a deliberately flawed fixture with exit 1 and named diagnostics.",
+      "smoke_passed": true,
+      "version": "0.16.0"
+    }
+  ],
+  "transitive_dependencies": [
+    "google-re2==1.1.20251105",
+    "google-re2-stubs==0.1.1",
+    "markdown-it-py==4.2.0",
+    "mdurl==0.1.2",
+    "tomli==2.4.1"
+  ]
+}
