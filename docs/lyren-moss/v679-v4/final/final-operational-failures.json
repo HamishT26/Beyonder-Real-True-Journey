@@ -1,0 +1,25 @@
+{
+  "base_evidence_head": "b204dcbfbcb3d016ab18f4bebc5ef9dc56d9dee6",
+  "bounded_recovery_count": 2,
+  "failure_count": 2,
+  "failures": [
+    {
+      "broader_claim_credit": 0,
+      "event_id": "LM6794-OP-034",
+      "failure": "The first exact final cached-diff hygiene gate rejected one trailing blank line in the report renderer and one in the canonical validator.",
+      "failure_credit": 0,
+      "recovery": "Removed only the two extra EOF blank lines, incremented the final repository overlay, and regenerated every affected report, baton, manifest, seal, and scoped validation receipt.",
+      "state": "retained_failure_with_bounded_recovery"
+    },
+    {
+      "broader_claim_credit": 0,
+      "event_id": "LM6794-OP-035",
+      "failure": "The first final stale-label scan returned two self-referential checker-pattern candidates in the final test and canonical validator.",
+      "failure_credit": 0,
+      "recovery": "Confirmed both candidates were scanner literals rather than stale owner content, split the checker literals so they cannot self-match, and regenerated every dependent artifact and validation surface.",
+      "state": "retained_failure_with_bounded_recovery"
+    }
+  ],
+  "recovery_erases_failure": false,
+  "terminal_verdict": "NOT_READY_FOR_STAGE_20"
+}
