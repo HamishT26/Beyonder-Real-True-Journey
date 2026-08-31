@@ -21,6 +21,7 @@ VALIDATION = PHASE / "validation"
 SOURCE = "e1c3ef6d2ff0bc2f1e38f5d702e008149842659f"
 X1_HEAD = "1fe28fafc308298e1043a9e2afbecf59c24c9866"
 EVIDENCE_HEAD = "b204dcbfbcb3d016ab18f4bebc5ef9dc56d9dee6"
+INITIAL_FINAL = "20923e75fe7490f43ed585ee97dca596b9ca7adc"
 BRANCH = "codex/GHC-Family/lyren-moss-v679-v4-full-tools"
 RECEIPT_BANK = Path("D:/GHC-Archives/phase-scratch/lyren-v679-v4")
 TEXT_SUFFIXES = {".json", ".md", ".html", ".yaml", ".yml", ".py"}
@@ -67,7 +68,9 @@ def replay_manifest(revision: str, entries: list[dict[str, Any]]) -> list[str]:
                 continue
             data = normalize(process.stdout.read(int(header[2])))
             process.stdout.read(1)
-            if sha(data) != item["sha256"] or len(data) != item["normalized_lf_bytes"]:
+            expected_sha = item.get("sha256", item.get("sha256_normalized_lf"))
+            expected_bytes = item.get("normalized_lf_bytes", item.get("bytes"))
+            if sha(data) != expected_sha or len(data) != expected_bytes:
                 mismatches.append(item["path"])
     finally:
         process.stdin.close()
@@ -140,6 +143,7 @@ def collect_tests() -> int:
         "-q",
         "tests/test_ghc_family_lyren_moss_v679_v4_x2.py",
         "tests/test_ghc_family_lyren_moss_v679_v4_final.py",
+        "tests/test_ghc_family_lyren_moss_v679_v4_correction1.py",
     )
     match = re.search(r"(\d+) tests collected", result.stdout)
     if not match:
@@ -155,6 +159,7 @@ def run_tests_once() -> dict[str, Any]:
         "-q",
         "tests/test_ghc_family_lyren_moss_v679_v4_x2.py",
         "tests/test_ghc_family_lyren_moss_v679_v4_final.py",
+        "tests/test_ghc_family_lyren_moss_v679_v4_correction1.py",
         check=False,
     )
     return {
@@ -180,16 +185,21 @@ def verify(run_tests: bool) -> dict[str, Any]:
     final_manifest = read_json(VALIDATION / "final-manifest.json")
     content_seal = read_json(VALIDATION / "final-content-seal.json")
     final_review = read_json(VALIDATION / "final-staged-review.json")
-    terminal = read_json(PHASE / "final" / "terminal-truth.json")
-    route = read_json(PHASE / "final" / "route-and-roster-overlay.json")
-    handoff_meta = read_json(PHASE / "final" / "activation-candidate-metadata.json")
+    corrected_manifest = read_json(VALIDATION / "corrected-final-manifest.json")
+    corrected_seal = read_json(VALIDATION / "corrected-content-seal.json")
+    corrected_review = read_json(VALIDATION / "corrected-staged-review.json")
+    terminal = read_json(PHASE / "correction1" / "terminal-overlay.json")
+    route = read_json(PHASE / "correction1" / "route-overlay.json")
+    handoff_meta = read_json(PHASE / "correction1" / "activation-candidate-metadata.json")
     handoff_path = ROOT / handoff_meta["path"]
     handoff_data = normalize(handoff_path.read_bytes())
 
     x1_replay = replay_manifest(head, x1_manifest["entries"])
     x2_replay = replay_manifest(head, x2_manifest["entries"])
-    final_replay = replay_manifest(head, final_manifest["entries"])
-    seal_replay = replay_manifest(head, content_seal["entries"])
+    final_replay = replay_manifest(INITIAL_FINAL, final_manifest["entries"])
+    seal_replay = replay_manifest(INITIAL_FINAL, content_seal["entries"])
+    corrected_replay = replay_manifest(head, corrected_manifest["entries"])
+    corrected_seal_replay = replay_manifest(head, corrected_seal["entries"])
     privacy = privacy_scan(owner)
     security = ast_security(paths)
     json_result = json_parse(owner)
@@ -202,6 +212,7 @@ def verify(run_tests: bool) -> dict[str, Any]:
                 stale.append(relative)
 
     parent = git("rev-parse", "HEAD^")
+    initial_parent = git("rev-parse", f"{INITIAL_FINAL}^")
     evidence_parent = git("rev-parse", f"{EVIDENCE_HEAD}^")
     x1_parent = git("rev-parse", f"{X1_HEAD}^")
     commit_count = int(git("rev-list", "--count", f"{SOURCE}..HEAD"))
@@ -218,10 +229,11 @@ def verify(run_tests: bool) -> dict[str, Any]:
         "tracking_equal": tracking == head,
         "fresh_live_equal": live == head,
         "zero_divergence": divergence.split() == ["0", "0"],
-        "final_direct_child_of_evidence": parent == EVIDENCE_HEAD,
+        "corrected_final_direct_child_of_initial_final": parent == INITIAL_FINAL,
+        "initial_final_direct_child_of_evidence": initial_parent == EVIDENCE_HEAD,
         "evidence_direct_child_of_x1": evidence_parent == X1_HEAD,
         "x1_direct_child_of_source": x1_parent == SOURCE,
-        "three_new_commits": commit_count == 3,
+        "four_new_commits": commit_count == 4,
         "zero_merges": len(merges) == 0,
         "all_new_commits_single_parent": single_parent,
         "commit_ceiling": commit_count <= 8,
@@ -229,9 +241,12 @@ def verify(run_tests: bool) -> dict[str, Any]:
         "materialized_file_guard": sum(1 for path in ROOT.rglob("*") if path.is_file()) < 2000,
         "x1_manifest_exact": x1_manifest["entry_count"] == 20 and not x1_replay,
         "x2_manifest_exact": x2_manifest["entry_count"] == 331 and not x2_replay,
-        "final_manifest_exact": final_manifest["entry_count"] >= 14 and not final_replay,
-        "content_seal_exact": content_seal["entry_count"] == 12 and not seal_replay,
+        "initial_final_manifest_exact_at_initial_final": final_manifest["entry_count"] == 17 and not final_replay,
+        "initial_content_seal_exact_at_initial_final": content_seal["entry_count"] == 12 and not seal_replay,
         "final_staged_review_passed": final_review["passed"] is True,
+        "corrected_manifest_exact": corrected_manifest["entry_count"] >= 11 and not corrected_replay,
+        "corrected_content_seal_exact": corrected_seal["entry_count"] == 10 and not corrected_seal_replay,
+        "corrected_staged_review_passed": corrected_review["passed"] is True,
         "all_json_parses": not json_result["failures"],
         "privacy_scan_zero": privacy["confirmed_candidates"] == 0,
         "bounded_ast_security_zero": security["medium_or_high_findings"] == 0,
@@ -241,7 +256,7 @@ def verify(run_tests: bool) -> dict[str, Any]:
         "route_prepared_not_sent": route["route_state"] == "PREPARED_NOT_SENT" and route["send_count"] == 0 and not route["precontact"],
         "handoff_digest_exact": sha(handoff_data) == handoff_meta["normalized_lf_sha256"] and len(handoff_data) == handoff_meta["normalized_lf_bytes"],
         "relational_boundary_preserved": read_json(PHASE / "final" / "wellbeing-and-boundaries.json")["names_roles_hopes_and_family_language_are_relational_only"] is True,
-        "tests_collected": collected >= 40,
+        "tests_collected": collected >= 49,
         "selected_tests_passed": (tests["exit_code"] == 0) if run_tests else True,
     }
     return {
@@ -263,8 +278,10 @@ def verify(run_tests: bool) -> dict[str, Any]:
             "x2": x2_manifest["entry_count"],
             "final": final_manifest["entry_count"],
             "content_seal": content_seal["entry_count"],
-            "total": x1_manifest["entry_count"] + x2_manifest["entry_count"] + final_manifest["entry_count"] + content_seal["entry_count"],
-            "mismatches": x1_replay + x2_replay + final_replay + seal_replay,
+            "corrected_final": corrected_manifest["entry_count"],
+            "corrected_content_seal": corrected_seal["entry_count"],
+            "total": x1_manifest["entry_count"] + x2_manifest["entry_count"] + final_manifest["entry_count"] + content_seal["entry_count"] + corrected_manifest["entry_count"] + corrected_seal["entry_count"],
+            "mismatches": x1_replay + x2_replay + final_replay + seal_replay + corrected_replay + corrected_seal_replay,
         },
         "changed_owner_paths": len(paths),
         "materialized_files": sum(1 for path in ROOT.rglob("*") if path.is_file()),
