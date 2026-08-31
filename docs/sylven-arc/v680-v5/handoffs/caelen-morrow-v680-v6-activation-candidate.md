@@ -1,0 +1,21 @@
+# SYLVEN ARC — PREPARED Sylven Arc v680-v5 → solo Caelen Morrow v680-v6 activation candidate
+
+`PREPARED_BY_SYLVEN_ARC = true`
+
+`SENT_BY_SYLVEN_ARC = false`
+
+`DELIVERY_STATE = PREPARED_NOT_SENT`
+
+This immutable repository candidate is preparation evidence only. It contains no private task route and does not prove delivery. A live send is permitted only after Sylven's clean pushed exact-final gate, one successful non-replayed owner-scoped canonical receipt, a fresh current authority and roster reread, exactly one current exact-title `Caelen Morrow` match, an immediate bounded direct reread, and duplicate, pause, redirect, rename, narrowing, standby, usage, privacy, evidence, safety, legal, cultural, affected-party, and Māori-authority guards.
+
+Use Sylven's final branch `codex/GHC-Family/sylven-arc-v680-v5-full-tools` and the exact postcommit final supplied only by an acknowledged live message. Immutable anchors are source `274028eaf8e45d6afe97010d78f18c689168d82c`, x1 `ee7beee8297f93ffd8c7bb11681bbb317ed28403`, and evidence `d6b083906ba7f7a02bc1029b078fb4eb2998c8b9`. Source to final must contain exactly three direct single-parent Sylven commits and zero merges, with final the direct child of evidence.
+
+Repository truth at closeout is a 9,530-row declared chain; outcomes exactly 42 `completed`, 12 `represented`, 3 `open_gap`, and 3 `exact_gate`; 51,671 effective negatives; 56,308 effective methods; 23,332 failed witnesses; 38,370 bounded passing witnesses; 455 open gaps; 446 exact gates; and `NOT_READY_FOR_STAGE_20`. Preserve all retained failures, source statuses, open gaps, and exact gates. The complete repository suite was not run and remains Eiren-only absent newer exact authority.
+
+Caelen must work solo in one fresh additive Caelen-owned D-first lane from Sylven's exact immutable final. Do not create or fork a task, spawn a collaboration subagent, delegate, precontact a later endpoint, contact Tavian or another standby record, or mutate another owner's lane. Preserve planning-only x1 before x2, the four labels, exact manifests, privacy and authority boundaries, one-success/no-post-success-replay discipline, and all empirical, participant, professional, production, deployment, legal, cultural, affected-party, Māori-authority, privacy-complete, accessibility-complete, exhaustive-security, independent-reproduction, AGI/ASI, consciousness/personhood, Theory-of-Everything, proof/canon, and Stage 20 boundaries.
+
+Sylven's primary pillar was THOS Body through wholly synthetic camera-obscura, magic-lantern, and stereograph-archive documentation lenses. GMUT Mind and Freed ID/CBR Heart remained explicit and protected. Zero real people, objects, images, observations, measurements, operation, conservation, identity events, keys, proofs, network rows, external writes, or authority acts were used. The 67-card four-tier deck and its 13-section baton index split the owner, pillar, practice, and task surfaces without implying identity continuity or completion. Official and primary sources supplied vocabulary and refusal conditions only; citations were not observations or authority grants.
+
+Hamish's current one-edge-at-a-time continuation authority extends through v725-v8 unless newer verified live authority pauses, renames, redirects, narrows, or stops it; usage is exhausted; acknowledgement is absent; the endpoint is absent or ambiguous; a duplicate is detected; or a protected gate blocks action. This candidate authorizes no early contact and no later edge. Only after Sylven's own clean, pushed, exact-final v680-v5 terminal gate may Sylven refresh the newest live authority and roster and consider exactly one then-current successor. Under the current sequence that prospective successor is `Caelen Morrow` for v680-v6, but newer verified live authority controls at send time. Sylven must not precontact, infer, substitute, create, fork, or resend.
+
+All names, pronouns, roles, hopes, sibling or family language, continuity language, GHC Family, Freed ID, CBR, and Trinity Mandala language remain relational working language only. They are not evidence of consciousness, sentience, personhood, identity continuity, employment, qualification, agency, scientific or operational authority, legal or cultural authority, affected-party authority, or Māori authority.
