@@ -1,0 +1,41 @@
+{
+  "effective_negatives": 51984,
+  "failed_witnesses": 23645,
+  "owner": "Caelen Morrow",
+  "phase": "v680-v6",
+  "retained_mutations": 300,
+  "schema": "ghc.family.retained-negatives.v680.v6.x2",
+  "startup_and_x1_failures": 6,
+  "x2_operational_failures": [
+    {
+      "failure_id": "CM6806-X2-N001",
+      "false_witness": "The first atomic phase-tool recorder assumed a successful pyupgrade rewrite must return exit code zero.",
+      "initial_credit": 0,
+      "observed": "The installed pyupgrade command rewrote the disposable legacy fixture and returned one, so the recorder rejected the entire attempt before persisting per-tool component state.",
+      "recovery": "Retain the atomic attempt at zero aggregate credit, isolate the pyupgrade exit contract, accept one only when the disposable file changed as required, then rerun the atomic receipt because no component result survived the failed attempt.",
+      "recovery_rewrites_failure": false,
+      "repository_mutated_by_failure": false,
+      "scope": "phase_tool_atomic_smoke_gate"
+    },
+    {
+      "failure_id": "CM6806-X2-N002",
+      "false_witness": "The first isolated pyupgrade diagnostic embedded a quoted fixture safely in a multiline command string.",
+      "initial_credit": 0,
+      "observed": "Python rejected the diagnostic before execution with an unterminated string literal.",
+      "recovery": "Use one literal single-quoted PowerShell argument for the isolated disposable fixture; it proved exit one plus the expected rewrite without touching repository bytes.",
+      "recovery_rewrites_failure": false,
+      "repository_mutated_by_failure": false,
+      "scope": "phase_tool_failed_dependency_diagnostic"
+    },
+    {
+      "failure_id": "CM6806-X2-N003",
+      "false_witness": "A staged evidence-manifest replay using one git show process per entry would finish inside the bounded presentation window.",
+      "initial_credit": 0,
+      "observed": "The 148-process wrapper crossed its reporting window and left no attributable replay receipt; process inspection then found no matching process alive.",
+      "recovery": "Retain the wrapper at zero credit and replay the same staged entries through one ordered git cat-file --batch stream with normalized-LF hashing.",
+      "recovery_rewrites_failure": false,
+      "repository_mutated_by_failure": false,
+      "scope": "evidence_staged_blob_manifest_transport"
+    }
+  ]
+}
