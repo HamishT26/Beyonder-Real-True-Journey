@@ -1,0 +1,43 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "certificate_record_id": {
+      "pattern": "^synthetic:hydrometer:[0-9]{3}$",
+      "type": "string"
+    },
+    "density_kg_m3": {
+      "minimum": 0,
+      "type": "number"
+    },
+    "reference_temperature_c": {
+      "type": "number"
+    },
+    "scale_family": {
+      "enum": [
+        "density_kg_m3",
+        "relative_density",
+        "api_gravity",
+        "baume",
+        "proof"
+      ]
+    },
+    "synthetic": {
+      "const": true
+    },
+    "uncertainty_kg_m3": {
+      "exclusiveMinimum": 0,
+      "type": "number"
+    }
+  },
+  "required": [
+    "certificate_record_id",
+    "density_kg_m3",
+    "reference_temperature_c",
+    "scale_family",
+    "synthetic",
+    "uncertainty_kg_m3"
+  ],
+  "title": "Synthetic hydrometer density record",
+  "type": "object"
+}

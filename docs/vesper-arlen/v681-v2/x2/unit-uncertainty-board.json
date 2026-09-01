@@ -1,0 +1,65 @@
+{
+  "authority_conferred": false,
+  "observation_rows": 0,
+  "owner": "Vesper Arlen",
+  "phase": "v681-v2",
+  "schema": {
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "additionalProperties": false,
+    "properties": {
+      "certificate_record_id": {
+        "pattern": "^synthetic:hydrometer:[0-9]{3}$",
+        "type": "string"
+      },
+      "density_kg_m3": {
+        "minimum": 0,
+        "type": "number"
+      },
+      "reference_temperature_c": {
+        "type": "number"
+      },
+      "scale_family": {
+        "enum": [
+          "density_kg_m3",
+          "relative_density",
+          "api_gravity",
+          "baume",
+          "proof"
+        ]
+      },
+      "synthetic": {
+        "const": true
+      },
+      "uncertainty_kg_m3": {
+        "exclusiveMinimum": 0,
+        "type": "number"
+      }
+    },
+    "required": [
+      "certificate_record_id",
+      "density_kg_m3",
+      "reference_temperature_c",
+      "scale_family",
+      "synthetic",
+      "uncertainty_kg_m3"
+    ],
+    "title": "Synthetic hydrometer density record",
+    "type": "object"
+  },
+  "record": {
+    "certificate_record_id": "synthetic:hydrometer:001",
+    "density_kg_m3": 999.7,
+    "reference_temperature_c": 20.0,
+    "scale_family": "density_kg_m3",
+    "synthetic": true,
+    "uncertainty_kg_m3": 0.224
+  },
+  "smoke": {
+    "external_actions": 0,
+    "invalid_schema_errors": 2,
+    "synthetic_density_conversion_g_cm3": 1.0000000000000002,
+    "synthetic_propagated_nominal_kg_m3": 999.7,
+    "synthetic_propagated_stddev_kg_m3": 0.223606797749979,
+    "valid_schema_errors": 0
+  }
+}
