@@ -17,6 +17,7 @@ CLOSEOUT = BASE / "closeout"
 SOURCE = "34536c2bb4c9fefb04cc0b571839e9ba54b3c497"
 X1 = "39f8a83e29ba28433b7c9da730d3299d1731cb4d"
 EVIDENCE = "f7ca8ace4a16f0dae8aa2530cf17962e79b062b0"
+ORIGINAL_FINAL = "d00443492f9e1a950e752aa2c1b5a1bf0613db44"
 
 
 def load(path: Path):
@@ -139,7 +140,12 @@ class TamarVeyV682V2FinalTests(unittest.TestCase):
             exclusions = set(manifest["declared_self_exclusions"])
             self.assertFalse(entries & exclusions)
             for entry in manifest["entries"]:
-                data = (ROOT / entry["path"]).read_bytes().replace(b"\r\n", b"\n")
+                data = subprocess.run(
+                    ["git", "show", f"{ORIGINAL_FINAL}:{entry['path']}"],
+                    cwd=ROOT,
+                    check=True,
+                    capture_output=True,
+                ).stdout
                 self.assertEqual(len(data), entry["bytes"], entry["path"])
                 self.assertEqual(hashlib.sha256(data).hexdigest(), entry["sha256"], entry["path"])
         self.assertEqual(set(self.review["expected_paths"]), {row["path"] for row in self.delta["entries"]} | set(self.delta["declared_self_exclusions"]))
@@ -183,7 +189,7 @@ class TamarVeyV682V2FinalTests(unittest.TestCase):
             X1,
         )
         head = subprocess.run(["git", "rev-parse", "HEAD"], cwd=ROOT, check=True, capture_output=True, text=True).stdout.strip()
-        if head != EVIDENCE:
+        if head == ORIGINAL_FINAL:
             self.assertEqual(
                 subprocess.run(["git", "rev-parse", "HEAD^"], cwd=ROOT, check=True, capture_output=True, text=True).stdout.strip(),
                 EVIDENCE,
@@ -196,6 +202,31 @@ class TamarVeyV682V2FinalTests(unittest.TestCase):
                 text=True,
             ).stdout.splitlines()
             self.assertEqual(len(commits), 3)
+            merges = subprocess.run(
+                ["git", "rev-list", "--merges", f"{SOURCE}..HEAD"],
+                cwd=ROOT,
+                check=True,
+                capture_output=True,
+                text=True,
+            ).stdout.splitlines()
+            self.assertEqual(merges, [])
+        elif head != EVIDENCE:
+            self.assertEqual(
+                subprocess.run(["git", "rev-parse", "HEAD^"], cwd=ROOT, check=True, capture_output=True, text=True).stdout.strip(),
+                ORIGINAL_FINAL,
+            )
+            self.assertEqual(
+                subprocess.run(["git", "rev-parse", f"{ORIGINAL_FINAL}^"], cwd=ROOT, check=True, capture_output=True, text=True).stdout.strip(),
+                EVIDENCE,
+            )
+            commits = subprocess.run(
+                ["git", "rev-list", "--reverse", f"{SOURCE}..HEAD"],
+                cwd=ROOT,
+                check=True,
+                capture_output=True,
+                text=True,
+            ).stdout.splitlines()
+            self.assertEqual(len(commits), 4)
             merges = subprocess.run(
                 ["git", "rev-list", "--merges", f"{SOURCE}..HEAD"],
                 cwd=ROOT,

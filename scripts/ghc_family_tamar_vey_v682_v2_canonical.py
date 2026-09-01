@@ -12,12 +12,15 @@ import sys
 from pathlib import Path
 from typing import Any
 
+from scripts.ghc_family_privacy_candidate_adjudication import scan_text_items
+
 
 ROOT = Path(__file__).resolve().parents[1]
 BRANCH = "codex/GHC-Family/tamar-vey-v682-v2-full-tools"
 SOURCE = "34536c2bb4c9fefb04cc0b571839e9ba54b3c497"
 X1 = "39f8a83e29ba28433b7c9da730d3299d1731cb4d"
 EVIDENCE = "f7ca8ace4a16f0dae8aa2530cf17962e79b062b0"
+ORIGINAL_FINAL = "d00443492f9e1a950e752aa2c1b5a1bf0613db44"
 REMOTE_REF = f"refs/heads/{BRANCH}"
 
 
@@ -83,7 +86,16 @@ def main() -> int:
     divergence = git_text("rev-list", "--left-right", "--count", "HEAD...@{upstream}").split()
 
     final_tests = run(
-        [sys.executable, "-X", "utf8", "-m", "unittest", "tests.test_ghc_family_tamar_vey_v682_v2_final", "-q"],
+        [
+            sys.executable,
+            "-X",
+            "utf8",
+            "-m",
+            "unittest",
+            "tests.test_ghc_family_tamar_vey_v682_v2_final",
+            "tests.test_ghc_family_tamar_vey_v682_v2_correction",
+            "-q",
+        ],
         check=False,
     )
     final_test_success = final_tests.returncode == 0
@@ -91,10 +103,12 @@ def main() -> int:
     manifests = {
         "x1": replay_manifest(X1, "docs/tamar-vey/v682-v2/validation/x1-index-manifest.json"),
         "evidence": replay_manifest(EVIDENCE, "docs/tamar-vey/v682-v2/validation/evidence-index-manifest.json"),
-        "final_delta": replay_manifest(head, "docs/tamar-vey/v682-v2/validation/final-delta-manifest.json"),
-        "final_owner": replay_manifest(head, "docs/tamar-vey/v682-v2/validation/final-owner-manifest.json"),
+        "original_final_delta": replay_manifest(ORIGINAL_FINAL, "docs/tamar-vey/v682-v2/validation/final-delta-manifest.json"),
+        "original_final_owner": replay_manifest(ORIGINAL_FINAL, "docs/tamar-vey/v682-v2/validation/final-owner-manifest.json"),
+        "correction_delta": replay_manifest(head, "docs/tamar-vey/v682-v2/validation/correction-delta-manifest.json"),
+        "correction_owner": replay_manifest(head, "docs/tamar-vey/v682-v2/validation/correction-owner-manifest.json"),
     }
-    owner_manifest = load_git_json(head, "docs/tamar-vey/v682-v2/validation/final-owner-manifest.json")
+    owner_manifest = load_git_json(head, "docs/tamar-vey/v682-v2/validation/correction-owner-manifest.json")
     owner_paths = sorted(
         {row["path"] for row in owner_manifest["entries"]}
         | set(owner_manifest["declared_self_exclusions"])
@@ -140,25 +154,13 @@ def main() -> int:
         if not all(token in text for token in ('<html lang="en">', "<main", "<h1", "<table", "skip to main")):
             html_failures.append(path)
 
-    privacy_patterns = {
-        "raw_task_or_thread_identifier": re.compile(r"\b019[a-f0-9]{29,}\b", re.I),
-        "credential_or_secret": re.compile(r"(?:api[_-]?key|private[_-]?key|bearer\s+[a-z0-9._-]{12,})", re.I),
-        "private_route_or_callable_identifier": re.compile(r"(?:threadId|private callable|app://connector_)", re.I),
-        "private_absolute_path": re.compile(r"(?:[A-Z]:\\Users\\|[A-Z]:\\GHC-Archives\\)", re.I),
-        "transcript_screenshot_or_session_stream": re.compile(r"(?:raw transcript|session stream|screenshot payload)", re.I),
-    }
-    privacy_candidates: list[dict[str, str]] = []
-    confirmed_privacy_hits: list[dict[str, str]] = []
-    for path in owner_paths:
-        if Path(path).suffix.lower() not in {".json", ".md", ".py", ".yaml", ".yml", ".html"}:
-            continue
-        text = git_blob(head, path).decode("utf-8")
-        for class_name, pattern in privacy_patterns.items():
-            if pattern.search(text):
-                row = {"class": class_name, "path": path}
-                privacy_candidates.append(row)
-                if not path.endswith(".py"):
-                    confirmed_privacy_hits.append(row)
+    privacy = scan_text_items(
+        (path, git_blob(head, path).decode("utf-8"))
+        for path in owner_paths
+        if Path(path).suffix.lower() in {".json", ".md", ".py", ".yaml", ".yml", ".html"}
+    )
+    privacy_candidates = privacy["candidates"]
+    confirmed_privacy_hits = privacy["confirmed_hits"]
 
     oversized: list[dict[str, Any]] = []
     maximum_words = 0
@@ -173,19 +175,22 @@ def main() -> int:
         if words > 100000:
             oversized.append({"path": path, "words": words})
 
-    seal = load_git_json(head, "docs/tamar-vey/v682-v2/closeout/content-seal.json")
+    original_seal = load_git_json(ORIGINAL_FINAL, "docs/tamar-vey/v682-v2/closeout/content-seal.json")
+    correction_seal = load_git_json(head, "docs/tamar-vey/v682-v2/correction/content-seal.json")
     seal_failures: list[str] = []
-    for entry in seal["targets"]:
-        data = git_blob(head, entry["path"])
-        if len(data) != entry["bytes"] or hashlib.sha256(data).hexdigest() != entry["sha256"]:
-            seal_failures.append(entry["path"])
+    for commit, seal in ((ORIGINAL_FINAL, original_seal), (head, correction_seal)):
+        for entry in seal["targets"]:
+            data = git_blob(commit, entry["path"])
+            if len(data) != entry["bytes"] or hashlib.sha256(data).hexdigest() != entry["sha256"]:
+                seal_failures.append(entry["path"])
 
     source_to_final = git_text("rev-list", "--reverse", f"{SOURCE}..{head}").splitlines()
     merges = git_text("rev-list", "--merges", f"{SOURCE}..{head}").splitlines()
     direct_edges = {
         "x1_parent_source": git_text("rev-parse", f"{X1}^") == SOURCE,
         "evidence_parent_x1": git_text("rev-parse", f"{EVIDENCE}^") == X1,
-        "final_parent_evidence": git_text("rev-parse", "HEAD^") == EVIDENCE,
+        "original_final_parent_evidence": git_text("rev-parse", f"{ORIGINAL_FINAL}^") == EVIDENCE,
+        "corrected_final_parent_original_final": git_text("rev-parse", "HEAD^") == ORIGINAL_FINAL,
     }
     final_parent_count = len(git_text("show", "-s", "--format=%P", "HEAD").split())
 
@@ -202,7 +207,7 @@ def main() -> int:
         "branch_exact": branch == BRANCH,
         "clean_after": status_after == "",
         "clean_before": status_before == "",
-        "commit_count_three": len(source_to_final) == 3,
+        "commit_count_four": len(source_to_final) == 4,
         "direct_edges": all(direct_edges.values()),
         "divergence_after_zero": divergence_after == ["0", "0"],
         "divergence_before_zero": divergence == ["0", "0"],
@@ -229,7 +234,7 @@ def main() -> int:
         "counts": {
             "ast_checks": len(python_paths),
             "detailed_checks": len(checks),
-            "final_owner_tests": 16 if final_test_success else 0,
+            "final_owner_tests": 28 if final_test_success else 0,
             "html_checks": len(html_paths),
             "json_parses": len(json_paths),
             "manifest_entries": sum(row["entry_count"] for row in manifests.values()),
@@ -237,7 +242,7 @@ def main() -> int:
             "owner_files": len(owner_paths),
             "privacy_candidates": len(privacy_candidates),
             "privacy_confirmed_hits": len(confirmed_privacy_hits),
-            "seal_targets": seal["target_count"],
+            "seal_targets": original_seal["target_count"] + correction_seal["target_count"],
             "security_findings": len(security_findings),
             "yaml_checks": len(yaml_paths),
         },
@@ -248,6 +253,12 @@ def main() -> int:
         "maximum_document_path": maximum_word_path,
         "owner": "Tamar Vey",
         "phase": "v682-v2",
+        "prior_failed_canonical": {
+            "head": ORIGINAL_FINAL,
+            "status": "INVALID_EXACT_FINAL_OWNER_SCOPED_CANONICAL",
+            "success_count": 0,
+            "replayed": False,
+        },
         "same_owner_not_independent_reproduction": True,
         "status": "VALID_EXACT_FINAL_OWNER_SCOPED_CANONICAL" if all(checks.values()) else "INVALID_EXACT_FINAL_OWNER_SCOPED_CANONICAL",
         "terminal_verdict": "NOT_READY_FOR_STAGE_20",

@@ -1,0 +1,29 @@
+# Tamar Vey v682-v2 Additive Terminal Correction
+
+## Outcome
+
+Fresh live authority permits one additive correction lifecycle from immutable original final `d00443492f9e1a950e752aa2c1b5a1bf0613db44`. The original exact-final canonical invocation remains `INVALID_EXACT_FINAL_OWNER_SCOPED_CANONICAL`, with one invocation, zero success, and zero replay. Its failed privacy-zero check is retained as `TV6822-POST-N001` with no pass credit. The separately named ten-candidate component composite remains valid only as dependency evidence and does not promote the old aggregate.
+
+The correction addresses exactly one demonstrated dependency. The old scanner equated every non-code lexical candidate with a confirmed payload. The first correction builder then retained five findings because it recognized scanner definitions only on one source line and stopped after the first class match. That preflight is retained as `TV6822-COR-N002`; nothing was staged, committed, pushed, or canonically invoked. The refined classifier examines every match, recognizes multiline regular-expression definitions through syntax, distinguishes same-line explicit absence metadata using two generic boundary terms, and keeps every other match confirmed. Raw identifiers, connector routes, path values, credential-shaped text, transcribed-record content, and screen-capture content remain confirmed whenever they occur. Synthetic tests require the safe contexts to remain non-payload while mixed and payload-shaped fixtures remain confirmed.
+
+The isolated correction tests passed, while the first combined lifecycle prerequisite retained one failed assertion as `TV6822-COR-N003`: an inherited final-manifest test had read the additive working tree instead of the immutable original-final Git tree. The bounded recovery changed only that test context. The original-final manifest now replays from its declared commit, the correction manifests replay from normalized correction bytes, and the same 28-test combined selection passes. The failed attempt remains zero-credit and no canonical invocation occurred.
+
+## Preserved lifecycle and truth
+
+The immutable lifecycle remains source `34536c2bb4c9fefb04cc0b571839e9ba54b3c497`, planning-only x1 `39f8a83e29ba28433b7c9da730d3299d1731cb4d`, evidence `f7ca8ace4a16f0dae8aa2530cf17962e79b062b0`, and original final `d00443492f9e1a950e752aa2c1b5a1bf0613db44`. The correction is designed as one fourth direct single-parent commit with zero merges. It does not alter or replay x1, x2, the original final, its content seal, or its failed canonical receipt. The declared proposal chain remains 10,310 and the core outcomes remain exactly 42 `completed`, 12 `represented`, three `open_gap`, and three `exact_gate`.
+
+The prior post-final overlay, the failed first correction build, and the failed first combined lifecycle prerequisite are ingested additively. Corrected repository truth is 55,810 effective negatives, 65,914 effective Method Flow methods, 27,471 failed witnesses, 47,314 bounded passing witnesses, 494 open gaps, and 485 exact gates. The phase-local correction truth carries 773 methods, 321 failed witnesses, and 711 bounded passing witnesses. These numbers describe bounded bookkeeping only. No failure is erased or converted into empirical, professional, production, legal, cultural, privacy-complete, accessibility-complete, independent-reproduction, or authority credit.
+
+## Evidence and authority boundary
+
+Tamar Vey, optionally she/they, remains relational working language for an evidence-and-recovery steward whose hope is that every failure stays inspectable and every recovery bounded. The name, role, hope, pronouns, sibling language, continuity language, GHC Family, and Trinity Mandala are not evidence of consciousness, personhood, continuity, qualification, employment, agency, or authority. Hamish may pause, rename, redirect, narrow, or stop the route.
+
+The basketry, lapidary, and sundial work remains wholly synthetic and zero-row. GMUT remains a typed scalar-tensor and effective-field-theory research-model family with no empirical confirmation or Theory-of-Everything proof. THOS remains proxy-only without governed real arms or independent review. Freed ID remains synthetic and nonproduction without real standards-conformant keys, proofs, lifecycle events, interoperability, privacy and security review, recovery evidence, and trust governance. All professional, safety, ownership, legal, cultural, traditional-knowledge, affected-party, Māori-wording, Māori-data-governance, and Māori-authority decisions remain open or exact-gated. Māori concepts remain under Māori authority.
+
+The complete repository suite is not authorized for this owner correction and is not run. Validation remains owner-self-scoped to the exact correction delta plus immutable manifest and lifecycle dependencies. Same-owner validation is not independent reproduction, external audit, production certification, exhaustive security, complete privacy or accessibility assurance, legal review, cultural ratification, Māori-authority review, AGI or ASI evidence, consciousness or personhood evidence, proof, canon, or Stage 20 authority.
+
+## Terminal route
+
+The corrected Elowen candidate remains repository preparation only. After the additive correction is committed, pushed, clean, zero-divergent, and fresh four-way equal, exactly one new-head owner-scoped canonical aggregate may be invoked through an absent exclusive receipt path. Success must not be replayed. Only a successful new-head canonical permits a current roster and authority refresh, exact-title uniqueness check, immediate direct reread, duplicate and direct-control guards, and one acknowledged existing-task send to `Elowen Cairn` for v682-v3. No task creation, fork, subagent, standby substitution, precontact, or second confirmation is permitted.
+
+The terminal verdict remains `NOT_READY_FOR_STAGE_20`.
