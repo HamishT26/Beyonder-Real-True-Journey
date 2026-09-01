@@ -1,0 +1,15 @@
+# Tamar Vey v682-v2 Bounded X2 Evidence Overview
+
+Tamar Vey, optionally she/they, is relational working language for an evidence-and-recovery steward. The hope is that every failure stays inspectable and every recovery remains bounded. This does not establish consciousness, personhood, continuity, employment, qualification, agency, or authority.
+
+This x2 executed the sixty planning-only x1 contracts without changing their expected dispositions. Exactly 42 completed software or structural contracts, 12 represented contracts, three open gaps, and three exact gates remain. Every positive fixture was wholly synthetic and used zero real rows. All 300 preregistered invalid mutations were rejected and retained at zero credit.
+
+The primary pillar is GMUT Mind through typed geometry, time domains, uncertainty, observation vacancies, and nonpromotion firewalls. THOS Body remains represented through work-state topology, stop conditions, workload, and handover. Freed ID and CBR Heart remain represented through surrogate identifiers, provenance, correction, challenge, status vacancies, accessibility structure, remedy holds, and authority reservation.
+
+The bounded lenses are synthetic basketry documentation and support planning, synthetic lapidary work-order and material-claim vacancy planning, and synthetic sundial documentation and solar-time symbol modelling. No real person, object, material, machine, site, observation, measurement, identity event, external write, professional decision, or authority act was involved.
+
+Official and primary sources supplied vocabulary and refusal conditions only. They were not observations, work instructions, material identifications, safety releases, certifications, legal interpretations, cultural ratifications, affected-party decisions, or Māori-authority grants.
+
+GMUT remains a typed scalar-tensor and effective-field-theory research-model family with no physical datum, likelihood, posterior, force, constraint, prediction, empirical confirmation, ultraviolet or quantum completion, or Theory-of-Everything proof. THOS remains synthetic or proxy-only without preregistered blind matched-budget governed real arms, safety monitoring, appropriate statistics, and independent review. Freed ID remains synthetic and nonproduction without real standards-conformant keys and proofs, live lifecycle events, interoperability, independent privacy and security review, recovery evidence, trust governance, and affected-party oversight.
+
+Basket ownership and meaning, traditional knowledge, material authenticity, mining provenance, dust exposure, machine and workplace release, sundial siting, land and heritage, privacy and accessibility remedy, legal or cultural interpretation, affected-party legitimacy, Māori wording, Māori data governance, and Māori authority remain open or exact-gated. Complete privacy, complete accessibility, exhaustive security, independent reproduction, AGI or ASI, consciousness or personhood, proof or canon, and Stage 20 are not established. The terminal verdict remains NOT_READY_FOR_STAGE_20.
