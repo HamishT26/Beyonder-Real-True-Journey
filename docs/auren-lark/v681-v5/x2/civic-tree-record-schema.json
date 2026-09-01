@@ -1,0 +1,72 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "authority_state": {
+      "const": "exact_gate"
+    },
+    "correction_history": {
+      "items": {
+        "additionalProperties": false,
+        "properties": {
+          "correction_id": {
+            "pattern": "^synthetic:correction:[0-9]{3}$",
+            "type": "string"
+          },
+          "field_pointer": {
+            "pattern": "^/[a-z_]+$",
+            "type": "string"
+          },
+          "state": {
+            "enum": [
+              "requested",
+              "statement_attached",
+              "superseded"
+            ]
+          }
+        },
+        "required": [
+          "correction_id",
+          "field_pointer",
+          "state"
+        ],
+        "type": "object"
+      },
+      "minItems": 1,
+      "type": "array"
+    },
+    "location_cell": {
+      "pattern": "^synthetic:grid:[A-Z]{2}[0-9]{2}$",
+      "type": "string"
+    },
+    "real_rows": {
+      "const": 0
+    },
+    "record_id": {
+      "pattern": "^synthetic:civic-tree-record:[0-9]{3}$",
+      "type": "string"
+    },
+    "risk_assessment": {
+      "const": "not_performed"
+    },
+    "synthetic": {
+      "const": true
+    },
+    "tree_key": {
+      "pattern": "^synthetic:civic-tree:[0-9]{3}$",
+      "type": "string"
+    }
+  },
+  "required": [
+    "authority_state",
+    "correction_history",
+    "location_cell",
+    "real_rows",
+    "record_id",
+    "risk_assessment",
+    "synthetic",
+    "tree_key"
+  ],
+  "title": "Wholly synthetic civic-tree correction record",
+  "type": "object"
+}

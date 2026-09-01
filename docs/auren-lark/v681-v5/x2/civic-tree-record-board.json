@@ -1,0 +1,136 @@
+{
+  "authority_conferred": false,
+  "external_actions": 0,
+  "invalid_controls": [
+    {
+      "fixture": "missing_record_id",
+      "reasons": [
+        "closed_field_set",
+        "record_id_format"
+      ]
+    },
+    {
+      "fixture": "real_row_promotion",
+      "reasons": [
+        "synthetic_zero_row_boundary"
+      ]
+    },
+    {
+      "fixture": "authority_promotion",
+      "reasons": [
+        "authority_state"
+      ]
+    },
+    {
+      "fixture": "exact_coordinate_materialization",
+      "reasons": [
+        "location_cell_format"
+      ]
+    },
+    {
+      "fixture": "risk_assessment_promotion",
+      "reasons": [
+        "risk_assessment_promotion"
+      ]
+    }
+  ],
+  "invalid_rejected": 5,
+  "owner": "Auren Lark",
+  "phase": "v681-v5",
+  "real_rows": 0,
+  "record": {
+    "authority_state": "exact_gate",
+    "correction_history": [
+      {
+        "correction_id": "synthetic:correction:001",
+        "field_pointer": "/condition_code",
+        "state": "requested"
+      },
+      {
+        "correction_id": "synthetic:correction:002",
+        "field_pointer": "/condition_code",
+        "state": "statement_attached"
+      }
+    ],
+    "location_cell": "synthetic:grid:AL15",
+    "real_rows": 0,
+    "record_id": "synthetic:civic-tree-record:001",
+    "risk_assessment": "not_performed",
+    "synthetic": true,
+    "tree_key": "synthetic:civic-tree:001"
+  },
+  "schema": {
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "additionalProperties": false,
+    "properties": {
+      "authority_state": {
+        "const": "exact_gate"
+      },
+      "correction_history": {
+        "items": {
+          "additionalProperties": false,
+          "properties": {
+            "correction_id": {
+              "pattern": "^synthetic:correction:[0-9]{3}$",
+              "type": "string"
+            },
+            "field_pointer": {
+              "pattern": "^/[a-z_]+$",
+              "type": "string"
+            },
+            "state": {
+              "enum": [
+                "requested",
+                "statement_attached",
+                "superseded"
+              ]
+            }
+          },
+          "required": [
+            "correction_id",
+            "field_pointer",
+            "state"
+          ],
+          "type": "object"
+        },
+        "minItems": 1,
+        "type": "array"
+      },
+      "location_cell": {
+        "pattern": "^synthetic:grid:[A-Z]{2}[0-9]{2}$",
+        "type": "string"
+      },
+      "real_rows": {
+        "const": 0
+      },
+      "record_id": {
+        "pattern": "^synthetic:civic-tree-record:[0-9]{3}$",
+        "type": "string"
+      },
+      "risk_assessment": {
+        "const": "not_performed"
+      },
+      "synthetic": {
+        "const": true
+      },
+      "tree_key": {
+        "pattern": "^synthetic:civic-tree:[0-9]{3}$",
+        "type": "string"
+      }
+    },
+    "required": [
+      "authority_state",
+      "correction_history",
+      "location_cell",
+      "real_rows",
+      "record_id",
+      "risk_assessment",
+      "synthetic",
+      "tree_key"
+    ],
+    "title": "Wholly synthetic civic-tree correction record",
+    "type": "object"
+  },
+  "schema_id": "ghc.family.civic-tree-record-board.v681.v5.x2",
+  "valid_errors": []
+}
