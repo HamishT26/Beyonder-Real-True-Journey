@@ -1,0 +1,31 @@
+{
+  "effective_negatives": 55488,
+  "failed_witnesses": 27149,
+  "owner": "Liora Venn",
+  "phase": "v682-v1",
+  "retained_mutations": 300,
+  "schema": "ghc.family.retained-negatives.v682.v1.x2",
+  "startup_and_x1_failures": 14,
+  "x2_operational_failures": [
+    {
+      "failure_id": "LV6821-X2-N001",
+      "false_witness": "the first structural-template copy respected the evidence-before-final materialization boundary",
+      "initial_credit": 0,
+      "observed": "three untracked final-only scaffolds were copied into the owner worktree before the x2 evidence freeze",
+      "recovery": "move only those three derived untracked copies to a recoverable D-side quarantine before x2 finalization and restore them only after the immutable evidence boundary",
+      "recovery_rewrites_failure": false,
+      "repository_mutated_by_failure": false,
+      "scope": "owner_x2_final_materialization_preflight"
+    },
+    {
+      "failure_id": "LV6821-X2-N002",
+      "false_witness": "one combined staged-review wrapper would return every manifest, JSON, word-ceiling, and count result synchronously",
+      "initial_credit": 0,
+      "observed": "the wrapper emitted only the completed manifest result and omitted its running-session handle before the remaining read-only projections finished",
+      "recovery": "inspect live processes and persisted Git state, retain the already successful manifest result, and run only the unreturned JSON, word-ceiling, and scalar-count projections separately",
+      "recovery_rewrites_failure": false,
+      "repository_mutated_by_failure": false,
+      "scope": "owner_x2_staged_review_projection"
+    }
+  ]
+}
