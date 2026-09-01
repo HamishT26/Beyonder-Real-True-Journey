@@ -1,0 +1,227 @@
+from __future__ import annotations
+
+import hashlib
+import json
+import subprocess
+import sys
+import unittest
+from collections import Counter
+from pathlib import Path
+
+ROOT = Path(__file__).resolve().parents[1]
+BASE = ROOT / "docs" / "neris-solane" / "v681-v1"
+X1 = BASE / "x1"
+X2 = BASE / "x2"
+VALIDATION = BASE / "validation"
+X1_HEAD = "dc2a06ff4429ccf3bcac079aaa93da44905248df"
+SOURCE = "40eefe9e5bd82c69063e2fe040db53ba08acb593"
+SKILL_PROPOSAL_INDEXES = [1, 3, 2, 6, 11, 14, 21, 23, 35, 29, 58, 42, 51, 52, 53, 39, 20, 40, 32, 60]
+
+sys.path.insert(0, str(ROOT / "scripts"))
+from ghc_family_neris_solane_v681_v1_contracts import (
+    MUTATION_TYPES,
+    mutate,
+    positive_fixture,
+    validate,
+)
+
+
+def load(path: Path):
+    return json.loads(path.read_text(encoding="utf-8"))
+
+
+def git(*args: str) -> str:
+    return subprocess.run(["git", "-C", str(ROOT), *args], check=True, capture_output=True, text=True, encoding="utf-8").stdout.strip()
+
+
+class NerisSolaneV681V1EvidenceTests(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls) -> None:
+        cls.freeze = load(X1 / "new-proposal-freeze.json")
+        cls.proposals = cls.freeze["proposals"]
+        cls.evidence = load(X2 / "proposal-evidence.json")
+        cls.mutations = load(X2 / "mutations.json")
+        cls.method = load(X2 / "method-flow-ledger.json")
+
+    def test_lifecycle_starts_at_immutable_x1(self) -> None:
+        self.assertEqual(git("rev-parse", "HEAD"), X1_HEAD)
+        self.assertEqual(git("show", "-s", "--format=%P", "HEAD"), SOURCE)
+        self.assertFalse((BASE / "final").exists())
+
+    def test_all_proposals_have_positive_controls(self) -> None:
+        positives = load(X2 / "positive-controls.json")
+        self.assertEqual(positives["accepted_count"], 60)
+        self.assertEqual(len(positives["receipts"]), 60)
+        self.assertTrue(all(row["accepted"] and row["real_rows"] == 0 for row in positives["receipts"]))
+
+    def test_exact_outcomes(self) -> None:
+        self.assertEqual(self.evidence["outcome_counts"], {"completed": 42, "represented": 12, "open_gap": 3, "exact_gate": 3})
+        self.assertEqual(Counter(row["outcome"] for row in self.evidence["outcomes"]), Counter(self.evidence["outcome_counts"]))
+
+    def test_every_mutation_executed_and_rejected(self) -> None:
+        self.assertEqual(self.mutations["executed_count"], 300)
+        self.assertEqual(self.mutations["rejected_count"], 300)
+        self.assertEqual(self.mutations["accepted_invalid_count"], 0)
+        self.assertTrue(all(not row["accepted"] and row["failed_witness_retained"] for row in self.mutations["receipts"]))
+
+    def test_five_mutation_types_per_proposal(self) -> None:
+        for proposal in self.proposals:
+            rows = [row for row in self.mutations["receipts"] if row["proposal_id"] == proposal["proposal_id"]]
+            self.assertEqual(len(rows), 5)
+            self.assertEqual({row["mutation_type"] for row in rows}, set(MUTATION_TYPES))
+
+    def test_contract_accepts_positive_and_rejects_mutations(self) -> None:
+        for proposal in self.proposals:
+            fixture = positive_fixture(proposal)
+            self.assertTrue(validate(proposal, fixture)["accepted"])
+            for mutation_type in MUTATION_TYPES:
+                self.assertFalse(validate(proposal, mutate(fixture, mutation_type))["accepted"])
+
+    def test_skill_receipts(self) -> None:
+        initialization = load(X2 / "skill-initialization-receipts.json")
+        self.assertEqual(initialization["initialized_count"], 20)
+        self.assertFalse(initialization["global_install"])
+        self.assertEqual(initialization["subagent_forward_test"], "not_run_solo_execution_required")
+        self.assertEqual([row["proposal_index"] for row in initialization["receipts"]], SKILL_PROPOSAL_INDEXES)
+        receipt = load(X2 / "skill-smoke-receipts.json")
+        self.assertEqual(receipt["skill_count"], 20)
+        self.assertEqual(receipt["validated_count"], 20)
+        self.assertEqual(receipt["smoke_used_count"], 20)
+        self.assertTrue(all(row["read_through_eof"] and not row["global_install"] for row in receipt["receipts"]))
+
+    def test_skill_scaffolds_are_complete(self) -> None:
+        files = sorted((BASE / "skills").glob("*/SKILL.md"))
+        self.assertEqual(len(files), 20)
+        for path in files:
+            text = path.read_text(encoding="utf-8")
+            self.assertNotIn("TODO", text)
+            for heading in ("## Scope", "## Inputs", "## Steps", "## Refusals", "## Outputs", "## Smoke fixture"):
+                self.assertIn(heading, text)
+
+    def test_runner_receipts(self) -> None:
+        receipt = load(X2 / "runner-smoke-receipts.json")
+        self.assertEqual(receipt["runner_count"], 10)
+        self.assertEqual(receipt["passed_count"], 10)
+        self.assertTrue(all(row["positive_accepted"] and row["invalid_rejected"] for row in receipt["receipts"]))
+
+    def test_d_isolated_toolchain_receipt(self) -> None:
+        receipt = load(X2 / "toolchain-install-receipt.json")
+        self.assertEqual(receipt["installed_count"], 3)
+        self.assertEqual(receipt["smoke_used_count"], 3)
+        self.assertTrue(receipt["dependency_check_passed"])
+        self.assertFalse(receipt["global_install"])
+        self.assertEqual(receipt["target_environment"], "D-first phase-isolated virtual environment")
+        self.assertEqual({row["name"] for row in receipt["tools"]}, {"jsonpointer", "rfc3339-validator", "fqdn"})
+        self.assertTrue(all(row["installed"] and row["smoke_passed"] for row in receipt["tools"]))
+        self.assertTrue(all(row["version"] and row["license"] and row["package_sha256"] for row in receipt["tools"]))
+        self.assertTrue(receipt["wheel_hashes_verified"])
+        self.assertTrue(all(row["wheel_sha256_verified"] and row["wheel_sha256"] for row in receipt["tools"]))
+
+    def test_portfolio_results(self) -> None:
+        portfolio = load(X2 / "portfolio-results.json")
+        self.assertEqual(len(portfolio["safe_now"]), 120)
+        self.assertEqual(len(portfolio["owner_candidates"]), 80)
+        self.assertEqual(len(portfolio["clean_fix_refine"]), 100)
+        self.assertEqual(len(portfolio["exact_approval"]), 20)
+        self.assertEqual(len(portfolio["blocked"]), 10)
+        self.assertTrue(all(row["state"] == "retained_unexecuted" for row in portfolio["exact_approval"] + portfolio["blocked"]))
+
+    def test_method_flow_counts_and_non_erasure(self) -> None:
+        counts = self.method["counts"]
+        self.assertEqual(counts["effective_negatives"], 52950)
+        self.assertEqual(counts["effective_methods"], 59387)
+        self.assertEqual(counts["failed_witnesses"], 24611)
+        self.assertEqual(counts["bounded_passing_witnesses"], 41209)
+        self.assertEqual(len(self.method["startup_and_x1_failures"]), 15)
+        self.assertEqual(
+            [row["failure_id"] for row in self.method["x2_operational_failures"]],
+            ["NE6811-X2-N001"],
+        )
+        self.assertTrue(all(row["initial_credit"] == 0 for row in self.method["x2_operational_failures"]))
+        self.assertFalse(self.method["failure_erasure"])
+        self.assertFalse(self.method["recoveries_retroactively_promote_failure"])
+
+    def test_gate_counts(self) -> None:
+        gates = load(X2 / "gate-register.json")
+        self.assertEqual(gates["open_gaps"], 467)
+        self.assertEqual(gates["exact_gates"], 458)
+        self.assertEqual(gates["new_open_gaps"], 3)
+        self.assertEqual(gates["new_exact_gates"], 3)
+
+    def test_four_tier_flashcard_deck(self) -> None:
+        deck = X2 / "flashcards"
+        index = load(deck / "deck-index.json")
+        cards = [load(path) for path in sorted((deck / "cards").glob("*.json"))]
+        self.assertEqual(index["card_count"], 67)
+        self.assertEqual(len(cards), 67)
+        self.assertEqual(len({row["card_id"] for row in cards}), 67)
+        self.assertEqual(Counter(row["tier"] for row in cards), Counter({1: 1, 2: 3, 3: 3, 4: 60}))
+        by_id = {row["card_id"]: row for row in cards}
+        for row in cards:
+            if row["tier"] == 1:
+                self.assertEqual(row["parent_ids"], [])
+            else:
+                self.assertEqual(len(row["parent_ids"]), 1)
+                self.assertEqual(by_id[row["parent_ids"][0]]["tier"], row["tier"] - 1)
+        self.assertEqual(Counter(row["outcome"] for row in cards if row["tier"] == 4), Counter({"completed": 42, "represented": 12, "open_gap": 3, "exact_gate": 3}))
+        baton = load(deck / "baton-index.json")
+        self.assertEqual(baton["count"], 13)
+        self.assertEqual(len(baton["sections"]), 13)
+        self.assertIn("PREPARED_NOT_SENT", (deck / "compact-activation.md").read_text(encoding="utf-8"))
+
+    def test_flashcard_manifest_replays_normalized_bytes(self) -> None:
+        manifest = load(X2 / "flashcards" / "card-manifest.json")
+        self.assertEqual(manifest["entry_count"], len(manifest["entries"]))
+        self.assertEqual(manifest["declared_self_exclusion"], "docs/neris-solane/v681-v1/x2/flashcards/card-manifest.json")
+        for entry in manifest["entries"]:
+            data = (ROOT / entry["path"]).read_bytes().replace(b"\r\n", b"\n").replace(b"\r", b"\n")
+            self.assertEqual(len(data), entry["bytes"], entry["path"])
+            self.assertEqual(hashlib.sha256(data).hexdigest(), entry["sha256"], entry["path"])
+
+    def test_sources_do_not_confer_authority(self) -> None:
+        receipt = load(X2 / "official-source-use-receipt.json")
+        self.assertFalse(receipt["authority_conferred"])
+        self.assertFalse(receipt["citations_are_observations"])
+        self.assertEqual(receipt["real_data_rows"], 0)
+
+    def test_threat_control_is_zero_real_world(self) -> None:
+        receipt = load(X2 / "threat-control-evidence.json")
+        self.assertEqual(receipt["external_actions"], 0)
+        self.assertEqual(receipt["network_data_queries"], 0)
+        self.assertEqual(receipt["real_rows"], 0)
+        self.assertFalse(receipt["authority_conferred"])
+
+    def test_privacy_and_security_scans(self) -> None:
+        privacy = load(VALIDATION / "evidence-privacy-scan.json")
+        security = load(VALIDATION / "evidence-security-scan.json")
+        self.assertEqual(privacy["confirmed_hits"], [])
+        self.assertEqual(len(privacy["privacy_classes"]), 5)
+        self.assertEqual(security["bounded_findings"], 0)
+        self.assertEqual(security["ast_errors"], [])
+
+    def test_manifest_replays_worktree_bytes(self) -> None:
+        manifest = load(VALIDATION / "evidence-index-manifest.json")
+        self.assertEqual(manifest["entry_count"], len(manifest["entries"]))
+        for entry in manifest["entries"]:
+            data = (ROOT / entry["path"]).read_bytes().replace(b"\r\n", b"\n").replace(b"\r", b"\n")
+            self.assertEqual(len(data), entry["bytes"], entry["path"])
+            self.assertEqual(hashlib.sha256(data).hexdigest(), entry["sha256"], entry["path"])
+
+    def test_staged_review_is_x2_only(self) -> None:
+        review = load(VALIDATION / "evidence-staged-review.json")
+        self.assertEqual(review["lifecycle"], "bounded_x2_evidence")
+        self.assertTrue(all("/final/" not in path for path in review["expected_paths"]))
+        self.assertTrue(all("/x1/" not in path for path in review["expected_paths"]))
+
+    def test_successor_is_zero_credit_and_uncontacted(self) -> None:
+        successor = load(X2 / "successor-recommendations.json")
+        self.assertEqual(successor["owner_completion_credit"], 0)
+        self.assertTrue(successor["recipient_not_contacted"])
+
+    def test_terminal_verdict(self) -> None:
+        phase = load(X2 / "phase-truth.json")
+        self.assertEqual(phase["terminal_verdict"], "NOT_READY_FOR_STAGE_20")
+
+
+if __name__ == "__main__":
+    unittest.main()
