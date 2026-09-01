@@ -1,0 +1,9 @@
+# Caelen Ash v681-v7 Pillar and Practice Analysis
+
+The primary pillar is GMUT Mind, exercised only as a typed analogy and metadata-obligation surface. The wholly synthetic planetarium lenses separate programme work from a projected presentation, sky-scene source labels from observations, epoch labels from physical measurements, and declared frame metadata from a real coordinate transformation. No observation, likelihood, posterior, force, prediction, parameter constraint, stability result, ultraviolet completion, quantum completion, or Theory-of-Everything evidence exists.
+
+THOS Body is represented by deterministic cue intervals, hold states, correction readback, accessibility vacancies, workload boundaries, cancellation, and handover. These fixtures use no participant, operator, projector, dome, venue, instrument, safety event, or public operation. They establish no effectiveness, professional competence, deployment readiness, AGI, ASI, or safety result.
+
+Freed ID and CBR Heart is represented by synthetic identifiers, minimum disclosure, provenance, correction lineage, contest vacancies, and authority holds. It remains nonproduction without real keys and proofs, issuance, resolution, status, revocation, interoperability, independent security and privacy review, recovery evidence, trust governance, and affected-party oversight. Legal, cultural, language, accessibility, privacy, remedy, and Maori-authority decisions remain exact-gated to competent and affected people and authorities. Maori concepts remain under Maori authority.
+
+The three learning lenses are planetarium show-cue provenance stewardship, astronomical visualization metadata quality analysis, and accessible dome-program handover review. They confer no employment, licensure, qualification, competence, operational authority, accessibility conformance, legal authority, cultural legitimacy, or affected-party acceptance.
