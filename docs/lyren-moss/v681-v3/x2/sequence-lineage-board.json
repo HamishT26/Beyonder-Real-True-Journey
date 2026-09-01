@@ -1,0 +1,118 @@
+{
+  "authority_conferred": false,
+  "collection_rows": 0,
+  "owner": "Lyren Moss",
+  "phase": "v681-v3",
+  "schema": {
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "additionalProperties": false,
+    "properties": {
+      "cards": {
+        "items": {
+          "additionalProperties": false,
+          "properties": {
+            "card_id": {
+              "pattern": "^synthetic:card:[0-9]{3}$",
+              "type": "string"
+            },
+            "ordinal": {
+              "minimum": 1,
+              "type": "integer"
+            },
+            "punch_pattern": {
+              "pattern": "^[01?]{12}$",
+              "type": "string"
+            },
+            "synthetic": {
+              "const": true
+            }
+          },
+          "required": [
+            "card_id",
+            "ordinal",
+            "punch_pattern",
+            "synthetic"
+          ],
+          "type": "object"
+        },
+        "minItems": 1,
+        "type": "array",
+        "uniqueItems": true
+      },
+      "deck_record_id": {
+        "pattern": "^synthetic:punched-card-deck:[0-9]{3}$",
+        "type": "string"
+      },
+      "format_profile": {
+        "enum": [
+          "declared_80_column_12_row",
+          "declared_other",
+          "unknown"
+        ]
+      },
+      "real_rows": {
+        "const": 0
+      },
+      "rights_status": {
+        "enum": [
+          "unknown",
+          "open_gap",
+          "exact_gate"
+        ]
+      },
+      "synthetic": {
+        "const": true
+      }
+    },
+    "required": [
+      "cards",
+      "deck_record_id",
+      "format_profile",
+      "real_rows",
+      "rights_status",
+      "synthetic"
+    ],
+    "title": "Synthetic historical punched-card deck record",
+    "type": "object"
+  },
+  "record": {
+    "cards": [
+      {
+        "card_id": "synthetic:card:001",
+        "ordinal": 1,
+        "punch_pattern": "100100001001",
+        "synthetic": true
+      },
+      {
+        "card_id": "synthetic:card:002",
+        "ordinal": 2,
+        "punch_pattern": "010010000100",
+        "synthetic": true
+      },
+      {
+        "card_id": "synthetic:card:003",
+        "ordinal": 3,
+        "punch_pattern": "001001000010",
+        "synthetic": true
+      }
+    ],
+    "deck_record_id": "synthetic:punched-card-deck:001",
+    "format_profile": "declared_80_column_12_row",
+    "real_rows": 0,
+    "rights_status": "exact_gate",
+    "synthetic": true
+  },
+  "smoke": {
+    "acyclic_lineage": true,
+    "external_actions": 0,
+    "invalid_schema_errors": 2,
+    "punch_pattern_bits": 12,
+    "punch_pattern_holes": 4,
+    "topological_card_order": [
+      "synthetic:card:001",
+      "synthetic:card:002",
+      "synthetic:card:003"
+    ],
+    "valid_schema_errors": 0
+  }
+}

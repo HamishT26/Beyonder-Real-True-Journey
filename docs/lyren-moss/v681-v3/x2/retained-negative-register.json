@@ -1,0 +1,27 @@
+{
+  "effective_negatives": 53582,
+  "failed_witnesses": 25243,
+  "failure_erasure": false,
+  "owner": "Lyren Moss",
+  "phase": "v681-v3",
+  "retained_mutations": 300,
+  "schema": "ghc.family.retained-negatives.v681.v3.x2",
+  "startup_failures": 5,
+  "x1_postcommit_failures": 0,
+  "x2_operational_failures": [
+    {
+      "failed_witness": "The first pre-seal x2 unittest invocation ran before the seal artifacts existed; seventeen tests passed and three errored on missing x2 privacy, manifest, and staged-review files.",
+      "failure_id": "LM6813-X2-N001",
+      "initial_credit": 0,
+      "recovery": "Run the pending x2 seal dependency once, then rerun only the previously incomplete x2 test module and retain the first invocation at zero aggregate-success credit.",
+      "recovery_credit": "bounded_dependency_only"
+    },
+    {
+      "failed_witness": "The first PowerShell JSON projection omitted grouping around its extension and x2-directory predicates, selected forty-one non-JSON files, and falsely reported forty-one parse failures.",
+      "failure_id": "LM6813-X2-N002",
+      "initial_credit": 0,
+      "recovery": "Restrict the bounded inventory to files whose extension is exactly .json, parse that exact list, and retain the projection error at zero credit.",
+      "recovery_credit": "bounded_dependency_only"
+    }
+  ]
+}

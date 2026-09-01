@@ -1,0 +1,72 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "cards": {
+      "items": {
+        "additionalProperties": false,
+        "properties": {
+          "card_id": {
+            "pattern": "^synthetic:card:[0-9]{3}$",
+            "type": "string"
+          },
+          "ordinal": {
+            "minimum": 1,
+            "type": "integer"
+          },
+          "punch_pattern": {
+            "pattern": "^[01?]{12}$",
+            "type": "string"
+          },
+          "synthetic": {
+            "const": true
+          }
+        },
+        "required": [
+          "card_id",
+          "ordinal",
+          "punch_pattern",
+          "synthetic"
+        ],
+        "type": "object"
+      },
+      "minItems": 1,
+      "type": "array",
+      "uniqueItems": true
+    },
+    "deck_record_id": {
+      "pattern": "^synthetic:punched-card-deck:[0-9]{3}$",
+      "type": "string"
+    },
+    "format_profile": {
+      "enum": [
+        "declared_80_column_12_row",
+        "declared_other",
+        "unknown"
+      ]
+    },
+    "real_rows": {
+      "const": 0
+    },
+    "rights_status": {
+      "enum": [
+        "unknown",
+        "open_gap",
+        "exact_gate"
+      ]
+    },
+    "synthetic": {
+      "const": true
+    }
+  },
+  "required": [
+    "cards",
+    "deck_record_id",
+    "format_profile",
+    "real_rows",
+    "rights_status",
+    "synthetic"
+  ],
+  "title": "Synthetic historical punched-card deck record",
+  "type": "object"
+}
