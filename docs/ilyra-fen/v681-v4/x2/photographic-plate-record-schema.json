@@ -1,0 +1,114 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "digitization_lineage": {
+      "items": {
+        "additionalProperties": false,
+        "properties": {
+          "from_id": {
+            "pattern": "^synthetic:(?:glass-plate|image-file):[0-9]{3}(?::[a-z-]+)?$",
+            "type": "string"
+          },
+          "relation": {
+            "enum": [
+              "digitized_as",
+              "derived_as"
+            ]
+          },
+          "to_id": {
+            "pattern": "^synthetic:image-file:[0-9]{3}:[a-z-]+$",
+            "type": "string"
+          }
+        },
+        "required": [
+          "from_id",
+          "relation",
+          "to_id"
+        ],
+        "type": "object"
+      },
+      "minItems": 2,
+      "type": "array"
+    },
+    "plates": {
+      "items": {
+        "additionalProperties": false,
+        "properties": {
+          "emulsion_side": {
+            "enum": [
+              "front",
+              "back",
+              "unknown"
+            ]
+          },
+          "ordinal": {
+            "minimum": 1,
+            "type": "integer"
+          },
+          "orientation": {
+            "enum": [
+              "landscape",
+              "portrait",
+              "square",
+              "unknown"
+            ]
+          },
+          "plate_id": {
+            "pattern": "^synthetic:glass-plate:[0-9]{3}$",
+            "type": "string"
+          },
+          "synthetic": {
+            "const": true
+          }
+        },
+        "required": [
+          "emulsion_side",
+          "ordinal",
+          "orientation",
+          "plate_id",
+          "synthetic"
+        ],
+        "type": "object"
+      },
+      "minItems": 1,
+      "type": "array",
+      "uniqueItems": true
+    },
+    "plate_record_id": {
+      "pattern": "^synthetic:glass-plate-record:[0-9]{3}$",
+      "type": "string"
+    },
+    "process_profile": {
+      "enum": [
+        "declared_dry_plate",
+        "declared_other",
+        "unknown"
+      ]
+    },
+    "real_rows": {
+      "const": 0
+    },
+    "rights_status": {
+      "enum": [
+        "unknown",
+        "open_gap",
+        "exact_gate"
+      ]
+    },
+    "synthetic": {
+      "const": true
+    }
+  },
+  "required": [
+    "digitization_lineage",
+    "plates",
+    "plate_record_id",
+    "process_profile",
+    "real_rows",
+    "rights_status",
+    "synthetic"
+  ],
+  "title": "Synthetic historical glass-photographic-plate record",
+  "type": "object"
+}
