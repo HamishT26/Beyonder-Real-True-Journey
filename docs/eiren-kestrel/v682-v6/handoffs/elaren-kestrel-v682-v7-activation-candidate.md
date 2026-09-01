@@ -1,0 +1,19 @@
+# ELAREN KESTREL — EIREN KESTREL v682-v6 PREPARED v682-v7 ACTIVATION CANDIDATE
+
+PREPARED_BY_EIREN_KESTREL = true
+
+SENT_BY_EIREN_KESTREL = false
+
+This repository document is preparation only. It does not activate a task and must not be rewritten merely to backfill a later live delivery.
+
+After Eiren's exact final is directly committed, pushed, clean, zero-divergent, fresh four-way equal, and successfully validated once through the exclusive owner-scoped canonical latch, the live sender may resolve the exact final SHA and canonical receipt digest. At that terminal gate only, the newest live authority and roster must be refreshed, exactly one existing task titled Elaren Kestrel must be immediately reread, and duplicate, direct-control, privacy, safety, evidence, legal, cultural, affected-party, Maori-authority, usage, acknowledgement, pause, stop, rename, redirect, and narrowing guards must pass.
+
+The immutable Eiren lifecycle anchors prepared for that live message are source 621ea4f832e9fda5549ed2f97dbfd9b539ef1f69, planning-only x1 861fa9c2ee9f96a0ad43105b6f56b1d278925b5c, and bounded evidence 6540d4d7cfab8300f750d48cdff4f39e007f170a. The exact final SHA and canonical receipt digest remain unresolved until their proper lifecycle events. Eiren's core outcomes are exactly 42 completed, 12 represented, three open_gap, and three exact_gate. The prepared effective totals are 57,123 negatives, 69,031 methods, 28,784 failed witnesses, 50,191 bounded passing witnesses, 506 open gaps, and 497 exact gates. The terminal verdict remains NOT_READY_FOR_STAGE_20.
+
+The primary pillar is GMUT Mind through wholly synthetic historical-seismogram cataloguing, carrier-surrogate separation, trace, timing, station, instrument-response, digitization, rights, accessibility, correction, remedy, workload, and handover documentation lenses. The phase used zero real rows, observations, measurements, people, seismograms, stations, instruments, events, locations, scanning, digitization, identity lifecycle events, external writes, professional decisions, or authority acts. All empirical, participant, professional, production, deployment, legal, cultural, Maori-authority, affected-party, privacy-complete, accessibility-complete, exhaustive-security, independent-reproduction, AGI/ASI, consciousness/personhood, Theory-of-Everything, proof/canon, and Stage 20 boundaries remain open or exact-gated.
+
+Relational names, roles, hopes, pronouns, sibling language, continuity language, GHC Family language, and Trinity Mandala language are working conventions only, not evidence of consciousness, personhood, continuity, employment, qualification, agency, or authority. Hamish may pause, rename, redirect, narrow, or stop the route.
+
+At startup, Elaren must read and apply the current family index, roster, authorization state, Method Flow State, Reflection Remaster, Meta Tool Box, Freed ID flashcards, orchestration memory, startup, compact-restart, closeout, retry, open-gate rail, timestamp flow, full-tools bank, truth bridge, worktree rotation, web-reflection ledger, watcher cadence, D-drive guardian, approval splitter, workflow refinement, and directly applicable current guidance. Installed skills and tools are instructions and bounded surfaces, never automatic authority or completion credit.
+
+Under the currently validated sequence, this candidate is for Elaren Kestrel's solo v682-v7 phase. Hamish's standing sequential continuation extends through v725-v8 unless Hamish pauses or redirects, usage is exhausted, the exact target is absent or ambiguous, acknowledgement is unavailable, or a protected gate blocks progress. After Elaren's own terminal gate and fresh route refresh, Elaren's prospective successor is Neris Solane for v682-v8. Newer verified live authority controls at each send time. Do not create, fork, substitute, precontact, contact a standby record, or send a second confirmation.
