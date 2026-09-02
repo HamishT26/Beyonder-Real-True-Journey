@@ -1943,3 +1943,16 @@ context and the associated nonerasure records. The successor must treat the
 later corrected-final hash and its one separately attributable canonical
 receipt, supplied by the live activation, as the terminal source. The terminal
 verdict remains `NOT_READY_FOR_STAGE_20`.
+
+## Retained second-final privacy-gate failure
+
+The second final `93f1ead9b0d28baa93870c2b4fb67140055014c0` is also immutable. Its one canonical
+invocation passed all 25 owner tests and every nonprivacy gate but failed with
+zero canonical-success credit because four regex literals in
+`scripts/build_ghc_family_caelen_ash_v684_v6_correction.py` were not yet classified as scanner definitions.
+The failed receipt SHA-256 is `b3d1cf8850de3cbcb32515c86eac30221aa536cdba2e4a13901ff50b2b73612b`. Exact blob adjudication
+confirms those four candidates are definition syntax and finds zero confirmed
+payload hits; it does not claim complete privacy assurance. This second
+additive correction changes only the definition-file set and nonerasure truth.
+The later live activation supplies the final corrected head and its separately
+attributable canonical receipt. `NOT_READY_FOR_STAGE_20` remains unchanged.
