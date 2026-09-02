@@ -1930,3 +1930,16 @@ PREPARED_BY_CAELEN_ASH = true.
 SENT_BY_CAELEN_ASH = false in this repository candidate.
 The later live application acknowledgement alone can establish one-send
 delivery truth.
+
+## Retained first-final canonical failure and additive correction
+
+The first exact final `af3cf6bdf1a5d890ccf417e6f6c9c203c0a7f563` remains immutable. Its one canonical
+invocation failed with zero canonical-success credit because direct script
+launch omitted the repository root from Python's process-local module search
+path; the unittest loader reported one import error and ran zero Caelen final
+tests. The failure receipt SHA-256 is `f29c19e221ad81bac5eed025d6363ede57899909f936a0ce49630b79bd5e0f26`. It was not
+replayed at that head. This additive correction changes only that import
+context and the associated nonerasure records. The successor must treat the
+later corrected-final hash and its one separately attributable canonical
+receipt, supplied by the live activation, as the terminal source. The terminal
+verdict remains `NOT_READY_FOR_STAGE_20`.

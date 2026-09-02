@@ -16,7 +16,8 @@ VALIDATION = BASE / "validation"
 SOURCE = "9a2fcdc6021dcc8226ff7150b990bfe429671680"
 X1_COMMIT = "ab50360d737177ab1ebe4564b348a88b540c9ed4"
 EVIDENCE_COMMIT = "ca4ac41d8984e8fcec58982bfd6507030dcd1480"
-PREVIOUS_FINAL = EVIDENCE_COMMIT
+FIRST_FINAL = "af3cf6bdf1a5d890ccf417e6f6c9c203c0a7f563"
+PREVIOUS_FINAL = FIRST_FINAL
 BRANCH = "codex/GHC-Family/caelen-ash-v684-v6-full-tools"
 
 
@@ -51,9 +52,9 @@ class CaelenAshV684V6FinalTests(unittest.TestCase):
 
     def test_02_final_candidate_truth(self):
         truth = load(FINAL / "phase-truth.json")
-        self.assertEqual(truth["lifecycle"], "FINAL_CANDIDATE_PRECOMMIT")
+        self.assertEqual(truth["lifecycle"], "FINAL_CORRECTION_CANDIDATE_PRECOMMIT")
         self.assertEqual(truth["exact_final"], "PENDING_COMMIT")
-        self.assertEqual(truth["external_canonical"], "PENDING_POSTCOMMIT")
+        self.assertEqual(truth["external_canonical"], "FIRST_FINAL_FAILED_CORRECTED_HEAD_PENDING")
         self.assertEqual(truth["terminal_verdict"], "NOT_READY_FOR_STAGE_20")
 
     def test_03_outcome_counts(self):
@@ -70,14 +71,16 @@ class CaelenAshV684V6FinalTests(unittest.TestCase):
 
     def test_05_negative_register(self):
         register = load(CLOSEOUT / "retained-negative-register.json")
-        self.assertEqual(register["effective_negatives"], 59730)
-        self.assertEqual(register["effective_methods"], 73690)
-        self.assertEqual(register["retained_failed_witnesses"], 30791)
-        self.assertEqual(register["bounded_passing_witnesses"], 54225)
+        self.assertEqual(register["effective_negatives"], 59733)
+        self.assertEqual(register["effective_methods"], 73693)
+        self.assertEqual(register["retained_failed_witnesses"], 30794)
+        self.assertEqual(register["bounded_passing_witnesses"], 54228)
         self.assertEqual(register["final_selection_operational_failures"], 0)
         self.assertEqual(register["final_selection_recoveries"], 0)
-        self.assertEqual(register["canonical_preflight_operational_failures"], 0)
-        self.assertEqual(register["canonical_preflight_recoveries"], 0)
+        self.assertEqual(register["canonical_preflight_operational_failures"], 1)
+        self.assertEqual(register["canonical_preflight_recoveries"], 1)
+        self.assertEqual(register["correction_staging_operational_failures"], 2)
+        self.assertEqual(register["correction_staging_recoveries"], 2)
 
     def test_06_gate_register(self):
         gates = load(CLOSEOUT / "gate-register.json")
@@ -138,14 +141,14 @@ class CaelenAshV684V6FinalTests(unittest.TestCase):
         self.assertEqual(replay_manifest(EVIDENCE_COMMIT, "docs/caelen-ash/v684-v6/validation/evidence-index-manifest.json"), 201)
 
     def test_16_final_delta_manifest_working(self):
-        manifest = load(VALIDATION / "final-delta-manifest.json")
+        manifest = load(VALIDATION / "correction-delta-manifest.json")
         self.assertGreaterEqual(manifest["entry_count"], 8)
         for entry in manifest["entries"]:
             data = (ROOT / entry["path"]).read_bytes().replace(b"\r\n", b"\n").replace(b"\r", b"\n")
             self.assertEqual(hashlib.sha256(data).hexdigest(), entry["sha256_normalized_lf"])
 
     def test_17_final_owner_manifest_working(self):
-        manifest = load(VALIDATION / "final-owner-manifest.json")
+        manifest = load(VALIDATION / "correction-owner-manifest.json")
         self.assertLess(manifest["owner_file_count"], 2000)
         self.assertEqual(manifest["owner_file_count"], manifest["entry_count"] + len(manifest["self_exclusions"]))
         for entry in manifest["entries"]:
@@ -153,7 +156,7 @@ class CaelenAshV684V6FinalTests(unittest.TestCase):
             self.assertEqual(hashlib.sha256(data).hexdigest(), entry["sha256_normalized_lf"])
 
     def test_18_privacy_scan_zero_confirmed(self):
-        scan = load(VALIDATION / "final-privacy-scan.json")
+        scan = load(VALIDATION / "correction-privacy-scan.json")
         self.assertEqual(len(scan["pattern_classes"]), 5)
         self.assertEqual(scan["confirmed_hit_count"], 0)
 
@@ -168,7 +171,7 @@ class CaelenAshV684V6FinalTests(unittest.TestCase):
             self.assertLessEqual(len(path.read_text(encoding="utf-8").split()), 100000)
 
     def test_21_staged_review_shape(self):
-        review = load(VALIDATION / "final-staged-review.json")
+        review = load(VALIDATION / "correction-staged-review.json")
         self.assertIn(review["state"], {"PREPARED_NOT_STAGED", "PASS"})
         if review["state"] == "PASS":
             self.assertEqual(review["manifest_mismatches"], [])
@@ -189,7 +192,7 @@ class CaelenAshV684V6FinalTests(unittest.TestCase):
         candidate = load(CLOSEOUT / "final-validation-candidate.json")
         self.assertEqual(candidate["canonical_invocation_budget"], 1)
         self.assertEqual(candidate["required_parent"], PREVIOUS_FINAL)
-        self.assertEqual(candidate["required_phase_commits"], 3)
+        self.assertEqual(candidate["required_phase_commits"], 4)
         self.assertFalse(candidate["replay_after_success"])
         self.assertFalse(candidate["full_repository_suite"])
 

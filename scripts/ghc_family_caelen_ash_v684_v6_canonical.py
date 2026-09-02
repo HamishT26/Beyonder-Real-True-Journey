@@ -21,7 +21,8 @@ BASE = ROOT / "docs" / "caelen-ash" / "v684-v6"
 SOURCE = "9a2fcdc6021dcc8226ff7150b990bfe429671680"
 X1 = "ab50360d737177ab1ebe4564b348a88b540c9ed4"
 EVIDENCE = "ca4ac41d8984e8fcec58982bfd6507030dcd1480"
-PREVIOUS_FINAL = EVIDENCE
+FIRST_FINAL = "af3cf6bdf1a5d890ccf417e6f6c9c203c0a7f563"
+PREVIOUS_FINAL = FIRST_FINAL
 BRANCH = "codex/GHC-Family/caelen-ash-v684-v6-full-tools"
 
 
@@ -63,6 +64,12 @@ def replay_manifest(commit: str, path: str) -> dict[str, Any]:
 
 def selected_tests(expected_head: str) -> dict[str, Any]:
     os.environ["CA6846_EXPECTED_FINAL"] = expected_head
+    # Direct script launch places ``scripts`` rather than the repository root
+    # first on sys.path.  Make the committed test package importable without
+    # changing the process-global environment or relying on caller setup.
+    root_text = str(ROOT)
+    if root_text not in sys.path:
+        sys.path.insert(0, root_text)
     loader = unittest.TestLoader()
     suite = loader.loadTestsFromName("tests.test_ghc_family_caelen_ash_v684_v6_final")
     result = unittest.TestResult()
@@ -153,7 +160,7 @@ def main() -> int:
     divergence = git("rev-list", "--left-right", "--count", "HEAD...@{upstream}").split()
     clean_before = not git("status", "--porcelain=v1")
 
-    owner_manifest = load(BASE / "validation" / "final-owner-manifest.json")
+    owner_manifest = load(BASE / "validation" / "correction-owner-manifest.json")
     owner_paths = [entry["path"] for entry in owner_manifest["entries"]]
     owner_paths.extend(owner_manifest["self_exclusions"])
     owner_paths = sorted(set(owner_paths))
@@ -162,8 +169,10 @@ def main() -> int:
     manifests = [
         replay_manifest(X1, "docs/caelen-ash/v684-v6/validation/x1-index-manifest.json"),
         replay_manifest(EVIDENCE, "docs/caelen-ash/v684-v6/validation/evidence-index-manifest.json"),
-        replay_manifest(head, "docs/caelen-ash/v684-v6/validation/final-delta-manifest.json"),
-        replay_manifest(head, "docs/caelen-ash/v684-v6/validation/final-owner-manifest.json"),
+        replay_manifest(FIRST_FINAL, "docs/caelen-ash/v684-v6/validation/final-delta-manifest.json"),
+        replay_manifest(FIRST_FINAL, "docs/caelen-ash/v684-v6/validation/final-owner-manifest.json"),
+        replay_manifest(head, "docs/caelen-ash/v684-v6/validation/correction-delta-manifest.json"),
+        replay_manifest(head, "docs/caelen-ash/v684-v6/validation/correction-owner-manifest.json"),
     ]
     json_paths = [path for path in owner_paths if path.endswith(".json")]
     json_failures = []
@@ -193,11 +202,11 @@ def main() -> int:
     detailed = {
         "exact_head": head == args.expected_head,
         "exact_branch": branch == BRANCH,
-        "direct_evidence_parent": len(parents) == 2 and parents[1] == PREVIOUS_FINAL,
+        "direct_correction_parent": len(parents) == 2 and parents[1] == PREVIOUS_FINAL,
         "source_ancestry": ancestry["source"],
         "x1_ancestry": ancestry["x1"],
         "evidence_ancestry": ancestry["evidence"],
-        "three_phase_commits": phase_commits == 3,
+        "four_phase_commits": phase_commits == 4,
         "zero_merges": merges == 0,
         "single_parent_history": single_parent_history,
         "one_final_parent": len(parents) == 2,
@@ -209,8 +218,10 @@ def main() -> int:
         "selected_tests": tests["success"],
         "x1_manifest": manifests[0]["passed"],
         "evidence_manifest": manifests[1]["passed"],
-        "final_delta_manifest": manifests[2]["passed"],
-        "final_owner_manifest": manifests[3]["passed"],
+        "first_final_delta_manifest": manifests[2]["passed"],
+        "first_final_owner_manifest": manifests[3]["passed"],
+        "correction_delta_manifest": manifests[4]["passed"],
+        "correction_owner_manifest": manifests[5]["passed"],
         "strict_json": not json_failures,
         "privacy": privacy["passed"],
         "security": security["passed"],
@@ -225,7 +236,7 @@ def main() -> int:
         "rejecting_mutations": load(BASE / "closeout" / "evidence-receipt.json")["rejecting_mutations"]["rejected"] == 300,
         "skills": load(BASE / "closeout" / "evidence-receipt.json")["skills"]["quick_validated"] == 20,
         "runners": load(BASE / "closeout" / "evidence-receipt.json")["runners"]["passed"] == 10,
-        "negative_nonerasure": load(BASE / "closeout" / "retained-negative-register.json")["effective_negatives"] == 59730,
+        "negative_nonerasure": load(BASE / "closeout" / "retained-negative-register.json")["effective_negatives"] == 59733,
         "open_gaps": load(BASE / "closeout" / "gate-register.json")["open_gaps"] == 531,
         "exact_gates": load(BASE / "closeout" / "gate-register.json")["exact_gates"] == 521,
         "no_silent_gate_close": load(BASE / "closeout" / "gate-register.json")["silently_closed"] == 0,
@@ -233,10 +244,10 @@ def main() -> int:
         "no_success_replay": load(BASE / "closeout" / "final-validation-candidate.json")["replay_after_success"] is False,
     }
     minimal_names = [
-        "exact_head", "direct_evidence_parent", "three_phase_commits", "zero_merges",
+        "exact_head", "direct_correction_parent", "four_phase_commits", "zero_merges",
         "single_parent_history", "clean_before", "typed_zero_ahead",
         "local_upstream_equal", "local_tracking_equal", "local_live_equal",
-        "selected_tests", "final_owner_manifest", "strict_json", "privacy",
+        "selected_tests", "correction_owner_manifest", "strict_json", "privacy",
         "terminal_verdict",
     ]
     minimal = {name: detailed[name] for name in minimal_names}

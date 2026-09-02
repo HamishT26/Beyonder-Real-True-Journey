@@ -1,0 +1,50 @@
+{
+  "failed_witnesses": [
+    {
+      "head": "af3cf6bdf1a5d890ccf417e6f6c9c203c0a7f563",
+      "id": "CA6846-FINAL-N001",
+      "method": "direct canonical script selected-test loader",
+      "observation": "The loader returned one import error and ran zero owner tests because the repository root was absent from the process-local module search path.",
+      "receipt_sha256": "f29c19e221ad81bac5eed025d6363ede57899909f936a0ce49630b79bd5e0f26",
+      "state": "failed_retained_zero_credit"
+    },
+    {
+      "id": "CA6846-FINAL-N002",
+      "method": "stage the exact correction manifest allowlist before materializing the new builder path in sparse-checkout",
+      "observation": "Git staged the already materialized allowlist paths, then rejected the correction builder because that one path was outside the exact sparse definition; the partial index was inspected and later replaced by a fresh exact allowlist stage.",
+      "state": "failed_retained_zero_credit"
+    },
+    {
+      "id": "CA6846-FINAL-N003",
+      "method": "add the correction builder with an unsupported sparse-checkout add --no-cone option",
+      "observation": "The installed Git rejected the unsupported option before changing the sparse definition.",
+      "state": "failed_retained_zero_credit"
+    }
+  ],
+  "nonerasure": true,
+  "phase": "v684-v6",
+  "preferred_recovery_methods": [
+    {
+      "id": "CA6846-FINAL-M001",
+      "method": "insert the already-resolved repository root into process-local sys.path before unittest discovery",
+      "recurrence_guard": "A corrected-head canonical loads the committed module through the exact same direct-script entry point; the failed first-final invocation is never replayed.",
+      "scope": "canonical selected-test import context only",
+      "state": "bounded_passing_witness"
+    },
+    {
+      "id": "CA6846-FINAL-M002",
+      "method": "materialize the exact correction-builder path before staging its manifest-declared allowlist",
+      "recurrence_guard": "Every new final or correction script path is checked against sparse-checkout before git add.",
+      "scope": "owner-local sparse definition only",
+      "state": "bounded_passing_witness"
+    },
+    {
+      "id": "CA6846-FINAL-M003",
+      "method": "use the installed sparse-checkout add --skip-checks literal-pattern contract",
+      "recurrence_guard": "Inspect the installed subcommand help before assuming mode-selection flags are accepted by add.",
+      "scope": "one literal owner script path",
+      "state": "bounded_passing_witness"
+    }
+  ],
+  "schema": "ghc.family.method-flow-correction.v2"
+}
