@@ -1,0 +1,40 @@
+{
+  "bounded_passing_witnesses": 54189,
+  "effective_methods": 73653,
+  "effective_negatives": 59083,
+  "failed_witnesses": 30744,
+  "failed_witnesses_retained_zero_credit": true,
+  "new_bounded_passing_witnesses": 390,
+  "new_failed_witnesses": 303,
+  "new_methods": 693,
+  "operational_failures": [
+    {
+      "failed_witness": "The first direct-file x2 builder invocation could not import the owner-local scripts package because the repository root was absent from sys.path.",
+      "failure_id": "AL6844-X2F001",
+      "recovery": "Retain the failed invocation at zero credit and use the Python package entrypoint from the exact repository root.",
+      "retained_zero_credit": true,
+      "state_change": false
+    },
+    {
+      "failed_witness": "A combined transient-cache cleanup and Git staging wrapper was rejected by the Windows safety guard before execution.",
+      "failure_id": "AL6844-X2F002",
+      "recovery": "Retain the zero-state-change rejection and separate the previously verified literal cache removal from the non-destructive staging command.",
+      "retained_zero_credit": true,
+      "state_change": false
+    },
+    {
+      "failed_witness": "The Windows safety guard also rejected the separated recursive removal of exact owner-local transient bytecode caches before execution.",
+      "failure_id": "AL6844-X2F003",
+      "recovery": "Retain the zero-state-change rejection, leave the ignored caches untracked, and stage only the explicit evidence allowlist.",
+      "retained_zero_credit": true,
+      "state_change": false
+    }
+  ],
+  "owner": "Auren Lark",
+  "phase": "v684-v4",
+  "schema": "ghc.family.method-flow-state.v1",
+  "starting_bounded_passing_witnesses": 53799,
+  "starting_effective_negatives": 58780,
+  "starting_failed_witnesses": 30441,
+  "starting_methods": 72960
+}
