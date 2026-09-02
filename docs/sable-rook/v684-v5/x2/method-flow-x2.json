@@ -1,0 +1,64 @@
+{
+  "inherited_x1_method_ledger": "docs/sable-rook/v684-v5/method-flow/ledger.json",
+  "rejected_synthetic_mutations": 300,
+  "schema": "ghc.family.method-flow-x2.v2",
+  "truth": "Rejected mutations are bounded negative witnesses, not operational failures or broader security evidence.",
+  "x2_operational_failures": [
+    {
+      "credit": 0,
+      "failure_id": "SR6845-X2-N001",
+      "summary": "The first x2 execute-once attempt invoked the skill quick-validator under the inherited Windows default codec; all twenty validations failed before any family runner receipt was created."
+    },
+    {
+      "credit": 0,
+      "failure_id": "SR6845-X2-N002",
+      "summary": "The first x2 test selection ran against that partial receipt state: seventeen tests passed, two failed, and one errored; it earned zero complete-selection credit."
+    },
+    {
+      "credit": 0,
+      "failure_id": "SR6845-X2-N003",
+      "summary": "A direct one-skill diagnostic reproduced the CP1252 Unicode decode failure and exited nonzero before validation."
+    },
+    {
+      "credit": 0,
+      "failure_id": "SR6845-X2-N004",
+      "summary": "The first x2 Method Flow summarize command wrote valid summary files but its final console projection failed on Māori text under the Windows default output codec."
+    },
+    {
+      "credit": 0,
+      "failure_id": "SR6845-X2-N005",
+      "summary": "The combined evidence staged-review wrapper returned no display projection even though the exact PASS review and clean staged state persisted."
+    }
+  ],
+  "x2_recovery_methods": [
+    {
+      "method": "Pin PYTHONUTF8 and PYTHONIOENCODING to UTF-8 for the validator subprocess, retain the failed receipt, and rerun only because no skill or runner success existed.",
+      "method_id": "SR6845-M008",
+      "retained_negative_ids": [
+        "SR6845-X2-N001",
+        "SR6845-X2-N002",
+        "SR6845-X2-N003"
+      ],
+      "state": "candidate_until_separate_pass",
+      "trigger": "A Unicode-emitting phase-local skill is validated by a script that uses the process default encoding."
+    },
+    {
+      "method": "Verify the persisted summary and validation files first, then pin UTF-8 only for the summary console projection.",
+      "method_id": "SR6845-M009",
+      "retained_negative_ids": [
+        "SR6845-X2-N004"
+      ],
+      "state": "candidate_until_separate_pass",
+      "trigger": "A validated Method Flow summary contains Unicode text and the console uses a legacy output codec."
+    },
+    {
+      "method": "Inspect the persisted review, staged and unstaged counts, mismatch lists, and diff hygiene before deciding whether any rerun is necessary.",
+      "method_id": "SR6845-M010",
+      "retained_negative_ids": [
+        "SR6845-X2-N005"
+      ],
+      "state": "candidate_until_separate_pass",
+      "trigger": "A bounded staged-review wrapper returns no display projection after it may have completed."
+    }
+  ]
+}

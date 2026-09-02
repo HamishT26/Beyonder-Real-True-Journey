@@ -1,0 +1,39 @@
+{
+  "approval_class": "safe_now_owner_local_workflow_recovery",
+  "candidate_workaround": "Inspect the persisted review, exact staged and unstaged counts, mismatch arrays, and diff hygiene before any retry.",
+  "changed_file_allowlist": [
+    "docs/sable-rook/v684-v5/validation/evidence-staged-review.json"
+  ],
+  "cross_lane_scan": false,
+  "exact_pushed_head_required": true,
+  "execution_authority": "owner_self_scoped_delta",
+  "failure_signature": "A combined staged-review wrapper returned no projection while the PASS receipt and exact staged state had persisted.",
+  "final_commit": "PENDING_EVIDENCE_COMMIT",
+  "method_id": "SR6845-M010",
+  "module_allowlist": [],
+  "module_scan": false,
+  "privacy_class": "sanitized_public",
+  "protected_gates": [
+    "failure nonerasure",
+    "exact staged scope",
+    "manifest parity",
+    "no success replay"
+  ],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Never replay a potentially successful deterministic review solely because its presentation wrapper is empty.",
+  "repository_scan": false,
+  "retained_negative_ids": [
+    "SR6845-X2-N005"
+  ],
+  "rollback": "Keep the exact staged index unchanged and stop if persisted state is incomplete or contradictory.",
+  "scope_boundary": "Sable-owned evidence staged-review state only; no broader assurance.",
+  "sibling_lane_mutation": false,
+  "source_commit": "699e42fe27678cc0e12a55c2d60ba029c62998b4",
+  "supersedes": [],
+  "title": "Inspect persisted staged-review state before retry",
+  "trigger_preconditions": [
+    "A bounded validation wrapper is unattributable but may have completed and written deterministic receipts."
+  ],
+  "unchanged_history_scan": false,
+  "validation_witness_ids": []
+}

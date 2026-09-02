@@ -1,0 +1,45 @@
+{
+  "approval_class": "safe_now_owner_local_workflow_recovery",
+  "candidate_workaround": "Set PYTHONUTF8 and PYTHONIOENCODING to UTF-8 for the validator subprocess and retain the failed attempt separately.",
+  "changed_file_allowlist": [
+    "scripts/build_ghc_family_sable_rook_v684_v5_x2.py",
+    "docs/sable-rook/v684-v5/x2/skill-use-receipts.json",
+    "docs/sable-rook/v684-v5/x2/runner-use-receipts.json"
+  ],
+  "cross_lane_scan": false,
+  "exact_pushed_head_required": true,
+  "execution_authority": "owner_self_scoped_delta",
+  "failure_signature": "Skill quick-validation under the inherited Windows default codec failed before any skill or runner success existed.",
+  "final_commit": "PENDING_EVIDENCE_COMMIT",
+  "method_id": "SR6845-M008",
+  "module_allowlist": [
+    "scripts/build_ghc_family_sable_rook_v684_v5_x2.py"
+  ],
+  "module_scan": true,
+  "privacy_class": "sanitized_public",
+  "protected_gates": [
+    "privacy",
+    "failure nonerasure",
+    "same-owner only",
+    "no success replay"
+  ],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Pin UTF-8 before every Unicode-emitting validation process and refuse replay after a successful receipt.",
+  "repository_scan": false,
+  "retained_negative_ids": [
+    "SR6845-X2-N001",
+    "SR6845-X2-N002",
+    "SR6845-X2-N003"
+  ],
+  "rollback": "Remove only incomplete current receipts, retain failed receipts, and return to the immutable x1 parent if the corrected attempt fails.",
+  "scope_boundary": "Phase-local skill validation and runner startup only; no scientific, professional, production, identity, legal, cultural, Māori-authority, or Stage 20 claim.",
+  "sibling_lane_mutation": false,
+  "source_commit": "699e42fe27678cc0e12a55c2d60ba029c62998b4",
+  "supersedes": [],
+  "title": "Pin UTF-8 for Unicode-emitting skill validation",
+  "trigger_preconditions": [
+    "A Unicode-emitting phase-local skill is validated by a script using process-default text decoding."
+  ],
+  "unchanged_history_scan": false,
+  "validation_witness_ids": []
+}
