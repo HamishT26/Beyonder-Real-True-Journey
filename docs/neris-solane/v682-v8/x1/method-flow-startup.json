@@ -1,0 +1,81 @@
+{
+  "activation_baseline": {
+    "effective_negatives": 57457,
+    "effective_methods": 69819,
+    "failed_witnesses": 29118,
+    "bounded_passing_witnesses": 50919,
+    "open_gaps": 510,
+    "exact_gates": 500
+  },
+  "current_after_startup": {
+    "effective_negatives": 57465,
+    "effective_methods": 69827,
+    "failed_witnesses": 29126,
+    "bounded_passing_witnesses": 50927,
+    "open_gaps": 510,
+    "exact_gates": 500
+  },
+  "failure_erasure": false,
+  "owner": "Neris Solane",
+  "phase": "v682-v8",
+  "recoveries_retroactively_promote_failure": false,
+  "schema": "ghc.family.method-flow-startup.v682.v8.x1",
+  "startup_failures": [
+    {
+      "failure_id": "NS6828-ST-N001",
+      "failed_witness": "A combined fresh-remote and history wrapper crossed its return window without attributable output.",
+      "initial_credit": 0,
+      "recovery": "Inspect persisted Git and process state, then split ancestry and live-remote probes into bounded scalar reads.",
+      "recovery_credit": "bounded_dependency_only"
+    },
+    {
+      "failure_id": "NS6828-ST-N002",
+      "failed_witness": "The first exact-manifest git cat-file batch queued all requests before reading output and deadlocked on pipe backpressure.",
+      "initial_credit": 0,
+      "recovery": "Stop only the verified read-only processes and use one request with one exact response at a time.",
+      "recovery_credit": "bounded_dependency_only"
+    },
+    {
+      "failure_id": "NS6828-ST-N003",
+      "failed_witness": "The second streaming manifest probe assumed one read would return the full blob and became byte-misaligned on a short read.",
+      "initial_credit": 0,
+      "recovery": "Use a bounded read-exact loop for every declared blob length; the corrected replay verified all 242 entries with zero mismatches.",
+      "recovery_credit": "bounded_dependency_only"
+    },
+    {
+      "failure_id": "NS6828-ST-N004",
+      "failed_witness": "Fresh sparse-worktree creation crossed the wrapper window while checkout continued normally.",
+      "initial_credit": 0,
+      "recovery": "Inspect the exact Git processes and worktree registry, wait for completion, and do not reset or recreate the lane.",
+      "recovery_credit": "bounded_dependency_only"
+    },
+    {
+      "failure_id": "NS6828-ST-N005",
+      "failed_witness": "The first bounded existing-task reread requested more than the tool's per-item output ceiling and was rejected.",
+      "initial_credit": 0,
+      "recovery": "Retry once within the documented per-item ceiling and retain the rejected call at zero credit.",
+      "recovery_credit": "bounded_dependency_only"
+    },
+    {
+      "failure_id": "NS6828-ST-N006",
+      "failed_witness": "The first case-insensitive PowerShell replacement map declared keys differing only by case and failed at parse time.",
+      "initial_credit": 0,
+      "recovery": "Represent mechanical replacement pairs as an ordered array, then apply the substantive domain changes with an explicit patch.",
+      "recovery_credit": "bounded_dependency_only"
+    },
+    {
+      "failure_id": "NS6828-X1-N007",
+      "failed_witness": "The first planning-builder compile exposed one orphan opening brace after inherited failure rows were removed.",
+      "initial_credit": 0,
+      "recovery": "Remove only the orphan delimiter, recompile the bounded x1 builder, and retain the failed syntax witness.",
+      "recovery_credit": "bounded_dependency_only"
+    },
+    {
+      "failure_id": "NS6828-X1-N008",
+      "failed_witness": "The first exact-source novelty audit quarantined one inherited THOS near-neighbour and one exact inherited terminal-gate title before writing x1.",
+      "initial_credit": 0,
+      "recovery": "Retain both rejected titles at zero credit, substantively replace only those two contracts, and rerun the failed audit dependency.",
+      "recovery_credit": "bounded_dependency_only"
+    }
+  ]
+}
