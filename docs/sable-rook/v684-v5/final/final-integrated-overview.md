@@ -11,11 +11,14 @@ permitted. Sixty positive controls passed, and all 300 preregistered invalid
 mutations were rejected and retained at zero completion credit.
 
 The source is Auren's corrected remaster final `73321b3ff077c3f33726562b8e9d5952608a060e`. The dedicated Sable
-x1 commit is `699e42fe27678cc0e12a55c2d60ba029c62998b4` and immutable evidence is `35073d785c63ab2bbf47260d66ca54e6865b877d`. X1
+x1 commit is `699e42fe27678cc0e12a55c2d60ba029c62998b4`, immutable evidence is `35073d785c63ab2bbf47260d66ca54e6865b877d`, and the
+immutable prior final is `69661bc2a721986a222cb75fe89d0352e314b3c0`. X1
 was pushed, clean, 0/0 divergent, and freshly four-way equal before x2 began.
 Evidence was separately committed, pushed, clean, 0/0 divergent, and freshly
-four-way equal before closeout. This final candidate is designed to become the
-direct single-parent child of evidence. A repository commit cannot truthfully
+four-way equal before closeout. The prior final was committed and pushed cleanly,
+then read-only latch review found a stale canonical count assertion before any
+canonical invocation. This correction candidate is designed to become the
+direct single-parent child of that prior final. A repository commit cannot truthfully
 contain its own future identifier or an external canonical result, so both
 remain explicitly pending until postcommit verification.
 
@@ -157,8 +160,13 @@ tree. The recovery binds those assertions to their immutable lifecycle contexts,
 replays both immutable manifests, and selects only final-context tests at final.
 That one bounded recovery does not convert any of the three failures into a pass.
 
-The additive pre-postcommit view is therefore 59,411 effective negatives,
-73,675 methods, 30,772 failed witnesses, and 54,210 bounded passing witnesses.
+Read-only latch inspection then caught a stale canonical negative-count assertion
+before invocation. `SR6845-FINAL-N004` remains a fourth zero-credit closeout
+failure. Its recovery is this additive direct-child correction commit; the prior
+final remains immutable, and the one-shot canonical budget remains unspent.
+
+The additive pre-postcommit view is therefore 59,412 effective negatives,
+73,676 methods, 30,773 failed witnesses, and 54,211 bounded passing witnesses.
 Every failure remains zero-credit. A passing recovery never converts its paired
 failure into an original pass or independent evidence.
 

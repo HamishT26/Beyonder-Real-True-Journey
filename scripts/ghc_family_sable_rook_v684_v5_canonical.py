@@ -21,6 +21,7 @@ BASE = ROOT / "docs" / "sable-rook" / "v684-v5"
 SOURCE = "73321b3ff077c3f33726562b8e9d5952608a060e"
 X1 = "699e42fe27678cc0e12a55c2d60ba029c62998b4"
 EVIDENCE = "35073d785c63ab2bbf47260d66ca54e6865b877d"
+PREVIOUS_FINAL = "69661bc2a721986a222cb75fe89d0352e314b3c0"
 BRANCH = "codex/GHC-Family/sable-rook-v684-v5-full-tools"
 
 
@@ -192,11 +193,11 @@ def main() -> int:
     detailed = {
         "exact_head": head == args.expected_head,
         "exact_branch": branch == BRANCH,
-        "direct_evidence_parent": len(parents) == 2 and parents[1] == EVIDENCE,
+        "direct_prior_final_parent": len(parents) == 2 and parents[1] == PREVIOUS_FINAL,
         "source_ancestry": ancestry["source"],
         "x1_ancestry": ancestry["x1"],
         "evidence_ancestry": ancestry["evidence"],
-        "three_phase_commits": phase_commits == 3,
+        "four_phase_commits": phase_commits == 4,
         "zero_merges": merges == 0,
         "single_parent_history": single_parent_history,
         "one_final_parent": len(parents) == 2,
@@ -224,7 +225,7 @@ def main() -> int:
         "rejecting_mutations": load(BASE / "closeout" / "evidence-receipt.json")["rejecting_mutations"]["rejected"] == 300,
         "skills": load(BASE / "closeout" / "evidence-receipt.json")["skills"]["quick_validated"] == 20,
         "runners": load(BASE / "closeout" / "evidence-receipt.json")["runners"]["passed"] == 10,
-        "negative_nonerasure": load(BASE / "closeout" / "retained-negative-register.json")["effective_negatives"] == 59408,
+        "negative_nonerasure": load(BASE / "closeout" / "retained-negative-register.json")["effective_negatives"] == 59412,
         "open_gaps": load(BASE / "closeout" / "gate-register.json")["open_gaps"] == 528,
         "exact_gates": load(BASE / "closeout" / "gate-register.json")["exact_gates"] == 518,
         "no_silent_gate_close": load(BASE / "closeout" / "gate-register.json")["silently_closed"] == 0,
@@ -232,7 +233,7 @@ def main() -> int:
         "no_success_replay": load(BASE / "closeout" / "final-validation-candidate.json")["replay_after_success"] is False,
     }
     minimal_names = [
-        "exact_head", "direct_evidence_parent", "three_phase_commits", "zero_merges",
+        "exact_head", "direct_prior_final_parent", "four_phase_commits", "zero_merges",
         "single_parent_history", "clean_before", "typed_zero_ahead",
         "local_upstream_equal", "local_tracking_equal", "local_live_equal",
         "selected_tests", "final_owner_manifest", "strict_json", "privacy",

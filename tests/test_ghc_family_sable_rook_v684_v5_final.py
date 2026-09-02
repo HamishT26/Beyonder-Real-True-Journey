@@ -16,6 +16,7 @@ VALIDATION = BASE / "validation"
 SOURCE = "73321b3ff077c3f33726562b8e9d5952608a060e"
 X1_COMMIT = "699e42fe27678cc0e12a55c2d60ba029c62998b4"
 EVIDENCE_COMMIT = "35073d785c63ab2bbf47260d66ca54e6865b877d"
+PREVIOUS_FINAL = "69661bc2a721986a222cb75fe89d0352e314b3c0"
 BRANCH = "codex/GHC-Family/sable-rook-v684-v5-full-tools"
 
 
@@ -43,14 +44,14 @@ class SableRookV684V5FinalTests(unittest.TestCase):
         expected = os.environ.get("SR6845_EXPECTED_FINAL")
         if expected:
             self.assertEqual(head, expected)
-            self.assertEqual(git("rev-parse", "HEAD^"), EVIDENCE_COMMIT)
+            self.assertEqual(git("rev-parse", "HEAD^"), PREVIOUS_FINAL)
         else:
-            self.assertEqual(head, EVIDENCE_COMMIT)
+            self.assertEqual(head, PREVIOUS_FINAL)
         self.assertEqual(git("branch", "--show-current"), BRANCH)
 
     def test_02_final_candidate_truth(self):
         truth = load(FINAL / "phase-truth.json")
-        self.assertEqual(truth["lifecycle"], "FINAL_CANDIDATE_PRECOMMIT")
+        self.assertEqual(truth["lifecycle"], "FINAL_CORRECTION_CANDIDATE_PRECOMMIT")
         self.assertEqual(truth["exact_final"], "PENDING_COMMIT")
         self.assertEqual(truth["external_canonical"], "PENDING_POSTCOMMIT")
         self.assertEqual(truth["terminal_verdict"], "NOT_READY_FOR_STAGE_20")
@@ -69,12 +70,14 @@ class SableRookV684V5FinalTests(unittest.TestCase):
 
     def test_05_negative_register(self):
         register = load(CLOSEOUT / "retained-negative-register.json")
-        self.assertEqual(register["effective_negatives"], 59411)
-        self.assertEqual(register["effective_methods"], 73675)
-        self.assertEqual(register["retained_failed_witnesses"], 30772)
-        self.assertEqual(register["bounded_passing_witnesses"], 54210)
+        self.assertEqual(register["effective_negatives"], 59412)
+        self.assertEqual(register["effective_methods"], 73676)
+        self.assertEqual(register["retained_failed_witnesses"], 30773)
+        self.assertEqual(register["bounded_passing_witnesses"], 54211)
         self.assertEqual(register["final_selection_operational_failures"], 3)
         self.assertEqual(register["final_selection_recoveries"], 1)
+        self.assertEqual(register["canonical_preflight_operational_failures"], 1)
+        self.assertEqual(register["canonical_preflight_recoveries"], 1)
 
     def test_06_gate_register(self):
         gates = load(CLOSEOUT / "gate-register.json")
@@ -136,7 +139,7 @@ class SableRookV684V5FinalTests(unittest.TestCase):
 
     def test_16_final_delta_manifest_working(self):
         manifest = load(VALIDATION / "final-delta-manifest.json")
-        self.assertGreaterEqual(manifest["entry_count"], 15)
+        self.assertGreaterEqual(manifest["entry_count"], 8)
         for entry in manifest["entries"]:
             data = (ROOT / entry["path"]).read_bytes().replace(b"\r\n", b"\n").replace(b"\r", b"\n")
             self.assertEqual(hashlib.sha256(data).hexdigest(), entry["sha256_normalized_lf"])
@@ -185,6 +188,8 @@ class SableRookV684V5FinalTests(unittest.TestCase):
     def test_23_final_validation_candidate(self):
         candidate = load(CLOSEOUT / "final-validation-candidate.json")
         self.assertEqual(candidate["canonical_invocation_budget"], 1)
+        self.assertEqual(candidate["required_parent"], PREVIOUS_FINAL)
+        self.assertEqual(candidate["required_phase_commits"], 4)
         self.assertFalse(candidate["replay_after_success"])
         self.assertFalse(candidate["full_repository_suite"])
 

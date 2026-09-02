@@ -25,6 +25,7 @@ VALIDATION = BASE / "validation"
 SOURCE = "73321b3ff077c3f33726562b8e9d5952608a060e"
 X1_COMMIT = "699e42fe27678cc0e12a55c2d60ba029c62998b4"
 EVIDENCE_COMMIT = "35073d785c63ab2bbf47260d66ca54e6865b877d"
+PREVIOUS_FINAL = "69661bc2a721986a222cb75fe89d0352e314b3c0"
 BRANCH = "codex/GHC-Family/sable-rook-v684-v5-full-tools"
 
 
@@ -111,15 +112,17 @@ redirect, narrow, or stop the route.
 
 Sable's immutable Auren source is `{SOURCE}`. The dedicated planning-only x1
 commit is `{X1_COMMIT}`. The immutable x2 evidence commit is
-`{EVIDENCE_COMMIT}`. The later live activation must supply Sable's exact final
-and external canonical receipt because those values do not exist when this file
-is committed. X1 was pushed, clean, typed 0/0 divergent, and freshly equal
+`{EVIDENCE_COMMIT}`. The immutable prior final is `{PREVIOUS_FINAL}`. The later
+live activation must supply Sable's exact corrected final and external canonical
+receipt because those values do not exist when this file is committed. X1 was
+pushed, clean, typed 0/0 divergent, and freshly equal
 across local, upstream, tracking, and live remote before any x2 path was
 created. Evidence was then separately committed, pushed, clean, typed 0/0
 divergent, and freshly four-way equal before closeout began.
 
-The intended final is a direct single-parent child of evidence. Source to final
-must contain exactly three Sable phase commits and zero merges. Every phase
+The intended corrected final is a direct single-parent child of the immutable
+prior final. Source to corrected final must contain exactly four Sable phase
+commits and zero merges. Every phase
 commit must be single-parent. No reset, amend, rewrite, force-push, merge,
 destructive cleanup, sibling mutation, or inherited-history deletion is
 permitted. The 2,000 owner-file limit and commit budgets are ceilings, not
@@ -151,9 +154,10 @@ methods, 30,755 retained failed witnesses, and 54,199 bounded passing witnesses.
 Sable retains nine x1 startup failures with seven bounded recoveries, five x2
 operational failures with three bounded recoveries, three lifecycle-local tests
 incorrectly selected at the advanced tree with one bounded selection recovery,
-and all 300 rejected synthetic mutations. The final additive view before any
-postcommit external event is 59,411 negatives, 73,675 methods, 30,772 failed
-witnesses, and 54,210 bounded passing witnesses. No failed witness is converted into an original
+one stale canonical count assertion caught before invocation with one additive
+correction recovery, and all 300 rejected synthetic mutations. The final
+additive view before any postcommit external event is 59,412 negatives, 73,676
+methods, 30,773 failed witnesses, and 54,211 bounded passing witnesses. No failed witness is converted into an original
 pass. Auren's repository seal remains unchanged; activation, route, and Sable
 phase facts are additive layers only.
 
@@ -268,8 +272,9 @@ topology.
         """
 ## Exact terminal checks before any live send
 
-The live owner must confirm that the final is the direct child of immutable
-evidence; source to final contains exactly three Sable commits and zero merges;
+The live owner must confirm that the corrected final is the direct child of the
+immutable prior final; source to corrected final contains exactly four Sable
+commits and zero merges;
 every phase commit is single-parent; the exact branch is clean; local, upstream,
 tracking, and a fresh live remote read are identical with typed 0/0 divergence;
 x1, evidence, final-delta, final-owner, and content-seal manifests replay from
@@ -296,23 +301,13 @@ error-free existing-task acknowledgement can establish the live send.
 
 
 def final_delta_files() -> list[Path]:
-    result: list[Path] = []
-    for root in [CLOSEOUT, FINAL, HANDOFFS]:
-        if root.exists():
-            result.extend(path for path in root.rglob("*") if path.is_file())
-    for path in VALIDATION.glob("final-*"):
-        if path.is_file():
-            result.append(path)
-    result.extend(
-        path
-        for path in [
-            ROOT / "scripts" / "build_ghc_family_sable_rook_v684_v5_final.py",
-            ROOT / "scripts" / "ghc_family_sable_rook_v684_v5_canonical.py",
-            ROOT / "tests" / "test_ghc_family_sable_rook_v684_v5_final.py",
-        ]
-        if path.exists()
+    # The immutable prior final preserves the original evidence-to-final delta.
+    # This additive commit must instead seal only its exact correction surface.
+    changed = run_git("diff", "--name-only", PREVIOUS_FINAL).stdout.splitlines()
+    return sorted(
+        (ROOT / rel for rel in changed if rel and (ROOT / rel).is_file()),
+        key=lambda path: path.relative_to(ROOT).as_posix(),
     )
-    return sorted(set(result), key=lambda path: path.relative_to(ROOT).as_posix())
 
 
 def owner_files() -> list[Path]:
@@ -383,8 +378,8 @@ def privacy_scan(paths: Iterable[Path]) -> dict[str, Any]:
 
 def build() -> None:
     head = run_git("rev-parse", "HEAD").stdout.strip()
-    if head != EVIDENCE_COMMIT:
-        raise SystemExit(f"final build requires exact evidence head {EVIDENCE_COMMIT}; observed {head}")
+    if head != PREVIOUS_FINAL:
+        raise SystemExit(f"correction build requires exact prior final {PREVIOUS_FINAL}; observed {head}")
     if run_git("status", "--porcelain=v1").stdout.strip():
         # The builder and final test/canonical source are expected to be the only
         # untracked inputs when invoked after apply_patch. Refuse tracked drift.
@@ -459,6 +454,8 @@ def build() -> None:
             "x2_operational_failures": 5,
             "final_selection_operational_failures": 3,
             "final_selection_recoveries": 1,
+            "canonical_preflight_operational_failures": 1,
+            "canonical_preflight_recoveries": 1,
             "final_selection_failure_records": [
                 {
                     "id": "SR6845-FINAL-N001",
@@ -478,12 +475,18 @@ def build() -> None:
                     "status": "RETAINED_FAILED_ZERO_CREDIT",
                     "recovery": "Bind x2-head assertions to immutable evidence and use exact evidence manifest replay plus final-parent checks.",
                 },
+                {
+                    "id": "SR6845-FINAL-N004",
+                    "test": "pre-invocation canonical count assertion inspection",
+                    "status": "RETAINED_FAILED_ZERO_CREDIT",
+                    "recovery": "Add a direct-child correction commit with the exact retained-negative total before spending the canonical latch; preserve the prior final unchanged.",
+                },
             ],
             "rejected_synthetic_mutations": 300,
-            "effective_negatives": 59411,
-            "effective_methods": 73675,
-            "retained_failed_witnesses": 30772,
-            "bounded_passing_witnesses": 54210,
+            "effective_negatives": 59412,
+            "effective_methods": 73676,
+            "retained_failed_witnesses": 30773,
+            "bounded_passing_witnesses": 54211,
             "nonerasure": "Every failed witness remains zero-credit after recovery; rejected mutations are not converted into successful inputs.",
         },
     )
@@ -513,9 +516,10 @@ def build() -> None:
             "source": SOURCE,
             "x1": X1_COMMIT,
             "evidence": EVIDENCE_COMMIT,
+            "prior_final": PREVIOUS_FINAL,
             "exact_final": "PENDING_COMMIT",
-            "required_final_parent": EVIDENCE_COMMIT,
-            "required_phase_commits": 3,
+            "required_final_parent": PREVIOUS_FINAL,
+            "required_phase_commits": 4,
             "required_merges": 0,
             "required_final_parents": 1,
         },
@@ -606,18 +610,19 @@ def build() -> None:
             "schema": "ghc.family.phase-truth.v2",
             "phase": PHASE,
             "owner": OWNER,
-            "lifecycle": "FINAL_CANDIDATE_PRECOMMIT",
+            "lifecycle": "FINAL_CORRECTION_CANDIDATE_PRECOMMIT",
             "source": SOURCE,
             "x1": X1_COMMIT,
             "evidence": EVIDENCE_COMMIT,
+            "prior_final": PREVIOUS_FINAL,
             "exact_final": "PENDING_COMMIT",
             "external_canonical": "PENDING_POSTCOMMIT",
             "outcomes": outcomes["counts"],
             "proposal_chain": 10970,
-            "effective_negatives": 59411,
-            "effective_methods": 73675,
-            "retained_failed_witnesses": 30772,
-            "bounded_passing_witnesses": 54210,
+            "effective_negatives": 59412,
+            "effective_methods": 73676,
+            "retained_failed_witnesses": 30773,
+            "bounded_passing_witnesses": 54211,
             "open_gaps": 528,
             "exact_gates": 518,
             "terminal_verdict": "NOT_READY_FOR_STAGE_20",
@@ -637,11 +642,14 @@ permitted. Sixty positive controls passed, and all 300 preregistered invalid
 mutations were rejected and retained at zero completion credit.
 
 The source is Auren's corrected remaster final `{SOURCE}`. The dedicated Sable
-x1 commit is `{X1_COMMIT}` and immutable evidence is `{EVIDENCE_COMMIT}`. X1
+x1 commit is `{X1_COMMIT}`, immutable evidence is `{EVIDENCE_COMMIT}`, and the
+immutable prior final is `{PREVIOUS_FINAL}`. X1
 was pushed, clean, 0/0 divergent, and freshly four-way equal before x2 began.
 Evidence was separately committed, pushed, clean, 0/0 divergent, and freshly
-four-way equal before closeout. This final candidate is designed to become the
-direct single-parent child of evidence. A repository commit cannot truthfully
+four-way equal before closeout. The prior final was committed and pushed cleanly,
+then read-only latch review found a stale canonical count assertion before any
+canonical invocation. This correction candidate is designed to become the
+direct single-parent child of that prior final. A repository commit cannot truthfully
 contain its own future identifier or an external canonical result, so both
 remain explicitly pending until postcommit verification.
 
@@ -783,8 +791,13 @@ tree. The recovery binds those assertions to their immutable lifecycle contexts,
 replays both immutable manifests, and selects only final-context tests at final.
 That one bounded recovery does not convert any of the three failures into a pass.
 
-The additive pre-postcommit view is therefore 59,411 effective negatives,
-73,675 methods, 30,772 failed witnesses, and 54,210 bounded passing witnesses.
+Read-only latch inspection then caught a stale canonical negative-count assertion
+before invocation. `SR6845-FINAL-N004` remains a fourth zero-credit closeout
+failure. Its recovery is this additive direct-child correction commit; the prior
+final remains immutable, and the one-shot canonical budget remains unspent.
+
+The additive pre-postcommit view is therefore 59,412 effective negatives,
+73,676 methods, 30,773 failed witnesses, and 54,211 bounded passing witnesses.
 Every failure remains zero-credit. A passing recovery never converts its paired
 failure into an original pass or independent evidence.
 
@@ -925,8 +938,8 @@ verdict.
             "schema": "ghc.family.final-validation-candidate.v2",
             "state": "PRECOMMIT_PENDING_EXACT_FINAL_AND_EXTERNAL_CANONICAL",
             "expected_branch": BRANCH,
-            "required_parent": EVIDENCE_COMMIT,
-            "required_phase_commits": 3,
+            "required_parent": PREVIOUS_FINAL,
+            "required_phase_commits": 4,
             "required_merges": 0,
             "canonical_invocation_budget": 1,
             "replay_after_success": False,

@@ -39,15 +39,17 @@ redirect, narrow, or stop the route.
 
 Sable's immutable Auren source is `73321b3ff077c3f33726562b8e9d5952608a060e`. The dedicated planning-only x1
 commit is `699e42fe27678cc0e12a55c2d60ba029c62998b4`. The immutable x2 evidence commit is
-`35073d785c63ab2bbf47260d66ca54e6865b877d`. The later live activation must supply Sable's exact final
-and external canonical receipt because those values do not exist when this file
-is committed. X1 was pushed, clean, typed 0/0 divergent, and freshly equal
+`35073d785c63ab2bbf47260d66ca54e6865b877d`. The immutable prior final is `69661bc2a721986a222cb75fe89d0352e314b3c0`. The later
+live activation must supply Sable's exact corrected final and external canonical
+receipt because those values do not exist when this file is committed. X1 was
+pushed, clean, typed 0/0 divergent, and freshly equal
 across local, upstream, tracking, and live remote before any x2 path was
 created. Evidence was then separately committed, pushed, clean, typed 0/0
 divergent, and freshly four-way equal before closeout began.
 
-The intended final is a direct single-parent child of evidence. Source to final
-must contain exactly three Sable phase commits and zero merges. Every phase
+The intended corrected final is a direct single-parent child of the immutable
+prior final. Source to corrected final must contain exactly four Sable phase
+commits and zero merges. Every phase
 commit must be single-parent. No reset, amend, rewrite, force-push, merge,
 destructive cleanup, sibling mutation, or inherited-history deletion is
 permitted. The 2,000 owner-file limit and commit budgets are ceilings, not
@@ -79,9 +81,10 @@ methods, 30,755 retained failed witnesses, and 54,199 bounded passing witnesses.
 Sable retains nine x1 startup failures with seven bounded recoveries, five x2
 operational failures with three bounded recoveries, three lifecycle-local tests
 incorrectly selected at the advanced tree with one bounded selection recovery,
-and all 300 rejected synthetic mutations. The final additive view before any
-postcommit external event is 59,411 negatives, 73,675 methods, 30,772 failed
-witnesses, and 54,210 bounded passing witnesses. No failed witness is converted into an original
+one stale canonical count assertion caught before invocation with one additive
+correction recovery, and all 300 rejected synthetic mutations. The final
+additive view before any postcommit external event is 59,412 negatives, 73,676
+methods, 30,773 failed witnesses, and 54,211 bounded passing witnesses. No failed witness is converted into an original
 pass. Auren's repository seal remains unchanged; activation, route, and Sable
 phase facts are additive layers only.
 
@@ -2074,8 +2077,9 @@ topology.
 
 ## Exact terminal checks before any live send
 
-The live owner must confirm that the final is the direct child of immutable
-evidence; source to final contains exactly three Sable commits and zero merges;
+The live owner must confirm that the corrected final is the direct child of the
+immutable prior final; source to corrected final contains exactly four Sable
+commits and zero merges;
 every phase commit is single-parent; the exact branch is clean; local, upstream,
 tracking, and a fresh live remote read are identical with typed 0/0 divergence;
 x1, evidence, final-delta, final-owner, and content-seal manifests replay from
