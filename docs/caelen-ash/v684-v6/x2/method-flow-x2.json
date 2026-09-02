@@ -1,0 +1,34 @@
+{
+  "inherited_x1_method_ledger": "docs/caelen-ash/v684-v6/x1/method-flow/ledger.json",
+  "rejected_synthetic_mutations": 300,
+  "schema": "ghc.family.method-flow-x2.v2",
+  "truth": "Both operational failures remain zero-credit and separate from their bounded recoveries. Rejected mutations are bounded zero-credit negative witnesses, not operational failures or broader security evidence.",
+  "x2_operational_failures": [
+    {
+      "credit": 0,
+      "failure_id": "CA6846-X2-N001",
+      "summary": "The combined evidence staged-review wrapper crossed its display window while the exact second review process was still reading index blobs."
+    },
+    {
+      "credit": 0,
+      "failure_id": "CA6846-X2-N002",
+      "summary": "The persisted review completed FAIL because the contracts module had one blank line at EOF and exact staged diff hygiene returned nonzero."
+    }
+  ],
+  "x2_recovery_methods": [
+    {
+      "method": "Inspect the exact live process and persisted review before deciding whether a wrapper-window crossing requires any retry.",
+      "method_id": "CA6846-M013",
+      "retained_negative_ids": [
+        "CA6846-X2-N001"
+      ]
+    },
+    {
+      "method": "Remove only the trailing blank line, restage that exact dependency, and rerun the bounded staged review once.",
+      "method_id": "CA6846-M014",
+      "retained_negative_ids": [
+        "CA6846-X2-N002"
+      ]
+    }
+  ]
+}
