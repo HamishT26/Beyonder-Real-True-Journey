@@ -1,0 +1,63 @@
+{
+  "additions": {
+    "operational_failures": 4,
+    "portfolio_execution_methods_and_passing_witnesses": 300,
+    "proposal_validation_methods_and_passing_witnesses": 360,
+    "rejecting_mutation_negatives_and_failed_witnesses": 300,
+    "runner_rejecting_negatives_and_failed_witnesses": 10,
+    "runner_smoke_methods_and_passing_witnesses": 20,
+    "skill_rejecting_negatives_and_failed_witnesses": 20,
+    "skill_smoke_methods_and_passing_witnesses": 40
+  },
+  "effective_evidence_counts": {
+    "bounded_passing_witnesses": 57189,
+    "effective_methods": 76654,
+    "effective_negatives": 61059,
+    "exact_gates": 533,
+    "failed_witnesses": 32120,
+    "open_gaps": 543
+  },
+  "failure_erasure": false,
+  "operational_failures": [
+    {
+      "credit": "retained_zero_credit",
+      "failed_witness": "The first x2 build stopped because the official quick validator inherited Windows cp1252 and could not decode UTF-8 Māori boundary text in all twenty skill files.",
+      "failure_id": "TV6851-X2-N001",
+      "recovery": "Reran only the exact validator dependency with PYTHONUTF8=1, then rebuilt the bounded evidence once.",
+      "recurrence_guard": "Set explicit UTF-8 for every external skill-creator validation subprocess on Windows."
+    },
+    {
+      "credit": "retained_zero_credit",
+      "failed_witness": "The first grouped evidence-validation wrapper returned four passing test dots at its output boundary without exposing the continuing session handle.",
+      "failure_id": "TV6851-X2-N002",
+      "recovery": "Audited process quiescence and staged receipts, retained the four attributable passes, then ran only the unresolved manifest check and not-yet-attributable remainder.",
+      "recurrence_guard": "Always serialize the exec result when a validation command may outlive its initial yield."
+    },
+    {
+      "credit": "retained_zero_credit",
+      "failed_witness": "The first combined Method Flow patch failed its context check because generated JSON key order differed from source object order.",
+      "failure_id": "TV6851-X2-N003",
+      "recovery": "Split source and generated-ledger edits and anchored the ledger patch to its exact serialized order.",
+      "recurrence_guard": "Inspect generated JSON serialization before applying a multi-file exact-context patch."
+    },
+    {
+      "credit": "retained_zero_credit",
+      "failed_witness": "The first skill-receipt test compared a normalized-text digest with raw checkout bytes and failed one of seven selected checks.",
+      "failure_id": "TV6851-X2-N004",
+      "recovery": "Changed only that assertion to hash UTF-8 text after universal newline normalization, matching the receipt domain.",
+      "recurrence_guard": "Name and compare the same byte or normalized-text domain on both sides of every digest assertion."
+    }
+  ],
+  "owner": "Tamar Vey",
+  "phase": "v685-v1",
+  "recovery_promotes_failed_witness": false,
+  "schema": "ghc.family.method-flow.v685.v1.x2",
+  "x1_baseline": {
+    "bounded_passing_witnesses": 56465,
+    "effective_methods": 75930,
+    "effective_negatives": 60725,
+    "exact_gates": 530,
+    "failed_witnesses": 31786,
+    "open_gaps": 540
+  }
+}
