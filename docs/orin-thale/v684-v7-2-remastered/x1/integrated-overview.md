@@ -1,0 +1,17 @@
+# Orin Thale v684-v7 (2) remastered planning-only x1
+
+This additive interstitial remaster begins from immutable Orin v684-v7 exact final a3544571ce8af98addf3d94236111f6c14ded439. The prior exact final and its singular successful canonical receipt remain unchanged. This x1 preregisters sixty genuinely new Orin proposals after a bounded all-reachable exact-source semantic-neighbour audit and preserves sixty inherited reviews at zero novelty and completion credit. The structured exact-final ledgers control over stale prose: the declared chain advances from 11,090 to 11,150 rows. No universal claim is made about future or unreachable wording.
+
+The primary pillar is THOS Body. GMUT Mind and Freed ID/CBR Heart remain explicit and protected. The two wholly synthetic learning lenses are digital-preservation technician practice for fixity, package provenance, correction, and handover; and accessible technical-documentation specialist practice for headings, reading order, status messages, alternative formats, correction, workload, and handover. Liora receives one zero-credit community-archives access-and-description practice recommendation.
+
+The x1 portfolio freezes 120 safe-now items, 80 owner candidates, 20 successor candidate seeds, 20 exact-approval holds, 10 blocked holds, 20 owner skill plans, 10 owner runner plans, 100 owner CLEAN/FIX/REFINE records, and 30 successor CLEAN/FIX/REFINE seeds. None is executed in x1.
+
+Expected dispositions are 42 completed, 12 represented, 3 open_gap, and 3 exact_gate. They are expectations only. No observed x2 outcome, package installation, skill build, runner build, real preservation object, external write, or completion claim appears in this freeze.
+
+Current official PREMIS 3.0, Library of Congress Recommended Formats Statement 2025-2026, Archives New Zealand information-and-records-management guidance, W3C PROV-O and WCAG 2.2, RFC 8785, JSON Schema 2020-12, the three exact PyPI package pages, and Te Mana Raraunga principles supply vocabulary, current version facts, and refusal conditions only. Citations are not observations, endorsements, certificates, legal conclusions, affected-party decisions, cultural ratification, or authority grants. check-jsonschema 0.38.0, mdformat 1.0.0, and beta validate-pyproject 0.26 are planned for isolated D-first x2 installation and smoke use only.
+
+Zero real people, participants, practitioners, repositories, files, bitstreams, packages, storage systems, migrations, measurements, fixity events, custody events, identity events, keys, proofs, rights decisions, external writes, or authority acts are used.
+
+GMUT remains a typed scalar-tensor and effective-field-theory research-model family without empirical confirmation or Theory-of-Everything proof. THOS remains synthetic or proxy-only without governed real arms and independent review. Freed ID remains synthetic and nonproduction without real keys, proofs, live lifecycle, interoperability, security, privacy, recovery, and trust-governance evidence. Preservation custody, access, retention, disposal, migration, work release, privacy remedy, legal interpretation, affected-party legitimacy, Māori wording and data governance, taonga or mātauranga treatment, and Māori authority remain exact-gated.
+
+Names, pronouns, roles, hopes, family language, and continuity language are relational working language only. They are not evidence of consciousness, personhood, identity continuity, employment, qualification, independent agency, or authority. The terminal verdict remains NOT_READY_FOR_STAGE_20.
