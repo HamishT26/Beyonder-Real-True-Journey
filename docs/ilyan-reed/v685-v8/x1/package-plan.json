@@ -1,0 +1,82 @@
+{
+  "bootstrap": "hash-verified pip in isolated D environment",
+  "direct_additions": 3,
+  "expected_runtime_dependencies": [
+    "six"
+  ],
+  "install_after_x1_equality": true,
+  "packages": [
+    {
+      "category": "direct",
+      "name": "simpy",
+      "requires_dist": null,
+      "sha256": "43071f84b6512c9b4fcb33ef057f240ccb1d1f3b263f9b4f9229d072e310b372",
+      "source": "https://pypi.org/project/simpy/4.1.2/",
+      "url": "https://files.pythonhosted.org/packages/ee/ed/07a1e054922c16b2c18ca3598771936c344d52337b8aaf0f1e3ed8b223dc/simpy-4.1.2-py3-none-any.whl",
+      "version": "4.1.2",
+      "wheel": "simpy-4.1.2-py3-none-any.whl"
+    },
+    {
+      "category": "direct",
+      "name": "transitions",
+      "requires_dist": [
+        "six",
+        "pygraphviz; extra == \"diagrams\"",
+        "pytest; extra == \"test\""
+      ],
+      "sha256": "02463248f2b668d86f66636b1e3c9e8de84d93e22915247f4e1aa9ee1cae28aa",
+      "source": "https://pypi.org/project/transitions/0.9.3/",
+      "url": "https://files.pythonhosted.org/packages/f4/05/fea3020e90aa378941ff10de8860fb3b1288313c27efd10fa0c476498f7e/transitions-0.9.3-py2.py3-none-any.whl",
+      "version": "0.9.3",
+      "wheel": "transitions-0.9.3-py2.py3-none-any.whl"
+    },
+    {
+      "category": "direct",
+      "name": "python-constraint2",
+      "requires_dist": null,
+      "sha256": "32c4b22458d12145cbd06b673f1e67ae5632e96bc95a743c4258a5e94f27d0b9",
+      "source": "https://pypi.org/project/python-constraint2/2.7.3/",
+      "url": "https://files.pythonhosted.org/packages/b3/7a/1dc7d27e3b93f2b72de5e64faf7dcf356f650f8e6f2c64d122239cf0149e/python_constraint2-2.7.3-cp312-cp312-win_amd64.whl",
+      "version": "2.7.3",
+      "wheel": "python_constraint2-2.7.3-cp312-cp312-win_amd64.whl"
+    },
+    {
+      "category": "dependency",
+      "name": "six",
+      "requires_dist": null,
+      "sha256": "4721f391ed90541fddacab5acf947aa0d3dc7d27b2e1e8eda2be8970586c3274",
+      "source": "https://pypi.org/project/six/1.17.0/",
+      "url": "https://files.pythonhosted.org/packages/b7/ce/149a00dd41f10bc29e5921b496af8b574d8413afcd5e30dfa0ed46c2cc5e/six-1.17.0-py2.py3-none-any.whl",
+      "version": "1.17.0",
+      "wheel": "six-1.17.0-py2.py3-none-any.whl"
+    },
+    {
+      "category": "bootstrap",
+      "name": "pip",
+      "requires_dist": null,
+      "sha256": "71138adf1f4ca900cdb7d289c21b7494329f2332b6d85f0e1c42108c0384ed3e",
+      "source": "https://pypi.org/project/pip/26.2.1/",
+      "url": "https://files.pythonhosted.org/packages/f3/6e/1736e5b4ae2b778ef2f81c47d797de9f891d4d8acb047a24ca37a60294dd/pip-26.2.1-py3-none-any.whl",
+      "version": "26.2.1",
+      "wheel": "pip-26.2.1-py3-none-any.whl"
+    }
+  ],
+  "require_hashes": true,
+  "rollback": "Retain the isolated environment and receipts; select a prior environment. No deletion, system Python, PATH, npm prefix, or sibling environment mutation.",
+  "rollback_token": "IR6858-TOOLS-01",
+  "smokes": {
+    "python-constraint2": [
+      "finite distinct assignments sum to four",
+      "inconsistent singleton domains have zero solutions"
+    ],
+    "simpy": [
+      "FIFO at equal time",
+      "negative timeout refusal"
+    ],
+    "transitions": [
+      "planned-running-recorded",
+      "finish before start refusal"
+    ]
+  },
+  "wheel_only": true
+}
