@@ -1,0 +1,7 @@
+# 12 Validation scope and review limits
+
+Only Mira's exact source-to-final delta is eligible for canonical validation. The scope includes exact Git-blob manifests, JSON parsing, Python AST, the one new selected unittest module, all current shared runners and copied skill dependencies, source/x1/evidence/final ancestry, package receipts, global byte parity, four-tier card topology, HTML structure, the overview PDF, bounded five-class privacy checks, bounded security review, clean state, zero divergence, and fresh-live equality. It excludes unchanged history, sibling lanes, the complete repository suite, and any claim of independent reproduction.
+
+The original component run passed 44 selected tests. After the explicit-null guard correction, the selected test inventory includes the additional guard test. Exact test identifiers and definition hashes are sealed with the final packet. The one canonical invocation uses one exclusive external marker only after the exact final is pushed and four-way equal. A failed aggregate is retained; a successful aggregate is never replayed for confidence, display, or routing.
+
+The overview contains at least three pages and requires every page to be rendered and visually inspected. Structural HTML and PDF checks do not establish complete accessibility, affected-user acceptance, Māori-language approval, professional quality, complete privacy, exhaustive security, or production readiness. The owner file scope remains below 2,000; rotate additively at the cap or at the released owner-bundle review interval.

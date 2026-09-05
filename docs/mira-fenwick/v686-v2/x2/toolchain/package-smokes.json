@@ -1,0 +1,122 @@
+{
+  "schema": "ghc.family.mira.package-smokes.v1",
+  "checks": [
+    {
+      "name": "jmespath public completed projection",
+      "observed": [
+        2
+      ],
+      "expected": [
+        2
+      ],
+      "pass": true
+    },
+    {
+      "name": "jmespath malformed expression",
+      "rejected": true,
+      "exception_type": "IncompleteExpressionError",
+      "pass": true,
+      "negative_success_credit": 0
+    },
+    {
+      "name": "jmespath null dropping boundary",
+      "observed": [
+        2
+      ],
+      "expected": [
+        2
+      ],
+      "pass": true
+    },
+    {
+      "name": "dpath nested scalar selection",
+      "observed": 4,
+      "expected": 4,
+      "pass": true
+    },
+    {
+      "name": "dpath missing path",
+      "rejected": true,
+      "exception_type": "KeyError",
+      "pass": true,
+      "negative_success_credit": 0
+    },
+    {
+      "name": "dictdiffer patch roundtrip",
+      "observed": {
+        "nested": {
+          "value": 3
+        },
+        "items": [
+          "a",
+          "b"
+        ]
+      },
+      "expected": {
+        "nested": {
+          "value": 3
+        },
+        "items": [
+          "a",
+          "b"
+        ]
+      },
+      "pass": true
+    },
+    {
+      "name": "dictdiffer revert roundtrip",
+      "observed": {
+        "nested": {
+          "value": 1
+        },
+        "items": [
+          "a"
+        ]
+      },
+      "expected": {
+        "nested": {
+          "value": 1
+        },
+        "items": [
+          "a"
+        ]
+      },
+      "pass": true
+    },
+    {
+      "name": "dictdiffer invalid change action",
+      "rejected": true,
+      "exception_type": "KeyError",
+      "pass": true,
+      "negative_success_credit": 0
+    },
+    {
+      "name": "package inputs unchanged",
+      "observed": {
+        "nested": {
+          "value": 1
+        },
+        "items": [
+          "a"
+        ]
+      },
+      "expected": {
+        "nested": {
+          "value": 1
+        },
+        "items": [
+          "a"
+        ]
+      },
+      "pass": true
+    }
+  ],
+  "pass": true,
+  "same_owner_only": true,
+  "independent_reproduction": false,
+  "boundaries": [
+    "Query null omission is explicit; do not infer complete denominators.",
+    "Mutable helpers act only on copied synthetic records.",
+    "No cryptographic disclosure, production conformance, complete privacy or exhaustive security."
+  ]
+}

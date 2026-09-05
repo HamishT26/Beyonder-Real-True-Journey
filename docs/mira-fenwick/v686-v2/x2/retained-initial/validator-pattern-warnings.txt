@@ -1,0 +1,185 @@
+"""Validate the exact Mira delta; canonical mode has one exclusive external latch."""
+import argparse,ast,collections,hashlib,importlib,io,json,os,re,subprocess,sys,unittest
+from datetime import datetime,timezone
+from html.parser import HTMLParser
+from pathlib import Path
+ROOT=Path(__file__).resolve().parents[4];BASE='docs/mira-fenwick/v686-v2/'
+SOURCE='cb3b08442d98030eb2d4a7cedab9dfbc72bd060c'
+SCRIPTS=['scripts/ghc_family_'+n+'.py' for n in ['evidence_selectors','evidence_patch','correction_lineage','receipt_binding','obligation_projection']]
+TEST='tests/test_ghc_family_mira_v686_v2.py'
+def git(*args):return subprocess.check_output(['git','-C',str(ROOT),*args])
+def sha(data):return hashlib.sha256(data).hexdigest()
+def compact(data):return json.dumps(data,ensure_ascii=False,sort_keys=True,separators=(',',':'),allow_nan=False).encode()
+def snapshot(head):
+    args=['diff','--raw','--no-abbrev','--no-renames',SOURCE]
+    if head=='INDEX':args.insert(1,'--cached')
+    else:args.append(head)
+    entries=[]
+    for line in git(*args).decode().splitlines():
+        meta,path=line.split('\t',1);parts=meta.split();entries.append((path,parts[3],parts[4]))
+    assert entries and all(status=='A' and (path.startswith(BASE) or path in SCRIPTS+[TEST]) for path,oid,status in entries),'owner allowlist or additive state'
+    request=''.join(oid+'\n' for _,oid,_ in entries).encode();proc=subprocess.run(['git','-C',str(ROOT),'cat-file','--batch'],input=request,capture_output=True,check=True)
+    data=proc.stdout;pos=0;blobs={}
+    for path,oid,_ in entries:
+        end=data.index(b'\n',pos);header=data[pos:end].split();size=int(header[2]);assert header[0].decode()==oid and header[1]==b'blob'
+        blobs[path]=data[end+1:end+1+size];pos=end+size+2
+    assert pos==len(data)
+    return blobs
+def load(blobs,path):return json.loads(blobs[BASE+path])
+def manifest(blobs,path,expected=None):
+    m=load(blobs,path);rows=m.get('entries',m.get('targets'));assert isinstance(rows,list)
+    paths=[e['path'] for e in rows];assert len(paths)==len(set(paths))
+    for e in rows:
+        data=blobs[e['path']];assert len(data)==e['bytes'] and sha(data)==e['sha256'],e['path']
+    if expected is not None:assert set(paths)==expected,'manifest coverage mismatch'
+    return len(rows)
+def equality(head):
+    branch=git('branch','--show-current').decode().strip();assert branch=='codex/GHC-Family/mira-fenwick-v686-v2-full-tools'
+    values=[git('rev-parse',x).decode().strip() for x in ['HEAD','@{upstream}','refs/remotes/origin/'+branch]]
+    live=git('ls-remote','--heads','origin','refs/heads/'+branch).decode().split();assert len(live)==2;values.append(live[0])
+    divergent=[int(x) for x in git('rev-list','--left-right','--count','HEAD...@{upstream}').split()]
+    clean=not git('status','--porcelain=v1')
+    assert values==[head]*4 and divergent==[0,0] and clean,'exact clean equality failed'
+    return {'local_upstream_tracking_fresh_live':values,'divergence':divergent,'clean':clean}
+
+def validate(args):
+    checks=[];counts={};extra={}
+    def check(name,fn):
+        value=fn();assert value is not False,name;checks.append({'check':name,'pass':True});return value
+    blobs=snapshot(args.head);check('additive_exact_owner_allowlist',lambda:len(blobs)<2000)
+    counts['owner_files']=len(blobs)
+    # Every executable check runs against these exact materialized bytes.
+    check('worktree_equals_selected_git_blobs',lambda:all((ROOT/p).read_bytes().replace(b'\r\n',b'\n')==b for p,b in blobs.items() if not p.endswith('.pdf')) and all((ROOT/p).read_bytes()==b for p,b in blobs.items() if p.endswith('.pdf')))
+    parsed={p:json.loads(b) for p,b in blobs.items() if p.endswith('.json')};counts['json']=len(parsed);check('all_owner_json_parses',lambda:True)
+    py=[p for p in blobs if p.endswith('.py')]
+    for p in py:ast.parse(blobs[p].decode('utf-8'),filename=p)
+    counts['python_ast']=len(py);check('all_owner_python_ast_parses',lambda:True)
+    counts['markdown']=sum(p.endswith('.md') for p in blobs)
+    check('markdown_utf8_nonempty',lambda:all(b.decode('utf-8').strip() and '\ufffd' not in b.decode('utf-8') for p,b in blobs.items() if p.endswith('.md')))
+    x1=load(blobs,'validation/x1-equality.json')['x1'];check('x1_direct_source_parent',lambda:git('rev-parse',x1+'^').decode().strip()==SOURCE)
+    check('immutable_x1',lambda:not git('diff','--name-only',x1,*([] if args.head=='INDEX' else [args.head]),'--',BASE+'x1'))
+    eq=load(blobs,'validation/x1-equality.json');check('x1_preimplementation_equality',lambda:eq['clean_before_x2'] and eq['divergence']==[0,0] and eq['local_upstream_tracking_fresh_live']==[x1]*4)
+    manifest_count=check('x1_manifest_replay',lambda:manifest(blobs,'validation/x1-manifest.json'))
+    deck_paths={p for p in blobs if p.startswith(BASE+'x2/flashcards/')}
+    manifest_count+=check('card_manifest_exact_coverage',lambda:manifest(blobs,'x2/flashcards/card-manifest.json',deck_paths-{BASE+'x2/flashcards/card-manifest.json'}))
+    if args.phase=='final':
+        check('direct_source_x1_evidence_final_lifecycle',lambda:git('rev-list','--count',SOURCE+'..'+args.head).strip()==b'3' and git('rev-list','--count','--merges',SOURCE+'..'+args.head).strip()==b'0' and git('rev-parse',args.head+'^').decode().strip()==args.evidence and git('rev-parse',args.evidence+'^').decode().strip()==x1)
+        evidence_blobs=snapshot(args.evidence)
+        evidence_paths=set(evidence_blobs)
+        manifest_count+=check('evidence_manifest_immutable_replay',lambda:manifest(blobs,'validation/evidence-manifest.json',evidence_paths-{BASE+'validation/evidence-manifest.json'}))
+        check('immutable_evidence_files',lambda:all(blobs[p]==b for p,b in evidence_blobs.items()))
+        manifest_count+=check('final_content_seal_replay',lambda:manifest(blobs,'final/content-seal.json',set(blobs)-{BASE+'final/content-seal.json',BASE+'validation/final-manifest.json'}))
+        manifest_count+=check('final_manifest_complete_replay',lambda:manifest(blobs,'validation/final-manifest.json',set(blobs)-{BASE+'validation/final-manifest.json'}))
+    elif BASE+'validation/evidence-manifest.json' in blobs:
+        manifest_count+=check('evidence_manifest_exact_coverage',lambda:manifest(blobs,'validation/evidence-manifest.json',set(blobs)-{BASE+'validation/evidence-manifest.json'}))
+    counts['manifest_entries']=manifest_count
+    rows=load(blobs,'x1/new-proposals.json')['proposals'];results=load(blobs,'x2/contract-results.json')['results'];negatives=load(blobs,'x2/registered-mutations.json')['negatives'];portfolio=load(blobs,'x2/portfolio-results.json')
+    check('proposal_counts_and_four_outcomes',lambda:len(rows)==200 and len({r['proposal_id'] for r in rows})==200 and collections.Counter(r['expected_execution_disposition'] for r in rows)=={'completed':170,'represented':10,'open_gap':10,'exact_gate':10})
+    check('inherited_zero_credit_selection',lambda:len(load(blobs,'x1/inherited-selection.json')['selections'])==200 and all(x['execution_credit']==x['novelty_credit']==0 for x in load(blobs,'x1/inherited-selection.json')['selections']))
+    check('bounded_novelty_scope',lambda:load(blobs,'x1/novelty-audit.json')['comparisons']==40000 and load(blobs,'x1/novelty-audit.json')['quarantined']==0 and not load(blobs,'x1/novelty-audit.json')['universal_novelty_claimed'])
+    check('frozen_definition_hashes',lambda:all(sha(compact({k:v for k,v in r.items() if k!='definition_sha256'}))==r['definition_sha256'] for r in rows))
+    sys.path.insert(0,str(ROOT/'scripts'))
+    import ghc_family_evidence_selectors as s
+    modules={'selectors':'evidence_selectors','patch':'evidence_patch','lineage':'correction_lineage','receipts':'receipt_binding','obligations':'obligation_projection'}
+    compute={k:importlib.import_module('ghc_family_'+v).evaluate for k,v in modules.items()};rowmap={r['proposal_id']:r for r in rows}
+    check('positive_report_recomputation',lambda:len(results)==200 and all(s.canonical(compute[rowmap[r['proposal_id']]['runner']](rowmap[r['proposal_id']]['operation'],rowmap[r['proposal_id']]['input']))==s.canonical(r['result'])==s.canonical(rowmap[r['proposal_id']]['expected_result']) and r['input_nonmutation'] for r in results))
+    check('all_registered_mutations_rejected',lambda:len(negatives)==1000 and len({n['negative_id'] for n in negatives})==1000 and all(n['success_credit']==0 and n['rejected'] and not s.verify_envelope(rowmap[n['proposal_id']],n['retained_record'],compute[rowmap[n['proposal_id']]['runner']])['accepted'] for n in negatives))
+    check('portfolio_counts_and_unexecuted_gates',lambda:[len(portfolio[k]) for k in ['safe_now','candidates','clean_fix_refine','exact_packets','blocked_packets']]==[300,250,300,50,30] and all(not t['executed'] for k in ['exact_packets','blocked_packets'] for t in portfolio[k]))
+    check('safe_and_candidate_evidence',lambda:all(t['passed'] and t['disposition']=='completed' for k in ['safe_now','candidates'] for t in portfolio[k]))
+    check('all_correction_failures_and_recoveries',lambda:all(not s.verify_envelope(rowmap[t['proposal_id']],t['retained_before'],compute[rowmap[t['proposal_id']]['runner']])['accepted'] and s.verify_envelope(rowmap[t['proposal_id']],t['corrected_after'],compute[rowmap[t['proposal_id']]['runner']])['accepted'] and t['success_credit_for_initial']==0 for t in portfolio['clean_fix_refine']))
+    ledger=load(blobs,'x2/method-flow.json');summary=load(blobs,'x2/evidence-summary.json');baseline=load(blobs,'x1/activation-source.json')['effective_activation_baseline']
+    check('method_flow_counts_and_non_erasure',lambda:len(ledger['methods'])==1333 and len(ledger['witnesses'])==2666 and len({m['method_id'] for m in ledger['methods']})==1333 and collections.Counter(w['result'] for w in ledger['witnesses'])=={'pass':1333,'fail':1333})
+    check('effective_count_arithmetic',lambda:all(summary['repository_seal'][k]==baseline[k]+(10 if k in ('open_gaps','exact_gates') else 1333) for k in baseline))
+    check('retained_null_allowlist_failure_and_recovery',lambda:load(blobs,'x2/retained-initial/patch-null-allowlist-failure.json')['success_credit']==0 and load(blobs,'x2/patch-permission-recovery.json')['all_passed'] and compute['patch']('patch',{'document':{},'operations':[],'allowed':None})=={'error':'invalid_permissions'})
+    cards=[j for p,j in parsed.items() if p.startswith(BASE+'x2/flashcards/cards/')];byid={c['card_id']:c for c in cards}
+    check('four_tier_card_graph',lambda:len(cards)==210 and len(byid)==210 and all((c['tier']==1 and not c['parent_ids']) or (len(c['parent_ids'])==1 and c['parent_ids'][0] in byid and byid[c['parent_ids'][0]]['tier']==c['tier']-1) for c in cards))
+    counts['cards']=len(cards)
+    class Page(HTMLParser):
+        def __init__(self):super().__init__();self.tags=collections.Counter();self.scope=collections.Counter();self.ids=[]
+        def handle_starttag(self,tag,attrs):
+            d=dict(attrs);self.tags[tag]+=1
+            if tag=='th':self.scope[d.get('scope')]+=1
+            if 'id' in d:self.ids.append(d['id'])
+    page=Page();page.feed(blobs[BASE+'x2/flashcards/accessible-report.html'].decode())
+    check('accessible_html_structure',lambda:page.tags['main']==1 and page.tags['caption']==1 and page.scope['col']==4 and page.scope['row']==200 and len(page.ids)==len(set(page.ids)))
+    review=load(blobs,'x2/overview-visual-review.json');pdf=blobs[BASE+'x2/integrated-overview.pdf']
+    check('four_page_pdf_review_binding',lambda:review['all_pages_passed'] and review['pages_reviewed']==[1,2,3,4] and review['pdf_sha256']==sha(pdf))
+    from pypdf import PdfReader
+    doc=PdfReader(io.BytesIO(pdf));texts=[p.extract_text() for p in doc.pages]
+    check('pdf_text_and_glyph_structure',lambda:len(texts)==4 and 'Māori' in texts[-1] and 'NOT_READY_FOR_STAGE_20' in texts[0] and all('\u25a0' not in x for x in texts))
+    counts['pdf_pages']=4
+    baton=blobs[BASE+('final/vesper-v686-v3-baton.md' if args.phase=='final' else 'x2/vesper-v686-v3-baton.md')].decode()
+    counts['baton_words']=len(baton.split());check('modular_baton_profile',lambda:10000<=len(baton.split())<=100000 and len(re.findall(r'(?m)^# \d\d ',baton))==13 and 'Vesper Arlen' in baton and 'v686-v3' in baton)
+    package=load(blobs,'x2/toolchain/installation-receipt.json');smokes=load(blobs,'x2/toolchain/package-smokes.json');audit=load(blobs,'x2/toolchain/advisory-audit.json')
+    check('three_isolated_packages_and_smokes',lambda:package['distribution_count']==3 and package['hash_required'] and package['offline'] and smokes['pass'] and len(smokes['checks'])==9 and audit['findings']==0 and len(audit['response']['results'])==3)
+    if args.tool_python:
+        inventory=json.loads(subprocess.check_output([args.tool_python,'-c','import importlib.metadata as m,json;print(json.dumps(sorted([(d.metadata["Name"],d.version) for d in m.distributions()])))']))
+        check('current_isolated_distribution_inventory',lambda:inventory==package['packages'])
+    promotion=load(blobs,'tooling/global-promotion.json');checks_global=[]
+    for entry in promotion['entries']:
+        local=blobs[BASE+'skills/'+entry['skill']+'/'+entry['path']];global_bytes=(Path.home()/'.codex/skills'/entry['skill']/entry['path']).read_bytes()
+        checks_global.append(local==global_bytes and sha(local)==entry['sha256'])
+    check('ten_global_skill_byte_parity',lambda:len(checks_global)==70 and all(checks_global) and promotion['skills']==10)
+    for skill in load(blobs,'x1/skill-runner-plan.json')['skills']:
+        md=blobs[BASE+'skills/'+skill['name']+'/SKILL.md'].decode();assert md.startswith('---\nname: '+skill['name']+'\n') and 'description: ' in md and 'references/contracts.json' in md
+    check('skill_frontmatter_and_contract_routing',lambda:True)
+    check('exact_tool_catalogue_and_policy',lambda:load(blobs,'tooling/catalogue-validate.json')['valid'] and load(blobs,'tooling/runner-query.json')['result_count']==5 and load(blobs,'tooling/catalogue-collisions.json')['finding_count']==0 and all(load(blobs,'tooling/promotion-checks/'+sk['name']+'.json')['state']=='ready' for sk in load(blobs,'x1/skill-runner-plan.json')['skills']))
+    privacy=[];patterns={
+      'private_absolute_path':r'(?<![A-Za-z0-9])[A-Za-z]:[\\/]',
+      'private_identifier':r'\b[0-9a-fA-F]{8}(?:-[0-9a-fA-F]{4}){3}-[0-9a-fA-F]{12}\b',
+      'credential':r'(?:gh'+'p_|gl'+'pat-|sk-'+'proj-)[A-Za-z0-9_\-]{16,}',
+      'private_payload_field':r'"(?:raw_'+'transcript|private_'+'route|thread_'+'id|session_'+'id)"\s*:',
+      'private_key':r'BEGIN [A-Z ]*'+'PRIVATE KEY'}
+    for path,data in blobs.items():
+        if path.endswith('.pdf'):continue
+        content=data.decode('utf-8')
+        for kind,pattern in patterns.items():
+            for match in re.finditer(pattern,content):privacy.append({'path':path,'class':kind,'offset':match.start()})
+    check('bounded_five_class_privacy',lambda:not privacy);counts['privacy_confirmed_hits']=len(privacy)
+    security=[]
+    for path in py:
+        for node in ast.walk(ast.parse(blobs[path].decode())):
+            if isinstance(node,ast.Call) and isinstance(node.func,ast.Name) and node.func.id in ('eval','exec'):security.append(path)
+            if isinstance(node,ast.keyword) and node.arg=='shell' and isinstance(node.value,ast.Constant) and node.value.value is True:security.append(path)
+    check('bounded_code_execution_security_scan',lambda:not security);counts['bounded_security_findings']=len(security)
+    sys.path.insert(0,str(ROOT/'tests'));module=importlib.import_module(Path(TEST).stem)
+    suite=unittest.defaultTestLoader.loadTestsFromModule(module)
+    def flatten(suite):
+        for item in suite:
+            if isinstance(item,unittest.TestSuite):yield from flatten(item)
+            else:yield item.id()
+    identifiers=list(flatten(suite));check('exact_selected_test_collection',lambda:len(identifiers)==len(set(identifiers))==45)
+    if args.phase=='final':
+        definition=load(blobs,'final/test-definition-manifest.json')
+        check('test_definition_manifest_binding',lambda:definition['identifiers']==identifiers and definition['definition_sha256']==sha(blobs[TEST]))
+    output=io.StringIO();run=unittest.TextTestRunner(stream=output,verbosity=1).run(suite)
+    check('selected_owner_tests',lambda:run.wasSuccessful() and run.testsRun==45);counts['selected_tests']=run.testsRun
+    extra['tests']={'identifiers':identifiers,'definition_sha256':sha(blobs[TEST]),'tests_run':run.testsRun,'failures':len(run.failures),'errors':len(run.errors),'complete_repository_suite':False}
+    counts['detailed_checks']=len(checks);counts['passed_checks']=len(checks)
+    return {'checks':checks,'counts':counts,**extra,'same_owner_only':True,'independent_reproduction':False,'complete_repository_suite':False}
+
+def main():
+    p=argparse.ArgumentParser(description=__doc__);p.add_argument('--head',required=True);p.add_argument('--phase',choices=['evidence','final'],required=True);p.add_argument('--evidence');p.add_argument('--receipt',type=Path,required=True);p.add_argument('--canonical',action='store_true');p.add_argument('--tool-python')
+    args=p.parse_args();assert not args.receipt.exists(),'Receipt already exists; no replay.'
+    args.receipt.parent.mkdir(parents=True,exist_ok=True)
+    before=None
+    if args.canonical:
+        assert args.phase=='final' and args.head!='INDEX' and args.evidence
+        before=equality(args.head)
+        marker=args.receipt.with_suffix(args.receipt.suffix+'.invoked')
+        with marker.open('x',encoding='utf-8') as f:json.dump({'head':args.head,'owner':'Mira Fenwick','invocations':1},f)
+    payload={'schema':'ghc.family.mira.owner-validation.v1','source':SOURCE,'head':args.head,'evidence':args.evidence,'owner':'Mira Fenwick','phase':'v686-v2','observed_at':datetime.now(timezone.utc).isoformat(),
+             'canonical_invocation_count':1 if args.canonical else 0,'canonical_success_count':0,'canonical_replay_count':0,'terminal_verdict':'NOT_READY_FOR_STAGE_20'}
+    try:
+        payload.update(validate(args))
+        if args.canonical:payload['before']=before;payload['after']=equality(args.head)
+        payload['status']='VALID_EXACT_FINAL_OWNER_SCOPED_CANONICAL' if args.canonical else 'PASS_OWNER_COMPONENT_PREFLIGHT'
+        payload['canonical_success_count']=1 if args.canonical else 0
+    except Exception as exc:
+        payload.update(status='FAILED_RETAINED_ZERO_CREDIT',failure_type=type(exc).__name__,failure=str(exc)[:500],canonical_success_count=0)
+    payload['payload_sha256']=sha(compact(payload))
+    with args.receipt.open('x',encoding='utf-8',newline='\n') as f:f.write(json.dumps(payload,ensure_ascii=False,sort_keys=True,indent=2)+'\n')
+    print(json.dumps({'status':payload['status'],'counts':payload.get('counts'), 'failure':payload.get('failure')}))
+    return 1 if payload['status']=='FAILED_RETAINED_ZERO_CREDIT' else 0
+
+if __name__=='__main__':raise SystemExit(main())
