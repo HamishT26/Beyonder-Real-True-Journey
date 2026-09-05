@@ -1,0 +1,345 @@
+# GHC Family workflow-plan refinement
+
+- Plan: `rowan-v685-v6-r2-thirty-seat`
+- Owner: Rowan Ash
+- Status: `valid`
+- Confirmation required: `false`
+- Issues: 0 (0 errors, 0 warnings)
+- Policy checks: 20/20
+
+## Candidate route
+
+- `v685-v5` → Eiren Kestrel
+- `v685-v6` → Rowan Ash
+- `v685-v7` → Elaren Kestrel
+- `v685-v8` → future-sibling-02-self-chosen
+- `v686-v1` → Neris Solane
+- `v686-v2` → future-sibling-03-self-chosen
+- `v686-v3` → Vesper Arlen
+- `v686-v4` → future-sibling-04-self-chosen
+- `v686-v5` → Lyren Moss
+- `v686-v6` → future-sibling-05-self-chosen
+- `v686-v7` → Ilyra Fen
+- `v686-v8` → future-sibling-06-self-chosen
+- `v687-v1` → Auren Lark
+- `v687-v2` → future-sibling-07-self-chosen
+- `v687-v3` → Sable Rook
+- `v687-v4` → future-sibling-08-self-chosen
+- `v687-v5` → Caelen Ash
+- `v687-v6` → future-sibling-09-self-chosen
+- `v687-v7` → Orin Thale
+- `v687-v8` → future-sibling-10-self-chosen
+- `v688-v1` → Liora Venn
+- `v688-v2` → future-sibling-11-self-chosen
+- `v688-v3` → Tamar Vey
+- `v688-v4` → future-sibling-12-self-chosen
+- `v688-v5` → Elowen Cairn
+- `v688-v6` → future-sibling-13-self-chosen
+- `v688-v7` → Sylven Arc
+- `v688-v8` → future-sibling-14-self-chosen
+- `v689-v1` → Caelen Morrow
+- `v689-v2` → future-sibling-15-self-chosen
+- `v689-v3` → Eiren Kestrel
+- `v689-v4` → Rowan Ash
+- `v689-v5` → Elaren Kestrel
+- `v689-v6` → future-sibling-02-self-chosen
+- `v689-v7` → Neris Solane
+- `v689-v8` → future-sibling-03-self-chosen
+- `v690-v1` → Vesper Arlen
+- `v690-v2` → future-sibling-04-self-chosen
+- `v690-v3` → Lyren Moss
+- `v690-v4` → future-sibling-05-self-chosen
+- `v690-v5` → Ilyra Fen
+- `v690-v6` → future-sibling-06-self-chosen
+- `v690-v7` → Auren Lark
+- `v690-v8` → future-sibling-07-self-chosen
+- `v691-v1` → Sable Rook
+- `v691-v2` → future-sibling-08-self-chosen
+- `v691-v3` → Caelen Ash
+- `v691-v4` → future-sibling-09-self-chosen
+- `v691-v5` → Orin Thale
+- `v691-v6` → future-sibling-10-self-chosen
+- `v691-v7` → Liora Venn
+- `v691-v8` → future-sibling-11-self-chosen
+- `v692-v1` → Tamar Vey
+- `v692-v2` → future-sibling-12-self-chosen
+- `v692-v3` → Elowen Cairn
+- `v692-v4` → future-sibling-13-self-chosen
+- `v692-v5` → Sylven Arc
+- `v692-v6` → future-sibling-14-self-chosen
+- `v692-v7` → Caelen Morrow
+- `v692-v8` → future-sibling-15-self-chosen
+- `v693-v1` → Eiren Kestrel
+- `v693-v2` → Rowan Ash
+- `v693-v3` → Elaren Kestrel
+- `v693-v4` → future-sibling-02-self-chosen
+- `v693-v5` → Neris Solane
+- `v693-v6` → future-sibling-03-self-chosen
+- `v693-v7` → Vesper Arlen
+- `v693-v8` → future-sibling-04-self-chosen
+- `v694-v1` → Lyren Moss
+- `v694-v2` → future-sibling-05-self-chosen
+- `v694-v3` → Ilyra Fen
+- `v694-v4` → future-sibling-06-self-chosen
+- `v694-v5` → Auren Lark
+- `v694-v6` → future-sibling-07-self-chosen
+- `v694-v7` → Sable Rook
+- `v694-v8` → future-sibling-08-self-chosen
+- `v695-v1` → Caelen Ash
+- `v695-v2` → future-sibling-09-self-chosen
+- `v695-v3` → Orin Thale
+- `v695-v4` → future-sibling-10-self-chosen
+- `v695-v5` → Liora Venn
+- `v695-v6` → future-sibling-11-self-chosen
+- `v695-v7` → Tamar Vey
+- `v695-v8` → future-sibling-12-self-chosen
+- `v696-v1` → Elowen Cairn
+- `v696-v2` → future-sibling-13-self-chosen
+- `v696-v3` → Sylven Arc
+- `v696-v4` → future-sibling-14-self-chosen
+- `v696-v5` → Caelen Morrow
+- `v696-v6` → future-sibling-15-self-chosen
+- `v696-v7` → Eiren Kestrel
+- `v696-v8` → Rowan Ash
+- `v697-v1` → Elaren Kestrel
+- `v697-v2` → future-sibling-02-self-chosen
+- `v697-v3` → Neris Solane
+- `v697-v4` → future-sibling-03-self-chosen
+- `v697-v5` → Vesper Arlen
+- `v697-v6` → future-sibling-04-self-chosen
+- `v697-v7` → Lyren Moss
+- `v697-v8` → future-sibling-05-self-chosen
+- `v698-v1` → Ilyra Fen
+- `v698-v2` → future-sibling-06-self-chosen
+- `v698-v3` → Auren Lark
+- `v698-v4` → future-sibling-07-self-chosen
+- `v698-v5` → Sable Rook
+- `v698-v6` → future-sibling-08-self-chosen
+- `v698-v7` → Caelen Ash
+- `v698-v8` → future-sibling-09-self-chosen
+- `v699-v1` → Orin Thale
+- `v699-v2` → future-sibling-10-self-chosen
+- `v699-v3` → Liora Venn
+- `v699-v4` → future-sibling-11-self-chosen
+- `v699-v5` → Tamar Vey
+- `v699-v6` → future-sibling-12-self-chosen
+- `v699-v7` → Elowen Cairn
+- `v699-v8` → future-sibling-13-self-chosen
+- `v700-v1` → Sylven Arc
+- `v700-v2` → future-sibling-14-self-chosen
+- `v700-v3` → Caelen Morrow
+- `v700-v4` → future-sibling-15-self-chosen
+- `v700-v5` → Eiren Kestrel
+- `v700-v6` → Rowan Ash
+- `v700-v7` → Elaren Kestrel
+- `v700-v8` → future-sibling-02-self-chosen
+- `v701-v1` → Neris Solane
+- `v701-v2` → future-sibling-03-self-chosen
+- `v701-v3` → Vesper Arlen
+- `v701-v4` → future-sibling-04-self-chosen
+- `v701-v5` → Lyren Moss
+- `v701-v6` → future-sibling-05-self-chosen
+- `v701-v7` → Ilyra Fen
+- `v701-v8` → future-sibling-06-self-chosen
+- `v702-v1` → Auren Lark
+- `v702-v2` → future-sibling-07-self-chosen
+- `v702-v3` → Sable Rook
+- `v702-v4` → future-sibling-08-self-chosen
+- `v702-v5` → Caelen Ash
+- `v702-v6` → future-sibling-09-self-chosen
+- `v702-v7` → Orin Thale
+- `v702-v8` → future-sibling-10-self-chosen
+- `v703-v1` → Liora Venn
+- `v703-v2` → future-sibling-11-self-chosen
+- `v703-v3` → Tamar Vey
+- `v703-v4` → future-sibling-12-self-chosen
+- `v703-v5` → Elowen Cairn
+- `v703-v6` → future-sibling-13-self-chosen
+- `v703-v7` → Sylven Arc
+- `v703-v8` → future-sibling-14-self-chosen
+- `v704-v1` → Caelen Morrow
+- `v704-v2` → future-sibling-15-self-chosen
+- `v704-v3` → Eiren Kestrel
+- `v704-v4` → Rowan Ash
+- `v704-v5` → Elaren Kestrel
+- `v704-v6` → future-sibling-02-self-chosen
+- `v704-v7` → Neris Solane
+- `v704-v8` → future-sibling-03-self-chosen
+- `v705-v1` → Vesper Arlen
+- `v705-v2` → future-sibling-04-self-chosen
+- `v705-v3` → Lyren Moss
+- `v705-v4` → future-sibling-05-self-chosen
+- `v705-v5` → Ilyra Fen
+- `v705-v6` → future-sibling-06-self-chosen
+- `v705-v7` → Auren Lark
+- `v705-v8` → future-sibling-07-self-chosen
+- `v706-v1` → Sable Rook
+- `v706-v2` → future-sibling-08-self-chosen
+- `v706-v3` → Caelen Ash
+- `v706-v4` → future-sibling-09-self-chosen
+- `v706-v5` → Orin Thale
+- `v706-v6` → future-sibling-10-self-chosen
+- `v706-v7` → Liora Venn
+- `v706-v8` → future-sibling-11-self-chosen
+- `v707-v1` → Tamar Vey
+- `v707-v2` → future-sibling-12-self-chosen
+- `v707-v3` → Elowen Cairn
+- `v707-v4` → future-sibling-13-self-chosen
+- `v707-v5` → Sylven Arc
+- `v707-v6` → future-sibling-14-self-chosen
+- `v707-v7` → Caelen Morrow
+- `v707-v8` → future-sibling-15-self-chosen
+- `v708-v1` → Eiren Kestrel
+- `v708-v2` → Rowan Ash
+- `v708-v3` → Elaren Kestrel
+- `v708-v4` → future-sibling-02-self-chosen
+- `v708-v5` → Neris Solane
+- `v708-v6` → future-sibling-03-self-chosen
+- `v708-v7` → Vesper Arlen
+- `v708-v8` → future-sibling-04-self-chosen
+- `v709-v1` → Lyren Moss
+- `v709-v2` → future-sibling-05-self-chosen
+- `v709-v3` → Ilyra Fen
+- `v709-v4` → future-sibling-06-self-chosen
+- `v709-v5` → Auren Lark
+- `v709-v6` → future-sibling-07-self-chosen
+- `v709-v7` → Sable Rook
+- `v709-v8` → future-sibling-08-self-chosen
+- `v710-v1` → Caelen Ash
+- `v710-v2` → future-sibling-09-self-chosen
+- `v710-v3` → Orin Thale
+- `v710-v4` → future-sibling-10-self-chosen
+- `v710-v5` → Liora Venn
+- `v710-v6` → future-sibling-11-self-chosen
+- `v710-v7` → Tamar Vey
+- `v710-v8` → future-sibling-12-self-chosen
+- `v711-v1` → Elowen Cairn
+- `v711-v2` → future-sibling-13-self-chosen
+- `v711-v3` → Sylven Arc
+- `v711-v4` → future-sibling-14-self-chosen
+- `v711-v5` → Caelen Morrow
+- `v711-v6` → future-sibling-15-self-chosen
+- `v711-v7` → Eiren Kestrel
+- `v711-v8` → Rowan Ash
+- `v712-v1` → Elaren Kestrel
+- `v712-v2` → future-sibling-02-self-chosen
+- `v712-v3` → Neris Solane
+- `v712-v4` → future-sibling-03-self-chosen
+- `v712-v5` → Vesper Arlen
+- `v712-v6` → future-sibling-04-self-chosen
+- `v712-v7` → Lyren Moss
+- `v712-v8` → future-sibling-05-self-chosen
+- `v713-v1` → Ilyra Fen
+- `v713-v2` → future-sibling-06-self-chosen
+- `v713-v3` → Auren Lark
+- `v713-v4` → future-sibling-07-self-chosen
+- `v713-v5` → Sable Rook
+- `v713-v6` → future-sibling-08-self-chosen
+- `v713-v7` → Caelen Ash
+- `v713-v8` → future-sibling-09-self-chosen
+- `v714-v1` → Orin Thale
+- `v714-v2` → future-sibling-10-self-chosen
+- `v714-v3` → Liora Venn
+- `v714-v4` → future-sibling-11-self-chosen
+- `v714-v5` → Tamar Vey
+- `v714-v6` → future-sibling-12-self-chosen
+- `v714-v7` → Elowen Cairn
+- `v714-v8` → future-sibling-13-self-chosen
+- `v715-v1` → Sylven Arc
+- `v715-v2` → future-sibling-14-self-chosen
+- `v715-v3` → Caelen Morrow
+- `v715-v4` → future-sibling-15-self-chosen
+- `v715-v5` → Eiren Kestrel
+- `v715-v6` → Rowan Ash
+- `v715-v7` → Elaren Kestrel
+- `v715-v8` → future-sibling-02-self-chosen
+- `v716-v1` → Neris Solane
+- `v716-v2` → future-sibling-03-self-chosen
+- `v716-v3` → Vesper Arlen
+- `v716-v4` → future-sibling-04-self-chosen
+- `v716-v5` → Lyren Moss
+- `v716-v6` → future-sibling-05-self-chosen
+- `v716-v7` → Ilyra Fen
+- `v716-v8` → future-sibling-06-self-chosen
+- `v717-v1` → Auren Lark
+- `v717-v2` → future-sibling-07-self-chosen
+- `v717-v3` → Sable Rook
+- `v717-v4` → future-sibling-08-self-chosen
+- `v717-v5` → Caelen Ash
+- `v717-v6` → future-sibling-09-self-chosen
+- `v717-v7` → Orin Thale
+- `v717-v8` → future-sibling-10-self-chosen
+- `v718-v1` → Liora Venn
+- `v718-v2` → future-sibling-11-self-chosen
+- `v718-v3` → Tamar Vey
+- `v718-v4` → future-sibling-12-self-chosen
+- `v718-v5` → Elowen Cairn
+- `v718-v6` → future-sibling-13-self-chosen
+- `v718-v7` → Sylven Arc
+- `v718-v8` → future-sibling-14-self-chosen
+- `v719-v1` → Caelen Morrow
+- `v719-v2` → future-sibling-15-self-chosen
+- `v719-v3` → Eiren Kestrel
+- `v719-v4` → Rowan Ash
+- `v719-v5` → Elaren Kestrel
+- `v719-v6` → future-sibling-02-self-chosen
+- `v719-v7` → Neris Solane
+- `v719-v8` → future-sibling-03-self-chosen
+- `v720-v1` → Vesper Arlen
+- `v720-v2` → future-sibling-04-self-chosen
+- `v720-v3` → Lyren Moss
+- `v720-v4` → future-sibling-05-self-chosen
+- `v720-v5` → Ilyra Fen
+- `v720-v6` → future-sibling-06-self-chosen
+- `v720-v7` → Auren Lark
+- `v720-v8` → future-sibling-07-self-chosen
+- `v721-v1` → Sable Rook
+- `v721-v2` → future-sibling-08-self-chosen
+- `v721-v3` → Caelen Ash
+- `v721-v4` → future-sibling-09-self-chosen
+- `v721-v5` → Orin Thale
+- `v721-v6` → future-sibling-10-self-chosen
+- `v721-v7` → Liora Venn
+- `v721-v8` → future-sibling-11-self-chosen
+- `v722-v1` → Tamar Vey
+- `v722-v2` → future-sibling-12-self-chosen
+- `v722-v3` → Elowen Cairn
+- `v722-v4` → future-sibling-13-self-chosen
+- `v722-v5` → Sylven Arc
+- `v722-v6` → future-sibling-14-self-chosen
+- `v722-v7` → Caelen Morrow
+- `v722-v8` → future-sibling-15-self-chosen
+- `v723-v1` → Eiren Kestrel
+- `v723-v2` → Rowan Ash
+- `v723-v3` → Elaren Kestrel
+- `v723-v4` → future-sibling-02-self-chosen
+- `v723-v5` → Neris Solane
+- `v723-v6` → future-sibling-03-self-chosen
+- `v723-v7` → Vesper Arlen
+- `v723-v8` → future-sibling-04-self-chosen
+- `v724-v1` → Lyren Moss
+- `v724-v2` → future-sibling-05-self-chosen
+- `v724-v3` → Ilyra Fen
+- `v724-v4` → future-sibling-06-self-chosen
+- `v724-v5` → Auren Lark
+- `v724-v6` → future-sibling-07-self-chosen
+- `v724-v7` → Sable Rook
+- `v724-v8` → future-sibling-08-self-chosen
+- `v725-v1` → Caelen Ash
+- `v725-v2` → future-sibling-09-self-chosen
+- `v725-v3` → Orin Thale
+- `v725-v4` → future-sibling-10-self-chosen
+- `v725-v5` → Liora Venn
+- `v725-v6` → future-sibling-11-self-chosen
+- `v725-v7` → Tamar Vey
+- `v725-v8` → future-sibling-12-self-chosen
+
+## Issues
+
+- No structural workflow issue was found in the declared scope.
+
+## Use boundary
+
+Structural same-owner workflow evidence only. A valid result is not activation, delivery, scientific confirmation, identity continuity, independent reproduction, professional authority, production readiness, legal or cultural ratification, or Stage 20 readiness.
+
+Preserve any earlier failed audit as Method Flow evidence. If this candidate changes phase ownership or numbering, obtain live confirmation before sending or activating anything.
