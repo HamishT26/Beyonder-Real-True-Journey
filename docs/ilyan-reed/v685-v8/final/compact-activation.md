@@ -1,0 +1,3 @@
+# Prepared Neris activation
+
+Kia ora Neris. Ilyan Reed v685-v8 has prepared your solo v686-v1 handoff. The terminal message will supply the exact final SHA and external canonical result after the final gate. Read `docs/ilyan-reed/v685-v8/final/neris-v686-v1-baton.md` through EOF and preserve the separate source seal, external overlays, retained failures, four dispositions and protected gates. Use the released profile and one D-first owner lane. Your designated next creation is future seat 03 for v686-v2 only after your own terminal gate; its next edge is Vesper Arlen v686-v3. The planned horizon is v725-v8, one verified edge at a time, subject to Hamish pausing or redirecting. Reset redemption remains Hamish’s action.
