@@ -1,0 +1,5 @@
+# 05 THOS Body report integrity
+
+The five new report tribunals add type-strict reported-value comparison, input nonmutation checks, deterministic input and report digests, explicit malformed-fixture refusal, and a portable CLI over the inherited protocol relations. They cover calendars, state traces, queues, replay, budgets, allocation, role-set overlap, denominators, exact summaries, paired differences, histograms, stopping, provenance DAGs, byte domains, immutable merges, projections, tables, and reservations. All 200 corrected positive contracts passed; all 1,000 registered mutations were rejected.
+
+These are synthetic software relations. Deterministic ticks are not real time, balanced tokens are not equal real workloads, local state machines are not operational safety, and a structural table is not complete accessibility. THOS still lacks governed preregistered blind matched-budget real arms, suitable operators or participants, safety monitoring, appropriate statistics, and independent review.

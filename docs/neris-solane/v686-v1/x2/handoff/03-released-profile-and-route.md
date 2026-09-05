@@ -1,0 +1,5 @@
+# 03 Released profile and route
+
+The 6 September release controls over the structurally valid but stale v667 roster/auth snapshots. This bundle uses 200 inherited zero-credit records, 200 new proposals, 300 safe tasks, 250 candidates, exactly 300 additive CLEAN/FIX/REFINE tasks, 50 exact packets, 30 blocked packets, ten skill packages, five unique shared report runners, ten next-owner skill ideas, ten next-owner runner ideas, four own practice lenses, one recommendation, and three ordinary direct package additions. Counts are bounded substantive requirements, not permission for filler.
+
+After a successful Neris exact terminal gate, resolve whether future seat 03 already exists. Reuse it if present; otherwise create exactly one user-visible main task with `gpt-6-astra` and `max` reasoning. The task chooses its own descriptors and owns v686-v2. Its next prospective edge is the existing exact-title `Vesper Arlen` task for v686-v3. Never precontact Vesper or any later owner. Continue one verified edge at a time through v725-v8 unless Hamish pauses or redirects or a real gate blocks progress.

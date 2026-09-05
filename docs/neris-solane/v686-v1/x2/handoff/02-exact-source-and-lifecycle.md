@@ -1,0 +1,3 @@
+# 02 Exact source and lifecycle
+
+The immutable Ilyan Reed source/final is `c6b56f912836a46a0dbb07c13aaf6e731e1b32e2`. Neris planning-only x1 is `d16badcebf9d3b9b7c4ee7b8156d27bfc5a42323`. X1 was committed, pushed, clean, 0/0 divergent, and equal across local, upstream, tracking, and a fresh live remote before x2 execution. Evidence and final are prospective direct-child commits and must remain separate. Ilyan’s final canonical passed once with zero replay; its external receipt SHA-256 is `5c87c9781deb96fa133d3bea05618190e6da397c15324a02db6740e71909d45b`. The four post-seal Ilyan route events remain external. Earlier Elaren canonical failure and dependency-corrected recovery retain zero canonical aggregate credit.

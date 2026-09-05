@@ -1,0 +1,5 @@
+# 11 Method Flow and retained failures
+
+Neris Method Flow contains 1094 methods, 1144 failed witnesses, 1144 retained negatives, and 1094 bounded passing witnesses. The failures include 1,000 preregistered report mutations, 100 deliberately false reports retained before correction, 13 operational failures, three package adversaries, ten malformed skill fixtures, five malformed runner fixtures, and thirteen trigger-overlap review findings. Every failure remains separate from its recovery.
+
+The operational record includes two profile-interface mistakes, one sparse checkout output boundary, stale shared roster/auth snapshots, one unsupported sparse-add option, two host-policy command refusals, two x2 equality-latch defects, the wrong Boolean replay oracle, the initial package smoke failure, and two renderer/dependency availability failures. Each recovery was bounded and no sibling repository, task, account, credential, Windows feature, host-security setting, or sealed source byte was changed.

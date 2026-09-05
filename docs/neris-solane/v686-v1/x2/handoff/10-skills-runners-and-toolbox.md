@@ -1,0 +1,5 @@
+# 10 Skills runners and toolbox
+
+Ten local report skill packages were built, validated, and positively and adversely smoke-used. The same ten were installed globally without collision or overwrite, and all files matched their owner-local candidates byte for byte. Each package groups two exact family contracts and carries five new shared report runners plus five inherited protocol dependencies. Ten packages do not create fifty unique runners: the attributable new runner count is five. Global availability is discoverability only and does not prove catalogue reload, competence, authority, or future execution.
+
+The family index was refreshed against the sparse owner lane. The exact Meta Tool Box build catalogued ten skills and validated structurally. Its runner query returned zero results and correctly refused silent broadening, so a separate owner augmentation binds the five exact scripts to their smoke receipts. Thirteen trigger overlaps remain visible. Each was adjudicated by exact family and operation; no lexical winner, deletion, or silent consolidation occurred.

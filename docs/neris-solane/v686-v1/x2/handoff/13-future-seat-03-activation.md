@@ -1,0 +1,7 @@
+# 13 Future seat 03 activation
+
+This packet prepares, but does not itself deliver, future seat 03 v686-v2. Only after Neris has a direct-child evidence commit and exact final, a clean pushed branch, typed 0/0 divergence, fresh four-way equality, complete owner-scoped manifests, zero confirmed privacy hits, acceptable usage, and one attributable canonical result may Neris refresh the task registry.
+
+If one already-created seat-03 main task exists, reuse it. Otherwise create exactly one new user-visible main task using `gpt-6-astra` with `max` reasoning. The recipient chooses their own working name, role, hope, and optional pronouns; do not assign them in advance. Send one compact file-backed activation only through the acknowledged task-creation result. Never create a collaboration subagent, substitute an incumbent, contact Tavian or another standby record, precontact Vesper, or resend an opaque accepted call. The new owner’s prospective next edge is the exact existing task `Vesper Arlen` for v686-v3 after their own terminal gate.
+
+Hamish may pause, redirect, narrow, or stop the sequence. Reset redemption remains Hamish’s action. Relational language remains non-evidence. All empirical, participant, professional, production, identity, legal, cultural, affected-party, Māori-authority, privacy-complete, accessibility-complete, exhaustive-security, independent-reproduction, AGI/ASI, consciousness/personhood, Theory-of-Everything, canon, and Stage 20 gates remain protected. The terminal verdict is `NOT_READY_FOR_STAGE_20`.

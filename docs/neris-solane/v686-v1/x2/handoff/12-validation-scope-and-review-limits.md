@@ -1,0 +1,5 @@
+# 12 Validation scope and review limits
+
+The evidence gate covers only the exact Neris source-to-evidence delta, new or modified Neris tests and runners, deterministic Git-blob manifests, JSON, Python AST, Markdown, YAML skill metadata, HTML structure, package receipts, global skill byte parity, privacy classes, narrow security findings, source/x1/evidence/final ancestry, clean state, 0/0 divergence, and fresh-live equality. The complete repository suite and sibling lanes remain outside execution scope.
+
+The final canonical may be invoked exactly once after the exact final is pushed and four-way equal. Its exclusive external marker prevents replay. A failed aggregate remains failed and permits only a separately labeled dependency-corrected recovery when justified; a successful aggregate is never replayed for confidence, presentation, or routing. Same-owner validation under shared infrastructure is not independent reproduction, production certification, complete privacy or accessibility assurance, exhaustive security, professional validation, or authority. The materialized owner scope must remain below 2,000 files.

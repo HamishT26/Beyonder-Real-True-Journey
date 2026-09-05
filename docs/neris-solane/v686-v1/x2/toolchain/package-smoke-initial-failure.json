@@ -1,0 +1,25 @@
+{
+  "aggregate_success_credit": 0,
+  "cause": "The break marker byte was decoded as a sentinel object instead of raising; the adverse expectation was wrong.",
+  "installation_replayed": false,
+  "observed": [
+    {
+      "adverse": true,
+      "package": "canonicaljson",
+      "positive": true
+    },
+    {
+      "adverse": true,
+      "package": "frozendict",
+      "positive": true
+    },
+    {
+      "adverse": false,
+      "package": "cbor2",
+      "positive": true
+    }
+  ],
+  "recovery": "Retain both successful package pairs and the CBOR positive, then execute only a malformed indefinite-length unsigned-integer byte through the CBOR adverse check.",
+  "schema": "ghc.family.neris.package-smoke-failure.v1",
+  "successful_smokes_replayed": false
+}

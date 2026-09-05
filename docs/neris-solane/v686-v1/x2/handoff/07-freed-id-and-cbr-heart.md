@@ -1,0 +1,5 @@
+# 07 Freed ID and CBR Heart
+
+Freed ID and CBR Heart are the priority pillar. The advance is evidence discipline: immutable x1 definitions, additive correction overlays, type-strict reports, content-addressed context cards, minimal public views, and explicit authority reservations. The single wrong x1 oracle remains visible; its x2 correction does not rewrite planning history. No real credential, identity, consent, right, or remedy is issued or decided.
+
+Freed ID remains synthetic and nonproduction without standards-conformant live keys and proofs, issuance, presentation, resolution, status, revocation, recovery, interoperability, independent security and privacy review, trust governance, or affected-party oversight. Ten CBR items remain `exact_gate`, including affected-community purpose, retention, issuer authorization, revocation, privacy-impact approval, accessibility acceptance, Māori terminology and tikanga, iwi and hapū data governance, tangata whenua judgments, and competent legal remedy. Māori concepts remain under Māori authority.
