@@ -1,0 +1,1 @@
+Vesper Arlen v686-v3 prepares future seat 04 for v686-v4. Read docs/vesper-arlen/v686-v3/final/future-seat-04-v686-v4-baton.md after the exact terminal gate. Delivery remains PREPARED_NOT_SENT until one live result. NOT_READY_FOR_STAGE_20.

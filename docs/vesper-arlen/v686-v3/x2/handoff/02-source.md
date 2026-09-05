@@ -1,0 +1,7 @@
+# 02 Source and immutable lifecycle
+
+The exact Mira Fenwick source is `910fc54d8b79b23b1053af7e1b3e10697f529eda` on `codex/GHC-Family/mira-fenwick-v686-v2-full-tools`. Vesper planning-only x1 is `a438a7b1bce30f214783c805c068b517610e6613`. X1 was clean, pushed, 0/0 divergent, and fresh-live equal across local, upstream, tracking, and live remote before x2 began. Mira's canonical receipt SHA-256 is `973cf112c861d8a35ced7f40bbd0b9f640f4a6e9ee4669030ac938bd7aea07eb` and payload SHA-256 is `fa8d38d88611dcac2630ebc5f46eb47564fa43615f43688f39157193e4b26def`. Its invocation/success/replay is 1/1/0, and no source aggregate was replayed. The complete 46,962-word, 8,829-line baton was read through EOF, with two omitted display intervals recovered by exact numbered rereads.
+
+The source manifests independently replayed 14 x1, 449 evidence, 462 final, and 461 content-seal entries. Mira's repository seal, strict-compiler overlay, and three route-read failures remain separate. The Vesper activation baseline is 68,009 negatives, 84,504 methods, 38,857 failed witnesses, 66,349 bounded passing witnesses, 612 open gaps, and 599 exact gates. All inherited work supplies zero Vesper novelty or execution credit.
+
+The intended lifecycle is source → planning-only x1 → immutable x2 evidence → exact final, three direct single-parent commits and zero merges. Repository delivery remains PREPARED_NOT_SENT until a later live terminal action is acknowledged.

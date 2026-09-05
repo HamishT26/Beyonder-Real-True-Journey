@@ -1,0 +1,5 @@
+# 12 Validation scope and review limits
+
+Only Vesper's exact source-to-final delta is eligible. The scope includes exact Git-blob manifests, JSON parsing, changed-Python AST, the one new selected test module, the five runner modules, current local skills and their global byte parity, package receipts, four-tier cards, structural HTML, a rendered multi-page overview, bounded five-class privacy, bounded security review, direct ancestry, clean state, zero divergence, and fresh-live equality. It excludes unchanged history, sibling lanes, the complete repository suite, external audit, and independent reproduction.
+
+One selected component inventory passed 45 tests and 203 subtests after the retained nonfinite-TOML correction. The canonical aggregate may run once only after the exact final is committed, pushed, clean, and four-way equal. A failed aggregate remains failed; a successful aggregate is never replayed for confidence, display, or routing. Structural HTML/PDF checks do not establish complete accessibility, affected-user acceptance, professional quality, complete privacy, exhaustive security, or production readiness.
