@@ -1,0 +1,35 @@
+{
+  "aggregate_success_credit": 0,
+  "boundary": "All passing components remain bounded component evidence only. The r2 aggregate is invalid and is not replayed.",
+  "direct_tool_count": 13,
+  "failure_count": 3,
+  "failures": [
+    {
+      "failure_id": "EK6855-TOOL-N002",
+      "failure": "The advisory Python environment audit found seven records, all attributable to the venv bootstrap pip 25.0.1 rather than any of the thirteen direct selected packages.",
+      "recovery": "Install the current exact pip 26.2.1 wheel through a checked SHA-256 in the isolated r2 environment and rerun only the Python audit dependency."
+    },
+    {
+      "failure_id": "EK6855-TOOL-N003",
+      "failure": "The json-schema-to-typescript rejecting fixture used an unknown type string that the package deliberately tolerated, so the rejecting predicate failed while the positive compile passed.",
+      "recovery": "Retain the accepted malformed-type witness and rerun only the rejecting dependency with a null schema that the compiler rejects with TypeError."
+    },
+    {
+      "failure_id": "EK6855-TOOL-N004",
+      "failure": "The Codex post-install probe resolved the desktop-bundled codex.exe ahead of the D-first npm codex.cmd and reported 0.153.3 even though npm installed 0.153.4.",
+      "recovery": "Do not reinstall. Query the exact D-first npm codex.cmd and npm package tree only."
+    }
+  ],
+  "node_direct_positive_pass_count": 5,
+  "node_direct_rejecting_pass_count": 4,
+  "node_known_vulnerability_count": 0,
+  "owner": "Eiren Kestrel",
+  "phase": "v685-v5",
+  "python_direct_positive_pass_count": 8,
+  "python_direct_rejecting_pass_count": 8,
+  "python_direct_vulnerability_count": 0,
+  "python_infrastructure_vulnerability_records": 7,
+  "r2_environment_reused_for_narrow_dependency_correction_only": true,
+  "schema": "ghc.family.d-first-toolchain-execution-failure.v685.v5.r2",
+  "valid": false
+}
