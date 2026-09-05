@@ -1,0 +1,5 @@
+# 08 Four practice lenses and primary sources
+
+The four lenses are experimental protocol auditor, event-log data engineer, uncertainty-model reviewer and accessible evidence editor. They guide questions and organization, not employment, qualification, competence or professional authority. Their six pillar placements in the card graph are six contexts for four lenses, not six professions. The next-owner recommendation is data-quality investigator, with attention to empty data, typed values, mismatched pair labels and hidden denominator changes.
+
+Primary sources provide narrow vocabulary: SimPy time and scheduling, the transitions project, python-constraint documentation, Python statistics, W3C PROV-O, WCAG 2.2 and Verifiable Credentials Data Model 2.0. The source ledger records the access date and current or stable status. None supplies participant evidence or a right to act. A changing package release is pinned by exact version and wheel digest; a stable standard remains distinct from a conformance claim.

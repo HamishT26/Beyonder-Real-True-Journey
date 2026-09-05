@@ -1,0 +1,5 @@
+# 07 Freed ID and CBR Heart
+
+Freed ID is synthetic and nonproduction. Content-addressed cards and provenance labels do not issue, verify, present, resolve, revoke or recover a real credential. No real keys, cryptographic proofs, status service, interoperability, security review, privacy review, trust-governance decision or independent identity-lifecycle event occurred. A digest establishes only the declared byte comparison.
+
+CBR keeps consent, legitimate access, contested rights, publication permission, cultural descriptions, Māori wording, Māori data governance, tangata whenua, iwi, hapū and remedies under the appropriate competent, affected-party and Māori authority. The ten authority reservations remain exact-gated. A present record is not consent, custody is not ownership and software cannot grant cultural standing. The fifty exact packets distinguish proposed wording, future collection scope, contested amendments, public export scope, and retention or remedy. They are individually specified prerequisite packets and no gated act was executed.

@@ -1,0 +1,5 @@
+# 05 THOS Body and offline protocols
+
+THOS Body is the priority pillar. The useful advance is an offline report-verification laboratory with event calendars, legal state traces, FIFO queues, idempotent replay, two-arm resource accounting, allocation balance, role separation and complete denominators. An explicit input and an independently specified oracle make a false summary falsifiable. Inputs are invented and execution is restricted to software. Event ticks are synthetic integers, budget units are declared tokens, labels are surrogates and no actual participant or device exists.
+
+A deterministic calendar is not a real-time scheduler. A legal state sequence is not a completed operational trial. Balanced totals do not establish randomized allocation, blinding, equal difficulty, safe operation or THOS effectiveness. The ten governed-trial vacancies stay represented. Real arms, legitimate recruitment, competent monitoring, prospective decisions, appropriate statistical design and independent evaluation remain prerequisites for a real comparison.

@@ -1,0 +1,5 @@
+# 10 Skills runners and promotions
+
+Twenty local source guides cover the twenty families. Ten curated global packages retain two guides each and the same five portable standard-library runner sources. The five unique runners are protocol trace, budget, analysis, provenance and export. Fifty file copies across ten packages remain five unique shared runners. Every local guide passed the official skill validator; every candidate and installed package passed validation and accepting/adverse CLI witnesses. All installed bytes matched their candidate source. No existing global skill was overwritten or deleted.
+
+The 25-card tool catalogue contains twenty local guides and five shared runners. Three lexical overlap findings concern governed trials, GMUT obligations and CBR reservations. Their additive adjudication selects the exact family: represented real-trial design, open scientific evidence gap, or exact authority gate. The common reservation operation is not authority to interchange those meanings. Selection is by the source-bound criterion, not by a lexical winner. Global discoverability does not prove catalogue reload or user competence.

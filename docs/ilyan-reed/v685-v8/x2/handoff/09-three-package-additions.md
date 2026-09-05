@@ -1,0 +1,5 @@
+# 09 Three package additions
+
+Exactly three direct additions were installed in a new isolated D environment: SimPy 4.1.2, transitions 0.9.3 and python-constraint2 2.7.3. The dependency six 1.17.0 and preplanned bootstrap pip 26.2.1 bring the installed distribution count to five. All five wheel hashes matched frozen official registry metadata. The wheel archive review rejected traversal-shaped member names, and installation used only the downloaded wheels with required hashes and compilation disabled. System Python, PATH, the npm prefix, plugin caches and sibling environments were not changed.
+
+The accepting smokes observed same-tick FIFO event order, planned-to-running-to-recorded state transitions, and two finite distinct assignments summing to four. The adverse smokes refused negative delay, finish-before-start and inconsistent singleton domains. All three pairs passed. Pip dependency checking passed and a dated public OSV query returned zero findings for the five pinned distributions. That snapshot is not exhaustive security or future safety. Rollback selects retained prior tooling and preserves the environment and receipts.

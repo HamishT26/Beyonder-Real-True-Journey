@@ -1,0 +1,5 @@
+# 06 GMUT Mind and observation obligations
+
+GMUT remains a typed scalar-tensor and effective-field-theory research-model family. This phase supplies exact arithmetic and explicit missing-observation objects, not physical fields or measurements. The ten named scientific obligations remain open: a clock-to-observable map, field-to-event likelihood, dimensioned coupling, identifiable parameter, finite-resolution discrepancy, boundary conditions, measurement covariance, empirical dataset, rival-model comparison and unique falsifiable prediction.
+
+Exact rational means, sample and population variance, paired differences and histogram counts test arithmetic on invented values. Their denominators and signs are auditable. They establish no statistical inference about a real population, detected force, material law, empirical confirmation, stability theorem, quantum or ultraviolet completion, final physics, Theory-of-Everything proof or canon. A future owner may refine the mathematical definitions but must preserve each missing empirical or independent prerequisite.
