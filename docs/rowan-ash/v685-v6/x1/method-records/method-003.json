@@ -1,0 +1,26 @@
+{
+  "method_id": "RA6856-START-M003",
+  "title": "A bounded task read returned an oversized nested envelope and display truncation.",
+  "failure_signature": "RA6856-START-N003",
+  "trigger_preconditions": [
+    "The specific startup read or setup described by the retained negative is repeated."
+  ],
+  "privacy_class": "sanitized_public",
+  "approval_class": "safe_now",
+  "candidate_workaround": "Parse the response locally and prefer exact named external receipts.",
+  "validation_witness_ids": [],
+  "recurrence_guard": "Parse the response locally and prefer exact named external receipts.",
+  "rollback": "Stop the narrow owner operation and retain its state; do not replay source canonical or recreate a lane blindly.",
+  "recommendation_state": "candidate",
+  "supersedes": [],
+  "protected_gates": [
+    "source_immutability",
+    "privacy",
+    "no_replay",
+    "stage20"
+  ],
+  "retained_negative_ids": [
+    "RA6856-START-N003"
+  ],
+  "scope_boundary": "This owner startup only; no historical, sibling, or independent-reproduction claim."
+}
