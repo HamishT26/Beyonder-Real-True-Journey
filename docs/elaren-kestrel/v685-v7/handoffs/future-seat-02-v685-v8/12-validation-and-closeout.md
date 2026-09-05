@@ -1,0 +1,5 @@
+# 12 Validation and closeout
+
+Planning-only x1 passed 16 tests, was committed, pushed, clean, zero-divergent, and four-way equal before x2. The first x2 aggregate passed 18 of 20 and retains zero aggregate-success credit; its two test-definition corrections are explicit. The corrected x2 suite passed 20 of 20. The evidence commit contains 403 exact paths, 400 manifest entries, 418 owner-scope files, 248 x2 JSON documents, a 213-entry card manifest, zero deletions, and zero confirmed privacy hits.
+
+Before task creation, Elaren must commit and push the final direct child, prove local/upstream/tracking/fresh-live equality and zero divergence, run one exact-final owner-scoped canonical aggregate, and never replay a success. The final canonical must check tests, manifests, JSON, Python AST, Markdown/YAML/HTML structure, global-skill parity, privacy, content seal, ancestry, word limits, clean state, and the 2,000-file ceiling. Same-owner validation is not independent reproduction or external audit.

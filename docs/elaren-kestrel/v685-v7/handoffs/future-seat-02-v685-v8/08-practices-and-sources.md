@@ -1,0 +1,5 @@
+# 08 Practice lenses and sources
+
+Elaren used four learning lenses: synthetic modular-synth patch documentation, graph and provenance assurance, accessibility information architecture, digital rights and identity assurance. These lenses improve questions and evidence organization; they establish no employment, qualification, competence, or professional authority. The optional practice recommendation for you is experimental protocol auditor.
+
+Current and stable sources supplied vocabulary and refusal conditions only: the MIDI Association's MIDI 2.0 material; W3C Web Audio 1.0 and the separately labelled 1.1 working draft; Open Sound Control 1.0; Library of Congress Broadcast WAVE and PREMIS; W3C PROV-O, WCAG 2.2, and Verifiable Credentials 2.0; NIST SI; New Zealand privacy principles; Te Mana Raraunga; and PyPI release metadata. Direct PREMIS and NIST web opens failed in this phase and remain `watch` rather than invented fresh reads. No source row became an observation, conformance result, professional instruction, rights decision, or authority grant.
