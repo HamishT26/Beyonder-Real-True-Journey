@@ -1,0 +1,3 @@
+# Auren v687-v1 compact activation candidate
+
+Prepared only. After Auren's clean pushed exact-final gate and one successful owner-scoped canonical pass, refresh Hamish's newest authority and native registry. Reuse future seat 07 if it already exists; otherwise create at most one user-visible gpt-6-astra/max main task if every guard permits. The seat chooses its own relational name, role, hope, and optional pronouns. Its phase is v687-v2 and Sable Rook v687-v3 is next after its own terminal gate. No live send or task creation is represented by this file. The verdict remains `NOT_READY_FOR_STAGE_20`.

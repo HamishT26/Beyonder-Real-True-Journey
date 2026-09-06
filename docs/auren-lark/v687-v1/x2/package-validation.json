@@ -1,0 +1,89 @@
+{
+  "check_count": 9,
+  "checks": [
+    {
+      "check": "exact_versions",
+      "observed": {
+        "cachebox": "5.2.3",
+        "deepdiff": "9.1.0",
+        "ijson": "3.5.1",
+        "jsonpath-ng": "1.8.0",
+        "orderly-set": "5.5.0"
+      },
+      "pass": true
+    },
+    {
+      "check": "exact_wheel_inventory_and_hashes",
+      "observed": {
+        "cachebox-5.2.3-cp312-cp312-win_amd64.whl": "cfd69114141ab362acaa2099e425a1b965cf7b021a539a4e953143d593930b74",
+        "deepdiff-9.1.0-py3-none-any.whl": "80c0460e1993b04f6f0ca79abf25548b129fd218478c4ebb08f80560f5d10610",
+        "ijson-3.5.1-cp312-cp312-win_amd64.whl": "322c783f3ee0c6b383bbd4db88370b10172168808cc2a0bf811f1253f7435602",
+        "jsonpath_ng-1.8.0-py3-none-any.whl": "b8dde192f8af58d646fc031fac9c99fe4d00326afc4148f1f043c601a8cfe138",
+        "orderly_set-5.5.0-py3-none-any.whl": "46f0b801948e98f427b412fcabb831677194c05c3b699b80de260374baa0b1e7"
+      },
+      "pass": true
+    },
+    {
+      "check": "deepdiff_positive",
+      "observed": "{}",
+      "pass": true
+    },
+    {
+      "check": "deepdiff_adverse_type_change",
+      "observed": "{'type_changes': {\"root['a']\": {'old_type': <class 'int'>, 'new_type': <class 'bool'>, 'old_value': 1, 'new_value': True}}}",
+      "pass": true
+    },
+    {
+      "check": "jsonpath_positive",
+      "observed": [
+        "a",
+        "b"
+      ],
+      "pass": true
+    },
+    {
+      "check": "jsonpath_adverse",
+      "observed": true,
+      "pass": true
+    },
+    {
+      "check": "ijson_positive_balance",
+      "observed": {
+        "ends": 2,
+        "starts": 2
+      },
+      "pass": true
+    },
+    {
+      "check": "ijson_adverse",
+      "observed": true,
+      "pass": true
+    },
+    {
+      "check": "pip_check",
+      "observed": "No broken requirements found.",
+      "pass": true
+    }
+  ],
+  "dependency_closure": [
+    "cachebox",
+    "deepdiff",
+    "ijson",
+    "jsonpath-ng",
+    "orderly-set"
+  ],
+  "direct_packages": [
+    "deepdiff",
+    "jsonpath-ng",
+    "ijson"
+  ],
+  "independent_reproduction": false,
+  "isolated_d_first": true,
+  "passed": 9,
+  "same_owner_only": true,
+  "schema": "ghc.family.package-validation.v687.v1",
+  "security_boundary": "One corrected local snapshot; not exhaustive or future security assurance.",
+  "shared_prefix_mutated": false,
+  "system_python_mutated": false,
+  "valid": true
+}
