@@ -1,0 +1,30 @@
+{
+  "events": [
+    {
+      "artifact_manifest_retained": true,
+      "candidate_workaround": "Preserve the existing evidence manifest, verify the empty index, and pass the exact NUL-delimited allowlist through Git pathspec stdin.",
+      "failure": "The exact Git add argument list exceeded the Windows process command-line length limit before Git launched.",
+      "id": "CA6866-OP012",
+      "initial_success_credit": 0,
+      "recovery_state": "validated_nul_pathspec_staging",
+      "rollback": "Stop before commit if exact staging cannot be reconstructed; retain all evidence and the manifest.",
+      "staged_files_after_failure": 0,
+      "staged_files_after_recovery": 443
+    },
+    {
+      "affected_crlf_files": 18,
+      "candidate_workaround": "Preserve earlier raw files and manifests, normalize only new owner text and matching new skill copies to LF, and rebind their exact staged Git-blob hashes.",
+      "failure": "The first staged evidence manifest compared raw CRLF working-file hashes with LF-normalized Git blobs and correctly failed the binding assertion.",
+      "id": "CA6866-OP013",
+      "initial_success_credit": 0,
+      "recovery_receipt": "lf-recovery-receipt.json",
+      "recovery_state": "validated_exact_lf_staged_manifest_and_global_parity",
+      "rollback": "Keep the archived original bytes and all failed manifest records; stop if normalization changes semantic content or crosses owner scope.",
+      "staged_review": "x2-staged-review.json",
+      "x1_mutation_authorized": false
+    }
+  ],
+  "recording_boundary": "after x2 artifact manifest construction and before evidence commit",
+  "repository_evidence_rewritten": false,
+  "schema": "ghc.family.late-validation-overlay.v686.v6"
+}
