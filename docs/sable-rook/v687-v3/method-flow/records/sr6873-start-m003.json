@@ -1,0 +1,26 @@
+{
+  "approval_class": "safe_now",
+  "candidate_workaround": "After locks and processes quiesce, populate the fresh exact-source index with git read-tree -mu HEAD and reapply sparse rules.",
+  "failure_signature": "sparse-spec-present-but-index-uninitialized",
+  "method_id": "SR6873-START-M003",
+  "privacy_class": "sanitized_public",
+  "protected_gates": [
+    "history_integrity",
+    "sibling_lane_integrity",
+    "privacy"
+  ],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "After locks and processes quiesce, populate the fresh exact-source index with git read-tree -mu HEAD and reapply sparse rules.",
+  "retained_negative_ids": [
+    "SR6873-START-N003"
+  ],
+  "rollback": "Stop in the owner lane; preserve source and sibling lanes read-only.",
+  "scope_boundary": "Owner-local startup workflow only; not independent reproduction.",
+  "supersedes": [],
+  "title": "Fresh no-checkout index initialization",
+  "trigger_preconditions": [
+    "Windows PowerShell",
+    "fresh Sable-owned v687-v3 startup"
+  ],
+  "validation_witness_ids": []
+}
