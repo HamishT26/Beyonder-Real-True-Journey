@@ -1,0 +1,56 @@
+{
+  "bounded_recovery_witnesses": 2,
+  "repository_x2_rewritten": false,
+  "retained_failed_witnesses": 2,
+  "rows": [
+    {
+      "class": "observed_renderer_failure",
+      "failure": {
+        "candidate_recovery": "Export the generated document through a hidden Microsoft Word instance, then rasterize and inspect every PDF page with bundled pypdfium2.",
+        "failure": "Packaged DOCX rendering could not find soffice.exe on PATH or in the resolved bundled runtime.",
+        "id": "SR6868-OP002",
+        "initial_success_credit": 0,
+        "recovery_state": "pending",
+        "renderer": "documents render_docx.py",
+        "rollback": "Retain generated DOCX and failure receipt; no renderer installation or host configuration change."
+      },
+      "id": "SR6868-M552",
+      "initial_success_credit": 0,
+      "recovery": {
+        "id": "SR6868-OP002-R1",
+        "method": "Hidden Microsoft Word export and bundled pypdfium2 page review",
+        "pages": 4,
+        "passed": true,
+        "same_owner_only": true,
+        "structural_a11y": {
+          "high": 0,
+          "low": 0,
+          "medium": 0
+        }
+      },
+      "rollback": "Retain the unavailable-renderer receipt and the reviewed generated document; do not install a renderer or alter host settings."
+    },
+    {
+      "class": "observed_final_preflight_failure",
+      "failure": {
+        "candidate_recovery": "Normalize the one JSON readback to LF and rebuild exact dependent closeout bindings.",
+        "failed_artifact_sha256": "25b56abc27896ec90896d1c32fbc2ad25fd724e0f2621867a520342ffc3a344a",
+        "failure": "Final staging preflight refused Windows CRLF in the new PDF integrity JSON before staging.",
+        "id": "SR6868-OP003",
+        "initial_success_credit": 0,
+        "recurrence_guard": "Write artifact text as UTF-8 bytes or use explicit LF, then compare staged Git blobs.",
+        "rollback": "Preserve the original failed bytes and manifests externally; immutable x1 and x2 remain unchanged.",
+        "scope": "Uncommitted final closeout text only"
+      },
+      "id": "SR6868-M553",
+      "initial_success_credit": 0,
+      "recovery": {
+        "id": "SR6868-OP003-R1",
+        "method": "Explicit LF JSON bytes with regenerated final and owner bindings",
+        "passed": true,
+        "same_owner_only": true
+      },
+      "rollback": "Select the retained preflight snapshot; preserve every previous committed phase."
+    }
+  ]
+}
