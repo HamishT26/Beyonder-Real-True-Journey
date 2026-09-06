@@ -1,0 +1,26 @@
+{
+  "approval_class": "safe_now",
+  "candidate_workaround": "Include every x2-prefixed validation artifact in the delta before hashing while self-excluding only the manifest and staged review.",
+  "failure_signature": "x2-staged-allowlist-omitted-two-validation-receipts",
+  "method_id": "SR6873-X2-M001",
+  "privacy_class": "sanitized_public",
+  "protected_gates": [
+    "manifest_integrity",
+    "x1_immutability",
+    "privacy"
+  ],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Enumerate the exact lifecycle validation prefix before computing the manifest, then compare the complete staged set.",
+  "retained_negative_ids": [
+    "SR6873-X2-N001"
+  ],
+  "rollback": "Stop before commit; preserve immutable x1 and the failed staged-review receipt.",
+  "scope_boundary": "Owner-local x2 manifest selection only; not broader repository assurance.",
+  "supersedes": [],
+  "title": "Complete x2 validation-delta inclusion",
+  "trigger_preconditions": [
+    "Sable v687-v3 x2 staged review",
+    "normalized-LF Git-blob manifest"
+  ],
+  "validation_witness_ids": []
+}

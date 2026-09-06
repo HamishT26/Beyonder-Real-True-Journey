@@ -1,0 +1,52 @@
+{
+  "adverse": [
+    {
+      "expected": "REJECT",
+      "kind": "remove_field",
+      "mutation_id": "SR6873-N041-M1",
+      "target": "authority"
+    },
+    {
+      "expected": "REJECT",
+      "kind": "unexpected_field",
+      "mutation_id": "SR6873-N041-M2",
+      "target": "unexpected"
+    },
+    {
+      "expected": "REJECT",
+      "kind": "type_flip",
+      "mutation_id": "SR6873-N041-M3",
+      "target": "authority"
+    },
+    {
+      "expected": "REJECT",
+      "kind": "authority_promotion",
+      "mutation_id": "SR6873-N041-M4",
+      "target": "authority"
+    },
+    {
+      "expected": "REJECT",
+      "kind": "value_change",
+      "mutation_id": "SR6873-N041-M5",
+      "target": "reasons"
+    }
+  ],
+  "operation": "digest_migration_ledger",
+  "positive": {
+    "expected_output": {
+      "authority": false,
+      "decision": "DUAL_BOUND",
+      "reasons": []
+    },
+    "input": {
+      "new_algorithm": "blake3",
+      "new_digest_present": true,
+      "old_algorithm": "sha256",
+      "old_digest_present": true,
+      "record_id": "record-01"
+    },
+    "proposal_id": "SR6873-N041"
+  },
+  "same_owner_only": true,
+  "schema": "ghc.family.skill-contract.v687.v3"
+}
