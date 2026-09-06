@@ -1,0 +1,26 @@
+{
+  "approval_class": "safe_now",
+  "candidate_workaround": "Parse every discovered phase JSON document and assert required lifecycle artifacts instead of relying on a brittle raw-cardinality threshold.",
+  "failure_signature": "stale-json-cardinality-floor-exceeded-current-corpus-shape",
+  "method_id": "SR6873-FINAL-M003",
+  "privacy_class": "sanitized_public",
+  "protected_gates": [
+    "strict_json_parsing",
+    "lifecycle_artifact_presence",
+    "nonfabrication"
+  ],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Bind corpus validation to parseability and named required artifacts; report cardinality without treating growth as quality.",
+  "retained_negative_ids": [
+    "SR6873-FINAL-N003"
+  ],
+  "rollback": "Retain the 146-document failed witness and stop if any discovered JSON fails strict parsing or a required lifecycle artifact is absent.",
+  "scope_boundary": "JSON corpus structure only; no readiness or completeness inference from file count.",
+  "supersedes": [],
+  "title": "Semantic JSON corpus gate",
+  "trigger_preconditions": [
+    "strict phase JSON parse",
+    "brittle cardinality assertion"
+  ],
+  "validation_witness_ids": []
+}

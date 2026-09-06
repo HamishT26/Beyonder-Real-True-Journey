@@ -1,0 +1,26 @@
+{
+  "approval_class": "safe_now",
+  "candidate_workaround": "Classify scanner syntax only for the four exact owner scanner-definition filenames while leaving every other candidate eligible for payload confirmation.",
+  "failure_signature": "sealed-scanner-definition-files-misclassified-as-private-payload",
+  "method_id": "SR6873-FINAL-M002",
+  "privacy_class": "sanitized_public",
+  "protected_gates": [
+    "five_class_privacy",
+    "definition_payload_separation",
+    "immutable_x1_x2"
+  ],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Use an exact filename allowlist for scanner implementations and never exempt a directory, suffix, or arbitrary source file.",
+  "retained_negative_ids": [
+    "SR6873-FINAL-N002"
+  ],
+  "rollback": "Retain the eight-hit failed scan and stop finalization if any non-definition candidate remains confirmed.",
+  "scope_boundary": "Exact scanner-definition adjudication only; not complete privacy assurance.",
+  "supersedes": [],
+  "title": "Exact scanner-definition adjudication",
+  "trigger_preconditions": [
+    "five-class scan",
+    "regex source definitions appear in immutable owner files"
+  ],
+  "validation_witness_ids": []
+}
