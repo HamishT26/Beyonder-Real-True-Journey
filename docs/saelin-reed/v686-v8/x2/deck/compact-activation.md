@@ -1,0 +1,1 @@
+Saelin Reed v686-v8 evidence deck. Auren Lark v687-v1 remains prospective behind Saelin's exact-final terminal gate. Read the committed terminal baton and its index when available. No current deck artifact proves a send, acknowledgement, independent reproduction, or Stage 20 readiness.
