@@ -1,0 +1,1 @@
+Prepared pointer only. After Ceryn Alder v686-v6 exact terminal validation, the only next endpoint is the unique existing Ilyra Fen task for v686-v7. Read docs/ceryn-alder/v686-v6/handoffs/ilyra-fen-v686-v7-activation-baton.md through EOF. No send has occurred.
