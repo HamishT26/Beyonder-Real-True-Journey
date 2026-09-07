@@ -1,0 +1,41 @@
+{
+  "direct": [
+    {
+      "acceptance": "within 1e-9 of 5000 Angstrom",
+      "adverse": true,
+      "name": "astropy",
+      "observed_float": "4999.999999999999",
+      "positive": true,
+      "same_owner_only": true
+    },
+    {
+      "acceptance": "bounded in-memory tree roundtrip and malformed-header refusal",
+      "adverse": true,
+      "name": "asdf",
+      "positive": true,
+      "same_owner_only": true
+    },
+    {
+      "acceptance": "correlated uncertainty propagation and negative standard-deviation refusal",
+      "adverse": true,
+      "name": "uncertainties",
+      "positive": true,
+      "same_owner_only": true
+    }
+  ],
+  "exhaustive_security": false,
+  "failure_erasure": false,
+  "operational_failures": [
+    {
+      "failure": "The first package-smoke receipt could not JSON-serialize a numpy.bool_ comparison result.",
+      "negative_id": "OR6877-X2-N001",
+      "recovery": "Cast only receipt Boolean projections to native bool while preserving the fixture and package state."
+    },
+    {
+      "failure": "The corrected smoke used exact float equality for the 500 nm to Angstrom conversion and rejected 4999.999999999999.",
+      "negative_id": "OR6877-X2-N002",
+      "recovery": "Use an explicit 1e-9 absolute tolerance for the bounded floating conversion and retain the exact observed representation."
+    }
+  ],
+  "schema": "ghc.family.package-smokes.v1"
+}
