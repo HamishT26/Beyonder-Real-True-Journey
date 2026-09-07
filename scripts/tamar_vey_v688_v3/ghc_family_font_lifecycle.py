@@ -21,6 +21,7 @@ BANK = pathlib.Path(os.environ["GHC_OWNER_BANK"])
 SOURCE = "c4c676d81235bc6e453bb867b0c0f0de121b7733"
 X1 = "6439f733e37a904a5f6e943c3acdbd507f0a98f8"
 BRANCH = "codex/GHC-Family/tamar-vey-v688-v3-full-tools"
+PHASE = "v688-v3"
 TEST = "tests/test_ghc_family_tamar_vey_v688_v3.py"
 PREFIX = "docs/tamar-vey/v688-v3/"
 SCRIPT_PREFIX = "scripts/tamar_vey_v688_v3/"
@@ -305,7 +306,7 @@ def overview(stage, truth):
     ledger = strict((BASE / "x2/method-flow/ledger.json").read_bytes())
     pages = [
         ("Tamar v688-v3 identity, pillars, and evidence scope", "Tamar Vey, optionally she/they, uses the relational role evidence-and-recovery steward and the hope that every failed witness remains inspectable and every recovery remains bounded. GMUT Mind is primary through exact synthetic outline, bounding, metrics, mapping, and variation contracts. THOS Body and Freed ID with CBR Heart remain explicit."),
-        ("Executed evidence and retained failures", f"Two hundred complete contracts matched; 250 altered candidates were rejected; 300 safe procedures and exactly 300 CLEAN/FIX/REFINE records passed. Ten skills, five runners, and three exact package versions passed bounded positive and adverse checks. Method Flow records {ledger['counts']['methods']} methods, {ledger['counts']['witness_results']['fail']} retained failed witnesses, and {ledger['counts']['witness_results']['pass']} bounded passing witnesses. Effective counts are {truth['effective_counts']}."),
+        ("Executed evidence and retained failures", f"Two hundred complete contracts matched; 250 altered candidates were rejected; 300 safe procedures and exactly 300 CLEAN/FIX/REFINE records passed. Ten skills, five runners, and three exact package versions passed bounded positive and adverse checks. Combined Method Flow records {truth['owner_method_flow']['methods']} methods, {truth['owner_method_flow']['witness_results']['fail']} retained failed witnesses, and {truth['owner_method_flow']['witness_results']['pass']} bounded passing witnesses. Effective counts are {truth['effective_counts']}."),
         ("Incomplete evidence and route boundary", "No real font, glyph, text corpus, participant, measurement, rendering, publication, credential, license determination, accessibility evaluation, cultural decision, Māori data, deployment, or authority act occurred. Fifty exact and thirty blocked packets remain unexecuted. The designated future-seat-12 v688-v4 edge remains PREPARED_NOT_SENT until exact final, canonical success, current registry absence/reuse checks, and one authorized task action."),
     ]
     document = f"<!doctype html><html lang=\"en\"><meta charset=\"utf-8\"><title>Tamar v688-v3 {stage} overview</title><style>@page{{size:A4;margin:18mm}}body{{font:16px/1.65 system-ui;max-width:850px;margin:auto}}section{{break-after:page;min-height:245mm}}section:last-child{{break-after:auto}}</style><body><a href=\"#main\">Skip to content</a><main id=\"main\">"
@@ -341,7 +342,7 @@ def build_baton(evidence):
             f"### {proposal['proposal_id']} - {proposal['title']}\n\nOperation: {proposal['operation']}. Practice: {proposal['practice']}. Pillar: {proposal['pillar']}. Outcome: `{result['outcome']}`. Source status: {proposal['source_status']}.\n\nFrozen input:\n```json\n{json.dumps(proposal['input'], indent=2, sort_keys=True, ensure_ascii=True)}\n```\n\nComplete observed output:\n```json\n{json.dumps(actual, indent=2, sort_keys=True, ensure_ascii=True)}\n```\n\n{detail} Definition SHA-256: {result['definition_sha256']}. Input remained unchanged. The falsifier is any complete-output mismatch, input mutation, or out-of-scope promotion. Recovery retains the failed candidate and changes only the bounded owner implementation, or leaves the outside evidence or authority gate open.\n"
         )
     section("Complete contract teaching catalogue", "\n".join(body))
-    section("Method Flow and retained recovery", f"The complete Method Flow ledger is x2/method-flow/ledger.json. It contains {ledger['counts']['methods']} preferred methods, {ledger['counts']['witness_results']['fail']} retained failed witnesses, {ledger['counts']['witness_results']['pass']} bounded passing witnesses, and {ledger['counts']['state_events']} state events. The frozen metric-name discrepancy, command-wrapper faults, proposal quarantines, workflow-policy mismatch, every altered output, invalid JSON input, broken CFR candidate, and skill/runner/package adverse input remain at zero original success credit. A recovery never erases or promotes its failed witness.")
+    section("Method Flow and retained recovery", f"The immutable evidence Method Flow ledger is x2/method-flow/ledger.json and the closeout recovery is final/method-flow-closeout-overlay.json. Together they contain {truth['owner_method_flow']['methods']} preferred methods, {truth['owner_method_flow']['witness_results']['fail']} retained failed witnesses, {truth['owner_method_flow']['witness_results']['pass']} bounded passing witnesses, and {truth['owner_method_flow']['state_events']} state events. The frozen metric-name discrepancy, command-wrapper faults, proposal quarantines, workflow-policy mismatch, every altered output, invalid JSON input, broken CFR candidate, skill/runner/package adverse input, and the first failed closeout build remain at zero original success credit. A recovery never erases or promotes its failed witness.")
     packages = strict((BASE / "x2/package-smokes.json").read_bytes())
     section("Three pinned package additions", f"The isolated D-drive environment contains exactly fonttools {packages['versions']['fonttools']}, uharfbuzz {packages['versions']['uharfbuzz']}, and unicodedata2 {packages['versions']['unicodedata2']}. Exact wheels matched official PyPI hashes and were installed with no index, no dependencies, required hashes, and no pip bootstrap in the environment. Positive and adverse synthetic smokes passed. The bounded OSV snapshot listed zero known advisories at query time; this is not exhaustive or future security assurance. No real font or text corpus was used.")
     promotion = strict((BASE / "x2/promotion-receipt.json").read_bytes())
@@ -364,14 +365,24 @@ def build_baton(evidence):
 def build_final(evidence):
     if scalar("rev-parse", "HEAD") != evidence or scalar("rev-parse", evidence + "^") != X1:
         raise RuntimeError("Final builder requires the immutable evidence direct child of x1")
-    if (BASE / "final").exists():
+    if (BASE / "final").exists() and any((BASE / "final").iterdir()):
         raise RuntimeError("Final builder is exclusive-write")
-    (BASE / "final").mkdir(parents=True)
+    (BASE / "final").mkdir(parents=True, exist_ok=True)
     truth = strict((BASE / "x2/phase-truth.json").read_bytes())
+    truth["evidence_effective_counts"] = dict(truth["effective_counts"])
+    for key in ["negatives", "methods", "failed_witnesses", "passing_witnesses"]:
+        truth["effective_counts"][key] += 2
+    truth["evidence_owner_method_flow"] = dict(truth["owner_method_flow"])
+    truth["owner_method_flow"] = strict(canonical(truth["owner_method_flow"]))
+    truth["owner_method_flow"]["methods"] += 2
+    truth["owner_method_flow"]["witnesses"] += 4
+    truth["owner_method_flow"]["witness_results"]["fail"] += 2
+    truth["owner_method_flow"]["witness_results"]["pass"] += 2
+    truth["owner_method_flow"]["state_events"] += 6
+    truth["owner_method_flow"]["states"]["preferred"] += 2
     truth.update({"evidence": evidence, "state": "FINAL_PREPARED_FOR_ONE_EXTERNAL_CANONICAL", "route_state": "PREPARED_NOT_SENT_TERMINAL_GATE_REQUIRED"})
     write("final/phase-truth.json", truth)
     for source, destination in [
-        ("x2/retained-negative-register.json", "final/retained-negative-register.json"),
         ("x2/open-gap-register.json", "final/open-gap-register.json"),
         ("x2/exact-gate-register.json", "final/exact-gate-register.json"),
         ("x2/complete-incomplete.json", "final/complete-incomplete.json"),
@@ -379,7 +390,60 @@ def build_final(evidence):
     ]:
         write(destination, strict((BASE / source).read_bytes()))
     ledger = strict((BASE / "x2/method-flow/ledger.json").read_bytes())
-    write("final/method-flow-index.json", {"complete_ledger": PREFIX + "x2/method-flow/ledger.json", "sha256": hashlib.sha256((BASE / "x2/method-flow/ledger.json").read_bytes()).hexdigest(), "counts": ledger["counts"], "failure_erasure": False})
+    negative_register = strict((BASE / "x2/retained-negative-register.json").read_bytes())
+    negative_register["evidence_effective_counts"] = dict(negative_register["effective_counts"])
+    negative_register["effective_counts"] = dict(truth["effective_counts"])
+    negative_register["owner_failed_witness_count"] += 2
+    negative_register["owner_failed_witness_refs"].extend(["TV6883-FINAL-M001-FAIL", "TV6883-FINAL-M002-FAIL"])
+    negative_register["closeout_negative_overlay"] = ["TV6883-FINAL-N001", "TV6883-FINAL-N002"]
+    write("final/retained-negative-register.json", negative_register)
+    closeout_overlay = {
+        "schema": "ghc.family.method-flow-closeout-overlay.v1",
+        "methods": [
+            {
+                "method_id": "TV6883-FINAL-M001",
+                "title": "Define and preflight lifecycle constants before exclusive closeout writes",
+                "failure_signature": "The first closeout build wrote a bounded partial final directory and then stopped on NameError because PHASE was undefined.",
+                "candidate_workaround": "Define the immutable phase constant, verify and remove only the untracked partial owner-final files, then rerun the exclusive builder once.",
+                "recommendation_state": "preferred",
+                "retained_negative_ids": ["TV6883-FINAL-N001"],
+                "validation_witness_ids": ["TV6883-FINAL-M001-FAIL", "TV6883-FINAL-M001-PASS"],
+                "protected_gates": GATES,
+                "rollback": "Remove only the verified untracked partial owner-final files; preserve immutable x1 and evidence commits.",
+                "recurrence_guard": "Compile or import the closeout module and assert every lifecycle constant before the first exclusive write.",
+            },
+            {
+                "method_id": "TV6883-FINAL-M002",
+                "title": "Use exact patch deletion when recursive cleanup is policy-blocked",
+                "failure_signature": "The combined recursive cleanup wrapper was rejected by host policy before execution.",
+                "candidate_workaround": "Delete only the eight named untracked partial files through the patch mechanism and allow the verified empty owner-final directory.",
+                "recommendation_state": "preferred",
+                "retained_negative_ids": ["TV6883-FINAL-N002"],
+                "validation_witness_ids": ["TV6883-FINAL-M002-FAIL", "TV6883-FINAL-M002-PASS"],
+                "protected_gates": GATES,
+                "rollback": "Stop without deleting anything else if any named path is tracked, outside owner scope, or not part of the failed partial write.",
+                "recurrence_guard": "Prefer exact file-level rollback for bounded generated partials when recursive deletion is unnecessary.",
+            },
+        ],
+        "witnesses": [
+            {"witness_id": "TV6883-FINAL-M001-FAIL", "method_id": "TV6883-FINAL-M001", "result": "fail", "observed": "NameError: PHASE was not defined after eight partial untracked final files were written.", "retained_negative_ids": ["TV6883-FINAL-N001"], "same_owner_only": True, "independent_reproduction": False, "boundary": BOUNDARY},
+            {"witness_id": "TV6883-FINAL-M001-PASS", "method_id": "TV6883-FINAL-M001", "result": "pass", "observed": "The constant was defined; the eight partial untracked files were path-verified and removed; the exclusive final build completed from the empty owner directory.", "retained_negative_ids": [], "same_owner_only": True, "independent_reproduction": False, "boundary": BOUNDARY},
+            {"witness_id": "TV6883-FINAL-M002-FAIL", "method_id": "TV6883-FINAL-M002", "result": "fail", "observed": "The host rejected the combined recursive cleanup wrapper before execution.", "retained_negative_ids": ["TV6883-FINAL-N002"], "same_owner_only": True, "independent_reproduction": False, "boundary": BOUNDARY},
+            {"witness_id": "TV6883-FINAL-M002-PASS", "method_id": "TV6883-FINAL-M002", "result": "pass", "observed": "Exactly eight untracked partial files were deleted by patch and the exclusive builder accepted the verified empty directory.", "retained_negative_ids": [], "same_owner_only": True, "independent_reproduction": False, "boundary": BOUNDARY},
+        ],
+        "state_events": [
+            {"method_id": "TV6883-FINAL-M001", "from": "observed", "to": "candidate", "note": "Failed closeout retained before recovery."},
+            {"method_id": "TV6883-FINAL-M001", "from": "candidate", "to": "validated", "note": "Smallest sufficient recovery completed."},
+            {"method_id": "TV6883-FINAL-M001", "from": "validated", "to": "preferred", "note": "Recurrence guard preserved."},
+            {"method_id": "TV6883-FINAL-M002", "from": "observed", "to": "candidate", "note": "Policy rejection retained before recovery."},
+            {"method_id": "TV6883-FINAL-M002", "from": "candidate", "to": "validated", "note": "Exact file-level rollback completed."},
+            {"method_id": "TV6883-FINAL-M002", "from": "validated", "to": "preferred", "note": "Recurrence guard preserved."},
+        ],
+        "counts": {"methods": 2, "witnesses": 4, "witness_results": {"fail": 2, "pass": 2}, "state_events": 6},
+        "failure_erasure": False,
+    }
+    write("final/method-flow-closeout-overlay.json", closeout_overlay)
+    write("final/method-flow-index.json", {"complete_evidence_ledger": PREFIX + "x2/method-flow/ledger.json", "evidence_ledger_sha256": hashlib.sha256((BASE / "x2/method-flow/ledger.json").read_bytes()).hexdigest(), "closeout_overlay": PREFIX + "final/method-flow-closeout-overlay.json", "evidence_counts": ledger["counts"], "combined_counts": truth["owner_method_flow"], "failure_erasure": False})
     write("final/evidence-boundary.json", {"source": SOURCE, "x1": X1, "evidence": evidence, "full_repository_suite": False, "same_owner_only": True, "independent_reproduction": False, "real_fonts": 0, "real_text_rows": 0, "real_people": 0, "external_actions": 0, "protected_gates": GATES, "boundary": BOUNDARY})
     write("final/route-state.json", {"owner": "Tamar Vey", "phase": PHASE, "next_owner": "future-sibling-12-self-chosen", "next_phase": "v688-v4", "following_owner": "Elowen Cairn", "following_phase": "v688-v5", "endpoint_kind": "main_task", "state": "PREPARED_NOT_SENT_TERMINAL_GATE_REQUIRED", "send_count": 0, "creation_authority": "authorized_with_terminal_conditions", "no_precontact": True, "no_resend": True, "current_release": "Hamish 6 September 2026 thirty-seat release"})
     write("final/canonical-policy.json", {"source": SOURCE, "x1": X1, "evidence": evidence, "branch": BRANCH, "test_module": TEST, "expected_tests": 28, "invocation_budget": 1, "success_replay_allowed": False, "full_repository_suite": False, "same_owner_only": True, "environment_distributions": 3, "promotion_parity_files": 66, "terminal_verdict": "NOT_READY_FOR_STAGE_20"})
@@ -396,6 +460,8 @@ def build_final(evidence):
         PREFIX + "x2/deck/card-manifest.json",
         MANIFESTS["evidence"],
         PREFIX + "final/phase-truth.json",
+        PREFIX + "final/retained-negative-register.json",
+        PREFIX + "final/method-flow-closeout-overlay.json",
         PREFIX + "final/baton-index.json",
         PREFIX + "final/future-seat-12-v688-v4-activation-baton.md",
         PREFIX + "final/lifecycle-push-boundaries.json",
@@ -409,14 +475,15 @@ def build_final(evidence):
     exclusions = [MANIFESTS["final_delta"], MANIFESTS["final_owner"]]
     current = {path.relative_to(ROOT).as_posix() for path in current_files()}
     all_paths = sorted(current | {staged, *exclusions})
-    delta = sorted(set(all_paths) - previous)
-    write("validation/final-staged-review.json", {"schema": "ghc.family.exact-staged-review.v1", "parent": evidence, "allowed_change": "A", "allowed_paths": delta, "count": len(delta), "owner_path_count": len(all_paths), "deletions": 0, "outside_owner_paths": 0})
+    modified = {SCRIPT_PREFIX + "ghc_family_font_lifecycle.py"}
+    delta = sorted((set(all_paths) - previous) | modified)
+    write("validation/final-staged-review.json", {"schema": "ghc.family.exact-staged-review.v1", "parent": evidence, "allowed_changes": ["A", "M"], "allowed_status_by_path": {path: ("M" if path in modified else "A") for path in delta}, "allowed_paths": delta, "count": len(delta), "owner_path_count": len(all_paths), "deletions": 0, "outside_owner_paths": 0})
     report = audit()
     write("validation/final-checks.json", report)
     write("validation/final-privacy.json", {"schema": "ghc.family.five-class-privacy-adjudication.v1", "classes": report["privacy_classes"], "scanned_files": report["owner_files"], "candidates": report["privacy_candidates"], "candidate_count": report["privacy_candidate_count"], "confirmed_hits": [], "confirmed_hit_count": 0})
     current = {path.relative_to(ROOT).as_posix() for path in current_files()} | set(exclusions)
     all_paths = sorted(current)
-    delta = sorted(current - previous)
+    delta = sorted((current - previous) | modified)
     manifest(MANIFESTS["final_delta"], delta, exclusions, "PENDING_FINAL_COMMIT")
     manifest(MANIFESTS["final_owner"], all_paths, exclusions, "PENDING_FINAL_COMMIT")
     print(json.dumps({"baton_words": words, "final_additions": len(delta), "owner_files": len(all_paths), "manifest_entries": {"delta": len(delta) - 2, "owner": len(all_paths) - 2}, "truth": truth["effective_counts"]}, sort_keys=True))
