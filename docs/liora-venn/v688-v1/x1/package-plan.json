@@ -1,0 +1,34 @@
+{
+  "direct_packages": {
+    "langcodes": "3.5.1",
+    "pysubs2": "1.9.0",
+    "webvtt-py": "0.5.1"
+  },
+  "hash_lock": "x1/requirements.lock",
+  "host_python_mutation": false,
+  "installed": false,
+  "network_install": false,
+  "new_environment_in_x2": true,
+  "platform": "CPython 3.12 Windows",
+  "rollback": "Stop selecting the isolated Liora environment while retaining locks, wheels, and failures; no deletion or host mutation.",
+  "schema": "ghc.family.package-plan.v1",
+  "smokes": [
+    {
+      "adverse": "Reject a malformed timing line.",
+      "name": "webvtt-py",
+      "positive": "Parse two synthetic in-memory WebVTT cues with exact millisecond bounds."
+    },
+    {
+      "adverse": "Reject unsupported input format selection.",
+      "name": "pysubs2",
+      "positive": "Parse and serialize two synthetic SubRip events with exact millisecond bounds."
+    },
+    {
+      "adverse": "Reject or refuse a syntactically invalid tag before any authority inference.",
+      "name": "langcodes",
+      "positive": "Standardize known language tags used by frozen fixtures."
+    }
+  ],
+  "wheel_count": 3,
+  "wheel_only": true
+}
