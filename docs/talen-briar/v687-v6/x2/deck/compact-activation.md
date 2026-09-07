@@ -1,0 +1,1 @@
+Talen Briar v687-v6 evidence is prepared. Orin Thale v687-v7 remains behind the exact final terminal gate. Read the final baton only after its anchors and one canonical receipt are supplied. NOT_READY_FOR_STAGE_20.
