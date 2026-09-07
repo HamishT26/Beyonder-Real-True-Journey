@@ -1,0 +1,291 @@
+{
+  "adverse_order_cases": [
+    {
+      "case": "duplicate",
+      "expected_output": {
+        "accepted": false,
+        "error": "SPECIES_ORDER",
+        "external_credit": false,
+        "value": null
+      },
+      "input": {
+        "label": "Ordered example",
+        "language": "en",
+        "manual_evaluation": false,
+        "operation": "accessible_equation",
+        "product_order": [
+          "B"
+        ],
+        "products": {
+          "B": 1
+        },
+        "reactant_order": [
+          "Z",
+          "Z"
+        ],
+        "reactants": {
+          "A": 2,
+          "Z": 1
+        }
+      }
+    },
+    {
+      "case": "missing",
+      "expected_output": {
+        "accepted": false,
+        "error": "SPECIES_ORDER",
+        "external_credit": false,
+        "value": null
+      },
+      "input": {
+        "label": "Ordered example",
+        "language": "en",
+        "manual_evaluation": false,
+        "operation": "accessible_equation",
+        "product_order": [
+          "B"
+        ],
+        "products": {
+          "B": 1
+        },
+        "reactant_order": [
+          "Z"
+        ],
+        "reactants": {
+          "A": 2,
+          "Z": 1
+        }
+      }
+    },
+    {
+      "case": "unknown",
+      "expected_output": {
+        "accepted": false,
+        "error": "SPECIES_ORDER",
+        "external_credit": false,
+        "value": null
+      },
+      "input": {
+        "label": "Ordered example",
+        "language": "en",
+        "manual_evaluation": false,
+        "operation": "accessible_equation",
+        "product_order": [
+          "B"
+        ],
+        "products": {
+          "B": 1
+        },
+        "reactant_order": [
+          "Z",
+          "Q"
+        ],
+        "reactants": {
+          "A": 2,
+          "Z": 1
+        }
+      }
+    },
+    {
+      "case": "Boolean-order",
+      "expected_output": {
+        "accepted": false,
+        "error": "ORDER_TYPE",
+        "external_credit": false,
+        "value": null
+      },
+      "input": {
+        "label": "Ordered example",
+        "language": "en",
+        "manual_evaluation": false,
+        "operation": "accessible_equation",
+        "product_order": [
+          "B"
+        ],
+        "products": {
+          "B": 1
+        },
+        "reactant_order": true,
+        "reactants": {
+          "A": 2,
+          "Z": 1
+        }
+      }
+    },
+    {
+      "case": "missing-product",
+      "expected_output": {
+        "accepted": false,
+        "error": "SPECIES_ORDER",
+        "external_credit": false,
+        "value": null
+      },
+      "input": {
+        "label": "Ordered example",
+        "language": "en",
+        "manual_evaluation": false,
+        "operation": "accessible_equation",
+        "product_order": [],
+        "products": {
+          "B": 1
+        },
+        "reactant_order": [
+          "Z",
+          "A"
+        ],
+        "reactants": {
+          "A": 2,
+          "Z": 1
+        }
+      }
+    }
+  ],
+  "corrected_definition": {
+    "approval_class": "safe_now",
+    "concrete_artifact": "docs/merrin-vale/v688-v4/x2/contract-results.json",
+    "execution_lane": "x2_only",
+    "expected_execution_disposition": "represented",
+    "expected_output": {
+      "accepted": true,
+      "error": null,
+      "external_credit": false,
+      "value": {
+        "accessibility_complete": false,
+        "label_present": true,
+        "language": "en",
+        "spoken": "1 Z plus 2 A yields 1 B"
+      }
+    },
+    "external_credit": false,
+    "falsifier_or_acceptance_gate": "Compare every key, value, numeric type and array position with the literal frozen output; separately challenge the validator with altered outputs.",
+    "hypothesis": "Reaction accessible equation preserves user species ordering",
+    "input": {
+      "label": "Ordered example",
+      "language": "en",
+      "manual_evaluation": false,
+      "operation": "accessible_equation",
+      "product_order": [
+        "B"
+      ],
+      "products": {
+        "B": 1
+      },
+      "reactant_order": [
+        "Z",
+        "A"
+      ],
+      "reactants": {
+        "A": 2,
+        "Z": 1
+      }
+    },
+    "null_or_failure_condition": "Any typed whole-output mismatch, input mutation, unexpected exception, or external claim promotion is a failed witness.",
+    "operation": "accessible_equation",
+    "pillar": "Freed ID and CBR Heart",
+    "practice": "reaction source and accessibility reservation steward",
+    "proposal_id": "MV6884-N195",
+    "protected_gates": [
+      "empirical",
+      "professional",
+      "production",
+      "deployment",
+      "real_participants",
+      "identity",
+      "legal",
+      "cultural",
+      "affected_party",
+      "maori_authority",
+      "privacy_complete",
+      "accessibility_complete",
+      "exhaustive_security",
+      "independent_reproduction",
+      "agi_asi",
+      "consciousness_personhood",
+      "theory_of_everything",
+      "proof_canon",
+      "stage20"
+    ],
+    "rollback_or_recovery": "Retain the original contract and failed witness; correct only the owner evaluator or leave the external gate open.",
+    "schema": "ghc.family.frozen-reaction-contract.v1",
+    "skill": "ghc-family-reaction-equivalence-and-access",
+    "source_kind": "synthetic",
+    "source_status": "current",
+    "title": "Reaction accessible equation preserves user species ordering"
+  },
+  "correction_reason": "Object key order is not an adequate frozen carrier for requested spoken order. Explicit arrays preserve the intended order across canonical JSON serialization.",
+  "effective_view_rule": "Replace only MV6884-N195 with corrected_definition when consuming the planning freeze; keep the original definition and its failed structural witness intact.",
+  "initial_x1": "8c1c83b3311e8527a82ccd931b39f924a14ce328",
+  "new_proposals": 0,
+  "novelty_credit": 0,
+  "original_definition": {
+    "approval_class": "safe_now",
+    "concrete_artifact": "docs/merrin-vale/v688-v4/x2/contract-results.json",
+    "execution_lane": "x2_only",
+    "expected_execution_disposition": "represented",
+    "expected_output": {
+      "accepted": true,
+      "error": null,
+      "external_credit": false,
+      "value": {
+        "accessibility_complete": false,
+        "label_present": true,
+        "language": "en",
+        "spoken": "1 Z plus 2 A yields 1 B"
+      }
+    },
+    "external_credit": false,
+    "falsifier_or_acceptance_gate": "Compare every key, value, numeric type and array position with the literal frozen output; separately challenge the validator with altered outputs.",
+    "hypothesis": "Reaction accessible equation preserves user species ordering",
+    "input": {
+      "label": "Ordered example",
+      "language": "en",
+      "manual_evaluation": false,
+      "operation": "accessible_equation",
+      "products": {
+        "B": 1
+      },
+      "reactants": {
+        "A": 2,
+        "Z": 1
+      }
+    },
+    "null_or_failure_condition": "Any typed whole-output mismatch, input mutation, unexpected exception, or external claim promotion is a failed witness.",
+    "operation": "accessible_equation",
+    "pillar": "Freed ID and CBR Heart",
+    "practice": "reaction source and accessibility reservation steward",
+    "proposal_id": "MV6884-N195",
+    "protected_gates": [
+      "empirical",
+      "professional",
+      "production",
+      "deployment",
+      "real_participants",
+      "identity",
+      "legal",
+      "cultural",
+      "affected_party",
+      "maori_authority",
+      "privacy_complete",
+      "accessibility_complete",
+      "exhaustive_security",
+      "independent_reproduction",
+      "agi_asi",
+      "consciousness_personhood",
+      "theory_of_everything",
+      "proof_canon",
+      "stage20"
+    ],
+    "rollback_or_recovery": "Retain the original contract and failed witness; correct only the owner evaluator or leave the external gate open.",
+    "schema": "ghc.family.frozen-reaction-contract.v1",
+    "skill": "ghc-family-reaction-equivalence-and-access",
+    "source_kind": "synthetic",
+    "source_status": "current",
+    "title": "Reaction accessible equation preserves user species ordering"
+  },
+  "package_installations": 0,
+  "planning_only": true,
+  "retained_negative": "MV6884-PLAN-N011",
+  "schema": "ghc.family.planning-correction.v1",
+  "source_proposal_id": "MV6884-N195",
+  "x2_implementation": false
+}
