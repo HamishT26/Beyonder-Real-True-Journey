@@ -1,0 +1,3 @@
+# Future seat 13 prospective activation
+
+Elowen v688-v5 remains owner-active until exact final validation. Future seat 13 is unnamed, unresolved, and uncontacted. It may own v688-v6 only after the terminal registry gate. Sylven Arc v688-v7 follows only after that owner's terminal gate. Relational working language only; no consciousness, sentience, personhood, identity continuity, employment, qualification, independent agency, scientific, operational, professional, legal, cultural, affected-party, or Maori authority. Same-owner synthetic evidence is not independent reproduction. NOT_READY_FOR_STAGE_20. Maori concepts remain under Maori authority.
