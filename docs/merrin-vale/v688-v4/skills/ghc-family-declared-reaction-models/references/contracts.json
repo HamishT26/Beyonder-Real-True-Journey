@@ -1,0 +1,100 @@
+{
+  "corrected_x1": "85617b39c876177842a2ae351373da1700b48a15",
+  "fixtures": [
+    {
+      "expected_disposition": "represented",
+      "expected_output": {
+        "accepted": true,
+        "error": null,
+        "external_credit": false,
+        "value": {
+          "deficiency": 0,
+          "dynamics_theorem_applied": false,
+          "network_verified": false
+        }
+      },
+      "fixture": "accepting-1.json",
+      "input": {
+        "complexes": 3,
+        "linkage_classes": 1,
+        "operation": "deficiency_record",
+        "stoichiometric_rank": 2
+      },
+      "source_proposal": "MV6884-N141"
+    },
+    {
+      "expected_disposition": "completed",
+      "expected_output": {
+        "accepted": false,
+        "error": "NEGATIVE_DEFICIENCY",
+        "external_credit": false,
+        "value": null
+      },
+      "fixture": "adverse-1.json",
+      "input": {
+        "complexes": 3,
+        "linkage_classes": 1,
+        "operation": "deficiency_record",
+        "stoichiometric_rank": 3
+      },
+      "source_proposal": "MV6884-N147"
+    },
+    {
+      "expected_disposition": "represented",
+      "expected_output": {
+        "accepted": true,
+        "error": null,
+        "external_credit": false,
+        "value": {
+          "formal_rate": "6",
+          "measured_kinetics": false,
+          "rate_units": "undeclared"
+        }
+      },
+      "fixture": "accepting-2.json",
+      "input": {
+        "coefficient": "2",
+        "concentrations": [
+          "3"
+        ],
+        "law": "declared_mass_action",
+        "operation": "mass_action_monomial",
+        "orders": [
+          1
+        ]
+      },
+      "source_proposal": "MV6884-N151"
+    },
+    {
+      "expected_disposition": "completed",
+      "expected_output": {
+        "accepted": false,
+        "error": "LAW_DECLARATION",
+        "external_credit": false,
+        "value": null
+      },
+      "fixture": "adverse-2.json",
+      "input": {
+        "coefficient": "1",
+        "concentrations": [
+          "1"
+        ],
+        "law": "inferred_from_stoichiometry",
+        "operation": "mass_action_monomial",
+        "orders": [
+          1
+        ]
+      },
+      "source_proposal": "MV6884-N157"
+    }
+  ],
+  "operations": [
+    "deficiency_record",
+    "mass_action_monomial"
+  ],
+  "rules": {
+    "deficiency_record": "Calculate complexes minus linkage classes minus declared rank after range checks. The graph and rank are declarations, so the result remains represented and no dynamics theorem is applied.",
+    "mass_action_monomial": "Require an explicit declared_mass_action law. Multiply the nonnegative coefficient by nonnegative concentrations raised to bounded nonnegative integer orders. Keep units undeclared and measured kinetics false; do not infer orders from stoichiometry."
+  },
+  "source_definition_credit": "Current owner frozen fixtures; no inherited implementation credit."
+}

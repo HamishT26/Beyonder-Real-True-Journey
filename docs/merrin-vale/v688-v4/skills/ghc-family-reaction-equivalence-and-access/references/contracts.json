@@ -1,0 +1,135 @@
+{
+  "corrected_x1": "85617b39c876177842a2ae351373da1700b48a15",
+  "explicit_order_example": {
+    "label": "Ordered example",
+    "language": "en",
+    "manual_evaluation": false,
+    "operation": "accessible_equation",
+    "product_order": [
+      "B"
+    ],
+    "products": {
+      "B": 1
+    },
+    "reactant_order": [
+      "Z",
+      "A"
+    ],
+    "reactants": {
+      "A": 2,
+      "Z": 1
+    }
+  },
+  "fixtures": [
+    {
+      "expected_disposition": "completed",
+      "expected_output": {
+        "accepted": true,
+        "error": null,
+        "external_credit": false,
+        "value": {
+          "process_identity_verified": false,
+          "relation": "same_orientation",
+          "scale": "2"
+        }
+      },
+      "fixture": "accepting-1.json",
+      "input": {
+        "left": [
+          "-2",
+          "-1",
+          "2"
+        ],
+        "operation": "equation_comparison",
+        "right": [
+          "-4",
+          "-2",
+          "4"
+        ]
+      },
+      "source_proposal": "MV6884-N181"
+    },
+    {
+      "expected_disposition": "completed",
+      "expected_output": {
+        "accepted": false,
+        "error": "VECTOR_SHAPE",
+        "external_credit": false,
+        "value": null
+      },
+      "fixture": "adverse-1.json",
+      "input": {
+        "left": [
+          "1"
+        ],
+        "operation": "equation_comparison",
+        "right": [
+          "1",
+          "2"
+        ]
+      },
+      "source_proposal": "MV6884-N187"
+    },
+    {
+      "expected_disposition": "represented",
+      "expected_output": {
+        "accepted": true,
+        "error": null,
+        "external_credit": false,
+        "value": {
+          "accessibility_complete": false,
+          "label_present": true,
+          "language": "en",
+          "spoken": "2 A plus 1 B yields 2 C"
+        }
+      },
+      "fixture": "accepting-2.json",
+      "input": {
+        "label": "Synthetic equation",
+        "language": "en",
+        "manual_evaluation": false,
+        "operation": "accessible_equation",
+        "products": {
+          "C": 2
+        },
+        "reactants": {
+          "A": 2,
+          "B": 1
+        }
+      },
+      "source_proposal": "MV6884-N191"
+    },
+    {
+      "expected_disposition": "exact_gate",
+      "expected_output": {
+        "accepted": false,
+        "error": "MANUAL_EVALUATION_GATE",
+        "external_credit": false,
+        "value": null
+      },
+      "fixture": "adverse-2.json",
+      "input": {
+        "label": "Example",
+        "language": "en",
+        "manual_evaluation": true,
+        "operation": "accessible_equation",
+        "products": {
+          "B": 1
+        },
+        "reactants": {
+          "A": 1
+        }
+      },
+      "source_proposal": "MV6884-N197"
+    }
+  ],
+  "operations": [
+    "equation_comparison",
+    "accessible_equation"
+  ],
+  "rules": {
+    "accessible_equation": "Read exact coefficients with explicit side-order arrays whenever ordering matters. Arrays must cover each side exactly once; an object map alone does not preserve requested speech order. Keep language review, manual evaluation and accessibility-complete claims reserved.",
+    "equation_comparison": "Compare aligned rational vectors for one nonzero proportionality factor. Distinguish positive rescaling, reverse orientation, different vectors and two zero vectors. Proportional equations do not prove process identity."
+  },
+  "source_definition_credit": "Current owner frozen fixtures; no inherited implementation credit."
+}

@@ -1,0 +1,118 @@
+{
+  "corrected_x1": "85617b39c876177842a2ae351373da1700b48a15",
+  "fixtures": [
+    {
+      "expected_disposition": "completed",
+      "expected_output": {
+        "accepted": true,
+        "error": null,
+        "external_credit": false,
+        "value": {
+          "amounts_mol": [
+            "2",
+            "1",
+            "2"
+          ],
+          "observed": false
+        }
+      },
+      "fixture": "accepting-1.json",
+      "input": {
+        "extent_mol": "1",
+        "initial_mol": [
+          "4",
+          "2",
+          "0"
+        ],
+        "numbers": [
+          -2,
+          -1,
+          2
+        ],
+        "operation": "extent_update"
+      },
+      "source_proposal": "MV6884-N061"
+    },
+    {
+      "expected_disposition": "completed",
+      "expected_output": {
+        "accepted": false,
+        "error": "NEGATIVE_AMOUNT",
+        "external_credit": false,
+        "value": null
+      },
+      "fixture": "adverse-1.json",
+      "input": {
+        "extent_mol": "1",
+        "initial_mol": [
+          "1",
+          "0"
+        ],
+        "numbers": [
+          -2,
+          2
+        ],
+        "operation": "extent_update"
+      },
+      "source_proposal": "MV6884-N067"
+    },
+    {
+      "expected_disposition": "completed",
+      "expected_output": {
+        "accepted": true,
+        "error": null,
+        "external_credit": false,
+        "value": {
+          "endpoints_included": true,
+          "lower_mol": "0",
+          "observed": false,
+          "upper_mol": "2"
+        }
+      },
+      "fixture": "accepting-2.json",
+      "input": {
+        "initial_mol": [
+          "4",
+          "2",
+          "0"
+        ],
+        "numbers": [
+          -2,
+          -1,
+          2
+        ],
+        "operation": "extent_interval"
+      },
+      "source_proposal": "MV6884-N071"
+    },
+    {
+      "expected_disposition": "completed",
+      "expected_output": {
+        "accepted": false,
+        "error": "NEGATIVE_AMOUNT",
+        "external_credit": false,
+        "value": null
+      },
+      "fixture": "adverse-2.json",
+      "input": {
+        "initial_mol": [
+          "-1"
+        ],
+        "numbers": [
+          0
+        ],
+        "operation": "extent_interval"
+      },
+      "source_proposal": "MV6884-N077"
+    }
+  ],
+  "operations": [
+    "extent_update",
+    "extent_interval"
+  ],
+  "rules": {
+    "extent_interval": "Intersect all nonnegative-amount constraints. Positive signed numbers give lower bounds; negative numbers give upper bounds; spectators give neither. Preserve null for an unbounded end and include finite endpoints.",
+    "extent_update": "Compute each declared amount as its initial amount plus signed number times extent using exact fractions. Initial and resulting amounts must be nonnegative. A negative extent is algebraically allowed when amounts remain feasible."
+  },
+  "source_definition_credit": "Current owner frozen fixtures; no inherited implementation credit."
+}

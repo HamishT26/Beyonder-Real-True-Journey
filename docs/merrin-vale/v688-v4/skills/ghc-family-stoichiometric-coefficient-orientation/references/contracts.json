@@ -1,0 +1,102 @@
+{
+  "corrected_x1": "85617b39c876177842a2ae351373da1700b48a15",
+  "fixtures": [
+    {
+      "expected_disposition": "completed",
+      "expected_output": {
+        "accepted": true,
+        "error": null,
+        "external_credit": false,
+        "value": {
+          "signed": {
+            "A": -2,
+            "B": -1,
+            "C": 2
+          }
+        }
+      },
+      "fixture": "accepting-1.json",
+      "input": {
+        "operation": "signed_numbers",
+        "products": {
+          "C": 2
+        },
+        "reactants": {
+          "A": 2,
+          "B": 1
+        }
+      },
+      "source_proposal": "MV6884-N021"
+    },
+    {
+      "expected_disposition": "completed",
+      "expected_output": {
+        "accepted": false,
+        "error": "SIDE_COEFFICIENT",
+        "external_credit": false,
+        "value": null
+      },
+      "fixture": "adverse-1.json",
+      "input": {
+        "operation": "signed_numbers",
+        "products": {},
+        "reactants": {
+          "A": -1
+        }
+      },
+      "source_proposal": "MV6884-N027"
+    },
+    {
+      "expected_disposition": "completed",
+      "expected_output": {
+        "accepted": true,
+        "error": null,
+        "external_credit": false,
+        "value": {
+          "primitive": [
+            -2,
+            -1,
+            2
+          ]
+        }
+      },
+      "fixture": "accepting-2.json",
+      "input": {
+        "numbers": [
+          "-4",
+          "-2",
+          "4"
+        ],
+        "operation": "primitive_numbers"
+      },
+      "source_proposal": "MV6884-N031"
+    },
+    {
+      "expected_disposition": "completed",
+      "expected_output": {
+        "accepted": false,
+        "error": "ZERO_EQUATION",
+        "external_credit": false,
+        "value": null
+      },
+      "fixture": "adverse-2.json",
+      "input": {
+        "numbers": [
+          "0",
+          "0"
+        ],
+        "operation": "primitive_numbers"
+      },
+      "source_proposal": "MV6884-N037"
+    }
+  ],
+  "operations": [
+    "signed_numbers",
+    "primitive_numbers"
+  ],
+  "rules": {
+    "primitive_numbers": "Clear rational denominators, then divide by the nonzero greatest common divisor. Preserve the original sign orientation and zero positions; refuse an all-zero equation.",
+    "signed_numbers": "Side coefficients are positive integers. Subtract reactant from product coefficients by exact species label; retain spectator zeros. A signed number is a symbolic orientation convention."
+  },
+  "source_definition_credit": "Current owner frozen fixtures; no inherited implementation credit."
+}

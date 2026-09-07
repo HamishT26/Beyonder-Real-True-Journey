@@ -1,0 +1,89 @@
+{
+  "corrected_x1": "85617b39c876177842a2ae351373da1700b48a15",
+  "fixtures": [
+    {
+      "expected_disposition": "completed",
+      "expected_output": {
+        "accepted": true,
+        "error": null,
+        "external_credit": false,
+        "value": {
+          "atom_total": 3,
+          "counts": {
+            "H": 2,
+            "O": 1
+          },
+          "element_existence_verified": false
+        }
+      },
+      "fixture": "accepting-1.json",
+      "input": {
+        "formula": "H2O",
+        "operation": "flat_formula"
+      },
+      "source_proposal": "MV6884-N001"
+    },
+    {
+      "expected_disposition": "completed",
+      "expected_output": {
+        "accepted": false,
+        "error": "ATOM_COUNT",
+        "external_credit": false,
+        "value": null
+      },
+      "fixture": "adverse-1.json",
+      "input": {
+        "formula": "H0",
+        "operation": "flat_formula"
+      },
+      "source_proposal": "MV6884-N007"
+    },
+    {
+      "expected_disposition": "completed",
+      "expected_output": {
+        "accepted": true,
+        "error": null,
+        "external_credit": false,
+        "value": {
+          "atom_total": 5,
+          "counts": {
+            "Ca": 1,
+            "H": 2,
+            "O": 2
+          },
+          "element_existence_verified": false
+        }
+      },
+      "fixture": "accepting-2.json",
+      "input": {
+        "formula": "Ca(OH)2",
+        "operation": "grouped_formula"
+      },
+      "source_proposal": "MV6884-N011"
+    },
+    {
+      "expected_disposition": "completed",
+      "expected_output": {
+        "accepted": false,
+        "error": "UNBALANCED_GROUP",
+        "external_credit": false,
+        "value": null
+      },
+      "fixture": "adverse-2.json",
+      "input": {
+        "formula": "Ca(OH2",
+        "operation": "grouped_formula"
+      },
+      "source_proposal": "MV6884-N017"
+    }
+  ],
+  "operations": [
+    "flat_formula",
+    "grouped_formula"
+  ],
+  "rules": {
+    "flat_formula": "Accept only a sequence of one- or two-letter atom symbols with bounded positive integer counts. Leading coefficients, grouping, zero counts and nontext input are outside this profile. Element existence is unverified.",
+    "grouped_formula": "Use a bounded stack for matching round and square groups. Apply terminal multipliers to every nested atom count; refuse empty, unmatched or too-deep groups. Group expansion does not identify a real substance."
+  },
+  "source_definition_credit": "Current owner frozen fixtures; no inherited implementation credit."
+}

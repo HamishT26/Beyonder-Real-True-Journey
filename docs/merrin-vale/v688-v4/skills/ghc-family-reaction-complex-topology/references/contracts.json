@@ -1,0 +1,144 @@
+{
+  "corrected_x1": "85617b39c876177842a2ae351373da1700b48a15",
+  "fixtures": [
+    {
+      "expected_disposition": "completed",
+      "expected_output": {
+        "accepted": true,
+        "error": null,
+        "external_credit": false,
+        "value": {
+          "complexes": [
+            {
+              "A": 1
+            },
+            {
+              "B": 1
+            },
+            {
+              "C": 1
+            }
+          ],
+          "edges": [
+            [
+              0,
+              1
+            ],
+            [
+              1,
+              2
+            ]
+          ],
+          "node_count": 3
+        }
+      },
+      "fixture": "accepting-1.json",
+      "input": {
+        "operation": "complex_registry",
+        "reactions": [
+          [
+            {
+              "A": 1
+            },
+            {
+              "B": 1
+            }
+          ],
+          [
+            {
+              "B": 1
+            },
+            {
+              "C": 1
+            }
+          ]
+        ]
+      },
+      "source_proposal": "MV6884-N121"
+    },
+    {
+      "expected_disposition": "completed",
+      "expected_output": {
+        "accepted": false,
+        "error": "REACTION_SHAPE",
+        "external_credit": false,
+        "value": null
+      },
+      "fixture": "adverse-1.json",
+      "input": {
+        "operation": "complex_registry",
+        "reactions": [
+          [
+            {
+              "A": 1
+            }
+          ]
+        ]
+      },
+      "source_proposal": "MV6884-N127"
+    },
+    {
+      "expected_disposition": "completed",
+      "expected_output": {
+        "accepted": true,
+        "error": null,
+        "external_credit": false,
+        "value": {
+          "column_sums": [
+            0
+          ],
+          "incidence": [
+            [
+              -1
+            ],
+            [
+              1
+            ]
+          ]
+        }
+      },
+      "fixture": "accepting-2.json",
+      "input": {
+        "edges": [
+          [
+            0,
+            1
+          ]
+        ],
+        "node_count": 2,
+        "operation": "complex_incidence"
+      },
+      "source_proposal": "MV6884-N131"
+    },
+    {
+      "expected_disposition": "completed",
+      "expected_output": {
+        "accepted": false,
+        "error": "NODE_RANGE",
+        "external_credit": false,
+        "value": null
+      },
+      "fixture": "adverse-2.json",
+      "input": {
+        "edges": [
+          [
+            0,
+            2
+          ]
+        ],
+        "node_count": 2,
+        "operation": "complex_incidence"
+      },
+      "source_proposal": "MV6884-N137"
+    }
+  ],
+  "operations": [
+    "complex_registry",
+    "complex_incidence"
+  ],
+  "rules": {
+    "complex_incidence": "Place minus one at each source and plus one at each target in a separate edge column. A self edge is zero. Preserve isolated node rows and parallel edge columns; reject out-of-range indices.",
+    "complex_registry": "Canonicalize each positive-coefficient species multiset, assign nodes in first-encounter order and retain each directed edge, including parallel and self edges. Empty source and sink complexes remain explicit."
+  },
+  "source_definition_credit": "Current owner frozen fixtures; no inherited implementation credit."
+}

@@ -1,0 +1,138 @@
+{
+  "corrected_x1": "85617b39c876177842a2ae351373da1700b48a15",
+  "fixtures": [
+    {
+      "expected_disposition": "completed",
+      "expected_output": {
+        "accepted": true,
+        "error": null,
+        "external_credit": false,
+        "value": {
+          "kinetic_flux_observed": false,
+          "net_numbers": [
+            "-1",
+            "0",
+            "1"
+          ]
+        }
+      },
+      "fixture": "accepting-1.json",
+      "input": {
+        "matrix": [
+          [
+            -1,
+            0
+          ],
+          [
+            1,
+            -1
+          ],
+          [
+            0,
+            1
+          ]
+        ],
+        "operation": "pathway_sum",
+        "weights": [
+          "1",
+          "1"
+        ]
+      },
+      "source_proposal": "MV6884-N101"
+    },
+    {
+      "expected_disposition": "completed",
+      "expected_output": {
+        "accepted": false,
+        "error": "MATRIX_SHAPE",
+        "external_credit": false,
+        "value": null
+      },
+      "fixture": "adverse-1.json",
+      "input": {
+        "matrix": [
+          [
+            1,
+            2
+          ],
+          [
+            1
+          ]
+        ],
+        "operation": "pathway_sum",
+        "weights": [
+          "1",
+          "1"
+        ]
+      },
+      "source_proposal": "MV6884-N107"
+    },
+    {
+      "expected_disposition": "completed",
+      "expected_output": {
+        "accepted": true,
+        "error": null,
+        "external_credit": false,
+        "value": {
+          "column_residuals": [
+            "0"
+          ],
+          "conserved": true,
+          "physical_conservation_verified": false,
+          "trivial": false
+        }
+      },
+      "fixture": "accepting-2.json",
+      "input": {
+        "matrix": [
+          [
+            -1
+          ],
+          [
+            1
+          ]
+        ],
+        "operation": "moiety_certificate",
+        "weights": [
+          "1",
+          "1"
+        ]
+      },
+      "source_proposal": "MV6884-N111"
+    },
+    {
+      "expected_disposition": "completed",
+      "expected_output": {
+        "accepted": false,
+        "error": "VECTOR_SHAPE",
+        "external_credit": false,
+        "value": null
+      },
+      "fixture": "adverse-2.json",
+      "input": {
+        "matrix": [
+          [
+            1
+          ],
+          [
+            2
+          ]
+        ],
+        "operation": "moiety_certificate",
+        "weights": [
+          "1"
+        ]
+      },
+      "source_proposal": "MV6884-N117"
+    }
+  ],
+  "operations": [
+    "pathway_sum",
+    "moiety_certificate"
+  ],
+  "rules": {
+    "moiety_certificate": "Multiply a declared row-weight vector by every stoichiometric column. Report every residual, whether all are zero, and whether the weight vector itself is zero. A formal certificate is not physical conservation evidence.",
+    "pathway_sum": "Treat each matrix column as a declared pathway and sum columns with exact rational weights. Reject ragged matrices and weight mismatches; do not turn formal pathway weights into observed kinetic flux."
+  },
+  "source_definition_credit": "Current owner frozen fixtures; no inherited implementation credit."
+}

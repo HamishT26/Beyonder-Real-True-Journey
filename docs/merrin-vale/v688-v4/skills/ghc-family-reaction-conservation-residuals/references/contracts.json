@@ -1,0 +1,122 @@
+{
+  "corrected_x1": "85617b39c876177842a2ae351373da1700b48a15",
+  "fixtures": [
+    {
+      "expected_disposition": "completed",
+      "expected_output": {
+        "accepted": true,
+        "error": null,
+        "external_credit": false,
+        "value": {
+          "balanced": true,
+          "physical_reaction_verified": false,
+          "residual": {
+            "H": 0,
+            "O": 0
+          }
+        }
+      },
+      "fixture": "accepting-1.json",
+      "input": {
+        "composition": {
+          "H2": {
+            "H": 2
+          },
+          "H2O": {
+            "H": 2,
+            "O": 1
+          },
+          "O2": {
+            "O": 2
+          }
+        },
+        "numbers": {
+          "H2": -2,
+          "H2O": 2,
+          "O2": -1
+        },
+        "operation": "element_residual"
+      },
+      "source_proposal": "MV6884-N041"
+    },
+    {
+      "expected_disposition": "completed",
+      "expected_output": {
+        "accepted": false,
+        "error": "UNKNOWN_SPECIES",
+        "external_credit": false,
+        "value": null
+      },
+      "fixture": "adverse-1.json",
+      "input": {
+        "composition": {
+          "A": {
+            "X": 1
+          }
+        },
+        "numbers": {
+          "B": 1
+        },
+        "operation": "element_residual"
+      },
+      "source_proposal": "MV6884-N047"
+    },
+    {
+      "expected_disposition": "completed",
+      "expected_output": {
+        "accepted": true,
+        "error": null,
+        "external_credit": false,
+        "value": {
+          "balanced": true,
+          "charge_residual": 0,
+          "electrochemistry_verified": false
+        }
+      },
+      "fixture": "accepting-2.json",
+      "input": {
+        "charges": {
+          "M": -1,
+          "N": 0,
+          "P": 1
+        },
+        "numbers": {
+          "M": -1,
+          "N": 1,
+          "P": -1
+        },
+        "operation": "charge_residual"
+      },
+      "source_proposal": "MV6884-N051"
+    },
+    {
+      "expected_disposition": "completed",
+      "expected_output": {
+        "accepted": false,
+        "error": "UNKNOWN_SPECIES",
+        "external_credit": false,
+        "value": null
+      },
+      "fixture": "adverse-2.json",
+      "input": {
+        "charges": {
+          "A": 1
+        },
+        "numbers": {
+          "B": 1
+        },
+        "operation": "charge_residual"
+      },
+      "source_proposal": "MV6884-N057"
+    }
+  ],
+  "operations": [
+    "element_residual",
+    "charge_residual"
+  ],
+  "rules": {
+    "charge_residual": "Join signed numbers to declared integer formal charges. Report the signed residual and a structural balanced flag, preserving neutral species. This establishes no electrochemistry or charge measurement.",
+    "element_residual": "Join each signed species coefficient to its declared atom-count map, sum each element and retain unused-element zeros. Missing species or negative counts are refusal conditions. A zero residual is no physical-reaction observation."
+  },
+  "source_definition_credit": "Current owner frozen fixtures; no inherited implementation credit."
+}

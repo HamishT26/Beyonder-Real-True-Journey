@@ -1,0 +1,104 @@
+{
+  "corrected_x1": "85617b39c876177842a2ae351373da1700b48a15",
+  "fixtures": [
+    {
+      "expected_disposition": "completed",
+      "expected_output": {
+        "accepted": true,
+        "error": null,
+        "external_credit": false,
+        "value": {
+          "limiting_species": [
+            "B"
+          ],
+          "maximum_forward_extent_mol": "1",
+          "observed": false
+        }
+      },
+      "fixture": "accepting-1.json",
+      "input": {
+        "amounts_mol": [
+          "4",
+          "1"
+        ],
+        "numbers": [
+          -2,
+          -1
+        ],
+        "operation": "limiting_pool",
+        "species": [
+          "A",
+          "B"
+        ]
+      },
+      "source_proposal": "MV6884-N081"
+    },
+    {
+      "expected_disposition": "completed",
+      "expected_output": {
+        "accepted": false,
+        "error": "NO_CONSUMPTION",
+        "external_credit": false,
+        "value": null
+      },
+      "fixture": "adverse-1.json",
+      "input": {
+        "amounts_mol": [
+          "1"
+        ],
+        "numbers": [
+          1
+        ],
+        "operation": "limiting_pool",
+        "species": [
+          "A"
+        ]
+      },
+      "source_proposal": "MV6884-N087"
+    },
+    {
+      "expected_disposition": "completed",
+      "expected_output": {
+        "accepted": true,
+        "error": null,
+        "external_credit": false,
+        "value": {
+          "degree": "0",
+          "observed": false
+        }
+      },
+      "fixture": "accepting-2.json",
+      "input": {
+        "extent_mol": "0",
+        "maximum_mol": "2",
+        "operation": "degree_of_reaction"
+      },
+      "source_proposal": "MV6884-N091"
+    },
+    {
+      "expected_disposition": "completed",
+      "expected_output": {
+        "accepted": false,
+        "error": "MAXIMUM_EXTENT",
+        "external_credit": false,
+        "value": null
+      },
+      "fixture": "adverse-2.json",
+      "input": {
+        "extent_mol": "0",
+        "maximum_mol": "0",
+        "operation": "degree_of_reaction"
+      },
+      "source_proposal": "MV6884-N097"
+    }
+  ],
+  "operations": [
+    "limiting_pool",
+    "degree_of_reaction"
+  ],
+  "rules": {
+    "degree_of_reaction": "Divide extent by a strictly positive maximum and require the result from zero through one. A numerical degree is a declared ratio, not observed conversion.",
+    "limiting_pool": "For consumed species only, divide initial amount by the absolute negative signed number. Preserve every tied minimum in the supplied species-array order and exclude products and spectators."
+  },
+  "source_definition_credit": "Current owner frozen fixtures; no inherited implementation credit."
+}

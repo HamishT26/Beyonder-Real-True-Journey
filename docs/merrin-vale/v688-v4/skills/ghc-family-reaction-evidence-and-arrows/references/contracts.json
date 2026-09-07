@@ -1,0 +1,95 @@
+{
+  "corrected_x1": "85617b39c876177842a2ae351373da1700b48a15",
+  "fixtures": [
+    {
+      "expected_disposition": "open_gap",
+      "expected_output": {
+        "accepted": true,
+        "error": null,
+        "external_credit": false,
+        "value": {
+          "external_claim_supported": false,
+          "missing_roles": [
+            "entity_definition",
+            "balanced_equation"
+          ],
+          "required_roles": [
+            "entity_definition",
+            "balanced_equation"
+          ]
+        }
+      },
+      "fixture": "accepting-1.json",
+      "input": {
+        "available_roles": [],
+        "claim": "stoichiometry",
+        "operation": "reaction_evidence",
+        "synthetic": true
+      },
+      "source_proposal": "MV6884-N161"
+    },
+    {
+      "expected_disposition": "exact_gate",
+      "expected_output": {
+        "accepted": false,
+        "error": "CLAIM_CLASS",
+        "external_credit": false,
+        "value": null
+      },
+      "fixture": "adverse-1.json",
+      "input": {
+        "available_roles": [],
+        "claim": "consciousness",
+        "operation": "reaction_evidence",
+        "synthetic": true
+      },
+      "source_proposal": "MV6884-N167"
+    },
+    {
+      "expected_disposition": "represented",
+      "expected_output": {
+        "accepted": true,
+        "error": null,
+        "external_credit": false,
+        "value": {
+          "arrow": "=",
+          "equilibrium_measured": false,
+          "kinetics_measured": false,
+          "meaning": "stoichiometric_relation"
+        }
+      },
+      "fixture": "accepting-2.json",
+      "input": {
+        "arrow": "=",
+        "observed": false,
+        "operation": "arrow_semantics"
+      },
+      "source_proposal": "MV6884-N171"
+    },
+    {
+      "expected_disposition": "completed",
+      "expected_output": {
+        "accepted": false,
+        "error": "ARROW_PROFILE",
+        "external_credit": false,
+        "value": null
+      },
+      "fixture": "adverse-2.json",
+      "input": {
+        "arrow": "=>",
+        "observed": false,
+        "operation": "arrow_semantics"
+      },
+      "source_proposal": "MV6884-N177"
+    }
+  ],
+  "operations": [
+    "reaction_evidence",
+    "arrow_semantics"
+  ],
+  "rules": {
+    "arrow_semantics": "Preserve the literal arrow and distinguish relation, net forward, both directions and equilibrium declaration. No arrow establishes measured equilibrium or kinetics; reject a preclaimed observation.",
+    "reaction_evidence": "Keep stoichiometric, kinetic, thermodynamic and deployment evidence roles distinct. Missing labels remain gaps; even complete synthetic labels support no external claim. Real-evidence or unsupported-claim promotion requires its separate gate."
+  },
+  "source_definition_credit": "Current owner frozen fixtures; no inherited implementation credit."
+}
