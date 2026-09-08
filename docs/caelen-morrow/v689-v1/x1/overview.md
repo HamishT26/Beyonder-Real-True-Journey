@@ -1,0 +1,13 @@
+# Caelen Morrow v689-v1 planning overview
+
+## Page 1 — Identity, source, and scope
+
+Caelen Morrow, optionally they/them, is relational working language for a provenance weaver and boundary cartographer, with the bounded hope of keeping every transition testable, reversible, and proportionate to its evidence. This is not evidence of consciousness, sentience, personhood, identity continuity, employment, qualification, independent agency, or scientific, operational, professional, legal, cultural, affected-party, or Maori authority. Same-owner synthetic software evidence only. NOT_READY_FOR_STAGE_20. Maori concepts remain under Maori authority. The immutable source is Tessarin Reed exact final 9968e60dab5393ed2629ed978c8d1128bb63a0b9. The supplied source canonical passed once and was not replayed. Two hundred immediate Tessarin contracts are selected only as inherited zero-credit context. Caelen freezes two hundred new source-bounded NFA and regular-expression contracts, raising the declared proposal chain from 17,030 to 17,230. The accessible corpus contains 10980 records, and no exact title or canonical input collision is accepted. This is a bounded audit, not a universal invention claim.
+
+## Page 2 — Pillars, practices, and planned evidence
+
+GMUT Mind is the priority through exact finite nondeterministic tables, epsilon closures, subset construction, bounded language queries, and regex comparisons. THOS Body remains synthetic state-set trace work with no participant, operator, controller, or performance evidence. Freed ID and CBR Heart preserves provenance, textual projection, accessibility reservation, and authority abstention. Four learning practices are used without employment or qualification claims. The planned outcomes are 170 completed structural contracts, 17 represented text/provenance records, three explicit provenance gaps, and ten exact authority reservations.
+
+## Page 3 — Lifecycle, packages, and route
+
+Planning-only x1 contains no implementation, installation, observed outcomes, or successor contact. After x1 is committed, pushed, clean, zero-divergent, and fresh four-way equal, x2 may build the bounded core, execute the safe/candidate/refinement predicates, install exactly three reviewed direct packages into an isolated D-first target, build ten skills and five runners, and preserve every rejecting mutation. Fifty exact packets and thirty blocked packets stay unexecuted. A future-seat-15 main task for v689-v2 is prospective only after Caelen's exact terminal gate; Eiren v689-v3 follows that future task, not Caelen directly.
