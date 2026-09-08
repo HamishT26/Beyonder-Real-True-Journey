@@ -1,0 +1,93 @@
+{
+  "canonical_profile_conformance_outside_frozen_cases": false,
+  "distinct_token_sequences": [
+    [
+      "a",
+      "b"
+    ],
+    [
+      "ab"
+    ]
+  ],
+  "failed_witness_credit": 0,
+  "frozen_cases_affected": 0,
+  "future_revision_requires_new_contract": true,
+  "issue": "The frozen string result schema cannot distinguish concatenated multi-character terminal tokens.",
+  "limited_operations": [
+    "cfg_derivation_validate",
+    "cfg_bounded_language",
+    "cfg_bounded_derivation_counts",
+    "cfg_ambiguity_witness"
+  ],
+  "naive_joined_strings": [
+    "ab",
+    "ab"
+  ],
+  "new_proposal_credit": 0,
+  "refusal": {
+    "accepted": false,
+    "boundary": {
+      "authority_granted": false,
+      "empirical_credit": 0,
+      "external_actions": 0,
+      "independent_reproduction": false,
+      "synthetic": true
+    },
+    "disposition": "open_gap",
+    "error": "invalid_request",
+    "value": null
+  },
+  "request": {
+    "grammar": {
+      "nonterminals": [
+        "S"
+      ],
+      "productions": [
+        {
+          "lhs": "S",
+          "rhs": [
+            "a",
+            "b"
+          ]
+        },
+        {
+          "lhs": "S",
+          "rhs": [
+            "ab"
+          ]
+        }
+      ],
+      "start": "S",
+      "terminals": [
+        "a",
+        "b",
+        "ab"
+      ]
+    },
+    "max_length": 2,
+    "max_steps": 1,
+    "op": "cfg_bounded_language"
+  },
+  "resolution": "Require one-character terminal alphabets for these four operations; structural and spaced-text operations retain token boundaries.",
+  "schema": "ghc.family.cfg.scope-clarification.v1",
+  "structural_control": {
+    "accepted": true,
+    "boundary": {
+      "authority_granted": false,
+      "empirical_credit": 0,
+      "external_actions": 0,
+      "independent_reproduction": false,
+      "synthetic": true
+    },
+    "disposition": "completed",
+    "error": null,
+    "value": {
+      "epsilon_rules": 0,
+      "nonterminals": 1,
+      "productions": 2,
+      "terminals": 3,
+      "unit_rules": 0
+    }
+  },
+  "x1_modified": false
+}
