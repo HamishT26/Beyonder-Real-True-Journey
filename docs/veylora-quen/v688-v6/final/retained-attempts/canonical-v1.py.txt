@@ -1,0 +1,152 @@
+"""One registered external canonical invocation for the exact final owner delta."""
+from pathlib import Path
+import argparse,datetime,json,os,re,subprocess,sys
+ROOT=Path(__file__).resolve().parents[1];sys.path.insert(0,str(ROOT/"scripts"))
+import ghc_family_veylora_quen_v688_v6_validation as v
+BASE=v.BASE
+def g(*args):return subprocess.check_output(["git","-C",str(ROOT),*args],stderr=subprocess.PIPE).decode("utf-8").strip()
+def load(p):return v.strict(p.read_bytes())
+def external_write(path,obj):
+ path.parent.mkdir(parents=True,exist_ok=True)
+ with path.open("x",encoding="utf-8",newline="\n") as f:json.dump(obj,f,indent=2,sort_keys=True);f.write("\n")
+def equality(branch):
+ heads=[g("rev-parse","HEAD"),g("rev-parse","@{upstream}"),g("rev-parse","refs/remotes/origin/"+branch),
+  g("ls-remote","--exit-code","origin","refs/heads/"+branch).split()[0]]
+ divergence=[int(x) for x in g("rev-list","--left-right","--count","HEAD...@{upstream}").split()]
+ return {"heads":heads,"equal":len(set(heads))==1,"divergence":divergence,"clean":not g("status","--porcelain=v1")}
+def snapshot(head,skills,runners):
+ policy=load(ROOT/BASE/"final/canonical-policy.json");truth=load(ROOT/BASE/"final/phase-truth.json")
+ checks={};checks["head_exact"]=g("rev-parse","HEAD")==head
+ checks["branch_exact"]=g("branch","--show-current")==policy["branch"]
+ eq=equality(policy["branch"])
+ checks["clean_before"]=eq["clean"];checks["four_way_equal_before"]=eq["equal"] and eq["heads"][0]==head
+ checks["zero_divergence_before"]=eq["divergence"]==[0,0]
+ checks["phase_commit_count"]=int(g("rev-list","--count",policy["source"]+".."+head))==3
+ checks["zero_merges"]=int(g("rev-list","--count","--merges",policy["source"]+".."+head))==0
+ parents=[(policy["x1"],policy["source"]),(policy["evidence"],policy["x1"]),(head,policy["evidence"])]
+ checks["direct_single_parent_chain"]=all(g("show","-s","--format=%P",child)==parent for child,parent in parents)
+ changes=g("diff","--name-status",policy["source"],head).splitlines()
+ checks["only_additions"]=all(line.startswith("A\t") for line in changes)
+ changed=[line.split("\t")[-1] for line in changes]
+ paths=v.owner_files(ROOT);rels={p.relative_to(ROOT).as_posix() for p in paths}
+ checks["owner_delta_complete"]=set(changed)==rels and all(v.allowed_path(p) for p in changed)
+ checks["owner_file_ceiling"]=len(paths)<2000
+ x1m=load(ROOT/BASE/"x1/x1-manifest.json")
+ x1paths=[e["path"] for e in x1m["entries"]]+x1m["self_exclusions"]
+ checks["x1_immutable"]=not g("diff","--name-only",policy["x1"],head,"--",*x1paths)
+ em=load(ROOT/BASE/"validation/evidence-manifest.json")
+ epaths=[e["path"] for e in em["entries"]]+em["self_exclusions"]
+ # Check immutable evidence paths in bounded batches to respect the Windows command-line limit.
+ checks["x2_immutable"]=all(not g("diff","--name-only",policy["evidence"],head,"--",*epaths[i:i+80]) for i in range(0,len(epaths),80))
+ scan=v.scan(ROOT,paths)
+ checks["strict_json_and_ast"]=scan["strict_json_count"]>0 and scan["python_ast_count"]>0
+ checks["configured_privacy"]=scan["privacy"]["valid"]
+ checks["configured_security"]=scan["security"]["valid"]
+ checks["document_word_ceiling"]=scan["maximum_document_words"]<=100000
+ manifest_paths=[BASE+"/x1/x1-manifest.json",BASE+"/x2/deck/card-manifest.json",
+  BASE+"/validation/evidence-manifest.json",BASE+"/validation/final-manifest.json"]
+ manifests=[v.verify_manifest(ROOT,ROOT/p) for p in manifest_paths]
+ checks["all_declared_manifests"]=all(m["valid"] for m in manifests)
+ fm=load(ROOT/BASE/"validation/final-manifest.json")
+ checks["final_manifest_complete"]={e["path"] for e in fm["entries"]}|set(fm["self_exclusions"])==rels
+ # Bind working text, with explicit LF normalization, to the exact committed final blobs.
+ ordered=sorted(rels);blobs=v.batch_blobs(ROOT,[head+":"+p for p in ordered])
+ checks["working_to_exact_git_blob"]=all(v.normalized((ROOT/p).read_bytes())==b for p,b in zip(ordered,blobs))
+ seal=load(ROOT/BASE/"seal/content-seal.json")
+ checks["content_seal"]=all(v.sha(v.normalized((ROOT/e["path"]).read_bytes()))==e["sha256_normalized_lf"]
+  and len(v.normalized((ROOT/e["path"]).read_bytes()))==e["bytes_normalized_lf"] for e in seal["targets"])
+ promotions=v.verify_promotions(ROOT,skills,runners);checks["raw_global_copy_parity"]=promotions["valid"]
+ pr=load(ROOT/BASE/"x2/promotion-receipt.json");by_path=dict(zip(ordered,blobs))
+ joins=[]
+ for e in pr["source_global_parity"]:
+  dest=e["global_target"]
+  target=skills/dest.removeprefix("skills/") if dest.startswith("skills/") else runners/dest.removeprefix("owner_runner_bank/")
+  joins.append(v.normalized(target.read_bytes())==by_path[e["source"]])
+ checks["global_to_committed_lf_join"]=all(joins)
+ checks["outcomes_exact"]=truth["outcomes"]=={"completed":176,"represented":11,"open_gap":3,"exact_gate":10}
+ checks["source_failure_retained"]=truth["source_failed_canonical_credit"]==0 and truth["source_canonical_replayed"] is False
+ checks["current_method_schema"]=load(ROOT/BASE/"x2/method-flow/validation.json")["valid"] is True
+ ledger=load(ROOT/BASE/"x2/method-flow/ledger.json");w=ledger["witnesses"]
+ checks["retained_failure_counts"]=(sum(r["result"]=="fail" for r in w)==531 and sum(r["result"]=="pass" for r in w)==37
+  and len({r["witness_id"] for r in w})==len(w))
+ checks["retained_failed_definitions"]=(ROOT/BASE/"x2/retained-attempts/firmware-core-v1.py.txt").is_file() and (ROOT/BASE/"x2/retained-attempts/x2-tests-v1.py.txt").is_file()
+ checks["release_profile"]=load(ROOT/BASE/"x1/release-profile-validation.json")["status"]=="PASS"
+ checks["workflow_dependency_correction"]=load(ROOT/BASE/"x1/workflow-current-profile-overlay.json")["status"]=="VALID_CURRENT_RELEASE_DEPENDENCY_CORRECTED_PLAN"
+ packages=load(ROOT/BASE/"x2/package-transaction.json")
+ checks["package_contract"]=packages["state"]=="COMPLETE" and packages["direct_count"]==3 and packages["closure_count"]==7 and packages["pip_check_passed"]
+ checks["promotion_counts"]=pr["skill_count"]==10 and pr["runner_interface_count"]==5 and len(pr["source_global_parity"])==96
+ bi=load(ROOT/BASE/"final/baton-index.json");baton=(ROOT/bi["path"]).read_text(encoding="utf-8")
+ checks["baton_modules_and_budget"]=len(re.findall(r"^## Module \d\d",baton,re.M))==13 and 10000<=len(baton.split())<=100000 and len(baton.split())==bi["word_count"]
+ route=load(ROOT/BASE/"final/terminal-route-checklist.json")
+ checks["prepared_not_sent"]=bi["delivery_state"]==route["state"]=="PREPARED_NOT_SENT" and route["sends_already_made"]==truth["successor_contacts"]==0
+ checks["one_existing_sylven_edge"]=route["recipient_title"]=="Sylven Arc" and route["recipient_phase"]=="v688-v7" and route["authorized_sends"]==1
+ checks["not_ready_for_stage20"]=truth["terminal_verdict"]=="NOT_READY_FOR_STAGE_20"
+ return {"policy":policy,"checks":checks,"equality_before":eq,"scan":scan,"manifests":manifests,"promotions":promotions,
+  "seal_targets":len(seal["targets"]),"owner_files":len(paths),"global_lf_bindings":len(joins)}
+def main():
+ ap=argparse.ArgumentParser();ap.add_argument("--head",required=True);ap.add_argument("--bank",type=Path,required=True)
+ ap.add_argument("--skills",type=Path,required=True);ap.add_argument("--runners",type=Path,required=True);ap.add_argument("--preflight",action="store_true")
+ a=ap.parse_args()
+ if re.fullmatch("[a-f0-9]{40}",a.head) is None:raise SystemExit("exact_head_required")
+ bank=a.bank.resolve()
+ if bank.drive.upper()!="D:" or bank.is_relative_to(ROOT):raise SystemExit("external_D_first_bank_required")
+ folder=bank/"canonical";marker=folder/"invocation.json";receipt=folder/"exact-final-owner-scoped-canonical.json"
+ if a.preflight:
+  if marker.exists() or receipt.exists():raise SystemExit("canonical_started_preflight_replay_refused")
+  result=snapshot(a.head,a.skills.resolve(),a.runners.resolve())
+  out={"schema":"ghc.family.exact-final-canonical-preflight.v1","head":a.head,
+   "checks":result["checks"],"valid":all(result["checks"].values()),"canonical_invoked":False,
+   "owner_files":result["owner_files"],"privacy":result["scan"]["privacy"],"manifests":result["manifests"]}
+  external_write(folder/"preflight.json",out)
+  print(json.dumps({"preflight":True,"valid":out["valid"],"checks":len(out["checks"]),"failed":[k for k,val in out["checks"].items() if not val]}))
+  return not out["valid"]
+ if marker.exists() or receipt.exists():raise SystemExit("canonical_replay_refused")
+ pre=load(folder/"preflight.json")
+ if pre["head"]!=a.head or pre["valid"] is not True:raise SystemExit("matching_successful_preflight_required")
+ external_write(marker,{"schema":"ghc.family.canonical-invocation.v1","head":a.head,"owner":"Veylora Quen","phase":"v688-v6","invocation_count":1,
+  "started_at_utc":datetime.datetime.now(datetime.timezone.utc).isoformat(),"replay_count":0})
+ checks={};test_results=[];state={}
+ try:
+  state=snapshot(a.head,a.skills.resolve(),a.runners.resolve());checks.update(state["checks"])
+  if not all(checks.values()):raise RuntimeError("exact_final_preconditions_changed")
+  for entry in state["policy"]["test_modules"]:
+   commit=a.head if entry["definition"]=="invocation_exact_final" else entry["definition"]
+   manifest=json.loads(subprocess.check_output(["git","-C",str(ROOT),"show",commit+":"+entry["manifest"]]))
+   paths=[e["path"] for e in manifest["entries"]]+manifest["self_exclusions"]
+   view=folder/("definition-"+entry["stage"])
+   mat=v.materialize(ROOT,commit,paths,view)
+   p=subprocess.run([sys.executable,"-B","-X","utf8",str(view/entry["module"])],cwd=view,stdout=subprocess.PIPE,stderr=subprocess.PIPE,timeout=90,
+    env={**os.environ,"PYTHONDONTWRITEBYTECODE":"1","PYTHONUTF8":"1"})
+   (folder/(entry["stage"]+"-test-stdout.txt")).write_bytes(p.stdout);(folder/(entry["stage"]+"-test-stderr.txt")).write_bytes(p.stderr)
+   match=re.search(r"Ran (\d+) tests?",p.stderr.decode("utf-8","replace"))
+   count=int(match.group(1)) if match else 0
+   passed=p.returncode==0 and count==entry["expected_tests"]
+   test_results.append({"stage":entry["stage"],"definition":commit,"module":entry["module"],
+    "definition_sha256":v.sha((view/entry["module"]).read_bytes()),"test_count":count,
+    "expected_test_count":entry["expected_tests"],"returncode":p.returncode,"passed":passed,"materialized_files":mat["file_count"]})
+   print(json.dumps({"canonical_module":entry["stage"],"tests":count,"passed":passed}),flush=True)
+  checks["all_lifecycle_test_modules"]=all(r["passed"] for r in test_results) and len(test_results)==3
+  checks["head_stable_after"]=g("rev-parse","HEAD")==a.head
+  after=equality(state["policy"]["branch"])
+  checks["clean_after"]=after["clean"];checks["four_way_equal_after"]=after["equal"] and after["heads"][0]==a.head
+  checks["zero_divergence_after"]=after["divergence"]==[0,0]
+  error=None
+ except Exception as exc:
+  checks["canonical_exception_absent"]=False;error={"class":type(exc).__name__,"scope":"exact owner canonical; private diagnostics retained externally"};after=None
+ valid=all(checks.values()) and len(test_results)==3 and all(r["passed"] for r in test_results)
+ out={"schema":"ghc.family.exact-final-owner-scoped-canonical.v688.v6","owner":"Veylora Quen","phase":"v688-v6","head":a.head,
+  "branch":state.get("policy",{}).get("branch"),"source":v.SOURCE,"x1":"6d7f5b0fc67f78a22463d3c3c9cec21aade35d92",
+  "evidence":"2cbe1c85f358bbed533dab79a22ffec9dd795f30","status":"VALID_EXACT_FINAL_OWNER_SCOPED_CANONICAL" if valid else "INVALID_EXACT_FINAL_OWNER_SCOPED_CANONICAL",
+  "canonical_invocation_count":1,"canonical_success_count":int(valid),"canonical_replay_count":0,"checks":checks,"check_count":len(checks),
+  "passed_check_count":sum(checks.values()),"test_modules":test_results,"test_count":sum(r["test_count"] for r in test_results),
+  "owner_files":state.get("owner_files"),"scan":state.get("scan"),"manifests":state.get("manifests"),
+  "manifest_bindings":sum(m["entries"] for m in state.get("manifests",[])),"seal_targets":state.get("seal_targets"),
+  "raw_global_parity":state.get("promotions"),"global_normalized_lf_bindings":state.get("global_lf_bindings"),
+  "equality_after":after,"error":error,"completed_at_utc":datetime.datetime.now(datetime.timezone.utc).isoformat(),
+  "same_owner_shared_infrastructure":True,"independent_reproduction":False,"whole_repository_suite":False,
+  "successor_contacts":0,"prepared_baton_state":"PREPARED_NOT_SENT","terminal_verdict":"NOT_READY_FOR_STAGE_20"}
+ external_write(receipt,out)
+ print(json.dumps({"status":out["status"],"head":a.head,"checks":len(checks),"passed_checks":sum(checks.values()),
+  "tests":out["test_count"],"owner_files":out["owner_files"],"replays":0}),flush=True)
+ return not valid
+if __name__=="__main__":raise SystemExit(main())
