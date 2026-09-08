@@ -1,0 +1,37 @@
+{
+  "authority_granted": false,
+  "core_dependencies": [
+    {
+      "path": "scripts/ghc_family_workflow_core.py",
+      "sha256": "146a72d5ab98dbb629ed8a0dbe797e267beb590318a362eaef1e70f1508790df"
+    }
+  ],
+  "deck_limit": 2000,
+  "default_collection_limit": 500,
+  "external_actions": 0,
+  "input_bytes_maximum": 1048576,
+  "model_states_maximum": 8,
+  "operations": [
+    {
+      "explanation": "Assess a concrete count against explicit minimum and maximum values without turning a cap into a quota.",
+      "op": "budget_check",
+      "required_fields": [
+        "count",
+        "maximum",
+        "minimum"
+      ],
+      "skill": "workload-range-contract",
+      "stage": "x1"
+    },
+    {
+      "explanation": "Split an exact finite workload into bounded batch sizes while preserving its total.",
+      "op": "quota_partition",
+      "required_fields": [
+        "batch",
+        "total"
+      ],
+      "skill": "workload-range-contract",
+      "stage": "x1"
+    }
+  ]
+}

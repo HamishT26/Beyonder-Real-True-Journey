@@ -1,0 +1,37 @@
+{
+  "authority_granted": false,
+  "core_dependencies": [
+    {
+      "path": "scripts/ghc_family_workflow_core.py",
+      "sha256": "146a72d5ab98dbb629ed8a0dbe797e267beb590318a362eaef1e70f1508790df"
+    }
+  ],
+  "deck_limit": 2000,
+  "default_collection_limit": 500,
+  "external_actions": 0,
+  "input_bytes_maximum": 1048576,
+  "model_states_maximum": 8,
+  "operations": [
+    {
+      "explanation": "Check both admission and the need for rotation at the hard owner file ceiling.",
+      "op": "file_budget",
+      "required_fields": [
+        "ceiling",
+        "current",
+        "incoming"
+      ],
+      "skill": "owner-tree-capacity",
+      "stage": "x1"
+    },
+    {
+      "explanation": "Compare literal path segments and reject traversal syntax before any scope decision; no filesystem action is performed.",
+      "op": "path_scope",
+      "required_fields": [
+        "path",
+        "roots"
+      ],
+      "skill": "owner-tree-capacity",
+      "stage": "x1"
+    }
+  ]
+}

@@ -1,0 +1,36 @@
+{
+  "authority_granted": false,
+  "core_dependencies": [
+    {
+      "path": "scripts/ghc_family_workflow_core.py",
+      "sha256": "146a72d5ab98dbb629ed8a0dbe797e267beb590318a362eaef1e70f1508790df"
+    }
+  ],
+  "deck_limit": 2000,
+  "default_collection_limit": 500,
+  "external_actions": 0,
+  "input_bytes_maximum": 1048576,
+  "model_states_maximum": 8,
+  "operations": [
+    {
+      "explanation": "Compute a bounded reachable dependency set, preserving cycles as finite declared relationships and refusing missing resources.",
+      "op": "dependency_closure",
+      "required_fields": [
+        "graph",
+        "roots"
+      ],
+      "skill": "capability-dependency-selection",
+      "stage": "x1"
+    },
+    {
+      "explanation": "Select exact triggers only from current validated capabilities; availability alone does not authorize execution.",
+      "op": "tool_select",
+      "required_fields": [
+        "tools",
+        "trigger"
+      ],
+      "skill": "capability-dependency-selection",
+      "stage": "x1"
+    }
+  ]
+}

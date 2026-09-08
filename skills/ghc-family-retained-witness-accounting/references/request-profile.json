@@ -1,0 +1,37 @@
+{
+  "authority_granted": false,
+  "core_dependencies": [
+    {
+      "path": "scripts/ghc_family_workflow_core.py",
+      "sha256": "146a72d5ab98dbb629ed8a0dbe797e267beb590318a362eaef1e70f1508790df"
+    }
+  ],
+  "deck_limit": 2000,
+  "default_collection_limit": 500,
+  "external_actions": 0,
+  "input_bytes_maximum": 1048576,
+  "model_states_maximum": 8,
+  "operations": [
+    {
+      "explanation": "Require an allowed state transition and a passing witness before promoting a candidate or preferred method.",
+      "op": "method_transition",
+      "required_fields": [
+        "passing_witnesses",
+        "state",
+        "successor_validated",
+        "to"
+      ],
+      "skill": "retained-witness-accounting",
+      "stage": "x1"
+    },
+    {
+      "explanation": "Count subject failures separately from passing rejection checks and prevent repeated identifiers from multiplying credit.",
+      "op": "witness_accounting",
+      "required_fields": [
+        "rows"
+      ],
+      "skill": "retained-witness-accounting",
+      "stage": "x1"
+    }
+  ]
+}

@@ -1,0 +1,38 @@
+{
+  "authority_granted": false,
+  "core_dependencies": [
+    {
+      "path": "scripts/ghc_family_workflow_core.py",
+      "sha256": "146a72d5ab98dbb629ed8a0dbe797e267beb590318a362eaef1e70f1508790df"
+    }
+  ],
+  "deck_limit": 2000,
+  "default_collection_limit": 500,
+  "external_actions": 0,
+  "input_bytes_maximum": 1048576,
+  "model_states_maximum": 8,
+  "operations": [
+    {
+      "explanation": "Convert an explicit version and slot into an ordinal before advancing; a remaster label is not an ordinary slot.",
+      "op": "phase_advance",
+      "required_fields": [
+        "delta",
+        "phase"
+      ],
+      "skill": "phase-cursor-arithmetic",
+      "stage": "x1"
+    },
+    {
+      "explanation": "Project a unique declared cycle from any named start owner, with a bounded count and no activation effect.",
+      "op": "cycle_assignments",
+      "required_fields": [
+        "count",
+        "cycle",
+        "phase",
+        "start"
+      ],
+      "skill": "phase-cursor-arithmetic",
+      "stage": "x1"
+    }
+  ]
+}

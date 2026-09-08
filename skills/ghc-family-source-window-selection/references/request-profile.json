@@ -1,0 +1,36 @@
+{
+  "authority_granted": false,
+  "core_dependencies": [
+    {
+      "path": "scripts/ghc_family_workflow_core.py",
+      "sha256": "146a72d5ab98dbb629ed8a0dbe797e267beb590318a362eaef1e70f1508790df"
+    }
+  ],
+  "deck_limit": 2000,
+  "default_collection_limit": 500,
+  "external_actions": 0,
+  "input_bytes_maximum": 1048576,
+  "model_states_maximum": 8,
+  "operations": [
+    {
+      "explanation": "Select the most recent completed records from explicit monotonic ordinals while keeping represented work out of the completed window.",
+      "op": "context_window",
+      "required_fields": [
+        "count",
+        "rows"
+      ],
+      "skill": "source-window-selection",
+      "stage": "x1"
+    },
+    {
+      "explanation": "Deduplicate equal source bindings by stable identifier, retain input order, and refuse conflicting bindings.",
+      "op": "source_selection",
+      "required_fields": [
+        "limit",
+        "rows"
+      ],
+      "skill": "source-window-selection",
+      "stage": "x1"
+    }
+  ]
+}
