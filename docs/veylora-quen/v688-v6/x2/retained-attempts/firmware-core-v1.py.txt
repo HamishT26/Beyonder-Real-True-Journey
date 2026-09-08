@@ -1,0 +1,259 @@
+"""Bounded synthetic firmware-record evaluator. It does not load or execute firmware."""
+import hashlib,json,re
+BOUNDARY=("Relational working language only. No consciousness, sentience, personhood, legal identity, "
+"identity continuity, employment, qualification, independent agency, scientific, operational, "
+"professional, legal, cultural, affected-party, or Maori authority is established. "
+"Same-owner synthetic evidence is not independent reproduction. NOT_READY_FOR_STAGE_20. "
+"Maori concepts remain under Maori authority.")
+FIELDS={
+ "ihex_record":{"record"},"ihex_checksum":{"bytes"},"ihex_extended":{"record"},"ihex_start":{"record"},
+ "ihex_image":{"records"},"ihex_eof":{"records"},"srec_record":{"record"},"srec_checksum":{"bytes"},
+ "srec_count":{"records"},"srec_termination":{"records"},"srec_image":{"records"},
+ "segment_runs":{"image"},"image_overlay":{"base","overlay","policy"},"image_relocate":{"image","delta"},
+ "image_crop":{"image","start","end"},"image_holes":{"image","start","end"},
+ "word_decode":{"data_hex","width","byteorder","signed"},"record_fixity":{"text"},
+ "record_provenance":{"source_label","source_digest","rights_state","review_state","observed"},
+ "authority_reservation":{"action"}}
+WIDTH={0:2,1:2,2:3,3:4,5:2,6:3,7:4,8:3,9:2}
+REQUIREMENTS={
+ "hardware_write":"exact device owner, target, qualified operator, rollback and safety evidence",
+ "firmware_deployment":"exact deployment target, authorization, test and recovery evidence",
+ "professional_certification":"competent professional authority and independent evaluation",
+ "legal_ownership":"competent legal and rights-holder evidence",
+ "cultural_interpretation":"competent and affected cultural authority",
+ "maori_wording":"tangata whenua, iwi, hapu and Maori authority",
+ "affected_party_approval":"the affected parties and their actual approval",
+ "privacy_complete":"appropriate privacy review, threat model and affected-party evidence",
+ "independent_reproduction":"an independent executor and independently obtained evidence",
+ "stage20":"all exact evidence and authority required by the protected Stage 20 gate"}
+class ContractError(ValueError): pass
+def require(condition,code):
+ if not condition:raise ContractError(code)
+def integer(v,minimum,maximum,code):
+ require(type(v) is int and minimum<=v<=maximum,code);return v
+def octets(v):
+ require(type(v) is list and len(v)<=260,"octet_array")
+ return [integer(x,0,255,"octet") for x in v]
+def hexbytes(v):
+ require(type(v) is str,"text_type")
+ require(len(v)<=8192 and len(v)%2==0 and re.fullmatch("[0-9a-fA-F]*",v) is not None,"hex_text")
+ return bytes.fromhex(v)
+def ihex_record(v):
+ require(type(v) is str,"text_type")
+ require(len(v)<=521 and re.fullmatch(":[0-9A-Fa-f]+",v) is not None and len(v)%2==1,"ihex_lexical")
+ data=bytes.fromhex(v[1:])
+ require(len(data)>=5 and len(data)==data[0]+5,"ihex_length")
+ require(sum(data)%256==0,"ihex_checksum")
+ require(data[3] in range(6),"ihex_record_type")
+ return {"length":data[0],"offset":int.from_bytes(data[1:3],"big"),"record_type":data[3],"data_hex":data[4:-1].hex()}
+def ihex_extension(r):
+ require(r["record_type"] in (2,4),"ihex_extension_kind")
+ require(r["offset"]==0 and r["length"]==2,"ihex_extension_shape")
+ mode="segment" if r["record_type"]==2 else "linear"
+ value=int(r["data_hex"],16)
+ return {"mode":mode,"base":value<<(4 if mode=="segment" else 16)}
+def ihex_entry(r):
+ require(r["record_type"] in (3,5),"ihex_start_kind")
+ require(r["offset"]==0 and r["length"]==4,"ihex_start_shape")
+ b=bytes.fromhex(r["data_hex"])
+ if r["record_type"]==3:return {"kind":"segment","cs":int.from_bytes(b[:2],"big"),"ip":int.from_bytes(b[2:],"big"),"executed":False}
+ return {"kind":"linear","entry":int.from_bytes(b,"big"),"executed":False}
+def records(v,parser):
+ require(type(v) is list and len(v)<=512,"record_collection")
+ return [parser(x) for x in v]
+def ihex_eof(rs):
+ ended=False
+ for r in rs:
+  require(not ended,"ihex_after_eof")
+  if r["record_type"]==1:
+   require(r["length"]==0 and r["offset"]==0,"ihex_eof_shape");ended=True
+ require(ended,"ihex_eof_missing")
+ return {"eof_index":len(rs)-1,"record_count":len(rs)}
+def ihex_image(rs):
+ ihex_eof(rs);base=0;mode="linear";image={};entry=None
+ for r in rs:
+  kind=r["record_type"]
+  if kind in (2,4):
+   ext=ihex_extension(r);base=ext["base"];mode=ext["mode"]
+  elif kind in (3,5):
+   require(entry is None,"duplicate_entry");entry=ihex_entry(r)
+  elif kind==0:
+   payload=bytes.fromhex(r["data_hex"]);off=r["offset"]
+   if mode=="segment":require(off+len(payload)<=65536,"address_wrap")
+   require(base+off+len(payload)<=0x100000000,"address_wrap")
+   for i,v in enumerate(payload):
+    address=base+off+i;require(address not in image,"image_overlap");image[address]=v
+    require(len(image)<=4096,"image_limit")
+ return {"image":[[a,image[a]] for a in sorted(image)],"entry":entry}
+def srec_record(v):
+ require(type(v) is str,"text_type")
+ require(len(v)>=4 and v[0]=="S" and v[1].isdigit(),"srec_lexical")
+ require(v[1] in "012356789","srec_type");kind=int(v[1])
+ require(len(v)<=514 and len(v)%2==0 and re.fullmatch("[0-9a-fA-F]+",v[2:]) is not None,"srec_lexical")
+ b=bytes.fromhex(v[2:]);width=WIDTH[kind]
+ require(len(b)>=width+2 and b[0]+1==len(b),"srec_length")
+ require(sum(b)%256==255,"srec_checksum")
+ address=int.from_bytes(b[1:1+width],"big");payload=b[1+width:-1]
+ if kind in (5,6,7,8,9):require(not payload,"srec_metadata_shape")
+ if kind==0:require(address==0,"srec_header_address")
+ return {"record_type":"S"+str(kind),"address":address,"data_hex":payload.hex(),"count":b[0]}
+def srec_count(rs):
+ count=sum(r["record_type"] in ("S1","S2","S3") for r in rs)
+ declared=[r["address"] for r in rs if r["record_type"] in ("S5","S6")]
+ require(len(declared)<=1,"srec_multiple_counts")
+ if declared:require(declared[0]==count,"srec_count_mismatch")
+ return {"data_records":count,"declared_count":declared[0] if declared else None}
+def srec_termination(rs):
+ data_kinds={r["record_type"] for r in rs if r["record_type"] in ("S1","S2","S3")}
+ require(len(data_kinds)<=1,"srec_mixed_width")
+ terminal=None
+ for r in rs:
+  require(terminal is None,"srec_after_termination")
+  if r["record_type"] in ("S7","S8","S9"):terminal=r
+ require(terminal is not None,"srec_termination_missing")
+ expected={"S1":"S9","S2":"S8","S3":"S7"}.get(next(iter(data_kinds),"S1"))
+ require(terminal["record_type"]==expected,"srec_termination_width")
+ return {"termination":terminal["record_type"],"entry":terminal["address"],"executed":False}
+def srec_image(rs):
+ srec_count(rs);entry=srec_termination(rs);image={};seen_data=False;header_seen=False
+ for r in rs:
+  kind=int(r["record_type"][1])
+  if kind==0:
+   require(not seen_data and not header_seen,"srec_header_order");header_seen=True
+  elif kind in (1,2,3):
+   seen_data=True;payload=bytes.fromhex(r["data_hex"]);address=r["address"]
+   require(address+len(payload)<=1<<(8*WIDTH[kind]),"address_wrap")
+   for i,v in enumerate(payload):
+    require(address+i not in image,"image_overlap");image[address+i]=v
+    require(len(image)<=4096,"image_limit")
+ return {"image":[[a,image[a]] for a in sorted(image)],"entry":entry["entry"]}
+def sparse(v):
+ require(type(v) is list and len(v)<=4096,"image_limit")
+ found={}
+ for pair in v:
+  require(type(pair) is list and len(pair)==2,"image_pair")
+  a=integer(pair[0],0,0xFFFFFFFF,"address");b=integer(pair[1],0,255,"octet")
+  require(a not in found,"image_overlap");found[a]=b
+ return [[a,found[a]] for a in sorted(found)]
+def interval(start,end):
+ require(type(start) is int and type(end) is int and 0<=start<=end<=0x100000000,"interval")
+ return start,end
+def runs(image):
+ result=[]
+ for a,b in image:
+  if result and result[-1]["end"]==a:
+   result[-1]["end"]=a+1;result[-1]["data_hex"]+=f"{b:02x}"
+  else:result.append({"start":a,"end":a+1,"data_hex":f"{b:02x}"})
+ return result
+def apply_operation(op,p):
+ if op=="ihex_record":return ihex_record(p["record"])
+ if op=="ihex_checksum":return (-sum(octets(p["bytes"])))%256
+ if op=="ihex_extended":return ihex_extension(ihex_record(p["record"]))
+ if op=="ihex_start":return ihex_entry(ihex_record(p["record"]))
+ if op=="ihex_eof":return ihex_eof(records(p["records"],ihex_record))
+ if op=="ihex_image":return ihex_image(records(p["records"],ihex_record))
+ if op=="srec_record":return srec_record(p["record"])
+ if op=="srec_checksum":return (~sum(octets(p["bytes"])))&255
+ if op=="srec_count":return srec_count(records(p["records"],srec_record))
+ if op=="srec_termination":return srec_termination(records(p["records"],srec_record))
+ if op=="srec_image":return srec_image(records(p["records"],srec_record))
+ if op=="segment_runs":return runs(sparse(p["image"]))
+ if op=="image_overlay":
+  require(p["policy"] in ("reject_any","identical_only"),"overlay_policy")
+  left=dict(sparse(p["base"]));right=dict(sparse(p["overlay"]))
+  for a,b in right.items():
+   if a in left:require(p["policy"]=="identical_only" and left[a]==b,"overlay_conflict")
+   left[a]=b
+  require(len(left)<=4096,"image_limit")
+  return [[a,left[a]] for a in sorted(left)]
+ if op=="image_relocate":
+  image=sparse(p["image"]);d=integer(p["delta"],-0xFFFFFFFF,0xFFFFFFFF,"delta")
+  require(all(0<=a+d<=0xFFFFFFFF for a,b in image),"relocation_range")
+  return [[a+d,b] for a,b in image]
+ if op in ("image_crop","image_holes"):
+  image=sparse(p["image"]);start,end=interval(p["start"],p["end"])
+  selected=[[a,b] for a,b in image if start<=a<end]
+  if op=="image_crop":return selected
+  holes=[];cursor=start
+  for a,b in selected:
+   if cursor<a:holes.append([cursor,a])
+   cursor=a+1
+  if cursor<end:holes.append([cursor,end])
+  return holes
+ if op=="word_decode":
+  require(type(p["width"]) is int and p["width"] in (8,16,24,32,64),"word_width")
+  require(p["byteorder"] in ("big","little"),"byteorder");require(type(p["signed"]) is bool,"word_signed")
+  b=hexbytes(p["data_hex"]);require(len(b)*8==p["width"],"word_length")
+  return int.from_bytes(b,p["byteorder"],signed=p["signed"])
+ if op=="record_fixity":
+  t=p["text"];require(type(t) is str,"text_type");require(t.isascii(),"ascii_text")
+  require(len(t)<=16384,"text_limit");require(all(ord(c)>=32 or c in "\r\n" for c in t) and "\x7f" not in t,"text_control")
+  raw=t.encode("ascii");lf=t.replace("\r\n","\n").encode("ascii")
+  return {"raw_sha256":hashlib.sha256(raw).hexdigest(),"lf_sha256":hashlib.sha256(lf).hexdigest(),
+   "raw_bytes":len(raw),"normalization":"CRLF_to_LF_only","authenticity_established":False}
+ if op=="record_provenance":
+  require(type(p["observed"]) is bool and p["observed"] is False,"synthetic_only")
+  require(type(p["source_label"]) is str and len(p["source_label"])<=64 and re.fullmatch("[A-Za-z0-9._-]*",p["source_label"]) is not None,"source_label")
+  require(type(p["source_digest"]) is str and re.fullmatch("(?:[0-9a-f]{64})?",p["source_digest"]) is not None,"digest")
+  require(p["rights_state"] in ("unknown","declared"),"rights_state")
+  require(p["review_state"] in ("absent","declared"),"review_state")
+  missing=[k for k in ("source_label","source_digest") if not p[k]]
+  if missing:return {"missing":missing,"publication_authorized":False}
+  return {"source_label":p["source_label"],"rights_state":p["rights_state"],"review_state":p["review_state"],
+   "observation":"synthetic","publication_authorized":False}
+ if op=="authority_reservation":
+  require(type(p["action"]) is str and p["action"] in REQUIREMENTS,"authority_action")
+  return {"action":p["action"],"executed":False,"required":REQUIREMENTS[p["action"]]}
+ raise ContractError("operation")
+def evaluate(payload):
+ try:
+  require(type(payload) is dict,"payload_type")
+  op=payload.get("operation")
+  require(type(op) is str and op in FIELDS,"operation")
+  require(set(payload)==FIELDS[op]|{"operation"},"field_set")
+  value=apply_operation(op,payload);disposition="completed"
+  if op=="record_fixity":disposition="represented"
+  if op=="record_provenance":disposition="open_gap" if "missing" in value else "represented"
+  if op=="authority_reservation":disposition="exact_gate"
+  return {"accepted":True,"error":None,"value":value,"disposition":disposition,"boundary":BOUNDARY}
+ except ContractError as exc:
+  return {"accepted":False,"error":str(exc),"value":None,"disposition":"completed","boundary":BOUNDARY}
+def expected_envelope(proposal):
+ return {"accepted":proposal["expected_acceptance"],"error":proposal["expected_error"],
+  "value":proposal["expected_value"],"disposition":proposal["expected_execution_disposition"],"boundary":BOUNDARY}
+def same_json(left,right):
+ if type(left) is not type(right):return False
+ if type(left) is dict:return set(left)==set(right) and all(same_json(left[k],right[k]) for k in left)
+ if type(left) is list:return len(left)==len(right) and all(same_json(a,b) for a,b in zip(left,right))
+ return left==right
+def matches_contract(proposal,result):
+ return type(result) is dict and same_json(result,expected_envelope(proposal))
+def _strict_object(pairs):
+ result={}
+ for k,v in pairs:
+  if k in result:raise ValueError("duplicate_json_key")
+  result[k]=v
+ return result
+def cli(allowed=None):
+ import argparse,sys
+ from pathlib import Path
+ parser=argparse.ArgumentParser(description=__doc__);parser.add_argument("input",nargs="?",default="-");parser.add_argument("--output")
+ args=parser.parse_args()
+ try:
+  if args.input=="-":text=sys.stdin.read(131073)
+  else:
+   with Path(args.input).open("r",encoding="utf-8") as handle:text=handle.read(131073)
+  if len(text)>131072:raise ValueError("json_input_limit")
+  payload=json.loads(text,object_pairs_hook=_strict_object,parse_constant=lambda value: (_ for _ in ()).throw(ValueError("nonfinite_json")))
+  if allowed is not None and type(payload) is dict and payload.get("operation") not in allowed:raise ValueError("runner_operation_scope")
+  result=evaluate(payload)
+ except RecursionError:
+  result={"accepted":False,"error":"json_depth","value":None,"disposition":"completed","boundary":BOUNDARY}
+ except (ValueError,OSError) as exc:
+  result={"accepted":False,"error":str(exc) if isinstance(exc,ValueError) else "input_unavailable","value":None,"disposition":"completed","boundary":BOUNDARY}
+ output=json.dumps(result,sort_keys=True,ensure_ascii=True)+"\n"
+ if args.output:
+  with Path(args.output).open("x",encoding="utf-8",newline="\n") as handle:handle.write(output)
+ else:sys.stdout.write(output)
+ return 0 if result["accepted"] else 2
+if __name__=="__main__":raise SystemExit(cli())

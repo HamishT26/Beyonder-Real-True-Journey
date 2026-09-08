@@ -1,0 +1,110 @@
+"""Owner x2 behavior and evidence checks, evaluated at the x2 definition commit."""
+from pathlib import Path
+import copy,hashlib,json,sys,unittest
+ROOT=Path(__file__).resolve().parents[1];sys.path.insert(0,str(ROOT/"scripts"))
+import ghc_family_firmware_records_core as core
+import ghc_family_veylora_quen_v688_v6_lifecycle as lifecycle
+BASE=ROOT/"docs/veylora-quen/v688-v6"
+def load(p):return json.loads(p.read_text(encoding="utf-8"))
+def digest(p):return hashlib.sha256(p.read_bytes()).hexdigest()
+class FirmwareEvidence(unittest.TestCase):
+ @classmethod
+ def setUpClass(cls):cls.proposals=load(BASE/"x1/new-proposals.json")["proposals"]
+ def test_01_all_frozen_contracts(self):
+  for p in self.proposals:
+   with self.subTest(proposal=p["proposal_id"]):
+    before=copy.deepcopy(p["input"]);result=core.evaluate(p["input"])
+    self.assertTrue(core.matches_contract(p,result))
+    self.assertTrue(core.same_json(before,p["input"]))
+ def test_02_rejects_unknown_and_missing_fields(self):
+  for p in self.proposals:
+   extra=copy.deepcopy(p["input"]);extra["unplanned_extension"]=1
+   missing=copy.deepcopy(p["input"]);missing.pop(next(k for k in missing if k!="operation"))
+   self.assertEqual(core.evaluate(extra)["error"],"field_set")
+   self.assertEqual(core.evaluate(missing)["error"],"field_set")
+ def test_03_complete_result_comparator_preserves_json_types(self):
+  self.assertFalse(core.same_json(True,1));self.assertFalse(core.same_json(False,0))
+  self.assertFalse(core.same_json(1,1.0));self.assertFalse(core.same_json([1],[True]))
+  self.assertFalse(core.same_json({"a":1},{"a":True}))
+  p=self.proposals[0];result=core.expected_envelope(p);result["value"]["length"]=False
+  self.assertFalse(core.matches_contract(p,result))
+ def test_04_collection_bounds_are_enforced(self):
+  self.assertEqual(core.evaluate({"operation":"ihex_eof","records":[":00000001FF"]*513})["error"],"record_collection")
+  self.assertEqual(core.evaluate({"operation":"segment_runs","image":[[i,0] for i in range(4097)]})["error"],"image_limit")
+  self.assertEqual(core.evaluate({"operation":"record_fixity","text":"A"*16385})["error"],"text_limit")
+ def test_05_entry_and_eof_semantics_are_separate(self):
+  self.assertEqual(core.evaluate({"operation":"ihex_eof","records":[":0100000100FE"]})["error"],"ihex_eof_shape")
+  self.assertFalse(core.evaluate({"operation":"ihex_start","record":":00000001FF"})["accepted"])
+  self.assertEqual(core.evaluate({"operation":"ihex_record","record":True})["error"],"text_type")
+ def test_06_no_implicit_image_writes_or_fills(self):
+  image=[[0,1],[3,255]];before=copy.deepcopy(image)
+  self.assertEqual(core.evaluate({"operation":"image_holes","image":image,"start":0,"end":4})["value"],[[1,3]])
+  self.assertEqual(image,before)
+  self.assertEqual(core.evaluate({"operation":"image_overlay","base":image,"overlay":[],"policy":"overwrite"})["error"],"overlay_policy")
+ def test_07_gate_projection_does_not_execute_action(self):
+  for action in core.REQUIREMENTS:
+   r=core.evaluate({"operation":"authority_reservation","action":action})
+   self.assertEqual(r["disposition"],"exact_gate");self.assertIs(r["value"]["executed"],False)
+  self.assertFalse(core.evaluate({"operation":"authority_reservation","action":"grant_all"})["accepted"])
+ def test_08_owned_lifecycle_five_mutations(self):
+  r=lifecycle.self_test();self.assertTrue(r["valid"]);self.assertEqual(len(r["negative_controls"]),5)
+  self.assertFalse(r["canonical_invoked"]);self.assertFalse(r["live_head_verified"])
+ def test_09_materialization_path_boundary(self):
+  self.assertEqual(lifecycle.safe_relative_paths(["docs/owner/a.json"]),["docs/owner/a.json"])
+  for p in ["../escape","/absolute","X:/absolute","a\\b"]:
+   with self.assertRaises(ValueError):lifecycle.safe_relative_paths([p])
+  with self.assertRaises(ValueError):lifecycle.safe_relative_paths(["a","a"])
+ def test_10_observed_evidence_is_complete(self):
+  files=list((BASE/"x2/contracts").glob("*.json"));self.assertEqual(len(files),200)
+  indexed={load(f)["proposal_id"]:load(f) for f in files}
+  for p in self.proposals:
+   r=indexed[p["proposal_id"]]
+   self.assertTrue(r["matches"]);self.assertTrue(r["input_unchanged"]);self.assertTrue(core.matches_contract(p,r["observed"]))
+  portfolio=load(BASE/"x2/portfolio-results.json")
+  self.assertEqual(len(portfolio["rows"]),850)
+  self.assertTrue(all(r["predicate_pass"] for r in portfolio["rows"]))
+ def test_11_adverse_definitions_and_failed_ledger_retained(self):
+  n=load(BASE/"x2/negative-controls.json")
+  self.assertEqual(n["count"],509);self.assertTrue(all(r["completion_credit"]==0 for r in n["negative_records"]))
+  bad=load(BASE/"x2/retained-attempts/method-flow-validation-v1.json")
+  self.assertFalse(bad["valid"]);self.assertEqual(bad["issues"],["derived counts are stale"])
+  self.assertTrue(load(BASE/"x2/method-flow/validation.json")["valid"])
+ def test_12_method_counts_match_actual_rows(self):
+  l=load(BASE/"x2/method-flow/ledger.json");c=l["counts"]
+  self.assertEqual(c["methods"],len(l["methods"]));self.assertEqual(c["witnesses"],len(l["witnesses"]))
+  self.assertEqual(c["witness_results"]["fail"],sum(w["result"]=="fail" for w in l["witnesses"]))
+  self.assertEqual(c["witness_results"]["pass"],sum(w["result"]=="pass" for w in l["witnesses"]))
+  self.assertEqual(c["methods"],36);self.assertEqual(c["witness_results"],{"fail":530,"pass":36})
+  allowed={("candidate","validated"),("validated","preferred")}
+  self.assertTrue(all((e["from"],e["to"]) in allowed for e in l["state_events"]))
+ def test_13_cards_bind_content_and_parentage(self):
+  index=load(BASE/"x2/deck/deck-index.json")
+  cards={ident:load(BASE/"x2/deck/cards"/(ident+".json")) for ident in index["cards"]}
+  self.assertEqual(len(cards),244);self.assertEqual(len(cards),index["card_count"])
+  for ident,card in cards.items():
+   bare={k:v for k,v in card.items() if k!="card_id"}
+   expected="ghc-card-"+hashlib.sha256(json.dumps(bare,sort_keys=True,ensure_ascii=True,separators=(",",":")).encode()).hexdigest()[:20]
+   self.assertEqual(ident,expected)
+   if card["tier"]==1:self.assertEqual(card["parent_ids"],[])
+   else:
+    self.assertEqual(len(card["parent_ids"]),1);self.assertEqual(cards[card["parent_ids"][0]]["tier"],card["tier"]-1)
+ def test_14_deck_manifest_and_core_binding(self):
+  m=load(BASE/"x2/deck/card-manifest.json")
+  for e in m["entries"]:
+   p=ROOT/e["path"];self.assertEqual(digest(p),e["sha256"]);self.assertEqual(len(p.read_bytes()),e["bytes"])
+  b=load(BASE/"x2/implementation-binding.json")
+  self.assertEqual(digest(ROOT/b["core_path"]),b["core_sha256"])
+ def test_15_packages_and_local_tools_have_actual_smokes(self):
+  p=load(BASE/"x2/package-transaction.json");self.assertEqual((p["direct_count"],p["closure_count"]),(3,7))
+  self.assertTrue(p["pip_check_passed"]);self.assertFalse(p["global_python_mutated"])
+  for r in p["smokes"]["direct_smokes"].values():self.assertTrue(r["accepting"] and r["adverse_rejected"])
+  t=load(BASE/"x2/local-tool-validation.json");self.assertEqual(len(t["skills"]),10)
+  self.assertTrue(all(s["quick_validate_pass"] and all(f["complete_envelope_pass"] for f in s["smokes"]) for s in t["skills"]))
+ def test_16_outcomes_and_gates_are_exact(self):
+  t=load(BASE/"x2/phase-truth.json")
+  self.assertEqual(t["outcomes"],{"completed":176,"represented":11,"open_gap":3,"exact_gate":10})
+  self.assertEqual(t["effective_counts"]["negatives"],84901)
+  self.assertEqual(t["exact_packets_unexecuted"],50);self.assertEqual(t["blocked_packets_unexecuted"],30)
+  self.assertEqual(t["canonical_invocations"],0);self.assertEqual(t["successor_contacts"],0)
+  self.assertEqual(t["terminal_verdict"],"NOT_READY_FOR_STAGE_20")
+if __name__=="__main__":unittest.main()
