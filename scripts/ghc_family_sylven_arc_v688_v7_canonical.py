@@ -21,6 +21,7 @@ X2 = "3c968db9391583a9e40f0eb8cc0c2f86d9997126"
 FIRST_FINAL = "4e2421659eed8617cbd1fd45677b7248db2dfd11"
 CORRECTION1 = "c0f79218f2d644592bd4eee0947058f0f3803b50"
 CORRECTION2 = "1b00ec2df09e02ef63b370d6c8b15180044b3a38"
+CORRECTION3 = "b105ef20548eb149b0f88fe9908c5b1ff5d81dca"
 BRANCH = "codex/GHC-Family/sylven-arc-v688-v7-full-tools"
 
 
@@ -146,7 +147,7 @@ def snapshot(head: str, bank: Path, skills: Path, runners: Path) -> dict:
     checks["clean"] = eq["clean"]
     checks["fresh_four_way_equal"] = eq["all_equal"]
     checks["zero_divergence"] = eq["divergence"] == [0, 0]
-    checks["phase_commit_count"] = int(git("rev-list", "--count", SOURCE + ".." + head)) == 6
+    checks["phase_commit_count"] = int(git("rev-list", "--count", SOURCE + ".." + head)) == 7
     checks["zero_merges"] = int(git("rev-list", "--count", "--merges", SOURCE + ".." + head)) == 0
     checks["direct_parent_chain"] = (
         git("show", "-s", "--format=%P", X1) == SOURCE
@@ -154,10 +155,11 @@ def snapshot(head: str, bank: Path, skills: Path, runners: Path) -> dict:
         and git("show", "-s", "--format=%P", FIRST_FINAL) == X2
         and git("show", "-s", "--format=%P", CORRECTION1) == FIRST_FINAL
         and git("show", "-s", "--format=%P", CORRECTION2) == CORRECTION1
-        and git("show", "-s", "--format=%P", head) == CORRECTION2
+        and git("show", "-s", "--format=%P", CORRECTION3) == CORRECTION2
+        and git("show", "-s", "--format=%P", head) == CORRECTION3
     )
     changes = [line for line in git("diff", "--name-status", SOURCE, head).splitlines() if line]
-    correction_changes = [line for line in git("diff", "--name-status", CORRECTION2, head).splitlines() if line]
+    correction_changes = [line for line in git("diff", "--name-status", CORRECTION3, head).splitlines() if line]
     modified = [line.split("\t")[-1] for line in correction_changes if line.startswith("M\t")]
     checks["additive_correction_scope"] = bool(correction_changes) and all(line.startswith(("A\t", "M\t")) for line in correction_changes) and modified == ["scripts/ghc_family_sylven_arc_v688_v7_canonical.py"]
     paths = [line.split("\t")[-1] for line in changes]
@@ -174,17 +176,19 @@ def snapshot(head: str, bank: Path, skills: Path, runners: Path) -> dict:
         verify_manifest(CORRECTION1, BASE + "/correction1/validation/corrected-owner-manifest.json"),
         verify_manifest(CORRECTION2, BASE + "/correction2/validation/correction-delta-manifest.json"),
         verify_manifest(CORRECTION2, BASE + "/correction2/validation/corrected-owner-manifest.json"),
-        verify_manifest(head, BASE + "/correction3/validation/correction-delta-manifest.json"),
-        verify_manifest(head, BASE + "/correction3/validation/corrected-owner-manifest.json"),
+        verify_manifest(CORRECTION3, BASE + "/correction3/validation/correction-delta-manifest.json"),
+        verify_manifest(CORRECTION3, BASE + "/correction3/validation/corrected-owner-manifest.json"),
+        verify_manifest(head, BASE + "/correction4/validation/correction-delta-manifest.json"),
+        verify_manifest(head, BASE + "/correction4/validation/corrected-owner-manifest.json"),
     ]
     checks["all_manifests"] = all(item["valid"] for item in manifests)
-    owner_manifest = strict(batch_blobs([head + ":" + BASE + "/correction3/validation/corrected-owner-manifest.json"])[0])
+    owner_manifest = strict(batch_blobs([head + ":" + BASE + "/correction4/validation/corrected-owner-manifest.json"])[0])
     checks["final_owner_manifest_complete"] = {item["path"] for item in owner_manifest["entries"]} | set(owner_manifest["self_exclusions"]) == set(paths)
-    seal = strict(batch_blobs([head + ":" + BASE + "/correction3/content-seal.json"])[0])
+    seal = strict(batch_blobs([head + ":" + BASE + "/correction4/content-seal.json"])[0])
     seal_blobs = batch_blobs([head + ":" + item["path"] for item in seal["targets"]])
     checks["content_seal"] = all(len(blob) == item["bytes"] and hashlib.sha256(blob).hexdigest() == item["sha256"] for item, blob in zip(seal["targets"], seal_blobs))
-    truth = strict(batch_blobs([head + ":" + BASE + "/correction3/phase-truth-overlay.json"])[0])
-    checks["truth_counts"] = truth["effective_counts"] == {"proposals": 16830, "negatives": 85423, "methods": 94123, "failed_witnesses": 56301, "passing_witnesses": 86186, "open_gaps": 765, "exact_gates": 785}
+    truth = strict(batch_blobs([head + ":" + BASE + "/correction4/phase-truth-overlay.json"])[0])
+    checks["truth_counts"] = truth["effective_counts"] == {"proposals": 16830, "negatives": 85424, "methods": 94124, "failed_witnesses": 56302, "passing_witnesses": 86187, "open_gaps": 765, "exact_gates": 785}
     checks["outcomes_exact"] = truth["outcomes"] == {"completed": 176, "represented": 11, "open_gap": 3, "exact_gate": 10}
     checks["prepared_not_sent"] = truth["prepared_baton_state"] == "PREPARED_NOT_SENT" and truth["successor_contacts"] == 0 and truth["new_tasks_created"] == 0
     checks["not_ready_for_stage20"] = truth["terminal_verdict"] == "NOT_READY_FOR_STAGE_20"
@@ -194,7 +198,7 @@ def snapshot(head: str, bank: Path, skills: Path, runners: Path) -> dict:
     checks["baton_budget_modules_hash"] = 10000 <= len(baton_text.split()) <= 100000 and len(re.findall(r"^## Module \d\d", baton_text, re.MULTILINE)) == 13 and hashlib.sha256(baton_blob).hexdigest() == baton_index["sha256"]
     route = strict(batch_blobs([head + ":" + BASE + "/final/terminal-route-checklist.json"])[0])
     checks["future_seat_self_choice"] = route["prospective_target"] == "future seat 14" and route["identity_assignment"] == "self_chosen_after_creation" and route["creation_if_absent"]["maximum"] == 1 and route["sends_or_creations_already_made"] == 0
-    supplement = strict(batch_blobs([head + ":" + BASE + "/correction3/baton-supplement-index.json"])[0])
+    supplement = strict(batch_blobs([head + ":" + BASE + "/correction4/baton-supplement-index.json"])[0])
     supplement_blob = batch_blobs([head + ":" + supplement["path"]])[0]
     checks["correction_baton_supplement"] = hashlib.sha256(supplement_blob).hexdigest() == supplement["sha256"] and supplement["delivery_state"] == "PREPARED_NOT_SENT"
     promotion = strict(batch_blobs([head + ":" + BASE + "/x2/promotion-receipt.json"])[0])
@@ -219,16 +223,18 @@ def snapshot(head: str, bank: Path, skills: Path, runners: Path) -> dict:
     checks["package_artifact_fixity"] = not artifact_failures
     package = strict(batch_blobs([head + ":" + BASE + "/x2/package-transaction.json"])[0])
     checks["package_contract"] = package["state"] == "COMPLETE" and package["direct_count"] == 3 and not package["global_python_mutated"]
-    method = strict(batch_blobs([head + ":" + BASE + "/correction3/post-final-method-flow-overlay.json"])[0])
-    checks["method_flow_nonerasure"] = method["combined_counts"] == {"methods": 61, "witnesses": 625, "failed_witnesses": 549, "passing_witnesses": 76, "state_events": 61, "recommendations": 61} and method["failed_witnesses_erased"] == 0
-    policy = strict(batch_blobs([head + ":" + BASE + "/correction3/canonical-policy-overlay.json"])[0])
-    checks["canonical_policy"] = not policy["post_success_replay"] and not policy["full_repository_suite"] and [item["expected_tests"] for item in policy["test_modules"]] == [12, 24, 20, 10, 6, 6]
+    method = strict(batch_blobs([head + ":" + BASE + "/correction4/post-final-method-flow-overlay.json"])[0])
+    checks["method_flow_nonerasure"] = method["combined_counts"] == {"methods": 62, "witnesses": 627, "failed_witnesses": 550, "passing_witnesses": 77, "state_events": 62, "recommendations": 62} and method["failed_witnesses_erased"] == 0
+    policy = strict(batch_blobs([head + ":" + BASE + "/correction4/canonical-policy-overlay.json"])[0])
+    checks["canonical_policy"] = not policy["post_success_replay"] and not policy["full_repository_suite"] and [item["expected_tests"] for item in policy["test_modules"]] == [12, 24, 20, 10, 6, 6, 5]
     prior_failed = bank / "canonical/exact-final-owner-scoped-canonical.json"
     isolated_recovery = bank / "canonical/dependency-corrected-x2.json"
-    if prior_failed.is_file() and isolated_recovery.is_file():
+    correction3_failed = bank / "canonical-b105ef20548e/exact-final-owner-scoped-canonical.json"
+    if prior_failed.is_file() and isolated_recovery.is_file() and correction3_failed.is_file():
         prior = strict(prior_failed.read_bytes())
         recovery = strict(isolated_recovery.read_bytes())
-        checks["prior_failed_canonical_retained"] = prior["head"] == CORRECTION2 and prior["status"] == "INVALID_EXACT_FINAL_OWNER_SCOPED_CANONICAL" and prior["canonical_success_count"] == 0 and recovery["state"] == "VALID_ISOLATED_X2_DEPENDENCY_RECOVERY" and recovery["aggregate_replayed"] is False
+        prior3 = strict(correction3_failed.read_bytes())
+        checks["prior_failed_canonical_retained"] = prior["head"] == CORRECTION2 and prior["status"] == "INVALID_EXACT_FINAL_OWNER_SCOPED_CANONICAL" and prior["canonical_success_count"] == 0 and recovery["state"] == "VALID_ISOLATED_X2_DEPENDENCY_RECOVERY" and recovery["aggregate_replayed"] is False and prior3["head"] == CORRECTION3 and prior3["status"] == "INVALID_EXACT_FINAL_OWNER_SCOPED_CANONICAL" and prior3["canonical_success_count"] == 0 and prior3["test_count"] == 78
     else:
         checks["prior_failed_canonical_retained"] = False
     return {"checks": checks, "equality": eq, "paths": paths, "scan": scan, "manifests": manifests, "promotion_failures": promotion_failures, "artifact_failures": artifact_failures, "policy": policy, "truth": truth}
@@ -304,7 +310,7 @@ def main() -> int:
             passed = process.returncode == 0 and count == entry["expected_tests"]
             tests.append({"stage": entry["stage"], "definition": commit, "module": entry["module"], "expected_tests": entry["expected_tests"], "tests": count, "returncode": process.returncode, "passed": passed, "materialized_files": count_files, "definition_sha256": hashlib.sha256((view / entry["module"]).read_bytes()).hexdigest()})
             print(json.dumps({"canonical_stage": entry["stage"], "tests": count, "passed": passed}), flush=True)
-        checks["all_lifecycle_tests"] = len(tests) == 3 and all(item["passed"] for item in tests)
+        checks["all_lifecycle_tests"] = len(tests) == len(state["policy"]["test_modules"]) and all(item["passed"] for item in tests)
         after = equality(args.head)
         checks["head_stable_after"] = git("rev-parse", "HEAD") == args.head
         checks["clean_after"] = after["clean"]
@@ -314,7 +320,7 @@ def main() -> int:
         error = {"class": type(exc).__name__, "scope": "exact owner canonical; detailed private diagnostics retained externally"}
         checks["canonical_exception_absent"] = False
         after = None
-    valid = all(checks.values()) and len(tests) == 3 and all(item["passed"] for item in tests)
+    valid = all(checks.values()) and len(tests) == len(state.get("policy", {}).get("test_modules", [])) and all(item["passed"] for item in tests)
     result = {
         "schema": "ghc.family.exact-corrected-final-owner-scoped-canonical.sylven-arc.v688-v7",
         "owner": "Sylven Arc",
@@ -327,10 +333,12 @@ def main() -> int:
         "first_final": FIRST_FINAL,
         "correction1": CORRECTION1,
         "correction2": CORRECTION2,
+        "correction3": CORRECTION3,
         "prior_failed_canonical_receipt_sha256": "526b15d930704f592486754db0547a594f0590329728cb7084de89a797eb2014",
         "isolated_x2_recovery_receipt_sha256": "56646c01100763254f584d667be5324d00fbab74530d00666a26c517ad4002fb",
-        "prior_canonical_invocation_count": 1,
+        "prior_canonical_invocation_count": 2,
         "prior_canonical_success_count": 0,
+        "correction3_failed_canonical_receipt_sha256": "0383cb436f6167a1d80d552dd961f67e97613f207273947868eb11cc99655c10",
         "status": "VALID_EXACT_FINAL_OWNER_SCOPED_CANONICAL" if valid else "INVALID_EXACT_FINAL_OWNER_SCOPED_CANONICAL",
         "canonical_invocation_count": 1,
         "canonical_success_count": int(valid),
