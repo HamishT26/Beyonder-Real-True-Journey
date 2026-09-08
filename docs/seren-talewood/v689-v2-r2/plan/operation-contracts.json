@@ -1,0 +1,407 @@
+[
+  {
+    "explanation": "Convert an explicit version and slot into an ordinal before advancing; a remaster label is not an ordinary slot.",
+    "op": "phase_advance",
+    "required_fields": [
+      "delta",
+      "phase"
+    ],
+    "skill": "phase-cursor-arithmetic",
+    "stage": "x1"
+  },
+  {
+    "explanation": "Project a unique declared cycle from any named start owner, with a bounded count and no activation effect.",
+    "op": "cycle_assignments",
+    "required_fields": [
+      "count",
+      "cycle",
+      "phase",
+      "start"
+    ],
+    "skill": "phase-cursor-arithmetic",
+    "stage": "x1"
+  },
+  {
+    "explanation": "Resolve only the exact phase and owner pair; terminal rows have no implicit next assignment.",
+    "op": "route_cursor",
+    "required_fields": [
+      "owner",
+      "phase",
+      "rows"
+    ],
+    "skill": "terminal-route-state",
+    "stage": "x1"
+  },
+  {
+    "explanation": "Reduce declared transport observations while distinguishing an unsent draft, accepted opaque result, rejection and acknowledgement.",
+    "op": "delivery_reduce",
+    "required_fields": [
+      "events"
+    ],
+    "skill": "terminal-route-state",
+    "stage": "x1"
+  },
+  {
+    "explanation": "Assess a concrete count against explicit minimum and maximum values without turning a cap into a quota.",
+    "op": "budget_check",
+    "required_fields": [
+      "count",
+      "maximum",
+      "minimum"
+    ],
+    "skill": "workload-range-contract",
+    "stage": "x1"
+  },
+  {
+    "explanation": "Split an exact finite workload into bounded batch sizes while preserving its total.",
+    "op": "quota_partition",
+    "required_fields": [
+      "batch",
+      "total"
+    ],
+    "skill": "workload-range-contract",
+    "stage": "x1"
+  },
+  {
+    "explanation": "Select the most recent completed records from explicit monotonic ordinals while keeping represented work out of the completed window.",
+    "op": "context_window",
+    "required_fields": [
+      "count",
+      "rows"
+    ],
+    "skill": "source-window-selection",
+    "stage": "x1"
+  },
+  {
+    "explanation": "Deduplicate equal source bindings by stable identifier, retain input order, and refuse conflicting bindings.",
+    "op": "source_selection",
+    "required_fields": [
+      "limit",
+      "rows"
+    ],
+    "skill": "source-window-selection",
+    "stage": "x1"
+  },
+  {
+    "explanation": "Check both admission and the need for rotation at the hard owner file ceiling.",
+    "op": "file_budget",
+    "required_fields": [
+      "ceiling",
+      "current",
+      "incoming"
+    ],
+    "skill": "owner-tree-capacity",
+    "stage": "x1"
+  },
+  {
+    "explanation": "Compare literal path segments and reject traversal syntax before any scope decision; no filesystem action is performed.",
+    "op": "path_scope",
+    "required_fields": [
+      "path",
+      "roots"
+    ],
+    "skill": "owner-tree-capacity",
+    "stage": "x1"
+  },
+  {
+    "explanation": "Compare explicit path, byte-count and digest records without reading files or silently merging duplicate paths.",
+    "op": "manifest_diff",
+    "required_fields": [
+      "after",
+      "before"
+    ],
+    "skill": "manifest-delta-review",
+    "stage": "x1"
+  },
+  {
+    "explanation": "Expose unexpected and missing staged members against a literal allowlist without broad staging.",
+    "op": "staged_allowlist",
+    "required_fields": [
+      "allowed",
+      "staged"
+    ],
+    "skill": "manifest-delta-review",
+    "stage": "x1"
+  },
+  {
+    "explanation": "Require an allowed state transition and a passing witness before promoting a candidate or preferred method.",
+    "op": "method_transition",
+    "required_fields": [
+      "passing_witnesses",
+      "state",
+      "successor_validated",
+      "to"
+    ],
+    "skill": "retained-witness-accounting",
+    "stage": "x1"
+  },
+  {
+    "explanation": "Count subject failures separately from passing rejection checks and prevent repeated identifiers from multiplying credit.",
+    "op": "witness_accounting",
+    "required_fields": [
+      "rows"
+    ],
+    "skill": "retained-witness-accounting",
+    "stage": "x1"
+  },
+  {
+    "explanation": "Compute a bounded reachable dependency set, preserving cycles as finite declared relationships and refusing missing resources.",
+    "op": "dependency_closure",
+    "required_fields": [
+      "graph",
+      "roots"
+    ],
+    "skill": "capability-dependency-selection",
+    "stage": "x1"
+  },
+  {
+    "explanation": "Select exact triggers only from current validated capabilities; availability alone does not authorize execution.",
+    "op": "tool_select",
+    "required_fields": [
+      "tools",
+      "trigger"
+    ],
+    "skill": "capability-dependency-selection",
+    "stage": "x1"
+  },
+  {
+    "explanation": "Validate exactly one owner anchor and immediate-tier parents before using a modular context graph.",
+    "op": "deck_parents",
+    "required_fields": [
+      "cards"
+    ],
+    "skill": "four-tier-context-selection",
+    "stage": "x1"
+  },
+  {
+    "explanation": "Load selected cards together with every required ancestor, ordered by tier without deleting unloaded evidence.",
+    "op": "card_selection",
+    "required_fields": [
+      "cards",
+      "selected"
+    ],
+    "skill": "four-tier-context-selection",
+    "stage": "x1"
+  },
+  {
+    "explanation": "Combine a declared user-controlled permission with explicit evidence and available prerequisites; this is a dry record assessment.",
+    "op": "evidence_gate",
+    "required_fields": [
+      "approval",
+      "evidence",
+      "prerequisites"
+    ],
+    "skill": "authorization-overlay-evidence",
+    "stage": "x1"
+  },
+  {
+    "explanation": "Apply ordered correction records to a detached current view while retaining the original base and number of events.",
+    "op": "overlay_fold",
+    "required_fields": [
+      "base",
+      "events"
+    ],
+    "skill": "authorization-overlay-evidence",
+    "stage": "x1"
+  },
+  {
+    "explanation": "Validate a finite row-stochastic matrix using exact rational arithmetic; normalization is a model property rather than an observation.",
+    "op": "stochastic_matrix",
+    "required_fields": [
+      "matrix"
+    ],
+    "skill": "rational-markov-kernel",
+    "stage": "x2"
+  },
+  {
+    "explanation": "Multiply an explicit row distribution by a validated transition kernel and return exact rational components.",
+    "op": "markov_step",
+    "required_fields": [
+      "distribution",
+      "matrix"
+    ],
+    "skill": "rational-markov-kernel",
+    "stage": "x2"
+  },
+  {
+    "explanation": "Solve finite stationarity equations and normalization exactly, refusing a nonunique stationary family instead of choosing silently.",
+    "op": "stationary_distribution",
+    "required_fields": [
+      "matrix"
+    ],
+    "skill": "stationarity-detailed-balance",
+    "stage": "x2"
+  },
+  {
+    "explanation": "Test pairwise stationary probability-flow symmetry after checking stationarity; this does not infer physical equilibrium.",
+    "op": "detailed_balance",
+    "required_fields": [
+      "matrix",
+      "stationary"
+    ],
+    "skill": "stationarity-detailed-balance",
+    "stage": "x2"
+  },
+  {
+    "explanation": "Construct the reversed kernel from positive stationary weights and oriented probability flows.",
+    "op": "time_reversal",
+    "required_fields": [
+      "matrix",
+      "stationary"
+    ],
+    "skill": "stationary-flow-reversal",
+    "stage": "x2"
+  },
+  {
+    "explanation": "Return the antisymmetric stationary current matrix using exact rational flows and explicit orientation.",
+    "op": "probability_current",
+    "required_fields": [
+      "matrix",
+      "stationary"
+    ],
+    "skill": "stationary-flow-reversal",
+    "stage": "x2"
+  },
+  {
+    "explanation": "Compute Shannon entropy in nats for a finite probability vector with the zero-log-zero convention.",
+    "op": "entropy",
+    "required_fields": [
+      "distribution"
+    ],
+    "skill": "probability-entropy-divergence",
+    "stage": "x2"
+  },
+  {
+    "explanation": "Compute directed Kullback-Leibler divergence while exposing support mismatch as infinity rather than a finite estimate.",
+    "op": "relative_entropy",
+    "required_fields": [
+      "p",
+      "q"
+    ],
+    "skill": "probability-entropy-divergence",
+    "stage": "x2"
+  },
+  {
+    "explanation": "Calculate stationary forward-versus-reverse path-flow divergence in nats per model step; physical thermodynamics needs additional assumptions.",
+    "op": "entropy_production",
+    "required_fields": [
+      "matrix",
+      "stationary"
+    ],
+    "skill": "flow-entropy-coarse-graining",
+    "stage": "x2"
+  },
+  {
+    "explanation": "Aggregate stationary flows by an explicit partition and separately test strong lumpability; a flow projection is not automatically closed dynamics.",
+    "op": "coarse_grain",
+    "required_fields": [
+      "groups",
+      "matrix",
+      "stationary"
+    ],
+    "skill": "flow-entropy-coarse-graining",
+    "stage": "x2"
+  },
+  {
+    "explanation": "Solve first-hit probabilities for declared target states while retaining probability lost to closed non-target classes.",
+    "op": "absorption_probabilities",
+    "required_fields": [
+      "matrix",
+      "targets"
+    ],
+    "skill": "first-hit-markov-evidence",
+    "stage": "x2"
+  },
+  {
+    "explanation": "Compute exact expected first-hit steps only when the target is reached almost surely; retain infinity as null otherwise.",
+    "op": "hitting_times",
+    "required_fields": [
+      "matrix",
+      "targets"
+    ],
+    "skill": "first-hit-markov-evidence",
+    "stage": "x2"
+  },
+  {
+    "explanation": "Compute exact L1 and total-variation distances between two finite distributions on the same ordered states.",
+    "op": "distribution_distance",
+    "required_fields": [
+      "p",
+      "q"
+    ],
+    "skill": "probability-distance-coupling",
+    "stage": "x2"
+  },
+  {
+    "explanation": "Compare the total-variation lower bound with disagreement under the explicitly independent product coupling.",
+    "op": "coupling_bounds",
+    "required_fields": [
+      "p",
+      "q"
+    ],
+    "skill": "probability-distance-coupling",
+    "stage": "x2"
+  },
+  {
+    "explanation": "Order declared ordinal risk scores while preserving each record evidence label; ordinal products are a local prioritization convention.",
+    "op": "risk_register_projection",
+    "required_fields": [
+      "rows"
+    ],
+    "skill": "risk-consent-records",
+    "stage": "x2"
+  },
+  {
+    "explanation": "Compare a synthetic grant record with action, resource, purpose and expiry, without treating the comparison as real consent or authority.",
+    "op": "consent_scope_check",
+    "required_fields": [
+      "action",
+      "grant",
+      "now",
+      "purpose",
+      "resource"
+    ],
+    "skill": "risk-consent-records",
+    "stage": "x2"
+  },
+  {
+    "explanation": "Build a deterministic synthetic review queue by urgency and declared intake order without resolving a grievance or allocating rights.",
+    "op": "remedy_queue",
+    "required_fields": [
+      "rows"
+    ],
+    "skill": "remedy-review-coverage",
+    "stage": "x2"
+  },
+  {
+    "explanation": "Compare explicit required review areas with completed evidence records and retain represented or missing areas as gaps.",
+    "op": "review_coverage",
+    "required_fields": [
+      "observed",
+      "required"
+    ],
+    "skill": "remedy-review-coverage",
+    "stage": "x2"
+  },
+  {
+    "explanation": "Search a bounded denominator domain for one ordered positive-integer witness to four over n as three unit fractions; no universal proof follows.",
+    "op": "egyptian_fraction_search",
+    "required_fields": [
+      "max_denominator",
+      "max_pairs",
+      "n"
+    ],
+    "skill": "egyptian-fraction-witness",
+    "stage": "x2"
+  },
+  {
+    "explanation": "Verify a supplied three-denominator witness with exact rational residuals and no search or universal conjecture claim.",
+    "op": "egyptian_fraction_verify",
+    "required_fields": [
+      "denominators",
+      "n"
+    ],
+    "skill": "egyptian-fraction-witness",
+    "stage": "x2"
+  }
+]
