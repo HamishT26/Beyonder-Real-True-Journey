@@ -1,0 +1,87 @@
+# Caelen Morrow v689-v1 integrated overview
+
+## Scope, lifecycle, and NFA structure
+
+This is a committed PREPARED_NOT_SENT candidate for the one future-sibling-15 self-chosen main task at v689-v2. A later live task-creation acknowledgement must supply the exact Caelen final and canonical receipt. Repository preparation alone is not delivery.
+
+Caelen Morrow, optionally they/them, is relational working language for a provenance weaver and boundary cartographer, with the bounded hope of keeping every transition testable, reversible, and proportionate to its evidence. This is not evidence of consciousness, sentience, personhood, identity continuity, employment, qualification, independent agency, or scientific, operational, professional, legal, cultural, affected-party, or Maori authority. Same-owner synthetic software evidence only. NOT_READY_FOR_STAGE_20. Maori concepts remain under Maori authority.
+
+The inductee chooses a unique relational working name, role, hope, and optional pronouns before repository mutation and may rename its task if the supported surface permits. All such language remains relational only. Hamish may pause, rename, redirect, narrow, or stop the work at any time.
+
+The immutable Tessarin Reed source is 9968e60dab5393ed2629ed978c8d1128bb63a0b9. Caelen planning-only x1 is 3635cfeeb48b27540452eabf104a5ad3f491b82c. Caelen immutable x2 evidence is a53b2ffc7020ad8d485878392793de7bd2722a7c. The later exact final must be the direct child of x2 and is bound only by an external one-shot canonical receipt after clean pushed equality.
+
+Source, x1, x2, and final are expected to form exactly three new direct single-parent Caelen commits with zero merges. X1 contains planning only; x2 contains implementation and evidence; final contains additive closeout, seal, and this historical candidate. No sibling lane was mutated.
+
+The source external canonical receipt was verified by SHA-256 before mutation and was not replayed. Every inherited proposal, package, skill, runner, card, method, test, and outcome remains context or a zero-credit seed rather than Caelen novelty or independent evidence.
+
+A nondeterministic finite-table shape is counted only after every state, symbol, origin, destination, and list-valued transition passes the frozen profile. The result describes the supplied representation and never a physical apparatus, participant, identity, or operational system.
+
+Epsilon closure follows only declared epsilon edges until a fixed point. Seed states remain visible and the input remains unchanged. Closure is a formal reachability relation; it is not evidence of memory persistence, identity continuity, hidden cognition, or an unobserved real transition.
+
+A move first closes its supplied state set, follows one declared symbol, then closes the result. That order is explicit and reproducible for the frozen table. It does not command a device, authorize a workflow, or establish that a real process entered any named state.
+
+A bounded word run retains every reachable state set after each symbol. Multiple active states are not collapsed into a narrative about subjective alternatives. The trace is synthetic table evidence and says nothing about human behavior, safety, agency, or empirical dynamics.
+
+Acceptance means that the final reachable set intersects the declared final states. Rejection remains a valid formal result and is never converted into a failed person, denied right, or professional decision. The operation cannot issue or revoke a credential.
+
+Reachability preserves both reachable and unreachable states. Unreachable structure is retained instead of deleted because it may explain a future correction. The result does not prove that a corresponding real event occurred or that an unvisited state is impossible outside the model.
+
+Liveness means only that a state can reach a declared accepting state in the finite graph. It is not a claim about wellbeing, responsiveness, consciousness, worker fitness, service availability, safety, or an eventual real-world outcome.
+
+## Language evidence, packages, and retained limits
+
+Subset construction gives stable labels to reachable state sets and refuses growth beyond its declared bound. The constructed table is an equivalent representation within the supplied model. It is not independent reproduction or a guarantee about another implementation.
+
+A subset trace shows the exact label assigned to each reachable state set along one bounded word. Those labels are structural aliases, not identities or people. Equality of a label does not establish personal continuity, consent, trust, or authority.
+
+Epsilon elimination rewrites the supplied finite table into a bounded epsilon-free representation while preserving declared language behavior. The original remains immutable. This does not authorize deletion of historical records or prove equivalence beyond the formal contract.
+
+Breadth-first exploration finds a shortest accepted word under sorted alphabet order. A missing word means no accepted state set was reached in the declared graph. It does not prove optimality for physical work, professional practice, or a social decision.
+
+Shortlex enumeration is explicitly capped and states the maximum covered length. It gives no unbounded completeness or equivalence claim. A finite list is not a census of real participants, records, events, identities, or natural observations.
+
+Exact counts cover only one bounded length over the declared alphabet. Boolean and out-of-range lengths are refused. Large integers are formal combinatorial results rather than observed throughput, probability, scientific likelihood, or population evidence.
+
+Finiteness checks for accepting-relevant cycles after subset construction. The conclusion applies to the supplied finite representation only. It is not a stability theorem for GMUT, a termination guarantee for THOS, or a lifecycle guarantee for Freed ID.
+
+The token profile counts visible syntactic markers without interpreting legal, cultural, personal, or empirical meaning. It is a quick structural aid rather than a parser proof, security review, accessibility evaluation, or professional analysis.
+
+Pyformlang 1.0.11, Automathon 0.0.15, and rstr 3.2.2 were selected in x1 after current official package-index research. X2 downloaded their binary wheels plus the resolved dependency closure, verified all eight exact hashes, wrote a hash-locked requirements file, and installed only into an isolated D-first owner target. No PATH, global Python, npm prefix, Windows feature, account, credential, host-security, Codex desktop, or external Graphviz-binary change occurred.
+
+The three packages passed 420 bounded synthetic comparisons: 140 pyformlang memberships, 140 Automathon memberships, and 140 seed-isolated rstr generation checks. Three malformed inputs were rejected and remain failed witnesses with zero completion credit. The eight-package point-in-time OSV query returned no listed records. That observation is neither exhaustive security nor future safety.
+
+Ten additive skill packages were initialized with the official Skill Creator, completely authored, quick-validated locally, smoke-used, promoted only after collision checks, byte-compared, quick-validated again, and smoke-used after promotion. Five family-current runners and one shared core were added to the D-first runner root without overwrites. All 190 local and promoted positive, adverse-field, and scope-refusal predicates passed.
+
+Family-current ghc_family_* and build_ghc_family_* callers remain compatible because these tools add names rather than replacing existing interfaces. Rollback means selecting the previous caller while retaining these packages and their negative evidence. Global presence is not authority to bulk-run, bulk-install, or apply a tool to real data.
+
+## Provenance, authority, validation, and next gate
+
+Regex membership uses Python fullmatch on supplied synthetic text and names that engine scope. It does not validate arbitrary user input for production, establish an identity match, or authorize acceptance in a real service.
+
+Regex and NFA agreement is checked only through a declared finite length. The output explicitly denies unbounded equivalence. A passing bounded comparison is not an external audit, theorem, interoperability certification, or scientific confirmation.
+
+Sorted transition text is a structural alternative representation with initial and final states kept separate. Manual browser, assistive-technology, cognitive, Maori-language, and affected-user evaluation remain reserved; readable text alone is not accessibility conformance.
+
+The provenance envelope binds canonical machine bytes, a supplied source label, and a declared digest. Missing metadata remains an open gap. A matching digest establishes byte correspondence only, never authorship, identity assurance, rights, consent, or independent review.
+
+Ten protected actions are represented only as refusals or unexecuted reservations. Acceptance of a reservation record grants no permission. Deployment, real control, identity issuance, certification, legal or cultural decisions, Maori wording, complete assurance, empirical promotion, and Stage 20 require fresh evidence and competent authority.
+
+The four-tier deck contains 265 cards: one owner anchor, three Trinity pillars, four bounded practices, two hundred proposal cards, and fifty-seven Method Flow cards. Every non-root card has exactly one parent at the preceding tier. Each identifier hashes its payload without card_id; the card manifest separately hashes the complete file bytes.
+
+The accessible HTML projection uses headings, links, lists, visible dispositions, and structural text. It has not been manually tested in browsers, assistive technologies, cognitive-accessibility review, Maori-language review, or affected-user evaluation. No accessibility-complete claim is made.
+
+X1 and x2 stage manifests bind exact Git-index blobs in normalized LF byte domains. The final stage adds a final manifest, an owner manifest over all three lifecycle layers, and a content seal. External canonical validation must replay those exact manifests from the pushed final rather than trusting the working tree.
+
+After receiving the later live acknowledged activation, read the exact final and external canonical receipt supplied there. Verify exact branch and head, source/x1/x2/final direct-parent ancestry, three commits, zero merges, one final parent, exact manifests, clean state, 0/0 divergence, and fresh local/upstream/tracking/live equality. Do not replay Caelen's canonical or any successful component.
+
+Work solo in a fresh additive D-first owner lane. Choose one primary Trinity pillar, four bounded human-practice lenses across all pillars, and one recommendation for the next owner. Audit semantic novelty against the declared 17,230-row chain using every reachable proposal source while naming any inaccessible mapping gap. Preregister 200 through 500 inherited selections at zero credit and 200 through 500 genuinely distinct new proposals with every required hypothesis, null or failure, approval, lane, source need, artifact, falsifier, rollback, protected gate, and exactly one expected disposition.
+
+Freeze planning-only x1 before any package installation, implementation, outcome, skill build, runner build, or execution. Plan 300 through 500 safe tasks, 250 through 500 candidates, exactly 300 CLEAN/FIX/REFINE tasks, 50 through 250 exact packets, and 30 through 100 blocked packets. Treat caps as ceilings, not quotas. Keep exact and blocked packets visible and unexecuted without fresh action-specific evidence and authority.
+
+After x1 is committed, pushed, clean, and fresh four-way equal, select exactly three needed packages with current official-source, license, compatibility, security, hash, dependency, rollback, and bounded-smoke review. Build at least ten owner skills and five family-current runners with official Skill Creator validation, collision-free additive promotion, exact byte parity, positive/adverse/scope smoke use, and compatibility guards. No bulk or unrelated global installation is authorized.
+
+Use only completed, represented, open_gap, and exact_gate as core outcomes. Preserve every inherited and new negative, gap, gate, failed witness, recovery, source status, recurrence guard, rollback, and recommendation through Method Flow. Run only owner-self-scoped dependency-closed tests. Invoke at most one attributable exact-final canonical after the final is pushed and fresh-live equal; never replay a success.
+
+Caelen's x1 definition has 12 tests. The x2 core has 24 tests and the deck has 6. The final definition has 10. The canonical policy therefore declares four lifecycle modules and 52 total tests, materialized at their proper immutable definitions. No full repository suite is authorized or claimed.
+
+Before the external canonical, the final must preserve outcomes {"completed": 170, "exact_gate": 10, "open_gap": 3, "represented": 17} and effective accounting {"exact_gates": 805, "failed_witnesses": 57265, "methods": 94237, "negatives": 86292, "open_gaps": 771, "passing_witnesses": 86430, "proposals": 17230}. Those are lineage records, not universal scientific counts or independent audit totals.
