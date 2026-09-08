@@ -1,0 +1,40 @@
+{
+  "authority_granted": false,
+  "core_dependencies": [
+    {
+      "path": "scripts/ghc_family_workflow_core.py",
+      "sha256": "146a72d5ab98dbb629ed8a0dbe797e267beb590318a362eaef1e70f1508790df"
+    },
+    {
+      "path": "scripts/ghc_family_model_core.py",
+      "sha256": "7beb3480b485bae5e075144553eec922ae2ec6b99dedb25dea4a18cff885fe43"
+    }
+  ],
+  "deck_limit": 2000,
+  "default_collection_limit": 500,
+  "external_actions": 0,
+  "input_bytes_maximum": 1048576,
+  "model_states_maximum": 8,
+  "operations": [
+    {
+      "explanation": "Construct the reversed kernel from positive stationary weights and oriented probability flows.",
+      "op": "time_reversal",
+      "required_fields": [
+        "matrix",
+        "stationary"
+      ],
+      "skill": "stationary-flow-reversal",
+      "stage": "x2"
+    },
+    {
+      "explanation": "Return the antisymmetric stationary current matrix using exact rational flows and explicit orientation.",
+      "op": "probability_current",
+      "required_fields": [
+        "matrix",
+        "stationary"
+      ],
+      "skill": "stationary-flow-reversal",
+      "stage": "x2"
+    }
+  ]
+}

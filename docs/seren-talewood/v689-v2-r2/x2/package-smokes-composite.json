@@ -1,0 +1,487 @@
+{
+  "all_matched": true,
+  "composite": true,
+  "current_definition_sha256": "94f28583fbd44f8de1df3cebc64cfa5df89e8fcf1f3c02eb3abd0e0a22a659e9",
+  "filesystem_mutations_by_fixtures": false,
+  "independent_reproduction": false,
+  "initial_definition_sha256": "c8b8d0c8413d3104167f1142461b1dafdddeba8e7e72afe8d404cb74988804b6",
+  "isolated_recovery": "docs/seren-talewood/v689-v2-r2/x2/package-api-recovery.json",
+  "limitations": [
+    "Immutable mappings can retain mutable child values",
+    "Dictdiffer equality is not the owner type-strict JSON relation",
+    "Library state transitions and trees are local models, not task activation or authority evidence"
+  ],
+  "native_launchers_executed": false,
+  "network_actions": false,
+  "original_results": "docs/seren-talewood/v689-v2-r2/x2/package-smokes.json",
+  "real_data_used": false,
+  "rows": [
+    {
+      "case": "derived mapping preserves original",
+      "expected": [
+        1,
+        2
+      ],
+      "matched": true,
+      "observed": [
+        1,
+        2
+      ],
+      "original_success_credit": 1,
+      "package": "immutables",
+      "subject_result": "pass"
+    },
+    {
+      "case": "immutable binding assignment",
+      "expected": "TypeError",
+      "matched": true,
+      "observed": "TypeError",
+      "original_success_credit": 0,
+      "package": "immutables",
+      "subject_result": "fail"
+    },
+    {
+      "case": "stable value mapping",
+      "expected": {
+        "a": 1
+      },
+      "matched": true,
+      "observed": {
+        "a": 1
+      },
+      "original_success_credit": 1,
+      "package": "frozendict",
+      "subject_result": "pass"
+    },
+    {
+      "case": "immutable binding assignment",
+      "expected": "TypeError",
+      "matched": true,
+      "observed": "TypeError",
+      "original_success_credit": 0,
+      "package": "frozendict",
+      "subject_result": "fail"
+    },
+    {
+      "case": "deep immutability preclaim is false",
+      "expected": true,
+      "matched": true,
+      "observed": true,
+      "original_success_credit": 0,
+      "package": "frozendict",
+      "subject_result": "fail"
+    },
+    {
+      "case": "inverse lookup",
+      "expected": "a",
+      "matched": true,
+      "observed": "a",
+      "original_success_credit": 1,
+      "package": "bidict",
+      "subject_result": "pass"
+    },
+    {
+      "case": "duplicate value mapping",
+      "expected": "ValueDuplicationError",
+      "matched": true,
+      "observed": "ValueDuplicationError",
+      "original_success_credit": 0,
+      "package": "bidict",
+      "subject_result": "fail"
+    },
+    {
+      "case": "failed assignment preserves mapping",
+      "expected": {
+        "a": 1
+      },
+      "matched": true,
+      "observed": {
+        "a": 1
+      },
+      "original_success_credit": 1,
+      "package": "bidict",
+      "subject_result": "pass"
+    },
+    {
+      "case": "detached structural remap",
+      "expected": {
+        "items": [
+          {
+            "keep": 1
+          }
+        ]
+      },
+      "matched": true,
+      "observed": {
+        "items": [
+          {
+            "keep": 1
+          }
+        ]
+      },
+      "original_success_credit": 1,
+      "package": "boltons",
+      "subject_result": "pass"
+    },
+    {
+      "case": "source remains unchanged",
+      "expected": {
+        "items": [
+          {
+            "cache": 9,
+            "keep": 1
+          }
+        ]
+      },
+      "matched": true,
+      "observed": {
+        "items": [
+          {
+            "cache": 9,
+            "keep": 1
+          }
+        ]
+      },
+      "original_success_credit": 1,
+      "package": "boltons",
+      "subject_result": "pass"
+    },
+    {
+      "case": "rejecting visit callback propagates",
+      "expected": "ValueError",
+      "matched": true,
+      "observed": "ValueError",
+      "original_success_credit": 0,
+      "package": "boltons",
+      "subject_result": "fail"
+    },
+    {
+      "case": "finite partitions",
+      "expected": [
+        [
+          1,
+          2
+        ],
+        [
+          3
+        ]
+      ],
+      "matched": true,
+      "observed": [
+        [
+          1,
+          2
+        ],
+        [
+          3
+        ]
+      ],
+      "original_success_credit": 1,
+      "package": "toolz",
+      "subject_result": "pass"
+    },
+    {
+      "case": "empty first item",
+      "expected": "StopIteration",
+      "matched": true,
+      "observed": "StopIteration",
+      "original_success_credit": 0,
+      "package": "toolz",
+      "subject_result": "fail"
+    },
+    {
+      "case": "overlapping source windows",
+      "expected": [
+        [
+          1,
+          2,
+          3
+        ],
+        [
+          2,
+          3,
+          4
+        ]
+      ],
+      "matched": true,
+      "observed": [
+        [
+          1,
+          2,
+          3
+        ],
+        [
+          2,
+          3,
+          4
+        ]
+      ],
+      "original_success_credit": 1,
+      "package": "more-itertools",
+      "subject_result": "pass"
+    },
+    {
+      "case": "exact-one rejects two records",
+      "expected": "ValueError",
+      "matched": true,
+      "observed": "ValueError",
+      "original_success_credit": 0,
+      "package": "more-itertools",
+      "subject_result": "fail"
+    },
+    {
+      "case": "inclusive capacity interval",
+      "expected": true,
+      "matched": true,
+      "observed": true,
+      "original_success_credit": 1,
+      "package": "portion",
+      "subject_result": "pass"
+    },
+    {
+      "case": "touching half-open intervals do not overlap",
+      "expected": true,
+      "matched": true,
+      "observed": true,
+      "original_success_credit": 0,
+      "package": "portion",
+      "subject_result": "fail"
+    },
+    {
+      "case": "half-open point lookup",
+      "expected": [
+        "b"
+      ],
+      "matched": true,
+      "observed": [
+        "b"
+      ],
+      "original_success_credit": 1,
+      "package": "intervaltree",
+      "subject_result": "pass"
+    },
+    {
+      "case": "zero-length interval",
+      "expected": "ValueError",
+      "matched": true,
+      "observed": "ValueError",
+      "original_success_credit": 0,
+      "package": "intervaltree",
+      "subject_result": "fail"
+    },
+    {
+      "case": "false guard keeps draft",
+      "expected": [
+        false,
+        "draft"
+      ],
+      "matched": true,
+      "observed": [
+        false,
+        "draft"
+      ],
+      "original_success_credit": 0,
+      "package": "transitions",
+      "subject_result": "fail"
+    },
+    {
+      "case": "ordered lifecycle",
+      "expected": "closed",
+      "matched": true,
+      "observed": "closed",
+      "original_success_credit": 1,
+      "package": "transitions",
+      "subject_result": "pass"
+    },
+    {
+      "case": "repeat after terminal state",
+      "expected": "MachineError",
+      "matched": true,
+      "observed": "MachineError",
+      "original_success_credit": 0,
+      "package": "transitions",
+      "subject_result": "fail"
+    },
+    {
+      "case": "skip intermediate state",
+      "expected": "TransitionNotAllowed",
+      "matched": true,
+      "observed": "TransitionNotAllowed",
+      "original_success_credit": 0,
+      "package": "python-statemachine",
+      "subject_result": "fail"
+    },
+    {
+      "case": "ordered lifecycle",
+      "expected": [
+        "closed"
+      ],
+      "matched": true,
+      "observed": [
+        "closed"
+      ],
+      "original_success_credit": 1,
+      "package": "python-statemachine",
+      "recovery_ref": "docs/seren-talewood/v689-v2-r2/x2/package-api-recovery.json",
+      "subject_result": "pass"
+    },
+    {
+      "case": "detached patch",
+      "expected": {
+        "count": 2,
+        "items": [
+          "a",
+          "b"
+        ]
+      },
+      "matched": true,
+      "observed": {
+        "count": 2,
+        "items": [
+          "a",
+          "b"
+        ]
+      },
+      "original_success_credit": 1,
+      "package": "dictdiffer",
+      "subject_result": "pass"
+    },
+    {
+      "case": "exact revert",
+      "expected": {
+        "count": 1,
+        "items": [
+          "a"
+        ]
+      },
+      "matched": true,
+      "observed": {
+        "count": 1,
+        "items": [
+          "a"
+        ]
+      },
+      "original_success_credit": 1,
+      "package": "dictdiffer",
+      "subject_result": "pass"
+    },
+    {
+      "case": "source preserved",
+      "expected": {
+        "count": 1,
+        "items": [
+          "a"
+        ]
+      },
+      "matched": true,
+      "observed": {
+        "count": 1,
+        "items": [
+          "a"
+        ]
+      },
+      "original_success_credit": 1,
+      "package": "dictdiffer",
+      "subject_result": "pass"
+    },
+    {
+      "case": "changed target does not match the intended after state",
+      "expected": false,
+      "matched": true,
+      "observed": false,
+      "original_success_credit": 0,
+      "package": "dictdiffer",
+      "subject_result": "fail"
+    },
+    {
+      "case": "type-strict equality preclaim is false",
+      "expected": [],
+      "matched": true,
+      "observed": [],
+      "original_success_credit": 0,
+      "package": "dictdiffer",
+      "subject_result": "fail"
+    },
+    {
+      "case": "dependency descendants",
+      "expected": [
+        1,
+        2
+      ],
+      "matched": true,
+      "observed": [
+        1,
+        2
+      ],
+      "original_success_credit": 1,
+      "package": "rustworkx",
+      "subject_result": "pass"
+    },
+    {
+      "case": "cycle checking blocks a back edge",
+      "expected": "DAGWouldCycle",
+      "matched": true,
+      "observed": "DAGWouldCycle",
+      "original_success_credit": 0,
+      "package": "rustworkx",
+      "subject_result": "fail"
+    },
+    {
+      "case": "four-tier depth",
+      "expected": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "matched": true,
+      "observed": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "original_success_credit": 1,
+      "package": "anytree",
+      "subject_result": "pass"
+    },
+    {
+      "case": "ancestor cycle",
+      "expected": "LoopError",
+      "matched": true,
+      "observed": "LoopError",
+      "original_success_credit": 0,
+      "package": "anytree",
+      "subject_result": "fail"
+    },
+    {
+      "case": "failed cycle preserves root",
+      "expected": null,
+      "matched": true,
+      "observed": null,
+      "original_success_credit": 1,
+      "package": "anytree",
+      "subject_result": "pass"
+    }
+  ],
+  "schema": "ghc.family.remaster.package-smokes.v1",
+  "selected_packages_exercised": 13,
+  "versions": {
+    "anytree": "2.13.0",
+    "bidict": "0.24.1",
+    "boltons": "26.2.0",
+    "dictdiffer": "0.10.0",
+    "frozendict": "2.4.7",
+    "immutables": "0.21",
+    "intervaltree": "3.2.1",
+    "more-itertools": "11.1.0",
+    "numpy": "2.5.3",
+    "portion": "2.6.2",
+    "python-statemachine": "3.2.1",
+    "rustworkx": "0.18.1",
+    "six": "1.17.0",
+    "sortedcontainers": "2.4.0",
+    "toolz": "1.1.0",
+    "transitions": "0.9.3"
+  }
+}

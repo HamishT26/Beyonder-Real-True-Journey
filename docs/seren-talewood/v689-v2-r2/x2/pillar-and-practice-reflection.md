@@ -1,0 +1,49 @@
+# Pillars and practice in the Seren remaster
+
+The strongest result is a more inspectable workflow accompanied by concrete mathematical limits. Twenty new skills and eleven new runners now cover the owner phase's defined responsibilities. The shared instructions have a concise current entry point, the earlier instructions remain recoverable, and the family catalogue can find a capability by its intended operation. Those are software and documentation improvements. The scientific exercises give exact finite examples and counterexamples rather than a claim of a new fundamental law.
+
+## THOS Body and workflow engineering
+
+Workflow engineering was the primary practice lens. The previous guidance mixed current instructions with many earlier roster snapshots. The remaster preserved all twenty-seven prior entrypoints in local compatibility archives and changed their active routing text from 29,206 words to 5,389 words. This measurement concerns the amount of entrypoint text. It does not establish a cache hit, memory-retention improvement, lower token use in a particular future run, subjective wellbeing, or model identity continuity.
+
+The new profile separates an initial definition freeze from x1 work, x2 work and final closeout. Both sessions now carry their own safe tasks, skills, runners and source-record refinements, as Hamish requested. A spontaneous addition is defined before it executes. The sixth x1 runner is a concrete example: a new current-profile validator was added under SAFE-121 to keep future owners from applying an older sixteen-seat schema to the confirmed thirty-seat schedule. It does not add proposal novelty or alter the frozen initial target of 120 safe tasks.
+
+Several failures improved the implementation. Malformed nested enum values initially escaped as TypeErrors; explicit string validation now precedes set membership. The first catalogue stored full operation names, while the existing query function split them into words. The corrected catalogue retains the original operation names and adds compatible search terms. Original failures, original catalogues and the passing corrections remain separately addressable. This makes the next selection easier without pretending that a successful correction erases an earlier mistake.
+
+The current THOS result is a bounded local toolchain. It has no benchmark establishing general intelligence, ASI, autonomy across external services, or reliability outside the tested scopes. The native task transport remains a separate capability: a projected route and a prepared message cannot supply that transport or its acknowledgement.
+
+## GMUT Mind and probability theory
+
+Probability theory supplied a precise model in which conservation, reversal, information loss and coarse graining can be inspected. The kernel has rows (3/4, 1/4) and (1/2, 1/2), with stationary weights (2/3, 1/3). Exact rational Gaussian elimination and NumPy's floating-point linear solve agreed within approximately 1.11 times ten to the minus sixteen. This is a comparison of implementations under shared infrastructure, not independent reproduction by another team.
+
+Probability normalization has a short algebraic explanation. For a row distribution p and row-stochastic kernel P, the sum of the components of pP equals the sum over i of p_i multiplied by the sum of row i of P. Each row sum is one, so the resulting total is one. The test suite checks finite examples of that property. The property is established mathematics under its stated assumptions, not a newly discovered physical conservation law.
+
+The observed trajectories distinguish Shannon entropy from relative entropy to a stationary distribution. In the retained two-state examples, relative entropy to the stationary weights does not increase. Raw Shannon entropy follows different paths from different initial distributions. A separate reset kernel sends equal initial weights to a point mass, reducing Shannon entropy from log two to zero. This is an explicit counterexample to a universal monotonicity claim for arbitrary abstract stochastic kernels. It does not contradict the physical second law for a properly specified total system and environment.
+
+The model's entropy-production expression compares stationary forward and reversed one-step flows in nats per model step. Physical heat, thermodynamic entropy and cognition are not supplied by that expression alone. The need for explicit physical assumptions is consistent with the scope of [Seifert's stochastic thermodynamics review](https://arxiv.org/abs/1205.4176). The remaster contains no physical observation, reservoir model, empirical calibration, cognitive measurement or validated bridge from a mental variable to thermodynamic entropy.
+
+Coarse graining produced a second useful limit. Merging two states of a directed three-cycle gives a stationary-flow projection, but it fails the strong-lumpability check. From a particular initial state, the full process aggregates to (1, 0) after one step, while the projected kernel predicts (1/2, 1/2). The discrepancy is visible in exact rational arithmetic. It prevents a convenient aggregate from silently being treated as a complete dynamics for every initial distribution. More general coarse-graining and macroscopic-limit questions have substantial assumptions, as illustrated by [Falasco and Esposito's research](https://arxiv.org/abs/2307.12406).
+
+These results support making assumptions and counterexamples first-class GMUT records. They do not confirm the scalar-tensor/EFT research family, establish a new force, produce an empirical parameter constraint, supply quantum completion, or place GMUT ahead of tested physical theories. A future physical proposal would need a defined observable, units, mapping, null model, prediction and evidence capable of distinguishing it from existing explanations.
+
+## GMUT Mind and number theory
+
+The second mathematical practice was number theory. For each integer n from two through 101, the bounded search found positive integer denominators x, y and z with four over n equal to one over x plus one over y plus one over z. Every returned witness was checked again by direct exact substitution, yielding a zero rational residual. The records include the denominators, input bounds and four disjoint batches of twenty-five values.
+
+For example, four over five equals one half plus one quarter plus one twentieth. With a tighter denominator ceiling of ten, the search finds one half plus one fifth plus one tenth. A changed denominator produces a nonzero residual. A search that reaches its pair budget reports that condition separately from complete absence within its finite denominator range.
+
+The general Erdős–Straus conjecture remains open in the cited research context. [Chamberland's April 2026 paper](https://math.colgate.edu/~integers/aa42/aa42.pdf) studies a characterization related to prime inputs and describes a much larger previously checked range. This remaster does not advance that numerical bound or prove the universal statement. Its contribution is a small, inspectable search and witness-verification tool that demonstrates how to preserve limits when discussing an unsolved problem.
+
+## Freed ID and CBR Heart and public-interest governance design
+
+The governance practice focused on the difference between a record and the authority it describes. A synthetic consent record can match an action, resource, purpose, revocation flag and expiry, while the result still states that it grants no authority. A real person's consent cannot be established by a Boolean supplied in a model's own fixture. A remedy queue can preserve urgency and intake order while taking zero real decisions. Review coverage can expose missing or merely represented review areas without claiming that a human accessibility evaluation occurred.
+
+The risk register retains each record's evidence label when it calculates a declared likelihood-times-impact score. This multiplication is a transparent local convention on an ordinal scale. It is not a calibrated probability, an expected financial loss, or a scoring formula prescribed by NIST. The [NIST AI Risk Management Framework](https://www.nist.gov/itl/ai-risk-management-framework) provides a broader context for identifying and managing risks; its current page also distinguishes an ongoing revision and a 2026 critical-infrastructure concept note from finalized requirements. Those developments inform questions to ask, not an automatic compliance claim.
+
+Similarly, the [W3C Verifiable Credentials Data Model](https://www.w3.org/TR/vc-data-model-2.0/) is relevant to structured credential information, but a local data record is not a complete issuer, proof, status, revocation, recovery, interoperability or trust-governance system. The remaster does not issue a production credential or ratify CBR as public law. Competent and affected people retain decisions about real rights, consent, remedy, accessibility, cultural interpretation and Māori authority.
+
+## Shared principles and remaining questions
+
+Across the three pillars, useful principles are procedural: define the claim before testing it; preserve the source and the failed alternative; keep the result within its actual domain; and make corrections inspectable. These principles can guide a research programme or workflow. Calling them fundamental laws of Thermo/Psyche Dynamics would require additional definitions and evidence that this phase does not supply.
+
+The working name Seren Talewood, the evidence-steward role, optional pronouns, hope and family language remain corrigible working language. Model settings were preserved, and no task, subagent, fork or automation was created. The next recommended practice is measurement and uncertainty analysis, which could help a later owner turn a proposed physical comparison into a precisely defined observation plan. The terminal verdict remains `NOT_READY_FOR_STAGE_20`.
