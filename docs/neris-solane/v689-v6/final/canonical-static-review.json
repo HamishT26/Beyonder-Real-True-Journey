@@ -1,0 +1,26 @@
+{
+  "schema": "ghc.family.canonical-static-review.v1",
+  "owner": "Neris Solane",
+  "phase": "v689-v6",
+  "retained_failure": {
+    "id": "NS6896-FINAL-011",
+    "initial_success_credit": 0,
+    "ruff": {
+      "initial_findings": 5,
+      "mechanically_fixed": 3,
+      "manually_resolved": 2,
+      "final_returncode": 0
+    },
+    "bandit": {
+      "initial_findings": 3,
+      "classes": ["B404", "B603", "B324"],
+      "adjudication": "Subprocess is restricted to the resolved Git executable and literal validator arguments. SHA-1 is calculated only for Git blob identity with usedforsecurity false; SHA-256 remains the content integrity digest.",
+      "final_returncode": 0
+    }
+  },
+  "canonical_invoked": false,
+  "tests_or_component_receipts_replayed": false,
+  "source_or_sibling_files_scanned": 0,
+  "complete_security_claimed": false,
+  "boundary": "Clean Ruff and bounded Bandit checks on the canonical entrypoint are same-owner static evidence only, not exhaustive security, independent audit, production certification, or canonical success."
+}
