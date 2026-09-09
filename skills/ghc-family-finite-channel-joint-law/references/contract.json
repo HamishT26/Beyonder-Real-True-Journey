@@ -1,0 +1,76 @@
+{
+  "core": "ghc_family_inference_core.py",
+  "fields": [
+    "channel",
+    "op",
+    "prior"
+  ],
+  "negative": {
+    "expected": {
+      "error": "E_PROBABILITY",
+      "ok": false,
+      "value": null
+    },
+    "input": {
+      "channel": [
+        [
+          1
+        ],
+        [
+          1
+        ]
+      ],
+      "op": "channel_joint",
+      "prior": [
+        1,
+        1
+      ]
+    }
+  },
+  "operation": "channel_joint",
+  "pillar": "GMUT",
+  "positive": {
+    "expected": {
+      "error": null,
+      "ok": true,
+      "value": {
+        "joint": [
+          [
+            "1/2",
+            "0"
+          ],
+          [
+            "0",
+            "1/2"
+          ]
+        ],
+        "observation": [
+          "1/2",
+          "1/2"
+        ]
+      }
+    },
+    "input": {
+      "channel": [
+        [
+          1,
+          0
+        ],
+        [
+          0,
+          1
+        ]
+      ],
+      "op": "channel_joint",
+      "prior": [
+        "1/2",
+        "1/2"
+      ]
+    }
+  },
+  "practice": "information theory",
+  "purpose": "Form a finite joint probability law from an explicit prior and channel; symbols are not physical or conscious states.",
+  "runner": "ghc_family_evidence_channel.py",
+  "same_owner_only": true,
+  "source_plan": "docs/seren-talewood/v689-v2-r3/plan/new-proposals.json"
+}

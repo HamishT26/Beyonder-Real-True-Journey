@@ -1,0 +1,51 @@
+{
+  "core": "ghc_family_inference_core.py",
+  "fields": [
+    "alternative",
+    "null",
+    "op",
+    "outcomes"
+  ],
+  "negative": {
+    "expected": {
+      "error": "E_INTERIOR",
+      "ok": false,
+      "value": null
+    },
+    "input": {
+      "alternative": "1/2",
+      "null": 0,
+      "op": "lr_path",
+      "outcomes": []
+    }
+  },
+  "operation": "lr_path",
+  "pillar": "GMUT",
+  "positive": {
+    "expected": {
+      "error": null,
+      "ok": true,
+      "value": {
+        "empirical": false,
+        "null_assumption": "conditional_Bernoulli",
+        "path": [
+          "1",
+          "3/2"
+        ]
+      }
+    },
+    "input": {
+      "alternative": "3/4",
+      "null": "1/2",
+      "op": "lr_path",
+      "outcomes": [
+        1
+      ]
+    }
+  },
+  "practice": "information theory",
+  "purpose": "Compute a fixed-alternative Bernoulli likelihood-ratio path; validity depends on the declared conditional null.",
+  "runner": "ghc_family_evidence_bayes.py",
+  "same_owner_only": true,
+  "source_plan": "docs/seren-talewood/v689-v2-r3/plan/new-proposals.json"
+}

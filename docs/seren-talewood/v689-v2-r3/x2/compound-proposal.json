@@ -1,0 +1,20 @@
+{
+  "proposal_id": "ST6892R3-N201",
+  "stage": "x2",
+  "title": "Compose weighted route cost context and checkpoint evidence without submitting a handoff",
+  "defined_before_implementation": true,
+  "source_skills": ["ghc-family-weighted-cycle-schedule", "ghc-family-model-mix-cost-scenario", "ghc-family-prefix-aware-context-batches", "ghc-family-checkpoint-acceptance-reducer"],
+  "new_skill": "ghc-family-weighted-handoff-composer",
+  "new_runner": "ghc_family_weighted_handoff_composer.py",
+  "safe_task": "SAFE-203",
+  "extra_exact_packets": [
+    {"id": "EXACT-051", "kind": "skill", "subject": "ghc-family-weighted-handoff-composer"},
+    {"id": "EXACT-052", "kind": "runner", "subject": "ghc_family_weighted_handoff_composer.py"}
+  ],
+  "positive_example": {"profile_and_route": "plan/profile-v4.json and plan/route-v4.json", "relative_astra_cost": 2, "sizes": [3,3,3], "prefix": 2, "limit": 8, "events": [["synthetic-handoff","digest-label","accepted"]]},
+  "expected": {"route_valid": true, "future_assignments": 294, "relative_cost_saving": "1/9", "context_batches": [[0,1],[2]], "accepted_checkpoint_retained": true, "messages_sent": 0},
+  "adverse_example": "Swap the first Astra and Sol cycle positions; require E_CADENCE with no composed output",
+  "authority": "Hamish's authorized x2 builds, compatible skill consolidation and global promotion",
+  "independent_reproduction": false,
+  "real_delivery": false
+}

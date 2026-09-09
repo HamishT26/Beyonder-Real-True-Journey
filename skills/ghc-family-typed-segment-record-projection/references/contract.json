@@ -1,0 +1,51 @@
+{
+  "core": "ghc_family_inference_core.py",
+  "fields": [
+    "op",
+    "path",
+    "record"
+  ],
+  "negative": {
+    "expected": {
+      "error": "E_MISSING",
+      "ok": false,
+      "value": null
+    },
+    "input": {
+      "op": "record_projection",
+      "path": [
+        "a"
+      ],
+      "record": {}
+    }
+  },
+  "operation": "record_projection",
+  "pillar": "THOS",
+  "positive": {
+    "expected": {
+      "error": null,
+      "ok": true,
+      "value": {
+        "present": true,
+        "value": 3
+      }
+    },
+    "input": {
+      "op": "record_projection",
+      "path": [
+        "a",
+        "b"
+      ],
+      "record": {
+        "a": {
+          "b": 3
+        }
+      }
+    }
+  },
+  "practice": "software performance engineering",
+  "purpose": "Select explicit typed path segments without evaluation, wildcard expansion, input mutation, or null-to-missing coercion.",
+  "runner": "ghc_family_evidence_comparison.py",
+  "same_owner_only": true,
+  "source_plan": "docs/seren-talewood/v689-v2-r3/plan/new-proposals.json"
+}

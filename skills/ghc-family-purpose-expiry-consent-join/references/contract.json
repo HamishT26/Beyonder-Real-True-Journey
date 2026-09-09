@@ -1,0 +1,62 @@
+{
+  "core": "ghc_family_inference_core.py",
+  "fields": [
+    "grant",
+    "now",
+    "op",
+    "purpose",
+    "subject"
+  ],
+  "negative": {
+    "expected": {
+      "error": "E_BOOLEAN",
+      "ok": false,
+      "value": null
+    },
+    "input": {
+      "grant": {
+        "expires": 10,
+        "purposes": [
+          "research"
+        ],
+        "revoked": null,
+        "subject": "synthetic-person"
+      },
+      "now": 5,
+      "op": "consent_scope",
+      "purpose": "research",
+      "subject": "synthetic-person"
+    }
+  },
+  "operation": "consent_scope",
+  "pillar": "Freed ID and CBR",
+  "positive": {
+    "expected": {
+      "error": null,
+      "ok": true,
+      "value": {
+        "model_eligible": true,
+        "real_consent_verified": false
+      }
+    },
+    "input": {
+      "grant": {
+        "expires": 10,
+        "purposes": [
+          "research"
+        ],
+        "revoked": false,
+        "subject": "synthetic-person"
+      },
+      "now": 5,
+      "op": "consent_scope",
+      "purpose": "research",
+      "subject": "synthetic-person"
+    }
+  },
+  "practice": "institutional design",
+  "purpose": "Join declared subject, purpose, expiry and revocation records while retaining the distinction from real consent.",
+  "runner": "ghc_family_evidence_review.py",
+  "same_owner_only": true,
+  "source_plan": "docs/seren-talewood/v689-v2-r3/plan/new-proposals.json"
+}

@@ -1,0 +1,57 @@
+{
+  "core": "ghc_family_inference_core.py",
+  "fields": [
+    "after",
+    "before",
+    "op",
+    "same_workload_and_results"
+  ],
+  "negative": {
+    "expected": {
+      "error": "E_SHAPE",
+      "ok": false,
+      "value": null
+    },
+    "input": {
+      "after": [
+        1
+      ],
+      "before": [
+        1,
+        2
+      ],
+      "op": "paired_gain",
+      "same_workload_and_results": true
+    }
+  },
+  "operation": "paired_gain",
+  "pillar": "THOS",
+  "positive": {
+    "expected": {
+      "error": null,
+      "ok": true,
+      "value": {
+        "comparable": true,
+        "cost_ratio": "1/2",
+        "saving": "1/2"
+      }
+    },
+    "input": {
+      "after": [
+        1,
+        2
+      ],
+      "before": [
+        2,
+        4
+      ],
+      "op": "paired_gain",
+      "same_workload_and_results": true
+    }
+  },
+  "practice": "software performance engineering",
+  "purpose": "Compare paired resource observations only when the workload and result digests agree; otherwise report a comparison gap.",
+  "runner": "ghc_family_evidence_comparison.py",
+  "same_owner_only": true,
+  "source_plan": "docs/seren-talewood/v689-v2-r3/plan/new-proposals.json"
+}

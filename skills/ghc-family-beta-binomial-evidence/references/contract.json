@@ -1,0 +1,50 @@
+{
+  "core": "ghc_family_inference_core.py",
+  "fields": [
+    "alpha",
+    "beta",
+    "op",
+    "outcomes"
+  ],
+  "negative": {
+    "expected": {
+      "error": "E_POSITIVE",
+      "ok": false,
+      "value": null
+    },
+    "input": {
+      "alpha": 0,
+      "beta": 1,
+      "op": "beta_update",
+      "outcomes": []
+    }
+  },
+  "operation": "beta_update",
+  "pillar": "GMUT",
+  "positive": {
+    "expected": {
+      "error": null,
+      "ok": true,
+      "value": {
+        "alpha": 2,
+        "beta": 1,
+        "empirical": false,
+        "mean": "2/3",
+        "variance": "1/18"
+      }
+    },
+    "input": {
+      "alpha": 1,
+      "beta": 1,
+      "op": "beta_update",
+      "outcomes": [
+        1
+      ]
+    }
+  },
+  "practice": "information theory",
+  "purpose": "Update an explicitly synthetic Beta prior with binary outcomes and retain the prior and finite sample count.",
+  "runner": "ghc_family_evidence_bayes.py",
+  "same_owner_only": true,
+  "source_plan": "docs/seren-talewood/v689-v2-r3/plan/new-proposals.json"
+}

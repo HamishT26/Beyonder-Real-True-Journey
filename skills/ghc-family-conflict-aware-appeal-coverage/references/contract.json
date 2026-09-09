@@ -1,0 +1,58 @@
+{
+  "core": "ghc_family_inference_core.py",
+  "fields": [
+    "conflicts",
+    "decisions",
+    "op",
+    "reviewers"
+  ],
+  "negative": {
+    "expected": {
+      "error": "E_DUPLICATE",
+      "ok": false,
+      "value": null
+    },
+    "input": {
+      "conflicts": [],
+      "decisions": [
+        "a",
+        "a"
+      ],
+      "op": "appeal_cover",
+      "reviewers": {}
+    }
+  },
+  "operation": "appeal_cover",
+  "pillar": "Freed ID and CBR",
+  "positive": {
+    "expected": {
+      "error": null,
+      "ok": true,
+      "value": {
+        "legitimacy_verified": false,
+        "uncovered": []
+      }
+    },
+    "input": {
+      "conflicts": [],
+      "decisions": [
+        "a",
+        "b"
+      ],
+      "op": "appeal_cover",
+      "reviewers": {
+        "a": [
+          "r1"
+        ],
+        "b": [
+          "r2"
+        ]
+      }
+    }
+  },
+  "practice": "institutional design",
+  "purpose": "Expose missing or conflicted reviewers for synthetic decisions instead of converting a roster into legitimate review.",
+  "runner": "ghc_family_evidence_review.py",
+  "same_owner_only": true,
+  "source_plan": "docs/seren-talewood/v689-v2-r3/plan/new-proposals.json"
+}

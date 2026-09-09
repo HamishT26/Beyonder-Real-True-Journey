@@ -1,0 +1,58 @@
+{
+  "core": "ghc_family_inference_core.py",
+  "fields": [
+    "events",
+    "op"
+  ],
+  "negative": {
+    "expected": {
+      "error": "E_CONFLICT",
+      "ok": false,
+      "value": null
+    },
+    "input": {
+      "events": [
+        [
+          "p",
+          "h",
+          "prepared"
+        ],
+        [
+          "p",
+          "g",
+          "accepted"
+        ]
+      ],
+      "op": "checkpoint"
+    }
+  },
+  "operation": "checkpoint",
+  "pillar": "THOS",
+  "positive": {
+    "expected": {
+      "error": null,
+      "ok": true,
+      "value": {
+        "messages_sent": 0,
+        "states": {
+          "p": "prepared"
+        }
+      }
+    },
+    "input": {
+      "events": [
+        [
+          "p",
+          "h",
+          "prepared"
+        ]
+      ],
+      "op": "checkpoint"
+    }
+  },
+  "practice": "software performance engineering",
+  "purpose": "Reduce local attempt records with digest binding and absorbing acceptance; the reducer never submits a message.",
+  "runner": "ghc_family_evidence_attempts.py",
+  "same_owner_only": true,
+  "source_plan": "docs/seren-talewood/v689-v2-r3/plan/new-proposals.json"
+}

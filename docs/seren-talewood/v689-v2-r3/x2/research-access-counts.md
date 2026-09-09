@@ -1,0 +1,1 @@
+X2 used no additional general web-search queries, three additional primary-source page opens, and four connected-Drive title searches. The unsuccessful Drive searches do not prove the documents do not exist. Registry metadata and documentation opens are recorded separately from general search queries.

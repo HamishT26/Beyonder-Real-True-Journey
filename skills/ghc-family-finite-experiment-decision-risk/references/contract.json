@@ -1,0 +1,79 @@
+{
+  "core": "ghc_family_inference_core.py",
+  "fields": [
+    "joint",
+    "loss",
+    "op"
+  ],
+  "negative": {
+    "expected": {
+      "error": "E_SHAPE",
+      "ok": false,
+      "value": null
+    },
+    "input": {
+      "joint": [
+        [
+          1
+        ],
+        [
+          0
+        ]
+      ],
+      "loss": [
+        [
+          0
+        ]
+      ],
+      "op": "bayes_risk"
+    }
+  },
+  "operation": "bayes_risk",
+  "pillar": "Freed ID and CBR",
+  "positive": {
+    "expected": {
+      "error": null,
+      "ok": true,
+      "value": {
+        "minimizers": [
+          [
+            0
+          ],
+          [
+            1
+          ]
+        ],
+        "public_decision": false,
+        "risk": "0"
+      }
+    },
+    "input": {
+      "joint": [
+        [
+          "1/2",
+          0
+        ],
+        [
+          0,
+          "1/2"
+        ]
+      ],
+      "loss": [
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          0
+        ]
+      ],
+      "op": "bayes_risk"
+    }
+  },
+  "practice": "institutional design",
+  "purpose": "Calculate Bayes risk for supplied finite losses, retaining ties and without choosing losses for affected people.",
+  "runner": "ghc_family_evidence_channel.py",
+  "same_owner_only": true,
+  "source_plan": "docs/seren-talewood/v689-v2-r3/plan/new-proposals.json"
+}

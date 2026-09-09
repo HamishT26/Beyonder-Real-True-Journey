@@ -1,0 +1,49 @@
+{
+  "core": "ghc_family_inference_core.py",
+  "fields": [
+    "base_delay",
+    "failure_probability",
+    "max_attempts",
+    "op"
+  ],
+  "negative": {
+    "expected": {
+      "error": "E_PROBABILITY",
+      "ok": false,
+      "value": null
+    },
+    "input": {
+      "base_delay": 1,
+      "failure_probability": 2,
+      "max_attempts": 2,
+      "op": "retry_budget"
+    }
+  },
+  "operation": "retry_budget",
+  "pillar": "THOS",
+  "positive": {
+    "expected": {
+      "error": null,
+      "ok": true,
+      "value": {
+        "delays": [
+          1
+        ],
+        "exhaustion_probability": "1/4",
+        "expected_attempts": "3/2",
+        "submissions": 0
+      }
+    },
+    "input": {
+      "base_delay": 1,
+      "failure_probability": "1/2",
+      "max_attempts": 2,
+      "op": "retry_budget"
+    }
+  },
+  "practice": "operations research",
+  "purpose": "Compute bounded attempts and delay exposure under a stated failure probability; never retry accepted or opaque sends.",
+  "runner": "ghc_family_evidence_attempts.py",
+  "same_owner_only": true,
+  "source_plan": "docs/seren-talewood/v689-v2-r3/plan/new-proposals.json"
+}
