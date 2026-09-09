@@ -1,0 +1,63 @@
+{
+  "core": "ghc_family_capacity_core.py",
+  "fields": [
+    "limit",
+    "op",
+    "prefix",
+    "sizes"
+  ],
+  "negative": {
+    "expected": {
+      "error": "E_OVERSIZE",
+      "ok": false,
+      "value": null
+    },
+    "input": {
+      "limit": 5,
+      "op": "context_batches",
+      "prefix": 1,
+      "sizes": [
+        5
+      ]
+    }
+  },
+  "operation": "context_batches",
+  "pillar": "THOS",
+  "positive": {
+    "expected": {
+      "error": null,
+      "ok": true,
+      "value": {
+        "batches": [
+          [
+            0,
+            1
+          ],
+          [
+            2
+          ]
+        ],
+        "totals": [
+          8,
+          5
+        ],
+        "truncated": false
+      }
+    },
+    "input": {
+      "limit": 8,
+      "op": "context_batches",
+      "prefix": 2,
+      "sizes": [
+        3,
+        3,
+        3
+      ]
+    }
+  },
+  "practice": "software performance engineering",
+  "purpose": "Split ordered indivisible modules while charging the stable prefix to every batch and refusing oversize modules.",
+  "runner": "ghc_family_capacity_packing.py",
+  "same_owner_only": true,
+  "source_plan": "docs/seren-talewood/v689-v2-r3/plan/new-proposals.json"
+}

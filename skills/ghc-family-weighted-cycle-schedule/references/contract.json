@@ -1,0 +1,51 @@
+{
+  "core": "ghc_family_capacity_core.py",
+  "fields": [
+    "count",
+    "cycle",
+    "op",
+    "start"
+  ],
+  "negative": {
+    "expected": {
+      "error": "E_CYCLE",
+      "ok": false,
+      "value": null
+    },
+    "input": {
+      "count": 1,
+      "cycle": [],
+      "op": "cycle_slice",
+      "start": 0
+    }
+  },
+  "operation": "cycle_slice",
+  "pillar": "THOS",
+  "positive": {
+    "expected": {
+      "error": null,
+      "ok": true,
+      "value": [
+        "A",
+        "S1",
+        "S2",
+        "A"
+      ]
+    },
+    "input": {
+      "count": 4,
+      "cycle": [
+        "A",
+        "S1",
+        "S2"
+      ],
+      "op": "cycle_slice",
+      "start": 0
+    }
+  },
+  "practice": "operations research",
+  "purpose": "Read a finite window of an explicitly repeated identity cycle without creating or contacting tasks.",
+  "runner": "ghc_family_capacity_cycle.py",
+  "same_owner_only": true,
+  "source_plan": "docs/seren-talewood/v689-v2-r3/plan/new-proposals.json"
+}

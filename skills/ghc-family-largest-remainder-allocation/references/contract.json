@@ -1,0 +1,54 @@
+{
+  "core": "ghc_family_capacity_core.py",
+  "fields": [
+    "op",
+    "total",
+    "weights"
+  ],
+  "negative": {
+    "expected": {
+      "error": "E_WEIGHT",
+      "ok": false,
+      "value": null
+    },
+    "input": {
+      "op": "fair_quota",
+      "total": 1,
+      "weights": [
+        0,
+        0
+      ]
+    }
+  },
+  "operation": "fair_quota",
+  "pillar": "Freed ID and CBR",
+  "positive": {
+    "expected": {
+      "error": null,
+      "ok": true,
+      "value": {
+        "allocation": [
+          1,
+          1,
+          0
+        ],
+        "rights_determined": false,
+        "tie_policy": "input_index"
+      }
+    },
+    "input": {
+      "op": "fair_quota",
+      "total": 2,
+      "weights": [
+        1,
+        1,
+        1
+      ]
+    }
+  },
+  "practice": "institutional design",
+  "purpose": "Allocate an integer workload with largest remainders, expose tie policy, and avoid equating numerical share with rights.",
+  "runner": "ghc_family_capacity_cost.py",
+  "same_owner_only": true,
+  "source_plan": "docs/seren-talewood/v689-v2-r3/plan/new-proposals.json"
+}

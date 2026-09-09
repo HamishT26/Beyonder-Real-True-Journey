@@ -1,0 +1,62 @@
+{
+  "core": "ghc_family_capacity_core.py",
+  "fields": [
+    "capacity",
+    "op",
+    "sizes"
+  ],
+  "negative": {
+    "expected": {
+      "error": "E_OVERSIZE",
+      "ok": false,
+      "value": null
+    },
+    "input": {
+      "capacity": 3,
+      "op": "ffd",
+      "sizes": [
+        4
+      ]
+    }
+  },
+  "operation": "ffd",
+  "pillar": "THOS",
+  "positive": {
+    "expected": {
+      "error": null,
+      "ok": true,
+      "value": {
+        "bins": [
+          [
+            0,
+            1
+          ],
+          [
+            2,
+            3
+          ]
+        ],
+        "loads": [
+          "10",
+          "10"
+        ],
+        "optimality_claimed": false
+      }
+    },
+    "input": {
+      "capacity": 10,
+      "op": "ffd",
+      "sizes": [
+        6,
+        4,
+        6,
+        4
+      ]
+    }
+  },
+  "practice": "operations research",
+  "purpose": "Pack indivisible file or token costs with first-fit decreasing and label the result as a heuristic.",
+  "runner": "ghc_family_capacity_packing.py",
+  "same_owner_only": true,
+  "source_plan": "docs/seren-talewood/v689-v2-r3/plan/new-proposals.json"
+}

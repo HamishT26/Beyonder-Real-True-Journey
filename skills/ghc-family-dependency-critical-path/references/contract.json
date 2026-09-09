@@ -1,0 +1,81 @@
+{
+  "core": "ghc_family_capacity_core.py",
+  "fields": [
+    "durations",
+    "edges",
+    "op"
+  ],
+  "negative": {
+    "expected": {
+      "error": "E_CYCLE",
+      "ok": false,
+      "value": null
+    },
+    "input": {
+      "durations": [
+        1,
+        1
+      ],
+      "edges": [
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          0
+        ]
+      ],
+      "op": "critical_path"
+    }
+  },
+  "operation": "critical_path",
+  "pillar": "THOS",
+  "positive": {
+    "expected": {
+      "error": null,
+      "ok": true,
+      "value": {
+        "finishes": [
+          "2",
+          "5",
+          "7",
+          "8"
+        ],
+        "makespan": "8"
+      }
+    },
+    "input": {
+      "durations": [
+        2,
+        3,
+        5,
+        1
+      ],
+      "edges": [
+        [
+          0,
+          1
+        ],
+        [
+          0,
+          2
+        ],
+        [
+          1,
+          3
+        ],
+        [
+          2,
+          3
+        ]
+      ],
+      "op": "critical_path"
+    }
+  },
+  "practice": "operations research",
+  "purpose": "Calculate earliest finishes on an explicit acyclic dependency graph without treating missing dependencies as complete.",
+  "runner": "ghc_family_capacity_dependency.py",
+  "same_owner_only": true,
+  "source_plan": "docs/seren-talewood/v689-v2-r3/plan/new-proposals.json"
+}

@@ -1,0 +1,41 @@
+{
+  "core": "ghc_family_capacity_core.py",
+  "fields": [
+    "astra_cost",
+    "op"
+  ],
+  "negative": {
+    "expected": {
+      "error": "E_POSITIVE",
+      "ok": false,
+      "value": null
+    },
+    "input": {
+      "astra_cost": 0,
+      "op": "mix_cost"
+    }
+  },
+  "operation": "mix_cost",
+  "pillar": "THOS",
+  "positive": {
+    "expected": {
+      "error": null,
+      "ok": true,
+      "value": {
+        "measured": false,
+        "new_average": "4/3",
+        "old_average": "3/2",
+        "relative_saving": "1/9"
+      }
+    },
+    "input": {
+      "astra_cost": "2",
+      "op": "mix_cost"
+    }
+  },
+  "practice": "software performance engineering",
+  "purpose": "Compare equal-workload model mixes using explicitly supplied relative costs; do not infer billing or measured token consumption.",
+  "runner": "ghc_family_capacity_cycle.py",
+  "same_owner_only": true,
+  "source_plan": "docs/seren-talewood/v689-v2-r3/plan/new-proposals.json"
+}

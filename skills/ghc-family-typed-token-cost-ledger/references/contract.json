@@ -1,0 +1,56 @@
+{
+  "core": "ghc_family_capacity_core.py",
+  "fields": [
+    "cached_tokens",
+    "input_tokens",
+    "op",
+    "output_tokens",
+    "rates"
+  ],
+  "negative": {
+    "expected": {
+      "error": "E_CACHE",
+      "ok": false,
+      "value": null
+    },
+    "input": {
+      "cached_tokens": 2,
+      "input_tokens": 1,
+      "op": "token_cost",
+      "output_tokens": 0,
+      "rates": [
+        1,
+        1,
+        1
+      ]
+    }
+  },
+  "operation": "token_cost",
+  "pillar": "THOS",
+  "positive": {
+    "expected": {
+      "error": null,
+      "ok": true,
+      "value": {
+        "billing_verified": false,
+        "cost_units": "240"
+      }
+    },
+    "input": {
+      "cached_tokens": 40,
+      "input_tokens": 100,
+      "op": "token_cost",
+      "output_tokens": 20,
+      "rates": [
+        "2",
+        "1",
+        "4"
+      ]
+    }
+  },
+  "practice": "software performance engineering",
+  "purpose": "Separate cached and uncached input counts and compute a supplied rate scenario with complete type checks.",
+  "runner": "ghc_family_capacity_cost.py",
+  "same_owner_only": true,
+  "source_plan": "docs/seren-talewood/v689-v2-r3/plan/new-proposals.json"
+}

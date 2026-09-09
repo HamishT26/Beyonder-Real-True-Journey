@@ -1,0 +1,57 @@
+{
+  "core": "ghc_family_capacity_core.py",
+  "fields": [
+    "jobs",
+    "op"
+  ],
+  "negative": {
+    "expected": {
+      "error": "E_NONNEGATIVE",
+      "ok": false,
+      "value": null
+    },
+    "input": {
+      "jobs": [
+        [
+          -1,
+          0
+        ]
+      ],
+      "op": "edd"
+    }
+  },
+  "operation": "edd",
+  "pillar": "THOS",
+  "positive": {
+    "expected": {
+      "error": null,
+      "ok": true,
+      "value": {
+        "maximum_lateness": "-1",
+        "order": [
+          1,
+          0
+        ],
+        "tardy_jobs": 0
+      }
+    },
+    "input": {
+      "jobs": [
+        [
+          3,
+          5
+        ],
+        [
+          1,
+          2
+        ]
+      ],
+      "op": "edd"
+    }
+  },
+  "practice": "operations research",
+  "purpose": "Calculate earliest-deadline ordering and lateness for jobs all available at time zero; retain missed deadlines.",
+  "runner": "ghc_family_capacity_queue.py",
+  "same_owner_only": true,
+  "source_plan": "docs/seren-talewood/v689-v2-r3/plan/new-proposals.json"
+}
