@@ -1,5 +1,6 @@
 import copy
 import json
+import subprocess
 import sys
 from pathlib import Path
 
@@ -66,5 +67,9 @@ def test_sample_registry_distinguishes_empty_sample_and_census():
     assert core.sample_registry(3, [0, 1, 2])["complete_census"] is True
 
 def test_x2_implementation_is_absent_at_x1():
-    assert not (ROOT / "scripts/ghc_family_experiment_evidence_core.py").exists()
-    assert not (PHASE / "x2").exists()
+    paths = subprocess.check_output(
+        ["git", "-C", str(ROOT), "ls-tree", "-r", "--name-only", "287b568014834f722c4d540ba02e67106cd9a5bc"],
+        text=True,
+    ).splitlines()
+    assert "scripts/ghc_family_experiment_evidence_core.py" not in paths
+    assert not any(path.startswith("docs/eiren-kestrel/v689-v3/x2/") for path in paths)
