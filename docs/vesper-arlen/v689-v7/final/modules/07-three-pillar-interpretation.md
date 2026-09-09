@@ -1,0 +1,7 @@
+# Module 07 — Three-pillar interpretation
+
+A checksum or digest can show that two computations over declared bytes agree. It cannot by itself show who authored the bytes, whether they are true, whether consent or lawful basis exists, who owns them, or whether use is culturally legitimate. A Merkle path can bind one leaf to a declared root under a selected construction. It does not prove that the root is trusted, complete, authorized, or externally witnessed.
+
+XOR recovery reconstructs one missing equal-width shard when all other shards and parity are supplied. Reed–Solomon comparisons correct one synthetic symbol error inside a declared parity budget. Recovery does not prove authenticity: a perfectly recovered false or unauthorized record remains false or unauthorized. Deterministic JSON and CBOR bytes improve reproducibility only within a fully specified profile.
+
+For GMUT, every proposed observable still needs units, calibration, uncertainty, competing models, data provenance, and a disconfirming result. None of these byte operations confirms a physical field equation or Theory of Everything. For THOS, strict typed boundaries and reversible evidence improve auditability but do not establish AGI, ASI, consciousness, embodiment, or production fitness. Freed ID remains synthetic and nonproduction; CBR, rights, remedy, law, culture, affected parties, and Maori authority remain exact-gated.

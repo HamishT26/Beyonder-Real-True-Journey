@@ -1,0 +1,5 @@
+# Module 12 — Closeout and canonical boundary
+
+The owner repository can close when planning, x1, x2, final artifacts, exact manifests, content seal, staged allowlist, JSON, privacy, security, direct-parent history, clean state, and fresh remote equality all match. The canonical is an external one-shot latch after final push. It binds receipts and Git blobs; it does not rerun x1 or x2 tests, package installation, source checks, or predecessor validation.
+
+If the canonical succeeds, replay is permanently refused. If it fails, the failure receives zero aggregate-success credit; any correction must be additive, attributable, and within budget. Repository closeout can succeed while empirical and authority gates remain open. Same-owner finite synthetic software and documentation evidence only. No empirical GMUT confirmation, independent reproduction, authenticity, production readiness, professional or public authority, identity evidence, Theory-of-Everything proof, or Stage 20 authority is established. Maori concepts remain under Maori authority. NOT_READY_FOR_STAGE_20.

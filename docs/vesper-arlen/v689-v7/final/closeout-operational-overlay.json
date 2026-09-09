@@ -1,0 +1,72 @@
+{
+  "boundary": "Same-owner closeout workflow evidence only. Every failed attempt receives zero original success credit; its recovery is a separate bounded witness. No canonical invocation or task send occurred. NOT_READY_FOR_STAGE_20.",
+  "failures": [
+    {
+      "observed": "The legacy workspace-de-loader surface reported that it was retired and returned no dependency paths.",
+      "original_success_credit": 0,
+      "recovery": "Use the current Codex-app dependency loader, which returned the bundled document runtime paths.",
+      "recovery_state": "bounded_recovery_passed",
+      "retained_negative_id": "VA6897-FINAL-N001",
+      "state_changed": false
+    },
+    {
+      "observed": "The bundled document runtime did not provide the fitz module in the first combined import probe.",
+      "original_success_credit": 0,
+      "recovery": "Verify reportlab, pypdf, Pillow, and the bundled Poppler executable separately; use those available tools only.",
+      "recovery_state": "bounded_recovery_passed",
+      "retained_negative_id": "VA6897-FINAL-N002",
+      "state_changed": false
+    },
+    {
+      "observed": "The first final-builder patch ended with an incomplete invalid method-card tail before any builder execution.",
+      "original_success_credit": 0,
+      "recovery": "Replace only the unfinished tail, complete the two-mode builder, and gate it with AST and Ruff before execution.",
+      "recovery_state": "bounded_recovery_passed",
+      "retained_negative_id": "VA6897-FINAL-N003",
+      "state_changed": true
+    },
+    {
+      "observed": "The first exact final-script Ruff pass reported four mechanical issues and one broad exception handler.",
+      "original_success_credit": 0,
+      "recovery": "Apply four safe fixes, narrow the exception classes, and rerun only AST and Ruff on the two final scripts.",
+      "recovery_state": "bounded_recovery_passed",
+      "retained_negative_id": "VA6897-FINAL-N004",
+      "state_changed": true
+    },
+    {
+      "observed": "Poppler reported missing display-font mappings for Symbol and ArialUnicode while rasterizing the three-page PDF.",
+      "original_success_credit": 0,
+      "recovery": "Inspect all three raster outputs at original detail; every visible glyph, margin, line, and heading rendered without clipping or omission.",
+      "recovery_state": "bounded_recovery_passed",
+      "retained_negative_id": "VA6897-FINAL-N005",
+      "state_changed": false
+    },
+    {
+      "observed": "The first exact staged diff-hygiene check treated the PDF as text and reported required PDF internal spacing as trailing whitespace.",
+      "original_success_credit": 0,
+      "recovery": "Add an owner-root .gitattributes rule classifying PDF files as binary, refresh the seal and manifests, and rerun only staged diff hygiene.",
+      "recovery_state": "bounded_recovery_passed",
+      "retained_negative_id": "VA6897-FINAL-N006",
+      "state_changed": true
+    },
+    {
+      "observed": "The first post-correction parallel AST and Ruff wrapper had a malformed tool argument object and stopped before either command executed.",
+      "original_success_credit": 0,
+      "recovery": "Use a complete two-command tool object; both final scripts then passed AST and Ruff.",
+      "recovery_state": "bounded_recovery_passed",
+      "retained_negative_id": "VA6897-FINAL-N007",
+      "state_changed": false
+    },
+    {
+      "observed": "The first tiny owner-file count patch wrapper ended before evaluation because its patch source was incomplete.",
+      "original_success_credit": 0,
+      "recovery": "Submit the complete exact-context patch and recompute owner-file count as the union of current paths and seal exclusions.",
+      "recovery_state": "bounded_recovery_passed",
+      "retained_negative_id": "VA6897-FINAL-N008",
+      "state_changed": false
+    }
+  ],
+  "owner": "Vesper Arlen",
+  "phase": "v689-v7",
+  "schema": "ghc.family.external-operational-overlay.v1"
+}
