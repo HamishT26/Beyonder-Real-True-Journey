@@ -1,0 +1,48 @@
+{
+  "adverse_subjects": 4,
+  "canonical_entrypoint_sha256": "f93d2d9df8281d0a0dfcefd7e634751844c8671046427525d8754817093b2c5c",
+  "canonical_invocations": 0,
+  "component_checks": [
+    {
+      "adverse_subject_success_credit": 0,
+      "boundary": "Synthetic final label supplies no actual final-commit claim.",
+      "expected_refusal": "E_OWNER_ANCESTRY",
+      "guard_passed": true,
+      "name": "owner_ancestry",
+      "observed_refusal": "E_OWNER_ANCESTRY",
+      "positive_passed": true
+    },
+    {
+      "adverse_subject_success_credit": 0,
+      "boundary": "The adverse path is data only and is never read or written.",
+      "expected_refusal": "E_PATH_ESCAPE",
+      "guard_passed": true,
+      "name": "owner_path_scope",
+      "observed_refusal": "E_PATH_ESCAPE",
+      "positive_passed": true
+    },
+    {
+      "adverse_subject_success_credit": 0,
+      "boundary": "The leaf digest is recomputed so this tests its missing parent, not a stale digest.",
+      "expected_refusal": "E_CARD_PARENT",
+      "guard_passed": true,
+      "name": "card_parent_graph",
+      "observed_refusal": "E_CARD_PARENT",
+      "positive_passed": true
+    },
+    {
+      "adverse_subject_success_credit": 0,
+      "boundary": "A true passed flag cannot override a changed observed value.",
+      "expected_refusal": "E_OBSERVED_BINDING",
+      "guard_passed": true,
+      "name": "observed_receipt_binding",
+      "observed_refusal": "E_OBSERVED_BINDING",
+      "positive_passed": true
+    }
+  ],
+  "positive_controls": 4,
+  "refusal_guards_passed": 4,
+  "schema": "ghc.family.canonical-component-preflight.v1",
+  "scope": "Pure validator predicates only. The exact-final canonical has not been invoked.",
+  "source_or_phase_calculations_reexecuted": 0
+}

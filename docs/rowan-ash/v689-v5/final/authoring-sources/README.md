@@ -1,0 +1,3 @@
+# Authoring definition snapshots
+
+These are exact byte snapshots of the successfully used figure, PDF and validator-preflight definitions. They were executed from the external Rowan phase bank. Their output locations and some cache paths are phase specific. Read them as reproducibility evidence; adapt paths and ownership deliberately before using them in another phase. They are not global installations or additional paired-runner capabilities. The figure used the existing host Matplotlib runtime; PDF assembly used the existing bundled ReportLab runtime. No scientific calculations were replayed to resolve that runtime split.
