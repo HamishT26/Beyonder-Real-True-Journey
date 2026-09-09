@@ -1,0 +1,52 @@
+{
+  "schema": "ghc.family.numerical-interpretation-study.v1",
+  "owner": "Neris Solane",
+  "phase": "v689-v6",
+  "preregistered_basis": "The x1 plan froze finite-difference, refinement, diffusion, provenance, and claim-reservation operations before execution.",
+  "observations": [
+    {
+      "id": "NS6896-INTERPRET-001",
+      "question": "Does an unrestricted explicit diffusion step necessarily reduce the selected discrete energy?",
+      "input": {"values": [0, 1, 0, 1, 0], "alpha": "1"},
+      "observed": {"updated": [0, -1, 2, -1, 0], "energy_before": "2", "energy_after": "10", "growth_factor": "5"},
+      "disposition": "completed",
+      "interpretation": "The finite counterexample rejects an unrestricted numerical energy-decay claim. It does not challenge the physical second law; the scheme, norm, boundary model, units, and stability domain are separate assumptions."
+    },
+    {
+      "id": "NS6896-INTERPRET-002",
+      "question": "Can the same initial vector decrease under the bounded step admitted by the owner profile?",
+      "input": {"values": [0, 1, 0, 1, 0], "alpha": "1/4"},
+      "observed": {"updated": ["0", "1/2", "1/2", "1/2", "0"], "energy_before": "2", "energy_after": "1/4"},
+      "disposition": "completed",
+      "interpretation": "This one exact step is consistent with the selected bound; it is not a long-time stability theorem or empirical heat measurement."
+    },
+    {
+      "id": "NS6896-INTERPRET-003",
+      "question": "What does a zero discrete Poisson residual establish?",
+      "input": {"intervals": 4, "forcing": 2, "solution": [0, 3, 4, 3, 0]},
+      "observed": {"residual": ["0", "0", "0"]},
+      "disposition": "represented",
+      "interpretation": "It establishes exact satisfaction of one finite difference equation. It does not establish continuum consistency order, boundary-data provenance, units, modelling adequacy, or agreement with measurement."
+    },
+    {
+      "id": "NS6896-INTERPRET-004",
+      "question": "What prerequisite does exact Richardson cancellation still need?",
+      "input": {"coarse": "5/4", "fine": "17/16", "order": 2, "refinement_ratio": 2},
+      "observed": {"extrapolated": "1"},
+      "disposition": "represented",
+      "interpretation": "The algebra cancels the declared leading second-order term. Real use still needs evidence that both estimates share the asserted asymptotic expansion and that other errors are controlled."
+    },
+    {
+      "id": "NS6896-INTERPRET-005",
+      "question": "Can exact internal consistency supply empirical GMUT confirmation?",
+      "observed": {"observable_map_supplied": false, "measured_dataset_supplied": false, "uncertainty_model_supplied": false, "independent_reproduction_supplied": false},
+      "disposition": "open_gap",
+      "interpretation": "No. A future claim needs typed observables, units, calibration, uncertainty, a comparison model, disconfirming conditions, governed data, and independent review."
+    }
+  ],
+  "candidate_thermo_psyche_law_status": "No new fundamental law validated. The bounded software supports an assumption-ledger proposal: any claimed monotonic quantity must name its state space, dynamics, discretization, sign domain, boundary conditions, step-size domain, observable map, and falsifier.",
+  "gmUT_contribution": "Makes mathematical identities and counterexamples usable as model-design constraints while reserving empirical confirmation.",
+  "thos_contribution": "Provides typed, bounded, refusal-aware numerical components with exact receipts.",
+  "freed_id_cbr_contribution": "Binds provenance and authority reservations without converting possession or a matching digest into rights or authority.",
+  "terminal_verdict": "NOT_READY_FOR_STAGE_20"
+}
