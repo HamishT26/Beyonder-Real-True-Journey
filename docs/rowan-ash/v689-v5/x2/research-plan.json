@@ -1,0 +1,40 @@
+{
+  "state": "DEFINED_BEFORE_INTERPRETATION_PROBES",
+  "proposal_credit": 0,
+  "purpose": "Additional implementation comparisons and assumption probes for the already frozen operation families.",
+  "symbolic_probe": {
+    "path_vertex_counts": [2, 3, 4, 5, 6],
+    "weights": "edge index plus one",
+    "quantity": "Sum of w times squared potential differences",
+    "expected": "Every symbolic derivative equals twice the corresponding weighted Laplacian component."
+  },
+  "array_comparisons": {
+    "proposal_ids": ["RA6895-N151", "RA6895-N152", "RA6895-N153", "RA6895-N154", "RA6895-N155", "RA6895-N156", "RA6895-N157", "RA6895-N158", "RA6895-N159", "RA6895-N160"],
+    "libraries": ["opt_einsum", "numexpr"],
+    "expected": "Exact agreement for these bounded integer cases, each below the declared floating point exact-integer ceiling."
+  },
+  "assumption_probes": [
+    {
+      "claim": "Energy remains nonnegative even without positive weights.",
+      "input": {"potential": [0, 1], "weight": -1},
+      "expected_energy": "-1/2",
+      "expected_disposition": "rejected_unconditional_claim",
+      "scope": "Arithmetic counterexample outside the positive-weight evaluator profile."
+    },
+    {
+      "claim": "Every explicit Euler step decreases energy for the two-node unit-weight gradient model.",
+      "initial_potential": [0, 1],
+      "step_sizes": ["1/4", "1/2", "3/2"],
+      "expected_energies_after": ["1/8", "0", "2"],
+      "initial_energy": "1/2",
+      "expected_disposition": "rejected_unrestricted_step_claim"
+    },
+    {
+      "claim": "Every zero-energy graph potential is globally constant.",
+      "input": {"vertices": [0, 1, 2], "edges": [[0, 1]], "potential": [2, 2, 9]},
+      "expected_energy": "0",
+      "expected_disposition": "rejected_without_connectivity"
+    }
+  ],
+  "boundary": "Finite model reasoning and same-owner library comparisons only; no physical law, empirical data, independent reproduction or Stage 20 conclusion."
+}
