@@ -1,0 +1,85 @@
+{
+  "arbitrary_external_expressions": false,
+  "independent_reproduction": false,
+  "numexpr_threads": 2,
+  "passed": 6,
+  "scope": "Fixed synthetic API checks, not a performance benchmark or exhaustive security audit.",
+  "smokes": [
+    {
+      "expected": "0",
+      "kind": "positive",
+      "observed": "0",
+      "package": "symengine",
+      "passed": true
+    },
+    {
+      "kind": "adverse",
+      "observed_exception": "RuntimeError",
+      "package": "symengine",
+      "passed": true,
+      "subject_success_credit": 0
+    },
+    {
+      "expected": [
+        [
+          2,
+          6
+        ],
+        [
+          6,
+          12
+        ]
+      ],
+      "kind": "positive",
+      "observed": [
+        [
+          2,
+          6
+        ],
+        [
+          6,
+          12
+        ]
+      ],
+      "package": "opt_einsum",
+      "passed": true
+    },
+    {
+      "kind": "adverse",
+      "observed_exception": "ValueError",
+      "package": "opt_einsum",
+      "passed": true,
+      "subject_success_credit": 0
+    },
+    {
+      "expected": [
+        1,
+        8,
+        27,
+        0
+      ],
+      "kind": "positive",
+      "observed": [
+        1,
+        8,
+        27,
+        0
+      ],
+      "package": "numexpr",
+      "passed": true
+    },
+    {
+      "kind": "adverse",
+      "observed_exception": "SyntaxError",
+      "package": "numexpr",
+      "passed": true,
+      "subject_success_credit": 0
+    }
+  ],
+  "versions": {
+    "numexpr": "2.14.2",
+    "numpy": "2.5.3",
+    "opt_einsum": "3.4.0",
+    "symengine": "0.14.1"
+  }
+}
