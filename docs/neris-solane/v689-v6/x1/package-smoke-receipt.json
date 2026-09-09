@@ -1,0 +1,69 @@
+{
+  "adverse": [
+    {
+      "exception": "ValueError",
+      "package": "findiff",
+      "rejected": true,
+      "subject": "zero spacing",
+      "subject_success_credit": 0
+    },
+    {
+      "exception": "AttributeError",
+      "package": "numdifftools",
+      "rejected": true,
+      "subject": "unsupported method",
+      "subject_success_credit": 0
+    },
+    {
+      "exception": "KeyError",
+      "package": "meshio",
+      "rejected": true,
+      "subject": "unknown cell type",
+      "subject_success_credit": 0
+    }
+  ],
+  "boundary": "Bounded package API evidence only; no permanent security, performance, interoperability, or production claim.",
+  "execution_note": "Positive imports required one bounded continuation poll. Adverse meshio path resolved to the host temp default but failed before any file was created; future file smokes are D-only.",
+  "positive": [
+    {
+      "observed": [
+        0.0,
+        0.5,
+        1.0,
+        1.5,
+        2.0
+      ],
+      "package": "findiff",
+      "passed": true,
+      "scope": "First derivative of x squared on five uniform nodes.",
+      "version": "0.13.1"
+    },
+    {
+      "expected_tolerance": "absolute error below 1e-10 from derivative of x squared at 3",
+      "observed": 5.999999999999992,
+      "package": "numdifftools",
+      "passed": true,
+      "version": "0.9.42"
+    },
+    {
+      "observed": {
+        "cell_type": "triangle",
+        "cells": [
+          [
+            0,
+            1,
+            2
+          ]
+        ],
+        "points_shape": [
+          3,
+          3
+        ]
+      },
+      "package": "meshio",
+      "passed": true,
+      "version": "5.3.5"
+    }
+  ],
+  "replayed": false
+}

@@ -1,0 +1,35 @@
+{
+  "schema": "ghc.family.owner-security-review.v1",
+  "owner": "Neris Solane",
+  "phase": "v689-v6",
+  "session": "x1",
+  "scope": "Seven new Neris Python modules only",
+  "initial_failures": [
+    {
+      "id": "NS6896-X1-SECURITY-001",
+      "subject": "python -m bandit on the declared module allowlist",
+      "observed": "Current host Python reported No module named bandit before any scan ran.",
+      "initial_success_credit": 0,
+      "repository_mutated": false
+    },
+    {
+      "id": "NS6896-X1-SECURITY-002",
+      "subject": "Broad D-drive executable-location query after Get-Command already resolved Bandit",
+      "observed": "The unnecessary trailing broad file query crossed the 30-second command boundary.",
+      "initial_success_credit": 0,
+      "repository_mutated": false
+    }
+  ],
+  "recovery": {
+    "procedure": "Use the exact Get-Command result from the established D-drive GHC family tools environment on the literal seven-file allowlist.",
+    "executable": "D-drive GHC family tools Bandit entrypoint",
+    "returncode": 0,
+    "bounded_findings": 0,
+    "source_or_sibling_files_scanned": 0,
+    "repository_mutated": false,
+    "passing_witnesses": 1
+  },
+  "complete_security_claimed": false,
+  "independent_audit_claimed": false,
+  "boundary": "A clean bounded Bandit result is same-owner static evidence only, not exhaustive security, production certification, or independent review."
+}
