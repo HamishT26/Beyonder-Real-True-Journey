@@ -1,0 +1,157 @@
+{
+  "all_passed": true,
+  "count": 5,
+  "records": [
+    {
+      "adverse": {
+        "original_success_credit": 0,
+        "result": {
+          "error": "unknown_payload_field",
+          "ok": false,
+          "original_success_credit": 0
+        },
+        "returncode": 0
+      },
+      "operations": [
+        "crc_append",
+        "crc_verify"
+      ],
+      "passed": true,
+      "positive": {
+        "result": {
+          "ok": true,
+          "operation": "crc_append",
+          "outcome": "completed",
+          "value": {
+            "codeword": "0000",
+            "cryptographic": false,
+            "remainder": "000"
+          }
+        },
+        "returncode": 0
+      },
+      "runner": "ghc_family_error_control_pair_06.py"
+    },
+    {
+      "adverse": {
+        "original_success_credit": 0,
+        "result": {
+          "error": "unknown_payload_field",
+          "ok": false,
+          "original_success_credit": 0
+        },
+        "returncode": 0
+      },
+      "operations": [
+        "xor_checksum",
+        "row_interleave"
+      ],
+      "passed": true,
+      "positive": {
+        "result": {
+          "ok": true,
+          "operation": "xor_checksum",
+          "outcome": "completed",
+          "value": {
+            "bits": "11111110",
+            "checksum": 254,
+            "cryptographic": false
+          }
+        },
+        "returncode": 0
+      },
+      "runner": "ghc_family_error_control_pair_07.py"
+    },
+    {
+      "adverse": {
+        "original_success_credit": 0,
+        "result": {
+          "error": "unknown_payload_field",
+          "ok": false,
+          "original_success_credit": 0
+        },
+        "returncode": 0
+      },
+      "operations": [
+        "row_deinterleave",
+        "erasure_inventory"
+      ],
+      "passed": true,
+      "positive": {
+        "result": {
+          "ok": true,
+          "operation": "row_deinterleave",
+          "outcome": "completed",
+          "value": {
+            "bits": "0011",
+            "columns": 2,
+            "rows": 2
+          }
+        },
+        "returncode": 0
+      },
+      "runner": "ghc_family_error_control_pair_08.py"
+    },
+    {
+      "adverse": {
+        "original_success_credit": 0,
+        "result": {
+          "error": "unknown_payload_field",
+          "ok": false,
+          "original_success_credit": 0
+        },
+        "returncode": 0
+      },
+      "operations": [
+        "sequence_gap_map",
+        "provenance_digest"
+      ],
+      "passed": true,
+      "positive": {
+        "result": {
+          "ok": true,
+          "operation": "sequence_gap_map",
+          "outcome": "completed",
+          "value": {
+            "duplicates": [],
+            "missing": [],
+            "source_retained": true,
+            "strictly_increasing": true
+          }
+        },
+        "returncode": 0
+      },
+      "runner": "ghc_family_error_control_pair_09.py"
+    },
+    {
+      "adverse": {
+        "original_success_credit": 0,
+        "result": {
+          "error": "unknown_payload_field",
+          "ok": false,
+          "original_success_credit": 0
+        },
+        "returncode": 0
+      },
+      "operations": [
+        "accessible_error_summary",
+        "coding_evidence_reservation"
+      ],
+      "passed": true,
+      "positive": {
+        "result": {
+          "ok": true,
+          "operation": "accessible_error_summary",
+          "outcome": "represented",
+          "value": {
+            "empirical": false,
+            "manual_evaluation": "reserved",
+            "text": "Synthetic blocks: detected 1; corrected 0; uncorrectable 0; unknown 1."
+          }
+        },
+        "returncode": 0
+      },
+      "runner": "ghc_family_error_control_pair_10.py"
+    }
+  ]
+}

@@ -1,0 +1,95 @@
+{
+  "schema": "ghc.family.post-validation-overlay.v1",
+  "owner": "Lyren Moss",
+  "phase": "v690-v1-x2",
+  "base_counts": {
+    "methods": 13,
+    "retained_negatives": 105,
+    "witnesses": 445,
+    "failed_witnesses": 105,
+    "passing_witnesses": 340
+  },
+  "retained_negatives": [
+    {
+      "negative_id": "LM6901-X2-LATE-RUFF-CORE",
+      "failure": "The first bounded x2 core, executor, and test lint gate returned six findings.",
+      "original_success_credit": 0,
+      "retained": true,
+      "recovery": "Apply the six bounded fixes and rerun only the isolated lint gate; all checks passed."
+    },
+    {
+      "negative_id": "LM6901-X2-LATE-PYCOMPILE-CACHE",
+      "failure": "The explicit py_compile preflight materialized three cache files under scripts despite the no-bytecode environment setting.",
+      "original_success_credit": 0,
+      "retained": true,
+      "recovery": "Resolve the exact cache leaf and move it intact to D:/GHC-Archives/runtime/lyren-moss/v690-v1/phase-cache/x2-pycompile-cache."
+    },
+    {
+      "negative_id": "LM6901-X2-LATE-RUFF-PROMOTION",
+      "failure": "The first bounded promotion-script lint gate returned two findings.",
+      "original_success_credit": 0,
+      "retained": true,
+      "recovery": "Apply the two bounded import fixes and rerun only the isolated lint gate; all checks passed."
+    },
+    {
+      "negative_id": "LM6901-X2-LATE-RUFF-SEAL-REFRESH",
+      "failure": "The first bounded seal-refresh-script lint gate returned one import-order finding.",
+      "original_success_credit": 0,
+      "retained": true,
+      "recovery": "Apply the bounded import-order fix and rerun only the isolated lint gate; all checks passed."
+    },
+    {
+      "negative_id": "LM6901-X2-LATE-RUFF-OVERBROAD-SCOPE",
+      "failure": "A broad owner-tree lint command included immutable planning files and reported four historical style findings.",
+      "original_success_credit": 0,
+      "retained": true,
+      "recovery": "Preserve the frozen planning commit and run Ruff against the exact sixteen-file x2/current-delta Python allowlist; all checks passed."
+    },
+    {
+      "negative_id": "LM6901-X2-LATE-PRIVACY-WRAPPER-QUOTE",
+      "failure": "The first PowerShell privacy-candidate wrapper failed at parse time because its composite regular expression was not safely quoted.",
+      "original_success_credit": 0,
+      "retained": true,
+      "recovery": "Run separately single-quoted candidate patterns; the wrapper executed, with no scan credit assigned to the failed command."
+    },
+    {
+      "negative_id": "LM6901-X2-LATE-PRIVACY-JSON-ESCAPE-MISS",
+      "failure": "The first recovered path pattern did not match doubled backslashes inside JSON and therefore missed six local-profile path candidates.",
+      "original_success_credit": 0,
+      "retained": true,
+      "recovery": "Use an exact fixed-string JSON-byte-domain search, find six candidates, and sanitize the repository receipt to C:\\Users\\[local-user] without changing the installed targets."
+    }
+  ],
+  "method": {
+    "method_id": "LM6901-X2-LATE-VALIDATION",
+    "title": "late x2 validation and recoverable cache hygiene",
+    "recommendation_state": "validated",
+    "same_owner_only": true,
+    "independent_reproduction": false
+  },
+  "witnesses": [
+    {"witness_id": "LM6901-X2-LATE-RUFF-CORE-W-FAIL", "result": "fail"},
+    {"witness_id": "LM6901-X2-LATE-RUFF-CORE-W-RECOVERY", "result": "pass"},
+    {"witness_id": "LM6901-X2-LATE-PYCOMPILE-CACHE-W-FAIL", "result": "fail"},
+    {"witness_id": "LM6901-X2-LATE-PYCOMPILE-CACHE-W-RECOVERY", "result": "pass"},
+    {"witness_id": "LM6901-X2-LATE-RUFF-PROMOTION-W-FAIL", "result": "fail"},
+    {"witness_id": "LM6901-X2-LATE-RUFF-PROMOTION-W-RECOVERY", "result": "pass"},
+    {"witness_id": "LM6901-X2-LATE-RUFF-SEAL-REFRESH-W-FAIL", "result": "fail"},
+    {"witness_id": "LM6901-X2-LATE-RUFF-SEAL-REFRESH-W-RECOVERY", "result": "pass"},
+    {"witness_id": "LM6901-X2-LATE-RUFF-OVERBROAD-SCOPE-W-FAIL", "result": "fail"},
+    {"witness_id": "LM6901-X2-LATE-RUFF-OVERBROAD-SCOPE-W-RECOVERY", "result": "pass"},
+    {"witness_id": "LM6901-X2-LATE-PRIVACY-WRAPPER-QUOTE-W-FAIL", "result": "fail"},
+    {"witness_id": "LM6901-X2-LATE-PRIVACY-WRAPPER-QUOTE-W-RECOVERY", "result": "pass"},
+    {"witness_id": "LM6901-X2-LATE-PRIVACY-JSON-ESCAPE-MISS-W-FAIL", "result": "fail"},
+    {"witness_id": "LM6901-X2-LATE-PRIVACY-JSON-ESCAPE-MISS-W-RECOVERY", "result": "pass"}
+  ],
+  "effective_counts": {
+    "methods": 14,
+    "retained_negatives": 112,
+    "witnesses": 459,
+    "failed_witnesses": 112,
+    "passing_witnesses": 347
+  },
+  "terminal_verdict": "NOT_READY_FOR_STAGE_20",
+  "boundary": "Same-owner bounded validation and recovery evidence only; no external audit, independent reproduction, production authority, or broader claim."
+}

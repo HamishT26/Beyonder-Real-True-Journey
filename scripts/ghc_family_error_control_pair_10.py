@@ -1,4 +1,4 @@
-"""File or inline JSON CLI for Lyren's bounded error-control operations."""
+"""Bounded Lyren error-control pair 10: accessible_error_summary, coding_evidence_reservation."""
 
 from __future__ import annotations
 
@@ -6,24 +6,21 @@ import argparse
 import json
 from pathlib import Path
 
-from ghc_family_error_control_x1 import run as run_x1
-from ghc_family_error_control_x2 import run as run_x2
+from ghc_family_error_control_x2 import run
+
+ALLOWED = ['accessible_error_summary', 'coding_evidence_reservation']
 
 
-def run(request):
-    result = run_x2(request)
-    return run_x1(request) if result.get("error") == "unknown_operation" else result
-
-
-def main() -> None:
+def main():
     parser = argparse.ArgumentParser()
-    source = parser.add_mutually_exclusive_group(required=True)
-    source.add_argument("--request-json")
-    source.add_argument("--input")
+    parser.add_argument("--request-json")
+    parser.add_argument("--input")
     parser.add_argument("--output")
     args = parser.parse_args()
+    if bool(args.request_json) == bool(args.input):
+        raise SystemExit("provide exactly one request source")
     request = json.loads(args.request_json) if args.request_json else json.loads(Path(args.input).read_text(encoding="utf-8"))
-    result = run(request)
+    result = run(request) if request.get("operation") in ALLOWED else {"ok": False, "error": "operation_outside_pair", "original_success_credit": 0}
     encoded = json.dumps(result, ensure_ascii=False, sort_keys=True, indent=2) + "\n"
     if args.output:
         Path(args.output).write_text(encoded, encoding="utf-8", newline="\n")
