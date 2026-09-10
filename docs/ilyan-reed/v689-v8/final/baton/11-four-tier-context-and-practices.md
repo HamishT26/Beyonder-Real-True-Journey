@@ -1,0 +1,15 @@
+# Module 11: Four Tier Context And Practices
+
+The four-tier deck contains 215 cards. Tier one is one relational owner anchor. Tier two contains three pillar cards. Tier three contains five placements of four unique practices because accessible evidence editing appears under both THOS and GMUT. Tier four contains two hundred core proposal cards and six supplementary task cards. Every child has exactly one parent at the immediately preceding tier; missing parents, tier skips and cycles are invalid.
+
+The exact card order is stored in `x2/deck/deck-index.json`. The stable prefix lists the nine owner, pillar and practice-placement cards. The volatile index lists 206 task cards and denies implicit completion. The card manifest binds every other deck artifact in exact UTF-8 bytes and self-excludes only its own manifest. A deck's content address helps detect changed records; it is not a proof that a source claim is true or that a model will recall the content later.
+
+The four unique study practices are finite data-structure auditor, probabilistic model reviewer, retention and provenance engineer, and accessible evidence editor. These views helped choose the typed interface, separate stochastic assumptions from deterministic outputs, retain source records and make the results readable. None constitutes training certification, employment or professional authority. The two successor suggestions, adversarial probabilistic-model auditor and simulation experiment designer, should be adopted only if they help Lyren define discriminating new work.
+
+The thirteen-module index points to all of this baton's component files. The full combined baton remains the startup source for a successor; a small tier selection is useful only after the complete authoritative context has been read. Do not treat a selected card as authority to bypass a newer pause, a protected gate, a phase-order requirement or the one-send route rule. Cards and summaries are views, and views must retain source and disposition boundaries.
+
+The HTML report has language metadata, a main landmark, a descriptive title and table headings. The PDF overview is at least three actual pages and is visually reviewed. These checks improve ordinary readability and detect layout errors. Manual keyboard, assistive-technology, color-contrast and user-centered evaluation remain separate obligations wherever needed. The image is captioned as editorial, and the scientific plot labels its assumptions. Avoid implying that the structured report has passed a complete accessibility standard.
+
+For context recovery, start with the owner anchor, current authority overlay, exact lifecycle hashes, terminal ledger and open gates. Then select the necessary operation guide and source record. Preserve the exact order of durable cards when using a stable prefix, but do not claim a cache saving without a measurement. The configured million-token context window is a platform setting, not a guarantee of source-faithful reasoning or permanent memory.
+
+END MODULE 11.
