@@ -1,0 +1,29 @@
+{
+  "comparison_count": 30,
+  "frozen_before_installation": true,
+  "interface_vectors": {
+    "PuLP": {
+      "adverse": "Variable creation with a nonfinite NaN lower bound",
+      "adverse_expected": "PulpError",
+      "expected": 3,
+      "positive": "The same bounded max-flow model through PuLP HiGHS"
+    },
+    "PyMaxflow": {
+      "adverse": "Unsupported object dtype at Graph factory selection",
+      "adverse_expected": "KeyError",
+      "expected": 3,
+      "positive": "The same bounded directed graph cut"
+    },
+    "highspy": {
+      "adverse": "Bounded variable x in [0,1] constrained to x>=2",
+      "adverse_expected": "kInfeasible",
+      "expected": 3,
+      "positive": "Three-unit direct-arc max-flow model"
+    }
+  },
+  "same_owner_only": true,
+  "schema": "ghc.family.mira.package-smoke-plan.v1",
+  "shared_backend_notice": "PuLP and highspy share HiGHS; these are three interface comparisons over two solver backends, not independent reproduction.",
+  "solver_threads": 1,
+  "time_limit_seconds": 5
+}
