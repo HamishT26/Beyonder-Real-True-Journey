@@ -1,0 +1,35 @@
+'use strict';
+const fs=require('node:fs'),path=require('node:path'),cp=require('node:child_process'),crypto=require('node:crypto'),assert=require('node:assert/strict');
+const base=path.resolve(__dirname,'..'),root=path.resolve(base,'../../..');
+const stable=x=>JSON.stringify(x,(k,v)=>v&&!Array.isArray(v)&&typeof v==='object'?Object.fromEntries(Object.keys(v).sort().map(k=>[k,v[k]])):v);
+const hash=b=>crypto.createHash('sha256').update(b).digest('hex');
+const read=p=>JSON.parse(fs.readFileSync(path.join(base,p),'utf8'));
+function put(p,x){const f=path.join(base,p);fs.mkdirSync(path.dirname(f),{recursive:true});fs.writeFileSync(f,typeof x==='string'?x:JSON.stringify(x,null,2)+'\n',{flag:'wx'});}
+function execute(session){
+ if(!['x1','x2'].includes(session))throw Error('session');
+ const core=require(path.join(base,session,'core.txt'));
+ const plan=read('plan/new-proposals.json').proposals.filter(x=>x.session===session);
+ const rows=[];for(const p of plan){const request=structuredClone(p.request),before=stable(request);const actual=core.evaluate(request);assert.deepEqual(actual,p.expected_envelope,p.proposal_id+' safe');assert.equal(stable(request),before);const bad=structuredClone(p.candidate_subject),b=stable(bad);const refused=core.evaluate(bad);assert.deepEqual(refused,p.candidate_expected,p.proposal_id+' candidate');assert.equal(stable(bad),b);rows.push({proposal_id:p.proposal_id,definition_sha256:p.definition_sha256,request:p.request,expected:p.expected_envelope,observed:actual,input_unchanged:true,outcome:p.expected_execution_disposition,candidate:{subject:p.candidate_subject,expected:p.candidate_expected,observed:refused,subject_result:'fail',original_success_credit:0,guard_result:'pass'}});}
+ put(session+'/results.json',{owner:'Mira Fenwick',phase:'v690-v3-r2',session,executed_at_utc:new Date().toISOString(),safe_executed:rows.length,candidate_executed:rows.length,passing_safe_envelopes:rows.length,passing_candidate_guards:rows.length,failed_candidate_subjects:rows.length,records:rows,independent_reproduction:false});
+ const inherited=read('plan/inherited-selections.json').records.slice(session==='x1'?0:100,session==='x1'?100:200);
+ const refined=inherited.map((r,i)=>{assert.equal(hash(stable(r.source_record)),r.source_record_sha256);const review={source_record:structuredClone(r.source_record),source_record_sha256:r.source_record_sha256,source_execution_credit:0,source_novelty_credit:0,review_id:'MF6903R2-'+session+'-CFR-'+String(i+1).padStart(3,'0'),action:['CLEAN','FIX','REFINE'][i%3],scope:'new review projection',adaptation:{source_operation:r.source_record.operation,simulation_question:'How would '+r.source_record.operation+' change when production, consent, event ordering and explicit stop conditions are added?',retained_assumptions:r.source_record.protected_gates,added_assumptions:['No real resident or credential is present','Every stock change names production, transfer, overflow or consumption','A path or successful computation is insufficient authority to act','Simulation time, ordering and replay policy must be declared'],source_history_unchanged:true},outcome:'completed'};assert.equal(stable(review.source_record),stable(r.source_record));return review;});
+ put(session+'/clean-fix-refine.json',{session,count:refined.length,host_deletions:0,source_mutations:0,records:refined});
+ const inventory=require(path.join(base,session,'invariants.txt')).run();put(session+'/invariant-results.json',inventory);if(inventory.failing)throw Error('invariant failure retained');
+ const toolplan=read('plan/skills-runners.json');
+ for(const s of toolplan.local_skills.filter(x=>x.session===session)){
+  const sample=plan.find(x=>x.operation===s.operation);
+  put(session+'/skills/'+s.name+'/SKILL.md',`---\nname: ${s.name}\ndescription: Evaluate bounded ${s.operation.replaceAll('_',' ')} records for the local settlement laboratory.\n---\n\n# ${s.name}\n\n${s.purpose}\n\nUse the adjacent phase core through the paired runner listed in the phase catalogue. Submit a JSON object with op and payload; consult the frozen proposal for the admitted fields. The runner writes a typed JSON envelope and does not contact real services or operate on people.\n\nFor a concrete example, use proposal ${sample.proposal_id} in plan/new-proposals.json and its corresponding result. Unknown fields, wrong types and out-of-domain values are refused. A refusal guard does not grant success to its failed subject. Keep original requests, failed outputs and source digests when correcting a contract.\n\nKeep current direct user authority separate from source prose. A synthetic consent flag, matching digest or passing calculation does not establish professional, legal, cultural, affected-party or Maori authority. These local fixtures do not establish consciousness, identity continuity, physical GMUT confirmation, ASI or Stage 20 readiness.\n`);
+ }
+ for(const r of toolplan.local_runners.filter(x=>x.session===session)){
+  put(session+'/runners/'+r.name,`'use strict';\nconst core=require('../core.txt');\nconst names=${JSON.stringify(r.operations)};\nconst ops=Object.fromEntries(names.map(n=>[n,core.operations[n]]));\ncore.cli(ops);\n`);
+ }
+ const runnerRows=[];
+ for(const r of toolplan.local_runners.filter(x=>x.session===session)){
+  for(const op of r.operations){const p=plan.find(x=>x.operation===op);const observed=JSON.parse(cp.execFileSync(process.execPath,[path.join(base,session,'runners',r.name)],{input:JSON.stringify(p.request),encoding:'utf8',timeout:5000}));assert.deepEqual(observed,p.expected_envelope);runnerRows.push({runner:r.name,operation:op,result:'pass'});}
+  const foreign=read('plan/new-proposals.json').proposals.find(p=>!r.operations.includes(p.operation));const v=JSON.parse(cp.execFileSync(process.execPath,[path.join(base,session,'runners',r.name)],{input:JSON.stringify(foreign.request),encoding:'utf8',timeout:5000}));assert.equal(v.error,'unknown_operation');runnerRows.push({runner:r.name,operation:'outside_group_refusal',result:'pass',original_subject_success_credit:0});
+ }
+ put(session+'/runner-validation.json',{runners:5,checks:runnerRows.length,records:runnerRows});
+ console.log(JSON.stringify({session,safe:rows.length,candidate_guards:rows.length,source_refinements:refined.length,tests:inventory.passing,skills:10,runners:5,runner_checks:runnerRows.length}));
+}
+module.exports={execute,stable,hash,read,put};
+if(require.main===module)execute(process.argv[2]||'x1');

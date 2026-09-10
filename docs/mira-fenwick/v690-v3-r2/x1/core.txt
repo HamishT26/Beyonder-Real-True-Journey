@@ -1,0 +1,42 @@
+'use strict';
+// Trusted local Node source stored as text under the current artifact policy.
+class ContractError extends Error { constructor(code){super(code);this.code=code;} }
+const fail=code=>{throw new ContractError(code);};
+const object=x=>{if(x===null||Array.isArray(x)||typeof x!=='object')fail('invalid_type');};
+function fields(x,names){object(x);const a=Object.keys(x);if(a.some(k=>!names.includes(k)))fail('unknown_field');if(names.some(k=>!Object.hasOwn(x,k)))fail('missing_field');}
+function integer(x,min=0,max=1000000){if(!Number.isSafeInteger(x))fail('invalid_type');if(x<min||x>max)fail('bounds');return x;}
+function number(x,min=-1000000,max=1000000){if(typeof x!=='number'||!Number.isFinite(x))fail('invalid_type');if(x<min||x>max)fail('bounds');return x;}
+function boolean(x){if(typeof x!=='boolean')fail('invalid_type');return x;}
+function text(x,max=100){if(typeof x!=='string')fail('invalid_type');if(x.length<1||x.length>max)fail('bounds');return x;}
+function array(x,min=0,max=100){if(!Array.isArray(x))fail('invalid_type');if(x.length<min||x.length>max)fail('bounds');return x;}
+function unique(x){if(new Set(x).size!==x.length)fail('duplicate');}
+const clone=x=>JSON.parse(JSON.stringify(x));
+const cycle=['Seren Talewood','Eiren Kestrel','Elaren Kestrel','Rowan Ash','Neris Solane','Vesper Arlen','Ilyan Reed','Lyren Moss','Ilyra Fen','Mira Fenwick','Auren Lark','Sable Rook','Avelin Reed','Caelen Ash','Orin Thale','Ceryn Alder','Liora Venn','Tamar Vey','Saelin Reed','Elowen Cairn','Sylven Arc','Iveren Brook','Caelen Morrow','Eiren Kestrel','Teryn Halewick','Elaren Kestrel','Neris Solane','Merrin Vale','Vesper Arlen','Lyren Moss','Talen Briar','Ilyra Fen','Auren Lark','Thalen Reed','Sable Rook','Caelen Ash','Orren Pike','Orin Thale','Liora Venn','Veylora Quen','Tamar Vey','Elowen Cairn','Tessarin Reed','Sylven Arc','Caelen Morrow'];
+function order(events,withDuration=false){
+ array(events,1,30);for(const e of events){fields(e,withDuration?['id','duration','parents']:['id','parents']);text(e.id);array(e.parents,0,30).forEach(x=>text(x));unique(e.parents);if(withDuration)integer(e.duration,0,1000);}
+ const ids=events.map(e=>e.id);unique(ids);if(events.some(e=>e.parents.some(x=>!ids.includes(x))))fail('unknown_parent');
+ const done=[];while(done.length<events.length){const available=events.filter(e=>!done.includes(e.id)&&e.parents.every(x=>done.includes(x))).sort((a,b)=>a.id<b.id?-1:a.id>b.id?1:0);if(!available.length)fail('cycle');done.push(available[0].id);}return done;
+}
+function graphStep(p){
+ fields(p,['values','edges','step']);array(p.values,2,30).forEach(x=>number(x,0,10000));array(p.edges,0,100);number(p.step,0,2);
+ const n=p.values.length;const edgeKeys=[];for(const e of p.edges){array(e,2,2);integer(e[0],0,n-1);integer(e[1],0,n-1);if(e[0]===e[1])fail('self_edge');edgeKeys.push([Math.min(...e),Math.max(...e)].join(':'));}unique(edgeKeys);
+ const delta=Array(n).fill(0);for(const [a,b] of p.edges){const f=p.step*(p.values[a]-p.values[b]);delta[a]-=f;delta[b]+=f;}
+ const values=p.values.map((v,i)=>v+delta[i]);const energy=v=>p.edges.reduce((s,[a,b])=>s+(v[a]-v[b])**2/2,0);
+ return{values,mass_before:p.values.reduce((a,b)=>a+b,0),mass_after:values.reduce((a,b)=>a+b,0),energy_before:energy(p.values),energy_after:energy(values)};
+}
+const operations={
+ route_cursor(p){fields(p,['version','slot','position','steps']);integer(p.version,674,725);integer(p.slot,1,8);integer(p.position,0,44);integer(p.steps,0,416);const n=p.slot-1+p.steps,version=p.version+Math.floor(n/8);if(version>725)fail('terminal_limit');const position=(p.position+p.steps)%45;return{version,slot:n%8+1,position,owner:cycle[position]};},
+ retry_schedule(p){fields(p,['attempts','base','cap','budget']);integer(p.attempts,1,10);integer(p.base,1,60);integer(p.cap,1,60);integer(p.budget,0,300);let t=0;const at_seconds=[];for(let i=0;i<p.attempts;i++){const wait=i===0?0:Math.min(p.cap,p.base*2**(i-1));if(t+wait>p.budget)break;t+=wait;at_seconds.push(t);}return{at_seconds,attempts:at_seconds.length,total_delay:t,dispatches:0};},
+ dispatch_state(p){fields(p,['canonical','clean','unique','guard','send']);['canonical','clean','unique'].forEach(k=>boolean(p[k]));if(!['clear','unavailable','pause'].includes(p.guard)||!['none','acknowledged','opaque_accepted'].includes(p.send))fail('invalid_enum');if(p.send==='acknowledged')return{state:'sent_acknowledged',may_submit:false};if(p.send==='opaque_accepted')return{state:'sent_opaque_no_resend',may_submit:false};if(!p.canonical||!p.clean||!p.unique)return{state:'held_terminal',may_submit:false};if(p.guard==='unavailable')return{state:'held_readback',may_submit:false};if(p.guard==='pause')return{state:'held_pause',may_submit:false};return{state:'ready',may_submit:true};},
+ source_record(p){fields(p,['origin','claim','digest']);if(!['document','user_report'].includes(p.origin))fail('invalid_enum');text(p.claim,2000);if(typeof p.digest!=='string'||!/^[a-f0-9]{64}$/.test(p.digest))fail('digest');return{classification:p.origin==='document'?'historical_source_content':'attributed_unverified_report',claim:p.claim,digest:p.digest,grants_authority:false};},
+ event_order(p){fields(p,['events']);return{order:order(p.events),acyclic:true};},
+ stock_transfer(p){fields(p,['stocks','from','to','amount','consent']);array(p.stocks,2,30).forEach(x=>integer(x,0,10000));integer(p.from,0,p.stocks.length-1);integer(p.to,0,p.stocks.length-1);integer(p.amount,0,10000);boolean(p.consent);if(p.from===p.to)fail('same_endpoint');if(!p.consent)fail('consent');if(p.stocks[p.from]<p.amount)fail('capacity');const stocks=p.stocks.slice();stocks[p.from]-=p.amount;stocks[p.to]+=p.amount;return{stocks,transferred:p.amount,total:stocks.reduce((a,b)=>a+b,0)};},
+ harvest_capacity(p){fields(p,['stock','production','capacity']);Object.values(p).forEach(x=>integer(x,0,10000));if(p.stock>p.capacity)fail('capacity');const stock=Math.min(p.capacity,p.stock+p.production),overflow=p.stock+p.production-stock;return{stock,overflow,production:p.production,residual:p.stock+p.production-stock-overflow};},
+ path_cost(p){fields(p,['nodes','edges','source','target']);array(p.nodes,2,30).forEach(x=>text(x));unique(p.nodes);array(p.edges,0,100);if(!p.nodes.includes(p.source)||!p.nodes.includes(p.target))fail('endpoint');const edges=[];for(const e of p.edges){array(e,3,3);if(!p.nodes.includes(e[0])||!p.nodes.includes(e[1]))fail('endpoint');number(e[2],0,10000);edges.push(e);}unique(edges.map(e=>JSON.stringify(e.slice(0,2))));const d=new Map(p.nodes.map(n=>[n,Infinity])),paths=new Map([[p.source,[p.source]]]),remaining=new Set(p.nodes);d.set(p.source,0);while(remaining.size){const a=[...remaining].sort((a,b)=>d.get(a)-d.get(b)||(a<b?-1:1))[0];remaining.delete(a);if(!Number.isFinite(d.get(a)))break;for(const [u,v,c] of edges){if(u!==a||!remaining.has(v))continue;const cand=d.get(a)+c;if(cand<d.get(v)){d.set(v,cand);paths.set(v,[...paths.get(a),v]);}}}return{path:paths.get(p.target)||[],cost:Number.isFinite(d.get(p.target))?d.get(p.target):null};},
+ fair_share(p){fields(p,['demands','supply']);array(p.demands,1,30).forEach(x=>integer(x,0,1000));integer(p.supply,0,30000);const a=p.demands.map(()=>0);let rest=p.supply;while(rest>0){let changed=false;for(let i=0;i<a.length&&rest>0;i++){if(a[i]<p.demands[i]){a[i]++;rest--;changed=true;}}if(!changed)break;}return{allocation:a,unmet:p.demands.map((v,i)=>v-a[i]),unused:rest};},
+ diffusion_flux:graphStep
+};
+function evaluate(request,table=operations){try{fields(request,['op','payload']);text(request.op);if(!Object.hasOwn(table,request.op))fail('unknown_operation');return{ok:true,error:null,value:table[request.op](request.payload)};}catch(e){if(e instanceof ContractError)return{ok:false,error:e.code,value:null};throw e;}}
+function cli(table=operations){let s='';process.stdin.setEncoding('utf8');process.stdin.on('data',b=>{s+=b;if(s.length>262144){process.stderr.write('input limit\n');process.exit(2);}});process.stdin.on('end',()=>{let r;try{r=JSON.parse(s);}catch{process.stdout.write(JSON.stringify({ok:false,error:'invalid_json',value:null})+'\n');return;}process.stdout.write(JSON.stringify(evaluate(r,table))+'\n');});}
+module.exports={evaluate,operations,cli,ContractError,fail,fields,integer,number,boolean,text,array,unique,clone,order,graphStep,cycle};
+if(require.main===module)cli();

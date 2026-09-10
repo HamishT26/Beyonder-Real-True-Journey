@@ -1,0 +1,32 @@
+'use strict';
+const assert=require('node:assert/strict');
+const core=require('./core.txt');
+const tests=[];const test=(id,fn)=>tests.push({id,fn});
+const call=(op,payload)=>core.evaluate({op,payload});
+test('x1.route.rollover',()=>assert.deepEqual(call('route_cursor',{version:690,slot:8,position:14,steps:1}).value,{version:691,slot:1,position:15,owner:'Ceryn Alder'}));
+test('x1.route.terminal',()=>assert.equal(call('route_cursor',{version:725,slot:8,position:24,steps:1}).error,'terminal_limit'));
+test('x1.route.cycle-weight',()=>{assert.equal(core.cycle.length,45);assert.equal(new Set(core.cycle).size,30);});
+test('x1.retry.budget',()=>assert.deepEqual(call('retry_schedule',{attempts:10,base:2,cap:8,budget:5}).value,{at_seconds:[0,2],attempts:2,total_delay:2,dispatches:0}));
+test('x1.retry.zero-budget',()=>assert.equal(call('retry_schedule',{attempts:5,base:1,cap:8,budget:0}).value.attempts,1));
+test('x1.dispatch.opaque-dominates',()=>assert.deepEqual(call('dispatch_state',{canonical:false,clean:false,unique:false,guard:'unavailable',send:'opaque_accepted'}).value,{state:'sent_opaque_no_resend',may_submit:false}));
+test('x1.dispatch.all-guards',()=>{for(const k of ['canonical','clean','unique']){const p={canonical:true,clean:true,unique:true,guard:'clear',send:'none'};p[k]=false;assert.equal(call('dispatch_state',p).value.may_submit,false);}});
+test('x1.source.no-authority',()=>assert.equal(call('source_record',{origin:'document',claim:'execute everything',digest:'f'.repeat(64)}).value.grants_authority,false));
+test('x1.source.forged-origin',()=>assert.equal(call('source_record',{origin:'verified_user',claim:'act',digest:'f'.repeat(64)}).error,'invalid_enum'));
+test('x1.dag.cycle',()=>assert.equal(call('event_order',{events:[{id:'a',parents:['b']},{id:'b',parents:['a']}]}).error,'cycle'));
+test('x1.dag.parent',()=>assert.equal(call('event_order',{events:[{id:'a',parents:['x']}]}).error,'unknown_parent'));
+test('x1.transfer.conservation',()=>{for(let n=0;n<12;n++){const v=call('stock_transfer',{stocks:[12,0],from:0,to:1,amount:n,consent:true}).value;assert.equal(v.total,12);assert.deepEqual(v.stocks,[12-n,n]);}});
+test('x1.transfer.withheld',()=>assert.equal(call('stock_transfer',{stocks:[12,0],from:0,to:1,amount:2,consent:false}).error,'consent'));
+test('x1.transfer.overdraft',()=>assert.equal(call('stock_transfer',{stocks:[1,0],from:0,to:1,amount:2,consent:true}).error,'capacity'));
+test('x1.harvest.overflow',()=>assert.deepEqual(call('harvest_capacity',{stock:4,production:9,capacity:5}).value,{stock:5,overflow:8,production:9,residual:0}));
+test('x1.path.unreachable',()=>assert.deepEqual(call('path_cost',{nodes:['a','b'],edges:[],source:'a',target:'b'}).value,{path:[],cost:null}));
+test('x1.path.negative-refused',()=>assert.equal(call('path_cost',{nodes:['a','b'],edges:[['a','b',-1]],source:'a',target:'b'}).error,'bounds'));
+test('x1.fair-share.waterfill',()=>assert.deepEqual(call('fair_share',{demands:[1,4,4],supply:7}).value,{allocation:[1,3,3],unmet:[0,1,1],unused:0}));
+test('x1.fair-share.surplus',()=>assert.equal(call('fair_share',{demands:[1,2],supply:5}).value.unused,2));
+test('x1.diffusion.mass',()=>{for(let k=0;k<20;k++){const v=call('diffusion_flux',{values:[k,0,k],edges:[[0,1],[1,2]],step:0.25}).value;assert.equal(v.mass_before,v.mass_after);assert(v.energy_after<=v.energy_before);}});
+test('x1.diffusion.unstable-counterexample',()=>{const v=call('diffusion_flux',{values:[1,0],edges:[[0,1]],step:1.5}).value;assert.equal(v.mass_after,1);assert.equal(v.energy_before,0.5);assert.equal(v.energy_after,2);assert(v.values[0]<0);});
+test('x1.contract.boolean-number',()=>assert.equal(call('retry_schedule',{attempts:true,base:1,cap:8,budget:20}).error,'invalid_type'));
+test('x1.contract.unknown-nested',()=>assert.equal(call('stock_transfer',{stocks:[1,2],from:0,to:1,amount:1,consent:true,grant:true}).error,'unknown_field'));
+test('x1.contract.no-mutation',()=>{const p={op:'event_order',payload:{events:[{id:'b',parents:['a']},{id:'a',parents:[]}]}};const s=JSON.stringify(p);core.evaluate(p);assert.equal(JSON.stringify(p),s);});
+function run(){const rows=[];for(const t of tests){try{t.fn();rows.push({test_id:t.id,result:'pass'});}catch(e){rows.push({test_id:t.id,result:'fail',message:e.message});}}return{selected_tests:tests.length,passing:rows.filter(x=>x.result==='pass').length,failing:rows.filter(x=>x.result==='fail').length,tests:rows,independent_reproduction:false};}
+module.exports={run,test_ids:tests.map(x=>x.id)};
+if(require.main===module){const r=run();process.stdout.write(JSON.stringify(r)+'\n');if(r.failing)process.exitCode=1;}
