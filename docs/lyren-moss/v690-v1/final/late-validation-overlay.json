@@ -1,0 +1,66 @@
+{
+  "schema": "ghc.family.late-validation-overlay.v1",
+  "owner": "Lyren Moss",
+  "phase": "v690-v1-final",
+  "base_terminal_accounting": {
+    "effective_negatives": 973,
+    "methods": 81,
+    "direct_witnesses": 2479,
+    "failed_witnesses": 684,
+    "passing_witnesses": 1795
+  },
+  "retained_negatives": [
+    {
+      "negative_id": "LM6901-FINAL-LATE-RUFF-CANONICAL-SOURCES",
+      "failure": "The first Ruff --fix pass for the final test and canonical validator fixed six findings but returned failure because two structural findings remained.",
+      "original_success_credit": 0,
+      "retained": true,
+      "recovery": "Apply the exact tuple-prefix and combined-condition fixes, then rerun only those two files; all checks passed."
+    },
+    {
+      "negative_id": "LM6901-FINAL-LATE-PARTIAL-GIT-ADD",
+      "failure": "The first final git add was partial because the sparse definition omitted the final builder filename.",
+      "original_success_credit": 0,
+      "retained": true,
+      "recovery": "Add only the exact Lyren final-builder pattern to the sparse definition, then restage the complete declared final delta."
+    },
+    {
+      "negative_id": "LM6901-FINAL-LATE-DIFF-WHITESPACE",
+      "failure": "The first staged diff check rejected four Markdown hard-break trailing spaces.",
+      "original_success_credit": 0,
+      "retained": true,
+      "recovery": "Remove the four trailing spaces from overview.md, refresh affected seals, and rerun the staged diff check."
+    },
+    {
+      "negative_id": "LM6901-FINAL-LATE-SPARSE-ADD-OPTION",
+      "failure": "The first sparse-checkout add wrapper supplied --no-cone, an option unsupported by this Git add subcommand, and changed nothing.",
+      "original_success_credit": 0,
+      "retained": true,
+      "recovery": "Use the supported literal sparse-checkout add form; the exact final-builder pattern was added."
+    }
+  ],
+  "method": {
+    "method_id": "LM6901-FINAL-LATE-VALIDATION",
+    "title": "final test and canonical source lint recovery",
+    "same_owner_only": true,
+    "independent_reproduction": false
+  },
+  "witnesses": [
+    {"witness_id": "LM6901-FINAL-LATE-RUFF-CANONICAL-SOURCES-W-FAIL", "result": "fail"},
+    {"witness_id": "LM6901-FINAL-LATE-RUFF-CANONICAL-SOURCES-W-RECOVERY", "result": "pass"},
+    {"witness_id": "LM6901-FINAL-LATE-PARTIAL-GIT-ADD-W-FAIL", "result": "fail"},
+    {"witness_id": "LM6901-FINAL-LATE-PARTIAL-GIT-ADD-W-RECOVERY", "result": "pass"},
+    {"witness_id": "LM6901-FINAL-LATE-DIFF-WHITESPACE-W-FAIL", "result": "fail"},
+    {"witness_id": "LM6901-FINAL-LATE-DIFF-WHITESPACE-W-RECOVERY", "result": "pass"},
+    {"witness_id": "LM6901-FINAL-LATE-SPARSE-ADD-OPTION-W-FAIL", "result": "fail"},
+    {"witness_id": "LM6901-FINAL-LATE-SPARSE-ADD-OPTION-W-RECOVERY", "result": "pass"}
+  ],
+  "successor_visible_accounting": {
+    "effective_negatives": 977,
+    "methods": 82,
+    "direct_witnesses": 2487,
+    "failed_witnesses": 688,
+    "passing_witnesses": 1799
+  },
+  "terminal_verdict": "NOT_READY_FOR_STAGE_20"
+}

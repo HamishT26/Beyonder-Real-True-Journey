@@ -1,0 +1,9 @@
+# 09 — Freed ID, CBR, privacy, and authority
+
+Freed ID and the Cosmic Bill of Rights remain synthetic governance and identity research. This phase models a useful separation: detection evidence, correction evidence, source provenance, identity evidence, consent, rights, and competent authority are distinct fields. A valid checksum or repaired codeword does not authenticate a person, grant consent, establish ownership, or authorize a rights-affecting action.
+
+The W3C Verifiable Credentials Data Model v2.0 is a current standards reference for interoperable credential data. A production Freed ID system would still need standards-conformant live keys and proofs, issuer and verifier policy, revocation or status handling, recovery, interoperability, threat modeling, independent security and privacy assessment, governance, auditability, accessibility, and affected-party oversight. None of those live conditions was established here.
+
+The repository privacy scan covered five bounded candidate classes: local profile paths, email addresses, network addresses, credential-like secrets, and keyed phone contacts. The first wrapper failed on PowerShell quoting, and a recovered regex missed JSON's doubled backslashes. Both failures are retained. An exact JSON-byte-domain search found six local-profile path candidates in the promotion receipt; those repository fields were sanitized to `[local-user]` while the installed files remained untouched. The final bounded scan found zero candidates and zero confirmed hits. This is not complete privacy assurance.
+
+All legal, cultural, affected-party, professional, and Maori-authority judgments remain exact gates. Hamish's authorization governs this task within his scope; it cannot substitute for another person's consent or competent institutional authority.

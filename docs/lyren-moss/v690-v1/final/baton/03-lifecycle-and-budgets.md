@@ -1,0 +1,9 @@
+# 03 — Lifecycle, caps, and separation
+
+The planned four-commit lifecycle is planning, x1, x2, and final, below the hard eight-commit cap. Planning froze every core request, expected result, adverse subject, outcome, packet inventory, skill and runner plan, practice lens, package choice, source reference, and rollback before execution. X1 then executed only proposals 001 through 100. It was committed, pushed, clean, zero divergent, and fresh-live equal before any x2 file existed. X2 executed proposals 101 through 200 as the direct child of x1.
+
+No merge, amend, reset, rewrite, force-push, source-lane mutation, sibling-lane mutation, collaboration delegation, or standby contact occurred. Materialized owner scope remained far below the 2,000-file ceiling. Current caps are ceilings rather than quotas: no unsafe work may be manufactured to meet a count. The exact package environment is D-side and isolated from shared Python and npm prefixes.
+
+The four allowed core labels are `completed`, `represented`, `open_gap`, and `exact_gate`. `Completed` means the exact bounded synthetic predicate passed. `Represented` means an artifact or analysis exists without the absent real-world evidence. `Open_gap` names missing evidence or evaluation. `Exact_gate` names a prerequisite requiring competent authority or an exact protected condition. None of those labels automatically grants broader empirical, professional, production, identity, legal, cultural, or Stage 20 meaning.
+
+The final commit must be pushed and four-way equal before one owner-head canonical run. A successful canonical run must not be replayed. A failed run retains zero success credit and may only be followed by an additive correction and a separately justified terminal composite. The present target is one successful attributable canonical pass, not repeated testing until a desired output appears.

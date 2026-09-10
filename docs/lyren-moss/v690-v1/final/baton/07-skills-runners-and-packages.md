@@ -1,0 +1,9 @@
+# 07 — Skills, runners, packages, and rollback
+
+X1 built ten local skills and five paired runners for parity, Hamming distance, repetition, Hamming seven-four, and GF(2)/CRC remainder operations. X2 built ten local skills and five paired runners for CRC append/verify, XOR checksum, interleave/deinterleave, erasure inventory, sequence gaps, provenance digest, accessible status, and evidence reservation. Each skill has a complete SKILL.md, interface metadata, a contract reference, and paired accepting and rejecting fixtures.
+
+Five merged global skill candidates group parity contracts, Hamming contracts, CRC contracts, interleave/sequence contracts, and provenance/authority contracts. Preflight proved each global skill directory and runner filename absent. Promotion copied them additively, retained source-to-target byte parity, revalidated every installed skill, and smoked each public runner with a valid request and an outside-group refusal. The two adjacent error-control core modules are dependencies with zero runner credit.
+
+The D-isolated package environment uses bitstring 4.4.0, reedsolo 1.7.0, and crccheck 1.3.1, plus bitarray 3.11.0 and tibs 0.5.7 as transitive dependencies. Wheel hashes were checked before no-index installation. Thirty x2 comparisons passed. Package metadata and local smokes are not a license opinion, security audit, maintenance guarantee, or production endorsement.
+
+Rollback never means deleting evidence. Stop selecting the exact additive skill or runner, preserve its installed bytes and receipt, and use a separately authorized removal workflow if removal later becomes necessary. Stop selecting the D-side environment while retaining its wheels, requirements, and install evidence. Never mutate an unrelated global tool with the same apparent purpose.

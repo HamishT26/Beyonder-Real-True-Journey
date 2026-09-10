@@ -1,0 +1,9 @@
+# 05 — Retained failures and Method Flow
+
+The acknowledged source overlay begins at 742 effective negatives, 50 methods, and 1,578 direct witnesses: 453 failed and 1,125 passing. Lyren x1 adds 113 negatives, 16 methods, and 430 direct witnesses. Lyren x2 adds 112 negatives, 14 methods, and 459 direct witnesses. Six final-authoring, render-path, and correction failures add six negatives, one method, and twelve witnesses. The prepared terminal lineage is therefore 973 effective negatives, 81 methods, and 2,479 direct witnesses, of which 684 failed and 1,795 passed.
+
+Every recovery is a separate passing witness. It does not erase, relabel, or grant original success credit to its paired failure. The current Lyren operational failures include invalid PowerShell projections, a retired dependency-loader alias, missing validator dependencies in isolated runtimes, style findings, an over-broad lint scope, a py_compile cache side effect, and privacy-regex byte-domain mistakes. Each exact recovery is named in the x1, x2, or final overlays.
+
+Method Flow entries declare trigger preconditions, failure signatures, retained-negative identifiers, passing witness identifiers, privacy and approval classes, recurrence guards, rollback, owner scope, exact-head requirements, and protected gates. All local recommendations are same-owner evidence under shared infrastructure. They are not independent reproduction, an external audit, a complete repository scan, or production certification.
+
+The two retained research counterexamples carry zero broad-claim credit. A saturated counting filter cannot safely decrement after multiplicity information is lost. An arbitrary Omega term need not satisfy conservation. Those negative witnesses are valuable precisely because they constrain what may be claimed.

@@ -1,0 +1,9 @@
+# 12 — Successor work and conditional future scenarios
+
+Ten successor skill ideas are prepared: decoder assumption ledger; burst-error window map; finite-field parameter receipt; repair provenance frontier; status-list corruption quarantine; interleaver padding refusal; syndrome ambiguity readback; channel-model drift guard; accessible repair explanation; and authority-separated correction receipt. Ten runner ideas are also prepared: bounded decoder comparison; burst-pattern enumerator; Reed-Solomon erasure witness; CRC polynomial fixture review; repair-lineage replay; status-list bit-flip simulator; interleave burst-dispersal map; finite-channel confusion grid; uncorrectable-state reporter; and exact-source confirmation wrapper.
+
+These ideas are not completion credit. Ilyra should select only relevant, licensed, auditable, reversible, dependency-justified work within current caps. Never install a package merely to satisfy a number. Never replace an existing global name without an exact compatibility, backup, rollback, and authority plan.
+
+Conditional ten-, thirty-, hundred-, and thousand-year scenarios remain scenarios rather than forecasts. Near-term value could come from clearer provenance, reproducible fixtures, and rights-preserving refusal states. Longer horizons require durable standards, governance, maintenance, energy and material accounting, inclusive institutions, independent scrutiny, and correction mechanisms. None of the horizons implies inevitable AGI, ASI, consciousness, social adoption, political legitimacy, or Stage 20.
+
+Potential thermo/psyche-dynamics laws must be treated as hypotheses with exact domains, definitions, dimensions, observables, falsifiers, alternative explanations, and ethical constraints. A poetic correspondence between coding, physics, cognition, and rights is not a scientific law. Preserve ambiguity where the evidence remains absent.
