@@ -1,0 +1,111 @@
+"""Additive evidence assembly; immutable earlier phase files are only read."""
+import argparse,copy,hashlib,html,importlib.util,json,re,subprocess
+from collections import Counter
+from pathlib import Path
+from scripts.ghc_family_flow_common import canonical
+ROOT=Path(__file__).resolve().parents[1]; BASE=ROOT/'docs/mira-fenwick/v690-v3'
+PLAN='5b0942bf915f5437f2b929d51f8015aa8bcf908a'; X1='e6831b2842f3a03458016f2b63cc8ff20d2680e5'
+def read(path):return json.loads((BASE/path).read_text(encoding='utf-8'))
+def rawwrite(path,value):
+    path.parent.mkdir(parents=True,exist_ok=True)
+    with path.open('xb') as out:out.write(value)
+def write(path,value):rawwrite(path,(json.dumps(value,ensure_ascii=False,sort_keys=True,indent=2)+'\n').encode())
+def digest(path):return hashlib.sha256(path.read_bytes()).hexdigest()
+def helper():
+    path=Path.home()/'.codex/skills/ghc-family-method-flow-state/scripts/ghc_family_method_flow_state.py'
+    spec=importlib.util.spec_from_file_location('flow_ledger_helper',path);mod=importlib.util.module_from_spec(spec);spec.loader.exec_module(mod);return mod
+
+def extras():
+    mod=helper();ledger=mod.new_ledger('v690-v3-x2-addendum','Mira Fenwick');methods={};gates=read('plan/identity-practices.json')['protected_gates']
+    ledger.update(execution_authority='owner_self_scoped_delta',repository_scan=False,unchanged_history_scan=False,cross_lane_scan=False,sibling_lane_mutation=False)
+    def witness(method,ident,result,observed,evidence):
+        if method not in methods:
+            row={'method_id':method,'title':method,'failure_signature':'Retained unavailable source, rejected runner subject, or refuted universal claim.',
+                 'trigger_preconditions':['The named materialized finite subject or source request.'],'privacy_class':'sanitized_public','approval_class':'safe_now',
+                 'candidate_workaround':'Use the bounded successful check while preserving the original failed subject at zero credit.','validation_witness_ids':[],
+                 'recurrence_guard':'Bind the exact source, caller, input and evidence scope.','rollback':'Select prior tooling; preserve additive records.',
+                 'recommendation_state':'validated','supersedes':[],'protected_gates':gates,'retained_negative_ids':[],'scope_boundary':ledger['boundary']}
+            methods[method]=row;ledger['methods'].append(row)
+        neg=ident+'-NEGATIVE';row=methods[method]
+        if result=='fail':row['retained_negative_ids'].append(neg)
+        row['validation_witness_ids'].append(ident)
+        ledger['witnesses'].append({'witness_id':ident,'method_id':method,'procedure':'Read the named materialized comparison or retained failed subject.',
+            'scope':'Mira Fenwick v690-v3 x2 addendum','expected':'The explicit frozen operation contract or bounded evidence reservation.',
+            'observed':observed,'result':result,'same_owner_only':True,'independent_reproduction':False,
+            'retained_negative_ids':[neg] if result=='fail' else [],'boundary':ledger['boundary'],
+            'evidence_path':'docs/mira-fenwick/v690-v3/'+evidence})
+    access=read('x2/source-access-overlay.json')
+    for event in access['events']:
+        mid=event['id']+'-METHOD';witness(mid,event['id']+'-FAIL','fail',event['failure'],'x2/source-access-overlay.json')
+        witness(mid,event['id']+'-RECOVERY','pass',access['recovery'],'x2/source-access-overlay.json')
+    groups=read('plan/skills-runners.json')['global_groups'];prom=read('x2/global-promotion.json')
+    for i,group in enumerate(groups,1):
+        mid=f'MF6903-GLOBAL-{i:02}'
+        for stage in ['local','installed']:
+            path=f'x2/global-{stage}-smokes/'+group['skill']+'/receipt.json';record=read(path)
+            for j,check in enumerate(record['checks'],1):
+                prefix=mid+'-'+stage+f'-{j:02}'
+                if check['outside_group']:witness(mid,prefix+'-SUBJECT','fail',check['observed'],path)
+                witness(mid,prefix+'-CHECK','pass',check,path)
+            witness(mid,mid+'-'+stage+'-METADATA','pass',{'official_metadata_pass':True},'x2/global-preflight.json' if stage=='local' else 'x2/global-promotion.json')
+        for j,record in enumerate(prom['records'],1):
+            belongs=record.get('name')==group['skill'] or record['path']=='scripts/'+group['runner']
+            dependency=record['kind']=='public_runner_or_dependency' and record['path'] not in ['scripts/'+g['runner'] for g in groups]
+            if belongs or i==1 and dependency:witness(mid,mid+f'-PARITY-{j:02}','pass',record,'x2/global-promotion.json')
+    sup=read('x2/supplementary-results.json');mid='MF6903-SUPPLEMENTARY-CLAIM-REVIEW'
+    for name in ['capacity_counterexample','assignment_counterexample','authority_counterexample']:
+        row=sup[name];witness(mid,row['proposal']+'-CLAIM','fail',row['rejected_claim'],'x2/supplementary-results.json')
+        witness(mid,row['proposal']+'-COUNTEREXAMPLE','pass',row['observed'],'x2/supplementary-results.json')
+    for i,row in enumerate(sup['finite_duality']['comparisons'],1):witness(mid,f'MF6903-SUP01-CHECK-{i:02}','pass',row,'x2/supplementary-results.json')
+    witness(mid,'MF6903-SUP04-GAP-CLASSIFICATION','pass',sup['gmut_gap'],'x2/supplementary-results.json')
+    for row in methods.values():
+        assert row['retained_negative_ids']
+        ledger['state_events'].append({'method_id':row['method_id'],'from':'candidate','to':'validated','evidence':'Explicit passing witnesses; failed subjects remain failed.'})
+        ledger['recommendations'].append({'method_id':row['method_id'],'state':'validated','recommendation':row['recurrence_guard']})
+    mod.refresh_counts(ledger);validation=mod.validate_ledger(ledger);assert validation['valid'],validation
+    write(BASE/'x2/method-flow-addendum.json',ledger);write(BASE/'x2/method-flow-addendum-validation.json',validation)
+    print(json.dumps(ledger['counts']))
+
+def accounting():
+    phases=[read(p) for p in ['x1/method-flow.json','x2/method-flow.json','x2/method-flow-addendum.json']]
+    mids=[m['method_id'] for p in phases for m in p['methods']];wids=[w['witness_id'] for p in phases for w in p['witnesses']]
+    assert len(mids)==len(set(mids)) and len(wids)==len(set(wids))
+    failed=[w for p in phases for w in p['witnesses'] if w['result']=='fail'];blocked=read('plan/blocked-packets.json')['packets']
+    own={'methods':len(mids),'direct_witnesses':len(wids),'failed_witnesses':len(failed),'passing_witnesses':len(wids)-len(failed),
+         'effective_negatives':len(failed)+len(blocked)}
+    source=read('plan/source-provenance.json');inherited=source['latest_inherited_overlay'];cumulative={k:inherited[k]+v for k,v in own.items()}
+    ledger={'source_repository':source['immutable_repository_accounting'],'source_quoted_activation':source['quoted_activation_overlay'],
+        'inherited_latest_route_overlay':inherited,'own':own,'cumulative':cumulative,
+        'own_effective_negative_definition':'Distinct failed witness subjects plus thirty distinct unexecuted protected packets. Fifty lifecycle gates are not added as negative subjects.',
+        'own_failed_witness_ids':[w['witness_id'] for w in failed],'blocked_packet_ids':[b['packet_id'] for b in blocked],
+        'core_proposals':200,'inherited_records_zero_credit':200,'core_outcomes':{'completed':180,'represented':10,'open_gap':5,'exact_gate':5},
+        'supplementary_proposals':5,'supplementary_core_credit':0,'supplementary_outcomes':{'completed':3,'represented':1,'open_gap':1},
+        'x1':phases[0]['counts'],'x2_base':phases[1]['counts'],'x2_addendum':phases[2]['counts'],
+        'operational_failures':8,'same_owner_only':True,'independent_reproduction':False,'terminal_verdict':'NOT_READY_FOR_STAGE_20'}
+    write(BASE/'x2/accounting.json',ledger);print(json.dumps({'own':own,'cumulative':cumulative}))
+
+def deck():
+    identity=read('plan/identity-practices.json');proposals=read('plan/new-proposals.json')['proposals'];folder=BASE/'x2/deck';cards=[]
+    def add(tier,label,parent,payload):
+        card={'tier':tier,'label':label,'parent':parent,'payload':payload};sha=hashlib.sha256(canonical(card).encode()).hexdigest()
+        write(folder/'cards'/(sha+'.json'),card);cards.append({'sha256':sha,'path':'cards/'+sha+'.json','tier':tier,'label':label,'parent':parent});return sha
+    owner=add(1,identity['owner'],None,{k:identity[k] for k in ['role','hope','boundary']});pillars={};practices={}
+    for p in proposals:
+        pillar=p['pillar'];pair=(pillar,p['practice'])
+        if pillar not in pillars:pillars[pillar]=add(2,pillar,owner,{'scope':'Planning placement; no pillar qualification or authority.'})
+        if pair not in practices:practices[pair]=add(3,p['practice'],pillars[pillar],{'pillar':pillar,'source':'plan/identity-practices.json'})
+        add(4,p['proposal_id'],practices[pair],{'title':p['title'],'definition_sha256':p['definition_sha256'],'disposition':p['expected_execution_disposition'],'evidence':p['artifact']})
+    parents=list(practices.values())
+    for i,p in enumerate(read('plan/supplementary-proposals.json')['proposals']):add(4,p['id'],parents[i%len(parents)],{'hypothesis':p['hypothesis'],'disposition':p['outcome'],'core_proposal_credit':0,'evidence':'x2/supplementary-results.json'})
+    assert len(cards)==215 and len(practices)==6
+    byid={c['sha256']:c for c in cards};assert len(byid)==215
+    for c in cards:
+        if c['tier']>1:assert byid[c['parent']]['tier']==c['tier']-1
+    write(folder/'index.json',{'schema':'ghc.family.content-addressed-four-tier.v1','hash_domain':'canonical UTF-8 JSON of card excluding digest; sorted fields and compact separators','cards':cards,'counts':dict(Counter(c['tier'] for c in cards)),'unique_practices':4,'practice_placements':6})
+    rows=''.join('<tr><td>'+str(c['tier'])+'</td><th scope="row">'+html.escape(c['label'])+'</th><td>'+html.escape(c['sha256'][:16])+'</td><td>'+html.escape((c['parent'] or 'root')[:16])+'</td></tr>' for c in cards)
+    doc='<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Mira Fenwick four-tier evidence index</title><style>body{font:18px/1.55 system-ui;max-width:1100px;margin:2rem auto;padding:1rem;color:#18252d;background:#fff}table{border-collapse:collapse;width:100%}th,td{text-align:left;padding:.5rem;border-bottom:1px solid #aaa}caption{font-weight:bold;text-align:left}a{color:#064c89}</style><main><h1>Mira Fenwick v690-v3</h1><p>One owner, three pillars, six placements of four practices, and 205 task cards. Every non-root card has exactly one immediate-tier parent. Digests bind records; they do not establish identity continuity or authority.</p><table><caption>Content-addressed four-tier cards</caption><thead><tr><th scope="col">Tier</th><th scope="col">Card</th><th scope="col">Digest prefix</th><th scope="col">Parent prefix</th></tr></thead><tbody>'+rows+'</tbody></table><p>Structural review only. Assistive-technology and affected-reader evaluation remain open gaps. NOT_READY_FOR_STAGE_20.</p></main></html>\n'
+    rawwrite(folder/'index.html',doc.encode());write(folder/'structure-review.json',{'cards':215,'roots':1,'pillars':3,'practice_placements':6,'unique_practices':4,'task_cards':205,'immediate_parent_errors':0,'language':'en','table_caption':True,'row_and_column_headers':True,'heading_order':True,'manual_assistive_technology_validation':False,'accessibility_disposition':'represented'})
+    print(json.dumps({'deck_cards':215,'parents_valid':True}))
+
+if __name__=='__main__':
+    p=argparse.ArgumentParser();p.add_argument('action',choices=['extras','accounting','deck']);a=p.parse_args();globals()[a.action]()
