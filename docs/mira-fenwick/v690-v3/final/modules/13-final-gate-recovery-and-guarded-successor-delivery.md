@@ -1,0 +1,21 @@
+# Module 13 - Final gate, recovery and guarded successor delivery
+
+Mira Fenwick | Trinity Mandala v690-v3 | provenance and correction steward
+
+Same-owner synthetic software and documentation. No independent reproduction, empirical GMUT confirmation, real allocation permission, identity continuity, professional qualification, legal or cultural authority, or Stage 20 evidence. NOT_READY_FOR_STAGE_20.
+
+The exact X2 anchor is `074c3612c88d4df6166fd1f9046bffc3caaec8db`. Its fresh clean equality receipt is final/x2-equality.json. Final artifacts are added after X2; earlier planning and execution files are immutable. The final manifest excludes only itself and covers every new final file. The content seal excludes itself and the final manifest. The canonical validator replays each phase manifest at its correct commit and verifies exact owner coverage, rather than mixing checkout bytes with older commits.
+
+The current owner canonical has not run at the point represented by this sealed file. Its required command is the module `scripts.ghc_family_flow_final_validation` from the owner root, using a fresh external receipt path under archive-relative receipts/mira-fenwick/v690-v3. Before the invocation, require exact final push, clean typed zero/zero divergence and equality of local HEAD, upstream, tracking and live remote refs. The validator uses a head-specific exclusive invocation marker. A passed or failed canonical must not be replayed. Component preflight carries zero canonical invocation or success credit.
+
+The exact selected tests are the 18 X1 and 20 X2 owner tests, bound by their full IDs and source definition hashes. No predecessor suite, old Mira lane or whole-repository test command belongs to this scope. The validator checks the two hundred frozen envelopes, designed refusals, inherited zero-credit records, five compatible Method Flow ledgers, 215 cards, five global skill packages, five public runners, isolated package versions, source receipt bindings, privacy patterns, JSON/YAML parseability, Python syntax and the five-page overview review. These are bounded checks, not exhaustive privacy, security or accessibility assurance.
+
+After a successful once-only canonical, prepare a compact file-backed message for the existing Auren Lark task. Refresh current weighted controls and newest direct user instructions. Query the native active registry and archived registry as necessary. A bounded listing is not proof that a task is absent. Resolve the exact endpoint kind, title and identity without guessing a private handle. Read the incoming contents with outputs enabled where required, decode the JSON envelope before projecting text, and inspect newest messages first.
+
+Immediately before sending, check the exact target for a current pause, redirect, duplicate activation or already accepted v690-v4 request. A negated historical pause phrase in an agent's summary is not itself a new direct pause instruction. If the native service fails before a send has been accepted, perform at least five bounded fresh lookup/read recovery attempts as current workflow requires, retaining each failure. If exact identity or route authority remains unresolved, record the open route gap and stop. Do not create a duplicate, substitute a target, use a UI workaround or infer absence from a bounded result.
+
+Once a send is accepted, acknowledged or opaque accepted, do not resend. Record the actual transport state in an external receipt and stop. A tool acknowledgment means the message was accepted; it is not proof that Auren completed induction, began X1 or finished its phase. Following owner Sable Rook v690-v5 stays uncontacted by this run. No new task, fork, subagent, automation, model override, reset redemption or private route identifier belongs in the committed baton.
+
+If a future host cannot import a dependency or locate the package root, retain the exact failed command and receipt before changing anything. Prefer the named module caller and declared runtime. Do not replay Ilyra's failed canonical or either source composite. Do not rewrite prior successful canonical evidence. A correction can only be additive, owner-scoped and truthfully labeled. The final verdict remains NOT_READY_FOR_STAGE_20 after a successful software validation or task delivery.
+
+End of independently readable module 13.
