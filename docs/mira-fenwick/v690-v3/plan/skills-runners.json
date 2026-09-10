@@ -1,0 +1,283 @@
+{
+  "core_dependency_runner_credit": 0,
+  "global_groups": [
+    {
+      "absence_checked": true,
+      "local_sources": 4,
+      "operations": [
+        "normalize",
+        "matrix",
+        "balance",
+        "feasible"
+      ],
+      "runner": "ghc_family_flow_network_structure.py",
+      "skill": "ghc-family-flow-network-structure"
+    },
+    {
+      "absence_checked": true,
+      "local_sources": 4,
+      "operations": [
+        "value",
+        "residual",
+        "augmenting_path",
+        "augment_once"
+      ],
+      "runner": "ghc_family_flow_residual_execution.py",
+      "skill": "ghc-family-flow-residual-execution"
+    },
+    {
+      "absence_checked": true,
+      "local_sources": 4,
+      "operations": [
+        "max_value",
+        "cut_capacity",
+        "min_cut",
+        "duality"
+      ],
+      "runner": "ghc_family_flow_optimality_certificates.py",
+      "skill": "ghc-family-flow-optimality-certificates"
+    },
+    {
+      "absence_checked": true,
+      "local_sources": 4,
+      "operations": [
+        "remove_arc",
+        "increase_capacity",
+        "lower_feasible",
+        "min_cost"
+      ],
+      "runner": "ghc_family_flow_capacity_cost.py",
+      "skill": "ghc-family-flow-capacity-cost"
+    },
+    {
+      "absence_checked": true,
+      "local_sources": 4,
+      "operations": [
+        "assignment",
+        "policy_gate",
+        "summary",
+        "reservation"
+      ],
+      "runner": "ghc_family_flow_allocation_reservations.py",
+      "skill": "ghc-family-flow-allocation-reservations"
+    }
+  ],
+  "local_runners": [
+    {
+      "name": "ghc_family_flow_x1_1.py",
+      "operations": [
+        "normalize",
+        "matrix"
+      ],
+      "session": "x1"
+    },
+    {
+      "name": "ghc_family_flow_x1_2.py",
+      "operations": [
+        "balance",
+        "feasible"
+      ],
+      "session": "x1"
+    },
+    {
+      "name": "ghc_family_flow_x1_3.py",
+      "operations": [
+        "value",
+        "cut_capacity"
+      ],
+      "session": "x1"
+    },
+    {
+      "name": "ghc_family_flow_x1_4.py",
+      "operations": [
+        "residual",
+        "augmenting_path"
+      ],
+      "session": "x1"
+    },
+    {
+      "name": "ghc_family_flow_x1_5.py",
+      "operations": [
+        "augment_once",
+        "max_value"
+      ],
+      "session": "x1"
+    },
+    {
+      "name": "ghc_family_flow_x2_1.py",
+      "operations": [
+        "min_cut",
+        "duality"
+      ],
+      "session": "x2"
+    },
+    {
+      "name": "ghc_family_flow_x2_2.py",
+      "operations": [
+        "remove_arc",
+        "increase_capacity"
+      ],
+      "session": "x2"
+    },
+    {
+      "name": "ghc_family_flow_x2_3.py",
+      "operations": [
+        "lower_feasible",
+        "min_cost"
+      ],
+      "session": "x2"
+    },
+    {
+      "name": "ghc_family_flow_x2_4.py",
+      "operations": [
+        "assignment",
+        "policy_gate"
+      ],
+      "session": "x2"
+    },
+    {
+      "name": "ghc_family_flow_x2_5.py",
+      "operations": [
+        "summary",
+        "reservation"
+      ],
+      "session": "x2"
+    }
+  ],
+  "local_skills": [
+    {
+      "mission": "Preserve the declared vertex order and capacities while canonicalizing arc order without changing the graph.",
+      "name": "ghc-family-flow-normalize",
+      "operation": "normalize",
+      "session": "x1"
+    },
+    {
+      "mission": "Bind every matrix row and column to the declared vertex order, including zero capacities.",
+      "name": "ghc-family-flow-matrix",
+      "operation": "matrix",
+      "session": "x1"
+    },
+    {
+      "mission": "Expose outgoing-minus-incoming units at every vertex without inferring a physical conservation law.",
+      "name": "ghc-family-flow-balance",
+      "operation": "balance",
+      "session": "x1"
+    },
+    {
+      "mission": "Separate conservation and capacity feasibility from throughput or authority claims.",
+      "name": "ghc-family-flow-feasible",
+      "operation": "feasible",
+      "session": "x1"
+    },
+    {
+      "mission": "Count net source flow only after the full finite feasibility predicate passes.",
+      "name": "ghc-family-flow-value",
+      "operation": "value",
+      "session": "x1"
+    },
+    {
+      "mission": "Count only declared arcs leaving the supplied source-side set.",
+      "name": "ghc-family-flow-cut-capacity",
+      "operation": "cut_capacity",
+      "session": "x1"
+    },
+    {
+      "mission": "Combine unused forward capacity and cancellable reverse flow without merging the underlying declared arcs.",
+      "name": "ghc-family-flow-residual",
+      "operation": "residual",
+      "session": "x1"
+    },
+    {
+      "mission": "Find a bounded breadth-first residual path using declared vertex-order ties, or return an explicit absence.",
+      "name": "ghc-family-flow-augmenting-path",
+      "operation": "augmenting_path",
+      "session": "x1"
+    },
+    {
+      "mission": "Apply exactly one shortest-path bottleneck update on a copy and report the amount advanced.",
+      "name": "ghc-family-flow-augment-once",
+      "operation": "augment_once",
+      "session": "x1"
+    },
+    {
+      "mission": "Compute maximum net source throughput within a bounded integer-capacity network.",
+      "name": "ghc-family-flow-max-value",
+      "operation": "max_value",
+      "session": "x1"
+    },
+    {
+      "mission": "Enumerate the bounded source-side subsets and choose the first minimum in declared binary-mask order.",
+      "name": "ghc-family-flow-min-cut",
+      "operation": "min_cut",
+      "session": "x2"
+    },
+    {
+      "mission": "Compare an augmenting-path optimum with a separately enumerated finite cut value.",
+      "name": "ghc-family-flow-duality",
+      "operation": "duality",
+      "session": "x2"
+    },
+    {
+      "mission": "Compare the exact base and changed maximum values while preserving the source network.",
+      "name": "ghc-family-flow-remove-arc",
+      "operation": "remove_arc",
+      "session": "x2"
+    },
+    {
+      "mission": "Show that increasing one capacity need not improve throughput when another bottleneck remains.",
+      "name": "ghc-family-flow-increase-capacity",
+      "operation": "increase_capacity",
+      "session": "x2"
+    },
+    {
+      "mission": "Enumerate only the frozen bounded integer domain and retain infeasibility instead of inventing a feasible allocation.",
+      "name": "ghc-family-flow-lower-feasible",
+      "operation": "lower_feasible",
+      "session": "x2"
+    },
+    {
+      "mission": "Minimize a declared synthetic linear cost over bounded feasible integer flows, including bounded negative cycles.",
+      "name": "ghc-family-flow-min-cost",
+      "operation": "min_cost",
+      "session": "x2"
+    },
+    {
+      "mission": "Enumerate bounded one-to-one column assignments with explicit forbidden cells and lexicographic tie-breaking.",
+      "name": "ghc-family-flow-assignment",
+      "operation": "assignment",
+      "session": "x2"
+    },
+    {
+      "mission": "Keep claimed consent, evidence and authority distinct from computed capacity; synthetic flags never authorize an external action.",
+      "name": "ghc-family-flow-policy-gate",
+      "operation": "policy_gate",
+      "session": "x2"
+    },
+    {
+      "mission": "Project structured throughput and cut fields while reserving human accessibility and real-allocation review.",
+      "name": "ghc-family-flow-summary",
+      "operation": "summary",
+      "session": "x2"
+    },
+    {
+      "mission": "Preserve absent physical evidence and competent authority despite a complete finite computational record.",
+      "name": "ghc-family-flow-reservation",
+      "operation": "reservation",
+      "session": "x2"
+    }
+  ],
+  "next_runner_ideas": [
+    "independent certificate checker",
+    "cut perturbation witness",
+    "lower-bound contradiction extractor",
+    "assignment policy comparator",
+    "bounded cost-cycle scanner"
+  ],
+  "next_skill_ideas": [
+    "flow certificate assumptions",
+    "cut explanation without permission",
+    "lower-bound infeasibility provenance",
+    "allocation tie-policy review",
+    "negative-cost-cycle containment"
+  ]
+}
