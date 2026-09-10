@@ -1,0 +1,282 @@
+{
+  "global_groups": [
+    {
+      "name": "ghc-family-error-code-parity-contracts",
+      "operations": [
+        "even_parity_append",
+        "even_parity_verify",
+        "hamming_distance",
+        "repetition_encode"
+      ],
+      "runner": "ghc_family_error_code_parity_contracts.py"
+    },
+    {
+      "name": "ghc-family-error-code-hamming-contracts",
+      "operations": [
+        "repetition_decode",
+        "hamming74_encode",
+        "hamming74_syndrome",
+        "hamming74_correct"
+      ],
+      "runner": "ghc_family_error_code_hamming_contracts.py"
+    },
+    {
+      "name": "ghc-family-error-code-crc-contracts",
+      "operations": [
+        "gf2_division_remainder",
+        "crc_remainder",
+        "crc_append",
+        "crc_verify"
+      ],
+      "runner": "ghc_family_error_code_crc_contracts.py"
+    },
+    {
+      "name": "ghc-family-error-code-interleave-sequence",
+      "operations": [
+        "xor_checksum",
+        "row_interleave",
+        "row_deinterleave",
+        "erasure_inventory"
+      ],
+      "runner": "ghc_family_error_code_interleave_sequence.py"
+    },
+    {
+      "name": "ghc-family-error-code-provenance-authority",
+      "operations": [
+        "sequence_gap_map",
+        "provenance_digest",
+        "accessible_error_summary",
+        "coding_evidence_reservation"
+      ],
+      "runner": "ghc_family_error_code_provenance_authority.py"
+    }
+  ],
+  "runners": [
+    {
+      "lane": "x1",
+      "name": "ghc_family_error_control_pair_01.py",
+      "operations": [
+        "even_parity_append",
+        "even_parity_verify"
+      ]
+    },
+    {
+      "lane": "x1",
+      "name": "ghc_family_error_control_pair_02.py",
+      "operations": [
+        "hamming_distance",
+        "repetition_encode"
+      ]
+    },
+    {
+      "lane": "x1",
+      "name": "ghc_family_error_control_pair_03.py",
+      "operations": [
+        "repetition_decode",
+        "hamming74_encode"
+      ]
+    },
+    {
+      "lane": "x1",
+      "name": "ghc_family_error_control_pair_04.py",
+      "operations": [
+        "hamming74_syndrome",
+        "hamming74_correct"
+      ]
+    },
+    {
+      "lane": "x1",
+      "name": "ghc_family_error_control_pair_05.py",
+      "operations": [
+        "gf2_division_remainder",
+        "crc_remainder"
+      ]
+    },
+    {
+      "lane": "x2",
+      "name": "ghc_family_error_control_pair_06.py",
+      "operations": [
+        "crc_append",
+        "crc_verify"
+      ]
+    },
+    {
+      "lane": "x2",
+      "name": "ghc_family_error_control_pair_07.py",
+      "operations": [
+        "xor_checksum",
+        "row_interleave"
+      ]
+    },
+    {
+      "lane": "x2",
+      "name": "ghc_family_error_control_pair_08.py",
+      "operations": [
+        "row_deinterleave",
+        "erasure_inventory"
+      ]
+    },
+    {
+      "lane": "x2",
+      "name": "ghc_family_error_control_pair_09.py",
+      "operations": [
+        "sequence_gap_map",
+        "provenance_digest"
+      ]
+    },
+    {
+      "lane": "x2",
+      "name": "ghc_family_error_control_pair_10.py",
+      "operations": [
+        "accessible_error_summary",
+        "coding_evidence_reservation"
+      ]
+    }
+  ],
+  "skills": [
+    {
+      "lane": "x1",
+      "mission": "Append one even-parity bit while preserving the declared source bits.",
+      "name": "ghc-family-error-control-even-parity-append",
+      "operation": "even_parity_append"
+    },
+    {
+      "lane": "x1",
+      "mission": "Verify a finite even-parity codeword without treating detection as repair.",
+      "name": "ghc-family-error-control-even-parity-verify",
+      "operation": "even_parity_verify"
+    },
+    {
+      "lane": "x1",
+      "mission": "Count differing positions between equal-width finite bit strings.",
+      "name": "ghc-family-error-control-hamming-distance",
+      "operation": "hamming_distance"
+    },
+    {
+      "lane": "x1",
+      "mission": "Repeat every source bit an odd declared number of times.",
+      "name": "ghc-family-error-control-repetition-encode",
+      "operation": "repetition_encode"
+    },
+    {
+      "lane": "x1",
+      "mission": "Decode odd-size repetition groups by majority and expose disagreement groups.",
+      "name": "ghc-family-error-control-repetition-decode",
+      "operation": "repetition_decode"
+    },
+    {
+      "lane": "x1",
+      "mission": "Encode four source bits into the conventional seven-position even-parity layout.",
+      "name": "ghc-family-error-control-hamming74-encode",
+      "operation": "hamming74_encode"
+    },
+    {
+      "lane": "x1",
+      "mission": "Compute the three-check Hamming seven-four syndrome as a bounded locator.",
+      "name": "ghc-family-error-control-hamming74-syndrome",
+      "operation": "hamming74_syndrome"
+    },
+    {
+      "lane": "x1",
+      "mission": "Correct one indicated Hamming seven-four bit while naming the assumed error model.",
+      "name": "ghc-family-error-control-hamming74-correct",
+      "operation": "hamming74_correct"
+    },
+    {
+      "lane": "x1",
+      "mission": "Compute a polynomial-division remainder over GF two for one declared dividend.",
+      "name": "ghc-family-error-control-gf2-division-remainder",
+      "operation": "gf2_division_remainder"
+    },
+    {
+      "lane": "x1",
+      "mission": "Compute a CRC-style remainder after appending the generator degree in zeros.",
+      "name": "ghc-family-error-control-crc-remainder",
+      "operation": "crc_remainder"
+    },
+    {
+      "lane": "x2",
+      "mission": "Append the declared CRC remainder without claiming cryptographic integrity.",
+      "name": "ghc-family-error-control-crc-append",
+      "operation": "crc_append"
+    },
+    {
+      "lane": "x2",
+      "mission": "Verify divisibility of a finite codeword by its declared generator.",
+      "name": "ghc-family-error-control-crc-verify",
+      "operation": "crc_verify"
+    },
+    {
+      "lane": "x2",
+      "mission": "Compute an eight-bit XOR checksum while refusing cryptographic meaning.",
+      "name": "ghc-family-error-control-xor-checksum",
+      "operation": "xor_checksum"
+    },
+    {
+      "lane": "x2",
+      "mission": "Interleave an exactly rectangular bit layout by columns.",
+      "name": "ghc-family-error-control-row-interleave",
+      "operation": "row_interleave"
+    },
+    {
+      "lane": "x2",
+      "mission": "Invert the declared rectangular interleave without guessing missing padding.",
+      "name": "ghc-family-error-control-row-deinterleave",
+      "operation": "row_deinterleave"
+    },
+    {
+      "lane": "x2",
+      "mission": "Inventory known symbols and explicit erasures without silently correcting them.",
+      "name": "ghc-family-error-control-erasure-inventory",
+      "operation": "erasure_inventory"
+    },
+    {
+      "lane": "x2",
+      "mission": "Expose gaps, duplicates, and ordering in a finite packet sequence.",
+      "name": "ghc-family-error-control-sequence-gap-map",
+      "operation": "sequence_gap_map"
+    },
+    {
+      "lane": "x2",
+      "mission": "Bind a canonical synthetic record digest to an explicit source digest.",
+      "name": "ghc-family-error-control-provenance-digest",
+      "operation": "provenance_digest"
+    },
+    {
+      "lane": "x2",
+      "mission": "Render finite error counts with an explicit uncorrectable category and reserved review.",
+      "name": "ghc-family-error-control-accessible-error-summary",
+      "operation": "accessible_error_summary"
+    },
+    {
+      "lane": "x2",
+      "mission": "Preserve missing scientific evidence and competent authority as unresolved coding obligations.",
+      "name": "ghc-family-error-control-coding-evidence-reservation",
+      "operation": "coding_evidence_reservation"
+    }
+  ],
+  "successor_runner_ideas": [
+    "bounded decoder comparison",
+    "burst-pattern enumerator",
+    "Reed Solomon erasure witness",
+    "CRC polynomial fixture review",
+    "repair lineage replay",
+    "status-list bit-flip simulator",
+    "interleave burst dispersal map",
+    "finite channel confusion grid",
+    "uncorrectable-state reporter",
+    "exact source confirmation wrapper"
+  ],
+  "successor_skill_ideas": [
+    "decoder assumption ledger",
+    "burst error window map",
+    "finite field parameter receipt",
+    "repair provenance frontier",
+    "status-list corruption quarantine",
+    "interleaver padding refusal",
+    "syndrome ambiguity readback",
+    "channel model drift guard",
+    "accessible repair explanation",
+    "authority-separated correction receipt"
+  ]
+}
