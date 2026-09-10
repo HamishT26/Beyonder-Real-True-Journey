@@ -1,0 +1,63 @@
+"""Execute one frozen tranche, preserving failed candidate subjects and source views."""
+from __future__ import annotations
+import argparse,copy,hashlib,importlib,importlib.util,json,subprocess,sys
+from pathlib import Path
+import ghc_family_ilyan_v689_v8_io as io
+PLANNING='c7d15a959610d81002c6884c6b699eccdc92ba5e'
+def module(name,path):
+    spec=importlib.util.spec_from_file_location(name,path);m=importlib.util.module_from_spec(spec);spec.loader.exec_module(m);return m
+def main():
+    ap=argparse.ArgumentParser();ap.add_argument('--lane',choices=['x1','x2'],required=True);ap.add_argument('--equality',required=True);ap.add_argument('--method-runner',required=True);ap.add_argument('--skill-validator',required=True);a=ap.parse_args();lane=a.lane;eq=json.loads(Path(a.equality).read_text())
+    if not(eq['clean'] and eq['four_way_equal'] and eq['divergence']=='0\t0'):raise ValueError('Preceding equality gate failed')
+    if lane=='x1' and eq['head']!=PLANNING:raise ValueError('Planning head mismatch')
+    implementation=importlib.import_module('ghc_family_membership_'+lane);rows=[r for r in io.read('plan/new-proposals.json')['proposals'] if r['lane']==lane];source=io.read('plan/inherited-selections.json')['rows'];start=0 if lane=='x1' else 100
+    results=[];candidates=[];refinements=[]
+    for i,p in enumerate(rows):
+        req=copy.deepcopy(p['request']);before=io.canonical(req);out=implementation.evaluate(req);good=io.canonical(out)==io.canonical(p['expected']) and io.canonical(req)==before
+        results.append({'proposal_id':p['proposal_id'],'request':req,'returned':out,'expected':p['expected'],'passed':good,'outcome':p['expected_execution_disposition'] if good else 'open_gap','oracle_sha256':io.sha(io.canonical(p['expected']))})
+        subject=copy.deepcopy(p['candidate_subject']);snapshot=io.canonical(subject);refusal=implementation.evaluate(subject);matches=io.canonical(refusal)==io.canonical(p['candidate_expected']) and io.canonical(subject)==snapshot
+        candidates.append({'proposal_id':p['proposal_id'],'failed_subject':subject,'subject_state':'failed','original_success_credit':0,'returned':refusal,'refusal_check_passed':matches,'subject_unchanged':io.canonical(subject)==snapshot})
+        inherited=source[start+i];serialized=io.canonical(inherited['record']);decoded=json.loads(serialized);equal=io.canonical(decoded)==io.canonical(inherited['record'])
+        refinements.append({'proposal_id':p['proposal_id'],'source_record_sha256':inherited['record_sha256'],'view_sha256':io.sha(serialized),'source_view':decoded,'lossless':equal,'source_preserved':True,'host_files_deleted':0,'novelty_credit':0})
+    io.write(lane+'/preceding-equality.json',eq);io.write(lane+'/results.json',{'records':results});io.write(lane+'/candidate-subjects.json',{'records':candidates});io.write(lane+'/refinements.json',{'records':refinements})
+    summary={'safe_count':len(results),'safe_passes':sum(r['passed'] for r in results),'candidate_subjects':len(candidates),'failed_candidate_subjects_retained':len(candidates),'refusal_passes':sum(r['refusal_check_passed'] for r in candidates),'clean_fix_refine_count':len(refinements),'lossless_refinement_passes':sum(r['lossless'] for r in refinements),'same_owner_only':True,'implementation':'integer masks and typed arithmetic','oracle':'frozen list and enumeration results','independent_reproduction':False}
+    io.write(lane+'/execution-summary.json',summary)
+    if any(summary[k]!=100 for k in ['safe_passes','refusal_passes','lossless_refinement_passes']):print(json.dumps(summary));raise SystemExit(1)
+    methods=module('current_method_flow',a.method_runner);ledger=methods.new_ledger('v689-v8','Ilyan Reed') if lane=='x1' else io.read('x1/method-flow.json')
+    boundary=io.read('plan/identity-practices.json')['boundary'];gates=io.read('plan/identity-practices.json')['protected_gates'];ledger.update(identity_boundary=boundary,execution_authority='owner_self_scoped_delta',source_commit=io.SOURCE,source_is_ancestor=False,planning_commit=PLANNING,final_commit='external_after_exact_final_commit')
+    def add_method(mid,title,failed_ids,evidence,observations):
+        m={'method_id':mid,'title':title,'failure_signature':'Retained invalid candidate subjects or explicit intake faults','trigger_preconditions':['Matching frozen operation and exact owned phase','Synthetic input only; external prerequisites remain separate'],'privacy_class':'sanitized_public','approval_class':'safe_now','candidate_workaround':'Use the typed finite relation, retain the original failed subject, and repair only the matching dependency.','validation_witness_ids':[],'recurrence_guard':'Check exact phase, field inventory, integer types, declared width and byte domain before using a result.','rollback':'Hold the affected operation and retain prior sources and witnesses; no deletion.','recommendation_state':'validated','supersedes':[],'protected_gates':gates,'retained_negative_ids':failed_ids,'scope_boundary':'Same-owner finite software evidence only.','execution_authority':'owner_self_scoped_delta','source_commit':io.SOURCE,'final_commit':'external_after_exact_final_commit','repository_scan':False,'module_scan':True,'cross_lane_scan':False,'unchanged_history_scan':False,'sibling_lane_mutation':False,'changed_file_allowlist':[evidence],'module_allowlist':['scripts/ghc_family_membership_'+lane+'.py'],'exact_pushed_head_required':True}
+        for i,o in enumerate(observations,1):
+            wid=mid+f'-W{i:03d}';m['validation_witness_ids'].append(wid);ledger['witnesses'].append({'witness_id':wid,'method_id':mid,'procedure':o['procedure'],'scope':'Ilyan Reed v689-v8 '+lane,'expected':o['expected'],'observed':o['observed'],'result':o['result'],'same_owner_only':True,'independent_reproduction':False,'retained_negative_ids':o.get('negative_ids',failed_ids),'boundary':gates,'evidence_ref':o.get('evidence_ref',evidence)})
+        ledger['methods'].append(m);methods.append_event(ledger,mid,'candidate','validated','Bounded passing witnesses recorded',next((x for x in m['validation_witness_ids'] if next(w for w in ledger['witnesses'] if w['witness_id']==x)['result']=='pass'),None));ledger['recommendations'].append({'method_id':mid,'preconditions':m['trigger_preconditions'],'recommendation':m['recurrence_guard'],'rollback':m['rollback']})
+    for op in sorted({p['operation'] for p in rows}):
+        group=[p for p in rows if p['operation']==op];observations=[];fails=[p['proposal_id']+'-CANDIDATE' for p in group]
+        for p in group:
+            pid=p['proposal_id'];r=next(x for x in results if x['proposal_id']==pid);c=next(x for x in candidates if x['proposal_id']==pid);f=next(x for x in refinements if x['proposal_id']==pid)
+            observations.extend([{'procedure':'Accepted request agrees with frozen oracle','expected':p['expected'],'observed':r['returned'],'result':'pass','evidence_ref':f'docs/ilyan-reed/v689-v8/{lane}/results.json#{pid}'},{'procedure':'Candidate subject validity','expected':'a valid request must be accepted','observed':c['returned'],'result':'fail','negative_ids':[pid+'-CANDIDATE'],'evidence_ref':f'docs/ilyan-reed/v689-v8/{lane}/candidate-subjects.json#{pid}'},{'procedure':'Refusal predicate','expected':p['candidate_expected'],'observed':c['returned'],'result':'pass','negative_ids':[pid+'-CANDIDATE'],'evidence_ref':f'docs/ilyan-reed/v689-v8/{lane}/candidate-subjects.json#{pid}'},{'procedure':'Lossless inherited-record projection','expected':True,'observed':f['lossless'],'result':'pass','evidence_ref':f'docs/ilyan-reed/v689-v8/{lane}/refinements.json#{pid}'}])
+        add_method('IR6898-'+op,op,fails,f'docs/ilyan-reed/v689-v8/{lane}/results.json',observations)
+    if lane=='x1':
+        startup=io.read('plan/startup-failures.json')['records'];obs=[]
+        for r in startup:
+            obs.append({'procedure':'Retained intake fault','expected':'bounded source procedure succeeds','observed':r['failure'],'result':'fail','negative_ids':[r['id']]})
+            if r['recovered']:obs.append({'procedure':'Narrow intake recovery','expected':'matching dependency resolved','observed':r['recovery'],'result':'pass','negative_ids':[r['id']]})
+        add_method('IR6898-intake','Source intake recovery',[r['id'] for r in startup],'docs/ilyan-reed/v689-v8/plan/startup-failures.json',obs)
+        package=io.read('x1/toolchain/smokes.json')
+        for r in package['rows']:
+            nid='IR6898-PACKAGE-'+r['package'];add_method(nid,r['package'],[nid+'-NEG'],'docs/ilyan-reed/v689-v8/x1/toolchain/smokes.json',[{'procedure':'Published accepting vector','expected':True,'observed':r['positive'],'result':'pass'},{'procedure':'Designed invalid package subject','expected':'valid input','observed':r['invalid_subject'],'result':'fail'},{'procedure':'Package refusal check','expected':True,'observed':r['refusal_check'],'result':'pass'}])
+    methods.refresh_counts(ledger);io.write(lane+'/method-flow.json',ledger);validation=methods.validate_ledger(ledger);io.write(lane+'/method-flow-validation.json',validation)
+    if not validation['valid']:raise ValueError(json.dumps(validation))
+    plan=io.read('plan/skills-runners.json');built=[]
+    for r in [r for r in plan['runners'] if r['lane']==lane]:
+        p=io.ROOT/'scripts'/r['name'];p.write_text('"""Bounded pair: '+', '.join(r['operations'])+'."""\nfrom ghc_family_membership_cli import main\nif __name__=="__main__":main('+repr(r['operations'])+')\n',encoding='utf8',newline='\n')
+        first=next(p for p in rows if p['operation']==r['operations'][0]);ip=io.BASE/lane/'runner-inputs'/Path(r['name']).stem;ip.parent.mkdir(parents=True,exist_ok=True);ip=ip.with_suffix('.json');ip.write_text(json.dumps(first['request'],ensure_ascii=False,sort_keys=True)+'\n',encoding='utf8',newline='\n')
+        run=subprocess.run([sys.executable,'-B','-X','utf8',str(p),'--input',str(ip)],capture_output=True,text=True,encoding='utf8');passed=run.returncode==0 and io.canonical(json.loads(run.stdout))==io.canonical(first['expected']);io.write(lane+'/tooling/runner-smoke/'+Path(r['name']).stem+'.json',{'valid':passed,'runner':r['name'],'operations':r['operations'],'caller_input':io.rel(ip)})
+        if not passed:raise RuntimeError('Runner caller failed '+r['name'])
+    for s in [s for s in plan['skills'] if s['lane']==lane]:
+        folder=io.BASE/lane/'skills'/s['name'];folder.mkdir(parents=True);group=[p for p in rows if p['operation']==s['operation']];runner=next(r['name'] for r in plan['runners'] if s['operation'] in r['operations'])
+        fields=list(group[0]['request']['payload']);body='---\nname: '+s['name']+'\ndescription: '+json.dumps(s['mission'])+'\n---\n\n# '+s['operation'].replace('_',' ').title()+'\n\n'+s['mission']+'\n\nRead [the frozen cases](references/cases.json) before adapting a request. The request has exactly operation and payload fields; the payload requires '+', '.join(fields)+'. Unknown fields are refused, including fields that claim external authority. Compare the full typed result, not Python loose equality between booleans and numbers.\n\nUse `'+runner+' --input INPUT.json` in the owner repository, or select the corresponding merged global package. Output goes to stdout unless an exclusive new `--output` file is supplied. No network, credential, device or host cleanup occurs.\n\nOracle basis: '+group[0]['oracle_basis']+' This guide includes ten distinct finite fixtures. Retain every contrary input and diagnose the exact assumption before changing code. The original failed subject remains failed even when its refusal predicate passes.\n\nRollback selects a retained source or holds the affected operation without erasing evidence. '+boundary+'\n'
+        (folder/'SKILL.md').write_text(body,encoding='utf8',newline='\n');(folder/'references').mkdir();(folder/'references/cases.json').write_text(json.dumps({'cases':group,'source_planning':PLANNING},ensure_ascii=False,indent=2,sort_keys=True)+'\n',encoding='utf8',newline='\n')
+        valid=subprocess.run([sys.executable,'-X','utf8',a.skill_validator,str(folder)],capture_output=True,text=True,encoding='utf8');built.append({'name':s['name'],'path':io.rel(folder),'valid':valid.returncode==0,'message':(valid.stdout+valid.stderr).strip(),'source_sha256':io.sha((folder/'SKILL.md').read_bytes())})
+        if valid.returncode:io.write(lane+'/skills-partial.json',{'records':built});raise RuntimeError('Skill validation failed '+s['name'])
+    io.write(lane+'/skills-validation.json',{'skills':built,'count':len(built),'runners':5,'same_owner_only':True});print(json.dumps({**summary,'skills':len(built),'runners':5,'method_counts':ledger['counts']}))
+if __name__=='__main__':main()
