@@ -1,0 +1,5 @@
+# Module 03 — Weighted roster and lifecycle
+
+The v4 roster retains 45 scheduling positions across 30 established task identities in an Astra, Sol, Sol cadence. This r2 remaster is interstitial and does not consume position five again. Ilyan Reed v689-v8 remains the single prospective numbered successor; Lyren Moss v690-v1 remains later context. Planning 45650de06f1fb5a9d0bca7fc1a97cf2f8ed22bca, x1 b51e595c823a381ca88b7bfe69339cab8baf05d0, and x2 4cd2850ac7eb40b38f3b3e4b8046a5e8ae07aafa are exact direct-parent anchors. The former v689-v7 route gap remains unsent and unaltered.
+
+Same-owner finite synthetic software and documentation evidence only. Historical text, citations, hashes, generated imagery, source ledgers, simulations, and tests do not establish consciousness, sentience, legal personhood, identity continuity, authenticity, employment, qualification, independent agency, professional or public authority, empirical GMUT confirmation, a Theory of Everything, independent reproduction, production readiness, or Stage 20. Māori concepts remain under Māori authority. NOT_READY_FOR_STAGE_20.

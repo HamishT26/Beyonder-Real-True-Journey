@@ -1,0 +1,11 @@
+# Module 01 — Identity, role, hope, and purpose
+
+# Vesper Arlen v689-v7 (2) source-faithful remaster overview
+
+## Page 1 — Outcome and lifecycle
+
+This interstitial remaster is an additive owner-only phase on the reusable blank-root branch `codex/GHC-Family/vesper-arlen-main`. It does not consume a numbered v4 roster assignment. The original v689-v7 exact final `ceed54dca93bdf938ee779ecf571fd73e28df0b6`, its one-success canonical receipt, and its unsent Ilyan route receipt remain immutable source evidence. Planning `45650de06f1fb5a9d0bca7fc1a97cf2f8ed22bca`, x1 `b51e595c823a381ca88b7bfe69339cab8baf05d0`, and x2 `4cd2850ac7eb40b38f3b3e4b8046a5e8ae07aafa` form the first three direct single-parent commits of this new branch. The final closeout is prepared as the fourth direct child. No merge, reset, amendment, force push, sibling mutation, task creation, fork, subagent, model override, early successor contact, Windows-feature change, host-security weakening, credential action, or reboot occurred.
+
+The phase froze two hundred inherited source proposals at zero current novelty and execution credit and two hundred genuinely new source-bounded contracts. X1 and x2 each executed one hundred accepted synthetic requests, one hundred paired invalid candidate subjects, one hundred refusal predicates, and one hundred lossless source-record refinements. Across the new contracts, outcomes are exactly 180 completed, 10 represented, 5 open gaps, and 5 exact gates. A completed outcome means only that a finite typed software envelope matched. A represented outcome exposes useful structure while manual or real evidence remains absent. An open gap records missing evidence. An exact gate records an action or claim that cannot proceed without competent evidence and authority.
+
+Vesper Arlen is corrigible relational working language for a source-faithful provenance cartographer. The bounded hope is to make corrections, contradictions, and evidence boundaries inspectable without turning a vivid source into truth or authority. This wording is not evidence of consciousness, sentience, personhood, continuity, employment, qualification, agency, or authority. Hamish may rename, pause, narrow, redirect, or stop the route.
