@@ -1,0 +1,54 @@
+{
+  "schema": "ghc.family.lyren.v690-v1.x1.post-validation-overlay.v1",
+  "owner": "Lyren Moss",
+  "phase": "v690-v1-x1",
+  "base_method_flow": {
+    "methods": 15,
+    "retained_negatives": 110,
+    "witnesses": 426,
+    "failed_witnesses": 110,
+    "passing_witnesses": 316
+  },
+  "method": {
+    "method_id": "LM6901-X1-RUFF-RECOVERY",
+    "title": "Resolve the already installed Ruff through its owning Python module and retain lint findings",
+    "state": "validated",
+    "same_owner_only": true,
+    "independent_reproduction": false,
+    "rollback": "Stop selecting Ruff for this scope and retain every diagnostic and source file; do not change host profiles or PATH."
+  },
+  "retained_negatives": [
+    {
+      "negative_id": "LM6901-X1-OP003",
+      "failure": "The bare Ruff executable was not present on PATH; the version and lint commands were both rejected before checking a file.",
+      "original_success_credit": 0,
+      "retained": true
+    },
+    {
+      "negative_id": "LM6901-X1-OP004",
+      "failure": "The first bounded system-Python Ruff check found twelve owner-source findings, principally import ordering plus one unnecessary generator.",
+      "original_success_credit": 0,
+      "retained": true
+    },
+    {
+      "negative_id": "LM6901-X1-OP005",
+      "failure": "Ruff's safe auto-fix corrected eleven findings but left the generator-comprehension finding; the immediate check therefore remained nonterminal.",
+      "original_success_credit": 0,
+      "retained": true
+    }
+  ],
+  "recovery": {
+    "procedure": "Use the pre-existing system Python module entrypoint, apply only the eleven safe mechanical fixes, patch the remaining set comprehension and generator template, and rerun the same exact file allowlist.",
+    "observed": "All checks passed.",
+    "result": "pass",
+    "witness_count": 1
+  },
+  "effective_counts": {
+    "methods": 16,
+    "retained_negatives": 113,
+    "witnesses": 430,
+    "failed_witnesses": 113,
+    "passing_witnesses": 317
+  },
+  "boundary": "Ruff validation is bounded owner-source evidence only; it is not exhaustive security, complete correctness, independent reproduction, production certification, or Stage 20 readiness."
+}
