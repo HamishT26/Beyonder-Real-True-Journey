@@ -30,21 +30,55 @@ from scripts.ghc_family_ilyra_v690_v2_canonical import (
 
 ROOT = Path(__file__).resolve().parents[1]
 DEPENDENCY_FAILED_FINAL = "a53241d465e2236f79375db2fdff04117e1e6a04"
+DEPENDENCY_COMPOSITE_FAILED_FINAL = "708edaf58e9d660b977014c92ca5dcf2d47bb849"
 CORRECTION_PATH = BASE + "correction/dependency-correction.json"
 COMPOSITE_PATH = "scripts/ghc_family_ilyra_v690_v2_dependency_corrected_composite.py"
+ROOT_COMPOSITE_PATH = (
+    "scripts/ghc_family_ilyra_v690_v2_dependency_root_corrected_composite.py"
+)
 
 
-def main() -> None:
+def main(variant: str = "dependency-corrected") -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--expected-head", required=True)
     parser.add_argument("--receipt-dir", required=True)
     args = parser.parse_args()
     expected = args.expected_head
     receipt_dir = Path(args.receipt_dir).resolve()
-    marker = receipt_dir / "dependency-corrected-composite-invocation.json"
-    receipt = receipt_dir / "dependency-corrected-exact-final-owner-scoped-composite.json"
+    if variant == "dependency-root-corrected":
+        marker = receipt_dir / "dependency-root-corrected-composite-invocation.json"
+        receipt = (
+            receipt_dir
+            / "dependency-root-corrected-exact-final-owner-scoped-composite.json"
+        )
+        expected_history = [
+            PLANNING,
+            X1,
+            X2,
+            DEPENDENCY_FAILED_FINAL,
+            DEPENDENCY_COMPOSITE_FAILED_FINAL,
+            expected,
+        ]
+        expected_parent = DEPENDENCY_COMPOSITE_FAILED_FINAL
+        expected_delta = [CORRECTION_PATH, COMPOSITE_PATH, ROOT_COMPOSITE_PATH]
+        schema = "ghc.family.dependency-root-corrected-exact-final-owner-scoped-composite.v1"
+        success_status = (
+            "VALID_DEPENDENCY_ROOT_CORRECTED_EXACT_FINAL_OWNER_SCOPED_COMPOSITE"
+        )
+    elif variant == "dependency-corrected":
+        marker = receipt_dir / "dependency-corrected-composite-invocation.json"
+        receipt = (
+            receipt_dir / "dependency-corrected-exact-final-owner-scoped-composite.json"
+        )
+        expected_history = [PLANNING, X1, X2, DEPENDENCY_FAILED_FINAL, expected]
+        expected_parent = DEPENDENCY_FAILED_FINAL
+        expected_delta = [CORRECTION_PATH, COMPOSITE_PATH]
+        schema = "ghc.family.dependency-corrected-exact-final-owner-scoped-composite.v1"
+        success_status = "VALID_DEPENDENCY_CORRECTED_EXACT_FINAL_OWNER_SCOPED_COMPOSITE"
+    else:
+        raise SystemExit(f"unsupported composite variant: {variant}")
     if marker.exists() or receipt.exists():
-        raise SystemExit("dependency-corrected composite latch exists; refusing replay")
+        raise SystemExit(f"{variant} composite latch exists; refusing replay")
     write_json(
         marker,
         {
@@ -54,6 +88,7 @@ def main() -> None:
             "phase": "v690-v2",
             "replay_count": 0,
             "state": "STARTED",
+            "variant": variant,
         },
     )
     checks: list[dict[str, Any]] = []
@@ -95,18 +130,16 @@ def main() -> None:
         check("zero_divergence", divergence == ["0", "0"], divergence)
         history = list(reversed(command("git", "rev-list", head).splitlines()))
         check(
-            "five_commit_history",
-            history == [PLANNING, X1, X2, DEPENDENCY_FAILED_FINAL, head],
+            "exact_commit_history",
+            history == expected_history,
             history,
         )
         final_parent = command("git", "show", "-s", "--format=%P", head).strip()
-        check("correction_parent", final_parent == DEPENDENCY_FAILED_FINAL, final_parent)
+        check("correction_parent", final_parent == expected_parent, final_parent)
         merges = command("git", "rev-list", "--merges", head)
         check("zero_merges", merges.strip() == "", merges)
-        delta = command(
-            "git", "diff", "--name-only", DEPENDENCY_FAILED_FINAL + ".." + head
-        ).splitlines()
-        check("correction_delta", delta == [CORRECTION_PATH, COMPOSITE_PATH], delta)
+        delta = command("git", "diff", "--name-only", expected_parent + ".." + head).splitlines()
+        check("correction_delta", delta == expected_delta, delta)
 
         layers = {
             PLANNING: blobs(PLANNING),
@@ -144,6 +177,13 @@ def main() -> None:
             and correction["canonical_failure"]["replay_count"] == 0,
             correction["canonical_failure"],
         )
+        if variant == "dependency-root-corrected":
+            check(
+                "failed_dependency_composite_retained",
+                correction["dependency_composite_failure"]["success_count"] == 0
+                and correction["dependency_composite_failure"]["replay_count"] == 0,
+                correction["dependency_composite_failure"],
+            )
         owner_paths = [
             path
             for path in layers[head]
@@ -272,13 +312,14 @@ def main() -> None:
             "privacy_classes": privacy_counts,
             "replay_count": 0,
             "same_owner_only": True,
-            "schema": "ghc.family.dependency-corrected-exact-final-owner-scoped-composite.v1",
+            "schema": schema,
             "source_is_ancestor": False,
             "source_provenance": SOURCE,
-            "status": "VALID_DEPENDENCY_CORRECTED_EXACT_FINAL_OWNER_SCOPED_COMPOSITE",
+            "status": success_status,
             "success_count": 1,
             "successor_visible_overlay": overlay,
             "terminal_verdict": "NOT_READY_FOR_STAGE_20",
+            "variant": variant,
             "x1": X1,
             "x2": X2,
         }
@@ -294,6 +335,7 @@ def main() -> None:
                 "replay_count": 0,
                 "state": "SUCCEEDED_NO_REPLAY",
                 "success_count": 1,
+                "variant": variant,
             },
         )
         print(
@@ -322,6 +364,7 @@ def main() -> None:
                 "replay_count": 0,
                 "state": "FAILED_RETAINED_ZERO_COMPOSITE_SUCCESS_CREDIT",
                 "success_count": 0,
+                "variant": variant,
             },
         )
         raise

@@ -11,7 +11,19 @@
     "success_count": 0
   },
   "dependency_failed_final": "a53241d465e2236f79375db2fdff04117e1e6a04",
+  "dependency_composite_failure": {
+    "composite_marker_created": false,
+    "composite_receipt_created": false,
+    "error_class": "ModuleNotFoundError",
+    "error_dependency": "scripts",
+    "failed_head": "708edaf58e9d660b977014c92ca5dcf2d47bb849",
+    "invocation_count": 1,
+    "replay_count": 0,
+    "state": "FAILED_BEFORE_DISCOVERY_RETAINED_ZERO_COMPOSITE_SUCCESS_CREDIT",
+    "success_count": 0
+  },
   "expected_parent_of_correction": "a53241d465e2236f79375db2fdff04117e1e6a04",
+  "expected_parent_of_root_correction": "708edaf58e9d660b977014c92ca5dcf2d47bb849",
   "immutable_repository_accounting": {
     "direct_witnesses": 3507,
     "effective_negatives": 1268,
@@ -35,13 +47,32 @@
       "original_success_credit": 0,
       "recovery": "Remove the unused import and rerun only the correction-script lint preflight before the correction commit.",
       "state": "first correction-script lint preflight found one unused import"
+    },
+    {
+      "id": "IF6902-CORRECTION-F003",
+      "original_success_credit": 0,
+      "recovery": "Use a separately named module entrypoint so the repository root is present on Python's import path before composite discovery.",
+      "state": "first dependency-corrected composite lacked the repository root on sys.path"
+    },
+    {
+      "id": "IF6902-CORRECTION-F004",
+      "original_success_credit": 0,
+      "recovery": "Replace the malformed combined search expression with bounded literal line-window reads.",
+      "state": "one correction-source search returned no matches because its combined PowerShell pattern was malformed"
+    },
+    {
+      "id": "IF6902-CORRECTION-F005",
+      "original_success_credit": 0,
+      "recovery": "Normalize the single-import wrapper boundary and rerun only the bounded root-entrypoint preflight.",
+      "state": "first root-entrypoint lint preflight found one import-block formatting defect"
     }
   ],
   "recovery": {
-    "kind": "separately_named_one_shot_dependency_corrected_composite",
+    "kind": "separately_named_one_shot_dependency_root_corrected_composite",
     "original_canonical_replay_forbidden": true,
-    "prospective_status": "VALID_DEPENDENCY_CORRECTED_EXACT_FINAL_OWNER_SCOPED_COMPOSITE",
+    "original_dependency_composite_replay_forbidden": true,
+    "prospective_status": "VALID_DEPENDENCY_ROOT_CORRECTED_EXACT_FINAL_OWNER_SCOPED_COMPOSITE",
     "same_owner_only": true
   },
-  "state": "PREPARED_FOR_ONE_SHOT_DEPENDENCY_CORRECTED_COMPOSITE"
+  "state": "PREPARED_FOR_ONE_SHOT_DEPENDENCY_ROOT_CORRECTED_COMPOSITE"
 }
