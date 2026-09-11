@@ -10,7 +10,7 @@ Liora Venn v691-v2 exact final ba0fdcf7c3d6ba7e3fd18c2151b599aa518e7166 on codex
 
 ## Module 03 — parentless Tamar lifecycle
 
-Planning 07b701700a9ec359f703a1215acb13f139d092b9 is parentless. X1 acbb3e391828be41a1c0ab2099b02f5408b29e12 is its direct child. X2 37e276d52d9cf74cdbaa6695d6e8623207071d26 is the direct child of x1. The later exact final must be the one-parent direct child of x2, for four commits and zero merges. Each committed stage was pushed, clean, typed 0/0 divergent and fresh-four-way equal before its successor began. Repository preparation remains distinct from external canonical validation and live delivery.
+Planning 07b701700a9ec359f703a1215acb13f139d092b9 is parentless. X1 acbb3e391828be41a1c0ab2099b02f5408b29e12 is its direct child. X2 37e276d52d9cf74cdbaa6695d6e8623207071d26 is the direct child of x1. The first final 3d1b6a3f9edaf7504d10f023e3121b7951f793aa is the direct child of x2. One additive corrected final is its one-parent child, for five commits and zero merges. The first final remains ancestral and immutable. Each committed stage was pushed, clean, typed 0/0 divergent and fresh-four-way equal before its successor began. Repository preparation remains distinct from external canonical validation and live delivery.
 
 ## Module 04 — current v5 workflow
 
@@ -828,11 +828,11 @@ X1 executed proposals 001–100 only after the planning root was clean and remot
 
 ## Module 08 — x2 evidence and promotion
 
-X2 began only after x1 was clean and remote-equal. Proposals 101–200 produced 60 completed, 20 represented, 10 open_gap and 10 exact_gate outcomes. One hundred positives, one hundred unknown-field refusals, one hundred altered-output refusals and one hundred CFR checks passed their exact guards. Ten local and five merged skills were read before use. Five merged skills and five public runners installed as 17 byte-equal files into absent destinations with zero overwrite. No ordinary package was installed. The first prestage wrapper parse fault remains failed beside its Python-only recovery.
+X2 began only after x1 was clean and remote-equal. Proposals 101–200 produced 60 completed, 20 represented, 10 open_gap and 10 exact_gate outcomes. One hundred positives, one hundred unknown-field refusals, one hundred altered-output refusals and one hundred CFR checks passed their exact guards. Ten local and five merged skills were read before use. Five merged skills and five public runners installed as 17 byte-equal files into absent destinations with zero overwrite. No ordinary package was installed. The first prestage wrapper parse fault remains failed beside its Python-only recovery. The first exact-final Git-blob batch remains failed on ENOBUFS beside a 64-selector bounded recovery; the malformed diagnostic and exact-sentence correction attempt also remain failed beside their smallest recoveries. The first correction status mapper also remains failed beside its explicit ??-to-A normalization.
 
 ## Module 09 — Method Flow and negative accounting
 
-Tamar contributes 67 methods and 1329 direct witnesses: 447 failed and 882 passing. Thirty blocked packets produce 477 owner effective negatives. Combined with Liora's external activation baseline, successor-visible truth is 348 methods, 8859 direct witnesses, 2074 failed, 6785 passing and 2225 effective negatives. A passing rejection never makes its invalid subject successful, and recovery never erases failure.
+Tamar contributes 71 methods and 1337 direct witnesses: 451 failed and 886 passing. Thirty blocked packets produce 481 owner effective negatives. Combined with Liora's external activation baseline, successor-visible truth is 352 methods, 8867 direct witnesses, 2078 failed, 6789 passing and 2229 effective negatives. A passing rejection never makes its invalid subject successful, and recovery never erases failure.
 
 ## Module 10 — privacy, security and accessibility
 
