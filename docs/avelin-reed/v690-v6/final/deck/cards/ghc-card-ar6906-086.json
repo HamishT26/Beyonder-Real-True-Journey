@@ -1,0 +1,128 @@
+{
+  "schema": "ghc.family.flashcard.v5",
+  "card_id": "ghc-card-ar6906-086",
+  "tier": 4,
+  "card_type": "task",
+  "title": "Recurrent component structure / structural fixture 6",
+  "parent_ids": [
+    "ghc-card-ar6906-practice-causal"
+  ],
+  "owner": "Avelin Reed",
+  "phase": "v690-v6",
+  "stability": "volatile",
+  "outcome": "completed",
+  "content": {
+    "proposal_id": "AR6906-086",
+    "hypothesis": "Partition the complete graph into strongly connected components and mark raw cycles.",
+    "request": {
+      "op": "lts_scc",
+      "model": {
+        "states": [
+          "s0",
+          "s1",
+          "s2"
+        ],
+        "start": "s0",
+        "edges": [
+          [
+            "s0",
+            "a",
+            "s1"
+          ],
+          [
+            "s0",
+            "b",
+            "s2"
+          ],
+          [
+            "s1",
+            "c",
+            "s1"
+          ]
+        ]
+      }
+    },
+    "expected": {
+      "ok": true,
+      "value": [
+        {
+          "states": [
+            "s0"
+          ],
+          "cyclic": false
+        },
+        {
+          "states": [
+            "s1"
+          ],
+          "cyclic": true
+        },
+        {
+          "states": [
+            "s2"
+          ],
+          "cyclic": false
+        }
+      ],
+      "error": null
+    },
+    "observed": {
+      "ok": true,
+      "value": [
+        {
+          "states": [
+            "s0"
+          ],
+          "cyclic": false
+        },
+        {
+          "states": [
+            "s1"
+          ],
+          "cyclic": true
+        },
+        {
+          "states": [
+            "s2"
+          ],
+          "cyclic": false
+        }
+      ],
+      "error": null
+    },
+    "candidate_observed": {
+      "ok": false,
+      "value": null,
+      "error": "state_type"
+    },
+    "candidate_original_success_credit": 0,
+    "input_unchanged": true,
+    "definition_sha256": "5f5340cc093924fa5dc404bbb502eddab391570e0a78f22071428c525b9e9c54",
+    "rollback": "Retain the failed subject and fix only the smallest owner dependency; never rerun a successful canonical."
+  },
+  "source_refs": [
+    {
+      "path": "docs/avelin-reed/v690-v6/plan/new-proposals.json",
+      "commit": "46f0b80951e2bd659e88f14ccc1c6a9b76ea19e4",
+      "sha256": "eb37c2b118a2899fedd4d6bfd8c35d76ba3322db8433a5d5873eda42f67bad38"
+    },
+    {
+      "path": "docs/avelin-reed/v690-v6/x1/results.json",
+      "commit": "955f61d126db5b1107c8319f05f764d01e5a7269",
+      "sha256": "9b66ccc9fda808ef9c9b6085115c02a8c7a034df378cf94baf4c6e809a692dac"
+    }
+  ],
+  "protected_gates": [
+    "empirical-gmut",
+    "production-thos",
+    "freed-id-lifecycle",
+    "human-accessibility",
+    "maori-authority",
+    "professional-legal-cultural",
+    "privacy-security",
+    "independent-reproduction",
+    "identity-personhood",
+    "stage20"
+  ],
+  "relational_boundary": "Bounded same-owner synthetic evidence only; no empirical, participant, identity, professional, production, legal, cultural, affected-party, Maori-authority, complete privacy/accessibility, exhaustive-security, independent-reproduction, consciousness/personhood, AGI/ASI, Theory-of-Everything or Stage 20 claim. NOT_READY_FOR_STAGE_20."
+}
