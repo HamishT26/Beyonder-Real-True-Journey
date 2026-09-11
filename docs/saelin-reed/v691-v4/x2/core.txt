@@ -1,0 +1,37 @@
+'use strict';
+const base=require('../x1/core.txt');
+const ownOperations=['maximum_common_set','weighted_maximum_common','greedy_counterexample','rank_split_bound','minmax_certificate','common_restriction','pair_correction','accessible_common_summary','selection_evidence_gap','selection_authority_hold'];
+const topics=['physical_observations','independence_oracle_measurements','blind_operator_comparison','likelihood_model','representability_matrix','production_key_proof','revocation_evidence','independent_security_review','accessibility_user_review','affected_party_review'];
+const actions=['publish_empirical_claim','operate_real_apparatus','recruit_participants','issue_identity_credential','deploy_selection_service','make_professional_decision','release_sensitive_records','interpret_cultural_material','adjudicate_remedy','authorize_maori_data_use'];
+function maximum(p){let I=0,steps=0;for(;;){const q=base.shortest(p,I);if(q===null)break;const J=I^base.mask(p,q);if(!p.L.has(J)||!p.R.has(J)||base.count(J)!==base.count(I)+1)base.fail('AUGMENTING_INVARIANT');I=J;if(++steps>p.E.length)base.fail('ITERATION_BOUND');}const k=base.count(I),canonical=base.common(p).find(m=>base.count(m)===k);return{cardinality:k,selected:base.array(p,canonical)};}
+function weights(p,w){if(!Array.isArray(w)||w.length!==p.E.length)base.fail('WEIGHT_SHAPE');if(w.some(x=>typeof x!=='number'||!Number.isSafeInteger(x)||Math.abs(x)>1000000))base.fail('WEIGHT_BOUND');return w;}
+function optimize(p,w){
+ let best=0,bestWeight=0;
+ const weight=m=>p.E.reduce((sum,_,i)=>sum+((m&(1<<i))?w[i]:0),0);
+ function visit(i,I,total){
+  if(!p.L.has(I)||!p.R.has(I))return;
+  const bound=total+w.slice(i).reduce((s,x)=>s+Math.max(x,0),0);if(bound<bestWeight)return;
+  if(i===p.E.length){const n=base.count(I),bn=base.count(best);if(total>bestWeight||total===bestWeight&&(n>bn||n===bn&&base.lexical(base.array(p,I).join(','),base.array(p,best).join(','))<0)){best=I;bestWeight=total;}return;}
+  visit(i+1,I,total);visit(i+1,I|(1<<i),total+w[i]);
+ }visit(0,0,0);return{mask:best,weight:weight(best),selected:base.array(p,best)};
+}
+function rank(F,A){let r=0;for(const s of F)if((s&A)===s)r=Math.max(r,base.count(s));return r;}
+function value(op,input){
+ const extra=['weighted_maximum_common','greedy_counterexample'].includes(op)?'weights':['rank_split_bound','common_restriction','accessible_common_summary'].includes(op)?'subset':op==='pair_correction'?'amended_pair':op==='selection_evidence_gap'?'topic':op==='selection_authority_hold'?'action':null;
+ base.fields(input,extra?['pair',extra]:['pair']);const p=base.parsePair(input.pair),F=base.common(p);
+ switch(op){
+ case 'maximum_common_set':return maximum(p);
+ case 'weighted_maximum_common':{const r=optimize(p,weights(p,input.weights));return{selected:r.selected,weight:r.weight};}
+ case 'greedy_counterexample':{const w=weights(p,input.weights),order=p.E.map((_,i)=>i).sort((a,b)=>w[b]-w[a]||base.lexical(p.E[a],p.E[b]));let I=0;for(const i of order)if(w[i]>=0&&p.L.has(I|(1<<i))&&p.R.has(I|(1<<i)))I|=1<<i;const optimum=optimize(p,w),greedyWeight=p.E.reduce((s,_,i)=>s+((I&(1<<i))?w[i]:0),0),gap=optimum.weight-greedyWeight;return{greedy_set:base.array(p,I),greedy_weight:greedyWeight,optimal_set:optimum.selected,optimal_weight:optimum.weight,gap,greedy_is_optimal:gap===0,interpretation:'synthetic_comparison'};}
+ case 'rank_split_bound':{const I=base.mask(p,input.subset),left=rank(p.L,I),right=rank(p.R,p.full^I);return{left_rank:left,right_complement_rank:right,bound:left+right};}
+ case 'minmax_certificate':{let min=Infinity,cut=0;for(const A of base.ordered(p,Array.from({length:p.full+1},(_,i)=>i))){const sum=rank(p.L,A)+rank(p.R,p.full^A);if(sum<min){min=sum;cut=A;}}const maximumCardinality=maximum(p).cardinality;return{maximum_cardinality:maximumCardinality,min_rank_sum:min,cut:base.array(p,cut),dual_gap:min-maximumCardinality};}
+ case 'common_restriction':{const I=base.mask(p,input.subset);return{ground:base.array(p,I),common_sets:F.filter(m=>(m&I)===m).map(m=>base.array(p,m))};}
+ case 'pair_correction':{const q=base.parsePair(input.amended_pair);if(p.E.join(',')!==q.E.join(','))base.fail('GROUND_MISMATCH');const G=base.common(q);return{added_common_sets:G.filter(m=>!F.includes(m)).map(m=>base.array(p,m)),removed_common_sets:F.filter(m=>!G.includes(m)).map(m=>base.array(p,m)),parent_preserved:true};}
+ case 'accessible_common_summary':{const I=base.mask(p,input.subset),left=p.L.has(I),right=p.R.has(I),max=maximum(p).cardinality;return{selected:base.array(p,I),selected_count:base.count(I),common:left&&right,left_allowed:left,right_allowed:right,maximum_cardinality:max,relation:!left||!right?'not_common':base.count(I)===max?'common_maximum':'common_nonmaximum'};}
+ case 'selection_evidence_gap':if(!topics.includes(input.topic))base.fail('TOPIC_REQUIRED');return{state:'open_gap',topic:input.topic,missing:['scoped_real_evidence','independent_review','governing_authority']};
+ case 'selection_authority_hold':if(!actions.includes(input.action))base.fail('ACTION_REQUIRED');return{state:'exact_gate',action:input.action,required:['exact_target_and_scope','competent_and_affected_authority','evidence_cost_and_rollback'],executed:false};
+ default:base.fail('UNKNOWN_OPERATION');
+ }
+}
+function evaluate(request){try{base.fields(request,['operation','input']);if(base.operations.includes(request.operation))return base.evaluate(request);if(!ownOperations.includes(request.operation))base.fail('UNKNOWN_OPERATION');return{ok:true,value:value(request.operation,request.input),error:null,authority:false};}catch(e){return{ok:false,value:null,error:e.message,authority:false};}}
+module.exports={evaluate,operations:[...base.operations,...ownOperations],maximum,optimize,rank};

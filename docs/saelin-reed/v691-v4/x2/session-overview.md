@@ -1,0 +1,7 @@
+# X2 common optima, bounds and authority review
+
+All 100 frozen x2 proposals matched on the first execution, including twenty represented comparisons, ten open evidence gaps and ten exact authority holds. The three-element case retains greedy weight 10 against optimum weight 12; a crossed four-element case retains a larger greedy gap. Rank-cut minima match the maximum common cardinality in every bounded certificate case. These are finite checks of classical mathematics, not discovery or empirical proof.
+
+X2 core contributes 12 methods, 835 direct witnesses, 215 failed subjects and 620 passing checks. Five merged skills and five public runners were published additively. Their 13 usable files and one unused failed public leaf are byte-bound. The first byte copy serialized a Buffer into numeric JSON keys; a diagnostic then assumed the wrong envelope. Both failures remain retained. The corrected public runtime uses a new core-recovered.txt leaf, and no existing public file was overwritten. Promotion contributes seven methods, 19 direct witnesses, seven failed witnesses and 12 passing checks.
+
+Bounded same-owner synthetic software and documentation evidence only. No empirical confirmation, real participants, professional judgment, production identity, deployment, legal or cultural ratification, affected-party or Maori authority, complete privacy/accessibility/security, independent reproduction, consciousness/personhood, Theory-of-Everything proof, canon or Stage 20 claim. Maori concepts remain under Maori authority. NOT_READY_FOR_STAGE_20.

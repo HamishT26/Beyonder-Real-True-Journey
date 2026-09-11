@@ -1,0 +1,4 @@
+'use strict';
+const fs=require('node:fs'),core=require("../core.txt"),allowed=["greedy_counterexample","rank_split_bound"];let out;
+try{const raw=fs.readFileSync(0);if(raw.length>262144)throw Error('INPUT_BOUND');const r=JSON.parse(raw.toString('utf8'));out=allowed.includes(r.operation)?core.evaluate(r):{ok:false,value:null,error:'RUNNER_OPERATION',authority:false};}catch(e){out={ok:false,value:null,error:e instanceof SyntaxError?'JSON_PARSE':e.message,authority:false};}
+process.stdout.write(JSON.stringify(out)+'\n');if(!out.ok)process.exitCode=1;

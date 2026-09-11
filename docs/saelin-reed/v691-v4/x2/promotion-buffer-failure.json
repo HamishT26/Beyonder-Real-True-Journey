@@ -1,0 +1,24 @@
+{
+  "schema": "ghc.family.retained-promotion-failure.v5",
+  "owner": "Saelin Reed",
+  "phase": "v691-v4",
+  "rows": [
+    {
+      "id": "SR6914-PROMOTION-BUFFER-FAIL",
+      "failure": "The generic JSON writer expanded Buffer numeric keys during the first public byte copy.",
+      "expected_sha256": "5e8c1cdc04a01fd236e9c375104135852ee311077169db3fd4333bcb54859a21",
+      "observed_sha256": "c2cd7f6c93f31c048d6d64921153dd3ce32bfb7e0274ac77ec5b8be38b6333bd",
+      "original_success_credit": 0
+    },
+    {
+      "id": "SR6914-PROMOTION-DIAGNOSTIC-FAIL",
+      "failure": "The first diagnostic assumed a type field before inspecting the actual numeric-key object.",
+      "original_success_credit": 0,
+      "recovery": "Inspect the object keys and verify lossless reconstruction of the intended byte sequence."
+    }
+  ],
+  "published_files_before_stop": 1,
+  "public_execution_before_stop": 0,
+  "retained_public_path": "global-tools/family-common-independent-lab/x1/core.txt",
+  "planned_recovery": "Keep the unused failed public leaf; publish core-recovered.txt with a raw Buffer write and bind the public x2 runtime to it; preserve all earlier bytes."
+}
