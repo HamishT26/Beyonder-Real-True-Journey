@@ -1,0 +1,394 @@
+{
+  "schema": "ghc.family.method-flow-state.v1",
+  "owner": "Mira Fenwick",
+  "phase": "v690-v3-r2",
+  "identity_boundary": "Relational working terms only",
+  "methods": [
+    {
+      "method_id": "MF6903R2-OP014",
+      "title": "Frozen request uniqueness correction",
+      "failure_signature": "The failed preflight found 198 distinct inputs among 200 original proposal records.",
+      "trigger_preconditions": [
+        "Observed novelty defect or two newly frozen requests"
+      ],
+      "privacy_class": "sanitized_public",
+      "approval_class": "safe_now",
+      "candidate_workaround": "Retain all originals, exclude duplicate novelty, and execute only the two new frozen cases plus focused correction checks.",
+      "validation_witness_ids": [
+        "MF6903R2-OP014-FAIL",
+        "MF6903R2-OP014-PASS"
+      ],
+      "recurrence_guard": "Compare normalized full requests as well as proposal identifiers before freezing a future tranche.",
+      "rollback": "Preserve failed preflight, original modules, definitions, observations and correction records.",
+      "recommendation_state": "validated",
+      "supersedes": [],
+      "protected_gates": [
+        "No false novelty or independent reproduction",
+        "No aggregate or canonical replay"
+      ],
+      "retained_negative_ids": [
+        "MF6903R2-OP014-FAIL"
+      ],
+      "scope_boundary": "Same-owner correction evidence only; no independent reproduction or broader authority claim."
+    },
+    {
+      "method_id": "MF6903R2-FINAL-DISPATCH-EXTENSION",
+      "title": "Two additional accepted-send state conjunctions",
+      "failure_signature": "Changed current prerequisites must not permit resending an already accepted message.",
+      "trigger_preconditions": [
+        "Observed novelty defect or two newly frozen requests"
+      ],
+      "privacy_class": "sanitized_public",
+      "approval_class": "safe_now",
+      "candidate_workaround": "Retain all originals, exclude duplicate novelty, and execute only the two new frozen cases plus focused correction checks.",
+      "validation_witness_ids": [
+        "MF6903R2-201-SAFE-CHECK",
+        "MF6903R2-201-CANDIDATE-SUBJECT",
+        "MF6903R2-201-REFUSAL-CHECK",
+        "MF6903R2-202-SAFE-CHECK",
+        "MF6903R2-202-CANDIDATE-SUBJECT",
+        "MF6903R2-202-REFUSAL-CHECK"
+      ],
+      "recurrence_guard": "Compare normalized full requests as well as proposal identifiers before freezing a future tranche.",
+      "rollback": "Preserve failed preflight, original modules, definitions, observations and correction records.",
+      "recommendation_state": "validated",
+      "supersedes": [],
+      "protected_gates": [
+        "No false novelty or independent reproduction",
+        "No aggregate or canonical replay"
+      ],
+      "retained_negative_ids": [
+        "MF6903R2-201-CANDIDATE-SUBJECT",
+        "MF6903R2-202-CANDIDATE-SUBJECT"
+      ],
+      "scope_boundary": "Same-owner correction evidence only; no independent reproduction or broader authority claim."
+    },
+    {
+      "method_id": "MF6903R2-OP015",
+      "title": "Text-script authoring and syntax recovery",
+      "failure_signature": "An unterminated path literal prevented parsing; node --check then refused the .txt extension.",
+      "trigger_preconditions": [
+        "Observed novelty defect or two newly frozen requests"
+      ],
+      "privacy_class": "sanitized_public",
+      "approval_class": "safe_now",
+      "candidate_workaround": "Correct the two missing quotes, retain original source, and compile trusted text with vm.Script without executing it.",
+      "validation_witness_ids": [
+        "MF6903R2-OP015-FAIL-1",
+        "MF6903R2-OP015-FAIL-2",
+        "MF6903R2-OP015-PASS"
+      ],
+      "recurrence_guard": "Use trusted source compilation for Node text entrypoints; CLI --check uses a different extension path.",
+      "rollback": "Preserve failed preflight, original modules, definitions, observations and correction records.",
+      "recommendation_state": "validated",
+      "supersedes": [],
+      "protected_gates": [
+        "No false novelty or independent reproduction",
+        "No aggregate or canonical replay"
+      ],
+      "retained_negative_ids": [
+        "MF6903R2-OP015-FAIL-1",
+        "MF6903R2-OP015-FAIL-2"
+      ],
+      "scope_boundary": "Same-owner correction evidence only; no independent reproduction or broader authority claim."
+    }
+  ],
+  "witnesses": [
+    {
+      "witness_id": "MF6903R2-OP014-FAIL",
+      "method_id": "MF6903R2-OP014",
+      "procedure": "Frozen request uniqueness correction",
+      "scope": "final correction only",
+      "expected": "200 distinct original request inputs",
+      "observed": "198; records 027 and 028 repeat record 026",
+      "result": "fail",
+      "same_owner_only": true,
+      "independent_reproduction": false,
+      "retained_negative_ids": [
+        "MF6903R2-OP014-FAIL"
+      ],
+      "boundary": "Same-owner correction evidence only; no independent reproduction or broader authority claim."
+    },
+    {
+      "witness_id": "MF6903R2-OP014-PASS",
+      "method_id": "MF6903R2-OP014",
+      "procedure": "Frozen request uniqueness correction",
+      "scope": "final correction only",
+      "expected": "Retain originals and reach 200 distinct newly credited inputs",
+      "observed": "202 retained records, two zero-novelty duplicates, two new distinct inputs",
+      "result": "pass",
+      "same_owner_only": true,
+      "independent_reproduction": false,
+      "retained_negative_ids": [
+        "MF6903R2-OP014-FAIL"
+      ],
+      "boundary": "Same-owner correction evidence only; no independent reproduction or broader authority claim."
+    },
+    {
+      "witness_id": "MF6903R2-201-SAFE-CHECK",
+      "method_id": "MF6903R2-FINAL-DISPATCH-EXTENSION",
+      "procedure": "Two additional accepted-send state conjunctions",
+      "scope": "final correction only",
+      "expected": {
+        "ok": true,
+        "error": null,
+        "value": {
+          "state": "sent_opaque_no_resend",
+          "may_submit": false
+        }
+      },
+      "observed": {
+        "ok": true,
+        "error": null,
+        "value": {
+          "state": "sent_opaque_no_resend",
+          "may_submit": false
+        }
+      },
+      "result": "pass",
+      "same_owner_only": true,
+      "independent_reproduction": false,
+      "retained_negative_ids": [
+        "MF6903R2-201-CANDIDATE-SUBJECT",
+        "MF6903R2-202-CANDIDATE-SUBJECT"
+      ],
+      "boundary": "Same-owner correction evidence only; no independent reproduction or broader authority claim."
+    },
+    {
+      "witness_id": "MF6903R2-201-CANDIDATE-SUBJECT",
+      "method_id": "MF6903R2-FINAL-DISPATCH-EXTENSION",
+      "procedure": "Two additional accepted-send state conjunctions",
+      "scope": "final correction only",
+      "expected": "Admissible closed request",
+      "observed": {
+        "ok": false,
+        "error": "unknown_field",
+        "value": null
+      },
+      "result": "fail",
+      "same_owner_only": true,
+      "independent_reproduction": false,
+      "retained_negative_ids": [
+        "MF6903R2-201-CANDIDATE-SUBJECT",
+        "MF6903R2-202-CANDIDATE-SUBJECT"
+      ],
+      "boundary": "Same-owner correction evidence only; no independent reproduction or broader authority claim."
+    },
+    {
+      "witness_id": "MF6903R2-201-REFUSAL-CHECK",
+      "method_id": "MF6903R2-FINAL-DISPATCH-EXTENSION",
+      "procedure": "Two additional accepted-send state conjunctions",
+      "scope": "final correction only",
+      "expected": {
+        "ok": false,
+        "error": "unknown_field",
+        "value": null
+      },
+      "observed": {
+        "ok": false,
+        "error": "unknown_field",
+        "value": null
+      },
+      "result": "pass",
+      "same_owner_only": true,
+      "independent_reproduction": false,
+      "retained_negative_ids": [
+        "MF6903R2-201-CANDIDATE-SUBJECT",
+        "MF6903R2-202-CANDIDATE-SUBJECT"
+      ],
+      "boundary": "Same-owner correction evidence only; no independent reproduction or broader authority claim."
+    },
+    {
+      "witness_id": "MF6903R2-202-SAFE-CHECK",
+      "method_id": "MF6903R2-FINAL-DISPATCH-EXTENSION",
+      "procedure": "Two additional accepted-send state conjunctions",
+      "scope": "final correction only",
+      "expected": {
+        "ok": true,
+        "error": null,
+        "value": {
+          "state": "sent_acknowledged",
+          "may_submit": false
+        }
+      },
+      "observed": {
+        "ok": true,
+        "error": null,
+        "value": {
+          "state": "sent_acknowledged",
+          "may_submit": false
+        }
+      },
+      "result": "pass",
+      "same_owner_only": true,
+      "independent_reproduction": false,
+      "retained_negative_ids": [
+        "MF6903R2-201-CANDIDATE-SUBJECT",
+        "MF6903R2-202-CANDIDATE-SUBJECT"
+      ],
+      "boundary": "Same-owner correction evidence only; no independent reproduction or broader authority claim."
+    },
+    {
+      "witness_id": "MF6903R2-202-CANDIDATE-SUBJECT",
+      "method_id": "MF6903R2-FINAL-DISPATCH-EXTENSION",
+      "procedure": "Two additional accepted-send state conjunctions",
+      "scope": "final correction only",
+      "expected": "Admissible closed request",
+      "observed": {
+        "ok": false,
+        "error": "unknown_field",
+        "value": null
+      },
+      "result": "fail",
+      "same_owner_only": true,
+      "independent_reproduction": false,
+      "retained_negative_ids": [
+        "MF6903R2-201-CANDIDATE-SUBJECT",
+        "MF6903R2-202-CANDIDATE-SUBJECT"
+      ],
+      "boundary": "Same-owner correction evidence only; no independent reproduction or broader authority claim."
+    },
+    {
+      "witness_id": "MF6903R2-202-REFUSAL-CHECK",
+      "method_id": "MF6903R2-FINAL-DISPATCH-EXTENSION",
+      "procedure": "Two additional accepted-send state conjunctions",
+      "scope": "final correction only",
+      "expected": {
+        "ok": false,
+        "error": "unknown_field",
+        "value": null
+      },
+      "observed": {
+        "ok": false,
+        "error": "unknown_field",
+        "value": null
+      },
+      "result": "pass",
+      "same_owner_only": true,
+      "independent_reproduction": false,
+      "retained_negative_ids": [
+        "MF6903R2-201-CANDIDATE-SUBJECT",
+        "MF6903R2-202-CANDIDATE-SUBJECT"
+      ],
+      "boundary": "Same-owner correction evidence only; no independent reproduction or broader authority claim."
+    },
+    {
+      "witness_id": "MF6903R2-OP015-FAIL-1",
+      "method_id": "MF6903R2-OP015",
+      "procedure": "Text-script authoring and syntax recovery",
+      "scope": "Final correction authoring only",
+      "expected": "A valid bounded syntax inspection",
+      "observed": "Unterminated string literal; no correction-authoring writes occurred",
+      "result": "fail",
+      "same_owner_only": true,
+      "independent_reproduction": false,
+      "retained_negative_ids": [
+        "MF6903R2-OP015-FAIL-1",
+        "MF6903R2-OP015-FAIL-2"
+      ],
+      "boundary": "Same-owner correction evidence only; no independent reproduction or broader authority claim."
+    },
+    {
+      "witness_id": "MF6903R2-OP015-FAIL-2",
+      "method_id": "MF6903R2-OP015",
+      "procedure": "Text-script authoring and syntax recovery",
+      "scope": "Final correction authoring only",
+      "expected": "A valid bounded syntax inspection",
+      "observed": "ERR_UNKNOWN_FILE_EXTENSION from node --check on .txt",
+      "result": "fail",
+      "same_owner_only": true,
+      "independent_reproduction": false,
+      "retained_negative_ids": [
+        "MF6903R2-OP015-FAIL-1",
+        "MF6903R2-OP015-FAIL-2"
+      ],
+      "boundary": "Same-owner correction evidence only; no independent reproduction or broader authority claim."
+    },
+    {
+      "witness_id": "MF6903R2-OP015-PASS",
+      "method_id": "MF6903R2-OP015",
+      "procedure": "Text-script authoring and syntax recovery",
+      "scope": "Final correction authoring only",
+      "expected": "A valid bounded syntax inspection",
+      "observed": "Trusted vm.Script syntax compilation passed without executing code",
+      "result": "pass",
+      "same_owner_only": true,
+      "independent_reproduction": false,
+      "retained_negative_ids": [
+        "MF6903R2-OP015-FAIL-1",
+        "MF6903R2-OP015-FAIL-2"
+      ],
+      "boundary": "Same-owner correction evidence only; no independent reproduction or broader authority claim."
+    }
+  ],
+  "state_events": [
+    {
+      "event_index": 1,
+      "method_id": "MF6903R2-OP014",
+      "before": null,
+      "after": "candidate",
+      "reason": "Correction defined",
+      "witness_id": null
+    },
+    {
+      "event_index": 2,
+      "method_id": "MF6903R2-OP014",
+      "before": "candidate",
+      "after": "validated",
+      "reason": "Focused defined evidence passed",
+      "witness_id": "MF6903R2-OP014-PASS"
+    },
+    {
+      "event_index": 3,
+      "method_id": "MF6903R2-FINAL-DISPATCH-EXTENSION",
+      "before": null,
+      "after": "candidate",
+      "reason": "Correction defined",
+      "witness_id": null
+    },
+    {
+      "event_index": 4,
+      "method_id": "MF6903R2-FINAL-DISPATCH-EXTENSION",
+      "before": "candidate",
+      "after": "validated",
+      "reason": "Focused defined evidence passed",
+      "witness_id": "MF6903R2-201-SAFE-CHECK"
+    },
+    {
+      "event_index": 5,
+      "method_id": "MF6903R2-OP015",
+      "before": null,
+      "after": "candidate",
+      "reason": "Authoring failure retained",
+      "witness_id": "MF6903R2-OP015-FAIL-1"
+    },
+    {
+      "event_index": 6,
+      "method_id": "MF6903R2-OP015",
+      "before": "candidate",
+      "after": "validated",
+      "reason": "Focused trusted syntax compilation passed",
+      "witness_id": "MF6903R2-OP015-PASS"
+    }
+  ],
+  "recommendations": [],
+  "counts": {
+    "methods": 3,
+    "witnesses": 11,
+    "state_events": 6,
+    "recommendations": 0,
+    "states": {
+      "observed": 0,
+      "candidate": 0,
+      "validated": 3,
+      "preferred": 0,
+      "superseded": 0,
+      "deprecated": 0
+    },
+    "witness_results": {
+      "pass": 6,
+      "fail": 5
+    }
+  },
+  "boundary": "Same-owner correction evidence only; no independent reproduction or broader authority claim."
+}

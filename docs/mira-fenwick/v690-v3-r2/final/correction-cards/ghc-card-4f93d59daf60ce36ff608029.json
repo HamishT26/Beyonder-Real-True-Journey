@@ -1,0 +1,44 @@
+{
+  "schema": "ghc.family.four-tier-card.v1",
+  "tier": 4,
+  "card_type": "proposal",
+  "title": "Opaque accepted delivery remains terminal after cleanliness and pause change",
+  "parent_ids": [
+    "ghc-card-5168f940082e0f7020772094"
+  ],
+  "owner": "Mira Fenwick",
+  "phase": "v690-v3-r2",
+  "stability": "volatile",
+  "outcome": "completed",
+  "content": {
+    "proposal_id": "MF6903R2-201",
+    "request": {
+      "op": "dispatch_state",
+      "payload": {
+        "canonical": true,
+        "clean": false,
+        "unique": true,
+        "guard": "pause",
+        "send": "opaque_accepted"
+      }
+    },
+    "expected": {
+      "ok": true,
+      "error": null,
+      "value": {
+        "state": "sent_opaque_no_resend",
+        "may_submit": false
+      }
+    },
+    "definition_sha256": "46e9ce53f005449caf8623dcdcb286f0d4e2c434b1a76e7870b582dc7eda685a",
+    "novelty_eligible": true
+  },
+  "source_refs": [
+    "final/novelty-correction-results.json"
+  ],
+  "protected_gates": [
+    "No accepted-send replay or authority promotion"
+  ],
+  "boundary": "Bounded same-owner correction evidence only.",
+  "card_id": "ghc-card-4f93d59daf60ce36ff608029"
+}

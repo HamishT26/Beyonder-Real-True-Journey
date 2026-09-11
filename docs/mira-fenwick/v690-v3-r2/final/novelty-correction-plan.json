@@ -1,0 +1,120 @@
+{
+  "schema": "ghc.family.novelty-correction.v1",
+  "method_id": "MF6903R2-OP014",
+  "defined_before_execution": true,
+  "original_records": 200,
+  "original_distinct_requests": 198,
+  "duplicate_group": [
+    "MF6903R2-026",
+    "MF6903R2-027",
+    "MF6903R2-028"
+  ],
+  "zero_new_novelty_ids": [
+    "MF6903R2-027",
+    "MF6903R2-028"
+  ],
+  "retained_primary": "MF6903R2-026",
+  "additional_definitions": [
+    {
+      "proposal_id": "MF6903R2-201",
+      "title": "Opaque accepted delivery remains terminal after cleanliness and pause change",
+      "session": "final_correction_of_x2",
+      "operation": "dispatch_state",
+      "request": {
+        "op": "dispatch_state",
+        "payload": {
+          "canonical": true,
+          "clean": false,
+          "unique": true,
+          "guard": "pause",
+          "send": "opaque_accepted"
+        }
+      },
+      "expected_envelope": {
+        "ok": true,
+        "error": null,
+        "value": {
+          "state": "sent_opaque_no_resend",
+          "may_submit": false
+        }
+      },
+      "pillar": "THOS Body",
+      "practice": "site reliability engineering",
+      "mission": "Exercise a previously unrepresented conjunction of accepted-send history and changed present prerequisites without enabling a resend.",
+      "candidate_subject": {
+        "op": "dispatch_state",
+        "payload": {
+          "canonical": true,
+          "clean": false,
+          "unique": true,
+          "guard": "pause",
+          "send": "opaque_accepted",
+          "unreviewed_authority_grant": true
+        }
+      },
+      "candidate_expected": {
+        "ok": false,
+        "error": "unknown_field",
+        "value": null
+      },
+      "expected_execution_disposition": "completed",
+      "approval_class": "safe_now",
+      "original_source_credit": 0,
+      "novelty_scope": "One distinct bounded request, not a new algorithm or independent discovery",
+      "falsifier": "Any envelope mismatch, input mutation, or permission to resend an accepted message."
+    },
+    {
+      "proposal_id": "MF6903R2-202",
+      "title": "Acknowledged delivery remains terminal after uniqueness and pause change",
+      "session": "final_correction_of_x2",
+      "operation": "dispatch_state",
+      "request": {
+        "op": "dispatch_state",
+        "payload": {
+          "canonical": true,
+          "clean": true,
+          "unique": false,
+          "guard": "pause",
+          "send": "acknowledged"
+        }
+      },
+      "expected_envelope": {
+        "ok": true,
+        "error": null,
+        "value": {
+          "state": "sent_acknowledged",
+          "may_submit": false
+        }
+      },
+      "pillar": "THOS Body",
+      "practice": "site reliability engineering",
+      "mission": "Exercise a previously unrepresented conjunction of accepted-send history and changed present prerequisites without enabling a resend.",
+      "candidate_subject": {
+        "op": "dispatch_state",
+        "payload": {
+          "canonical": true,
+          "clean": true,
+          "unique": false,
+          "guard": "pause",
+          "send": "acknowledged",
+          "unreviewed_authority_grant": true
+        }
+      },
+      "candidate_expected": {
+        "ok": false,
+        "error": "unknown_field",
+        "value": null
+      },
+      "expected_execution_disposition": "completed",
+      "approval_class": "safe_now",
+      "original_source_credit": 0,
+      "novelty_scope": "One distinct bounded request, not a new algorithm or independent discovery",
+      "falsifier": "Any envelope mismatch, input mutation, or permission to resend an accepted message."
+    }
+  ],
+  "original_planning_files_modified": false,
+  "expected_current_records": 202,
+  "expected_current_distinct_requests": 200,
+  "failed_preflight": "component-preflight.json retained externally; 34/35 checks and 65/65 tests, zero canonical credit",
+  "replay_policy": "No aggregate preflight replay; focused changed checks only before the first canonical."
+}

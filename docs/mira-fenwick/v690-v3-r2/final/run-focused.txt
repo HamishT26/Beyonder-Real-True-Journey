@@ -1,0 +1,9 @@
+'use strict';
+const fs=require('node:fs'),path=require('node:path'),crypto=require('node:crypto');
+const {audit,equality}=require('./validate.txt');
+const selected=['complete-content-seal','frozen-proposal-definitions','method-flow-and-accounting','baton-module-seal','public-private-data-boundary','explicit-module-syntax','corrective-cases-and-current-deck'];
+const out='D:/GHC-Archives/receipts/mira-fenwick/v690-v3-r2/focused-correction-validation.json';
+if(fs.existsSync(out))throw Error('focused correction already recorded');
+const gate=equality(),r=audit('preflight',gate,selected);if(r.checks.length!==selected.length)throw Error('focused inventory');
+const receipt={schema:'ghc.family.focused-correction.v1',status:r.valid?'VALID_FOCUSED_NOVELTY_CORRECTION':'FAILED_FOCUSED_CORRECTION',failed_preflight_sha256:'52d28dc77afb4904dcb0597295e9fc6ceca444fd49fbbdfb90fcace8fdf0c556',checks:r.checks,check_count:r.checks.length,canonical_invocations:0,aggregate_preflight_replays:0,unchanged_invariant_tests_replayed:0,created_at_utc:new Date().toISOString(),boundary:'Only changed final correction surfaces checked; earlier 34 passing preflight checks and 65 passing tests remain retained.'};
+fs.writeFileSync(out,JSON.stringify(receipt,null,2)+'\n',{flag:'wx'});console.log(JSON.stringify({status:receipt.status,checks:r.checks.filter(x=>x.result==='pass').length+'/'+r.checks.length,canonical_invocations:0,receipt_sha256:crypto.createHash('sha256').update(fs.readFileSync(out)).digest('hex')}));if(!r.valid){console.log(JSON.stringify(r.checks.filter(c=>c.result==='fail')));process.exitCode=1;}
