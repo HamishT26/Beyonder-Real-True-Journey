@@ -1,0 +1,14 @@
+# Retained failures, Method Flow, and accounting
+
+- **AL6904-OP001:** Initial planning generator rejected repeated requests Recovery/status: Case-specific fields were required before any file was written. Current state: recovered.
+- **AL6904-OP002:** First focused distinctness correction left checkpoint duplicates Recovery/status: The remaining duplicate group was enumerated. Current state: recovered.
+- **AL6904-OP003:** Diagnostic build still exited on the enumerated duplicate groups Recovery/status: The checkpoint identifier was made case-specific. Current state: recovered.
+- **AL6904-OP004:** Initial Git add was refused by inherited sparse-checkout rules Recovery/status: Git add --sparse staged only literal Auren paths without changing shared sparsity. Current state: recovered.
+- **AL6904-OP005:** A broad privacy regex mistook a SHA-256 prefix for a task identifier Recovery/status: The classifier was narrowed to the actual hyphenated identifier shape. Current state: recovered.
+- **AL6904-OP006:** X2 forEach passed an index into a text-length validator Recovery/status: Two callback sites were changed to explicit one-argument closures. Current state: recovered.
+- **AL6904-OP007:** X2 used a distinct ContractError class outside the inherited evaluator Recovery/status: X2 reused the exported x1 error class. Current state: recovered.
+- **AL6904-OP008:** The public x2 candidate imported an owner-local x1 filename Recovery/status: The portable candidate now imports ../x1/core.txt and was hash-rebound. Current state: recovered.
+- **AL6904-OP009:** MetaToolBox rejected a descriptive unsupported catalogue schema label Recovery/status: Only the label was corrected to the exact supported v2 enum. Current state: recovered.
+- **AL6904-OP010:** The in-app browser URL policy blocked the local HTML file URL Recovery/status: No bypass was attempted; static checks remain and browser interaction stays open. Current state: open_gap.
+
+The owner layer has 35 methods and 639 direct witnesses, comprising 217 failed and 422 passing witnesses. Effective negatives are 247. Cumulative continuity totals are 250 methods, 6418 direct witnesses, 1797 failed, 4621 passing, and 2174 effective negatives. These are source-faithful declared domains, not an audit of the entire archive. This phase contains finite same-owner synthetic software and documentation evidence only. It does not establish empirical GMUT confirmation, an observed force, a parameter constraint, a validated likelihood against real data, independent reproduction, production readiness, governed deployment, complete privacy, complete accessibility, exhaustive security, real consent, credential validity, professional competence, legal or cultural ratification, Maori authority, consciousness or personhood, AGI or ASI, a Theory-of-Everything proof or canon, or Stage 20 authority. NOT_READY_FOR_STAGE_20 remains the terminal verdict.

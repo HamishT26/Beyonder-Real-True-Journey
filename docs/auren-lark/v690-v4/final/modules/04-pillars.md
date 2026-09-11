@@ -1,0 +1,15 @@
+# GMUT Mind, THOS Body, and Freed ID/CBR Heart
+
+GMUT Mind is the priority pillar. Its bounded contribution is methodological rather than cosmological: exact beta-binomial updates, rational Bernoulli likelihoods, sign-test tails, paired differences, agreement corrections, probability distances, support checks, finite first-hit horizons, and declared bootstrap grids. The work demonstrates how a hypothesis can be written with explicit denominators, support, finite stopping, and a falsifier. It uses no observational dataset and estimates no physical parameter. A conventional finite calculation is not a new physical law, psyche measurement, or evidence that a historical Mandala equation describes nature.
+
+THOS Body implements closed Node-text contracts for classification summaries, finite Markov propagation, dependency critical paths, deterministic first-fit packing, largest-remainder allocation, checkpoint quorums, digest chains, and migration previews. Each executor returns a complete typed envelope, refuses undeclared fields, leaves inputs unchanged, and records limits such as heuristic rather than optimal allocation. The HTML observatory is a readable local projection of all 200 outputs. Static structure passed; the in-app browser refused the local file URL, so no browser-interaction or complete-accessibility claim is made.
+
+Freed ID and CBR Heart is represented through synthetic purpose-expiry joins, appeal coverage, remedy-capacity gaps, and authority-vacancy holds. These operations are designed to preserve missingness: an empty purpose intersection stays empty, absent appeal notice stays visible, inadequate remedy capacity remains a gap, and software does not fill an authority role. The records involve no real participant, credential, beneficiary, legal decision, cultural determination, or Maori-authority act.
+
+The four learning practices are statistical software verification, reliability engineering, research data stewardship, and consent-and-recourse interaction design. They are educational lenses, not employment or qualification claims. The two suggestions for Sable are causal-model criticism and accessible audit-interface testing.
+
+
+
+The central methodological proposal is a claim ladder: a deterministic calculation may establish a completed local predicate; a simulation may represent a conditional model; missing observations remain an open_gap; and competent authority or exact terminal prerequisites remain exact_gate. Moving upward requires new evidence rather than stronger language.
+
+This phase contains finite same-owner synthetic software and documentation evidence only. It does not establish empirical GMUT confirmation, an observed force, a parameter constraint, a validated likelihood against real data, independent reproduction, production readiness, governed deployment, complete privacy, complete accessibility, exhaustive security, real consent, credential validity, professional competence, legal or cultural ratification, Maori authority, consciousness or personhood, AGI or ASI, a Theory-of-Everything proof or canon, or Stage 20 authority. NOT_READY_FOR_STAGE_20 remains the terminal verdict.
