@@ -1,0 +1,53 @@
+'use strict';
+const C=require('../plan/tools/common.txt');
+const {ensure,exact,integer,array,matrix,rectangle,fraction}=C;
+function dims(r){integer(r.width,1,16);integer(r.height,1,16);}
+const operations={
+ raster_layout_shape(r){exact(r,['op','width','height','channels']);dims(r);integer(r.channels,1,4);return{elements:r.width*r.height*r.channels,row_stride:r.width*r.channels,pixel_stride:r.channels,shape:[r.height,r.width,r.channels],unit:'elements'};},
+ pixel_coordinate_bijection(r){exact(r,['op','width','height','x','y']);dims(r);integer(r.x,0,r.width-1);integer(r.y,0,r.height-1);const index=r.y*r.width+r.x;return{index,coordinate:[index%r.width,Math.floor(index/r.width)]};},
+ pixel_region_intersection(r){
+  exact(r,['op','a','b']);rectangle(r.a);rectangle(r.b);
+  const left=Math.max(r.a[0],r.b[0]),top=Math.max(r.a[1],r.b[1]),right=Math.min(r.a[2],r.b[2]),bottom=Math.min(r.a[3],r.b[3]);
+  return right<=left||bottom<=top?{rectangle:null,area:0}:{rectangle:[left,top,right,bottom],area:(right-left)*(bottom-top)};
+ },
+ pixel_region_union_cells(r){
+  exact(r,['op','width','height','rectangles']);dims(r);array(r.rectangles,0,16).forEach(rectangle);
+  const counts=new Uint16Array(r.width*r.height);
+  for(const[a,b,c,d]of r.rectangles)for(let y=Math.max(0,b);y<Math.min(r.height,d);y++)for(let x=Math.max(0,a);x<Math.min(r.width,c);x++)counts[y*r.width+x]++;
+  const cells=[];for(let i=0;i<counts.length;i++)if(counts[i])cells.push({cell:[i%r.width,Math.floor(i/r.width)],coverage:counts[i]});
+  return{cells,area:cells.length,overlap_cells:cells.filter(c=>c.coverage>1).length};
+ },
+ pixel_mask_runs(r){
+  exact(r,['op','row']);array(r.row).forEach(v=>ensure(typeof v==='boolean'));
+  let start=null,foreground=0;const runs=[];
+  for(let i=0;i<=r.row.length;i++){if(r.row[i]===true){foreground++;if(start===null)start=i;}else if(start!==null){runs.push([start,i]);start=null;}}
+  return{runs,foreground};
+ },
+ neighborhood_stencil(r){
+  exact(r,['op','width','height','x','y','connectivity']);dims(r);integer(r.x,0,r.width-1);integer(r.y,0,r.height-1);ensure([4,8].includes(r.connectivity));const neighbors=[];
+  for(let dy=-1;dy<=1;dy++)for(let dx=-1;dx<=1;dx++){if(!dx&&!dy||r.connectivity===4&&Math.abs(dx)+Math.abs(dy)!==1)continue;const x=r.x+dx,y=r.y+dy;if(x>=0&&x<r.width&&y>=0&&y<r.height)neighbors.push([x,y]);}
+  return{neighbors};
+ },
+ integral_plane_queries(r){
+  exact(r,['op','grid','rectangle']);const[w,h]=matrix(r.grid);const[a,b,c,d]=rectangle(r.rectangle);ensure(a>=0&&b>=0&&c<=w&&d<=h);
+  const prefix=Array.from({length:h+1},()=>Array(w+1).fill(0));
+  for(let y=1;y<=h;y++)for(let x=1;x<=w;x++)prefix[y][x]=r.grid[y-1][x-1]+prefix[y-1][x]+prefix[y][x-1]-prefix[y-1][x-1];
+  return{sum:prefix[d][c]-prefix[b][c]-prefix[d][a]+prefix[b][a],count:(c-a)*(d-b)};
+ },
+ nearest_grid_mapping(r){exact(r,['op','source_width','destination_width']);integer(r.source_width,1,16);integer(r.destination_width,1,16);const indices=[];for(let i=0;i<r.destination_width;i++)indices.push(Math.floor((i+0.5)*r.source_width/r.destination_width));return{indices,convention:'destination_center_floor'};},
+ bilinear_weight_witness(r){
+  exact(r,['op','qx','qy','samples']);integer(r.qx,0,4);integer(r.qy,0,4);array(r.samples,4,4).forEach(v=>integer(v));
+  const weights=[];for(const v of[4-r.qy,r.qy])for(const u of[4-r.qx,r.qx])weights.push(u*v);
+  let sum=0;for(let i=0;i<4;i++)sum+=weights[i]*r.samples[i];
+  return{weight_numerators:weights,weight_denominator:16,value:fraction(sum,16)};
+ },
+ convolution_support_refusal(r){
+  exact(r,['op','grid','x','y','weights','padding']);const[w,h]=matrix(r.grid);integer(r.x,0,w-1);integer(r.y,0,h-1);array(r.weights,3,3).forEach(v=>integer(v));ensure(['zero','refuse'].includes(r.padding));
+  let sum=0,present=0,padded=0;
+  for(let offset=-1;offset<=1;offset++){const x=r.x+offset;if(x<0||x>=w){ensure(r.padding==='zero','missing_support');padded++;}else{present++;sum+=r.grid[r.y][x]*r.weights[offset+1];}}
+  return{sum,present,padded};
+ }
+};
+const run=r=>C.dispatcher(operations,r);
+module.exports={operations,run};
+if(require.main===module)C.cli(operations);

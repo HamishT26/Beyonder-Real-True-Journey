@@ -1,0 +1,59 @@
+'use strict';
+const fs=require('node:fs'),path=require('node:path'),cp=require('node:child_process');
+const C=require('../plan/tools/common.txt');
+const [stage,skillBank,python]=process.argv.slice(2);C.ensure(['x1','x2'].includes(stage));
+const base=path.resolve('docs/ceryn-alder/v691-v1'),stageRoot=path.join(base,stage);
+const expectedParent=stage==='x1'?'08f85218f9b84f9e8a5e2e7700de6c7baa8b0f9f':process.argv[5];
+const git=(...a)=>cp.execFileSync('git',a,{encoding:'utf8'}).trim();
+C.ensure(git('rev-parse','HEAD')===expectedParent,'exact prior boundary');
+C.ensure(!fs.existsSync(path.join(stageRoot,'results.json')),'Evidence already exists');
+const engine=require(path.join(stageRoot,'engine.txt'));
+const tests=require(path.join(stageRoot,'tests.txt')).runTests();
+const definitions=C.read(path.join(base,'plan/definitions.json')).proposals;
+const inherited=C.read(path.join(base,'plan/inherited.json')).rows;
+const selected=definitions.filter(r=>r.session===stage),families=C.read(path.join(base,'plan/families.json')).families.filter(r=>r.session===stage);
+const witnesses=[],results=[],methodRows=families.map(f=>({method_id:'CA6911-'+f.operation,title:f.title}));
+const witness=(id,method_id,procedure,result,expected,observed,retained_negative_ids=[])=>witnesses.push({witness_id:id,method_id,procedure,result,expected,observed,retained_negative_ids});
+for(const[pIndex,p]of selected.entries()){
+ const m='CA6911-'+p.operation,subject=structuredClone(p.request),invalid=structuredClone(p.candidate_subject),before=C.hash(C.stable(subject)),invalidBefore=C.hash(C.stable(invalid));
+ const observed=engine.run(subject),refusal=engine.run(invalid),pass=C.equal(observed,p.expected_output),refusalPass=C.equal(refusal,p.candidate_expected);
+ const sourceRow=inherited[pIndex+(stage==='x2'?100:0)],sourceHash=C.hash(C.stable(sourceRow.source_record));
+ const checks={typed_output:pass,exact_refusal:refusalPass,nonmutation:C.hash(C.stable(subject))===before,invalid_nonmutation:C.hash(C.stable(invalid))===invalidBefore,inherited_fixity:sourceHash===sourceRow.source_record_sha256,definition_fixity:(()=>{const q={...p};delete q.definition_sha256;return C.hash(C.stable(q))===p.definition_sha256;})()};
+ witness(p.proposal_id+'-SAFE',m,'Frozen full typed output',pass?'pass':'fail',p.expected_output,observed);
+ witness(p.proposal_id+'-INVALID',m,'Unknown-field subject has zero acceptance credit','fail','Closed accepted request',refusal);
+ witness(p.proposal_id+'-GUARD',m,'Exact refusal of invalid subject',refusalPass?'pass':'fail',p.candidate_expected,refusal,[p.proposal_id+'-INVALID']);
+ for(const k of ['nonmutation','invalid_nonmutation','inherited_fixity','definition_fixity'])witness(p.proposal_id+'-'+k,m,k,checks[k]?'pass':'fail',true,checks[k]);
+ results.push({proposal_id:p.proposal_id,operation:p.operation,definition_sha256:p.definition_sha256,request:p.request,expected:p.expected_output,observed,invalid_subject:invalid,refusal,checks,disposition:pass?p.expected_disposition:'open_gap',input_sha256:before,source_row_sha256:sourceHash,source_execution_credit:0});
+}
+const testMethod='CA6911-'+stage+'-INVARIANTS';methodRows.push({method_id:testMethod,title:stage+' invariant and domain tests'});
+for(const [i,t]of tests.entries()){const id='CA6911-'+stage+'-TEST-'+(i+1);if(t.negative)witness(id+'-SUBJECT',testMethod,t.name,'fail','Valid in-domain input','Preregistered invalid subject');witness(id,testMethod,t.name,t.pass?'pass':'fail',true,t.pass,t.negative?[id+'-SUBJECT']:[]);}
+const allPass=results.every(r=>Object.values(r.checks).every(Boolean))&&tests.every(t=>t.pass);
+C.put(path.join(stageRoot,'results.json'),{owner:'Ceryn Alder',phase:'v691-v1',stage,parent:expectedParent,valid:allPass,results,boundary:C.BOUNDARY});
+C.put(path.join(stageRoot,'test-receipt.json'),{valid:tests.every(t=>t.pass),tests:tests.length,passed:tests.filter(t=>t.pass).length,results:tests,boundary:C.BOUNDARY});
+if(!allPass){C.put(path.join(stageRoot,'failed-execution-ledger.json'),C.ledger(stage,methodRows,witnesses));throw Error('Retained execution mismatch; repair only failed contract');}
+const skillReceipts=[],runnerReceipts=[];
+for(const f of families){
+ const name='ghc-family-'+f.operation.replaceAll('_','-'),rel='skills/'+name,dir=path.join(stageRoot,rel),sample=selected.find(p=>p.operation===f.operation);
+ C.put(path.join(dir,'SKILL.md'),`---\nname: ${name}\ndescription: Check ${f.title.toLowerCase()} for finite synthetic grid records with explicit bounds and refusal behavior.\n---\n\n# ${f.title}\n\n${f.hypothesis}\n\nUse the operation ${f.operation} with the companion fixture.json and the matching family runner. Inputs are JSON records; use the frozen field names and bounded integer or Boolean values. Compare the complete typed output, preserve the input, and keep the evidence ceiling ${f.expected_disposition}.\n\nRead fixture.json before choosing this contract. Vary the actual geometry, support or obligation set; a renamed duplicate request has no new fixture credit. Unknown fields must be refused and invalid subjects retained at zero original acceptance credit. A missing real review stays missing even when structural checks pass.\n\n${C.BOUNDARY}\n`);
+ C.put(path.join(dir,'fixture.json'),{operation:f.operation,request:sample.request,expected_output:sample.expected_output,candidate:sample.candidate_subject,candidate_expected:sample.candidate_expected,ceiling:f.expected_disposition});
+ const r=cp.spawnSync(python,['-B','-X','utf8',path.join(skillBank,'.system/skill-creator/scripts/quick_validate.py'),dir],{encoding:'utf8'});
+ const passed=r.status===0;skillReceipts.push({name,valid:passed,exit:r.status,validator_output:r.stdout.trim(),source_sha256:C.hash(fs.readFileSync(path.join(dir,'SKILL.md'))),smoke_proposal:sample.proposal_id});
+ witness('CA6911-'+stage+'-SKILL-'+f.operation,'CA6911-'+f.operation,'Official Skill Creator quick validation',passed?'pass':'fail',0,r.status);
+ C.ensure(passed,'Skill validation failed');
+}
+for(let i=0;i<families.length;i+=2){
+ const pair=families.slice(i,i+2),names=pair.map(f=>f.operation),file='ghc_family_'+stage+'_grid_pair_'+(i/2+1)+'.txt';
+ C.put(path.join(stageRoot,'runners',file),`'use strict';\nconst C=require('../../plan/tools/common.txt');\nconst {operations}=require('../engine.txt');\nconst names=${JSON.stringify(names)};\nconst selected=Object.fromEntries(names.map(n=>[n,operations[n]]));\nmodule.exports={run:r=>C.dispatcher(selected,r)};\nif(require.main===module)C.cli(selected);\n`);
+ const runner=require(path.join(stageRoot,'runners',file)),sample=selected.find(p=>p.operation===names[0]),outside=selected.find(p=>!names.includes(p.operation));
+ const observed=runner.run(sample.request),rejected=runner.run(outside.request),positive=C.equal(observed,sample.expected_output),negative=C.equal(rejected,C.bad('unknown_operation'));
+ runnerReceipts.push({file,operations:names,valid:positive&&negative,positive:sample.proposal_id,outside_operation:outside.operation});
+ const m='CA6911-'+names[0];witness('CA6911-'+stage+'-RUNNER-'+i+'-POS',m,'Paired caller positive smoke',positive?'pass':'fail',sample.expected_output,observed);
+ witness('CA6911-'+stage+'-RUNNER-'+i+'-NEG',m,'Outside-group invalid caller','fail','Supported operation',rejected);
+ witness('CA6911-'+stage+'-RUNNER-'+i+'-GUARD',m,'Paired caller outside-group refusal',negative?'pass':'fail',C.bad('unknown_operation'),rejected);
+ C.ensure(positive&&negative,'Paired caller failed');
+}
+C.put(path.join(stageRoot,'skill-receipts.json'),{valid:true,skills:skillReceipts,boundary:C.BOUNDARY});
+C.put(path.join(stageRoot,'runner-receipts.json'),{valid:true,runners:runnerReceipts,boundary:C.BOUNDARY});
+C.put(path.join(stageRoot,'method-flow.json'),C.ledger(stage,methodRows,witnesses));
+C.put(path.join(stageRoot,'phase-truth.json'),{owner:'Ceryn Alder',phase:'v691-v1',stage,parent:expectedParent,safe_now:100,candidate_subjects:100,candidate_guards:100,clean_fix_refine:100,skills:10,runners:5,outcomes:Object.fromEntries(['completed','represented','open_gap','exact_gate'].map(d=>[d,results.filter(r=>r.disposition===d).length])),global_promotions:0,exact_packets_executed:0,blocked_packets_executed:0,canonical_invocations:0,successor_contacted:false,terminal_verdict:'NOT_READY_FOR_STAGE_20',boundary:C.BOUNDARY});
+console.log(JSON.stringify({stage,valid:true,requests:results.length,tests:tests.length,skills:skillReceipts.length,runners:runnerReceipts.length,witnesses:witnesses.length,failed_subjects:witnesses.filter(r=>r.result==='fail').length}));

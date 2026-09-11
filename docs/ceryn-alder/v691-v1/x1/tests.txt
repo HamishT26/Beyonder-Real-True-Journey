@@ -1,0 +1,24 @@
+'use strict';
+const C=require('../plan/tools/common.txt'),{run}=require('./engine.txt');
+function runTests(){
+ const results=[];const test=(name,fn,negative=false)=>{try{C.ensure(fn());results.push({name,pass:true,negative});}catch(e){results.push({name,pass:false,negative,error:e.message});}};
+ const plan=C.read(require('node:path').join(__dirname,'../plan/definitions.json')).proposals.filter(r=>r.session==='x1');
+ for(const p of plan.filter((_,i)=>i%10===0))test(p.operation+' refuses null field',()=>{const q=structuredClone(p.request);q[Object.keys(q).find(k=>k!=='op')]=null;return C.equal(run(q),C.bad('invalid_value'));},true);
+ test('element stride algebra',()=>{for(let w=1;w<=8;w++)for(let h=1;h<=8;h++){const r=run({op:'raster_layout_shape',width:w,height:h,channels:3}).value;if(r.elements!==h*r.row_stride||r.row_stride!==w*r.pixel_stride)return false;}return true;});
+ test('exhaustive coordinate round trip',()=>{const indices=[];for(let y=0;y<3;y++)for(let x=0;x<5;x++){const r=run({op:'pixel_coordinate_bijection',width:5,height:3,x,y}).value;if(!C.equal(r.coordinate,[x,y]))return false;indices.push(r.index);}return C.equal(indices,Array.from({length:15},(_,i)=>i));});
+ test('region intersection symmetry',()=>{const a=[-2,1,3,5],b=[0,0,4,2];return C.equal(run({op:'pixel_region_intersection',a,b}),run({op:'pixel_region_intersection',a:b,b:a}));});
+ test('repeated region does not duplicate union cells',()=>{const r=run({op:'pixel_region_union_cells',width:2,height:2,rectangles:[[0,0,2,2],[0,0,2,2]]}).value;return r.area===4&&r.overlap_cells===4&&r.cells.every(x=>x.coverage===2);});
+ test('run intervals decode exactly',()=>{const row=[true,true,false,true,false,false,true];const r=run({op:'pixel_mask_runs',row}).value,out=row.map(()=>false);for(const[a,b]of r.runs)for(let i=a;i<b;i++)out[i]=true;return C.equal(out,row)&&r.foreground===4;});
+ test('neighborhood relation is symmetric',()=>{for(let y=0;y<4;y++)for(let x=0;x<3;x++)for(const[a,b]of run({op:'neighborhood_stencil',width:3,height:4,x,y,connectivity:8}).value.neighbors)if(!run({op:'neighborhood_stencil',width:3,height:4,x:a,y:b,connectivity:8}).value.neighbors.some(q=>C.equal(q,[x,y])))return false;return true;});
+ test('summed-area decomposition',()=>{const grid=[[1,-2,3],[4,5,-6]],v=r=>run({op:'integral_plane_queries',grid,rectangle:r}).value.sum;return v([0,0,3,2])===v([0,0,1,2])+v([1,0,3,2])&&v([0,0,3,2])===5;});
+ test('nearest identity map',()=>{for(let w=1;w<=16;w++)if(!C.equal(run({op:'nearest_grid_mapping',source_width:w,destination_width:w}).value.indices,Array.from({length:w},(_,i)=>i)))return false;return true;});
+ test('bilinear weights preserve constants and sum sixteen',()=>{for(let qx=0;qx<=4;qx++)for(let qy=0;qy<=4;qy++){const r=run({op:'bilinear_weight_witness',qx,qy,samples:[5,5,5,5]}).value;if(r.weight_numerators.reduce((a,b)=>a+b)!==16||!C.equal(r.value,{numerator:5,denominator:1}))return false;}return true;});
+ test('zero padding differs from refused support',()=>{const r={op:'convolution_support_refusal',grid:[[2]],x:0,y:0,weights:[1,2,1],padding:'refuse'};return C.equal(run(r),C.bad('missing_support'))&&C.equal(run({...r,padding:'zero'}),C.ok({sum:4,present:1,padded:2}));});
+ test('strict JSON escaped string',()=>C.equal(C.parseStrict('{"a":"b\\\"c","z":[true,null,2]}'),{a:'b"c',z:[true,null,2]}));
+ test('strict JSON duplicate key refuses',()=>{try{C.parseStrict('{"a":1,"a":2}');return false;}catch(e){return e.message==='duplicate_key';}},true);
+ test('strict JSON escaped duplicate refuses',()=>{try{C.parseStrict('{"a":1,"\\u0061":2}');return false;}catch(e){return e.message==='duplicate_key';}},true);
+ test('explicit grid budget refuses oversized width',()=>C.equal(run({op:'raster_layout_shape',width:17,height:1,channels:1}),C.bad('invalid_value')),true);
+ return results;
+}
+module.exports={runTests};
+if(require.main===module){const results=runTests();process.stdout.write(JSON.stringify({tests:results.length,passed:results.filter(r=>r.pass).length,results})+'\n');if(results.some(r=>!r.pass))process.exitCode=1;}

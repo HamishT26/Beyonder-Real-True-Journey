@@ -1,0 +1,7 @@
+'use strict';
+const C=require('../../plan/tools/common.txt');
+const {operations}=require('../engine.txt');
+const names=["integral_plane_queries","nearest_grid_mapping"];
+const selected=Object.fromEntries(names.map(n=>[n,operations[n]]));
+module.exports={run:r=>C.dispatcher(selected,r)};
+if(require.main===module)C.cli(selected);
