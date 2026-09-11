@@ -1,0 +1,73 @@
+{
+  "schema": "ghc.family.four-tier-card.v1",
+  "tier": 4,
+  "card_type": "proposal",
+  "title": "Settlement resource step / bounded case 09",
+  "parent_ids": [
+    "ghc-card-30fd642a217a75322b8b0c38"
+  ],
+  "owner": "Mira Fenwick",
+  "phase": "v690-v3-r2",
+  "stability": "volatile",
+  "outcome": "completed",
+  "content": {
+    "proposal_id": "MF6903R2-199",
+    "mission": "Join production, consent, reserve and consumption in one deterministic synthetic step.",
+    "definition_sha256": "beabd4d3edd81a4e2c8770c1c2208574f97256d9eea1f0d9c297374c67ccca04",
+    "request": {
+      "op": "simulation_step",
+      "payload": {
+        "stock": 14,
+        "production": 2,
+        "reserve": 2,
+        "agents": [
+          {
+            "id": "a",
+            "need": 2,
+            "consent": true
+          },
+          {
+            "id": "b",
+            "need": 1,
+            "consent": false
+          }
+        ]
+      }
+    },
+    "expected": {
+      "ok": true,
+      "error": null,
+      "value": {
+        "stock": 14,
+        "production": 2,
+        "consumed": 2,
+        "allocations": [
+          {
+            "id": "a",
+            "amount": 2
+          },
+          {
+            "id": "b",
+            "amount": 0
+          }
+        ],
+        "refused": [
+          "b"
+        ],
+        "residual": 0,
+        "external_action": false
+      }
+    },
+    "observed_match": true,
+    "candidate_subject_success_credit": 0
+  },
+  "source_refs": [
+    "x2/results.json"
+  ],
+  "protected_gates": [
+    "No empirical or identity promotion",
+    "Professional, legal, cultural, affected-party and Maori authority remain separate"
+  ],
+  "boundary": "Relational indexing and bounded same-owner evidence only; no identity, authority, independent reproduction or Stage 20 conclusion.",
+  "card_id": "ghc-card-303f0b9f0e67e0a09f1d392a"
+}

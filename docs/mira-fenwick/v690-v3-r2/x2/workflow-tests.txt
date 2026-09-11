@@ -1,0 +1,13 @@
+'use strict';
+const fs=require('node:fs'),path=require('node:path'),assert=require('node:assert/strict'),{review}=require('./workflow-review.txt');
+const base=path.resolve(__dirname,'..'),profile=JSON.parse(fs.readFileSync(path.join(base,'plan/workflow-v5.json'))),route=JSON.parse(fs.readFileSync(path.join(base,'plan/roster-v5.json')));
+const tests=[];const test=(id,fn)=>tests.push({id,fn});
+test('workflow.current-profile',()=>assert.equal(review(profile,route).valid,true));
+test('workflow.images-refused',()=>{const p=structuredClone(profile);p.artifact_policy.authored_extensions.push('.png');assert.equal(review(p,route).valid,false);});
+test('workflow.sequence-gap',()=>{const r=structuredClone(route);r.assignments[4].phase='v700-v1';assert.equal(review(profile,r).valid,false);});
+test('workflow.resend-limit',()=>{const p=structuredClone(profile);p.routing.accepted_send_limit=2;assert.equal(review(p,route).valid,false);});
+test('workflow.canonical-replay',()=>{const p=structuredClone(profile);p.validation.source_replay=true;assert.equal(review(p,route).valid,false);});
+test('workflow.weight-corruption',()=>{const r=structuredClone(route);r.cycle[1]=r.cycle[0];assert.equal(review(profile,r).valid,false);});
+test('workflow.malformed-shape',()=>{assert.equal(review(null,route).valid,false);assert.equal(review(profile,{}).valid,false);});
+function run(){const rows=[];for(const t of tests){try{t.fn();rows.push({test_id:t.id,result:'pass'});}catch(e){rows.push({test_id:t.id,result:'fail',message:e.message});}}return{selected_tests:tests.length,passing:rows.filter(x=>x.result==='pass').length,failing:rows.filter(x=>x.result==='fail').length,tests:rows,independent_reproduction:false};}
+module.exports={run,test_ids:tests.map(x=>x.id)};if(require.main===module){const r=run();process.stdout.write(JSON.stringify(r)+'\n');if(r.failing)process.exitCode=1;}

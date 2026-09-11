@@ -1,0 +1,73 @@
+{
+  "schema": "ghc.family.four-tier-card.v1",
+  "tier": 4,
+  "card_type": "proposal",
+  "title": "Dependency earliest starts / bounded case 06",
+  "parent_ids": [
+    "ghc-card-5168f940082e0f7020772094"
+  ],
+  "owner": "Mira Fenwick",
+  "phase": "v690-v3-r2",
+  "stability": "volatile",
+  "outcome": "completed",
+  "content": {
+    "proposal_id": "MF6903R2-146",
+    "mission": "Compute earliest starts and makespan without claiming resource-constrained optimality.",
+    "definition_sha256": "28c99b926f5ba2eb25cdc483d523bc26249f2d429b5f4fd3d013fe475522b2f7",
+    "request": {
+      "op": "task_scheduler",
+      "payload": {
+        "tasks": [
+          {
+            "id": "a",
+            "duration": 6,
+            "parents": []
+          },
+          {
+            "id": "b",
+            "duration": 2,
+            "parents": [
+              "a"
+            ]
+          },
+          {
+            "id": "c",
+            "duration": 3,
+            "parents": [
+              "a"
+            ]
+          }
+        ]
+      }
+    },
+    "expected": {
+      "ok": true,
+      "error": null,
+      "value": {
+        "starts": {
+          "a": 0,
+          "b": 6,
+          "c": 6
+        },
+        "finishes": {
+          "a": 6,
+          "b": 8,
+          "c": 9
+        },
+        "makespan": 9,
+        "resource_limits_modeled": false
+      }
+    },
+    "observed_match": true,
+    "candidate_subject_success_credit": 0
+  },
+  "source_refs": [
+    "x2/results.json"
+  ],
+  "protected_gates": [
+    "No empirical or identity promotion",
+    "Professional, legal, cultural, affected-party and Maori authority remain separate"
+  ],
+  "boundary": "Relational indexing and bounded same-owner evidence only; no identity, authority, independent reproduction or Stage 20 conclusion.",
+  "card_id": "ghc-card-83cd23d9a92e6c921220f050"
+}

@@ -1,0 +1,29 @@
+'use strict';
+const assert=require('node:assert/strict'),core=require('./core.txt');
+const tests=[];const test=(id,fn)=>tests.push({id,fn});const call=(op,payload)=>core.evaluate({op,payload});
+test('x2.replay.duplicate',()=>assert.deepEqual(call('idempotent_replay',{initial:0,events:[{id:'a',delta:2},{id:'a',delta:2}]}).value,{value:2,applied:['a'],skipped:['a']}));
+test('x2.replay.conflict',()=>assert.equal(call('idempotent_replay',{initial:0,events:[{id:'a',delta:2},{id:'a',delta:3}]}).error,'conflicting_event'));
+test('x2.replay.empty',()=>assert.equal(call('idempotent_replay',{initial:7,events:[]}).value.value,7));
+test('x2.rollback.retains-future',()=>assert.deepEqual(call('rollback_projection',{history:[1,2,3],index:0}).value,{active:1,retained:[1,2,3],inactive_later_indices:[1,2]}));
+test('x2.rollback.index-bound',()=>assert.equal(call('rollback_projection',{history:[1],index:1}).error,'bounds'));
+test('x2.consent.expiry-equality',()=>assert.deepEqual(call('consent_intersection',{now:5,records:[{scopes:['read'],expires:5}]}).value,{scopes:[],active_records:0,external_action:false}));
+test('x2.consent.disjoint',()=>assert.deepEqual(call('consent_intersection',{now:0,records:[{scopes:['a'],expires:5},{scopes:['b'],expires:5}]}).value.scopes,[]));
+test('x2.revoke.half-open',()=>assert.equal(call('revocation_order',{granted:2,expires:9,revoked:5,now:5}).value.active,false));
+test('x2.revoke.before-grant',()=>assert.equal(call('revocation_order',{granted:2,expires:9,revoked:null,now:1}).value.reason,'not_yet_valid'));
+test('x2.revoke.bad-order',()=>assert.equal(call('revocation_order',{granted:2,expires:9,revoked:1,now:5}).error,'chronology'));
+test('x2.scheduler.longest-parent',()=>assert.deepEqual(call('task_scheduler',{tasks:[{id:'a',duration:3,parents:[]},{id:'b',duration:7,parents:[]},{id:'c',duration:2,parents:['a','b']}]}).value,{starts:{a:0,b:0,c:7},finishes:{a:3,b:7,c:9},makespan:9,resource_limits_modeled:false}));
+test('x2.scheduler.special-key',()=>{const v=call('task_scheduler',{tasks:[{id:'__proto__',duration:2,parents:[]}]}).value;assert.equal(Object.hasOwn(v.starts,'__proto__'),true);assert.equal(v.finishes.__proto__,2);});
+test('x2.scheduler.cycle',()=>assert.equal(call('task_scheduler',{tasks:[{id:'a',duration:1,parents:['a']}]}).error,'cycle'));
+test('x2.queue.zero-service',()=>assert.deepEqual(call('queue_service',{arrivals:[2,3],capacity:0}).value,{served:[0,0],backlog:[2,5],total_arrivals:5,total_served:0,residual:5}));
+test('x2.queue.balance',()=>{for(let n=0;n<20;n++){const v=call('queue_service',{arrivals:[n,2,n],capacity:3}).value;assert.equal(v.total_arrivals,v.total_served+v.residual);}});
+test('x2.entropy.zero-cells',()=>assert.equal(call('entropy_mix',{counts:[0,4,0]}).value.bits,0));
+test('x2.entropy.empty',()=>assert.equal(call('entropy_mix',{counts:[0,0]}).error,'empty_distribution'));
+test('x2.entropy.uniform-four',()=>assert.equal(call('entropy_mix',{counts:[3,3,3,3]}).value.bits,2));
+test('x2.energy.mass-not-positivity',()=>{const v=call('energy_step',{values:[1,0,1],edges:[[0,1],[1,2]],step:1}).value;assert.equal(v.mass_after,2);assert(v.values.some(x=>x<0)||v.energy_after>v.energy_before);});
+test('x2.html.script-text',()=>assert.equal(call('html_escape',{text:'<script>alert("x")</script>'}).value.text,'&lt;script&gt;alert(&quot;x&quot;)&lt;/script&gt;'));
+test('x2.html.empty',()=>assert.equal(call('html_escape',{text:''}).value.text,''));
+test('x2.simulation.reserve',()=>{const v=call('simulation_step',{stock:10,production:0,reserve:4,agents:[{id:'a',need:20,consent:true}]}).value;assert.equal(v.stock,4);assert.equal(v.consumed,6);assert.equal(v.residual,0);});
+test('x2.simulation.withheld',()=>{const v=call('simulation_step',{stock:10,production:2,reserve:1,agents:[{id:'a',need:5,consent:false}]}).value;assert.equal(v.stock,12);assert.equal(v.consumed,0);assert.equal(v.external_action,false);});
+test('x2.contract.no-mutation',()=>{const r={op:'rollback_projection',payload:{history:[1,2,3],index:1}};const b=JSON.stringify(r);core.evaluate(r);assert.equal(JSON.stringify(r),b);});
+function run(){const rows=[];for(const t of tests){try{t.fn();rows.push({test_id:t.id,result:'pass'});}catch(e){rows.push({test_id:t.id,result:'fail',message:e.message});}}return{selected_tests:tests.length,passing:rows.filter(x=>x.result==='pass').length,failing:rows.filter(x=>x.result==='fail').length,tests:rows,independent_reproduction:false};}
+module.exports={run,test_ids:tests.map(x=>x.id)};if(require.main===module){const r=run();process.stdout.write(JSON.stringify(r)+'\n');if(r.failing)process.exitCode=1;}

@@ -1,0 +1,8184 @@
+{
+  "owner": "Mira Fenwick",
+  "phase": "v690-v3-r2",
+  "session": "x2",
+  "executed_at_utc": "2026-09-10T23:35:50.478Z",
+  "safe_executed": 100,
+  "candidate_executed": 100,
+  "passing_safe_envelopes": 100,
+  "passing_candidate_guards": 100,
+  "failed_candidate_subjects": 100,
+  "records": [
+    {
+      "proposal_id": "MF6903R2-101",
+      "definition_sha256": "41e6440047cdd591a94a76b79882d4b639c1e4234311fe3364af97f2f84c392b",
+      "request": {
+        "op": "idempotent_replay",
+        "payload": {
+          "initial": 10,
+          "events": [
+            {
+              "id": "a",
+              "delta": 1
+            },
+            {
+              "id": "a",
+              "delta": 1
+            },
+            {
+              "id": "b",
+              "delta": -1
+            }
+          ]
+        }
+      },
+      "expected": {
+        "ok": true,
+        "error": null,
+        "value": {
+          "value": 10,
+          "applied": [
+            "a",
+            "b"
+          ],
+          "skipped": [
+            "a"
+          ]
+        }
+      },
+      "observed": {
+        "ok": true,
+        "error": null,
+        "value": {
+          "value": 10,
+          "applied": [
+            "a",
+            "b"
+          ],
+          "skipped": [
+            "a"
+          ]
+        }
+      },
+      "input_unchanged": true,
+      "outcome": "completed",
+      "candidate": {
+        "subject": {
+          "op": "idempotent_replay",
+          "payload": {
+            "initial": 10,
+            "events": [
+              {
+                "id": "a",
+                "delta": 1
+              },
+              {
+                "id": "a",
+                "delta": 1
+              },
+              {
+                "id": "b",
+                "delta": -1
+              }
+            ],
+            "unreviewed_authority_grant": true
+          }
+        },
+        "expected": {
+          "ok": false,
+          "error": "unknown_field",
+          "value": null
+        },
+        "observed": {
+          "ok": false,
+          "error": "unknown_field",
+          "value": null
+        },
+        "subject_result": "fail",
+        "original_success_credit": 0,
+        "guard_result": "pass"
+      }
+    },
+    {
+      "proposal_id": "MF6903R2-102",
+      "definition_sha256": "f46cf860789580c21394be09fd06e7ed265e9bf2c60d3431376508c7c9bb6794",
+      "request": {
+        "op": "idempotent_replay",
+        "payload": {
+          "initial": 10,
+          "events": [
+            {
+              "id": "a",
+              "delta": 2
+            },
+            {
+              "id": "a",
+              "delta": 2
+            },
+            {
+              "id": "b",
+              "delta": -1
+            }
+          ]
+        }
+      },
+      "expected": {
+        "ok": true,
+        "error": null,
+        "value": {
+          "value": 11,
+          "applied": [
+            "a",
+            "b"
+          ],
+          "skipped": [
+            "a"
+          ]
+        }
+      },
+      "observed": {
+        "ok": true,
+        "error": null,
+        "value": {
+          "value": 11,
+          "applied": [
+            "a",
+            "b"
+          ],
+          "skipped": [
+            "a"
+          ]
+        }
+      },
+      "input_unchanged": true,
+      "outcome": "completed",
+      "candidate": {
+        "subject": {
+          "op": "idempotent_replay",
+          "payload": {
+            "initial": 10,
+            "events": [
+              {
+                "id": "a",
+                "delta": 2
+              },
+              {
+                "id": "a",
+                "delta": 2
+              },
+              {
+                "id": "b",
+                "delta": -1
+              }
+            ],
+            "unreviewed_authority_grant": true
+          }
+        },
+        "expected": {
+          "ok": false,
+          "error": "unknown_field",
+          "value": null
+        },
+        "observed": {
+          "ok": false,
+          "error": "unknown_field",
+          "value": null
+        },
+        "subject_result": "fail",
+        "original_success_credit": 0,
+        "guard_result": "pass"
+      }
+    },
+    {
+      "proposal_id": "MF6903R2-103",
+      "definition_sha256": "b639b24e65a42c1d01a45329940d7fd6fbf7c1475b9dc0bbae2c118930d5e99e",
+      "request": {
+        "op": "idempotent_replay",
+        "payload": {
+          "initial": 10,
+          "events": [
+            {
+              "id": "a",
+              "delta": 3
+            },
+            {
+              "id": "a",
+              "delta": 3
+            },
+            {
+              "id": "b",
+              "delta": -1
+            }
+          ]
+        }
+      },
+      "expected": {
+        "ok": true,
+        "error": null,
+        "value": {
+          "value": 12,
+          "applied": [
+            "a",
+            "b"
+          ],
+          "skipped": [
+            "a"
+          ]
+        }
+      },
+      "observed": {
+        "ok": true,
+        "error": null,
+        "value": {
+          "value": 12,
+          "applied": [
+            "a",
+            "b"
+          ],
+          "skipped": [
+            "a"
+          ]
+        }
+      },
+      "input_unchanged": true,
+      "outcome": "completed",
+      "candidate": {
+        "subject": {
+          "op": "idempotent_replay",
+          "payload": {
+            "initial": 10,
+            "events": [
+              {
+                "id": "a",
+                "delta": 3
+              },
+              {
+                "id": "a",
+                "delta": 3
+              },
+              {
+                "id": "b",
+                "delta": -1
+              }
+            ],
+            "unreviewed_authority_grant": true
+          }
+        },
+        "expected": {
+          "ok": false,
+          "error": "unknown_field",
+          "value": null
+        },
+        "observed": {
+          "ok": false,
+          "error": "unknown_field",
+          "value": null
+        },
+        "subject_result": "fail",
+        "original_success_credit": 0,
+        "guard_result": "pass"
+      }
+    },
+    {
+      "proposal_id": "MF6903R2-104",
+      "definition_sha256": "9edf0f355b726b25f1992b84572b6dc31a225022e6825b0b4d4381c0d541d014",
+      "request": {
+        "op": "idempotent_replay",
+        "payload": {
+          "initial": 10,
+          "events": [
+            {
+              "id": "a",
+              "delta": 4
+            },
+            {
+              "id": "a",
+              "delta": 4
+            },
+            {
+              "id": "b",
+              "delta": -1
+            }
+          ]
+        }
+      },
+      "expected": {
+        "ok": true,
+        "error": null,
+        "value": {
+          "value": 13,
+          "applied": [
+            "a",
+            "b"
+          ],
+          "skipped": [
+            "a"
+          ]
+        }
+      },
+      "observed": {
+        "ok": true,
+        "error": null,
+        "value": {
+          "value": 13,
+          "applied": [
+            "a",
+            "b"
+          ],
+          "skipped": [
+            "a"
+          ]
+        }
+      },
+      "input_unchanged": true,
+      "outcome": "completed",
+      "candidate": {
+        "subject": {
+          "op": "idempotent_replay",
+          "payload": {
+            "initial": 10,
+            "events": [
+              {
+                "id": "a",
+                "delta": 4
+              },
+              {
+                "id": "a",
+                "delta": 4
+              },
+              {
+                "id": "b",
+                "delta": -1
+              }
+            ],
+            "unreviewed_authority_grant": true
+          }
+        },
+        "expected": {
+          "ok": false,
+          "error": "unknown_field",
+          "value": null
+        },
+        "observed": {
+          "ok": false,
+          "error": "unknown_field",
+          "value": null
+        },
+        "subject_result": "fail",
+        "original_success_credit": 0,
+        "guard_result": "pass"
+      }
+    },
+    {
+      "proposal_id": "MF6903R2-105",
+      "definition_sha256": "182b2f28558da652e889ed7b98ac9939a269fa15be0097862538c4abfe8ae4c7",
+      "request": {
+        "op": "idempotent_replay",
+        "payload": {
+          "initial": 10,
+          "events": [
+            {
+              "id": "a",
+              "delta": 5
+            },
+            {
+              "id": "a",
+              "delta": 5
+            },
+            {
+              "id": "b",
+              "delta": -1
+            }
+          ]
+        }
+      },
+      "expected": {
+        "ok": true,
+        "error": null,
+        "value": {
+          "value": 14,
+          "applied": [
+            "a",
+            "b"
+          ],
+          "skipped": [
+            "a"
+          ]
+        }
+      },
+      "observed": {
+        "ok": true,
+        "error": null,
+        "value": {
+          "value": 14,
+          "applied": [
+            "a",
+            "b"
+          ],
+          "skipped": [
+            "a"
+          ]
+        }
+      },
+      "input_unchanged": true,
+      "outcome": "completed",
+      "candidate": {
+        "subject": {
+          "op": "idempotent_replay",
+          "payload": {
+            "initial": 10,
+            "events": [
+              {
+                "id": "a",
+                "delta": 5
+              },
+              {
+                "id": "a",
+                "delta": 5
+              },
+              {
+                "id": "b",
+                "delta": -1
+              }
+            ],
+            "unreviewed_authority_grant": true
+          }
+        },
+        "expected": {
+          "ok": false,
+          "error": "unknown_field",
+          "value": null
+        },
+        "observed": {
+          "ok": false,
+          "error": "unknown_field",
+          "value": null
+        },
+        "subject_result": "fail",
+        "original_success_credit": 0,
+        "guard_result": "pass"
+      }
+    },
+    {
+      "proposal_id": "MF6903R2-106",
+      "definition_sha256": "11ab5a92009de1f3f88a59cfe250d8761a4069f339c0b39819eea103d59d7dd6",
+      "request": {
+        "op": "idempotent_replay",
+        "payload": {
+          "initial": 10,
+          "events": [
+            {
+              "id": "a",
+              "delta": 6
+            },
+            {
+              "id": "a",
+              "delta": 6
+            },
+            {
+              "id": "b",
+              "delta": -1
+            }
+          ]
+        }
+      },
+      "expected": {
+        "ok": true,
+        "error": null,
+        "value": {
+          "value": 15,
+          "applied": [
+            "a",
+            "b"
+          ],
+          "skipped": [
+            "a"
+          ]
+        }
+      },
+      "observed": {
+        "ok": true,
+        "error": null,
+        "value": {
+          "value": 15,
+          "applied": [
+            "a",
+            "b"
+          ],
+          "skipped": [
+            "a"
+          ]
+        }
+      },
+      "input_unchanged": true,
+      "outcome": "completed",
+      "candidate": {
+        "subject": {
+          "op": "idempotent_replay",
+          "payload": {
+            "initial": 10,
+            "events": [
+              {
+                "id": "a",
+                "delta": 6
+              },
+              {
+                "id": "a",
+                "delta": 6
+              },
+              {
+                "id": "b",
+                "delta": -1
+              }
+            ],
+            "unreviewed_authority_grant": true
+          }
+        },
+        "expected": {
+          "ok": false,
+          "error": "unknown_field",
+          "value": null
+        },
+        "observed": {
+          "ok": false,
+          "error": "unknown_field",
+          "value": null
+        },
+        "subject_result": "fail",
+        "original_success_credit": 0,
+        "guard_result": "pass"
+      }
+    },
+    {
+      "proposal_id": "MF6903R2-107",
+      "definition_sha256": "cb99e779c7e69074c6d0a2eda0eb3b7ce29c9e7d0da34eb35d9ecf7c8c94c17d",
+      "request": {
+        "op": "idempotent_replay",
+        "payload": {
+          "initial": 10,
+          "events": [
+            {
+              "id": "a",
+              "delta": 7
+            },
+            {
+              "id": "a",
+              "delta": 7
+            },
+            {
+              "id": "b",
+              "delta": -1
+            }
+          ]
+        }
+      },
+      "expected": {
+        "ok": true,
+        "error": null,
+        "value": {
+          "value": 16,
+          "applied": [
+            "a",
+            "b"
+          ],
+          "skipped": [
+            "a"
+          ]
+        }
+      },
+      "observed": {
+        "ok": true,
+        "error": null,
+        "value": {
+          "value": 16,
+          "applied": [
+            "a",
+            "b"
+          ],
+          "skipped": [
+            "a"
+          ]
+        }
+      },
+      "input_unchanged": true,
+      "outcome": "completed",
+      "candidate": {
+        "subject": {
+          "op": "idempotent_replay",
+          "payload": {
+            "initial": 10,
+            "events": [
+              {
+                "id": "a",
+                "delta": 7
+              },
+              {
+                "id": "a",
+                "delta": 7
+              },
+              {
+                "id": "b",
+                "delta": -1
+              }
+            ],
+            "unreviewed_authority_grant": true
+          }
+        },
+        "expected": {
+          "ok": false,
+          "error": "unknown_field",
+          "value": null
+        },
+        "observed": {
+          "ok": false,
+          "error": "unknown_field",
+          "value": null
+        },
+        "subject_result": "fail",
+        "original_success_credit": 0,
+        "guard_result": "pass"
+      }
+    },
+    {
+      "proposal_id": "MF6903R2-108",
+      "definition_sha256": "26b86930f1edf7b69811df1e610879f9d977d639c91cbd8334da46fc726566f4",
+      "request": {
+        "op": "idempotent_replay",
+        "payload": {
+          "initial": 10,
+          "events": [
+            {
+              "id": "a",
+              "delta": 8
+            },
+            {
+              "id": "a",
+              "delta": 8
+            },
+            {
+              "id": "b",
+              "delta": -1
+            }
+          ]
+        }
+      },
+      "expected": {
+        "ok": true,
+        "error": null,
+        "value": {
+          "value": 17,
+          "applied": [
+            "a",
+            "b"
+          ],
+          "skipped": [
+            "a"
+          ]
+        }
+      },
+      "observed": {
+        "ok": true,
+        "error": null,
+        "value": {
+          "value": 17,
+          "applied": [
+            "a",
+            "b"
+          ],
+          "skipped": [
+            "a"
+          ]
+        }
+      },
+      "input_unchanged": true,
+      "outcome": "completed",
+      "candidate": {
+        "subject": {
+          "op": "idempotent_replay",
+          "payload": {
+            "initial": 10,
+            "events": [
+              {
+                "id": "a",
+                "delta": 8
+              },
+              {
+                "id": "a",
+                "delta": 8
+              },
+              {
+                "id": "b",
+                "delta": -1
+              }
+            ],
+            "unreviewed_authority_grant": true
+          }
+        },
+        "expected": {
+          "ok": false,
+          "error": "unknown_field",
+          "value": null
+        },
+        "observed": {
+          "ok": false,
+          "error": "unknown_field",
+          "value": null
+        },
+        "subject_result": "fail",
+        "original_success_credit": 0,
+        "guard_result": "pass"
+      }
+    },
+    {
+      "proposal_id": "MF6903R2-109",
+      "definition_sha256": "077e9a3edee61b4fb1dfe5887a516a4881d5d6f55dcf4b13fac9628e769508d1",
+      "request": {
+        "op": "idempotent_replay",
+        "payload": {
+          "initial": 10,
+          "events": [
+            {
+              "id": "a",
+              "delta": 9
+            },
+            {
+              "id": "a",
+              "delta": 9
+            },
+            {
+              "id": "b",
+              "delta": -1
+            }
+          ]
+        }
+      },
+      "expected": {
+        "ok": true,
+        "error": null,
+        "value": {
+          "value": 18,
+          "applied": [
+            "a",
+            "b"
+          ],
+          "skipped": [
+            "a"
+          ]
+        }
+      },
+      "observed": {
+        "ok": true,
+        "error": null,
+        "value": {
+          "value": 18,
+          "applied": [
+            "a",
+            "b"
+          ],
+          "skipped": [
+            "a"
+          ]
+        }
+      },
+      "input_unchanged": true,
+      "outcome": "completed",
+      "candidate": {
+        "subject": {
+          "op": "idempotent_replay",
+          "payload": {
+            "initial": 10,
+            "events": [
+              {
+                "id": "a",
+                "delta": 9
+              },
+              {
+                "id": "a",
+                "delta": 9
+              },
+              {
+                "id": "b",
+                "delta": -1
+              }
+            ],
+            "unreviewed_authority_grant": true
+          }
+        },
+        "expected": {
+          "ok": false,
+          "error": "unknown_field",
+          "value": null
+        },
+        "observed": {
+          "ok": false,
+          "error": "unknown_field",
+          "value": null
+        },
+        "subject_result": "fail",
+        "original_success_credit": 0,
+        "guard_result": "pass"
+      }
+    },
+    {
+      "proposal_id": "MF6903R2-110",
+      "definition_sha256": "036d918002b7d5c14a33c7536d3f62cfabb2084a12d6554c86d2986138940e81",
+      "request": {
+        "op": "idempotent_replay",
+        "payload": {
+          "initial": 10,
+          "events": [
+            {
+              "id": "a",
+              "delta": 10
+            },
+            {
+              "id": "a",
+              "delta": 10
+            },
+            {
+              "id": "b",
+              "delta": -1
+            }
+          ]
+        }
+      },
+      "expected": {
+        "ok": true,
+        "error": null,
+        "value": {
+          "value": 19,
+          "applied": [
+            "a",
+            "b"
+          ],
+          "skipped": [
+            "a"
+          ]
+        }
+      },
+      "observed": {
+        "ok": true,
+        "error": null,
+        "value": {
+          "value": 19,
+          "applied": [
+            "a",
+            "b"
+          ],
+          "skipped": [
+            "a"
+          ]
+        }
+      },
+      "input_unchanged": true,
+      "outcome": "completed",
+      "candidate": {
+        "subject": {
+          "op": "idempotent_replay",
+          "payload": {
+            "initial": 10,
+            "events": [
+              {
+                "id": "a",
+                "delta": 10
+              },
+              {
+                "id": "a",
+                "delta": 10
+              },
+              {
+                "id": "b",
+                "delta": -1
+              }
+            ],
+            "unreviewed_authority_grant": true
+          }
+        },
+        "expected": {
+          "ok": false,
+          "error": "unknown_field",
+          "value": null
+        },
+        "observed": {
+          "ok": false,
+          "error": "unknown_field",
+          "value": null
+        },
+        "subject_result": "fail",
+        "original_success_credit": 0,
+        "guard_result": "pass"
+      }
+    },
+    {
+      "proposal_id": "MF6903R2-111",
+      "definition_sha256": "9841b60f8f950c3931d090d3bf795aee24003e042386b9c055517a8a8edcde8a",
+      "request": {
+        "op": "rollback_projection",
+        "payload": {
+          "history": [
+            1,
+            1,
+            3
+          ],
+          "index": 1
+        }
+      },
+      "expected": {
+        "ok": true,
+        "error": null,
+        "value": {
+          "active": 1,
+          "retained": [
+            1,
+            1,
+            3
+          ],
+          "inactive_later_indices": [
+            2
+          ]
+        }
+      },
+      "observed": {
+        "ok": true,
+        "error": null,
+        "value": {
+          "active": 1,
+          "retained": [
+            1,
+            1,
+            3
+          ],
+          "inactive_later_indices": [
+            2
+          ]
+        }
+      },
+      "input_unchanged": true,
+      "outcome": "completed",
+      "candidate": {
+        "subject": {
+          "op": "rollback_projection",
+          "payload": {
+            "history": [
+              1,
+              1,
+              3
+            ],
+            "index": 1,
+            "unreviewed_authority_grant": true
+          }
+        },
+        "expected": {
+          "ok": false,
+          "error": "unknown_field",
+          "value": null
+        },
+        "observed": {
+          "ok": false,
+          "error": "unknown_field",
+          "value": null
+        },
+        "subject_result": "fail",
+        "original_success_credit": 0,
+        "guard_result": "pass"
+      }
+    },
+    {
+      "proposal_id": "MF6903R2-112",
+      "definition_sha256": "80cf4eb3f01ec034cd2236a772d71d5542d37da1598dfd050c168df960e97af1",
+      "request": {
+        "op": "rollback_projection",
+        "payload": {
+          "history": [
+            1,
+            2,
+            4
+          ],
+          "index": 1
+        }
+      },
+      "expected": {
+        "ok": true,
+        "error": null,
+        "value": {
+          "active": 2,
+          "retained": [
+            1,
+            2,
+            4
+          ],
+          "inactive_later_indices": [
+            2
+          ]
+        }
+      },
+      "observed": {
+        "ok": true,
+        "error": null,
+        "value": {
+          "active": 2,
+          "retained": [
+            1,
+            2,
+            4
+          ],
+          "inactive_later_indices": [
+            2
+          ]
+        }
+      },
+      "input_unchanged": true,
+      "outcome": "completed",
+      "candidate": {
+        "subject": {
+          "op": "rollback_projection",
+          "payload": {
+            "history": [
+              1,
+              2,
+              4
+            ],
+            "index": 1,
+            "unreviewed_authority_grant": true
+          }
+        },
+        "expected": {
+          "ok": false,
+          "error": "unknown_field",
+          "value": null
+        },
+        "observed": {
+          "ok": false,
+          "error": "unknown_field",
+          "value": null
+        },
+        "subject_result": "fail",
+        "original_success_credit": 0,
+        "guard_result": "pass"
+      }
+    },
+    {
+      "proposal_id": "MF6903R2-113",
+      "definition_sha256": "5c9adaea3d45677c59cb0e26cb7710397d5d1484027ef2743989a6b5280d9bcc",
+      "request": {
+        "op": "rollback_projection",
+        "payload": {
+          "history": [
+            1,
+            3,
+            5
+          ],
+          "index": 1
+        }
+      },
+      "expected": {
+        "ok": true,
+        "error": null,
+        "value": {
+          "active": 3,
+          "retained": [
+            1,
+            3,
+            5
+          ],
+          "inactive_later_indices": [
+            2
+          ]
+        }
+      },
+      "observed": {
+        "ok": true,
+        "error": null,
+        "value": {
+          "active": 3,
+          "retained": [
+            1,
+            3,
+            5
+          ],
+          "inactive_later_indices": [
+            2
+          ]
+        }
+      },
+      "input_unchanged": true,
+      "outcome": "completed",
+      "candidate": {
+        "subject": {
+          "op": "rollback_projection",
+          "payload": {
+            "history": [
+              1,
+              3,
+              5
+            ],
+            "index": 1,
+            "unreviewed_authority_grant": true
+          }
+        },
+        "expected": {
+          "ok": false,
+          "error": "unknown_field",
+          "value": null
+        },
+        "observed": {
+          "ok": false,
+          "error": "unknown_field",
+          "value": null
+        },
+        "subject_result": "fail",
+        "original_success_credit": 0,
+        "guard_result": "pass"
+      }
+    },
+    {
+      "proposal_id": "MF6903R2-114",
+      "definition_sha256": "eb4465fe77f2e59a38c76d65a5c8ce0ff3b251b4dac99d6a664eea6379cb2aa0",
+      "request": {
+        "op": "rollback_projection",
+        "payload": {
+          "history": [
+            1,
+            4,
+            6
+          ],
+          "index": 1
+        }
+      },
+      "expected": {
+        "ok": true,
+        "error": null,
+        "value": {
+          "active": 4,
+          "retained": [
+            1,
+            4,
+            6
+          ],
+          "inactive_later_indices": [
+            2
+          ]
+        }
+      },
+      "observed": {
+        "ok": true,
+        "error": null,
+        "value": {
+          "active": 4,
+          "retained": [
+            1,
+            4,
+            6
+          ],
+          "inactive_later_indices": [
+            2
+          ]
+        }
+      },
+      "input_unchanged": true,
+      "outcome": "completed",
+      "candidate": {
+        "subject": {
+          "op": "rollback_projection",
+          "payload": {
+            "history": [
+              1,
+              4,
+              6
+            ],
+            "index": 1,
+            "unreviewed_authority_grant": true
+          }
+        },
+        "expected": {
+          "ok": false,
+          "error": "unknown_field",
+          "value": null
+        },
+        "observed": {
+          "ok": false,
+          "error": "unknown_field",
+          "value": null
+        },
+        "subject_result": "fail",
+        "original_success_credit": 0,
+        "guard_result": "pass"
+      }
+    },
+    {
+      "proposal_id": "MF6903R2-115",
+      "definition_sha256": "483c3b76bc5104deea66d37f0859ca63dbc4cdfd111b07b00cf810a356f6c8cd",
+      "request": {
+        "op": "rollback_projection",
+        "payload": {
+          "history": [
+            1,
+            5,
+            7
+          ],
+          "index": 1
+        }
+      },
+      "expected": {
+        "ok": true,
+        "error": null,
+        "value": {
+          "active": 5,
+          "retained": [
+            1,
+            5,
+            7
+          ],
+          "inactive_later_indices": [
+            2
+          ]
+        }
+      },
+      "observed": {
+        "ok": true,
+        "error": null,
+        "value": {
+          "active": 5,
+          "retained": [
+            1,
+            5,
+            7
+          ],
+          "inactive_later_indices": [
+            2
+          ]
+        }
+      },
+      "input_unchanged": true,
+      "outcome": "completed",
+      "candidate": {
+        "subject": {
+          "op": "rollback_projection",
+          "payload": {
+            "history": [
+              1,
+              5,
+              7
+            ],
+            "index": 1,
+            "unreviewed_authority_grant": true
+          }
+        },
+        "expected": {
+          "ok": false,
+          "error": "unknown_field",
+          "value": null
+        },
+        "observed": {
+          "ok": false,
+          "error": "unknown_field",
+          "value": null
+        },
+        "subject_result": "fail",
+        "original_success_credit": 0,
+        "guard_result": "pass"
+      }
+    },
+    {
+      "proposal_id": "MF6903R2-116",
+      "definition_sha256": "7812140e021279ecde9f192bf011c85741c5ac6b483bec4e525fa90f229f1626",
+      "request": {
+        "op": "rollback_projection",
+        "payload": {
+          "history": [
+            1,
+            6,
+            8
+          ],
+          "index": 1
+        }
+      },
+      "expected": {
+        "ok": true,
+        "error": null,
+        "value": {
+          "active": 6,
+          "retained": [
+            1,
+            6,
+            8
+          ],
+          "inactive_later_indices": [
+            2
+          ]
+        }
+      },
+      "observed": {
+        "ok": true,
+        "error": null,
+        "value": {
+          "active": 6,
+          "retained": [
+            1,
+            6,
+            8
+          ],
+          "inactive_later_indices": [
+            2
+          ]
+        }
+      },
+      "input_unchanged": true,
+      "outcome": "completed",
+      "candidate": {
+        "subject": {
+          "op": "rollback_projection",
+          "payload": {
+            "history": [
+              1,
+              6,
+              8
+            ],
+            "index": 1,
+            "unreviewed_authority_grant": true
+          }
+        },
+        "expected": {
+          "ok": false,
+          "error": "unknown_field",
+          "value": null
+        },
+        "observed": {
+          "ok": false,
+          "error": "unknown_field",
+          "value": null
+        },
+        "subject_result": "fail",
+        "original_success_credit": 0,
+        "guard_result": "pass"
+      }
+    },
+    {
+      "proposal_id": "MF6903R2-117",
+      "definition_sha256": "8bc466ca22eeee6ff273904315b44d4ca4063d276b1094d2d96cb51f6f3a4025",
+      "request": {
+        "op": "rollback_projection",
+        "payload": {
+          "history": [
+            1,
+            7,
+            9
+          ],
+          "index": 1
+        }
+      },
+      "expected": {
+        "ok": true,
+        "error": null,
+        "value": {
+          "active": 7,
+          "retained": [
+            1,
+            7,
+            9
+          ],
+          "inactive_later_indices": [
+            2
+          ]
+        }
+      },
+      "observed": {
+        "ok": true,
+        "error": null,
+        "value": {
+          "active": 7,
+          "retained": [
+            1,
+            7,
+            9
+          ],
+          "inactive_later_indices": [
+            2
+          ]
+        }
+      },
+      "input_unchanged": true,
+      "outcome": "completed",
+      "candidate": {
+        "subject": {
+          "op": "rollback_projection",
+          "payload": {
+            "history": [
+              1,
+              7,
+              9
+            ],
+            "index": 1,
+            "unreviewed_authority_grant": true
+          }
+        },
+        "expected": {
+          "ok": false,
+          "error": "unknown_field",
+          "value": null
+        },
+        "observed": {
+          "ok": false,
+          "error": "unknown_field",
+          "value": null
+        },
+        "subject_result": "fail",
+        "original_success_credit": 0,
+        "guard_result": "pass"
+      }
+    },
+    {
+      "proposal_id": "MF6903R2-118",
+      "definition_sha256": "a0dd17b0237801580738d1b17323911c3a19c1dc2a2b3658c82df11e740f10bc",
+      "request": {
+        "op": "rollback_projection",
+        "payload": {
+          "history": [
+            1,
+            8,
+            10
+          ],
+          "index": 1
+        }
+      },
+      "expected": {
+        "ok": true,
+        "error": null,
+        "value": {
+          "active": 8,
+          "retained": [
+            1,
+            8,
+            10
+          ],
+          "inactive_later_indices": [
+            2
+          ]
+        }
+      },
+      "observed": {
+        "ok": true,
+        "error": null,
+        "value": {
+          "active": 8,
+          "retained": [
+            1,
+            8,
+            10
+          ],
+          "inactive_later_indices": [
+            2
+          ]
+        }
+      },
+      "input_unchanged": true,
+      "outcome": "completed",
+      "candidate": {
+        "subject": {
+          "op": "rollback_projection",
+          "payload": {
+            "history": [
+              1,
+              8,
+              10
+            ],
+            "index": 1,
+            "unreviewed_authority_grant": true
+          }
+        },
+        "expected": {
+          "ok": false,
+          "error": "unknown_field",
+          "value": null
+        },
+        "observed": {
+          "ok": false,
+          "error": "unknown_field",
+          "value": null
+        },
+        "subject_result": "fail",
+        "original_success_credit": 0,
+        "guard_result": "pass"
+      }
+    },
+    {
+      "proposal_id": "MF6903R2-119",
+      "definition_sha256": "28f882696b96b7ff651c1d34702b68283e5f63c5413aada8b353c16e65f73e3c",
+      "request": {
+        "op": "rollback_projection",
+        "payload": {
+          "history": [
+            1,
+            9,
+            11
+          ],
+          "index": 1
+        }
+      },
+      "expected": {
+        "ok": true,
+        "error": null,
+        "value": {
+          "active": 9,
+          "retained": [
+            1,
+            9,
+            11
+          ],
+          "inactive_later_indices": [
+            2
+          ]
+        }
+      },
+      "observed": {
+        "ok": true,
+        "error": null,
+        "value": {
+          "active": 9,
+          "retained": [
+            1,
+            9,
+            11
+          ],
+          "inactive_later_indices": [
+            2
+          ]
+        }
+      },
+      "input_unchanged": true,
+      "outcome": "completed",
+      "candidate": {
+        "subject": {
+          "op": "rollback_projection",
+          "payload": {
+            "history": [
+              1,
+              9,
+              11
+            ],
+            "index": 1,
+            "unreviewed_authority_grant": true
+          }
+        },
+        "expected": {
+          "ok": false,
+          "error": "unknown_field",
+          "value": null
+        },
+        "observed": {
+          "ok": false,
+          "error": "unknown_field",
+          "value": null
+        },
+        "subject_result": "fail",
+        "original_success_credit": 0,
+        "guard_result": "pass"
+      }
+    },
+    {
+      "proposal_id": "MF6903R2-120",
+      "definition_sha256": "3cc8af06c9af3bbb073f09e02537010763d8659f1ae87b8c07cc16f13afc816f",
+      "request": {
+        "op": "rollback_projection",
+        "payload": {
+          "history": [
+            1,
+            10,
+            12
+          ],
+          "index": 1
+        }
+      },
+      "expected": {
+        "ok": true,
+        "error": null,
+        "value": {
+          "active": 10,
+          "retained": [
+            1,
+            10,
+            12
+          ],
+          "inactive_later_indices": [
+            2
+          ]
+        }
+      },
+      "observed": {
+        "ok": true,
+        "error": null,
+        "value": {
+          "active": 10,
+          "retained": [
+            1,
+            10,
+            12
+          ],
+          "inactive_later_indices": [
+            2
+          ]
+        }
+      },
+      "input_unchanged": true,
+      "outcome": "completed",
+      "candidate": {
+        "subject": {
+          "op": "rollback_projection",
+          "payload": {
+            "history": [
+              1,
+              10,
+              12
+            ],
+            "index": 1,
+            "unreviewed_authority_grant": true
+          }
+        },
+        "expected": {
+          "ok": false,
+          "error": "unknown_field",
+          "value": null
+        },
+        "observed": {
+          "ok": false,
+          "error": "unknown_field",
+          "value": null
+        },
+        "subject_result": "fail",
+        "original_success_credit": 0,
+        "guard_result": "pass"
+      }
+    },
+    {
+      "proposal_id": "MF6903R2-121",
+      "definition_sha256": "60df91e7be33f1d67011698b423c8994c722fb793fa2a2b9ff355f013b4533fc",
+      "request": {
+        "op": "consent_intersection",
+        "payload": {
+          "now": 1,
+          "records": [
+            {
+              "scopes": [
+                "read",
+                "simulate",
+                "export"
+              ],
+              "expires": 20
+            },
+            {
+              "scopes": [
+                "read",
+                "simulate"
+              ],
+              "expires": 6
+            }
+          ]
+        }
+      },
+      "expected": {
+        "ok": true,
+        "error": null,
+        "value": {
+          "scopes": [
+            "read",
+            "simulate"
+          ],
+          "active_records": 2,
+          "external_action": false
+        }
+      },
+      "observed": {
+        "ok": true,
+        "error": null,
+        "value": {
+          "scopes": [
+            "read",
+            "simulate"
+          ],
+          "active_records": 2,
+          "external_action": false
+        }
+      },
+      "input_unchanged": true,
+      "outcome": "completed",
+      "candidate": {
+        "subject": {
+          "op": "consent_intersection",
+          "payload": {
+            "now": 1,
+            "records": [
+              {
+                "scopes": [
+                  "read",
+                  "simulate",
+                  "export"
+                ],
+                "expires": 20
+              },
+              {
+                "scopes": [
+                  "read",
+                  "simulate"
+                ],
+                "expires": 6
+              }
+            ],
+            "unreviewed_authority_grant": true
+          }
+        },
+        "expected": {
+          "ok": false,
+          "error": "unknown_field",
+          "value": null
+        },
+        "observed": {
+          "ok": false,
+          "error": "unknown_field",
+          "value": null
+        },
+        "subject_result": "fail",
+        "original_success_credit": 0,
+        "guard_result": "pass"
+      }
+    },
+    {
+      "proposal_id": "MF6903R2-122",
+      "definition_sha256": "0073656d03b690ebbe5d71925d7165b871aa8c9f43d2bcaeac754d72988d34ea",
+      "request": {
+        "op": "consent_intersection",
+        "payload": {
+          "now": 2,
+          "records": [
+            {
+              "scopes": [
+                "read",
+                "simulate",
+                "export"
+              ],
+              "expires": 20
+            },
+            {
+              "scopes": [
+                "read",
+                "simulate"
+              ],
+              "expires": 6
+            }
+          ]
+        }
+      },
+      "expected": {
+        "ok": true,
+        "error": null,
+        "value": {
+          "scopes": [
+            "read",
+            "simulate"
+          ],
+          "active_records": 2,
+          "external_action": false
+        }
+      },
+      "observed": {
+        "ok": true,
+        "error": null,
+        "value": {
+          "scopes": [
+            "read",
+            "simulate"
+          ],
+          "active_records": 2,
+          "external_action": false
+        }
+      },
+      "input_unchanged": true,
+      "outcome": "completed",
+      "candidate": {
+        "subject": {
+          "op": "consent_intersection",
+          "payload": {
+            "now": 2,
+            "records": [
+              {
+                "scopes": [
+                  "read",
+                  "simulate",
+                  "export"
+                ],
+                "expires": 20
+              },
+              {
+                "scopes": [
+                  "read",
+                  "simulate"
+                ],
+                "expires": 6
+              }
+            ],
+            "unreviewed_authority_grant": true
+          }
+        },
+        "expected": {
+          "ok": false,
+          "error": "unknown_field",
+          "value": null
+        },
+        "observed": {
+          "ok": false,
+          "error": "unknown_field",
+          "value": null
+        },
+        "subject_result": "fail",
+        "original_success_credit": 0,
+        "guard_result": "pass"
+      }
+    },
+    {
+      "proposal_id": "MF6903R2-123",
+      "definition_sha256": "108d8268158fc54dcbb1ebf9571cd28699de7588ac6adc52bee86f8c8d6ff1a2",
+      "request": {
+        "op": "consent_intersection",
+        "payload": {
+          "now": 3,
+          "records": [
+            {
+              "scopes": [
+                "read",
+                "simulate",
+                "export"
+              ],
+              "expires": 20
+            },
+            {
+              "scopes": [
+                "read",
+                "simulate"
+              ],
+              "expires": 6
+            }
+          ]
+        }
+      },
+      "expected": {
+        "ok": true,
+        "error": null,
+        "value": {
+          "scopes": [
+            "read",
+            "simulate"
+          ],
+          "active_records": 2,
+          "external_action": false
+        }
+      },
+      "observed": {
+        "ok": true,
+        "error": null,
+        "value": {
+          "scopes": [
+            "read",
+            "simulate"
+          ],
+          "active_records": 2,
+          "external_action": false
+        }
+      },
+      "input_unchanged": true,
+      "outcome": "completed",
+      "candidate": {
+        "subject": {
+          "op": "consent_intersection",
+          "payload": {
+            "now": 3,
+            "records": [
+              {
+                "scopes": [
+                  "read",
+                  "simulate",
+                  "export"
+                ],
+                "expires": 20
+              },
+              {
+                "scopes": [
+                  "read",
+                  "simulate"
+                ],
+                "expires": 6
+              }
+            ],
+            "unreviewed_authority_grant": true
+          }
+        },
+        "expected": {
+          "ok": false,
+          "error": "unknown_field",
+          "value": null
+        },
+        "observed": {
+          "ok": false,
+          "error": "unknown_field",
+          "value": null
+        },
+        "subject_result": "fail",
+        "original_success_credit": 0,
+        "guard_result": "pass"
+      }
+    },
+    {
+      "proposal_id": "MF6903R2-124",
+      "definition_sha256": "197b197ccbbe90ffdb9dd082de2d5e8ee51e4ac3354e649bd28104ef52732bb2",
+      "request": {
+        "op": "consent_intersection",
+        "payload": {
+          "now": 4,
+          "records": [
+            {
+              "scopes": [
+                "read",
+                "simulate",
+                "export"
+              ],
+              "expires": 20
+            },
+            {
+              "scopes": [
+                "read",
+                "simulate"
+              ],
+              "expires": 6
+            }
+          ]
+        }
+      },
+      "expected": {
+        "ok": true,
+        "error": null,
+        "value": {
+          "scopes": [
+            "read",
+            "simulate"
+          ],
+          "active_records": 2,
+          "external_action": false
+        }
+      },
+      "observed": {
+        "ok": true,
+        "error": null,
+        "value": {
+          "scopes": [
+            "read",
+            "simulate"
+          ],
+          "active_records": 2,
+          "external_action": false
+        }
+      },
+      "input_unchanged": true,
+      "outcome": "completed",
+      "candidate": {
+        "subject": {
+          "op": "consent_intersection",
+          "payload": {
+            "now": 4,
+            "records": [
+              {
+                "scopes": [
+                  "read",
+                  "simulate",
+                  "export"
+                ],
+                "expires": 20
+              },
+              {
+                "scopes": [
+                  "read",
+                  "simulate"
+                ],
+                "expires": 6
+              }
+            ],
+            "unreviewed_authority_grant": true
+          }
+        },
+        "expected": {
+          "ok": false,
+          "error": "unknown_field",
+          "value": null
+        },
+        "observed": {
+          "ok": false,
+          "error": "unknown_field",
+          "value": null
+        },
+        "subject_result": "fail",
+        "original_success_credit": 0,
+        "guard_result": "pass"
+      }
+    },
+    {
+      "proposal_id": "MF6903R2-125",
+      "definition_sha256": "f7457056b54528ac6f78d2d6354dba26d9b3b71b775889703b488ef843a08da0",
+      "request": {
+        "op": "consent_intersection",
+        "payload": {
+          "now": 5,
+          "records": [
+            {
+              "scopes": [
+                "read",
+                "simulate",
+                "export"
+              ],
+              "expires": 20
+            },
+            {
+              "scopes": [
+                "read",
+                "simulate"
+              ],
+              "expires": 6
+            }
+          ]
+        }
+      },
+      "expected": {
+        "ok": true,
+        "error": null,
+        "value": {
+          "scopes": [
+            "read",
+            "simulate"
+          ],
+          "active_records": 2,
+          "external_action": false
+        }
+      },
+      "observed": {
+        "ok": true,
+        "error": null,
+        "value": {
+          "scopes": [
+            "read",
+            "simulate"
+          ],
+          "active_records": 2,
+          "external_action": false
+        }
+      },
+      "input_unchanged": true,
+      "outcome": "completed",
+      "candidate": {
+        "subject": {
+          "op": "consent_intersection",
+          "payload": {
+            "now": 5,
+            "records": [
+              {
+                "scopes": [
+                  "read",
+                  "simulate",
+                  "export"
+                ],
+                "expires": 20
+              },
+              {
+                "scopes": [
+                  "read",
+                  "simulate"
+                ],
+                "expires": 6
+              }
+            ],
+            "unreviewed_authority_grant": true
+          }
+        },
+        "expected": {
+          "ok": false,
+          "error": "unknown_field",
+          "value": null
+        },
+        "observed": {
+          "ok": false,
+          "error": "unknown_field",
+          "value": null
+        },
+        "subject_result": "fail",
+        "original_success_credit": 0,
+        "guard_result": "pass"
+      }
+    },
+    {
+      "proposal_id": "MF6903R2-126",
+      "definition_sha256": "30af7c3fb31c3270fdbcbeeee2a470389a8d7c7ef6ec85fc2c5f25427728e75f",
+      "request": {
+        "op": "consent_intersection",
+        "payload": {
+          "now": 6,
+          "records": [
+            {
+              "scopes": [
+                "read",
+                "simulate",
+                "export"
+              ],
+              "expires": 20
+            },
+            {
+              "scopes": [
+                "read",
+                "simulate"
+              ],
+              "expires": 6
+            }
+          ]
+        }
+      },
+      "expected": {
+        "ok": true,
+        "error": null,
+        "value": {
+          "scopes": [],
+          "active_records": 1,
+          "external_action": false
+        }
+      },
+      "observed": {
+        "ok": true,
+        "error": null,
+        "value": {
+          "scopes": [],
+          "active_records": 1,
+          "external_action": false
+        }
+      },
+      "input_unchanged": true,
+      "outcome": "completed",
+      "candidate": {
+        "subject": {
+          "op": "consent_intersection",
+          "payload": {
+            "now": 6,
+            "records": [
+              {
+                "scopes": [
+                  "read",
+                  "simulate",
+                  "export"
+                ],
+                "expires": 20
+              },
+              {
+                "scopes": [
+                  "read",
+                  "simulate"
+                ],
+                "expires": 6
+              }
+            ],
+            "unreviewed_authority_grant": true
+          }
+        },
+        "expected": {
+          "ok": false,
+          "error": "unknown_field",
+          "value": null
+        },
+        "observed": {
+          "ok": false,
+          "error": "unknown_field",
+          "value": null
+        },
+        "subject_result": "fail",
+        "original_success_credit": 0,
+        "guard_result": "pass"
+      }
+    },
+    {
+      "proposal_id": "MF6903R2-127",
+      "definition_sha256": "2b99dff54e652896219b1d19f091e39dfc77f9621ecd96698432d38f4b512e06",
+      "request": {
+        "op": "consent_intersection",
+        "payload": {
+          "now": 7,
+          "records": [
+            {
+              "scopes": [
+                "read",
+                "simulate",
+                "export"
+              ],
+              "expires": 20
+            },
+            {
+              "scopes": [
+                "read",
+                "simulate"
+              ],
+              "expires": 6
+            }
+          ]
+        }
+      },
+      "expected": {
+        "ok": true,
+        "error": null,
+        "value": {
+          "scopes": [],
+          "active_records": 1,
+          "external_action": false
+        }
+      },
+      "observed": {
+        "ok": true,
+        "error": null,
+        "value": {
+          "scopes": [],
+          "active_records": 1,
+          "external_action": false
+        }
+      },
+      "input_unchanged": true,
+      "outcome": "completed",
+      "candidate": {
+        "subject": {
+          "op": "consent_intersection",
+          "payload": {
+            "now": 7,
+            "records": [
+              {
+                "scopes": [
+                  "read",
+                  "simulate",
+                  "export"
+                ],
+                "expires": 20
+              },
+              {
+                "scopes": [
+                  "read",
+                  "simulate"
+                ],
+                "expires": 6
+              }
+            ],
+            "unreviewed_authority_grant": true
+          }
+        },
+        "expected": {
+          "ok": false,
+          "error": "unknown_field",
+          "value": null
+        },
+        "observed": {
+          "ok": false,
+          "error": "unknown_field",
+          "value": null
+        },
+        "subject_result": "fail",
+        "original_success_credit": 0,
+        "guard_result": "pass"
+      }
+    },
+    {
+      "proposal_id": "MF6903R2-128",
+      "definition_sha256": "71c0e02e344ab5bde6f8f9dd230578d64a32d5ff059a58bb9f6c886e2b48a67d",
+      "request": {
+        "op": "consent_intersection",
+        "payload": {
+          "now": 8,
+          "records": [
+            {
+              "scopes": [
+                "read",
+                "simulate",
+                "export"
+              ],
+              "expires": 20
+            },
+            {
+              "scopes": [
+                "read",
+                "simulate"
+              ],
+              "expires": 6
+            }
+          ]
+        }
+      },
+      "expected": {
+        "ok": true,
+        "error": null,
+        "value": {
+          "scopes": [],
+          "active_records": 1,
+          "external_action": false
+        }
+      },
+      "observed": {
+        "ok": true,
+        "error": null,
+        "value": {
+          "scopes": [],
+          "active_records": 1,
+          "external_action": false
+        }
+      },
+      "input_unchanged": true,
+      "outcome": "completed",
+      "candidate": {
+        "subject": {
+          "op": "consent_intersection",
+          "payload": {
+            "now": 8,
+            "records": [
+              {
+                "scopes": [
+                  "read",
+                  "simulate",
+                  "export"
+                ],
+                "expires": 20
+              },
+              {
+                "scopes": [
+                  "read",
+                  "simulate"
+                ],
+                "expires": 6
+              }
+            ],
+            "unreviewed_authority_grant": true
+          }
+        },
+        "expected": {
+          "ok": false,
+          "error": "unknown_field",
+          "value": null
+        },
+        "observed": {
+          "ok": false,
+          "error": "unknown_field",
+          "value": null
+        },
+        "subject_result": "fail",
+        "original_success_credit": 0,
+        "guard_result": "pass"
+      }
+    },
+    {
+      "proposal_id": "MF6903R2-129",
+      "definition_sha256": "da56e4a1f2ea686a0a28d467fa60cf60b07525c6d9e5474855bd746aab9fed2b",
+      "request": {
+        "op": "consent_intersection",
+        "payload": {
+          "now": 9,
+          "records": [
+            {
+              "scopes": [
+                "read",
+                "simulate",
+                "export"
+              ],
+              "expires": 20
+            },
+            {
+              "scopes": [
+                "read",
+                "simulate"
+              ],
+              "expires": 6
+            }
+          ]
+        }
+      },
+      "expected": {
+        "ok": true,
+        "error": null,
+        "value": {
+          "scopes": [],
+          "active_records": 1,
+          "external_action": false
+        }
+      },
+      "observed": {
+        "ok": true,
+        "error": null,
+        "value": {
+          "scopes": [],
+          "active_records": 1,
+          "external_action": false
+        }
+      },
+      "input_unchanged": true,
+      "outcome": "completed",
+      "candidate": {
+        "subject": {
+          "op": "consent_intersection",
+          "payload": {
+            "now": 9,
+            "records": [
+              {
+                "scopes": [
+                  "read",
+                  "simulate",
+                  "export"
+                ],
+                "expires": 20
+              },
+              {
+                "scopes": [
+                  "read",
+                  "simulate"
+                ],
+                "expires": 6
+              }
+            ],
+            "unreviewed_authority_grant": true
+          }
+        },
+        "expected": {
+          "ok": false,
+          "error": "unknown_field",
+          "value": null
+        },
+        "observed": {
+          "ok": false,
+          "error": "unknown_field",
+          "value": null
+        },
+        "subject_result": "fail",
+        "original_success_credit": 0,
+        "guard_result": "pass"
+      }
+    },
+    {
+      "proposal_id": "MF6903R2-130",
+      "definition_sha256": "03f4bacaa1f5084b1d2c5936649d186869eece4d2e368f577c7614665456df46",
+      "request": {
+        "op": "consent_intersection",
+        "payload": {
+          "now": 10,
+          "records": [
+            {
+              "scopes": [
+                "read",
+                "simulate",
+                "export"
+              ],
+              "expires": 20
+            },
+            {
+              "scopes": [
+                "read",
+                "simulate"
+              ],
+              "expires": 6
+            }
+          ]
+        }
+      },
+      "expected": {
+        "ok": true,
+        "error": null,
+        "value": {
+          "scopes": [],
+          "active_records": 1,
+          "external_action": false
+        }
+      },
+      "observed": {
+        "ok": true,
+        "error": null,
+        "value": {
+          "scopes": [],
+          "active_records": 1,
+          "external_action": false
+        }
+      },
+      "input_unchanged": true,
+      "outcome": "completed",
+      "candidate": {
+        "subject": {
+          "op": "consent_intersection",
+          "payload": {
+            "now": 10,
+            "records": [
+              {
+                "scopes": [
+                  "read",
+                  "simulate",
+                  "export"
+                ],
+                "expires": 20
+              },
+              {
+                "scopes": [
+                  "read",
+                  "simulate"
+                ],
+                "expires": 6
+              }
+            ],
+            "unreviewed_authority_grant": true
+          }
+        },
+        "expected": {
+          "ok": false,
+          "error": "unknown_field",
+          "value": null
+        },
+        "observed": {
+          "ok": false,
+          "error": "unknown_field",
+          "value": null
+        },
+        "subject_result": "fail",
+        "original_success_credit": 0,
+        "guard_result": "pass"
+      }
+    },
+    {
+      "proposal_id": "MF6903R2-131",
+      "definition_sha256": "4fa9e561f5bae5801b9207a78d2a4496e39e4fe8388d9c464de7ffc6a6992b07",
+      "request": {
+        "op": "revocation_order",
+        "payload": {
+          "granted": 10,
+          "expires": 20,
+          "revoked": 15,
+          "now": 11
+        }
+      },
+      "expected": {
+        "ok": true,
+        "error": null,
+        "value": {
+          "active": true,
+          "reason": "current",
+          "external_action": false
+        }
+      },
+      "observed": {
+        "ok": true,
+        "error": null,
+        "value": {
+          "active": true,
+          "reason": "current",
+          "external_action": false
+        }
+      },
+      "input_unchanged": true,
+      "outcome": "completed",
+      "candidate": {
+        "subject": {
+          "op": "revocation_order",
+          "payload": {
+            "granted": 10,
+            "expires": 20,
+            "revoked": 15,
+            "now": 11,
+            "unreviewed_authority_grant": true
+          }
+        },
+        "expected": {
+          "ok": false,
+          "error": "unknown_field",
+          "value": null
+        },
+        "observed": {
+          "ok": false,
+          "error": "unknown_field",
+          "value": null
+        },
+        "subject_result": "fail",
+        "original_success_credit": 0,
+        "guard_result": "pass"
+      }
+    },
+    {
+      "proposal_id": "MF6903R2-132",
+      "definition_sha256": "087271544b6e992071fef7bc321d462c4dc136c432f20ff0b675c4d34193a31a",
+      "request": {
+        "op": "revocation_order",
+        "payload": {
+          "granted": 10,
+          "expires": 20,
+          "revoked": 15,
+          "now": 12
+        }
+      },
+      "expected": {
+        "ok": true,
+        "error": null,
+        "value": {
+          "active": true,
+          "reason": "current",
+          "external_action": false
+        }
+      },
+      "observed": {
+        "ok": true,
+        "error": null,
+        "value": {
+          "active": true,
+          "reason": "current",
+          "external_action": false
+        }
+      },
+      "input_unchanged": true,
+      "outcome": "completed",
+      "candidate": {
+        "subject": {
+          "op": "revocation_order",
+          "payload": {
+            "granted": 10,
+            "expires": 20,
+            "revoked": 15,
+            "now": 12,
+            "unreviewed_authority_grant": true
+          }
+        },
+        "expected": {
+          "ok": false,
+          "error": "unknown_field",
+          "value": null
+        },
+        "observed": {
+          "ok": false,
+          "error": "unknown_field",
+          "value": null
+        },
+        "subject_result": "fail",
+        "original_success_credit": 0,
+        "guard_result": "pass"
+      }
+    },
+    {
+      "proposal_id": "MF6903R2-133",
+      "definition_sha256": "ac898afbd5ad7e0edbad36e42cc3a15b470c9d890124c951ae0b4f42a1709cf3",
+      "request": {
+        "op": "revocation_order",
+        "payload": {
+          "granted": 10,
+          "expires": 20,
+          "revoked": 15,
+          "now": 13
+        }
+      },
+      "expected": {
+        "ok": true,
+        "error": null,
+        "value": {
+          "active": true,
+          "reason": "current",
+          "external_action": false
+        }
+      },
+      "observed": {
+        "ok": true,
+        "error": null,
+        "value": {
+          "active": true,
+          "reason": "current",
+          "external_action": false
+        }
+      },
+      "input_unchanged": true,
+      "outcome": "completed",
+      "candidate": {
+        "subject": {
+          "op": "revocation_order",
+          "payload": {
+            "granted": 10,
+            "expires": 20,
+            "revoked": 15,
+            "now": 13,
+            "unreviewed_authority_grant": true
+          }
+        },
+        "expected": {
+          "ok": false,
+          "error": "unknown_field",
+          "value": null
+        },
+        "observed": {
+          "ok": false,
+          "error": "unknown_field",
+          "value": null
+        },
+        "subject_result": "fail",
+        "original_success_credit": 0,
+        "guard_result": "pass"
+      }
+    },
+    {
+      "proposal_id": "MF6903R2-134",
+      "definition_sha256": "b688f9028bb4853a9a29b9d2c072eb7f12d34934a7c45c95f1745ed64417e7b1",
+      "request": {
+        "op": "revocation_order",
+        "payload": {
+          "granted": 10,
+          "expires": 20,
+          "revoked": 15,
+          "now": 14
+        }
+      },
+      "expected": {
+        "ok": true,
+        "error": null,
+        "value": {
+          "active": true,
+          "reason": "current",
+          "external_action": false
+        }
+      },
+      "observed": {
+        "ok": true,
+        "error": null,
+        "value": {
+          "active": true,
+          "reason": "current",
+          "external_action": false
+        }
+      },
+      "input_unchanged": true,
+      "outcome": "completed",
+      "candidate": {
+        "subject": {
+          "op": "revocation_order",
+          "payload": {
+            "granted": 10,
+            "expires": 20,
+            "revoked": 15,
+            "now": 14,
+            "unreviewed_authority_grant": true
+          }
+        },
+        "expected": {
+          "ok": false,
+          "error": "unknown_field",
+          "value": null
+        },
+        "observed": {
+          "ok": false,
+          "error": "unknown_field",
+          "value": null
+        },
+        "subject_result": "fail",
+        "original_success_credit": 0,
+        "guard_result": "pass"
+      }
+    },
+    {
+      "proposal_id": "MF6903R2-135",
+      "definition_sha256": "924ac07c7f19eaf3ec5ef123f5439cfba3cb104ccb8753919d7d112be817e889",
+      "request": {
+        "op": "revocation_order",
+        "payload": {
+          "granted": 10,
+          "expires": 20,
+          "revoked": 15,
+          "now": 15
+        }
+      },
+      "expected": {
+        "ok": true,
+        "error": null,
+        "value": {
+          "active": false,
+          "reason": "revoked",
+          "external_action": false
+        }
+      },
+      "observed": {
+        "ok": true,
+        "error": null,
+        "value": {
+          "active": false,
+          "reason": "revoked",
+          "external_action": false
+        }
+      },
+      "input_unchanged": true,
+      "outcome": "completed",
+      "candidate": {
+        "subject": {
+          "op": "revocation_order",
+          "payload": {
+            "granted": 10,
+            "expires": 20,
+            "revoked": 15,
+            "now": 15,
+            "unreviewed_authority_grant": true
+          }
+        },
+        "expected": {
+          "ok": false,
+          "error": "unknown_field",
+          "value": null
+        },
+        "observed": {
+          "ok": false,
+          "error": "unknown_field",
+          "value": null
+        },
+        "subject_result": "fail",
+        "original_success_credit": 0,
+        "guard_result": "pass"
+      }
+    },
+    {
+      "proposal_id": "MF6903R2-136",
+      "definition_sha256": "30e39ecf9245de1afb8064a215bb5a922f9adf58883fd6ac38c6e7fe89bcfcf8",
+      "request": {
+        "op": "revocation_order",
+        "payload": {
+          "granted": 10,
+          "expires": 20,
+          "revoked": 15,
+          "now": 16
+        }
+      },
+      "expected": {
+        "ok": true,
+        "error": null,
+        "value": {
+          "active": false,
+          "reason": "revoked",
+          "external_action": false
+        }
+      },
+      "observed": {
+        "ok": true,
+        "error": null,
+        "value": {
+          "active": false,
+          "reason": "revoked",
+          "external_action": false
+        }
+      },
+      "input_unchanged": true,
+      "outcome": "completed",
+      "candidate": {
+        "subject": {
+          "op": "revocation_order",
+          "payload": {
+            "granted": 10,
+            "expires": 20,
+            "revoked": 15,
+            "now": 16,
+            "unreviewed_authority_grant": true
+          }
+        },
+        "expected": {
+          "ok": false,
+          "error": "unknown_field",
+          "value": null
+        },
+        "observed": {
+          "ok": false,
+          "error": "unknown_field",
+          "value": null
+        },
+        "subject_result": "fail",
+        "original_success_credit": 0,
+        "guard_result": "pass"
+      }
+    },
+    {
+      "proposal_id": "MF6903R2-137",
+      "definition_sha256": "83f0b25c06353f31217be27cca9bf27c7dd9c2054d20355fdbb097daf1fa0e74",
+      "request": {
+        "op": "revocation_order",
+        "payload": {
+          "granted": 10,
+          "expires": 20,
+          "revoked": 15,
+          "now": 17
+        }
+      },
+      "expected": {
+        "ok": true,
+        "error": null,
+        "value": {
+          "active": false,
+          "reason": "revoked",
+          "external_action": false
+        }
+      },
+      "observed": {
+        "ok": true,
+        "error": null,
+        "value": {
+          "active": false,
+          "reason": "revoked",
+          "external_action": false
+        }
+      },
+      "input_unchanged": true,
+      "outcome": "completed",
+      "candidate": {
+        "subject": {
+          "op": "revocation_order",
+          "payload": {
+            "granted": 10,
+            "expires": 20,
+            "revoked": 15,
+            "now": 17,
+            "unreviewed_authority_grant": true
+          }
+        },
+        "expected": {
+          "ok": false,
+          "error": "unknown_field",
+          "value": null
+        },
+        "observed": {
+          "ok": false,
+          "error": "unknown_field",
+          "value": null
+        },
+        "subject_result": "fail",
+        "original_success_credit": 0,
+        "guard_result": "pass"
+      }
+    },
+    {
+      "proposal_id": "MF6903R2-138",
+      "definition_sha256": "f75c70ba8ba0e2758750a9d7b80e81380525f64f05e0dba926e2b6822094c7c6",
+      "request": {
+        "op": "revocation_order",
+        "payload": {
+          "granted": 10,
+          "expires": 20,
+          "revoked": 15,
+          "now": 18
+        }
+      },
+      "expected": {
+        "ok": true,
+        "error": null,
+        "value": {
+          "active": false,
+          "reason": "revoked",
+          "external_action": false
+        }
+      },
+      "observed": {
+        "ok": true,
+        "error": null,
+        "value": {
+          "active": false,
+          "reason": "revoked",
+          "external_action": false
+        }
+      },
+      "input_unchanged": true,
+      "outcome": "completed",
+      "candidate": {
+        "subject": {
+          "op": "revocation_order",
+          "payload": {
+            "granted": 10,
+            "expires": 20,
+            "revoked": 15,
+            "now": 18,
+            "unreviewed_authority_grant": true
+          }
+        },
+        "expected": {
+          "ok": false,
+          "error": "unknown_field",
+          "value": null
+        },
+        "observed": {
+          "ok": false,
+          "error": "unknown_field",
+          "value": null
+        },
+        "subject_result": "fail",
+        "original_success_credit": 0,
+        "guard_result": "pass"
+      }
+    },
+    {
+      "proposal_id": "MF6903R2-139",
+      "definition_sha256": "74b9c067c677ffbc6564d92eafed1d15df9a5e0e721ab3fb5cf65c6aac30e519",
+      "request": {
+        "op": "revocation_order",
+        "payload": {
+          "granted": 10,
+          "expires": 20,
+          "revoked": 15,
+          "now": 19
+        }
+      },
+      "expected": {
+        "ok": true,
+        "error": null,
+        "value": {
+          "active": false,
+          "reason": "revoked",
+          "external_action": false
+        }
+      },
+      "observed": {
+        "ok": true,
+        "error": null,
+        "value": {
+          "active": false,
+          "reason": "revoked",
+          "external_action": false
+        }
+      },
+      "input_unchanged": true,
+      "outcome": "completed",
+      "candidate": {
+        "subject": {
+          "op": "revocation_order",
+          "payload": {
+            "granted": 10,
+            "expires": 20,
+            "revoked": 15,
+            "now": 19,
+            "unreviewed_authority_grant": true
+          }
+        },
+        "expected": {
+          "ok": false,
+          "error": "unknown_field",
+          "value": null
+        },
+        "observed": {
+          "ok": false,
+          "error": "unknown_field",
+          "value": null
+        },
+        "subject_result": "fail",
+        "original_success_credit": 0,
+        "guard_result": "pass"
+      }
+    },
+    {
+      "proposal_id": "MF6903R2-140",
+      "definition_sha256": "e3c97966bf8021b7a057107e992c2308da3d2dcf3d26a17c266cdaafe0962ce9",
+      "request": {
+        "op": "revocation_order",
+        "payload": {
+          "granted": 10,
+          "expires": 20,
+          "revoked": 15,
+          "now": 20
+        }
+      },
+      "expected": {
+        "ok": true,
+        "error": null,
+        "value": {
+          "active": false,
+          "reason": "expired",
+          "external_action": false
+        }
+      },
+      "observed": {
+        "ok": true,
+        "error": null,
+        "value": {
+          "active": false,
+          "reason": "expired",
+          "external_action": false
+        }
+      },
+      "input_unchanged": true,
+      "outcome": "completed",
+      "candidate": {
+        "subject": {
+          "op": "revocation_order",
+          "payload": {
+            "granted": 10,
+            "expires": 20,
+            "revoked": 15,
+            "now": 20,
+            "unreviewed_authority_grant": true
+          }
+        },
+        "expected": {
+          "ok": false,
+          "error": "unknown_field",
+          "value": null
+        },
+        "observed": {
+          "ok": false,
+          "error": "unknown_field",
+          "value": null
+        },
+        "subject_result": "fail",
+        "original_success_credit": 0,
+        "guard_result": "pass"
+      }
+    },
+    {
+      "proposal_id": "MF6903R2-141",
+      "definition_sha256": "fc1b62b94e4c749e68c41138eb5e044e98f9aa0ce4feb7877f474a98c55d8833",
+      "request": {
+        "op": "task_scheduler",
+        "payload": {
+          "tasks": [
+            {
+              "id": "a",
+              "duration": 1,
+              "parents": []
+            },
+            {
+              "id": "b",
+              "duration": 2,
+              "parents": [
+                "a"
+              ]
+            },
+            {
+              "id": "c",
+              "duration": 3,
+              "parents": [
+                "a"
+              ]
+            }
+          ]
+        }
+      },
+      "expected": {
+        "ok": true,
+        "error": null,
+        "value": {
+          "starts": {
+            "a": 0,
+            "b": 1,
+            "c": 1
+          },
+          "finishes": {
+            "a": 1,
+            "b": 3,
+            "c": 4
+          },
+          "makespan": 4,
+          "resource_limits_modeled": false
+        }
+      },
+      "observed": {
+        "ok": true,
+        "error": null,
+        "value": {
+          "starts": {
+            "a": 0,
+            "b": 1,
+            "c": 1
+          },
+          "finishes": {
+            "a": 1,
+            "b": 3,
+            "c": 4
+          },
+          "makespan": 4,
+          "resource_limits_modeled": false
+        }
+      },
+      "input_unchanged": true,
+      "outcome": "completed",
+      "candidate": {
+        "subject": {
+          "op": "task_scheduler",
+          "payload": {
+            "tasks": [
+              {
+                "id": "a",
+                "duration": 1,
+                "parents": []
+              },
+              {
+                "id": "b",
+                "duration": 2,
+                "parents": [
+                  "a"
+                ]
+              },
+              {
+                "id": "c",
+                "duration": 3,
+                "parents": [
+                  "a"
+                ]
+              }
+            ],
+            "unreviewed_authority_grant": true
+          }
+        },
+        "expected": {
+          "ok": false,
+          "error": "unknown_field",
+          "value": null
+        },
+        "observed": {
+          "ok": false,
+          "error": "unknown_field",
+          "value": null
+        },
+        "subject_result": "fail",
+        "original_success_credit": 0,
+        "guard_result": "pass"
+      }
+    },
+    {
+      "proposal_id": "MF6903R2-142",
+      "definition_sha256": "2b3c4daf6ac53df4b42faf1c03dd4cd5c8da53eaf3360e83f024ed285d72a42b",
+      "request": {
+        "op": "task_scheduler",
+        "payload": {
+          "tasks": [
+            {
+              "id": "a",
+              "duration": 2,
+              "parents": []
+            },
+            {
+              "id": "b",
+              "duration": 2,
+              "parents": [
+                "a"
+              ]
+            },
+            {
+              "id": "c",
+              "duration": 3,
+              "parents": [
+                "a"
+              ]
+            }
+          ]
+        }
+      },
+      "expected": {
+        "ok": true,
+        "error": null,
+        "value": {
+          "starts": {
+            "a": 0,
+            "b": 2,
+            "c": 2
+          },
+          "finishes": {
+            "a": 2,
+            "b": 4,
+            "c": 5
+          },
+          "makespan": 5,
+          "resource_limits_modeled": false
+        }
+      },
+      "observed": {
+        "ok": true,
+        "error": null,
+        "value": {
+          "starts": {
+            "a": 0,
+            "b": 2,
+            "c": 2
+          },
+          "finishes": {
+            "a": 2,
+            "b": 4,
+            "c": 5
+          },
+          "makespan": 5,
+          "resource_limits_modeled": false
+        }
+      },
+      "input_unchanged": true,
+      "outcome": "completed",
+      "candidate": {
+        "subject": {
+          "op": "task_scheduler",
+          "payload": {
+            "tasks": [
+              {
+                "id": "a",
+                "duration": 2,
+                "parents": []
+              },
+              {
+                "id": "b",
+                "duration": 2,
+                "parents": [
+                  "a"
+                ]
+              },
+              {
+                "id": "c",
+                "duration": 3,
+                "parents": [
+                  "a"
+                ]
+              }
+            ],
+            "unreviewed_authority_grant": true
+          }
+        },
+        "expected": {
+          "ok": false,
+          "error": "unknown_field",
+          "value": null
+        },
+        "observed": {
+          "ok": false,
+          "error": "unknown_field",
+          "value": null
+        },
+        "subject_result": "fail",
+        "original_success_credit": 0,
+        "guard_result": "pass"
+      }
+    },
+    {
+      "proposal_id": "MF6903R2-143",
+      "definition_sha256": "9fd0eb8a9954c9378d12040c4d91515f1c17db864f438a71bc0840589542bec0",
+      "request": {
+        "op": "task_scheduler",
+        "payload": {
+          "tasks": [
+            {
+              "id": "a",
+              "duration": 3,
+              "parents": []
+            },
+            {
+              "id": "b",
+              "duration": 2,
+              "parents": [
+                "a"
+              ]
+            },
+            {
+              "id": "c",
+              "duration": 3,
+              "parents": [
+                "a"
+              ]
+            }
+          ]
+        }
+      },
+      "expected": {
+        "ok": true,
+        "error": null,
+        "value": {
+          "starts": {
+            "a": 0,
+            "b": 3,
+            "c": 3
+          },
+          "finishes": {
+            "a": 3,
+            "b": 5,
+            "c": 6
+          },
+          "makespan": 6,
+          "resource_limits_modeled": false
+        }
+      },
+      "observed": {
+        "ok": true,
+        "error": null,
+        "value": {
+          "starts": {
+            "a": 0,
+            "b": 3,
+            "c": 3
+          },
+          "finishes": {
+            "a": 3,
+            "b": 5,
+            "c": 6
+          },
+          "makespan": 6,
+          "resource_limits_modeled": false
+        }
+      },
+      "input_unchanged": true,
+      "outcome": "completed",
+      "candidate": {
+        "subject": {
+          "op": "task_scheduler",
+          "payload": {
+            "tasks": [
+              {
+                "id": "a",
+                "duration": 3,
+                "parents": []
+              },
+              {
+                "id": "b",
+                "duration": 2,
+                "parents": [
+                  "a"
+                ]
+              },
+              {
+                "id": "c",
+                "duration": 3,
+                "parents": [
+                  "a"
+                ]
+              }
+            ],
+            "unreviewed_authority_grant": true
+          }
+        },
+        "expected": {
+          "ok": false,
+          "error": "unknown_field",
+          "value": null
+        },
+        "observed": {
+          "ok": false,
+          "error": "unknown_field",
+          "value": null
+        },
+        "subject_result": "fail",
+        "original_success_credit": 0,
+        "guard_result": "pass"
+      }
+    },
+    {
+      "proposal_id": "MF6903R2-144",
+      "definition_sha256": "d57b8343a52df654c29bc3caee9927e26de1cc94767476ca2e72e628e742fb44",
+      "request": {
+        "op": "task_scheduler",
+        "payload": {
+          "tasks": [
+            {
+              "id": "a",
+              "duration": 4,
+              "parents": []
+            },
+            {
+              "id": "b",
+              "duration": 2,
+              "parents": [
+                "a"
+              ]
+            },
+            {
+              "id": "c",
+              "duration": 3,
+              "parents": [
+                "a"
+              ]
+            }
+          ]
+        }
+      },
+      "expected": {
+        "ok": true,
+        "error": null,
+        "value": {
+          "starts": {
+            "a": 0,
+            "b": 4,
+            "c": 4
+          },
+          "finishes": {
+            "a": 4,
+            "b": 6,
+            "c": 7
+          },
+          "makespan": 7,
+          "resource_limits_modeled": false
+        }
+      },
+      "observed": {
+        "ok": true,
+        "error": null,
+        "value": {
+          "starts": {
+            "a": 0,
+            "b": 4,
+            "c": 4
+          },
+          "finishes": {
+            "a": 4,
+            "b": 6,
+            "c": 7
+          },
+          "makespan": 7,
+          "resource_limits_modeled": false
+        }
+      },
+      "input_unchanged": true,
+      "outcome": "completed",
+      "candidate": {
+        "subject": {
+          "op": "task_scheduler",
+          "payload": {
+            "tasks": [
+              {
+                "id": "a",
+                "duration": 4,
+                "parents": []
+              },
+              {
+                "id": "b",
+                "duration": 2,
+                "parents": [
+                  "a"
+                ]
+              },
+              {
+                "id": "c",
+                "duration": 3,
+                "parents": [
+                  "a"
+                ]
+              }
+            ],
+            "unreviewed_authority_grant": true
+          }
+        },
+        "expected": {
+          "ok": false,
+          "error": "unknown_field",
+          "value": null
+        },
+        "observed": {
+          "ok": false,
+          "error": "unknown_field",
+          "value": null
+        },
+        "subject_result": "fail",
+        "original_success_credit": 0,
+        "guard_result": "pass"
+      }
+    },
+    {
+      "proposal_id": "MF6903R2-145",
+      "definition_sha256": "74573e23b616de9ab58984734d02b7a0c0295134f7670d1d0d64499ef81f36fa",
+      "request": {
+        "op": "task_scheduler",
+        "payload": {
+          "tasks": [
+            {
+              "id": "a",
+              "duration": 5,
+              "parents": []
+            },
+            {
+              "id": "b",
+              "duration": 2,
+              "parents": [
+                "a"
+              ]
+            },
+            {
+              "id": "c",
+              "duration": 3,
+              "parents": [
+                "a"
+              ]
+            }
+          ]
+        }
+      },
+      "expected": {
+        "ok": true,
+        "error": null,
+        "value": {
+          "starts": {
+            "a": 0,
+            "b": 5,
+            "c": 5
+          },
+          "finishes": {
+            "a": 5,
+            "b": 7,
+            "c": 8
+          },
+          "makespan": 8,
+          "resource_limits_modeled": false
+        }
+      },
+      "observed": {
+        "ok": true,
+        "error": null,
+        "value": {
+          "starts": {
+            "a": 0,
+            "b": 5,
+            "c": 5
+          },
+          "finishes": {
+            "a": 5,
+            "b": 7,
+            "c": 8
+          },
+          "makespan": 8,
+          "resource_limits_modeled": false
+        }
+      },
+      "input_unchanged": true,
+      "outcome": "completed",
+      "candidate": {
+        "subject": {
+          "op": "task_scheduler",
+          "payload": {
+            "tasks": [
+              {
+                "id": "a",
+                "duration": 5,
+                "parents": []
+              },
+              {
+                "id": "b",
+                "duration": 2,
+                "parents": [
+                  "a"
+                ]
+              },
+              {
+                "id": "c",
+                "duration": 3,
+                "parents": [
+                  "a"
+                ]
+              }
+            ],
+            "unreviewed_authority_grant": true
+          }
+        },
+        "expected": {
+          "ok": false,
+          "error": "unknown_field",
+          "value": null
+        },
+        "observed": {
+          "ok": false,
+          "error": "unknown_field",
+          "value": null
+        },
+        "subject_result": "fail",
+        "original_success_credit": 0,
+        "guard_result": "pass"
+      }
+    },
+    {
+      "proposal_id": "MF6903R2-146",
+      "definition_sha256": "28c99b926f5ba2eb25cdc483d523bc26249f2d429b5f4fd3d013fe475522b2f7",
+      "request": {
+        "op": "task_scheduler",
+        "payload": {
+          "tasks": [
+            {
+              "id": "a",
+              "duration": 6,
+              "parents": []
+            },
+            {
+              "id": "b",
+              "duration": 2,
+              "parents": [
+                "a"
+              ]
+            },
+            {
+              "id": "c",
+              "duration": 3,
+              "parents": [
+                "a"
+              ]
+            }
+          ]
+        }
+      },
+      "expected": {
+        "ok": true,
+        "error": null,
+        "value": {
+          "starts": {
+            "a": 0,
+            "b": 6,
+            "c": 6
+          },
+          "finishes": {
+            "a": 6,
+            "b": 8,
+            "c": 9
+          },
+          "makespan": 9,
+          "resource_limits_modeled": false
+        }
+      },
+      "observed": {
+        "ok": true,
+        "error": null,
+        "value": {
+          "starts": {
+            "a": 0,
+            "b": 6,
+            "c": 6
+          },
+          "finishes": {
+            "a": 6,
+            "b": 8,
+            "c": 9
+          },
+          "makespan": 9,
+          "resource_limits_modeled": false
+        }
+      },
+      "input_unchanged": true,
+      "outcome": "completed",
+      "candidate": {
+        "subject": {
+          "op": "task_scheduler",
+          "payload": {
+            "tasks": [
+              {
+                "id": "a",
+                "duration": 6,
+                "parents": []
+              },
+              {
+                "id": "b",
+                "duration": 2,
+                "parents": [
+                  "a"
+                ]
+              },
+              {
+                "id": "c",
+                "duration": 3,
+                "parents": [
+                  "a"
+                ]
+              }
+            ],
+            "unreviewed_authority_grant": true
+          }
+        },
+        "expected": {
+          "ok": false,
+          "error": "unknown_field",
+          "value": null
+        },
+        "observed": {
+          "ok": false,
+          "error": "unknown_field",
+          "value": null
+        },
+        "subject_result": "fail",
+        "original_success_credit": 0,
+        "guard_result": "pass"
+      }
+    },
+    {
+      "proposal_id": "MF6903R2-147",
+      "definition_sha256": "682b0a027a07287af56e55f529a2a7315b5cab1835f61eba556a6650eff69e8c",
+      "request": {
+        "op": "task_scheduler",
+        "payload": {
+          "tasks": [
+            {
+              "id": "a",
+              "duration": 7,
+              "parents": []
+            },
+            {
+              "id": "b",
+              "duration": 2,
+              "parents": [
+                "a"
+              ]
+            },
+            {
+              "id": "c",
+              "duration": 3,
+              "parents": [
+                "a"
+              ]
+            }
+          ]
+        }
+      },
+      "expected": {
+        "ok": true,
+        "error": null,
+        "value": {
+          "starts": {
+            "a": 0,
+            "b": 7,
+            "c": 7
+          },
+          "finishes": {
+            "a": 7,
+            "b": 9,
+            "c": 10
+          },
+          "makespan": 10,
+          "resource_limits_modeled": false
+        }
+      },
+      "observed": {
+        "ok": true,
+        "error": null,
+        "value": {
+          "starts": {
+            "a": 0,
+            "b": 7,
+            "c": 7
+          },
+          "finishes": {
+            "a": 7,
+            "b": 9,
+            "c": 10
+          },
+          "makespan": 10,
+          "resource_limits_modeled": false
+        }
+      },
+      "input_unchanged": true,
+      "outcome": "completed",
+      "candidate": {
+        "subject": {
+          "op": "task_scheduler",
+          "payload": {
+            "tasks": [
+              {
+                "id": "a",
+                "duration": 7,
+                "parents": []
+              },
+              {
+                "id": "b",
+                "duration": 2,
+                "parents": [
+                  "a"
+                ]
+              },
+              {
+                "id": "c",
+                "duration": 3,
+                "parents": [
+                  "a"
+                ]
+              }
+            ],
+            "unreviewed_authority_grant": true
+          }
+        },
+        "expected": {
+          "ok": false,
+          "error": "unknown_field",
+          "value": null
+        },
+        "observed": {
+          "ok": false,
+          "error": "unknown_field",
+          "value": null
+        },
+        "subject_result": "fail",
+        "original_success_credit": 0,
+        "guard_result": "pass"
+      }
+    },
+    {
+      "proposal_id": "MF6903R2-148",
+      "definition_sha256": "b392f5ecae9d9b9dac54ef58a73eec912bde8c8ba4390f5c54e20443c4657051",
+      "request": {
+        "op": "task_scheduler",
+        "payload": {
+          "tasks": [
+            {
+              "id": "a",
+              "duration": 8,
+              "parents": []
+            },
+            {
+              "id": "b",
+              "duration": 2,
+              "parents": [
+                "a"
+              ]
+            },
+            {
+              "id": "c",
+              "duration": 3,
+              "parents": [
+                "a"
+              ]
+            }
+          ]
+        }
+      },
+      "expected": {
+        "ok": true,
+        "error": null,
+        "value": {
+          "starts": {
+            "a": 0,
+            "b": 8,
+            "c": 8
+          },
+          "finishes": {
+            "a": 8,
+            "b": 10,
+            "c": 11
+          },
+          "makespan": 11,
+          "resource_limits_modeled": false
+        }
+      },
+      "observed": {
+        "ok": true,
+        "error": null,
+        "value": {
+          "starts": {
+            "a": 0,
+            "b": 8,
+            "c": 8
+          },
+          "finishes": {
+            "a": 8,
+            "b": 10,
+            "c": 11
+          },
+          "makespan": 11,
+          "resource_limits_modeled": false
+        }
+      },
+      "input_unchanged": true,
+      "outcome": "completed",
+      "candidate": {
+        "subject": {
+          "op": "task_scheduler",
+          "payload": {
+            "tasks": [
+              {
+                "id": "a",
+                "duration": 8,
+                "parents": []
+              },
+              {
+                "id": "b",
+                "duration": 2,
+                "parents": [
+                  "a"
+                ]
+              },
+              {
+                "id": "c",
+                "duration": 3,
+                "parents": [
+                  "a"
+                ]
+              }
+            ],
+            "unreviewed_authority_grant": true
+          }
+        },
+        "expected": {
+          "ok": false,
+          "error": "unknown_field",
+          "value": null
+        },
+        "observed": {
+          "ok": false,
+          "error": "unknown_field",
+          "value": null
+        },
+        "subject_result": "fail",
+        "original_success_credit": 0,
+        "guard_result": "pass"
+      }
+    },
+    {
+      "proposal_id": "MF6903R2-149",
+      "definition_sha256": "fa2dc0459f350d3f102fe0fc47888986d2b71494e0253cd83ef9dd792f181518",
+      "request": {
+        "op": "task_scheduler",
+        "payload": {
+          "tasks": [
+            {
+              "id": "a",
+              "duration": 9,
+              "parents": []
+            },
+            {
+              "id": "b",
+              "duration": 2,
+              "parents": [
+                "a"
+              ]
+            },
+            {
+              "id": "c",
+              "duration": 3,
+              "parents": [
+                "a"
+              ]
+            }
+          ]
+        }
+      },
+      "expected": {
+        "ok": true,
+        "error": null,
+        "value": {
+          "starts": {
+            "a": 0,
+            "b": 9,
+            "c": 9
+          },
+          "finishes": {
+            "a": 9,
+            "b": 11,
+            "c": 12
+          },
+          "makespan": 12,
+          "resource_limits_modeled": false
+        }
+      },
+      "observed": {
+        "ok": true,
+        "error": null,
+        "value": {
+          "starts": {
+            "a": 0,
+            "b": 9,
+            "c": 9
+          },
+          "finishes": {
+            "a": 9,
+            "b": 11,
+            "c": 12
+          },
+          "makespan": 12,
+          "resource_limits_modeled": false
+        }
+      },
+      "input_unchanged": true,
+      "outcome": "completed",
+      "candidate": {
+        "subject": {
+          "op": "task_scheduler",
+          "payload": {
+            "tasks": [
+              {
+                "id": "a",
+                "duration": 9,
+                "parents": []
+              },
+              {
+                "id": "b",
+                "duration": 2,
+                "parents": [
+                  "a"
+                ]
+              },
+              {
+                "id": "c",
+                "duration": 3,
+                "parents": [
+                  "a"
+                ]
+              }
+            ],
+            "unreviewed_authority_grant": true
+          }
+        },
+        "expected": {
+          "ok": false,
+          "error": "unknown_field",
+          "value": null
+        },
+        "observed": {
+          "ok": false,
+          "error": "unknown_field",
+          "value": null
+        },
+        "subject_result": "fail",
+        "original_success_credit": 0,
+        "guard_result": "pass"
+      }
+    },
+    {
+      "proposal_id": "MF6903R2-150",
+      "definition_sha256": "a5bd408b296feb5da9b7870536284a3f13959ec9660d5ad3a59bd09e27610cda",
+      "request": {
+        "op": "task_scheduler",
+        "payload": {
+          "tasks": [
+            {
+              "id": "a",
+              "duration": 10,
+              "parents": []
+            },
+            {
+              "id": "b",
+              "duration": 2,
+              "parents": [
+                "a"
+              ]
+            },
+            {
+              "id": "c",
+              "duration": 3,
+              "parents": [
+                "a"
+              ]
+            }
+          ]
+        }
+      },
+      "expected": {
+        "ok": true,
+        "error": null,
+        "value": {
+          "starts": {
+            "a": 0,
+            "b": 10,
+            "c": 10
+          },
+          "finishes": {
+            "a": 10,
+            "b": 12,
+            "c": 13
+          },
+          "makespan": 13,
+          "resource_limits_modeled": false
+        }
+      },
+      "observed": {
+        "ok": true,
+        "error": null,
+        "value": {
+          "starts": {
+            "a": 0,
+            "b": 10,
+            "c": 10
+          },
+          "finishes": {
+            "a": 10,
+            "b": 12,
+            "c": 13
+          },
+          "makespan": 13,
+          "resource_limits_modeled": false
+        }
+      },
+      "input_unchanged": true,
+      "outcome": "completed",
+      "candidate": {
+        "subject": {
+          "op": "task_scheduler",
+          "payload": {
+            "tasks": [
+              {
+                "id": "a",
+                "duration": 10,
+                "parents": []
+              },
+              {
+                "id": "b",
+                "duration": 2,
+                "parents": [
+                  "a"
+                ]
+              },
+              {
+                "id": "c",
+                "duration": 3,
+                "parents": [
+                  "a"
+                ]
+              }
+            ],
+            "unreviewed_authority_grant": true
+          }
+        },
+        "expected": {
+          "ok": false,
+          "error": "unknown_field",
+          "value": null
+        },
+        "observed": {
+          "ok": false,
+          "error": "unknown_field",
+          "value": null
+        },
+        "subject_result": "fail",
+        "original_success_credit": 0,
+        "guard_result": "pass"
+      }
+    },
+    {
+      "proposal_id": "MF6903R2-151",
+      "definition_sha256": "04962ebbedbb1446c109b03b772fd343c180063b84953778559348c72f6f1ea0",
+      "request": {
+        "op": "queue_service",
+        "payload": {
+          "arrivals": [
+            1,
+            0,
+            2
+          ],
+          "capacity": 2
+        }
+      },
+      "expected": {
+        "ok": true,
+        "error": null,
+        "value": {
+          "served": [
+            1,
+            0,
+            2
+          ],
+          "backlog": [
+            0,
+            0,
+            0
+          ],
+          "total_arrivals": 3,
+          "total_served": 3,
+          "residual": 0
+        }
+      },
+      "observed": {
+        "ok": true,
+        "error": null,
+        "value": {
+          "served": [
+            1,
+            0,
+            2
+          ],
+          "backlog": [
+            0,
+            0,
+            0
+          ],
+          "total_arrivals": 3,
+          "total_served": 3,
+          "residual": 0
+        }
+      },
+      "input_unchanged": true,
+      "outcome": "completed",
+      "candidate": {
+        "subject": {
+          "op": "queue_service",
+          "payload": {
+            "arrivals": [
+              1,
+              0,
+              2
+            ],
+            "capacity": 2,
+            "unreviewed_authority_grant": true
+          }
+        },
+        "expected": {
+          "ok": false,
+          "error": "unknown_field",
+          "value": null
+        },
+        "observed": {
+          "ok": false,
+          "error": "unknown_field",
+          "value": null
+        },
+        "subject_result": "fail",
+        "original_success_credit": 0,
+        "guard_result": "pass"
+      }
+    },
+    {
+      "proposal_id": "MF6903R2-152",
+      "definition_sha256": "6825e78018c9a0d2c28da1fd24566adcc8d5b9e8a76c60de584bdee310bfdbdb",
+      "request": {
+        "op": "queue_service",
+        "payload": {
+          "arrivals": [
+            2,
+            0,
+            2
+          ],
+          "capacity": 2
+        }
+      },
+      "expected": {
+        "ok": true,
+        "error": null,
+        "value": {
+          "served": [
+            2,
+            0,
+            2
+          ],
+          "backlog": [
+            0,
+            0,
+            0
+          ],
+          "total_arrivals": 4,
+          "total_served": 4,
+          "residual": 0
+        }
+      },
+      "observed": {
+        "ok": true,
+        "error": null,
+        "value": {
+          "served": [
+            2,
+            0,
+            2
+          ],
+          "backlog": [
+            0,
+            0,
+            0
+          ],
+          "total_arrivals": 4,
+          "total_served": 4,
+          "residual": 0
+        }
+      },
+      "input_unchanged": true,
+      "outcome": "completed",
+      "candidate": {
+        "subject": {
+          "op": "queue_service",
+          "payload": {
+            "arrivals": [
+              2,
+              0,
+              2
+            ],
+            "capacity": 2,
+            "unreviewed_authority_grant": true
+          }
+        },
+        "expected": {
+          "ok": false,
+          "error": "unknown_field",
+          "value": null
+        },
+        "observed": {
+          "ok": false,
+          "error": "unknown_field",
+          "value": null
+        },
+        "subject_result": "fail",
+        "original_success_credit": 0,
+        "guard_result": "pass"
+      }
+    },
+    {
+      "proposal_id": "MF6903R2-153",
+      "definition_sha256": "a085ebe32ef205a225d9044451b82deefb2c35da0536cf2f167ea3fefb865112",
+      "request": {
+        "op": "queue_service",
+        "payload": {
+          "arrivals": [
+            3,
+            0,
+            2
+          ],
+          "capacity": 2
+        }
+      },
+      "expected": {
+        "ok": true,
+        "error": null,
+        "value": {
+          "served": [
+            2,
+            1,
+            2
+          ],
+          "backlog": [
+            1,
+            0,
+            0
+          ],
+          "total_arrivals": 5,
+          "total_served": 5,
+          "residual": 0
+        }
+      },
+      "observed": {
+        "ok": true,
+        "error": null,
+        "value": {
+          "served": [
+            2,
+            1,
+            2
+          ],
+          "backlog": [
+            1,
+            0,
+            0
+          ],
+          "total_arrivals": 5,
+          "total_served": 5,
+          "residual": 0
+        }
+      },
+      "input_unchanged": true,
+      "outcome": "completed",
+      "candidate": {
+        "subject": {
+          "op": "queue_service",
+          "payload": {
+            "arrivals": [
+              3,
+              0,
+              2
+            ],
+            "capacity": 2,
+            "unreviewed_authority_grant": true
+          }
+        },
+        "expected": {
+          "ok": false,
+          "error": "unknown_field",
+          "value": null
+        },
+        "observed": {
+          "ok": false,
+          "error": "unknown_field",
+          "value": null
+        },
+        "subject_result": "fail",
+        "original_success_credit": 0,
+        "guard_result": "pass"
+      }
+    },
+    {
+      "proposal_id": "MF6903R2-154",
+      "definition_sha256": "3e44413d3bd81b3a94aa0be8eb4a5b0b6637f737da6f31c4a12cf1605a20308d",
+      "request": {
+        "op": "queue_service",
+        "payload": {
+          "arrivals": [
+            4,
+            0,
+            2
+          ],
+          "capacity": 2
+        }
+      },
+      "expected": {
+        "ok": true,
+        "error": null,
+        "value": {
+          "served": [
+            2,
+            2,
+            2
+          ],
+          "backlog": [
+            2,
+            0,
+            0
+          ],
+          "total_arrivals": 6,
+          "total_served": 6,
+          "residual": 0
+        }
+      },
+      "observed": {
+        "ok": true,
+        "error": null,
+        "value": {
+          "served": [
+            2,
+            2,
+            2
+          ],
+          "backlog": [
+            2,
+            0,
+            0
+          ],
+          "total_arrivals": 6,
+          "total_served": 6,
+          "residual": 0
+        }
+      },
+      "input_unchanged": true,
+      "outcome": "completed",
+      "candidate": {
+        "subject": {
+          "op": "queue_service",
+          "payload": {
+            "arrivals": [
+              4,
+              0,
+              2
+            ],
+            "capacity": 2,
+            "unreviewed_authority_grant": true
+          }
+        },
+        "expected": {
+          "ok": false,
+          "error": "unknown_field",
+          "value": null
+        },
+        "observed": {
+          "ok": false,
+          "error": "unknown_field",
+          "value": null
+        },
+        "subject_result": "fail",
+        "original_success_credit": 0,
+        "guard_result": "pass"
+      }
+    },
+    {
+      "proposal_id": "MF6903R2-155",
+      "definition_sha256": "71fc580996bef56410808574188602c83c66c2e3bc948c2785406d4851fd18b7",
+      "request": {
+        "op": "queue_service",
+        "payload": {
+          "arrivals": [
+            5,
+            0,
+            2
+          ],
+          "capacity": 2
+        }
+      },
+      "expected": {
+        "ok": true,
+        "error": null,
+        "value": {
+          "served": [
+            2,
+            2,
+            2
+          ],
+          "backlog": [
+            3,
+            1,
+            1
+          ],
+          "total_arrivals": 7,
+          "total_served": 6,
+          "residual": 1
+        }
+      },
+      "observed": {
+        "ok": true,
+        "error": null,
+        "value": {
+          "served": [
+            2,
+            2,
+            2
+          ],
+          "backlog": [
+            3,
+            1,
+            1
+          ],
+          "total_arrivals": 7,
+          "total_served": 6,
+          "residual": 1
+        }
+      },
+      "input_unchanged": true,
+      "outcome": "completed",
+      "candidate": {
+        "subject": {
+          "op": "queue_service",
+          "payload": {
+            "arrivals": [
+              5,
+              0,
+              2
+            ],
+            "capacity": 2,
+            "unreviewed_authority_grant": true
+          }
+        },
+        "expected": {
+          "ok": false,
+          "error": "unknown_field",
+          "value": null
+        },
+        "observed": {
+          "ok": false,
+          "error": "unknown_field",
+          "value": null
+        },
+        "subject_result": "fail",
+        "original_success_credit": 0,
+        "guard_result": "pass"
+      }
+    },
+    {
+      "proposal_id": "MF6903R2-156",
+      "definition_sha256": "b985e9e1b2f124ae331b8df37d532b8db96d04bfa44581353b67aaab8ce72c2f",
+      "request": {
+        "op": "queue_service",
+        "payload": {
+          "arrivals": [
+            6,
+            0,
+            2
+          ],
+          "capacity": 2
+        }
+      },
+      "expected": {
+        "ok": true,
+        "error": null,
+        "value": {
+          "served": [
+            2,
+            2,
+            2
+          ],
+          "backlog": [
+            4,
+            2,
+            2
+          ],
+          "total_arrivals": 8,
+          "total_served": 6,
+          "residual": 2
+        }
+      },
+      "observed": {
+        "ok": true,
+        "error": null,
+        "value": {
+          "served": [
+            2,
+            2,
+            2
+          ],
+          "backlog": [
+            4,
+            2,
+            2
+          ],
+          "total_arrivals": 8,
+          "total_served": 6,
+          "residual": 2
+        }
+      },
+      "input_unchanged": true,
+      "outcome": "completed",
+      "candidate": {
+        "subject": {
+          "op": "queue_service",
+          "payload": {
+            "arrivals": [
+              6,
+              0,
+              2
+            ],
+            "capacity": 2,
+            "unreviewed_authority_grant": true
+          }
+        },
+        "expected": {
+          "ok": false,
+          "error": "unknown_field",
+          "value": null
+        },
+        "observed": {
+          "ok": false,
+          "error": "unknown_field",
+          "value": null
+        },
+        "subject_result": "fail",
+        "original_success_credit": 0,
+        "guard_result": "pass"
+      }
+    },
+    {
+      "proposal_id": "MF6903R2-157",
+      "definition_sha256": "2e511b39993f2c50bba627f50f6306af291e52ef88b104b666010623e954b607",
+      "request": {
+        "op": "queue_service",
+        "payload": {
+          "arrivals": [
+            7,
+            0,
+            2
+          ],
+          "capacity": 2
+        }
+      },
+      "expected": {
+        "ok": true,
+        "error": null,
+        "value": {
+          "served": [
+            2,
+            2,
+            2
+          ],
+          "backlog": [
+            5,
+            3,
+            3
+          ],
+          "total_arrivals": 9,
+          "total_served": 6,
+          "residual": 3
+        }
+      },
+      "observed": {
+        "ok": true,
+        "error": null,
+        "value": {
+          "served": [
+            2,
+            2,
+            2
+          ],
+          "backlog": [
+            5,
+            3,
+            3
+          ],
+          "total_arrivals": 9,
+          "total_served": 6,
+          "residual": 3
+        }
+      },
+      "input_unchanged": true,
+      "outcome": "completed",
+      "candidate": {
+        "subject": {
+          "op": "queue_service",
+          "payload": {
+            "arrivals": [
+              7,
+              0,
+              2
+            ],
+            "capacity": 2,
+            "unreviewed_authority_grant": true
+          }
+        },
+        "expected": {
+          "ok": false,
+          "error": "unknown_field",
+          "value": null
+        },
+        "observed": {
+          "ok": false,
+          "error": "unknown_field",
+          "value": null
+        },
+        "subject_result": "fail",
+        "original_success_credit": 0,
+        "guard_result": "pass"
+      }
+    },
+    {
+      "proposal_id": "MF6903R2-158",
+      "definition_sha256": "1bcd1c7513401146e14d5018618b610fda06dd83feb0566234775446f720ee29",
+      "request": {
+        "op": "queue_service",
+        "payload": {
+          "arrivals": [
+            8,
+            0,
+            2
+          ],
+          "capacity": 2
+        }
+      },
+      "expected": {
+        "ok": true,
+        "error": null,
+        "value": {
+          "served": [
+            2,
+            2,
+            2
+          ],
+          "backlog": [
+            6,
+            4,
+            4
+          ],
+          "total_arrivals": 10,
+          "total_served": 6,
+          "residual": 4
+        }
+      },
+      "observed": {
+        "ok": true,
+        "error": null,
+        "value": {
+          "served": [
+            2,
+            2,
+            2
+          ],
+          "backlog": [
+            6,
+            4,
+            4
+          ],
+          "total_arrivals": 10,
+          "total_served": 6,
+          "residual": 4
+        }
+      },
+      "input_unchanged": true,
+      "outcome": "completed",
+      "candidate": {
+        "subject": {
+          "op": "queue_service",
+          "payload": {
+            "arrivals": [
+              8,
+              0,
+              2
+            ],
+            "capacity": 2,
+            "unreviewed_authority_grant": true
+          }
+        },
+        "expected": {
+          "ok": false,
+          "error": "unknown_field",
+          "value": null
+        },
+        "observed": {
+          "ok": false,
+          "error": "unknown_field",
+          "value": null
+        },
+        "subject_result": "fail",
+        "original_success_credit": 0,
+        "guard_result": "pass"
+      }
+    },
+    {
+      "proposal_id": "MF6903R2-159",
+      "definition_sha256": "0299364d8ee495978e3274cff05378ac4df80561b698313e1f748b95a50ad93d",
+      "request": {
+        "op": "queue_service",
+        "payload": {
+          "arrivals": [
+            9,
+            0,
+            2
+          ],
+          "capacity": 2
+        }
+      },
+      "expected": {
+        "ok": true,
+        "error": null,
+        "value": {
+          "served": [
+            2,
+            2,
+            2
+          ],
+          "backlog": [
+            7,
+            5,
+            5
+          ],
+          "total_arrivals": 11,
+          "total_served": 6,
+          "residual": 5
+        }
+      },
+      "observed": {
+        "ok": true,
+        "error": null,
+        "value": {
+          "served": [
+            2,
+            2,
+            2
+          ],
+          "backlog": [
+            7,
+            5,
+            5
+          ],
+          "total_arrivals": 11,
+          "total_served": 6,
+          "residual": 5
+        }
+      },
+      "input_unchanged": true,
+      "outcome": "completed",
+      "candidate": {
+        "subject": {
+          "op": "queue_service",
+          "payload": {
+            "arrivals": [
+              9,
+              0,
+              2
+            ],
+            "capacity": 2,
+            "unreviewed_authority_grant": true
+          }
+        },
+        "expected": {
+          "ok": false,
+          "error": "unknown_field",
+          "value": null
+        },
+        "observed": {
+          "ok": false,
+          "error": "unknown_field",
+          "value": null
+        },
+        "subject_result": "fail",
+        "original_success_credit": 0,
+        "guard_result": "pass"
+      }
+    },
+    {
+      "proposal_id": "MF6903R2-160",
+      "definition_sha256": "ced7a40ae5e64cf98af8fa98fa4dcbaab90080729a8431675a10ee694000ac17",
+      "request": {
+        "op": "queue_service",
+        "payload": {
+          "arrivals": [
+            10,
+            0,
+            2
+          ],
+          "capacity": 2
+        }
+      },
+      "expected": {
+        "ok": true,
+        "error": null,
+        "value": {
+          "served": [
+            2,
+            2,
+            2
+          ],
+          "backlog": [
+            8,
+            6,
+            6
+          ],
+          "total_arrivals": 12,
+          "total_served": 6,
+          "residual": 6
+        }
+      },
+      "observed": {
+        "ok": true,
+        "error": null,
+        "value": {
+          "served": [
+            2,
+            2,
+            2
+          ],
+          "backlog": [
+            8,
+            6,
+            6
+          ],
+          "total_arrivals": 12,
+          "total_served": 6,
+          "residual": 6
+        }
+      },
+      "input_unchanged": true,
+      "outcome": "completed",
+      "candidate": {
+        "subject": {
+          "op": "queue_service",
+          "payload": {
+            "arrivals": [
+              10,
+              0,
+              2
+            ],
+            "capacity": 2,
+            "unreviewed_authority_grant": true
+          }
+        },
+        "expected": {
+          "ok": false,
+          "error": "unknown_field",
+          "value": null
+        },
+        "observed": {
+          "ok": false,
+          "error": "unknown_field",
+          "value": null
+        },
+        "subject_result": "fail",
+        "original_success_credit": 0,
+        "guard_result": "pass"
+      }
+    },
+    {
+      "proposal_id": "MF6903R2-161",
+      "definition_sha256": "4a2e94e297045e0df5f22c3fc96c2f3df38923b1e2fb285744aa85195177a57d",
+      "request": {
+        "op": "entropy_mix",
+        "payload": {
+          "counts": [
+            1,
+            1
+          ]
+        }
+      },
+      "expected": {
+        "ok": true,
+        "error": null,
+        "value": {
+          "total": 2,
+          "bits": 1,
+          "effective_states": 2,
+          "physical_entropy": false
+        }
+      },
+      "observed": {
+        "ok": true,
+        "error": null,
+        "value": {
+          "total": 2,
+          "bits": 1,
+          "effective_states": 2,
+          "physical_entropy": false
+        }
+      },
+      "input_unchanged": true,
+      "outcome": "completed",
+      "candidate": {
+        "subject": {
+          "op": "entropy_mix",
+          "payload": {
+            "counts": [
+              1,
+              1
+            ],
+            "unreviewed_authority_grant": true
+          }
+        },
+        "expected": {
+          "ok": false,
+          "error": "unknown_field",
+          "value": null
+        },
+        "observed": {
+          "ok": false,
+          "error": "unknown_field",
+          "value": null
+        },
+        "subject_result": "fail",
+        "original_success_credit": 0,
+        "guard_result": "pass"
+      }
+    },
+    {
+      "proposal_id": "MF6903R2-162",
+      "definition_sha256": "3a351eeae5b8bb2f6255469b6a3d9c80dab8cc4e30f8547612c0f9149e280fd6",
+      "request": {
+        "op": "entropy_mix",
+        "payload": {
+          "counts": [
+            2,
+            2
+          ]
+        }
+      },
+      "expected": {
+        "ok": true,
+        "error": null,
+        "value": {
+          "total": 4,
+          "bits": 1,
+          "effective_states": 2,
+          "physical_entropy": false
+        }
+      },
+      "observed": {
+        "ok": true,
+        "error": null,
+        "value": {
+          "total": 4,
+          "bits": 1,
+          "effective_states": 2,
+          "physical_entropy": false
+        }
+      },
+      "input_unchanged": true,
+      "outcome": "completed",
+      "candidate": {
+        "subject": {
+          "op": "entropy_mix",
+          "payload": {
+            "counts": [
+              2,
+              2
+            ],
+            "unreviewed_authority_grant": true
+          }
+        },
+        "expected": {
+          "ok": false,
+          "error": "unknown_field",
+          "value": null
+        },
+        "observed": {
+          "ok": false,
+          "error": "unknown_field",
+          "value": null
+        },
+        "subject_result": "fail",
+        "original_success_credit": 0,
+        "guard_result": "pass"
+      }
+    },
+    {
+      "proposal_id": "MF6903R2-163",
+      "definition_sha256": "8cf6a35e6d11b482c33cee7c3972b87471bcb34514694a4c6707816bbb5858e7",
+      "request": {
+        "op": "entropy_mix",
+        "payload": {
+          "counts": [
+            3,
+            3
+          ]
+        }
+      },
+      "expected": {
+        "ok": true,
+        "error": null,
+        "value": {
+          "total": 6,
+          "bits": 1,
+          "effective_states": 2,
+          "physical_entropy": false
+        }
+      },
+      "observed": {
+        "ok": true,
+        "error": null,
+        "value": {
+          "total": 6,
+          "bits": 1,
+          "effective_states": 2,
+          "physical_entropy": false
+        }
+      },
+      "input_unchanged": true,
+      "outcome": "completed",
+      "candidate": {
+        "subject": {
+          "op": "entropy_mix",
+          "payload": {
+            "counts": [
+              3,
+              3
+            ],
+            "unreviewed_authority_grant": true
+          }
+        },
+        "expected": {
+          "ok": false,
+          "error": "unknown_field",
+          "value": null
+        },
+        "observed": {
+          "ok": false,
+          "error": "unknown_field",
+          "value": null
+        },
+        "subject_result": "fail",
+        "original_success_credit": 0,
+        "guard_result": "pass"
+      }
+    },
+    {
+      "proposal_id": "MF6903R2-164",
+      "definition_sha256": "190b61c74ff35ce127e22549feaf8437bf44fbf68fcf7d835d66317a29c20972",
+      "request": {
+        "op": "entropy_mix",
+        "payload": {
+          "counts": [
+            4,
+            4
+          ]
+        }
+      },
+      "expected": {
+        "ok": true,
+        "error": null,
+        "value": {
+          "total": 8,
+          "bits": 1,
+          "effective_states": 2,
+          "physical_entropy": false
+        }
+      },
+      "observed": {
+        "ok": true,
+        "error": null,
+        "value": {
+          "total": 8,
+          "bits": 1,
+          "effective_states": 2,
+          "physical_entropy": false
+        }
+      },
+      "input_unchanged": true,
+      "outcome": "completed",
+      "candidate": {
+        "subject": {
+          "op": "entropy_mix",
+          "payload": {
+            "counts": [
+              4,
+              4
+            ],
+            "unreviewed_authority_grant": true
+          }
+        },
+        "expected": {
+          "ok": false,
+          "error": "unknown_field",
+          "value": null
+        },
+        "observed": {
+          "ok": false,
+          "error": "unknown_field",
+          "value": null
+        },
+        "subject_result": "fail",
+        "original_success_credit": 0,
+        "guard_result": "pass"
+      }
+    },
+    {
+      "proposal_id": "MF6903R2-165",
+      "definition_sha256": "c516b3a26dd94cd7e9e40cf17fc5988fcb704a0313537cafc44657abd829f38a",
+      "request": {
+        "op": "entropy_mix",
+        "payload": {
+          "counts": [
+            5,
+            5
+          ]
+        }
+      },
+      "expected": {
+        "ok": true,
+        "error": null,
+        "value": {
+          "total": 10,
+          "bits": 1,
+          "effective_states": 2,
+          "physical_entropy": false
+        }
+      },
+      "observed": {
+        "ok": true,
+        "error": null,
+        "value": {
+          "total": 10,
+          "bits": 1,
+          "effective_states": 2,
+          "physical_entropy": false
+        }
+      },
+      "input_unchanged": true,
+      "outcome": "completed",
+      "candidate": {
+        "subject": {
+          "op": "entropy_mix",
+          "payload": {
+            "counts": [
+              5,
+              5
+            ],
+            "unreviewed_authority_grant": true
+          }
+        },
+        "expected": {
+          "ok": false,
+          "error": "unknown_field",
+          "value": null
+        },
+        "observed": {
+          "ok": false,
+          "error": "unknown_field",
+          "value": null
+        },
+        "subject_result": "fail",
+        "original_success_credit": 0,
+        "guard_result": "pass"
+      }
+    },
+    {
+      "proposal_id": "MF6903R2-166",
+      "definition_sha256": "ae7d5c43ef413b57d0a20f254ba581105eb5de7d7e1a39d89d81d1979005bed3",
+      "request": {
+        "op": "entropy_mix",
+        "payload": {
+          "counts": [
+            6,
+            6
+          ]
+        }
+      },
+      "expected": {
+        "ok": true,
+        "error": null,
+        "value": {
+          "total": 12,
+          "bits": 1,
+          "effective_states": 2,
+          "physical_entropy": false
+        }
+      },
+      "observed": {
+        "ok": true,
+        "error": null,
+        "value": {
+          "total": 12,
+          "bits": 1,
+          "effective_states": 2,
+          "physical_entropy": false
+        }
+      },
+      "input_unchanged": true,
+      "outcome": "completed",
+      "candidate": {
+        "subject": {
+          "op": "entropy_mix",
+          "payload": {
+            "counts": [
+              6,
+              6
+            ],
+            "unreviewed_authority_grant": true
+          }
+        },
+        "expected": {
+          "ok": false,
+          "error": "unknown_field",
+          "value": null
+        },
+        "observed": {
+          "ok": false,
+          "error": "unknown_field",
+          "value": null
+        },
+        "subject_result": "fail",
+        "original_success_credit": 0,
+        "guard_result": "pass"
+      }
+    },
+    {
+      "proposal_id": "MF6903R2-167",
+      "definition_sha256": "2cf922906817d7a68dda4118e9eebf734b7bd6ff733dfbdab1e869b2355c312e",
+      "request": {
+        "op": "entropy_mix",
+        "payload": {
+          "counts": [
+            7,
+            7
+          ]
+        }
+      },
+      "expected": {
+        "ok": true,
+        "error": null,
+        "value": {
+          "total": 14,
+          "bits": 1,
+          "effective_states": 2,
+          "physical_entropy": false
+        }
+      },
+      "observed": {
+        "ok": true,
+        "error": null,
+        "value": {
+          "total": 14,
+          "bits": 1,
+          "effective_states": 2,
+          "physical_entropy": false
+        }
+      },
+      "input_unchanged": true,
+      "outcome": "completed",
+      "candidate": {
+        "subject": {
+          "op": "entropy_mix",
+          "payload": {
+            "counts": [
+              7,
+              7
+            ],
+            "unreviewed_authority_grant": true
+          }
+        },
+        "expected": {
+          "ok": false,
+          "error": "unknown_field",
+          "value": null
+        },
+        "observed": {
+          "ok": false,
+          "error": "unknown_field",
+          "value": null
+        },
+        "subject_result": "fail",
+        "original_success_credit": 0,
+        "guard_result": "pass"
+      }
+    },
+    {
+      "proposal_id": "MF6903R2-168",
+      "definition_sha256": "9f908ac879ee91d9a3d681bbed08490e1878385e82a97907f5ead228b9561fe8",
+      "request": {
+        "op": "entropy_mix",
+        "payload": {
+          "counts": [
+            8,
+            8
+          ]
+        }
+      },
+      "expected": {
+        "ok": true,
+        "error": null,
+        "value": {
+          "total": 16,
+          "bits": 1,
+          "effective_states": 2,
+          "physical_entropy": false
+        }
+      },
+      "observed": {
+        "ok": true,
+        "error": null,
+        "value": {
+          "total": 16,
+          "bits": 1,
+          "effective_states": 2,
+          "physical_entropy": false
+        }
+      },
+      "input_unchanged": true,
+      "outcome": "completed",
+      "candidate": {
+        "subject": {
+          "op": "entropy_mix",
+          "payload": {
+            "counts": [
+              8,
+              8
+            ],
+            "unreviewed_authority_grant": true
+          }
+        },
+        "expected": {
+          "ok": false,
+          "error": "unknown_field",
+          "value": null
+        },
+        "observed": {
+          "ok": false,
+          "error": "unknown_field",
+          "value": null
+        },
+        "subject_result": "fail",
+        "original_success_credit": 0,
+        "guard_result": "pass"
+      }
+    },
+    {
+      "proposal_id": "MF6903R2-169",
+      "definition_sha256": "3866755bb32cb0ef17cbb068692b6839b6977236966e606247225d2962b4ad7b",
+      "request": {
+        "op": "entropy_mix",
+        "payload": {
+          "counts": [
+            9,
+            9
+          ]
+        }
+      },
+      "expected": {
+        "ok": true,
+        "error": null,
+        "value": {
+          "total": 18,
+          "bits": 1,
+          "effective_states": 2,
+          "physical_entropy": false
+        }
+      },
+      "observed": {
+        "ok": true,
+        "error": null,
+        "value": {
+          "total": 18,
+          "bits": 1,
+          "effective_states": 2,
+          "physical_entropy": false
+        }
+      },
+      "input_unchanged": true,
+      "outcome": "completed",
+      "candidate": {
+        "subject": {
+          "op": "entropy_mix",
+          "payload": {
+            "counts": [
+              9,
+              9
+            ],
+            "unreviewed_authority_grant": true
+          }
+        },
+        "expected": {
+          "ok": false,
+          "error": "unknown_field",
+          "value": null
+        },
+        "observed": {
+          "ok": false,
+          "error": "unknown_field",
+          "value": null
+        },
+        "subject_result": "fail",
+        "original_success_credit": 0,
+        "guard_result": "pass"
+      }
+    },
+    {
+      "proposal_id": "MF6903R2-170",
+      "definition_sha256": "dc1f361a1e4180774e2c269b5d53e5445538a804c827358122fec33ae9ab4ce4",
+      "request": {
+        "op": "entropy_mix",
+        "payload": {
+          "counts": [
+            10,
+            10
+          ]
+        }
+      },
+      "expected": {
+        "ok": true,
+        "error": null,
+        "value": {
+          "total": 20,
+          "bits": 1,
+          "effective_states": 2,
+          "physical_entropy": false
+        }
+      },
+      "observed": {
+        "ok": true,
+        "error": null,
+        "value": {
+          "total": 20,
+          "bits": 1,
+          "effective_states": 2,
+          "physical_entropy": false
+        }
+      },
+      "input_unchanged": true,
+      "outcome": "completed",
+      "candidate": {
+        "subject": {
+          "op": "entropy_mix",
+          "payload": {
+            "counts": [
+              10,
+              10
+            ],
+            "unreviewed_authority_grant": true
+          }
+        },
+        "expected": {
+          "ok": false,
+          "error": "unknown_field",
+          "value": null
+        },
+        "observed": {
+          "ok": false,
+          "error": "unknown_field",
+          "value": null
+        },
+        "subject_result": "fail",
+        "original_success_credit": 0,
+        "guard_result": "pass"
+      }
+    },
+    {
+      "proposal_id": "MF6903R2-171",
+      "definition_sha256": "d9594566d1e6739897d06542885af19595f4a37b61d7a020707bd9a0e46a68f8",
+      "request": {
+        "op": "energy_step",
+        "payload": {
+          "values": [
+            1,
+            0,
+            1
+          ],
+          "edges": [
+            [
+              0,
+              1
+            ],
+            [
+              1,
+              2
+            ]
+          ],
+          "step": 0.25
+        }
+      },
+      "expected": {
+        "ok": true,
+        "error": null,
+        "value": {
+          "values": [
+            0.75,
+            0.5,
+            0.75
+          ],
+          "mass_before": 2,
+          "mass_after": 2,
+          "energy_before": 1,
+          "energy_after": 0.0625
+        }
+      },
+      "observed": {
+        "ok": true,
+        "error": null,
+        "value": {
+          "values": [
+            0.75,
+            0.5,
+            0.75
+          ],
+          "mass_before": 2,
+          "mass_after": 2,
+          "energy_before": 1,
+          "energy_after": 0.0625
+        }
+      },
+      "input_unchanged": true,
+      "outcome": "completed",
+      "candidate": {
+        "subject": {
+          "op": "energy_step",
+          "payload": {
+            "values": [
+              1,
+              0,
+              1
+            ],
+            "edges": [
+              [
+                0,
+                1
+              ],
+              [
+                1,
+                2
+              ]
+            ],
+            "step": 0.25,
+            "unreviewed_authority_grant": true
+          }
+        },
+        "expected": {
+          "ok": false,
+          "error": "unknown_field",
+          "value": null
+        },
+        "observed": {
+          "ok": false,
+          "error": "unknown_field",
+          "value": null
+        },
+        "subject_result": "fail",
+        "original_success_credit": 0,
+        "guard_result": "pass"
+      }
+    },
+    {
+      "proposal_id": "MF6903R2-172",
+      "definition_sha256": "ffed87bf6cc1a4d0964076aaab38d2fd4b9e7414e5fdeb9c56fd28e5b35ac19d",
+      "request": {
+        "op": "energy_step",
+        "payload": {
+          "values": [
+            2,
+            0,
+            2
+          ],
+          "edges": [
+            [
+              0,
+              1
+            ],
+            [
+              1,
+              2
+            ]
+          ],
+          "step": 0.25
+        }
+      },
+      "expected": {
+        "ok": true,
+        "error": null,
+        "value": {
+          "values": [
+            1.5,
+            1,
+            1.5
+          ],
+          "mass_before": 4,
+          "mass_after": 4,
+          "energy_before": 4,
+          "energy_after": 0.25
+        }
+      },
+      "observed": {
+        "ok": true,
+        "error": null,
+        "value": {
+          "values": [
+            1.5,
+            1,
+            1.5
+          ],
+          "mass_before": 4,
+          "mass_after": 4,
+          "energy_before": 4,
+          "energy_after": 0.25
+        }
+      },
+      "input_unchanged": true,
+      "outcome": "completed",
+      "candidate": {
+        "subject": {
+          "op": "energy_step",
+          "payload": {
+            "values": [
+              2,
+              0,
+              2
+            ],
+            "edges": [
+              [
+                0,
+                1
+              ],
+              [
+                1,
+                2
+              ]
+            ],
+            "step": 0.25,
+            "unreviewed_authority_grant": true
+          }
+        },
+        "expected": {
+          "ok": false,
+          "error": "unknown_field",
+          "value": null
+        },
+        "observed": {
+          "ok": false,
+          "error": "unknown_field",
+          "value": null
+        },
+        "subject_result": "fail",
+        "original_success_credit": 0,
+        "guard_result": "pass"
+      }
+    },
+    {
+      "proposal_id": "MF6903R2-173",
+      "definition_sha256": "c58578bb013b003dd8c3929176c0405c66166f1422c9223f0388a12d384c69d5",
+      "request": {
+        "op": "energy_step",
+        "payload": {
+          "values": [
+            3,
+            0,
+            3
+          ],
+          "edges": [
+            [
+              0,
+              1
+            ],
+            [
+              1,
+              2
+            ]
+          ],
+          "step": 0.25
+        }
+      },
+      "expected": {
+        "ok": true,
+        "error": null,
+        "value": {
+          "values": [
+            2.25,
+            1.5,
+            2.25
+          ],
+          "mass_before": 6,
+          "mass_after": 6,
+          "energy_before": 9,
+          "energy_after": 0.5625
+        }
+      },
+      "observed": {
+        "ok": true,
+        "error": null,
+        "value": {
+          "values": [
+            2.25,
+            1.5,
+            2.25
+          ],
+          "mass_before": 6,
+          "mass_after": 6,
+          "energy_before": 9,
+          "energy_after": 0.5625
+        }
+      },
+      "input_unchanged": true,
+      "outcome": "completed",
+      "candidate": {
+        "subject": {
+          "op": "energy_step",
+          "payload": {
+            "values": [
+              3,
+              0,
+              3
+            ],
+            "edges": [
+              [
+                0,
+                1
+              ],
+              [
+                1,
+                2
+              ]
+            ],
+            "step": 0.25,
+            "unreviewed_authority_grant": true
+          }
+        },
+        "expected": {
+          "ok": false,
+          "error": "unknown_field",
+          "value": null
+        },
+        "observed": {
+          "ok": false,
+          "error": "unknown_field",
+          "value": null
+        },
+        "subject_result": "fail",
+        "original_success_credit": 0,
+        "guard_result": "pass"
+      }
+    },
+    {
+      "proposal_id": "MF6903R2-174",
+      "definition_sha256": "531a3986feab1556c674c72004b0783560dfd5466e2fbbddec21378df3a05d49",
+      "request": {
+        "op": "energy_step",
+        "payload": {
+          "values": [
+            4,
+            0,
+            4
+          ],
+          "edges": [
+            [
+              0,
+              1
+            ],
+            [
+              1,
+              2
+            ]
+          ],
+          "step": 0.25
+        }
+      },
+      "expected": {
+        "ok": true,
+        "error": null,
+        "value": {
+          "values": [
+            3,
+            2,
+            3
+          ],
+          "mass_before": 8,
+          "mass_after": 8,
+          "energy_before": 16,
+          "energy_after": 1
+        }
+      },
+      "observed": {
+        "ok": true,
+        "error": null,
+        "value": {
+          "values": [
+            3,
+            2,
+            3
+          ],
+          "mass_before": 8,
+          "mass_after": 8,
+          "energy_before": 16,
+          "energy_after": 1
+        }
+      },
+      "input_unchanged": true,
+      "outcome": "completed",
+      "candidate": {
+        "subject": {
+          "op": "energy_step",
+          "payload": {
+            "values": [
+              4,
+              0,
+              4
+            ],
+            "edges": [
+              [
+                0,
+                1
+              ],
+              [
+                1,
+                2
+              ]
+            ],
+            "step": 0.25,
+            "unreviewed_authority_grant": true
+          }
+        },
+        "expected": {
+          "ok": false,
+          "error": "unknown_field",
+          "value": null
+        },
+        "observed": {
+          "ok": false,
+          "error": "unknown_field",
+          "value": null
+        },
+        "subject_result": "fail",
+        "original_success_credit": 0,
+        "guard_result": "pass"
+      }
+    },
+    {
+      "proposal_id": "MF6903R2-175",
+      "definition_sha256": "bd0b4a964784d222367b7cfa1b18a210790c9182c685704f7ec3365810db0256",
+      "request": {
+        "op": "energy_step",
+        "payload": {
+          "values": [
+            5,
+            0,
+            5
+          ],
+          "edges": [
+            [
+              0,
+              1
+            ],
+            [
+              1,
+              2
+            ]
+          ],
+          "step": 0.25
+        }
+      },
+      "expected": {
+        "ok": true,
+        "error": null,
+        "value": {
+          "values": [
+            3.75,
+            2.5,
+            3.75
+          ],
+          "mass_before": 10,
+          "mass_after": 10,
+          "energy_before": 25,
+          "energy_after": 1.5625
+        }
+      },
+      "observed": {
+        "ok": true,
+        "error": null,
+        "value": {
+          "values": [
+            3.75,
+            2.5,
+            3.75
+          ],
+          "mass_before": 10,
+          "mass_after": 10,
+          "energy_before": 25,
+          "energy_after": 1.5625
+        }
+      },
+      "input_unchanged": true,
+      "outcome": "completed",
+      "candidate": {
+        "subject": {
+          "op": "energy_step",
+          "payload": {
+            "values": [
+              5,
+              0,
+              5
+            ],
+            "edges": [
+              [
+                0,
+                1
+              ],
+              [
+                1,
+                2
+              ]
+            ],
+            "step": 0.25,
+            "unreviewed_authority_grant": true
+          }
+        },
+        "expected": {
+          "ok": false,
+          "error": "unknown_field",
+          "value": null
+        },
+        "observed": {
+          "ok": false,
+          "error": "unknown_field",
+          "value": null
+        },
+        "subject_result": "fail",
+        "original_success_credit": 0,
+        "guard_result": "pass"
+      }
+    },
+    {
+      "proposal_id": "MF6903R2-176",
+      "definition_sha256": "fc14a7516e667a1974bb5b02abff10be310759e4d09e764961288895639eb666",
+      "request": {
+        "op": "energy_step",
+        "payload": {
+          "values": [
+            6,
+            0,
+            6
+          ],
+          "edges": [
+            [
+              0,
+              1
+            ],
+            [
+              1,
+              2
+            ]
+          ],
+          "step": 0.25
+        }
+      },
+      "expected": {
+        "ok": true,
+        "error": null,
+        "value": {
+          "values": [
+            4.5,
+            3,
+            4.5
+          ],
+          "mass_before": 12,
+          "mass_after": 12,
+          "energy_before": 36,
+          "energy_after": 2.25
+        }
+      },
+      "observed": {
+        "ok": true,
+        "error": null,
+        "value": {
+          "values": [
+            4.5,
+            3,
+            4.5
+          ],
+          "mass_before": 12,
+          "mass_after": 12,
+          "energy_before": 36,
+          "energy_after": 2.25
+        }
+      },
+      "input_unchanged": true,
+      "outcome": "completed",
+      "candidate": {
+        "subject": {
+          "op": "energy_step",
+          "payload": {
+            "values": [
+              6,
+              0,
+              6
+            ],
+            "edges": [
+              [
+                0,
+                1
+              ],
+              [
+                1,
+                2
+              ]
+            ],
+            "step": 0.25,
+            "unreviewed_authority_grant": true
+          }
+        },
+        "expected": {
+          "ok": false,
+          "error": "unknown_field",
+          "value": null
+        },
+        "observed": {
+          "ok": false,
+          "error": "unknown_field",
+          "value": null
+        },
+        "subject_result": "fail",
+        "original_success_credit": 0,
+        "guard_result": "pass"
+      }
+    },
+    {
+      "proposal_id": "MF6903R2-177",
+      "definition_sha256": "5216fd6633acc88ffc3525a8501e1b7aa01f3af4f5a1f580b798d734cdc420fd",
+      "request": {
+        "op": "energy_step",
+        "payload": {
+          "values": [
+            7,
+            0,
+            7
+          ],
+          "edges": [
+            [
+              0,
+              1
+            ],
+            [
+              1,
+              2
+            ]
+          ],
+          "step": 0.25
+        }
+      },
+      "expected": {
+        "ok": true,
+        "error": null,
+        "value": {
+          "values": [
+            5.25,
+            3.5,
+            5.25
+          ],
+          "mass_before": 14,
+          "mass_after": 14,
+          "energy_before": 49,
+          "energy_after": 3.0625
+        }
+      },
+      "observed": {
+        "ok": true,
+        "error": null,
+        "value": {
+          "values": [
+            5.25,
+            3.5,
+            5.25
+          ],
+          "mass_before": 14,
+          "mass_after": 14,
+          "energy_before": 49,
+          "energy_after": 3.0625
+        }
+      },
+      "input_unchanged": true,
+      "outcome": "completed",
+      "candidate": {
+        "subject": {
+          "op": "energy_step",
+          "payload": {
+            "values": [
+              7,
+              0,
+              7
+            ],
+            "edges": [
+              [
+                0,
+                1
+              ],
+              [
+                1,
+                2
+              ]
+            ],
+            "step": 0.25,
+            "unreviewed_authority_grant": true
+          }
+        },
+        "expected": {
+          "ok": false,
+          "error": "unknown_field",
+          "value": null
+        },
+        "observed": {
+          "ok": false,
+          "error": "unknown_field",
+          "value": null
+        },
+        "subject_result": "fail",
+        "original_success_credit": 0,
+        "guard_result": "pass"
+      }
+    },
+    {
+      "proposal_id": "MF6903R2-178",
+      "definition_sha256": "a36920cebbde4c4ecefe358d3a7762340e3f72c539c90f5f85d8e0afbb3ac09c",
+      "request": {
+        "op": "energy_step",
+        "payload": {
+          "values": [
+            8,
+            0,
+            8
+          ],
+          "edges": [
+            [
+              0,
+              1
+            ],
+            [
+              1,
+              2
+            ]
+          ],
+          "step": 0.25
+        }
+      },
+      "expected": {
+        "ok": true,
+        "error": null,
+        "value": {
+          "values": [
+            6,
+            4,
+            6
+          ],
+          "mass_before": 16,
+          "mass_after": 16,
+          "energy_before": 64,
+          "energy_after": 4
+        }
+      },
+      "observed": {
+        "ok": true,
+        "error": null,
+        "value": {
+          "values": [
+            6,
+            4,
+            6
+          ],
+          "mass_before": 16,
+          "mass_after": 16,
+          "energy_before": 64,
+          "energy_after": 4
+        }
+      },
+      "input_unchanged": true,
+      "outcome": "completed",
+      "candidate": {
+        "subject": {
+          "op": "energy_step",
+          "payload": {
+            "values": [
+              8,
+              0,
+              8
+            ],
+            "edges": [
+              [
+                0,
+                1
+              ],
+              [
+                1,
+                2
+              ]
+            ],
+            "step": 0.25,
+            "unreviewed_authority_grant": true
+          }
+        },
+        "expected": {
+          "ok": false,
+          "error": "unknown_field",
+          "value": null
+        },
+        "observed": {
+          "ok": false,
+          "error": "unknown_field",
+          "value": null
+        },
+        "subject_result": "fail",
+        "original_success_credit": 0,
+        "guard_result": "pass"
+      }
+    },
+    {
+      "proposal_id": "MF6903R2-179",
+      "definition_sha256": "ba47e847d90c2b08812d8dd1ae38ad668ec43bbb66ecbbba6ef89cc021284cb6",
+      "request": {
+        "op": "energy_step",
+        "payload": {
+          "values": [
+            9,
+            0,
+            9
+          ],
+          "edges": [
+            [
+              0,
+              1
+            ],
+            [
+              1,
+              2
+            ]
+          ],
+          "step": 0.25
+        }
+      },
+      "expected": {
+        "ok": true,
+        "error": null,
+        "value": {
+          "values": [
+            6.75,
+            4.5,
+            6.75
+          ],
+          "mass_before": 18,
+          "mass_after": 18,
+          "energy_before": 81,
+          "energy_after": 5.0625
+        }
+      },
+      "observed": {
+        "ok": true,
+        "error": null,
+        "value": {
+          "values": [
+            6.75,
+            4.5,
+            6.75
+          ],
+          "mass_before": 18,
+          "mass_after": 18,
+          "energy_before": 81,
+          "energy_after": 5.0625
+        }
+      },
+      "input_unchanged": true,
+      "outcome": "completed",
+      "candidate": {
+        "subject": {
+          "op": "energy_step",
+          "payload": {
+            "values": [
+              9,
+              0,
+              9
+            ],
+            "edges": [
+              [
+                0,
+                1
+              ],
+              [
+                1,
+                2
+              ]
+            ],
+            "step": 0.25,
+            "unreviewed_authority_grant": true
+          }
+        },
+        "expected": {
+          "ok": false,
+          "error": "unknown_field",
+          "value": null
+        },
+        "observed": {
+          "ok": false,
+          "error": "unknown_field",
+          "value": null
+        },
+        "subject_result": "fail",
+        "original_success_credit": 0,
+        "guard_result": "pass"
+      }
+    },
+    {
+      "proposal_id": "MF6903R2-180",
+      "definition_sha256": "6b39880a6b5e7a1f9f59de599bbf5d510b2a41139967f30bf652a2e72cc97b63",
+      "request": {
+        "op": "energy_step",
+        "payload": {
+          "values": [
+            10,
+            0,
+            10
+          ],
+          "edges": [
+            [
+              0,
+              1
+            ],
+            [
+              1,
+              2
+            ]
+          ],
+          "step": 0.25
+        }
+      },
+      "expected": {
+        "ok": true,
+        "error": null,
+        "value": {
+          "values": [
+            7.5,
+            5,
+            7.5
+          ],
+          "mass_before": 20,
+          "mass_after": 20,
+          "energy_before": 100,
+          "energy_after": 6.25
+        }
+      },
+      "observed": {
+        "ok": true,
+        "error": null,
+        "value": {
+          "values": [
+            7.5,
+            5,
+            7.5
+          ],
+          "mass_before": 20,
+          "mass_after": 20,
+          "energy_before": 100,
+          "energy_after": 6.25
+        }
+      },
+      "input_unchanged": true,
+      "outcome": "completed",
+      "candidate": {
+        "subject": {
+          "op": "energy_step",
+          "payload": {
+            "values": [
+              10,
+              0,
+              10
+            ],
+            "edges": [
+              [
+                0,
+                1
+              ],
+              [
+                1,
+                2
+              ]
+            ],
+            "step": 0.25,
+            "unreviewed_authority_grant": true
+          }
+        },
+        "expected": {
+          "ok": false,
+          "error": "unknown_field",
+          "value": null
+        },
+        "observed": {
+          "ok": false,
+          "error": "unknown_field",
+          "value": null
+        },
+        "subject_result": "fail",
+        "original_success_credit": 0,
+        "guard_result": "pass"
+      }
+    },
+    {
+      "proposal_id": "MF6903R2-181",
+      "definition_sha256": "cc897452384a9c6438475470b8884958f1f287f1d0edd35f06b007f484016371",
+      "request": {
+        "op": "html_escape",
+        "payload": {
+          "text": "Mira & Hamish <1> \"read\" 'safe'"
+        }
+      },
+      "expected": {
+        "ok": true,
+        "error": null,
+        "value": {
+          "text": "Mira &amp; Hamish &lt;1&gt; &quot;read&quot; &#39;safe&#39;",
+          "context": "html_text_only"
+        }
+      },
+      "observed": {
+        "ok": true,
+        "error": null,
+        "value": {
+          "text": "Mira &amp; Hamish &lt;1&gt; &quot;read&quot; &#39;safe&#39;",
+          "context": "html_text_only"
+        }
+      },
+      "input_unchanged": true,
+      "outcome": "completed",
+      "candidate": {
+        "subject": {
+          "op": "html_escape",
+          "payload": {
+            "text": "Mira & Hamish <1> \"read\" 'safe'",
+            "unreviewed_authority_grant": true
+          }
+        },
+        "expected": {
+          "ok": false,
+          "error": "unknown_field",
+          "value": null
+        },
+        "observed": {
+          "ok": false,
+          "error": "unknown_field",
+          "value": null
+        },
+        "subject_result": "fail",
+        "original_success_credit": 0,
+        "guard_result": "pass"
+      }
+    },
+    {
+      "proposal_id": "MF6903R2-182",
+      "definition_sha256": "ab089922518915c0a792f8459066467a9f0a6efaeddbd9ed0b5e6a6412264fc1",
+      "request": {
+        "op": "html_escape",
+        "payload": {
+          "text": "Mira & Hamish <2> \"read\" 'safe'"
+        }
+      },
+      "expected": {
+        "ok": true,
+        "error": null,
+        "value": {
+          "text": "Mira &amp; Hamish &lt;2&gt; &quot;read&quot; &#39;safe&#39;",
+          "context": "html_text_only"
+        }
+      },
+      "observed": {
+        "ok": true,
+        "error": null,
+        "value": {
+          "text": "Mira &amp; Hamish &lt;2&gt; &quot;read&quot; &#39;safe&#39;",
+          "context": "html_text_only"
+        }
+      },
+      "input_unchanged": true,
+      "outcome": "completed",
+      "candidate": {
+        "subject": {
+          "op": "html_escape",
+          "payload": {
+            "text": "Mira & Hamish <2> \"read\" 'safe'",
+            "unreviewed_authority_grant": true
+          }
+        },
+        "expected": {
+          "ok": false,
+          "error": "unknown_field",
+          "value": null
+        },
+        "observed": {
+          "ok": false,
+          "error": "unknown_field",
+          "value": null
+        },
+        "subject_result": "fail",
+        "original_success_credit": 0,
+        "guard_result": "pass"
+      }
+    },
+    {
+      "proposal_id": "MF6903R2-183",
+      "definition_sha256": "ec287cf60c8682a2e28376ea1b432ff78b49fef2bd33b05f928ea120207094ab",
+      "request": {
+        "op": "html_escape",
+        "payload": {
+          "text": "Mira & Hamish <3> \"read\" 'safe'"
+        }
+      },
+      "expected": {
+        "ok": true,
+        "error": null,
+        "value": {
+          "text": "Mira &amp; Hamish &lt;3&gt; &quot;read&quot; &#39;safe&#39;",
+          "context": "html_text_only"
+        }
+      },
+      "observed": {
+        "ok": true,
+        "error": null,
+        "value": {
+          "text": "Mira &amp; Hamish &lt;3&gt; &quot;read&quot; &#39;safe&#39;",
+          "context": "html_text_only"
+        }
+      },
+      "input_unchanged": true,
+      "outcome": "completed",
+      "candidate": {
+        "subject": {
+          "op": "html_escape",
+          "payload": {
+            "text": "Mira & Hamish <3> \"read\" 'safe'",
+            "unreviewed_authority_grant": true
+          }
+        },
+        "expected": {
+          "ok": false,
+          "error": "unknown_field",
+          "value": null
+        },
+        "observed": {
+          "ok": false,
+          "error": "unknown_field",
+          "value": null
+        },
+        "subject_result": "fail",
+        "original_success_credit": 0,
+        "guard_result": "pass"
+      }
+    },
+    {
+      "proposal_id": "MF6903R2-184",
+      "definition_sha256": "4e8bc8ca32f890cd412a54febe4a0ab522853963f18713fc97b698decface23c",
+      "request": {
+        "op": "html_escape",
+        "payload": {
+          "text": "Mira & Hamish <4> \"read\" 'safe'"
+        }
+      },
+      "expected": {
+        "ok": true,
+        "error": null,
+        "value": {
+          "text": "Mira &amp; Hamish &lt;4&gt; &quot;read&quot; &#39;safe&#39;",
+          "context": "html_text_only"
+        }
+      },
+      "observed": {
+        "ok": true,
+        "error": null,
+        "value": {
+          "text": "Mira &amp; Hamish &lt;4&gt; &quot;read&quot; &#39;safe&#39;",
+          "context": "html_text_only"
+        }
+      },
+      "input_unchanged": true,
+      "outcome": "completed",
+      "candidate": {
+        "subject": {
+          "op": "html_escape",
+          "payload": {
+            "text": "Mira & Hamish <4> \"read\" 'safe'",
+            "unreviewed_authority_grant": true
+          }
+        },
+        "expected": {
+          "ok": false,
+          "error": "unknown_field",
+          "value": null
+        },
+        "observed": {
+          "ok": false,
+          "error": "unknown_field",
+          "value": null
+        },
+        "subject_result": "fail",
+        "original_success_credit": 0,
+        "guard_result": "pass"
+      }
+    },
+    {
+      "proposal_id": "MF6903R2-185",
+      "definition_sha256": "bea1ccf03f39236b07d9b2700d1c56e0dcd61a9e960cee11c8fae0abb1ce3654",
+      "request": {
+        "op": "html_escape",
+        "payload": {
+          "text": "Mira & Hamish <5> \"read\" 'safe'"
+        }
+      },
+      "expected": {
+        "ok": true,
+        "error": null,
+        "value": {
+          "text": "Mira &amp; Hamish &lt;5&gt; &quot;read&quot; &#39;safe&#39;",
+          "context": "html_text_only"
+        }
+      },
+      "observed": {
+        "ok": true,
+        "error": null,
+        "value": {
+          "text": "Mira &amp; Hamish &lt;5&gt; &quot;read&quot; &#39;safe&#39;",
+          "context": "html_text_only"
+        }
+      },
+      "input_unchanged": true,
+      "outcome": "completed",
+      "candidate": {
+        "subject": {
+          "op": "html_escape",
+          "payload": {
+            "text": "Mira & Hamish <5> \"read\" 'safe'",
+            "unreviewed_authority_grant": true
+          }
+        },
+        "expected": {
+          "ok": false,
+          "error": "unknown_field",
+          "value": null
+        },
+        "observed": {
+          "ok": false,
+          "error": "unknown_field",
+          "value": null
+        },
+        "subject_result": "fail",
+        "original_success_credit": 0,
+        "guard_result": "pass"
+      }
+    },
+    {
+      "proposal_id": "MF6903R2-186",
+      "definition_sha256": "603adfb7f0160b3a1d48034401439f766c4f2035e6500d3a3ea4064b1c455776",
+      "request": {
+        "op": "html_escape",
+        "payload": {
+          "text": "Mira & Hamish <6> \"read\" 'safe'"
+        }
+      },
+      "expected": {
+        "ok": true,
+        "error": null,
+        "value": {
+          "text": "Mira &amp; Hamish &lt;6&gt; &quot;read&quot; &#39;safe&#39;",
+          "context": "html_text_only"
+        }
+      },
+      "observed": {
+        "ok": true,
+        "error": null,
+        "value": {
+          "text": "Mira &amp; Hamish &lt;6&gt; &quot;read&quot; &#39;safe&#39;",
+          "context": "html_text_only"
+        }
+      },
+      "input_unchanged": true,
+      "outcome": "completed",
+      "candidate": {
+        "subject": {
+          "op": "html_escape",
+          "payload": {
+            "text": "Mira & Hamish <6> \"read\" 'safe'",
+            "unreviewed_authority_grant": true
+          }
+        },
+        "expected": {
+          "ok": false,
+          "error": "unknown_field",
+          "value": null
+        },
+        "observed": {
+          "ok": false,
+          "error": "unknown_field",
+          "value": null
+        },
+        "subject_result": "fail",
+        "original_success_credit": 0,
+        "guard_result": "pass"
+      }
+    },
+    {
+      "proposal_id": "MF6903R2-187",
+      "definition_sha256": "7b640b69f17d0e621eda1866b4f194d7072f5a59d2b46781ddde2ef5db64835c",
+      "request": {
+        "op": "html_escape",
+        "payload": {
+          "text": "Mira & Hamish <7> \"read\" 'safe'"
+        }
+      },
+      "expected": {
+        "ok": true,
+        "error": null,
+        "value": {
+          "text": "Mira &amp; Hamish &lt;7&gt; &quot;read&quot; &#39;safe&#39;",
+          "context": "html_text_only"
+        }
+      },
+      "observed": {
+        "ok": true,
+        "error": null,
+        "value": {
+          "text": "Mira &amp; Hamish &lt;7&gt; &quot;read&quot; &#39;safe&#39;",
+          "context": "html_text_only"
+        }
+      },
+      "input_unchanged": true,
+      "outcome": "completed",
+      "candidate": {
+        "subject": {
+          "op": "html_escape",
+          "payload": {
+            "text": "Mira & Hamish <7> \"read\" 'safe'",
+            "unreviewed_authority_grant": true
+          }
+        },
+        "expected": {
+          "ok": false,
+          "error": "unknown_field",
+          "value": null
+        },
+        "observed": {
+          "ok": false,
+          "error": "unknown_field",
+          "value": null
+        },
+        "subject_result": "fail",
+        "original_success_credit": 0,
+        "guard_result": "pass"
+      }
+    },
+    {
+      "proposal_id": "MF6903R2-188",
+      "definition_sha256": "76619e804de0fbafd1d5b11cbf728cc03b9deb4699c36f7d3ca4e5ec00c10ec6",
+      "request": {
+        "op": "html_escape",
+        "payload": {
+          "text": "Mira & Hamish <8> \"read\" 'safe'"
+        }
+      },
+      "expected": {
+        "ok": true,
+        "error": null,
+        "value": {
+          "text": "Mira &amp; Hamish &lt;8&gt; &quot;read&quot; &#39;safe&#39;",
+          "context": "html_text_only"
+        }
+      },
+      "observed": {
+        "ok": true,
+        "error": null,
+        "value": {
+          "text": "Mira &amp; Hamish &lt;8&gt; &quot;read&quot; &#39;safe&#39;",
+          "context": "html_text_only"
+        }
+      },
+      "input_unchanged": true,
+      "outcome": "completed",
+      "candidate": {
+        "subject": {
+          "op": "html_escape",
+          "payload": {
+            "text": "Mira & Hamish <8> \"read\" 'safe'",
+            "unreviewed_authority_grant": true
+          }
+        },
+        "expected": {
+          "ok": false,
+          "error": "unknown_field",
+          "value": null
+        },
+        "observed": {
+          "ok": false,
+          "error": "unknown_field",
+          "value": null
+        },
+        "subject_result": "fail",
+        "original_success_credit": 0,
+        "guard_result": "pass"
+      }
+    },
+    {
+      "proposal_id": "MF6903R2-189",
+      "definition_sha256": "72dca451d6648b3ca01370125f296c3b1b9e5326dd39221a9080b98cb9c4b506",
+      "request": {
+        "op": "html_escape",
+        "payload": {
+          "text": "Mira & Hamish <9> \"read\" 'safe'"
+        }
+      },
+      "expected": {
+        "ok": true,
+        "error": null,
+        "value": {
+          "text": "Mira &amp; Hamish &lt;9&gt; &quot;read&quot; &#39;safe&#39;",
+          "context": "html_text_only"
+        }
+      },
+      "observed": {
+        "ok": true,
+        "error": null,
+        "value": {
+          "text": "Mira &amp; Hamish &lt;9&gt; &quot;read&quot; &#39;safe&#39;",
+          "context": "html_text_only"
+        }
+      },
+      "input_unchanged": true,
+      "outcome": "completed",
+      "candidate": {
+        "subject": {
+          "op": "html_escape",
+          "payload": {
+            "text": "Mira & Hamish <9> \"read\" 'safe'",
+            "unreviewed_authority_grant": true
+          }
+        },
+        "expected": {
+          "ok": false,
+          "error": "unknown_field",
+          "value": null
+        },
+        "observed": {
+          "ok": false,
+          "error": "unknown_field",
+          "value": null
+        },
+        "subject_result": "fail",
+        "original_success_credit": 0,
+        "guard_result": "pass"
+      }
+    },
+    {
+      "proposal_id": "MF6903R2-190",
+      "definition_sha256": "f07f427ea1ca59eae12b6b94ac4b852dcee3bc060c2e5b51eab771b99883308b",
+      "request": {
+        "op": "html_escape",
+        "payload": {
+          "text": "Mira & Hamish <10> \"read\" 'safe'"
+        }
+      },
+      "expected": {
+        "ok": true,
+        "error": null,
+        "value": {
+          "text": "Mira &amp; Hamish &lt;10&gt; &quot;read&quot; &#39;safe&#39;",
+          "context": "html_text_only"
+        }
+      },
+      "observed": {
+        "ok": true,
+        "error": null,
+        "value": {
+          "text": "Mira &amp; Hamish &lt;10&gt; &quot;read&quot; &#39;safe&#39;",
+          "context": "html_text_only"
+        }
+      },
+      "input_unchanged": true,
+      "outcome": "completed",
+      "candidate": {
+        "subject": {
+          "op": "html_escape",
+          "payload": {
+            "text": "Mira & Hamish <10> \"read\" 'safe'",
+            "unreviewed_authority_grant": true
+          }
+        },
+        "expected": {
+          "ok": false,
+          "error": "unknown_field",
+          "value": null
+        },
+        "observed": {
+          "ok": false,
+          "error": "unknown_field",
+          "value": null
+        },
+        "subject_result": "fail",
+        "original_success_credit": 0,
+        "guard_result": "pass"
+      }
+    },
+    {
+      "proposal_id": "MF6903R2-191",
+      "definition_sha256": "4ffeb37abb053993dddae057124bd3490dbfaedaa3100694bdf7e114dae99a92",
+      "request": {
+        "op": "simulation_step",
+        "payload": {
+          "stock": 6,
+          "production": 2,
+          "reserve": 2,
+          "agents": [
+            {
+              "id": "a",
+              "need": 2,
+              "consent": true
+            },
+            {
+              "id": "b",
+              "need": 1,
+              "consent": false
+            }
+          ]
+        }
+      },
+      "expected": {
+        "ok": true,
+        "error": null,
+        "value": {
+          "stock": 6,
+          "production": 2,
+          "consumed": 2,
+          "allocations": [
+            {
+              "id": "a",
+              "amount": 2
+            },
+            {
+              "id": "b",
+              "amount": 0
+            }
+          ],
+          "refused": [
+            "b"
+          ],
+          "residual": 0,
+          "external_action": false
+        }
+      },
+      "observed": {
+        "ok": true,
+        "error": null,
+        "value": {
+          "stock": 6,
+          "production": 2,
+          "consumed": 2,
+          "allocations": [
+            {
+              "id": "a",
+              "amount": 2
+            },
+            {
+              "id": "b",
+              "amount": 0
+            }
+          ],
+          "refused": [
+            "b"
+          ],
+          "residual": 0,
+          "external_action": false
+        }
+      },
+      "input_unchanged": true,
+      "outcome": "completed",
+      "candidate": {
+        "subject": {
+          "op": "simulation_step",
+          "payload": {
+            "stock": 6,
+            "production": 2,
+            "reserve": 2,
+            "agents": [
+              {
+                "id": "a",
+                "need": 2,
+                "consent": true
+              },
+              {
+                "id": "b",
+                "need": 1,
+                "consent": false
+              }
+            ],
+            "unreviewed_authority_grant": true
+          }
+        },
+        "expected": {
+          "ok": false,
+          "error": "unknown_field",
+          "value": null
+        },
+        "observed": {
+          "ok": false,
+          "error": "unknown_field",
+          "value": null
+        },
+        "subject_result": "fail",
+        "original_success_credit": 0,
+        "guard_result": "pass"
+      }
+    },
+    {
+      "proposal_id": "MF6903R2-192",
+      "definition_sha256": "a1d501e7e352158de247e99d03a7dcd81b7bf127c0ab63f4e82eac7fb78f85d9",
+      "request": {
+        "op": "simulation_step",
+        "payload": {
+          "stock": 7,
+          "production": 2,
+          "reserve": 2,
+          "agents": [
+            {
+              "id": "a",
+              "need": 2,
+              "consent": true
+            },
+            {
+              "id": "b",
+              "need": 1,
+              "consent": false
+            }
+          ]
+        }
+      },
+      "expected": {
+        "ok": true,
+        "error": null,
+        "value": {
+          "stock": 7,
+          "production": 2,
+          "consumed": 2,
+          "allocations": [
+            {
+              "id": "a",
+              "amount": 2
+            },
+            {
+              "id": "b",
+              "amount": 0
+            }
+          ],
+          "refused": [
+            "b"
+          ],
+          "residual": 0,
+          "external_action": false
+        }
+      },
+      "observed": {
+        "ok": true,
+        "error": null,
+        "value": {
+          "stock": 7,
+          "production": 2,
+          "consumed": 2,
+          "allocations": [
+            {
+              "id": "a",
+              "amount": 2
+            },
+            {
+              "id": "b",
+              "amount": 0
+            }
+          ],
+          "refused": [
+            "b"
+          ],
+          "residual": 0,
+          "external_action": false
+        }
+      },
+      "input_unchanged": true,
+      "outcome": "completed",
+      "candidate": {
+        "subject": {
+          "op": "simulation_step",
+          "payload": {
+            "stock": 7,
+            "production": 2,
+            "reserve": 2,
+            "agents": [
+              {
+                "id": "a",
+                "need": 2,
+                "consent": true
+              },
+              {
+                "id": "b",
+                "need": 1,
+                "consent": false
+              }
+            ],
+            "unreviewed_authority_grant": true
+          }
+        },
+        "expected": {
+          "ok": false,
+          "error": "unknown_field",
+          "value": null
+        },
+        "observed": {
+          "ok": false,
+          "error": "unknown_field",
+          "value": null
+        },
+        "subject_result": "fail",
+        "original_success_credit": 0,
+        "guard_result": "pass"
+      }
+    },
+    {
+      "proposal_id": "MF6903R2-193",
+      "definition_sha256": "2b69960aca8753f3a934ce85c990ee0fbda8ca29e9a134709c0b14efb5f60c62",
+      "request": {
+        "op": "simulation_step",
+        "payload": {
+          "stock": 8,
+          "production": 2,
+          "reserve": 2,
+          "agents": [
+            {
+              "id": "a",
+              "need": 2,
+              "consent": true
+            },
+            {
+              "id": "b",
+              "need": 1,
+              "consent": false
+            }
+          ]
+        }
+      },
+      "expected": {
+        "ok": true,
+        "error": null,
+        "value": {
+          "stock": 8,
+          "production": 2,
+          "consumed": 2,
+          "allocations": [
+            {
+              "id": "a",
+              "amount": 2
+            },
+            {
+              "id": "b",
+              "amount": 0
+            }
+          ],
+          "refused": [
+            "b"
+          ],
+          "residual": 0,
+          "external_action": false
+        }
+      },
+      "observed": {
+        "ok": true,
+        "error": null,
+        "value": {
+          "stock": 8,
+          "production": 2,
+          "consumed": 2,
+          "allocations": [
+            {
+              "id": "a",
+              "amount": 2
+            },
+            {
+              "id": "b",
+              "amount": 0
+            }
+          ],
+          "refused": [
+            "b"
+          ],
+          "residual": 0,
+          "external_action": false
+        }
+      },
+      "input_unchanged": true,
+      "outcome": "completed",
+      "candidate": {
+        "subject": {
+          "op": "simulation_step",
+          "payload": {
+            "stock": 8,
+            "production": 2,
+            "reserve": 2,
+            "agents": [
+              {
+                "id": "a",
+                "need": 2,
+                "consent": true
+              },
+              {
+                "id": "b",
+                "need": 1,
+                "consent": false
+              }
+            ],
+            "unreviewed_authority_grant": true
+          }
+        },
+        "expected": {
+          "ok": false,
+          "error": "unknown_field",
+          "value": null
+        },
+        "observed": {
+          "ok": false,
+          "error": "unknown_field",
+          "value": null
+        },
+        "subject_result": "fail",
+        "original_success_credit": 0,
+        "guard_result": "pass"
+      }
+    },
+    {
+      "proposal_id": "MF6903R2-194",
+      "definition_sha256": "98b80813c4bedeeea8141d07b7853100e791658c6c7ee5018d7c11b7bc8e58e1",
+      "request": {
+        "op": "simulation_step",
+        "payload": {
+          "stock": 9,
+          "production": 2,
+          "reserve": 2,
+          "agents": [
+            {
+              "id": "a",
+              "need": 2,
+              "consent": true
+            },
+            {
+              "id": "b",
+              "need": 1,
+              "consent": false
+            }
+          ]
+        }
+      },
+      "expected": {
+        "ok": true,
+        "error": null,
+        "value": {
+          "stock": 9,
+          "production": 2,
+          "consumed": 2,
+          "allocations": [
+            {
+              "id": "a",
+              "amount": 2
+            },
+            {
+              "id": "b",
+              "amount": 0
+            }
+          ],
+          "refused": [
+            "b"
+          ],
+          "residual": 0,
+          "external_action": false
+        }
+      },
+      "observed": {
+        "ok": true,
+        "error": null,
+        "value": {
+          "stock": 9,
+          "production": 2,
+          "consumed": 2,
+          "allocations": [
+            {
+              "id": "a",
+              "amount": 2
+            },
+            {
+              "id": "b",
+              "amount": 0
+            }
+          ],
+          "refused": [
+            "b"
+          ],
+          "residual": 0,
+          "external_action": false
+        }
+      },
+      "input_unchanged": true,
+      "outcome": "completed",
+      "candidate": {
+        "subject": {
+          "op": "simulation_step",
+          "payload": {
+            "stock": 9,
+            "production": 2,
+            "reserve": 2,
+            "agents": [
+              {
+                "id": "a",
+                "need": 2,
+                "consent": true
+              },
+              {
+                "id": "b",
+                "need": 1,
+                "consent": false
+              }
+            ],
+            "unreviewed_authority_grant": true
+          }
+        },
+        "expected": {
+          "ok": false,
+          "error": "unknown_field",
+          "value": null
+        },
+        "observed": {
+          "ok": false,
+          "error": "unknown_field",
+          "value": null
+        },
+        "subject_result": "fail",
+        "original_success_credit": 0,
+        "guard_result": "pass"
+      }
+    },
+    {
+      "proposal_id": "MF6903R2-195",
+      "definition_sha256": "6fe2def4c672ce032b7a7d93e40207105cccccf7e90ced70b0869a9b6b95b3c6",
+      "request": {
+        "op": "simulation_step",
+        "payload": {
+          "stock": 10,
+          "production": 2,
+          "reserve": 2,
+          "agents": [
+            {
+              "id": "a",
+              "need": 2,
+              "consent": true
+            },
+            {
+              "id": "b",
+              "need": 1,
+              "consent": false
+            }
+          ]
+        }
+      },
+      "expected": {
+        "ok": true,
+        "error": null,
+        "value": {
+          "stock": 10,
+          "production": 2,
+          "consumed": 2,
+          "allocations": [
+            {
+              "id": "a",
+              "amount": 2
+            },
+            {
+              "id": "b",
+              "amount": 0
+            }
+          ],
+          "refused": [
+            "b"
+          ],
+          "residual": 0,
+          "external_action": false
+        }
+      },
+      "observed": {
+        "ok": true,
+        "error": null,
+        "value": {
+          "stock": 10,
+          "production": 2,
+          "consumed": 2,
+          "allocations": [
+            {
+              "id": "a",
+              "amount": 2
+            },
+            {
+              "id": "b",
+              "amount": 0
+            }
+          ],
+          "refused": [
+            "b"
+          ],
+          "residual": 0,
+          "external_action": false
+        }
+      },
+      "input_unchanged": true,
+      "outcome": "completed",
+      "candidate": {
+        "subject": {
+          "op": "simulation_step",
+          "payload": {
+            "stock": 10,
+            "production": 2,
+            "reserve": 2,
+            "agents": [
+              {
+                "id": "a",
+                "need": 2,
+                "consent": true
+              },
+              {
+                "id": "b",
+                "need": 1,
+                "consent": false
+              }
+            ],
+            "unreviewed_authority_grant": true
+          }
+        },
+        "expected": {
+          "ok": false,
+          "error": "unknown_field",
+          "value": null
+        },
+        "observed": {
+          "ok": false,
+          "error": "unknown_field",
+          "value": null
+        },
+        "subject_result": "fail",
+        "original_success_credit": 0,
+        "guard_result": "pass"
+      }
+    },
+    {
+      "proposal_id": "MF6903R2-196",
+      "definition_sha256": "83ebfe7815f16e3d9780c93f2eabca4ef38ba3510330057f6e75789f2f94eeb3",
+      "request": {
+        "op": "simulation_step",
+        "payload": {
+          "stock": 11,
+          "production": 2,
+          "reserve": 2,
+          "agents": [
+            {
+              "id": "a",
+              "need": 2,
+              "consent": true
+            },
+            {
+              "id": "b",
+              "need": 1,
+              "consent": false
+            }
+          ]
+        }
+      },
+      "expected": {
+        "ok": true,
+        "error": null,
+        "value": {
+          "stock": 11,
+          "production": 2,
+          "consumed": 2,
+          "allocations": [
+            {
+              "id": "a",
+              "amount": 2
+            },
+            {
+              "id": "b",
+              "amount": 0
+            }
+          ],
+          "refused": [
+            "b"
+          ],
+          "residual": 0,
+          "external_action": false
+        }
+      },
+      "observed": {
+        "ok": true,
+        "error": null,
+        "value": {
+          "stock": 11,
+          "production": 2,
+          "consumed": 2,
+          "allocations": [
+            {
+              "id": "a",
+              "amount": 2
+            },
+            {
+              "id": "b",
+              "amount": 0
+            }
+          ],
+          "refused": [
+            "b"
+          ],
+          "residual": 0,
+          "external_action": false
+        }
+      },
+      "input_unchanged": true,
+      "outcome": "completed",
+      "candidate": {
+        "subject": {
+          "op": "simulation_step",
+          "payload": {
+            "stock": 11,
+            "production": 2,
+            "reserve": 2,
+            "agents": [
+              {
+                "id": "a",
+                "need": 2,
+                "consent": true
+              },
+              {
+                "id": "b",
+                "need": 1,
+                "consent": false
+              }
+            ],
+            "unreviewed_authority_grant": true
+          }
+        },
+        "expected": {
+          "ok": false,
+          "error": "unknown_field",
+          "value": null
+        },
+        "observed": {
+          "ok": false,
+          "error": "unknown_field",
+          "value": null
+        },
+        "subject_result": "fail",
+        "original_success_credit": 0,
+        "guard_result": "pass"
+      }
+    },
+    {
+      "proposal_id": "MF6903R2-197",
+      "definition_sha256": "618820dafb916095c06da402ac61a25d9a00db2516313e4fd66be211f250679e",
+      "request": {
+        "op": "simulation_step",
+        "payload": {
+          "stock": 12,
+          "production": 2,
+          "reserve": 2,
+          "agents": [
+            {
+              "id": "a",
+              "need": 2,
+              "consent": true
+            },
+            {
+              "id": "b",
+              "need": 1,
+              "consent": false
+            }
+          ]
+        }
+      },
+      "expected": {
+        "ok": true,
+        "error": null,
+        "value": {
+          "stock": 12,
+          "production": 2,
+          "consumed": 2,
+          "allocations": [
+            {
+              "id": "a",
+              "amount": 2
+            },
+            {
+              "id": "b",
+              "amount": 0
+            }
+          ],
+          "refused": [
+            "b"
+          ],
+          "residual": 0,
+          "external_action": false
+        }
+      },
+      "observed": {
+        "ok": true,
+        "error": null,
+        "value": {
+          "stock": 12,
+          "production": 2,
+          "consumed": 2,
+          "allocations": [
+            {
+              "id": "a",
+              "amount": 2
+            },
+            {
+              "id": "b",
+              "amount": 0
+            }
+          ],
+          "refused": [
+            "b"
+          ],
+          "residual": 0,
+          "external_action": false
+        }
+      },
+      "input_unchanged": true,
+      "outcome": "completed",
+      "candidate": {
+        "subject": {
+          "op": "simulation_step",
+          "payload": {
+            "stock": 12,
+            "production": 2,
+            "reserve": 2,
+            "agents": [
+              {
+                "id": "a",
+                "need": 2,
+                "consent": true
+              },
+              {
+                "id": "b",
+                "need": 1,
+                "consent": false
+              }
+            ],
+            "unreviewed_authority_grant": true
+          }
+        },
+        "expected": {
+          "ok": false,
+          "error": "unknown_field",
+          "value": null
+        },
+        "observed": {
+          "ok": false,
+          "error": "unknown_field",
+          "value": null
+        },
+        "subject_result": "fail",
+        "original_success_credit": 0,
+        "guard_result": "pass"
+      }
+    },
+    {
+      "proposal_id": "MF6903R2-198",
+      "definition_sha256": "272115c0f799383c8dd461cbf0940f03db11d57a69b43265bf59e593e15861bc",
+      "request": {
+        "op": "simulation_step",
+        "payload": {
+          "stock": 13,
+          "production": 2,
+          "reserve": 2,
+          "agents": [
+            {
+              "id": "a",
+              "need": 2,
+              "consent": true
+            },
+            {
+              "id": "b",
+              "need": 1,
+              "consent": false
+            }
+          ]
+        }
+      },
+      "expected": {
+        "ok": true,
+        "error": null,
+        "value": {
+          "stock": 13,
+          "production": 2,
+          "consumed": 2,
+          "allocations": [
+            {
+              "id": "a",
+              "amount": 2
+            },
+            {
+              "id": "b",
+              "amount": 0
+            }
+          ],
+          "refused": [
+            "b"
+          ],
+          "residual": 0,
+          "external_action": false
+        }
+      },
+      "observed": {
+        "ok": true,
+        "error": null,
+        "value": {
+          "stock": 13,
+          "production": 2,
+          "consumed": 2,
+          "allocations": [
+            {
+              "id": "a",
+              "amount": 2
+            },
+            {
+              "id": "b",
+              "amount": 0
+            }
+          ],
+          "refused": [
+            "b"
+          ],
+          "residual": 0,
+          "external_action": false
+        }
+      },
+      "input_unchanged": true,
+      "outcome": "completed",
+      "candidate": {
+        "subject": {
+          "op": "simulation_step",
+          "payload": {
+            "stock": 13,
+            "production": 2,
+            "reserve": 2,
+            "agents": [
+              {
+                "id": "a",
+                "need": 2,
+                "consent": true
+              },
+              {
+                "id": "b",
+                "need": 1,
+                "consent": false
+              }
+            ],
+            "unreviewed_authority_grant": true
+          }
+        },
+        "expected": {
+          "ok": false,
+          "error": "unknown_field",
+          "value": null
+        },
+        "observed": {
+          "ok": false,
+          "error": "unknown_field",
+          "value": null
+        },
+        "subject_result": "fail",
+        "original_success_credit": 0,
+        "guard_result": "pass"
+      }
+    },
+    {
+      "proposal_id": "MF6903R2-199",
+      "definition_sha256": "beabd4d3edd81a4e2c8770c1c2208574f97256d9eea1f0d9c297374c67ccca04",
+      "request": {
+        "op": "simulation_step",
+        "payload": {
+          "stock": 14,
+          "production": 2,
+          "reserve": 2,
+          "agents": [
+            {
+              "id": "a",
+              "need": 2,
+              "consent": true
+            },
+            {
+              "id": "b",
+              "need": 1,
+              "consent": false
+            }
+          ]
+        }
+      },
+      "expected": {
+        "ok": true,
+        "error": null,
+        "value": {
+          "stock": 14,
+          "production": 2,
+          "consumed": 2,
+          "allocations": [
+            {
+              "id": "a",
+              "amount": 2
+            },
+            {
+              "id": "b",
+              "amount": 0
+            }
+          ],
+          "refused": [
+            "b"
+          ],
+          "residual": 0,
+          "external_action": false
+        }
+      },
+      "observed": {
+        "ok": true,
+        "error": null,
+        "value": {
+          "stock": 14,
+          "production": 2,
+          "consumed": 2,
+          "allocations": [
+            {
+              "id": "a",
+              "amount": 2
+            },
+            {
+              "id": "b",
+              "amount": 0
+            }
+          ],
+          "refused": [
+            "b"
+          ],
+          "residual": 0,
+          "external_action": false
+        }
+      },
+      "input_unchanged": true,
+      "outcome": "completed",
+      "candidate": {
+        "subject": {
+          "op": "simulation_step",
+          "payload": {
+            "stock": 14,
+            "production": 2,
+            "reserve": 2,
+            "agents": [
+              {
+                "id": "a",
+                "need": 2,
+                "consent": true
+              },
+              {
+                "id": "b",
+                "need": 1,
+                "consent": false
+              }
+            ],
+            "unreviewed_authority_grant": true
+          }
+        },
+        "expected": {
+          "ok": false,
+          "error": "unknown_field",
+          "value": null
+        },
+        "observed": {
+          "ok": false,
+          "error": "unknown_field",
+          "value": null
+        },
+        "subject_result": "fail",
+        "original_success_credit": 0,
+        "guard_result": "pass"
+      }
+    },
+    {
+      "proposal_id": "MF6903R2-200",
+      "definition_sha256": "a8f2cc18e1961c98e9117eb238ec9377d2b2e744a92d00f41b1f64541de18110",
+      "request": {
+        "op": "simulation_step",
+        "payload": {
+          "stock": 15,
+          "production": 2,
+          "reserve": 2,
+          "agents": [
+            {
+              "id": "a",
+              "need": 2,
+              "consent": true
+            },
+            {
+              "id": "b",
+              "need": 1,
+              "consent": false
+            }
+          ]
+        }
+      },
+      "expected": {
+        "ok": true,
+        "error": null,
+        "value": {
+          "stock": 15,
+          "production": 2,
+          "consumed": 2,
+          "allocations": [
+            {
+              "id": "a",
+              "amount": 2
+            },
+            {
+              "id": "b",
+              "amount": 0
+            }
+          ],
+          "refused": [
+            "b"
+          ],
+          "residual": 0,
+          "external_action": false
+        }
+      },
+      "observed": {
+        "ok": true,
+        "error": null,
+        "value": {
+          "stock": 15,
+          "production": 2,
+          "consumed": 2,
+          "allocations": [
+            {
+              "id": "a",
+              "amount": 2
+            },
+            {
+              "id": "b",
+              "amount": 0
+            }
+          ],
+          "refused": [
+            "b"
+          ],
+          "residual": 0,
+          "external_action": false
+        }
+      },
+      "input_unchanged": true,
+      "outcome": "completed",
+      "candidate": {
+        "subject": {
+          "op": "simulation_step",
+          "payload": {
+            "stock": 15,
+            "production": 2,
+            "reserve": 2,
+            "agents": [
+              {
+                "id": "a",
+                "need": 2,
+                "consent": true
+              },
+              {
+                "id": "b",
+                "need": 1,
+                "consent": false
+              }
+            ],
+            "unreviewed_authority_grant": true
+          }
+        },
+        "expected": {
+          "ok": false,
+          "error": "unknown_field",
+          "value": null
+        },
+        "observed": {
+          "ok": false,
+          "error": "unknown_field",
+          "value": null
+        },
+        "subject_result": "fail",
+        "original_success_credit": 0,
+        "guard_result": "pass"
+      }
+    }
+  ],
+  "independent_reproduction": false
+}

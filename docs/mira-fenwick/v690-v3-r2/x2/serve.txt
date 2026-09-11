@@ -1,0 +1,8 @@
+'use strict';
+const http=require('node:http'),fs=require('node:fs'),path=require('node:path');
+const html=fs.readFileSync(path.join(__dirname,'albion.html'));
+const server=http.createServer((req,res)=>{if(!['/','/albion.html'].includes(req.url)||req.method!=='GET'){res.writeHead(404,{'Content-Type':'text/plain'});res.end('Not found');return;}res.writeHead(200,{'Content-Type':'text/html; charset=utf-8','Cache-Control':'no-store','X-Content-Type-Options':'nosniff','Content-Security-Policy':"default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; img-src 'none'; connect-src 'none'; base-uri 'none'; form-action 'none'"});res.end(html);});
+const port=process.argv[2]?Number(process.argv[2]):0;if(!Number.isInteger(port)||port<0||port>65535)throw Error('port');
+server.listen(port,'127.0.0.1',()=>process.stdout.write(JSON.stringify({url:'http://127.0.0.1:'+server.address().port+'/albion.html',pid:process.pid,scope:'single local HTML resource'})+'\n'));
+process.stdin.setEncoding('utf8');process.stdin.on('data',s=>{if(s.trim()==='stop')server.close(()=>process.exit(0));});
+setTimeout(()=>server.close(()=>process.exit(0)),3600000).unref();

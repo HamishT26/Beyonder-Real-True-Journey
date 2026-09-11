@@ -1,0 +1,55 @@
+{
+  "schema": "ghc.family.four-tier-card.v1",
+  "tier": 4,
+  "card_type": "proposal",
+  "title": "Nonerasing rollback view / bounded case 07",
+  "parent_ids": [
+    "ghc-card-74dcfde78545ce2dfc366f70"
+  ],
+  "owner": "Mira Fenwick",
+  "phase": "v690-v3-r2",
+  "stability": "volatile",
+  "outcome": "completed",
+  "content": {
+    "proposal_id": "MF6903R2-117",
+    "mission": "Select an earlier active state while retaining every later historical state.",
+    "definition_sha256": "8bc466ca22eeee6ff273904315b44d4ca4063d276b1094d2d96cb51f6f3a4025",
+    "request": {
+      "op": "rollback_projection",
+      "payload": {
+        "history": [
+          1,
+          7,
+          9
+        ],
+        "index": 1
+      }
+    },
+    "expected": {
+      "ok": true,
+      "error": null,
+      "value": {
+        "active": 7,
+        "retained": [
+          1,
+          7,
+          9
+        ],
+        "inactive_later_indices": [
+          2
+        ]
+      }
+    },
+    "observed_match": true,
+    "candidate_subject_success_credit": 0
+  },
+  "source_refs": [
+    "x2/results.json"
+  ],
+  "protected_gates": [
+    "No empirical or identity promotion",
+    "Professional, legal, cultural, affected-party and Maori authority remain separate"
+  ],
+  "boundary": "Relational indexing and bounded same-owner evidence only; no identity, authority, independent reproduction or Stage 20 conclusion.",
+  "card_id": "ghc-card-a39feb82adacd9f56d34e816"
+}

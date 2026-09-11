@@ -1,0 +1,25 @@
+'use strict';
+function review(profile,route){const checks=[];const check=(id,pass)=>checks.push({check_id:id,result:pass?'pass':'fail'});
+ if(!profile||typeof profile!=='object'||Array.isArray(profile)||!route||typeof route!=='object'||Array.isArray(route)||!['cycle','astra_identities','sol_identities','assignments'].every(k=>Array.isArray(route[k])))return{schema:'ghc.family.workflow-review.v5',valid:false,checks:[{check_id:'shape',result:'fail'}],check_count:1,dispatches:0};
+ check('schema',profile.schema==='ghc.family.workflow-profile.v5'&&route.schema==='ghc.family.weighted-route.v5');
+ check('owner-phase',profile.owner===route.current_owner&&profile.phase===route.current_phase);
+ check('format-list',JSON.stringify(profile.artifact_policy?.authored_extensions)===JSON.stringify(['.json','.md','.txt','.html']));
+ check('image-pdf-policy',profile.artifact_policy?.no_new_pdf===true&&profile.artifact_policy?.no_new_images===true);
+ check('recovery-limit',profile.routing?.minimum_bounded_recovery_attempts>=5&&profile.routing?.accepted_send_limit===1&&profile.routing?.no_resend_after_opaque_acceptance===true);
+ const cycle=route.cycle||[],astra=route.astra_identities||[],sol=route.sol_identities||[],rows=route.assignments||[];
+ check('weighted-cardinality',cycle.length===45&&new Set(cycle).size===30&&astra.length===15&&sol.length===15&&new Set([...astra,...sol]).size===30);
+ check('weights',astra.every(n=>cycle.filter(x=>x===n).length===1)&&sol.every(n=>cycle.filter(x=>x===n).length===2));
+ check('cadence',cycle.every((n,i)=>i%3===0?astra.includes(n):sol.includes(n)));
+ const starts=cycle.map((_,i)=>i).filter(i=>rows.length>0&&rows.every((r,j)=>r.owner===cycle[(i+j)%cycle.length]));
+ check('unique-route-rotation',starts.length===1);check('owner-before-successor',starts.length===1&&cycle[(starts[0]+44)%45]===route.current_owner);
+ const first=/^v(\d+)-v([1-8])/.exec(route.current_phase||'');let v=first?Number(first[1]):0,s=first?Number(first[2]):0;let consecutive=!!first;
+ for(const [i,r] of rows.entries()){s++;if(s>8){s=1;v++;}if(r.phase!=='v'+v+'-v'+s||r.sequence!==i+1||r.state!=='prospective'||r.model_role!==(astra.includes(r.owner)?'Astra':'Sol'))consecutive=false;}
+ check('phase-projection',consecutive);check('terminal',rows.at(-1)?.phase==='v725-v8'&&rows.at(-1)?.owner==='Teryn Halewick');
+ check('preserved-settings',route.model_settings_changed===false&&profile.task_creation===false&&profile.subagents===false);
+ check('owner-only-validation',profile.validation?.owner_scope_only===true&&profile.validation?.canonical_invocations===1&&profile.validation?.source_replay===false&&profile.validation?.success_replay===false);
+ check('record-floors',profile.limits?.new_proposals?.[0]>=200&&profile.limits?.inherited_proposals?.[0]>=200&&profile.limits?.safe_now_x1?.[0]>=100&&profile.limits?.safe_now_x2?.[0]>=100);
+ check('retained-boundary',profile.terminal_verdict==='NOT_READY_FOR_STAGE_20');
+ return{schema:'ghc.family.workflow-review.v5',valid:checks.every(x=>x.result==='pass'),checks,check_count:checks.length,assignment_count:rows.length,first:rows[0],last:rows.at(-1),source_execution_credit:0,dispatches:0};
+}
+module.exports={review};
+if(require.main===module){const fs=require('node:fs'),args=process.argv.slice(2),get=k=>args[args.indexOf(k)+1];if(!args.includes('--profile')||!args.includes('--route'))throw Error('--profile and --route required');const r=review(JSON.parse(fs.readFileSync(get('--profile'))),JSON.parse(fs.readFileSync(get('--route'))));process.stdout.write(JSON.stringify(r)+'\n');if(!r.valid)process.exitCode=1;}

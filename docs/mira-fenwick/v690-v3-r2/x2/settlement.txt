@@ -1,0 +1,37 @@
+'use strict';
+(function(root){
+ const core=typeof module!=='undefined'&&module.exports?require('./core.txt'):root.SettlementCore;
+ const names=['Elm','Juniper','Rowan','Hazel','Clover','Wren','Fern','Willow','Ash','Briar','Poppy','Robin','Iris','Lark','Moss','Cedar','Daisy','Alder','Sage','Reed','Maple','Laurel','Aster','Yarrow','Birch','Sorrel','Holly','Linden','Rue','Flax'];
+ const maxTicks=240;
+ function checked(op,payload){const r=core.evaluate({op,payload});if(!r.ok)throw Error(op+': '+r.error);return r.value;}
+ function random(s){s.randomState=(Math.imul(1664525,s.randomState)+1013904223)>>>0;return s.randomState;}
+ function create(config){
+  core.fields(config,['seed','population','production','policy','withdrawn']);core.integer(config.seed,1,1000000);core.integer(config.population,4,30);core.integer(config.production,0,90);core.boolean(config.withdrawn);if(!['progressive','greedy'].includes(config.policy))core.fail('invalid_enum');
+  const s={schema:'ghc.albion.synthetic-state.v1',initialConfig:{...config},config:{...config},consentEvents:[],tick:0,initialStock:80,stock:80,capacity:240,reserve:10,produced:0,consumed:0,overflow:0,randomState:config.seed>>>0,agents:[],trace:[],stopped:false};
+  for(let i=0;i<config.population;i++){s.agents.push({id:'resident-'+String(i+1).padStart(2,'0'),name:names[i],consent:!(config.withdrawn&&i===0),totalNeed:0,totalReceived:0,unmet:0,lastNeed:0,lastReceived:0});}
+  return s;
+ }
+ function step(input){
+  if(input.tick>=maxTicks)return{...input,stopped:true};
+  const s=JSON.parse(JSON.stringify(input));const previous=s.stock;
+  const variation=(random(s)%5)-2,production=Math.max(0,s.config.production+variation);
+  const harvest=checked('harvest_capacity',{stock:s.stock,production,capacity:s.capacity});s.stock=harvest.stock;s.produced+=production;s.overflow+=harvest.overflow;
+  const needs=s.agents.map(()=>1+random(s)%3);const admitted=needs.map((n,i)=>s.agents[i].consent?n:0);
+  let allocation;
+  if(s.config.policy==='progressive')allocation=checked('fair_share',{demands:admitted,supply:Math.max(0,s.stock-s.reserve)}).allocation;
+  else allocation=checked('simulation_step',{stock:s.stock,production:0,reserve:s.reserve,agents:s.agents.map((a,i)=>({id:a.id,need:needs[i],consent:a.consent}))}).allocations.map(a=>a.amount);
+  let consumed=0;for(let i=0;i<s.agents.length;i++){const a=s.agents[i];a.lastNeed=needs[i];a.lastReceived=allocation[i];if(a.consent){a.totalNeed+=needs[i];a.totalReceived+=allocation[i];a.unmet+=needs[i]-allocation[i];}consumed+=allocation[i];}
+  s.stock-=consumed;s.consumed+=consumed;s.tick++;
+  const residual=previous+production-harvest.overflow-consumed-s.stock;
+  const cumulativeResidual=s.initialStock+s.produced-s.overflow-s.consumed-s.stock;
+  if(residual!==0||cumulativeResidual!==0||s.stock<0||allocation.some((n,i)=>n<0||n>needs[i]||(!s.agents[i].consent&&n!==0)))throw Error('simulation invariant');
+  s.trace.push({tick:s.tick,production,overflow:harvest.overflow,needs,allocations:allocation,consumed,stock:s.stock,residual,cumulativeResidual,refused:s.agents.filter(a=>!a.consent).map(a=>a.id)});
+  s.stopped=s.tick>=maxTicks;return s;
+ }
+ function setConsent(input,index,consent){core.integer(index,0,input.agents.length-1);core.boolean(consent);const s=JSON.parse(JSON.stringify(input));s.agents[index].consent=consent;s.consentEvents.push({beforeTick:s.tick,index,consent});if(index===0)s.config.withdrawn=!consent;return s;}
+ function metrics(s){const admitted=s.agents.filter(a=>a.consent),need=admitted.reduce((a,b)=>a+b.totalNeed,0),received=admitted.reduce((a,b)=>a+b.totalReceived,0);const last=s.trace.at(-1);return{tick:s.tick,stock:s.stock,produced:s.produced,consumed:s.consumed,overflow:s.overflow,residual:s.initialStock+s.produced-s.overflow-s.consumed-s.stock,admitted:admitted.length,servedLastTick:last?last.allocations.filter((n,i)=>s.agents[i].consent&&n===last.needs[i]).length:0,atLeastOneLastTick:last?last.allocations.filter(n=>n>0).length:0,meanUnmet:admitted.length?admitted.reduce((a,b)=>a+b.unmet,0)/admitted.length:0,maxUnmet:admitted.length?Math.max(...admitted.map(a=>a.unmet)):0,fulfillment:need?received/need:null};}
+ function run(config,ticks=120){core.integer(ticks,0,maxTicks);let s=create(config);for(let i=0;i<ticks;i++)s=step(s);return s;}
+ function replay(log){core.integer(log.tick,0,maxTicks);core.array(log.consentEvents,0,1000);let prev=-1;for(const e of log.consentEvents){core.fields(e,['beforeTick','index','consent']);core.integer(e.beforeTick,0,log.tick);if(e.beforeTick<prev)core.fail('chronology');prev=e.beforeTick;}let s=create(log.initialConfig);for(let t=0;t<=log.tick;t++){for(const e of log.consentEvents.filter(e=>e.beforeTick===t))s=setConsent(s,e.index,e.consent);if(t<log.tick)s=step(s);}if(JSON.stringify(s.trace)!==JSON.stringify(log.trace))throw Error('replay_mismatch');return s;}
+ const api={create,step,setConsent,metrics,run,replay,maxTicks,names};
+ if(typeof module!=='undefined'&&module.exports)module.exports=api;else root.Albion=api;
+})(globalThis);

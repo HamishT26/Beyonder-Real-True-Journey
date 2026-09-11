@@ -1,0 +1,14 @@
+'use strict';
+const fs=require('node:fs'),path=require('node:path'),crypto=require('node:crypto');
+const root=__dirname,read=p=>fs.readFileSync(path.join(root,p),'utf8'),sha=b=>crypto.createHash('sha256').update(b).digest('hex');
+const revision=process.argv[2]||null;
+if(revision){if(!/^r[1-9][0-9]*$/.test(revision))throw Error('revision id');const receipts='D:/GHC-Archives/receipts/mira-fenwick/v690-v3-r2';for(const name of ['albion.html','interface-build.json'])fs.writeFileSync(path.join(receipts,'before-'+revision+'-'+name),fs.readFileSync(path.join(root,name)),{flag:'wx'});}
+const first=read('../x1/core.txt'),second=read('core.txt'),simulation=read('settlement.txt'),template=read('interface.txt');
+if(template.split('__KERNEL__').length!==2)throw Error('exact kernel placeholder');
+const kernel=`globalThis.SettlementCore=(function(){const one={exports:{}};const r1=()=>{throw Error('unexpected dependency');};(function(module,require){\n${first}\n})(one,r1);const two={exports:{}};const r2=p=>{if(p!=='../x1/core.txt')throw Error('unexpected dependency');return one.exports;};(function(module,require){\n${second}\n})(two,r2);return two.exports;})();\n${simulation}`;
+if(/<\/script/i.test(kernel))throw Error('kernel script terminator');
+const html=template.replace('__KERNEL__','<script id="kernel">\n'+kernel+'\n</script>');
+for(const m of html.matchAll(/<script\b[^>]*>([\s\S]*?)<\/script>/g))new Function(m[1]);
+fs.writeFileSync(path.join(root,'albion.html'),html,{flag:revision?'w':'wx'});
+fs.writeFileSync(path.join(root,'interface-build.json'),JSON.stringify({schema:'ghc.albion.interface-build.v1',revision,sources:[['../x1/core.txt',first],['core.txt',second],['settlement.txt',simulation],['interface.txt',template]].map(([path,content])=>({path,sha256:sha(content),bytes:Buffer.byteLength(content)})),output:{path:'albion.html',sha256:sha(html),bytes:Buffer.byteLength(html)},inline_script_count:2,syntax_checked:true,external_dependencies:0,image_files:0,pdf_files:0,created_at_utc:new Date().toISOString()},null,2)+'\n',{flag:revision?'w':'wx'});
+console.log(JSON.stringify({html_bytes:Buffer.byteLength(html),scripts:2,external_dependencies:0}));

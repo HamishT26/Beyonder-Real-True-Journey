@@ -1,0 +1,92 @@
+{
+  "schema": "ghc.albion.browser-review.v1",
+  "phase": "v690-v3-r2",
+  "browser": "Codex in-app browser through CUA",
+  "screenshots_created": 0,
+  "images_created": 0,
+  "concept": "plan/design-spec.md",
+  "intentional_deviations": [
+    "User prohibited image generation and screenshots. The scene is code-drawn canvas; review used accessible text, interactions and measured DOM layout.",
+    "No claim of pixel-perfect image comparison or comprehensive accessibility conformance."
+  ],
+  "checks": [
+    {
+      "id": "step",
+      "result": "pass",
+      "observed": "Two steps produced ticks 1 and 2 with stock 76 then 78 and balance 0."
+    },
+    {
+      "id": "consent",
+      "result": "pass",
+      "observed": "Elm was held after withdrawal; prior tick remained present."
+    },
+    {
+      "id": "replay",
+      "result": "pass",
+      "observed": "Two ticks and one consent change replayed exactly."
+    },
+    {
+      "id": "compare",
+      "result": "pass",
+      "observed": "Seed 417 with withdrawal: both policies used 3659 units, max unmet 44 versus 163, balance 0."
+    },
+    {
+      "id": "json-inspection",
+      "result": "pass",
+      "observed": "Dialog contained two trace rows and the consent event; no download or external transmission."
+    },
+    {
+      "id": "keyboard",
+      "result": "pass",
+      "observed": "Enter on Step advanced once; Escape dismissed the JSON dialog."
+    },
+    {
+      "id": "start-pause",
+      "result": "pass",
+      "observed": "Start entered running state; Pause returned to paused. An earlier running observation reached tick 179 before reset."
+    },
+    {
+      "id": "reset-parameters",
+      "result": "pass",
+      "observed": "Reset replaced the visible run. Seed 123, population 30 and the alternate policy produced a valid next tick."
+    },
+    {
+      "id": "mobile",
+      "result": "pass",
+      "observed": "After correction, requested 390px viewport had 375px content width and 375px document width; canvas 341px and controls 343px fit."
+    },
+    {
+      "id": "desktop",
+      "result": "pass",
+      "observed": "Requested 1440px viewport had 1425px content and document width; controls 292px, heading 43px, button font 14px, button height 40.19px."
+    },
+    {
+      "id": "palette-and-copy",
+      "result": "pass",
+      "observed": "Parchment RGB 245,242,233, visible title and essential controls match the text design specification."
+    },
+    {
+      "id": "dependencies-and-console",
+      "result": "pass",
+      "observed": "No img elements, external script sources, console warnings or console errors observed."
+    }
+  ],
+  "stop_limit": {
+    "engine_test": "passed at 240 ticks",
+    "browser_limit_completion": "not claimed; browser observed 179 ticks before explicit reset"
+  },
+  "retained_failure": {
+    "method_id": "MF6903R2-OP008",
+    "before": {
+      "viewport_content_width": 375,
+      "document_width": 435,
+      "canvas_width": 416.65625,
+      "controls_width": 418.65625
+    },
+    "cause": "Grid items retained their intrinsic minimum width.",
+    "correction": "Set direct layout and lower-grid children to min-width:0.",
+    "original_html_preserved_externally": true,
+    "original_success_credit": 0
+  },
+  "scope": "Current local page and declared interactions, not full assistive-technology, perception, cognitive or affected-user evaluation."
+}

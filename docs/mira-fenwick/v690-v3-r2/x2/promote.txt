@@ -1,0 +1,9 @@
+'use strict';
+const fs=require('node:fs'),path=require('node:path'),crypto=require('node:crypto');
+const root=path.resolve(__dirname,'../../../..'),plan=JSON.parse(fs.readFileSync(path.join(__dirname,'promotion-plan.json'))),hash=b=>crypto.createHash('sha256').update(b).digest('hex');
+const ready=JSON.parse(fs.readFileSync(path.join(__dirname,'promotion-preflight.json')));if(!ready.valid)throw Error('promotion preflight');
+if(plan.targets.some(t=>fs.existsSync(t.destination)))throw Error('no-overwrite preflight');
+for(const t of plan.targets){const b=fs.readFileSync(path.join(root,t.source));if(hash(b)!==t.sha256)throw Error('prepared source drift');}
+const rows=[];for(const t of plan.targets){const b=fs.readFileSync(path.join(root,t.source));fs.mkdirSync(path.dirname(t.destination),{recursive:true});fs.writeFileSync(t.destination,b,{flag:'wx'});if(hash(fs.readFileSync(t.destination))!==t.sha256)throw Error('installed byte mismatch');rows.push({source:t.source,sha256:t.sha256,bytes:t.bytes,parity:true,destination_scope:t.destination.startsWith('C:')?'essential discoverable skill':'D public runner or support module'});}
+fs.writeFileSync(path.join(__dirname,'promotion-receipt.json'),JSON.stringify({schema:'ghc.family.promotion-receipt.v1',global_skills:5,public_runners:5,support_modules:4,installed_files:rows.length,byte_parity:rows.every(x=>x.parity),rows,created_at_utc:new Date().toISOString(),old_files_overwritten:0},null,2)+'\n',{flag:'wx'});
+console.log(JSON.stringify({installed_files:rows.length,byte_parity:true,global_skills:5,public_runners:5}));

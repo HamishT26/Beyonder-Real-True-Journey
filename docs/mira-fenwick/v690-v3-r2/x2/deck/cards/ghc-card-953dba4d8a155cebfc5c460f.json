@@ -1,0 +1,63 @@
+{
+  "schema": "ghc.family.four-tier-card.v1",
+  "tier": 4,
+  "card_type": "proposal",
+  "title": "Event replay with conflict refusal / bounded case 07",
+  "parent_ids": [
+    "ghc-card-5168f940082e0f7020772094"
+  ],
+  "owner": "Mira Fenwick",
+  "phase": "v690-v3-r2",
+  "stability": "volatile",
+  "outcome": "completed",
+  "content": {
+    "proposal_id": "MF6903R2-107",
+    "mission": "Apply each event key once and refuse a conflicting payload under the same key.",
+    "definition_sha256": "cb99e779c7e69074c6d0a2eda0eb3b7ce29c9e7d0da34eb35d9ecf7c8c94c17d",
+    "request": {
+      "op": "idempotent_replay",
+      "payload": {
+        "initial": 10,
+        "events": [
+          {
+            "id": "a",
+            "delta": 7
+          },
+          {
+            "id": "a",
+            "delta": 7
+          },
+          {
+            "id": "b",
+            "delta": -1
+          }
+        ]
+      }
+    },
+    "expected": {
+      "ok": true,
+      "error": null,
+      "value": {
+        "value": 16,
+        "applied": [
+          "a",
+          "b"
+        ],
+        "skipped": [
+          "a"
+        ]
+      }
+    },
+    "observed_match": true,
+    "candidate_subject_success_credit": 0
+  },
+  "source_refs": [
+    "x2/results.json"
+  ],
+  "protected_gates": [
+    "No empirical or identity promotion",
+    "Professional, legal, cultural, affected-party and Maori authority remain separate"
+  ],
+  "boundary": "Relational indexing and bounded same-owner evidence only; no identity, authority, independent reproduction or Stage 20 conclusion.",
+  "card_id": "ghc-card-953dba4d8a155cebfc5c460f"
+}

@@ -1,0 +1,17 @@
+'use strict';
+const assert=require('node:assert/strict'),crypto=require('node:crypto'),sim=require('./settlement.txt');
+const config={seed:417,population:18,production:30,policy:'progressive',withdrawn:false};
+const tests=[];const test=(id,fn)=>tests.push({id,fn});
+test('simulation.deterministic',()=>assert.deepEqual(sim.run(config,120),sim.run(config,120)));
+test('simulation.balance',()=>{for(let seed=1;seed<=10;seed++){const s=sim.run({...config,seed},120);assert(s.trace.every(t=>t.residual===0&&t.cumulativeResidual===0));assert.equal(sim.metrics(s).residual,0);}});
+test('simulation.withdrawal',()=>{let s=sim.create(config);s=sim.step(s);s=sim.setConsent(s,0,false);const before=s.agents[0].totalReceived;s=sim.step(s);assert.equal(s.agents[0].lastReceived,0);assert.equal(s.agents[0].totalReceived,before);assert(s.trace.at(-1).refused.includes(s.agents[0].id));});
+test('simulation.no-input-mutation',()=>{const s=sim.create(config),b=JSON.stringify(s);sim.step(s);assert.equal(JSON.stringify(s),b);});
+test('simulation.finite-stop',()=>{const s=sim.run(config,240);assert.equal(s.stopped,true);assert.equal(sim.step(s).trace.length,240);assert.equal(sim.step(s).tick,240);});
+test('simulation.no-production',()=>{const s=sim.run({...config,production:0,population:30},240);assert(s.stock>=s.reserve);assert(s.consumed<=s.initialStock+s.produced);});
+test('simulation.overflow-accounted',()=>{const s=sim.run({...config,production:90,population:4},120);assert(s.overflow>0);assert.equal(sim.metrics(s).residual,0);});
+test('simulation.policy-pair-inputs',()=>{const a=sim.run(config,120),b=sim.run({...config,policy:'greedy'},120);assert.deepEqual(a.trace.map(t=>[t.production,t.needs]),b.trace.map(t=>[t.production,t.needs]));});
+test('simulation.control-replay',()=>{let s=sim.run(config,7);s=sim.setConsent(s,0,false);for(let i=0;i<9;i++)s=sim.step(s);s=sim.setConsent(s,0,true);s=sim.step(s);assert.deepEqual(sim.replay(s),s);});
+test('simulation.tampered-replay',()=>{const s=sim.run(config,5);s.trace[1].consumed++;assert.throws(()=>sim.replay(s),/replay_mismatch/);});
+function run(){const rows=[];for(const t of tests){try{t.fn();rows.push({test_id:t.id,result:'pass'});}catch(e){rows.push({test_id:t.id,result:'fail',message:e.message});}}return{selected_tests:tests.length,passing:rows.filter(r=>r.result==='pass').length,failing:rows.filter(r=>r.result==='fail').length,tests:rows,independent_reproduction:false};}
+function comparisons(){const rows=[];for(let seed=1;seed<=10;seed++){const a=sim.run({...config,seed,policy:'progressive'},120),b=sim.run({...config,seed,policy:'greedy'},120);rows.push({seed,population:18,production:30,ticks:120,matched_demand_production:JSON.stringify(a.trace.map(t=>[t.production,t.needs]))===JSON.stringify(b.trace.map(t=>[t.production,t.needs])),progressive:sim.metrics(a),greedy:sim.metrics(b),progressive_trace_sha256:crypto.createHash('sha256').update(JSON.stringify(a.trace)).digest('hex'),greedy_trace_sha256:crypto.createHash('sha256').update(JSON.stringify(b.trace)).digest('hex')});}return{schema:'ghc.albion.paired-seed-comparison.v1',pairs:rows.length,runs:rows.length*2,total_ticks:rows.length*2*120,records:rows,boundary:'Same-owner deterministic scripted resource simulation. Service distribution metrics are proxy observations, not social fairness, wellbeing or rights determinations.'};}
+module.exports={run,comparisons,test_ids:tests.map(t=>t.id)};if(require.main===module){const r=run();process.stdout.write(JSON.stringify(r)+'\n');if(r.failing)process.exitCode=1;}

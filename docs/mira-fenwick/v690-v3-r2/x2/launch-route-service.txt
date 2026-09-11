@@ -1,0 +1,16 @@
+'use strict';
+// Retained failed bootstrap candidate. The successful health receipt came from
+// a directly launched documented listener, not this detached startup path.
+const net=require('node:net'),cp=require('node:child_process'),fs=require('node:fs'),path=require('node:path'),{connect}=require('./websocket-reader.txt');
+const exe='D:/GHC-Archives/global-tools/npm/node_modules/@openai/codex/node_modules/@openai/codex-win32-x64/vendor/x86_64-pc-windows-msvc/bin/codex.exe';
+const receipt=path.join(__dirname,'route-service-health.json');if(fs.existsSync(receipt))throw Error('service already launched; use the retained live handle');
+(async()=>{const reservation=net.createServer();await new Promise(r=>reservation.listen(0,'127.0.0.1',r));const port=reservation.address().port;await new Promise(r=>reservation.close(r));const endpoint='ws://127.0.0.1:'+port;
+ const child=cp.spawn(exe,['app-server','--listen',endpoint],{cwd:'D:/GHC-Archives/worktrees/mira-fenwick-main',detached:true,windowsHide:true,stdio:'ignore'});child.unref();
+ let client=null,attempts=0;for(let i=0;i<10;i++){attempts++;try{client=await connect(endpoint);break;}catch{await new Promise(r=>setTimeout(r,500));}}
+ if(!client){try{process.kill(child.pid);}catch{}throw Error('bounded_service_start_failed');}
+ const usage=await client.rpc('account/rateLimits/read',{});client.close();
+ const publicReceipt={schema:'ghc.family.durable-service-health.v1',transport:'documented official CLI loopback WebSocket',managed_daemon_failure:'Managed standalone install absent; existing D npm CLI retained instead of installing another C copy.',initialized:true,version:'0.154.0',startup_connection_observations:attempts,task_reads:0,task_mutations:0,task_creation:0,weekly_used_percent:usage.rateLimits?.primary?.usedPercent??null,background_monitor:false,scope:'Owned local service health only. Target history, durable message acceptance and successor execution remain untested until the terminal gate.',created_at_utc:new Date().toISOString()};
+ fs.writeFileSync(receipt,JSON.stringify(publicReceipt,null,2)+'\n',{flag:'wx'});
+ // The live process and endpoint handles are emitted only for the caller's private tool store.
+ process.stdout.write(JSON.stringify({endpoint,pid:child.pid,health:publicReceipt})+'\n');
+})().catch(e=>{process.stdout.write(JSON.stringify({ok:false,error:e.message,rpc_code:e.rpcError?.code??null})+'\n');process.exitCode=1;});

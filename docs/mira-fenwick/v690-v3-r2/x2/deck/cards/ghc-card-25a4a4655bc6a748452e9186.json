@@ -1,0 +1,64 @@
+{
+  "schema": "ghc.family.four-tier-card.v1",
+  "tier": 4,
+  "card_type": "proposal",
+  "title": "Purpose intersection / bounded case 04",
+  "parent_ids": [
+    "ghc-card-74dcfde78545ce2dfc366f70"
+  ],
+  "owner": "Mira Fenwick",
+  "phase": "v690-v3-r2",
+  "stability": "volatile",
+  "outcome": "completed",
+  "content": {
+    "proposal_id": "MF6903R2-124",
+    "mission": "Intersect synthetic allowed purposes only while every supplied record is current.",
+    "definition_sha256": "197b197ccbbe90ffdb9dd082de2d5e8ee51e4ac3354e649bd28104ef52732bb2",
+    "request": {
+      "op": "consent_intersection",
+      "payload": {
+        "now": 4,
+        "records": [
+          {
+            "scopes": [
+              "read",
+              "simulate",
+              "export"
+            ],
+            "expires": 20
+          },
+          {
+            "scopes": [
+              "read",
+              "simulate"
+            ],
+            "expires": 6
+          }
+        ]
+      }
+    },
+    "expected": {
+      "ok": true,
+      "error": null,
+      "value": {
+        "scopes": [
+          "read",
+          "simulate"
+        ],
+        "active_records": 2,
+        "external_action": false
+      }
+    },
+    "observed_match": true,
+    "candidate_subject_success_credit": 0
+  },
+  "source_refs": [
+    "x2/results.json"
+  ],
+  "protected_gates": [
+    "No empirical or identity promotion",
+    "Professional, legal, cultural, affected-party and Maori authority remain separate"
+  ],
+  "boundary": "Relational indexing and bounded same-owner evidence only; no identity, authority, independent reproduction or Stage 20 conclusion.",
+  "card_id": "ghc-card-25a4a4655bc6a748452e9186"
+}

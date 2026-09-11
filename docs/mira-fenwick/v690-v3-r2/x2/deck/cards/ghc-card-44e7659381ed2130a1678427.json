@@ -1,0 +1,65 @@
+{
+  "schema": "ghc.family.four-tier-card.v1",
+  "tier": 4,
+  "card_type": "proposal",
+  "title": "Causal event ordering / bounded case 04",
+  "parent_ids": [
+    "ghc-card-0c340acf52ef969556635821"
+  ],
+  "owner": "Mira Fenwick",
+  "phase": "v690-v3-r2",
+  "stability": "volatile",
+  "outcome": "completed",
+  "content": {
+    "proposal_id": "MF6903R2-044",
+    "mission": "Topologically order a finite event DAG while preserving predecessor obligations.",
+    "definition_sha256": "479561c5651fa854bc8140017da39fa5d635b37aa849f741f7648c4e64e62775",
+    "request": {
+      "op": "event_order",
+      "payload": {
+        "events": [
+          {
+            "id": "a4",
+            "parents": []
+          },
+          {
+            "id": "b4",
+            "parents": [
+              "a4"
+            ]
+          },
+          {
+            "id": "c4",
+            "parents": [
+              "a4",
+              "b4"
+            ]
+          }
+        ]
+      }
+    },
+    "expected": {
+      "ok": true,
+      "error": null,
+      "value": {
+        "order": [
+          "a4",
+          "b4",
+          "c4"
+        ],
+        "acyclic": true
+      }
+    },
+    "observed_match": true,
+    "candidate_subject_success_credit": 0
+  },
+  "source_refs": [
+    "x1/results.json"
+  ],
+  "protected_gates": [
+    "No empirical or identity promotion",
+    "Professional, legal, cultural, affected-party and Maori authority remain separate"
+  ],
+  "boundary": "Relational indexing and bounded same-owner evidence only; no identity, authority, independent reproduction or Stage 20 conclusion.",
+  "card_id": "ghc-card-44e7659381ed2130a1678427"
+}

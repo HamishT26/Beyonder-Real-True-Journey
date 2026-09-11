@@ -1,0 +1,21 @@
+'use strict';
+// Documented official CLI protocol. This helper never starts/resumes a task.
+const cp=require('node:child_process'),fs=require('node:fs');
+const exe='D:/GHC-Archives/global-tools/npm/node_modules/@openai/codex/node_modules/@openai/codex-win32-x64/vendor/x86_64-pc-windows-msvc/bin/codex.exe';
+const approved=new Set(['initialize','account/rateLimits/read','thread/list','thread/read','thread/turns/list','thread/items/list']);
+async function withServer(fn,options={}){
+ const args=['app-server','--stdio'];
+ // Avoid starting unrelated configured NPX servers in this bounded helper.
+ for(const n of ['circleci','e2b','oci','notion','neon','openai','github','docker','render','expo','kimicode','node_repl'])args.push('-c','mcp_servers.'+n+'.enabled=false');
+ const child=cp.spawn(exe,args,{cwd:'D:/GHC-Archives/worktrees/mira-fenwick-main',windowsHide:true,stdio:['pipe','pipe','pipe']});
+ let buffer='',seq=0,stderrBytes=0;const pending=new Map();
+ child.stderr.on('data',b=>{stderrBytes+=b.length;});
+ child.stdout.setEncoding('utf8');child.stdout.on('data',chunk=>{buffer+=chunk;for(;;){const i=buffer.indexOf('\n');if(i<0)break;const s=buffer.slice(0,i);buffer=buffer.slice(i+1);if(!s.trim())continue;let msg;try{msg=JSON.parse(s);}catch{continue;}if(pending.has(msg.id)){const p=pending.get(msg.id);pending.delete(msg.id);clearTimeout(p.timer);msg.error?p.reject(Object.assign(new Error('rpc_error'),{rpcError:msg.error})):p.resolve(msg.result);}}});
+ child.on('error',e=>{for(const p of pending.values()){clearTimeout(p.timer);p.reject(e);}pending.clear();});
+ child.on('exit',code=>{for(const p of pending.values()){clearTimeout(p.timer);p.reject(new Error('server_exit_'+code));}pending.clear();});
+ const rpc=(method,params={})=>{if(!approved.has(method))throw Error('read_only_method_guard');return new Promise((resolve,reject)=>{const id=++seq;const timer=setTimeout(()=>{pending.delete(id);reject(new Error('rpc_timeout'));},options.timeout||18000);pending.set(id,{resolve,reject,timer});child.stdin.write(JSON.stringify({id,method,params})+'\n');});};
+ try{const init=await rpc('initialize',{clientInfo:{name:'mira_text_recovery',title:'Mira bounded recovery reader',version:'1.0.0'},capabilities:{experimentalApi:true}});child.stdin.write(JSON.stringify({method:'initialized',params:{}})+'\n');return await fn(rpc,{server:typeof init.userAgent==='string'?init.userAgent:'initialized',stderrBytes:()=>stderrBytes});}
+ finally{for(const p of pending.values())clearTimeout(p.timer);pending.clear();child.stdin.end();child.kill();}
+}
+module.exports={withServer,approved_methods:[...approved]};
+if(require.main===module){withServer(async(rpc,meta)=>{const rates=await rpc('account/rateLimits/read',{});return{mode:'health',initialized:true,server:meta.server,rate_limits:rates.rateLimits||rates.rateLimitsByLimitId||null,stderr_bytes:meta.stderrBytes(),task_reads:0,task_mutations:0,observed_at_utc:new Date().toISOString()};}).then(r=>process.stdout.write(JSON.stringify(r)+'\n')).catch(e=>{process.stdout.write(JSON.stringify({mode:'health',ok:false,error:e.message,rpc_code:e.rpcError?.code??null,task_mutations:0})+'\n');process.exitCode=1;});}
