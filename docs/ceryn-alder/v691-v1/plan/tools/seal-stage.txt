@@ -1,0 +1,33 @@
+'use strict';
+// Seal a new owner tranche. Review its output before committing separately.
+const fs=require('node:fs'),path=require('node:path'),cp=require('node:child_process');
+const C=require('./common.txt');
+const stage=process.argv[2];C.ensure(['plan','x1','x2','final'].includes(stage));
+const prefix='docs/ceryn-alder/v691-v1',base=path.resolve(prefix);
+const git=(...args)=>cp.execFileSync('git',args,{encoding:'utf8'}).trim();
+C.ensure(git('branch','--show-current')==='codex/GHC-Family/ceryn-alder-main','owner branch');
+const all=fs.readdirSync(base,{recursive:true}).filter(p=>fs.statSync(path.join(base,p)).isFile()).map(p=>prefix+'/'+p.replaceAll('\\','/')).sort();
+C.ensure(all.length<2000,'owner file ceiling');
+const selected=all.filter(p=>p.startsWith(prefix+'/'+stage+'/'));
+const excludes=[prefix+'/'+stage+'/manifest.json',prefix+'/'+stage+'/staged-review.json'];
+C.ensure(!excludes.some(p=>fs.existsSync(p)),'stage already sealed');
+const entries=[];const privacy={credentials:[],private_paths:[],raw_routes:[],uuid:[],email:[]};
+for(const p of selected){
+ C.ensure(['.json','.md','.txt','.html'].includes(path.extname(p)),'extension');
+ const raw=fs.readFileSync(p),text=raw.toString('utf8');C.ensure(!text.includes('\r'),'LF required '+p);
+ C.ensure(text.trim().split(/\s+/).length<=100000,'word ceiling '+p);
+ if(p.endsWith('.json'))C.parseStrict(text);
+ if(p.endsWith('.txt'))cp.execFileSync(process.execPath,['--check'],{input:raw});
+ const patterns={credentials:/(?:-----BEGIN [A-Z ]*PRIVATE KEY-----|\bsk-[A-Za-z0-9]{24,})/,private_paths:/\b[A-Za-z]:[\\/](?:Users|GHC-Archives|Program Files)\b/i,raw_routes:/\b(?:threadId|taskId|sessionId)\s*[:=]\s*["'][A-Za-z0-9-]{16,}/,uuid:/\b[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\b/i,email:/\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}\b/i};
+ for(const[k,r]of Object.entries(patterns))if(r.test(text))privacy[k].push(p);
+ entries.push({path:p,bytes:raw.length,sha256:C.hash(raw)});
+}
+C.ensure(Object.values(privacy).every(x=>x.length===0),'privacy candidate');
+C.put(excludes[0],{schema:'ghc.family.raw-manifest.v5',owner:'Ceryn Alder',phase:'v691-v1',stage,byte_domain:'Exact UTF-8 LF bytes and corresponding Git blobs',entries,self_exclusions:excludes,boundary:C.BOUNDARY});
+const finalPaths=[...selected,...excludes].sort();
+C.put(excludes[1],{schema:'ghc.family.staged-review.v5',stage,owner:'Ceryn Alder',allowed_paths:finalPaths,privacy_candidates:privacy,owner_files:all.length+2,extension_lf_json_syntax_checks:true,execution_authority:'owner_self_scoped_delta',sibling_mutation:false,source_canonical_replayed:false,boundary:C.BOUNDARY});
+cp.execFileSync('git',['add','--pathspec-from-file=-','--pathspec-file-nul'],{input:Buffer.from(finalPaths.join('\0')+'\0')});
+const staged=git('diff','--cached','--name-only').split('\n').filter(Boolean).sort();C.ensure(C.equal(staged,finalPaths),'staged allowlist mismatch');
+cp.execFileSync('git',['diff','--cached','--check']);
+for(const e of entries){const b=cp.execFileSync('git',['show',':'+e.path],{maxBuffer:5*1024*1024});C.ensure(C.hash(b)===e.sha256,'staged blob mismatch '+e.path);}
+console.log(JSON.stringify({stage,staged_paths:staged.length,manifest_entries:entries.length,privacy_candidates:0,valid:true,commit_performed:false}));

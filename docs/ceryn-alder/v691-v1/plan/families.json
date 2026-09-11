@@ -1,0 +1,205 @@
+{
+  "families": [
+    {
+      "operation": "raster_layout_shape",
+      "title": "Raster element layout",
+      "pillar": "body",
+      "practice": "image_grid_geometry",
+      "hypothesis": "Derive planar element counts and row-major element strides; byte size and a real image format are deliberately unspecified.",
+      "session": "x1",
+      "expected_disposition": "completed",
+      "case_count": 10
+    },
+    {
+      "operation": "pixel_coordinate_bijection",
+      "title": "Pixel coordinate inverse",
+      "pillar": "mind",
+      "practice": "image_grid_geometry",
+      "hypothesis": "Map a finite row-major pixel address to its linear index and recover the exact coordinate.",
+      "session": "x1",
+      "expected_disposition": "completed",
+      "case_count": 10
+    },
+    {
+      "operation": "pixel_region_intersection",
+      "title": "Half-open region intersection",
+      "pillar": "mind",
+      "practice": "image_grid_geometry",
+      "hypothesis": "Intersect two integer half-open rectangles, retaining empty intersections without negative area.",
+      "session": "x1",
+      "expected_disposition": "completed",
+      "case_count": 10
+    },
+    {
+      "operation": "pixel_region_union_cells",
+      "title": "Finite region union coverage",
+      "pillar": "mind",
+      "practice": "image_grid_geometry",
+      "hypothesis": "Enumerate the union of clipped integer cells once while retaining overlapping source coverage.",
+      "session": "x1",
+      "expected_disposition": "completed",
+      "case_count": 10
+    },
+    {
+      "operation": "pixel_mask_runs",
+      "title": "Boolean mask run intervals",
+      "pillar": "body",
+      "practice": "image_grid_geometry",
+      "hypothesis": "Encode true row spans as maximal half-open runs and retain exact foreground cardinality.",
+      "session": "x1",
+      "expected_disposition": "completed",
+      "case_count": 10
+    },
+    {
+      "operation": "neighborhood_stencil",
+      "title": "Clipped grid neighborhood",
+      "pillar": "mind",
+      "practice": "image_grid_geometry",
+      "hypothesis": "Return only in-grid four or eight adjacent cells in row-major order, excluding the center.",
+      "session": "x1",
+      "expected_disposition": "completed",
+      "case_count": 10
+    },
+    {
+      "operation": "integral_plane_queries",
+      "title": "Summed-area rectangle query",
+      "pillar": "mind",
+      "practice": "finite_sampling_and_intervals",
+      "hypothesis": "Compare a prefix-table rectangle result with a frozen direct enumeration oracle.",
+      "session": "x1",
+      "expected_disposition": "completed",
+      "case_count": 10
+    },
+    {
+      "operation": "nearest_grid_mapping",
+      "title": "Center-based nearest sampling",
+      "pillar": "mind",
+      "practice": "finite_sampling_and_intervals",
+      "hypothesis": "Map destination cell centers to bounded source indices using an explicit floor convention.",
+      "session": "x1",
+      "expected_disposition": "completed",
+      "case_count": 10
+    },
+    {
+      "operation": "bilinear_weight_witness",
+      "title": "Quarter-cell bilinear weights",
+      "pillar": "mind",
+      "practice": "finite_sampling_and_intervals",
+      "hypothesis": "Keep four integer weight numerators over sixteen, preserving constants and convex support.",
+      "session": "x1",
+      "expected_disposition": "completed",
+      "case_count": 10
+    },
+    {
+      "operation": "convolution_support_refusal",
+      "title": "Stencil support and padding",
+      "pillar": "body",
+      "practice": "tiled_workload_and_release",
+      "hypothesis": "Distinguish refused missing stencil support from explicit zero padding; never invent an edge policy.",
+      "session": "x1",
+      "expected_disposition": "completed",
+      "case_count": 10
+    },
+    {
+      "operation": "downsample_block_means",
+      "title": "Partial-block sample means",
+      "pillar": "body",
+      "practice": "tiled_workload_and_release",
+      "hypothesis": "Partition a finite plane into blocks and expose each sum and support count without fabricating edge samples.",
+      "session": "x2",
+      "expected_disposition": "completed",
+      "case_count": 10
+    },
+    {
+      "operation": "finite_histogram_bins",
+      "title": "Explicit histogram endpoints",
+      "pillar": "mind",
+      "practice": "finite_sampling_and_intervals",
+      "hypothesis": "Assign each finite value to left-closed bins, optionally closing the last edge, and retain excluded values.",
+      "session": "x2",
+      "expected_disposition": "completed",
+      "case_count": 10
+    },
+    {
+      "operation": "mask_connected_regions",
+      "title": "Four-connected mask regions",
+      "pillar": "mind",
+      "practice": "image_grid_geometry",
+      "hypothesis": "Separate orthogonally connected foreground components without joining diagonal contact.",
+      "session": "x2",
+      "expected_disposition": "completed",
+      "case_count": 10
+    },
+    {
+      "operation": "mask_boundary_edges",
+      "title": "Exposed cell-face inventory",
+      "pillar": "mind",
+      "practice": "image_grid_geometry",
+      "hypothesis": "Count and identify exposed north east south west faces of a finite Boolean mask.",
+      "session": "x2",
+      "expected_disposition": "completed",
+      "case_count": 10
+    },
+    {
+      "operation": "finite_intensity_ranks",
+      "title": "Intensity tie ranks",
+      "pillar": "mind",
+      "practice": "finite_sampling_and_intervals",
+      "hypothesis": "Return dense or competition ranks while preserving original order and ties.",
+      "session": "x2",
+      "expected_disposition": "completed",
+      "case_count": 10
+    },
+    {
+      "operation": "interval_pixel_propagation",
+      "title": "Affine interval support",
+      "pillar": "mind",
+      "practice": "finite_sampling_and_intervals",
+      "hypothesis": "Propagate declared interval bounds through signed integer coefficients without claiming calibrated measurement uncertainty.",
+      "session": "x2",
+      "expected_disposition": "represented",
+      "case_count": 10
+    },
+    {
+      "operation": "grid_resolution_nonconversion",
+      "title": "Declared grid-coordinate scale",
+      "pillar": "mind",
+      "practice": "finite_sampling_and_intervals",
+      "hypothesis": "Represent an explicitly declared dimensionless pixel scale while withholding physical calibration and measurement claims.",
+      "session": "x2",
+      "expected_disposition": "represented",
+      "case_count": 10
+    },
+    {
+      "operation": "text_symbol_legend_review",
+      "title": "Text and symbol legend collisions",
+      "pillar": "heart",
+      "practice": "uncertainty_communication",
+      "hypothesis": "Expose empty labels and duplicate text or symbol cues so a color cue cannot silently become the sole distinction.",
+      "session": "x2",
+      "expected_disposition": "completed",
+      "case_count": 10
+    },
+    {
+      "operation": "visual_uncertainty_review_vacancies",
+      "title": "Visual uncertainty evaluation vacancies",
+      "pillar": "heart",
+      "practice": "uncertainty_communication",
+      "hypothesis": "Keep independent evaluation and affected-user evidence missing despite structurally complete synthetic review notes.",
+      "session": "x2",
+      "expected_disposition": "open_gap",
+      "case_count": 10
+    },
+    {
+      "operation": "image_release_obligation_matrix",
+      "title": "Image release obligation hold",
+      "pillar": "heart",
+      "practice": "tiled_workload_and_release",
+      "hypothesis": "Report missing provenance, license and review declarations while always withholding external publication authority.",
+      "session": "x2",
+      "expected_disposition": "exact_gate",
+      "case_count": 10
+    }
+  ],
+  "boundary": "Bounded same-owner synthetic software evidence only. No empirical GMUT, real THOS effectiveness, live Freed ID, professional, legal, cultural, affected-party or Maori authority, complete accessibility/privacy/security, independent reproduction, consciousness/personhood, AGI/ASI, Theory-of-Everything or Stage 20 claim. NOT_READY_FOR_STAGE_20."
+}

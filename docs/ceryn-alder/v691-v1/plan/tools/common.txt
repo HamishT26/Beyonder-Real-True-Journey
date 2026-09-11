@@ -1,0 +1,73 @@
+'use strict';
+const fs = require('node:fs');
+const crypto = require('node:crypto');
+const path = require('node:path');
+const {isDeepStrictEqual} = require('node:util');
+const BOUNDARY = 'Bounded same-owner synthetic software evidence only. No empirical, real-participant, production-identity, professional, legal, cultural, affected-party or Maori authority, complete privacy/accessibility/security, independent reproduction, consciousness/personhood or Stage 20 claim. NOT_READY_FOR_STAGE_20.';
+function ensure(condition, code='invalid_value') { if (!condition) throw Error(code); }
+function object(x) { return x!==null && typeof x==='object' && !Array.isArray(x); }
+function exact(x, keys) {
+  ensure(object(x));
+  ensure(Object.keys(x).every(k=>keys.includes(k)), 'unknown_field');
+  ensure(keys.every(k=>Object.hasOwn(x,k)));
+}
+function integer(x,min=-1024,max=1024) { ensure(Number.isSafeInteger(x)&&x>=min&&x<=max);return x; }
+function array(x,min=0,max=256) { ensure(Array.isArray(x)&&x.length>=min&&x.length<=max);return x; }
+function text(x,max=256) { ensure(typeof x==='string'&&x.length<=max);return x; }
+function matrix(x,boolean=false) {
+  array(x,1,16); const w=array(x[0],1,16).length;
+  for(const row of x){array(row,w,w);for(const v of row)boolean?ensure(typeof v==='boolean'):integer(v);}
+  return [w,x.length];
+}
+function rectangle(r) { array(r,4,4).forEach(v=>integer(v,-32,32));ensure(r[0]<=r[2]&&r[1]<=r[3]);return r; }
+function stable(x) {
+  if(x===null || typeof x!=='object') return JSON.stringify(x);
+  return Array.isArray(x) ? '['+x.map(stable).join(',')+']' : '{'+Object.keys(x).sort().map(k=>JSON.stringify(k)+':'+stable(x[k])).join(',')+'}';
+}
+const hash = bytes => crypto.createHash('sha256').update(bytes).digest('hex');
+function fraction(n,d) {
+  ensure(Number.isSafeInteger(n)&&Number.isSafeInteger(d)&&d>0);
+  let a=Math.abs(n),b=d;while(b){const r=a%b;a=b;b=r;}
+  return {numerator:n/a,denominator:d/a};
+}
+function parseStrict(s) {
+  ensure(typeof s==='string'&&Buffer.byteLength(s)<=4*1024*1024,'invalid_json');
+  let i=0;
+  const ws=()=>{while(/[\x20\t\r\n]/.test(s[i]??'!'))i++;};
+  function string(){const start=i;ensure(s[i++]==='"','invalid_json');let escape=false;while(i<s.length){const c=s[i++];if(escape){escape=false;continue;}if(c==='\\'){escape=true;continue;}if(c==='"'){try{return JSON.parse(s.slice(start,i));}catch{throw Error('invalid_json');}}}throw Error('invalid_json');}
+  function value(depth){
+    ensure(depth<=40,'invalid_json');ws();const c=s[i];
+    if(c==='"')return string();
+    if(c==='{'){
+      i++;ws();const out={};const keys=new Set();if(s[i]==='}'){i++;return out;}
+      for(;;){ws();const key=string();ensure(!keys.has(key),'duplicate_key');keys.add(key);ws();ensure(s[i++]===':','invalid_json');const v=value(depth+1);Object.defineProperty(out,key,{value:v,writable:true,configurable:true,enumerable:true});ws();if(s[i]==='}'){i++;return out;}ensure(s[i++ ]===',','invalid_json');}
+    }
+    if(c==='['){i++;ws();const out=[];if(s[i]===']'){i++;return out;}for(;;){out.push(value(depth+1));ws();if(s[i]===']'){i++;return out;}ensure(s[i++ ]===',','invalid_json');}}
+    for(const [literal,v] of [['true',true],['false',false],['null',null]])if(s.startsWith(literal,i)){i+=literal.length;return v;}
+    const m=/^-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?/.exec(s.slice(i));ensure(m,'invalid_json');i+=m[0].length;const n=Number(m[0]);ensure(Number.isFinite(n),'invalid_json');return n;
+  }
+  const out=value(0);ws();ensure(i===s.length,'invalid_json');return out;
+}
+const read = p => parseStrict(fs.readFileSync(p,'utf8'));
+function put(p,x,exclusive=true) {fs.mkdirSync(path.dirname(p),{recursive:true});fs.writeFileSync(p,typeof x==='string'?x:JSON.stringify(x,null,2)+'\n',{flag:exclusive?'wx':'w'});}
+const ok = value => ({ok:true,value,authority:false});
+const bad = error => ({ok:false,error,authority:false});
+function dispatcher(operations,request) {
+  try {ensure(object(request));ensure(typeof request.op==='string');ensure(Object.hasOwn(operations,request.op),'unknown_operation');return ok(operations[request.op](request));}
+  catch(e){if(['invalid_value','unknown_field','unknown_operation','missing_support'].includes(e.message))return bad(e.message);throw e;}
+}
+function cli(operations) {
+  let input='';process.stdin.setEncoding('utf8');
+  process.stdin.on('data',chunk=>{input+=chunk;if(Buffer.byteLength(input)>1024*1024){process.stdout.write(JSON.stringify(bad('input_limit'))+'\n');process.exit(2);}});
+  process.stdin.on('end',()=>{try{process.stdout.write(JSON.stringify(dispatcher(operations,parseStrict(input)))+'\n');}catch(e){if(['invalid_json','duplicate_key'].includes(e.message))process.stdout.write(JSON.stringify(bad(e.message))+'\n');else throw e;}});
+}
+function ledger(stage, methods, witnesses) {
+  const rows=methods.map(m=>{
+    const own=witnesses.filter(w=>w.method_id===m.method_id),neg=own.filter(w=>w.result==='fail').map(w=>w.witness_id);
+    return {method_id:m.method_id,title:m.title,failure_signature:m.failure_signature??'Closed-contract violation',trigger_preconditions:['Explicit frozen synthetic input'],privacy_class:'sanitized_public',approval_class:'owner_local',candidate_workaround:'Use the exact scoped contract; retain negatives and correct the smallest unsealed dependency.',validation_witness_ids:own.map(w=>w.witness_id),recurrence_guard:'Bounded typed comparison, input fixity and explicit claim ceiling',rollback:'Retain artifacts and select prior validated caller; no erasure.',recommendation_state:own.some(w=>w.result==='pass')?'validated':'candidate',supersedes:[],protected_gates:['no_empirical_or_authority_promotion','no_canonical_replay','no_sibling_mutation'],retained_negative_ids:neg.length?neg:m.retained_negative_ids??['CA6911-OP001'],scope_boundary:BOUNDARY};
+  });
+  const events=rows.map((m,i)=>({event_index:i+1,method_id:m.method_id,before:'candidate',after:m.recommendation_state,reason:'Declared bounded witnesses',witness_id:m.validation_witness_ids.find(id=>witnesses.find(w=>w.witness_id===id)?.result==='pass')??null}));
+  const all=witnesses.map(w=>({...w,procedure:w.procedure??'Frozen typed contract',scope:stage,expected:w.expected??true,observed:w.observed??w.result==='pass',same_owner_only:true,independent_reproduction:false,retained_negative_ids:w.result==='fail'?[w.witness_id]:w.retained_negative_ids??[],original_subject_success_credit:w.result==='fail'?0:null,boundary:BOUNDARY}));
+  return {schema:'ghc.family.method-flow-state.v1',phase:'v691-v1/'+stage,owner:'Ceryn Alder',identity_boundary:'Relational working name only; no identity continuity or agency evidence.',execution_authority:'owner_self_scoped_delta',repository_scan:false,cross_lane_scan:false,unchanged_history_scan:false,sibling_lane_mutation:false,methods:rows,witnesses:all,state_events:events,recommendations:[],counts:{methods:rows.length,witnesses:all.length,state_events:events.length,recommendations:0,states:Object.fromEntries(['observed','candidate','validated','preferred','superseded','deprecated'].map(s=>[s,rows.filter(r=>r.recommendation_state===s).length])),witness_results:{pass:all.filter(w=>w.result==='pass').length,fail:all.filter(w=>w.result==='fail').length}},boundary:BOUNDARY};
+}
+module.exports={ensure,object,exact,integer,array,text,matrix,rectangle,stable,hash,fraction,parseStrict,read,put,ok,bad,dispatcher,cli,ledger,equal:isDeepStrictEqual,BOUNDARY};

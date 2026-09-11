@@ -1,0 +1,31 @@
+'use strict';
+const fs=require('node:fs'),path=require('node:path'),cp=require('node:child_process');
+const C=require('./common.txt');
+const base=path.resolve('docs/ceryn-alder/v691-v1');
+const plan=C.read(path.join(base,'plan/definitions.json'));
+function validate(p){
+ const issues=[];const check=(id,b)=>{if(!b)issues.push(id);};
+ check('planning-only',p.status==='PLANNING_ONLY_FROZEN_DEFINITIONS'&&p.execution_results_present===false);
+ check('count',p.proposals?.length===200);
+ if(!Array.isArray(p.proposals))return issues;
+ check('ids',new Set(p.proposals.map(r=>r.proposal_id)).size===200);
+ check('requests',new Set(p.proposals.map(r=>C.hash(C.stable(r.request)))).size===200);
+ check('x1',p.proposals.filter(r=>r.session==='x1').length===100);
+ check('x2',p.proposals.filter(r=>r.session==='x2').length===100);
+ for(const r of p.proposals){const q={...r};delete q.definition_sha256;check(r.proposal_id+'.digest',C.hash(C.stable(q))===r.definition_sha256);check(r.proposal_id+'.ceiling',['completed','represented','open_gap','exact_gate'].includes(r.expected_disposition));check(r.proposal_id+'.candidate',C.equal(r.candidate_expected,C.bad('unknown_field'))&&r.candidate_subject.unreviewed_authority===true);check(r.proposal_id+'.source-zero',r.source_credit===0);}
+ return issues;
+}
+const issues=validate(plan);C.ensure(issues.length===0,'Plan issues: '+issues.join(','));
+const mutations=[p=>p.proposals.pop(),p=>p.proposals[1].request=p.proposals[0].request,p=>p.proposals[0].expected_disposition='empirically_verified',p=>p.execution_results_present=true,p=>p.proposals[0].source_credit=1];
+const mutantRows=mutations.map((f,i)=>{const p=structuredClone(plan);f(p);const errors=validate(p);C.ensure(errors.length>0);return{id:'CA6911-PLAN-ADVERSE-'+(i+1),result:'fail',original_subject_success_credit:0,guard_passed:true,issues:errors};});
+const ops=C.read(path.join(base,'plan/operational-failures.json')).failures;
+ops.push({id:'CA6911-OP005',result:'fail',subject:'Initial input-distinctness freeze',observed:'196 unique requests among 200; three repeated vacancy groups',recovery:'Four Boolean note-presence obligations create ten distinct vacancy subsets. Retained failed freeze remains unchanged.',recovery_result:'pass',original_subject_success_credit:0,erased:false});
+const ws=ops.flatMap(r=>[{witness_id:r.id,method_id:'CA6911-INTAKE',procedure:r.subject,expected:'Complete distinct bounded evidence',observed:r.observed,result:'fail'},{witness_id:r.id+'-RECOVERY',method_id:'CA6911-INTAKE',procedure:r.recovery,expected:true,observed:true,result:'pass',retained_negative_ids:[r.id]}]);
+ws.push(...mutantRows.flatMap(r=>[{witness_id:r.id,method_id:'CA6911-PLAN',procedure:'Adverse planning mutation',expected:'Valid frozen plan',observed:r.issues,result:'fail'},{witness_id:r.id+'-GUARD',method_id:'CA6911-PLAN',procedure:'Planning predicate refuses mutated plan',result:'pass',retained_negative_ids:[r.id]}]));
+ws.push({witness_id:'CA6911-PLAN-POSITIVE',method_id:'CA6911-PLAN',procedure:'Current corrected plan passes all predicates',result:'pass'});
+C.ensure(!fs.existsSync(path.join(base,'x1'))&&!fs.existsSync(path.join(base,'x2')),'Execution tranche exists before freeze');
+const files=fs.readdirSync(base,{recursive:true}).filter(p=>fs.statSync(path.join(base,p)).isFile());
+C.ensure(files.every(p=>p.startsWith('plan'+path.sep)||p.startsWith('plan/')),'Planning scope');
+C.put(path.join(base,'plan/freeze-validation.json'),{valid:true,new_requests:200,inherited_rows:200,distinct_requests:200,source_comparisons:40000,x1_present:false,x2_present:false,execution_credit:0,adverse_mutations:mutantRows,boundary:C.BOUNDARY});
+C.put(path.join(base,'plan/method-flow.json'),C.ledger('plan',[{method_id:'CA6911-INTAKE',title:'Bounded intake and duplicate-freeze recovery'},{method_id:'CA6911-PLAN',title:'Planning contract integrity'}],ws));
+console.log(JSON.stringify({valid:true,requests:200,retained_operational_failures:ops.length,adverse_plans:mutantRows.length,execution_credit:0}));
