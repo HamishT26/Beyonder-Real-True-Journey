@@ -1,0 +1,63 @@
+{
+  "schema": "ghc.family.phase-local-skill-fixture.v5",
+  "skill": "ghc-family-spurious-trace-check",
+  "operation": "spurious_trace_check",
+  "proposal_id": "CA6907-021",
+  "request": {
+    "op": "spurious_trace_check",
+    "abstract_actions": [
+      "request",
+      "review"
+    ],
+    "concrete_action_traces": [
+      [
+        "request",
+        "review"
+      ],
+      [
+        "request",
+        "missing"
+      ],
+      [
+        "readback"
+      ]
+    ]
+  },
+  "expected_output": {
+    "ok": true,
+    "value": {
+      "spurious": false,
+      "matching_trace_indexes": [
+        0
+      ]
+    },
+    "error": null
+  },
+  "invalid_subject": {
+    "op": "spurious_trace_check",
+    "abstract_actions": [
+      "request",
+      "review"
+    ],
+    "concrete_action_traces": [
+      [
+        "request",
+        "review"
+      ],
+      [
+        "request",
+        "missing"
+      ],
+      [
+        "readback"
+      ]
+    ],
+    "unreviewed_authority": true
+  },
+  "invalid_expected": {
+    "ok": false,
+    "value": null,
+    "error": "unknown_field"
+  },
+  "boundary": "Bounded same-owner synthetic software and documentation evidence only; no empirical, participant, identity, professional, production, deployment, legal, cultural, affected-party, Maori-authority, complete privacy/accessibility, exhaustive-security, independent-reproduction, consciousness/personhood, AGI/ASI, Theory-of-Everything, proof/canon or Stage 20 claim. NOT_READY_FOR_STAGE_20."
+}

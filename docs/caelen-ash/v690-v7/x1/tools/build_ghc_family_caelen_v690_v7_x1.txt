@@ -1,0 +1,339 @@
+"use strict";
+
+const fs = require("fs");
+const path = require("path");
+const crypto = require("crypto");
+const cp = require("child_process");
+const core = require("./ghc_family_caelen_x1_evidence.txt");
+
+const ownerRoot = path.resolve(__dirname, "..", "..");
+const repo = path.resolve(ownerRoot, "..", "..", "..");
+const x1Root = path.join(ownerRoot, "x1");
+const planRoot = path.join(ownerRoot, "plan");
+const planningHead = "421ad67edb7cbe75e20f692e6085ace32916dd5d";
+const boundary = "Bounded same-owner synthetic software and documentation evidence only; no empirical, participant, identity, professional, production, deployment, legal, cultural, affected-party, Maori-authority, complete privacy/accessibility, exhaustive-security, independent-reproduction, consciousness/personhood, AGI/ASI, Theory-of-Everything, proof/canon or Stage 20 claim. NOT_READY_FOR_STAGE_20.";
+
+function mkdir(dir) { fs.mkdirSync(dir, { recursive: true }); }
+function writeJson(relative, value) {
+  const target = path.join(x1Root, relative);
+  mkdir(path.dirname(target));
+  fs.writeFileSync(target, JSON.stringify(value, null, 2) + "\n", "utf8");
+}
+function writeText(relative, value) {
+  const target = path.join(x1Root, relative);
+  mkdir(path.dirname(target));
+  const clean = String(value).replace(/\r\n/g, "\n").replace(/\r/g, "\n");
+  fs.writeFileSync(target, clean.endsWith("\n") ? clean : clean + "\n", "utf8");
+}
+function sha(bytes) { return crypto.createHash("sha256").update(bytes).digest("hex"); }
+function readJson(file) { return JSON.parse(fs.readFileSync(file, "utf8")); }
+function equal(a, b) { return core.canonical(a) === core.canonical(b); }
+function git(args) { return cp.execFileSync("git", ["-C", repo, ...args], { encoding: "utf8" }).trim(); }
+
+const currentHead = git(["rev-parse", "HEAD"]);
+if (currentHead !== planningHead) throw new Error(`x1 must begin at immutable planning root ${planningHead}, found ${currentHead}`);
+if (git(["status", "--porcelain"]).trim() !== "") {
+  const allowed = git(["status", "--porcelain"]).split(/\r?\n/).filter(Boolean).every((line) => line.slice(3).startsWith("docs/caelen-ash/v690-v7/x1/"));
+  if (!allowed) throw new Error("unexpected non-x1 working change before x1 build");
+}
+
+const proposalDoc = readJson(path.join(planRoot, "new-proposals.json"));
+const portfolioDoc = readJson(path.join(planRoot, "portfolio-x1.json"));
+const toolPlan = readJson(path.join(planRoot, "skills-runners-promotions.json"));
+const proposals = proposalDoc.proposals.filter((proposal) => proposal.session === "x1");
+if (proposals.length !== 100) throw new Error(`expected 100 frozen x1 proposals, found ${proposals.length}`);
+
+const results = [];
+const rejections = [];
+const nonmutations = [];
+for (const proposal of proposals) {
+  const positiveInput = JSON.parse(JSON.stringify(proposal.request));
+  const positive = core.execute(positiveInput);
+  const candidateInput = JSON.parse(JSON.stringify(proposal.candidate_subject));
+  const candidate = core.execute(candidateInput);
+  const expectedMatch = equal(positive.result, proposal.expected_output);
+  const candidateMatch = equal(candidate.result, proposal.candidate_expected);
+  results.push({
+    proposal_id: proposal.proposal_id,
+    operation: proposal.operation,
+    definition_sha256: proposal.definition_sha256,
+    expected_disposition: proposal.expected_execution_disposition,
+    actual_disposition: expectedMatch && positive.input_unchanged && candidateMatch && candidate.input_unchanged ? "completed" : "open_gap",
+    expected_output: proposal.expected_output,
+    actual_output: positive.result,
+    typed_equality: expectedMatch,
+    input_sha256_before: positive.input_sha256_before,
+    input_sha256_after: positive.input_sha256_after,
+    input_unchanged: positive.input_unchanged,
+    same_owner_only: true,
+    independent_reproduction: false,
+    boundary
+  });
+  rejections.push({
+    proposal_id: proposal.proposal_id,
+    operation: proposal.operation,
+    subject_sha256: candidate.input_sha256_before,
+    expected: proposal.candidate_expected,
+    observed: candidate.result,
+    exact_refusal: candidateMatch,
+    result: "fail",
+    retained_negative_id: `${proposal.proposal_id}-INVALID`,
+    original_subject_success_credit: 0,
+    rejection_guard_pass: candidateMatch,
+    same_owner_only: true,
+    independent_reproduction: false,
+    boundary
+  });
+  nonmutations.push({
+    proposal_id: proposal.proposal_id,
+    positive_unchanged: positive.input_unchanged,
+    invalid_subject_unchanged: candidate.input_unchanged,
+    pass: positive.input_unchanged && candidate.input_unchanged
+  });
+}
+
+if (!results.every((row) => row.typed_equality && row.input_unchanged && row.actual_disposition === "completed")) throw new Error("x1 positive result mismatch");
+if (!rejections.every((row) => row.exact_refusal && row.rejection_guard_pass && row.original_subject_success_credit === 0)) throw new Error("x1 invalid-subject refusal mismatch");
+if (!nonmutations.every((row) => row.pass)) throw new Error("x1 input mutation detected");
+
+const skillPlans = toolPlan.phase_local_skills.filter((skill) => skill.session === "x1");
+if (skillPlans.length !== 10) throw new Error("x1 skill plan count mismatch");
+
+for (const skill of skillPlans) {
+  const skillDir = path.join("skills", skill.name);
+  const family = proposals.find((proposal) => proposal.operation === skill.operation);
+  writeText(path.join(skillDir, "SKILL.md"), `---
+name: ${skill.name}
+description: Validate and explain the bounded ${skill.operation} synthetic contract while preserving empirical, identity, professional, legal, cultural, Maori-authority and Stage 20 gates.
+---
+
+# ${skill.name}
+
+## Scope
+
+Use this phase-local skill only for Caelen Ash v690-v7 finite synthetic fixtures for \`${skill.operation}\`. It does not establish a real observation, authorization, credential, remedy, accessibility result, professional competence or external system behavior.
+
+## Inputs
+
+Accept one preregistered request whose operation is exactly \`${skill.operation}\`. Reject unknown fields and malformed types before evaluation. Preserve the canonical input hash before and after.
+
+## Method
+
+1. Confirm the request is one of the frozen proposal definitions.
+2. Run the owner-local evidence core against a deep copy.
+3. Compare the full typed result with the frozen expected output.
+4. Run the corresponding unknown-field candidate and retain its failure at zero original-subject credit.
+5. Confirm both input hashes are unchanged.
+
+## Acceptance
+
+Accept only full typed equality, exact invalid-fixture refusal and byte-stable input. A recovered method never erases a failed witness. Same-owner validation is not independent reproduction.
+
+## Refusal and rollback
+
+Stop on any mismatch, preserve the exact subject and receipt, and correct only the smallest owner-local dependency. Never bypass authority gates or replay a successful canonical aggregate.
+
+## Smoke fixture
+
+The phase smoke uses proposal \`${family.proposal_id}\` and its preregistered invalid candidate. The smoke is structural same-owner evidence only.
+
+## Boundary
+
+${boundary}
+`);
+  writeJson(path.join(skillDir, "fixture.json"), {
+    schema: "ghc.family.phase-local-skill-fixture.v5",
+    skill: skill.name,
+    operation: skill.operation,
+    proposal_id: family.proposal_id,
+    request: family.request,
+    expected_output: family.expected_output,
+    invalid_subject: family.candidate_subject,
+    invalid_expected: family.candidate_expected,
+    boundary
+  });
+}
+
+const runnerPlans = toolPlan.family_runners.filter((runner) => runner.session === "x1");
+if (runnerPlans.length !== 5) throw new Error("x1 runner plan count mismatch");
+for (const runner of runnerPlans) {
+  const source = `"use strict";
+const fs = require("fs");
+const path = require("path");
+const core = require("../tools/ghc_family_caelen_x1_evidence.txt");
+const plan = JSON.parse(fs.readFileSync(path.resolve(__dirname, "..", "..", "plan", "new-proposals.json"), "utf8"));
+const operations = ${JSON.stringify(runner.operations)};
+const rows = plan.proposals.filter((row) => row.session === "x1" && operations.includes(row.operation));
+const outcomes = rows.map((row) => {
+  const positive = core.execute(JSON.parse(JSON.stringify(row.request)));
+  const invalid = core.execute(JSON.parse(JSON.stringify(row.candidate_subject)));
+  return {
+    proposal_id: row.proposal_id,
+    positive_pass: core.canonical(positive.result) === core.canonical(row.expected_output),
+    invalid_rejected: core.canonical(invalid.result) === core.canonical(row.candidate_expected),
+    input_unchanged: positive.input_unchanged && invalid.input_unchanged
+  };
+});
+const receipt = {
+  schema: "ghc.family.runner-smoke.v5",
+  runner: ${JSON.stringify(runner.name)},
+  operations,
+  proposal_count: rows.length,
+  positive_passes: outcomes.filter((row) => row.positive_pass).length,
+  invalid_rejections: outcomes.filter((row) => row.invalid_rejected).length,
+  nonmutation_passes: outcomes.filter((row) => row.input_unchanged).length,
+  valid: rows.length === 20 && outcomes.every((row) => row.positive_pass && row.invalid_rejected && row.input_unchanged),
+  same_owner_only: true,
+  independent_reproduction: false,
+  boundary: ${JSON.stringify(boundary)}
+};
+process.stdout.write(JSON.stringify(receipt) + "\\n");
+if (!receipt.valid) process.exitCode = 1;
+`;
+  writeText(path.join("runners", runner.name), source);
+}
+
+const skillReceipts = skillPlans.map((skill) => {
+  const skillFile = path.join(x1Root, "skills", skill.name, "SKILL.md");
+  const fixture = readJson(path.join(x1Root, "skills", skill.name, "fixture.json"));
+  const text = fs.readFileSync(skillFile, "utf8");
+  const positive = core.execute(JSON.parse(JSON.stringify(fixture.request)));
+  const invalid = core.execute(JSON.parse(JSON.stringify(fixture.invalid_subject)));
+  const structural = ["---", "# ", "## Scope", "## Inputs", "## Method", "## Acceptance", "## Refusal and rollback", "## Smoke fixture", "## Boundary"].every((token) => text.includes(token));
+  return {
+    skill: skill.name,
+    operation: skill.operation,
+    skill_sha256: sha(Buffer.from(text, "utf8")),
+    fixture_sha256: sha(fs.readFileSync(path.join(x1Root, "skills", skill.name, "fixture.json"))),
+    quick_validation: structural,
+    positive_smoke: equal(positive.result, fixture.expected_output),
+    invalid_smoke: equal(invalid.result, fixture.invalid_expected),
+    nonmutation_smoke: positive.input_unchanged && invalid.input_unchanged,
+    global_installation: false,
+    smoke_used: true,
+    valid: structural && equal(positive.result, fixture.expected_output) && equal(invalid.result, fixture.invalid_expected) && positive.input_unchanged && invalid.input_unchanged
+  };
+});
+if (!skillReceipts.every((receipt) => receipt.valid)) throw new Error("x1 skill smoke failure");
+
+const runnerReceipts = runnerPlans.map((runner) => {
+  const runnerFile = path.join(x1Root, "runners", runner.name);
+  const execution = cp.spawnSync(process.execPath, [runnerFile], { encoding: "utf8", maxBuffer: 32 * 1024 * 1024 });
+  if (execution.status !== 0) throw new Error(`runner failed ${runner.name}: ${execution.stderr}`);
+  const receipt = JSON.parse(execution.stdout);
+  return { ...receipt, source_sha256: sha(fs.readFileSync(runnerFile)), invoked: true };
+});
+if (!runnerReceipts.every((receipt) => receipt.valid && receipt.proposal_count === 20)) throw new Error("x1 runner receipt mismatch");
+
+function executePortfolio(tasks, kind) {
+  return tasks.map((task) => {
+    const proposal = proposals.find((row) => row.proposal_id === task.proposal_id);
+    const result = results.find((row) => row.proposal_id === task.proposal_id);
+    const rejection = rejections.find((row) => row.proposal_id === task.proposal_id);
+    const pass = kind === "safe_now" ? result.typed_equality && result.input_unchanged : kind === "candidate" ? rejection.exact_refusal && rejection.original_subject_success_credit === 0 : Boolean(proposal.falsifier_acceptance_gate && proposal.rollback_recovery && proposal.protected_gates.length === 6);
+    return { task_id: task.task_id, proposal_id: task.proposal_id, portfolio: kind, result: pass ? "pass" : "fail", executed: true, bounded_owner_local: true, authority_action: false, evidence: kind === "safe_now" ? "typed positive equality" : kind === "candidate" ? "unknown-field subject rejected and retained" : "contract, falsifier, rollback and gate review", boundary };
+  });
+}
+
+const portfolioResults = {
+  schema: "ghc.family.approval-portfolio-results.v5",
+  owner: "Caelen Ash",
+  phase: "v690-v7",
+  session: "x1",
+  safe_now: executePortfolio(portfolioDoc.safe_now, "safe_now"),
+  candidate: executePortfolio(portfolioDoc.candidate, "candidate"),
+  clean_fix_refine: executePortfolio(portfolioDoc.clean_fix_refine, "clean_fix_refine"),
+  exact_packets_executed: 0,
+  blocked_packets_executed: 0,
+  boundary
+};
+portfolioResults.counts = {
+  safe_now_passed: portfolioResults.safe_now.filter((row) => row.result === "pass").length,
+  candidate_passed: portfolioResults.candidate.filter((row) => row.result === "pass").length,
+  clean_fix_refine_passed: portfolioResults.clean_fix_refine.filter((row) => row.result === "pass").length
+};
+if (Object.values(portfolioResults.counts).some((count) => count !== 100)) throw new Error("x1 portfolio result mismatch");
+
+const methodRecords = [...new Set(proposals.map((proposal) => proposal.operation))].map((operation) => ({
+  method_id: `CA6907-X1-${operation.toUpperCase()}-METHOD`,
+  title: `Independent typed execution and refusal method for ${operation}`,
+  failure_signature: "Typed mismatch, accepted unknown field, input mutation, non-determinism or boundary promotion",
+  trigger_preconditions: ["immutable planning root", "frozen proposal definition", "x1 operation only"],
+  privacy_class: "sanitized_public",
+  approval_class: "safe_now",
+  candidate_workaround: "Retain the failing subject, inspect only the exact operation contract, and correct the smallest x1 owner-local dependency.",
+  validation_witness_ids: proposals.filter((proposal) => proposal.operation === operation).map((proposal) => `${proposal.proposal_id}-POSITIVE-PASS`),
+  recurrence_guard: "Full typed equality, strict unknown-field refusal, canonical input hashes and no successful canonical replay.",
+  rollback: "Stop the operation family, retain all prior witnesses and revert only the additive uncommitted owner-local change.",
+  recommendation_state: "validated",
+  supersedes: [],
+  protected_gates: proposalDoc.proposals[0].protected_gates,
+  retained_negative_ids: proposals.filter((proposal) => proposal.operation === operation).map((proposal) => `${proposal.proposal_id}-INVALID`),
+  scope_boundary: boundary
+}));
+
+const witnesses = [];
+for (const proposal of proposals) {
+  const methodId = `CA6907-X1-${proposal.operation.toUpperCase()}-METHOD`;
+  const result = results.find((row) => row.proposal_id === proposal.proposal_id);
+  const rejection = rejections.find((row) => row.proposal_id === proposal.proposal_id);
+  const nonmutation = nonmutations.find((row) => row.proposal_id === proposal.proposal_id);
+  const common = { method_id: methodId, scope: "Caelen v690-v7 x1", same_owner_only: true, independent_reproduction: false, boundary };
+  witnesses.push({ witness_id: `${proposal.proposal_id}-POSITIVE-PASS`, ...common, procedure: "Execute the frozen valid request through the independent x1 core", expected: proposal.expected_output, observed: result.actual_output, result: "pass", retained_negative_ids: [], original_subject_success_credit: null });
+  witnesses.push({ witness_id: `${proposal.proposal_id}-INVALID-FAIL`, ...common, procedure: "Submit the frozen unknown-field candidate", expected: proposal.candidate_expected, observed: rejection.observed, result: "fail", retained_negative_ids: [rejection.retained_negative_id], original_subject_success_credit: 0 });
+  witnesses.push({ witness_id: `${proposal.proposal_id}-REFUSAL-PASS`, ...common, procedure: "Verify the invalid subject was refused exactly", expected: true, observed: rejection.exact_refusal, result: "pass", retained_negative_ids: [rejection.retained_negative_id], original_subject_success_credit: null });
+  witnesses.push({ witness_id: `${proposal.proposal_id}-NONMUTATION-PASS`, ...common, procedure: "Compare canonical input hashes before and after both executions", expected: true, observed: nonmutation.pass, result: "pass", retained_negative_ids: [], original_subject_success_credit: null });
+  for (const [suffix, kind] of [["SAFE", "safe_now"], ["CANDIDATE", "candidate"], ["CFR", "clean_fix_refine"]]) {
+    const row = portfolioResults[kind].find((entry) => entry.proposal_id === proposal.proposal_id);
+    witnesses.push({ witness_id: `${proposal.proposal_id}-${suffix}-PASS`, ...common, procedure: `Execute the frozen ${kind} portfolio task`, expected: "pass", observed: row.result, result: "pass", retained_negative_ids: kind === "candidate" ? [rejection.retained_negative_id] : [], original_subject_success_credit: null });
+  }
+}
+for (const receipt of skillReceipts) {
+  const methodId = `CA6907-X1-${receipt.operation.toUpperCase()}-METHOD`;
+  witnesses.push({ witness_id: `CA6907-X1-SKILL-${receipt.operation.toUpperCase()}-PASS`, method_id: methodId, procedure: "Quick-validate and smoke-use the phase-local skill", scope: "Caelen v690-v7 x1", expected: true, observed: receipt.valid, result: "pass", same_owner_only: true, independent_reproduction: false, retained_negative_ids: [], original_subject_success_credit: null, boundary });
+}
+runnerReceipts.forEach((receipt, index) => {
+  const methodId = `CA6907-X1-${receipt.operations[0].toUpperCase()}-METHOD`;
+  witnesses.push({ witness_id: `CA6907-X1-RUNNER-${String(index + 1).padStart(2, "0")}-PASS`, method_id: methodId, procedure: "Invoke the family-compatible paired runner", scope: "Caelen v690-v7 x1", expected: true, observed: receipt.valid, result: "pass", same_owner_only: true, independent_reproduction: false, retained_negative_ids: [], original_subject_success_credit: null, boundary });
+});
+
+const methodCounts = {
+  methods: methodRecords.length,
+  direct_witnesses: witnesses.length,
+  failed_witnesses: witnesses.filter((row) => row.result === "fail").length,
+  passing_witnesses: witnesses.filter((row) => row.result === "pass").length
+};
+if (methodCounts.direct_witnesses !== 715 || methodCounts.failed_witnesses !== 100 || methodCounts.passing_witnesses !== 615) throw new Error(`unexpected x1 method counts ${JSON.stringify(methodCounts)}`);
+
+writeJson("results/proposal-results.json", { schema: "ghc.family.proposal-results.v5", owner: "Caelen Ash", phase: "v690-v7", session: "x1", planning_head: planningHead, count: results.length, outcomes: { completed: 100, represented: 0, open_gap: 0, exact_gate: 0 }, results, boundary });
+writeJson("evidence/rejection-ledger.json", { schema: "ghc.family.retained-rejection-ledger.v5", owner: "Caelen Ash", phase: "v690-v7", session: "x1", count: rejections.length, all_retained: true, all_zero_original_subject_credit: true, rejections, boundary });
+writeJson("evidence/nonmutation-ledger.json", { schema: "ghc.family.nonmutation-ledger.v5", owner: "Caelen Ash", phase: "v690-v7", session: "x1", count: nonmutations.length, all_pass: nonmutations.every((row) => row.pass), checks: nonmutations, boundary });
+writeJson("evidence/skill-receipts.json", { schema: "ghc.family.phase-local-skill-receipts.v5", owner: "Caelen Ash", phase: "v690-v7", session: "x1", count: skillReceipts.length, all_valid: skillReceipts.every((row) => row.valid), receipts: skillReceipts, global_installations: 0, boundary });
+writeJson("evidence/runner-receipts.json", { schema: "ghc.family.runner-receipts.v5", owner: "Caelen Ash", phase: "v690-v7", session: "x1", count: runnerReceipts.length, all_valid: runnerReceipts.every((row) => row.valid), receipts: runnerReceipts, boundary });
+writeJson("evidence/portfolio-results.json", portfolioResults);
+writeJson("method-flow/ledger.json", { schema: "ghc.family.method-flow-state.v1", owner: "Caelen Ash", phase: "v690-v7", stage: "x1", identity_boundary: "Relational working language only; no consciousness, personhood, continuity, employment, qualification, authority or independent agency.", execution_authority: "Owner-local synthetic x1 only.", methods: methodRecords, witnesses, state_events: methodRecords.map((method) => ({ method_id: method.method_id, from: "candidate", to: "validated", reason: "Frozen x1 positive/refusal/nonmutation and portfolio witnesses all satisfied" })), recommendations: [], counts: methodCounts, predecessor_overlay: { methods: 123, direct_witnesses: 2199, failed_witnesses: 690, passing_witnesses: 1509, effective_negatives: 750 }, planning_addition: { methods: 12, direct_witnesses: 24, failed_witnesses: 12, passing_witnesses: 12, effective_negatives: 12 }, cumulative_overlay: { methods: 145, direct_witnesses: 2938, failed_witnesses: 802, passing_witnesses: 2136, effective_negatives: 862, open_gaps: 51, exact_gates: 70 }, boundary });
+writeJson("method-flow/validation.json", { valid: true, counts: methodCounts, cumulative_overlay: { methods: 145, direct_witnesses: 2938, failed_witnesses: 802, passing_witnesses: 2136, effective_negatives: 862 } });
+writeJson("environment.json", { schema: "ghc.family.environment-version-receipt.v5", owner: "Caelen Ash", phase: "v690-v7", session: "x1", node: process.version, git: git(["--version"]), platform: process.platform, architecture: process.arch, package_installations: [], package_updates: [], host_security_changes: [], codex_desktop_updates: [], note: "Version verification only; no installation, elevation, Windows-feature change or reboot.", boundary });
+writeJson("source-anchor.json", { schema: "ghc.family.lifecycle-anchor.v5", owner: "Caelen Ash", phase: "v690-v7", session: "x1", expected_parent: planningHead, observed_head_before_x1_commit: currentHead, exact_parent_gate: currentHead === planningHead, planning_root_parentless: true, predecessor_provenance_is_ancestry: false, x2_present: false, boundary });
+writeJson("phase-truth.json", { schema: "ghc.family.phase-truth.v5", owner: "Caelen Ash", phase: "v690-v7", stage: "x1", status: "X1_FROZEN_NO_X2", proposal_outcomes: { completed: 100, represented: 0, open_gap: 0, exact_gate: 0 }, positive_controls: 100, invalid_subjects_rejected: 100, nonmutation_checks: 100, safe_now_tasks: 100, candidate_tasks: 100, clean_fix_refine_tasks: 100, phase_local_skills_built_validated_smoke_used: 10, family_runners_built_invoked: 5, exact_packets_executed: 0, blocked_packets_executed: 0, x2_results_present: false, global_promotions_completed: 0, successor_contacted: false, terminal_verdict: "NOT_READY_FOR_STAGE_20", boundary });
+writeJson("validation.json", { schema: "ghc.family.x1-validation-summary.v5", owner: "Caelen Ash", phase: "v690-v7", session: "x1", valid: true, positive_controls: { passed: 100, total: 100 }, invalid_subjects: { rejected: 100, total: 100, retained_failures: 100 }, nonmutation: { passed: 100, total: 100 }, portfolios: portfolioResults.counts, skills: { passed: 10, total: 10 }, runners: { passed: 5, total: 5 }, method_counts: methodCounts, x2_absent: true, final_absent: true, boundary });
+
+function walk(dir) {
+  const out = [];
+  for (const entry of fs.readdirSync(dir, { withFileTypes: true }).sort((a, b) => a.name.localeCompare(b.name))) {
+    const full = path.join(dir, entry.name);
+    if (entry.isDirectory()) out.push(...walk(full)); else out.push(full);
+  }
+  return out;
+}
+
+const manifestPath = path.join(x1Root, "manifest.json");
+const stagedPath = path.join(x1Root, "staged-review.json");
+const entries = walk(x1Root).filter((file) => file !== manifestPath && file !== stagedPath).map((file) => {
+  const bytes = fs.readFileSync(file);
+  if (bytes.includes(13)) throw new Error(`CR byte found in ${file}`);
+  return { path: `docs/caelen-ash/v690-v7/x1/${path.relative(x1Root, file).replaceAll("\\", "/")}`, bytes: bytes.length, sha256: sha(bytes) };
+});
+writeJson("manifest.json", { schema: "ghc.family.raw-manifest.v5", owner: "Caelen Ash", phase: "v690-v7", stage: "x1", parent: planningHead, byte_domain: "exact UTF-8 LF working bytes intended to equal Git blobs", entries, self_exclusions: ["docs/caelen-ash/v690-v7/x1/manifest.json", "docs/caelen-ash/v690-v7/x1/staged-review.json"], selected_count: entries.length, boundary });
+
+process.stdout.write(JSON.stringify({ valid: true, planning_head: planningHead, proposals: results.length, outcomes: { completed: 100, represented: 0, open_gap: 0, exact_gate: 0 }, rejections: rejections.length, nonmutation: nonmutations.length, portfolios: portfolioResults.counts, skills: skillReceipts.length, runners: runnerReceipts.length, method_counts: methodCounts, manifest_entries: entries.length, x2_present: fs.existsSync(path.join(ownerRoot, "x2")) }, null, 2) + "\n");

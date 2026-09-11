@@ -1,0 +1,53 @@
+{
+  "schema": "ghc.family.phase-local-skill-fixture.v5",
+  "skill": "ghc-family-remedy-route",
+  "operation": "remedy_route",
+  "proposal_id": "CA6907-081",
+  "request": {
+    "op": "remedy_route",
+    "issue_codes": [
+      "incorrect_record",
+      "access_barrier"
+    ],
+    "declared_routes": {
+      "incorrect_record": "correction_review",
+      "access_barrier": "accessibility_review"
+    }
+  },
+  "expected_output": {
+    "ok": true,
+    "value": {
+      "declared_routes": [
+        [
+          "incorrect_record",
+          "correction_review"
+        ],
+        [
+          "access_barrier",
+          "accessibility_review"
+        ]
+      ],
+      "unresolved_codes": [],
+      "authority_reserved": true
+    },
+    "error": null
+  },
+  "invalid_subject": {
+    "op": "remedy_route",
+    "issue_codes": [
+      "incorrect_record",
+      "access_barrier"
+    ],
+    "declared_routes": {
+      "incorrect_record": "correction_review",
+      "access_barrier": "accessibility_review"
+    },
+    "unreviewed_authority": true
+  },
+  "invalid_expected": {
+    "ok": false,
+    "value": null,
+    "error": "unknown_field"
+  },
+  "boundary": "Bounded same-owner synthetic software and documentation evidence only; no empirical, participant, identity, professional, production, deployment, legal, cultural, affected-party, Maori-authority, complete privacy/accessibility, exhaustive-security, independent-reproduction, consciousness/personhood, AGI/ASI, Theory-of-Everything, proof/canon or Stage 20 claim. NOT_READY_FOR_STAGE_20."
+}

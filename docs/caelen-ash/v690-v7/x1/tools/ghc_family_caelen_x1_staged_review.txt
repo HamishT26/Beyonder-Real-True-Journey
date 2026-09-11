@@ -1,0 +1,54 @@
+"use strict";
+
+const fs = require("fs");
+const path = require("path");
+const crypto = require("crypto");
+const cp = require("child_process");
+
+const x1Root = path.resolve(__dirname, "..");
+const ownerRoot = path.resolve(x1Root, "..");
+const repo = path.resolve(ownerRoot, "..", "..", "..");
+const expectedParent = "421ad67edb7cbe75e20f692e6085ace32916dd5d";
+const receiptPath = path.join(x1Root, "staged-review.json");
+const receiptRepoPath = "docs/caelen-ash/v690-v7/x1/staged-review.json";
+
+function git(args, encoding = "utf8") {
+  return cp.execFileSync("git", ["-C", repo, ...args], { encoding, maxBuffer: 64 * 1024 * 1024 });
+}
+
+const head = git(["rev-parse", "HEAD"]).trim();
+const stagedPaths = git(["diff", "--cached", "--name-only", "--diff-filter=ACMR", "-z"], "buffer").toString("utf8").split("\0").filter(Boolean).sort();
+const selected = stagedPaths.filter((p) => p !== receiptRepoPath);
+const invalid = selected.filter((p) => !p.startsWith("docs/caelen-ash/v690-v7/x1/"));
+const entries = selected.map((p) => {
+  const file = path.join(repo, ...p.split("/"));
+  const working = fs.readFileSync(file);
+  const staged = git(["show", `:${p}`], "buffer");
+  return { path: p, bytes: working.length, sha256: crypto.createHash("sha256").update(working).digest("hex"), staged_bytes: staged.length, staged_sha256: crypto.createHash("sha256").update(staged).digest("hex"), working_equals_staged: working.equals(staged) };
+});
+let diffCheckExit = 0;
+let diffCheckOutput = "";
+try { diffCheckOutput = git(["diff", "--cached", "--check"]).trim(); }
+catch (error) { diffCheckExit = error.status ?? 1; diffCheckOutput = String(error.stdout || error.stderr || error.message).trim(); }
+const receipt = {
+  schema: "ghc.family.exact-staged-review.v5",
+  owner: "Caelen Ash",
+  phase: "v690-v7",
+  stage: "x1",
+  expected_parent: expectedParent,
+  observed_parent: head,
+  selected_count: entries.length,
+  entries,
+  self_exclusions: [receiptRepoPath],
+  invalid_paths: invalid,
+  working_staged_mismatches: entries.filter((entry) => !entry.working_equals_staged).map((entry) => entry.path),
+  diff_check_exit: diffCheckExit,
+  diff_check_output: diffCheckOutput,
+  exact_allowlist_pass: head === expectedParent && invalid.length === 0 && entries.length > 0 && entries.every((entry) => entry.working_equals_staged) && diffCheckExit === 0,
+  x2_paths_staged: stagedPaths.filter((p) => p.startsWith("docs/caelen-ash/v690-v7/x2/")),
+  boundary: "Exact x1-only staged review. No x2 outcome, successor delivery, empirical, professional, production, legal, cultural, Maori-authority, independent-reproduction or Stage 20 claim."
+};
+if (receipt.x2_paths_staged.length) receipt.exact_allowlist_pass = false;
+fs.writeFileSync(receiptPath, JSON.stringify(receipt, null, 2) + "\n", "utf8");
+process.stdout.write(JSON.stringify({ valid: receipt.exact_allowlist_pass, selected_count: entries.length, expected_parent: expectedParent, observed_parent: head, invalid_paths: invalid.length, x2_paths: receipt.x2_paths_staged.length }, null, 2) + "\n");
+if (!receipt.exact_allowlist_pass) process.exitCode = 1;

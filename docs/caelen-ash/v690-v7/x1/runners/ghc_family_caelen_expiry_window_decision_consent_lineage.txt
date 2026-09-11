@@ -1,0 +1,32 @@
+"use strict";
+const fs = require("fs");
+const path = require("path");
+const core = require("../tools/ghc_family_caelen_x1_evidence.txt");
+const plan = JSON.parse(fs.readFileSync(path.resolve(__dirname, "..", "..", "plan", "new-proposals.json"), "utf8"));
+const operations = ["expiry_window_decision","consent_lineage"];
+const rows = plan.proposals.filter((row) => row.session === "x1" && operations.includes(row.operation));
+const outcomes = rows.map((row) => {
+  const positive = core.execute(JSON.parse(JSON.stringify(row.request)));
+  const invalid = core.execute(JSON.parse(JSON.stringify(row.candidate_subject)));
+  return {
+    proposal_id: row.proposal_id,
+    positive_pass: core.canonical(positive.result) === core.canonical(row.expected_output),
+    invalid_rejected: core.canonical(invalid.result) === core.canonical(row.candidate_expected),
+    input_unchanged: positive.input_unchanged && invalid.input_unchanged
+  };
+});
+const receipt = {
+  schema: "ghc.family.runner-smoke.v5",
+  runner: "ghc_family_caelen_expiry_window_decision_consent_lineage.txt",
+  operations,
+  proposal_count: rows.length,
+  positive_passes: outcomes.filter((row) => row.positive_pass).length,
+  invalid_rejections: outcomes.filter((row) => row.invalid_rejected).length,
+  nonmutation_passes: outcomes.filter((row) => row.input_unchanged).length,
+  valid: rows.length === 20 && outcomes.every((row) => row.positive_pass && row.invalid_rejected && row.input_unchanged),
+  same_owner_only: true,
+  independent_reproduction: false,
+  boundary: "Bounded same-owner synthetic software and documentation evidence only; no empirical, participant, identity, professional, production, deployment, legal, cultural, affected-party, Maori-authority, complete privacy/accessibility, exhaustive-security, independent-reproduction, consciousness/personhood, AGI/ASI, Theory-of-Everything, proof/canon or Stage 20 claim. NOT_READY_FOR_STAGE_20."
+};
+process.stdout.write(JSON.stringify(receipt) + "\n");
+if (!receipt.valid) process.exitCode = 1;

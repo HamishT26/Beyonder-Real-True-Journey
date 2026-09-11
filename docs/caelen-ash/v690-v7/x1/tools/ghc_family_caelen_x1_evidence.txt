@@ -1,0 +1,190 @@
+"use strict";
+
+const crypto = require("crypto");
+
+function normalize(value) {
+  if (Array.isArray(value)) return value.map(normalize);
+  if (value && typeof value === "object") {
+    const out = {};
+    for (const key of Object.keys(value).sort()) out[key] = normalize(value[key]);
+    return out;
+  }
+  return value;
+}
+
+function canonical(value) {
+  return JSON.stringify(normalize(value));
+}
+
+function digest(value) {
+  return crypto.createHash("sha256").update(canonical(value), "utf8").digest("hex");
+}
+
+function uniqueSorted(values) {
+  return [...new Set(values)].sort((a, b) => String(a).localeCompare(String(b)));
+}
+
+const schemas = {
+  abstraction_partition_check: ["blocks", "concrete_states", "op"],
+  abstract_edge_projection: ["abstraction", "concrete_edges", "op"],
+  spurious_trace_check: ["abstract_actions", "concrete_action_traces", "op"],
+  concrete_trace_lift: ["abstract_state_trace", "abstraction", "concrete_edges", "op"],
+  refinement_split: ["attributes", "members", "op", "threshold"],
+  purpose_scope_intersection: ["granted_scopes", "op", "purpose", "requested_scopes"],
+  expiry_window_decision: ["expires_at", "not_before", "observed_at", "op"],
+  consent_lineage: ["as_of_sequence", "events", "op"],
+  remedy_route: ["declared_routes", "issue_codes", "op"],
+  appeal_window: ["appeal_by", "decision_at", "op", "submitted_at"]
+};
+
+function exactKeys(record, expected) {
+  if (!record || typeof record !== "object" || Array.isArray(record)) return false;
+  return canonical(Object.keys(record).sort()) === canonical(expected.slice().sort());
+}
+
+function reject(error) {
+  return { ok: false, value: null, error };
+}
+
+function validate(request) {
+  if (!request || typeof request !== "object" || Array.isArray(request)) return "invalid_request";
+  if (typeof request.op !== "string" || !Object.hasOwn(schemas, request.op)) return "unknown_operation";
+  if (!exactKeys(request, schemas[request.op])) return "unknown_field";
+  switch (request.op) {
+    case "abstraction_partition_check":
+      if (!Array.isArray(request.concrete_states) || !Array.isArray(request.blocks)) return "invalid_shape";
+      if (!request.blocks.every((block) => exactKeys(block, ["abstract", "members"]) && typeof block.abstract === "string" && Array.isArray(block.members))) return "invalid_shape";
+      break;
+    case "abstract_edge_projection":
+      if (!Array.isArray(request.concrete_edges) || !request.abstraction || typeof request.abstraction !== "object") return "invalid_shape";
+      if (!request.concrete_edges.every((edge) => Array.isArray(edge) && edge.length === 3)) return "invalid_shape";
+      break;
+    case "spurious_trace_check":
+      if (!Array.isArray(request.abstract_actions) || !Array.isArray(request.concrete_action_traces) || !request.concrete_action_traces.every(Array.isArray)) return "invalid_shape";
+      break;
+    case "concrete_trace_lift":
+      if (!Array.isArray(request.abstract_state_trace) || !Array.isArray(request.concrete_edges) || !request.abstraction || typeof request.abstraction !== "object") return "invalid_shape";
+      break;
+    case "refinement_split":
+      if (!Array.isArray(request.members) || !request.attributes || typeof request.attributes !== "object" || typeof request.threshold !== "number") return "invalid_shape";
+      break;
+    case "purpose_scope_intersection":
+      if (!Array.isArray(request.requested_scopes) || !Array.isArray(request.granted_scopes) || typeof request.purpose !== "string") return "invalid_shape";
+      break;
+    case "expiry_window_decision":
+      if (![request.observed_at, request.not_before, request.expires_at].every((x) => typeof x === "string" && Number.isFinite(Date.parse(x)))) return "invalid_timestamp";
+      break;
+    case "consent_lineage":
+      if (!Array.isArray(request.events) || !Number.isInteger(request.as_of_sequence)) return "invalid_shape";
+      if (!request.events.every((event) => exactKeys(event, ["action", "id", "scopes", "sequence"]) && typeof event.id === "string" && Number.isInteger(event.sequence) && Array.isArray(event.scopes))) return "invalid_shape";
+      break;
+    case "remedy_route":
+      if (!Array.isArray(request.issue_codes) || !request.declared_routes || typeof request.declared_routes !== "object") return "invalid_shape";
+      break;
+    case "appeal_window":
+      if (![request.decision_at, request.appeal_by].every((x) => typeof x === "string" && Number.isFinite(Date.parse(x)))) return "invalid_timestamp";
+      if (request.submitted_at !== null && (typeof request.submitted_at !== "string" || !Number.isFinite(Date.parse(request.submitted_at)))) return "invalid_timestamp";
+      break;
+    default:
+      return "unknown_operation";
+  }
+  return null;
+}
+
+function evaluate(request) {
+  switch (request.op) {
+    case "abstraction_partition_check": {
+      const counts = new Map();
+      const emptyBlocks = [];
+      for (const block of request.blocks) {
+        if (block.members.length === 0) emptyBlocks.push(block.abstract);
+        for (const state of block.members) counts.set(state, (counts.get(state) || 0) + 1);
+      }
+      const covered = request.concrete_states.filter((state) => counts.has(state)).sort();
+      const missing = request.concrete_states.filter((state) => !counts.has(state));
+      const duplicates = [...counts].filter(([, count]) => count > 1).map(([state]) => state).sort();
+      return { covered, missing, duplicate_members: duplicates, empty_blocks: emptyBlocks.sort(), valid: missing.length === 0 && duplicates.length === 0 && emptyBlocks.length === 0 };
+    }
+    case "abstract_edge_projection": {
+      const byKey = new Map();
+      for (const [from, label, to] of request.concrete_edges) {
+        const edge = [request.abstraction[from], label, request.abstraction[to]];
+        byKey.set(canonical(edge), edge);
+      }
+      return { abstract_edges: [...byKey.values()].sort((a, b) => canonical(a).localeCompare(canonical(b))) };
+    }
+    case "spurious_trace_check": {
+      const target = canonical(request.abstract_actions);
+      const indexes = [];
+      request.concrete_action_traces.forEach((trace, index) => {
+        if (canonical(trace) === target) indexes.push(index);
+      });
+      return { spurious: indexes.length === 0, matching_trace_indexes: indexes };
+    }
+    case "concrete_trace_lift": {
+      const candidates = [];
+      for (const [from, label, to] of request.concrete_edges) {
+        for (let step = 0; step < request.abstract_state_trace.length - 1; step++) {
+          if (request.abstraction[from] === request.abstract_state_trace[step] && request.abstraction[to] === request.abstract_state_trace[step + 1]) candidates.push({ step, from, label, to });
+        }
+      }
+      return { candidates, complete_step_coverage: uniqueSorted(candidates.map((entry) => entry.step)).length === Math.max(0, request.abstract_state_trace.length - 1) };
+    }
+    case "refinement_split": {
+      const lower = [];
+      const higher = [];
+      for (const member of request.members) (request.attributes[member] <= request.threshold ? lower : higher).push(member);
+      lower.sort();
+      higher.sort();
+      return { lower_or_equal: lower, higher, disjoint_complete: lower.length + higher.length === request.members.length };
+    }
+    case "purpose_scope_intersection": {
+      const granted = new Set(request.granted_scopes);
+      return { permitted: uniqueSorted(request.requested_scopes.filter((scope) => granted.has(scope))), withheld: uniqueSorted(request.requested_scopes.filter((scope) => !granted.has(scope))), purpose: request.purpose };
+    }
+    case "expiry_window_decision": {
+      const observed = Date.parse(request.observed_at);
+      const start = Date.parse(request.not_before);
+      const end = Date.parse(request.expires_at);
+      return { state: observed < start ? "premature" : observed >= end ? "expired" : "active", duration_to_expiry_seconds: Math.trunc((end - observed) / 1000) };
+    }
+    case "consent_lineage": {
+      const history = request.events.filter((event) => event.sequence <= request.as_of_sequence).sort((a, b) => a.sequence - b.sequence);
+      const scopes = new Set();
+      for (const event of history) {
+        if (event.action === "grant") event.scopes.forEach((scope) => scopes.add(scope));
+        if (event.action === "revoke") event.scopes.forEach((scope) => scopes.delete(scope));
+        if (event.action === "correct") {
+          scopes.clear();
+          event.scopes.forEach((scope) => scopes.add(scope));
+        }
+      }
+      return { active_scopes: [...scopes].sort(), lineage_ids: history.map((event) => event.id), last_sequence: history.length ? history.at(-1).sequence : null };
+    }
+    case "remedy_route": {
+      const declared = [];
+      const unresolved = [];
+      for (const code of request.issue_codes) {
+        if (Object.hasOwn(request.declared_routes, code)) declared.push([code, request.declared_routes[code]]);
+        else unresolved.push(code);
+      }
+      return { declared_routes: declared, unresolved_codes: unresolved.sort(), authority_reserved: true };
+    }
+    case "appeal_window": {
+      const state = request.submitted_at === null ? "missing" : Date.parse(request.submitted_at) <= Date.parse(request.appeal_by) ? "timely" : "late";
+      return { state, window_seconds: Math.trunc((Date.parse(request.appeal_by) - Date.parse(request.decision_at)) / 1000), remedy_authority_reserved: true };
+    }
+    default:
+      throw new Error(`unsupported x1 operation ${request.op}`);
+  }
+}
+
+function execute(request) {
+  const before = digest(request);
+  const error = validate(request);
+  const result = error ? reject(error) : { ok: true, value: evaluate(request), error: null };
+  const after = digest(request);
+  return { result, input_sha256_before: before, input_sha256_after: after, input_unchanged: before === after };
+}
+
+module.exports = { canonical, digest, execute, validate, evaluate, schemas };

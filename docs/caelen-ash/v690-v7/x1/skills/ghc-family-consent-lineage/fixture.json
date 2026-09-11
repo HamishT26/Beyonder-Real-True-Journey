@@ -1,0 +1,85 @@
+{
+  "schema": "ghc.family.phase-local-skill-fixture.v5",
+  "skill": "ghc-family-consent-lineage",
+  "operation": "consent_lineage",
+  "proposal_id": "CA6907-071",
+  "request": {
+    "op": "consent_lineage",
+    "events": [
+      {
+        "id": "e1-1",
+        "sequence": 1,
+        "action": "grant",
+        "scopes": [
+          "inspect",
+          "correct"
+        ]
+      },
+      {
+        "id": "e1-2",
+        "sequence": 2,
+        "action": "correct",
+        "scopes": [
+          "inspect"
+        ]
+      },
+      {
+        "id": "e1-3",
+        "sequence": 3,
+        "action": "note",
+        "scopes": []
+      }
+    ],
+    "as_of_sequence": 1
+  },
+  "expected_output": {
+    "ok": true,
+    "value": {
+      "active_scopes": [
+        "correct",
+        "inspect"
+      ],
+      "lineage_ids": [
+        "e1-1"
+      ],
+      "last_sequence": 1
+    },
+    "error": null
+  },
+  "invalid_subject": {
+    "op": "consent_lineage",
+    "events": [
+      {
+        "id": "e1-1",
+        "sequence": 1,
+        "action": "grant",
+        "scopes": [
+          "inspect",
+          "correct"
+        ]
+      },
+      {
+        "id": "e1-2",
+        "sequence": 2,
+        "action": "correct",
+        "scopes": [
+          "inspect"
+        ]
+      },
+      {
+        "id": "e1-3",
+        "sequence": 3,
+        "action": "note",
+        "scopes": []
+      }
+    ],
+    "as_of_sequence": 1,
+    "unreviewed_authority": true
+  },
+  "invalid_expected": {
+    "ok": false,
+    "value": null,
+    "error": "unknown_field"
+  },
+  "boundary": "Bounded same-owner synthetic software and documentation evidence only; no empirical, participant, identity, professional, production, deployment, legal, cultural, affected-party, Maori-authority, complete privacy/accessibility, exhaustive-security, independent-reproduction, consciousness/personhood, AGI/ASI, Theory-of-Everything, proof/canon or Stage 20 claim. NOT_READY_FOR_STAGE_20."
+}
