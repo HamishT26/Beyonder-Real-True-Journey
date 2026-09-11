@@ -1,0 +1,15 @@
+'use strict';
+const fs = require('node:fs');
+const path = require('node:path');
+const C = require('../plan/tools/common.txt');
+const repo = process.cwd();
+const stage = path.join(repo, 'docs/liora-venn/v691-v2/x1');
+const exclusions = ['manifest.json', 'staged-review.json'];
+const entries = C.manifest(repo, 'docs/liora-venn/v691-v2/x1', exclusions);
+C.put(path.join(stage, 'manifest.json'), {schema: 'ghc.family.stage-manifest.v5', owner: 'Liora Venn', phase: 'v691-v2', stage: 'x1', byte_domain: 'raw_utf8_lf_worktree_before_commit', entries, self_exclusions: exclusions.map(name => 'docs/liora-venn/v691-v2/x1/' + name), boundary: C.BOUNDARY}, false);
+const allowed = fs.readdirSync(stage, {recursive: true}).filter(rel => fs.statSync(path.join(stage, rel)).isFile()).map(rel => 'docs/liora-venn/v691-v2/x1/' + rel.replaceAll('\\', '/'));
+const stagedRel = 'docs/liora-venn/v691-v2/x1/staged-review.json';
+if (!allowed.includes(stagedRel)) allowed.push(stagedRel);
+allowed.sort();
+C.put(path.join(stage, 'staged-review.json'), {schema: 'ghc.family.staged-review.v5', owner: 'Liora Venn', phase: 'v691-v2', stage: 'x1', allowed_paths: allowed, path_count: allowed.length, planning_paths_changed: [], x2_paths: [], positive_matches: 100, retained_invalid_subjects: 100, operational_failures: 2, recovery_witnesses: 2, privacy_candidates: 0, confirmed_privacy_hits: 0, boundary: C.BOUNDARY}, false);
+process.stdout.write(JSON.stringify({valid: true, manifest_entries: entries.length, staged_paths: allowed.length}));

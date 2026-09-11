@@ -1,0 +1,7 @@
+'use strict';
+const engine=require('../engine.txt');
+const names=["petri_record_shape","petri_place_invariant"];
+const selected=Object.fromEntries(names.map(name=>[name,engine.operations[name]]));
+function run(request){if(!request||typeof request!=='object'||!names.includes(request.op))return {ok:false,error:'unknown_operation',authority:false};return engine.run(request);}
+module.exports={run,names};
+if(require.main===module)engine.cli(selected);

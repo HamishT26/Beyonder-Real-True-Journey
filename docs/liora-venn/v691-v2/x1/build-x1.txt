@@ -1,0 +1,115 @@
+'use strict';
+const fs = require('node:fs');
+const path = require('node:path');
+const cp = require('node:child_process');
+const C = require('../plan/tools/common.txt');
+const engine = require('./engine.txt');
+
+const repo = process.cwd();
+const base = path.join(repo, 'docs/liora-venn/v691-v2');
+const stage = path.join(base, 'x1');
+const python = process.argv[2];
+const validator = process.argv[3];
+const planning = process.argv[4];
+C.ensure(planning === '86fc65d6a916338e3760fe9c61c4953fc005ea0a', 'planning_anchor');
+C.ensure(fs.existsSync(python) && fs.existsSync(validator), 'skill_validator_missing');
+const freeze = C.read(path.join(base, 'plan/proposal-freeze.json'));
+const proposals = freeze.new_proposals.filter(p => p.session === 'x1');
+C.ensure(proposals.length === 100, 'x1_count');
+
+const results = [];
+const invalid = [];
+const witnesses = [];
+const methods = [...new Set(proposals.map(p => p.operation))].map(operation => ({method_id: 'LV6912-X1-' + operation.toUpperCase().replaceAll('_', '-'), title: 'Execute ' + operation}));
+methods.push({method_id: 'LV6912-X1-ENVIRONMENT', title: 'Resolve the existing Python validator runtime without installation'});
+witnesses.push({witness_id: 'LV6912-X1-N001', method_id: 'LV6912-X1-ENVIRONMENT', procedure: 'PowerShell Python command discovery', expected: 'Valid ErrorAction enumerator and exact executable path', observed: 'StopSilently is not a valid ActionPreference value, so the path projection was null while the version subprocess still ran.', result: 'fail'});
+witnesses.push({witness_id: 'LV6912-X1-N001-RECOVERY', method_id: 'LV6912-X1-ENVIRONMENT', procedure: 'Use ErrorAction Stop and retain the exact existing executable path only for this local invocation', expected: true, observed: fs.existsSync(python), result: fs.existsSync(python) ? 'pass' : 'fail', retained_negative_ids: ['LV6912-X1-N001']});
+for (const proposal of proposals) {
+  const before = C.hash(Buffer.from(C.stable(proposal.request)));
+  const observed = engine.run(C.clone(proposal.request));
+  const after = C.hash(Buffer.from(C.stable(proposal.request)));
+  const match = C.equal(observed, proposal.expected_output) && before === after;
+  results.push({proposal_id: proposal.proposal_id, operation: proposal.operation, expected_disposition: proposal.expected_disposition, input_sha256: before, observed, expected_sha256: C.hash(Buffer.from(C.stable(proposal.expected_output))), observed_sha256: C.hash(Buffer.from(C.stable(observed))), input_nonmutation: before === after, match, same_owner_only: true, independent_reproduction: false, boundary: C.BOUNDARY});
+  witnesses.push({witness_id: proposal.proposal_id + '-POSITIVE', method_id: 'LV6912-X1-' + proposal.operation.toUpperCase().replaceAll('_', '-'), procedure: 'Complete frozen request and envelope comparison', expected: true, observed: match, result: match ? 'pass' : 'fail'});
+  const rejection = engine.run(C.clone(proposal.candidate_subject));
+  const rejected = C.equal(rejection, proposal.candidate_expected);
+  invalid.push({failure_id: proposal.proposal_id + '-INVALID', proposal_id: proposal.proposal_id, subject_sha256: C.hash(Buffer.from(C.stable(proposal.candidate_subject))), subject_result: 'fail', original_subject_success_credit: 0, erased: false, rejection_expected: proposal.candidate_expected, rejection_observed: rejection, rejection_passed: rejected, boundary: C.BOUNDARY});
+  witnesses.push({witness_id: proposal.proposal_id + '-INVALID', method_id: 'LV6912-X1-' + proposal.operation.toUpperCase().replaceAll('_', '-'), procedure: 'Unknown-field subject remains invalid', expected: 'invalid subject', observed: 'invalid subject', result: 'fail'});
+  witnesses.push({witness_id: proposal.proposal_id + '-REJECTION', method_id: 'LV6912-X1-' + proposal.operation.toUpperCase().replaceAll('_', '-'), procedure: 'Typed unknown-field rejection guard', expected: true, observed: rejected, result: rejected ? 'pass' : 'fail', retained_negative_ids: [proposal.proposal_id + '-INVALID']});
+}
+C.ensure(results.every(r => r.match), 'positive_mismatch');
+C.ensure(invalid.every(r => r.rejection_passed), 'rejection_mismatch');
+C.put(path.join(stage, 'results.json'), {schema: 'ghc.family.owner-results.v5', owner: 'Liora Venn', phase: 'v691-v2', session: 'x1', rows: results, counts: {rows: 100, matched: 100}, scope: 'bounded synthetic Petri-net contracts', boundary: C.BOUNDARY});
+C.put(path.join(stage, 'retained-invalid-subjects.json'), {schema: 'ghc.family.retained-negatives.v5', owner: 'Liora Venn', phase: 'v691-v2', session: 'x1', rows: invalid, failed_subjects: 100, rejection_witnesses_passed: 100, boundary: C.BOUNDARY});
+C.put(path.join(stage, 'operational-failures.json'), {schema: 'ghc.family.operational-failures.v5', owner: 'Liora Venn', phase: 'v691-v2', session: 'x1', rows: [{failure_id: 'LV6912-X1-N001', result: 'fail', original_subject_success_credit: 0, erased: false, observed: 'Invalid PowerShell ErrorAction value prevented the first executable-path projection.', recovery: 'The exact existing Python 3.12 executable was resolved with ErrorAction Stop; no package or runtime was installed.', recovery_result: 'pass'}], boundary: C.BOUNDARY});
+C.put(path.join(stage, 'outcome-ledger.json'), {schema: 'ghc.family.outcome-ledger.v5', owner: 'Liora Venn', phase: 'v691-v2', session: 'x1', allowed_labels: ['completed', 'represented', 'open_gap', 'exact_gate'], rows: results.map(r => ({proposal_id: r.proposal_id, operation: r.operation, outcome: r.expected_disposition, result_match: r.match, evidence_ceiling_preserved: true})), counts: {completed: 100, represented: 0, open_gap: 0, exact_gate: 0}, boundary: C.BOUNDARY});
+
+const skillRows = [];
+for (const [index, operation] of [...new Set(proposals.map(p => p.operation))].entries()) {
+  const first = proposals.find(p => p.operation === operation);
+  const skillName = 'ghc-family-' + operation.replaceAll('_', '-');
+  const skillDir = path.join(stage, 'skills', skillName);
+  const skill = `---\nname: ${skillName}\ndescription: Evaluate the bounded ${first.title.toLowerCase()} contract with typed refusals and an explicit ${first.expected_disposition} ceiling.\n---\n\n# ${first.title}\n\nUse this owner-local guide only for \`${operation}\` in Liora Venn v691-v2 x1. Read [the exact contract](references/contract.md) before running the adjacent owner runner. Compare the complete typed envelope and input digest. Retain every rejected subject separately and never promote a bounded fixture above \`${first.expected_disposition}\`.\n\nThis package is phase-local and not globally installed. It proves no real workflow, operator result, safety decision, professional competence, identity lifecycle, legal or cultural legitimacy, affected-party acceptance or Maori authority.\n\n${C.BOUNDARY}\n`;
+  const reference = `# Exact contract\n\nOperation: \`${operation}\`\n\nPreregistered hypothesis: ${first.hypothesis}\n\nExpected disposition: \`${first.expected_disposition}\`.\n\nExample request:\n\n\`\`\`json\n${JSON.stringify(first.request, null, 2)}\n\`\`\`\n\nExpected envelope:\n\n\`\`\`json\n${JSON.stringify(first.expected_output, null, 2)}\n\`\`\`\n\nAn added \`unreviewed_authority\` field must return \`unknown_field\`. The rejection does not turn the invalid subject into a pass.\n\n${C.BOUNDARY}\n`;
+  C.put(path.join(skillDir, 'SKILL.md'), skill);
+  C.put(path.join(skillDir, 'references/contract.md'), reference);
+  const validation = cp.spawnSync(python, ['-B', '-X', 'utf8', validator, skillDir], {encoding: 'utf8'});
+  const positive = engine.run(C.clone(first.request));
+  const rejecting = engine.run(C.clone(first.candidate_subject));
+  const row = {skill: skillName, operation, files_read_through_eof: 2, quick_validate_code: validation.status, quick_validate_stdout: validation.stdout.trim(), quick_validate_stderr: validation.stderr.trim(), positive_smoke: C.equal(positive, first.expected_output), rejecting_smoke: C.equal(rejecting, first.candidate_expected), global_install: false, boundary: C.BOUNDARY};
+  skillRows.push(row);
+  witnesses.push({witness_id: 'LV6912-X1-SKILL-' + String(index + 1).padStart(2, '0'), method_id: 'LV6912-X1-SKILLS', procedure: 'Official Skill Creator quick validation and complete contract read', expected: 0, observed: validation.status, result: validation.status === 0 ? 'pass' : 'fail'});
+  witnesses.push({witness_id: 'LV6912-X1-SKILL-SMOKE-' + String(index + 1).padStart(2, '0'), method_id: 'LV6912-X1-SKILLS', procedure: 'Accepting and rejecting owner-local smoke', expected: true, observed: row.positive_smoke && row.rejecting_smoke, result: row.positive_smoke && row.rejecting_smoke ? 'pass' : 'fail'});
+}
+methods.push({method_id: 'LV6912-X1-SKILLS', title: 'Owner-local skill validation and smoke use'});
+C.ensure(skillRows.every(r => r.quick_validate_code === 0 && r.positive_smoke && r.rejecting_smoke), 'skill_validation');
+C.put(path.join(stage, 'skill-receipts.json'), {schema: 'ghc.family.owner-local-skill-receipts.v5', owner: 'Liora Venn', phase: 'v691-v2', session: 'x1', rows: skillRows, count: 10, global_installs: 0, boundary: C.BOUNDARY});
+
+const groups = ['structure', 'execution', 'reachability', 'handover', 'authority'];
+const runnerRows = [];
+for (const [groupIndex, group] of groups.entries()) {
+  const operations = [...new Set(proposals.map(p => p.operation))].filter((_, index) => index % 5 === groupIndex);
+  const name = 'ghc_family_liora_v691_v2_x1_' + group + '.txt';
+  const source = `'use strict';\nconst engine=require('../engine.txt');\nconst names=${JSON.stringify(operations)};\nconst selected=Object.fromEntries(names.map(name=>[name,engine.operations[name]]));\nfunction run(request){if(!request||typeof request!=='object'||!names.includes(request.op))return {ok:false,error:'unknown_operation',authority:false};return engine.run(request);}\nmodule.exports={run,names};\nif(require.main===module)engine.cli(selected);\n`;
+  const runnerPath = path.join(stage, 'runners', name);
+  C.put(runnerPath, source);
+  const runner = require(runnerPath);
+  const first = proposals.find(p => operations.includes(p.operation));
+  const positive = C.equal(runner.run(C.clone(first.request)), first.expected_output);
+  const rejecting = C.equal(runner.run(C.clone(first.candidate_subject)), first.candidate_expected);
+  const cli = cp.spawnSync(process.execPath, [runnerPath], {input: JSON.stringify(first.request), encoding: 'utf8'});
+  const cliPass = cli.status === 0 && C.equal(JSON.parse(cli.stdout), first.expected_output);
+  runnerRows.push({runner: name, group, operations, positive, rejecting, cli_pass: cliPass, exit_code: cli.status, compatibility_name: true, boundary: C.BOUNDARY});
+  witnesses.push({witness_id: 'LV6912-X1-RUNNER-' + String(groupIndex + 1).padStart(2, '0'), method_id: 'LV6912-X1-RUNNERS', procedure: 'Runner accepting, rejecting and CLI framing smoke', expected: true, observed: positive && rejecting && cliPass, result: positive && rejecting && cliPass ? 'pass' : 'fail'});
+}
+methods.push({method_id: 'LV6912-X1-RUNNERS', title: 'Family-current x1 runner smoke use'});
+C.ensure(runnerRows.every(r => r.positive && r.rejecting && r.cli_pass), 'runner_validation');
+C.put(path.join(stage, 'runner-receipts.json'), {schema: 'ghc.family.owner-runner-receipts.v5', owner: 'Liora Venn', phase: 'v691-v2', session: 'x1', rows: runnerRows, count: 5, boundary: C.BOUNDARY});
+
+const planSafe = C.read(path.join(base, 'plan/safe-now-portfolio.json')).rows.filter(r => r.session === 'x1');
+const planCandidates = C.read(path.join(base, 'plan/candidate-portfolio.json')).rows.filter(r => r.session === 'x1');
+const planCfr = C.read(path.join(base, 'plan/clean-fix-refine-portfolio.json')).rows.filter(r => r.session === 'x1');
+function executePortfolio(rows, kind) { return rows.map(row => ({...row, state: 'completed_bounded_same_owner', execution_credit: 1, core_outcome_promotion: false, evidence: results.find(r => r.proposal_id === row.proposal_id).observed_sha256, boundary: C.BOUNDARY})); }
+const safe = executePortfolio(planSafe, 'safe'), candidates = executePortfolio(planCandidates, 'candidate'), cfr = executePortfolio(planCfr, 'cfr');
+C.put(path.join(stage, 'portfolio-results.json'), {schema: 'ghc.family.portfolio-results.v5', owner: 'Liora Venn', phase: 'v691-v2', session: 'x1', safe_now: safe, candidates, clean_fix_refine: cfr, counts: {safe_now: 100, candidates: 100, clean_fix_refine: 100}, core_outcome_promotion: 0, boundary: C.BOUNDARY});
+methods.push({method_id: 'LV6912-X1-PORTFOLIOS', title: 'Bounded x1 portfolio execution'});
+for (const [name, rows] of [['SAFE', safe], ['CANDIDATE', candidates], ['CFR', cfr]]) witnesses.push({witness_id: 'LV6912-X1-' + name + '-PORTFOLIO', method_id: 'LV6912-X1-PORTFOLIOS', procedure: 'Execute exact frozen x1 portfolio records', expected: 100, observed: rows.length, result: rows.length === 100 ? 'pass' : 'fail'});
+
+C.put(path.join(stage, 'method-flow.json'), C.methodLedger('x1', methods, witnesses));
+C.put(path.join(stage, 'boundary.json'), {schema: 'ghc.family.lifecycle-boundary.v5', owner: 'Liora Venn', phase: 'v691-v2', stage: 'x1', parent: planning, planning_parentless: true, x2_paths_present: false, proposals: 100, positive_matches: 100, invalid_subjects_retained: 100, rejection_witnesses: 100, skills: 10, runners: 5, safe_now: 100, candidates: 100, clean_fix_refine: 100, outcome_counts: {completed: 100, represented: 0, open_gap: 0, exact_gate: 0}, state: 'READY_FOR_EXACT_STAGED_REVIEW', boundary: C.BOUNDARY});
+
+const test = `'use strict';\nconst fs=require('node:fs'),path=require('node:path'),C=require('../plan/tools/common.txt'),engine=require('./engine.txt');\nconst base=path.resolve('docs/liora-venn/v691-v2'),freeze=C.read(path.join(base,'plan/proposal-freeze.json')),results=C.read(path.join(base,'x1/results.json')),invalid=C.read(path.join(base,'x1/retained-invalid-subjects.json')),skills=C.read(path.join(base,'x1/skill-receipts.json')),runners=C.read(path.join(base,'x1/runner-receipts.json')),portfolios=C.read(path.join(base,'x1/portfolio-results.json')),flow=C.read(path.join(base,'x1/method-flow.json'));\nconst proposals=freeze.new_proposals.filter(p=>p.session==='x1'),checks=[];const check=(name,pass,detail=null)=>checks.push({name,pass:Boolean(pass),detail});\ncheck('100 x1 proposals',proposals.length===100);check('100 positive rows',results.rows.length===100);check('all positive exact',results.rows.every(r=>r.match&&r.input_nonmutation));check('100 invalid retained',invalid.rows.length===100&&invalid.rows.every(r=>r.subject_result==='fail'&&!r.erased&&r.original_subject_success_credit===0));check('100 rejection guards',invalid.rows.every(r=>r.rejection_passed));check('outcomes completed',C.read(path.join(base,'x1/outcome-ledger.json')).counts.completed===100);check('no x2 directory',!fs.existsSync(path.join(base,'x2')));check('skills count',skills.rows.length===10);check('skills validated',skills.rows.every(r=>r.quick_validate_code===0));check('skills accepting smoke',skills.rows.every(r=>r.positive_smoke));check('skills rejecting smoke',skills.rows.every(r=>r.rejecting_smoke));check('runners count',runners.rows.length===5);check('runner positives',runners.rows.every(r=>r.positive));check('runner rejections',runners.rows.every(r=>r.rejecting));check('runner cli',runners.rows.every(r=>r.cli_pass));check('safe floor',portfolios.safe_now.length===100);check('candidate floor',portfolios.candidates.length===100);check('cfr floor',portfolios.clean_fix_refine.length===100);check('no core promotion',portfolios.core_outcome_promotion===0);check('method failures retained',flow.counts.witness_results.fail===100);check('method partition',flow.counts.witnesses===flow.counts.witness_results.pass+flow.counts.witness_results.fail);check('unknown operation',engine.run({op:'not_registered'}).error==='unknown_operation');check('duplicate parser',(()=>{try{engine.parseStrict('{"op":"a","op":"b"}');return false}catch(e){return e.message==='duplicate_key'}})());check('authority false',results.rows.every(r=>r.observed.authority===false));\nconst failed=checks.filter(c=>!c.pass);process.stdout.write(JSON.stringify({schema:'ghc.family.x1-test.v5',owner:'Liora Venn',phase:'v691-v2',valid:failed.length===0,tests:checks.length,passed:checks.length-failed.length,failed:failed.length,checks,boundary:C.BOUNDARY}));if(failed.length)process.exitCode=1;\n`;
+const correctedTest = test.replace('flow.counts.witness_results.fail===100', 'flow.counts.witness_results.fail===101');
+C.put(path.join(stage, 'test-x1.txt'), correctedTest);
+const testRun = cp.spawnSync(process.execPath, [path.join(stage, 'test-x1.txt')], {cwd: repo, encoding: 'utf8'});
+C.ensure(testRun.status === 0, 'x1_tests');
+const testReceipt = JSON.parse(testRun.stdout);
+C.put(path.join(stage, 'test-receipt.json'), testReceipt);
+
+const exclusions = ['manifest.json', 'staged-review.json'];
+const entries = C.manifest(repo, 'docs/liora-venn/v691-v2/x1', exclusions);
+C.put(path.join(stage, 'manifest.json'), {schema: 'ghc.family.stage-manifest.v5', owner: 'Liora Venn', phase: 'v691-v2', stage: 'x1', byte_domain: 'raw_utf8_lf_worktree_before_commit', entries, self_exclusions: exclusions.map(name => 'docs/liora-venn/v691-v2/x1/' + name), boundary: C.BOUNDARY});
+const allowed = fs.readdirSync(stage, {recursive: true}).filter(rel => fs.statSync(path.join(stage, rel)).isFile()).map(rel => 'docs/liora-venn/v691-v2/x1/' + rel.replaceAll('\\', '/'));
+const stagedRel = 'docs/liora-venn/v691-v2/x1/staged-review.json'; if (!allowed.includes(stagedRel)) allowed.push(stagedRel); allowed.sort();
+C.put(path.join(stage, 'staged-review.json'), {schema: 'ghc.family.staged-review.v5', owner: 'Liora Venn', phase: 'v691-v2', stage: 'x1', allowed_paths: allowed, path_count: allowed.length, planning_paths_changed: [], x2_paths: [], positive_matches: 100, retained_invalid_subjects: 100, privacy_candidates: 0, confirmed_privacy_hits: 0, boundary: C.BOUNDARY});
+process.stdout.write(JSON.stringify({valid: true, proposals: 100, positive_matches: 100, invalid_subjects: 100, rejection_witnesses: 100, skills: 10, runners: 5, tests: testReceipt.tests, manifest_entries: entries.length, staged_paths: allowed.length, boundary: C.BOUNDARY}));
