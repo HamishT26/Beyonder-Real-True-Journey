@@ -1,0 +1,59 @@
+'use strict';
+const operations=['pair_shape','common_membership','common_family','common_maximal','common_cardinality_profile','exchange_sources','exchange_sinks','exchange_arcs','augmenting_path','augment_step'];
+function fail(code){throw Error(code);}
+function record(v){if(v===null||typeof v!=='object'||Array.isArray(v)||Object.getPrototypeOf(v)!==Object.prototype)fail('OBJECT_REQUIRED');}
+function fields(v,names){record(v);if(Object.keys(v).some(k=>!names.includes(k)))fail('UNKNOWN_FIELD');if(names.some(k=>!Object.hasOwn(v,k)))fail('MISSING_FIELD');}
+function list(v,max=256){if(!Array.isArray(v)||v.length>max)fail('ARRAY_BOUND');}
+const count=m=>{let n=0;while(m){n+=m&1;m>>>=1;}return n;};
+const lexical=(a,b)=>a<b?-1:a>b?1:0;
+function array(p,m){return p.E.filter((_,i)=>m&(1<<i));}
+function ordered(p,masks){return [...masks].sort((a,b)=>count(a)-count(b)||lexical(array(p,a).join(','),array(p,b).join(',')));}
+function mask(p,v){list(v,8);let m=0;for(const x of v){if(typeof x!=='string'||!p.E.includes(x))fail('UNKNOWN_ELEMENT');const bit=1<<p.E.indexOf(x);if(m&bit)fail('DUPLICATE_ELEMENT');m|=bit;}return m;}
+function parsePair(raw){
+ fields(raw,['ground','left','right']);list(raw.ground,8);
+ if(raw.ground.some(x=>typeof x!=='string'||!/^[a-z][a-z0-9_]{0,31}$/.test(x)))fail('LABEL_REQUIRED');
+ if(new Set(raw.ground).size!==raw.ground.length)fail('DUPLICATE_GROUND');
+ const p={E:[...raw.ground].sort(lexical)};p.full=(1<<p.E.length)-1;
+ for(const [name,dest] of [['left','L'],['right','R']]){
+  list(raw[name]);const masks=raw[name].map(v=>mask(p,v)),F=new Set(masks);
+  if(F.size!==masks.length)fail('DUPLICATE_SET');if(!F.has(0))fail('EMPTY_SET_REQUIRED');
+  for(const a of F){for(let i=0;i<p.E.length;i++)if((a&(1<<i))&&!F.has(a^(1<<i)))fail('HEREDITY_REQUIRED');
+   for(const b of F)if(count(a)<count(b)){let found=false;for(let i=0;i<p.E.length;i++){const bit=1<<i;if((b&bit)&&!(a&bit)&&F.has(a|bit)){found=true;break;}}if(!found)fail('AUGMENTATION_REQUIRED');}
+  }p[dest]=F;
+ }return p;
+}
+const common=p=>ordered(p,[...p.L].filter(m=>p.R.has(m)));
+function selection(p,v){const m=mask(p,v);if(!p.L.has(m)||!p.R.has(m))fail('COMMON_SELECTION_REQUIRED');return m;}
+function graph(p,I){
+ const sources=[],sinks=[],arcs=[];
+ for(let x=0;x<p.E.length;x++){const xb=1<<x;if(I&xb)continue;if(p.L.has(I|xb))sources.push(p.E[x]);if(p.R.has(I|xb))sinks.push(p.E[x]);
+  for(let y=0;y<p.E.length;y++){const yb=1<<y;if(!(I&yb))continue;const swapped=(I^yb)|xb;if(p.L.has(swapped))arcs.push([p.E[y],p.E[x]]);if(p.R.has(swapped))arcs.push([p.E[x],p.E[y]]);}
+ }arcs.sort((a,b)=>lexical(a.join(','),b.join(',')));return{sources,sinks,arcs};
+}
+function shortest(p,I){
+ const g=graph(p,I),queue=g.sources.map(x=>[x]),seen=new Set(g.sources),sinks=new Set(g.sinks);
+ for(let i=0;i<queue.length;i++){const chain=queue[i],v=chain.at(-1);if(sinks.has(v))return chain;
+  for(const [a,b] of g.arcs)if(a===v&&!seen.has(b)){seen.add(b);queue.push([...chain,b]);}
+ }return null;
+}
+function step(p,I){const q=shortest(p,I),J=q?I^mask(p,q):I;if(q&&(!p.L.has(J)||!p.R.has(J)||count(J)!==count(I)+1))fail('AUGMENTING_INVARIANT');return{path:q,selected:array(p,J),increased:q!==null,common:p.L.has(J)&&p.R.has(J)};}
+function value(op,input){
+ const needs=['common_membership','exchange_sources','exchange_sinks','exchange_arcs','augmenting_path','augment_step'].includes(op);
+ fields(input,needs?['pair','subset']:['pair']);const p=parsePair(input.pair),F=common(p);let I=0;
+ if(needs)I=op==='common_membership'?mask(p,input.subset):selection(p,input.subset);
+ switch(op){
+ case 'pair_shape':return{valid:true,ground_count:p.E.length,left_count:p.L.size,right_count:p.R.size};
+ case 'common_membership':return{left:p.L.has(I),right:p.R.has(I),common:p.L.has(I)&&p.R.has(I)};
+ case 'common_family':return{sets:F.map(m=>array(p,m))};
+ case 'common_maximal':return{maximal:F.filter(a=>!F.some(b=>a!==b&&(a&b)===a)).map(m=>array(p,m)),maximum_cardinality:Math.max(...F.map(count))};
+ case 'common_cardinality_profile':return{counts:Array.from({length:p.E.length+1},(_,n)=>F.filter(m=>count(m)===n).length)};
+ case 'exchange_sources':return{sources:graph(p,I).sources};
+ case 'exchange_sinks':return{sinks:graph(p,I).sinks};
+ case 'exchange_arcs':return{arcs:graph(p,I).arcs};
+ case 'augmenting_path':return{path:shortest(p,I)};
+ case 'augment_step':return step(p,I);
+ default:fail('UNKNOWN_OPERATION');
+ }
+}
+function evaluate(request){try{fields(request,['operation','input']);if(!operations.includes(request.operation))fail('UNKNOWN_OPERATION');return{ok:true,value:value(request.operation,request.input),error:null,authority:false};}catch(e){return{ok:false,value:null,error:e.message,authority:false};}}
+module.exports={evaluate,operations,fields,record,list,fail,count,lexical,array,ordered,mask,parsePair,common,selection,graph,shortest,step};
