@@ -1,0 +1,829 @@
+{
+  "boundary": "Bounded same-owner synthetic software and documentation evidence only. No empirical confirmation, real participants, professional judgment, production identity, deployment, legal or cultural ratification, affected-party or Maori authority, complete privacy/accessibility/security, independent reproduction, consciousness/personhood, Theory-of-Everything proof, canon or Stage 20 claim. Maori concepts remain under Maori authority. NOT_READY_FOR_STAGE_20.",
+  "cases": [
+    {
+      "id": "empty_pair",
+      "pair": {
+        "ground": [],
+        "left": [
+          []
+        ],
+        "right": [
+          []
+        ]
+      },
+      "selected": [],
+      "weights": [],
+      "why": "Empty ground has one common set and no augmenting path."
+    },
+    {
+      "id": "one_sided_loop",
+      "pair": {
+        "ground": [
+          "a"
+        ],
+        "left": [
+          [],
+          [
+            "a"
+          ]
+        ],
+        "right": [
+          []
+        ]
+      },
+      "selected": [],
+      "weights": [
+        7
+      ],
+      "why": "A right-side loop prevents the sole element from being common."
+    },
+    {
+      "id": "uniform_against_free",
+      "pair": {
+        "ground": [
+          "a",
+          "b"
+        ],
+        "left": [
+          [],
+          [
+            "a"
+          ],
+          [
+            "b"
+          ]
+        ],
+        "right": [
+          [],
+          [
+            "a"
+          ],
+          [
+            "b"
+          ],
+          [
+            "a",
+            "b"
+          ]
+        ]
+      },
+      "selected": [
+        "a"
+      ],
+      "weights": [
+        2,
+        -3
+      ],
+      "why": "The left rank-one constraint binds while the right family is free."
+    },
+    {
+      "id": "disjoint_nonloops",
+      "pair": {
+        "ground": [
+          "a",
+          "b"
+        ],
+        "left": [
+          [],
+          [
+            "a"
+          ]
+        ],
+        "right": [
+          [],
+          [
+            "b"
+          ]
+        ]
+      },
+      "selected": [],
+      "weights": [
+        5,
+        4
+      ],
+      "why": "Each side permits a different singleton, leaving only the empty common set."
+    },
+    {
+      "id": "three_element_greedy_trap",
+      "pair": {
+        "ground": [
+          "a",
+          "b",
+          "c"
+        ],
+        "left": [
+          [],
+          [
+            "a"
+          ],
+          [
+            "b"
+          ],
+          [
+            "c"
+          ],
+          [
+            "a",
+            "c"
+          ],
+          [
+            "b",
+            "c"
+          ]
+        ],
+        "right": [
+          [],
+          [
+            "a"
+          ],
+          [
+            "b"
+          ],
+          [
+            "c"
+          ],
+          [
+            "a",
+            "b"
+          ],
+          [
+            "b",
+            "c"
+          ]
+        ]
+      },
+      "selected": [
+        "a"
+      ],
+      "weights": [
+        10,
+        6,
+        6
+      ],
+      "why": "The maximal singleton a has weight ten; exchanging it for b and c yields twelve."
+    },
+    {
+      "id": "crossed_four_partition",
+      "pair": {
+        "ground": [
+          "a",
+          "b",
+          "c",
+          "d"
+        ],
+        "left": [
+          [],
+          [
+            "a"
+          ],
+          [
+            "b"
+          ],
+          [
+            "c"
+          ],
+          [
+            "d"
+          ],
+          [
+            "a",
+            "c"
+          ],
+          [
+            "a",
+            "d"
+          ],
+          [
+            "b",
+            "c"
+          ],
+          [
+            "b",
+            "d"
+          ]
+        ],
+        "right": [
+          [],
+          [
+            "a"
+          ],
+          [
+            "b"
+          ],
+          [
+            "c"
+          ],
+          [
+            "d"
+          ],
+          [
+            "a",
+            "b"
+          ],
+          [
+            "a",
+            "d"
+          ],
+          [
+            "b",
+            "c"
+          ],
+          [
+            "c",
+            "d"
+          ]
+        ]
+      },
+      "selected": [
+        "a"
+      ],
+      "weights": [
+        9,
+        8,
+        8,
+        1
+      ],
+      "why": "Crossing partitions admit ad and bc; the two maximum sets have different weights."
+    },
+    {
+      "id": "triangle_loop_and_colour",
+      "pair": {
+        "ground": [
+          "a",
+          "b",
+          "c",
+          "d"
+        ],
+        "left": [
+          [],
+          [
+            "a"
+          ],
+          [
+            "b"
+          ],
+          [
+            "c"
+          ],
+          [
+            "a",
+            "b"
+          ],
+          [
+            "a",
+            "c"
+          ],
+          [
+            "b",
+            "c"
+          ]
+        ],
+        "right": [
+          [],
+          [
+            "a"
+          ],
+          [
+            "b"
+          ],
+          [
+            "c"
+          ],
+          [
+            "d"
+          ],
+          [
+            "a",
+            "c"
+          ],
+          [
+            "a",
+            "d"
+          ],
+          [
+            "b",
+            "c"
+          ],
+          [
+            "b",
+            "d"
+          ]
+        ]
+      },
+      "selected": [
+        "a"
+      ],
+      "weights": [
+        4,
+        3,
+        5,
+        -1
+      ],
+      "why": "A triangle graphic family with a loop meets a two-colour partition constraint."
+    },
+    {
+      "id": "negative_zero_and_excluded_weight",
+      "pair": {
+        "ground": [
+          "a",
+          "b",
+          "c",
+          "d"
+        ],
+        "left": [
+          [],
+          [
+            "a"
+          ],
+          [
+            "b"
+          ],
+          [
+            "c"
+          ],
+          [
+            "d"
+          ],
+          [
+            "a",
+            "b"
+          ],
+          [
+            "a",
+            "c"
+          ],
+          [
+            "a",
+            "d"
+          ],
+          [
+            "b",
+            "c"
+          ],
+          [
+            "b",
+            "d"
+          ],
+          [
+            "c",
+            "d"
+          ]
+        ],
+        "right": [
+          [],
+          [
+            "a"
+          ],
+          [
+            "b"
+          ],
+          [
+            "c"
+          ],
+          [
+            "a",
+            "b"
+          ],
+          [
+            "a",
+            "c"
+          ],
+          [
+            "b",
+            "c"
+          ],
+          [
+            "a",
+            "b",
+            "c"
+          ]
+        ]
+      },
+      "selected": [
+        "b"
+      ],
+      "weights": [
+        -2,
+        0,
+        4,
+        8
+      ],
+      "why": "A high-weight loop remains excluded and a zero-weight element tests the tie rule."
+    },
+    {
+      "id": "five_element_partition_path",
+      "pair": {
+        "ground": [
+          "a",
+          "b",
+          "c",
+          "d",
+          "e"
+        ],
+        "left": [
+          [],
+          [
+            "a"
+          ],
+          [
+            "b"
+          ],
+          [
+            "c"
+          ],
+          [
+            "d"
+          ],
+          [
+            "e"
+          ],
+          [
+            "a",
+            "c"
+          ],
+          [
+            "a",
+            "d"
+          ],
+          [
+            "a",
+            "e"
+          ],
+          [
+            "b",
+            "c"
+          ],
+          [
+            "b",
+            "d"
+          ],
+          [
+            "b",
+            "e"
+          ],
+          [
+            "c",
+            "e"
+          ],
+          [
+            "d",
+            "e"
+          ],
+          [
+            "a",
+            "c",
+            "e"
+          ],
+          [
+            "a",
+            "d",
+            "e"
+          ],
+          [
+            "b",
+            "c",
+            "e"
+          ],
+          [
+            "b",
+            "d",
+            "e"
+          ]
+        ],
+        "right": [
+          [],
+          [
+            "a"
+          ],
+          [
+            "b"
+          ],
+          [
+            "c"
+          ],
+          [
+            "d"
+          ],
+          [
+            "e"
+          ],
+          [
+            "a",
+            "b"
+          ],
+          [
+            "a",
+            "d"
+          ],
+          [
+            "a",
+            "e"
+          ],
+          [
+            "b",
+            "c"
+          ],
+          [
+            "b",
+            "d"
+          ],
+          [
+            "c",
+            "d"
+          ],
+          [
+            "c",
+            "e"
+          ],
+          [
+            "d",
+            "e"
+          ],
+          [
+            "a",
+            "b",
+            "d"
+          ],
+          [
+            "a",
+            "d",
+            "e"
+          ],
+          [
+            "b",
+            "c",
+            "d"
+          ],
+          [
+            "c",
+            "d",
+            "e"
+          ]
+        ]
+      },
+      "selected": [
+        "a",
+        "d"
+      ],
+      "weights": [
+        8,
+        7,
+        6,
+        5,
+        4
+      ],
+      "why": "Three blocks on each side create a nontrivial common triple."
+    },
+    {
+      "id": "six_element_alternating_cycle",
+      "pair": {
+        "ground": [
+          "a",
+          "b",
+          "c",
+          "d",
+          "e",
+          "f"
+        ],
+        "left": [
+          [],
+          [
+            "a"
+          ],
+          [
+            "b"
+          ],
+          [
+            "c"
+          ],
+          [
+            "d"
+          ],
+          [
+            "e"
+          ],
+          [
+            "f"
+          ],
+          [
+            "a",
+            "c"
+          ],
+          [
+            "a",
+            "d"
+          ],
+          [
+            "a",
+            "e"
+          ],
+          [
+            "a",
+            "f"
+          ],
+          [
+            "b",
+            "c"
+          ],
+          [
+            "b",
+            "d"
+          ],
+          [
+            "b",
+            "e"
+          ],
+          [
+            "b",
+            "f"
+          ],
+          [
+            "c",
+            "e"
+          ],
+          [
+            "c",
+            "f"
+          ],
+          [
+            "d",
+            "e"
+          ],
+          [
+            "d",
+            "f"
+          ],
+          [
+            "a",
+            "c",
+            "e"
+          ],
+          [
+            "a",
+            "c",
+            "f"
+          ],
+          [
+            "a",
+            "d",
+            "e"
+          ],
+          [
+            "a",
+            "d",
+            "f"
+          ],
+          [
+            "b",
+            "c",
+            "e"
+          ],
+          [
+            "b",
+            "c",
+            "f"
+          ],
+          [
+            "b",
+            "d",
+            "e"
+          ],
+          [
+            "b",
+            "d",
+            "f"
+          ]
+        ],
+        "right": [
+          [],
+          [
+            "a"
+          ],
+          [
+            "b"
+          ],
+          [
+            "c"
+          ],
+          [
+            "d"
+          ],
+          [
+            "e"
+          ],
+          [
+            "f"
+          ],
+          [
+            "a",
+            "b"
+          ],
+          [
+            "a",
+            "d"
+          ],
+          [
+            "a",
+            "e"
+          ],
+          [
+            "a",
+            "f"
+          ],
+          [
+            "b",
+            "c"
+          ],
+          [
+            "b",
+            "d"
+          ],
+          [
+            "b",
+            "f"
+          ],
+          [
+            "c",
+            "d"
+          ],
+          [
+            "c",
+            "e"
+          ],
+          [
+            "c",
+            "f"
+          ],
+          [
+            "d",
+            "e"
+          ],
+          [
+            "e",
+            "f"
+          ],
+          [
+            "a",
+            "b",
+            "d"
+          ],
+          [
+            "a",
+            "b",
+            "f"
+          ],
+          [
+            "a",
+            "d",
+            "e"
+          ],
+          [
+            "a",
+            "e",
+            "f"
+          ],
+          [
+            "b",
+            "c",
+            "d"
+          ],
+          [
+            "b",
+            "c",
+            "f"
+          ],
+          [
+            "c",
+            "d",
+            "e"
+          ],
+          [
+            "c",
+            "e",
+            "f"
+          ]
+        ]
+      },
+      "selected": [
+        "a",
+        "d"
+      ],
+      "weights": [
+        10,
+        9,
+        8,
+        7,
+        6,
+        5
+      ],
+      "why": "Two distinct common triples and an alternating cycle exercise deterministic choices."
+    }
+  ],
+  "ground_bound": 8,
+  "integer_weight_bound": 1000000,
+  "ordering": "Sorted labels; set families shortlex; shortest paths length then lexical; weighted ties prefer larger cardinality then lexical.",
+  "owner": "Saelin Reed",
+  "phase": "v691-v4",
+  "schema": "ghc.family.common-pair-cases.v1"
+}

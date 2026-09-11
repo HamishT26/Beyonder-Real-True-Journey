@@ -1,0 +1,5 @@
+# Current authorization
+
+Hamish current v5 sequential continuation through v725-v8, conveyed by Tamar Vey once to the existing Saelin Reed task, authorizes solo Saelin v691-v4 with a fresh parentless owner lane and Tamar as content provenance. Current v5 policy is hash-bound in guidance-receipt.json. No private task identifier or stream is retained. The later Tamar send-attempt and delivery receipts preserve two route failures and establish the latest external baseline of 361 methods and 8,885 direct witnesses. They do not rewrite the earlier repository or composite seal.
+
+Bounded same-owner synthetic software and documentation evidence only. No empirical confirmation, real participants, professional judgment, production identity, deployment, legal or cultural ratification, affected-party or Maori authority, complete privacy/accessibility/security, independent reproduction, consciousness/personhood, Theory-of-Everything proof, canon or Stage 20 claim. Maori concepts remain under Maori authority. NOT_READY_FOR_STAGE_20.
