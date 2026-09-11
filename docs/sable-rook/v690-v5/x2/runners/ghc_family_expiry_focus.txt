@@ -1,0 +1,3 @@
+'use strict';
+const fs=require('node:fs'),path=require('node:path'),util=require('node:util'),core=require('../core.txt'),ops=["evidence_expiry_state","focus_order_trace"];
+if(process.argv[2]==='--smoke'){const plan=JSON.parse(fs.readFileSync(path.join(__dirname,'..','..','plan','new-proposals.json'),'utf8')).proposals,p=plan.find(r=>ops.includes(r.operation)),actual=core.evaluate(p.request);process.stdout.write(JSON.stringify({runner:path.basename(__filename),operation:p.operation,passed:util.isDeepStrictEqual(actual,p.expected_output)})+'\n');}else{const request=JSON.parse(process.argv[2]||fs.readFileSync(0,'utf8'));if(!ops.includes(request.op))throw Error('operation outside runner group');process.stdout.write(JSON.stringify(core.evaluate(request))+'\n');}

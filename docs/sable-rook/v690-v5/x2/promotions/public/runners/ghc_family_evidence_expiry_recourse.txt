@@ -1,0 +1,4 @@
+'use strict';
+const fs=require('node:fs'),path=require('node:path'),util=require('node:util'),x1=require('../x1/core.txt'),x2=require('../x2/core.txt'),ops=["evidence_expiry_state","locale_number_readback","real_user_evaluation_gate"];
+const evaluate=r=>(x1.operations[r.op]?x1:x2).evaluate(r);
+if(process.argv[2]==='--smoke'){const request={"op":"evidence_expiry_state","payload":{"case_token":"evidence_expiry_state-01","expires_at":1005,"observed_at":1001,"revoked":false}},expected={"error":null,"ok":true,"value":{"state":"active","usable":true}},actual=evaluate(request);process.stdout.write(JSON.stringify({runner:path.basename(__filename),passed:util.isDeepStrictEqual(actual,expected),operation:request.op})+'\n');}else{const request=JSON.parse(process.argv[2]||fs.readFileSync(0,'utf8'));if(!ops.includes(request.op))throw Error('operation outside public group');process.stdout.write(JSON.stringify(evaluate(request))+'\n');}
