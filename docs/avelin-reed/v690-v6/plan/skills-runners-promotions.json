@@ -1,0 +1,218 @@
+{
+  "schema": "ghc.family.skills-runners-plan.v5",
+  "local_skills": [
+    {
+      "name": "ghc-family-lts-enabled",
+      "session": "x1",
+      "operation": "lts_enabled"
+    },
+    {
+      "name": "ghc-family-lts-reachable",
+      "session": "x1",
+      "operation": "lts_reachable"
+    },
+    {
+      "name": "ghc-family-lts-bad-trace",
+      "session": "x1",
+      "operation": "lts_bad_trace"
+    },
+    {
+      "name": "ghc-family-lts-deadlocks",
+      "session": "x1",
+      "operation": "lts_deadlocks"
+    },
+    {
+      "name": "ghc-family-lts-ef",
+      "session": "x1",
+      "operation": "lts_ef"
+    },
+    {
+      "name": "ghc-family-lts-af",
+      "session": "x1",
+      "operation": "lts_af"
+    },
+    {
+      "name": "ghc-family-lts-eg",
+      "session": "x1",
+      "operation": "lts_eg"
+    },
+    {
+      "name": "ghc-family-lts-eu",
+      "session": "x1",
+      "operation": "lts_eu"
+    },
+    {
+      "name": "ghc-family-lts-scc",
+      "session": "x1",
+      "operation": "lts_scc"
+    },
+    {
+      "name": "ghc-family-lts-conflicts",
+      "session": "x1",
+      "operation": "lts_conflicts"
+    },
+    {
+      "name": "ghc-family-lts-simulation",
+      "session": "x2",
+      "operation": "lts_simulation"
+    },
+    {
+      "name": "ghc-family-lts-bisimulation",
+      "session": "x2",
+      "operation": "lts_bisimulation"
+    },
+    {
+      "name": "ghc-family-lts-trace-difference",
+      "session": "x2",
+      "operation": "lts_trace_difference"
+    },
+    {
+      "name": "ghc-family-lts-quotient",
+      "session": "x2",
+      "operation": "lts_quotient"
+    },
+    {
+      "name": "ghc-family-lts-product",
+      "session": "x2",
+      "operation": "lts_product"
+    },
+    {
+      "name": "ghc-family-lts-game",
+      "session": "x2",
+      "operation": "lts_game"
+    },
+    {
+      "name": "ghc-family-lts-narration",
+      "session": "x2",
+      "operation": "lts_narration"
+    },
+    {
+      "name": "ghc-family-lts-observer",
+      "session": "x2",
+      "operation": "lts_observer"
+    },
+    {
+      "name": "ghc-family-lts-evaluation-gap",
+      "session": "x2",
+      "operation": "lts_evaluation_gap"
+    },
+    {
+      "name": "ghc-family-lts-authority-hold",
+      "session": "x2",
+      "operation": "lts_authority_hold"
+    }
+  ],
+  "runners": {
+    "x1": [
+      "ghc_family_transition_x1_1.txt",
+      "ghc_family_transition_x1_2.txt",
+      "ghc_family_transition_x1_3.txt",
+      "ghc_family_transition_x1_4.txt",
+      "ghc_family_transition_x1_5.txt"
+    ],
+    "x2": [
+      "ghc_family_transition_x2_1.txt",
+      "ghc_family_transition_x2_2.txt",
+      "ghc_family_transition_x2_3.txt",
+      "ghc_family_transition_x2_4.txt",
+      "ghc_family_transition_x2_5.txt"
+    ]
+  },
+  "global_groups": [
+    {
+      "name": "ghc-family-transition-counterexamples",
+      "runner": "ghc_family_transition_counterexamples.txt",
+      "operations": [
+        "lts_enabled",
+        "lts_reachable",
+        "lts_bad_trace",
+        "lts_deadlocks"
+      ],
+      "source_skills": [
+        "ghc-family-lts-enabled",
+        "ghc-family-lts-reachable",
+        "ghc-family-lts-bad-trace",
+        "ghc-family-lts-deadlocks"
+      ]
+    },
+    {
+      "name": "ghc-family-branching-time-contracts",
+      "runner": "ghc_family_branching_time_contracts.txt",
+      "operations": [
+        "lts_ef",
+        "lts_af",
+        "lts_eg",
+        "lts_eu"
+      ],
+      "source_skills": [
+        "ghc-family-lts-ef",
+        "ghc-family-lts-af",
+        "ghc-family-lts-eg",
+        "ghc-family-lts-eu"
+      ]
+    },
+    {
+      "name": "ghc-family-transition-equivalence",
+      "runner": "ghc_family_transition_equivalence.txt",
+      "operations": [
+        "lts_scc",
+        "lts_conflicts",
+        "lts_simulation",
+        "lts_bisimulation",
+        "lts_trace_difference",
+        "lts_quotient"
+      ],
+      "source_skills": [
+        "ghc-family-lts-scc",
+        "ghc-family-lts-conflicts",
+        "ghc-family-lts-simulation",
+        "ghc-family-lts-bisimulation",
+        "ghc-family-lts-trace-difference",
+        "ghc-family-lts-quotient"
+      ]
+    },
+    {
+      "name": "ghc-family-observation-projection-boundary",
+      "runner": "ghc_family_observation_projection_boundary.txt",
+      "operations": [
+        "lts_product",
+        "lts_narration",
+        "lts_observer"
+      ],
+      "source_skills": [
+        "ghc-family-lts-product",
+        "ghc-family-lts-narration",
+        "ghc-family-lts-observer"
+      ]
+    },
+    {
+      "name": "ghc-family-transition-recourse-gates",
+      "runner": "ghc_family_transition_recourse_gates.txt",
+      "operations": [
+        "lts_game",
+        "lts_evaluation_gap",
+        "lts_authority_hold"
+      ],
+      "source_skills": [
+        "ghc-family-lts-game",
+        "ghc-family-lts-evaluation-gap",
+        "ghc-family-lts-authority-hold"
+      ]
+    }
+  ],
+  "successor_skill_ideas": [
+    "ghc-family-counterexample-minimization",
+    "ghc-family-abstraction-refinement-contract",
+    "ghc-family-fairness-assumption-review",
+    "ghc-family-observer-branching-audit",
+    "ghc-family-participatory-trace-review"
+  ],
+  "successor_runner_ideas": [
+    "ghc_family_counterexample_minimization.txt",
+    "ghc_family_abstraction_refinement_contract.txt",
+    "ghc_family_fairness_assumption_review.txt",
+    "ghc_family_observer_branching_audit.txt",
+    "ghc_family_participatory_trace_review.txt"
+  ],
+  "boundary": "Bounded same-owner synthetic software and documentation evidence. No empirical GMUT confirmation, participant effectiveness, identity continuity, consciousness, personhood, qualification, production readiness, professional, legal, cultural, affected-party or Maori authority, complete privacy or accessibility, exhaustive security, independent reproduction, AGI or ASI, Theory-of-Everything proof, canon, or Stage 20 authority. NOT_READY_FOR_STAGE_20."
+}

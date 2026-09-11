@@ -1,0 +1,443 @@
+{
+  "schema": "ghc.family.operation-families.v5",
+  "owner": "Avelin Reed",
+  "phase": "v690-v6",
+  "families": [
+    {
+      "operation": "lts_enabled",
+      "title": "Enabled action inventory",
+      "practice": "model",
+      "pillar": "body",
+      "hypothesis": "Read distinct enabled action labels at the declared start, retaining nondeterministic edges.",
+      "session": "x1",
+      "expected_disposition": "completed"
+    },
+    {
+      "operation": "lts_reachable",
+      "title": "Reachable state closure",
+      "practice": "model",
+      "pillar": "body",
+      "hypothesis": "Return exactly the states reachable from the declared start, including the zero-step path.",
+      "session": "x1",
+      "expected_disposition": "completed"
+    },
+    {
+      "operation": "lts_bad_trace",
+      "title": "Shortest bad-state counterexample",
+      "practice": "interface",
+      "pillar": "body",
+      "hypothesis": "Find the shortest action-sorted path to a target; null means no target is reachable in this finite graph.",
+      "session": "x1",
+      "expected_disposition": "completed"
+    },
+    {
+      "operation": "lts_deadlocks",
+      "title": "Reachable deadlock inventory",
+      "practice": "model",
+      "pillar": "body",
+      "hypothesis": "Report reachable states with no outgoing raw transition; never erase deadlocks through totalization.",
+      "session": "x1",
+      "expected_disposition": "completed"
+    },
+    {
+      "operation": "lts_ef",
+      "title": "Existential eventual target",
+      "practice": "model",
+      "pillar": "body",
+      "hypothesis": "Classify states from which some finite path reaches a target.",
+      "session": "x1",
+      "expected_disposition": "completed"
+    },
+    {
+      "operation": "lts_af",
+      "title": "Universal eventual target",
+      "practice": "model",
+      "pillar": "body",
+      "hypothesis": "Classify states where every path eventually reaches a target, with deadlocks stuttering forever.",
+      "session": "x1",
+      "expected_disposition": "completed"
+    },
+    {
+      "operation": "lts_eg",
+      "title": "Existential persistent region",
+      "practice": "model",
+      "pillar": "body",
+      "hypothesis": "Classify states with some infinite path entirely inside the allowed region under explicit deadlock stuttering.",
+      "session": "x1",
+      "expected_disposition": "completed"
+    },
+    {
+      "operation": "lts_eu",
+      "title": "Existential until target",
+      "practice": "model",
+      "pillar": "body",
+      "hypothesis": "Classify states that can reach a target while all earlier states stay in the allowed region.",
+      "session": "x1",
+      "expected_disposition": "completed"
+    },
+    {
+      "operation": "lts_scc",
+      "title": "Recurrent component structure",
+      "practice": "causal",
+      "pillar": "mind",
+      "hypothesis": "Partition the complete graph into strongly connected components and mark raw cycles.",
+      "session": "x1",
+      "expected_disposition": "completed"
+    },
+    {
+      "operation": "lts_conflicts",
+      "title": "Nondeterministic action conflicts",
+      "practice": "interface",
+      "pillar": "body",
+      "hypothesis": "List each state/action pair with more than one distinct successor.",
+      "session": "x1",
+      "expected_disposition": "completed"
+    },
+    {
+      "operation": "lts_simulation",
+      "title": "Strong simulation relation",
+      "practice": "model",
+      "pillar": "body",
+      "hypothesis": "Retain pairs for which every left action can be matched by a right action recursively.",
+      "session": "x2",
+      "expected_disposition": "completed"
+    },
+    {
+      "operation": "lts_bisimulation",
+      "title": "Strong bisimulation partition",
+      "practice": "model",
+      "pillar": "body",
+      "hypothesis": "Partition one labelled graph by greatest two-sided action matching.",
+      "session": "x2",
+      "expected_disposition": "completed"
+    },
+    {
+      "operation": "lts_trace_difference",
+      "title": "Bounded trace inclusion counterexample",
+      "practice": "interface",
+      "pillar": "body",
+      "hypothesis": "Find a shortest left trace absent on the right up to the declared depth; absence is bounded, not equivalence.",
+      "session": "x2",
+      "expected_disposition": "completed"
+    },
+    {
+      "operation": "lts_quotient",
+      "title": "Bisimulation quotient readback",
+      "practice": "causal",
+      "pillar": "mind",
+      "hypothesis": "Project action edges between strong bisimulation classes without claiming causal or physical equivalence.",
+      "session": "x2",
+      "expected_disposition": "completed"
+    },
+    {
+      "operation": "lts_product",
+      "title": "Synchronous product reachability",
+      "practice": "causal",
+      "pillar": "mind",
+      "hypothesis": "Explore pairs reached when both models take the same explicit action label.",
+      "session": "x2",
+      "expected_disposition": "completed"
+    },
+    {
+      "operation": "lts_game",
+      "title": "Adversarial reachability region",
+      "practice": "recourse",
+      "pillar": "heart",
+      "hypothesis": "Compute a finite reachability-game winning region with existential controller choice and universal environment choice.",
+      "session": "x2",
+      "expected_disposition": "completed"
+    },
+    {
+      "operation": "lts_narration",
+      "title": "Counterexample step narration",
+      "practice": "interface",
+      "pillar": "body",
+      "hypothesis": "Pair a valid finite trace with ordered text and exact edge records while reserving human comprehensibility.",
+      "session": "x2",
+      "expected_disposition": "represented"
+    },
+    {
+      "operation": "lts_observer",
+      "title": "Observation loss projection",
+      "practice": "causal",
+      "pillar": "mind",
+      "hypothesis": "Keep visible trace events and count explicitly hidden events without equating projection with the original behavior.",
+      "session": "x2",
+      "expected_disposition": "represented"
+    },
+    {
+      "operation": "lts_evaluation_gap",
+      "title": "Evaluation prerequisite missingness",
+      "practice": "interface",
+      "pillar": "body",
+      "hypothesis": "List missing real evaluation modes from supplied evidence labels; this phase supplies none.",
+      "session": "x2",
+      "expected_disposition": "open_gap"
+    },
+    {
+      "operation": "lts_authority_hold",
+      "title": "Release-role vacancy hold",
+      "practice": "recourse",
+      "pillar": "heart",
+      "hypothesis": "Expose missing declared roles while keeping actual external authority and external action false.",
+      "session": "x2",
+      "expected_disposition": "exact_gate"
+    }
+  ],
+  "models": [
+    {
+      "states": [
+        "s0"
+      ],
+      "start": "s0",
+      "edges": []
+    },
+    {
+      "states": [
+        "s0"
+      ],
+      "start": "s0",
+      "edges": [
+        [
+          "s0",
+          "a",
+          "s0"
+        ]
+      ]
+    },
+    {
+      "states": [
+        "s0",
+        "s1"
+      ],
+      "start": "s0",
+      "edges": [
+        [
+          "s0",
+          "a",
+          "s1"
+        ]
+      ]
+    },
+    {
+      "states": [
+        "s0",
+        "s1"
+      ],
+      "start": "s0",
+      "edges": [
+        [
+          "s0",
+          "a",
+          "s1"
+        ],
+        [
+          "s1",
+          "b",
+          "s0"
+        ]
+      ]
+    },
+    {
+      "states": [
+        "s0",
+        "s1",
+        "s2",
+        "s3"
+      ],
+      "start": "s0",
+      "edges": [
+        [
+          "s0",
+          "a",
+          "s1"
+        ],
+        [
+          "s0",
+          "b",
+          "s2"
+        ],
+        [
+          "s1",
+          "c",
+          "s3"
+        ],
+        [
+          "s2",
+          "c",
+          "s3"
+        ],
+        [
+          "s3",
+          "d",
+          "s3"
+        ]
+      ]
+    },
+    {
+      "states": [
+        "s0",
+        "s1",
+        "s2"
+      ],
+      "start": "s0",
+      "edges": [
+        [
+          "s0",
+          "a",
+          "s1"
+        ],
+        [
+          "s0",
+          "b",
+          "s2"
+        ],
+        [
+          "s1",
+          "c",
+          "s1"
+        ]
+      ]
+    },
+    {
+      "states": [
+        "s0",
+        "s1",
+        "s2"
+      ],
+      "start": "s0",
+      "edges": [
+        [
+          "s0",
+          "a",
+          "s1"
+        ],
+        [
+          "s1",
+          "a",
+          "s1"
+        ],
+        [
+          "s2",
+          "b",
+          "s2"
+        ]
+      ]
+    },
+    {
+      "states": [
+        "s0",
+        "s1",
+        "s2",
+        "s3"
+      ],
+      "start": "s0",
+      "edges": [
+        [
+          "s0",
+          "a",
+          "s1"
+        ],
+        [
+          "s0",
+          "a",
+          "s2"
+        ],
+        [
+          "s1",
+          "b",
+          "s3"
+        ],
+        [
+          "s2",
+          "c",
+          "s3"
+        ],
+        [
+          "s3",
+          "d",
+          "s3"
+        ]
+      ]
+    },
+    {
+      "states": [
+        "s0",
+        "s1",
+        "s2",
+        "s3"
+      ],
+      "start": "s0",
+      "edges": [
+        [
+          "s0",
+          "a",
+          "s1"
+        ],
+        [
+          "s0",
+          "b",
+          "s2"
+        ],
+        [
+          "s1",
+          "c",
+          "s3"
+        ],
+        [
+          "s2",
+          "c",
+          "s3"
+        ],
+        [
+          "s3",
+          "d",
+          "s0"
+        ]
+      ]
+    },
+    {
+      "states": [
+        "s0",
+        "s1",
+        "s2",
+        "s3",
+        "s4"
+      ],
+      "start": "s0",
+      "edges": [
+        [
+          "s0",
+          "a",
+          "s1"
+        ],
+        [
+          "s1",
+          "b",
+          "s2"
+        ],
+        [
+          "s2",
+          "c",
+          "s3"
+        ],
+        [
+          "s3",
+          "d",
+          "s4"
+        ],
+        [
+          "s4",
+          "e",
+          "s4"
+        ],
+        [
+          "s2",
+          "x",
+          "s0"
+        ]
+      ]
+    }
+  ],
+  "boundary": "Bounded same-owner synthetic software and documentation evidence. No empirical GMUT confirmation, participant effectiveness, identity continuity, consciousness, personhood, qualification, production readiness, professional, legal, cultural, affected-party or Maori authority, complete privacy or accessibility, exhaustive security, independent reproduction, AGI or ASI, Theory-of-Everything proof, canon, or Stage 20 authority. NOT_READY_FOR_STAGE_20."
+}
