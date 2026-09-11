@@ -1,0 +1,40 @@
+'use strict';
+const fs=require('node:fs'),path=require('node:path'),cp=require('node:child_process');
+const C=require('../plan/tools/common.txt');
+const [skillBank,publicDestination,python]=process.argv.slice(2);
+C.ensure(skillBank&&publicDestination&&python);
+const base=path.resolve('docs/ceryn-alder/v691-v1'),prefix='docs/ceryn-alder/v691-v1';
+const groups=C.read(path.join(base,'plan/tool-promotion-design.json')).groups,cat=C.read(path.join(base,'x2/meta-tool-catalogue.json'));
+const review=C.read(path.join(base,'x2/collision-review-candidate.json'));
+C.ensure(review.findings.length===43&&review.findings.every(r=>r.shared_operations.length>0),'Unexpected collision');
+C.ensure(C.read(path.join(base,'x2/catalogue-validate.json')).valid,'Catalogue invalid');
+for(const c of cat.cards){C.ensure(C.hash(fs.readFileSync(c.source_path))===c.sha256,'Candidate drift');if(c.status==='candidate')C.ensure(C.read(path.join(base,'x2/promotion-readiness',c.card_id+'.json')).state==='ready','Not ready');}
+const maps=groups.map(g=>({source:path.join(base,'x2/promotions/skills',g.name),dest:path.join(skillBank,g.name),label:'skills/'+g.name}));maps.push({source:path.join(base,'x2/promotions/family-raster-lab'),dest:publicDestination,label:'global-tools/family-raster-lab'});
+for(const m of maps)C.ensure(!fs.existsSync(m.dest),'Destination exists; no overwrite');
+C.put(path.join(base,'x2/collision-review.json'),{candidate_sha256:C.hash(fs.readFileSync(path.join(base,'x2/collision-review-candidate.json'))),reviewed_pairs:43,disposition:'intentional shared-operation callers and declared four-guide merges',disjoint_pairs:0,source_callers_retained:true,silent_winner_selected:false,boundary:C.BOUNDARY});
+C.put(path.join(base,'x2/install-plan.json'),{destinations:maps.map(m=>m.label),all_absent:true,overwrite_allowed:false,planned_checks:'20 full-output comparisons, 20 retained-source refusal checks, 5 CLI checks, 5 outside-group invalid subjects and guards, 5 official skill validators, full copied-byte parity.',boundary:C.BOUNDARY});
+const copied=[];
+for(const m of maps){const list=fs.readdirSync(m.source,{recursive:true}).filter(p=>fs.statSync(path.join(m.source,p)).isFile());for(const rel of list){const from=path.join(m.source,rel),to=path.join(m.dest,rel);fs.mkdirSync(path.dirname(to),{recursive:true});fs.copyFileSync(from,to,fs.constants.COPYFILE_EXCL);const source_sha256=C.hash(fs.readFileSync(from)),installed_sha256=C.hash(fs.readFileSync(to));copied.push({source:path.relative(process.cwd(),from).replaceAll('\\','/'),installed:m.label+'/'+rel.replaceAll('\\','/'),source_sha256,installed_sha256,match:source_sha256===installed_sha256});}}
+const defs=C.read(path.join(base,'plan/definitions.json')).proposals,witnesses=[],checks=[];
+const witness=(id,procedure,result,expected,observed,negative=[])=>witnesses.push({witness_id:id,method_id:'CA6911-PROMOTION',procedure,result,expected,observed,retained_negative_ids:negative});
+witness('CA6911-PROMOTION-READY','Valid catalogue, fresh hashes, reviewed shared contracts and ten readiness receipts','pass',true,true);
+for(const[gi,g]of groups.entries()){
+ const runner=g.name.replaceAll('-','_')+'.txt',p=path.join(publicDestination,'runners',runner),module=require(p);
+ const validator=cp.spawnSync(python,['-B','-X','utf8',path.join(skillBank,'.system/skill-creator/scripts/quick_validate.py'),path.join(skillBank,g.name)],{encoding:'utf8'});
+ witness('CA6911-PROMOTION-SKILL-'+gi,'Installed official skill validation',validator.status===0?'pass':'fail',0,validator.status);
+ for(const op of g.operations){const d=defs.find(d=>d.operation===op),request=structuredClone(d.request),before=C.hash(C.stable(request)),result=module.run(request),candidate=module.run(structuredClone(d.candidate_subject)),positive=C.equal(result,d.expected_output)&&before===C.hash(C.stable(request)),refusal=C.equal(candidate,d.candidate_expected);
+  witness('CA6911-PROMOTION-'+op+'-FULL','Installed typed output and nonmutation',positive?'pass':'fail',d.expected_output,result);
+  witness('CA6911-PROMOTION-'+op+'-REFUSAL','Installed refusal for already retained source invalid subject',refusal?'pass':'fail',d.candidate_expected,candidate,[d.proposal_id+'-INVALID']);
+  checks.push({group:g.name,operation:op,positive,refusal,nonmutation:before===C.hash(C.stable(request)),retained_invalid_subject:d.proposal_id+'-INVALID'});
+ }
+ const first=defs.find(d=>d.operation===g.operations[0]),cli=C.parseStrict(cp.execFileSync(process.execPath,[p],{input:JSON.stringify(first.request),encoding:'utf8'}));
+ witness('CA6911-PROMOTION-CLI-'+gi,'Installed CLI framing and relative dependency closure',C.equal(cli,first.expected_output)?'pass':'fail',first.expected_output,cli);
+ const invalid={op:'unsupported_public_group_'+gi},observed=module.run(invalid),id='CA6911-PROMOTION-OUTSIDE-'+gi;
+ witness(id,'Distinct outside-group request has no acceptance credit','fail','Supported operation',observed);
+ witness(id+'-GUARD','Outside-group operation is refused',C.equal(observed,C.bad('unknown_operation'))?'pass':'fail',C.bad('unknown_operation'),observed,[id]);
+}
+const parity=copied.every(r=>r.match);witness('CA6911-PROMOTION-PARITY','All copied source and installed bytes match',parity?'pass':'fail',true,parity);
+const unexpected=witnesses.filter(w=>w.result==='fail'&&!/^CA6911-PROMOTION-OUTSIDE-\d$/.test(w.witness_id));
+C.put(path.join(base,'x2/global-promotion-receipt.json'),{owner:'Ceryn Alder',phase:'v691-v1',valid:unexpected.length===0,merged_skills:5,public_runners:5,dependency_modules:3,files:copied,checks,overwrites:0,earlier_callers_retained:true,package_installations:0,scope:'Actual finite algorithms; same owner, not independent reproduction.',boundary:C.BOUNDARY});
+C.put(path.join(base,'x2/promotion-method-flow.json'),C.ledger('x2-promotion',[{method_id:'CA6911-PROMOTION',title:'Curated algorithm packaging, installed contracts and compatibility'}],witnesses));
+C.ensure(unexpected.length===0,'Installed mismatch retained');console.log(JSON.stringify({valid:true,skills:5,runners:5,dependency_modules:3,copied_files:copied.length,positive_contracts:20,retained_source_refusals:20,cli_checks:5,new_outside_subjects:5,byte_parity:parity,witnesses:witnesses.length}));

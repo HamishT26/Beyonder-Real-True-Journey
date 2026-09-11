@@ -1,0 +1,37 @@
+{
+  "status": "DEFINED_BEFORE_EXECUTION",
+  "separate_from_core_200": true,
+  "cases": [
+    {
+      "id": "CA6911-S001",
+      "claim_under_test": "An interval enclosure is always the exact range even when inputs are dependent.",
+      "requests": [{"op":"interval_pixel_propagation","intervals":[[-1,1],[-1,1]],"coefficients":[1,-1],"offset":0}],
+      "expected_enclosure": [-2,2],
+      "coupled_constraint": "The two symbols denote the same value x; x-x is zero.",
+      "expected_coupled_range": [0,0],
+      "expected_claim_result": false,
+      "disposition": "represented"
+    },
+    {
+      "id": "CA6911-S002",
+      "claim_under_test": "A block-mean output uniquely determines its source plane.",
+      "requests": [
+        {"op":"downsample_block_means","grid":[[1,-1],[-1,1]],"block_width":2,"block_height":2},
+        {"op":"downsample_block_means","grid":[[0,0],[0,0]],"block_width":2,"block_height":2}
+      ],
+      "expected_equal_outputs": true,
+      "expected_distinct_inputs": true,
+      "expected_claim_result": false,
+      "disposition": "represented"
+    },
+    {
+      "id": "CA6911-S003",
+      "claim_under_test": "Complete synthetic declarations confer external image-publication authority.",
+      "requests": [{"op":"image_release_obligation_matrix","asset":"synthetic-counterexample","declarations":{"provenance":true,"license":true,"review":true},"external_authority":false}],
+      "expected_external_action": false,
+      "expected_claim_result": false,
+      "disposition": "exact_gate"
+    }
+  ],
+  "boundary": "Finite classical counterexamples and synthetic authority reservations only. No discovery, empirical evidence, real authorization, independent reproduction or Stage 20 credit."
+}

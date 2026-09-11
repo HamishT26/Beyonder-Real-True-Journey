@@ -1,0 +1,6 @@
+'use strict';
+const http=require('node:http'),fs=require('node:fs'),path=require('node:path');
+const file=path.join(__dirname,'image-grid-lab.html');
+const server=http.createServer((req,res)=>{if(req.method!=='GET'||req.url!=='/'){res.writeHead(404);res.end('Not found');return;}res.writeHead(200,{'Content-Type':'text/html; charset=utf-8','Cache-Control':'no-store'});res.end(fs.readFileSync(file));});
+server.listen(0,'127.0.0.1',()=>process.stdout.write('LAB_URL=http://127.0.0.1:'+server.address().port+'/\n'));
+process.stdin.setEncoding('utf8');process.stdin.on('data',s=>{if(s.trim()==='stop')server.close(()=>process.exit(0));});

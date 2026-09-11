@@ -1,0 +1,12 @@
+'use strict';
+const path=require('node:path'),C=require('../plan/tools/common.txt'),{run}=require('./engine.txt');
+const plan=C.read(path.join(__dirname,'supplement-plan.json'));
+const rows=plan.cases.map(p=>{const observed=p.requests.map(r=>run(structuredClone(r)));let passes;
+ if(p.id==='CA6911-S001')passes=C.equal(observed[0].value.interval,p.expected_enclosure)&&!C.equal(p.expected_enclosure,p.expected_coupled_range);
+ if(p.id==='CA6911-S002')passes=C.equal(observed[0],observed[1])&&!C.equal(p.requests[0],p.requests[1]);
+ if(p.id==='CA6911-S003')passes=observed[0].value.missing.length===0&&observed[0].value.external_action===false;
+ return{...p,observed,claim_result:false,guard_passed:passes,original_claim_success_credit:0,source_discovery_credit:0};});
+C.put(path.join(__dirname,'supplement-results.json'),{valid:rows.every(r=>r.guard_passed),separate_from_core_200:true,rows,boundary:C.BOUNDARY});
+const witnesses=rows.flatMap(r=>[{witness_id:r.id+'-CLAIM',method_id:'CA6911-SUPPLEMENT',procedure:r.claim_under_test,result:'fail',expected:true,observed:false},{witness_id:r.id+'-REFUTER',method_id:'CA6911-SUPPLEMENT',procedure:'Preregistered finite counterexample',result:r.guard_passed?'pass':'fail',expected:true,observed:r.guard_passed,retained_negative_ids:[r.id+'-CLAIM']}]);
+C.put(path.join(__dirname,'supplement-method-flow.json'),C.ledger('x2-supplement',[{method_id:'CA6911-SUPPLEMENT',title:'Dependence, noninjectivity and authority counterexamples'}],witnesses));
+C.ensure(rows.every(r=>r.guard_passed),'Supplement mismatch');console.log(JSON.stringify({valid:true,claims_retained_false:3,passing_refuters:3,core_credit:0}));

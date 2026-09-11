@@ -1,0 +1,24 @@
+'use strict';
+const C=require('../plan/tools/common.txt'),{run}=require('./engine.txt');
+function runTests(){
+ const results=[];const test=(name,fn,negative=false)=>{try{C.ensure(fn());results.push({name,pass:true,negative});}catch(e){results.push({name,pass:false,negative,error:e.message});}};
+ const plan=C.read(require('node:path').join(__dirname,'../plan/definitions.json')).proposals.filter(r=>r.session==='x2');
+ for(const p of plan.filter((_,i)=>i%10===0))test(p.operation+' refuses null field',()=>{const q=structuredClone(p.request);q[Object.keys(q).find(k=>k!=='op')]=null;return C.equal(run(q),C.bad('invalid_value'));},true);
+ test('block support covers every cell once',()=>{const r=run({op:'downsample_block_means',grid:[[1,2,3],[4,5,6]],block_width:2,block_height:2}).value;return r.blocks.reduce((s,b)=>s+b.count,0)===6&&r.blocks.reduce((s,b)=>s+b.sum,0)===21&&r.blocks[1].count===2;});
+ test('histogram endpoint policy is explicit',()=>{const q={op:'finite_histogram_bins',values:[0,1,2],edges:[0,1,2],last_closed:false};return C.equal(run(q).value.counts,[1,1])&&run(q).value.excluded===1&&C.equal(run({...q,last_closed:true}).value.counts,[1,2]);});
+ test('diagonal cells stay separate under four-connectivity',()=>run({op:'mask_connected_regions',grid:[[true,false],[false,true]]}).value.components.length===2);
+ test('foreground traversal is complete without duplication',()=>{const r=run({op:'mask_connected_regions',grid:[[true,true,false],[false,true,true],[true,false,false]]}).value;const flat=r.components.flat().map(c=>c.join(','));return r.foreground===5&&flat.length===new Set(flat).size&&r.components.length===2;});
+ test('two adjacent cells have perimeter six',()=>run({op:'mask_boundary_edges',grid:[[true,true]]}).value.perimeter===6);
+ test('interior mask hole contributes four faces',()=>run({op:'mask_boundary_edges',grid:[[true,true,true],[true,false,true],[true,true,true]]}).value.perimeter===16);
+ test('rank modes preserve tie meaning',()=>{const q={op:'finite_intensity_ranks',values:[5,2,2,9],mode:'dense'};return C.equal(run(q).value.ranks,[2,1,1,3])&&C.equal(run({...q,mode:'competition'}).value.ranks,[3,1,1,4]);});
+ test('signed interval contains all corner images',()=>{const q={op:'interval_pixel_propagation',intervals:[[-2,3],[1,4]],coefficients:[-2,3],offset:1},r=run(q).value.interval;const values=[-2,3].flatMap(a=>[1,4].map(b=>1-2*a+3*b));return C.equal(r,[Math.min(...values),Math.max(...values)]);});
+ test('declared coordinate scaling does not calibrate',()=>{const r=run({op:'grid_resolution_nonconversion',pixels:[2,3],scale:[4,5],origin:[-1,2],unit:'declared_grid_unit'}).value;return C.equal(r.coordinates,[7,17])&&r.physical_calibration===false;});
+ test('legend duplicate text remains visible',()=>C.equal(run({op:'text_symbol_legend_review',rows:[{id:'a',text:' same ',symbol:'x'},{id:'b',text:'same',symbol:'y'}]}).value.duplicate_text,['same']));
+ test('complete synthetic notes do not create evaluation',()=>run({op:'visual_uncertainty_review_vacancies',notes:{denominator:'n',interval_basis:'b',missingness:'m',sampling_rule:'s'},evaluation_count:0}).value.real_evidence_gap===true);
+ test('complete declarations cannot authorize publication',()=>{const r=run({op:'image_release_obligation_matrix',asset:'example',declarations:{provenance:true,license:true,review:true},external_authority:false}).value;return r.missing.length===0&&r.external_action===false&&r.authority_verified===false;});
+ test('nested unknown declaration is refused',()=>C.equal(run({op:'image_release_obligation_matrix',asset:'example',declarations:{provenance:true,license:true,review:true,override:true},external_authority:false}),C.bad('unknown_field')),true);
+ test('ragged mask is refused',()=>C.equal(run({op:'mask_connected_regions',grid:[[true],[false,true]]}),C.bad('invalid_value')),true);
+ return results;
+}
+module.exports={runTests};
+if(require.main===module){const results=runTests();process.stdout.write(JSON.stringify({tests:results.length,passed:results.filter(r=>r.pass).length,results})+'\n');if(results.some(r=>!r.pass))process.exitCode=1;}

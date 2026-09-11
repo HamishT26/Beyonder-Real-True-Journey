@@ -1,0 +1,7 @@
+'use strict';
+const C=require('../plan/tools/common.txt');
+const all={...require('../x1/engine.txt').operations,...require('../x2/engine.txt').operations};
+const names=["grid_resolution_nonconversion","text_symbol_legend_review","visual_uncertainty_review_vacancies","image_release_obligation_matrix"];
+const selected=Object.fromEntries(names.map(n=>[n,all[n]]));
+module.exports={run:r=>C.dispatcher(selected,r)};
+if(require.main===module)C.cli(selected);

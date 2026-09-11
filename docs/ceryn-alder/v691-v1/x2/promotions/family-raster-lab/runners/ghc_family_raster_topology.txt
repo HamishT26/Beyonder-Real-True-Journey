@@ -1,0 +1,7 @@
+'use strict';
+const C=require('../plan/tools/common.txt');
+const all={...require('../x1/engine.txt').operations,...require('../x2/engine.txt').operations};
+const names=["mask_connected_regions","mask_boundary_edges","finite_intensity_ranks","interval_pixel_propagation"];
+const selected=Object.fromEntries(names.map(n=>[n,all[n]]));
+module.exports={run:r=>C.dispatcher(selected,r)};
+if(require.main===module)C.cli(selected);

@@ -1,0 +1,48 @@
+'use strict';
+const C=require('../plan/tools/common.txt');
+const {ensure,exact,integer,array,text,matrix,fraction}=C;
+const operations={
+ downsample_block_means(r){
+  exact(r,['op','grid','block_width','block_height']);const[w,h]=matrix(r.grid);integer(r.block_width,1,16);integer(r.block_height,1,16);const blocks=[];
+  for(let by=0;by<h;by+=r.block_height)for(let bx=0;bx<w;bx+=r.block_width){let sum=0,count=0;for(let y=by;y<Math.min(by+r.block_height,h);y++)for(let x=bx;x<Math.min(bx+r.block_width,w);x++){sum+=r.grid[y][x];count++;}blocks.push({origin:[bx,by],sum,count,mean:fraction(sum,count)});}
+  return{blocks,input_count:w*h};
+ },
+ finite_histogram_bins(r){
+  exact(r,['op','values','edges','last_closed']);array(r.values).forEach(v=>integer(v));array(r.edges,2,32).forEach(v=>integer(v));ensure(r.edges.every((v,i)=>i===0||v>r.edges[i-1]));ensure(typeof r.last_closed==='boolean');const counts=Array(r.edges.length-1).fill(0);let excluded=0;
+  for(const v of r.values){let assigned=false;for(let i=0;i<counts.length;i++)if(v>=r.edges[i]&&(v<r.edges[i+1]||r.last_closed&&i===counts.length-1&&v===r.edges[i+1])){counts[i]++;assigned=true;break;}if(!assigned)excluded++;}
+  return{counts,excluded,last_closed:r.last_closed};
+ },
+ mask_connected_regions(r){
+  exact(r,['op','grid']);const[w,h]=matrix(r.grid,true),seen=new Set(),components=[];
+  for(let y=0;y<h;y++)for(let x=0;x<w;x++){const start=y*w+x;if(!r.grid[y][x]||seen.has(start))continue;const queue=[[x,y]],component=[];seen.add(start);
+   for(let i=0;i<queue.length;i++){const[a,b]=queue[i];component.push([a,b]);for(const[dx,dy]of [[-1,0],[1,0],[0,-1],[0,1]]){const nx=a+dx,ny=b+dy,key=ny*w+nx;if(nx>=0&&nx<w&&ny>=0&&ny<h&&r.grid[ny][nx]&&!seen.has(key)){seen.add(key);queue.push([nx,ny]);}}}
+   component.sort((a,b)=>a[1]-b[1]||a[0]-b[0]);components.push(component);
+  }
+  return{components,foreground:seen.size};
+ },
+ mask_boundary_edges(r){
+  exact(r,['op','grid']);const[w,h]=matrix(r.grid,true),faces=[];
+  for(let y=0;y<h;y++)for(let x=0;x<w;x++)if(r.grid[y][x]){if(y===0||!r.grid[y-1][x])faces.push({cell:[x,y],side:'N'});if(x===w-1||!r.grid[y][x+1])faces.push({cell:[x,y],side:'E'});if(y===h-1||!r.grid[y+1][x])faces.push({cell:[x,y],side:'S'});if(x===0||!r.grid[y][x-1])faces.push({cell:[x,y],side:'W'});}
+  return{faces,perimeter:faces.length};
+ },
+ finite_intensity_ranks(r){
+  exact(r,['op','values','mode']);array(r.values).forEach(v=>integer(v));ensure(['dense','competition'].includes(r.mode));const sorted=[...r.values].sort((a,b)=>a-b),map=new Map();let dense=0;
+  sorted.forEach((v,i)=>{if(!map.has(v)){dense++;map.set(v,r.mode==='dense'?dense:i+1);}});return{ranks:r.values.map(v=>map.get(v)),mode:r.mode};
+ },
+ interval_pixel_propagation(r){
+  exact(r,['op','intervals','coefficients','offset']);array(r.intervals,1,16);array(r.coefficients,r.intervals.length,r.intervals.length).forEach(v=>integer(v));integer(r.offset);
+  let low=r.offset,high=r.offset;for(let i=0;i<r.intervals.length;i++){const[a,b]=array(r.intervals[i],2,2);integer(a);integer(b);ensure(a<=b);const c=r.coefficients[i];if(c>=0){low+=c*a;high+=c*b;}else{low+=c*b;high+=c*a;}}
+  return{interval:[low,high],measurement:false,calibrated:false};
+ },
+ grid_resolution_nonconversion(r){exact(r,['op','pixels','scale','origin','unit']);array(r.pixels,2,2).forEach(v=>integer(v));array(r.scale,2,2).forEach(v=>integer(v,1,1024));array(r.origin,2,2).forEach(v=>integer(v));ensure(r.unit==='declared_grid_unit');return{coordinates:[r.pixels[0]*r.scale[0]+r.origin[0],r.pixels[1]*r.scale[1]+r.origin[1]],unit:r.unit,physical_calibration:false};},
+ text_symbol_legend_review(r){
+  exact(r,['op','rows']);array(r.rows,0,64);const ids=new Set(),missing_text=[],symbols=new Map(),texts=new Map();
+  for(const row of r.rows){exact(row,['id','text','symbol']);text(row.id,64);text(row.text);text(row.symbol,64);ensure(row.id.length>0&&row.symbol.length>0&&!ids.has(row.id));ids.add(row.id);const t=row.text.trim();if(!t)missing_text.push(row.id);else texts.set(t,(texts.get(t)??0)+1);symbols.set(row.symbol,(symbols.get(row.symbol)??0)+1);}
+  return{missing_text,duplicate_symbols:[...symbols].filter(([,n])=>n>1).map(([s])=>s).sort(),duplicate_text:[...texts].filter(([,n])=>n>1).map(([s])=>s).sort(),manual_review_required:true};
+ },
+ visual_uncertainty_review_vacancies(r){exact(r,['op','notes','evaluation_count']);exact(r.notes,['denominator','interval_basis','missingness','sampling_rule']);Object.values(r.notes).forEach(v=>text(v));ensure(r.evaluation_count===0);return{missing_notes:Object.keys(r.notes).filter(k=>!r.notes[k].trim()).sort(),evaluation_count:0,independent_review:false,affected_user_review:false,real_evidence_gap:true};},
+ image_release_obligation_matrix(r){exact(r,['op','asset','declarations','external_authority']);text(r.asset,64);ensure(r.asset.length>0);exact(r.declarations,['provenance','license','review']);Object.values(r.declarations).forEach(v=>ensure(typeof v==='boolean'));ensure(r.external_authority===false);return{asset:r.asset,missing:Object.keys(r.declarations).filter(k=>!r.declarations[k]).sort(),external_action:false,authority_verified:false};}
+};
+const run=r=>C.dispatcher(operations,r);
+module.exports={operations,run};
+if(require.main===module)C.cli(operations);
