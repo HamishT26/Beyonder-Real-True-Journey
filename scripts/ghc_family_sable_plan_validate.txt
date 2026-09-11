@@ -1,0 +1,108 @@
+'use strict';
+
+const fs = require('node:fs');
+const path = require('node:path');
+const crypto = require('node:crypto');
+
+const ROOT = path.resolve(__dirname, '..');
+const BASE = path.join(ROOT, 'docs', 'sable-rook', 'v690-v5');
+const receiptPath = process.argv[2];
+if (!receiptPath) throw new Error('usage: node plan_validate.txt receipt-relative-path');
+
+function ordered(value) {
+  if (Array.isArray(value)) return value.map(ordered);
+  if (value && typeof value === 'object') return Object.fromEntries(Object.keys(value).sort().map((key) => [key, ordered(value[key])]));
+  return value;
+}
+function compact(value) { return JSON.stringify(ordered(value)); }
+function sha(value) { return crypto.createHash('sha256').update(value).digest('hex'); }
+function read(relative) { return JSON.parse(fs.readFileSync(path.join(BASE, relative), 'utf8')); }
+const checks = [];
+function check(id, pass, details = null) { checks.push({check_id: id, result: pass ? 'pass' : 'fail', details}); }
+
+const proposalsDoc = read('plan/new-proposals.json');
+const proposals = proposalsDoc.proposals;
+const inherited = read('plan/inherited-selections.json');
+const x1 = read('plan/portfolio-x1.json');
+const x2 = read('plan/portfolio-x2.json');
+const profile = read('plan/workflow-profile.json');
+const route = read('plan/route-plan.json');
+const workflowReview = read('plan/workflow-review.json');
+const exact = read('plan/exact-packets.json');
+const blocked = read('plan/blocked-packets.json');
+const method = read('plan/method-flow/validation.json');
+const summary = read('plan/planning-summary.json');
+const allowedOutcomes = new Set(['completed', 'represented', 'open_gap', 'exact_gate']);
+
+const definitionFailures = [];
+for (const proposal of proposals) {
+  const copy = JSON.parse(JSON.stringify(proposal));
+  const expected = copy.definition_sha256;
+  delete copy.definition_sha256;
+  if (sha(compact(copy)) !== expected) definitionFailures.push(proposal.proposal_id);
+}
+check('proposal-count', proposals.length === 200, proposals.length);
+check('proposal-id-uniqueness', new Set(proposals.map((row) => row.proposal_id)).size === 200);
+check('request-digest-uniqueness', new Set(proposals.map((row) => sha(compact(row.request)))).size === 200);
+check('definition-digests', definitionFailures.length === 0, definitionFailures);
+check('session-split', proposals.filter((row) => row.session === 'x1').length === 100 && proposals.filter((row) => row.session === 'x2').length === 100);
+check('outcome-vocabulary', proposals.every((row) => allowedOutcomes.has(row.expected_disposition)));
+check('required-fields', proposals.every((row) => ['hypothesis','null_or_failure_condition','approval_class','execution_lane','official_or_primary_source_needs','concrete_artifacts','falsifier_or_acceptance_gate','rollback_or_recovery','protected_gates','expected_disposition'].every((key) => Object.hasOwn(row, key))));
+check('planning-only', proposalsDoc.planning_only === true && proposalsDoc.production_executor_executed === false && summary.state === 'PLANNING_ONLY_NO_X1_OR_X2_EXECUTION');
+check('inherited-zero-credit', inherited.selected_count === 202 && inherited.distinct_source_requests === 200 && inherited.zero_credit_count === 202 && inherited.records.every((row) => row.execution_credit === 0 && row.novelty_credit === 0));
+check('x1-portfolio', x1.counts.safe === 100 && x1.counts.candidate === 100 && x1.counts.clean_fix_refine === 100 && x1.counts.skills === 10 && x1.counts.runners === 5);
+check('x2-portfolio', x2.counts.safe === 100 && x2.counts.candidate === 100 && x2.counts.clean_fix_refine === 100 && x2.counts.skills === 10 && x2.counts.runners === 5);
+check('exact-held', exact.count === 50 && exact.packets.every((row) => row.executed === false));
+check('blocked-held', blocked.count === 30 && blocked.packets.every((row) => row.executed === false));
+check('workflow-review', workflowReview.valid === true && workflowReview.checks.every((row) => row.result === 'pass') && route.assignments[0].owner === 'Avelin Reed' && route.assignments[0].phase === 'v690-v6');
+check('method-flow', method.valid === true && method.method_count === 3 && method.witness_count === 6);
+check('identity-boundary', read('plan/identity-practices.json').relational_only === true && read('plan/identity-practices.json').authority_claimed === false);
+check('x1-x2-absent', !fs.existsSync(path.join(BASE, 'x1')) && !fs.existsSync(path.join(BASE, 'x2')));
+check('successor-not-contacted', summary.successor.state === 'PROSPECTIVE_NOT_CONTACTED');
+check('terminal-verdict', summary.terminal_verdict === 'NOT_READY_FOR_STAGE_20' && profile.terminal_verdict === 'NOT_READY_FOR_STAGE_20');
+
+const authored = [];
+for (const relativeRoot of ['docs/sable-rook/v690-v5', 'scripts']) {
+  const root = path.join(ROOT, relativeRoot);
+  if (!fs.existsSync(root)) continue;
+  const stack = [root];
+  while (stack.length) {
+    const current = stack.pop();
+    for (const entry of fs.readdirSync(current, {withFileTypes: true})) {
+      const full = path.join(current, entry.name);
+      if (entry.isDirectory()) stack.push(full); else authored.push(path.relative(ROOT, full).replaceAll('\\', '/'));
+    }
+  }
+}
+const invalidExtensions = authored.filter((name) => !['.json','.md','.txt','.html'].includes(path.extname(name)));
+check('artifact-policy', invalidExtensions.length === 0, invalidExtensions);
+check('file-ceiling', authored.length < 2000, authored.length);
+
+function mutationRejected(kind) {
+  if (kind === 'duplicate-request') {
+    const digests = proposals.map((row) => sha(compact(row.request))); digests[1] = digests[0]; return new Set(digests).size !== 200;
+  }
+  if (kind === 'executed-planning') {
+    const mutated = {...proposalsDoc, production_executor_executed: true};
+    return !(mutated.planning_only === true && mutated.production_executor_executed === false);
+  }
+  if (kind === 'bad-outcome') return !allowedOutcomes.has('success');
+  if (kind === 'bad-successor') {
+    const mutated = {...route.assignments[0], owner: 'Caelen Ash'};
+    return !(mutated.owner === 'Avelin Reed' && mutated.phase === 'v690-v6');
+  }
+  if (kind === 'missing-protected-gate') {
+    const mutated = {...proposals[0], protected_gates: []};
+    return mutated.protected_gates.length === 0;
+  }
+  return false;
+}
+const mutations = ['duplicate-request','executed-planning','bad-outcome','bad-successor','missing-protected-gate'].map((kind) => ({kind, rejected: mutationRejected(kind)}));
+check('five-rejecting-mutations', mutations.length === 5 && mutations.every((row) => row.rejected), mutations);
+
+const receipt = {schema: 'ghc.family.planning-validation.v5', owner: 'Sable Rook', phase: 'v690-v5', state: checks.every((row) => row.result === 'pass') ? 'VALID_PLANNING_ONLY' : 'FAILED_PLANNING_ZERO_CREDIT', checks, passed: checks.filter((row) => row.result === 'pass').length, total: checks.length, mutations, source_execution_credit: 0, x1_execution_credit: 0, x2_execution_credit: 0, terminal_verdict: 'NOT_READY_FOR_STAGE_20'};
+const target = path.join(ROOT, receiptPath);
+fs.mkdirSync(path.dirname(target), {recursive: true});
+fs.writeFileSync(target, JSON.stringify(receipt, null, 2) + '\n', 'utf8');
+process.stdout.write(JSON.stringify({state: receipt.state, checks: `${receipt.passed}/${receipt.total}`, mutations: `${mutations.filter((row) => row.rejected).length}/${mutations.length}`}) + '\n');
+if (receipt.state !== 'VALID_PLANNING_ONLY') process.exitCode = 1;

@@ -1,0 +1,48 @@
+'use strict';
+
+const fs = require('node:fs');
+const path = require('node:path');
+const crypto = require('node:crypto');
+const cp = require('node:child_process');
+
+const ROOT = path.resolve(__dirname, '..');
+const output = process.argv[2];
+const state = process.argv[3];
+
+function git(args, encoding = 'utf8') {
+  return cp.execFileSync('git', args, {cwd: ROOT, encoding});
+}
+
+if (output === '--verify-index') {
+  if (!state) throw new Error('usage: node manifest.txt --verify-index manifest-relative-path');
+  const manifest = JSON.parse(fs.readFileSync(path.join(ROOT, state), 'utf8'));
+  const stagedPaths = git(['diff', '--cached', '--name-only', '--diff-filter=ACMR']).trim().split(/\r?\n/).filter(Boolean).sort();
+  const expectedPaths = [...manifest.entries.map((row) => row.path), ...manifest.self_exclusions].sort();
+  const missing = expectedPaths.filter((name) => !stagedPaths.includes(name));
+  const extra = stagedPaths.filter((name) => !expectedPaths.includes(name));
+  const mismatches = [];
+  for (const entry of manifest.entries) {
+    const bytes = git(['show', `:${entry.path}`], null);
+    const digest = crypto.createHash('sha256').update(bytes).digest('hex');
+    if (bytes.length !== entry.bytes || digest !== entry.sha256) mismatches.push(entry.path);
+  }
+  const valid = missing.length === 0 && extra.length === 0 && mismatches.length === 0;
+  process.stdout.write(JSON.stringify({valid, entries: manifest.entries.length, exclusions: manifest.self_exclusions.length, staged: stagedPaths.length, missing, extra, mismatches}) + '\n');
+  if (!valid) process.exitCode = 1;
+  return;
+}
+
+if (!output || !state) throw new Error('usage: node manifest.txt output-relative-path lifecycle-state');
+
+const staged = git(['diff', '--cached', '--name-only', '--diff-filter=ACMR']).trim().split(/\r?\n/).filter(Boolean).sort();
+const entries = [];
+for (const relative of staged) {
+  if (relative === output) continue;
+  const bytes = git(['show', `:${relative}`], null);
+  entries.push({path: relative, bytes: bytes.length, sha256: crypto.createHash('sha256').update(bytes).digest('hex')});
+}
+const payload = {schema: 'ghc.family.raw-git-manifest.v5', owner: 'Sable Rook', phase: 'v690-v5', lifecycle_state: state, domain: 'raw_git_index_blob', entries, entry_count: entries.length, self_exclusions: [output]};
+const target = path.join(ROOT, output);
+fs.mkdirSync(path.dirname(target), {recursive: true});
+fs.writeFileSync(target, JSON.stringify(payload, null, 2) + '\n', 'utf8');
+process.stdout.write(JSON.stringify({output, state, entries: entries.length, self_exclusions: 1}) + '\n');

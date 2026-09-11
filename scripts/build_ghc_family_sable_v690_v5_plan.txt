@@ -1,0 +1,352 @@
+'use strict';
+
+const fs = require('node:fs');
+const path = require('node:path');
+const crypto = require('node:crypto');
+
+const ROOT = path.resolve(__dirname, '..');
+const BASE = path.join(ROOT, 'docs', 'sable-rook', 'v690-v5');
+const PLAN = path.join(BASE, 'plan');
+const SOURCE_BRANCH = 'codex/GHC-Family/auren-lark-main';
+const SOURCE_FINAL = 'f6faae2f7e68be015f217dc8f19660e2be5b59e1';
+const SOURCE_PLANNING = '1a02b8e6283ca48417d7c7a511f70809a55fc237';
+const SOURCE_X1 = 'f72f7d0e13dfa2d682d50576481ad1eb0c9c4c72';
+const SOURCE_X2 = 'd2b646b299d8c586a6dd005b8f8281c87b609334';
+
+function ordered(value) {
+  if (Array.isArray(value)) return value.map(ordered);
+  if (value && typeof value === 'object') {
+    return Object.fromEntries(Object.keys(value).sort().map((key) => [key, ordered(value[key])]));
+  }
+  return value;
+}
+
+function stable(value) {
+  return JSON.stringify(ordered(value), null, 2) + '\n';
+}
+
+function compact(value) {
+  return JSON.stringify(ordered(value));
+}
+
+function sha(value) {
+  const data = Buffer.isBuffer(value) ? value : Buffer.from(String(value));
+  return crypto.createHash('sha256').update(data).digest('hex');
+}
+
+function writeJson(relative, value) {
+  const target = path.join(BASE, relative);
+  fs.mkdirSync(path.dirname(target), {recursive: true});
+  fs.writeFileSync(target, stable(value), 'utf8');
+}
+
+function writeText(relative, value) {
+  const target = path.join(BASE, relative);
+  fs.mkdirSync(path.dirname(target), {recursive: true});
+  fs.writeFileSync(target, value.trimEnd() + '\n', 'utf8');
+}
+
+function gcd(a, b) {
+  a = Math.abs(a); b = Math.abs(b);
+  while (b) [a, b] = [b, a % b];
+  return a || 1;
+}
+
+function fraction(n, d) {
+  const g = gcd(n, d);
+  return {numerator: n / g, denominator: d / g};
+}
+
+function topological(payload) {
+  const incoming = Object.fromEntries(payload.nodes.map((node) => [node, 0]));
+  const outgoing = Object.fromEntries(payload.nodes.map((node) => [node, []]));
+  for (const [from, to] of payload.edges) { incoming[to] += 1; outgoing[from].push(to); }
+  const ready = payload.nodes.filter((node) => incoming[node] === 0).sort();
+  const order = [];
+  while (ready.length) {
+    const node = ready.shift(); order.push(node);
+    for (const next of outgoing[node].sort()) {
+      incoming[next] -= 1;
+      if (incoming[next] === 0) { ready.push(next); ready.sort(); }
+    }
+  }
+  return {acyclic: order.length === payload.nodes.length, order};
+}
+
+function oracle(operation, payload) {
+  if (operation === 'dag_topological_order') return topological(payload);
+  if (operation === 'backdoor_path_screen') {
+    const open = payload.paths.filter((row) => row.starts_backdoor && (!row.collider_blocked || row.collider_conditioned)).map((row) => row.id).sort();
+    return {open_backdoor_paths: open, count: open.length};
+  }
+  if (operation === 'adjustment_set_filter') {
+    const admissible = payload.candidates.filter((set) => payload.required.every((x) => set.includes(x)) && set.every((x) => !payload.forbidden.includes(x))).map((set) => [...set].sort());
+    return {admissible};
+  }
+  if (operation === 'frontdoor_condition_matrix') {
+    const conditions = ['intercepts_treatment_effect', 'treatment_outcome_backdoor_blocked', 'mediator_outcome_backdoor_blocked'];
+    const missing = conditions.filter((key) => payload[key] !== true);
+    return {identifiable: missing.length === 0, missing};
+  }
+  if (operation === 'counterfactual_consistency') {
+    const violations = payload.rows.filter((row) => row.observed_treatment === row.intervention && row.observed_outcome !== row.counterfactual_outcome).map((row) => row.id).sort();
+    return {consistent: violations.length === 0, violations};
+  }
+  if (operation === 'positivity_overlap_bins') {
+    const supported = payload.strata.filter((row) => row.treated > 0 && row.control > 0).map((row) => row.id);
+    const unsupported = payload.strata.filter((row) => row.treated === 0 || row.control === 0).map((row) => row.id);
+    return {supported, unsupported, complete_overlap: unsupported.length === 0};
+  }
+  if (operation === 'instrument_assumption_ledger') {
+    const required = ['relevance', 'exclusion', 'independence'];
+    const missing = required.filter((key) => payload.assumptions[key] !== 'declared');
+    return {all_declared: missing.length === 0, missing};
+  }
+  if (operation === 'negative_control_pairing') {
+    const pairs = [];
+    for (const exposure of payload.exposures) for (const outcome of payload.outcomes) if (exposure.domain === outcome.domain) pairs.push(`${exposure.id}:${outcome.id}`);
+    return {pairs: pairs.sort(), pair_count: pairs.length};
+  }
+  if (operation === 'estimand_population_contract') {
+    return {estimand: payload.estimand, target_population: payload.target_population, denominator: payload.included, excluded: payload.excluded, empty: payload.included === 0};
+  }
+  if (operation === 'sensitivity_interval_projection') {
+    return {lower: payload.estimate - payload.bias_bound, upper: payload.estimate + payload.bias_bound, assumption: payload.assumption};
+  }
+  if (operation === 'audit_filter_projection') {
+    return {visible_ids: payload.rows.filter((row) => payload.statuses.includes(row.status) && payload.pillars.includes(row.pillar)).map((row) => row.id)};
+  }
+  if (operation === 'uncertainty_narration') {
+    return {text: `${payload.label}: ${payload.value} ${payload.unit}; bounded interval ${payload.lower} to ${payload.upper}; source ${payload.source_status}.`, machine: {value: payload.value, lower: payload.lower, upper: payload.upper, unit: payload.unit}};
+  }
+  if (operation === 'evidence_expiry_state') {
+    const state = payload.revoked ? 'revoked' : payload.observed_at >= payload.expires_at ? 'expired' : 'active';
+    return {state, usable: state === 'active'};
+  }
+  if (operation === 'focus_order_trace') {
+    const active = payload.elements.filter((row) => !row.hidden && !row.disabled).sort((a, b) => a.order - b.order || a.id.localeCompare(b.id));
+    const orders = active.map((row) => row.order);
+    return {focus_order: active.map((row) => row.id), duplicate_order: orders.some((value, index) => index > 0 && orders[index - 1] === value)};
+  }
+  if (operation === 'table_sort_stability') {
+    const rows = payload.rows.map((row, index) => ({...row, _index: index})).sort((a, b) => (a.value - b.value) * (payload.direction === 'desc' ? -1 : 1) || a._index - b._index);
+    return {row_ids: rows.map((row) => row.id), direction: payload.direction};
+  }
+  if (operation === 'error_summary_links') {
+    const linked = payload.errors.filter((row) => payload.targets.includes(row.target)).map((row) => row.field).sort();
+    const missing = payload.errors.filter((row) => !payload.targets.includes(row.target)).map((row) => row.field).sort();
+    return {linked, missing_targets: missing};
+  }
+  if (operation === 'live_region_queue') {
+    const sorted = [...payload.events].sort((a, b) => a.time - b.time || a.id.localeCompare(b.id));
+    return {assertive: sorted.filter((row) => row.urgency === 'assertive').map((row) => row.id), polite: sorted.filter((row) => row.urgency === 'polite').map((row) => row.id), evaluation: 'structural_proxy'};
+  }
+  if (operation === 'locale_number_readback') {
+    const value = payload.numerator / payload.denominator;
+    return {canonical_decimal: value.toFixed(3), requested_locale: payload.locale, spoken_review: 'reserved', evaluation: 'structural_proxy'};
+  }
+  if (operation === 'real_user_evaluation_gate') {
+    return {state: payload.participants > 0 && payload.assistive_technologies.length > 0 ? 'evidence_present_requires_review' : 'OPEN_GAP', participant_rows: payload.participants, manual_review: 'reserved'};
+  }
+  if (operation === 'authority_release_gate') {
+    const vacant = payload.required_roles.filter((row) => row.status !== 'authorized').map((row) => row.role).sort();
+    return {state: vacant.length ? 'EXACT_GATE' : 'requires_live_authority_verification', vacant_roles: vacant, software_authority: false};
+  }
+  throw new Error(`unknown operation ${operation}`);
+}
+
+const protectedGates = [
+  'empirical GMUT observation, causal identification against real data, parameter constraint, or independently reproduced prediction',
+  'governed THOS deployment, participant effectiveness, production safety, exhaustive security, complete privacy, or complete accessibility',
+  'real identity, credential, consent, recourse, legal, cultural, affected-party, or Maori authority',
+  'consciousness, sentience, personhood, identity continuity, AGI, ASI, Theory-of-Everything proof, canon, or Stage 20',
+];
+
+const families = [
+  ['dag_topological_order', 'Causal DAG order and cycle boundary', 'x1', 'GMUT Mind', 'causal-model criticism', 'Derive one deterministic topological order for a declared finite DAG without implying causal truth.', ['W3C PROV-O', 'NIST AI RMF 1.0'], ['node coverage equals declared graph', 'cycle prevents complete order'], 'completed'],
+  ['backdoor_path_screen', 'Backdoor path openness screen', 'x1', 'GMUT Mind', 'causal-model criticism', 'Classify declared candidate backdoor paths without claiming the graph matches reality.', ['NIST AI RMF 1.0'], ['only declared paths are screened', 'collider and conditioning states remain explicit'], 'completed'],
+  ['adjustment_set_filter', 'Adjustment-set forbidden-variable filter', 'x1', 'GMUT Mind', 'causal-model criticism', 'Filter candidate adjustment sets against declared required and forbidden variables.', ['NIST AI RMF 1.0'], ['every result contains required variables', 'no result contains a forbidden variable'], 'completed'],
+  ['frontdoor_condition_matrix', 'Front-door condition matrix', 'x1', 'GMUT Mind', 'causal-model criticism', 'Evaluate only three declared structural front-door conditions and retain missing conditions.', ['NIST AI RMF 1.0'], ['all conditions are named', 'missing conditions prevent identification'], 'completed'],
+  ['counterfactual_consistency', 'Counterfactual consistency witness', 'x1', 'GMUT Mind', 'causal-model criticism', 'Detect internal consistency violations in synthetic potential-outcome rows.', ['NIST AI RMF 1.0'], ['only same-treatment rows are compared', 'violating identifiers remain visible'], 'completed'],
+  ['positivity_overlap_bins', 'Positivity and overlap bin audit', 'x1', 'GMUT Mind', 'research software verification', 'Report declared strata lacking treated or control support without population inference.', ['NIST AI RMF 1.0'], ['zero-arm strata remain unsupported', 'no unsupported stratum is averaged away'], 'completed'],
+  ['instrument_assumption_ledger', 'Instrumental-variable assumption ledger', 'x1', 'GMUT Mind', 'causal-model criticism', 'Keep relevance, exclusion, and independence assumptions explicit rather than inferred.', ['NIST AI RMF 1.0'], ['all three assumptions are retained', 'unknown assumptions block all-declared state'], 'completed'],
+  ['negative_control_pairing', 'Negative-control domain pairing', 'x1', 'GMUT Mind', 'research software verification', 'Pair only declared exposure and outcome controls sharing a synthetic domain.', ['W3C PROV-O'], ['pair domains match', 'unpaired controls remain absent rather than invented'], 'completed'],
+  ['estimand_population_contract', 'Estimand and target-population contract', 'x1', 'GMUT Mind', 'causal-model criticism', 'Bind an estimand label to an explicit synthetic denominator and exclusions.', ['NIST AI RMF 1.0'], ['denominator is explicit', 'empty population remains visible'], 'completed'],
+  ['sensitivity_interval_projection', 'Bounded sensitivity interval projection', 'x1', 'GMUT Mind', 'research software verification', 'Project a declared symmetric bias bound without treating it as empirical robustness.', ['NIST AI RMF 1.0'], ['bounds preserve the declared assumption', 'lower does not exceed upper'], 'completed'],
+  ['audit_filter_projection', 'Audit dashboard filter projection', 'x2', 'THOS Body', 'accessible audit-interface testing', 'Project declared audit rows through explicit status and pillar filters without mutating the source.', ['WCAG 2.2', 'WAI-ARIA 1.2'], ['visible rows satisfy both filters', 'source row order remains stable'], 'completed'],
+  ['uncertainty_narration', 'Accessible uncertainty narration', 'x2', 'THOS Body', 'accessible audit-interface testing', 'Produce paired human-readable and machine-readable bounded uncertainty text.', ['WCAG 2.2', 'WAI-ARIA 1.2'], ['value unit and interval remain explicit', 'source status remains visible'], 'completed'],
+  ['evidence_expiry_state', 'Evidence expiry and revocation state', 'x2', 'Freed ID and CBR Heart', 'evidence expiry and recourse stewardship', 'Resolve synthetic active expired or revoked state with revocation precedence.', ['RFC 3339', 'W3C PROV-O'], ['revocation takes precedence', 'expiry comparison is deterministic'], 'completed'],
+  ['focus_order_trace', 'Keyboard focus-order trace', 'x2', 'THOS Body', 'accessible audit-interface testing', 'Project enabled visible controls into a deterministic focus trace and flag duplicate order.', ['WCAG 2.2', 'WHATWG HTML'], ['hidden and disabled controls are absent', 'duplicate order remains visible'], 'completed'],
+  ['table_sort_stability', 'Stable audit-table sort', 'x2', 'THOS Body', 'accessible audit-interface testing', 'Sort synthetic audit rows while preserving source order for equal values.', ['WCAG 2.2', 'WHATWG HTML'], ['equal values retain source order', 'direction is explicit'], 'completed'],
+  ['error_summary_links', 'Error-summary target linkage', 'x2', 'THOS Body', 'accessible audit-interface testing', 'Separate errors with declared targets from errors whose targets are missing.', ['WCAG 2.2', 'WAI-ARIA 1.2'], ['linked targets exist', 'missing targets remain explicit'], 'completed'],
+  ['live_region_queue', 'Live-region announcement queue', 'x2', 'THOS Body', 'accessible audit-interface testing', 'Partition synthetic status events into assertive and polite chronological queues.', ['WAI-ARIA 1.2'], ['chronology is stable', 'manual assistive-technology evaluation remains reserved'], 'represented'],
+  ['locale_number_readback', 'Locale number readback reservation', 'x2', 'Freed ID and CBR Heart', 'accessible audit-interface testing', 'Pair a locale request with a canonical decimal while reserving spoken review.', ['WCAG 2.2', 'WHATWG HTML'], ['canonical decimal remains locale-independent', 'spoken review remains reserved'], 'represented'],
+  ['real_user_evaluation_gate', 'Real-user accessibility evaluation gate', 'x2', 'Freed ID and CBR Heart', 'accessible audit-interface testing', 'Keep participant and assistive-technology evidence absent when no real evaluation occurred.', ['WCAG 2.2'], ['zero participants stays visible', 'manual and affected-user review remains reserved'], 'open_gap'],
+  ['authority_release_gate', 'Affected-party and Maori-authority release gate', 'x2', 'Freed ID and CBR Heart', 'evidence expiry and recourse stewardship', 'Hold release whenever a competent affected-party or Maori-authority role is vacant.', ['Te Mana Raraunga principles', 'NIST AI RMF 1.0'], ['software never fills an authority role', 'every vacancy remains explicit'], 'exact_gate'],
+].map((row, index) => ({
+  family_index: index + 1, operation: row[0], title: row[1], session: row[2], pillar: row[3], practice: row[4],
+  hypothesis: row[5], source_needs: row[6], expected_invariants: row[7], expected_disposition: row[8],
+}));
+
+function inputFor(operation, caseIndex) {
+  const n = caseIndex;
+  if (operation === 'dag_topological_order') return {nodes: [`A${n}`, `B${n}`, `C${n}`, `D${n}`], edges: n % 2 ? [[`A${n}`, `B${n}`], [`A${n}`, `C${n}`], [`B${n}`, `D${n}`]] : [[`A${n}`, `C${n}`], [`B${n}`, `C${n}`], [`C${n}`, `D${n}`]]};
+  if (operation === 'backdoor_path_screen') return {paths: [{id: `p${n}a`, starts_backdoor: true, collider_blocked: n % 2 === 0, collider_conditioned: false}, {id: `p${n}b`, starts_backdoor: true, collider_blocked: true, collider_conditioned: n % 3 === 0}, {id: `p${n}c`, starts_backdoor: false, collider_blocked: false, collider_conditioned: false}]};
+  if (operation === 'adjustment_set_filter') return {required: [`baseline${n}`], forbidden: [`mediator${n}`, `instrument${n}`], candidates: [[`baseline${n}`], [`baseline${n}`, `age${n}`], [`baseline${n}`, `mediator${n}`], [`instrument${n}`]]};
+  if (operation === 'frontdoor_condition_matrix') return {intercepts_treatment_effect: true, treatment_outcome_backdoor_blocked: n % 4 !== 0, mediator_outcome_backdoor_blocked: n % 3 !== 0};
+  if (operation === 'counterfactual_consistency') return {rows: [{id: `r${n}a`, observed_treatment: 1, intervention: 1, observed_outcome: n % 2, counterfactual_outcome: n % 2}, {id: `r${n}b`, observed_treatment: 0, intervention: 1, observed_outcome: 0, counterfactual_outcome: 1}, {id: `r${n}c`, observed_treatment: 0, intervention: 0, observed_outcome: 1, counterfactual_outcome: n % 5 === 0 ? 0 : 1}]};
+  if (operation === 'positivity_overlap_bins') return {strata: [{id: `s${n}a`, treated: n + 1, control: n + 2}, {id: `s${n}b`, treated: n % 3 === 0 ? 0 : n, control: n + 1}, {id: `s${n}c`, treated: n + 2, control: n % 4 === 0 ? 0 : n}]};
+  if (operation === 'instrument_assumption_ledger') return {assumptions: {relevance: 'declared', exclusion: n % 3 === 0 ? 'unknown' : 'declared', independence: n % 4 === 0 ? 'unknown' : 'declared'}};
+  if (operation === 'negative_control_pairing') return {exposures: [{id: `e${n}a`, domain: 'time'}, {id: `e${n}b`, domain: 'site'}], outcomes: [{id: `o${n}a`, domain: n % 2 ? 'time' : 'site'}, {id: `o${n}b`, domain: 'other'}]};
+  if (operation === 'estimand_population_contract') return {estimand: n % 2 ? 'ATE' : 'ATT', target_population: `synthetic-population-${n}`, included: n % 5 === 0 ? 0 : n * 3, excluded: n + 1};
+  if (operation === 'sensitivity_interval_projection') return {estimate: n * 2 - 5, bias_bound: (n % 4) + 1, assumption: `declared-bound-${n}`};
+  if (operation === 'audit_filter_projection') return {statuses: n % 2 ? ['pass', 'open'] : ['open'], pillars: n % 3 ? ['Mind', 'Body'] : ['Heart'], rows: [{id: `a${n}`, status: 'pass', pillar: 'Mind'}, {id: `b${n}`, status: 'open', pillar: n % 3 ? 'Body' : 'Heart'}, {id: `c${n}`, status: 'held', pillar: 'Heart'}]};
+  if (operation === 'uncertainty_narration') return {label: `metric-${n}`, value: n * 2, lower: n * 2 - 1, upper: n * 2 + 2, unit: 'synthetic-unit', source_status: n % 2 ? 'current' : 'stable'};
+  if (operation === 'evidence_expiry_state') return {observed_at: 1000 + n, expires_at: 1005 + n - (n % 3), revoked: n % 5 === 0};
+  if (operation === 'focus_order_trace') return {elements: [{id: `f${n}a`, order: 1, hidden: false, disabled: false}, {id: `f${n}b`, order: n % 3 === 0 ? 1 : 2, hidden: false, disabled: false}, {id: `f${n}c`, order: 3, hidden: n % 2 === 0, disabled: false}, {id: `f${n}d`, order: 4, hidden: false, disabled: true}]};
+  if (operation === 'table_sort_stability') return {direction: n % 2 ? 'asc' : 'desc', rows: [{id: `t${n}a`, value: n % 3}, {id: `t${n}b`, value: n % 3}, {id: `t${n}c`, value: (n + 1) % 3}]};
+  if (operation === 'error_summary_links') return {targets: [`field-${n}-a`, `field-${n}-b`], errors: [{field: `error-${n}-a`, target: `field-${n}-a`}, {field: `error-${n}-b`, target: n % 2 ? `field-${n}-b` : `missing-${n}`}]};
+  if (operation === 'live_region_queue') return {events: [{id: `q${n}a`, time: n + 2, urgency: 'polite'}, {id: `q${n}b`, time: n, urgency: n % 2 ? 'assertive' : 'polite'}, {id: `q${n}c`, time: n + 1, urgency: 'assertive'}]};
+  if (operation === 'locale_number_readback') return {numerator: n * 7, denominator: n + 3, locale: n % 2 ? 'en-NZ' : 'mi-NZ'};
+  if (operation === 'real_user_evaluation_gate') return {participants: 0, assistive_technologies: [], manual_review: false, intended_context: `audit-${n}`};
+  if (operation === 'authority_release_gate') return {required_roles: [{role: 'affected-party', status: 'vacant'}, {role: 'competent-legal-reviewer', status: n % 2 ? 'unverified' : 'vacant'}, {role: 'Maori-authority', status: 'vacant'}]};
+  throw new Error(operation);
+}
+
+const proposals = [];
+for (const family of families) {
+  for (let caseIndex = 1; caseIndex <= 10; caseIndex += 1) {
+    const number = (family.family_index - 1) * 10 + caseIndex;
+    const id = `SR6905-${String(number).padStart(3, '0')}`;
+    const payload = {...inputFor(family.operation, caseIndex), case_token: `${family.operation}-${String(caseIndex).padStart(2, '0')}`};
+    const expected = {ok: true, error: null, value: oracle(family.operation, payload)};
+    const candidatePayload = {...payload, unreviewed_authority_grant: true};
+    const proposal = {
+      proposal_id: id,
+      title: `${family.title} / bounded case ${String(caseIndex).padStart(2, '0')}`,
+      session: family.session,
+      operation: family.operation,
+      pillar: family.pillar,
+      practice: family.practice,
+      hypothesis: family.hypothesis,
+      null_or_failure_condition: 'Any output mismatch, input mutation, accepted undeclared field, erased failed subject, nondeterministic order, or promotion beyond the declared evidence class.',
+      approval_class: family.expected_disposition === 'exact_gate' ? 'exact_authority_required' : family.expected_disposition === 'open_gap' ? 'evidence_required' : 'safe_now',
+      execution_lane: `Sable-owned ${family.session} synthetic Node-text evaluator`,
+      official_or_primary_source_needs: family.source_needs,
+      request: {op: family.operation, payload},
+      expected_output: expected,
+      candidate_subject: {op: family.operation, payload: candidatePayload},
+      candidate_expected: {ok: false, error: 'unknown_field', value: null},
+      concrete_artifacts: [`${family.session}/results.json`, `${family.session}/validation.json`],
+      falsifier_or_acceptance_gate: 'The complete typed output must equal the frozen expected output; the invalid candidate must be refused as unknown_field; source input must remain unchanged.',
+      rollback_or_recovery: 'Retain the failed request and witness, stop the affected session, and correct only the smallest Sable-owned dependency before a bounded retry.',
+      protected_gates: protectedGates,
+      expected_disposition: family.expected_disposition,
+      expected_invariants: family.expected_invariants,
+      novelty_scope: 'One distinct Sable operation/input contract within twenty new families; not a universal algorithm, scientific discovery, professional result, or authority grant.',
+      inherited_execution_credit: 0,
+      definition_frozen_before_execution: true,
+    };
+    proposal.definition_sha256 = sha(compact(proposal));
+    proposals.push(proposal);
+  }
+}
+
+const sourceProfilePath = process.argv[2];
+const sourceRoutePath = process.argv[3];
+const aurenProposalPath = process.argv[4];
+const workflowReviewerPath = process.argv[5];
+if (!sourceProfilePath || !sourceRoutePath || !aurenProposalPath || !workflowReviewerPath) throw new Error('usage: node plan.txt workflow-v5.json roster-v5.json auren-proposals.json workflow-review.txt');
+const sourceProfile = JSON.parse(fs.readFileSync(sourceProfilePath, 'utf8'));
+const sourceRoute = JSON.parse(fs.readFileSync(sourceRoutePath, 'utf8'));
+const aurenProposals = JSON.parse(fs.readFileSync(aurenProposalPath, 'utf8')).proposals;
+
+const profile = JSON.parse(JSON.stringify(sourceProfile));
+profile.owner = 'Sable Rook'; profile.phase = 'v690-v5'; profile.display_phase = 'v690-v5'; profile.interstitial = false;
+profile.source_final = SOURCE_FINAL; profile.roster.first_next = 'Avelin Reed v690-v6'; profile.roster.following = 'Caelen Ash v690-v7';
+profile.phase_targets = {inherited_proposals: 202, new_proposals: 200, safe_now_x1: 100, candidate_x1: 100, clean_fix_refine_x1: 100, skills_x1: 10, runners_x1: 5, safe_now_x2: 100, candidate_x2: 100, clean_fix_refine_x2: 100, skills_x2: 10, runners_x2: 5, exact_packets: 50, blocked_packets: 30, successor_skill_ideas: 5, successor_runner_ideas: 5};
+profile.roster.last.sequence = 283;
+
+const route = JSON.parse(JSON.stringify(sourceRoute));
+route.current_owner = 'Sable Rook'; route.current_phase = 'v690-v5'; route.interstitial = false; route.route_state = 'PROSPECTIVE_UNTIL_SABLE_TERMINAL';
+route.assignments = route.assignments.slice(2).map((row, index) => ({...row, sequence: index + 1}));
+
+const sourceLedger = {
+  schema: 'ghc.family.source-ledger.v5', owner: 'Sable Rook', phase: 'v690-v5', citations_are_observations: false, real_rows: 0,
+  entries: [
+    {id: 'SRC-01', title: 'Auren v690-v4 exact final', status: 'stable', kind: 'repository_source', locator: `${SOURCE_BRANCH}@${SOURCE_FINAL}`},
+    {id: 'SRC-02', title: 'Current GHC workflow profile v5', status: 'current', kind: 'live_local_authority', locator: 'ghc-family-index current-workflow-v5.json'},
+    {id: 'SRC-03', title: 'Current GHC weighted route v5', status: 'current', kind: 'live_local_authority', locator: 'ghc-family-index current-roster-v5.json'},
+    {id: 'SRC-04', title: 'WCAG 2.2', status: 'current', kind: 'primary_standard', locator: 'https://www.w3.org/TR/WCAG22/'},
+    {id: 'SRC-05', title: 'WAI-ARIA 1.2', status: 'stable', kind: 'primary_standard', locator: 'https://www.w3.org/TR/wai-aria-1.2/'},
+    {id: 'SRC-06', title: 'PROV-O', status: 'stable', kind: 'primary_standard', locator: 'https://www.w3.org/TR/prov-o/'},
+    {id: 'SRC-07', title: 'HTML Living Standard interaction model', status: 'current', kind: 'primary_standard', locator: 'https://html.spec.whatwg.org/multipage/interaction.html'},
+    {id: 'SRC-08', title: 'RFC 3339 timestamps', status: 'stable', kind: 'primary_standard', locator: 'https://www.rfc-editor.org/rfc/rfc3339.html'},
+    {id: 'SRC-09', title: 'NIST AI RMF 1.0', status: 'watch', kind: 'primary_framework', locator: 'https://www.nist.gov/publications/artificial-intelligence-risk-management-framework-ai-rmf-10'},
+    {id: 'SRC-10', title: 'Te Mana Raraunga principles', status: 'current', kind: 'primary_authority_boundary', locator: 'https://www.temanararaunga.maori.nz/principles-of-maori-data-sovereignty'},
+  ],
+  boundary: 'Sources provide vocabulary and refusal conditions only; they are not observations, participant evidence, conformance certificates, legal interpretation, cultural ratification, or delegated authority.',
+};
+
+const inheritedRecords = aurenProposals.map((row) => ({source_id: row.proposal_id, title: row.title, operation: row.operation, definition_sha256: row.definition_sha256, source_owner: 'Auren Lark', execution_credit: 0, novelty_credit: 0}));
+inheritedRecords.push({...inheritedRecords[0], source_id: `${inheritedRecords[0].source_id}-SOURCE-DUPLICATE`});
+inheritedRecords.push({...inheritedRecords[1], source_id: `${inheritedRecords[1].source_id}-SOURCE-DUPLICATE`});
+
+const skillNamesX1 = families.slice(0, 10).map((family) => `ghc-family-${family.operation.replaceAll('_', '-')}`);
+const skillNamesX2 = families.slice(10).map((family) => `ghc-family-${family.operation.replaceAll('_', '-')}`);
+const runnersX1 = ['ghc_family_causal_graph.txt', 'ghc_family_counterfactual_overlap.txt', 'ghc_family_instrument_controls.txt', 'ghc_family_estimand_sensitivity.txt', 'ghc_family_sable_x1_suite.txt'];
+const runnersX2 = ['ghc_family_accessible_projection.txt', 'ghc_family_expiry_focus.txt', 'ghc_family_table_errors.txt', 'ghc_family_live_locale_authority.txt', 'ghc_family_sable_x2_suite.txt'];
+const globalGroups = [
+  {skill: 'ghc-family-causal-adjustment-audit', runner: 'ghc_family_causal_adjustment_audit.txt', sources: skillNamesX1.slice(0, 4)},
+  {skill: 'ghc-family-counterfactual-overlap-review', runner: 'ghc_family_counterfactual_overlap_review.txt', sources: skillNamesX1.slice(4, 8)},
+  {skill: 'ghc-family-accessible-audit-interface', runner: 'ghc_family_accessible_audit_interface.txt', sources: skillNamesX2.slice(0, 6)},
+  {skill: 'ghc-family-evidence-expiry-recourse', runner: 'ghc_family_evidence_expiry_recourse.txt', sources: [skillNamesX2[2], skillNamesX2[6], skillNamesX2[7]]},
+  {skill: 'ghc-family-causal-authority-boundary', runner: 'ghc_family_causal_authority_boundary.txt', sources: [skillNamesX1[6], skillNamesX1[8], skillNamesX2[8], skillNamesX2[9]]},
+];
+
+function portfolio(session) {
+  const rows = proposals.filter((row) => row.session === session);
+  return {
+    schema: 'ghc.family.session-portfolio.v5', owner: 'Sable Rook', phase: 'v690-v5', session, definition_state: 'PLANNED_NOT_EXECUTED',
+    safe_tasks: rows.map((row, index) => ({task_id: `SR6905-${session.toUpperCase()}-SAFE-${String(index + 1).padStart(3, '0')}`, proposal_id: row.proposal_id, expected: row.expected_output})),
+    candidate_tasks: rows.map((row, index) => ({task_id: `SR6905-${session.toUpperCase()}-CAND-${String(index + 1).padStart(3, '0')}`, proposal_id: row.proposal_id, subject: row.candidate_subject, expected_refusal: row.candidate_expected})),
+    clean_fix_refine_tasks: rows.map((row, index) => ({task_id: `SR6905-${session.toUpperCase()}-CFR-${String(index + 1).padStart(3, '0')}`, proposal_id: row.proposal_id, checks: ['stable input projection', 'nonmutation', 'boundary linkage'], destructive: false})),
+    skills: session === 'x1' ? skillNamesX1 : skillNamesX2,
+    runners: session === 'x1' ? runnersX1 : runnersX2,
+    counts: {safe: 100, candidate: 100, clean_fix_refine: 100, skills: 10, runners: 5},
+  };
+}
+
+writeText('plan/authorization.md', `# Sable Rook v690-v5 authorization\n\nHamish's direct 11 September 2026 activation authorizes Sable Rook alone to execute v690-v5 after Auren Lark's exact-final canonical and one accepted existing-task send. This planning root is parentless and records Auren provenance without claiming Git ancestry. Avelin Reed v690-v6 remains prospective until Sable's own terminal gate.\n\nIdentity, family, role, hope, Freed ID, CBR, GHC Family, and Trinity Mandala language is relational working language only. It establishes no consciousness, sentience, legal personhood, identity continuity, employment, qualification, agency, or authority.\n\nThe verdict is NOT_READY_FOR_STAGE_20.`);
+writeJson('plan/workflow-profile.json', profile);
+writeJson('plan/route-plan.json', route);
+const workflowReview = require(workflowReviewerPath).review(profile, route);
+if (!workflowReview.valid) throw new Error(`Sable v5 workflow review failed: ${compact(workflowReview)}`);
+writeJson('plan/workflow-review.json', workflowReview);
+writeJson('plan/source-bindings.json', {schema: 'ghc.family.source-bindings.v5', owner: 'Sable Rook', phase: 'v690-v5', source: {branch: SOURCE_BRANCH, planning: SOURCE_PLANNING, x1: SOURCE_X1, x2: SOURCE_X2, final: SOURCE_FINAL, false_ancestry_claimed: false, provenance_only: true, baton_sha256: '418c3472daa46184dd8cc0faff1fa2d4ec3573b7537751fbdc5c2f8d39bb1f75', canonical_receipt_sha256: 'c10bc1d484277ef619865908aa3c3aa66f4edcce70cd83a322afd42316f7736e'}, source_ledger: sourceLedger, protected_gates: protectedGates});
+writeJson('plan/identity-practices.json', {schema: 'ghc.family.identity-practices.v5', owner: 'Sable Rook', phase: 'v690-v5', pronouns: 'they/them', relational_role: 'Evidence Interchange Boundary Cartographer', hope: 'Make causal claims inspectable, audit interfaces legible, corrections reversible, and authority vacancies unmistakable.', relational_only: true, primary_pillar: 'GMUT Mind', protected_pillars: ['THOS Body', 'Freed ID and CBR Heart'], practices: ['causal-model criticism', 'accessible audit-interface testing', 'research software verification', 'evidence expiry and recourse stewardship'], successor_recommendations: ['counterexample-guided interface assurance', 'accessible causal provenance review'], qualification_claimed: false, authority_claimed: false});
+writeJson('plan/operation-families.json', {schema: 'ghc.family.operation-families.v5', owner: 'Sable Rook', phase: 'v690-v5', family_count: families.length, families});
+writeJson('plan/inherited-selections.json', {schema: 'ghc.family.inherited-selections.v5', owner: 'Sable Rook', phase: 'v690-v5', selected_count: inheritedRecords.length, distinct_source_requests: 200, zero_credit_count: inheritedRecords.length, retained_duplicate_ids: inheritedRecords.slice(-2).map((row) => row.source_id), records: inheritedRecords, boundary: 'Every inherited row has zero Sable execution and novelty credit.'});
+writeJson('plan/new-proposals.json', {schema: 'ghc.family.frozen-proposals.v5', owner: 'Sable Rook', phase: 'v690-v5', planning_only: true, production_executor_executed: false, proposal_count: proposals.length, distinct_request_count: new Set(proposals.map((row) => sha(compact(row.request)))).size, proposals});
+writeJson('plan/portfolio-x1.json', portfolio('x1'));
+writeJson('plan/portfolio-x2.json', portfolio('x2'));
+writeJson('plan/skills-runners-promotions.json', {schema: 'ghc.family.skills-runners-plan.v5', owner: 'Sable Rook', phase: 'v690-v5', local_skills: {x1: skillNamesX1, x2: skillNamesX2}, local_runners: {x1: runnersX1, x2: runnersX2}, global_groups: globalGroups, successor_skill_ideas: ['ghc-family-counterexample-interface-oracle', 'ghc-family-accessible-causal-provenance', 'ghc-family-overlap-expiry-dashboard', 'ghc-family-adjustment-authority-reservation', 'ghc-family-recourse-focus-readback'], successor_runner_ideas: ['ghc_family_counterexample_interface_oracle.txt', 'ghc_family_accessible_causal_provenance.txt', 'ghc_family_overlap_expiry_dashboard.txt', 'ghc_family_adjustment_authority_reservation.txt', 'ghc_family_recourse_focus_readback.txt']});
+writeJson('plan/exact-packets.json', {schema: 'ghc.family.exact-packets.v5', owner: 'Sable Rook', phase: 'v690-v5', count: 50, packets: Array.from({length: 50}, (_, i) => ({id: `SR6905-EXACT-${String(i + 1).padStart(3, '0')}`, state: 'exact_gate', requirement: ['empirical observation', 'competent authority', 'affected-party acceptance', 'production interoperability', 'terminal route proof'][i % 5], executed: false}))});
+writeJson('plan/blocked-packets.json', {schema: 'ghc.family.blocked-packets.v5', owner: 'Sable Rook', phase: 'v690-v5', count: 30, packets: Array.from({length: 30}, (_, i) => ({id: `SR6905-BLOCKED-${String(i + 1).padStart(3, '0')}`, state: 'blocked', reason: ['real participant required', 'credential or account required', 'destructive target unspecified', 'legal or cultural authority absent', 'Stage 20 authority absent'][i % 5], executed: false}))});
+writeJson('plan/package-review.json', {schema: 'ghc.family.package-review.v1', owner: 'Sable Rook', phase: 'v690-v5', new_installations: 0, updates_installed: 0, inherited_reviewed_candidates: 8, status: 'RETAINED_REVIEWED_UNINSTALLED', reason: 'No arbitrary package quota exists and the current JSON/Markdown/text/explicit-HTML policy favors existing Node and PowerShell runtimes.', system_python_mutated: false, npm_prefix_mutated: false, path_mutated: false, plugin_cache_mutated: false});
+writeJson('plan/planning-summary.json', {schema: 'ghc.family.planning-summary.v5', owner: 'Sable Rook', phase: 'v690-v5', state: 'PLANNING_ONLY_NO_X1_OR_X2_EXECUTION', source_records: 202, source_distinct: 200, inherited_credit: 0, new_proposals: 200, distinct_new_requests: 200, sessions: {x1: {proposals: 100, safe: 100, candidate: 100, clean_fix_refine: 100, skills: 10, runners: 5}, x2: {proposals: 100, safe: 100, candidate: 100, clean_fix_refine: 100, skills: 10, runners: 5}}, exact_packets: 50, blocked_packets: 30, global_groups: 5, outcome_labels: ['completed', 'represented', 'open_gap', 'exact_gate'], successor: {title: 'Avelin Reed', phase: 'v690-v6', state: 'PROSPECTIVE_NOT_CONTACTED'}, terminal_verdict: 'NOT_READY_FOR_STAGE_20'});
+writeText('plan/design-spec.md', `# Sable Rook v690-v5 planning design\n\n## Scope\n\nThis parentless planning root binds Auren provenance without false ancestry and freezes two hundred Sable operation/input contracts before either session evaluator exists. The primary pillar is GMUT Mind through causal-model criticism. THOS Body and Freed ID/CBR Heart remain visible through deterministic audit projections, expiry, recourse, accessibility, and authority holds.\n\n## Separation\n\nPlanning contains no x1 or x2 result, evaluator, built skill, runner smoke, global promotion, canonical success, or successor contact. X1 may begin only after this root is committed, pushed, clean, 0/0 divergent, and fresh-four-way equal. X2 may begin only after the same gate on x1.\n\n## Falsifier and rollback\n\nEvery positive envelope must match its frozen complete output, every invalid candidate must be refused, and every source input must remain unchanged. A failure stops only the affected Sable-owned dependency; the failed witness is retained before bounded recovery. No passing guard changes an invalid subject into a success.\n\n## Authority boundary\n\nStructural causal checks do not identify a real causal effect. Accessibility structures do not establish complete accessibility or affected-user acceptance. Synthetic expiry, recourse, and authority records do not create a credential, remedy, legal conclusion, cultural ratification, or Maori authority. NOT_READY_FOR_STAGE_20 remains fixed.`);
+
+fs.mkdirSync(path.join(PLAN, 'method-flow', 'records'), {recursive: true});
+fs.mkdirSync(path.join(PLAN, 'method-flow', 'witnesses'), {recursive: true});
+fs.writeFileSync(path.join(PLAN, 'method-flow', 'records', 'sr6905-start-m001.json'), stable({method_id: 'SR6905-START-M001', title: 'Exact global-tool root recovery', failure_signature: 'broad-global-tools-search-returned-no-attributable-result', trigger_preconditions: ['current v5 reviewer discovery', 'broad global-tools inventory'], privacy_class: 'sanitized_public', approval_class: 'safe_now', candidate_workaround: 'Use the exact family-settlement-lab root named by current authority and inspect only its bounded files.', validation_witness_ids: [], recurrence_guard: 'Prefer the exact authority-named tool root before any broad recursive catalogue search.', rollback: 'Stop discovery without writing repository or global state.', recommendation_state: 'candidate', supersedes: [], protected_gates: ['tool provenance', 'bounded inspection', 'failure nonerasure'], retained_negative_ids: ['SR6905-START-N001'], scope_boundary: 'Read-only discovery recovery only; no execution, scientific, authority, or readiness credit.'}));
+fs.writeFileSync(path.join(PLAN, 'method-flow', 'witnesses', 'sr6905-start-w001-f.json'), stable({witness_id: 'SR6905-START-W001-F', method_id: 'SR6905-START-M001', procedure: 'Broad global-tools recursive search', scope: 'read-only current reviewer discovery', expected: 'Attributable bounded tool result', observed: 'No attributable output within the wrapper window', result: 'fail', same_owner_only: true, independent_reproduction: false, retained_negative_ids: ['SR6905-START-N001'], boundary: 'Zero credit and no state change.'}));
+fs.writeFileSync(path.join(PLAN, 'method-flow', 'witnesses', 'sr6905-start-w001-p.json'), stable({witness_id: 'SR6905-START-W001-P', method_id: 'SR6905-START-M001', procedure: 'Exact family-settlement-lab inspection and v5 reviewer invocation', scope: 'authority-named current reviewer only', expected: 'Exact runner found and current profile/route passes', observed: 'PASS: exact root found and reviewer passed 16 of 16 checks', result: 'pass', same_owner_only: true, independent_reproduction: false, retained_negative_ids: ['SR6905-START-N001'], boundary: 'Recovery does not erase the broad-search failure or grant route activation.'}));
+fs.writeFileSync(path.join(PLAN, 'method-flow', 'records', 'sr6905-plan-m002.json'), stable({method_id: 'SR6905-PLAN-M002', title: 'Case-token request distinctness recovery', failure_signature: 'planning-generator-produced-178-distinct-requests-for-200-proposals', trigger_preconditions: ['200 planned operation/input contracts', 'exact request-digest novelty gate'], privacy_class: 'sanitized_public', approval_class: 'safe_now', candidate_workaround: 'Add one explicit case provenance token to each request while keeping the operation semantics and expected output unchanged.', validation_witness_ids: [], recurrence_guard: 'Count canonical request digests before committing the planning root and bind each bounded case to an explicit provenance token.', rollback: 'Retain the 178-distinct failed planning output and stop before any lifecycle commit.', recommendation_state: 'candidate', supersedes: [], protected_gates: ['semantic novelty', 'planning-only separation', 'failure nonerasure'], retained_negative_ids: ['SR6905-PLAN-N002'], scope_boundary: 'Request identity and provenance only; not a new algorithm, scientific result, or completion claim.'}));
+fs.writeFileSync(path.join(PLAN, 'method-flow', 'witnesses', 'sr6905-plan-w002-f.json'), stable({witness_id: 'SR6905-PLAN-W002-F', method_id: 'SR6905-PLAN-M002', procedure: 'Initial planning request-digest census', scope: '200 Sable proposal requests', expected: '200 distinct canonical request digests', observed: 'FAIL: 178 distinct request digests', result: 'fail', same_owner_only: true, independent_reproduction: false, retained_negative_ids: ['SR6905-PLAN-N002'], boundary: 'Zero proposal-freeze credit; no commit or x1 execution occurred.'}));
+fs.writeFileSync(path.join(PLAN, 'method-flow', 'witnesses', 'sr6905-plan-w002-p.json'), stable({witness_id: 'SR6905-PLAN-W002-P', method_id: 'SR6905-PLAN-M002', procedure: 'Case-token planning request-digest census', scope: '200 Sable proposal requests', expected: '200 distinct canonical request digests with unchanged operation semantics', observed: 'PASS: 200 distinct request and definition digests; 100 x1 and 100 x2 proposals', result: 'pass', same_owner_only: true, independent_reproduction: false, retained_negative_ids: ['SR6905-PLAN-N002'], boundary: 'Recovery preserves the 178-distinct failure and establishes planning identity only.'}));
+fs.writeFileSync(path.join(PLAN, 'method-flow', 'records', 'sr6905-plan-m003.json'), stable({method_id: 'SR6905-PLAN-M003', title: 'Exact sparse-stage recovery', failure_signature: 'initial-planning-git-add-refused-outside-inherited-sparse-definition', trigger_preconditions: ['parentless Sable worktree', 'inherited sparse-checkout metadata', 'exact planning allowlist'], privacy_class: 'sanitized_public', approval_class: 'safe_now', candidate_workaround: 'Keep shared sparsity unchanged and use git add --sparse only for the exact Sable planning paths.', validation_witness_ids: [], recurrence_guard: 'Inspect sparse-checkout rules before the first stage in a parentless worktree and use an exact sparse-aware allowlist.', rollback: 'Retain the refused stage, inspect partial index state, and do not reset or rewrite the branch.', recommendation_state: 'candidate', supersedes: [], protected_gates: ['sparse ownership', 'exact staged surface', 'failure nonerasure'], retained_negative_ids: ['SR6905-PLAN-N003'], scope_boundary: 'Owner-index recovery only; no x1 execution or broader repository credit.'}));
+fs.writeFileSync(path.join(PLAN, 'method-flow', 'witnesses', 'sr6905-plan-w003-f.json'), stable({witness_id: 'SR6905-PLAN-W003-F', method_id: 'SR6905-PLAN-M003', procedure: 'Initial ordinary git add of exact planning paths', scope: 'Sable planning root', expected: 'All exact planning paths staged', observed: 'FAIL: inherited sparse-checkout refused the docs paths; three script paths staged before refusal', result: 'fail', same_owner_only: true, independent_reproduction: false, retained_negative_ids: ['SR6905-PLAN-N003'], boundary: 'Zero freeze credit; no commit or sparsity mutation occurred.'}));
+fs.writeFileSync(path.join(PLAN, 'method-flow', 'witnesses', 'sr6905-plan-w003-p.json'), stable({witness_id: 'SR6905-PLAN-W003-P', method_id: 'SR6905-PLAN-M003', procedure: 'Exact git add --sparse and raw-index manifest replay', scope: '34 Sable planning paths', expected: 'All exact paths staged with unchanged sparse rules and zero raw blob mismatch', observed: 'PASS: 33 raw entries plus one self-exclusion, zero missing, extra, or mismatch', result: 'pass', same_owner_only: true, independent_reproduction: false, retained_negative_ids: ['SR6905-PLAN-N003'], boundary: 'Recovery preserves the refused ordinary stage and establishes owner-index parity only.'}));
+
+process.stdout.write(JSON.stringify({state: 'PLANNING_ONLY', proposals: proposals.length, distinct_requests: new Set(proposals.map((row) => sha(compact(row.request)))).size, inherited_records: inheritedRecords.length, families: families.length, x1: 100, x2: 100}) + '\n');
