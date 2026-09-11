@@ -1,0 +1,27 @@
+"use strict";
+const fs = require("fs");
+const path = require("path");
+const ownerRoot = path.resolve(__dirname, "..", "..");
+const results = JSON.parse(fs.readFileSync(path.join(ownerRoot, "x2", "results", "proposal-results.json"), "utf8"));
+const rejection = JSON.parse(fs.readFileSync(path.join(ownerRoot, "x2", "evidence", "rejection-ledger.json"), "utf8"));
+const mutation = JSON.parse(fs.readFileSync(path.join(ownerRoot, "x2", "evidence", "nonmutation-ledger.json"), "utf8"));
+const skills = JSON.parse(fs.readFileSync(path.join(ownerRoot, "x2", "evidence", "skill-receipts.json"), "utf8"));
+const runners = JSON.parse(fs.readFileSync(path.join(ownerRoot, "x2", "evidence", "runner-receipts.json"), "utf8"));
+const promotion = JSON.parse(fs.readFileSync(path.join(ownerRoot, "x2", "evidence", "global-promotion-receipt.json"), "utf8"));
+const portfolio = JSON.parse(fs.readFileSync(path.join(ownerRoot, "x2", "evidence", "portfolio-results.json"), "utf8"));
+const truth = JSON.parse(fs.readFileSync(path.join(ownerRoot, "x2", "phase-truth.json"), "utf8"));
+const tests = [
+  ["100 positives", results.results.length === 100 && results.results.every((row) => row.typed_equality && row.input_unchanged && row.actual_disposition === row.expected_disposition)],
+  ["bounded outcome tally", results.outcomes.completed === 60 && results.outcomes.represented === 20 && results.outcomes.open_gap === 10 && results.outcomes.exact_gate === 10],
+  ["100 invalid failures", rejection.rejections.length === 100 && rejection.rejections.every((row) => row.result === "fail" && row.exact_refusal && row.original_subject_success_credit === 0)],
+  ["100 nonmutation", mutation.count === 100 && mutation.all_pass],
+  ["10 skills", skills.count === 10 && skills.all_valid],
+  ["5 runners", runners.count === 5 && runners.all_valid],
+  ["100 task portfolios", portfolio.counts.safe_now_passed === 100 && portfolio.counts.candidate_passed === 100 && portfolio.counts.clean_fix_refine_passed === 100],
+  ["5 merged skills", promotion.valid && promotion.skills.length === 5 && promotion.skills.every((row) => row.valid)],
+  ["5 public runners", promotion.runners.length === 5 && promotion.runners.every((row) => row.valid && row.self_test.valid)],
+  ["x2 gate truth", truth.status === "X2_EVIDENCE_FROZEN_PRE_FINAL" && truth.exact_packets_executed === 0 && truth.blocked_packets_executed === 0]
+].map(([name, pass]) => ({ name, pass }));
+const receipt = { module: "x2_contracts", valid: tests.every((row) => row.pass), tests_total: tests.length, tests_passed: tests.filter((row) => row.pass).length, tests };
+process.stdout.write(JSON.stringify(receipt) + "\n");
+if (!receipt.valid) process.exitCode = 1;

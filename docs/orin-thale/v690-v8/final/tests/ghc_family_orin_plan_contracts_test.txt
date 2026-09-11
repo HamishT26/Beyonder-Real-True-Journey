@@ -1,0 +1,24 @@
+"use strict";
+const fs = require("fs");
+const path = require("path");
+const ownerRoot = path.resolve(__dirname, "..", "..");
+const plan = JSON.parse(fs.readFileSync(path.join(ownerRoot, "plan", "new-proposals.json"), "utf8"));
+const inherited = JSON.parse(fs.readFileSync(path.join(ownerRoot, "plan", "inherited-selections.json"), "utf8"));
+const neighbor = JSON.parse(fs.readFileSync(path.join(ownerRoot, "plan", "semantic-neighbor-audit.json"), "utf8"));
+const x1 = JSON.parse(fs.readFileSync(path.join(ownerRoot, "plan", "portfolio-x1.json"), "utf8"));
+const x2 = JSON.parse(fs.readFileSync(path.join(ownerRoot, "plan", "portfolio-x2.json"), "utf8"));
+const tests = [
+  ["200 new proposals", plan.proposals.length === 200],
+  ["200 inherited reviews", inherited.records.length === 200],
+  ["40000 neighbor comparisons", neighbor.pairwise_comparisons === 40000],
+  ["zero quarantines", neighbor.quarantines === 0],
+  ["100 x1 proposals", plan.proposals.filter((row) => row.session === "x1").length === 100],
+  ["100 x2 proposals", plan.proposals.filter((row) => row.session === "x2").length === 100],
+  ["four outcome labels only", plan.proposals.every((row) => ["completed","represented","open_gap","exact_gate"].includes(row.expected_execution_disposition))],
+  ["x1 portfolio floor", x1.safe_now.length === 100 && x1.candidate.length === 100 && x1.clean_fix_refine.length === 100],
+  ["x2 portfolio floor", x2.safe_now.length === 100 && x2.candidate.length === 100 && x2.clean_fix_refine.length === 100],
+  ["no inherited credit", inherited.records.every((row) => row.novelty_credit === 0 && row.completion_credit === 0 && row.authority_credit === 0)]
+].map(([name, pass]) => ({ name, pass }));
+const receipt = { module: "plan_contracts", valid: tests.every((row) => row.pass), tests_total: tests.length, tests_passed: tests.filter((row) => row.pass).length, tests };
+process.stdout.write(JSON.stringify(receipt) + "\n");
+if (!receipt.valid) process.exitCode = 1;

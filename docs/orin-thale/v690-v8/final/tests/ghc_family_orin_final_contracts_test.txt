@@ -1,0 +1,25 @@
+"use strict";
+const fs = require("fs");
+const path = require("path");
+const finalRoot = path.resolve(__dirname, "..");
+const truth = JSON.parse(fs.readFileSync(path.join(finalRoot, "phase-truth.json"), "utf8"));
+const accounting = JSON.parse(fs.readFileSync(path.join(finalRoot, "effective-accounting.json"), "utf8"));
+const negatives = JSON.parse(fs.readFileSync(path.join(finalRoot, "retained-negative-register.json"), "utf8"));
+const gates = JSON.parse(fs.readFileSync(path.join(finalRoot, "open-exact-gate-register.json"), "utf8"));
+const route = JSON.parse(fs.readFileSync(path.join(finalRoot, "terminal-route-state.json"), "utf8"));
+const baton = JSON.parse(fs.readFileSync(path.join(finalRoot, "baton-metadata.json"), "utf8"));
+const tests = [
+  ["final outcomes", truth.outcomes.completed === 160 && truth.outcomes.represented === 20 && truth.outcomes.open_gap === 10 && truth.outcomes.exact_gate === 10],
+  ["terminal verdict", truth.terminal_verdict === "NOT_READY_FOR_STAGE_20"],
+  ["negative arithmetic", accounting.successor_visible.effective_negatives === 1183 && negatives.effective_negatives === 1183],
+  ["method arithmetic", accounting.successor_visible.methods === 195 && accounting.successor_visible.direct_witnesses === 5143],
+  ["witness arithmetic", accounting.successor_visible.failed_witnesses === 1122 && accounting.successor_visible.passing_witnesses === 4021],
+  ["gap layers", gates.effective_core_open_gaps === 71 && gates.effective_core_exact_gates === 90],
+  ["packets unexecuted", gates.unexecuted_exact_approval_packets === 50 && gates.unexecuted_blocked_packets === 30],
+  ["route prepared not sent", route.state === "PREPARED_NOT_SENT" && route.sent === false && route.task_created === false],
+  ["baton module count", baton.modules === 13],
+  ["baton word bounds", baton.words >= 10000 && baton.words <= 100000]
+].map(([name, pass]) => ({ name, pass }));
+const receipt = { module: "final_contracts", valid: tests.every((row) => row.pass), tests_total: tests.length, tests_passed: tests.filter((row) => row.pass).length, tests };
+process.stdout.write(JSON.stringify(receipt) + "\n");
+if (!receipt.valid) process.exitCode = 1;
