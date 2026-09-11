@@ -1,0 +1,12 @@
+'use strict';
+const fs = require('node:fs');
+const path = require('node:path');
+const Module = require('node:module');
+const sourcePath = path.join(__dirname, 'complete-after-skill-read.txt');
+let source = fs.readFileSync(sourcePath, 'utf8');
+if (!source.endsWith('\\n')) throw new Error('expected_retained_terminal_token');
+source = source.slice(0, -2);
+const compiled = new Module(sourcePath, module);
+compiled.filename = sourcePath;
+compiled.paths = Module._nodeModulePaths(path.dirname(sourcePath));
+compiled._compile(source, sourcePath);

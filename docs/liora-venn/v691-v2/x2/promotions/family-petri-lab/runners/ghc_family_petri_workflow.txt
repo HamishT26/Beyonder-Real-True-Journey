@@ -1,0 +1,6 @@
+'use strict';
+const first=require('../x1/engine.txt'),second=require('../x2/engine.txt');
+const names=["petri_trace_prefix","petri_independent_pairs","petri_workflow_source_sink","petri_capacity_envelope"];
+function run(request){if(!request||typeof request!=='object'||!names.includes(request.op))return {ok:false,error:'unknown_operation',authority:false};return Object.hasOwn(first.operations,request.op)?first.run(request):second.run(request);}
+function cli(){let source='';process.stdin.setEncoding('utf8');process.stdin.on('data',chunk=>{source+=chunk;if(Buffer.byteLength(source)>1024*1024){process.stdout.write(JSON.stringify({ok:false,error:'input_limit',authority:false})+'\n');process.exit(2);}});process.stdin.on('end',()=>{try{const request=first.parseStrict(source);process.stdout.write(JSON.stringify(run(request))+'\n');}catch(error){process.stdout.write(JSON.stringify({ok:false,error:['duplicate_key','invalid_json'].includes(error.message)?error.message:'invalid_json',authority:false})+'\n');}});}
+module.exports={run,names};if(require.main===module)cli();

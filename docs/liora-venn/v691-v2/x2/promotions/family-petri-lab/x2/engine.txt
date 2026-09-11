@@ -1,0 +1,113 @@
+'use strict';
+const C = require('../plan/tools/common.txt');
+
+function network(request) {
+  C.array(request.places, 2, 8); request.places.forEach(value => C.text(value, 32)); C.ensure(new Set(request.places).size === request.places.length);
+  C.array(request.transitions, 1, 8);
+  request.transitions.forEach(transition => {
+    C.exactObject(transition, ['id', 'consume', 'produce']); C.text(transition.id, 32);
+    C.array(transition.consume, request.places.length, request.places.length).forEach(value => C.integer(value, 0, 8));
+    C.array(transition.produce, request.places.length, request.places.length).forEach(value => C.integer(value, 0, 8));
+    C.ensure(transition.consume.some(Boolean) || transition.produce.some(Boolean));
+  });
+  C.ensure(new Set(request.transitions.map(t => t.id)).size === request.transitions.length);
+  return {places: request.places, transitions: request.transitions};
+}
+
+function validateMarking(request, n) { C.array(request.marking, n, n).forEach(value => C.integer(value, 0, 64)); return request.marking; }
+function enabled(marking, transition) { return transition.consume.every((value, index) => marking[index] >= value); }
+function fire(marking, transition) { return enabled(marking, transition) ? marking.map((value, index) => value - transition.consume[index] + transition.produce[index]) : null; }
+function support(transition) { const rows = []; for (let i = 0; i < transition.consume.length; i++) if (transition.consume[i] || transition.produce[i]) rows.push(i); return rows; }
+
+const operations = {
+  petri_conflict_pairs(request) {
+    C.exactObject(request, ['op', 'places', 'transitions', 'marking']);
+    const net = network(request), marking = validateMarking(request, net.places.length);
+    const active = net.transitions.filter(t => enabled(marking, t));
+    const pairs = [];
+    for (let left = 0; left < active.length; left++) for (let right = left + 1; right < active.length; right++) {
+      const shared = [];
+      for (let place = 0; place < net.places.length; place++) if (active[left].consume[place] > 0 && active[right].consume[place] > 0) shared.push(net.places[place]);
+      if (shared.length) pairs.push({transitions: [active[left].id, active[right].id], shared_places: shared});
+    }
+    return {pairs};
+  },
+  petri_independent_pairs(request) {
+    C.exactObject(request, ['op', 'places', 'transitions']);
+    const net = network(request), pairs = [];
+    for (let left = 0; left < net.transitions.length; left++) for (let right = left + 1; right < net.transitions.length; right++) {
+      const a = new Set(support(net.transitions[left]));
+      if (support(net.transitions[right]).every(place => !a.has(place))) pairs.push([net.transitions[left].id, net.transitions[right].id]);
+    }
+    return {pairs, criterion: 'disjoint_declared_support'};
+  },
+  petri_siphon_candidate(request) {
+    C.exactObject(request, ['op', 'places', 'transitions', 'subset']);
+    const net = network(request); C.array(request.subset, 1, net.places.length).forEach(p => C.integer(p, 0, net.places.length - 1)); C.ensure(new Set(request.subset).size === request.subset.length);
+    const violations = [];
+    for (const transition of net.transitions) if (request.subset.some(p => transition.produce[p] > 0) && !request.subset.some(p => transition.consume[p] > 0)) violations.push(transition.id);
+    return {candidate: violations.length === 0, violations, subset: request.subset.map(p => net.places[p])};
+  },
+  petri_trap_candidate(request) {
+    C.exactObject(request, ['op', 'places', 'transitions', 'subset']);
+    const net = network(request); C.array(request.subset, 1, net.places.length).forEach(p => C.integer(p, 0, net.places.length - 1)); C.ensure(new Set(request.subset).size === request.subset.length);
+    const violations = [];
+    for (const transition of net.transitions) if (request.subset.some(p => transition.consume[p] > 0) && !request.subset.some(p => transition.produce[p] > 0)) violations.push(transition.id);
+    return {candidate: violations.length === 0, violations, subset: request.subset.map(p => net.places[p])};
+  },
+  petri_workflow_source_sink(request) {
+    C.exactObject(request, ['op', 'places', 'transitions', 'entry_place', 'exit_place']);
+    const net = network(request); C.integer(request.entry_place, 0, net.places.length - 1); C.integer(request.exit_place, 0, net.places.length - 1);
+    return {entry: net.places[request.entry_place], exit: net.places[request.exit_place], leaving_entry: net.transitions.filter(t => t.consume[request.entry_place] > 0).map(t => t.id), entering_exit: net.transitions.filter(t => t.produce[request.exit_place] > 0).map(t => t.id), real_workflow_certified: false};
+  },
+  petri_capacity_envelope(request) {
+    C.exactObject(request, ['op', 'places', 'transitions', 'marking', 'transition_index', 'capacities']);
+    const net = network(request), marking = validateMarking(request, net.places.length); C.integer(request.transition_index, 0, net.transitions.length - 1); C.array(request.capacities, net.places.length, net.places.length).forEach(value => C.integer(value, 0, 128));
+    const next = fire(marking, net.transitions[request.transition_index]);
+    return {enabled: next !== null, next_marking: next, within_declared_capacity: next ? next.every((value, index) => value <= request.capacities[index]) : null, represented_model_only: true};
+  },
+  petri_correction_prefix(request) {
+    C.exactObject(request, ['op', 'original', 'corrected']); C.array(request.original, 1, 32).forEach(value => C.integer(value, 0, 32)); C.array(request.corrected, 1, 32).forEach(value => C.integer(value, 0, 32));
+    let shared = 0; while (shared < request.original.length && shared < request.corrected.length && request.original[shared] === request.corrected[shared]) shared++;
+    return {shared_prefix_length: shared, replay_original_suffix: request.original.slice(shared), apply_corrected_suffix: request.corrected.slice(shared), operational_replay_performed: false};
+  },
+  petri_accessible_marking_summary(request) {
+    C.exactObject(request, ['op', 'labels', 'marking']); C.array(request.labels, 2, 8).forEach(label => C.text(label, 64)); C.ensure(new Set(request.labels).size === request.labels.length); C.array(request.marking, request.labels.length, request.labels.length).forEach(value => C.integer(value, 0, 64));
+    const rows = request.labels.map((label, index) => ({position: index + 1, label, tokens: request.marking[index]}));
+    return {rows, text: rows.map(row => row.position + '. ' + row.label + ': ' + row.tokens + ' token' + (row.tokens === 1 ? '' : 's')).join('\n'), manual_accessibility_review_required: true};
+  },
+  petri_operator_review_vacancy(request) {
+    C.exactObject(request, ['op', 'notes', 'evaluation_count']); C.exactObject(request.notes, ['operator', 'usability', 'affected_user', 'safety']); Object.values(request.notes).forEach(value => { C.ensure(typeof value === 'string' && value.length <= 256); }); C.ensure(request.evaluation_count === 0);
+    return {missing: Object.keys(request.notes).filter(key => !request.notes[key].trim()).sort(), evaluation_count: 0, real_operator_review: false, affected_user_review: false, safety_review: false, open_gap: true};
+  },
+  petri_release_authority_hold(request) {
+    C.exactObject(request, ['op', 'record', 'declarations', 'external_authority']); C.text(request.record, 64); C.exactObject(request.declarations, ['provenance', 'correction', 'accessibility', 'professional_review']); Object.values(request.declarations).forEach(value => C.ensure(typeof value === 'boolean')); C.ensure(request.external_authority === false);
+    return {record: request.record, missing: Object.keys(request.declarations).filter(key => !request.declarations[key]).sort(), external_action: false, authority_verified: false, exact_gate: true};
+  }
+};
+
+function run(request) {
+  try {
+    C.ensure(request !== null && typeof request === 'object' && !Array.isArray(request)); C.ensure(typeof request.op === 'string'); C.ensure(Object.hasOwn(operations, request.op), 'unknown_operation');
+    return {ok: true, value: operations[request.op](request), authority: false};
+  } catch (error) {
+    if (['invalid_value', 'unknown_field', 'missing_field', 'unknown_operation'].includes(error.message)) return {ok: false, error: error.message, authority: false};
+    throw error;
+  }
+}
+
+function cli(selected = operations) {
+  let source = '';
+  process.stdin.setEncoding('utf8');
+  process.stdin.on('data', chunk => { source += chunk; if (Buffer.byteLength(source) > 1024 * 1024) { process.stdout.write(JSON.stringify({ok: false, error: 'input_limit', authority: false}) + '\n'); process.exit(2); } });
+  process.stdin.on('end', () => {
+    try {
+      const request = JSON.parse(source); C.ensure(request && typeof request === 'object');
+      if (!Object.hasOwn(selected, request.op)) { process.stdout.write(JSON.stringify({ok: false, error: 'unknown_operation', authority: false}) + '\n'); return; }
+      process.stdout.write(JSON.stringify(run(request)) + '\n');
+    } catch { process.stdout.write(JSON.stringify({ok: false, error: 'invalid_json', authority: false}) + '\n'); }
+  });
+}
+
+module.exports = {operations, run, cli};
+if (require.main === module) cli();

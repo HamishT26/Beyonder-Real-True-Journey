@@ -1,0 +1,148 @@
+'use strict';
+const fs = require('node:fs');
+const path = require('node:path');
+const crypto = require('node:crypto');
+const {isDeepStrictEqual} = require('node:util');
+
+const BOUNDARY = 'Bounded same-owner synthetic software evidence only. No empirical, real-participant, professional, production-identity, deployment, legal, cultural, affected-party or Maori authority, complete privacy/accessibility/security, independent reproduction, consciousness/personhood, Theory-of-Everything, canon or Stage 20 claim. NOT_READY_FOR_STAGE_20.';
+
+function ensure(condition, code = 'invalid_value') {
+  if (!condition) throw new Error(code);
+}
+
+function stable(value) {
+  if (value === null || typeof value !== 'object') return JSON.stringify(value);
+  if (Array.isArray(value)) return '[' + value.map(stable).join(',') + ']';
+  return '{' + Object.keys(value).sort().map(key => JSON.stringify(key) + ':' + stable(value[key])).join(',') + '}';
+}
+
+function hash(bytes) {
+  return crypto.createHash('sha256').update(bytes).digest('hex');
+}
+
+function read(file) {
+  return JSON.parse(fs.readFileSync(file, 'utf8'));
+}
+
+function put(file, value, exclusive = true) {
+  fs.mkdirSync(path.dirname(file), {recursive: true});
+  const data = typeof value === 'string' ? value : JSON.stringify(value, null, 2) + '\n';
+  fs.writeFileSync(file, data, {encoding: 'utf8', flag: exclusive ? 'wx' : 'w'});
+}
+
+function exactObject(value, keys) {
+  ensure(value !== null && typeof value === 'object' && !Array.isArray(value));
+  ensure(Object.keys(value).every(key => keys.includes(key)), 'unknown_field');
+  ensure(keys.every(key => Object.hasOwn(value, key)), 'missing_field');
+}
+
+function integer(value, min = -1024, max = 1024) {
+  ensure(Number.isSafeInteger(value) && value >= min && value <= max);
+  return value;
+}
+
+function text(value, max = 256) {
+  ensure(typeof value === 'string' && value.length > 0 && value.length <= max);
+  return value;
+}
+
+function array(value, min = 0, max = 256) {
+  ensure(Array.isArray(value) && value.length >= min && value.length <= max);
+  return value;
+}
+
+function clone(value) {
+  return structuredClone(value);
+}
+
+function manifest(repoRoot, relativeRoot, exclusions) {
+  const root = path.join(repoRoot, relativeRoot);
+  const excluded = new Set(exclusions.map(item => relativeRoot + '/' + item));
+  const entries = [];
+  const walk = dir => {
+    for (const item of fs.readdirSync(dir, {withFileTypes: true})) {
+      const full = path.join(dir, item.name);
+      if (item.isDirectory()) walk(full);
+      else {
+        const rel = path.relative(repoRoot, full).replaceAll('\\', '/');
+        if (excluded.has(rel)) continue;
+        const bytes = fs.readFileSync(full);
+        entries.push({path: rel, bytes: bytes.length, sha256: hash(bytes)});
+      }
+    }
+  };
+  walk(root);
+  entries.sort((a, b) => a.path.localeCompare(b.path));
+  return entries;
+}
+
+function methodLedger(stage, methods, witnesses) {
+  const normalizedMethods = methods.map(method => {
+    const own = witnesses.filter(w => w.method_id === method.method_id);
+    const failures = own.filter(w => w.result === 'fail').map(w => w.witness_id);
+    return {
+      method_id: method.method_id,
+      title: method.title,
+      failure_signature: method.failure_signature || 'Bounded contract or workflow failure',
+      trigger_preconditions: method.trigger_preconditions || ['Exact phase-local operation'],
+      privacy_class: 'sanitized_public',
+      approval_class: method.approval_class || 'owner_local',
+      candidate_workaround: method.candidate_workaround || 'Retain the failure and correct only the smallest unsealed owner dependency.',
+      validation_witness_ids: own.map(w => w.witness_id),
+      recurrence_guard: method.recurrence_guard || 'Typed inputs, exact scope, separate recovery and no replay of a successful canonical.',
+      rollback: method.rollback || 'Retain artifacts and select the prior validated caller; do not erase evidence.',
+      recommendation_state: own.some(w => w.result === 'pass') ? 'validated' : 'candidate',
+      supersedes: [],
+      protected_gates: ['no_empirical_or_authority_promotion', 'no_canonical_replay', 'no_sibling_mutation'],
+      retained_negative_ids: failures.length ? failures : [method.method_id + '-NO-FAILURE-LINK'],
+      scope_boundary: BOUNDARY
+    };
+  });
+  const normalizedWitnesses = witnesses.map(w => ({
+    ...w,
+    scope: stage,
+    same_owner_only: true,
+    independent_reproduction: false,
+    retained_negative_ids: w.result === 'fail' ? [w.witness_id] : (w.retained_negative_ids || []),
+    original_subject_success_credit: w.result === 'fail' ? 0 : null,
+    boundary: BOUNDARY
+  }));
+  const stateEvents = normalizedMethods.map((m, index) => ({
+    event_index: index + 1,
+    method_id: m.method_id,
+    before: 'candidate',
+    after: m.recommendation_state,
+    reason: 'Declared bounded phase witness',
+    witness_id: m.validation_witness_ids.find(id => normalizedWitnesses.find(w => w.witness_id === id)?.result === 'pass') || null
+  }));
+  return {
+    schema: 'ghc.family.method-flow-state.v1',
+    phase: 'v691-v2/' + stage,
+    owner: 'Liora Venn',
+    identity_boundary: 'Relational working name only; no identity continuity, consciousness, personhood or agency evidence.',
+    execution_authority: 'owner_self_scoped_delta',
+    repository_scan: false,
+    module_scan: true,
+    cross_lane_scan: false,
+    unchanged_history_scan: false,
+    sibling_lane_mutation: false,
+    methods: normalizedMethods,
+    witnesses: normalizedWitnesses,
+    state_events: stateEvents,
+    recommendations: [],
+    counts: {
+      methods: normalizedMethods.length,
+      witnesses: normalizedWitnesses.length,
+      state_events: stateEvents.length,
+      recommendations: 0,
+      states: Object.fromEntries(['observed', 'candidate', 'validated', 'preferred', 'superseded', 'deprecated'].map(state => [state, normalizedMethods.filter(m => m.recommendation_state === state).length])),
+      witness_results: {
+        pass: normalizedWitnesses.filter(w => w.result === 'pass').length,
+        fail: normalizedWitnesses.filter(w => w.result === 'fail').length
+      }
+    },
+    boundary: BOUNDARY
+  };
+}
+
+module.exports = {BOUNDARY, ensure, stable, hash, read, put, exactObject, integer, text, array, clone, manifest, methodLedger, equal: isDeepStrictEqual};

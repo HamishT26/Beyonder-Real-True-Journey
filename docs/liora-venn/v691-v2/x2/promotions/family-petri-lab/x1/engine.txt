@@ -1,0 +1,204 @@
+'use strict';
+const C = require('../plan/tools/common.txt');
+
+function net(request) {
+  C.array(request.places, 2, 8);
+  request.places.forEach(value => C.text(value, 32));
+  C.ensure(new Set(request.places).size === request.places.length);
+  C.array(request.transitions, 1, 8);
+  request.transitions.forEach(transition => {
+    C.exactObject(transition, ['id', 'consume', 'produce']);
+    C.text(transition.id, 32);
+    C.array(transition.consume, request.places.length, request.places.length).forEach(value => C.integer(value, 0, 8));
+    C.array(transition.produce, request.places.length, request.places.length).forEach(value => C.integer(value, 0, 8));
+    C.ensure(transition.consume.some(Boolean) || transition.produce.some(Boolean));
+  });
+  C.ensure(new Set(request.transitions.map(t => t.id)).size === request.transitions.length);
+  return {places: request.places, transitions: request.transitions};
+}
+
+function marking(request, n) {
+  C.array(request.marking, n, n).forEach(value => C.integer(value, 0, 64));
+  return request.marking;
+}
+
+function isEnabled(values, transition) {
+  for (let i = 0; i < values.length; i++) if (values[i] < transition.consume[i]) return false;
+  return true;
+}
+
+function fire(values, transition) {
+  if (!isEnabled(values, transition)) return null;
+  return values.map((value, i) => value - transition.consume[i] + transition.produce[i]);
+}
+
+function enumerateReachable(network, initial, cap) {
+  const queue = [initial.slice()];
+  const rows = [initial.slice()];
+  const seen = new Set([C.stable(initial)]);
+  let cursor = 0;
+  while (cursor < queue.length && rows.length < cap) {
+    const current = queue[cursor++];
+    for (const transition of network.transitions) {
+      if (rows.length >= cap) break;
+      const next = fire(current, transition);
+      if (!next) continue;
+      const key = C.stable(next);
+      if (!seen.has(key)) {
+        seen.add(key);
+        rows.push(next);
+        queue.push(next);
+      }
+    }
+  }
+  let unseen = cursor < queue.length;
+  if (!unseen) {
+    outer: for (const current of queue) for (const transition of network.transitions) {
+      const next = fire(current, transition);
+      if (next && !seen.has(C.stable(next))) { unseen = true; break outer; }
+    }
+  }
+  return {markings: rows, truncated: rows.length >= cap && unseen};
+}
+
+const operations = {
+  petri_record_shape(request) {
+    C.exactObject(request, ['op', 'places', 'transitions']);
+    const network = net(request);
+    let pre = 0, post = 0;
+    for (const transition of network.transitions) {
+      pre += transition.consume.reduce((n, value) => n + Number(value !== 0), 0);
+      post += transition.produce.reduce((n, value) => n + Number(value !== 0), 0);
+    }
+    return {place_count: network.places.length, transition_count: network.transitions.length, nonzero_pre_arcs: pre, nonzero_post_arcs: post, shape_consistent: true};
+  },
+  petri_incidence_matrix(request) {
+    C.exactObject(request, ['op', 'places', 'transitions']);
+    const network = net(request);
+    const matrix = [];
+    for (let p = 0; p < network.places.length; p++) {
+      const row = [];
+      for (const transition of network.transitions) row.push(transition.produce[p] - transition.consume[p]);
+      matrix.push(row);
+    }
+    return {matrix, orientation: 'places_by_transitions'};
+  },
+  petri_enabled_transitions(request) {
+    C.exactObject(request, ['op', 'places', 'transitions', 'marking']);
+    const network = net(request), values = marking(request, network.places.length);
+    return {enabled: network.transitions.filter(t => isEnabled(values, t)).map(t => t.id)};
+  },
+  petri_fire_transition(request) {
+    C.exactObject(request, ['op', 'places', 'transitions', 'marking', 'transition_index']);
+    const network = net(request), values = marking(request, network.places.length);
+    C.integer(request.transition_index, 0, network.transitions.length - 1);
+    const next = fire(values, network.transitions[request.transition_index]);
+    return {enabled: next !== null, next_marking: next};
+  },
+  petri_fire_sequence(request) {
+    C.exactObject(request, ['op', 'places', 'transitions', 'marking', 'sequence']);
+    const network = net(request); let values = marking(request, network.places.length).slice();
+    C.array(request.sequence, 0, 32).forEach(value => C.integer(value, 0, network.transitions.length - 1));
+    let firedCount = 0, blockedAt = null;
+    for (let index = 0; index < request.sequence.length; index++) {
+      const next = fire(values, network.transitions[request.sequence[index]]);
+      if (!next) { blockedAt = index; break; }
+      values = next; firedCount++;
+    }
+    return {fired_count: firedCount, blocked_at: blockedAt, marking: values};
+  },
+  petri_place_invariant(request) {
+    C.exactObject(request, ['op', 'places', 'transitions', 'marking', 'transition_index', 'weights']);
+    const network = net(request), values = marking(request, network.places.length);
+    C.integer(request.transition_index, 0, network.transitions.length - 1);
+    C.array(request.weights, network.places.length, network.places.length).forEach(value => C.integer(value, -16, 16));
+    const next = fire(values, network.transitions[request.transition_index]);
+    const dot = row => row.reduce((sum, value, index) => sum + value * request.weights[index], 0);
+    const before = dot(values), after = next === null ? null : dot(next);
+    return {enabled: next !== null, before, after, conserved: next === null ? null : before === after, local_witness_only: true};
+  },
+  petri_reachability_bfs(request) {
+    C.exactObject(request, ['op', 'places', 'transitions', 'marking', 'state_cap']);
+    const network = net(request), values = marking(request, network.places.length);
+    C.integer(request.state_cap, 1, 128);
+    return {...enumerateReachable(network, values, request.state_cap), cap: request.state_cap};
+  },
+  petri_boundedness_probe(request) {
+    C.exactObject(request, ['op', 'places', 'transitions', 'marking', 'state_cap', 'token_limit']);
+    const network = net(request), values = marking(request, network.places.length);
+    C.integer(request.state_cap, 1, 128); C.integer(request.token_limit, 0, 128);
+    const result = enumerateReachable(network, values, request.state_cap);
+    const maxima = network.places.map((_, p) => Math.max(...result.markings.map(row => row[p])));
+    return {observed_maxima: maxima, within_declared_limit: maxima.every(value => value <= request.token_limit), truncated: result.truncated, universal_boundedness_proved: false};
+  },
+  petri_deadlock_witness(request) {
+    C.exactObject(request, ['op', 'places', 'transitions', 'marking']);
+    const network = net(request), values = marking(request, network.places.length);
+    const ids = network.transitions.filter(t => isEnabled(values, t)).map(t => t.id);
+    return {enabled: ids, deadlocked: ids.length === 0, marking_local_only: true};
+  },
+  petri_trace_prefix(request) {
+    C.exactObject(request, ['op', 'places', 'transitions', 'marking', 'sequence', 'prefix_length']);
+    const network = net(request); let values = marking(request, network.places.length).slice();
+    C.array(request.sequence, 0, 32).forEach(value => C.integer(value, 0, network.transitions.length - 1));
+    C.integer(request.prefix_length, 0, request.sequence.length);
+    let firedCount = 0, blockedAt = null;
+    for (let index = 0; index < request.prefix_length; index++) {
+      const next = fire(values, network.transitions[request.sequence[index]]);
+      if (!next) { blockedAt = index; break; }
+      values = next; firedCount++;
+    }
+    return {requested_prefix: request.prefix_length, fired_count: firedCount, blocked_at: blockedAt, marking: values};
+  }
+};
+
+function run(request) {
+  try {
+    C.ensure(request !== null && typeof request === 'object' && !Array.isArray(request));
+    C.ensure(typeof request.op === 'string');
+    C.ensure(Object.hasOwn(operations, request.op), 'unknown_operation');
+    return {ok: true, value: operations[request.op](request), authority: false};
+  } catch (error) {
+    if (['invalid_value', 'unknown_field', 'missing_field', 'unknown_operation'].includes(error.message)) return {ok: false, error: error.message, authority: false};
+    throw error;
+  }
+}
+
+function parseStrict(source) {
+  C.ensure(typeof source === 'string' && Buffer.byteLength(source) <= 1024 * 1024, 'invalid_json');
+  let i = 0;
+  const ws = () => { while (/\s/.test(source[i] || '!')) i++; };
+  function string() {
+    const start = i; C.ensure(source[i++] === '"', 'invalid_json'); let escaped = false;
+    while (i < source.length) { const ch = source[i++]; if (escaped) { escaped = false; continue; } if (ch === '\\') { escaped = true; continue; } if (ch === '"') { try { return JSON.parse(source.slice(start, i)); } catch { throw new Error('invalid_json'); } } }
+    throw new Error('invalid_json');
+  }
+  function value(depth) {
+    C.ensure(depth <= 40, 'invalid_json'); ws(); const ch = source[i];
+    if (ch === '"') return string();
+    if (ch === '{') { i++; ws(); const out = {}, keys = new Set(); if (source[i] === '}') { i++; return out; } for (;;) { ws(); const key = string(); C.ensure(!keys.has(key), 'duplicate_key'); keys.add(key); ws(); C.ensure(source[i++] === ':', 'invalid_json'); out[key] = value(depth + 1); ws(); if (source[i] === '}') { i++; return out; } C.ensure(source[i++] === ',', 'invalid_json'); } }
+    if (ch === '[') { i++; ws(); const out = []; if (source[i] === ']') { i++; return out; } for (;;) { out.push(value(depth + 1)); ws(); if (source[i] === ']') { i++; return out; } C.ensure(source[i++] === ',', 'invalid_json'); } }
+    for (const [literal, result] of [['true', true], ['false', false], ['null', null]]) if (source.startsWith(literal, i)) { i += literal.length; return result; }
+    const match = /^-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?/.exec(source.slice(i)); C.ensure(match, 'invalid_json'); i += match[0].length; const number = Number(match[0]); C.ensure(Number.isFinite(number), 'invalid_json'); return number;
+  }
+  const result = value(0); ws(); C.ensure(i === source.length, 'invalid_json'); return result;
+}
+
+function cli(selected = operations) {
+  let source = '';
+  process.stdin.setEncoding('utf8');
+  process.stdin.on('data', chunk => { source += chunk; if (Buffer.byteLength(source) > 1024 * 1024) { process.stdout.write(JSON.stringify({ok: false, error: 'input_limit', authority: false}) + '\n'); process.exit(2); } });
+  process.stdin.on('end', () => {
+    try {
+      const request = parseStrict(source);
+      if (!Object.hasOwn(selected, request.op)) { process.stdout.write(JSON.stringify({ok: false, error: 'unknown_operation', authority: false}) + '\n'); return; }
+      process.stdout.write(JSON.stringify(run(request)) + '\n');
+    } catch (error) {
+      if (['invalid_json', 'duplicate_key'].includes(error.message)) process.stdout.write(JSON.stringify({ok: false, error: error.message, authority: false}) + '\n');
+      else throw error;
+    }
+  });
+}
+
+module.exports = {operations, run, cli, parseStrict};
+if (require.main === module) cli();
