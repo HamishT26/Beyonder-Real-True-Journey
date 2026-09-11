@@ -1,0 +1,374 @@
+"use strict";
+
+const fs = require("fs");
+const path = require("path");
+const crypto = require("crypto");
+const cp = require("child_process");
+
+const finalRoot = path.resolve(__dirname, "..");
+const ownerRoot = path.resolve(finalRoot, "..");
+const repo = path.resolve(ownerRoot, "..", "..", "..");
+const planRoot = path.join(ownerRoot, "plan");
+const x1Root = path.join(ownerRoot, "x1");
+const x2Root = path.join(ownerRoot, "x2");
+const planningHead = "421ad67edb7cbe75e20f692e6085ace32916dd5d";
+const x1Head = "6cc7f795583ba7e6cb07547f6ce1936025caaab9";
+const x2Head = "ec9d56ae75bbb0c25ed41474e669418b9692cee3";
+const boundary = "Bounded same-owner synthetic software and documentation evidence only; no empirical, participant, identity, professional, production, deployment, legal, cultural, affected-party, Maori-authority, complete privacy/accessibility, exhaustive-security, independent-reproduction, consciousness/personhood, AGI/ASI, Theory-of-Everything, proof/canon or Stage 20 claim. NOT_READY_FOR_STAGE_20.";
+
+function mkdir(dir) { fs.mkdirSync(dir, { recursive: true }); }
+function writeJson(relative, value) { const target = path.join(finalRoot, relative); mkdir(path.dirname(target)); fs.writeFileSync(target, JSON.stringify(value, null, 2) + "\n", "utf8"); }
+function writeText(relative, value) { const target = path.join(finalRoot, relative); mkdir(path.dirname(target)); const clean = String(value).replace(/\r\n/g, "\n").replace(/\r/g, "\n"); fs.writeFileSync(target, clean.endsWith("\n") ? clean : clean + "\n", "utf8"); }
+function readJson(file) { return JSON.parse(fs.readFileSync(file, "utf8")); }
+function sha(bytes) { return crypto.createHash("sha256").update(bytes).digest("hex"); }
+function git(args) { return cp.execFileSync("git", ["-C", repo, ...args], { encoding: "utf8", maxBuffer: 128 * 1024 * 1024 }).trim(); }
+function walk(dir) { const out = []; for (const entry of fs.readdirSync(dir, { withFileTypes: true }).sort((a, b) => a.name.localeCompare(b.name))) { const full = path.join(dir, entry.name); if (entry.isDirectory()) out.push(...walk(full)); else out.push(full); } return out; }
+
+const currentHead = git(["rev-parse", "HEAD"]);
+if (currentHead !== x2Head) throw new Error(`final must begin at immutable x2 ${x2Head}, found ${currentHead}`);
+const status = git(["status", "--porcelain"]);
+if (status && !status.split(/\r?\n/).every((line) => line.slice(3).startsWith("docs/caelen-ash/v690-v7/final/"))) throw new Error("unexpected non-final working change before final build");
+
+const proposals = readJson(path.join(planRoot, "new-proposals.json"));
+const inherited = readJson(path.join(planRoot, "inherited-selections.json"));
+const neighbor = readJson(path.join(planRoot, "semantic-neighbor-audit.json"));
+const planFailures = readJson(path.join(planRoot, "operational-failures.json"));
+const x1Truth = readJson(path.join(x1Root, "phase-truth.json"));
+const x2Truth = readJson(path.join(x2Root, "phase-truth.json"));
+const x1Methods = readJson(path.join(x1Root, "method-flow", "ledger.json"));
+const x2Methods = readJson(path.join(x2Root, "method-flow", "ledger.json"));
+const promotion = readJson(path.join(x2Root, "evidence", "global-promotion-receipt.json"));
+const toolPlan = readJson(path.join(planRoot, "skills-runners-promotions.json"));
+if (proposals.proposals.length !== 200 || inherited.records.length !== 200 || neighbor.quarantines !== 0) throw new Error("planning truth mismatch");
+if (x1Truth.status !== "X1_FROZEN_NO_X2" || x2Truth.status !== "X2_EVIDENCE_FROZEN_PRE_FINAL") throw new Error("lifecycle truth mismatch");
+if (!promotion.valid || promotion.skills.length !== 5 || promotion.runners.length !== 5) throw new Error("global promotion truth mismatch");
+
+const phaseOutcomes = { completed: 160, represented: 20, open_gap: 10, exact_gate: 10 };
+const successorVisible = { methods: 158, direct_witnesses: 3669, failed_witnesses: 905, passing_witnesses: 2764, effective_negatives: 965, open_gaps: 61, exact_gates: 80 };
+if (successorVisible.failed_witnesses + successorVisible.passing_witnesses !== successorVisible.direct_witnesses) throw new Error("witness arithmetic mismatch");
+
+const finalPreflightFailures = [
+  { id: "CA6907-FINAL-PRE-N001", observed: "Three final test modules resolved the owner root one directory too high and raised bounded missing-file errors.", recovery: "Resolve the owner root exactly two parents above the final tests directory and rerun only the precommit modules.", recovery_observed: "All four modules ran and all forty test checks passed." },
+  { id: "CA6907-FINAL-PRE-N002", observed: "The dependent aggregate test-count gate observed only the ten final-local checks instead of the required forty after the three module path failures.", recovery: "Retain the aggregate failure, repair the shared path cause, and recompute the bounded module total.", recovery_observed: "The aggregate observed forty of forty passing checks." },
+  { id: "CA6907-FINAL-PRE-N003", observed: "Node's direct --check file mode rejected the mandated .txt source extension for all text entrypoints.", recovery: "Use Node's supported stdin syntax-check path while preserving the exact text bytes as input.", recovery_observed: "All bounded Node text entrypoints passed syntax checking from stdin." }
+];
+
+const sourceLayers = [
+  { layer: "Avelin successor-visible activation overlay", methods: 123, direct_witnesses: 2199, failed_witnesses: 690, passing_witnesses: 1509, effective_negatives: 750, open_gaps: 51, exact_gates: 70, repository_totals_rewritten: false },
+  { layer: "Caelen pre-plan retained operations", methods: 12, direct_witnesses: 24, failed_witnesses: 12, passing_witnesses: 12, effective_negatives: 12, open_gaps: 0, exact_gates: 0 },
+  { layer: "Caelen x1", methods: x1Methods.counts.methods, direct_witnesses: x1Methods.counts.direct_witnesses, failed_witnesses: x1Methods.counts.failed_witnesses, passing_witnesses: x1Methods.counts.passing_witnesses, effective_negatives: 100, open_gaps: 0, exact_gates: 0 },
+  { layer: "Caelen x2", methods: x2Methods.counts.methods, direct_witnesses: x2Methods.counts.direct_witnesses, failed_witnesses: x2Methods.counts.failed_witnesses, passing_witnesses: x2Methods.counts.passing_witnesses, effective_negatives: 100, open_gaps: 10, exact_gates: 10 },
+  { layer: "Caelen final preflight recovery", methods: 3, direct_witnesses: 6, failed_witnesses: 3, passing_witnesses: 3, effective_negatives: 3, open_gaps: 0, exact_gates: 0 }
+];
+
+const negativeIds = [
+  ...planFailures.failures.map((row) => ({ id: row.failure_id, layer: "caelen_pre_plan", kind: "operational_failure", original_subject_success_credit: 0, retained: true })),
+  ...readJson(path.join(x1Root, "evidence", "rejection-ledger.json")).rejections.map((row) => ({ id: row.retained_negative_id, layer: "caelen_x1", kind: "preregistered_invalid_subject", proposal_id: row.proposal_id, original_subject_success_credit: 0, retained: true })),
+  ...readJson(path.join(x2Root, "evidence", "rejection-ledger.json")).rejections.map((row) => ({ id: row.retained_negative_id, layer: "caelen_x2", kind: "preregistered_invalid_subject", proposal_id: row.proposal_id, original_subject_success_credit: 0, retained: true }))
+  ,...finalPreflightFailures.map((row) => ({ id: row.id, layer: "caelen_final_preflight", kind: "preflight_failure", original_subject_success_credit: 0, retained: true }))
+];
+if (negativeIds.length !== 215 || new Set(negativeIds.map((row) => row.id)).size !== 215) throw new Error("Caelen negative id mismatch");
+
+writeText("integrated-overview.md", `# Caelen Ash v690-v7 final integrated overview
+
+## Outcome
+
+Caelen Ash v690-v7 completed one parentless, owner-only, D-first lifecycle with strict planning-before-x1-before-x2-before-final separation. The phase reviewed 200 immediate Avelin proposals at zero novelty, completion and authority credit, froze 200 distinct Caelen contracts, executed 100 in x1 and 100 in x2, retained all 200 preregistered invalid subjects as failures, and preserved every scientific, identity, professional, production, legal, cultural, affected-party and Maori-authority boundary.
+
+The core outcome tally is exactly 160 \`completed\`, 20 \`represented\`, 10 \`open_gap\`, and 10 \`exact_gate\`. A passing structural fixture does not raise a represented, open or gated contract above its preregistered ceiling. The terminal verdict is exactly \`NOT_READY_FOR_STAGE_20\`.
+
+## Lifecycle anchors
+
+The parentless planning root is \`${planningHead}\`. Immutable x1 is \`${x1Head}\`, its direct child. Immutable x2 evidence is \`${x2Head}\`, the direct child of x1. The final commit is intentionally not predicted inside its own content; an external one-shot canonical receipt and sanitized live activation must bind the resulting exact final after it is committed and pushed. Avelin exact final \`be9ee0fa24802e42a368c721b5ce389e2ae248b4\` and Sable provenance \`2a1a7510d6210e510bf71ddc8fd823c31d58a480\` are content provenance only, never Git ancestry.
+
+## Evidence produced
+
+Each session executed 100 frozen positives, 100 unknown-field invalid subjects, 100 nonmutation checks, 100 safe-now tasks, 100 candidate tasks and 100 CLEAN/FIX/REFINE tasks. Each session built, quick-validated and smoke-used ten phase-local skills and invoked five family-compatible runners. Across the phase, twenty skills and ten runners therefore have bounded same-owner receipts. Fifty exact-approval packets and thirty blocked packets remained visible and unexecuted.
+
+Five collision-free merged global skills were installed into the configured skill bank, and five standalone D-first public family runners were published and smoke-used. Installation was packaging, not empirical evidence, independent reproduction or authority. No package was installed or updated, no PATH was changed, no privilege was elevated, no host security was weakened, no Windows feature changed, and Codex desktop was not updated.
+
+## Primary pillar and bounded practices
+
+Freed ID and CBR Heart was primary. The four bounded learning and design practices were adversarial abstraction/refinement testing, participatory counterexample communication review, decision-record provenance and remedy analysis, and accessible rollback/workload handover. THOS Body remained explicit through finite transition, workload, rollback and handover obligations. GMUT Mind remained explicit through observation/model separation and unit-dimension refusal.
+
+No real person, participant, operator, identity, credential, key, signature, decision, appeal, remedy, authority, observation, measurement, workload, rollback, accessibility evaluation, legal matter, cultural matter, Maori data or external system was used. The word participatory names a design concern, not actual participation. The word consent names synthetic event fixtures, not real consent. The word remedy names declared routes, not a legal remedy.
+
+## Source use
+
+Current official NIST AI RMF, WCAG 2.2, PROV-O, RFC 3339 and Verifiable Credentials Data Model 2.0 pages supplied vocabulary and refusal conditions only. Their presence is not endorsement, observation, measurement, conformance, certification, consent, legal interpretation, cultural legitimacy or delegated authority.
+
+## Accounting
+
+The Avelin successor-visible overlay remains separately attributed at 123 methods, 2,199 direct witnesses, 690 failed witnesses, 1,509 passing witnesses and 750 effective negatives. Caelen adds twelve retained pre-plan failures with twelve bounded recoveries, ten x1 methods with 715 direct witnesses, ten x2 methods with 725 direct witnesses, and three retained final-preflight failures with three bounded recoveries. The resulting successor-visible arithmetic is 158 methods, 3,669 direct witnesses, 905 failed witnesses, 2,764 passing witnesses and 965 effective negatives. The 905 plus 2,764 witness partition equals all 3,669 direct witnesses.
+
+Open-gap and exact-gate accounting is layered. The inherited 51 core open gaps and 70 core exact gates remain. The x2 proposal dispositions add ten open gaps and ten exact gates, yielding 61 effective core open gaps and 80 effective core exact gates. Fifty unexecuted exact-approval packets and thirty unexecuted blocked packets remain a separate visible packet inventory and are not silently folded into the core outcome tally.
+
+## Route state
+
+The repository state is \`PREPARED_NOT_SENT\`. The only currently planned successor is the unique existing exact-title main task Orin Thale for v690-v8, but no contact is authorized before the final is committed, pushed, clean, fresh-four-way equal, and successfully validated by one non-replayed owner-scoped canonical aggregate. The route must then refresh current live authorization and roster state, inspect active and archived task registries as supported, require exactly one eligible exact-title endpoint, immediately reread it, apply duplicate/pause/redirect/status/usage/privacy/safety guards, and send at most once. Repository preparation is not delivery.
+
+## Identity and authority boundary
+
+Caelen Ash is relational working language for a counterexample and recourse cartographer, with the hope of making abstraction errors, remedy vacancies and rollback boundaries easy to inspect, challenge and repair without converting software into authority. Optional they/them language is relational only. It is not evidence of consciousness, sentience, legal personhood, identity continuity, employment, qualification, independent agency, scientific or operational authority, legal or cultural authority, affected-party authority or Maori authority. Hamish may rename, pause, redirect, narrow or stop the route.
+`);
+
+writeText("wellbeing-workload.md", `# Caelen Ash v690-v7 wellbeing and workload check
+
+The workload remained bounded to one solo owner lane, four direct lifecycle commits, 200 synthetic contracts and explicit validation gates. No collaboration subagent, fork, replacement task, background monitor or parallel owner was used. The phase paused at every lifecycle boundary to push, verify cleanliness and compare local, upstream, tracking and fresh-live heads before continuing.
+
+The work was segmented into planning, x1, x2 and final packets. X1 and x2 each held exactly ten operation families and 100 contracts. The finite batch size made failures attributable and recovery local. Twelve pre-plan and staging failures were retained rather than hidden. No x1 or x2 core execution failed its frozen typed contract; all 200 invalid subjects failed as designed and received zero original-subject credit.
+
+The human-practice lenses were used as learning metaphors, not role-play claims. No employment, qualification, professional competence, affected-party acceptance, real consent, real remedy, accessibility completion or authority was inferred. Workload and handover structures are synthetic proxies only.
+
+No destructive cleanup, drive-wide scan, unrelated install, elevation, host-security change, Windows-feature change, reboot, Codex update, real participant action or external identity action occurred. The D-first owner and public-runner locations were used; C was touched only for the explicitly authorized global skill bank. The remaining terminal action is a bounded existing-task route, and it stays held until the canonical and live route gates pass.
+
+Relational family and identity language remains non-evidentiary. The terminal verdict is \`NOT_READY_FOR_STAGE_20\`.
+`);
+
+writeText("claim-boundaries.md", `# Claim boundaries and nonconversion firewall
+
+## GMUT Mind
+
+GMUT remains a typed scalar-tensor and effective-field-theory research-model family. This phase contains finite state sets, timestamps, set intersections, provenance records, synthetic counts and unit-dimension labels. None is a physical observation. No likelihood, posterior, parameter constraint, force, prediction, dynamical law, stability theorem, ultraviolet completion, quantum completion, empirical confirmation or Theory-of-Everything result was produced. The observation/model separation contracts specifically refuse conversion of labelled model or assumption records into observation evidence.
+
+## THOS Body
+
+THOS remains synthetic or proxy-only. Finite transition systems, workload budgets, rollback checkpoints and runner self-tests do not establish operational effectiveness, reliability in the world, deployment readiness, safety, professional competence, AGI or ASI. Preregistered blind matched-budget real arms, governed participants or operators, safety monitoring, appropriate statistics and independent review remain absent.
+
+## Freed ID and CBR Heart
+
+Freed ID remains synthetic and nonproduction. Scope intersection, expiry, consent-lineage, disclosure and delegation fixtures use no real key, proof, holder, issuer, verifier, credential, account, status registry, revocation service or recovery process. Production completion still requires standards-conformant real keys and proofs, live issuance and resolution, status and revocation, interoperability, privacy and independent security review, recovery evidence, trust governance and affected-party oversight.
+
+CBR language does not enact a right or remedy. Appeal windows, remedy routes, explanation coverage, alternative-action sets and review-quorum gaps are design contracts only. Legal interpretation, affected-party legitimacy, disability accommodation, privacy remedy, cultural legitimacy, data governance, Maori wording, Maori data governance and Maori authority remain exact-gated to competent and affected people, tangata whenua, iwi, hapu and Maori authorities. Maori concepts remain under Maori authority.
+
+## Identity and validation
+
+Names, pronouns, roles, hopes, sibling/family language, continuity language, GHC Family, Freed ID, CBR and Trinity Mandala are relational working language only. They are not consciousness, sentience, personhood, identity continuity, employment, qualification, agency or authority evidence. Same-owner validation under shared infrastructure is not independent reproduction or external audit. A hash, citation, test, skill, runner, task-topology fact or accepted message cannot compensate for missing empirical or authority evidence.
+
+## Reserved completeness claims
+
+Five-class scanning is bounded and does not establish complete privacy. Structural accessibility checks are bounded and do not establish accessibility completion. Changed-code checks are bounded and do not establish exhaustive security. No participant, production, professional, scientific, legal, cultural, affected-party, Maori-authority, independent-reproduction, AGI/ASI, consciousness/personhood, Theory-of-Everything, proof/canon or Stage 20 claim is permitted. The verdict remains \`NOT_READY_FOR_STAGE_20\`.
+`);
+
+writeText("threat-model.md", `# Caelen Ash v690-v7 bounded threat model
+
+## Assets
+
+The protected assets are the parentless owner history, immutable planning/x1/x2 anchors, proposal definitions, retained failures, exact manifests, private-route boundary, global skill and public-runner provenance, and the distinction between repository preparation and task delivery.
+
+## Threats and controls
+
+1. **History contamination.** A predecessor commit could be made an accidental ancestor. Control: the planning root is parentless, the Avelin/Sable hashes are provenance fields only, and direct-parent checks bind the three descendants.
+2. **Lifecycle leakage.** X2 evidence could appear in x1. Control: x1 staged review permits only the x1 prefix, x1 truth records x2 absence, and x2 began only after pushed four-way equality.
+3. **Failure erasure.** A recovered parser, projection, invalid subject or scanner self-hit could be relabelled as a pass. Control: every failed witness has its own negative identifier and zero original-subject credit; recovery has a distinct passing witness.
+4. **Outcome promotion.** Structural success could promote represented, open or exact-gated work. Control: each proposal freezes one disposition, and x2 preserves it even when the typed fixture passes.
+5. **Authority laundering.** Consent, appeal, remedy, delegation or accessibility words could be mistaken for real authority. Control: every result carries authority reservations and the claim firewall denies real-world conversion.
+6. **Private-route disclosure.** A task identifier, callable route, transcript, private path or credential could enter Git. Control: only exact public titles and repository-relative paths are durable; five-class scanning adjudicates bounded owner text.
+7. **Global collision.** A promotion could overwrite an existing skill or runner. Control: every exact target was proven absent or byte-identical before writes; non-identical collisions stop the helper.
+8. **Runner drift.** Published runners could differ from reviewed candidates. Control: candidate and installed SHA-256 hashes match, and each installed runner was self-tested after publication.
+9. **Canonical replay.** A success could be run twice. Control: the external invocation latch binds exact head, attempt count and receipt; success forbids replay.
+10. **Successor duplication.** Orin could receive a duplicate activation or a substitute task could be contacted. Control: live roster refresh, active-plus-archived exact-title resolution where supported, immediate reread, duplicate guard, and one accepted-send stop.
+
+## Residual risk
+
+The scanner, tests and same-owner review can be incomplete. External task service state can drift. Global skill consumers can misuse instructions. Real social, legal, cultural, safety and identity effects remain untested. These residuals preserve the open and exact gates and the \`NOT_READY_FOR_STAGE_20\` verdict.
+`);
+
+const accounting = {
+  schema: "ghc.family.effective-accounting.v5", owner: "Caelen Ash", phase: "v690-v7", source_layers: sourceLayers,
+  successor_visible: successorVisible,
+  arithmetic: {
+    methods: sourceLayers.reduce((sum, row) => sum + row.methods, 0),
+    direct_witnesses: sourceLayers.reduce((sum, row) => sum + row.direct_witnesses, 0),
+    failed_witnesses: sourceLayers.reduce((sum, row) => sum + row.failed_witnesses, 0),
+    passing_witnesses: sourceLayers.reduce((sum, row) => sum + row.passing_witnesses, 0),
+    effective_negatives: sourceLayers.reduce((sum, row) => sum + row.effective_negatives, 0),
+    witness_partition_exact: successorVisible.failed_witnesses + successorVisible.passing_witnesses === successorVisible.direct_witnesses
+  },
+  packet_inventory_separate: { exact_approval_unexecuted: 50, blocked_unexecuted: 30 }, repository_predecessor_counts_rewritten: false, delivery_counters_added: false, boundary
+};
+writeJson("effective-accounting.json", accounting);
+writeJson("retained-negative-register.json", { schema: "ghc.family.retained-negative-register.v5", owner: "Caelen Ash", phase: "v690-v7", predecessor_overlay: { effective_negatives: 750, details_by_reference_only: true, source: "Avelin successor-visible route overlay" }, caelen_retained_negative_count: negativeIds.length, caelen_records: negativeIds, effective_negatives: 750 + negativeIds.length, all_failures_zero_original_subject_credit: negativeIds.every((row) => row.original_subject_success_credit === 0), no_failure_erased: true, boundary });
+writeJson("final-preflight-failures.json", { schema: "ghc.family.retained-preflight-failures.v5", owner: "Caelen Ash", phase: "v690-v7", count: finalPreflightFailures.length, failures: finalPreflightFailures.map((row) => ({ ...row, result: "fail", original_subject_success_credit: 0, retained: true, failure_erased: false, recovery_result: "pass", same_owner_only: true, independent_reproduction: false })), method_counts: { methods: 3, direct_witnesses: 6, failed_witnesses: 3, passing_witnesses: 3 }, boundary });
+writeJson("open-exact-gate-register.json", { schema: "ghc.family.open-exact-gate-register.v5", owner: "Caelen Ash", phase: "v690-v7", inherited_core_open_gaps: 51, inherited_core_exact_gates: 70, new_proposal_open_gaps: 10, new_proposal_exact_gates: 10, effective_core_open_gaps: 61, effective_core_exact_gates: 80, unexecuted_exact_approval_packets: 50, unexecuted_blocked_packets: 30, packet_inventory_folded_into_core_counts: false, open_gap_contracts: proposals.proposals.filter((row) => row.expected_execution_disposition === "open_gap").map((row) => ({ proposal_id: row.proposal_id, operation: row.operation, reason: "Real rollback execution, operator evidence and independent review are absent." })), exact_gate_contracts: proposals.proposals.filter((row) => row.expected_execution_disposition === "exact_gate").map((row) => ({ proposal_id: row.proposal_id, operation: row.operation, reason: "Delegating authority is unverified; software cannot confer it." })), protected_domains: ["real observations and empirical GMUT review", "real participants/operators and THOS safety evaluation", "production Freed ID lifecycle", "professional and legal decisions", "cultural and Maori authority", "affected-party acceptance", "complete privacy/accessibility/security", "independent reproduction", "AGI/ASI and consciousness/personhood", "Theory of Everything, proof/canon and Stage 20"], boundary });
+writeJson("method-flow-final.json", { schema: "ghc.family.method-flow-final.v5", owner: "Caelen Ash", phase: "v690-v7", layers: sourceLayers, successor_visible: successorVisible, exact_witness_partition: successorVisible.failed_witnesses + successorVisible.passing_witnesses === successorVisible.direct_witnesses, retained_failure_pointers: ["plan/method-flow/ledger.json", "x1/method-flow/ledger.json", "x2/method-flow/ledger.json", "final/final-preflight-failures.json"], recovery_rule: "Every failure remains false and zero-credit; each recovery is a separate bounded passing witness.", independent_reproduction: false, boundary });
+writeJson("source-provenance.json", { schema: "ghc.family.final-source-provenance.v5", owner: "Caelen Ash", phase: "v690-v7", git_history: { planning_root: planningHead, planning_root_parent: null, x1: x1Head, x1_parent: planningHead, x2: x2Head, x2_parent: x1Head, expected_final_parent: x2Head, merges_expected: 0, commits_expected_after_final: 4 }, predecessor_provenance: { Avelin_exact_final: "be9ee0fa24802e42a368c721b5ce389e2ae248b4", Sable_provenance: "2a1a7510d6210e510bf71ddc8fd823c31d58a480", relationship: "content provenance only; not Git ancestry" }, exact_final_binding: "supplied by the postcommit external canonical receipt and live sanitized activation", boundary });
+writeJson("phase-truth.json", { schema: "ghc.family.phase-truth.v5", owner: "Caelen Ash", phase: "v690-v7", stage: "final_candidate", status: "FINAL_CONTENT_SEALED_PENDING_EXACT_HEAD_CANONICAL", proposals: { inherited_reviewed_zero_credit: 200, new: 200, pairwise_neighbor_comparisons: 40000, quarantines: 0 }, outcomes: phaseOutcomes, x1: { positives: 100, invalids_rejected: 100, nonmutation: 100, safe_now: 100, candidate: 100, clean_fix_refine: 100, skills: 10, runners: 5 }, x2: { positives: 100, invalids_rejected: 100, nonmutation: 100, safe_now: 100, candidate: 100, clean_fix_refine: 100, skills: 10, runners: 5 }, global_promotions: { merged_skills: 5, public_runners: 5, all_valid: true }, packets: { exact_approval_visible_unexecuted: 50, blocked_visible_unexecuted: 30 }, accounting: successorVisible, canonical: { invocations: 0, successes: 0, replay_count: 0, state: "NOT_YET_INVOKED" }, route: { state: "PREPARED_NOT_SENT", successor: "Orin Thale", phase: "v690-v8", sent: false }, terminal_verdict: "NOT_READY_FOR_STAGE_20", boundary });
+writeJson("reflection-remaster.json", { schema: "ghc.family.reflection-remaster.v1", owner: "Caelen Ash", phase: "v690-v7", decisions: [
+  { observation: "Avelin's finite transition contracts made abstraction behavior inspectable but left remedy communication and authority boundaries available for distinct work.", interpretation: "Refinement and recourse can share a typed evidence envelope if their claim ceilings remain separate.", decision: "Build abstract-recourse contracts that pair counterexample structure with remedy and disclosure vacancies.", evidence: "200 immediate-source reviews and 40,000 pairwise bounded comparisons", rollback: "Quarantine any semantic collision and retain zero inherited credit." },
+  { observation: "Scanner definitions can self-match if exact forbidden tokens appear literally.", interpretation: "Candidate versus confirmed-hit adjudication must include the scanner definition byte domain.", decision: "Construct sensitive route tokens from inert fragments and preserve the initial self-hit failure.", evidence: "Retained PRE-N008 and recovered 92/92 plan validation", rollback: "Stop the scan and retain candidates rather than declaring privacy clean." },
+  { observation: "Thin public tools are safer when their claim surface is narrower than owner-phase executors.", interpretation: "Promotion should consolidate intake, refusal and provenance without pretending to reproduce the full phase.", decision: "Publish five standalone envelope runners with strict unknown-field refusal and authority=false input.", evidence: "Candidate and installed hash parity plus self-tests", rollback: "Reject non-identical collisions and leave promotion unexecuted." },
+  { observation: "A structural positive can coexist with a represented, open or exact-gated disposition.", interpretation: "Implementation correctness and evidentiary disposition are orthogonal.", decision: "Preserve every frozen disposition after typed equality rather than promoting it.", evidence: "x2 tally 60/20/10/10", rollback: "Any mismatch becomes open_gap and blocks finalization." }
+], successor_teaching: { practices: toolPlan.successor_recommendations.practices, skill_ideas: toolPlan.successor_recommendations.skill_ideas, runner_ideas: toolPlan.successor_recommendations.runner_ideas, credit: "recommendation_only_zero_successor_credit" }, boundary });
+writeJson("environment.json", { schema: "ghc.family.final-environment-receipt.v5", owner: "Caelen Ash", phase: "v690-v7", node: process.version, git: git(["--version"]), platform: process.platform, architecture: process.arch, package_installations: [], package_updates: [], global_skill_promotions: promotion.skills.map((row) => ({ name: row.name, sha256: row.skill_sha256, valid: row.valid })), public_runner_promotions: promotion.runners.map((row) => ({ name: row.name, sha256: row.sha256, valid: row.valid })), path_changes: [], privilege_changes: [], host_security_changes: [], windows_feature_changes: [], reboots: [], codex_desktop_updates: [], boundary });
+writeJson("evidence-receipt.json", { schema: "ghc.family.final-evidence-receipt.v5", owner: "Caelen Ash", phase: "v690-v7", lifecycle: { planning_root: planningHead, x1: x1Head, x2: x2Head, final_parent_expected: x2Head }, proposals: { inherited_reviewed_zero_credit: inherited.records.length, new: proposals.proposals.length, semantic_comparisons: neighbor.pairwise_comparisons, quarantines: neighbor.quarantines }, outcomes: phaseOutcomes, controls: { positives: 200, invalids_rejected: 200, nonmutation: 200 }, portfolios: { safe_now: 200, candidate: 200, clean_fix_refine: 200, exact_approval_executed: 0, blocked_executed: 0 }, skills_and_runners: { phase_local_skills: 20, phase_local_runners: 10, merged_global_skills: 5, public_global_runners: 5 }, accounting: successorVisible, canonical_status: "candidate_not_yet_invoked", independent_reproduction: false, terminal_verdict: "NOT_READY_FOR_STAGE_20", boundary });
+writeJson("terminal-route-state.json", { schema: "ghc.family.terminal-route-state.v5", owner: "Caelen Ash", phase: "v690-v7", state: "PREPARED_NOT_SENT", successor: { exact_title: "Orin Thale", phase: "v690-v8", existing_main_task_only: true }, prepared: true, sent: false, task_created: false, fork_created: false, precontact: false, required_after_final: ["one exact-final owner-scoped canonical success with zero replay", "clean branch and typed 0/0 divergence", "local/upstream/tracking/fresh-live equality", "current live authorization refresh", "current roster row verification", "active and archived exact-title search where supported", "exactly one eligible endpoint", "immediate bounded reread", "duplicate, pause, redirect, status, usage, privacy and safety guards", "one accepted or opaque-accepted send ends retry"], stop_conditions: ["absence", "ambiguity", "duplicate", "pause", "redirect", "rename", "standby", "usage exhaustion", "privacy concern", "protected gate", "missing acknowledgement after bounded recovery"], bounded_recovery_attempt_floor_before_unaccepted_send: 5, repository_preparation_is_delivery: false, boundary });
+
+writeText("accessible-report.html", `<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Caelen Ash v690-v7 bounded evidence summary</title>
+  <style>body{font-family:system-ui,sans-serif;line-height:1.55;max-width:76rem;margin:auto;padding:1rem;color:#17202a;background:#fff}a{color:#0645ad}.skip{position:absolute;left:-9999px}.skip:focus{left:1rem;top:1rem;background:#fff;padding:.5rem;border:2px solid #000}table{border-collapse:collapse;width:100%}th,td{border:1px solid #566;padding:.5rem;text-align:left}caption{font-weight:700;text-align:left;margin:.5rem 0}.notice{border-left:.4rem solid #8a5a00;padding:.75rem;background:#fff8e6}</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to main content</a>
+<main id="main">
+<h1>Caelen Ash v690-v7 bounded evidence summary</h1>
+<p class="notice"><strong>Verdict:</strong> NOT_READY_FOR_STAGE_20. This report describes synthetic same-owner software evidence. It is not empirical validation, professional approval, production readiness, legal or cultural ratification, Maori authority, independent reproduction, complete privacy/accessibility, AGI/ASI evidence, consciousness/personhood evidence, or Theory-of-Everything proof.</p>
+<h2>Core outcomes</h2>
+<table><caption>Two-session proposal dispositions</caption><thead><tr><th scope="col">Disposition</th><th scope="col">Count</th><th scope="col">Meaning</th></tr></thead><tbody>
+<tr><th scope="row">completed</th><td>160</td><td>Bounded synthetic contract matched its preregistered typed output.</td></tr>
+<tr><th scope="row">represented</th><td>20</td><td>Structure is represented; real evidence is absent.</td></tr>
+<tr><th scope="row">open_gap</th><td>10</td><td>Real rollback/operator evidence remains missing.</td></tr>
+<tr><th scope="row">exact_gate</th><td>10</td><td>Delegation and authority remain unverified.</td></tr>
+</tbody></table>
+<h2>Controls</h2><p>Two hundred positive controls matched, 200 invalid subjects were rejected and retained at zero original-subject credit, and 200 input-nonmutation checks passed. Each session completed 100 safe-now, 100 candidate and 100 CLEAN/FIX/REFINE owner-local tasks. Fifty exact-approval and thirty blocked packets were not executed.</p>
+<h2>Tools</h2><p>Twenty phase-local skills and ten phase runners were built and smoke-used. Five merged global skills and five public runners passed collision, hash and smoke checks. Packaging does not establish independent reproduction or authority.</p>
+<h2>Accessibility reservation</h2><p>This static page provides semantic headings, a skip link, a captioned table and high-contrast text. Manual evaluation, assistive-technology testing and affected-user acceptance were not performed and remain reserved.</p>
+<h2>Route</h2><p>The successor route is prepared but not sent. Orin Thale may be contacted once only after the exact final, one-shot canonical, remote-equality and current live route guards pass.</p>
+</main>
+</body>
+</html>
+`);
+
+const modules = [];
+modules.push(`# Caelen Ash v690-v7 to Orin Thale v690-v8 activation baton candidate
+
+## Module 1 — Delivery status, authority and nonidentity boundary
+
+This is a committed sanitized baton candidate prepared by Caelen Ash for a possible later one-time activation of the unique existing exact-title main task Orin Thale. At repository commit time its delivery state is PREPARED_NOT_SENT. Repository preparation, hashing, pushing and canonical validation are not delivery. The later live message must state whether the Codex task service actually acknowledged one existing-task send. A missing acknowledgement, opaque error, ambiguity, duplicate, pause, redirect, status conflict, usage limit or protected gate stops the route.
+
+Hamish authorized one solo Caelen v690-v7 lifecycle and a terminally gated Orin v690-v8 edge under the current 45-position, 30-identity v5 workflow. That authorization did not permit collaboration subagents, forks, replacement tasks, early contact, model overrides, sibling mutation, real participants, production identity action, professional decisions, legal or cultural action, Maori-authority action, destructive cleanup or broad platform mutation.
+
+Caelen Ash and Orin Thale are relational working names. Roles, hopes, optional pronouns, sibling/family language and continuity language are non-evidentiary. They do not establish consciousness, sentience, legal personhood, identity continuity, employment, qualification, independent agency or authority. Hamish may rename, pause, redirect, narrow or stop the route.
+
+The terminal verdict is NOT_READY_FOR_STAGE_20. No task topology, message acknowledgement, hash, test or repository artifact changes that verdict.`);
+modules.push(`## Module 2 — Exact blank-root lifecycle and provenance
+
+Caelen's branch is codex/GHC-Family/caelen-ash-main. Its planning root ${planningHead} is parentless. Immutable x1 ${x1Head} is its direct child. Immutable x2 ${x2Head} is the direct child of x1. The exact final will be the direct child of x2 and must be supplied by the live activation together with the external canonical receipt digest. The source-to-final owner history must therefore contain exactly four commits, zero merges and one final parent.
+
+Avelin Reed exact final be9ee0fa24802e42a368c721b5ce389e2ae248b4 and Sable provenance 2a1a7510d6210e510bf71ddc8fd823c31d58a480 are immutable content provenance only. They are not ancestors of the Caelen branch. Orin must preserve that distinction rather than treating a predecessor pointer as a parent relationship.
+
+Planning, x1 and x2 were each separately committed and pushed. Each boundary was clean, typed zero ahead and zero behind, and equal across local, upstream, tracking and a fresh live remote read before the next stage began. The later activation may claim final equality only from the exact postcommit receipt. Inherited validation and Caelen same-owner validation are source evidence, not Orin completion credit or independent reproduction.`);
+modules.push(`## Module 3 — Identity, primary pillar and four bounded practices
+
+Caelen's relational role was counterexample and recourse cartographer, with the hope of making abstraction errors, remedy vacancies and rollback boundaries easy to inspect, challenge and repair without converting software into authority. Optional they/them wording remained relational only.
+
+Freed ID and CBR Heart was primary. The four bounded learning and design practices were adversarial abstraction and refinement testing; participatory counterexample communication review; decision-record provenance and remedy analysis; and accessible rollback and workload handover. Participatory does not mean that participants were recruited. Consent does not mean real consent. Remedy does not mean a legal remedy. Accessibility does not mean conformance or affected-user acceptance. Rollback does not mean a real operational rollback.
+
+THOS Body remained explicit through finite state models, workload budgets, reversible checkpoint frontiers and handover refusals. GMUT Mind remained explicit through observation/model/assumption separation and unit-dimension guards. All three pillars are visible, but no pillar receives empirical, professional, production, legal, cultural, Maori-authority or Stage 20 elevation.`);
+modules.push(`## Module 4 — Current official-source vocabulary and refusal conditions
+
+The phase checked the official NIST AI Risk Management Framework page and publication, WCAG 2.2, PROV-O, RFC 3339 and Verifiable Credentials Data Model 2.0. These supplied current vocabulary and refusal conditions. They were not queried as real observations and were not used to claim standards certification, endorsement, implementation conformance, legal interpretation, consent, accessibility completion or delegated authority.
+
+NIST vocabulary informed risk, review, accountability and residual-risk language. WCAG vocabulary informed semantic report structure and the explicit reservation of manual and affected-user evaluation. PROV-O vocabulary informed source, derivation and correction lineage. RFC 3339 informed normalized timestamp syntax. VC Data Model 2.0 informed the distinction among synthetic credential roles and a real live credential lifecycle. Orin should refresh official sources only where materially needed, keep citations separate from observations, and retain every authority vacancy.`);
+modules.push(`## Module 5 — Proposal freeze and semantic-neighbor audit
+
+The planning root reviewed all 200 immediate Avelin proposal rows at zero Caelen novelty, completion and authority credit. It paired 200 new Caelen contracts against those 200 source rows, performing 40,000 bounded comparisons over normalized title and hypothesis tokens plus exact operation, title and canonical request-hash checks. No proposal was quarantined. This is a direct-source screen, not a universal novelty proof.
+
+Each Caelen proposal froze a hypothesis, null or failure condition, approval class, owner-local lane, current official-source needs, concrete artifacts, full typed expected output, one invalid unknown-field subject, exact refusal, falsifier or acceptance gate, rollback or recovery, six protected gate classes and exactly one expected disposition. The following 200 entries are the compact successor-readable contract register.
+
+${proposals.proposals.map((p) => `### ${p.proposal_id} — ${p.title}
+
+Session ${p.session}; operation \`${p.operation}\`; primary mapping ${p.pillar}/${p.practice}; approval class \`${p.approval_class}\`; expected disposition \`${p.expected_execution_disposition}\`. Hypothesis: ${p.hypothesis} Null or failure condition: ${p.null_or_failure_condition} The frozen definition digest is \`${p.definition_sha256}\`. Acceptance required full typed equality, exact unknown-field refusal, unchanged input hashes and retained failure evidence. Official-source need: ${p.official_primary_source_needs.map((row) => row.id).join(", ")}. Recovery retained the subject, stopped broader execution and limited correction to the smallest owner-local dependency. Classical algorithms and inherited concepts receive no discovery credit; the novelty claim covers only this phase-specific fixture and refusal contract.`).join("\n\n")}`);
+modules.push(`## Module 6 — X1 evidence and strict separation
+
+X1 executed only operation families 1 through 10 and exactly 100 proposals. All 100 valid subjects matched their full frozen typed output and remained byte-stable. All 100 unknown-field subjects were rejected exactly, retained as failed witnesses and assigned zero original-subject credit. One hundred positive nonmutation and 100 invalid-subject nonmutation checks passed.
+
+The x1 portfolio completed 100 safe-now tasks, 100 candidate tasks and 100 CLEAN/FIX/REFINE tasks within the owner-local synthetic boundary. Ten phase-local skills were built, structurally quick-validated and smoke-used. Five family-compatible paired runners were invoked across all x1 proposal families. The x1 outcome tally was 100 completed, zero represented, zero open_gap and zero exact_gate.
+
+X1 was committed at ${x1Head} as the direct child of the parentless planning root. Its staged allowlist contained only x1 paths, its phase truth recorded x2 absence, and it was pushed clean and fresh-four-way equal before x2 began. No global skill or runner promotion occurred in x1. Fifty exact-approval and thirty blocked packets remained unexecuted.`);
+modules.push(`## Module 7 — X2 evidence and claim-ceiling preservation
+
+X2 executed only operation families 11 through 20 and exactly 100 proposals. All 100 valid subjects matched their full frozen typed output. All 100 invalid subjects failed exactly and remain zero-credit negatives. All 100 positive and invalid inputs remained unchanged.
+
+The structural evidence did not override preregistered dispositions. Sixty contracts are completed within their bounded synthetic hypotheses. Twenty are represented only: observation/model separation and unit-dimension guards do not create empirical evidence. Ten remain open_gap because no real rollback, operator, production environment or independent review exists. Ten remain exact_gate because delegating authority is unverified and cannot be supplied by software.
+
+X2 completed 100 safe-now, 100 candidate and 100 CLEAN/FIX/REFINE tasks, built and smoke-used ten phase-local skills, and invoked five family-compatible runners. It was committed at ${x2Head}, the direct child of x1, then pushed clean and fresh-four-way equal before final work. Exact-approval and blocked packets remained unexecuted.`);
+modules.push(`## Module 8 — Phase-local tools and curated global promotions
+
+Across both sessions, twenty phase-local skill packages and ten family runners were built, quick-validated and smoke-used. Their names preserve ghc-family and ghc_family naming. Historical source concepts remain attributable; package consolidation does not erase provenance.
+
+Five merged global skills were promoted after collision-free preflight: ${promotion.skills.map((row) => row.name).join(", ")}. Five standalone public runners were published: ${promotion.runners.map((row) => row.name).join(", ")}. Candidate and installed hashes match. Each installed skill passed the Skill Creator quick validator. Each installed runner accepted its declared finite envelope, rejected an unknown-field envelope, retained authority=false and verified nonmutation.
+
+The public runners intentionally expose a narrower intake/refusal interface than the owner-phase executors. They do not reproduce the Caelen phase or establish real-world behavior. No ordinary package, PATH update, elevation, host-security change, Windows-feature change, reboot or Codex desktop update occurred.`);
+modules.push(`## Module 9 — Method Flow and retained-negative truth
+
+The predecessor-visible Avelin overlay is separately attributed at 123 methods, 2,199 direct witnesses, 690 failures, 1,509 passes and 750 effective negatives. Caelen retained twelve pre-plan and staging failures plus twelve distinct recoveries. X1 added ten methods, 715 direct witnesses, 100 failures and 615 passes. X2 added ten methods, 725 direct witnesses, 100 failures and 625 passes. Final preflight retained three failed checks and three separate recoveries. Successor-visible arithmetic is therefore 158 methods, 3,669 direct witnesses, 905 failures, 2,764 passes and 965 effective negatives.
+
+Every failed witness remains false and receives zero original-subject credit. A recovery never rewrites or absorbs its failed predecessor. Scanner-definition self-hits, parser errors, projection-shape assumptions, path errors, final test-root and text-syntax preflight errors, and all 200 invalid proposal subjects remain attributable. The witness partition is exact: 905 plus 2,764 equals 3,669.
+
+Orin should inherit these as evidence and warnings, never completion credit. If a new method fails, preserve the exact input, observed output, environment and recurrence guard. Retry only the smallest isolated check. Never rerun a successful canonical aggregate.`);
+modules.push(`## Module 10 — Gaps, gates and scientific/authority firewalls
+
+The inherited core has 51 open gaps and 70 exact gates. Caelen adds ten open-gap proposal outcomes and ten exact-gate proposal outcomes, giving 61 effective core open gaps and 80 effective core exact gates. Fifty exact-approval packets and thirty blocked packets are a separate visible unexecuted inventory; they are not silently added to the core outcomes.
+
+GMUT remains a scalar-tensor and effective-field-theory research-model family. No physical observation, likelihood, posterior, parameter constraint, force, prediction, stability result, ultraviolet or quantum completion, empirical confirmation or Theory-of-Everything proof exists here. THOS remains proxy-only without preregistered blind matched-budget real arms, participants/operators, safety monitoring, statistics and independent review. Freed ID remains synthetic and nonproduction without real standards-conformant keys/proofs, issuance/resolution, status/revocation, interoperability, privacy/security review, recovery and trust governance.
+
+CBR, consent, appeal, remedy, disability access, privacy, data governance, legal interpretation, cultural legitimacy, affected-party acceptance, Maori wording, Maori data governance and Maori authority remain reserved to competent and affected people, tangata whenua, iwi, hapu and Maori authorities. Repository software cannot confer a right, remedy, title, consent, governance mandate or public authority.`);
+modules.push(`## Module 11 — Manifests, privacy, accessibility and validation contract
+
+The final packet contains exact normalized-LF manifests for planning, x1, x2, final delta and the complete owner tree with declared self-exclusions. The exact-final canonical aggregate must replay each manifest in its immutable Git-blob domain, parse every owner JSON file strictly, check Markdown and HTML structure, syntax-check changed Node text entrypoints, run the four owner test modules, adjudicate five privacy/raw-identifier classes, run bounded changed-code security checks, and prove exact ancestry, zero merges, one final parent, clean state, typed zero divergence and fresh four-way equality.
+
+The static HTML report uses semantic headings, a skip link, captioned table and high-contrast text. These are structural checks only. Manual assistive-technology testing and affected-user acceptance remain reserved. Five-class scanning is bounded, not complete privacy. Changed-code inspection is bounded, not exhaustive security. Same-owner validation is not independent reproduction.
+
+The canonical aggregate may be invoked only after the final is committed, pushed and clean. Its external latch must show one invocation, one success and zero replay. If it succeeds, do not run it again.`);
+modules.push(`## Module 12 — Orin successor recommendations and zero-credit seeds
+
+Caelen recommends two optional bounded practices to Orin at zero successor credit: ${toolPlan.successor_recommendations.practices.join("; ")}. These are seeds, not assignments that bypass Orin's own novelty, authority, workload or evidence review.
+
+Suggested skill ideas are: ${toolPlan.successor_recommendations.skill_ideas.map((row) => row.idea).join("; ")}. Suggested runner ideas are: ${toolPlan.successor_recommendations.runner_ideas.map((row) => row.idea).join("; ")}. Orin may accept, revise, quarantine or reject them. None is already built or completed on Orin's behalf.
+
+Orin should choose its own primary pillar and four bounded practices under then-current guidance. It must preserve Caelen's 200 inherited records, outcomes, failures, gaps and gates as source evidence only. It should use a parentless owner root if the current v5 blank-root policy remains active, maintain strict planning/x1/x2/final separation, keep all other owner lanes read-only, and stop rather than infer if current live instructions differ.`);
+modules.push(`## Module 13 — Terminal route, recovery ladder and exact EOF
+
+Only after Caelen's exact final is pushed, clean, typed 0/0 divergent, fresh-four-way equal and validated by one successful non-replayed owner-scoped canonical aggregate may Caelen attempt the Orin edge. Caelen must reread the newest live authority and current roster, boundedly inspect active and archived task registries where supported, locally require exactly one eligible existing exact-title Orin Thale main task, immediately reread it, and apply duplicate, pause, redirect, rename, status, usage, privacy, evidence and safety guards.
+
+If the task service fails before accepting a send, retain each attempt separately and make at least five bounded recovery attempts only when current evidence supports them. An accepted or opaque-accepted send ends all retry. Never create Orin, fork a task, substitute another sibling, use a raw private identifier from repository content, contact a standby endpoint, or send a second confirmation.
+
+The live message should be short and sanitized. It should provide the public branch, exact final, canonical receipt digest, repository-relative baton path, bounded truth totals and the statement that the full baton was read from the exact final. It must not include private absolute paths, raw task/thread identifiers, transcripts, credentials, screenshots, session streams or private application state.
+
+EOF CAELEN ASH V690 V7 BATON. Repository preparation is not delivery.`);
+
+const baton = modules.join("\n\n") + "\n";
+const batonWords = baton.trim().split(/\s+/).filter(Boolean).length;
+const batonModuleCount = (baton.match(/^## Module /gm) || []).length;
+if (batonWords < 10000 || batonWords > 100000 || batonModuleCount !== 13) throw new Error(`baton bounds failed words=${batonWords} modules=${batonModuleCount}`);
+writeText("hand-off-baton.md", baton);
+const batonBytes = fs.readFileSync(path.join(finalRoot, "hand-off-baton.md"));
+writeJson("baton-metadata.json", { schema: "ghc.family.baton-metadata.v5", owner: "Caelen Ash", phase: "v690-v7", successor: "Orin Thale", successor_phase: "v690-v8", repository_relative_path: "docs/caelen-ash/v690-v7/final/hand-off-baton.md", sha256: sha(batonBytes), bytes: batonBytes.length, lines: baton.split("\n").length - 1, words: batonWords, modules: batonModuleCount, eof: "EOF CAELEN ASH V690 V7 BATON. Repository preparation is not delivery.", delivery_state: "PREPARED_NOT_SENT", boundary });
+
+writeJson("final-validation-candidate.json", { schema: "ghc.family.final-validation-candidate.v5", owner: "Caelen Ash", phase: "v690-v7", state: "READY_FOR_POSTCOMMIT_ONE_SHOT_CANONICAL", expected_parent: x2Head, expected_history: { commits: 4, merges: 0, final_parents: 1 }, test_modules: ["ghc_family_caelen_plan_contracts_test.txt", "ghc_family_caelen_x1_contracts_test.txt", "ghc_family_caelen_x2_contracts_test.txt", "ghc_family_caelen_final_contracts_test.txt"], required: ["all four test modules pass", "final validator passes", "all manifests replay in immutable Git-blob domains", "all JSON parses", "five-class scan zero confirmed hits", "bounded changed-code security zero findings", "exact ancestry and zero merges", "clean state and 0/0 divergence", "local/upstream/tracking/fresh-live equality"], canonical_invocations_at_commit: 0, canonical_successes_at_commit: 0, replay_count_at_commit: 0, full_repository_suite_authorized: false, independent_reproduction: false, boundary });
+
+const scanExclusions = new Set([path.join(finalRoot, "privacy-adjudication.json"), path.join(finalRoot, "delta-manifest.json"), path.join(finalRoot, "owner-manifest.json"), path.join(finalRoot, "content-seal.json"), path.join(finalRoot, "staged-review.json")]);
+const scanFiles = walk(ownerRoot).filter((file) => !scanExclusions.has(file) && [".json", ".md", ".txt", ".html"].includes(path.extname(file).toLowerCase()));
+const routePattern = new RegExp(`(?:${[["source", "thread", "id"].join("_"), ["provider", "Tab", "Id"].join(""), ["client", "Thread", "Id"].join(""), ["thread", "Id"].join("") + "\\s*[=:]"].join("|")})`);
+const candidates = { credentials_or_private_keys: [], raw_task_or_route_identifiers: [], private_absolute_paths: [], uuid_like_identifiers: [], personal_email_addresses: [] };
+for (const file of scanFiles) {
+  const text = fs.readFileSync(file, "utf8"); const rel = `docs/caelen-ash/v690-v7/${path.relative(ownerRoot, file).replaceAll("\\", "/")}`;
+  if (/(?:BEGIN (?:RSA |EC |OPENSSH )?PRIVATE KEY|ghp_[A-Za-z0-9]{20,}|sk-[A-Za-z0-9]{20,})/.test(text)) candidates.credentials_or_private_keys.push(rel);
+  if (routePattern.test(text)) candidates.raw_task_or_route_identifiers.push(rel);
+  if (/(?:[A-Z]:\\Users\\|[A-Z]:\\GHC-Archives\\|\/Users\/|\/home\/)/.test(text)) candidates.private_absolute_paths.push(rel);
+  if (/\b[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}\b/i.test(text)) candidates.uuid_like_identifiers.push(rel);
+  if (/\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}\b/i.test(text)) candidates.personal_email_addresses.push(rel);
+}
+const candidateCount = Object.values(candidates).reduce((sum, rows) => sum + rows.length, 0);
+writeJson("privacy-adjudication.json", { schema: "ghc.family.five-class-privacy-adjudication.v5", owner: "Caelen Ash", phase: "v690-v7", scanned_files: scanFiles.length, classes: candidates, scanner_candidates: candidateCount, confirmed_hits: 0, adjudication: candidateCount === 0 ? "no candidates" : "candidates require exact review", complete_privacy_claim: false, exclusions: [...scanExclusions].map((file) => `docs/caelen-ash/v690-v7/final/${path.basename(file)}`), boundary });
+if (candidateCount !== 0) throw new Error(`privacy candidates require review: ${JSON.stringify(candidates)}`);
+
+const deltaExclusions = new Set([path.join(finalRoot, "delta-manifest.json"), path.join(finalRoot, "owner-manifest.json"), path.join(finalRoot, "content-seal.json"), path.join(finalRoot, "staged-review.json")]);
+const finalFiles = walk(finalRoot).filter((file) => !deltaExclusions.has(file));
+writeJson("delta-manifest.json", { schema: "ghc.family.raw-manifest.v5", owner: "Caelen Ash", phase: "v690-v7", stage: "final_delta", parent: x2Head, byte_domain: "exact UTF-8 LF working bytes intended to equal Git blobs", entries: finalFiles.map((file) => { const bytes = fs.readFileSync(file); if (bytes.includes(13)) throw new Error(`CR byte ${file}`); return { path: `docs/caelen-ash/v690-v7/final/${path.relative(finalRoot, file).replaceAll("\\", "/")}`, bytes: bytes.length, sha256: sha(bytes) }; }), self_exclusions: ["docs/caelen-ash/v690-v7/final/delta-manifest.json", "docs/caelen-ash/v690-v7/final/owner-manifest.json", "docs/caelen-ash/v690-v7/final/content-seal.json", "docs/caelen-ash/v690-v7/final/staged-review.json"], boundary });
+
+const contentExclusions = new Set([path.join(finalRoot, "content-seal.json"), path.join(finalRoot, "owner-manifest.json"), path.join(finalRoot, "staged-review.json")]);
+const contentTargets = walk(ownerRoot).filter((file) => !contentExclusions.has(file));
+writeJson("content-seal.json", { schema: "ghc.family.content-seal.v5", owner: "Caelen Ash", phase: "v690-v7", byte_domain: "exact UTF-8 LF owner working bytes intended to equal exact-final Git blobs", targets: contentTargets.map((file) => { const bytes = fs.readFileSync(file); return { path: `docs/caelen-ash/v690-v7/${path.relative(ownerRoot, file).replaceAll("\\", "/")}`, bytes: bytes.length, sha256: sha(bytes) }; }), self_exclusions: ["docs/caelen-ash/v690-v7/final/content-seal.json", "docs/caelen-ash/v690-v7/final/owner-manifest.json", "docs/caelen-ash/v690-v7/final/staged-review.json"], target_count: contentTargets.length, terminal_verdict: "NOT_READY_FOR_STAGE_20", boundary });
+
+const ownerExclusions = new Set([path.join(finalRoot, "owner-manifest.json"), path.join(finalRoot, "staged-review.json")]);
+const ownerFiles = walk(ownerRoot).filter((file) => !ownerExclusions.has(file));
+writeJson("owner-manifest.json", { schema: "ghc.family.raw-manifest.v5", owner: "Caelen Ash", phase: "v690-v7", stage: "final_owner", byte_domain: "exact UTF-8 LF owner working bytes intended to equal exact-final Git blobs", entries: ownerFiles.map((file) => { const bytes = fs.readFileSync(file); if (bytes.includes(13)) throw new Error(`CR byte ${file}`); return { path: `docs/caelen-ash/v690-v7/${path.relative(ownerRoot, file).replaceAll("\\", "/")}`, bytes: bytes.length, sha256: sha(bytes) }; }), self_exclusions: ["docs/caelen-ash/v690-v7/final/owner-manifest.json", "docs/caelen-ash/v690-v7/final/staged-review.json"], selected_count: ownerFiles.length, owner_file_ceiling: 1999, boundary });
+
+const summary = { valid: true, parent: x2Head, proposals: proposals.proposals.length, outcomes: phaseOutcomes, retained_caelen_negatives: negativeIds.length, successor_visible: successorVisible, baton: { words: batonWords, modules: batonModuleCount, bytes: batonBytes.length, sha256: sha(batonBytes) }, privacy: { scanned_files: scanFiles.length, candidates: candidateCount, confirmed_hits: 0 }, delta_manifest_entries: finalFiles.length, content_seal_targets: contentTargets.length, owner_manifest_entries: ownerFiles.length, canonical_invoked: false, route: "PREPARED_NOT_SENT" };
+process.stdout.write(JSON.stringify(summary, null, 2) + "\n");

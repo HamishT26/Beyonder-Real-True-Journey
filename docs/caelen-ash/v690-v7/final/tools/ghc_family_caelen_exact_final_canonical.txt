@@ -1,0 +1,88 @@
+"use strict";
+
+const fs = require("fs");
+const path = require("path");
+const crypto = require("crypto");
+const cp = require("child_process");
+
+const finalRoot = path.resolve(__dirname, "..");
+const ownerRoot = path.resolve(finalRoot, "..");
+const repo = path.resolve(ownerRoot, "..", "..", "..");
+const receiptRoot = process.env.CAELEN_CANONICAL_RECEIPT_ROOT;
+if (!receiptRoot) throw new Error("CAELEN_CANONICAL_RECEIPT_ROOT is required for the external one-shot receipt");
+const receiptPath = path.join(receiptRoot, "exact-final-owner-scoped-canonical.json");
+const latchPath = path.join(receiptRoot, "canonical-invocation-latch.json");
+const expectedBranch = "codex/GHC-Family/caelen-ash-main";
+const planningHead = "421ad67edb7cbe75e20f692e6085ace32916dd5d";
+const x1Head = "6cc7f795583ba7e6cb07547f6ce1936025caaab9";
+const x2Head = "ec9d56ae75bbb0c25ed41474e669418b9692cee3";
+
+function git(args, encoding = "utf8") { return cp.execFileSync("git", ["-C", repo, ...args], { encoding, maxBuffer: 256 * 1024 * 1024 }).toString("utf8").trim(); }
+function normalize(value) { if (Array.isArray(value)) return value.map(normalize); if (value && typeof value === "object") { const out = {}; for (const key of Object.keys(value).sort()) out[key] = normalize(value[key]); return out; } return value; }
+function digestBytes(bytes) { return crypto.createHash("sha256").update(bytes).digest("hex"); }
+function payloadDigest(value) { return digestBytes(Buffer.from(JSON.stringify(normalize(value)), "utf8")); }
+function writeJson(file, value) { fs.writeFileSync(file, JSON.stringify(value, null, 2) + "\n", "utf8"); }
+
+fs.mkdirSync(receiptRoot, { recursive: true });
+if (fs.existsSync(latchPath) || fs.existsSync(receiptPath)) throw new Error("canonical latch or receipt already exists; replay is forbidden");
+
+const head = git(["rev-parse", "HEAD"]);
+const latch = { schema: "ghc.family.canonical-success-latch.v5", owner: "Caelen Ash", phase: "v690-v7", exact_head: head, invocations: 1, successes: 0, replay_count: 0, state: "RUNNING", replay_forbidden: true };
+writeJson(latchPath, latch);
+
+try {
+  const branch = git(["branch", "--show-current"]);
+  if (branch !== expectedBranch) throw new Error(`unexpected branch ${branch}`);
+  if (git(["status", "--porcelain"]) !== "") throw new Error("owner lane is not clean");
+  if (git(["rev-parse", "HEAD^"]) !== x2Head) throw new Error("exact final is not direct child of x2");
+  if (git(["rev-parse", `${x2Head}^`]) !== x1Head || git(["rev-parse", `${x1Head}^`]) !== planningHead) throw new Error("lifecycle ancestry mismatch");
+  if (git(["rev-list", "--parents", "-n", "1", planningHead]).split(/\s+/).length !== 1) throw new Error("planning root is not parentless");
+  if (git(["rev-list", "--count", "HEAD"]) !== "4") throw new Error("phase commit count is not four");
+  if (git(["rev-list", "--merges", "HEAD"]) !== "") throw new Error("merge commit present");
+  if (git(["cat-file", "-p", "HEAD"]).split(/\r?\n/).filter((line) => line.startsWith("parent ")).length !== 1) throw new Error("final does not have one parent");
+
+  const upstream = git(["rev-parse", "@{upstream}"]);
+  const tracking = git(["rev-parse", `refs/remotes/origin/${expectedBranch}`]);
+  const freshLine = git(["ls-remote", "--heads", "origin", `refs/heads/${expectedBranch}`]);
+  const freshLive = freshLine.split(/\s+/)[0];
+  const divergence = git(["rev-list", "--left-right", "--count", "HEAD...@{upstream}"]).split(/\s+/).map(Number);
+  const fourWayEqual = head === upstream && head === tracking && head === freshLive;
+  if (!fourWayEqual || divergence.length !== 2 || divergence[0] !== 0 || divergence[1] !== 0) throw new Error("final remote equality gate failed");
+
+  const validatorPath = path.join(finalRoot, "tools", "ghc_family_caelen_final_validate.txt");
+  const validatorRun = cp.spawnSync(process.execPath, [validatorPath, "--canonical"], { encoding: "utf8", maxBuffer: 256 * 1024 * 1024 });
+  if (validatorRun.status !== 0) throw new Error(`final validator failed: ${validatorRun.stderr || validatorRun.stdout}`);
+  const validator = JSON.parse(validatorRun.stdout);
+  if (!validator.valid) throw new Error("final validator returned invalid");
+
+  const finalDelta = git(["diff-tree", "--no-commit-id", "--name-only", "-r", "HEAD"]).split(/\r?\n/).filter(Boolean);
+  if (finalDelta.length === 0 || finalDelta.some((p) => !p.startsWith("docs/caelen-ash/v690-v7/final/"))) throw new Error("final delta scope mismatch");
+
+  const receipt = {
+    schema: "ghc.family.exact-final-owner-scoped-canonical.v5",
+    owner: "Caelen Ash",
+    phase: "v690-v7",
+    status: "VALID_EXACT_FINAL_OWNER_SCOPED_CANONICAL",
+    branch,
+    exact_final: head,
+    lifecycle: { planning_root: planningHead, x1: x1Head, x2: x2Head, final: head, commits: 4, merges: 0, final_parents: 1, planning_root_parentless: true },
+    invocation: { invocations: 1, successes: 1, replay_count: 0, replay_forbidden: true },
+    remote_equality: { local: head, upstream, tracking, fresh_live: freshLive, divergence: { ahead: divergence[0], behind: divergence[1] }, clean: true, four_way_equal: fourWayEqual },
+    owner_validation: validator,
+    final_delta_paths: finalDelta.length,
+    full_repository_suite_run: false,
+    same_owner_only: true,
+    independent_reproduction: false,
+    claim_boundary: "Bounded same-owner synthetic software and documentation evidence only; no empirical, participant, identity, professional, production, legal, cultural, affected-party, Maori-authority, complete privacy/accessibility, exhaustive-security, independent-reproduction, consciousness/personhood, AGI/ASI, Theory-of-Everything, proof/canon or Stage 20 claim. NOT_READY_FOR_STAGE_20."
+  };
+  receipt.payload_sha256 = payloadDigest(receipt);
+  writeJson(receiptPath, receipt);
+  const receiptSha256 = digestBytes(fs.readFileSync(receiptPath));
+  writeJson(latchPath, { ...latch, successes: 1, state: "SUCCESS_LATCHED_NO_REPLAY", receipt_sha256: receiptSha256, payload_sha256: receipt.payload_sha256 });
+  process.stdout.write(JSON.stringify({ status: receipt.status, exact_final: head, invocations: 1, successes: 1, replay_count: 0, checks_total: validator.checks_total, checks_passed: validator.checks_passed, selected_tests: validator.selected_tests, strict_json_files: validator.strict_json_files, historical_manifest_entries: validator.historical_manifest_entries, final_delta_entries: validator.final_delta_entries, final_owner_entries: validator.final_owner_entries, content_seal_targets: validator.content_seal_targets, privacy_candidates: validator.privacy_candidates, security_findings: validator.security_findings, four_way_equal: fourWayEqual, divergence, receipt_sha256: receiptSha256, payload_sha256: receipt.payload_sha256 }, null, 2) + "\n");
+} catch (error) {
+  const failure = { ...latch, state: "FAILED_ZERO_CANONICAL_SUCCESS_CREDIT", error: String(error && error.message ? error.message : error) };
+  writeJson(latchPath, failure);
+  if (!fs.existsSync(receiptPath)) writeJson(receiptPath, { schema: "ghc.family.exact-final-owner-scoped-canonical.v5", owner: "Caelen Ash", phase: "v690-v7", status: "FAILED_ZERO_CANONICAL_SUCCESS_CREDIT", exact_final: head, invocation: { invocations: 1, successes: 0, replay_count: 0, replay_forbidden: true }, error: failure.error });
+  throw error;
+}

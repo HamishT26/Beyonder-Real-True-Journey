@@ -1,0 +1,230 @@
+"use strict";
+
+const fs = require("fs");
+const path = require("path");
+const crypto = require("crypto");
+const cp = require("child_process");
+
+const canonicalMode = process.argv.includes("--canonical");
+const finalRoot = path.resolve(__dirname, "..");
+const ownerRoot = path.resolve(finalRoot, "..");
+const repo = path.resolve(ownerRoot, "..", "..", "..");
+const planningHead = "421ad67edb7cbe75e20f692e6085ace32916dd5d";
+const x1Head = "6cc7f795583ba7e6cb07547f6ce1936025caaab9";
+const x2Head = "ec9d56ae75bbb0c25ed41474e669418b9692cee3";
+const checks = [];
+const errors = [];
+function check(name, condition, detail = null) { checks.push({ name, pass: Boolean(condition), detail }); if (!condition) errors.push(`${name}${detail ? `: ${detail}` : ""}`); }
+function readJson(relative) { return JSON.parse(fs.readFileSync(path.join(finalRoot, relative), "utf8")); }
+function git(args, encoding = "utf8") { return cp.execFileSync("git", ["-C", repo, ...args], { encoding, maxBuffer: 256 * 1024 * 1024 }); }
+function walk(dir) { const out = []; for (const entry of fs.readdirSync(dir, { withFileTypes: true }).sort((a, b) => a.name.localeCompare(b.name))) { const full = path.join(dir, entry.name); if (entry.isDirectory()) out.push(...walk(full)); else out.push(full); } return out; }
+function digest(bytes) { return crypto.createHash("sha256").update(bytes).digest("hex"); }
+
+const currentHead = git(["rev-parse", "HEAD"]).toString("utf8").trim();
+check("mode head", canonicalMode ? currentHead !== x2Head : currentHead === x2Head, currentHead);
+if (canonicalMode) {
+  check("final direct parent", git(["rev-parse", "HEAD^"]).toString("utf8").trim() === x2Head);
+  check("final commit count", git(["rev-list", "--count", "HEAD"]).toString("utf8").trim() === "4");
+  check("final one parent", git(["cat-file", "-p", "HEAD"]).toString("utf8").split(/\r?\n/).filter((line) => line.startsWith("parent ")).length === 1);
+} else {
+  check("precommit parent", currentHead === x2Head);
+  check("precommit commit count", git(["rev-list", "--count", "HEAD"]).toString("utf8").trim() === "3");
+}
+check("x2 direct parent", git(["rev-parse", `${x2Head}^`]).toString("utf8").trim() === x1Head);
+check("x1 direct parent", git(["rev-parse", `${x1Head}^`]).toString("utf8").trim() === planningHead);
+check("planning root parentless", git(["rev-list", "--parents", "-n", "1", planningHead]).toString("utf8").trim().split(/\s+/).length === 1);
+check("zero merges", git(["rev-list", "--merges", canonicalMode ? "HEAD" : x2Head]).toString("utf8").trim() === "");
+for (const stage of ["plan", "x1", "x2"]) {
+  check(`${stage} working immutable`, git(["diff", "--name-only", "--", `docs/caelen-ash/v690-v7/${stage}`]).toString("utf8").trim() === "");
+  check(`${stage} index immutable`, git(["diff", "--cached", "--name-only", "--", `docs/caelen-ash/v690-v7/${stage}`]).toString("utf8").trim() === "");
+}
+
+const truth = readJson("phase-truth.json");
+const accounting = readJson("effective-accounting.json");
+const negatives = readJson("retained-negative-register.json");
+const gates = readJson("open-exact-gate-register.json");
+const methods = readJson("method-flow-final.json");
+const evidence = readJson("evidence-receipt.json");
+const route = readJson("terminal-route-state.json");
+const batonMeta = readJson("baton-metadata.json");
+const privacy = readJson("privacy-adjudication.json");
+const candidate = readJson("final-validation-candidate.json");
+const deltaManifest = readJson("delta-manifest.json");
+const ownerManifest = readJson("owner-manifest.json");
+const contentSeal = readJson("content-seal.json");
+
+check("phase proposal counts", truth.proposals.inherited_reviewed_zero_credit === 200 && truth.proposals.new === 200 && truth.proposals.pairwise_neighbor_comparisons === 40000 && truth.proposals.quarantines === 0);
+check("phase outcomes", truth.outcomes.completed === 160 && truth.outcomes.represented === 20 && truth.outcomes.open_gap === 10 && truth.outcomes.exact_gate === 10);
+check("x1 truth", truth.x1.positives === 100 && truth.x1.invalids_rejected === 100 && truth.x1.nonmutation === 100 && truth.x1.safe_now === 100 && truth.x1.candidate === 100 && truth.x1.clean_fix_refine === 100 && truth.x1.skills === 10 && truth.x1.runners === 5);
+check("x2 truth", truth.x2.positives === 100 && truth.x2.invalids_rejected === 100 && truth.x2.nonmutation === 100 && truth.x2.safe_now === 100 && truth.x2.candidate === 100 && truth.x2.clean_fix_refine === 100 && truth.x2.skills === 10 && truth.x2.runners === 5);
+check("global promotion truth", truth.global_promotions.merged_skills === 5 && truth.global_promotions.public_runners === 5 && truth.global_promotions.all_valid);
+check("packets unexecuted", truth.packets.exact_approval_visible_unexecuted === 50 && truth.packets.blocked_visible_unexecuted === 30);
+check("terminal verdict", truth.terminal_verdict === "NOT_READY_FOR_STAGE_20");
+check("canonical not claimed in repo", truth.canonical.invocations === 0 && truth.canonical.successes === 0 && truth.canonical.replay_count === 0 && truth.canonical.state === "NOT_YET_INVOKED");
+
+check("successor-visible methods", accounting.successor_visible.methods === 158);
+check("successor-visible witnesses", accounting.successor_visible.direct_witnesses === 3669 && accounting.successor_visible.failed_witnesses === 905 && accounting.successor_visible.passing_witnesses === 2764);
+check("witness partition", accounting.successor_visible.failed_witnesses + accounting.successor_visible.passing_witnesses === accounting.successor_visible.direct_witnesses && accounting.arithmetic.witness_partition_exact);
+check("effective negatives", accounting.successor_visible.effective_negatives === 965 && negatives.effective_negatives === 965);
+check("Caelen negative records", negatives.caelen_retained_negative_count === 215 && negatives.caelen_records.length === 215 && new Set(negatives.caelen_records.map((row) => row.id)).size === 215);
+check("failures zero credit", negatives.all_failures_zero_original_subject_credit && negatives.caelen_records.every((row) => row.original_subject_success_credit === 0 && row.retained));
+check("no failure erased", negatives.no_failure_erased);
+check("method layer arithmetic", methods.successor_visible.methods === 158 && methods.successor_visible.direct_witnesses === 3669 && methods.successor_visible.failed_witnesses === 905 && methods.successor_visible.passing_witnesses === 2764 && methods.exact_witness_partition);
+check("core gaps", gates.effective_core_open_gaps === 61 && gates.inherited_core_open_gaps === 51 && gates.new_proposal_open_gaps === 10);
+check("core exact gates", gates.effective_core_exact_gates === 80 && gates.inherited_core_exact_gates === 70 && gates.new_proposal_exact_gates === 10);
+check("packet layers separate", gates.unexecuted_exact_approval_packets === 50 && gates.unexecuted_blocked_packets === 30 && gates.packet_inventory_folded_into_core_counts === false);
+check("open contracts ten", gates.open_gap_contracts.length === 10);
+check("exact contracts ten", gates.exact_gate_contracts.length === 10);
+
+check("route prepared not sent", route.state === "PREPARED_NOT_SENT" && route.prepared && route.sent === false && route.task_created === false && route.fork_created === false && route.precontact === false);
+check("route successor", route.successor.exact_title === "Orin Thale" && route.successor.phase === "v690-v8" && route.successor.existing_main_task_only);
+check("route recovery floor", route.bounded_recovery_attempt_floor_before_unaccepted_send >= 5);
+check("repository preparation not delivery", route.repository_preparation_is_delivery === false);
+check("validation candidate", candidate.state === "READY_FOR_POSTCOMMIT_ONE_SHOT_CANONICAL" && candidate.canonical_invocations_at_commit === 0 && candidate.canonical_successes_at_commit === 0 && candidate.replay_count_at_commit === 0 && candidate.full_repository_suite_authorized === false);
+
+const batonPath = path.join(finalRoot, "hand-off-baton.md");
+const batonBytes = fs.readFileSync(batonPath);
+const batonText = batonBytes.toString("utf8");
+const batonWords = batonText.trim().split(/\s+/).filter(Boolean).length;
+const batonModules = (batonText.match(/^## Module /gm) || []).length;
+check("baton hash", digest(batonBytes) === batonMeta.sha256);
+check("baton bytes", batonBytes.length === batonMeta.bytes);
+check("baton words", batonWords === batonMeta.words && batonWords >= 10000 && batonWords <= 100000, String(batonWords));
+check("baton modules", batonModules === 13 && batonMeta.modules === 13);
+check("baton EOF", batonText.endsWith("EOF CAELEN ASH V690 V7 BATON. Repository preparation is not delivery.\n") && batonMeta.eof === "EOF CAELEN ASH V690 V7 BATON. Repository preparation is not delivery.");
+check("baton prepared not sent", batonMeta.delivery_state === "PREPARED_NOT_SENT");
+
+check("privacy receipt zero", privacy.scanner_candidates === 0 && privacy.confirmed_hits === 0 && privacy.complete_privacy_claim === false);
+check("evidence outcome parity", JSON.stringify(evidence.outcomes) === JSON.stringify(truth.outcomes));
+check("evidence control counts", evidence.controls.positives === 200 && evidence.controls.invalids_rejected === 200 && evidence.controls.nonmutation === 200);
+check("evidence portfolio counts", evidence.portfolios.safe_now === 200 && evidence.portfolios.candidate === 200 && evidence.portfolios.clean_fix_refine === 200 && evidence.portfolios.exact_approval_executed === 0 && evidence.portfolios.blocked_executed === 0);
+check("evidence tool counts", evidence.skills_and_runners.phase_local_skills === 20 && evidence.skills_and_runners.phase_local_runners === 10 && evidence.skills_and_runners.merged_global_skills === 5 && evidence.skills_and_runners.public_global_runners === 5);
+check("evidence not independent", evidence.independent_reproduction === false);
+
+const testFiles = ["ghc_family_caelen_plan_contracts_test.txt", "ghc_family_caelen_x1_contracts_test.txt", "ghc_family_caelen_x2_contracts_test.txt", "ghc_family_caelen_final_contracts_test.txt"];
+const testReceipts = [];
+for (const name of testFiles) {
+  const run = cp.spawnSync(process.execPath, [path.join(finalRoot, "tests", name)], { encoding: "utf8", maxBuffer: 32 * 1024 * 1024 });
+  if (run.status !== 0) { testReceipts.push({ module: name, valid: false, error: run.stderr }); continue; }
+  testReceipts.push(JSON.parse(run.stdout));
+}
+check("four test modules", testReceipts.length === 4 && testReceipts.every((row) => row.valid), JSON.stringify(testReceipts.filter((row) => !row.valid)));
+check("40 test checks", testReceipts.reduce((sum, row) => sum + (row.tests_total || 0), 0) === 40 && testReceipts.reduce((sum, row) => sum + (row.tests_passed || 0), 0) === 40);
+
+const ownerFiles = walk(ownerRoot);
+check("owner file ceiling", ownerFiles.length < 2000, String(ownerFiles.length));
+check("allowed extensions", ownerFiles.every((file) => [".json", ".md", ".txt", ".html"].includes(path.extname(file).toLowerCase())));
+const jsonFiles = ownerFiles.filter((file) => path.extname(file).toLowerCase() === ".json");
+const jsonErrors = [];
+for (const file of jsonFiles) { try { JSON.parse(fs.readFileSync(file, "utf8")); } catch { jsonErrors.push(path.relative(ownerRoot, file)); } }
+check("strict JSON parse", jsonErrors.length === 0, jsonErrors.join(","));
+
+const html = fs.readFileSync(path.join(finalRoot, "accessible-report.html"), "utf8");
+check("HTML language and title", /<html lang="en">/.test(html) && /<title>[^<]+<\/title>/.test(html));
+check("HTML landmark and heading", /<main id="main">/.test(html) && /<h1>/.test(html));
+check("HTML skip link", /href="#main"/.test(html));
+check("HTML table semantics", /<caption>/.test(html) && /scope="col"/.test(html) && /scope="row"/.test(html));
+check("HTML no script", !/<script\b/i.test(html));
+check("accessibility reservation", html.includes("Manual evaluation") && html.includes("affected-user acceptance"));
+
+const textFiles = ownerFiles.filter((file) => [".json", ".md", ".txt", ".html"].includes(path.extname(file).toLowerCase()));
+const cr = [], uuid = [], privatePath = [], credential = [], routeIds = [], emails = [];
+const routePattern = new RegExp(`(?:${[["source", "thread", "id"].join("_"), ["provider", "Tab", "Id"].join(""), ["client", "Thread", "Id"].join(""), ["thread", "Id"].join("") + "\\s*[=:]"].join("|")})`);
+for (const file of textFiles) {
+  const bytes = fs.readFileSync(file); const rel = path.relative(ownerRoot, file).replaceAll("\\", "/"); const text = bytes.toString("utf8");
+  if (bytes.includes(13)) cr.push(rel);
+  if (/\b[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}\b/i.test(text)) uuid.push(rel);
+  if (/(?:[A-Z]:\\Users\\|[A-Z]:\\GHC-Archives\\|\/Users\/|\/home\/)/.test(text)) privatePath.push(rel);
+  if (/(?:BEGIN (?:RSA |EC |OPENSSH )?PRIVATE KEY|ghp_[A-Za-z0-9]{20,}|sk-[A-Za-z0-9]{20,})/.test(text)) credential.push(rel);
+  if (routePattern.test(text)) routeIds.push(rel);
+  if (/\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}\b/i.test(text)) emails.push(rel);
+}
+check("LF byte domain", cr.length === 0, cr.join(","));
+check("UUID candidates zero", uuid.length === 0, uuid.join(","));
+check("private path candidates zero", privatePath.length === 0, privatePath.join(","));
+check("credential candidates zero", credential.length === 0, credential.join(","));
+check("raw route candidates zero", routeIds.length === 0, routeIds.join(","));
+check("email candidates zero", emails.length === 0, emails.join(","));
+
+const codeFiles = ownerFiles.filter((file) => path.extname(file).toLowerCase() === ".txt" && /[\\/](tools|runners|tests)[\\/]/.test(file));
+const syntaxErrors = [];
+for (const file of codeFiles) { const run = cp.spawnSync(process.execPath, ["--check", "-"], { encoding: "utf8", input: fs.readFileSync(file, "utf8") }); if (run.status !== 0) syntaxErrors.push(path.relative(ownerRoot, file)); }
+check("Node text syntax", syntaxErrors.length === 0, syntaxErrors.join(","));
+const securityFindings = [];
+for (const file of codeFiles) {
+  const text = fs.readFileSync(file, "utf8");
+  const findings = [];
+  if (/\beval\s*\(/.test(text)) findings.push("eval");
+  if (/\bFunction\s*\(/.test(text)) findings.push("dynamic_function");
+  if (/\b(?:rmSync|rmdirSync|unlinkSync)\s*\(/.test(text)) findings.push("destructive_fs");
+  if (/reset\s+--hard|push\s+--force/.test(text)) findings.push("destructive_git");
+  if (findings.length) securityFindings.push({ file: path.relative(ownerRoot, file), findings });
+}
+check("bounded changed-code security", securityFindings.length === 0, JSON.stringify(securityFindings));
+
+function verifyWorkingManifest(manifest, excludedPaths) {
+  const failures = [];
+  for (const entry of manifest.entries || manifest.targets) {
+    const file = path.join(repo, ...entry.path.split("/"));
+    if (!fs.existsSync(file)) { failures.push(entry.path); continue; }
+    const bytes = fs.readFileSync(file);
+    if (bytes.length !== entry.bytes || digest(bytes) !== entry.sha256) failures.push(entry.path);
+  }
+  return failures;
+}
+const deltaErrors = verifyWorkingManifest(deltaManifest);
+const ownerErrors = verifyWorkingManifest(ownerManifest);
+const sealErrors = verifyWorkingManifest(contentSeal);
+check("final delta manifest", deltaErrors.length === 0 && deltaManifest.entries.length > 0, deltaErrors.join(","));
+check("final owner manifest", ownerErrors.length === 0 && ownerManifest.entries.length > 0, ownerErrors.join(","));
+check("content seal", sealErrors.length === 0 && contentSeal.targets.length === contentSeal.target_count, sealErrors.join(","));
+check("owner manifest ceiling", ownerManifest.entries.length < 2000 && ownerManifest.owner_file_ceiling === 1999);
+
+const historicalManifests = [
+  [planningHead, `docs/caelen-ash/v690-v7/plan/manifest.json`, 25],
+  [x1Head, `docs/caelen-ash/v690-v7/x1/manifest.json`, 41],
+  [x2Head, `docs/caelen-ash/v690-v7/x2/manifest.json`, 58]
+];
+const historicalErrors = [];
+let historicalEntries = 0;
+for (const [head, manifestPath, expectedCount] of historicalManifests) {
+  const manifestRecord = JSON.parse(git(["show", `${head}:${manifestPath}`]).toString("utf8"));
+  if (manifestRecord.entries.length !== expectedCount) historicalErrors.push(`${manifestPath}:count`);
+  historicalEntries += manifestRecord.entries.length;
+  for (const entry of manifestRecord.entries) {
+    let bytes;
+    try { bytes = git(["show", `${head}:${entry.path}`], "buffer"); }
+    catch { historicalErrors.push(entry.path); continue; }
+    if (bytes.length !== entry.bytes || digest(bytes) !== entry.sha256) historicalErrors.push(entry.path);
+  }
+}
+check("historical manifest replay", historicalErrors.length === 0 && historicalEntries === 124, historicalErrors.join(","));
+
+if (canonicalMode) {
+  const blobErrors = [];
+  for (const manifestRecord of [deltaManifest, ownerManifest]) {
+    for (const entry of manifestRecord.entries) {
+      let bytes;
+      try { bytes = git(["show", `HEAD:${entry.path}`], "buffer"); } catch { blobErrors.push(entry.path); continue; }
+      if (bytes.length !== entry.bytes || digest(bytes) !== entry.sha256) blobErrors.push(entry.path);
+    }
+  }
+  for (const entry of contentSeal.targets) {
+    let bytes;
+    try { bytes = git(["show", `HEAD:${entry.path}`], "buffer"); } catch { blobErrors.push(entry.path); continue; }
+    if (bytes.length !== entry.bytes || digest(bytes) !== entry.sha256) blobErrors.push(entry.path);
+  }
+  check("exact-final Git-blob manifests", blobErrors.length === 0, blobErrors.join(","));
+  check("canonical clean working tree", git(["status", "--porcelain"]).toString("utf8").trim() === "");
+} else {
+  const changed = git(["status", "--porcelain"]).toString("utf8").trim().split(/\r?\n/).filter(Boolean);
+  check("only final working paths", changed.every((line) => line.slice(3).startsWith("docs/caelen-ash/v690-v7/final/")), changed.join(","));
+}
+
+const markdownFiles = ownerFiles.filter((file) => path.extname(file).toLowerCase() === ".md");
+const wordOverflow = markdownFiles.filter((file) => fs.readFileSync(file, "utf8").trim().split(/\s+/).filter(Boolean).length > 100000).map((file) => path.relative(ownerRoot, file));
+check("document word ceilings", wordOverflow.length === 0, wordOverflow.join(","));
+
+const receipt = { schema: "ghc.family.final-validator-receipt.v5", owner: "Caelen Ash", phase: "v690-v7", mode: canonicalMode ? "exact_final" : "precommit", head: currentHead, valid: errors.length === 0, checks_total: checks.length, checks_passed: checks.filter((row) => row.pass).length, checks_failed: errors.length, selected_tests: { modules: testReceipts.length, tests: testReceipts.reduce((sum, row) => sum + (row.tests_total || 0), 0), passed: testReceipts.reduce((sum, row) => sum + (row.tests_passed || 0), 0) }, strict_json_files: jsonFiles.length, owner_files: ownerFiles.length, code_files_checked: codeFiles.length, historical_manifest_entries: historicalEntries, final_delta_entries: deltaManifest.entries.length, final_owner_entries: ownerManifest.entries.length, content_seal_targets: contentSeal.targets.length, privacy_candidates: { credentials_or_private_keys: credential.length, raw_task_or_route_identifiers: routeIds.length, private_absolute_paths: privatePath.length, uuid_like_identifiers: uuid.length, personal_email_addresses: emails.length }, security_findings: securityFindings.length, baton: { words: batonWords, modules: batonModules, sha256: digest(batonBytes) }, errors, checks };
+process.stdout.write(JSON.stringify(receipt, null, 2) + "\n");
+if (!receipt.valid) process.exitCode = 1;

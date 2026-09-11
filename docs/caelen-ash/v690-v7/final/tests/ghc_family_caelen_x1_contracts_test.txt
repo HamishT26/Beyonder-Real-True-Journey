@@ -1,0 +1,26 @@
+"use strict";
+const fs = require("fs");
+const path = require("path");
+const ownerRoot = path.resolve(__dirname, "..", "..");
+const results = JSON.parse(fs.readFileSync(path.join(ownerRoot, "x1", "results", "proposal-results.json"), "utf8"));
+const rejection = JSON.parse(fs.readFileSync(path.join(ownerRoot, "x1", "evidence", "rejection-ledger.json"), "utf8"));
+const mutation = JSON.parse(fs.readFileSync(path.join(ownerRoot, "x1", "evidence", "nonmutation-ledger.json"), "utf8"));
+const skills = JSON.parse(fs.readFileSync(path.join(ownerRoot, "x1", "evidence", "skill-receipts.json"), "utf8"));
+const runners = JSON.parse(fs.readFileSync(path.join(ownerRoot, "x1", "evidence", "runner-receipts.json"), "utf8"));
+const portfolio = JSON.parse(fs.readFileSync(path.join(ownerRoot, "x1", "evidence", "portfolio-results.json"), "utf8"));
+const truth = JSON.parse(fs.readFileSync(path.join(ownerRoot, "x1", "phase-truth.json"), "utf8"));
+const tests = [
+  ["100 positives", results.results.length === 100 && results.results.every((row) => row.typed_equality && row.input_unchanged)],
+  ["100 completed only", results.outcomes.completed === 100 && results.outcomes.represented === 0 && results.outcomes.open_gap === 0 && results.outcomes.exact_gate === 0],
+  ["100 invalid failures", rejection.rejections.length === 100 && rejection.rejections.every((row) => row.result === "fail" && row.exact_refusal && row.original_subject_success_credit === 0)],
+  ["100 nonmutation", mutation.count === 100 && mutation.all_pass],
+  ["10 skills", skills.count === 10 && skills.all_valid],
+  ["5 runners", runners.count === 5 && runners.all_valid],
+  ["100 safe tasks", portfolio.counts.safe_now_passed === 100],
+  ["100 candidate tasks", portfolio.counts.candidate_passed === 100],
+  ["100 clean fix refine tasks", portfolio.counts.clean_fix_refine_passed === 100],
+  ["x1 separation", truth.status === "X1_FROZEN_NO_X2" && truth.x2_results_present === false && truth.global_promotions_completed === 0]
+].map(([name, pass]) => ({ name, pass }));
+const receipt = { module: "x1_contracts", valid: tests.every((row) => row.pass), tests_total: tests.length, tests_passed: tests.filter((row) => row.pass).length, tests };
+process.stdout.write(JSON.stringify(receipt) + "\n");
+if (!receipt.valid) process.exitCode = 1;
