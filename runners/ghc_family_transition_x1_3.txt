@@ -1,0 +1,5 @@
+'use strict';
+const p=require('./ghc_family_transition_protocol.txt'),core=require('./ghc_family_transition_x1_core.txt');
+const allowed=["lts_ef","lts_af"];
+function run(q){return allowed.includes(q?.op)?core.run(q):{ok:false,value:null,error:'outside_group'};}
+module.exports={run};if(require.main===module)p.cli(run);
