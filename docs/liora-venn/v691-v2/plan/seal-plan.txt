@@ -1,0 +1,9 @@
+'use strict';
+const fs=require('node:fs'),path=require('node:path'),C=require('./tools/common.txt');
+const repo=process.cwd(),base=path.join(repo,'docs/liora-venn/v691-v2'),plan=path.join(base,'plan');
+const receipt=JSON.parse(process.argv[2]);C.ensure(receipt.valid,'plan_tests_failed');const receiptPath=path.join(plan,'test-receipt.json');if(fs.existsSync(receiptPath))C.ensure(C.equal(C.read(receiptPath),receipt),'test_receipt_drift');else C.put(receiptPath,receipt);
+const exclusions=['manifest.json','staged-review.json'];const entries=C.manifest(repo,'docs/liora-venn/v691-v2/plan',exclusions);
+C.put(path.join(plan,'manifest.json'),{schema:'ghc.family.stage-manifest.v5',owner:'Liora Venn',phase:'v691-v2',stage:'planning',byte_domain:'raw_utf8_lf_worktree_before_commit',entries,self_exclusions:exclusions.map(x=>'docs/liora-venn/v691-v2/plan/'+x),boundary:C.BOUNDARY},false);
+const allowed=fs.readdirSync(plan,{recursive:true}).filter(rel=>fs.statSync(path.join(plan,rel)).isFile()).map(rel=>'docs/liora-venn/v691-v2/plan/'+rel.replaceAll('\\','/'));const stagedRel='docs/liora-venn/v691-v2/plan/staged-review.json';if(!allowed.includes(stagedRel))allowed.push(stagedRel);allowed.sort();
+C.put(path.join(plan,'staged-review.json'),{schema:'ghc.family.staged-review.v5',owner:'Liora Venn',phase:'v691-v2',stage:'planning',allowed_paths:allowed,path_count:allowed.length,x1_implementation_paths:[],x2_implementation_paths:[],execution_results_present:false,privacy_candidates:0,confirmed_privacy_hits:0,boundary:C.BOUNDARY},false);
+process.stdout.write(JSON.stringify({valid:true,entries:entries.length,allowed:allowed.length}));

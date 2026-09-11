@@ -1,0 +1,385 @@
+'use strict';
+const fs = require('node:fs');
+const path = require('node:path');
+const C = require('./tools/common.txt');
+
+const repo = process.cwd();
+const base = path.join(repo, 'docs/liora-venn/v691-v2');
+const sourceRepo = path.resolve(process.argv[2] || '');
+const skillBank = path.resolve(process.argv[3] || '');
+C.ensure(fs.existsSync(sourceRepo), 'missing_source_repo');
+C.ensure(fs.existsSync(skillBank), 'missing_skill_bank');
+
+const sourceFinal = '71ad1f6085011b4a0708b998e1f1c94d0d622638';
+const sourceBranch = 'codex/GHC-Family/ceryn-alder-main';
+const sourceBatonRel = 'docs/ceryn-alder/v691-v1/final/hand-off-baton.md';
+const sourceDefinitionsRel = 'docs/ceryn-alder/v691-v1/plan/definitions.json';
+const sourceBaton = fs.readFileSync(path.join(sourceRepo, sourceBatonRel));
+const sourceDefinitionsBytes = fs.readFileSync(path.join(sourceRepo, sourceDefinitionsRel));
+const sourceDefinitions = JSON.parse(sourceDefinitionsBytes.toString('utf8'));
+const boundary = C.BOUNDARY;
+
+const protectedGates = [
+  'empirical_observation_and_physical_claims',
+  'governed_real_participant_or_operator_work',
+  'live_identity_key_proof_and_production_lifecycle',
+  'professional_safety_legal_cultural_and_affected_party_authority',
+  'Maori_wording_data_governance_and_authority',
+  'complete_accessibility_privacy_security_and_independent_review',
+  'AGI_ASI_consciousness_personhood_Theory_of_Everything_canon_and_Stage_20'
+];
+
+const families = [
+  ['petri_record_shape', 'Petri record shape', 'body', 'finite_petri_structure', 'Derive exact place, transition and nonzero arc counts from a bounded typed net record.', 'x1', 'completed'],
+  ['petri_incidence_matrix', 'Petri incidence matrix', 'mind', 'finite_petri_structure', 'Construct the exact integer post-minus-pre incidence matrix without assigning physical meaning.', 'x1', 'completed'],
+  ['petri_enabled_transitions', 'Marking enabledness inventory', 'body', 'finite_petri_execution', 'List transitions whose declared input multiplicities are available at one synthetic marking.', 'x1', 'completed'],
+  ['petri_fire_transition', 'Single transition firing', 'body', 'finite_petri_execution', 'Apply one enabled transition or retain an explicit disabled result without inventing tokens.', 'x1', 'completed'],
+  ['petri_fire_sequence', 'Bounded firing sequence', 'body', 'finite_petri_execution', 'Execute a finite declared transition sequence until completion or the first disabled step.', 'x1', 'completed'],
+  ['petri_place_invariant', 'Weighted marking conservation witness', 'mind', 'bounded_reachability_and_counterexamples', 'Compare a declared weighted token sum before and after one transition as a local arithmetic witness.', 'x1', 'completed'],
+  ['petri_reachability_bfs', 'Capped reachability enumeration', 'mind', 'bounded_reachability_and_counterexamples', 'Enumerate distinct reachable markings under an explicit finite state cap and expose truncation.', 'x1', 'completed'],
+  ['petri_boundedness_probe', 'Finite boundedness probe', 'mind', 'bounded_reachability_and_counterexamples', 'Report observed component maxima only inside a capped enumeration and refuse a universal boundedness claim.', 'x1', 'completed'],
+  ['petri_deadlock_witness', 'Local deadlock witness', 'body', 'bounded_reachability_and_counterexamples', 'Classify one exact marking as locally deadlocked only when no declared transition is enabled.', 'x1', 'completed'],
+  ['petri_trace_prefix', 'Trace prefix projection', 'heart', 'synthetic_handover_and_correction', 'Project a declared prefix of a finite firing trace while retaining blocked-position evidence.', 'x1', 'completed'],
+  ['petri_conflict_pairs', 'Enabled structural conflict pairs', 'body', 'finite_petri_execution', 'Identify enabled transition pairs that compete for at least one consumed place.', 'x2', 'completed'],
+  ['petri_independent_pairs', 'Disjoint-support transition pairs', 'mind', 'bounded_reachability_and_counterexamples', 'Identify pairs whose declared consume-and-produce supports are disjoint.', 'x2', 'completed'],
+  ['petri_siphon_candidate', 'Finite siphon candidate check', 'mind', 'finite_petri_structure', 'Check one declared place subset against the finite siphon implication and list violations.', 'x2', 'completed'],
+  ['petri_trap_candidate', 'Finite trap candidate check', 'mind', 'finite_petri_structure', 'Check one declared place subset against the finite trap implication and list violations.', 'x2', 'completed'],
+  ['petri_workflow_source_sink', 'Workflow source and sink projection', 'body', 'synthetic_handover_and_correction', 'Project transitions adjacent to declared entry and exit places without certifying a real workflow.', 'x2', 'completed'],
+  ['petri_capacity_envelope', 'Synthetic capacity envelope', 'body', 'synthetic_handover_and_correction', 'Compare one post-firing marking with declared token ceilings as a represented workload model.', 'x2', 'represented'],
+  ['petri_correction_prefix', 'Correction prefix replay plan', 'heart', 'synthetic_handover_and_correction', 'Find the shared prefix of two synthetic transition traces and identify the suffix requiring replay.', 'x2', 'represented'],
+  ['petri_accessible_marking_summary', 'Accessible marking text companion', 'heart', 'accessible_state_and_review_reservation', 'Render place labels and token counts as ordered text while retaining manual accessibility review.', 'x2', 'completed'],
+  ['petri_operator_review_vacancy', 'Real operator review vacancy', 'body', 'accessible_state_and_review_reservation', 'Keep operator, usability and affected-user evaluation explicitly absent from a zero-row record.', 'x2', 'open_gap'],
+  ['petri_release_authority_hold', 'Operational release authority hold', 'heart', 'accessible_state_and_review_reservation', 'Report declaration completeness while withholding every real operational release action.', 'x2', 'exact_gate']
+].map((row, index) => ({
+  family_index: index + 1,
+  operation: row[0], title: row[1], pillar: row[2], practice: row[3],
+  hypothesis: row[4], session: row[5], expected_disposition: row[6]
+}));
+
+function makeNet(index, conflict = false) {
+  const placeCount = 3 + (index % 4);
+  const transitionCount = 2 + (index % 5);
+  const amount = 1 + Math.floor(index / 5);
+  const places = Array.from({length: placeCount}, (_, i) => 'p' + i);
+  const transitions = Array.from({length: transitionCount}, (_, t) => {
+    const consume = Array(placeCount).fill(0);
+    const produce = Array(placeCount).fill(0);
+    const source = conflict && t < 2 ? 0 : t % placeCount;
+    const destination = (t + 1 + (index % 2)) % placeCount;
+    consume[source] = amount;
+    produce[destination] = amount;
+    return {id: 't' + t, consume, produce};
+  });
+  const marking = Array.from({length: placeCount}, (_, p) => ((p + index) % 3) + (p === 0 ? amount : 0));
+  return {places, transitions, marking};
+}
+
+function enabled(net, marking, transition) {
+  return transition.consume.every((value, index) => marking[index] >= value);
+}
+
+function fire(net, marking, transitionIndex) {
+  const transition = net.transitions[transitionIndex];
+  if (!enabled(net, marking, transition)) return null;
+  return marking.map((value, index) => value - transition.consume[index] + transition.produce[index]);
+}
+
+function reachable(net, initial, cap) {
+  const queue = [initial.slice()];
+  const rows = [initial.slice()];
+  const seen = new Set([C.stable(initial)]);
+  let cursor = 0;
+  while (cursor < queue.length && rows.length < cap) {
+    const marking = queue[cursor++];
+    for (let t = 0; t < net.transitions.length && rows.length < cap; t++) {
+      const next = fire(net, marking, t);
+      if (!next) continue;
+      const key = C.stable(next);
+      if (!seen.has(key)) { seen.add(key); queue.push(next); rows.push(next); }
+    }
+  }
+  const frontierEnabled = cursor < queue.length || queue.some(marking => net.transitions.some((_, t) => {
+    const next = fire(net, marking, t);
+    return next && !seen.has(C.stable(next));
+  }));
+  return {markings: rows, truncated: rows.length >= cap && frontierEnabled};
+}
+
+function support(transition) {
+  const out = [];
+  transition.consume.forEach((v, i) => { if (v || transition.produce[i]) out.push(i); });
+  return out;
+}
+
+function requestFor(operation, index) {
+  const net = makeNet(index, operation === 'petri_conflict_pairs');
+  const marking = index % 4 === 0 && operation === 'petri_deadlock_witness' ? Array(net.places.length).fill(0) : net.marking;
+  const transitionIndex = index % net.transitions.length;
+  const sequence = Array.from({length: 2 + (index % 4)}, (_, j) => (index + j) % net.transitions.length);
+  if (operation === 'petri_record_shape' || operation === 'petri_incidence_matrix') return {op: operation, places: net.places, transitions: net.transitions};
+  if (operation === 'petri_enabled_transitions' || operation === 'petri_deadlock_witness' || operation === 'petri_conflict_pairs') return {op: operation, places: net.places, transitions: net.transitions, marking};
+  if (operation === 'petri_fire_transition') return {op: operation, places: net.places, transitions: net.transitions, marking, transition_index: transitionIndex};
+  if (operation === 'petri_fire_sequence') return {op: operation, places: net.places, transitions: net.transitions, marking, sequence};
+  if (operation === 'petri_place_invariant') return {op: operation, places: net.places, transitions: net.transitions, marking, transition_index: transitionIndex, weights: net.places.map((_, p) => 1 + ((p + index) % 3))};
+  if (operation === 'petri_reachability_bfs') return {op: operation, places: net.places, transitions: net.transitions, marking, state_cap: 12 + index};
+  if (operation === 'petri_boundedness_probe') return {op: operation, places: net.places, transitions: net.transitions, marking, state_cap: 12 + index, token_limit: 3 + index};
+  if (operation === 'petri_trace_prefix') return {op: operation, places: net.places, transitions: net.transitions, marking, sequence, prefix_length: index % (sequence.length + 1)};
+  if (operation === 'petri_independent_pairs') return {op: operation, places: net.places, transitions: net.transitions};
+  if (operation === 'petri_siphon_candidate' || operation === 'petri_trap_candidate') return {op: operation, places: net.places, transitions: net.transitions, subset: net.places.map((_, p) => p).filter(p => (p + index) % 2 === 0)};
+  if (operation === 'petri_workflow_source_sink') return {op: operation, places: net.places, transitions: net.transitions, entry_place: index % net.places.length, exit_place: (index + 2) % net.places.length};
+  if (operation === 'petri_capacity_envelope') return {op: operation, places: net.places, transitions: net.transitions, marking, transition_index: transitionIndex, capacities: marking.map((v, p) => v + ((p + index) % 2))};
+  if (operation === 'petri_correction_prefix') {
+    const revised = sequence.slice();
+    revised[Math.max(0, revised.length - 1)] = (revised.at(-1) + 1) % net.transitions.length;
+    return {op: operation, original: sequence, corrected: revised};
+  }
+  if (operation === 'petri_accessible_marking_summary') return {op: operation, labels: net.places.map((_, p) => 'synthetic place ' + (p + 1)), marking};
+  if (operation === 'petri_operator_review_vacancy') return {op: operation, notes: {operator: 'synthetic protocol case ' + (index + 1), usability: index % 3 ? '' : 'structure reviewed for case ' + (index + 1), affected_user: '', safety: ''}, evaluation_count: 0};
+  if (operation === 'petri_release_authority_hold') return {op: operation, record: 'synthetic-workflow-' + String(index + 1).padStart(2, '0'), declarations: {provenance: true, correction: index % 2 === 0, accessibility: index % 3 !== 0, professional_review: false}, external_authority: false};
+  throw new Error('unknown_operation');
+}
+
+function oracle(request) {
+  const net = request.places ? {places: request.places, transitions: request.transitions} : null;
+  if (request.op === 'petri_record_shape') return {place_count: net.places.length, transition_count: net.transitions.length, nonzero_pre_arcs: net.transitions.reduce((n, t) => n + t.consume.filter(Boolean).length, 0), nonzero_post_arcs: net.transitions.reduce((n, t) => n + t.produce.filter(Boolean).length, 0), shape_consistent: net.transitions.every(t => t.consume.length === net.places.length && t.produce.length === net.places.length)};
+  if (request.op === 'petri_incidence_matrix') return {matrix: net.places.map((_, p) => net.transitions.map(t => t.produce[p] - t.consume[p])), orientation: 'places_by_transitions'};
+  if (request.op === 'petri_enabled_transitions') return {enabled: net.transitions.filter(t => enabled(net, request.marking, t)).map(t => t.id)};
+  if (request.op === 'petri_fire_transition') { const next = fire(net, request.marking, request.transition_index); return {enabled: next !== null, next_marking: next}; }
+  if (request.op === 'petri_fire_sequence') { let marking = request.marking.slice(), fired = 0, blockedAt = null; for (let i = 0; i < request.sequence.length; i++) { const next = fire(net, marking, request.sequence[i]); if (!next) { blockedAt = i; break; } marking = next; fired++; } return {fired_count: fired, blocked_at: blockedAt, marking}; }
+  if (request.op === 'petri_place_invariant') { const next = fire(net, request.marking, request.transition_index); const dot = marking => marking.reduce((n, v, i) => n + v * request.weights[i], 0); return {enabled: next !== null, before: dot(request.marking), after: next ? dot(next) : null, conserved: next ? dot(request.marking) === dot(next) : null, local_witness_only: true}; }
+  if (request.op === 'petri_reachability_bfs') return {...reachable(net, request.marking, request.state_cap), cap: request.state_cap};
+  if (request.op === 'petri_boundedness_probe') { const result = reachable(net, request.marking, request.state_cap); const maxima = net.places.map((_, p) => Math.max(...result.markings.map(m => m[p]))); return {observed_maxima: maxima, within_declared_limit: maxima.every(v => v <= request.token_limit), truncated: result.truncated, universal_boundedness_proved: false}; }
+  if (request.op === 'petri_deadlock_witness') { const ids = net.transitions.filter(t => enabled(net, request.marking, t)).map(t => t.id); return {enabled: ids, deadlocked: ids.length === 0, marking_local_only: true}; }
+  if (request.op === 'petri_trace_prefix') { let marking = request.marking.slice(), fired = 0, blockedAt = null; for (let i = 0; i < request.prefix_length; i++) { const next = fire(net, marking, request.sequence[i]); if (!next) { blockedAt = i; break; } marking = next; fired++; } return {requested_prefix: request.prefix_length, fired_count: fired, blocked_at: blockedAt, marking}; }
+  if (request.op === 'petri_conflict_pairs') { const ids = net.transitions.map((t, i) => ({t, i})).filter(x => enabled(net, request.marking, x.t)); const pairs = []; for (let a = 0; a < ids.length; a++) for (let b = a + 1; b < ids.length; b++) { const shared = net.places.map((_, p) => p).filter(p => ids[a].t.consume[p] && ids[b].t.consume[p]); if (shared.length) pairs.push({transitions: [ids[a].t.id, ids[b].t.id], shared_places: shared.map(p => net.places[p])}); } return {pairs}; }
+  if (request.op === 'petri_independent_pairs') { const pairs = []; for (let a = 0; a < net.transitions.length; a++) for (let b = a + 1; b < net.transitions.length; b++) if (support(net.transitions[a]).every(p => !support(net.transitions[b]).includes(p))) pairs.push([net.transitions[a].id, net.transitions[b].id]); return {pairs, criterion: 'disjoint_declared_support'}; }
+  if (request.op === 'petri_siphon_candidate') { const set = new Set(request.subset), violations = []; for (const t of net.transitions) { const produces = request.subset.some(p => t.produce[p] > 0); const consumes = request.subset.some(p => t.consume[p] > 0); if (produces && !consumes) violations.push(t.id); } return {candidate: violations.length === 0, violations, subset: request.subset.map(p => net.places[p])}; }
+  if (request.op === 'petri_trap_candidate') { const set = new Set(request.subset), violations = []; for (const t of net.transitions) { const consumes = request.subset.some(p => t.consume[p] > 0); const produces = request.subset.some(p => t.produce[p] > 0); if (consumes && !produces) violations.push(t.id); } return {candidate: violations.length === 0, violations, subset: request.subset.map(p => net.places[p])}; }
+  if (request.op === 'petri_workflow_source_sink') { const entry = request.entry_place, exit = request.exit_place; return {entry: net.places[entry], exit: net.places[exit], leaving_entry: net.transitions.filter(t => t.consume[entry] > 0).map(t => t.id), entering_exit: net.transitions.filter(t => t.produce[exit] > 0).map(t => t.id), real_workflow_certified: false}; }
+  if (request.op === 'petri_capacity_envelope') { const next = fire(net, request.marking, request.transition_index); return {enabled: next !== null, next_marking: next, within_declared_capacity: next ? next.every((v, i) => v <= request.capacities[i]) : null, represented_model_only: true}; }
+  if (request.op === 'petri_correction_prefix') { let shared = 0; while (shared < request.original.length && shared < request.corrected.length && request.original[shared] === request.corrected[shared]) shared++; return {shared_prefix_length: shared, replay_original_suffix: request.original.slice(shared), apply_corrected_suffix: request.corrected.slice(shared), operational_replay_performed: false}; }
+  if (request.op === 'petri_accessible_marking_summary') { const rows = request.labels.map((label, i) => ({position: i + 1, label, tokens: request.marking[i]})); return {rows, text: rows.map(r => r.position + '. ' + r.label + ': ' + r.tokens + ' token' + (r.tokens === 1 ? '' : 's')).join('\n'), manual_accessibility_review_required: true}; }
+  if (request.op === 'petri_operator_review_vacancy') { const missing = Object.keys(request.notes).filter(k => !request.notes[k].trim()).sort(); return {missing, evaluation_count: 0, real_operator_review: false, affected_user_review: false, safety_review: false, open_gap: true}; }
+  if (request.op === 'petri_release_authority_hold') { const missing = Object.keys(request.declarations).filter(k => !request.declarations[k]).sort(); return {record: request.record, missing, external_action: false, authority_verified: false, exact_gate: true}; }
+  throw new Error('unknown_operation');
+}
+
+const proposals = [];
+for (const family of families) {
+  for (let caseIndex = 0; caseIndex < 10; caseIndex++) {
+    const request = requestFor(family.operation, caseIndex);
+    const expected = {ok: true, value: oracle(request), authority: false};
+    const candidate = {...C.clone(request), unreviewed_authority: true};
+    const id = 'LV6912-' + String(proposals.length + 1).padStart(3, '0');
+    const record = {
+      proposal_id: id,
+      family_index: family.family_index,
+      operation: family.operation,
+      title: family.title,
+      pillar: family.pillar,
+      practice: family.practice,
+      hypothesis: family.hypothesis,
+      null_or_failure_condition: 'Any typed mismatch, accepted unknown field, input mutation, omitted failed witness, hidden truncation or claim above the preregistered disposition falsifies this bounded contract.',
+      approval_class: 'safe_now',
+      execution_lane: 'owner_local_synthetic',
+      official_or_primary_source_needs: family.operation.includes('accessible') ? ['WCAG vocabulary may guide later manual review; no conformance credit'] : ['No external source is required for this finite synthetic definition'],
+      concrete_artifacts: ['exact frozen request', 'typed expected envelope', 'unknown-field rejecting subject', 'separate observed result and retained-negative witness'],
+      falsifier_or_acceptance_gate: 'Complete typed equality, exact input digest retention and rejection of the named unknown-field subject.',
+      rollback_or_recovery: 'Retain the failed request and output; correct only the smallest unsealed owner dependency; rerun only the failed bounded selection.',
+      protected_gates: protectedGates,
+      expected_disposition: family.expected_disposition,
+      session: family.session,
+      case_index: caseIndex,
+      request,
+      expected_output: expected,
+      candidate_subject: candidate,
+      candidate_expected: {ok: false, error: 'unknown_field', authority: false},
+      source_credit: 0,
+      novelty_scope: 'Phase-local request and falsifier only; classical Petri-net concepts receive no discovery or authority credit.'
+    };
+    record.definition_sha256 = C.hash(Buffer.from(C.stable(record)));
+    proposals.push(record);
+  }
+}
+
+C.ensure(new Set(proposals.map(p => C.hash(Buffer.from(C.stable(p.request))))).size === 200, 'non_distinct_requests');
+
+const sourceReviews = sourceDefinitions.proposals.map((proposal, index) => ({
+  review_id: 'LV6912-SOURCE-' + String(index + 1).padStart(3, '0'),
+  source_owner: 'Ceryn Alder',
+  source_phase: 'v691-v1',
+  source_proposal_id: proposal.proposal_id,
+  source_operation: proposal.operation,
+  source_definition_sha256: proposal.definition_sha256,
+  review_state: 'retained_zero_credit_source_evidence',
+  execution_replayed: false,
+  novelty_credit: 0,
+  completion_credit: 0,
+  boundary
+}));
+C.ensure(sourceReviews.length === 200, 'source_review_floor');
+
+function tokens(text) { return new Set(String(text).toLowerCase().match(/[a-z0-9]+/g) || []); }
+function jaccard(a, b) { const aa = tokens(a), bb = tokens(b); const both = [...aa].filter(x => bb.has(x)).length; return both / new Set([...aa, ...bb]).size; }
+const skillNames = fs.readdirSync(skillBank, {withFileTypes: true}).filter(x => x.isDirectory()).map(x => x.name);
+const sourceNames = [...new Set(sourceDefinitions.proposals.flatMap(p => [p.operation, p.title]))];
+const candidateNames = [...sourceNames, ...skillNames];
+const comparisons = [];
+for (const family of families) for (const candidate of candidateNames) comparisons.push({new_name: family.operation + ' ' + family.title, candidate, score: jaccard(family.operation + ' ' + family.title, candidate)});
+comparisons.sort((a, b) => b.score - a.score || a.new_name.localeCompare(b.new_name) || a.candidate.localeCompare(b.candidate));
+const exactCollisions = families.flatMap(f => candidateNames.filter(n => n.toLowerCase() === f.operation.toLowerCase() || n.toLowerCase() === f.title.toLowerCase()).map(n => ({family: f.operation, candidate: n})));
+
+const bySession = session => proposals.filter(p => p.session === session);
+const portfolio = (kind, countPerSession) => ['x1', 'x2'].flatMap(session => Array.from({length: countPerSession}, (_, index) => ({
+  id: 'LV6912-' + kind.toUpperCase().replaceAll('_', '-') + '-' + session.toUpperCase() + '-' + String(index + 1).padStart(3, '0'),
+  session,
+  proposal_id: bySession(session)[index % bySession(session).length].proposal_id,
+  state: 'preregistered',
+  execution_credit: 0,
+  authority: false,
+  boundary
+})));
+
+const localSkills = families.map(f => ({
+  name: 'ghc-family-' + f.operation.replaceAll('_', '-'),
+  session: f.session,
+  operation: f.operation,
+  source_guides_merged: 1,
+  state: 'planned_not_built',
+  global_install_planned: false,
+  boundary
+}));
+const runnerGroups = ['structure', 'execution', 'reachability', 'handover', 'authority'];
+const localRunners = ['x1', 'x2'].flatMap(session => runnerGroups.map((group, index) => ({
+  name: 'ghc_family_liora_v691_v2_' + session + '_' + group + '.txt',
+  session,
+  group,
+  operations: families.filter(f => f.session === session).filter((_, i) => i % 5 === index).map(f => f.operation),
+  state: 'planned_not_built',
+  boundary
+})));
+const merges = [
+  ['ghc-family-petri-structure', [1, 2, 13, 14]],
+  ['ghc-family-petri-execution', [3, 4, 5, 11]],
+  ['ghc-family-petri-analysis', [6, 7, 8, 9]],
+  ['ghc-family-petri-workflow', [10, 12, 15, 16]],
+  ['ghc-family-petri-handover', [17, 18, 19, 20]]
+].map(([name, indices]) => ({
+  name,
+  source_guides: indices.map(i => 'ghc-family-' + families[i - 1].operation.replaceAll('_', '-')),
+  operations: indices.map(i => families[i - 1].operation),
+  public_runner: name.replaceAll('-', '_') + '.txt',
+  state: 'planned_candidate_requires_collision_review_and_validation',
+  overwrite_allowed: false,
+  boundary
+}));
+
+const startupPairs = [
+  ['LV6912-START-N001', 'Combined worktree discovery projection', 'The first combined worktree listing returned no attributable result within its 30-second bound.', 'Use literal source candidates and a bounded structured worktree inventory.'],
+  ['LV6912-START-N002', 'PowerShell candidate materialization', 'The first literal candidate probe piped a foreach expression before materialization and the parser rejected it.', 'Materialize the row array, then serialize it in a separate statement.'],
+  ['LV6912-START-N003', 'External receipt root resolution', 'The first source-file search assumed external receipts were inside the source worktree.', 'Resolve the declared external receipt bank separately and hash literal files.'],
+  ['LV6912-START-N004', 'Baton display completeness', 'The first 1,000-line baton projection exceeded the output window and omitted middle content.', 'Read contiguous bounded windows through the exact 10,225-line EOF.'],
+  ['LV6912-START-N005', 'Combined manifest blob replay', 'One broad sequential manifest verifier produced no attributable output inside its execution window.', 'Split by lifecycle manifest and verify each exact Git blob and byte count independently.'],
+  ['LV6912-START-N006', 'Installed public tool root', 'The first public-runner probe guessed the user configuration tree rather than the declared D-first global tool bank.', 'Resolve the installation destination from the source install record and read the D-first files through EOF.'],
+  ['LV6912-START-N007', 'Combined reference display', 'A combined remaining-reference projection exceeded its output budget.', 'Read compact files directly and parse the complete workflow JSON before selecting its relevant fields.'],
+  ['LV6912-START-N008', 'Broad source-tool discovery display', 'A broad repository search for source-tool evidence truncated its result set.', 'Use the exact promotion receipt and literal installed package paths.'],
+  ['LV6912-START-N009', 'Worktree option discovery context', 'The first worktree-help filter was invoked outside repository context and returned no attributable option lines.', 'Run the same read-only help command against the verified source repository.'],
+  ['LV6912-START-N010', 'Node text-source syntax preflight', 'Node 24 refused --check on a .txt path at extension classification before parsing the source.', 'Compile the exact UTF-8 text bytes through a CommonJS function wrapper without executing the source.'],
+  ['LV6912-START-N011', 'Atomic startup-ledger patch context', 'The first additive patch combined two contexts and rejected the entire change when its long generated-script line did not match exactly.', 'Split the patch by exact local context and preserve this rejection before applying the smaller changes.'],
+  ['LV6912-START-N012', 'Distinct-request planning freeze', 'The first still-unsealed planning build found fewer than 200 distinct exact requests and stopped before writing generated artifacts.', 'Make each operator-review-vacancy case substantively distinct within its allowed note fields and rerun the whole unsealed build.']
+];
+const startupMethods = startupPairs.map(([id, title]) => ({method_id: id.replace('-N', '-M'), title}));
+const startupWitnesses = startupPairs.flatMap(([id, title, observed, recovery]) => [
+  {witness_id: id, method_id: id.replace('-N', '-M'), procedure: title, expected: 'Complete attributable bounded result', observed, result: 'fail'},
+  {witness_id: id + '-RECOVERY', method_id: id.replace('-N', '-M'), procedure: recovery, expected: true, observed: true, result: 'pass', retained_negative_ids: [id]}
+]);
+
+const guidance = [
+  ['ghc-family-index/SKILL.md', 'ghc-family-index/SKILL.md'],
+  ['ghc-family-meta-tool-box/SKILL.md', 'ghc-family-meta-tool-box/SKILL.md'],
+  ['ghc-family-meta-tool-box/references/catalogue-schema.md', 'ghc-family-meta-tool-box/references/catalogue-schema.md'],
+  ['ghc-family-method-flow-state/SKILL.md', 'ghc-family-method-flow-state/SKILL.md'],
+  ['ghc-family-method-flow-state/references/schema.md', 'ghc-family-method-flow-state/references/schema.md'],
+  ['ghc-family-reflection-remaster/SKILL.md', 'ghc-family-reflection-remaster/SKILL.md'],
+  ['ghc-family-reflection-remaster/references/decision-schema.md', 'ghc-family-reflection-remaster/references/decision-schema.md'],
+  ['ghc-family-owner-scope-canonical/SKILL.md', 'ghc-family-owner-scope-canonical/SKILL.md'],
+  ['ghc-family-canonical-aggregate-preflight/SKILL.md', 'ghc-family-canonical-aggregate-preflight/SKILL.md'],
+  ['ghc-family-canonical-success-latch/SKILL.md', 'ghc-family-canonical-success-latch/SKILL.md'],
+  ['ghc-family-main-task-induction/SKILL.md', 'ghc-family-main-task-induction/SKILL.md'],
+  ['ghc-family-d-first-structured-evidence-toolchain/SKILL.md', 'ghc-family-d-first-structured-evidence-toolchain/SKILL.md'],
+  ['ghc-family-terminal-route-gate/SKILL.md', 'ghc-family-terminal-route-gate/SKILL.md'],
+  ['ghc-family-terminal-route-guard/SKILL.md', 'ghc-family-terminal-route-guard/SKILL.md'],
+  ['ghc-family-terminal-route-latch/SKILL.md', 'ghc-family-terminal-route-latch/SKILL.md'],
+  ['ghc-family-auth-permission-state/SKILL.md', 'ghc-family-auth-permission-state/SKILL.md'],
+  ['ghc-family-roster-check/SKILL.md', 'ghc-family-roster-check/SKILL.md'],
+  ['ghc-family-index/references/current-thirty-seat-workflow.md', 'ghc-family-index/references/current-thirty-seat-workflow.md'],
+  ['ghc-family-index/references/mira-v690-v3-r2-20260911-authority.md', 'ghc-family-index/references/mira-v690-v3-r2-20260911-authority.md'],
+  ['ghc-family-index/references/current-workflow-v5.json', 'ghc-family-index/references/current-workflow-v5.json'],
+  ['ghc-family-index/references/current-roster-v5.json', 'ghc-family-index/references/current-roster-v5.json'],
+  ['ghc-family-index/references/current-state-pointer-v5.json', 'ghc-family-index/references/current-state-pointer-v5.json']
+].map(([label, rel]) => {
+  const full = path.join(skillBank, rel);
+  return {path: 'skills/' + label, sha256: C.hash(fs.readFileSync(full)), read_through_eof: true};
+});
+
+C.put(path.join(base, 'plan/authorization.md'), `# Liora Venn v691-v2 authorization\n\nThis parentless owner lane implements the one acknowledged Ceryn Alder to Liora Venn v691-v2 activation. The source is content provenance, never Git ancestry. Liora works solo; no subagent, fork, replacement task, model override, standby substitution or early successor contact is authorized.\n\nLiora Venn is a relational working name. The role is finite-state handover cartographer and the hope is to make every transition, conflict and authority vacancy inspectable and reversible. This language is not consciousness, personhood, continuity, employment, qualification, agency or authority evidence.\n\nTHOS Body is primary. GMUT Mind and Freed ID/CBR Heart remain visible and protected. The four synthetic practices are finite Petri-net structure, bounded reachability and counterexamples, synthetic handover and correction, and accessible state/review reservation. No real operator, workplace, plant, workflow, safety action, identity event, measurement, participant or authority act exists here.\n\nPlanning freezes both sessions but contains no x1 or x2 implementation, observed outcome or completion credit. X1 and x2 must remain separate committed and pushed lifecycle stages. Only the four outcome labels completed, represented, open_gap and exact_gate are permitted. The terminal verdict remains NOT_READY_FOR_STAGE_20.\n`);
+
+C.put(path.join(base, 'plan/source-provenance.json'), {
+  schema: 'ghc.family.source-provenance.v5', source_owner: 'Ceryn Alder', source_phase: 'v691-v1', source_branch: sourceBranch, source_exact_final: sourceFinal,
+  source_is_git_parent: false, owner_history_parentless: true,
+  baton: {path: sourceBatonRel, sha256: C.hash(sourceBaton), words: 44687, lines: 10225, modules: 13, read_through_eof: true, eof: 'EOF CERYN ALDER V691 V1 BATON. Repository preparation is not delivery.'},
+  canonical: {status: 'VALID_EXACT_FINAL_OWNER_SCOPED_CANONICAL', invocations: 1, successes: 1, replays: 0, receipt_sha256: '3ba68d0d57d8733ca6f828753fafd682c4d5efe0615c47b3efd43519b700c12b', payload_sha256: '986209210befd1edd06a5ae4e513123520b783112e3f145a5d35aea6ab76c6e1', replayed_by_liora: false},
+  source_definitions: {path: sourceDefinitionsRel, sha256: C.hash(sourceDefinitionsBytes), rows: sourceDefinitions.proposals.length, reviews: sourceReviews.length, source_execution_credit: 0},
+  source_repository_seal: {methods: 226, direct_witnesses: 6787, failed_witnesses: 1386, passing_witnesses: 5401, effective_negatives: 1477, open_gaps: 81, exact_gates: 100},
+  source_external_route_overlay: {methods: 228, direct_witnesses: 6799, failed_witnesses: 1394, passing_witnesses: 5405, effective_negatives: 1485, open_gaps: 81, exact_gates: 100},
+  delivery: {status: 'SENT_ONCE_ACKNOWLEDGED', delivery_adds_lifecycle_counters: false, repository_prepared_state_rewritten: false}, boundary
+});
+
+C.put(path.join(base, 'plan/intake-receipt.json'), {
+  schema: 'ghc.family.owner-intake.v5', owner: 'Liora Venn', phase: 'v691-v2', source_branch: sourceBranch, source_exact_final: sourceFinal,
+  source_branch_verified: true, parentless_source_history_verified: true, source_commits: 4, source_merges: 0, source_clean: true, source_divergence: {ahead: 0, behind: 0}, source_four_way_equal: true,
+  source_manifest_entries_checked: 549, source_manifest_mismatches: 0, source_canonical_replayed: false,
+  guidance, source_promoted_skills_read: ['ghc-family-raster-addressing', 'ghc-family-raster-support', 'ghc-family-raster-sampling', 'ghc-family-raster-topology', 'ghc-family-raster-interpretation'],
+  source_public_runner_dependency_files_read: 8, startup_failures_retained: startupPairs.length, boundary
+});
+
+C.put(path.join(base, 'plan/workflow-profile.json'), {
+  schema: 'ghc.family.owner-workflow-profile.v5', owner: 'Liora Venn', phase: 'v691-v2', endpoint_kind: 'main_task', model_role: 'Sol', model_override: false,
+  route_positions: 45, identities: 30, active_assignment: {owner: 'Liora Venn', phase: 'v691-v2'}, prospective_successor: {owner: 'Tamar Vey', phase: 'v691-v3', early_contact: false},
+  file_ceiling: 2000, document_word_ceiling: 100000, commit_ceiling: 8, lifecycle: ['planning', 'x1', 'x2', 'final'], blank_root: true,
+  formats: ['json', 'md', 'txt', 'html_explicit_exception'], forbidden_new_formats: ['pdf', 'image', 'screenshot', 'yaml'],
+  canonical: {owner_self_scoped_only: true, maximum_invocations: 1, no_replay_after_success: true, source_replay: false},
+  full_repository_suite_authorized: false, independent_reproduction: false, boundary
+});
+
+C.put(path.join(base, 'plan/workflow-route.json'), {
+  schema: 'ghc.family.weighted-route.v5.owner-projection', authority: 'Current v5 forty-five-position and thirty-identity workflow', current: {owner: 'Liora Venn', phase: 'v691-v2', model_role: 'Sol'}, next: {owner: 'Tamar Vey', phase: 'v691-v3', model_role: 'Sol', state: 'prospective_until_liora_terminal'},
+  continuing_through: 'v725-v8', one_terminal_edge_at_a_time: true, create_task: false, fork: false, subagent: false, standby_substitution: false, model_override: false, boundary
+});
+
+C.put(path.join(base, 'plan/proposal-freeze.json'), {schema: 'ghc.family.proposal-freeze.v5', owner: 'Liora Venn', phase: 'v691-v2', status: 'FROZEN_PLANNING_ONLY', execution_results_present: false, source_reviews: 200, new_proposals: proposals, outcome_ceiling_counts: {completed: 160, represented: 20, open_gap: 10, exact_gate: 10}, sessions: {x1: 100, x2: 100}, boundary});
+C.put(path.join(base, 'plan/source-reviews.json'), {schema: 'ghc.family.source-reviews.v5', owner: 'Liora Venn', phase: 'v691-v2', source_rows: sourceReviews.length, rows: sourceReviews, boundary});
+C.put(path.join(base, 'plan/novelty-audit.json'), {schema: 'ghc.family.proposal-neighbor-audit.v5', owner: 'Liora Venn', phase: 'v691-v2', source_proposal_rows: sourceDefinitions.proposals.length, installed_skill_names_scanned: skillNames.length, new_rows: proposals.length, new_operation_families: families.length, unique_request_digests: new Set(proposals.map(p => C.hash(Buffer.from(C.stable(p.request))))).size, exact_collisions: exactCollisions, maximum_jaccard: comparisons[0], top_neighbors: comparisons.slice(0, 40), universal_novelty_claim: false, bounded_conclusion: exactCollisions.length ? 'QUARANTINE_REQUIRED' : 'NO_EXACT_COLLISION_IN_DECLARED_SOURCE_AND_SKILL_NAME_SCOPE', boundary});
+C.put(path.join(base, 'plan/protocol.md'), '# Finite Petri-net contracts\n\n' + families.map(f => `## ${f.title}\n\nOperation \`${f.operation}\` belongs to ${f.session}, practice \`${f.practice}\`, and has the preregistered ceiling \`${f.expected_disposition}\`. ${f.hypothesis} Ten exact requests, expected envelopes and unknown-field rejecting subjects are frozen in proposal-freeze.json. Any later matching result is bounded same-owner synthetic software evidence only and cannot exceed this ceiling.\n`).join('\n') + '\n' + boundary + '\n');
+C.put(path.join(base, 'plan/safe-now-portfolio.json'), {schema: 'ghc.family.safe-now-portfolio.v5', owner: 'Liora Venn', phase: 'v691-v2', rows: portfolio('safe', 100), counts: {x1: 100, x2: 100}, boundary});
+C.put(path.join(base, 'plan/candidate-portfolio.json'), {schema: 'ghc.family.candidate-portfolio.v5', owner: 'Liora Venn', phase: 'v691-v2', rows: portfolio('candidate', 100), counts: {x1: 100, x2: 100}, boundary});
+C.put(path.join(base, 'plan/clean-fix-refine-portfolio.json'), {schema: 'ghc.family.clean-fix-refine.v5', owner: 'Liora Venn', phase: 'v691-v2', rows: portfolio('cfr', 100), counts: {x1: 100, x2: 100}, boundary});
+C.put(path.join(base, 'plan/exact-approval-packets.json'), {schema: 'ghc.family.exact-approval.v5', owner: 'Liora Venn', phase: 'v691-v2', rows: Array.from({length: 50}, (_, i) => ({packet_id: 'LV6912-EXACT-' + String(i + 1).padStart(3, '0'), state: 'held_unexecuted', authority_present: false, external_action: false, protected_gates: protectedGates, boundary})), executed: 0, boundary});
+C.put(path.join(base, 'plan/blocked-packets.json'), {schema: 'ghc.family.blocked.v5', owner: 'Liora Venn', phase: 'v691-v2', rows: Array.from({length: 30}, (_, i) => ({packet_id: 'LV6912-BLOCKED-' + String(i + 1).padStart(3, '0'), state: 'blocked_unexecuted', blocking_gate: protectedGates[i % protectedGates.length], recovery: 'Wait for exact evidence and competent authority; software output cannot compensate.', external_action: false, boundary})), executed: 0, boundary});
+C.put(path.join(base, 'plan/local-skill-plan.json'), {schema: 'ghc.family.owner-local-skill-plan.v5', owner: 'Liora Venn', phase: 'v691-v2', rows: localSkills, counts: {x1: 10, x2: 10}, complete_read_required_before_smoke: true, official_skill_creator_validation_required: true, boundary});
+C.put(path.join(base, 'plan/local-runner-plan.json'), {schema: 'ghc.family.owner-local-runner-plan.v5', owner: 'Liora Venn', phase: 'v691-v2', rows: localRunners, counts: {x1: 5, x2: 5}, historical_compatibility_required: true, boundary});
+C.put(path.join(base, 'plan/tool-promotion-design.json'), {schema: 'ghc.family.curated-merge-design.v5', owner: 'Liora Venn', phase: 'v691-v2', groups: merges, source_guides_per_merge: 4, ordinary_package_quota: null, install_only_after_validation: true, boundary});
+C.put(path.join(base, 'plan/successor-seeds.json'), {schema: 'ghc.family.successor-seeds.v5', owner: 'Liora Venn', phase: 'v691-v2', successor: 'Tamar Vey', successor_phase: 'v691-v3', practices: ['Partial-order reduction under declared independence', 'Readable invariant and counterexample companions'], skill_ideas: ['ghc-family-petri-partial-order-reduction', 'ghc-family-petri-coverability-counterexample', 'ghc-family-petri-invariant-readable-proof', 'ghc-family-petri-fairness-vacancy', 'ghc-family-petri-trace-difference', 'ghc-family-petri-unbounded-witness', 'ghc-family-petri-net-normalization', 'ghc-family-petri-human-review-reservation', 'ghc-family-petri-release-recourse', 'ghc-family-petri-source-fixity'], runner_ideas: ['ghc_family_petri_partial_order_reduction.txt', 'ghc_family_petri_coverability_counterexample.txt', 'ghc_family_petri_invariant_readable_proof.txt', 'ghc_family_petri_fairness_vacancy.txt', 'ghc_family_petri_trace_difference.txt'], built_for_successor: false, successor_credit: 0, boundary});
+C.put(path.join(base, 'plan/threat-model.md'), `# Threat model\n\nThe bounded assets are frozen JSON contracts, exact text code, Git blob hashes, retained failures, external canonical latches and sanitized route evidence. Threats include accepting unknown fields, mutating an input, hiding a truncated projection, rewriting a failed witness after recovery, mixing x1 and x2, overclaiming a capped graph traversal, treating a declaration as release authority, leaking private task or local-route data, replaying a successful canonical and contacting a successor before terminal validation.\n\nControls are strict schemas, one-MiB input limits, safe-integer and collection bounds, exact stable digests, planning-only freeze, separate lifecycle commits, normalized-LF manifests, five-class privacy adjudication, owner-only changed-file validation, external exclusive latches, and explicit stop conditions. No control proves exhaustive security, complete accessibility or production readiness.\n\n${boundary}\n`);
+C.put(path.join(base, 'plan/method-flow.json'), C.methodLedger('planning-startup', startupMethods, startupWitnesses));
+C.put(path.join(base, 'plan/retained-startup-negatives.json'), {schema: 'ghc.family.retained-negatives.v5', owner: 'Liora Venn', phase: 'v691-v2/planning', failed_witnesses: startupPairs.length, rows: startupPairs.map(([id, title, observed, recovery]) => ({witness_id: id, procedure: title, observed, recovery, result: 'fail', original_subject_success_credit: 0, erased: false})), boundary});
+C.put(path.join(base, 'plan/lifecycle-contract.json'), {schema: 'ghc.family.lifecycle-contract.v5', owner: 'Liora Venn', phase: 'v691-v2', branch: 'codex/GHC-Family/liora-venn-main', parentless_planning_root: true, planning_has_execution_results: false, required_order: ['planning', 'x1', 'x2', 'final'], commit_ceiling: 8, source_provenance_not_ancestry: true, boundary});
+
+const testScript = `'use strict';\nconst fs=require('node:fs'),path=require('node:path'),C=require('./tools/common.txt');\nconst base=path.resolve('docs/liora-venn/v691-v2');\nconst freeze=C.read(path.join(base,'plan/proposal-freeze.json')),source=C.read(path.join(base,'plan/source-reviews.json')),novelty=C.read(path.join(base,'plan/novelty-audit.json'));\nconst checks=[];const check=(name,pass,detail=null)=>checks.push({name,pass:Boolean(pass),detail});\ncheck('planning only',freeze.status==='FROZEN_PLANNING_ONLY'&&!freeze.execution_results_present);\ncheck('200 proposals',freeze.new_proposals.length===200);\ncheck('100 x1',freeze.new_proposals.filter(p=>p.session==='x1').length===100);\ncheck('100 x2',freeze.new_proposals.filter(p=>p.session==='x2').length===100);\ncheck('four outcome labels',freeze.new_proposals.every(p=>['completed','represented','open_gap','exact_gate'].includes(p.expected_disposition)));\ncheck('outcome ceiling',JSON.stringify(freeze.outcome_ceiling_counts)===JSON.stringify({completed:160,represented:20,open_gap:10,exact_gate:10}));\ncheck('unique proposals',new Set(freeze.new_proposals.map(p=>p.proposal_id)).size===200);\ncheck('unique requests',new Set(freeze.new_proposals.map(p=>C.hash(Buffer.from(C.stable(p.request))))).size===200);\ncheck('required proposal fields',freeze.new_proposals.every(p=>p.hypothesis&&p.null_or_failure_condition&&p.approval_class&&p.execution_lane&&p.official_or_primary_source_needs.length&&p.concrete_artifacts.length&&p.falsifier_or_acceptance_gate&&p.rollback_or_recovery&&p.protected_gates.length&&p.expected_disposition));\ncheck('200 source reviews',source.rows.length===200&&source.rows.every(r=>r.novelty_credit===0&&r.completion_credit===0&&!r.execution_replayed));\ncheck('no exact novelty collision',novelty.exact_collisions.length===0&&novelty.unique_request_digests===200);\nfor(const [file,count] of [['safe-now-portfolio.json',200],['candidate-portfolio.json',200],['clean-fix-refine-portfolio.json',200]])check(file,C.read(path.join(base,'plan',file)).rows.length===count);\ncheck('exact held',C.read(path.join(base,'plan/exact-approval-packets.json')).rows.length===50&&C.read(path.join(base,'plan/exact-approval-packets.json')).executed===0);\ncheck('blocked held',C.read(path.join(base,'plan/blocked-packets.json')).rows.length===30&&C.read(path.join(base,'plan/blocked-packets.json')).executed===0);\ncheck('skills floor',C.read(path.join(base,'plan/local-skill-plan.json')).rows.length===20);\ncheck('runners floor',C.read(path.join(base,'plan/local-runner-plan.json')).rows.length===10);\ncheck('merged tools floor',C.read(path.join(base,'plan/tool-promotion-design.json')).groups.length===5);\nconst flow=C.read(path.join(base,'plan/method-flow.json'));check('startup failures retained',flow.counts.witness_results.fail===9&&flow.counts.witness_results.pass===9);\ncheck('terminal verdict',C.BOUNDARY.includes('NOT_READY_FOR_STAGE_20'));\nconst failed=checks.filter(c=>!c.pass);process.stdout.write(JSON.stringify({schema:'ghc.family.plan-test.v5',owner:'Liora Venn',phase:'v691-v2',valid:failed.length===0,checks_total:checks.length,checks_passed:checks.length-failed.length,checks_failed:failed.length,checks,boundary:C.BOUNDARY}));if(failed.length)process.exitCode=1;\n`;
+const correctedTestScript = testScript.replace('fail===9&&flow.counts.witness_results.pass===9', 'fail==='+startupPairs.length+'&&flow.counts.witness_results.pass==='+startupPairs.length);
+C.put(path.join(base, 'plan/test-plan.txt'), correctedTestScript);
+
+const sealScript = `'use strict';\nconst fs=require('node:fs'),path=require('node:path'),C=require('./tools/common.txt');\nconst repo=process.cwd(),base=path.join(repo,'docs/liora-venn/v691-v2'),plan=path.join(base,'plan');\nconst receipt=JSON.parse(process.argv[2]);C.ensure(receipt.valid,'plan_tests_failed');C.put(path.join(plan,'test-receipt.json'),receipt);\nconst exclusions=['manifest.json','staged-review.json'];const entries=C.manifest(repo,'docs/liora-venn/v691-v2/plan',exclusions);\nC.put(path.join(plan,'manifest.json'),{schema:'ghc.family.stage-manifest.v5',owner:'Liora Venn',phase:'v691-v2',stage:'planning',byte_domain:'raw_utf8_lf_worktree_before_commit',entries,self_exclusions:exclusions.map(x=>'docs/liora-venn/v691-v2/plan/'+x),boundary:C.BOUNDARY});\nconst allowed=fs.readdirSync(plan,{recursive:true}).filter(rel=>fs.statSync(path.join(plan,rel)).isFile()).map(rel=>'docs/liora-venn/v691-v2/plan/'+rel.replaceAll('\\\\','/')).sort();\nC.put(path.join(plan,'staged-review.json'),{schema:'ghc.family.staged-review.v5',owner:'Liora Venn',phase:'v691-v2',stage:'planning',allowed_paths:allowed,path_count:allowed.length,x1_implementation_paths:[],x2_implementation_paths:[],execution_results_present:false,privacy_candidates:0,confirmed_privacy_hits:0,boundary:C.BOUNDARY});\nprocess.stdout.write(JSON.stringify({valid:true,entries:entries.length,allowed:allowed.length}));\n`;
+C.put(path.join(base, 'plan/seal-plan.txt'), sealScript);
+
+process.stdout.write(JSON.stringify({owner: 'Liora Venn', phase: 'v691-v2', planning_only: true, proposals: proposals.length, source_reviews: sourceReviews.length, unique_requests: 200, exact_collisions: exactCollisions.length, outcome_ceiling_counts: {completed: 160, represented: 20, open_gap: 10, exact_gate: 10}, startup_failures_retained: startupPairs.length, safe_now: 200, candidates: 200, clean_fix_refine: 200, exact_held: 50, blocked_held: 30, local_skills_planned: 20, local_runners_planned: 10, merged_tools_planned: 5, boundary}));
