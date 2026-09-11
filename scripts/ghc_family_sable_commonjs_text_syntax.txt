@@ -1,0 +1,6 @@
+'use strict';
+const fs=require('node:fs'),vm=require('node:vm'),path=require('node:path');
+const files=process.argv.slice(2),results=[];
+if(!files.length)throw Error('supply one or more CommonJS text entrypoints');
+for(const file of files){try{const source=fs.readFileSync(file,'utf8'),wrapped='(function(exports,require,module,__filename,__dirname){\n'+source+'\n})';new vm.Script(wrapped,{filename:path.basename(file)});results.push({file:path.basename(file),valid:true});}catch(error){results.push({file:path.basename(file),valid:false,error:error.message});}}
+const valid=results.every(row=>row.valid);process.stdout.write(JSON.stringify({valid,files:results.length,results})+'\n');if(!valid)process.exitCode=1;

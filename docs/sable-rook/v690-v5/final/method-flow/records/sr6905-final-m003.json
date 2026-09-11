@@ -1,0 +1,26 @@
+{
+  "approval_class": "safe_now",
+  "candidate_workaround": "Require final-to-correction only when an expected final is supplied; always verify correction-to-evidence-to-x1-to-root.",
+  "failure_signature": "precommit-parent-check-required-a-not-yet-created-final-parent-edge",
+  "method_id": "SR6905-FINAL-M003",
+  "privacy_class": "sanitized_public",
+  "protected_gates": [
+    "lifecycle truth",
+    "canonical preflight",
+    "failure nonerasure"
+  ],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Branch lifecycle assertions explicitly by precommit versus exact-final state rather than applying future edges to the current head.",
+  "retained_negative_ids": [
+    "SR6905-FINAL-N003"
+  ],
+  "rollback": "Retain the 28-of-29 failed receipt and do not invoke the canonical until the corrected final-context test passes.",
+  "scope_boundary": "Lifecycle assertion correction only; no final or canonical success credit.",
+  "supersedes": [],
+  "title": "Lifecycle-state-aware parent-chain assertion",
+  "trigger_preconditions": [
+    "final tests run before final commit",
+    "same test also runs at exact final"
+  ],
+  "validation_witness_ids": []
+}
