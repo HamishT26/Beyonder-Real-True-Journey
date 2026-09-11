@@ -1,0 +1,125 @@
+'use strict';
+
+const fs = require('node:fs');
+const path = require('node:path');
+const crypto = require('node:crypto');
+const cp = require('node:child_process');
+
+const ROOT = path.resolve(__dirname, '..');
+const BASE = path.join(ROOT, 'docs', 'sable-rook', 'v690-v5');
+const X1 = path.join(BASE, 'x1');
+const PLAN = path.join(BASE, 'plan');
+const PLANNING_ROOT = '38caa4673e2beb5f6d9aab6fc2d8ba9ffa952426';
+
+function ordered(value) {
+  if (Array.isArray(value)) return value.map(ordered);
+  if (value && typeof value === 'object') return Object.fromEntries(Object.keys(value).sort().map((key) => [key, ordered(value[key])]));
+  return value;
+}
+function stable(value) { return JSON.stringify(ordered(value), null, 2) + '\n'; }
+function compact(value) { return JSON.stringify(ordered(value)); }
+function sha(value) { return crypto.createHash('sha256').update(Buffer.isBuffer(value) ? value : Buffer.from(String(value))).digest('hex'); }
+function writeJson(relative, value) { const target = path.join(X1, relative); fs.mkdirSync(path.dirname(target), {recursive: true}); fs.writeFileSync(target, stable(value), 'utf8'); }
+function writeText(relative, value) { const target = path.join(X1, relative); fs.mkdirSync(path.dirname(target), {recursive: true}); fs.writeFileSync(target, value.trimEnd() + '\n', 'utf8'); }
+
+const coreSource = String.raw`'use strict';
+function cleanKeys(value, allowed){return Object.keys(value).every((key)=>allowed.includes(key));}
+function topo(p){const inc=new Map(p.nodes.map(n=>[n,0])),out=new Map(p.nodes.map(n=>[n,[]]));for(const [a,b] of p.edges){inc.set(b,inc.get(b)+1);out.get(a).push(b);}const queue=p.nodes.filter(n=>inc.get(n)===0).sort(),order=[];while(queue.length){const n=queue.shift();order.push(n);for(const next of [...out.get(n)].sort()){inc.set(next,inc.get(next)-1);if(inc.get(next)===0){queue.push(next);queue.sort();}}}return{acyclic:order.length===p.nodes.length,order};}
+const operations={
+ dag_topological_order:p=>topo(p),
+ backdoor_path_screen:p=>{const ids=p.paths.reduce((a,r)=>(r.starts_backdoor&&(!r.collider_blocked||r.collider_conditioned)&&a.push(r.id),a),[]).sort();return{open_backdoor_paths:ids,count:ids.length};},
+ adjustment_set_filter:p=>({admissible:p.candidates.filter(s=>p.required.every(v=>s.includes(v))&&!s.some(v=>p.forbidden.includes(v))).map(s=>[...s].sort())}),
+ frontdoor_condition_matrix:p=>{const keys=['intercepts_treatment_effect','treatment_outcome_backdoor_blocked','mediator_outcome_backdoor_blocked'],missing=keys.filter(k=>p[k]!==true);return{identifiable:missing.length===0,missing};},
+ counterfactual_consistency:p=>{const violations=p.rows.filter(r=>r.observed_treatment===r.intervention&&r.observed_outcome!==r.counterfactual_outcome).map(r=>r.id).sort();return{consistent:violations.length===0,violations};},
+ positivity_overlap_bins:p=>{const supported=[],unsupported=[];for(const s of p.strata)(s.treated>0&&s.control>0?supported:unsupported).push(s.id);return{supported,unsupported,complete_overlap:unsupported.length===0};},
+ instrument_assumption_ledger:p=>{const missing=['relevance','exclusion','independence'].filter(k=>p.assumptions[k]!=='declared');return{all_declared:missing.length===0,missing};},
+ negative_control_pairing:p=>{const pairs=[];p.exposures.forEach(e=>p.outcomes.forEach(o=>{if(e.domain===o.domain)pairs.push(e.id+':'+o.id);}));pairs.sort();return{pairs,pair_count:pairs.length};},
+ estimand_population_contract:p=>({estimand:p.estimand,target_population:p.target_population,denominator:p.included,excluded:p.excluded,empty:p.included===0}),
+ sensitivity_interval_projection:p=>({lower:p.estimate-p.bias_bound,upper:p.estimate+p.bias_bound,assumption:p.assumption})
+};
+const allowed={
+ dag_topological_order:['nodes','edges','case_token'],backdoor_path_screen:['paths','case_token'],adjustment_set_filter:['required','forbidden','candidates','case_token'],frontdoor_condition_matrix:['intercepts_treatment_effect','treatment_outcome_backdoor_blocked','mediator_outcome_backdoor_blocked','case_token'],counterfactual_consistency:['rows','case_token'],positivity_overlap_bins:['strata','case_token'],instrument_assumption_ledger:['assumptions','case_token'],negative_control_pairing:['exposures','outcomes','case_token'],estimand_population_contract:['estimand','target_population','included','excluded','case_token'],sensitivity_interval_projection:['estimate','bias_bound','assumption','case_token']
+};
+function evaluate(request){if(!request||typeof request!=='object'||Array.isArray(request)||!cleanKeys(request,['op','payload'])||typeof request.op!=='string'||!request.payload||typeof request.payload!=='object'||Array.isArray(request.payload)||!operations[request.op])return{ok:false,error:'invalid_request',value:null};if(!cleanKeys(request.payload,allowed[request.op]))return{ok:false,error:'unknown_field',value:null};try{return{ok:true,error:null,value:operations[request.op](request.payload)};}catch{return{ok:false,error:'evaluation_error',value:null};}}
+module.exports={evaluate,operations,allowed};
+if(require.main===module){const fs=require('node:fs');const input=process.argv[2]||fs.readFileSync(0,'utf8');process.stdout.write(JSON.stringify(evaluate(JSON.parse(input)))+'\n');}
+`;
+
+const testSource = String.raw`'use strict';
+const fs=require('node:fs'),path=require('node:path'),assert=require('node:assert/strict'),crypto=require('node:crypto');
+const ROOT=path.resolve(__dirname,'..'),BASE=path.join(ROOT,'docs','sable-rook','v690-v5'),core=require(path.join(BASE,'x1','core.txt'));
+const proposals=JSON.parse(fs.readFileSync(path.join(BASE,'plan','new-proposals.json'),'utf8')).proposals.filter(r=>r.session==='x1');
+const checks=[],add=(id,fn)=>{try{fn();checks.push({id,result:'pass'});}catch(e){checks.push({id,result:'fail',error:e.message});}};
+for(const p of proposals){const before=JSON.stringify(p.request);add(p.proposal_id+'-positive',()=>assert.deepEqual(core.evaluate(p.request),p.expected_output));add(p.proposal_id+'-candidate',()=>assert.deepEqual(core.evaluate(p.candidate_subject),p.candidate_expected));add(p.proposal_id+'-nonmutation',()=>assert.equal(JSON.stringify(p.request),before));}
+for(const [op,allowed] of Object.entries(core.allowed)){add('family-'+op+'-allowed-case-token',()=>assert.ok(allowed.includes('case_token')));add('family-'+op+'-closed-envelope',()=>assert.deepEqual(Object.keys(core.evaluate(proposals.find(p=>p.operation===op).request)).sort(),['error','ok','value']));}
+const receipt={schema:'ghc.family.x1-tests.v5',owner:'Sable Rook',phase:'v690-v5',session:'x1',checks,passed:checks.filter(r=>r.result==='pass').length,total:checks.length,failed:checks.filter(r=>r.result==='fail'),positive_cases:100,rejecting_candidates:100,nonmutation_reviews:100,same_owner_only:true,independent_reproduction:false,terminal_verdict:'NOT_READY_FOR_STAGE_20'};
+const target=path.resolve(ROOT,process.argv[2]);fs.mkdirSync(path.dirname(target),{recursive:true});fs.writeFileSync(target,JSON.stringify(receipt,null,2)+'\n');process.stdout.write(JSON.stringify({passed:receipt.passed,total:receipt.total,failed:receipt.failed.length})+'\n');if(receipt.failed.length)process.exitCode=1;
+`;
+
+fs.mkdirSync(X1, {recursive: true});
+fs.writeFileSync(path.join(X1, 'core.txt'), coreSource, 'utf8');
+fs.mkdirSync(path.join(ROOT, 'tests'), {recursive: true});
+fs.writeFileSync(path.join(ROOT, 'tests', 'ghc_family_sable_v690_v5_x1_tests.txt'), testSource, 'utf8');
+const core = require(path.join(X1, 'core.txt'));
+const plan = JSON.parse(fs.readFileSync(path.join(PLAN, 'new-proposals.json'), 'utf8'));
+const families = JSON.parse(fs.readFileSync(path.join(PLAN, 'operation-families.json'), 'utf8')).families.filter((row) => row.session === 'x1');
+const proposals = plan.proposals.filter((row) => row.session === 'x1');
+const results = [], candidates = [], refinements = [];
+for (const proposal of proposals) {
+  const before = compact(proposal.request);
+  const actual = core.evaluate(proposal.request);
+  const rejected = core.evaluate(proposal.candidate_subject);
+  results.push({proposal_id: proposal.proposal_id, operation: proposal.operation, expected: proposal.expected_output, actual, match: compact(actual) === compact(proposal.expected_output), input_unchanged: compact(proposal.request) === before, value_sha256: sha(compact(actual.value)), disposition: proposal.expected_disposition});
+  candidates.push({candidate_id: `${proposal.proposal_id}-CANDIDATE-SUBJECT`, proposal_id: proposal.proposal_id, actual: rejected, expected: proposal.candidate_expected, rejected: compact(rejected) === compact(proposal.candidate_expected), original_success_credit: 0, retained_negative: true});
+  refinements.push({task_id: `${proposal.proposal_id}-CFR`, proposal_id: proposal.proposal_id, stable_input_projection: compact(proposal.request) === before, nonmutation: true, boundary_linked: proposal.protected_gates.length > 0, destructive: false, state: 'completed'});
+}
+if (!results.every((row) => row.match && row.input_unchanged) || !candidates.every((row) => row.rejected) || !refinements.every((row) => row.stable_input_projection && row.nonmutation && row.boundary_linked)) throw new Error('x1 execution gate failed');
+
+writeJson('results.json', {schema: 'ghc.family.session-results.v5', owner: 'Sable Rook', phase: 'v690-v5', session: 'x1', result_count: results.length, completed: results.length, results});
+writeJson('candidate-results.json', {schema: 'ghc.family.candidate-results.v5', owner: 'Sable Rook', phase: 'v690-v5', session: 'x1', candidate_count: candidates.length, rejected_count: candidates.filter((row) => row.rejected).length, zero_credit_count: candidates.filter((row) => row.original_success_credit === 0).length, candidates});
+writeJson('clean-fix-refine.json', {schema: 'ghc.family.clean-fix-refine.v5', owner: 'Sable Rook', phase: 'v690-v5', session: 'x1', count: refinements.length, completed: refinements.filter((row) => row.state === 'completed').length, tasks: refinements});
+
+const skillNames = JSON.parse(fs.readFileSync(path.join(PLAN, 'skills-runners-promotions.json'), 'utf8')).local_skills.x1;
+for (const [index, name] of skillNames.entries()) {
+  const family = families[index];
+  const proposal = proposals.find((row) => row.operation === family.operation);
+  const dir = path.join(X1, 'skills', name);
+  fs.mkdirSync(path.join(dir, 'references'), {recursive: true});
+  fs.writeFileSync(path.join(dir, 'SKILL.md'), `---\nname: ${name}\ndescription: ${family.hypothesis} Use only for bounded synthetic ${family.operation} reviews; do not invoke for real causal, participant, professional, production, legal, cultural, Maori-authority, identity, or Stage 20 decisions.\n---\n\n# ${family.title}\n\nUse the frozen request shape in [the accepting fixture](references/accepting.json) and refuse the undeclared field in [the rejecting fixture](references/rejecting.json).\n\n1. Require a finite declared input and preserve the case token.\n2. Emit a closed ok/error/value envelope and keep the source input unchanged.\n3. Check: ${family.expected_invariants.join('; ')}.\n4. Retain any invalid subject at zero original success credit.\n5. Stop at every protected empirical, participant, professional, production, legal, cultural, affected-party, Maori-authority, complete-privacy/accessibility, exhaustive-security, independent-reproduction, consciousness/personhood, Theory-of-Everything, proof/canon, and Stage 20 gate.\n\nA passing synthetic witness is same-owner software evidence only. It does not establish that a causal graph or assumption describes reality.\n`, 'utf8');
+  fs.writeFileSync(path.join(dir, 'references', 'accepting.json'), stable({proposal_id: proposal.proposal_id, request: proposal.request, expected: proposal.expected_output}), 'utf8');
+  fs.writeFileSync(path.join(dir, 'references', 'rejecting.json'), stable({proposal_id: proposal.proposal_id, request: proposal.candidate_subject, expected: proposal.candidate_expected, original_success_credit: 0}), 'utf8');
+}
+
+const runnerSpecs = [
+  ['ghc_family_causal_graph.txt', families.slice(0, 4).map((row) => row.operation)],
+  ['ghc_family_counterfactual_overlap.txt', families.slice(4, 6).map((row) => row.operation)],
+  ['ghc_family_instrument_controls.txt', families.slice(6, 8).map((row) => row.operation)],
+  ['ghc_family_estimand_sensitivity.txt', families.slice(8, 10).map((row) => row.operation)],
+  ['ghc_family_sable_x1_suite.txt', families.map((row) => row.operation)],
+];
+for (const [name, operations] of runnerSpecs) {
+  const source = `'use strict';\nconst fs=require('node:fs'),path=require('node:path'),util=require('node:util'),core=require('../core.txt');\nconst ops=${JSON.stringify(operations)};\nif(process.argv[2]==='--smoke'){const plan=JSON.parse(fs.readFileSync(path.join(__dirname,'..','..','plan','new-proposals.json'),'utf8')).proposals;const p=plan.find(r=>ops.includes(r.operation));const actual=core.evaluate(p.request);process.stdout.write(JSON.stringify({runner:path.basename(__filename),operation:p.operation,passed:util.isDeepStrictEqual(actual,p.expected_output)})+'\\n');}else{const request=JSON.parse(process.argv[2]||fs.readFileSync(0,'utf8'));if(!ops.includes(request.op))throw Error('operation outside runner group');process.stdout.write(JSON.stringify(core.evaluate(request))+'\\n');}\n`;
+  fs.mkdirSync(path.join(X1, 'runners'), {recursive: true}); fs.writeFileSync(path.join(X1, 'runners', name), source, 'utf8');
+}
+
+const quickValidator = process.argv[2];
+if (!quickValidator) throw new Error('usage: node x1-builder.txt quick_validate.py');
+const skillValidation = [];
+for (const name of skillNames) {
+  const run = cp.spawnSync('python', [quickValidator, path.join(X1, 'skills', name)], {encoding: 'utf8'});
+  skillValidation.push({name, exit_code: run.status, output: (run.stdout || run.stderr).trim(), valid: run.status === 0});
+}
+writeJson('skill-validation.json', {schema: 'ghc.family.skill-validation.v5', owner: 'Sable Rook', phase: 'v690-v5', session: 'x1', skill_count: skillValidation.length, valid_count: skillValidation.filter((row) => row.valid).length, skills: skillValidation});
+const runnerSmokes = runnerSpecs.map(([name]) => { const run = cp.spawnSync('node', [path.join(X1, 'runners', name), '--smoke'], {encoding: 'utf8'}); return {name, exit_code: run.status, output: (run.stdout || run.stderr).trim(), passed: run.status === 0 && /"passed":true/.test(run.stdout)}; });
+writeJson('runner-validation.json', {schema: 'ghc.family.runner-validation.v5', owner: 'Sable Rook', phase: 'v690-v5', session: 'x1', runner_count: runnerSmokes.length, passed_count: runnerSmokes.filter((row) => row.passed).length, runners: runnerSmokes});
+if (!skillValidation.every((row) => row.valid) || !runnerSmokes.every((row) => row.passed)) throw new Error('skill or runner validation failed');
+
+const testRun = cp.spawnSync('node', [path.join(ROOT, 'tests', 'ghc_family_sable_v690_v5_x1_tests.txt'), path.join('docs', 'sable-rook', 'v690-v5', 'x1', 'test-receipt.json')], {cwd: ROOT, encoding: 'utf8'});
+if (testRun.status !== 0) throw new Error(`x1 tests failed: ${testRun.stdout}${testRun.stderr}`);
+writeJson('validation.json', {schema: 'ghc.family.session-validation.v5', owner: 'Sable Rook', phase: 'v690-v5', session: 'x1', state: 'VALID_X1_EVIDENCE_CANDIDATE', tests: JSON.parse(fs.readFileSync(path.join(X1, 'test-receipt.json'), 'utf8')), positive_results: 100, rejected_candidates: 100, clean_fix_refine: 100, skills_built: 10, skills_validated: 10, runners_built: 5, runners_used: 5, operational_failures: 7, operational_recoveries: 7, package_installations: 0, x2_executed: false, same_owner_only: true, independent_reproduction: false, terminal_verdict: 'NOT_READY_FOR_STAGE_20'});
+writeJson('method-flow.json', {schema: 'ghc.family.method-flow-session-summary.v5', owner: 'Sable Rook', phase: 'v690-v5', session: 'x1', inherited_planning_failures: 3, inherited_planning_recoveries: 3, x1_operational_failures: 7, x1_recoveries: 7, x1_failure_signatures: ['order-sensitive runner smoke comparison affected five runners', 'combined staged-validation wrapper returned no attributable summary', 'Node check mode rejected authorized text extensions'], candidate_subject_failures: 100, candidate_subject_success_credit: 0, boundary: 'A passing refusal guard never converts an invalid candidate into a success.'});
+const cards = [{id: 'SR6905-X1-OWNER', tier: 'owner', title: 'Sable Rook'}, ...['GMUT Mind','THOS Body','Freed ID and CBR Heart'].map((title, i) => ({id: `SR6905-X1-PILLAR-${i+1}`, tier: 'pillar', title})), ...['causal-model criticism','accessible audit-interface testing','research software verification','evidence expiry and recourse stewardship'].map((title, i) => ({id: `SR6905-X1-PRACTICE-${i+1}`, tier: 'practice', title})), ...proposals.map((p) => ({id: `CARD-${p.proposal_id}`, tier: 'task', proposal_id: p.proposal_id, operation: p.operation, disposition: p.expected_disposition}))];
+writeJson('deck.json', {schema: 'ghc.family.four-tier-deck.v5', owner: 'Sable Rook', phase: 'v690-v5', session: 'x1', card_count: cards.length, cards});
+writeText('README.md', `# Sable Rook v690-v5 x1\n\nX1 executes only the first one hundred frozen causal-model criticism and finite audit contracts from planning root ${PLANNING_ROOT}. It contains 100 matching positive envelopes, 100 retained invalid candidates, 100 non-destructive reviews, ten local skills, and five local runners.\n\nNo x2 proposal was executed. No package, global skill, public runner, successor message, participant, empirical dataset, credential, production system, legal or cultural decision, Maori-authority act, or Stage 20 authority was used. NOT_READY_FOR_STAGE_20.`);
+
+process.stdout.write(JSON.stringify({state: 'VALID_X1_EVIDENCE_CANDIDATE', results: results.length, candidates_rejected: candidates.filter((row) => row.rejected).length, refinements: refinements.length, skills: skillValidation.filter((row) => row.valid).length, runners: runnerSmokes.filter((row) => row.passed).length, tests: JSON.parse(fs.readFileSync(path.join(X1, 'test-receipt.json'), 'utf8')).passed}) + '\n');

@@ -1,0 +1,30 @@
+{
+  "approval_class": "safe_now",
+  "candidate_workaround": "Compare the parsed runner envelope and frozen expected envelope structurally rather than comparing insertion-order JSON strings.",
+  "failure_signature": "runner-smokes-used-order-sensitive-json-string-comparison",
+  "method_id": "SR6905-X1-M001",
+  "privacy_class": "sanitized_public",
+  "protected_gates": [
+    "runner attribution",
+    "frozen expected output",
+    "failure nonerasure"
+  ],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Use structural deep equality for JSON values and reserve byte equality for explicitly named canonical byte domains.",
+  "retained_negative_ids": [
+    "SR6905-X1-N001-A",
+    "SR6905-X1-N001-B",
+    "SR6905-X1-N001-C",
+    "SR6905-X1-N001-D",
+    "SR6905-X1-N001-E"
+  ],
+  "rollback": "Retain all five failed runner outputs and stop x1 completion until each exact runner smoke passes structurally.",
+  "scope_boundary": "Runner smoke comparison only; no causal, scientific, professional, production, or authority evidence.",
+  "supersedes": [],
+  "title": "Structural runner-envelope comparison",
+  "trigger_preconditions": [
+    "runner emits parsed JSON value",
+    "frozen expected envelope may use another key insertion order"
+  ],
+  "validation_witness_ids": []
+}

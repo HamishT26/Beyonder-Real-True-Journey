@@ -1,0 +1,17 @@
+{
+  "approval_class":"safe_now",
+  "candidate_workaround":"Compile authorized JavaScript-in-text entrypoints with Node vm.Script instead of node --check, which rejects the .txt extension.",
+  "failure_signature":"node-24-check-mode-rejected-authorized-txt-entrypoint-extension",
+  "method_id":"SR6905-X1-M003",
+  "privacy_class":"sanitized_public",
+  "protected_gates":["v5 text-code policy","syntax validation","failure nonerasure"],
+  "recommendation_state":"candidate",
+  "recurrence_guard":"Use the text-source syntax runner for .txt JavaScript and reserve node --check for recognized JavaScript extensions.",
+  "retained_negative_ids":["SR6905-X1-N003"],
+  "rollback":"Retain the rejected check-mode invocation and do not rename or duplicate source files merely to satisfy the checker.",
+  "scope_boundary":"JavaScript syntax parsing only; no runtime, security, causal, accessibility, or authority guarantee.",
+  "supersedes":[],
+  "title":"Text-entrypoint syntax compiler",
+  "trigger_preconditions":["Node JavaScript stored in .txt under v5 policy","syntax-only validation required"],
+  "validation_witness_ids":[]
+}

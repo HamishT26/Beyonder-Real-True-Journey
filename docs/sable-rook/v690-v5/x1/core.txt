@@ -1,0 +1,21 @@
+'use strict';
+function cleanKeys(value, allowed){return Object.keys(value).every((key)=>allowed.includes(key));}
+function topo(p){const inc=new Map(p.nodes.map(n=>[n,0])),out=new Map(p.nodes.map(n=>[n,[]]));for(const [a,b] of p.edges){inc.set(b,inc.get(b)+1);out.get(a).push(b);}const queue=p.nodes.filter(n=>inc.get(n)===0).sort(),order=[];while(queue.length){const n=queue.shift();order.push(n);for(const next of [...out.get(n)].sort()){inc.set(next,inc.get(next)-1);if(inc.get(next)===0){queue.push(next);queue.sort();}}}return{acyclic:order.length===p.nodes.length,order};}
+const operations={
+ dag_topological_order:p=>topo(p),
+ backdoor_path_screen:p=>{const ids=p.paths.reduce((a,r)=>(r.starts_backdoor&&(!r.collider_blocked||r.collider_conditioned)&&a.push(r.id),a),[]).sort();return{open_backdoor_paths:ids,count:ids.length};},
+ adjustment_set_filter:p=>({admissible:p.candidates.filter(s=>p.required.every(v=>s.includes(v))&&!s.some(v=>p.forbidden.includes(v))).map(s=>[...s].sort())}),
+ frontdoor_condition_matrix:p=>{const keys=['intercepts_treatment_effect','treatment_outcome_backdoor_blocked','mediator_outcome_backdoor_blocked'],missing=keys.filter(k=>p[k]!==true);return{identifiable:missing.length===0,missing};},
+ counterfactual_consistency:p=>{const violations=p.rows.filter(r=>r.observed_treatment===r.intervention&&r.observed_outcome!==r.counterfactual_outcome).map(r=>r.id).sort();return{consistent:violations.length===0,violations};},
+ positivity_overlap_bins:p=>{const supported=[],unsupported=[];for(const s of p.strata)(s.treated>0&&s.control>0?supported:unsupported).push(s.id);return{supported,unsupported,complete_overlap:unsupported.length===0};},
+ instrument_assumption_ledger:p=>{const missing=['relevance','exclusion','independence'].filter(k=>p.assumptions[k]!=='declared');return{all_declared:missing.length===0,missing};},
+ negative_control_pairing:p=>{const pairs=[];p.exposures.forEach(e=>p.outcomes.forEach(o=>{if(e.domain===o.domain)pairs.push(e.id+':'+o.id);}));pairs.sort();return{pairs,pair_count:pairs.length};},
+ estimand_population_contract:p=>({estimand:p.estimand,target_population:p.target_population,denominator:p.included,excluded:p.excluded,empty:p.included===0}),
+ sensitivity_interval_projection:p=>({lower:p.estimate-p.bias_bound,upper:p.estimate+p.bias_bound,assumption:p.assumption})
+};
+const allowed={
+ dag_topological_order:['nodes','edges','case_token'],backdoor_path_screen:['paths','case_token'],adjustment_set_filter:['required','forbidden','candidates','case_token'],frontdoor_condition_matrix:['intercepts_treatment_effect','treatment_outcome_backdoor_blocked','mediator_outcome_backdoor_blocked','case_token'],counterfactual_consistency:['rows','case_token'],positivity_overlap_bins:['strata','case_token'],instrument_assumption_ledger:['assumptions','case_token'],negative_control_pairing:['exposures','outcomes','case_token'],estimand_population_contract:['estimand','target_population','included','excluded','case_token'],sensitivity_interval_projection:['estimate','bias_bound','assumption','case_token']
+};
+function evaluate(request){if(!request||typeof request!=='object'||Array.isArray(request)||!cleanKeys(request,['op','payload'])||typeof request.op!=='string'||!request.payload||typeof request.payload!=='object'||Array.isArray(request.payload)||!operations[request.op])return{ok:false,error:'invalid_request',value:null};if(!cleanKeys(request.payload,allowed[request.op]))return{ok:false,error:'unknown_field',value:null};try{return{ok:true,error:null,value:operations[request.op](request.payload)};}catch{return{ok:false,error:'evaluation_error',value:null};}}
+module.exports={evaluate,operations,allowed};
+if(require.main===module){const fs=require('node:fs');const input=process.argv[2]||fs.readFileSync(0,'utf8');process.stdout.write(JSON.stringify(evaluate(JSON.parse(input)))+'\n');}
