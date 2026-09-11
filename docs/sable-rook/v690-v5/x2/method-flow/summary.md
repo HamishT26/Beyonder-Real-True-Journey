@@ -2,9 +2,9 @@
 
 - Phase: v690-v5-x2
 - Owner: Sable Rook
-- Methods: 2
-- Passing witnesses: 3
-- Failed witnesses retained: 3
+- Methods: 4
+- Passing witnesses: 5
+- Failed witnesses retained: 5
 
 ## Preferred methods
 
@@ -23,6 +23,22 @@
 - Recurrence guard: Validate identifier-to-session mapping for every row whenever aggregate category counts can remain balanced under permutation.
 - Rollback: Retain the mislabelled generated HTML witness and keep browser/accessibility completion open until the corrected static row audit passes.
 - Witnesses: SR6905-X2-W002-F, SR6905-X2-W002-P
+
+### SR6905-X2-M003 — Runtime source-catalogue path injection
+
+- Trigger: reusable builder reads an owner-local source catalogue; repository privacy scan includes absolute drive paths
+- Method: Accept the inherited MetaToolBox catalogue as an explicit runtime argument and keep only its sanitized source binding in repository records.
+- Recurrence guard: Pass owner-local catalogue and toolbank locations at invocation time; never freeze absolute workstation paths into reusable source.
+- Rollback: Retain the immutable x2 evidence commit and add one direct-child correction rather than amend or force-push it.
+- Witnesses: SR6905-X2-W003-F, SR6905-X2-W003-P
+
+### SR6905-X2-M004 — Guard-preserving post-evidence source verification
+
+- Trigger: x2 evidence already committed; builder source receives a later portability correction
+- Method: Preserve the exact-x1 execution guard and validate the post-evidence source correction through syntax compilation, exact parameterization assertions, path scanning, and immutable-tree comparison.
+- Recurrence guard: Do not rerun a lifecycle builder after its evidence commit; validate later source-only corrections without weakening the original exact-head guard.
+- Rollback: Retain the guard refusal and make no generated-output claim from the rejected invocation.
+- Witnesses: SR6905-X2-W004-F, SR6905-X2-W004-P
 
 ## Retained boundary
 
