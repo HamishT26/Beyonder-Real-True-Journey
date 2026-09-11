@@ -1,0 +1,67 @@
+"use strict";
+
+const fs = require("fs");
+const path = require("path");
+const crypto = require("crypto");
+const cp = require("child_process");
+
+const ownerRoot = path.resolve(__dirname, "..");
+const repo = path.resolve(ownerRoot, "..", "..", "..");
+const receiptPath = path.join(ownerRoot, "plan", "staged-review.json");
+const receiptRepoPath = "docs/orin-thale/v690-v8/plan/staged-review.json";
+
+function git(args, options = {}) {
+  return cp.execFileSync("git", ["-C", repo, ...args], { encoding: options.encoding || "utf8", maxBuffer: 64 * 1024 * 1024 });
+}
+
+const rawPaths = git(["diff", "--cached", "--name-only", "--diff-filter=ACMR", "-z"], { encoding: "buffer" });
+const stagedPaths = rawPaths.toString("utf8").split("\0").filter(Boolean).sort();
+const selected = stagedPaths.filter((p) => p !== receiptRepoPath);
+const invalid = selected.filter((p) => !p.startsWith("docs/orin-thale/v690-v8/"));
+const missing = selected.filter((p) => !fs.existsSync(path.join(repo, ...p.split("/"))));
+const entries = selected.map((p) => {
+  const file = path.join(repo, ...p.split("/"));
+  const working = fs.readFileSync(file);
+  const staged = git(["show", `:${p}`], { encoding: "buffer" });
+  return {
+    path: p,
+    bytes: working.length,
+    sha256: crypto.createHash("sha256").update(working).digest("hex"),
+    staged_bytes: staged.length,
+    staged_sha256: crypto.createHash("sha256").update(staged).digest("hex"),
+    working_equals_staged: working.equals(staged)
+  };
+});
+
+let diffCheck = "";
+let diffCheckExit = 0;
+try {
+  diffCheck = git(["diff", "--cached", "--check"]);
+} catch (error) {
+  diffCheckExit = error.status ?? 1;
+  diffCheck = String(error.stdout || error.stderr || error.message);
+}
+
+const headExists = cp.spawnSync("git", ["-C", repo, "rev-parse", "--verify", "HEAD"], { encoding: "utf8" }).status === 0;
+const receipt = {
+  schema: "ghc.family.exact-staged-review.v5",
+  owner: "Orin Thale",
+  phase: "v690-v8",
+  stage: "planning_root",
+  head_exists_before_parentless_commit: headExists,
+  expected_parent: null,
+  selected_count: entries.length,
+  entries,
+  self_exclusions: [receiptRepoPath],
+  invalid_paths: invalid,
+  missing_paths: missing,
+  working_staged_mismatches: entries.filter((entry) => !entry.working_equals_staged).map((entry) => entry.path),
+  diff_check_exit: diffCheckExit,
+  diff_check_output: diffCheck.trim(),
+  exact_allowlist_pass: !headExists && invalid.length === 0 && missing.length === 0 && entries.every((entry) => entry.working_equals_staged) && diffCheckExit === 0,
+  boundary: "Planning-only parentless Orin owner scope. No x1/x2 outcome, successor delivery, empirical, professional, production, legal, cultural, Maori-authority, independent-reproduction or Stage 20 claim."
+};
+
+fs.writeFileSync(receiptPath, JSON.stringify(receipt, null, 2) + "\n", "utf8");
+process.stdout.write(JSON.stringify({ valid: receipt.exact_allowlist_pass, selected_count: receipt.selected_count, self_exclusions: receipt.self_exclusions.length, head_exists: headExists }, null, 2) + "\n");
+if (!receipt.exact_allowlist_pass) process.exitCode = 1;

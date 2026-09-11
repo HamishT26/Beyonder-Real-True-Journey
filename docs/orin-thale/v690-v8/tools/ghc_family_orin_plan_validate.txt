@@ -1,0 +1,229 @@
+"use strict";
+
+const fs = require("fs");
+const path = require("path");
+const crypto = require("crypto");
+
+const root = path.resolve(__dirname, "..");
+const plan = path.join(root, "plan");
+const errors = [];
+const checks = [];
+
+function pass(name, condition, detail = null) {
+  checks.push({ name, pass: Boolean(condition), detail });
+  if (!condition) errors.push(detail ? `${name}: ${detail}` : name);
+}
+
+function readJson(relative) {
+  return JSON.parse(fs.readFileSync(path.join(root, relative), "utf8"));
+}
+
+function normalize(value) {
+  if (Array.isArray(value)) return value.map(normalize);
+  if (value && typeof value === "object") {
+    const out = {};
+    for (const key of Object.keys(value).sort()) out[key] = normalize(value[key]);
+    return out;
+  }
+  return value;
+}
+
+function hashObject(value) {
+  return crypto.createHash("sha256").update(JSON.stringify(normalize(value)), "utf8").digest("hex");
+}
+
+function walk(dir) {
+  const out = [];
+  for (const entry of fs.readdirSync(dir, { withFileTypes: true }).sort((a, b) => a.name.localeCompare(b.name))) {
+    const full = path.join(dir, entry.name);
+    if (entry.isDirectory()) out.push(...walk(full));
+    else out.push(full);
+  }
+  return out;
+}
+
+const proposals = readJson("plan/new-proposals.json");
+const inherited = readJson("plan/inherited-selections.json");
+const neighbors = readJson("plan/semantic-neighbor-audit.json");
+const x1Portfolio = readJson("plan/portfolio-x1.json");
+const x2Portfolio = readJson("plan/portfolio-x2.json");
+const exact = readJson("plan/exact-packets.json");
+const blocked = readJson("plan/blocked-packets.json");
+const toolPlan = readJson("plan/skills-runners-promotions.json");
+const route = readJson("plan/route-plan.json");
+const failures = readJson("plan/operational-failures.json");
+const methods = readJson("plan/method-flow/ledger.json");
+const manifest = readJson("plan/manifest.json");
+const workflow = readJson("plan/workflow-profile.json");
+const sources = readJson("plan/primary-sources.json");
+
+const proposalRows = proposals.proposals || [];
+pass("proposal count", proposalRows.length === 200, `observed ${proposalRows.length}`);
+pass("proposal ids unique", new Set(proposalRows.map((row) => row.proposal_id)).size === 200);
+pass("proposal definition hashes unique", new Set(proposalRows.map((row) => row.definition_sha256)).size === 200);
+pass("x1 proposal count", proposalRows.filter((row) => row.session === "x1").length === 100);
+pass("x2 proposal count", proposalRows.filter((row) => row.session === "x2").length === 100);
+pass("operation families", new Set(proposalRows.map((row) => row.operation)).size === 20);
+pass("ten contracts per family", [...new Set(proposalRows.map((row) => row.operation))].every((op) => proposalRows.filter((row) => row.operation === op).length === 10));
+
+const allowed = new Set(["completed", "represented", "open_gap", "exact_gate"]);
+pass("authorized outcome vocabulary", proposalRows.every((row) => allowed.has(row.expected_execution_disposition)));
+const dispositionCounts = Object.fromEntries([...allowed].map((label) => [label, proposalRows.filter((row) => row.expected_execution_disposition === label).length]));
+pass("expected completed count", dispositionCounts.completed === 160, JSON.stringify(dispositionCounts));
+pass("expected represented count", dispositionCounts.represented === 20, JSON.stringify(dispositionCounts));
+pass("expected open gap count", dispositionCounts.open_gap === 10, JSON.stringify(dispositionCounts));
+pass("expected exact gate count", dispositionCounts.exact_gate === 10, JSON.stringify(dispositionCounts));
+
+const requiredProposalKeys = [
+  "proposal_id", "title", "operation", "session", "pillar", "practice", "approval_class", "execution_lane", "request",
+  "expected_output", "candidate_subject", "candidate_expected", "expected_execution_disposition", "hypothesis",
+  "null_or_failure_condition", "official_primary_source_needs", "concrete_artifacts", "falsifier_acceptance_gate",
+  "rollback_recovery", "protected_gates", "source_credit", "phase_novelty_credit", "novelty_scope", "definition_sha256"
+];
+pass("proposal field completeness", proposalRows.every((row) => requiredProposalKeys.every((key) => Object.hasOwn(row, key))));
+pass("one disposition per proposal", proposalRows.every((row) => typeof row.expected_execution_disposition === "string"));
+pass("source credit zero", proposalRows.every((row) => row.source_credit === 0));
+pass("phase novelty credit one", proposalRows.every((row) => row.phase_novelty_credit === 1));
+pass("invalid candidates frozen", proposalRows.every((row) => row.candidate_subject.unreviewed_authority === true && row.candidate_expected.ok === false && row.candidate_expected.error === "unknown_field"));
+pass("definition hash parity", proposalRows.every((row) => row.definition_sha256 === hashObject({ proposal_id: row.proposal_id, operation: row.operation, request: row.request, expected_output: row.expected_output })));
+pass("protected gates populated", proposalRows.every((row) => Array.isArray(row.protected_gates) && row.protected_gates.length === 6));
+pass("official needs populated", proposalRows.every((row) => Array.isArray(row.official_primary_source_needs) && row.official_primary_source_needs.length >= 1));
+
+pass("inherited count", inherited.records.length === 200 && inherited.reviewed_count === 200);
+pass("inherited ids unique", new Set(inherited.records.map((row) => row.inherited_proposal_id)).size === 200);
+pass("inherited zero novelty", inherited.records.every((row) => row.novelty_credit === 0));
+pass("inherited zero completion", inherited.records.every((row) => row.completion_credit === 0));
+pass("inherited zero authority", inherited.records.every((row) => row.authority_credit === 0));
+pass("semantic comparisons", neighbors.pairwise_comparisons === 40000);
+pass("semantic rows", neighbors.rows.length === 200);
+pass("semantic quarantines zero", neighbors.quarantines === 0);
+pass("operation collisions zero", neighbors.exact_operation_collisions === 0);
+pass("title collisions zero", neighbors.exact_title_collisions === 0);
+pass("request collisions zero", neighbors.canonical_request_hash_collisions === 0);
+
+for (const [session, portfolio] of [["x1", x1Portfolio], ["x2", x2Portfolio]]) {
+  pass(`${session} planning status`, portfolio.status === "planning_only_not_executed");
+  pass(`${session} safe count`, portfolio.safe_now.length === 100);
+  pass(`${session} candidate count`, portfolio.candidate.length === 100);
+  pass(`${session} clean fix refine count`, portfolio.clean_fix_refine.length === 100);
+  pass(`${session} portfolio ids unique`, new Set([...portfolio.safe_now, ...portfolio.candidate, ...portfolio.clean_fix_refine].map((row) => row.task_id)).size === 300);
+  pass(`${session} no completion status`, [...portfolio.safe_now, ...portfolio.candidate, ...portfolio.clean_fix_refine].every((row) => row.status === "planned_not_executed"));
+}
+
+pass("exact packet count", exact.packets.length === 50 && exact.count === 50);
+pass("exact packets unexecuted", exact.packets.every((row) => row.status === "unexecuted_exact_gate" && row.execution_prohibited_without_exact_approval === true));
+pass("blocked packet count", blocked.packets.length === 30 && blocked.count === 30);
+pass("blocked packets zero credit", blocked.packets.every((row) => row.status === "blocked_unexecuted" && row.original_subject_success_credit === 0));
+
+pass("skill count", toolPlan.phase_local_skills.length === 20);
+pass("x1 skill count", toolPlan.phase_local_skills.filter((row) => row.session === "x1").length === 10);
+pass("x2 skill count", toolPlan.phase_local_skills.filter((row) => row.session === "x2").length === 10);
+pass("skills not built", toolPlan.phase_local_skills.every((row) => row.status === "planned_phase_local_not_built" && row.global_installation === false));
+pass("runner count", toolPlan.family_runners.length === 10);
+pass("x1 runner count", toolPlan.family_runners.filter((row) => row.session === "x1").length === 5);
+pass("x2 runner count", toolPlan.family_runners.filter((row) => row.session === "x2").length === 5);
+pass("runners text extension", toolPlan.family_runners.every((row) => row.name.endsWith(".txt")));
+pass("global promotions count", toolPlan.curated_global_promotions.length === 5);
+pass("global promotions not installed", toolPlan.curated_global_promotions.every((row) => row.status === "planned_not_installed_or_published"));
+pass("successor practice recommendations", toolPlan.successor_recommendations.practices.length === 2);
+pass("successor skill ideas", toolPlan.successor_recommendations.skill_ideas.length >= 5);
+pass("successor runner ideas", toolPlan.successor_recommendations.runner_ideas.length >= 5);
+
+pass("route prepared not sent", route.state === "PREPARED_NOT_SENT" && route.message_sent === false && route.task_created === false && route.precontact === false);
+pass("route exact successor", route.successor.exact_title === "Ceryn Alder" && route.successor.phase === "v691-v1");
+pass("route recovery floor", route.recovery_floor_before_unaccepted_send >= 5);
+
+pass("retained startup failures", failures.failures.length === failures.count && failures.count > 0);
+pass("startup failures zero credit", failures.failures.every((row) => row.status === "retained_zero_credit_failure" && row.original_subject_success_credit === 0 && row.failure_erased === false));
+pass("method count", methods.methods.length === failures.count && methods.counts.methods === failures.count);
+pass("method witness count", methods.witnesses.length === failures.count * 2 && methods.counts.direct_witnesses === failures.count * 2);
+pass("method fail count", methods.witnesses.filter((row) => row.result === "fail").length === failures.count && methods.counts.failed_witnesses === failures.count);
+pass("method pass count", methods.witnesses.filter((row) => row.result === "pass").length === failures.count && methods.counts.passing_witnesses === failures.count);
+pass("failed witness zero credit", methods.witnesses.filter((row) => row.result === "fail").every((row) => row.original_subject_success_credit === 0));
+pass("same owner not independent", methods.witnesses.every((row) => row.same_owner_only === true && row.independent_reproduction === false));
+pass("retained negative links", methods.witnesses.every((row) => Array.isArray(row.retained_negative_ids) && row.retained_negative_ids.length > 0));
+
+pass("workflow blank root", workflow.branch_history.includes("parentless"));
+pass("workflow commit ceiling", workflow.commit_ceilings.total === 8);
+pass("workflow owner file ceiling", workflow.materialization_ceilings.owner_files === 1999);
+pass("workflow no full suite", workflow.full_repository_suite === "not authorized");
+pass("five official sources", sources.sources.length === 5);
+pass("sources zero observation credit", sources.sources.every((row) => row.observation_credit === 0 && row.authority_credit === 0));
+
+pass("x1 output absent", !fs.existsSync(path.join(root, "x1")));
+pass("x2 output absent", !fs.existsSync(path.join(root, "x2")));
+pass("final output absent", !fs.existsSync(path.join(root, "final")));
+
+const allFiles = walk(root);
+const allowedExtensions = new Set([".json", ".md", ".txt", ".html"]);
+pass("allowed source extensions", allFiles.every((file) => allowedExtensions.has(path.extname(file).toLowerCase())), allFiles.filter((file) => !allowedExtensions.has(path.extname(file).toLowerCase())).join(","));
+pass("owner files below ceiling", allFiles.length < 2000, `observed ${allFiles.length}`);
+
+let crFiles = [];
+let uuidCandidates = [];
+let privatePathCandidates = [];
+let credentialCandidates = [];
+let rawRouteCandidates = [];
+const routeFragments = [
+  ["source", "thread", "id"].join("_"),
+  ["provider", "Tab", "Id"].join(""),
+  ["client", "Thread", "Id"].join(""),
+  ["thread", "Id"].join("") + "\\s*[=:]"
+];
+const rawRoutePattern = new RegExp(`(?:${routeFragments.join("|")})`);
+for (const file of allFiles) {
+  const bytes = fs.readFileSync(file);
+  const rel = path.relative(root, file).replaceAll("\\", "/");
+  if (bytes.includes(13)) crFiles.push(rel);
+  const text = bytes.toString("utf8");
+  if (/\b[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}\b/i.test(text)) uuidCandidates.push(rel);
+  if (/(?:[A-Z]:\\Users\\|[A-Z]:\\GHC-Archives\\|\/Users\/|\/home\/)/.test(text)) privatePathCandidates.push(rel);
+  if (/(?:BEGIN (?:RSA |EC |OPENSSH )?PRIVATE KEY|ghp_[A-Za-z0-9]{20,}|sk-[A-Za-z0-9]{20,})/.test(text)) credentialCandidates.push(rel);
+  if (rawRoutePattern.test(text)) rawRouteCandidates.push(rel);
+}
+pass("LF byte domain", crFiles.length === 0, crFiles.join(","));
+pass("no UUID candidates", uuidCandidates.length === 0, uuidCandidates.join(","));
+pass("no private absolute paths", privatePathCandidates.length === 0, privatePathCandidates.join(","));
+pass("no credential candidates", credentialCandidates.length === 0, credentialCandidates.join(","));
+pass("no raw route candidates", rawRouteCandidates.length === 0, rawRouteCandidates.join(","));
+
+const manifestMap = new Map(manifest.entries.map((entry) => [entry.path, entry]));
+const expectedManifestFiles = allFiles.filter((file) => file !== path.join(plan, "manifest.json") && file !== path.join(plan, "staged-review.json"));
+pass("manifest entry count", manifest.entries.length === expectedManifestFiles.length, `manifest ${manifest.entries.length}, files ${expectedManifestFiles.length}`);
+let manifestMismatches = [];
+for (const file of expectedManifestFiles) {
+  const relative = `docs/orin-thale/v690-v8/${path.relative(root, file).replaceAll("\\", "/")}`;
+  const bytes = fs.readFileSync(file);
+  const entry = manifestMap.get(relative);
+  if (!entry || entry.bytes !== bytes.length || entry.sha256 !== crypto.createHash("sha256").update(bytes).digest("hex")) manifestMismatches.push(relative);
+}
+pass("manifest byte parity", manifestMismatches.length === 0, manifestMismatches.join(","));
+pass("manifest self exclusions", manifest.self_exclusions.length === 2 && manifest.self_exclusions.includes("docs/orin-thale/v690-v8/plan/manifest.json") && manifest.self_exclusions.includes("docs/orin-thale/v690-v8/plan/staged-review.json"));
+
+const markdownWords = allFiles.filter((file) => path.extname(file).toLowerCase() === ".md").map((file) => ({ file, words: fs.readFileSync(file, "utf8").trim().split(/\s+/).filter(Boolean).length }));
+pass("documents within word ceiling", markdownWords.every((row) => row.words <= 100000));
+
+const result = {
+  schema: "ghc.family.plan-validation-receipt.v5",
+  owner: "Orin Thale",
+  phase: "v690-v8",
+  stage: "planning_root",
+  valid: errors.length === 0,
+  checks_total: checks.length,
+  checks_passed: checks.filter((row) => row.pass).length,
+  checks_failed: errors.length,
+  proposal_counts: { inherited: inherited.records.length, new: proposalRows.length, x1: proposalRows.filter((row) => row.session === "x1").length, x2: proposalRows.filter((row) => row.session === "x2").length, dispositions: dispositionCounts },
+  portfolio_counts: { x1: x1Portfolio.counts, x2: x2Portfolio.counts },
+  tool_counts: toolPlan.counts,
+  packet_counts: { exact: exact.packets.length, blocked: blocked.packets.length },
+  method_counts: methods.counts,
+  owner_files: allFiles.length,
+  manifest_entries: manifest.entries.length,
+  privacy_candidates: { uuid: uuidCandidates.length, private_path: privatePathCandidates.length, credential: credentialCandidates.length, raw_route: rawRouteCandidates.length },
+  execution_results_present: fs.existsSync(path.join(root, "x1")) || fs.existsSync(path.join(root, "x2")),
+  errors,
+  checks
+};
+
+process.stdout.write(JSON.stringify(result, null, 2) + "\n");
+if (!result.valid) process.exitCode = 1;

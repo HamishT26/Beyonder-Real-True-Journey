@@ -1,0 +1,1192 @@
+"use strict";
+
+const fs = require("fs");
+const path = require("path");
+const crypto = require("crypto");
+
+const owner = "Orin Thale";
+const phase = "v690-v8";
+const prefix = "OR6908";
+const root = path.resolve(__dirname, "..");
+const planDir = path.join(root, "plan");
+const methodDir = path.join(planDir, "method-flow");
+const inheritedPath = process.env.ORIN_SOURCE_PROPOSALS;
+
+if (!inheritedPath || !fs.existsSync(inheritedPath)) {
+  throw new Error("ORIN_SOURCE_PROPOSALS must name the exact Caelen proposal ledger for read-only planning input");
+}
+
+const boundary = [
+  "Bounded same-owner synthetic software and documentation evidence only.",
+  "No empirical, participant, identity, professional, production, deployment, legal, cultural, affected-party, Maori-authority, complete privacy/accessibility, exhaustive-security, independent-reproduction, consciousness/personhood, AGI/ASI, Theory-of-Everything, proof/canon or Stage 20 claim.",
+  "NOT_READY_FOR_STAGE_20."
+].join(" ");
+
+const protectedGates = [
+  "real observations, units, dynamics, likelihoods, uncertainty, falsifiers and empirical review",
+  "governed real workloads, participants, operators, safety monitoring and appropriate statistics",
+  "real keys, proofs, live identity lifecycle, interoperability, privacy/security review and recovery governance",
+  "professional, scientific, legal, cultural, affected-party and Maori authority",
+  "complete privacy, accessibility, security and independent reproduction",
+  "consciousness, personhood, identity continuity, AGI, ASI, Theory of Everything, proof/canon and Stage 20"
+];
+
+const officialSources = {
+  icc_v4: {
+    title: "ICC.1:2022 profile format specification",
+    url: "https://www.color.org/icc-1_specification/",
+    role: "profile architecture, tag and data-structure vocabulary only; no conformance claim",
+    checked: "2026-09-11"
+  },
+  css_color4: {
+    title: "CSS Color Module Level 4",
+    url: "https://www.w3.org/TR/css-color-4/",
+    role: "current color-space, channel, interpolation and gamut vocabulary; candidate draft, not endorsement",
+    checked: "2026-09-11"
+  },
+  wcag22: {
+    title: "Web Content Accessibility Guidelines 2.2",
+    url: "https://www.w3.org/TR/WCAG22/",
+    role: "accessibility vocabulary and explicit evaluation vacancy only",
+    checked: "2026-09-11"
+  },
+  prov_o: {
+    title: "PROV-O: The PROV Ontology",
+    url: "https://www.w3.org/TR/prov-o/",
+    role: "provenance vocabulary only",
+    checked: "2026-09-11"
+  },
+  rfc3339: {
+    title: "RFC 3339: Date and Time on the Internet",
+    url: "https://www.rfc-editor.org/rfc/rfc3339",
+    role: "timestamp syntax and offset vocabulary only",
+    checked: "2026-09-11"
+  }
+};
+
+function mkdir(dir) {
+  fs.mkdirSync(dir, { recursive: true });
+}
+
+function normalize(value) {
+  if (Array.isArray(value)) return value.map(normalize);
+  if (value && typeof value === "object") {
+    const out = {};
+    for (const key of Object.keys(value).sort()) out[key] = normalize(value[key]);
+    return out;
+  }
+  return value;
+}
+
+function canonical(value) {
+  return JSON.stringify(normalize(value));
+}
+
+function hashText(value) {
+  return crypto.createHash("sha256").update(value, "utf8").digest("hex");
+}
+
+function hashObject(value) {
+  return hashText(canonical(value));
+}
+
+function writeJson(relative, value) {
+  const target = path.join(root, relative);
+  mkdir(path.dirname(target));
+  fs.writeFileSync(target, JSON.stringify(value, null, 2) + "\n", { encoding: "utf8" });
+}
+
+function writeText(relative, value) {
+  const target = path.join(root, relative);
+  mkdir(path.dirname(target));
+  const clean = String(value).replace(/\r\n/g, "\n").replace(/\r/g, "\n");
+  fs.writeFileSync(target, clean.endsWith("\n") ? clean : clean + "\n", { encoding: "utf8" });
+}
+
+function uniqueSorted(values) {
+  return [...new Set(values)].sort((a, b) => String(a).localeCompare(String(b)));
+}
+
+function isoHour(hour) {
+  return new Date(Date.UTC(2026, 8, 11, hour, 0, 0)).toISOString();
+}
+
+function scenario(index) {
+  const n = index + 1;
+  const concreteStates = Array.from({ length: 3 + (index % 3) }, (_, j) => `c${j}`);
+  const blocks = [];
+  for (let j = 0; j < concreteStates.length; j += 2) {
+    blocks.push({ abstract: `a${Math.floor(j / 2)}`, members: concreteStates.slice(j, j + 2) });
+  }
+  const abstraction = {};
+  for (const block of blocks) for (const member of block.members) abstraction[member] = block.abstract;
+  const actions = ["profile_ingest", "transform", "proof", "handover"];
+  const edges = concreteStates.slice(0, -1).map((state, j) => [state, actions[(j + index) % actions.length], concreteStates[j + 1]]);
+  if (index % 2 === 1) edges.push([concreteStates.at(-1), "readback", concreteStates.at(-1)]);
+  return { n, concreteStates, blocks, abstraction, actions, edges };
+}
+
+function buildRequest(operation, index) {
+  const s = scenario(index);
+  const hour = index;
+  const even = index % 2 === 0;
+  switch (operation) {
+    case "color_channel_partition":
+      return { op: operation, concrete_states: s.concreteStates, blocks: s.blocks };
+    case "profile_link_projection":
+      return { op: operation, concrete_edges: s.edges, abstraction: s.abstraction };
+    case "unsupported_conversion_trace": {
+      const trace = s.edges.slice(0, Math.min(2, s.edges.length)).map((edge) => edge[1]);
+      const alternatives = [trace, ["profile_ingest", "missing_transform"], ["proof"]];
+      return { op: operation, abstract_actions: even ? trace : ["not-realized"], concrete_action_traces: alternatives };
+    }
+    case "conversion_step_candidates": {
+      const pathEdges = s.edges.slice(0, Math.min(2, s.edges.length));
+      const abstractTrace = pathEdges.length === 0 ? [s.abstraction[s.concreteStates[0]]] : [s.abstraction[pathEdges[0][0]], ...pathEdges.map((edge) => s.abstraction[edge[2]])];
+      return { op: operation, abstract_state_trace: abstractTrace, abstraction: s.abstraction, concrete_edges: s.edges };
+    }
+    case "gamut_boundary_split":
+      return {
+        op: operation,
+        members: s.concreteStates,
+        attributes: Object.fromEntries(s.concreteStates.map((state, j) => [state, (j + 1) * (index + 2)])),
+        threshold: (index + 2) * 2
+      };
+    case "profile_tag_allowlist":
+      return {
+        op: operation,
+        requested_scopes: ["inspect_tags", "correct_metadata", even ? "handover" : "publish_profile"],
+        granted_scopes: ["inspect_tags", "correct_metadata", "handover"],
+        purpose: `synthetic-profile-review-${s.n}`
+      };
+    case "calibration_expiry_state":
+      return {
+        op: operation,
+        observed_at: isoHour(hour + 2),
+        not_before: isoHour(hour + (even ? 1 : 3)),
+        expires_at: isoHour(hour + (index % 3 === 0 ? 2 : 4))
+      };
+    case "profile_revision_lineage":
+      return {
+        op: operation,
+        events: [
+          { id: `e${s.n}-1`, sequence: 1, action: "grant", scopes: ["inspect_tags", "correct_metadata"] },
+          { id: `e${s.n}-2`, sequence: 2, action: even ? "correct" : "revoke", scopes: even ? ["inspect_tags"] : ["correct_metadata"] },
+          { id: `e${s.n}-3`, sequence: 3, action: "note", scopes: [] }
+        ],
+        as_of_sequence: index % 3 === 0 ? 1 : 3
+      };
+    case "correction_route_coverage":
+      return {
+        op: operation,
+        issue_codes: even ? ["profile_mismatch", "color_only_cue"] : ["color_only_cue", "publication_authority_unknown"],
+        declared_routes: {
+          profile_mismatch: "profile_correction_review",
+          color_only_cue: "accessible_palette_review"
+        }
+      };
+    case "review_window_state":
+      return {
+        op: operation,
+        decision_at: isoHour(hour),
+        appeal_by: isoHour(hour + 4),
+        submitted_at: index % 3 === 0 ? null : isoHour(hour + (even ? 3 : 5))
+      };
+    case "metadata_disclosure_minimization":
+      return {
+        op: operation,
+        requested_fields: ["profile_id", "color_space", even ? "private_note" : "provenance"],
+        allowed_fields: ["profile_id", "color_space", "provenance"],
+        record: { profile_id: `synthetic-profile-${s.n}`, color_space: "synthetic-rgb", provenance: `fixture-${s.n}`, private_note: "synthetic-redacted" }
+      };
+    case "color_difference_explanation_coverage":
+      return {
+        op: operation,
+        required_reasons: ["source_space", "transform_basis", "manual_review_route"],
+        provided_reasons: even ? ["source_space", "transform_basis", "manual_review_route"] : ["source_space", "transform_basis"]
+      };
+    case "accessible_palette_alternatives":
+      return {
+        op: operation,
+        available_roles: even ? ["color_reviewer", "profile_steward"] : ["color_reviewer"],
+        actions: [
+          { id: "inspect_palette", required_roles: ["color_reviewer"] },
+          { id: "correct_profile", required_roles: ["color_reviewer", "profile_steward"] },
+          { id: "publish_profile", required_roles: ["publication_authority"] }
+        ]
+      };
+    case "color_review_quorum_gap":
+      return {
+        op: operation,
+        required_roles: ["color_reviewer", "affected_user_reviewer", "publication_authority"],
+        present_roles: even ? ["color_reviewer", "affected_user_reviewer"] : ["color_reviewer"]
+      };
+    case "accessible_mode_vacancy":
+      return {
+        op: operation,
+        required_modes: ["text_labels", "shape_cues", "screen_reader_summary", "plain_language"],
+        provided_modes: even ? ["text_labels", "shape_cues", "plain_language"] : ["text_labels", "shape_cues"]
+      };
+    case "measurement_model_separation":
+      return {
+        op: operation,
+        records: [
+          { id: `r${s.n}-o`, kind: "observation", value: index + 1, unit: "synthetic_channel_code" },
+          { id: `r${s.n}-m`, kind: "model", value: index + 2, unit: "synthetic_tristimulus_proxy" },
+          { id: `r${s.n}-u`, kind: even ? "assumption" : "unknown", value: null, unit: null }
+        ]
+      };
+    case "tristimulus_dimension_guard":
+      return {
+        op: operation,
+        left: { value: index + 1, unit: even ? "relative_X" : "encoded_channel", dimension: even ? "tristimulus" : "code_value" },
+        right: { value: index + 2, unit: "relative_Y", dimension: "tristimulus" },
+        operator: "add"
+      };
+    case "conversion_workload_budget":
+      return {
+        op: operation,
+        budget: 6 + index,
+        tasks: [
+          { id: `t${s.n}-1`, cost: 2 },
+          { id: `t${s.n}-2`, cost: 3 + (index % 2) },
+          { id: `t${s.n}-3`, cost: 4 },
+          { id: `t${s.n}-4`, cost: 1 }
+        ]
+      };
+    case "profile_rollback_checkpoint":
+      return {
+        op: operation,
+        events: [
+          { id: `k${s.n}-1`, sequence: 1, state: "draft", reversible: true },
+          { id: `k${s.n}-2`, sequence: 2, state: "reviewed", reversible: true },
+          { id: `k${s.n}-3`, sequence: 3, state: even ? "held" : "external_action", reversible: even }
+        ]
+      };
+    case "publication_authority_gap":
+      return {
+        op: operation,
+        required_scopes: ["inspect_profile", "correct_profile", "authorize_publication"],
+        delegated_scopes: even ? ["inspect_profile", "correct_profile"] : ["inspect_profile"],
+        delegating_authority_verified: false
+      };
+    default:
+      throw new Error(`unknown operation ${operation}`);
+  }
+}
+
+function oracle(request) {
+  switch (request.op) {
+    case "color_channel_partition": {
+      const seen = new Map();
+      const empties = [];
+      for (const block of request.blocks) {
+        if (block.members.length === 0) empties.push(block.abstract);
+        for (const member of block.members) seen.set(member, (seen.get(member) || 0) + 1);
+      }
+      const missing = request.concrete_states.filter((state) => !seen.has(state));
+      const duplicateMembers = [...seen.entries()].filter(([, count]) => count > 1).map(([state]) => state).sort();
+      const covered = request.concrete_states.filter((state) => seen.has(state)).sort();
+      return { covered, missing, duplicate_members: duplicateMembers, empty_blocks: empties.sort(), valid: missing.length === 0 && duplicateMembers.length === 0 && empties.length === 0 };
+    }
+    case "profile_link_projection": {
+      const projected = request.concrete_edges.map(([from, label, to]) => [request.abstraction[from], label, request.abstraction[to]]);
+      const keyed = new Map(projected.map((edge) => [canonical(edge), edge]));
+      return { abstract_edges: [...keyed.values()].sort((a, b) => canonical(a).localeCompare(canonical(b))) };
+    }
+    case "unsupported_conversion_trace": {
+      const target = canonical(request.abstract_actions);
+      const indexes = request.concrete_action_traces.map((trace, i) => canonical(trace) === target ? i : -1).filter((i) => i >= 0);
+      return { spurious: indexes.length === 0, matching_trace_indexes: indexes };
+    }
+    case "conversion_step_candidates": {
+      const candidates = [];
+      for (const [from, label, to] of request.concrete_edges) {
+        const pair = [request.abstraction[from], request.abstraction[to]];
+        for (let i = 0; i < request.abstract_state_trace.length - 1; i++) {
+          if (pair[0] === request.abstract_state_trace[i] && pair[1] === request.abstract_state_trace[i + 1]) candidates.push({ step: i, from, label, to });
+        }
+      }
+      return { candidates, complete_step_coverage: uniqueSorted(candidates.map((x) => x.step)).length === Math.max(0, request.abstract_state_trace.length - 1) };
+    }
+    case "gamut_boundary_split": {
+      const lower = request.members.filter((member) => request.attributes[member] <= request.threshold).sort();
+      const higher = request.members.filter((member) => request.attributes[member] > request.threshold).sort();
+      return { lower_or_equal: lower, higher, disjoint_complete: lower.length + higher.length === request.members.length };
+    }
+    case "profile_tag_allowlist": {
+      const granted = new Set(request.granted_scopes);
+      return {
+        permitted: uniqueSorted(request.requested_scopes.filter((scope) => granted.has(scope))),
+        withheld: uniqueSorted(request.requested_scopes.filter((scope) => !granted.has(scope))),
+        purpose: request.purpose
+      };
+    }
+    case "calibration_expiry_state": {
+      const observed = Date.parse(request.observed_at);
+      const notBefore = Date.parse(request.not_before);
+      const expires = Date.parse(request.expires_at);
+      const state = observed < notBefore ? "premature" : observed >= expires ? "expired" : "active";
+      return { state, duration_to_expiry_seconds: Math.trunc((expires - observed) / 1000) };
+    }
+    case "profile_revision_lineage": {
+      const events = request.events.filter((event) => event.sequence <= request.as_of_sequence).sort((a, b) => a.sequence - b.sequence);
+      const active = new Set();
+      for (const event of events) {
+        if (event.action === "grant") for (const scope of event.scopes) active.add(scope);
+        if (event.action === "revoke") for (const scope of event.scopes) active.delete(scope);
+        if (event.action === "correct") {
+          active.clear();
+          for (const scope of event.scopes) active.add(scope);
+        }
+      }
+      return { active_scopes: [...active].sort(), lineage_ids: events.map((event) => event.id), last_sequence: events.length ? events.at(-1).sequence : null };
+    }
+    case "correction_route_coverage": {
+      const resolved = [];
+      const unresolved = [];
+      for (const code of request.issue_codes) {
+        if (Object.hasOwn(request.declared_routes, code)) resolved.push([code, request.declared_routes[code]]);
+        else unresolved.push(code);
+      }
+      return { declared_routes: resolved, unresolved_codes: unresolved.sort(), authority_reserved: true };
+    }
+    case "review_window_state": {
+      let state = "missing";
+      if (request.submitted_at !== null) state = Date.parse(request.submitted_at) <= Date.parse(request.appeal_by) ? "timely" : "late";
+      return { state, window_seconds: Math.trunc((Date.parse(request.appeal_by) - Date.parse(request.decision_at)) / 1000), remedy_authority_reserved: true };
+    }
+    case "metadata_disclosure_minimization": {
+      const allowed = new Set(request.allowed_fields);
+      const released = {};
+      const withheld = [];
+      for (const field of request.requested_fields) {
+        if (allowed.has(field) && Object.hasOwn(request.record, field)) released[field] = request.record[field];
+        else withheld.push(field);
+      }
+      return { released, withheld_fields: withheld.sort(), minimum_disclosure_only: true };
+    }
+    case "color_difference_explanation_coverage": {
+      const provided = new Set(request.provided_reasons);
+      const missing = request.required_reasons.filter((reason) => !provided.has(reason)).sort();
+      return { covered: missing.length === 0, missing_reasons: missing, provided_reasons: uniqueSorted(request.provided_reasons) };
+    }
+    case "accessible_palette_alternatives": {
+      const roles = new Set(request.available_roles);
+      const enabled = [];
+      const withheld = [];
+      for (const action of request.actions) {
+        const missing = action.required_roles.filter((role) => !roles.has(role));
+        (missing.length === 0 ? enabled : withheld).push(missing.length === 0 ? action.id : { id: action.id, missing_roles: missing.sort() });
+      }
+      return { enabled_actions: enabled.sort(), withheld_actions: withheld };
+    }
+    case "color_review_quorum_gap": {
+      const present = new Set(request.present_roles);
+      const missing = request.required_roles.filter((role) => !present.has(role)).sort();
+      return { quorum_met: missing.length === 0, missing_roles: missing, authority_reserved: true };
+    }
+    case "accessible_mode_vacancy": {
+      const provided = new Set(request.provided_modes);
+      const missing = request.required_modes.filter((mode) => !provided.has(mode)).sort();
+      return { declared_modes_complete: missing.length === 0, missing_modes: missing, manual_evaluation_reserved: true };
+    }
+    case "measurement_model_separation": {
+      const groups = { observation: [], model: [], assumption: [], unknown: [] };
+      for (const record of request.records) groups[record.kind].push(record.id);
+      return { groups, mixed_as_evidence: false, empirical_conversion_forbidden: true };
+    }
+    case "tristimulus_dimension_guard": {
+      const compatible = request.left.dimension === request.right.dimension;
+      return { compatible, result: compatible ? request.left.value + request.right.value : null, dimension: compatible ? request.left.dimension : null, error: compatible ? null : "dimension_mismatch" };
+    }
+    case "conversion_workload_budget": {
+      let remaining = request.budget;
+      const accepted = [];
+      const held = [];
+      for (const task of request.tasks) {
+        if (task.cost <= remaining) {
+          accepted.push(task.id);
+          remaining -= task.cost;
+        } else held.push(task.id);
+      }
+      return { accepted, held, remaining_budget: remaining, scheduling_authority_reserved: true };
+    }
+    case "profile_rollback_checkpoint": {
+      const reversible = request.events.filter((event) => event.reversible).sort((a, b) => a.sequence - b.sequence);
+      return { latest_reversible_event: reversible.length ? reversible.at(-1).id : null, irreversible_events: request.events.filter((event) => !event.reversible).map((event) => event.id), real_rollback_unexecuted: true };
+    }
+    case "publication_authority_gap": {
+      const delegated = new Set(request.delegated_scopes);
+      const missing = request.required_scopes.filter((scope) => !delegated.has(scope)).sort();
+      return { delegation_complete: request.delegating_authority_verified && missing.length === 0, missing_scopes: missing, authority_verified: request.delegating_authority_verified, exact_authority_gate: true };
+    }
+    default:
+      throw new Error(`no oracle for ${request.op}`);
+  }
+}
+
+const operationFamilies = [
+  ["color_channel_partition", "Color-channel partition integrity", "profile_metadata_stewardship", "body", "Declared channel groups cover each finite synthetic profile component exactly once without empty or overlapping groups."],
+  ["profile_link_projection", "Profile-link transition projection", "profile_metadata_stewardship", "body", "A finite synthetic profile-link graph projects deterministically while retaining every labelled conversion edge."],
+  ["unsupported_conversion_trace", "Unsupported color-conversion trace", "tristimulus_transform_audit", "body", "A requested synthetic conversion sequence is refused exactly when no declared transform trace realizes it."],
+  ["conversion_step_candidates", "Color-conversion step candidates", "tristimulus_transform_audit", "body", "Each adjacent synthetic profile-space transition exposes its declared candidate transform steps without claiming device behavior."],
+  ["gamut_boundary_split", "Synthetic gamut-boundary split", "tristimulus_transform_audit", "mind", "A declared scalar proxy partitions a finite synthetic color set into disjoint in-bound and out-bound groups."],
+  ["profile_tag_allowlist", "ICC-profile tag allowlist", "profile_metadata_stewardship", "body", "Only requested synthetic profile-tag actions that are explicitly granted remain in the permitted projection."],
+  ["calibration_expiry_state", "Calibration-record expiry state", "calibration_rollback_publication_handover", "body", "Normalized synthetic timestamps expose premature, active, or expired calibration metadata without asserting calibration."],
+  ["profile_revision_lineage", "Color-profile revision lineage", "profile_metadata_stewardship", "body", "An ordered synthetic correction and revocation history yields an as-of profile-scope projection without erasing earlier states."],
+  ["correction_route_coverage", "Color-record correction-route coverage", "accessible_palette_communication", "heart", "Every synthetic profile or color-only-cue issue is mapped to a declared review route or retained unresolved."],
+  ["review_window_state", "Color-review timing window", "accessible_palette_communication", "heart", "A synthetic review submission is labelled timely, late, or missing while remedy and publication authority remain reserved."],
+  ["metadata_disclosure_minimization", "Color-metadata disclosure minimization", "profile_metadata_stewardship", "heart", "A synthetic color record releases only requested fields that are present and explicitly allowed."],
+  ["color_difference_explanation_coverage", "Color-difference explanation coverage", "accessible_palette_communication", "heart", "Missing source-space, transform-basis, or manual-review explanations remain explicit rather than inferred."],
+  ["accessible_palette_alternatives", "Accessible palette action alternatives", "accessible_palette_communication", "heart", "Declared reviewer roles determine finite synthetic palette actions and explicit withheld reasons."],
+  ["color_review_quorum_gap", "Finite profile-release role deficit", "accessible_palette_communication", "heart", "The finite profile-release role set reports each absent reviewer category and forces release_allowed false."],
+  ["accessible_mode_vacancy", "Non-color accessibility-mode vacancy", "accessible_palette_communication", "heart", "Missing text, shape, screen-reader, or plain-language modes remain explicit and affected-user evaluation stays reserved."],
+  ["measurement_model_separation", "Color measurement-model separation", "tristimulus_transform_audit", "mind", "Synthetic observations, transform models, assumptions, and unknowns remain typed apart and cannot become empirical evidence."],
+  ["tristimulus_dimension_guard", "Tristimulus dimension-composition guard", "tristimulus_transform_audit", "mind", "Synthetic arithmetic proceeds only for matching declared color dimensions and creates no real measurement."],
+  ["conversion_workload_budget", "Color-conversion workload budget", "calibration_rollback_publication_handover", "body", "A finite synthetic conversion queue retains held work when its declared workload budget is exhausted."],
+  ["profile_rollback_checkpoint", "Color-profile rollback checkpoint", "calibration_rollback_publication_handover", "body", "The latest declared reversible synthetic profile checkpoint is exposed while every real rollback remains open."],
+  ["publication_authority_gap", "Color-profile publication authority gap", "calibration_rollback_publication_handover", "heart", "Missing publication scope or competent authority remains exact-gated and cannot be supplied by software." ]
+].map((row, index) => ({
+  ordinal: index + 1,
+  operation: row[0],
+  title: row[1],
+  practice: row[2],
+  pillar: row[3],
+  hypothesis: row[4],
+  session: index < 10 ? "x1" : "x2",
+  expected_disposition: index < 16 ? "completed" : index < 18 ? "represented" : index === 18 ? "open_gap" : "exact_gate"
+}));
+
+function sourceNeeds(operation) {
+  if (["calibration_expiry_state", "review_window_state"].includes(operation)) return ["rfc3339", "icc_v4"];
+  if (["profile_revision_lineage", "metadata_disclosure_minimization", "publication_authority_gap"].includes(operation)) return ["prov_o", "icc_v4"];
+  if (["accessible_mode_vacancy", "color_difference_explanation_coverage", "accessible_palette_alternatives", "color_review_quorum_gap"].includes(operation)) return ["wcag22", "css_color4"];
+  if (["color_channel_partition", "profile_link_projection", "profile_tag_allowlist", "profile_rollback_checkpoint"].includes(operation)) return ["icc_v4", "prov_o"];
+  return ["css_color4", "icc_v4"];
+}
+
+const proposals = [];
+for (const family of operationFamilies) {
+  for (let i = 0; i < 10; i++) {
+    const ordinal = (family.ordinal - 1) * 10 + i + 1;
+    const proposalId = `${prefix}-${String(ordinal).padStart(3, "0")}`;
+    const request = buildRequest(family.operation, i);
+    const expectedOutput = { ok: true, value: oracle(request), error: null };
+    const candidateSubject = { ...request, unreviewed_authority: true };
+    const candidateExpected = { ok: false, value: null, error: "unknown_field" };
+    const approvalClass = family.expected_disposition === "completed" ? "safe_now" : family.expected_disposition === "exact_gate" ? "exact_approval" : "candidate";
+    const proposal = {
+      proposal_id: proposalId,
+      title: `${family.title} / synthetic contract ${i + 1}`,
+      operation: family.operation,
+      session: family.session,
+      pillar: family.pillar,
+      practice: family.practice,
+      approval_class: approvalClass,
+      execution_lane: "owner_local_synthetic",
+      request,
+      expected_output: expectedOutput,
+      candidate_subject: candidateSubject,
+      candidate_expected: candidateExpected,
+      expected_execution_disposition: family.expected_disposition,
+      hypothesis: family.hypothesis,
+      null_or_failure_condition: "Any typed mismatch, accepted invalid subject, mutated input, missing refusal, evidence erasure, non-determinism or promotion beyond the declared synthetic scope.",
+      official_primary_source_needs: sourceNeeds(family.operation).map((id) => ({ id, need: officialSources[id].role })),
+      concrete_artifacts: [
+        `${family.session}/results/proposal-results.json`,
+        `${family.session}/evidence/rejection-ledger.json`,
+        `${family.session}/evidence/nonmutation-ledger.json`
+      ],
+      falsifier_acceptance_gate: "Full typed equality with the preregistered planning oracle, rejection of the unknown-field candidate, byte-identical input before and after, and retention of every failed witness.",
+      rollback_recovery: "Retain the exact failed subject, stop broader execution, correct only the smallest owner-local dependency, rerun only the isolated failed check, and never replay a successful canonical aggregate.",
+      protected_gates: protectedGates,
+      source_credit: 0,
+      phase_novelty_credit: 1,
+      novelty_scope: "This Orin phase-specific color-profile request, fixture and refusal contract only; classical algorithms, official vocabulary and inherited ideas are not discoveries."
+    };
+    proposal.definition_sha256 = hashObject({ proposal_id: proposalId, operation: family.operation, request, expected_output: expectedOutput });
+    proposals.push(proposal);
+  }
+}
+
+const inheritedDoc = JSON.parse(fs.readFileSync(inheritedPath, "utf8"));
+const inherited = Array.isArray(inheritedDoc.proposals) ? inheritedDoc.proposals : [];
+if (inherited.length !== 200) throw new Error(`expected 200 inherited Caelen proposals, found ${inherited.length}`);
+
+function tokens(text) {
+  return new Set(String(text).toLowerCase().replace(/[^a-z0-9]+/g, " ").trim().split(/\s+/).filter(Boolean));
+}
+
+function jaccard(a, b) {
+  const aa = tokens(a);
+  const bb = tokens(b);
+  const intersection = [...aa].filter((x) => bb.has(x)).length;
+  const union = new Set([...aa, ...bb]).size;
+  return union === 0 ? 1 : intersection / union;
+}
+
+const inheritedSelections = inherited.map((record) => ({
+  inherited_proposal_id: record.proposal_id,
+  title: record.title,
+  operation: record.operation,
+  session: record.session,
+  expected_execution_disposition: record.expected_execution_disposition,
+  source_definition_sha256: record.definition_sha256 || hashObject(record),
+  source_record_sha256: hashObject(record),
+  review_disposition: "inherited_reviewed_zero_credit",
+  novelty_credit: 0,
+  completion_credit: 0,
+  authority_credit: 0,
+  retained_as: "read-only immediate-source evidence and semantic-neighbor seed"
+}));
+
+const neighborRows = proposals.map((proposal) => {
+  let nearest = null;
+  for (const source of inherited) {
+    const titleScore = jaccard(proposal.title, source.title);
+    const hypothesisScore = jaccard(proposal.hypothesis, source.hypothesis || "");
+    const score = Math.max(titleScore, hypothesisScore);
+    if (!nearest || score > nearest.score) nearest = { id: source.proposal_id, title: source.title, operation: source.operation, score };
+  }
+  return {
+    proposal_id: proposal.proposal_id,
+    operation_collision_count: inherited.filter((source) => source.operation === proposal.operation).length,
+    exact_title_collision_count: inherited.filter((source) => String(source.title).toLowerCase() === proposal.title.toLowerCase()).length,
+    nearest_inherited_id: nearest.id,
+    nearest_inherited_operation: nearest.operation,
+    nearest_title_or_hypothesis_token_jaccard: Number(nearest.score.toFixed(6)),
+    request_hash_collision_count: inherited.filter((source) => hashObject(source.request) === hashObject(proposal.request)).length,
+    review: nearest.score >= 0.8 ? "quarantine_for_manual_review" : "distinct_under_bounded_immediate-source_screen"
+  };
+});
+
+const quarantines = neighborRows.filter((row) => row.review === "quarantine_for_manual_review" || row.operation_collision_count > 0 || row.exact_title_collision_count > 0 || row.request_hash_collision_count > 0);
+if (quarantines.length !== 0) {
+  console.error(JSON.stringify({ semantic_novelty_quarantines: quarantines }, null, 2));
+  throw new Error(`semantic novelty quarantine count ${quarantines.length}`);
+}
+
+function taskRecords(session, kind) {
+  return proposals.filter((proposal) => proposal.session === session).map((proposal, index) => ({
+    task_id: `${prefix}-${session.toUpperCase()}-${kind.toUpperCase()}-${String(index + 1).padStart(3, "0")}`,
+    proposal_id: proposal.proposal_id,
+    session,
+    portfolio: kind,
+    approval_class: kind === "safe" ? "safe_now" : kind === "candidate" ? "candidate" : "safe_now",
+    title: kind === "safe" ? `Run the preregistered positive fixture for ${proposal.operation}` : kind === "candidate" ? `Reject the preregistered unknown-field candidate for ${proposal.operation}` : `Review and refine the owner-local contract for ${proposal.operation}`,
+    status: "planned_not_executed",
+    expected_artifact: `${session}/evidence/${kind}-portfolio-results.json`,
+    acceptance_gate: kind === "safe" ? "Typed oracle equality and no input mutation" : kind === "candidate" ? "Exact refusal with zero original-subject credit" : "Additive owner-local refinement with no protected-boundary promotion",
+    authority_boundary: boundary
+  }));
+}
+
+const portfolios = {};
+for (const session of ["x1", "x2"]) {
+  portfolios[session] = {
+    schema: "ghc.family.approval-portfolio.v5",
+    owner,
+    phase,
+    session,
+    status: "planning_only_not_executed",
+    safe_now: taskRecords(session, "safe"),
+    candidate: taskRecords(session, "candidate"),
+    clean_fix_refine: taskRecords(session, "clean_fix_refine"),
+    counts: { safe_now: 100, candidate: 100, clean_fix_refine: 100 },
+    boundary
+  };
+}
+
+const skillPlans = operationFamilies.map((family, index) => ({
+  skill_id: `${prefix}-SKILL-${String(index + 1).padStart(2, "0")}`,
+  name: `ghc-family-${family.operation.replaceAll("_", "-")}`,
+  session: family.session,
+  operation: family.operation,
+  purpose: `Validate and explain the bounded ${family.title.toLowerCase()} contract without authority promotion.`,
+  status: "planned_phase_local_not_built",
+  global_installation: false,
+  required_checks: ["complete SKILL.md", "UTF-8", "quick validation", "positive smoke", "invalid-fixture rejection", "no protected-gate bypass"]
+}));
+
+const runnerPairs = Array.from({ length: 10 }, (_, index) => {
+  const first = operationFamilies[index * 2];
+  const second = operationFamilies[index * 2 + 1];
+  return {
+    runner_id: `${prefix}-RUNNER-${String(index + 1).padStart(2, "0")}`,
+    name: `ghc_family_orin_${first.operation}_${second.operation}.txt`,
+    session: index < 5 ? "x1" : "x2",
+    operations: [first.operation, second.operation],
+    interface: "node text entrypoint with --input and --output",
+    status: "planned_not_built",
+    required_checks: ["positive fixture", "invalid fixture", "input nonmutation", "structured receipt", "historical caller compatibility"]
+  };
+});
+
+const globalPromotions = [
+  ["ghc-family-color-profile-integrity", ["color_channel_partition", "profile_link_projection", "profile_tag_allowlist", "profile_revision_lineage"]],
+  ["ghc-family-color-transform-boundaries", ["unsupported_conversion_trace", "conversion_step_candidates", "gamut_boundary_split", "measurement_model_separation", "tristimulus_dimension_guard"]],
+  ["ghc-family-color-accessibility-review", ["correction_route_coverage", "review_window_state", "color_difference_explanation_coverage", "accessible_palette_alternatives", "accessible_mode_vacancy"]],
+  ["ghc-family-color-calibration-lineage", ["calibration_expiry_state", "conversion_workload_budget", "profile_rollback_checkpoint"]],
+  ["ghc-family-color-publication-reservations", ["metadata_disclosure_minimization", "color_review_quorum_gap", "publication_authority_gap"]]
+].map((row, index) => ({
+  promotion_id: `${prefix}-PROMOTION-${String(index + 1).padStart(2, "0")}`,
+  merged_skill_name: row[0],
+  operations: row[1],
+  public_runner_name: `ghc_family_${row[0].replace(/^ghc-family-/, "").replaceAll("-", "_")}.txt`,
+  status: "planned_not_installed_or_published",
+  gate: "Only after both contributing phase-local skills and runners pass; use one exact global target and retain pre-existing content if collision occurs."
+}));
+
+const successorRecommendations = {
+  successor_title: "Ceryn Alder",
+  credit: "recommendation_only_zero_successor_credit",
+  practices: [
+    "bounded scientific-image color provenance review",
+    "accessible visual-uncertainty communication analysis"
+  ],
+  skill_ideas: Array.from({ length: 10 }, (_, index) => ({ id: `${prefix}-NEXT-SKILL-${String(index + 1).padStart(2, "0")}`, idea: [
+    "scientific-image profile provenance witness",
+    "rendering-intent uncertainty envelope",
+    "non-color communication vacancy map",
+    "calibration expiry conjunction",
+    "accessible gamut-boundary narrative",
+    "encoded-value to measurement nonconversion firewall",
+    "color-workload handover readback",
+    "metadata minimization and correction join",
+    "profile rollback authority abstention",
+    "color privacy-candidate adjudication summary"
+  ][index], status: "recommendation_only" })),
+  runner_ideas: Array.from({ length: 10 }, (_, index) => ({ id: `${prefix}-NEXT-RUNNER-${String(index + 1).padStart(2, "0")}`, idea: [
+    "ghc_family_image_profile_provenance_probe.txt",
+    "ghc_family_rendering_intent_uncertainty_probe.txt",
+    "ghc_family_noncolor_communication_gap_probe.txt",
+    "ghc_family_calibration_expiry_probe.txt",
+    "ghc_family_accessible_gamut_narrative_probe.txt",
+    "ghc_family_color_nonconversion_firewall_probe.txt",
+    "ghc_family_color_workload_readback_probe.txt",
+    "ghc_family_color_metadata_correction_probe.txt",
+    "ghc_family_profile_rollback_abstention_probe.txt",
+    "ghc_family_color_privacy_summary_probe.txt"
+  ][index], status: "recommendation_only" }))
+};
+
+const exactPackets = Array.from({ length: 50 }, (_, index) => ({
+  packet_id: `${prefix}-EXACT-${String(index + 1).padStart(3, "0")}`,
+  approval_class: "exact_approval",
+  status: "unexecuted_exact_gate",
+  requested_surface: ["real participant evaluation", "production identity lifecycle", "professional decision", "legal or cultural review", "Maori authority review"][index % 5],
+  required_authority: ["affected parties and independent reviewers", "real trust governance and independent security review", "appropriately qualified professionals", "competent legal or cultural authorities", "tangata whenua, iwi, hapu and Maori authorities"][index % 5],
+  execution_prohibited_without_exact_approval: true,
+  boundary
+}));
+
+const blockedPackets = Array.from({ length: 30 }, (_, index) => ({
+  packet_id: `${prefix}-BLOCKED-${String(index + 1).padStart(3, "0")}`,
+  approval_class: "blocked",
+  status: "blocked_unexecuted",
+  blocked_reason: ["no real governed participants", "no production key or credential lifecycle", "no professional authority", "no affected-party acceptance", "no Maori authority", "no empirical observation or independent review"][index % 6],
+  original_subject_success_credit: 0,
+  protected_gate: protectedGates[index % protectedGates.length],
+  boundary
+}));
+
+const failures = [
+  {
+    id: "PRE-N001",
+    observed: "The first activation-baton SHA projection rejoined PowerShell text and therefore hashed reserialized bytes rather than the exact Git blob.",
+    recovery: "Read the exact Git object bytes with git cat-file and hash those bytes without newline conversion.",
+    recovery_observed: "The exact 233,101-byte baton matched SHA-256 3af1fc1274b671331bc915aa510fd1117debb3da09dcdab1f806943b0a2d8260."
+  },
+  {
+    id: "PRE-N002",
+    observed: "The first 300-line baton display exceeded the bounded output and truncated internal proposal rows.",
+    recovery: "Restart the immutable read in contiguous 75-line windows and retain exact offsets.",
+    recovery_observed: "All 905 lines were read in order through the exact EOF sentence."
+  },
+  {
+    id: "PRE-N003",
+    observed: "The first fresh-remote scalar expression applied PowerShell splitting before native output materialization and returned only the first character.",
+    recovery: "Materialize the exact ls-remote line first, then split the completed scalar.",
+    recovery_observed: "Local, upstream, tracking and fresh-live values all resolved to Caelen exact final 7c009a2e89eb357a7888eeac9f6af009c6e9ad44."
+  },
+  {
+    id: "PRE-N004",
+    observed: "The first manifest-summary command piped directly from a PowerShell foreach block and failed parser validation before reading entries.",
+    recovery: "Materialize foreach output into an array before piping it to JSON serialization.",
+    recovery_observed: "All five manifest shapes and exclusions were projected, then all 312 exact Git-blob entries replayed with zero mismatch."
+  },
+  {
+    id: "PRE-N005",
+    observed: "The initial post-orphan diagnostic invoked rev-parse HEAD on the intentionally unborn branch and serialized the expected native failure verbosely.",
+    recovery: "Treat missing HEAD as the required unborn-root state and verify the branch, empty index, empty worktree and collision-free path directly.",
+    recovery_observed: "The Orin main branch remained unborn, empty and isolated in the intended D-first worktree."
+  },
+  {
+    id: "PRE-N006",
+    observed: "The first combined current-workflow projection included the full 285-row roster and exceeded the bounded display.",
+    recovery: "Parse the complete JSON once and project the route in three ordered, compact assignment windows.",
+    recovery_observed: "All 285 assignments were read; Orin v690-v8 is sequence 5 and Ceryn Alder v691-v1 is sequence 6."
+  },
+  {
+    id: "PRE-N007",
+    observed: "Node 24 rejected direct --check syntax inspection of text entrypoints because .txt is not a recognized module extension.",
+    recovery: "Read each text entrypoint explicitly and compile its CommonJS source with new Function without executing it.",
+    recovery_observed: "The planning builder, validator and staged-review helper all compiled successfully as text-loaded CommonJS source."
+  },
+  {
+    id: "PRE-N008",
+    observed: "The first planning build stopped before file creation because ten color-review-quorum contracts crossed the 0.8 semantic-neighbor quarantine threshold.",
+    recovery: "Expose only the quarantined proposal IDs and nearest source rows without lowering the threshold.",
+    recovery_observed: "All ten collisions belonged to one operation family and each nearest source was the inherited review-quorum-gap family at score 0.857143."
+  },
+  {
+    id: "PRE-N009",
+    observed: "The diagnostic planning build retained the same ten quarantines and exited nonzero after producing the bounded collision explanation.",
+    recovery: "Rewrite only the affected title and hypothesis around finite profile-release role deficits, then rerun the complete planning freeze.",
+    recovery_observed: "The corrected 200-row proposal set has zero operation, title, request-hash, or threshold quarantines while the original failed definitions remain retained."
+  },
+  {
+    id: "PRE-N010",
+    observed: "The first planning validation passed 87 of 92 checks but retained a stale Caelen-specific requirement for exactly twelve startup failures instead of Orin's attributable count.",
+    recovery: "Bind method and witness arithmetic to the declared retained-failure count while requiring that count to be nonzero.",
+    recovery_observed: "The corrected validator preserves every Orin failure and checks exact one-method, one-fail and one-pass pairing without adding filler records."
+  },
+  {
+    id: "PRE-N011",
+    observed: "The first combined staging wrapper failed PowerShell parsing at an inline native-command expression before any staging command executed.",
+    recovery: "Materialize native diff output and its exit code in separate sequential statements.",
+    recovery_observed: "The corrected wrapper reached the Git stage step without parser ambiguity."
+  },
+  {
+    id: "PRE-N012",
+    observed: "Git refused all Orin planning paths because the new orphan worktree still carried Caelen's inherited sparse-checkout pattern.",
+    recovery: "Replace only this worktree's sparse definition with the literal Orin owner directory and confirm the index remains empty before retry.",
+    recovery_observed: "The worktree now lists only docs/orin-thale/v690-v8 as its sparse owner surface; no path was staged by the failed attempt."
+  }
+];
+
+const methods = failures.map((item) => ({
+  method_id: `${prefix}-${item.id}-METHOD`,
+  title: item.observed,
+  failure_signature: item.observed,
+  trigger_preconditions: ["bounded read-only startup or blank-root lane preparation", "exact v690-v8 owner scope"],
+  privacy_class: "sanitized_public",
+  approval_class: "safe_now",
+  candidate_workaround: item.recovery,
+  validation_witness_ids: [`${prefix}-${item.id}-P`],
+  recurrence_guard: "Inspect exact output shape or parser contract before scalar projection; retain the failed witness separately.",
+  rollback: "Stop before broader mutation, retain the failure, and use only the smallest owner-local recovery.",
+  recommendation_state: "validated",
+  supersedes: [],
+  protected_gates: protectedGates,
+  retained_negative_ids: [`${prefix}-${item.id}`],
+  scope_boundary: boundary
+}));
+
+const witnesses = failures.flatMap((item) => ([
+  {
+    witness_id: `${prefix}-${item.id}-F`,
+    method_id: `${prefix}-${item.id}-METHOD`,
+    procedure: "Initial bounded startup attempt",
+    scope: `${owner} ${phase} pre-plan`,
+    expected: "Exact bounded evidence or mutation-free lane preparation",
+    observed: item.observed,
+    result: "fail",
+    same_owner_only: true,
+    independent_reproduction: false,
+    retained_negative_ids: [`${prefix}-${item.id}`],
+    original_subject_success_credit: 0,
+    boundary
+  },
+  {
+    witness_id: `${prefix}-${item.id}-P`,
+    method_id: `${prefix}-${item.id}-METHOD`,
+    procedure: item.recovery,
+    scope: `${owner} ${phase} pre-plan`,
+    expected: "Exact bounded recovery without erasing the failed attempt",
+    observed: item.recovery_observed,
+    result: "pass",
+    same_owner_only: true,
+    independent_reproduction: false,
+    retained_negative_ids: [`${prefix}-${item.id}`],
+    original_subject_success_credit: null,
+    boundary
+  }
+]));
+
+const methodLedger = {
+  schema: "ghc.family.method-flow-state.v1",
+  owner,
+  phase,
+  stage: "planning",
+  identity_boundary: "Orin Thale is relational working language only and does not establish consciousness, personhood, continuity, employment, qualification, authority or independent agency.",
+  execution_authority: "Hamish authorized the bounded solo phase; all protected external and authority-dependent actions remain withheld.",
+  methods,
+  witnesses,
+  state_events: methods.flatMap((method) => ([
+    { method_id: method.method_id, from: "observed", to: "candidate", reason: "Declared bounded recovery" },
+    { method_id: method.method_id, from: "candidate", to: "validated", witness_id: method.validation_witness_ids[0] }
+  ])),
+  recommendations: [],
+  counts: { methods: methods.length, direct_witnesses: witnesses.length, failed_witnesses: failures.length, passing_witnesses: failures.length },
+  boundary
+};
+
+mkdir(methodDir);
+
+writeText("plan/authorization.md", `# Orin Thale v690-v8 authorization and limits
+
+Hamish authorized this existing Orin Thale main task to perform one solo v690-v8 x1/x2 phase and, only after every terminal gate, to attempt one sanitized existing-task activation of Ceryn Alder for v691-v1. The authorization does not permit collaboration subagents, delegation, task creation, forks, precontact, sibling mutation, model overrides, broad platform mutation, real participants, production identity activity, or authority-dependent action.
+
+The owner branch is deliberately parentless. Caelen Ash exact final \`7c009a2e89eb357a7888eeac9f6af009c6e9ad44\` and Sable provenance \`2a1a7510d6210e510bf71ddc8fd823c31d58a480\` are content provenance only and are not Git ancestry. Every predecessor lane remains read-only.
+
+Names, roles, hopes, pronouns, sibling/family and continuity language are relational working language only. They are not evidence of consciousness, sentience, legal personhood, identity continuity, employment, qualification, independent agency, scientific or operational authority, legal or cultural authority, affected-party authority, or Maori authority.
+
+The phase keeps exactly four core outcome labels: \`completed\`, \`represented\`, \`open_gap\`, and \`exact_gate\`. It cannot establish empirical GMUT confirmation, THOS real-world effectiveness, production Freed ID, enacted CBR rights, professional competence, independent reproduction, AGI/ASI, consciousness/personhood, Theory-of-Everything proof, canon, or Stage 20 authority. The terminal verdict remains \`NOT_READY_FOR_STAGE_20\`.
+`);
+
+writeText("plan/design-spec.md", `# Orin Thale v690-v8 planning-only design
+
+## Result
+
+This parentless planning root freezes 200 new finite color-profile and transform-boundary contracts after a bounded semantic-neighbor review of all 200 immediate Caelen source proposals. It contains no x1 or x2 execution result, no built phase-local skill, no invoked runner, no global promotion, no terminal validation, and no successor contact.
+
+## Structure
+
+Twenty operation families each contain ten deterministic synthetic contracts. Families 1-10 are reserved for x1 and families 11-20 for x2. The planning oracle freezes the full typed expected output before any independent executor exists. Every proposal also freezes one invalid unknown-field candidate, its exact refusal, input-nonmutation requirement, recovery, source needs, artifacts, protected gates and exactly one expected disposition.
+
+The expected phase tally is 160 \`completed\`, 20 \`represented\`, 10 \`open_gap\`, and 10 \`exact_gate\`. Expected labels are preregistration, not outcomes. Only later evidence may instantiate them.
+
+## Primary pillar and practices
+
+THOS Body is primary through deterministic color-profile structure, transform sequencing, bounded workload and reversible handover contracts. GMUT Mind remains explicit through measurement/model separation, color-space assumptions and dimension refusal. Freed ID/CBR Heart remains explicit through metadata minimization, non-color communication, affected-user review vacancies and publication-authority gates. The four bounded practices are synthetic color-profile metadata stewardship; finite tristimulus and matrix-transform audit; accessible palette and color-difference communication review; and calibration, rollback and publication handover.
+
+These are learning and synthetic-design lenses only. No real person, system, identity, credential, decision, observation, legal matter, cultural matter, Maori matter or authority action is present.
+
+## Evidence firewall
+
+Official ICC, W3C and RFC materials provide current vocabulary and refusal conditions only. Citation is not observation, color measurement, device characterization, endorsement, conformance, accessibility acceptance, publication authority or affected-party acceptance. Same-owner software checks are not independent reproduction.
+
+## Lifecycle
+
+The planning root must be committed and pushed cleanly. X1 may begin only after local, upstream, tracking and fresh-live equality. X2 may begin only after an immutable clean pushed x1. Final closeout may begin only after immutable x2 evidence. One owner-scoped canonical aggregate may run after a clean pushed exact final; a success may never be replayed.
+`);
+
+writeJson("plan/identity-practices.json", {
+  schema: "ghc.family.identity-practices.v5",
+  owner,
+  phase,
+  relational_role: "color-boundary and provenance steward",
+  hope: "to make every synthetic transform, uncertainty, accessibility vacancy and release gate inspectable without turning numeric proxies into measurement or authority",
+  optional_pronouns: "they/them",
+  primary_pillar: "THOS Body",
+  protected_pillars: ["GMUT Mind", "THOS Body", "Freed ID and CBR Heart"],
+  practices: [
+    { id: "profile_metadata_stewardship", title: "synthetic color-profile metadata stewardship", scope: "finite synthetic profiles only; no real device characterization" },
+    { id: "tristimulus_transform_audit", title: "finite tristimulus and matrix-transform audit", scope: "numeric proxy fixtures only; no real measurement" },
+    { id: "accessible_palette_communication", title: "accessible palette and color-difference communication review", scope: "synthetic structure only; affected-user evaluation reserved" },
+    { id: "calibration_rollback_publication_handover", title: "calibration, rollback and publication handover", scope: "synthetic records only; professional and publication authority reserved" }
+  ],
+  successor_practice_recommendations: successorRecommendations.practices,
+  identity_boundary: "Relational working language only; no consciousness, personhood, continuity, employment, qualification, authority or independent agency evidence.",
+  boundary
+});
+
+writeJson("plan/source-provenance.json", {
+  schema: "ghc.family.blank-root-provenance.v5",
+  owner,
+  phase,
+  git_history_model: "parentless owner root followed by direct single-parent descendants",
+  owner_branch: "codex/GHC-Family/orin-thale-main",
+  owner_worktree_policy: "D-first sparse owner-only lane",
+  expected_parent_of_planning_root: null,
+  predecessor_provenance: {
+    owner: "Caelen Ash",
+    branch: "codex/GHC-Family/caelen-ash-main",
+    parentless_planning_root: "421ad67edb7cbe75e20f692e6085ace32916dd5d",
+    frozen_x1: "6cc7f795583ba7e6cb07547f6ce1936025caaab9",
+    immutable_x2: "ec9d56ae75bbb0c25ed41474e669418b9692cee3",
+    exact_final: "7c009a2e89eb357a7888eeac9f6af009c6e9ad44",
+    relationship: "content and receipt provenance only; not Git ancestry"
+  },
+  older_provenance: {
+    owner: "Sable Rook",
+    exact_final: "2a1a7510d6210e510bf71ddc8fd823c31d58a480",
+    relationship: "provenance only; not Git ancestry"
+  },
+  baton: {
+    path: "docs/caelen-ash/v690-v7/final/hand-off-baton.md",
+    sha256: "3af1fc1274b671331bc915aa510fd1117debb3da09dcdab1f806943b0a2d8260",
+    bytes: 233101,
+    lines: 905,
+    words: 26437,
+    modules: 13,
+    eof: "EOF CAELEN ASH V690 V7 BATON. Repository preparation is not delivery.",
+    read_complete: true
+  },
+  inherited_validation_credit: 0,
+  boundary
+});
+
+writeJson("plan/primary-sources.json", {
+  schema: "ghc.family.primary-source-ledger.v5",
+  owner,
+  phase,
+  query_policy: "official or primary current sources only where material",
+  sources: Object.entries(officialSources).map(([id, value]) => ({ id, ...value, observation_credit: 0, authority_credit: 0 })),
+  source_firewall: "Vocabulary and refusal conditions only; citations are not observations, measurements, conformance, endorsement, consent or delegated authority.",
+  boundary
+});
+
+writeJson("plan/recent-source-ledger.json", {
+  schema: "ghc.family.recent-source-ledger.v5",
+  owner,
+  phase,
+  current_workflow: { format: "v5", positions: 45, identities: 30, row: 5, assignment: "Orin Thale v690-v8", successor_row: 6, successor_assignment: "Ceryn Alder v691-v1", read_complete: true },
+  predecessor_canonical: { status: "VALID_EXACT_FINAL_OWNER_SCOPED_CANONICAL", invocations: 1, successes: 1, replay_count: 0, receipt_sha256: "a80c8d7a406e62772d9f3220b4f54bf6fdd293c8619424c07227f57abc7f63bb", inherited_credit: 0 },
+  predecessor_route_overlay: { sha256: "20c9723eefa83a45a9804be0dadb056c8a1476c61c223802dc870e29cc3c2e39", failed_guard_projections: 2, passing_recoveries: 2, repository_counts_rewritten: false },
+  predecessor_delivery_receipt: { sha256: "d70123252307369bf5eaf42d0a9ffdda14057c4bb79f60f679236e9438d6f295", state: "SENT_ONCE_ACKNOWLEDGED", retained_route_failure: 1, repository_counts_rewritten: false },
+  predecessor_successor_visible_counts: { methods: 160, direct_witnesses: 3673, failed_witnesses: 907, passing_witnesses: 2766, effective_negatives_before_delivery_read_failure: 967, effective_negatives_after_delivery_read_failure: 968, open_gaps: 61, exact_gates: 80 },
+  predecessor_manifests_replayed: { manifests: 5, entries: 312, mismatches: 0, content_seal_targets: 159, content_seal_mismatches: 0 },
+  predecessor_failure_review: { repository_failed_witnesses: 905, post_canonical_failed_witnesses: 907, all_failed: true, all_zero_original_subject_credit: true, all_same_owner: true, independent_reproduction_count: 0 },
+  boundary
+});
+
+writeJson("plan/workflow-profile.json", {
+  schema: "ghc.family.workflow-profile.v5",
+  owner,
+  phase,
+  format: "v5",
+  route_row: 5,
+  model_assignments: { x1: "Astra", x2: "Sol", final: "Sol" },
+  preserve_current_task_settings: true,
+  branch_history: "blank parentless owner root; predecessor provenance is not ancestry",
+  lifecycle: ["planning_root", "x1", "x2", "final"],
+  commit_ceilings: { planning: 1, x1: 2, x2: 3, final: 2, total: 8 },
+  materialization_ceilings: { owner_files: 1999, checkout_files: 1999, document_words: 100000 },
+  proposal_floors_and_ceilings: { inherited: [200, 500], new: [200, 500] },
+  per_session_portfolios: { safe_now: [100, 500], candidate: [100, 500], clean_fix_refine: [100, 300], skills: [10, 30], runners: [5, 15] },
+  phase_packets: { exact_approval: [50, 250], blocked: [30, 100] },
+  practices: { own: 4, successor_recommendations: 2 },
+  successor_ideas: { skills_minimum: 5, runners_minimum: 5 },
+  global_promotions: { merged_skills: 5, public_runners: 5 },
+  baton: { words: [10000, 100000], modules_minimum: 10, planned_modules: 13 },
+  source_extensions: [".json", ".md", ".txt"],
+  webpage_exception: ".html",
+  prohibited_new_media: [".pdf", ".png", ".jpg", ".jpeg", ".gif", ".webp", ".svg"],
+  package_policy: "No package quota; reuse only installed essential runtimes unless exact evidence and authorization require otherwise.",
+  canonical_policy: "At most one exact-final owner-scoped successful aggregate; never replay success.",
+  full_repository_suite: "not authorized",
+  route_policy: "No successor contact until exact final and all current route guards pass.",
+  boundary
+});
+
+writeJson("plan/workflow-review.json", {
+  schema: "ghc.family.workflow-plan-refinement.v1",
+  owner,
+  phase,
+  status: "planning_only",
+  decisions: [
+    { issue: "blank-root ownership", decision: "Use one parentless Orin planning root and treat Caelen solely as provenance.", evidence: "Current v5 blank-root rule and verified collision-free owner lane.", rollback: "Stop before commit if HEAD unexpectedly resolves." },
+    { issue: "semantic novelty", decision: "Review all 200 immediate-source proposals and quarantine any exact operation/title/request collision or high token similarity.", evidence: "Bounded direct-source proposal ledger.", rollback: "Replace only quarantined proposal definitions before x1 freeze." },
+    { issue: "x1/x2 separation", decision: "Freeze complete expectations now, execute families 1-10 only in x1 and families 11-20 only after x1 equality.", evidence: "Lifecycle isolator guidance.", rollback: "Reject any staged x2 result at x1." },
+    { issue: "skill/runner scope", decision: "Build 10 local skills and five runners per session; promote exactly five merged skills and five runners only after evidence.", evidence: "v5 portfolio and promotion contract.", rollback: "Keep package phase-local and mark promotion unexecuted." },
+    { issue: "canonical replay", decision: "Build a preflight and immutable latch before the sole final aggregate.", evidence: "Owner-scope canonical and success-latch guidance.", rollback: "Any failure remains zero-credit and success ends replay." }
+  ],
+  stale_plan_prevention: "All counts, source anchors, route row and file policies are checked from the current v5 workflow and exact Caelen final before mutation.",
+  boundary
+});
+
+writeJson("plan/inherited-selections.json", {
+  schema: "ghc.family.inherited-selection-review.v5",
+  owner,
+  phase,
+  source_owner: "Caelen Ash",
+  source_phase: "v690-v7",
+  source_exact_final: "7c009a2e89eb357a7888eeac9f6af009c6e9ad44",
+  source_ledger_path: "docs/caelen-ash/v690-v7/plan/new-proposals.json",
+  source_ledger_sha256: hashText(fs.readFileSync(inheritedPath, "utf8").replace(/\r\n/g, "\n")),
+  reviewed_count: inheritedSelections.length,
+  novelty_credit: 0,
+  completion_credit: 0,
+  authority_credit: 0,
+  records: inheritedSelections,
+  boundary
+});
+
+writeJson("plan/semantic-neighbor-audit.json", {
+  schema: "ghc.family.semantic-neighbor-audit.v5",
+  owner,
+  phase,
+  method: "Pair every new title and hypothesis against every immediate-source title and hypothesis using normalized token Jaccard; also check exact operation, exact title and canonical request-hash collisions.",
+  scope: "All 200 immediate Caelen source proposals by 200 Orin proposals; bounded direct-source screen, not a universal novelty proof.",
+  inherited_rows_reviewed: inherited.length,
+  new_rows_reviewed: proposals.length,
+  pairwise_comparisons: inherited.length * proposals.length,
+  exact_operation_collisions: neighborRows.reduce((sum, row) => sum + row.operation_collision_count, 0),
+  exact_title_collisions: neighborRows.reduce((sum, row) => sum + row.exact_title_collision_count, 0),
+  canonical_request_hash_collisions: neighborRows.reduce((sum, row) => sum + row.request_hash_collision_count, 0),
+  quarantines: quarantines.length,
+  rows: neighborRows,
+  boundary
+});
+
+writeJson("plan/operation-families.json", { schema: "ghc.family.color-profile-operation-families.v1", owner, phase, count: operationFamilies.length, families: operationFamilies, boundary });
+writeJson("plan/new-proposals.json", {
+  schema: "ghc.family.proposal-freeze.v5",
+  owner,
+  phase,
+  status: "planning_only_frozen_not_executed",
+  inherited_reviewed_zero_credit: inherited.length,
+  new_proposal_count: proposals.length,
+  session_counts: { x1: 100, x2: 100 },
+  expected_dispositions: { completed: 160, represented: 20, open_gap: 10, exact_gate: 10 },
+  proposals,
+  allowed_outcome_labels: ["completed", "represented", "open_gap", "exact_gate"],
+  execution_results_present: false,
+  boundary
+});
+
+writeJson("plan/portfolio-x1.json", portfolios.x1);
+writeJson("plan/portfolio-x2.json", portfolios.x2);
+writeJson("plan/exact-packets.json", { schema: "ghc.family.exact-approval-packets.v5", owner, phase, status: "unexecuted", count: exactPackets.length, packets: exactPackets, boundary });
+writeJson("plan/blocked-packets.json", { schema: "ghc.family.blocked-packets.v5", owner, phase, status: "unexecuted", count: blockedPackets.length, packets: blockedPackets, boundary });
+writeJson("plan/skills-runners-promotions.json", {
+  schema: "ghc.family.skills-runners-promotions.v5",
+  owner,
+  phase,
+  status: "planning_only",
+  phase_local_skills: skillPlans,
+  family_runners: runnerPairs,
+  curated_global_promotions: globalPromotions,
+  successor_recommendations: successorRecommendations,
+  counts: { skills: 20, x1_skills: 10, x2_skills: 10, runners: 10, x1_runners: 5, x2_runners: 5, merged_global_skills: 5, public_global_runners: 5, successor_skill_ideas: 10, successor_runner_ideas: 10 },
+  boundary
+});
+
+writeJson("plan/route-plan.json", {
+  schema: "ghc.family.terminal-route-plan.v5",
+  owner,
+  phase,
+  state: "PREPARED_NOT_SENT",
+  successor: { exact_title: "Ceryn Alder", phase: "v691-v1", existing_main_task_only: true },
+  precontact: false,
+  task_created: false,
+  message_sent: false,
+  required_terminal_gates: [
+    "parentless planning root, x1, x2 and final lifecycle exact",
+    "strict x1-before-x2 separation",
+    "all manifests and staged allowlists replay exactly",
+    "all owner-scoped tests and validators pass",
+    "five-class privacy scan has zero confirmed hits",
+    "one exact-final owner-scoped canonical aggregate succeeds once and is latched",
+    "branch is clean, typed zero divergent and local/upstream/tracking/fresh-live equal",
+    "current live authorization and current v5 roster still name Ceryn Alder v691-v1 as Orin's next edge",
+    "unique exact-title existing task is immediately reread with duplicate/pause/redirect/status guards",
+    "task-service accepted or opaque-accepted outcome ends retry; no resend"
+  ],
+  recovery_floor_before_unaccepted_send: 5,
+  stop_conditions: ["absence", "ambiguity", "duplicate activation", "pause", "redirect", "rename", "standby state", "usage exhaustion", "privacy concern", "protected gate", "missing acknowledgement after bounded recovery"],
+  forbidden: ["task creation", "fork", "collaboration subagent", "substitute endpoint", "early contact", "second confirmation", "raw task/thread identifiers in artifacts"],
+  delivery_truth: "Repository preparation is not delivery; acknowledged task-service delivery remains external route evidence.",
+  boundary
+});
+
+writeJson("plan/operational-failures.json", {
+  schema: "ghc.family.retained-operational-failures.v5",
+  owner,
+  phase,
+  stage: "pre-plan",
+  count: failures.length,
+  failures: failures.map((item) => ({ failure_id: `${prefix}-${item.id}`, observed: item.observed, status: "retained_zero_credit_failure", original_subject_success_credit: 0, recovery: item.recovery, recovery_observed: item.recovery_observed, failure_erased: false })),
+  boundary
+});
+
+writeJson("plan/method-flow/ledger.json", methodLedger);
+writeJson("plan/method-flow/validation.json", { valid: true, counts: methodLedger.counts });
+
+writeJson("plan/validation.json", {
+  schema: "ghc.family.plan-validation-contract.v5",
+  owner,
+  phase,
+  expected: {
+    inherited_rows: 200,
+    new_proposals: 200,
+    proposal_sessions: { x1: 100, x2: 100 },
+    expected_dispositions: { completed: 160, represented: 20, open_gap: 10, exact_gate: 10 },
+    positive_contracts_per_session: 100,
+    invalid_candidates_per_session: 100,
+    nonmutation_checks_per_session: 100,
+    safe_now_tasks_per_session: 100,
+    candidate_tasks_per_session: 100,
+    clean_fix_refine_tasks_per_session: 100,
+    skills_per_session: 10,
+    runners_per_session: 5,
+    exact_packets: 50,
+    blocked_packets: 30,
+    merged_global_skills: 5,
+    public_global_runners: 5,
+    practices: 4,
+    successor_practices: 2,
+    successor_skill_ideas: 10,
+    successor_runner_ideas: 10,
+    planning_failures_retained: 12
+  },
+  required_plan_absences: ["x1 execution results", "x2 execution results", "built skills", "invoked runners", "global promotions", "canonical receipt", "successor delivery"],
+  manifest_domain: "exact UTF-8 LF bytes",
+  boundary
+});
+
+function walk(dir) {
+  const out = [];
+  for (const entry of fs.readdirSync(dir, { withFileTypes: true }).sort((a, b) => a.name.localeCompare(b.name))) {
+    const full = path.join(dir, entry.name);
+    if (entry.isDirectory()) out.push(...walk(full));
+    else out.push(full);
+  }
+  return out;
+}
+
+const manifestPath = path.join(planDir, "manifest.json");
+const stagedReviewPath = path.join(planDir, "staged-review.json");
+const manifestEntries = walk(root)
+  .filter((file) => file !== manifestPath && file !== stagedReviewPath)
+  .map((file) => {
+    const bytes = fs.readFileSync(file);
+    const relative = path.relative(path.dirname(path.dirname(path.dirname(root))), file).replaceAll("\\", "/");
+    if (bytes.includes(13)) throw new Error(`CR byte forbidden in ${relative}`);
+    return { path: relative, bytes: bytes.length, sha256: crypto.createHash("sha256").update(bytes).digest("hex") };
+  });
+
+writeJson("plan/manifest.json", {
+  schema: "ghc.family.raw-manifest.v5",
+  owner,
+  phase,
+  stage: "planning_root",
+  byte_domain: "exact UTF-8 LF working bytes intended to equal Git blobs",
+  entries: manifestEntries,
+  self_exclusions: [
+    "docs/orin-thale/v690-v8/plan/manifest.json",
+    "docs/orin-thale/v690-v8/plan/staged-review.json"
+  ],
+  selected_count: manifestEntries.length,
+  boundary
+});
+
+const summary = {
+  owner,
+  phase,
+  stage: "planning_root",
+  inherited_reviewed: inherited.length,
+  new_proposals: proposals.length,
+  pairwise_neighbor_comparisons: inherited.length * proposals.length,
+  quarantines: quarantines.length,
+  x1_proposals: proposals.filter((p) => p.session === "x1").length,
+  x2_proposals: proposals.filter((p) => p.session === "x2").length,
+  plan_manifest_entries: manifestEntries.length,
+  retained_failures: failures.length,
+  execution_results_present: false,
+  valid: true
+};
+process.stdout.write(JSON.stringify(summary, null, 2) + "\n");
