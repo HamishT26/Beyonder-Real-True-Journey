@@ -1,0 +1,7 @@
+'use strict';
+// Read-only, loopback-only preview for the single owned HTML artifact.
+const http=require('node:http'),fs=require('node:fs');
+const artifact='docs/avelin-reed/v690-v6/x2/observatory.html';
+const server=http.createServer((req,res)=>{if(req.method!=='GET'){res.writeHead(405);res.end();return;}if(req.url==='/favicon.ico'){res.writeHead(204);res.end();return;}if(!['/','/observatory.html'].includes(req.url)){res.writeHead(404);res.end('Not found');return;}res.writeHead(200,{'Content-Type':'text/html; charset=utf-8','Cache-Control':'no-store','X-Content-Type-Options':'nosniff'});res.end(fs.readFileSync(artifact));});
+server.listen(0,'127.0.0.1',()=>console.log('PREVIEW http://127.0.0.1:'+server.address().port));
+process.on('SIGINT',()=>server.close(()=>process.exit(0)));

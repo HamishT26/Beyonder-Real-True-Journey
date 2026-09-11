@@ -1,0 +1,5 @@
+'use strict';
+const p=require('./ghc_family_transition_protocol.txt'),strict=require('./ghc_family_transition_strict_dispatch.txt');
+const operations=["lts_game","lts_evaluation_gap","lts_authority_hold"];
+function run(q){return operations.includes(q?.op)?strict.run(q):{ok:false,value:null,error:'outside_group'};}
+module.exports={run};if(require.main===module)p.cli(run);

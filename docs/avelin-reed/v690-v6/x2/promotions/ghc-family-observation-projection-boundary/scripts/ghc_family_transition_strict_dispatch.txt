@@ -1,0 +1,5 @@
+'use strict';
+// Additive correction: frozen x1 modules remain unchanged for provenance.
+const p=require('./ghc_family_transition_protocol.txt'),x1=require('./ghc_family_transition_x1_core.txt'),x2=require('./ghc_family_transition_x2_core.txt');
+function value(q){const engine=q&&Object.hasOwn(x1.FIELDS,q.op)?x1:q&&Object.hasOwn(x2.FIELDS,q.op)?x2:null;if(!engine)p.fail('unknown_operation');const fields=engine.FIELDS[q.op];p.object(q,['op','model',...fields]);p.model(q.model);for(const field of ['target','allowed','controller'])if(fields.includes(field))p.stateSet(q[field],q.model);return engine.value(q);}
+const run=q=>p.envelope(value,q);module.exports={run,value};if(require.main===module)p.cli(run);
