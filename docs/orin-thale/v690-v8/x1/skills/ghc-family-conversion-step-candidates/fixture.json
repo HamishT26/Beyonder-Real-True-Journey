@@ -1,0 +1,84 @@
+{
+  "schema": "ghc.family.phase-local-skill-fixture.v5",
+  "skill": "ghc-family-conversion-step-candidates",
+  "operation": "conversion_step_candidates",
+  "proposal_id": "OR6908-031",
+  "request": {
+    "op": "conversion_step_candidates",
+    "abstract_state_trace": [
+      "a0",
+      "a0",
+      "a1"
+    ],
+    "abstraction": {
+      "c0": "a0",
+      "c1": "a0",
+      "c2": "a1"
+    },
+    "concrete_edges": [
+      [
+        "c0",
+        "profile_ingest",
+        "c1"
+      ],
+      [
+        "c1",
+        "transform",
+        "c2"
+      ]
+    ]
+  },
+  "expected_output": {
+    "ok": true,
+    "value": {
+      "candidates": [
+        {
+          "step": 0,
+          "from": "c0",
+          "label": "profile_ingest",
+          "to": "c1"
+        },
+        {
+          "step": 1,
+          "from": "c1",
+          "label": "transform",
+          "to": "c2"
+        }
+      ],
+      "complete_step_coverage": true
+    },
+    "error": null
+  },
+  "invalid_subject": {
+    "op": "conversion_step_candidates",
+    "abstract_state_trace": [
+      "a0",
+      "a0",
+      "a1"
+    ],
+    "abstraction": {
+      "c0": "a0",
+      "c1": "a0",
+      "c2": "a1"
+    },
+    "concrete_edges": [
+      [
+        "c0",
+        "profile_ingest",
+        "c1"
+      ],
+      [
+        "c1",
+        "transform",
+        "c2"
+      ]
+    ],
+    "unreviewed_authority": true
+  },
+  "invalid_expected": {
+    "ok": false,
+    "value": null,
+    "error": "unknown_field"
+  },
+  "boundary": "Bounded same-owner synthetic software and documentation evidence only; no empirical, participant, identity, professional, production, deployment, legal, cultural, affected-party, Maori-authority, complete privacy/accessibility, exhaustive-security, independent-reproduction, consciousness/personhood, AGI/ASI, Theory-of-Everything, proof/canon or Stage 20 claim. NOT_READY_FOR_STAGE_20."
+}

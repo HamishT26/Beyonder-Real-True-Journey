@@ -1,0 +1,167 @@
+"use strict";
+
+const fs = require("fs");
+const path = require("path");
+const crypto = require("crypto");
+const cp = require("child_process");
+const core = require("./ghc_family_orin_x1_evidence.txt");
+
+const x1Root = path.resolve(__dirname, "..");
+const ownerRoot = path.resolve(x1Root, "..");
+const repo = path.resolve(ownerRoot, "..", "..", "..");
+const planningHead = "6c38a875a6623bd8f49e4077024953b1ea42345d";
+const checks = [];
+const errors = [];
+
+function check(name, condition, detail = null) {
+  checks.push({ name, pass: Boolean(condition), detail });
+  if (!condition) errors.push(`${name}${detail ? `: ${detail}` : ""}`);
+}
+function readJson(relative) { return JSON.parse(fs.readFileSync(path.join(x1Root, relative), "utf8")); }
+function git(args) { return cp.execFileSync("git", ["-C", repo, ...args], { encoding: "utf8", maxBuffer: 64 * 1024 * 1024 }).trim(); }
+function walk(dir) {
+  const out = [];
+  for (const entry of fs.readdirSync(dir, { withFileTypes: true }).sort((a, b) => a.name.localeCompare(b.name))) {
+    const full = path.join(dir, entry.name);
+    if (entry.isDirectory()) out.push(...walk(full)); else out.push(full);
+  }
+  return out;
+}
+function digest(bytes) { return crypto.createHash("sha256").update(bytes).digest("hex"); }
+
+const proposals = JSON.parse(fs.readFileSync(path.join(ownerRoot, "plan", "new-proposals.json"), "utf8")).proposals.filter((row) => row.session === "x1");
+const resultsDoc = readJson("results/proposal-results.json");
+const rejectionDoc = readJson("evidence/rejection-ledger.json");
+const nonmutationDoc = readJson("evidence/nonmutation-ledger.json");
+const skillDoc = readJson("evidence/skill-receipts.json");
+const runnerDoc = readJson("evidence/runner-receipts.json");
+const portfolioDoc = readJson("evidence/portfolio-results.json");
+const methods = readJson("method-flow/ledger.json");
+const truth = readJson("phase-truth.json");
+const source = readJson("source-anchor.json");
+const manifest = readJson("manifest.json");
+
+check("current planning head", git(["rev-parse", "HEAD"]) === planningHead);
+check("source anchor", source.expected_parent === planningHead && source.observed_head_before_x1_commit === planningHead && source.planning_root_parentless === true);
+check("planning root has no parent", git(["rev-list", "--parents", "-n", "1", planningHead]).split(/\s+/).length === 1);
+check("planning commit count", git(["rev-list", "--count", planningHead]) === "1");
+check("planning merges zero", git(["rev-list", "--merges", planningHead]) === "");
+check("plan working diff empty", git(["diff", "--name-only", "--", "docs/orin-thale/v690-v8/plan"]) === "");
+check("plan staged diff empty", git(["diff", "--cached", "--name-only", "--", "docs/orin-thale/v690-v8/plan"]) === "");
+
+check("x1 proposals", proposals.length === 100);
+check("result count", resultsDoc.results.length === 100 && resultsDoc.count === 100);
+check("result ids unique", new Set(resultsDoc.results.map((row) => row.proposal_id)).size === 100);
+check("positive typed equality", resultsDoc.results.every((row) => row.typed_equality && row.input_unchanged && row.actual_disposition === "completed"));
+check("x1 outcome tally", resultsDoc.outcomes.completed === 100 && resultsDoc.outcomes.represented === 0 && resultsDoc.outcomes.open_gap === 0 && resultsDoc.outcomes.exact_gate === 0);
+
+const replay = proposals.map((proposal) => ({
+  id: proposal.proposal_id,
+  positive: core.execute(JSON.parse(JSON.stringify(proposal.request))),
+  invalid: core.execute(JSON.parse(JSON.stringify(proposal.candidate_subject)))
+}));
+check("independent positive replay", replay.every((row, index) => core.canonical(row.positive.result) === core.canonical(proposals[index].expected_output)));
+check("independent invalid replay", replay.every((row, index) => core.canonical(row.invalid.result) === core.canonical(proposals[index].candidate_expected)));
+check("independent replay nonmutation", replay.every((row) => row.positive.input_unchanged && row.invalid.input_unchanged));
+
+check("rejection count", rejectionDoc.rejections.length === 100 && rejectionDoc.count === 100);
+check("all candidates rejected", rejectionDoc.rejections.every((row) => row.result === "fail" && row.exact_refusal && row.rejection_guard_pass));
+check("invalid subjects zero credit", rejectionDoc.rejections.every((row) => row.original_subject_success_credit === 0));
+check("retained negative ids unique", new Set(rejectionDoc.rejections.map((row) => row.retained_negative_id)).size === 100);
+check("nonmutation count", nonmutationDoc.checks.length === 100 && nonmutationDoc.count === 100);
+check("all nonmutation checks", nonmutationDoc.all_pass && nonmutationDoc.checks.every((row) => row.pass));
+
+check("skill count", skillDoc.receipts.length === 10 && skillDoc.count === 10);
+check("skills all valid", skillDoc.all_valid && skillDoc.receipts.every((row) => row.valid && row.smoke_used && row.global_installation === false));
+check("skill package count", fs.readdirSync(path.join(x1Root, "skills"), { withFileTypes: true }).filter((entry) => entry.isDirectory()).length === 10);
+check("runner count", runnerDoc.receipts.length === 5 && runnerDoc.count === 5);
+check("runners all invoked", runnerDoc.all_valid && runnerDoc.receipts.every((row) => row.valid && row.invoked && row.proposal_count === 20));
+check("runner source count", fs.readdirSync(path.join(x1Root, "runners")).filter((name) => name.endsWith(".txt")).length === 5);
+
+check("safe portfolio 100", portfolioDoc.counts.safe_now_passed === 100 && portfolioDoc.safe_now.every((row) => row.result === "pass" && row.executed));
+check("candidate portfolio 100", portfolioDoc.counts.candidate_passed === 100 && portfolioDoc.candidate.every((row) => row.result === "pass" && row.executed));
+check("clean fix refine portfolio 100", portfolioDoc.counts.clean_fix_refine_passed === 100 && portfolioDoc.clean_fix_refine.every((row) => row.result === "pass" && row.executed));
+check("exact packets unexecuted", portfolioDoc.exact_packets_executed === 0);
+check("blocked packets unexecuted", portfolioDoc.blocked_packets_executed === 0);
+
+check("method count", methods.counts.methods === 10 && methods.methods.length === 10);
+check("witness count", methods.counts.direct_witnesses === 715 && methods.witnesses.length === 715);
+check("failed witness count", methods.counts.failed_witnesses === 100 && methods.witnesses.filter((row) => row.result === "fail").length === 100);
+check("passing witness count", methods.counts.passing_witnesses === 615 && methods.witnesses.filter((row) => row.result === "pass").length === 615);
+check("failed witnesses zero credit", methods.witnesses.filter((row) => row.result === "fail").every((row) => row.original_subject_success_credit === 0));
+check("same owner not independent", methods.witnesses.every((row) => row.same_owner_only && row.independent_reproduction === false));
+check("cumulative arithmetic", methods.cumulative_overlay.methods === 182 && methods.cumulative_overlay.direct_witnesses === 4412 && methods.cumulative_overlay.failed_witnesses === 1019 && methods.cumulative_overlay.passing_witnesses === 3393 && methods.cumulative_overlay.failed_witnesses + methods.cumulative_overlay.passing_witnesses === methods.cumulative_overlay.direct_witnesses && methods.cumulative_overlay.effective_negatives === 1080);
+
+check("x1 truth status", truth.status === "X1_FROZEN_NO_X2");
+check("x1 truth counts", truth.positive_controls === 100 && truth.invalid_subjects_rejected === 100 && truth.nonmutation_checks === 100 && truth.safe_now_tasks === 100 && truth.candidate_tasks === 100 && truth.clean_fix_refine_tasks === 100 && truth.phase_local_skills_built_validated_smoke_used === 10 && truth.family_runners_built_invoked === 5);
+check("truth no exact or blocked execution", truth.exact_packets_executed === 0 && truth.blocked_packets_executed === 0);
+check("truth no global promotion", truth.global_promotions_completed === 0);
+check("truth no successor contact", truth.successor_contacted === false);
+check("terminal verdict", truth.terminal_verdict === "NOT_READY_FOR_STAGE_20");
+check("x2 absent", !fs.existsSync(path.join(ownerRoot, "x2")));
+check("final absent", !fs.existsSync(path.join(ownerRoot, "final")));
+
+const files = walk(x1Root);
+check("owner x1 file ceiling", files.length < 2000, `observed ${files.length}`);
+check("allowed extensions", files.every((file) => [".json", ".md", ".txt", ".html"].includes(path.extname(file).toLowerCase())));
+const cr = [];
+const uuid = [];
+const privatePath = [];
+const credential = [];
+const route = [];
+const routePattern = new RegExp(`(?:${[["source", "thread", "id"].join("_"), ["provider", "Tab", "Id"].join(""), ["client", "Thread", "Id"].join(""), ["thread", "Id"].join("") + "\\s*[=:]"].join("|")})`);
+for (const file of files) {
+  const bytes = fs.readFileSync(file);
+  const rel = path.relative(x1Root, file).replaceAll("\\", "/");
+  const text = bytes.toString("utf8");
+  if (bytes.includes(13)) cr.push(rel);
+  if (/\b[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}\b/i.test(text)) uuid.push(rel);
+  if (/(?:[A-Z]:\\Users\\|[A-Z]:\\GHC-Archives\\|\/Users\/|\/home\/)/.test(text)) privatePath.push(rel);
+  if (/(?:BEGIN (?:RSA |EC |OPENSSH )?PRIVATE KEY|ghp_[A-Za-z0-9]{20,}|sk-[A-Za-z0-9]{20,})/.test(text)) credential.push(rel);
+  if (routePattern.test(text)) route.push(rel);
+}
+check("LF bytes", cr.length === 0, cr.join(","));
+check("UUID candidates zero", uuid.length === 0, uuid.join(","));
+check("private path candidates zero", privatePath.length === 0, privatePath.join(","));
+check("credential candidates zero", credential.length === 0, credential.join(","));
+check("raw route candidates zero", route.length === 0, route.join(","));
+
+const manifestMap = new Map(manifest.entries.map((entry) => [entry.path, entry]));
+const manifestExpected = files.filter((file) => file !== path.join(x1Root, "manifest.json") && file !== path.join(x1Root, "staged-review.json"));
+check("manifest entry count", manifest.entries.length === manifestExpected.length, `manifest ${manifest.entries.length}, files ${manifestExpected.length}`);
+const manifestErrors = [];
+for (const file of manifestExpected) {
+  const bytes = fs.readFileSync(file);
+  const p = `docs/orin-thale/v690-v8/x1/${path.relative(x1Root, file).replaceAll("\\", "/")}`;
+  const entry = manifestMap.get(p);
+  if (!entry || entry.bytes !== bytes.length || entry.sha256 !== digest(bytes)) manifestErrors.push(p);
+}
+check("manifest exact bytes", manifestErrors.length === 0, manifestErrors.join(","));
+check("manifest exclusions", manifest.self_exclusions.length === 2 && manifest.self_exclusions.includes("docs/orin-thale/v690-v8/x1/manifest.json") && manifest.self_exclusions.includes("docs/orin-thale/v690-v8/x1/staged-review.json"));
+
+const changed = git(["status", "--porcelain"]).split(/\r?\n/).filter(Boolean);
+check("only x1 working paths", changed.every((line) => line.slice(3).startsWith("docs/orin-thale/v690-v8/x1/")), changed.join(","));
+
+const receipt = {
+  schema: "ghc.family.x1-validator-receipt.v5",
+  owner: "Orin Thale",
+  phase: "v690-v8",
+  stage: "x1",
+  valid: errors.length === 0,
+  checks_total: checks.length,
+  checks_passed: checks.filter((row) => row.pass).length,
+  checks_failed: errors.length,
+  proposal_counts: { positive: resultsDoc.results.length, rejected_invalid: rejectionDoc.rejections.length, nonmutation: nonmutationDoc.checks.length },
+  portfolio_counts: portfolioDoc.counts,
+  skill_count: skillDoc.receipts.length,
+  runner_count: runnerDoc.receipts.length,
+  method_counts: methods.counts,
+  files: files.length,
+  manifest_entries: manifest.entries.length,
+  privacy_candidates: { uuid: uuid.length, private_path: privatePath.length, credential: credential.length, raw_route: route.length },
+  x2_present: fs.existsSync(path.join(ownerRoot, "x2")),
+  errors,
+  checks
+};
+process.stdout.write(JSON.stringify(receipt, null, 2) + "\n");
+if (!receipt.valid) process.exitCode = 1;
