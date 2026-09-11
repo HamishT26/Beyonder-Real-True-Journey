@@ -1,0 +1,11 @@
+'use strict';
+const fs=require('node:fs'),path=require('node:path'),C=require('../../plan/tools/common.txt');
+const prefix='docs/ceryn-alder/v691-v1',base=path.resolve(prefix);
+C.ensure(C.read(path.join(base,'final/content-preflight.json')).valid,'Content preflight required');
+function files(){return fs.readdirSync(base,{recursive:true}).filter(p=>fs.statSync(path.join(base,p)).isFile()).map(p=>prefix+'/'+p.replaceAll('\\','/')).sort();}
+function manifest(excludes){return files().filter(p=>!excludes.includes(p)).map(p=>{const b=fs.readFileSync(p);return{path:p,bytes:b.length,sha256:C.hash(b)};});}
+const commonExclusions=['final/owner-manifest.json','final/manifest.json','final/staged-review.json'].map(p=>prefix+'/'+p),sealPath=prefix+'/final/content-seal.json';
+const sealExclusions=[...commonExclusions,sealPath];
+C.put(sealPath,{schema:'ghc.family.content-seal.v5',owner:'Ceryn Alder',phase:'v691-v1',targets:manifest(sealExclusions),self_exclusions:sealExclusions,byte_domain:'Exact UTF-8 LF bytes, later checked against exact-final Git blobs',boundary:C.BOUNDARY});
+C.put(prefix+'/final/owner-manifest.json',{schema:'ghc.family.owner-manifest.v5',owner:'Ceryn Alder',phase:'v691-v1',entries:manifest(commonExclusions),self_exclusions:commonExclusions,byte_domain:'Exact UTF-8 LF owner bytes including the content seal',boundary:C.BOUNDARY});
+console.log(JSON.stringify({content_seal_targets:C.read(sealPath).targets.length,owner_manifest_entries:C.read(prefix+'/final/owner-manifest.json').entries.length,valid:true}));

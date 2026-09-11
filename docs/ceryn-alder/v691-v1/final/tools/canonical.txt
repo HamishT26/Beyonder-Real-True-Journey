@@ -1,0 +1,20 @@
+'use strict';
+const fs=require('node:fs'),path=require('node:path'),cp=require('node:child_process');
+const C=require('../../plan/tools/common.txt'),G=require('./canonical-gate.txt'),V=require('./validate-final.txt');
+const [expectedHead,receiptDirectory]=process.argv.slice(2);C.ensure(/^[0-9a-f]{40}$/.test(expectedHead)&&receiptDirectory,'Exact final and external receipt directory required');
+const dir=path.resolve(receiptDirectory);C.ensure(!dir.startsWith(process.cwd()+path.sep),'Canonical receipt must be external');
+const latch=path.join(dir,'canonical-invocation-latch.json'),receiptPath=path.join(dir,'exact-final-owner-scoped-canonical.json');
+C.ensure(!fs.existsSync(latch)&&!fs.existsSync(receiptPath),'Canonical already invoked; replay forbidden');
+const git=(...a)=>cp.execFileSync('git',a,{encoding:'utf8'}).trim();
+const lifecycle=C.read('docs/ceryn-alder/v691-v1/final/lifecycle.json'),head=git('rev-parse','HEAD'),branch=git('branch','--show-current'),div=git('rev-list','--left-right','--count','HEAD...@{u}').split(/\s+/).map(Number);
+C.ensure(branch===lifecycle.branch,'Wrong owner branch');
+const state={head,expected_head:expectedHead,local:head,upstream:git('rev-parse','@{u}'),tracking:git('rev-parse','refs/remotes/origin/'+branch),fresh_live:git('ls-remote','--heads','origin','refs/heads/'+branch).split(/\s+/)[0],clean:git('status','--porcelain')==='',ahead:div[0],behind:div[1],invocations:0,source_replayed:false,sibling_mutation:false,paths:git('ls-tree','-r','--name-only','HEAD').split('\n'),planning:lifecycle.planning,x1:lifecycle.x1,x2:lifecycle.x2,lineage:git('rev-list','--parents','HEAD').split('\n').map(r=>r.split(' '))};
+C.ensure(G.gate(state),'Exact-final real-state preflight refused');
+C.put(latch,{state:'INVOKED_NO_REPLAY',owner:'Ceryn Alder',phase:'v691-v1',head,invocations:1,successes:0,replays:0,recorded_at:new Date().toISOString()});
+V.validate('exact_final').then(validation=>{
+ const payload={schema:'ghc.family.exact-final-owner-scoped-canonical.v5',owner:'Ceryn Alder',phase:'v691-v1',status:validation.valid?'VALID_EXACT_FINAL_OWNER_SCOPED_CANONICAL':'FAILED_EXACT_FINAL_OWNER_SCOPED_CANONICAL',branch,exact_final:head,invocation:{invocations:1,successes:validation.valid?1:0,replay_count:0},remote_equality:{local:state.local,upstream:state.upstream,tracking:state.tracking,fresh_live:state.fresh_live,clean:state.clean,divergence:{ahead:state.ahead,behind:state.behind},four_way_equal:true},lifecycle:{planning:lifecycle.planning,x1:lifecycle.x1,x2:lifecycle.x2,final:head,commits:4,merges:0,planning_parentless:true,final_parents:1},validation,scope:'Declared owner files and explicit dependencies only',source_replayed:false,full_repository_suite_run:false,boundary:C.BOUNDARY};
+ payload.payload_sha256=C.hash(C.stable(payload));C.put(receiptPath,payload);
+ const receipt_sha256=C.hash(fs.readFileSync(receiptPath));
+ fs.writeFileSync(latch,JSON.stringify({state:validation.valid?'SUCCESS_LATCHED_NO_REPLAY':'FAILED_LATCHED_NO_REPLAY',owner:'Ceryn Alder',phase:'v691-v1',head,invocations:1,successes:validation.valid?1:0,replays:0,receipt_sha256,payload_sha256:payload.payload_sha256},null,2)+'\n');
+ console.log(JSON.stringify({status:payload.status,head,checks:validation.checks_total,passed:validation.checks_passed,tests:validation.selected_tests,owner_files:validation.owner_files,json_files:validation.strict_json_files,manifest_entries:validation.manifest_entries_checked,receipt_sha256,payload_sha256:payload.payload_sha256,invocations:1,successes:validation.valid?1:0,replays:0,failures:validation.checks.filter(c=>!c.pass)}));if(!validation.valid)process.exitCode=1;
+}).catch(error=>{C.put(path.join(dir,'canonical-runtime-failure.json'),{owner:'Ceryn Alder',phase:'v691-v1',head,state:'FAILED_NO_REPLAY',error_code:error.code??'validator_runtime_error',message:'The invoked validator did not complete. Retain the latch and diagnose without replay.',original_subject_success_credit:0,boundary:C.BOUNDARY});console.error(error.message);process.exitCode=1;});

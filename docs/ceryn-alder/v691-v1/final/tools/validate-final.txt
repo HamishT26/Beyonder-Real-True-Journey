@@ -1,0 +1,90 @@
+'use strict';
+const fs=require('node:fs'),path=require('node:path'),cp=require('node:child_process');
+const C=require('../../plan/tools/common.txt');
+const prefix='docs/ceryn-alder/v691-v1',base=path.resolve(prefix);
+const git=(...a)=>cp.execFileSync('git',a,{encoding:'utf8'}).trim();
+function blobReader(){
+ const child=cp.spawn('git',['cat-file','--batch'],{stdio:['pipe','pipe','pipe']});let buffer=Buffer.alloc(0),pending=null,broken=null;
+ const closed=new Promise((resolve,reject)=>{child.once('error',reject);child.once('exit',code=>code===0?resolve():reject(Error('Git blob reader exit '+code)));});
+ function consume(){if(!pending)return;const i=buffer.indexOf(10);if(i<0)return;const parts=buffer.subarray(0,i).toString().split(' ');if(parts[1]!=='blob'){const p=pending;pending=null;p.reject(Error('Expected blob response'));return;}const size=Number(parts[2]);if(buffer.length<i+1+size+1)return;const body=buffer.subarray(i+1,i+1+size),p=pending;buffer=buffer.subarray(i+1+size+1);pending=null;p.resolve(body);}
+ child.stdout.on('data',b=>{buffer=Buffer.concat([buffer,b]);consume();});child.stderr.on('data',()=>{});child.once('error',e=>{broken=e;pending?.reject(e);pending=null;});
+ return{get:ref=>{C.ensure(!pending&&!/[\r\n\0]/.test(ref),'Sequential literal blob request');if(broken)throw broken;return new Promise((resolve,reject)=>{pending={resolve,reject};child.stdin.write(ref+'\n');consume();});},close:async()=>{child.stdin.end();await closed;}};
+}
+async function validate(mode){
+ C.ensure(['content_preflight','exact_final'].includes(mode));
+ const checks=[],check=(name,pass,detail=null)=>checks.push({name,pass:!!pass,detail});
+ const lifecycle=C.read(path.join(base,'final/lifecycle.json')),truth=C.read(path.join(base,'final/phase-truth.json')),account=C.read(path.join(base,'final/accounting.json'));
+ const files=fs.readdirSync(base,{recursive:true}).filter(p=>fs.statSync(path.join(base,p)).isFile()).map(p=>prefix+'/'+p.replaceAll('\\','/')).sort();
+ const head=git('rev-parse','HEAD'),chain=git('rev-list','--parents','HEAD').split('\n').map(s=>s.split(' '));
+ check('owner branch',git('branch','--show-current')===lifecycle.branch);
+ check('exact lifecycle',C.equal(chain,mode==='exact_final'?[[head,lifecycle.x2],[lifecycle.x2,lifecycle.x1],[lifecycle.x1,lifecycle.planning],[lifecycle.planning]]:[[lifecycle.x2,lifecycle.x1],[lifecycle.x1,lifecycle.planning],[lifecycle.planning]]));
+ check('source not ancestry',chain.every(row=>!row.includes(lifecycle.source_provenance)));
+ check('no merges',git('rev-list','--merges','HEAD')==='');
+ check('file ceiling',files.length<2000,files.length);
+ check('extensions',files.every(p=>['.json','.md','.txt','.html'].includes(path.extname(p))));
+ check('owner prefix',files.every(p=>p.startsWith(prefix+'/')&&!p.includes('/../')));
+ for(const[stage,anchor]of [['plan',lifecycle.planning],['x1',lifecycle.x1],['x2',lifecycle.x2]]){const r=cp.spawnSync('git',['diff','--quiet',anchor,'--',prefix+'/'+stage],{encoding:'utf8'});check(stage+' immutable working and staged content',r.status===0);}
+ const data=new Map(),json=[],syntaxErrors=[],jsonErrors=[],lfErrors=[],wordErrors=[],markdownErrors=[],htmlErrors=[],security=[];
+ const privacy={credentials:[],raw_routes:[],private_paths:[],uuid:[],email:[]};
+ const patterns={credentials:/(?:-----BEGIN [A-Z ]*PRIVATE KEY-----|\bsk-[A-Za-z0-9]{24,})/,raw_routes:/\b(?:threadId|taskId|sessionId)\s*[:=]\s*["'][A-Za-z0-9-]{16,}/,private_paths:/\b[A-Za-z]:[\\/](?:Users|GHC-Archives|Program Files)\b/i,uuid:/\b[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\b/i,email:/\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}\b/i};
+ for(const p of files){
+  const bytes=fs.readFileSync(p),text=bytes.toString('utf8');data.set(p,bytes);
+  if(text.includes('\r'))lfErrors.push(p);
+  if(text.trim().split(/\s+/).length>100000)wordErrors.push(p);
+  for(const[k,r]of Object.entries(patterns))if(r.test(text))privacy[k].push(p);
+  if(p.endsWith('.json')){try{C.parseStrict(text);json.push(p);}catch(e){jsonErrors.push({path:p,code:e.message});}}
+  if(p.endsWith('.md')){if(!/^# /m.test(text)||(text.match(/^```/gm)??[]).length%2)markdownErrors.push(p);}
+  const chunks=[];if(p.endsWith('.txt'))chunks.push(text);
+  if(p.endsWith('.html')){
+   if(!/<!doctype html>/i.test(text)||!/<html lang="en"/i.test(text)||!/<title>[^<]+<\/title>/.test(text)||!/<main\b/.test(text)||!/<caption>/.test(text)||/<script[^>]+src=|<img\b/i.test(text))htmlErrors.push(p);
+   for(const match of text.matchAll(/<script([^>]*)>([\s\S]*?)<\/script>/g)){if(match[1].includes('application/json')){try{C.parseStrict(match[2]);}catch(e){jsonErrors.push({path:p,code:'embedded_'+e.message});}}else chunks.push(match[2]);}
+  }
+  for(const code of chunks){const r=cp.spawnSync(process.execPath,['--check'],{input:code,encoding:'utf8'});if(r.status!==0)syntaxErrors.push(p);if(/\beval\s*\(|\bnew\s+Function\s*\(|\b(?:rmSync|unlinkSync|execSync)\s*\(|listen\([^\n]*['"]0\.0\.0\.0['"]/.test(code))security.push(p);}
+ }
+ check('LF bytes',lfErrors.length===0,lfErrors);check('per-document words',wordErrors.length===0,wordErrors);check('strict JSON',jsonErrors.length===0,jsonErrors);check('Markdown structure',markdownErrors.length===0,markdownErrors);check('HTML structure',htmlErrors.length===0,htmlErrors);check('Node and inline syntax',syntaxErrors.length===0,syntaxErrors);check('bounded changed-code scan',security.length===0,security);
+ for(const[k,v]of Object.entries(privacy))check('privacy '+k,v.length===0,v);
+ const defs=C.read(path.join(base,'plan/definitions.json')).proposals,results=[...C.read(path.join(base,'x1/results.json')).results,...C.read(path.join(base,'x2/results.json')).results];
+ check('200 exact distinct definitions',defs.length===200&&new Set(defs.map(r=>C.hash(C.stable(r.request)))).size===200&&defs.every(r=>{const q={...r};delete q.definition_sha256;return C.hash(C.stable(q))===r.definition_sha256;}));
+ check('full outcome binding',results.length===200&&results.every(r=>{const d=defs.find(d=>d.proposal_id===r.proposal_id);return d&&r.disposition===d.expected_disposition&&C.equal(r.observed,d.expected_output)&&Object.values(r.checks).every(Boolean);}));
+ check('core ceilings',C.equal(truth.core_outcomes,{completed:160,represented:20,open_gap:10,exact_gate:10}));
+ check('unexecuted protected packets',C.read(path.join(base,'plan/exact-packets.json')).packets.every(r=>r.executed===false)&&C.read(path.join(base,'plan/blocked-packets.json')).packets.every(r=>r.executed===false));
+ check('no repository canonical claim',truth.canonical.invocations===0&&truth.canonical.successes===0&&truth.route.messages_sent===0&&truth.route.state==='PREPARED_NOT_SENT');
+ check('terminal route',truth.route.successor==='Liora Venn'&&truth.route.phase==='v691-v2'&&truth.terminal_verdict==='NOT_READY_FOR_STAGE_20');
+ const observedMethods=[],observedWitnesses=[];let layerHashes=true;
+ for(const l of account.layers){const b=data.get(prefix+'/'+l.path);if(!b||C.hash(b)!==l.sha256)layerHashes=false;const x=C.read(path.join(base,l.path));observedMethods.push(...x.methods);observedWitnesses.push(...x.witnesses);}
+ check('method layer hashes',layerHashes);
+ check('unique direct evidence',new Set(observedMethods.map(m=>m.method_id)).size===observedMethods.length&&new Set(observedWitnesses.map(w=>w.witness_id)).size===observedWitnesses.length);
+ check('owner counts',observedMethods.length===account.owner.methods&&observedWitnesses.length===account.owner.direct_witnesses&&observedWitnesses.filter(w=>w.result==='fail').length===account.owner.failed_witnesses&&observedWitnesses.filter(w=>w.result==='pass').length===account.owner.passing_witnesses);
+ check('failed subjects retained zero credit',observedWitnesses.filter(w=>w.result==='fail').every(w=>w.original_subject_success_credit===0)&&C.read(path.join(base,'final/retained-negative-register.json')).rows.length===account.owner.failed_witnesses);
+ check('same owner boundary',observedWitnesses.every(w=>w.same_owner_only===true&&w.independent_reproduction===false));
+ check('effective-negative arithmetic',account.owner.effective_negatives===account.owner.failed_witnesses+30&&account.successor_visible.effective_negatives===account.source_external_baseline.effective_negatives+account.owner.effective_negatives);
+ check('source and owner arithmetic',['methods','direct_witnesses','failed_witnesses','passing_witnesses'].every(k=>account.successor_visible[k]===account.owner[k]+account.source_external_baseline[k])&&account.successor_visible.direct_witnesses===account.successor_visible.failed_witnesses+account.successor_visible.passing_witnesses);
+ check('core gap and gate arithmetic',account.successor_visible.open_gaps===81&&account.successor_visible.exact_gates===100);
+ const promotion=C.read(path.join(base,'x2/global-promotion-receipt.json'));check('promotion evidence',promotion.valid&&promotion.files.length===18&&promotion.files.every(f=>f.match&&f.source_sha256===f.installed_sha256));
+ check('promoted source unchanged',promotion.files.every(f=>data.has(f.source)&&C.hash(data.get(f.source))===f.source_sha256));
+ const browser=C.read(path.join(base,'x2/browser-receipt.json'));check('current browser artifact',browser.valid&&browser.current_html_sha256===C.hash(data.get(prefix+'/x2/image-grid-lab.html'))&&C.read(path.join(base,'x2/preview-cleanup.json')).preview_stopped===true);
+ const baton=data.get(prefix+'/final/hand-off-baton.md'),meta=C.read(path.join(base,'final/baton-metadata.json')),text=baton.toString('utf8');
+ check('baton exact metadata',C.hash(baton)===meta.sha256&&baton.length===meta.bytes&&text.trim().split(/\s+/).length===meta.words&&meta.words>=10000&&meta.words<=100000);
+ check('baton modules and EOF',(text.match(/^## Module /gm)??[]).length===13&&text.trimEnd().endsWith(meta.eof));
+ const testModules=['x1/tests.txt','x2/tests.txt','final/tools/canonical-gate.txt'];
+ const tests=testModules.flatMap(p=>require(path.join(base,p)).runTests().map(r=>({module:p,...r})));
+ check('complete selected test inventory',tests.length===54);check('all selected tests pass',tests.every(r=>r.pass),tests.filter(r=>!r.pass));
+ const reader=blobReader(),cache=new Map();let manifestEntries=0,manifestErrors=[];
+ async function blob(ref,p){const key=ref+':'+p;if(!cache.has(key))cache.set(key,await reader.get(key));return cache.get(key);}
+ async function inspectManifest(p,ref){
+  const raw=await blob(ref,p),m=C.parseStrict(raw.toString('utf8'));
+  for(const e of m.entries??m.targets??[]){manifestEntries++;if(typeof e.path!=='string'||!e.path.startsWith(prefix+'/')||e.path.split('/').includes('..')||/[\r\n\0]/.test(e.path)){manifestErrors.push({manifest:p,code:'scope'});continue;}const b=await blob(ref,e.path);if(b.length!==e.bytes||C.hash(b)!==e.sha256)manifestErrors.push({manifest:p,path:e.path,code:'blob_fixity'});if(mode==='exact_final'&&data.has(e.path)&&!b.equals(data.get(e.path)))manifestErrors.push({path:e.path,code:'working_bytes'});}
+ }
+ try{
+  for(const[stage,ref]of [['plan',lifecycle.planning],['x1',lifecycle.x1],['x2',lifecycle.x2]])await inspectManifest(prefix+'/'+stage+'/manifest.json',ref);
+  if(mode==='exact_final')for(const p of ['final/manifest.json','final/content-seal.json','final/owner-manifest.json'])await inspectManifest(prefix+'/'+p,head);
+ }finally{await reader.close();}
+ check('immutable Git-blob manifests',manifestErrors.length===0,manifestErrors);
+ if(mode==='exact_final'){
+  const committed=git('ls-tree','-r','--name-only','HEAD').split('\n').sort();check('complete exact owner inventory',C.equal(committed,files));check('clean exact final',git('status','--porcelain')==='');
+  const ownerManifest=C.read(path.join(base,'final/owner-manifest.json'));check('owner manifest coverage',C.equal([...ownerManifest.entries.map(e=>e.path),...ownerManifest.self_exclusions].sort(),files));
+ }else check('final manifest timing',!fs.existsSync(path.join(base,'final/manifest.json')),'Final manifest intentionally follows content preflight.');
+ return{schema:'ghc.family.owner-final-validation.v5',owner:'Ceryn Alder',phase:'v691-v1',mode,head,valid:checks.every(c=>c.pass),checks_total:checks.length,checks_passed:checks.filter(c=>c.pass).length,checks_failed:checks.filter(c=>!c.pass).length,checks,selected_tests:{modules:3,tests:tests.length,passed:tests.filter(t=>t.pass).length},owner_files:files.length,strict_json_files:json.length,manifest_entries_checked:manifestEntries,unique_git_blobs_read:cache.size,privacy_candidates:Object.fromEntries(Object.entries(privacy).map(([k,v])=>[k,v.length])),security_findings:security.length,baton:meta,source_canonical_replayed:false,full_repository_suite_run:false,independent_reproduction:false,boundary:C.BOUNDARY};
+}
+module.exports={validate};
+if(require.main===module){const[mode,output]=process.argv.slice(2);validate(mode).then(r=>{if(output)C.put(output,r);console.log(JSON.stringify({valid:r.valid,mode:r.mode,checks:r.checks_total,passed:r.checks_passed,failed:r.checks.filter(c=>!c.pass),tests:r.selected_tests,files:r.owner_files,json:r.strict_json_files,manifest_entries:r.manifest_entries_checked}));if(!r.valid)process.exitCode=1;}).catch(e=>{console.error(e.message);process.exitCode=1;});}

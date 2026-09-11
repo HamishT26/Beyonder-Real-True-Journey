@@ -1,0 +1,13 @@
+'use strict';
+const C=require('../../plan/tools/common.txt');
+function gate(s){
+ return s!==null&&typeof s==='object'&&/^[0-9a-f]{40}$/.test(s.head)&&s.expected_head===s.head&&[s.local,s.upstream,s.tracking,s.fresh_live].every(h=>h===s.head)&&s.clean===true&&s.ahead===0&&s.behind===0&&s.invocations===0&&s.source_replayed===false&&s.sibling_mutation===false&&Array.isArray(s.paths)&&s.paths.length>0&&s.paths.length<2000&&new Set(s.paths).size===s.paths.length&&s.paths.every(p=>p.startsWith('docs/ceryn-alder/v691-v1/')&&!p.split('/').includes('..'))&&C.equal(s.lineage,[[s.head,s.x2],[s.x2,s.x1],[s.x1,s.planning],[s.planning]]);
+}
+function fixtures(){
+ const head='a'.repeat(40),x2='b'.repeat(40),x1='c'.repeat(40),planning='d'.repeat(40);
+ const good={head,expected_head:head,local:head,upstream:head,tracking:head,fresh_live:head,clean:true,ahead:0,behind:0,invocations:0,source_replayed:false,sibling_mutation:false,paths:['docs/ceryn-alder/v691-v1/final/overview.md'],planning,x1,x2,lineage:[[head,x2],[x2,x1],[x1,planning],[planning]]};
+ const mutations=[['wrong exact head',s=>s.head='e'.repeat(40)],['dirty state',s=>s.clean=false],['used invocation latch',s=>s.invocations=1],['outside owner path',s=>s.paths.push('docs/another-owner/example.md')],['extra final parent',s=>s.lineage[0].push(planning)]];
+ return[{id:'CA6911-GATE-VALID',name:'valid synthetic gate state',state:good,expected:true},...mutations.map(([name,mutate],i)=>{const s=structuredClone(good);mutate(s);return{id:'CA6911-GATE-ADVERSE-'+(i+1),name,state:s,expected:false};})];
+}
+function runTests(){return fixtures().map(f=>({name:f.name,negative:!f.expected,pass:gate(f.state)===f.expected}));}
+module.exports={gate,fixtures,runTests};
