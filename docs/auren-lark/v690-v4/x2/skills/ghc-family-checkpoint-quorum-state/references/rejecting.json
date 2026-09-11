@@ -1,0 +1,39 @@
+{
+  "schema": "ghc.family.skill-fixture.v1",
+  "skill": "ghc-family-checkpoint-quorum-state",
+  "kind": "rejecting",
+  "proposal_id": "AL6904-131",
+  "request": {
+    "op": "checkpoint_quorum",
+    "payload": {
+      "checkpoints": [
+        {
+          "id": "source",
+          "required": true,
+          "approved": true,
+          "revoked": false
+        },
+        {
+          "id": "privacy",
+          "required": true,
+          "approved": false,
+          "revoked": false
+        },
+        {
+          "id": "advisory-1",
+          "required": false,
+          "approved": true,
+          "revoked": true
+        }
+      ],
+      "minimum": 2,
+      "unreviewed_authority_grant": true
+    }
+  },
+  "expected": {
+    "ok": false,
+    "error": "unknown_field",
+    "value": null
+  },
+  "original_success_credit": 0
+}

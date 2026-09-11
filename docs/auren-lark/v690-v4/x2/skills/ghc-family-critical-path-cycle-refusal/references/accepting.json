@@ -1,0 +1,42 @@
+{
+  "schema": "ghc.family.skill-fixture.v1",
+  "skill": "ghc-family-critical-path-cycle-refusal",
+  "kind": "accepting",
+  "proposal_id": "AL6904-101",
+  "request": {
+    "op": "critical_path",
+    "payload": {
+      "tasks": [
+        {
+          "id": "a",
+          "duration": 2,
+          "depends": []
+        },
+        {
+          "id": "b",
+          "duration": 3,
+          "depends": [
+            "a"
+          ]
+        },
+        {
+          "id": "c",
+          "duration": 1,
+          "depends": [
+            "a"
+          ]
+        },
+        {
+          "id": "d",
+          "duration": 2,
+          "depends": [
+            "b",
+            "c"
+          ]
+        }
+      ]
+    }
+  },
+  "expected_ok": true,
+  "source_execution_credit": 0
+}
