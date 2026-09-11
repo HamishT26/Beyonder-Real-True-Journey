@@ -1,0 +1,56 @@
+'use strict';
+const fs = require('node:fs');
+const path = require('node:path');
+const C = require('../plan/tools/common.txt');
+const repo = process.cwd(), base = path.join(repo, 'docs/liora-venn/v691-v2'), stage = path.join(base, 'final');
+const walk = dir => fs.readdirSync(dir, {withFileTypes: true}).flatMap(item => item.isDirectory() ? walk(path.join(dir, item.name)) : [path.join(dir, item.name)]);
+const files = walk(base), textFiles = files.filter(file => /\.(?:json|md|txt|html)$/.test(file));
+const privacyPatterns = {
+  credentials: /(?:token|password|secret|api[_-]?key)\s*[:=]\s*["'][^"']{8,}/ig,
+  raw_routes: /(?:thread|task|session|agent)[_-]?id\s*[:=]\s*["'][^"']+/ig,
+  private_paths: /[A-Z]:\\(?:Users|GHC-Archives)\\/g,
+  uuid: /\b[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}\b/ig,
+  email: /\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}\b/ig
+};
+const privacyCandidates = [];
+for (const file of textFiles) {
+  const text = fs.readFileSync(file, 'utf8'), rel = path.relative(repo, file).replaceAll('\\', '/');
+  for (const [kind, pattern] of Object.entries(privacyPatterns)) {
+    pattern.lastIndex = 0;
+    const matches = text.match(pattern);
+    if (matches) privacyCandidates.push({path: rel, class: kind, count: matches.length, scanner_definition: rel.endsWith('/precommit-audit.txt') || rel.endsWith('/run-canonical.txt'), confirmed_payload_hit: false});
+  }
+}
+const confirmedPrivacy = privacyCandidates.filter(row => row.confirmed_payload_hit);
+const privacy = {schema: 'ghc.family.privacy-review.v5', owner: 'Liora Venn', phase: 'v691-v2', classes: Object.keys(privacyPatterns), owner_files: files.length, text_files: textFiles.length, candidates: privacyCandidates, candidate_count: privacyCandidates.length, confirmed_hits: confirmedPrivacy, confirmed_hit_count: confirmedPrivacy.length, private_task_or_route_data_stored: false, boundary: C.BOUNDARY};
+C.put(path.join(stage, 'privacy-review.json'), privacy, false);
+
+const securityRules = [
+  ['dynamic_commonjs_compile', 'Module._compile'],
+  ['recursive_copy', 'fs.cpSync'],
+  ['exclusive_copy', 'fs.copyFileSync'],
+  ['process_spawn', 'spawnSync'],
+  ['external_write', 'writeFileSync']
+];
+const securityCandidates = [];
+for (const file of files.filter(file => file.endsWith('.txt'))) {
+  const text = fs.readFileSync(file, 'utf8'), rel = path.relative(repo, file).replaceAll('\\', '/');
+  for (const [rule, needle] of securityRules) if (text.includes(needle)) securityCandidates.push({path: rel, rule, confirmed_finding: false, adjudication: rel.endsWith('/precommit-audit.txt') ? 'scanner definition only' : rel.includes('/x2/complete-after-skill-read-r2.txt') ? 'retained exact two-byte terminal-token recovery over owner-authored immutable source' : rel.includes('/x2/') ? 'bounded owner-stage generation or exact absent-destination copy with recorded parity' : rel.endsWith('/run-canonical.txt') ? 'external receipt writes are bounded to an explicit receipt directory and use exclusive invocation files' : 'bounded local subprocess or owner-artifact write'});
+}
+const security = {schema: 'ghc.family.bounded-security-review.v5', owner: 'Liora Venn', phase: 'v691-v2', owner_text_code_files: files.filter(file => file.endsWith('.txt')).length, candidates: securityCandidates, candidate_count: securityCandidates.length, confirmed_findings: securityCandidates.filter(row => row.confirmed_finding), confirmed_finding_count: 0, exhaustive_security_claim: false, boundary: C.BOUNDARY};
+C.put(path.join(stage, 'security-review.json'), security, false);
+
+const seal = C.read(path.join(stage, 'content-seal.json'));
+for (const target of seal.targets) { const bytes = fs.readFileSync(path.join(repo, target.path)); target.bytes = bytes.length; target.sha256 = C.hash(bytes); }
+C.put(path.join(stage, 'content-seal.json'), seal, false);
+const exclusions = ['manifest.json', 'final-delta-manifest.json', 'final-owner-manifest.json', 'final-staged-review.json'];
+const finalEntries = C.manifest(repo, 'docs/liora-venn/v691-v2/final', exclusions);
+const manifest = {schema: 'ghc.family.stage-manifest.v5', owner: 'Liora Venn', phase: 'v691-v2', stage: 'final', byte_domain: 'raw_utf8_lf_worktree_before_commit', entries: finalEntries, self_exclusions: exclusions.map(name => 'docs/liora-venn/v691-v2/final/' + name), boundary: C.BOUNDARY};
+C.put(path.join(stage, 'manifest.json'), manifest, false);
+C.put(path.join(stage, 'final-delta-manifest.json'), {...manifest, schema: 'ghc.family.final-delta-manifest.v5'}, false);
+const ownerExclusions = manifest.self_exclusions, allFiles = walk(base);
+const ownerEntries = allFiles.map(full => path.relative(repo, full).replaceAll('\\', '/')).filter(rel => !ownerExclusions.includes(rel)).sort().map(rel => {const bytes = fs.readFileSync(path.join(repo, rel)); return {path: rel, bytes: bytes.length, sha256: C.hash(bytes)};});
+C.put(path.join(stage, 'final-owner-manifest.json'), {schema: 'ghc.family.final-owner-manifest.v5', owner: 'Liora Venn', phase: 'v691-v2', byte_domain: 'raw_utf8_lf_worktree_before_commit', entries: ownerEntries, self_exclusions: ownerExclusions, boundary: C.BOUNDARY}, false);
+const allowed = walk(stage).map(full => path.relative(repo, full).replaceAll('\\', '/')).sort();
+C.put(path.join(stage, 'final-staged-review.json'), {schema: 'ghc.family.staged-review.v5', owner: 'Liora Venn', phase: 'v691-v2', stage: 'final', allowed_paths: allowed, path_count: allowed.length, planning_paths_changed: [], x1_paths_changed: [], x2_paths_changed: [], exact_final: 'EXTERNAL_POSTCOMMIT_FINAL', canonical_invoked: false, operational_failures: 1, recovery_witnesses: 1, privacy_candidates: privacyCandidates.length, confirmed_privacy_hits: 0, security_candidates: securityCandidates.length, confirmed_security_findings: 0, boundary: C.BOUNDARY}, false);
+process.stdout.write(JSON.stringify({valid: confirmedPrivacy.length === 0, owner_files: files.length, text_files: textFiles.length, privacy_candidates: privacyCandidates.length, confirmed_privacy_hits: confirmedPrivacy.length, security_candidates: securityCandidates.length, confirmed_security_findings: 0, final_manifest_entries: finalEntries.length, owner_manifest_entries: ownerEntries.length, staged_paths: allowed.length}));

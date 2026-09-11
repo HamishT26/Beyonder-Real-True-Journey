@@ -1,0 +1,92 @@
+'use strict';
+const fs = require('node:fs');
+const path = require('node:path');
+const cp = require('node:child_process');
+const C = require('../plan/tools/common.txt');
+const repo = process.cwd(), base = path.join(repo, 'docs/liora-venn/v691-v2'), stage = path.join(base, 'final');
+
+const failure = {
+  schema: 'ghc.family.operational-failures.v5', owner: 'Liora Venn', phase: 'v691-v2', stage: 'final',
+  rows: [{failure_id: 'LV6912-FINAL-N001', result: 'fail', original_subject_success_credit: 0, erased: false, observed: 'The first read-only all-artifact verifier omitted one closing parenthesis around the precommit receipt parse and failed before content inspection.', recovery: 'Correct only the inline expression and rerun the same read-only manifest, content-seal, LF, extension, JSON, privacy, HTML, word-ceiling and scope checks.', recovery_result: 'pass', repository_mutation_before_failure: false, canonical_invoked: false}],
+  recovery_witness: {owner_files: 167, final_files_before_overlay: 25, manifest_mismatches: 0, content_seal_mismatches: 0, line_ending_issues: 0, extension_issues: 0, word_ceiling_issues: 0, json_issues: 0, privacy_candidates: 0, html_sections: 3, valid: true}, boundary: C.BOUNDARY
+};
+C.put(path.join(stage, 'operational-failures.json'), failure);
+
+const accounting = C.read(path.join(stage, 'accounting.json'));
+accounting.owner.methods += 1; accounting.owner.direct_witnesses += 2; accounting.owner.failed_witnesses += 1; accounting.owner.passing_witnesses += 1; accounting.owner.effective_negatives += 1;
+accounting.successor_visible_repository.methods += 1; accounting.successor_visible_repository.direct_witnesses += 2; accounting.successor_visible_repository.failed_witnesses += 1; accounting.successor_visible_repository.passing_witnesses += 1; accounting.successor_visible_repository.effective_negatives += 1;
+accounting.layers.push({path: 'final/operational-failures.json', counts: {methods: 1, witnesses: 2, witness_results: {fail: 1, pass: 1}}});
+accounting.witness_partition_exact = accounting.successor_visible_repository.direct_witnesses === accounting.successor_visible_repository.failed_witnesses + accounting.successor_visible_repository.passing_witnesses;
+C.ensure(C.equal(accounting.owner, {methods: 52, direct_witnesses: 726, failed_witnesses: 229, passing_witnesses: 497, blocked_packets: 30, effective_negatives: 259}), 'corrected_owner_accounting');
+C.ensure(C.equal(accounting.successor_visible_repository, {methods: 280, direct_witnesses: 7525, failed_witnesses: 1623, passing_witnesses: 5902, effective_negatives: 1744, open_gaps: 91, exact_gates: 110}), 'corrected_successor_accounting');
+C.put(path.join(stage, 'accounting.json'), accounting, false);
+
+const negative = C.read(path.join(stage, 'retained-negative-register.json'));
+negative.rows.push({witness_id: 'LV6912-FINAL-N001', source_ledger: 'final/operational-failures.json', procedure: failure.rows[0].observed, observed: failure.rows[0].observed, result: 'fail', original_subject_success_credit: 0, erased: false});
+negative.rows.sort((a, b) => a.witness_id.localeCompare(b.witness_id));
+negative.failed_witnesses = 229; negative.effective_negatives = 259;
+C.ensure(negative.rows.length === 229 && new Set(negative.rows.map(r => r.witness_id)).size === 229, 'corrected_negative_register');
+C.put(path.join(stage, 'retained-negative-register.json'), negative, false);
+
+const truth = C.read(path.join(stage, 'phase-truth.json'));
+truth.final_operational_failures = 1; truth.final_operational_recoveries = 1; truth.owner_accounting = accounting.owner; truth.successor_visible_repository = accounting.successor_visible_repository;
+C.put(path.join(stage, 'phase-truth.json'), truth, false);
+
+function replaceExact(file, replacements) {
+  let text = fs.readFileSync(file, 'utf8');
+  for (const [from, to] of replacements) { C.ensure(text.includes(from), 'replacement_context_missing'); text = text.replace(from, to); }
+  fs.writeFileSync(file, text, 'utf8');
+}
+
+replaceExact(path.join(stage, 'final-integrated-overview.md'), [
+  ['Liora contributes 51 methods and 724 direct witnesses: 228 failed and 496 passing. Thirty distinct blocked packets make 258 owner effective negatives.', 'Liora contributes 52 methods and 726 direct witnesses: 229 failed and 497 passing. Thirty distinct blocked packets make 259 owner effective negatives.'],
+  ['The successor-visible repository layer is 279 methods, 7,523 direct witnesses, 1,622 failed, 5,901 passing, 1,743 effective negatives, 91 open gaps and 110 exact gates.', 'The successor-visible repository layer is 280 methods, 7,525 direct witnesses, 1,623 failed, 5,902 passing, 1,744 effective negatives, 91 open gaps and 110 exact gates.']
+]);
+
+replaceExact(path.join(stage, 'hand-off-baton.md'), [
+  ['Across planning, x1, x2 and final preflight, all 228 owner failed witnesses remain retained.', 'Across planning, x1, x2, final preflight and the final read-only audit, all 229 owner failed witnesses remain retained.'],
+  ['- `LV6912-FINAL-GATE-N05` remains failed from final/method-flow.json; recovery, when present, is separate and grants no original-subject success credit.\n', '- `LV6912-FINAL-GATE-N05` remains failed from final/method-flow.json; recovery, when present, is separate and grants no original-subject success credit.\n- `LV6912-FINAL-N001` remains failed from final/operational-failures.json; its corrected read-only audit is a separate passing witness and grants no original-subject success credit.\n'],
+  ['Liora adds 51 methods and 724 witnesses, partitioned as 228 failed and 496 passing. Thirty blocked packets make 258 owner effective negatives.', 'Liora adds 52 methods and 726 witnesses, partitioned as 229 failed and 497 passing. Thirty blocked packets make 259 owner effective negatives.'],
+  ['The prepared successor-visible repository layer is 279 methods, 7,523 witnesses, 1,622 failed, 5,901 passing, 1,743 effective negatives, 91 open gaps and 110 exact gates.', 'The prepared successor-visible repository layer is 280 methods, 7,525 witnesses, 1,623 failed, 5,902 passing, 1,744 effective negatives, 91 open gaps and 110 exact gates.']
+]);
+
+replaceExact(path.join(stage, 'validate-final.txt'), [
+  ["accounting.owner.methods===51", "accounting.owner.methods===52"],
+  ["accounting.owner.direct_witnesses===724", "accounting.owner.direct_witnesses===726"],
+  ["accounting.owner.failed_witnesses===228&&accounting.owner.passing_witnesses===496", "accounting.owner.failed_witnesses===229&&accounting.owner.passing_witnesses===497"],
+  ["accounting.owner.effective_negatives===258", "accounting.owner.effective_negatives===259"],
+  ["accounting.successor_visible_repository.methods===279", "accounting.successor_visible_repository.methods===280"],
+  ["accounting.successor_visible_repository.direct_witnesses===7523", "accounting.successor_visible_repository.direct_witnesses===7525"],
+  ["accounting.successor_visible_repository.failed_witnesses===1622&&accounting.successor_visible_repository.passing_witnesses===5901", "accounting.successor_visible_repository.failed_witnesses===1623&&accounting.successor_visible_repository.passing_witnesses===5902"],
+  ["accounting.successor_visible_repository.effective_negatives===1743", "accounting.successor_visible_repository.effective_negatives===1744"],
+  ["negative.rows.length===228&&new Set(negative.rows.map(r=>r.witness_id)).size===228", "negative.rows.length===229&&new Set(negative.rows.map(r=>r.witness_id)).size===229"]
+]);
+
+const validation = cp.spawnSync(process.execPath, [path.join(stage, 'validate-final.txt')], {cwd: repo, encoding: 'utf8'});
+C.ensure(validation.status === 0, 'corrected_final_validation');
+C.put(path.join(stage, 'precommit-validation-receipt.json'), JSON.parse(validation.stdout), false);
+
+const batonBytes = fs.readFileSync(path.join(stage, 'hand-off-baton.md')), batonText = batonBytes.toString('utf8');
+const batonMetadata = C.read(path.join(stage, 'baton-metadata.json'));
+batonMetadata.sha256 = C.hash(batonBytes); batonMetadata.bytes = batonBytes.length; batonMetadata.words = (batonText.match(/\S+/g) || []).length; batonMetadata.lines = batonText.split('\n').length - 1; batonMetadata.modules = (batonText.match(/^## Module /gm) || []).length;
+C.ensure(batonMetadata.words >= 10000 && batonMetadata.words <= 100000 && batonText.endsWith(batonMetadata.eof + '\n'), 'corrected_baton_contract');
+C.put(path.join(stage, 'baton-metadata.json'), batonMetadata, false);
+
+const seal = C.read(path.join(stage, 'content-seal.json'));
+for (const target of seal.targets) { const bytes = fs.readFileSync(path.join(repo, target.path)); target.bytes = bytes.length; target.sha256 = C.hash(bytes); }
+C.put(path.join(stage, 'content-seal.json'), seal, false);
+
+const exclusions = ['manifest.json', 'final-delta-manifest.json', 'final-owner-manifest.json', 'final-staged-review.json'];
+const finalEntries = C.manifest(repo, 'docs/liora-venn/v691-v2/final', exclusions);
+const manifest = {schema: 'ghc.family.stage-manifest.v5', owner: 'Liora Venn', phase: 'v691-v2', stage: 'final', byte_domain: 'raw_utf8_lf_worktree_before_commit', entries: finalEntries, self_exclusions: exclusions.map(name => 'docs/liora-venn/v691-v2/final/' + name), boundary: C.BOUNDARY};
+C.put(path.join(stage, 'manifest.json'), manifest, false);
+C.put(path.join(stage, 'final-delta-manifest.json'), {...manifest, schema: 'ghc.family.final-delta-manifest.v5'}, false);
+const ownerExclusions = manifest.self_exclusions, allFiles = [];
+const walk = dir => { for (const item of fs.readdirSync(dir, {withFileTypes: true})) { const full = path.join(dir, item.name); if (item.isDirectory()) walk(full); else allFiles.push(full); } };
+walk(base);
+const ownerEntries = allFiles.map(full => path.relative(repo, full).replaceAll('\\', '/')).filter(rel => !ownerExclusions.includes(rel)).sort().map(rel => {const bytes = fs.readFileSync(path.join(repo, rel)); return {path: rel, bytes: bytes.length, sha256: C.hash(bytes)};});
+C.put(path.join(stage, 'final-owner-manifest.json'), {schema: 'ghc.family.final-owner-manifest.v5', owner: 'Liora Venn', phase: 'v691-v2', byte_domain: 'raw_utf8_lf_worktree_before_commit', entries: ownerEntries, self_exclusions: ownerExclusions, boundary: C.BOUNDARY}, false);
+const allowed = fs.readdirSync(stage, {recursive: true}).filter(rel => fs.statSync(path.join(stage, rel)).isFile()).map(rel => 'docs/liora-venn/v691-v2/final/' + rel.replaceAll('\\', '/'));
+const stagedRel = 'docs/liora-venn/v691-v2/final/final-staged-review.json'; if (!allowed.includes(stagedRel)) allowed.push(stagedRel); allowed.sort();
+C.put(path.join(stage, 'final-staged-review.json'), {schema: 'ghc.family.staged-review.v5', owner: 'Liora Venn', phase: 'v691-v2', stage: 'final', allowed_paths: allowed, path_count: allowed.length, planning_paths_changed: [], x1_paths_changed: [], x2_paths_changed: [], exact_final: 'EXTERNAL_POSTCOMMIT_FINAL', canonical_invoked: false, operational_failures: 1, recovery_witnesses: 1, privacy_candidates: 0, confirmed_privacy_hits: 0, boundary: C.BOUNDARY}, false);
+process.stdout.write(JSON.stringify({valid: true, owner: accounting.owner, successor_visible: accounting.successor_visible_repository, retained_failures: negative.rows.length, baton: batonMetadata, tests: JSON.parse(validation.stdout).tests, final_manifest_entries: finalEntries.length, owner_manifest_entries: ownerEntries.length, staged_paths: allowed.length}));
