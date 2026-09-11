@@ -1,0 +1,337 @@
+"use strict";
+
+const fs = require("fs");
+const path = require("path");
+const crypto = require("crypto");
+const cp = require("child_process");
+const core = require("./ghc_family_orin_x2_evidence.txt");
+
+const ownerRoot = path.resolve(__dirname, "..", "..");
+const repo = path.resolve(ownerRoot, "..", "..", "..");
+const x2Root = path.join(ownerRoot, "x2");
+const planRoot = path.join(ownerRoot, "plan");
+const x1Root = path.join(ownerRoot, "x1");
+const x1Head = "5fe783498d897f37b86fd63647f764e854823018";
+const boundary = "Bounded same-owner synthetic software and documentation evidence only; no empirical, participant, identity, professional, production, deployment, legal, cultural, affected-party, Maori-authority, complete privacy/accessibility, exhaustive-security, independent-reproduction, consciousness/personhood, AGI/ASI, Theory-of-Everything, proof/canon or Stage 20 claim. NOT_READY_FOR_STAGE_20.";
+
+function mkdir(dir) { fs.mkdirSync(dir, { recursive: true }); }
+function writeJson(relative, value) { const target = path.join(x2Root, relative); mkdir(path.dirname(target)); fs.writeFileSync(target, JSON.stringify(value, null, 2) + "\n", "utf8"); }
+function writeText(relative, value) { const target = path.join(x2Root, relative); mkdir(path.dirname(target)); const clean = String(value).replace(/\r\n/g, "\n").replace(/\r/g, "\n"); fs.writeFileSync(target, clean.endsWith("\n") ? clean : clean + "\n", "utf8"); }
+function readJson(file) { return JSON.parse(fs.readFileSync(file, "utf8")); }
+function sha(bytes) { return crypto.createHash("sha256").update(bytes).digest("hex"); }
+function equal(a, b) { return core.canonical(a) === core.canonical(b); }
+function git(args) { return cp.execFileSync("git", ["-C", repo, ...args], { encoding: "utf8", maxBuffer: 64 * 1024 * 1024 }).trim(); }
+
+const currentHead = git(["rev-parse", "HEAD"]);
+if (currentHead !== x1Head) throw new Error(`x2 must begin at immutable x1 ${x1Head}, found ${currentHead}`);
+const status = git(["status", "--porcelain"]);
+if (status && !status.split(/\r?\n/).every((line) => line.slice(3).startsWith("docs/orin-thale/v690-v8/x2/"))) throw new Error("unexpected non-x2 working change before x2 build");
+
+const proposalDoc = readJson(path.join(planRoot, "new-proposals.json"));
+const portfolioDoc = readJson(path.join(planRoot, "portfolio-x2.json"));
+const toolPlan = readJson(path.join(planRoot, "skills-runners-promotions.json"));
+const x1Truth = readJson(path.join(x1Root, "phase-truth.json"));
+if (x1Truth.status !== "X1_FROZEN_NO_X2" || x1Truth.x2_results_present !== false) throw new Error("immutable x1 truth gate failed");
+const proposals = proposalDoc.proposals.filter((proposal) => proposal.session === "x2");
+if (proposals.length !== 100) throw new Error(`expected 100 frozen x2 proposals, found ${proposals.length}`);
+
+const results = [];
+const rejections = [];
+const nonmutations = [];
+for (const proposal of proposals) {
+  const positive = core.execute(JSON.parse(JSON.stringify(proposal.request)));
+  const invalid = core.execute(JSON.parse(JSON.stringify(proposal.candidate_subject)));
+  const typed = equal(positive.result, proposal.expected_output);
+  const refused = equal(invalid.result, proposal.candidate_expected);
+  const acceptedEvidence = typed && refused && positive.input_unchanged && invalid.input_unchanged;
+  results.push({
+    proposal_id: proposal.proposal_id,
+    operation: proposal.operation,
+    definition_sha256: proposal.definition_sha256,
+    expected_disposition: proposal.expected_execution_disposition,
+    actual_disposition: acceptedEvidence ? proposal.expected_execution_disposition : "open_gap",
+    expected_output: proposal.expected_output,
+    actual_output: positive.result,
+    typed_equality: typed,
+    input_sha256_before: positive.input_sha256_before,
+    input_sha256_after: positive.input_sha256_after,
+    input_unchanged: positive.input_unchanged,
+    claim_ceiling: proposal.expected_execution_disposition === "completed" ? "bounded synthetic contract only" : proposal.expected_execution_disposition === "represented" ? "representation only; no empirical or operational completion" : proposal.expected_execution_disposition === "open_gap" ? "real rollback evidence absent" : "delegating authority absent and exact-gated",
+    same_owner_only: true,
+    independent_reproduction: false,
+    boundary
+  });
+  rejections.push({
+    proposal_id: proposal.proposal_id,
+    operation: proposal.operation,
+    subject_sha256: invalid.input_sha256_before,
+    expected: proposal.candidate_expected,
+    observed: invalid.result,
+    exact_refusal: refused,
+    result: "fail",
+    retained_negative_id: `${proposal.proposal_id}-INVALID`,
+    original_subject_success_credit: 0,
+    rejection_guard_pass: refused,
+    same_owner_only: true,
+    independent_reproduction: false,
+    boundary
+  });
+  nonmutations.push({ proposal_id: proposal.proposal_id, positive_unchanged: positive.input_unchanged, invalid_subject_unchanged: invalid.input_unchanged, pass: positive.input_unchanged && invalid.input_unchanged });
+}
+if (!results.every((row) => row.typed_equality && row.input_unchanged && row.actual_disposition === row.expected_disposition)) throw new Error("x2 result mismatch");
+if (!rejections.every((row) => row.exact_refusal && row.original_subject_success_credit === 0)) throw new Error("x2 refusal mismatch");
+if (!nonmutations.every((row) => row.pass)) throw new Error("x2 input mutation detected");
+
+const skillPlans = toolPlan.phase_local_skills.filter((skill) => skill.session === "x2");
+for (const skill of skillPlans) {
+  const proposal = proposals.find((row) => row.operation === skill.operation);
+  const skillDir = path.join("skills", skill.name);
+  writeText(path.join(skillDir, "SKILL.md"), `---
+name: ${skill.name}
+description: Validate and explain the bounded ${skill.operation} synthetic contract while preserving empirical, identity, professional, legal, cultural, Maori-authority and Stage 20 gates.
+---
+
+# ${skill.name}
+
+## Scope
+
+Use this phase-local skill only for the Orin Thale v690-v8 synthetic \`${skill.operation}\` contracts. It cannot establish a real observation, participant result, credential, remedy, accessibility outcome, delegation, professional competence or external-system behavior.
+
+## Inputs
+
+Accept only an exact preregistered request. Reject unknown fields and malformed types before evaluation. Preserve canonical input hashes before and after.
+
+## Method
+
+1. Bind the request to its frozen proposal digest.
+2. Execute a deep copy through the independent x2 core.
+3. Compare the entire typed result with the preregistered output.
+4. Execute and retain the unknown-field subject as a zero-credit failure.
+5. Confirm both subjects remain unchanged.
+6. Apply the preregistered claim ceiling: represented, open or exact-gated work is never promoted by structural success.
+
+## Acceptance
+
+Require typed equality, exact refusal and nonmutation. Same-owner validation is not independent reproduction.
+
+## Refusal and rollback
+
+Stop on mismatch, retain the exact failure, and correct only the smallest owner-local dependency. Never perform a real rollback or infer delegation authority.
+
+## Smoke fixture
+
+The phase smoke uses \`${proposal.proposal_id}\` and its invalid candidate. This is structural evidence only.
+
+## Boundary
+
+${boundary}
+`);
+  writeJson(path.join(skillDir, "fixture.json"), { schema: "ghc.family.phase-local-skill-fixture.v5", skill: skill.name, operation: skill.operation, proposal_id: proposal.proposal_id, request: proposal.request, expected_output: proposal.expected_output, invalid_subject: proposal.candidate_subject, invalid_expected: proposal.candidate_expected, expected_disposition: proposal.expected_execution_disposition, boundary });
+}
+
+const runnerPlans = toolPlan.family_runners.filter((runner) => runner.session === "x2");
+for (const runner of runnerPlans) {
+  writeText(path.join("runners", runner.name), `"use strict";
+const fs = require("fs");
+const path = require("path");
+const core = require("../tools/ghc_family_orin_x2_evidence.txt");
+const plan = JSON.parse(fs.readFileSync(path.resolve(__dirname, "..", "..", "plan", "new-proposals.json"), "utf8"));
+const operations = ${JSON.stringify(runner.operations)};
+const rows = plan.proposals.filter((row) => row.session === "x2" && operations.includes(row.operation));
+const outcomes = rows.map((row) => {
+  const positive = core.execute(JSON.parse(JSON.stringify(row.request)));
+  const invalid = core.execute(JSON.parse(JSON.stringify(row.candidate_subject)));
+  return { proposal_id: row.proposal_id, positive_pass: core.canonical(positive.result) === core.canonical(row.expected_output), invalid_rejected: core.canonical(invalid.result) === core.canonical(row.candidate_expected), input_unchanged: positive.input_unchanged && invalid.input_unchanged, disposition_preserved: ["completed","represented","open_gap","exact_gate"].includes(row.expected_execution_disposition) };
+});
+const receipt = { schema: "ghc.family.runner-smoke.v5", runner: ${JSON.stringify(runner.name)}, operations, proposal_count: rows.length, positive_passes: outcomes.filter((row) => row.positive_pass).length, invalid_rejections: outcomes.filter((row) => row.invalid_rejected).length, nonmutation_passes: outcomes.filter((row) => row.input_unchanged).length, valid: rows.length === 20 && outcomes.every((row) => row.positive_pass && row.invalid_rejected && row.input_unchanged && row.disposition_preserved), same_owner_only: true, independent_reproduction: false, boundary: ${JSON.stringify(boundary)} };
+process.stdout.write(JSON.stringify(receipt) + "\\n");
+if (!receipt.valid) process.exitCode = 1;
+`);
+}
+
+const skillReceipts = skillPlans.map((skill) => {
+  const skillFile = path.join(x2Root, "skills", skill.name, "SKILL.md");
+  const fixturePath = path.join(x2Root, "skills", skill.name, "fixture.json");
+  const fixture = readJson(fixturePath);
+  const text = fs.readFileSync(skillFile, "utf8");
+  const positive = core.execute(JSON.parse(JSON.stringify(fixture.request)));
+  const invalid = core.execute(JSON.parse(JSON.stringify(fixture.invalid_subject)));
+  const structure = ["---", "# ", "## Scope", "## Inputs", "## Method", "## Acceptance", "## Refusal and rollback", "## Smoke fixture", "## Boundary"].every((token) => text.includes(token));
+  const valid = structure && equal(positive.result, fixture.expected_output) && equal(invalid.result, fixture.invalid_expected) && positive.input_unchanged && invalid.input_unchanged;
+  return { skill: skill.name, operation: skill.operation, skill_sha256: sha(Buffer.from(text, "utf8")), fixture_sha256: sha(fs.readFileSync(fixturePath)), quick_validation: structure, positive_smoke: equal(positive.result, fixture.expected_output), invalid_smoke: equal(invalid.result, fixture.invalid_expected), nonmutation_smoke: positive.input_unchanged && invalid.input_unchanged, disposition_preserved: fixture.expected_disposition, global_installation: false, smoke_used: true, valid };
+});
+if (skillReceipts.length !== 10 || !skillReceipts.every((row) => row.valid)) throw new Error("x2 skill failure");
+
+const runnerReceipts = runnerPlans.map((runner) => {
+  const sourcePath = path.join(x2Root, "runners", runner.name);
+  const run = cp.spawnSync(process.execPath, [sourcePath], { encoding: "utf8", maxBuffer: 32 * 1024 * 1024 });
+  if (run.status !== 0) throw new Error(`x2 runner failed ${runner.name}: ${run.stderr}`);
+  return { ...JSON.parse(run.stdout), source_sha256: sha(fs.readFileSync(sourcePath)), invoked: true };
+});
+if (runnerReceipts.length !== 5 || !runnerReceipts.every((row) => row.valid)) throw new Error("x2 runner failure");
+
+function executePortfolio(tasks, kind) {
+  return tasks.map((task) => {
+    const proposal = proposals.find((row) => row.proposal_id === task.proposal_id);
+    const result = results.find((row) => row.proposal_id === task.proposal_id);
+    const rejection = rejections.find((row) => row.proposal_id === task.proposal_id);
+    const pass = kind === "safe_now" ? result.typed_equality && result.input_unchanged : kind === "candidate" ? rejection.exact_refusal && rejection.original_subject_success_credit === 0 : Boolean(proposal.falsifier_acceptance_gate && proposal.rollback_recovery && proposal.protected_gates.length === 6);
+    return { task_id: task.task_id, proposal_id: task.proposal_id, portfolio: kind, result: pass ? "pass" : "fail", executed: true, bounded_owner_local: true, authority_action: false, evidence: kind === "safe_now" ? "typed positive equality under claim ceiling" : kind === "candidate" ? "unknown-field subject rejected and retained" : "claim ceiling, falsifier, rollback and gate review", boundary };
+  });
+}
+const portfolioResults = { schema: "ghc.family.approval-portfolio-results.v5", owner: "Orin Thale", phase: "v690-v8", session: "x2", safe_now: executePortfolio(portfolioDoc.safe_now, "safe_now"), candidate: executePortfolio(portfolioDoc.candidate, "candidate"), clean_fix_refine: executePortfolio(portfolioDoc.clean_fix_refine, "clean_fix_refine"), exact_packets_executed: 0, blocked_packets_executed: 0, boundary };
+portfolioResults.counts = { safe_now_passed: portfolioResults.safe_now.filter((row) => row.result === "pass").length, candidate_passed: portfolioResults.candidate.filter((row) => row.result === "pass").length, clean_fix_refine_passed: portfolioResults.clean_fix_refine.filter((row) => row.result === "pass").length };
+if (Object.values(portfolioResults.counts).some((count) => count !== 100)) throw new Error("x2 portfolio mismatch");
+
+const promotions = toolPlan.curated_global_promotions;
+for (const promotion of promotions) {
+  const localSkills = promotion.operations.map((operation) => `ghc-family-${operation.replaceAll("_", "-")}`);
+  writeText(path.join("promotions", "skills", promotion.merged_skill_name, "SKILL.md"), `---
+name: ${promotion.merged_skill_name}
+description: Route bounded synthetic color-profile, transform, accessibility, provenance and publication checks while retaining refusals and every scientific, identity, professional, legal, cultural and authority gate.
+---
+
+# ${promotion.merged_skill_name}
+
+## Purpose
+
+Use this merged family skill to select and compose the bounded synthetic operations \`${promotion.operations.join("`, `")}\`. It consolidates the phase-local instruction surfaces ${localSkills.map((name) => `\`${name}\``).join(", ")} without erasing their provenance.
+
+## Intake
+
+Require an explicit synthetic operation, a frozen or caller-supplied fixture, a declared expected result, a refusal subject and a claim ceiling. Refuse private route material, secrets, real participants, production credentials, authority decisions and destructive actions.
+
+## Workflow
+
+1. Select the narrowest listed operation.
+2. Bind the input and expectation with deterministic hashes.
+3. Execute a deep copy through a family-compatible runner.
+4. Compare the full typed result and verify input nonmutation.
+5. Retain every rejected subject and failure at zero original-subject credit.
+6. Keep represented, open and exact-gated dispositions below completion.
+
+## Recovery
+
+Stop on mismatch, retain the failure, inspect the smallest dependency, and rerun only the isolated check. Never replay a successful canonical aggregate or infer authority from a passing fixture.
+
+## Boundary
+
+${boundary}
+`);
+  writeText(path.join("promotions", "skills", promotion.merged_skill_name, "references", "contracts.md"), `# Contract routing reference
+
+Merged operations: ${promotion.operations.join(", ")}.
+
+The companion public runner is \`${promotion.public_runner_name}\`. Its standalone intake envelope is intentionally narrower than the owner-phase executors: it validates an allowed operation name, a finite record list and an explicit false authority flag, then returns a deterministic count and refusal envelope. It does not reproduce the Orin phase, confer authority or establish real-world behavior.
+
+All source phase-local skills remain attributable. Consolidation is packaging, not independent validation or new scientific evidence.
+`);
+  const runnerSource = `"use strict";
+const crypto = require("crypto");
+const allowed = ${JSON.stringify(promotion.operations)};
+function canonical(value){if(Array.isArray(value))return "["+value.map(canonical).join(",")+"]";if(value&&typeof value==="object")return "{"+Object.keys(value).sort().map((key)=>JSON.stringify(key)+":"+canonical(value[key])).join(",")+"}";return JSON.stringify(value);}
+function run(input){const keys=input&&typeof input==="object"&&!Array.isArray(input)?Object.keys(input).sort():[];if(JSON.stringify(keys)!==JSON.stringify(["authority_verified","operation","records"]))return {ok:false,value:null,error:"unknown_field"};if(!allowed.includes(input.operation)||!Array.isArray(input.records)||input.authority_verified!==false)return {ok:false,value:null,error:"invalid_envelope"};const before=crypto.createHash("sha256").update(canonical(input)).digest("hex");const ids=[...new Set(input.records.map((record)=>String(record.id)))].sort();const after=crypto.createHash("sha256").update(canonical(input)).digest("hex");return {ok:true,value:{operation:input.operation,record_count:input.records.length,distinct_record_ids:ids,authority_reserved:true,input_unchanged:before===after},error:null};}
+const valid={operation:allowed[0],records:[{id:"fixture-a"},{id:"fixture-b"},{id:"fixture-a"}],authority_verified:false};
+const invalid={...valid,unreviewed_authority:true};
+const validResult=run(valid);const invalidResult=run(invalid);
+const receipt={schema:"ghc.family.public-runner-self-test.v5",runner:${JSON.stringify(promotion.public_runner_name)},operations:allowed,valid_result:validResult,invalid_result:invalidResult,valid:validResult.ok===true&&validResult.value.record_count===3&&validResult.value.distinct_record_ids.length===2&&validResult.value.authority_reserved===true&&validResult.value.input_unchanged===true&&invalidResult.ok===false&&invalidResult.error==="unknown_field",same_owner_only:true,independent_reproduction:false,boundary:${JSON.stringify(boundary)}};
+if(process.argv.includes("--self-test")||process.argv.length===2){process.stdout.write(JSON.stringify(receipt)+"\\n");if(!receipt.valid)process.exitCode=1;}else{process.stdout.write(JSON.stringify({ok:false,value:null,error:"use_self_test_or_import"})+"\\n");}
+module.exports={run};
+`;
+  writeText(path.join("promotions", "runners", promotion.public_runner_name), runnerSource);
+}
+
+const promotionCandidateReceipts = promotions.map((promotion) => {
+  const skillPath = path.join(x2Root, "promotions", "skills", promotion.merged_skill_name, "SKILL.md");
+  const referencePath = path.join(x2Root, "promotions", "skills", promotion.merged_skill_name, "references", "contracts.md");
+  const runnerPath = path.join(x2Root, "promotions", "runners", promotion.public_runner_name);
+  const skillText = fs.readFileSync(skillPath, "utf8");
+  const run = cp.spawnSync(process.execPath, [runnerPath, "--self-test"], { encoding: "utf8" });
+  if (run.status !== 0) throw new Error(`promotion runner self-test failed ${promotion.public_runner_name}: ${run.stderr}`);
+  const runnerReceipt = JSON.parse(run.stdout);
+  return { promotion_id: promotion.promotion_id, merged_skill_name: promotion.merged_skill_name, public_runner_name: promotion.public_runner_name, source_skills: promotion.operations.map((operation) => `ghc-family-${operation.replaceAll("_", "-")}`), skill_sha256: sha(fs.readFileSync(skillPath)), reference_sha256: sha(fs.readFileSync(referencePath)), runner_sha256: sha(fs.readFileSync(runnerPath)), skill_structure_valid: skillText.startsWith("---\nname:") && skillText.includes("\ndescription:") && skillText.includes("## Workflow") && skillText.includes("## Boundary"), runner_self_test: runnerReceipt, candidate_valid: runnerReceipt.valid };
+});
+if (!promotionCandidateReceipts.every((row) => row.skill_structure_valid && row.candidate_valid)) throw new Error("promotion candidate validation failed");
+
+const promotionReceiptPath = path.join(x2Root, "evidence", "global-promotion-receipt.json");
+const installedPromotion = fs.existsSync(promotionReceiptPath) ? readJson(promotionReceiptPath) : null;
+const promotionComplete = Boolean(installedPromotion && installedPromotion.valid && installedPromotion.skills.length === 5 && installedPromotion.runners.length === 5);
+
+const methodRecords = [...new Set(proposals.map((proposal) => proposal.operation))].map((operation) => ({
+  method_id: `OR6908-X2-${operation.toUpperCase()}-METHOD`, title: `Independent typed execution and refusal method for ${operation}`, failure_signature: "Typed mismatch, accepted unknown field, input mutation, non-determinism or claim-ceiling promotion", trigger_preconditions: ["immutable x1", "frozen proposal definition", "x2 operation only"], privacy_class: "sanitized_public", approval_class: "safe_now", candidate_workaround: "Retain the failing subject and inspect only the smallest x2 owner-local dependency.", validation_witness_ids: proposals.filter((proposal) => proposal.operation === operation).map((proposal) => `${proposal.proposal_id}-POSITIVE-PASS`), recurrence_guard: "Full typed equality, strict refusal, nonmutation and disposition preservation.", rollback: "Stop the operation family and preserve all prior evidence.", recommendation_state: "validated", supersedes: [], protected_gates: proposalDoc.proposals[0].protected_gates, retained_negative_ids: proposals.filter((proposal) => proposal.operation === operation).map((proposal) => `${proposal.proposal_id}-INVALID`), scope_boundary: boundary
+}));
+const x2OperationalFailure = {
+  failure_id: "OR6908-X2-N001",
+  observed: "The first x2 validator invocation omitted the exact promotion-root environment values and stopped with 70 of 71 checks passing.",
+  recovery: "Supply the exact configured C skill bank and D-first public runner bank, then rerun only the x2 validator.",
+  recovery_observed: "The validator can inspect promoted source/global hashes and runner smokes without repeating promotion or x2 proposal execution."
+};
+methodRecords.push({
+  method_id: "OR6908-X2-PROMOTION-ROOT-BINDING-METHOD",
+  title: "Bind x2 promotion roots before external parity validation",
+  failure_signature: "promotion roots supplied check fails while promotion receipt is otherwise valid",
+  trigger_preconditions: ["promotion completed", "x2 validator invoked", "external parity required"],
+  privacy_class: "sanitized_public",
+  approval_class: "safe_now",
+  candidate_workaround: x2OperationalFailure.recovery,
+  validation_witness_ids: ["OR6908-X2-N001-P"],
+  recurrence_guard: "Bind exact configured roots only in the live process environment; never persist private absolute paths in repository artifacts.",
+  rollback: "Stop validation without changing the installed promotion and retain the failed invocation.",
+  recommendation_state: "validated",
+  supersedes: [],
+  protected_gates: proposalDoc.proposals[0].protected_gates,
+  retained_negative_ids: [x2OperationalFailure.failure_id],
+  scope_boundary: boundary
+});
+const witnesses = [];
+for (const proposal of proposals) {
+  const methodId = `OR6908-X2-${proposal.operation.toUpperCase()}-METHOD`;
+  const result = results.find((row) => row.proposal_id === proposal.proposal_id);
+  const rejection = rejections.find((row) => row.proposal_id === proposal.proposal_id);
+  const nonmutation = nonmutations.find((row) => row.proposal_id === proposal.proposal_id);
+  const common = { method_id: methodId, scope: "Orin v690-v8 x2", same_owner_only: true, independent_reproduction: false, boundary };
+  witnesses.push({ witness_id: `${proposal.proposal_id}-POSITIVE-PASS`, ...common, procedure: "Execute the frozen valid x2 request under its claim ceiling", expected: proposal.expected_output, observed: result.actual_output, result: "pass", retained_negative_ids: [], original_subject_success_credit: null });
+  witnesses.push({ witness_id: `${proposal.proposal_id}-INVALID-FAIL`, ...common, procedure: "Submit the frozen unknown-field x2 candidate", expected: proposal.candidate_expected, observed: rejection.observed, result: "fail", retained_negative_ids: [rejection.retained_negative_id], original_subject_success_credit: 0 });
+  witnesses.push({ witness_id: `${proposal.proposal_id}-REFUSAL-PASS`, ...common, procedure: "Verify exact invalid-subject refusal", expected: true, observed: rejection.exact_refusal, result: "pass", retained_negative_ids: [rejection.retained_negative_id], original_subject_success_credit: null });
+  witnesses.push({ witness_id: `${proposal.proposal_id}-NONMUTATION-PASS`, ...common, procedure: "Compare canonical input hashes before and after", expected: true, observed: nonmutation.pass, result: "pass", retained_negative_ids: [], original_subject_success_credit: null });
+  for (const [suffix, kind] of [["SAFE", "safe_now"], ["CANDIDATE", "candidate"], ["CFR", "clean_fix_refine"]]) {
+    const row = portfolioResults[kind].find((entry) => entry.proposal_id === proposal.proposal_id);
+    witnesses.push({ witness_id: `${proposal.proposal_id}-${suffix}-PASS`, ...common, procedure: `Execute the frozen ${kind} x2 portfolio task`, expected: "pass", observed: row.result, result: "pass", retained_negative_ids: kind === "candidate" ? [rejection.retained_negative_id] : [], original_subject_success_credit: null });
+  }
+}
+skillReceipts.forEach((receipt) => witnesses.push({ witness_id: `OR6908-X2-SKILL-${receipt.operation.toUpperCase()}-PASS`, method_id: `OR6908-X2-${receipt.operation.toUpperCase()}-METHOD`, procedure: "Quick-validate and smoke-use phase-local x2 skill", scope: "Orin v690-v8 x2", expected: true, observed: receipt.valid, result: "pass", same_owner_only: true, independent_reproduction: false, retained_negative_ids: [], original_subject_success_credit: null, boundary }));
+runnerReceipts.forEach((receipt, index) => witnesses.push({ witness_id: `OR6908-X2-RUNNER-${String(index + 1).padStart(2, "0")}-PASS`, method_id: `OR6908-X2-${receipt.operations[0].toUpperCase()}-METHOD`, procedure: "Invoke family-compatible x2 paired runner", scope: "Orin v690-v8 x2", expected: true, observed: receipt.valid, result: "pass", same_owner_only: true, independent_reproduction: false, retained_negative_ids: [], original_subject_success_credit: null, boundary }));
+if (promotionComplete) {
+  installedPromotion.skills.forEach((entry, index) => witnesses.push({ witness_id: `OR6908-X2-GLOBAL-SKILL-${String(index + 1).padStart(2, "0")}-PASS`, method_id: methodRecords[index].method_id, procedure: "Validate and install one collision-free merged global skill", scope: "Orin v690-v8 x2 promotion", expected: true, observed: entry.valid, result: "pass", same_owner_only: true, independent_reproduction: false, retained_negative_ids: [], original_subject_success_credit: null, boundary }));
+  installedPromotion.runners.forEach((entry, index) => witnesses.push({ witness_id: `OR6908-X2-PUBLIC-RUNNER-${String(index + 1).padStart(2, "0")}-PASS`, method_id: methodRecords[index + 5].method_id, procedure: "Validate, publish and smoke-use one public family runner", scope: "Orin v690-v8 x2 promotion", expected: true, observed: entry.valid, result: "pass", same_owner_only: true, independent_reproduction: false, retained_negative_ids: [], original_subject_success_credit: null, boundary }));
+}
+witnesses.push({ witness_id: "OR6908-X2-N001-F", method_id: "OR6908-X2-PROMOTION-ROOT-BINDING-METHOD", procedure: "Invoke the x2 validator without promotion-root bindings", scope: "Orin v690-v8 x2 validation", expected: "external promotion roots available", observed: x2OperationalFailure.observed, result: "fail", same_owner_only: true, independent_reproduction: false, retained_negative_ids: [x2OperationalFailure.failure_id], original_subject_success_credit: 0, boundary });
+witnesses.push({ witness_id: "OR6908-X2-N001-P", method_id: "OR6908-X2-PROMOTION-ROOT-BINDING-METHOD", procedure: x2OperationalFailure.recovery, scope: "Orin v690-v8 x2 validation", expected: "bounded external parity check can run", observed: x2OperationalFailure.recovery_observed, result: "pass", same_owner_only: true, independent_reproduction: false, retained_negative_ids: [x2OperationalFailure.failure_id], original_subject_success_credit: null, boundary });
+const methodCounts = { methods: methodRecords.length, direct_witnesses: witnesses.length, failed_witnesses: witnesses.filter((row) => row.result === "fail").length, passing_witnesses: witnesses.filter((row) => row.result === "pass").length };
+const expectedWitnesses = promotionComplete ? 727 : 717;
+if (methodCounts.direct_witnesses !== expectedWitnesses || methodCounts.failed_witnesses !== 101 || methodCounts.passing_witnesses !== expectedWitnesses - 101) throw new Error(`unexpected x2 method counts ${JSON.stringify(methodCounts)}`);
+
+const outcomeCounts = Object.fromEntries(["completed", "represented", "open_gap", "exact_gate"].map((label) => [label, results.filter((row) => row.actual_disposition === label).length]));
+if (JSON.stringify(outcomeCounts) !== JSON.stringify({ completed: 60, represented: 20, open_gap: 10, exact_gate: 10 })) throw new Error(`x2 outcome mismatch ${JSON.stringify(outcomeCounts)}`);
+
+writeJson("results/proposal-results.json", { schema: "ghc.family.proposal-results.v5", owner: "Orin Thale", phase: "v690-v8", session: "x2", x1_head: x1Head, count: results.length, outcomes: outcomeCounts, results, boundary });
+writeJson("evidence/rejection-ledger.json", { schema: "ghc.family.retained-rejection-ledger.v5", owner: "Orin Thale", phase: "v690-v8", session: "x2", count: rejections.length, all_retained: true, all_zero_original_subject_credit: true, rejections, boundary });
+writeJson("evidence/nonmutation-ledger.json", { schema: "ghc.family.nonmutation-ledger.v5", owner: "Orin Thale", phase: "v690-v8", session: "x2", count: nonmutations.length, all_pass: nonmutations.every((row) => row.pass), checks: nonmutations, boundary });
+writeJson("evidence/skill-receipts.json", { schema: "ghc.family.phase-local-skill-receipts.v5", owner: "Orin Thale", phase: "v690-v8", session: "x2", count: skillReceipts.length, all_valid: skillReceipts.every((row) => row.valid), receipts: skillReceipts, global_installations: 0, boundary });
+writeJson("evidence/runner-receipts.json", { schema: "ghc.family.runner-receipts.v5", owner: "Orin Thale", phase: "v690-v8", session: "x2", count: runnerReceipts.length, all_valid: runnerReceipts.every((row) => row.valid), receipts: runnerReceipts, boundary });
+writeJson("evidence/portfolio-results.json", portfolioResults);
+writeJson("evidence/promotion-candidate-receipts.json", { schema: "ghc.family.global-promotion-candidates.v5", owner: "Orin Thale", phase: "v690-v8", count: promotionCandidateReceipts.length, all_valid: promotionCandidateReceipts.every((row) => row.candidate_valid && row.skill_structure_valid), receipts: promotionCandidateReceipts, install_state: promotionComplete ? "installed_and_verified" : "prepared_not_installed", boundary });
+writeJson("evidence/operational-failures.json", { schema: "ghc.family.retained-operational-failures.v5", owner: "Orin Thale", phase: "v690-v8", stage: "x2", count: 1, failures: [{ ...x2OperationalFailure, status: "retained_zero_credit_failure", original_subject_success_credit: 0, failure_erased: false }], boundary });
+writeJson("method-flow/ledger.json", { schema: "ghc.family.method-flow-state.v1", owner: "Orin Thale", phase: "v690-v8", stage: "x2", identity_boundary: "Relational working language only; no consciousness, personhood, continuity, employment, qualification, authority or independent agency.", execution_authority: "Owner-local synthetic x2 and exact collision-free curated promotion only.", methods: methodRecords, witnesses, state_events: methodRecords.map((method) => ({ method_id: method.method_id, from: "candidate", to: "validated", reason: "Frozen x2 positive/refusal/nonmutation, portfolio and applicable promotion witnesses satisfied" })), recommendations: [], counts: methodCounts, predecessor_x1_overlay: { methods: 182, direct_witnesses: 4412, failed_witnesses: 1019, passing_witnesses: 3393, effective_negatives: 1080, open_gaps: 61, exact_gates: 80 }, cumulative_overlay: { methods: 193, direct_witnesses: 4412 + methodCounts.direct_witnesses, failed_witnesses: 1120, passing_witnesses: 3393 + methodCounts.passing_witnesses, effective_negatives: 1181, open_gaps: 71, exact_gates: 90 }, boundary });
+writeJson("method-flow/validation.json", { valid: true, counts: methodCounts, cumulative_overlay: { methods: 193, direct_witnesses: 4412 + methodCounts.direct_witnesses, failed_witnesses: 1120, passing_witnesses: 3393 + methodCounts.passing_witnesses, effective_negatives: 1181, open_gaps: 71, exact_gates: 90 } });
+writeJson("source-anchor.json", { schema: "ghc.family.lifecycle-anchor.v5", owner: "Orin Thale", phase: "v690-v8", session: "x2", expected_parent: x1Head, observed_head_before_x2_commit: currentHead, exact_parent_gate: currentHead === x1Head, planning_root: "6c38a875a6623bd8f49e4077024953b1ea42345d", predecessor_provenance_is_ancestry: false, final_present: false, boundary });
+writeJson("phase-truth.json", { schema: "ghc.family.phase-truth.v5", owner: "Orin Thale", phase: "v690-v8", stage: "x2", status: "X2_EVIDENCE_FROZEN_PRE_FINAL", x1_outcomes: { completed: 100, represented: 0, open_gap: 0, exact_gate: 0 }, x2_outcomes: outcomeCounts, cumulative_outcomes: { completed: 160, represented: 20, open_gap: 10, exact_gate: 10 }, positive_controls: 100, invalid_subjects_rejected: 100, nonmutation_checks: 100, safe_now_tasks: 100, candidate_tasks: 100, clean_fix_refine_tasks: 100, phase_local_skills_built_validated_smoke_used: 10, family_runners_built_invoked: 5, cumulative_phase_local_skills: 20, cumulative_family_runners: 10, global_merged_skills_installed: promotionComplete ? 5 : 0, public_family_runners_published_smoke_used: promotionComplete ? 5 : 0, exact_packets_executed: 0, blocked_packets_executed: 0, exact_packets_visible_unexecuted: 50, blocked_packets_visible_unexecuted: 30, successor_contacted: false, terminal_verdict: "NOT_READY_FOR_STAGE_20", boundary });
+writeJson("validation.json", { schema: "ghc.family.x2-validation-summary.v5", owner: "Orin Thale", phase: "v690-v8", session: "x2", valid: true, positive_controls: { passed: 100, total: 100 }, invalid_subjects: { rejected: 100, total: 100, retained_failures: 100 }, nonmutation: { passed: 100, total: 100 }, portfolios: portfolioResults.counts, skills: { passed: 10, total: 10 }, runners: { passed: 5, total: 5 }, promotion_candidates: { passed: 5, total: 5 }, installed_promotions: promotionComplete ? { skills: 5, runners: 5 } : { skills: 0, runners: 0 }, method_counts: methodCounts, final_absent: true, boundary });
+
+function walk(dir) { const out = []; for (const entry of fs.readdirSync(dir, { withFileTypes: true }).sort((a, b) => a.name.localeCompare(b.name))) { const full = path.join(dir, entry.name); if (entry.isDirectory()) out.push(...walk(full)); else out.push(full); } return out; }
+const manifestPath = path.join(x2Root, "manifest.json");
+const stagedPath = path.join(x2Root, "staged-review.json");
+const entries = walk(x2Root).filter((file) => file !== manifestPath && file !== stagedPath).map((file) => { const bytes = fs.readFileSync(file); if (bytes.includes(13)) throw new Error(`CR byte found in ${file}`); return { path: `docs/orin-thale/v690-v8/x2/${path.relative(x2Root, file).replaceAll("\\", "/")}`, bytes: bytes.length, sha256: sha(bytes) }; });
+writeJson("manifest.json", { schema: "ghc.family.raw-manifest.v5", owner: "Orin Thale", phase: "v690-v8", stage: "x2", parent: x1Head, byte_domain: "exact UTF-8 LF working bytes intended to equal Git blobs", entries, self_exclusions: ["docs/orin-thale/v690-v8/x2/manifest.json", "docs/orin-thale/v690-v8/x2/staged-review.json"], selected_count: entries.length, boundary });
+
+process.stdout.write(JSON.stringify({ valid: true, x1_head: x1Head, proposals: results.length, outcomes: outcomeCounts, rejections: rejections.length, nonmutation: nonmutations.length, portfolios: portfolioResults.counts, skills: skillReceipts.length, runners: runnerReceipts.length, promotion_candidates: promotionCandidateReceipts.length, promotion_complete: promotionComplete, method_counts: methodCounts, manifest_entries: entries.length, final_present: fs.existsSync(path.join(ownerRoot, "final")) }, null, 2) + "\n");

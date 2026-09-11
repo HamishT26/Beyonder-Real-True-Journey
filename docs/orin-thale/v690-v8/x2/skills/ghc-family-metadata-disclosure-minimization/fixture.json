@@ -1,0 +1,66 @@
+{
+  "schema": "ghc.family.phase-local-skill-fixture.v5",
+  "skill": "ghc-family-metadata-disclosure-minimization",
+  "operation": "metadata_disclosure_minimization",
+  "proposal_id": "OR6908-101",
+  "request": {
+    "op": "metadata_disclosure_minimization",
+    "requested_fields": [
+      "profile_id",
+      "color_space",
+      "private_note"
+    ],
+    "allowed_fields": [
+      "profile_id",
+      "color_space",
+      "provenance"
+    ],
+    "record": {
+      "profile_id": "synthetic-profile-1",
+      "color_space": "synthetic-rgb",
+      "provenance": "fixture-1",
+      "private_note": "synthetic-redacted"
+    }
+  },
+  "expected_output": {
+    "ok": true,
+    "value": {
+      "released": {
+        "profile_id": "synthetic-profile-1",
+        "color_space": "synthetic-rgb"
+      },
+      "withheld_fields": [
+        "private_note"
+      ],
+      "minimum_disclosure_only": true
+    },
+    "error": null
+  },
+  "invalid_subject": {
+    "op": "metadata_disclosure_minimization",
+    "requested_fields": [
+      "profile_id",
+      "color_space",
+      "private_note"
+    ],
+    "allowed_fields": [
+      "profile_id",
+      "color_space",
+      "provenance"
+    ],
+    "record": {
+      "profile_id": "synthetic-profile-1",
+      "color_space": "synthetic-rgb",
+      "provenance": "fixture-1",
+      "private_note": "synthetic-redacted"
+    },
+    "unreviewed_authority": true
+  },
+  "invalid_expected": {
+    "ok": false,
+    "value": null,
+    "error": "unknown_field"
+  },
+  "expected_disposition": "completed",
+  "boundary": "Bounded same-owner synthetic software and documentation evidence only; no empirical, participant, identity, professional, production, deployment, legal, cultural, affected-party, Maori-authority, complete privacy/accessibility, exhaustive-security, independent-reproduction, consciousness/personhood, AGI/ASI, Theory-of-Everything, proof/canon or Stage 20 claim. NOT_READY_FOR_STAGE_20."
+}
