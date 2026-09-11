@@ -1,0 +1,32 @@
+'use strict';
+class ContractError extends Error{constructor(code){super(code);this.code=code;}}
+const fail=c=>{throw new ContractError(c);};
+function object(x){if(x===null||Array.isArray(x)||typeof x!=='object')fail('invalid_type');}
+function fields(x,n){object(x);const k=Object.keys(x);if(k.some(v=>!n.includes(v)))fail('unknown_field');if(n.some(v=>!Object.hasOwn(x,v)))fail('missing_field');}
+function text(x){if(typeof x!=='string'||x.length<1||x.length>100)fail('invalid_text');return x;}
+function array(x,max=64){if(!Array.isArray(x)||x.length>max)fail('invalid_array');return x;}
+const key=s=>JSON.stringify([...s].sort());
+const includes=(a,b)=>{const A=new Set(a);return b.every(x=>A.has(x));};
+function subsets(a){const out=[];for(let m=0;m<(1<<a.length);m++){const s=[];for(let i=0;i<a.length;i++)if(m&(1<<i))s.push(a[i]);out.push(s);}return out.sort((x,y)=>x.length-y.length||key(x).localeCompare(key(y)));}
+function parseMatroid(m){fields(m,['ground','independent_sets']);array(m.ground,8).forEach(text);if(new Set(m.ground).size!==m.ground.length)fail('duplicate_ground');array(m.independent_sets,256);const seen=new Set();for(const s of m.independent_sets){array(s,8).forEach(text);if(new Set(s).size!==s.length||s.some(e=>!m.ground.includes(e)))fail('invalid_independent_set');const k=key(s);if(seen.has(k))fail('duplicate_independent_set');seen.add(k);}if(!seen.has('[]'))fail('missing_empty_set');return{ground:[...m.ground],independent_sets:m.independent_sets.map(s=>[...s])};}
+function independent(m,s){return new Set(m.independent_sets.map(key)).has(key(s));}
+function bases(m){return m.independent_sets.filter(s=>!m.independent_sets.some(t=>t.length>s.length&&includes(t,s))).map(s=>[...s].sort()).sort((a,b)=>key(a).localeCompare(key(b)));}
+function rank(m,s){if(new Set(s).size!==s.length||s.some(e=>!m.ground.includes(e)))fail('invalid_subset');return Math.max(...m.independent_sets.filter(i=>includes(s,i)).map(i=>i.length));}
+function circuits(m){return subsets(m.ground).filter(s=>s.length>0&&!independent(m,s)&&s.every((_,i)=>independent(m,s.filter((__,j)=>j!==i)))).map(s=>[...s].sort());}
+function closure(m,s){const r=rank(m,s);return m.ground.filter(e=>rank(m,[...new Set([...s,e])])===r).sort();}
+const operations={
+ matroid_record_shape(p){fields(p,['matroid']);const m=parseMatroid(p.matroid);return{ground_count:m.ground.length,independent_count:m.independent_sets.length,record_valid:true};},
+ independence_hereditary(p){fields(p,['matroid']);const m=parseMatroid(p.matroid),violations=[];for(const s of m.independent_sets)for(let i=0;i<s.length;i++){const t=s.filter((_,j)=>j!==i);if(!independent(m,t))violations.push({set:s,missing:t});}return{holds:violations.length===0,violations};},
+ independence_exchange(p){fields(p,['matroid']);const m=parseMatroid(p.matroid),violations=[];for(const a of m.independent_sets)for(const b of m.independent_sets)if(a.length<b.length&&!b.some(e=>!a.includes(e)&&independent(m,[...a,e])))violations.push({smaller:a,larger:b});return{holds:violations.length===0,violations};},
+ basis_family(p){fields(p,['matroid']);const m=parseMatroid(p.matroid);return{bases:bases(m),rank:Math.max(...m.independent_sets.map(s=>s.length))};},
+ rank_subset(p){fields(p,['matroid','subset']);const m=parseMatroid(p.matroid);array(p.subset,8);const r=rank(m,p.subset);return{subset:[...p.subset].sort(),rank:r,maximal_witnesses:m.independent_sets.filter(i=>includes(p.subset,i)&&i.length===r).map(s=>[...s].sort())};},
+ closure_subset(p){fields(p,['matroid','subset']);const m=parseMatroid(p.matroid);array(p.subset,8);return{subset:[...p.subset].sort(),closure:closure(m,p.subset),rank:rank(m,p.subset)};},
+ circuit_family(p){fields(p,['matroid']);const m=parseMatroid(p.matroid),c=circuits(m);return{circuits:c,count:c.length};},
+ loop_elements(p){fields(p,['matroid']);const m=parseMatroid(p.matroid);return{loops:m.ground.filter(e=>!independent(m,[e])).sort()};},
+ coloop_elements(p){fields(p,['matroid']);const m=parseMatroid(p.matroid),b=bases(m);return{coloops:m.ground.filter(e=>b.every(x=>x.includes(e))).sort(),basis_count:b.length};},
+ rank_submodularity(p){fields(p,['matroid','left','right']);const m=parseMatroid(p.matroid);array(p.left,8);array(p.right,8);const a=rank(m,p.left),b=rank(m,p.right),u=rank(m,[...new Set([...p.left,...p.right])]),i=rank(m,p.left.filter(e=>p.right.includes(e)));return{left_rank:a,right_rank:b,union_rank:u,intersection_rank:i,slack:a+b-u-i,holds:a+b>=u+i};}
+};
+function evaluate(request,allowed=null){try{fields(request,['op','payload']);text(request.op);if(!Object.hasOwn(operations,request.op)||(allowed&&!allowed.has(request.op)))fail('unknown_operation');const copy=JSON.parse(JSON.stringify(request.payload));return{ok:true,error:null,value:operations[request.op](copy),authority:false};}catch(e){if(e instanceof ContractError)return{ok:false,error:e.code,value:null,authority:false};throw e;}}
+function cli(names){let s='';process.stdin.setEncoding('utf8');process.stdin.on('data',b=>{s+=b;if(s.length>1048576){process.stderr.write('input_limit\n');process.exit(2);}});process.stdin.on('end',()=>{let q;try{q=JSON.parse(s);}catch{process.stdout.write(JSON.stringify({ok:false,error:'invalid_json',value:null,authority:false})+'\n');return;}process.stdout.write(JSON.stringify(evaluate(q,new Set(names)))+'\n');});}
+module.exports={evaluate,operations,cli,key,bases,rank,circuits,closure};
+if(require.main===module)cli(Object.keys(operations));
