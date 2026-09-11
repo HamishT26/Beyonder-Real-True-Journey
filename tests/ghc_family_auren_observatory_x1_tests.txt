@@ -1,0 +1,28 @@
+'use strict';
+const fs=require('node:fs');
+const path=require('node:path');
+const cp=require('node:child_process');
+const assert=require('node:assert/strict');
+const repo=path.resolve(__dirname,'..');
+const core=require(path.join(repo,'scripts/ghc_family_auren_observatory_x1.txt'));
+const plan=JSON.parse(fs.readFileSync(path.join(repo,'docs/auren-lark/v690-v4/plan/new-proposals.json'),'utf8')).proposals.filter((p)=>p.session==='x1');
+const ids=[];
+for(const p of plan){const before=JSON.stringify(p.request);const a=core.evaluate(p.request);assert.equal(a.ok,true);assert.equal(JSON.stringify(p.request),before);assert.deepEqual(core.evaluate(p.request),a);ids.push(p.proposal_id+'-safe');const cb=JSON.stringify(p.candidate_subject);const b=core.evaluate(p.candidate_subject);assert.deepEqual(b,{ok:false,error:'unknown_field',value:null});assert.equal(JSON.stringify(p.candidate_subject),cb);ids.push(p.proposal_id+'-candidate-refusal');}
+const boundary=[
+ ['beta-range',{op:'beta_binomial_update',payload:{successes:3,trials:2,alpha:1,beta:1}},'invalid_range'],
+ ['likelihood-range',{op:'bernoulli_likelihood_path',payload:{successes:1,trials:2,p_num:5,p_den:5}},'invalid_range'],
+ ['sign-negative',{op:'exact_sign_test',payload:{positive:-1,negative:1,ties:0}},'invalid_integer'],
+ ['paired-length',{op:'paired_effect',payload:{before:[1],after:[1,2]}},'length_mismatch'],
+ ['confusion-zero',{op:'confusion_profile',payload:{tp:0,fp:0,tn:0,fn:0}},null],
+ ['kappa-degenerate',{op:'kappa_agreement',payload:{table:[[1,0],[0,0]]}},'degenerate_denominator'],
+ ['tv-length',{op:'total_variation',payload:{p_counts:[1],q_counts:[1,2]}},'length_mismatch'],
+ ['kl-support',{op:'kl_support_check',payload:{p_counts:[1,1],q_counts:[1,0]}},null],
+ ['first-hit-zero',{op:'first_hit_horizon',payload:{weights:[[1,1],[0,2]],start:0,target:1,horizon:0}},null],
+ ['bootstrap-index',{op:'bootstrap_support',payload:{values:[1,2],resamples:[[0,2]]}},'invalid_index']
+];
+for(const [id,request,error] of boundary){const r=core.evaluate(request);if(error)assert.equal(r.error,error);else assert.equal(r.ok,true);ids.push('boundary-'+id);}
+const runnerDir=path.join(repo,'docs/auren-lark/v690-v4/x1/runners');
+for(const name of fs.readdirSync(runnerDir).sort()){const runner=path.join(runnerDir,name);const planItem=JSON.parse(fs.readFileSync(path.join(repo,'docs/auren-lark/v690-v4/plan/skills-runners-promotions.json'),'utf8')).local_runners.find((r)=>r.name===name);const sample=plan.find((p)=>p.operation===planItem.operations[0]);const pos=cp.spawnSync(process.execPath,[runner],{input:JSON.stringify(sample.request),encoding:'utf8'});assert.equal(pos.status,0);assert.equal(JSON.parse(pos.stdout).ok,true);ids.push('runner-'+name+'-positive');const neg=cp.spawnSync(process.execPath,[runner],{input:JSON.stringify({op:'outside_group',payload:{}}),encoding:'utf8'});assert.equal(neg.status,0);assert.equal(JSON.parse(neg.stdout).error,'unknown_operation');ids.push('runner-'+name+'-outside-group');}
+const skillRoot=path.join(repo,'docs/auren-lark/v690-v4/x1/skills');
+for(const name of fs.readdirSync(skillRoot).sort()){const a=JSON.parse(fs.readFileSync(path.join(skillRoot,name,'references/accepting.json'),'utf8'));const b=JSON.parse(fs.readFileSync(path.join(skillRoot,name,'references/rejecting.json'),'utf8'));assert.equal(core.evaluate(a.request).ok,true);ids.push('skill-'+name+'-accepting');assert.deepEqual(core.evaluate(b.request),b.expected);ids.push('skill-'+name+'-rejecting');}
+process.stdout.write(JSON.stringify({schema:'ghc.family.selected-tests.v1',phase:'v690-v4',session:'x1',tests:ids.length,passed:ids.length,test_ids:ids,independent_reproduction:false})+'\n');
