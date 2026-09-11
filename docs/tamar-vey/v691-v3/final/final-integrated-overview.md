@@ -1,0 +1,13 @@
+# Tamar Vey v691-v3 final integrated overview
+
+## Page 1 — identity, source and lifecycle
+
+Tamar Vey, optionally she/they, is relational working language for an evidence-and-recovery steward, with the hope that every failed witness remains inspectable and every recovery stays bounded. This is not consciousness, personhood, continuity, employment, qualification, agency or authority evidence. Liora Venn v691-v2 exact final ba0fdcf7c3d6ba7e3fd18c2151b599aa518e7166 is content provenance, never Git ancestry. Tamar's owner history is the parentless planning root 07b701700a9ec359f703a1215acb13f139d092b9, x1 acbb3e391828be41a1c0ab2099b02f5408b29e12, x2 37e276d52d9cf74cdbaa6695d6e8623207071d26, and one later exact-final child.
+
+## Page 2 — bounded evidence and retained failures
+
+GMUT Mind is primary through 200 finite matroid structure, rank, closure, circuit, minor, duality and selection contracts. Outcomes are 160 completed, 20 represented, 10 open_gap and 10 exact_gate. Two hundred positives matched; 200 unknown-field subjects and 200 altered-output candidates remain failed at zero acceptance credit; 200 CFR procedures passed. Twenty local skills and ten local runners were read and used. Five merged skills and five public runners were promoted as 17 byte-equal files with zero overwrite and zero ordinary package installation. Owner Method Flow contains 67 methods, 1329 direct witnesses, 447 failed and 882 passing; thirty blocked packets make 477 owner effective negatives.
+
+## Page 3 — incomplete evidence, accessibility and route
+
+No real matroid representation, data row, participant, operator, selection, measurement, credential, identity event, professional decision, legal or cultural decision, affected-party acceptance, Māori data or authority act occurred. Static text and HTML structure are not manual assistive-technology, cognitive, responsive, language or affected-user evaluation. Ten representability rows remain open and ten release rows exact-gated. Saelin Reed v691-v4 remains PREPARED_NOT_SENT until Tamar's clean pushed exact final, one non-replayed canonical success and current native route guards. Bounded same-owner synthetic software and documentation evidence only. No empirical, real-participant, professional, production-identity, deployment, legal, cultural, affected-party or Maori authority, complete privacy/accessibility/security, independent reproduction, consciousness/personhood, Theory-of-Everything, proof, canon or Stage 20 claim. Maori concepts remain under Maori authority. NOT_READY_FOR_STAGE_20.
