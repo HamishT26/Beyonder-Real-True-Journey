@@ -1,0 +1,151 @@
+"use strict";
+
+const crypto = require("crypto");
+
+function normalize(value) {
+  if (Array.isArray(value)) return value.map(normalize);
+  if (value && typeof value === "object") {
+    const out = {};
+    for (const key of Object.keys(value).sort()) out[key] = normalize(value[key]);
+    return out;
+  }
+  return value;
+}
+function canonical(value) { return JSON.stringify(normalize(value)); }
+function digest(value) { return crypto.createHash("sha256").update(canonical(value), "utf8").digest("hex"); }
+function exactKeys(value, keys) { return Boolean(value && typeof value === "object" && !Array.isArray(value) && canonical(Object.keys(value).sort()) === canonical(keys.slice().sort())); }
+function uniqueSorted(values) { return [...new Set(values)].sort((a, b) => String(a).localeCompare(String(b))); }
+
+const schemas = {
+  disclosure_minimization: ["allowed_fields", "op", "record", "requested_fields"],
+  explanation_coverage: ["op", "provided_reasons", "required_reasons"],
+  alternative_action_set: ["actions", "available_roles", "op"],
+  review_quorum_gap: ["op", "present_roles", "required_roles"],
+  accessibility_mode_gap: ["op", "provided_modes", "required_modes"],
+  observation_model_separation: ["op", "records"],
+  unit_dimension_guard: ["left", "op", "operator", "right"],
+  workload_budget_trace: ["budget", "op", "tasks"],
+  rollback_checkpoint: ["events", "op"],
+  delegation_scope_gap: ["delegated_scopes", "delegating_authority_verified", "op", "required_scopes"]
+};
+
+function validate(request) {
+  if (!request || typeof request !== "object" || Array.isArray(request)) return "invalid_request";
+  if (typeof request.op !== "string" || !Object.hasOwn(schemas, request.op)) return "unknown_operation";
+  if (!exactKeys(request, schemas[request.op])) return "unknown_field";
+  switch (request.op) {
+    case "disclosure_minimization":
+      if (!Array.isArray(request.requested_fields) || !Array.isArray(request.allowed_fields) || !request.record || typeof request.record !== "object" || Array.isArray(request.record)) return "invalid_shape";
+      break;
+    case "explanation_coverage":
+      if (!Array.isArray(request.required_reasons) || !Array.isArray(request.provided_reasons)) return "invalid_shape";
+      break;
+    case "alternative_action_set":
+      if (!Array.isArray(request.available_roles) || !Array.isArray(request.actions) || !request.actions.every((action) => exactKeys(action, ["id", "required_roles"]) && Array.isArray(action.required_roles))) return "invalid_shape";
+      break;
+    case "review_quorum_gap":
+      if (!Array.isArray(request.required_roles) || !Array.isArray(request.present_roles)) return "invalid_shape";
+      break;
+    case "accessibility_mode_gap":
+      if (!Array.isArray(request.required_modes) || !Array.isArray(request.provided_modes)) return "invalid_shape";
+      break;
+    case "observation_model_separation":
+      if (!Array.isArray(request.records) || !request.records.every((record) => exactKeys(record, ["id", "kind", "unit", "value"]) && ["observation", "model", "assumption", "unknown"].includes(record.kind))) return "invalid_shape";
+      break;
+    case "unit_dimension_guard":
+      if (!exactKeys(request.left, ["dimension", "unit", "value"]) || !exactKeys(request.right, ["dimension", "unit", "value"]) || request.operator !== "add") return "invalid_shape";
+      break;
+    case "workload_budget_trace":
+      if (typeof request.budget !== "number" || !Array.isArray(request.tasks) || !request.tasks.every((task) => exactKeys(task, ["cost", "id"]) && typeof task.cost === "number")) return "invalid_shape";
+      break;
+    case "rollback_checkpoint":
+      if (!Array.isArray(request.events) || !request.events.every((event) => exactKeys(event, ["id", "reversible", "sequence", "state"]) && typeof event.reversible === "boolean" && Number.isInteger(event.sequence))) return "invalid_shape";
+      break;
+    case "delegation_scope_gap":
+      if (!Array.isArray(request.required_scopes) || !Array.isArray(request.delegated_scopes) || typeof request.delegating_authority_verified !== "boolean") return "invalid_shape";
+      break;
+    default:
+      return "unknown_operation";
+  }
+  return null;
+}
+
+function evaluate(request) {
+  switch (request.op) {
+    case "disclosure_minimization": {
+      const allowed = new Set(request.allowed_fields);
+      const released = {};
+      const withheld = [];
+      for (const field of request.requested_fields) {
+        if (allowed.has(field) && Object.hasOwn(request.record, field)) released[field] = request.record[field];
+        else withheld.push(field);
+      }
+      return { released, withheld_fields: withheld.sort(), minimum_disclosure_only: true };
+    }
+    case "explanation_coverage": {
+      const provided = new Set(request.provided_reasons);
+      const missing = request.required_reasons.filter((reason) => !provided.has(reason)).sort();
+      return { covered: missing.length === 0, missing_reasons: missing, provided_reasons: uniqueSorted(request.provided_reasons) };
+    }
+    case "alternative_action_set": {
+      const roles = new Set(request.available_roles);
+      const enabled = [];
+      const withheld = [];
+      for (const action of request.actions) {
+        const missing = action.required_roles.filter((role) => !roles.has(role)).sort();
+        if (missing.length === 0) enabled.push(action.id); else withheld.push({ id: action.id, missing_roles: missing });
+      }
+      return { enabled_actions: enabled.sort(), withheld_actions: withheld };
+    }
+    case "review_quorum_gap": {
+      const present = new Set(request.present_roles);
+      const missing = request.required_roles.filter((role) => !present.has(role)).sort();
+      return { quorum_met: missing.length === 0, missing_roles: missing, authority_reserved: true };
+    }
+    case "accessibility_mode_gap": {
+      const present = new Set(request.provided_modes);
+      const missing = request.required_modes.filter((mode) => !present.has(mode)).sort();
+      return { declared_modes_complete: missing.length === 0, missing_modes: missing, manual_evaluation_reserved: true };
+    }
+    case "observation_model_separation": {
+      const groups = { observation: [], model: [], assumption: [], unknown: [] };
+      for (const record of request.records) groups[record.kind].push(record.id);
+      return { groups, mixed_as_evidence: false, empirical_conversion_forbidden: true };
+    }
+    case "unit_dimension_guard": {
+      const compatible = request.left.dimension === request.right.dimension;
+      return { compatible, result: compatible ? request.left.value + request.right.value : null, dimension: compatible ? request.left.dimension : null, error: compatible ? null : "dimension_mismatch" };
+    }
+    case "workload_budget_trace": {
+      let remaining = request.budget;
+      const accepted = [];
+      const held = [];
+      for (const task of request.tasks) {
+        if (task.cost <= remaining) { accepted.push(task.id); remaining -= task.cost; }
+        else held.push(task.id);
+      }
+      return { accepted, held, remaining_budget: remaining, scheduling_authority_reserved: true };
+    }
+    case "rollback_checkpoint": {
+      const reversible = request.events.filter((event) => event.reversible).sort((a, b) => a.sequence - b.sequence);
+      return { latest_reversible_event: reversible.length ? reversible.at(-1).id : null, irreversible_events: request.events.filter((event) => !event.reversible).map((event) => event.id), real_rollback_unexecuted: true };
+    }
+    case "delegation_scope_gap": {
+      const delegated = new Set(request.delegated_scopes);
+      const missing = request.required_scopes.filter((scope) => !delegated.has(scope)).sort();
+      return { delegation_complete: request.delegating_authority_verified && missing.length === 0, missing_scopes: missing, authority_verified: request.delegating_authority_verified, exact_authority_gate: true };
+    }
+    default:
+      throw new Error(`unsupported x2 operation ${request.op}`);
+  }
+}
+
+function execute(request) {
+  const before = digest(request);
+  const error = validate(request);
+  const result = error ? { ok: false, value: null, error } : { ok: true, value: evaluate(request), error: null };
+  const after = digest(request);
+  return { result, input_sha256_before: before, input_sha256_after: after, input_unchanged: before === after };
+}
+
+module.exports = { canonical, digest, validate, evaluate, execute, schemas };

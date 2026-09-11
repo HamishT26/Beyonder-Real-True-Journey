@@ -1,0 +1,169 @@
+"use strict";
+
+const fs = require("fs");
+const path = require("path");
+const crypto = require("crypto");
+const cp = require("child_process");
+const core = require("./ghc_family_caelen_x2_evidence.txt");
+
+const x2Root = path.resolve(__dirname, "..");
+const ownerRoot = path.resolve(x2Root, "..");
+const repo = path.resolve(ownerRoot, "..", "..", "..");
+const x1Head = "6cc7f795583ba7e6cb07547f6ce1936025caaab9";
+const planningHead = "421ad67edb7cbe75e20f692e6085ace32916dd5d";
+const globalSkillRoot = process.env.CAELEN_GLOBAL_SKILL_ROOT;
+const publicRunnerRoot = process.env.CAELEN_PUBLIC_RUNNER_ROOT;
+const checks = [];
+const errors = [];
+function check(name, condition, detail = null) { checks.push({ name, pass: Boolean(condition), detail }); if (!condition) errors.push(`${name}${detail ? `: ${detail}` : ""}`); }
+function readJson(relative) { return JSON.parse(fs.readFileSync(path.join(x2Root, relative), "utf8")); }
+function git(args, encoding = "utf8") { return cp.execFileSync("git", ["-C", repo, ...args], { encoding, maxBuffer: 128 * 1024 * 1024 }); }
+function walk(dir) { const out = []; for (const entry of fs.readdirSync(dir, { withFileTypes: true }).sort((a, b) => a.name.localeCompare(b.name))) { const full = path.join(dir, entry.name); if (entry.isDirectory()) out.push(...walk(full)); else out.push(full); } return out; }
+function digest(bytes) { return crypto.createHash("sha256").update(bytes).digest("hex"); }
+
+const proposals = JSON.parse(fs.readFileSync(path.join(ownerRoot, "plan", "new-proposals.json"), "utf8")).proposals.filter((row) => row.session === "x2");
+const results = readJson("results/proposal-results.json");
+const rejections = readJson("evidence/rejection-ledger.json");
+const nonmutation = readJson("evidence/nonmutation-ledger.json");
+const skills = readJson("evidence/skill-receipts.json");
+const runners = readJson("evidence/runner-receipts.json");
+const portfolios = readJson("evidence/portfolio-results.json");
+const candidates = readJson("evidence/promotion-candidate-receipts.json");
+const promotion = readJson("evidence/global-promotion-receipt.json");
+const methods = readJson("method-flow/ledger.json");
+const truth = readJson("phase-truth.json");
+const source = readJson("source-anchor.json");
+const manifest = readJson("manifest.json");
+
+const currentHead = git(["rev-parse", "HEAD"]).toString("utf8").trim();
+check("current x1 head", currentHead === x1Head, currentHead);
+check("x1 direct child of planning", git(["rev-parse", `${x1Head}^`]).toString("utf8").trim() === planningHead);
+check("planning parentless", git(["rev-list", "--parents", "-n", "1", planningHead]).toString("utf8").trim().split(/\s+/).length === 1);
+check("two commits before x2", git(["rev-list", "--count", x1Head]).toString("utf8").trim() === "2");
+check("zero merges before x2", git(["rev-list", "--merges", x1Head]).toString("utf8").trim() === "");
+check("source anchor exact", source.expected_parent === x1Head && source.observed_head_before_x2_commit === x1Head && source.planning_root === planningHead);
+check("plan immutable in working tree", git(["diff", "--name-only", "--", "docs/caelen-ash/v690-v7/plan"]).toString("utf8").trim() === "");
+check("x1 immutable in working tree", git(["diff", "--name-only", "--", "docs/caelen-ash/v690-v7/x1"]).toString("utf8").trim() === "");
+check("plan not staged", git(["diff", "--cached", "--name-only", "--", "docs/caelen-ash/v690-v7/plan"]).toString("utf8").trim() === "");
+check("x1 not staged", git(["diff", "--cached", "--name-only", "--", "docs/caelen-ash/v690-v7/x1"]).toString("utf8").trim() === "");
+
+const x1Manifest = JSON.parse(git(["show", `${x1Head}:docs/caelen-ash/v690-v7/x1/manifest.json`]).toString("utf8"));
+const x1BlobErrors = [];
+for (const entry of x1Manifest.entries) {
+  let bytes;
+  try { bytes = git(["show", `${x1Head}:${entry.path}`], "buffer"); }
+  catch { x1BlobErrors.push(entry.path); continue; }
+  if (bytes.length !== entry.bytes || digest(bytes) !== entry.sha256) x1BlobErrors.push(entry.path);
+}
+check("immutable x1 manifest replay", x1BlobErrors.length === 0 && x1Manifest.entries.length === 41, x1BlobErrors.join(","));
+
+check("x2 proposal count", proposals.length === 100);
+check("x2 result count", results.results.length === 100 && results.count === 100);
+check("result ids unique", new Set(results.results.map((row) => row.proposal_id)).size === 100);
+check("typed equality and disposition preservation", results.results.every((row) => row.typed_equality && row.input_unchanged && row.actual_disposition === row.expected_disposition));
+check("x2 outcome counts", results.outcomes.completed === 60 && results.outcomes.represented === 20 && results.outcomes.open_gap === 10 && results.outcomes.exact_gate === 10);
+const replay = proposals.map((proposal) => ({ proposal, positive: core.execute(JSON.parse(JSON.stringify(proposal.request))), invalid: core.execute(JSON.parse(JSON.stringify(proposal.candidate_subject))) }));
+check("independent positive replay", replay.every((row) => core.canonical(row.positive.result) === core.canonical(row.proposal.expected_output)));
+check("independent invalid replay", replay.every((row) => core.canonical(row.invalid.result) === core.canonical(row.proposal.candidate_expected)));
+check("replay nonmutation", replay.every((row) => row.positive.input_unchanged && row.invalid.input_unchanged));
+
+check("rejection count", rejections.rejections.length === 100 && rejections.count === 100);
+check("all invalid subjects retained", rejections.rejections.every((row) => row.result === "fail" && row.exact_refusal && row.rejection_guard_pass && row.original_subject_success_credit === 0));
+check("retained negative ids unique", new Set(rejections.rejections.map((row) => row.retained_negative_id)).size === 100);
+check("nonmutation count", nonmutation.checks.length === 100 && nonmutation.count === 100 && nonmutation.all_pass);
+check("all nonmutation pass", nonmutation.checks.every((row) => row.pass));
+
+check("ten x2 skills", skills.receipts.length === 10 && skills.count === 10 && skills.all_valid);
+check("skills validated and smoke used", skills.receipts.every((row) => row.valid && row.smoke_used && row.global_installation === false));
+check("ten skill packages", fs.readdirSync(path.join(x2Root, "skills"), { withFileTypes: true }).filter((entry) => entry.isDirectory()).length === 10);
+check("five x2 runners", runners.receipts.length === 5 && runners.count === 5 && runners.all_valid);
+check("runners invoked", runners.receipts.every((row) => row.valid && row.invoked && row.proposal_count === 20));
+check("five runner sources", fs.readdirSync(path.join(x2Root, "runners")).filter((name) => name.endsWith(".txt")).length === 5);
+
+check("safe portfolio 100", portfolios.counts.safe_now_passed === 100 && portfolios.safe_now.every((row) => row.result === "pass" && row.executed));
+check("candidate portfolio 100", portfolios.counts.candidate_passed === 100 && portfolios.candidate.every((row) => row.result === "pass" && row.executed));
+check("clean fix refine 100", portfolios.counts.clean_fix_refine_passed === 100 && portfolios.clean_fix_refine.every((row) => row.result === "pass" && row.executed));
+check("exact packets unexecuted", portfolios.exact_packets_executed === 0);
+check("blocked packets unexecuted", portfolios.blocked_packets_executed === 0);
+
+check("promotion candidates five", candidates.receipts.length === 5 && candidates.count === 5 && candidates.all_valid);
+check("promotion candidate skill structure", candidates.receipts.every((row) => row.skill_structure_valid && row.candidate_valid));
+check("promotion receipt valid", promotion.valid && promotion.skills.length === 5 && promotion.runners.length === 5);
+check("promoted skills valid", promotion.skills.every((row) => row.valid && row.quick_structure_valid));
+check("public runners valid", promotion.runners.every((row) => row.valid && row.invoked_after_publish && row.self_test.valid));
+check("promotion logical paths sanitized", promotion.global_locations_sanitized.skills === "configured global skill bank" && promotion.global_locations_sanitized.runners === "configured D-first public runner bank");
+check("promotion roots supplied", Boolean(globalSkillRoot && publicRunnerRoot));
+if (globalSkillRoot && publicRunnerRoot) {
+  const externalSkillErrors = [];
+  const externalRunnerErrors = [];
+  for (const row of promotion.skills) {
+    const skillFile = path.join(globalSkillRoot, row.name, "SKILL.md");
+    const referenceFile = path.join(globalSkillRoot, row.name, "references", "contracts.md");
+    if (!fs.existsSync(skillFile) || !fs.existsSync(referenceFile) || digest(fs.readFileSync(skillFile)) !== row.skill_sha256 || digest(fs.readFileSync(referenceFile)) !== row.reference_sha256) externalSkillErrors.push(row.name);
+  }
+  for (const row of promotion.runners) {
+    const runnerFile = path.join(publicRunnerRoot, row.name);
+    if (!fs.existsSync(runnerFile) || digest(fs.readFileSync(runnerFile)) !== row.sha256) { externalRunnerErrors.push(row.name); continue; }
+    const run = cp.spawnSync(process.execPath, [runnerFile, "--self-test"], { encoding: "utf8" });
+    if (run.status !== 0 || !JSON.parse(run.stdout).valid) externalRunnerErrors.push(row.name);
+  }
+  check("external skill hash parity", externalSkillErrors.length === 0, externalSkillErrors.join(","));
+  check("external runner hash and smoke parity", externalRunnerErrors.length === 0, externalRunnerErrors.join(","));
+}
+
+check("x2 method count", methods.counts.methods === 10 && methods.methods.length === 10);
+check("x2 direct witnesses", methods.counts.direct_witnesses === 725 && methods.witnesses.length === 725);
+check("x2 failed witnesses", methods.counts.failed_witnesses === 100 && methods.witnesses.filter((row) => row.result === "fail").length === 100);
+check("x2 passing witnesses", methods.counts.passing_witnesses === 625 && methods.witnesses.filter((row) => row.result === "pass").length === 625);
+check("failed witnesses zero credit", methods.witnesses.filter((row) => row.result === "fail").every((row) => row.original_subject_success_credit === 0));
+check("same owner not independent", methods.witnesses.every((row) => row.same_owner_only && row.independent_reproduction === false));
+check("cumulative witness arithmetic", methods.cumulative_overlay.direct_witnesses === 3663 && methods.cumulative_overlay.failed_witnesses === 902 && methods.cumulative_overlay.passing_witnesses === 2761 && methods.cumulative_overlay.failed_witnesses + methods.cumulative_overlay.passing_witnesses === methods.cumulative_overlay.direct_witnesses);
+check("cumulative method and negative arithmetic", methods.cumulative_overlay.methods === 155 && methods.cumulative_overlay.effective_negatives === 962 && methods.cumulative_overlay.open_gaps === 61 && methods.cumulative_overlay.exact_gates === 80);
+
+check("x2 truth status", truth.status === "X2_EVIDENCE_FROZEN_PRE_FINAL");
+check("cumulative outcomes", truth.cumulative_outcomes.completed === 160 && truth.cumulative_outcomes.represented === 20 && truth.cumulative_outcomes.open_gap === 10 && truth.cumulative_outcomes.exact_gate === 10);
+check("x2 portfolios truth", truth.safe_now_tasks === 100 && truth.candidate_tasks === 100 && truth.clean_fix_refine_tasks === 100);
+check("phase-local totals", truth.cumulative_phase_local_skills === 20 && truth.cumulative_family_runners === 10);
+check("global promotions complete", truth.global_merged_skills_installed === 5 && truth.public_family_runners_published_smoke_used === 5);
+check("exact and blocked visible unexecuted", truth.exact_packets_executed === 0 && truth.blocked_packets_executed === 0 && truth.exact_packets_visible_unexecuted === 50 && truth.blocked_packets_visible_unexecuted === 30);
+check("successor not contacted", truth.successor_contacted === false);
+check("terminal verdict", truth.terminal_verdict === "NOT_READY_FOR_STAGE_20");
+check("final absent", !fs.existsSync(path.join(ownerRoot, "final")));
+
+const files = walk(x2Root);
+check("x2 file ceiling", files.length < 2000, `observed ${files.length}`);
+check("allowed extensions", files.every((file) => [".json", ".md", ".txt", ".html"].includes(path.extname(file).toLowerCase())));
+const cr = [], uuid = [], privatePath = [], credential = [], route = [];
+const routePattern = new RegExp(`(?:${[["source", "thread", "id"].join("_"), ["provider", "Tab", "Id"].join(""), ["client", "Thread", "Id"].join(""), ["thread", "Id"].join("") + "\\s*[=:]"].join("|")})`);
+for (const file of files) {
+  const bytes = fs.readFileSync(file); const rel = path.relative(x2Root, file).replaceAll("\\", "/"); const text = bytes.toString("utf8");
+  if (bytes.includes(13)) cr.push(rel);
+  if (/\b[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}\b/i.test(text)) uuid.push(rel);
+  if (/(?:[A-Z]:\\Users\\|[A-Z]:\\GHC-Archives\\|\/Users\/|\/home\/)/.test(text)) privatePath.push(rel);
+  if (/(?:BEGIN (?:RSA |EC |OPENSSH )?PRIVATE KEY|ghp_[A-Za-z0-9]{20,}|sk-[A-Za-z0-9]{20,})/.test(text)) credential.push(rel);
+  if (routePattern.test(text)) route.push(rel);
+}
+check("LF bytes", cr.length === 0, cr.join(","));
+check("UUID candidates zero", uuid.length === 0, uuid.join(","));
+check("private path candidates zero", privatePath.length === 0, privatePath.join(","));
+check("credential candidates zero", credential.length === 0, credential.join(","));
+check("raw route candidates zero", route.length === 0, route.join(","));
+
+const manifestExpected = files.filter((file) => file !== path.join(x2Root, "manifest.json") && file !== path.join(x2Root, "staged-review.json"));
+const manifestMap = new Map(manifest.entries.map((entry) => [entry.path, entry]));
+check("manifest count", manifest.entries.length === manifestExpected.length, `manifest ${manifest.entries.length}, files ${manifestExpected.length}`);
+const manifestErrors = [];
+for (const file of manifestExpected) { const bytes = fs.readFileSync(file); const p = `docs/caelen-ash/v690-v7/x2/${path.relative(x2Root, file).replaceAll("\\", "/")}`; const entry = manifestMap.get(p); if (!entry || entry.bytes !== bytes.length || entry.sha256 !== digest(bytes)) manifestErrors.push(p); }
+check("manifest exact bytes", manifestErrors.length === 0, manifestErrors.join(","));
+check("manifest exclusions", manifest.self_exclusions.length === 2 && manifest.self_exclusions.includes("docs/caelen-ash/v690-v7/x2/manifest.json") && manifest.self_exclusions.includes("docs/caelen-ash/v690-v7/x2/staged-review.json"));
+
+const jsonFiles = files.filter((file) => path.extname(file).toLowerCase() === ".json");
+const jsonErrors = [];
+for (const file of jsonFiles) { try { JSON.parse(fs.readFileSync(file, "utf8")); } catch { jsonErrors.push(path.relative(x2Root, file)); } }
+check("strict x2 JSON parse", jsonErrors.length === 0, jsonErrors.join(","));
+const changed = git(["status", "--porcelain"]).toString("utf8").trim().split(/\r?\n/).filter(Boolean);
+check("only x2 working paths", changed.every((line) => line.slice(3).startsWith("docs/caelen-ash/v690-v7/x2/")), changed.join(","));
+
+const receipt = { schema: "ghc.family.x2-validator-receipt.v5", owner: "Caelen Ash", phase: "v690-v7", stage: "x2", valid: errors.length === 0, checks_total: checks.length, checks_passed: checks.filter((row) => row.pass).length, checks_failed: errors.length, proposal_counts: { positive: results.results.length, rejected_invalid: rejections.rejections.length, nonmutation: nonmutation.checks.length, outcomes: results.outcomes }, portfolio_counts: portfolios.counts, skill_count: skills.receipts.length, runner_count: runners.receipts.length, promotion_counts: promotion.counts, method_counts: methods.counts, x1_manifest_entries_replayed: x1Manifest.entries.length, files: files.length, manifest_entries: manifest.entries.length, strict_json_files: jsonFiles.length, privacy_candidates: { uuid: uuid.length, private_path: privatePath.length, credential: credential.length, raw_route: route.length }, final_present: fs.existsSync(path.join(ownerRoot, "final")), errors, checks };
+process.stdout.write(JSON.stringify(receipt, null, 2) + "\n");
+if (!receipt.valid) process.exitCode = 1;

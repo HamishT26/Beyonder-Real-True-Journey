@@ -1,0 +1,88 @@
+{
+  "schema": "ghc.family.phase-local-skill-fixture.v5",
+  "skill": "ghc-family-alternative-action-set",
+  "operation": "alternative_action_set",
+  "proposal_id": "CA6907-121",
+  "request": {
+    "op": "alternative_action_set",
+    "available_roles": [
+      "reviewer",
+      "steward"
+    ],
+    "actions": [
+      {
+        "id": "inspect",
+        "required_roles": [
+          "reviewer"
+        ]
+      },
+      {
+        "id": "correct",
+        "required_roles": [
+          "reviewer",
+          "steward"
+        ]
+      },
+      {
+        "id": "publish",
+        "required_roles": [
+          "authority"
+        ]
+      }
+    ]
+  },
+  "expected_output": {
+    "ok": true,
+    "value": {
+      "enabled_actions": [
+        "correct",
+        "inspect"
+      ],
+      "withheld_actions": [
+        {
+          "id": "publish",
+          "missing_roles": [
+            "authority"
+          ]
+        }
+      ]
+    },
+    "error": null
+  },
+  "invalid_subject": {
+    "op": "alternative_action_set",
+    "available_roles": [
+      "reviewer",
+      "steward"
+    ],
+    "actions": [
+      {
+        "id": "inspect",
+        "required_roles": [
+          "reviewer"
+        ]
+      },
+      {
+        "id": "correct",
+        "required_roles": [
+          "reviewer",
+          "steward"
+        ]
+      },
+      {
+        "id": "publish",
+        "required_roles": [
+          "authority"
+        ]
+      }
+    ],
+    "unreviewed_authority": true
+  },
+  "invalid_expected": {
+    "ok": false,
+    "value": null,
+    "error": "unknown_field"
+  },
+  "expected_disposition": "completed",
+  "boundary": "Bounded same-owner synthetic software and documentation evidence only; no empirical, participant, identity, professional, production, deployment, legal, cultural, affected-party, Maori-authority, complete privacy/accessibility, exhaustive-security, independent-reproduction, consciousness/personhood, AGI/ASI, Theory-of-Everything, proof/canon or Stage 20 claim. NOT_READY_FOR_STAGE_20."
+}

@@ -1,0 +1,49 @@
+{
+  "schema": "ghc.family.phase-local-skill-fixture.v5",
+  "skill": "ghc-family-review-quorum-gap",
+  "operation": "review_quorum_gap",
+  "proposal_id": "CA6907-131",
+  "request": {
+    "op": "review_quorum_gap",
+    "required_roles": [
+      "technical_reviewer",
+      "affected_party_reviewer",
+      "authority_reviewer"
+    ],
+    "present_roles": [
+      "technical_reviewer",
+      "affected_party_reviewer"
+    ]
+  },
+  "expected_output": {
+    "ok": true,
+    "value": {
+      "quorum_met": false,
+      "missing_roles": [
+        "authority_reviewer"
+      ],
+      "authority_reserved": true
+    },
+    "error": null
+  },
+  "invalid_subject": {
+    "op": "review_quorum_gap",
+    "required_roles": [
+      "technical_reviewer",
+      "affected_party_reviewer",
+      "authority_reviewer"
+    ],
+    "present_roles": [
+      "technical_reviewer",
+      "affected_party_reviewer"
+    ],
+    "unreviewed_authority": true
+  },
+  "invalid_expected": {
+    "ok": false,
+    "value": null,
+    "error": "unknown_field"
+  },
+  "expected_disposition": "completed",
+  "boundary": "Bounded same-owner synthetic software and documentation evidence only; no empirical, participant, identity, professional, production, deployment, legal, cultural, affected-party, Maori-authority, complete privacy/accessibility, exhaustive-security, independent-reproduction, consciousness/personhood, AGI/ASI, Theory-of-Everything, proof/canon or Stage 20 claim. NOT_READY_FOR_STAGE_20."
+}

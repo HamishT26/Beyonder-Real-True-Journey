@@ -1,0 +1,66 @@
+{
+  "schema": "ghc.family.phase-local-skill-fixture.v5",
+  "skill": "ghc-family-disclosure-minimization",
+  "operation": "disclosure_minimization",
+  "proposal_id": "CA6907-101",
+  "request": {
+    "op": "disclosure_minimization",
+    "requested_fields": [
+      "record_id",
+      "status",
+      "private_note"
+    ],
+    "allowed_fields": [
+      "record_id",
+      "status",
+      "provenance"
+    ],
+    "record": {
+      "record_id": "synthetic-1",
+      "status": "held",
+      "provenance": "fixture-1",
+      "private_note": "synthetic-redacted"
+    }
+  },
+  "expected_output": {
+    "ok": true,
+    "value": {
+      "released": {
+        "record_id": "synthetic-1",
+        "status": "held"
+      },
+      "withheld_fields": [
+        "private_note"
+      ],
+      "minimum_disclosure_only": true
+    },
+    "error": null
+  },
+  "invalid_subject": {
+    "op": "disclosure_minimization",
+    "requested_fields": [
+      "record_id",
+      "status",
+      "private_note"
+    ],
+    "allowed_fields": [
+      "record_id",
+      "status",
+      "provenance"
+    ],
+    "record": {
+      "record_id": "synthetic-1",
+      "status": "held",
+      "provenance": "fixture-1",
+      "private_note": "synthetic-redacted"
+    },
+    "unreviewed_authority": true
+  },
+  "invalid_expected": {
+    "ok": false,
+    "value": null,
+    "error": "unknown_field"
+  },
+  "expected_disposition": "completed",
+  "boundary": "Bounded same-owner synthetic software and documentation evidence only; no empirical, participant, identity, professional, production, deployment, legal, cultural, affected-party, Maori-authority, complete privacy/accessibility, exhaustive-security, independent-reproduction, consciousness/personhood, AGI/ASI, Theory-of-Everything, proof/canon or Stage 20 claim. NOT_READY_FOR_STAGE_20."
+}

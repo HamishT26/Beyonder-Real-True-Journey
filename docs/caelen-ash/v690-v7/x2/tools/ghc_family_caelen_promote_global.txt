@@ -1,0 +1,87 @@
+"use strict";
+
+const fs = require("fs");
+const path = require("path");
+const crypto = require("crypto");
+const cp = require("child_process");
+
+const x2Root = path.resolve(__dirname, "..");
+const ownerRoot = path.resolve(x2Root, "..");
+const globalSkillRoot = process.env.CAELEN_GLOBAL_SKILL_ROOT;
+const publicRunnerRoot = process.env.CAELEN_PUBLIC_RUNNER_ROOT;
+if (!globalSkillRoot || !publicRunnerRoot) throw new Error("exact global skill and public runner roots must be supplied through the phase-scoped environment");
+
+const toolPlan = JSON.parse(fs.readFileSync(path.join(ownerRoot, "plan", "skills-runners-promotions.json"), "utf8"));
+const candidates = JSON.parse(fs.readFileSync(path.join(x2Root, "evidence", "promotion-candidate-receipts.json"), "utf8"));
+const promotions = toolPlan.curated_global_promotions;
+if (promotions.length !== 5 || candidates.receipts.length !== 5 || !candidates.all_valid) throw new Error("promotion candidate gate failed");
+
+function digest(file) { return crypto.createHash("sha256").update(fs.readFileSync(file)).digest("hex"); }
+function mkdir(dir) { fs.mkdirSync(dir, { recursive: true }); }
+function assertExactOrAbsent(source, target) {
+  if (!fs.existsSync(target)) return "absent";
+  if (!fs.statSync(target).isFile()) throw new Error(`target collision is not a file: ${path.basename(target)}`);
+  if (digest(source) !== digest(target)) throw new Error(`non-identical target collision: ${path.basename(target)}`);
+  return "existing_exact";
+}
+
+const operations = [];
+for (const promotion of promotions) {
+  const sourceRoot = path.join(x2Root, "promotions", "skills", promotion.merged_skill_name);
+  const targetRoot = path.join(globalSkillRoot, promotion.merged_skill_name);
+  for (const relative of ["SKILL.md", path.join("references", "contracts.md")]) {
+    const source = path.join(sourceRoot, relative);
+    const target = path.join(targetRoot, relative);
+    operations.push({ kind: "skill_file", logical_name: promotion.merged_skill_name, relative: relative.replaceAll("\\", "/"), source, target, preflight: assertExactOrAbsent(source, target) });
+  }
+  const runnerSource = path.join(x2Root, "promotions", "runners", promotion.public_runner_name);
+  const runnerTarget = path.join(publicRunnerRoot, promotion.public_runner_name);
+  operations.push({ kind: "runner", logical_name: promotion.public_runner_name, relative: promotion.public_runner_name, source: runnerSource, target: runnerTarget, preflight: assertExactOrAbsent(runnerSource, runnerTarget) });
+}
+
+for (const operation of operations) {
+  if (operation.preflight === "absent") {
+    mkdir(path.dirname(operation.target));
+    fs.copyFileSync(operation.source, operation.target, fs.constants.COPYFILE_EXCL);
+  }
+  if (digest(operation.source) !== digest(operation.target)) throw new Error(`post-install hash mismatch: ${operation.logical_name}/${operation.relative}`);
+}
+
+const skills = promotions.map((promotion) => {
+  const candidate = candidates.receipts.find((row) => row.merged_skill_name === promotion.merged_skill_name);
+  const targetSkill = path.join(globalSkillRoot, promotion.merged_skill_name, "SKILL.md");
+  const targetReference = path.join(globalSkillRoot, promotion.merged_skill_name, "references", "contracts.md");
+  const text = fs.readFileSync(targetSkill, "utf8");
+  const valid = digest(targetSkill) === candidate.skill_sha256 && digest(targetReference) === candidate.reference_sha256 && text.startsWith("---\nname:") && text.includes("\ndescription:") && text.includes("## Workflow") && text.includes("## Boundary");
+  return { name: promotion.merged_skill_name, status: operations.filter((row) => row.kind === "skill_file" && row.logical_name === promotion.merged_skill_name).every((row) => row.preflight === "existing_exact") ? "existing_exact_no_write" : "installed_new", skill_sha256: digest(targetSkill), reference_sha256: digest(targetReference), quick_structure_valid: valid, valid };
+});
+
+const runners = promotions.map((promotion) => {
+  const candidate = candidates.receipts.find((row) => row.public_runner_name === promotion.public_runner_name);
+  const target = path.join(publicRunnerRoot, promotion.public_runner_name);
+  const run = cp.spawnSync(process.execPath, [target, "--self-test"], { encoding: "utf8" });
+  if (run.status !== 0) throw new Error(`installed runner self-test failed ${promotion.public_runner_name}: ${run.stderr}`);
+  const selfTest = JSON.parse(run.stdout);
+  const operation = operations.find((row) => row.kind === "runner" && row.logical_name === promotion.public_runner_name);
+  const valid = digest(target) === candidate.runner_sha256 && selfTest.valid === true;
+  return { name: promotion.public_runner_name, status: operation.preflight === "existing_exact" ? "existing_exact_no_write" : "published_new", sha256: digest(target), self_test: selfTest, invoked_after_publish: true, valid };
+});
+
+const receipt = {
+  schema: "ghc.family.global-promotion-receipt.v5",
+  owner: "Caelen Ash",
+  phase: "v690-v7",
+  session: "x2",
+  collision_guard: "all exact targets were absent or byte-identical before any write",
+  skills,
+  runners,
+  counts: { merged_skills: skills.length, public_runners: runners.length, new_skill_files: operations.filter((row) => row.kind === "skill_file" && row.preflight === "absent").length, new_runner_files: operations.filter((row) => row.kind === "runner" && row.preflight === "absent").length },
+  global_locations_sanitized: { skills: "configured global skill bank", runners: "configured D-first public runner bank" },
+  no_path_or_identity_authority_claim: true,
+  valid: skills.every((row) => row.valid) && runners.every((row) => row.valid),
+  boundary: "Packaging and same-owner smoke evidence only; no empirical, participant, identity, professional, production, legal, cultural, Maori-authority, independent-reproduction or Stage 20 claim."
+};
+const receiptPath = path.join(x2Root, "evidence", "global-promotion-receipt.json");
+fs.writeFileSync(receiptPath, JSON.stringify(receipt, null, 2) + "\n", "utf8");
+process.stdout.write(JSON.stringify({ valid: receipt.valid, merged_skills: skills.length, public_runners: runners.length, new_skill_files: receipt.counts.new_skill_files, new_runner_files: receipt.counts.new_runner_files }, null, 2) + "\n");
+if (!receipt.valid) process.exitCode = 1;
