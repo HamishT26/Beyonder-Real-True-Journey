@@ -1,0 +1,140 @@
+{
+  "schema": "ghc.family.reviewed-case.v1",
+  "owner": "Elaren Kestrel",
+  "phase": "v692-v3",
+  "session": "x1",
+  "proposal_id": "EL6923-025",
+  "operation": "greedy_coloring_trace",
+  "title": "greedy coloring trace finite case 05 preserves a bounded conflict-coloring obligation",
+  "definition_sha256": "07e4fda8b06ec211183acef121dd8b513c45b161c41bb369036790f05607cda3",
+  "frozen_input": {
+    "graph": {
+      "nodes": [
+        "a",
+        "b",
+        "c"
+      ],
+      "edges": [
+        [
+          "a",
+          "b"
+        ],
+        [
+          "b",
+          "c"
+        ],
+        [
+          "c",
+          "a"
+        ]
+      ]
+    },
+    "strategy": "degree_lex"
+  },
+  "expected_envelope": {
+    "ok": true,
+    "disposition": "completed",
+    "value": {
+      "colors": {
+        "a": 0,
+        "b": 1,
+        "c": 2
+      },
+      "trace": [
+        {
+          "node": "a",
+          "color": 0,
+          "forbidden": []
+        },
+        {
+          "node": "b",
+          "color": 1,
+          "forbidden": [
+            0
+          ]
+        },
+        {
+          "node": "c",
+          "color": 2,
+          "forbidden": [
+            0,
+            1
+          ]
+        }
+      ],
+      "color_count": 3
+    },
+    "error": null
+  },
+  "observed_envelope": {
+    "ok": true,
+    "disposition": "completed",
+    "value": {
+      "colors": {
+        "a": 0,
+        "b": 1,
+        "c": 2
+      },
+      "trace": [
+        {
+          "node": "a",
+          "color": 0,
+          "forbidden": []
+        },
+        {
+          "node": "b",
+          "color": 1,
+          "forbidden": [
+            0
+          ]
+        },
+        {
+          "node": "c",
+          "color": 2,
+          "forbidden": [
+            0,
+            1
+          ]
+        }
+      ],
+      "color_count": 3
+    },
+    "error": null
+  },
+  "positive_check": {
+    "result": "pass"
+  },
+  "malformed_subject": {
+    "graph": null
+  },
+  "malformed_observed": {
+    "ok": false,
+    "disposition": "open_gap",
+    "value": null,
+    "error": "INVALID_INPUT"
+  },
+  "malformed_subject_result": "fail",
+  "malformed_original_success_credit": 0,
+  "refusal_check": {
+    "expected": {
+      "ok": false,
+      "disposition": "open_gap",
+      "value": null,
+      "error": "INVALID_INPUT"
+    },
+    "observed": {
+      "ok": false,
+      "disposition": "open_gap",
+      "value": null,
+      "error": "INVALID_INPUT"
+    },
+    "result": "pass"
+  },
+  "case_review": {
+    "result": "pass"
+  },
+  "core_outcome": "completed",
+  "same_owner_only": true,
+  "independent_reproduction": false,
+  "boundary": "Finite synthetic graph record only; no live schedule, allocation, fairness, accessibility, authority or production claim."
+}
