@@ -1,0 +1,51 @@
+{
+  "schema": "ghc.family.card.v1",
+  "card_id": "ghc-card-th6922-024",
+  "tier": 4,
+  "title": "A read followed by another writer creates an anti-dependency",
+  "parent_ids": [
+    "ghc-card-th6922-practice-1"
+  ],
+  "owner": "Teryn Halewick",
+  "phase": "v692-v2",
+  "outcome": "completed",
+  "content": {
+    "proposal_id": "TH6922-024",
+    "operation": "serial_conflict_witness",
+    "session": "x1",
+    "review": "docs/teryn-halewick/v692-v2/x1/reviewed-cases/TH6922-024.json",
+    "input": {
+      "events": [
+        {
+          "tx": "a",
+          "kind": "read",
+          "key": "x"
+        },
+        {
+          "tx": "b",
+          "kind": "write",
+          "key": "x"
+        }
+      ]
+    },
+    "observed": {
+      "ok": true,
+      "disposition": "completed",
+      "value": {
+        "edges": [
+          "a>b"
+        ],
+        "acyclic": true
+      },
+      "error": null
+    },
+    "malformed_subject_credit": 0,
+    "refusal_check_passed": true,
+    "falsifier": "A complete typed-envelope mismatch, changed input, admitted malformed subject, lost failed witness, or unearned authority claim falsifies the contract.",
+    "rollback": "Stop the affected case; retain the input, definition, and failed witness at zero original success credit; add a named prospective correction and test only its changed dependency."
+  },
+  "source_refs": [
+    "docs/teryn-halewick/v692-v2/plan/proposal-freeze.json"
+  ],
+  "boundary": "Teryn Halewick, roles, hopes, pronouns, family language and continuity are collaborative working language only. They establish no consciousness, personhood, identity continuity, qualification, independent agency, professional or public authority. Same-owner synthetic software evidence is not independent reproduction, empirical GMUT confirmation, production identity, ASI, Theory-of-Everything proof, canon, or Stage 20. Maori concepts remain under Maori authority."
+}

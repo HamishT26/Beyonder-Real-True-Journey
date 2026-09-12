@@ -1,0 +1,125 @@
+{
+  "schema": "ghc.family.method-flow-state.v1",
+  "owner": "Teryn Halewick",
+  "phase": "v692-v2",
+  "identity_boundary": "Relational working language only.",
+  "boundary": "Bounded owner startup evidence only.",
+  "execution_authority": "owner_self_scoped_delta",
+  "retained_failed_document": "docs/teryn-halewick/v692-v2/plan/method-flow-startup.json",
+  "retained_failed_document_sha256": "a6327f0d5c66f7893d8b3b32f45939b001af30924e9567a768df7dfca26a14f8",
+  "premature_original_witness_credit": 0,
+  "methods": [
+    {
+      "method_id": "TH6922-FINAL-M001",
+      "title": "Final metadata wrapper parse recovery",
+      "failure_signature": "final-metadata-wrapper-parse-failure",
+      "trigger_preconditions": [
+        "A final metadata wrapper was rejected during parsing before any of its writes."
+      ],
+      "privacy_class": "sanitized_public",
+      "approval_class": "safe_now",
+      "candidate_workaround": "Correct the bounded wrapper structure and observe its complete exit before producing dependent metadata.",
+      "validation_witness_ids": [
+        "TH6922-FINAL-N001-RETAINED-F",
+        "TH6922-FINAL-N001-RECOVERY-P"
+      ],
+      "recurrence_guard": "Require attributable completion before dependent actions or promotion; verify exact IDs and state ordering.",
+      "rollback": "Keep the prior failed record, stop the affected dependency, and apply only a named additive correction.",
+      "recommendation_state": "preferred",
+      "supersedes": [],
+      "protected_gates": [
+        "source_integrity",
+        "privacy",
+        "no_replay",
+        "no_precontact",
+        "stage20"
+      ],
+      "retained_negative_ids": [
+        "TH6922-FINAL-N001"
+      ],
+      "scope_boundary": "Same-owner final preparation only."
+    }
+  ],
+  "witnesses": [
+    {
+      "witness_id": "TH6922-FINAL-N001-RETAINED-F",
+      "method_id": "TH6922-FINAL-M001",
+      "procedure": "Run the bounded final metadata wrapper",
+      "scope": "docs/teryn-halewick/v692-v2/final",
+      "expected": "Complete attributable metadata operation",
+      "observed": "SyntaxError: Unexpected token ')'",
+      "result": "fail",
+      "same_owner_only": true,
+      "independent_reproduction": false,
+      "retained_negative_ids": [
+        "TH6922-FINAL-N001"
+      ],
+      "boundary": "Original failure remains zero-credit.",
+      "evidence_record": "docs/teryn-halewick/v692-v2/final/metadata-wrapper-retained-failure.json",
+      "original_failed_success_credit": 0
+    },
+    {
+      "witness_id": "TH6922-FINAL-N001-RECOVERY-P",
+      "method_id": "TH6922-FINAL-M001",
+      "procedure": "Run the bounded final metadata wrapper",
+      "scope": "docs/teryn-halewick/v692-v2/final",
+      "expected": "Complete attributable metadata operation",
+      "observed": "Corrected wrapper completed with exit code zero and bounded receipts.",
+      "result": "pass",
+      "same_owner_only": true,
+      "independent_reproduction": false,
+      "retained_negative_ids": [
+        "TH6922-FINAL-N001"
+      ],
+      "boundary": "Original failure remains zero-credit.",
+      "evidence_record": "docs/teryn-halewick/v692-v2/final/metadata-recovery-receipt.json",
+      "original_failed_success_credit": 0
+    }
+  ],
+  "state_events": [
+    {
+      "event_index": 1,
+      "method_id": "TH6922-FINAL-M001",
+      "before": null,
+      "after": "candidate",
+      "reason": "Retained final wrapper failure",
+      "witness_id": null
+    },
+    {
+      "event_index": 2,
+      "method_id": "TH6922-FINAL-M001",
+      "before": "candidate",
+      "after": "validated",
+      "reason": "Observed corrected wrapper exit zero",
+      "witness_id": "TH6922-FINAL-N001-RECOVERY-P"
+    },
+    {
+      "event_index": 3,
+      "method_id": "TH6922-FINAL-M001",
+      "before": "validated",
+      "after": "preferred",
+      "reason": "Dependent final work follows attributable completion",
+      "witness_id": "TH6922-FINAL-N001-RECOVERY-P"
+    }
+  ],
+  "recommendations": [],
+  "counts": {
+    "methods": 1,
+    "witnesses": 2,
+    "state_events": 3,
+    "recommendations": 0,
+    "states": {
+      "observed": 0,
+      "candidate": 0,
+      "validated": 0,
+      "preferred": 1,
+      "superseded": 0,
+      "deprecated": 0
+    },
+    "witness_results": {
+      "fail": 1,
+      "pass": 1
+    }
+  },
+  "session": "final_quality"
+}

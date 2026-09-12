@@ -1,0 +1,183 @@
+'use strict';
+// One owner canonical. This reads immutable records; it does not execute either successful tranche.
+const fs=require('fs'),path=require('path'),assert=require('assert/strict');
+const root=process.argv[2],bank=process.argv[3],expected=process.argv[4],skillRoot=process.argv[5],globalBank=process.argv[6];
+assert(root&&bank&&skillRoot&&globalBank&&/^[0-9a-f]{40}$/.test(expected||''),'Explicit owner paths and exact final are required.');
+const base='docs/teryn-halewick/v692-v2',branch='codex/GHC-Family/teryn-halewick-main';
+const planning='ab9d1167aa75b2ae28366ed16698a0ea06ddcb2d',x1='b501825088dbb09ac7009f318d32335cbd87813b',x2='dcf407875d572826585559aafe3d456385d12b78';
+const source='8c1eeeff6eb3305ea8dd28bc15c3a2212545d2e1',m=require(path.join(root,base,'final/validation-tools.txt'));
+const out=path.join(bank,'canonical'),checks=[],started=new Date().toISOString();
+fs.mkdirSync(out,{recursive:true});
+// An existing marker is a hard no-replay latch, including an interrupted or failed invocation.
+m.write(path.join(out,'invocation.json'),{owner:'Teryn Halewick',phase:'v692-v2',exact_final:expected,started,invocations:1,replays:0});
+const rel=p=>base+'/'+p,g=args=>m.git(root,args),eq=(a,b)=>assert.deepEqual(a,b);
+let records,paths,beginGate,endGate,counts,contentSeal;
+function check(id,procedure){const detail=procedure();checks.push({id,status:'PASS',detail:detail??null});}
+function raw(p){assert(records.has(p),'Unbound owner record: '+p);return records.get(p);}
+function read(p){return m.strictJSON(raw(rel(p)).toString('utf8'));}
+function freshGate(){
+ g(['fetch','--no-tags','origin','refs/heads/'+branch+':refs/remotes/origin/'+branch]);
+ const head=g(['rev-parse','HEAD']),local=g(['rev-parse','refs/heads/'+branch]),tracking=g(['rev-parse','refs/remotes/origin/'+branch]);
+ const rows=g(['ls-remote','--heads','origin','refs/heads/'+branch]).split('\n').filter(Boolean);assert.equal(rows.length,1);
+ const remote=rows[0].split(/\s+/)[0],divergence=g(['rev-list','--left-right','--count','HEAD...refs/remotes/origin/'+branch]).split(/\s+/).map(Number);
+ eq([head,local,tracking,remote],[expected,expected,expected,expected]);eq(divergence,[0,0]);assert.equal(g(['status','--porcelain=v1','--untracked-files=all']),'');assert.equal(g(['branch','--show-current']),branch);
+ return{at:new Date().toISOString(),head,local,tracking,remote,divergence,clean:true};
+}
+function binding(e,buffer){assert.equal(buffer.length,e.bytes);assert.equal(m.sha(buffer),e.sha256);}
+function boundManifest(p,expectedPaths){const doc=read(p),entries=doc.entries;assert(Array.isArray(entries));const names=entries.map(e=>e.path);assert.equal(new Set(names).size,names.length);eq(names.slice().sort(),expectedPaths.slice().sort());for(const e of entries)binding(e,raw(e.path));return entries.length;}
+try{
+ check('01_exact_final_initial_gate',()=>{beginGate=freshGate();return beginGate;});
+ check('02_blank_root_and_four_direct_commits',()=>{
+  const history=g(['rev-list','--reverse','--topo-order',expected]).split('\n');eq(history,[planning,x1,x2,expected]);
+  const parentRows=g(['rev-list','--parents',expected]).split('\n').map(r=>r.split(' '));const parents=new Map(parentRows.map(r=>[r[0],r.slice(1)]));
+  eq(parents.get(planning),[]);eq(parents.get(x1),[planning]);eq(parents.get(x2),[x1]);eq(parents.get(expected),[x2]);assert.equal(g(['rev-list','--count','--merges',expected]),'0');
+  return{commits:4,merges:0,source_is_git_ancestor:false};
+ });
+ check('03_immutable_prior_phase_trees',()=>{assert.equal(g(['diff','--name-only',x2,expected,'--',rel('plan'),rel('x1'),rel('x2')]),'');return{planning,x1,x2,successful_tranches_replayed:0};});
+ check('04_owner_tree_and_materialized_bytes',()=>{
+  paths=g(['ls-tree','-r','--name-only',expected]).split('\n').filter(Boolean).sort();assert(paths.length<=2000);assert(paths.every(p=>p.startsWith(base+'/')));
+  const active=fs.readdirSync(root,{withFileTypes:true}).filter(e=>e.name!=='.git').flatMap(e=>e.isDirectory()?m.files(path.join(root,e.name)):[path.join(root,e.name)]).map(p=>path.relative(root,p).replaceAll('\\','/')).sort();
+  assert(active.length<=2000);eq(active,paths);records=new Map(m.blobs(root,paths.map(p=>expected+':'+p)).map((b,i)=>[paths[i],b]));
+  for(const p of paths)assert(fs.readFileSync(path.join(root,p)).equals(raw(p)),p);
+  return{tracked_owner:paths.length,active_materialized:active.length,ceilings:[2000,2000]};
+ });
+ let audit;
+ check('05_strict_json_utf8_lf_and_format_profile',()=>{audit=m.audit(root,paths);return{files:audit.files,json_documents:audit.parsed,extensions:['.json','.md','.txt','.html'],utf8_lf:true};});
+ check('06_bounded_privacy_scanner_adjudication',()=>{
+  const adj=read('final/privacy-adjudication.json');assert.equal(adj.unadjudicated,0);assert.equal(adj.complete_privacy,false);eq(audit.privacy.classes,adj.classes);
+  assert.equal(adj.allowed_findings.length,2);const authorized=[];
+  for(const a of adj.allowed_findings){assert.equal(a.path,rel('final/validation-tools.txt'));assert.equal(a.kind,'application_state');assert.equal(m.sha(raw(a.path)),a.file_sha256);assert.equal(m.sha(raw(a.path).toString('utf8').split('\n')[a.line-1]),a.line_sha256);authorized.push({path:a.path,line:a.line,kind:a.kind});}
+  eq(audit.privacy.findings,authorized);return{pattern_classes:audit.privacy.classes.length,definition_literals:2,unadjudicated:0,complete_privacy:false};
+ });
+ check('07_bounded_dynamic_execution_scan',()=>{eq(audit.security.findings,[]);return{findings:0,exhaustive_security:false};});
+ check('08_three_immutable_stage_manifests',()=>{
+  const details=[];for(const [stage,commit]of [['plan',planning],['x1',x1],['x2',x2]]){
+   const manifestPath=rel(stage+'/manifest.json'),doc=m.strictJSON(m.blobs(root,[commit+':'+manifestPath])[0].toString('utf8'));
+   eq(doc.self_exclusions,[manifestPath]);const members=g(['ls-tree','-r','--name-only',commit,'--',rel(stage)]).split('\n').filter(Boolean).sort();eq(doc.entries.map(e=>e.path).sort(),members.filter(p=>p!==manifestPath));
+   const bytes=m.blobs(root,doc.entries.map(e=>commit+':'+e.path));doc.entries.forEach((e,i)=>{binding(e,bytes[i]);assert(bytes[i].equals(raw(e.path)));});details.push({stage,commit,entries:doc.entries.length});
+  }return details;
+ });
+ check('09_final_and_owner_manifest_closure',()=>{
+  const excluded=['final/manifest.json','final/owner-manifest.json','final/content-seal.json'].map(rel);
+  eq(read('final/manifest.json').self_exclusions,excluded);eq(read('final/owner-manifest.json').self_exclusions,excluded.slice(1));
+  return{final_entries:boundManifest('final/manifest.json',paths.filter(p=>p.startsWith(rel('final/'))&&!excluded.includes(p))),owner_entries:boundManifest('final/owner-manifest.json',paths.filter(p=>!excluded.slice(1).includes(p)))};
+ });
+ check('10_acyclic_content_seal',()=>{
+  contentSeal=read('final/content-seal.json');assert.equal(contentSeal.byte_domain,'UTF8_LF_GIT_BLOB');assert.equal(contentSeal.exact_final,'BOUND_EXTERNALLY');assert.equal(contentSeal.owner_files,paths.length);
+  for(const e of [contentSeal.owner_manifest,contentSeal.final_manifest,...contentSeal.critical]){assert.notEqual(e.path,rel('final/content-seal.json'));binding(e,raw(e.path));}
+  assert.equal(contentSeal.owner_manifest.path,rel('final/owner-manifest.json'));assert.equal(contentSeal.final_manifest.path,rel('final/manifest.json'));assert.equal(contentSeal.canonical_invocations_at_seal,0);
+  return{sha256:m.sha(raw(rel('final/content-seal.json'))),critical_bindings:contentSeal.critical.length,no_hash_backedge:true};
+ });
+ check('11_source_provenance_bindings_without_execution',()=>{
+  const s=read('plan/source-record.json');assert.equal(s.source_content_provenance,source);assert.equal(s.baton.read_through_eof,true);assert.equal(s.source_executors_rerun,0);assert.equal(s.canonical.invocations_by_teryn,0);
+  const sourceBaton=m.blobs(root,[source+':'+s.baton.path])[0];binding(s.baton,sourceBaton);assert.equal(s.owner_manifest.entries,352);assert.equal(s.canonical.source_successes,1);assert.equal(s.canonical.source_replays,0);assert(s.retained_source_gap.includes('could not locate'));
+  return{source,source_baton_sha256:s.baton.sha256,source_receipt_sha256:s.canonical.receipt_sha256,source_replayed:0,earlier_receipt_location_gap_retained:true};
+ });
+ check('12_current_profile_and_successor_assignment',()=>{
+  const p=read('plan/phase-profile.json'),profilePath=path.join(skillRoot,'ghc-family-index/references/current-workflow-v6.json'),rosterPath=path.join(skillRoot,'ghc-family-index/references/current-roster-v6.json');
+  assert.equal(m.sha(fs.readFileSync(profilePath)),p.publication_profile_sha256);assert.equal(m.sha(fs.readFileSync(rosterPath)),p.publication_roster_sha256);
+  eq([p.selected_assignment.owner,p.selected_assignment.phase],['Teryn Halewick','v692-v2']);eq([p.successor_assignment.owner,p.successor_assignment.phase],['Elaren Kestrel','v692-v3']);
+  assert.equal(p.new_lane.blank_root,true);assert.equal(p.new_lane.source_is_git_parent,false);assert.equal(p.task_creation,false);assert.equal(p.subagents,false);assert.equal(p.automations,false);
+  return{profile_sha256:p.publication_profile_sha256,roster_sha256:p.publication_roster_sha256,existing_models_preserved:p.existing_models_preserved};
+ });
+ check('13_inherited_review_is_zero_new_credit',()=>{
+  const h=read('plan/inherited-review.json');assert.equal(h.reviewed,200);assert.equal(h.rows.length,200);assert.equal(new Set(h.rows.map(r=>r.id)).size,200);assert(h.rows.every(r=>r.credit===0));assert.equal(h.new_owner_execution_credit,0);assert.equal(h.new_owner_novelty_credit,0);
+  assert.equal(m.sha(m.blobs(root,[source+':'+h.source_file])[0]),h.source_file_sha256);return{reviewed:200,owner_execution_credit:0,owner_novelty_credit:0};
+ });
+ let proposals,proposalMap,results;
+ check('14_two_hundred_frozen_distinct_contracts',()=>{
+  const f=read('plan/proposal-freeze.json');proposals=f.proposals;proposalMap=new Map(proposals.map(p=>[p.proposal_id,p]));assert.equal(proposals.length,200);assert.equal(proposalMap.size,200);assert.equal(f.implementation_ran,false);assert.equal(f.outcomes_observed,false);
+  assert.equal(new Set(proposals.map(p=>p.operation+'|'+m.json(p.input))).size,200);const operations=new Map();for(const p of proposals){operations.set(p.operation,(operations.get(p.operation)||0)+1);assert.equal(p.outcomes_observed,false);assert.equal(p.inherited_execution_credit,0);}assert.equal(operations.size,20);assert([...operations.values()].every(n=>n===10));return{proposals:200,operations:20,unique_operation_subjects:200};
+ });
+ check('15_approved_portfolio_and_held_packet_views',()=>{
+  const p=read('plan/portfolio-plan.json');assert.equal(p.planning_only,true);for(const stage of ['x1','x2'])for(const kind of ['safe','candidate','clean_fix_refine']){assert.equal(p[stage][kind].length,100);assert(p[stage][kind].every(r=>proposalMap.get(r.proposal).session===stage));}
+  assert.equal(p.exact.length,50);assert.equal(p.blocked.length,30);assert([...p.exact,...p.blocked].every(r=>r.executed===false));return{safe:200,candidate:200,clean_fix_refine:200,exact_unexecuted:50,blocked_unexecuted:30};
+ });
+ results=[];
+ for(const [stage,id]of [['x1','16'],['x2','17']])check(id+'_'+stage+'_sealed_result_contracts',()=>{
+  const rows=read(stage+'/results.json'),receipt=read(stage+'/validation-receipt.json'),hash=m.sha(raw(rel(stage+'/code/engine.txt')));assert.equal(rows.length,100);assert.equal(new Set(rows.map(r=>r.proposal_id)).size,100);
+  for(const r of rows){const p=proposalMap.get(r.proposal_id);assert.equal(p.session,stage);assert.equal(r.session,stage);assert.equal(r.operation,p.operation);eq(r.input,p.input);eq(r.expected,p.expected);eq(r.actual,p.expected);eq(r.adverse_input,p.adverse_input);eq(r.adverse_expected,p.adverse_expected);eq(r.adverse_actual,p.adverse_expected);assert.equal(r.definition_sha256,hash);assert.equal(r.positive_passed,true);assert.equal(r.refusal_check_passed,true);assert.equal(r.input_unchanged,true);assert.equal(r.error,null);assert.equal(r.adverse_subject_result,'failed');assert.equal(r.adverse_original_success_credit,0);assert.equal(r.independent_reproduction,false);}
+  eq([receipt.positive_contracts,receipt.malformed_subjects,receipt.refusal_checks,receipt.case_reviews,receipt.new_interface_smokes],[100,100,100,100,20]);assert.equal(receipt.method_flow_valid,true);assert.equal(receipt.canonical_invocations,0);assert.equal(receipt.source_replay,false);assert.equal(receipt.successful_tranche_replay,false);results.push(...rows);return{recorded_positive_matches:100,failed_subjects:100,refusal_matches:100,engine_sha256:hash,executions_in_canonical:0};
+ });
+ check('18_two_hundred_case_reviews_and_portfolio_results',()=>{
+  for(const p of proposals){const r=read(p.session+'/reviewed-cases/'+p.proposal_id+'.json');assert.equal(r.proposal_id,p.proposal_id);assert.equal(r.source_definition_sha256,m.sha(m.json(p)));eq(r.positive_subject,p.input);eq(r.observed_envelope,p.expected);eq(r.candidate_subject,p.adverse_input);assert.equal(r.candidate_subject_outcome,'failed');assert.equal(r.candidate_original_success_credit,0);assert.equal(r.refusal_check_outcome,'passed');assert.equal(r.rollback,p.rollback_or_recovery);eq(r.protected_gates,p.protected_gates);}
+  for(const stage of ['x1','x2']){const p=read(stage+'/portfolio-results.json');for(const kind of ['safe','candidate','clean_fix_refine'])assert.equal(p[kind].length,100);assert(p.safe.every(r=>r.passed&&r.outcome==='completed'));assert(p.candidate.every(r=>r.subject_result==='failed'&&r.subject_credit===0&&r.refusal_check_passed));}
+  return{reviews:200,original_failed_credit:0};
+ });
+ check('19_forty_new_local_caller_receipts',()=>{
+  let total=0;for(const stage of ['x1','x2']){const rows=read(stage+'/tool-smokes.json');assert.equal(rows.length,20);assert.equal(new Set(rows.map(r=>r.interface+'|'+r.proposal_id)).size,20);for(const r of rows){assert.equal(r.passed,true);eq(r.observed,proposalMap.get(r.proposal_id).expected);assert.equal(r.engine_sha256,m.sha(raw(rel(stage+'/code/engine.txt'))));assert(records.has(r.interface));assert.equal(r.independent_reproduction,false);}total+=rows.length;}return{checks:total,caller_reexecutions:0};
+ });
+ check('20_forty_five_installed_interface_receipts',()=>{
+  const rows=read('x2/promotion/smokes.json'),contract=read('x2/promotion/smoke-contract.json'),planned=contract.checks;
+  assert.equal(contract.defined_before_execution,true);
+  assert.equal(rows.length,45);assert.equal(planned.length,45);for(let i=0;i<rows.length;i++){const r=rows[i],p=planned[i];for(const k of Object.keys(p))eq(r[k],p[k]);assert.equal(r.passed,true);eq(r.actual,r.expected);assert.equal(r.independent_reproduction,false);}
+  assert.equal(rows.filter(r=>r.kind==='positive').length,20);assert.equal(rows.filter(r=>r.kind==='new_interface_scope_refusal'&&r.original_subject_credit===0).length,5);return{checks:45,new_failed_scope_subjects:5,existing_negatives_reused_without_new_credit:true,reexecutions:0};
+ });
+ check('21_ninety_eight_installed_byte_bindings',()=>{
+  const install=read('x2/promotion/installation-receipt.json');assert.equal(install.bindings.length,98);assert.equal(install.skills,5);assert.equal(install.runners,5);assert.equal(install.skill_member_files,90);assert.equal(install.runner_bank_files,8);assert.equal(install.exact_parity,true);
+  for(const b of install.bindings){assert.equal(m.sha(raw(b.source)),b.sha256);assert(!b.member.split('/').includes('..'));const installed=b.kind==='skill'?path.join(skillRoot,b.name,b.member):path.join(globalBank,b.member);assert.equal(m.sha(fs.readFileSync(installed)),b.sha256);}
+  eq(read('final/tools.json'),install);return{skills:5,runners:5,bindings:98,packages_installed:0};
+ });
+ check('22_local_packages_and_curated_composition',()=>{
+  for(const stage of ['x1','x2']){const skillPaths=paths.filter(p=>p.startsWith(rel(stage+'/skills/'))&&p.endsWith('/SKILL.md')),runners=paths.filter(p=>p.startsWith(rel(stage+'/runners/'))&&p.endsWith('.txt'));assert.equal(skillPaths.length,10);assert.equal(runners.length,5);for(const p of skillPaths){const c=m.strictJSON(raw(p.replace('/SKILL.md','/contract.json')).toString('utf8'));assert.equal(c.cases.length,10);assert.equal(c.definition_sha256,m.sha(raw(rel(stage+'/code/engine.txt'))));for(const r of c.cases)eq(r,proposalMap.get(r.proposal_id));}}
+  const c=read('x2/promotion/catalogue.json');assert.equal(c.groups.length,5);for(const group of c.groups){assert.equal(group.source_units,4);assert.equal(group.operations.length,4);assert.equal(new Set(group.operations).size,4);for(const op of group.operations){const sourceSkill=paths.find(p=>p.includes('/skills/teryn-v6922-'+op.replaceAll('_','-')+'/SKILL.md')&&!p.includes('/promotion/'));assert(sourceSkill);const prefix=rel('x2/promotion/skills/'+group.name+'/references/'+path.posix.basename(path.posix.dirname(sourceSkill))+'/');for(const member of ['SKILL.md','contract.json','provenance.json','scripts/run.txt'])assert(raw(prefix+member).equals(raw(sourceSkill.replace('SKILL.md',member))));}}return{local_skills:20,local_runners:10,merged_groups:5,source_units_per_group:4};
+ });
+ let methodTotal=0,witnessTotal=0,failedTotal=0,passingTotal=0,negativeSet=new Set();
+ check('23_current_method_flow_link_and_state_integrity',()=>{
+  const index=read('final/method-flow-index.json');assert.equal(index.current_ledgers.length,5);const allMethods=new Set(),allWitnesses=new Set();
+  for(const b of index.current_ledgers){assert.equal(m.sha(raw(b.path)),b.sha256);const l=m.strictJSON(raw(b.path).toString('utf8')),methods=new Map(l.methods.map(r=>[r.method_id,r])),witnesses=new Map(l.witnesses.map(r=>[r.witness_id,r])),states=new Map();assert.equal(methods.size,l.methods.length);assert.equal(witnesses.size,l.witnesses.length);
+   for(const method of l.methods){assert(!allMethods.has(method.method_id));allMethods.add(method.method_id);assert.equal(method.recommendation_state,'preferred');for(const id of method.validation_witness_ids){assert(witnesses.has(id));assert.equal(witnesses.get(id).method_id,method.method_id);}for(const id of method.retained_negative_ids)negativeSet.add(id);}
+   for(const w of l.witnesses){assert(!allWitnesses.has(w.witness_id));allWitnesses.add(w.witness_id);assert(methods.has(w.method_id));assert(methods.get(w.method_id).validation_witness_ids.includes(w.witness_id));assert.equal(w.same_owner_only,true);assert.equal(w.independent_reproduction,false);assert(['pass','fail'].includes(w.result));for(const n of w.retained_negative_ids){assert(methods.get(w.method_id).retained_negative_ids.includes(n));negativeSet.add(n);}if(w.result==='fail'){assert(w.retained_negative_ids.length>0);failedTotal++;}else passingTotal++;}
+   for(let i=0;i<l.state_events.length;i++){const e=l.state_events[i];assert.equal(e.event_index,i+1);assert(methods.has(e.method_id));assert.equal(e.before,states.get(e.method_id)??null);if(e.after==='candidate')assert.equal(e.before,null);else{assert.equal(e.after,e.before==='candidate'?'validated':'preferred');const w=witnesses.get(e.witness_id);assert(w);assert.equal(w.method_id,e.method_id);assert.equal(w.result,'pass');}states.set(e.method_id,e.after);}
+   assert(l.methods.every(r=>states.get(r.method_id)===r.recommendation_state));assert.equal(l.counts.methods,l.methods.length);assert.equal(l.counts.witnesses,l.witnesses.length);assert.equal(l.counts.state_events,l.state_events.length);methodTotal+=l.methods.length;witnessTotal+=l.witnesses.length;
+  }eq([methodTotal,witnessTotal,failedTotal,passingTotal],[213,906,213,693]);return{methods:methodTotal,witnesses:witnessTotal,failed:failedTotal,passing:passingTotal};
+ });
+ check('24_retained_negative_union_and_validation_receipts',()=>{
+  assert.equal(negativeSet.size,213);for(const p of ['x1/method-flow-validation.json','x2/method-flow-validation.json','x2/promotion/method-flow-validation.json','final/method-flow-quality-validation.json']){const r=read(p);assert.equal(r.valid,true);assert.equal(r.issue_count,0);eq(r.issues,[]);}return{unique_owner_negatives:negativeSet.size,failed_original_success_credit:0,independent_reproduction:false};
+ });
+ check('25_source_overlay_owner_accounting',()=>{
+  counts=read('final/evidence-counts.json');const truth=read('final/phase-truth.json'),index=read('final/method-flow-index.json'),x2Counts=read('x2/evidence-counts.json');eq(counts.owner,{methods:methodTotal,direct_witnesses:witnessTotal,failed_witnesses:failedTotal,passing_witnesses:passingTotal,effective_negatives:negativeSet.size,open_gaps:10,exact_gates:10});
+  eq(counts.owner_at_x2,x2Counts.owner);eq(counts.effective_at_x2,x2Counts.effective);for(const k of Object.keys(counts.owner))assert.equal(counts.owner[k],counts.owner_at_x2[k]+counts.final_quality_overlay[k]);
+  for(const k of Object.keys(counts.owner))assert.equal(counts.effective[k],counts.instructed_source_baseline[k]+counts.source_delivery_overlay[k]+counts.owner[k]);assert.equal(counts.effective.direct_witnesses,counts.effective.failed_witnesses+counts.effective.passing_witnesses);
+  eq(truth.effective_counts,counts.effective);eq(truth.owner_counts,counts.owner);eq(index.effective_counts,counts.effective);eq(truth.source_baseline_preserved,counts.instructed_source_baseline);eq(truth.source_delivery_overlay,counts.source_delivery_overlay);return counts;
+ });
+ check('26_invalid_startup_ledger_is_retained_and_uncredited',()=>{
+  const a=read('plan/recovery-order-failures.json'),index=read('final/method-flow-index.json');assert.equal(m.sha(raw(a.retained_invalid_document)),a.retained_sha256);assert.equal(a.premature_witness_credit,0);assert.equal(index.invalid_ledger_credit,0);assert(index.current_ledgers.every(e=>e.path!==a.retained_invalid_document));assert(a.failures.every(f=>f.credit===0));
+  const drafts=read('final/retained-final-draft-index.json');assert.equal(drafts.canonical_credit,0);for(const e of drafts.entries)binding(e,fs.readFileSync(path.join(bank,drafts.bank_alias,e.member)));
+  assert.equal(read('final/metadata-wrapper-retained-failure.json').original_success_credit,0);assert.equal(read('final/metadata-recovery-receipt.json').observed_exit_code,0);
+  return{invalid_document_retained:true,current_ledger_is_separate:true,premature_witness_credit:0,retained_unsealed_draft_files:drafts.entries.length};
+ });
+ check('27_four_dispositions_and_unclosed_external_gates',()=>{
+  const outcomes={};for(const r of results)outcomes[r.actual.disposition]=(outcomes[r.actual.disposition]||0)+1;eq(outcomes,{completed:170,represented:10,open_gap:10,exact_gate:10});eq(read('final/phase-truth.json').proposals.outcomes,outcomes);
+  const gaps=read('final/open-exact-gates.json');assert.equal(gaps.new_open_gap_records.length,10);assert.equal(gaps.new_exact_gate_records.length,10);assert([...gaps.new_open_gap_records,...gaps.new_exact_gate_records].every(r=>r.closed===false));eq([gaps.effective_open_gaps,gaps.effective_exact_gates,gaps.external_gates_closed],[185,201,0]);return{outcomes,open_gaps:185,exact_gates:201,external_gates_closed:0};
+ });
+ check('28_four_practices_and_one_successor_recommendation',()=>{const p=read('plan/practices.json');assert.equal(p.owner_practices.length,4);assert.equal(p.primary_pillar,'THOS Body');assert.equal(p.qualification_claim,false);assert.equal(p.successor_practice,'bounded recovery evidence auditor');return{practices:p.owner_practices,successor_practice:p.successor_practice};});
+ check('29_four_tier_deck_and_content_bindings',()=>{
+  const index=read('final/deck/deck-index.json'),cards=index.cards.map(id=>read('final/deck/cards/'+id+'.json')),map=new Map(cards.map(c=>[c.card_id,c]));assert.equal(map.size,208);eq([1,2,3,4].map(t=>cards.filter(c=>c.tier===t).length),[1,3,4,200]);
+  for(const c of cards){if(c.tier===1)eq(c.parent_ids,[]);else{assert.equal(c.parent_ids.length,1);assert.equal(map.get(c.parent_ids[0]).tier,c.tier-1);}if(c.tier===4){const p=proposalMap.get(c.content.proposal_id);eq(c.content.input,p.input);eq(c.content.observed,p.expected);assert.equal(c.outcome,p.expected_disposition);}}
+  const manifestPath=rel('final/deck/card-manifest.json');const entries=boundManifest('final/deck/card-manifest.json',paths.filter(p=>p.startsWith(rel('final/deck/'))&&p!==manifestPath));return{cards:208,tiers:4,bindings:entries,cache_benefit_claim:false};
+ });
+ check('30_baton_modules_words_eof_and_overview',()=>{
+  const b=read('final/baton-index.json'),bytes=raw(b.path),text=bytes.toString('utf8');binding(b,bytes);assert.equal(text.trim().split(/\s+/).length,b.words);assert(b.words>=10000&&b.words<=100000);assert.equal(text.split('\n').length,b.lines);assert.equal(b.sections.length,13);assert.equal(text.trim().split('\n').at(-1),b.eof);for(const s of b.sections)assert(text.includes(s.anchor));
+  const overview=raw(rel('final/final-integrated-overview.md')).toString('utf8');assert((overview.match(/^## /gm)||[]).length>=3);return{baton_sha256:b.sha256,bytes:b.bytes,words:b.words,modules:13,overview_sections:(overview.match(/^## /gm)||[]).length};
+ });
+ check('31_browser_filter_receipt_and_accessibility_limits',()=>{
+  const plan=read('final/browser-check-plan.json'),receipt=read('final/browser-check-receipt.json');assert.equal(receipt.plan_sha256,m.sha(raw(rel('final/browser-check-plan.json'))));assert.equal(receipt.report_sha256,m.sha(raw(rel('final/accessible-report.html'))));assert.equal(receipt.checks.length,4);assert(receipt.checks.every(r=>r.passed));eq(receipt.checks.map(r=>r.observed_count),[200,100,10,1]);assert.equal(receipt.screenshots_saved,0);assert.equal(receipt.manual_accessibility_claim,false);assert.equal(receipt.server_stopped,true);assert.equal(receipt.tab_closed,true);assert.equal(plan.manual_accessibility_claim,false);return{browser_checks:4,complete_accessibility:false,manual_and_affected_user_gaps_preserved:true};
+ });
+ check('32_environment_spending_and_same_owner_limits',()=>{
+  const e=read('final/environment.json'),truth=read('final/phase-truth.json');eq([e.packages_installed,e.incremental_spend_usd,truth.spend_usd],[0,0,0]);assert.equal(e.images_or_screenshots_authored,false);assert.equal(e.host_security_changed,false);assert.equal(e.windows_features_changed,false);assert.equal(e.desktop_updated,false);assert.equal(e.rebooted,false);assert.equal(truth.independent_reproduction,false);assert.equal(truth.full_repository_suite,false);assert.equal(truth.terminal_verdict,'NOT_READY_FOR_STAGE_20');return{spend_usd:0,packages_installed:0,terminal_verdict:truth.terminal_verdict};
+ });
+ check('33_successor_ideas_and_unsent_existing_task_route',()=>{
+  const ideas=read('final/successor-ideas.json'),route=read('final/route-state.json');assert.equal(ideas.skills.length,5);assert.equal(ideas.runners.length,5);assert([...ideas.skills,...ideas.runners].every(i=>i.credit===0));eq([route.successor,route.successor_phase,route.following,route.following_phase],['Elaren Kestrel','v692-v3','Neris Solane','v692-v4']);assert.equal(route.state,'PREPARED_NOT_SENT');eq([route.send_attempts,route.messages_sent,route.resends],[0,0,0]);for(const key of ['precontact','task_created','subagents','model_override'])assert.equal(route[key],false);assert.equal(route.minimum_bounded_recovery_attempts_if_unaccepted,5);assert.equal(route.accepted_or_unresolved_submission_must_not_be_duplicated,true);return{skill_ideas:5,runner_ideas:5,state:route.state,send_count:0};
+ });
+ check('34_new_final_code_syntax_receipt',()=>{const s=read('final/syntax-receipt.json');assert.equal(s.executed_owner_tranches,0);assert.equal(s.checked.length,2);for(const e of s.checked){assert.equal(e.passed,true);assert.equal(e.sha256,m.sha(raw(e.path)));}return{syntax_checks:2,owner_tranche_executions:0};});
+ check('35_exact_final_terminal_gate',()=>{endGate=freshGate();return endGate;});
+ const payload={schema:'ghc.family.teryn-v692-v2.canonical-payload.v1',status:'PASS',owner:'Teryn Halewick',phase:'v692-v2',branch,exact_final:expected,started,finished:new Date().toISOString(),check_count:checks.length,checks,owner_counts:counts.owner,effective_counts:counts.effective,canonical_invocations:1,canonical_successes:1,canonical_replays:0,source_executions:0,successful_tranche_replays:0,terminal_verdict:'NOT_READY_FOR_STAGE_20'};
+ m.write(path.join(out,'canonical-payload.json'),payload);const payloadHash=m.sha(fs.readFileSync(path.join(out,'canonical-payload.json')));
+ const receipt={schema:'ghc.family.teryn-v692-v2.exact-final-canonical.v1',status:'VALID_EXACT_FINAL_OWNER_SCOPED_CANONICAL',owner:'Teryn Halewick',phase:'v692-v2',branch,exact_final:expected,payload:'canonical-payload.json',payload_sha256:payloadHash,checks:checks.length,invocations:1,successes:1,replays:0,owner_files:paths.length,owner_manifest_sha256:m.sha(raw(rel('final/owner-manifest.json'))),content_seal_sha256:m.sha(raw(rel('final/content-seal.json'))),baton_sha256:read('final/baton-index.json').sha256,initial_gate:beginGate,terminal_gate:endGate,owner_counts:counts.owner,effective_counts:counts.effective,route_state:'PREPARED_NOT_SENT',terminal_verdict:'NOT_READY_FOR_STAGE_20'};
+ m.write(path.join(out,'exact-final-owner-scoped-canonical.json'),receipt);m.write(path.join(out,'success-latch.json'),{exact_final:expected,receipt_sha256:m.sha(fs.readFileSync(path.join(out,'exact-final-owner-scoped-canonical.json'))),payload_sha256:payloadHash,invocations:1,successes:1,replays:0});
+ console.log(m.json({status:receipt.status,exact_final:expected,checks:checks.length,owner_files:paths.length,receipt_sha256:m.sha(fs.readFileSync(path.join(out,'exact-final-owner-scoped-canonical.json'))),payload_sha256:payloadHash}));
+}catch(error){
+ const failure={status:'FAILED_RETAINED_ZERO_SUCCESS_CREDIT',exact_final:expected,started,failed_at:new Date().toISOString(),passed_checks:checks,invocations:1,successes:0,replays:0,error:{name:error.name,message:error.message},no_replay:true};
+ m.write(path.join(out,'failed-canonical.json'),failure);console.error(m.json({status:failure.status,passed_checks:checks.length,error:error.message}));process.exitCode=1;
+}

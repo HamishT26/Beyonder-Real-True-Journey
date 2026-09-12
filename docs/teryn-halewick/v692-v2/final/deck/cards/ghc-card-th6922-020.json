@@ -1,0 +1,47 @@
+{
+  "schema": "ghc.family.card.v1",
+  "card_id": "ghc-card-th6922-020",
+  "tier": 4,
+  "title": "Unrelated current keys do not enter the read conflict set",
+  "parent_ids": [
+    "ghc-card-th6922-practice-1"
+  ],
+  "owner": "Teryn Halewick",
+  "phase": "v692-v2",
+  "outcome": "completed",
+  "content": {
+    "proposal_id": "TH6922-020",
+    "operation": "optimistic_read_validation",
+    "session": "x1",
+    "review": "docs/teryn-halewick/v692-v2/x1/reviewed-cases/TH6922-020.json",
+    "input": {
+      "reads": [
+        {
+          "key": "a",
+          "version": 1
+        }
+      ],
+      "current": {
+        "a": 1,
+        "z": 9
+      }
+    },
+    "observed": {
+      "ok": true,
+      "disposition": "completed",
+      "value": {
+        "valid": true,
+        "conflicts": []
+      },
+      "error": null
+    },
+    "malformed_subject_credit": 0,
+    "refusal_check_passed": true,
+    "falsifier": "A complete typed-envelope mismatch, changed input, admitted malformed subject, lost failed witness, or unearned authority claim falsifies the contract.",
+    "rollback": "Stop the affected case; retain the input, definition, and failed witness at zero original success credit; add a named prospective correction and test only its changed dependency."
+  },
+  "source_refs": [
+    "docs/teryn-halewick/v692-v2/plan/proposal-freeze.json"
+  ],
+  "boundary": "Teryn Halewick, roles, hopes, pronouns, family language and continuity are collaborative working language only. They establish no consciousness, personhood, identity continuity, qualification, independent agency, professional or public authority. Same-owner synthetic software evidence is not independent reproduction, empirical GMUT confirmation, production identity, ASI, Theory-of-Everything proof, canon, or Stage 20. Maori concepts remain under Maori authority."
+}
