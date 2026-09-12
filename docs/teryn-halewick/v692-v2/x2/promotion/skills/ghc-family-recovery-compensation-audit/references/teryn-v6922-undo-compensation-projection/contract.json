@@ -1,0 +1,978 @@
+{
+  "operation": "undo_compensation_projection",
+  "cases": [
+    {
+      "operation": "undo_compensation_projection",
+      "title": "An empty undo history has no compensation",
+      "input": {
+        "records": [],
+        "applied": [],
+        "compensated": [],
+        "target": "t"
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "instructions": [],
+          "executed": false
+        },
+        "error": null
+      },
+      "adverse_input": {
+        "records": null,
+        "applied": [],
+        "compensated": [],
+        "target": "t"
+      },
+      "adverse_expected": {
+        "ok": false,
+        "disposition": "open_gap",
+        "value": null,
+        "error": "INVALID_INPUT"
+      },
+      "proposal_id": "TH6922-041",
+      "session": "x1",
+      "pillar": "THOS Body",
+      "practice": "transaction recovery reviewer",
+      "hypothesis": "The declared finite profile will satisfy this specific requirement: An empty undo history has no compensation.",
+      "null_or_failure_condition": "A complete typed-envelope mismatch, changed input, admitted malformed subject, lost failed witness, or unearned authority claim falsifies the contract.",
+      "approval_class": "safe_now_bounded_synthetic_or_structural",
+      "execution_lane": "owner_self_scoped_x1",
+      "expected_disposition": "completed",
+      "concrete_artifacts": [
+        "docs/teryn-halewick/v692-v2/x1/results.json",
+        "docs/teryn-halewick/v692-v2/x1/code/engine.txt",
+        "docs/teryn-halewick/v692-v2/x1/reviewed-cases/TH6922-041.json"
+      ],
+      "falsifier_or_acceptance_gate": "Complete independently frozen envelope equality, input nonmutation, and refusal of the explicitly declared malformed subject. No hidden implementation-generated expectation.",
+      "rollback_or_recovery": "Stop the affected case; retain the input, definition, and failed witness at zero original success credit; add a named prospective correction and test only its changed dependency.",
+      "protected_gates": [
+        "empirical",
+        "participant",
+        "professional",
+        "production",
+        "deployment",
+        "identity",
+        "legal",
+        "cultural",
+        "affected_party",
+        "maori_authority",
+        "privacy_complete",
+        "accessibility_complete",
+        "exhaustive_security",
+        "independent_reproduction",
+        "agi_asi",
+        "consciousness_personhood",
+        "theory_of_everything",
+        "proof_canon",
+        "stage20"
+      ],
+      "source_status": "stable",
+      "source_refs": [
+        "PG-ISOLATION",
+        "PG-WAL",
+        "PG-2PC"
+      ],
+      "outcomes_observed": false,
+      "inherited_novelty_credit": 0,
+      "inherited_execution_credit": 0,
+      "novelty_scope": "Distinct authored behavioral requirement relative to the selected Eiren corpus and prior Teryn operation catalogue; no universal novelty claim."
+    },
+    {
+      "operation": "undo_compensation_projection",
+      "title": "An applied target record produces a restoration instruction",
+      "input": {
+        "records": [
+          {
+            "lsn": 1,
+            "tx": "t",
+            "key": "a",
+            "before": 1,
+            "after": 2
+          }
+        ],
+        "applied": [
+          1
+        ],
+        "compensated": [],
+        "target": "t"
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "instructions": [
+            {
+              "lsn": 1,
+              "key": "a",
+              "restore": 1
+            }
+          ],
+          "executed": false
+        },
+        "error": null
+      },
+      "adverse_input": {
+        "records": null,
+        "applied": [
+          1
+        ],
+        "compensated": [],
+        "target": "t"
+      },
+      "adverse_expected": {
+        "ok": false,
+        "disposition": "open_gap",
+        "value": null,
+        "error": "INVALID_INPUT"
+      },
+      "proposal_id": "TH6922-042",
+      "session": "x1",
+      "pillar": "THOS Body",
+      "practice": "transaction recovery reviewer",
+      "hypothesis": "The declared finite profile will satisfy this specific requirement: An applied target record produces a restoration instruction.",
+      "null_or_failure_condition": "A complete typed-envelope mismatch, changed input, admitted malformed subject, lost failed witness, or unearned authority claim falsifies the contract.",
+      "approval_class": "safe_now_bounded_synthetic_or_structural",
+      "execution_lane": "owner_self_scoped_x1",
+      "expected_disposition": "completed",
+      "concrete_artifacts": [
+        "docs/teryn-halewick/v692-v2/x1/results.json",
+        "docs/teryn-halewick/v692-v2/x1/code/engine.txt",
+        "docs/teryn-halewick/v692-v2/x1/reviewed-cases/TH6922-042.json"
+      ],
+      "falsifier_or_acceptance_gate": "Complete independently frozen envelope equality, input nonmutation, and refusal of the explicitly declared malformed subject. No hidden implementation-generated expectation.",
+      "rollback_or_recovery": "Stop the affected case; retain the input, definition, and failed witness at zero original success credit; add a named prospective correction and test only its changed dependency.",
+      "protected_gates": [
+        "empirical",
+        "participant",
+        "professional",
+        "production",
+        "deployment",
+        "identity",
+        "legal",
+        "cultural",
+        "affected_party",
+        "maori_authority",
+        "privacy_complete",
+        "accessibility_complete",
+        "exhaustive_security",
+        "independent_reproduction",
+        "agi_asi",
+        "consciousness_personhood",
+        "theory_of_everything",
+        "proof_canon",
+        "stage20"
+      ],
+      "source_status": "stable",
+      "source_refs": [
+        "PG-ISOLATION",
+        "PG-WAL",
+        "PG-2PC"
+      ],
+      "outcomes_observed": false,
+      "inherited_novelty_credit": 0,
+      "inherited_execution_credit": 0,
+      "novelty_scope": "Distinct authored behavioral requirement relative to the selected Eiren corpus and prior Teryn operation catalogue; no universal novelty claim."
+    },
+    {
+      "operation": "undo_compensation_projection",
+      "title": "Unapplied records need no compensation",
+      "input": {
+        "records": [
+          {
+            "lsn": 1,
+            "tx": "t",
+            "key": "a",
+            "before": 1,
+            "after": 2
+          }
+        ],
+        "applied": [],
+        "compensated": [],
+        "target": "t"
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "instructions": [],
+          "executed": false
+        },
+        "error": null
+      },
+      "adverse_input": {
+        "records": null,
+        "applied": [],
+        "compensated": [],
+        "target": "t"
+      },
+      "adverse_expected": {
+        "ok": false,
+        "disposition": "open_gap",
+        "value": null,
+        "error": "INVALID_INPUT"
+      },
+      "proposal_id": "TH6922-043",
+      "session": "x1",
+      "pillar": "THOS Body",
+      "practice": "transaction recovery reviewer",
+      "hypothesis": "The declared finite profile will satisfy this specific requirement: Unapplied records need no compensation.",
+      "null_or_failure_condition": "A complete typed-envelope mismatch, changed input, admitted malformed subject, lost failed witness, or unearned authority claim falsifies the contract.",
+      "approval_class": "safe_now_bounded_synthetic_or_structural",
+      "execution_lane": "owner_self_scoped_x1",
+      "expected_disposition": "completed",
+      "concrete_artifacts": [
+        "docs/teryn-halewick/v692-v2/x1/results.json",
+        "docs/teryn-halewick/v692-v2/x1/code/engine.txt",
+        "docs/teryn-halewick/v692-v2/x1/reviewed-cases/TH6922-043.json"
+      ],
+      "falsifier_or_acceptance_gate": "Complete independently frozen envelope equality, input nonmutation, and refusal of the explicitly declared malformed subject. No hidden implementation-generated expectation.",
+      "rollback_or_recovery": "Stop the affected case; retain the input, definition, and failed witness at zero original success credit; add a named prospective correction and test only its changed dependency.",
+      "protected_gates": [
+        "empirical",
+        "participant",
+        "professional",
+        "production",
+        "deployment",
+        "identity",
+        "legal",
+        "cultural",
+        "affected_party",
+        "maori_authority",
+        "privacy_complete",
+        "accessibility_complete",
+        "exhaustive_security",
+        "independent_reproduction",
+        "agi_asi",
+        "consciousness_personhood",
+        "theory_of_everything",
+        "proof_canon",
+        "stage20"
+      ],
+      "source_status": "stable",
+      "source_refs": [
+        "PG-ISOLATION",
+        "PG-WAL",
+        "PG-2PC"
+      ],
+      "outcomes_observed": false,
+      "inherited_novelty_credit": 0,
+      "inherited_execution_credit": 0,
+      "novelty_scope": "Distinct authored behavioral requirement relative to the selected Eiren corpus and prior Teryn operation catalogue; no universal novelty claim."
+    },
+    {
+      "operation": "undo_compensation_projection",
+      "title": "A compensation already recorded is not repeated",
+      "input": {
+        "records": [
+          {
+            "lsn": 1,
+            "tx": "t",
+            "key": "a",
+            "before": 1,
+            "after": 2
+          }
+        ],
+        "applied": [
+          1
+        ],
+        "compensated": [
+          1
+        ],
+        "target": "t"
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "instructions": [],
+          "executed": false
+        },
+        "error": null
+      },
+      "adverse_input": {
+        "records": null,
+        "applied": [
+          1
+        ],
+        "compensated": [
+          1
+        ],
+        "target": "t"
+      },
+      "adverse_expected": {
+        "ok": false,
+        "disposition": "open_gap",
+        "value": null,
+        "error": "INVALID_INPUT"
+      },
+      "proposal_id": "TH6922-044",
+      "session": "x1",
+      "pillar": "THOS Body",
+      "practice": "transaction recovery reviewer",
+      "hypothesis": "The declared finite profile will satisfy this specific requirement: A compensation already recorded is not repeated.",
+      "null_or_failure_condition": "A complete typed-envelope mismatch, changed input, admitted malformed subject, lost failed witness, or unearned authority claim falsifies the contract.",
+      "approval_class": "safe_now_bounded_synthetic_or_structural",
+      "execution_lane": "owner_self_scoped_x1",
+      "expected_disposition": "completed",
+      "concrete_artifacts": [
+        "docs/teryn-halewick/v692-v2/x1/results.json",
+        "docs/teryn-halewick/v692-v2/x1/code/engine.txt",
+        "docs/teryn-halewick/v692-v2/x1/reviewed-cases/TH6922-044.json"
+      ],
+      "falsifier_or_acceptance_gate": "Complete independently frozen envelope equality, input nonmutation, and refusal of the explicitly declared malformed subject. No hidden implementation-generated expectation.",
+      "rollback_or_recovery": "Stop the affected case; retain the input, definition, and failed witness at zero original success credit; add a named prospective correction and test only its changed dependency.",
+      "protected_gates": [
+        "empirical",
+        "participant",
+        "professional",
+        "production",
+        "deployment",
+        "identity",
+        "legal",
+        "cultural",
+        "affected_party",
+        "maori_authority",
+        "privacy_complete",
+        "accessibility_complete",
+        "exhaustive_security",
+        "independent_reproduction",
+        "agi_asi",
+        "consciousness_personhood",
+        "theory_of_everything",
+        "proof_canon",
+        "stage20"
+      ],
+      "source_status": "stable",
+      "source_refs": [
+        "PG-ISOLATION",
+        "PG-WAL",
+        "PG-2PC"
+      ],
+      "outcomes_observed": false,
+      "inherited_novelty_credit": 0,
+      "inherited_execution_credit": 0,
+      "novelty_scope": "Distinct authored behavioral requirement relative to the selected Eiren corpus and prior Teryn operation catalogue; no universal novelty claim."
+    },
+    {
+      "operation": "undo_compensation_projection",
+      "title": "Other transaction records are preserved",
+      "input": {
+        "records": [
+          {
+            "lsn": 1,
+            "tx": "other",
+            "key": "a",
+            "before": 1,
+            "after": 2
+          }
+        ],
+        "applied": [
+          1
+        ],
+        "compensated": [],
+        "target": "t"
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "instructions": [],
+          "executed": false
+        },
+        "error": null
+      },
+      "adverse_input": {
+        "records": null,
+        "applied": [
+          1
+        ],
+        "compensated": [],
+        "target": "t"
+      },
+      "adverse_expected": {
+        "ok": false,
+        "disposition": "open_gap",
+        "value": null,
+        "error": "INVALID_INPUT"
+      },
+      "proposal_id": "TH6922-045",
+      "session": "x1",
+      "pillar": "THOS Body",
+      "practice": "transaction recovery reviewer",
+      "hypothesis": "The declared finite profile will satisfy this specific requirement: Other transaction records are preserved.",
+      "null_or_failure_condition": "A complete typed-envelope mismatch, changed input, admitted malformed subject, lost failed witness, or unearned authority claim falsifies the contract.",
+      "approval_class": "safe_now_bounded_synthetic_or_structural",
+      "execution_lane": "owner_self_scoped_x1",
+      "expected_disposition": "completed",
+      "concrete_artifacts": [
+        "docs/teryn-halewick/v692-v2/x1/results.json",
+        "docs/teryn-halewick/v692-v2/x1/code/engine.txt",
+        "docs/teryn-halewick/v692-v2/x1/reviewed-cases/TH6922-045.json"
+      ],
+      "falsifier_or_acceptance_gate": "Complete independently frozen envelope equality, input nonmutation, and refusal of the explicitly declared malformed subject. No hidden implementation-generated expectation.",
+      "rollback_or_recovery": "Stop the affected case; retain the input, definition, and failed witness at zero original success credit; add a named prospective correction and test only its changed dependency.",
+      "protected_gates": [
+        "empirical",
+        "participant",
+        "professional",
+        "production",
+        "deployment",
+        "identity",
+        "legal",
+        "cultural",
+        "affected_party",
+        "maori_authority",
+        "privacy_complete",
+        "accessibility_complete",
+        "exhaustive_security",
+        "independent_reproduction",
+        "agi_asi",
+        "consciousness_personhood",
+        "theory_of_everything",
+        "proof_canon",
+        "stage20"
+      ],
+      "source_status": "stable",
+      "source_refs": [
+        "PG-ISOLATION",
+        "PG-WAL",
+        "PG-2PC"
+      ],
+      "outcomes_observed": false,
+      "inherited_novelty_credit": 0,
+      "inherited_execution_credit": 0,
+      "novelty_scope": "Distinct authored behavioral requirement relative to the selected Eiren corpus and prior Teryn operation catalogue; no universal novelty claim."
+    },
+    {
+      "operation": "undo_compensation_projection",
+      "title": "Compensation order is descending LSN",
+      "input": {
+        "records": [
+          {
+            "lsn": 1,
+            "tx": "t",
+            "key": "a",
+            "before": 0,
+            "after": 1
+          },
+          {
+            "lsn": 2,
+            "tx": "t",
+            "key": "b",
+            "before": 3,
+            "after": 4
+          }
+        ],
+        "applied": [
+          1,
+          2
+        ],
+        "compensated": [],
+        "target": "t"
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "instructions": [
+            {
+              "lsn": 2,
+              "key": "b",
+              "restore": 3
+            },
+            {
+              "lsn": 1,
+              "key": "a",
+              "restore": 0
+            }
+          ],
+          "executed": false
+        },
+        "error": null
+      },
+      "adverse_input": {
+        "records": null,
+        "applied": [
+          1,
+          2
+        ],
+        "compensated": [],
+        "target": "t"
+      },
+      "adverse_expected": {
+        "ok": false,
+        "disposition": "open_gap",
+        "value": null,
+        "error": "INVALID_INPUT"
+      },
+      "proposal_id": "TH6922-046",
+      "session": "x1",
+      "pillar": "THOS Body",
+      "practice": "transaction recovery reviewer",
+      "hypothesis": "The declared finite profile will satisfy this specific requirement: Compensation order is descending LSN.",
+      "null_or_failure_condition": "A complete typed-envelope mismatch, changed input, admitted malformed subject, lost failed witness, or unearned authority claim falsifies the contract.",
+      "approval_class": "safe_now_bounded_synthetic_or_structural",
+      "execution_lane": "owner_self_scoped_x1",
+      "expected_disposition": "completed",
+      "concrete_artifacts": [
+        "docs/teryn-halewick/v692-v2/x1/results.json",
+        "docs/teryn-halewick/v692-v2/x1/code/engine.txt",
+        "docs/teryn-halewick/v692-v2/x1/reviewed-cases/TH6922-046.json"
+      ],
+      "falsifier_or_acceptance_gate": "Complete independently frozen envelope equality, input nonmutation, and refusal of the explicitly declared malformed subject. No hidden implementation-generated expectation.",
+      "rollback_or_recovery": "Stop the affected case; retain the input, definition, and failed witness at zero original success credit; add a named prospective correction and test only its changed dependency.",
+      "protected_gates": [
+        "empirical",
+        "participant",
+        "professional",
+        "production",
+        "deployment",
+        "identity",
+        "legal",
+        "cultural",
+        "affected_party",
+        "maori_authority",
+        "privacy_complete",
+        "accessibility_complete",
+        "exhaustive_security",
+        "independent_reproduction",
+        "agi_asi",
+        "consciousness_personhood",
+        "theory_of_everything",
+        "proof_canon",
+        "stage20"
+      ],
+      "source_status": "stable",
+      "source_refs": [
+        "PG-ISOLATION",
+        "PG-WAL",
+        "PG-2PC"
+      ],
+      "outcomes_observed": false,
+      "inherited_novelty_credit": 0,
+      "inherited_execution_credit": 0,
+      "novelty_scope": "Distinct authored behavioral requirement relative to the selected Eiren corpus and prior Teryn operation catalogue; no universal novelty claim."
+    },
+    {
+      "operation": "undo_compensation_projection",
+      "title": "A null predecessor remains an explicit restoration value",
+      "input": {
+        "records": [
+          {
+            "lsn": 1,
+            "tx": "t",
+            "key": "a",
+            "before": null,
+            "after": 2
+          }
+        ],
+        "applied": [
+          1
+        ],
+        "compensated": [],
+        "target": "t"
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "instructions": [
+            {
+              "lsn": 1,
+              "key": "a",
+              "restore": null
+            }
+          ],
+          "executed": false
+        },
+        "error": null
+      },
+      "adverse_input": {
+        "records": null,
+        "applied": [
+          1
+        ],
+        "compensated": [],
+        "target": "t"
+      },
+      "adverse_expected": {
+        "ok": false,
+        "disposition": "open_gap",
+        "value": null,
+        "error": "INVALID_INPUT"
+      },
+      "proposal_id": "TH6922-047",
+      "session": "x1",
+      "pillar": "THOS Body",
+      "practice": "transaction recovery reviewer",
+      "hypothesis": "The declared finite profile will satisfy this specific requirement: A null predecessor remains an explicit restoration value.",
+      "null_or_failure_condition": "A complete typed-envelope mismatch, changed input, admitted malformed subject, lost failed witness, or unearned authority claim falsifies the contract.",
+      "approval_class": "safe_now_bounded_synthetic_or_structural",
+      "execution_lane": "owner_self_scoped_x1",
+      "expected_disposition": "completed",
+      "concrete_artifacts": [
+        "docs/teryn-halewick/v692-v2/x1/results.json",
+        "docs/teryn-halewick/v692-v2/x1/code/engine.txt",
+        "docs/teryn-halewick/v692-v2/x1/reviewed-cases/TH6922-047.json"
+      ],
+      "falsifier_or_acceptance_gate": "Complete independently frozen envelope equality, input nonmutation, and refusal of the explicitly declared malformed subject. No hidden implementation-generated expectation.",
+      "rollback_or_recovery": "Stop the affected case; retain the input, definition, and failed witness at zero original success credit; add a named prospective correction and test only its changed dependency.",
+      "protected_gates": [
+        "empirical",
+        "participant",
+        "professional",
+        "production",
+        "deployment",
+        "identity",
+        "legal",
+        "cultural",
+        "affected_party",
+        "maori_authority",
+        "privacy_complete",
+        "accessibility_complete",
+        "exhaustive_security",
+        "independent_reproduction",
+        "agi_asi",
+        "consciousness_personhood",
+        "theory_of_everything",
+        "proof_canon",
+        "stage20"
+      ],
+      "source_status": "stable",
+      "source_refs": [
+        "PG-ISOLATION",
+        "PG-WAL",
+        "PG-2PC"
+      ],
+      "outcomes_observed": false,
+      "inherited_novelty_credit": 0,
+      "inherited_execution_credit": 0,
+      "novelty_scope": "Distinct authored behavioral requirement relative to the selected Eiren corpus and prior Teryn operation catalogue; no universal novelty claim."
+    },
+    {
+      "operation": "undo_compensation_projection",
+      "title": "An absence marker is carried without being executed",
+      "input": {
+        "records": [
+          {
+            "lsn": 1,
+            "tx": "t",
+            "key": "a",
+            "before": {
+              "absent": true
+            },
+            "after": 2
+          }
+        ],
+        "applied": [
+          1
+        ],
+        "compensated": [],
+        "target": "t"
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "instructions": [
+            {
+              "lsn": 1,
+              "key": "a",
+              "restore": {
+                "absent": true
+              }
+            }
+          ],
+          "executed": false
+        },
+        "error": null
+      },
+      "adverse_input": {
+        "records": null,
+        "applied": [
+          1
+        ],
+        "compensated": [],
+        "target": "t"
+      },
+      "adverse_expected": {
+        "ok": false,
+        "disposition": "open_gap",
+        "value": null,
+        "error": "INVALID_INPUT"
+      },
+      "proposal_id": "TH6922-048",
+      "session": "x1",
+      "pillar": "THOS Body",
+      "practice": "transaction recovery reviewer",
+      "hypothesis": "The declared finite profile will satisfy this specific requirement: An absence marker is carried without being executed.",
+      "null_or_failure_condition": "A complete typed-envelope mismatch, changed input, admitted malformed subject, lost failed witness, or unearned authority claim falsifies the contract.",
+      "approval_class": "safe_now_bounded_synthetic_or_structural",
+      "execution_lane": "owner_self_scoped_x1",
+      "expected_disposition": "completed",
+      "concrete_artifacts": [
+        "docs/teryn-halewick/v692-v2/x1/results.json",
+        "docs/teryn-halewick/v692-v2/x1/code/engine.txt",
+        "docs/teryn-halewick/v692-v2/x1/reviewed-cases/TH6922-048.json"
+      ],
+      "falsifier_or_acceptance_gate": "Complete independently frozen envelope equality, input nonmutation, and refusal of the explicitly declared malformed subject. No hidden implementation-generated expectation.",
+      "rollback_or_recovery": "Stop the affected case; retain the input, definition, and failed witness at zero original success credit; add a named prospective correction and test only its changed dependency.",
+      "protected_gates": [
+        "empirical",
+        "participant",
+        "professional",
+        "production",
+        "deployment",
+        "identity",
+        "legal",
+        "cultural",
+        "affected_party",
+        "maori_authority",
+        "privacy_complete",
+        "accessibility_complete",
+        "exhaustive_security",
+        "independent_reproduction",
+        "agi_asi",
+        "consciousness_personhood",
+        "theory_of_everything",
+        "proof_canon",
+        "stage20"
+      ],
+      "source_status": "stable",
+      "source_refs": [
+        "PG-ISOLATION",
+        "PG-WAL",
+        "PG-2PC"
+      ],
+      "outcomes_observed": false,
+      "inherited_novelty_credit": 0,
+      "inherited_execution_credit": 0,
+      "novelty_scope": "Distinct authored behavioral requirement relative to the selected Eiren corpus and prior Teryn operation catalogue; no universal novelty claim."
+    },
+    {
+      "operation": "undo_compensation_projection",
+      "title": "A partly compensated history retains only its outstanding step",
+      "input": {
+        "records": [
+          {
+            "lsn": 1,
+            "tx": "t",
+            "key": "a",
+            "before": 0,
+            "after": 1
+          },
+          {
+            "lsn": 2,
+            "tx": "t",
+            "key": "b",
+            "before": 3,
+            "after": 4
+          }
+        ],
+        "applied": [
+          1,
+          2
+        ],
+        "compensated": [
+          2
+        ],
+        "target": "t"
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "instructions": [
+            {
+              "lsn": 1,
+              "key": "a",
+              "restore": 0
+            }
+          ],
+          "executed": false
+        },
+        "error": null
+      },
+      "adverse_input": {
+        "records": null,
+        "applied": [
+          1,
+          2
+        ],
+        "compensated": [
+          2
+        ],
+        "target": "t"
+      },
+      "adverse_expected": {
+        "ok": false,
+        "disposition": "open_gap",
+        "value": null,
+        "error": "INVALID_INPUT"
+      },
+      "proposal_id": "TH6922-049",
+      "session": "x1",
+      "pillar": "THOS Body",
+      "practice": "transaction recovery reviewer",
+      "hypothesis": "The declared finite profile will satisfy this specific requirement: A partly compensated history retains only its outstanding step.",
+      "null_or_failure_condition": "A complete typed-envelope mismatch, changed input, admitted malformed subject, lost failed witness, or unearned authority claim falsifies the contract.",
+      "approval_class": "safe_now_bounded_synthetic_or_structural",
+      "execution_lane": "owner_self_scoped_x1",
+      "expected_disposition": "completed",
+      "concrete_artifacts": [
+        "docs/teryn-halewick/v692-v2/x1/results.json",
+        "docs/teryn-halewick/v692-v2/x1/code/engine.txt",
+        "docs/teryn-halewick/v692-v2/x1/reviewed-cases/TH6922-049.json"
+      ],
+      "falsifier_or_acceptance_gate": "Complete independently frozen envelope equality, input nonmutation, and refusal of the explicitly declared malformed subject. No hidden implementation-generated expectation.",
+      "rollback_or_recovery": "Stop the affected case; retain the input, definition, and failed witness at zero original success credit; add a named prospective correction and test only its changed dependency.",
+      "protected_gates": [
+        "empirical",
+        "participant",
+        "professional",
+        "production",
+        "deployment",
+        "identity",
+        "legal",
+        "cultural",
+        "affected_party",
+        "maori_authority",
+        "privacy_complete",
+        "accessibility_complete",
+        "exhaustive_security",
+        "independent_reproduction",
+        "agi_asi",
+        "consciousness_personhood",
+        "theory_of_everything",
+        "proof_canon",
+        "stage20"
+      ],
+      "source_status": "stable",
+      "source_refs": [
+        "PG-ISOLATION",
+        "PG-WAL",
+        "PG-2PC"
+      ],
+      "outcomes_observed": false,
+      "inherited_novelty_credit": 0,
+      "inherited_execution_credit": 0,
+      "novelty_scope": "Distinct authored behavioral requirement relative to the selected Eiren corpus and prior Teryn operation catalogue; no universal novelty claim."
+    },
+    {
+      "operation": "undo_compensation_projection",
+      "title": "Input order does not determine compensation order",
+      "input": {
+        "records": [
+          {
+            "lsn": 5,
+            "tx": "t",
+            "key": "a",
+            "before": 4,
+            "after": 5
+          },
+          {
+            "lsn": 3,
+            "tx": "t",
+            "key": "a",
+            "before": 2,
+            "after": 3
+          }
+        ],
+        "applied": [
+          3,
+          5
+        ],
+        "compensated": [],
+        "target": "t"
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "instructions": [
+            {
+              "lsn": 5,
+              "key": "a",
+              "restore": 4
+            },
+            {
+              "lsn": 3,
+              "key": "a",
+              "restore": 2
+            }
+          ],
+          "executed": false
+        },
+        "error": null
+      },
+      "adverse_input": {
+        "records": null,
+        "applied": [
+          3,
+          5
+        ],
+        "compensated": [],
+        "target": "t"
+      },
+      "adverse_expected": {
+        "ok": false,
+        "disposition": "open_gap",
+        "value": null,
+        "error": "INVALID_INPUT"
+      },
+      "proposal_id": "TH6922-050",
+      "session": "x1",
+      "pillar": "THOS Body",
+      "practice": "transaction recovery reviewer",
+      "hypothesis": "The declared finite profile will satisfy this specific requirement: Input order does not determine compensation order.",
+      "null_or_failure_condition": "A complete typed-envelope mismatch, changed input, admitted malformed subject, lost failed witness, or unearned authority claim falsifies the contract.",
+      "approval_class": "safe_now_bounded_synthetic_or_structural",
+      "execution_lane": "owner_self_scoped_x1",
+      "expected_disposition": "completed",
+      "concrete_artifacts": [
+        "docs/teryn-halewick/v692-v2/x1/results.json",
+        "docs/teryn-halewick/v692-v2/x1/code/engine.txt",
+        "docs/teryn-halewick/v692-v2/x1/reviewed-cases/TH6922-050.json"
+      ],
+      "falsifier_or_acceptance_gate": "Complete independently frozen envelope equality, input nonmutation, and refusal of the explicitly declared malformed subject. No hidden implementation-generated expectation.",
+      "rollback_or_recovery": "Stop the affected case; retain the input, definition, and failed witness at zero original success credit; add a named prospective correction and test only its changed dependency.",
+      "protected_gates": [
+        "empirical",
+        "participant",
+        "professional",
+        "production",
+        "deployment",
+        "identity",
+        "legal",
+        "cultural",
+        "affected_party",
+        "maori_authority",
+        "privacy_complete",
+        "accessibility_complete",
+        "exhaustive_security",
+        "independent_reproduction",
+        "agi_asi",
+        "consciousness_personhood",
+        "theory_of_everything",
+        "proof_canon",
+        "stage20"
+      ],
+      "source_status": "stable",
+      "source_refs": [
+        "PG-ISOLATION",
+        "PG-WAL",
+        "PG-2PC"
+      ],
+      "outcomes_observed": false,
+      "inherited_novelty_credit": 0,
+      "inherited_execution_credit": 0,
+      "novelty_scope": "Distinct authored behavioral requirement relative to the selected Eiren corpus and prior Teryn operation catalogue; no universal novelty claim."
+    }
+  ],
+  "source_definition": "docs/teryn-halewick/v692-v2/plan/proposal-freeze.json",
+  "execution_engine": "docs/teryn-halewick/v692-v2/x1/code/engine.txt",
+  "definition_sha256": "c9187e001682fbbe18e5445b0532d35a55fe23d85deba135279e91c835ed6d34",
+  "zero_inherited_credit": true
+}

@@ -1,0 +1,72 @@
+{
+  "procedure_id": "TH6922-145-R",
+  "kind": "REFINE",
+  "proposal_id": "TH6922-145",
+  "operation": "event_correction_asof",
+  "source_definition_sha256": "40bf18b16b312387ba6d0fd02960bbf7cbb557de4cf97e1e09231ec31ebbb43c",
+  "engine_sha256": "a173bd89e8a274d371a7f73ea4d94e35fe271b5bd796f1a6ecb9bd5136391e2d",
+  "positive_subject": {
+    "records": [
+      {
+        "id": "a",
+        "at": 1,
+        "value": 1,
+        "replaces": []
+      },
+      {
+        "id": "b",
+        "at": 3,
+        "value": 2,
+        "replaces": [
+          "a"
+        ]
+      }
+    ],
+    "at": 2
+  },
+  "observed_envelope": {
+    "ok": true,
+    "disposition": "completed",
+    "value": {
+      "heads": [
+        "a"
+      ],
+      "values": [
+        1
+      ],
+      "missing": [],
+      "conflict": false
+    },
+    "error": null
+  },
+  "candidate_subject": {
+    "records": null,
+    "at": 2
+  },
+  "candidate_subject_outcome": "failed",
+  "candidate_original_success_credit": 0,
+  "refusal_check_outcome": "passed",
+  "explanation": "A later correction does not rewrite an earlier as-of view. The complete frozen envelope matched. The malformed subject was refused, and its failure is retained separately.",
+  "rollback": "Stop the affected case; retain the input, definition, and failed witness at zero original success credit; add a named prospective correction and test only its changed dependency.",
+  "protected_gates": [
+    "empirical",
+    "participant",
+    "professional",
+    "production",
+    "deployment",
+    "identity",
+    "legal",
+    "cultural",
+    "affected_party",
+    "maori_authority",
+    "privacy_complete",
+    "accessibility_complete",
+    "exhaustive_security",
+    "independent_reproduction",
+    "agi_asi",
+    "consciousness_personhood",
+    "theory_of_everything",
+    "proof_canon",
+    "stage20"
+  ]
+}

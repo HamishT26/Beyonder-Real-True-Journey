@@ -1,0 +1,4 @@
+'use strict';
+const allowed=["undo_compensation_projection","checkpoint_log_retention","saga_compensation_order","two_phase_commit_projection"];
+const operation=process.argv[3];
+if(!allowed.includes(operation)){console.log(JSON.stringify({ok:false,disposition:'open_gap',value:null,error:'OPERATION_OUTSIDE_RUNNER'}));}else{const engine=require(process.argv[2]);console.log(JSON.stringify(engine.run(operation,JSON.parse(process.argv[4]))));}

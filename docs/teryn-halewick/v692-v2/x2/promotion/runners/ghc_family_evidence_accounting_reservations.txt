@@ -1,0 +1,4 @@
+'use strict';
+const allowed=["dimensional_exponent_balance","evidence_layer_accounting","evidence_review_gap","authority_scope_intersection"];
+const operation=process.argv[3];
+if(!allowed.includes(operation)){console.log(JSON.stringify({ok:false,disposition:'open_gap',value:null,error:'OPERATION_OUTSIDE_RUNNER'}));}else{const engine=require(process.argv[2]);console.log(JSON.stringify(engine.run(operation,JSON.parse(process.argv[4]))));}

@@ -1,0 +1,113 @@
+{
+  "schema": "ghc.family.teryn-v692-v2.curated-capabilities.v1",
+  "owner": "Teryn Halewick",
+  "phase": "v692-v2",
+  "groups": [
+    {
+      "name": "ghc-family-transaction-snapshot-audit",
+      "runner": "ghc_family_transaction_snapshot_audit.txt",
+      "operations": [
+        "snapshot_visible_versions",
+        "optimistic_read_validation",
+        "serial_conflict_witness",
+        "write_ahead_redo_projection"
+      ],
+      "source_units": 4,
+      "evidence_state": "validated_local_pending_installation",
+      "owner_scope": "bounded_synthetic_records",
+      "rollback": "Select the retained prior caller; do not erase the installed package or its failures.",
+      "protected_gates": [
+        "source_integrity",
+        "privacy",
+        "no_replay",
+        "no_authority_promotion",
+        "stage20"
+      ]
+    },
+    {
+      "name": "ghc-family-recovery-compensation-audit",
+      "runner": "ghc_family_recovery_compensation_audit.txt",
+      "operations": [
+        "undo_compensation_projection",
+        "checkpoint_log_retention",
+        "saga_compensation_order",
+        "two_phase_commit_projection"
+      ],
+      "source_units": 4,
+      "evidence_state": "validated_local_pending_installation",
+      "owner_scope": "bounded_synthetic_records",
+      "rollback": "Select the retained prior caller; do not erase the installed package or its failures.",
+      "protected_gates": [
+        "source_integrity",
+        "privacy",
+        "no_replay",
+        "no_authority_promotion",
+        "stage20"
+      ]
+    },
+    {
+      "name": "ghc-family-replica-convergence-audit",
+      "runner": "ghc_family_replica_convergence_audit.txt",
+      "operations": [
+        "idempotency_fingerprint",
+        "lease_fencing_sequence",
+        "version_vector_join",
+        "observed_remove_set"
+      ],
+      "source_units": 4,
+      "evidence_state": "validated_local_pending_installation",
+      "owner_scope": "bounded_synthetic_records",
+      "rollback": "Select the retained prior caller; do not erase the installed package or its failures.",
+      "protected_gates": [
+        "source_integrity",
+        "privacy",
+        "no_replay",
+        "no_authority_promotion",
+        "stage20"
+      ]
+    },
+    {
+      "name": "ghc-family-record-correction-integrity",
+      "runner": "ghc_family_record_correction_integrity.txt",
+      "operations": [
+        "bounded_pn_counter",
+        "timestamp_register_review",
+        "event_correction_asof",
+        "prefixed_merkle_path"
+      ],
+      "source_units": 4,
+      "evidence_state": "validated_local_pending_installation",
+      "owner_scope": "bounded_synthetic_records",
+      "rollback": "Select the retained prior caller; do not erase the installed package or its failures.",
+      "protected_gates": [
+        "source_integrity",
+        "privacy",
+        "no_replay",
+        "no_authority_promotion",
+        "stage20"
+      ]
+    },
+    {
+      "name": "ghc-family-evidence-accounting-reservations",
+      "runner": "ghc_family_evidence_accounting_reservations.txt",
+      "operations": [
+        "dimensional_exponent_balance",
+        "evidence_layer_accounting",
+        "evidence_review_gap",
+        "authority_scope_intersection"
+      ],
+      "source_units": 4,
+      "evidence_state": "validated_local_pending_installation",
+      "owner_scope": "bounded_synthetic_records",
+      "rollback": "Select the retained prior caller; do not erase the installed package or its failures.",
+      "protected_gates": [
+        "source_integrity",
+        "privacy",
+        "no_replay",
+        "no_authority_promotion",
+        "stage20"
+      ]
+    }
+  ],
+  "package_installations": 0
+}

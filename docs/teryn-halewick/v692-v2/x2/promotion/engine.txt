@@ -1,0 +1,6 @@
+'use strict';
+const x1=require('./engine-x1.txt'),x2=require('./engine-x2.txt');
+const names=[...x1.operations,...x2.operations];
+if(new Set(names).size!==names.length)throw Error('OPERATION_COLLISION');
+function run(op,input){if(x1.operations.includes(op))return x1.run(op,input);if(x2.operations.includes(op))return x2.run(op,input);return {ok:false,disposition:'open_gap',value:null,error:'INVALID_INPUT'};}
+module.exports={run,operations:names};

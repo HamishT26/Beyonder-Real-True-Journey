@@ -1,0 +1,5 @@
+'use strict';
+const allowed=["dimensional_exponent_balance","evidence_layer_accounting"];
+if(!allowed.includes(process.argv[3]))throw Error('OPERATION_OUTSIDE_RUNNER');
+const engine=require(process.argv[2]);
+console.log(JSON.stringify(engine.run(process.argv[3],JSON.parse(process.argv[4]))));

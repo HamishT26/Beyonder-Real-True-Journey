@@ -1,0 +1,1344 @@
+[
+  {
+    "id": "TH6922-001-GLOBAL-POS",
+    "group": "ghc-family-transaction-snapshot-audit",
+    "operation": "snapshot_visible_versions",
+    "proposal": "TH6922-001",
+    "input": {
+      "versions": [],
+      "at": 0
+    },
+    "expected": {
+      "ok": true,
+      "disposition": "completed",
+      "value": {
+        "view": {}
+      },
+      "error": null
+    },
+    "kind": "positive",
+    "actual": {
+      "ok": true,
+      "disposition": "completed",
+      "value": {
+        "view": {}
+      },
+      "error": null
+    },
+    "passed": true,
+    "independent_reproduction": false
+  },
+  {
+    "id": "TH6922-001-GLOBAL-REFUSAL",
+    "group": "ghc-family-transaction-snapshot-audit",
+    "operation": "snapshot_visible_versions",
+    "proposal": "TH6922-001",
+    "input": {
+      "versions": null,
+      "at": 0
+    },
+    "expected": {
+      "ok": false,
+      "disposition": "open_gap",
+      "value": null,
+      "error": "INVALID_INPUT"
+    },
+    "kind": "existing_malformed_subject_refusal",
+    "original_subject_credit": 0,
+    "actual": {
+      "ok": false,
+      "disposition": "open_gap",
+      "value": null,
+      "error": "INVALID_INPUT"
+    },
+    "passed": true,
+    "independent_reproduction": false
+  },
+  {
+    "id": "TH6922-011-GLOBAL-POS",
+    "group": "ghc-family-transaction-snapshot-audit",
+    "operation": "optimistic_read_validation",
+    "proposal": "TH6922-011",
+    "input": {
+      "reads": [],
+      "current": {
+        "a": 1
+      }
+    },
+    "expected": {
+      "ok": true,
+      "disposition": "completed",
+      "value": {
+        "valid": true,
+        "conflicts": []
+      },
+      "error": null
+    },
+    "kind": "positive",
+    "actual": {
+      "ok": true,
+      "disposition": "completed",
+      "value": {
+        "valid": true,
+        "conflicts": []
+      },
+      "error": null
+    },
+    "passed": true,
+    "independent_reproduction": false
+  },
+  {
+    "id": "TH6922-011-GLOBAL-REFUSAL",
+    "group": "ghc-family-transaction-snapshot-audit",
+    "operation": "optimistic_read_validation",
+    "proposal": "TH6922-011",
+    "input": {
+      "reads": null,
+      "current": {
+        "a": 1
+      }
+    },
+    "expected": {
+      "ok": false,
+      "disposition": "open_gap",
+      "value": null,
+      "error": "INVALID_INPUT"
+    },
+    "kind": "existing_malformed_subject_refusal",
+    "original_subject_credit": 0,
+    "actual": {
+      "ok": false,
+      "disposition": "open_gap",
+      "value": null,
+      "error": "INVALID_INPUT"
+    },
+    "passed": true,
+    "independent_reproduction": false
+  },
+  {
+    "id": "TH6922-021-GLOBAL-POS",
+    "group": "ghc-family-transaction-snapshot-audit",
+    "operation": "serial_conflict_witness",
+    "proposal": "TH6922-021",
+    "input": {
+      "events": []
+    },
+    "expected": {
+      "ok": true,
+      "disposition": "completed",
+      "value": {
+        "edges": [],
+        "acyclic": true
+      },
+      "error": null
+    },
+    "kind": "positive",
+    "actual": {
+      "ok": true,
+      "disposition": "completed",
+      "value": {
+        "edges": [],
+        "acyclic": true
+      },
+      "error": null
+    },
+    "passed": true,
+    "independent_reproduction": false
+  },
+  {
+    "id": "TH6922-021-GLOBAL-REFUSAL",
+    "group": "ghc-family-transaction-snapshot-audit",
+    "operation": "serial_conflict_witness",
+    "proposal": "TH6922-021",
+    "input": {
+      "events": null
+    },
+    "expected": {
+      "ok": false,
+      "disposition": "open_gap",
+      "value": null,
+      "error": "INVALID_INPUT"
+    },
+    "kind": "existing_malformed_subject_refusal",
+    "original_subject_credit": 0,
+    "actual": {
+      "ok": false,
+      "disposition": "open_gap",
+      "value": null,
+      "error": "INVALID_INPUT"
+    },
+    "passed": true,
+    "independent_reproduction": false
+  },
+  {
+    "id": "TH6922-031-GLOBAL-POS",
+    "group": "ghc-family-transaction-snapshot-audit",
+    "operation": "write_ahead_redo_projection",
+    "proposal": "TH6922-031",
+    "input": {
+      "records": [],
+      "base": {
+        "a": {
+          "value": 1,
+          "lsn": 0
+        }
+      },
+      "committed": []
+    },
+    "expected": {
+      "ok": true,
+      "disposition": "completed",
+      "value": {
+        "state": {
+          "a": {
+            "value": 1,
+            "lsn": 0
+          }
+        },
+        "applied": []
+      },
+      "error": null
+    },
+    "kind": "positive",
+    "actual": {
+      "ok": true,
+      "disposition": "completed",
+      "value": {
+        "state": {
+          "a": {
+            "value": 1,
+            "lsn": 0
+          }
+        },
+        "applied": []
+      },
+      "error": null
+    },
+    "passed": true,
+    "independent_reproduction": false
+  },
+  {
+    "id": "TH6922-031-GLOBAL-REFUSAL",
+    "group": "ghc-family-transaction-snapshot-audit",
+    "operation": "write_ahead_redo_projection",
+    "proposal": "TH6922-031",
+    "input": {
+      "records": null,
+      "base": {
+        "a": {
+          "value": 1,
+          "lsn": 0
+        }
+      },
+      "committed": []
+    },
+    "expected": {
+      "ok": false,
+      "disposition": "open_gap",
+      "value": null,
+      "error": "INVALID_INPUT"
+    },
+    "kind": "existing_malformed_subject_refusal",
+    "original_subject_credit": 0,
+    "actual": {
+      "ok": false,
+      "disposition": "open_gap",
+      "value": null,
+      "error": "INVALID_INPUT"
+    },
+    "passed": true,
+    "independent_reproduction": false
+  },
+  {
+    "id": "TH6922-GLOBAL-GUARD-01",
+    "group": "ghc-family-transaction-snapshot-audit",
+    "operation": "unlisted_operation",
+    "proposal": null,
+    "input": {},
+    "expected": {
+      "ok": false,
+      "disposition": "open_gap",
+      "value": null,
+      "error": "OPERATION_OUTSIDE_RUNNER"
+    },
+    "kind": "new_interface_scope_refusal",
+    "original_subject_credit": 0,
+    "actual": {
+      "ok": false,
+      "disposition": "open_gap",
+      "value": null,
+      "error": "OPERATION_OUTSIDE_RUNNER"
+    },
+    "passed": true,
+    "independent_reproduction": false
+  },
+  {
+    "id": "TH6922-041-GLOBAL-POS",
+    "group": "ghc-family-recovery-compensation-audit",
+    "operation": "undo_compensation_projection",
+    "proposal": "TH6922-041",
+    "input": {
+      "records": [],
+      "applied": [],
+      "compensated": [],
+      "target": "t"
+    },
+    "expected": {
+      "ok": true,
+      "disposition": "completed",
+      "value": {
+        "instructions": [],
+        "executed": false
+      },
+      "error": null
+    },
+    "kind": "positive",
+    "actual": {
+      "ok": true,
+      "disposition": "completed",
+      "value": {
+        "instructions": [],
+        "executed": false
+      },
+      "error": null
+    },
+    "passed": true,
+    "independent_reproduction": false
+  },
+  {
+    "id": "TH6922-041-GLOBAL-REFUSAL",
+    "group": "ghc-family-recovery-compensation-audit",
+    "operation": "undo_compensation_projection",
+    "proposal": "TH6922-041",
+    "input": {
+      "records": null,
+      "applied": [],
+      "compensated": [],
+      "target": "t"
+    },
+    "expected": {
+      "ok": false,
+      "disposition": "open_gap",
+      "value": null,
+      "error": "INVALID_INPUT"
+    },
+    "kind": "existing_malformed_subject_refusal",
+    "original_subject_credit": 0,
+    "actual": {
+      "ok": false,
+      "disposition": "open_gap",
+      "value": null,
+      "error": "INVALID_INPUT"
+    },
+    "passed": true,
+    "independent_reproduction": false
+  },
+  {
+    "id": "TH6922-051-GLOBAL-POS",
+    "group": "ghc-family-recovery-compensation-audit",
+    "operation": "checkpoint_log_retention",
+    "proposal": "TH6922-051",
+    "input": {
+      "segments": [],
+      "checkpoint": 5,
+      "undo_floor": null
+    },
+    "expected": {
+      "ok": true,
+      "disposition": "completed",
+      "value": {
+        "review": [],
+        "retained": [],
+        "action_allowed": false
+      },
+      "error": null
+    },
+    "kind": "positive",
+    "actual": {
+      "ok": true,
+      "disposition": "completed",
+      "value": {
+        "review": [],
+        "retained": [],
+        "action_allowed": false
+      },
+      "error": null
+    },
+    "passed": true,
+    "independent_reproduction": false
+  },
+  {
+    "id": "TH6922-051-GLOBAL-REFUSAL",
+    "group": "ghc-family-recovery-compensation-audit",
+    "operation": "checkpoint_log_retention",
+    "proposal": "TH6922-051",
+    "input": {
+      "segments": null,
+      "checkpoint": 5,
+      "undo_floor": null
+    },
+    "expected": {
+      "ok": false,
+      "disposition": "open_gap",
+      "value": null,
+      "error": "INVALID_INPUT"
+    },
+    "kind": "existing_malformed_subject_refusal",
+    "original_subject_credit": 0,
+    "actual": {
+      "ok": false,
+      "disposition": "open_gap",
+      "value": null,
+      "error": "INVALID_INPUT"
+    },
+    "passed": true,
+    "independent_reproduction": false
+  },
+  {
+    "id": "TH6922-081-GLOBAL-POS",
+    "group": "ghc-family-recovery-compensation-audit",
+    "operation": "saga_compensation_order",
+    "proposal": "TH6922-081",
+    "input": {
+      "steps": []
+    },
+    "expected": {
+      "ok": true,
+      "disposition": "completed",
+      "value": {
+        "order": [],
+        "blocked": [],
+        "executed": false
+      },
+      "error": null
+    },
+    "kind": "positive",
+    "actual": {
+      "ok": true,
+      "disposition": "completed",
+      "value": {
+        "order": [],
+        "blocked": [],
+        "executed": false
+      },
+      "error": null
+    },
+    "passed": true,
+    "independent_reproduction": false
+  },
+  {
+    "id": "TH6922-081-GLOBAL-REFUSAL",
+    "group": "ghc-family-recovery-compensation-audit",
+    "operation": "saga_compensation_order",
+    "proposal": "TH6922-081",
+    "input": {
+      "steps": null
+    },
+    "expected": {
+      "ok": false,
+      "disposition": "open_gap",
+      "value": null,
+      "error": "INVALID_INPUT"
+    },
+    "kind": "existing_malformed_subject_refusal",
+    "original_subject_credit": 0,
+    "actual": {
+      "ok": false,
+      "disposition": "open_gap",
+      "value": null,
+      "error": "INVALID_INPUT"
+    },
+    "passed": true,
+    "independent_reproduction": false
+  },
+  {
+    "id": "TH6922-091-GLOBAL-POS",
+    "group": "ghc-family-recovery-compensation-audit",
+    "operation": "two_phase_commit_projection",
+    "proposal": "TH6922-091",
+    "input": {
+      "participants": [],
+      "decision": "commit"
+    },
+    "expected": {
+      "ok": true,
+      "disposition": "completed",
+      "value": {
+        "state": "WAIT",
+        "executed": false
+      },
+      "error": null
+    },
+    "kind": "positive",
+    "actual": {
+      "ok": true,
+      "disposition": "completed",
+      "value": {
+        "state": "WAIT",
+        "executed": false
+      },
+      "error": null
+    },
+    "passed": true,
+    "independent_reproduction": false
+  },
+  {
+    "id": "TH6922-091-GLOBAL-REFUSAL",
+    "group": "ghc-family-recovery-compensation-audit",
+    "operation": "two_phase_commit_projection",
+    "proposal": "TH6922-091",
+    "input": {
+      "participants": null,
+      "decision": "commit"
+    },
+    "expected": {
+      "ok": false,
+      "disposition": "open_gap",
+      "value": null,
+      "error": "INVALID_INPUT"
+    },
+    "kind": "existing_malformed_subject_refusal",
+    "original_subject_credit": 0,
+    "actual": {
+      "ok": false,
+      "disposition": "open_gap",
+      "value": null,
+      "error": "INVALID_INPUT"
+    },
+    "passed": true,
+    "independent_reproduction": false
+  },
+  {
+    "id": "TH6922-GLOBAL-GUARD-02",
+    "group": "ghc-family-recovery-compensation-audit",
+    "operation": "unlisted_operation",
+    "proposal": null,
+    "input": {},
+    "expected": {
+      "ok": false,
+      "disposition": "open_gap",
+      "value": null,
+      "error": "OPERATION_OUTSIDE_RUNNER"
+    },
+    "kind": "new_interface_scope_refusal",
+    "original_subject_credit": 0,
+    "actual": {
+      "ok": false,
+      "disposition": "open_gap",
+      "value": null,
+      "error": "OPERATION_OUTSIDE_RUNNER"
+    },
+    "passed": true,
+    "independent_reproduction": false
+  },
+  {
+    "id": "TH6922-061-GLOBAL-POS",
+    "group": "ghc-family-replica-convergence-audit",
+    "operation": "idempotency_fingerprint",
+    "proposal": "TH6922-061",
+    "input": {
+      "request": {
+        "key": "k",
+        "digest": "d1"
+      },
+      "entries": [],
+      "now": 0
+    },
+    "expected": {
+      "ok": true,
+      "disposition": "completed",
+      "value": {
+        "status": "MISS",
+        "response": null,
+        "executed": false
+      },
+      "error": null
+    },
+    "kind": "positive",
+    "actual": {
+      "ok": true,
+      "disposition": "completed",
+      "value": {
+        "status": "MISS",
+        "response": null,
+        "executed": false
+      },
+      "error": null
+    },
+    "passed": true,
+    "independent_reproduction": false
+  },
+  {
+    "id": "TH6922-061-GLOBAL-REFUSAL",
+    "group": "ghc-family-replica-convergence-audit",
+    "operation": "idempotency_fingerprint",
+    "proposal": "TH6922-061",
+    "input": {
+      "request": null,
+      "entries": [],
+      "now": 0
+    },
+    "expected": {
+      "ok": false,
+      "disposition": "open_gap",
+      "value": null,
+      "error": "INVALID_INPUT"
+    },
+    "kind": "existing_malformed_subject_refusal",
+    "original_subject_credit": 0,
+    "actual": {
+      "ok": false,
+      "disposition": "open_gap",
+      "value": null,
+      "error": "INVALID_INPUT"
+    },
+    "passed": true,
+    "independent_reproduction": false
+  },
+  {
+    "id": "TH6922-071-GLOBAL-POS",
+    "group": "ghc-family-replica-convergence-audit",
+    "operation": "lease_fencing_sequence",
+    "proposal": "TH6922-071",
+    "input": {
+      "events": []
+    },
+    "expected": {
+      "ok": true,
+      "disposition": "completed",
+      "value": {
+        "epoch": 0,
+        "holder": null,
+        "grants": [],
+        "writes": [],
+        "denied": []
+      },
+      "error": null
+    },
+    "kind": "positive",
+    "actual": {
+      "ok": true,
+      "disposition": "completed",
+      "value": {
+        "epoch": 0,
+        "holder": null,
+        "grants": [],
+        "writes": [],
+        "denied": []
+      },
+      "error": null
+    },
+    "passed": true,
+    "independent_reproduction": false
+  },
+  {
+    "id": "TH6922-071-GLOBAL-REFUSAL",
+    "group": "ghc-family-replica-convergence-audit",
+    "operation": "lease_fencing_sequence",
+    "proposal": "TH6922-071",
+    "input": {
+      "events": null
+    },
+    "expected": {
+      "ok": false,
+      "disposition": "open_gap",
+      "value": null,
+      "error": "INVALID_INPUT"
+    },
+    "kind": "existing_malformed_subject_refusal",
+    "original_subject_credit": 0,
+    "actual": {
+      "ok": false,
+      "disposition": "open_gap",
+      "value": null,
+      "error": "INVALID_INPUT"
+    },
+    "passed": true,
+    "independent_reproduction": false
+  },
+  {
+    "id": "TH6922-101-GLOBAL-POS",
+    "group": "ghc-family-replica-convergence-audit",
+    "operation": "version_vector_join",
+    "proposal": "TH6922-101",
+    "input": {
+      "vectors": []
+    },
+    "expected": {
+      "ok": true,
+      "disposition": "completed",
+      "value": {
+        "joined": {}
+      },
+      "error": null
+    },
+    "kind": "positive",
+    "actual": {
+      "ok": true,
+      "disposition": "completed",
+      "value": {
+        "joined": {}
+      },
+      "error": null
+    },
+    "passed": true,
+    "independent_reproduction": false
+  },
+  {
+    "id": "TH6922-101-GLOBAL-REFUSAL",
+    "group": "ghc-family-replica-convergence-audit",
+    "operation": "version_vector_join",
+    "proposal": "TH6922-101",
+    "input": {
+      "vectors": null
+    },
+    "expected": {
+      "ok": false,
+      "disposition": "open_gap",
+      "value": null,
+      "error": "INVALID_INPUT"
+    },
+    "kind": "existing_malformed_subject_refusal",
+    "original_subject_credit": 0,
+    "actual": {
+      "ok": false,
+      "disposition": "open_gap",
+      "value": null,
+      "error": "INVALID_INPUT"
+    },
+    "passed": true,
+    "independent_reproduction": false
+  },
+  {
+    "id": "TH6922-111-GLOBAL-POS",
+    "group": "ghc-family-replica-convergence-audit",
+    "operation": "observed_remove_set",
+    "proposal": "TH6922-111",
+    "input": {
+      "adds": [],
+      "removes": []
+    },
+    "expected": {
+      "ok": true,
+      "disposition": "completed",
+      "value": {
+        "elements": [],
+        "active_tags": []
+      },
+      "error": null
+    },
+    "kind": "positive",
+    "actual": {
+      "ok": true,
+      "disposition": "completed",
+      "value": {
+        "elements": [],
+        "active_tags": []
+      },
+      "error": null
+    },
+    "passed": true,
+    "independent_reproduction": false
+  },
+  {
+    "id": "TH6922-111-GLOBAL-REFUSAL",
+    "group": "ghc-family-replica-convergence-audit",
+    "operation": "observed_remove_set",
+    "proposal": "TH6922-111",
+    "input": {
+      "adds": null,
+      "removes": []
+    },
+    "expected": {
+      "ok": false,
+      "disposition": "open_gap",
+      "value": null,
+      "error": "INVALID_INPUT"
+    },
+    "kind": "existing_malformed_subject_refusal",
+    "original_subject_credit": 0,
+    "actual": {
+      "ok": false,
+      "disposition": "open_gap",
+      "value": null,
+      "error": "INVALID_INPUT"
+    },
+    "passed": true,
+    "independent_reproduction": false
+  },
+  {
+    "id": "TH6922-GLOBAL-GUARD-03",
+    "group": "ghc-family-replica-convergence-audit",
+    "operation": "unlisted_operation",
+    "proposal": null,
+    "input": {},
+    "expected": {
+      "ok": false,
+      "disposition": "open_gap",
+      "value": null,
+      "error": "OPERATION_OUTSIDE_RUNNER"
+    },
+    "kind": "new_interface_scope_refusal",
+    "original_subject_credit": 0,
+    "actual": {
+      "ok": false,
+      "disposition": "open_gap",
+      "value": null,
+      "error": "OPERATION_OUTSIDE_RUNNER"
+    },
+    "passed": true,
+    "independent_reproduction": false
+  },
+  {
+    "id": "TH6922-121-GLOBAL-POS",
+    "group": "ghc-family-record-correction-integrity",
+    "operation": "bounded_pn_counter",
+    "proposal": "TH6922-121",
+    "input": {
+      "states": []
+    },
+    "expected": {
+      "ok": true,
+      "disposition": "completed",
+      "value": {
+        "positive": {},
+        "negative": {},
+        "total": 0
+      },
+      "error": null
+    },
+    "kind": "positive",
+    "actual": {
+      "ok": true,
+      "disposition": "completed",
+      "value": {
+        "positive": {},
+        "negative": {},
+        "total": 0
+      },
+      "error": null
+    },
+    "passed": true,
+    "independent_reproduction": false
+  },
+  {
+    "id": "TH6922-121-GLOBAL-REFUSAL",
+    "group": "ghc-family-record-correction-integrity",
+    "operation": "bounded_pn_counter",
+    "proposal": "TH6922-121",
+    "input": {
+      "states": null
+    },
+    "expected": {
+      "ok": false,
+      "disposition": "open_gap",
+      "value": null,
+      "error": "INVALID_INPUT"
+    },
+    "kind": "existing_malformed_subject_refusal",
+    "original_subject_credit": 0,
+    "actual": {
+      "ok": false,
+      "disposition": "open_gap",
+      "value": null,
+      "error": "INVALID_INPUT"
+    },
+    "passed": true,
+    "independent_reproduction": false
+  },
+  {
+    "id": "TH6922-131-GLOBAL-POS",
+    "group": "ghc-family-record-correction-integrity",
+    "operation": "timestamp_register_review",
+    "proposal": "TH6922-131",
+    "input": {
+      "records": []
+    },
+    "expected": {
+      "ok": true,
+      "disposition": "completed",
+      "value": {
+        "state": "MISSING",
+        "at": null,
+        "values": []
+      },
+      "error": null
+    },
+    "kind": "positive",
+    "actual": {
+      "ok": true,
+      "disposition": "completed",
+      "value": {
+        "state": "MISSING",
+        "at": null,
+        "values": []
+      },
+      "error": null
+    },
+    "passed": true,
+    "independent_reproduction": false
+  },
+  {
+    "id": "TH6922-131-GLOBAL-REFUSAL",
+    "group": "ghc-family-record-correction-integrity",
+    "operation": "timestamp_register_review",
+    "proposal": "TH6922-131",
+    "input": {
+      "records": null
+    },
+    "expected": {
+      "ok": false,
+      "disposition": "open_gap",
+      "value": null,
+      "error": "INVALID_INPUT"
+    },
+    "kind": "existing_malformed_subject_refusal",
+    "original_subject_credit": 0,
+    "actual": {
+      "ok": false,
+      "disposition": "open_gap",
+      "value": null,
+      "error": "INVALID_INPUT"
+    },
+    "passed": true,
+    "independent_reproduction": false
+  },
+  {
+    "id": "TH6922-141-GLOBAL-POS",
+    "group": "ghc-family-record-correction-integrity",
+    "operation": "event_correction_asof",
+    "proposal": "TH6922-141",
+    "input": {
+      "records": [],
+      "at": 0
+    },
+    "expected": {
+      "ok": true,
+      "disposition": "completed",
+      "value": {
+        "heads": [],
+        "values": [],
+        "missing": [],
+        "conflict": false
+      },
+      "error": null
+    },
+    "kind": "positive",
+    "actual": {
+      "ok": true,
+      "disposition": "completed",
+      "value": {
+        "heads": [],
+        "values": [],
+        "missing": [],
+        "conflict": false
+      },
+      "error": null
+    },
+    "passed": true,
+    "independent_reproduction": false
+  },
+  {
+    "id": "TH6922-141-GLOBAL-REFUSAL",
+    "group": "ghc-family-record-correction-integrity",
+    "operation": "event_correction_asof",
+    "proposal": "TH6922-141",
+    "input": {
+      "records": null,
+      "at": 0
+    },
+    "expected": {
+      "ok": false,
+      "disposition": "open_gap",
+      "value": null,
+      "error": "INVALID_INPUT"
+    },
+    "kind": "existing_malformed_subject_refusal",
+    "original_subject_credit": 0,
+    "actual": {
+      "ok": false,
+      "disposition": "open_gap",
+      "value": null,
+      "error": "INVALID_INPUT"
+    },
+    "passed": true,
+    "independent_reproduction": false
+  },
+  {
+    "id": "TH6922-151-GLOBAL-POS",
+    "group": "ghc-family-record-correction-integrity",
+    "operation": "prefixed_merkle_path",
+    "proposal": "TH6922-151",
+    "input": {
+      "leaf": "a",
+      "path": [],
+      "root": "022a6979e6dab7aa5ae4c3e5e45f7e977112a7e63593820dbec1ec738a24f93c"
+    },
+    "expected": {
+      "ok": true,
+      "disposition": "completed",
+      "value": {
+        "verified": true,
+        "origin_authenticated": false
+      },
+      "error": null
+    },
+    "kind": "positive",
+    "actual": {
+      "ok": true,
+      "disposition": "completed",
+      "value": {
+        "verified": true,
+        "origin_authenticated": false
+      },
+      "error": null
+    },
+    "passed": true,
+    "independent_reproduction": false
+  },
+  {
+    "id": "TH6922-151-GLOBAL-REFUSAL",
+    "group": "ghc-family-record-correction-integrity",
+    "operation": "prefixed_merkle_path",
+    "proposal": "TH6922-151",
+    "input": {
+      "leaf": null,
+      "path": [],
+      "root": "022a6979e6dab7aa5ae4c3e5e45f7e977112a7e63593820dbec1ec738a24f93c"
+    },
+    "expected": {
+      "ok": false,
+      "disposition": "open_gap",
+      "value": null,
+      "error": "INVALID_INPUT"
+    },
+    "kind": "existing_malformed_subject_refusal",
+    "original_subject_credit": 0,
+    "actual": {
+      "ok": false,
+      "disposition": "open_gap",
+      "value": null,
+      "error": "INVALID_INPUT"
+    },
+    "passed": true,
+    "independent_reproduction": false
+  },
+  {
+    "id": "TH6922-GLOBAL-GUARD-04",
+    "group": "ghc-family-record-correction-integrity",
+    "operation": "unlisted_operation",
+    "proposal": null,
+    "input": {},
+    "expected": {
+      "ok": false,
+      "disposition": "open_gap",
+      "value": null,
+      "error": "OPERATION_OUTSIDE_RUNNER"
+    },
+    "kind": "new_interface_scope_refusal",
+    "original_subject_credit": 0,
+    "actual": {
+      "ok": false,
+      "disposition": "open_gap",
+      "value": null,
+      "error": "OPERATION_OUTSIDE_RUNNER"
+    },
+    "passed": true,
+    "independent_reproduction": false
+  },
+  {
+    "id": "TH6922-161-GLOBAL-POS",
+    "group": "ghc-family-evidence-accounting-reservations",
+    "operation": "dimensional_exponent_balance",
+    "proposal": "TH6922-161",
+    "input": {
+      "terms": []
+    },
+    "expected": {
+      "ok": true,
+      "disposition": "represented",
+      "value": {
+        "homogeneous": false,
+        "dimension": null,
+        "mismatches": [],
+        "empirical": false
+      },
+      "error": null
+    },
+    "kind": "positive",
+    "actual": {
+      "ok": true,
+      "disposition": "represented",
+      "value": {
+        "homogeneous": false,
+        "dimension": null,
+        "mismatches": [],
+        "empirical": false
+      },
+      "error": null
+    },
+    "passed": true,
+    "independent_reproduction": false
+  },
+  {
+    "id": "TH6922-161-GLOBAL-REFUSAL",
+    "group": "ghc-family-evidence-accounting-reservations",
+    "operation": "dimensional_exponent_balance",
+    "proposal": "TH6922-161",
+    "input": {
+      "terms": null
+    },
+    "expected": {
+      "ok": false,
+      "disposition": "open_gap",
+      "value": null,
+      "error": "INVALID_INPUT"
+    },
+    "kind": "existing_malformed_subject_refusal",
+    "original_subject_credit": 0,
+    "actual": {
+      "ok": false,
+      "disposition": "open_gap",
+      "value": null,
+      "error": "INVALID_INPUT"
+    },
+    "passed": true,
+    "independent_reproduction": false
+  },
+  {
+    "id": "TH6922-171-GLOBAL-POS",
+    "group": "ghc-family-evidence-accounting-reservations",
+    "operation": "evidence_layer_accounting",
+    "proposal": "TH6922-171",
+    "input": {
+      "records": []
+    },
+    "expected": {
+      "ok": true,
+      "disposition": "completed",
+      "value": {
+        "state": "COUNTED",
+        "counts": {
+          "methods": 0,
+          "witnesses": 0,
+          "failed": 0,
+          "passed": 0,
+          "negative_refs": 0
+        },
+        "duplicates": 0,
+        "conflicts": []
+      },
+      "error": null
+    },
+    "kind": "positive",
+    "actual": {
+      "ok": true,
+      "disposition": "completed",
+      "value": {
+        "state": "COUNTED",
+        "counts": {
+          "methods": 0,
+          "witnesses": 0,
+          "failed": 0,
+          "passed": 0,
+          "negative_refs": 0
+        },
+        "duplicates": 0,
+        "conflicts": []
+      },
+      "error": null
+    },
+    "passed": true,
+    "independent_reproduction": false
+  },
+  {
+    "id": "TH6922-171-GLOBAL-REFUSAL",
+    "group": "ghc-family-evidence-accounting-reservations",
+    "operation": "evidence_layer_accounting",
+    "proposal": "TH6922-171",
+    "input": {
+      "records": null
+    },
+    "expected": {
+      "ok": false,
+      "disposition": "open_gap",
+      "value": null,
+      "error": "INVALID_INPUT"
+    },
+    "kind": "existing_malformed_subject_refusal",
+    "original_subject_credit": 0,
+    "actual": {
+      "ok": false,
+      "disposition": "open_gap",
+      "value": null,
+      "error": "INVALID_INPUT"
+    },
+    "passed": true,
+    "independent_reproduction": false
+  },
+  {
+    "id": "TH6922-181-GLOBAL-POS",
+    "group": "ghc-family-evidence-accounting-reservations",
+    "operation": "evidence_review_gap",
+    "proposal": "TH6922-181",
+    "input": {
+      "required": [
+        "manual"
+      ],
+      "provided": []
+    },
+    "expected": {
+      "ok": true,
+      "disposition": "open_gap",
+      "value": {
+        "missing": [
+          "manual"
+        ],
+        "declared": [],
+        "assurance_established": false
+      },
+      "error": null
+    },
+    "kind": "positive",
+    "actual": {
+      "ok": true,
+      "disposition": "open_gap",
+      "value": {
+        "missing": [
+          "manual"
+        ],
+        "declared": [],
+        "assurance_established": false
+      },
+      "error": null
+    },
+    "passed": true,
+    "independent_reproduction": false
+  },
+  {
+    "id": "TH6922-181-GLOBAL-REFUSAL",
+    "group": "ghc-family-evidence-accounting-reservations",
+    "operation": "evidence_review_gap",
+    "proposal": "TH6922-181",
+    "input": {
+      "required": null,
+      "provided": []
+    },
+    "expected": {
+      "ok": false,
+      "disposition": "open_gap",
+      "value": null,
+      "error": "INVALID_INPUT"
+    },
+    "kind": "existing_malformed_subject_refusal",
+    "original_subject_credit": 0,
+    "actual": {
+      "ok": false,
+      "disposition": "open_gap",
+      "value": null,
+      "error": "INVALID_INPUT"
+    },
+    "passed": true,
+    "independent_reproduction": false
+  },
+  {
+    "id": "TH6922-191-GLOBAL-POS",
+    "group": "ghc-family-evidence-accounting-reservations",
+    "operation": "authority_scope_intersection",
+    "proposal": "TH6922-191",
+    "input": {
+      "grants": [],
+      "requested": [
+        "read"
+      ],
+      "now": 1
+    },
+    "expected": {
+      "ok": true,
+      "disposition": "exact_gate",
+      "value": {
+        "candidates": [],
+        "outside": [
+          "read"
+        ],
+        "reasons": [
+          "NO_GRANTS"
+        ],
+        "executed": false,
+        "authority_established": false
+      },
+      "error": null
+    },
+    "kind": "positive",
+    "actual": {
+      "ok": true,
+      "disposition": "exact_gate",
+      "value": {
+        "candidates": [],
+        "outside": [
+          "read"
+        ],
+        "reasons": [
+          "NO_GRANTS"
+        ],
+        "executed": false,
+        "authority_established": false
+      },
+      "error": null
+    },
+    "passed": true,
+    "independent_reproduction": false
+  },
+  {
+    "id": "TH6922-191-GLOBAL-REFUSAL",
+    "group": "ghc-family-evidence-accounting-reservations",
+    "operation": "authority_scope_intersection",
+    "proposal": "TH6922-191",
+    "input": {
+      "grants": null,
+      "requested": [
+        "read"
+      ],
+      "now": 1
+    },
+    "expected": {
+      "ok": false,
+      "disposition": "open_gap",
+      "value": null,
+      "error": "INVALID_INPUT"
+    },
+    "kind": "existing_malformed_subject_refusal",
+    "original_subject_credit": 0,
+    "actual": {
+      "ok": false,
+      "disposition": "open_gap",
+      "value": null,
+      "error": "INVALID_INPUT"
+    },
+    "passed": true,
+    "independent_reproduction": false
+  },
+  {
+    "id": "TH6922-GLOBAL-GUARD-05",
+    "group": "ghc-family-evidence-accounting-reservations",
+    "operation": "unlisted_operation",
+    "proposal": null,
+    "input": {},
+    "expected": {
+      "ok": false,
+      "disposition": "open_gap",
+      "value": null,
+      "error": "OPERATION_OUTSIDE_RUNNER"
+    },
+    "kind": "new_interface_scope_refusal",
+    "original_subject_credit": 0,
+    "actual": {
+      "ok": false,
+      "disposition": "open_gap",
+      "value": null,
+      "error": "OPERATION_OUTSIDE_RUNNER"
+    },
+    "passed": true,
+    "independent_reproduction": false
+  }
+]

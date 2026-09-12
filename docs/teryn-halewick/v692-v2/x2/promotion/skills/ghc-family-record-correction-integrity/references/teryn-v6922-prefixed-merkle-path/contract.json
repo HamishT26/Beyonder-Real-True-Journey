@@ -1,0 +1,817 @@
+{
+  "operation": "prefixed_merkle_path",
+  "cases": [
+    {
+      "operation": "prefixed_merkle_path",
+      "title": "A singleton leaf matches its declared root",
+      "input": {
+        "leaf": "a",
+        "path": [],
+        "root": "022a6979e6dab7aa5ae4c3e5e45f7e977112a7e63593820dbec1ec738a24f93c"
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "verified": true,
+          "origin_authenticated": false
+        },
+        "error": null
+      },
+      "adverse_input": {
+        "leaf": null,
+        "path": [],
+        "root": "022a6979e6dab7aa5ae4c3e5e45f7e977112a7e63593820dbec1ec738a24f93c"
+      },
+      "adverse_expected": {
+        "ok": false,
+        "disposition": "open_gap",
+        "value": null,
+        "error": "INVALID_INPUT"
+      },
+      "proposal_id": "TH6922-151",
+      "session": "x2",
+      "pillar": "Freed ID and CBR Heart",
+      "practice": "provenance and disclosure editor",
+      "hypothesis": "The declared finite profile will satisfy this specific requirement: A singleton leaf matches its declared root.",
+      "null_or_failure_condition": "A complete typed-envelope mismatch, changed input, admitted malformed subject, lost failed witness, or unearned authority claim falsifies the contract.",
+      "approval_class": "safe_now_bounded_synthetic_or_structural",
+      "execution_lane": "owner_self_scoped_x2",
+      "expected_disposition": "completed",
+      "concrete_artifacts": [
+        "docs/teryn-halewick/v692-v2/x2/results.json",
+        "docs/teryn-halewick/v692-v2/x2/code/engine.txt",
+        "docs/teryn-halewick/v692-v2/x2/reviewed-cases/TH6922-151.json"
+      ],
+      "falsifier_or_acceptance_gate": "Complete independently frozen envelope equality, input nonmutation, and refusal of the explicitly declared malformed subject. No hidden implementation-generated expectation.",
+      "rollback_or_recovery": "Stop the affected case; retain the input, definition, and failed witness at zero original success credit; add a named prospective correction and test only its changed dependency.",
+      "protected_gates": [
+        "empirical",
+        "participant",
+        "professional",
+        "production",
+        "deployment",
+        "identity",
+        "legal",
+        "cultural",
+        "affected_party",
+        "maori_authority",
+        "privacy_complete",
+        "accessibility_complete",
+        "exhaustive_security",
+        "independent_reproduction",
+        "agi_asi",
+        "consciousness_personhood",
+        "theory_of_everything",
+        "proof_canon",
+        "stage20"
+      ],
+      "source_status": "stable",
+      "source_refs": [
+        "RFC9162"
+      ],
+      "outcomes_observed": false,
+      "inherited_novelty_credit": 0,
+      "inherited_execution_credit": 0,
+      "novelty_scope": "Distinct authored behavioral requirement relative to the selected Eiren corpus and prior Teryn operation catalogue; no universal novelty claim."
+    },
+    {
+      "operation": "prefixed_merkle_path",
+      "title": "An empty UTF-8 leaf has its own prefixed hash",
+      "input": {
+        "leaf": "",
+        "path": [],
+        "root": "6e340b9cffb37a989ca544e6bb780a2c78901d3fb33738768511a30617afa01d"
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "verified": true,
+          "origin_authenticated": false
+        },
+        "error": null
+      },
+      "adverse_input": {
+        "leaf": null,
+        "path": [],
+        "root": "6e340b9cffb37a989ca544e6bb780a2c78901d3fb33738768511a30617afa01d"
+      },
+      "adverse_expected": {
+        "ok": false,
+        "disposition": "open_gap",
+        "value": null,
+        "error": "INVALID_INPUT"
+      },
+      "proposal_id": "TH6922-152",
+      "session": "x2",
+      "pillar": "Freed ID and CBR Heart",
+      "practice": "provenance and disclosure editor",
+      "hypothesis": "The declared finite profile will satisfy this specific requirement: An empty UTF-8 leaf has its own prefixed hash.",
+      "null_or_failure_condition": "A complete typed-envelope mismatch, changed input, admitted malformed subject, lost failed witness, or unearned authority claim falsifies the contract.",
+      "approval_class": "safe_now_bounded_synthetic_or_structural",
+      "execution_lane": "owner_self_scoped_x2",
+      "expected_disposition": "completed",
+      "concrete_artifacts": [
+        "docs/teryn-halewick/v692-v2/x2/results.json",
+        "docs/teryn-halewick/v692-v2/x2/code/engine.txt",
+        "docs/teryn-halewick/v692-v2/x2/reviewed-cases/TH6922-152.json"
+      ],
+      "falsifier_or_acceptance_gate": "Complete independently frozen envelope equality, input nonmutation, and refusal of the explicitly declared malformed subject. No hidden implementation-generated expectation.",
+      "rollback_or_recovery": "Stop the affected case; retain the input, definition, and failed witness at zero original success credit; add a named prospective correction and test only its changed dependency.",
+      "protected_gates": [
+        "empirical",
+        "participant",
+        "professional",
+        "production",
+        "deployment",
+        "identity",
+        "legal",
+        "cultural",
+        "affected_party",
+        "maori_authority",
+        "privacy_complete",
+        "accessibility_complete",
+        "exhaustive_security",
+        "independent_reproduction",
+        "agi_asi",
+        "consciousness_personhood",
+        "theory_of_everything",
+        "proof_canon",
+        "stage20"
+      ],
+      "source_status": "stable",
+      "source_refs": [
+        "RFC9162"
+      ],
+      "outcomes_observed": false,
+      "inherited_novelty_credit": 0,
+      "inherited_execution_credit": 0,
+      "novelty_scope": "Distinct authored behavioral requirement relative to the selected Eiren corpus and prior Teryn operation catalogue; no universal novelty claim."
+    },
+    {
+      "operation": "prefixed_merkle_path",
+      "title": "A left leaf can be bound to a two-leaf root",
+      "input": {
+        "leaf": "a",
+        "path": [
+          {
+            "side": "right",
+            "hash": "57eb35615d47f34ec714cacdf5fd74608a5e8e102724e80b24b287c0c27b6a31"
+          }
+        ],
+        "root": "b137985ff484fb600db93107c77b0365c80d78f5b429ded0fd97361d077999eb"
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "verified": true,
+          "origin_authenticated": false
+        },
+        "error": null
+      },
+      "adverse_input": {
+        "leaf": null,
+        "path": [
+          {
+            "side": "right",
+            "hash": "57eb35615d47f34ec714cacdf5fd74608a5e8e102724e80b24b287c0c27b6a31"
+          }
+        ],
+        "root": "b137985ff484fb600db93107c77b0365c80d78f5b429ded0fd97361d077999eb"
+      },
+      "adverse_expected": {
+        "ok": false,
+        "disposition": "open_gap",
+        "value": null,
+        "error": "INVALID_INPUT"
+      },
+      "proposal_id": "TH6922-153",
+      "session": "x2",
+      "pillar": "Freed ID and CBR Heart",
+      "practice": "provenance and disclosure editor",
+      "hypothesis": "The declared finite profile will satisfy this specific requirement: A left leaf can be bound to a two-leaf root.",
+      "null_or_failure_condition": "A complete typed-envelope mismatch, changed input, admitted malformed subject, lost failed witness, or unearned authority claim falsifies the contract.",
+      "approval_class": "safe_now_bounded_synthetic_or_structural",
+      "execution_lane": "owner_self_scoped_x2",
+      "expected_disposition": "completed",
+      "concrete_artifacts": [
+        "docs/teryn-halewick/v692-v2/x2/results.json",
+        "docs/teryn-halewick/v692-v2/x2/code/engine.txt",
+        "docs/teryn-halewick/v692-v2/x2/reviewed-cases/TH6922-153.json"
+      ],
+      "falsifier_or_acceptance_gate": "Complete independently frozen envelope equality, input nonmutation, and refusal of the explicitly declared malformed subject. No hidden implementation-generated expectation.",
+      "rollback_or_recovery": "Stop the affected case; retain the input, definition, and failed witness at zero original success credit; add a named prospective correction and test only its changed dependency.",
+      "protected_gates": [
+        "empirical",
+        "participant",
+        "professional",
+        "production",
+        "deployment",
+        "identity",
+        "legal",
+        "cultural",
+        "affected_party",
+        "maori_authority",
+        "privacy_complete",
+        "accessibility_complete",
+        "exhaustive_security",
+        "independent_reproduction",
+        "agi_asi",
+        "consciousness_personhood",
+        "theory_of_everything",
+        "proof_canon",
+        "stage20"
+      ],
+      "source_status": "stable",
+      "source_refs": [
+        "RFC9162"
+      ],
+      "outcomes_observed": false,
+      "inherited_novelty_credit": 0,
+      "inherited_execution_credit": 0,
+      "novelty_scope": "Distinct authored behavioral requirement relative to the selected Eiren corpus and prior Teryn operation catalogue; no universal novelty claim."
+    },
+    {
+      "operation": "prefixed_merkle_path",
+      "title": "A right leaf preserves sibling order",
+      "input": {
+        "leaf": "b",
+        "path": [
+          {
+            "side": "left",
+            "hash": "022a6979e6dab7aa5ae4c3e5e45f7e977112a7e63593820dbec1ec738a24f93c"
+          }
+        ],
+        "root": "b137985ff484fb600db93107c77b0365c80d78f5b429ded0fd97361d077999eb"
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "verified": true,
+          "origin_authenticated": false
+        },
+        "error": null
+      },
+      "adverse_input": {
+        "leaf": null,
+        "path": [
+          {
+            "side": "left",
+            "hash": "022a6979e6dab7aa5ae4c3e5e45f7e977112a7e63593820dbec1ec738a24f93c"
+          }
+        ],
+        "root": "b137985ff484fb600db93107c77b0365c80d78f5b429ded0fd97361d077999eb"
+      },
+      "adverse_expected": {
+        "ok": false,
+        "disposition": "open_gap",
+        "value": null,
+        "error": "INVALID_INPUT"
+      },
+      "proposal_id": "TH6922-154",
+      "session": "x2",
+      "pillar": "Freed ID and CBR Heart",
+      "practice": "provenance and disclosure editor",
+      "hypothesis": "The declared finite profile will satisfy this specific requirement: A right leaf preserves sibling order.",
+      "null_or_failure_condition": "A complete typed-envelope mismatch, changed input, admitted malformed subject, lost failed witness, or unearned authority claim falsifies the contract.",
+      "approval_class": "safe_now_bounded_synthetic_or_structural",
+      "execution_lane": "owner_self_scoped_x2",
+      "expected_disposition": "completed",
+      "concrete_artifacts": [
+        "docs/teryn-halewick/v692-v2/x2/results.json",
+        "docs/teryn-halewick/v692-v2/x2/code/engine.txt",
+        "docs/teryn-halewick/v692-v2/x2/reviewed-cases/TH6922-154.json"
+      ],
+      "falsifier_or_acceptance_gate": "Complete independently frozen envelope equality, input nonmutation, and refusal of the explicitly declared malformed subject. No hidden implementation-generated expectation.",
+      "rollback_or_recovery": "Stop the affected case; retain the input, definition, and failed witness at zero original success credit; add a named prospective correction and test only its changed dependency.",
+      "protected_gates": [
+        "empirical",
+        "participant",
+        "professional",
+        "production",
+        "deployment",
+        "identity",
+        "legal",
+        "cultural",
+        "affected_party",
+        "maori_authority",
+        "privacy_complete",
+        "accessibility_complete",
+        "exhaustive_security",
+        "independent_reproduction",
+        "agi_asi",
+        "consciousness_personhood",
+        "theory_of_everything",
+        "proof_canon",
+        "stage20"
+      ],
+      "source_status": "stable",
+      "source_refs": [
+        "RFC9162"
+      ],
+      "outcomes_observed": false,
+      "inherited_novelty_credit": 0,
+      "inherited_execution_credit": 0,
+      "novelty_scope": "Distinct authored behavioral requirement relative to the selected Eiren corpus and prior Teryn operation catalogue; no universal novelty claim."
+    },
+    {
+      "operation": "prefixed_merkle_path",
+      "title": "A wrong sibling direction does not verify",
+      "input": {
+        "leaf": "b",
+        "path": [
+          {
+            "side": "right",
+            "hash": "022a6979e6dab7aa5ae4c3e5e45f7e977112a7e63593820dbec1ec738a24f93c"
+          }
+        ],
+        "root": "b137985ff484fb600db93107c77b0365c80d78f5b429ded0fd97361d077999eb"
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "verified": false,
+          "origin_authenticated": false
+        },
+        "error": null
+      },
+      "adverse_input": {
+        "leaf": null,
+        "path": [
+          {
+            "side": "right",
+            "hash": "022a6979e6dab7aa5ae4c3e5e45f7e977112a7e63593820dbec1ec738a24f93c"
+          }
+        ],
+        "root": "b137985ff484fb600db93107c77b0365c80d78f5b429ded0fd97361d077999eb"
+      },
+      "adverse_expected": {
+        "ok": false,
+        "disposition": "open_gap",
+        "value": null,
+        "error": "INVALID_INPUT"
+      },
+      "proposal_id": "TH6922-155",
+      "session": "x2",
+      "pillar": "Freed ID and CBR Heart",
+      "practice": "provenance and disclosure editor",
+      "hypothesis": "The declared finite profile will satisfy this specific requirement: A wrong sibling direction does not verify.",
+      "null_or_failure_condition": "A complete typed-envelope mismatch, changed input, admitted malformed subject, lost failed witness, or unearned authority claim falsifies the contract.",
+      "approval_class": "safe_now_bounded_synthetic_or_structural",
+      "execution_lane": "owner_self_scoped_x2",
+      "expected_disposition": "completed",
+      "concrete_artifacts": [
+        "docs/teryn-halewick/v692-v2/x2/results.json",
+        "docs/teryn-halewick/v692-v2/x2/code/engine.txt",
+        "docs/teryn-halewick/v692-v2/x2/reviewed-cases/TH6922-155.json"
+      ],
+      "falsifier_or_acceptance_gate": "Complete independently frozen envelope equality, input nonmutation, and refusal of the explicitly declared malformed subject. No hidden implementation-generated expectation.",
+      "rollback_or_recovery": "Stop the affected case; retain the input, definition, and failed witness at zero original success credit; add a named prospective correction and test only its changed dependency.",
+      "protected_gates": [
+        "empirical",
+        "participant",
+        "professional",
+        "production",
+        "deployment",
+        "identity",
+        "legal",
+        "cultural",
+        "affected_party",
+        "maori_authority",
+        "privacy_complete",
+        "accessibility_complete",
+        "exhaustive_security",
+        "independent_reproduction",
+        "agi_asi",
+        "consciousness_personhood",
+        "theory_of_everything",
+        "proof_canon",
+        "stage20"
+      ],
+      "source_status": "stable",
+      "source_refs": [
+        "RFC9162"
+      ],
+      "outcomes_observed": false,
+      "inherited_novelty_credit": 0,
+      "inherited_execution_credit": 0,
+      "novelty_scope": "Distinct authored behavioral requirement relative to the selected Eiren corpus and prior Teryn operation catalogue; no universal novelty claim."
+    },
+    {
+      "operation": "prefixed_merkle_path",
+      "title": "A changed leaf does not borrow the original path",
+      "input": {
+        "leaf": "changed",
+        "path": [
+          {
+            "side": "right",
+            "hash": "57eb35615d47f34ec714cacdf5fd74608a5e8e102724e80b24b287c0c27b6a31"
+          }
+        ],
+        "root": "b137985ff484fb600db93107c77b0365c80d78f5b429ded0fd97361d077999eb"
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "verified": false,
+          "origin_authenticated": false
+        },
+        "error": null
+      },
+      "adverse_input": {
+        "leaf": null,
+        "path": [
+          {
+            "side": "right",
+            "hash": "57eb35615d47f34ec714cacdf5fd74608a5e8e102724e80b24b287c0c27b6a31"
+          }
+        ],
+        "root": "b137985ff484fb600db93107c77b0365c80d78f5b429ded0fd97361d077999eb"
+      },
+      "adverse_expected": {
+        "ok": false,
+        "disposition": "open_gap",
+        "value": null,
+        "error": "INVALID_INPUT"
+      },
+      "proposal_id": "TH6922-156",
+      "session": "x2",
+      "pillar": "Freed ID and CBR Heart",
+      "practice": "provenance and disclosure editor",
+      "hypothesis": "The declared finite profile will satisfy this specific requirement: A changed leaf does not borrow the original path.",
+      "null_or_failure_condition": "A complete typed-envelope mismatch, changed input, admitted malformed subject, lost failed witness, or unearned authority claim falsifies the contract.",
+      "approval_class": "safe_now_bounded_synthetic_or_structural",
+      "execution_lane": "owner_self_scoped_x2",
+      "expected_disposition": "completed",
+      "concrete_artifacts": [
+        "docs/teryn-halewick/v692-v2/x2/results.json",
+        "docs/teryn-halewick/v692-v2/x2/code/engine.txt",
+        "docs/teryn-halewick/v692-v2/x2/reviewed-cases/TH6922-156.json"
+      ],
+      "falsifier_or_acceptance_gate": "Complete independently frozen envelope equality, input nonmutation, and refusal of the explicitly declared malformed subject. No hidden implementation-generated expectation.",
+      "rollback_or_recovery": "Stop the affected case; retain the input, definition, and failed witness at zero original success credit; add a named prospective correction and test only its changed dependency.",
+      "protected_gates": [
+        "empirical",
+        "participant",
+        "professional",
+        "production",
+        "deployment",
+        "identity",
+        "legal",
+        "cultural",
+        "affected_party",
+        "maori_authority",
+        "privacy_complete",
+        "accessibility_complete",
+        "exhaustive_security",
+        "independent_reproduction",
+        "agi_asi",
+        "consciousness_personhood",
+        "theory_of_everything",
+        "proof_canon",
+        "stage20"
+      ],
+      "source_status": "stable",
+      "source_refs": [
+        "RFC9162"
+      ],
+      "outcomes_observed": false,
+      "inherited_novelty_credit": 0,
+      "inherited_execution_credit": 0,
+      "novelty_scope": "Distinct authored behavioral requirement relative to the selected Eiren corpus and prior Teryn operation catalogue; no universal novelty claim."
+    },
+    {
+      "operation": "prefixed_merkle_path",
+      "title": "A mismatched root remains unverified",
+      "input": {
+        "leaf": "a",
+        "path": [],
+        "root": "0000000000000000000000000000000000000000000000000000000000000000"
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "verified": false,
+          "origin_authenticated": false
+        },
+        "error": null
+      },
+      "adverse_input": {
+        "leaf": null,
+        "path": [],
+        "root": "0000000000000000000000000000000000000000000000000000000000000000"
+      },
+      "adverse_expected": {
+        "ok": false,
+        "disposition": "open_gap",
+        "value": null,
+        "error": "INVALID_INPUT"
+      },
+      "proposal_id": "TH6922-157",
+      "session": "x2",
+      "pillar": "Freed ID and CBR Heart",
+      "practice": "provenance and disclosure editor",
+      "hypothesis": "The declared finite profile will satisfy this specific requirement: A mismatched root remains unverified.",
+      "null_or_failure_condition": "A complete typed-envelope mismatch, changed input, admitted malformed subject, lost failed witness, or unearned authority claim falsifies the contract.",
+      "approval_class": "safe_now_bounded_synthetic_or_structural",
+      "execution_lane": "owner_self_scoped_x2",
+      "expected_disposition": "completed",
+      "concrete_artifacts": [
+        "docs/teryn-halewick/v692-v2/x2/results.json",
+        "docs/teryn-halewick/v692-v2/x2/code/engine.txt",
+        "docs/teryn-halewick/v692-v2/x2/reviewed-cases/TH6922-157.json"
+      ],
+      "falsifier_or_acceptance_gate": "Complete independently frozen envelope equality, input nonmutation, and refusal of the explicitly declared malformed subject. No hidden implementation-generated expectation.",
+      "rollback_or_recovery": "Stop the affected case; retain the input, definition, and failed witness at zero original success credit; add a named prospective correction and test only its changed dependency.",
+      "protected_gates": [
+        "empirical",
+        "participant",
+        "professional",
+        "production",
+        "deployment",
+        "identity",
+        "legal",
+        "cultural",
+        "affected_party",
+        "maori_authority",
+        "privacy_complete",
+        "accessibility_complete",
+        "exhaustive_security",
+        "independent_reproduction",
+        "agi_asi",
+        "consciousness_personhood",
+        "theory_of_everything",
+        "proof_canon",
+        "stage20"
+      ],
+      "source_status": "stable",
+      "source_refs": [
+        "RFC9162"
+      ],
+      "outcomes_observed": false,
+      "inherited_novelty_credit": 0,
+      "inherited_execution_credit": 0,
+      "novelty_scope": "Distinct authored behavioral requirement relative to the selected Eiren corpus and prior Teryn operation catalogue; no universal novelty claim."
+    },
+    {
+      "operation": "prefixed_merkle_path",
+      "title": "A two-level path folds from leaf toward root",
+      "input": {
+        "leaf": "a",
+        "path": [
+          {
+            "side": "right",
+            "hash": "57eb35615d47f34ec714cacdf5fd74608a5e8e102724e80b24b287c0c27b6a31"
+          },
+          {
+            "side": "right",
+            "hash": "597fcb31282d34654c200d3418fca5705c648ebf326ec73d8ddef11841f876d8"
+          }
+        ],
+        "root": "36642e73c2540ab121e3a6bf9545b0a24982cd830eb13d3cd19de3ce6c021ec1"
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "verified": true,
+          "origin_authenticated": false
+        },
+        "error": null
+      },
+      "adverse_input": {
+        "leaf": null,
+        "path": [
+          {
+            "side": "right",
+            "hash": "57eb35615d47f34ec714cacdf5fd74608a5e8e102724e80b24b287c0c27b6a31"
+          },
+          {
+            "side": "right",
+            "hash": "597fcb31282d34654c200d3418fca5705c648ebf326ec73d8ddef11841f876d8"
+          }
+        ],
+        "root": "36642e73c2540ab121e3a6bf9545b0a24982cd830eb13d3cd19de3ce6c021ec1"
+      },
+      "adverse_expected": {
+        "ok": false,
+        "disposition": "open_gap",
+        "value": null,
+        "error": "INVALID_INPUT"
+      },
+      "proposal_id": "TH6922-158",
+      "session": "x2",
+      "pillar": "Freed ID and CBR Heart",
+      "practice": "provenance and disclosure editor",
+      "hypothesis": "The declared finite profile will satisfy this specific requirement: A two-level path folds from leaf toward root.",
+      "null_or_failure_condition": "A complete typed-envelope mismatch, changed input, admitted malformed subject, lost failed witness, or unearned authority claim falsifies the contract.",
+      "approval_class": "safe_now_bounded_synthetic_or_structural",
+      "execution_lane": "owner_self_scoped_x2",
+      "expected_disposition": "completed",
+      "concrete_artifacts": [
+        "docs/teryn-halewick/v692-v2/x2/results.json",
+        "docs/teryn-halewick/v692-v2/x2/code/engine.txt",
+        "docs/teryn-halewick/v692-v2/x2/reviewed-cases/TH6922-158.json"
+      ],
+      "falsifier_or_acceptance_gate": "Complete independently frozen envelope equality, input nonmutation, and refusal of the explicitly declared malformed subject. No hidden implementation-generated expectation.",
+      "rollback_or_recovery": "Stop the affected case; retain the input, definition, and failed witness at zero original success credit; add a named prospective correction and test only its changed dependency.",
+      "protected_gates": [
+        "empirical",
+        "participant",
+        "professional",
+        "production",
+        "deployment",
+        "identity",
+        "legal",
+        "cultural",
+        "affected_party",
+        "maori_authority",
+        "privacy_complete",
+        "accessibility_complete",
+        "exhaustive_security",
+        "independent_reproduction",
+        "agi_asi",
+        "consciousness_personhood",
+        "theory_of_everything",
+        "proof_canon",
+        "stage20"
+      ],
+      "source_status": "stable",
+      "source_refs": [
+        "RFC9162"
+      ],
+      "outcomes_observed": false,
+      "inherited_novelty_credit": 0,
+      "inherited_execution_credit": 0,
+      "novelty_scope": "Distinct authored behavioral requirement relative to the selected Eiren corpus and prior Teryn operation catalogue; no universal novelty claim."
+    },
+    {
+      "operation": "prefixed_merkle_path",
+      "title": "The third leaf uses the complete left subtree",
+      "input": {
+        "leaf": "c",
+        "path": [
+          {
+            "side": "left",
+            "hash": "b137985ff484fb600db93107c77b0365c80d78f5b429ded0fd97361d077999eb"
+          }
+        ],
+        "root": "36642e73c2540ab121e3a6bf9545b0a24982cd830eb13d3cd19de3ce6c021ec1"
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "verified": true,
+          "origin_authenticated": false
+        },
+        "error": null
+      },
+      "adverse_input": {
+        "leaf": null,
+        "path": [
+          {
+            "side": "left",
+            "hash": "b137985ff484fb600db93107c77b0365c80d78f5b429ded0fd97361d077999eb"
+          }
+        ],
+        "root": "36642e73c2540ab121e3a6bf9545b0a24982cd830eb13d3cd19de3ce6c021ec1"
+      },
+      "adverse_expected": {
+        "ok": false,
+        "disposition": "open_gap",
+        "value": null,
+        "error": "INVALID_INPUT"
+      },
+      "proposal_id": "TH6922-159",
+      "session": "x2",
+      "pillar": "Freed ID and CBR Heart",
+      "practice": "provenance and disclosure editor",
+      "hypothesis": "The declared finite profile will satisfy this specific requirement: The third leaf uses the complete left subtree.",
+      "null_or_failure_condition": "A complete typed-envelope mismatch, changed input, admitted malformed subject, lost failed witness, or unearned authority claim falsifies the contract.",
+      "approval_class": "safe_now_bounded_synthetic_or_structural",
+      "execution_lane": "owner_self_scoped_x2",
+      "expected_disposition": "completed",
+      "concrete_artifacts": [
+        "docs/teryn-halewick/v692-v2/x2/results.json",
+        "docs/teryn-halewick/v692-v2/x2/code/engine.txt",
+        "docs/teryn-halewick/v692-v2/x2/reviewed-cases/TH6922-159.json"
+      ],
+      "falsifier_or_acceptance_gate": "Complete independently frozen envelope equality, input nonmutation, and refusal of the explicitly declared malformed subject. No hidden implementation-generated expectation.",
+      "rollback_or_recovery": "Stop the affected case; retain the input, definition, and failed witness at zero original success credit; add a named prospective correction and test only its changed dependency.",
+      "protected_gates": [
+        "empirical",
+        "participant",
+        "professional",
+        "production",
+        "deployment",
+        "identity",
+        "legal",
+        "cultural",
+        "affected_party",
+        "maori_authority",
+        "privacy_complete",
+        "accessibility_complete",
+        "exhaustive_security",
+        "independent_reproduction",
+        "agi_asi",
+        "consciousness_personhood",
+        "theory_of_everything",
+        "proof_canon",
+        "stage20"
+      ],
+      "source_status": "stable",
+      "source_refs": [
+        "RFC9162"
+      ],
+      "outcomes_observed": false,
+      "inherited_novelty_credit": 0,
+      "inherited_execution_credit": 0,
+      "novelty_scope": "Distinct authored behavioral requirement relative to the selected Eiren corpus and prior Teryn operation catalogue; no universal novelty claim."
+    },
+    {
+      "operation": "prefixed_merkle_path",
+      "title": "Unicode normalization is not silently applied to leaf bytes",
+      "input": {
+        "leaf": "é",
+        "path": [],
+        "root": "7e8d20ac6fc3f5fff436df1f54b0ee0e0b387d4ed998b32231e796d689ceff3b"
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "verified": false,
+          "origin_authenticated": false
+        },
+        "error": null
+      },
+      "adverse_input": {
+        "leaf": null,
+        "path": [],
+        "root": "7e8d20ac6fc3f5fff436df1f54b0ee0e0b387d4ed998b32231e796d689ceff3b"
+      },
+      "adverse_expected": {
+        "ok": false,
+        "disposition": "open_gap",
+        "value": null,
+        "error": "INVALID_INPUT"
+      },
+      "proposal_id": "TH6922-160",
+      "session": "x2",
+      "pillar": "Freed ID and CBR Heart",
+      "practice": "provenance and disclosure editor",
+      "hypothesis": "The declared finite profile will satisfy this specific requirement: Unicode normalization is not silently applied to leaf bytes.",
+      "null_or_failure_condition": "A complete typed-envelope mismatch, changed input, admitted malformed subject, lost failed witness, or unearned authority claim falsifies the contract.",
+      "approval_class": "safe_now_bounded_synthetic_or_structural",
+      "execution_lane": "owner_self_scoped_x2",
+      "expected_disposition": "completed",
+      "concrete_artifacts": [
+        "docs/teryn-halewick/v692-v2/x2/results.json",
+        "docs/teryn-halewick/v692-v2/x2/code/engine.txt",
+        "docs/teryn-halewick/v692-v2/x2/reviewed-cases/TH6922-160.json"
+      ],
+      "falsifier_or_acceptance_gate": "Complete independently frozen envelope equality, input nonmutation, and refusal of the explicitly declared malformed subject. No hidden implementation-generated expectation.",
+      "rollback_or_recovery": "Stop the affected case; retain the input, definition, and failed witness at zero original success credit; add a named prospective correction and test only its changed dependency.",
+      "protected_gates": [
+        "empirical",
+        "participant",
+        "professional",
+        "production",
+        "deployment",
+        "identity",
+        "legal",
+        "cultural",
+        "affected_party",
+        "maori_authority",
+        "privacy_complete",
+        "accessibility_complete",
+        "exhaustive_security",
+        "independent_reproduction",
+        "agi_asi",
+        "consciousness_personhood",
+        "theory_of_everything",
+        "proof_canon",
+        "stage20"
+      ],
+      "source_status": "stable",
+      "source_refs": [
+        "RFC9162"
+      ],
+      "outcomes_observed": false,
+      "inherited_novelty_credit": 0,
+      "inherited_execution_credit": 0,
+      "novelty_scope": "Distinct authored behavioral requirement relative to the selected Eiren corpus and prior Teryn operation catalogue; no universal novelty claim."
+    }
+  ],
+  "source_definition": "docs/teryn-halewick/v692-v2/plan/proposal-freeze.json",
+  "execution_engine": "docs/teryn-halewick/v692-v2/x2/code/engine.txt",
+  "definition_sha256": "a173bd89e8a274d371a7f73ea4d94e35fe271b5bd796f1a6ecb9bd5136391e2d",
+  "zero_inherited_credit": true
+}

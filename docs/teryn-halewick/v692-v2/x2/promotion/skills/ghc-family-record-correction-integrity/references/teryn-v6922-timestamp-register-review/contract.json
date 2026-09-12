@@ -1,0 +1,838 @@
+{
+  "operation": "timestamp_register_review",
+  "cases": [
+    {
+      "operation": "timestamp_register_review",
+      "title": "An empty register does not invent a value",
+      "input": {
+        "records": []
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "state": "MISSING",
+          "at": null,
+          "values": []
+        },
+        "error": null
+      },
+      "adverse_input": {
+        "records": null
+      },
+      "adverse_expected": {
+        "ok": false,
+        "disposition": "open_gap",
+        "value": null,
+        "error": "INVALID_INPUT"
+      },
+      "proposal_id": "TH6922-131",
+      "session": "x2",
+      "pillar": "Freed ID and CBR Heart",
+      "practice": "provenance and disclosure editor",
+      "hypothesis": "The declared finite profile will satisfy this specific requirement: An empty register does not invent a value.",
+      "null_or_failure_condition": "A complete typed-envelope mismatch, changed input, admitted malformed subject, lost failed witness, or unearned authority claim falsifies the contract.",
+      "approval_class": "safe_now_bounded_synthetic_or_structural",
+      "execution_lane": "owner_self_scoped_x2",
+      "expected_disposition": "completed",
+      "concrete_artifacts": [
+        "docs/teryn-halewick/v692-v2/x2/results.json",
+        "docs/teryn-halewick/v692-v2/x2/code/engine.txt",
+        "docs/teryn-halewick/v692-v2/x2/reviewed-cases/TH6922-131.json"
+      ],
+      "falsifier_or_acceptance_gate": "Complete independently frozen envelope equality, input nonmutation, and refusal of the explicitly declared malformed subject. No hidden implementation-generated expectation.",
+      "rollback_or_recovery": "Stop the affected case; retain the input, definition, and failed witness at zero original success credit; add a named prospective correction and test only its changed dependency.",
+      "protected_gates": [
+        "empirical",
+        "participant",
+        "professional",
+        "production",
+        "deployment",
+        "identity",
+        "legal",
+        "cultural",
+        "affected_party",
+        "maori_authority",
+        "privacy_complete",
+        "accessibility_complete",
+        "exhaustive_security",
+        "independent_reproduction",
+        "agi_asi",
+        "consciousness_personhood",
+        "theory_of_everything",
+        "proof_canon",
+        "stage20"
+      ],
+      "source_status": "stable",
+      "source_refs": [
+        "CRDT-PRIMARY",
+        "PROV-O"
+      ],
+      "outcomes_observed": false,
+      "inherited_novelty_credit": 0,
+      "inherited_execution_credit": 0,
+      "novelty_scope": "Distinct authored behavioral requirement relative to the selected Eiren corpus and prior Teryn operation catalogue; no universal novelty claim."
+    },
+    {
+      "operation": "timestamp_register_review",
+      "title": "One declared timestamp supplies a current snapshot",
+      "input": {
+        "records": [
+          {
+            "at": 1,
+            "value": "a",
+            "author": "a"
+          }
+        ]
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "state": "CURRENT",
+          "at": 1,
+          "values": [
+            "a"
+          ]
+        },
+        "error": null
+      },
+      "adverse_input": {
+        "records": null
+      },
+      "adverse_expected": {
+        "ok": false,
+        "disposition": "open_gap",
+        "value": null,
+        "error": "INVALID_INPUT"
+      },
+      "proposal_id": "TH6922-132",
+      "session": "x2",
+      "pillar": "Freed ID and CBR Heart",
+      "practice": "provenance and disclosure editor",
+      "hypothesis": "The declared finite profile will satisfy this specific requirement: One declared timestamp supplies a current snapshot.",
+      "null_or_failure_condition": "A complete typed-envelope mismatch, changed input, admitted malformed subject, lost failed witness, or unearned authority claim falsifies the contract.",
+      "approval_class": "safe_now_bounded_synthetic_or_structural",
+      "execution_lane": "owner_self_scoped_x2",
+      "expected_disposition": "completed",
+      "concrete_artifacts": [
+        "docs/teryn-halewick/v692-v2/x2/results.json",
+        "docs/teryn-halewick/v692-v2/x2/code/engine.txt",
+        "docs/teryn-halewick/v692-v2/x2/reviewed-cases/TH6922-132.json"
+      ],
+      "falsifier_or_acceptance_gate": "Complete independently frozen envelope equality, input nonmutation, and refusal of the explicitly declared malformed subject. No hidden implementation-generated expectation.",
+      "rollback_or_recovery": "Stop the affected case; retain the input, definition, and failed witness at zero original success credit; add a named prospective correction and test only its changed dependency.",
+      "protected_gates": [
+        "empirical",
+        "participant",
+        "professional",
+        "production",
+        "deployment",
+        "identity",
+        "legal",
+        "cultural",
+        "affected_party",
+        "maori_authority",
+        "privacy_complete",
+        "accessibility_complete",
+        "exhaustive_security",
+        "independent_reproduction",
+        "agi_asi",
+        "consciousness_personhood",
+        "theory_of_everything",
+        "proof_canon",
+        "stage20"
+      ],
+      "source_status": "stable",
+      "source_refs": [
+        "CRDT-PRIMARY",
+        "PROV-O"
+      ],
+      "outcomes_observed": false,
+      "inherited_novelty_credit": 0,
+      "inherited_execution_credit": 0,
+      "novelty_scope": "Distinct authored behavioral requirement relative to the selected Eiren corpus and prior Teryn operation catalogue; no universal novelty claim."
+    },
+    {
+      "operation": "timestamp_register_review",
+      "title": "The greatest timestamp selects the declared latest value",
+      "input": {
+        "records": [
+          {
+            "at": 1,
+            "value": "old",
+            "author": "a"
+          },
+          {
+            "at": 2,
+            "value": "new",
+            "author": "a"
+          }
+        ]
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "state": "CURRENT",
+          "at": 2,
+          "values": [
+            "new"
+          ]
+        },
+        "error": null
+      },
+      "adverse_input": {
+        "records": null
+      },
+      "adverse_expected": {
+        "ok": false,
+        "disposition": "open_gap",
+        "value": null,
+        "error": "INVALID_INPUT"
+      },
+      "proposal_id": "TH6922-133",
+      "session": "x2",
+      "pillar": "Freed ID and CBR Heart",
+      "practice": "provenance and disclosure editor",
+      "hypothesis": "The declared finite profile will satisfy this specific requirement: The greatest timestamp selects the declared latest value.",
+      "null_or_failure_condition": "A complete typed-envelope mismatch, changed input, admitted malformed subject, lost failed witness, or unearned authority claim falsifies the contract.",
+      "approval_class": "safe_now_bounded_synthetic_or_structural",
+      "execution_lane": "owner_self_scoped_x2",
+      "expected_disposition": "completed",
+      "concrete_artifacts": [
+        "docs/teryn-halewick/v692-v2/x2/results.json",
+        "docs/teryn-halewick/v692-v2/x2/code/engine.txt",
+        "docs/teryn-halewick/v692-v2/x2/reviewed-cases/TH6922-133.json"
+      ],
+      "falsifier_or_acceptance_gate": "Complete independently frozen envelope equality, input nonmutation, and refusal of the explicitly declared malformed subject. No hidden implementation-generated expectation.",
+      "rollback_or_recovery": "Stop the affected case; retain the input, definition, and failed witness at zero original success credit; add a named prospective correction and test only its changed dependency.",
+      "protected_gates": [
+        "empirical",
+        "participant",
+        "professional",
+        "production",
+        "deployment",
+        "identity",
+        "legal",
+        "cultural",
+        "affected_party",
+        "maori_authority",
+        "privacy_complete",
+        "accessibility_complete",
+        "exhaustive_security",
+        "independent_reproduction",
+        "agi_asi",
+        "consciousness_personhood",
+        "theory_of_everything",
+        "proof_canon",
+        "stage20"
+      ],
+      "source_status": "stable",
+      "source_refs": [
+        "CRDT-PRIMARY",
+        "PROV-O"
+      ],
+      "outcomes_observed": false,
+      "inherited_novelty_credit": 0,
+      "inherited_execution_credit": 0,
+      "novelty_scope": "Distinct authored behavioral requirement relative to the selected Eiren corpus and prior Teryn operation catalogue; no universal novelty claim."
+    },
+    {
+      "operation": "timestamp_register_review",
+      "title": "Input order does not replace timestamp order",
+      "input": {
+        "records": [
+          {
+            "at": 5,
+            "value": 5,
+            "author": "a"
+          },
+          {
+            "at": 1,
+            "value": 1,
+            "author": "a"
+          }
+        ]
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "state": "CURRENT",
+          "at": 5,
+          "values": [
+            5
+          ]
+        },
+        "error": null
+      },
+      "adverse_input": {
+        "records": null
+      },
+      "adverse_expected": {
+        "ok": false,
+        "disposition": "open_gap",
+        "value": null,
+        "error": "INVALID_INPUT"
+      },
+      "proposal_id": "TH6922-134",
+      "session": "x2",
+      "pillar": "Freed ID and CBR Heart",
+      "practice": "provenance and disclosure editor",
+      "hypothesis": "The declared finite profile will satisfy this specific requirement: Input order does not replace timestamp order.",
+      "null_or_failure_condition": "A complete typed-envelope mismatch, changed input, admitted malformed subject, lost failed witness, or unearned authority claim falsifies the contract.",
+      "approval_class": "safe_now_bounded_synthetic_or_structural",
+      "execution_lane": "owner_self_scoped_x2",
+      "expected_disposition": "completed",
+      "concrete_artifacts": [
+        "docs/teryn-halewick/v692-v2/x2/results.json",
+        "docs/teryn-halewick/v692-v2/x2/code/engine.txt",
+        "docs/teryn-halewick/v692-v2/x2/reviewed-cases/TH6922-134.json"
+      ],
+      "falsifier_or_acceptance_gate": "Complete independently frozen envelope equality, input nonmutation, and refusal of the explicitly declared malformed subject. No hidden implementation-generated expectation.",
+      "rollback_or_recovery": "Stop the affected case; retain the input, definition, and failed witness at zero original success credit; add a named prospective correction and test only its changed dependency.",
+      "protected_gates": [
+        "empirical",
+        "participant",
+        "professional",
+        "production",
+        "deployment",
+        "identity",
+        "legal",
+        "cultural",
+        "affected_party",
+        "maori_authority",
+        "privacy_complete",
+        "accessibility_complete",
+        "exhaustive_security",
+        "independent_reproduction",
+        "agi_asi",
+        "consciousness_personhood",
+        "theory_of_everything",
+        "proof_canon",
+        "stage20"
+      ],
+      "source_status": "stable",
+      "source_refs": [
+        "CRDT-PRIMARY",
+        "PROV-O"
+      ],
+      "outcomes_observed": false,
+      "inherited_novelty_credit": 0,
+      "inherited_execution_credit": 0,
+      "novelty_scope": "Distinct authored behavioral requirement relative to the selected Eiren corpus and prior Teryn operation catalogue; no universal novelty claim."
+    },
+    {
+      "operation": "timestamp_register_review",
+      "title": "Equal latest values do not become a conflict",
+      "input": {
+        "records": [
+          {
+            "at": 2,
+            "value": "x",
+            "author": "a"
+          },
+          {
+            "at": 2,
+            "value": "x",
+            "author": "b"
+          }
+        ]
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "state": "CURRENT",
+          "at": 2,
+          "values": [
+            "x"
+          ]
+        },
+        "error": null
+      },
+      "adverse_input": {
+        "records": null
+      },
+      "adverse_expected": {
+        "ok": false,
+        "disposition": "open_gap",
+        "value": null,
+        "error": "INVALID_INPUT"
+      },
+      "proposal_id": "TH6922-135",
+      "session": "x2",
+      "pillar": "Freed ID and CBR Heart",
+      "practice": "provenance and disclosure editor",
+      "hypothesis": "The declared finite profile will satisfy this specific requirement: Equal latest values do not become a conflict.",
+      "null_or_failure_condition": "A complete typed-envelope mismatch, changed input, admitted malformed subject, lost failed witness, or unearned authority claim falsifies the contract.",
+      "approval_class": "safe_now_bounded_synthetic_or_structural",
+      "execution_lane": "owner_self_scoped_x2",
+      "expected_disposition": "completed",
+      "concrete_artifacts": [
+        "docs/teryn-halewick/v692-v2/x2/results.json",
+        "docs/teryn-halewick/v692-v2/x2/code/engine.txt",
+        "docs/teryn-halewick/v692-v2/x2/reviewed-cases/TH6922-135.json"
+      ],
+      "falsifier_or_acceptance_gate": "Complete independently frozen envelope equality, input nonmutation, and refusal of the explicitly declared malformed subject. No hidden implementation-generated expectation.",
+      "rollback_or_recovery": "Stop the affected case; retain the input, definition, and failed witness at zero original success credit; add a named prospective correction and test only its changed dependency.",
+      "protected_gates": [
+        "empirical",
+        "participant",
+        "professional",
+        "production",
+        "deployment",
+        "identity",
+        "legal",
+        "cultural",
+        "affected_party",
+        "maori_authority",
+        "privacy_complete",
+        "accessibility_complete",
+        "exhaustive_security",
+        "independent_reproduction",
+        "agi_asi",
+        "consciousness_personhood",
+        "theory_of_everything",
+        "proof_canon",
+        "stage20"
+      ],
+      "source_status": "stable",
+      "source_refs": [
+        "CRDT-PRIMARY",
+        "PROV-O"
+      ],
+      "outcomes_observed": false,
+      "inherited_novelty_credit": 0,
+      "inherited_execution_credit": 0,
+      "novelty_scope": "Distinct authored behavioral requirement relative to the selected Eiren corpus and prior Teryn operation catalogue; no universal novelty claim."
+    },
+    {
+      "operation": "timestamp_register_review",
+      "title": "Different values at the same latest timestamp stay conflicted",
+      "input": {
+        "records": [
+          {
+            "at": 2,
+            "value": "a",
+            "author": "a"
+          },
+          {
+            "at": 2,
+            "value": "b",
+            "author": "b"
+          }
+        ]
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "state": "CONFLICT",
+          "at": 2,
+          "values": [
+            "a",
+            "b"
+          ]
+        },
+        "error": null
+      },
+      "adverse_input": {
+        "records": null
+      },
+      "adverse_expected": {
+        "ok": false,
+        "disposition": "open_gap",
+        "value": null,
+        "error": "INVALID_INPUT"
+      },
+      "proposal_id": "TH6922-136",
+      "session": "x2",
+      "pillar": "Freed ID and CBR Heart",
+      "practice": "provenance and disclosure editor",
+      "hypothesis": "The declared finite profile will satisfy this specific requirement: Different values at the same latest timestamp stay conflicted.",
+      "null_or_failure_condition": "A complete typed-envelope mismatch, changed input, admitted malformed subject, lost failed witness, or unearned authority claim falsifies the contract.",
+      "approval_class": "safe_now_bounded_synthetic_or_structural",
+      "execution_lane": "owner_self_scoped_x2",
+      "expected_disposition": "completed",
+      "concrete_artifacts": [
+        "docs/teryn-halewick/v692-v2/x2/results.json",
+        "docs/teryn-halewick/v692-v2/x2/code/engine.txt",
+        "docs/teryn-halewick/v692-v2/x2/reviewed-cases/TH6922-136.json"
+      ],
+      "falsifier_or_acceptance_gate": "Complete independently frozen envelope equality, input nonmutation, and refusal of the explicitly declared malformed subject. No hidden implementation-generated expectation.",
+      "rollback_or_recovery": "Stop the affected case; retain the input, definition, and failed witness at zero original success credit; add a named prospective correction and test only its changed dependency.",
+      "protected_gates": [
+        "empirical",
+        "participant",
+        "professional",
+        "production",
+        "deployment",
+        "identity",
+        "legal",
+        "cultural",
+        "affected_party",
+        "maori_authority",
+        "privacy_complete",
+        "accessibility_complete",
+        "exhaustive_security",
+        "independent_reproduction",
+        "agi_asi",
+        "consciousness_personhood",
+        "theory_of_everything",
+        "proof_canon",
+        "stage20"
+      ],
+      "source_status": "stable",
+      "source_refs": [
+        "CRDT-PRIMARY",
+        "PROV-O"
+      ],
+      "outcomes_observed": false,
+      "inherited_novelty_credit": 0,
+      "inherited_execution_credit": 0,
+      "novelty_scope": "Distinct authored behavioral requirement relative to the selected Eiren corpus and prior Teryn operation catalogue; no universal novelty claim."
+    },
+    {
+      "operation": "timestamp_register_review",
+      "title": "Older disagreements do not replace a later unique value",
+      "input": {
+        "records": [
+          {
+            "at": 1,
+            "value": "a",
+            "author": "a"
+          },
+          {
+            "at": 1,
+            "value": "b",
+            "author": "b"
+          },
+          {
+            "at": 2,
+            "value": "c",
+            "author": "a"
+          }
+        ]
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "state": "CURRENT",
+          "at": 2,
+          "values": [
+            "c"
+          ]
+        },
+        "error": null
+      },
+      "adverse_input": {
+        "records": null
+      },
+      "adverse_expected": {
+        "ok": false,
+        "disposition": "open_gap",
+        "value": null,
+        "error": "INVALID_INPUT"
+      },
+      "proposal_id": "TH6922-137",
+      "session": "x2",
+      "pillar": "Freed ID and CBR Heart",
+      "practice": "provenance and disclosure editor",
+      "hypothesis": "The declared finite profile will satisfy this specific requirement: Older disagreements do not replace a later unique value.",
+      "null_or_failure_condition": "A complete typed-envelope mismatch, changed input, admitted malformed subject, lost failed witness, or unearned authority claim falsifies the contract.",
+      "approval_class": "safe_now_bounded_synthetic_or_structural",
+      "execution_lane": "owner_self_scoped_x2",
+      "expected_disposition": "completed",
+      "concrete_artifacts": [
+        "docs/teryn-halewick/v692-v2/x2/results.json",
+        "docs/teryn-halewick/v692-v2/x2/code/engine.txt",
+        "docs/teryn-halewick/v692-v2/x2/reviewed-cases/TH6922-137.json"
+      ],
+      "falsifier_or_acceptance_gate": "Complete independently frozen envelope equality, input nonmutation, and refusal of the explicitly declared malformed subject. No hidden implementation-generated expectation.",
+      "rollback_or_recovery": "Stop the affected case; retain the input, definition, and failed witness at zero original success credit; add a named prospective correction and test only its changed dependency.",
+      "protected_gates": [
+        "empirical",
+        "participant",
+        "professional",
+        "production",
+        "deployment",
+        "identity",
+        "legal",
+        "cultural",
+        "affected_party",
+        "maori_authority",
+        "privacy_complete",
+        "accessibility_complete",
+        "exhaustive_security",
+        "independent_reproduction",
+        "agi_asi",
+        "consciousness_personhood",
+        "theory_of_everything",
+        "proof_canon",
+        "stage20"
+      ],
+      "source_status": "stable",
+      "source_refs": [
+        "CRDT-PRIMARY",
+        "PROV-O"
+      ],
+      "outcomes_observed": false,
+      "inherited_novelty_credit": 0,
+      "inherited_execution_credit": 0,
+      "novelty_scope": "Distinct authored behavioral requirement relative to the selected Eiren corpus and prior Teryn operation catalogue; no universal novelty claim."
+    },
+    {
+      "operation": "timestamp_register_review",
+      "title": "Null remains a current recorded value",
+      "input": {
+        "records": [
+          {
+            "at": 0,
+            "value": null,
+            "author": "a"
+          }
+        ]
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "state": "CURRENT",
+          "at": 0,
+          "values": [
+            null
+          ]
+        },
+        "error": null
+      },
+      "adverse_input": {
+        "records": null
+      },
+      "adverse_expected": {
+        "ok": false,
+        "disposition": "open_gap",
+        "value": null,
+        "error": "INVALID_INPUT"
+      },
+      "proposal_id": "TH6922-138",
+      "session": "x2",
+      "pillar": "Freed ID and CBR Heart",
+      "practice": "provenance and disclosure editor",
+      "hypothesis": "The declared finite profile will satisfy this specific requirement: Null remains a current recorded value.",
+      "null_or_failure_condition": "A complete typed-envelope mismatch, changed input, admitted malformed subject, lost failed witness, or unearned authority claim falsifies the contract.",
+      "approval_class": "safe_now_bounded_synthetic_or_structural",
+      "execution_lane": "owner_self_scoped_x2",
+      "expected_disposition": "completed",
+      "concrete_artifacts": [
+        "docs/teryn-halewick/v692-v2/x2/results.json",
+        "docs/teryn-halewick/v692-v2/x2/code/engine.txt",
+        "docs/teryn-halewick/v692-v2/x2/reviewed-cases/TH6922-138.json"
+      ],
+      "falsifier_or_acceptance_gate": "Complete independently frozen envelope equality, input nonmutation, and refusal of the explicitly declared malformed subject. No hidden implementation-generated expectation.",
+      "rollback_or_recovery": "Stop the affected case; retain the input, definition, and failed witness at zero original success credit; add a named prospective correction and test only its changed dependency.",
+      "protected_gates": [
+        "empirical",
+        "participant",
+        "professional",
+        "production",
+        "deployment",
+        "identity",
+        "legal",
+        "cultural",
+        "affected_party",
+        "maori_authority",
+        "privacy_complete",
+        "accessibility_complete",
+        "exhaustive_security",
+        "independent_reproduction",
+        "agi_asi",
+        "consciousness_personhood",
+        "theory_of_everything",
+        "proof_canon",
+        "stage20"
+      ],
+      "source_status": "stable",
+      "source_refs": [
+        "CRDT-PRIMARY",
+        "PROV-O"
+      ],
+      "outcomes_observed": false,
+      "inherited_novelty_credit": 0,
+      "inherited_execution_credit": 0,
+      "novelty_scope": "Distinct authored behavioral requirement relative to the selected Eiren corpus and prior Teryn operation catalogue; no universal novelty claim."
+    },
+    {
+      "operation": "timestamp_register_review",
+      "title": "Zero remains distinct from a missing register",
+      "input": {
+        "records": [
+          {
+            "at": 0,
+            "value": 0,
+            "author": "a"
+          }
+        ]
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "state": "CURRENT",
+          "at": 0,
+          "values": [
+            0
+          ]
+        },
+        "error": null
+      },
+      "adverse_input": {
+        "records": null
+      },
+      "adverse_expected": {
+        "ok": false,
+        "disposition": "open_gap",
+        "value": null,
+        "error": "INVALID_INPUT"
+      },
+      "proposal_id": "TH6922-139",
+      "session": "x2",
+      "pillar": "Freed ID and CBR Heart",
+      "practice": "provenance and disclosure editor",
+      "hypothesis": "The declared finite profile will satisfy this specific requirement: Zero remains distinct from a missing register.",
+      "null_or_failure_condition": "A complete typed-envelope mismatch, changed input, admitted malformed subject, lost failed witness, or unearned authority claim falsifies the contract.",
+      "approval_class": "safe_now_bounded_synthetic_or_structural",
+      "execution_lane": "owner_self_scoped_x2",
+      "expected_disposition": "completed",
+      "concrete_artifacts": [
+        "docs/teryn-halewick/v692-v2/x2/results.json",
+        "docs/teryn-halewick/v692-v2/x2/code/engine.txt",
+        "docs/teryn-halewick/v692-v2/x2/reviewed-cases/TH6922-139.json"
+      ],
+      "falsifier_or_acceptance_gate": "Complete independently frozen envelope equality, input nonmutation, and refusal of the explicitly declared malformed subject. No hidden implementation-generated expectation.",
+      "rollback_or_recovery": "Stop the affected case; retain the input, definition, and failed witness at zero original success credit; add a named prospective correction and test only its changed dependency.",
+      "protected_gates": [
+        "empirical",
+        "participant",
+        "professional",
+        "production",
+        "deployment",
+        "identity",
+        "legal",
+        "cultural",
+        "affected_party",
+        "maori_authority",
+        "privacy_complete",
+        "accessibility_complete",
+        "exhaustive_security",
+        "independent_reproduction",
+        "agi_asi",
+        "consciousness_personhood",
+        "theory_of_everything",
+        "proof_canon",
+        "stage20"
+      ],
+      "source_status": "stable",
+      "source_refs": [
+        "CRDT-PRIMARY",
+        "PROV-O"
+      ],
+      "outcomes_observed": false,
+      "inherited_novelty_credit": 0,
+      "inherited_execution_credit": 0,
+      "novelty_scope": "Distinct authored behavioral requirement relative to the selected Eiren corpus and prior Teryn operation catalogue; no universal novelty claim."
+    },
+    {
+      "operation": "timestamp_register_review",
+      "title": "Boolean and numeric tie values remain distinct",
+      "input": {
+        "records": [
+          {
+            "at": 1,
+            "value": false,
+            "author": "a"
+          },
+          {
+            "at": 1,
+            "value": 0,
+            "author": "b"
+          }
+        ]
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "state": "CONFLICT",
+          "at": 1,
+          "values": [
+            0,
+            false
+          ]
+        },
+        "error": null
+      },
+      "adverse_input": {
+        "records": null
+      },
+      "adverse_expected": {
+        "ok": false,
+        "disposition": "open_gap",
+        "value": null,
+        "error": "INVALID_INPUT"
+      },
+      "proposal_id": "TH6922-140",
+      "session": "x2",
+      "pillar": "Freed ID and CBR Heart",
+      "practice": "provenance and disclosure editor",
+      "hypothesis": "The declared finite profile will satisfy this specific requirement: Boolean and numeric tie values remain distinct.",
+      "null_or_failure_condition": "A complete typed-envelope mismatch, changed input, admitted malformed subject, lost failed witness, or unearned authority claim falsifies the contract.",
+      "approval_class": "safe_now_bounded_synthetic_or_structural",
+      "execution_lane": "owner_self_scoped_x2",
+      "expected_disposition": "completed",
+      "concrete_artifacts": [
+        "docs/teryn-halewick/v692-v2/x2/results.json",
+        "docs/teryn-halewick/v692-v2/x2/code/engine.txt",
+        "docs/teryn-halewick/v692-v2/x2/reviewed-cases/TH6922-140.json"
+      ],
+      "falsifier_or_acceptance_gate": "Complete independently frozen envelope equality, input nonmutation, and refusal of the explicitly declared malformed subject. No hidden implementation-generated expectation.",
+      "rollback_or_recovery": "Stop the affected case; retain the input, definition, and failed witness at zero original success credit; add a named prospective correction and test only its changed dependency.",
+      "protected_gates": [
+        "empirical",
+        "participant",
+        "professional",
+        "production",
+        "deployment",
+        "identity",
+        "legal",
+        "cultural",
+        "affected_party",
+        "maori_authority",
+        "privacy_complete",
+        "accessibility_complete",
+        "exhaustive_security",
+        "independent_reproduction",
+        "agi_asi",
+        "consciousness_personhood",
+        "theory_of_everything",
+        "proof_canon",
+        "stage20"
+      ],
+      "source_status": "stable",
+      "source_refs": [
+        "CRDT-PRIMARY",
+        "PROV-O"
+      ],
+      "outcomes_observed": false,
+      "inherited_novelty_credit": 0,
+      "inherited_execution_credit": 0,
+      "novelty_scope": "Distinct authored behavioral requirement relative to the selected Eiren corpus and prior Teryn operation catalogue; no universal novelty claim."
+    }
+  ],
+  "source_definition": "docs/teryn-halewick/v692-v2/plan/proposal-freeze.json",
+  "execution_engine": "docs/teryn-halewick/v692-v2/x2/code/engine.txt",
+  "definition_sha256": "a173bd89e8a274d371a7f73ea4d94e35fe271b5bd796f1a6ecb9bd5136391e2d",
+  "zero_inherited_credit": true
+}
