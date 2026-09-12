@@ -1,0 +1,213 @@
+'use strict';
+
+const crypto = require('crypto');
+
+function stable(value) {
+  if (Array.isArray(value)) return '[' + value.map(stable).join(',') + ']';
+  if (value && typeof value === 'object') {
+    return '{' + Object.keys(value).sort().map(key => JSON.stringify(key) + ':' + stable(value[key])).join(',') + '}';
+  }
+  return JSON.stringify(value);
+}
+
+function sha256(value) {
+  const bytes = Buffer.isBuffer(value)
+    ? value
+    : Buffer.from(typeof value === 'string' ? value : stable(value), 'utf8');
+  return crypto.createHash('sha256').update(bytes).digest('hex');
+}
+
+function clone(value) {
+  return JSON.parse(JSON.stringify(value));
+}
+
+function envelope(operation, errors, result) {
+  return {
+    schema: 'ghc.family.synthetic-sequence-result.v1',
+    operation,
+    valid: errors.length === 0,
+    errors,
+    result,
+    evidence_class: 'wholly_synthetic_same_owner',
+    real_biological_observation: false,
+    participant_evidence: false,
+    professional_interpretation: false,
+    authority_grant: false,
+    independent_reproduction: false,
+    terminal_verdict: 'NOT_READY_FOR_STAGE_20'
+  };
+}
+
+function gcd(a, b) {
+  let x = Math.abs(a);
+  let y = Math.abs(b);
+  while (y !== 0) [x, y] = [y, x % y];
+  return x || 1;
+}
+
+const IUPAC = 'ACGTRYSWKMBDHVN';
+const COMPLEMENT = {
+  A: 'T', C: 'G', G: 'C', T: 'A',
+  R: 'Y', Y: 'R', S: 'S', W: 'W',
+  K: 'M', M: 'K', B: 'V', V: 'B',
+  D: 'H', H: 'D', N: 'N'
+};
+
+function fastaHeader(input) {
+  const errors = [];
+  const identifier = typeof input?.identifier === 'string' ? input.identifier : '';
+  const description = typeof input?.description === 'string' ? input.description.trim() : '';
+  const maximum = Number.isInteger(input?.maximumIdLength) ? input.maximumIdLength : 25;
+  if (!identifier) errors.push('IDENTIFIER_REQUIRED');
+  if (identifier.length > maximum) errors.push('IDENTIFIER_TOO_LONG');
+  if (identifier && !/^[A-Za-z0-9._:*#-]+$/.test(identifier)) errors.push('IDENTIFIER_SYMBOL');
+  return envelope('fasta_header', errors, {
+    identifier,
+    description,
+    maximum_id_length: maximum,
+    definition_line: errors.length === 0 ? '>' + identifier + (description ? ' ' + description : '') : null
+  });
+}
+
+function sequenceAlphabet(input) {
+  const errors = [];
+  const sequence = typeof input?.sequence === 'string' ? input.sequence.toUpperCase().replace(/\s+/g, '') : null;
+  const allowed = typeof input?.allowed === 'string' ? input.allowed.toUpperCase() : IUPAC;
+  if (sequence === null) errors.push('SEQUENCE_TYPE');
+  const unsupported = sequence === null ? [] : [...sequence].flatMap((symbol, index) => allowed.includes(symbol) ? [] : [{index, symbol}]);
+  if (unsupported.length) errors.push('UNSUPPORTED_SYMBOL');
+  return envelope('sequence_alphabet', errors, {sequence, allowed, unsupported});
+}
+
+function lineWrap(input) {
+  const errors = [];
+  const sequence = typeof input?.sequence === 'string' ? input.sequence : null;
+  const width = input?.width;
+  if (sequence === null) errors.push('SEQUENCE_TYPE');
+  if (!Number.isInteger(width) || width < 1 || width > 80) errors.push('WIDTH_RANGE');
+  const lines = errors.length ? [] : Array.from({length: Math.ceil(sequence.length / width)}, (_, index) => sequence.slice(index * width, (index + 1) * width));
+  return envelope('line_wrap', errors, {width, lines, roundtrip: errors.length ? null : lines.join('')});
+}
+
+function sequenceLength(input) {
+  const errors = [];
+  const sequence = typeof input?.sequence === 'string' ? input.sequence.toUpperCase() : null;
+  if (sequence === null) errors.push('SEQUENCE_TYPE');
+  const symbols = sequence === null ? [] : [...sequence];
+  const canonical = symbols.filter(symbol => 'ACGT'.includes(symbol)).length;
+  const ambiguous = symbols.filter(symbol => IUPAC.includes(symbol) && !'ACGT'.includes(symbol)).length;
+  const unsupported = symbols.length - canonical - ambiguous;
+  if (unsupported) errors.push('UNSUPPORTED_SYMBOL');
+  return envelope('sequence_length', errors, {total: symbols.length, canonical, ambiguous, unsupported});
+}
+
+function gcFraction(input) {
+  const errors = [];
+  const sequence = typeof input?.sequence === 'string' ? input.sequence.toUpperCase() : null;
+  if (!sequence) errors.push('SEQUENCE_REQUIRED');
+  if (sequence && /[^ACGT]/.test(sequence)) errors.push('CANONICAL_SYMBOL_REQUIRED');
+  const gc = sequence ? [...sequence].filter(symbol => symbol === 'G' || symbol === 'C').length : 0;
+  const denominator = sequence ? sequence.length : 0;
+  const divisor = gcd(gc, denominator);
+  return envelope('gc_fraction', errors, {
+    gc_count: gc,
+    sequence_length: denominator,
+    numerator: denominator ? gc / divisor : 0,
+    denominator: denominator ? denominator / divisor : 0,
+    decimal: denominator ? gc / denominator : null
+  });
+}
+
+function reverseComplement(input) {
+  const errors = [];
+  const sequence = typeof input?.sequence === 'string' ? input.sequence.toUpperCase() : null;
+  if (sequence === null) errors.push('SEQUENCE_TYPE');
+  const unsupported = sequence === null ? [] : [...sequence].filter(symbol => !Object.hasOwn(COMPLEMENT, symbol));
+  if (unsupported.length) errors.push('UNSUPPORTED_SYMBOL');
+  const value = errors.length ? null : [...sequence].reverse().map(symbol => COMPLEMENT[symbol]).join('');
+  return envelope('reverse_complement', errors, {sequence, reverse_complement: value, unsupported});
+}
+
+function ambiguousCount(input) {
+  const errors = [];
+  const sequence = typeof input?.sequence === 'string' ? input.sequence.toUpperCase() : null;
+  if (sequence === null) errors.push('SEQUENCE_TYPE');
+  const counts = {};
+  if (sequence !== null) {
+    for (const symbol of sequence) {
+      if (!IUPAC.includes(symbol)) errors.push('UNSUPPORTED_SYMBOL');
+      if (!'ACGT'.includes(symbol)) counts[symbol] = (counts[symbol] || 0) + 1;
+    }
+  }
+  return envelope('ambiguous_count', [...new Set(errors)], {
+    ambiguous_total: Object.values(counts).reduce((sum, value) => sum + value, 0),
+    counts
+  });
+}
+
+function sequenceChecksum(input) {
+  const errors = [];
+  const source = typeof input?.sequence === 'string' ? input.sequence : null;
+  if (source === null) errors.push('SEQUENCE_TYPE');
+  if (input?.normalization !== 'uppercase_no_whitespace') errors.push('NORMALIZATION_PROFILE');
+  const normalized = source === null ? null : source.toUpperCase().replace(/\s+/g, '');
+  return envelope('sequence_checksum', errors, {
+    normalization: input?.normalization ?? null,
+    normalized_length: normalized === null ? 0 : normalized.length,
+    sha256: errors.length ? null : sha256(normalized)
+  });
+}
+
+function recordOrder(input) {
+  const errors = [];
+  const identifiers = Array.isArray(input?.identifiers) ? clone(input.identifiers) : null;
+  if (identifiers === null) errors.push('IDENTIFIER_LIST');
+  if (identifiers && identifiers.some(value => typeof value !== 'string' || value.length === 0)) errors.push('IDENTIFIER_TYPE');
+  const positions = {};
+  if (identifiers) identifiers.forEach((identifier, index) => {
+    const key = String(identifier);
+    (positions[key] ||= []).push(index);
+  });
+  const duplicates = Object.entries(positions).filter(([, indexes]) => indexes.length > 1).map(([identifier, indexes]) => ({identifier, indexes}));
+  return envelope('record_order', errors, {identifiers, duplicates, deduplicated: false});
+}
+
+function recordManifest(input) {
+  const errors = [];
+  const entries = Array.isArray(input?.entries) ? clone(input.entries) : null;
+  if (entries === null) errors.push('ENTRY_LIST');
+  const normalized = [];
+  if (entries) {
+    entries.forEach((entry, index) => {
+      const entryErrors = [];
+      if (typeof entry?.path !== 'string' || !entry.path || entry.path.startsWith('/') || entry.path.includes('..') || entry.path.includes('\\')) entryErrors.push('PATH');
+      if (!Number.isInteger(entry?.bytes) || entry.bytes < 0) entryErrors.push('BYTES');
+      if (typeof entry?.digest !== 'string' || !/^[0-9a-f]{64}$/i.test(entry.digest)) entryErrors.push('DIGEST');
+      if (entryErrors.length) errors.push('ENTRY_' + index + '_' + entryErrors.join('_'));
+      normalized.push({path: entry?.path ?? null, bytes: entry?.bytes ?? null, digest: entry?.digest ?? null, errors: entryErrors});
+    });
+    const paths = entries.map(entry => entry?.path);
+    if (new Set(paths).size !== paths.length) errors.push('DUPLICATE_PATH');
+  }
+  return envelope('record_manifest', errors, {entry_count: normalized.length, entries: normalized});
+}
+
+const OPERATIONS = {
+  fasta_header: fastaHeader,
+  sequence_alphabet: sequenceAlphabet,
+  line_wrap: lineWrap,
+  sequence_length: sequenceLength,
+  gc_fraction: gcFraction,
+  reverse_complement: reverseComplement,
+  ambiguous_count: ambiguousCount,
+  sequence_checksum: sequenceChecksum,
+  record_order: recordOrder,
+  record_manifest: recordManifest
+};
+
+function execute(operation, input) {
+  if (!Object.hasOwn(OPERATIONS, operation)) return envelope(operation, ['UNKNOWN_OPERATION'], null);
+  return OPERATIONS[operation](clone(input));
+}
+
+module.exports = {IUPAC, OPERATIONS, stable, sha256, clone, execute};

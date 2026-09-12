@@ -1,0 +1,36 @@
+{
+  "schema": "ghc.family.elowen-x1-operational-failures.v1",
+  "count": 4,
+  "failures": [
+    {
+      "negative_id": "EC6915-X1-N001",
+      "failure": "The first x1 builder reached all ten skill smoke checks but every official quick validation exited 1 because Windows Python decoded UTF-8 skill text with the legacy cp1252 default.",
+      "recovery": "Set PYTHONUTF8=1 only in the official validator child process and preserve the UTF-8 skill content and system defaults.",
+      "completion_credit": 0,
+      "retained": true
+    },
+    {
+      "negative_id": "EC6915-X1-N002",
+      "failure": "The isolated first-skill validator reproduced a UnicodeDecodeError at the UTF-8 Maori macron byte under the default Windows codec.",
+      "recovery": "The same skill passed the official validator once under the bounded process-local UTF-8 compatibility environment.",
+      "completion_credit": 0,
+      "retained": true
+    },
+    {
+      "negative_id": "EC6915-X1-N003",
+      "failure": "After the shared UTF-8 validator dependency was isolated, the corrected whole x1 builder was rerun and repeated already-passing core checks instead of rerunning only the failed validator dependency.",
+      "recovery": "Retain the overbroad retry at zero credit, never run the x1 builder again, and gate the commit with a separate no-write independent x1 validator.",
+      "completion_credit": 0,
+      "retained": true
+    },
+    {
+      "negative_id": "EC6915-X1-N004",
+      "failure": "The first no-write independent x1 aggregate passed every nonprivacy check but its private-route scanner counted five tokens from its own scanner-definition line and remained invalid with zero aggregate credit.",
+      "recovery": "Run one separately named privacy-only component that classifies the exact scanner-definition line before counting confirmed payload hits; do not replay the successful aggregate components.",
+      "completion_credit": 0,
+      "retained": true
+    }
+  ],
+  "failure_erasure": false,
+  "boundary": "Wholly synthetic sequence-record software evidence only. No real sequence, sample, organism, person, participant, patient, consent act, clinical interpretation, data-release decision, professional result, legal or cultural determination, affected-party acceptance, Maori authority, empirical GMUT confirmation, production readiness, independent reproduction, proof, canon, or Stage 20 authority."
+}

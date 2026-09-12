@@ -1,0 +1,154 @@
+'use strict';
+
+const fs = require('fs');
+const path = require('path');
+const crypto = require('crypto');
+
+const ROOT = path.resolve(__dirname, '../../../..');
+const BASE = path.join(ROOT, 'docs', 'elowen-cairn', 'v691-v5');
+const X1 = path.join(BASE, 'x1');
+const errors = [];
+
+function readJson(relative) {
+  return JSON.parse(fs.readFileSync(path.join(BASE, relative), 'utf8'));
+}
+
+function walk(directory) {
+  if (!fs.existsSync(directory)) return [];
+  const output = [];
+  for (const name of fs.readdirSync(directory).sort()) {
+    const file = path.join(directory, name);
+    const stat = fs.statSync(file);
+    if (stat.isDirectory()) output.push(...walk(file));
+    else output.push(file);
+  }
+  return output;
+}
+
+function sha256(bytes) {
+  return crypto.createHash('sha256').update(bytes).digest('hex');
+}
+
+function requireCheck(condition, code) {
+  if (!condition) errors.push(code);
+}
+
+const plan = readJson('plan/proposal-freeze.json');
+const planned = plan.proposals.filter(row => row.session === 'x1');
+const contracts = walk(path.join(X1, 'contracts')).filter(file => file.endsWith('.json'));
+requireCheck(planned.length === 100, 'PLAN_X1_COUNT');
+requireCheck(contracts.length === 100, 'CONTRACT_FILE_COUNT');
+
+let contractPasses = 0;
+let rejectingSubjects = 0;
+for (const file of contracts) {
+  const row = JSON.parse(fs.readFileSync(file, 'utf8'));
+  const proposal = planned.find(candidate => candidate.proposal_id === row.proposal_id);
+  const allChecks = row.checks && Object.values(row.checks).every(Boolean);
+  const validEnvelope = row.output && row.output.schema === 'ghc.family.synthetic-sequence-result.v1' && row.output.operation === row.operation;
+  const rejected = row.rejecting_mutation?.output?.valid === false && row.rejecting_mutation.output.errors.length > 0 && row.rejecting_mutation.completion_credit === 0;
+  const passed = Boolean(proposal && row.passed && row.outcome === 'completed' && allChecks && validEnvelope && rejected && row.same_owner_only && !row.independent_reproduction);
+  if (passed) contractPasses++;
+  else errors.push('CONTRACT_' + path.basename(file));
+  if (rejected) rejectingSubjects++;
+}
+
+const skillFiles = walk(path.join(X1, 'skills')).filter(file => path.basename(file) === 'SKILL.md');
+const skillValidation = readJson('x1/skill-validation.json');
+requireCheck(skillFiles.length === 10, 'SKILL_FILE_COUNT');
+requireCheck(skillValidation.count === 10 && skillValidation.passed === 10 && skillValidation.failed === 0, 'SKILL_VALIDATION_COUNT');
+requireCheck(skillValidation.records.every(row => row.official_quick_validate_passed && row.complete_read && row.accepting_smoke_passed && row.rejecting_smoke_passed && !row.global_installation), 'SKILL_VALIDATION_ROWS');
+
+const runnerFiles = walk(path.join(X1, 'runners')).filter(file => file.endsWith('.txt'));
+const runnerValidation = readJson('x1/runner-validation.json');
+requireCheck(runnerFiles.length === 5, 'RUNNER_FILE_COUNT');
+requireCheck(runnerValidation.count === 5 && runnerValidation.passed === 5 && runnerValidation.failed === 0, 'RUNNER_VALIDATION_COUNT');
+requireCheck(runnerValidation.records.every(row => row.accepting_smoke_passed && row.rejecting_smoke_passed && row.outside_operation_blocked && !row.global_publication), 'RUNNER_VALIDATION_ROWS');
+
+const portfolio = readJson('x1/portfolio-execution.json');
+requireCheck(portfolio.safe.length === 100 && portfolio.safe.every(row => row.execution_state === 'executed_bounded_same_owner'), 'SAFE_PORTFOLIO');
+requireCheck(portfolio.candidate.length === 100 && portfolio.candidate.every(row => row.execution_state === 'executed_bounded_same_owner'), 'CANDIDATE_PORTFOLIO');
+requireCheck(portfolio.clean_fix_refine.length === 100 && portfolio.clean_fix_refine.every(row => row.execution_state === 'executed_bounded_same_owner'), 'CFR_PORTFOLIO');
+requireCheck(portfolio.exact_packets.length === 50 && portfolio.exact_packets.every(row => row.execution_state === 'held_to_exact_action_or_external_gate'), 'EXACT_PACKETS');
+requireCheck(portfolio.blocked_packets.length === 30 && portfolio.blocked_packets.every(row => row.execution_state === 'visible_unexecuted'), 'BLOCKED_PACKETS');
+
+const truth = readJson('x1/phase-truth.json');
+requireCheck(truth.planning_head === 'b25d6e41c92d988538ad47348762c1560e3c8b3e', 'PLANNING_HEAD');
+requireCheck(truth.outcomes.completed === 100 && truth.outcomes.represented === 0 && truth.outcomes.open_gap === 0 && truth.outcomes.exact_gate === 0, 'OUTCOME_COUNTS');
+requireCheck(truth.skills_built === 10 && truth.runners_built === 5 && truth.skills_global_installed === 0 && truth.runners_published === 0, 'TOOL_COUNTS');
+requireCheck(truth.x2_implementation_present === false && truth.x2_outcomes === null, 'X2_SEPARATION');
+requireCheck(truth.incremental_spend_usd === 0 && truth.external_actions === 0 && truth.canonical_invocations === 0 && truth.successor_contacts === 0, 'ACTION_BOUNDARY');
+requireCheck(truth.terminal_verdict === 'NOT_READY_FOR_STAGE_20', 'TERMINAL_VERDICT');
+requireCheck(!fs.existsSync(path.join(BASE, 'x2')), 'X2_PATH_ABSENT');
+
+const negatives = readJson('x1/retained-negative-register.json');
+const operations = readJson('x1/operational-failures.json');
+const methodFlow = readJson('x1/method-flow.json');
+requireCheck(negatives.count === negatives.records.length && negatives.completion_credit === 0 && !negatives.failure_erasure, 'NEGATIVE_REGISTER');
+requireCheck(operations.count === operations.failures.length && !operations.failure_erasure, 'OPERATIONAL_FAILURES');
+requireCheck(methodFlow.counts.methods === methodFlow.methods.length && methodFlow.counts.witnesses === methodFlow.witnesses.length, 'METHOD_COUNTS');
+requireCheck(methodFlow.counts.witness_results.fail === methodFlow.witnesses.filter(row => row.result === 'fail').length, 'FAILED_WITNESS_COUNT');
+requireCheck(methodFlow.counts.witness_results.pass === methodFlow.witnesses.filter(row => row.result === 'pass').length, 'PASSING_WITNESS_COUNT');
+
+const allX1 = walk(X1);
+const jsonFiles = allX1.filter(file => file.endsWith('.json'));
+let jsonParses = 0;
+for (const file of jsonFiles) {
+  try { JSON.parse(fs.readFileSync(file, 'utf8')); jsonParses++; }
+  catch { errors.push('JSON_' + path.relative(BASE, file)); }
+}
+
+const manifest = readJson('x1/manifest.json');
+const exclusions = new Set(manifest.declared_self_exclusions);
+const selected = walk(BASE).filter(file => file.startsWith(X1 + path.sep) || [
+  'sequence-x1-engine.txt', 'build-x1.txt', 'test-x1.txt', 'finalize-x1.txt'
+].includes(path.basename(file)));
+const expectedPaths = selected.map(file => path.relative(ROOT, file).replaceAll('\\', '/')).filter(file => !exclusions.has(file)).sort();
+const declaredPaths = manifest.entries.map(row => row.path).sort();
+requireCheck(JSON.stringify(expectedPaths) === JSON.stringify(declaredPaths), 'MANIFEST_PATH_SET');
+requireCheck(manifest.entry_count === manifest.entries.length, 'MANIFEST_COUNT');
+let manifestMatches = 0;
+for (const entry of manifest.entries) {
+  const file = path.join(ROOT, ...entry.path.split('/'));
+  if (fs.existsSync(file)) {
+    const bytes = fs.readFileSync(file);
+    if (bytes.length === entry.bytes && sha256(bytes) === entry.sha256) manifestMatches++;
+    else errors.push('MANIFEST_BYTES_' + entry.path);
+  } else errors.push('MANIFEST_MISSING_' + entry.path);
+}
+
+const textFiles = selected.filter(file => ['.json','.md','.txt','.html'].includes(path.extname(file)));
+const joined = textFiles.map(file => fs.readFileSync(file, 'utf8')).join('\n');
+const privacy = {
+  raw_uuid: (joined.match(/\b[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\b/gi) || []).length,
+  private_absolute_path: (joined.match(/(?<![A-Za-z])[A-Za-z]:[\\/]/g) || []).length,
+  credential_assignment: (joined.match(/(?:api[_-]?key|password|secret|access[_-]?token|authorization)\s*[:=]\s*[^\s,}]+/gi) || []).length,
+  private_route_marker: (joined.match(/(?:source_thread_id|providerTabId|private callable identifier|private application state|session stream)/gi) || []).length
+};
+requireCheck(Object.values(privacy).every(value => value === 0), 'PRIVACY_CONFIRMED');
+let maxWords = 0;
+for (const file of textFiles) {
+  const words = fs.readFileSync(file, 'utf8').trim().split(/\s+/).filter(Boolean).length;
+  maxWords = Math.max(maxWords, words);
+  if (words > 100000) errors.push('WORD_CEILING_' + path.relative(BASE, file));
+}
+
+const summary = {
+  schema: 'ghc.family.elowen-x1-independent-test.v1',
+  valid: errors.length === 0,
+  errors,
+  contract_tests: {passed: contractPasses, total: contracts.length},
+  rejecting_subjects: {retained: rejectingSubjects, total: contracts.length},
+  skill_records: skillFiles.length,
+  runner_records: runnerFiles.length,
+  json_parses: {passed: jsonParses, total: jsonFiles.length},
+  manifest: {matched: manifestMatches, total: manifest.entries.length},
+  privacy,
+  max_document_words: maxWords,
+  x2_absent: !fs.existsSync(path.join(BASE, 'x2')),
+  same_owner_only: true,
+  independent_reproduction: false,
+  terminal_verdict: 'NOT_READY_FOR_STAGE_20'
+};
+process.stdout.write(JSON.stringify(summary) + '\n');
+if (errors.length) process.exitCode = 1;

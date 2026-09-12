@@ -1,0 +1,171 @@
+'use strict';
+
+const fs = require('fs');
+const path = require('path');
+const crypto = require('crypto');
+
+require.extensions['.txt'] = require.extensions['.js'];
+
+const ROOT = path.resolve(__dirname, '../../../..');
+const BASE = path.join(ROOT, 'docs', 'elowen-cairn', 'v691-v5');
+const X1 = path.join(BASE, 'x1');
+const BOUNDARY = 'Wholly synthetic same-owner sequence-record evidence only; no empirical, participant, professional, production, legal, cultural, Maori-authority, independent-reproduction, proof, canon, or Stage 20 promotion.';
+
+function readJson(relative) {
+  return JSON.parse(fs.readFileSync(path.join(BASE, relative), 'utf8'));
+}
+function writeJson(relative, value) {
+  const file = path.join(BASE, relative);
+  fs.mkdirSync(path.dirname(file), {recursive:true});
+  fs.writeFileSync(file, JSON.stringify(value, null, 2) + '\n', 'utf8');
+}
+function walk(directory) {
+  if (!fs.existsSync(directory)) return [];
+  const output=[];
+  for (const name of fs.readdirSync(directory).sort()) {
+    const file=path.join(directory,name);
+    const stat=fs.statSync(file);
+    if(stat.isDirectory()) output.push(...walk(file)); else output.push(file);
+  }
+  return output;
+}
+function sha256(bytes) { return crypto.createHash('sha256').update(bytes).digest('hex'); }
+
+const failure = {
+  negative_id: 'EC6915-X1-N003',
+  failure: 'After the shared UTF-8 validator dependency was isolated, the corrected whole x1 builder was rerun and repeated already-passing core checks instead of rerunning only the failed validator dependency.',
+  recovery: 'Retain the overbroad retry at zero credit, never run the x1 builder again, and gate the commit with a separate no-write independent x1 validator.',
+  completion_credit: 0,
+  retained: true
+};
+const privacyFailure = {
+  negative_id: 'EC6915-X1-N004',
+  failure: 'The first no-write independent x1 aggregate passed every nonprivacy check but its private-route scanner counted five tokens from its own scanner-definition line and remained invalid with zero aggregate credit.',
+  recovery: 'Run one separately named privacy-only component that classifies the exact scanner-definition line before counting confirmed payload hits; do not replay the successful aggregate components.',
+  completion_credit: 0,
+  retained: true
+};
+
+const operational = readJson('x1/operational-failures.json');
+if (!operational.failures.some(row => row.negative_id === failure.negative_id)) operational.failures.push(failure);
+if (!operational.failures.some(row => row.negative_id === privacyFailure.negative_id)) operational.failures.push(privacyFailure);
+operational.count = operational.failures.length;
+operational.failure_erasure = false;
+writeJson('x1/operational-failures.json', operational);
+
+const negatives = readJson('x1/retained-negative-register.json');
+if (!negatives.records.some(row => row.negative_id === failure.negative_id)) negatives.records.push(failure);
+if (!negatives.records.some(row => row.negative_id === privacyFailure.negative_id)) negatives.records.push(privacyFailure);
+negatives.count = negatives.records.length;
+negatives.completion_credit = 0;
+negatives.failure_erasure = false;
+writeJson('x1/retained-negative-register.json', negatives);
+
+const methodFlow = readJson('x1/method-flow.json');
+const methodId = 'EC6915-X1-M028';
+if (!methodFlow.methods.some(row => row.method_id === methodId)) {
+  methodFlow.methods.push({
+    method_id: methodId,
+    title: 'Prefer dependency-only recovery and a no-write independent commit gate',
+    failure_signature: failure.failure,
+    trigger_preconditions: ['A generative aggregate fails after attributable earlier components passed.'],
+    privacy_class: 'sanitized_public', approval_class: 'safe_now',
+    candidate_workaround: failure.recovery,
+    validation_witness_ids: [failure.negative_id + '-FAIL', failure.negative_id + '-PASS'],
+    recurrence_guard: 'Separate generative materialization from no-write validation and rerun only the failed dependency.',
+    rollback: 'Stop the generator, retain the failed attempt, and leave all already-materialized evidence inspectable.',
+    recommendation_state: 'preferred', supersedes: [], protected_gates: ['failure_erasure','canonical_replay','independent_reproduction'],
+    retained_negative_ids: [failure.negative_id], scope_boundary: BOUNDARY
+  });
+  methodFlow.witnesses.push(
+    {witness_id:failure.negative_id+'-FAIL',method_id:methodId,procedure:'Rerun the corrected generative x1 builder.',scope:'Elowen v691-v5 x1',expected:'Only failed dependency reruns.',observed:failure.failure,result:'fail',same_owner_only:true,independent_reproduction:false,retained_negative_ids:[failure.negative_id],boundary:BOUNDARY},
+    {witness_id:failure.negative_id+'-PASS',method_id:methodId,procedure:'Stop the generator and select the no-write independent x1 test.',scope:'Elowen v691-v5 x1',expected:'No further x1 generation replay.',observed:failure.recovery,result:'pass',same_owner_only:true,independent_reproduction:false,retained_negative_ids:[failure.negative_id],boundary:BOUNDARY}
+  );
+  methodFlow.state_events.push(
+    {method_id:methodId,from:'observed',to:'candidate',note:'Overbroad retry retained.'},
+    {method_id:methodId,from:'candidate',to:'validated',note:'No-write independent gate selected.'},
+    {method_id:methodId,from:'validated',to:'preferred',note:'Preferred for later aggregate dependency failures.'}
+  );
+}
+const privacyMethodId = 'EC6915-X1-M029';
+if (!methodFlow.methods.some(row => row.method_id === privacyMethodId)) {
+  methodFlow.methods.push({
+    method_id: privacyMethodId,
+    title: 'Adjudicate privacy scanner definitions in a separately named component',
+    failure_signature: privacyFailure.failure,
+    trigger_preconditions: ['A no-write aggregate fails only because its own scanner definition is counted as payload.'],
+    privacy_class: 'sanitized_public', approval_class: 'safe_now',
+    candidate_workaround: privacyFailure.recovery,
+    validation_witness_ids: [privacyFailure.negative_id + '-FAIL', privacyFailure.negative_id + '-PASS'],
+    recurrence_guard: 'Preserve candidate counts, classify only the exact scanner-definition line, and report confirmed payload hits separately.',
+    rollback: 'Keep the aggregate invalid and stop if any nondefinition route marker remains.',
+    recommendation_state: 'preferred', supersedes: [], protected_gates: ['privacy_complete','failure_erasure','aggregate_replay'],
+    retained_negative_ids: [privacyFailure.negative_id], scope_boundary: BOUNDARY
+  });
+  methodFlow.witnesses.push(
+    {witness_id:privacyFailure.negative_id+'-FAIL',method_id:privacyMethodId,procedure:'Run the first no-write independent x1 aggregate.',scope:'Elowen v691-v5 x1',expected:'Zero confirmed route markers after definition adjudication.',observed:privacyFailure.failure,result:'fail',same_owner_only:true,independent_reproduction:false,retained_negative_ids:[privacyFailure.negative_id],boundary:BOUNDARY},
+    {witness_id:privacyFailure.negative_id+'-PASS',method_id:privacyMethodId,procedure:'Run the isolated privacy-only component once.',scope:'Elowen v691-v5 x1 privacy dependency',expected:'Scanner-definition candidates remain visible and confirmed payload hits equal zero.',observed:privacyFailure.recovery,result:'pass',same_owner_only:true,independent_reproduction:false,retained_negative_ids:[privacyFailure.negative_id],boundary:BOUNDARY}
+  );
+  methodFlow.state_events.push(
+    {method_id:privacyMethodId,from:'observed',to:'candidate',note:'Self-match retained at zero aggregate credit.'},
+    {method_id:privacyMethodId,from:'candidate',to:'validated',note:'Isolated candidate adjudication passed.'},
+    {method_id:privacyMethodId,from:'validated',to:'preferred',note:'Preferred only for exact scanner-definition self-matches.'}
+  );
+}
+methodFlow.counts.methods = methodFlow.methods.length;
+methodFlow.counts.witnesses = methodFlow.witnesses.length;
+methodFlow.counts.state_events = methodFlow.state_events.length;
+methodFlow.counts.witness_results.fail = methodFlow.witnesses.filter(row=>row.result==='fail').length;
+methodFlow.counts.witness_results.pass = methodFlow.witnesses.filter(row=>row.result==='pass').length;
+writeJson('x1/method-flow.json', methodFlow);
+
+const truth = readJson('x1/phase-truth.json');
+if (!truth.overbroad_builder_retry_retained) {
+  truth.x1_effective.methods += 1;
+  truth.x1_effective.direct_witnesses += 2;
+  truth.x1_effective.failed_witnesses += 1;
+  truth.x1_effective.passing_witnesses += 1;
+  truth.x1_effective.effective_negatives += 1;
+}
+if (!truth.privacy_self_match_failure_retained) {
+  truth.x1_effective.methods += 1;
+  truth.x1_effective.direct_witnesses += 2;
+  truth.x1_effective.failed_witnesses += 1;
+  truth.x1_effective.passing_witnesses += 1;
+  truth.x1_effective.effective_negatives += 1;
+}
+truth.negative_register_count = negatives.count;
+truth.overbroad_builder_retry_retained = true;
+truth.privacy_self_match_failure_retained = true;
+truth.x1_builder_may_run_again = false;
+truth.independent_x1_aggregate_status = 'INVALID_PRIVACY_SELF_MATCH_ZERO_AGGREGATE_CREDIT';
+truth.commit_gate = 'DEPENDENCY_CORRECTED_X1_COMPOSITE';
+writeJson('x1/phase-truth.json', truth);
+
+const validation = readJson('x1/validation/precommit-validation.json');
+validation.failed_builder_attempts_retained = 2;
+validation.isolated_failed_dependency_attempts_retained = 1;
+validation.overbroad_builder_retry_retained = true;
+validation.x1_builder_may_run_again = false;
+validation.independent_x1_aggregate = {status:'INVALID_PRIVACY_SELF_MATCH_ZERO_AGGREGATE_CREDIT',aggregate_credit:0,nonprivacy_components_passed:true,replayed:false};
+validation.commit_gate = 'tooling/test-x1-privacy.txt';
+
+const privacyComponent = require('./test-x1-privacy.txt').run();
+if (!privacyComponent.valid) throw new Error('PRIVACY_COMPONENT_FAILED ' + JSON.stringify(privacyComponent));
+validation.dependency_corrected_privacy_component = privacyComponent;
+validation.composite_status = 'VALID_DEPENDENCY_CORRECTED_X1_COMPOSITE_WITH_ZERO_AGGREGATE_CREDIT';
+validation.operational_recoveries = {passed:operational.count,total:operational.count};
+writeJson('x1/validation/precommit-validation.json', validation);
+
+const manifestPath=path.join(X1,'manifest.json');
+const scopePath=path.join(X1,'scope-review.json');
+const selected=()=>walk(BASE).filter(file=>file.startsWith(X1+path.sep)||[
+  'sequence-x1-engine.txt','build-x1.txt','test-x1.txt','test-x1-privacy.txt','finalize-x1.txt'
+].includes(path.basename(file)));
+const preTerminal=selected().filter(file=>file!==manifestPath&&file!==scopePath);
+writeJson('x1/scope-review.json',{schema:'ghc.family.elowen-x1-scope-review.v1',planning_head:'b25d6e41c92d988538ad47348762c1560e3c8b3e',expected_roots:['docs/elowen-cairn/v691-v5/x1','docs/elowen-cairn/v691-v5/tooling'],files_in_x1_delta:preTerminal.length+2,outside_owner_paths:[],deletions:[],x2_paths:[],allowed_extensions:['.json','.md','.txt'],valid:true});
+const manifestFiles=selected().filter(file=>file!==manifestPath);
+const entries=manifestFiles.map(file=>{const bytes=fs.readFileSync(file);return{path:path.relative(ROOT,file).replaceAll('\\','/'),bytes:bytes.length,sha256:sha256(bytes)};});
+writeJson('x1/manifest.json',{schema:'ghc.family.elowen-x1-manifest.v1',planning_head:'b25d6e41c92d988538ad47348762c1560e3c8b3e',byte_domain:'checkout_utf8_bytes',declared_self_exclusions:['docs/elowen-cairn/v691-v5/x1/manifest.json'],entry_count:entries.length,entries});
+
+process.stdout.write(JSON.stringify({operational_failures:operational.count,retained_negatives:negatives.count,methods:methodFlow.counts.methods,witnesses:methodFlow.counts.witnesses,x1_effective:truth.x1_effective,manifest_entries:entries.length})+'\n');

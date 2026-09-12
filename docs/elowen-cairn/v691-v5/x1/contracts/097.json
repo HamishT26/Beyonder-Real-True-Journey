@@ -1,0 +1,135 @@
+{
+  "schema": "ghc.family.elowen-sequence-x1-result.v1",
+  "proposal_id": "EC6915-097",
+  "operation": "record_manifest",
+  "input": {
+    "entries": [
+      {
+        "path": "records/synthetic-7.fa",
+        "bytes": 17,
+        "digest": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+      },
+      {
+        "path": "records/synthetic-17.fa",
+        "bytes": 27,
+        "digest": "zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz"
+      }
+    ]
+  },
+  "expected_input_validity": false,
+  "output": {
+    "schema": "ghc.family.synthetic-sequence-result.v1",
+    "operation": "record_manifest",
+    "valid": false,
+    "errors": [
+      "ENTRY_1_DIGEST"
+    ],
+    "result": {
+      "entry_count": 2,
+      "entries": [
+        {
+          "path": "records/synthetic-7.fa",
+          "bytes": 17,
+          "digest": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "errors": []
+        },
+        {
+          "path": "records/synthetic-17.fa",
+          "bytes": 27,
+          "digest": "zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz",
+          "errors": [
+            "DIGEST"
+          ]
+        }
+      ]
+    },
+    "evidence_class": "wholly_synthetic_same_owner",
+    "real_biological_observation": false,
+    "participant_evidence": false,
+    "professional_interpretation": false,
+    "authority_grant": false,
+    "independent_reproduction": false,
+    "terminal_verdict": "NOT_READY_FOR_STAGE_20"
+  },
+  "rejecting_mutation": {
+    "input": {
+      "entries": [
+        {
+          "path": "records/synthetic-7.fa",
+          "bytes": 17,
+          "digest": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+        },
+        {
+          "path": "records/synthetic-17.fa",
+          "bytes": 27,
+          "digest": "zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz"
+        },
+        {
+          "path": "../outside.fa",
+          "bytes": -1,
+          "digest": "not-a-digest"
+        }
+      ]
+    },
+    "output": {
+      "schema": "ghc.family.synthetic-sequence-result.v1",
+      "operation": "record_manifest",
+      "valid": false,
+      "errors": [
+        "ENTRY_1_DIGEST",
+        "ENTRY_2_PATH_BYTES_DIGEST"
+      ],
+      "result": {
+        "entry_count": 3,
+        "entries": [
+          {
+            "path": "records/synthetic-7.fa",
+            "bytes": 17,
+            "digest": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "errors": []
+          },
+          {
+            "path": "records/synthetic-17.fa",
+            "bytes": 27,
+            "digest": "zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz",
+            "errors": [
+              "DIGEST"
+            ]
+          },
+          {
+            "path": "../outside.fa",
+            "bytes": -1,
+            "digest": "not-a-digest",
+            "errors": [
+              "PATH",
+              "BYTES",
+              "DIGEST"
+            ]
+          }
+        ]
+      },
+      "evidence_class": "wholly_synthetic_same_owner",
+      "real_biological_observation": false,
+      "participant_evidence": false,
+      "professional_interpretation": false,
+      "authority_grant": false,
+      "independent_reproduction": false,
+      "terminal_verdict": "NOT_READY_FOR_STAGE_20"
+    },
+    "completion_credit": 0
+  },
+  "checks": {
+    "deterministic": true,
+    "input_unchanged": true,
+    "closed_envelope": true,
+    "independent_invariant": true,
+    "rejecting_mutation": true,
+    "mutation_distinct": true,
+    "evidence_ceiling": true
+  },
+  "passed": true,
+  "outcome": "completed",
+  "same_owner_only": true,
+  "independent_reproduction": false,
+  "boundary": "Wholly synthetic sequence-record software evidence only. No real sequence, sample, organism, person, participant, patient, consent act, clinical interpretation, data-release decision, professional result, legal or cultural determination, affected-party acceptance, Maori authority, empirical GMUT confirmation, production readiness, independent reproduction, proof, canon, or Stage 20 authority."
+}

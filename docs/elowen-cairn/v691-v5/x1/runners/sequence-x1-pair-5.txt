@@ -1,0 +1,17 @@
+'use strict';
+const path = require('path');
+require.extensions['.txt'] = require.extensions['.js'];
+const core = require(path.join(__dirname, '..', '..', 'tooling', 'sequence-x1-engine.txt'));
+const operations = ["record_order","record_manifest"];
+function run(request) {
+  if (!request || !operations.includes(request.operation)) {
+    return {schema:'ghc.family.sequence-runner.v1',valid:false,errors:['OPERATION_NOT_ALLOWED'],operation:request?.operation ?? null,result:null,external_action:false};
+  }
+  return {schema:'ghc.family.sequence-runner.v1',valid:true,errors:[],operation:request.operation,result:core.execute(request.operation, request.input),external_action:false};
+}
+module.exports = {operations, run};
+if (require.main === module) {
+  const operation = process.argv[2];
+  const input = process.argv[3] ? JSON.parse(process.argv[3]) : null;
+  process.stdout.write(JSON.stringify(run({operation,input})) + '\n');
+}

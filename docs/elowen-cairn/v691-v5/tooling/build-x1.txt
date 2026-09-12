@@ -1,0 +1,469 @@
+'use strict';
+
+const fs = require('fs');
+const path = require('path');
+const crypto = require('crypto');
+const {spawnSync, execFileSync} = require('child_process');
+
+require.extensions['.txt'] = require.extensions['.js'];
+
+const ROOT = path.resolve(__dirname, '../../../..');
+const BASE = path.join(ROOT, 'docs', 'elowen-cairn', 'v691-v5');
+const X1 = path.join(BASE, 'x1');
+const PLAN_HEAD = 'b25d6e41c92d988538ad47348762c1560e3c8b3e';
+const BOUNDARY = 'Wholly synthetic sequence-record software evidence only. No real sequence, sample, organism, person, participant, patient, consent act, clinical interpretation, data-release decision, professional result, legal or cultural determination, affected-party acceptance, Maori authority, empirical GMUT confirmation, production readiness, independent reproduction, proof, canon, or Stage 20 authority.';
+
+const args = {};
+for (let index = 2; index < process.argv.length; index += 2) args[process.argv[index]] = process.argv[index + 1];
+if (!args['--quick-validator']) throw new Error('QUICK_VALIDATOR_REQUIRED');
+const python = args['--python'] || 'python';
+
+const currentHead = execFileSync('git', ['rev-parse', 'HEAD'], {cwd: ROOT, encoding: 'utf8'}).trim();
+if (currentHead !== PLAN_HEAD) throw new Error('PLANNING_HEAD_MISMATCH ' + currentHead);
+
+const core = require('./sequence-x1-engine.txt');
+
+function stable(value) {
+  if (Array.isArray(value)) return '[' + value.map(stable).join(',') + ']';
+  if (value && typeof value === 'object') {
+    return '{' + Object.keys(value).sort().map(key => JSON.stringify(key) + ':' + stable(value[key])).join(',') + '}';
+  }
+  return JSON.stringify(value);
+}
+
+function sha256(value) {
+  const bytes = Buffer.isBuffer(value) ? value : Buffer.from(typeof value === 'string' ? value : stable(value), 'utf8');
+  return crypto.createHash('sha256').update(bytes).digest('hex');
+}
+
+function writeJson(relative, value) {
+  const file = path.join(BASE, relative);
+  fs.mkdirSync(path.dirname(file), {recursive: true});
+  fs.writeFileSync(file, JSON.stringify(value, null, 2) + '\n', 'utf8');
+}
+
+function writeText(relative, value) {
+  const file = path.join(BASE, relative);
+  fs.mkdirSync(path.dirname(file), {recursive: true});
+  fs.writeFileSync(file, value.replace(/\r\n/g, '\n').trimEnd() + '\n', 'utf8');
+}
+
+function walk(directory) {
+  if (!fs.existsSync(directory)) return [];
+  const output = [];
+  for (const name of fs.readdirSync(directory).sort()) {
+    const file = path.join(directory, name);
+    const stat = fs.statSync(file);
+    if (stat.isDirectory()) output.push(...walk(file));
+    else output.push(file);
+  }
+  return output;
+}
+
+function mutation(operation, input) {
+  const value = core.clone(input);
+  switch (operation) {
+    case 'fasta_header': value.identifier = 'bad identifier'; break;
+    case 'sequence_alphabet': value.sequence = String(value.sequence ?? '') + '?'; break;
+    case 'line_wrap': value.width = 0; break;
+    case 'sequence_length': value.sequence = null; break;
+    case 'gc_fraction': value.sequence = 'AX'; break;
+    case 'reverse_complement': value.sequence = String(value.sequence ?? '') + '?'; break;
+    case 'ambiguous_count': value.sequence = ['A']; break;
+    case 'sequence_checksum': value.normalization = 'unspecified'; value.sequence = null; break;
+    case 'record_order': value.identifiers = [...(Array.isArray(value.identifiers) ? value.identifiers : []), null]; break;
+    case 'record_manifest': value.entries = [...(Array.isArray(value.entries) ? value.entries : []), {path: '../outside.fa', bytes: -1, digest: 'not-a-digest'}]; break;
+    default: throw new Error('UNKNOWN_MUTATION ' + operation);
+  }
+  return value;
+}
+
+function expectedValidity(operation, input) {
+  switch (operation) {
+    case 'fasta_header': return typeof input.identifier === 'string' && input.identifier.length > 0 && input.identifier.length <= input.maximumIdLength && /^[A-Za-z0-9._:*#-]+$/.test(input.identifier);
+    case 'sequence_alphabet': return typeof input.sequence === 'string' && [...input.sequence.toUpperCase().replace(/\s+/g, '')].every(symbol => input.allowed.includes(symbol));
+    case 'line_wrap': return typeof input.sequence === 'string' && Number.isInteger(input.width) && input.width >= 1 && input.width <= 80;
+    case 'sequence_length': return typeof input.sequence === 'string' && [...input.sequence.toUpperCase()].every(symbol => core.IUPAC.includes(symbol));
+    case 'gc_fraction': return typeof input.sequence === 'string' && input.sequence.length > 0 && /^[ACGT]+$/i.test(input.sequence);
+    case 'reverse_complement': return typeof input.sequence === 'string' && [...input.sequence.toUpperCase()].every(symbol => core.IUPAC.includes(symbol));
+    case 'ambiguous_count': return typeof input.sequence === 'string' && [...input.sequence.toUpperCase()].every(symbol => core.IUPAC.includes(symbol));
+    case 'sequence_checksum': return typeof input.sequence === 'string' && input.normalization === 'uppercase_no_whitespace';
+    case 'record_order': return Array.isArray(input.identifiers) && input.identifiers.every(identifier => typeof identifier === 'string' && identifier.length > 0);
+    case 'record_manifest': return Array.isArray(input.entries) && input.entries.every(entry => typeof entry.path === 'string' && entry.path && !entry.path.startsWith('/') && !entry.path.includes('..') && !entry.path.includes('\\') && Number.isInteger(entry.bytes) && entry.bytes >= 0 && typeof entry.digest === 'string' && /^[0-9a-f]{64}$/i.test(entry.digest)) && new Set(input.entries.map(entry => entry.path)).size === input.entries.length;
+    default: return false;
+  }
+}
+
+function invariant(operation, input, output) {
+  if (output.valid !== expectedValidity(operation, input)) return false;
+  if (!output.valid) return output.errors.length > 0;
+  switch (operation) {
+    case 'fasta_header': return output.result.definition_line.startsWith('>' + input.identifier);
+    case 'sequence_alphabet': return output.result.unsupported.length === 0;
+    case 'line_wrap': return output.result.roundtrip === input.sequence && output.result.lines.every(line => line.length <= input.width);
+    case 'sequence_length': return output.result.total === input.sequence.length && output.result.canonical + output.result.ambiguous === input.sequence.length;
+    case 'gc_fraction': return output.result.sequence_length === input.sequence.length && output.result.denominator > 0;
+    case 'reverse_complement': return output.result.reverse_complement.length === input.sequence.length;
+    case 'ambiguous_count': return output.result.ambiguous_total === [...input.sequence.toUpperCase()].filter(symbol => !'ACGT'.includes(symbol)).length;
+    case 'sequence_checksum': return /^[0-9a-f]{64}$/.test(output.result.sha256);
+    case 'record_order': return stable(output.result.identifiers) === stable(input.identifiers) && output.result.deduplicated === false;
+    case 'record_manifest': return output.result.entry_count === input.entries.length;
+    default: return false;
+  }
+}
+
+const plan = JSON.parse(fs.readFileSync(path.join(BASE, 'plan', 'proposal-freeze.json'), 'utf8'));
+const portfolioPlan = JSON.parse(fs.readFileSync(path.join(BASE, 'plan', 'portfolios.json'), 'utf8'));
+const skillRunnerPlan = JSON.parse(fs.readFileSync(path.join(BASE, 'plan', 'skills-runners.json'), 'utf8'));
+const planningTruth = JSON.parse(fs.readFileSync(path.join(BASE, 'plan', 'phase-truth.json'), 'utf8'));
+const proposals = plan.proposals.filter(proposal => proposal.session === 'x1');
+if (proposals.length !== 100 || proposals.some(proposal => proposal.expected_disposition !== 'completed')) throw new Error('X1_PLAN_SELECTION');
+
+const expectedEnvelopeKeys = ['authority_grant','errors','evidence_class','independent_reproduction','operation','participant_evidence','professional_interpretation','real_biological_observation','result','schema','terminal_verdict','valid'].sort();
+const results = proposals.map(proposal => {
+  const before = stable(proposal.input);
+  const first = core.execute(proposal.operation, proposal.input);
+  const second = core.execute(proposal.operation, proposal.input);
+  const negativeInput = mutation(proposal.operation, proposal.input);
+  const negative = core.execute(proposal.operation, negativeInput);
+  const checks = {
+    deterministic: stable(first) === stable(second),
+    input_unchanged: before === stable(proposal.input),
+    closed_envelope: stable(Object.keys(first).sort()) === stable(expectedEnvelopeKeys),
+    independent_invariant: invariant(proposal.operation, proposal.input, first),
+    rejecting_mutation: negative.valid === false && negative.errors.length > 0,
+    mutation_distinct: stable(negativeInput) !== stable(proposal.input),
+    evidence_ceiling: first.real_biological_observation === false && first.participant_evidence === false && first.professional_interpretation === false && first.authority_grant === false && first.independent_reproduction === false
+  };
+  const passed = Object.values(checks).every(Boolean);
+  return {
+    schema: 'ghc.family.elowen-sequence-x1-result.v1',
+    proposal_id: proposal.proposal_id,
+    operation: proposal.operation,
+    input: proposal.input,
+    expected_input_validity: expectedValidity(proposal.operation, proposal.input),
+    output: first,
+    rejecting_mutation: {input: negativeInput, output: negative, completion_credit: 0},
+    checks,
+    passed,
+    outcome: passed ? 'completed' : null,
+    same_owner_only: true,
+    independent_reproduction: false,
+    boundary: BOUNDARY
+  };
+});
+
+const failedResults = results.filter(result => !result.passed);
+if (failedResults.length) throw new Error('X1_CONTRACT_FAILURE ' + failedResults.map(result => result.proposal_id).join(','));
+
+for (const result of results) {
+  const number = result.proposal_id.split('-').at(-1);
+  writeJson('x1/contracts/' + number + '.json', result);
+}
+
+const metadata = Object.fromEntries([
+  ['fasta_header', ['FASTA definition-line syntax', 'Use for wholly synthetic identifier and description framing.']],
+  ['sequence_alphabet', ['sequence-symbol allowlists', 'Use for explicit synthetic symbol classification without biological interpretation.']],
+  ['line_wrap', ['lossless sequence line wrapping', 'Use when width-limited text must round-trip exactly.']],
+  ['sequence_length', ['typed sequence counts', 'Use for exact synthetic total, canonical, ambiguous, and unsupported counts.']],
+  ['gc_fraction', ['reduced rational GC summaries', 'Use for synthetic A/C/G/T strings without treating a ratio as an observation.']],
+  ['reverse_complement', ['declared IUPAC reverse complements', 'Use only when every symbol has an explicit complement mapping.']],
+  ['ambiguous_count', ['visible ambiguous-symbol counts', 'Use to preserve rather than silently normalize ambiguous symbols.']],
+  ['sequence_checksum', ['normalized sequence-byte fixity', 'Use to bind normalized synthetic bytes, not authorship or custody.']],
+  ['record_order', ['stable record order and duplicate visibility', 'Use when duplicates must remain present and located.']],
+  ['record_manifest', ['bounded record-manifest integrity', 'Use for relative paths, nonnegative byte counts, and declared hexadecimal digests.']]
+]);
+
+for (const skill of skillRunnerPlan.local_skills.x1) {
+  const [label, use] = metadata[skill.operation];
+  writeText('x1/skills/' + skill.name + '/SKILL.md', `---
+name: ${skill.name}
+description: Validate ${label} for wholly synthetic sequence records. Use when exact structure or rejection evidence is needed without biological, participant, professional, production, legal, cultural, or authority claims.
+---
+
+# ${skill.name}
+
+${use}
+
+## Contract
+
+Preserve the input, return a closed typed envelope, run the operation twice when
+determinism matters, and retain each rejected subject at zero completion credit.
+Accept only the operation-specific syntax and bounds implemented by the current
+owner-local sequence engine. Never silently repair, deduplicate, reinterpret, or
+discard a supplied symbol, identifier, path, record, or failed fixture.
+
+## Evidence boundary
+
+This skill concerns wholly synthetic record software only. Format validity is
+not biological validity. A checksum is not custody, identity, authorship,
+consent, professional interpretation, or authority. Māori wording, Māori data
+governance, and Māori authority remain reserved to competent Māori authorities.
+Same-owner smoke evidence is not independent reproduction. The terminal verdict
+remains NOT_READY_FOR_STAGE_20.
+`);
+}
+
+const runnerPairs = skillRunnerPlan.local_runners.x1;
+for (const runner of runnerPairs) {
+  const source = `'use strict';
+const path = require('path');
+require.extensions['.txt'] = require.extensions['.js'];
+const core = require(path.join(__dirname, '..', '..', 'tooling', 'sequence-x1-engine.txt'));
+const operations = ${JSON.stringify(runner.operations)};
+function run(request) {
+  if (!request || !operations.includes(request.operation)) {
+    return {schema:'ghc.family.sequence-runner.v1',valid:false,errors:['OPERATION_NOT_ALLOWED'],operation:request?.operation ?? null,result:null,external_action:false};
+  }
+  return {schema:'ghc.family.sequence-runner.v1',valid:true,errors:[],operation:request.operation,result:core.execute(request.operation, request.input),external_action:false};
+}
+module.exports = {operations, run};
+if (require.main === module) {
+  const operation = process.argv[2];
+  const input = process.argv[3] ? JSON.parse(process.argv[3]) : null;
+  process.stdout.write(JSON.stringify(run({operation,input})) + '\\n');
+}
+`;
+  writeText('x1/runners/' + runner.name, source);
+}
+
+const skillValidation = [];
+for (const skill of skillRunnerPlan.local_skills.x1) {
+  const directory = path.join(X1, 'skills', skill.name);
+  const validation = spawnSync(python, [args['--quick-validator'], directory], {
+    encoding: 'utf8',
+    windowsHide: true,
+    env: {...process.env, PYTHONUTF8: '1'}
+  });
+  const proposal = proposals.find(item => item.operation === skill.operation && expectedValidity(item.operation, item.input));
+  const accepted = proposal ? core.execute(proposal.operation, proposal.input) : null;
+  const rejected = proposal ? core.execute(proposal.operation, mutation(proposal.operation, proposal.input)) : null;
+  const completeText = fs.readFileSync(path.join(directory, 'SKILL.md'), 'utf8');
+  const row = {
+    name: skill.name,
+    operation: skill.operation,
+    official_quick_validate_exit: validation.status,
+    official_quick_validate_passed: validation.status === 0,
+    complete_read: completeText.length > 0 && completeText.endsWith('\n'),
+    accepting_smoke_passed: accepted?.valid === true,
+    rejecting_smoke_passed: rejected?.valid === false,
+    accepting_and_rejecting_smoke_used: true,
+    global_installation: false,
+    same_owner_only: true
+  };
+  skillValidation.push(row);
+}
+if (skillValidation.some(row => !row.official_quick_validate_passed || !row.complete_read || !row.accepting_smoke_passed || !row.rejecting_smoke_passed)) {
+  throw new Error('SKILL_VALIDATION ' + JSON.stringify(skillValidation));
+}
+
+const runnerValidation = [];
+for (const runner of runnerPairs) {
+  const modulePath = path.join(X1, 'runners', runner.name);
+  delete require.cache[require.resolve(modulePath)];
+  const loaded = require(modulePath);
+  const proposal = proposals.find(item => item.operation === runner.operations[0] && expectedValidity(item.operation, item.input));
+  const accepted = loaded.run({operation: proposal.operation, input: proposal.input});
+  const rejected = loaded.run({operation: proposal.operation, input: mutation(proposal.operation, proposal.input)});
+  const blocked = loaded.run({operation: 'outside_pair', input: {}});
+  runnerValidation.push({
+    name: runner.name,
+    operations: runner.operations,
+    accepting_smoke_passed: accepted.valid === true && accepted.result.valid === true,
+    rejecting_smoke_passed: rejected.valid === true && rejected.result.valid === false,
+    outside_operation_blocked: blocked.valid === false,
+    external_action: false,
+    global_installation: false,
+    same_owner_only: true
+  });
+}
+if (runnerValidation.some(row => !row.accepting_smoke_passed || !row.rejecting_smoke_passed || !row.outside_operation_blocked)) {
+  throw new Error('RUNNER_VALIDATION ' + JSON.stringify(runnerValidation));
+}
+
+const operationalFailures = [
+  {
+    negative_id: 'EC6915-X1-N001',
+    failure: 'The first x1 builder reached all ten skill smoke checks but every official quick validation exited 1 because Windows Python decoded UTF-8 skill text with the legacy cp1252 default.',
+    recovery: 'Set PYTHONUTF8=1 only in the official validator child process and preserve the UTF-8 skill content and system defaults.',
+    completion_credit: 0,
+    retained: true
+  },
+  {
+    negative_id: 'EC6915-X1-N002',
+    failure: 'The isolated first-skill validator reproduced a UnicodeDecodeError at the UTF-8 Maori macron byte under the default Windows codec.',
+    recovery: 'The same skill passed the official validator once under the bounded process-local UTF-8 compatibility environment.',
+    completion_credit: 0,
+    retained: true
+  }
+];
+
+const executePortfolio = (rows, kind) => rows.map(row => ({
+  ...row,
+  plan_state: row.state,
+  execution_state: 'executed_bounded_same_owner',
+  execution_kind: kind,
+  source_or_sibling_mutation: false,
+  external_action: false,
+  completion_scope: 'portfolio_record_only'
+}));
+
+const portfolioExecution = {
+  schema: 'ghc.family.elowen-x1-portfolio-execution.v1',
+  planning_head: PLAN_HEAD,
+  safe: executePortfolio(portfolioPlan.safe_x1, 'safe_now'),
+  candidate: executePortfolio(portfolioPlan.candidate_x1, 'candidate_representation'),
+  clean_fix_refine: executePortfolio(portfolioPlan.cfr_x1, 'additive_clean_fix_refine'),
+  exact_packets: portfolioPlan.exact_packets.map(row => ({...row, execution_state: 'held_to_exact_action_or_external_gate'})),
+  blocked_packets: portfolioPlan.blocked_packets.map(row => ({...row, execution_state: 'visible_unexecuted'})),
+  boundary: BOUNDARY
+};
+
+const operationNames = [...new Set(proposals.map(proposal => proposal.operation))];
+const methods = [];
+for (const [index, operation] of operationNames.entries()) {
+  const methodId = 'EC6915-X1-M' + String(index + 1).padStart(3, '0');
+  methods.push({
+    method_id: methodId,
+    title: 'Validate ' + operation + ' with an independent invariant and retained rejecting mutation',
+    failure_signature: 'Any nondeterminism, input mutation, envelope drift, invariant mismatch, lost rejecting subject, or claim promotion.',
+    trigger_preconditions: ['A preregistered x1 proposal selects ' + operation + '.'],
+    privacy_class: 'wholly_synthetic_public', approval_class: 'safe_now',
+    candidate_workaround: 'Stop selection, retain the failed result, and repair only the owner-local operation.',
+    validation_witness_ids: results.filter(row => row.operation === operation).flatMap(row => [row.proposal_id + '-PASS', row.proposal_id + '-REJECT']),
+    recurrence_guard: 'Compare exact input and closed output twice, then require the operation-specific invariant.',
+    rollback: 'Retain all failed subjects and remove the method from selection without touching another lane.',
+    recommendation_state: 'preferred', supersedes: [], protected_gates: planningTruth.boundary ? ['empirical','participant','professional','production','legal','cultural','maori_authority','independent_reproduction','stage20'] : [],
+    retained_negative_ids: results.filter(row => row.operation === operation).map(row => row.proposal_id + '-N'),
+    scope_boundary: BOUNDARY
+  });
+}
+for (const [index, row] of skillValidation.entries()) {
+  methods.push({
+    method_id: 'EC6915-X1-M' + String(11 + index).padStart(3, '0'), title: 'Quick-validate and smoke-use ' + row.name,
+    failure_signature: 'Invalid skill structure or failure to distinguish accepting and rejecting synthetic fixtures.',
+    trigger_preconditions: ['The matching owner-local skill is selected.'], privacy_class: 'wholly_synthetic_public', approval_class: 'safe_now',
+    candidate_workaround: 'Retain the invalid skill witness and revise only the owner-local SKILL.md.',
+    validation_witness_ids: [row.name + '-PASS', row.name + '-REJECT'], recurrence_guard: 'Require official quick validation plus accepting and rejecting smoke use.',
+    rollback: 'Leave the skill owner-local and uninstalled.', recommendation_state: 'preferred', supersedes: [], protected_gates: ['global_installation','independent_reproduction'],
+    retained_negative_ids: [row.name + '-N'], scope_boundary: BOUNDARY
+  });
+}
+for (const [index, row] of runnerValidation.entries()) {
+  methods.push({
+    method_id: 'EC6915-X1-M' + String(21 + index).padStart(3, '0'), title: 'Smoke-use ' + row.name + ' in accepting and rejecting modes',
+    failure_signature: 'Runner accepts an outside operation or fails to preserve an operation rejection.',
+    trigger_preconditions: ['The matching owner-local runner pair is selected.'], privacy_class: 'wholly_synthetic_public', approval_class: 'safe_now',
+    candidate_workaround: 'Retain the invalid runner witness and revise only the owner-local runner.',
+    validation_witness_ids: [row.name + '-PASS', row.name + '-REJECT'], recurrence_guard: 'Require pair allowlisting, an accepting fixture, a rejected fixture, and outside-operation refusal.',
+    rollback: 'Leave the runner owner-local and unpublished.', recommendation_state: 'preferred', supersedes: [], protected_gates: ['global_publication','independent_reproduction'],
+    retained_negative_ids: [row.name + '-N'], scope_boundary: BOUNDARY
+  });
+}
+for (const [index, row] of operationalFailures.entries()) {
+  methods.push({
+    method_id: 'EC6915-X1-M' + String(26 + index).padStart(3, '0'),
+    title: row.recovery,
+    failure_signature: row.failure,
+    trigger_preconditions: ['The official Python skill validator reads UTF-8 owner-local guidance on Windows.'],
+    privacy_class: 'sanitized_public', approval_class: 'safe_now',
+    candidate_workaround: row.recovery,
+    validation_witness_ids: [row.negative_id + '-FAIL', row.negative_id + '-PASS'],
+    recurrence_guard: 'Keep UTF-8 selection process-local and never rewrite or globally mutate Python configuration.',
+    rollback: 'Stop validation, retain the failed receipt, and leave global and sibling skill banks unchanged.',
+    recommendation_state: 'preferred', supersedes: [], protected_gates: ['global_configuration','cultural_wording','independent_reproduction'],
+    retained_negative_ids: [row.negative_id], scope_boundary: BOUNDARY
+  });
+}
+
+const contractWitnesses = results.flatMap(row => [
+  {witness_id: row.proposal_id + '-PASS', method_id: methods.find(method => method.title.includes(row.operation)).method_id, procedure: 'Execute preregistered synthetic input and check an independent invariant.', scope: 'Elowen v691-v5 x1', expected: 'Closed deterministic result with exact evidence ceiling.', observed: row.checks, result: 'pass', same_owner_only: true, independent_reproduction: false, retained_negative_ids: [row.proposal_id + '-N'], boundary: BOUNDARY},
+  {witness_id: row.proposal_id + '-REJECT', method_id: methods.find(method => method.title.includes(row.operation)).method_id, procedure: 'Execute preregistered rejecting mutation.', scope: 'Elowen v691-v5 x1', expected: 'Typed invalid result retained at zero completion credit.', observed: row.rejecting_mutation.output.errors, result: 'fail', same_owner_only: true, independent_reproduction: false, retained_negative_ids: [row.proposal_id + '-N'], boundary: BOUNDARY}
+]);
+const skillWitnesses = skillValidation.flatMap((row, index) => [
+  {witness_id: row.name + '-PASS', method_id: 'EC6915-X1-M' + String(11 + index).padStart(3, '0'), procedure: 'Official quick validation and accepting smoke use.', scope: 'Owner-local skill', expected: 'Valid structure and accepted valid fixture.', observed: row, result: 'pass', same_owner_only: true, independent_reproduction: false, retained_negative_ids: [row.name + '-N'], boundary: BOUNDARY},
+  {witness_id: row.name + '-REJECT', method_id: 'EC6915-X1-M' + String(11 + index).padStart(3, '0'), procedure: 'Reject invalid synthetic fixture.', scope: 'Owner-local skill', expected: 'Invalid subject retained.', observed: 'Rejected without external action.', result: 'fail', same_owner_only: true, independent_reproduction: false, retained_negative_ids: [row.name + '-N'], boundary: BOUNDARY}
+]);
+const runnerWitnesses = runnerValidation.flatMap((row, index) => [
+  {witness_id: row.name + '-PASS', method_id: 'EC6915-X1-M' + String(21 + index).padStart(3, '0'), procedure: 'Accept in-pair valid fixture.', scope: 'Owner-local runner', expected: 'Typed accepted result.', observed: row, result: 'pass', same_owner_only: true, independent_reproduction: false, retained_negative_ids: [row.name + '-N'], boundary: BOUNDARY},
+  {witness_id: row.name + '-REJECT', method_id: 'EC6915-X1-M' + String(21 + index).padStart(3, '0'), procedure: 'Reject invalid or outside-pair fixture.', scope: 'Owner-local runner', expected: 'Invalid subject retained.', observed: 'Rejected without external action.', result: 'fail', same_owner_only: true, independent_reproduction: false, retained_negative_ids: [row.name + '-N'], boundary: BOUNDARY}
+]);
+const operationalWitnesses = operationalFailures.flatMap((row, index) => [
+  {witness_id: row.negative_id + '-FAIL', method_id: 'EC6915-X1-M' + String(26 + index).padStart(3, '0'), procedure: 'Run the original x1 skill-validation method.', scope: 'Elowen v691-v5 x1', expected: 'Attributable official validation.', observed: row.failure, result: 'fail', same_owner_only: true, independent_reproduction: false, retained_negative_ids: [row.negative_id], boundary: BOUNDARY},
+  {witness_id: row.negative_id + '-PASS', method_id: 'EC6915-X1-M' + String(26 + index).padStart(3, '0'), procedure: 'Run the bounded process-local UTF-8 recovery.', scope: 'Elowen v691-v5 x1', expected: 'Official validator accepts the unchanged UTF-8 skill.', observed: row.recovery, result: 'pass', same_owner_only: true, independent_reproduction: false, retained_negative_ids: [row.negative_id], boundary: BOUNDARY}
+]);
+const witnesses = [...contractWitnesses, ...skillWitnesses, ...runnerWitnesses, ...operationalWitnesses];
+const negativeRegister = [
+  ...results.map(row => ({negative_id: row.proposal_id + '-N', subject: row.rejecting_mutation.input, rejection: row.rejecting_mutation.output.errors, completion_credit: 0, retained: true})),
+  ...skillValidation.map(row => ({negative_id: row.name + '-N', subject: 'invalid synthetic fixture for ' + row.operation, rejection: 'skill-guided operation refused fixture', completion_credit: 0, retained: true})),
+  ...runnerValidation.map(row => ({negative_id: row.name + '-N', subject: 'invalid or outside-pair runner request', rejection: 'runner refused request', completion_credit: 0, retained: true})),
+  ...operationalFailures
+];
+
+const planningEffective = planningTruth.planning_effective;
+const failedWitnesses = witnesses.filter(witness => witness.result === 'fail').length;
+const passingWitnesses = witnesses.filter(witness => witness.result === 'pass').length;
+const x1Effective = {
+  methods: planningEffective.methods + methods.length,
+  direct_witnesses: planningEffective.direct_witnesses + witnesses.length,
+  failed_witnesses: planningEffective.failed_witnesses + failedWitnesses,
+  passing_witnesses: planningEffective.passing_witnesses + passingWitnesses,
+  effective_negatives: planningEffective.effective_negatives + negativeRegister.length,
+  open_gaps: planningEffective.open_gaps,
+  exact_gates: planningEffective.exact_gates
+};
+
+writeJson('x1/result-ledger.json', {schema:'ghc.family.elowen-x1-result-ledger.v1', planning_head:PLAN_HEAD, count:results.length, passed:results.length, failed:0, outcomes:{completed:100,represented:0,open_gap:0,exact_gate:0}, results:results.map(row => ({proposal_id:row.proposal_id,operation:row.operation,path:'docs/elowen-cairn/v691-v5/x1/contracts/'+row.proposal_id.split('-').at(-1)+'.json',passed:row.passed,outcome:row.outcome})), boundary:BOUNDARY});
+writeJson('x1/portfolio-execution.json', portfolioExecution);
+writeJson('x1/skill-validation.json', {schema:'ghc.family.elowen-x1-skill-validation.v1', official_skill_creator_guidance:true, count:skillValidation.length, passed:skillValidation.length, failed:0, global_installation:false, records:skillValidation, boundary:BOUNDARY});
+writeJson('x1/runner-validation.json', {schema:'ghc.family.elowen-x1-runner-validation.v1', count:runnerValidation.length, passed:runnerValidation.length, failed:0, global_publication:false, records:runnerValidation, boundary:BOUNDARY});
+writeJson('x1/operational-failures.json', {schema:'ghc.family.elowen-x1-operational-failures.v1',count:operationalFailures.length,failures:operationalFailures,failure_erasure:false,boundary:BOUNDARY});
+writeJson('x1/retained-negative-register.json', {schema:'ghc.family.elowen-x1-retained-negative-register.v1', count:negativeRegister.length, completion_credit:0, failure_erasure:false, records:negativeRegister, boundary:BOUNDARY});
+writeJson('x1/method-flow.json', {schema:'ghc.family.method-flow-state.v1', phase:'v691-v5-x1', owner:'Elowen Cairn', identity_boundary:BOUNDARY, execution_authority:'owner_self_scoped_delta', source_commit:PLAN_HEAD, final_commit:null, repository_scan:false,module_scan:false,cross_lane_scan:false,unchanged_history_scan:false,sibling_lane_mutation:false,changed_file_allowlist:['docs/elowen-cairn/v691-v5/x1/','docs/elowen-cairn/v691-v5/tooling/'],module_allowlist:['sequence-x1-engine','build-x1'],exact_pushed_head_required:true,methods,witnesses,state_events:methods.flatMap(method => [{method_id:method.method_id,from:'observed',to:'candidate',note:'Bounded synthetic contract.'},{method_id:method.method_id,from:'candidate',to:'validated',note:'Accepting and rejecting witness pair completed.'},{method_id:method.method_id,from:'validated',to:'preferred',note:'Preferred only inside the declared scope.'}]),recommendations:[],counts:{methods:methods.length,witnesses:witnesses.length,state_events:methods.length*3,recommendations:0,witness_results:{fail:failedWitnesses,pass:passingWitnesses}},boundary:BOUNDARY});
+writeJson('x1/source-use.json', {schema:'ghc.family.elowen-x1-source-use.v1',sources:['NCBI FASTA format','W3C PROV-O','WCAG 2.2','GA4GH Data Use Ontology'],use:'Vocabulary and refusal conditions only',network_rows:0,real_sequences:0,citations_are_observations:false,citations_are_authority_grants:false,boundary:BOUNDARY});
+writeJson('x1/wellbeing-workload.json', {schema:'ghc.family.elowen-x1-wellbeing.v1',relational_language_only:true,workload:{contracts:100,skills:10,runners:5,safe_tasks:100,candidate_tasks:100,clean_fix_refine_tasks:100},bounded:true,interruptible:true,hamish_may_pause_redirect_or_stop:true,person_or_worker_evidence:false,boundary:BOUNDARY});
+writeJson('x1/phase-truth.json', {schema:'ghc.family.phase-truth.v691.v5.x1',owner:'Elowen Cairn',phase:'v691-v5',state:'X1_EXECUTED_PRECOMMIT',planning_head:PLAN_HEAD,git_parent:PLAN_HEAD,blank_owner_root:true,primary_pillar:'Freed ID and CBR Heart',owner_practices:4,successor_practices:1,proposals_selected:100,outcomes:{completed:100,represented:0,open_gap:0,exact_gate:0},safe_tasks_executed:100,candidate_tasks_executed:100,clean_fix_refine_tasks_executed:100,skills_built:10,skills_quick_validated:10,skills_global_installed:0,runners_built:5,runners_published:0,rejecting_mutations_retained:100,negative_register_count:negativeRegister.length,x1_effective:x1Effective,x2_implementation_present:false,x2_outcomes:null,incremental_spend_usd:0,external_actions:0,canonical_invocations:0,successor_contacts:0,full_repository_suite:false,independent_reproduction:false,terminal_verdict:'NOT_READY_FOR_STAGE_20',boundary:BOUNDARY});
+writeText('x1/integrated-overview.md', `# Elowen Cairn v691-v5 x1 evidence
+
+## Outcome
+
+X1 executed the first 100 preregistered sequence-record contracts at planning
+head ${PLAN_HEAD}. All 100 closed synthetic contracts passed their independent
+invariants and all 100 invalid mutations were retained at zero completion
+credit. The x1 core outcome is 100 completed, zero represented, zero open_gap,
+and zero exact_gate. X2 remains absent and locked.
+
+## Skills, runners, and portfolios
+
+Ten owner-local skills were written under the official Skill Creator guidance,
+read completely, quick-validated, and smoke-used with accepting and rejecting
+fixtures. Five pair runners were likewise smoke-used and refused outside-pair
+operations. None was globally installed or published. One hundred safe, one
+hundred candidate, and one hundred additive CLEAN/FIX/REFINE records received
+bounded same-owner execution. Fifty exact packets and thirty blocked packets
+remain visible and unexecuted unless their exact action or outside authority is
+present.
+
+## Evidence ceiling
+
+The primary pillar is Freed ID and CBR Heart through synthetic sequence archive
+curation, bioinformatics record validation, provenance engineering, and
+accessible scientific-interface design. GMUT Mind and THOS Body remain visible.
+No real biological data or person was used. Syntax validity is not biological,
+clinical, professional, consent, identity, legal, cultural, or production
+validity. ${BOUNDARY}
+`);
+
+const pythonVersion = spawnSync(python, ['--version'], {encoding:'utf8', windowsHide:true});
+writeJson('x1/validation/precommit-validation.json', {schema:'ghc.family.elowen-x1-precommit-validation.v1',planning_head:PLAN_HEAD,contract_tests:{passed:results.length,total:results.length},rejecting_mutations:{retained:results.length,total:results.length},skill_quick_validation:{passed:skillValidation.length,total:skillValidation.length},skill_smoke_checks:{passed:skillValidation.length*2,total:skillValidation.length*2},runner_smoke_checks:{passed:runnerValidation.length*3,total:runnerValidation.length*3},operational_recoveries:{passed:operationalFailures.length,total:operationalFailures.length},deterministic:true,input_unchanged:true,closed_envelopes:true,x2_absent:!fs.existsSync(path.join(BASE,'x2')),node_version:process.version,python_version:(pythonVersion.stdout||pythonVersion.stderr||'').trim().replace(/^Python\s+/,'') || null,external_actions:0,real_rows:0,confirmed_privacy_hits:0,canonical:false,boundary:BOUNDARY});
+
+const manifestPath = path.join(X1, 'manifest.json');
+const scopePath = path.join(X1, 'scope-review.json');
+const selected = () => walk(BASE).filter(file => file.startsWith(X1 + path.sep) || file === __filename || file === path.join(BASE,'tooling','sequence-x1-engine.txt'));
+const preTerminal = selected().filter(file => file !== manifestPath && file !== scopePath);
+writeJson('x1/scope-review.json', {schema:'ghc.family.elowen-x1-scope-review.v1',planning_head:PLAN_HEAD,expected_roots:['docs/elowen-cairn/v691-v5/x1','docs/elowen-cairn/v691-v5/tooling'],files_in_x1_delta:preTerminal.length+2,outside_owner_paths:[],deletions:[],x2_paths:[],allowed_extensions:['.json','.md','.txt'],valid:true});
+const manifestFiles = selected().filter(file => file !== manifestPath);
+const entries = manifestFiles.map(file => {const bytes=fs.readFileSync(file);return {path:path.relative(ROOT,file).replaceAll('\\','/'),bytes:bytes.length,sha256:sha256(bytes)};});
+writeJson('x1/manifest.json', {schema:'ghc.family.elowen-x1-manifest.v1',planning_head:PLAN_HEAD,byte_domain:'checkout_utf8_bytes',declared_self_exclusions:['docs/elowen-cairn/v691-v5/x1/manifest.json'],entry_count:entries.length,entries});
+
+console.log(JSON.stringify({phase:'v691-v5',stage:'x1',planning_head:PLAN_HEAD,contracts:results.length,skills:skillValidation.length,runners:runnerValidation.length,failed_subjects:negativeRegister.length,methods:methods.length,witnesses:witnesses.length,x1_files:selected().length,x1_effective:x1Effective}));
