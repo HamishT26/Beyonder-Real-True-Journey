@@ -1,0 +1,109 @@
+{
+  "schema": "ghc.family.elowen-sequence-x2-result.v1",
+  "proposal_id": "EC6915-167",
+  "operation": "provenance_chain",
+  "input": {
+    "events": [
+      {
+        "sequence": 1,
+        "previous": "0000000000000000000000000000000000000000000000000000000000000000",
+        "payload": {
+          "action": "create",
+          "record": "SYN7"
+        }
+      },
+      {
+        "sequence": 2,
+        "previous": null,
+        "payload": {
+          "action": "review",
+          "record": "SYN7"
+        }
+      }
+    ]
+  },
+  "expected_input_validity": false,
+  "output": {
+    "schema": "ghc.family.synthetic-sequence-result.v1",
+    "operation": "provenance_chain",
+    "valid": false,
+    "errors": [
+      "EVENT_1_PREVIOUS"
+    ],
+    "result": {
+      "event_count": 2,
+      "events": [
+        {
+          "index": 0,
+          "expected_previous": "0000000000000000000000000000000000000000000000000000000000000000",
+          "observed_previous": "0000000000000000000000000000000000000000000000000000000000000000",
+          "digest": "8d01a106508265119f9c1d54df1ddd47ccff1a8d97d68314baefdd1a66e58ed4",
+          "errors": []
+        },
+        {
+          "index": 1,
+          "expected_previous": "8d01a106508265119f9c1d54df1ddd47ccff1a8d97d68314baefdd1a66e58ed4",
+          "observed_previous": null,
+          "digest": "929b4eac60c8d4b96e6c909d6dd68c24ff533556ab9a910b5ad100605483442e",
+          "errors": [
+            "PREVIOUS"
+          ]
+        }
+      ],
+      "first_broken_index": 1,
+      "chain_head": "929b4eac60c8d4b96e6c909d6dd68c24ff533556ab9a910b5ad100605483442e",
+      "provenance_authority": false
+    },
+    "evidence_class": "wholly_synthetic_same_owner",
+    "real_biological_observation": false,
+    "participant_evidence": false,
+    "professional_interpretation": false,
+    "authority_grant": false,
+    "external_action": false,
+    "independent_reproduction": false,
+    "terminal_verdict": "NOT_READY_FOR_STAGE_20"
+  },
+  "rejecting_mutation": {
+    "input": {
+      "events": "not-an-array"
+    },
+    "output": {
+      "schema": "ghc.family.synthetic-sequence-result.v1",
+      "operation": "provenance_chain",
+      "valid": false,
+      "errors": [
+        "EVENT_LIST"
+      ],
+      "result": {
+        "event_count": 0,
+        "events": [],
+        "first_broken_index": null,
+        "chain_head": null,
+        "provenance_authority": false
+      },
+      "evidence_class": "wholly_synthetic_same_owner",
+      "real_biological_observation": false,
+      "participant_evidence": false,
+      "professional_interpretation": false,
+      "authority_grant": false,
+      "external_action": false,
+      "independent_reproduction": false,
+      "terminal_verdict": "NOT_READY_FOR_STAGE_20"
+    },
+    "completion_credit": 0
+  },
+  "checks": {
+    "deterministic": true,
+    "input_unchanged": true,
+    "closed_envelope": true,
+    "independent_invariant": true,
+    "rejecting_mutation": true,
+    "mutation_distinct": true,
+    "evidence_ceiling": true
+  },
+  "passed": true,
+  "outcome": "completed",
+  "same_owner_only": true,
+  "independent_reproduction": false,
+  "boundary": "Wholly synthetic sequence-record software evidence only. No real sequence, sample, organism, person, participant, patient, consent act, clinical interpretation, data-release decision, professional result, legal or cultural determination, affected-party acceptance, Maori authority, empirical GMUT confirmation, production readiness, independent reproduction, proof, canon, or Stage 20 authority."
+}

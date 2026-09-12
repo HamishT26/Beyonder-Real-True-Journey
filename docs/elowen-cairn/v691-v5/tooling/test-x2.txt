@@ -1,0 +1,70 @@
+'use strict';
+
+const fs=require('fs');
+const path=require('path');
+const crypto=require('crypto');
+require.extensions['.txt']=require.extensions['.js'];
+const ROOT=path.resolve(__dirname,'../../../..');
+const BASE=path.join(ROOT,'docs','elowen-cairn','v691-v5');
+const X2=path.join(BASE,'x2');
+const TOOL_NAMES=require('./refresh-x2-manifest.txt').TOOL_NAMES;
+const errors=[];
+const readJson=relative=>JSON.parse(fs.readFileSync(path.join(BASE,relative),'utf8'));
+function walk(directory){if(!fs.existsSync(directory))return[];const out=[];for(const name of fs.readdirSync(directory).sort()){const file=path.join(directory,name),stat=fs.statSync(file);if(stat.isDirectory())out.push(...walk(file));else out.push(file);}return out;}
+const check=(condition,code)=>{if(!condition)errors.push(code);};
+const sha256=bytes=>crypto.createHash('sha256').update(bytes).digest('hex');
+
+const plan=readJson('plan/proposal-freeze.json').proposals.filter(row=>row.session==='x2');
+const contractFiles=walk(path.join(X2,'contracts')).filter(file=>file.endsWith('.json'));
+check(plan.length===100,'PLAN_COUNT');check(contractFiles.length===100,'CONTRACT_COUNT');
+let contractsPassed=0,rejectionsRetained=0;
+for(const file of contractFiles){const row=JSON.parse(fs.readFileSync(file,'utf8')),proposal=plan.find(item=>item.proposal_id===row.proposal_id),checks=row.checks&&Object.values(row.checks).every(Boolean),rejected=row.rejecting_mutation?.output?.valid===false&&row.rejecting_mutation.output.errors.length>0&&row.rejecting_mutation.completion_credit===0,expected=proposal?.expected_disposition;if(proposal&&row.passed&&row.outcome===expected&&checks&&rejected&&row.output.schema==='ghc.family.synthetic-sequence-result.v1'&&row.output.operation===row.operation&&row.same_owner_only&&!row.independent_reproduction)contractsPassed++;else errors.push('CONTRACT_'+path.basename(file));if(rejected)rejectionsRetained++;}
+
+const results=readJson('x2/result-ledger.json');
+check(results.count===100&&results.passed===100&&results.failed===0,'RESULT_LEDGER');
+check(results.outcomes.completed===70&&results.outcomes.represented===10&&results.outcomes.open_gap===10&&results.outcomes.exact_gate===10,'X2_OUTCOMES');
+const truth=readJson('x2/phase-truth.json');
+check(truth.combined_outcomes.completed===170&&truth.combined_outcomes.represented===10&&truth.combined_outcomes.open_gap===10&&truth.combined_outcomes.exact_gate===10,'COMBINED_OUTCOMES');
+check(truth.x1_head==='fab3901455432641dc981f7749c3fb7b33ac33a4','X1_HEAD');
+check(truth.incremental_spend_usd===0&&truth.external_actions===0&&truth.canonical_invocations===0&&truth.successor_contacts===0,'ACTION_BOUNDARY');
+check(truth.terminal_verdict==='NOT_READY_FOR_STAGE_20','TERMINAL_VERDICT');
+
+const skills=readJson('x2/skill-validation.json'),runners=readJson('x2/runner-validation.json'),prepared=readJson('x2/promotion-prepared-validation.json');
+check(skills.count===10&&skills.passed===10&&skills.failed===0&&skills.records.every(row=>row.official_quick_validate_passed&&row.complete_read&&row.accepting_smoke_passed&&row.rejecting_smoke_passed),'SKILLS');
+check(runners.count===5&&runners.passed===5&&runners.failed===0&&runners.records.every(row=>row.accepting_smoke_passed&&row.rejecting_smoke_passed&&row.outside_operation_blocked),'RUNNERS');
+check(prepared.groups===5&&prepared.skills===5&&prepared.runners===5&&prepared.checks.every(row=>row.pass)&&prepared.negatives.length===5&&prepared.overwrites===0&&!prepared.installed,'PROMOTION_PREPARED');
+const promotionSkills=walk(path.join(X2,'promotions','skills')).filter(file=>path.basename(file)==='SKILL.md');
+const closures=walk(path.join(X2,'promotions','skills')).filter(file=>path.basename(file)==='source-closure.json').map(file=>JSON.parse(fs.readFileSync(file,'utf8')));
+const promotionRunners=walk(path.join(X2,'promotions','public','runners')).filter(file=>file.endsWith('.txt'));
+check(promotionSkills.length===5&&closures.length===5&&closures.every(row=>row.source_units===4&&row.sources.length===4&&row.source_callers_retained),'PROMOTION_SOURCES');
+check(promotionRunners.length===5,'PROMOTION_RUNNERS');
+
+const portfolio=readJson('x2/portfolio-execution.json');
+check(portfolio.safe.length===100&&portfolio.safe.every(row=>row.execution_state==='executed_bounded_same_owner'),'SAFE');
+check(portfolio.candidate.length===100&&portfolio.candidate.every(row=>row.execution_state==='executed_bounded_same_owner'),'CANDIDATE');
+check(portfolio.clean_fix_refine.length===100&&portfolio.clean_fix_refine.every(row=>row.execution_state==='executed_bounded_same_owner'),'CFR');
+check(portfolio.exact_packets.length===50&&portfolio.exact_packets.every(row=>row.execution_state==='held_to_exact_action_or_external_gate'),'EXACT');
+check(portfolio.blocked_packets.length===30&&portfolio.blocked_packets.every(row=>row.execution_state==='visible_unexecuted'),'BLOCKED');
+
+const methodFlow=readJson('x2/method-flow.json'),negatives=readJson('x2/retained-negative-register.json'),operations=readJson('x2/operational-failures.json');
+check(methodFlow.counts.methods===methodFlow.methods.length&&methodFlow.counts.witnesses===methodFlow.witnesses.length,'METHOD_COUNTS');
+check(methodFlow.counts.witness_results.fail===methodFlow.witnesses.filter(row=>row.result==='fail').length&&methodFlow.counts.witness_results.pass===methodFlow.witnesses.filter(row=>row.result==='pass').length,'WITNESS_COUNTS');
+check(negatives.count===negatives.records.length&&negatives.completion_credit===0&&!negatives.failure_erasure,'NEGATIVES');
+check(operations.count===6&&operations.failures.length===6&&!operations.failure_erasure,'OPERATIONAL_FAILURES');
+
+const workbench=fs.readFileSync(path.join(X2,'workbench.html'),'utf8');
+for(const [needle,code]of [['<!doctype html>','HTML_DOCTYPE'],['<html lang="en">','HTML_LANG'],['href="#main"','HTML_SKIP'],['<main id="main">','HTML_MAIN'],['<caption>','HTML_CAPTION'],['scope="col"','HTML_HEADERS'],['prefers-reduced-motion','HTML_MOTION'],['assistive-technology','HTML_RESERVED_AT'],['affected-user evaluation','HTML_RESERVED_AFFECTED']])check(workbench.includes(needle),code);
+
+const x2Files=walk(X2),jsonFiles=x2Files.filter(file=>file.endsWith('.json'));let jsonPassed=0;for(const file of jsonFiles){try{JSON.parse(fs.readFileSync(file,'utf8'));jsonPassed++;}catch{errors.push('JSON_'+path.relative(BASE,file));}}
+const manifest=readJson('x2/manifest.json'),exclusions=new Set(manifest.declared_self_exclusions),selected=walk(BASE).filter(file=>file.startsWith(X2+path.sep)||TOOL_NAMES.has(path.basename(file))),expectedPaths=selected.map(file=>path.relative(ROOT,file).replaceAll('\\','/')).filter(file=>!exclusions.has(file)).sort(),declaredPaths=manifest.entries.map(row=>row.path).sort();
+check(JSON.stringify(expectedPaths)===JSON.stringify(declaredPaths),'MANIFEST_PATH_SET');check(manifest.entry_count===manifest.entries.length,'MANIFEST_COUNT');let manifestPassed=0;for(const entry of manifest.entries){const file=path.join(ROOT,...entry.path.split('/'));if(fs.existsSync(file)){const bytes=fs.readFileSync(file);if(bytes.length===entry.bytes&&sha256(bytes)===entry.sha256)manifestPassed++;else errors.push('MANIFEST_BYTES_'+entry.path);}else errors.push('MANIFEST_MISSING_'+entry.path);}
+
+const textFiles=selected.filter(file=>['.json','.md','.txt','.html'].includes(path.extname(file)));const records=[];for(const file of textFiles){const relative=path.relative(ROOT,file).replaceAll('\\','/');fs.readFileSync(file,'utf8').split(/\r?\n/).forEach((line,index)=>records.push({relative,line,index:index+1}));}const joined=records.map(row=>row.line).join('\n'),count=(regex,text)=>(text.match(regex)||[]).length;
+const privateRoute=[];for(const row of records){const hits=count(/(?:source_thread_id|providerTabId|private callable identifier|private application state|session stream)/gi,row.line);if(hits)privateRoute.push({path:row.relative,line:row.index,count:hits,definition:row.relative.endsWith('/tooling/test-x2.txt')});}
+const media=[];for(const row of records){const hits=count(/(?:transcript|screenshot|screen capture)/gi,row.line);if(hits)media.push({path:row.relative,line:row.index,count:hits,metadata:/new_screenshots.*false/i.test(row.line)||row.relative.endsWith('/tooling/test-x2.txt')});}
+const privacy={raw_uuid:count(/\b[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\b/gi,joined),private_absolute_path:count(/(?<![A-Za-z])[A-Za-z]:[\\/]/g,joined),credential_assignment:count(/(?:api[_-]?key|password|secret|access[_-]?token|authorization)\s*[:=]\s*[^\s,}]+/gi,joined),private_route_candidates:privateRoute.reduce((sum,row)=>sum+row.count,0),private_route_confirmed:privateRoute.filter(row=>!row.definition).reduce((sum,row)=>sum+row.count,0),media_candidates:media.reduce((sum,row)=>sum+row.count,0),media_confirmed:media.filter(row=>!row.metadata).reduce((sum,row)=>sum+row.count,0)};
+check(privacy.raw_uuid===0&&privacy.private_absolute_path===0&&privacy.credential_assignment===0&&privacy.private_route_confirmed===0&&privacy.media_confirmed===0,'PRIVACY');
+let maxWords=0;for(const file of textFiles){const words=fs.readFileSync(file,'utf8').trim().split(/\s+/).filter(Boolean).length;maxWords=Math.max(maxWords,words);if(words>100000)errors.push('WORD_CEILING_'+path.relative(BASE,file));}
+
+const summary={schema:'ghc.family.elowen-x2-independent-test.v1',valid:errors.length===0,errors,contract_tests:{passed:contractsPassed,total:contractFiles.length},rejecting_subjects:{retained:rejectionsRetained,total:contractFiles.length},skills:skills.passed,runners:runners.passed,promotion_groups:prepared.groups,json_parses:{passed:jsonPassed,total:jsonFiles.length},manifest:{passed:manifestPassed,total:manifest.entries.length},privacy,max_document_words:maxWords,workbench_structural_checks:9,same_owner_only:true,independent_reproduction:false,terminal_verdict:'NOT_READY_FOR_STAGE_20'};
+process.stdout.write(JSON.stringify(summary)+'\n');if(errors.length)process.exitCode=1;

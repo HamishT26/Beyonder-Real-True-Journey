@@ -1,0 +1,14 @@
+'use strict';
+
+const fs=require('fs');
+const path=require('path');
+const crypto=require('crypto');
+const ROOT=path.resolve(__dirname,'../../../..');
+const BASE=path.join(ROOT,'docs','elowen-cairn','v691-v5');
+const X2=path.join(BASE,'x2');
+const TOOL_NAMES=new Set(['sequence-x2-engine.txt','build-x2.txt','install-x2-promotions.txt','test-x2.txt','refresh-x2-manifest.txt','finalize-x2-install.txt','test-x2-install.txt','test-owner-privacy-final.txt','finalize-x2-stage-timeout.txt']);
+function walk(directory){if(!fs.existsSync(directory))return[];const out=[];for(const name of fs.readdirSync(directory).sort()){const file=path.join(directory,name),stat=fs.statSync(file);if(stat.isDirectory())out.push(...walk(file));else out.push(file);}return out;}
+function writeJson(relative,value){const file=path.join(BASE,relative);fs.mkdirSync(path.dirname(file),{recursive:true});fs.writeFileSync(file,JSON.stringify(value,null,2)+'\n','utf8');}
+function run(){const manifestPath=path.join(X2,'manifest.json'),scopePath=path.join(X2,'scope-review.json');const selected=()=>walk(BASE).filter(file=>file.startsWith(X2+path.sep)||TOOL_NAMES.has(path.basename(file)));const pre=selected().filter(file=>file!==manifestPath&&file!==scopePath);writeJson('x2/scope-review.json',{schema:'ghc.family.elowen-x2-scope-review.v1',x1_head:'fab3901455432641dc981f7749c3fb7b33ac33a4',expected_roots:['docs/elowen-cairn/v691-v5/x2','docs/elowen-cairn/v691-v5/tooling'],files_in_x2_delta:pre.length+2,outside_owner_paths:[],deletions:[],allowed_extensions:['.json','.md','.txt','.html'],valid:true});const files=selected().filter(file=>file!==manifestPath),entries=files.map(file=>{const bytes=fs.readFileSync(file);return{path:path.relative(ROOT,file).replaceAll('\\','/'),bytes:bytes.length,sha256:crypto.createHash('sha256').update(bytes).digest('hex')};});writeJson('x2/manifest.json',{schema:'ghc.family.elowen-x2-manifest.v1',x1_head:'fab3901455432641dc981f7749c3fb7b33ac33a4',byte_domain:'checkout_utf8_bytes',declared_self_exclusions:['docs/elowen-cairn/v691-v5/x2/manifest.json'],entry_count:entries.length,entries});return{files:files.length+1,manifest_entries:entries.length};}
+module.exports={run,TOOL_NAMES};
+if(require.main===module)process.stdout.write(JSON.stringify(run())+'\n');

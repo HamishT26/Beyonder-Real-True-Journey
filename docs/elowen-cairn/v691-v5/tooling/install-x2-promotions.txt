@@ -1,0 +1,46 @@
+'use strict';
+
+const fs=require('fs');
+const path=require('path');
+const crypto=require('crypto');
+const {spawnSync}=require('child_process');
+require.extensions['.txt']=require.extensions['.js'];
+
+const ROOT=path.resolve(__dirname,'../../../..');
+const BASE=path.join(ROOT,'docs','elowen-cairn','v691-v5');
+const PREPARED=path.join(BASE,'x2','promotions');
+const args={};for(let i=2;i<process.argv.length;i+=2)args[process.argv[i]]=process.argv[i+1];
+for(const key of ['--skill-root','--public-root','--quick-validator'])if(!args[key])throw Error('ARGUMENT_REQUIRED '+key);
+const skillRoot=path.resolve(args['--skill-root']),publicRoot=path.resolve(args['--public-root']),python=args['--python']||'python';
+const groups=JSON.parse(fs.readFileSync(path.join(BASE,'plan','skills-runners.json'),'utf8')).merged_global_groups;
+const plan=JSON.parse(fs.readFileSync(path.join(BASE,'plan','proposal-freeze.json'),'utf8')).proposals;
+const core=require(path.join(PREPARED,'public','sequence','sequence-x2-engine.txt'));
+const sha256=bytes=>crypto.createHash('sha256').update(bytes).digest('hex');
+const stable=value=>Array.isArray(value)?'['+value.map(stable).join(',')+']':value&&typeof value==='object'?'{'+Object.keys(value).sort().map(key=>JSON.stringify(key)+':'+stable(value[key])).join(',')+'}':JSON.stringify(value);
+function walk(directory){const out=[];for(const name of fs.readdirSync(directory).sort()){const file=path.join(directory,name),stat=fs.statSync(file);if(stat.isDirectory())out.push(...walk(file));else out.push(file);}return out;}
+function put(file,bytes){fs.mkdirSync(path.dirname(file),{recursive:true});fs.writeFileSync(file,bytes,{flag:'wx'});}
+function writeJson(relative,value){const file=path.join(BASE,relative);put(file,Buffer.from(JSON.stringify(value,null,2)+'\n','utf8'));}
+function validFixture(operation,input){if(operation!=='provenance_chain')return JSON.parse(JSON.stringify(input));const first={sequence:1,previous:'0'.repeat(64),payload:{action:'create',record:'SYN-INSTALLED'}};return{events:[first,{sequence:2,previous:core.sha256(first),payload:{action:'review',record:'SYN-INSTALLED'}}]};}
+
+const files=[];
+for(const file of walk(path.join(PREPARED,'skills'))){const relative=path.relative(path.join(PREPARED,'skills'),file);files.push({kind:'skills',relative,destination:path.join(skillRoot,relative),source:file});}
+for(const file of walk(path.join(PREPARED,'public'))){const relative=path.relative(path.join(PREPARED,'public'),file);files.push({kind:'public',relative,destination:path.join(publicRoot,relative),source:file});}
+const collisions=files.filter(row=>fs.existsSync(row.destination));
+if(collisions.length)throw Error('DESTINATION_COLLISION '+collisions.map(row=>row.kind+'/'+row.relative.split(path.sep).join('/')).join(','));
+const intent={schema:'ghc.family.elowen-global-install-intent.v1',state:'PREPARED_FOR_ADDITIVE_COPY',skills:5,runners:5,overwrites:0,files:files.map(row=>({kind:row.kind,path:row.relative.split(path.sep).join('/'),bytes:fs.statSync(row.source).size,sha256:sha256(fs.readFileSync(row.source))})),external_roots_sanitized:true,spend_usd:0};
+writeJson('x2/global-install-intent.json',intent);
+
+const bindings=[];
+for(const row of files){const bytes=fs.readFileSync(row.source);put(row.destination,bytes);const installed=fs.readFileSync(row.destination),digest=sha256(installed);if(digest!==sha256(bytes)||installed.length!==bytes.length)throw Error('BYTE_PARITY '+row.relative);bindings.push({kind:row.kind,path:row.relative.split(path.sep).join('/'),source_path:path.relative(ROOT,row.source).split(path.sep).join('/'),bytes:installed.length,sha256:digest,byte_parity:true});}
+
+const skillChecks=[];
+for(const group of groups){const directory=path.join(skillRoot,group.name),check=spawnSync(python,[args['--quick-validator'],directory],{encoding:'utf8',windowsHide:true,env:{...process.env,PYTHONUTF8:'1',PYTHONDONTWRITEBYTECODE:'1'}});skillChecks.push({name:group.name,exit_code:check.status,passed:check.status===0});}
+if(skillChecks.some(row=>!row.passed))throw Error('INSTALLED_SKILL_VALIDATION '+JSON.stringify(skillChecks));
+
+const witnesses=[],negatives=[];
+for(const group of groups){const short=group.name.replace(/^ghc-family-/,'');const runner=require(path.join(publicRoot,'runners',short+'.txt'));for(const operation of group.operations){const proposal=plan.find(row=>row.operation===operation),input=validFixture(operation,proposal.input),result=runner.evaluate({operation,input});witnesses.push({group:group.name,id:'installed-'+operation,result:result.ok&&result.value.valid&&result.authority===false&&result.external_action===false?'pass':'fail',details:'Installed operation closure'});}const outside=runner.evaluate({operation:'outside_group',input:{}});witnesses.push({group:group.name,id:'installed-outside-group',result:outside.ok===false&&outside.error==='OUTSIDE_GROUP'?'pass':'fail',details:'Installed scope guard'});negatives.push({negative_id:'EC6915-X2-INST-'+String(negatives.length+1).padStart(3,'0'),group:group.name,subject:'outside_group',rejection:'OUTSIDE_GROUP',completion_credit:0,retained:true});}
+if(witnesses.some(row=>row.result!=='pass'))throw Error('INSTALLED_SMOKE '+JSON.stringify(witnesses.filter(row=>row.result!=='pass')));
+
+const receipt={schema:'ghc.family.elowen-global-promotion-receipt.v1',state:'INSTALLED_ADDITIVE_VALIDATED',skills:5,runners:5,supporting_cores:2,files:bindings.length,bindings,skill_checks:skillChecks,witnesses,negatives,overwrites:0,packages_installed:0,spend_usd:0,all_byte_parity:true,all_smokes_passed:true,source_callers_preserved:true,external_roots_sanitized:true,same_owner_only:true,independent_reproduction:false,terminal_verdict:'NOT_READY_FOR_STAGE_20'};
+writeJson('x2/global-promotion-receipt.json',receipt);
+process.stdout.write(JSON.stringify({installed_skills:5,installed_runners:5,supporting_cores:2,files:bindings.length,checks:witnesses.length+skillChecks.length,overwrites:0,spend_usd:0,all_byte_parity:true,all_smokes_passed:true})+'\n');

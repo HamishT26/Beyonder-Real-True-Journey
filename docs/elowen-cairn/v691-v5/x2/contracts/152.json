@@ -1,0 +1,93 @@
+{
+  "schema": "ghc.family.elowen-sequence-x2-result.v1",
+  "proposal_id": "EC6915-152",
+  "operation": "duplicate_record",
+  "input": {
+    "records": [
+      {
+        "identifier": "SYN2",
+        "sequence": "AACCGGTT"
+      },
+      {
+        "identifier": "SYN12",
+        "sequence": "ACGTN"
+      }
+    ]
+  },
+  "expected_input_validity": true,
+  "output": {
+    "schema": "ghc.family.synthetic-sequence-result.v1",
+    "operation": "duplicate_record",
+    "valid": true,
+    "errors": [],
+    "result": {
+      "record_count": 2,
+      "duplicate_identifiers": [],
+      "duplicate_digests": [],
+      "records_preserved": true
+    },
+    "evidence_class": "wholly_synthetic_same_owner",
+    "real_biological_observation": false,
+    "participant_evidence": false,
+    "professional_interpretation": false,
+    "authority_grant": false,
+    "external_action": false,
+    "independent_reproduction": false,
+    "terminal_verdict": "NOT_READY_FOR_STAGE_20"
+  },
+  "rejecting_mutation": {
+    "input": {
+      "records": [
+        {
+          "identifier": "SYN2",
+          "sequence": "AACCGGTT"
+        },
+        {
+          "identifier": "SYN12",
+          "sequence": "ACGTN"
+        },
+        {
+          "identifier": null,
+          "sequence": 7
+        }
+      ]
+    },
+    "output": {
+      "schema": "ghc.family.synthetic-sequence-result.v1",
+      "operation": "duplicate_record",
+      "valid": false,
+      "errors": [
+        "RECORD_SHAPE"
+      ],
+      "result": {
+        "record_count": 3,
+        "duplicate_identifiers": [],
+        "duplicate_digests": [],
+        "records_preserved": true
+      },
+      "evidence_class": "wholly_synthetic_same_owner",
+      "real_biological_observation": false,
+      "participant_evidence": false,
+      "professional_interpretation": false,
+      "authority_grant": false,
+      "external_action": false,
+      "independent_reproduction": false,
+      "terminal_verdict": "NOT_READY_FOR_STAGE_20"
+    },
+    "completion_credit": 0
+  },
+  "checks": {
+    "deterministic": true,
+    "input_unchanged": true,
+    "closed_envelope": true,
+    "independent_invariant": true,
+    "rejecting_mutation": true,
+    "mutation_distinct": true,
+    "evidence_ceiling": true
+  },
+  "passed": true,
+  "outcome": "completed",
+  "same_owner_only": true,
+  "independent_reproduction": false,
+  "boundary": "Wholly synthetic sequence-record software evidence only. No real sequence, sample, organism, person, participant, patient, consent act, clinical interpretation, data-release decision, professional result, legal or cultural determination, affected-party acceptance, Maori authority, empirical GMUT confirmation, production readiness, independent reproduction, proof, canon, or Stage 20 authority."
+}

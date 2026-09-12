@@ -1,0 +1,160 @@
+'use strict';
+
+const path = require('path');
+require.extensions['.txt'] = require.extensions['.js'];
+const x1 = require(path.join(__dirname, 'sequence-x1-engine.txt'));
+
+function envelope(operation, errors, result) {
+  return {
+    schema: 'ghc.family.synthetic-sequence-result.v1',
+    operation,
+    valid: errors.length === 0,
+    errors,
+    result,
+    evidence_class: 'wholly_synthetic_same_owner',
+    real_biological_observation: false,
+    participant_evidence: false,
+    professional_interpretation: false,
+    authority_grant: false,
+    external_action: false,
+    independent_reproduction: false,
+    terminal_verdict: 'NOT_READY_FOR_STAGE_20'
+  };
+}
+
+function fastqFrame(input) {
+  const errors=[];
+  const header=typeof input?.header==='string'?input.header:null;
+  const sequence=typeof input?.sequence==='string'?input.sequence.toUpperCase():null;
+  const plus=typeof input?.plus==='string'?input.plus:null;
+  const quality=typeof input?.quality==='string'?input.quality:null;
+  if(!header||!header.startsWith('@')||/[\r\n]/.test(header))errors.push('HEADER');
+  if(!sequence||/[^ACGTN]/.test(sequence)||/[\r\n]/.test(sequence))errors.push('SEQUENCE');
+  if(plus!=='+'&&!(plus&&plus.startsWith('+')))errors.push('PLUS');
+  if(quality===null||/[\r\n]/.test(quality))errors.push('QUALITY');
+  if(sequence!==null&&quality!==null&&sequence.length!==quality.length)errors.push('LENGTH_MISMATCH');
+  return envelope('fastq_frame',[...new Set(errors)],{header,sequence,plus,quality,lines:[header,sequence,plus,quality]});
+}
+
+function qualityLength(input) {
+  const errors=[];
+  const sequence=typeof input?.sequence==='string'?input.sequence:null;
+  const quality=typeof input?.quality==='string'?input.quality:null;
+  if(sequence===null)errors.push('SEQUENCE_TYPE');
+  if(quality===null)errors.push('QUALITY_TYPE');
+  if(sequence!==null&&quality!==null&&sequence.length!==quality.length)errors.push('LENGTH_MISMATCH');
+  return envelope('quality_length',errors,{sequence_length:sequence?.length??null,quality_length:quality?.length??null,equal:sequence!==null&&quality!==null&&sequence.length===quality.length});
+}
+
+function phred33Range(input) {
+  const errors=[];
+  const quality=typeof input?.quality==='string'?input.quality:null;
+  if(quality===null)errors.push('QUALITY_TYPE');
+  const invalid=[];
+  if(quality!==null)[...quality].forEach((symbol,index)=>{const code=symbol.codePointAt(0);if(code<33||code>126)invalid.push({index,code});});
+  if(invalid.length)errors.push('PHRED33_RANGE');
+  return envelope('phred33_range',errors,{length:quality?.length??0,invalid,min_code:quality?.length?Math.min(...[...quality].map(x=>x.codePointAt(0))):null,max_code:quality?.length?Math.max(...[...quality].map(x=>x.codePointAt(0))):null});
+}
+
+function pairedReadBinding(input) {
+  const errors=[];
+  const left=typeof input?.left==='string'?input.left:null;
+  const right=typeof input?.right==='string'?input.right:null;
+  const leftMatch=left?.match(/^(.*)\/1$/);
+  const rightMatch=right?.match(/^(.*)\/2$/);
+  if(!leftMatch)errors.push('LEFT_SUFFIX');
+  if(!rightMatch)errors.push('RIGHT_SUFFIX');
+  if(leftMatch&&rightMatch&&leftMatch[1]!==rightMatch[1])errors.push('BASE_IDENTIFIER_MISMATCH');
+  return envelope('paired_read_binding',errors,{left,right,left_base:leftMatch?.[1]??null,right_base:rightMatch?.[1]??null,paired:errors.length===0,laboratory_relationship_claim:false});
+}
+
+function kmerHistogram(input) {
+  const errors=[];
+  const sequence=typeof input?.sequence==='string'?input.sequence.toUpperCase():null;
+  const k=input?.k;
+  if(sequence===null||/[^ACGT]/.test(sequence))errors.push('CANONICAL_SEQUENCE');
+  if(!Number.isInteger(k)||k<1||k>8||(sequence!==null&&k>sequence.length))errors.push('K_RANGE');
+  const histogram={};
+  if(errors.length===0)for(let index=0;index<=sequence.length-k;index++){const word=sequence.slice(index,index+k);histogram[word]=(histogram[word]||0)+1;}
+  return envelope('kmer_histogram',errors,{k,window_count:errors.length?0:sequence.length-k+1,histogram});
+}
+
+function duplicateRecord(input) {
+  const errors=[];
+  const records=Array.isArray(input?.records)?x1.clone(input.records):null;
+  if(records===null)errors.push('RECORD_LIST');
+  if(records&&records.some(row=>typeof row?.identifier!=='string'||!row.identifier||typeof row?.sequence!=='string'))errors.push('RECORD_SHAPE');
+  const idPositions={};
+  const digestPositions={};
+  if(records)records.forEach((row,index)=>{
+    const identifier=String(row?.identifier);
+    const digest=typeof row?.sequence==='string'?x1.sha256(row.sequence.toUpperCase()):null;
+    (idPositions[identifier]||=[]).push(index);
+    if(digest)(digestPositions[digest]||=[]).push(index);
+  });
+  const duplicateIdentifiers=Object.entries(idPositions).filter(([,positions])=>positions.length>1).map(([identifier,positions])=>({identifier,positions}));
+  const duplicateDigests=Object.entries(digestPositions).filter(([,positions])=>positions.length>1).map(([digest,positions])=>({digest,positions}));
+  return envelope('duplicate_record',errors,{record_count:records?.length??0,duplicate_identifiers:duplicateIdentifiers,duplicate_digests:duplicateDigests,records_preserved:true});
+}
+
+function provenanceChain(input) {
+  const errors=[];
+  const events=Array.isArray(input?.events)?x1.clone(input.events):null;
+  if(events===null||events.length===0)errors.push('EVENT_LIST');
+  const rows=[];
+  let expected='0'.repeat(64);
+  if(events)events.forEach((event,index)=>{
+    const rowErrors=[];
+    if(event?.sequence!==index+1)rowErrors.push('SEQUENCE');
+    if(event?.previous!==expected)rowErrors.push('PREVIOUS');
+    if(!event||typeof event.payload!=='object'||Array.isArray(event.payload)||event.payload===null)rowErrors.push('PAYLOAD');
+    const digest=x1.sha256({sequence:event?.sequence??null,previous:event?.previous??null,payload:event?.payload??null});
+    rows.push({index,expected_previous:expected,observed_previous:event?.previous??null,digest,errors:rowErrors});
+    if(rowErrors.length)errors.push('EVENT_'+index+'_'+rowErrors.join('_'));
+    expected=digest;
+  });
+  return envelope('provenance_chain',errors,{event_count:events?.length??0,events:rows,first_broken_index:rows.find(row=>row.errors.length)?.index??null,chain_head:rows.at(-1)?.digest??null,provenance_authority:false});
+}
+
+function evidenceCeiling(input) {
+  const errors=[];
+  const requested=typeof input?.requested==='string'?input.requested:null;
+  const available=Array.isArray(input?.available)&&input.available.every(value=>typeof value==='string')?[...input.available]:null;
+  if(!requested)errors.push('REQUESTED_CLAIM');
+  if(available===null)errors.push('AVAILABLE_EVIDENCE');
+  return envelope('evidence_ceiling',errors,{requested,available:available??[],supported:false,missing_evidence:requested?[requested+'_evidence']:[],outcome:'represented',promotion_refused:true});
+}
+
+function participantGap(input) {
+  const errors=[];
+  const evaluation=typeof input?.evaluation==='string'?input.evaluation:null;
+  const participants=input?.participants;
+  const available=Array.isArray(input?.available)&&input.available.every(value=>typeof value==='string')?[...input.available]:null;
+  if(!evaluation)errors.push('EVALUATION');
+  if(!Number.isInteger(participants)||participants<0)errors.push('PARTICIPANT_COUNT');
+  if(available===null)errors.push('AVAILABLE_EVIDENCE');
+  return envelope('participant_gap',errors,{evaluation,participants:Number.isInteger(participants)?participants:null,available:available??[],outcome:participants===0?'open_gap':'represented',missing:['affected_user_evaluation','manual_accessibility_review','assistive_technology_review','consent_and_comprehension_evidence'],gap_closed:false});
+}
+
+function authorityGate(input) {
+  const errors=[];
+  const action=typeof input?.action==='string'&&input.action?input.action:null;
+  const required=Array.isArray(input?.requiredRoles)&&input.requiredRoles.length>0&&input.requiredRoles.every(value=>typeof value==='string'&&value)?[...input.requiredRoles]:null;
+  const verified=Array.isArray(input?.verifiedRoles)&&input.verifiedRoles.every(value=>typeof value==='string'&&value)?[...input.verifiedRoles]:null;
+  if(!action)errors.push('ACTION');
+  if(required===null||new Set(required).size!==required?.length)errors.push('REQUIRED_ROLES');
+  if(verified===null||new Set(verified).size!==verified?.length)errors.push('VERIFIED_ROLES');
+  if(required&&verified&&verified.some(role=>!required.includes(role)))errors.push('UNEXPECTED_VERIFIED_ROLE');
+  const missing=required&&verified?required.filter(role=>!verified.includes(role)):[];
+  return envelope('authority_gate',errors,{action,required_roles:required??[],verified_roles:verified??[],missing_roles:missing,outcome:missing.length?'exact_gate':'represented',external_action:false,gate_closed:false});
+}
+
+const X2_OPERATIONS={fastq_frame:fastqFrame,quality_length:qualityLength,phred33_range:phred33Range,paired_read_binding:pairedReadBinding,kmer_histogram:kmerHistogram,duplicate_record:duplicateRecord,provenance_chain:provenanceChain,evidence_ceiling:evidenceCeiling,participant_gap:participantGap,authority_gate:authorityGate};
+
+function execute(operation,input){
+  if(Object.hasOwn(x1.OPERATIONS,operation))return x1.execute(operation,input);
+  if(!Object.hasOwn(X2_OPERATIONS,operation))return envelope(operation,['UNKNOWN_OPERATION'],null);
+  return X2_OPERATIONS[operation](x1.clone(input));
+}
+
+module.exports={...x1,X2_OPERATIONS,execute};

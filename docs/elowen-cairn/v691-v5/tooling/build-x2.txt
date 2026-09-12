@@ -1,0 +1,253 @@
+'use strict';
+
+const fs=require('fs');
+const path=require('path');
+const crypto=require('crypto');
+const {spawnSync,execFileSync}=require('child_process');
+require.extensions['.txt']=require.extensions['.js'];
+
+const ROOT=path.resolve(__dirname,'../../../..');
+const BASE=path.join(ROOT,'docs','elowen-cairn','v691-v5');
+const X2=path.join(BASE,'x2');
+const X1_HEAD='fab3901455432641dc981f7749c3fb7b33ac33a4';
+const BOUNDARY='Wholly synthetic sequence-record software evidence only. No real sequence, sample, organism, person, participant, patient, consent act, clinical interpretation, data-release decision, professional result, legal or cultural determination, affected-party acceptance, Maori authority, empirical GMUT confirmation, production readiness, independent reproduction, proof, canon, or Stage 20 authority.';
+const args={};for(let i=2;i<process.argv.length;i+=2)args[process.argv[i]]=process.argv[i+1];
+if(!args['--quick-validator'])throw Error('QUICK_VALIDATOR_REQUIRED');
+const python=args['--python']||'python';
+const head=execFileSync('git',['rev-parse','HEAD'],{cwd:ROOT,encoding:'utf8'}).trim();
+if(head!==X1_HEAD)throw Error('X1_HEAD_MISMATCH '+head);
+const core=require('./sequence-x2-engine.txt');
+
+const stable=value=>Array.isArray(value)?'['+value.map(stable).join(',')+']':value&&typeof value==='object'?'{'+Object.keys(value).sort().map(key=>JSON.stringify(key)+':'+stable(value[key])).join(',')+'}':JSON.stringify(value);
+const sha256=value=>crypto.createHash('sha256').update(Buffer.isBuffer(value)?value:Buffer.from(typeof value==='string'?value:stable(value),'utf8')).digest('hex');
+function writeJson(relative,value){const file=path.join(BASE,relative);fs.mkdirSync(path.dirname(file),{recursive:true});fs.writeFileSync(file,JSON.stringify(value,null,2)+'\n','utf8');}
+function writeText(relative,value){const file=path.join(BASE,relative);fs.mkdirSync(path.dirname(file),{recursive:true});fs.writeFileSync(file,value.replace(/\r\n/g,'\n').trimEnd()+'\n','utf8');}
+function walk(directory){if(!fs.existsSync(directory))return[];const out=[];for(const name of fs.readdirSync(directory).sort()){const file=path.join(directory,name),stat=fs.statSync(file);if(stat.isDirectory())out.push(...walk(file));else out.push(file);}return out;}
+
+function mutation(operation,input){const value=core.clone(input);switch(operation){
+ case'fastq_frame':value.header='not-fastq';value.plus='-';break;
+ case'quality_length':{const sequenceLength=typeof value.sequence==='string'?value.sequence.length:0,target=sequenceLength+1;value.quality='I'.repeat(typeof value.quality==='string'&&value.quality.length===target?sequenceLength+2:target);break;}
+ case'phred33_range':value.quality='I\u0001I';break;
+ case'paired_read_binding':value.right='UNRELATED/2';break;
+ case'kmer_histogram':value.k=0;break;
+ case'duplicate_record':value.records=[...(Array.isArray(value.records)?value.records:[]),{identifier:null,sequence:7}];break;
+ case'provenance_chain':value.events='not-an-array';break;
+ case'evidence_ceiling':value.available='not-an-array';break;
+ case'participant_gap':value.participants='unknown';break;
+ case'authority_gate':value.verifiedRoles=['fabricated_unlisted_role'];break;
+ default:throw Error('UNKNOWN_MUTATION '+operation);
+}return value;}
+
+function validProvenanceFixture(){const first={sequence:1,previous:'0'.repeat(64),payload:{action:'create',record:'SYN-VALID'}};const digest=core.sha256(first);return{events:[first,{sequence:2,previous:digest,payload:{action:'review',record:'SYN-VALID'}}]};}
+function validFixture(operation,input){if(operation==='provenance_chain')return validProvenanceFixture();return core.clone(input);}
+
+function expectedValidity(operation,input){switch(operation){
+ case'fastq_frame':return typeof input.header==='string'&&input.header.startsWith('@')&&!/[\r\n]/.test(input.header)&&typeof input.sequence==='string'&&input.sequence.length>0&&!/[^ACGTN]/i.test(input.sequence)&&typeof input.plus==='string'&&input.plus.startsWith('+')&&typeof input.quality==='string'&&input.sequence.length===input.quality.length;
+ case'quality_length':return typeof input.sequence==='string'&&typeof input.quality==='string'&&input.sequence.length===input.quality.length;
+ case'phred33_range':return typeof input.quality==='string'&&[...input.quality].every(symbol=>{const code=symbol.codePointAt(0);return code>=33&&code<=126;});
+ case'paired_read_binding':{const left=typeof input.left==='string'?input.left.match(/^(.*)\/1$/):null,right=typeof input.right==='string'?input.right.match(/^(.*)\/2$/):null;return Boolean(left&&right&&left[1]===right[1]);}
+ case'kmer_histogram':return typeof input.sequence==='string'&&/^[ACGT]+$/i.test(input.sequence)&&Number.isInteger(input.k)&&input.k>=1&&input.k<=8&&input.k<=input.sequence.length;
+ case'duplicate_record':return Array.isArray(input.records)&&input.records.every(row=>typeof row?.identifier==='string'&&row.identifier&&typeof row?.sequence==='string');
+ case'provenance_chain':{if(!Array.isArray(input.events)||!input.events.length)return false;let expected='0'.repeat(64);for(let index=0;index<input.events.length;index++){const event=input.events[index];if(event?.sequence!==index+1||event?.previous!==expected||!event.payload||typeof event.payload!=='object'||Array.isArray(event.payload))return false;expected=core.sha256(event);}return true;}
+ case'evidence_ceiling':return typeof input.requested==='string'&&input.requested.length>0&&Array.isArray(input.available)&&input.available.every(value=>typeof value==='string');
+ case'participant_gap':return typeof input.evaluation==='string'&&input.evaluation.length>0&&Number.isInteger(input.participants)&&input.participants>=0&&Array.isArray(input.available)&&input.available.every(value=>typeof value==='string');
+ case'authority_gate':return typeof input.action==='string'&&input.action.length>0&&Array.isArray(input.requiredRoles)&&input.requiredRoles.length>0&&input.requiredRoles.every(value=>typeof value==='string'&&value)&&new Set(input.requiredRoles).size===input.requiredRoles.length&&Array.isArray(input.verifiedRoles)&&input.verifiedRoles.every(value=>typeof value==='string'&&value&&input.requiredRoles.includes(value))&&new Set(input.verifiedRoles).size===input.verifiedRoles.length;
+ default:return false;
+}}
+
+function invariant(proposal,output){if(output.valid!==expectedValidity(proposal.operation,proposal.input))return false;if(!output.valid)return output.errors.length>0;switch(proposal.operation){
+ case'fastq_frame':return output.result.lines.length===4&&output.result.sequence.length===output.result.quality.length;
+ case'quality_length':return output.result.equal===true;
+ case'phred33_range':return output.result.invalid.length===0;
+ case'paired_read_binding':return output.result.paired===true&&output.result.laboratory_relationship_claim===false;
+ case'kmer_histogram':return Object.values(output.result.histogram).reduce((sum,value)=>sum+value,0)===output.result.window_count;
+ case'duplicate_record':return output.result.record_count===proposal.input.records.length&&output.result.records_preserved===true;
+ case'provenance_chain':return output.result.first_broken_index===null;
+ case'evidence_ceiling':return output.result.outcome==='represented'&&output.result.supported===false&&output.result.promotion_refused===true;
+ case'participant_gap':return output.result.outcome==='open_gap'&&output.result.participants===0&&output.result.gap_closed===false;
+ case'authority_gate':return output.result.outcome==='exact_gate'&&output.result.missing_roles.length>0&&output.result.external_action===false&&output.result.gate_closed===false;
+ default:return false;
+}}
+
+const plan=JSON.parse(fs.readFileSync(path.join(BASE,'plan','proposal-freeze.json'),'utf8'));
+const portfolioPlan=JSON.parse(fs.readFileSync(path.join(BASE,'plan','portfolios.json'),'utf8'));
+const toolPlan=JSON.parse(fs.readFileSync(path.join(BASE,'plan','skills-runners.json'),'utf8'));
+const x1Truth=JSON.parse(fs.readFileSync(path.join(BASE,'x1','phase-truth.json'),'utf8'));
+const proposals=plan.proposals.filter(row=>row.session==='x2');
+if(proposals.length!==100)throw Error('X2_PLAN_SELECTION');
+if(args['--mode']==='mutation-preflight'){
+  const rows=proposals.map(proposal=>{const candidate=mutation(proposal.operation,proposal.input),output=core.execute(proposal.operation,candidate);return{proposal_id:proposal.proposal_id,distinct:stable(candidate)!==stable(proposal.input),rejected:output.valid===false,errors:output.errors};});
+  const failures=rows.filter(row=>!row.distinct||!row.rejected);
+  process.stdout.write(JSON.stringify({mode:'mutation-preflight',total:rows.length,passed:rows.length-failures.length,failures})+'\n');
+  process.exit(failures.length?1:0);
+}
+const expectedKeys=['authority_grant','errors','evidence_class','external_action','independent_reproduction','operation','participant_evidence','professional_interpretation','real_biological_observation','result','schema','terminal_verdict','valid'].sort();
+const results=proposals.map(proposal=>{const before=stable(proposal.input),first=core.execute(proposal.operation,proposal.input),second=core.execute(proposal.operation,proposal.input),negativeInput=mutation(proposal.operation,proposal.input),negative=core.execute(proposal.operation,negativeInput);const checks={deterministic:stable(first)===stable(second),input_unchanged:before===stable(proposal.input),closed_envelope:stable(Object.keys(first).sort())===stable(expectedKeys),independent_invariant:invariant(proposal,first),rejecting_mutation:negative.valid===false&&negative.errors.length>0,mutation_distinct:stable(negativeInput)!==stable(proposal.input),evidence_ceiling:first.real_biological_observation===false&&first.participant_evidence===false&&first.professional_interpretation===false&&first.authority_grant===false&&first.external_action===false&&first.independent_reproduction===false};const passed=Object.values(checks).every(Boolean);return{schema:'ghc.family.elowen-sequence-x2-result.v1',proposal_id:proposal.proposal_id,operation:proposal.operation,input:proposal.input,expected_input_validity:expectedValidity(proposal.operation,proposal.input),output:first,rejecting_mutation:{input:negativeInput,output:negative,completion_credit:0},checks,passed,outcome:passed?proposal.expected_disposition:null,same_owner_only:true,independent_reproduction:false,boundary:BOUNDARY};});
+const failed=results.filter(row=>!row.passed);if(failed.length)throw Error('X2_CONTRACT_FAILURE '+failed.map(row=>row.proposal_id).join(','));
+for(const row of results)writeJson('x2/contracts/'+row.proposal_id.split('-').at(-1)+'.json',row);
+
+const descriptions={
+ fastq_frame:['synthetic FASTQ four-line framing','Use to preserve header, sequence, plus, and quality boundaries without implying a sequencing run.'],
+ quality_length:['synthetic sequence-quality length parity','Use to expose rather than repair a length mismatch.'],
+ phred33_range:['printable Phred-33 code-point ranges','Use for character-code validation without instrument or quality interpretation.'],
+ paired_read_binding:['exact paired-read name binding','Use for syntactic /1 and /2 matching without claiming a laboratory relationship.'],
+ kmer_histogram:['bounded synthetic k-mer histograms','Use for deterministic finite string counts, never population inference.'],
+ duplicate_record:['duplicate identifier and digest visibility','Use to retain and locate duplicates without silent deletion.'],
+ provenance_chain:['append-only synthetic provenance links','Use to identify the first broken predecessor without claiming real custody.'],
+ evidence_ceiling:['sequence-claim evidence ceilings','Use to keep unsupported biological or identity claims represented only.'],
+ participant_gap:['zero-participant evaluation gaps','Use to keep accessibility, consent, comprehension, and affected-user evidence open.'],
+ authority_gate:['action-specific sequence-data authority gates','Use to keep consequential actions exact-gated while required roles are vacant.']
+};
+for(const skill of toolPlan.local_skills.x2){const[label,use]=descriptions[skill.operation];writeText('x2/skills/'+skill.name+'/SKILL.md',`---
+name: ${skill.name}
+description: Validate ${label} for wholly synthetic sequence records. Use when typed results and refusal evidence are needed without biological, participant, professional, production, legal, cultural, or authority claims.
+---
+
+# ${skill.name}
+
+${use}
+
+## Contract
+
+Preserve the exact input, emit a closed deterministic envelope, and retain every
+rejected subject at zero completion credit. Report detected mismatch, duplicate,
+broken chain, missing participant evidence, or missing authority explicitly.
+Never repair, deduplicate, infer a real relationship, or perform an external
+action merely because a synthetic record is structurally valid.
+
+## Evidence boundary
+
+Format, checksum, count, and provenance syntax are not biological observation,
+consent, identity, clinical interpretation, custody, professional advice, or
+authority. Māori wording, Māori data governance, and Māori authority remain
+reserved to competent Māori authorities. Same-owner smoke evidence is not
+independent reproduction. NOT_READY_FOR_STAGE_20 remains the verdict.
+`);}
+
+for(const runner of toolPlan.local_runners.x2){const source=`'use strict';
+const path=require('path');require.extensions['.txt']=require.extensions['.js'];
+const core=require(path.join(__dirname,'..','..','tooling','sequence-x2-engine.txt'));
+const operations=${JSON.stringify(runner.operations)};
+function run(request){if(!request||!operations.includes(request.operation))return{schema:'ghc.family.sequence-runner.v1',valid:false,errors:['OPERATION_NOT_ALLOWED'],operation:request?.operation??null,result:null,external_action:false};return{schema:'ghc.family.sequence-runner.v1',valid:true,errors:[],operation:request.operation,result:core.execute(request.operation,request.input),external_action:false};}
+module.exports={operations,run};if(require.main===module){const operation=process.argv[2],input=process.argv[3]?JSON.parse(process.argv[3]):null;process.stdout.write(JSON.stringify(run({operation,input}))+'\\n');}
+`;writeText('x2/runners/'+runner.name,source);}
+
+const skillValidation=[];
+for(const skill of toolPlan.local_skills.x2){const dir=path.join(X2,'skills',skill.name),validation=spawnSync(python,[args['--quick-validator'],dir],{encoding:'utf8',windowsHide:true,env:{...process.env,PYTHONUTF8:'1',PYTHONDONTWRITEBYTECODE:'1'}}),proposal=proposals.find(row=>row.operation===skill.operation),fixture=validFixture(skill.operation,proposal.input),accepted=core.execute(skill.operation,fixture),rejected=core.execute(skill.operation,mutation(skill.operation,fixture)),text=fs.readFileSync(path.join(dir,'SKILL.md'),'utf8');skillValidation.push({name:skill.name,operation:skill.operation,official_quick_validate_exit:validation.status,official_quick_validate_passed:validation.status===0,complete_read:text.length>0&&text.endsWith('\n'),accepting_smoke_passed:accepted.valid===true,rejecting_smoke_passed:rejected.valid===false,global_installation:false,same_owner_only:true});}
+if(skillValidation.some(row=>!row.official_quick_validate_passed||!row.complete_read||!row.accepting_smoke_passed||!row.rejecting_smoke_passed))throw Error('X2_SKILL_VALIDATION '+JSON.stringify(skillValidation));
+const runnerValidation=[];
+for(const runner of toolPlan.local_runners.x2){const modulePath=path.join(X2,'runners',runner.name);delete require.cache[require.resolve(modulePath)];const loaded=require(modulePath),proposal=proposals.find(row=>row.operation===runner.operations[0]),fixture=validFixture(proposal.operation,proposal.input),accepted=loaded.run({operation:proposal.operation,input:fixture}),rejected=loaded.run({operation:proposal.operation,input:mutation(proposal.operation,fixture)}),outside=loaded.run({operation:'outside_pair',input:{}});runnerValidation.push({name:runner.name,operations:runner.operations,accepting_smoke_passed:accepted.valid&&accepted.result.valid,rejecting_smoke_passed:rejected.valid&&rejected.result.valid===false,outside_operation_blocked:outside.valid===false,external_action:false,global_publication:false,same_owner_only:true});}
+if(runnerValidation.some(row=>!row.accepting_smoke_passed||!row.rejecting_smoke_passed||!row.outside_operation_blocked))throw Error('X2_RUNNER_VALIDATION '+JSON.stringify(runnerValidation));
+
+const promotionChecks=[],promotionNegatives=[];
+writeText('x2/promotions/public/sequence/sequence-x1-engine.txt',fs.readFileSync(path.join(BASE,'tooling','sequence-x1-engine.txt'),'utf8'));
+writeText('x2/promotions/public/sequence/sequence-x2-engine.txt',fs.readFileSync(path.join(BASE,'tooling','sequence-x2-engine.txt'),'utf8'));
+for(const group of toolPlan.merged_global_groups){const short=group.name.replace(/^ghc-family-/,'');const sources=group.operations.map(operation=>{const session=core.X2_OPERATIONS[operation]?'x2':'x1',skill=toolPlan.local_skills[session].find(row=>row.operation===operation);const relative='docs/elowen-cairn/v691-v5/'+session+'/skills/'+skill.name+'/SKILL.md',file=path.join(ROOT,...relative.split('/'));return{operation,path:relative,sha256:sha256(fs.readFileSync(file)),bytes:fs.statSync(file).size};});writeJson('x2/promotions/skills/'+group.name+'/source-closure.json',{schema:'ghc.family.sequence-promotion-source-closure.v1',group:group.name,source_units:sources.length,sources,source_callers_retained:true,overwrites:0});writeText('x2/promotions/skills/'+group.name+'/SKILL.md',`---
+name: ${group.name}
+description: Evaluate ${group.operations.join(', ')} for wholly synthetic sequence records. Use for bounded family-current syntax, integrity, provenance, evidence-ceiling, or authority-gate work.
+---
+
+# ${group.name}
+
+This curated group merges exactly four validated owner-local operation guides:
+${group.operations.map(operation=>'- `'+operation+'`').join('\n')}.
+
+Use the companion D-first public runner at
+family-recovery-commons/runners/${short}.txt. It accepts only this exact operation
+set and returns a typed envelope. Reject outside operations. Preserve input,
+failed subjects, source callers, and all evidence ceilings. Installation is
+additive and may not overwrite an existing destination.
+
+Structural validity is not biological truth, participant evidence, consent,
+identity, custody, clinical or professional advice, production readiness, legal
+or cultural legitimacy, affected-party acceptance, or Māori authority. Same-
+owner software is not independent reproduction. NOT_READY_FOR_STAGE_20.
+`);const runnerSource=`'use strict';
+const path=require('path');require.extensions['.txt']=require.extensions['.js'];
+const core=require(path.join(__dirname,'..','sequence','sequence-x2-engine.txt'));
+const operations=${JSON.stringify(group.operations)};
+function evaluate(request){return request&&operations.includes(request.operation)?{ok:true,error:null,value:core.execute(request.operation,request.input),authority:false,external_action:false}:{ok:false,error:'OUTSIDE_GROUP',value:null,authority:false,external_action:false};}
+module.exports={operations,evaluate};
+`;writeText('x2/promotions/public/runners/'+short+'.txt',runnerSource);
+ const skillDir=path.join(X2,'promotions','skills',group.name),quick=spawnSync(python,[args['--quick-validator'],skillDir],{encoding:'utf8',windowsHide:true,env:{...process.env,PYTHONUTF8:'1',PYTHONDONTWRITEBYTECODE:'1'}});promotionChecks.push({group:group.name,check:'official_quick_validate',pass:quick.status===0});const runner=require(path.join(X2,'promotions','public','runners',short+'.txt'));for(const operation of group.operations){const proposal=(operation in core.X2_OPERATIONS?proposals:plan.proposals).find(row=>row.operation===operation),fixture=validFixture(operation,proposal.input),result=runner.evaluate({operation,input:fixture});promotionChecks.push({group:group.name,check:'accept_'+operation,pass:result.ok===true&&result.value.valid===true&&result.authority===false&&result.external_action===false});}const outside=runner.evaluate({operation:'outside_group',input:{}});promotionChecks.push({group:group.name,check:'reject_outside_group',pass:outside.ok===false&&outside.error==='OUTSIDE_GROUP'});promotionNegatives.push({negative_id:'EC6915-X2-PROMO-'+String(promotionNegatives.length+1).padStart(3,'0'),group:group.name,subject:'outside_group',rejection:'OUTSIDE_GROUP',completion_credit:0,retained:true});}
+if(promotionChecks.some(row=>!row.pass))throw Error('PROMOTION_PREP_VALIDATION '+JSON.stringify(promotionChecks.filter(row=>!row.pass)));
+
+const operationalFailures=[
+ {negative_id:'EC6915-X2-N001',failure:'A direct foreach-to-pipeline PowerShell source read failed to parse before reading the promotion records.',recovery:'Materialize the file projections in an array before piping to JSON.',completion_credit:0,retained:true},
+ {negative_id:'EC6915-X2-N002',failure:'A broad skill-bank search passed a Windows wildcard as a literal rg path and failed.',recovery:'Search exact files and explicit directories instead of wildcard paths.',completion_credit:0,retained:true},
+ {negative_id:'EC6915-X2-N003',failure:'A mixed exact-path source search included a nonexistent Saelin tooling directory and returned a partial error alongside useful x2 matches.',recovery:'Read the exact committed x2 promotion builder directly.',completion_credit:0,retained:true},
+ {negative_id:'EC6915-X2-N004',failure:'The first external promotion preflight assumed the public root directly under GHC-Archives and found a false absence.',recovery:'Resolve the authoritative global-tools/family-recovery-commons path from Saelin promotion provenance and check exact destinations.',completion_credit:0,retained:true},
+ {negative_id:'EC6915-X2-N005',failure:'The first x2 pre-write aggregate found that the quality-length rejecting mutation for an already mismatched case accidentally repaired parity.',recovery:'Construct a guaranteed mismatched quality string and verify the isolated failed case before the all-or-nothing materialization rerun.',completion_credit:0,retained:true},
+ {negative_id:'EC6915-X2-N006',failure:'The second x2 pre-write aggregate found that case 115 already had sequence-length-plus-one quality, so the revised invalid mutation was not distinct from its source.',recovery:'Use sequence length plus two when plus one already matches the source, then run only the 100-pair mutation distinctness and rejection preflight before materialization.',completion_credit:0,retained:true}
+];
+
+const executePortfolio=(rows,kind)=>rows.map(row=>({...row,plan_state:row.state,execution_state:'executed_bounded_same_owner',execution_kind:kind,source_or_sibling_mutation:false,external_action:false,completion_scope:'portfolio_record_only'}));
+const portfolio={schema:'ghc.family.elowen-x2-portfolio-execution.v1',x1_head:X1_HEAD,safe:executePortfolio(portfolioPlan.safe_x2,'safe_now'),candidate:executePortfolio(portfolioPlan.candidate_x2,'candidate_representation'),clean_fix_refine:executePortfolio(portfolioPlan.cfr_x2,'additive_clean_fix_refine'),exact_packets:portfolioPlan.exact_packets.map(row=>({...row,execution_state:'held_to_exact_action_or_external_gate'})),blocked_packets:portfolioPlan.blocked_packets.map(row=>({...row,execution_state:'visible_unexecuted'})),boundary:BOUNDARY};
+
+const operations=[...new Set(proposals.map(row=>row.operation))],methods=[];
+for(const[index,operation]of operations.entries()){const id='EC6915-X2-M'+String(index+1).padStart(3,'0');methods.push({method_id:id,title:'Validate '+operation+' with an independent invariant and retained rejecting mutation',failure_signature:'Any nondeterminism, input mutation, envelope drift, invariant mismatch, lost rejecting subject, or claim promotion.',trigger_preconditions:['A preregistered x2 proposal selects '+operation+'.'],privacy_class:'wholly_synthetic_public',approval_class:'safe_now',candidate_workaround:'Stop selection, retain the failed result, and repair only the owner-local operation.',validation_witness_ids:results.filter(row=>row.operation===operation).flatMap(row=>[row.proposal_id+'-PASS',row.proposal_id+'-REJECT']),recurrence_guard:'Compare exact input and output twice, then require the operation-specific invariant.',rollback:'Retain all failed subjects and remove the method from selection without touching another lane.',recommendation_state:'preferred',supersedes:[],protected_gates:['empirical','participant','professional','production','legal','cultural','maori_authority','independent_reproduction','stage20'],retained_negative_ids:results.filter(row=>row.operation===operation).map(row=>row.proposal_id+'-N'),scope_boundary:BOUNDARY});}
+for(const[index,row]of skillValidation.entries())methods.push({method_id:'EC6915-X2-M'+String(11+index).padStart(3,'0'),title:'Quick-validate and smoke-use '+row.name,failure_signature:'Invalid skill structure or failure to distinguish valid and invalid synthetic fixtures.',trigger_preconditions:['The matching owner-local x2 skill is selected.'],privacy_class:'wholly_synthetic_public',approval_class:'safe_now',candidate_workaround:'Retain the invalid skill witness and revise only its owner-local guide.',validation_witness_ids:[row.name+'-PASS',row.name+'-REJECT'],recurrence_guard:'Require official validation and accepting/rejecting smoke use.',rollback:'Leave the skill owner-local and uninstalled.',recommendation_state:'preferred',supersedes:[],protected_gates:['global_installation','independent_reproduction'],retained_negative_ids:[row.name+'-N'],scope_boundary:BOUNDARY});
+for(const[index,row]of runnerValidation.entries())methods.push({method_id:'EC6915-X2-M'+String(21+index).padStart(3,'0'),title:'Smoke-use '+row.name+' with pair allowlisting',failure_signature:'Runner accepts an outside operation or loses an invalid result.',trigger_preconditions:['The matching owner-local x2 runner is selected.'],privacy_class:'wholly_synthetic_public',approval_class:'safe_now',candidate_workaround:'Retain the runner failure and revise only the owner-local wrapper.',validation_witness_ids:[row.name+'-PASS',row.name+'-REJECT'],recurrence_guard:'Require accepting, rejecting, and outside-pair checks.',rollback:'Leave the runner owner-local and unpublished.',recommendation_state:'preferred',supersedes:[],protected_gates:['global_publication','independent_reproduction'],retained_negative_ids:[row.name+'-N'],scope_boundary:BOUNDARY});
+for(const[index,row]of operationalFailures.entries())methods.push({method_id:'EC6915-X2-M'+String(26+index).padStart(3,'0'),title:row.recovery,failure_signature:row.failure,trigger_preconditions:['The matching source or promotion preflight is needed.'],privacy_class:'sanitized_public',approval_class:'safe_now',candidate_workaround:row.recovery,validation_witness_ids:[row.negative_id+'-FAIL',row.negative_id+'-PASS'],recurrence_guard:row.recovery,rollback:'Stop, retain the failed attempt, and leave source, sibling, shared, and global state unchanged.',recommendation_state:'preferred',supersedes:[],protected_gates:['cross_lane_mutation','global_overwrite','failure_erasure'],retained_negative_ids:[row.negative_id],scope_boundary:BOUNDARY});
+for(const[index,group]of toolPlan.merged_global_groups.entries())methods.push({method_id:'EC6915-X2-M'+String(32+index).padStart(3,'0'),title:'Prepare validated additive merged group '+group.name,failure_signature:'Missing source unit, invalid guide, outside-group acceptance, destination collision, or byte drift.',trigger_preconditions:['All four source operations have passed owner-local validation.'],privacy_class:'wholly_synthetic_public',approval_class:'safe_now',candidate_workaround:'Keep the promotion prepared and uninstalled.',validation_witness_ids:[group.name+'-PASS',group.name+'-REJECT'],recurrence_guard:'Require four exact sources, quick validation, accepting operations, outside-group refusal, and no-overwrite installation.',rollback:'Retain source callers and leave or return selection to the owner-local tools.',recommendation_state:'preferred',supersedes:[],protected_gates:['global_overwrite','caller_compatibility','independent_reproduction'],retained_negative_ids:[promotionNegatives[index].negative_id],scope_boundary:BOUNDARY});
+
+const contractWitnesses=results.flatMap(row=>{const method=methods.find(item=>item.title.includes(row.operation));return[{witness_id:row.proposal_id+'-PASS',method_id:method.method_id,procedure:'Execute preregistered synthetic input and independent invariant.',scope:'Elowen v691-v5 x2',expected:'Closed deterministic result at the preregistered disposition.',observed:row.checks,result:'pass',same_owner_only:true,independent_reproduction:false,retained_negative_ids:[row.proposal_id+'-N'],boundary:BOUNDARY},{witness_id:row.proposal_id+'-REJECT',method_id:method.method_id,procedure:'Execute preregistered rejecting mutation.',scope:'Elowen v691-v5 x2',expected:'Typed invalid result retained at zero completion credit.',observed:row.rejecting_mutation.output.errors,result:'fail',same_owner_only:true,independent_reproduction:false,retained_negative_ids:[row.proposal_id+'-N'],boundary:BOUNDARY}];});
+const skillWitnesses=skillValidation.flatMap((row,index)=>[{witness_id:row.name+'-PASS',method_id:'EC6915-X2-M'+String(11+index).padStart(3,'0'),procedure:'Official quick validation and accepting smoke.',scope:'Owner-local x2 skill',expected:'Valid guide and accepted fixture.',observed:row,result:'pass',same_owner_only:true,independent_reproduction:false,retained_negative_ids:[row.name+'-N'],boundary:BOUNDARY},{witness_id:row.name+'-REJECT',method_id:'EC6915-X2-M'+String(11+index).padStart(3,'0'),procedure:'Reject invalid synthetic fixture.',scope:'Owner-local x2 skill',expected:'Invalid subject retained.',observed:'Rejected without external action.',result:'fail',same_owner_only:true,independent_reproduction:false,retained_negative_ids:[row.name+'-N'],boundary:BOUNDARY}]);
+const runnerWitnesses=runnerValidation.flatMap((row,index)=>[{witness_id:row.name+'-PASS',method_id:'EC6915-X2-M'+String(21+index).padStart(3,'0'),procedure:'Accept in-pair valid fixture.',scope:'Owner-local x2 runner',expected:'Typed accepted result.',observed:row,result:'pass',same_owner_only:true,independent_reproduction:false,retained_negative_ids:[row.name+'-N'],boundary:BOUNDARY},{witness_id:row.name+'-REJECT',method_id:'EC6915-X2-M'+String(21+index).padStart(3,'0'),procedure:'Reject invalid and outside-pair fixtures.',scope:'Owner-local x2 runner',expected:'Invalid subject retained.',observed:'Rejected without external action.',result:'fail',same_owner_only:true,independent_reproduction:false,retained_negative_ids:[row.name+'-N'],boundary:BOUNDARY}]);
+const operationalWitnesses=operationalFailures.flatMap((row,index)=>[{witness_id:row.negative_id+'-FAIL',method_id:'EC6915-X2-M'+String(26+index).padStart(3,'0'),procedure:'Original bounded source or preflight operation.',scope:'Elowen v691-v5 x2 startup',expected:'Exact attributable result.',observed:row.failure,result:'fail',same_owner_only:true,independent_reproduction:false,retained_negative_ids:[row.negative_id],boundary:BOUNDARY},{witness_id:row.negative_id+'-PASS',method_id:'EC6915-X2-M'+String(26+index).padStart(3,'0'),procedure:'Smallest corrected source or preflight operation.',scope:'Elowen v691-v5 x2 startup',expected:'Exact attributable result.',observed:row.recovery,result:'pass',same_owner_only:true,independent_reproduction:false,retained_negative_ids:[row.negative_id],boundary:BOUNDARY}]);
+const promotionWitnesses=toolPlan.merged_global_groups.flatMap((group,index)=>[{witness_id:group.name+'-PASS',method_id:'EC6915-X2-M'+String(32+index).padStart(3,'0'),procedure:'Quick-validate four-source merged guide and accepting operation set.',scope:'Prepared promotion only',expected:'All prepared checks pass.',observed:promotionChecks.filter(row=>row.group===group.name),result:'pass',same_owner_only:true,independent_reproduction:false,retained_negative_ids:[promotionNegatives[index].negative_id],boundary:BOUNDARY},{witness_id:group.name+'-REJECT',method_id:'EC6915-X2-M'+String(32+index).padStart(3,'0'),procedure:'Submit outside-group operation.',scope:'Prepared promotion only',expected:'OUTSIDE_GROUP and no action.',observed:'OUTSIDE_GROUP',result:'fail',same_owner_only:true,independent_reproduction:false,retained_negative_ids:[promotionNegatives[index].negative_id],boundary:BOUNDARY}]);
+const witnesses=[...contractWitnesses,...skillWitnesses,...runnerWitnesses,...operationalWitnesses,...promotionWitnesses];
+const negatives=[...results.map(row=>({negative_id:row.proposal_id+'-N',subject:row.rejecting_mutation.input,rejection:row.rejecting_mutation.output.errors,completion_credit:0,retained:true})),...skillValidation.map(row=>({negative_id:row.name+'-N',subject:'invalid synthetic fixture for '+row.operation,rejection:'skill-guided operation refused fixture',completion_credit:0,retained:true})),...runnerValidation.map(row=>({negative_id:row.name+'-N',subject:'invalid or outside-pair runner request',rejection:'runner refused request',completion_credit:0,retained:true})),...operationalFailures,...promotionNegatives];
+const failCount=witnesses.filter(row=>row.result==='fail').length,passCount=witnesses.filter(row=>row.result==='pass').length,base=x1Truth.x1_effective;
+const x2Effective={methods:base.methods+methods.length,direct_witnesses:base.direct_witnesses+witnesses.length,failed_witnesses:base.failed_witnesses+failCount,passing_witnesses:base.passing_witnesses+passCount,effective_negatives:base.effective_negatives+negatives.length,open_gaps:base.open_gaps+10,exact_gates:base.exact_gates+10};
+
+writeJson('x2/result-ledger.json',{schema:'ghc.family.elowen-x2-result-ledger.v1',x1_head:X1_HEAD,count:results.length,passed:results.length,failed:0,outcomes:{completed:70,represented:10,open_gap:10,exact_gate:10},results:results.map(row=>({proposal_id:row.proposal_id,operation:row.operation,path:'docs/elowen-cairn/v691-v5/x2/contracts/'+row.proposal_id.split('-').at(-1)+'.json',passed:row.passed,outcome:row.outcome})),boundary:BOUNDARY});
+writeJson('x2/portfolio-execution.json',portfolio);
+writeJson('x2/skill-validation.json',{schema:'ghc.family.elowen-x2-skill-validation.v1',official_skill_creator_guidance:true,count:10,passed:10,failed:0,records:skillValidation,global_installation:false,boundary:BOUNDARY});
+writeJson('x2/runner-validation.json',{schema:'ghc.family.elowen-x2-runner-validation.v1',count:5,passed:5,failed:0,records:runnerValidation,global_publication:false,boundary:BOUNDARY});
+writeJson('x2/promotion-prepared-validation.json',{schema:'ghc.family.elowen-promotion-prepared.v1',groups:5,skills:5,runners:5,source_units_per_group:4,checks:promotionChecks,negatives:promotionNegatives,all_passed:true,installed:false,overwrites:0,spend_usd:0,boundary:BOUNDARY});
+writeJson('x2/operational-failures.json',{schema:'ghc.family.elowen-x2-operational-failures.v1',count:operationalFailures.length,failures:operationalFailures,failure_erasure:false,boundary:BOUNDARY});
+writeJson('x2/retained-negative-register.json',{schema:'ghc.family.elowen-x2-retained-negative-register.v1',count:negatives.length,completion_credit:0,failure_erasure:false,records:negatives,boundary:BOUNDARY});
+writeJson('x2/method-flow.json',{schema:'ghc.family.method-flow-state.v1',phase:'v691-v5-x2',owner:'Elowen Cairn',identity_boundary:BOUNDARY,execution_authority:'owner_self_scoped_delta',source_commit:X1_HEAD,final_commit:null,repository_scan:false,module_scan:false,cross_lane_scan:false,unchanged_history_scan:false,sibling_lane_mutation:false,changed_file_allowlist:['docs/elowen-cairn/v691-v5/x2/','docs/elowen-cairn/v691-v5/tooling/'],module_allowlist:['sequence-x2-engine','build-x2'],exact_pushed_head_required:true,methods,witnesses,state_events:methods.flatMap(method=>[{method_id:method.method_id,from:'observed',to:'candidate',note:'Bounded synthetic or operational contract.'},{method_id:method.method_id,from:'candidate',to:'validated',note:'Accepting and rejecting witness pair completed.'},{method_id:method.method_id,from:'validated',to:'preferred',note:'Preferred only inside the declared scope.'}]),recommendations:[],counts:{methods:methods.length,witnesses:witnesses.length,state_events:methods.length*3,recommendations:0,witness_results:{fail:failCount,pass:passCount}},boundary:BOUNDARY});
+writeJson('x2/wellbeing-workload.json',{schema:'ghc.family.elowen-x2-wellbeing.v1',relational_language_only:true,workload:{contracts:100,skills:10,runners:5,promotion_groups:5,safe_tasks:100,candidate_tasks:100,clean_fix_refine_tasks:100},bounded:true,interruptible:true,hamish_may_pause_redirect_or_stop:true,person_or_worker_evidence:false,boundary:BOUNDARY});
+writeJson('x2/phase-truth.json',{schema:'ghc.family.phase-truth.v691.v5.x2',owner:'Elowen Cairn',phase:'v691-v5',state:'X2_EXECUTED_PRECOMMIT',x1_head:X1_HEAD,git_parent:X1_HEAD,blank_owner_root:true,primary_pillar:'Freed ID and CBR Heart',owner_practices:4,successor_practices:1,x2_proposals_selected:100,x2_outcomes:{completed:70,represented:10,open_gap:10,exact_gate:10},combined_outcomes:{completed:170,represented:10,open_gap:10,exact_gate:10},safe_tasks_executed:100,candidate_tasks_executed:100,clean_fix_refine_tasks_executed:100,local_skills_built:10,local_skills_quick_validated:10,local_runners_built:5,promotion_groups_prepared:5,promotions_installed:false,negative_register_count:negatives.length,x2_effective:x2Effective,incremental_spend_usd:0,external_actions:0,canonical_invocations:0,successor_contacts:0,full_repository_suite:false,independent_reproduction:false,terminal_verdict:'NOT_READY_FOR_STAGE_20',boundary:BOUNDARY});
+writeText('x2/integrated-overview.md',`# Elowen Cairn v691-v5 x2 evidence
+
+## Outcome
+
+X2 executed 100 preregistered wholly synthetic sequence-record contracts at x1
+head ${X1_HEAD}. Seventy are completed software contracts, ten evidence-ceiling
+contracts remain represented, ten zero-participant evaluations remain open_gap,
+and ten consequential authority contracts remain exact_gate. Combined x1/x2
+outcomes are exactly 170 completed, 10 represented, 10 open_gap, and 10
+exact_gate. Every rejecting mutation remains zero-credit evidence.
+
+## Tools and portfolios
+
+Ten x2 skills passed the official Skill Creator validator and accepting/rejecting
+smokes; five owner-local runners passed pair and outside-operation checks. Five
+four-source merged skill/runner groups are prepared and validated for additive,
+no-overwrite promotion. One hundred safe, one hundred candidate, and one hundred
+CLEAN/FIX/REFINE records received bounded execution. Exact and blocked packets
+remain visible and action-specific.
+
+## Boundaries
+
+The work uses generated FASTQ-style frames, quality strings, paired identifiers,
+k-mers, duplicate records, provenance chains, evidence ceilings, participant
+vacancies, and authority vacancies only. NCBI, W3C, WCAG, and GA4GH sources
+supply vocabulary and refusal conditions, not observations or authority.
+${BOUNDARY}
+`);
+
+const rows=results.map(row=>`<tr><th scope="row">${row.proposal_id}</th><td>${row.operation}</td><td>${row.outcome}</td><td>${row.output.valid?'input accepted':'input refused or gap classified'}</td></tr>`).join('');
+writeText('x2/workbench.html',`<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Elowen v691-v5 synthetic sequence workbench</title><style>body{font:1rem/1.55 system-ui,sans-serif;max-width:78rem;margin:auto;padding:1rem;color:#161616;background:#fff}a{color:#0645ad}.skip{position:absolute;left:-9999px}.skip:focus{left:1rem;background:#fff;padding:.5rem}table{border-collapse:collapse;width:100%}th,td{border:1px solid #555;padding:.45rem;text-align:left;vertical-align:top}thead{background:#eee}@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}</style></head><body><a class="skip" href="#main">Skip to evidence table</a><header><h1>Elowen Cairn v691-v5 synthetic sequence workbench</h1><p><strong>Verdict:</strong> NOT_READY_FOR_STAGE_20. Same-owner synthetic evidence only.</p></header><main id="main"><section aria-labelledby="scope"><h2 id="scope">Scope</h2><p>One hundred x2 contracts: 70 completed, 10 represented, 10 open_gap, and 10 exact_gate. No real biological or participant data is present.</p></section><section aria-labelledby="table-title"><h2 id="table-title">Contract index</h2><div role="region" aria-label="Scrollable contract table" tabindex="0" style="overflow:auto"><table><caption>Preregistered x2 contract dispositions and input classifications</caption><thead><tr><th scope="col">Proposal</th><th scope="col">Operation</th><th scope="col">Disposition</th><th scope="col">Input classification</th></tr></thead><tbody>${rows}</tbody></table></div></section><section aria-labelledby="reserved"><h2 id="reserved">Reserved evaluation</h2><p>Manual, browser, assistive-technology, cognitive-accessibility, Māori-language, and affected-user evaluation remain unperformed and reserved.</p></section></main></body></html>`);
+writeJson('x2/validation/precommit-validation.json',{schema:'ghc.family.elowen-x2-precommit-validation.v1',x1_head:X1_HEAD,contract_tests:{passed:100,total:100},rejecting_mutations:{retained:100,total:100},skill_quick_validation:{passed:10,total:10},skill_smoke_checks:{passed:20,total:20},runner_smoke_checks:{passed:15,total:15},promotion_prepared_checks:{passed:promotionChecks.length,total:promotionChecks.length},operational_recoveries:{passed:operationalFailures.length,total:operationalFailures.length},deterministic:true,input_unchanged:true,closed_envelopes:true,combined_outcomes:{completed:170,represented:10,open_gap:10,exact_gate:10},node_version:process.version,external_actions:0,real_rows:0,confirmed_privacy_hits:0,canonical:false,boundary:BOUNDARY});
+
+const manifestPath=path.join(X2,'manifest.json'),scopePath=path.join(X2,'scope-review.json');
+const selected=()=>walk(BASE).filter(file=>file.startsWith(X2+path.sep)||['sequence-x2-engine.txt','build-x2.txt'].includes(path.basename(file)));
+const preTerminal=selected().filter(file=>file!==manifestPath&&file!==scopePath);
+writeJson('x2/scope-review.json',{schema:'ghc.family.elowen-x2-scope-review.v1',x1_head:X1_HEAD,expected_roots:['docs/elowen-cairn/v691-v5/x2','docs/elowen-cairn/v691-v5/tooling'],files_in_x2_delta:preTerminal.length+2,outside_owner_paths:[],deletions:[],allowed_extensions:['.json','.md','.txt','.html'],valid:true});
+const manifestFiles=selected().filter(file=>file!==manifestPath),entries=manifestFiles.map(file=>{const bytes=fs.readFileSync(file);return{path:path.relative(ROOT,file).replaceAll('\\','/'),bytes:bytes.length,sha256:sha256(bytes)};});
+writeJson('x2/manifest.json',{schema:'ghc.family.elowen-x2-manifest.v1',x1_head:X1_HEAD,byte_domain:'checkout_utf8_bytes',declared_self_exclusions:['docs/elowen-cairn/v691-v5/x2/manifest.json'],entry_count:entries.length,entries});
+process.stdout.write(JSON.stringify({phase:'v691-v5',stage:'x2',x1_head:X1_HEAD,contracts:100,outcomes:{completed:70,represented:10,open_gap:10,exact_gate:10},skills:10,runners:5,promotions:5,failed_subjects:negatives.length,methods:methods.length,witnesses:witnesses.length,x2_files:selected().length,x2_effective:x2Effective})+'\n');

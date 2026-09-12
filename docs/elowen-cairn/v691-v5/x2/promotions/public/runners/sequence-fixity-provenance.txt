@@ -1,0 +1,6 @@
+'use strict';
+const path=require('path');require.extensions['.txt']=require.extensions['.js'];
+const core=require(path.join(__dirname,'..','sequence','sequence-x2-engine.txt'));
+const operations=["ambiguous_count","sequence_checksum","provenance_chain","evidence_ceiling"];
+function evaluate(request){return request&&operations.includes(request.operation)?{ok:true,error:null,value:core.execute(request.operation,request.input),authority:false,external_action:false}:{ok:false,error:'OUTSIDE_GROUP',value:null,authority:false,external_action:false};}
+module.exports={operations,evaluate};

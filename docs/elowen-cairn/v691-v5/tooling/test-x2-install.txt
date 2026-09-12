@@ -1,0 +1,28 @@
+'use strict';
+
+const fs=require('fs');
+const path=require('path');
+const crypto=require('crypto');
+require.extensions['.txt']=require.extensions['.js'];
+const ROOT=path.resolve(__dirname,'../../../..');
+const BASE=path.join(ROOT,'docs','elowen-cairn','v691-v5');
+const args={};for(let i=2;i<process.argv.length;i+=2)args[process.argv[i]]=process.argv[i+1];
+if(!args['--skill-root']||!args['--public-root'])throw Error('INSTALL_ROOTS_REQUIRED');
+const skillRoot=path.resolve(args['--skill-root']),publicRoot=path.resolve(args['--public-root']),errors=[];
+const readJson=relative=>JSON.parse(fs.readFileSync(path.join(BASE,relative),'utf8'));
+const sha256=bytes=>crypto.createHash('sha256').update(bytes).digest('hex');
+const check=(condition,code)=>{if(!condition)errors.push(code);};
+const receipt=readJson('x2/global-promotion-receipt.json');
+check(receipt.state==='INSTALLED_ADDITIVE_VALIDATED'&&receipt.skills===5&&receipt.runners===5&&receipt.supporting_cores===2&&receipt.files===17,'RECEIPT_COUNTS');
+check(receipt.overwrites===0&&receipt.packages_installed===0&&receipt.spend_usd===0&&receipt.all_byte_parity&&receipt.all_smokes_passed&&receipt.source_callers_preserved,'RECEIPT_BOUNDARIES');
+let bindingPass=0;for(const binding of receipt.bindings){const file=path.join(binding.kind==='skills'?skillRoot:publicRoot,...binding.path.split('/'));if(fs.existsSync(file)){const bytes=fs.readFileSync(file);if(bytes.length===binding.bytes&&sha256(bytes)===binding.sha256&&binding.byte_parity)bindingPass++;else errors.push('BINDING_BYTES_'+binding.kind+'/'+binding.path);}else errors.push('BINDING_MISSING_'+binding.kind+'/'+binding.path);}
+check(receipt.skill_checks.length===5&&receipt.skill_checks.every(row=>row.passed&&row.exit_code===0),'INSTALLED_SKILLS');
+check(receipt.witnesses.length===25&&receipt.witnesses.every(row=>row.result==='pass')&&receipt.negatives.length===5,'INSTALLED_SMOKES');
+const truth=readJson('x2/phase-truth.json'),negatives=readJson('x2/retained-negative-register.json'),methodFlow=readJson('x2/method-flow.json');
+check(truth.promotions_installed&&truth.global_skills_installed===5&&truth.global_runners_installed===5&&truth.global_supporting_cores===2&&truth.global_files_bound===17&&truth.global_overwrites===0,'TRUTH_INSTALL');
+check(truth.external_actions===17&&truth.incremental_spend_usd===0&&truth.negative_register_count===negatives.count,'TRUTH_COUNTS');
+check(methodFlow.counts.witnesses===methodFlow.witnesses.length&&methodFlow.counts.witness_results.fail===methodFlow.witnesses.filter(row=>row.result==='fail').length&&methodFlow.counts.witness_results.pass===methodFlow.witnesses.filter(row=>row.result==='pass').length,'METHOD_COUNTS');
+const manifest=readJson('x2/manifest.json');let manifestPass=0;for(const entry of manifest.entries){const file=path.join(ROOT,...entry.path.split('/'));if(fs.existsSync(file)){const bytes=fs.readFileSync(file);if(bytes.length===entry.bytes&&sha256(bytes)===entry.sha256)manifestPass++;else errors.push('MANIFEST_BYTES_'+entry.path);}else errors.push('MANIFEST_MISSING_'+entry.path);}
+const validation=readJson('x2/validation/precommit-validation.json');check(validation.independent_preinstall_test.status==='VALID_OWNER_SELF_SCOPED_X2_PREINSTALL'&&!validation.independent_preinstall_test.replayed,'PREINSTALL_TEST_RECEIPT');check(validation.global_install.status==='INSTALLED_ADDITIVE_VALIDATED'&&!validation.global_install.installer_replayed,'INSTALL_VALIDATION');
+const summary={schema:'ghc.family.elowen-x2-install-component.v1',valid:errors.length===0,errors,bindings:{passed:bindingPass,total:receipt.bindings.length},installed_skill_receipts:receipt.skill_checks.length,installed_smoke_receipts:receipt.witnesses.length,retained_installed_negatives:receipt.negatives.length,manifest:{passed:manifestPass,total:manifest.entries.length},overwrites:receipt.overwrites,spend_usd:receipt.spend_usd,installer_replayed:false,same_owner_only:true,independent_reproduction:false,terminal_verdict:'NOT_READY_FOR_STAGE_20'};
+process.stdout.write(JSON.stringify(summary)+'\n');if(errors.length)process.exitCode=1;
