@@ -1,0 +1,110 @@
+{
+  "adverse_expected": {
+    "disposition": "open_gap",
+    "error": "INVALID_WINDOW",
+    "ok": false,
+    "value": null
+  },
+  "adverse_input": {
+    "spans": [
+      {
+        "arrival": 0,
+        "finish": 2,
+        "id": "A"
+      },
+      {
+        "arrival": 0,
+        "finish": 4,
+        "id": "B"
+      },
+      {
+        "arrival": 0,
+        "finish": 6,
+        "id": "C"
+      }
+    ],
+    "window": [
+      0,
+      0
+    ]
+  },
+  "approval_class": "safe_synthetic_validation",
+  "definition_sha256": "0e1f852e0c7a78a9c37934dca1cb7bcb0953c74d67c497ac5ad910dde056d7bf",
+  "expected": {
+    "disposition": "completed",
+    "error": null,
+    "ok": true,
+    "value": {
+      "area": 12,
+      "arrival_rate": "1/2",
+      "complete_cohort": true,
+      "mean_occupancy": "2/1",
+      "mean_sojourn": "4/1",
+      "stationarity_claim": false
+    }
+  },
+  "expected_disposition": "completed",
+  "falsifier": "Compare the complete typed envelope and retained adverse input against these frozen values; a mismatch is a failed witness.",
+  "hypothesis": "Compute clipped half-open occupancy area and reserve a complete-cohort identity when observations are censored.",
+  "independent_reproduction": false,
+  "inherited_credit": false,
+  "input": {
+    "spans": [
+      {
+        "arrival": 0,
+        "finish": 2,
+        "id": "A"
+      },
+      {
+        "arrival": 0,
+        "finish": 4,
+        "id": "B"
+      },
+      {
+        "arrival": 0,
+        "finish": 6,
+        "id": "C"
+      }
+    ],
+    "window": [
+      0,
+      6
+    ]
+  },
+  "null_or_failure_condition": "A complete typed result, declared tie rule, unchanged input, service budget, refusal reason or evidence ceiling differs from the frozen definition.",
+  "operation": "occupancy_area",
+  "oracle_provenance": "Hand-specified traces and explicit preimplementation arithmetic; the production operation has not been called.",
+  "pillar": "GMUT Mind",
+  "practice": "queueing model verification",
+  "proposal_id": "IB6917-090",
+  "protected_gates": [
+    "empirical",
+    "participant",
+    "professional",
+    "production",
+    "deployment",
+    "identity",
+    "legal",
+    "cultural",
+    "affected_party",
+    "maori_authority",
+    "privacy_complete",
+    "accessibility_complete",
+    "exhaustive_security",
+    "independent_reproduction",
+    "agi_asi",
+    "consciousness_personhood",
+    "theory_of_everything",
+    "proof_canon",
+    "stage20"
+  ],
+  "rollback": "Retain the original definition and failed subject. Freeze a separate correction before a bounded recovery; preserve the original zero credit.",
+  "same_owner_only": true,
+  "session": "x1",
+  "source_refs": [
+    "DECLARED-ARITHMETIC"
+  ],
+  "source_status": "current",
+  "title": "Finite occupancy area identity: nested complete spans",
+  "underlying_consequential_action_authorized": false
+}

@@ -1,0 +1,165 @@
+{
+  "adverse_expected": {
+    "disposition": "open_gap",
+    "error": "INVALID_WORKLOAD",
+    "ok": false,
+    "value": null
+  },
+  "adverse_input": {
+    "aging_interval": 1,
+    "jobs": [
+      {
+        "arrival": 0,
+        "deadline": 3,
+        "id": "C",
+        "priority": 2,
+        "service": 1,
+        "weight": 0
+      },
+      {
+        "arrival": 0,
+        "deadline": 3,
+        "id": "A",
+        "priority": 2,
+        "service": 1,
+        "weight": 1
+      },
+      {
+        "arrival": 0,
+        "deadline": 3,
+        "id": "B",
+        "priority": 2,
+        "service": 1,
+        "weight": 1
+      }
+    ]
+  },
+  "approval_class": "safe_synthetic_validation",
+  "definition_sha256": "56da5161efe323f61e8cbd1e52c05d35d0b3474a6604667232f4532dd9f9fce3",
+  "expected": {
+    "disposition": "completed",
+    "error": null,
+    "ok": true,
+    "value": {
+      "busy": 3,
+      "idle": 0,
+      "jobs": [
+        {
+          "finish": 1,
+          "id": "C",
+          "response": 0,
+          "start": 0,
+          "turnaround": 1,
+          "wait": 0
+        },
+        {
+          "finish": 2,
+          "id": "A",
+          "response": 1,
+          "start": 1,
+          "turnaround": 2,
+          "wait": 1
+        },
+        {
+          "finish": 3,
+          "id": "B",
+          "response": 2,
+          "start": 2,
+          "turnaround": 3,
+          "wait": 2
+        }
+      ],
+      "makespan": 3,
+      "mean_response": "1/1",
+      "mean_turnaround": "2/1",
+      "mean_wait": "1/1",
+      "segments": [
+        {
+          "end": 1,
+          "id": "C",
+          "start": 0
+        },
+        {
+          "end": 2,
+          "id": "A",
+          "start": 1
+        },
+        {
+          "end": 3,
+          "id": "B",
+          "start": 2
+        }
+      ]
+    }
+  },
+  "expected_disposition": "completed",
+  "falsifier": "Compare the complete typed envelope and retained adverse input against these frozen values; a mismatch is a failed witness.",
+  "hypothesis": "Apply a declared finite waiting-time aging rule and expose its concrete tie behavior without an infinite-horizon starvation claim.",
+  "independent_reproduction": false,
+  "inherited_credit": false,
+  "input": {
+    "aging_interval": 1,
+    "jobs": [
+      {
+        "arrival": 0,
+        "deadline": 3,
+        "id": "C",
+        "priority": 2,
+        "service": 1,
+        "weight": 1
+      },
+      {
+        "arrival": 0,
+        "deadline": 3,
+        "id": "A",
+        "priority": 2,
+        "service": 1,
+        "weight": 1
+      },
+      {
+        "arrival": 0,
+        "deadline": 3,
+        "id": "B",
+        "priority": 2,
+        "service": 1,
+        "weight": 1
+      }
+    ]
+  },
+  "null_or_failure_condition": "A complete typed result, declared tie rule, unchanged input, service budget, refusal reason or evidence ceiling differs from the frozen definition.",
+  "operation": "aging_priority",
+  "oracle_provenance": "Hand-specified traces and explicit preimplementation arithmetic; the production operation has not been called.",
+  "pillar": "THOS Body",
+  "practice": "workload fairness documentation",
+  "proposal_id": "IB6917-066",
+  "protected_gates": [
+    "empirical",
+    "participant",
+    "professional",
+    "production",
+    "deployment",
+    "identity",
+    "legal",
+    "cultural",
+    "affected_party",
+    "maori_authority",
+    "privacy_complete",
+    "accessibility_complete",
+    "exhaustive_security",
+    "independent_reproduction",
+    "agi_asi",
+    "consciousness_personhood",
+    "theory_of_everything",
+    "proof_canon",
+    "stage20"
+  ],
+  "rollback": "Retain the original definition and failed subject. Freeze a separate correction before a bounded recovery; preserve the original zero credit.",
+  "same_owner_only": true,
+  "session": "x1",
+  "source_refs": [
+    "OSTEP"
+  ],
+  "source_status": "current",
+  "title": "Aging-priority readback: stable input-order tie",
+  "underlying_consequential_action_authorized": false
+}

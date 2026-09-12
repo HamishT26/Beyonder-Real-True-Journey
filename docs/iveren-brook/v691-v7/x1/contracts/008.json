@@ -1,0 +1,104 @@
+{
+  "adverse_expected": {
+    "disposition": "open_gap",
+    "error": "INVALID_WORKLOAD",
+    "ok": false,
+    "value": null
+  },
+  "adverse_input": {
+    "jobs": [
+      {
+        "arrival": 2,
+        "deadline": -1,
+        "id": "A",
+        "priority": 2,
+        "service": 2,
+        "weight": 1
+      },
+      {
+        "arrival": 2,
+        "deadline": 6,
+        "id": "B",
+        "priority": 1,
+        "service": 2,
+        "weight": 2
+      }
+    ]
+  },
+  "approval_class": "safe_synthetic_validation",
+  "definition_sha256": "813b18c86f3f5835c5cddc8d53323d50ca33b587da7b165a734bd1926d40e070",
+  "expected": {
+    "disposition": "completed",
+    "error": null,
+    "ok": true,
+    "value": {
+      "arrival_span": [
+        2,
+        2
+      ],
+      "job_count": 2,
+      "total_service": 4
+    }
+  },
+  "expected_disposition": "completed",
+  "falsifier": "Compare the complete typed envelope and retained adverse input against these frozen values; a mismatch is a failed witness.",
+  "hypothesis": "Validate unique synthetic job labels and bounded integer arrivals, service demands, priorities, weights and deadlines.",
+  "independent_reproduction": false,
+  "inherited_credit": false,
+  "input": {
+    "jobs": [
+      {
+        "arrival": 2,
+        "deadline": 6,
+        "id": "A",
+        "priority": 2,
+        "service": 2,
+        "weight": 1
+      },
+      {
+        "arrival": 2,
+        "deadline": 6,
+        "id": "B",
+        "priority": 1,
+        "service": 2,
+        "weight": 2
+      }
+    ]
+  },
+  "null_or_failure_condition": "A complete typed result, declared tie rule, unchanged input, service budget, refusal reason or evidence ceiling differs from the frozen definition.",
+  "operation": "workload_schema",
+  "oracle_provenance": "Hand-specified traces and explicit preimplementation arithmetic; the production operation has not been called.",
+  "pillar": "THOS Body",
+  "practice": "finite scheduling policy analysis",
+  "proposal_id": "IB6917-008",
+  "protected_gates": [
+    "empirical",
+    "participant",
+    "professional",
+    "production",
+    "deployment",
+    "identity",
+    "legal",
+    "cultural",
+    "affected_party",
+    "maori_authority",
+    "privacy_complete",
+    "accessibility_complete",
+    "exhaustive_security",
+    "independent_reproduction",
+    "agi_asi",
+    "consciousness_personhood",
+    "theory_of_everything",
+    "proof_canon",
+    "stage20"
+  ],
+  "rollback": "Retain the original definition and failed subject. Freeze a separate correction before a bounded recovery; preserve the original zero credit.",
+  "same_owner_only": true,
+  "session": "x1",
+  "source_refs": [
+    "OSTEP"
+  ],
+  "source_status": "current",
+  "title": "Closed finite workload schema: nonzero initial arrival",
+  "underlying_consequential_action_authorized": false
+}

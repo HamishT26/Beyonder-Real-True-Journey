@@ -1,0 +1,121 @@
+{
+  "adverse_expected": {
+    "disposition": "open_gap",
+    "error": "INVALID_WORKLOAD",
+    "ok": false,
+    "value": null
+  },
+  "adverse_input": {
+    "jobs": [
+      {
+        "arrival": 0,
+        "deadline": 4,
+        "id": "A",
+        "priority": 2,
+        "service": 2,
+        "unexpected": true,
+        "weight": 1
+      },
+      {
+        "arrival": 2,
+        "deadline": 5,
+        "id": "B",
+        "priority": 1,
+        "service": 1,
+        "weight": 2
+      },
+      {
+        "arrival": 2,
+        "deadline": 6,
+        "id": "C",
+        "priority": 3,
+        "service": 2,
+        "weight": 3
+      }
+    ]
+  },
+  "approval_class": "safe_synthetic_validation",
+  "definition_sha256": "c3df73671f03765b049a8fb4d36a25c6e8414448695c300246ef053886eda5a4",
+  "expected": {
+    "disposition": "completed",
+    "error": null,
+    "ok": true,
+    "value": {
+      "arrival_span": [
+        0,
+        2
+      ],
+      "job_count": 3,
+      "total_service": 5
+    }
+  },
+  "expected_disposition": "completed",
+  "falsifier": "Compare the complete typed envelope and retained adverse input against these frozen values; a mismatch is a failed witness.",
+  "hypothesis": "Validate unique synthetic job labels and bounded integer arrivals, service demands, priorities, weights and deadlines.",
+  "independent_reproduction": false,
+  "inherited_credit": false,
+  "input": {
+    "jobs": [
+      {
+        "arrival": 0,
+        "deadline": 4,
+        "id": "A",
+        "priority": 2,
+        "service": 2,
+        "weight": 1
+      },
+      {
+        "arrival": 2,
+        "deadline": 5,
+        "id": "B",
+        "priority": 1,
+        "service": 1,
+        "weight": 2
+      },
+      {
+        "arrival": 2,
+        "deadline": 6,
+        "id": "C",
+        "priority": 3,
+        "service": 2,
+        "weight": 3
+      }
+    ]
+  },
+  "null_or_failure_condition": "A complete typed result, declared tie rule, unchanged input, service budget, refusal reason or evidence ceiling differs from the frozen definition.",
+  "operation": "workload_schema",
+  "oracle_provenance": "Hand-specified traces and explicit preimplementation arithmetic; the production operation has not been called.",
+  "pillar": "THOS Body",
+  "practice": "finite scheduling policy analysis",
+  "proposal_id": "IB6917-009",
+  "protected_gates": [
+    "empirical",
+    "participant",
+    "professional",
+    "production",
+    "deployment",
+    "identity",
+    "legal",
+    "cultural",
+    "affected_party",
+    "maori_authority",
+    "privacy_complete",
+    "accessibility_complete",
+    "exhaustive_security",
+    "independent_reproduction",
+    "agi_asi",
+    "consciousness_personhood",
+    "theory_of_everything",
+    "proof_canon",
+    "stage20"
+  ],
+  "rollback": "Retain the original definition and failed subject. Freeze a separate correction before a bounded recovery; preserve the original zero credit.",
+  "same_owner_only": true,
+  "session": "x1",
+  "source_refs": [
+    "OSTEP"
+  ],
+  "source_status": "current",
+  "title": "Closed finite workload schema: arrival at completion boundary",
+  "underlying_consequential_action_authorized": false
+}

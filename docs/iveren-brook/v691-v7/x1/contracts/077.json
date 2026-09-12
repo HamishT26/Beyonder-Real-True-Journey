@@ -1,0 +1,122 @@
+{
+  "adverse_expected": {
+    "disposition": "open_gap",
+    "error": "INVALID_RECORDS",
+    "ok": false,
+    "value": null
+  },
+  "adverse_input": {
+    "records": [
+      {
+        "completion": -1,
+        "deadline": 7,
+        "id": "A"
+      },
+      {
+        "completion": 7,
+        "deadline": 5,
+        "id": "B"
+      },
+      {
+        "completion": 8,
+        "deadline": 5,
+        "id": "C"
+      }
+    ]
+  },
+  "approval_class": "safe_synthetic_validation",
+  "definition_sha256": "b6a4eecae0f2629c0850065bcc9fa5372ef12c23c17d802fd141f83fe3515ff5",
+  "expected": {
+    "disposition": "completed",
+    "error": null,
+    "ok": true,
+    "value": {
+      "maximum_lateness": 3,
+      "missed": [
+        "B",
+        "C"
+      ],
+      "records": [
+        {
+          "earliness": 2,
+          "id": "A",
+          "lateness": -2,
+          "tardiness": 0
+        },
+        {
+          "earliness": 0,
+          "id": "B",
+          "lateness": 2,
+          "tardiness": 2
+        },
+        {
+          "earliness": 0,
+          "id": "C",
+          "lateness": 3,
+          "tardiness": 3
+        }
+      ],
+      "total_tardiness": 5
+    }
+  },
+  "expected_disposition": "completed",
+  "falsifier": "Compare the complete typed envelope and retained adverse input against these frozen values; a mismatch is a failed witness.",
+  "hypothesis": "Keep signed lateness, nonnegative tardiness and exact-boundary success distinct over declared completion records.",
+  "independent_reproduction": false,
+  "inherited_credit": false,
+  "input": {
+    "records": [
+      {
+        "completion": 5,
+        "deadline": 7,
+        "id": "A"
+      },
+      {
+        "completion": 7,
+        "deadline": 5,
+        "id": "B"
+      },
+      {
+        "completion": 8,
+        "deadline": 5,
+        "id": "C"
+      }
+    ]
+  },
+  "null_or_failure_condition": "A complete typed result, declared tie rule, unchanged input, service budget, refusal reason or evidence ceiling differs from the frozen definition.",
+  "operation": "deadline_metrics",
+  "oracle_provenance": "Hand-specified traces and explicit preimplementation arithmetic; the production operation has not been called.",
+  "pillar": "GMUT Mind",
+  "practice": "queueing model verification",
+  "proposal_id": "IB6917-077",
+  "protected_gates": [
+    "empirical",
+    "participant",
+    "professional",
+    "production",
+    "deployment",
+    "identity",
+    "legal",
+    "cultural",
+    "affected_party",
+    "maori_authority",
+    "privacy_complete",
+    "accessibility_complete",
+    "exhaustive_security",
+    "independent_reproduction",
+    "agi_asi",
+    "consciousness_personhood",
+    "theory_of_everything",
+    "proof_canon",
+    "stage20"
+  ],
+  "rollback": "Retain the original definition and failed subject. Freeze a separate correction before a bounded recovery; preserve the original zero credit.",
+  "same_owner_only": true,
+  "session": "x1",
+  "source_refs": [
+    "DECLARED-ARITHMETIC"
+  ],
+  "source_status": "current",
+  "title": "Deadline difference ledger: three staggered jobs",
+  "underlying_consequential_action_authorized": false
+}

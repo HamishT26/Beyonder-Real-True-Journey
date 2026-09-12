@@ -1,0 +1,164 @@
+{
+  "adverse_expected": {
+    "disposition": "open_gap",
+    "error": "INVALID_REQUEST",
+    "ok": false,
+    "value": null
+  },
+  "adverse_input": {
+    "extra": 1,
+    "jobs": [
+      {
+        "arrival": 0,
+        "deadline": 3,
+        "id": "A",
+        "priority": 3,
+        "service": 1,
+        "weight": 1
+      },
+      {
+        "arrival": 0,
+        "deadline": 6,
+        "id": "B",
+        "priority": 1,
+        "service": 4,
+        "weight": 2
+      },
+      {
+        "arrival": 1,
+        "deadline": 5,
+        "id": "C",
+        "priority": 2,
+        "service": 2,
+        "weight": 3
+      }
+    ]
+  },
+  "approval_class": "safe_synthetic_validation",
+  "definition_sha256": "927f4c79b45cc8182961d9a1394d0be8382244587f57ccb48ea2f96c92fcd727",
+  "expected": {
+    "disposition": "completed",
+    "error": null,
+    "ok": true,
+    "value": {
+      "busy": 7,
+      "idle": 0,
+      "jobs": [
+        {
+          "finish": 1,
+          "id": "A",
+          "response": 0,
+          "start": 0,
+          "turnaround": 1,
+          "wait": 0
+        },
+        {
+          "finish": 7,
+          "id": "B",
+          "response": 3,
+          "start": 3,
+          "turnaround": 7,
+          "wait": 3
+        },
+        {
+          "finish": 3,
+          "id": "C",
+          "response": 0,
+          "start": 1,
+          "turnaround": 2,
+          "wait": 0
+        }
+      ],
+      "makespan": 7,
+      "mean_response": "1/1",
+      "mean_turnaround": "10/3",
+      "mean_wait": "1/1",
+      "segments": [
+        {
+          "end": 1,
+          "id": "A",
+          "start": 0
+        },
+        {
+          "end": 3,
+          "id": "C",
+          "start": 1
+        },
+        {
+          "end": 7,
+          "id": "B",
+          "start": 3
+        }
+      ]
+    }
+  },
+  "expected_disposition": "completed",
+  "falsifier": "Compare the complete typed envelope and retained adverse input against these frozen values; a mismatch is a failed witness.",
+  "hypothesis": "Reconsider a finite integer workload at each arrival or completion boundary, retaining stable ties.",
+  "independent_reproduction": false,
+  "inherited_credit": false,
+  "input": {
+    "jobs": [
+      {
+        "arrival": 0,
+        "deadline": 3,
+        "id": "A",
+        "priority": 3,
+        "service": 1,
+        "weight": 1
+      },
+      {
+        "arrival": 0,
+        "deadline": 6,
+        "id": "B",
+        "priority": 1,
+        "service": 4,
+        "weight": 2
+      },
+      {
+        "arrival": 1,
+        "deadline": 5,
+        "id": "C",
+        "priority": 2,
+        "service": 2,
+        "weight": 3
+      }
+    ]
+  },
+  "null_or_failure_condition": "A complete typed result, declared tie rule, unchanged input, service budget, refusal reason or evidence ceiling differs from the frozen definition.",
+  "operation": "srtf",
+  "oracle_provenance": "Hand-specified traces and explicit preimplementation arithmetic; the production operation has not been called.",
+  "pillar": "THOS Body",
+  "practice": "finite scheduling policy analysis",
+  "proposal_id": "IB6917-050",
+  "protected_gates": [
+    "empirical",
+    "participant",
+    "professional",
+    "production",
+    "deployment",
+    "identity",
+    "legal",
+    "cultural",
+    "affected_party",
+    "maori_authority",
+    "privacy_complete",
+    "accessibility_complete",
+    "exhaustive_security",
+    "independent_reproduction",
+    "agi_asi",
+    "consciousness_personhood",
+    "theory_of_everything",
+    "proof_canon",
+    "stage20"
+  ],
+  "rollback": "Retain the original definition and failed subject. Freeze a separate correction before a bounded recovery; preserve the original zero credit.",
+  "same_owner_only": true,
+  "session": "x1",
+  "source_refs": [
+    "OSTEP"
+  ],
+  "source_status": "current",
+  "title": "Shortest-remaining-time trace: priority and aging counterexample",
+  "underlying_consequential_action_authorized": false
+}

@@ -1,0 +1,141 @@
+{
+  "adverse_expected": {
+    "disposition": "open_gap",
+    "error": "INVALID_WORKLOAD",
+    "ok": false,
+    "value": null
+  },
+  "adverse_input": {
+    "jobs": [
+      {
+        "arrival": 0,
+        "deadline": 4,
+        "id": "A",
+        "priority": 2,
+        "service": 3,
+        "weight": 1
+      },
+      {
+        "arrival": 0,
+        "deadline": 2,
+        "id": "A",
+        "priority": 1,
+        "service": 1,
+        "weight": 2
+      }
+    ],
+    "quantum": 2
+  },
+  "approval_class": "safe_synthetic_validation",
+  "definition_sha256": "d9a428a0437078e4a231b8f8a83e7ca44dfeec4104dd4df0bf2a0a863784b1e1",
+  "expected": {
+    "disposition": "completed",
+    "error": null,
+    "ok": true,
+    "value": {
+      "busy": 4,
+      "idle": 0,
+      "jobs": [
+        {
+          "finish": 4,
+          "id": "A",
+          "response": 0,
+          "start": 0,
+          "turnaround": 4,
+          "wait": 1
+        },
+        {
+          "finish": 3,
+          "id": "B",
+          "response": 2,
+          "start": 2,
+          "turnaround": 3,
+          "wait": 2
+        }
+      ],
+      "makespan": 4,
+      "mean_response": "1/1",
+      "mean_turnaround": "7/2",
+      "mean_wait": "3/2",
+      "segments": [
+        {
+          "end": 2,
+          "id": "A",
+          "start": 0
+        },
+        {
+          "end": 3,
+          "id": "B",
+          "start": 2
+        },
+        {
+          "end": 4,
+          "id": "A",
+          "start": 3
+        }
+      ]
+    }
+  },
+  "expected_disposition": "completed",
+  "falsifier": "Compare the complete typed envelope and retained adverse input against these frozen values; a mismatch is a failed witness.",
+  "hypothesis": "Enqueue arrivals at a quantum boundary before requeuing the unfinished job, preserving finite service conservation.",
+  "independent_reproduction": false,
+  "inherited_credit": false,
+  "input": {
+    "jobs": [
+      {
+        "arrival": 0,
+        "deadline": 4,
+        "id": "A",
+        "priority": 2,
+        "service": 3,
+        "weight": 1
+      },
+      {
+        "arrival": 0,
+        "deadline": 2,
+        "id": "B",
+        "priority": 1,
+        "service": 1,
+        "weight": 2
+      }
+    ],
+    "quantum": 2
+  },
+  "null_or_failure_condition": "A complete typed result, declared tie rule, unchanged input, service budget, refusal reason or evidence ceiling differs from the frozen definition.",
+  "operation": "round_robin",
+  "oracle_provenance": "Hand-specified traces and explicit preimplementation arithmetic; the production operation has not been called.",
+  "pillar": "THOS Body",
+  "practice": "finite scheduling policy analysis",
+  "proposal_id": "IB6917-033",
+  "protected_gates": [
+    "empirical",
+    "participant",
+    "professional",
+    "production",
+    "deployment",
+    "identity",
+    "legal",
+    "cultural",
+    "affected_party",
+    "maori_authority",
+    "privacy_complete",
+    "accessibility_complete",
+    "exhaustive_security",
+    "independent_reproduction",
+    "agi_asi",
+    "consciousness_personhood",
+    "theory_of_everything",
+    "proof_canon",
+    "stage20"
+  ],
+  "rollback": "Retain the original definition and failed subject. Freeze a separate correction before a bounded recovery; preserve the original zero credit.",
+  "same_owner_only": true,
+  "session": "x1",
+  "source_refs": [
+    "OSTEP"
+  ],
+  "source_status": "current",
+  "title": "Round-robin queue boundary: simultaneous unequal jobs",
+  "underlying_consequential_action_authorized": false
+}

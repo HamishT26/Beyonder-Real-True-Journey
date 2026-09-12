@@ -1,0 +1,164 @@
+{
+  "adverse_expected": {
+    "disposition": "open_gap",
+    "error": "INVALID_REQUEST",
+    "ok": false,
+    "value": null
+  },
+  "adverse_input": {
+    "extra": 1,
+    "jobs": [
+      {
+        "arrival": 0,
+        "deadline": 3,
+        "id": "A",
+        "priority": 3,
+        "service": 1,
+        "weight": 1
+      },
+      {
+        "arrival": 0,
+        "deadline": 6,
+        "id": "B",
+        "priority": 1,
+        "service": 4,
+        "weight": 2
+      },
+      {
+        "arrival": 1,
+        "deadline": 5,
+        "id": "C",
+        "priority": 2,
+        "service": 2,
+        "weight": 3
+      }
+    ]
+  },
+  "approval_class": "safe_synthetic_validation",
+  "definition_sha256": "7fe1e840f8100d95d6c9c117f03b37adce688a9418d71073600bc4656c3ec6a3",
+  "expected": {
+    "disposition": "completed",
+    "error": null,
+    "ok": true,
+    "value": {
+      "busy": 7,
+      "idle": 0,
+      "jobs": [
+        {
+          "finish": 7,
+          "id": "A",
+          "response": 6,
+          "start": 6,
+          "turnaround": 7,
+          "wait": 6
+        },
+        {
+          "finish": 4,
+          "id": "B",
+          "response": 0,
+          "start": 0,
+          "turnaround": 4,
+          "wait": 0
+        },
+        {
+          "finish": 6,
+          "id": "C",
+          "response": 3,
+          "start": 4,
+          "turnaround": 5,
+          "wait": 3
+        }
+      ],
+      "makespan": 7,
+      "mean_response": "3/1",
+      "mean_turnaround": "16/3",
+      "mean_wait": "3/1",
+      "segments": [
+        {
+          "end": 4,
+          "id": "B",
+          "start": 0
+        },
+        {
+          "end": 6,
+          "id": "C",
+          "start": 4
+        },
+        {
+          "end": 7,
+          "id": "A",
+          "start": 6
+        }
+      ]
+    }
+  },
+  "expected_disposition": "completed",
+  "falsifier": "Compare the complete typed envelope and retained adverse input against these frozen values; a mismatch is a failed witness.",
+  "hypothesis": "Select the smallest declared priority value nonpreemptively without treating priority as legitimate real-world authority.",
+  "independent_reproduction": false,
+  "inherited_credit": false,
+  "input": {
+    "jobs": [
+      {
+        "arrival": 0,
+        "deadline": 3,
+        "id": "A",
+        "priority": 3,
+        "service": 1,
+        "weight": 1
+      },
+      {
+        "arrival": 0,
+        "deadline": 6,
+        "id": "B",
+        "priority": 1,
+        "service": 4,
+        "weight": 2
+      },
+      {
+        "arrival": 1,
+        "deadline": 5,
+        "id": "C",
+        "priority": 2,
+        "service": 2,
+        "weight": 3
+      }
+    ]
+  },
+  "null_or_failure_condition": "A complete typed result, declared tie rule, unchanged input, service budget, refusal reason or evidence ceiling differs from the frozen definition.",
+  "operation": "static_priority",
+  "oracle_provenance": "Hand-specified traces and explicit preimplementation arithmetic; the production operation has not been called.",
+  "pillar": "THOS Body",
+  "practice": "workload fairness documentation",
+  "proposal_id": "IB6917-060",
+  "protected_gates": [
+    "empirical",
+    "participant",
+    "professional",
+    "production",
+    "deployment",
+    "identity",
+    "legal",
+    "cultural",
+    "affected_party",
+    "maori_authority",
+    "privacy_complete",
+    "accessibility_complete",
+    "exhaustive_security",
+    "independent_reproduction",
+    "agi_asi",
+    "consciousness_personhood",
+    "theory_of_everything",
+    "proof_canon",
+    "stage20"
+  ],
+  "rollback": "Retain the original definition and failed subject. Freeze a separate correction before a bounded recovery; preserve the original zero credit.",
+  "same_owner_only": true,
+  "session": "x1",
+  "source_refs": [
+    "OSTEP"
+  ],
+  "source_status": "current",
+  "title": "Static-priority timeline: priority and aging counterexample",
+  "underlying_consequential_action_authorized": false
+}

@@ -1,0 +1,87 @@
+{
+  "adverse_expected": {
+    "disposition": "open_gap",
+    "error": "INVALID_RECORDS",
+    "ok": false,
+    "value": null
+  },
+  "adverse_input": {
+    "records": [
+      {
+        "completion": -1,
+        "deadline": 2,
+        "id": "A"
+      }
+    ]
+  },
+  "approval_class": "safe_synthetic_validation",
+  "definition_sha256": "e07ed94b94bae21206b26e1b09afea9f839a7f2cb8dbf3f7b32e301a3325713a",
+  "expected": {
+    "disposition": "completed",
+    "error": null,
+    "ok": true,
+    "value": {
+      "maximum_lateness": -1,
+      "missed": [],
+      "records": [
+        {
+          "earliness": 1,
+          "id": "A",
+          "lateness": -1,
+          "tardiness": 0
+        }
+      ],
+      "total_tardiness": 0
+    }
+  },
+  "expected_disposition": "completed",
+  "falsifier": "Compare the complete typed envelope and retained adverse input against these frozen values; a mismatch is a failed witness.",
+  "hypothesis": "Keep signed lateness, nonnegative tardiness and exact-boundary success distinct over declared completion records.",
+  "independent_reproduction": false,
+  "inherited_credit": false,
+  "input": {
+    "records": [
+      {
+        "completion": 1,
+        "deadline": 2,
+        "id": "A"
+      }
+    ]
+  },
+  "null_or_failure_condition": "A complete typed result, declared tie rule, unchanged input, service budget, refusal reason or evidence ceiling differs from the frozen definition.",
+  "operation": "deadline_metrics",
+  "oracle_provenance": "Hand-specified traces and explicit preimplementation arithmetic; the production operation has not been called.",
+  "pillar": "GMUT Mind",
+  "practice": "queueing model verification",
+  "proposal_id": "IB6917-072",
+  "protected_gates": [
+    "empirical",
+    "participant",
+    "professional",
+    "production",
+    "deployment",
+    "identity",
+    "legal",
+    "cultural",
+    "affected_party",
+    "maori_authority",
+    "privacy_complete",
+    "accessibility_complete",
+    "exhaustive_security",
+    "independent_reproduction",
+    "agi_asi",
+    "consciousness_personhood",
+    "theory_of_everything",
+    "proof_canon",
+    "stage20"
+  ],
+  "rollback": "Retain the original definition and failed subject. Freeze a separate correction before a bounded recovery; preserve the original zero credit.",
+  "same_owner_only": true,
+  "session": "x1",
+  "source_refs": [
+    "DECLARED-ARITHMETIC"
+  ],
+  "source_status": "current",
+  "title": "Deadline difference ledger: one unit job",
+  "underlying_consequential_action_authorized": false
+}

@@ -1,0 +1,166 @@
+{
+  "adverse_expected": {
+    "disposition": "open_gap",
+    "error": "INVALID_REQUEST",
+    "ok": false,
+    "value": null
+  },
+  "adverse_input": {
+    "aging_interval": 1,
+    "extra": 1,
+    "jobs": [
+      {
+        "arrival": 0,
+        "deadline": 3,
+        "id": "A",
+        "priority": 3,
+        "service": 1,
+        "weight": 1
+      },
+      {
+        "arrival": 0,
+        "deadline": 6,
+        "id": "B",
+        "priority": 1,
+        "service": 4,
+        "weight": 2
+      },
+      {
+        "arrival": 1,
+        "deadline": 5,
+        "id": "C",
+        "priority": 2,
+        "service": 2,
+        "weight": 3
+      }
+    ]
+  },
+  "approval_class": "safe_synthetic_validation",
+  "definition_sha256": "d3c5aeb34a577796ba63f92e9634f04251153ef954272de17370043ede308caa",
+  "expected": {
+    "disposition": "completed",
+    "error": null,
+    "ok": true,
+    "value": {
+      "busy": 7,
+      "idle": 0,
+      "jobs": [
+        {
+          "finish": 5,
+          "id": "A",
+          "response": 4,
+          "start": 4,
+          "turnaround": 5,
+          "wait": 4
+        },
+        {
+          "finish": 4,
+          "id": "B",
+          "response": 0,
+          "start": 0,
+          "turnaround": 4,
+          "wait": 0
+        },
+        {
+          "finish": 7,
+          "id": "C",
+          "response": 4,
+          "start": 5,
+          "turnaround": 6,
+          "wait": 4
+        }
+      ],
+      "makespan": 7,
+      "mean_response": "8/3",
+      "mean_turnaround": "5/1",
+      "mean_wait": "8/3",
+      "segments": [
+        {
+          "end": 4,
+          "id": "B",
+          "start": 0
+        },
+        {
+          "end": 5,
+          "id": "A",
+          "start": 4
+        },
+        {
+          "end": 7,
+          "id": "C",
+          "start": 5
+        }
+      ]
+    }
+  },
+  "expected_disposition": "completed",
+  "falsifier": "Compare the complete typed envelope and retained adverse input against these frozen values; a mismatch is a failed witness.",
+  "hypothesis": "Apply a declared finite waiting-time aging rule and expose its concrete tie behavior without an infinite-horizon starvation claim.",
+  "independent_reproduction": false,
+  "inherited_credit": false,
+  "input": {
+    "aging_interval": 1,
+    "jobs": [
+      {
+        "arrival": 0,
+        "deadline": 3,
+        "id": "A",
+        "priority": 3,
+        "service": 1,
+        "weight": 1
+      },
+      {
+        "arrival": 0,
+        "deadline": 6,
+        "id": "B",
+        "priority": 1,
+        "service": 4,
+        "weight": 2
+      },
+      {
+        "arrival": 1,
+        "deadline": 5,
+        "id": "C",
+        "priority": 2,
+        "service": 2,
+        "weight": 3
+      }
+    ]
+  },
+  "null_or_failure_condition": "A complete typed result, declared tie rule, unchanged input, service budget, refusal reason or evidence ceiling differs from the frozen definition.",
+  "operation": "aging_priority",
+  "oracle_provenance": "Hand-specified traces and explicit preimplementation arithmetic; the production operation has not been called.",
+  "pillar": "THOS Body",
+  "practice": "workload fairness documentation",
+  "proposal_id": "IB6917-070",
+  "protected_gates": [
+    "empirical",
+    "participant",
+    "professional",
+    "production",
+    "deployment",
+    "identity",
+    "legal",
+    "cultural",
+    "affected_party",
+    "maori_authority",
+    "privacy_complete",
+    "accessibility_complete",
+    "exhaustive_security",
+    "independent_reproduction",
+    "agi_asi",
+    "consciousness_personhood",
+    "theory_of_everything",
+    "proof_canon",
+    "stage20"
+  ],
+  "rollback": "Retain the original definition and failed subject. Freeze a separate correction before a bounded recovery; preserve the original zero credit.",
+  "same_owner_only": true,
+  "session": "x1",
+  "source_refs": [
+    "OSTEP"
+  ],
+  "source_status": "current",
+  "title": "Aging-priority readback: priority and aging counterexample",
+  "underlying_consequential_action_authorized": false
+}
