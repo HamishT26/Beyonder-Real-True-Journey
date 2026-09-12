@@ -1,0 +1,122 @@
+{
+  "adverse_expected": {
+    "disposition": "open_gap",
+    "error": "INVALID_BUCKET",
+    "ok": false,
+    "value": null
+  },
+  "adverse_input": {
+    "capacity": 5,
+    "events": [
+      {
+        "cost": 3,
+        "id": "A",
+        "time": 0
+      },
+      {
+        "cost": 2,
+        "id": "B",
+        "time": 0
+      },
+      {
+        "cost": 1,
+        "id": "C",
+        "time": 0
+      }
+    ],
+    "initial": 6,
+    "rate": 1
+  },
+  "approval_class": "safe_synthetic_validation",
+  "definition_sha256": "64307d4a29f06ce12028edd5daafec52f346235652d43a5faeb23e427a37dcc8",
+  "expected": {
+    "disposition": "completed",
+    "error": null,
+    "ok": true,
+    "value": {
+      "last_time": 0,
+      "network_action": false,
+      "records": [
+        {
+          "accepted": true,
+          "id": "A",
+          "tokens": 2
+        },
+        {
+          "accepted": true,
+          "id": "B",
+          "tokens": 0
+        },
+        {
+          "accepted": false,
+          "id": "C",
+          "tokens": 0
+        }
+      ],
+      "tokens": 0
+    }
+  },
+  "expected_disposition": "completed",
+  "falsifier": "Compare the complete typed envelope and retained adverse input against these frozen values; a mismatch is a failed witness.",
+  "hypothesis": "Refill a bounded declared token budget and preserve input-order decisions at equal timestamps without transmitting traffic.",
+  "independent_reproduction": false,
+  "inherited_credit": false,
+  "input": {
+    "capacity": 5,
+    "events": [
+      {
+        "cost": 3,
+        "id": "A",
+        "time": 0
+      },
+      {
+        "cost": 2,
+        "id": "B",
+        "time": 0
+      },
+      {
+        "cost": 1,
+        "id": "C",
+        "time": 0
+      }
+    ],
+    "initial": 5,
+    "rate": 1
+  },
+  "null_or_failure_condition": "A complete typed result, declared tie rule, unchanged input, service budget, refusal reason or evidence ceiling differs from the frozen definition.",
+  "operation": "token_bucket",
+  "oracle_provenance": "Hand-specified traces and explicit preimplementation arithmetic; the production operation has not been called.",
+  "pillar": "THOS Body",
+  "practice": "queueing model verification",
+  "proposal_id": "IB6917-117",
+  "protected_gates": [
+    "empirical",
+    "participant",
+    "professional",
+    "production",
+    "deployment",
+    "identity",
+    "legal",
+    "cultural",
+    "affected_party",
+    "maori_authority",
+    "privacy_complete",
+    "accessibility_complete",
+    "exhaustive_security",
+    "independent_reproduction",
+    "agi_asi",
+    "consciousness_personhood",
+    "theory_of_everything",
+    "proof_canon",
+    "stage20"
+  ],
+  "rollback": "Retain the original definition and failed subject. Freeze a separate correction before a bounded recovery; preserve the original zero credit.",
+  "same_owner_only": true,
+  "session": "x2",
+  "source_refs": [
+    "RFC3290"
+  ],
+  "source_status": "current",
+  "title": "Finite token-bucket decisions: equal-time input order",
+  "underlying_consequential_action_authorized": false
+}

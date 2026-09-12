@@ -1,0 +1,117 @@
+{
+  "adverse_expected": {
+    "disposition": "open_gap",
+    "error": "INVALID_CAPACITY",
+    "ok": false,
+    "value": null
+  },
+  "adverse_input": {
+    "capacity": 0,
+    "requests": [
+      {
+        "arrival": 0,
+        "id": "A",
+        "service": 1
+      },
+      {
+        "arrival": 0,
+        "id": "B",
+        "service": 4
+      },
+      {
+        "arrival": 1,
+        "id": "C",
+        "service": 2
+      }
+    ]
+  },
+  "approval_class": "safe_synthetic_validation",
+  "definition_sha256": "05f6c74b0eee1d28ec53db377be282915d53ad452c6d2172d50ad2d4603d1135",
+  "expected": {
+    "disposition": "completed",
+    "error": null,
+    "ok": true,
+    "value": {
+      "accepted": [
+        {
+          "finish": 1,
+          "id": "A",
+          "start": 0
+        },
+        {
+          "finish": 4,
+          "id": "B",
+          "start": 0
+        },
+        {
+          "finish": 3,
+          "id": "C",
+          "start": 1
+        }
+      ],
+      "peak_busy": 2,
+      "rejected": []
+    }
+  },
+  "expected_disposition": "completed",
+  "falsifier": "Compare the complete typed envelope and retained adverse input against these frozen values; a mismatch is a failed witness.",
+  "hypothesis": "Release completions before equal-time arrivals and retain rejected synthetic requests without deleting evidence.",
+  "independent_reproduction": false,
+  "inherited_credit": false,
+  "input": {
+    "capacity": 2,
+    "requests": [
+      {
+        "arrival": 0,
+        "id": "A",
+        "service": 1
+      },
+      {
+        "arrival": 0,
+        "id": "B",
+        "service": 4
+      },
+      {
+        "arrival": 1,
+        "id": "C",
+        "service": 2
+      }
+    ]
+  },
+  "null_or_failure_condition": "A complete typed result, declared tie rule, unchanged input, service budget, refusal reason or evidence ceiling differs from the frozen definition.",
+  "operation": "capacity_admission",
+  "oracle_provenance": "Hand-specified traces and explicit preimplementation arithmetic; the production operation has not been called.",
+  "pillar": "THOS Body",
+  "practice": "finite scheduling policy analysis",
+  "proposal_id": "IB6917-110",
+  "protected_gates": [
+    "empirical",
+    "participant",
+    "professional",
+    "production",
+    "deployment",
+    "identity",
+    "legal",
+    "cultural",
+    "affected_party",
+    "maori_authority",
+    "privacy_complete",
+    "accessibility_complete",
+    "exhaustive_security",
+    "independent_reproduction",
+    "agi_asi",
+    "consciousness_personhood",
+    "theory_of_everything",
+    "proof_canon",
+    "stage20"
+  ],
+  "rollback": "Retain the original definition and failed subject. Freeze a separate correction before a bounded recovery; preserve the original zero credit.",
+  "same_owner_only": true,
+  "session": "x2",
+  "source_refs": [
+    "DECLARED-ARITHMETIC"
+  ],
+  "source_status": "current",
+  "title": "Finite loss-system admission: priority and aging counterexample",
+  "underlying_consequential_action_authorized": false
+}

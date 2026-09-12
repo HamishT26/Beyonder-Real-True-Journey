@@ -1,0 +1,111 @@
+{
+  "adverse_expected": {
+    "disposition": "open_gap",
+    "error": "INVALID_DRR",
+    "ok": false,
+    "value": null
+  },
+  "adverse_input": {
+    "flows": [
+      {
+        "id": "A",
+        "packets": [
+          1,
+          2,
+          2
+        ],
+        "quantum": 0
+      }
+    ],
+    "max_rounds": 3
+  },
+  "approval_class": "safe_synthetic_validation",
+  "definition_sha256": "b39cac52baf92bc113617514891d588610afbe2b7aedef4458ddb4eb7db6ffe9",
+  "expected": {
+    "disposition": "completed",
+    "error": null,
+    "ok": true,
+    "value": {
+      "deficits": {
+        "A": 0
+      },
+      "departures": [
+        {
+          "flow": "A",
+          "length": 1,
+          "round": 1
+        },
+        {
+          "flow": "A",
+          "length": 2,
+          "round": 1
+        },
+        {
+          "flow": "A",
+          "length": 2,
+          "round": 1
+        }
+      ],
+      "real_router": false,
+      "remaining": {
+        "A": []
+      },
+      "rounds_used": 1
+    }
+  },
+  "expected_disposition": "completed",
+  "falsifier": "Compare the complete typed envelope and retained adverse input against these frozen values; a mismatch is a failed witness.",
+  "hypothesis": "Carry unsent credit across finite rounds, reset empty queues, and preserve unfinished packets at the explicit round bound.",
+  "independent_reproduction": false,
+  "inherited_credit": false,
+  "input": {
+    "flows": [
+      {
+        "id": "A",
+        "packets": [
+          1,
+          2,
+          2
+        ],
+        "quantum": 5
+      }
+    ],
+    "max_rounds": 3
+  },
+  "null_or_failure_condition": "A complete typed result, declared tie rule, unchanged input, service budget, refusal reason or evidence ceiling differs from the frozen definition.",
+  "operation": "deficit_round_robin",
+  "oracle_provenance": "Hand-specified traces and explicit preimplementation arithmetic; the production operation has not been called.",
+  "pillar": "THOS Body",
+  "practice": "finite scheduling policy analysis",
+  "proposal_id": "IB6917-150",
+  "protected_gates": [
+    "empirical",
+    "participant",
+    "professional",
+    "production",
+    "deployment",
+    "identity",
+    "legal",
+    "cultural",
+    "affected_party",
+    "maori_authority",
+    "privacy_complete",
+    "accessibility_complete",
+    "exhaustive_security",
+    "independent_reproduction",
+    "agi_asi",
+    "consciousness_personhood",
+    "theory_of_everything",
+    "proof_canon",
+    "stage20"
+  ],
+  "rollback": "Retain the original definition and failed subject. Freeze a separate correction before a bounded recovery; preserve the original zero credit.",
+  "same_owner_only": true,
+  "session": "x2",
+  "source_refs": [
+    "DRR"
+  ],
+  "source_status": "current",
+  "title": "Bounded deficit-round-robin trace: bounded service pattern 9",
+  "underlying_consequential_action_authorized": false
+}

@@ -1,0 +1,5 @@
+"use strict";
+const engine=require("../engine.txt");
+const allowed=["deficit_round_robin","vacation_fcfs"];
+let result;try{if(process.argv.length!==3)throw Error("INVALID_REQUEST");const request=JSON.parse(process.argv[2]);engine.helpers.closed(request,["operation","input"]);if(!allowed.includes(request.operation))throw Error("UNKNOWN_OPERATION");result=engine.run(request.operation,request.input);}catch(e){result={ok:false,value:null,error:e.message,disposition:"open_gap"};}
+process.stdout.write(JSON.stringify(result)+"\n");

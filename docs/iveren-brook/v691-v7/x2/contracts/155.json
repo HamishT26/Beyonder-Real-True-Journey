@@ -1,0 +1,146 @@
+{
+  "adverse_expected": {
+    "disposition": "open_gap",
+    "error": "INVALID_VACATIONS",
+    "ok": false,
+    "value": null
+  },
+  "adverse_input": {
+    "jobs": [
+      {
+        "arrival": 0,
+        "deadline": 2,
+        "id": "A",
+        "priority": 1,
+        "service": 2,
+        "weight": 1
+      },
+      {
+        "arrival": 4,
+        "deadline": 4,
+        "id": "B",
+        "priority": 2,
+        "service": 1,
+        "weight": 1
+      }
+    ],
+    "vacations": [
+      [
+        1,
+        1
+      ]
+    ]
+  },
+  "approval_class": "safe_synthetic_validation",
+  "definition_sha256": "650754836fc15d45ebcb736ba6f456331b236a0969a431fa57f4f6d55f582eb5",
+  "expected": {
+    "disposition": "completed",
+    "error": null,
+    "ok": true,
+    "value": {
+      "busy": 3,
+      "idle": 2,
+      "jobs": [
+        {
+          "finish": 2,
+          "id": "A",
+          "response": 0,
+          "start": 0,
+          "turnaround": 2,
+          "wait": 0
+        },
+        {
+          "finish": 5,
+          "id": "B",
+          "response": 0,
+          "start": 4,
+          "turnaround": 1,
+          "wait": 0
+        }
+      ],
+      "makespan": 5,
+      "mean_response": "0/1",
+      "mean_turnaround": "3/2",
+      "mean_wait": "0/1",
+      "segments": [
+        {
+          "end": 2,
+          "id": "A",
+          "start": 0
+        },
+        {
+          "end": 5,
+          "id": "B",
+          "start": 4
+        }
+      ]
+    }
+  },
+  "expected_disposition": "completed",
+  "falsifier": "Compare the complete typed envelope and retained adverse input against these frozen values; a mismatch is a failed witness.",
+  "hypothesis": "Reserve a complete contiguous service block outside declared half-open unavailable intervals.",
+  "independent_reproduction": false,
+  "inherited_credit": false,
+  "input": {
+    "jobs": [
+      {
+        "arrival": 0,
+        "deadline": 2,
+        "id": "A",
+        "priority": 1,
+        "service": 2,
+        "weight": 1
+      },
+      {
+        "arrival": 4,
+        "deadline": 4,
+        "id": "B",
+        "priority": 2,
+        "service": 1,
+        "weight": 1
+      }
+    ],
+    "vacations": [
+      [
+        2,
+        4
+      ]
+    ]
+  },
+  "null_or_failure_condition": "A complete typed result, declared tie rule, unchanged input, service budget, refusal reason or evidence ceiling differs from the frozen definition.",
+  "operation": "vacation_fcfs",
+  "oracle_provenance": "Hand-specified traces and explicit preimplementation arithmetic; the production operation has not been called.",
+  "pillar": "THOS Body",
+  "practice": "finite scheduling policy analysis",
+  "proposal_id": "IB6917-155",
+  "protected_gates": [
+    "empirical",
+    "participant",
+    "professional",
+    "production",
+    "deployment",
+    "identity",
+    "legal",
+    "cultural",
+    "affected_party",
+    "maori_authority",
+    "privacy_complete",
+    "accessibility_complete",
+    "exhaustive_security",
+    "independent_reproduction",
+    "agi_asi",
+    "consciousness_personhood",
+    "theory_of_everything",
+    "proof_canon",
+    "stage20"
+  ],
+  "rollback": "Retain the original definition and failed subject. Freeze a separate correction before a bounded recovery; preserve the original zero credit.",
+  "same_owner_only": true,
+  "session": "x2",
+  "source_refs": [
+    "DECLARED-ARITHMETIC"
+  ],
+  "source_status": "current",
+  "title": "Nonpreemptive service-vacation timeline: idle interval and late deadline",
+  "underlying_consequential_action_authorized": false
+}

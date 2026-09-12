@@ -1,0 +1,99 @@
+{
+  "adverse_expected": {
+    "disposition": "open_gap",
+    "error": "INVALID_CAPACITY",
+    "ok": false,
+    "value": null
+  },
+  "adverse_input": {
+    "capacity": 0,
+    "requests": [
+      {
+        "arrival": 0,
+        "id": "A",
+        "service": 3
+      },
+      {
+        "arrival": 0,
+        "id": "B",
+        "service": 1
+      }
+    ]
+  },
+  "approval_class": "safe_synthetic_validation",
+  "definition_sha256": "c1775d66f34d8b16a2a9a4455b6217a63674bc0de80290e9845ba4b244a6abd8",
+  "expected": {
+    "disposition": "completed",
+    "error": null,
+    "ok": true,
+    "value": {
+      "accepted": [
+        {
+          "finish": 3,
+          "id": "A",
+          "start": 0
+        }
+      ],
+      "peak_busy": 1,
+      "rejected": [
+        "B"
+      ]
+    }
+  },
+  "expected_disposition": "completed",
+  "falsifier": "Compare the complete typed envelope and retained adverse input against these frozen values; a mismatch is a failed witness.",
+  "hypothesis": "Release completions before equal-time arrivals and retain rejected synthetic requests without deleting evidence.",
+  "independent_reproduction": false,
+  "inherited_credit": false,
+  "input": {
+    "capacity": 1,
+    "requests": [
+      {
+        "arrival": 0,
+        "id": "A",
+        "service": 3
+      },
+      {
+        "arrival": 0,
+        "id": "B",
+        "service": 1
+      }
+    ]
+  },
+  "null_or_failure_condition": "A complete typed result, declared tie rule, unchanged input, service budget, refusal reason or evidence ceiling differs from the frozen definition.",
+  "operation": "capacity_admission",
+  "oracle_provenance": "Hand-specified traces and explicit preimplementation arithmetic; the production operation has not been called.",
+  "pillar": "THOS Body",
+  "practice": "finite scheduling policy analysis",
+  "proposal_id": "IB6917-103",
+  "protected_gates": [
+    "empirical",
+    "participant",
+    "professional",
+    "production",
+    "deployment",
+    "identity",
+    "legal",
+    "cultural",
+    "affected_party",
+    "maori_authority",
+    "privacy_complete",
+    "accessibility_complete",
+    "exhaustive_security",
+    "independent_reproduction",
+    "agi_asi",
+    "consciousness_personhood",
+    "theory_of_everything",
+    "proof_canon",
+    "stage20"
+  ],
+  "rollback": "Retain the original definition and failed subject. Freeze a separate correction before a bounded recovery; preserve the original zero credit.",
+  "same_owner_only": true,
+  "session": "x2",
+  "source_refs": [
+    "DECLARED-ARITHMETIC"
+  ],
+  "source_status": "current",
+  "title": "Finite loss-system admission: simultaneous unequal jobs",
+  "underlying_consequential_action_authorized": false
+}

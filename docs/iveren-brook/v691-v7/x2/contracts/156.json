@@ -1,0 +1,175 @@
+{
+  "adverse_expected": {
+    "disposition": "open_gap",
+    "error": "INVALID_VACATIONS",
+    "ok": false,
+    "value": null
+  },
+  "adverse_input": {
+    "jobs": [
+      {
+        "arrival": 0,
+        "deadline": 3,
+        "id": "C",
+        "priority": 2,
+        "service": 1,
+        "weight": 1
+      },
+      {
+        "arrival": 0,
+        "deadline": 3,
+        "id": "A",
+        "priority": 2,
+        "service": 1,
+        "weight": 1
+      },
+      {
+        "arrival": 0,
+        "deadline": 3,
+        "id": "B",
+        "priority": 2,
+        "service": 1,
+        "weight": 1
+      }
+    ],
+    "vacations": [
+      [
+        1,
+        1
+      ]
+    ]
+  },
+  "approval_class": "safe_synthetic_validation",
+  "definition_sha256": "1d47be26947540078ac057b9b36debdb2625ef3b8553d86e79886091ecba8329",
+  "expected": {
+    "disposition": "completed",
+    "error": null,
+    "ok": true,
+    "value": {
+      "busy": 3,
+      "idle": 1,
+      "jobs": [
+        {
+          "finish": 1,
+          "id": "C",
+          "response": 0,
+          "start": 0,
+          "turnaround": 1,
+          "wait": 0
+        },
+        {
+          "finish": 3,
+          "id": "A",
+          "response": 2,
+          "start": 2,
+          "turnaround": 3,
+          "wait": 2
+        },
+        {
+          "finish": 4,
+          "id": "B",
+          "response": 3,
+          "start": 3,
+          "turnaround": 4,
+          "wait": 3
+        }
+      ],
+      "makespan": 4,
+      "mean_response": "5/3",
+      "mean_turnaround": "8/3",
+      "mean_wait": "5/3",
+      "segments": [
+        {
+          "end": 1,
+          "id": "C",
+          "start": 0
+        },
+        {
+          "end": 3,
+          "id": "A",
+          "start": 2
+        },
+        {
+          "end": 4,
+          "id": "B",
+          "start": 3
+        }
+      ]
+    }
+  },
+  "expected_disposition": "completed",
+  "falsifier": "Compare the complete typed envelope and retained adverse input against these frozen values; a mismatch is a failed witness.",
+  "hypothesis": "Reserve a complete contiguous service block outside declared half-open unavailable intervals.",
+  "independent_reproduction": false,
+  "inherited_credit": false,
+  "input": {
+    "jobs": [
+      {
+        "arrival": 0,
+        "deadline": 3,
+        "id": "C",
+        "priority": 2,
+        "service": 1,
+        "weight": 1
+      },
+      {
+        "arrival": 0,
+        "deadline": 3,
+        "id": "A",
+        "priority": 2,
+        "service": 1,
+        "weight": 1
+      },
+      {
+        "arrival": 0,
+        "deadline": 3,
+        "id": "B",
+        "priority": 2,
+        "service": 1,
+        "weight": 1
+      }
+    ],
+    "vacations": [
+      [
+        1,
+        2
+      ]
+    ]
+  },
+  "null_or_failure_condition": "A complete typed result, declared tie rule, unchanged input, service budget, refusal reason or evidence ceiling differs from the frozen definition.",
+  "operation": "vacation_fcfs",
+  "oracle_provenance": "Hand-specified traces and explicit preimplementation arithmetic; the production operation has not been called.",
+  "pillar": "THOS Body",
+  "practice": "finite scheduling policy analysis",
+  "proposal_id": "IB6917-156",
+  "protected_gates": [
+    "empirical",
+    "participant",
+    "professional",
+    "production",
+    "deployment",
+    "identity",
+    "legal",
+    "cultural",
+    "affected_party",
+    "maori_authority",
+    "privacy_complete",
+    "accessibility_complete",
+    "exhaustive_security",
+    "independent_reproduction",
+    "agi_asi",
+    "consciousness_personhood",
+    "theory_of_everything",
+    "proof_canon",
+    "stage20"
+  ],
+  "rollback": "Retain the original definition and failed subject. Freeze a separate correction before a bounded recovery; preserve the original zero credit.",
+  "same_owner_only": true,
+  "session": "x2",
+  "source_refs": [
+    "DECLARED-ARITHMETIC"
+  ],
+  "source_status": "current",
+  "title": "Nonpreemptive service-vacation timeline: stable input-order tie",
+  "underlying_consequential_action_authorized": false
+}

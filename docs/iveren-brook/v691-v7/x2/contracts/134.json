@@ -1,0 +1,109 @@
+{
+  "adverse_expected": {
+    "disposition": "open_gap",
+    "error": "INVALID_PACKETS",
+    "ok": false,
+    "value": null
+  },
+  "adverse_input": {
+    "packets": [
+      {
+        "flow": "a",
+        "id": "A",
+        "length": 2,
+        "virtual_time": 0,
+        "weight": 0
+      },
+      {
+        "flow": "b",
+        "id": "B",
+        "length": 2,
+        "virtual_time": 0,
+        "weight": 2
+      }
+    ]
+  },
+  "approval_class": "safe_synthetic_validation",
+  "definition_sha256": "d27c53b3cd4c2b7a7ddb2afc6f33c3c38976ee4fbd916683baf3273a86fc8369",
+  "expected": {
+    "disposition": "completed",
+    "error": null,
+    "ok": true,
+    "value": {
+      "fair_service_claim": false,
+      "order": [
+        "B",
+        "A"
+      ],
+      "tags": [
+        {
+          "finish": "2/1",
+          "id": "A"
+        },
+        {
+          "finish": "1/1",
+          "id": "B"
+        }
+      ]
+    }
+  },
+  "expected_disposition": "completed",
+  "falsifier": "Compare the complete typed envelope and retained adverse input against these frozen values; a mismatch is a failed witness.",
+  "hypothesis": "Keep exact rational finish tags and a caller-declared virtual-time convention separate from a measured fair-queueing service.",
+  "independent_reproduction": false,
+  "inherited_credit": false,
+  "input": {
+    "packets": [
+      {
+        "flow": "a",
+        "id": "A",
+        "length": 2,
+        "virtual_time": 0,
+        "weight": 1
+      },
+      {
+        "flow": "b",
+        "id": "B",
+        "length": 2,
+        "virtual_time": 0,
+        "weight": 2
+      }
+    ]
+  },
+  "null_or_failure_condition": "A complete typed result, declared tie rule, unchanged input, service budget, refusal reason or evidence ceiling differs from the frozen definition.",
+  "operation": "weighted_finish_tags",
+  "oracle_provenance": "Hand-specified traces and explicit preimplementation arithmetic; the production operation has not been called.",
+  "pillar": "GMUT Mind",
+  "practice": "queueing model verification",
+  "proposal_id": "IB6917-134",
+  "protected_gates": [
+    "empirical",
+    "participant",
+    "professional",
+    "production",
+    "deployment",
+    "identity",
+    "legal",
+    "cultural",
+    "affected_party",
+    "maori_authority",
+    "privacy_complete",
+    "accessibility_complete",
+    "exhaustive_security",
+    "independent_reproduction",
+    "agi_asi",
+    "consciousness_personhood",
+    "theory_of_everything",
+    "proof_canon",
+    "stage20"
+  ],
+  "rollback": "Retain the original definition and failed subject. Freeze a separate correction before a bounded recovery; preserve the original zero credit.",
+  "same_owner_only": true,
+  "session": "x2",
+  "source_refs": [
+    "DRR"
+  ],
+  "source_status": "current",
+  "title": "Weighted finish-tag recurrence: rational finish pattern 3",
+  "underlying_consequential_action_authorized": false
+}

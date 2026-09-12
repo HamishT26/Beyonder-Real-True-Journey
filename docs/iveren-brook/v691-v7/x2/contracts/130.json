@@ -1,0 +1,122 @@
+{
+  "adverse_expected": {
+    "disposition": "open_gap",
+    "error": "INVALID_BUCKET",
+    "ok": false,
+    "value": null
+  },
+  "adverse_input": {
+    "capacity": 5,
+    "events": [
+      {
+        "cost": 3,
+        "id": "A",
+        "time": 2
+      },
+      {
+        "cost": 3,
+        "id": "B",
+        "time": 4
+      },
+      {
+        "cost": 2,
+        "id": "C",
+        "time": 5
+      }
+    ],
+    "initial": 6,
+    "rate": 1
+  },
+  "approval_class": "safe_synthetic_validation",
+  "definition_sha256": "dc6cf89833b6dc0d373d46cf4ac62c901760875eeff123e6cc5fa429793f1990",
+  "expected": {
+    "disposition": "completed",
+    "error": null,
+    "ok": true,
+    "value": {
+      "last_time": 5,
+      "level": 5,
+      "network_action": false,
+      "records": [
+        {
+          "accepted": true,
+          "id": "A",
+          "level": 3
+        },
+        {
+          "accepted": true,
+          "id": "B",
+          "level": 4
+        },
+        {
+          "accepted": true,
+          "id": "C",
+          "level": 5
+        }
+      ]
+    }
+  },
+  "expected_disposition": "completed",
+  "falsifier": "Compare the complete typed envelope and retained adverse input against these frozen values; a mismatch is a failed witness.",
+  "hypothesis": "Drain a declared finite backlog before each arrival and distinguish overflow rejection from real packet shaping.",
+  "independent_reproduction": false,
+  "inherited_credit": false,
+  "input": {
+    "capacity": 5,
+    "events": [
+      {
+        "cost": 3,
+        "id": "A",
+        "time": 2
+      },
+      {
+        "cost": 3,
+        "id": "B",
+        "time": 4
+      },
+      {
+        "cost": 2,
+        "id": "C",
+        "time": 5
+      }
+    ],
+    "initial": 1,
+    "rate": 1
+  },
+  "null_or_failure_condition": "A complete typed result, declared tie rule, unchanged input, service budget, refusal reason or evidence ceiling differs from the frozen definition.",
+  "operation": "leaky_bucket",
+  "oracle_provenance": "Hand-specified traces and explicit preimplementation arithmetic; the production operation has not been called.",
+  "pillar": "THOS Body",
+  "practice": "queueing model verification",
+  "proposal_id": "IB6917-130",
+  "protected_gates": [
+    "empirical",
+    "participant",
+    "professional",
+    "production",
+    "deployment",
+    "identity",
+    "legal",
+    "cultural",
+    "affected_party",
+    "maori_authority",
+    "privacy_complete",
+    "accessibility_complete",
+    "exhaustive_security",
+    "independent_reproduction",
+    "agi_asi",
+    "consciousness_personhood",
+    "theory_of_everything",
+    "proof_canon",
+    "stage20"
+  ],
+  "rollback": "Retain the original definition and failed subject. Freeze a separate correction before a bounded recovery; preserve the original zero credit.",
+  "same_owner_only": true,
+  "session": "x2",
+  "source_refs": [
+    "RFC3290"
+  ],
+  "source_status": "current",
+  "title": "Finite backlog-meter decisions: three-step state recurrence",
+  "underlying_consequential_action_authorized": false
+}

@@ -1,0 +1,115 @@
+{
+  "adverse_expected": {
+    "disposition": "open_gap",
+    "error": "INVALID_RECORDS",
+    "ok": false,
+    "value": null
+  },
+  "adverse_input": {
+    "records": [
+      {
+        "arrival": 0,
+        "finish": 1,
+        "id": "A",
+        "service": 1,
+        "start": -1
+      },
+      {
+        "arrival": 0,
+        "finish": 5,
+        "id": "B",
+        "service": 4,
+        "start": 1
+      },
+      {
+        "arrival": 1,
+        "finish": 7,
+        "id": "C",
+        "service": 2,
+        "start": 5
+      }
+    ]
+  },
+  "approval_class": "safe_synthetic_validation",
+  "definition_sha256": "039df66141f63ff24994a7db7b26d21f4b15bb8ad296411440cabf7de18c281b",
+  "expected": {
+    "disposition": "completed",
+    "error": null,
+    "ok": true,
+    "value": {
+      "count": 3,
+      "maximum_wait": 4,
+      "mean_response": "5/3",
+      "mean_turnaround": "4/1",
+      "mean_wait": "5/3",
+      "production_benchmark": false,
+      "total_service": 7
+    }
+  },
+  "expected_disposition": "completed",
+  "falsifier": "Compare the complete typed envelope and retained adverse input against these frozen values; a mismatch is a failed witness.",
+  "hypothesis": "Derive response, waiting and turnaround statistics from declared complete records without promoting a simulation into an operational benchmark.",
+  "independent_reproduction": false,
+  "inherited_credit": false,
+  "input": {
+    "records": [
+      {
+        "arrival": 0,
+        "finish": 1,
+        "id": "A",
+        "service": 1,
+        "start": 0
+      },
+      {
+        "arrival": 0,
+        "finish": 5,
+        "id": "B",
+        "service": 4,
+        "start": 1
+      },
+      {
+        "arrival": 1,
+        "finish": 7,
+        "id": "C",
+        "service": 2,
+        "start": 5
+      }
+    ]
+  },
+  "null_or_failure_condition": "A complete typed result, declared tie rule, unchanged input, service budget, refusal reason or evidence ceiling differs from the frozen definition.",
+  "operation": "workload_metrics",
+  "oracle_provenance": "Hand-specified traces and explicit preimplementation arithmetic; the production operation has not been called.",
+  "pillar": "GMUT Mind",
+  "practice": "queueing model verification",
+  "proposal_id": "IB6917-170",
+  "protected_gates": [
+    "empirical",
+    "participant",
+    "professional",
+    "production",
+    "deployment",
+    "identity",
+    "legal",
+    "cultural",
+    "affected_party",
+    "maori_authority",
+    "privacy_complete",
+    "accessibility_complete",
+    "exhaustive_security",
+    "independent_reproduction",
+    "agi_asi",
+    "consciousness_personhood",
+    "theory_of_everything",
+    "proof_canon",
+    "stage20"
+  ],
+  "rollback": "Retain the original definition and failed subject. Freeze a separate correction before a bounded recovery; preserve the original zero credit.",
+  "same_owner_only": true,
+  "session": "x2",
+  "source_refs": [
+    "OSTEP"
+  ],
+  "source_status": "current",
+  "title": "Matched workload metric readback: priority and aging counterexample",
+  "underlying_consequential_action_authorized": false
+}
