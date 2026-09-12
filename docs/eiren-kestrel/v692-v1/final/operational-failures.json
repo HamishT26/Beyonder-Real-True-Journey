@@ -16,13 +16,20 @@
       "recovery": "Apply one bounded literal mechanical replacement, recheck exact CommonJS syntax, and preserve the failed patch.",
       "original_success_credit": 0,
       "mutation_before_recovery": false
+    },
+    {
+      "negative_id": "EK6921-FINAL-N01",
+      "failure": "The first owner-manifest model included final/manifest.json even though that manifest was regenerated after the owner-manifest snapshot, leaving one stale circular dependency.",
+      "recovery": "Exclude final manifest and both staged-review surfaces from the owner-wide manifest, bind all other updated owner files, then regenerate the content seal and final manifest in dependency order.",
+      "original_success_credit": 0,
+      "canonical_invocations_before_recovery": 0
     }
   ],
   "counts": {
-    "methods": 2,
-    "failed_witnesses": 2,
-    "passing_witnesses": 2,
-    "effective_negatives": 2
+    "methods": 3,
+    "failed_witnesses": 3,
+    "passing_witnesses": 3,
+    "effective_negatives": 3
   },
   "no_failure_erased": true
 }

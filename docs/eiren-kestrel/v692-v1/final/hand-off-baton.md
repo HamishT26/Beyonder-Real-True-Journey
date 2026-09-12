@@ -3672,4 +3672,6 @@ PREPARED_NOT_SENT. Teryn Halewick v692-v2 remains prospective until exact-final 
 
 Two post-plan operational failures remain retained: the direct Node syntax check refused the text extension before parsing, and an exact-context patch found no matching line and changed nothing. Explicit CommonJS stdin and one literal path replacement supplied the bounded recoveries. Both original attempts retain zero success credit.
 
+The first owner-wide manifest retained one stale circular entry for the final-stage manifest. No canonical ran. The exact-final correction excludes that dependency, preserves the failed first model at zero credit, and rebinds all remaining owner blobs before resealing.
+
 EOF EIREN KESTREL V692 V1 MODULAR BATON.

@@ -46,3 +46,7 @@ Final must be pushed, clean, zero-divergent, fresh-live equal and pass one non-r
 ## Post-plan operational overlay
 
 Two additional pre-x1 authoring probes failed without changing tracked state: direct Node syntax checking refused the text extension, and one exact-context patch found no matching source line. Explicit CommonJS stdin and a bounded literal replacement passed. Both failures remain zero-credit evidence.
+
+## Exact-final manifest correction
+
+The first closeout candidate exposed one stale circular owner-manifest entry for the subsequently regenerated final-stage manifest. It received zero canonical credit. The second final commit excludes that circular surface, retains the failed model, and rebinds the remaining owner files before the one canonical invocation.
