@@ -1,0 +1,32 @@
+'use strict';
+const invalid=function(op){return {ok:false,value:null,error:'INVALID_'+op.toUpperCase(),disposition:'open_gap'};};
+const ok=function(value,disposition){return {ok:true,value:value,error:null,disposition:disposition||'completed'};};
+const run=function run(op,x){
+ if(!x||x.malformed===true)return invalid(op);
+ try{
+  let v,d='completed';
+  if(op==='event_sequence_order'){const a=x.events.slice().sort(function(l,r){return l.time-r.time||l.id.localeCompare(r.id);});v={ordered_ids:a.map(function(y){return y.id;}),duplicate_times:new Set(a.map(function(y){return y.time;})).size!==a.length};}
+  else if(op==='queue_capacity_admission'){let used=0,accepted=[],held=[];x.demands.forEach(function(y){if(used+y.units<=x.capacity){used+=y.units;accepted.push(y.id);}else held.push(y.id);});v={capacity:x.capacity,used:used,remaining:x.capacity-used,accepted:accepted,held:held,operational_admission:false};}
+  else if(op==='priority_delay_bound'){let clock=0;const a=x.jobs.slice().sort(function(l,r){return r.priority-l.priority||l.arrival-r.arrival;});const s=a.map(function(y){clock=Math.max(clock,y.arrival);const start=clock;clock+=y.duration;return {id:y.id,start:start,finish:clock,wait:start-y.arrival};});v={schedule:s,max_wait:Math.max.apply(null,[0].concat(s.map(function(y){return y.wait;}))),real_service_claim:false};}
+  else if(op==='retry_exposure_bound'){let q=[],t=0,z=x.base_delay;for(let i=0;i<x.attempts;i++){q.push(z);t+=z;z*=x.factor;}v={attempts:x.attempts,delays:q,cumulative_delay:t,success_probability_claim:false};}
+  else if(op==='service_horizon_partition'){const a=x.intervals.map(function(y){return [Math.max(x.window[0],y[0]),Math.min(x.window[1],y[1])];}).filter(function(y){return y[1]>y[0];}).sort(function(l,r){return l[0]-r[0];});const m=[];a.forEach(function(y){if(!m.length||y[0]>m[m.length-1][1])m.push(y.slice());else m[m.length-1][1]=Math.max(m[m.length-1][1],y[1]);});const c=m.reduce(function(n,y){return n+y[1]-y[0];},0);v={window:x.window,merged:m,covered:c,uncovered:x.window[1]-x.window[0]-c,availability_claim:false};}
+  else if(op==='allocation_transition'){const delta=x.after.map(function(y,i){return y-x.before[i];});v={before_total:x.before.reduce(function(a,b){return a+b;},0),after_total:x.after.reduce(function(a,b){return a+b;},0),delta:delta,conserved:delta.reduce(function(a,b){return a+b;},0)===0,resource_authority:false};}
+  else if(op==='petri_marking_step'){const enabled=x.marking.every(function(y,i){return y>=x.consume[i];});v={enabled:enabled,next:enabled?x.marking.map(function(y,i){return y-x.consume[i]+x.produce[i];}):x.marking,execution_claim:false};}
+  else if(op==='parity_syndrome')v={length:x.bits.length,ones:x.bits.reduce(function(a,b){return a+b;},0),even_parity:x.bits.reduce(function(a,b){return a^b;},0)===0,correction_authority:false};
+  else if(op==='message_clock_order'){const keys=Array.from(new Set(Object.keys(x.left).concat(Object.keys(x.right)))).sort();const le=keys.every(function(k){return (x.left[k]||0)<=(x.right[k]||0);}),ge=keys.every(function(k){return (x.left[k]||0)>=(x.right[k]||0);});v={keys:keys,relation:le&&ge?'equal':le?'before':ge?'after':'concurrent',wall_clock_claim:false};}
+  else if(op==='outbox_lifecycle'){const allowed={empty:['prepared'],prepared:['submitted'],submitted:['acknowledged','failed'],failed:['prepared'],acknowledged:[]};let state='empty',valid=true;x.events.forEach(function(e){if(valid&&!allowed[state].includes(e))valid=false;else if(valid)state=e;});v={valid:valid,state:state,delivered:state==='acknowledged',duplicate_send_authorized:false};}
+  else if(op==='fault_delivery_trace'){let a=[];x.messages.forEach(function(m){const f=x.faults.find(function(y){return y.id===m;});if(f&&f.kind==='drop')return;a.push(m);if(f&&f.kind==='duplicate')a.push(m);});v={delivered:a,unique:Array.from(new Set(a)),duplicates:a.length-new Set(a).size,production_delivery_claim:false};}
+  else if(op==='load_admission_fairness'){const q=x.queues.map(function(y){return {id:y.id,demand:y.demand,granted:0};});let left=x.capacity,progress=true;while(left&&progress){progress=false;q.forEach(function(y){if(left&&y.granted<y.demand){y.granted++;left--;progress=true;}});}v={grants:Object.fromEntries(q.map(function(y){return [y.id,y.granted];})),unused:left,policy:'finite_round_robin',fairness_authority:false};}
+  else if(op==='resource_budget_guard'){let used=0,accepted=[],held=[];x.requests.forEach(function(y){if(used+y.cost<=x.budget){used+=y.cost;accepted.push(y.id);}else held.push(y.id);});v={budget:x.budget,used:used,accepted:accepted,held:held,spend_authority:false};}
+  else if(op==='branching_time_paths'){const a={};x.edges.forEach(function(y){(a[y[0]]||(a[y[0]]=[])).push(y[1]);});const paths=[];function walk(n,p,s){if(s.has(n))return;if(!(a[n]||[]).length){paths.push(p.concat(n));return;}(a[n]||[]).forEach(function(k){walk(k,p.concat(n),new Set(Array.from(s).concat(n)));});}walk(x.start,[],new Set());v={paths:paths,path_count:paths.length,cycle_paths_excluded:true,real_future_claim:false};}
+  else if(op==='evidence_expiry_recourse'||op==='consent_expiry_lineage'){const expired=x.observed_at>=x.expires_at;v={subject:x.subject,kind:op.split('_')[0],expired:expired,state:expired?'expired':'current',recourse_required:expired,authority_claim:false};}
+  else if(op==='correction_lineage'){let current=x.base,lineage=[{version:0,value:current}];x.corrections.forEach(function(y,i){current=y.value;lineage.push({version:i+1,value:current,reason:y.reason});});v={current:current,lineage:lineage,history_erased:false};}
+  else if(op==='service_evidence_ceiling'){v={metric:x.metric,difference:x.right-x.left,operational_claim:false,independent_claim:false};d='represented';}
+  else if(op==='service_evaluation_gap'){v={missing:[x.need],performed:false};d='open_gap';}
+  else if(op==='service_authority_gate'){v={missing:[x.required_role],executed:false};d='exact_gate';}
+  else return invalid(op);
+  return ok(v,d);
+ }catch(e){return invalid(op);}
+};
+function cli(allowed){let q;try{q=JSON.parse(process.argv[2]||'{}');}catch(e){console.log(JSON.stringify({ok:false,value:null,error:'INVALID_JSON',disposition:'open_gap'}));return 2;}if(!allowed.includes(q.operation)){console.log(JSON.stringify({ok:false,value:null,error:'UNKNOWN_OPERATION',disposition:'open_gap'}));return 2;}const out=run(q.operation,q.input);console.log(JSON.stringify(out));return out.ok?0:2;}
+module.exports={run,cli};
