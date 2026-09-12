@@ -1,0 +1,277 @@
+{
+  "defined": "2026-09-12T04:23:38.710Z",
+  "cases": [
+    {
+      "id": "two_vertex_average",
+      "operation": "laplacian_diffusion",
+      "input": {
+        "values": [
+          0,
+          10
+        ],
+        "edges": [
+          [
+            0,
+            1
+          ]
+        ],
+        "stepDenominator": 2
+      },
+      "value": {
+        "values": [
+          "5/1",
+          "5/1"
+        ],
+        "mass": "10/1",
+        "massResidual": "0/1",
+        "energyChange": "-50/1",
+        "physicalInterpretation": false
+      }
+    },
+    {
+      "id": "isolated_vertex",
+      "operation": "laplacian_diffusion",
+      "input": {
+        "values": [
+          7
+        ],
+        "edges": [],
+        "stepDenominator": 1
+      },
+      "value": {
+        "values": [
+          "7/1"
+        ],
+        "mass": "7/1",
+        "massResidual": "0/1",
+        "energyChange": "0/1",
+        "physicalInterpretation": false
+      }
+    },
+    {
+      "id": "zero_depth_model",
+      "operation": "product_reachability",
+      "input": {
+        "depth": 0,
+        "resetPolicy": "preserve"
+      },
+      "value": {
+        "states": 1,
+        "edges": 0,
+        "maxSubmissions": 0,
+        "counterexample": null,
+        "safeWithinBound": true,
+        "depth": 0
+      }
+    },
+    {
+      "id": "conflicting_consent",
+      "operation": "consent_projection",
+      "input": {
+        "now": 100,
+        "purpose": "simulate",
+        "events": [
+          {
+            "seq": 1,
+            "actor": "Tui",
+            "kind": "grant",
+            "purpose": "simulate",
+            "expires": 200
+          },
+          {
+            "seq": 1,
+            "actor": "Tui",
+            "kind": "revoke",
+            "purpose": "simulate",
+            "expires": 200
+          }
+        ]
+      },
+      "value": {
+        "allowed": [],
+        "held": [
+          "Tui"
+        ],
+        "realConsent": false
+      }
+    },
+    {
+      "id": "occupied_start",
+      "operation": "path_reservation",
+      "input": {
+        "width": 2,
+        "height": 2,
+        "start": 0,
+        "goal": 3,
+        "blocked": [],
+        "occupied": [
+          {
+            "time": 0,
+            "cell": 0
+          }
+        ],
+        "edgeReservations": [],
+        "horizon": 4
+      },
+      "value": {
+        "found": false,
+        "path": [],
+        "arrival": null
+      }
+    },
+    {
+      "id": "same_start_goal",
+      "operation": "path_reservation",
+      "input": {
+        "width": 2,
+        "height": 2,
+        "start": 0,
+        "goal": 0,
+        "blocked": [],
+        "occupied": [],
+        "edgeReservations": [],
+        "horizon": 0
+      },
+      "value": {
+        "found": true,
+        "path": [
+          0
+        ],
+        "arrival": 0
+      }
+    },
+    {
+      "id": "participant_claim_refused",
+      "operation": "participant_gap",
+      "input": {
+        "evaluation": "keyboard_only",
+        "participants": 3,
+        "requiredEvidence": [
+          "protocol"
+        ],
+        "availableEvidence": []
+      },
+      "error": "INVALID_INPUT"
+    },
+    {
+      "id": "probability_above_one",
+      "operation": "retry_cost_frontier",
+      "input": {
+        "successNumerator": 11,
+        "successDenominator": 10,
+        "maxAttempts": 5,
+        "costCents": 1
+      },
+      "error": "INVALID_INPUT"
+    },
+    {
+      "id": "unbounded_depth_refused",
+      "operation": "product_reachability",
+      "input": {
+        "depth": 13,
+        "resetPolicy": "preserve"
+      },
+      "error": "INVALID_INPUT"
+    },
+    {
+      "id": "unstable_diffusion_step",
+      "operation": "laplacian_diffusion",
+      "input": {
+        "values": [
+          0,
+          10,
+          0
+        ],
+        "edges": [
+          [
+            0,
+            1
+          ],
+          [
+            1,
+            2
+          ]
+        ],
+        "stepDenominator": 1
+      },
+      "error": "INVALID_INPUT"
+    },
+    {
+      "id": "duplicate_graph_edge",
+      "operation": "laplacian_diffusion",
+      "input": {
+        "values": [
+          0,
+          10
+        ],
+        "edges": [
+          [
+            0,
+            1
+          ],
+          [
+            1,
+            0
+          ]
+        ],
+        "stepDenominator": 2
+      },
+      "error": "INVALID_INPUT"
+    },
+    {
+      "id": "empty_world",
+      "operation": "simulation_step",
+      "input": {
+        "stocks": [],
+        "capacity": [],
+        "edges": [],
+        "actors": [],
+        "requests": []
+      },
+      "error": "INVALID_INPUT"
+    },
+    {
+      "id": "goal_outside_grid",
+      "operation": "path_reservation",
+      "input": {
+        "width": 2,
+        "height": 2,
+        "start": 0,
+        "goal": 4,
+        "blocked": [],
+        "occupied": [],
+        "edgeReservations": [],
+        "horizon": 4
+      },
+      "error": "INVALID_INPUT"
+    },
+    {
+      "id": "physical_authority_injection",
+      "operation": "evidence_lattice",
+      "input": {
+        "claim": "physical_confirmation",
+        "evidence": [
+          {
+            "kind": "synthetic_test",
+            "count": 100
+          }
+        ],
+        "requestedTier": "empirical",
+        "authority": true
+      },
+      "error": "INVALID_INPUT"
+    },
+    {
+      "id": "zero_denominator",
+      "operation": "retry_cost_frontier",
+      "input": {
+        "successNumerator": 0,
+        "successDenominator": 0,
+        "maxAttempts": 5,
+        "costCents": 1
+      },
+      "error": "INVALID_INPUT"
+    }
+  ],
+  "execution_credit": 0
+}

@@ -1,0 +1,30 @@
+'use strict';
+const cycle=['Eiren Kestrel','Elaren Kestrel','Rowan Ash','Neris Solane','Vesper Arlen','Ilyan Reed','Lyren Moss','Ilyra Fen','Mira Fenwick','Auren Lark','Sable Rook','Avelin Reed','Caelen Ash','Orin Thale','Ceryn Alder','Liora Venn','Tamar Vey','Saelin Reed','Elowen Cairn','Sylven Arc','Iveren Brook','Caelen Morrow','Eiren Kestrel','Teryn Halewick','Elaren Kestrel','Neris Solane','Merrin Vale','Vesper Arlen','Lyren Moss','Talen Briar','Ilyra Fen','Auren Lark','Thalen Reed','Sable Rook','Caelen Ash','Orren Pike','Orin Thale','Liora Venn','Veylora Quen','Tamar Vey','Elowen Cairn','Tessarin Reed','Sylven Arc','Caelen Morrow','Seren Talewood'];
+function review(profile,route){
+ const issues=[],check=(condition,name)=>{if(!condition)issues.push(name);};
+ if(!profile||!route||typeof profile!=='object'||typeof route!=='object')return {ok:false,issues:['objects_required'],summary:null};
+ check(profile.schema==='ghc.family.workflow-profile.v6','profile_schema');
+ check(route.schema==='ghc.family.weighted-route.v6','route_schema');
+ check(profile.owner==='Saelin Reed'&&profile.phase==='v691-v4-r2'&&profile.interstitial===true,'owner_and_interstitial');
+ check(profile.limits?.own_practices===4&&profile.limits?.next_practices===1,'practice_count');
+ check(profile.spending?.currency==='USD'&&profile.spending?.ceiling===50,'spending_ceiling');
+ check(profile.spending?.spent===0,'initial_spend');
+ check(profile.subagents===false&&profile.task_creation===false&&profile.automations===false,'solo_scope');
+ check(profile.models==='Preserve existing settings; no model changes','model_preservation');
+ check(profile.validation?.canonical_invocations===1&&profile.validation?.source_replay===false&&profile.validation?.success_replay===false,'canonical_no_replay');
+ check(profile.routing?.minimum_bounded_recovery_attempts>=5&&profile.routing?.accepted_send_limit===1&&profile.routing?.no_resend_after_opaque_acceptance===true,'routing_latch');
+ check(JSON.stringify([...(profile.artifact_policy?.authored_extensions||[])].sort())===JSON.stringify(['.html','.json','.md','.txt']),'file_policy');
+ check(profile.limits?.owner_file_ceiling===2000,'owner_file_limit');
+ for(const [key,min,max]of [['inherited_proposals',200,500],['new_proposals',200,500],['safe_now_x1',100,500],['safe_now_x2',100,500],['candidate_x1',100,500],['candidate_x2',100,500],['clean_fix_refine_x1',100,300],['clean_fix_refine_x2',100,300],['skills_x1',10,30],['skills_x2',10,30],['runners_x1',5,15],['runners_x2',5,15],['exact_packets',50,250],['blocked_packets',30,100]]){check(JSON.stringify(profile.limits?.[key])===JSON.stringify([min,max]),'limit_'+key);check(Number.isSafeInteger(profile.phase_targets?.[key])&&profile.phase_targets[key]>=min&&profile.phase_targets[key]<=max,'target_'+key);}
+ check(JSON.stringify(route.cycle)===JSON.stringify(cycle),'weighted_cycle');
+ check(route.identity_count===30&&route.cycle_positions===45&&new Set(route.cycle||[]).size===30,'identity_count');
+ check(route.activated_by_projection===false&&route.model_settings_changed===false,'projection_no_activation');
+ check(Array.isArray(route.assignments)&&route.assignments.length===277,'assignment_count');
+ const astra=new Set(cycle.filter((_,i)=>i%3===2));
+ for(let i=0;i<(route.assignments||[]).length;i++){const r=route.assignments[i],slot=3+i,name=cycle[(17+i)%45];check(r.sequence===i&&r.owner===name&&r.phase==='v'+(691+Math.floor(slot/8))+'-v'+(slot%8+1)&&r.model_role===(astra.has(name)?'Astra':'Sol')&&r.state===(i===0?'current_remaster':'prospective'),'assignment_'+i);}
+ check(profile.roster?.first_next==='Elowen Cairn v691-v5'&&profile.roster?.following==='Sylven Arc v691-v6','next_edges');
+ check(profile.terminal_verdict==='NOT_READY_FOR_STAGE_20','evidence_boundary');
+ return {ok:issues.length===0,issues,summary:{cyclePositions:45,identities:30,assignments:route.assignments?.length||0,next:'Elowen Cairn v691-v5',last:'Teryn Halewick v725-v8',nextPractices:1,spendingCeilingUsd:50,activated:0}};
+}
+module.exports={review};
+if(require.main===module){const fs=require('node:fs');const out=review(JSON.parse(fs.readFileSync(process.argv[2],'utf8')),JSON.parse(fs.readFileSync(process.argv[3],'utf8')));process.stdout.write(JSON.stringify(out)+'\n');if(!out.ok)process.exitCode=1;}

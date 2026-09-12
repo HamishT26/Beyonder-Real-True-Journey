@@ -1,0 +1,72 @@
+{
+  "schema": "ghc.family.current-capability-index.v6",
+  "publisher": "Saelin Reed",
+  "phase": "v691-v4-r2",
+  "owner_catalogue": "docs/saelin-reed/v691-v4-r2/x2/capability-catalogue.json",
+  "promotion_receipt": "docs/saelin-reed/v691-v4-r2/x2/global-promotion-receipt.json",
+  "groups": [
+    {
+      "name": "ghc-family-task-recovery-workbench",
+      "runner": "family-recovery-commons/runners/task-recovery-workbench.txt",
+      "operations": [
+        "exact_registry",
+        "control_precedence",
+        "history_evidence",
+        "recovery_plan"
+      ],
+      "status": "validated",
+      "source_callers_retained": true
+    },
+    {
+      "name": "ghc-family-outbox-lifecycle-proof",
+      "runner": "family-recovery-commons/runners/outbox-lifecycle-proof.txt",
+      "operations": [
+        "receipt_reduce",
+        "outbox_chain",
+        "product_reachability",
+        "checkpoint_replay"
+      ],
+      "status": "validated",
+      "source_callers_retained": true
+    },
+    {
+      "name": "ghc-family-bounded-resource-budget",
+      "runner": "family-recovery-commons/runners/bounded-resource-budget.txt",
+      "operations": [
+        "cost_reservation",
+        "resource_residual",
+        "retry_cost_frontier",
+        "simulation_step"
+      ],
+      "status": "validated",
+      "source_callers_retained": true
+    },
+    {
+      "name": "ghc-family-temporal-path-projection",
+      "runner": "family-recovery-commons/runners/temporal-path-projection.txt",
+      "operations": [
+        "phase_projection",
+        "clock_window",
+        "path_reservation",
+        "laplacian_diffusion"
+      ],
+      "status": "validated",
+      "source_callers_retained": true
+    },
+    {
+      "name": "ghc-family-source-consent-ceilings",
+      "runner": "family-recovery-commons/runners/source-consent-ceilings.txt",
+      "operations": [
+        "consent_projection",
+        "evidence_lattice",
+        "participant_gap",
+        "authority_gate"
+      ],
+      "status": "validated",
+      "source_callers_retained": true
+    }
+  ],
+  "reviewer": "family-recovery-commons/workflow-reviewer.txt",
+  "legacy_tools": "Keep original contracts; select by observed scope and source receipt, not name similarity",
+  "execution_authority": "owner_self_scoped_delta"
+}

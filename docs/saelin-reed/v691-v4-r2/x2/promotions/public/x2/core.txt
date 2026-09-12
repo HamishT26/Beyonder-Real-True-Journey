@@ -1,0 +1,100 @@
+'use strict';
+const base=require('../x1/core.txt');
+const {canonical,sha,copy,validate,object,array,number,text,bool}=base;
+const edge=array(number(0,63),2);
+const requestSchema=object({actor:number(0,31),from:number(0,31),to:number(0,31),units:number(0,1000000)});
+const worldFields={stocks:array(number(),32),capacity:array(number(),32),edges:array(edge,128),actors:array(object({name:text(),site:number(0,31),energy:number(0,10000),consent:bool}),32),requests:array(requestSchema,128)};
+const schemas={
+ product_reachability:object({depth:number(0,12),resetPolicy:text(['preserve','erase'])}),
+ retry_cost_frontier:object({successNumerator:number(0,1000),successDenominator:number(1,1000),maxAttempts:number(1,50),costCents:number(0,1000000)}),
+ simulation_step:object(worldFields),
+ path_reservation:object({width:number(1,16),height:number(1,16),start:number(0,255),goal:number(0,255),blocked:array(number(0,255),256),occupied:array(object({time:number(0,32),cell:number(0,255)}),512),edgeReservations:array(object({time:number(0,32),from:number(0,255),to:number(0,255)}),512),horizon:number(0,32)}),
+ checkpoint_replay:object({initial:object(worldFields),batches:array(array(requestSchema,128),100),declaredFinal:text()}),
+ consent_projection:object({now:number(),purpose:text(),events:array(object({seq:number(),actor:text(),kind:text(['grant','revoke']),purpose:text(),expires:number()}))}),
+ evidence_lattice:object({claim:text(),evidence:array(object({kind:text(['historical_assertion','synthetic_test']),count:number()})),requestedTier:text(['empirical'])}),
+ laplacian_diffusion:object({values:array(number(-1000000,1000000),32),edges:array(edge,128),stepDenominator:number(1,1000000)}),
+ participant_gap:object({evaluation:text(),participants:number(0,0),requiredEvidence:array(text(),32),availableEvidence:array(text(),32)}),
+ authority_gate:object({action:text(),requiredRoles:array(text(),32),verifiedRoles:array(text(),32)})
+};
+function graphEdges(edges,n){const seen=new Set();for(const e of edges){if(e.length!==2||e[0]>=n||e[1]>=n||e[0]===e[1])throw Error('INVALID_INPUT');const k=e.slice().sort((a,b)=>a-b).join(':');if(seen.has(k))throw Error('INVALID_INPUT');seen.add(k);}}
+function worldValid(x){const n=x.stocks.length;if(!n||n!==x.capacity.length||x.stocks.some((v,i)=>v>x.capacity[i]))throw Error('INVALID_INPUT');graphEdges(x.edges,n);if(new Set(x.actors.map(a=>a.name)).size!==x.actors.length||x.actors.some(a=>a.site>=n)||x.requests.some(r=>r.actor>=x.actors.length||r.from>=n||r.to>=n||r.from===r.to))throw Error('INVALID_INPUT');}
+function semantic(op,x){
+ if(op==='retry_cost_frontier'&&x.successNumerator>x.successDenominator)throw Error('INVALID_INPUT');
+ if(op==='simulation_step')worldValid(x);
+ if(op==='checkpoint_replay'){worldValid(x.initial);if(!/^[0-9a-f]{64}$/.test(x.declaredFinal))throw Error('INVALID_INPUT');for(const requests of x.batches)worldValid({...x.initial,requests});}
+ if(op==='path_reservation'){const size=x.width*x.height;if(x.start>=size||x.goal>=size||x.blocked.some(c=>c>=size)||x.occupied.some(r=>r.cell>=size)||x.edgeReservations.some(r=>r.from>=size||r.to>=size))throw Error('INVALID_INPUT');}
+ if(op==='laplacian_diffusion'){if(!x.values.length)throw Error('INVALID_INPUT');graphEdges(x.edges,x.values.length);const degrees=Array(x.values.length).fill(0);for(const [a,b]of x.edges){degrees[a]++;degrees[b]++;}if(Math.max(...degrees)>x.stepDenominator)throw Error('INVALID_INPUT');}
+}
+function evaluate(request){
+ if(request&&typeof request==='object'&&Object.hasOwn(base.schemas,request.operation))return base.evaluate(request);
+ try{const s=schemas[request?.operation];validate(request,object({operation:text(),input:s||object({})}));if(!Object.hasOwn(schemas,request.operation))return {ok:false,error:'UNKNOWN_OPERATION',value:null,authority:false};semantic(request.operation,request.input);return {ok:true,error:null,value:run(request.operation,request.input),authority:false};}
+ catch(e){if(e.message!=='INVALID_INPUT')throw e;return {ok:false,error:'INVALID_INPUT',value:null,authority:false};}
+}
+function fraction(a,b=1n){a=BigInt(a);b=BigInt(b);if(b<0n){a=-a;b=-b;}let x=a<0n?-a:a,y=b;while(y){[x,y]=[y,x%y];}const d=x||1n;return [a/d,b/d];}
+const plus=(a,b)=>fraction(a[0]*b[1]+b[0]*a[1],a[1]*b[1]);
+const times=(a,b)=>fraction(a[0]*b[0],a[1]*b[1]);
+const fractionText=f=>f[0].toString()+'/'+f[1].toString();
+function worldStep(x){
+ const result=copy(x),accepted=[],rejected=[],used=new Set(),links=new Set(x.edges.flatMap(([a,b])=>[a+':'+b,b+':'+a]));
+ for(let index=0;index<x.requests.length;index++){
+  const r=x.requests[index],a=result.actors[r.actor];let reason=null;
+  if(!a.consent)reason='consent';else if(used.has(r.actor))reason='one_action';else if(a.site!==r.from)reason='location';else if(!links.has(r.from+':'+r.to))reason='path';else if(a.energy===0)reason='energy';else if(result.stocks[r.from]<r.units)reason='stock';else if(result.stocks[r.to]+r.units>result.capacity[r.to])reason='capacity';
+  if(reason){rejected.push({index,reason});continue;}
+  result.stocks[r.from]-=r.units;result.stocks[r.to]+=r.units;a.site=r.to;a.energy-=1;used.add(r.actor);accepted.push(index);
+ }
+ result.requests=[];return {world:result,accepted,rejected,resourceResidual:result.stocks.reduce((a,b)=>a+b,0)-x.stocks.reduce((a,b)=>a+b,0),workUnits:accepted.length};
+}
+function product(x){
+ // A finite model: flags are declared observations, never live task evidence.
+ const events=['clear','pause','send','ack','opaque','timeout','reset'];
+ const first=[false,false,0,'none'],queue=[{s:first,trace:[]}],key=s=>s.join('|'),seen=new Set([key(first)]);let edges=0,maxSubmissions=0,counterexample=null;
+ for(let q=0;q<queue.length;q++){
+  const {s,trace}=queue[q];maxSubmissions=Math.max(maxSubmissions,s[2]);if(s[2]>1&&counterexample===null)counterexample=trace;if(trace.length===x.depth)continue;
+  for(const e of events){const n=s.slice();if(e==='clear')n[0]=true;else if(e==='pause')n[0]=false;else if(e==='send'){if(!s[0]||s[1]||s[2]>=2)continue;n[1]=true;n[2]++;n[3]='pending';}else if(e==='reset'){if(x.resetPolicy==='erase'){n[1]=false;n[3]='none';}}else{if(s[3]!=='pending')continue;n[3]=e;}
+   edges++;const k=key(n);if(!seen.has(k)){seen.add(k);queue.push({s:n,trace:trace.concat(e)});}
+  }
+ }
+ return {states:seen.size,edges,maxSubmissions,counterexample,safeWithinBound:maxSubmissions<=1,depth:x.depth};
+}
+function temporalPath(x){
+ const closed=new Set(x.blocked),occupied=new Set(x.occupied.map(r=>r.time+':'+r.cell)),opposed=new Set(x.edgeReservations.map(r=>r.time+':'+r.from+':'+r.to));
+ if(closed.has(x.start)||closed.has(x.goal)||occupied.has('0:'+x.start))return {found:false,path:[],arrival:null};
+ const queue=[{cell:x.start,t:0,path:[x.start]}],visited=new Set(['0:'+x.start]);
+ for(let q=0;q<queue.length;q++){
+  const s=queue[q];if(s.cell===x.goal)return {found:true,path:s.path,arrival:s.t};if(s.t===x.horizon)continue;
+  const col=s.cell%x.width,row=Math.floor(s.cell/x.width),neighbors=[s.cell];if(col>0)neighbors.push(s.cell-1);if(col+1<x.width)neighbors.push(s.cell+1);if(row>0)neighbors.push(s.cell-x.width);if(row+1<x.height)neighbors.push(s.cell+x.width);neighbors.sort((a,b)=>a-b);
+  for(const cell of neighbors){const t=s.t+1,k=t+':'+cell;if(closed.has(cell)||occupied.has(k)||opposed.has(t+':'+cell+':'+s.cell)||visited.has(k))continue;visited.add(k);queue.push({cell,t,path:s.path.concat(cell)});}
+ }
+ return {found:false,path:[],arrival:null};
+}
+function run(op,x){
+ switch(op){
+ case 'product_reachability':return product(x);
+ case 'retry_cost_frontier':{
+  const n=BigInt(x.successNumerator),d=BigInt(x.successDenominator),q=d-n,limit=BigInt(x.maxAttempts);const fail=fraction(q**limit,d**limit);let expected;
+  if(n===0n)expected=fraction(limit);else expected=fraction((d**limit-q**limit)*d,n*d**limit);
+  return {successProbability:fractionText(fraction(d**limit-q**limit,d**limit)),expectedAttempts:fractionText(expected),expectedCents:fractionText(times(expected,fraction(x.costCents))),modelOnly:true};
+ }
+ case 'simulation_step':return worldStep(x);
+ case 'path_reservation':return temporalPath(x);
+ case 'checkpoint_replay':{
+  let world=copy(x.initial);const states=[];for(const requests of x.batches){world=worldStep({...world,requests}).world;states.push(sha(world));}const digest=sha(world);return {steps:x.batches.length,digest,states,matches:digest===x.declaredFinal};
+ }
+ case 'consent_projection':{
+  const actors=new Set(),latest=new Map(),conflict=new Set();for(const e of x.events){actors.add(e.actor);if(e.purpose!==x.purpose)continue;const prior=latest.get(e.actor);if(!prior||e.seq>prior.seq){latest.set(e.actor,e);conflict.delete(e.actor);}else if(e.seq===prior.seq&&(e.kind!==prior.kind||e.expires!==prior.expires))conflict.add(e.actor);}
+  const allowed=[],held=[];for(const actor of [...actors].sort()){const e=latest.get(actor);if(e&&!conflict.has(actor)&&e.kind==='grant'&&e.expires>=x.now)allowed.push(actor);else held.push(actor);}return {allowed,held,realConsent:false};
+ }
+ case 'evidence_lattice':return {claim:x.claim,supportedTier:x.evidence.some(e=>e.kind==='synthetic_test'&&e.count>0)?'synthetic':'assertion',requestedTier:x.requestedTier,promotion:false,missing:['observable','attributable_data','independent_validation']};
+ case 'laplacian_diffusion':{
+  const n=x.values.length,matrix=Array.from({length:n},(_,i)=>Array.from({length:n},(_,j)=>i===j?x.stepDenominator:0));
+  for(const [a,b]of x.edges){matrix[a][a]--;matrix[b][b]--;matrix[a][b]++;matrix[b][a]++;}
+  const values=matrix.map(row=>fraction(row.reduce((sum,c,j)=>sum+BigInt(c)*BigInt(x.values[j]),0n),BigInt(x.stepDenominator)));
+  let mass=fraction(0),energy=fraction(0),oldEnergy=0n,oldMass=0n;for(let i=0;i<n;i++){mass=plus(mass,values[i]);energy=plus(energy,times(values[i],values[i]));oldEnergy+=BigInt(x.values[i])**2n;oldMass+=BigInt(x.values[i]);}
+  return {values:values.map(fractionText),mass:fractionText(mass),massResidual:fractionText(plus(mass,fraction(-oldMass))),energyChange:fractionText(plus(energy,fraction(-oldEnergy))),physicalInterpretation:false};
+ }
+ case 'participant_gap':return {evaluation:x.evaluation,participants:0,missing:x.requiredEvidence.filter(e=>!new Set(x.availableEvidence).has(e)),outcome:'open_gap',actualEvaluation:false};
+ case 'authority_gate':return {action:x.action,missingRoles:x.requiredRoles.filter(r=>!new Set(x.verifiedRoles).has(r)),outcome:'exact_gate',externalAction:false};
+ default:throw Error('UNKNOWN_OPERATION');
+ }
+}
+module.exports={...base,evaluate,schemas:{...base.schemas,...schemas},worldStep,temporalPath,product};

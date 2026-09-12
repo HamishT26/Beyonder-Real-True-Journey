@@ -1,0 +1,6 @@
+'use strict';
+const core=require('../x2/core.txt');
+const operations=["cost_reservation","resource_residual","retry_cost_frontier","simulation_step"];
+function evaluate(request){return operations.includes(request?.operation)?core.evaluate(request):{ok:false,error:'OUTSIDE_GROUP',value:null,authority:false};}
+function main(file){const fs=require('node:fs');const result=evaluate(JSON.parse(fs.readFileSync(file,'utf8')));process.stdout.write(JSON.stringify(result)+'\n');return result;}
+module.exports={evaluate,operations,main};

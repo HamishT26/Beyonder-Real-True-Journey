@@ -1,0 +1,8 @@
+'use strict';
+const fs=require('node:fs'),http=require('node:http'),path=require('node:path');
+const file=path.resolve(process.argv[2]);if(path.extname(file)!=='.html')throw Error('HTML_ONLY');
+const body=fs.readFileSync(file);let requests=0;
+const server=http.createServer((req,res)=>{requests++;if(req.method!=='GET'||new URL(req.url,'http://127.0.0.1').pathname!=='/'){res.writeHead(404,{'Content-Type':'text/plain; charset=utf-8'});res.end('Not found');return;}res.writeHead(200,{'Content-Type':'text/html; charset=utf-8','Content-Length':body.length,'Cache-Control':'no-store','Content-Security-Policy':"default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; connect-src 'none'; img-src 'none'; font-src 'none'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'",'X-Content-Type-Options':'nosniff'});res.end(body);});
+server.listen(0,'127.0.0.1',()=>console.log(JSON.stringify({state:'LISTENING',url:'http://127.0.0.1:'+server.address().port,bytes:body.length})));
+function stop(){server.close(()=>{console.log(JSON.stringify({state:'STOPPED',requests}));process.exit(0);});}
+process.stdin.setEncoding('utf8');process.stdin.on('data',s=>{if(s.includes('STOP'))stop();});process.on('SIGINT',stop);setTimeout(stop,1800000).unref();
