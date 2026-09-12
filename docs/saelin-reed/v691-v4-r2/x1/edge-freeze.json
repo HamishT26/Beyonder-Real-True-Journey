@@ -1,0 +1,172 @@
+{
+  "defined": "2026-09-12T04:12:57.151Z",
+  "cases": [
+    {
+      "id": "empty_cycle",
+      "operation": "phase_projection",
+      "input": {
+        "cycle": [],
+        "startIndex": 0,
+        "startVersion": 691,
+        "startSlot": 4,
+        "count": 1
+      },
+      "error": "INVALID_INPUT"
+    },
+    {
+      "id": "null_capacity",
+      "operation": "resource_residual",
+      "input": {
+        "stocks": [
+          1
+        ],
+        "capacity": null,
+        "transfers": []
+      },
+      "error": "INVALID_INPUT"
+    },
+    {
+      "id": "negative_cents",
+      "operation": "cost_reservation",
+      "input": {
+        "cap": 5000,
+        "events": [
+          {
+            "kind": "reserve",
+            "key": "a",
+            "cents": -1
+          }
+        ]
+      },
+      "error": "INVALID_INPUT"
+    },
+    {
+      "id": "inverted_clock",
+      "operation": "clock_window",
+      "input": {
+        "nowMin": 5,
+        "nowMax": 2,
+        "observed": 1,
+        "ttl": 3
+      },
+      "error": "INVALID_INPUT"
+    },
+    {
+      "id": "same_site_transfer",
+      "operation": "resource_residual",
+      "input": {
+        "stocks": [
+          4
+        ],
+        "capacity": [
+          10
+        ],
+        "transfers": [
+          {
+            "from": 0,
+            "to": 0,
+            "units": 1
+          }
+        ]
+      },
+      "error": "INVALID_INPUT"
+    },
+    {
+      "id": "prototype_key",
+      "operation": "cost_reservation",
+      "input": {
+        "cap": 10,
+        "events": [
+          {
+            "kind": "reserve",
+            "key": "__proto__",
+            "cents": 3
+          },
+          {
+            "kind": "commit",
+            "key": "__proto__",
+            "cents": 3
+          }
+        ]
+      },
+      "value": {
+        "spent": 3,
+        "reserved": 0,
+        "available": 7,
+        "rejected": [],
+        "cap": 10
+      }
+    },
+    {
+      "id": "unknown_history",
+      "operation": "history_evidence",
+      "input": {
+        "mode": "paginated",
+        "complete": true,
+        "pages": [],
+        "declaredItems": 0
+      },
+      "value": {
+        "mode": "paginated",
+        "items": 0,
+        "publicUsers": 0,
+        "coverage": "unknown",
+        "empty": true
+      }
+    },
+    {
+      "id": "fractional_slot",
+      "operation": "phase_projection",
+      "input": {
+        "cycle": [
+          "A"
+        ],
+        "startIndex": 0,
+        "startVersion": 691,
+        "startSlot": 1.5,
+        "count": 1
+      },
+      "error": "INVALID_INPUT"
+    },
+    {
+      "id": "nested_unknown",
+      "operation": "exact_registry",
+      "input": {
+        "target": "A",
+        "kind": "codex",
+        "current": [
+          {
+            "key": "a",
+            "title": "A",
+            "kind": "codex",
+            "unexpected": true
+          }
+        ],
+        "archived": [],
+        "currentComplete": true,
+        "archiveComplete": true
+      },
+      "error": "INVALID_INPUT"
+    },
+    {
+      "id": "ack_is_sticky",
+      "operation": "receipt_reduce",
+      "input": {
+        "events": [
+          "prepare",
+          "submit",
+          "ack",
+          "prepare"
+        ]
+      },
+      "value": {
+        "state": "acknowledged",
+        "submissions": 1,
+        "valid": false,
+        "firstBad": 3,
+        "resubmit": false
+      }
+    }
+  ],
+  "execution_credit": 0
+}

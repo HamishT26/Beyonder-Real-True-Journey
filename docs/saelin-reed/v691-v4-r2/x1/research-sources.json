@@ -1,0 +1,76 @@
+{
+  "accessed": "2026-09-12T04:17:21.449Z",
+  "sources": [
+    {
+      "title": "Codex CLI 0.154.0 release",
+      "url": "https://github.com/openai/codex/releases/tag/rust-v0.154.0",
+      "finding": "The stable release includes managed app-server work on Windows and removes the deprecated mcp-server entrypoint.",
+      "decision": "Use installed 0.154.0 documented interfaces; do not revive a removed entrypoint or assume a release note proves this desktop service healthy."
+    },
+    {
+      "title": "Codex Python SDK 0.154.0",
+      "url": "https://github.com/openai/codex/releases/tag/python-v0.154.0",
+      "finding": "The release notes distinguish external content from user authorization and expose saved-history reads.",
+      "decision": "Keep source-content authority separate; do not treat an external activation summary as a new blanket permission source."
+    },
+    {
+      "title": "Codex App Server",
+      "url": "https://learn.chatgpt.com/docs/app-server",
+      "finding": "Stored summaries can be listed; the current documentation says full-history reads and turn pagination for paginated records fail closed until supported.",
+      "decision": "Distinguish discovery from current-control availability. Preserve unsupported-history missingness and use the exact current native task surface first."
+    },
+    {
+      "title": "MCP stdio binding 2026-07-28",
+      "url": "https://modelcontextprotocol.io/specification/2026-07-28/basic/transports/stdio",
+      "finding": "The documented stdio lifecycle includes closing input and terminating an owned child if necessary.",
+      "decision": "An owned read-only diagnostic child can be cleaned up without treating it as the managed desktop daemon or delivery proof."
+    },
+    {
+      "title": "Node.js 24.18.0 release",
+      "url": "https://nodejs.org/en/blog/release/v24.18.0",
+      "finding": "The installed runtime belongs to the supported LTS line; the specific release page dates it to 23 June 2026.",
+      "decision": "Record the exact runtime and keep version provenance distinct from the claim that every installed tool is latest."
+    },
+    {
+      "title": "Managing usage with GPT-6 Astra",
+      "url": "https://help.openai.com/en/articles/20001516-managing-usage-with-gpt-6-astra-in-work-and-codex",
+      "finding": "Usage depends on task, model and settings; plan message counts are estimates rather than fixed rates.",
+      "decision": "Retain Hamish token-ratio observations as reported scenarios, use current account usage for this run, and avoid claiming measured savings from the weighted roster."
+    },
+    {
+      "title": "Google CLI transition notice",
+      "url": "https://developers.googleblog.com/an-important-update-transitioning-gemini-cli-to-antigravity-cli/",
+      "finding": "Google describes a consumer transition from Gemini CLI to Antigravity CLI with a June 2026 cutoff.",
+      "decision": "Keep older Journey Gemini CLI commands historical and review the actual account and product before any future integration."
+    },
+    {
+      "title": "Google managed agent platform",
+      "url": "https://docs.cloud.google.com/gemini-enterprise-agent-platform/scale",
+      "finding": "The older Agent Engine Memory Bank documentation URL redirects to the current managed agent platform.",
+      "decision": "Do not copy stale cloud endpoints or provision infrastructure from an older Journey document; local event schemas remain provider-neutral."
+    },
+    {
+      "title": "Anthropic building effective agents",
+      "url": "https://www.anthropic.com/engineering/building-effective-agents",
+      "finding": "The engineering guidance distinguishes predictable workflows from model-directed agents and emphasizes simple composable patterns.",
+      "decision": "Use deterministic workflow and simulation modules for this phase; no unrequested multi-agent activation is needed."
+    },
+    {
+      "title": "NVIDIA and Palantir supply-chain announcement",
+      "url": "https://nvidianews.nvidia.com/news/nvidia-and-palantir-bring-sovereign-intelligence-to-critical-supply-chains",
+      "finding": "The September 10 announcement discusses Nemotron models and Vera Rubin infrastructure in a supply-chain context.",
+      "decision": "Treat hardware and vendor capability announcements as external context, not evidence of available local GPU capacity or a completed GHC deployment."
+    },
+    {
+      "title": "Matt Shumer Unreal Engine simulation post",
+      "url": "https://x.com/mattshumer_/status/2095596175705399482",
+      "finding": "The September 4 post describes an Unreal Engine world with Astra-powered characters cooperating to survive. The post text and embedded video presence were observed in the browser.",
+      "decision": "Use as design inspiration for inspectable cooperation, bounded resources and dialogue events. Video behavior, sound and implementation were not independently verified; no media file was created."
+    }
+  ],
+  "web_search_limit": 500,
+  "search_calls_with_queries": 3,
+  "search_queries": 10,
+  "counts_are_research_not_execution": true,
+  "primary_sources_only_for_technical_findings": true
+}

@@ -1,0 +1,89 @@
+'use strict';
+const crypto=require('node:crypto');
+const MAX_ITEMS=512;
+function canonical(v){if(v===null||typeof v!=='object')return JSON.stringify(v);if(Array.isArray(v))return '['+v.map(canonical).join(',')+']';return '{'+Object.keys(v).sort().map(k=>JSON.stringify(k)+':'+canonical(v[k])).join(',')+'}';}
+const sha=v=>crypto.createHash('sha256').update(typeof v==='string'?v:canonical(v)).digest('hex');
+const copy=v=>JSON.parse(JSON.stringify(v));
+const number=(min=0,max=1000000)=>({type:'number',min,max});
+const text=(values=null)=>({type:'string',values});
+const bool={type:'boolean'};
+const array=(item,max=MAX_ITEMS)=>({type:'array',item,max});
+const object=fields=>({type:'object',fields});
+const endpoint=object({key:text(),title:text(),kind:text(['codex','chatgpt'])});
+const transfer=object({from:number(0,63),to:number(0,63),units:number(0,1000000)});
+const schemas={
+ exact_registry:object({target:text(),kind:text(['codex','chatgpt']),current:array(endpoint),archived:array(endpoint),currentComplete:bool,archiveComplete:bool}),
+ control_precedence:object({phase:text(),now:number(),messages:array(object({seq:number(),origin:text(['user','assistant','document']),phase:text(),action:text(['activate','pause','redirect']),expires:number()}))}),
+ history_evidence:object({mode:text(['legacy','paginated']),complete:bool,pages:array(object({items:array(object({role:text(['user','assistant']),public:bool,sequence:number()})),hasMore:bool})),declaredItems:number()}),
+ recovery_plan:object({outcomes:array(text(['ready','timeout','empty','malformed','pause','redirect','accepted','opaque','unknown_delivery']),50),maxAttempts:number(5,50),attemptMs:number(1,60000),baseDelayMs:number(0,60000),budgetMs:number(1,3600000)}),
+ receipt_reduce:object({events:array(text(['prepare','submit','ack','opaque','reject','timeout']))}),
+ outbox_chain:object({records:array(object({seq:number(1),prev:text(),payload:object({event:text(['prepare','read']),attempt:number(),budget:number()}),digest:text()})),declaredHead:text()}),
+ phase_projection:object({cycle:array(text(),100),startIndex:number(0,99),startVersion:number(1,10000),startSlot:number(1,8),count:number(1,512)}),
+ cost_reservation:object({cap:number(),events:array(object({kind:text(['reserve','commit','release']),key:text(),cents:number()}))}),
+ resource_residual:object({stocks:array(number(),64),capacity:array(number(),64),transfers:array(transfer)}),
+ clock_window:object({nowMin:number(),nowMax:number(),observed:number(),ttl:number()})
+};
+function validate(v,s,depth=0){
+ if(depth>24)throw Error('INVALID_INPUT');
+ if(s.type==='number'){if(!Number.isSafeInteger(v)||v<s.min||v>s.max)throw Error('INVALID_INPUT');return;}
+ if(s.type==='string'){if(typeof v!=='string'||v.length>512||(s.values&&!s.values.includes(v)))throw Error('INVALID_INPUT');return;}
+ if(s.type==='boolean'){if(typeof v!=='boolean')throw Error('INVALID_INPUT');return;}
+ if(s.type==='array'){if(!Array.isArray(v)||v.length>s.max)throw Error('INVALID_INPUT');for(const a of v)validate(a,s.item,depth+1);return;}
+ if(!v||Array.isArray(v)||typeof v!=='object'||![Object.prototype,null].includes(Object.getPrototypeOf(v)))throw Error('INVALID_INPUT');
+ const keys=Object.keys(v),required=Object.keys(s.fields);if(keys.length!==required.length||keys.some(k=>!Object.hasOwn(s.fields,k)))throw Error('INVALID_INPUT');
+ for(const k of required)validate(v[k],s.fields[k],depth+1);
+}
+function semantic(op,x){
+ if(op==='phase_projection'&&(!x.cycle.length||x.startIndex>=x.cycle.length))throw Error('INVALID_INPUT');
+ if(op==='resource_residual'){
+  if(!x.stocks.length||x.stocks.length!==x.capacity.length||x.stocks.some((v,i)=>v>x.capacity[i])||x.transfers.some(t=>t.from>=x.stocks.length||t.to>=x.stocks.length||t.from===t.to))throw Error('INVALID_INPUT');
+ }
+ if(op==='clock_window'&&x.nowMin>x.nowMax)throw Error('INVALID_INPUT');
+}
+function evaluate(request){
+ try{validate(request,object({operation:text(),input:{type:'object',fields:schemas[request?.operation]?.fields||{}}}));const op=request.operation,x=request.input;if(!Object.hasOwn(schemas,op))return {ok:false,error:'UNKNOWN_OPERATION',value:null,authority:false};semantic(op,x);return {ok:true,error:null,value:run(op,x),authority:false};}
+ catch(e){if(e.message!=='INVALID_INPUT')throw e;return {ok:false,error:'INVALID_INPUT',value:null,authority:false};}
+}
+function run(op,x){
+ switch(op){
+ case 'exact_registry':{
+  const sets={current:new Set(),archived:new Set()};for(const bank of Object.keys(sets))for(const r of x[bank])if(r.kind===x.kind&&r.title===x.target)sets[bank].add(r.key);
+  const c=sets.current.size,a=sets.archived.size;let resolution='absent';if(!x.currentComplete||!x.archiveComplete)resolution='incomplete';else if(c>1||c===1&&a>0)resolution='ambiguous';else if(c===1)resolution='unique';else if(a>0)resolution='archived_only';return {current:c,archived:a,resolution,key:c===1?[...sets.current][0]:null};
+ }
+ case 'control_precedence':{
+  let sequence=null,latest=[];for(const m of x.messages){if(m.origin!=='user'||m.phase!==x.phase)continue;if(sequence===null||m.seq>sequence){sequence=m.seq;latest=[m];}else if(m.seq===sequence)latest.push(m);}
+  if(sequence===null)return {action:'unknown',sequence:null,conflict:false};const first=latest[0],conflict=latest.some(m=>m.action!==first.action||m.expires!==first.expires);return {action:conflict?'hold':first.expires<x.now?'expired':first.action,sequence,conflict};
+ }
+ case 'history_evidence':{
+  let items=0,publicUsers=0,hasMore=false;for(const page of x.pages){hasMore=hasMore||page.hasMore;for(const item of page.items){items++;if(item.role==='user'&&item.public)publicUsers++;}}
+  return {mode:x.mode,items,publicUsers,coverage:x.complete&&!hasMore&&items===x.declaredItems&&publicUsers>0?'available':'unknown',empty:items===0};
+ }
+ case 'recovery_plan':{
+  let elapsedMs=0,state='exhausted',delays=[];const terminal=new Set(['ready','pause','redirect','accepted','opaque','unknown_delivery']);
+  for(let index=0;index<x.outcomes.length&&index<x.maxAttempts;index++){const wait=index===0?0:x.baseDelayMs*2**Math.min(index-1,3);if(elapsedMs+wait+x.attemptMs>x.budgetMs){state='budget_hold';break;}delays.push(wait);elapsedMs+=wait+x.attemptMs;if(terminal.has(x.outcomes[index])){state=x.outcomes[index];break;}}
+  return {attempts:delays.length,elapsedMs,delays,state,submissionPermitted:state==='ready'};
+ }
+ case 'receipt_reduce':{
+  let state='empty',submissions=0,firstBad=null;for(let i=0;i<x.events.length;i++){const event=x.events[i];if(state==='empty'&&event==='prepare')state='prepared';else if(state==='prepared'&&event==='submit'){state='pending';submissions++;}else if(state==='pending'&&['ack','opaque','reject','timeout'].includes(event))state={ack:'acknowledged',opaque:'opaque_accepted',reject:'rejected',timeout:'unknown_delivery'}[event];else{firstBad=i;break;}}
+  return {state,submissions,valid:firstBad===null,firstBad,resubmit:false};
+ }
+ case 'outbox_chain':{
+  let head='GENESIS',firstBad=null,verifiedPrefix=0;for(const record of x.records){const digest=sha({prev:record.prev,seq:record.seq,payload:record.payload});if(record.prev!==head||record.seq!==verifiedPrefix+1||record.digest!==digest){firstBad=verifiedPrefix;break;}head=digest;verifiedPrefix++;}
+  return {valid:firstBad===null&&head===x.declaredHead,firstBad,verifiedPrefix,head};
+ }
+ case 'phase_projection':{
+  const owners=Array.from({length:x.count},(_,i)=>x.cycle[(x.startIndex+i)%x.cycle.length]);const at=i=>({owner:owners[i],version:x.startVersion+Math.floor((x.startSlot-1+i)/8),slot:(x.startSlot-1+i)%8+1});return {count:x.count,first:at(0),last:at(x.count-1),owners,activated:0};
+ }
+ case 'cost_reservation':{
+  const reservations=new Map(),rejected=[];let spent=0,reserved=0;for(let i=0;i<x.events.length;i++){const e=x.events[i];if(e.kind==='reserve'){if(reservations.has(e.key)||e.cents>x.cap-spent-reserved){rejected.push(i);continue;}reservations.set(e.key,e.cents);reserved+=e.cents;}else{if(reservations.get(e.key)!==e.cents||!reservations.has(e.key)){rejected.push(i);continue;}reservations.delete(e.key);reserved-=e.cents;if(e.kind==='commit')spent+=e.cents;}}
+  return {spent,reserved,available:x.cap-spent-reserved,rejected,cap:x.cap};
+ }
+ case 'resource_residual':{
+  const stocks=x.stocks.slice(),accepted=[],rejected=[];let original=0;for(const v of stocks)original+=v;for(let i=0;i<x.transfers.length;i++){const t=x.transfers[i];if(t.units>stocks[t.from]||t.units>x.capacity[t.to]-stocks[t.to])rejected.push(i);else{stocks[t.from]-=t.units;stocks[t.to]+=t.units;accepted.push(i);}}return {stocks,accepted,rejected,residual:stocks.reduce((a,b)=>a+b,0)-original};
+ }
+ case 'clock_window':{const expires=x.observed+x.ttl;let freshness='uncertain';if(x.nowMax<=expires)freshness='fresh';else if(x.nowMin>expires)freshness='expired';return {expires,freshness,authority:false};}
+ default:throw Error('UNKNOWN_OPERATION');
+ }
+}
+function verify(expected,result){return !!result&&typeof result==='object'&&!Array.isArray(result)&&Object.keys(result).sort().join(',')==='authority,error,ok,value'&&result.ok===true&&result.error===null&&result.authority===false&&canonical(result.value)===canonical(expected);}
+module.exports={evaluate,verify,canonical,sha,copy,validate,object,array,number,text,bool,schemas};

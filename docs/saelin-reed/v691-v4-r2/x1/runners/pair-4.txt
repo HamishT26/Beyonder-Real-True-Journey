@@ -1,0 +1,6 @@
+'use strict';
+const core=require('../core.txt');
+const allowed=["phase_projection","cost_reservation"];
+function evaluate(request){return allowed.includes(request?.operation)?core.evaluate(request):{ok:false,error:'OUTSIDE_GROUP',value:null,authority:false};}
+module.exports={evaluate,operations:allowed};
+if(require.main===module){const fs=require('node:fs');const req=JSON.parse(fs.readFileSync(process.argv[2],'utf8'));process.stdout.write(JSON.stringify(evaluate(req))+'\n');}
