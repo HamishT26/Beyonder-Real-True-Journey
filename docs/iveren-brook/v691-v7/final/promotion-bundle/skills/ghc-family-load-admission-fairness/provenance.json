@@ -1,0 +1,59 @@
+{
+  "owner": "Iveren Brook",
+  "phase": "v691-v7",
+  "exact_source_head": "7c4c9331838f0f3e4a26d435730ea1655a279bc9",
+  "meaningful_source_units": 4,
+  "operations": [
+    "occupancy_area",
+    "jain_fairness",
+    "capacity_admission",
+    "token_bucket"
+  ],
+  "runner": "ghc_family_load_admission.txt",
+  "units": [
+    {
+      "operation": "occupancy_area",
+      "hypothesis": "Compute clipped half-open occupancy area and reserve a complete-cohort identity when observations are censored.",
+      "local_skill_path": "docs/iveren-brook/v691-v7/x1/skills/ghc-family-queue-occupancy-area/SKILL.md",
+      "local_skill_sha256": "9921b198d40bfe926f8bb38ad3401bcf105295a27f712591a2ac41c09ec8ee53",
+      "source_refs": [
+        "DECLARED-ARITHMETIC"
+      ],
+      "example_id": "IB6917-090"
+    },
+    {
+      "operation": "jain_fairness",
+      "hypothesis": "Compute an explicitly declared normalized allocation statistic while refusing to infer normative fairness or legitimacy.",
+      "local_skill_path": "docs/iveren-brook/v691-v7/x1/skills/ghc-family-queue-jain-fairness/SKILL.md",
+      "local_skill_sha256": "43df55669bf4d0fe8d70e866b2fae07c202b824615f60cbeb78e0347f038a7b7",
+      "source_refs": [
+        "JAIN"
+      ],
+      "example_id": "IB6917-100"
+    },
+    {
+      "operation": "capacity_admission",
+      "hypothesis": "Release completions before equal-time arrivals and retain rejected synthetic requests without deleting evidence.",
+      "local_skill_path": "docs/iveren-brook/v691-v7/x2/skills/ghc-family-queue-capacity-admission/SKILL.md",
+      "local_skill_sha256": "d8948750991ca96d4e1907af98efce5cd1582473f27ac20401ae5d247eccacaa",
+      "source_refs": [
+        "DECLARED-ARITHMETIC"
+      ],
+      "example_id": "IB6917-110"
+    },
+    {
+      "operation": "token_bucket",
+      "hypothesis": "Refill a bounded declared token budget and preserve input-order decisions at equal timestamps without transmitting traffic.",
+      "local_skill_path": "docs/iveren-brook/v691-v7/x2/skills/ghc-family-queue-token-bucket/SKILL.md",
+      "local_skill_sha256": "0ffabc1fa4868e667b6a22f348ad243e560b17c22286168e4dd8229336f4c25a",
+      "source_refs": [
+        "RFC3290"
+      ],
+      "example_id": "IB6917-120"
+    }
+  ],
+  "source_is_git_parent": false,
+  "original_owner_scope_preserved": true,
+  "packages_installed": 0,
+  "rollback": "Stop selecting this additive version; retain the exact source head and all receipts."
+}

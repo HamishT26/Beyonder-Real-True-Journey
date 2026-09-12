@@ -1,0 +1,59 @@
+{
+  "owner": "Iveren Brook",
+  "phase": "v691-v7",
+  "exact_source_head": "7c4c9331838f0f3e4a26d435730ea1655a279bc9",
+  "meaningful_source_units": 4,
+  "operations": [
+    "leaky_bucket",
+    "weighted_finish_tags",
+    "deficit_round_robin",
+    "vacation_fcfs"
+  ],
+  "runner": "ghc_family_weighted_service.txt",
+  "units": [
+    {
+      "operation": "leaky_bucket",
+      "hypothesis": "Drain a declared finite backlog before each arrival and distinguish overflow rejection from real packet shaping.",
+      "local_skill_path": "docs/iveren-brook/v691-v7/x2/skills/ghc-family-queue-leaky-bucket/SKILL.md",
+      "local_skill_sha256": "7ff319bb29346af6c955d90587a25047462e4a9b0f9df3e21dc8b26bd7536a4b",
+      "source_refs": [
+        "RFC3290"
+      ],
+      "example_id": "IB6917-130"
+    },
+    {
+      "operation": "weighted_finish_tags",
+      "hypothesis": "Keep exact rational finish tags and a caller-declared virtual-time convention separate from a measured fair-queueing service.",
+      "local_skill_path": "docs/iveren-brook/v691-v7/x2/skills/ghc-family-queue-weighted-finish-tags/SKILL.md",
+      "local_skill_sha256": "e1337b03f4e95357b3f50321c186bef3e9d74ebeec0519fd862d4bb723219f0f",
+      "source_refs": [
+        "DRR"
+      ],
+      "example_id": "IB6917-140"
+    },
+    {
+      "operation": "deficit_round_robin",
+      "hypothesis": "Carry unsent credit across finite rounds, reset empty queues, and preserve unfinished packets at the explicit round bound.",
+      "local_skill_path": "docs/iveren-brook/v691-v7/x2/skills/ghc-family-queue-deficit-round-robin/SKILL.md",
+      "local_skill_sha256": "b6286425f07f7bd171af87ac61e6f17697a34665f8a78a37f90640881d9c7ce4",
+      "source_refs": [
+        "DRR"
+      ],
+      "example_id": "IB6917-150"
+    },
+    {
+      "operation": "vacation_fcfs",
+      "hypothesis": "Reserve a complete contiguous service block outside declared half-open unavailable intervals.",
+      "local_skill_path": "docs/iveren-brook/v691-v7/x2/skills/ghc-family-queue-vacation-fcfs/SKILL.md",
+      "local_skill_sha256": "9ff9121173c4eed014ad89538307eff2bff15d3568d6c3202c083d92f98a03f9",
+      "source_refs": [
+        "DECLARED-ARITHMETIC"
+      ],
+      "example_id": "IB6917-160"
+    }
+  ],
+  "source_is_git_parent": false,
+  "original_owner_scope_preserved": true,
+  "packages_installed": 0,
+  "rollback": "Stop selecting this additive version; retain the exact source head and all receipts."
+}

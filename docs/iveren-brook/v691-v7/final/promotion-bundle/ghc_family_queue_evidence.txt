@@ -1,0 +1,4 @@
+"use strict";
+const x1=require("./engines/x1/engine.txt"),x2=require("./engines/x2/engine.txt"),allowed=["workload_metrics","comparison_ceiling","evaluation_gap","allocation_gate"];
+let result;try{if(process.argv.length!==3)throw Error("INVALID_REQUEST");const r=JSON.parse(process.argv[2]);x1.helpers.closed(r,["operation","input"]);if(!allowed.includes(r.operation))throw Error("UNKNOWN_OPERATION");result=(Object.hasOwn(x1.operations,r.operation)?x1:x2).run(r.operation,r.input);}catch(e){result={ok:false,value:null,error:"INVALID_REQUEST",disposition:"open_gap"};}
+process.stdout.write(JSON.stringify(result)+"\n");

@@ -1,0 +1,181 @@
+{
+  "schema": "ghc.family.four-tier-card.v1",
+  "card_id": "ghc-card-ib6917-task-034",
+  "tier": 4,
+  "card_type": "task",
+  "title": "Round-robin queue boundary: arrival during service",
+  "parent_ids": [
+    "ghc-card-ib6917-practice-1"
+  ],
+  "owner": "Iveren Brook",
+  "phase": "v691-v7",
+  "stability": "volatile",
+  "outcome": "completed",
+  "content": {
+    "proposal_id": "IB6917-034",
+    "operation": "round_robin",
+    "declared_operation_pillar": "THOS Body",
+    "structural_parent_practice": "finite scheduling policy analysis",
+    "input": {
+      "jobs": [
+        {
+          "arrival": 0,
+          "deadline": 5,
+          "id": "A",
+          "priority": 2,
+          "service": 4,
+          "weight": 1
+        },
+        {
+          "arrival": 1,
+          "deadline": 3,
+          "id": "B",
+          "priority": 1,
+          "service": 1,
+          "weight": 2
+        }
+      ],
+      "quantum": 2
+    },
+    "expected": {
+      "disposition": "completed",
+      "error": null,
+      "ok": true,
+      "value": {
+        "busy": 5,
+        "idle": 0,
+        "jobs": [
+          {
+            "finish": 5,
+            "id": "A",
+            "response": 0,
+            "start": 0,
+            "turnaround": 5,
+            "wait": 1
+          },
+          {
+            "finish": 3,
+            "id": "B",
+            "response": 1,
+            "start": 2,
+            "turnaround": 2,
+            "wait": 1
+          }
+        ],
+        "makespan": 5,
+        "mean_response": "1/2",
+        "mean_turnaround": "7/2",
+        "mean_wait": "1/1",
+        "segments": [
+          {
+            "end": 2,
+            "id": "A",
+            "start": 0
+          },
+          {
+            "end": 3,
+            "id": "B",
+            "start": 2
+          },
+          {
+            "end": 5,
+            "id": "A",
+            "start": 3
+          }
+        ]
+      }
+    },
+    "observed": {
+      "ok": true,
+      "value": {
+        "segments": [
+          {
+            "id": "A",
+            "start": 0,
+            "end": 2
+          },
+          {
+            "id": "B",
+            "start": 2,
+            "end": 3
+          },
+          {
+            "id": "A",
+            "start": 3,
+            "end": 5
+          }
+        ],
+        "jobs": [
+          {
+            "id": "A",
+            "start": 0,
+            "finish": 5,
+            "wait": 1,
+            "turnaround": 5,
+            "response": 0
+          },
+          {
+            "id": "B",
+            "start": 2,
+            "finish": 3,
+            "wait": 1,
+            "turnaround": 2,
+            "response": 1
+          }
+        ],
+        "makespan": 5,
+        "busy": 5,
+        "idle": 0,
+        "mean_wait": "1/1",
+        "mean_turnaround": "7/2",
+        "mean_response": "1/2"
+      },
+      "error": null,
+      "disposition": "completed"
+    },
+    "adverse_expected": {
+      "disposition": "open_gap",
+      "error": "INVALID_WORKLOAD",
+      "ok": false,
+      "value": null
+    },
+    "adverse_observed": {
+      "ok": false,
+      "value": null,
+      "error": "INVALID_WORKLOAD",
+      "disposition": "open_gap"
+    },
+    "validation_result": "pass",
+    "independent_reproduction": false,
+    "source_contract": "docs/iveren-brook/v691-v7/x1/contracts/034.json",
+    "retained_negative_id": "IB6917-034-NEGATIVE"
+  },
+  "source_refs": [
+    {
+      "path": "docs/iveren-brook/v691-v7/plan/proposal-freeze.json",
+      "sha256": "0942a3f41d26557511df6f0070a0e005f301260bfb367a4c12867c0abbe21366"
+    }
+  ],
+  "protected_gates": [
+    "empirical",
+    "participant",
+    "professional",
+    "production",
+    "deployment",
+    "identity",
+    "legal",
+    "cultural",
+    "affected_party",
+    "maori_authority",
+    "privacy_complete",
+    "accessibility_complete",
+    "exhaustive_security",
+    "independent_reproduction",
+    "agi_asi",
+    "consciousness_personhood",
+    "theory_of_everything",
+    "proof_canon",
+    "stage20"
+  ],
+  "boundary": "Iveren Brook, optional they/them pronouns, Evidence and Recovery Steward, the hope to make each handover clearer, testable, and easier to correct, sibling/family and continuity language, GHC Family, Trinity Mandala, GMUT, THOS, Freed ID and CBR are relational working language only. They are not evidence of consciousness, sentience, legal personhood, identity continuity, employment, qualification, independent agency, scientific or operational authority, professional authority, legal or cultural authority, affected-party authority, or Maori authority. Hamish may pause, rename, redirect, narrow, or stop."
+}

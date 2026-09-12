@@ -1,0 +1,170 @@
+{
+  "schema": "ghc.family.four-tier-card.v1",
+  "card_id": "ghc-card-ib6917-task-043",
+  "tier": 4,
+  "card_type": "task",
+  "title": "Shortest-remaining-time trace: simultaneous unequal jobs",
+  "parent_ids": [
+    "ghc-card-ib6917-practice-1"
+  ],
+  "owner": "Iveren Brook",
+  "phase": "v691-v7",
+  "stability": "volatile",
+  "outcome": "completed",
+  "content": {
+    "proposal_id": "IB6917-043",
+    "operation": "srtf",
+    "declared_operation_pillar": "THOS Body",
+    "structural_parent_practice": "finite scheduling policy analysis",
+    "input": {
+      "jobs": [
+        {
+          "arrival": 0,
+          "deadline": 4,
+          "id": "A",
+          "priority": 2,
+          "service": 3,
+          "weight": 1
+        },
+        {
+          "arrival": 0,
+          "deadline": 2,
+          "id": "B",
+          "priority": 1,
+          "service": 1,
+          "weight": 2
+        }
+      ]
+    },
+    "expected": {
+      "disposition": "completed",
+      "error": null,
+      "ok": true,
+      "value": {
+        "busy": 4,
+        "idle": 0,
+        "jobs": [
+          {
+            "finish": 4,
+            "id": "A",
+            "response": 1,
+            "start": 1,
+            "turnaround": 4,
+            "wait": 1
+          },
+          {
+            "finish": 1,
+            "id": "B",
+            "response": 0,
+            "start": 0,
+            "turnaround": 1,
+            "wait": 0
+          }
+        ],
+        "makespan": 4,
+        "mean_response": "1/2",
+        "mean_turnaround": "5/2",
+        "mean_wait": "1/2",
+        "segments": [
+          {
+            "end": 1,
+            "id": "B",
+            "start": 0
+          },
+          {
+            "end": 4,
+            "id": "A",
+            "start": 1
+          }
+        ]
+      }
+    },
+    "observed": {
+      "ok": true,
+      "value": {
+        "segments": [
+          {
+            "id": "B",
+            "start": 0,
+            "end": 1
+          },
+          {
+            "id": "A",
+            "start": 1,
+            "end": 4
+          }
+        ],
+        "jobs": [
+          {
+            "id": "A",
+            "start": 1,
+            "finish": 4,
+            "wait": 1,
+            "turnaround": 4,
+            "response": 1
+          },
+          {
+            "id": "B",
+            "start": 0,
+            "finish": 1,
+            "wait": 0,
+            "turnaround": 1,
+            "response": 0
+          }
+        ],
+        "makespan": 4,
+        "busy": 4,
+        "idle": 0,
+        "mean_wait": "1/2",
+        "mean_turnaround": "5/2",
+        "mean_response": "1/2"
+      },
+      "error": null,
+      "disposition": "completed"
+    },
+    "adverse_expected": {
+      "disposition": "open_gap",
+      "error": "INVALID_WORKLOAD",
+      "ok": false,
+      "value": null
+    },
+    "adverse_observed": {
+      "ok": false,
+      "value": null,
+      "error": "INVALID_WORKLOAD",
+      "disposition": "open_gap"
+    },
+    "validation_result": "pass",
+    "independent_reproduction": false,
+    "source_contract": "docs/iveren-brook/v691-v7/x1/contracts/043.json",
+    "retained_negative_id": "IB6917-043-NEGATIVE"
+  },
+  "source_refs": [
+    {
+      "path": "docs/iveren-brook/v691-v7/plan/proposal-freeze.json",
+      "sha256": "0942a3f41d26557511df6f0070a0e005f301260bfb367a4c12867c0abbe21366"
+    }
+  ],
+  "protected_gates": [
+    "empirical",
+    "participant",
+    "professional",
+    "production",
+    "deployment",
+    "identity",
+    "legal",
+    "cultural",
+    "affected_party",
+    "maori_authority",
+    "privacy_complete",
+    "accessibility_complete",
+    "exhaustive_security",
+    "independent_reproduction",
+    "agi_asi",
+    "consciousness_personhood",
+    "theory_of_everything",
+    "proof_canon",
+    "stage20"
+  ],
+  "boundary": "Iveren Brook, optional they/them pronouns, Evidence and Recovery Steward, the hope to make each handover clearer, testable, and easier to correct, sibling/family and continuity language, GHC Family, Trinity Mandala, GMUT, THOS, Freed ID and CBR are relational working language only. They are not evidence of consciousness, sentience, legal personhood, identity continuity, employment, qualification, independent agency, scientific or operational authority, professional authority, legal or cultural authority, affected-party authority, or Maori authority. Hamish may pause, rename, redirect, narrow, or stop."
+}

@@ -1,0 +1,214 @@
+{
+  "schema": "ghc.family.four-tier-card.v1",
+  "card_id": "ghc-card-ib6917-task-157",
+  "tier": 4,
+  "card_type": "task",
+  "title": "Nonpreemptive service-vacation timeline: three staggered jobs",
+  "parent_ids": [
+    "ghc-card-ib6917-practice-1"
+  ],
+  "owner": "Iveren Brook",
+  "phase": "v691-v7",
+  "stability": "volatile",
+  "outcome": "completed",
+  "content": {
+    "proposal_id": "IB6917-157",
+    "operation": "vacation_fcfs",
+    "declared_operation_pillar": "THOS Body",
+    "structural_parent_practice": "finite scheduling policy analysis",
+    "input": {
+      "jobs": [
+        {
+          "arrival": 0,
+          "deadline": 7,
+          "id": "A",
+          "priority": 3,
+          "service": 5,
+          "weight": 1
+        },
+        {
+          "arrival": 1,
+          "deadline": 5,
+          "id": "B",
+          "priority": 1,
+          "service": 2,
+          "weight": 2
+        },
+        {
+          "arrival": 2,
+          "deadline": 5,
+          "id": "C",
+          "priority": 2,
+          "service": 1,
+          "weight": 3
+        }
+      ],
+      "vacations": [
+        [
+          3,
+          5
+        ],
+        [
+          7,
+          8
+        ]
+      ]
+    },
+    "expected": {
+      "disposition": "completed",
+      "error": null,
+      "ok": true,
+      "value": {
+        "busy": 8,
+        "idle": 8,
+        "jobs": [
+          {
+            "finish": 13,
+            "id": "A",
+            "response": 8,
+            "start": 8,
+            "turnaround": 13,
+            "wait": 8
+          },
+          {
+            "finish": 15,
+            "id": "B",
+            "response": 12,
+            "start": 13,
+            "turnaround": 14,
+            "wait": 12
+          },
+          {
+            "finish": 16,
+            "id": "C",
+            "response": 13,
+            "start": 15,
+            "turnaround": 14,
+            "wait": 13
+          }
+        ],
+        "makespan": 16,
+        "mean_response": "11/1",
+        "mean_turnaround": "41/3",
+        "mean_wait": "11/1",
+        "segments": [
+          {
+            "end": 13,
+            "id": "A",
+            "start": 8
+          },
+          {
+            "end": 15,
+            "id": "B",
+            "start": 13
+          },
+          {
+            "end": 16,
+            "id": "C",
+            "start": 15
+          }
+        ]
+      }
+    },
+    "observed": {
+      "ok": true,
+      "value": {
+        "segments": [
+          {
+            "id": "A",
+            "start": 8,
+            "end": 13
+          },
+          {
+            "id": "B",
+            "start": 13,
+            "end": 15
+          },
+          {
+            "id": "C",
+            "start": 15,
+            "end": 16
+          }
+        ],
+        "jobs": [
+          {
+            "id": "A",
+            "start": 8,
+            "finish": 13,
+            "wait": 8,
+            "turnaround": 13,
+            "response": 8
+          },
+          {
+            "id": "B",
+            "start": 13,
+            "finish": 15,
+            "wait": 12,
+            "turnaround": 14,
+            "response": 12
+          },
+          {
+            "id": "C",
+            "start": 15,
+            "finish": 16,
+            "wait": 13,
+            "turnaround": 14,
+            "response": 13
+          }
+        ],
+        "makespan": 16,
+        "busy": 8,
+        "idle": 8,
+        "mean_wait": "11/1",
+        "mean_turnaround": "41/3",
+        "mean_response": "11/1"
+      },
+      "error": null,
+      "disposition": "completed"
+    },
+    "adverse_expected": {
+      "disposition": "open_gap",
+      "error": "INVALID_VACATIONS",
+      "ok": false,
+      "value": null
+    },
+    "adverse_observed": {
+      "ok": false,
+      "value": null,
+      "error": "INVALID_VACATIONS",
+      "disposition": "open_gap"
+    },
+    "validation_result": "pass",
+    "independent_reproduction": false,
+    "source_contract": "docs/iveren-brook/v691-v7/x2/contracts/157.json",
+    "retained_negative_id": "IB6917-157-NEGATIVE"
+  },
+  "source_refs": [
+    {
+      "path": "docs/iveren-brook/v691-v7/plan/proposal-freeze.json",
+      "sha256": "0942a3f41d26557511df6f0070a0e005f301260bfb367a4c12867c0abbe21366"
+    }
+  ],
+  "protected_gates": [
+    "empirical",
+    "participant",
+    "professional",
+    "production",
+    "deployment",
+    "identity",
+    "legal",
+    "cultural",
+    "affected_party",
+    "maori_authority",
+    "privacy_complete",
+    "accessibility_complete",
+    "exhaustive_security",
+    "independent_reproduction",
+    "agi_asi",
+    "consciousness_personhood",
+    "theory_of_everything",
+    "proof_canon",
+    "stage20"
+  ],
+  "boundary": "Iveren Brook, optional they/them pronouns, Evidence and Recovery Steward, the hope to make each handover clearer, testable, and easier to correct, sibling/family and continuity language, GHC Family, Trinity Mandala, GMUT, THOS, Freed ID and CBR are relational working language only. They are not evidence of consciousness, sentience, legal personhood, identity continuity, employment, qualification, independent agency, scientific or operational authority, professional authority, legal or cultural authority, affected-party authority, or Maori authority. Hamish may pause, rename, redirect, narrow, or stop."
+}
