@@ -1,0 +1,87 @@
+{
+  "procedure_id": "TH6922-050-R",
+  "kind": "FIX",
+  "proposal_id": "TH6922-050",
+  "operation": "undo_compensation_projection",
+  "source_definition_sha256": "d15ee5f5469de6b37485a0263997cfdf68e67c3bb67fdde190b0f04529d318fe",
+  "engine_sha256": "c9187e001682fbbe18e5445b0532d35a55fe23d85deba135279e91c835ed6d34",
+  "positive_subject": {
+    "records": [
+      {
+        "lsn": 5,
+        "tx": "t",
+        "key": "a",
+        "before": 4,
+        "after": 5
+      },
+      {
+        "lsn": 3,
+        "tx": "t",
+        "key": "a",
+        "before": 2,
+        "after": 3
+      }
+    ],
+    "applied": [
+      3,
+      5
+    ],
+    "compensated": [],
+    "target": "t"
+  },
+  "observed_envelope": {
+    "ok": true,
+    "disposition": "completed",
+    "value": {
+      "instructions": [
+        {
+          "lsn": 5,
+          "key": "a",
+          "restore": 4
+        },
+        {
+          "lsn": 3,
+          "key": "a",
+          "restore": 2
+        }
+      ],
+      "executed": false
+    },
+    "error": null
+  },
+  "candidate_subject": {
+    "records": null,
+    "applied": [
+      3,
+      5
+    ],
+    "compensated": [],
+    "target": "t"
+  },
+  "candidate_subject_outcome": "failed",
+  "candidate_original_success_credit": 0,
+  "refusal_check_outcome": "passed",
+  "explanation": "Input order does not determine compensation order. The complete frozen envelope matched. The malformed subject was refused, and its failure is retained separately.",
+  "rollback": "Stop the affected case; retain the input, definition, and failed witness at zero original success credit; add a named prospective correction and test only its changed dependency.",
+  "protected_gates": [
+    "empirical",
+    "participant",
+    "professional",
+    "production",
+    "deployment",
+    "identity",
+    "legal",
+    "cultural",
+    "affected_party",
+    "maori_authority",
+    "privacy_complete",
+    "accessibility_complete",
+    "exhaustive_security",
+    "independent_reproduction",
+    "agi_asi",
+    "consciousness_personhood",
+    "theory_of_everything",
+    "proof_canon",
+    "stage20"
+  ]
+}

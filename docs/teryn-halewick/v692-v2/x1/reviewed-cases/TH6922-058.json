@@ -1,0 +1,71 @@
+{
+  "procedure_id": "TH6922-058-R",
+  "kind": "CLEAN",
+  "proposal_id": "TH6922-058",
+  "operation": "checkpoint_log_retention",
+  "source_definition_sha256": "ac144ac160dadd39946cb812cc818052aa1548bc32d98fc90d913d415293ebf6",
+  "engine_sha256": "c9187e001682fbbe18e5445b0532d35a55fe23d85deba135279e91c835ed6d34",
+  "positive_subject": {
+    "segments": [
+      {
+        "id": "b",
+        "start": 0,
+        "end": 1,
+        "archived": false
+      },
+      {
+        "id": "a",
+        "start": 0,
+        "end": 1,
+        "archived": true
+      }
+    ],
+    "checkpoint": 5,
+    "undo_floor": null
+  },
+  "observed_envelope": {
+    "ok": true,
+    "disposition": "completed",
+    "value": {
+      "review": [
+        "a"
+      ],
+      "retained": [
+        "b"
+      ],
+      "action_allowed": false
+    },
+    "error": null
+  },
+  "candidate_subject": {
+    "segments": null,
+    "checkpoint": 5,
+    "undo_floor": null
+  },
+  "candidate_subject_outcome": "failed",
+  "candidate_original_success_credit": 0,
+  "refusal_check_outcome": "passed",
+  "explanation": "Mixed archived and unarchived ranges remain separate. The complete frozen envelope matched. The malformed subject was refused, and its failure is retained separately.",
+  "rollback": "Stop the affected case; retain the input, definition, and failed witness at zero original success credit; add a named prospective correction and test only its changed dependency.",
+  "protected_gates": [
+    "empirical",
+    "participant",
+    "professional",
+    "production",
+    "deployment",
+    "identity",
+    "legal",
+    "cultural",
+    "affected_party",
+    "maori_authority",
+    "privacy_complete",
+    "accessibility_complete",
+    "exhaustive_security",
+    "independent_reproduction",
+    "agi_asi",
+    "consciousness_personhood",
+    "theory_of_everything",
+    "proof_canon",
+    "stage20"
+  ]
+}

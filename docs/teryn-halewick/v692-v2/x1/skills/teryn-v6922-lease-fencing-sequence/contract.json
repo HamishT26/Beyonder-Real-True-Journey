@@ -1,0 +1,910 @@
+{
+  "operation": "lease_fencing_sequence",
+  "cases": [
+    {
+      "operation": "lease_fencing_sequence",
+      "title": "No event creates no lease",
+      "input": {
+        "events": []
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "epoch": 0,
+          "holder": null,
+          "grants": [],
+          "writes": [],
+          "denied": []
+        },
+        "error": null
+      },
+      "adverse_input": {
+        "events": null
+      },
+      "adverse_expected": {
+        "ok": false,
+        "disposition": "open_gap",
+        "value": null,
+        "error": "INVALID_INPUT"
+      },
+      "proposal_id": "TH6922-071",
+      "session": "x1",
+      "pillar": "THOS Body",
+      "practice": "distributed-state analyst",
+      "hypothesis": "The declared finite profile will satisfy this specific requirement: No event creates no lease.",
+      "null_or_failure_condition": "A complete typed-envelope mismatch, changed input, admitted malformed subject, lost failed witness, or unearned authority claim falsifies the contract.",
+      "approval_class": "safe_now_bounded_synthetic_or_structural",
+      "execution_lane": "owner_self_scoped_x1",
+      "expected_disposition": "completed",
+      "concrete_artifacts": [
+        "docs/teryn-halewick/v692-v2/x1/results.json",
+        "docs/teryn-halewick/v692-v2/x1/code/engine.txt",
+        "docs/teryn-halewick/v692-v2/x1/reviewed-cases/TH6922-071.json"
+      ],
+      "falsifier_or_acceptance_gate": "Complete independently frozen envelope equality, input nonmutation, and refusal of the explicitly declared malformed subject. No hidden implementation-generated expectation.",
+      "rollback_or_recovery": "Stop the affected case; retain the input, definition, and failed witness at zero original success credit; add a named prospective correction and test only its changed dependency.",
+      "protected_gates": [
+        "empirical",
+        "participant",
+        "professional",
+        "production",
+        "deployment",
+        "identity",
+        "legal",
+        "cultural",
+        "affected_party",
+        "maori_authority",
+        "privacy_complete",
+        "accessibility_complete",
+        "exhaustive_security",
+        "independent_reproduction",
+        "agi_asi",
+        "consciousness_personhood",
+        "theory_of_everything",
+        "proof_canon",
+        "stage20"
+      ],
+      "source_status": "stable",
+      "source_refs": [
+        "PG-ISOLATION",
+        "PG-WAL",
+        "PG-2PC"
+      ],
+      "outcomes_observed": false,
+      "inherited_novelty_credit": 0,
+      "inherited_execution_credit": 0,
+      "novelty_scope": "Distinct authored behavioral requirement relative to the selected Eiren corpus and prior Teryn operation catalogue; no universal novelty claim."
+    },
+    {
+      "operation": "lease_fencing_sequence",
+      "title": "A higher epoch establishes a declared lease",
+      "input": {
+        "events": [
+          {
+            "id": "g",
+            "kind": "grant",
+            "epoch": 1,
+            "holder": "a"
+          }
+        ]
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "epoch": 1,
+          "holder": "a",
+          "grants": [
+            "g"
+          ],
+          "writes": [],
+          "denied": []
+        },
+        "error": null
+      },
+      "adverse_input": {
+        "events": null
+      },
+      "adverse_expected": {
+        "ok": false,
+        "disposition": "open_gap",
+        "value": null,
+        "error": "INVALID_INPUT"
+      },
+      "proposal_id": "TH6922-072",
+      "session": "x1",
+      "pillar": "THOS Body",
+      "practice": "distributed-state analyst",
+      "hypothesis": "The declared finite profile will satisfy this specific requirement: A higher epoch establishes a declared lease.",
+      "null_or_failure_condition": "A complete typed-envelope mismatch, changed input, admitted malformed subject, lost failed witness, or unearned authority claim falsifies the contract.",
+      "approval_class": "safe_now_bounded_synthetic_or_structural",
+      "execution_lane": "owner_self_scoped_x1",
+      "expected_disposition": "completed",
+      "concrete_artifacts": [
+        "docs/teryn-halewick/v692-v2/x1/results.json",
+        "docs/teryn-halewick/v692-v2/x1/code/engine.txt",
+        "docs/teryn-halewick/v692-v2/x1/reviewed-cases/TH6922-072.json"
+      ],
+      "falsifier_or_acceptance_gate": "Complete independently frozen envelope equality, input nonmutation, and refusal of the explicitly declared malformed subject. No hidden implementation-generated expectation.",
+      "rollback_or_recovery": "Stop the affected case; retain the input, definition, and failed witness at zero original success credit; add a named prospective correction and test only its changed dependency.",
+      "protected_gates": [
+        "empirical",
+        "participant",
+        "professional",
+        "production",
+        "deployment",
+        "identity",
+        "legal",
+        "cultural",
+        "affected_party",
+        "maori_authority",
+        "privacy_complete",
+        "accessibility_complete",
+        "exhaustive_security",
+        "independent_reproduction",
+        "agi_asi",
+        "consciousness_personhood",
+        "theory_of_everything",
+        "proof_canon",
+        "stage20"
+      ],
+      "source_status": "stable",
+      "source_refs": [
+        "PG-ISOLATION",
+        "PG-WAL",
+        "PG-2PC"
+      ],
+      "outcomes_observed": false,
+      "inherited_novelty_credit": 0,
+      "inherited_execution_credit": 0,
+      "novelty_scope": "Distinct authored behavioral requirement relative to the selected Eiren corpus and prior Teryn operation catalogue; no universal novelty claim."
+    },
+    {
+      "operation": "lease_fencing_sequence",
+      "title": "A write without a prior grant is denied",
+      "input": {
+        "events": [
+          {
+            "id": "w",
+            "kind": "write",
+            "epoch": 1,
+            "holder": "a"
+          }
+        ]
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "epoch": 0,
+          "holder": null,
+          "grants": [],
+          "writes": [],
+          "denied": [
+            "w"
+          ]
+        },
+        "error": null
+      },
+      "adverse_input": {
+        "events": null
+      },
+      "adverse_expected": {
+        "ok": false,
+        "disposition": "open_gap",
+        "value": null,
+        "error": "INVALID_INPUT"
+      },
+      "proposal_id": "TH6922-073",
+      "session": "x1",
+      "pillar": "THOS Body",
+      "practice": "distributed-state analyst",
+      "hypothesis": "The declared finite profile will satisfy this specific requirement: A write without a prior grant is denied.",
+      "null_or_failure_condition": "A complete typed-envelope mismatch, changed input, admitted malformed subject, lost failed witness, or unearned authority claim falsifies the contract.",
+      "approval_class": "safe_now_bounded_synthetic_or_structural",
+      "execution_lane": "owner_self_scoped_x1",
+      "expected_disposition": "completed",
+      "concrete_artifacts": [
+        "docs/teryn-halewick/v692-v2/x1/results.json",
+        "docs/teryn-halewick/v692-v2/x1/code/engine.txt",
+        "docs/teryn-halewick/v692-v2/x1/reviewed-cases/TH6922-073.json"
+      ],
+      "falsifier_or_acceptance_gate": "Complete independently frozen envelope equality, input nonmutation, and refusal of the explicitly declared malformed subject. No hidden implementation-generated expectation.",
+      "rollback_or_recovery": "Stop the affected case; retain the input, definition, and failed witness at zero original success credit; add a named prospective correction and test only its changed dependency.",
+      "protected_gates": [
+        "empirical",
+        "participant",
+        "professional",
+        "production",
+        "deployment",
+        "identity",
+        "legal",
+        "cultural",
+        "affected_party",
+        "maori_authority",
+        "privacy_complete",
+        "accessibility_complete",
+        "exhaustive_security",
+        "independent_reproduction",
+        "agi_asi",
+        "consciousness_personhood",
+        "theory_of_everything",
+        "proof_canon",
+        "stage20"
+      ],
+      "source_status": "stable",
+      "source_refs": [
+        "PG-ISOLATION",
+        "PG-WAL",
+        "PG-2PC"
+      ],
+      "outcomes_observed": false,
+      "inherited_novelty_credit": 0,
+      "inherited_execution_credit": 0,
+      "novelty_scope": "Distinct authored behavioral requirement relative to the selected Eiren corpus and prior Teryn operation catalogue; no universal novelty claim."
+    },
+    {
+      "operation": "lease_fencing_sequence",
+      "title": "The current holder and epoch can pass the write predicate",
+      "input": {
+        "events": [
+          {
+            "id": "g",
+            "kind": "grant",
+            "epoch": 1,
+            "holder": "a"
+          },
+          {
+            "id": "w",
+            "kind": "write",
+            "epoch": 1,
+            "holder": "a"
+          }
+        ]
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "epoch": 1,
+          "holder": "a",
+          "grants": [
+            "g"
+          ],
+          "writes": [
+            "w"
+          ],
+          "denied": []
+        },
+        "error": null
+      },
+      "adverse_input": {
+        "events": null
+      },
+      "adverse_expected": {
+        "ok": false,
+        "disposition": "open_gap",
+        "value": null,
+        "error": "INVALID_INPUT"
+      },
+      "proposal_id": "TH6922-074",
+      "session": "x1",
+      "pillar": "THOS Body",
+      "practice": "distributed-state analyst",
+      "hypothesis": "The declared finite profile will satisfy this specific requirement: The current holder and epoch can pass the write predicate.",
+      "null_or_failure_condition": "A complete typed-envelope mismatch, changed input, admitted malformed subject, lost failed witness, or unearned authority claim falsifies the contract.",
+      "approval_class": "safe_now_bounded_synthetic_or_structural",
+      "execution_lane": "owner_self_scoped_x1",
+      "expected_disposition": "completed",
+      "concrete_artifacts": [
+        "docs/teryn-halewick/v692-v2/x1/results.json",
+        "docs/teryn-halewick/v692-v2/x1/code/engine.txt",
+        "docs/teryn-halewick/v692-v2/x1/reviewed-cases/TH6922-074.json"
+      ],
+      "falsifier_or_acceptance_gate": "Complete independently frozen envelope equality, input nonmutation, and refusal of the explicitly declared malformed subject. No hidden implementation-generated expectation.",
+      "rollback_or_recovery": "Stop the affected case; retain the input, definition, and failed witness at zero original success credit; add a named prospective correction and test only its changed dependency.",
+      "protected_gates": [
+        "empirical",
+        "participant",
+        "professional",
+        "production",
+        "deployment",
+        "identity",
+        "legal",
+        "cultural",
+        "affected_party",
+        "maori_authority",
+        "privacy_complete",
+        "accessibility_complete",
+        "exhaustive_security",
+        "independent_reproduction",
+        "agi_asi",
+        "consciousness_personhood",
+        "theory_of_everything",
+        "proof_canon",
+        "stage20"
+      ],
+      "source_status": "stable",
+      "source_refs": [
+        "PG-ISOLATION",
+        "PG-WAL",
+        "PG-2PC"
+      ],
+      "outcomes_observed": false,
+      "inherited_novelty_credit": 0,
+      "inherited_execution_credit": 0,
+      "novelty_scope": "Distinct authored behavioral requirement relative to the selected Eiren corpus and prior Teryn operation catalogue; no universal novelty claim."
+    },
+    {
+      "operation": "lease_fencing_sequence",
+      "title": "An old epoch is fenced after a newer grant",
+      "input": {
+        "events": [
+          {
+            "id": "g1",
+            "kind": "grant",
+            "epoch": 1,
+            "holder": "a"
+          },
+          {
+            "id": "g2",
+            "kind": "grant",
+            "epoch": 2,
+            "holder": "b"
+          },
+          {
+            "id": "w",
+            "kind": "write",
+            "epoch": 1,
+            "holder": "a"
+          }
+        ]
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "epoch": 2,
+          "holder": "b",
+          "grants": [
+            "g1",
+            "g2"
+          ],
+          "writes": [],
+          "denied": [
+            "w"
+          ]
+        },
+        "error": null
+      },
+      "adverse_input": {
+        "events": null
+      },
+      "adverse_expected": {
+        "ok": false,
+        "disposition": "open_gap",
+        "value": null,
+        "error": "INVALID_INPUT"
+      },
+      "proposal_id": "TH6922-075",
+      "session": "x1",
+      "pillar": "THOS Body",
+      "practice": "distributed-state analyst",
+      "hypothesis": "The declared finite profile will satisfy this specific requirement: An old epoch is fenced after a newer grant.",
+      "null_or_failure_condition": "A complete typed-envelope mismatch, changed input, admitted malformed subject, lost failed witness, or unearned authority claim falsifies the contract.",
+      "approval_class": "safe_now_bounded_synthetic_or_structural",
+      "execution_lane": "owner_self_scoped_x1",
+      "expected_disposition": "completed",
+      "concrete_artifacts": [
+        "docs/teryn-halewick/v692-v2/x1/results.json",
+        "docs/teryn-halewick/v692-v2/x1/code/engine.txt",
+        "docs/teryn-halewick/v692-v2/x1/reviewed-cases/TH6922-075.json"
+      ],
+      "falsifier_or_acceptance_gate": "Complete independently frozen envelope equality, input nonmutation, and refusal of the explicitly declared malformed subject. No hidden implementation-generated expectation.",
+      "rollback_or_recovery": "Stop the affected case; retain the input, definition, and failed witness at zero original success credit; add a named prospective correction and test only its changed dependency.",
+      "protected_gates": [
+        "empirical",
+        "participant",
+        "professional",
+        "production",
+        "deployment",
+        "identity",
+        "legal",
+        "cultural",
+        "affected_party",
+        "maori_authority",
+        "privacy_complete",
+        "accessibility_complete",
+        "exhaustive_security",
+        "independent_reproduction",
+        "agi_asi",
+        "consciousness_personhood",
+        "theory_of_everything",
+        "proof_canon",
+        "stage20"
+      ],
+      "source_status": "stable",
+      "source_refs": [
+        "PG-ISOLATION",
+        "PG-WAL",
+        "PG-2PC"
+      ],
+      "outcomes_observed": false,
+      "inherited_novelty_credit": 0,
+      "inherited_execution_credit": 0,
+      "novelty_scope": "Distinct authored behavioral requirement relative to the selected Eiren corpus and prior Teryn operation catalogue; no universal novelty claim."
+    },
+    {
+      "operation": "lease_fencing_sequence",
+      "title": "A different holder cannot use the current epoch",
+      "input": {
+        "events": [
+          {
+            "id": "g",
+            "kind": "grant",
+            "epoch": 1,
+            "holder": "a"
+          },
+          {
+            "id": "w",
+            "kind": "write",
+            "epoch": 1,
+            "holder": "b"
+          }
+        ]
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "epoch": 1,
+          "holder": "a",
+          "grants": [
+            "g"
+          ],
+          "writes": [],
+          "denied": [
+            "w"
+          ]
+        },
+        "error": null
+      },
+      "adverse_input": {
+        "events": null
+      },
+      "adverse_expected": {
+        "ok": false,
+        "disposition": "open_gap",
+        "value": null,
+        "error": "INVALID_INPUT"
+      },
+      "proposal_id": "TH6922-076",
+      "session": "x1",
+      "pillar": "THOS Body",
+      "practice": "distributed-state analyst",
+      "hypothesis": "The declared finite profile will satisfy this specific requirement: A different holder cannot use the current epoch.",
+      "null_or_failure_condition": "A complete typed-envelope mismatch, changed input, admitted malformed subject, lost failed witness, or unearned authority claim falsifies the contract.",
+      "approval_class": "safe_now_bounded_synthetic_or_structural",
+      "execution_lane": "owner_self_scoped_x1",
+      "expected_disposition": "completed",
+      "concrete_artifacts": [
+        "docs/teryn-halewick/v692-v2/x1/results.json",
+        "docs/teryn-halewick/v692-v2/x1/code/engine.txt",
+        "docs/teryn-halewick/v692-v2/x1/reviewed-cases/TH6922-076.json"
+      ],
+      "falsifier_or_acceptance_gate": "Complete independently frozen envelope equality, input nonmutation, and refusal of the explicitly declared malformed subject. No hidden implementation-generated expectation.",
+      "rollback_or_recovery": "Stop the affected case; retain the input, definition, and failed witness at zero original success credit; add a named prospective correction and test only its changed dependency.",
+      "protected_gates": [
+        "empirical",
+        "participant",
+        "professional",
+        "production",
+        "deployment",
+        "identity",
+        "legal",
+        "cultural",
+        "affected_party",
+        "maori_authority",
+        "privacy_complete",
+        "accessibility_complete",
+        "exhaustive_security",
+        "independent_reproduction",
+        "agi_asi",
+        "consciousness_personhood",
+        "theory_of_everything",
+        "proof_canon",
+        "stage20"
+      ],
+      "source_status": "stable",
+      "source_refs": [
+        "PG-ISOLATION",
+        "PG-WAL",
+        "PG-2PC"
+      ],
+      "outcomes_observed": false,
+      "inherited_novelty_credit": 0,
+      "inherited_execution_credit": 0,
+      "novelty_scope": "Distinct authored behavioral requirement relative to the selected Eiren corpus and prior Teryn operation catalogue; no universal novelty claim."
+    },
+    {
+      "operation": "lease_fencing_sequence",
+      "title": "A repeated grant epoch is denied",
+      "input": {
+        "events": [
+          {
+            "id": "g1",
+            "kind": "grant",
+            "epoch": 1,
+            "holder": "a"
+          },
+          {
+            "id": "g2",
+            "kind": "grant",
+            "epoch": 1,
+            "holder": "a"
+          }
+        ]
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "epoch": 1,
+          "holder": "a",
+          "grants": [
+            "g1"
+          ],
+          "writes": [],
+          "denied": [
+            "g2"
+          ]
+        },
+        "error": null
+      },
+      "adverse_input": {
+        "events": null
+      },
+      "adverse_expected": {
+        "ok": false,
+        "disposition": "open_gap",
+        "value": null,
+        "error": "INVALID_INPUT"
+      },
+      "proposal_id": "TH6922-077",
+      "session": "x1",
+      "pillar": "THOS Body",
+      "practice": "distributed-state analyst",
+      "hypothesis": "The declared finite profile will satisfy this specific requirement: A repeated grant epoch is denied.",
+      "null_or_failure_condition": "A complete typed-envelope mismatch, changed input, admitted malformed subject, lost failed witness, or unearned authority claim falsifies the contract.",
+      "approval_class": "safe_now_bounded_synthetic_or_structural",
+      "execution_lane": "owner_self_scoped_x1",
+      "expected_disposition": "completed",
+      "concrete_artifacts": [
+        "docs/teryn-halewick/v692-v2/x1/results.json",
+        "docs/teryn-halewick/v692-v2/x1/code/engine.txt",
+        "docs/teryn-halewick/v692-v2/x1/reviewed-cases/TH6922-077.json"
+      ],
+      "falsifier_or_acceptance_gate": "Complete independently frozen envelope equality, input nonmutation, and refusal of the explicitly declared malformed subject. No hidden implementation-generated expectation.",
+      "rollback_or_recovery": "Stop the affected case; retain the input, definition, and failed witness at zero original success credit; add a named prospective correction and test only its changed dependency.",
+      "protected_gates": [
+        "empirical",
+        "participant",
+        "professional",
+        "production",
+        "deployment",
+        "identity",
+        "legal",
+        "cultural",
+        "affected_party",
+        "maori_authority",
+        "privacy_complete",
+        "accessibility_complete",
+        "exhaustive_security",
+        "independent_reproduction",
+        "agi_asi",
+        "consciousness_personhood",
+        "theory_of_everything",
+        "proof_canon",
+        "stage20"
+      ],
+      "source_status": "stable",
+      "source_refs": [
+        "PG-ISOLATION",
+        "PG-WAL",
+        "PG-2PC"
+      ],
+      "outcomes_observed": false,
+      "inherited_novelty_credit": 0,
+      "inherited_execution_credit": 0,
+      "novelty_scope": "Distinct authored behavioral requirement relative to the selected Eiren corpus and prior Teryn operation catalogue; no universal novelty claim."
+    },
+    {
+      "operation": "lease_fencing_sequence",
+      "title": "A lower grant does not rewind the epoch",
+      "input": {
+        "events": [
+          {
+            "id": "g2",
+            "kind": "grant",
+            "epoch": 2,
+            "holder": "b"
+          },
+          {
+            "id": "g1",
+            "kind": "grant",
+            "epoch": 1,
+            "holder": "a"
+          }
+        ]
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "epoch": 2,
+          "holder": "b",
+          "grants": [
+            "g2"
+          ],
+          "writes": [],
+          "denied": [
+            "g1"
+          ]
+        },
+        "error": null
+      },
+      "adverse_input": {
+        "events": null
+      },
+      "adverse_expected": {
+        "ok": false,
+        "disposition": "open_gap",
+        "value": null,
+        "error": "INVALID_INPUT"
+      },
+      "proposal_id": "TH6922-078",
+      "session": "x1",
+      "pillar": "THOS Body",
+      "practice": "distributed-state analyst",
+      "hypothesis": "The declared finite profile will satisfy this specific requirement: A lower grant does not rewind the epoch.",
+      "null_or_failure_condition": "A complete typed-envelope mismatch, changed input, admitted malformed subject, lost failed witness, or unearned authority claim falsifies the contract.",
+      "approval_class": "safe_now_bounded_synthetic_or_structural",
+      "execution_lane": "owner_self_scoped_x1",
+      "expected_disposition": "completed",
+      "concrete_artifacts": [
+        "docs/teryn-halewick/v692-v2/x1/results.json",
+        "docs/teryn-halewick/v692-v2/x1/code/engine.txt",
+        "docs/teryn-halewick/v692-v2/x1/reviewed-cases/TH6922-078.json"
+      ],
+      "falsifier_or_acceptance_gate": "Complete independently frozen envelope equality, input nonmutation, and refusal of the explicitly declared malformed subject. No hidden implementation-generated expectation.",
+      "rollback_or_recovery": "Stop the affected case; retain the input, definition, and failed witness at zero original success credit; add a named prospective correction and test only its changed dependency.",
+      "protected_gates": [
+        "empirical",
+        "participant",
+        "professional",
+        "production",
+        "deployment",
+        "identity",
+        "legal",
+        "cultural",
+        "affected_party",
+        "maori_authority",
+        "privacy_complete",
+        "accessibility_complete",
+        "exhaustive_security",
+        "independent_reproduction",
+        "agi_asi",
+        "consciousness_personhood",
+        "theory_of_everything",
+        "proof_canon",
+        "stage20"
+      ],
+      "source_status": "stable",
+      "source_refs": [
+        "PG-ISOLATION",
+        "PG-WAL",
+        "PG-2PC"
+      ],
+      "outcomes_observed": false,
+      "inherited_novelty_credit": 0,
+      "inherited_execution_credit": 0,
+      "novelty_scope": "Distinct authored behavioral requirement relative to the selected Eiren corpus and prior Teryn operation catalogue; no universal novelty claim."
+    },
+    {
+      "operation": "lease_fencing_sequence",
+      "title": "A higher ungranted write epoch is not accepted",
+      "input": {
+        "events": [
+          {
+            "id": "g",
+            "kind": "grant",
+            "epoch": 1,
+            "holder": "a"
+          },
+          {
+            "id": "w",
+            "kind": "write",
+            "epoch": 2,
+            "holder": "a"
+          }
+        ]
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "epoch": 1,
+          "holder": "a",
+          "grants": [
+            "g"
+          ],
+          "writes": [],
+          "denied": [
+            "w"
+          ]
+        },
+        "error": null
+      },
+      "adverse_input": {
+        "events": null
+      },
+      "adverse_expected": {
+        "ok": false,
+        "disposition": "open_gap",
+        "value": null,
+        "error": "INVALID_INPUT"
+      },
+      "proposal_id": "TH6922-079",
+      "session": "x1",
+      "pillar": "THOS Body",
+      "practice": "distributed-state analyst",
+      "hypothesis": "The declared finite profile will satisfy this specific requirement: A higher ungranted write epoch is not accepted.",
+      "null_or_failure_condition": "A complete typed-envelope mismatch, changed input, admitted malformed subject, lost failed witness, or unearned authority claim falsifies the contract.",
+      "approval_class": "safe_now_bounded_synthetic_or_structural",
+      "execution_lane": "owner_self_scoped_x1",
+      "expected_disposition": "completed",
+      "concrete_artifacts": [
+        "docs/teryn-halewick/v692-v2/x1/results.json",
+        "docs/teryn-halewick/v692-v2/x1/code/engine.txt",
+        "docs/teryn-halewick/v692-v2/x1/reviewed-cases/TH6922-079.json"
+      ],
+      "falsifier_or_acceptance_gate": "Complete independently frozen envelope equality, input nonmutation, and refusal of the explicitly declared malformed subject. No hidden implementation-generated expectation.",
+      "rollback_or_recovery": "Stop the affected case; retain the input, definition, and failed witness at zero original success credit; add a named prospective correction and test only its changed dependency.",
+      "protected_gates": [
+        "empirical",
+        "participant",
+        "professional",
+        "production",
+        "deployment",
+        "identity",
+        "legal",
+        "cultural",
+        "affected_party",
+        "maori_authority",
+        "privacy_complete",
+        "accessibility_complete",
+        "exhaustive_security",
+        "independent_reproduction",
+        "agi_asi",
+        "consciousness_personhood",
+        "theory_of_everything",
+        "proof_canon",
+        "stage20"
+      ],
+      "source_status": "stable",
+      "source_refs": [
+        "PG-ISOLATION",
+        "PG-WAL",
+        "PG-2PC"
+      ],
+      "outcomes_observed": false,
+      "inherited_novelty_credit": 0,
+      "inherited_execution_credit": 0,
+      "novelty_scope": "Distinct authored behavioral requirement relative to the selected Eiren corpus and prior Teryn operation catalogue; no universal novelty claim."
+    },
+    {
+      "operation": "lease_fencing_sequence",
+      "title": "A current replacement holder may write after fencing",
+      "input": {
+        "events": [
+          {
+            "id": "g1",
+            "kind": "grant",
+            "epoch": 1,
+            "holder": "a"
+          },
+          {
+            "id": "g2",
+            "kind": "grant",
+            "epoch": 3,
+            "holder": "b"
+          },
+          {
+            "id": "w",
+            "kind": "write",
+            "epoch": 3,
+            "holder": "b"
+          }
+        ]
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "epoch": 3,
+          "holder": "b",
+          "grants": [
+            "g1",
+            "g2"
+          ],
+          "writes": [
+            "w"
+          ],
+          "denied": []
+        },
+        "error": null
+      },
+      "adverse_input": {
+        "events": null
+      },
+      "adverse_expected": {
+        "ok": false,
+        "disposition": "open_gap",
+        "value": null,
+        "error": "INVALID_INPUT"
+      },
+      "proposal_id": "TH6922-080",
+      "session": "x1",
+      "pillar": "THOS Body",
+      "practice": "distributed-state analyst",
+      "hypothesis": "The declared finite profile will satisfy this specific requirement: A current replacement holder may write after fencing.",
+      "null_or_failure_condition": "A complete typed-envelope mismatch, changed input, admitted malformed subject, lost failed witness, or unearned authority claim falsifies the contract.",
+      "approval_class": "safe_now_bounded_synthetic_or_structural",
+      "execution_lane": "owner_self_scoped_x1",
+      "expected_disposition": "completed",
+      "concrete_artifacts": [
+        "docs/teryn-halewick/v692-v2/x1/results.json",
+        "docs/teryn-halewick/v692-v2/x1/code/engine.txt",
+        "docs/teryn-halewick/v692-v2/x1/reviewed-cases/TH6922-080.json"
+      ],
+      "falsifier_or_acceptance_gate": "Complete independently frozen envelope equality, input nonmutation, and refusal of the explicitly declared malformed subject. No hidden implementation-generated expectation.",
+      "rollback_or_recovery": "Stop the affected case; retain the input, definition, and failed witness at zero original success credit; add a named prospective correction and test only its changed dependency.",
+      "protected_gates": [
+        "empirical",
+        "participant",
+        "professional",
+        "production",
+        "deployment",
+        "identity",
+        "legal",
+        "cultural",
+        "affected_party",
+        "maori_authority",
+        "privacy_complete",
+        "accessibility_complete",
+        "exhaustive_security",
+        "independent_reproduction",
+        "agi_asi",
+        "consciousness_personhood",
+        "theory_of_everything",
+        "proof_canon",
+        "stage20"
+      ],
+      "source_status": "stable",
+      "source_refs": [
+        "PG-ISOLATION",
+        "PG-WAL",
+        "PG-2PC"
+      ],
+      "outcomes_observed": false,
+      "inherited_novelty_credit": 0,
+      "inherited_execution_credit": 0,
+      "novelty_scope": "Distinct authored behavioral requirement relative to the selected Eiren corpus and prior Teryn operation catalogue; no universal novelty claim."
+    }
+  ],
+  "source_definition": "docs/teryn-halewick/v692-v2/plan/proposal-freeze.json",
+  "execution_engine": "docs/teryn-halewick/v692-v2/x1/code/engine.txt",
+  "definition_sha256": "c9187e001682fbbe18e5445b0532d35a55fe23d85deba135279e91c835ed6d34",
+  "zero_inherited_credit": true
+}

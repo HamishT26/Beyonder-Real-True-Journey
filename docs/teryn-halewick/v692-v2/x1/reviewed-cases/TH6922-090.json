@@ -1,0 +1,69 @@
+{
+  "procedure_id": "TH6922-090-R",
+  "kind": "REFINE",
+  "proposal_id": "TH6922-090",
+  "operation": "saga_compensation_order",
+  "source_definition_sha256": "95b91db0747ef79fc047c611d8a598756cb71d3214fcc01f688f8b337de2da06",
+  "engine_sha256": "c9187e001682fbbe18e5445b0532d35a55fe23d85deba135279e91c835ed6d34",
+  "positive_subject": {
+    "steps": [
+      {
+        "id": "a",
+        "depends": [],
+        "done": true,
+        "reversible": false
+      },
+      {
+        "id": "b",
+        "depends": [
+          "a"
+        ],
+        "done": true,
+        "reversible": true
+      }
+    ]
+  },
+  "observed_envelope": {
+    "ok": true,
+    "disposition": "completed",
+    "value": {
+      "order": [
+        "b"
+      ],
+      "blocked": [
+        "a"
+      ],
+      "executed": false
+    },
+    "error": null
+  },
+  "candidate_subject": {
+    "steps": null
+  },
+  "candidate_subject_outcome": "failed",
+  "candidate_original_success_credit": 0,
+  "refusal_check_outcome": "passed",
+  "explanation": "Irreversible predecessors do not erase reversible descendants. The complete frozen envelope matched. The malformed subject was refused, and its failure is retained separately.",
+  "rollback": "Stop the affected case; retain the input, definition, and failed witness at zero original success credit; add a named prospective correction and test only its changed dependency.",
+  "protected_gates": [
+    "empirical",
+    "participant",
+    "professional",
+    "production",
+    "deployment",
+    "identity",
+    "legal",
+    "cultural",
+    "affected_party",
+    "maori_authority",
+    "privacy_complete",
+    "accessibility_complete",
+    "exhaustive_security",
+    "independent_reproduction",
+    "agi_asi",
+    "consciousness_personhood",
+    "theory_of_everything",
+    "proof_canon",
+    "stage20"
+  ]
+}

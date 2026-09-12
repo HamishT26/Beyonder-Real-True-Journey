@@ -1,0 +1,60 @@
+{
+  "procedure_id": "TH6922-100-R",
+  "kind": "CLEAN",
+  "proposal_id": "TH6922-100",
+  "operation": "two_phase_commit_projection",
+  "source_definition_sha256": "12381d7297825edce5d78fdeec49e4c13aee12239d79f8971dc954652289e681",
+  "engine_sha256": "c9187e001682fbbe18e5445b0532d35a55fe23d85deba135279e91c835ed6d34",
+  "positive_subject": {
+    "participants": [
+      {
+        "id": "a",
+        "vote": "committed"
+      },
+      {
+        "id": "b",
+        "vote": "prepared"
+      }
+    ],
+    "decision": "commit"
+  },
+  "observed_envelope": {
+    "ok": true,
+    "disposition": "completed",
+    "value": {
+      "state": "COMMIT_SNAPSHOT",
+      "executed": false
+    },
+    "error": null
+  },
+  "candidate_subject": {
+    "participants": null,
+    "decision": "commit"
+  },
+  "candidate_subject_outcome": "failed",
+  "candidate_original_success_credit": 0,
+  "refusal_check_outcome": "passed",
+  "explanation": "Prepared and committed votes can agree with the declared commit. The complete frozen envelope matched. The malformed subject was refused, and its failure is retained separately.",
+  "rollback": "Stop the affected case; retain the input, definition, and failed witness at zero original success credit; add a named prospective correction and test only its changed dependency.",
+  "protected_gates": [
+    "empirical",
+    "participant",
+    "professional",
+    "production",
+    "deployment",
+    "identity",
+    "legal",
+    "cultural",
+    "affected_party",
+    "maori_authority",
+    "privacy_complete",
+    "accessibility_complete",
+    "exhaustive_security",
+    "independent_reproduction",
+    "agi_asi",
+    "consciousness_personhood",
+    "theory_of_everything",
+    "proof_canon",
+    "stage20"
+  ]
+}

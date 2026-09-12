@@ -1,0 +1,71 @@
+{
+  "procedure_id": "TH6922-070-R",
+  "kind": "CLEAN",
+  "proposal_id": "TH6922-070",
+  "operation": "idempotency_fingerprint",
+  "source_definition_sha256": "7ec989c7b02720756dbe8eae891886345f3b6ad042465e8730e537d39496bdea",
+  "engine_sha256": "c9187e001682fbbe18e5445b0532d35a55fe23d85deba135279e91c835ed6d34",
+  "positive_subject": {
+    "request": {
+      "key": "b",
+      "digest": "d1"
+    },
+    "entries": [
+      {
+        "key": "a",
+        "digest": "d1",
+        "expires": 5,
+        "response": "x"
+      }
+    ],
+    "now": 1
+  },
+  "observed_envelope": {
+    "ok": true,
+    "disposition": "completed",
+    "value": {
+      "status": "MISS",
+      "response": null,
+      "executed": false
+    },
+    "error": null
+  },
+  "candidate_subject": {
+    "request": null,
+    "entries": [
+      {
+        "key": "a",
+        "digest": "d1",
+        "expires": 5,
+        "response": "x"
+      }
+    ],
+    "now": 1
+  },
+  "candidate_subject_outcome": "failed",
+  "candidate_original_success_credit": 0,
+  "refusal_check_outcome": "passed",
+  "explanation": "Different keys do not share even identical fingerprints. The complete frozen envelope matched. The malformed subject was refused, and its failure is retained separately.",
+  "rollback": "Stop the affected case; retain the input, definition, and failed witness at zero original success credit; add a named prospective correction and test only its changed dependency.",
+  "protected_gates": [
+    "empirical",
+    "participant",
+    "professional",
+    "production",
+    "deployment",
+    "identity",
+    "legal",
+    "cultural",
+    "affected_party",
+    "maori_authority",
+    "privacy_complete",
+    "accessibility_complete",
+    "exhaustive_security",
+    "independent_reproduction",
+    "agi_asi",
+    "consciousness_personhood",
+    "theory_of_everything",
+    "proof_canon",
+    "stage20"
+  ]
+}

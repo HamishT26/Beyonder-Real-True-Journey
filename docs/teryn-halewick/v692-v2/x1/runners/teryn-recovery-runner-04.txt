@@ -1,0 +1,5 @@
+'use strict';
+const allowed=["idempotency_fingerprint","lease_fencing_sequence"];
+if(!allowed.includes(process.argv[3]))throw Error('OPERATION_OUTSIDE_RUNNER');
+const engine=require(process.argv[2]);
+console.log(JSON.stringify(engine.run(process.argv[3],JSON.parse(process.argv[4]))));

@@ -1,0 +1,5 @@
+'use strict';
+const allowed=["undo_compensation_projection","checkpoint_log_retention"];
+if(!allowed.includes(process.argv[3]))throw Error('OPERATION_OUTSIDE_RUNNER');
+const engine=require(process.argv[2]);
+console.log(JSON.stringify(engine.run(process.argv[3],JSON.parse(process.argv[4]))));

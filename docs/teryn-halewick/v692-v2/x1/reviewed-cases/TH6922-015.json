@@ -1,0 +1,62 @@
+{
+  "procedure_id": "TH6922-015-R",
+  "kind": "REFINE",
+  "proposal_id": "TH6922-015",
+  "operation": "optimistic_read_validation",
+  "source_definition_sha256": "88533cf07c97a01afb10b5e96613c64e6d9376208b1ed0dc24da0a445ab1bad1",
+  "engine_sha256": "c9187e001682fbbe18e5445b0532d35a55fe23d85deba135279e91c835ed6d34",
+  "positive_subject": {
+    "reads": [
+      {
+        "key": "a",
+        "version": null
+      }
+    ],
+    "current": {
+      "a": 0
+    }
+  },
+  "observed_envelope": {
+    "ok": true,
+    "disposition": "completed",
+    "value": {
+      "valid": false,
+      "conflicts": [
+        "a"
+      ]
+    },
+    "error": null
+  },
+  "candidate_subject": {
+    "reads": null,
+    "current": {
+      "a": 0
+    }
+  },
+  "candidate_subject_outcome": "failed",
+  "candidate_original_success_credit": 0,
+  "refusal_check_outcome": "passed",
+  "explanation": "A newly present zero revision violates an absence read. The complete frozen envelope matched. The malformed subject was refused, and its failure is retained separately.",
+  "rollback": "Stop the affected case; retain the input, definition, and failed witness at zero original success credit; add a named prospective correction and test only its changed dependency.",
+  "protected_gates": [
+    "empirical",
+    "participant",
+    "professional",
+    "production",
+    "deployment",
+    "identity",
+    "legal",
+    "cultural",
+    "affected_party",
+    "maori_authority",
+    "privacy_complete",
+    "accessibility_complete",
+    "exhaustive_security",
+    "independent_reproduction",
+    "agi_asi",
+    "consciousness_personhood",
+    "theory_of_everything",
+    "proof_canon",
+    "stage20"
+  ]
+}
