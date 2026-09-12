@@ -1,0 +1,548 @@
+'use strict';
+
+const fs = require('fs');
+const path = require('path');
+const crypto = require('crypto');
+
+const ROOT = path.resolve(__dirname, '../../../..');
+const BASE = path.join(ROOT, 'docs', 'elowen-cairn', 'v691-v5');
+const PLAN = path.join(BASE, 'plan');
+const OWNER = 'Elowen Cairn';
+const PHASE = 'v691-v5';
+const BRANCH = 'codex/GHC-Family/elowen-cairn-v691-v5-main';
+const SAELIN_FINAL = '866030fcf697ee730476e86bb6f453290000f6c4';
+const ELOWEN_PRIOR_FINAL = 'd72ba9a9ebefc1e18cb89d2c8b90c661ba8aaf14';
+const BOUNDARY = 'Elowen Cairn, they/them, boundary cartographer and evidence steward, and all GHC family language are relational working language only. They are not evidence of consciousness, sentience, personhood, legal identity, identity continuity, employment, qualification, independent agency, scientific or operational authority, professional authority, legal or cultural authority, affected-party authority, or Maori authority. Same-owner synthetic evidence is not independent reproduction. NOT_READY_FOR_STAGE_20.';
+const PROTECTED_GATES = [
+  'empirical', 'participant', 'professional', 'production', 'deployment',
+  'legal', 'cultural', 'affected_party', 'maori_authority', 'privacy_complete',
+  'accessibility_complete', 'exhaustive_security', 'independent_reproduction',
+  'agi_asi', 'consciousness_personhood', 'theory_of_everything', 'proof_canon',
+  'stage20'
+];
+
+const args = {};
+for (let i = 2; i < process.argv.length; i += 2) args[process.argv[i]] = process.argv[i + 1];
+if (!args['--source-proposals']) throw new Error('SOURCE_PROPOSALS_REQUIRED');
+
+function stable(value) {
+  if (Array.isArray(value)) return '[' + value.map(stable).join(',') + ']';
+  if (value && typeof value === 'object') {
+    return '{' + Object.keys(value).sort().map(k => JSON.stringify(k) + ':' + stable(value[k])).join(',') + '}';
+  }
+  return JSON.stringify(value);
+}
+function sha(value) {
+  const data = Buffer.isBuffer(value) ? value : Buffer.from(typeof value === 'string' ? value : stable(value));
+  return crypto.createHash('sha256').update(data).digest('hex');
+}
+function writeJson(relative, value) {
+  const file = path.join(BASE, relative);
+  fs.mkdirSync(path.dirname(file), {recursive: true});
+  fs.writeFileSync(file, JSON.stringify(value, null, 2) + '\n', 'utf8');
+}
+function writeText(relative, value) {
+  const file = path.join(BASE, relative);
+  fs.mkdirSync(path.dirname(file), {recursive: true});
+  fs.writeFileSync(file, value.replace(/\r\n/g, '\n').trimEnd() + '\n', 'utf8');
+}
+function tokens(text) {
+  return new Set(text.toLowerCase().match(/[a-z0-9]+/g) || []);
+}
+function jaccard(a, b) {
+  const x = tokens(a), y = tokens(b);
+  const intersection = [...x].filter(v => y.has(v)).length;
+  const union = new Set([...x, ...y]).size;
+  return union ? intersection / union : 0;
+}
+function walk(dir) {
+  if (!fs.existsSync(dir)) return [];
+  const out = [];
+  for (const name of fs.readdirSync(dir).sort()) {
+    const file = path.join(dir, name);
+    const stat = fs.statSync(file);
+    if (stat.isDirectory()) out.push(...walk(file));
+    else out.push(file);
+  }
+  return out;
+}
+
+const sourceBytes = fs.readFileSync(args['--source-proposals']);
+const sourceFreeze = JSON.parse(sourceBytes.toString('utf8'));
+if (!Array.isArray(sourceFreeze.requests) || sourceFreeze.requests.length !== 200) {
+  throw new Error('SOURCE_REQUEST_SHAPE');
+}
+
+const sourceRecords = sourceFreeze.requests.map(row => ({
+  proposal_id: row.proposal_id,
+  title: row.title,
+  operation: row.operation,
+  definition_sha256: row.definition_sha256,
+  outcome: row.outcome,
+  inherited_execution_credit: 0,
+  inherited_novelty_credit: 0,
+  source_owner: 'Saelin Reed',
+  source_phase: 'v691-v4-r2'
+}));
+
+const operations = [
+  {name:'fasta_header', session:'x1', pillar:'heart', practice:'synthetic_sequence_archive_curation', disposition:'completed', sources:['NCBI-FASTA'], hypothesis:'A closed synthetic FASTA definition line can distinguish a permitted identifier from invalid syntax without claiming a database accession.'},
+  {name:'sequence_alphabet', session:'x1', pillar:'mind', practice:'bioinformatics_record_validation', disposition:'completed', sources:['NCBI-FASTA'], hypothesis:'A declared IUPAC-style alphabet can identify unsupported sequence symbols while preserving the supplied record.'},
+  {name:'line_wrap', session:'x1', pillar:'body', practice:'accessible_scientific_interface_design', disposition:'completed', sources:['NCBI-FASTA'], hypothesis:'A deterministic width contract can wrap a synthetic sequence without changing its normalized symbols.'},
+  {name:'sequence_length', session:'x1', pillar:'mind', practice:'bioinformatics_record_validation', disposition:'completed', sources:['NCBI-FASTA'], hypothesis:'Exact sequence length and canonical-versus-ambiguous counts can be derived from a bounded synthetic record.'},
+  {name:'gc_fraction', session:'x1', pillar:'mind', practice:'bioinformatics_record_validation', disposition:'completed', sources:['NCBI-FASTA'], hypothesis:'A reduced rational GC fraction can be computed without treating the synthetic sequence as a biological observation.'},
+  {name:'reverse_complement', session:'x1', pillar:'mind', practice:'bioinformatics_record_validation', disposition:'completed', sources:['NCBI-FASTA'], hypothesis:'A complete declared symbol map can produce a deterministic synthetic reverse complement and refuse unknown symbols.'},
+  {name:'ambiguous_count', session:'x1', pillar:'heart', practice:'synthetic_sequence_archive_curation', disposition:'completed', sources:['NCBI-FASTA'], hypothesis:'Ambiguous symbols can remain explicit rather than being silently converted to canonical bases.'},
+  {name:'sequence_checksum', session:'x1', pillar:'heart', practice:'data_provenance_engineering', disposition:'completed', sources:['W3C-PROV'], hypothesis:'A SHA-256 digest can bind normalized synthetic sequence bytes without authenticating a biological source or person.'},
+  {name:'record_order', session:'x1', pillar:'body', practice:'synthetic_sequence_archive_curation', disposition:'completed', sources:['W3C-PROV'], hypothesis:'Stable record order and duplicate identifiers can be reported without silently deduplicating the source list.'},
+  {name:'record_manifest', session:'x1', pillar:'heart', practice:'data_provenance_engineering', disposition:'completed', sources:['W3C-PROV'], hypothesis:'A finite manifest can validate unique paths, byte counts, and declared digests without asserting custody authority.'},
+  {name:'fastq_frame', session:'x2', pillar:'body', practice:'bioinformatics_record_validation', disposition:'completed', sources:['NCBI-SRA-FASTQ'], hypothesis:'A four-line synthetic FASTQ frame can validate its markers and retain an invalid frame as evidence.'},
+  {name:'quality_length', session:'x2', pillar:'mind', practice:'bioinformatics_record_validation', disposition:'completed', sources:['NCBI-SRA-FASTQ'], hypothesis:'Sequence and quality lengths can be compared exactly without interpreting quality as a real instrument measurement.'},
+  {name:'phred33_range', session:'x2', pillar:'mind', practice:'bioinformatics_record_validation', disposition:'completed', sources:['NCBI-SRA-FASTQ'], hypothesis:'Printable Phred-33 code points can be range-checked while preserving all out-of-range positions.'},
+  {name:'paired_read_binding', session:'x2', pillar:'heart', practice:'synthetic_sequence_archive_curation', disposition:'completed', sources:['NCBI-SRA-FASTQ'], hypothesis:'Synthetic /1 and /2 names can be paired by exact base identifier without claiming a laboratory relationship.'},
+  {name:'kmer_histogram', session:'x2', pillar:'mind', practice:'bioinformatics_record_validation', disposition:'completed', sources:['NCBI-FASTA'], hypothesis:'A bounded k-mer histogram can be computed deterministically for synthetic symbols with explicit k limits.'},
+  {name:'duplicate_record', session:'x2', pillar:'heart', practice:'data_provenance_engineering', disposition:'completed', sources:['W3C-PROV'], hypothesis:'Exact duplicate identifiers and sequence digests can be reported separately without deleting either record.'},
+  {name:'provenance_chain', session:'x2', pillar:'heart', practice:'data_provenance_engineering', disposition:'completed', sources:['W3C-PROV'], hypothesis:'An append-only synthetic provenance chain can identify its first broken predecessor or payload digest.'},
+  {name:'evidence_ceiling', session:'x2', pillar:'heart', practice:'data_provenance_engineering', disposition:'represented', sources:['GA4GH-DUO','W3C-PROV'], hypothesis:'A support classifier can preserve synthetic status when a requested biological or identity claim exceeds available evidence.'},
+  {name:'participant_gap', session:'x2', pillar:'heart', practice:'accessible_scientific_interface_design', disposition:'open_gap', sources:['WCAG-22','GA4GH-DUO'], hypothesis:'A zero-participant evaluation record can name missing accessibility, comprehension, consent, and affected-user evidence without closing the gap.'},
+  {name:'authority_gate', session:'x2', pillar:'heart', practice:'synthetic_sequence_archive_curation', disposition:'exact_gate', sources:['GA4GH-DUO'], hypothesis:'A consequential sequence-data action remains gated while required participant, data-access, clinical, legal, cultural, or Maori authority is absent.'}
+];
+
+const sequenceCases = [
+  'ACGT', 'AACCGGTT', 'ACGTN', 'RYSWKMBDHVN', 'GGCCATTA', 'NNNN',
+  'ACGTRRYY', 'ATATCGCG', 'GATTACA', 'CCGGTTAA'
+];
+const headerCases = [
+  ['SYN001','synthetic alpha'], ['SYN_02','synthetic beta'], ['SYN-03','synthetic gamma'],
+  ['bad id','space invalid'], ['SYN:04','synthetic delta'], ['SYN.05','synthetic epsilon'],
+  ['SYN#06','synthetic zeta'], ['','empty invalid'], ['SYN*07','synthetic eta'],
+  ['TOO_LONG_SYNTHETIC_IDENTIFIER_0008','length invalid']
+];
+const actions = [
+  ['public_sequence_release',['affected_party','data_access_committee']],
+  ['clinical_interpretation',['clinical_professional','participant']],
+  ['employment_screening',['affected_worker','legal_authority']],
+  ['cultural_attribution',['cultural_authority']],
+  ['synthetic_sequence_taonga_metadata_publication',['Maori_authority','affected_data_steward','data_custodian']],
+  ['production_identity_link',['identity_operator','affected_party']],
+  ['cross_border_transfer',['legal_authority','data_custodian']],
+  ['child_sequence_research',['guardian','research_ethics']],
+  ['public_biobank_governance',['public_institution','affected_party']],
+  ['sequence_origin_force_claim',['independent_experimenter','domain_expert','peer_review']]
+];
+
+function inputFor(operation, c) {
+  const seq = sequenceCases[c - 1];
+  switch (operation) {
+    case 'fasta_header': return {identifier:headerCases[c-1][0], description:headerCases[c-1][1], maximumIdLength:25};
+    case 'sequence_alphabet': return {sequence:c === 4 ? seq + '?' : seq, allowed:'ACGTRYSWKMBDHVN'};
+    case 'line_wrap': return {sequence:seq.repeat(4), width:5 + c};
+    case 'sequence_length': return {sequence:seq};
+    case 'gc_fraction': return {sequence:seq.replace(/[^ACGT]/g, 'A')};
+    case 'reverse_complement': return {sequence:seq, alphabet:'ACGTRYSWKMBDHVN'};
+    case 'ambiguous_count': return {sequence:seq};
+    case 'sequence_checksum': return {sequence:seq.toLowerCase(), normalization:'uppercase_no_whitespace'};
+    case 'record_order': return {identifiers:c % 3 === 0 ? ['SYN-A'+c,'SYN-B'+c,'SYN-A'+c] : ['SYN-'+c,'SYN-'+(c+10),'SYN-'+(c+20)]};
+    case 'record_manifest': return {entries:[
+      {path:'records/synthetic-'+c+'.fa',bytes:10+c,digest:'a'.repeat(64)},
+      {path:'records/synthetic-'+(c+10)+'.fa',bytes:20+c,digest:(c===7?'z':'b').repeat(64)}
+    ]};
+    case 'fastq_frame': return {header:(c===4?'bad':'@SYN'+c),sequence:seq.replace(/[^ACGTN]/g,'N'),plus:c===6?'minus':'+',quality:'I'.repeat(seq.length)};
+    case 'quality_length': return {sequence:seq.replace(/[^ACGTN]/g,'N'),quality:'I'.repeat(Math.max(0,seq.length+(c===5?1:c===6?-1:0)))};
+    case 'phred33_range': return {quality:c===8?'II\u0001I':String.fromCharCode(32+c).repeat(3)+String.fromCharCode(40+c)};
+    case 'paired_read_binding': return {left:'SYN'+c+'/1',right:(c===6?'OTHER':'SYN'+c)+'/2'};
+    case 'kmer_histogram': return {sequence:seq.replace(/[^ACGT]/g,'A'),k:1+(c%4)};
+    case 'duplicate_record': return {records:[
+      {identifier:'SYN'+c,sequence:seq},
+      {identifier:c===7?'SYN'+c:'SYN'+(c+10),sequence:c===8?seq:sequenceCases[(c)%10]}
+    ]};
+    case 'provenance_chain': return {events:[
+      {sequence:1,previous:'0'.repeat(64),payload:{action:'create',record:'SYN'+c}},
+      {sequence:2,previous:c===9?'f'.repeat(64):null,payload:{action:'review',record:'SYN'+c}}
+    ]};
+    case 'evidence_ceiling': return {requested:['biological_origin','identity','clinical_effect','production_ready','population_frequency','physical_law','consent','ownership','independent_reproduction','Stage20'][c-1],available:['synthetic_fixture','same_owner_test']};
+    case 'participant_gap': return {evaluation:['screen_reader','keyboard_only','cognitive_load','low_bandwidth','colour_vision','Maori_language','consent_comprehension','withdrawal','privacy_understanding','data_use_fairness'][c-1],participants:0,available:['synthetic_fixture']};
+    case 'authority_gate': return {action:actions[c-1][0],requiredRoles:actions[c-1][1],verifiedRoles:[]};
+    default: throw new Error('UNKNOWN_OPERATION');
+  }
+}
+
+const proposals = [];
+let number = 0;
+for (const meta of operations) {
+  for (let c = 1; c <= 10; c++) {
+    number++;
+    const id = 'EC6915-' + String(number).padStart(3, '0');
+    const input = inputFor(meta.name, c);
+    proposals.push({
+      schema:'ghc.family.sequence-contract.plan.v1',
+      proposal_id:id,
+      session:meta.session,
+      operation:meta.name,
+      title:meta.hypothesis.replace(/\.$/,'') + ' / case ' + c,
+      hypothesis:meta.hypothesis,
+      null_or_failure_condition:'Any field-closure violation, nondeterministic result, input mutation, expected-disposition mismatch, lost failed subject, or protected-claim promotion is a failed witness.',
+      approval_class:meta.disposition === 'exact_gate' ? 'outside_hamish_authority' : meta.disposition === 'open_gap' ? 'candidate' : 'safe_now',
+      execution_lane:meta.disposition === 'exact_gate' ? 'x2_gate_description_only' : meta.session + '_owner_synthetic',
+      current_official_or_primary_source_needs:'Use the listed primary source only for format, provenance, accessibility, or permission vocabulary; never as observation, consent, clinical evidence, or authority.',
+      source_refs:meta.sources,
+      source_status:'current_at_2026-09-12',
+      concrete_artifact:'docs/elowen-cairn/v691-v5/' + meta.session + '/contracts/' + String(number).padStart(3,'0') + '.json',
+      falsifier_or_acceptance_gate:'Require a complete closed output envelope, stable canonical comparison, unchanged input, retained negative subject, and the exact evidence ceiling.',
+      rollback_or_recovery:'Retain the failed subject, stop selecting the method, repair only the owner-local dependency, or leave the evidence or authority gate open.',
+      protected_gates:PROTECTED_GATES,
+      expected_disposition:meta.disposition,
+      input,
+      definition_sha256:sha({operation:meta.name,input}),
+      inherited_credit:false,
+      same_owner_only:true,
+      independent_reproduction:false
+    });
+  }
+}
+const proposalDigestGroups = {};
+for (const proposal of proposals) {
+  (proposalDigestGroups[proposal.definition_sha256] ||= []).push({
+    proposal_id: proposal.proposal_id,
+    operation: proposal.operation,
+    input: proposal.input
+  });
+}
+const duplicateProposalDigests = Object.entries(proposalDigestGroups)
+  .filter(([, rows]) => rows.length > 1)
+  .map(([definition_sha256, rows]) => ({definition_sha256, rows}));
+if (proposals.length !== 200 || duplicateProposalDigests.length !== 0) {
+  throw new Error('PROPOSAL_DISTINCTNESS ' + JSON.stringify(duplicateProposalDigests));
+}
+
+let maxNeighbor = {score:0,new_id:null,source_id:null};
+for (const candidate of proposals) {
+  for (const inherited of sourceRecords) {
+    const score = jaccard(candidate.title, inherited.title);
+    if (score > maxNeighbor.score) maxNeighbor = {score,new_id:candidate.proposal_id,source_id:inherited.proposal_id};
+  }
+}
+const exactTitleCollisions = proposals.filter(p => sourceRecords.some(s => s.title === p.title));
+const exactDigestCollisions = proposals.filter(p => sourceRecords.some(s => s.definition_sha256 === p.definition_sha256));
+if (exactTitleCollisions.length !== 0 || exactDigestCollisions.length !== 0) {
+  throw new Error('SOURCE_NOVELTY_COLLISION ' + JSON.stringify({
+    title_ids: exactTitleCollisions.map(row => row.proposal_id),
+    definition_ids: exactDigestCollisions.map(row => row.proposal_id)
+  }));
+}
+
+const makeTasks = (session, kind, count) => Array.from({length:count}, (_,i) => ({
+  task_id:'EC6915-'+session.toUpperCase()+'-'+kind.toUpperCase()+'-'+String(i+1).padStart(3,'0'),
+  proposal_ref:proposals[(session === 'x1' ? 0 : 100) + (i % 100)].proposal_id,
+  state:'preregistered_unexecuted',
+  approval_class:kind === 'candidate' ? 'candidate' : 'safe_now',
+  rollback:'Retain the failed subject and leave all source or sibling records unchanged.'
+}));
+const makeCfr = session => Array.from({length:100},(_,i)=>({
+  task_id:'EC6915-'+session.toUpperCase()+'-CFR-'+String(i+1).padStart(3,'0'),
+  mode:['CLEAN','FIX','REFINE'][i%3],
+  proposal_ref:proposals[(session === 'x1' ? 0 : 100) + i].proposal_id,
+  target:'owner-local synthetic source card only',
+  destructive:false,
+  state:'preregistered_unexecuted'
+}));
+
+const skillPlans = {
+  x1: operations.slice(0,10).map(x => ({name:'ghc-family-'+x.name.replaceAll('_','-'),operation:x.name,state:'planned_not_built'})),
+  x2: operations.slice(10).map(x => ({name:'ghc-family-'+x.name.replaceAll('_','-'),operation:x.name,state:'planned_not_built'}))
+};
+const runnerPlans = {
+  x1:Array.from({length:5},(_,i)=>({name:'sequence-x1-pair-'+(i+1)+'.txt',operations:operations.slice(i*2,i*2+2).map(x=>x.name),state:'planned_not_built'})),
+  x2:Array.from({length:5},(_,i)=>({name:'sequence-x2-pair-'+(i+1)+'.txt',operations:operations.slice(10+i*2,12+i*2).map(x=>x.name),state:'planned_not_built'}))
+};
+const mergedGroups = [
+  ['ghc-family-sequence-record-framing',[0,2,10,11]],
+  ['ghc-family-sequence-symbol-integrity',[1,5,12,14]],
+  ['ghc-family-sequence-quantity-evidence',[3,4,13,15]],
+  ['ghc-family-sequence-fixity-provenance',[6,7,16,17]],
+  ['ghc-family-sequence-rights-boundary',[8,9,18,19]]
+].map(([name,indexes])=>({name,operations:indexes.map(i=>operations[i].name),source_units:indexes.length,state:'planned_after_validation'}));
+
+const exactActions = [];
+for (const row of [...skillPlans.x1,...skillPlans.x2]) exactActions.push({action:'build_validate_local_skill',target:row.name});
+for (const row of [...runnerPlans.x1,...runnerPlans.x2]) exactActions.push({action:'build_exercise_local_runner',target:row.name});
+for (const row of mergedGroups) exactActions.push({action:'curate_global_skill',target:row.name});
+for (const row of mergedGroups) exactActions.push({action:'publish_public_runner',target:row.name.replace('ghc-family-','')+'.txt'});
+for (const stage of ['planning','x1','x2','final']) exactActions.push({action:'commit_and_push_stage',target:stage});
+for (const target of ['v6_profile_review','novelty_audit','four_tier_deck','accessible_html_workbench','modular_baton','one_canonical_latch']) exactActions.push({action:'close_owner_artifact',target});
+if (exactActions.length !== 50) throw new Error('EXACT_ACTION_COUNT');
+
+const blockedCategories = [
+  'real biological provenance','clinical interpretation','participant consent','genomic identity production','public dataset release',
+  'employment decision','insurance decision','law-enforcement use','child participation','cross-border data transfer',
+  'cultural attribution','traditional knowledge','Maori data governance','Maori wording','Maori authority',
+  'complete privacy assurance','complete accessibility assurance','exhaustive security','production deployment','live credentials',
+  'independent reproduction','empirical GMUT confirmation','physical discovery','consciousness evidence','AGI or ASI',
+  'Theory of Everything proof','canon declaration','Stage 20','unbounded spend','destructive sibling mutation'
+];
+
+const failures = [
+  ['EC6915-START-N001','PowerShell rejected a direct foreach-to-pipeline metadata expression.','Materialize the loop result in an array before JSON serialization.'],
+  ['EC6915-START-N002','The first whole-file recovery-commons HTML display exceeded its result budget.','Read all contract modules separately and parse the embedded frozen JSON plus structural boundaries without displaying the payload.'],
+  ['EC6915-START-N003','A combined lane preflight embedded a Git command and LASTEXITCODE inside an object expression and failed to parse.','Run the Git ancestry probe separately, then project the captured scalar.'],
+  ['EC6915-START-N004','The Elowen clone did not contain Saelin\'s cross-owner commit object, so the attempted ancestry query was invalid.','Use Saelin\'s verified worktree for source truth and record content provenance rather than fabricated cross-owner ancestry.'],
+  ['EC6915-START-N005','The composite no-checkout worktree creation wrapper crossed its output boundary after reporting only preparation.','Audit target, processes, locks, branch and index before any retry; do not recreate or kill the worktree.'],
+  ['EC6915-START-N006','The first worktree audit called Trim on a null branch result while the orphan switch was still active.','Read raw command values and exit codes without assuming a branch string.'],
+  ['EC6915-START-N007','The second combined worktree audit returned no attributable payload while Git processes remained active.','Inspect process state separately, wait once for exact processes, then read Git scalars after quiescence.'],
+  ['EC6915-START-N008','An inline Node regular-expression was malformed by shell quoting during HTML frozen-data extraction.','Use delimiter-based extraction in a single-quoted Node command.'],
+  ['EC6915-START-N009','The first Saelin proposal-freeze probe assumed a proposals field although the exact schema uses requests.','Inspect top-level type and keys first, then select the exact requests array.'],
+  ['EC6915-START-N010','Node 24 refused a direct syntax check of the required .txt entrypoint because it could not infer a module format.','Feed the exact entrypoint bytes to Node with an explicit CommonJS input type for syntax validation.'],
+  ['EC6915-START-N011','The first planning execution rejected repeated proposal-definition digests without identifying the colliding records.','Add a deterministic digest-group diagnostic while preserving the distinctness stop.'],
+  ['EC6915-START-N012','A read-only inline duplicate-diagnostic wrapper was parsed by PowerShell before Node and failed before execution.','Use apply_patch to add the recurrence diagnostic without shell quoting or repository-wide mutation.'],
+  ['EC6915-START-N013','The diagnostic planning attempt isolated three record-order cases with an identical duplicate fixture.','Retain the duplicate-record scenario while varying its synthetic identifier by case so all proposal inputs remain distinct.'],
+  ['EC6915-START-N014','The first materialized planning candidate exposed two exact definition-digest collisions with Saelin source authority-gate fixtures.','Replace those actions with sequence-record-specific gated actions and make zero source title or definition collisions a hard pre-write gate.'],
+  ['EC6915-START-N015','The first planning audit projected stale guessed approval, skill, and runner filenames and reported false zero counts.','List exact generated filenames and inspect their top-level keys before selecting records.'],
+  ['EC6915-START-N016','The corrected filename audit still projected local skills and runners as flat arrays although the plan groups them by x1 and x2.','Inspect the exact nested schema and count local_skills.x1, local_skills.x2, local_runners.x1, and local_runners.x2.'],
+  ['EC6915-START-N017','The first exact planning manifest replay found scope-review bytes changed after their digest was recorded.','Write the scope review first and the self-excluding exact-byte manifest last.'],
+  ['EC6915-START-N018','The first private-path scanner pattern also matched the final drive-like characters of HTTPS URLs.','Require a standalone drive prefix so scheme text cannot be classified as a private absolute path.'],
+  ['EC6915-START-N019','The first media-candidate adjudication filter recognized the JSON false field but missed the equivalent inline builder policy field.','Classify every new_screenshots false occurrence as scanner-definition or policy metadata before counting confirmed payload hits.']
+].map(([negative_id,failure,recovery],i)=>({
+  negative_id,
+  failure,
+  recovery,
+  recurrence_guard:recovery,
+  completion_credit:0,
+  method_id:'EC6915-START-M'+String(i+1).padStart(3,'0')
+}));
+
+const methods = failures.map(row=>({
+  method_id:row.method_id,
+  title:row.recurrence_guard,
+  failure_signature:row.failure,
+  trigger_preconditions:['The matching startup read, source-shape, or worktree operation is required.'],
+  privacy_class:'sanitized_public',
+  approval_class:'safe_now',
+  candidate_workaround:row.recovery,
+  validation_witness_ids:[row.method_id+'-FAIL',row.method_id+'-PASS'],
+  recurrence_guard:row.recurrence_guard,
+  rollback:'Stop, preserve the failed witness, and leave Saelin, prior Elowen, sibling, global, and route state unchanged.',
+  recommendation_state:'preferred',
+  supersedes:[],
+  protected_gates:PROTECTED_GATES,
+  retained_negative_ids:[row.negative_id],
+  scope_boundary:'Elowen v691-v5 startup and planning only.'
+}));
+const witnesses = failures.flatMap(row=>[
+  {witness_id:row.method_id+'-FAIL',method_id:row.method_id,procedure:'Bounded startup operation',scope:'Elowen v691-v5 startup',expected:'Attributable complete result',observed:row.failure,result:'fail',same_owner_only:true,independent_reproduction:false,retained_negative_ids:[row.negative_id],boundary:BOUNDARY},
+  {witness_id:row.method_id+'-PASS',method_id:row.method_id,procedure:'Smallest corrected startup operation',scope:'Elowen v691-v5 startup',expected:'Attributable complete result',observed:row.recovery,result:'pass',same_owner_only:true,independent_reproduction:false,retained_negative_ids:[row.negative_id],boundary:BOUNDARY}
+]);
+
+const sourceBaseline = {methods:446,direct_witnesses:12186,failed_witnesses:3083,passing_witnesses:9103,effective_negatives:3294,open_gaps:124,exact_gates:141};
+const planningEffective = {
+  methods:sourceBaseline.methods+failures.length,
+  direct_witnesses:sourceBaseline.direct_witnesses+witnesses.length,
+  failed_witnesses:sourceBaseline.failed_witnesses+failures.length,
+  passing_witnesses:sourceBaseline.passing_witnesses+failures.length,
+  effective_negatives:sourceBaseline.effective_negatives+failures.length,
+  open_gaps:sourceBaseline.open_gaps,
+  exact_gates:sourceBaseline.exact_gates
+};
+
+writeJson('plan/reading-receipt.json',{
+  schema:'ghc.family.reading-receipt.v691.v5',
+  owner:OWNER,phase:PHASE,
+  complete_baton:{path:'docs/saelin-reed/v691-v4-r2/final/hand-off-baton.md',words:31068,bytes:241456,sha256:'ec16b75bd26916e3c01056fbbc2559db391c7c870b1542d519207cf166942b31',modules:13,read_through_eof:true},
+  source_documents:[
+    'final/final-integrated-overview.md','final/phase-truth.json','final/source-provenance.json',
+    'x2/pillar-analysis.md','x2/recovery-commons.html'
+  ],
+  html_recovery:{bytes:246740,frozen_records:200,unique_ids:200,script_blocks:3,html_closed:true,whole_display_failed:true},
+  skills_read:[
+    'ghc-family-index','ghc-family-roster-check','ghc-family-auth-permission-state',
+    'ghc-family-method-flow-state','ghc-family-workflow-plan-refinement',
+    'ghc-family-owner-tree-capacity','ghc-family-d-first-structured-evidence-toolchain',
+    'ghc-family-owned-bundle-rotation'
+  ],
+  v6_profile_read:true,v6_roster_read_through_eof:true,source_canonical_replayed:false
+});
+writeJson('plan/source-verification.json',{
+  schema:'ghc.family.source-verification.v691.v5',
+  saelin:{branch:'codex/GHC-Family/saelin-reed-main',exact_final:SAELIN_FINAL,clean:true,divergence:'0/0',four_way_equal:true,commits:['e02fe95f545ad547f9cb59e658a9a02046aff247','327cd8b57f87427426d344c116aa09fe0973854c','655164d118cd23e77303b3fde36b5aa7d58afd27',SAELIN_FINAL],single_parent_each:true,merges:0,canonical_receipt_sha256:'181f480a22d5d41586b4acffc42d4cca106b0868d308af758c0647e9a792a009',canonical_latch_sha256:'219591238abea35b89514b9cc3a7bdb996208ec505a0a5faecd3b29c4c49751a',canonical_replayed:false},
+  prior_elowen:{exact_final:ELOWEN_PRIOR_FINAL,branch:'codex/GHC-Family/elowen-cairn-v688-v5-full-tools',tracked_files:40124,materialized_files:665,reuse_refused_by_both_ceilings:true},
+  new_lane:{branch:BRANCH,blank_owner_root:true,unborn_at_freeze:true,tracked_files_before_plan:0,materialized_files_before_plan:0,saelin_content_provenance_not_ancestry:true,prior_elowen_content_provenance_not_ancestry:true}
+});
+writeJson('plan/v6-profile.json',{
+  schema:'ghc.family.phase-profile.v691.v5',
+  source_profile:'ghc.family.workflow-profile.v6',
+  source_profile_sha256:'def89730843406228485906ed7823dfddc9ae63b22706ab38996216e060ade54',
+  owner:OWNER,phase:PHASE,model_role:'Sol',model_settings_changed:false,
+  targets:{inherited_proposals:200,new_proposals:200,safe_x1:100,safe_x2:100,candidate_x1:100,candidate_x2:100,cfr_x1:100,cfr_x2:100,skills_x1:10,skills_x2:10,runners_x1:5,runners_x2:5,exact_packets:50,blocked_packets:30,global_skills:5,global_runners:5,own_practices:4,next_practices:1},
+  limits:{owner_files:2000,tracked_files:2000,baton_words:[10000,100000],document_words:100000,incremental_spend_usd:50,commit_total:8},
+  artifact_extensions:['.json','.md','.txt','.html'],html_exception:'Explicit interactive workbench only',new_pdf:false,new_images:false,new_screenshots:false
+});
+writeJson('plan/route.json',{
+  schema:'ghc.family.route.v691.v5',controller:'Saelin Reed',owner:OWNER,phase:PHASE,state:'ACTIVATED_OWNER_PLANNING',
+  endpoint_kind:'main_task',model_role:'Sol',next_owner:'Sylven Arc',next_phase:'v691-v6',
+  next_state:'PREPARED_NOT_SENT_TERMINAL_GATE_REQUIRED',accepted_send_limit:1,early_contact:false,
+  terminal_horizon:{owner:'Teryn Halewick',phase:'v725-v8'},projection_rows:277,projection_activates:false
+});
+writeJson('plan/source-list.json',{
+  schema:'ghc.family.primary-sources.v691.v5',
+  checked_on:'2026-09-12',
+  sources:[
+    {id:'NCBI-FASTA',url:'https://www.ncbi.nlm.nih.gov/genbank/fastaformat/',authority:'NCBI',use:'FASTA definition-line and sequence-symbol vocabulary only'},
+    {id:'NCBI-SRA-FASTQ',url:'https://www.ncbi.nlm.nih.gov/sra/docs/submitformats/',authority:'NCBI SRA',use:'FASTQ framing, quality-length, range, and paired-read vocabulary only'},
+    {id:'GA4GH-DUO',url:'https://www.ga4gh.org/product/data-use-ontology-duo/',authority:'GA4GH',use:'data-use permission vocabulary only'},
+    {id:'W3C-PROV',url:'https://www.w3.org/TR/2013/REC-prov-o-20130430/',authority:'W3C Recommendation',use:'provenance vocabulary only'},
+    {id:'WCAG-22',url:'https://www.w3.org/TR/WCAG22/',authority:'W3C Recommendation',use:'structural accessibility reference only'}
+  ],
+  network_sequence_rows:0,real_biological_records:0,citations_are_observations:false,citations_are_authority_grants:false
+});
+writeJson('plan/inherited-proposal-review.json',{
+  schema:'ghc.family.inherited-proposal-review.v691.v5',source_owner:'Saelin Reed',source_phase:'v691-v4-r2',
+  source_exact_final:SAELIN_FINAL,source_file:'docs/saelin-reed/v691-v4-r2/plan/proposal-freeze.json',
+  source_file_sha256:sha(sourceBytes),count:sourceRecords.length,execution_credit:0,novelty_credit:0,records:sourceRecords
+});
+writeJson('plan/proposal-freeze.json',{
+  schema:'ghc.family.proposal-freeze.v691.v5',owner:OWNER,phase:PHASE,state:'PLANNING_ONLY_FROZEN_BEFORE_X1_IMPLEMENTATION',
+  count:proposals.length,session_counts:{x1:100,x2:100},
+  expected_dispositions:Object.fromEntries(['completed','represented','open_gap','exact_gate'].map(k=>[k,proposals.filter(x=>x.expected_disposition===k).length])),
+  distinct_definitions:new Set(proposals.map(x=>x.definition_sha256)).size,
+  proposals,boundary:BOUNDARY
+});
+writeJson('plan/novelty-audit.json',{
+  schema:'ghc.family.novelty-audit.v691.v5',source_review_count:200,new_count:200,
+  exact_title_collisions:exactTitleCollisions.map(x=>x.proposal_id),
+  exact_definition_collisions:exactDigestCollisions.map(x=>x.proposal_id),
+  max_title_token_jaccard:maxNeighbor,
+  universal_historical_novelty_claim:false,
+  conclusion:exactTitleCollisions.length||exactDigestCollisions.length?'QUARANTINE_REQUIRED':'SOURCE_BOUNDED_DISTINCT'
+});
+writeJson('plan/portfolios.json',{
+  schema:'ghc.family.portfolios.v691.v5',planning_only:true,
+  safe_x1:makeTasks('x1','safe',100),candidate_x1:makeTasks('x1','candidate',100),cfr_x1:makeCfr('x1'),
+  safe_x2:makeTasks('x2','safe',100),candidate_x2:makeTasks('x2','candidate',100),cfr_x2:makeCfr('x2'),
+  exact_packets:exactActions.map((x,i)=>({...x,packet_id:'EC6915-EX-'+String(i+1).padStart(2,'0'),state:'planned_unexecuted'})),
+  blocked_packets:blockedCategories.map((category,i)=>({packet_id:'EC6915-BLOCK-'+String(i+1).padStart(2,'0'),category,state:'blocked_unexecuted',missing:'Exact real evidence, system control, affected authority, or protected permission remains absent.'}))
+});
+writeJson('plan/skills-runners.json',{
+  schema:'ghc.family.skills-runners-plan.v691.v5',planning_only:true,
+  local_skills:skillPlans,local_runners:runnerPlans,merged_global_groups:mergedGroups,
+  successor_skill_ideas:[
+    'ghc-family-message-causality-envelope','ghc-family-temporal-conflict-repair',
+    'ghc-family-resource-policy-comparison','ghc-family-consent-dialogue-lineage',
+    'ghc-family-forecast-falsifier'
+  ],
+  successor_runner_ideas:[
+    'bounded-delivery-fault-adapter.txt','small-world-path-comparator.txt',
+    'consent-replay-viewer.txt','resource-budget-explorer.txt',
+    'parameter-identifiability-critic.txt'
+  ]
+});
+writeJson('plan/practices-pillars.json',{
+  schema:'ghc.family.practices-pillars.v691.v5',primary_pillar:'Freed ID and CBR Heart',
+  owner_practices:[
+    {name:'synthetic sequence archive curation',qualification_claim:false},
+    {name:'bioinformatics record validation',qualification_claim:false},
+    {name:'data provenance engineering',qualification_claim:false},
+    {name:'accessible scientific interface design',qualification_claim:false}
+  ],
+  successor_recommendation:{count:1,practice:'simulation engineering with controlled inter-agent communication',completion_credit:0},
+  gmut:'Typed sequence quantities and finite transformations only; no biological or physical inference.',
+  thos:'Closed record-processing and accessible-interface contracts only; no real operator or participant evidence.',
+  freed_id_cbr:'Provenance, purpose, minimization, withdrawal, and authority vacancies; no production identity or legitimate release.'
+});
+writeJson('plan/spend-plan.json',{
+  schema:'ghc.family.spend-plan.v691.v5',currency:'USD',ceiling_cents:5000,reserved_cents:0,spent_cents:0,
+  recurring_commitment:false,purchases_authorized:false,paid_service_used:false
+});
+writeJson('plan/threat-model.json',{
+  schema:'ghc.family.threat-model.v691.v5',
+  threats:PROTECTED_GATES.map(gate=>({gate,state:'protected',control:'Synthetic zero-row fixtures, explicit evidence ceiling, retained refusal, and no external action.'})),
+  additional:[
+    {threat:'real sequence or participant data enters fixtures',control:'Use generated symbols only and scan every owner blob.'},
+    {threat:'format validity becomes biological validity',control:'Separate syntax contracts from observation and interpretation.'},
+    {threat:'permission tag becomes consent or authority',control:'Keep GA4GH vocabulary represented and authority roles vacant.'},
+    {threat:'prior owner work becomes Elowen credit',control:'Inherited review rows carry zero execution and novelty credit.'}
+  ]
+});
+writeJson('plan/operational-failures.json',{schema:'ghc.family.operational-failures.v691.v5.plan',count:failures.length,failures,failure_erasure:false});
+writeJson('plan/method-flow-startup.json',{
+  schema:'ghc.family.method-flow-state.v1',phase:PHASE,owner:OWNER,identity_boundary:BOUNDARY,
+  execution_authority:'owner_self_scoped_delta',source_commit:SAELIN_FINAL,final_commit:null,
+  repository_scan:false,module_scan:false,cross_lane_scan:false,unchanged_history_scan:false,sibling_lane_mutation:false,
+  changed_file_allowlist:[],module_allowlist:[],exact_pushed_head_required:true,
+  methods,witnesses,state_events:methods.flatMap(m=>[
+    {method_id:m.method_id,from:'observed',to:'candidate',note:'Failure retained before recovery.'},
+    {method_id:m.method_id,from:'candidate',to:'validated',note:'Bounded corrected witness passed.'},
+    {method_id:m.method_id,from:'validated',to:'preferred',note:'Preferred only for matching preconditions.'}
+  ]),recommendations:[],
+  counts:{methods:methods.length,witnesses:witnesses.length,state_events:methods.length*3,recommendations:0,witness_results:{fail:failures.length,pass:failures.length}},
+  boundary:BOUNDARY
+});
+writeJson('plan/phase-truth.json',{
+  schema:'ghc.family.phase-truth.v691.v5.plan',owner:OWNER,phase:PHASE,state:'PLANNING_ONLY_PRECOMMIT',
+  branch:BRANCH,git_parent:null,blank_owner_root:true,saelin_source:SAELIN_FINAL,saelin_source_is_content_provenance:true,
+  prior_elowen:ELOWEN_PRIOR_FINAL,prior_elowen_is_content_provenance:true,
+  inherited_proposals:200,new_proposals:200,expected_outcomes:{completed:170,represented:10,open_gap:10,exact_gate:10},
+  x1_implementation_present:false,x2_implementation_present:false,observed_outcomes:null,
+  source_external_baseline:sourceBaseline,planning_effective:planningEffective,
+  primary_pillar:'Freed ID and CBR Heart',owner_practices:4,successor_practices:1,
+  incremental_spend_usd:0,canonical_invocations:0,successor_contacts:0,
+  full_repository_suite:false,independent_reproduction:false,terminal_verdict:'NOT_READY_FOR_STAGE_20',boundary:BOUNDARY
+});
+writeText('plan/integrated-overview.md',`# Elowen Cairn v691-v5 planning freeze
+
+## Scope and lifecycle
+
+This is a planning-only blank owner root. Saelin Reed exact final ${SAELIN_FINAL}
+and prior Elowen exact final ${ELOWEN_PRIOR_FINAL} are immutable content
+provenance, not Git parents. The prior Elowen tree exceeded the new tracked-file
+ceiling, so this branch starts with zero tracked files and preserves both source
+lanes read-only.
+
+## Proposed contribution
+
+Elowen preregisters 200 wholly synthetic sequence-record contracts across FASTA
+and FASTQ framing, IUPAC-style symbol handling, exact counts and fractions,
+checksums, duplicate retention, provenance, evidence ceilings, participant gaps,
+and action-specific authority gates. The primary pillar is Freed ID and CBR
+Heart. GMUT Mind and THOS Body remain explicit. The expected dispositions are
+170 completed, 10 represented, 10 open_gap, and 10 exact_gate.
+
+## Work and boundaries
+
+Each of x1 and x2 plans 100 safe, 100 candidate, and 100 CLEAN/FIX/REFINE
+records, ten local skills, and five runners. Fifty exact packets bind concrete
+owner actions; thirty blocked packets remain unexecuted. Five merged global
+groups and five public runners may be promoted only after validation. No paid
+service is required and incremental spend is zero.
+
+No real sequence, sample, organism, participant, patient, contributor,
+credential, consent event, clinical interpretation, data-release decision,
+cultural determination, Maori authority, or production action is present.
+Format syntax is not biological truth. A digest is not provenance authority.
+A permission tag is not real consent. ${BOUNDARY}
+`);
+
+const manifestPath = path.join(PLAN, 'manifest.json');
+const scopeReviewPath = path.join(PLAN, 'scope-review.json');
+const preTerminalFiles = walk(BASE).filter(file => file !== manifestPath && file !== scopeReviewPath);
+writeJson('plan/scope-review.json',{
+  schema:'ghc.family.scope-review.v691.v5.plan',expected_root:'docs/elowen-cairn/v691-v5',
+  files_before_commit:preTerminalFiles.length+2,outside_owner_paths:[],deletions:[],x1_paths:[],x2_paths:[],
+  allowed_extensions:['.json','.md','.txt','.html'],valid:true
+});
+const files = walk(BASE).filter(file => file !== manifestPath);
+const entries = files.map(file => {
+  const data = fs.readFileSync(file);
+  return {path:path.relative(ROOT,file).replaceAll('\\','/'),bytes:data.length,sha256:sha(data)};
+});
+writeJson('plan/manifest.json',{
+  schema:'ghc.family.manifest.v691.v5.plan',byte_domain:'checkout_utf8_bytes',
+  declared_self_exclusions:['docs/elowen-cairn/v691-v5/plan/manifest.json'],
+  entry_count:entries.length,entries
+});
+
+console.log(JSON.stringify({
+  owner:OWNER,phase:PHASE,source_review:sourceRecords.length,new_proposals:proposals.length,
+  expected:{completed:170,represented:10,open_gap:10,exact_gate:10},
+  exact_title_collisions:exactTitleCollisions.length,exact_definition_collisions:exactDigestCollisions.length,
+  max_title_jaccard:maxNeighbor.score,startup_failures:failures.length,
+  planned_files:walk(BASE).length
+}));
