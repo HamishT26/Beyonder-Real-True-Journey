@@ -1,0 +1,537 @@
+{
+  "schema": "ghc.family.skill-contract.v1",
+  "owner": "Elaren Kestrel",
+  "phase": "v692-v3",
+  "session": "x2",
+  "operation": "dsatur_coloring_trace",
+  "cases": [
+    {
+      "proposal_id": "EL6923-101",
+      "input": {
+        "graph": {
+          "nodes": [],
+          "edges": []
+        }
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "colors": {},
+          "trace": [],
+          "color_count": 0
+        },
+        "error": null
+      }
+    },
+    {
+      "proposal_id": "EL6923-102",
+      "input": {
+        "graph": {
+          "nodes": [
+            "a"
+          ],
+          "edges": []
+        }
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "colors": {
+            "a": 0
+          },
+          "trace": [
+            {
+              "node": "a",
+              "color": 0,
+              "saturation": 0
+            }
+          ],
+          "color_count": 1
+        },
+        "error": null
+      }
+    },
+    {
+      "proposal_id": "EL6923-103",
+      "input": {
+        "graph": {
+          "nodes": [
+            "a",
+            "b"
+          ],
+          "edges": [
+            [
+              "a",
+              "b"
+            ]
+          ]
+        }
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "colors": {
+            "a": 0,
+            "b": 1
+          },
+          "trace": [
+            {
+              "node": "a",
+              "color": 0,
+              "saturation": 0
+            },
+            {
+              "node": "b",
+              "color": 1,
+              "saturation": 1
+            }
+          ],
+          "color_count": 2
+        },
+        "error": null
+      }
+    },
+    {
+      "proposal_id": "EL6923-104",
+      "input": {
+        "graph": {
+          "nodes": [
+            "a",
+            "b",
+            "c"
+          ],
+          "edges": [
+            [
+              "a",
+              "b"
+            ],
+            [
+              "b",
+              "c"
+            ]
+          ]
+        }
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "colors": {
+            "b": 0,
+            "a": 1,
+            "c": 1
+          },
+          "trace": [
+            {
+              "node": "b",
+              "color": 0,
+              "saturation": 0
+            },
+            {
+              "node": "a",
+              "color": 1,
+              "saturation": 1
+            },
+            {
+              "node": "c",
+              "color": 1,
+              "saturation": 1
+            }
+          ],
+          "color_count": 2
+        },
+        "error": null
+      }
+    },
+    {
+      "proposal_id": "EL6923-105",
+      "input": {
+        "graph": {
+          "nodes": [
+            "a",
+            "b",
+            "c"
+          ],
+          "edges": [
+            [
+              "a",
+              "b"
+            ],
+            [
+              "b",
+              "c"
+            ],
+            [
+              "c",
+              "a"
+            ]
+          ]
+        }
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "colors": {
+            "a": 0,
+            "b": 1,
+            "c": 2
+          },
+          "trace": [
+            {
+              "node": "a",
+              "color": 0,
+              "saturation": 0
+            },
+            {
+              "node": "b",
+              "color": 1,
+              "saturation": 1
+            },
+            {
+              "node": "c",
+              "color": 2,
+              "saturation": 2
+            }
+          ],
+          "color_count": 3
+        },
+        "error": null
+      }
+    },
+    {
+      "proposal_id": "EL6923-106",
+      "input": {
+        "graph": {
+          "nodes": [
+            "a",
+            "b",
+            "c",
+            "d"
+          ],
+          "edges": [
+            [
+              "a",
+              "b"
+            ],
+            [
+              "b",
+              "c"
+            ],
+            [
+              "c",
+              "d"
+            ],
+            [
+              "d",
+              "a"
+            ]
+          ]
+        }
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "colors": {
+            "a": 0,
+            "b": 1,
+            "c": 0,
+            "d": 1
+          },
+          "trace": [
+            {
+              "node": "a",
+              "color": 0,
+              "saturation": 0
+            },
+            {
+              "node": "b",
+              "color": 1,
+              "saturation": 1
+            },
+            {
+              "node": "c",
+              "color": 0,
+              "saturation": 1
+            },
+            {
+              "node": "d",
+              "color": 1,
+              "saturation": 1
+            }
+          ],
+          "color_count": 2
+        },
+        "error": null
+      }
+    },
+    {
+      "proposal_id": "EL6923-107",
+      "input": {
+        "graph": {
+          "nodes": [
+            "a",
+            "b",
+            "c",
+            "d"
+          ],
+          "edges": [
+            [
+              "a",
+              "b"
+            ],
+            [
+              "a",
+              "c"
+            ],
+            [
+              "a",
+              "d"
+            ]
+          ]
+        }
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "colors": {
+            "a": 0,
+            "b": 1,
+            "c": 1,
+            "d": 1
+          },
+          "trace": [
+            {
+              "node": "a",
+              "color": 0,
+              "saturation": 0
+            },
+            {
+              "node": "b",
+              "color": 1,
+              "saturation": 1
+            },
+            {
+              "node": "c",
+              "color": 1,
+              "saturation": 1
+            },
+            {
+              "node": "d",
+              "color": 1,
+              "saturation": 1
+            }
+          ],
+          "color_count": 2
+        },
+        "error": null
+      }
+    },
+    {
+      "proposal_id": "EL6923-108",
+      "input": {
+        "graph": {
+          "nodes": [
+            "a",
+            "b",
+            "c",
+            "d",
+            "e"
+          ],
+          "edges": [
+            [
+              "a",
+              "b"
+            ],
+            [
+              "b",
+              "c"
+            ],
+            [
+              "c",
+              "d"
+            ],
+            [
+              "d",
+              "e"
+            ],
+            [
+              "e",
+              "a"
+            ]
+          ]
+        }
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "colors": {
+            "a": 0,
+            "b": 1,
+            "c": 0,
+            "d": 1,
+            "e": 2
+          },
+          "trace": [
+            {
+              "node": "a",
+              "color": 0,
+              "saturation": 0
+            },
+            {
+              "node": "b",
+              "color": 1,
+              "saturation": 1
+            },
+            {
+              "node": "c",
+              "color": 0,
+              "saturation": 1
+            },
+            {
+              "node": "d",
+              "color": 1,
+              "saturation": 1
+            },
+            {
+              "node": "e",
+              "color": 2,
+              "saturation": 2
+            }
+          ],
+          "color_count": 3
+        },
+        "error": null
+      }
+    },
+    {
+      "proposal_id": "EL6923-109",
+      "input": {
+        "graph": {
+          "nodes": [
+            "a",
+            "b",
+            "c"
+          ],
+          "edges": [
+            [
+              "a",
+              "b"
+            ]
+          ]
+        }
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "colors": {
+            "a": 0,
+            "b": 1,
+            "c": 0
+          },
+          "trace": [
+            {
+              "node": "a",
+              "color": 0,
+              "saturation": 0
+            },
+            {
+              "node": "b",
+              "color": 1,
+              "saturation": 1
+            },
+            {
+              "node": "c",
+              "color": 0,
+              "saturation": 0
+            }
+          ],
+          "color_count": 2
+        },
+        "error": null
+      }
+    },
+    {
+      "proposal_id": "EL6923-110",
+      "input": {
+        "graph": {
+          "nodes": [
+            "a",
+            "b",
+            "c",
+            "d"
+          ],
+          "edges": [
+            [
+              "a",
+              "b"
+            ],
+            [
+              "a",
+              "c"
+            ],
+            [
+              "a",
+              "d"
+            ],
+            [
+              "b",
+              "c"
+            ],
+            [
+              "b",
+              "d"
+            ],
+            [
+              "c",
+              "d"
+            ]
+          ]
+        }
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "colors": {
+            "a": 0,
+            "b": 1,
+            "c": 2,
+            "d": 3
+          },
+          "trace": [
+            {
+              "node": "a",
+              "color": 0,
+              "saturation": 0
+            },
+            {
+              "node": "b",
+              "color": 1,
+              "saturation": 1
+            },
+            {
+              "node": "c",
+              "color": 2,
+              "saturation": 2
+            },
+            {
+              "node": "d",
+              "color": 3,
+              "saturation": 3
+            }
+          ],
+          "color_count": 4
+        },
+        "error": null
+      }
+    }
+  ]
+}

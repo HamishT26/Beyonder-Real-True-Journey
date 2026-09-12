@@ -1,0 +1,363 @@
+{
+  "schema": "ghc.family.skill-contract.v1",
+  "owner": "Elaren Kestrel",
+  "phase": "v692-v3",
+  "session": "x1",
+  "operation": "degree_ordering",
+  "cases": [
+    {
+      "proposal_id": "EL6923-031",
+      "input": {
+        "graph": {
+          "nodes": [],
+          "edges": []
+        }
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "order": []
+        },
+        "error": null
+      }
+    },
+    {
+      "proposal_id": "EL6923-032",
+      "input": {
+        "graph": {
+          "nodes": [
+            "a"
+          ],
+          "edges": []
+        }
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "order": [
+            "a"
+          ]
+        },
+        "error": null
+      }
+    },
+    {
+      "proposal_id": "EL6923-033",
+      "input": {
+        "graph": {
+          "nodes": [
+            "a",
+            "b"
+          ],
+          "edges": [
+            [
+              "a",
+              "b"
+            ]
+          ]
+        }
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "order": [
+            "a",
+            "b"
+          ]
+        },
+        "error": null
+      }
+    },
+    {
+      "proposal_id": "EL6923-034",
+      "input": {
+        "graph": {
+          "nodes": [
+            "a",
+            "b",
+            "c"
+          ],
+          "edges": [
+            [
+              "a",
+              "b"
+            ],
+            [
+              "b",
+              "c"
+            ]
+          ]
+        }
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "order": [
+            "b",
+            "a",
+            "c"
+          ]
+        },
+        "error": null
+      }
+    },
+    {
+      "proposal_id": "EL6923-035",
+      "input": {
+        "graph": {
+          "nodes": [
+            "a",
+            "b",
+            "c"
+          ],
+          "edges": [
+            [
+              "a",
+              "b"
+            ],
+            [
+              "b",
+              "c"
+            ],
+            [
+              "c",
+              "a"
+            ]
+          ]
+        }
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "order": [
+            "a",
+            "b",
+            "c"
+          ]
+        },
+        "error": null
+      }
+    },
+    {
+      "proposal_id": "EL6923-036",
+      "input": {
+        "graph": {
+          "nodes": [
+            "a",
+            "b",
+            "c",
+            "d"
+          ],
+          "edges": [
+            [
+              "a",
+              "b"
+            ],
+            [
+              "b",
+              "c"
+            ],
+            [
+              "c",
+              "d"
+            ],
+            [
+              "d",
+              "a"
+            ]
+          ]
+        }
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "order": [
+            "a",
+            "b",
+            "c",
+            "d"
+          ]
+        },
+        "error": null
+      }
+    },
+    {
+      "proposal_id": "EL6923-037",
+      "input": {
+        "graph": {
+          "nodes": [
+            "a",
+            "b",
+            "c",
+            "d"
+          ],
+          "edges": [
+            [
+              "a",
+              "b"
+            ],
+            [
+              "a",
+              "c"
+            ],
+            [
+              "a",
+              "d"
+            ]
+          ]
+        }
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "order": [
+            "a",
+            "b",
+            "c",
+            "d"
+          ]
+        },
+        "error": null
+      }
+    },
+    {
+      "proposal_id": "EL6923-038",
+      "input": {
+        "graph": {
+          "nodes": [
+            "a",
+            "b",
+            "c",
+            "d",
+            "e"
+          ],
+          "edges": [
+            [
+              "a",
+              "b"
+            ],
+            [
+              "b",
+              "c"
+            ],
+            [
+              "c",
+              "d"
+            ],
+            [
+              "d",
+              "e"
+            ],
+            [
+              "e",
+              "a"
+            ]
+          ]
+        }
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "order": [
+            "a",
+            "b",
+            "c",
+            "d",
+            "e"
+          ]
+        },
+        "error": null
+      }
+    },
+    {
+      "proposal_id": "EL6923-039",
+      "input": {
+        "graph": {
+          "nodes": [
+            "a",
+            "b",
+            "c"
+          ],
+          "edges": [
+            [
+              "a",
+              "b"
+            ]
+          ]
+        }
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "order": [
+            "a",
+            "b",
+            "c"
+          ]
+        },
+        "error": null
+      }
+    },
+    {
+      "proposal_id": "EL6923-040",
+      "input": {
+        "graph": {
+          "nodes": [
+            "a",
+            "b",
+            "c",
+            "d"
+          ],
+          "edges": [
+            [
+              "a",
+              "b"
+            ],
+            [
+              "a",
+              "c"
+            ],
+            [
+              "a",
+              "d"
+            ],
+            [
+              "b",
+              "c"
+            ],
+            [
+              "b",
+              "d"
+            ],
+            [
+              "c",
+              "d"
+            ]
+          ]
+        }
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "order": [
+            "a",
+            "b",
+            "c",
+            "d"
+          ]
+        },
+        "error": null
+      }
+    }
+  ]
+}

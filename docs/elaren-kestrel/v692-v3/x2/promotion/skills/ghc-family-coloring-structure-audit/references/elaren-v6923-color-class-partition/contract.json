@@ -1,0 +1,463 @@
+{
+  "schema": "ghc.family.skill-contract.v1",
+  "owner": "Elaren Kestrel",
+  "phase": "v692-v3",
+  "session": "x1",
+  "operation": "color_class_partition",
+  "cases": [
+    {
+      "proposal_id": "EL6923-041",
+      "input": {
+        "graph": {
+          "nodes": [],
+          "edges": []
+        },
+        "coloring": {}
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "classes": {},
+          "proper": true
+        },
+        "error": null
+      }
+    },
+    {
+      "proposal_id": "EL6923-042",
+      "input": {
+        "graph": {
+          "nodes": [
+            "a"
+          ],
+          "edges": []
+        },
+        "coloring": {
+          "a": 0
+        }
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "classes": {
+            "0": [
+              "a"
+            ]
+          },
+          "proper": true
+        },
+        "error": null
+      }
+    },
+    {
+      "proposal_id": "EL6923-043",
+      "input": {
+        "graph": {
+          "nodes": [
+            "a",
+            "b"
+          ],
+          "edges": [
+            [
+              "a",
+              "b"
+            ]
+          ]
+        },
+        "coloring": {
+          "a": 0,
+          "b": 1
+        }
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "classes": {
+            "0": [
+              "a"
+            ],
+            "1": [
+              "b"
+            ]
+          },
+          "proper": true
+        },
+        "error": null
+      }
+    },
+    {
+      "proposal_id": "EL6923-044",
+      "input": {
+        "graph": {
+          "nodes": [
+            "a",
+            "b",
+            "c"
+          ],
+          "edges": [
+            [
+              "a",
+              "b"
+            ],
+            [
+              "b",
+              "c"
+            ]
+          ]
+        },
+        "coloring": {
+          "b": 0,
+          "a": 1,
+          "c": 1
+        }
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "classes": {
+            "0": [
+              "b"
+            ],
+            "1": [
+              "a",
+              "c"
+            ]
+          },
+          "proper": true
+        },
+        "error": null
+      }
+    },
+    {
+      "proposal_id": "EL6923-045",
+      "input": {
+        "graph": {
+          "nodes": [
+            "a",
+            "b",
+            "c"
+          ],
+          "edges": [
+            [
+              "a",
+              "b"
+            ],
+            [
+              "b",
+              "c"
+            ],
+            [
+              "c",
+              "a"
+            ]
+          ]
+        },
+        "coloring": {
+          "a": 0,
+          "b": 1,
+          "c": 2
+        }
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "classes": {
+            "0": [
+              "a"
+            ],
+            "1": [
+              "b"
+            ],
+            "2": [
+              "c"
+            ]
+          },
+          "proper": true
+        },
+        "error": null
+      }
+    },
+    {
+      "proposal_id": "EL6923-046",
+      "input": {
+        "graph": {
+          "nodes": [
+            "a",
+            "b",
+            "c",
+            "d"
+          ],
+          "edges": [
+            [
+              "a",
+              "b"
+            ],
+            [
+              "b",
+              "c"
+            ],
+            [
+              "c",
+              "d"
+            ],
+            [
+              "d",
+              "a"
+            ]
+          ]
+        },
+        "coloring": {
+          "a": 0,
+          "b": 1,
+          "c": 0,
+          "d": 1
+        }
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "classes": {
+            "0": [
+              "a",
+              "c"
+            ],
+            "1": [
+              "b",
+              "d"
+            ]
+          },
+          "proper": true
+        },
+        "error": null
+      }
+    },
+    {
+      "proposal_id": "EL6923-047",
+      "input": {
+        "graph": {
+          "nodes": [
+            "a",
+            "b",
+            "c",
+            "d"
+          ],
+          "edges": [
+            [
+              "a",
+              "b"
+            ],
+            [
+              "a",
+              "c"
+            ],
+            [
+              "a",
+              "d"
+            ]
+          ]
+        },
+        "coloring": {
+          "a": 0,
+          "b": 1,
+          "c": 1,
+          "d": 1
+        }
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "classes": {
+            "0": [
+              "a"
+            ],
+            "1": [
+              "b",
+              "c",
+              "d"
+            ]
+          },
+          "proper": true
+        },
+        "error": null
+      }
+    },
+    {
+      "proposal_id": "EL6923-048",
+      "input": {
+        "graph": {
+          "nodes": [
+            "a",
+            "b",
+            "c",
+            "d",
+            "e"
+          ],
+          "edges": [
+            [
+              "a",
+              "b"
+            ],
+            [
+              "b",
+              "c"
+            ],
+            [
+              "c",
+              "d"
+            ],
+            [
+              "d",
+              "e"
+            ],
+            [
+              "e",
+              "a"
+            ]
+          ]
+        },
+        "coloring": {
+          "a": 0,
+          "b": 1,
+          "c": 0,
+          "d": 1,
+          "e": 2
+        }
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "classes": {
+            "0": [
+              "a",
+              "c"
+            ],
+            "1": [
+              "b",
+              "d"
+            ],
+            "2": [
+              "e"
+            ]
+          },
+          "proper": true
+        },
+        "error": null
+      }
+    },
+    {
+      "proposal_id": "EL6923-049",
+      "input": {
+        "graph": {
+          "nodes": [
+            "a",
+            "b",
+            "c"
+          ],
+          "edges": [
+            [
+              "a",
+              "b"
+            ]
+          ]
+        },
+        "coloring": {
+          "a": 0,
+          "b": 1,
+          "c": 0
+        }
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "classes": {
+            "0": [
+              "a",
+              "c"
+            ],
+            "1": [
+              "b"
+            ]
+          },
+          "proper": true
+        },
+        "error": null
+      }
+    },
+    {
+      "proposal_id": "EL6923-050",
+      "input": {
+        "graph": {
+          "nodes": [
+            "a",
+            "b",
+            "c",
+            "d"
+          ],
+          "edges": [
+            [
+              "a",
+              "b"
+            ],
+            [
+              "a",
+              "c"
+            ],
+            [
+              "a",
+              "d"
+            ],
+            [
+              "b",
+              "c"
+            ],
+            [
+              "b",
+              "d"
+            ],
+            [
+              "c",
+              "d"
+            ]
+          ]
+        },
+        "coloring": {
+          "a": 0,
+          "b": 1,
+          "c": 2,
+          "d": 3
+        }
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "classes": {
+            "0": [
+              "a"
+            ],
+            "1": [
+              "b"
+            ],
+            "2": [
+              "c"
+            ],
+            "3": [
+              "d"
+            ]
+          },
+          "proper": true
+        },
+        "error": null
+      }
+    }
+  ]
+}

@@ -1,0 +1,393 @@
+{
+  "schema": "ghc.family.skill-contract.v1",
+  "owner": "Elaren Kestrel",
+  "phase": "v692-v3",
+  "session": "x2",
+  "operation": "exact_chromatic_search",
+  "cases": [
+    {
+      "proposal_id": "EL6923-111",
+      "input": {
+        "graph": {
+          "nodes": [],
+          "edges": []
+        },
+        "max_nodes": 6
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "chromatic_number": 0,
+          "colors": {},
+          "bounded_nodes": 0
+        },
+        "error": null
+      }
+    },
+    {
+      "proposal_id": "EL6923-112",
+      "input": {
+        "graph": {
+          "nodes": [
+            "a"
+          ],
+          "edges": []
+        },
+        "max_nodes": 6
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "chromatic_number": 1,
+          "colors": {
+            "a": 0
+          },
+          "bounded_nodes": 1
+        },
+        "error": null
+      }
+    },
+    {
+      "proposal_id": "EL6923-113",
+      "input": {
+        "graph": {
+          "nodes": [
+            "a",
+            "b"
+          ],
+          "edges": [
+            [
+              "a",
+              "b"
+            ]
+          ]
+        },
+        "max_nodes": 6
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "chromatic_number": 2,
+          "colors": {
+            "a": 0,
+            "b": 1
+          },
+          "bounded_nodes": 2
+        },
+        "error": null
+      }
+    },
+    {
+      "proposal_id": "EL6923-114",
+      "input": {
+        "graph": {
+          "nodes": [
+            "a",
+            "b",
+            "c"
+          ],
+          "edges": [
+            [
+              "a",
+              "b"
+            ],
+            [
+              "b",
+              "c"
+            ]
+          ]
+        },
+        "max_nodes": 6
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "chromatic_number": 2,
+          "colors": {
+            "b": 0,
+            "a": 1,
+            "c": 1
+          },
+          "bounded_nodes": 3
+        },
+        "error": null
+      }
+    },
+    {
+      "proposal_id": "EL6923-115",
+      "input": {
+        "graph": {
+          "nodes": [
+            "a",
+            "b",
+            "c"
+          ],
+          "edges": [
+            [
+              "a",
+              "b"
+            ],
+            [
+              "b",
+              "c"
+            ],
+            [
+              "c",
+              "a"
+            ]
+          ]
+        },
+        "max_nodes": 6
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "chromatic_number": 3,
+          "colors": {
+            "a": 0,
+            "b": 1,
+            "c": 2
+          },
+          "bounded_nodes": 3
+        },
+        "error": null
+      }
+    },
+    {
+      "proposal_id": "EL6923-116",
+      "input": {
+        "graph": {
+          "nodes": [
+            "a",
+            "b",
+            "c",
+            "d"
+          ],
+          "edges": [
+            [
+              "a",
+              "b"
+            ],
+            [
+              "b",
+              "c"
+            ],
+            [
+              "c",
+              "d"
+            ],
+            [
+              "d",
+              "a"
+            ]
+          ]
+        },
+        "max_nodes": 6
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "chromatic_number": 2,
+          "colors": {
+            "a": 0,
+            "b": 1,
+            "c": 0,
+            "d": 1
+          },
+          "bounded_nodes": 4
+        },
+        "error": null
+      }
+    },
+    {
+      "proposal_id": "EL6923-117",
+      "input": {
+        "graph": {
+          "nodes": [
+            "a",
+            "b",
+            "c",
+            "d"
+          ],
+          "edges": [
+            [
+              "a",
+              "b"
+            ],
+            [
+              "a",
+              "c"
+            ],
+            [
+              "a",
+              "d"
+            ]
+          ]
+        },
+        "max_nodes": 6
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "chromatic_number": 2,
+          "colors": {
+            "a": 0,
+            "b": 1,
+            "c": 1,
+            "d": 1
+          },
+          "bounded_nodes": 4
+        },
+        "error": null
+      }
+    },
+    {
+      "proposal_id": "EL6923-118",
+      "input": {
+        "graph": {
+          "nodes": [
+            "a",
+            "b",
+            "c",
+            "d",
+            "e"
+          ],
+          "edges": [
+            [
+              "a",
+              "b"
+            ],
+            [
+              "b",
+              "c"
+            ],
+            [
+              "c",
+              "d"
+            ],
+            [
+              "d",
+              "e"
+            ],
+            [
+              "e",
+              "a"
+            ]
+          ]
+        },
+        "max_nodes": 6
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "chromatic_number": 3,
+          "colors": {
+            "a": 0,
+            "b": 1,
+            "c": 0,
+            "d": 1,
+            "e": 2
+          },
+          "bounded_nodes": 5
+        },
+        "error": null
+      }
+    },
+    {
+      "proposal_id": "EL6923-119",
+      "input": {
+        "graph": {
+          "nodes": [
+            "a",
+            "b",
+            "c"
+          ],
+          "edges": [
+            [
+              "a",
+              "b"
+            ]
+          ]
+        },
+        "max_nodes": 6
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "chromatic_number": 2,
+          "colors": {
+            "a": 0,
+            "b": 1,
+            "c": 0
+          },
+          "bounded_nodes": 3
+        },
+        "error": null
+      }
+    },
+    {
+      "proposal_id": "EL6923-120",
+      "input": {
+        "graph": {
+          "nodes": [
+            "a",
+            "b",
+            "c",
+            "d"
+          ],
+          "edges": [
+            [
+              "a",
+              "b"
+            ],
+            [
+              "a",
+              "c"
+            ],
+            [
+              "a",
+              "d"
+            ],
+            [
+              "b",
+              "c"
+            ],
+            [
+              "b",
+              "d"
+            ],
+            [
+              "c",
+              "d"
+            ]
+          ]
+        },
+        "max_nodes": 6
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "chromatic_number": 4,
+          "colors": {
+            "a": 0,
+            "b": 1,
+            "c": 2,
+            "d": 3
+          },
+          "bounded_nodes": 4
+        },
+        "error": null
+      }
+    }
+  ]
+}

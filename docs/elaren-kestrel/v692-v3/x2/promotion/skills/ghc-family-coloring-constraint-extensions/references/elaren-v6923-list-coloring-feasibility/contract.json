@@ -1,0 +1,502 @@
+{
+  "schema": "ghc.family.skill-contract.v1",
+  "owner": "Elaren Kestrel",
+  "phase": "v692-v3",
+  "session": "x2",
+  "operation": "list_coloring_feasibility",
+  "cases": [
+    {
+      "proposal_id": "EL6923-121",
+      "input": {
+        "graph": {
+          "nodes": [],
+          "edges": []
+        },
+        "lists": {}
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "feasible": true,
+          "colors": {}
+        },
+        "error": null
+      }
+    },
+    {
+      "proposal_id": "EL6923-122",
+      "input": {
+        "graph": {
+          "nodes": [
+            "a"
+          ],
+          "edges": []
+        },
+        "lists": {
+          "a": [
+            0,
+            1
+          ]
+        }
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "feasible": true,
+          "colors": {
+            "a": 0
+          }
+        },
+        "error": null
+      }
+    },
+    {
+      "proposal_id": "EL6923-123",
+      "input": {
+        "graph": {
+          "nodes": [
+            "a",
+            "b"
+          ],
+          "edges": [
+            [
+              "a",
+              "b"
+            ]
+          ]
+        },
+        "lists": {
+          "a": [
+            0,
+            1,
+            2
+          ],
+          "b": [
+            0,
+            1,
+            2
+          ]
+        }
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "feasible": true,
+          "colors": {
+            "a": 0,
+            "b": 1
+          }
+        },
+        "error": null
+      }
+    },
+    {
+      "proposal_id": "EL6923-124",
+      "input": {
+        "graph": {
+          "nodes": [
+            "a",
+            "b",
+            "c"
+          ],
+          "edges": [
+            [
+              "a",
+              "b"
+            ],
+            [
+              "b",
+              "c"
+            ]
+          ]
+        },
+        "lists": {
+          "a": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "b": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "c": [
+            0,
+            1,
+            2,
+            3
+          ]
+        }
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "feasible": true,
+          "colors": {
+            "b": 0,
+            "a": 1,
+            "c": 1
+          }
+        },
+        "error": null
+      }
+    },
+    {
+      "proposal_id": "EL6923-125",
+      "input": {
+        "graph": {
+          "nodes": [
+            "a",
+            "b",
+            "c"
+          ],
+          "edges": [
+            [
+              "a",
+              "b"
+            ],
+            [
+              "b",
+              "c"
+            ],
+            [
+              "c",
+              "a"
+            ]
+          ]
+        },
+        "lists": {
+          "a": [
+            0
+          ],
+          "b": [
+            0
+          ],
+          "c": [
+            0
+          ]
+        }
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "feasible": false,
+          "colors": null
+        },
+        "error": null
+      }
+    },
+    {
+      "proposal_id": "EL6923-126",
+      "input": {
+        "graph": {
+          "nodes": [
+            "a",
+            "b",
+            "c",
+            "d"
+          ],
+          "edges": [
+            [
+              "a",
+              "b"
+            ],
+            [
+              "b",
+              "c"
+            ],
+            [
+              "c",
+              "d"
+            ],
+            [
+              "d",
+              "a"
+            ]
+          ]
+        },
+        "lists": {
+          "a": [
+            0
+          ],
+          "b": [
+            0
+          ],
+          "c": [
+            0
+          ],
+          "d": [
+            0
+          ]
+        }
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "feasible": false,
+          "colors": null
+        },
+        "error": null
+      }
+    },
+    {
+      "proposal_id": "EL6923-127",
+      "input": {
+        "graph": {
+          "nodes": [
+            "a",
+            "b",
+            "c",
+            "d"
+          ],
+          "edges": [
+            [
+              "a",
+              "b"
+            ],
+            [
+              "a",
+              "c"
+            ],
+            [
+              "a",
+              "d"
+            ]
+          ]
+        },
+        "lists": {
+          "a": [
+            0,
+            1
+          ],
+          "b": [
+            0,
+            1
+          ],
+          "c": [
+            0,
+            1
+          ],
+          "d": [
+            0,
+            1
+          ]
+        }
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "feasible": true,
+          "colors": {
+            "a": 0,
+            "b": 1,
+            "c": 1,
+            "d": 1
+          }
+        },
+        "error": null
+      }
+    },
+    {
+      "proposal_id": "EL6923-128",
+      "input": {
+        "graph": {
+          "nodes": [
+            "a",
+            "b",
+            "c",
+            "d",
+            "e"
+          ],
+          "edges": [
+            [
+              "a",
+              "b"
+            ],
+            [
+              "b",
+              "c"
+            ],
+            [
+              "c",
+              "d"
+            ],
+            [
+              "d",
+              "e"
+            ],
+            [
+              "e",
+              "a"
+            ]
+          ]
+        },
+        "lists": {
+          "a": [
+            0,
+            1,
+            2
+          ],
+          "b": [
+            0,
+            1,
+            2
+          ],
+          "c": [
+            0,
+            1,
+            2
+          ],
+          "d": [
+            0,
+            1,
+            2
+          ],
+          "e": [
+            0,
+            1,
+            2
+          ]
+        }
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "feasible": true,
+          "colors": {
+            "a": 0,
+            "b": 1,
+            "c": 0,
+            "d": 1,
+            "e": 2
+          }
+        },
+        "error": null
+      }
+    },
+    {
+      "proposal_id": "EL6923-129",
+      "input": {
+        "graph": {
+          "nodes": [
+            "a",
+            "b",
+            "c"
+          ],
+          "edges": [
+            [
+              "a",
+              "b"
+            ]
+          ]
+        },
+        "lists": {
+          "a": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "b": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "c": [
+            0,
+            1,
+            2,
+            3
+          ]
+        }
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "feasible": true,
+          "colors": {
+            "a": 0,
+            "b": 1,
+            "c": 0
+          }
+        },
+        "error": null
+      }
+    },
+    {
+      "proposal_id": "EL6923-130",
+      "input": {
+        "graph": {
+          "nodes": [
+            "a",
+            "b",
+            "c",
+            "d"
+          ],
+          "edges": [
+            [
+              "a",
+              "b"
+            ],
+            [
+              "a",
+              "c"
+            ],
+            [
+              "a",
+              "d"
+            ],
+            [
+              "b",
+              "c"
+            ],
+            [
+              "b",
+              "d"
+            ],
+            [
+              "c",
+              "d"
+            ]
+          ]
+        },
+        "lists": {
+          "a": [
+            0
+          ],
+          "b": [
+            0
+          ],
+          "c": [
+            0
+          ],
+          "d": [
+            0
+          ]
+        }
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "feasible": false,
+          "colors": null
+        },
+        "error": null
+      }
+    }
+  ]
+}

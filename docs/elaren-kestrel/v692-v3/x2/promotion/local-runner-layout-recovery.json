@@ -1,0 +1,49 @@
+{
+  "schema": "ghc.family.local-runner-layout-recovery.v1",
+  "owner": "Elaren Kestrel",
+  "phase": "v692-v3",
+  "failure": {
+    "failure_id": "EL6923-X2-OP-002",
+    "observed": "Precommit compatibility review found local promotion runners expected a promotion/engines directory that was absent.",
+    "initial_credit": 0,
+    "repository_bytes_changed_before_recovery": false
+  },
+  "recovery": {
+    "action": "Add exact local copies of both already-validated immutable session engines under the expected directory and update the module allowlist.",
+    "global_bytes_changed": false,
+    "local_runner_smokes": [
+      {
+        "group": "ghc-family-coloring-structure-audit",
+        "supported_result": "pass",
+        "unsupported_subject_result": "fail",
+        "unsupported_refusal_result": "pass"
+      },
+      {
+        "group": "ghc-family-coloring-recovery-certificates",
+        "supported_result": "pass",
+        "unsupported_subject_result": "fail",
+        "unsupported_refusal_result": "pass"
+      },
+      {
+        "group": "ghc-family-coloring-search-bounds",
+        "supported_result": "pass",
+        "unsupported_subject_result": "fail",
+        "unsupported_refusal_result": "pass"
+      },
+      {
+        "group": "ghc-family-coloring-constraint-extensions",
+        "supported_result": "pass",
+        "unsupported_subject_result": "fail",
+        "unsupported_refusal_result": "pass"
+      },
+      {
+        "group": "ghc-family-coloring-access-authority",
+        "supported_result": "pass",
+        "unsupported_subject_result": "fail",
+        "unsupported_refusal_result": "pass"
+      }
+    ],
+    "valid": true
+  },
+  "recurrence_guard": "Smoke both global and committed local caller layouts before freezing the promotion receipt."
+}

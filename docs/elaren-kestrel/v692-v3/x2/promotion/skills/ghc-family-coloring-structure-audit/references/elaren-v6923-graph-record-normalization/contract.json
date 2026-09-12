@@ -1,0 +1,552 @@
+{
+  "schema": "ghc.family.skill-contract.v1",
+  "owner": "Elaren Kestrel",
+  "phase": "v692-v3",
+  "session": "x1",
+  "operation": "graph_record_normalization",
+  "cases": [
+    {
+      "proposal_id": "EL6923-001",
+      "input": {
+        "graph": {
+          "nodes": [],
+          "edges": []
+        }
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "graph": {
+            "nodes": [],
+            "edges": []
+          },
+          "performed": false
+        },
+        "error": null
+      }
+    },
+    {
+      "proposal_id": "EL6923-002",
+      "input": {
+        "graph": {
+          "nodes": [
+            "a",
+            "a"
+          ],
+          "edges": []
+        }
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "graph": {
+            "nodes": [
+              "a"
+            ],
+            "edges": []
+          },
+          "performed": false
+        },
+        "error": null
+      }
+    },
+    {
+      "proposal_id": "EL6923-003",
+      "input": {
+        "graph": {
+          "nodes": [
+            "b",
+            "a",
+            "a"
+          ],
+          "edges": [
+            [
+              "a",
+              "b"
+            ],
+            [
+              "a",
+              "b"
+            ]
+          ]
+        }
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "graph": {
+            "nodes": [
+              "a",
+              "b"
+            ],
+            "edges": [
+              [
+                "a",
+                "b"
+              ]
+            ]
+          },
+          "performed": false
+        },
+        "error": null
+      }
+    },
+    {
+      "proposal_id": "EL6923-004",
+      "input": {
+        "graph": {
+          "nodes": [
+            "c",
+            "b",
+            "a",
+            "a"
+          ],
+          "edges": [
+            [
+              "b",
+              "c"
+            ],
+            [
+              "a",
+              "b"
+            ],
+            [
+              "a",
+              "b"
+            ]
+          ]
+        }
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "graph": {
+            "nodes": [
+              "a",
+              "b",
+              "c"
+            ],
+            "edges": [
+              [
+                "a",
+                "b"
+              ],
+              [
+                "b",
+                "c"
+              ]
+            ]
+          },
+          "performed": false
+        },
+        "error": null
+      }
+    },
+    {
+      "proposal_id": "EL6923-005",
+      "input": {
+        "graph": {
+          "nodes": [
+            "c",
+            "b",
+            "a",
+            "a"
+          ],
+          "edges": [
+            [
+              "c",
+              "a"
+            ],
+            [
+              "b",
+              "c"
+            ],
+            [
+              "a",
+              "b"
+            ],
+            [
+              "a",
+              "b"
+            ]
+          ]
+        }
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "graph": {
+            "nodes": [
+              "a",
+              "b",
+              "c"
+            ],
+            "edges": [
+              [
+                "a",
+                "b"
+              ],
+              [
+                "a",
+                "c"
+              ],
+              [
+                "b",
+                "c"
+              ]
+            ]
+          },
+          "performed": false
+        },
+        "error": null
+      }
+    },
+    {
+      "proposal_id": "EL6923-006",
+      "input": {
+        "graph": {
+          "nodes": [
+            "d",
+            "c",
+            "b",
+            "a",
+            "a"
+          ],
+          "edges": [
+            [
+              "d",
+              "a"
+            ],
+            [
+              "c",
+              "d"
+            ],
+            [
+              "b",
+              "c"
+            ],
+            [
+              "a",
+              "b"
+            ],
+            [
+              "a",
+              "b"
+            ]
+          ]
+        }
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "graph": {
+            "nodes": [
+              "a",
+              "b",
+              "c",
+              "d"
+            ],
+            "edges": [
+              [
+                "a",
+                "b"
+              ],
+              [
+                "a",
+                "d"
+              ],
+              [
+                "b",
+                "c"
+              ],
+              [
+                "c",
+                "d"
+              ]
+            ]
+          },
+          "performed": false
+        },
+        "error": null
+      }
+    },
+    {
+      "proposal_id": "EL6923-007",
+      "input": {
+        "graph": {
+          "nodes": [
+            "d",
+            "c",
+            "b",
+            "a",
+            "a"
+          ],
+          "edges": [
+            [
+              "a",
+              "d"
+            ],
+            [
+              "a",
+              "c"
+            ],
+            [
+              "a",
+              "b"
+            ],
+            [
+              "a",
+              "b"
+            ]
+          ]
+        }
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "graph": {
+            "nodes": [
+              "a",
+              "b",
+              "c",
+              "d"
+            ],
+            "edges": [
+              [
+                "a",
+                "b"
+              ],
+              [
+                "a",
+                "c"
+              ],
+              [
+                "a",
+                "d"
+              ]
+            ]
+          },
+          "performed": false
+        },
+        "error": null
+      }
+    },
+    {
+      "proposal_id": "EL6923-008",
+      "input": {
+        "graph": {
+          "nodes": [
+            "e",
+            "d",
+            "c",
+            "b",
+            "a",
+            "a"
+          ],
+          "edges": [
+            [
+              "e",
+              "a"
+            ],
+            [
+              "d",
+              "e"
+            ],
+            [
+              "c",
+              "d"
+            ],
+            [
+              "b",
+              "c"
+            ],
+            [
+              "a",
+              "b"
+            ],
+            [
+              "a",
+              "b"
+            ]
+          ]
+        }
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "graph": {
+            "nodes": [
+              "a",
+              "b",
+              "c",
+              "d",
+              "e"
+            ],
+            "edges": [
+              [
+                "a",
+                "b"
+              ],
+              [
+                "a",
+                "e"
+              ],
+              [
+                "b",
+                "c"
+              ],
+              [
+                "c",
+                "d"
+              ],
+              [
+                "d",
+                "e"
+              ]
+            ]
+          },
+          "performed": false
+        },
+        "error": null
+      }
+    },
+    {
+      "proposal_id": "EL6923-009",
+      "input": {
+        "graph": {
+          "nodes": [
+            "c",
+            "b",
+            "a",
+            "a"
+          ],
+          "edges": [
+            [
+              "a",
+              "b"
+            ],
+            [
+              "a",
+              "b"
+            ]
+          ]
+        }
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "graph": {
+            "nodes": [
+              "a",
+              "b",
+              "c"
+            ],
+            "edges": [
+              [
+                "a",
+                "b"
+              ]
+            ]
+          },
+          "performed": false
+        },
+        "error": null
+      }
+    },
+    {
+      "proposal_id": "EL6923-010",
+      "input": {
+        "graph": {
+          "nodes": [
+            "d",
+            "c",
+            "b",
+            "a",
+            "a"
+          ],
+          "edges": [
+            [
+              "c",
+              "d"
+            ],
+            [
+              "b",
+              "d"
+            ],
+            [
+              "b",
+              "c"
+            ],
+            [
+              "a",
+              "d"
+            ],
+            [
+              "a",
+              "c"
+            ],
+            [
+              "a",
+              "b"
+            ],
+            [
+              "a",
+              "b"
+            ]
+          ]
+        }
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "graph": {
+            "nodes": [
+              "a",
+              "b",
+              "c",
+              "d"
+            ],
+            "edges": [
+              [
+                "a",
+                "b"
+              ],
+              [
+                "a",
+                "c"
+              ],
+              [
+                "a",
+                "d"
+              ],
+              [
+                "b",
+                "c"
+              ],
+              [
+                "b",
+                "d"
+              ],
+              [
+                "c",
+                "d"
+              ]
+            ]
+          },
+          "performed": false
+        },
+        "error": null
+      }
+    }
+  ]
+}
