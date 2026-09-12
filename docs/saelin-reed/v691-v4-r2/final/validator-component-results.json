@@ -1,0 +1,100 @@
+{
+  "results": [
+    {
+      "id": "valid_structure",
+      "input": "{\"a\":[1,-2,0.5,true,null],\"b\":\"Ω\"}",
+      "expectedAccepted": true,
+      "accepted": true,
+      "error": null,
+      "passed": true,
+      "original_subject_success_credit": null
+    },
+    {
+      "id": "prototype_data",
+      "input": "{\"__proto__\":{\"x\":1}}",
+      "expectedAccepted": true,
+      "accepted": true,
+      "error": null,
+      "passed": true,
+      "original_subject_success_credit": null
+    },
+    {
+      "id": "duplicate_key",
+      "input": "{\"a\":1,\"a\":2}",
+      "expectedAccepted": false,
+      "accepted": false,
+      "error": "DUPLICATE_JSON_KEY",
+      "passed": true,
+      "original_subject_success_credit": 0
+    },
+    {
+      "id": "escaped_duplicate",
+      "input": "{\"a\":1,\"\\u0061\":2}",
+      "expectedAccepted": false,
+      "accepted": false,
+      "error": "DUPLICATE_JSON_KEY",
+      "passed": true,
+      "original_subject_success_credit": 0
+    },
+    {
+      "id": "nested_duplicate",
+      "input": "{\"a\":{\"b\":1,\"b\":2}}",
+      "expectedAccepted": false,
+      "accepted": false,
+      "error": "DUPLICATE_JSON_KEY",
+      "passed": true,
+      "original_subject_success_credit": 0
+    },
+    {
+      "id": "object_trailing_comma",
+      "input": "{\"a\":1,}",
+      "expectedAccepted": false,
+      "accepted": false,
+      "error": "KEY_EXPECTED",
+      "passed": true,
+      "original_subject_success_credit": 0
+    },
+    {
+      "id": "array_trailing_comma",
+      "input": "[1,]",
+      "expectedAccepted": false,
+      "accepted": false,
+      "error": "JSON_VALUE_EXPECTED",
+      "passed": true,
+      "original_subject_success_credit": 0
+    },
+    {
+      "id": "leading_zero",
+      "input": "01",
+      "expectedAccepted": false,
+      "accepted": false,
+      "error": "TRAILING_JSON",
+      "passed": true,
+      "original_subject_success_credit": 0
+    },
+    {
+      "id": "nonfinite_number",
+      "input": "1e9999",
+      "expectedAccepted": false,
+      "accepted": false,
+      "error": "NONFINITE_JSON_NUMBER",
+      "passed": true,
+      "original_subject_success_credit": 0
+    },
+    {
+      "id": "unterminated_string",
+      "input": "\"unterminated",
+      "expectedAccepted": false,
+      "accepted": false,
+      "error": "UNTERMINATED_STRING",
+      "passed": true,
+      "original_subject_success_credit": 0
+    }
+  ],
+  "passed": true,
+  "positive_subjects": 2,
+  "failed_subjects": 8,
+  "passing_checks": 10,
+  "canonical_invocations": 0,
+  "full_program_invoked": false
+}

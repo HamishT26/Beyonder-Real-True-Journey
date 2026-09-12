@@ -1,0 +1,57 @@
+{
+  "scope": "New strict JSON parser component only",
+  "source_sha256": "af4f02c85abdfb80524606203f6057aba93eeb58387dbbfd8e1410ed6ab5d4c4",
+  "cases": [
+    {
+      "id": "valid_structure",
+      "input": "{\"a\":[1,-2,0.5,true,null],\"b\":\"Ω\"}",
+      "accepted": true
+    },
+    {
+      "id": "prototype_data",
+      "input": "{\"__proto__\":{\"x\":1}}",
+      "accepted": true
+    },
+    {
+      "id": "duplicate_key",
+      "input": "{\"a\":1,\"a\":2}",
+      "accepted": false
+    },
+    {
+      "id": "escaped_duplicate",
+      "input": "{\"a\":1,\"\\u0061\":2}",
+      "accepted": false
+    },
+    {
+      "id": "nested_duplicate",
+      "input": "{\"a\":{\"b\":1,\"b\":2}}",
+      "accepted": false
+    },
+    {
+      "id": "object_trailing_comma",
+      "input": "{\"a\":1,}",
+      "accepted": false
+    },
+    {
+      "id": "array_trailing_comma",
+      "input": "[1,]",
+      "accepted": false
+    },
+    {
+      "id": "leading_zero",
+      "input": "01",
+      "accepted": false
+    },
+    {
+      "id": "nonfinite_number",
+      "input": "1e9999",
+      "accepted": false
+    },
+    {
+      "id": "unterminated_string",
+      "input": "\"unterminated",
+      "accepted": false
+    }
+  ],
+  "canonical_invoked": false
+}
