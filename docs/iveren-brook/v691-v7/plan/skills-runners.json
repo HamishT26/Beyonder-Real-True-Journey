@@ -1,0 +1,510 @@
+{
+  "global_groups": [
+    {
+      "meaningful_source_units": 4,
+      "name": "ghc-family-finite-queue-policies",
+      "operations": [
+        "workload_schema",
+        "fcfs",
+        "sjf",
+        "round_robin"
+      ],
+      "runner": "ghc_family_queue_policies.txt"
+    },
+    {
+      "meaningful_source_units": 4,
+      "name": "ghc-family-priority-delay-contracts",
+      "operations": [
+        "srtf",
+        "static_priority",
+        "aging_priority",
+        "deadline_metrics"
+      ],
+      "runner": "ghc_family_priority_delay.txt"
+    },
+    {
+      "meaningful_source_units": 4,
+      "name": "ghc-family-load-admission-fairness",
+      "operations": [
+        "occupancy_area",
+        "jain_fairness",
+        "capacity_admission",
+        "token_bucket"
+      ],
+      "runner": "ghc_family_load_admission.txt"
+    },
+    {
+      "meaningful_source_units": 4,
+      "name": "ghc-family-weighted-service-vacations",
+      "operations": [
+        "leaky_bucket",
+        "weighted_finish_tags",
+        "deficit_round_robin",
+        "vacation_fcfs"
+      ],
+      "runner": "ghc_family_weighted_service.txt"
+    },
+    {
+      "meaningful_source_units": 4,
+      "name": "ghc-family-queue-evidence-reservations",
+      "operations": [
+        "workload_metrics",
+        "comparison_ceiling",
+        "evaluation_gap",
+        "allocation_gate"
+      ],
+      "runner": "ghc_family_queue_evidence.txt"
+    }
+  ],
+  "global_runners": 5,
+  "global_skills": 5,
+  "global_smoke_plan": "One positive and one preregistered adverse per operation from both immutable session collections: forty checks.",
+  "local_runners": [
+    {
+      "name": "queue-runner-01.txt",
+      "operations": [
+        "workload_schema",
+        "fcfs"
+      ],
+      "session": "x1"
+    },
+    {
+      "name": "queue-runner-02.txt",
+      "operations": [
+        "sjf",
+        "round_robin"
+      ],
+      "session": "x1"
+    },
+    {
+      "name": "queue-runner-03.txt",
+      "operations": [
+        "srtf",
+        "static_priority"
+      ],
+      "session": "x1"
+    },
+    {
+      "name": "queue-runner-04.txt",
+      "operations": [
+        "aging_priority",
+        "deadline_metrics"
+      ],
+      "session": "x1"
+    },
+    {
+      "name": "queue-runner-05.txt",
+      "operations": [
+        "occupancy_area",
+        "jain_fairness"
+      ],
+      "session": "x1"
+    },
+    {
+      "name": "queue-runner-06.txt",
+      "operations": [
+        "capacity_admission",
+        "token_bucket"
+      ],
+      "session": "x2"
+    },
+    {
+      "name": "queue-runner-07.txt",
+      "operations": [
+        "leaky_bucket",
+        "weighted_finish_tags"
+      ],
+      "session": "x2"
+    },
+    {
+      "name": "queue-runner-08.txt",
+      "operations": [
+        "deficit_round_robin",
+        "vacation_fcfs"
+      ],
+      "session": "x2"
+    },
+    {
+      "name": "queue-runner-09.txt",
+      "operations": [
+        "workload_metrics",
+        "comparison_ceiling"
+      ],
+      "session": "x2"
+    },
+    {
+      "name": "queue-runner-10.txt",
+      "operations": [
+        "evaluation_gap",
+        "allocation_gate"
+      ],
+      "session": "x2"
+    }
+  ],
+  "local_skills": [
+    {
+      "name": "ghc-family-queue-workload-schema",
+      "operation": "workload_schema",
+      "session": "x1",
+      "source_case_ids": [
+        "IB6917-001",
+        "IB6917-002",
+        "IB6917-003",
+        "IB6917-004",
+        "IB6917-005",
+        "IB6917-006",
+        "IB6917-007",
+        "IB6917-008",
+        "IB6917-009",
+        "IB6917-010"
+      ]
+    },
+    {
+      "name": "ghc-family-queue-fcfs",
+      "operation": "fcfs",
+      "session": "x1",
+      "source_case_ids": [
+        "IB6917-011",
+        "IB6917-012",
+        "IB6917-013",
+        "IB6917-014",
+        "IB6917-015",
+        "IB6917-016",
+        "IB6917-017",
+        "IB6917-018",
+        "IB6917-019",
+        "IB6917-020"
+      ]
+    },
+    {
+      "name": "ghc-family-queue-sjf",
+      "operation": "sjf",
+      "session": "x1",
+      "source_case_ids": [
+        "IB6917-021",
+        "IB6917-022",
+        "IB6917-023",
+        "IB6917-024",
+        "IB6917-025",
+        "IB6917-026",
+        "IB6917-027",
+        "IB6917-028",
+        "IB6917-029",
+        "IB6917-030"
+      ]
+    },
+    {
+      "name": "ghc-family-queue-round-robin",
+      "operation": "round_robin",
+      "session": "x1",
+      "source_case_ids": [
+        "IB6917-031",
+        "IB6917-032",
+        "IB6917-033",
+        "IB6917-034",
+        "IB6917-035",
+        "IB6917-036",
+        "IB6917-037",
+        "IB6917-038",
+        "IB6917-039",
+        "IB6917-040"
+      ]
+    },
+    {
+      "name": "ghc-family-queue-srtf",
+      "operation": "srtf",
+      "session": "x1",
+      "source_case_ids": [
+        "IB6917-041",
+        "IB6917-042",
+        "IB6917-043",
+        "IB6917-044",
+        "IB6917-045",
+        "IB6917-046",
+        "IB6917-047",
+        "IB6917-048",
+        "IB6917-049",
+        "IB6917-050"
+      ]
+    },
+    {
+      "name": "ghc-family-queue-static-priority",
+      "operation": "static_priority",
+      "session": "x1",
+      "source_case_ids": [
+        "IB6917-051",
+        "IB6917-052",
+        "IB6917-053",
+        "IB6917-054",
+        "IB6917-055",
+        "IB6917-056",
+        "IB6917-057",
+        "IB6917-058",
+        "IB6917-059",
+        "IB6917-060"
+      ]
+    },
+    {
+      "name": "ghc-family-queue-aging-priority",
+      "operation": "aging_priority",
+      "session": "x1",
+      "source_case_ids": [
+        "IB6917-061",
+        "IB6917-062",
+        "IB6917-063",
+        "IB6917-064",
+        "IB6917-065",
+        "IB6917-066",
+        "IB6917-067",
+        "IB6917-068",
+        "IB6917-069",
+        "IB6917-070"
+      ]
+    },
+    {
+      "name": "ghc-family-queue-deadline-metrics",
+      "operation": "deadline_metrics",
+      "session": "x1",
+      "source_case_ids": [
+        "IB6917-071",
+        "IB6917-072",
+        "IB6917-073",
+        "IB6917-074",
+        "IB6917-075",
+        "IB6917-076",
+        "IB6917-077",
+        "IB6917-078",
+        "IB6917-079",
+        "IB6917-080"
+      ]
+    },
+    {
+      "name": "ghc-family-queue-occupancy-area",
+      "operation": "occupancy_area",
+      "session": "x1",
+      "source_case_ids": [
+        "IB6917-081",
+        "IB6917-082",
+        "IB6917-083",
+        "IB6917-084",
+        "IB6917-085",
+        "IB6917-086",
+        "IB6917-087",
+        "IB6917-088",
+        "IB6917-089",
+        "IB6917-090"
+      ]
+    },
+    {
+      "name": "ghc-family-queue-jain-fairness",
+      "operation": "jain_fairness",
+      "session": "x1",
+      "source_case_ids": [
+        "IB6917-091",
+        "IB6917-092",
+        "IB6917-093",
+        "IB6917-094",
+        "IB6917-095",
+        "IB6917-096",
+        "IB6917-097",
+        "IB6917-098",
+        "IB6917-099",
+        "IB6917-100"
+      ]
+    },
+    {
+      "name": "ghc-family-queue-capacity-admission",
+      "operation": "capacity_admission",
+      "session": "x2",
+      "source_case_ids": [
+        "IB6917-101",
+        "IB6917-102",
+        "IB6917-103",
+        "IB6917-104",
+        "IB6917-105",
+        "IB6917-106",
+        "IB6917-107",
+        "IB6917-108",
+        "IB6917-109",
+        "IB6917-110"
+      ]
+    },
+    {
+      "name": "ghc-family-queue-token-bucket",
+      "operation": "token_bucket",
+      "session": "x2",
+      "source_case_ids": [
+        "IB6917-111",
+        "IB6917-112",
+        "IB6917-113",
+        "IB6917-114",
+        "IB6917-115",
+        "IB6917-116",
+        "IB6917-117",
+        "IB6917-118",
+        "IB6917-119",
+        "IB6917-120"
+      ]
+    },
+    {
+      "name": "ghc-family-queue-leaky-bucket",
+      "operation": "leaky_bucket",
+      "session": "x2",
+      "source_case_ids": [
+        "IB6917-121",
+        "IB6917-122",
+        "IB6917-123",
+        "IB6917-124",
+        "IB6917-125",
+        "IB6917-126",
+        "IB6917-127",
+        "IB6917-128",
+        "IB6917-129",
+        "IB6917-130"
+      ]
+    },
+    {
+      "name": "ghc-family-queue-weighted-finish-tags",
+      "operation": "weighted_finish_tags",
+      "session": "x2",
+      "source_case_ids": [
+        "IB6917-131",
+        "IB6917-132",
+        "IB6917-133",
+        "IB6917-134",
+        "IB6917-135",
+        "IB6917-136",
+        "IB6917-137",
+        "IB6917-138",
+        "IB6917-139",
+        "IB6917-140"
+      ]
+    },
+    {
+      "name": "ghc-family-queue-deficit-round-robin",
+      "operation": "deficit_round_robin",
+      "session": "x2",
+      "source_case_ids": [
+        "IB6917-141",
+        "IB6917-142",
+        "IB6917-143",
+        "IB6917-144",
+        "IB6917-145",
+        "IB6917-146",
+        "IB6917-147",
+        "IB6917-148",
+        "IB6917-149",
+        "IB6917-150"
+      ]
+    },
+    {
+      "name": "ghc-family-queue-vacation-fcfs",
+      "operation": "vacation_fcfs",
+      "session": "x2",
+      "source_case_ids": [
+        "IB6917-151",
+        "IB6917-152",
+        "IB6917-153",
+        "IB6917-154",
+        "IB6917-155",
+        "IB6917-156",
+        "IB6917-157",
+        "IB6917-158",
+        "IB6917-159",
+        "IB6917-160"
+      ]
+    },
+    {
+      "name": "ghc-family-queue-workload-metrics",
+      "operation": "workload_metrics",
+      "session": "x2",
+      "source_case_ids": [
+        "IB6917-161",
+        "IB6917-162",
+        "IB6917-163",
+        "IB6917-164",
+        "IB6917-165",
+        "IB6917-166",
+        "IB6917-167",
+        "IB6917-168",
+        "IB6917-169",
+        "IB6917-170"
+      ]
+    },
+    {
+      "name": "ghc-family-queue-comparison-ceiling",
+      "operation": "comparison_ceiling",
+      "session": "x2",
+      "source_case_ids": [
+        "IB6917-171",
+        "IB6917-172",
+        "IB6917-173",
+        "IB6917-174",
+        "IB6917-175",
+        "IB6917-176",
+        "IB6917-177",
+        "IB6917-178",
+        "IB6917-179",
+        "IB6917-180"
+      ]
+    },
+    {
+      "name": "ghc-family-queue-evaluation-gap",
+      "operation": "evaluation_gap",
+      "session": "x2",
+      "source_case_ids": [
+        "IB6917-181",
+        "IB6917-182",
+        "IB6917-183",
+        "IB6917-184",
+        "IB6917-185",
+        "IB6917-186",
+        "IB6917-187",
+        "IB6917-188",
+        "IB6917-189",
+        "IB6917-190"
+      ]
+    },
+    {
+      "name": "ghc-family-queue-allocation-gate",
+      "operation": "allocation_gate",
+      "session": "x2",
+      "source_case_ids": [
+        "IB6917-191",
+        "IB6917-192",
+        "IB6917-193",
+        "IB6917-194",
+        "IB6917-195",
+        "IB6917-196",
+        "IB6917-197",
+        "IB6917-198",
+        "IB6917-199",
+        "IB6917-200"
+      ]
+    }
+  ],
+  "next_runner_ideas": [
+    "windowed queue integrator",
+    "service-duration interval sweep",
+    "multi-server trace checker",
+    "weight-sensitivity table",
+    "allocation evidence vacancy reporter"
+  ],
+  "next_skill_ideas": [
+    "queue-censoring adjudication",
+    "service-time uncertainty envelope",
+    "multi-server policy comparison",
+    "weighted-queue sensitivity",
+    "human allocation decision provenance"
+  ],
+  "promotion_gates": [
+    "exact pushed owner source",
+    "both-session fixture lookup",
+    "byte parity",
+    "five skill validation checks",
+    "forty bounded global smokes",
+    "no overwrite",
+    "rollback pointer"
+  ],
+  "support_modules_are_not_extra_runner_credit": true
+}
