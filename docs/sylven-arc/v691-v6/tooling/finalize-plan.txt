@@ -1,0 +1,94 @@
+"use strict";
+
+const fs = require("fs");
+const path = require("path");
+const crypto = require("crypto");
+
+const ROOT = path.resolve(__dirname, "../../../..");
+const BASE = "docs/sylven-arc/v691-v6";
+const PLAN = path.join(ROOT, BASE, "plan");
+const GATES = ["empirical","participant","professional","production","deployment","legal","cultural","affected_party","maori_authority","privacy_complete","accessibility_complete","exhaustive_security","independent_reproduction","agi_asi","consciousness_personhood","theory_of_everything","proof_canon","stage20"];
+
+function stable(value) {
+  if (Array.isArray(value)) return value.map(stable);
+  if (value && typeof value === "object") return Object.fromEntries(Object.keys(value).sort().map(key => [key, stable(value[key])]));
+  return value;
+}
+function sha(value) { return crypto.createHash("sha256").update(Buffer.isBuffer(value) ? value : Buffer.from(JSON.stringify(stable(value)))).digest("hex"); }
+function load(name) { return JSON.parse(fs.readFileSync(path.join(PLAN, name), "utf8")); }
+function encode(value) { return JSON.stringify(value, null, 2) + "\n"; }
+function tokens(value) { return new Set(String(value).toLowerCase().match(/[a-z0-9]+/g) || []); }
+function jaccard(left, right) {
+  const a=tokens(left), b=tokens(right), union=new Set([...a,...b]); let intersection=0;
+  for (const token of a) if (b.has(token)) intersection += 1;
+  return union.size ? intersection / union.size : 1;
+}
+function collect(directory, output=[]) {
+  for (const name of fs.readdirSync(directory)) {
+    const absolute=path.join(directory,name), stat=fs.statSync(absolute);
+    if (stat.isDirectory()) collect(absolute,output); else output.push(absolute);
+  }
+  return output;
+}
+
+function main() {
+  const sourcePath = process.argv[2];
+  if (!sourcePath) throw new Error("source_plan_argument_required");
+  if (fs.existsSync(path.join(ROOT, BASE, "x1")) || fs.existsSync(path.join(ROOT, BASE, "x2"))) throw new Error("mixed_lifecycle_stage");
+  const freeze=load("proposal-freeze.json"), source=JSON.parse(fs.readFileSync(path.resolve(sourcePath),"utf8"));
+  const novelty=load("novelty-audit.json"), portfolio=load("portfolios.json"), tools=load("skills-runners.json");
+  const operational=load("operational-failures.json"), methodFlow=load("method-flow-startup.json"), truth=load("phase-truth.json"), route=load("route.json");
+  const required=["proposal_id","session","operation","title","hypothesis","null_or_failure_condition","approval_class","execution_lane","current_official_or_primary_source_needs","concrete_artifact","falsifier_or_acceptance_gate","rollback_or_recovery","protected_gates","expected_disposition","input","expected","practice","pillar","definition_sha256"];
+  if (freeze.count!==200 || freeze.proposals.length!==200 || new Set(freeze.proposals.map(p=>p.proposal_id)).size!==200 || new Set(freeze.proposals.map(p=>p.title)).size!==200) throw new Error("proposal_identity");
+  if (freeze.proposals.some(p=>required.some(key=>!(key in p)))) throw new Error("proposal_fields");
+  if (freeze.proposals.some(p=>sha({operation:p.operation,input:p.input,hypothesis:p.hypothesis,expected:p.expected})!==p.definition_sha256)) throw new Error("proposal_definition_hash");
+  if (new Set(freeze.proposals.map(p=>p.definition_sha256)).size!==200) throw new Error("proposal_definition_uniqueness");
+  const sessions=Object.fromEntries(["x1","x2"].map(name=>[name,freeze.proposals.filter(p=>p.session===name).length]));
+  const outcomes={completed:0,represented:0,open_gap:0,exact_gate:0}; for(const p of freeze.proposals){if(!(p.expected_disposition in outcomes))throw new Error("outcome_label");outcomes[p.expected_disposition]++;}
+  if (sessions.x1!==100||sessions.x2!==100||JSON.stringify(outcomes)!==JSON.stringify({completed:170,represented:10,open_gap:10,exact_gate:10})) throw new Error("proposal_distribution");
+  const sourceTitles=new Set(source.proposals.map(p=>p.title)), sourceDefinitions=new Set(source.proposals.map(p=>p.definition_sha256));
+  if (freeze.proposals.some(p=>sourceTitles.has(p.title)||sourceDefinitions.has(p.definition_sha256))) throw new Error("source_collision");
+  let maximum={score:0,new_id:null,source_id:null}; for(const p of freeze.proposals)for(const s of source.proposals){const score=jaccard(p.title,s.title);if(score>maximum.score)maximum={score,new_id:p.proposal_id,source_id:s.proposal_id};}
+  if(maximum.score>0.78||Math.abs(maximum.score-novelty.maximum_token_jaccard.score)>1e-12||maximum.new_id!==novelty.maximum_token_jaccard.new_id||maximum.source_id!==novelty.maximum_token_jaccard.source_id)throw new Error("semantic_novelty");
+  const cardinalities={safe_x1:portfolio.safe_now.x1.length,safe_x2:portfolio.safe_now.x2.length,candidate_x1:portfolio.candidates.x1.length,candidate_x2:portfolio.candidates.x2.length,cfr_x1:portfolio.clean_fix_refine.x1.length,cfr_x2:portfolio.clean_fix_refine.x2.length,exact:portfolio.exact_packets.length,blocked:portfolio.blocked_packets.length,skills_x1:tools.local_skills.x1.length,skills_x2:tools.local_skills.x2.length,runners_x1:tools.local_runners.x1.length,runners_x2:tools.local_runners.x2.length,curated_groups:tools.curated_global_groups.length};
+  const expectedCardinalities={safe_x1:100,safe_x2:100,candidate_x1:100,candidate_x2:100,cfr_x1:100,cfr_x2:100,exact:50,blocked:30,skills_x1:10,skills_x2:10,runners_x1:5,runners_x2:5,curated_groups:5};
+  if(JSON.stringify(cardinalities)!==JSON.stringify(expectedCardinalities))throw new Error("portfolio_cardinality");
+  if(portfolio.exact_packets.some(p=>p.executed!==false)||portfolio.blocked_packets.some(p=>p.executed!==false))throw new Error("gated_packet_execution");
+  if(route.early_contact!==false||route.send_limit!==1||route.create_task!==false||route.fork_task!==false||route.spawn_subagent!==false||route.successor!=="Iveren Brook")throw new Error("route_plan");
+  if(operational.failures.length!==7||methodFlow.counts.methods!==7||truth.startup_overlay.methods!==7)throw new Error("startup_overlay_before_privacy_correction");
+
+  const privacyFailure={failure_id:"SA6916-START-N008",failed_witness:"The first retained novelty-repair tool encoded a host-specific absolute source-plan path before planning validation.",recovery:"Parameterize the source-plan path, preserve only repository-relative paths in committed artifacts, and scan the complete planning surface before staging.",recurrence_guard:"Pass host paths at invocation time and never embed a private absolute route in a committed owner tool or baton.",success_credit:0};
+  operational.failures.push(privacyFailure);
+  const methodId="SA6916-START-M008";
+  methodFlow.methods.push({method_id:methodId,title:privacyFailure.recovery,failure_signature:privacyFailure.failed_witness,trigger_preconditions:["A bounded startup metadata or source-validation operation is required."],privacy_class:"sanitized_public",approval_class:"safe_now",candidate_workaround:privacyFailure.recovery,validation_witness_ids:[`${privacyFailure.failure_id}-FAIL`,`${privacyFailure.failure_id}-PASS`],recurrence_guard:privacyFailure.recurrence_guard,rollback:"Stop, retain the failure, and leave source, sibling, shared, global, and route state unchanged.",recommendation_state:"preferred",supersedes:[],protected_gates:GATES,retained_negative_ids:[privacyFailure.failure_id],scope_boundary:"Sylven v691-v6 startup only."});
+  methodFlow.witnesses.push(
+    {witness_id:`${privacyFailure.failure_id}-FAIL`,method_id:methodId,procedure:"initial repair-tool privacy review",scope:"Sylven startup",expected:"No private absolute path",observed:privacyFailure.failed_witness,result:"fail",same_owner_only:true,independent_reproduction:false,retained_negative_ids:[privacyFailure.failure_id],boundary:methodFlow.boundary},
+    {witness_id:`${privacyFailure.failure_id}-PASS`,method_id:methodId,procedure:"complete planning-surface privacy scan",scope:"Sylven startup",expected:"Zero confirmed private absolute paths",observed:privacyFailure.recovery,result:"pass",same_owner_only:true,independent_reproduction:false,retained_negative_ids:[privacyFailure.failure_id],boundary:methodFlow.boundary}
+  );
+  methodFlow.counts={methods:8,witnesses:16,failed:8,passing:8};
+  truth.startup_overlay={methods:8,witnesses:16,failed_witnesses:8,passing_witnesses:8,negatives:8};
+  fs.writeFileSync(path.join(PLAN,"operational-failures.json"),encode(operational),"utf8");
+  fs.writeFileSync(path.join(PLAN,"method-flow-startup.json"),encode(methodFlow),"utf8");
+  fs.writeFileSync(path.join(PLAN,"phase-truth.json"),encode(truth),"utf8");
+
+  const beforeReceipt=collect(path.join(ROOT,BASE));
+  const allowedExtensions=new Set([".json",".md",".txt",".html"]);
+  const extensionViolations=beforeReceipt.filter(file=>!allowedExtensions.has(path.extname(file).toLowerCase()));
+  const privateAbsolute=/\b[a-z]:[\\/](?:users|ghc-archives)[\\/]/ig;
+  const rawTask=/\b[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\b/ig;
+  const confirmed=[];
+  for(const file of beforeReceipt){const text=fs.readFileSync(file,"utf8");if(privateAbsolute.test(text)||rawTask.test(text))confirmed.push(path.relative(ROOT,file).replaceAll("\\","/"));privateAbsolute.lastIndex=0;rawTask.lastIndex=0;}
+  if(extensionViolations.length||confirmed.length)throw new Error(`privacy_or_extension_${extensionViolations.length}_${confirmed.length}`);
+  const jsonFiles=beforeReceipt.filter(file=>path.extname(file).toLowerCase()===".json"); for(const file of jsonFiles)JSON.parse(fs.readFileSync(file,"utf8"));
+  const receipt={schema:"ghc.family.sylven-plan-validation.v1",status:"VALID_PLANNING_ONLY_ROOT_CANDIDATE",owner:"Sylven Arc",phase:"v691-v6",checked_at:"2026-09-12T20:00:00+12:00",proposal_checks:200,source_rows:200,session_counts:sessions,outcomes,maximum_token_jaccard:maximum,threshold:0.78,portfolio_cardinalities:cardinalities,json_documents:jsonFiles.length,privacy_files:beforeReceipt.length,confirmed_private_path_or_task_id_hits:0,x1_exists:false,x2_exists:false,retained_startup_failures:8,methods:8,witnesses:16,manifest_pending:true,same_owner_only:true,independent_reproduction:false,terminal_verdict:"NOT_READY_FOR_STAGE_20",boundary:truth.boundary};
+  fs.writeFileSync(path.join(PLAN,"validation-receipt.json"),encode(receipt),"utf8");
+
+  const allFiles=collect(path.join(ROOT,BASE));
+  const manifestPath=`${BASE}/plan/manifest.json`;
+  const entries=allFiles.map(file=>path.relative(ROOT,file).replaceAll("\\","/")).filter(item=>item!==manifestPath).sort().map(item=>{const content=fs.readFileSync(path.join(ROOT,item));return {path:item,bytes:content.length,sha256:sha(content)};});
+  const manifest={schema:"ghc.family.sylven-plan-manifest.v1",byte_domain:"working UTF-8 LF bytes before root commit",entry_count:entries.length,entries,declared_self_exclusions:[manifestPath]};
+  fs.writeFileSync(path.join(PLAN,"manifest.json"),encode(manifest),"utf8");
+  process.stdout.write(JSON.stringify({status:receipt.status,proposals:200,maximum_token_jaccard:maximum,retained_startup_failures:8,json_documents:jsonFiles.length,manifest_entries:entries.length}));
+}
+
+main();

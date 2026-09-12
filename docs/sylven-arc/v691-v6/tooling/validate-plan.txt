@@ -1,0 +1,43 @@
+"use strict";
+
+const fs=require("fs");
+const path=require("path");
+const crypto=require("crypto");
+const cp=require("child_process");
+const ROOT=path.resolve(__dirname,"../../../..");
+const BASE="docs/sylven-arc/v691-v6";
+const PLAN=path.join(ROOT,BASE,"plan");
+
+function stable(value){if(Array.isArray(value))return value.map(stable);if(value&&typeof value==="object")return Object.fromEntries(Object.keys(value).sort().map(key=>[key,stable(value[key])]));return value;}
+function sha(value){return crypto.createHash("sha256").update(Buffer.isBuffer(value)?value:Buffer.from(JSON.stringify(stable(value)))).digest("hex");}
+function load(name){return JSON.parse(fs.readFileSync(path.join(PLAN,name),"utf8"));}
+function collect(directory,output=[]){for(const name of fs.readdirSync(directory)){const absolute=path.join(directory,name),stat=fs.statSync(absolute);if(stat.isDirectory())collect(absolute,output);else output.push(absolute);}return output;}
+function run(argv){return cp.spawnSync("git",["-C",ROOT,...argv],{encoding:"utf8"});}
+function tokens(value){return new Set(String(value).toLowerCase().match(/[a-z0-9]+/g)||[]);}
+function jaccard(left,right){const a=tokens(left),b=tokens(right),u=new Set([...a,...b]);let i=0;for(const t of a)if(b.has(t))i++;return u.size?i/u.size:1;}
+
+function main(){
+  const sourcePath=process.argv[2]; if(!sourcePath)throw new Error("source_plan_argument_required");
+  const head=run(["rev-parse","--verify","HEAD"]),branch=run(["branch","--show-current"]),index=run(["ls-files"]),status=run(["status","--porcelain=v1","--untracked-files=all"]);
+  if(head.status===0||branch.status!==0||branch.stdout.trim()!=="codex/GHC-Family/sylven-arc-main"||index.status!==0||index.stdout.trim()!==""||status.status!==0)throw new Error("unborn_root_state");
+  const statusPaths=status.stdout.trim().split(/\r?\n/).filter(Boolean).map(line=>line.slice(3).replaceAll("\\","/"));
+  if(statusPaths.some(item=>!item.startsWith(`${BASE}/`)))throw new Error("outside_owner_scope");
+  if(fs.existsSync(path.join(ROOT,BASE,"x1"))||fs.existsSync(path.join(ROOT,BASE,"x2")))throw new Error("mixed_lifecycle_stage");
+  const freeze=load("proposal-freeze.json"),source=JSON.parse(fs.readFileSync(path.resolve(sourcePath),"utf8")),novelty=load("novelty-audit.json"),portfolio=load("portfolios.json"),tools=load("skills-runners.json"),failures=load("operational-failures.json"),flow=load("method-flow-startup.json"),truth=load("phase-truth.json"),receipt=load("validation-receipt.json"),manifest=load("manifest.json");
+  const ids=new Set(),titles=new Set(),definitions=new Set(); const outcomes={completed:0,represented:0,open_gap:0,exact_gate:0},sessions={x1:0,x2:0};
+  for(const p of freeze.proposals){ids.add(p.proposal_id);titles.add(p.title);definitions.add(p.definition_sha256);sessions[p.session]++;outcomes[p.expected_disposition]++;if(sha({operation:p.operation,input:p.input,hypothesis:p.hypothesis,expected:p.expected})!==p.definition_sha256)throw new Error("definition_hash");}
+  if(freeze.proposals.length!==200||ids.size!==200||titles.size!==200||definitions.size!==200||sessions.x1!==100||sessions.x2!==100||outcomes.completed!==170||outcomes.represented!==10||outcomes.open_gap!==10||outcomes.exact_gate!==10)throw new Error("proposal_contract");
+  const sourceTitles=new Set(source.proposals.map(p=>p.title)),sourceDefinitions=new Set(source.proposals.map(p=>p.definition_sha256));if(freeze.proposals.some(p=>sourceTitles.has(p.title)||sourceDefinitions.has(p.definition_sha256)))throw new Error("source_collision");
+  let maximum={score:0,new_id:null,source_id:null};for(const p of freeze.proposals)for(const s of source.proposals){const score=jaccard(p.title,s.title);if(score>maximum.score)maximum={score,new_id:p.proposal_id,source_id:s.proposal_id};}if(maximum.score>0.78||Math.abs(maximum.score-novelty.maximum_token_jaccard.score)>1e-12)throw new Error("novelty_gate");
+  if(portfolio.safe_now.x1.length!==100||portfolio.safe_now.x2.length!==100||portfolio.candidates.x1.length!==100||portfolio.candidates.x2.length!==100||portfolio.clean_fix_refine.x1.length!==100||portfolio.clean_fix_refine.x2.length!==100||portfolio.exact_packets.length!==50||portfolio.blocked_packets.length!==30||tools.local_skills.x1.length!==10||tools.local_skills.x2.length!==10||tools.local_runners.x1.length!==5||tools.local_runners.x2.length!==5||tools.curated_global_groups.length!==5)throw new Error("portfolio_gate");
+  const gitDirectory=run(["rev-parse","--git-dir"]).stdout.trim();const sparse=fs.readFileSync(path.join(gitDirectory,"info","sparse-checkout"),"utf8").trim().replaceAll("\\","/");
+  if(sparse!=="/docs/sylven-arc/v691-v6/")throw new Error("sparse_pattern");
+  if(failures.failures.length!==9||flow.methods.length!==9||flow.witnesses.length!==18||truth.startup_overlay.methods!==9||receipt.status!=="VALID_PLANNING_ONLY_ROOT_CANDIDATE"||receipt.sparse_pattern!==sparse)throw new Error("retained_failure_gate");
+  const files=collect(path.join(ROOT,BASE)),relative=files.map(file=>path.relative(ROOT,file).replaceAll("\\","/"));
+  if(relative.length!==manifest.entry_count+1||new Set(manifest.entries.map(e=>e.path)).size!==manifest.entry_count)throw new Error("manifest_cardinality");
+  for(const entry of manifest.entries){const content=fs.readFileSync(path.join(ROOT,entry.path));if(content.length!==entry.bytes||sha(content)!==entry.sha256)throw new Error(`manifest_${entry.path}`);}
+  for(const file of files){const content=fs.readFileSync(file);if(content.includes(13))throw new Error(`crlf_${file}`);const text=content.toString("utf8");if(/\b[a-z]:[\\/](?:users|ghc-archives)[\\/]/i.test(text)||/\b[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\b/i.test(text))throw new Error(`privacy_${file}`);const words=(text.match(/\S+/g)||[]).length;if(words>100000)throw new Error(`word_ceiling_${file}`);}
+  process.stdout.write(JSON.stringify({status:"VALID_PLANNING_ONLY_ROOT_CANDIDATE",unborn:true,sparse_pattern:sparse,owner_files:files.length,manifest_entries:manifest.entry_count,proposals:freeze.proposals.length,maximum_token_jaccard:maximum,retained_failures:failures.failures.length,methods:flow.methods.length,witnesses:flow.witnesses.length,privacy_confirmed:0,x1_exists:false,x2_exists:false}));
+}
+
+main();

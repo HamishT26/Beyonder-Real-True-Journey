@@ -1,0 +1,45 @@
+"use strict";
+
+const fs = require("fs");
+
+function tokens(value) {
+  return new Set(String(value).toLowerCase().match(/[a-z0-9]+/g) || []);
+}
+
+function jaccard(left, right) {
+  const a = tokens(left);
+  const b = tokens(right);
+  const union = new Set([...a, ...b]);
+  let intersection = 0;
+  for (const token of a) if (b.has(token)) intersection += 1;
+  return union.size ? intersection / union.size : 1;
+}
+
+function main() {
+  const currentPath = process.argv[2];
+  const sourcePath = process.argv[3];
+  const replacement = process.argv[4] || "";
+  if (!currentPath || !sourcePath) throw new Error("usage: node check-plan-novelty.txt CURRENT SOURCE [PARTICIPANT_GAP_HYPOTHESIS]");
+  const current = JSON.parse(fs.readFileSync(currentPath, "utf8")).proposals;
+  const source = JSON.parse(fs.readFileSync(sourcePath, "utf8")).proposals;
+  let maximum = {score: 0, new_id: null, source_id: null, new_title: null, source_title: null};
+  for (const proposal of current) {
+    const caseNumber = Number(proposal.proposal_id.slice(-3)) - 180;
+    const title = replacement && proposal.operation === "participant_gap"
+      ? `${replacement} / case ${caseNumber}`
+      : proposal.title;
+    for (const inherited of source) {
+      const score = jaccard(title, inherited.title);
+      if (score > maximum.score) maximum = {
+        score,
+        new_id: proposal.proposal_id,
+        source_id: inherited.proposal_id,
+        new_title: title,
+        source_title: inherited.title
+      };
+    }
+  }
+  process.stdout.write(JSON.stringify({new_rows: current.length, source_rows: source.length, maximum}) + "\n");
+}
+
+main();

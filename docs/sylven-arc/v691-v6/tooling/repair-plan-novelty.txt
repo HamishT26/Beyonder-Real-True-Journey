@@ -1,0 +1,133 @@
+"use strict";
+
+const fs = require("fs");
+const path = require("path");
+const crypto = require("crypto");
+
+const ROOT = path.resolve(__dirname, "../../../..");
+const BASE = "docs/sylven-arc/v691-v6";
+const PLAN = path.join(ROOT, BASE, "plan");
+const HYPOTHESIS = "A dormant synthetic simulation-evaluation slot can enumerate unrun assistive-technology and stakeholder reviews while leaving every evidence vacancy open.";
+const GATES = ["empirical","participant","professional","production","deployment","legal","cultural","affected_party","maori_authority","privacy_complete","accessibility_complete","exhaustive_security","independent_reproduction","agi_asi","consciousness_personhood","theory_of_everything","proof_canon","stage20"];
+
+function stable(value) {
+  if (Array.isArray(value)) return value.map(stable);
+  if (value && typeof value === "object") return Object.fromEntries(Object.keys(value).sort().map(key => [key, stable(value[key])]));
+  return value;
+}
+
+function bytes(value) {
+  return Buffer.from(JSON.stringify(stable(value)));
+}
+
+function sha(value) {
+  return crypto.createHash("sha256").update(Buffer.isBuffer(value) ? value : bytes(value)).digest("hex");
+}
+
+function load(name) {
+  return JSON.parse(fs.readFileSync(path.join(PLAN, name), "utf8"));
+}
+
+function encode(value) {
+  return JSON.stringify(value, null, 2) + "\n";
+}
+
+function tokens(value) {
+  return new Set(String(value).toLowerCase().match(/[a-z0-9]+/g) || []);
+}
+
+function jaccard(left, right) {
+  const a = tokens(left);
+  const b = tokens(right);
+  const union = new Set([...a, ...b]);
+  let intersection = 0;
+  for (const token of a) if (b.has(token)) intersection += 1;
+  return union.size ? intersection / union.size : 1;
+}
+
+function main() {
+  const sourcePlanPath = process.argv[2];
+  if (!sourcePlanPath) throw new Error("source_plan_argument_required");
+  const freeze = load("proposal-freeze.json");
+  const source = JSON.parse(fs.readFileSync(path.resolve(sourcePlanPath), "utf8"));
+  const novelty = load("novelty-audit.json");
+  const operational = load("operational-failures.json");
+  const methodFlow = load("method-flow-startup.json");
+  const truth = load("phase-truth.json");
+  const scope = load("scope-review.json");
+
+  if (freeze.proposals.length !== 200 || source.proposals.length !== 200) throw new Error("proposal_count");
+  if (novelty.maximum_token_jaccard.score !== 0.8571428571428571 || novelty.threshold !== 0.78) throw new Error("unexpected_failed_audit_state");
+  if (operational.failures.length !== 5 || operational.failures.some(item => item.failure_id === "SA6916-START-N006")) throw new Error("repair_replay_or_failure_shape");
+
+  for (const proposal of freeze.proposals.filter(item => item.operation === "participant_gap")) {
+    const caseNumber = Number(proposal.proposal_id.slice(-3)) - 180;
+    proposal.title = `${HYPOTHESIS} / case ${caseNumber}`;
+    proposal.hypothesis = HYPOTHESIS;
+    proposal.definition_sha256 = sha({operation: proposal.operation, input: proposal.input, hypothesis: proposal.hypothesis, expected: proposal.expected});
+  }
+  const definitionCount = new Set(freeze.proposals.map(item => item.definition_sha256)).size;
+  if (definitionCount !== 200) throw new Error("definition_count_after_repair");
+  freeze.distinct_definitions = definitionCount;
+
+  let maximum = {score: 0, new_id: null, source_id: null};
+  for (const proposal of freeze.proposals) for (const inherited of source.proposals) {
+    const score = jaccard(proposal.title, inherited.title);
+    if (score > maximum.score) maximum = {score, new_id: proposal.proposal_id, source_id: inherited.proposal_id};
+  }
+  if (maximum.score > 0.78) throw new Error(`semantic_similarity_after_repair_${maximum.score}`);
+  novelty.maximum_token_jaccard = maximum;
+  novelty.new_definition_count = definitionCount;
+
+  const newFailures = [
+    {failure_id:"SA6916-START-N006",failed_witness:"The corrected build materialized a 0.857 title-similarity neighbor while its declared semantic threshold was 0.78 because the builder reported but did not enforce that gate.",recovery:"Replace only the generic participant-gap hypothesis with a simulation-specific vacancy contract, compute the full bounded all-pairs score, and enforce the declared threshold before future writes.",recurrence_guard:"Make every declared novelty threshold an executable pre-write stop rather than report-only metadata.",success_credit:0},
+    {failure_id:"SA6916-START-N007",failed_witness:"A PowerShell all-pairs hypothetical title projection crossed the 30-second response window without yielding its result.",recovery:"Use the bounded Node novelty checker with pre-tokenized set arithmetic and stop relying on nested PowerShell object construction for the 40,000-pair comparison.",recurrence_guard:"Use the dedicated bounded Node checker for proposal-neighbor scans and keep PowerShell projections scalar or linear.",success_credit:0}
+  ];
+  operational.failures.push(...newFailures);
+
+  for (const failure of newFailures) {
+    const index = methodFlow.methods.length + 1;
+    const methodId = `SA6916-START-M${String(index).padStart(3, "0")}`;
+    methodFlow.methods.push({method_id:methodId,title:failure.recovery,failure_signature:failure.failed_witness,trigger_preconditions:["A bounded startup metadata or source-validation operation is required."],privacy_class:"sanitized_public",approval_class:"safe_now",candidate_workaround:failure.recovery,validation_witness_ids:[`${failure.failure_id}-FAIL`,`${failure.failure_id}-PASS`],recurrence_guard:failure.recurrence_guard,rollback:"Stop, retain the failure, and leave source, sibling, shared, global, and route state unchanged.",recommendation_state:"preferred",supersedes:[],protected_gates:GATES,retained_negative_ids:[failure.failure_id],scope_boundary:"Sylven v691-v6 startup only."});
+    methodFlow.witnesses.push(
+      {witness_id:`${failure.failure_id}-FAIL`,method_id:methodId,procedure:"original startup operation",scope:"Sylven startup",expected:"Attributable complete result",observed:failure.failed_witness,result:"fail",same_owner_only:true,independent_reproduction:false,retained_negative_ids:[failure.failure_id],boundary:methodFlow.boundary},
+      {witness_id:`${failure.failure_id}-PASS`,method_id:methodId,procedure:"bounded recovery",scope:"Sylven startup",expected:"Corrected bounded result",observed:failure.recovery,result:"pass",same_owner_only:true,independent_reproduction:false,retained_negative_ids:[failure.failure_id],boundary:methodFlow.boundary}
+    );
+  }
+  methodFlow.counts = {methods:7,witnesses:14,failed:7,passing:7};
+  truth.startup_overlay = {methods:7,witnesses:14,failed_witnesses:7,passing_witnesses:7,negatives:7};
+  scope.allowed_roots = [`${BASE}/plan`, `${BASE}/tooling`];
+
+  const writes = new Map([
+    ["proposal-freeze.json", freeze],
+    ["novelty-audit.json", novelty],
+    ["operational-failures.json", operational],
+    ["method-flow-startup.json", methodFlow],
+    ["phase-truth.json", truth],
+    ["scope-review.json", scope]
+  ]);
+  for (const [name, value] of writes) fs.writeFileSync(path.join(PLAN, name), encode(value), "utf8");
+
+  const paths = [];
+  function walk(directory) {
+    for (const name of fs.readdirSync(directory)) {
+      const absolute = path.join(directory, name);
+      const stat = fs.statSync(absolute);
+      if (stat.isDirectory()) walk(absolute);
+      else paths.push(path.relative(ROOT, absolute).replaceAll("\\", "/"));
+    }
+  }
+  walk(PLAN);
+  walk(path.join(ROOT, BASE, "tooling"));
+  const manifestPath = `${BASE}/plan/manifest.json`;
+  const entries = [...new Set(paths)].filter(item => item !== manifestPath).sort().map(item => {
+    const content = fs.readFileSync(path.join(ROOT, item));
+    return {path:item,bytes:content.length,sha256:sha(content)};
+  });
+  const manifest = {schema:"ghc.family.sylven-plan-manifest.v1",byte_domain:"working UTF-8 LF bytes before root commit",entry_count:entries.length,entries,declared_self_exclusions:[manifestPath]};
+  fs.writeFileSync(path.join(PLAN, "manifest.json"), encode(manifest), "utf8");
+
+  process.stdout.write(JSON.stringify({status:"CORRECTED_PLANNING_ONLY",definition_count:definitionCount,maximum_token_jaccard:maximum,retained_failures:operational.failures.length,manifest_entries:entries.length}));
+}
+
+main();

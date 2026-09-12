@@ -1,0 +1,37 @@
+"use strict";
+
+const fs=require("fs");
+const path=require("path");
+const crypto=require("crypto");
+const ROOT=path.resolve(__dirname,"../../../..");
+const BASE="docs/sylven-arc/v691-v6";
+const PLAN=path.join(ROOT,BASE,"plan");
+const GATES=["empirical","participant","professional","production","deployment","legal","cultural","affected_party","maori_authority","privacy_complete","accessibility_complete","exhaustive_security","independent_reproduction","agi_asi","consciousness_personhood","theory_of_everything","proof_canon","stage20"];
+function stable(value){if(Array.isArray(value))return value.map(stable);if(value&&typeof value==="object")return Object.fromEntries(Object.keys(value).sort().map(key=>[key,stable(value[key])]));return value;}
+function sha(value){return crypto.createHash("sha256").update(Buffer.isBuffer(value)?value:Buffer.from(JSON.stringify(stable(value)))).digest("hex");}
+function load(name){return JSON.parse(fs.readFileSync(path.join(PLAN,name),"utf8"));}
+function encode(value){return JSON.stringify(value,null,2)+"\n";}
+function collect(directory,output=[]){for(const name of fs.readdirSync(directory)){const absolute=path.join(directory,name),stat=fs.statSync(absolute);if(stat.isDirectory())collect(absolute,output);else output.push(absolute);}return output;}
+
+function main(){
+  const operational=load("operational-failures.json"),flow=load("method-flow-startup.json"),truth=load("phase-truth.json"),receipt=load("validation-receipt.json"),scope=load("scope-review.json");
+  if(operational.failures.length!==8||flow.methods.length!==8||truth.startup_overlay.methods!==8)throw new Error("replay_or_unexpected_state");
+  const failure={failure_id:"SA6916-START-N009",failed_witness:"The first exact Git stage matched only paths outside the inherited Elowen sparse-checkout pattern and therefore staged zero Sylven files.",recovery:"Replace only this blank-root worktree's sparse pattern with the Sylven v691-v6 owner root, verify the index remains empty, and repeat exact staging only after the planning manifest is refreshed.",recurrence_guard:"Set and read back the new owner sparse pattern immediately after switching an inherited worktree to an orphan branch and before the first Git add.",success_credit:0};
+  operational.failures.push(failure);
+  const methodId="SA6916-START-M009";
+  flow.methods.push({method_id:methodId,title:failure.recovery,failure_signature:failure.failed_witness,trigger_preconditions:["A blank-root owner lane is ready for its first exact stage."],privacy_class:"sanitized_public",approval_class:"safe_now",candidate_workaround:failure.recovery,validation_witness_ids:[`${failure.failure_id}-FAIL`,`${failure.failure_id}-PASS`],recurrence_guard:failure.recurrence_guard,rollback:"Leave the index empty, retain the failed stage, and do not add outside the exact owner root.",recommendation_state:"preferred",supersedes:[],protected_gates:GATES,retained_negative_ids:[failure.failure_id],scope_boundary:"Sylven v691-v6 planning-root stage only."});
+  flow.witnesses.push(
+    {witness_id:`${failure.failure_id}-FAIL`,method_id:methodId,procedure:"first exact Git stage",scope:"Sylven planning root",expected:"Twenty-five planning files staged inside owner scope",observed:"Git rejected every path as outside the inherited Elowen sparse definition; staged count remained zero.",result:"fail",same_owner_only:true,independent_reproduction:false,retained_negative_ids:[failure.failure_id],boundary:flow.boundary},
+    {witness_id:`${failure.failure_id}-PASS`,method_id:methodId,procedure:"sparse-pattern readback before corrected exact stage",scope:"Sylven planning root",expected:"Sylven-only sparse root and empty pre-stage index",observed:"The pattern is /docs/sylven-arc/v691-v6/ and the index remains empty before corrected staging.",result:"pass",same_owner_only:true,independent_reproduction:false,retained_negative_ids:[failure.failure_id],boundary:flow.boundary}
+  );
+  flow.counts={methods:9,witnesses:18,failed:9,passing:9};
+  truth.startup_overlay={methods:9,witnesses:18,failed_witnesses:9,passing_witnesses:9,negatives:9};
+  receipt.retained_startup_failures=9;receipt.methods=9;receipt.witnesses=18;receipt.manifest_pending=false;receipt.sparse_pattern="/docs/sylven-arc/v691-v6/";
+  scope.sparse_pattern="/docs/sylven-arc/v691-v6/";
+  for(const [name,value] of [["operational-failures.json",operational],["method-flow-startup.json",flow],["phase-truth.json",truth],["validation-receipt.json",receipt],["scope-review.json",scope]])fs.writeFileSync(path.join(PLAN,name),encode(value),"utf8");
+  const files=collect(path.join(ROOT,BASE)),manifestPath=`${BASE}/plan/manifest.json`;
+  const entries=files.map(file=>path.relative(ROOT,file).replaceAll("\\","/")).filter(item=>item!==manifestPath).sort().map(item=>{const content=fs.readFileSync(path.join(ROOT,item));return {path:item,bytes:content.length,sha256:sha(content)};});
+  fs.writeFileSync(path.join(PLAN,"manifest.json"),encode({schema:"ghc.family.sylven-plan-manifest.v1",byte_domain:"working UTF-8 LF bytes before root commit",entry_count:entries.length,entries,declared_self_exclusions:[manifestPath]}),"utf8");
+  process.stdout.write(JSON.stringify({status:"RECORDED_SPARSE_STAGE_RECOVERY",retained_failures:9,methods:9,witnesses:18,manifest_entries:entries.length}));
+}
+main();

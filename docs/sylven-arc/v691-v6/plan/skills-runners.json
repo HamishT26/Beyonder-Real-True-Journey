@@ -1,0 +1,187 @@
+{
+  "schema": "ghc.family.simulation-skill-runner-plan.v1",
+  "local_skills": {
+    "x1": [
+      "ghc-family-simulation-scenario-schema",
+      "ghc-family-simulation-agent-registry",
+      "ghc-family-simulation-message-envelope",
+      "ghc-family-simulation-logical-clock",
+      "ghc-family-simulation-priority-queue",
+      "ghc-family-simulation-deterministic-step",
+      "ghc-family-simulation-schedule-order",
+      "ghc-family-simulation-resource-budget",
+      "ghc-family-simulation-seed-replay",
+      "ghc-family-simulation-state-digest"
+    ],
+    "x2": [
+      "ghc-family-simulation-message-delivery",
+      "ghc-family-simulation-drop-fault",
+      "ghc-family-simulation-duplicate-fault",
+      "ghc-family-simulation-delay-fault",
+      "ghc-family-simulation-partition-fault",
+      "ghc-family-simulation-retry-budget",
+      "ghc-family-simulation-causal-trace",
+      "ghc-family-simulation-evidence-ceiling",
+      "ghc-family-simulation-participant-gap",
+      "ghc-family-simulation-authority-gate"
+    ]
+  },
+  "local_runners": {
+    "x1": [
+      {
+        "name": "simulation-x1-pair-1.txt",
+        "operations": [
+          "scenario_schema",
+          "agent_registry"
+        ]
+      },
+      {
+        "name": "simulation-x1-pair-2.txt",
+        "operations": [
+          "message_envelope",
+          "logical_clock"
+        ]
+      },
+      {
+        "name": "simulation-x1-pair-3.txt",
+        "operations": [
+          "priority_queue",
+          "deterministic_step"
+        ]
+      },
+      {
+        "name": "simulation-x1-pair-4.txt",
+        "operations": [
+          "schedule_order",
+          "resource_budget"
+        ]
+      },
+      {
+        "name": "simulation-x1-pair-5.txt",
+        "operations": [
+          "seed_replay",
+          "state_digest"
+        ]
+      }
+    ],
+    "x2": [
+      {
+        "name": "simulation-x2-pair-1.txt",
+        "operations": [
+          "message_delivery",
+          "drop_fault"
+        ]
+      },
+      {
+        "name": "simulation-x2-pair-2.txt",
+        "operations": [
+          "duplicate_fault",
+          "delay_fault"
+        ]
+      },
+      {
+        "name": "simulation-x2-pair-3.txt",
+        "operations": [
+          "partition_fault",
+          "retry_budget"
+        ]
+      },
+      {
+        "name": "simulation-x2-pair-4.txt",
+        "operations": [
+          "causal_trace",
+          "evidence_ceiling"
+        ]
+      },
+      {
+        "name": "simulation-x2-pair-5.txt",
+        "operations": [
+          "participant_gap",
+          "authority_gate"
+        ]
+      }
+    ]
+  },
+  "curated_global_groups": [
+    {
+      "name": "ghc-family-simulation-state-contracts",
+      "operations": [
+        "scenario_schema",
+        "agent_registry",
+        "deterministic_step",
+        "state_digest"
+      ],
+      "runner": "simulation-curated-group-1.txt",
+      "merge_source_count": 4,
+      "state": "planned_after_validation"
+    },
+    {
+      "name": "ghc-family-message-clock-contracts",
+      "operations": [
+        "message_envelope",
+        "logical_clock",
+        "schedule_order",
+        "causal_trace"
+      ],
+      "runner": "simulation-curated-group-2.txt",
+      "merge_source_count": 4,
+      "state": "planned_after_validation"
+    },
+    {
+      "name": "ghc-family-queue-resource-contracts",
+      "operations": [
+        "priority_queue",
+        "resource_budget",
+        "seed_replay",
+        "retry_budget"
+      ],
+      "runner": "simulation-curated-group-3.txt",
+      "merge_source_count": 4,
+      "state": "planned_after_validation"
+    },
+    {
+      "name": "ghc-family-fault-delivery-contracts",
+      "operations": [
+        "message_delivery",
+        "drop_fault",
+        "duplicate_fault",
+        "delay_fault"
+      ],
+      "runner": "simulation-curated-group-4.txt",
+      "merge_source_count": 4,
+      "state": "planned_after_validation"
+    },
+    {
+      "name": "ghc-family-partition-rights-contracts",
+      "operations": [
+        "partition_fault",
+        "evidence_ceiling",
+        "participant_gap",
+        "authority_gate"
+      ],
+      "runner": "simulation-curated-group-5.txt",
+      "merge_source_count": 4,
+      "state": "planned_after_validation"
+    }
+  ],
+  "successor_skill_ideas": [
+    "queueing-network-state-closure",
+    "workload-fairness-denominator",
+    "service-time-uncertainty",
+    "backpressure-evidence-boundary",
+    "scheduling-authority-reservation"
+  ],
+  "successor_runner_ideas": [
+    "queue-scenario-loader",
+    "fairness-metric-validator",
+    "service-time-replay",
+    "backpressure-fault-injector",
+    "schedule-budget-checker"
+  ],
+  "packages": {
+    "quota": null,
+    "installed": 0,
+    "reason": "Current v6 policy requires reuse of installed Node and no arbitrary package quota."
+  },
+  "planning_only": true
+}
