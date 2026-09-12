@@ -1,0 +1,284 @@
+## 08 — Retained-negative and recovery index
+
+All 276 owner-direct negative records remain at zero
+completion credit. The effective count including the separately preserved source
+baseline is 3570. Recovery never erases a subject.
+
+- **EC6915-START-N001:** PowerShell rejected a direct foreach-to-pipeline metadata expression. Rejection or recovery: Materialize the loop result in an array before JSON serialization. Completion credit remains zero.
+- **EC6915-START-N002:** The first whole-file recovery-commons HTML display exceeded its result budget. Rejection or recovery: Read all contract modules separately and parse the embedded frozen JSON plus structural boundaries without displaying the payload. Completion credit remains zero.
+- **EC6915-START-N003:** A combined lane preflight embedded a Git command and LASTEXITCODE inside an object expression and failed to parse. Rejection or recovery: Run the Git ancestry probe separately, then project the captured scalar. Completion credit remains zero.
+- **EC6915-START-N004:** The Elowen clone did not contain Saelin's cross-owner commit object, so the attempted ancestry query was invalid. Rejection or recovery: Use Saelin's verified worktree for source truth and record content provenance rather than fabricated cross-owner ancestry. Completion credit remains zero.
+- **EC6915-START-N005:** The composite no-checkout worktree creation wrapper crossed its output boundary after reporting only preparation. Rejection or recovery: Audit target, processes, locks, branch and index before any retry; do not recreate or kill the worktree. Completion credit remains zero.
+- **EC6915-START-N006:** The first worktree audit called Trim on a null branch result while the orphan switch was still active. Rejection or recovery: Read raw command values and exit codes without assuming a branch string. Completion credit remains zero.
+- **EC6915-START-N007:** The second combined worktree audit returned no attributable payload while Git processes remained active. Rejection or recovery: Inspect process state separately, wait once for exact processes, then read Git scalars after quiescence. Completion credit remains zero.
+- **EC6915-START-N008:** An inline Node regular-expression was malformed by shell quoting during HTML frozen-data extraction. Rejection or recovery: Use delimiter-based extraction in a single-quoted Node command. Completion credit remains zero.
+- **EC6915-START-N009:** The first Saelin proposal-freeze probe assumed a proposals field although the exact schema uses requests. Rejection or recovery: Inspect top-level type and keys first, then select the exact requests array. Completion credit remains zero.
+- **EC6915-START-N010:** Node 24 refused a direct syntax check of the required .txt entrypoint because it could not infer a module format. Rejection or recovery: Feed the exact entrypoint bytes to Node with an explicit CommonJS input type for syntax validation. Completion credit remains zero.
+- **EC6915-START-N011:** The first planning execution rejected repeated proposal-definition digests without identifying the colliding records. Rejection or recovery: Add a deterministic digest-group diagnostic while preserving the distinctness stop. Completion credit remains zero.
+- **EC6915-START-N012:** A read-only inline duplicate-diagnostic wrapper was parsed by PowerShell before Node and failed before execution. Rejection or recovery: Use apply_patch to add the recurrence diagnostic without shell quoting or repository-wide mutation. Completion credit remains zero.
+- **EC6915-START-N013:** The diagnostic planning attempt isolated three record-order cases with an identical duplicate fixture. Rejection or recovery: Retain the duplicate-record scenario while varying its synthetic identifier by case so all proposal inputs remain distinct. Completion credit remains zero.
+- **EC6915-START-N014:** The first materialized planning candidate exposed two exact definition-digest collisions with Saelin source authority-gate fixtures. Rejection or recovery: Replace those actions with sequence-record-specific gated actions and make zero source title or definition collisions a hard pre-write gate. Completion credit remains zero.
+- **EC6915-START-N015:** The first planning audit projected stale guessed approval, skill, and runner filenames and reported false zero counts. Rejection or recovery: List exact generated filenames and inspect their top-level keys before selecting records. Completion credit remains zero.
+- **EC6915-START-N016:** The corrected filename audit still projected local skills and runners as flat arrays although the plan groups them by x1 and x2. Rejection or recovery: Inspect the exact nested schema and count local_skills.x1, local_skills.x2, local_runners.x1, and local_runners.x2. Completion credit remains zero.
+- **EC6915-START-N017:** The first exact planning manifest replay found scope-review bytes changed after their digest was recorded. Rejection or recovery: Write the scope review first and the self-excluding exact-byte manifest last. Completion credit remains zero.
+- **EC6915-START-N018:** The first private-path scanner pattern also matched the final drive-like characters of HTTPS URLs. Rejection or recovery: Require a standalone drive prefix so scheme text cannot be classified as a private absolute path. Completion credit remains zero.
+- **EC6915-START-N019:** The first media-candidate adjudication filter recognized the JSON false field but missed the equivalent inline builder policy field. Rejection or recovery: Classify every new_screenshots false occurrence as scanner-definition or policy metadata before counting confirmed payload hits. Completion credit remains zero.
+- **EC6915-001-N:** [object Object] Rejection or recovery: IDENTIFIER_SYMBOL Completion credit remains zero.
+- **EC6915-002-N:** [object Object] Rejection or recovery: IDENTIFIER_SYMBOL Completion credit remains zero.
+- **EC6915-003-N:** [object Object] Rejection or recovery: IDENTIFIER_SYMBOL Completion credit remains zero.
+- **EC6915-004-N:** [object Object] Rejection or recovery: IDENTIFIER_SYMBOL Completion credit remains zero.
+- **EC6915-005-N:** [object Object] Rejection or recovery: IDENTIFIER_SYMBOL Completion credit remains zero.
+- **EC6915-006-N:** [object Object] Rejection or recovery: IDENTIFIER_SYMBOL Completion credit remains zero.
+- **EC6915-007-N:** [object Object] Rejection or recovery: IDENTIFIER_SYMBOL Completion credit remains zero.
+- **EC6915-008-N:** [object Object] Rejection or recovery: IDENTIFIER_SYMBOL Completion credit remains zero.
+- **EC6915-009-N:** [object Object] Rejection or recovery: IDENTIFIER_SYMBOL Completion credit remains zero.
+- **EC6915-010-N:** [object Object] Rejection or recovery: IDENTIFIER_SYMBOL Completion credit remains zero.
+- **EC6915-011-N:** [object Object] Rejection or recovery: UNSUPPORTED_SYMBOL Completion credit remains zero.
+- **EC6915-012-N:** [object Object] Rejection or recovery: UNSUPPORTED_SYMBOL Completion credit remains zero.
+- **EC6915-013-N:** [object Object] Rejection or recovery: UNSUPPORTED_SYMBOL Completion credit remains zero.
+- **EC6915-014-N:** [object Object] Rejection or recovery: UNSUPPORTED_SYMBOL Completion credit remains zero.
+- **EC6915-015-N:** [object Object] Rejection or recovery: UNSUPPORTED_SYMBOL Completion credit remains zero.
+- **EC6915-016-N:** [object Object] Rejection or recovery: UNSUPPORTED_SYMBOL Completion credit remains zero.
+- **EC6915-017-N:** [object Object] Rejection or recovery: UNSUPPORTED_SYMBOL Completion credit remains zero.
+- **EC6915-018-N:** [object Object] Rejection or recovery: UNSUPPORTED_SYMBOL Completion credit remains zero.
+- **EC6915-019-N:** [object Object] Rejection or recovery: UNSUPPORTED_SYMBOL Completion credit remains zero.
+- **EC6915-020-N:** [object Object] Rejection or recovery: UNSUPPORTED_SYMBOL Completion credit remains zero.
+- **EC6915-021-N:** [object Object] Rejection or recovery: WIDTH_RANGE Completion credit remains zero.
+- **EC6915-022-N:** [object Object] Rejection or recovery: WIDTH_RANGE Completion credit remains zero.
+- **EC6915-023-N:** [object Object] Rejection or recovery: WIDTH_RANGE Completion credit remains zero.
+- **EC6915-024-N:** [object Object] Rejection or recovery: WIDTH_RANGE Completion credit remains zero.
+- **EC6915-025-N:** [object Object] Rejection or recovery: WIDTH_RANGE Completion credit remains zero.
+- **EC6915-026-N:** [object Object] Rejection or recovery: WIDTH_RANGE Completion credit remains zero.
+- **EC6915-027-N:** [object Object] Rejection or recovery: WIDTH_RANGE Completion credit remains zero.
+- **EC6915-028-N:** [object Object] Rejection or recovery: WIDTH_RANGE Completion credit remains zero.
+- **EC6915-029-N:** [object Object] Rejection or recovery: WIDTH_RANGE Completion credit remains zero.
+- **EC6915-030-N:** [object Object] Rejection or recovery: WIDTH_RANGE Completion credit remains zero.
+- **EC6915-031-N:** [object Object] Rejection or recovery: SEQUENCE_TYPE Completion credit remains zero.
+- **EC6915-032-N:** [object Object] Rejection or recovery: SEQUENCE_TYPE Completion credit remains zero.
+- **EC6915-033-N:** [object Object] Rejection or recovery: SEQUENCE_TYPE Completion credit remains zero.
+- **EC6915-034-N:** [object Object] Rejection or recovery: SEQUENCE_TYPE Completion credit remains zero.
+- **EC6915-035-N:** [object Object] Rejection or recovery: SEQUENCE_TYPE Completion credit remains zero.
+- **EC6915-036-N:** [object Object] Rejection or recovery: SEQUENCE_TYPE Completion credit remains zero.
+- **EC6915-037-N:** [object Object] Rejection or recovery: SEQUENCE_TYPE Completion credit remains zero.
+- **EC6915-038-N:** [object Object] Rejection or recovery: SEQUENCE_TYPE Completion credit remains zero.
+- **EC6915-039-N:** [object Object] Rejection or recovery: SEQUENCE_TYPE Completion credit remains zero.
+- **EC6915-040-N:** [object Object] Rejection or recovery: SEQUENCE_TYPE Completion credit remains zero.
+- **EC6915-041-N:** [object Object] Rejection or recovery: CANONICAL_SYMBOL_REQUIRED Completion credit remains zero.
+- **EC6915-042-N:** [object Object] Rejection or recovery: CANONICAL_SYMBOL_REQUIRED Completion credit remains zero.
+- **EC6915-043-N:** [object Object] Rejection or recovery: CANONICAL_SYMBOL_REQUIRED Completion credit remains zero.
+- **EC6915-044-N:** [object Object] Rejection or recovery: CANONICAL_SYMBOL_REQUIRED Completion credit remains zero.
+- **EC6915-045-N:** [object Object] Rejection or recovery: CANONICAL_SYMBOL_REQUIRED Completion credit remains zero.
+- **EC6915-046-N:** [object Object] Rejection or recovery: CANONICAL_SYMBOL_REQUIRED Completion credit remains zero.
+- **EC6915-047-N:** [object Object] Rejection or recovery: CANONICAL_SYMBOL_REQUIRED Completion credit remains zero.
+- **EC6915-048-N:** [object Object] Rejection or recovery: CANONICAL_SYMBOL_REQUIRED Completion credit remains zero.
+- **EC6915-049-N:** [object Object] Rejection or recovery: CANONICAL_SYMBOL_REQUIRED Completion credit remains zero.
+- **EC6915-050-N:** [object Object] Rejection or recovery: CANONICAL_SYMBOL_REQUIRED Completion credit remains zero.
+- **EC6915-051-N:** [object Object] Rejection or recovery: UNSUPPORTED_SYMBOL Completion credit remains zero.
+- **EC6915-052-N:** [object Object] Rejection or recovery: UNSUPPORTED_SYMBOL Completion credit remains zero.
+- **EC6915-053-N:** [object Object] Rejection or recovery: UNSUPPORTED_SYMBOL Completion credit remains zero.
+- **EC6915-054-N:** [object Object] Rejection or recovery: UNSUPPORTED_SYMBOL Completion credit remains zero.
+- **EC6915-055-N:** [object Object] Rejection or recovery: UNSUPPORTED_SYMBOL Completion credit remains zero.
+- **EC6915-056-N:** [object Object] Rejection or recovery: UNSUPPORTED_SYMBOL Completion credit remains zero.
+- **EC6915-057-N:** [object Object] Rejection or recovery: UNSUPPORTED_SYMBOL Completion credit remains zero.
+- **EC6915-058-N:** [object Object] Rejection or recovery: UNSUPPORTED_SYMBOL Completion credit remains zero.
+- **EC6915-059-N:** [object Object] Rejection or recovery: UNSUPPORTED_SYMBOL Completion credit remains zero.
+- **EC6915-060-N:** [object Object] Rejection or recovery: UNSUPPORTED_SYMBOL Completion credit remains zero.
+- **EC6915-061-N:** [object Object] Rejection or recovery: SEQUENCE_TYPE Completion credit remains zero.
+- **EC6915-062-N:** [object Object] Rejection or recovery: SEQUENCE_TYPE Completion credit remains zero.
+- **EC6915-063-N:** [object Object] Rejection or recovery: SEQUENCE_TYPE Completion credit remains zero.
+- **EC6915-064-N:** [object Object] Rejection or recovery: SEQUENCE_TYPE Completion credit remains zero.
+- **EC6915-065-N:** [object Object] Rejection or recovery: SEQUENCE_TYPE Completion credit remains zero.
+- **EC6915-066-N:** [object Object] Rejection or recovery: SEQUENCE_TYPE Completion credit remains zero.
+- **EC6915-067-N:** [object Object] Rejection or recovery: SEQUENCE_TYPE Completion credit remains zero.
+- **EC6915-068-N:** [object Object] Rejection or recovery: SEQUENCE_TYPE Completion credit remains zero.
+- **EC6915-069-N:** [object Object] Rejection or recovery: SEQUENCE_TYPE Completion credit remains zero.
+- **EC6915-070-N:** [object Object] Rejection or recovery: SEQUENCE_TYPE Completion credit remains zero.
+- **EC6915-071-N:** [object Object] Rejection or recovery: SEQUENCE_TYPE,NORMALIZATION_PROFILE Completion credit remains zero.
+- **EC6915-072-N:** [object Object] Rejection or recovery: SEQUENCE_TYPE,NORMALIZATION_PROFILE Completion credit remains zero.
+- **EC6915-073-N:** [object Object] Rejection or recovery: SEQUENCE_TYPE,NORMALIZATION_PROFILE Completion credit remains zero.
+- **EC6915-074-N:** [object Object] Rejection or recovery: SEQUENCE_TYPE,NORMALIZATION_PROFILE Completion credit remains zero.
+- **EC6915-075-N:** [object Object] Rejection or recovery: SEQUENCE_TYPE,NORMALIZATION_PROFILE Completion credit remains zero.
+- **EC6915-076-N:** [object Object] Rejection or recovery: SEQUENCE_TYPE,NORMALIZATION_PROFILE Completion credit remains zero.
+- **EC6915-077-N:** [object Object] Rejection or recovery: SEQUENCE_TYPE,NORMALIZATION_PROFILE Completion credit remains zero.
+- **EC6915-078-N:** [object Object] Rejection or recovery: SEQUENCE_TYPE,NORMALIZATION_PROFILE Completion credit remains zero.
+- **EC6915-079-N:** [object Object] Rejection or recovery: SEQUENCE_TYPE,NORMALIZATION_PROFILE Completion credit remains zero.
+- **EC6915-080-N:** [object Object] Rejection or recovery: SEQUENCE_TYPE,NORMALIZATION_PROFILE Completion credit remains zero.
+- **EC6915-081-N:** [object Object] Rejection or recovery: IDENTIFIER_TYPE Completion credit remains zero.
+- **EC6915-082-N:** [object Object] Rejection or recovery: IDENTIFIER_TYPE Completion credit remains zero.
+- **EC6915-083-N:** [object Object] Rejection or recovery: IDENTIFIER_TYPE Completion credit remains zero.
+- **EC6915-084-N:** [object Object] Rejection or recovery: IDENTIFIER_TYPE Completion credit remains zero.
+- **EC6915-085-N:** [object Object] Rejection or recovery: IDENTIFIER_TYPE Completion credit remains zero.
+- **EC6915-086-N:** [object Object] Rejection or recovery: IDENTIFIER_TYPE Completion credit remains zero.
+- **EC6915-087-N:** [object Object] Rejection or recovery: IDENTIFIER_TYPE Completion credit remains zero.
+- **EC6915-088-N:** [object Object] Rejection or recovery: IDENTIFIER_TYPE Completion credit remains zero.
+- **EC6915-089-N:** [object Object] Rejection or recovery: IDENTIFIER_TYPE Completion credit remains zero.
+- **EC6915-090-N:** [object Object] Rejection or recovery: IDENTIFIER_TYPE Completion credit remains zero.
+- **EC6915-091-N:** [object Object] Rejection or recovery: ENTRY_2_PATH_BYTES_DIGEST Completion credit remains zero.
+- **EC6915-092-N:** [object Object] Rejection or recovery: ENTRY_2_PATH_BYTES_DIGEST Completion credit remains zero.
+- **EC6915-093-N:** [object Object] Rejection or recovery: ENTRY_2_PATH_BYTES_DIGEST Completion credit remains zero.
+- **EC6915-094-N:** [object Object] Rejection or recovery: ENTRY_2_PATH_BYTES_DIGEST Completion credit remains zero.
+- **EC6915-095-N:** [object Object] Rejection or recovery: ENTRY_2_PATH_BYTES_DIGEST Completion credit remains zero.
+- **EC6915-096-N:** [object Object] Rejection or recovery: ENTRY_2_PATH_BYTES_DIGEST Completion credit remains zero.
+- **EC6915-097-N:** [object Object] Rejection or recovery: ENTRY_1_DIGEST,ENTRY_2_PATH_BYTES_DIGEST Completion credit remains zero.
+- **EC6915-098-N:** [object Object] Rejection or recovery: ENTRY_2_PATH_BYTES_DIGEST Completion credit remains zero.
+- **EC6915-099-N:** [object Object] Rejection or recovery: ENTRY_2_PATH_BYTES_DIGEST Completion credit remains zero.
+- **EC6915-100-N:** [object Object] Rejection or recovery: ENTRY_2_PATH_BYTES_DIGEST Completion credit remains zero.
+- **ghc-family-fasta-header-N:** invalid synthetic fixture for fasta_header Rejection or recovery: skill-guided operation refused fixture Completion credit remains zero.
+- **ghc-family-sequence-alphabet-N:** invalid synthetic fixture for sequence_alphabet Rejection or recovery: skill-guided operation refused fixture Completion credit remains zero.
+- **ghc-family-line-wrap-N:** invalid synthetic fixture for line_wrap Rejection or recovery: skill-guided operation refused fixture Completion credit remains zero.
+- **ghc-family-sequence-length-N:** invalid synthetic fixture for sequence_length Rejection or recovery: skill-guided operation refused fixture Completion credit remains zero.
+- **ghc-family-gc-fraction-N:** invalid synthetic fixture for gc_fraction Rejection or recovery: skill-guided operation refused fixture Completion credit remains zero.
+- **ghc-family-reverse-complement-N:** invalid synthetic fixture for reverse_complement Rejection or recovery: skill-guided operation refused fixture Completion credit remains zero.
+- **ghc-family-ambiguous-count-N:** invalid synthetic fixture for ambiguous_count Rejection or recovery: skill-guided operation refused fixture Completion credit remains zero.
+- **ghc-family-sequence-checksum-N:** invalid synthetic fixture for sequence_checksum Rejection or recovery: skill-guided operation refused fixture Completion credit remains zero.
+- **ghc-family-record-order-N:** invalid synthetic fixture for record_order Rejection or recovery: skill-guided operation refused fixture Completion credit remains zero.
+- **ghc-family-record-manifest-N:** invalid synthetic fixture for record_manifest Rejection or recovery: skill-guided operation refused fixture Completion credit remains zero.
+- **sequence-x1-pair-1.txt-N:** invalid or outside-pair runner request Rejection or recovery: runner refused request Completion credit remains zero.
+- **sequence-x1-pair-2.txt-N:** invalid or outside-pair runner request Rejection or recovery: runner refused request Completion credit remains zero.
+- **sequence-x1-pair-3.txt-N:** invalid or outside-pair runner request Rejection or recovery: runner refused request Completion credit remains zero.
+- **sequence-x1-pair-4.txt-N:** invalid or outside-pair runner request Rejection or recovery: runner refused request Completion credit remains zero.
+- **sequence-x1-pair-5.txt-N:** invalid or outside-pair runner request Rejection or recovery: runner refused request Completion credit remains zero.
+- **EC6915-X1-N001:** The first x1 builder reached all ten skill smoke checks but every official quick validation exited 1 because Windows Python decoded UTF-8 skill text with the legacy cp1252 default. Rejection or recovery: Set PYTHONUTF8=1 only in the official validator child process and preserve the UTF-8 skill content and system defaults. Completion credit remains zero.
+- **EC6915-X1-N002:** The isolated first-skill validator reproduced a UnicodeDecodeError at the UTF-8 Maori macron byte under the default Windows codec. Rejection or recovery: The same skill passed the official validator once under the bounded process-local UTF-8 compatibility environment. Completion credit remains zero.
+- **EC6915-X1-N003:** After the shared UTF-8 validator dependency was isolated, the corrected whole x1 builder was rerun and repeated already-passing core checks instead of rerunning only the failed validator dependency. Rejection or recovery: Retain the overbroad retry at zero credit, never run the x1 builder again, and gate the commit with a separate no-write independent x1 validator. Completion credit remains zero.
+- **EC6915-X1-N004:** The first no-write independent x1 aggregate passed every nonprivacy check but its private-route scanner counted five tokens from its own scanner-definition line and remained invalid with zero aggregate credit. Rejection or recovery: Run one separately named privacy-only component that classifies the exact scanner-definition line before counting confirmed payload hits; do not replay the successful aggregate components. Completion credit remains zero.
+- **EC6915-101-N:** [object Object] Rejection or recovery: HEADER,PLUS Completion credit remains zero.
+- **EC6915-102-N:** [object Object] Rejection or recovery: HEADER,PLUS Completion credit remains zero.
+- **EC6915-103-N:** [object Object] Rejection or recovery: HEADER,PLUS Completion credit remains zero.
+- **EC6915-104-N:** [object Object] Rejection or recovery: HEADER,PLUS Completion credit remains zero.
+- **EC6915-105-N:** [object Object] Rejection or recovery: HEADER,PLUS Completion credit remains zero.
+- **EC6915-106-N:** [object Object] Rejection or recovery: HEADER,PLUS Completion credit remains zero.
+- **EC6915-107-N:** [object Object] Rejection or recovery: HEADER,PLUS Completion credit remains zero.
+- **EC6915-108-N:** [object Object] Rejection or recovery: HEADER,PLUS Completion credit remains zero.
+- **EC6915-109-N:** [object Object] Rejection or recovery: HEADER,PLUS Completion credit remains zero.
+- **EC6915-110-N:** [object Object] Rejection or recovery: HEADER,PLUS Completion credit remains zero.
+- **EC6915-111-N:** [object Object] Rejection or recovery: LENGTH_MISMATCH Completion credit remains zero.
+- **EC6915-112-N:** [object Object] Rejection or recovery: LENGTH_MISMATCH Completion credit remains zero.
+- **EC6915-113-N:** [object Object] Rejection or recovery: LENGTH_MISMATCH Completion credit remains zero.
+- **EC6915-114-N:** [object Object] Rejection or recovery: LENGTH_MISMATCH Completion credit remains zero.
+- **EC6915-115-N:** [object Object] Rejection or recovery: LENGTH_MISMATCH Completion credit remains zero.
+- **EC6915-116-N:** [object Object] Rejection or recovery: LENGTH_MISMATCH Completion credit remains zero.
+- **EC6915-117-N:** [object Object] Rejection or recovery: LENGTH_MISMATCH Completion credit remains zero.
+- **EC6915-118-N:** [object Object] Rejection or recovery: LENGTH_MISMATCH Completion credit remains zero.
+- **EC6915-119-N:** [object Object] Rejection or recovery: LENGTH_MISMATCH Completion credit remains zero.
+- **EC6915-120-N:** [object Object] Rejection or recovery: LENGTH_MISMATCH Completion credit remains zero.
+- **EC6915-121-N:** [object Object] Rejection or recovery: PHRED33_RANGE Completion credit remains zero.
+- **EC6915-122-N:** [object Object] Rejection or recovery: PHRED33_RANGE Completion credit remains zero.
+- **EC6915-123-N:** [object Object] Rejection or recovery: PHRED33_RANGE Completion credit remains zero.
+- **EC6915-124-N:** [object Object] Rejection or recovery: PHRED33_RANGE Completion credit remains zero.
+- **EC6915-125-N:** [object Object] Rejection or recovery: PHRED33_RANGE Completion credit remains zero.
+- **EC6915-126-N:** [object Object] Rejection or recovery: PHRED33_RANGE Completion credit remains zero.
+- **EC6915-127-N:** [object Object] Rejection or recovery: PHRED33_RANGE Completion credit remains zero.
+- **EC6915-128-N:** [object Object] Rejection or recovery: PHRED33_RANGE Completion credit remains zero.
+- **EC6915-129-N:** [object Object] Rejection or recovery: PHRED33_RANGE Completion credit remains zero.
+- **EC6915-130-N:** [object Object] Rejection or recovery: PHRED33_RANGE Completion credit remains zero.
+- **EC6915-131-N:** [object Object] Rejection or recovery: BASE_IDENTIFIER_MISMATCH Completion credit remains zero.
+- **EC6915-132-N:** [object Object] Rejection or recovery: BASE_IDENTIFIER_MISMATCH Completion credit remains zero.
+- **EC6915-133-N:** [object Object] Rejection or recovery: BASE_IDENTIFIER_MISMATCH Completion credit remains zero.
+- **EC6915-134-N:** [object Object] Rejection or recovery: BASE_IDENTIFIER_MISMATCH Completion credit remains zero.
+- **EC6915-135-N:** [object Object] Rejection or recovery: BASE_IDENTIFIER_MISMATCH Completion credit remains zero.
+- **EC6915-136-N:** [object Object] Rejection or recovery: BASE_IDENTIFIER_MISMATCH Completion credit remains zero.
+- **EC6915-137-N:** [object Object] Rejection or recovery: BASE_IDENTIFIER_MISMATCH Completion credit remains zero.
+- **EC6915-138-N:** [object Object] Rejection or recovery: BASE_IDENTIFIER_MISMATCH Completion credit remains zero.
+- **EC6915-139-N:** [object Object] Rejection or recovery: BASE_IDENTIFIER_MISMATCH Completion credit remains zero.
+- **EC6915-140-N:** [object Object] Rejection or recovery: BASE_IDENTIFIER_MISMATCH Completion credit remains zero.
+- **EC6915-141-N:** [object Object] Rejection or recovery: K_RANGE Completion credit remains zero.
+- **EC6915-142-N:** [object Object] Rejection or recovery: K_RANGE Completion credit remains zero.
+- **EC6915-143-N:** [object Object] Rejection or recovery: K_RANGE Completion credit remains zero.
+- **EC6915-144-N:** [object Object] Rejection or recovery: K_RANGE Completion credit remains zero.
+- **EC6915-145-N:** [object Object] Rejection or recovery: K_RANGE Completion credit remains zero.
+- **EC6915-146-N:** [object Object] Rejection or recovery: K_RANGE Completion credit remains zero.
+- **EC6915-147-N:** [object Object] Rejection or recovery: K_RANGE Completion credit remains zero.
+- **EC6915-148-N:** [object Object] Rejection or recovery: K_RANGE Completion credit remains zero.
+- **EC6915-149-N:** [object Object] Rejection or recovery: K_RANGE Completion credit remains zero.
+- **EC6915-150-N:** [object Object] Rejection or recovery: K_RANGE Completion credit remains zero.
+- **EC6915-151-N:** [object Object] Rejection or recovery: RECORD_SHAPE Completion credit remains zero.
+- **EC6915-152-N:** [object Object] Rejection or recovery: RECORD_SHAPE Completion credit remains zero.
+- **EC6915-153-N:** [object Object] Rejection or recovery: RECORD_SHAPE Completion credit remains zero.
+- **EC6915-154-N:** [object Object] Rejection or recovery: RECORD_SHAPE Completion credit remains zero.
+- **EC6915-155-N:** [object Object] Rejection or recovery: RECORD_SHAPE Completion credit remains zero.
+- **EC6915-156-N:** [object Object] Rejection or recovery: RECORD_SHAPE Completion credit remains zero.
+- **EC6915-157-N:** [object Object] Rejection or recovery: RECORD_SHAPE Completion credit remains zero.
+- **EC6915-158-N:** [object Object] Rejection or recovery: RECORD_SHAPE Completion credit remains zero.
+- **EC6915-159-N:** [object Object] Rejection or recovery: RECORD_SHAPE Completion credit remains zero.
+- **EC6915-160-N:** [object Object] Rejection or recovery: RECORD_SHAPE Completion credit remains zero.
+- **EC6915-161-N:** [object Object] Rejection or recovery: EVENT_LIST Completion credit remains zero.
+- **EC6915-162-N:** [object Object] Rejection or recovery: EVENT_LIST Completion credit remains zero.
+- **EC6915-163-N:** [object Object] Rejection or recovery: EVENT_LIST Completion credit remains zero.
+- **EC6915-164-N:** [object Object] Rejection or recovery: EVENT_LIST Completion credit remains zero.
+- **EC6915-165-N:** [object Object] Rejection or recovery: EVENT_LIST Completion credit remains zero.
+- **EC6915-166-N:** [object Object] Rejection or recovery: EVENT_LIST Completion credit remains zero.
+- **EC6915-167-N:** [object Object] Rejection or recovery: EVENT_LIST Completion credit remains zero.
+- **EC6915-168-N:** [object Object] Rejection or recovery: EVENT_LIST Completion credit remains zero.
+- **EC6915-169-N:** [object Object] Rejection or recovery: EVENT_LIST Completion credit remains zero.
+- **EC6915-170-N:** [object Object] Rejection or recovery: EVENT_LIST Completion credit remains zero.
+- **EC6915-171-N:** [object Object] Rejection or recovery: AVAILABLE_EVIDENCE Completion credit remains zero.
+- **EC6915-172-N:** [object Object] Rejection or recovery: AVAILABLE_EVIDENCE Completion credit remains zero.
+- **EC6915-173-N:** [object Object] Rejection or recovery: AVAILABLE_EVIDENCE Completion credit remains zero.
+- **EC6915-174-N:** [object Object] Rejection or recovery: AVAILABLE_EVIDENCE Completion credit remains zero.
+- **EC6915-175-N:** [object Object] Rejection or recovery: AVAILABLE_EVIDENCE Completion credit remains zero.
+- **EC6915-176-N:** [object Object] Rejection or recovery: AVAILABLE_EVIDENCE Completion credit remains zero.
+- **EC6915-177-N:** [object Object] Rejection or recovery: AVAILABLE_EVIDENCE Completion credit remains zero.
+- **EC6915-178-N:** [object Object] Rejection or recovery: AVAILABLE_EVIDENCE Completion credit remains zero.
+- **EC6915-179-N:** [object Object] Rejection or recovery: AVAILABLE_EVIDENCE Completion credit remains zero.
+- **EC6915-180-N:** [object Object] Rejection or recovery: AVAILABLE_EVIDENCE Completion credit remains zero.
+- **EC6915-181-N:** [object Object] Rejection or recovery: PARTICIPANT_COUNT Completion credit remains zero.
+- **EC6915-182-N:** [object Object] Rejection or recovery: PARTICIPANT_COUNT Completion credit remains zero.
+- **EC6915-183-N:** [object Object] Rejection or recovery: PARTICIPANT_COUNT Completion credit remains zero.
+- **EC6915-184-N:** [object Object] Rejection or recovery: PARTICIPANT_COUNT Completion credit remains zero.
+- **EC6915-185-N:** [object Object] Rejection or recovery: PARTICIPANT_COUNT Completion credit remains zero.
+- **EC6915-186-N:** [object Object] Rejection or recovery: PARTICIPANT_COUNT Completion credit remains zero.
+- **EC6915-187-N:** [object Object] Rejection or recovery: PARTICIPANT_COUNT Completion credit remains zero.
+- **EC6915-188-N:** [object Object] Rejection or recovery: PARTICIPANT_COUNT Completion credit remains zero.
+- **EC6915-189-N:** [object Object] Rejection or recovery: PARTICIPANT_COUNT Completion credit remains zero.
+- **EC6915-190-N:** [object Object] Rejection or recovery: PARTICIPANT_COUNT Completion credit remains zero.
+- **EC6915-191-N:** [object Object] Rejection or recovery: UNEXPECTED_VERIFIED_ROLE Completion credit remains zero.
+- **EC6915-192-N:** [object Object] Rejection or recovery: UNEXPECTED_VERIFIED_ROLE Completion credit remains zero.
+- **EC6915-193-N:** [object Object] Rejection or recovery: UNEXPECTED_VERIFIED_ROLE Completion credit remains zero.
+- **EC6915-194-N:** [object Object] Rejection or recovery: UNEXPECTED_VERIFIED_ROLE Completion credit remains zero.
+- **EC6915-195-N:** [object Object] Rejection or recovery: UNEXPECTED_VERIFIED_ROLE Completion credit remains zero.
+- **EC6915-196-N:** [object Object] Rejection or recovery: UNEXPECTED_VERIFIED_ROLE Completion credit remains zero.
+- **EC6915-197-N:** [object Object] Rejection or recovery: UNEXPECTED_VERIFIED_ROLE Completion credit remains zero.
+- **EC6915-198-N:** [object Object] Rejection or recovery: UNEXPECTED_VERIFIED_ROLE Completion credit remains zero.
+- **EC6915-199-N:** [object Object] Rejection or recovery: UNEXPECTED_VERIFIED_ROLE Completion credit remains zero.
+- **EC6915-200-N:** [object Object] Rejection or recovery: UNEXPECTED_VERIFIED_ROLE Completion credit remains zero.
+- **ghc-family-fastq-frame-N:** invalid synthetic fixture for fastq_frame Rejection or recovery: skill-guided operation refused fixture Completion credit remains zero.
+- **ghc-family-quality-length-N:** invalid synthetic fixture for quality_length Rejection or recovery: skill-guided operation refused fixture Completion credit remains zero.
+- **ghc-family-phred33-range-N:** invalid synthetic fixture for phred33_range Rejection or recovery: skill-guided operation refused fixture Completion credit remains zero.
+- **ghc-family-paired-read-binding-N:** invalid synthetic fixture for paired_read_binding Rejection or recovery: skill-guided operation refused fixture Completion credit remains zero.
+- **ghc-family-kmer-histogram-N:** invalid synthetic fixture for kmer_histogram Rejection or recovery: skill-guided operation refused fixture Completion credit remains zero.
+- **ghc-family-duplicate-record-N:** invalid synthetic fixture for duplicate_record Rejection or recovery: skill-guided operation refused fixture Completion credit remains zero.
+- **ghc-family-provenance-chain-N:** invalid synthetic fixture for provenance_chain Rejection or recovery: skill-guided operation refused fixture Completion credit remains zero.
+- **ghc-family-evidence-ceiling-N:** invalid synthetic fixture for evidence_ceiling Rejection or recovery: skill-guided operation refused fixture Completion credit remains zero.
+- **ghc-family-participant-gap-N:** invalid synthetic fixture for participant_gap Rejection or recovery: skill-guided operation refused fixture Completion credit remains zero.
+- **ghc-family-authority-gate-N:** invalid synthetic fixture for authority_gate Rejection or recovery: skill-guided operation refused fixture Completion credit remains zero.
+- **sequence-x2-pair-1.txt-N:** invalid or outside-pair runner request Rejection or recovery: runner refused request Completion credit remains zero.
+- **sequence-x2-pair-2.txt-N:** invalid or outside-pair runner request Rejection or recovery: runner refused request Completion credit remains zero.
+- **sequence-x2-pair-3.txt-N:** invalid or outside-pair runner request Rejection or recovery: runner refused request Completion credit remains zero.
+- **sequence-x2-pair-4.txt-N:** invalid or outside-pair runner request Rejection or recovery: runner refused request Completion credit remains zero.
+- **sequence-x2-pair-5.txt-N:** invalid or outside-pair runner request Rejection or recovery: runner refused request Completion credit remains zero.
+- **EC6915-X2-N001:** A direct foreach-to-pipeline PowerShell source read failed to parse before reading the promotion records. Rejection or recovery: Materialize the file projections in an array before piping to JSON. Completion credit remains zero.
+- **EC6915-X2-N002:** A broad skill-bank search passed a Windows wildcard as a literal rg path and failed. Rejection or recovery: Search exact files and explicit directories instead of wildcard paths. Completion credit remains zero.
+- **EC6915-X2-N003:** A mixed exact-path source search included a nonexistent Saelin tooling directory and returned a partial error alongside useful x2 matches. Rejection or recovery: Read the exact committed x2 promotion builder directly. Completion credit remains zero.
+- **EC6915-X2-N004:** The first external promotion preflight assumed the public root directly under GHC-Archives and found a false absence. Rejection or recovery: Resolve the authoritative global-tools/family-recovery-commons path from Saelin promotion provenance and check exact destinations. Completion credit remains zero.
+- **EC6915-X2-N005:** The first x2 pre-write aggregate found that the quality-length rejecting mutation for an already mismatched case accidentally repaired parity. Rejection or recovery: Construct a guaranteed mismatched quality string and verify the isolated failed case before the all-or-nothing materialization rerun. Completion credit remains zero.
+- **EC6915-X2-N006:** The second x2 pre-write aggregate found that case 115 already had sequence-length-plus-one quality, so the revised invalid mutation was not distinct from its source. Rejection or recovery: Use sequence length plus two when plus one already matches the source, then run only the 100-pair mutation distinctness and rejection preflight before materialization. Completion credit remains zero.
+- **EC6915-X2-PROMO-001:** outside_group Rejection or recovery: OUTSIDE_GROUP Completion credit remains zero.
+- **EC6915-X2-PROMO-002:** outside_group Rejection or recovery: OUTSIDE_GROUP Completion credit remains zero.
+- **EC6915-X2-PROMO-003:** outside_group Rejection or recovery: OUTSIDE_GROUP Completion credit remains zero.
+- **EC6915-X2-PROMO-004:** outside_group Rejection or recovery: OUTSIDE_GROUP Completion credit remains zero.
+- **EC6915-X2-PROMO-005:** outside_group Rejection or recovery: OUTSIDE_GROUP Completion credit remains zero.
+- **EC6915-X2-INST-001:** outside_group Rejection or recovery: OUTSIDE_GROUP Completion credit remains zero.
+- **EC6915-X2-INST-002:** outside_group Rejection or recovery: OUTSIDE_GROUP Completion credit remains zero.
+- **EC6915-X2-INST-003:** outside_group Rejection or recovery: OUTSIDE_GROUP Completion credit remains zero.
+- **EC6915-X2-INST-004:** outside_group Rejection or recovery: OUTSIDE_GROUP Completion credit remains zero.
+- **EC6915-X2-INST-005:** outside_group Rejection or recovery: OUTSIDE_GROUP Completion credit remains zero.
+- **EC6915-X2-N007:** The first final owner-wide media scan withheld success because it treated the media_or_transcript field in an existing privacy receipt as payload. Rejection or recovery: Run one privacy-only component that classifies exact scanner definitions, no-screenshot policy, and the media_or_transcript receipt key before counting confirmed payload hits. Completion credit remains zero.
+- **EC6915-X2-N008:** The first isolated privacy component still counted fifteen provenance-linked copies of its own media_or_transcript failure and recovery text as payload. Rejection or recovery: Classify only the exact retained failure and recovery phrases as receipt metadata while leaving every unrelated media or transcript occurrence confirmable. Completion credit remains zero.
+- **EC6915-X2-N009:** The exact staged-blob audit crossed its 30-second output boundary and returned a live session identifier before its attributable result was available. Rejection or recovery: Poll the same live session once; do not restart, restage, or duplicate the audit. The original session then reported 157 staged files and zero mismatches. Completion credit remains zero.
+- **EC6915-FINAL-N001:** The first exact current-roster projection used an invalid PowerShell property expression and failed before reading a route row. Rejection or recovery: Inspect the roster top-level schema first, then address the assignments array with supported property syntax. Completion credit remains zero.
+- **EC6915-FINAL-N002:** The first corrected roster filter used an owner-name OR clause and returned all thirteen future Sylven assignments instead of one current edge. Rejection or recovery: Require both exact owner Sylven Arc and exact phase v691-v6, yielding exactly one prospective Sol-role row. Completion credit remains zero.
+
+- **EC6915-FINAL-N003:** The first terminal manifest audit wrapped an empty mismatch list with a unary comma, so each clean layer falsely reported one failure. Recovery: Enumerate actual mismatching entries directly and treat an empty scalar result as zero; the delta, owner, and seal layers then had no mismatch. Completion credit remains zero.
+
+- **EC6915-FINAL-N004:** The first final owner privacy projection used a brittle test-file path expression and misclassified eight scanner-definition tokens as payload. Recovery: Use separator-neutral tooling test-file and final canonical path classification, preserving candidates while confirmed hits remain zero. Completion credit remains zero.

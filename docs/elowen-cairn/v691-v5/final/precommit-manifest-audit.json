@@ -1,0 +1,24 @@
+{
+  "schema": "ghc.family.elowen-final-precommit-manifest-audit.v1",
+  "first_projection": {
+    "status": "INVALID_FALSE_WRAPPED_EMPTY_LIST",
+    "success_credit": 0,
+    "reported_delta_failures": 1,
+    "reported_owner_failures": 1,
+    "reported_seal_failures": 1
+  },
+  "exact_entry_isolation": {
+    "status": "VALID_ZERO_MISMATCH_ENTRIES",
+    "delta_failures": 0,
+    "owner_failures": 0,
+    "seal_failures": 0
+  },
+  "failure_retained": {
+    "negative_id": "EC6915-FINAL-N003",
+    "failure": "The first terminal manifest audit wrapped an empty mismatch list with a unary comma, so each clean layer falsely reported one failure.",
+    "recovery": "Enumerate actual mismatching entries directly and treat an empty scalar result as zero; the delta, owner, and seal layers then had no mismatch.",
+    "completion_credit": 0,
+    "retained": true
+  },
+  "replayed_builder": false
+}

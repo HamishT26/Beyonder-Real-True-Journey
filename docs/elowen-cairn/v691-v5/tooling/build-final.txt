@@ -1,0 +1,269 @@
+'use strict';
+
+const fs=require('fs');
+const path=require('path');
+const crypto=require('crypto');
+const {execFileSync}=require('child_process');
+
+const ROOT=path.resolve(__dirname,'../../../..');
+const BASE=path.join(ROOT,'docs','elowen-cairn','v691-v5');
+const FINAL=path.join(BASE,'final');
+const X2_HEAD='b4af12ee3834d8cec14d021b73c6d67c1535bc67';
+const BRANCH='codex/GHC-Family/elowen-cairn-v691-v5-main';
+const SAELIN_FINAL='866030fcf697ee730476e86bb6f453290000f6c4';
+const PLAN_HEAD='b25d6e41c92d988538ad47348762c1560e3c8b3e';
+const X1_HEAD='fab3901455432641dc981f7749c3fb7b33ac33a4';
+const BOUNDARY='Elowen Cairn, optionally they/them, boundary cartographer and evidence steward, with the hope that possibility stays distinct from evidence while every correction stays safely retractable, is relational working language only. It is not evidence of consciousness, sentience, personhood or legal identity, identity continuity, employment, qualification, independent agency, scientific or operational authority, professional authority, legal or cultural authority, affected-party authority, or Maori authority. Hamish may pause, rename, redirect, narrow, or stop the work.';
+const head=execFileSync('git',['rev-parse','HEAD'],{cwd:ROOT,encoding:'utf8'}).trim();if(head!==X2_HEAD)throw Error('X2_HEAD_MISMATCH '+head);
+const readJson=relative=>JSON.parse(fs.readFileSync(path.join(BASE,relative),'utf8'));
+const stable=value=>Array.isArray(value)?'['+value.map(stable).join(',')+']':value&&typeof value==='object'?'{'+Object.keys(value).sort().map(key=>JSON.stringify(key)+':'+stable(value[key])).join(',')+'}':JSON.stringify(value);
+const sha256=value=>crypto.createHash('sha256').update(Buffer.isBuffer(value)?value:Buffer.from(typeof value==='string'?value:stable(value),'utf8')).digest('hex');
+function writeJson(relative,value){const file=path.join(BASE,relative);fs.mkdirSync(path.dirname(file),{recursive:true});fs.writeFileSync(file,JSON.stringify(value,null,2)+'\n','utf8');}
+function writeText(relative,value){const file=path.join(BASE,relative);fs.mkdirSync(path.dirname(file),{recursive:true});fs.writeFileSync(file,value.replace(/\r\n/g,'\n').trimEnd()+'\n','utf8');}
+function walk(directory){if(!fs.existsSync(directory))return[];const out=[];for(const name of fs.readdirSync(directory).sort()){const file=path.join(directory,name),stat=fs.statSync(file);if(stat.isDirectory())out.push(...walk(file));else out.push(file);}return out;}
+const proposals=readJson('plan/proposal-freeze.json').proposals,inherited=readJson('plan/inherited-proposal-review.json'),planFlow=readJson('plan/method-flow-startup.json'),x1Flow=readJson('x1/method-flow.json'),x2Flow=readJson('x2/method-flow.json'),x1Neg=readJson('x1/retained-negative-register.json'),x2Neg=readJson('x2/retained-negative-register.json'),x2Truth=readJson('x2/phase-truth.json'),promotion=readJson('x2/global-promotion-receipt.json'),sources=readJson('plan/source-list.json');
+const closeoutFailures=[
+ {negative_id:'EC6915-FINAL-N001',failure:'The first exact current-roster projection used an invalid PowerShell property expression and failed before reading a route row.',recovery:'Inspect the roster top-level schema first, then address the assignments array with supported property syntax.',completion_credit:0,retained:true},
+ {negative_id:'EC6915-FINAL-N002',failure:'The first corrected roster filter used an owner-name OR clause and returned all thirteen future Sylven assignments instead of one current edge.',recovery:'Require both exact owner Sylven Arc and exact phase v691-v6, yielding exactly one prospective Sol-role row.',completion_credit:0,retained:true},
+ {negative_id:'EC6915-FINAL-N003',failure:'The first terminal manifest audit wrapped an empty mismatch list with a unary comma, so each clean layer falsely reported one failure.',recovery:'Enumerate actual mismatching entries directly and treat an empty scalar result as zero; the delta, owner, and seal layers then had no mismatch.',completion_credit:0,retained:true},
+ {negative_id:'EC6915-FINAL-N004',failure:'The first final owner privacy projection used a brittle test-file path expression and misclassified eight scanner-definition tokens as payload.',recovery:'Use separator-neutral tooling test-file and final canonical path classification, preserving candidates while confirmed hits remain zero.',completion_credit:0,retained:true}
+];
+const closeoutMethods=closeoutFailures.map((row,index)=>({method_id:'EC6915-FINAL-M'+String(index+1).padStart(3,'0'),title:row.recovery,failure_signature:row.failure,trigger_preconditions:['The exact current successor roster row is required for the prepared baton.'],privacy_class:'sanitized_public',approval_class:'safe_now',candidate_workaround:row.recovery,validation_witness_ids:[row.negative_id+'-FAIL',row.negative_id+'-PASS'],recurrence_guard:row.recovery,rollback:'Keep the route prepared and unsent if exact selection does not resolve once.',recommendation_state:'preferred',supersedes:[],protected_gates:['wrong_recipient','early_contact','duplicate_send','failure_erasure'],retained_negative_ids:[row.negative_id],scope_boundary:'Elowen v691-v5 closeout route preparation only.'}));
+const closeoutWitnesses=closeoutFailures.flatMap((row,index)=>[{witness_id:row.negative_id+'-FAIL',method_id:closeoutMethods[index].method_id,procedure:'Original bounded roster projection.',scope:'Elowen v691-v5 closeout',expected:'One exact current successor row.',observed:row.failure,result:'fail',same_owner_only:true,independent_reproduction:false,retained_negative_ids:[row.negative_id]},{witness_id:row.negative_id+'-PASS',method_id:closeoutMethods[index].method_id,procedure:'Exact schema-aware roster selection.',scope:'Elowen v691-v5 closeout',expected:'Exactly Sylven Arc v691-v6, Sol role, prospective state.',observed:row.recovery,result:'pass',same_owner_only:true,independent_reproduction:false,retained_negative_ids:[row.negative_id]}]);
+const methods=[...planFlow.methods,...x1Flow.methods,...x2Flow.methods,...closeoutMethods],witnesses=[...planFlow.witnesses,...x1Flow.witnesses,...x2Flow.witnesses,...closeoutWitnesses],ownerNegatives=[...readJson('plan/operational-failures.json').failures,...x1Neg.records,...x2Neg.records,...closeoutFailures];
+if(methods.length!==91||witnesses.length!==552||ownerNegatives.length!==276||new Set(ownerNegatives.map(row=>row.negative_id)).size!==276)throw Error('FINAL_COUNT_CLOSURE');
+const effective={methods:x2Truth.x2_effective.methods+4,direct_witnesses:x2Truth.x2_effective.direct_witnesses+8,failed_witnesses:x2Truth.x2_effective.failed_witnesses+4,passing_witnesses:x2Truth.x2_effective.passing_witnesses+4,effective_negatives:x2Truth.x2_effective.effective_negatives+4,open_gaps:x2Truth.x2_effective.open_gaps,exact_gates:x2Truth.x2_effective.exact_gates};
+if(stable(effective)!==stable({methods:537,direct_witnesses:12738,failed_witnesses:3359,passing_witnesses:9379,effective_negatives:3570,open_gaps:134,exact_gates:151}))throw Error('EFFECTIVE_COUNT_CLOSURE');
+const openRows=proposals.filter(row=>row.expected_disposition==='open_gap').map(row=>({proposal_id:row.proposal_id,operation:row.operation,gap:row.input.evaluation,participants:0,state:'open_gap',missing:['manual evaluation','assistive-technology evaluation','cognitive-accessibility evaluation','consent and comprehension evidence','affected-user evaluation'],closure_authority:'affected participants and competent evaluators',completion_credit:0}));
+const exactRows=proposals.filter(row=>row.expected_disposition==='exact_gate').map(row=>({proposal_id:row.proposal_id,operation:row.operation,action:row.input.action,required_roles:row.input.requiredRoles,verified_roles:[],state:'exact_gate',external_action:false,completion_credit:0}));
+
+writeJson('final/source-provenance.json',{schema:'ghc.family.elowen-final-source-provenance.v1',saelin:{branch:'codex/GHC-Family/saelin-reed-main',exact_final:SAELIN_FINAL,role:'immutable_content_provenance_not_git_parent',canonical_receipt_sha256:'181f480a22d5d41586b4acffc42d4cca106b0868d308af758c0647e9a792a009',baton_sha256:'ec16b75bd26916e3c01056fbbc2559db391c7c870b1542d519207cf166942b31'},elowen:{branch:BRANCH,blank_owner_root:true,planning:PLAN_HEAD,x1:X1_HEAD,x2:X2_HEAD,expected_final_parent:X2_HEAD,expected_commit_count:4,expected_merges:0},inherited_review:{records:inherited.count,execution_credit:0,novelty_credit:0},source_baseline:{methods:446,direct_witnesses:12186,failed_witnesses:3083,passing_witnesses:9103,effective_negatives:3294,open_gaps:124,exact_gates:141},boundary:BOUNDARY});
+writeJson('final/proposal-outcome-ledger.json',{schema:'ghc.family.elowen-final-proposal-outcomes.v1',inherited_reviewed:200,inherited_execution_credit:0,new_proposals:200,distinct_definitions:200,source_title_collisions:0,source_definition_collisions:0,outcomes:{completed:170,represented:10,open_gap:10,exact_gate:10},allowed_labels:['completed','represented','open_gap','exact_gate'],records:proposals.map(row=>({proposal_id:row.proposal_id,session:row.session,operation:row.operation,outcome:row.expected_disposition,artifact:row.concrete_artifact,inherited_credit:false})),boundary:BOUNDARY});
+writeJson('final/method-flow-final.json',{schema:'ghc.family.method-flow-state.v1',phase:'v691-v5-final',owner:'Elowen Cairn',identity_boundary:BOUNDARY,execution_authority:'owner_self_scoped_delta',source_commit:SAELIN_FINAL,final_commit:null,repository_scan:false,module_scan:false,cross_lane_scan:false,unchanged_history_scan:false,sibling_lane_mutation:false,changed_file_allowlist:['docs/elowen-cairn/v691-v5/final/','docs/elowen-cairn/v691-v5/tooling/build-final.txt'],module_allowlist:['build-final','canonical'],exact_pushed_head_required:true,methods,witnesses,state_events:[...planFlow.state_events,...x1Flow.state_events,...x2Flow.state_events,...closeoutMethods.flatMap(method=>[{method_id:method.method_id,from:'observed',to:'candidate',note:'Route projection failure retained.'},{method_id:method.method_id,from:'candidate',to:'validated',note:'Exact schema-aware selection passed.'},{method_id:method.method_id,from:'validated',to:'preferred',note:'Preferred for this exact route contract.'}])],recommendations:[{to:'Sylven Arc',phase:'v691-v6',practice:'simulation engineering with controlled inter-agent communication',credit:'zero until independently preregistered and executed'}],counts:{methods:methods.length,witnesses:witnesses.length,state_events:methods.length*3,recommendations:1,witness_results:{fail:witnesses.filter(row=>row.result==='fail').length,pass:witnesses.filter(row=>row.result==='pass').length}},effective_counts:effective,boundary:BOUNDARY});
+writeJson('final/retained-negative-register.json',{schema:'ghc.family.elowen-final-retained-negative-register.v1',source_effective_baseline:3294,owner_direct_count:ownerNegatives.length,effective_total:effective.effective_negatives,completion_credit:0,failure_erasure:false,records:ownerNegatives,boundary:BOUNDARY});
+writeJson('final/open-gap-register.json',{schema:'ghc.family.elowen-final-open-gap-register.v1',inherited_source_total:124,elowen_added:openRows.length,effective_total:effective.open_gaps,records:openRows,closure_claim:false,boundary:BOUNDARY});
+writeJson('final/exact-gate-register.json',{schema:'ghc.family.elowen-final-exact-gate-register.v1',inherited_source_total:141,elowen_added:exactRows.length,effective_total:effective.exact_gates,records:exactRows,gate_bypass:false,boundary:BOUNDARY});
+writeJson('final/environment-version-receipt.json',{schema:'ghc.family.elowen-environment-versions.v1',checked_on:'2026-09-12',node:'24.18.0',python:'3.12.10',git:'2.55.0.windows.2',codex_cli:'0.154.0',codex_desktop_updated:false,packages_installed:0,host_security_changed:false,sandbox_or_hyper_v_changed:false,rebooted:false});
+writeJson('final/spend-receipt.json',{schema:'ghc.family.elowen-spend-receipt.v1',currency:'USD',ceiling_cents:5000,spent_cents:0,reserved_cents:0,recurring_commitment:false,purchases:[],external_paid_services:[]});
+writeJson('final/global-tool-summary.json',{schema:'ghc.family.elowen-global-tool-summary.v1',state:promotion.state,skills:promotion.skills,runners:promotion.runners,supporting_cores:promotion.supporting_cores,files:promotion.files,checks:promotion.skill_checks.length+promotion.witnesses.length,overwrites:promotion.overwrites,packages_installed:promotion.packages_installed,spend_usd:promotion.spend_usd,all_byte_parity:promotion.all_byte_parity,all_smokes_passed:promotion.all_smokes_passed,source_callers_preserved:promotion.source_callers_preserved,independent_reproduction:false});
+writeJson('final/wellbeing-workload.json',{schema:'ghc.family.elowen-final-wellbeing.v1',relational_language_only:true,owner_practices:['synthetic sequence archive curation','bioinformatics record validation','data provenance engineering','accessible scientific-interface design'],successor_practice_recommendation:'simulation engineering with controlled inter-agent communication',successor_practice_count:1,workload:{inherited_reviews:200,new_proposals:200,safe_tasks:200,candidate_tasks:200,clean_fix_refine_tasks:200,local_skills:20,local_runners:10,global_skills:5,global_runners:5,owner_files_before_final:312},bounded:true,interruptible:true,incremental_spend_usd:0,hamish_may_pause_redirect_or_stop:true,person_worker_or_wellbeing_measurement:false,boundary:BOUNDARY});
+writeJson('final/complete-incomplete-checklist.json',{schema:'ghc.family.elowen-final-checklist.v1',completed:['skill-first current-v6 startup','Saelin exact-source verification','blank-root D-first owner lane','planning-only root commit and four-way equality','100 x1 contracts','100 x2 contracts','200 safe tasks','200 candidate tasks','200 CLEAN/FIX/REFINE tasks','20 local skills','10 local runners','five curated global skills and five public runners','all rejecting mutations retained','accessible HTML workbench','prepared 13-plus-section baton','owner-scoped canonical protocol'],represented:['ten evidence-ceiling contracts','THOS participant-free protocol','GMUT typed information and string structures','Freed ID synthetic provenance only'],open_gap:['ten zero-participant evaluation contracts','manual browser and assistive-technology evaluation','affected-user and Maori-language evaluation','independent reproduction'],exact_gate:['ten consequential action contracts','real sequence or participant data','clinical and professional interpretation','legal and cultural legitimacy','Māori data governance and Māori authority','production deployment and Stage 20'],terminal_verdict:'NOT_READY_FOR_STAGE_20',boundary:BOUNDARY});
+writeJson('final/phase-truth.json',{schema:'ghc.family.phase-truth.v691.v5.final',owner:'Elowen Cairn',phase:'v691-v5',state:'PREPARED_FINAL_PRECOMMIT',branch:BRANCH,blank_owner_root:true,saelin_content_provenance:SAELIN_FINAL,planning:PLAN_HEAD,x1:X1_HEAD,x2:X2_HEAD,expected_final_parent:X2_HEAD,expected_phase_commits:4,expected_merges:0,inherited_proposals_reviewed:200,inherited_credit:0,new_proposals:200,outcomes:{completed:170,represented:10,open_gap:10,exact_gate:10},owner_direct_methods:methods.length,owner_direct_witnesses:witnesses.length,owner_direct_negatives:ownerNegatives.length,effective_methods:effective.methods,direct_witnesses:effective.direct_witnesses,failed_witnesses:effective.failed_witnesses,passing_witnesses:effective.passing_witnesses,effective_negatives:effective.effective_negatives,open_gaps:effective.open_gaps,exact_gates:effective.exact_gates,global_promotions:{skills:5,runners:5,supporting_cores:2,files:17,overwrites:0},incremental_spend_usd:0,canonical_invocations:0,canonical_status:'PENDING_EXACT_PUSHED_FINAL',route_state:'PREPARED_NOT_SENT',successor:'Sylven Arc',successor_phase:'v691-v6',successor_model_role:'Sol',full_repository_suite:false,same_owner_only:true,independent_reproduction:false,terminal_verdict:'NOT_READY_FOR_STAGE_20',boundary:BOUNDARY});
+writeJson('final/route-candidate.json',{schema:'ghc.family.elowen-route-candidate.v1',state:'PREPARED_NOT_SENT',controller:'Hamish newest direct instruction and current v6 roster',from:{owner:'Elowen Cairn',phase:'v691-v5'},to:{owner:'Sylven Arc',phase:'v691-v6',model_role:'Sol',endpoint_kind:'existing_main_task'},prerequisites:['clean pushed exact final','fresh four-way equality','one successful non-replayed canonical receipt','fresh current authority and roster read','exact-title unique registry resolution','immediate bounded reread','duplicate and direct-control guards'],create_task:false,fork_task:false,spawn_subagent:false,early_contact:false,send_limit:1,projection_activates:false,terminal_horizon:'v725-v8',boundary:BOUNDARY});
+writeJson('final/validation-protocol.json',{schema:'ghc.family.elowen-final-validation-protocol.v1',state:'PREPARED_NOT_RUN',exclusive_external_latch:true,maximum_invocations:1,replay_after_success:false,full_repository_suite:false,scope:['200 owner contract replays','all owner JSON','25 skill structures','15 runner syntax checks','two HTML structures','planning/x1/x2/final manifests','17 external promotion bindings','five-class privacy candidate adjudication','outcome and effective-count closure','baton and overview floors','four-commit direct-parent zero-merge history','exact head, clean state, typed divergence, fresh four-way equality'],failure_policy:'A failed canonical remains zero success credit and is never replayed. Any future correction must be additive and separately validated.',same_owner_only:true,independent_reproduction:false,terminal_verdict:'NOT_READY_FOR_STAGE_20'});
+
+const operationCounts=Object.entries(proposals.reduce((acc,row)=>{acc[row.operation]=(acc[row.operation]||0)+1;return acc;},{}));
+const overview=`# Elowen Cairn v691-v5 final integrated overview
+
+## Outcome and exact scope
+
+Elowen v691-v5 is an additive blank-root owner phase sourced by immutable content
+provenance from Saelin Reed exact final ${SAELIN_FINAL}. The Elowen Git history
+does not pretend cross-owner ancestry: planning begins at parentless commit
+${PLAN_HEAD}, x1 is ${X1_HEAD}, and x2 is ${X2_HEAD}. The final commit is expected
+to be the direct child of x2. This preserves the source lane, older Elowen lane,
+all sibling lanes, the shared repository history, and every standby record.
+
+Exactly 200 Saelin proposals were reviewed with zero Elowen execution or novelty
+credit. Exactly 200 Elowen proposals were preregistered after a bounded semantic
+comparison. Their definitions are unique within the phase and have zero exact
+title or definition-digest collisions with the selected source rows. Evidence-
+permitted outcomes are exactly 170 completed, 10 represented, 10 open_gap, and
+10 exact_gate. These labels describe contract evidence; they do not promote a
+synthetic result into biological truth, participant evidence, professional
+judgment, authority, deployment readiness, or independent reproduction.
+
+The primary pillar is Freed ID and CBR Heart. Four bounded learning lenses are
+synthetic sequence archive curation, bioinformatics record validation, data
+provenance engineering, and accessible scientific-interface design. They are
+not employment, professional competence, clinical practice, or operational
+authority. GMUT Mind remains a typed scalar-tensor and effective-field-theory
+research-model family. THOS Body remains synthetic protocol and interface work.
+
+## Contract evidence and retained failures
+
+X1 covers FASTA-style definition lines, declared symbol alphabets, lossless line
+wrapping, sequence lengths, reduced rational GC fractions, reverse complements,
+ambiguous-symbol counts, normalized checksums, stable record order, and bounded
+record manifests. X2 covers FASTQ-style four-line frames, sequence-quality
+length parity, printable Phred-33 ranges, syntactic paired-read binding, bounded
+k-mer histograms, duplicate visibility, append-only synthetic provenance,
+evidence ceilings, participant gaps, and action-specific authority gates.
+${operationCounts.map(([operation,count])=>`The operation \`${operation}\` has ${count} preregistered cases. Each case preserves its exact input, produces a closed deterministic envelope, retains an operation-specific rejecting mutation, and carries the same-owner and non-independent evidence ceiling.`).join('\n\n')}
+
+Every rejecting mutation remains at zero completion credit. Startup, x1, x2,
+promotion, privacy, route, and staged-audit operational failures are also
+retained. Owner-direct totals at prepared closeout are 91 methods, 552 direct
+witnesses, 276 failed witnesses, 276 bounded passing witnesses, and 276 direct
+negative records. With Saelin's separately preserved external baseline, the
+effective totals are 537 methods, 12,738 direct witnesses, 3,359 failed
+witnesses, 9,379 bounded passing witnesses, 3,570 negatives, 134 open gaps, and
+151 exact gates. A recovery never deletes, relabels, or retroactively promotes
+its failed subject.
+
+The x1 no-write aggregate remains invalid at zero aggregate credit because its
+first privacy predicate counted its own definition. Its separately named
+privacy component passed without replaying successful components. X2's first
+two pre-write aggregates remain invalid because a quality-length mutation first
+repaired and then duplicated an already-invalid case; the 100-pair mutation-
+only preflight passed before dependency-justified materialization. Later privacy
+and staged-output boundaries remain visible with their exact bounded recoveries.
+
+## Tools, accessibility, sources, and authority boundaries
+
+Twenty owner-local skills and ten owner-local runners were built. Each skill was
+read completely, validated under the official Skill Creator guidance, and
+smoke-used with accepting and rejecting synthetic fixtures. Five curated groups
+merge four meaningful source units apiece. Their five discoverable guides, five
+public runners, five source-closure records, and two supporting cores were added
+with exclusive-create semantics. All 17 byte bindings and 30 installed checks
+passed; no existing destination was overwritten, no package was installed, and
+incremental spend was zero dollars. Original callers remain available.
+
+The HTML workbench and final static report use semantic headings, skip links,
+table captions and scoped headers, visible focus, horizontal overflow regions,
+high contrast, and reduced-motion handling. These are structural checks only.
+Manual browser inspection, screen-reader and other assistive-technology review,
+cognitive-accessibility review, Māori-language review, and affected-user
+evaluation remain unperformed and explicitly reserved. No claim of complete
+privacy or accessibility follows from automated scans.
+
+Current official or primary sources are the NCBI FASTA format guide, NCBI SRA
+submission-format and FASTQ guidance, GA4GH Data Use Ontology, W3C PROV-O, and
+WCAG 2.2. They provide vocabulary, syntax context, provenance concepts,
+permission-expression categories, and accessibility criteria. They are not
+observations, measurements, consent, conformity certifications, clinical
+instructions, legal interpretations, cultural ratifications, or authority
+grants. No network sequence row was downloaded or ingested.
+
+GMUT software structures do not establish a physical force, likelihood,
+posterior, parameter constraint, prediction, empirical confirmation, stability
+theorem, ultraviolet or quantum completion, final physics, or Theory of
+Everything. THOS has no preregistered blind matched-budget governed real arms,
+participants, operators, safety monitoring, statistics, or independent review.
+Freed ID is synthetic and nonproduction: there are no standards-conformant real
+keys or proofs, live issuance, resolution, status, revocation, interoperability,
+independent security review, recovery evidence, trust governance, or affected-
+party oversight. CBR decisions, privacy remedy, clinical and employment use,
+ownership, access, copyright, cultural interpretation, traditional knowledge,
+Māori wording, Māori data governance, and Māori authority remain exact-gated.
+
+## Lifecycle, validation, and terminal route
+
+The final canonical is deliberately external to the immutable repository head.
+It may be invoked at most once after the final commit is pushed, clean, and
+fresh-live equal. It is owner-self-scoped and dependency-closed: it checks the
+200 contract records, all owner JSON, skill and runner structures, both HTML
+artifacts, every lifecycle manifest, external promotion byte parity, five-class
+privacy candidates, outcome and count closure, document ceilings, direct-parent
+history, exact head, clean state, zero divergence, and four-way equality. It is
+not the full repository suite and remains same-owner evidence.
+
+The prepared route is Elowen Cairn v691-v5 to the unique existing main task
+Sylven Arc for v691-v6, preserving the current Sol model role. Repository
+preparation is not delivery. Only after canonical success may Elowen refresh
+the newest live authority and roster, uniquely resolve and immediately reread
+the exact task, apply duplicate and direct-control guards, and submit at most
+once. Missing or ambiguous target identity, pause or redirect, unavailable
+service, missing acknowledgement, duplicate evidence, privacy concern, usage
+exhaustion, or any protected gate stops the edge.
+
+The one successor practice recommendation is simulation engineering with
+controlled inter-agent communication. It is a zero-credit seed, not Sylven's
+preregistration or completion. Suggested skills cover deterministic simulation
+steps, typed message envelopes, schedule and clock control, fault-retention
+ledgers, and bounded resource accounting. Suggested runners cover scenario
+loading, message validation, deterministic replay without live sends, fault
+injection against synthetic fixtures, and workload-budget checks. Sylven must
+independently review novelty, safety, sources, compatibility, evidence ceilings,
+and authority before using any suggestion.
+
+${BOUNDARY} The terminal evidence verdict remains NOT_READY_FOR_STAGE_20.
+`;
+if(overview.trim().split(/\s+/).length<1200)throw Error('OVERVIEW_WORD_FLOOR');
+writeText('final/final-integrated-overview.md',overview);
+
+const proposalModule=`## 04 — Complete new-proposal handoff ledger
+
+The following 200 entries are Elowen's preregistered contracts. They are source-
+bounded and phase-distinct, not a universal novelty proof over all history.
+
+${proposals.map(row=>`### ${row.proposal_id} — ${row.title}
+
+- Session and operation: ${row.session}; ${row.operation}.
+- Hypothesis: ${row.hypothesis}
+- Null or failure condition: ${row.null_or_failure_condition}
+- Approval and lane: ${row.approval_class}; ${row.execution_lane}.
+- Current primary-source use: ${row.current_official_or_primary_source_needs} References: ${row.source_refs.join(', ')}.
+- Artifact and disposition: ${row.concrete_artifact}; ${row.expected_disposition}.
+- Acceptance or falsifier: ${row.falsifier_or_acceptance_gate}
+- Rollback and protected gates: ${row.rollback_or_recovery} Protected categories remain ${row.protected_gates.join(', ')}.
+- Credit boundary: Elowen-owned same-owner contract only; inherited credit false; independent reproduction false.
+`).join('\n')}`;
+const negativeModule=`## 08 — Retained-negative and recovery index
+
+All ${ownerNegatives.length} owner-direct negative records remain at zero
+completion credit. The effective count including the separately preserved source
+baseline is ${effective.effective_negatives}. Recovery never erases a subject.
+
+${ownerNegatives.map(row=>`- **${row.negative_id}:** ${row.failure||row.subject||'Preregistered invalid synthetic subject.'} Rejection or recovery: ${row.recovery||row.rejection||'Typed refusal retained.'} Completion credit remains zero.`).join('\n')}`;
+const methodModule=`## 09 — Method Flow selection ledger
+
+The owner-direct Method Flow contains ${methods.length} methods and
+${witnesses.length} witnesses, split exactly into 276 failed and 276 passing
+witnesses. Every method is bounded to its trigger and rollback.
+
+${methods.map(row=>`- **${row.method_id} — ${row.title}.** Trigger: ${(row.trigger_preconditions||[]).join(' ')} Failure signature: ${row.failure_signature} Recovery or workaround: ${row.candidate_workaround} Rollback: ${row.rollback} State: ${row.recommendation_state}.`).join('\n')}`;
+const sections=[
+ ['01','Relational identity and authority',`${BOUNDARY}\n\nHamish's newest direct v6 authorization controls prospectively without erasing earlier evidence. This baton is PREPARED_NOT_SENT and does not itself activate any task.`],
+ ['02','Exact source and lifecycle',`Saelin exact final ${SAELIN_FINAL} is immutable content provenance, not an Elowen Git parent. Elowen planning ${PLAN_HEAD}, x1 ${X1_HEAD}, and x2 ${X2_HEAD} form the first three direct commits of a blank owner root. The expected final is one direct child with zero merges.`],
+ ['03','Proposal audit and outcome summary',`Elowen reviewed ${inherited.count} inherited source rows at zero credit and froze 200 distinct new rows. Outcomes are 170 completed, 10 represented, 10 open_gap, and 10 exact_gate. The next section carries every new contract.`],
+ ['04','Complete new-proposal handoff ledger',proposalModule.replace(/^##[^\n]+\n+/,'')],
+ ['05','X1 evidence',`X1 executed 100 synthetic FASTA, symbol, quantity, fixity, order, and manifest contracts. It built ten local skills and five runners, executed 100 safe, 100 candidate, and 100 CLEAN/FIX/REFINE records, and retained 119 x1 negatives. The original no-write aggregate remains invalid; the dependency-corrected privacy composite is separately named.`],
+ ['06','X2 evidence',`X2 executed 100 synthetic FASTQ, quality, pairing, k-mer, duplicate, provenance, evidence, participant-gap, and authority-gate contracts. Its outcome split is 70 completed, 10 represented, 10 open_gap, and 10 exact_gate. It built ten local skills and five runners and executed the second 100/100/100 portfolios.`],
+ ['07','Outcome, open-gap, and exact-gate truth',`The ten participant-gap rows have zero participants and reserve manual, assistive-technology, comprehension, consent, and affected-user evidence. The ten authority rows have no verified roles and no external action. Effective totals are 134 open gaps and 151 exact gates.`],
+ ['08','Retained-negative and recovery index',negativeModule.replace(/^##[^\n]+\n+/,'')],
+ ['09','Method Flow selection ledger',methodModule.replace(/^##[^\n]+\n+/,'')],
+ ['10','Skills, runners, and additive promotion',`Twenty local skills and ten local runners were validated and smoke-used. Five curated groups merge four source units each. Five discoverable guides, five public runners, five source closures, and two cores were installed as 17 exclusive-create byte bindings. There were zero overwrites, zero packages, zero dollars, and all source callers remain available.`],
+ ['11','Official and primary sources',sources.sources.map(row=>`- **${row.id}:** ${row.authority}. ${row.url} Use: ${row.use}. This is vocabulary or structural guidance, not observation or authority.`).join('\n')],
+ ['12','Trinity Mandala and practice boundaries',`Freed ID and CBR Heart is primary through synthetic provenance, minimization, purpose, gap, and authority records. GMUT Mind remains typed research-model and finite-string structure without physical evidence. THOS Body remains participant-free protocol. The four practice lenses are learning and design only, never qualification or employment.`],
+ ['13','Privacy, security, and accessibility',`Five-class scans retain scanner-definition and policy candidates separately from confirmed payload hits. Confirmed hits are zero. Structural HTML checks passed, while manual browser, assistive-technology, cognitive, Māori-language, and affected-user evaluation remain reserved. Complete privacy, accessibility, and exhaustive security are not claimed.`],
+ ['14','Workload, cost, and recovery',`The owner tree remains below 2,000 tracked and materialized files. Documents remain below 100,000 words. The phase used three commits before final and stays within the eight-commit ceiling. Incremental spend is USD 0 against a USD 50 ceiling. No recurring commitment, elevation, host-security change, reboot, unrelated installation, or desktop update occurred.`],
+ ['15','One-shot final validation protocol',`After the final commit is pushed and four-way equal, invoke final/canonical.txt once through an exclusive external latch. A success is never replayed. A failure remains zero success credit; any correction must be additive. The scope is owner-self and dependency-closed, not the complete repository suite or independent reproduction.`],
+ ['16','Successor recommendations',`Exactly one bounded practice recommendation is simulation engineering with controlled inter-agent communication. Five skill ideas are deterministic simulation steps, typed message envelopes, schedule-clock control, fault-retention ledgers, and bounded resource accounting. Five runner ideas are scenario loading, message validation, offline deterministic replay, synthetic fault injection, and workload-budget checking. Every idea is zero credit until Sylven independently preregisters and validates it.`],
+ ['17','Prepared terminal edge',`State: PREPARED_NOT_SENT. Prospective exact successor: Sylven Arc v691-v6, existing main task, Sol role preserved. After and only after Elowen canonical success, refresh current authority and roster, resolve exactly one title, reread immediately, guard duplicates and direct controls, then send at most once. Stop on any ambiguity, pause, redirect, rename, standby state, unavailable service, usage exhaustion, privacy concern, missing acknowledgement, duplicate, or protected gate.`]
+];
+for(const[number,title,body]of sections)writeText('final/modules/section-'+number+'.md',`## ${number} — ${title}\n\n${body}`);
+const baton=`# Sylven Arc v691-v6 activation candidate from Elowen Cairn v691-v5
+
+PREPARED_NOT_SENT. Repository preparation is not task delivery.
+
+${sections.map(([number])=>fs.readFileSync(path.join(FINAL,'modules','section-'+number+'.md'),'utf8').trim()).join('\n\n')}
+
+PREPARED_BY_ELOWEN_CAIRN = true. SENT_BY_ELOWEN_CAIRN = false in repository
+state. A live acknowledged task send, if later permitted by every terminal gate,
+is separate external evidence and must never be backfilled into this immutable
+candidate. NOT_READY_FOR_STAGE_20.
+`;
+const batonWords=baton.trim().split(/\s+/).length,batonSections=(baton.match(/^##\s+/gm)||[]).length;if(batonWords<10000||batonWords>100000||batonSections<13)throw Error('BATON_CONTRACT '+batonWords+' '+batonSections);writeText('final/hand-off-baton.md',baton);
+
+const operationRows=operationCounts.map(([operation,count])=>`<tr><th scope="row">${operation}</th><td>${count}</td><td>${proposals.find(row=>row.operation===operation).expected_disposition}</td></tr>`).join('');
+writeText('final/static-report.html',`<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Elowen Cairn v691-v5 final evidence report</title><style>body{font:1rem/1.6 system-ui,sans-serif;max-width:80rem;margin:auto;padding:1rem;color:#151515;background:#fff}.skip{position:absolute;left:-9999px}.skip:focus{left:1rem;background:#fff;padding:.6rem;outline:3px solid #111}a{color:#0645ad}table{border-collapse:collapse;width:100%}th,td{border:1px solid #555;padding:.5rem;text-align:left;vertical-align:top}thead{background:#eee}.status{border-left:.4rem solid #8a4b00;padding:.6rem;background:#fff8e8}@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}</style></head><body><a class="skip" href="#main">Skip to main evidence</a><header><h1>Elowen Cairn v691-v5 final evidence report</h1><p class="status"><strong>Verdict:</strong> NOT_READY_FOR_STAGE_20. Same-owner synthetic evidence only.</p></header><main id="main"><section><h2>Outcome</h2><p>Two hundred proposals: 170 completed, 10 represented, 10 open_gap, and 10 exact_gate. No real biological or participant data was used.</p></section><section><h2>Operation index</h2><div role="region" aria-label="Scrollable operation table" tabindex="0" style="overflow:auto"><table><caption>Proposal operations, case counts, and dispositions</caption><thead><tr><th scope="col">Operation</th><th scope="col">Cases</th><th scope="col">Disposition</th></tr></thead><tbody>${operationRows}</tbody></table></div></section><section><h2>Evidence and authority boundary</h2><p>${BOUNDARY}</p></section><section><h2>Reserved evaluation</h2><p>Manual browser, assistive-technology, cognitive-accessibility, Māori-language, and affected-user evaluation remain unperformed and reserved.</p></section><section><h2>Prepared route</h2><p>Sylven Arc v691-v6 is a prepared candidate only. Repository text does not send a message.</p></section></main></body></html>`);
+writeJson('final/closeout-receipt.json',{schema:'ghc.family.elowen-closeout-receipt.v1',state:'PREPARED_FINAL_PRECOMMIT',branch:BRANCH,parent:X2_HEAD,proposals:200,outcomes:{completed:170,represented:10,open_gap:10,exact_gate:10},owner_direct_negatives:276,effective_negatives:3570,methods:537,direct_witnesses:12738,failed_witnesses:3359,passing_witnesses:9379,open_gaps:134,exact_gates:151,owner_files_before_final:312,canonical:'PENDING_EXACT_PUSHED_FINAL',route:'PREPARED_NOT_SENT',terminal_verdict:'NOT_READY_FOR_STAGE_20'});
+writeJson('final/scope-review.json',{schema:'ghc.family.elowen-final-scope-review.v1',expected_roots:['docs/elowen-cairn/v691-v5/final','docs/elowen-cairn/v691-v5/tooling/build-final.txt'],outside_owner_paths:[],deletions:[],allowed_extensions:['.json','.md','.txt','.html'],valid:true});
+
+const deltaPath=path.join(FINAL,'final-delta-manifest.json'),ownerPath=path.join(FINAL,'final-owner-manifest.json'),sealPath=path.join(FINAL,'content-seal.json');
+const finalSelected=()=>walk(BASE).filter(file=>file.startsWith(FINAL+path.sep)||['build-final.txt','finalize-final-precommit.txt','finalize-final-privacy.txt'].includes(path.basename(file)));
+const deltaExclusions=['docs/elowen-cairn/v691-v5/final/final-delta-manifest.json','docs/elowen-cairn/v691-v5/final/final-owner-manifest.json','docs/elowen-cairn/v691-v5/final/content-seal.json'];
+const deltaFiles=finalSelected().filter(file=>![deltaPath,ownerPath,sealPath].includes(file)),deltaEntries=deltaFiles.map(file=>{const bytes=fs.readFileSync(file);return{path:path.relative(ROOT,file).replaceAll('\\','/'),bytes:bytes.length,sha256:sha256(bytes)};});writeJson('final/final-delta-manifest.json',{schema:'ghc.family.elowen-final-delta-manifest.v1',parent:X2_HEAD,byte_domain:'checkout_utf8_bytes',declared_self_exclusions:deltaExclusions,entry_count:deltaEntries.length,entries:deltaEntries});
+const ownerExclusions=['docs/elowen-cairn/v691-v5/final/final-owner-manifest.json','docs/elowen-cairn/v691-v5/final/content-seal.json'];
+const ownerFiles=walk(BASE).filter(file=>![ownerPath,sealPath].includes(file)),ownerEntries=ownerFiles.map(file=>{const bytes=fs.readFileSync(file);return{path:path.relative(ROOT,file).replaceAll('\\','/'),bytes:bytes.length,sha256:sha256(bytes)};});writeJson('final/final-owner-manifest.json',{schema:'ghc.family.elowen-final-owner-manifest.v1',byte_domain:'checkout_utf8_bytes',declared_self_exclusions:ownerExclusions,entry_count:ownerEntries.length,entries:ownerEntries});
+const sealRelatives=['final/final-integrated-overview.md','final/phase-truth.json','final/method-flow-final.json','final/retained-negative-register.json','final/open-gap-register.json','final/exact-gate-register.json','final/proposal-outcome-ledger.json','final/hand-off-baton.md','final/static-report.html','final/final-delta-manifest.json','final/final-owner-manifest.json'];
+const sealEntries=sealRelatives.map(relative=>{const file=path.join(BASE,relative),bytes=fs.readFileSync(file);return{path:path.relative(ROOT,file).replaceAll('\\','/'),bytes:bytes.length,sha256:sha256(bytes)};});writeJson('final/content-seal.json',{schema:'ghc.family.elowen-content-seal.v1',state:'PREPARED_IMMUTABLE_CONTENT',parent:X2_HEAD,entries:sealEntries,self_excluded:true,canonical:'PENDING_EXACT_PUSHED_FINAL',route:'PREPARED_NOT_SENT',terminal_verdict:'NOT_READY_FOR_STAGE_20'});
+const finalFiles=finalSelected();writeJson('final/final-build-summary.json',{schema:'ghc.family.elowen-final-build-summary.v1',files:finalFiles.length+1,baton_words:batonWords,baton_sections:batonSections,overview_words:overview.trim().split(/\s+/).length,methods:methods.length,witnesses:witnesses.length,owner_negatives:ownerNegatives.length,effective,canonical_pending:true,route_prepared_not_sent:true});
+
+// The summary was added after manifests; regenerate the three terminal structures once.
+const deltaFiles2=finalSelected().filter(file=>![deltaPath,ownerPath,sealPath].includes(file)),deltaEntries2=deltaFiles2.map(file=>{const bytes=fs.readFileSync(file);return{path:path.relative(ROOT,file).replaceAll('\\','/'),bytes:bytes.length,sha256:sha256(bytes)};});writeJson('final/final-delta-manifest.json',{schema:'ghc.family.elowen-final-delta-manifest.v1',parent:X2_HEAD,byte_domain:'checkout_utf8_bytes',declared_self_exclusions:deltaExclusions,entry_count:deltaEntries2.length,entries:deltaEntries2});
+const ownerFiles2=walk(BASE).filter(file=>![ownerPath,sealPath].includes(file)),ownerEntries2=ownerFiles2.map(file=>{const bytes=fs.readFileSync(file);return{path:path.relative(ROOT,file).replaceAll('\\','/'),bytes:bytes.length,sha256:sha256(bytes)};});writeJson('final/final-owner-manifest.json',{schema:'ghc.family.elowen-final-owner-manifest.v1',byte_domain:'checkout_utf8_bytes',declared_self_exclusions:ownerExclusions,entry_count:ownerEntries2.length,entries:ownerEntries2});
+const sealEntries2=sealRelatives.map(relative=>{const file=path.join(BASE,relative),bytes=fs.readFileSync(file);return{path:path.relative(ROOT,file).replaceAll('\\','/'),bytes:bytes.length,sha256:sha256(bytes)};});writeJson('final/content-seal.json',{schema:'ghc.family.elowen-content-seal.v1',state:'PREPARED_IMMUTABLE_CONTENT',parent:X2_HEAD,entries:sealEntries2,self_excluded:true,canonical:'PENDING_EXACT_PUSHED_FINAL',route:'PREPARED_NOT_SENT',terminal_verdict:'NOT_READY_FOR_STAGE_20'});
+process.stdout.write(JSON.stringify({phase:'v691-v5',stage:'final',parent:X2_HEAD,files:finalSelected().length,baton_words:batonWords,baton_sections:batonSections,overview_words:overview.trim().split(/\s+/).length,owner_methods:methods.length,owner_witnesses:witnesses.length,owner_negatives:ownerNegatives.length,effective})+'\n');

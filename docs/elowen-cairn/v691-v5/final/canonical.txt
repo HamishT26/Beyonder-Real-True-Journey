@@ -1,0 +1,79 @@
+'use strict';
+
+const fs=require('fs');
+const path=require('path');
+const crypto=require('crypto');
+const vm=require('vm');
+const {execFileSync}=require('child_process');
+require.extensions['.txt']=require.extensions['.js'];
+
+const ROOT=path.resolve(__dirname,'../../../..');
+const BASE=path.join(ROOT,'docs','elowen-cairn','v691-v5');
+const args={};for(let i=2;i<process.argv.length;i+=2)args[process.argv[i]]=process.argv[i+1];
+for(const key of['--expected-head','--branch','--receipt','--latch','--skill-root','--public-root'])if(!args[key])throw Error('ARGUMENT_REQUIRED '+key);
+const receiptPath=path.resolve(args['--receipt']),latchPath=path.resolve(args['--latch']),skillRoot=path.resolve(args['--skill-root']),publicRoot=path.resolve(args['--public-root']);
+if(fs.existsSync(receiptPath)||fs.existsSync(latchPath))throw Error('CANONICAL_LATCH_EXISTS');
+fs.mkdirSync(path.dirname(latchPath),{recursive:true});
+fs.writeFileSync(latchPath,JSON.stringify({schema:'ghc.family.elowen-canonical-latch.v1',phase:'v691-v5',expected_head:args['--expected-head'],invocation_count:1,replay_count:0,state:'INVOKED_ONCE'},null,2)+'\n',{flag:'wx'});
+
+const checks=[],errors=[];
+const check=(name,condition,details={})=>{checks.push({name,pass:Boolean(condition),details});if(!condition)errors.push(name);};
+const git=argv=>execFileSync('git',argv,{cwd:ROOT,encoding:'utf8',windowsHide:true}).trim();
+const readJson=relative=>JSON.parse(fs.readFileSync(path.join(BASE,relative),'utf8'));
+const stable=value=>Array.isArray(value)?'['+value.map(stable).join(',')+']':value&&typeof value==='object'?'{'+Object.keys(value).sort().map(key=>JSON.stringify(key)+':'+stable(value[key])).join(',')+'}':JSON.stringify(value);
+const sha256=bytes=>crypto.createHash('sha256').update(Buffer.isBuffer(bytes)?bytes:Buffer.from(typeof bytes==='string'?bytes:stable(bytes),'utf8')).digest('hex');
+function walk(directory){const out=[];for(const name of fs.readdirSync(directory).sort()){const file=path.join(directory,name),stat=fs.statSync(file);if(stat.isDirectory())out.push(...walk(file));else out.push(file);}return out;}
+function manifestCheck(relative){const manifest=readJson(relative);let passed=0;for(const entry of manifest.entries){const file=path.join(ROOT,...entry.path.split('/'));if(fs.existsSync(file)){const bytes=fs.readFileSync(file);if(bytes.length===entry.bytes&&sha256(bytes)===entry.sha256)passed++;}}check('manifest_'+path.basename(relative,'.json'),passed===manifest.entries.length&&manifest.entry_count===manifest.entries.length,{passed,total:manifest.entries.length,exclusions:manifest.declared_self_exclusions});return manifest;}
+
+let status='INVALID_EXACT_FINAL_OWNER_SCOPED_CANONICAL';
+try{
+ const before=git(['rev-parse','HEAD']),branch=git(['branch','--show-current']),upstream=git(['rev-parse','@{u}']),tracking=git(['rev-parse','refs/remotes/origin/'+args['--branch']]),liveLine=git(['ls-remote','--heads','origin','refs/heads/'+args['--branch']]),live=liveLine.split(/\s+/)[0],divergence=git(['rev-list','--left-right','--count','HEAD...@{u}']),worktree=git(['status','--porcelain=v1']);
+ check('exact_head',before===args['--expected-head'],{before,expected:args['--expected-head']});
+ check('exact_branch',branch===args['--branch'],{branch});
+ check('clean_before',worktree==='',{clean:worktree===''});
+ check('four_way_before',before===upstream&&before===tracking&&before===live,{before,upstream,tracking,live});
+ check('zero_divergence_before',/^0\s+0$/.test(divergence),{divergence});
+ const commits=git(['rev-list','--reverse','HEAD']).split(/\r?\n/).filter(Boolean),merges=git(['rev-list','--min-parents=2','HEAD']).split(/\r?\n/).filter(Boolean),parents=commits.map(commit=>git(['show','-s','--format=%P',commit]).split(/\s+/).filter(Boolean).length);
+ check('four_direct_commits',commits.length===4&&parents[0]===0&&parents.slice(1).every(count=>count===1),{commits,parents});
+ check('zero_merges',merges.length===0,{merges:merges.length});
+ check('lifecycle_anchors',commits[0]==='b25d6e41c92d988538ad47348762c1560e3c8b3e'&&commits[1]==='fab3901455432641dc981f7749c3fb7b33ac33a4'&&commits[2]==='b4af12ee3834d8cec14d021b73c6d67c1535bc67',{commits});
+ const tracked=git(['ls-files']).split(/\r?\n/).filter(Boolean);
+ check('owner_tree_only',tracked.every(file=>file.startsWith('docs/elowen-cairn/v691-v5/')),{tracked:tracked.length});
+ check('file_ceiling',tracked.length<2000&&walk(BASE).length<2000,{tracked:tracked.length,materialized:walk(BASE).length});
+ check('extension_policy',tracked.every(file=>['.json','.md','.txt','.html'].includes(path.extname(file))),{extensions:[...new Set(tracked.map(path.extname))]});
+
+ const jsonFiles=tracked.filter(file=>file.endsWith('.json'));let jsonPass=0;for(const relative of jsonFiles){try{JSON.parse(fs.readFileSync(path.join(ROOT,...relative.split('/')),'utf8'));jsonPass++;}catch{}}
+ check('strict_json',jsonPass===jsonFiles.length,{passed:jsonPass,total:jsonFiles.length});
+ const planManifest=manifestCheck('plan/manifest.json'),x1Manifest=manifestCheck('x1/manifest.json'),x2Manifest=manifestCheck('x2/manifest.json'),deltaManifest=manifestCheck('final/final-delta-manifest.json'),ownerManifest=manifestCheck('final/final-owner-manifest.json');
+ const finalChanged=git(['diff-tree','--no-commit-id','--name-only','-r','HEAD']).split(/\r?\n/).filter(Boolean).sort(),deltaSet=[...deltaManifest.entries.map(row=>row.path),...deltaManifest.declared_self_exclusions].sort();
+ check('final_delta_set',stable(finalChanged)===stable(deltaSet),{changed:finalChanged.length,declared:deltaSet.length});
+ const ownerSet=[...ownerManifest.entries.map(row=>row.path),...ownerManifest.declared_self_exclusions].sort();check('final_owner_set',stable(tracked.sort())===stable(ownerSet),{tracked:tracked.length,declared:ownerSet.length});
+ const seal=readJson('final/content-seal.json');let sealPass=0;for(const entry of seal.entries){const bytes=fs.readFileSync(path.join(ROOT,...entry.path.split('/')));if(bytes.length===entry.bytes&&sha256(bytes)===entry.sha256)sealPass++;}check('content_seal',sealPass===seal.entries.length,{passed:sealPass,total:seal.entries.length});
+
+ const proposalPlan=readJson('plan/proposal-freeze.json').proposals,engine=require(path.join(BASE,'tooling','sequence-x2-engine.txt'));let contractPass=0;const outcomes={completed:0,represented:0,open_gap:0,exact_gate:0};
+ for(const proposal of proposalPlan){const session=proposal.session,number=proposal.proposal_id.split('-').at(-1),stored=readJson(session+'/contracts/'+number+'.json'),current=engine.execute(proposal.operation,proposal.input);if(stored.passed&&stored.outcome===proposal.expected_disposition&&stable(current)===stable(stored.output)&&stored.rejecting_mutation.output.valid===false&&Object.values(stored.checks).every(Boolean))contractPass++;if(Object.hasOwn(outcomes,stored.outcome))outcomes[stored.outcome]++;}
+ check('contract_tests',contractPass===200,{passed:contractPass,total:200});
+ check('outcome_counts',stable(outcomes)===stable({completed:170,represented:10,open_gap:10,exact_gate:10}),{outcomes});
+ const skillFiles=tracked.filter(file=>file.endsWith('/SKILL.md'));let skillPass=0;for(const relative of skillFiles){const text=fs.readFileSync(path.join(ROOT,...relative.split('/')),'utf8'),name=relative.split('/').at(-2),match=text.match(/^---\nname:\s*([^\n]+)\ndescription:\s*([^\n]+)\n---\n/);if(match&&match[1].trim()===name&&match[2].trim().length>20&&!/TODO|REPLACE_ME/.test(text))skillPass++;}check('skill_structure',skillPass===25,{passed:skillPass,total:skillFiles.length});
+ const runnerFiles=tracked.filter(file=>/(?:x1|x2)\/runners\/.*\.txt$/.test(file)||/x2\/promotions\/public\/runners\/.*\.txt$/.test(file));let runnerSyntax=0;for(const relative of runnerFiles){try{new vm.Script(fs.readFileSync(path.join(ROOT,...relative.split('/')),'utf8'),{filename:relative});runnerSyntax++;}catch{}}check('runner_syntax',runnerSyntax===15,{passed:runnerSyntax,total:runnerFiles.length});
+ const htmlFiles=tracked.filter(file=>file.endsWith('.html'));let htmlPass=0;for(const relative of htmlFiles){const text=fs.readFileSync(path.join(ROOT,...relative.split('/')),'utf8');if(/<!doctype html>/i.test(text)&&/<html lang="en">/i.test(text)&&/<main(?:\s|>)/i.test(text)&&/<h1(?:\s|>)/i.test(text)&&/<h2(?:\s|>)/i.test(text)&&/prefers-reduced-motion/i.test(text)&&/(?:manual|affected-user)/i.test(text))htmlPass++;}check('html_structure',htmlPass===2,{passed:htmlPass,total:htmlFiles.length});
+
+ const promotion=readJson('x2/global-promotion-receipt.json');let bindingPass=0;for(const binding of promotion.bindings){const file=path.join(binding.kind==='skills'?skillRoot:publicRoot,...binding.path.split('/'));if(fs.existsSync(file)){const bytes=fs.readFileSync(file);if(bytes.length===binding.bytes&&sha256(bytes)===binding.sha256)bindingPass++;}}check('global_binding_parity',bindingPass===17&&promotion.overwrites===0&&promotion.spend_usd===0,{passed:bindingPass,total:promotion.bindings.length});
+ const truth=readJson('final/phase-truth.json');check('final_truth',truth.effective_negatives===3570&&truth.effective_methods===537&&truth.failed_witnesses===3359&&truth.passing_witnesses===9379&&truth.open_gaps===134&&truth.exact_gates===151&&truth.terminal_verdict==='NOT_READY_FOR_STAGE_20',{truth});
+ const methodFlow=readJson('final/method-flow-final.json'),negatives=readJson('final/retained-negative-register.json');check('method_flow_counts',methodFlow.counts.methods===91&&methodFlow.counts.witnesses===552&&methodFlow.counts.witness_results.fail===276&&methodFlow.counts.witness_results.pass===276,{counts:methodFlow.counts});check('negative_counts',negatives.owner_direct_count===276&&negatives.effective_total===3570&&!negatives.failure_erasure,{owner:negatives.owner_direct_count,effective:negatives.effective_total});
+ const open=readJson('final/open-gap-register.json'),exact=readJson('final/exact-gate-register.json');check('gate_counts',open.effective_total===134&&open.elowen_added===10&&exact.effective_total===151&&exact.elowen_added===10,{open:open.effective_total,exact:exact.effective_total});
+ const baton=fs.readFileSync(path.join(BASE,'final','hand-off-baton.md'),'utf8'),batonWords=baton.trim().split(/\s+/).length,sections=(baton.match(/^##\s+/gm)||[]).length;check('baton_contract',batonWords>=10000&&batonWords<=100000&&sections>=13&&/PREPARED_NOT_SENT/.test(baton)&&/Sylven Arc/.test(baton)&&/v691-v6/.test(baton),{words:batonWords,sections});
+ const overview=fs.readFileSync(path.join(BASE,'final','final-integrated-overview.md'),'utf8'),overviewWords=overview.trim().split(/\s+/).length,overviewSections=(overview.match(/^##\s+/gm)||[]).length;check('overview_contract',overviewWords>=1200&&overviewSections>=3,{words:overviewWords,sections:overviewSections});
+ let wordMaximum=0;for(const relative of tracked){if(['.json','.md','.txt','.html'].includes(path.extname(relative))){const words=fs.readFileSync(path.join(ROOT,...relative.split('/')),'utf8').trim().split(/\s+/).filter(Boolean).length;wordMaximum=Math.max(wordMaximum,words);}}check('word_ceiling',wordMaximum<=100000,{maximum:wordMaximum});
+ const records=[];for(const relative of tracked){if(!['.json','.md','.txt','.html'].includes(path.extname(relative)))continue;fs.readFileSync(path.join(ROOT,...relative.split('/')),'utf8').split(/\r?\n/).forEach((line,index)=>records.push({relative,line,index:index+1}));}const joined=records.map(row=>row.line).join('\n'),count=(regex,text)=>(text.match(regex)||[]).length,route=[],media=[];for(const row of records){const hits=count(/(?:source_thread_id|providerTabId|private callable identifier|private application state|session stream)/gi,row.line);if(hits)route.push({count:hits,metadata:/\/tooling\/test-|\/final\/canonical\.txt$/.test(row.relative)||/(?:excluded|must not contain|zero confirmed)/i.test(row.line)});const mediaHits=count(/(?:transcript|screenshot|screen capture)/gi,row.line);if(mediaHits)media.push({count:mediaHits,metadata:/\/tooling\/test-|\/final\/canonical\.txt$/.test(row.relative)||/new_screenshots.*false/i.test(row.line)||/"media_or_transcript"\s*:/i.test(row.line)||/(?:excluded|no new|must not contain|zero confirmed)/i.test(row.line)||/The first (?:final owner-wide media scan|isolated privacy component)/i.test(row.line)||/Run one privacy-only component that classifies exact scanner definitions/i.test(row.line)||/Classify only the exact retained failure and recovery phrases/i.test(row.line)});}
+ const privacy={raw_uuid:count(/\b[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\b/gi,joined),private_absolute_path:count(/(?<![A-Za-z])[A-Za-z]:[\\/]/g,joined),credential_assignment:count(/(?:api[_-]?key|password|secret|access[_-]?token|authorization)\s*[:=]\s*[^\s,}]+/gi,joined),private_route_candidates:route.reduce((sum,row)=>sum+row.count,0),private_route_confirmed:route.filter(row=>!row.metadata).reduce((sum,row)=>sum+row.count,0),media_candidates:media.reduce((sum,row)=>sum+row.count,0),media_confirmed:media.filter(row=>!row.metadata).reduce((sum,row)=>sum+row.count,0)};check('privacy_five_class',privacy.raw_uuid===0&&privacy.private_absolute_path===0&&privacy.credential_assignment===0&&privacy.private_route_confirmed===0&&privacy.media_confirmed===0,privacy);
+ const diffCheck=git(['diff-tree','--check','HEAD^','HEAD']);check('diff_hygiene',diffCheck==='',{clean:diffCheck===''});
+ const after=git(['rev-parse','HEAD']),afterStatus=git(['status','--porcelain=v1']),afterUp=git(['rev-parse','@{u}']),afterTracking=git(['rev-parse','refs/remotes/origin/'+args['--branch']]),afterLive=git(['ls-remote','--heads','origin','refs/heads/'+args['--branch']]).split(/\s+/)[0],afterDivergence=git(['rev-list','--left-right','--count','HEAD...@{u}']);check('stable_head_after',after===before,{before,after});check('clean_after',afterStatus==='',{clean:afterStatus===''});check('four_way_after',after===afterUp&&after===afterTracking&&after===afterLive,{after,afterUp,afterTracking,afterLive});check('zero_divergence_after',/^0\s+0$/.test(afterDivergence),{divergence:afterDivergence});
+ if(errors.length===0)status='VALID_EXACT_FINAL_OWNER_SCOPED_CANONICAL';
+}catch(error){errors.push('UNCAUGHT_'+error.message);}
+
+const payload={schema:'ghc.family.elowen-exact-final-owner-scoped-canonical.v1',owner:'Elowen Cairn',phase:'v691-v5',branch:args['--branch'],exact_head:args['--expected-head'],status,invocation_count:1,success_count:status==='VALID_EXACT_FINAL_OWNER_SCOPED_CANONICAL'?1:0,replay_count:0,checks,errors,full_repository_suite:false,same_owner_only:true,independent_reproduction:false,terminal_verdict:'NOT_READY_FOR_STAGE_20'};
+payload.payload_sha256=sha256(payload);
+fs.mkdirSync(path.dirname(receiptPath),{recursive:true});fs.writeFileSync(receiptPath,JSON.stringify(payload,null,2)+'\n',{flag:'wx'});
+process.stdout.write(JSON.stringify({status:payload.status,checks_passed:checks.filter(row=>row.pass).length,checks_total:checks.length,errors,payload_sha256:payload.payload_sha256,invocation_count:1,success_count:payload.success_count,replay_count:0})+'\n');
+if(status!=='VALID_EXACT_FINAL_OWNER_SCOPED_CANONICAL')process.exitCode=1;
