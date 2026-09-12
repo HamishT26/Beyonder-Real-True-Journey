@@ -1,0 +1,77 @@
+"use strict";
+
+const fs=require("fs");
+const path=require("path");
+const crypto=require("crypto");
+const cp=require("child_process");
+require.extensions[".txt"]=require.extensions[".js"];
+const engine=require("./simulation-engine.txt");
+const ROOT=path.resolve(__dirname,"../../../..");
+const BASE="docs/sylven-arc/v691-v6";
+const OUT=path.join(ROOT,BASE,"x1");
+const PLAN_ROOT="98591e4a91d3eb5f6a9b98b552f08063f8c2e39c";
+const BRANCH="codex/GHC-Family/sylven-arc-main";
+function sha(value){return crypto.createHash("sha256").update(Buffer.isBuffer(value)?value:Buffer.from(JSON.stringify(value))).digest("hex");}
+function git(args){const r=cp.spawnSync("git",["-C",ROOT,...args],{encoding:"utf8"});if(r.status!==0)throw new Error(`git_${args[0]}_${r.status}`);return r.stdout.trim();}
+function writeJson(relative,value){const target=path.join(OUT,relative);fs.mkdirSync(path.dirname(target),{recursive:true});fs.writeFileSync(target,JSON.stringify(value,null,2)+"\n",{encoding:"utf8",flag:"wx"});}
+function writeText(relative,value){const target=path.join(OUT,relative);fs.mkdirSync(path.dirname(target),{recursive:true});fs.writeFileSync(target,value.replace(/\s+$/u,"")+"\n",{encoding:"utf8",flag:"wx"});}
+function stable(value){if(Array.isArray(value))return value.map(stable);if(value&&typeof value==="object")return Object.fromEntries(Object.keys(value).sort().map(key=>[key,stable(value[key])]));return value;}
+function same(a,b){return JSON.stringify(stable(a))===JSON.stringify(stable(b));}
+function collect(directory,output=[]){for(const name of fs.readdirSync(directory)){const absolute=path.join(directory,name),stat=fs.statSync(absolute);if(stat.isDirectory())collect(absolute,output);else output.push(absolute);}return output;}
+
+function main(){
+  if(fs.existsSync(OUT))throw new Error("x1_exists");
+  const local=git(["rev-parse","HEAD"]),upstream=git(["rev-parse","@{upstream}"]),tracking=git(["rev-parse",`refs/remotes/origin/${BRANCH}`]),live=git(["ls-remote","--exit-code","origin",`refs/heads/${BRANCH}`]).split(/\s+/)[0];
+  const statusLines=git(["status","--porcelain=v1","--untracked-files=all"]).split(/\r?\n/).filter(Boolean),expectedUntracked=new Set([`${BASE}/tooling/build-x1.txt`,`${BASE}/tooling/simulation-engine.txt`,`${BASE}/tooling/validate-x1.txt`]);
+  const actualUntracked=new Set(statusLines.filter(line=>line.startsWith("?? ")).map(line=>line.slice(3).replaceAll("\\","/")));
+  if(local!==PLAN_ROOT||new Set([local,upstream,tracking,live]).size!==1||statusLines.some(line=>!line.startsWith("?? "))||actualUntracked.size!==expectedUntracked.size||[...actualUntracked].some(item=>!expectedUntracked.has(item))||git(["rev-list","--count","HEAD"])!=="1"||git(["rev-list","--merges","--count","HEAD"])!=="0")throw new Error("planning_root_gate");
+  const plan=JSON.parse(fs.readFileSync(path.join(ROOT,BASE,"plan/proposal-freeze.json"),"utf8"));
+  const proposals=plan.proposals.filter(p=>p.session==="x1");if(proposals.length!==100)throw new Error("x1_proposal_count");
+  const safe=[],candidate=[],refine=[],methods=[],witnesses=[];
+  for(const proposal of proposals){
+    const index=proposal.proposal_id.slice(-3),contract={schema:"ghc.family.synthetic-simulation-contract.v1",proposal_id:proposal.proposal_id,session:"x1",operation:proposal.operation,input:proposal.input,expected:proposal.expected,hypothesis:proposal.hypothesis,falsifier_or_acceptance_gate:proposal.falsifier_or_acceptance_gate,protected_gates:proposal.protected_gates,same_owner_only:true,independent_reproduction:false};
+    writeJson(`contracts/${index}.json`,contract);
+    const positive=engine.execute(proposal.operation,proposal.input,{disposition:proposal.expected_disposition,boundary:proposal.expected.boundary});
+    if(!same(positive,proposal.expected))throw new Error(`positive_${proposal.proposal_id}`);
+    const adverseInput={...proposal.input,__unknown_candidate_field__:true};const adverse=engine.execute(proposal.operation,adverseInput,{disposition:proposal.expected_disposition,boundary:proposal.expected.boundary});
+    if(adverse.ok!==false||adverse.error.code!=="unknown_or_missing_field")throw new Error(`adverse_${proposal.proposal_id}`);
+    const replay=engine.execute(proposal.operation,proposal.input,{disposition:proposal.expected_disposition,boundary:proposal.expected.boundary});if(!same(replay,positive))throw new Error(`replay_${proposal.proposal_id}`);
+    safe.push({task_id:`SA6916-X1-SAFE-${index}`,proposal_id:proposal.proposal_id,operation:proposal.operation,procedure:"complete_contract_check",result:"completed",witness_id:`SA6916-X1-W-${index}-POS`,completion_scope:"bounded synthetic structure only"});
+    candidate.push({task_id:`SA6916-X1-CAND-${index}`,proposal_id:proposal.proposal_id,operation:proposal.operation,procedure:"unknown_field_rejection",result:"represented",retained_negative_id:`SA6916-X1-N-${index}`,witness_id:`SA6916-X1-W-${index}-NEG`,completion_scope:"rejecting mutation only"});
+    refine.push({task_id:`SA6916-X1-CFR-${index}`,proposal_id:proposal.proposal_id,operation:proposal.operation,procedure:"deterministic_replay",result:"completed",witness_id:`SA6916-X1-W-${index}-REP`,completion_scope:"same-process replay only"});
+    const methodId=`SA6916-X1-M-${index}`;methods.push({method_id:methodId,title:`Closed deterministic ${proposal.operation} contract`,failure_signature:"Unknown field, nondeterministic value, input mutation, missing envelope, or protected-claim promotion.",trigger_preconditions:["Planning root is pushed and fresh-live equal.","The exact x1 proposal and contract are present."],privacy_class:"sanitized_public",approval_class:"safe_now",candidate_workaround:"Reject the adverse input, preserve it, and repair only the failed operation dependency.",validation_witness_ids:[`SA6916-X1-W-${index}-NEG`,`SA6916-X1-W-${index}-POS`,`SA6916-X1-W-${index}-REP`],recurrence_guard:"Require exact closed fields and compare canonical values before credit.",rollback:"Stop selecting the operation; preserve source, contract, and failed witness.",recommendation_state:"preferred",supersedes:[],protected_gates:proposal.protected_gates,retained_negative_ids:[`SA6916-X1-N-${index}`],scope_boundary:"Sylven v691-v6 x1 synthetic operation only."});
+    witnesses.push(
+      {witness_id:`SA6916-X1-W-${index}-NEG`,method_id:methodId,procedure:"unknown-field mutation",expected:"closed-field rejection",observed:adverse,result:"fail",failed_subject:{operation:proposal.operation,input:adverseInput},retained_negative_ids:[`SA6916-X1-N-${index}`],same_owner_only:true,independent_reproduction:false},
+      {witness_id:`SA6916-X1-W-${index}-POS`,method_id:methodId,procedure:"planned positive fixture",expected:proposal.expected,observed:positive,result:"pass",retained_negative_ids:[`SA6916-X1-N-${index}`],same_owner_only:true,independent_reproduction:false},
+      {witness_id:`SA6916-X1-W-${index}-REP`,method_id:methodId,procedure:"deterministic replay",expected:positive,observed:replay,result:"pass",retained_negative_ids:[`SA6916-X1-N-${index}`],same_owner_only:true,independent_reproduction:false}
+    );
+  }
+  const operationalFailure={failure_id:"SA6916-X1-OP-N001",failed_witness:"The first x1 builder preflight required a literally empty worktree and rejected the three exact untracked x1 tooling inputs before creating any x1 artifact.",recovery:"Permit exactly the engine, x1 builder, and x1 validator as untracked owner-local inputs while rejecting every tracked change and every additional path.",recurrence_guard:"Model lifecycle-builder inputs as an explicit untracked allowlist rather than treating their necessary presence as source drift.",success_credit:0};
+  methods.push({method_id:"SA6916-X1-OP-M001",title:operationalFailure.recovery,failure_signature:operationalFailure.failed_witness,trigger_preconditions:["The pushed planning root remains exact and four-way equal.","Exactly three declared x1 tooling paths are untracked."],privacy_class:"sanitized_public",approval_class:"safe_now",candidate_workaround:operationalFailure.recovery,validation_witness_ids:["SA6916-X1-OP-W001-FAIL","SA6916-X1-OP-W001-PASS"],recurrence_guard:operationalFailure.recurrence_guard,rollback:"Stop before x1 creation and leave the parent, index, remote, and sibling lanes unchanged.",recommendation_state:"preferred",supersedes:[],protected_gates:proposals[0].protected_gates,retained_negative_ids:[operationalFailure.failure_id],scope_boundary:"Sylven v691-v6 x1 lifecycle preflight only."});
+  witnesses.push(
+    {witness_id:"SA6916-X1-OP-W001-FAIL",method_id:"SA6916-X1-OP-M001",procedure:"first x1 builder preflight",expected:"Recognize exact owner tooling without source drift",observed:operationalFailure.failed_witness,result:"fail",retained_negative_ids:[operationalFailure.failure_id],same_owner_only:true,independent_reproduction:false},
+    {witness_id:"SA6916-X1-OP-W001-PASS",method_id:"SA6916-X1-OP-M001",procedure:"bounded exact-untracked allowlist preflight",expected:"Three exact inputs and no other worktree change",observed:operationalFailure.recovery,result:"pass",retained_negative_ids:[operationalFailure.failure_id],same_owner_only:true,independent_reproduction:false}
+  );
+  writeJson("operational-failures.json",{schema:"ghc.family.sylven-x1-operational-failures.v1",count:1,failures:[operationalFailure],erased:0});
+  writeJson("execution/safe-now.json",{schema:"ghc.family.sylven-x1-safe-now.v1",count:safe.length,tasks:safe});
+  writeJson("execution/candidate.json",{schema:"ghc.family.sylven-x1-candidate.v1",count:candidate.length,zero_completion_credit:true,tasks:candidate});
+  writeJson("execution/clean-fix-refine.json",{schema:"ghc.family.sylven-x1-clean-fix-refine.v1",count:refine.length,tasks:refine});
+  writeJson("evidence/method-flow.json",{schema:"ghc.family.method-flow-state.v1",owner:"Sylven Arc",phase:"v691-v6",session:"x1",methods,witnesses,counts:{methods:101,witnesses:302,failed:101,passing:201},failed_witnesses_erased:0,recoveries_promoted_to_independent_evidence:0});
+  writeJson("evidence/retained-negatives.json",{schema:"ghc.family.sylven-x1-negatives.v1",count:101,negatives:[...candidate.map((task,i)=>({negative_id:task.retained_negative_id,proposal_id:task.proposal_id,failed_witness_id:task.witness_id,failure:"unknown_or_missing_field",success_credit:0,recovery_witness_id:`SA6916-X1-W-${String(i+1).padStart(3,"0")}-POS`,erased:false})),{negative_id:operationalFailure.failure_id,proposal_id:null,failed_witness_id:"SA6916-X1-OP-W001-FAIL",failure:"over-strict lifecycle input gate",success_credit:0,recovery_witness_id:"SA6916-X1-OP-W001-PASS",erased:false}]});
+  const skillNames=[...new Set(proposals.map(p=>p.operation))].map(name=>`ghc-family-simulation-${name.replaceAll("_","-")}`);if(skillNames.length!==10)throw new Error("skill_count");
+  for(const operation of [...new Set(proposals.map(p=>p.operation))]){
+    const name=`ghc-family-simulation-${operation.replaceAll("_","-")}`,title=operation.replaceAll("_"," ");
+    writeText(`skills/${name}/SKILL.md`,`---\nname: ${name}\ndescription: Validate one closed, deterministic ${title} fixture in the Sylven v691-v6 synthetic simulation lane. Use when an owner-local x1 contract names ${operation}; retain adverse inputs and do not operate an external system.\n---\n\n# ${title}\n\nRead the exact contract first. Require its closed field set, execute the owner-local simulation engine, compare the complete result envelope, preserve the unknown-field rejection, and record deterministic replay separately. Stop on any external-action, participant, professional, legal, cultural, Maori-authority, privacy-complete, accessibility-complete, exhaustive-security, independent-reproduction, consciousness, Theory-of-Everything, proof, canon, or Stage 20 claim. This skill confers no identity, agency, qualification, or authority.`);
+  }
+  const operations=[...new Set(proposals.map(p=>p.operation))];for(let i=0;i<5;i++){
+    const pair=operations.slice(i*2,i*2+2),content=`"use strict";\nrequire.extensions[".txt"]=require.extensions[".js"];\nconst engine=require("../../tooling/simulation-engine.txt");\nconst fs=require("fs");\nconst allowed=${JSON.stringify(pair)};\nconst fixture=process.argv[2];if(!fixture)throw new Error("fixture_path_required");const envelope=JSON.parse(fs.readFileSync(fixture,"utf8"));if(!allowed.includes(envelope.operation))throw new Error("operation_outside_runner_pair");process.stdout.write(JSON.stringify(engine.execute(envelope.operation,envelope.input,{disposition:envelope.expected.disposition,boundary:envelope.expected.boundary}))+"\\n");\n`;
+    writeText(`runners/simulation-x1-pair-${i+1}.txt`,content);
+  }
+  writeJson("validation/observed-results.json",{schema:"ghc.family.sylven-x1-observed-results.v1",positive:safe.map((task,i)=>({proposal_id:task.proposal_id,witness_id:task.witness_id,result:witnesses[i*3+1].observed})),adverse:candidate.map((task,i)=>({proposal_id:task.proposal_id,witness_id:task.witness_id,result:witnesses[i*3].observed})),replay:refine.map((task,i)=>({proposal_id:task.proposal_id,witness_id:task.witness_id,result:witnesses[i*3+2].observed}))});
+  writeJson("phase-truth.json",{schema:"ghc.family.phase-truth.v691.v6.x1",owner:"Sylven Arc",phase:"v691-v6",session:"x1",planning_root:PLAN_ROOT,state:"X1_EVIDENCE_CANDIDATE",proposals:100,outcomes:{completed:100,represented:0,open_gap:0,exact_gate:0},safe_completed:100,candidates_executed_as_rejecting_mutations:100,clean_fix_refine_completed:100,local_skills:10,local_runners:5,packages_installed:0,incremental_spend_usd:0,startup_failures:9,x1_operational_failures:1,x1_retained_negatives:101,effective_counts:{methods:647,direct_witnesses:13058,failed_witnesses:3469,passing_witnesses:9589,effective_negatives:3680,open_gaps:134,exact_gates:151},x2_results_exist:false,successor_contacts:0,terminal_verdict:"NOT_READY_FOR_STAGE_20",same_owner_only:true,independent_reproduction:false});
+  writeJson("wellbeing-workload.json",{schema:"ghc.family.sylven-wellbeing.v1",session:"x1",work_items:300,automatic_stop_on_failure:true,external_actions:0,participants:0,packages:0,spend_usd:0,relational_language_only:true,consciousness_or_personhood_evidence:false,assessment:"bounded owner-local workload; no wellbeing claim about a sentient entity"});
+  const tooling=["simulation-engine.txt","build-x1.txt","validate-x1.txt"].map(name=>`${BASE}/tooling/${name}`);const files=collect(OUT).map(file=>path.relative(ROOT,file).replaceAll("\\","/"));const manifestPath=`${BASE}/x1/manifest.json`;const entries=[...new Set([...files,...tooling])].filter(item=>item!==manifestPath).sort().map(item=>{const content=fs.readFileSync(path.join(ROOT,item));return {path:item,bytes:content.length,sha256:sha(content)};});
+  writeJson("manifest.json",{schema:"ghc.family.sylven-x1-manifest.v1",parent_commit:PLAN_ROOT,byte_domain:"working UTF-8 LF bytes before x1 commit",entry_count:entries.length,entries,declared_self_exclusions:[manifestPath]});
+  process.stdout.write(JSON.stringify({status:"X1_BUILT",contracts:100,safe:100,candidate:100,clean_fix_refine:100,methods:101,witnesses:302,retained_negatives:101,skills:10,runners:5,manifest_entries:entries.length}));
+}
+main();

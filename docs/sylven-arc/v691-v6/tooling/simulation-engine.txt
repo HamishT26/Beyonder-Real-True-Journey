@@ -1,0 +1,42 @@
+"use strict";
+
+const crypto=require("crypto");
+
+function stable(value){if(Array.isArray(value))return value.map(stable);if(value&&typeof value==="object")return Object.fromEntries(Object.keys(value).sort().map(key=>[key,stable(value[key])]));return value;}
+function sha(value){return crypto.createHash("sha256").update(Buffer.from(JSON.stringify(stable(value)))).digest("hex");}
+function clone(value){return JSON.parse(JSON.stringify(value));}
+function equal(left,right){return JSON.stringify(stable(left))===JSON.stringify(stable(right));}
+function requireClosed(input,fields){const actual=Object.keys(input).sort(),expected=[...fields].sort();if(!equal(actual,expected))throw Object.assign(new Error("closed_field_set"),{code:"unknown_or_missing_field"});}
+function finiteInteger(value,name){if(!Number.isInteger(value)||value<0)throw Object.assign(new Error(name),{code:"invalid_integer"});return value;}
+
+const definitions={
+  scenario_schema:{fields:["actors","maximumActors","scenarioId"],run(input){if(!Array.isArray(input.actors)||new Set(input.actors).size!==input.actors.length||input.actors.length>input.maximumActors)throw Object.assign(new Error("actors"),{code:"invalid_actor_registry"});return {scenario_id:input.scenarioId,actor_count:input.actors.length,actors:clone(input.actors)};}},
+  agent_registry:{fields:["agents","maximumAgents"],run(input){if(!Array.isArray(input.agents)||input.agents.length>input.maximumAgents||new Set(input.agents.map(a=>a.id)).size!==input.agents.length||input.agents.some(a=>!Number.isInteger(a.capacity)||a.capacity<0))throw Object.assign(new Error("agents"),{code:"invalid_agent_registry"});return {count:input.agents.length,total_capacity:input.agents.reduce((sum,a)=>sum+a.capacity,0),ids:input.agents.map(a=>a.id)};}},
+  message_envelope:{fields:["id","knownAgents","payload","source","target","type"],run(input){if(!input.knownAgents.includes(input.source)||!input.knownAgents.includes(input.target))throw Object.assign(new Error("endpoint"),{code:"unknown_agent"});return {id:input.id,source:input.source,target:input.target,type:input.type,payload_sha256:sha(input.payload)};}},
+  logical_clock:{fields:["local","received"],run(input){finiteInteger(input.local,"local");finiteInteger(input.received,"received");return {next:Math.max(input.local,input.received)+1,physical_time_claimed:false};}},
+  priority_queue:{fields:["events","maximumEvents"],run(input){if(!Array.isArray(input.events)||input.events.length>input.maximumEvents)throw Object.assign(new Error("events"),{code:"event_budget"});const order=clone(input.events).sort((a,b)=>a.time-b.time||a.priority-b.priority||a.sequence-b.sequence||a.id.localeCompare(b.id)).map(e=>e.id);return {order};}},
+  deterministic_step:{fields:["delta","maximum","minimum","state"],run(input){for(const name of ["state","delta","minimum","maximum"])if(!Number.isInteger(input[name]))throw Object.assign(new Error(name),{code:"invalid_integer"});const raw=input.state+input.delta,next=Math.max(input.minimum,Math.min(input.maximum,raw));return {previous:input.state,next,clamped:next!==raw,external_action:false};}},
+  schedule_order:{fields:["events","tieBreak"],run(input){if(input.tieBreak!=="clock_actor_id"||!Array.isArray(input.events))throw Object.assign(new Error("schedule"),{code:"invalid_schedule"});return {order:clone(input.events).sort((a,b)=>a.clock-b.clock||a.actor.localeCompare(b.actor)||a.id.localeCompare(b.id)).map(e=>e.id),partial_order_preserved:true};}},
+  resource_budget:{fields:["capacity","request","reserved","used"],run(input){for(const name of ["capacity","request","reserved","used"])finiteInteger(input[name],name);const total=input.used+input.reserved+input.request,admit=total<=input.capacity;return {admit,total,remaining:admit?input.capacity-total:input.capacity-input.used-input.reserved,host_allocation:false,spend_usd:0};}},
+  seed_replay:{fields:["increment","modulus","multiplier","seed","steps"],run(input){for(const name of ["seed","steps","modulus","multiplier","increment"])finiteInteger(input[name],name);if(input.modulus<2||input.steps>100)throw Object.assign(new Error("recurrence"),{code:"invalid_recurrence"});const values=[];let x=input.seed;for(let i=0;i<input.steps;i++){x=(input.multiplier*x+input.increment)%input.modulus;values.push(x);}return {values,randomness_quality_claimed:false};}},
+  state_digest:{fields:["normalization","state"],run(input){if(input.normalization!=="sorted_json")throw Object.assign(new Error("normalization"),{code:"unsupported_normalization"});return {sha256:sha(input.state),authenticity_established:false};}}
+};
+
+function execute(operation,input,context={}){
+  const before=clone(input);
+  try{
+    if(!(operation in definitions))throw Object.assign(new Error("operation"),{code:"unknown_operation"});
+    const definition=definitions[operation];requireClosed(input,definition.fields);const value=definition.run(input);
+    if(!equal(input,before))throw Object.assign(new Error("mutation"),{code:"input_mutation"});
+    return {ok:true,value,error:null,disposition:context.disposition||"completed",boundary:context.boundary||null};
+  }catch(error){return {ok:false,value:null,error:{code:error.code||"execution_error",message:error.message},disposition:context.disposition||"completed",boundary:context.boundary||null};}
+}
+
+function main(){
+  const fixture=process.argv[2];if(!fixture)throw new Error("fixture_path_required");
+  const envelope=JSON.parse(require("fs").readFileSync(fixture,"utf8"));
+  process.stdout.write(JSON.stringify(execute(envelope.operation,envelope.input,{disposition:envelope.disposition,boundary:envelope.boundary}))+"\n");
+}
+
+module.exports={execute,stable,sha,definitions};
+if(require.main===module)main();
