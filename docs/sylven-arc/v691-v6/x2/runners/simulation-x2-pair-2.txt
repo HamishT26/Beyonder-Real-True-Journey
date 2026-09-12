@@ -1,0 +1,6 @@
+"use strict";
+require.extensions[".txt"]=require.extensions[".js"];
+const engine=require("../../tooling/simulation-engine.txt");
+const fs=require("fs");
+const allowed=["duplicate_fault","delay_fault"];
+const fixture=process.argv[2];if(!fixture)throw new Error("fixture_path_required");const envelope=JSON.parse(fs.readFileSync(fixture,"utf8"));if(!allowed.includes(envelope.operation))throw new Error("operation_outside_runner_pair");process.stdout.write(JSON.stringify(engine.execute(envelope.operation,envelope.input,{disposition:envelope.expected.disposition,boundary:envelope.expected.boundary}))+"\n");

@@ -1,0 +1,4 @@
+"use strict";
+require.extensions[".txt"]=require.extensions[".js"];
+const engine=require(process.argv[3]);
+const fs=require("fs");const allowed=["partition_fault","evidence_ceiling","participant_gap","authority_gate"];const fixture=process.argv[2];if(!fixture||!process.argv[3])throw new Error("fixture_and_engine_required");const envelope=JSON.parse(fs.readFileSync(fixture,"utf8"));if(!allowed.includes(envelope.operation))throw new Error("operation_outside_curated_group");process.stdout.write(JSON.stringify(engine.execute(envelope.operation,envelope.input,{disposition:envelope.expected.disposition,boundary:envelope.expected.boundary}))+"\n");
