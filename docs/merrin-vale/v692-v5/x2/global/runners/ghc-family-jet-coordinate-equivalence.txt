@@ -1,0 +1,5 @@
+'use strict';
+require.extensions['.txt']=require.extensions['.js'];
+const p=require('../x1/polynomial.txt'),v=require('../x2/variation.txt');
+const api={evaluate:x=>p.operations.includes(x.op)?p.evaluate(x):v.evaluate(x)};
+require('../x1/cli.txt').run(api,["field_parity","coordinate_scale","boundary_equivalence","affine_pullback"]);

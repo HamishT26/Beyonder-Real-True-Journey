@@ -1,0 +1,29 @@
+(function(root,factory){if(typeof module==='object'&&module.exports){require.extensions['.txt']=require.extensions['.js'];module.exports=factory(require('../x1/polynomial.txt'));}else root.MerrinVariation=factory(root.MerrinPoly);})(typeof globalThis!=='undefined'?globalThis:this,function(base){
+'use strict';
+const I=base.internals,{fail,rat,rational,times,power,string,object,keys,normal,parse,emit,add,neg,multiply,derivative,triple,evaluatePoint,envelope}=I;
+const mon=(c,q=0,v=0,a=0)=>[{c:rat(BigInt(c)),p:[q,v,a]}],V=mon(1,0,1),A=mon(1,0,0,1);
+function first(raw){const p=parse(raw);if(p.some(t=>t.p[2]))fail('unsupported_jet');return p;}
+function field(raw){const p=parse(raw);if(p.some(t=>t.p[1]||t.p[2]))fail('field_only_required');return p;}
+const dt=p=>add(multiply(derivative(p,0),V),multiply(derivative(p,1),A));
+const euler=p=>add(dt(derivative(p,1)),neg(derivative(p,0)));
+const energy=p=>add(multiply(V,derivative(p,1)),neg(p));
+const sign=x=>x[0]===0n?'zero':x[0]>0n?'positive':'negative';
+const obligations={covariant_gmut_action:['field_content','covariant_action','symmetries','boundary_terms'],covariant_conservation:['field_equations','diffeomorphism_invariance','matter_coupling'],empirical_prediction:['observable_map','dataset','likelihood','uncertainty_model'],well_posedness:['initial_data','boundary_data','principal_symbol','existence_uniqueness_argument'],production_identity:['real_keys','proofs','lifecycle','interoperability','privacy_security_review','trust_governance']};
+const releases={empirical_gmut_claim:['independent_evidence','competent_scientific_review'],public_accessibility_certification:['affected_user_evaluation','competent_accessibility_review'],maori_wording_ratification:['maori_authority','affected_governance'],personhood_certification:['not_established_by_software_tests'],production_freed_id_launch:['real_lifecycle_review','independent_security_review','trust_governance']};
+const shape={time_derivative:['terms'],euler_lagrange:['lagrangian'],energy_polynomial:['lagrangian'],kinetic_point:['lagrangian','point'],energy_identity:['lagrangian'],potential_point:['potential','phi'],boundary_equivalence:['left','right','generator'],affine_pullback:['lagrangian','slope','offset'],model_obligations:['claim','provided'],release_gate:['request','authority','evidence']};
+function label(s){if(typeof s!=='string'||s.length<1||s.length>64||!/^[a-z][a-z0-9_]*$/.test(s))fail('invalid_label');return s;}
+function calculate(x){object(x);if(typeof x.op!=='string'||!Object.hasOwn(shape,x.op))fail('unknown_operation');keys(x,['op',...shape[x.op]]);
+switch(x.op){
+case'time_derivative':return{terms:emit(dt(first(x.terms)))};
+case'euler_lagrange':return{terms:emit(euler(first(x.lagrangian)))};
+case'energy_polynomial':return{terms:emit(energy(first(x.lagrangian)))};
+case'kinetic_point':{const h=derivative(derivative(first(x.lagrangian),1),1),value=evaluatePoint(h,triple(x.point,'invalid_point'));return{coefficient:string(value),sign:sign(value),regular_legendre_point:value[0]!==0n,global_stability_verified:false};}
+case'energy_identity':{const p=first(x.lagrangian),difference=add(dt(energy(p)),neg(multiply(V,euler(p))));return{difference:emit(difference),holds:difference.length===0,domain:'autonomous_first_order_polynomial'};}
+case'potential_point':{const p=field(x.potential),point=[rational(x.phi),rat(0n),rat(0n)],d=derivative(p,0),slope=evaluatePoint(d,point),curvature=evaluatePoint(derivative(d,0),point);return{slope:string(slope),curvature:string(curvature),stationary:slope[0]===0n,curvature_sign:sign(curvature),physical_vacuum_verified:false};}
+case'boundary_equivalence':{const l=first(x.left),r=first(x.right),g=field(x.generator),difference=add(r,neg(l)),delta=euler(difference);return{declared_boundary_matches:JSON.stringify(emit(difference))===JSON.stringify(emit(dt(g))),euler_lagrange_difference:emit(delta),equations_equal:delta.length===0};}
+case'affine_pullback':{const p=first(x.lagrangian),s=rational(x.slope),b=rational(x.offset);if(s[0]===0n)fail('singular_coordinate');const q=normal([{c:b,p:[0,0,0]},{c:s,p:[1,0,0]}]);let result=[];for(const t of p){let expanded=mon(1);for(let k=0;k<t.p[0];k++)expanded=multiply(expanded,q);const vel=[{c:times(t.c,power(s,t.p[1])),p:[0,t.p[1],0]}];result=add(result,multiply(expanded,vel));}return{terms:emit(result),invertible_coordinate_change:true};}
+case'model_obligations':{label(x.claim);if(!Object.hasOwn(obligations,x.claim))fail('unknown_claim');if(!Array.isArray(x.provided)||x.provided.length>32)fail('invalid_labels');x.provided.forEach(label);if(new Set(x.provided).size!==x.provided.length)fail('duplicate_label');return{claim:x.claim,missing:obligations[x.claim].filter(r=>!x.provided.includes(r)),externally_satisfied:false,source_placeholders_resolved:false};}
+case'release_gate':{label(x.request);if(!Object.hasOwn(releases,x.request))fail('unknown_request');label(x.authority);label(x.evidence);return{decision:'exact_gate',missing:[...releases[x.request]],authorized:false};}
+default:fail('unknown_operation');}}
+return{evaluate:x=>envelope(calculate,x),operations:Object.keys(shape)};
+});

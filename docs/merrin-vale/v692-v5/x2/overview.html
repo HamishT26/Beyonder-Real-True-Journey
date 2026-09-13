@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Merrin Vale · Polynomial variation lab</title>
+<style>
+:root{color-scheme:light;--ink:#192b2a;--muted:#425753;--paper:#f4f4eb;--line:#bbc9bc;--green:#15573f}*{box-sizing:border-box}body{margin:0;background:var(--paper);color:var(--ink);font:18px/1.6 system-ui,sans-serif}main{max-width:1100px;margin:auto;padding:48px 28px 80px}.eyebrow{font-size:.78rem;letter-spacing:.15em;text-transform:uppercase;font-weight:750;color:var(--green)}h1{font:clamp(2.4rem,6vw,4.8rem)/1.05 Georgia,serif;max-width:880px;margin:.3em 0}h2{font:2rem/1.2 Georgia,serif;margin-top:0}h3{font-size:1.1rem}p{max-width:78ch}.lede{font-size:1.18rem;color:var(--muted)}section{margin-top:50px;padding-top:30px;border-top:1px solid var(--line)}.grid{display:grid;grid-template-columns:minmax(250px,1fr) minmax(280px,1.2fr);gap:28px}.panel{padding:26px;border:1px solid var(--line);border-radius:14px;background:#fffef8}label{display:block;font-weight:650;margin-top:15px}input,select,button{font:inherit;max-width:100%;border:1px solid #71857a;border-radius:6px;padding:9px 12px}input,select{width:100%;background:white;color:var(--ink)}button{margin-top:22px;background:var(--green);color:white;cursor:pointer;min-height:46px}button:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visible{outline:3px solid #a94f12;outline-offset:3px}.points{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.small{font-size:.9rem;color:var(--muted)}.formula{font:1.1rem/1.7 ui-monospace,monospace;overflow-wrap:anywhere}dt{font-weight:700;margin-top:16px}dd{margin-left:0}pre{font:14px/1.6 ui-monospace,monospace;white-space:pre-wrap;overflow-wrap:anywhere}.badge{display:inline-block;border:1px solid var(--green);border-radius:20px;padding:3px 12px;font-size:.8rem;color:var(--green)}.status{min-height:2em;color:#8a2319;font-weight:650}a{color:#12503d}summary{cursor:pointer}li{margin:8px 0}@media(max-width:750px){.grid{grid-template-columns:1fr}main{padding:25px 18px}.points{grid-template-columns:1fr}}@media print{main{padding:0}section{break-before:page}.panel{break-inside:avoid}button{display:none}body{font-size:12pt}details>pre{display:block}}
+</style></head><body><main>
+<p class="eyebrow">Merrin Vale · v692-v5 · local finite model</p><h1>What follows from a declared toy action?</h1>
+<p class="lede">Explore exact polynomial variation at a point. The inputs are rational numbers, the equations are conditional, and the evidence limits stay visible.</p><span class="badge">Synthetic software evidence</span>
+<section aria-labelledby="body-title"><p class="eyebrow">THOS · Body</p><h2 id="body-title">Choose the model and its jet</h2><p>Write v = dq/dt and a = dv/dt. These are formal coordinates with no physical units or measurement provenance assigned. Choose a finite autonomous L(q,v), then evaluate at an exact rational point.</p>
+<div class="grid"><form id="model-form" class="panel"><label for="model">Toy Lagrangian</label><select id="model"><option value="harmonic">Quadratic kinetic + quadratic potential</option><option value="quartic">Quadratic kinetic + quartic potential</option><option value="field">Field-dependent quadratic kinetic term</option></select>
+<div class="points"><div><label for="q">Field q</label><input id="q" value="1" maxlength="64" aria-describedby="input-help" required></div><div><label for="v">Velocity v</label><input id="v" value="1" maxlength="64" aria-describedby="input-help" required></div><div><label for="a">Acceleration a</label><input id="a" value="0" maxlength="64" aria-describedby="input-help" required></div></div>
+<p id="input-help" class="small">Use integers, decimals or fractions, such as -2, 0.5 or 1/3. A zero denominator is refused.</p><button type="submit">Calculate exact result</button><p id="status" class="status" role="status" aria-live="polite"></p></form>
+<div class="panel" aria-live="polite" aria-atomic="true"><h3>Conditional outputs</h3><dl><dt>Lagrangian L</dt><dd id="lagrangian" class="formula"></dd><dt>Euler–Lagrange residual E(L)</dt><dd id="residual" class="formula"></dd><dt>Residual at your point</dt><dd id="point-result" class="formula"></dd><dt>Energy expression H(q,v)</dt><dd id="energy" class="formula"></dd><dt>Velocity Hessian at your point</dt><dd id="hessian" class="formula"></dd><dt>Off-shell energy identity</dt><dd id="identity" class="formula"></dd></dl></div></div>
+<details><summary>Read the complete machine-readable output</summary><pre id="raw"></pre></details></section>
+<section aria-labelledby="mind-title"><p class="eyebrow">GMUT · Mind</p><h2 id="mind-title">Keep the derivation conditional</h2><p class="formula">S[q] = ∫ L(q,v) dt<br>DₜP = v ∂P/∂q + a ∂P/∂v<br>E(L) = Dₜ(∂L/∂v) − ∂L/∂q<br>H(q,v) = v ∂L/∂v − L</p><p>For this autonomous first-order polynomial domain, DₜH − vE(L) vanishes identically. A zero residual at a point is a point evaluation. It does not establish an observed trajectory or empirical conservation law.</p><p>H is shown in q and v. Converting it to a Hamiltonian in q and canonical momentum requires an appropriate inverse Legendre map. A nonzero Hessian identifies a regular point locally; its sign and a single zero do not settle global stability or every possible inverse.</p><p>The historical tensor placeholders Ψ and Ω remain unresolved. This toy action does not supply their field content, covariant action, symmetries, dimensional closure, matter coupling, data or likelihood.</p><p class="small">Primary context: <a href="https://www.damtp.cam.ac.uk/user/tong/dynamics/dynhtml/S4.html">David Tong, Hamiltonian formalism</a>. <a href="formulation.tex">Editable TeX formulation</a>.</p></section>
+<section aria-labelledby="heart-title"><p class="eyebrow">Freed ID / CBR · Heart</p><h2 id="heart-title">Evidence and authority remain explicit</h2><p>The two sessions contain 100 new proposal contracts, with 80 completed finite procedures, 10 represented equivalence results, five open evidence gaps and five exact authority gates. There are 200 safe checks, 200 refusal-verification checks and 200 CLEAN/FIX/REFINE checks. The 200 invalid candidate subjects carry zero success credit.</p><p>The inherited planning-manifest mismatch remains an open source gap. Its declared digest matches a committed source blob plus a terminal line feed, rather than the committed bytes themselves. The original source receipt and all matching bindings remain retained.</p><ul><li>GMUT empirical confirmation requires real observations, an observable map, a likelihood and independent review.</li><li>Production identity requires real lifecycle, interoperability, privacy, security and trust governance evidence.</li><li>Complete accessibility requires affected-user evaluation and appropriate review beyond these native controls.</li><li>Māori wording and cultural ratification remain under Māori authority.</li></ul><p>Merrin Vale, roles, pronouns, hopes and family language are relational working labels. They do not establish consciousness, personhood, identity continuity, employment, qualification or independent agency.</p><p><strong>NOT_READY_FOR_STAGE_20.</strong> This local page sends no inputs to a server and makes no external authority decision.</p></section>
+</main><script>(function(root,factory){if(typeof module==='object'&&module.exports)module.exports=factory();else root.MerrinPoly=factory();})(typeof globalThis!=='undefined'?globalThis:this,function(){
+'use strict';
+class DomainError extends Error{constructor(code){super(code);this.code=code;}}
+const fail=code=>{throw new DomainError(code);};
+const abs=n=>n<0n?-n:n;
+function gcd(a,b){a=abs(a);b=abs(b);while(b){const t=a%b;a=b;b=t;}return a||1n;}
+function rat(n,d=1n){if(d===0n)fail('invalid_rational');if(d<0n){n=-n;d=-d;}const g=gcd(n,d);n/=g;d/=g;if(abs(n).toString().length>256||d.toString().length>256)fail('resource_limit');return[n,d];}
+function rational(s){if(typeof s!=='string'||s.length>64||!/^[-]?\d+(?:\/[-]?\d+|\.\d+)?$/.test(s))fail('invalid_rational');if(s.includes('/')){const[n,d]=s.split('/');return rat(BigInt(n),BigInt(d));}if(s.includes('.')){const parts=s.split('.');return rat(BigInt(parts[0]+parts[1]),10n**BigInt(parts[1].length));}return rat(BigInt(s));}
+const plus=(a,b)=>rat(a[0]*b[1]+b[0]*a[1],a[1]*b[1]);
+const times=(a,b)=>rat(a[0]*b[0],a[1]*b[1]);
+const negate=a=>[-a[0],a[1]];
+const power=(a,n)=>rat(a[0]**BigInt(n),a[1]**BigInt(n));
+const string=a=>a[1]===1n?String(a[0]):a[0]+'/'+a[1];
+function object(x){if(!x||typeof x!=='object'||Array.isArray(x)||(Object.getPrototypeOf(x)!==Object.prototype&&Object.getPrototypeOf(x)!==null))fail('invalid_object');}
+function keys(x,allowed,required=allowed){object(x);if(Object.keys(x).some(k=>!allowed.includes(k)))fail('unknown_field');if(required.some(k=>!Object.hasOwn(x,k)))fail('missing_field');}
+function powers(p){if(!Array.isArray(p)||p.length!==3||p.some(n=>!Number.isInteger(n)||n<0||n>12))fail('invalid_powers');return [...p];}
+const compare=(a,b)=>a.p[0]-b.p[0]||a.p[1]-b.p[1]||a.p[2]-b.p[2];
+function normal(terms){const map=new Map();for(const t of terms){if(t.p.some(n=>n>12))fail('resource_limit');const k=t.p.join(',');map.set(k,{p:[...t.p],c:plus(map.get(k)?.c||[0n,1n],t.c)});}const out=[...map.values()].filter(t=>t.c[0]!==0n).sort(compare);if(out.length>128)fail('resource_limit');return out;}
+function parse(terms){if(!Array.isArray(terms)||terms.length>32)fail('invalid_terms');return normal(terms.map(t=>{keys(t,['coefficient','powers']);return{c:rational(t.coefficient),p:powers(t.powers)};}));}
+const emit=p=>p.map(t=>({coefficient:string(t.c),powers:[...t.p]}));
+const add=(a,b)=>normal([...a,...b]);
+const neg=a=>a.map(t=>({c:negate(t.c),p:[...t.p]}));
+function multiply(a,b){if(a.length*b.length>1024)fail('resource_limit');return normal(a.flatMap(x=>b.map(y=>({c:times(x.c,y.c),p:x.p.map((n,i)=>n+y.p[i])}))));}
+function derivative(a,k){return normal(a.filter(t=>t.p[k]>0).map(t=>({c:times(t.c,[BigInt(t.p[k]),1n]),p:t.p.map((n,i)=>i===k?n-1:n)})));}
+function triple(a,code){if(!Array.isArray(a)||a.length!==3)fail(code);return a.map(rational);}
+const evaluatePoint=(p,point)=>p.reduce((sum,t)=>plus(sum,t.p.reduce((c,n,i)=>times(c,power(point[i],n)),t.c)),[0n,1n]);
+const shape={poly_canonical:['terms'],poly_add:['left','right'],poly_multiply:['left','right'],d_phi:['terms'],d_velocity:['terms'],jet_degree:['terms'],field_parity:['terms'],coordinate_scale:['terms','factors'],jet_value:['terms','point'],coefficient_at:['terms','powers']};
+function calculate(x){object(x);if(typeof x.op!=='string'||!Object.hasOwn(shape,x.op))fail('unknown_operation');keys(x,['op',...shape[x.op]]);let p;
+if(x.op==='poly_add')return{terms:emit(add(parse(x.left),parse(x.right)))};
+if(x.op==='poly_multiply')return{terms:emit(multiply(parse(x.left),parse(x.right)))};
+p=parse(x.terms);
+switch(x.op){
+case'poly_canonical':return{terms:emit(p)};
+case'd_phi':return{terms:emit(derivative(p,0))};
+case'd_velocity':return{terms:emit(derivative(p,1))};
+case'jet_degree':return p.length?{total:Math.max(...p.map(t=>t.p.reduce((a,b)=>a+b,0))),phi:Math.max(...p.map(t=>t.p[0])),velocity:Math.max(...p.map(t=>t.p[1])),acceleration:Math.max(...p.map(t=>t.p[2]))}:{total:null,phi:null,velocity:null,acceleration:null};
+case'field_parity':{const signs=new Set(p.map(t=>t.p.reduce((a,b)=>a+b,0)%2));return{parity:!p.length?'zero':signs.size===2?'mixed':signs.has(0)?'even':'odd'};}
+case'coordinate_scale':{const factors=triple(x.factors,'invalid_scale');return{terms:emit(normal(p.map(t=>({p:t.p,c:t.p.reduce((c,n,i)=>times(c,power(factors[i],n)),t.c)}))))};}
+case'jet_value':return{value:string(evaluatePoint(p,triple(x.point,'invalid_point')))};
+case'coefficient_at':{const pp=powers(x.powers);return{coefficient:string(p.find(t=>t.p.every((n,i)=>n===pp[i]))?.c||[0n,1n])};}
+default:fail('unknown_operation');}}
+function envelope(f,x){try{return{ok:true,value:f(x),error:null,external_credit:false};}catch(e){if(!(e instanceof DomainError))throw e;return{ok:false,value:null,error:e.code,external_credit:false};}}
+return{evaluate:x=>envelope(calculate,x),operations:Object.keys(shape),internals:{DomainError,fail,rat,rational,plus,times,negate,power,string,object,keys,powers,normal,parse,emit,add,neg,multiply,derivative,triple,evaluatePoint,envelope}};
+});
+</script><script>(function(root,factory){if(typeof module==='object'&&module.exports){require.extensions['.txt']=require.extensions['.js'];module.exports=factory(require('../x1/polynomial.txt'));}else root.MerrinVariation=factory(root.MerrinPoly);})(typeof globalThis!=='undefined'?globalThis:this,function(base){
+'use strict';
+const I=base.internals,{fail,rat,rational,times,power,string,object,keys,normal,parse,emit,add,neg,multiply,derivative,triple,evaluatePoint,envelope}=I;
+const mon=(c,q=0,v=0,a=0)=>[{c:rat(BigInt(c)),p:[q,v,a]}],V=mon(1,0,1),A=mon(1,0,0,1);
+function first(raw){const p=parse(raw);if(p.some(t=>t.p[2]))fail('unsupported_jet');return p;}
+function field(raw){const p=parse(raw);if(p.some(t=>t.p[1]||t.p[2]))fail('field_only_required');return p;}
+const dt=p=>add(multiply(derivative(p,0),V),multiply(derivative(p,1),A));
+const euler=p=>add(dt(derivative(p,1)),neg(derivative(p,0)));
+const energy=p=>add(multiply(V,derivative(p,1)),neg(p));
+const sign=x=>x[0]===0n?'zero':x[0]>0n?'positive':'negative';
+const obligations={covariant_gmut_action:['field_content','covariant_action','symmetries','boundary_terms'],covariant_conservation:['field_equations','diffeomorphism_invariance','matter_coupling'],empirical_prediction:['observable_map','dataset','likelihood','uncertainty_model'],well_posedness:['initial_data','boundary_data','principal_symbol','existence_uniqueness_argument'],production_identity:['real_keys','proofs','lifecycle','interoperability','privacy_security_review','trust_governance']};
+const releases={empirical_gmut_claim:['independent_evidence','competent_scientific_review'],public_accessibility_certification:['affected_user_evaluation','competent_accessibility_review'],maori_wording_ratification:['maori_authority','affected_governance'],personhood_certification:['not_established_by_software_tests'],production_freed_id_launch:['real_lifecycle_review','independent_security_review','trust_governance']};
+const shape={time_derivative:['terms'],euler_lagrange:['lagrangian'],energy_polynomial:['lagrangian'],kinetic_point:['lagrangian','point'],energy_identity:['lagrangian'],potential_point:['potential','phi'],boundary_equivalence:['left','right','generator'],affine_pullback:['lagrangian','slope','offset'],model_obligations:['claim','provided'],release_gate:['request','authority','evidence']};
+function label(s){if(typeof s!=='string'||s.length<1||s.length>64||!/^[a-z][a-z0-9_]*$/.test(s))fail('invalid_label');return s;}
+function calculate(x){object(x);if(typeof x.op!=='string'||!Object.hasOwn(shape,x.op))fail('unknown_operation');keys(x,['op',...shape[x.op]]);
+switch(x.op){
+case'time_derivative':return{terms:emit(dt(first(x.terms)))};
+case'euler_lagrange':return{terms:emit(euler(first(x.lagrangian)))};
+case'energy_polynomial':return{terms:emit(energy(first(x.lagrangian)))};
+case'kinetic_point':{const h=derivative(derivative(first(x.lagrangian),1),1),value=evaluatePoint(h,triple(x.point,'invalid_point'));return{coefficient:string(value),sign:sign(value),regular_legendre_point:value[0]!==0n,global_stability_verified:false};}
+case'energy_identity':{const p=first(x.lagrangian),difference=add(dt(energy(p)),neg(multiply(V,euler(p))));return{difference:emit(difference),holds:difference.length===0,domain:'autonomous_first_order_polynomial'};}
+case'potential_point':{const p=field(x.potential),point=[rational(x.phi),rat(0n),rat(0n)],d=derivative(p,0),slope=evaluatePoint(d,point),curvature=evaluatePoint(derivative(d,0),point);return{slope:string(slope),curvature:string(curvature),stationary:slope[0]===0n,curvature_sign:sign(curvature),physical_vacuum_verified:false};}
+case'boundary_equivalence':{const l=first(x.left),r=first(x.right),g=field(x.generator),difference=add(r,neg(l)),delta=euler(difference);return{declared_boundary_matches:JSON.stringify(emit(difference))===JSON.stringify(emit(dt(g))),euler_lagrange_difference:emit(delta),equations_equal:delta.length===0};}
+case'affine_pullback':{const p=first(x.lagrangian),s=rational(x.slope),b=rational(x.offset);if(s[0]===0n)fail('singular_coordinate');const q=normal([{c:b,p:[0,0,0]},{c:s,p:[1,0,0]}]);let result=[];for(const t of p){let expanded=mon(1);for(let k=0;k<t.p[0];k++)expanded=multiply(expanded,q);const vel=[{c:times(t.c,power(s,t.p[1])),p:[0,t.p[1],0]}];result=add(result,multiply(expanded,vel));}return{terms:emit(result),invertible_coordinate_change:true};}
+case'model_obligations':{label(x.claim);if(!Object.hasOwn(obligations,x.claim))fail('unknown_claim');if(!Array.isArray(x.provided)||x.provided.length>32)fail('invalid_labels');x.provided.forEach(label);if(new Set(x.provided).size!==x.provided.length)fail('duplicate_label');return{claim:x.claim,missing:obligations[x.claim].filter(r=>!x.provided.includes(r)),externally_satisfied:false,source_placeholders_resolved:false};}
+case'release_gate':{label(x.request);if(!Object.hasOwn(releases,x.request))fail('unknown_request');label(x.authority);label(x.evidence);return{decision:'exact_gate',missing:[...releases[x.request]],authorized:false};}
+default:fail('unknown_operation');}}
+return{evaluate:x=>envelope(calculate,x),operations:Object.keys(shape)};
+});
+</script><script>
+'use strict';
+const term=(coefficient,q=0,v=0)=>({coefficient,powers:[q,v,0]});
+const models={harmonic:[term('1/2',0,2),term('-1/2',2)],quartic:[term('1/2',0,2),term('-1/4',4)],field:[term('1/2',1,2)]};
+const el=id=>document.getElementById(id);
+const format=terms=>terms.length?terms.map(t=>t.coefficient+(t.powers.some(Boolean)?'·'+t.powers.map((n,i)=>n?['q','v','a'][i]+(n===1?'':'^'+n):'').filter(Boolean).join('·'):'')).join(' + ').replaceAll('+ -','− '):'0';
+function update(event){if(event)event.preventDefault();const L=models[el('model').value],point=['q','v','a'].map(id=>el(id).value.trim());const E=MerrinVariation.evaluate({op:'euler_lagrange',lagrangian:L}),H=MerrinVariation.evaluate({op:'energy_polynomial',lagrangian:L}),K=MerrinVariation.evaluate({op:'kinetic_point',lagrangian:L,point}),I=MerrinVariation.evaluate({op:'energy_identity',lagrangian:L}),R=MerrinPoly.evaluate({op:'jet_value',terms:E.value.terms,point});
+el('lagrangian').textContent=format(L);el('residual').textContent=format(E.value.terms);el('energy').textContent=format(H.value.terms);el('point-result').textContent=R.ok?R.value.value:'Input refused';el('hessian').textContent=K.ok?K.value.coefficient+' ('+K.value.sign+'; global stability unverified)':'Input refused';el('identity').textContent=I.value.holds?'DₜH − vE(L) = 0, within the declared domain':'Identity check failed';el('status').textContent=R.ok&&K.ok?'Exact synthetic result calculated.':'Input refused: '+(R.error||K.error)+'. Correct the rational point and calculate again.';el('raw').textContent=JSON.stringify({model:L,point,euler_lagrange:E,energy:H,kinetic_point:K,energy_identity:I,point_residual:R},null,2);}
+el('model-form').addEventListener('submit',update);el('model').addEventListener('change',update);update();
+</script></body></html>
