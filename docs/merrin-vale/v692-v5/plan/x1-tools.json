@@ -1,0 +1,126 @@
+{
+  "skills": [
+    {
+      "name": "merrin-poly-canonical",
+      "operation": "poly_canonical",
+      "scope": "Merge rational coefficients at equal power triples and sort lexicographically by field, velocity, acceleration powers.",
+      "boundary": "Input order has no mathematical role, but every surviving exponent tuple must retain its coefficient. Empty terms means the zero polynomial, whose degree remains undefined.",
+      "accepting_example": "MV6925-P001",
+      "adverse_example": "MV6925-P001 unknown_field"
+    },
+    {
+      "name": "merrin-poly-add",
+      "operation": "poly_add",
+      "scope": "Add two finite formal polynomials over rational coefficients.",
+      "boundary": "Cancellation must remove a term exactly. A missing empirical measurement is never encoded as a zero polynomial by this operation.",
+      "accepting_example": "MV6925-P006",
+      "adverse_example": "MV6925-P006 unknown_field"
+    },
+    {
+      "name": "merrin-poly-multiply",
+      "operation": "poly_multiply",
+      "scope": "Distribute every pair of terms and combine equal exponent triples.",
+      "boundary": "The cross term is essential for binomial products. Enforce input and expansion budgets before allowing an unbounded product.",
+      "accepting_example": "MV6925-P011",
+      "adverse_example": "MV6925-P011 unknown_field"
+    },
+    {
+      "name": "merrin-d-phi",
+      "operation": "d_phi",
+      "scope": "Differentiate formally with respect to the field coordinate q.",
+      "boundary": "Velocity and acceleration are independent jet coordinates during this partial derivative. A zero result is a formal statement about the declared expression.",
+      "accepting_example": "MV6925-P016",
+      "adverse_example": "MV6925-P016 unknown_field"
+    },
+    {
+      "name": "merrin-d-velocity",
+      "operation": "d_velocity",
+      "scope": "Differentiate formally with respect to the velocity coordinate v.",
+      "boundary": "A velocity-linear term has a nonzero first derivative and zero Hessian; these observations serve different purposes.",
+      "accepting_example": "MV6925-P021",
+      "adverse_example": "MV6925-P021 unknown_field"
+    },
+    {
+      "name": "merrin-jet-degree",
+      "operation": "jet_degree",
+      "scope": "Report total degree and each coordinate degree after exact cancellation.",
+      "boundary": "Component maxima may arise in different monomials and must not be summed to obtain total degree. Zero has null degrees.",
+      "accepting_example": "MV6925-P026",
+      "adverse_example": "MV6925-P026 unknown_field"
+    },
+    {
+      "name": "merrin-field-parity",
+      "operation": "field_parity",
+      "scope": "Classify simultaneous sign reversal of q, v and a by total exponent parity.",
+      "boundary": "This is a declared algebraic symmetry check. It does not establish a symmetry of an unspecified physical action or its boundary conditions.",
+      "accepting_example": "MV6925-P031",
+      "adverse_example": "MV6925-P031 unknown_field"
+    },
+    {
+      "name": "merrin-coordinate-scale",
+      "operation": "coordinate_scale",
+      "scope": "Substitute independent rational coordinate scales without changing exponent labels.",
+      "boundary": "Zero scales are permitted as substitutions here; unlike affine pullback they are not claimed to be invertible coordinate transformations.",
+      "accepting_example": "MV6925-P036",
+      "adverse_example": "MV6925-P036 unknown_field"
+    },
+    {
+      "name": "merrin-jet-value",
+      "operation": "jet_value",
+      "scope": "Evaluate a finite polynomial at a complete rational triple q, v, a.",
+      "boundary": "Values are exact evaluations at declared synthetic points. They carry no sensor, calibration, data collection or trajectory provenance.",
+      "accepting_example": "MV6925-P041",
+      "adverse_example": "MV6925-P041 unknown_field"
+    },
+    {
+      "name": "merrin-coefficient-at",
+      "operation": "coefficient_at",
+      "scope": "Read the coefficient at a specific nonnegative exponent triple after normalization.",
+      "boundary": "An absent formal monomial has coefficient zero under this closed polynomial contract. This does not make an absent scientific dataset a measured zero.",
+      "accepting_example": "MV6925-P046",
+      "adverse_example": "MV6925-P046 unknown_field"
+    }
+  ],
+  "runners": [
+    {
+      "name": "x1-pair-1",
+      "operations": [
+        "poly_canonical",
+        "poly_add"
+      ],
+      "purpose": "Expose two related bounded operations through complete JSON request and response envelopes."
+    },
+    {
+      "name": "x1-pair-2",
+      "operations": [
+        "poly_multiply",
+        "d_phi"
+      ],
+      "purpose": "Expose two related bounded operations through complete JSON request and response envelopes."
+    },
+    {
+      "name": "x1-pair-3",
+      "operations": [
+        "d_velocity",
+        "jet_degree"
+      ],
+      "purpose": "Expose two related bounded operations through complete JSON request and response envelopes."
+    },
+    {
+      "name": "x1-pair-4",
+      "operations": [
+        "field_parity",
+        "coordinate_scale"
+      ],
+      "purpose": "Expose two related bounded operations through complete JSON request and response envelopes."
+    },
+    {
+      "name": "x1-pair-5",
+      "operations": [
+        "jet_value",
+        "coefficient_at"
+      ],
+      "purpose": "Expose two related bounded operations through complete JSON request and response envelopes."
+    }
+  ]
+}

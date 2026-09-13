@@ -1,0 +1,272 @@
+{
+  "notes": {
+    "poly_canonical": [
+      "Merge rational coefficients at equal power triples and sort lexicographically by field, velocity, acceleration powers.",
+      "Input order has no mathematical role, but every surviving exponent tuple must retain its coefficient. Empty terms means the zero polynomial, whose degree remains undefined.",
+      "reverse_terms",
+      "terms"
+    ],
+    "poly_add": [
+      "Add two finite formal polynomials over rational coefficients.",
+      "Cancellation must remove a term exactly. A missing empirical measurement is never encoded as a zero polynomial by this operation.",
+      "swap_operands",
+      "left"
+    ],
+    "poly_multiply": [
+      "Distribute every pair of terms and combine equal exponent triples.",
+      "The cross term is essential for binomial products. Enforce input and expansion budgets before allowing an unbounded product.",
+      "swap_operands",
+      "left"
+    ],
+    "d_phi": [
+      "Differentiate formally with respect to the field coordinate q.",
+      "Velocity and acceleration are independent jet coordinates during this partial derivative. A zero result is a formal statement about the declared expression.",
+      "add_constant",
+      "terms"
+    ],
+    "d_velocity": [
+      "Differentiate formally with respect to the velocity coordinate v.",
+      "A velocity-linear term has a nonzero first derivative and zero Hessian; these observations serve different purposes.",
+      "add_constant",
+      "terms"
+    ],
+    "jet_degree": [
+      "Report total degree and each coordinate degree after exact cancellation.",
+      "Component maxima may arise in different monomials and must not be summed to obtain total degree. Zero has null degrees.",
+      "double_coefficients",
+      "terms"
+    ],
+    "field_parity": [
+      "Classify simultaneous sign reversal of q, v and a by total exponent parity.",
+      "This is a declared algebraic symmetry check. It does not establish a symmetry of an unspecified physical action or its boundary conditions.",
+      "double_coefficients",
+      "terms"
+    ],
+    "coordinate_scale": [
+      "Substitute independent rational coordinate scales without changing exponent labels.",
+      "Zero scales are permitted as substitutions here; unlike affine pullback they are not claimed to be invertible coordinate transformations.",
+      "double_coefficients",
+      "terms"
+    ],
+    "jet_value": [
+      "Evaluate a finite polynomial at a complete rational triple q, v, a.",
+      "Values are exact evaluations at declared synthetic points. They carry no sensor, calibration, data collection or trajectory provenance.",
+      "add_constant_value",
+      "terms"
+    ],
+    "coefficient_at": [
+      "Read the coefficient at a specific nonnegative exponent triple after normalization.",
+      "An absent formal monomial has coefficient zero under this closed polynomial contract. This does not make an absent scientific dataset a measured zero.",
+      "add_selected_basis",
+      "terms"
+    ],
+    "time_derivative": [
+      "Apply D_t P = v P_q + a P_v to an autonomous first-jet polynomial.",
+      "Acceleration-dependent input would require a jerk coordinate and is refused. Explicit time dependence is outside this declared operator.",
+      "add_constant",
+      "terms"
+    ],
+    "euler_lagrange": [
+      "Form E(L) = D_t(L_v) - L_q with a fixed sign convention.",
+      "The input is an explicitly declared first-order autonomous toy Lagrangian. The result is a conditional residual, not a derivation of the historical GMUT tensor placeholders.",
+      "add_constant",
+      "lagrangian"
+    ],
+    "energy_polynomial": [
+      "Form H(q,v) = v L_v - L in jet coordinates.",
+      "This expression is not automatically a Hamiltonian written in canonical momentum. No globally invertible Legendre map or physical energy interpretation is asserted.",
+      "add_constant_energy",
+      "lagrangian"
+    ],
+    "kinetic_point": [
+      "Evaluate the velocity Hessian L_vv at a declared rational point.",
+      "A nonzero Hessian marks a regular Legendre point in this finite model. A zero Hessian is not proof that every possible inverse fails; neither sign certifies global stability.",
+      "add_constant",
+      "lagrangian"
+    ],
+    "energy_identity": [
+      "Check the off-shell identity D_t H - v E(L) = 0 for autonomous first-order polynomials.",
+      "The identity is conditional algebra. Conservation along an actual solution also requires the equations, a valid solution and the intended physical interpretation.",
+      "add_constant",
+      "lagrangian"
+    ],
+    "potential_point": [
+      "Evaluate the field derivative and curvature of a field-only potential.",
+      "A stationary point with zero curvature is unresolved at quadratic order. No physical vacuum, stable state or measured parameter is established.",
+      "add_constant",
+      "potential"
+    ],
+    "boundary_equivalence": [
+      "Compare a stated boundary addition D_t F(q) with the actual difference of two actions.",
+      "The declared generator and residual comparison are separate outputs. Equal equations alone cannot establish every global boundary, topology or quantum equivalence claim.",
+      "generator_constant",
+      "left"
+    ],
+    "affine_pullback": [
+      "Expand q = s Q + b and v = s V for a nonzero rational slope.",
+      "The pullback is an invertible coordinate representation in the finite model. It is not a field-theory equivalence proof or a change in source evidence status.",
+      "add_constant_affine",
+      "lagrangian"
+    ],
+    "model_obligations": [
+      "Project explicit missing evidence roles for five out-of-model claim classes.",
+      "Providing all role labels only empties a bookkeeping list. It never verifies evidence contents, closes the source placeholders or grants scientific and production authority.",
+      "all_labels_nonpromotion",
+      "claim"
+    ],
+    "release_gate": [
+      "Retain five protected requests as exact gates under synthetic evidence.",
+      "An authority string cannot grant authority. Real review, affected governance and Māori authority cannot be synthesized by a successful software check.",
+      "declared_authority_nonpromotion",
+      "request"
+    ]
+  },
+  "fieldList": {
+    "poly_canonical": [
+      "terms"
+    ],
+    "poly_add": [
+      "left",
+      "right"
+    ],
+    "poly_multiply": [
+      "left",
+      "right"
+    ],
+    "d_phi": [
+      "terms"
+    ],
+    "d_velocity": [
+      "terms"
+    ],
+    "jet_degree": [
+      "terms"
+    ],
+    "field_parity": [
+      "terms"
+    ],
+    "coordinate_scale": [
+      "terms",
+      "factors"
+    ],
+    "jet_value": [
+      "terms",
+      "point"
+    ],
+    "coefficient_at": [
+      "terms",
+      "powers"
+    ],
+    "time_derivative": [
+      "terms"
+    ],
+    "euler_lagrange": [
+      "lagrangian"
+    ],
+    "energy_polynomial": [
+      "lagrangian"
+    ],
+    "kinetic_point": [
+      "lagrangian",
+      "point"
+    ],
+    "energy_identity": [
+      "lagrangian"
+    ],
+    "potential_point": [
+      "potential",
+      "phi"
+    ],
+    "boundary_equivalence": [
+      "left",
+      "right",
+      "generator"
+    ],
+    "affine_pullback": [
+      "lagrangian",
+      "slope",
+      "offset"
+    ],
+    "model_obligations": [
+      "claim",
+      "provided"
+    ],
+    "release_gate": [
+      "request",
+      "authority",
+      "evidence"
+    ]
+  },
+  "obligations": {
+    "covariant_gmut_action": [
+      "field_content",
+      "covariant_action",
+      "symmetries",
+      "boundary_terms"
+    ],
+    "covariant_conservation": [
+      "field_equations",
+      "diffeomorphism_invariance",
+      "matter_coupling"
+    ],
+    "empirical_prediction": [
+      "observable_map",
+      "dataset",
+      "likelihood",
+      "uncertainty_model"
+    ],
+    "well_posedness": [
+      "initial_data",
+      "boundary_data",
+      "principal_symbol",
+      "existence_uniqueness_argument"
+    ],
+    "production_identity": [
+      "real_keys",
+      "proofs",
+      "lifecycle",
+      "interoperability",
+      "privacy_security_review",
+      "trust_governance"
+    ]
+  },
+  "releases": {
+    "empirical_gmut_claim": [
+      "independent_evidence",
+      "competent_scientific_review"
+    ],
+    "public_accessibility_certification": [
+      "affected_user_evaluation",
+      "competent_accessibility_review"
+    ],
+    "maori_wording_ratification": [
+      "maori_authority",
+      "affected_governance"
+    ],
+    "personhood_certification": [
+      "not_established_by_software_tests"
+    ],
+    "production_freed_id_launch": [
+      "real_lifecycle_review",
+      "independent_security_review",
+      "trust_governance"
+    ]
+  },
+  "limits": {
+    "max_input_terms": 32,
+    "max_output_terms": 128,
+    "max_power": 12,
+    "max_rational_characters": 64,
+    "max_result_digits": 256,
+    "max_term_products": 1024
+  },
+  "coordinate_order": [
+    "q",
+    "v",
+    "a"
+  ],
+  "coefficient_type": "bounded exact rational string",
+  "ordering": "lexicographic ascending powers q then v then a",
+  "first_jet": "no acceleration in L or P for time/variational operators",
+  "boundary": "Bounded exact synthetic software evidence only. Same-owner checks are not independent reproduction. GMUT empirical confirmation, production THOS and Freed ID, personhood, qualification, professional, legal, cultural, affected-party and Māori authority, complete accessibility and security remain outside this model. NOT_READY_FOR_STAGE_20."
+}
