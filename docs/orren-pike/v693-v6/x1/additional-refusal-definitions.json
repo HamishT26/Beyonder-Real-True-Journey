@@ -1,0 +1,248 @@
+{
+  "stage": "x1",
+  "defined_before_execution": true,
+  "cases": [
+    {
+      "negative_id": "OP6936-X1-PARSER-N001",
+      "title": "duplicate root member",
+      "raw": "{\"op\":\"a\",\"op\":\"b\"}",
+      "expected": {
+        "ok": false,
+        "value": null,
+        "error": "E_DUPLICATE_KEY"
+      },
+      "original_subject_success_credit": 0
+    },
+    {
+      "negative_id": "OP6936-X1-PARSER-N002",
+      "title": "duplicate nested member",
+      "raw": "{\"x\":{\"a\":1,\"a\":2}}",
+      "expected": {
+        "ok": false,
+        "value": null,
+        "error": "E_DUPLICATE_KEY"
+      },
+      "original_subject_success_credit": 0
+    },
+    {
+      "negative_id": "OP6936-X1-PARSER-N003",
+      "title": "non-JSON nonfinite token",
+      "raw": "NaN",
+      "expected": {
+        "ok": false,
+        "value": null,
+        "error": "E_JSON"
+      },
+      "original_subject_success_credit": 0
+    },
+    {
+      "negative_id": "OP6936-X1-PARSER-N004",
+      "title": "trailing JSON value",
+      "raw": "{} {}",
+      "expected": {
+        "ok": false,
+        "value": null,
+        "error": "E_JSON"
+      },
+      "original_subject_success_credit": 0
+    },
+    {
+      "negative_id": "OP6936-X1-PARSER-N005",
+      "title": "truncated object",
+      "raw": "{\"op\":",
+      "expected": {
+        "ok": false,
+        "value": null,
+        "error": "E_JSON"
+      },
+      "original_subject_success_credit": 0
+    },
+    {
+      "negative_id": "OP6936-X1-PARSER-N006",
+      "title": "trailing array comma",
+      "raw": "[1,]",
+      "expected": {
+        "ok": false,
+        "value": null,
+        "error": "E_JSON"
+      },
+      "original_subject_success_credit": 0
+    },
+    {
+      "negative_id": "OP6936-X1-PARSER-N007",
+      "title": "boolean partition member",
+      "raw": "{\"op\":\"aggregation_lumpability\",\"kernel\":[[\"1/2\",\"0\",\"1/2\"],[\"0\",\"1/2\",\"1/2\"],[\"0\",\"0\",\"1\"]],\"partition\":[[false,1],[2]]}",
+      "expected": {
+        "ok": false,
+        "value": null,
+        "error": "E_PARTITION"
+      },
+      "original_subject_success_credit": 0
+    },
+    {
+      "negative_id": "OP6936-X1-PARSER-N008",
+      "title": "null partition",
+      "raw": "{\"op\":\"aggregation_lumpability\",\"kernel\":[[\"1/2\",\"0\",\"1/2\"],[\"0\",\"1/2\",\"1/2\"],[\"0\",\"0\",\"1\"]],\"partition\":null}",
+      "expected": {
+        "ok": false,
+        "value": null,
+        "error": "E_PARTITION"
+      },
+      "original_subject_success_credit": 0
+    },
+    {
+      "negative_id": "OP6936-X1-PARSER-N009",
+      "title": "overlapping partition",
+      "raw": "{\"op\":\"aggregation_lumpability\",\"kernel\":[[\"1/2\",\"0\",\"1/2\"],[\"0\",\"1/2\",\"1/2\"],[\"0\",\"0\",\"1\"]],\"partition\":[[0,1],[1,2]]}",
+      "expected": {
+        "ok": false,
+        "value": null,
+        "error": "E_PARTITION"
+      },
+      "original_subject_success_credit": 0
+    },
+    {
+      "negative_id": "OP6936-X1-PARSER-N010",
+      "title": "uncovered state",
+      "raw": "{\"op\":\"aggregation_lumpability\",\"kernel\":[[\"1/2\",\"0\",\"1/2\"],[\"0\",\"1/2\",\"1/2\"],[\"0\",\"0\",\"1\"]],\"partition\":[[0],[1]]}",
+      "expected": {
+        "ok": false,
+        "value": null,
+        "error": "E_PARTITION"
+      },
+      "original_subject_success_credit": 0
+    },
+    {
+      "negative_id": "OP6936-X1-PARSER-N011",
+      "title": "ragged kernel",
+      "raw": "{\"op\":\"aggregation_lumpability\",\"kernel\":[[\"1\"],[\"0\",\"1/2\",\"1/2\"],[\"0\",\"0\",\"1\"]],\"partition\":[[0,1],[2]]}",
+      "expected": {
+        "ok": false,
+        "value": null,
+        "error": "E_SHAPE"
+      },
+      "original_subject_success_credit": 0
+    },
+    {
+      "negative_id": "OP6936-X1-PARSER-N012",
+      "title": "unreduced probability",
+      "raw": "{\"op\":\"aggregation_lumpability\",\"kernel\":[[\"2/4\",\"0\",\"1/2\"],[\"0\",\"1/2\",\"1/2\"],[\"0\",\"0\",\"1\"]],\"partition\":[[0,1],[2]]}",
+      "expected": {
+        "ok": false,
+        "value": null,
+        "error": "E_RATIONAL"
+      },
+      "original_subject_success_credit": 0
+    },
+    {
+      "negative_id": "OP6936-X1-PARSER-N013",
+      "title": "negative probability",
+      "raw": "{\"op\":\"aggregation_lumpability\",\"kernel\":[[\"-1/2\",\"0\",\"1/2\"],[\"0\",\"1/2\",\"1/2\"],[\"0\",\"0\",\"1\"]],\"partition\":[[0,1],[2]]}",
+      "expected": {
+        "ok": false,
+        "value": null,
+        "error": "E_RATIONAL"
+      },
+      "original_subject_success_credit": 0
+    },
+    {
+      "negative_id": "OP6936-X1-PARSER-N014",
+      "title": "boolean probability",
+      "raw": "{\"op\":\"aggregation_lumpability\",\"kernel\":[[true,\"0\",\"1/2\"],[\"0\",\"1/2\",\"1/2\"],[\"0\",\"0\",\"1\"]],\"partition\":[[0,1],[2]]}",
+      "expected": {
+        "ok": false,
+        "value": null,
+        "error": "E_RATIONAL"
+      },
+      "original_subject_success_credit": 0
+    },
+    {
+      "negative_id": "OP6936-X1-PARSER-N015",
+      "title": "overflow JSON number",
+      "raw": "{\"n\":1e999}",
+      "expected": {
+        "ok": false,
+        "value": null,
+        "error": "E_JSON"
+      },
+      "original_subject_success_credit": 0
+    },
+    {
+      "negative_id": "OP6936-X1-PARSER-N016",
+      "title": "invalid distribution",
+      "raw": "{\"op\":\"aggregation_distribution_projection\",\"kernel\":[[\"1/2\",\"0\",\"1/2\"],[\"0\",\"1/2\",\"1/2\"],[\"0\",\"0\",\"1\"]],\"partition\":[[0,1],[2]],\"distribution\":false}",
+      "expected": {
+        "ok": false,
+        "value": null,
+        "error": "E_DISTRIBUTION"
+      },
+      "original_subject_success_credit": 0
+    },
+    {
+      "negative_id": "OP6936-X1-PARSER-N017",
+      "title": "fractional state member",
+      "raw": "{\"op\":\"aggregation_lumpability\",\"kernel\":[[\"1/2\",\"0\",\"1/2\"],[\"0\",\"1/2\",\"1/2\"],[\"0\",\"0\",\"1\"]],\"partition\":[[0.5,1],[2]]}",
+      "expected": {
+        "ok": false,
+        "value": null,
+        "error": "E_PARTITION"
+      },
+      "original_subject_success_credit": 0
+    },
+    {
+      "negative_id": "OP6936-X1-PARSER-N018",
+      "title": "nine-state kernel",
+      "raw": "{\"op\":\"aggregation_lumpability\",\"kernel\":[[\"1\",\"0\",\"0\",\"0\",\"0\",\"0\",\"0\",\"0\",\"0\"],[\"0\",\"1\",\"0\",\"0\",\"0\",\"0\",\"0\",\"0\",\"0\"],[\"0\",\"0\",\"1\",\"0\",\"0\",\"0\",\"0\",\"0\",\"0\"],[\"0\",\"0\",\"0\",\"1\",\"0\",\"0\",\"0\",\"0\",\"0\"],[\"0\",\"0\",\"0\",\"0\",\"1\",\"0\",\"0\",\"0\",\"0\"],[\"0\",\"0\",\"0\",\"0\",\"0\",\"1\",\"0\",\"0\",\"0\"],[\"0\",\"0\",\"0\",\"0\",\"0\",\"0\",\"1\",\"0\",\"0\"],[\"0\",\"0\",\"0\",\"0\",\"0\",\"0\",\"0\",\"1\",\"0\"],[\"0\",\"0\",\"0\",\"0\",\"0\",\"0\",\"0\",\"0\",\"1\"]],\"partition\":[[0,1,2,3,4,5,6,7,8]]}",
+      "expected": {
+        "ok": false,
+        "value": null,
+        "error": "E_SHAPE"
+      },
+      "original_subject_success_credit": 0
+    },
+    {
+      "negative_id": "OP6936-X1-PARSER-N019",
+      "title": "zero denominator",
+      "raw": "{\"op\":\"aggregation_lumpability\",\"kernel\":[[\"1/0\",\"0\",\"1/2\"],[\"0\",\"1/2\",\"1/2\"],[\"0\",\"0\",\"1\"]],\"partition\":[[0,1],[2]]}",
+      "expected": {
+        "ok": false,
+        "value": null,
+        "error": "E_RATIONAL"
+      },
+      "original_subject_success_credit": 0
+    },
+    {
+      "negative_id": "OP6936-X1-PARSER-N020",
+      "title": "unknown operation",
+      "raw": "{\"op\":\"undeclared\",\"kernel\":[[\"1/2\",\"0\",\"1/2\"],[\"0\",\"1/2\",\"1/2\"],[\"0\",\"0\",\"1\"]],\"partition\":[[0,1],[2]]}",
+      "expected": {
+        "ok": false,
+        "value": null,
+        "error": "E_FIELDS"
+      },
+      "original_subject_success_credit": 0
+    },
+    {
+      "negative_id": "OP6936-X1-PARSER-N021",
+      "title": "excessive nesting",
+      "raw": "[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[0]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]",
+      "expected": {
+        "ok": false,
+        "value": null,
+        "error": "E_JSON_LIMIT"
+      },
+      "original_subject_success_credit": 0
+    },
+    {
+      "negative_id": "OP6936-X1-PARSER-N022",
+      "title": "prototype-shaped unknown key",
+      "raw": "{\"__proto__\":{\"x\":1}}",
+      "expected": {
+        "ok": false,
+        "value": null,
+        "error": "E_FIELDS"
+      },
+      "original_subject_success_credit": 0
+    }
+  ]
+}

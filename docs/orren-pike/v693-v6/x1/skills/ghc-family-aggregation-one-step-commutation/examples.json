@@ -1,0 +1,880 @@
+{
+  "operation": "aggregation_one_step_commutation",
+  "examples": [
+    {
+      "proposal_id": "OP6936-P046",
+      "request": {
+        "op": "aggregation_one_step_commutation",
+        "kernel": [
+          [
+            "1"
+          ]
+        ],
+        "partition": [
+          [
+            0
+          ]
+        ],
+        "distribution": [
+          "1"
+        ],
+        "quotient": [
+          [
+            "1"
+          ]
+        ]
+      },
+      "expected": {
+        "ok": true,
+        "value": {
+          "project_after_step": [
+            "1"
+          ],
+          "step_after_project": [
+            "1"
+          ],
+          "difference": [
+            "0"
+          ],
+          "equal_for_supplied_distribution": true,
+          "strongly_lumpable": true
+        },
+        "error": null
+      },
+      "adverse": [
+        {
+          "negative_id": "OP6936-P046-N1",
+          "request": {
+            "op": "aggregation_one_step_commutation",
+            "kernel": [
+              [
+                "1"
+              ]
+            ],
+            "partition": [
+              [
+                0
+              ]
+            ],
+            "distribution": [
+              "1"
+            ],
+            "quotient": [
+              [
+                "1"
+              ]
+            ],
+            "unexpected": true
+          },
+          "expected": {
+            "ok": false,
+            "value": null,
+            "error": "E_FIELDS"
+          },
+          "subject_success_credit": 0
+        },
+        {
+          "negative_id": "OP6936-P046-N2",
+          "request": {
+            "op": "aggregation_one_step_commutation",
+            "kernel": [
+              [
+                "0"
+              ]
+            ],
+            "partition": [
+              [
+                0
+              ]
+            ],
+            "distribution": [
+              "1"
+            ],
+            "quotient": [
+              [
+                "1"
+              ]
+            ]
+          },
+          "expected": {
+            "ok": false,
+            "value": null,
+            "error": "E_STOCHASTIC"
+          },
+          "subject_success_credit": 0
+        }
+      ]
+    },
+    {
+      "proposal_id": "OP6936-P047",
+      "request": {
+        "op": "aggregation_one_step_commutation",
+        "kernel": [
+          [
+            "1/2",
+            "0",
+            "1/2"
+          ],
+          [
+            "0",
+            "1/2",
+            "1/2"
+          ],
+          [
+            "0",
+            "0",
+            "1"
+          ]
+        ],
+        "partition": [
+          [
+            0,
+            1
+          ],
+          [
+            2
+          ]
+        ],
+        "distribution": [
+          "1/2",
+          "1/2",
+          "0"
+        ],
+        "quotient": [
+          [
+            "1/2",
+            "1/2"
+          ],
+          [
+            "0",
+            "1"
+          ]
+        ]
+      },
+      "expected": {
+        "ok": true,
+        "value": {
+          "project_after_step": [
+            "1/2",
+            "1/2"
+          ],
+          "step_after_project": [
+            "1/2",
+            "1/2"
+          ],
+          "difference": [
+            "0",
+            "0"
+          ],
+          "equal_for_supplied_distribution": true,
+          "strongly_lumpable": true
+        },
+        "error": null
+      },
+      "adverse": [
+        {
+          "negative_id": "OP6936-P047-N1",
+          "request": {
+            "op": "aggregation_one_step_commutation",
+            "kernel": [
+              [
+                "1/2",
+                "0",
+                "1/2"
+              ],
+              [
+                "0",
+                "1/2",
+                "1/2"
+              ],
+              [
+                "0",
+                "0",
+                "1"
+              ]
+            ],
+            "partition": [
+              [
+                0,
+                1
+              ],
+              [
+                2
+              ]
+            ],
+            "distribution": [
+              "1/2",
+              "1/2",
+              "0"
+            ],
+            "quotient": [
+              [
+                "1/2",
+                "1/2"
+              ],
+              [
+                "0",
+                "1"
+              ]
+            ],
+            "unexpected": true
+          },
+          "expected": {
+            "ok": false,
+            "value": null,
+            "error": "E_FIELDS"
+          },
+          "subject_success_credit": 0
+        },
+        {
+          "negative_id": "OP6936-P047-N2",
+          "request": {
+            "op": "aggregation_one_step_commutation",
+            "kernel": [
+              [
+                "0",
+                "0",
+                "0"
+              ],
+              [
+                "0",
+                "1/2",
+                "1/2"
+              ],
+              [
+                "0",
+                "0",
+                "1"
+              ]
+            ],
+            "partition": [
+              [
+                0,
+                1
+              ],
+              [
+                2
+              ]
+            ],
+            "distribution": [
+              "1/2",
+              "1/2",
+              "0"
+            ],
+            "quotient": [
+              [
+                "1/2",
+                "1/2"
+              ],
+              [
+                "0",
+                "1"
+              ]
+            ]
+          },
+          "expected": {
+            "ok": false,
+            "value": null,
+            "error": "E_STOCHASTIC"
+          },
+          "subject_success_credit": 0
+        }
+      ]
+    },
+    {
+      "proposal_id": "OP6936-P048",
+      "request": {
+        "op": "aggregation_one_step_commutation",
+        "kernel": [
+          [
+            "1/2",
+            "0",
+            "1/2"
+          ],
+          [
+            "0",
+            "1/4",
+            "3/4"
+          ],
+          [
+            "0",
+            "0",
+            "1"
+          ]
+        ],
+        "partition": [
+          [
+            0,
+            1
+          ],
+          [
+            2
+          ]
+        ],
+        "distribution": [
+          "1/2",
+          "1/2",
+          "0"
+        ],
+        "quotient": [
+          [
+            "1/2",
+            "1/2"
+          ],
+          [
+            "0",
+            "1"
+          ]
+        ]
+      },
+      "expected": {
+        "ok": true,
+        "value": {
+          "project_after_step": [
+            "3/8",
+            "5/8"
+          ],
+          "step_after_project": [
+            "1/2",
+            "1/2"
+          ],
+          "difference": [
+            "-1/8",
+            "1/8"
+          ],
+          "equal_for_supplied_distribution": false,
+          "strongly_lumpable": false
+        },
+        "error": null
+      },
+      "adverse": [
+        {
+          "negative_id": "OP6936-P048-N1",
+          "request": {
+            "op": "aggregation_one_step_commutation",
+            "kernel": [
+              [
+                "1/2",
+                "0",
+                "1/2"
+              ],
+              [
+                "0",
+                "1/4",
+                "3/4"
+              ],
+              [
+                "0",
+                "0",
+                "1"
+              ]
+            ],
+            "partition": [
+              [
+                0,
+                1
+              ],
+              [
+                2
+              ]
+            ],
+            "distribution": [
+              "1/2",
+              "1/2",
+              "0"
+            ],
+            "quotient": [
+              [
+                "1/2",
+                "1/2"
+              ],
+              [
+                "0",
+                "1"
+              ]
+            ],
+            "unexpected": true
+          },
+          "expected": {
+            "ok": false,
+            "value": null,
+            "error": "E_FIELDS"
+          },
+          "subject_success_credit": 0
+        },
+        {
+          "negative_id": "OP6936-P048-N2",
+          "request": {
+            "op": "aggregation_one_step_commutation",
+            "kernel": [
+              [
+                "0",
+                "0",
+                "0"
+              ],
+              [
+                "0",
+                "1/4",
+                "3/4"
+              ],
+              [
+                "0",
+                "0",
+                "1"
+              ]
+            ],
+            "partition": [
+              [
+                0,
+                1
+              ],
+              [
+                2
+              ]
+            ],
+            "distribution": [
+              "1/2",
+              "1/2",
+              "0"
+            ],
+            "quotient": [
+              [
+                "1/2",
+                "1/2"
+              ],
+              [
+                "0",
+                "1"
+              ]
+            ]
+          },
+          "expected": {
+            "ok": false,
+            "value": null,
+            "error": "E_STOCHASTIC"
+          },
+          "subject_success_credit": 0
+        }
+      ]
+    },
+    {
+      "proposal_id": "OP6936-P049",
+      "request": {
+        "op": "aggregation_one_step_commutation",
+        "kernel": [
+          [
+            "0",
+            "0",
+            "1",
+            "0"
+          ],
+          [
+            "0",
+            "0",
+            "0",
+            "1"
+          ],
+          [
+            "0",
+            "0",
+            "1",
+            "0"
+          ],
+          [
+            "1",
+            "0",
+            "0",
+            "0"
+          ]
+        ],
+        "partition": [
+          [
+            0,
+            1
+          ],
+          [
+            2,
+            3
+          ]
+        ],
+        "distribution": [
+          "1/2",
+          "1/2",
+          "0",
+          "0"
+        ],
+        "quotient": [
+          [
+            "0",
+            "1"
+          ],
+          [
+            "0",
+            "1"
+          ]
+        ]
+      },
+      "expected": {
+        "ok": true,
+        "value": {
+          "project_after_step": [
+            "0",
+            "1"
+          ],
+          "step_after_project": [
+            "0",
+            "1"
+          ],
+          "difference": [
+            "0",
+            "0"
+          ],
+          "equal_for_supplied_distribution": true,
+          "strongly_lumpable": false
+        },
+        "error": null
+      },
+      "adverse": [
+        {
+          "negative_id": "OP6936-P049-N1",
+          "request": {
+            "op": "aggregation_one_step_commutation",
+            "kernel": [
+              [
+                "0",
+                "0",
+                "1",
+                "0"
+              ],
+              [
+                "0",
+                "0",
+                "0",
+                "1"
+              ],
+              [
+                "0",
+                "0",
+                "1",
+                "0"
+              ],
+              [
+                "1",
+                "0",
+                "0",
+                "0"
+              ]
+            ],
+            "partition": [
+              [
+                0,
+                1
+              ],
+              [
+                2,
+                3
+              ]
+            ],
+            "distribution": [
+              "1/2",
+              "1/2",
+              "0",
+              "0"
+            ],
+            "quotient": [
+              [
+                "0",
+                "1"
+              ],
+              [
+                "0",
+                "1"
+              ]
+            ],
+            "unexpected": true
+          },
+          "expected": {
+            "ok": false,
+            "value": null,
+            "error": "E_FIELDS"
+          },
+          "subject_success_credit": 0
+        },
+        {
+          "negative_id": "OP6936-P049-N2",
+          "request": {
+            "op": "aggregation_one_step_commutation",
+            "kernel": [
+              [
+                "0",
+                "0",
+                "0",
+                "0"
+              ],
+              [
+                "0",
+                "0",
+                "0",
+                "1"
+              ],
+              [
+                "0",
+                "0",
+                "1",
+                "0"
+              ],
+              [
+                "1",
+                "0",
+                "0",
+                "0"
+              ]
+            ],
+            "partition": [
+              [
+                0,
+                1
+              ],
+              [
+                2,
+                3
+              ]
+            ],
+            "distribution": [
+              "1/2",
+              "1/2",
+              "0",
+              "0"
+            ],
+            "quotient": [
+              [
+                "0",
+                "1"
+              ],
+              [
+                "0",
+                "1"
+              ]
+            ]
+          },
+          "expected": {
+            "ok": false,
+            "value": null,
+            "error": "E_STOCHASTIC"
+          },
+          "subject_success_credit": 0
+        }
+      ]
+    },
+    {
+      "proposal_id": "OP6936-P050",
+      "request": {
+        "op": "aggregation_one_step_commutation",
+        "kernel": [
+          [
+            "0",
+            "1/2",
+            "1/2",
+            "0"
+          ],
+          [
+            "1/2",
+            "0",
+            "0",
+            "1/2"
+          ],
+          [
+            "1/4",
+            "0",
+            "3/4",
+            "0"
+          ],
+          [
+            "0",
+            "1/4",
+            "0",
+            "3/4"
+          ]
+        ],
+        "partition": [
+          [
+            0,
+            1
+          ],
+          [
+            2,
+            3
+          ]
+        ],
+        "distribution": [
+          "1/6",
+          "1/6",
+          "1/3",
+          "1/3"
+        ],
+        "quotient": [
+          [
+            "1/2",
+            "1/2"
+          ],
+          [
+            "1/4",
+            "3/4"
+          ]
+        ]
+      },
+      "expected": {
+        "ok": true,
+        "value": {
+          "project_after_step": [
+            "1/3",
+            "2/3"
+          ],
+          "step_after_project": [
+            "1/3",
+            "2/3"
+          ],
+          "difference": [
+            "0",
+            "0"
+          ],
+          "equal_for_supplied_distribution": true,
+          "strongly_lumpable": true
+        },
+        "error": null
+      },
+      "adverse": [
+        {
+          "negative_id": "OP6936-P050-N1",
+          "request": {
+            "op": "aggregation_one_step_commutation",
+            "kernel": [
+              [
+                "0",
+                "1/2",
+                "1/2",
+                "0"
+              ],
+              [
+                "1/2",
+                "0",
+                "0",
+                "1/2"
+              ],
+              [
+                "1/4",
+                "0",
+                "3/4",
+                "0"
+              ],
+              [
+                "0",
+                "1/4",
+                "0",
+                "3/4"
+              ]
+            ],
+            "partition": [
+              [
+                0,
+                1
+              ],
+              [
+                2,
+                3
+              ]
+            ],
+            "distribution": [
+              "1/6",
+              "1/6",
+              "1/3",
+              "1/3"
+            ],
+            "quotient": [
+              [
+                "1/2",
+                "1/2"
+              ],
+              [
+                "1/4",
+                "3/4"
+              ]
+            ],
+            "unexpected": true
+          },
+          "expected": {
+            "ok": false,
+            "value": null,
+            "error": "E_FIELDS"
+          },
+          "subject_success_credit": 0
+        },
+        {
+          "negative_id": "OP6936-P050-N2",
+          "request": {
+            "op": "aggregation_one_step_commutation",
+            "kernel": [
+              [
+                "0",
+                "0",
+                "0",
+                "0"
+              ],
+              [
+                "1/2",
+                "0",
+                "0",
+                "1/2"
+              ],
+              [
+                "1/4",
+                "0",
+                "3/4",
+                "0"
+              ],
+              [
+                "0",
+                "1/4",
+                "0",
+                "3/4"
+              ]
+            ],
+            "partition": [
+              [
+                0,
+                1
+              ],
+              [
+                2,
+                3
+              ]
+            ],
+            "distribution": [
+              "1/6",
+              "1/6",
+              "1/3",
+              "1/3"
+            ],
+            "quotient": [
+              [
+                "1/2",
+                "1/2"
+              ],
+              [
+                "1/4",
+                "3/4"
+              ]
+            ]
+          },
+          "expected": {
+            "ok": false,
+            "value": null,
+            "error": "E_STOCHASTIC"
+          },
+          "subject_success_credit": 0
+        }
+      ]
+    }
+  ],
+  "boundary": "Relational working language and bounded same-owner synthetic software only. No consciousness, personhood, identity continuity, qualification, independent agency, empirical GMUT confirmation, production THOS or Freed ID, professional, legal, cultural, affected-party or Maori authority, complete privacy or accessibility, exhaustive security, independent reproduction, AGI/ASI, Theory-of-Everything proof, canon, deployment or Stage 20 credit. Maori concepts remain under Maori authority. NOT_READY_FOR_STAGE_20."
+}
