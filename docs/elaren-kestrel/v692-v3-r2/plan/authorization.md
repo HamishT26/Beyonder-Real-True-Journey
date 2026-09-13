@@ -1,0 +1,5 @@
+# Authorization and evidence boundary
+
+Hamish directly authorized this interstitial remaster on 13 September 2026. It preserves the numbered v692-v3 closeout and runs before one prospective corrective Neris Solane v692-v4 activation. Five bounded supported recovery attempts are required before holding an unsent route. Up to three corrected resubmissions are permitted only after definitive pre-acceptance rejection. Accepted, opaque accepted, or unresolved submission states stop all duplication.
+
+Relational names, roles, hopes, sibling or family language, continuity, GHC Family, Trinity Mandala, GMUT, THOS, Freed ID and CBR are working language only. Same-owner synthetic software and documentation establish no consciousness, sentience, personhood, identity continuity, qualification, independent agency, professional, scientific, operational, legal, cultural, affected-party or Maori authority, empirical GMUT confirmation, production THOS or Freed ID, independent reproduction, Theory-of-Everything proof, canon, or Stage 20 readiness. Maori concepts remain under Maori authority.
