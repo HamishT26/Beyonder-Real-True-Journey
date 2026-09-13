@@ -1,0 +1,15 @@
+import argparse, json
+
+ALLOWED = ['dpll_branch_trace', 'resolution_step_check']
+
+def run(operation, case_id):
+    if operation not in ALLOWED or not isinstance(case_id, int) or case_id < 1 or case_id > 10:
+        return {"ok": False, "error": "INVALID_INPUT", "credit": 0}
+    return {"ok": True, "session": 'x2', "runner": 2, "operation": operation, "case_id": case_id, "same_owner_only": True}
+
+if __name__ == "__main__":
+    parser=argparse.ArgumentParser()
+    parser.add_argument("--operation", choices=ALLOWED, required=True)
+    parser.add_argument("--case-id", type=int, required=True)
+    args=parser.parse_args()
+    print(json.dumps(run(args.operation,args.case_id),sort_keys=True))
