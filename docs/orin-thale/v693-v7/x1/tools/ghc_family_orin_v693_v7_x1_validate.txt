@@ -1,0 +1,75 @@
+"use strict";
+
+const fs = require("fs");
+const path = require("path");
+const crypto = require("crypto");
+const vm = require("vm");
+
+const repo = process.env.ORIN_REPO;
+if (!repo) throw new Error("ORIN_REPO is required");
+const baseRel = "docs/orin-thale/v693-v7";
+const base = path.join(repo, ...baseRel.split("/"));
+const x1 = path.join(base, "x1");
+const checks = [];
+function check(name, pass, detail = null) { checks.push({ name, pass: Boolean(pass), detail }); }
+function json(rel) { return JSON.parse(fs.readFileSync(path.join(base, ...rel.split("/")), "utf8")); }
+function stable(value) { if (Array.isArray(value)) return value.map(stable); if (value && typeof value === "object") return Object.fromEntries(Object.keys(value).sort().map((key) => [key, stable(value[key])])); return value; }
+function canon(value) { return JSON.stringify(stable(value)); }
+function loadTextModule(file) { const module = { exports: {} }; new Function("require", "module", "exports", fs.readFileSync(file, "utf8"))(require, module, module.exports); return module.exports; }
+function list(dir) { const out = []; for (const entry of fs.readdirSync(dir, { withFileTypes: true })) { const full = path.join(dir, entry.name); if (entry.isDirectory()) out.push(...list(full)); else out.push(full); } return out; }
+
+const plan = json("plan/proposals.json");
+const phaseTruth = json("x1/phase-truth.json");
+const results = json("x1/results/proposal-results.json");
+const portfolio = json("x1/evidence/portfolio-results.json");
+const skills = json("x1/evidence/skill-receipts.json");
+const runners = json("x1/evidence/runner-receipts.json");
+const methodflow = json("x1/methodflow-ledger.json");
+const manifest = json("x1/manifest.json");
+const allowlist = json("x1/staged-allowlist.json");
+const core = loadTextModule(path.join(x1, "discrepancy-core.txt"));
+const x1Proposals = plan.proposals.filter((row) => row.session === "x1");
+
+check("planning anchor", phaseTruth.planning === "completed_immutable" && methodflow.source_commit === "f3b35b450af2bd472c8af940778d8819a85316b0");
+check("x1 proposal count", results.count === 50 && results.rows.length === 50 && x1Proposals.length === 50);
+check("x1 core outcome", results.outcomes.completed === 50 && results.outcomes.represented === 0 && results.outcomes.open_gap === 0 && results.outcomes.exact_gate === 0);
+check("proposal full envelopes", results.rows.every((row) => row.envelope_pass && row.request_nonmutation && row.observed_outcome === "completed"));
+check("runtime exact replay against frozen definitions", x1Proposals.every((row) => canon(core.execute(row.request)) === canon(row.expected_output)));
+check("runtime operation scope", core.operations.length === 10 && new Set(core.operations).size === 10);
+check("safe checks", portfolio.safe.count === 100 && portfolio.safe.passed === 100 && portfolio.safe.rows.every((row) => row.pass));
+check("candidate subjects and refusals", portfolio.candidate.count === 100 && portfolio.candidate.failed_subjects_retained === 100 && portfolio.candidate.refusal_checks_passed === 100 && portfolio.candidate.rows.every((row) => row.original_subject_success_credit === 0 && row.refusal_pass));
+check("CFR checks and failed subjects", portfolio.clean_fix_refine.count === 100 && portfolio.clean_fix_refine.passed === 100 && portfolio.clean_fix_refine.altered_expected_subjects_retained === 50);
+check("ten skill validations", skills.count === 10 && skills.passed === 10 && skills.rows.every((row) => row.quick_valid && row.smoke_pass));
+check("five runner validations", runners.count === 5 && runners.passed === 5 && runners.rows.every((row) => row.compile_pass && row.positive.pass && row.negative.pass && row.negative.original_subject_success_credit === 0));
+check("Method Flow arithmetic", methodflow.counts.methods === methodflow.methods.length && methodflow.counts.witnesses === methodflow.witnesses.length && methodflow.counts.pass + methodflow.counts.fail === methodflow.counts.witnesses);
+check("Method Flow expected counts", methodflow.counts.methods === 9 && methodflow.counts.witnesses === 493 && methodflow.counts.pass === 334 && methodflow.counts.fail === 159 && methodflow.counts.projected_negative_lineage === 2485);
+check("Method Flow backlinks", methodflow.witnesses.every((row) => methodflow.methods.some((method) => method.method_id === row.method_id)));
+check("all failed witnesses zero-credit retained", methodflow.witnesses.filter((row) => row.result === "fail").every((row) => row.retained_negative_ids.length > 0));
+check("same-owner evidence only", methodflow.witnesses.every((row) => row.same_owner_only === true && row.independent_reproduction === false));
+check("route held and canonical absent", phaseTruth.route === "PREPARED_NOT_SENT" && phaseTruth.canonical_invocations === 0 && !fs.existsSync(path.join(base, "x2")) && !fs.existsSync(path.join(base, "final")));
+check("exact and blocked packets unexecuted", phaseTruth.exact_packets_executed === 0 && phaseTruth.blocked_packets_executed === 0);
+check("manifest exclusions", manifest.declared_exclusions.length === 3 && manifest.hash_domain.includes("working_tree_bytes"));
+const manifestIssues = [];
+for (const row of manifest.bindings) { const full = path.join(repo, ...row.path.split("/")); if (!fs.existsSync(full)) manifestIssues.push(`${row.path}:missing`); else { const bytes = fs.readFileSync(full); if (bytes.length !== row.bytes) manifestIssues.push(`${row.path}:bytes`); if (crypto.createHash("sha256").update(bytes).digest("hex") !== row.sha256) manifestIssues.push(`${row.path}:sha256`); } }
+check("x1 manifest parity", manifestIssues.length === 0, manifestIssues);
+check("allowlist owner stage", allowlist.paths.every((row) => row.startsWith(`${baseRel}/x1/`)) && allowlist.x2_and_final_forbidden === true);
+const files = list(x1);
+check("x1 file ceiling", files.length < 2000, files.length);
+check("authorized x1 file types", files.every((file) => [".json", ".md", ".txt", ".html", ".tex"].includes(path.extname(file).toLowerCase())));
+for (const file of files.filter((file) => path.extname(file).toLowerCase() === ".txt")) { try { new vm.Script(`(function(require,module,exports){\n${fs.readFileSync(file, "utf8")}\n})`, { filename: file }); } catch (error) { check(`compile ${path.relative(base, file)}`, false, error.message); } }
+check("all trusted TXT compiles", !checks.some((row) => row.name.startsWith("compile ") && !row.pass));
+const allText = files.map((file) => fs.readFileSync(file, "utf8")).join("\n");
+const privacy = [
+  ["uuid", /\b[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}\b/ig],
+  ["credentials", /(?:api[_-]?key|password|secret|bearer)\s*[:=]\s*[\"']?[A-Za-z0-9_\-]{12,}/ig],
+  ["private_c", /C:\\Users\\[^\s\"']+/ig],
+  ["private_d", /D:\\GHC-Archives\\[^\s\"']+/ig],
+  ["email", /\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}\b/ig]
+].map(([kind, pattern]) => ({ kind, candidates: [...allText.matchAll(pattern)].map((m) => m[0]).slice(0, 10) }));
+check("zero confirmed five-class privacy candidates", privacy.every((row) => row.candidates.length === 0), privacy);
+check("bounded code review", !/\b(?:eval|child_process\.exec\s*\(|shell\s*:\s*true)\b/.test(fs.readFileSync(path.join(x1, "discrepancy-core.txt"), "utf8")));
+const failed = checks.filter((row) => !row.pass);
+const receipt = { schema: "ghc.family.x1-validation.v8", owner: "Orin Thale", phase: "v693-v7", stage: "x1_execution", status: failed.length ? "INVALID_X1_EXECUTION" : "VALID_X1_EXECUTION", checks_total: checks.length, checks_passed: checks.length - failed.length, checks_failed: failed.length, checks, owner_tests: { total: 50, passed: results.rows.filter((row) => row.envelope_pass && row.request_nonmutation).length }, strict_json_documents: files.filter((file) => path.extname(file).toLowerCase() === ".json").length, trusted_txt_files: files.filter((file) => path.extname(file).toLowerCase() === ".txt").length, privacy_confirmed_hits: 0, bounded_code_findings: 0, same_owner_only: true, independent_reproduction: false, canonical_invocations: 0, route: "PREPARED_NOT_SENT", terminal_verdict: "NOT_READY_FOR_STAGE_20" };
+fs.writeFileSync(path.join(x1, "validation.json"), JSON.stringify(receipt, null, 2) + "\n", "utf8");
+process.stdout.write(JSON.stringify({ status: receipt.status, checks_total: receipt.checks_total, checks_passed: receipt.checks_passed, checks_failed: receipt.checks_failed, owner_tests: receipt.owner_tests }, null, 2) + "\n");
+process.exit(failed.length ? 2 : 0);

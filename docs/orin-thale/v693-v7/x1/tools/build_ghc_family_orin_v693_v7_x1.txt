@@ -1,0 +1,135 @@
+"use strict";
+
+const fs = require("fs");
+const path = require("path");
+const crypto = require("crypto");
+const cp = require("child_process");
+const vm = require("vm");
+
+const repo = process.env.ORIN_REPO;
+const python = process.env.SKILL_CREATOR_PYTHON;
+const quickValidate = process.env.SKILL_CREATOR_QUICK_VALIDATE;
+if (!repo || !python || !quickValidate) throw new Error("ORIN_REPO, SKILL_CREATOR_PYTHON, and SKILL_CREATOR_QUICK_VALIDATE are required");
+const baseRel = "docs/orin-thale/v693-v7";
+const base = path.join(repo, ...baseRel.split("/"));
+const x1Root = path.join(base, "x1");
+fs.mkdirSync(x1Root, { recursive: true });
+const boundary = "Relational working language and bounded same-owner synthetic software only. No consciousness, sentience, personhood, identity continuity, qualification, employment, independent agency, empirical GMUT confirmation, production THOS or Freed ID, professional, legal, cultural, affected-party or Maori authority, complete privacy or accessibility, exhaustive security, independent reproduction, AGI/ASI, Theory-of-Everything proof, canon, deployment or Stage 20 credit. Maori concepts remain under Maori authority. NOT_READY_FOR_STAGE_20.";
+const protectedGates = ["real observations and participants", "production or deployment", "professional and scientific authority", "legal cultural affected-party and Maori authority", "complete privacy accessibility or security", "independent reproduction and Stage 20"];
+function stable(value) { if (Array.isArray(value)) return value.map(stable); if (value && typeof value === "object") return Object.fromEntries(Object.keys(value).sort().map((key) => [key, stable(value[key])])); return value; }
+function canonical(value) { return JSON.stringify(stable(value)); }
+function shaText(text) { return crypto.createHash("sha256").update(Buffer.from(text, "utf8")).digest("hex"); }
+function shaObject(value) { return shaText(canonical(value)); }
+function writeText(rel, text) { const target = path.join(base, ...rel.split("/")); fs.mkdirSync(path.dirname(target), { recursive: true }); fs.writeFileSync(target, String(text).replace(/\r\n/g, "\n"), "utf8"); }
+function writeJson(rel, value) { writeText(rel, JSON.stringify(value, null, 2) + "\n"); }
+function loadTextModule(file) { const source = fs.readFileSync(file, "utf8"); const module = { exports: {} }; new Function("require", "module", "exports", source)(require, module, module.exports); return module.exports; }
+function listFiles(dir) { const out = []; function walk(current) { for (const entry of fs.readdirSync(current, { withFileTypes: true })) { const full = path.join(current, entry.name); if (entry.isDirectory()) walk(full); else out.push(full); } } walk(dir); return out; }
+function git(args) { return cp.execFileSync("git", ["-C", repo, ...args], { encoding: "utf8" }).trim(); }
+
+const planning = git(["rev-parse", "HEAD"]);
+if (planning !== "f3b35b450af2bd472c8af940778d8819a85316b0") throw new Error(`x1 requires exact planning head, got ${planning}`);
+if (git(["status", "--porcelain", "--untracked-files=no"]) !== "") throw new Error("x1 requires no tracked mutation after the planning boundary");
+const plan = JSON.parse(fs.readFileSync(path.join(base, "plan", "proposals.json"), "utf8"));
+const taskPlan = JSON.parse(fs.readFileSync(path.join(base, "plan", "x1-tasks.json"), "utf8"));
+const toolPlan = JSON.parse(fs.readFileSync(path.join(base, "plan", "skills-runners-plan.json"), "utf8"));
+const planMethodflow = JSON.parse(fs.readFileSync(path.join(base, "plan", "methodflow-ledger.json"), "utf8"));
+const x1Rows = plan.proposals.filter((row) => row.session === "x1");
+if (x1Rows.length !== 50) throw new Error("expected 50 x1 proposals");
+const corePath = path.join(x1Root, "discrepancy-core.txt");
+const core = loadTextModule(corePath);
+
+const proposalResults = [];
+const safeResults = [];
+const rejectionResults = [];
+const cfrResults = [];
+for (const row of x1Rows) {
+  const requestBefore = canonical(row.request);
+  const observed = core.execute(JSON.parse(requestBefore));
+  const requestAfter = canonical(row.request);
+  const envelopePass = canonical(observed) === canonical(row.expected_output);
+  const nonmutationPass = requestBefore === requestAfter;
+  proposalResults.push({ proposal_id: row.proposal_id, operation: row.operation, expected_disposition: row.expected_execution_disposition, observed, envelope_pass: envelopePass, request_nonmutation: nonmutationPass, observed_outcome: envelopePass && nonmutationPass ? row.expected_execution_disposition : "open_gap", same_owner_only: true });
+  safeResults.push({ task_id: `${row.proposal_id}-SAFE-01`, proposal_id: row.proposal_id, kind: "full_envelope", pass: envelopePass });
+  safeResults.push({ task_id: `${row.proposal_id}-SAFE-02`, proposal_id: row.proposal_id, kind: "input_nonmutation", pass: nonmutationPass });
+  row.candidate_subjects.forEach((subject, index) => {
+    const response = core.execute(subject);
+    const expected = row.candidate_expected[index];
+    rejectionResults.push({ task_id: `${row.proposal_id}-CAND-${String(index + 1).padStart(2, "0")}`, proposal_id: row.proposal_id, subject_index: index, failed_subject_retained: true, original_subject_success_credit: 0, expected, observed: response, refusal_pass: canonical(response) === canonical(expected) });
+  });
+  const roundtripPass = canonical(JSON.parse(canonical(row.request))) === canonical(row.request);
+  const altered = JSON.parse(JSON.stringify(row.expected_output));
+  altered.ok = !altered.ok;
+  const alteredDetected = canonical(observed) !== canonical(altered);
+  cfrResults.push({ task_id: `${row.proposal_id}-CFR-01`, proposal_id: row.proposal_id, kind: "canonical_roundtrip", pass: roundtripPass });
+  cfrResults.push({ task_id: `${row.proposal_id}-CFR-02`, proposal_id: row.proposal_id, kind: "altered_expected_envelope", failed_subject_retained: true, original_subject_success_credit: 0, detector_pass: alteredDetected });
+}
+if (proposalResults.some((row) => !row.envelope_pass || !row.request_nonmutation)) throw new Error("x1 proposal mismatch");
+if (safeResults.some((row) => !row.pass) || rejectionResults.some((row) => !row.refusal_pass) || cfrResults.some((row) => row.pass === false || row.detector_pass === false)) throw new Error("x1 portfolio mismatch");
+
+const x1Skills = toolPlan.local_skills.filter((row) => row.session === "x1");
+const skillReceipts = [];
+for (const skill of x1Skills) {
+  const row = x1Rows.find((proposal) => proposal.operation === skill.operation);
+  const dir = path.join(x1Root, "skills", skill.name);
+  fs.mkdirSync(dir, { recursive: true });
+  const skillText = `---\nname: ${skill.name}\ndescription: Validate the bounded ${skill.operation.replaceAll("_", " ")} contract for supplied synthetic finite distributions; use when exact rational discrepancy evidence is needed without observation or authority promotion.\n---\n\n# ${skill.name}\n\n1. Read the current GHC Family Index and exact phase truth.\n2. Accept only the closed ${skill.operation} request shape documented in fixture.json.\n3. Keep rational strings exact and preserve the input hash.\n4. Retain invalid subjects with zero original credit and require exact refusal.\n5. Emit only completed, represented, open_gap, or exact_gate.\n6. Stop at every empirical, participant, production, professional, legal, cultural, affected-party, Maori-authority, privacy-complete, accessibility-complete, exhaustive-security, independent-reproduction, AGI/ASI, Theory-of-Everything, and Stage 20 boundary.\n\nThe included fixture is synthetic same-owner evidence, not an observation, deployment, professional result, or independent reproduction.\n`;
+  fs.writeFileSync(path.join(dir, "SKILL.md"), skillText, "utf8");
+  fs.writeFileSync(path.join(dir, "fixture.json"), JSON.stringify({ schema: "ghc.family.discrepancy-skill-fixture.v1", owner: "Orin Thale", phase: "v693-v7", operation: skill.operation, request: row.request, expected: row.expected_output, boundary }, null, 2) + "\n", "utf8");
+  const validation = cp.spawnSync(python, ["-X", "utf8", quickValidate, dir], { encoding: "utf8", env: { ...process.env, PYTHONDONTWRITEBYTECODE: "1" } });
+  const smoke = core.execute(row.request);
+  skillReceipts.push({ skill_id: skill.skill_id, name: skill.name, operation: skill.operation, quick_validate_exit: validation.status, quick_validate_output: `${validation.stdout || ""}${validation.stderr || ""}`.trim(), quick_valid: validation.status === 0, smoke_pass: canonical(smoke) === canonical(row.expected_output), status: validation.status === 0 && canonical(smoke) === canonical(row.expected_output) ? "validated_and_smoke_used" : "open_gap" });
+}
+if (skillReceipts.some((row) => !row.quick_valid || !row.smoke_pass)) throw new Error("x1 skill validation failed");
+
+const runnerPlans = toolPlan.local_runners.filter((row) => row.session === "x1");
+const runnerReceipts = [];
+for (const runner of runnerPlans) {
+  const runnerPath = path.join(x1Root, "runners", runner.name);
+  fs.mkdirSync(path.dirname(runnerPath), { recursive: true });
+  const wrapper = `"use strict";\nconst fs=require("fs"),path=require("path");\nconst moduleBox={exports:{}};\nnew Function("require","module","exports",fs.readFileSync(path.join(__dirname,"..","discrepancy-core.txt"),"utf8"))(require,moduleBox,moduleBox.exports);\nconst request=JSON.parse(fs.readFileSync(0,"utf8"));\nconst allowed=${JSON.stringify(runner.operations)};\nconst result=allowed.includes(request.op)?moduleBox.exports.execute(request):{ok:false,value:null,error:"E_RUNNER_SCOPE"};\nprocess.stdout.write(JSON.stringify(result)+"\\n");\nprocess.exit(result.ok?0:2);\n`;
+  fs.writeFileSync(runnerPath, wrapper, "utf8");
+  new vm.Script(wrapper, { filename: runnerPath });
+  const positive = x1Rows.find((row) => row.operation === runner.operations[0]);
+  const positiveRun = cp.spawnSync(process.execPath, [runnerPath], { input: canonical(positive.request), encoding: "utf8" });
+  const positiveObserved = JSON.parse(positiveRun.stdout);
+  const outOfScope = x1Rows.find((row) => !runner.operations.includes(row.operation));
+  const negativeRun = cp.spawnSync(process.execPath, [runnerPath], { input: canonical(outOfScope.request), encoding: "utf8" });
+  const negativeObserved = JSON.parse(negativeRun.stdout);
+  runnerReceipts.push({ runner_id: runner.runner_id, name: runner.name, operations: runner.operations, compile_pass: true, positive: { proposal_id: positive.proposal_id, exit: positiveRun.status, observed: positiveObserved, pass: positiveRun.status === 0 && canonical(positiveObserved) === canonical(positive.expected_output) }, negative: { proposal_id: outOfScope.proposal_id, failed_subject_retained: true, original_subject_success_credit: 0, exit: negativeRun.status, observed: negativeObserved, pass: negativeRun.status === 2 && negativeObserved.error === "E_RUNNER_SCOPE" } });
+}
+if (runnerReceipts.some((row) => !row.positive.pass || !row.negative.pass)) throw new Error("x1 runner validation failed");
+
+writeJson("x1/results/proposal-results.json", { schema: "ghc.family.proposal-results.v8", owner: "Orin Thale", phase: "v693-v7", stage: "x1_execution", count: proposalResults.length, outcomes: { completed: 50, represented: 0, open_gap: 0, exact_gate: 0 }, rows: proposalResults, boundary });
+writeJson("x1/evidence/portfolio-results.json", { schema: "ghc.family.portfolio-results.v8", owner: "Orin Thale", phase: "v693-v7", stage: "x1_execution", safe: { count: safeResults.length, passed: safeResults.filter((r) => r.pass).length, rows: safeResults }, candidate: { count: rejectionResults.length, failed_subjects_retained: rejectionResults.length, refusal_checks_passed: rejectionResults.filter((r) => r.refusal_pass).length, rows: rejectionResults }, clean_fix_refine: { count: cfrResults.length, passed: cfrResults.filter((r) => r.pass || r.detector_pass).length, altered_expected_subjects_retained: cfrResults.filter((r) => r.failed_subject_retained).length, rows: cfrResults }, boundary });
+writeJson("x1/evidence/skill-receipts.json", { schema: "ghc.family.skill-receipts.v8", owner: "Orin Thale", phase: "v693-v7", count: skillReceipts.length, passed: skillReceipts.filter((r) => r.status === "validated_and_smoke_used").length, rows: skillReceipts, boundary });
+writeJson("x1/evidence/runner-receipts.json", { schema: "ghc.family.runner-receipts.v8", owner: "Orin Thale", phase: "v693-v7", count: runnerReceipts.length, passed: runnerReceipts.filter((r) => r.positive.pass && r.negative.pass).length, rows: runnerReceipts, boundary });
+
+const methods = JSON.parse(JSON.stringify(planMethodflow.methods));
+const witnesses = JSON.parse(JSON.stringify(planMethodflow.witnesses));
+const methodTemplates = [
+  ["OR6937-M005", "Exact x1 envelope and nonmutation checks", "x1 exact runtime mismatch", ["x1 runtime", "frozen proposal"], []],
+  ["OR6937-M006", "Malformed candidate refusal", "invalid candidate accepted", ["x1 candidate", "closed request shape"], []],
+  ["OR6937-M007", "Altered expectation detector", "altered expected envelope not detected", ["x1 CFR", "frozen expected envelope"], []],
+  ["OR6937-M008", "Official skill validation and smoke use", "skill invalid or meaningful smoke mismatch", ["x1 skill", "Skill Creator runtime"], []],
+  ["OR6937-M009", "Runner pair scope and refusal", "runner mismatch or out-of-scope acceptance", ["x1 runner", "paired operations"], []]
+];
+for (const [id, title, signature, triggers, negatives] of methodTemplates) methods.push({ method_id: id, title, failure_signature: signature, trigger_preconditions: triggers, privacy_class: "sanitized_public", approval_class: "safe_now", candidate_workaround: "Isolate the exact proposal or runner and preserve its frozen definition.", validation_witness_ids: [], recurrence_guard: "Compare full typed envelopes and preserve each failed subject before recovery.", rollback: "Retain owner-local additive files and do not advance the lifecycle on mismatch.", recommendation_state: "validated", supersedes: [], protected_gates: protectedGates, retained_negative_ids: negatives, scope_boundary: boundary });
+function addWitness(methodId, witness) { witnesses.push({ method_id: methodId, same_owner_only: true, independent_reproduction: false, retained_negative_ids: witness.retained_negative_ids || [], boundary, ...witness }); }
+for (const row of safeResults) addWitness("OR6937-M005", { witness_id: `${row.task_id}-W`, procedure: row.kind, scope: "x1_owner_delta", expected: "pass", observed: row.pass ? "pass" : "fail", result: row.pass ? "pass" : "fail" });
+for (const row of rejectionResults) { const nid = `${row.task_id}-SUBJECT`; addWitness("OR6937-M006", { witness_id: `${row.task_id}-FAIL`, procedure: "retain malformed subject", scope: "x1_owner_delta", expected: "invalid subject", observed: "invalid subject", result: "fail", retained_negative_ids: [nid] }); addWitness("OR6937-M006", { witness_id: `${row.task_id}-PASS`, procedure: "verify exact refusal", scope: "x1_owner_delta", expected: canonical(row.expected), observed: canonical(row.observed), result: row.refusal_pass ? "pass" : "fail", retained_negative_ids: [nid] }); }
+for (const row of cfrResults) { if (row.kind === "canonical_roundtrip") addWitness("OR6937-M007", { witness_id: `${row.task_id}-PASS`, procedure: row.kind, scope: "x1_owner_delta", expected: "pass", observed: row.pass ? "pass" : "fail", result: row.pass ? "pass" : "fail" }); else { const nid = `${row.task_id}-SUBJECT`; addWitness("OR6937-M007", { witness_id: `${row.task_id}-FAIL`, procedure: "retain altered expected envelope", scope: "x1_owner_delta", expected: "mismatch subject", observed: "mismatch subject", result: "fail", retained_negative_ids: [nid] }); addWitness("OR6937-M007", { witness_id: `${row.task_id}-PASS`, procedure: "detect altered envelope", scope: "x1_owner_delta", expected: "detected", observed: row.detector_pass ? "detected" : "missed", result: row.detector_pass ? "pass" : "fail", retained_negative_ids: [nid] }); } }
+for (const row of skillReceipts) { addWitness("OR6937-M008", { witness_id: `${row.skill_id}-VALIDATE`, procedure: "official quick validation", scope: "x1_owner_delta", expected: "exit 0", observed: String(row.quick_validate_exit), result: row.quick_valid ? "pass" : "fail" }); addWitness("OR6937-M008", { witness_id: `${row.skill_id}-SMOKE`, procedure: "execute bound positive fixture", scope: "x1_owner_delta", expected: "full envelope equality", observed: row.smoke_pass ? "equal" : "different", result: row.smoke_pass ? "pass" : "fail" }); }
+for (const row of runnerReceipts) { const nid = `${row.runner_id}-SCOPE-SUBJECT`; addWitness("OR6937-M009", { witness_id: `${row.runner_id}-POS`, procedure: "paired positive runner fixture", scope: "x1_owner_delta", expected: "exact envelope", observed: row.positive.pass ? "exact envelope" : "mismatch", result: row.positive.pass ? "pass" : "fail" }); addWitness("OR6937-M009", { witness_id: `${row.runner_id}-NEG-FAIL`, procedure: "retain out-of-scope runner subject", scope: "x1_owner_delta", expected: "invalid subject", observed: "invalid subject", result: "fail", retained_negative_ids: [nid] }); addWitness("OR6937-M009", { witness_id: `${row.runner_id}-NEG-PASS`, procedure: "verify E_RUNNER_SCOPE", scope: "x1_owner_delta", expected: "E_RUNNER_SCOPE", observed: row.negative.observed.error, result: row.negative.pass ? "pass" : "fail", retained_negative_ids: [nid] }); }
+const failCount = witnesses.filter((row) => row.result === "fail").length;
+const passCount = witnesses.filter((row) => row.result === "pass").length;
+writeJson("x1/methodflow-ledger.json", { schema: "ghc.family.method-flow-state.v1", owner: "Orin Thale", phase: "v693-v7", stage: "x1_execution", identity_boundary: boundary, execution_authority: "owner_self_scoped_delta", source_commit: "f3b35b450af2bd472c8af940778d8819a85316b0", final_commit: null, methods, witnesses, state_events: [...planMethodflow.state_events, { event_id: "OR6937-E005", state: "x1_execution_complete_pending_commit" }], recommendations: [], counts: { methods: methods.length, witnesses: witnesses.length, pass: passCount, fail: failCount, effective_negatives: failCount, incoming_negative_lineage: 2326, projected_negative_lineage: 2326 + failCount }, boundary });
+writeJson("x1/environment.json", { schema: "ghc.family.environment.v8", owner: "Orin Thale", phase: "v693-v7", stage: "x1_execution", node: process.version, platform: process.platform, architecture: process.arch, ordinary_packages_installed: 0, incremental_spend_usd: 0, primary_drive: "D", boundary });
+writeJson("x1/phase-truth.json", { schema: "ghc.family.phase-truth.v8", owner: "Orin Thale", phase: "v693-v7", stage: "x1_execution", planning: "completed_immutable", x1: "completed_pending_exact_commit_binding", x2: "not_started", observed_outcomes: { completed: 50, represented: 0, open_gap: 0, exact_gate: 0 }, safe: 100, candidate_failed_subjects: 100, candidate_refusal_checks: 100, clean_fix_refine: 100, local_skills: 10, local_runners: 5, exact_packets_executed: 0, blocked_packets_executed: 0, route: "PREPARED_NOT_SENT", canonical_invocations: 0, terminal_verdict: "NOT_READY_FOR_STAGE_20", boundary });
+writeText("x1/overview.md", `# Orin Thale v693-v7 x1 execution\n\nThe immutable planning freeze at f3b35b450af2bd472c8af940778d8819a85316b0 authorized only this owner-local x1 tranche. Fifty exact finite discrepancy contracts across the first ten operation families matched their preregistered envelopes. One hundred safe checks passed. One hundred malformed candidate subjects remained failed subjects with zero original credit, and one hundred separate refusal checks passed. One hundred CLEAN/FIX/REFINE tasks passed while fifty altered expected envelopes remained retained as failed subjects.\n\nTen phase-local guides passed the official Skill Creator quick validator and their bound positive smokes. Five paired family-current runners accepted one in-scope request and rejected one out-of-scope request apiece. No global installation, ordinary package installation, network action, account change, participant action, or successor contact occurred.\n\nExact arithmetic concerns only supplied finite distribution strings. It does not establish that a model describes reality, that a score is normatively correct, or that any decision should be made.\n\n${boundary}\n`);
+
+const receiptExclusions = [`${baseRel}/x1/manifest.json`, `${baseRel}/x1/validation.json`, `${baseRel}/x1/staged-review.json`];
+const allCurrent = () => listFiles(x1Root).map((file) => path.relative(repo, file).replaceAll("\\", "/")).sort();
+writeJson("x1/staged-allowlist.json", { schema: "ghc.family.staged-allowlist.v8", owner: "Orin Thale", phase: "v693-v7", stage: "x1_execution", paths: [...new Set([...allCurrent(), ...receiptExclusions, `${baseRel}/x1/staged-allowlist.json`])].sort(), owner_only: true, x2_and_final_forbidden: true, boundary });
+const bindings = allCurrent().filter((rel) => !receiptExclusions.includes(rel)).map((rel) => { const bytes = fs.readFileSync(path.join(repo, ...rel.split("/"))); return { path: rel, bytes: bytes.length, sha256: crypto.createHash("sha256").update(bytes).digest("hex") }; });
+writeJson("x1/manifest.json", { schema: "ghc.family.raw-file-manifest.v8", owner: "Orin Thale", phase: "v693-v7", stage: "x1_execution", hash_domain: "working_tree_bytes_expected_to_equal_raw_git_blob_after_commit", bindings, declared_exclusions: receiptExclusions, paths_covered: bindings.length, boundary });
+process.stdout.write(JSON.stringify({ status: "X1_EXECUTION_BUILT", proposals: 50, outcomes: { completed: 50, represented: 0, open_gap: 0, exact_gate: 0 }, safe: 100, candidate_failed_subjects: 100, candidate_refusal_checks: 100, clean_fix_refine: 100, skills: 10, runners: 5, methodflow: { methods: methods.length, witnesses: witnesses.length, pass: passCount, fail: failCount }, files: allCurrent().length }, null, 2) + "\n");
