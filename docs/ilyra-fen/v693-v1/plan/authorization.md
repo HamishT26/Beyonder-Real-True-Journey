@@ -1,0 +1,5 @@
+# Ilyra Fen v693-v1
+
+Hamish's current v8 sequential authority activates this existing exact-title task through Talen Briar's one acknowledged v692-v8 delivery. This owner phase uses one fresh additive sparse D-first lane from Talen's exact final. Planning freezes before x1; x1 freezes before x2; final closeout remains separate. No source or sibling lane may be mutated. Auren Lark v693-v2 is prospective only and remains uncontacted until Ilyra's own exact-final canonical success and fresh route guards. No task creation, fork, delegation, substitute, standby contact, model change, early successor contact, or reset redemption.
+
+Same-owner finite synthetic software and documentation evidence only; not independent reproduction, empirical GMUT confirmation, production THOS or Freed ID, professional, legal, cultural, affected-party or Maori authority, complete privacy or accessibility, exhaustive security, AGI/ASI, consciousness, personhood, identity continuity, Theory-of-Everything proof, canon, deployment or Stage 20 readiness.

@@ -1,0 +1,245 @@
+{
+  "local_skills": [
+    {
+      "name": "ilyra-graph-shape",
+      "operation": "graph_shape",
+      "stage": "x1",
+      "guidance": "Summarize exact node and edge shape while retaining isolated obligations."
+    },
+    {
+      "name": "ilyra-topological-order",
+      "operation": "topological_order",
+      "stage": "x1",
+      "guidance": "Produce the deterministic index-stable topological order."
+    },
+    {
+      "name": "ilyra-reachability-matrix",
+      "operation": "reachability_matrix",
+      "stage": "x1",
+      "guidance": "Materialize reflexive reachability for the declared obligation DAG."
+    },
+    {
+      "name": "ilyra-ancestor-sets",
+      "operation": "ancestor_sets",
+      "stage": "x1",
+      "guidance": "List each obligation's strict upstream dependencies."
+    },
+    {
+      "name": "ilyra-descendant-sets",
+      "operation": "descendant_sets",
+      "stage": "x1",
+      "guidance": "List each obligation's strict downstream dependants."
+    },
+    {
+      "name": "ilyra-minimal-obligations",
+      "operation": "minimal_obligations",
+      "stage": "x1",
+      "guidance": "Identify obligations with no declared predecessor."
+    },
+    {
+      "name": "ilyra-maximal-obligations",
+      "operation": "maximal_obligations",
+      "stage": "x1",
+      "guidance": "Identify obligations with no declared successor."
+    },
+    {
+      "name": "ilyra-antichain-frontiers",
+      "operation": "antichain_frontiers",
+      "stage": "x1",
+      "guidance": "Partition obligations into deterministic antichain frontiers."
+    },
+    {
+      "name": "ilyra-path-witness",
+      "operation": "path_witness",
+      "stage": "x1",
+      "guidance": "Return a shortest deterministic dependency path or explicit absence."
+    },
+    {
+      "name": "ilyra-transitive-reduction",
+      "operation": "transitive_reduction",
+      "stage": "x1",
+      "guidance": "Remove only transitively redundant edges while preserving reachability."
+    },
+    {
+      "name": "ilyra-dual-order-projection",
+      "operation": "dual_order_projection",
+      "stage": "x2",
+      "guidance": "Project the exact reversed obligation order without authority promotion."
+    },
+    {
+      "name": "ilyra-dependency-depth",
+      "operation": "dependency_depth",
+      "stage": "x2",
+      "guidance": "Compute longest dependency depth from a declared minimal obligation."
+    },
+    {
+      "name": "ilyra-critical-path-witness",
+      "operation": "critical_path_witness",
+      "stage": "x2",
+      "guidance": "Return one deterministic longest dependency path as a bounded witness."
+    },
+    {
+      "name": "ilyra-minimal-cutsets",
+      "operation": "minimal_cutsets",
+      "stage": "x2",
+      "guidance": "Enumerate inclusion-minimal internal cutsets for reachable root-to-leaf pairs."
+    },
+    {
+      "name": "ilyra-correction-lineage",
+      "operation": "correction_lineage",
+      "stage": "x2",
+      "guidance": "Preserve an append-only correction chain and expose its current label."
+    },
+    {
+      "name": "ilyra-evidence-frontier",
+      "operation": "evidence_frontier",
+      "stage": "x2",
+      "guidance": "Separate currently satisfiable obligations from the explicit missing frontier."
+    },
+    {
+      "name": "ilyra-authority-vacancy",
+      "operation": "authority_vacancy",
+      "stage": "x2",
+      "guidance": "Represent absent authority without treating vacancy as denial or consent."
+    },
+    {
+      "name": "ilyra-accessible-projection",
+      "operation": "accessible_projection",
+      "stage": "x2",
+      "guidance": "Render a deterministic text projection without claiming manual accessibility review."
+    },
+    {
+      "name": "ilyra-external-evidence-gap",
+      "operation": "external_evidence_gap",
+      "stage": "x2",
+      "guidance": "Retain missing external evidence as an open gap rather than false data."
+    },
+    {
+      "name": "ilyra-release-gate",
+      "operation": "release_gate",
+      "stage": "x2",
+      "guidance": "Keep publication and operational release closed without exact authority and evidence."
+    }
+  ],
+  "local_runners": [
+    {
+      "name": "ilyra-x1-1",
+      "operations": [
+        "graph_shape",
+        "topological_order"
+      ]
+    },
+    {
+      "name": "ilyra-x1-2",
+      "operations": [
+        "reachability_matrix",
+        "ancestor_sets"
+      ]
+    },
+    {
+      "name": "ilyra-x1-3",
+      "operations": [
+        "descendant_sets",
+        "minimal_obligations"
+      ]
+    },
+    {
+      "name": "ilyra-x1-4",
+      "operations": [
+        "maximal_obligations",
+        "antichain_frontiers"
+      ]
+    },
+    {
+      "name": "ilyra-x1-5",
+      "operations": [
+        "path_witness",
+        "transitive_reduction"
+      ]
+    },
+    {
+      "name": "ilyra-x2-1",
+      "operations": [
+        "dual_order_projection",
+        "dependency_depth"
+      ]
+    },
+    {
+      "name": "ilyra-x2-2",
+      "operations": [
+        "critical_path_witness",
+        "minimal_cutsets"
+      ]
+    },
+    {
+      "name": "ilyra-x2-3",
+      "operations": [
+        "correction_lineage",
+        "evidence_frontier"
+      ]
+    },
+    {
+      "name": "ilyra-x2-4",
+      "operations": [
+        "authority_vacancy",
+        "accessible_projection"
+      ]
+    },
+    {
+      "name": "ilyra-x2-5",
+      "operations": [
+        "external_evidence_gap",
+        "release_gate"
+      ]
+    }
+  ],
+  "global_candidates": [
+    {
+      "name": "ghc-family-evidence-obligation-topology",
+      "operations": [
+        "graph_shape",
+        "topological_order",
+        "reachability_matrix",
+        "ancestor_sets"
+      ]
+    },
+    {
+      "name": "ghc-family-evidence-obligation-frontier",
+      "operations": [
+        "descendant_sets",
+        "minimal_obligations",
+        "maximal_obligations",
+        "antichain_frontiers"
+      ]
+    },
+    {
+      "name": "ghc-family-evidence-obligation-paths",
+      "operations": [
+        "path_witness",
+        "transitive_reduction",
+        "dual_order_projection",
+        "dependency_depth"
+      ]
+    },
+    {
+      "name": "ghc-family-evidence-obligation-correction",
+      "operations": [
+        "critical_path_witness",
+        "minimal_cutsets",
+        "correction_lineage",
+        "evidence_frontier"
+      ]
+    },
+    {
+      "name": "ghc-family-evidence-obligation-release",
+      "operations": [
+        "authority_vacancy",
+        "accessible_projection",
+        "external_evidence_gap",
+        "release_gate"
+      ]
+    }
+  ],
+  "global_overwrite": false,
+  "global_binary_files": 0
+}
