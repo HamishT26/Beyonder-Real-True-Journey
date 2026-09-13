@@ -1,0 +1,226 @@
+{
+  "schema": "ghc.family.markov-aggregation.request.v1",
+  "states": [
+    1,
+    8
+  ],
+  "probability_encoding": "canonical nonnegative rational strings, reduced numerator/positive denominator, 0 or 1 for integers",
+  "integer_token_magnitude_maximum": 1000000,
+  "kernel": "square row-stochastic, exact sum one",
+  "partition": "nonempty ordered blocks, each nonempty; integer members form an exact disjoint cover; caller order retained",
+  "horizon": [
+    0,
+    6
+  ],
+  "distribution": "nonnegative rational vector of exact total one",
+  "quotient": "square row-stochastic matrix of block count",
+  "rewards": "signed canonical rational vector of state count",
+  "closed_fields": true,
+  "duplicate_json_keys": "E_DUPLICATE_KEY",
+  "unknown_or_missing_fields": "E_FIELDS",
+  "zero_row": "E_STOCHASTIC",
+  "authority_claim_must_be_false": true,
+  "maximum_input_bytes": 1048576,
+  "maximum_nesting": 32,
+  "output_envelope": [
+    "ok",
+    "value",
+    "error"
+  ],
+  "canonical_json": "sort object keys recursively; preserve array order; ASCII data in every fixture",
+  "authority_actions": [
+    "deploy_control",
+    "publish_real_risk",
+    "certify_model",
+    "affect_rights",
+    "maori_interpretation"
+  ],
+  "operations": [
+    {
+      "op": "aggregation_block_mass",
+      "title": "Block transition mass table",
+      "extra_fields": [],
+      "practice_index": 0,
+      "expected_execution_disposition": "completed",
+      "stage": "x1"
+    },
+    {
+      "op": "aggregation_pair_disagreements",
+      "title": "Within-block probability disagreements",
+      "extra_fields": [],
+      "practice_index": 0,
+      "expected_execution_disposition": "completed",
+      "stage": "x1"
+    },
+    {
+      "op": "aggregation_block_diameter",
+      "title": "Exact block probability diameter",
+      "extra_fields": [],
+      "practice_index": 0,
+      "expected_execution_disposition": "completed",
+      "stage": "x1"
+    },
+    {
+      "op": "aggregation_lumpability",
+      "title": "Strong lumpability decision witness",
+      "extra_fields": [],
+      "practice_index": 0,
+      "expected_execution_disposition": "completed",
+      "stage": "x1"
+    },
+    {
+      "op": "aggregation_refinement_step",
+      "title": "Probability-signature refinement step",
+      "extra_fields": [],
+      "practice_index": 1,
+      "expected_execution_disposition": "completed",
+      "stage": "x1"
+    },
+    {
+      "op": "aggregation_refinement_trace",
+      "title": "Successive lumpability refinement trace",
+      "extra_fields": [],
+      "practice_index": 1,
+      "expected_execution_disposition": "completed",
+      "stage": "x1"
+    },
+    {
+      "op": "aggregation_exact_quotient",
+      "title": "Representative-independent quotient kernel",
+      "extra_fields": [],
+      "practice_index": 1,
+      "expected_execution_disposition": "completed",
+      "stage": "x1"
+    },
+    {
+      "op": "aggregation_intertwining_residual",
+      "title": "Transition aggregation intertwining residual",
+      "extra_fields": [
+        "quotient"
+      ],
+      "practice_index": 1,
+      "expected_execution_disposition": "completed",
+      "stage": "x1"
+    },
+    {
+      "op": "aggregation_distribution_projection",
+      "title": "State distribution block projection",
+      "extra_fields": [
+        "distribution"
+      ],
+      "practice_index": 2,
+      "expected_execution_disposition": "completed",
+      "stage": "x1"
+    },
+    {
+      "op": "aggregation_one_step_commutation",
+      "title": "One-step aggregation commutation",
+      "extra_fields": [
+        "distribution",
+        "quotient"
+      ],
+      "practice_index": 2,
+      "expected_execution_disposition": "completed",
+      "stage": "x1"
+    },
+    {
+      "op": "aggregation_horizon_commutation",
+      "title": "Finite-horizon aggregation comparison",
+      "extra_fields": [
+        "distribution",
+        "quotient",
+        "horizon"
+      ],
+      "practice_index": 2,
+      "expected_execution_disposition": "completed",
+      "stage": "x2"
+    },
+    {
+      "op": "aggregation_block_expectation",
+      "title": "Block-constant reward expectation",
+      "extra_fields": [
+        "distribution",
+        "rewards"
+      ],
+      "practice_index": 2,
+      "expected_execution_disposition": "completed",
+      "stage": "x2"
+    },
+    {
+      "op": "aggregation_stationary_projection",
+      "title": "Stationary distribution quotient check",
+      "extra_fields": [
+        "distribution",
+        "quotient"
+      ],
+      "practice_index": 2,
+      "expected_execution_disposition": "completed",
+      "stage": "x2"
+    },
+    {
+      "op": "aggregation_same_block_mass",
+      "title": "Equal-block-mass continuation comparison",
+      "extra_fields": [
+        "distribution",
+        "comparison_distribution"
+      ],
+      "practice_index": 0,
+      "expected_execution_disposition": "completed",
+      "stage": "x2"
+    },
+    {
+      "op": "aggregation_refinement_certificate",
+      "title": "Stable refinement quotient certificate",
+      "extra_fields": [],
+      "practice_index": 1,
+      "expected_execution_disposition": "completed",
+      "stage": "x2"
+    },
+    {
+      "op": "aggregation_composed_quotient",
+      "title": "Successive quotient composition",
+      "extra_fields": [
+        "second_partition"
+      ],
+      "practice_index": 1,
+      "expected_execution_disposition": "completed",
+      "stage": "x2"
+    },
+    {
+      "op": "aggregation_explanation",
+      "title": "Readable probability-loss explanation",
+      "extra_fields": [],
+      "practice_index": 3,
+      "expected_execution_disposition": "represented",
+      "stage": "x2"
+    },
+    {
+      "op": "aggregation_provenance_projection",
+      "title": "Aggregation input fixity projection",
+      "extra_fields": [],
+      "practice_index": 3,
+      "expected_execution_disposition": "represented",
+      "stage": "x2"
+    },
+    {
+      "op": "aggregation_observation_gap",
+      "title": "Measured transition evidence vacancy",
+      "extra_fields": [],
+      "practice_index": 3,
+      "expected_execution_disposition": "open_gap",
+      "stage": "x2"
+    },
+    {
+      "op": "aggregation_authority_reservation",
+      "title": "Real aggregation action reservation",
+      "extra_fields": [
+        "action",
+        "authority_claim"
+      ],
+      "practice_index": 3,
+      "expected_execution_disposition": "exact_gate",
+      "stage": "x2"
+    }
+  ],
+  "boundary": "Relational working language and bounded same-owner synthetic software only. No consciousness, personhood, identity continuity, qualification, independent agency, empirical GMUT confirmation, production THOS or Freed ID, professional, legal, cultural, affected-party or Maori authority, complete privacy or accessibility, exhaustive security, independent reproduction, AGI/ASI, Theory-of-Everything proof, canon, deployment or Stage 20 credit. Maori concepts remain under Maori authority. NOT_READY_FOR_STAGE_20."
+}
