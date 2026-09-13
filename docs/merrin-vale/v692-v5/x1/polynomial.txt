@@ -1,0 +1,44 @@
+(function(root,factory){if(typeof module==='object'&&module.exports)module.exports=factory();else root.MerrinPoly=factory();})(typeof globalThis!=='undefined'?globalThis:this,function(){
+'use strict';
+class DomainError extends Error{constructor(code){super(code);this.code=code;}}
+const fail=code=>{throw new DomainError(code);};
+const abs=n=>n<0n?-n:n;
+function gcd(a,b){a=abs(a);b=abs(b);while(b){const t=a%b;a=b;b=t;}return a||1n;}
+function rat(n,d=1n){if(d===0n)fail('invalid_rational');if(d<0n){n=-n;d=-d;}const g=gcd(n,d);n/=g;d/=g;if(abs(n).toString().length>256||d.toString().length>256)fail('resource_limit');return[n,d];}
+function rational(s){if(typeof s!=='string'||s.length>64||!/^[-]?\d+(?:\/[-]?\d+|\.\d+)?$/.test(s))fail('invalid_rational');if(s.includes('/')){const[n,d]=s.split('/');return rat(BigInt(n),BigInt(d));}if(s.includes('.')){const parts=s.split('.');return rat(BigInt(parts[0]+parts[1]),10n**BigInt(parts[1].length));}return rat(BigInt(s));}
+const plus=(a,b)=>rat(a[0]*b[1]+b[0]*a[1],a[1]*b[1]);
+const times=(a,b)=>rat(a[0]*b[0],a[1]*b[1]);
+const negate=a=>[-a[0],a[1]];
+const power=(a,n)=>rat(a[0]**BigInt(n),a[1]**BigInt(n));
+const string=a=>a[1]===1n?String(a[0]):a[0]+'/'+a[1];
+function object(x){if(!x||typeof x!=='object'||Array.isArray(x)||(Object.getPrototypeOf(x)!==Object.prototype&&Object.getPrototypeOf(x)!==null))fail('invalid_object');}
+function keys(x,allowed,required=allowed){object(x);if(Object.keys(x).some(k=>!allowed.includes(k)))fail('unknown_field');if(required.some(k=>!Object.hasOwn(x,k)))fail('missing_field');}
+function powers(p){if(!Array.isArray(p)||p.length!==3||p.some(n=>!Number.isInteger(n)||n<0||n>12))fail('invalid_powers');return [...p];}
+const compare=(a,b)=>a.p[0]-b.p[0]||a.p[1]-b.p[1]||a.p[2]-b.p[2];
+function normal(terms){const map=new Map();for(const t of terms){if(t.p.some(n=>n>12))fail('resource_limit');const k=t.p.join(',');map.set(k,{p:[...t.p],c:plus(map.get(k)?.c||[0n,1n],t.c)});}const out=[...map.values()].filter(t=>t.c[0]!==0n).sort(compare);if(out.length>128)fail('resource_limit');return out;}
+function parse(terms){if(!Array.isArray(terms)||terms.length>32)fail('invalid_terms');return normal(terms.map(t=>{keys(t,['coefficient','powers']);return{c:rational(t.coefficient),p:powers(t.powers)};}));}
+const emit=p=>p.map(t=>({coefficient:string(t.c),powers:[...t.p]}));
+const add=(a,b)=>normal([...a,...b]);
+const neg=a=>a.map(t=>({c:negate(t.c),p:[...t.p]}));
+function multiply(a,b){if(a.length*b.length>1024)fail('resource_limit');return normal(a.flatMap(x=>b.map(y=>({c:times(x.c,y.c),p:x.p.map((n,i)=>n+y.p[i])}))));}
+function derivative(a,k){return normal(a.filter(t=>t.p[k]>0).map(t=>({c:times(t.c,[BigInt(t.p[k]),1n]),p:t.p.map((n,i)=>i===k?n-1:n)})));}
+function triple(a,code){if(!Array.isArray(a)||a.length!==3)fail(code);return a.map(rational);}
+const evaluatePoint=(p,point)=>p.reduce((sum,t)=>plus(sum,t.p.reduce((c,n,i)=>times(c,power(point[i],n)),t.c)),[0n,1n]);
+const shape={poly_canonical:['terms'],poly_add:['left','right'],poly_multiply:['left','right'],d_phi:['terms'],d_velocity:['terms'],jet_degree:['terms'],field_parity:['terms'],coordinate_scale:['terms','factors'],jet_value:['terms','point'],coefficient_at:['terms','powers']};
+function calculate(x){object(x);if(typeof x.op!=='string'||!Object.hasOwn(shape,x.op))fail('unknown_operation');keys(x,['op',...shape[x.op]]);let p;
+if(x.op==='poly_add')return{terms:emit(add(parse(x.left),parse(x.right)))};
+if(x.op==='poly_multiply')return{terms:emit(multiply(parse(x.left),parse(x.right)))};
+p=parse(x.terms);
+switch(x.op){
+case'poly_canonical':return{terms:emit(p)};
+case'd_phi':return{terms:emit(derivative(p,0))};
+case'd_velocity':return{terms:emit(derivative(p,1))};
+case'jet_degree':return p.length?{total:Math.max(...p.map(t=>t.p.reduce((a,b)=>a+b,0))),phi:Math.max(...p.map(t=>t.p[0])),velocity:Math.max(...p.map(t=>t.p[1])),acceleration:Math.max(...p.map(t=>t.p[2]))}:{total:null,phi:null,velocity:null,acceleration:null};
+case'field_parity':{const signs=new Set(p.map(t=>t.p.reduce((a,b)=>a+b,0)%2));return{parity:!p.length?'zero':signs.size===2?'mixed':signs.has(0)?'even':'odd'};}
+case'coordinate_scale':{const factors=triple(x.factors,'invalid_scale');return{terms:emit(normal(p.map(t=>({p:t.p,c:t.p.reduce((c,n,i)=>times(c,power(factors[i],n)),t.c)}))))};}
+case'jet_value':return{value:string(evaluatePoint(p,triple(x.point,'invalid_point')))};
+case'coefficient_at':{const pp=powers(x.powers);return{coefficient:string(p.find(t=>t.p.every((n,i)=>n===pp[i]))?.c||[0n,1n])};}
+default:fail('unknown_operation');}}
+function envelope(f,x){try{return{ok:true,value:f(x),error:null,external_credit:false};}catch(e){if(!(e instanceof DomainError))throw e;return{ok:false,value:null,error:e.code,external_credit:false};}}
+return{evaluate:x=>envelope(calculate,x),operations:Object.keys(shape),internals:{DomainError,fail,rat,rational,plus,times,negate,power,string,object,keys,powers,normal,parse,emit,add,neg,multiply,derivative,triple,evaluatePoint,envelope}};
+});
