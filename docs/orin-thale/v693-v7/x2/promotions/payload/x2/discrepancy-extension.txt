@@ -1,0 +1,91 @@
+"use strict";
+
+const crypto = require("crypto");
+
+function gcd(a, b) { a = a < 0n ? -a : a; b = b < 0n ? -b : b; while (b) { const r = a % b; a = b; b = r; } return a; }
+class Fraction {
+  constructor(n, d = 1n) { n = BigInt(n); d = BigInt(d); if (d === 0n) throw new Error("E_RATIONAL"); if (d < 0n) { n = -n; d = -d; } const g = gcd(n, d); this.n = n / g; this.d = d / g; }
+  static from(token) { if (typeof token !== "string" || !/^-?\d+(\/\d+)?$/.test(token)) throw new Error("E_RATIONAL"); const [n, d = "1"] = token.split("/"); return new Fraction(n, d); }
+  add(x) { return new Fraction(this.n * x.d + x.n * this.d, this.d * x.d); }
+  sub(x) { return new Fraction(this.n * x.d - x.n * this.d, this.d * x.d); }
+  mul(x) { return new Fraction(this.n * x.n, this.d * x.d); }
+  abs() { return new Fraction(this.n < 0n ? -this.n : this.n, this.d); }
+  cmp(x) { const d = this.n * x.d - x.n * this.d; return d < 0n ? -1 : d > 0n ? 1 : 0; }
+  text() { return this.d === 1n ? String(this.n) : `${this.n}/${this.d}`; }
+}
+const z = () => new Fraction(0);
+const o = () => new Fraction(1);
+const h = () => new Fraction(1, 2);
+const sum = (xs) => xs.reduce((a, x) => a.add(x), z());
+const vector = (tokens) => tokens.map(Fraction.from);
+const text = (xs) => xs.map((x) => x.text());
+function distribution(tokens) { if (!Array.isArray(tokens) || tokens.length < 1 || tokens.length > 8) throw new Error("E_DISTRIBUTION"); const xs = vector(tokens); if (xs.some((x) => x.n < 0n) || sum(xs).cmp(o()) !== 0) throw new Error("E_PROBABILITY"); return xs; }
+function totalVariation(a, b) { return h().mul(sum(a.map((x, i) => x.sub(b[i]).abs()))); }
+function expected(dist, losses) { return losses.map((row) => sum(row.map((value, i) => Fraction.from(value).mul(dist[i])))); }
+function argmin(xs) { let best = 0; for (let i = 1; i < xs.length; i++) if (xs[i].cmp(xs[best]) < 0) best = i; return best; }
+function maximum(a, b) { return a.cmp(b) >= 0 ? a : b; }
+function project(dist, partition) { return partition.map((block) => sum(block.map((index) => dist[index]))); }
+function mixture(a, b, alpha) { return a.map((x, i) => alpha.mul(x).add(o().sub(alpha).mul(b[i]))); }
+function stable(value) { if (Array.isArray(value)) return value.map(stable); if (value && typeof value === "object") return Object.fromEntries(Object.keys(value).sort().map((key) => [key, stable(value[key])])); return value; }
+function hash(value) { return crypto.createHash("sha256").update(JSON.stringify(stable(value)), "utf8").digest("hex"); }
+const pass = (value) => ({ ok: true, value, error: null });
+const fail = (error) => ({ ok: false, value: null, error });
+
+const fields = {
+  expected_loss_table: ["op", "p", "q", "losses"],
+  decision_regret: ["op", "p", "q", "losses", "chosen_action"],
+  minimax_model_loss: ["op", "p", "q", "losses", "chosen_action"],
+  coarse_partition_projection: ["op", "p", "q", "partition"],
+  coarse_tv_monotonicity: ["op", "p", "q", "partition"],
+  mixture_tv_convexity: ["op", "p", "q", "p2", "q2", "alpha"],
+  discrepancy_explanation: ["op", "p", "q"],
+  discrepancy_provenance: ["op", "p", "q"],
+  observation_gap: ["op", "p", "q"],
+  authority_reservation: ["op", "p", "q", "action", "authority_claim"]
+};
+
+function createExtended(core) {
+  function execute(request) {
+    if (request && core.operations.includes(request.op)) return core.execute(request);
+    if (!request || typeof request !== "object" || Array.isArray(request)) return fail("E_REQUEST");
+    const contract = fields[request.op];
+    if (!contract) return fail("E_OPERATION");
+    const keys = Object.keys(request);
+    if (keys.some((key) => !contract.includes(key)) || contract.some((key) => !Object.hasOwn(request, key))) return fail("E_FIELDS");
+    let p, q;
+    try { p = distribution(request.p); q = distribution(request.q); } catch (error) { return fail(["E_PROBABILITY", "E_DISTRIBUTION"].includes(error.message) ? error.message : "E_DISTRIBUTION"); }
+    if (p.length !== q.length) return fail("E_DIMENSION");
+    const fineTv = totalVariation(p, q);
+    if (["expected_loss_table", "decision_regret", "minimax_model_loss"].includes(request.op)) {
+      if (!Array.isArray(request.losses) || request.losses.length < 1 || request.losses.some((row) => !Array.isArray(row) || row.length !== p.length)) return fail("E_LOSSES");
+      let pLosses, qLosses;
+      try { pLosses = expected(p, request.losses); qLosses = expected(q, request.losses); } catch { return fail("E_LOSSES"); }
+      if (request.op === "expected_loss_table") return pass({ under_p: text(pLosses), under_q: text(qLosses), p_optimal: argmin(pLosses), q_optimal: argmin(qLosses) });
+      if (!Number.isInteger(request.chosen_action) || request.chosen_action < 0 || request.chosen_action >= pLosses.length) return fail("E_ACTION");
+      if (request.op === "decision_regret") { const best = argmin(pLosses); return pass({ chosen_action: request.chosen_action, optimal_action_under_p: best, chosen_loss: pLosses[request.chosen_action].text(), optimal_loss: pLosses[best].text(), regret: pLosses[request.chosen_action].sub(pLosses[best]).text() }); }
+      const worst = pLosses.map((x, i) => maximum(x, qLosses[i])); const best = argmin(worst);
+      return pass({ worst_case_losses: text(worst), chosen_action: request.chosen_action, minimax_action: best, chosen_worst_loss: worst[request.chosen_action].text(), minimax_loss: worst[best].text(), regret: worst[request.chosen_action].sub(worst[best]).text() });
+    }
+    if (["coarse_partition_projection", "coarse_tv_monotonicity"].includes(request.op)) {
+      if (!Array.isArray(request.partition) || request.partition.flat().length !== p.length || new Set(request.partition.flat()).size !== p.length || request.partition.flat().some((i) => !Number.isInteger(i) || i < 0 || i >= p.length)) return fail("E_PARTITION");
+      const cp = project(p, request.partition), cq = project(q, request.partition);
+      if (request.op === "coarse_partition_projection") return pass({ partition: request.partition, p_coarse: text(cp), q_coarse: text(cq), coarse_residuals: text(cp.map((x, i) => x.sub(cq[i]))) });
+      const coarseTv = totalVariation(cp, cq); return pass({ fine_tv: fineTv.text(), coarse_tv: coarseTv.text(), contraction_gap: fineTv.sub(coarseTv).text(), monotone: coarseTv.cmp(fineTv) <= 0 });
+    }
+    if (request.op === "mixture_tv_convexity") {
+      let p2, q2, alpha;
+      try { p2 = distribution(request.p2); q2 = distribution(request.q2); alpha = Fraction.from(request.alpha); } catch { return fail("E_MIXTURE"); }
+      if (p2.length !== p.length || q2.length !== p.length || alpha.cmp(z()) < 0 || alpha.cmp(o()) > 0) return fail("E_MIXTURE");
+      const pm = mixture(p, p2, alpha), qm = mixture(q, q2, alpha); const lhs = totalVariation(pm, qm); const rhs = alpha.mul(fineTv).add(o().sub(alpha).mul(totalVariation(p2, q2)));
+      return pass({ alpha: alpha.text(), p_mixture: text(pm), q_mixture: text(qm), mixture_tv: lhs.text(), convex_bound: rhs.text(), slack: rhs.sub(lhs).text(), certified: lhs.cmp(rhs) <= 0 });
+    }
+    if (request.op === "discrepancy_explanation") return pass({ states: p.length, total_variation: fineTv.text(), summary: fineTv.cmp(z()) === 0 ? "The supplied finite distributions are equal." : "The supplied finite distributions differ; the reported value is model-local and not observational evidence.", manual_accessibility_review: "open_gap" });
+    if (request.op === "discrepancy_provenance") return pass({ p_sha256: hash(request.p), q_sha256: hash(request.q), state_count: p.length, governed_observations: 0, external_acceptance: false });
+    if (request.op === "observation_gap") return pass({ model_states: p.length, observed_rows: 0, missing: ["governed observations", "sampling and calibration assessment", "independent model comparison"], release: "open_gap" });
+    if (request.op === "authority_reservation") return pass({ action: request.action, authority_verified: false, external_action_performed: false, release: "exact_gate", required: ["competent and affected authority", "exact action scope", "appropriate evidence and review"] });
+    return fail("E_OPERATION");
+  }
+  return { execute, operations: Object.freeze([...core.operations, ...Object.keys(fields)]), stable, digest: hash };
+}
+
+module.exports = { createExtended, extensionOperations: Object.freeze(Object.keys(fields)) };

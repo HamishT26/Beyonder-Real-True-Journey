@@ -1,0 +1,122 @@
+"use strict";
+
+const crypto = require("crypto");
+
+function gcd(a, b) {
+  a = a < 0n ? -a : a;
+  b = b < 0n ? -b : b;
+  while (b !== 0n) {
+    const r = a % b;
+    a = b;
+    b = r;
+  }
+  return a;
+}
+
+class Rational {
+  constructor(numerator, denominator = 1n) {
+    let n = BigInt(numerator);
+    let d = BigInt(denominator);
+    if (d === 0n) throw new Error("E_RATIONAL");
+    if (d < 0n) { n = -n; d = -d; }
+    const divisor = gcd(n, d);
+    this.n = n / divisor;
+    this.d = d / divisor;
+  }
+  static parse(token) {
+    if (typeof token !== "string" || !/^-?\d+(\/\d+)?$/.test(token)) throw new Error("E_RATIONAL");
+    const parts = token.split("/");
+    return new Rational(parts[0], parts[1] || 1);
+  }
+  plus(other) { return new Rational(this.n * other.d + other.n * this.d, this.d * other.d); }
+  minus(other) { return new Rational(this.n * other.d - other.n * this.d, this.d * other.d); }
+  times(other) { return new Rational(this.n * other.n, this.d * other.d); }
+  absolute() { return new Rational(this.n < 0n ? -this.n : this.n, this.d); }
+  compare(other) { const delta = this.n * other.d - other.n * this.d; return delta < 0n ? -1 : delta > 0n ? 1 : 0; }
+  toString() { return this.d === 1n ? String(this.n) : `${this.n}/${this.d}`; }
+}
+
+const zero = () => new Rational(0);
+const one = () => new Rational(1);
+const half = () => new Rational(1, 2);
+const addAll = (items) => items.reduce((acc, item) => acc.plus(item), zero());
+const asStrings = (items) => items.map((item) => item.toString());
+
+function stable(value) {
+  if (Array.isArray(value)) return value.map(stable);
+  if (value && typeof value === "object") return Object.fromEntries(Object.keys(value).sort().map((key) => [key, stable(value[key])]));
+  return value;
+}
+function digest(value) { return crypto.createHash("sha256").update(JSON.stringify(stable(value)), "utf8").digest("hex"); }
+function success(value) { return { ok: true, value, error: null }; }
+function failure(error) { return { ok: false, value: null, error }; }
+
+const fieldContracts = {
+  probability_total: ["op", "p", "q"],
+  coordinate_residuals: ["op", "p", "q"],
+  l1_distance: ["op", "p", "q"],
+  total_variation: ["op", "p", "q"],
+  overlap_coefficient: ["op", "p", "q"],
+  maximum_coordinate_gap: ["op", "p", "q"],
+  signed_event_gap: ["op", "p", "q", "event"],
+  event_probability_table: ["op", "p", "q", "event"],
+  quadratic_discrepancy: ["op", "p", "q"],
+  brier_score_pair: ["op", "p", "q", "outcome"]
+};
+
+function parseDistribution(tokens) {
+  if (!Array.isArray(tokens) || tokens.length < 1 || tokens.length > 8) throw new Error("E_DISTRIBUTION");
+  const values = tokens.map(Rational.parse);
+  if (values.some((value) => value.n < 0n)) throw new Error("E_PROBABILITY");
+  if (addAll(values).compare(one()) !== 0) throw new Error("E_PROBABILITY");
+  return values;
+}
+
+function admit(request) {
+  if (!request || typeof request !== "object" || Array.isArray(request)) return failure("E_REQUEST");
+  const fields = fieldContracts[request.op];
+  if (!fields) return failure("E_OPERATION");
+  const keys = Object.keys(request);
+  if (keys.some((key) => !fields.includes(key)) || fields.some((key) => !Object.hasOwn(request, key))) return failure("E_FIELDS");
+  return null;
+}
+
+function execute(request) {
+  const admission = admit(request);
+  if (admission) return admission;
+  let p;
+  let q;
+  try {
+    p = parseDistribution(request.p);
+    q = parseDistribution(request.q);
+  } catch (error) {
+    return failure(["E_PROBABILITY", "E_DISTRIBUTION"].includes(error.message) ? error.message : "E_DISTRIBUTION");
+  }
+  if (p.length !== q.length) return failure("E_DIMENSION");
+  const residuals = p.map((value, index) => value.minus(q[index]));
+  const absoluteResiduals = residuals.map((value) => value.absolute());
+  const l1 = addAll(absoluteResiduals);
+  const tv = half().times(l1);
+
+  switch (request.op) {
+    case "probability_total":
+      return success({ p_total: addAll(p).toString(), q_total: addAll(q).toString(), p_nonnegative: true, q_nonnegative: true, dimensions_equal: true });
+    case "coordinate_residuals":
+      return success({ residuals: asStrings(residuals), residual_sum: addAll(residuals).toString() });
+    case "l1_distance":
+      return success({ absolute_residuals: asStrings(absoluteResiduals), l1: l1.toString() });
+    case "total_variation":
+      return success({ total_variation: tv.toString(), bounded: tv.compare(one()) <= 0 });
+    case "overlap_coefficient":
+      return success({ overlap: one().minus(tv).toString(), complement_tv: tv.toString() });
+    case "maximum_coordinate_gap": { let index = 0; for (let i = 1; i < absoluteResiduals.length; i++) if (absoluteResiduals[i].compare(absoluteResiduals[index]) > 0) index = i; return success({ maximum: absoluteResiduals[index].toString(), witness_index: index, signed_residual: residuals[index].toString() }); }
+    case "signed_event_gap":
+    case "event_probability_table": { const event = request.event; if (!Array.isArray(event) || new Set(event).size !== event.length || event.some((index) => !Number.isInteger(index) || index < 0 || index >= p.length)) return failure("E_EVENT"); const pEvent = addAll(event.map((index) => p[index])); const qEvent = addAll(event.map((index) => q[index])); if (request.op === "signed_event_gap") return success({ event, p_event: pEvent.toString(), q_event: qEvent.toString(), signed_gap: pEvent.minus(qEvent).toString() }); const complement = p.map((_, index) => index).filter((index) => !event.includes(index)); return success({ event, complement, p_event: pEvent.toString(), q_event: qEvent.toString(), absolute_gap: pEvent.minus(qEvent).absolute().toString() }); }
+    case "quadratic_discrepancy": { const squares = residuals.map((value) => value.times(value)); return success({ squared_residuals: asStrings(squares), quadratic_sum: addAll(squares).toString() }); }
+    case "brier_score_pair": { if (!Number.isInteger(request.outcome) || request.outcome < 0 || request.outcome >= p.length) return failure("E_OUTCOME"); const score = (forecast) => addAll(forecast.map((value, index) => { const delta = value.minus(new Rational(index === request.outcome ? 1 : 0)); return delta.times(delta); })); const pScore = score(p); const qScore = score(q); return success({ outcome: request.outcome, p_score: pScore.toString(), q_score: qScore.toString(), p_minus_q: pScore.minus(qScore).toString(), lower: pScore.compare(qScore) < 0 ? "p" : pScore.compare(qScore) > 0 ? "q" : "tie" }); }
+    default:
+      return failure("E_OPERATION");
+  }
+}
+
+module.exports = { execute, digest, stable, operations: Object.freeze(Object.keys(fieldContracts)) };

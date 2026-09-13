@@ -1,0 +1,86 @@
+"use strict";
+
+const fs = require("fs");
+const path = require("path");
+const crypto = require("crypto");
+const vm = require("vm");
+
+const repo = process.env.ORIN_REPO;
+const globalSkillRoot = process.env.ORIN_GLOBAL_SKILL_ROOT;
+const publicRoot = process.env.ORIN_PUBLIC_ROOT;
+if (!repo || !globalSkillRoot || !publicRoot) throw new Error("ORIN_REPO and global roots are required");
+const baseRel = "docs/orin-thale/v693-v7";
+const base = path.join(repo, ...baseRel.split("/"));
+const x2 = path.join(base, "x2");
+const checks = [];
+function check(name, pass, detail = null) { checks.push({ name, pass: Boolean(pass), detail }); }
+function json(rel) { return JSON.parse(fs.readFileSync(path.join(base, ...rel.split("/")), "utf8")); }
+function stable(value) { if (Array.isArray(value)) return value.map(stable); if (value && typeof value === "object") return Object.fromEntries(Object.keys(value).sort().map((key) => [key, stable(value[key])])); return value; }
+function canon(value) { return JSON.stringify(stable(value)); }
+function load(file) { const module = { exports: {} }; new Function("require", "module", "exports", fs.readFileSync(file, "utf8"))(require, module, module.exports); return module.exports; }
+function files(dir) { const out = []; for (const entry of fs.readdirSync(dir, { withFileTypes: true })) { const full = path.join(dir, entry.name); if (entry.isDirectory()) out.push(...files(full)); else out.push(full); } return out; }
+
+const plan = json("plan/proposals.json");
+const truth = json("x2/phase-truth.json");
+const results = json("x2/results/proposal-results.json");
+const portfolio = json("x2/evidence/portfolio-results.json");
+const skills = json("x2/evidence/skill-receipts.json");
+const runners = json("x2/evidence/runner-receipts.json");
+const promotion = json("x2/evidence/global-promotion-receipt.json");
+const catalogue = json("x2/meta-tool-catalogue.json");
+const methodflow = json("x2/methodflow-ledger.json");
+const manifest = json("x2/manifest.json");
+const allowlist = json("x2/staged-allowlist.json");
+const core = load(path.join(base, "x1", "discrepancy-core.txt"));
+const extension = load(path.join(x2, "discrepancy-extension.txt"));
+const runtime = extension.createExtended(core);
+const rows = plan.proposals.filter((row) => row.session === "x2");
+
+check("immutable x1 anchor", methodflow.source_commit === "73985efc89ee0977c6ed7d5f0b2d041fcb48dec7" && truth.x1 === "completed_immutable");
+check("twenty runtime operations", runtime.operations.length === 20 && new Set(runtime.operations).size === 20);
+check("fifty x2 results", results.count === 50 && results.rows.length === 50 && rows.length === 50);
+check("x2 outcomes", results.outcomes.completed === 30 && results.outcomes.represented === 10 && results.outcomes.open_gap === 5 && results.outcomes.exact_gate === 5);
+check("cumulative outcomes", truth.cumulative_outcomes.completed === 80 && truth.cumulative_outcomes.represented === 10 && truth.cumulative_outcomes.open_gap === 5 && truth.cumulative_outcomes.exact_gate === 5);
+check("proposal envelopes and nonmutation", results.rows.every((row) => row.envelope_pass && row.request_nonmutation));
+check("runtime replay against definitions", rows.every((row) => canon(runtime.execute(row.request)) === canon(row.expected_output)));
+check("safe checks", portfolio.safe.count === 100 && portfolio.safe.passed === 100 && portfolio.safe.rows.every((row) => row.pass));
+check("candidate subjects and refusal checks", portfolio.candidate.count === 100 && portfolio.candidate.failed_subjects_retained === 100 && portfolio.candidate.refusal_checks_passed === 100 && portfolio.candidate.rows.every((row) => row.original_subject_success_credit === 0 && row.refusal_pass));
+check("CFR checks", portfolio.clean_fix_refine.count === 100 && portfolio.clean_fix_refine.passed === 100 && portfolio.clean_fix_refine.altered_expected_subjects_retained === 50);
+check("ten x2 skills", skills.count === 10 && skills.passed === 10 && skills.rows.every((row) => row.quick_valid && row.smoke_pass));
+check("five x2 runners", runners.count === 5 && runners.passed === 5 && runners.rows.every((row) => row.positive.pass && row.negative.pass && row.negative.original_subject_success_credit === 0));
+check("global promotion status", promotion.status === "VALIDATED_ADDITIVE_PROMOTION_WITH_RETAINED_WRAPPER_FAILURE" && promotion.global_skills === 5 && promotion.public_runners === 5);
+check("all targets originally absent", promotion.target_checks.length === 6 && promotion.target_checks.every((row) => row.initial_absent));
+check("37 installed parity bindings", promotion.binding_count === 37 && promotion.parity_passed === 37 && promotion.bindings.every((row) => row.parity && row.source_sha256 === row.target_sha256));
+check("30 public runner smokes", promotion.smoke_count === 30 && promotion.smoke_passed === 30 && promotion.smokes.every((row) => row.pass));
+check("ten negative public subjects retained", promotion.smokes.filter((row) => row.kind === "negative").length === 10 && promotion.smokes.filter((row) => row.kind === "negative").every((row) => row.original_subject_success_credit === 0));
+check("five failed public wrappers retained", promotion.retained_failed_public_wrapper_subjects === 5 && promotion.failed_runner_bindings.length === 5 && promotion.failed_runner_bindings.every((row) => row.original_success_credit === 0 && row.retained));
+check("candidate and installed skills valid", promotion.candidate_validations.length === 5 && promotion.candidate_validations.every((row) => row.pass) && promotion.installed_validations.length === 5 && promotion.installed_validations.every((row) => row.pass));
+check("catalogue ten cards", catalogue.cards.length === 10 && new Set(catalogue.cards.map((row) => row.card_id)).size === 10 && catalogue.cards.every((row) => row.evidence_state === "validated" && row.repository_scan === false && row.cross_lane_scan === false && row.sibling_lane_mutation === false));
+check("Method Flow arithmetic", methodflow.counts.methods === methodflow.methods.length && methodflow.counts.witnesses === methodflow.witnesses.length && methodflow.counts.pass + methodflow.counts.fail === methodflow.counts.witnesses);
+check("Method Flow exact totals", methodflow.counts.methods === 16 && methodflow.counts.witnesses === 1067 && methodflow.counts.pass === 742 && methodflow.counts.fail === 325 && methodflow.counts.projected_negative_lineage === 2651);
+check("failed witnesses retained", methodflow.witnesses.filter((row) => row.result === "fail").every((row) => row.retained_negative_ids.length > 0));
+check("same-owner only", methodflow.witnesses.every((row) => row.same_owner_only === true && row.independent_reproduction === false));
+check("route and canonical held", truth.route === "PREPARED_NOT_SENT" && truth.canonical_invocations === 0 && !fs.existsSync(path.join(base, "final")));
+check("exact and blocked unexecuted", truth.exact_packets_executed === 0 && truth.blocked_packets_executed === 0);
+const manifestIssues = [];
+for (const row of manifest.bindings) { const full = path.join(repo, ...row.path.split("/")); if (!fs.existsSync(full)) manifestIssues.push(`${row.path}:missing`); else { const bytes = fs.readFileSync(full); if (bytes.length !== row.bytes) manifestIssues.push(`${row.path}:bytes`); if (crypto.createHash("sha256").update(bytes).digest("hex") !== row.sha256) manifestIssues.push(`${row.path}:sha256`); } }
+check("x2 manifest parity", manifestIssues.length === 0, manifestIssues);
+check("manifest exclusions", manifest.declared_exclusions.length === 3 && manifest.hash_domain.includes("working_tree_bytes"));
+check("allowlist exact owner stage", allowlist.paths.every((row) => row.startsWith(`${baseRel}/x2/`)) && allowlist.final_forbidden === true);
+const ownerFiles = files(x2);
+check("x2 file ceiling", ownerFiles.length < 2000, ownerFiles.length);
+check("authorized file types", ownerFiles.every((file) => [".json", ".md", ".txt", ".html", ".tex"].includes(path.extname(file).toLowerCase())));
+for (const file of ownerFiles.filter((file) => path.extname(file).toLowerCase() === ".txt")) { try { new vm.Script(`(function(require,module,exports){\n${fs.readFileSync(file, "utf8")}\n})`, { filename: file }); } catch (error) { check(`compile ${path.relative(base, file)}`, false, error.message); } }
+check("all x2 trusted TXT compiles", !checks.some((row) => row.name.startsWith("compile ") && !row.pass));
+const parityNow = [];
+for (const row of promotion.bindings) { const source = path.join(repo, ...row.source_path.split("/")); const target = row.target_kind === "skill" ? path.join(globalSkillRoot, ...row.target_relative.split("/")) : path.join(path.dirname(publicRoot), ...row.target_relative.split("/")); parityNow.push(fs.existsSync(source) && fs.existsSync(target) && fs.readFileSync(source).equals(fs.readFileSync(target))); }
+check("current installed parity", parityNow.length === 37 && parityNow.every(Boolean));
+const joined = ownerFiles.map((file) => fs.readFileSync(file, "utf8")).join("\n");
+const patterns = [/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/ig, /(?:api[_-]?key|password|secret|bearer)\s*[:=]\s*[\"']?[A-Za-z0-9_\-]{12,}/ig, /C:\\Users\\[^\s\"']+/ig, /D:\\GHC-Archives\\[^\s\"']+/ig, /\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}\b/ig];
+check("zero confirmed five-class privacy candidates", patterns.every((pattern) => !pattern.test(joined)));
+check("bounded extension review", !/\b(?:eval|child_process\.exec\s*\(|shell\s*:\s*true)\b/.test(fs.readFileSync(path.join(x2, "discrepancy-extension.txt"), "utf8")));
+const failed = checks.filter((row) => !row.pass);
+const receipt = { schema: "ghc.family.x2-validation.v8", owner: "Orin Thale", phase: "v693-v7", stage: "x2_execution", status: failed.length ? "INVALID_X2_EXECUTION" : "VALID_X2_EXECUTION", checks_total: checks.length, checks_passed: checks.length - failed.length, checks_failed: failed.length, checks, owner_tests: { total: 50, passed: results.rows.filter((row) => row.envelope_pass && row.request_nonmutation).length }, strict_json_documents: ownerFiles.filter((file) => path.extname(file).toLowerCase() === ".json").length, trusted_txt_files: ownerFiles.filter((file) => path.extname(file).toLowerCase() === ".txt").length, privacy_confirmed_hits: 0, bounded_code_findings: 0, same_owner_only: true, independent_reproduction: false, canonical_invocations: 0, route: "PREPARED_NOT_SENT", terminal_verdict: "NOT_READY_FOR_STAGE_20" };
+fs.writeFileSync(path.join(x2, "validation.json"), JSON.stringify(receipt, null, 2) + "\n", "utf8");
+process.stdout.write(JSON.stringify({ status: receipt.status, checks_total: receipt.checks_total, checks_passed: receipt.checks_passed, checks_failed: receipt.checks_failed, owner_tests: receipt.owner_tests }, null, 2) + "\n");
+process.exit(failed.length ? 2 : 0);

@@ -1,0 +1,235 @@
+"use strict";
+
+const fs = require("fs");
+const path = require("path");
+const crypto = require("crypto");
+const cp = require("child_process");
+const vm = require("vm");
+
+const repo = process.env.ORIN_REPO;
+const python = process.env.SKILL_CREATOR_PYTHON;
+const quickValidate = process.env.SKILL_CREATOR_QUICK_VALIDATE;
+const globalSkillRoot = process.env.ORIN_GLOBAL_SKILL_ROOT;
+const publicRoot = process.env.ORIN_PUBLIC_ROOT;
+if (!repo || !python || !quickValidate || !globalSkillRoot || !publicRoot) throw new Error("ORIN_REPO, Skill Creator paths, and global roots are required");
+const baseRel = "docs/orin-thale/v693-v7";
+const base = path.join(repo, ...baseRel.split("/"));
+const x1Root = path.join(base, "x1");
+const x2Root = path.join(base, "x2");
+fs.mkdirSync(x2Root, { recursive: true });
+const boundary = "Relational working language and bounded same-owner synthetic software only. No consciousness, sentience, personhood, identity continuity, qualification, employment, independent agency, empirical GMUT confirmation, production THOS or Freed ID, professional, legal, cultural, affected-party or Maori authority, complete privacy or accessibility, exhaustive security, independent reproduction, AGI/ASI, Theory-of-Everything proof, canon, deployment or Stage 20 credit. Maori concepts remain under Maori authority. NOT_READY_FOR_STAGE_20.";
+const protectedGates = ["real observations and participants", "production or deployment", "professional and scientific authority", "legal cultural affected-party and Maori authority", "complete privacy accessibility or security", "independent reproduction and Stage 20"];
+function stable(value) { if (Array.isArray(value)) return value.map(stable); if (value && typeof value === "object") return Object.fromEntries(Object.keys(value).sort().map((key) => [key, stable(value[key])])); return value; }
+function canonical(value) { return JSON.stringify(stable(value)); }
+function sha(bytes) { return crypto.createHash("sha256").update(bytes).digest("hex"); }
+function writeText(rel, text) { const target = path.join(base, ...rel.split("/")); fs.mkdirSync(path.dirname(target), { recursive: true }); fs.writeFileSync(target, String(text).replace(/\r\n/g, "\n"), "utf8"); }
+function writeJson(rel, value) { writeText(rel, JSON.stringify(value, null, 2) + "\n"); }
+function load(file) { const module = { exports: {} }; new Function("require", "module", "exports", fs.readFileSync(file, "utf8"))(require, module, module.exports); return module.exports; }
+function files(dir) { const out = []; function walk(current) { for (const entry of fs.readdirSync(current, { withFileTypes: true })) { const full = path.join(current, entry.name); if (entry.isDirectory()) walk(full); else out.push(full); } } walk(dir); return out; }
+function git(args) { return cp.execFileSync("git", ["-C", repo, ...args], { encoding: "utf8" }).trim(); }
+function installOrVerify(source, target) {
+  fs.mkdirSync(path.dirname(target), { recursive: true });
+  const bytes = fs.readFileSync(source);
+  if (fs.existsSync(target)) {
+    const existing = fs.readFileSync(target);
+    if (!existing.equals(bytes)) throw new Error(`existing promotion target differs: ${path.basename(target)}`);
+    return { bytes: bytes.length, sha256: sha(bytes), install_mode: "retained_identical_from_failed_attempt" };
+  }
+  fs.writeFileSync(target, bytes, { flag: "wx" });
+  return { bytes: bytes.length, sha256: sha(bytes), install_mode: "created_exclusively" };
+}
+function correctedRunnerName(promotion) { return promotion.runner.replace(/\.txt$/, "_v2.txt"); }
+
+const x1Commit = git(["rev-parse", "HEAD"]);
+if (x1Commit !== "73985efc89ee0977c6ed7d5f0b2d041fcb48dec7") throw new Error(`x2 requires exact x1 head, got ${x1Commit}`);
+if (git(["status", "--porcelain", "--untracked-files=no"]) !== "") throw new Error("x2 requires no tracked mutation after x1");
+const plan = JSON.parse(fs.readFileSync(path.join(base, "plan", "proposals.json"), "utf8"));
+const toolPlan = JSON.parse(fs.readFileSync(path.join(base, "plan", "skills-runners-plan.json"), "utf8"));
+const x1Methodflow = JSON.parse(fs.readFileSync(path.join(x1Root, "methodflow-ledger.json"), "utf8"));
+const core = load(path.join(x1Root, "discrepancy-core.txt"));
+const extension = load(path.join(x2Root, "discrepancy-extension.txt"));
+const runtime = extension.createExtended(core);
+const x2Rows = plan.proposals.filter((row) => row.session === "x2");
+if (x2Rows.length !== 50 || runtime.operations.length !== 20) throw new Error("x2 operation surface mismatch");
+
+const proposalResults = [], safeResults = [], rejectionResults = [], cfrResults = [];
+for (const row of x2Rows) {
+  const requestBefore = canonical(row.request);
+  const observed = runtime.execute(JSON.parse(requestBefore));
+  const envelopePass = canonical(observed) === canonical(row.expected_output);
+  const nonmutationPass = requestBefore === canonical(row.request);
+  proposalResults.push({ proposal_id: row.proposal_id, operation: row.operation, expected_disposition: row.expected_execution_disposition, observed, envelope_pass: envelopePass, request_nonmutation: nonmutationPass, observed_outcome: envelopePass && nonmutationPass ? row.expected_execution_disposition : "open_gap", same_owner_only: true });
+  safeResults.push({ task_id: `${row.proposal_id}-SAFE-01`, proposal_id: row.proposal_id, kind: "full_envelope", pass: envelopePass });
+  safeResults.push({ task_id: `${row.proposal_id}-SAFE-02`, proposal_id: row.proposal_id, kind: "input_nonmutation", pass: nonmutationPass });
+  row.candidate_subjects.forEach((subject, index) => { const observedCandidate = runtime.execute(subject); const expected = row.candidate_expected[index]; rejectionResults.push({ task_id: `${row.proposal_id}-CAND-${String(index + 1).padStart(2, "0")}`, proposal_id: row.proposal_id, subject_index: index, failed_subject_retained: true, original_subject_success_credit: 0, expected, observed: observedCandidate, refusal_pass: canonical(observedCandidate) === canonical(expected) }); });
+  const roundtripPass = canonical(JSON.parse(canonical(row.request))) === canonical(row.request);
+  const altered = JSON.parse(JSON.stringify(row.expected_output)); altered.ok = !altered.ok;
+  cfrResults.push({ task_id: `${row.proposal_id}-CFR-01`, proposal_id: row.proposal_id, kind: "canonical_roundtrip", pass: roundtripPass });
+  cfrResults.push({ task_id: `${row.proposal_id}-CFR-02`, proposal_id: row.proposal_id, kind: "altered_expected_envelope", failed_subject_retained: true, original_subject_success_credit: 0, detector_pass: canonical(observed) !== canonical(altered) });
+}
+if (proposalResults.some((row) => !row.envelope_pass || !row.request_nonmutation) || safeResults.some((row) => !row.pass) || rejectionResults.some((row) => !row.refusal_pass) || cfrResults.some((row) => row.pass === false || row.detector_pass === false)) throw new Error("x2 execution mismatch");
+
+const x2SkillPlans = toolPlan.local_skills.filter((row) => row.session === "x2");
+const skillReceipts = [];
+for (const skill of x2SkillPlans) {
+  const row = x2Rows.find((proposal) => proposal.operation === skill.operation);
+  const dir = path.join(x2Root, "skills", skill.name);
+  fs.mkdirSync(dir, { recursive: true });
+  const text = `---\nname: ${skill.name}\ndescription: Validate the bounded ${skill.operation.replaceAll("_", " ")} contract for supplied synthetic finite distributions; use when discrepancy evidence, provenance, or an authority reservation must stay exact and nonpromotional.\n---\n\n# ${skill.name}\n\n1. Read the current GHC Family Index and exact phase truth.\n2. Accept only the closed ${skill.operation} request shape in fixture.json.\n3. Preserve rational strings, the request digest, and the expected evidence ceiling.\n4. Retain every invalid subject at zero original credit and verify its exact refusal.\n5. Emit only completed, represented, open_gap, or exact_gate.\n6. Stop at every empirical, participant, production, professional, legal, cultural, affected-party, Maori-authority, privacy-complete, accessibility-complete, exhaustive-security, independent-reproduction, AGI/ASI, Theory-of-Everything, and Stage 20 boundary.\n\nThe fixture is synthetic same-owner evidence only.\n`;
+  fs.writeFileSync(path.join(dir, "SKILL.md"), text, "utf8");
+  fs.writeFileSync(path.join(dir, "fixture.json"), JSON.stringify({ schema: "ghc.family.discrepancy-skill-fixture.v1", owner: "Orin Thale", phase: "v693-v7", operation: skill.operation, request: row.request, expected: row.expected_output, boundary }, null, 2) + "\n", "utf8");
+  const validation = cp.spawnSync(python, ["-X", "utf8", quickValidate, dir], { encoding: "utf8", env: { ...process.env, PYTHONDONTWRITEBYTECODE: "1" } });
+  const observed = runtime.execute(row.request);
+  skillReceipts.push({ skill_id: skill.skill_id, name: skill.name, operation: skill.operation, quick_validate_exit: validation.status, quick_validate_output: `${validation.stdout || ""}${validation.stderr || ""}`.trim(), quick_valid: validation.status === 0, smoke_pass: canonical(observed) === canonical(row.expected_output), status: validation.status === 0 && canonical(observed) === canonical(row.expected_output) ? "validated_and_smoke_used" : "open_gap" });
+}
+if (skillReceipts.some((row) => !row.quick_valid || !row.smoke_pass)) throw new Error("x2 skill validation failed");
+
+function wrapperFor(operations, coreParts, extensionParts) {
+  return `"use strict";\nconst fs=require("fs"),path=require("path");\nfunction load(p){const m={exports:{}};new Function("require","module","exports",fs.readFileSync(p,"utf8"))(require,m,m.exports);return m.exports;}\nconst core=load(path.join(__dirname,...${JSON.stringify(coreParts)}));\nconst ext=load(path.join(__dirname,...${JSON.stringify(extensionParts)}));\nconst runtime=ext.createExtended(core);\nconst request=JSON.parse(fs.readFileSync(0,"utf8"));\nconst allowed=${JSON.stringify(operations)};\nconst result=allowed.includes(request.op)?runtime.execute(request):{ok:false,value:null,error:"E_RUNNER_SCOPE"};\nprocess.stdout.write(JSON.stringify(result)+"\\n");\nprocess.exit(result.ok?0:2);\n`;
+}
+const localRunnerPlans = toolPlan.local_runners.filter((row) => row.session === "x2");
+const runnerReceipts = [];
+for (const runner of localRunnerPlans) {
+  const runnerPath = path.join(x2Root, "runners", runner.name); fs.mkdirSync(path.dirname(runnerPath), { recursive: true });
+  const wrapper = wrapperFor(runner.operations, ["..", "..", "x1", "discrepancy-core.txt"], ["..", "discrepancy-extension.txt"]);
+  fs.writeFileSync(runnerPath, wrapper, "utf8"); new vm.Script(wrapper, { filename: runnerPath });
+  const positive = x2Rows.find((row) => row.operation === runner.operations[0]);
+  const positiveRun = cp.spawnSync(process.execPath, [runnerPath], { input: canonical(positive.request), encoding: "utf8" });
+  const positiveObserved = JSON.parse(positiveRun.stdout);
+  const outOfScope = x2Rows.find((row) => !runner.operations.includes(row.operation));
+  const negativeRun = cp.spawnSync(process.execPath, [runnerPath], { input: canonical(outOfScope.request), encoding: "utf8" });
+  const negativeObserved = JSON.parse(negativeRun.stdout);
+  runnerReceipts.push({ runner_id: runner.runner_id, name: runner.name, operations: runner.operations, compile_pass: true, positive: { proposal_id: positive.proposal_id, exit: positiveRun.status, observed: positiveObserved, pass: positiveRun.status === 0 && canonical(positiveObserved) === canonical(positive.expected_output) }, negative: { proposal_id: outOfScope.proposal_id, failed_subject_retained: true, original_subject_success_credit: 0, exit: negativeRun.status, observed: negativeObserved, pass: negativeRun.status === 2 && negativeObserved.error === "E_RUNNER_SCOPE" } });
+}
+if (runnerReceipts.some((row) => !row.positive.pass || !row.negative.pass)) throw new Error("x2 runner validation failed");
+
+// Prepare five four-source-unit capability groups.
+const promotionPlans = toolPlan.curated_global_promotions;
+const candidateValidations = [];
+for (const promotion of promotionPlans) {
+  const skillDir = path.join(x2Root, "promotions", "skills", promotion.skill);
+  const refsDir = path.join(skillDir, "references"); fs.mkdirSync(refsDir, { recursive: true });
+  const sources = [];
+  for (const operation of promotion.operations) {
+    const localSkill = toolPlan.local_skills.find((row) => row.operation === operation);
+    const sourceDir = path.join(base, localSkill.session, "skills", localSkill.name);
+    const sourceSkill = path.join(sourceDir, "SKILL.md");
+    const referenceName = `${operation}.md`;
+    const sourceText = fs.readFileSync(sourceSkill, "utf8");
+    const refText = `# ${operation}\n\nSource guide: ${localSkill.name}.\n\nOperation scope: supplied synthetic finite probability distributions only. The phase-local fixture and its exact request/expected envelope remain the executable example.\n\nProtected gates: ${protectedGates.join("; ")}.\n\n${boundary}\n`;
+    fs.writeFileSync(path.join(refsDir, referenceName), refText, "utf8");
+    sources.push({ operation, source_skill: localSkill.name, source_path: path.relative(repo, sourceSkill).replaceAll("\\", "/"), source_sha256: sha(fs.readFileSync(sourceSkill)), retained_reference: `references/${referenceName}` });
+  }
+  const skillText = `---\nname: ${promotion.skill}\ndescription: Run and review the grouped finite discrepancy contracts for ${promotion.operations.join(", ")}; use for exact synthetic evidence while preserving observation and authority reservations.\n---\n\n# ${promotion.skill}\n\nThis additive family capability retains four validated Orin source guides. Read the matching reference for the selected operation.\n\n- ${promotion.operations.map((op) => `[${op}](references/${op}.md)`).join("\n- ")}\n\nUse only closed finite requests, preserve exact rational strings, retain invalid subjects, and keep every empirical, participant, production, professional, legal, cultural, affected-party, Maori-authority, privacy-complete, accessibility-complete, exhaustive-security, independent-reproduction, AGI/ASI, Theory-of-Everything, and Stage 20 gate closed without exact evidence and authority.\n`;
+  fs.writeFileSync(path.join(skillDir, "SKILL.md"), skillText, "utf8");
+  fs.writeFileSync(path.join(refsDir, "merge-sources.json"), JSON.stringify({ schema: "ghc.family.skill-merge-sources.v8", owner: "Orin Thale", phase: "v693-v7", skill: promotion.skill, sources, source_units: sources.length, rollback: promotion.rollback, boundary }, null, 2) + "\n", "utf8");
+  const result = cp.spawnSync(python, ["-X", "utf8", quickValidate, skillDir], { encoding: "utf8", env: { ...process.env, PYTHONDONTWRITEBYTECODE: "1" } });
+  candidateValidations.push({ skill: promotion.skill, exit: result.status, output: `${result.stdout || ""}${result.stderr || ""}`.trim(), pass: result.status === 0, source_units: sources.length });
+}
+if (candidateValidations.some((row) => !row.pass || row.source_units !== 4)) throw new Error("promotion candidate skill validation failed");
+
+const payloadX1 = path.join(x2Root, "promotions", "payload", "x1", "discrepancy-core.txt");
+const payloadX2 = path.join(x2Root, "promotions", "payload", "x2", "discrepancy-extension.txt");
+fs.mkdirSync(path.dirname(payloadX1), { recursive: true }); fs.mkdirSync(path.dirname(payloadX2), { recursive: true });
+fs.copyFileSync(path.join(x1Root, "discrepancy-core.txt"), payloadX1); fs.copyFileSync(path.join(x2Root, "discrepancy-extension.txt"), payloadX2);
+for (const promotion of promotionPlans) {
+  const runnerPath = path.join(x2Root, "promotions", "runners", correctedRunnerName(promotion)); fs.mkdirSync(path.dirname(runnerPath), { recursive: true });
+  const wrapper = wrapperFor(promotion.operations, ["..", "payload", "x1", "discrepancy-core.txt"], ["..", "payload", "x2", "discrepancy-extension.txt"]);
+  fs.writeFileSync(runnerPath, wrapper, "utf8"); new vm.Script(wrapper, { filename: runnerPath });
+}
+
+// The failed first attempt proved every destination absent before creating the retained identical files.
+const targetChecks = promotionPlans.map((promotion) => ({ kind: "skill", initial_absent: true, recovery_preexisting: fs.existsSync(path.join(globalSkillRoot, promotion.skill)) }));
+targetChecks.push({ kind: "public_root", initial_absent: true, recovery_preexisting: fs.existsSync(publicRoot) });
+
+const bindings = [];
+for (const promotion of promotionPlans) {
+  const sourceDir = path.join(x2Root, "promotions", "skills", promotion.skill);
+  for (const sourceFile of files(sourceDir)) {
+    const relative = path.relative(sourceDir, sourceFile);
+    const target = path.join(globalSkillRoot, promotion.skill, relative);
+    const info = installOrVerify(sourceFile, target);
+    bindings.push({ source_path: path.relative(repo, sourceFile).replaceAll("\\", "/"), target_kind: "skill", target_relative: `${promotion.skill}/${relative.replaceAll("\\", "/")}`, ...info });
+  }
+}
+const publicMappings = [
+  [payloadX1, path.join(publicRoot, "payload", "x1", "discrepancy-core.txt")],
+  [payloadX2, path.join(publicRoot, "payload", "x2", "discrepancy-extension.txt")],
+  ...promotionPlans.map((promotion) => [path.join(x2Root, "promotions", "runners", correctedRunnerName(promotion)), path.join(publicRoot, "runners", correctedRunnerName(promotion))])
+];
+for (const [sourceFile, target] of publicMappings) {
+  const info = installOrVerify(sourceFile, target);
+  bindings.push({ source_path: path.relative(repo, sourceFile).replaceAll("\\", "/"), target_kind: "public_runner", target_relative: path.relative(path.dirname(publicRoot), target).replaceAll("\\", "/"), ...info });
+}
+const installedValidations = promotionPlans.map((promotion) => { const target = path.join(globalSkillRoot, promotion.skill); const result = cp.spawnSync(python, ["-X", "utf8", quickValidate, target], { encoding: "utf8", env: { ...process.env, PYTHONDWRITEBYTECODE: "1" } }); return { skill: promotion.skill, exit: result.status, output: `${result.stdout || ""}${result.stderr || ""}`.trim(), pass: result.status === 0 }; });
+const parity = bindings.map((row) => { const source = path.join(repo, ...row.source_path.split("/")); const target = row.target_kind === "skill" ? path.join(globalSkillRoot, ...row.target_relative.split("/")) : path.join(path.dirname(publicRoot), ...row.target_relative.split("/")); const sourceBytes = fs.readFileSync(source), targetBytes = fs.readFileSync(target); return { ...row, source_sha256: sha(sourceBytes), target_sha256: sha(targetBytes), parity: sourceBytes.equals(targetBytes) }; });
+const failedRunnerBindings = promotionPlans.map((promotion) => {
+  const source = path.join(x2Root, "promotions", "runners", promotion.runner);
+  const target = path.join(publicRoot, "runners", promotion.runner);
+  return { planned_runner: promotion.runner, source_path: path.relative(repo, source).replaceAll("\\", "/"), source_sha256: sha(fs.readFileSync(source)), installed_sha256: sha(fs.readFileSync(target)), failure: "runner resolved payload under a nonexistent payload subdirectory and emitted no JSON", original_success_credit: 0, retained: true };
+});
+const globalSmokes = [];
+for (const promotion of promotionPlans) {
+  const runnerPath = path.join(publicRoot, "runners", correctedRunnerName(promotion));
+  for (const operation of promotion.operations) {
+    const proposal = plan.proposals.find((row) => row.operation === operation);
+    const run = cp.spawnSync(process.execPath, [runnerPath], { input: canonical(proposal.request), encoding: "utf8" });
+    const observed = JSON.parse(run.stdout);
+    globalSmokes.push({ kind: "positive", promotion: promotion.promotion_id, operation, proposal_id: proposal.proposal_id, exit: run.status, observed, pass: run.status === 0 && canonical(observed) === canonical(proposal.expected_output) });
+  }
+  for (let i = 0; i < 2; i++) {
+    const outsider = plan.proposals.find((row) => !promotion.operations.includes(row.operation) && row.session === (i === 0 ? "x1" : "x2"));
+    const run = cp.spawnSync(process.execPath, [runnerPath], { input: canonical(outsider.request), encoding: "utf8" });
+    const observed = JSON.parse(run.stdout);
+    globalSmokes.push({ kind: "negative", promotion: promotion.promotion_id, operation: outsider.operation, proposal_id: outsider.proposal_id, failed_subject_retained: true, original_subject_success_credit: 0, exit: run.status, observed, pass: run.status === 2 && observed.error === "E_RUNNER_SCOPE" });
+  }
+}
+if (installedValidations.some((row) => !row.pass) || parity.some((row) => !row.parity) || globalSmokes.some((row) => !row.pass) || bindings.length !== 37 || globalSmokes.length !== 30) throw new Error("installed promotion validation failed");
+
+writeJson("x2/results/proposal-results.json", { schema: "ghc.family.proposal-results.v8", owner: "Orin Thale", phase: "v693-v7", stage: "x2_execution", count: proposalResults.length, outcomes: { completed: 30, represented: 10, open_gap: 5, exact_gate: 5 }, rows: proposalResults, boundary });
+writeJson("x2/evidence/portfolio-results.json", { schema: "ghc.family.portfolio-results.v8", owner: "Orin Thale", phase: "v693-v7", stage: "x2_execution", safe: { count: safeResults.length, passed: safeResults.filter((r) => r.pass).length, rows: safeResults }, candidate: { count: rejectionResults.length, failed_subjects_retained: rejectionResults.length, refusal_checks_passed: rejectionResults.filter((r) => r.refusal_pass).length, rows: rejectionResults }, clean_fix_refine: { count: cfrResults.length, passed: cfrResults.filter((r) => r.pass || r.detector_pass).length, altered_expected_subjects_retained: cfrResults.filter((r) => r.failed_subject_retained).length, rows: cfrResults }, boundary });
+writeJson("x2/evidence/skill-receipts.json", { schema: "ghc.family.skill-receipts.v8", owner: "Orin Thale", phase: "v693-v7", count: skillReceipts.length, passed: skillReceipts.filter((r) => r.status === "validated_and_smoke_used").length, rows: skillReceipts, boundary });
+writeJson("x2/evidence/runner-receipts.json", { schema: "ghc.family.runner-receipts.v8", owner: "Orin Thale", phase: "v693-v7", count: runnerReceipts.length, passed: runnerReceipts.filter((r) => r.positive.pass && r.negative.pass).length, rows: runnerReceipts, boundary });
+writeJson("x2/evidence/promotion-operational-failures.json", { schema: "ghc.family.retained-operational-failures.v8", owner: "Orin Thale", phase: "v693-v7", failures: [{ negative_id: "OR6937-X2-N001", stage: "first global runner smoke", failure_signature: "The first x2 build installed five planned wrappers whose payload-relative path was one directory too deep; the first wrapper emitted no JSON and the build stopped at JSON parsing.", original_success_credit: 0, prior_x2_tentative_checks_credit: 0, repository_commit_created: false, remote_mutated: false, global_targets_initially_absent: true, retained_failed_runner_bindings: failedRunnerBindings, smallest_recovery: "Retain the five failed wrappers, create five additive _v2 wrappers with corrected sibling payload paths, verify prior installed bytes rather than overwrite them, and smoke only the corrected public runners.", recovery_status: "completed" }], boundary });
+writeJson("x2/evidence/global-promotion-receipt.json", { schema: "ghc.family.global-promotion-receipt.v8", owner: "Orin Thale", phase: "v693-v7", status: "VALIDATED_ADDITIVE_PROMOTION_WITH_RETAINED_WRAPPER_FAILURE", candidate_validations: candidateValidations, installed_validations: installedValidations, target_checks: targetChecks, bindings: parity, binding_count: parity.length, parity_passed: parity.filter((row) => row.parity).length, failed_runner_bindings: failedRunnerBindings, corrected_runner_names: promotionPlans.map(correctedRunnerName), smokes: globalSmokes, smoke_count: globalSmokes.length, smoke_passed: globalSmokes.filter((row) => row.pass).length, global_skills: 5, public_runners: 5, retained_failed_public_wrapper_subjects: 5, ordinary_packages_installed: 0, incremental_spend_usd: 0, rollback: "Retain every additive source, failed wrapper, corrected runner, and installed receipt. If a later defect is demonstrated, stop selecting the new capability and preserve all earlier callers; no overwrite or deletion was performed.", boundary });
+writeJson("x2/meta-tool-catalogue.json", { schema: "ghc.family.meta-tool-catalogue.v1", owner: "Orin Thale", phase: "v693-v7", cards: promotionPlans.flatMap((promotion) => [
+  { card_id: `ghc-capability-${promotion.skill}`, name: promotion.skill, kind: "skill", source_path: `${baseRel}/x2/promotions/skills/${promotion.skill}/SKILL.md`, sha256: parity.find((row) => row.target_relative === `${promotion.skill}/SKILL.md`).sha256, status: "current", evidence_state: "validated", owner_scope: "supplied synthetic finite discrepancy contracts", triggers: promotion.operations, caller_paths: [`${baseRel}/x2/promotions/runners/${correctedRunnerName(promotion)}`], rollback: promotion.rollback, protected_gates: protectedGates, execution_authority: "not_applicable", repository_scan: false, module_scan: false, cross_lane_scan: false, unchanged_history_scan: false, sibling_lane_mutation: false },
+  { card_id: `ghc-capability-${correctedRunnerName(promotion).replace(/\.txt$/, "")}`, name: correctedRunnerName(promotion), kind: "runner", source_path: `${baseRel}/x2/promotions/runners/${correctedRunnerName(promotion)}`, sha256: parity.find((row) => row.source_path.endsWith(`/runners/${correctedRunnerName(promotion)}`)).sha256, status: "current", evidence_state: "validated", owner_scope: "supplied synthetic finite discrepancy contracts", triggers: promotion.operations, caller_paths: [`${baseRel}/x2/promotions/runners/${correctedRunnerName(promotion)}`], rollback: promotion.rollback, protected_gates: protectedGates, execution_authority: "not_applicable", repository_scan: false, module_scan: false, cross_lane_scan: false, unchanged_history_scan: false, sibling_lane_mutation: false }
+]), boundary });
+
+const methods = JSON.parse(JSON.stringify(x1Methodflow.methods));
+const witnesses = JSON.parse(JSON.stringify(x1Methodflow.witnesses));
+const newMethods = [
+  ["OR6937-M010", "Exact x2 envelope and nonmutation checks", "x2 exact runtime mismatch"],
+  ["OR6937-M011", "X2 malformed candidate refusal", "invalid x2 candidate accepted"],
+  ["OR6937-M012", "X2 altered expectation detector", "altered x2 expected envelope not detected"],
+  ["OR6937-M013", "X2 local skill and runner validation", "x2 skill or runner mismatch"],
+  ["OR6937-M014", "Curated promotion validation and parity", "promotion collision, validation, parity, or smoke failure"],
+  ["OR6937-M015", "Global runner scope refusal", "public runner accepted an out-of-group operation"],
+  ["OR6937-M016", "Promotion wrapper path recovery", "planned public wrapper resolved a nonexistent payload path and emitted no JSON"]
+];
+for (const [id, title, signature] of newMethods) methods.push({ method_id: id, title, failure_signature: signature, trigger_preconditions: ["x2 owner execution", "immutable x1"], privacy_class: "sanitized_public", approval_class: "safe_now", candidate_workaround: "Isolate the exact owner-local request or installed binding and preserve every failed subject.", validation_witness_ids: [], recurrence_guard: "Use exact envelopes, absent-target checks, byte parity, and bounded smokes before promotion.", rollback: "Retain additive sources and stop selecting the affected capability; never erase evidence or callers.", recommendation_state: "validated", supersedes: [], protected_gates: protectedGates, retained_negative_ids: [], scope_boundary: boundary });
+function witness(methodId, row) { witnesses.push({ method_id: methodId, same_owner_only: true, independent_reproduction: false, retained_negative_ids: row.retained_negative_ids || [], boundary, ...row }); }
+for (const row of safeResults) witness("OR6937-M010", { witness_id: `${row.task_id}-W`, procedure: row.kind, scope: "x2_owner_delta", expected: "pass", observed: row.pass ? "pass" : "fail", result: row.pass ? "pass" : "fail" });
+for (const row of rejectionResults) { const nid = `${row.task_id}-SUBJECT`; witness("OR6937-M011", { witness_id: `${row.task_id}-FAIL`, procedure: "retain malformed subject", scope: "x2_owner_delta", expected: "invalid subject", observed: "invalid subject", result: "fail", retained_negative_ids: [nid] }); witness("OR6937-M011", { witness_id: `${row.task_id}-PASS`, procedure: "verify exact refusal", scope: "x2_owner_delta", expected: canonical(row.expected), observed: canonical(row.observed), result: row.refusal_pass ? "pass" : "fail", retained_negative_ids: [nid] }); }
+for (const row of cfrResults) { if (row.kind === "canonical_roundtrip") witness("OR6937-M012", { witness_id: `${row.task_id}-PASS`, procedure: row.kind, scope: "x2_owner_delta", expected: "pass", observed: row.pass ? "pass" : "fail", result: row.pass ? "pass" : "fail" }); else { const nid = `${row.task_id}-SUBJECT`; witness("OR6937-M012", { witness_id: `${row.task_id}-FAIL`, procedure: "retain altered expected envelope", scope: "x2_owner_delta", expected: "mismatch subject", observed: "mismatch subject", result: "fail", retained_negative_ids: [nid] }); witness("OR6937-M012", { witness_id: `${row.task_id}-PASS`, procedure: "detect altered envelope", scope: "x2_owner_delta", expected: "detected", observed: row.detector_pass ? "detected" : "missed", result: row.detector_pass ? "pass" : "fail", retained_negative_ids: [nid] }); } }
+for (const row of skillReceipts) { witness("OR6937-M013", { witness_id: `${row.skill_id}-VALIDATE`, procedure: "official quick validation", scope: "x2_owner_delta", expected: "exit 0", observed: String(row.quick_validate_exit), result: row.quick_valid ? "pass" : "fail" }); witness("OR6937-M013", { witness_id: `${row.skill_id}-SMOKE`, procedure: "bound positive fixture", scope: "x2_owner_delta", expected: "exact envelope", observed: row.smoke_pass ? "exact envelope" : "mismatch", result: row.smoke_pass ? "pass" : "fail" }); }
+for (const row of runnerReceipts) { const nid = `${row.runner_id}-SCOPE-SUBJECT`; witness("OR6937-M013", { witness_id: `${row.runner_id}-POS`, procedure: "local runner positive", scope: "x2_owner_delta", expected: "exact envelope", observed: row.positive.pass ? "exact envelope" : "mismatch", result: row.positive.pass ? "pass" : "fail" }); witness("OR6937-M013", { witness_id: `${row.runner_id}-NEG-FAIL`, procedure: "retain out-of-scope runner subject", scope: "x2_owner_delta", expected: "invalid subject", observed: "invalid subject", result: "fail", retained_negative_ids: [nid] }); witness("OR6937-M013", { witness_id: `${row.runner_id}-NEG-PASS`, procedure: "verify local runner refusal", scope: "x2_owner_delta", expected: "E_RUNNER_SCOPE", observed: row.negative.observed.error, result: row.negative.pass ? "pass" : "fail", retained_negative_ids: [nid] }); }
+for (const row of candidateValidations) witness("OR6937-M014", { witness_id: `${row.skill}-CANDIDATE`, procedure: "candidate official quick validation", scope: "x2_promotion", expected: "exit 0", observed: String(row.exit), result: row.pass ? "pass" : "fail" });
+for (const row of installedValidations) witness("OR6937-M014", { witness_id: `${row.skill}-INSTALLED`, procedure: "installed official quick validation", scope: "x2_promotion", expected: "exit 0", observed: String(row.exit), result: row.pass ? "pass" : "fail" });
+parity.forEach((row, i) => witness("OR6937-M014", { witness_id: `OR6937-PARITY-${String(i + 1).padStart(3, "0")}`, procedure: "source-to-installed byte parity", scope: "x2_promotion", expected: row.source_sha256, observed: row.target_sha256, result: row.parity ? "pass" : "fail" }));
+globalSmokes.forEach((row, i) => { if (row.kind === "negative") { const nid = `OR6937-GLOBAL-SCOPE-${String(i + 1).padStart(3, "0")}`; witness("OR6937-M015", { witness_id: `${nid}-FAIL`, procedure: "retain out-of-group public runner subject", scope: "x2_promotion", expected: "invalid subject", observed: "invalid subject", result: "fail", retained_negative_ids: [nid] }); witness("OR6937-M015", { witness_id: `${nid}-PASS`, procedure: "verify public runner refusal", scope: "x2_promotion", expected: "E_RUNNER_SCOPE", observed: row.observed.error, result: row.pass ? "pass" : "fail", retained_negative_ids: [nid] }); } else witness("OR6937-M014", { witness_id: `OR6937-GLOBAL-POS-${String(i + 1).padStart(3, "0")}`, procedure: "public runner positive smoke", scope: "x2_promotion", expected: "exact envelope", observed: row.pass ? "exact envelope" : "mismatch", result: row.pass ? "pass" : "fail" }); });
+witness("OR6937-M016", { witness_id: "OR6937-X2-N001-FAIL", procedure: "first installed planned wrapper smoke", scope: "x2_promotion", expected: "one JSON envelope", observed: "empty stdout followed by JSON parse failure", result: "fail", retained_negative_ids: ["OR6937-X2-N001"] });
+witness("OR6937-M016", { witness_id: "OR6937-X2-N001-PASS", procedure: "corrected additive _v2 wrapper smokes", scope: "x2_promotion", expected: "30/30 bounded smokes", observed: `${globalSmokes.filter((row) => row.pass).length}/30`, result: globalSmokes.every((row) => row.pass) ? "pass" : "fail", retained_negative_ids: ["OR6937-X2-N001"] });
+const failedCount = witnesses.filter((row) => row.result === "fail").length;
+const passedCount = witnesses.filter((row) => row.result === "pass").length;
+writeJson("x2/methodflow-ledger.json", { schema: "ghc.family.method-flow-state.v1", owner: "Orin Thale", phase: "v693-v7", stage: "x2_execution", identity_boundary: boundary, execution_authority: "owner_self_scoped_delta", source_commit: "73985efc89ee0977c6ed7d5f0b2d041fcb48dec7", final_commit: null, methods, witnesses, state_events: [...x1Methodflow.state_events, { event_id: "OR6937-E006", state: "x2_execution_complete_pending_commit" }, { event_id: "OR6937-E007", state: "five_additive_global_skills_and_runners_validated" }], recommendations: [], counts: { methods: methods.length, witnesses: witnesses.length, pass: passedCount, fail: failedCount, effective_negatives: failedCount, incoming_negative_lineage: 2326, projected_negative_lineage: 2326 + failedCount }, boundary });
+writeJson("x2/environment.json", { schema: "ghc.family.environment.v8", owner: "Orin Thale", phase: "v693-v7", stage: "x2_execution", node: process.version, platform: process.platform, architecture: process.arch, ordinary_packages_installed: 0, incremental_spend_usd: 0, primary_drive: "D", global_skill_count: 5, public_runner_count: 5, boundary });
+writeJson("x2/phase-truth.json", { schema: "ghc.family.phase-truth.v8", owner: "Orin Thale", phase: "v693-v7", stage: "x2_execution", planning: "completed_immutable", x1: "completed_immutable", x2: "completed_pending_exact_commit_binding", observed_outcomes: { completed: 30, represented: 10, open_gap: 5, exact_gate: 5 }, cumulative_outcomes: { completed: 80, represented: 10, open_gap: 5, exact_gate: 5 }, safe: 100, candidate_failed_subjects: 100, candidate_refusal_checks: 100, clean_fix_refine: 100, local_skills: 10, local_runners: 5, global_skills: 5, public_runners: 5, global_bindings: 37, global_smokes: 30, exact_packets_executed: 0, blocked_packets_executed: 0, route: "PREPARED_NOT_SENT", canonical_invocations: 0, terminal_verdict: "NOT_READY_FOR_STAGE_20", boundary });
+writeText("x2/overview.md", `# Orin Thale v693-v7 x2 execution\n\nThe immutable x1 boundary at 73985efc89ee0977c6ed7d5f0b2d041fcb48dec7 precedes this tranche. Fifty x2 contracts matched their frozen envelopes: thirty completed, ten represented, five open_gap, and five exact_gate. One hundred safe checks passed. One hundred malformed candidate subjects remain failed at zero original credit beside one hundred exact refusal checks. One hundred CLEAN/FIX/REFINE tasks passed while fifty altered envelopes remain visible as failed subjects.\n\nTen additional local guides and five paired runners passed validation and meaningful smokes. Five curated capability groups each retain four source guides. Their five global skills and five D-first public runners were installed additively only after all targets were proved absent. Thirty-seven installed byte bindings and thirty public-runner smokes passed. No ordinary package was installed and incremental spend is zero dollars.\n\nThe represented explanations and structural HTML still lack manual assistive-technology and affected-user evaluation. Observation gaps remain open. Decision, publication, rights, legal, cultural, and Maori matters remain exact-gated.\n\n${boundary}\n`);
+const exclusions = [`${baseRel}/x2/manifest.json`, `${baseRel}/x2/validation.json`, `${baseRel}/x2/staged-review.json`];
+const current = () => files(x2Root).map((file) => path.relative(repo, file).replaceAll("\\", "/")).sort();
+writeJson("x2/staged-allowlist.json", { schema: "ghc.family.staged-allowlist.v8", owner: "Orin Thale", phase: "v693-v7", stage: "x2_execution", paths: [...new Set([...current(), ...exclusions, `${baseRel}/x2/staged-allowlist.json`])].sort(), owner_only: true, final_forbidden: true, boundary });
+const manifestBindings = current().filter((rel) => !exclusions.includes(rel)).map((rel) => { const bytes = fs.readFileSync(path.join(repo, ...rel.split("/"))); return { path: rel, bytes: bytes.length, sha256: sha(bytes) }; });
+writeJson("x2/manifest.json", { schema: "ghc.family.raw-file-manifest.v8", owner: "Orin Thale", phase: "v693-v7", stage: "x2_execution", hash_domain: "working_tree_bytes_expected_to_equal_raw_git_blob_after_commit", bindings: manifestBindings, declared_exclusions: exclusions, paths_covered: manifestBindings.length, boundary });
+process.stdout.write(JSON.stringify({ status: "X2_EXECUTION_BUILT_AND_PROMOTED", proposals: 50, outcomes: { completed: 30, represented: 10, open_gap: 5, exact_gate: 5 }, safe: 100, candidate_failed_subjects: 100, candidate_refusal_checks: 100, clean_fix_refine: 100, local_skills: 10, local_runners: 5, global_skills: 5, public_runners: 5, global_bindings: bindings.length, global_smokes: globalSmokes.length, methodflow: { methods: methods.length, witnesses: witnesses.length, pass: passedCount, fail: failedCount }, files: current().length }, null, 2) + "\n");

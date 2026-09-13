@@ -1,0 +1,11 @@
+"use strict";
+const fs=require("fs"),path=require("path");
+function load(p){const m={exports:{}};new Function("require","module","exports",fs.readFileSync(p,"utf8"))(require,m,m.exports);return m.exports;}
+const core=load(path.join(__dirname,...["..","payload","x1","discrepancy-core.txt"]));
+const ext=load(path.join(__dirname,...["..","payload","x2","discrepancy-extension.txt"]));
+const runtime=ext.createExtended(core);
+const request=JSON.parse(fs.readFileSync(0,"utf8"));
+const allowed=["discrepancy_explanation","discrepancy_provenance","observation_gap","authority_reservation"];
+const result=allowed.includes(request.op)?runtime.execute(request):{ok:false,value:null,error:"E_RUNNER_SCOPE"};
+process.stdout.write(JSON.stringify(result)+"\n");
+process.exit(result.ok?0:2);
