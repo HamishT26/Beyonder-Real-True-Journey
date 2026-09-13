@@ -1,0 +1,5 @@
+# Vesper v692-v6 reading map
+
+Start with `phase-truth.json`, then `lifecycle-bindings.json`, `retained-negative-register.json`, `gap-and-gate-register.json`, `method-flow-index.json`, `source-ledger.json`, `skills-tools.json`, `threat-model.json`, `complete-incomplete-checklist.json`, and `validation-policy.json`. Read the thirteen files in `modules/` or the complete `hand-off-baton.md` through its literal final sentence. Review the interactive `../x2/overview.html` and editable `../x2/formulation.tex`. Repository seal, external canonical, route guard, and native delivery are separate layers.
+
+Bounded same-owner synthetic software and documentation evidence only. It is not independent reproduction, empirical GMUT confirmation, production THOS or Freed ID, complete accessibility, exhaustive security, professional, legal, cultural, affected-party or Maori authority, consciousness or personhood evidence, Theory-of-Everything proof, canon, or Stage 20 readiness. Maori concepts remain under Maori authority. NOT_READY_FOR_STAGE_20.
