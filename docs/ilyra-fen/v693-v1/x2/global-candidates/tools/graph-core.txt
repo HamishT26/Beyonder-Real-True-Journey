@@ -1,0 +1,42 @@
+"use strict";
+const OPS=["graph_shape","topological_order","reachability_matrix","ancestor_sets","descendant_sets","minimal_obligations","maximal_obligations","antichain_frontiers","path_witness","transitive_reduction"];
+function fail(code){throw new Error(code);}
+function keys(value,expected){if(!value||typeof value!=="object"||Array.isArray(value)||Object.keys(value).sort().join("|")!==expected.slice().sort().join("|"))fail("field_set");}
+function integer(value){if(!Number.isSafeInteger(value))fail("integer_range");return value;}
+function parseStrict(text){
+ if(typeof text!=="string"||text.length>1048576)fail("input_budget");let p=0;const ws=()=>{while(/[\x20\t\r\n]/.test(text[p]||"!"))p++;};
+ function str(){const start=p++;while(p<text.length){const c=text[p++];if(c==='"'){try{return JSON.parse(text.slice(start,p));}catch{fail("json_syntax");}}if(c==='\\')p++;}fail("json_syntax");}
+ function value(depth){if(depth>32)fail("depth_budget");ws();let c=text[p];if(c==='"')return str();if(c==='{'){p++;const out=Object.create(null);ws();if(text[p]==='}'){p++;return out;}while(true){ws();if(text[p]!=='"')fail("json_syntax");const key=str();if(Object.hasOwn(out,key))fail("duplicate_key");ws();if(text[p++]!==':')fail("json_syntax");out[key]=value(depth+1);ws();c=text[p++];if(c==='}')return out;if(c!==',')fail("json_syntax");}}if(c==='['){p++;const out=[];ws();if(text[p]===']'){p++;return out;}while(true){out.push(value(depth+1));ws();c=text[p++];if(c===']')return out;if(c!==',')fail("json_syntax");}}for(const [token,out] of [["true",true],["false",false],["null",null]])if(text.slice(p,p+token.length)===token){p+=token.length;return out;}const match=text.slice(p).match(/^-?(?:0|[1-9][0-9]*)(?:\.[0-9]+)?(?:[eE][+-]?[0-9]+)?/);if(!match)fail("json_syntax");p+=match[0].length;return integer(Number(match[0]));}
+ const out=value(0);ws();if(p!==text.length)fail("json_syntax");return out;
+}
+function normalize(graph){
+ keys(graph,["id","nodes","edges"]);if(typeof graph.id!=="string"||!/^[A-Za-z0-9_-]{1,24}$/.test(graph.id))fail("identifier");
+ if(!Array.isArray(graph.nodes)||graph.nodes.length<1||graph.nodes.length>8||graph.nodes.some(label=>typeof label!=="string"||!/^[A-Za-z0-9_-]{1,24}$/.test(label))||new Set(graph.nodes).size!==graph.nodes.length)fail("nodes");
+ const n=graph.nodes.length;if(!Array.isArray(graph.edges)||graph.edges.length>n*n)fail("edges");const seen=new Set(),out=Array.from({length:n},()=>[]),inc=Array.from({length:n},()=>[]),edges=[];
+ for(const edge of graph.edges){if(!Array.isArray(edge)||edge.length!==2||edge.some(node=>!Number.isInteger(node)||node<0||node>=n)||edge[0]===edge[1]||seen.has(edge.join(",")))fail("edges");seen.add(edge.join(","));edges.push([edge[0],edge[1]]);out[edge[0]].push(edge[1]);inc[edge[1]].push(edge[0]);}
+ out.forEach(row=>row.sort((a,b)=>a-b));inc.forEach(row=>row.sort((a,b)=>a-b));const pending=inc.map(row=>row.length),ready=pending.map((value,index)=>value===0?index:null).filter(value=>value!==null),order=[];ready.sort((a,b)=>a-b);
+ while(ready.length){const node=ready.shift();order.push(node);for(const child of out[node]){pending[child]--;if(pending[child]===0){ready.push(child);ready.sort((a,b)=>a-b);}}}if(order.length!==n)fail("cycle");
+ const reach=Array.from({length:n},()=>Array(n).fill(0));for(let source=0;source<n;source++){reach[source][source]=1;const stack=[...out[source]];while(stack.length){const node=stack.pop();if(reach[source][node])continue;reach[source][node]=1;stack.push(...out[node]);}}
+ return {id:graph.id,nodes:[...graph.nodes],edges,out,inc,order,reach};
+}
+function shortest(g,source,target,removed=new Set(),skip=null){if(removed.has(source)||removed.has(target))return null;const queue=[[source]],seen=new Set([source]);while(queue.length){const current=queue.shift(),node=current[current.length-1];if(node===target)return current;for(const child of g.out[node]){if(skip&&skip[0]===node&&skip[1]===child)continue;if(!removed.has(child)&&!seen.has(child)){seen.add(child);queue.push([...current,child]);}}}return null;}
+function antichains(g){const pending=g.inc.map(row=>row.length);let ready=pending.map((value,index)=>value===0?index:null).filter(value=>value!==null).sort((a,b)=>a-b),levels=[];while(ready.length){levels.push(ready);const next=[];for(const node of ready)for(const child of g.out[node]){pending[child]--;if(pending[child]===0)next.push(child);}ready=next.sort((a,b)=>a-b);}return levels;}
+function reduction(g){return g.edges.filter(edge=>shortest(g,edge[0],edge[1],new Set(),edge)===null);}
+function envelope(value,disposition="completed"){return {ok:true,error:null,disposition,value,external_credit:false};}
+function rejected(error){return {ok:false,error,disposition:"exact_gate",value:null,external_credit:false};}
+function evaluate(input){keys(input,["op","graph","args"]);if(!OPS.includes(input.op))fail("operation");const g=normalize(input.graph),n=g.nodes.length;let value;keys(input.args,input.op==="path_witness"?["source","target"]:[]);
+ if(input.op==="graph_shape")value={nodes:n,edges:g.edges.length,indegree:g.inc.map(row=>row.length),outdegree:g.out.map(row=>row.length),isolated:Array.from({length:n},(_,i)=>i).filter(i=>!g.inc[i].length&&!g.out[i].length)};
+ else if(input.op==="topological_order")value=g.order;
+ else if(input.op==="reachability_matrix")value=g.reach;
+ else if(input.op==="ancestor_sets")value=Array.from({length:n},(_,i)=>Array.from({length:n},(_,j)=>j).filter(j=>j!==i&&g.reach[j][i]));
+ else if(input.op==="descendant_sets")value=Array.from({length:n},(_,i)=>Array.from({length:n},(_,j)=>j).filter(j=>j!==i&&g.reach[i][j]));
+ else if(input.op==="minimal_obligations")value=Array.from({length:n},(_,i)=>i).filter(i=>!g.inc[i].length);
+ else if(input.op==="maximal_obligations")value=Array.from({length:n},(_,i)=>i).filter(i=>!g.out[i].length);
+ else if(input.op==="antichain_frontiers")value=antichains(g);
+ else if(input.op==="path_witness"){const source=integer(input.args.source),target=integer(input.args.target);if(source<0||source>=n||target<0||target>=n)fail("node_range");value={source,target,path:shortest(g,source,target)};}
+ else value={edges:reduction(g),reachability_preserved:true};
+ return envelope(value);
+}
+function dispatch(input){try{return evaluate(input);}catch(error){return rejected(error.message);}}
+function fromText(text){try{return dispatch(parseStrict(text));}catch(error){return rejected(error.message);}}
+module.exports={OPS,fail,keys,integer,parseStrict,normalize,shortest,antichains,reduction,envelope,rejected,dispatch,fromText};
