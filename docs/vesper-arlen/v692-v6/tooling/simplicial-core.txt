@@ -1,0 +1,299 @@
+'use strict';
+
+const fs = require('fs');
+
+const SPECS = {
+  simplex_canonical: ['vertices'],
+  simplex_boundary: ['simplex'],
+  chain_canonical: ['terms'],
+  chain_add: ['left', 'right'],
+  chain_boundary: ['terms'],
+  boundary_squared: ['terms'],
+  complex_closure: ['simplices'],
+  incidence_matrix: ['simplices', 'dimension'],
+  chain_cycle: ['terms'],
+  rational_rank: ['matrix'],
+};
+
+function gcd(a, b) {
+  a = a < 0n ? -a : a;
+  b = b < 0n ? -b : b;
+  while (b) [a, b] = [b, a % b];
+  return a || 1n;
+}
+
+function rational(value) {
+  if (typeof value === 'boolean' || value === null || (typeof value !== 'string' && typeof value !== 'number')) {
+    throw new Error('invalid_rational');
+  }
+  const text = String(value);
+  if (!/^-?\d+(?:\/-?\d+)?$/.test(text)) throw new Error('invalid_rational');
+  const [rawN, rawD = '1'] = text.split('/');
+  let n = BigInt(rawN);
+  let d = BigInt(rawD);
+  if (!d) throw new Error('invalid_rational');
+  if (d < 0n) { n = -n; d = -d; }
+  const g = gcd(n, d);
+  return [n / g, d / g];
+}
+
+function add(a, b) { return rationalPair(a[0] * b[1] + b[0] * a[1], a[1] * b[1]); }
+function sub(a, b) { return rationalPair(a[0] * b[1] - b[0] * a[1], a[1] * b[1]); }
+function mul(a, b) { return rationalPair(a[0] * b[0], a[1] * b[1]); }
+function div(a, b) { if (!b[0]) throw new Error('division_by_zero'); return rationalPair(a[0] * b[1], a[1] * b[0]); }
+function neg(a) { return [-a[0], a[1]]; }
+function zero(a) { return a[0] === 0n; }
+function rationalPair(n, d) {
+  if (!d) throw new Error('division_by_zero');
+  if (d < 0n) { n = -n; d = -d; }
+  const g = gcd(n, d);
+  return [n / g, d / g];
+}
+function rationalText(a) { return a[1] === 1n ? String(a[0]) : `${a[0]}/${a[1]}`; }
+
+function guard(request, operation) {
+  if (!request || typeof request !== 'object' || Array.isArray(request)) throw new Error('invalid_request');
+  const required = SPECS[operation];
+  if (!required) throw new Error('unknown_operation');
+  const allowed = new Set(['op', ...required]);
+  for (const key of Object.keys(request)) if (!allowed.has(key)) throw new Error('unknown_field');
+  for (const key of required) if (!Object.prototype.hasOwnProperty.call(request, key)) throw new Error('missing_field');
+}
+
+function checkedVertices(value) {
+  if (!Array.isArray(value) || !value.length) throw new Error('invalid_simplex');
+  if (value.some(v => typeof v !== 'string' || !/^[A-Za-z0-9_-]{1,16}$/.test(v))) throw new Error('invalid_vertex');
+  if (new Set(value).size !== value.length) throw new Error('degenerate_simplex');
+  return [...value];
+}
+
+function canonicalSimplex(value) {
+  const raw = checkedVertices(value);
+  let inversions = 0;
+  for (let i = 0; i < raw.length; i++) for (let j = i + 1; j < raw.length; j++) if (raw[i] > raw[j]) inversions++;
+  return { simplex: [...raw].sort(), orientation: inversions % 2 ? -1 : 1 };
+}
+
+function key(simplex) { return JSON.stringify(simplex); }
+function keyCompare(a, b) { return a < b ? -1 : a > b ? 1 : 0; }
+function simplexCompare(a, b) {
+  const limit = Math.min(a.length, b.length);
+  for (let i = 0; i < limit; i++) {
+    if (a[i] < b[i]) return -1;
+    if (a[i] > b[i]) return 1;
+  }
+  return a.length - b.length;
+}
+
+function canonicalChain(terms) {
+  if (!Array.isArray(terms)) throw new Error('invalid_chain');
+  const acc = new Map();
+  for (const term of terms) {
+    if (!term || typeof term !== 'object' || Array.isArray(term) || Object.keys(term).sort().join(',') !== 'coefficient,simplex') throw new Error('invalid_chain_term');
+    const oriented = canonicalSimplex(term.simplex);
+    const coefficient = mul(rational(term.coefficient), [BigInt(oriented.orientation), 1n]);
+    const k = key(oriented.simplex);
+    acc.set(k, add(acc.get(k) || [0n, 1n], coefficient));
+  }
+  return [...acc.entries()]
+    .filter(([, coefficient]) => !zero(coefficient))
+    .sort(([a], [b]) => simplexCompare(JSON.parse(a), JSON.parse(b)))
+    .map(([k, coefficient]) => ({ coefficient: rationalText(coefficient), simplex: JSON.parse(k) }));
+}
+
+function simplexBoundary(simplexValue) {
+  const raw = checkedVertices(simplexValue);
+  if (raw.length === 1) return [];
+  const terms = [];
+  for (let i = 0; i < raw.length; i++) {
+    const face = [...raw.slice(0, i), ...raw.slice(i + 1)];
+    const oriented = canonicalSimplex(face);
+    terms.push({ coefficient: String((i % 2 ? -1 : 1) * oriented.orientation), simplex: oriented.simplex });
+  }
+  return canonicalChain(terms);
+}
+
+function chainBoundary(terms) {
+  const output = [];
+  for (const term of canonicalChain(terms)) {
+    const c = rational(term.coefficient);
+    for (const face of simplexBoundary(term.simplex)) {
+      output.push({ coefficient: rationalText(mul(c, rational(face.coefficient))), simplex: face.simplex });
+    }
+  }
+  return canonicalChain(output);
+}
+
+function complexBasis(simplices) {
+  if (!Array.isArray(simplices)) throw new Error('invalid_complex');
+  const basis = new Map();
+  for (const item of simplices) {
+    const simplex = canonicalSimplex(item).simplex;
+    const dimension = simplex.length - 1;
+    if (!basis.has(dimension)) basis.set(dimension, new Map());
+    basis.get(dimension).set(key(simplex), simplex);
+  }
+  const result = new Map();
+  for (const [dimension, values] of basis) result.set(dimension, [...values.values()].sort(simplexCompare));
+  return result;
+}
+
+function missingFaces(simplices) {
+  const basis = complexBasis(simplices);
+  const all = new Map();
+  for (const values of basis.values()) for (const simplex of values) all.set(key(simplex), simplex);
+  const missing = new Map();
+  for (const simplex of all.values()) {
+    for (let i = 0; i < simplex.length; i++) {
+      const face = [...simplex.slice(0, i), ...simplex.slice(i + 1)];
+      if (face.length && !all.has(key(face))) missing.set(key(face), face);
+    }
+  }
+  return [...missing.values()].sort((a, b) => a.length - b.length || keyCompare(key(a), key(b)));
+}
+
+function incidence(simplices, dimension) {
+  if (!Number.isInteger(dimension) || dimension < 1) throw new Error('invalid_dimension');
+  const basis = complexBasis(simplices);
+  const lower = basis.get(dimension - 1) || [];
+  const upper = basis.get(dimension) || [];
+  const rows = new Map(lower.map((simplex, index) => [key(simplex), index]));
+  const matrix = lower.map(() => upper.map(() => [0n, 1n]));
+  upper.forEach((simplex, column) => {
+    for (const face of simplexBoundary(simplex)) {
+      const row = rows.get(key(face.simplex));
+      if (row !== undefined) matrix[row][column] = add(matrix[row][column], rational(face.coefficient));
+    }
+  });
+  return {
+    lower_basis: lower,
+    upper_basis: upper,
+    matrix: matrix.map(row => row.map(rationalText)),
+  };
+}
+
+function matrixRank(value) {
+  if (!Array.isArray(value) || value.some(row => !Array.isArray(row))) throw new Error('invalid_matrix');
+  if (value.length && new Set(value.map(row => row.length)).size !== 1) throw new Error('ragged_matrix');
+  const a = value.map(row => row.map(rational));
+  if (!a.length) return 0;
+  const rows = a.length;
+  const cols = a[0].length;
+  let pivotRow = 0;
+  for (let column = 0; column < cols && pivotRow < rows; column++) {
+    let pivot = pivotRow;
+    while (pivot < rows && zero(a[pivot][column])) pivot++;
+    if (pivot === rows) continue;
+    [a[pivotRow], a[pivot]] = [a[pivot], a[pivotRow]];
+    const q = a[pivotRow][column];
+    a[pivotRow] = a[pivotRow].map(value => div(value, q));
+    for (let row = 0; row < rows; row++) {
+      if (row === pivotRow || zero(a[row][column])) continue;
+      const factor = a[row][column];
+      a[row] = a[row].map((value, index) => sub(value, mul(factor, a[pivotRow][index])));
+    }
+    pivotRow++;
+  }
+  return pivotRow;
+}
+
+function execute(request) {
+  const operation = request && request.op;
+  guard(request, operation);
+  let value;
+  if (operation === 'simplex_canonical') {
+    value = canonicalSimplex(request.vertices);
+  } else if (operation === 'simplex_boundary') {
+    value = { terms: simplexBoundary(request.simplex) };
+  } else if (operation === 'chain_canonical') {
+    value = { terms: canonicalChain(request.terms) };
+  } else if (operation === 'chain_add') {
+    if (!Array.isArray(request.left) || !Array.isArray(request.right)) throw new Error('invalid_chain');
+    value = { terms: canonicalChain([...request.left, ...request.right]) };
+  } else if (operation === 'chain_boundary') {
+    value = { terms: chainBoundary(request.terms) };
+  } else if (operation === 'boundary_squared') {
+    const first = chainBoundary(request.terms);
+    const second = chainBoundary(first);
+    value = { first_boundary: first, second_boundary: second, zero: second.length === 0 };
+  } else if (operation === 'complex_closure') {
+    const missing = missingFaces(request.simplices);
+    value = { closed: missing.length === 0, missing_faces: missing };
+  } else if (operation === 'incidence_matrix') {
+    value = incidence(request.simplices, request.dimension);
+  } else if (operation === 'chain_cycle') {
+    const boundary = chainBoundary(request.terms);
+    value = { cycle: boundary.length === 0, boundary };
+  } else if (operation === 'rational_rank') {
+    value = { rank: matrixRank(request.matrix) };
+  } else {
+    throw new Error('unknown_operation');
+  }
+  return { ok: true, value, error: null, external_credit: false };
+}
+
+function safeExecute(request) {
+  try {
+    return execute(request);
+  } catch (error) {
+    const code = error && error.message ? error.message : 'invalid_request';
+    return { ok: false, value: null, error: { code, message: code }, external_credit: false };
+  }
+}
+
+module.exports = {
+  safeExecute,
+  canonicalSimplex,
+  canonicalChain,
+  simplexBoundary,
+  chainBoundary,
+  complexBasis,
+  missingFaces,
+  incidence,
+  matrixRank,
+};
+
+if (require.main === module) {
+  try {
+    const request = JSON.parse(fs.readFileSync(0, 'utf8'));
+    const output = Array.isArray(request) ? request.map(safeExecute) : safeExecute(request);
+    process.stdout.write(JSON.stringify(output));
+  } catch (error) {
+    const code = error && error.message ? error.message : 'invalid_json';
+    process.stdout.write(JSON.stringify({ ok: false, value: null, error: { code, message: code }, external_credit: false }));
+  }
+}
+
+function safeExecute(request) {
+  try {
+    return execute(request);
+  } catch (error) {
+    return { ok: false, value: null, error: { code: error.message, message: error.message }, external_credit: false };
+  }
+}
+
+module.exports = {
+  safeExecute,
+  execute,
+  canonicalSimplex,
+  canonicalChain,
+  simplexBoundary,
+  chainBoundary,
+  complexBasis,
+  incidence,
+  matrixRank,
+  rational,
+  rationalText,
+  add,
+  sub,
+  mul,
+  div,
+  zero,
+  key,
+};
+
+if (require.main === module) {
+  const input = JSON.parse(fs.readFileSync(0, 'utf8'));
+  const output = Array.isArray(input) ? input.map(safeExecute) : safeExecute(input);
+  process.stdout.write(JSON.stringify(output));
+}
