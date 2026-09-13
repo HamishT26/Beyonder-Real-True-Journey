@@ -1,0 +1,3 @@
+# Sable Rook v693-v4 source pointer
+
+The existing Sable Rook main task is the next route only after Thalen Reed v693-v3 exact-final canonical success. Read all thirteen modules of docs/thalen-reed/v693-v3/final/hand-off-baton.md through its literal EOF before mutation. Verify the final commit, source manifests and external canonical receipt supplied with the native activation. Use current v8 planning, x1, x2 and final gates, preserve the thirty-identity forty-five-position route, and keep Caelen Ash v693-v5 Sable-gated. This repository pointer remains PREPARED_NOT_SENT; later route evidence is external.

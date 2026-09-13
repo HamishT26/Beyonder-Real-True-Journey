@@ -1,0 +1,97 @@
+'use strict';
+const fs=require('node:fs'),path=require('node:path'),vm=require('node:vm'),cp=require('node:child_process');
+const root=process.argv[2],receiptDir=process.argv[3],locatorFile=process.argv[4],expectedHead=process.argv[5];
+if(!root||!receiptDir||!locatorFile||!/^[a-f0-9]{40}$/.test(expectedHead||''))throw new Error('Four explicit canonical arguments required');
+const prefix='docs/thalen-reed/v693-v3/',ownerDir=path.join(root,prefix),u=require(path.join(__dirname,'validation-lib.txt'));
+const {sha,strictJSON,git,createBlobReader}=u,{rows:checks,check}=u.checks();
+const source='0d44a7fdd029f9586ce0f69c6278d22c1b9a8a93',anchors={plan:'f973e6239248684c1a9ea04ce9ab3fb4ad4beaa1',x1:'9cce50d8924886e19c11f6b75677b53359f0d16c',x2:'8032ca14e974acb0bd33e84eebb5b9a840ac0ba5',final:expectedHead};
+const branch='codex/GHC-Family/thalen-reed-v693-v3-full-tools',started=new Date().toISOString();
+// The invocation marker is exclusive and precedes any canonical scan. It is never removed.
+if(fs.existsSync(receiptDir))throw new Error('Canonical namespace exists; never replay this phase');
+fs.mkdirSync(receiptDir,{recursive:true});
+function emit(name,payload){fs.writeFileSync(path.join(receiptDir,name),JSON.stringify(payload,null,2)+'\n',{flag:'wx'});}
+emit('canonical-invocation.json',{owner:'Thalen Reed',phase:'v693-v3',started,expected_head:expectedHead,invocations:1,successes:0,replays:0,execution_authority:'owner_self_scoped_delta'});
+const blobs=createBlobReader(root);
+async function main(){
+ const head=git(root,'rev-parse','HEAD');check('exact final head',head===expectedHead);
+ check('owner branch',git(root,'branch','--show-current')===branch);
+ check('clean final worktree',git(root,'status','--porcelain=v1','--untracked-files=all')==='');
+ const upstream=git(root,'rev-parse','@{upstream}'),tracking=git(root,'rev-parse','refs/remotes/origin/'+branch),live=git(root,'ls-remote','--heads','origin','refs/heads/'+branch).split(/\s+/)[0],counts=git(root,'rev-list','--left-right','--count','HEAD...@{upstream}').split(/\s+/).map(Number);
+ check('four-way equality',[upstream,tracking,live].every(x=>x===head));check('typed zero divergence',counts.length===2&&counts.every(n=>Number.isInteger(n)&&n===0));
+ const chain=git(root,'rev-list','--reverse',source+'..HEAD').split('\n');check('four stage commits',JSON.stringify(chain)===JSON.stringify(Object.values(anchors)));
+ let previous=source;for(const [stage,anchor] of Object.entries(anchors)){const parents=git(root,'rev-list','--parents','-n','1',anchor).split(' ');check(stage+' direct single parent',parents.length===2&&parents[1]===previous);previous=anchor;}
+ const changes=git(root,'diff','--name-status',source,'HEAD').split('\n');check('owner-only additive delta',changes.every(s=>s.startsWith('A\t'+prefix)));
+ const files=changes.map(s=>s.slice(2)),fileSet=new Set(files);check('owner file ceiling',files.length<=2000);
+ function materialized(dir){return fs.readdirSync(dir,{withFileTypes:true}).filter(x=>x.name!=='.git').flatMap(x=>x.isDirectory()?materialized(path.join(dir,x.name)):[path.relative(root,path.join(dir,x.name)).replaceAll('\\','/')]);}
+ const diskFiles=materialized(root);check('materialized file ceiling',diskFiles.length<=2000);check('materialized owner-only surface',diskFiles.length===files.length&&diskFiles.every(f=>fileSet.has(f)));
+ check('exact tree owner coverage',JSON.stringify(git(root,'ls-tree','-r','--name-only','HEAD','--',prefix).split('\n').sort())===JSON.stringify([...files].sort()));
+ const cache=new Map();let jsonCount=0,compiledCount=0,largestWords=0;
+ const privatePatterns=[/\b[A-Za-z]:[\\/](?:Users|GHC-Archives|Program Files)\b/i,/\b(?:app|plugin):\/\//i,/<(?:codex_delegation|source_thread_id)>/i,/\b[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}\b/i,/\b(?:api[_-]?key|access[_-]?token|password|secret)\b\s*[:=]\s*["'][^"']+["']/i];
+ for(const file of files){
+  const bytes=await blobs.read(head+':'+file);cache.set(file.slice(prefix.length),bytes);
+  check('working bytes '+file,sha(bytes)===sha(fs.readFileSync(path.join(root,file))));
+  const ext=path.extname(file);check('allowed artifact '+file,['.json','.md','.txt','.html','.tex'].includes(ext));
+  const text=new TextDecoder('utf-8',{fatal:true}).decode(bytes),words=text.trim().split(/\s+/).length;largestWords=Math.max(largestWords,words);check('document word ceiling '+file,words<=100000);
+  check('privacy exclusions '+file,!privatePatterns.some(rx=>rx.test(text)));
+  if(ext==='.json'){strictJSON(bytes);jsonCount++;}
+  if(ext==='.txt'&&!file.includes('/retained/')&&(/(?:lib\/|runners\/|tools\/|fixture-definitions|plan-writer|canonical-validator|validation-lib)/.test(file))){new vm.Script(text,{filename:path.basename(file)});compiledCount++;}
+ }
+ const read=f=>strictJSON(cache.get(f)),manifest=read('final/owner-manifest.json'),seal=read('final/content-seal.json');
+ check('owner manifest complete set',JSON.stringify([...manifest.bindings.map(b=>b.path),...manifest.excluded].sort())===JSON.stringify([...cache.keys()].sort()));
+ check('owner four explicit exclusions',JSON.stringify([...manifest.excluded].sort())===JSON.stringify(['final/content-seal.json','final/manifest.json','final/owner-manifest.json','final/staged-allowlist.json'].sort()));
+ for(const b of manifest.bindings)check('owner raw binding '+b.path,cache.get(b.path)?.length===b.bytes&&sha(cache.get(b.path))===b.sha256);
+ let stageBindings=0;
+ for(const [stage,anchor] of Object.entries(anchors)){
+  const m=read(stage+'/manifest.json'),ownFiles=[...cache.keys()].filter(f=>f.startsWith(stage+'/'));
+  const exclusions=stage==='plan'?m.self_exclusions:m.excluded;
+  check(stage+' manifest coverage',Array.isArray(exclusions)&&JSON.stringify([...m.bindings.map(b=>b.path),...exclusions].sort())===JSON.stringify(ownFiles.sort()));
+  for(const b of m.bindings){const bytes=await blobs.read(anchor+':'+prefix+b.path);check(stage+' anchored raw binding '+b.path,bytes.length===b.bytes&&sha(bytes)===b.sha256&&sha(bytes)===sha(cache.get(b.path)));stageBindings++;}
+ }
+ for(const b of seal.bindings)check('content seal '+b.path,sha(cache.get(b.path))===b.sha256);
+ const deck=read('x2/deck/deck-index.json'),cards=deck.order.map(id=>read('x2/deck/cards/'+id+'.json')),byId=new Map(cards.map(c=>[c.card_id,c]));
+ check('108 cards',cards.length===108&&byId.size===108);check('four-tier parent links',cards.every(c=>c.tier===1?c.parent_ids.length===0:c.parent_ids.length===1&&byId.get(c.parent_ids[0])?.tier===c.tier-1));
+ const dm=read('x2/deck/card-manifest.json');for(const b of dm.bindings)check('deck raw binding '+b.path,sha(cache.get('x2/deck/'+b.path))===b.sha256);
+ function load(name){const bytes=cache.get(name),mod={exports:{}};const trustedRequire=n=>{if(n!=='node:crypto')throw new Error('Require denied');return require(n);};new vm.Script('(function(module,exports,require){'+bytes.toString('utf8')+'\n})',{filename:name}).runInThisContext()(mod,mod.exports,trustedRequire);return mod.exports;}
+ const x1=load('x1/lib/migration-x1.txt'),api=load('x2/lib/migration-x2.txt'),fixtures=load('plan/fixture-definitions.txt').rows;
+ check('sealed x1 embedding',api.embedded_x1_sha256===sha(cache.get('x1/lib/migration-x1.txt')));
+ check('one hundred unique requests',fixtures.length===100&&new Set(fixtures.map(r=>api.helpers.canon(r.request))).size===100);
+ for(const r of fixtures){const request=api.helpers.clone(r.request),before=api.helpers.canon(request),actual=(r.stage==='x1'?x1:api).execute(request);check('frozen complete envelope '+r.proposal_id,api.helpers.equal(actual,r.expected)&&before===api.helpers.canon(request));}
+ for(const stage of ['x1','x2']){
+  const tasks=read('plan/'+stage+'-tasks.json'),summary=read(stage+'/execution-summary.json'),runtime=stage==='x1'?x1:api;
+  check(stage+' declared task floors',tasks.safe.length===100&&tasks.candidate.length===100&&tasks.clean_fix_refine.length===100&&summary.unexpected_failures===0);
+  for(const c of tasks.candidate)check('declared refusal '+c.id,api.helpers.equal(runtime.execute(c.request),api.envelope(false,null,c.expected_error)));
+  const negatives=read(stage+'/evidence/candidate-subjects.json').records,recovery=read(stage+'/evidence/clean-fix-refine.json').records;
+  check(stage+' retained candidate zero credit',negatives.length===100&&negatives.every(n=>n.result==='fail'&&n.subject_success_credit===0));
+  check(stage+' corrected request evidence',recovery.length===100&&recovery.every(c=>c.result==='pass'&&c.original_subject_credit===0&&c.retained===true&&api.helpers.equal(c.actual,fixtures.find(r=>r.proposal_id===c.proposal).expected)));
+  for(const c of read('plan/parser-definitions.json')[stage]){let error='ACCEPTED';try{runtime.parseStrict(c.raw);}catch(e){error=e.code||e.message;}check('declared parser refusal '+c.id,error===c.expected_error);}
+  check(stage+' official skills validated',read(stage+'/evidence/skill-validation.json').valid===true);
+  check(stage+' official ledger validated',read(stage+'/evidence/methodflow-validation.json').valid===true);
+  for(const c of read(stage+'/evidence/runner-checks.json').records){const run=cp.spawnSync(process.execPath,[path.join(ownerDir,stage,'runners',c.runner)],{input:JSON.stringify(c.request),encoding:'utf8',timeout:15000});check('exact-final local CLI '+c.id,run.status===(c.kind==='negative'?1:0)&&api.helpers.equal(strictJSON(run.stdout),c.expected));}
+ }
+ const ledger=read('final/methodflow-ledger.json'),witnessIds=new Set(ledger.witnesses.map(w=>w.witness_id));
+ check('exact methodflow counts',ledger.methods.length===29&&ledger.witnesses.length===922&&ledger.witnesses.filter(w=>w.result==='pass').length===676&&ledger.witnesses.filter(w=>w.result==='fail').length===246);
+ check('final official ledger validation',read('final/methodflow-validation.json').valid===true);
+ check('unique witness IDs',witnessIds.size===922);check('retained negative links',ledger.witnesses.every(w=>w.retained_negative_ids.every(id=>witnessIds.has(id))));
+ const retained=read('final/retained-final-candidate.json');check('failed final candidate retained',retained.exit_code===2&&retained.subject_success_credit===0&&retained.canonical_invoked===false&&retained.artifacts.length===19);
+ for(const a of retained.artifacts){const bytes=Buffer.from(a.content_base64,'base64');check('retained candidate byte binding '+a.path,bytes.length===a.bytes&&sha(bytes)===a.sha256);}
+ check('no independent reproduction',ledger.witnesses.every(w=>w.same_owner_only===true&&w.independent_reproduction===false));
+ const inherited=read('plan/inherited-review.json');check('inherited review receives zero novelty',inherited.records.length===100&&inherited.records.every(r=>r.novelty_credit===0&&r.completion_credit===0));
+ check('held packet counts',read('plan/exact-packets.json').packets.length===50&&read('plan/blocked-packets.json').packets.length===30);
+ const locators=strictJSON(fs.readFileSync(locatorFile)),parity=read('x2/promotion/parity.json');
+ check('sixteen promoted files',parity.bindings.length===16);
+ for(const b of parity.bindings){const actual=fs.readFileSync(path.join(b.target_kind==='global_skill'?locators.skillRoot:locators.toolRoot,b.target_relative));check('installed parity '+b.target_relative,sha(actual)===b.sha256&&sha(actual)===sha(cache.get(b.source)));}
+ const integration=read('x2/promotion/installed-execution.json');check('all installed checks passed',integration.records.length===25&&integration.unexpected_failures===0);
+ for(const c of integration.records){const run=cp.spawnSync(process.execPath,[path.join(locators.toolRoot,c.runner)],{input:JSON.stringify(c.request),encoding:'utf8',timeout:15000});check('exact-final public CLI '+c.id,run.status===(c.kind==='negative'?1:0)&&api.helpers.equal(strictJSON(run.stdout),c.expected));}
+ const portfolio=read('x2/portfolio-results.json');check('observed core outcomes',api.helpers.equal(portfolio.outcomes,{completed:80,represented:10,open_gap:5,exact_gate:5})&&portfolio.records.every(r=>api.helpers.equal(r.observed,fixtures.find(f=>f.proposal_id===r.proposal_id).expected)));
+ const baton=cache.get('final/hand-off-baton.md').toString('utf8'),words=baton.trim().split(/\s+/).length;
+ check('thirteen module baton',/^## Module \d+:/gm.test(baton)&&(baton.match(/^## Module \d+:/gm)||[]).length===13);check('baton word range',words>=10000&&words<=100000);check('literal baton EOF',baton.trimEnd().endsWith('This is the literal end of the thirteen-module Thalen v693-v3 baton.'));
+ check('final verdict reservation',read('final/phase-truth.json').terminal_verdict==='NOT_READY_FOR_STAGE_20');
+ check('final remains clean',git(root,'status','--porcelain=v1','--untracked-files=all')==='');
+ check('final remote unchanged',git(root,'ls-remote','--heads','origin','refs/heads/'+branch).split(/\s+/)[0]===head);
+ const payload={owner:'Thalen Reed',phase:'v693-v3',source,head,anchors,owner_paths:files.length,owner_bindings:manifest.bindings.length,owner_exclusions:manifest.excluded,stage_bindings:stageBindings,stage_manifest_checks:4,strict_json_files:jsonCount,compiled_txt_files:compiledCount,largest_document_words:largestWords,baton_words:words,baton_sha256:sha(cache.get('final/hand-off-baton.md')),owner_manifest_sha256:sha(cache.get('final/owner-manifest.json')),content_seal_sha256:sha(cache.get('final/content-seal.json')),outcomes:portfolio.outcomes,methods:29,witnesses:922,passing_witnesses:676,failed_witnesses:246,lineage_negative_baseline:1183,lineage_negative_total:1429,global_parity:16,deck_cards:108,canonical_checks:checks.length,checks,boundary:'Exact-final same-owner synthetic software validation only; no source canonical replay, independent reproduction, deployment, scientific, authority, identity or Stage 20 credit.'};
+ emit('canonical-payload.json',payload);
+ emit('exact-final-owner-scoped-canonical.json',{schema:'ghc.family.exact-final-owner-scoped-canonical.v1',owner:'Thalen Reed',phase:'v693-v3',status:'VALID_EXACT_FINAL_OWNER_SCOPED_CANONICAL',source,head,payload_sha256:sha(fs.readFileSync(path.join(receiptDir,'canonical-payload.json'))),checks_passed:checks.length,checks_total:checks.length,invocations:1,successes:1,replays:0,completed_utc:new Date().toISOString(),terminal_verdict:'NOT_READY_FOR_STAGE_20'});
+ emit('canonical-success-latch.json',{phase:'v693-v3',head,invocations:1,successes:1,replays:0,closed:true,receipt_sha256:sha(fs.readFileSync(path.join(receiptDir,'exact-final-owner-scoped-canonical.json')))});
+ console.log(JSON.stringify({status:'VALID_EXACT_FINAL_OWNER_SCOPED_CANONICAL',head,owner_paths:files.length,checks:checks.length,canonical:{invocations:1,successes:1,replays:0},payload_sha256:sha(fs.readFileSync(path.join(receiptDir,'canonical-payload.json')))}));
+}
+main().catch(error=>{emit('canonical-failure.json',{status:'FAILED_RETAINED',message:error.message,checks,invocations:1,successes:0,replays:0});console.error(error.message);process.exitCode=1;}).finally(()=>blobs.close());
