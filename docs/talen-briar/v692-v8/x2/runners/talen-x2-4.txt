@@ -1,0 +1,9 @@
+'use strict';
+const fs=require('node:fs'),vm=require('node:vm'),path=require('node:path');
+const root=path.dirname(process.argv[1]);
+function load(p,base){const c={module:{exports:{}},base};vm.createContext(c);new vm.Script(fs.readFileSync(path.resolve(root,p),'utf8'),{filename:p}).runInContext(c,{timeout:3000});return c.module.exports;}
+const base=load("../../x1/lib/incidence-core.txt"),api="../lib/lattice-core.txt"?load("../lib/lattice-core.txt",base):base,allowed=["complements", "lattice_representation"];
+const args=process.argv.slice(2);if(args.length!==4||args[0]!=='--input'||args[2]!=='--output')throw Error('Use --input JSON_PATH --output NEW_JSON_PATH');
+const raw=fs.readFileSync(args[1],'utf8');let result;
+try{const input=base.parseStrict(raw);result=allowed.includes(input.op)?api.dispatch(input):base.rejected('runner_operation');}catch(e){result=base.rejected(e.message);}
+fs.writeFileSync(args[3],JSON.stringify(result,null,2)+'\n',{encoding:'utf8',flag:'wx'});

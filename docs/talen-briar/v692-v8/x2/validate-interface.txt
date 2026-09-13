@@ -1,0 +1,11 @@
+'use strict';
+const fs=require('node:fs'),vm=require('node:vm'),path=require('node:path');
+const root=path.dirname(process.argv[1]),html=fs.readFileSync(path.join(root,'deck/accessible-report.html'),'utf8');
+const data=html.match(/<script id="records" type="application\/json">([\s\S]*?)<\/script>/)[1],script=html.match(/<script>\s*([\s\S]*?)<\/script>/)[1],records=JSON.parse(data),nodes={};
+for(const id of ['records','operation','fixture','record-title','feature','outcome','input','output'])nodes[id]={value:'',textContent:id==='records'?data:'',options:[],handlers:{},append(o){this.options.push(o);if(this.options.length===1)this.value=o.value;},addEventListener(n,f){this.handlers[n]=f;}};
+const document={getElementById:id=>nodes[id],createElement:()=>({value:'',textContent:''})};
+const context=vm.createContext({document});new vm.Script(script,{filename:'accessible-report-inline-script'}).runInContext(context,{timeout:3000});
+let checks=0;for(const record of records){nodes.operation.value=record.op;nodes.fixture.value=record.fixture;nodes.operation.handlers.change();if(nodes['record-title'].textContent!==record.id+' · '+record.fixture||nodes.outcome.textContent!==record.result.disposition||JSON.stringify(JSON.parse(nodes.output.textContent))!==JSON.stringify(record.result)||JSON.stringify(JSON.parse(nodes.input.textContent))!==JSON.stringify(record.input))throw Error(record.id);checks++;}
+if(nodes.operation.options.length!==20||nodes.fixture.options.length!==5||checks!==100)throw Error('selector inventory');
+const receipt={state:'completed',selector_records_checked:checks,operations:20,fixtures:5,inline_script_compiled:true,DOM_interface_simulation:true,browser_rendering:false,assistive_technology_evaluation:'open_gap',screenshots:0,independent_reproduction:false};
+fs.writeFileSync(path.join(root,'interface-validation.json'),JSON.stringify(receipt,null,2)+'\n',{flag:'wx'});process.stdout.write(JSON.stringify(receipt)+'\n');

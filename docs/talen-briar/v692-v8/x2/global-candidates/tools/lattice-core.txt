@@ -1,0 +1,31 @@
+'use strict';
+// Dependency is the frozen x1 incidence module supplied in a trusted VM context.
+const OPS=['product_chain_mobius','dual_mobius','order_ideals','join_irreducible_embedding','distributivity_witness','modularity_witness','complements','lattice_representation','evidence_gap','release_gate'];
+function ideals(z){const n=z.length,out=[];for(let mask=0;mask<2**n;mask++){let ok=true;for(let j=0;j<n;j++)if(mask&(1<<j))for(let i=0;i<n;i++)if(z[i][j]&&!(mask&(1<<i)))ok=false;if(ok)out.push(Array.from({length:n},(_,i)=>i).filter(i=>mask&(1<<i)));}return out;}
+function lattice(z){const n=z.length,meet=Array.from({length:n},()=>Array(n)),join=Array.from({length:n},()=>Array(n)),missing=[];
+ for(let i=0;i<n;i++)for(let j=0;j<n;j++){const lo=[],up=[];for(let k=0;k<n;k++){if(z[k][i]&&z[k][j])lo.push(k);if(z[i][k]&&z[j][k])up.push(k);}const m=lo.filter(k=>lo.every(t=>z[t][k])),u=up.filter(k=>up.every(t=>z[k][t]));meet[i][j]=m.length===1?m[0]:null;join[i][j]=u.length===1?u[0]:null;if(m.length!==1||u.length!==1)missing.push([i,j]);}return {meet,join,missing};
+}
+function law(z,modular=false){const {meet:m,join:j,missing}=lattice(z),n=z.length;if(missing.length)return {is_lattice:false,holds:null,missing_pairs:missing,counterexample:null};
+ for(let a=0;a<n;a++)for(let b=0;b<n;b++)for(let c=0;c<n;c++){if(modular&&!z[a][c])continue;const left=modular?j[a][m[b][c]]:m[a][j[b][c]],right=modular?m[j[a][b]][c]:j[m[a][b]][m[a][c]];if(left!==right)return {is_lattice:true,holds:false,missing_pairs:[],counterexample:{a,b,c,left,right}};}return {is_lattice:true,holds:true,missing_pairs:[],counterexample:null};
+}
+function embedding(z){const {missing}=lattice(z),n=z.length;if(missing.length)return {is_lattice:false,join_irreducibles:[],images:[],ideal_count:null,surjective:null,missing_ideals:[]};
+ const ir=[];for(let i=0;i<n;i++){const covers=[];for(let k=0;k<n;k++)if(k!==i&&z[k][i]){let covered=true;for(let t=0;t<n;t++)if(t!==i&&t!==k&&z[k][t]&&z[t][i])covered=false;if(covered)covers.push(k);}if(covers.length===1)ir.push(i);}
+ const images=Array.from({length:n},(_,x)=>ir.filter(t=>z[t][x])),ids=ideals(ir.map(i=>ir.map(j=>z[i][j]))).map(row=>row.map(i=>ir[i])),known=new Set(images.map(x=>JSON.stringify(x))),missing_ideals=ids.filter(x=>!known.has(JSON.stringify(x)));return {is_lattice:true,join_irreducibles:ir,images,ideal_count:ids.length,surjective:missing_ideals.length===0,missing_ideals};
+}
+function terms(xs){if(!Array.isArray(xs)||xs.length>32||xs.some(x=>typeof x!=='string'||!/^[A-Za-z0-9_-]{1,48}$/.test(x))||new Set(xs).size!==xs.length)throw Error('terms');return xs;}
+function evaluate(input){base.keys(input,['op','poset','args']);if(!OPS.includes(input.op))throw Error('operation');const z=base.order(input.poset),n=z.length,op=input.op,a=input.args;let v,d='completed';
+ if(op==='evidence_gap')base.keys(a,['required','available']);else if(op==='release_gate')base.keys(a,['requested','authorizations']);else base.keys(a,[]);
+ if(op==='product_chain_mobius'){const labels=Array.from({length:n},(_,i)=>[[i,0],[i,1]]).flat();if(labels.length>16)throw Error('product_budget');const zz=labels.map(([i,j])=>labels.map(([k,l])=>+(z[i][k]&&j<=l))),mobius=base.mobius(zz),m=base.mobius(z),expected=labels.map(([i,j])=>labels.map(([k,l])=>m[i][k]*([[1,-1],[0,1]][j][l])));v={labels,mobius,factor_formula_holds:JSON.stringify(mobius)===JSON.stringify(expected)};}
+ else if(op==='dual_mobius')v=base.mobius(base.transpose(z));
+ else if(op==='order_ideals'){const result=ideals(z);v={ideals:result,count:result.length};}
+ else if(op==='join_irreducible_embedding')v=embedding(z);
+ else if(op==='distributivity_witness')v=law(z);
+ else if(op==='modularity_witness')v=law(z,true);
+ else if(op==='complements'){const {meet:m,join:j,missing}=lattice(z);let bottom=z.findIndex(row=>row.every(Boolean)),top=Array.from({length:n},(_,j)=>j).find(j=>z.every(row=>row[j]));if(bottom<0)bottom=null;if(top===undefined)top=null;v={is_lattice:missing.length===0,bottom,top,complements:missing.length?[]:Array.from({length:n},(_,i)=>Array.from({length:n},(_,k)=>k).filter(k=>m[i][k]===bottom&&j[i][k]===top)),authority_credit:false};}
+ else if(op==='lattice_representation'){const {meet,join,missing}=lattice(z);v={is_lattice:missing.length===0,meet,join,missing_pairs:missing,external_model_validity:false};d='represented';}
+ else if(op==='evidence_gap'){const required=terms(a.required),available=terms(a.available);v={missing:required.filter(t=>!available.includes(t)),fixture:input.poset.id,evidence_supplied:false};d='open_gap';}
+ else {terms(a.authorizations);v={closed:terms(a.requested).slice(),synthetic_input:true,release:false};d='exact_gate';}
+ return base.envelope(v,d);
+}
+function dispatch(input){try{return evaluate(input);}catch(e){return base.rejected(e.message);}}
+module.exports={OPS,ideals,lattice,law,embedding,dispatch};
