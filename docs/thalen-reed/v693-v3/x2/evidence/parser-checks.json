@@ -1,0 +1,113 @@
+{
+  "stage": "x2",
+  "records": [
+    {
+      "id": "TR6933-X2-PARSER-duplicate_null",
+      "raw": "{\"n\":null,\"n\":false}",
+      "expected_error": "DUPLICATE_KEY",
+      "subject_success_credit": 0,
+      "actual": "DUPLICATE_KEY",
+      "subject_result": "fail",
+      "refusal_result": "pass"
+    },
+    {
+      "id": "TR6933-X2-PARSER-duplicate_array",
+      "raw": "{\"a\":[],\"a\":{}}",
+      "expected_error": "DUPLICATE_KEY",
+      "subject_success_credit": 0,
+      "actual": "DUPLICATE_KEY",
+      "subject_result": "fail",
+      "refusal_result": "pass"
+    },
+    {
+      "id": "TR6933-X2-PARSER-nested_reserved",
+      "raw": "{\"a\":{\"prototype\":1}}",
+      "expected_error": "RESERVED_KEY",
+      "subject_success_credit": 0,
+      "actual": "RESERVED_KEY",
+      "subject_result": "fail",
+      "refusal_result": "pass"
+    },
+    {
+      "id": "TR6933-X2-PARSER-negative_zero",
+      "raw": "{\"a\":-0}",
+      "expected_error": "NUMERIC_PROFILE",
+      "subject_success_credit": 0,
+      "actual": "NUMERIC_PROFILE",
+      "subject_result": "fail",
+      "refusal_result": "pass"
+    },
+    {
+      "id": "TR6933-X2-PARSER-negative_unsafe",
+      "raw": "{\"a\":-9007199254740992}",
+      "expected_error": "NUMERIC_PROFILE",
+      "subject_success_credit": 0,
+      "actual": "NUMERIC_PROFILE",
+      "subject_result": "fail",
+      "refusal_result": "pass"
+    },
+    {
+      "id": "TR6933-X2-PARSER-exponent_number",
+      "raw": "{\"a\":1e2}",
+      "expected_error": "NUMERIC_PROFILE",
+      "subject_success_credit": 0,
+      "actual": "NUMERIC_PROFILE",
+      "subject_result": "fail",
+      "refusal_result": "pass"
+    },
+    {
+      "id": "TR6933-X2-PARSER-array_trailing_comma",
+      "raw": "[1,]",
+      "expected_error": "JSON_SYNTAX",
+      "subject_success_credit": 0,
+      "actual": "JSON_SYNTAX",
+      "subject_result": "fail",
+      "refusal_result": "pass"
+    },
+    {
+      "id": "TR6933-X2-PARSER-missing_colon",
+      "raw": "{\"a\" 1}",
+      "expected_error": "JSON_SYNTAX",
+      "subject_success_credit": 0,
+      "actual": "JSON_SYNTAX",
+      "subject_result": "fail",
+      "refusal_result": "pass"
+    },
+    {
+      "id": "TR6933-X2-PARSER-single_quote",
+      "raw": "{'a':1}",
+      "expected_error": "JSON_SYNTAX",
+      "subject_success_credit": 0,
+      "actual": "JSON_SYNTAX",
+      "subject_result": "fail",
+      "refusal_result": "pass"
+    },
+    {
+      "id": "TR6933-X2-PARSER-literal_control",
+      "raw": "{\"a\":\"\u0001\"}",
+      "expected_error": "JSON_SYNTAX",
+      "subject_success_credit": 0,
+      "actual": "JSON_SYNTAX",
+      "subject_result": "fail",
+      "refusal_result": "pass"
+    },
+    {
+      "id": "TR6933-X2-PARSER-over_depth",
+      "raw": "[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[0]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]",
+      "expected_error": "DEPTH_LIMIT",
+      "subject_success_credit": 0,
+      "actual": "DEPTH_LIMIT",
+      "subject_result": "fail",
+      "refusal_result": "pass"
+    },
+    {
+      "id": "TR6933-X2-PARSER-over_array",
+      "raw": "[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]",
+      "expected_error": "COLLECTION_LIMIT",
+      "subject_success_credit": 0,
+      "actual": "COLLECTION_LIMIT",
+      "subject_result": "fail",
+      "refusal_result": "pass"
+    }
+  ]
+}

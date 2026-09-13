@@ -1,0 +1,1335 @@
+{
+  "records": [
+    {
+      "id": "TR6933-GLOBAL-fields-0",
+      "op": "field_inventory",
+      "runner": "ghc_family_config_reconcile_fields.txt",
+      "kind": "positive",
+      "request": {
+        "op": "field_inventory",
+        "record": {
+          "count": 1,
+          "enabled": true
+        },
+        "args": {}
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "fields": [
+            {
+              "name": "count",
+              "type": "integer"
+            },
+            {
+              "name": "enabled",
+              "type": "boolean"
+            }
+          ],
+          "count": 2
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "actual": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "fields": [
+            {
+              "name": "count",
+              "type": "integer"
+            },
+            {
+              "name": "enabled",
+              "type": "boolean"
+            }
+          ],
+          "count": 2
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "result": "pass",
+      "exit_code": 0
+    },
+    {
+      "id": "TR6933-GLOBAL-fields-1",
+      "op": "field_correspondence",
+      "runner": "ghc_family_config_reconcile_fields.txt",
+      "kind": "positive",
+      "request": {
+        "op": "field_correspondence",
+        "record": {
+          "alpha": 1,
+          "beta": 2
+        },
+        "args": {
+          "mapping": {
+            "alpha": "value"
+          }
+        }
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "resolved": [
+            {
+              "from": "alpha",
+              "to": "value",
+              "present": true,
+              "source_type": "integer"
+            }
+          ],
+          "target_collisions": [],
+          "missing_sources": []
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "actual": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "resolved": [
+            {
+              "from": "alpha",
+              "to": "value",
+              "present": true,
+              "source_type": "integer"
+            }
+          ],
+          "target_collisions": [],
+          "missing_sources": []
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "result": "pass",
+      "exit_code": 0
+    },
+    {
+      "id": "TR6933-GLOBAL-fields-2",
+      "op": "required_field_check",
+      "runner": "ghc_family_config_reconcile_fields.txt",
+      "kind": "positive",
+      "request": {
+        "op": "required_field_check",
+        "record": {
+          "a": 1,
+          "b": 2
+        },
+        "args": {
+          "required": [
+            "b",
+            "a"
+          ]
+        }
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "present": [
+            "a",
+            "b"
+          ],
+          "missing": [],
+          "complete": true
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "actual": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "present": [
+            "a",
+            "b"
+          ],
+          "missing": [],
+          "complete": true
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "result": "pass",
+      "exit_code": 0
+    },
+    {
+      "id": "TR6933-GLOBAL-fields-3",
+      "op": "schema_delta",
+      "runner": "ghc_family_config_reconcile_fields.txt",
+      "kind": "positive",
+      "request": {
+        "op": "schema_delta",
+        "record": {
+          "a": "integer"
+        },
+        "args": {
+          "target": {
+            "a": "integer",
+            "b": "string"
+          }
+        }
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "added": [
+            "b"
+          ],
+          "removed": [],
+          "changed": [],
+          "unchanged": [
+            "a"
+          ]
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "actual": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "added": [
+            "b"
+          ],
+          "removed": [],
+          "changed": [],
+          "unchanged": [
+            "a"
+          ]
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "result": "pass",
+      "exit_code": 0
+    },
+    {
+      "id": "TR6933-GLOBAL-fields-negative",
+      "runner": "ghc_family_config_reconcile_fields.txt",
+      "kind": "negative",
+      "request": {
+        "op": "unsupported_fields",
+        "record": {
+          "count": 1,
+          "enabled": true
+        },
+        "args": {}
+      },
+      "expected": {
+        "ok": false,
+        "disposition": "open_gap",
+        "value": null,
+        "error": "RUNNER_OPERATION",
+        "external_credit": false
+      },
+      "actual": {
+        "ok": false,
+        "disposition": "open_gap",
+        "value": null,
+        "error": "RUNNER_OPERATION",
+        "external_credit": false
+      },
+      "subject_result": "fail",
+      "subject_success_credit": 0,
+      "result": "pass",
+      "exit_code": 1
+    },
+    {
+      "id": "TR6933-GLOBAL-rules-0",
+      "op": "rename_preview",
+      "runner": "ghc_family_config_reconcile_rules.txt",
+      "kind": "positive",
+      "request": {
+        "op": "rename_preview",
+        "record": {
+          "old": 1,
+          "keep": true
+        },
+        "args": {
+          "mapping": {
+            "old": "new"
+          }
+        }
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "applied": true,
+          "result": {
+            "keep": true,
+            "new": 1
+          },
+          "conflicts": [],
+          "source_preserved": true
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "actual": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "applied": true,
+          "result": {
+            "keep": true,
+            "new": 1
+          },
+          "conflicts": [],
+          "source_preserved": true
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "result": "pass",
+      "exit_code": 0
+    },
+    {
+      "id": "TR6933-GLOBAL-rules-1",
+      "op": "default_overlay",
+      "runner": "ghc_family_config_reconcile_rules.txt",
+      "kind": "positive",
+      "request": {
+        "op": "default_overlay",
+        "record": {},
+        "args": {
+          "defaults": {
+            "a": 1
+          }
+        }
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "result": {
+            "a": 1
+          },
+          "added": [
+            "a"
+          ],
+          "retained": [],
+          "already_equal": []
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "actual": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "result": {
+            "a": 1
+          },
+          "added": [
+            "a"
+          ],
+          "retained": [],
+          "already_equal": []
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "result": "pass",
+      "exit_code": 0
+    },
+    {
+      "id": "TR6933-GLOBAL-rules-2",
+      "op": "coercion_preview",
+      "runner": "ghc_family_config_reconcile_rules.txt",
+      "kind": "positive",
+      "request": {
+        "op": "coercion_preview",
+        "record": {
+          "n": 12
+        },
+        "args": {
+          "field": "n",
+          "conversion": "integer_to_text"
+        }
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "applied": true,
+          "result": {
+            "n": "12"
+          },
+          "reason": null,
+          "input_type": "integer",
+          "output_type": "string"
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "actual": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "applied": true,
+          "result": {
+            "n": "12"
+          },
+          "reason": null,
+          "input_type": "integer",
+          "output_type": "string"
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "result": "pass",
+      "exit_code": 0
+    },
+    {
+      "id": "TR6933-GLOBAL-rules-3",
+      "op": "enum_mapping",
+      "runner": "ghc_family_config_reconcile_rules.txt",
+      "kind": "positive",
+      "request": {
+        "op": "enum_mapping",
+        "record": {
+          "status": "new"
+        },
+        "args": {
+          "field": "status",
+          "mapping": {
+            "new": "pending",
+            "ready": "go"
+          }
+        }
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "applied": true,
+          "result": {
+            "status": "pending"
+          },
+          "unmapped": null,
+          "noninjective_targets": []
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "actual": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "applied": true,
+          "result": {
+            "status": "pending"
+          },
+          "unmapped": null,
+          "noninjective_targets": []
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "result": "pass",
+      "exit_code": 0
+    },
+    {
+      "id": "TR6933-GLOBAL-rules-negative",
+      "runner": "ghc_family_config_reconcile_rules.txt",
+      "kind": "negative",
+      "request": {
+        "op": "unsupported_rules",
+        "record": {
+          "old": 1,
+          "keep": true
+        },
+        "args": {
+          "mapping": {
+            "old": "new"
+          }
+        }
+      },
+      "expected": {
+        "ok": false,
+        "disposition": "open_gap",
+        "value": null,
+        "error": "RUNNER_OPERATION",
+        "external_credit": false
+      },
+      "actual": {
+        "ok": false,
+        "disposition": "open_gap",
+        "value": null,
+        "error": "RUNNER_OPERATION",
+        "external_credit": false
+      },
+      "subject_result": "fail",
+      "subject_success_credit": 0,
+      "result": "pass",
+      "exit_code": 1
+    },
+    {
+      "id": "TR6933-GLOBAL-conflicts-0",
+      "op": "three_way_merge",
+      "runner": "ghc_family_config_reconcile_conflicts.txt",
+      "kind": "positive",
+      "request": {
+        "op": "three_way_merge",
+        "record": {
+          "base": {
+            "v": 1,
+            "k": 0
+          },
+          "left": {
+            "v": 2,
+            "k": 0
+          },
+          "right": {
+            "v": 1,
+            "k": 0
+          }
+        },
+        "args": {}
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "merged": {
+            "k": 0,
+            "v": 2
+          },
+          "conflicts": [],
+          "resolved": [
+            {
+              "field": "k",
+              "source": "unchanged"
+            },
+            {
+              "field": "v",
+              "source": "left"
+            }
+          ]
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "actual": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "merged": {
+            "k": 0,
+            "v": 2
+          },
+          "conflicts": [],
+          "resolved": [
+            {
+              "field": "k",
+              "source": "unchanged"
+            },
+            {
+              "field": "v",
+              "source": "left"
+            }
+          ]
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "result": "pass",
+      "exit_code": 0
+    },
+    {
+      "id": "TR6933-GLOBAL-conflicts-1",
+      "op": "conflict_kinds",
+      "runner": "ghc_family_config_reconcile_conflicts.txt",
+      "kind": "positive",
+      "request": {
+        "op": "conflict_kinds",
+        "record": {
+          "base": {
+            "v": 1
+          },
+          "left": {},
+          "right": {
+            "v": 1
+          }
+        },
+        "args": {}
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "fields": 1,
+          "conflict_count": 0,
+          "kinds": {
+            "different_edits": [],
+            "delete_modify": [],
+            "concurrent_add": []
+          }
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "actual": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "fields": 1,
+          "conflict_count": 0,
+          "kinds": {
+            "different_edits": [],
+            "delete_modify": [],
+            "concurrent_add": []
+          }
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "result": "pass",
+      "exit_code": 0
+    },
+    {
+      "id": "TR6933-GLOBAL-conflicts-2",
+      "op": "resolution_preview",
+      "runner": "ghc_family_config_reconcile_conflicts.txt",
+      "kind": "positive",
+      "request": {
+        "op": "resolution_preview",
+        "record": {
+          "base": {
+            "v": 1
+          },
+          "left": {
+            "v": 2
+          },
+          "right": {
+            "v": 3
+          }
+        },
+        "args": {
+          "choices": {
+            "v": "left"
+          }
+        }
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "applied": true,
+          "result": {
+            "v": 2
+          },
+          "decisions": [
+            {
+              "field": "v",
+              "choice": "left"
+            }
+          ],
+          "unresolved": [],
+          "source_preserved": true
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "actual": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "applied": true,
+          "result": {
+            "v": 2
+          },
+          "decisions": [
+            {
+              "field": "v",
+              "choice": "left"
+            }
+          ],
+          "unresolved": [],
+          "source_preserved": true
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "result": "pass",
+      "exit_code": 0
+    },
+    {
+      "id": "TR6933-GLOBAL-conflicts-3",
+      "op": "resolution_receipt",
+      "runner": "ghc_family_config_reconcile_conflicts.txt",
+      "kind": "positive",
+      "request": {
+        "op": "resolution_receipt",
+        "record": {
+          "base": {
+            "v": 1,
+            "k": 0
+          },
+          "left": {
+            "v": 2,
+            "k": 0
+          },
+          "right": {
+            "v": 1,
+            "k": 0
+          }
+        },
+        "args": {
+          "decisions": {
+            "v": "left"
+          },
+          "claims": {
+            "base": "e8dcb54b754f09cf0eaabadd25c51650d24a635f587c0af65a723e02a7b6c470",
+            "left": "48fef3934e4ac7805ece610d2a4d24d81123ed9f7cf8773a9f1cd6f721c70068",
+            "right": "e8dcb54b754f09cf0eaabadd25c51650d24a635f587c0af65a723e02a7b6c470",
+            "decisions": "d47d2877dc462fa3ee89c65a93544e0aba53ac344947fde0de623e2d7ca2c7e8"
+          }
+        }
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "bound": true,
+          "mismatch_domains": [],
+          "actual": {
+            "base": "e8dcb54b754f09cf0eaabadd25c51650d24a635f587c0af65a723e02a7b6c470",
+            "left": "48fef3934e4ac7805ece610d2a4d24d81123ed9f7cf8773a9f1cd6f721c70068",
+            "right": "e8dcb54b754f09cf0eaabadd25c51650d24a635f587c0af65a723e02a7b6c470",
+            "decisions": "d47d2877dc462fa3ee89c65a93544e0aba53ac344947fde0de623e2d7ca2c7e8"
+          },
+          "external_authority": false
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "actual": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "bound": true,
+          "mismatch_domains": [],
+          "actual": {
+            "base": "e8dcb54b754f09cf0eaabadd25c51650d24a635f587c0af65a723e02a7b6c470",
+            "left": "48fef3934e4ac7805ece610d2a4d24d81123ed9f7cf8773a9f1cd6f721c70068",
+            "right": "e8dcb54b754f09cf0eaabadd25c51650d24a635f587c0af65a723e02a7b6c470",
+            "decisions": "d47d2877dc462fa3ee89c65a93544e0aba53ac344947fde0de623e2d7ca2c7e8"
+          },
+          "external_authority": false
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "result": "pass",
+      "exit_code": 0
+    },
+    {
+      "id": "TR6933-GLOBAL-conflicts-negative",
+      "runner": "ghc_family_config_reconcile_conflicts.txt",
+      "kind": "negative",
+      "request": {
+        "op": "unsupported_conflicts",
+        "record": {
+          "base": {
+            "v": 1,
+            "k": 0
+          },
+          "left": {
+            "v": 2,
+            "k": 0
+          },
+          "right": {
+            "v": 1,
+            "k": 0
+          }
+        },
+        "args": {}
+      },
+      "expected": {
+        "ok": false,
+        "disposition": "open_gap",
+        "value": null,
+        "error": "RUNNER_OPERATION",
+        "external_credit": false
+      },
+      "actual": {
+        "ok": false,
+        "disposition": "open_gap",
+        "value": null,
+        "error": "RUNNER_OPERATION",
+        "external_credit": false
+      },
+      "subject_result": "fail",
+      "subject_success_credit": 0,
+      "result": "pass",
+      "exit_code": 1
+    },
+    {
+      "id": "TR6933-GLOBAL-recovery-0",
+      "op": "rename_cycle_analysis",
+      "runner": "ghc_family_config_reconcile_recovery.txt",
+      "kind": "positive",
+      "request": {
+        "op": "rename_cycle_analysis",
+        "record": {
+          "a": 1,
+          "b": 2
+        },
+        "args": {
+          "mapping": {
+            "a": "b",
+            "b": "a"
+          }
+        }
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "cycles": [
+            [
+              "a",
+              "b"
+            ]
+          ],
+          "chains": [],
+          "fixed_points": [],
+          "duplicate_targets": []
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "actual": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "cycles": [
+            [
+              "a",
+              "b"
+            ]
+          ],
+          "chains": [],
+          "fixed_points": [],
+          "duplicate_targets": []
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "result": "pass",
+      "exit_code": 0
+    },
+    {
+      "id": "TR6933-GLOBAL-recovery-1",
+      "op": "loss_snapshot",
+      "runner": "ghc_family_config_reconcile_recovery.txt",
+      "kind": "positive",
+      "request": {
+        "op": "loss_snapshot",
+        "record": {
+          "before": {
+            "a": 1,
+            "b": 2
+          },
+          "after": {
+            "a": 1
+          }
+        },
+        "args": {}
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "removed": [
+            {
+              "field": "b",
+              "value": 2
+            }
+          ],
+          "overwritten": [],
+          "added": [],
+          "snapshot": {
+            "a": 1,
+            "b": 2
+          },
+          "reversible_from_snapshot": true
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "actual": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "removed": [
+            {
+              "field": "b",
+              "value": 2
+            }
+          ],
+          "overwritten": [],
+          "added": [],
+          "snapshot": {
+            "a": 1,
+            "b": 2
+          },
+          "reversible_from_snapshot": true
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "result": "pass",
+      "exit_code": 0
+    },
+    {
+      "id": "TR6933-GLOBAL-recovery-2",
+      "op": "atomic_migration_pipeline",
+      "runner": "ghc_family_config_reconcile_recovery.txt",
+      "kind": "positive",
+      "request": {
+        "op": "atomic_migration_pipeline",
+        "record": {
+          "old": 1
+        },
+        "args": {
+          "rules": [
+            {
+              "op": "rename_preview",
+              "args": {
+                "mapping": {
+                  "old": "new"
+                }
+              }
+            },
+            {
+              "op": "default_overlay",
+              "args": {
+                "defaults": {
+                  "flag": false
+                }
+              }
+            }
+          ],
+          "allow_lossy": false
+        }
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "committed": true,
+          "result": {
+            "new": 1,
+            "flag": false
+          },
+          "failed_index": null,
+          "reason": null,
+          "attempted_steps": 2,
+          "rollback_preserved": true
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "actual": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "committed": true,
+          "result": {
+            "flag": false,
+            "new": 1
+          },
+          "failed_index": null,
+          "reason": null,
+          "attempted_steps": 2,
+          "rollback_preserved": true
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "result": "pass",
+      "exit_code": 0
+    },
+    {
+      "id": "TR6933-GLOBAL-recovery-3",
+      "op": "correction_context",
+      "runner": "ghc_family_config_reconcile_recovery.txt",
+      "kind": "positive",
+      "request": {
+        "op": "correction_context",
+        "record": {
+          "prior": [
+            {
+              "id": "r1",
+              "state": "rejected",
+              "context": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "retained": true
+            }
+          ],
+          "correction": {
+            "id": "r2",
+            "supersedes": "r1",
+            "context": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "state": "represented"
+          }
+        },
+        "args": {}
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "represented",
+        "value": {
+          "accepted": true,
+          "reason": null,
+          "records": [
+            {
+              "id": "r1",
+              "state": "rejected",
+              "context": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "retained": true
+            },
+            {
+              "id": "r2",
+              "supersedes": "r1",
+              "context": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "state": "represented"
+            }
+          ],
+          "predecessor_erased": false
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "actual": {
+        "ok": true,
+        "disposition": "represented",
+        "value": {
+          "accepted": true,
+          "reason": null,
+          "records": [
+            {
+              "context": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "id": "r1",
+              "retained": true,
+              "state": "rejected"
+            },
+            {
+              "context": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "id": "r2",
+              "state": "represented",
+              "supersedes": "r1"
+            }
+          ],
+          "predecessor_erased": false
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "result": "pass",
+      "exit_code": 0
+    },
+    {
+      "id": "TR6933-GLOBAL-recovery-negative",
+      "runner": "ghc_family_config_reconcile_recovery.txt",
+      "kind": "negative",
+      "request": {
+        "op": "unsupported_recovery",
+        "record": {
+          "a": 1,
+          "b": 2
+        },
+        "args": {
+          "mapping": {
+            "a": "b",
+            "b": "a"
+          }
+        }
+      },
+      "expected": {
+        "ok": false,
+        "disposition": "open_gap",
+        "value": null,
+        "error": "RUNNER_OPERATION",
+        "external_credit": false
+      },
+      "actual": {
+        "ok": false,
+        "disposition": "open_gap",
+        "value": null,
+        "error": "RUNNER_OPERATION",
+        "external_credit": false
+      },
+      "subject_result": "fail",
+      "subject_success_credit": 0,
+      "result": "pass",
+      "exit_code": 1
+    },
+    {
+      "id": "TR6933-GLOBAL-handover-0",
+      "op": "unknown_field_projection",
+      "runner": "ghc_family_config_reconcile_handover.txt",
+      "kind": "positive",
+      "request": {
+        "op": "unknown_field_projection",
+        "record": {
+          "known": 1,
+          "extra": 2
+        },
+        "args": {
+          "allowed": [
+            "known"
+          ]
+        }
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "selected": {
+            "known": 1
+          },
+          "quarantine": {
+            "extra": 2
+          },
+          "source_preserved": true
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "actual": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "selected": {
+            "known": 1
+          },
+          "quarantine": {
+            "extra": 2
+          },
+          "source_preserved": true
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "result": "pass",
+      "exit_code": 0
+    },
+    {
+      "id": "TR6933-GLOBAL-handover-1",
+      "op": "accessible_resolution_summary",
+      "runner": "ghc_family_config_reconcile_handover.txt",
+      "kind": "positive",
+      "request": {
+        "op": "accessible_resolution_summary",
+        "record": {
+          "base": {
+            "v": 1,
+            "k": 0
+          },
+          "left": {
+            "v": 2,
+            "k": 0
+          },
+          "right": {
+            "v": 1,
+            "k": 0
+          }
+        },
+        "args": {}
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "represented",
+        "value": {
+          "rows": [
+            {
+              "field": "k",
+              "state": "resolved_unchanged"
+            },
+            {
+              "field": "v",
+              "state": "resolved_left"
+            }
+          ],
+          "conflicts": 0,
+          "manual_review": false,
+          "operator_decision": false
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "actual": {
+        "ok": true,
+        "disposition": "represented",
+        "value": {
+          "rows": [
+            {
+              "field": "k",
+              "state": "resolved_unchanged"
+            },
+            {
+              "field": "v",
+              "state": "resolved_left"
+            }
+          ],
+          "conflicts": 0,
+          "manual_review": false,
+          "operator_decision": false
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "result": "pass",
+      "exit_code": 0
+    },
+    {
+      "id": "TR6933-GLOBAL-handover-2",
+      "op": "external_migration_evidence",
+      "runner": "ghc_family_config_reconcile_handover.txt",
+      "kind": "positive",
+      "request": {
+        "op": "external_migration_evidence",
+        "record": {
+          "requirements": [
+            "operator"
+          ],
+          "evidence": {}
+        },
+        "args": {}
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "open_gap",
+        "value": {
+          "missing": [
+            "operator"
+          ],
+          "provided": [],
+          "external_qualified": false,
+          "release": false
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "actual": {
+        "ok": true,
+        "disposition": "open_gap",
+        "value": {
+          "missing": [
+            "operator"
+          ],
+          "provided": [],
+          "external_qualified": false,
+          "release": false
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "result": "pass",
+      "exit_code": 0
+    },
+    {
+      "id": "TR6933-GLOBAL-handover-3",
+      "op": "operator_release_gate",
+      "runner": "ghc_family_config_reconcile_handover.txt",
+      "kind": "positive",
+      "request": {
+        "op": "operator_release_gate",
+        "record": {
+          "target": "synthetic-config-A",
+          "authority": null,
+          "evidence": null
+        },
+        "args": {
+          "requested": "deploy"
+        }
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "exact_gate",
+        "value": {
+          "requested": "deploy",
+          "target": "synthetic-config-A",
+          "required": [
+            "competent_operator",
+            "external_validation",
+            "rollback_evidence"
+          ],
+          "released": false,
+          "assertions_verified": false
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "actual": {
+        "ok": true,
+        "disposition": "exact_gate",
+        "value": {
+          "requested": "deploy",
+          "target": "synthetic-config-A",
+          "required": [
+            "competent_operator",
+            "external_validation",
+            "rollback_evidence"
+          ],
+          "released": false,
+          "assertions_verified": false
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "result": "pass",
+      "exit_code": 0
+    },
+    {
+      "id": "TR6933-GLOBAL-handover-negative",
+      "runner": "ghc_family_config_reconcile_handover.txt",
+      "kind": "negative",
+      "request": {
+        "op": "unsupported_handover",
+        "record": {
+          "known": 1,
+          "extra": 2
+        },
+        "args": {
+          "allowed": [
+            "known"
+          ]
+        }
+      },
+      "expected": {
+        "ok": false,
+        "disposition": "open_gap",
+        "value": null,
+        "error": "RUNNER_OPERATION",
+        "external_credit": false
+      },
+      "actual": {
+        "ok": false,
+        "disposition": "open_gap",
+        "value": null,
+        "error": "RUNNER_OPERATION",
+        "external_credit": false
+      },
+      "subject_result": "fail",
+      "subject_success_credit": 0,
+      "result": "pass",
+      "exit_code": 1
+    }
+  ],
+  "unexpected_failures": 0,
+  "actual_global_execution": true,
+  "same_owner": true,
+  "independent_reproduction": false
+}

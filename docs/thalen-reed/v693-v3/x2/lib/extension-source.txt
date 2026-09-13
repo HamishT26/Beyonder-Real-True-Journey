@@ -1,0 +1,105 @@
+'use strict';
+// A pure extension factory. The caller supplies the already-bound x1 library.
+module.exports=base=>{
+ const {need,own,plain,keys,field,clone,equal,digest,validateJSON}=base.helpers;
+ const {Refusal,envelope,parseStrict}=base;
+ const OPS={...base.operations};
+ const state=(record,k)=>({present:own(record,k),value:own(record,k)?clone(record[k]):null});
+ function triple(record){keys(record,['base','left','right'],'TRIPLE_FIELDS');for(const k of ['base','left','right'])need(plain(record[k]),'TRIPLE_RECORD');}
+ function merge(record){
+  triple(record);const merged={},conflicts=[],resolved=[];
+  const names=[...new Set([...Object.keys(record.base),...Object.keys(record.left),...Object.keys(record.right)])].sort();
+  for(const name of names){
+   const b=state(record.base,name),l=state(record.left,name),r=state(record.right,name);let selected=null,source=null;
+   if(equal(l,r)){selected=l;source=equal(b,l)?'unchanged':'both';}
+   else if(equal(b,l)){selected=r;source='right';}
+   else if(equal(b,r)){selected=l;source='left';}
+   if(selected){if(selected.present)merged[name]=clone(selected.value);resolved.push({field:name,source});}
+   else conflicts.push({field:name,kind:!b.present?'concurrent_add':!l.present||!r.present?'delete_modify':'different_edits',base:b,left:l,right:r});
+  }
+  return {merged,conflicts,resolved};
+ }
+ OPS.three_way_merge=(record,args)=>{keys(args,[]);return merge(record);};
+ OPS.conflict_kinds=(record,args)=>{
+  keys(args,[]);const view=merge(record),kinds={different_edits:[],delete_modify:[],concurrent_add:[]};
+  for(const conflict of view.conflicts)kinds[conflict.kind].push(conflict.field);
+  return {fields:view.resolved.length+view.conflicts.length,conflict_count:view.conflicts.length,kinds};
+ };
+ OPS.resolution_preview=(record,args)=>{
+  keys(args,['choices']);need(plain(args.choices),'CHOICES_TYPE');
+  const view=merge(record),decisions=[],unresolved=[],result=clone(view.merged);
+  for(const name of Object.keys(args.choices)){field(name);need(['left','right','base','remove'].includes(args.choices[name]),'CHOICE');need(view.conflicts.some(c=>c.field===name),'EXTRANEOUS_CHOICE');}
+  for(const c of view.conflicts){
+   if(!own(args.choices,c.field)){unresolved.push(c.field);continue;}
+   const choice=args.choices[c.field];decisions.push({field:c.field,choice});
+   if(choice!=='remove'&&c[choice].present)result[c.field]=clone(c[choice].value);else delete result[c.field];
+  }
+  return {applied:unresolved.length===0,result:unresolved.length?clone(record.base):result,decisions,unresolved,source_preserved:true};
+ };
+ OPS.resolution_receipt=(record,args)=>{
+  triple(record);keys(args,['decisions','claims']);need(plain(args.decisions),'DECISIONS_TYPE');keys(args.claims,['base','left','right','decisions'],'CLAIM_FIELDS');
+  const actual={base:digest(record.base),left:digest(record.left),right:digest(record.right),decisions:digest(args.decisions)};
+  const mismatch_domains=Object.keys(actual).filter(k=>args.claims[k]!==actual[k]).sort();
+  return {bound:mismatch_domains.length===0,mismatch_domains,actual,external_authority:false};
+ };
+ OPS.loss_snapshot=(record,args)=>{
+  keys(args,[]);keys(record,['before','after'],'SNAPSHOT_FIELDS');need(plain(record.before)&&plain(record.after),'SNAPSHOT_RECORD');
+  const removed=[],overwritten=[],added=[];
+  for(const k of [...new Set([...Object.keys(record.before),...Object.keys(record.after)])].sort()){
+   if(!own(record.after,k))removed.push({field:k,value:clone(record.before[k])});
+   else if(!own(record.before,k))added.push({field:k,value:clone(record.after[k])});
+   else if(!equal(record.before[k],record.after[k]))overwritten.push({field:k,before:clone(record.before[k]),after:clone(record.after[k])});
+  }
+  return {removed,overwritten,added,snapshot:clone(record.before),reversible_from_snapshot:true};
+ };
+ OPS.atomic_migration_pipeline=(record,args)=>{
+  keys(args,['rules','allow_lossy']);need(Array.isArray(args.rules)&&args.rules.length<=32,'RULES_LIMIT');need(typeof args.allow_lossy==='boolean','LOSS_POLICY');
+  const allowed=['rename_preview','default_overlay','coercion_preview','enum_mapping'];let result=clone(record);
+  for(let i=0;i<args.rules.length;i++){
+   const rule=args.rules[i];keys(rule,['op','args'],'RULE_FIELDS');need(allowed.includes(rule.op),'PIPELINE_OPERATION');
+   const answer=base.execute({op:rule.op,record:result,args:rule.args});let reason=answer.ok?null:answer.error;
+   if(answer.ok){const v=answer.value;
+    if(rule.op==='enum_mapping'&&v.noninjective_targets.length&&!args.allow_lossy)reason='LOSSY_ENUM_MAPPING';
+    else if(v.applied===false)reason=v.reason||(v.conflicts&&v.conflicts.join('|'))||'UNMAPPED_ENUM_TOKEN';
+    if(reason===null)result=clone(v.result);
+   }
+   if(reason!==null)return {committed:false,result:clone(record),failed_index:i,reason,attempted_steps:i+1,rollback_preserved:true};
+  }
+  return {committed:true,result,failed_index:null,reason:null,attempted_steps:args.rules.length,rollback_preserved:true};
+ };
+ OPS.accessible_resolution_summary=(record,args)=>{
+  keys(args,[]);const view=merge(record);
+  const rows=[...view.resolved.map(r=>({field:r.field,state:'resolved_'+r.source})),...view.conflicts.map(c=>({field:c.field,state:c.kind}))].sort((a,b)=>a.field<b.field?-1:a.field>b.field?1:0);
+  return {rows,conflicts:view.conflicts.length,manual_review:false,operator_decision:false};
+ };
+ OPS.correction_context=(record,args)=>{
+  keys(args,[]);keys(record,['prior','correction'],'CORRECTION_FIELDS');need(Array.isArray(record.prior)&&record.prior.every(plain)&&plain(record.correction),'CORRECTION_TYPE');
+  const c=record.correction;keys(c,['id','supersedes','context','state'],'CORRECTION_MEMBER_FIELDS');
+  need(typeof c.id==='string'&&typeof c.context==='string'&&typeof c.supersedes==='string','CORRECTION_MEMBER_TYPE');
+  need(new Set(record.prior.map(r=>r.id)).size===record.prior.length,'PRIOR_DUPLICATE');
+  const predecessor=record.prior.find(r=>r.id===c.supersedes);
+  const reason=record.prior.some(r=>r.id===c.id)?'DUPLICATE_ID':!predecessor?'UNKNOWN_PREDECESSOR':predecessor.context!==c.context?'STALE_CONTEXT':null;
+  return {accepted:reason===null,reason,records:reason===null?[...clone(record.prior),clone(c)]:clone(record.prior),predecessor_erased:false};
+ };
+ OPS.external_migration_evidence=(record,args)=>{
+  keys(args,[]);keys(record,['requirements','evidence'],'EVIDENCE_FIELDS');need(Array.isArray(record.requirements)&&plain(record.evidence),'EVIDENCE_TYPE');
+  record.requirements.forEach(field);need(new Set(record.requirements).size===record.requirements.length,'DUPLICATE_REQUIREMENT');
+  const requirements=[...record.requirements].sort(),provided=requirements.filter(k=>own(record.evidence,k)&&record.evidence[k]!==null),missing=requirements.filter(k=>!provided.includes(k));
+  return {missing,provided,external_qualified:false,release:false};
+ };
+ OPS.operator_release_gate=(record,args)=>{
+  keys(args,['requested']);keys(record,['target','authority','evidence'],'RELEASE_FIELDS');need(typeof record.target==='string','RELEASE_TARGET');
+  const requiredByAction={deploy:['competent_operator','external_validation','rollback_evidence'],publish:['rights_holder','affected_people','privacy_review'],replace:['competent_operator','exact_target','recoverable_source'],delete:['exact_destructive_authority','recoverable_source'],maori_label:['maori_authority','affected_people']};
+  need(own(requiredByAction,args.requested),'RELEASE_ACTION');
+  return {requested:args.requested,target:record.target,required:requiredByAction[args.requested],released:false,assertions_verified:false};
+ };
+ function execute(request){
+  try{
+   keys(request,['op','record','args'],'REQUEST_FIELDS');need(typeof request.op==='string'&&own(OPS,request.op),'UNKNOWN_OPERATION');need(plain(request.record),'RECORD_TYPE');need(plain(request.args),'ARGS_TYPE');validateJSON(request);
+   const value=OPS[request.op](request.record,request.args);validateJSON(value);
+   const disposition=['accessible_resolution_summary','correction_context'].includes(request.op)?'represented':request.op==='external_migration_evidence'?'open_gap':request.op==='operator_release_gate'?'exact_gate':'completed';
+   return envelope(true,value,null,disposition);
+  }catch(error){if(error instanceof Refusal)return envelope(false,null,error.code);throw error;}
+ }
+ return {execute,parseStrict,envelope,Refusal,helpers:base.helpers,operations:OPS};
+};

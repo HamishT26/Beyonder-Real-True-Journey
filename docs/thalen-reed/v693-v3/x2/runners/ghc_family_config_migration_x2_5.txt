@@ -1,0 +1,20 @@
+'use strict';
+const fs=require('node:fs'),path=require('node:path'),crypto=require('node:crypto'),vm=require('node:vm');
+const allowed=["external_migration_evidence","operator_release_gate"];
+const expected='c600609ff627cf8805d81e7a96688996c2a6a39f104f66691d1276206606e00a';
+const failure=error=>({ok:false,disposition:'open_gap',value:null,error,external_credit:false});
+let response;
+try{
+ if(process.argv.length!==2)throw new Error('CLI_ARGUMENTS');
+ const literal=path.join(__dirname,'../lib/migration-x2.txt');
+ const bytes=fs.readFileSync(literal);
+ if(crypto.createHash('sha256').update(bytes).digest('hex')!==expected)throw new Error('LIBRARY_BINDING');
+ const mod={exports:{}};
+ const trustedRequire=name=>{if(name!=='node:crypto')throw new Error('REQUIRE_DENIED');return require(name);};
+ new vm.Script('(function(module,exports,require){'+bytes.toString('utf8')+'\n})',{filename:'migration-x2.txt'}).runInThisContext()(mod,mod.exports,trustedRequire);
+ const api=mod.exports,request=api.parseStrict(fs.readFileSync(0));
+ if(!request||!allowed.includes(request.op))response=failure('RUNNER_OPERATION');
+ else response=api.execute(request);
+}catch(error){response=failure(error.code||error.message);}
+process.stdout.write(JSON.stringify(response)+'\n');
+if(!response.ok)process.exitCode=1;

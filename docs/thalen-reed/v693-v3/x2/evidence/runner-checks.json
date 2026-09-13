@@ -1,0 +1,519 @@
+{
+  "stage": "x2",
+  "records": [
+    {
+      "id": "TR6933-X2-RUNNER-1-positive",
+      "runner": "ghc_family_config_migration_x2_1.txt",
+      "kind": "positive",
+      "request": {
+        "op": "three_way_merge",
+        "record": {
+          "base": {
+            "v": 1,
+            "k": 0
+          },
+          "left": {
+            "v": 2,
+            "k": 0
+          },
+          "right": {
+            "v": 1,
+            "k": 0
+          }
+        },
+        "args": {}
+      },
+      "actual": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "merged": {
+            "k": 0,
+            "v": 2
+          },
+          "conflicts": [],
+          "resolved": [
+            {
+              "field": "k",
+              "source": "unchanged"
+            },
+            {
+              "field": "v",
+              "source": "left"
+            }
+          ]
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "merged": {
+            "k": 0,
+            "v": 2
+          },
+          "conflicts": [],
+          "resolved": [
+            {
+              "field": "k",
+              "source": "unchanged"
+            },
+            {
+              "field": "v",
+              "source": "left"
+            }
+          ]
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "exit_code": 0,
+      "result": "pass",
+      "subject_result": "pass",
+      "subject_success_credit": 1
+    },
+    {
+      "id": "TR6933-X2-RUNNER-1-negative",
+      "runner": "ghc_family_config_migration_x2_1.txt",
+      "kind": "negative",
+      "request": {
+        "op": "unsupported_three_way_merge",
+        "record": {
+          "base": {
+            "v": 1,
+            "k": 0
+          },
+          "left": {
+            "v": 2,
+            "k": 0
+          },
+          "right": {
+            "v": 1,
+            "k": 0
+          }
+        },
+        "args": {}
+      },
+      "actual": {
+        "ok": false,
+        "disposition": "open_gap",
+        "value": null,
+        "error": "RUNNER_OPERATION",
+        "external_credit": false
+      },
+      "expected": {
+        "ok": false,
+        "disposition": "open_gap",
+        "value": null,
+        "error": "RUNNER_OPERATION",
+        "external_credit": false
+      },
+      "exit_code": 1,
+      "result": "pass",
+      "subject_result": "fail",
+      "subject_success_credit": 0
+    },
+    {
+      "id": "TR6933-X2-RUNNER-2-positive",
+      "runner": "ghc_family_config_migration_x2_2.txt",
+      "kind": "positive",
+      "request": {
+        "op": "resolution_preview",
+        "record": {
+          "base": {
+            "v": 1
+          },
+          "left": {
+            "v": 2
+          },
+          "right": {
+            "v": 3
+          }
+        },
+        "args": {
+          "choices": {
+            "v": "left"
+          }
+        }
+      },
+      "actual": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "applied": true,
+          "result": {
+            "v": 2
+          },
+          "decisions": [
+            {
+              "field": "v",
+              "choice": "left"
+            }
+          ],
+          "unresolved": [],
+          "source_preserved": true
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "applied": true,
+          "result": {
+            "v": 2
+          },
+          "decisions": [
+            {
+              "field": "v",
+              "choice": "left"
+            }
+          ],
+          "unresolved": [],
+          "source_preserved": true
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "exit_code": 0,
+      "result": "pass",
+      "subject_result": "pass",
+      "subject_success_credit": 1
+    },
+    {
+      "id": "TR6933-X2-RUNNER-2-negative",
+      "runner": "ghc_family_config_migration_x2_2.txt",
+      "kind": "negative",
+      "request": {
+        "op": "unsupported_resolution_preview",
+        "record": {
+          "base": {
+            "v": 1
+          },
+          "left": {
+            "v": 2
+          },
+          "right": {
+            "v": 3
+          }
+        },
+        "args": {
+          "choices": {
+            "v": "left"
+          }
+        }
+      },
+      "actual": {
+        "ok": false,
+        "disposition": "open_gap",
+        "value": null,
+        "error": "RUNNER_OPERATION",
+        "external_credit": false
+      },
+      "expected": {
+        "ok": false,
+        "disposition": "open_gap",
+        "value": null,
+        "error": "RUNNER_OPERATION",
+        "external_credit": false
+      },
+      "exit_code": 1,
+      "result": "pass",
+      "subject_result": "fail",
+      "subject_success_credit": 0
+    },
+    {
+      "id": "TR6933-X2-RUNNER-3-positive",
+      "runner": "ghc_family_config_migration_x2_3.txt",
+      "kind": "positive",
+      "request": {
+        "op": "loss_snapshot",
+        "record": {
+          "before": {
+            "a": 1,
+            "b": 2
+          },
+          "after": {
+            "a": 1
+          }
+        },
+        "args": {}
+      },
+      "actual": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "removed": [
+            {
+              "field": "b",
+              "value": 2
+            }
+          ],
+          "overwritten": [],
+          "added": [],
+          "snapshot": {
+            "a": 1,
+            "b": 2
+          },
+          "reversible_from_snapshot": true
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "removed": [
+            {
+              "field": "b",
+              "value": 2
+            }
+          ],
+          "overwritten": [],
+          "added": [],
+          "snapshot": {
+            "a": 1,
+            "b": 2
+          },
+          "reversible_from_snapshot": true
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "exit_code": 0,
+      "result": "pass",
+      "subject_result": "pass",
+      "subject_success_credit": 1
+    },
+    {
+      "id": "TR6933-X2-RUNNER-3-negative",
+      "runner": "ghc_family_config_migration_x2_3.txt",
+      "kind": "negative",
+      "request": {
+        "op": "unsupported_loss_snapshot",
+        "record": {
+          "before": {
+            "a": 1,
+            "b": 2
+          },
+          "after": {
+            "a": 1
+          }
+        },
+        "args": {}
+      },
+      "actual": {
+        "ok": false,
+        "disposition": "open_gap",
+        "value": null,
+        "error": "RUNNER_OPERATION",
+        "external_credit": false
+      },
+      "expected": {
+        "ok": false,
+        "disposition": "open_gap",
+        "value": null,
+        "error": "RUNNER_OPERATION",
+        "external_credit": false
+      },
+      "exit_code": 1,
+      "result": "pass",
+      "subject_result": "fail",
+      "subject_success_credit": 0
+    },
+    {
+      "id": "TR6933-X2-RUNNER-4-positive",
+      "runner": "ghc_family_config_migration_x2_4.txt",
+      "kind": "positive",
+      "request": {
+        "op": "accessible_resolution_summary",
+        "record": {
+          "base": {
+            "v": 1,
+            "k": 0
+          },
+          "left": {
+            "v": 2,
+            "k": 0
+          },
+          "right": {
+            "v": 1,
+            "k": 0
+          }
+        },
+        "args": {}
+      },
+      "actual": {
+        "ok": true,
+        "disposition": "represented",
+        "value": {
+          "rows": [
+            {
+              "field": "k",
+              "state": "resolved_unchanged"
+            },
+            {
+              "field": "v",
+              "state": "resolved_left"
+            }
+          ],
+          "conflicts": 0,
+          "manual_review": false,
+          "operator_decision": false
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "represented",
+        "value": {
+          "rows": [
+            {
+              "field": "k",
+              "state": "resolved_unchanged"
+            },
+            {
+              "field": "v",
+              "state": "resolved_left"
+            }
+          ],
+          "conflicts": 0,
+          "manual_review": false,
+          "operator_decision": false
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "exit_code": 0,
+      "result": "pass",
+      "subject_result": "pass",
+      "subject_success_credit": 1
+    },
+    {
+      "id": "TR6933-X2-RUNNER-4-negative",
+      "runner": "ghc_family_config_migration_x2_4.txt",
+      "kind": "negative",
+      "request": {
+        "op": "unsupported_accessible_resolution_summary",
+        "record": {
+          "base": {
+            "v": 1,
+            "k": 0
+          },
+          "left": {
+            "v": 2,
+            "k": 0
+          },
+          "right": {
+            "v": 1,
+            "k": 0
+          }
+        },
+        "args": {}
+      },
+      "actual": {
+        "ok": false,
+        "disposition": "open_gap",
+        "value": null,
+        "error": "RUNNER_OPERATION",
+        "external_credit": false
+      },
+      "expected": {
+        "ok": false,
+        "disposition": "open_gap",
+        "value": null,
+        "error": "RUNNER_OPERATION",
+        "external_credit": false
+      },
+      "exit_code": 1,
+      "result": "pass",
+      "subject_result": "fail",
+      "subject_success_credit": 0
+    },
+    {
+      "id": "TR6933-X2-RUNNER-5-positive",
+      "runner": "ghc_family_config_migration_x2_5.txt",
+      "kind": "positive",
+      "request": {
+        "op": "external_migration_evidence",
+        "record": {
+          "requirements": [
+            "operator"
+          ],
+          "evidence": {}
+        },
+        "args": {}
+      },
+      "actual": {
+        "ok": true,
+        "disposition": "open_gap",
+        "value": {
+          "missing": [
+            "operator"
+          ],
+          "provided": [],
+          "external_qualified": false,
+          "release": false
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "open_gap",
+        "value": {
+          "missing": [
+            "operator"
+          ],
+          "provided": [],
+          "external_qualified": false,
+          "release": false
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "exit_code": 0,
+      "result": "pass",
+      "subject_result": "pass",
+      "subject_success_credit": 1
+    },
+    {
+      "id": "TR6933-X2-RUNNER-5-negative",
+      "runner": "ghc_family_config_migration_x2_5.txt",
+      "kind": "negative",
+      "request": {
+        "op": "unsupported_external_migration_evidence",
+        "record": {
+          "requirements": [
+            "operator"
+          ],
+          "evidence": {}
+        },
+        "args": {}
+      },
+      "actual": {
+        "ok": false,
+        "disposition": "open_gap",
+        "value": null,
+        "error": "RUNNER_OPERATION",
+        "external_credit": false
+      },
+      "expected": {
+        "ok": false,
+        "disposition": "open_gap",
+        "value": null,
+        "error": "RUNNER_OPERATION",
+        "external_credit": false
+      },
+      "exit_code": 1,
+      "result": "pass",
+      "subject_result": "fail",
+      "subject_success_credit": 0
+    }
+  ]
+}

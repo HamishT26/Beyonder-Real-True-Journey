@@ -1,0 +1,5928 @@
+{
+  "new_proposals": 100,
+  "inherited_reviewed": 100,
+  "inherited_new_credit": 0,
+  "records": [
+    {
+      "proposal_id": "TR6933-P001",
+      "title": "Integer and Boolean fields stay distinct",
+      "operation": "field_inventory",
+      "stage": "x1",
+      "request": {
+        "op": "field_inventory",
+        "record": {
+          "count": 1,
+          "enabled": true
+        },
+        "args": {}
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "fields": [
+            {
+              "name": "count",
+              "type": "integer"
+            },
+            {
+              "name": "enabled",
+              "type": "boolean"
+            }
+          ],
+          "count": 2
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "observed": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "fields": [
+            {
+              "name": "count",
+              "type": "integer"
+            },
+            {
+              "name": "enabled",
+              "type": "boolean"
+            }
+          ],
+          "count": 2
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "outcome": "completed",
+      "source_unchanged": true,
+      "evidence_path": "x1/evidence/first-core-execution.json"
+    },
+    {
+      "proposal_id": "TR6933-P002",
+      "title": "Explicit null remains a present field",
+      "operation": "field_inventory",
+      "stage": "x1",
+      "request": {
+        "op": "field_inventory",
+        "record": {
+          "label": "north",
+          "flag": false,
+          "detail": null
+        },
+        "args": {}
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "fields": [
+            {
+              "name": "detail",
+              "type": "null"
+            },
+            {
+              "name": "flag",
+              "type": "boolean"
+            },
+            {
+              "name": "label",
+              "type": "string"
+            }
+          ],
+          "count": 3
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "observed": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "fields": [
+            {
+              "name": "detail",
+              "type": "null"
+            },
+            {
+              "name": "flag",
+              "type": "boolean"
+            },
+            {
+              "name": "label",
+              "type": "string"
+            }
+          ],
+          "count": 3
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "outcome": "completed",
+      "source_unchanged": true,
+      "evidence_path": "x1/evidence/first-core-execution.json"
+    },
+    {
+      "proposal_id": "TR6933-P003",
+      "title": "Array and object containers have separate types",
+      "operation": "field_inventory",
+      "stage": "x1",
+      "request": {
+        "op": "field_inventory",
+        "record": {
+          "list": [
+            1,
+            2
+          ],
+          "opts": {
+            "mode": "x"
+          }
+        },
+        "args": {}
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "fields": [
+            {
+              "name": "list",
+              "type": "array"
+            },
+            {
+              "name": "opts",
+              "type": "object"
+            }
+          ],
+          "count": 2
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "observed": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "fields": [
+            {
+              "name": "list",
+              "type": "array"
+            },
+            {
+              "name": "opts",
+              "type": "object"
+            }
+          ],
+          "count": 2
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "outcome": "completed",
+      "source_unchanged": true,
+      "evidence_path": "x1/evidence/first-core-execution.json"
+    },
+    {
+      "proposal_id": "TR6933-P004",
+      "title": "Empty object and empty string are not absence",
+      "operation": "field_inventory",
+      "stage": "x1",
+      "request": {
+        "op": "field_inventory",
+        "record": {
+          "empty": {},
+          "zero": 0,
+          "blanks": ""
+        },
+        "args": {}
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "fields": [
+            {
+              "name": "blanks",
+              "type": "string"
+            },
+            {
+              "name": "empty",
+              "type": "object"
+            },
+            {
+              "name": "zero",
+              "type": "integer"
+            }
+          ],
+          "count": 3
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "observed": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "fields": [
+            {
+              "name": "blanks",
+              "type": "string"
+            },
+            {
+              "name": "empty",
+              "type": "object"
+            },
+            {
+              "name": "zero",
+              "type": "integer"
+            }
+          ],
+          "count": 3
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "outcome": "completed",
+      "source_unchanged": true,
+      "evidence_path": "x1/evidence/first-core-execution.json"
+    },
+    {
+      "proposal_id": "TR6933-P005",
+      "title": "Negative integer, empty array and null retain their types",
+      "operation": "field_inventory",
+      "stage": "x1",
+      "request": {
+        "op": "field_inventory",
+        "record": {
+          "negative": -2,
+          "tags": [],
+          "nullable": null
+        },
+        "args": {}
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "fields": [
+            {
+              "name": "negative",
+              "type": "integer"
+            },
+            {
+              "name": "nullable",
+              "type": "null"
+            },
+            {
+              "name": "tags",
+              "type": "array"
+            }
+          ],
+          "count": 3
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "observed": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "fields": [
+            {
+              "name": "negative",
+              "type": "integer"
+            },
+            {
+              "name": "nullable",
+              "type": "null"
+            },
+            {
+              "name": "tags",
+              "type": "array"
+            }
+          ],
+          "count": 3
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "outcome": "completed",
+      "source_unchanged": true,
+      "evidence_path": "x1/evidence/first-core-execution.json"
+    },
+    {
+      "proposal_id": "TR6933-P006",
+      "title": "One declared field resolves to a new label",
+      "operation": "field_correspondence",
+      "stage": "x1",
+      "request": {
+        "op": "field_correspondence",
+        "record": {
+          "alpha": 1,
+          "beta": 2
+        },
+        "args": {
+          "mapping": {
+            "alpha": "value"
+          }
+        }
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "resolved": [
+            {
+              "from": "alpha",
+              "to": "value",
+              "present": true,
+              "source_type": "integer"
+            }
+          ],
+          "target_collisions": [],
+          "missing_sources": []
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "observed": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "resolved": [
+            {
+              "from": "alpha",
+              "to": "value",
+              "present": true,
+              "source_type": "integer"
+            }
+          ],
+          "target_collisions": [],
+          "missing_sources": []
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "outcome": "completed",
+      "source_unchanged": true,
+      "evidence_path": "x1/evidence/first-core-execution.json"
+    },
+    {
+      "proposal_id": "TR6933-P007",
+      "title": "Swap correspondences remain simultaneous",
+      "operation": "field_correspondence",
+      "stage": "x1",
+      "request": {
+        "op": "field_correspondence",
+        "record": {
+          "left": true,
+          "right": false
+        },
+        "args": {
+          "mapping": {
+            "left": "right",
+            "right": "left"
+          }
+        }
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "resolved": [
+            {
+              "from": "left",
+              "to": "right",
+              "present": true,
+              "source_type": "boolean"
+            },
+            {
+              "from": "right",
+              "to": "left",
+              "present": true,
+              "source_type": "boolean"
+            }
+          ],
+          "target_collisions": [],
+          "missing_sources": []
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "observed": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "resolved": [
+            {
+              "from": "left",
+              "to": "right",
+              "present": true,
+              "source_type": "boolean"
+            },
+            {
+              "from": "right",
+              "to": "left",
+              "present": true,
+              "source_type": "boolean"
+            }
+          ],
+          "target_collisions": [],
+          "missing_sources": []
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "outcome": "completed",
+      "source_unchanged": true,
+      "evidence_path": "x1/evidence/first-core-execution.json"
+    },
+    {
+      "proposal_id": "TR6933-P008",
+      "title": "Two sources targeting one field are exposed",
+      "operation": "field_correspondence",
+      "stage": "x1",
+      "request": {
+        "op": "field_correspondence",
+        "record": {
+          "a": 1,
+          "b": "two"
+        },
+        "args": {
+          "mapping": {
+            "a": "x",
+            "b": "x"
+          }
+        }
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "resolved": [
+            {
+              "from": "a",
+              "to": "x",
+              "present": true,
+              "source_type": "integer"
+            },
+            {
+              "from": "b",
+              "to": "x",
+              "present": true,
+              "source_type": "string"
+            }
+          ],
+          "target_collisions": [
+            {
+              "target": "x",
+              "sources": [
+                "a",
+                "b"
+              ]
+            }
+          ],
+          "missing_sources": []
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "observed": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "resolved": [
+            {
+              "from": "a",
+              "to": "x",
+              "present": true,
+              "source_type": "integer"
+            },
+            {
+              "from": "b",
+              "to": "x",
+              "present": true,
+              "source_type": "string"
+            }
+          ],
+          "target_collisions": [
+            {
+              "target": "x",
+              "sources": [
+                "a",
+                "b"
+              ]
+            }
+          ],
+          "missing_sources": []
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "outcome": "completed",
+      "source_unchanged": true,
+      "evidence_path": "x1/evidence/first-core-execution.json"
+    },
+    {
+      "proposal_id": "TR6933-P009",
+      "title": "An absent source cannot become a null value",
+      "operation": "field_correspondence",
+      "stage": "x1",
+      "request": {
+        "op": "field_correspondence",
+        "record": {
+          "a": 1
+        },
+        "args": {
+          "mapping": {
+            "z": "zeta"
+          }
+        }
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "resolved": [
+            {
+              "from": "z",
+              "to": "zeta",
+              "present": false,
+              "source_type": "absent"
+            }
+          ],
+          "target_collisions": [],
+          "missing_sources": [
+            "z"
+          ]
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "observed": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "resolved": [
+            {
+              "from": "z",
+              "to": "zeta",
+              "present": false,
+              "source_type": "absent"
+            }
+          ],
+          "target_collisions": [],
+          "missing_sources": [
+            "z"
+          ]
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "outcome": "completed",
+      "source_unchanged": true,
+      "evidence_path": "x1/evidence/first-core-execution.json"
+    },
+    {
+      "proposal_id": "TR6933-P010",
+      "title": "Identity correspondence preserves an array field",
+      "operation": "field_correspondence",
+      "stage": "x1",
+      "request": {
+        "op": "field_correspondence",
+        "record": {
+          "x": [
+            1
+          ],
+          "meta": null
+        },
+        "args": {
+          "mapping": {
+            "x": "x"
+          }
+        }
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "resolved": [
+            {
+              "from": "x",
+              "to": "x",
+              "present": true,
+              "source_type": "array"
+            }
+          ],
+          "target_collisions": [],
+          "missing_sources": []
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "observed": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "resolved": [
+            {
+              "from": "x",
+              "to": "x",
+              "present": true,
+              "source_type": "array"
+            }
+          ],
+          "target_collisions": [],
+          "missing_sources": []
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "outcome": "completed",
+      "source_unchanged": true,
+      "evidence_path": "x1/evidence/first-core-execution.json"
+    },
+    {
+      "proposal_id": "TR6933-P011",
+      "title": "A fresh target receives the original value",
+      "operation": "rename_preview",
+      "stage": "x1",
+      "request": {
+        "op": "rename_preview",
+        "record": {
+          "old": 1,
+          "keep": true
+        },
+        "args": {
+          "mapping": {
+            "old": "new"
+          }
+        }
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "applied": true,
+          "result": {
+            "keep": true,
+            "new": 1
+          },
+          "conflicts": [],
+          "source_preserved": true
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "observed": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "applied": true,
+          "result": {
+            "keep": true,
+            "new": 1
+          },
+          "conflicts": [],
+          "source_preserved": true
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "outcome": "completed",
+      "source_unchanged": true,
+      "evidence_path": "x1/evidence/first-core-execution.json"
+    },
+    {
+      "proposal_id": "TR6933-P012",
+      "title": "A two-field swap does not destroy either source",
+      "operation": "rename_preview",
+      "stage": "x1",
+      "request": {
+        "op": "rename_preview",
+        "record": {
+          "left": "L",
+          "right": "R"
+        },
+        "args": {
+          "mapping": {
+            "left": "right",
+            "right": "left"
+          }
+        }
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "applied": true,
+          "result": {
+            "left": "R",
+            "right": "L"
+          },
+          "conflicts": [],
+          "source_preserved": true
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "observed": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "applied": true,
+          "result": {
+            "right": "L",
+            "left": "R"
+          },
+          "conflicts": [],
+          "source_preserved": true
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "outcome": "completed",
+      "source_unchanged": true,
+      "evidence_path": "x1/evidence/first-core-execution.json"
+    },
+    {
+      "proposal_id": "TR6933-P013",
+      "title": "An occupied unmapped destination blocks the preview",
+      "operation": "rename_preview",
+      "stage": "x1",
+      "request": {
+        "op": "rename_preview",
+        "record": {
+          "a": 1,
+          "b": 2,
+          "c": 3
+        },
+        "args": {
+          "mapping": {
+            "a": "c"
+          }
+        }
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "applied": false,
+          "result": {
+            "a": 1,
+            "b": 2,
+            "c": 3
+          },
+          "conflicts": [
+            "destination_occupied:c"
+          ],
+          "source_preserved": true
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "observed": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "applied": false,
+          "result": {
+            "a": 1,
+            "b": 2,
+            "c": 3
+          },
+          "conflicts": [
+            "destination_occupied:c"
+          ],
+          "source_preserved": true
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "outcome": "completed",
+      "source_unchanged": true,
+      "evidence_path": "x1/evidence/first-core-execution.json"
+    },
+    {
+      "proposal_id": "TR6933-P014",
+      "title": "A duplicate target blocks both writes",
+      "operation": "rename_preview",
+      "stage": "x1",
+      "request": {
+        "op": "rename_preview",
+        "record": {
+          "a": 1,
+          "b": 2
+        },
+        "args": {
+          "mapping": {
+            "a": "x",
+            "b": "x"
+          }
+        }
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "applied": false,
+          "result": {
+            "a": 1,
+            "b": 2
+          },
+          "conflicts": [
+            "duplicate_destination:x"
+          ],
+          "source_preserved": true
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "observed": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "applied": false,
+          "result": {
+            "a": 1,
+            "b": 2
+          },
+          "conflicts": [
+            "duplicate_destination:x"
+          ],
+          "source_preserved": true
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "outcome": "completed",
+      "source_unchanged": true,
+      "evidence_path": "x1/evidence/first-core-execution.json"
+    },
+    {
+      "proposal_id": "TR6933-P015",
+      "title": "An identity rename preserves explicit null",
+      "operation": "rename_preview",
+      "stage": "x1",
+      "request": {
+        "op": "rename_preview",
+        "record": {
+          "a": null,
+          "keep": "k"
+        },
+        "args": {
+          "mapping": {
+            "a": "a"
+          }
+        }
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "applied": true,
+          "result": {
+            "a": null,
+            "keep": "k"
+          },
+          "conflicts": [],
+          "source_preserved": true
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "observed": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "applied": true,
+          "result": {
+            "keep": "k",
+            "a": null
+          },
+          "conflicts": [],
+          "source_preserved": true
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "outcome": "completed",
+      "source_unchanged": true,
+      "evidence_path": "x1/evidence/first-core-execution.json"
+    },
+    {
+      "proposal_id": "TR6933-P016",
+      "title": "An absent field receives a declared default",
+      "operation": "default_overlay",
+      "stage": "x1",
+      "request": {
+        "op": "default_overlay",
+        "record": {},
+        "args": {
+          "defaults": {
+            "a": 1
+          }
+        }
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "result": {
+            "a": 1
+          },
+          "added": [
+            "a"
+          ],
+          "retained": [],
+          "already_equal": []
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "observed": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "result": {
+            "a": 1
+          },
+          "added": [
+            "a"
+          ],
+          "retained": [],
+          "already_equal": []
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "outcome": "completed",
+      "source_unchanged": true,
+      "evidence_path": "x1/evidence/first-core-execution.json"
+    },
+    {
+      "proposal_id": "TR6933-P017",
+      "title": "Null is retained while another absent field is added",
+      "operation": "default_overlay",
+      "stage": "x1",
+      "request": {
+        "op": "default_overlay",
+        "record": {
+          "a": null
+        },
+        "args": {
+          "defaults": {
+            "a": 5,
+            "b": false
+          }
+        }
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "result": {
+            "a": null,
+            "b": false
+          },
+          "added": [
+            "b"
+          ],
+          "retained": [
+            "a"
+          ],
+          "already_equal": []
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "observed": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "result": {
+            "a": null,
+            "b": false
+          },
+          "added": [
+            "b"
+          ],
+          "retained": [
+            "a"
+          ],
+          "already_equal": []
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "outcome": "completed",
+      "source_unchanged": true,
+      "evidence_path": "x1/evidence/first-core-execution.json"
+    },
+    {
+      "proposal_id": "TR6933-P018",
+      "title": "An equal default is recorded without a change",
+      "operation": "default_overlay",
+      "stage": "x1",
+      "request": {
+        "op": "default_overlay",
+        "record": {
+          "a": 1
+        },
+        "args": {
+          "defaults": {
+            "a": 1
+          }
+        }
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "result": {
+            "a": 1
+          },
+          "added": [],
+          "retained": [],
+          "already_equal": [
+            "a"
+          ]
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "observed": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "result": {
+            "a": 1
+          },
+          "added": [],
+          "retained": [],
+          "already_equal": [
+            "a"
+          ]
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "outcome": "completed",
+      "source_unchanged": true,
+      "evidence_path": "x1/evidence/first-core-execution.json"
+    },
+    {
+      "proposal_id": "TR6933-P019",
+      "title": "An existing empty array is not replaced",
+      "operation": "default_overlay",
+      "stage": "x1",
+      "request": {
+        "op": "default_overlay",
+        "record": {
+          "arr": []
+        },
+        "args": {
+          "defaults": {
+            "arr": [
+              1
+            ],
+            "object": {}
+          }
+        }
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "result": {
+            "arr": [],
+            "object": {}
+          },
+          "added": [
+            "object"
+          ],
+          "retained": [
+            "arr"
+          ],
+          "already_equal": []
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "observed": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "result": {
+            "arr": [],
+            "object": {}
+          },
+          "added": [
+            "object"
+          ],
+          "retained": [
+            "arr"
+          ],
+          "already_equal": []
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "outcome": "completed",
+      "source_unchanged": true,
+      "evidence_path": "x1/evidence/first-core-execution.json"
+    },
+    {
+      "proposal_id": "TR6933-P020",
+      "title": "Contrary Boolean and integer values remain present",
+      "operation": "default_overlay",
+      "stage": "x1",
+      "request": {
+        "op": "default_overlay",
+        "record": {
+          "neg": -1,
+          "flag": false
+        },
+        "args": {
+          "defaults": {
+            "neg": 0,
+            "flag": true,
+            "x": null
+          }
+        }
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "result": {
+            "neg": -1,
+            "flag": false,
+            "x": null
+          },
+          "added": [
+            "x"
+          ],
+          "retained": [
+            "flag",
+            "neg"
+          ],
+          "already_equal": []
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "observed": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "result": {
+            "flag": false,
+            "neg": -1,
+            "x": null
+          },
+          "added": [
+            "x"
+          ],
+          "retained": [
+            "flag",
+            "neg"
+          ],
+          "already_equal": []
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "outcome": "completed",
+      "source_unchanged": true,
+      "evidence_path": "x1/evidence/first-core-execution.json"
+    },
+    {
+      "proposal_id": "TR6933-P021",
+      "title": "An integer converts only under an explicit text rule",
+      "operation": "coercion_preview",
+      "stage": "x1",
+      "request": {
+        "op": "coercion_preview",
+        "record": {
+          "n": 12
+        },
+        "args": {
+          "field": "n",
+          "conversion": "integer_to_text"
+        }
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "applied": true,
+          "result": {
+            "n": "12"
+          },
+          "reason": null,
+          "input_type": "integer",
+          "output_type": "string"
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "observed": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "applied": true,
+          "result": {
+            "n": "12"
+          },
+          "reason": null,
+          "input_type": "integer",
+          "output_type": "string"
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "outcome": "completed",
+      "source_unchanged": true,
+      "evidence_path": "x1/evidence/first-core-execution.json"
+    },
+    {
+      "proposal_id": "TR6933-P022",
+      "title": "Canonical signed integer text converts exactly",
+      "operation": "coercion_preview",
+      "stage": "x1",
+      "request": {
+        "op": "coercion_preview",
+        "record": {
+          "n": "-3"
+        },
+        "args": {
+          "field": "n",
+          "conversion": "text_to_integer"
+        }
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "applied": true,
+          "result": {
+            "n": -3
+          },
+          "reason": null,
+          "input_type": "string",
+          "output_type": "integer"
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "observed": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "applied": true,
+          "result": {
+            "n": -3
+          },
+          "reason": null,
+          "input_type": "string",
+          "output_type": "integer"
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "outcome": "completed",
+      "source_unchanged": true,
+      "evidence_path": "x1/evidence/first-core-execution.json"
+    },
+    {
+      "proposal_id": "TR6933-P023",
+      "title": "Leading-zero text is held rather than silently normalized",
+      "operation": "coercion_preview",
+      "stage": "x1",
+      "request": {
+        "op": "coercion_preview",
+        "record": {
+          "n": "03"
+        },
+        "args": {
+          "field": "n",
+          "conversion": "text_to_integer"
+        }
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "applied": false,
+          "result": {
+            "n": "03"
+          },
+          "reason": "NONCANONICAL_INTEGER_TEXT",
+          "input_type": "string",
+          "output_type": "string"
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "observed": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "applied": false,
+          "result": {
+            "n": "03"
+          },
+          "reason": "NONCANONICAL_INTEGER_TEXT",
+          "input_type": "string",
+          "output_type": "string"
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "outcome": "completed",
+      "source_unchanged": true,
+      "evidence_path": "x1/evidence/first-core-execution.json"
+    },
+    {
+      "proposal_id": "TR6933-P024",
+      "title": "A Boolean converts to its literal text spelling",
+      "operation": "coercion_preview",
+      "stage": "x1",
+      "request": {
+        "op": "coercion_preview",
+        "record": {
+          "n": true
+        },
+        "args": {
+          "field": "n",
+          "conversion": "boolean_to_text"
+        }
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "applied": true,
+          "result": {
+            "n": "true"
+          },
+          "reason": null,
+          "input_type": "boolean",
+          "output_type": "string"
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "observed": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "applied": true,
+          "result": {
+            "n": "true"
+          },
+          "reason": null,
+          "input_type": "boolean",
+          "output_type": "string"
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "outcome": "completed",
+      "source_unchanged": true,
+      "evidence_path": "x1/evidence/first-core-execution.json"
+    },
+    {
+      "proposal_id": "TR6933-P025",
+      "title": "Integer one is not coerced by a Boolean rule",
+      "operation": "coercion_preview",
+      "stage": "x1",
+      "request": {
+        "op": "coercion_preview",
+        "record": {
+          "n": 1
+        },
+        "args": {
+          "field": "n",
+          "conversion": "boolean_to_text"
+        }
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "applied": false,
+          "result": {
+            "n": 1
+          },
+          "reason": "TYPE_MISMATCH",
+          "input_type": "integer",
+          "output_type": "integer"
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "observed": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "applied": false,
+          "result": {
+            "n": 1
+          },
+          "reason": "TYPE_MISMATCH",
+          "input_type": "integer",
+          "output_type": "integer"
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "outcome": "completed",
+      "source_unchanged": true,
+      "evidence_path": "x1/evidence/first-core-execution.json"
+    },
+    {
+      "proposal_id": "TR6933-P026",
+      "title": "A listed enum token maps explicitly",
+      "operation": "enum_mapping",
+      "stage": "x1",
+      "request": {
+        "op": "enum_mapping",
+        "record": {
+          "status": "new"
+        },
+        "args": {
+          "field": "status",
+          "mapping": {
+            "new": "pending",
+            "ready": "go"
+          }
+        }
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "applied": true,
+          "result": {
+            "status": "pending"
+          },
+          "unmapped": null,
+          "noninjective_targets": []
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "observed": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "applied": true,
+          "result": {
+            "status": "pending"
+          },
+          "unmapped": null,
+          "noninjective_targets": []
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "outcome": "completed",
+      "source_unchanged": true,
+      "evidence_path": "x1/evidence/first-core-execution.json"
+    },
+    {
+      "proposal_id": "TR6933-P027",
+      "title": "An unlisted enum token remains unchanged",
+      "operation": "enum_mapping",
+      "stage": "x1",
+      "request": {
+        "op": "enum_mapping",
+        "record": {
+          "status": "unknown"
+        },
+        "args": {
+          "field": "status",
+          "mapping": {
+            "new": "pending"
+          }
+        }
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "applied": false,
+          "result": {
+            "status": "unknown"
+          },
+          "unmapped": "unknown",
+          "noninjective_targets": []
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "observed": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "applied": false,
+          "result": {
+            "status": "unknown"
+          },
+          "unmapped": "unknown",
+          "noninjective_targets": []
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "outcome": "completed",
+      "source_unchanged": true,
+      "evidence_path": "x1/evidence/first-core-execution.json"
+    },
+    {
+      "proposal_id": "TR6933-P028",
+      "title": "A many-to-one enum map exposes information loss",
+      "operation": "enum_mapping",
+      "stage": "x1",
+      "request": {
+        "op": "enum_mapping",
+        "record": {
+          "status": "a"
+        },
+        "args": {
+          "field": "status",
+          "mapping": {
+            "a": "x",
+            "b": "x"
+          }
+        }
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "applied": true,
+          "result": {
+            "status": "x"
+          },
+          "unmapped": null,
+          "noninjective_targets": [
+            "x"
+          ]
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "observed": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "applied": true,
+          "result": {
+            "status": "x"
+          },
+          "unmapped": null,
+          "noninjective_targets": [
+            "x"
+          ]
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "outcome": "completed",
+      "source_unchanged": true,
+      "evidence_path": "x1/evidence/first-core-execution.json"
+    },
+    {
+      "proposal_id": "TR6933-P029",
+      "title": "An empty enum token is literal rather than absent",
+      "operation": "enum_mapping",
+      "stage": "x1",
+      "request": {
+        "op": "enum_mapping",
+        "record": {
+          "status": ""
+        },
+        "args": {
+          "field": "status",
+          "mapping": {
+            "": "blank"
+          }
+        }
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "applied": true,
+          "result": {
+            "status": "blank"
+          },
+          "unmapped": null,
+          "noninjective_targets": []
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "observed": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "applied": true,
+          "result": {
+            "status": "blank"
+          },
+          "unmapped": null,
+          "noninjective_targets": []
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "outcome": "completed",
+      "source_unchanged": true,
+      "evidence_path": "x1/evidence/first-core-execution.json"
+    },
+    {
+      "proposal_id": "TR6933-P030",
+      "title": "An identity enum mapping is a declared no-op",
+      "operation": "enum_mapping",
+      "stage": "x1",
+      "request": {
+        "op": "enum_mapping",
+        "record": {
+          "status": "done"
+        },
+        "args": {
+          "field": "status",
+          "mapping": {
+            "done": "done"
+          }
+        }
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "applied": true,
+          "result": {
+            "status": "done"
+          },
+          "unmapped": null,
+          "noninjective_targets": []
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "observed": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "applied": true,
+          "result": {
+            "status": "done"
+          },
+          "unmapped": null,
+          "noninjective_targets": []
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "outcome": "completed",
+      "source_unchanged": true,
+      "evidence_path": "x1/evidence/first-core-execution.json"
+    },
+    {
+      "proposal_id": "TR6933-P031",
+      "title": "A complete required set is present",
+      "operation": "required_field_check",
+      "stage": "x1",
+      "request": {
+        "op": "required_field_check",
+        "record": {
+          "a": 1,
+          "b": 2
+        },
+        "args": {
+          "required": [
+            "b",
+            "a"
+          ]
+        }
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "present": [
+            "a",
+            "b"
+          ],
+          "missing": [],
+          "complete": true
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "observed": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "present": [
+            "a",
+            "b"
+          ],
+          "missing": [],
+          "complete": true
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "outcome": "completed",
+      "source_unchanged": true,
+      "evidence_path": "x1/evidence/first-core-execution.json"
+    },
+    {
+      "proposal_id": "TR6933-P032",
+      "title": "A missing field remains distinct from null",
+      "operation": "required_field_check",
+      "stage": "x1",
+      "request": {
+        "op": "required_field_check",
+        "record": {
+          "a": null
+        },
+        "args": {
+          "required": [
+            "a",
+            "b"
+          ]
+        }
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "present": [
+            "a"
+          ],
+          "missing": [
+            "b"
+          ],
+          "complete": false
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "observed": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "present": [
+            "a"
+          ],
+          "missing": [
+            "b"
+          ],
+          "complete": false
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "outcome": "completed",
+      "source_unchanged": true,
+      "evidence_path": "x1/evidence/first-core-execution.json"
+    },
+    {
+      "proposal_id": "TR6933-P033",
+      "title": "False and zero satisfy presence only",
+      "operation": "required_field_check",
+      "stage": "x1",
+      "request": {
+        "op": "required_field_check",
+        "record": {
+          "enabled": false,
+          "retries": 0
+        },
+        "args": {
+          "required": [
+            "enabled",
+            "retries"
+          ]
+        }
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "present": [
+            "enabled",
+            "retries"
+          ],
+          "missing": [],
+          "complete": true
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "observed": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "present": [
+            "enabled",
+            "retries"
+          ],
+          "missing": [],
+          "complete": true
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "outcome": "completed",
+      "source_unchanged": true,
+      "evidence_path": "x1/evidence/first-core-execution.json"
+    },
+    {
+      "proposal_id": "TR6933-P034",
+      "title": "No fields cannot satisfy a nonempty requirement",
+      "operation": "required_field_check",
+      "stage": "x1",
+      "request": {
+        "op": "required_field_check",
+        "record": {},
+        "args": {
+          "required": [
+            "x"
+          ]
+        }
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "present": [],
+          "missing": [
+            "x"
+          ],
+          "complete": false
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "observed": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "present": [],
+          "missing": [
+            "x"
+          ],
+          "complete": false
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "outcome": "completed",
+      "source_unchanged": true,
+      "evidence_path": "x1/evidence/first-core-execution.json"
+    },
+    {
+      "proposal_id": "TR6933-P035",
+      "title": "An empty requirement list is explicitly vacuous",
+      "operation": "required_field_check",
+      "stage": "x1",
+      "request": {
+        "op": "required_field_check",
+        "record": {
+          "x": 1
+        },
+        "args": {
+          "required": []
+        }
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "present": [],
+          "missing": [],
+          "complete": true
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "observed": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "present": [],
+          "missing": [],
+          "complete": true
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "outcome": "completed",
+      "source_unchanged": true,
+      "evidence_path": "x1/evidence/first-core-execution.json"
+    },
+    {
+      "proposal_id": "TR6933-P036",
+      "title": "A known field is selected and its neighbour quarantined",
+      "operation": "unknown_field_projection",
+      "stage": "x1",
+      "request": {
+        "op": "unknown_field_projection",
+        "record": {
+          "known": 1,
+          "extra": 2
+        },
+        "args": {
+          "allowed": [
+            "known"
+          ]
+        }
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "selected": {
+            "known": 1
+          },
+          "quarantine": {
+            "extra": 2
+          },
+          "source_preserved": true
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "observed": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "selected": {
+            "known": 1
+          },
+          "quarantine": {
+            "extra": 2
+          },
+          "source_preserved": true
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "outcome": "completed",
+      "source_unchanged": true,
+      "evidence_path": "x1/evidence/first-core-execution.json"
+    },
+    {
+      "proposal_id": "TR6933-P037",
+      "title": "Explicit null stays selected",
+      "operation": "unknown_field_projection",
+      "stage": "x1",
+      "request": {
+        "op": "unknown_field_projection",
+        "record": {
+          "n": null,
+          "x": false
+        },
+        "args": {
+          "allowed": [
+            "n"
+          ]
+        }
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "selected": {
+            "n": null
+          },
+          "quarantine": {
+            "x": false
+          },
+          "source_preserved": true
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "observed": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "selected": {
+            "n": null
+          },
+          "quarantine": {
+            "x": false
+          },
+          "source_preserved": true
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "outcome": "completed",
+      "source_unchanged": true,
+      "evidence_path": "x1/evidence/first-core-execution.json"
+    },
+    {
+      "proposal_id": "TR6933-P038",
+      "title": "An empty allowlist quarantines all data",
+      "operation": "unknown_field_projection",
+      "stage": "x1",
+      "request": {
+        "op": "unknown_field_projection",
+        "record": {
+          "a": [
+            1
+          ],
+          "b": {}
+        },
+        "args": {
+          "allowed": []
+        }
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "selected": {},
+          "quarantine": {
+            "a": [
+              1
+            ],
+            "b": {}
+          },
+          "source_preserved": true
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "observed": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "selected": {},
+          "quarantine": {
+            "a": [
+              1
+            ],
+            "b": {}
+          },
+          "source_preserved": true
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "outcome": "completed",
+      "source_unchanged": true,
+      "evidence_path": "x1/evidence/first-core-execution.json"
+    },
+    {
+      "proposal_id": "TR6933-P039",
+      "title": "All declared fields remain in the selected view",
+      "operation": "unknown_field_projection",
+      "stage": "x1",
+      "request": {
+        "op": "unknown_field_projection",
+        "record": {
+          "a": 1,
+          "b": "two"
+        },
+        "args": {
+          "allowed": [
+            "b",
+            "a"
+          ]
+        }
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "selected": {
+            "a": 1,
+            "b": "two"
+          },
+          "quarantine": {},
+          "source_preserved": true
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "observed": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "selected": {
+            "a": 1,
+            "b": "two"
+          },
+          "quarantine": {},
+          "source_preserved": true
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "outcome": "completed",
+      "source_unchanged": true,
+      "evidence_path": "x1/evidence/first-core-execution.json"
+    },
+    {
+      "proposal_id": "TR6933-P040",
+      "title": "An absent allowed field is not invented",
+      "operation": "unknown_field_projection",
+      "stage": "x1",
+      "request": {
+        "op": "unknown_field_projection",
+        "record": {
+          "existing": true
+        },
+        "args": {
+          "allowed": [
+            "absent"
+          ]
+        }
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "selected": {},
+          "quarantine": {
+            "existing": true
+          },
+          "source_preserved": true
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "observed": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "selected": {},
+          "quarantine": {
+            "existing": true
+          },
+          "source_preserved": true
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "outcome": "completed",
+      "source_unchanged": true,
+      "evidence_path": "x1/evidence/first-core-execution.json"
+    },
+    {
+      "proposal_id": "TR6933-P041",
+      "title": "A target schema adds one field",
+      "operation": "schema_delta",
+      "stage": "x1",
+      "request": {
+        "op": "schema_delta",
+        "record": {
+          "a": "integer"
+        },
+        "args": {
+          "target": {
+            "a": "integer",
+            "b": "string"
+          }
+        }
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "added": [
+            "b"
+          ],
+          "removed": [],
+          "changed": [],
+          "unchanged": [
+            "a"
+          ]
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "observed": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "added": [
+            "b"
+          ],
+          "removed": [],
+          "changed": [],
+          "unchanged": [
+            "a"
+          ]
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "outcome": "completed",
+      "source_unchanged": true,
+      "evidence_path": "x1/evidence/first-core-execution.json"
+    },
+    {
+      "proposal_id": "TR6933-P042",
+      "title": "A removed field remains an explicit obligation",
+      "operation": "schema_delta",
+      "stage": "x1",
+      "request": {
+        "op": "schema_delta",
+        "record": {
+          "old": "string",
+          "x": "boolean"
+        },
+        "args": {
+          "target": {
+            "x": "boolean"
+          }
+        }
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "added": [],
+          "removed": [
+            "old"
+          ],
+          "changed": [],
+          "unchanged": [
+            "x"
+          ]
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "observed": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "added": [],
+          "removed": [
+            "old"
+          ],
+          "changed": [],
+          "unchanged": [
+            "x"
+          ]
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "outcome": "completed",
+      "source_unchanged": true,
+      "evidence_path": "x1/evidence/first-core-execution.json"
+    },
+    {
+      "proposal_id": "TR6933-P043",
+      "title": "A scalar type change is not an automatic conversion",
+      "operation": "schema_delta",
+      "stage": "x1",
+      "request": {
+        "op": "schema_delta",
+        "record": {
+          "value": "integer"
+        },
+        "args": {
+          "target": {
+            "value": "string"
+          }
+        }
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "added": [],
+          "removed": [],
+          "changed": [
+            {
+              "field": "value",
+              "from": "integer",
+              "to": "string"
+            }
+          ],
+          "unchanged": []
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "observed": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "added": [],
+          "removed": [],
+          "changed": [
+            {
+              "field": "value",
+              "from": "integer",
+              "to": "string"
+            }
+          ],
+          "unchanged": []
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "outcome": "completed",
+      "source_unchanged": true,
+      "evidence_path": "x1/evidence/first-core-execution.json"
+    },
+    {
+      "proposal_id": "TR6933-P044",
+      "title": "Two empty schemas have no inferred fields",
+      "operation": "schema_delta",
+      "stage": "x1",
+      "request": {
+        "op": "schema_delta",
+        "record": {},
+        "args": {
+          "target": {}
+        }
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "added": [],
+          "removed": [],
+          "changed": [],
+          "unchanged": []
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "observed": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "added": [],
+          "removed": [],
+          "changed": [],
+          "unchanged": []
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "outcome": "completed",
+      "source_unchanged": true,
+      "evidence_path": "x1/evidence/first-core-execution.json"
+    },
+    {
+      "proposal_id": "TR6933-P045",
+      "title": "Addition removal and type change remain separate",
+      "operation": "schema_delta",
+      "stage": "x1",
+      "request": {
+        "op": "schema_delta",
+        "record": {
+          "x": "null",
+          "y": "array"
+        },
+        "args": {
+          "target": {
+            "x": "object",
+            "z": "array"
+          }
+        }
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "added": [
+            "z"
+          ],
+          "removed": [
+            "y"
+          ],
+          "changed": [
+            {
+              "field": "x",
+              "from": "null",
+              "to": "object"
+            }
+          ],
+          "unchanged": []
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "observed": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "added": [
+            "z"
+          ],
+          "removed": [
+            "y"
+          ],
+          "changed": [
+            {
+              "field": "x",
+              "from": "null",
+              "to": "object"
+            }
+          ],
+          "unchanged": []
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "outcome": "completed",
+      "source_unchanged": true,
+      "evidence_path": "x1/evidence/first-core-execution.json"
+    },
+    {
+      "proposal_id": "TR6933-P046",
+      "title": "A two-cycle needs simultaneous evaluation",
+      "operation": "rename_cycle_analysis",
+      "stage": "x1",
+      "request": {
+        "op": "rename_cycle_analysis",
+        "record": {
+          "a": 1,
+          "b": 2
+        },
+        "args": {
+          "mapping": {
+            "a": "b",
+            "b": "a"
+          }
+        }
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "cycles": [
+            [
+              "a",
+              "b"
+            ]
+          ],
+          "chains": [],
+          "fixed_points": [],
+          "duplicate_targets": []
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "observed": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "cycles": [
+            [
+              "a",
+              "b"
+            ]
+          ],
+          "chains": [],
+          "fixed_points": [],
+          "duplicate_targets": []
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "outcome": "completed",
+      "source_unchanged": true,
+      "evidence_path": "x1/evidence/first-core-execution.json"
+    },
+    {
+      "proposal_id": "TR6933-P047",
+      "title": "A rename chain terminates at a fresh target",
+      "operation": "rename_cycle_analysis",
+      "stage": "x1",
+      "request": {
+        "op": "rename_cycle_analysis",
+        "record": {
+          "a": 1,
+          "b": 2
+        },
+        "args": {
+          "mapping": {
+            "a": "b",
+            "b": "c"
+          }
+        }
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "cycles": [],
+          "chains": [
+            [
+              "a",
+              "b",
+              "c"
+            ]
+          ],
+          "fixed_points": [],
+          "duplicate_targets": []
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "observed": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "cycles": [],
+          "chains": [
+            [
+              "a",
+              "b",
+              "c"
+            ]
+          ],
+          "fixed_points": [],
+          "duplicate_targets": []
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "outcome": "completed",
+      "source_unchanged": true,
+      "evidence_path": "x1/evidence/first-core-execution.json"
+    },
+    {
+      "proposal_id": "TR6933-P048",
+      "title": "A fixed point is distinct from a cycle",
+      "operation": "rename_cycle_analysis",
+      "stage": "x1",
+      "request": {
+        "op": "rename_cycle_analysis",
+        "record": {
+          "a": 1
+        },
+        "args": {
+          "mapping": {
+            "a": "a"
+          }
+        }
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "cycles": [],
+          "chains": [],
+          "fixed_points": [
+            "a"
+          ],
+          "duplicate_targets": []
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "observed": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "cycles": [],
+          "chains": [],
+          "fixed_points": [
+            "a"
+          ],
+          "duplicate_targets": []
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "outcome": "completed",
+      "source_unchanged": true,
+      "evidence_path": "x1/evidence/first-core-execution.json"
+    },
+    {
+      "proposal_id": "TR6933-P049",
+      "title": "Independent rename chains remain separate",
+      "operation": "rename_cycle_analysis",
+      "stage": "x1",
+      "request": {
+        "op": "rename_cycle_analysis",
+        "record": {
+          "a": 1,
+          "c": 2
+        },
+        "args": {
+          "mapping": {
+            "a": "b",
+            "c": "d"
+          }
+        }
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "cycles": [],
+          "chains": [
+            [
+              "a",
+              "b"
+            ],
+            [
+              "c",
+              "d"
+            ]
+          ],
+          "fixed_points": [],
+          "duplicate_targets": []
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "observed": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "cycles": [],
+          "chains": [
+            [
+              "a",
+              "b"
+            ],
+            [
+              "c",
+              "d"
+            ]
+          ],
+          "fixed_points": [],
+          "duplicate_targets": []
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "outcome": "completed",
+      "source_unchanged": true,
+      "evidence_path": "x1/evidence/first-core-execution.json"
+    },
+    {
+      "proposal_id": "TR6933-P050",
+      "title": "Converging chains expose a duplicate target",
+      "operation": "rename_cycle_analysis",
+      "stage": "x1",
+      "request": {
+        "op": "rename_cycle_analysis",
+        "record": {
+          "a": 1,
+          "b": 2
+        },
+        "args": {
+          "mapping": {
+            "a": "c",
+            "b": "c"
+          }
+        }
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "cycles": [],
+          "chains": [
+            [
+              "a",
+              "c"
+            ],
+            [
+              "b",
+              "c"
+            ]
+          ],
+          "fixed_points": [],
+          "duplicate_targets": [
+            "c"
+          ]
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "observed": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "cycles": [],
+          "chains": [
+            [
+              "a",
+              "c"
+            ],
+            [
+              "b",
+              "c"
+            ]
+          ],
+          "fixed_points": [],
+          "duplicate_targets": [
+            "c"
+          ]
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "outcome": "completed",
+      "source_unchanged": true,
+      "evidence_path": "x1/evidence/first-core-execution.json"
+    },
+    {
+      "proposal_id": "TR6933-P051",
+      "title": "A unilateral edit merges beside an unchanged field",
+      "operation": "three_way_merge",
+      "stage": "x2",
+      "request": {
+        "op": "three_way_merge",
+        "record": {
+          "base": {
+            "v": 1,
+            "k": 0
+          },
+          "left": {
+            "v": 2,
+            "k": 0
+          },
+          "right": {
+            "v": 1,
+            "k": 0
+          }
+        },
+        "args": {}
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "merged": {
+            "k": 0,
+            "v": 2
+          },
+          "conflicts": [],
+          "resolved": [
+            {
+              "field": "k",
+              "source": "unchanged"
+            },
+            {
+              "field": "v",
+              "source": "left"
+            }
+          ]
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "observed": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "merged": {
+            "k": 0,
+            "v": 2
+          },
+          "conflicts": [],
+          "resolved": [
+            {
+              "field": "k",
+              "source": "unchanged"
+            },
+            {
+              "field": "v",
+              "source": "left"
+            }
+          ]
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "outcome": "completed",
+      "source_unchanged": true,
+      "evidence_path": "x2/evidence/first-core-execution.json"
+    },
+    {
+      "proposal_id": "TR6933-P052",
+      "title": "Equal concurrent edits coalesce",
+      "operation": "three_way_merge",
+      "stage": "x2",
+      "request": {
+        "op": "three_way_merge",
+        "record": {
+          "base": {
+            "v": 1
+          },
+          "left": {
+            "v": 2
+          },
+          "right": {
+            "v": 2
+          }
+        },
+        "args": {}
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "merged": {
+            "v": 2
+          },
+          "conflicts": [],
+          "resolved": [
+            {
+              "field": "v",
+              "source": "both"
+            }
+          ]
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "observed": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "merged": {
+            "v": 2
+          },
+          "conflicts": [],
+          "resolved": [
+            {
+              "field": "v",
+              "source": "both"
+            }
+          ]
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "outcome": "completed",
+      "source_unchanged": true,
+      "evidence_path": "x2/evidence/first-core-execution.json"
+    },
+    {
+      "proposal_id": "TR6933-P053",
+      "title": "Different concurrent edits remain unresolved",
+      "operation": "three_way_merge",
+      "stage": "x2",
+      "request": {
+        "op": "three_way_merge",
+        "record": {
+          "base": {
+            "v": 1
+          },
+          "left": {
+            "v": 2
+          },
+          "right": {
+            "v": 3
+          }
+        },
+        "args": {}
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "merged": {},
+          "conflicts": [
+            {
+              "field": "v",
+              "kind": "different_edits",
+              "base": {
+                "present": true,
+                "value": 1
+              },
+              "left": {
+                "present": true,
+                "value": 2
+              },
+              "right": {
+                "present": true,
+                "value": 3
+              }
+            }
+          ],
+          "resolved": []
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "observed": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "merged": {},
+          "conflicts": [
+            {
+              "field": "v",
+              "kind": "different_edits",
+              "base": {
+                "present": true,
+                "value": 1
+              },
+              "left": {
+                "present": true,
+                "value": 2
+              },
+              "right": {
+                "present": true,
+                "value": 3
+              }
+            }
+          ],
+          "resolved": []
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "outcome": "completed",
+      "source_unchanged": true,
+      "evidence_path": "x2/evidence/first-core-execution.json"
+    },
+    {
+      "proposal_id": "TR6933-P054",
+      "title": "Delete-versus-modify keeps both contrary states",
+      "operation": "three_way_merge",
+      "stage": "x2",
+      "request": {
+        "op": "three_way_merge",
+        "record": {
+          "base": {
+            "v": 1
+          },
+          "left": {},
+          "right": {
+            "v": 2
+          }
+        },
+        "args": {}
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "merged": {},
+          "conflicts": [
+            {
+              "field": "v",
+              "kind": "delete_modify",
+              "base": {
+                "present": true,
+                "value": 1
+              },
+              "left": {
+                "present": false,
+                "value": null
+              },
+              "right": {
+                "present": true,
+                "value": 2
+              }
+            }
+          ],
+          "resolved": []
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "observed": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "merged": {},
+          "conflicts": [
+            {
+              "field": "v",
+              "kind": "delete_modify",
+              "base": {
+                "present": true,
+                "value": 1
+              },
+              "left": {
+                "present": false,
+                "value": null
+              },
+              "right": {
+                "present": true,
+                "value": 2
+              }
+            }
+          ],
+          "resolved": []
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "outcome": "completed",
+      "source_unchanged": true,
+      "evidence_path": "x2/evidence/first-core-execution.json"
+    },
+    {
+      "proposal_id": "TR6933-P055",
+      "title": "Concurrent null and false additions remain a conflict",
+      "operation": "three_way_merge",
+      "stage": "x2",
+      "request": {
+        "op": "three_way_merge",
+        "record": {
+          "base": {},
+          "left": {
+            "v": null
+          },
+          "right": {
+            "v": false
+          }
+        },
+        "args": {}
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "merged": {},
+          "conflicts": [
+            {
+              "field": "v",
+              "kind": "concurrent_add",
+              "base": {
+                "present": false,
+                "value": null
+              },
+              "left": {
+                "present": true,
+                "value": null
+              },
+              "right": {
+                "present": true,
+                "value": false
+              }
+            }
+          ],
+          "resolved": []
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "observed": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "merged": {},
+          "conflicts": [
+            {
+              "field": "v",
+              "kind": "concurrent_add",
+              "base": {
+                "present": false,
+                "value": null
+              },
+              "left": {
+                "present": true,
+                "value": null
+              },
+              "right": {
+                "present": true,
+                "value": false
+              }
+            }
+          ],
+          "resolved": []
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "outcome": "completed",
+      "source_unchanged": true,
+      "evidence_path": "x2/evidence/first-core-execution.json"
+    },
+    {
+      "proposal_id": "TR6933-P056",
+      "title": "Unilateral deletion is not a conflict",
+      "operation": "conflict_kinds",
+      "stage": "x2",
+      "request": {
+        "op": "conflict_kinds",
+        "record": {
+          "base": {
+            "v": 1
+          },
+          "left": {},
+          "right": {
+            "v": 1
+          }
+        },
+        "args": {}
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "fields": 1,
+          "conflict_count": 0,
+          "kinds": {
+            "different_edits": [],
+            "delete_modify": [],
+            "concurrent_add": []
+          }
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "observed": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "fields": 1,
+          "conflict_count": 0,
+          "kinds": {
+            "different_edits": [],
+            "delete_modify": [],
+            "concurrent_add": []
+          }
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "outcome": "completed",
+      "source_unchanged": true,
+      "evidence_path": "x2/evidence/first-core-execution.json"
+    },
+    {
+      "proposal_id": "TR6933-P057",
+      "title": "Different edits are classified by field",
+      "operation": "conflict_kinds",
+      "stage": "x2",
+      "request": {
+        "op": "conflict_kinds",
+        "record": {
+          "base": {
+            "v": 1
+          },
+          "left": {
+            "v": 2
+          },
+          "right": {
+            "v": 3
+          }
+        },
+        "args": {}
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "fields": 1,
+          "conflict_count": 1,
+          "kinds": {
+            "different_edits": [
+              "v"
+            ],
+            "delete_modify": [],
+            "concurrent_add": []
+          }
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "observed": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "fields": 1,
+          "conflict_count": 1,
+          "kinds": {
+            "different_edits": [
+              "v"
+            ],
+            "delete_modify": [],
+            "concurrent_add": []
+          }
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "outcome": "completed",
+      "source_unchanged": true,
+      "evidence_path": "x2/evidence/first-core-execution.json"
+    },
+    {
+      "proposal_id": "TR6933-P058",
+      "title": "Delete-versus-modify is its own category",
+      "operation": "conflict_kinds",
+      "stage": "x2",
+      "request": {
+        "op": "conflict_kinds",
+        "record": {
+          "base": {
+            "v": 1
+          },
+          "left": {},
+          "right": {
+            "v": 2
+          }
+        },
+        "args": {}
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "fields": 1,
+          "conflict_count": 1,
+          "kinds": {
+            "different_edits": [],
+            "delete_modify": [
+              "v"
+            ],
+            "concurrent_add": []
+          }
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "observed": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "fields": 1,
+          "conflict_count": 1,
+          "kinds": {
+            "different_edits": [],
+            "delete_modify": [
+              "v"
+            ],
+            "concurrent_add": []
+          }
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "outcome": "completed",
+      "source_unchanged": true,
+      "evidence_path": "x2/evidence/first-core-execution.json"
+    },
+    {
+      "proposal_id": "TR6933-P059",
+      "title": "Concurrent additions preserve their category",
+      "operation": "conflict_kinds",
+      "stage": "x2",
+      "request": {
+        "op": "conflict_kinds",
+        "record": {
+          "base": {},
+          "left": {
+            "v": null
+          },
+          "right": {
+            "v": false
+          }
+        },
+        "args": {}
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "fields": 1,
+          "conflict_count": 1,
+          "kinds": {
+            "different_edits": [],
+            "delete_modify": [],
+            "concurrent_add": [
+              "v"
+            ]
+          }
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "observed": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "fields": 1,
+          "conflict_count": 1,
+          "kinds": {
+            "different_edits": [],
+            "delete_modify": [],
+            "concurrent_add": [
+              "v"
+            ]
+          }
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "outcome": "completed",
+      "source_unchanged": true,
+      "evidence_path": "x2/evidence/first-core-execution.json"
+    },
+    {
+      "proposal_id": "TR6933-P060",
+      "title": "Multiple categories are counted without collapsing fields",
+      "operation": "conflict_kinds",
+      "stage": "x2",
+      "request": {
+        "op": "conflict_kinds",
+        "record": {
+          "base": {
+            "a": 1,
+            "b": 1
+          },
+          "left": {
+            "a": 2,
+            "c": true
+          },
+          "right": {
+            "a": 3,
+            "b": 2,
+            "c": false
+          }
+        },
+        "args": {}
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "fields": 3,
+          "conflict_count": 3,
+          "kinds": {
+            "different_edits": [
+              "a"
+            ],
+            "delete_modify": [
+              "b"
+            ],
+            "concurrent_add": [
+              "c"
+            ]
+          }
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "observed": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "fields": 3,
+          "conflict_count": 3,
+          "kinds": {
+            "different_edits": [
+              "a"
+            ],
+            "delete_modify": [
+              "b"
+            ],
+            "concurrent_add": [
+              "c"
+            ]
+          }
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "outcome": "completed",
+      "source_unchanged": true,
+      "evidence_path": "x2/evidence/first-core-execution.json"
+    },
+    {
+      "proposal_id": "TR6933-P061",
+      "title": "An explicit left choice selects only the left value",
+      "operation": "resolution_preview",
+      "stage": "x2",
+      "request": {
+        "op": "resolution_preview",
+        "record": {
+          "base": {
+            "v": 1
+          },
+          "left": {
+            "v": 2
+          },
+          "right": {
+            "v": 3
+          }
+        },
+        "args": {
+          "choices": {
+            "v": "left"
+          }
+        }
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "applied": true,
+          "result": {
+            "v": 2
+          },
+          "decisions": [
+            {
+              "field": "v",
+              "choice": "left"
+            }
+          ],
+          "unresolved": [],
+          "source_preserved": true
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "observed": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "applied": true,
+          "result": {
+            "v": 2
+          },
+          "decisions": [
+            {
+              "field": "v",
+              "choice": "left"
+            }
+          ],
+          "unresolved": [],
+          "source_preserved": true
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "outcome": "completed",
+      "source_unchanged": true,
+      "evidence_path": "x2/evidence/first-core-execution.json"
+    },
+    {
+      "proposal_id": "TR6933-P062",
+      "title": "An explicit right choice selects only the right value",
+      "operation": "resolution_preview",
+      "stage": "x2",
+      "request": {
+        "op": "resolution_preview",
+        "record": {
+          "base": {
+            "v": 1
+          },
+          "left": {
+            "v": 2
+          },
+          "right": {
+            "v": 3
+          }
+        },
+        "args": {
+          "choices": {
+            "v": "right"
+          }
+        }
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "applied": true,
+          "result": {
+            "v": 3
+          },
+          "decisions": [
+            {
+              "field": "v",
+              "choice": "right"
+            }
+          ],
+          "unresolved": [],
+          "source_preserved": true
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "observed": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "applied": true,
+          "result": {
+            "v": 3
+          },
+          "decisions": [
+            {
+              "field": "v",
+              "choice": "right"
+            }
+          ],
+          "unresolved": [],
+          "source_preserved": true
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "outcome": "completed",
+      "source_unchanged": true,
+      "evidence_path": "x2/evidence/first-core-execution.json"
+    },
+    {
+      "proposal_id": "TR6933-P063",
+      "title": "An explicit base choice retains the ancestor",
+      "operation": "resolution_preview",
+      "stage": "x2",
+      "request": {
+        "op": "resolution_preview",
+        "record": {
+          "base": {
+            "v": 1
+          },
+          "left": {
+            "v": 2
+          },
+          "right": {
+            "v": 3
+          }
+        },
+        "args": {
+          "choices": {
+            "v": "base"
+          }
+        }
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "applied": true,
+          "result": {
+            "v": 1
+          },
+          "decisions": [
+            {
+              "field": "v",
+              "choice": "base"
+            }
+          ],
+          "unresolved": [],
+          "source_preserved": true
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "observed": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "applied": true,
+          "result": {
+            "v": 1
+          },
+          "decisions": [
+            {
+              "field": "v",
+              "choice": "base"
+            }
+          ],
+          "unresolved": [],
+          "source_preserved": true
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "outcome": "completed",
+      "source_unchanged": true,
+      "evidence_path": "x2/evidence/first-core-execution.json"
+    },
+    {
+      "proposal_id": "TR6933-P064",
+      "title": "An explicit remove choice preserves absence",
+      "operation": "resolution_preview",
+      "stage": "x2",
+      "request": {
+        "op": "resolution_preview",
+        "record": {
+          "base": {
+            "v": 1
+          },
+          "left": {
+            "v": 2
+          },
+          "right": {
+            "v": 3
+          }
+        },
+        "args": {
+          "choices": {
+            "v": "remove"
+          }
+        }
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "applied": true,
+          "result": {},
+          "decisions": [
+            {
+              "field": "v",
+              "choice": "remove"
+            }
+          ],
+          "unresolved": [],
+          "source_preserved": true
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "observed": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "applied": true,
+          "result": {},
+          "decisions": [
+            {
+              "field": "v",
+              "choice": "remove"
+            }
+          ],
+          "unresolved": [],
+          "source_preserved": true
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "outcome": "completed",
+      "source_unchanged": true,
+      "evidence_path": "x2/evidence/first-core-execution.json"
+    },
+    {
+      "proposal_id": "TR6933-P065",
+      "title": "An unresolved field aborts the whole resolution preview",
+      "operation": "resolution_preview",
+      "stage": "x2",
+      "request": {
+        "op": "resolution_preview",
+        "record": {
+          "base": {
+            "v": 1
+          },
+          "left": {
+            "v": 2
+          },
+          "right": {
+            "v": 3
+          }
+        },
+        "args": {
+          "choices": {}
+        }
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "applied": false,
+          "result": {
+            "v": 1
+          },
+          "decisions": [],
+          "unresolved": [
+            "v"
+          ],
+          "source_preserved": true
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "observed": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "applied": false,
+          "result": {
+            "v": 1
+          },
+          "decisions": [],
+          "unresolved": [
+            "v"
+          ],
+          "source_preserved": true
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "outcome": "completed",
+      "source_unchanged": true,
+      "evidence_path": "x2/evidence/first-core-execution.json"
+    },
+    {
+      "proposal_id": "TR6933-P066",
+      "title": "A decision binds to all four exact contexts",
+      "operation": "resolution_receipt",
+      "stage": "x2",
+      "request": {
+        "op": "resolution_receipt",
+        "record": {
+          "base": {
+            "v": 1,
+            "k": 0
+          },
+          "left": {
+            "v": 2,
+            "k": 0
+          },
+          "right": {
+            "v": 1,
+            "k": 0
+          }
+        },
+        "args": {
+          "decisions": {
+            "v": "left"
+          },
+          "claims": {
+            "base": "e8dcb54b754f09cf0eaabadd25c51650d24a635f587c0af65a723e02a7b6c470",
+            "left": "48fef3934e4ac7805ece610d2a4d24d81123ed9f7cf8773a9f1cd6f721c70068",
+            "right": "e8dcb54b754f09cf0eaabadd25c51650d24a635f587c0af65a723e02a7b6c470",
+            "decisions": "d47d2877dc462fa3ee89c65a93544e0aba53ac344947fde0de623e2d7ca2c7e8"
+          }
+        }
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "bound": true,
+          "mismatch_domains": [],
+          "actual": {
+            "base": "e8dcb54b754f09cf0eaabadd25c51650d24a635f587c0af65a723e02a7b6c470",
+            "left": "48fef3934e4ac7805ece610d2a4d24d81123ed9f7cf8773a9f1cd6f721c70068",
+            "right": "e8dcb54b754f09cf0eaabadd25c51650d24a635f587c0af65a723e02a7b6c470",
+            "decisions": "d47d2877dc462fa3ee89c65a93544e0aba53ac344947fde0de623e2d7ca2c7e8"
+          },
+          "external_authority": false
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "observed": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "bound": true,
+          "mismatch_domains": [],
+          "actual": {
+            "base": "e8dcb54b754f09cf0eaabadd25c51650d24a635f587c0af65a723e02a7b6c470",
+            "left": "48fef3934e4ac7805ece610d2a4d24d81123ed9f7cf8773a9f1cd6f721c70068",
+            "right": "e8dcb54b754f09cf0eaabadd25c51650d24a635f587c0af65a723e02a7b6c470",
+            "decisions": "d47d2877dc462fa3ee89c65a93544e0aba53ac344947fde0de623e2d7ca2c7e8"
+          },
+          "external_authority": false
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "outcome": "completed",
+      "source_unchanged": true,
+      "evidence_path": "x2/evidence/first-core-execution.json"
+    },
+    {
+      "proposal_id": "TR6933-P067",
+      "title": "A changed left context invalidates its receipt",
+      "operation": "resolution_receipt",
+      "stage": "x2",
+      "request": {
+        "op": "resolution_receipt",
+        "record": {
+          "base": {
+            "v": 1
+          },
+          "left": {
+            "v": 2
+          },
+          "right": {
+            "v": 2
+          }
+        },
+        "args": {
+          "decisions": {},
+          "claims": {
+            "base": "afbf9d0f3560b0fd7795e81c42a0a79ee6b6fc67e064f77826aee642cad28d91",
+            "left": "0000000000000000000000000000000000000000000000000000000000000000",
+            "right": "2b5442799fccc3af2e7e790017697373913b7afcac933d72fb5876de994f659a",
+            "decisions": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a"
+          }
+        }
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "bound": false,
+          "mismatch_domains": [
+            "left"
+          ],
+          "actual": {
+            "base": "afbf9d0f3560b0fd7795e81c42a0a79ee6b6fc67e064f77826aee642cad28d91",
+            "left": "2b5442799fccc3af2e7e790017697373913b7afcac933d72fb5876de994f659a",
+            "right": "2b5442799fccc3af2e7e790017697373913b7afcac933d72fb5876de994f659a",
+            "decisions": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a"
+          },
+          "external_authority": false
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "observed": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "bound": false,
+          "mismatch_domains": [
+            "left"
+          ],
+          "actual": {
+            "base": "afbf9d0f3560b0fd7795e81c42a0a79ee6b6fc67e064f77826aee642cad28d91",
+            "left": "2b5442799fccc3af2e7e790017697373913b7afcac933d72fb5876de994f659a",
+            "right": "2b5442799fccc3af2e7e790017697373913b7afcac933d72fb5876de994f659a",
+            "decisions": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a"
+          },
+          "external_authority": false
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "outcome": "completed",
+      "source_unchanged": true,
+      "evidence_path": "x2/evidence/first-core-execution.json"
+    },
+    {
+      "proposal_id": "TR6933-P068",
+      "title": "A missing right digest stays unbound",
+      "operation": "resolution_receipt",
+      "stage": "x2",
+      "request": {
+        "op": "resolution_receipt",
+        "record": {
+          "base": {
+            "v": 1
+          },
+          "left": {
+            "v": 2
+          },
+          "right": {
+            "v": 3
+          }
+        },
+        "args": {
+          "decisions": {
+            "v": "right"
+          },
+          "claims": {
+            "base": "afbf9d0f3560b0fd7795e81c42a0a79ee6b6fc67e064f77826aee642cad28d91",
+            "left": "2b5442799fccc3af2e7e790017697373913b7afcac933d72fb5876de994f659a",
+            "right": null,
+            "decisions": "f8c2e199aa54daff9d1b30e84a2a3571f8324b992a00351b150ff7abe2f62b9d"
+          }
+        }
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "bound": false,
+          "mismatch_domains": [
+            "right"
+          ],
+          "actual": {
+            "base": "afbf9d0f3560b0fd7795e81c42a0a79ee6b6fc67e064f77826aee642cad28d91",
+            "left": "2b5442799fccc3af2e7e790017697373913b7afcac933d72fb5876de994f659a",
+            "right": "ff3acadf3b29fc4fa59d5b9612db39960c223344122be86dfaf4075be7c50279",
+            "decisions": "f8c2e199aa54daff9d1b30e84a2a3571f8324b992a00351b150ff7abe2f62b9d"
+          },
+          "external_authority": false
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "observed": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "bound": false,
+          "mismatch_domains": [
+            "right"
+          ],
+          "actual": {
+            "base": "afbf9d0f3560b0fd7795e81c42a0a79ee6b6fc67e064f77826aee642cad28d91",
+            "left": "2b5442799fccc3af2e7e790017697373913b7afcac933d72fb5876de994f659a",
+            "right": "ff3acadf3b29fc4fa59d5b9612db39960c223344122be86dfaf4075be7c50279",
+            "decisions": "f8c2e199aa54daff9d1b30e84a2a3571f8324b992a00351b150ff7abe2f62b9d"
+          },
+          "external_authority": false
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "outcome": "completed",
+      "source_unchanged": true,
+      "evidence_path": "x2/evidence/first-core-execution.json"
+    },
+    {
+      "proposal_id": "TR6933-P069",
+      "title": "A changed decision digest cannot reuse an earlier binding",
+      "operation": "resolution_receipt",
+      "stage": "x2",
+      "request": {
+        "op": "resolution_receipt",
+        "record": {
+          "base": {
+            "v": 1
+          },
+          "left": {},
+          "right": {
+            "v": 2
+          }
+        },
+        "args": {
+          "decisions": {
+            "v": "right"
+          },
+          "claims": {
+            "base": "afbf9d0f3560b0fd7795e81c42a0a79ee6b6fc67e064f77826aee642cad28d91",
+            "left": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+            "right": "2b5442799fccc3af2e7e790017697373913b7afcac933d72fb5876de994f659a",
+            "decisions": "0000000000000000000000000000000000000000000000000000000000000000"
+          }
+        }
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "bound": false,
+          "mismatch_domains": [
+            "decisions"
+          ],
+          "actual": {
+            "base": "afbf9d0f3560b0fd7795e81c42a0a79ee6b6fc67e064f77826aee642cad28d91",
+            "left": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+            "right": "2b5442799fccc3af2e7e790017697373913b7afcac933d72fb5876de994f659a",
+            "decisions": "f8c2e199aa54daff9d1b30e84a2a3571f8324b992a00351b150ff7abe2f62b9d"
+          },
+          "external_authority": false
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "observed": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "bound": false,
+          "mismatch_domains": [
+            "decisions"
+          ],
+          "actual": {
+            "base": "afbf9d0f3560b0fd7795e81c42a0a79ee6b6fc67e064f77826aee642cad28d91",
+            "left": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+            "right": "2b5442799fccc3af2e7e790017697373913b7afcac933d72fb5876de994f659a",
+            "decisions": "f8c2e199aa54daff9d1b30e84a2a3571f8324b992a00351b150ff7abe2f62b9d"
+          },
+          "external_authority": false
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "outcome": "completed",
+      "source_unchanged": true,
+      "evidence_path": "x2/evidence/first-core-execution.json"
+    },
+    {
+      "proposal_id": "TR6933-P070",
+      "title": "Four contradictory digest claims remain separately visible",
+      "operation": "resolution_receipt",
+      "stage": "x2",
+      "request": {
+        "op": "resolution_receipt",
+        "record": {
+          "base": {},
+          "left": {
+            "v": null
+          },
+          "right": {
+            "v": false
+          }
+        },
+        "args": {
+          "decisions": {
+            "v": "right"
+          },
+          "claims": {
+            "base": "0000000000000000000000000000000000000000000000000000000000000000",
+            "left": "0000000000000000000000000000000000000000000000000000000000000000",
+            "right": "0000000000000000000000000000000000000000000000000000000000000000",
+            "decisions": "0000000000000000000000000000000000000000000000000000000000000000"
+          }
+        }
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "bound": false,
+          "mismatch_domains": [
+            "base",
+            "decisions",
+            "left",
+            "right"
+          ],
+          "actual": {
+            "base": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+            "left": "aae9e223dcdc02dfd8149da8c25b9536533a7232b0c9137ee6b2cd5c2a2629eb",
+            "right": "eeb0deb9cb259a55fdff2c5ed5d0a08dba3ff585aafa0821cc51889f7660739e",
+            "decisions": "f8c2e199aa54daff9d1b30e84a2a3571f8324b992a00351b150ff7abe2f62b9d"
+          },
+          "external_authority": false
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "observed": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "bound": false,
+          "mismatch_domains": [
+            "base",
+            "decisions",
+            "left",
+            "right"
+          ],
+          "actual": {
+            "base": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+            "left": "aae9e223dcdc02dfd8149da8c25b9536533a7232b0c9137ee6b2cd5c2a2629eb",
+            "right": "eeb0deb9cb259a55fdff2c5ed5d0a08dba3ff585aafa0821cc51889f7660739e",
+            "decisions": "f8c2e199aa54daff9d1b30e84a2a3571f8324b992a00351b150ff7abe2f62b9d"
+          },
+          "external_authority": false
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "outcome": "completed",
+      "source_unchanged": true,
+      "evidence_path": "x2/evidence/first-core-execution.json"
+    },
+    {
+      "proposal_id": "TR6933-P071",
+      "title": "Removed integer values remain recoverable",
+      "operation": "loss_snapshot",
+      "stage": "x2",
+      "request": {
+        "op": "loss_snapshot",
+        "record": {
+          "before": {
+            "a": 1,
+            "b": 2
+          },
+          "after": {
+            "a": 1
+          }
+        },
+        "args": {}
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "removed": [
+            {
+              "field": "b",
+              "value": 2
+            }
+          ],
+          "overwritten": [],
+          "added": [],
+          "snapshot": {
+            "a": 1,
+            "b": 2
+          },
+          "reversible_from_snapshot": true
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "observed": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "removed": [
+            {
+              "field": "b",
+              "value": 2
+            }
+          ],
+          "overwritten": [],
+          "added": [],
+          "snapshot": {
+            "a": 1,
+            "b": 2
+          },
+          "reversible_from_snapshot": true
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "outcome": "completed",
+      "source_unchanged": true,
+      "evidence_path": "x2/evidence/first-core-execution.json"
+    },
+    {
+      "proposal_id": "TR6933-P072",
+      "title": "Boolean-to-integer replacement retains the prior type",
+      "operation": "loss_snapshot",
+      "stage": "x2",
+      "request": {
+        "op": "loss_snapshot",
+        "record": {
+          "before": {
+            "v": true
+          },
+          "after": {
+            "v": 1
+          }
+        },
+        "args": {}
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "removed": [],
+          "overwritten": [
+            {
+              "field": "v",
+              "before": true,
+              "after": 1
+            }
+          ],
+          "added": [],
+          "snapshot": {
+            "v": true
+          },
+          "reversible_from_snapshot": true
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "observed": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "removed": [],
+          "overwritten": [
+            {
+              "field": "v",
+              "before": true,
+              "after": 1
+            }
+          ],
+          "added": [],
+          "snapshot": {
+            "v": true
+          },
+          "reversible_from_snapshot": true
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "outcome": "completed",
+      "source_unchanged": true,
+      "evidence_path": "x2/evidence/first-core-execution.json"
+    },
+    {
+      "proposal_id": "TR6933-P073",
+      "title": "A newly added null does not become a removed value",
+      "operation": "loss_snapshot",
+      "stage": "x2",
+      "request": {
+        "op": "loss_snapshot",
+        "record": {
+          "before": {},
+          "after": {
+            "a": null
+          }
+        },
+        "args": {}
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "removed": [],
+          "overwritten": [],
+          "added": [
+            {
+              "field": "a",
+              "value": null
+            }
+          ],
+          "snapshot": {},
+          "reversible_from_snapshot": true
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "observed": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "removed": [],
+          "overwritten": [],
+          "added": [
+            {
+              "field": "a",
+              "value": null
+            }
+          ],
+          "snapshot": {},
+          "reversible_from_snapshot": true
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "outcome": "completed",
+      "source_unchanged": true,
+      "evidence_path": "x2/evidence/first-core-execution.json"
+    },
+    {
+      "proposal_id": "TR6933-P074",
+      "title": "Array replacement preserves the complete previous array",
+      "operation": "loss_snapshot",
+      "stage": "x2",
+      "request": {
+        "op": "loss_snapshot",
+        "record": {
+          "before": {
+            "arr": [
+              1
+            ]
+          },
+          "after": {
+            "arr": [
+              2
+            ]
+          }
+        },
+        "args": {}
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "removed": [],
+          "overwritten": [
+            {
+              "field": "arr",
+              "before": [
+                1
+              ],
+              "after": [
+                2
+              ]
+            }
+          ],
+          "added": [],
+          "snapshot": {
+            "arr": [
+              1
+            ]
+          },
+          "reversible_from_snapshot": true
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "observed": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "removed": [],
+          "overwritten": [
+            {
+              "field": "arr",
+              "before": [
+                1
+              ],
+              "after": [
+                2
+              ]
+            }
+          ],
+          "added": [],
+          "snapshot": {
+            "arr": [
+              1
+            ]
+          },
+          "reversible_from_snapshot": true
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "outcome": "completed",
+      "source_unchanged": true,
+      "evidence_path": "x2/evidence/first-core-execution.json"
+    },
+    {
+      "proposal_id": "TR6933-P075",
+      "title": "An unchanged record retains an explicit recovery snapshot",
+      "operation": "loss_snapshot",
+      "stage": "x2",
+      "request": {
+        "op": "loss_snapshot",
+        "record": {
+          "before": {
+            "v": null,
+            "k": false
+          },
+          "after": {
+            "v": null,
+            "k": false
+          }
+        },
+        "args": {}
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "removed": [],
+          "overwritten": [],
+          "added": [],
+          "snapshot": {
+            "v": null,
+            "k": false
+          },
+          "reversible_from_snapshot": true
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "observed": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "removed": [],
+          "overwritten": [],
+          "added": [],
+          "snapshot": {
+            "k": false,
+            "v": null
+          },
+          "reversible_from_snapshot": true
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "outcome": "completed",
+      "source_unchanged": true,
+      "evidence_path": "x2/evidence/first-core-execution.json"
+    },
+    {
+      "proposal_id": "TR6933-P076",
+      "title": "Rename followed by default injection commits as one preview",
+      "operation": "atomic_migration_pipeline",
+      "stage": "x2",
+      "request": {
+        "op": "atomic_migration_pipeline",
+        "record": {
+          "old": 1
+        },
+        "args": {
+          "rules": [
+            {
+              "op": "rename_preview",
+              "args": {
+                "mapping": {
+                  "old": "new"
+                }
+              }
+            },
+            {
+              "op": "default_overlay",
+              "args": {
+                "defaults": {
+                  "flag": false
+                }
+              }
+            }
+          ],
+          "allow_lossy": false
+        }
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "committed": true,
+          "result": {
+            "new": 1,
+            "flag": false
+          },
+          "failed_index": null,
+          "reason": null,
+          "attempted_steps": 2,
+          "rollback_preserved": true
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "observed": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "committed": true,
+          "result": {
+            "flag": false,
+            "new": 1
+          },
+          "failed_index": null,
+          "reason": null,
+          "attempted_steps": 2,
+          "rollback_preserved": true
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "outcome": "completed",
+      "source_unchanged": true,
+      "evidence_path": "x2/evidence/first-core-execution.json"
+    },
+    {
+      "proposal_id": "TR6933-P077",
+      "title": "Refused numeric text returns the original record",
+      "operation": "atomic_migration_pipeline",
+      "stage": "x2",
+      "request": {
+        "op": "atomic_migration_pipeline",
+        "record": {
+          "n": "03"
+        },
+        "args": {
+          "rules": [
+            {
+              "op": "coercion_preview",
+              "args": {
+                "field": "n",
+                "conversion": "text_to_integer"
+              }
+            }
+          ],
+          "allow_lossy": false
+        }
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "committed": false,
+          "result": {
+            "n": "03"
+          },
+          "failed_index": 0,
+          "reason": "NONCANONICAL_INTEGER_TEXT",
+          "attempted_steps": 1,
+          "rollback_preserved": true
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "observed": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "committed": false,
+          "result": {
+            "n": "03"
+          },
+          "failed_index": 0,
+          "reason": "NONCANONICAL_INTEGER_TEXT",
+          "attempted_steps": 1,
+          "rollback_preserved": true
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "outcome": "completed",
+      "source_unchanged": true,
+      "evidence_path": "x2/evidence/first-core-execution.json"
+    },
+    {
+      "proposal_id": "TR6933-P078",
+      "title": "Occupied rename destination aborts before a write",
+      "operation": "atomic_migration_pipeline",
+      "stage": "x2",
+      "request": {
+        "op": "atomic_migration_pipeline",
+        "record": {
+          "a": 1,
+          "b": 2
+        },
+        "args": {
+          "rules": [
+            {
+              "op": "rename_preview",
+              "args": {
+                "mapping": {
+                  "a": "b"
+                }
+              }
+            }
+          ],
+          "allow_lossy": false
+        }
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "committed": false,
+          "result": {
+            "a": 1,
+            "b": 2
+          },
+          "failed_index": 0,
+          "reason": "destination_occupied:b",
+          "attempted_steps": 1,
+          "rollback_preserved": true
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "observed": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "committed": false,
+          "result": {
+            "a": 1,
+            "b": 2
+          },
+          "failed_index": 0,
+          "reason": "destination_occupied:b",
+          "attempted_steps": 1,
+          "rollback_preserved": true
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "outcome": "completed",
+      "source_unchanged": true,
+      "evidence_path": "x2/evidence/first-core-execution.json"
+    },
+    {
+      "proposal_id": "TR6933-P079",
+      "title": "A later failed conversion rolls back an earlier default",
+      "operation": "atomic_migration_pipeline",
+      "stage": "x2",
+      "request": {
+        "op": "atomic_migration_pipeline",
+        "record": {
+          "n": 1
+        },
+        "args": {
+          "rules": [
+            {
+              "op": "default_overlay",
+              "args": {
+                "defaults": {
+                  "x": 0
+                }
+              }
+            },
+            {
+              "op": "coercion_preview",
+              "args": {
+                "field": "n",
+                "conversion": "boolean_to_text"
+              }
+            }
+          ],
+          "allow_lossy": false
+        }
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "committed": false,
+          "result": {
+            "n": 1
+          },
+          "failed_index": 1,
+          "reason": "TYPE_MISMATCH",
+          "attempted_steps": 2,
+          "rollback_preserved": true
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "observed": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "committed": false,
+          "result": {
+            "n": 1
+          },
+          "failed_index": 1,
+          "reason": "TYPE_MISMATCH",
+          "attempted_steps": 2,
+          "rollback_preserved": true
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "outcome": "completed",
+      "source_unchanged": true,
+      "evidence_path": "x2/evidence/first-core-execution.json"
+    },
+    {
+      "proposal_id": "TR6933-P080",
+      "title": "Unacknowledged enum information loss aborts the pipeline",
+      "operation": "atomic_migration_pipeline",
+      "stage": "x2",
+      "request": {
+        "op": "atomic_migration_pipeline",
+        "record": {
+          "status": "a",
+          "keep": null
+        },
+        "args": {
+          "rules": [
+            {
+              "op": "enum_mapping",
+              "args": {
+                "field": "status",
+                "mapping": {
+                  "a": "x",
+                  "b": "x"
+                }
+              }
+            }
+          ],
+          "allow_lossy": false
+        }
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "committed": false,
+          "result": {
+            "status": "a",
+            "keep": null
+          },
+          "failed_index": 0,
+          "reason": "LOSSY_ENUM_MAPPING",
+          "attempted_steps": 1,
+          "rollback_preserved": true
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "observed": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "committed": false,
+          "result": {
+            "keep": null,
+            "status": "a"
+          },
+          "failed_index": 0,
+          "reason": "LOSSY_ENUM_MAPPING",
+          "attempted_steps": 1,
+          "rollback_preserved": true
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "outcome": "completed",
+      "source_unchanged": true,
+      "evidence_path": "x2/evidence/first-core-execution.json"
+    },
+    {
+      "proposal_id": "TR6933-P081",
+      "title": "Literal field summary for unilateral edit",
+      "operation": "accessible_resolution_summary",
+      "stage": "x2",
+      "request": {
+        "op": "accessible_resolution_summary",
+        "record": {
+          "base": {
+            "v": 1,
+            "k": 0
+          },
+          "left": {
+            "v": 2,
+            "k": 0
+          },
+          "right": {
+            "v": 1,
+            "k": 0
+          }
+        },
+        "args": {}
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "represented",
+        "value": {
+          "rows": [
+            {
+              "field": "k",
+              "state": "resolved_unchanged"
+            },
+            {
+              "field": "v",
+              "state": "resolved_left"
+            }
+          ],
+          "conflicts": 0,
+          "manual_review": false,
+          "operator_decision": false
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "observed": {
+        "ok": true,
+        "disposition": "represented",
+        "value": {
+          "rows": [
+            {
+              "field": "k",
+              "state": "resolved_unchanged"
+            },
+            {
+              "field": "v",
+              "state": "resolved_left"
+            }
+          ],
+          "conflicts": 0,
+          "manual_review": false,
+          "operator_decision": false
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "outcome": "represented",
+      "source_unchanged": true,
+      "evidence_path": "x2/evidence/first-core-execution.json"
+    },
+    {
+      "proposal_id": "TR6933-P082",
+      "title": "Literal field summary for equal edits",
+      "operation": "accessible_resolution_summary",
+      "stage": "x2",
+      "request": {
+        "op": "accessible_resolution_summary",
+        "record": {
+          "base": {
+            "v": 1
+          },
+          "left": {
+            "v": 2
+          },
+          "right": {
+            "v": 2
+          }
+        },
+        "args": {}
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "represented",
+        "value": {
+          "rows": [
+            {
+              "field": "v",
+              "state": "resolved_both"
+            }
+          ],
+          "conflicts": 0,
+          "manual_review": false,
+          "operator_decision": false
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "observed": {
+        "ok": true,
+        "disposition": "represented",
+        "value": {
+          "rows": [
+            {
+              "field": "v",
+              "state": "resolved_both"
+            }
+          ],
+          "conflicts": 0,
+          "manual_review": false,
+          "operator_decision": false
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "outcome": "represented",
+      "source_unchanged": true,
+      "evidence_path": "x2/evidence/first-core-execution.json"
+    },
+    {
+      "proposal_id": "TR6933-P083",
+      "title": "Literal field summary for different edits",
+      "operation": "accessible_resolution_summary",
+      "stage": "x2",
+      "request": {
+        "op": "accessible_resolution_summary",
+        "record": {
+          "base": {
+            "v": 1
+          },
+          "left": {
+            "v": 2
+          },
+          "right": {
+            "v": 3
+          }
+        },
+        "args": {}
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "represented",
+        "value": {
+          "rows": [
+            {
+              "field": "v",
+              "state": "different_edits"
+            }
+          ],
+          "conflicts": 1,
+          "manual_review": false,
+          "operator_decision": false
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "observed": {
+        "ok": true,
+        "disposition": "represented",
+        "value": {
+          "rows": [
+            {
+              "field": "v",
+              "state": "different_edits"
+            }
+          ],
+          "conflicts": 1,
+          "manual_review": false,
+          "operator_decision": false
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "outcome": "represented",
+      "source_unchanged": true,
+      "evidence_path": "x2/evidence/first-core-execution.json"
+    },
+    {
+      "proposal_id": "TR6933-P084",
+      "title": "Literal field summary for delete versus modify",
+      "operation": "accessible_resolution_summary",
+      "stage": "x2",
+      "request": {
+        "op": "accessible_resolution_summary",
+        "record": {
+          "base": {
+            "v": 1
+          },
+          "left": {},
+          "right": {
+            "v": 2
+          }
+        },
+        "args": {}
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "represented",
+        "value": {
+          "rows": [
+            {
+              "field": "v",
+              "state": "delete_modify"
+            }
+          ],
+          "conflicts": 1,
+          "manual_review": false,
+          "operator_decision": false
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "observed": {
+        "ok": true,
+        "disposition": "represented",
+        "value": {
+          "rows": [
+            {
+              "field": "v",
+              "state": "delete_modify"
+            }
+          ],
+          "conflicts": 1,
+          "manual_review": false,
+          "operator_decision": false
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "outcome": "represented",
+      "source_unchanged": true,
+      "evidence_path": "x2/evidence/first-core-execution.json"
+    },
+    {
+      "proposal_id": "TR6933-P085",
+      "title": "Literal field summary for contrary additions",
+      "operation": "accessible_resolution_summary",
+      "stage": "x2",
+      "request": {
+        "op": "accessible_resolution_summary",
+        "record": {
+          "base": {},
+          "left": {
+            "v": null
+          },
+          "right": {
+            "v": false
+          }
+        },
+        "args": {}
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "represented",
+        "value": {
+          "rows": [
+            {
+              "field": "v",
+              "state": "concurrent_add"
+            }
+          ],
+          "conflicts": 1,
+          "manual_review": false,
+          "operator_decision": false
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "observed": {
+        "ok": true,
+        "disposition": "represented",
+        "value": {
+          "rows": [
+            {
+              "field": "v",
+              "state": "concurrent_add"
+            }
+          ],
+          "conflicts": 1,
+          "manual_review": false,
+          "operator_decision": false
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "outcome": "represented",
+      "source_unchanged": true,
+      "evidence_path": "x2/evidence/first-core-execution.json"
+    },
+    {
+      "proposal_id": "TR6933-P086",
+      "title": "A correction appends beside its rejected predecessor",
+      "operation": "correction_context",
+      "stage": "x2",
+      "request": {
+        "op": "correction_context",
+        "record": {
+          "prior": [
+            {
+              "id": "r1",
+              "state": "rejected",
+              "context": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "retained": true
+            }
+          ],
+          "correction": {
+            "id": "r2",
+            "supersedes": "r1",
+            "context": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "state": "represented"
+          }
+        },
+        "args": {}
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "represented",
+        "value": {
+          "accepted": true,
+          "reason": null,
+          "records": [
+            {
+              "id": "r1",
+              "state": "rejected",
+              "context": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "retained": true
+            },
+            {
+              "id": "r2",
+              "supersedes": "r1",
+              "context": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "state": "represented"
+            }
+          ],
+          "predecessor_erased": false
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "observed": {
+        "ok": true,
+        "disposition": "represented",
+        "value": {
+          "accepted": true,
+          "reason": null,
+          "records": [
+            {
+              "context": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "id": "r1",
+              "retained": true,
+              "state": "rejected"
+            },
+            {
+              "context": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "id": "r2",
+              "state": "represented",
+              "supersedes": "r1"
+            }
+          ],
+          "predecessor_erased": false
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "outcome": "represented",
+      "source_unchanged": true,
+      "evidence_path": "x2/evidence/first-core-execution.json"
+    },
+    {
+      "proposal_id": "TR6933-P087",
+      "title": "A new source context cannot amend the old attempt",
+      "operation": "correction_context",
+      "stage": "x2",
+      "request": {
+        "op": "correction_context",
+        "record": {
+          "prior": [
+            {
+              "id": "r1",
+              "state": "rejected",
+              "context": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "retained": true
+            }
+          ],
+          "correction": {
+            "id": "r2",
+            "supersedes": "r1",
+            "context": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+            "state": "represented"
+          }
+        },
+        "args": {}
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "represented",
+        "value": {
+          "accepted": false,
+          "reason": "STALE_CONTEXT",
+          "records": [
+            {
+              "id": "r1",
+              "state": "rejected",
+              "context": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "retained": true
+            }
+          ],
+          "predecessor_erased": false
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "observed": {
+        "ok": true,
+        "disposition": "represented",
+        "value": {
+          "accepted": false,
+          "reason": "STALE_CONTEXT",
+          "records": [
+            {
+              "context": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "id": "r1",
+              "retained": true,
+              "state": "rejected"
+            }
+          ],
+          "predecessor_erased": false
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "outcome": "represented",
+      "source_unchanged": true,
+      "evidence_path": "x2/evidence/first-core-execution.json"
+    },
+    {
+      "proposal_id": "TR6933-P088",
+      "title": "An unknown predecessor prevents attachment",
+      "operation": "correction_context",
+      "stage": "x2",
+      "request": {
+        "op": "correction_context",
+        "record": {
+          "prior": [
+            {
+              "id": "r1",
+              "state": "rejected",
+              "context": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "retained": true
+            }
+          ],
+          "correction": {
+            "id": "r2",
+            "supersedes": "missing",
+            "context": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "state": "represented"
+          }
+        },
+        "args": {}
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "represented",
+        "value": {
+          "accepted": false,
+          "reason": "UNKNOWN_PREDECESSOR",
+          "records": [
+            {
+              "id": "r1",
+              "state": "rejected",
+              "context": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "retained": true
+            }
+          ],
+          "predecessor_erased": false
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "observed": {
+        "ok": true,
+        "disposition": "represented",
+        "value": {
+          "accepted": false,
+          "reason": "UNKNOWN_PREDECESSOR",
+          "records": [
+            {
+              "context": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "id": "r1",
+              "retained": true,
+              "state": "rejected"
+            }
+          ],
+          "predecessor_erased": false
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "outcome": "represented",
+      "source_unchanged": true,
+      "evidence_path": "x2/evidence/first-core-execution.json"
+    },
+    {
+      "proposal_id": "TR6933-P089",
+      "title": "A repeated correction identifier is refused",
+      "operation": "correction_context",
+      "stage": "x2",
+      "request": {
+        "op": "correction_context",
+        "record": {
+          "prior": [
+            {
+              "id": "r1",
+              "state": "rejected",
+              "context": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "retained": true
+            }
+          ],
+          "correction": {
+            "id": "r1",
+            "supersedes": "r1",
+            "context": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "state": "represented"
+          }
+        },
+        "args": {}
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "represented",
+        "value": {
+          "accepted": false,
+          "reason": "DUPLICATE_ID",
+          "records": [
+            {
+              "id": "r1",
+              "state": "rejected",
+              "context": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "retained": true
+            }
+          ],
+          "predecessor_erased": false
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "observed": {
+        "ok": true,
+        "disposition": "represented",
+        "value": {
+          "accepted": false,
+          "reason": "DUPLICATE_ID",
+          "records": [
+            {
+              "context": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "id": "r1",
+              "retained": true,
+              "state": "rejected"
+            }
+          ],
+          "predecessor_erased": false
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "outcome": "represented",
+      "source_unchanged": true,
+      "evidence_path": "x2/evidence/first-core-execution.json"
+    },
+    {
+      "proposal_id": "TR6933-P090",
+      "title": "A held predecessor stays held after an additive correction",
+      "operation": "correction_context",
+      "stage": "x2",
+      "request": {
+        "op": "correction_context",
+        "record": {
+          "prior": [
+            {
+              "id": "r1",
+              "state": "held",
+              "context": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "retained": true
+            }
+          ],
+          "correction": {
+            "id": "r2",
+            "supersedes": "r1",
+            "context": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "state": "represented"
+          }
+        },
+        "args": {}
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "represented",
+        "value": {
+          "accepted": true,
+          "reason": null,
+          "records": [
+            {
+              "id": "r1",
+              "state": "held",
+              "context": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "retained": true
+            },
+            {
+              "id": "r2",
+              "supersedes": "r1",
+              "context": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "state": "represented"
+            }
+          ],
+          "predecessor_erased": false
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "observed": {
+        "ok": true,
+        "disposition": "represented",
+        "value": {
+          "accepted": true,
+          "reason": null,
+          "records": [
+            {
+              "context": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "id": "r1",
+              "retained": true,
+              "state": "held"
+            },
+            {
+              "context": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "id": "r2",
+              "state": "represented",
+              "supersedes": "r1"
+            }
+          ],
+          "predecessor_erased": false
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "outcome": "represented",
+      "source_unchanged": true,
+      "evidence_path": "x2/evidence/first-core-execution.json"
+    },
+    {
+      "proposal_id": "TR6933-P091",
+      "title": "Absent operator evidence remains an open gap",
+      "operation": "external_migration_evidence",
+      "stage": "x2",
+      "request": {
+        "op": "external_migration_evidence",
+        "record": {
+          "requirements": [
+            "operator"
+          ],
+          "evidence": {}
+        },
+        "args": {}
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "open_gap",
+        "value": {
+          "missing": [
+            "operator"
+          ],
+          "provided": [],
+          "external_qualified": false,
+          "release": false
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "observed": {
+        "ok": true,
+        "disposition": "open_gap",
+        "value": {
+          "missing": [
+            "operator"
+          ],
+          "provided": [],
+          "external_qualified": false,
+          "release": false
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "outcome": "open_gap",
+      "source_unchanged": true,
+      "evidence_path": "x2/evidence/first-core-execution.json"
+    },
+    {
+      "proposal_id": "TR6933-P092",
+      "title": "A synthetic compatibility note does not supply rollback evidence",
+      "operation": "external_migration_evidence",
+      "stage": "x2",
+      "request": {
+        "op": "external_migration_evidence",
+        "record": {
+          "requirements": [
+            "compatibility",
+            "rollback"
+          ],
+          "evidence": {
+            "compatibility": {
+              "class": "synthetic"
+            }
+          }
+        },
+        "args": {}
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "open_gap",
+        "value": {
+          "missing": [
+            "rollback"
+          ],
+          "provided": [
+            "compatibility"
+          ],
+          "external_qualified": false,
+          "release": false
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "observed": {
+        "ok": true,
+        "disposition": "open_gap",
+        "value": {
+          "missing": [
+            "rollback"
+          ],
+          "provided": [
+            "compatibility"
+          ],
+          "external_qualified": false,
+          "release": false
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "outcome": "open_gap",
+      "source_unchanged": true,
+      "evidence_path": "x2/evidence/first-core-execution.json"
+    },
+    {
+      "proposal_id": "TR6933-P093",
+      "title": "Null human review is still absent",
+      "operation": "external_migration_evidence",
+      "stage": "x2",
+      "request": {
+        "op": "external_migration_evidence",
+        "record": {
+          "requirements": [
+            "human_review"
+          ],
+          "evidence": {
+            "human_review": null
+          }
+        },
+        "args": {}
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "open_gap",
+        "value": {
+          "missing": [
+            "human_review"
+          ],
+          "provided": [],
+          "external_qualified": false,
+          "release": false
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "observed": {
+        "ok": true,
+        "disposition": "open_gap",
+        "value": {
+          "missing": [
+            "human_review"
+          ],
+          "provided": [],
+          "external_qualified": false,
+          "release": false
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "outcome": "open_gap",
+      "source_unchanged": true,
+      "evidence_path": "x2/evidence/first-core-execution.json"
+    },
+    {
+      "proposal_id": "TR6933-P094",
+      "title": "Same-owner review is present metadata without independent qualification",
+      "operation": "external_migration_evidence",
+      "stage": "x2",
+      "request": {
+        "op": "external_migration_evidence",
+        "record": {
+          "requirements": [
+            "independent_review"
+          ],
+          "evidence": {
+            "independent_review": {
+              "class": "same_owner"
+            }
+          }
+        },
+        "args": {}
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "open_gap",
+        "value": {
+          "missing": [],
+          "provided": [
+            "independent_review"
+          ],
+          "external_qualified": false,
+          "release": false
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "observed": {
+        "ok": true,
+        "disposition": "open_gap",
+        "value": {
+          "missing": [],
+          "provided": [
+            "independent_review"
+          ],
+          "external_qualified": false,
+          "release": false
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "outcome": "open_gap",
+      "source_unchanged": true,
+      "evidence_path": "x2/evidence/first-core-execution.json"
+    },
+    {
+      "proposal_id": "TR6933-P095",
+      "title": "Rights and Maori authority require competent external evidence",
+      "operation": "external_migration_evidence",
+      "stage": "x2",
+      "request": {
+        "op": "external_migration_evidence",
+        "record": {
+          "requirements": [
+            "rights",
+            "maori_authority"
+          ],
+          "evidence": {
+            "rights": null,
+            "maori_authority": null
+          }
+        },
+        "args": {}
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "open_gap",
+        "value": {
+          "missing": [
+            "maori_authority",
+            "rights"
+          ],
+          "provided": [],
+          "external_qualified": false,
+          "release": false
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "observed": {
+        "ok": true,
+        "disposition": "open_gap",
+        "value": {
+          "missing": [
+            "maori_authority",
+            "rights"
+          ],
+          "provided": [],
+          "external_qualified": false,
+          "release": false
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "outcome": "open_gap",
+      "source_unchanged": true,
+      "evidence_path": "x2/evidence/first-core-execution.json"
+    },
+    {
+      "proposal_id": "TR6933-P096",
+      "title": "Reserve deploy despite local permission assertions",
+      "operation": "operator_release_gate",
+      "stage": "x2",
+      "request": {
+        "op": "operator_release_gate",
+        "record": {
+          "target": "synthetic-config-A",
+          "authority": null,
+          "evidence": null
+        },
+        "args": {
+          "requested": "deploy"
+        }
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "exact_gate",
+        "value": {
+          "requested": "deploy",
+          "target": "synthetic-config-A",
+          "required": [
+            "competent_operator",
+            "external_validation",
+            "rollback_evidence"
+          ],
+          "released": false,
+          "assertions_verified": false
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "observed": {
+        "ok": true,
+        "disposition": "exact_gate",
+        "value": {
+          "requested": "deploy",
+          "target": "synthetic-config-A",
+          "required": [
+            "competent_operator",
+            "external_validation",
+            "rollback_evidence"
+          ],
+          "released": false,
+          "assertions_verified": false
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "outcome": "exact_gate",
+      "source_unchanged": true,
+      "evidence_path": "x2/evidence/first-core-execution.json"
+    },
+    {
+      "proposal_id": "TR6933-P097",
+      "title": "Reserve publish despite local permission assertions",
+      "operation": "operator_release_gate",
+      "stage": "x2",
+      "request": {
+        "op": "operator_release_gate",
+        "record": {
+          "target": "synthetic-config-B",
+          "authority": {
+            "declared": true
+          },
+          "evidence": null
+        },
+        "args": {
+          "requested": "publish"
+        }
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "exact_gate",
+        "value": {
+          "requested": "publish",
+          "target": "synthetic-config-B",
+          "required": [
+            "rights_holder",
+            "affected_people",
+            "privacy_review"
+          ],
+          "released": false,
+          "assertions_verified": false
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "observed": {
+        "ok": true,
+        "disposition": "exact_gate",
+        "value": {
+          "requested": "publish",
+          "target": "synthetic-config-B",
+          "required": [
+            "rights_holder",
+            "affected_people",
+            "privacy_review"
+          ],
+          "released": false,
+          "assertions_verified": false
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "outcome": "exact_gate",
+      "source_unchanged": true,
+      "evidence_path": "x2/evidence/first-core-execution.json"
+    },
+    {
+      "proposal_id": "TR6933-P098",
+      "title": "Reserve replace despite local permission assertions",
+      "operation": "operator_release_gate",
+      "stage": "x2",
+      "request": {
+        "op": "operator_release_gate",
+        "record": {
+          "target": "synthetic-config-C",
+          "authority": null,
+          "evidence": {
+            "declared": true
+          }
+        },
+        "args": {
+          "requested": "replace"
+        }
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "exact_gate",
+        "value": {
+          "requested": "replace",
+          "target": "synthetic-config-C",
+          "required": [
+            "competent_operator",
+            "exact_target",
+            "recoverable_source"
+          ],
+          "released": false,
+          "assertions_verified": false
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "observed": {
+        "ok": true,
+        "disposition": "exact_gate",
+        "value": {
+          "requested": "replace",
+          "target": "synthetic-config-C",
+          "required": [
+            "competent_operator",
+            "exact_target",
+            "recoverable_source"
+          ],
+          "released": false,
+          "assertions_verified": false
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "outcome": "exact_gate",
+      "source_unchanged": true,
+      "evidence_path": "x2/evidence/first-core-execution.json"
+    },
+    {
+      "proposal_id": "TR6933-P099",
+      "title": "Reserve delete despite local permission assertions",
+      "operation": "operator_release_gate",
+      "stage": "x2",
+      "request": {
+        "op": "operator_release_gate",
+        "record": {
+          "target": "synthetic-config-D",
+          "authority": {
+            "declared": true
+          },
+          "evidence": {
+            "declared": true
+          }
+        },
+        "args": {
+          "requested": "delete"
+        }
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "exact_gate",
+        "value": {
+          "requested": "delete",
+          "target": "synthetic-config-D",
+          "required": [
+            "exact_destructive_authority",
+            "recoverable_source"
+          ],
+          "released": false,
+          "assertions_verified": false
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "observed": {
+        "ok": true,
+        "disposition": "exact_gate",
+        "value": {
+          "requested": "delete",
+          "target": "synthetic-config-D",
+          "required": [
+            "exact_destructive_authority",
+            "recoverable_source"
+          ],
+          "released": false,
+          "assertions_verified": false
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "outcome": "exact_gate",
+      "source_unchanged": true,
+      "evidence_path": "x2/evidence/first-core-execution.json"
+    },
+    {
+      "proposal_id": "TR6933-P100",
+      "title": "Reserve maori_label despite local permission assertions",
+      "operation": "operator_release_gate",
+      "stage": "x2",
+      "request": {
+        "op": "operator_release_gate",
+        "record": {
+          "target": "synthetic-config-E",
+          "authority": null,
+          "evidence": {
+            "declared": true
+          }
+        },
+        "args": {
+          "requested": "maori_label"
+        }
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "exact_gate",
+        "value": {
+          "requested": "maori_label",
+          "target": "synthetic-config-E",
+          "required": [
+            "maori_authority",
+            "affected_people"
+          ],
+          "released": false,
+          "assertions_verified": false
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "observed": {
+        "ok": true,
+        "disposition": "exact_gate",
+        "value": {
+          "requested": "maori_label",
+          "target": "synthetic-config-E",
+          "required": [
+            "maori_authority",
+            "affected_people"
+          ],
+          "released": false,
+          "assertions_verified": false
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "outcome": "exact_gate",
+      "source_unchanged": true,
+      "evidence_path": "x2/evidence/first-core-execution.json"
+    }
+  ],
+  "outcomes": {
+    "completed": 80,
+    "represented": 10,
+    "open_gap": 5,
+    "exact_gate": 5
+  },
+  "boundary": "Relational working language and bounded same-owner synthetic software only; no consciousness, personhood, identity continuity, employment, qualification, independent agency, empirical GMUT confirmation, production THOS or Freed ID, professional, legal, cultural, affected-party or Maori authority, independent reproduction, complete privacy or accessibility, exhaustive security, AGI/ASI, Theory-of-Everything proof, canon, deployment or Stage 20 credit. Maori concepts remain under Maori authority. NOT_READY_FOR_STAGE_20."
+}

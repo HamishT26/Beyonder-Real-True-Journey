@@ -1,0 +1,3425 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Thalen Reed · Configuration review</title><style>
+:root{color-scheme:light;--ink:#193338;--muted:#4d6569;--line:#cedddd;--paper:#f4f7f5;--teal:#17565c}*{box-sizing:border-box}body{margin:0;background:var(--paper);color:var(--ink);font:16px/1.6 system-ui,sans-serif}a{color:#17565c}.wrap{max-width:1160px;margin:auto;padding:36px 24px}header{background:#173f44;color:white}header .wrap{padding-top:55px;padding-bottom:45px}.eyebrow{font-size:.8rem;letter-spacing:.15em;text-transform:uppercase;color:#b7dfd8}h1{font:600 clamp(2rem,5vw,3.7rem)/1.12 system-ui;max-width:850px;margin:14px 0}h2{font-size:1.5rem}p{max-width:850px}.lede{color:#dcebe7;font-size:1.1rem}.metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:24px 0}.metric{background:white;border:1px solid var(--line);padding:20px}.metric strong{display:block;font-size:2rem}.metric span{color:var(--muted)}.note{border-left:4px solid #b57b29;background:#fff8e8;padding:16px 20px}.controls{display:flex;align-items:end;gap:16px;flex-wrap:wrap;padding:20px;background:white;border:1px solid var(--line)}label{display:block;font-weight:600}input,select,button{font:inherit;padding:10px 12px;border:1px solid #759194;border-radius:3px;background:white;color:var(--ink)}input{min-width:290px}button{background:var(--teal);color:white;cursor:pointer}:focus-visible{outline:3px solid #be6718;outline-offset:3px}.table-wrap{overflow:auto}table{width:100%;border-collapse:collapse;background:white;text-align:left}caption{text-align:left;margin:20px 0;color:var(--muted)}th,td{padding:16px;border-bottom:1px solid var(--line);vertical-align:top}th{background:#e5eeeb}td:first-child{font-size:.85rem;white-space:nowrap}summary{cursor:pointer;font-weight:600}pre{white-space:pre-wrap;overflow-wrap:anywhere;font-size:.85rem;background:#f2f5f4;padding:16px}.state{display:inline-block;border:1px solid #b9cfca;border-radius:3px;padding:2px 8px;font-size:.8rem;white-space:nowrap}.open_gap,.exact_gate{background:#fff2d5;border-color:#c6a264}.represented{background:#e9eef7}footer{padding:30px 0;color:var(--muted);font-size:.9rem}[hidden]{display:none!important}@media(max-width:640px){.metrics{grid-template-columns:repeat(2,1fr)}.wrap{padding:24px 16px}input{min-width:0;width:100%}.controls>div{width:100%}td,th{padding:12px}}</style></head><body><header><div class="wrap"><div class="eyebrow">Thalen Reed · v693-v3 · Evidence review</div><h1>Configuration changes with their evidence intact.</h1><p class="lede">One hundred finite cases connect schema correspondence, conflicting edits, reversible previews, and explicit authority reservations.</p></div></header><main class="wrap"><section aria-labelledby="outcomes"><h2 id="outcomes">Observed proposal outcomes</h2><div class="metrics"><div class="metric"><strong>80</strong><span>completed</span></div><div class="metric"><strong>10</strong><span>represented</span></div><div class="metric"><strong>5</strong><span>open_gap</span></div><div class="metric"><strong>5</strong><span>exact_gate</span></div></div><p class="note">These are bounded same-owner software results. Human accessibility review, independent reproduction, external validation and competent deployment authority remain reserved. NOT_READY_FOR_STAGE_20.</p></section><section aria-labelledby="records"><h2 id="records">Inspect the exact records</h2><p>Open any row to read its request and observed response. Filtering changes only this display; it does not change evidence or authorize an action.</p><div class="controls"><div><label for="search">Search records</label><input id="search" type="search" placeholder="Field, conflict, proposal, or operation"></div><div><label for="outcome">Outcome</label><select id="outcome"><option value="all">All outcomes</option><option>completed</option><option>represented</option><option>open_gap</option><option>exact_gate</option></select></div><button id="clear" type="button">Clear filters</button></div><p id="status" role="status" aria-live="polite">100 of 100 proposal records shown</p><div class="table-wrap"><table><caption>Exact finite requests and their complete response envelopes</caption><thead><tr><th scope="col">Proposal</th><th scope="col">Contract and observed evidence</th><th scope="col">Outcome</th></tr></thead><tbody><tr data-outcome="completed" data-search="tr6933-p001 integer and boolean fields stay distinct field_inventory"><td>TR6933-P001</td><td><details><summary>Integer and Boolean fields stay distinct</summary><p>Operation: <code>field_inventory</code>. Source records remain preserved.</p><pre>{
+  &quot;request&quot;: {
+    &quot;op&quot;: &quot;field_inventory&quot;,
+    &quot;record&quot;: {
+      &quot;count&quot;: 1,
+      &quot;enabled&quot;: true
+    },
+    &quot;args&quot;: {}
+  },
+  &quot;observed&quot;: {
+    &quot;ok&quot;: true,
+    &quot;disposition&quot;: &quot;completed&quot;,
+    &quot;value&quot;: {
+      &quot;fields&quot;: [
+        {
+          &quot;name&quot;: &quot;count&quot;,
+          &quot;type&quot;: &quot;integer&quot;
+        },
+        {
+          &quot;name&quot;: &quot;enabled&quot;,
+          &quot;type&quot;: &quot;boolean&quot;
+        }
+      ],
+      &quot;count&quot;: 2
+    },
+    &quot;error&quot;: null,
+    &quot;external_credit&quot;: false
+  }
+}</pre></details></td><td><span class="state completed">completed</span></td></tr>
+<tr data-outcome="completed" data-search="tr6933-p002 explicit null remains a present field field_inventory"><td>TR6933-P002</td><td><details><summary>Explicit null remains a present field</summary><p>Operation: <code>field_inventory</code>. Source records remain preserved.</p><pre>{
+  &quot;request&quot;: {
+    &quot;op&quot;: &quot;field_inventory&quot;,
+    &quot;record&quot;: {
+      &quot;label&quot;: &quot;north&quot;,
+      &quot;flag&quot;: false,
+      &quot;detail&quot;: null
+    },
+    &quot;args&quot;: {}
+  },
+  &quot;observed&quot;: {
+    &quot;ok&quot;: true,
+    &quot;disposition&quot;: &quot;completed&quot;,
+    &quot;value&quot;: {
+      &quot;fields&quot;: [
+        {
+          &quot;name&quot;: &quot;detail&quot;,
+          &quot;type&quot;: &quot;null&quot;
+        },
+        {
+          &quot;name&quot;: &quot;flag&quot;,
+          &quot;type&quot;: &quot;boolean&quot;
+        },
+        {
+          &quot;name&quot;: &quot;label&quot;,
+          &quot;type&quot;: &quot;string&quot;
+        }
+      ],
+      &quot;count&quot;: 3
+    },
+    &quot;error&quot;: null,
+    &quot;external_credit&quot;: false
+  }
+}</pre></details></td><td><span class="state completed">completed</span></td></tr>
+<tr data-outcome="completed" data-search="tr6933-p003 array and object containers have separate types field_inventory"><td>TR6933-P003</td><td><details><summary>Array and object containers have separate types</summary><p>Operation: <code>field_inventory</code>. Source records remain preserved.</p><pre>{
+  &quot;request&quot;: {
+    &quot;op&quot;: &quot;field_inventory&quot;,
+    &quot;record&quot;: {
+      &quot;list&quot;: [
+        1,
+        2
+      ],
+      &quot;opts&quot;: {
+        &quot;mode&quot;: &quot;x&quot;
+      }
+    },
+    &quot;args&quot;: {}
+  },
+  &quot;observed&quot;: {
+    &quot;ok&quot;: true,
+    &quot;disposition&quot;: &quot;completed&quot;,
+    &quot;value&quot;: {
+      &quot;fields&quot;: [
+        {
+          &quot;name&quot;: &quot;list&quot;,
+          &quot;type&quot;: &quot;array&quot;
+        },
+        {
+          &quot;name&quot;: &quot;opts&quot;,
+          &quot;type&quot;: &quot;object&quot;
+        }
+      ],
+      &quot;count&quot;: 2
+    },
+    &quot;error&quot;: null,
+    &quot;external_credit&quot;: false
+  }
+}</pre></details></td><td><span class="state completed">completed</span></td></tr>
+<tr data-outcome="completed" data-search="tr6933-p004 empty object and empty string are not absence field_inventory"><td>TR6933-P004</td><td><details><summary>Empty object and empty string are not absence</summary><p>Operation: <code>field_inventory</code>. Source records remain preserved.</p><pre>{
+  &quot;request&quot;: {
+    &quot;op&quot;: &quot;field_inventory&quot;,
+    &quot;record&quot;: {
+      &quot;empty&quot;: {},
+      &quot;zero&quot;: 0,
+      &quot;blanks&quot;: &quot;&quot;
+    },
+    &quot;args&quot;: {}
+  },
+  &quot;observed&quot;: {
+    &quot;ok&quot;: true,
+    &quot;disposition&quot;: &quot;completed&quot;,
+    &quot;value&quot;: {
+      &quot;fields&quot;: [
+        {
+          &quot;name&quot;: &quot;blanks&quot;,
+          &quot;type&quot;: &quot;string&quot;
+        },
+        {
+          &quot;name&quot;: &quot;empty&quot;,
+          &quot;type&quot;: &quot;object&quot;
+        },
+        {
+          &quot;name&quot;: &quot;zero&quot;,
+          &quot;type&quot;: &quot;integer&quot;
+        }
+      ],
+      &quot;count&quot;: 3
+    },
+    &quot;error&quot;: null,
+    &quot;external_credit&quot;: false
+  }
+}</pre></details></td><td><span class="state completed">completed</span></td></tr>
+<tr data-outcome="completed" data-search="tr6933-p005 negative integer, empty array and null retain their types field_inventory"><td>TR6933-P005</td><td><details><summary>Negative integer, empty array and null retain their types</summary><p>Operation: <code>field_inventory</code>. Source records remain preserved.</p><pre>{
+  &quot;request&quot;: {
+    &quot;op&quot;: &quot;field_inventory&quot;,
+    &quot;record&quot;: {
+      &quot;negative&quot;: -2,
+      &quot;tags&quot;: [],
+      &quot;nullable&quot;: null
+    },
+    &quot;args&quot;: {}
+  },
+  &quot;observed&quot;: {
+    &quot;ok&quot;: true,
+    &quot;disposition&quot;: &quot;completed&quot;,
+    &quot;value&quot;: {
+      &quot;fields&quot;: [
+        {
+          &quot;name&quot;: &quot;negative&quot;,
+          &quot;type&quot;: &quot;integer&quot;
+        },
+        {
+          &quot;name&quot;: &quot;nullable&quot;,
+          &quot;type&quot;: &quot;null&quot;
+        },
+        {
+          &quot;name&quot;: &quot;tags&quot;,
+          &quot;type&quot;: &quot;array&quot;
+        }
+      ],
+      &quot;count&quot;: 3
+    },
+    &quot;error&quot;: null,
+    &quot;external_credit&quot;: false
+  }
+}</pre></details></td><td><span class="state completed">completed</span></td></tr>
+<tr data-outcome="completed" data-search="tr6933-p006 one declared field resolves to a new label field_correspondence"><td>TR6933-P006</td><td><details><summary>One declared field resolves to a new label</summary><p>Operation: <code>field_correspondence</code>. Source records remain preserved.</p><pre>{
+  &quot;request&quot;: {
+    &quot;op&quot;: &quot;field_correspondence&quot;,
+    &quot;record&quot;: {
+      &quot;alpha&quot;: 1,
+      &quot;beta&quot;: 2
+    },
+    &quot;args&quot;: {
+      &quot;mapping&quot;: {
+        &quot;alpha&quot;: &quot;value&quot;
+      }
+    }
+  },
+  &quot;observed&quot;: {
+    &quot;ok&quot;: true,
+    &quot;disposition&quot;: &quot;completed&quot;,
+    &quot;value&quot;: {
+      &quot;resolved&quot;: [
+        {
+          &quot;from&quot;: &quot;alpha&quot;,
+          &quot;to&quot;: &quot;value&quot;,
+          &quot;present&quot;: true,
+          &quot;source_type&quot;: &quot;integer&quot;
+        }
+      ],
+      &quot;target_collisions&quot;: [],
+      &quot;missing_sources&quot;: []
+    },
+    &quot;error&quot;: null,
+    &quot;external_credit&quot;: false
+  }
+}</pre></details></td><td><span class="state completed">completed</span></td></tr>
+<tr data-outcome="completed" data-search="tr6933-p007 swap correspondences remain simultaneous field_correspondence"><td>TR6933-P007</td><td><details><summary>Swap correspondences remain simultaneous</summary><p>Operation: <code>field_correspondence</code>. Source records remain preserved.</p><pre>{
+  &quot;request&quot;: {
+    &quot;op&quot;: &quot;field_correspondence&quot;,
+    &quot;record&quot;: {
+      &quot;left&quot;: true,
+      &quot;right&quot;: false
+    },
+    &quot;args&quot;: {
+      &quot;mapping&quot;: {
+        &quot;left&quot;: &quot;right&quot;,
+        &quot;right&quot;: &quot;left&quot;
+      }
+    }
+  },
+  &quot;observed&quot;: {
+    &quot;ok&quot;: true,
+    &quot;disposition&quot;: &quot;completed&quot;,
+    &quot;value&quot;: {
+      &quot;resolved&quot;: [
+        {
+          &quot;from&quot;: &quot;left&quot;,
+          &quot;to&quot;: &quot;right&quot;,
+          &quot;present&quot;: true,
+          &quot;source_type&quot;: &quot;boolean&quot;
+        },
+        {
+          &quot;from&quot;: &quot;right&quot;,
+          &quot;to&quot;: &quot;left&quot;,
+          &quot;present&quot;: true,
+          &quot;source_type&quot;: &quot;boolean&quot;
+        }
+      ],
+      &quot;target_collisions&quot;: [],
+      &quot;missing_sources&quot;: []
+    },
+    &quot;error&quot;: null,
+    &quot;external_credit&quot;: false
+  }
+}</pre></details></td><td><span class="state completed">completed</span></td></tr>
+<tr data-outcome="completed" data-search="tr6933-p008 two sources targeting one field are exposed field_correspondence"><td>TR6933-P008</td><td><details><summary>Two sources targeting one field are exposed</summary><p>Operation: <code>field_correspondence</code>. Source records remain preserved.</p><pre>{
+  &quot;request&quot;: {
+    &quot;op&quot;: &quot;field_correspondence&quot;,
+    &quot;record&quot;: {
+      &quot;a&quot;: 1,
+      &quot;b&quot;: &quot;two&quot;
+    },
+    &quot;args&quot;: {
+      &quot;mapping&quot;: {
+        &quot;a&quot;: &quot;x&quot;,
+        &quot;b&quot;: &quot;x&quot;
+      }
+    }
+  },
+  &quot;observed&quot;: {
+    &quot;ok&quot;: true,
+    &quot;disposition&quot;: &quot;completed&quot;,
+    &quot;value&quot;: {
+      &quot;resolved&quot;: [
+        {
+          &quot;from&quot;: &quot;a&quot;,
+          &quot;to&quot;: &quot;x&quot;,
+          &quot;present&quot;: true,
+          &quot;source_type&quot;: &quot;integer&quot;
+        },
+        {
+          &quot;from&quot;: &quot;b&quot;,
+          &quot;to&quot;: &quot;x&quot;,
+          &quot;present&quot;: true,
+          &quot;source_type&quot;: &quot;string&quot;
+        }
+      ],
+      &quot;target_collisions&quot;: [
+        {
+          &quot;target&quot;: &quot;x&quot;,
+          &quot;sources&quot;: [
+            &quot;a&quot;,
+            &quot;b&quot;
+          ]
+        }
+      ],
+      &quot;missing_sources&quot;: []
+    },
+    &quot;error&quot;: null,
+    &quot;external_credit&quot;: false
+  }
+}</pre></details></td><td><span class="state completed">completed</span></td></tr>
+<tr data-outcome="completed" data-search="tr6933-p009 an absent source cannot become a null value field_correspondence"><td>TR6933-P009</td><td><details><summary>An absent source cannot become a null value</summary><p>Operation: <code>field_correspondence</code>. Source records remain preserved.</p><pre>{
+  &quot;request&quot;: {
+    &quot;op&quot;: &quot;field_correspondence&quot;,
+    &quot;record&quot;: {
+      &quot;a&quot;: 1
+    },
+    &quot;args&quot;: {
+      &quot;mapping&quot;: {
+        &quot;z&quot;: &quot;zeta&quot;
+      }
+    }
+  },
+  &quot;observed&quot;: {
+    &quot;ok&quot;: true,
+    &quot;disposition&quot;: &quot;completed&quot;,
+    &quot;value&quot;: {
+      &quot;resolved&quot;: [
+        {
+          &quot;from&quot;: &quot;z&quot;,
+          &quot;to&quot;: &quot;zeta&quot;,
+          &quot;present&quot;: false,
+          &quot;source_type&quot;: &quot;absent&quot;
+        }
+      ],
+      &quot;target_collisions&quot;: [],
+      &quot;missing_sources&quot;: [
+        &quot;z&quot;
+      ]
+    },
+    &quot;error&quot;: null,
+    &quot;external_credit&quot;: false
+  }
+}</pre></details></td><td><span class="state completed">completed</span></td></tr>
+<tr data-outcome="completed" data-search="tr6933-p010 identity correspondence preserves an array field field_correspondence"><td>TR6933-P010</td><td><details><summary>Identity correspondence preserves an array field</summary><p>Operation: <code>field_correspondence</code>. Source records remain preserved.</p><pre>{
+  &quot;request&quot;: {
+    &quot;op&quot;: &quot;field_correspondence&quot;,
+    &quot;record&quot;: {
+      &quot;x&quot;: [
+        1
+      ],
+      &quot;meta&quot;: null
+    },
+    &quot;args&quot;: {
+      &quot;mapping&quot;: {
+        &quot;x&quot;: &quot;x&quot;
+      }
+    }
+  },
+  &quot;observed&quot;: {
+    &quot;ok&quot;: true,
+    &quot;disposition&quot;: &quot;completed&quot;,
+    &quot;value&quot;: {
+      &quot;resolved&quot;: [
+        {
+          &quot;from&quot;: &quot;x&quot;,
+          &quot;to&quot;: &quot;x&quot;,
+          &quot;present&quot;: true,
+          &quot;source_type&quot;: &quot;array&quot;
+        }
+      ],
+      &quot;target_collisions&quot;: [],
+      &quot;missing_sources&quot;: []
+    },
+    &quot;error&quot;: null,
+    &quot;external_credit&quot;: false
+  }
+}</pre></details></td><td><span class="state completed">completed</span></td></tr>
+<tr data-outcome="completed" data-search="tr6933-p011 a fresh target receives the original value rename_preview"><td>TR6933-P011</td><td><details><summary>A fresh target receives the original value</summary><p>Operation: <code>rename_preview</code>. Source records remain preserved.</p><pre>{
+  &quot;request&quot;: {
+    &quot;op&quot;: &quot;rename_preview&quot;,
+    &quot;record&quot;: {
+      &quot;old&quot;: 1,
+      &quot;keep&quot;: true
+    },
+    &quot;args&quot;: {
+      &quot;mapping&quot;: {
+        &quot;old&quot;: &quot;new&quot;
+      }
+    }
+  },
+  &quot;observed&quot;: {
+    &quot;ok&quot;: true,
+    &quot;disposition&quot;: &quot;completed&quot;,
+    &quot;value&quot;: {
+      &quot;applied&quot;: true,
+      &quot;result&quot;: {
+        &quot;keep&quot;: true,
+        &quot;new&quot;: 1
+      },
+      &quot;conflicts&quot;: [],
+      &quot;source_preserved&quot;: true
+    },
+    &quot;error&quot;: null,
+    &quot;external_credit&quot;: false
+  }
+}</pre></details></td><td><span class="state completed">completed</span></td></tr>
+<tr data-outcome="completed" data-search="tr6933-p012 a two-field swap does not destroy either source rename_preview"><td>TR6933-P012</td><td><details><summary>A two-field swap does not destroy either source</summary><p>Operation: <code>rename_preview</code>. Source records remain preserved.</p><pre>{
+  &quot;request&quot;: {
+    &quot;op&quot;: &quot;rename_preview&quot;,
+    &quot;record&quot;: {
+      &quot;left&quot;: &quot;L&quot;,
+      &quot;right&quot;: &quot;R&quot;
+    },
+    &quot;args&quot;: {
+      &quot;mapping&quot;: {
+        &quot;left&quot;: &quot;right&quot;,
+        &quot;right&quot;: &quot;left&quot;
+      }
+    }
+  },
+  &quot;observed&quot;: {
+    &quot;ok&quot;: true,
+    &quot;disposition&quot;: &quot;completed&quot;,
+    &quot;value&quot;: {
+      &quot;applied&quot;: true,
+      &quot;result&quot;: {
+        &quot;left&quot;: &quot;R&quot;,
+        &quot;right&quot;: &quot;L&quot;
+      },
+      &quot;conflicts&quot;: [],
+      &quot;source_preserved&quot;: true
+    },
+    &quot;error&quot;: null,
+    &quot;external_credit&quot;: false
+  }
+}</pre></details></td><td><span class="state completed">completed</span></td></tr>
+<tr data-outcome="completed" data-search="tr6933-p013 an occupied unmapped destination blocks the preview rename_preview"><td>TR6933-P013</td><td><details><summary>An occupied unmapped destination blocks the preview</summary><p>Operation: <code>rename_preview</code>. Source records remain preserved.</p><pre>{
+  &quot;request&quot;: {
+    &quot;op&quot;: &quot;rename_preview&quot;,
+    &quot;record&quot;: {
+      &quot;a&quot;: 1,
+      &quot;b&quot;: 2,
+      &quot;c&quot;: 3
+    },
+    &quot;args&quot;: {
+      &quot;mapping&quot;: {
+        &quot;a&quot;: &quot;c&quot;
+      }
+    }
+  },
+  &quot;observed&quot;: {
+    &quot;ok&quot;: true,
+    &quot;disposition&quot;: &quot;completed&quot;,
+    &quot;value&quot;: {
+      &quot;applied&quot;: false,
+      &quot;result&quot;: {
+        &quot;a&quot;: 1,
+        &quot;b&quot;: 2,
+        &quot;c&quot;: 3
+      },
+      &quot;conflicts&quot;: [
+        &quot;destination_occupied:c&quot;
+      ],
+      &quot;source_preserved&quot;: true
+    },
+    &quot;error&quot;: null,
+    &quot;external_credit&quot;: false
+  }
+}</pre></details></td><td><span class="state completed">completed</span></td></tr>
+<tr data-outcome="completed" data-search="tr6933-p014 a duplicate target blocks both writes rename_preview"><td>TR6933-P014</td><td><details><summary>A duplicate target blocks both writes</summary><p>Operation: <code>rename_preview</code>. Source records remain preserved.</p><pre>{
+  &quot;request&quot;: {
+    &quot;op&quot;: &quot;rename_preview&quot;,
+    &quot;record&quot;: {
+      &quot;a&quot;: 1,
+      &quot;b&quot;: 2
+    },
+    &quot;args&quot;: {
+      &quot;mapping&quot;: {
+        &quot;a&quot;: &quot;x&quot;,
+        &quot;b&quot;: &quot;x&quot;
+      }
+    }
+  },
+  &quot;observed&quot;: {
+    &quot;ok&quot;: true,
+    &quot;disposition&quot;: &quot;completed&quot;,
+    &quot;value&quot;: {
+      &quot;applied&quot;: false,
+      &quot;result&quot;: {
+        &quot;a&quot;: 1,
+        &quot;b&quot;: 2
+      },
+      &quot;conflicts&quot;: [
+        &quot;duplicate_destination:x&quot;
+      ],
+      &quot;source_preserved&quot;: true
+    },
+    &quot;error&quot;: null,
+    &quot;external_credit&quot;: false
+  }
+}</pre></details></td><td><span class="state completed">completed</span></td></tr>
+<tr data-outcome="completed" data-search="tr6933-p015 an identity rename preserves explicit null rename_preview"><td>TR6933-P015</td><td><details><summary>An identity rename preserves explicit null</summary><p>Operation: <code>rename_preview</code>. Source records remain preserved.</p><pre>{
+  &quot;request&quot;: {
+    &quot;op&quot;: &quot;rename_preview&quot;,
+    &quot;record&quot;: {
+      &quot;a&quot;: null,
+      &quot;keep&quot;: &quot;k&quot;
+    },
+    &quot;args&quot;: {
+      &quot;mapping&quot;: {
+        &quot;a&quot;: &quot;a&quot;
+      }
+    }
+  },
+  &quot;observed&quot;: {
+    &quot;ok&quot;: true,
+    &quot;disposition&quot;: &quot;completed&quot;,
+    &quot;value&quot;: {
+      &quot;applied&quot;: true,
+      &quot;result&quot;: {
+        &quot;a&quot;: null,
+        &quot;keep&quot;: &quot;k&quot;
+      },
+      &quot;conflicts&quot;: [],
+      &quot;source_preserved&quot;: true
+    },
+    &quot;error&quot;: null,
+    &quot;external_credit&quot;: false
+  }
+}</pre></details></td><td><span class="state completed">completed</span></td></tr>
+<tr data-outcome="completed" data-search="tr6933-p016 an absent field receives a declared default default_overlay"><td>TR6933-P016</td><td><details><summary>An absent field receives a declared default</summary><p>Operation: <code>default_overlay</code>. Source records remain preserved.</p><pre>{
+  &quot;request&quot;: {
+    &quot;op&quot;: &quot;default_overlay&quot;,
+    &quot;record&quot;: {},
+    &quot;args&quot;: {
+      &quot;defaults&quot;: {
+        &quot;a&quot;: 1
+      }
+    }
+  },
+  &quot;observed&quot;: {
+    &quot;ok&quot;: true,
+    &quot;disposition&quot;: &quot;completed&quot;,
+    &quot;value&quot;: {
+      &quot;result&quot;: {
+        &quot;a&quot;: 1
+      },
+      &quot;added&quot;: [
+        &quot;a&quot;
+      ],
+      &quot;retained&quot;: [],
+      &quot;already_equal&quot;: []
+    },
+    &quot;error&quot;: null,
+    &quot;external_credit&quot;: false
+  }
+}</pre></details></td><td><span class="state completed">completed</span></td></tr>
+<tr data-outcome="completed" data-search="tr6933-p017 null is retained while another absent field is added default_overlay"><td>TR6933-P017</td><td><details><summary>Null is retained while another absent field is added</summary><p>Operation: <code>default_overlay</code>. Source records remain preserved.</p><pre>{
+  &quot;request&quot;: {
+    &quot;op&quot;: &quot;default_overlay&quot;,
+    &quot;record&quot;: {
+      &quot;a&quot;: null
+    },
+    &quot;args&quot;: {
+      &quot;defaults&quot;: {
+        &quot;a&quot;: 5,
+        &quot;b&quot;: false
+      }
+    }
+  },
+  &quot;observed&quot;: {
+    &quot;ok&quot;: true,
+    &quot;disposition&quot;: &quot;completed&quot;,
+    &quot;value&quot;: {
+      &quot;result&quot;: {
+        &quot;a&quot;: null,
+        &quot;b&quot;: false
+      },
+      &quot;added&quot;: [
+        &quot;b&quot;
+      ],
+      &quot;retained&quot;: [
+        &quot;a&quot;
+      ],
+      &quot;already_equal&quot;: []
+    },
+    &quot;error&quot;: null,
+    &quot;external_credit&quot;: false
+  }
+}</pre></details></td><td><span class="state completed">completed</span></td></tr>
+<tr data-outcome="completed" data-search="tr6933-p018 an equal default is recorded without a change default_overlay"><td>TR6933-P018</td><td><details><summary>An equal default is recorded without a change</summary><p>Operation: <code>default_overlay</code>. Source records remain preserved.</p><pre>{
+  &quot;request&quot;: {
+    &quot;op&quot;: &quot;default_overlay&quot;,
+    &quot;record&quot;: {
+      &quot;a&quot;: 1
+    },
+    &quot;args&quot;: {
+      &quot;defaults&quot;: {
+        &quot;a&quot;: 1
+      }
+    }
+  },
+  &quot;observed&quot;: {
+    &quot;ok&quot;: true,
+    &quot;disposition&quot;: &quot;completed&quot;,
+    &quot;value&quot;: {
+      &quot;result&quot;: {
+        &quot;a&quot;: 1
+      },
+      &quot;added&quot;: [],
+      &quot;retained&quot;: [],
+      &quot;already_equal&quot;: [
+        &quot;a&quot;
+      ]
+    },
+    &quot;error&quot;: null,
+    &quot;external_credit&quot;: false
+  }
+}</pre></details></td><td><span class="state completed">completed</span></td></tr>
+<tr data-outcome="completed" data-search="tr6933-p019 an existing empty array is not replaced default_overlay"><td>TR6933-P019</td><td><details><summary>An existing empty array is not replaced</summary><p>Operation: <code>default_overlay</code>. Source records remain preserved.</p><pre>{
+  &quot;request&quot;: {
+    &quot;op&quot;: &quot;default_overlay&quot;,
+    &quot;record&quot;: {
+      &quot;arr&quot;: []
+    },
+    &quot;args&quot;: {
+      &quot;defaults&quot;: {
+        &quot;arr&quot;: [
+          1
+        ],
+        &quot;object&quot;: {}
+      }
+    }
+  },
+  &quot;observed&quot;: {
+    &quot;ok&quot;: true,
+    &quot;disposition&quot;: &quot;completed&quot;,
+    &quot;value&quot;: {
+      &quot;result&quot;: {
+        &quot;arr&quot;: [],
+        &quot;object&quot;: {}
+      },
+      &quot;added&quot;: [
+        &quot;object&quot;
+      ],
+      &quot;retained&quot;: [
+        &quot;arr&quot;
+      ],
+      &quot;already_equal&quot;: []
+    },
+    &quot;error&quot;: null,
+    &quot;external_credit&quot;: false
+  }
+}</pre></details></td><td><span class="state completed">completed</span></td></tr>
+<tr data-outcome="completed" data-search="tr6933-p020 contrary boolean and integer values remain present default_overlay"><td>TR6933-P020</td><td><details><summary>Contrary Boolean and integer values remain present</summary><p>Operation: <code>default_overlay</code>. Source records remain preserved.</p><pre>{
+  &quot;request&quot;: {
+    &quot;op&quot;: &quot;default_overlay&quot;,
+    &quot;record&quot;: {
+      &quot;neg&quot;: -1,
+      &quot;flag&quot;: false
+    },
+    &quot;args&quot;: {
+      &quot;defaults&quot;: {
+        &quot;neg&quot;: 0,
+        &quot;flag&quot;: true,
+        &quot;x&quot;: null
+      }
+    }
+  },
+  &quot;observed&quot;: {
+    &quot;ok&quot;: true,
+    &quot;disposition&quot;: &quot;completed&quot;,
+    &quot;value&quot;: {
+      &quot;result&quot;: {
+        &quot;neg&quot;: -1,
+        &quot;flag&quot;: false,
+        &quot;x&quot;: null
+      },
+      &quot;added&quot;: [
+        &quot;x&quot;
+      ],
+      &quot;retained&quot;: [
+        &quot;flag&quot;,
+        &quot;neg&quot;
+      ],
+      &quot;already_equal&quot;: []
+    },
+    &quot;error&quot;: null,
+    &quot;external_credit&quot;: false
+  }
+}</pre></details></td><td><span class="state completed">completed</span></td></tr>
+<tr data-outcome="completed" data-search="tr6933-p021 an integer converts only under an explicit text rule coercion_preview"><td>TR6933-P021</td><td><details><summary>An integer converts only under an explicit text rule</summary><p>Operation: <code>coercion_preview</code>. Source records remain preserved.</p><pre>{
+  &quot;request&quot;: {
+    &quot;op&quot;: &quot;coercion_preview&quot;,
+    &quot;record&quot;: {
+      &quot;n&quot;: 12
+    },
+    &quot;args&quot;: {
+      &quot;field&quot;: &quot;n&quot;,
+      &quot;conversion&quot;: &quot;integer_to_text&quot;
+    }
+  },
+  &quot;observed&quot;: {
+    &quot;ok&quot;: true,
+    &quot;disposition&quot;: &quot;completed&quot;,
+    &quot;value&quot;: {
+      &quot;applied&quot;: true,
+      &quot;result&quot;: {
+        &quot;n&quot;: &quot;12&quot;
+      },
+      &quot;reason&quot;: null,
+      &quot;input_type&quot;: &quot;integer&quot;,
+      &quot;output_type&quot;: &quot;string&quot;
+    },
+    &quot;error&quot;: null,
+    &quot;external_credit&quot;: false
+  }
+}</pre></details></td><td><span class="state completed">completed</span></td></tr>
+<tr data-outcome="completed" data-search="tr6933-p022 canonical signed integer text converts exactly coercion_preview"><td>TR6933-P022</td><td><details><summary>Canonical signed integer text converts exactly</summary><p>Operation: <code>coercion_preview</code>. Source records remain preserved.</p><pre>{
+  &quot;request&quot;: {
+    &quot;op&quot;: &quot;coercion_preview&quot;,
+    &quot;record&quot;: {
+      &quot;n&quot;: &quot;-3&quot;
+    },
+    &quot;args&quot;: {
+      &quot;field&quot;: &quot;n&quot;,
+      &quot;conversion&quot;: &quot;text_to_integer&quot;
+    }
+  },
+  &quot;observed&quot;: {
+    &quot;ok&quot;: true,
+    &quot;disposition&quot;: &quot;completed&quot;,
+    &quot;value&quot;: {
+      &quot;applied&quot;: true,
+      &quot;result&quot;: {
+        &quot;n&quot;: -3
+      },
+      &quot;reason&quot;: null,
+      &quot;input_type&quot;: &quot;string&quot;,
+      &quot;output_type&quot;: &quot;integer&quot;
+    },
+    &quot;error&quot;: null,
+    &quot;external_credit&quot;: false
+  }
+}</pre></details></td><td><span class="state completed">completed</span></td></tr>
+<tr data-outcome="completed" data-search="tr6933-p023 leading-zero text is held rather than silently normalized coercion_preview"><td>TR6933-P023</td><td><details><summary>Leading-zero text is held rather than silently normalized</summary><p>Operation: <code>coercion_preview</code>. Source records remain preserved.</p><pre>{
+  &quot;request&quot;: {
+    &quot;op&quot;: &quot;coercion_preview&quot;,
+    &quot;record&quot;: {
+      &quot;n&quot;: &quot;03&quot;
+    },
+    &quot;args&quot;: {
+      &quot;field&quot;: &quot;n&quot;,
+      &quot;conversion&quot;: &quot;text_to_integer&quot;
+    }
+  },
+  &quot;observed&quot;: {
+    &quot;ok&quot;: true,
+    &quot;disposition&quot;: &quot;completed&quot;,
+    &quot;value&quot;: {
+      &quot;applied&quot;: false,
+      &quot;result&quot;: {
+        &quot;n&quot;: &quot;03&quot;
+      },
+      &quot;reason&quot;: &quot;NONCANONICAL_INTEGER_TEXT&quot;,
+      &quot;input_type&quot;: &quot;string&quot;,
+      &quot;output_type&quot;: &quot;string&quot;
+    },
+    &quot;error&quot;: null,
+    &quot;external_credit&quot;: false
+  }
+}</pre></details></td><td><span class="state completed">completed</span></td></tr>
+<tr data-outcome="completed" data-search="tr6933-p024 a boolean converts to its literal text spelling coercion_preview"><td>TR6933-P024</td><td><details><summary>A Boolean converts to its literal text spelling</summary><p>Operation: <code>coercion_preview</code>. Source records remain preserved.</p><pre>{
+  &quot;request&quot;: {
+    &quot;op&quot;: &quot;coercion_preview&quot;,
+    &quot;record&quot;: {
+      &quot;n&quot;: true
+    },
+    &quot;args&quot;: {
+      &quot;field&quot;: &quot;n&quot;,
+      &quot;conversion&quot;: &quot;boolean_to_text&quot;
+    }
+  },
+  &quot;observed&quot;: {
+    &quot;ok&quot;: true,
+    &quot;disposition&quot;: &quot;completed&quot;,
+    &quot;value&quot;: {
+      &quot;applied&quot;: true,
+      &quot;result&quot;: {
+        &quot;n&quot;: &quot;true&quot;
+      },
+      &quot;reason&quot;: null,
+      &quot;input_type&quot;: &quot;boolean&quot;,
+      &quot;output_type&quot;: &quot;string&quot;
+    },
+    &quot;error&quot;: null,
+    &quot;external_credit&quot;: false
+  }
+}</pre></details></td><td><span class="state completed">completed</span></td></tr>
+<tr data-outcome="completed" data-search="tr6933-p025 integer one is not coerced by a boolean rule coercion_preview"><td>TR6933-P025</td><td><details><summary>Integer one is not coerced by a Boolean rule</summary><p>Operation: <code>coercion_preview</code>. Source records remain preserved.</p><pre>{
+  &quot;request&quot;: {
+    &quot;op&quot;: &quot;coercion_preview&quot;,
+    &quot;record&quot;: {
+      &quot;n&quot;: 1
+    },
+    &quot;args&quot;: {
+      &quot;field&quot;: &quot;n&quot;,
+      &quot;conversion&quot;: &quot;boolean_to_text&quot;
+    }
+  },
+  &quot;observed&quot;: {
+    &quot;ok&quot;: true,
+    &quot;disposition&quot;: &quot;completed&quot;,
+    &quot;value&quot;: {
+      &quot;applied&quot;: false,
+      &quot;result&quot;: {
+        &quot;n&quot;: 1
+      },
+      &quot;reason&quot;: &quot;TYPE_MISMATCH&quot;,
+      &quot;input_type&quot;: &quot;integer&quot;,
+      &quot;output_type&quot;: &quot;integer&quot;
+    },
+    &quot;error&quot;: null,
+    &quot;external_credit&quot;: false
+  }
+}</pre></details></td><td><span class="state completed">completed</span></td></tr>
+<tr data-outcome="completed" data-search="tr6933-p026 a listed enum token maps explicitly enum_mapping"><td>TR6933-P026</td><td><details><summary>A listed enum token maps explicitly</summary><p>Operation: <code>enum_mapping</code>. Source records remain preserved.</p><pre>{
+  &quot;request&quot;: {
+    &quot;op&quot;: &quot;enum_mapping&quot;,
+    &quot;record&quot;: {
+      &quot;status&quot;: &quot;new&quot;
+    },
+    &quot;args&quot;: {
+      &quot;field&quot;: &quot;status&quot;,
+      &quot;mapping&quot;: {
+        &quot;new&quot;: &quot;pending&quot;,
+        &quot;ready&quot;: &quot;go&quot;
+      }
+    }
+  },
+  &quot;observed&quot;: {
+    &quot;ok&quot;: true,
+    &quot;disposition&quot;: &quot;completed&quot;,
+    &quot;value&quot;: {
+      &quot;applied&quot;: true,
+      &quot;result&quot;: {
+        &quot;status&quot;: &quot;pending&quot;
+      },
+      &quot;unmapped&quot;: null,
+      &quot;noninjective_targets&quot;: []
+    },
+    &quot;error&quot;: null,
+    &quot;external_credit&quot;: false
+  }
+}</pre></details></td><td><span class="state completed">completed</span></td></tr>
+<tr data-outcome="completed" data-search="tr6933-p027 an unlisted enum token remains unchanged enum_mapping"><td>TR6933-P027</td><td><details><summary>An unlisted enum token remains unchanged</summary><p>Operation: <code>enum_mapping</code>. Source records remain preserved.</p><pre>{
+  &quot;request&quot;: {
+    &quot;op&quot;: &quot;enum_mapping&quot;,
+    &quot;record&quot;: {
+      &quot;status&quot;: &quot;unknown&quot;
+    },
+    &quot;args&quot;: {
+      &quot;field&quot;: &quot;status&quot;,
+      &quot;mapping&quot;: {
+        &quot;new&quot;: &quot;pending&quot;
+      }
+    }
+  },
+  &quot;observed&quot;: {
+    &quot;ok&quot;: true,
+    &quot;disposition&quot;: &quot;completed&quot;,
+    &quot;value&quot;: {
+      &quot;applied&quot;: false,
+      &quot;result&quot;: {
+        &quot;status&quot;: &quot;unknown&quot;
+      },
+      &quot;unmapped&quot;: &quot;unknown&quot;,
+      &quot;noninjective_targets&quot;: []
+    },
+    &quot;error&quot;: null,
+    &quot;external_credit&quot;: false
+  }
+}</pre></details></td><td><span class="state completed">completed</span></td></tr>
+<tr data-outcome="completed" data-search="tr6933-p028 a many-to-one enum map exposes information loss enum_mapping"><td>TR6933-P028</td><td><details><summary>A many-to-one enum map exposes information loss</summary><p>Operation: <code>enum_mapping</code>. Source records remain preserved.</p><pre>{
+  &quot;request&quot;: {
+    &quot;op&quot;: &quot;enum_mapping&quot;,
+    &quot;record&quot;: {
+      &quot;status&quot;: &quot;a&quot;
+    },
+    &quot;args&quot;: {
+      &quot;field&quot;: &quot;status&quot;,
+      &quot;mapping&quot;: {
+        &quot;a&quot;: &quot;x&quot;,
+        &quot;b&quot;: &quot;x&quot;
+      }
+    }
+  },
+  &quot;observed&quot;: {
+    &quot;ok&quot;: true,
+    &quot;disposition&quot;: &quot;completed&quot;,
+    &quot;value&quot;: {
+      &quot;applied&quot;: true,
+      &quot;result&quot;: {
+        &quot;status&quot;: &quot;x&quot;
+      },
+      &quot;unmapped&quot;: null,
+      &quot;noninjective_targets&quot;: [
+        &quot;x&quot;
+      ]
+    },
+    &quot;error&quot;: null,
+    &quot;external_credit&quot;: false
+  }
+}</pre></details></td><td><span class="state completed">completed</span></td></tr>
+<tr data-outcome="completed" data-search="tr6933-p029 an empty enum token is literal rather than absent enum_mapping"><td>TR6933-P029</td><td><details><summary>An empty enum token is literal rather than absent</summary><p>Operation: <code>enum_mapping</code>. Source records remain preserved.</p><pre>{
+  &quot;request&quot;: {
+    &quot;op&quot;: &quot;enum_mapping&quot;,
+    &quot;record&quot;: {
+      &quot;status&quot;: &quot;&quot;
+    },
+    &quot;args&quot;: {
+      &quot;field&quot;: &quot;status&quot;,
+      &quot;mapping&quot;: {
+        &quot;&quot;: &quot;blank&quot;
+      }
+    }
+  },
+  &quot;observed&quot;: {
+    &quot;ok&quot;: true,
+    &quot;disposition&quot;: &quot;completed&quot;,
+    &quot;value&quot;: {
+      &quot;applied&quot;: true,
+      &quot;result&quot;: {
+        &quot;status&quot;: &quot;blank&quot;
+      },
+      &quot;unmapped&quot;: null,
+      &quot;noninjective_targets&quot;: []
+    },
+    &quot;error&quot;: null,
+    &quot;external_credit&quot;: false
+  }
+}</pre></details></td><td><span class="state completed">completed</span></td></tr>
+<tr data-outcome="completed" data-search="tr6933-p030 an identity enum mapping is a declared no-op enum_mapping"><td>TR6933-P030</td><td><details><summary>An identity enum mapping is a declared no-op</summary><p>Operation: <code>enum_mapping</code>. Source records remain preserved.</p><pre>{
+  &quot;request&quot;: {
+    &quot;op&quot;: &quot;enum_mapping&quot;,
+    &quot;record&quot;: {
+      &quot;status&quot;: &quot;done&quot;
+    },
+    &quot;args&quot;: {
+      &quot;field&quot;: &quot;status&quot;,
+      &quot;mapping&quot;: {
+        &quot;done&quot;: &quot;done&quot;
+      }
+    }
+  },
+  &quot;observed&quot;: {
+    &quot;ok&quot;: true,
+    &quot;disposition&quot;: &quot;completed&quot;,
+    &quot;value&quot;: {
+      &quot;applied&quot;: true,
+      &quot;result&quot;: {
+        &quot;status&quot;: &quot;done&quot;
+      },
+      &quot;unmapped&quot;: null,
+      &quot;noninjective_targets&quot;: []
+    },
+    &quot;error&quot;: null,
+    &quot;external_credit&quot;: false
+  }
+}</pre></details></td><td><span class="state completed">completed</span></td></tr>
+<tr data-outcome="completed" data-search="tr6933-p031 a complete required set is present required_field_check"><td>TR6933-P031</td><td><details><summary>A complete required set is present</summary><p>Operation: <code>required_field_check</code>. Source records remain preserved.</p><pre>{
+  &quot;request&quot;: {
+    &quot;op&quot;: &quot;required_field_check&quot;,
+    &quot;record&quot;: {
+      &quot;a&quot;: 1,
+      &quot;b&quot;: 2
+    },
+    &quot;args&quot;: {
+      &quot;required&quot;: [
+        &quot;b&quot;,
+        &quot;a&quot;
+      ]
+    }
+  },
+  &quot;observed&quot;: {
+    &quot;ok&quot;: true,
+    &quot;disposition&quot;: &quot;completed&quot;,
+    &quot;value&quot;: {
+      &quot;present&quot;: [
+        &quot;a&quot;,
+        &quot;b&quot;
+      ],
+      &quot;missing&quot;: [],
+      &quot;complete&quot;: true
+    },
+    &quot;error&quot;: null,
+    &quot;external_credit&quot;: false
+  }
+}</pre></details></td><td><span class="state completed">completed</span></td></tr>
+<tr data-outcome="completed" data-search="tr6933-p032 a missing field remains distinct from null required_field_check"><td>TR6933-P032</td><td><details><summary>A missing field remains distinct from null</summary><p>Operation: <code>required_field_check</code>. Source records remain preserved.</p><pre>{
+  &quot;request&quot;: {
+    &quot;op&quot;: &quot;required_field_check&quot;,
+    &quot;record&quot;: {
+      &quot;a&quot;: null
+    },
+    &quot;args&quot;: {
+      &quot;required&quot;: [
+        &quot;a&quot;,
+        &quot;b&quot;
+      ]
+    }
+  },
+  &quot;observed&quot;: {
+    &quot;ok&quot;: true,
+    &quot;disposition&quot;: &quot;completed&quot;,
+    &quot;value&quot;: {
+      &quot;present&quot;: [
+        &quot;a&quot;
+      ],
+      &quot;missing&quot;: [
+        &quot;b&quot;
+      ],
+      &quot;complete&quot;: false
+    },
+    &quot;error&quot;: null,
+    &quot;external_credit&quot;: false
+  }
+}</pre></details></td><td><span class="state completed">completed</span></td></tr>
+<tr data-outcome="completed" data-search="tr6933-p033 false and zero satisfy presence only required_field_check"><td>TR6933-P033</td><td><details><summary>False and zero satisfy presence only</summary><p>Operation: <code>required_field_check</code>. Source records remain preserved.</p><pre>{
+  &quot;request&quot;: {
+    &quot;op&quot;: &quot;required_field_check&quot;,
+    &quot;record&quot;: {
+      &quot;enabled&quot;: false,
+      &quot;retries&quot;: 0
+    },
+    &quot;args&quot;: {
+      &quot;required&quot;: [
+        &quot;enabled&quot;,
+        &quot;retries&quot;
+      ]
+    }
+  },
+  &quot;observed&quot;: {
+    &quot;ok&quot;: true,
+    &quot;disposition&quot;: &quot;completed&quot;,
+    &quot;value&quot;: {
+      &quot;present&quot;: [
+        &quot;enabled&quot;,
+        &quot;retries&quot;
+      ],
+      &quot;missing&quot;: [],
+      &quot;complete&quot;: true
+    },
+    &quot;error&quot;: null,
+    &quot;external_credit&quot;: false
+  }
+}</pre></details></td><td><span class="state completed">completed</span></td></tr>
+<tr data-outcome="completed" data-search="tr6933-p034 no fields cannot satisfy a nonempty requirement required_field_check"><td>TR6933-P034</td><td><details><summary>No fields cannot satisfy a nonempty requirement</summary><p>Operation: <code>required_field_check</code>. Source records remain preserved.</p><pre>{
+  &quot;request&quot;: {
+    &quot;op&quot;: &quot;required_field_check&quot;,
+    &quot;record&quot;: {},
+    &quot;args&quot;: {
+      &quot;required&quot;: [
+        &quot;x&quot;
+      ]
+    }
+  },
+  &quot;observed&quot;: {
+    &quot;ok&quot;: true,
+    &quot;disposition&quot;: &quot;completed&quot;,
+    &quot;value&quot;: {
+      &quot;present&quot;: [],
+      &quot;missing&quot;: [
+        &quot;x&quot;
+      ],
+      &quot;complete&quot;: false
+    },
+    &quot;error&quot;: null,
+    &quot;external_credit&quot;: false
+  }
+}</pre></details></td><td><span class="state completed">completed</span></td></tr>
+<tr data-outcome="completed" data-search="tr6933-p035 an empty requirement list is explicitly vacuous required_field_check"><td>TR6933-P035</td><td><details><summary>An empty requirement list is explicitly vacuous</summary><p>Operation: <code>required_field_check</code>. Source records remain preserved.</p><pre>{
+  &quot;request&quot;: {
+    &quot;op&quot;: &quot;required_field_check&quot;,
+    &quot;record&quot;: {
+      &quot;x&quot;: 1
+    },
+    &quot;args&quot;: {
+      &quot;required&quot;: []
+    }
+  },
+  &quot;observed&quot;: {
+    &quot;ok&quot;: true,
+    &quot;disposition&quot;: &quot;completed&quot;,
+    &quot;value&quot;: {
+      &quot;present&quot;: [],
+      &quot;missing&quot;: [],
+      &quot;complete&quot;: true
+    },
+    &quot;error&quot;: null,
+    &quot;external_credit&quot;: false
+  }
+}</pre></details></td><td><span class="state completed">completed</span></td></tr>
+<tr data-outcome="completed" data-search="tr6933-p036 a known field is selected and its neighbour quarantined unknown_field_projection"><td>TR6933-P036</td><td><details><summary>A known field is selected and its neighbour quarantined</summary><p>Operation: <code>unknown_field_projection</code>. Source records remain preserved.</p><pre>{
+  &quot;request&quot;: {
+    &quot;op&quot;: &quot;unknown_field_projection&quot;,
+    &quot;record&quot;: {
+      &quot;known&quot;: 1,
+      &quot;extra&quot;: 2
+    },
+    &quot;args&quot;: {
+      &quot;allowed&quot;: [
+        &quot;known&quot;
+      ]
+    }
+  },
+  &quot;observed&quot;: {
+    &quot;ok&quot;: true,
+    &quot;disposition&quot;: &quot;completed&quot;,
+    &quot;value&quot;: {
+      &quot;selected&quot;: {
+        &quot;known&quot;: 1
+      },
+      &quot;quarantine&quot;: {
+        &quot;extra&quot;: 2
+      },
+      &quot;source_preserved&quot;: true
+    },
+    &quot;error&quot;: null,
+    &quot;external_credit&quot;: false
+  }
+}</pre></details></td><td><span class="state completed">completed</span></td></tr>
+<tr data-outcome="completed" data-search="tr6933-p037 explicit null stays selected unknown_field_projection"><td>TR6933-P037</td><td><details><summary>Explicit null stays selected</summary><p>Operation: <code>unknown_field_projection</code>. Source records remain preserved.</p><pre>{
+  &quot;request&quot;: {
+    &quot;op&quot;: &quot;unknown_field_projection&quot;,
+    &quot;record&quot;: {
+      &quot;n&quot;: null,
+      &quot;x&quot;: false
+    },
+    &quot;args&quot;: {
+      &quot;allowed&quot;: [
+        &quot;n&quot;
+      ]
+    }
+  },
+  &quot;observed&quot;: {
+    &quot;ok&quot;: true,
+    &quot;disposition&quot;: &quot;completed&quot;,
+    &quot;value&quot;: {
+      &quot;selected&quot;: {
+        &quot;n&quot;: null
+      },
+      &quot;quarantine&quot;: {
+        &quot;x&quot;: false
+      },
+      &quot;source_preserved&quot;: true
+    },
+    &quot;error&quot;: null,
+    &quot;external_credit&quot;: false
+  }
+}</pre></details></td><td><span class="state completed">completed</span></td></tr>
+<tr data-outcome="completed" data-search="tr6933-p038 an empty allowlist quarantines all data unknown_field_projection"><td>TR6933-P038</td><td><details><summary>An empty allowlist quarantines all data</summary><p>Operation: <code>unknown_field_projection</code>. Source records remain preserved.</p><pre>{
+  &quot;request&quot;: {
+    &quot;op&quot;: &quot;unknown_field_projection&quot;,
+    &quot;record&quot;: {
+      &quot;a&quot;: [
+        1
+      ],
+      &quot;b&quot;: {}
+    },
+    &quot;args&quot;: {
+      &quot;allowed&quot;: []
+    }
+  },
+  &quot;observed&quot;: {
+    &quot;ok&quot;: true,
+    &quot;disposition&quot;: &quot;completed&quot;,
+    &quot;value&quot;: {
+      &quot;selected&quot;: {},
+      &quot;quarantine&quot;: {
+        &quot;a&quot;: [
+          1
+        ],
+        &quot;b&quot;: {}
+      },
+      &quot;source_preserved&quot;: true
+    },
+    &quot;error&quot;: null,
+    &quot;external_credit&quot;: false
+  }
+}</pre></details></td><td><span class="state completed">completed</span></td></tr>
+<tr data-outcome="completed" data-search="tr6933-p039 all declared fields remain in the selected view unknown_field_projection"><td>TR6933-P039</td><td><details><summary>All declared fields remain in the selected view</summary><p>Operation: <code>unknown_field_projection</code>. Source records remain preserved.</p><pre>{
+  &quot;request&quot;: {
+    &quot;op&quot;: &quot;unknown_field_projection&quot;,
+    &quot;record&quot;: {
+      &quot;a&quot;: 1,
+      &quot;b&quot;: &quot;two&quot;
+    },
+    &quot;args&quot;: {
+      &quot;allowed&quot;: [
+        &quot;b&quot;,
+        &quot;a&quot;
+      ]
+    }
+  },
+  &quot;observed&quot;: {
+    &quot;ok&quot;: true,
+    &quot;disposition&quot;: &quot;completed&quot;,
+    &quot;value&quot;: {
+      &quot;selected&quot;: {
+        &quot;a&quot;: 1,
+        &quot;b&quot;: &quot;two&quot;
+      },
+      &quot;quarantine&quot;: {},
+      &quot;source_preserved&quot;: true
+    },
+    &quot;error&quot;: null,
+    &quot;external_credit&quot;: false
+  }
+}</pre></details></td><td><span class="state completed">completed</span></td></tr>
+<tr data-outcome="completed" data-search="tr6933-p040 an absent allowed field is not invented unknown_field_projection"><td>TR6933-P040</td><td><details><summary>An absent allowed field is not invented</summary><p>Operation: <code>unknown_field_projection</code>. Source records remain preserved.</p><pre>{
+  &quot;request&quot;: {
+    &quot;op&quot;: &quot;unknown_field_projection&quot;,
+    &quot;record&quot;: {
+      &quot;existing&quot;: true
+    },
+    &quot;args&quot;: {
+      &quot;allowed&quot;: [
+        &quot;absent&quot;
+      ]
+    }
+  },
+  &quot;observed&quot;: {
+    &quot;ok&quot;: true,
+    &quot;disposition&quot;: &quot;completed&quot;,
+    &quot;value&quot;: {
+      &quot;selected&quot;: {},
+      &quot;quarantine&quot;: {
+        &quot;existing&quot;: true
+      },
+      &quot;source_preserved&quot;: true
+    },
+    &quot;error&quot;: null,
+    &quot;external_credit&quot;: false
+  }
+}</pre></details></td><td><span class="state completed">completed</span></td></tr>
+<tr data-outcome="completed" data-search="tr6933-p041 a target schema adds one field schema_delta"><td>TR6933-P041</td><td><details><summary>A target schema adds one field</summary><p>Operation: <code>schema_delta</code>. Source records remain preserved.</p><pre>{
+  &quot;request&quot;: {
+    &quot;op&quot;: &quot;schema_delta&quot;,
+    &quot;record&quot;: {
+      &quot;a&quot;: &quot;integer&quot;
+    },
+    &quot;args&quot;: {
+      &quot;target&quot;: {
+        &quot;a&quot;: &quot;integer&quot;,
+        &quot;b&quot;: &quot;string&quot;
+      }
+    }
+  },
+  &quot;observed&quot;: {
+    &quot;ok&quot;: true,
+    &quot;disposition&quot;: &quot;completed&quot;,
+    &quot;value&quot;: {
+      &quot;added&quot;: [
+        &quot;b&quot;
+      ],
+      &quot;removed&quot;: [],
+      &quot;changed&quot;: [],
+      &quot;unchanged&quot;: [
+        &quot;a&quot;
+      ]
+    },
+    &quot;error&quot;: null,
+    &quot;external_credit&quot;: false
+  }
+}</pre></details></td><td><span class="state completed">completed</span></td></tr>
+<tr data-outcome="completed" data-search="tr6933-p042 a removed field remains an explicit obligation schema_delta"><td>TR6933-P042</td><td><details><summary>A removed field remains an explicit obligation</summary><p>Operation: <code>schema_delta</code>. Source records remain preserved.</p><pre>{
+  &quot;request&quot;: {
+    &quot;op&quot;: &quot;schema_delta&quot;,
+    &quot;record&quot;: {
+      &quot;old&quot;: &quot;string&quot;,
+      &quot;x&quot;: &quot;boolean&quot;
+    },
+    &quot;args&quot;: {
+      &quot;target&quot;: {
+        &quot;x&quot;: &quot;boolean&quot;
+      }
+    }
+  },
+  &quot;observed&quot;: {
+    &quot;ok&quot;: true,
+    &quot;disposition&quot;: &quot;completed&quot;,
+    &quot;value&quot;: {
+      &quot;added&quot;: [],
+      &quot;removed&quot;: [
+        &quot;old&quot;
+      ],
+      &quot;changed&quot;: [],
+      &quot;unchanged&quot;: [
+        &quot;x&quot;
+      ]
+    },
+    &quot;error&quot;: null,
+    &quot;external_credit&quot;: false
+  }
+}</pre></details></td><td><span class="state completed">completed</span></td></tr>
+<tr data-outcome="completed" data-search="tr6933-p043 a scalar type change is not an automatic conversion schema_delta"><td>TR6933-P043</td><td><details><summary>A scalar type change is not an automatic conversion</summary><p>Operation: <code>schema_delta</code>. Source records remain preserved.</p><pre>{
+  &quot;request&quot;: {
+    &quot;op&quot;: &quot;schema_delta&quot;,
+    &quot;record&quot;: {
+      &quot;value&quot;: &quot;integer&quot;
+    },
+    &quot;args&quot;: {
+      &quot;target&quot;: {
+        &quot;value&quot;: &quot;string&quot;
+      }
+    }
+  },
+  &quot;observed&quot;: {
+    &quot;ok&quot;: true,
+    &quot;disposition&quot;: &quot;completed&quot;,
+    &quot;value&quot;: {
+      &quot;added&quot;: [],
+      &quot;removed&quot;: [],
+      &quot;changed&quot;: [
+        {
+          &quot;field&quot;: &quot;value&quot;,
+          &quot;from&quot;: &quot;integer&quot;,
+          &quot;to&quot;: &quot;string&quot;
+        }
+      ],
+      &quot;unchanged&quot;: []
+    },
+    &quot;error&quot;: null,
+    &quot;external_credit&quot;: false
+  }
+}</pre></details></td><td><span class="state completed">completed</span></td></tr>
+<tr data-outcome="completed" data-search="tr6933-p044 two empty schemas have no inferred fields schema_delta"><td>TR6933-P044</td><td><details><summary>Two empty schemas have no inferred fields</summary><p>Operation: <code>schema_delta</code>. Source records remain preserved.</p><pre>{
+  &quot;request&quot;: {
+    &quot;op&quot;: &quot;schema_delta&quot;,
+    &quot;record&quot;: {},
+    &quot;args&quot;: {
+      &quot;target&quot;: {}
+    }
+  },
+  &quot;observed&quot;: {
+    &quot;ok&quot;: true,
+    &quot;disposition&quot;: &quot;completed&quot;,
+    &quot;value&quot;: {
+      &quot;added&quot;: [],
+      &quot;removed&quot;: [],
+      &quot;changed&quot;: [],
+      &quot;unchanged&quot;: []
+    },
+    &quot;error&quot;: null,
+    &quot;external_credit&quot;: false
+  }
+}</pre></details></td><td><span class="state completed">completed</span></td></tr>
+<tr data-outcome="completed" data-search="tr6933-p045 addition removal and type change remain separate schema_delta"><td>TR6933-P045</td><td><details><summary>Addition removal and type change remain separate</summary><p>Operation: <code>schema_delta</code>. Source records remain preserved.</p><pre>{
+  &quot;request&quot;: {
+    &quot;op&quot;: &quot;schema_delta&quot;,
+    &quot;record&quot;: {
+      &quot;x&quot;: &quot;null&quot;,
+      &quot;y&quot;: &quot;array&quot;
+    },
+    &quot;args&quot;: {
+      &quot;target&quot;: {
+        &quot;x&quot;: &quot;object&quot;,
+        &quot;z&quot;: &quot;array&quot;
+      }
+    }
+  },
+  &quot;observed&quot;: {
+    &quot;ok&quot;: true,
+    &quot;disposition&quot;: &quot;completed&quot;,
+    &quot;value&quot;: {
+      &quot;added&quot;: [
+        &quot;z&quot;
+      ],
+      &quot;removed&quot;: [
+        &quot;y&quot;
+      ],
+      &quot;changed&quot;: [
+        {
+          &quot;field&quot;: &quot;x&quot;,
+          &quot;from&quot;: &quot;null&quot;,
+          &quot;to&quot;: &quot;object&quot;
+        }
+      ],
+      &quot;unchanged&quot;: []
+    },
+    &quot;error&quot;: null,
+    &quot;external_credit&quot;: false
+  }
+}</pre></details></td><td><span class="state completed">completed</span></td></tr>
+<tr data-outcome="completed" data-search="tr6933-p046 a two-cycle needs simultaneous evaluation rename_cycle_analysis"><td>TR6933-P046</td><td><details><summary>A two-cycle needs simultaneous evaluation</summary><p>Operation: <code>rename_cycle_analysis</code>. Source records remain preserved.</p><pre>{
+  &quot;request&quot;: {
+    &quot;op&quot;: &quot;rename_cycle_analysis&quot;,
+    &quot;record&quot;: {
+      &quot;a&quot;: 1,
+      &quot;b&quot;: 2
+    },
+    &quot;args&quot;: {
+      &quot;mapping&quot;: {
+        &quot;a&quot;: &quot;b&quot;,
+        &quot;b&quot;: &quot;a&quot;
+      }
+    }
+  },
+  &quot;observed&quot;: {
+    &quot;ok&quot;: true,
+    &quot;disposition&quot;: &quot;completed&quot;,
+    &quot;value&quot;: {
+      &quot;cycles&quot;: [
+        [
+          &quot;a&quot;,
+          &quot;b&quot;
+        ]
+      ],
+      &quot;chains&quot;: [],
+      &quot;fixed_points&quot;: [],
+      &quot;duplicate_targets&quot;: []
+    },
+    &quot;error&quot;: null,
+    &quot;external_credit&quot;: false
+  }
+}</pre></details></td><td><span class="state completed">completed</span></td></tr>
+<tr data-outcome="completed" data-search="tr6933-p047 a rename chain terminates at a fresh target rename_cycle_analysis"><td>TR6933-P047</td><td><details><summary>A rename chain terminates at a fresh target</summary><p>Operation: <code>rename_cycle_analysis</code>. Source records remain preserved.</p><pre>{
+  &quot;request&quot;: {
+    &quot;op&quot;: &quot;rename_cycle_analysis&quot;,
+    &quot;record&quot;: {
+      &quot;a&quot;: 1,
+      &quot;b&quot;: 2
+    },
+    &quot;args&quot;: {
+      &quot;mapping&quot;: {
+        &quot;a&quot;: &quot;b&quot;,
+        &quot;b&quot;: &quot;c&quot;
+      }
+    }
+  },
+  &quot;observed&quot;: {
+    &quot;ok&quot;: true,
+    &quot;disposition&quot;: &quot;completed&quot;,
+    &quot;value&quot;: {
+      &quot;cycles&quot;: [],
+      &quot;chains&quot;: [
+        [
+          &quot;a&quot;,
+          &quot;b&quot;,
+          &quot;c&quot;
+        ]
+      ],
+      &quot;fixed_points&quot;: [],
+      &quot;duplicate_targets&quot;: []
+    },
+    &quot;error&quot;: null,
+    &quot;external_credit&quot;: false
+  }
+}</pre></details></td><td><span class="state completed">completed</span></td></tr>
+<tr data-outcome="completed" data-search="tr6933-p048 a fixed point is distinct from a cycle rename_cycle_analysis"><td>TR6933-P048</td><td><details><summary>A fixed point is distinct from a cycle</summary><p>Operation: <code>rename_cycle_analysis</code>. Source records remain preserved.</p><pre>{
+  &quot;request&quot;: {
+    &quot;op&quot;: &quot;rename_cycle_analysis&quot;,
+    &quot;record&quot;: {
+      &quot;a&quot;: 1
+    },
+    &quot;args&quot;: {
+      &quot;mapping&quot;: {
+        &quot;a&quot;: &quot;a&quot;
+      }
+    }
+  },
+  &quot;observed&quot;: {
+    &quot;ok&quot;: true,
+    &quot;disposition&quot;: &quot;completed&quot;,
+    &quot;value&quot;: {
+      &quot;cycles&quot;: [],
+      &quot;chains&quot;: [],
+      &quot;fixed_points&quot;: [
+        &quot;a&quot;
+      ],
+      &quot;duplicate_targets&quot;: []
+    },
+    &quot;error&quot;: null,
+    &quot;external_credit&quot;: false
+  }
+}</pre></details></td><td><span class="state completed">completed</span></td></tr>
+<tr data-outcome="completed" data-search="tr6933-p049 independent rename chains remain separate rename_cycle_analysis"><td>TR6933-P049</td><td><details><summary>Independent rename chains remain separate</summary><p>Operation: <code>rename_cycle_analysis</code>. Source records remain preserved.</p><pre>{
+  &quot;request&quot;: {
+    &quot;op&quot;: &quot;rename_cycle_analysis&quot;,
+    &quot;record&quot;: {
+      &quot;a&quot;: 1,
+      &quot;c&quot;: 2
+    },
+    &quot;args&quot;: {
+      &quot;mapping&quot;: {
+        &quot;a&quot;: &quot;b&quot;,
+        &quot;c&quot;: &quot;d&quot;
+      }
+    }
+  },
+  &quot;observed&quot;: {
+    &quot;ok&quot;: true,
+    &quot;disposition&quot;: &quot;completed&quot;,
+    &quot;value&quot;: {
+      &quot;cycles&quot;: [],
+      &quot;chains&quot;: [
+        [
+          &quot;a&quot;,
+          &quot;b&quot;
+        ],
+        [
+          &quot;c&quot;,
+          &quot;d&quot;
+        ]
+      ],
+      &quot;fixed_points&quot;: [],
+      &quot;duplicate_targets&quot;: []
+    },
+    &quot;error&quot;: null,
+    &quot;external_credit&quot;: false
+  }
+}</pre></details></td><td><span class="state completed">completed</span></td></tr>
+<tr data-outcome="completed" data-search="tr6933-p050 converging chains expose a duplicate target rename_cycle_analysis"><td>TR6933-P050</td><td><details><summary>Converging chains expose a duplicate target</summary><p>Operation: <code>rename_cycle_analysis</code>. Source records remain preserved.</p><pre>{
+  &quot;request&quot;: {
+    &quot;op&quot;: &quot;rename_cycle_analysis&quot;,
+    &quot;record&quot;: {
+      &quot;a&quot;: 1,
+      &quot;b&quot;: 2
+    },
+    &quot;args&quot;: {
+      &quot;mapping&quot;: {
+        &quot;a&quot;: &quot;c&quot;,
+        &quot;b&quot;: &quot;c&quot;
+      }
+    }
+  },
+  &quot;observed&quot;: {
+    &quot;ok&quot;: true,
+    &quot;disposition&quot;: &quot;completed&quot;,
+    &quot;value&quot;: {
+      &quot;cycles&quot;: [],
+      &quot;chains&quot;: [
+        [
+          &quot;a&quot;,
+          &quot;c&quot;
+        ],
+        [
+          &quot;b&quot;,
+          &quot;c&quot;
+        ]
+      ],
+      &quot;fixed_points&quot;: [],
+      &quot;duplicate_targets&quot;: [
+        &quot;c&quot;
+      ]
+    },
+    &quot;error&quot;: null,
+    &quot;external_credit&quot;: false
+  }
+}</pre></details></td><td><span class="state completed">completed</span></td></tr>
+<tr data-outcome="completed" data-search="tr6933-p051 a unilateral edit merges beside an unchanged field three_way_merge"><td>TR6933-P051</td><td><details><summary>A unilateral edit merges beside an unchanged field</summary><p>Operation: <code>three_way_merge</code>. Source records remain preserved.</p><pre>{
+  &quot;request&quot;: {
+    &quot;op&quot;: &quot;three_way_merge&quot;,
+    &quot;record&quot;: {
+      &quot;base&quot;: {
+        &quot;v&quot;: 1,
+        &quot;k&quot;: 0
+      },
+      &quot;left&quot;: {
+        &quot;v&quot;: 2,
+        &quot;k&quot;: 0
+      },
+      &quot;right&quot;: {
+        &quot;v&quot;: 1,
+        &quot;k&quot;: 0
+      }
+    },
+    &quot;args&quot;: {}
+  },
+  &quot;observed&quot;: {
+    &quot;ok&quot;: true,
+    &quot;disposition&quot;: &quot;completed&quot;,
+    &quot;value&quot;: {
+      &quot;merged&quot;: {
+        &quot;k&quot;: 0,
+        &quot;v&quot;: 2
+      },
+      &quot;conflicts&quot;: [],
+      &quot;resolved&quot;: [
+        {
+          &quot;field&quot;: &quot;k&quot;,
+          &quot;source&quot;: &quot;unchanged&quot;
+        },
+        {
+          &quot;field&quot;: &quot;v&quot;,
+          &quot;source&quot;: &quot;left&quot;
+        }
+      ]
+    },
+    &quot;error&quot;: null,
+    &quot;external_credit&quot;: false
+  }
+}</pre></details></td><td><span class="state completed">completed</span></td></tr>
+<tr data-outcome="completed" data-search="tr6933-p052 equal concurrent edits coalesce three_way_merge"><td>TR6933-P052</td><td><details><summary>Equal concurrent edits coalesce</summary><p>Operation: <code>three_way_merge</code>. Source records remain preserved.</p><pre>{
+  &quot;request&quot;: {
+    &quot;op&quot;: &quot;three_way_merge&quot;,
+    &quot;record&quot;: {
+      &quot;base&quot;: {
+        &quot;v&quot;: 1
+      },
+      &quot;left&quot;: {
+        &quot;v&quot;: 2
+      },
+      &quot;right&quot;: {
+        &quot;v&quot;: 2
+      }
+    },
+    &quot;args&quot;: {}
+  },
+  &quot;observed&quot;: {
+    &quot;ok&quot;: true,
+    &quot;disposition&quot;: &quot;completed&quot;,
+    &quot;value&quot;: {
+      &quot;merged&quot;: {
+        &quot;v&quot;: 2
+      },
+      &quot;conflicts&quot;: [],
+      &quot;resolved&quot;: [
+        {
+          &quot;field&quot;: &quot;v&quot;,
+          &quot;source&quot;: &quot;both&quot;
+        }
+      ]
+    },
+    &quot;error&quot;: null,
+    &quot;external_credit&quot;: false
+  }
+}</pre></details></td><td><span class="state completed">completed</span></td></tr>
+<tr data-outcome="completed" data-search="tr6933-p053 different concurrent edits remain unresolved three_way_merge"><td>TR6933-P053</td><td><details><summary>Different concurrent edits remain unresolved</summary><p>Operation: <code>three_way_merge</code>. Source records remain preserved.</p><pre>{
+  &quot;request&quot;: {
+    &quot;op&quot;: &quot;three_way_merge&quot;,
+    &quot;record&quot;: {
+      &quot;base&quot;: {
+        &quot;v&quot;: 1
+      },
+      &quot;left&quot;: {
+        &quot;v&quot;: 2
+      },
+      &quot;right&quot;: {
+        &quot;v&quot;: 3
+      }
+    },
+    &quot;args&quot;: {}
+  },
+  &quot;observed&quot;: {
+    &quot;ok&quot;: true,
+    &quot;disposition&quot;: &quot;completed&quot;,
+    &quot;value&quot;: {
+      &quot;merged&quot;: {},
+      &quot;conflicts&quot;: [
+        {
+          &quot;field&quot;: &quot;v&quot;,
+          &quot;kind&quot;: &quot;different_edits&quot;,
+          &quot;base&quot;: {
+            &quot;present&quot;: true,
+            &quot;value&quot;: 1
+          },
+          &quot;left&quot;: {
+            &quot;present&quot;: true,
+            &quot;value&quot;: 2
+          },
+          &quot;right&quot;: {
+            &quot;present&quot;: true,
+            &quot;value&quot;: 3
+          }
+        }
+      ],
+      &quot;resolved&quot;: []
+    },
+    &quot;error&quot;: null,
+    &quot;external_credit&quot;: false
+  }
+}</pre></details></td><td><span class="state completed">completed</span></td></tr>
+<tr data-outcome="completed" data-search="tr6933-p054 delete-versus-modify keeps both contrary states three_way_merge"><td>TR6933-P054</td><td><details><summary>Delete-versus-modify keeps both contrary states</summary><p>Operation: <code>three_way_merge</code>. Source records remain preserved.</p><pre>{
+  &quot;request&quot;: {
+    &quot;op&quot;: &quot;three_way_merge&quot;,
+    &quot;record&quot;: {
+      &quot;base&quot;: {
+        &quot;v&quot;: 1
+      },
+      &quot;left&quot;: {},
+      &quot;right&quot;: {
+        &quot;v&quot;: 2
+      }
+    },
+    &quot;args&quot;: {}
+  },
+  &quot;observed&quot;: {
+    &quot;ok&quot;: true,
+    &quot;disposition&quot;: &quot;completed&quot;,
+    &quot;value&quot;: {
+      &quot;merged&quot;: {},
+      &quot;conflicts&quot;: [
+        {
+          &quot;field&quot;: &quot;v&quot;,
+          &quot;kind&quot;: &quot;delete_modify&quot;,
+          &quot;base&quot;: {
+            &quot;present&quot;: true,
+            &quot;value&quot;: 1
+          },
+          &quot;left&quot;: {
+            &quot;present&quot;: false,
+            &quot;value&quot;: null
+          },
+          &quot;right&quot;: {
+            &quot;present&quot;: true,
+            &quot;value&quot;: 2
+          }
+        }
+      ],
+      &quot;resolved&quot;: []
+    },
+    &quot;error&quot;: null,
+    &quot;external_credit&quot;: false
+  }
+}</pre></details></td><td><span class="state completed">completed</span></td></tr>
+<tr data-outcome="completed" data-search="tr6933-p055 concurrent null and false additions remain a conflict three_way_merge"><td>TR6933-P055</td><td><details><summary>Concurrent null and false additions remain a conflict</summary><p>Operation: <code>three_way_merge</code>. Source records remain preserved.</p><pre>{
+  &quot;request&quot;: {
+    &quot;op&quot;: &quot;three_way_merge&quot;,
+    &quot;record&quot;: {
+      &quot;base&quot;: {},
+      &quot;left&quot;: {
+        &quot;v&quot;: null
+      },
+      &quot;right&quot;: {
+        &quot;v&quot;: false
+      }
+    },
+    &quot;args&quot;: {}
+  },
+  &quot;observed&quot;: {
+    &quot;ok&quot;: true,
+    &quot;disposition&quot;: &quot;completed&quot;,
+    &quot;value&quot;: {
+      &quot;merged&quot;: {},
+      &quot;conflicts&quot;: [
+        {
+          &quot;field&quot;: &quot;v&quot;,
+          &quot;kind&quot;: &quot;concurrent_add&quot;,
+          &quot;base&quot;: {
+            &quot;present&quot;: false,
+            &quot;value&quot;: null
+          },
+          &quot;left&quot;: {
+            &quot;present&quot;: true,
+            &quot;value&quot;: null
+          },
+          &quot;right&quot;: {
+            &quot;present&quot;: true,
+            &quot;value&quot;: false
+          }
+        }
+      ],
+      &quot;resolved&quot;: []
+    },
+    &quot;error&quot;: null,
+    &quot;external_credit&quot;: false
+  }
+}</pre></details></td><td><span class="state completed">completed</span></td></tr>
+<tr data-outcome="completed" data-search="tr6933-p056 unilateral deletion is not a conflict conflict_kinds"><td>TR6933-P056</td><td><details><summary>Unilateral deletion is not a conflict</summary><p>Operation: <code>conflict_kinds</code>. Source records remain preserved.</p><pre>{
+  &quot;request&quot;: {
+    &quot;op&quot;: &quot;conflict_kinds&quot;,
+    &quot;record&quot;: {
+      &quot;base&quot;: {
+        &quot;v&quot;: 1
+      },
+      &quot;left&quot;: {},
+      &quot;right&quot;: {
+        &quot;v&quot;: 1
+      }
+    },
+    &quot;args&quot;: {}
+  },
+  &quot;observed&quot;: {
+    &quot;ok&quot;: true,
+    &quot;disposition&quot;: &quot;completed&quot;,
+    &quot;value&quot;: {
+      &quot;fields&quot;: 1,
+      &quot;conflict_count&quot;: 0,
+      &quot;kinds&quot;: {
+        &quot;different_edits&quot;: [],
+        &quot;delete_modify&quot;: [],
+        &quot;concurrent_add&quot;: []
+      }
+    },
+    &quot;error&quot;: null,
+    &quot;external_credit&quot;: false
+  }
+}</pre></details></td><td><span class="state completed">completed</span></td></tr>
+<tr data-outcome="completed" data-search="tr6933-p057 different edits are classified by field conflict_kinds"><td>TR6933-P057</td><td><details><summary>Different edits are classified by field</summary><p>Operation: <code>conflict_kinds</code>. Source records remain preserved.</p><pre>{
+  &quot;request&quot;: {
+    &quot;op&quot;: &quot;conflict_kinds&quot;,
+    &quot;record&quot;: {
+      &quot;base&quot;: {
+        &quot;v&quot;: 1
+      },
+      &quot;left&quot;: {
+        &quot;v&quot;: 2
+      },
+      &quot;right&quot;: {
+        &quot;v&quot;: 3
+      }
+    },
+    &quot;args&quot;: {}
+  },
+  &quot;observed&quot;: {
+    &quot;ok&quot;: true,
+    &quot;disposition&quot;: &quot;completed&quot;,
+    &quot;value&quot;: {
+      &quot;fields&quot;: 1,
+      &quot;conflict_count&quot;: 1,
+      &quot;kinds&quot;: {
+        &quot;different_edits&quot;: [
+          &quot;v&quot;
+        ],
+        &quot;delete_modify&quot;: [],
+        &quot;concurrent_add&quot;: []
+      }
+    },
+    &quot;error&quot;: null,
+    &quot;external_credit&quot;: false
+  }
+}</pre></details></td><td><span class="state completed">completed</span></td></tr>
+<tr data-outcome="completed" data-search="tr6933-p058 delete-versus-modify is its own category conflict_kinds"><td>TR6933-P058</td><td><details><summary>Delete-versus-modify is its own category</summary><p>Operation: <code>conflict_kinds</code>. Source records remain preserved.</p><pre>{
+  &quot;request&quot;: {
+    &quot;op&quot;: &quot;conflict_kinds&quot;,
+    &quot;record&quot;: {
+      &quot;base&quot;: {
+        &quot;v&quot;: 1
+      },
+      &quot;left&quot;: {},
+      &quot;right&quot;: {
+        &quot;v&quot;: 2
+      }
+    },
+    &quot;args&quot;: {}
+  },
+  &quot;observed&quot;: {
+    &quot;ok&quot;: true,
+    &quot;disposition&quot;: &quot;completed&quot;,
+    &quot;value&quot;: {
+      &quot;fields&quot;: 1,
+      &quot;conflict_count&quot;: 1,
+      &quot;kinds&quot;: {
+        &quot;different_edits&quot;: [],
+        &quot;delete_modify&quot;: [
+          &quot;v&quot;
+        ],
+        &quot;concurrent_add&quot;: []
+      }
+    },
+    &quot;error&quot;: null,
+    &quot;external_credit&quot;: false
+  }
+}</pre></details></td><td><span class="state completed">completed</span></td></tr>
+<tr data-outcome="completed" data-search="tr6933-p059 concurrent additions preserve their category conflict_kinds"><td>TR6933-P059</td><td><details><summary>Concurrent additions preserve their category</summary><p>Operation: <code>conflict_kinds</code>. Source records remain preserved.</p><pre>{
+  &quot;request&quot;: {
+    &quot;op&quot;: &quot;conflict_kinds&quot;,
+    &quot;record&quot;: {
+      &quot;base&quot;: {},
+      &quot;left&quot;: {
+        &quot;v&quot;: null
+      },
+      &quot;right&quot;: {
+        &quot;v&quot;: false
+      }
+    },
+    &quot;args&quot;: {}
+  },
+  &quot;observed&quot;: {
+    &quot;ok&quot;: true,
+    &quot;disposition&quot;: &quot;completed&quot;,
+    &quot;value&quot;: {
+      &quot;fields&quot;: 1,
+      &quot;conflict_count&quot;: 1,
+      &quot;kinds&quot;: {
+        &quot;different_edits&quot;: [],
+        &quot;delete_modify&quot;: [],
+        &quot;concurrent_add&quot;: [
+          &quot;v&quot;
+        ]
+      }
+    },
+    &quot;error&quot;: null,
+    &quot;external_credit&quot;: false
+  }
+}</pre></details></td><td><span class="state completed">completed</span></td></tr>
+<tr data-outcome="completed" data-search="tr6933-p060 multiple categories are counted without collapsing fields conflict_kinds"><td>TR6933-P060</td><td><details><summary>Multiple categories are counted without collapsing fields</summary><p>Operation: <code>conflict_kinds</code>. Source records remain preserved.</p><pre>{
+  &quot;request&quot;: {
+    &quot;op&quot;: &quot;conflict_kinds&quot;,
+    &quot;record&quot;: {
+      &quot;base&quot;: {
+        &quot;a&quot;: 1,
+        &quot;b&quot;: 1
+      },
+      &quot;left&quot;: {
+        &quot;a&quot;: 2,
+        &quot;c&quot;: true
+      },
+      &quot;right&quot;: {
+        &quot;a&quot;: 3,
+        &quot;b&quot;: 2,
+        &quot;c&quot;: false
+      }
+    },
+    &quot;args&quot;: {}
+  },
+  &quot;observed&quot;: {
+    &quot;ok&quot;: true,
+    &quot;disposition&quot;: &quot;completed&quot;,
+    &quot;value&quot;: {
+      &quot;fields&quot;: 3,
+      &quot;conflict_count&quot;: 3,
+      &quot;kinds&quot;: {
+        &quot;different_edits&quot;: [
+          &quot;a&quot;
+        ],
+        &quot;delete_modify&quot;: [
+          &quot;b&quot;
+        ],
+        &quot;concurrent_add&quot;: [
+          &quot;c&quot;
+        ]
+      }
+    },
+    &quot;error&quot;: null,
+    &quot;external_credit&quot;: false
+  }
+}</pre></details></td><td><span class="state completed">completed</span></td></tr>
+<tr data-outcome="completed" data-search="tr6933-p061 an explicit left choice selects only the left value resolution_preview"><td>TR6933-P061</td><td><details><summary>An explicit left choice selects only the left value</summary><p>Operation: <code>resolution_preview</code>. Source records remain preserved.</p><pre>{
+  &quot;request&quot;: {
+    &quot;op&quot;: &quot;resolution_preview&quot;,
+    &quot;record&quot;: {
+      &quot;base&quot;: {
+        &quot;v&quot;: 1
+      },
+      &quot;left&quot;: {
+        &quot;v&quot;: 2
+      },
+      &quot;right&quot;: {
+        &quot;v&quot;: 3
+      }
+    },
+    &quot;args&quot;: {
+      &quot;choices&quot;: {
+        &quot;v&quot;: &quot;left&quot;
+      }
+    }
+  },
+  &quot;observed&quot;: {
+    &quot;ok&quot;: true,
+    &quot;disposition&quot;: &quot;completed&quot;,
+    &quot;value&quot;: {
+      &quot;applied&quot;: true,
+      &quot;result&quot;: {
+        &quot;v&quot;: 2
+      },
+      &quot;decisions&quot;: [
+        {
+          &quot;field&quot;: &quot;v&quot;,
+          &quot;choice&quot;: &quot;left&quot;
+        }
+      ],
+      &quot;unresolved&quot;: [],
+      &quot;source_preserved&quot;: true
+    },
+    &quot;error&quot;: null,
+    &quot;external_credit&quot;: false
+  }
+}</pre></details></td><td><span class="state completed">completed</span></td></tr>
+<tr data-outcome="completed" data-search="tr6933-p062 an explicit right choice selects only the right value resolution_preview"><td>TR6933-P062</td><td><details><summary>An explicit right choice selects only the right value</summary><p>Operation: <code>resolution_preview</code>. Source records remain preserved.</p><pre>{
+  &quot;request&quot;: {
+    &quot;op&quot;: &quot;resolution_preview&quot;,
+    &quot;record&quot;: {
+      &quot;base&quot;: {
+        &quot;v&quot;: 1
+      },
+      &quot;left&quot;: {
+        &quot;v&quot;: 2
+      },
+      &quot;right&quot;: {
+        &quot;v&quot;: 3
+      }
+    },
+    &quot;args&quot;: {
+      &quot;choices&quot;: {
+        &quot;v&quot;: &quot;right&quot;
+      }
+    }
+  },
+  &quot;observed&quot;: {
+    &quot;ok&quot;: true,
+    &quot;disposition&quot;: &quot;completed&quot;,
+    &quot;value&quot;: {
+      &quot;applied&quot;: true,
+      &quot;result&quot;: {
+        &quot;v&quot;: 3
+      },
+      &quot;decisions&quot;: [
+        {
+          &quot;field&quot;: &quot;v&quot;,
+          &quot;choice&quot;: &quot;right&quot;
+        }
+      ],
+      &quot;unresolved&quot;: [],
+      &quot;source_preserved&quot;: true
+    },
+    &quot;error&quot;: null,
+    &quot;external_credit&quot;: false
+  }
+}</pre></details></td><td><span class="state completed">completed</span></td></tr>
+<tr data-outcome="completed" data-search="tr6933-p063 an explicit base choice retains the ancestor resolution_preview"><td>TR6933-P063</td><td><details><summary>An explicit base choice retains the ancestor</summary><p>Operation: <code>resolution_preview</code>. Source records remain preserved.</p><pre>{
+  &quot;request&quot;: {
+    &quot;op&quot;: &quot;resolution_preview&quot;,
+    &quot;record&quot;: {
+      &quot;base&quot;: {
+        &quot;v&quot;: 1
+      },
+      &quot;left&quot;: {
+        &quot;v&quot;: 2
+      },
+      &quot;right&quot;: {
+        &quot;v&quot;: 3
+      }
+    },
+    &quot;args&quot;: {
+      &quot;choices&quot;: {
+        &quot;v&quot;: &quot;base&quot;
+      }
+    }
+  },
+  &quot;observed&quot;: {
+    &quot;ok&quot;: true,
+    &quot;disposition&quot;: &quot;completed&quot;,
+    &quot;value&quot;: {
+      &quot;applied&quot;: true,
+      &quot;result&quot;: {
+        &quot;v&quot;: 1
+      },
+      &quot;decisions&quot;: [
+        {
+          &quot;field&quot;: &quot;v&quot;,
+          &quot;choice&quot;: &quot;base&quot;
+        }
+      ],
+      &quot;unresolved&quot;: [],
+      &quot;source_preserved&quot;: true
+    },
+    &quot;error&quot;: null,
+    &quot;external_credit&quot;: false
+  }
+}</pre></details></td><td><span class="state completed">completed</span></td></tr>
+<tr data-outcome="completed" data-search="tr6933-p064 an explicit remove choice preserves absence resolution_preview"><td>TR6933-P064</td><td><details><summary>An explicit remove choice preserves absence</summary><p>Operation: <code>resolution_preview</code>. Source records remain preserved.</p><pre>{
+  &quot;request&quot;: {
+    &quot;op&quot;: &quot;resolution_preview&quot;,
+    &quot;record&quot;: {
+      &quot;base&quot;: {
+        &quot;v&quot;: 1
+      },
+      &quot;left&quot;: {
+        &quot;v&quot;: 2
+      },
+      &quot;right&quot;: {
+        &quot;v&quot;: 3
+      }
+    },
+    &quot;args&quot;: {
+      &quot;choices&quot;: {
+        &quot;v&quot;: &quot;remove&quot;
+      }
+    }
+  },
+  &quot;observed&quot;: {
+    &quot;ok&quot;: true,
+    &quot;disposition&quot;: &quot;completed&quot;,
+    &quot;value&quot;: {
+      &quot;applied&quot;: true,
+      &quot;result&quot;: {},
+      &quot;decisions&quot;: [
+        {
+          &quot;field&quot;: &quot;v&quot;,
+          &quot;choice&quot;: &quot;remove&quot;
+        }
+      ],
+      &quot;unresolved&quot;: [],
+      &quot;source_preserved&quot;: true
+    },
+    &quot;error&quot;: null,
+    &quot;external_credit&quot;: false
+  }
+}</pre></details></td><td><span class="state completed">completed</span></td></tr>
+<tr data-outcome="completed" data-search="tr6933-p065 an unresolved field aborts the whole resolution preview resolution_preview"><td>TR6933-P065</td><td><details><summary>An unresolved field aborts the whole resolution preview</summary><p>Operation: <code>resolution_preview</code>. Source records remain preserved.</p><pre>{
+  &quot;request&quot;: {
+    &quot;op&quot;: &quot;resolution_preview&quot;,
+    &quot;record&quot;: {
+      &quot;base&quot;: {
+        &quot;v&quot;: 1
+      },
+      &quot;left&quot;: {
+        &quot;v&quot;: 2
+      },
+      &quot;right&quot;: {
+        &quot;v&quot;: 3
+      }
+    },
+    &quot;args&quot;: {
+      &quot;choices&quot;: {}
+    }
+  },
+  &quot;observed&quot;: {
+    &quot;ok&quot;: true,
+    &quot;disposition&quot;: &quot;completed&quot;,
+    &quot;value&quot;: {
+      &quot;applied&quot;: false,
+      &quot;result&quot;: {
+        &quot;v&quot;: 1
+      },
+      &quot;decisions&quot;: [],
+      &quot;unresolved&quot;: [
+        &quot;v&quot;
+      ],
+      &quot;source_preserved&quot;: true
+    },
+    &quot;error&quot;: null,
+    &quot;external_credit&quot;: false
+  }
+}</pre></details></td><td><span class="state completed">completed</span></td></tr>
+<tr data-outcome="completed" data-search="tr6933-p066 a decision binds to all four exact contexts resolution_receipt"><td>TR6933-P066</td><td><details><summary>A decision binds to all four exact contexts</summary><p>Operation: <code>resolution_receipt</code>. Source records remain preserved.</p><pre>{
+  &quot;request&quot;: {
+    &quot;op&quot;: &quot;resolution_receipt&quot;,
+    &quot;record&quot;: {
+      &quot;base&quot;: {
+        &quot;v&quot;: 1,
+        &quot;k&quot;: 0
+      },
+      &quot;left&quot;: {
+        &quot;v&quot;: 2,
+        &quot;k&quot;: 0
+      },
+      &quot;right&quot;: {
+        &quot;v&quot;: 1,
+        &quot;k&quot;: 0
+      }
+    },
+    &quot;args&quot;: {
+      &quot;decisions&quot;: {
+        &quot;v&quot;: &quot;left&quot;
+      },
+      &quot;claims&quot;: {
+        &quot;base&quot;: &quot;e8dcb54b754f09cf0eaabadd25c51650d24a635f587c0af65a723e02a7b6c470&quot;,
+        &quot;left&quot;: &quot;48fef3934e4ac7805ece610d2a4d24d81123ed9f7cf8773a9f1cd6f721c70068&quot;,
+        &quot;right&quot;: &quot;e8dcb54b754f09cf0eaabadd25c51650d24a635f587c0af65a723e02a7b6c470&quot;,
+        &quot;decisions&quot;: &quot;d47d2877dc462fa3ee89c65a93544e0aba53ac344947fde0de623e2d7ca2c7e8&quot;
+      }
+    }
+  },
+  &quot;observed&quot;: {
+    &quot;ok&quot;: true,
+    &quot;disposition&quot;: &quot;completed&quot;,
+    &quot;value&quot;: {
+      &quot;bound&quot;: true,
+      &quot;mismatch_domains&quot;: [],
+      &quot;actual&quot;: {
+        &quot;base&quot;: &quot;e8dcb54b754f09cf0eaabadd25c51650d24a635f587c0af65a723e02a7b6c470&quot;,
+        &quot;left&quot;: &quot;48fef3934e4ac7805ece610d2a4d24d81123ed9f7cf8773a9f1cd6f721c70068&quot;,
+        &quot;right&quot;: &quot;e8dcb54b754f09cf0eaabadd25c51650d24a635f587c0af65a723e02a7b6c470&quot;,
+        &quot;decisions&quot;: &quot;d47d2877dc462fa3ee89c65a93544e0aba53ac344947fde0de623e2d7ca2c7e8&quot;
+      },
+      &quot;external_authority&quot;: false
+    },
+    &quot;error&quot;: null,
+    &quot;external_credit&quot;: false
+  }
+}</pre></details></td><td><span class="state completed">completed</span></td></tr>
+<tr data-outcome="completed" data-search="tr6933-p067 a changed left context invalidates its receipt resolution_receipt"><td>TR6933-P067</td><td><details><summary>A changed left context invalidates its receipt</summary><p>Operation: <code>resolution_receipt</code>. Source records remain preserved.</p><pre>{
+  &quot;request&quot;: {
+    &quot;op&quot;: &quot;resolution_receipt&quot;,
+    &quot;record&quot;: {
+      &quot;base&quot;: {
+        &quot;v&quot;: 1
+      },
+      &quot;left&quot;: {
+        &quot;v&quot;: 2
+      },
+      &quot;right&quot;: {
+        &quot;v&quot;: 2
+      }
+    },
+    &quot;args&quot;: {
+      &quot;decisions&quot;: {},
+      &quot;claims&quot;: {
+        &quot;base&quot;: &quot;afbf9d0f3560b0fd7795e81c42a0a79ee6b6fc67e064f77826aee642cad28d91&quot;,
+        &quot;left&quot;: &quot;0000000000000000000000000000000000000000000000000000000000000000&quot;,
+        &quot;right&quot;: &quot;2b5442799fccc3af2e7e790017697373913b7afcac933d72fb5876de994f659a&quot;,
+        &quot;decisions&quot;: &quot;44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a&quot;
+      }
+    }
+  },
+  &quot;observed&quot;: {
+    &quot;ok&quot;: true,
+    &quot;disposition&quot;: &quot;completed&quot;,
+    &quot;value&quot;: {
+      &quot;bound&quot;: false,
+      &quot;mismatch_domains&quot;: [
+        &quot;left&quot;
+      ],
+      &quot;actual&quot;: {
+        &quot;base&quot;: &quot;afbf9d0f3560b0fd7795e81c42a0a79ee6b6fc67e064f77826aee642cad28d91&quot;,
+        &quot;left&quot;: &quot;2b5442799fccc3af2e7e790017697373913b7afcac933d72fb5876de994f659a&quot;,
+        &quot;right&quot;: &quot;2b5442799fccc3af2e7e790017697373913b7afcac933d72fb5876de994f659a&quot;,
+        &quot;decisions&quot;: &quot;44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a&quot;
+      },
+      &quot;external_authority&quot;: false
+    },
+    &quot;error&quot;: null,
+    &quot;external_credit&quot;: false
+  }
+}</pre></details></td><td><span class="state completed">completed</span></td></tr>
+<tr data-outcome="completed" data-search="tr6933-p068 a missing right digest stays unbound resolution_receipt"><td>TR6933-P068</td><td><details><summary>A missing right digest stays unbound</summary><p>Operation: <code>resolution_receipt</code>. Source records remain preserved.</p><pre>{
+  &quot;request&quot;: {
+    &quot;op&quot;: &quot;resolution_receipt&quot;,
+    &quot;record&quot;: {
+      &quot;base&quot;: {
+        &quot;v&quot;: 1
+      },
+      &quot;left&quot;: {
+        &quot;v&quot;: 2
+      },
+      &quot;right&quot;: {
+        &quot;v&quot;: 3
+      }
+    },
+    &quot;args&quot;: {
+      &quot;decisions&quot;: {
+        &quot;v&quot;: &quot;right&quot;
+      },
+      &quot;claims&quot;: {
+        &quot;base&quot;: &quot;afbf9d0f3560b0fd7795e81c42a0a79ee6b6fc67e064f77826aee642cad28d91&quot;,
+        &quot;left&quot;: &quot;2b5442799fccc3af2e7e790017697373913b7afcac933d72fb5876de994f659a&quot;,
+        &quot;right&quot;: null,
+        &quot;decisions&quot;: &quot;f8c2e199aa54daff9d1b30e84a2a3571f8324b992a00351b150ff7abe2f62b9d&quot;
+      }
+    }
+  },
+  &quot;observed&quot;: {
+    &quot;ok&quot;: true,
+    &quot;disposition&quot;: &quot;completed&quot;,
+    &quot;value&quot;: {
+      &quot;bound&quot;: false,
+      &quot;mismatch_domains&quot;: [
+        &quot;right&quot;
+      ],
+      &quot;actual&quot;: {
+        &quot;base&quot;: &quot;afbf9d0f3560b0fd7795e81c42a0a79ee6b6fc67e064f77826aee642cad28d91&quot;,
+        &quot;left&quot;: &quot;2b5442799fccc3af2e7e790017697373913b7afcac933d72fb5876de994f659a&quot;,
+        &quot;right&quot;: &quot;ff3acadf3b29fc4fa59d5b9612db39960c223344122be86dfaf4075be7c50279&quot;,
+        &quot;decisions&quot;: &quot;f8c2e199aa54daff9d1b30e84a2a3571f8324b992a00351b150ff7abe2f62b9d&quot;
+      },
+      &quot;external_authority&quot;: false
+    },
+    &quot;error&quot;: null,
+    &quot;external_credit&quot;: false
+  }
+}</pre></details></td><td><span class="state completed">completed</span></td></tr>
+<tr data-outcome="completed" data-search="tr6933-p069 a changed decision digest cannot reuse an earlier binding resolution_receipt"><td>TR6933-P069</td><td><details><summary>A changed decision digest cannot reuse an earlier binding</summary><p>Operation: <code>resolution_receipt</code>. Source records remain preserved.</p><pre>{
+  &quot;request&quot;: {
+    &quot;op&quot;: &quot;resolution_receipt&quot;,
+    &quot;record&quot;: {
+      &quot;base&quot;: {
+        &quot;v&quot;: 1
+      },
+      &quot;left&quot;: {},
+      &quot;right&quot;: {
+        &quot;v&quot;: 2
+      }
+    },
+    &quot;args&quot;: {
+      &quot;decisions&quot;: {
+        &quot;v&quot;: &quot;right&quot;
+      },
+      &quot;claims&quot;: {
+        &quot;base&quot;: &quot;afbf9d0f3560b0fd7795e81c42a0a79ee6b6fc67e064f77826aee642cad28d91&quot;,
+        &quot;left&quot;: &quot;44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a&quot;,
+        &quot;right&quot;: &quot;2b5442799fccc3af2e7e790017697373913b7afcac933d72fb5876de994f659a&quot;,
+        &quot;decisions&quot;: &quot;0000000000000000000000000000000000000000000000000000000000000000&quot;
+      }
+    }
+  },
+  &quot;observed&quot;: {
+    &quot;ok&quot;: true,
+    &quot;disposition&quot;: &quot;completed&quot;,
+    &quot;value&quot;: {
+      &quot;bound&quot;: false,
+      &quot;mismatch_domains&quot;: [
+        &quot;decisions&quot;
+      ],
+      &quot;actual&quot;: {
+        &quot;base&quot;: &quot;afbf9d0f3560b0fd7795e81c42a0a79ee6b6fc67e064f77826aee642cad28d91&quot;,
+        &quot;left&quot;: &quot;44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a&quot;,
+        &quot;right&quot;: &quot;2b5442799fccc3af2e7e790017697373913b7afcac933d72fb5876de994f659a&quot;,
+        &quot;decisions&quot;: &quot;f8c2e199aa54daff9d1b30e84a2a3571f8324b992a00351b150ff7abe2f62b9d&quot;
+      },
+      &quot;external_authority&quot;: false
+    },
+    &quot;error&quot;: null,
+    &quot;external_credit&quot;: false
+  }
+}</pre></details></td><td><span class="state completed">completed</span></td></tr>
+<tr data-outcome="completed" data-search="tr6933-p070 four contradictory digest claims remain separately visible resolution_receipt"><td>TR6933-P070</td><td><details><summary>Four contradictory digest claims remain separately visible</summary><p>Operation: <code>resolution_receipt</code>. Source records remain preserved.</p><pre>{
+  &quot;request&quot;: {
+    &quot;op&quot;: &quot;resolution_receipt&quot;,
+    &quot;record&quot;: {
+      &quot;base&quot;: {},
+      &quot;left&quot;: {
+        &quot;v&quot;: null
+      },
+      &quot;right&quot;: {
+        &quot;v&quot;: false
+      }
+    },
+    &quot;args&quot;: {
+      &quot;decisions&quot;: {
+        &quot;v&quot;: &quot;right&quot;
+      },
+      &quot;claims&quot;: {
+        &quot;base&quot;: &quot;0000000000000000000000000000000000000000000000000000000000000000&quot;,
+        &quot;left&quot;: &quot;0000000000000000000000000000000000000000000000000000000000000000&quot;,
+        &quot;right&quot;: &quot;0000000000000000000000000000000000000000000000000000000000000000&quot;,
+        &quot;decisions&quot;: &quot;0000000000000000000000000000000000000000000000000000000000000000&quot;
+      }
+    }
+  },
+  &quot;observed&quot;: {
+    &quot;ok&quot;: true,
+    &quot;disposition&quot;: &quot;completed&quot;,
+    &quot;value&quot;: {
+      &quot;bound&quot;: false,
+      &quot;mismatch_domains&quot;: [
+        &quot;base&quot;,
+        &quot;decisions&quot;,
+        &quot;left&quot;,
+        &quot;right&quot;
+      ],
+      &quot;actual&quot;: {
+        &quot;base&quot;: &quot;44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a&quot;,
+        &quot;left&quot;: &quot;aae9e223dcdc02dfd8149da8c25b9536533a7232b0c9137ee6b2cd5c2a2629eb&quot;,
+        &quot;right&quot;: &quot;eeb0deb9cb259a55fdff2c5ed5d0a08dba3ff585aafa0821cc51889f7660739e&quot;,
+        &quot;decisions&quot;: &quot;f8c2e199aa54daff9d1b30e84a2a3571f8324b992a00351b150ff7abe2f62b9d&quot;
+      },
+      &quot;external_authority&quot;: false
+    },
+    &quot;error&quot;: null,
+    &quot;external_credit&quot;: false
+  }
+}</pre></details></td><td><span class="state completed">completed</span></td></tr>
+<tr data-outcome="completed" data-search="tr6933-p071 removed integer values remain recoverable loss_snapshot"><td>TR6933-P071</td><td><details><summary>Removed integer values remain recoverable</summary><p>Operation: <code>loss_snapshot</code>. Source records remain preserved.</p><pre>{
+  &quot;request&quot;: {
+    &quot;op&quot;: &quot;loss_snapshot&quot;,
+    &quot;record&quot;: {
+      &quot;before&quot;: {
+        &quot;a&quot;: 1,
+        &quot;b&quot;: 2
+      },
+      &quot;after&quot;: {
+        &quot;a&quot;: 1
+      }
+    },
+    &quot;args&quot;: {}
+  },
+  &quot;observed&quot;: {
+    &quot;ok&quot;: true,
+    &quot;disposition&quot;: &quot;completed&quot;,
+    &quot;value&quot;: {
+      &quot;removed&quot;: [
+        {
+          &quot;field&quot;: &quot;b&quot;,
+          &quot;value&quot;: 2
+        }
+      ],
+      &quot;overwritten&quot;: [],
+      &quot;added&quot;: [],
+      &quot;snapshot&quot;: {
+        &quot;a&quot;: 1,
+        &quot;b&quot;: 2
+      },
+      &quot;reversible_from_snapshot&quot;: true
+    },
+    &quot;error&quot;: null,
+    &quot;external_credit&quot;: false
+  }
+}</pre></details></td><td><span class="state completed">completed</span></td></tr>
+<tr data-outcome="completed" data-search="tr6933-p072 boolean-to-integer replacement retains the prior type loss_snapshot"><td>TR6933-P072</td><td><details><summary>Boolean-to-integer replacement retains the prior type</summary><p>Operation: <code>loss_snapshot</code>. Source records remain preserved.</p><pre>{
+  &quot;request&quot;: {
+    &quot;op&quot;: &quot;loss_snapshot&quot;,
+    &quot;record&quot;: {
+      &quot;before&quot;: {
+        &quot;v&quot;: true
+      },
+      &quot;after&quot;: {
+        &quot;v&quot;: 1
+      }
+    },
+    &quot;args&quot;: {}
+  },
+  &quot;observed&quot;: {
+    &quot;ok&quot;: true,
+    &quot;disposition&quot;: &quot;completed&quot;,
+    &quot;value&quot;: {
+      &quot;removed&quot;: [],
+      &quot;overwritten&quot;: [
+        {
+          &quot;field&quot;: &quot;v&quot;,
+          &quot;before&quot;: true,
+          &quot;after&quot;: 1
+        }
+      ],
+      &quot;added&quot;: [],
+      &quot;snapshot&quot;: {
+        &quot;v&quot;: true
+      },
+      &quot;reversible_from_snapshot&quot;: true
+    },
+    &quot;error&quot;: null,
+    &quot;external_credit&quot;: false
+  }
+}</pre></details></td><td><span class="state completed">completed</span></td></tr>
+<tr data-outcome="completed" data-search="tr6933-p073 a newly added null does not become a removed value loss_snapshot"><td>TR6933-P073</td><td><details><summary>A newly added null does not become a removed value</summary><p>Operation: <code>loss_snapshot</code>. Source records remain preserved.</p><pre>{
+  &quot;request&quot;: {
+    &quot;op&quot;: &quot;loss_snapshot&quot;,
+    &quot;record&quot;: {
+      &quot;before&quot;: {},
+      &quot;after&quot;: {
+        &quot;a&quot;: null
+      }
+    },
+    &quot;args&quot;: {}
+  },
+  &quot;observed&quot;: {
+    &quot;ok&quot;: true,
+    &quot;disposition&quot;: &quot;completed&quot;,
+    &quot;value&quot;: {
+      &quot;removed&quot;: [],
+      &quot;overwritten&quot;: [],
+      &quot;added&quot;: [
+        {
+          &quot;field&quot;: &quot;a&quot;,
+          &quot;value&quot;: null
+        }
+      ],
+      &quot;snapshot&quot;: {},
+      &quot;reversible_from_snapshot&quot;: true
+    },
+    &quot;error&quot;: null,
+    &quot;external_credit&quot;: false
+  }
+}</pre></details></td><td><span class="state completed">completed</span></td></tr>
+<tr data-outcome="completed" data-search="tr6933-p074 array replacement preserves the complete previous array loss_snapshot"><td>TR6933-P074</td><td><details><summary>Array replacement preserves the complete previous array</summary><p>Operation: <code>loss_snapshot</code>. Source records remain preserved.</p><pre>{
+  &quot;request&quot;: {
+    &quot;op&quot;: &quot;loss_snapshot&quot;,
+    &quot;record&quot;: {
+      &quot;before&quot;: {
+        &quot;arr&quot;: [
+          1
+        ]
+      },
+      &quot;after&quot;: {
+        &quot;arr&quot;: [
+          2
+        ]
+      }
+    },
+    &quot;args&quot;: {}
+  },
+  &quot;observed&quot;: {
+    &quot;ok&quot;: true,
+    &quot;disposition&quot;: &quot;completed&quot;,
+    &quot;value&quot;: {
+      &quot;removed&quot;: [],
+      &quot;overwritten&quot;: [
+        {
+          &quot;field&quot;: &quot;arr&quot;,
+          &quot;before&quot;: [
+            1
+          ],
+          &quot;after&quot;: [
+            2
+          ]
+        }
+      ],
+      &quot;added&quot;: [],
+      &quot;snapshot&quot;: {
+        &quot;arr&quot;: [
+          1
+        ]
+      },
+      &quot;reversible_from_snapshot&quot;: true
+    },
+    &quot;error&quot;: null,
+    &quot;external_credit&quot;: false
+  }
+}</pre></details></td><td><span class="state completed">completed</span></td></tr>
+<tr data-outcome="completed" data-search="tr6933-p075 an unchanged record retains an explicit recovery snapshot loss_snapshot"><td>TR6933-P075</td><td><details><summary>An unchanged record retains an explicit recovery snapshot</summary><p>Operation: <code>loss_snapshot</code>. Source records remain preserved.</p><pre>{
+  &quot;request&quot;: {
+    &quot;op&quot;: &quot;loss_snapshot&quot;,
+    &quot;record&quot;: {
+      &quot;before&quot;: {
+        &quot;v&quot;: null,
+        &quot;k&quot;: false
+      },
+      &quot;after&quot;: {
+        &quot;v&quot;: null,
+        &quot;k&quot;: false
+      }
+    },
+    &quot;args&quot;: {}
+  },
+  &quot;observed&quot;: {
+    &quot;ok&quot;: true,
+    &quot;disposition&quot;: &quot;completed&quot;,
+    &quot;value&quot;: {
+      &quot;removed&quot;: [],
+      &quot;overwritten&quot;: [],
+      &quot;added&quot;: [],
+      &quot;snapshot&quot;: {
+        &quot;v&quot;: null,
+        &quot;k&quot;: false
+      },
+      &quot;reversible_from_snapshot&quot;: true
+    },
+    &quot;error&quot;: null,
+    &quot;external_credit&quot;: false
+  }
+}</pre></details></td><td><span class="state completed">completed</span></td></tr>
+<tr data-outcome="completed" data-search="tr6933-p076 rename followed by default injection commits as one preview atomic_migration_pipeline"><td>TR6933-P076</td><td><details><summary>Rename followed by default injection commits as one preview</summary><p>Operation: <code>atomic_migration_pipeline</code>. Source records remain preserved.</p><pre>{
+  &quot;request&quot;: {
+    &quot;op&quot;: &quot;atomic_migration_pipeline&quot;,
+    &quot;record&quot;: {
+      &quot;old&quot;: 1
+    },
+    &quot;args&quot;: {
+      &quot;rules&quot;: [
+        {
+          &quot;op&quot;: &quot;rename_preview&quot;,
+          &quot;args&quot;: {
+            &quot;mapping&quot;: {
+              &quot;old&quot;: &quot;new&quot;
+            }
+          }
+        },
+        {
+          &quot;op&quot;: &quot;default_overlay&quot;,
+          &quot;args&quot;: {
+            &quot;defaults&quot;: {
+              &quot;flag&quot;: false
+            }
+          }
+        }
+      ],
+      &quot;allow_lossy&quot;: false
+    }
+  },
+  &quot;observed&quot;: {
+    &quot;ok&quot;: true,
+    &quot;disposition&quot;: &quot;completed&quot;,
+    &quot;value&quot;: {
+      &quot;committed&quot;: true,
+      &quot;result&quot;: {
+        &quot;new&quot;: 1,
+        &quot;flag&quot;: false
+      },
+      &quot;failed_index&quot;: null,
+      &quot;reason&quot;: null,
+      &quot;attempted_steps&quot;: 2,
+      &quot;rollback_preserved&quot;: true
+    },
+    &quot;error&quot;: null,
+    &quot;external_credit&quot;: false
+  }
+}</pre></details></td><td><span class="state completed">completed</span></td></tr>
+<tr data-outcome="completed" data-search="tr6933-p077 refused numeric text returns the original record atomic_migration_pipeline"><td>TR6933-P077</td><td><details><summary>Refused numeric text returns the original record</summary><p>Operation: <code>atomic_migration_pipeline</code>. Source records remain preserved.</p><pre>{
+  &quot;request&quot;: {
+    &quot;op&quot;: &quot;atomic_migration_pipeline&quot;,
+    &quot;record&quot;: {
+      &quot;n&quot;: &quot;03&quot;
+    },
+    &quot;args&quot;: {
+      &quot;rules&quot;: [
+        {
+          &quot;op&quot;: &quot;coercion_preview&quot;,
+          &quot;args&quot;: {
+            &quot;field&quot;: &quot;n&quot;,
+            &quot;conversion&quot;: &quot;text_to_integer&quot;
+          }
+        }
+      ],
+      &quot;allow_lossy&quot;: false
+    }
+  },
+  &quot;observed&quot;: {
+    &quot;ok&quot;: true,
+    &quot;disposition&quot;: &quot;completed&quot;,
+    &quot;value&quot;: {
+      &quot;committed&quot;: false,
+      &quot;result&quot;: {
+        &quot;n&quot;: &quot;03&quot;
+      },
+      &quot;failed_index&quot;: 0,
+      &quot;reason&quot;: &quot;NONCANONICAL_INTEGER_TEXT&quot;,
+      &quot;attempted_steps&quot;: 1,
+      &quot;rollback_preserved&quot;: true
+    },
+    &quot;error&quot;: null,
+    &quot;external_credit&quot;: false
+  }
+}</pre></details></td><td><span class="state completed">completed</span></td></tr>
+<tr data-outcome="completed" data-search="tr6933-p078 occupied rename destination aborts before a write atomic_migration_pipeline"><td>TR6933-P078</td><td><details><summary>Occupied rename destination aborts before a write</summary><p>Operation: <code>atomic_migration_pipeline</code>. Source records remain preserved.</p><pre>{
+  &quot;request&quot;: {
+    &quot;op&quot;: &quot;atomic_migration_pipeline&quot;,
+    &quot;record&quot;: {
+      &quot;a&quot;: 1,
+      &quot;b&quot;: 2
+    },
+    &quot;args&quot;: {
+      &quot;rules&quot;: [
+        {
+          &quot;op&quot;: &quot;rename_preview&quot;,
+          &quot;args&quot;: {
+            &quot;mapping&quot;: {
+              &quot;a&quot;: &quot;b&quot;
+            }
+          }
+        }
+      ],
+      &quot;allow_lossy&quot;: false
+    }
+  },
+  &quot;observed&quot;: {
+    &quot;ok&quot;: true,
+    &quot;disposition&quot;: &quot;completed&quot;,
+    &quot;value&quot;: {
+      &quot;committed&quot;: false,
+      &quot;result&quot;: {
+        &quot;a&quot;: 1,
+        &quot;b&quot;: 2
+      },
+      &quot;failed_index&quot;: 0,
+      &quot;reason&quot;: &quot;destination_occupied:b&quot;,
+      &quot;attempted_steps&quot;: 1,
+      &quot;rollback_preserved&quot;: true
+    },
+    &quot;error&quot;: null,
+    &quot;external_credit&quot;: false
+  }
+}</pre></details></td><td><span class="state completed">completed</span></td></tr>
+<tr data-outcome="completed" data-search="tr6933-p079 a later failed conversion rolls back an earlier default atomic_migration_pipeline"><td>TR6933-P079</td><td><details><summary>A later failed conversion rolls back an earlier default</summary><p>Operation: <code>atomic_migration_pipeline</code>. Source records remain preserved.</p><pre>{
+  &quot;request&quot;: {
+    &quot;op&quot;: &quot;atomic_migration_pipeline&quot;,
+    &quot;record&quot;: {
+      &quot;n&quot;: 1
+    },
+    &quot;args&quot;: {
+      &quot;rules&quot;: [
+        {
+          &quot;op&quot;: &quot;default_overlay&quot;,
+          &quot;args&quot;: {
+            &quot;defaults&quot;: {
+              &quot;x&quot;: 0
+            }
+          }
+        },
+        {
+          &quot;op&quot;: &quot;coercion_preview&quot;,
+          &quot;args&quot;: {
+            &quot;field&quot;: &quot;n&quot;,
+            &quot;conversion&quot;: &quot;boolean_to_text&quot;
+          }
+        }
+      ],
+      &quot;allow_lossy&quot;: false
+    }
+  },
+  &quot;observed&quot;: {
+    &quot;ok&quot;: true,
+    &quot;disposition&quot;: &quot;completed&quot;,
+    &quot;value&quot;: {
+      &quot;committed&quot;: false,
+      &quot;result&quot;: {
+        &quot;n&quot;: 1
+      },
+      &quot;failed_index&quot;: 1,
+      &quot;reason&quot;: &quot;TYPE_MISMATCH&quot;,
+      &quot;attempted_steps&quot;: 2,
+      &quot;rollback_preserved&quot;: true
+    },
+    &quot;error&quot;: null,
+    &quot;external_credit&quot;: false
+  }
+}</pre></details></td><td><span class="state completed">completed</span></td></tr>
+<tr data-outcome="completed" data-search="tr6933-p080 unacknowledged enum information loss aborts the pipeline atomic_migration_pipeline"><td>TR6933-P080</td><td><details><summary>Unacknowledged enum information loss aborts the pipeline</summary><p>Operation: <code>atomic_migration_pipeline</code>. Source records remain preserved.</p><pre>{
+  &quot;request&quot;: {
+    &quot;op&quot;: &quot;atomic_migration_pipeline&quot;,
+    &quot;record&quot;: {
+      &quot;status&quot;: &quot;a&quot;,
+      &quot;keep&quot;: null
+    },
+    &quot;args&quot;: {
+      &quot;rules&quot;: [
+        {
+          &quot;op&quot;: &quot;enum_mapping&quot;,
+          &quot;args&quot;: {
+            &quot;field&quot;: &quot;status&quot;,
+            &quot;mapping&quot;: {
+              &quot;a&quot;: &quot;x&quot;,
+              &quot;b&quot;: &quot;x&quot;
+            }
+          }
+        }
+      ],
+      &quot;allow_lossy&quot;: false
+    }
+  },
+  &quot;observed&quot;: {
+    &quot;ok&quot;: true,
+    &quot;disposition&quot;: &quot;completed&quot;,
+    &quot;value&quot;: {
+      &quot;committed&quot;: false,
+      &quot;result&quot;: {
+        &quot;status&quot;: &quot;a&quot;,
+        &quot;keep&quot;: null
+      },
+      &quot;failed_index&quot;: 0,
+      &quot;reason&quot;: &quot;LOSSY_ENUM_MAPPING&quot;,
+      &quot;attempted_steps&quot;: 1,
+      &quot;rollback_preserved&quot;: true
+    },
+    &quot;error&quot;: null,
+    &quot;external_credit&quot;: false
+  }
+}</pre></details></td><td><span class="state completed">completed</span></td></tr>
+<tr data-outcome="represented" data-search="tr6933-p081 literal field summary for unilateral edit accessible_resolution_summary"><td>TR6933-P081</td><td><details><summary>Literal field summary for unilateral edit</summary><p>Operation: <code>accessible_resolution_summary</code>. Source records remain preserved.</p><pre>{
+  &quot;request&quot;: {
+    &quot;op&quot;: &quot;accessible_resolution_summary&quot;,
+    &quot;record&quot;: {
+      &quot;base&quot;: {
+        &quot;v&quot;: 1,
+        &quot;k&quot;: 0
+      },
+      &quot;left&quot;: {
+        &quot;v&quot;: 2,
+        &quot;k&quot;: 0
+      },
+      &quot;right&quot;: {
+        &quot;v&quot;: 1,
+        &quot;k&quot;: 0
+      }
+    },
+    &quot;args&quot;: {}
+  },
+  &quot;observed&quot;: {
+    &quot;ok&quot;: true,
+    &quot;disposition&quot;: &quot;represented&quot;,
+    &quot;value&quot;: {
+      &quot;rows&quot;: [
+        {
+          &quot;field&quot;: &quot;k&quot;,
+          &quot;state&quot;: &quot;resolved_unchanged&quot;
+        },
+        {
+          &quot;field&quot;: &quot;v&quot;,
+          &quot;state&quot;: &quot;resolved_left&quot;
+        }
+      ],
+      &quot;conflicts&quot;: 0,
+      &quot;manual_review&quot;: false,
+      &quot;operator_decision&quot;: false
+    },
+    &quot;error&quot;: null,
+    &quot;external_credit&quot;: false
+  }
+}</pre></details></td><td><span class="state represented">represented</span></td></tr>
+<tr data-outcome="represented" data-search="tr6933-p082 literal field summary for equal edits accessible_resolution_summary"><td>TR6933-P082</td><td><details><summary>Literal field summary for equal edits</summary><p>Operation: <code>accessible_resolution_summary</code>. Source records remain preserved.</p><pre>{
+  &quot;request&quot;: {
+    &quot;op&quot;: &quot;accessible_resolution_summary&quot;,
+    &quot;record&quot;: {
+      &quot;base&quot;: {
+        &quot;v&quot;: 1
+      },
+      &quot;left&quot;: {
+        &quot;v&quot;: 2
+      },
+      &quot;right&quot;: {
+        &quot;v&quot;: 2
+      }
+    },
+    &quot;args&quot;: {}
+  },
+  &quot;observed&quot;: {
+    &quot;ok&quot;: true,
+    &quot;disposition&quot;: &quot;represented&quot;,
+    &quot;value&quot;: {
+      &quot;rows&quot;: [
+        {
+          &quot;field&quot;: &quot;v&quot;,
+          &quot;state&quot;: &quot;resolved_both&quot;
+        }
+      ],
+      &quot;conflicts&quot;: 0,
+      &quot;manual_review&quot;: false,
+      &quot;operator_decision&quot;: false
+    },
+    &quot;error&quot;: null,
+    &quot;external_credit&quot;: false
+  }
+}</pre></details></td><td><span class="state represented">represented</span></td></tr>
+<tr data-outcome="represented" data-search="tr6933-p083 literal field summary for different edits accessible_resolution_summary"><td>TR6933-P083</td><td><details><summary>Literal field summary for different edits</summary><p>Operation: <code>accessible_resolution_summary</code>. Source records remain preserved.</p><pre>{
+  &quot;request&quot;: {
+    &quot;op&quot;: &quot;accessible_resolution_summary&quot;,
+    &quot;record&quot;: {
+      &quot;base&quot;: {
+        &quot;v&quot;: 1
+      },
+      &quot;left&quot;: {
+        &quot;v&quot;: 2
+      },
+      &quot;right&quot;: {
+        &quot;v&quot;: 3
+      }
+    },
+    &quot;args&quot;: {}
+  },
+  &quot;observed&quot;: {
+    &quot;ok&quot;: true,
+    &quot;disposition&quot;: &quot;represented&quot;,
+    &quot;value&quot;: {
+      &quot;rows&quot;: [
+        {
+          &quot;field&quot;: &quot;v&quot;,
+          &quot;state&quot;: &quot;different_edits&quot;
+        }
+      ],
+      &quot;conflicts&quot;: 1,
+      &quot;manual_review&quot;: false,
+      &quot;operator_decision&quot;: false
+    },
+    &quot;error&quot;: null,
+    &quot;external_credit&quot;: false
+  }
+}</pre></details></td><td><span class="state represented">represented</span></td></tr>
+<tr data-outcome="represented" data-search="tr6933-p084 literal field summary for delete versus modify accessible_resolution_summary"><td>TR6933-P084</td><td><details><summary>Literal field summary for delete versus modify</summary><p>Operation: <code>accessible_resolution_summary</code>. Source records remain preserved.</p><pre>{
+  &quot;request&quot;: {
+    &quot;op&quot;: &quot;accessible_resolution_summary&quot;,
+    &quot;record&quot;: {
+      &quot;base&quot;: {
+        &quot;v&quot;: 1
+      },
+      &quot;left&quot;: {},
+      &quot;right&quot;: {
+        &quot;v&quot;: 2
+      }
+    },
+    &quot;args&quot;: {}
+  },
+  &quot;observed&quot;: {
+    &quot;ok&quot;: true,
+    &quot;disposition&quot;: &quot;represented&quot;,
+    &quot;value&quot;: {
+      &quot;rows&quot;: [
+        {
+          &quot;field&quot;: &quot;v&quot;,
+          &quot;state&quot;: &quot;delete_modify&quot;
+        }
+      ],
+      &quot;conflicts&quot;: 1,
+      &quot;manual_review&quot;: false,
+      &quot;operator_decision&quot;: false
+    },
+    &quot;error&quot;: null,
+    &quot;external_credit&quot;: false
+  }
+}</pre></details></td><td><span class="state represented">represented</span></td></tr>
+<tr data-outcome="represented" data-search="tr6933-p085 literal field summary for contrary additions accessible_resolution_summary"><td>TR6933-P085</td><td><details><summary>Literal field summary for contrary additions</summary><p>Operation: <code>accessible_resolution_summary</code>. Source records remain preserved.</p><pre>{
+  &quot;request&quot;: {
+    &quot;op&quot;: &quot;accessible_resolution_summary&quot;,
+    &quot;record&quot;: {
+      &quot;base&quot;: {},
+      &quot;left&quot;: {
+        &quot;v&quot;: null
+      },
+      &quot;right&quot;: {
+        &quot;v&quot;: false
+      }
+    },
+    &quot;args&quot;: {}
+  },
+  &quot;observed&quot;: {
+    &quot;ok&quot;: true,
+    &quot;disposition&quot;: &quot;represented&quot;,
+    &quot;value&quot;: {
+      &quot;rows&quot;: [
+        {
+          &quot;field&quot;: &quot;v&quot;,
+          &quot;state&quot;: &quot;concurrent_add&quot;
+        }
+      ],
+      &quot;conflicts&quot;: 1,
+      &quot;manual_review&quot;: false,
+      &quot;operator_decision&quot;: false
+    },
+    &quot;error&quot;: null,
+    &quot;external_credit&quot;: false
+  }
+}</pre></details></td><td><span class="state represented">represented</span></td></tr>
+<tr data-outcome="represented" data-search="tr6933-p086 a correction appends beside its rejected predecessor correction_context"><td>TR6933-P086</td><td><details><summary>A correction appends beside its rejected predecessor</summary><p>Operation: <code>correction_context</code>. Source records remain preserved.</p><pre>{
+  &quot;request&quot;: {
+    &quot;op&quot;: &quot;correction_context&quot;,
+    &quot;record&quot;: {
+      &quot;prior&quot;: [
+        {
+          &quot;id&quot;: &quot;r1&quot;,
+          &quot;state&quot;: &quot;rejected&quot;,
+          &quot;context&quot;: &quot;aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa&quot;,
+          &quot;retained&quot;: true
+        }
+      ],
+      &quot;correction&quot;: {
+        &quot;id&quot;: &quot;r2&quot;,
+        &quot;supersedes&quot;: &quot;r1&quot;,
+        &quot;context&quot;: &quot;aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa&quot;,
+        &quot;state&quot;: &quot;represented&quot;
+      }
+    },
+    &quot;args&quot;: {}
+  },
+  &quot;observed&quot;: {
+    &quot;ok&quot;: true,
+    &quot;disposition&quot;: &quot;represented&quot;,
+    &quot;value&quot;: {
+      &quot;accepted&quot;: true,
+      &quot;reason&quot;: null,
+      &quot;records&quot;: [
+        {
+          &quot;id&quot;: &quot;r1&quot;,
+          &quot;state&quot;: &quot;rejected&quot;,
+          &quot;context&quot;: &quot;aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa&quot;,
+          &quot;retained&quot;: true
+        },
+        {
+          &quot;id&quot;: &quot;r2&quot;,
+          &quot;supersedes&quot;: &quot;r1&quot;,
+          &quot;context&quot;: &quot;aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa&quot;,
+          &quot;state&quot;: &quot;represented&quot;
+        }
+      ],
+      &quot;predecessor_erased&quot;: false
+    },
+    &quot;error&quot;: null,
+    &quot;external_credit&quot;: false
+  }
+}</pre></details></td><td><span class="state represented">represented</span></td></tr>
+<tr data-outcome="represented" data-search="tr6933-p087 a new source context cannot amend the old attempt correction_context"><td>TR6933-P087</td><td><details><summary>A new source context cannot amend the old attempt</summary><p>Operation: <code>correction_context</code>. Source records remain preserved.</p><pre>{
+  &quot;request&quot;: {
+    &quot;op&quot;: &quot;correction_context&quot;,
+    &quot;record&quot;: {
+      &quot;prior&quot;: [
+        {
+          &quot;id&quot;: &quot;r1&quot;,
+          &quot;state&quot;: &quot;rejected&quot;,
+          &quot;context&quot;: &quot;aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa&quot;,
+          &quot;retained&quot;: true
+        }
+      ],
+      &quot;correction&quot;: {
+        &quot;id&quot;: &quot;r2&quot;,
+        &quot;supersedes&quot;: &quot;r1&quot;,
+        &quot;context&quot;: &quot;bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb&quot;,
+        &quot;state&quot;: &quot;represented&quot;
+      }
+    },
+    &quot;args&quot;: {}
+  },
+  &quot;observed&quot;: {
+    &quot;ok&quot;: true,
+    &quot;disposition&quot;: &quot;represented&quot;,
+    &quot;value&quot;: {
+      &quot;accepted&quot;: false,
+      &quot;reason&quot;: &quot;STALE_CONTEXT&quot;,
+      &quot;records&quot;: [
+        {
+          &quot;id&quot;: &quot;r1&quot;,
+          &quot;state&quot;: &quot;rejected&quot;,
+          &quot;context&quot;: &quot;aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa&quot;,
+          &quot;retained&quot;: true
+        }
+      ],
+      &quot;predecessor_erased&quot;: false
+    },
+    &quot;error&quot;: null,
+    &quot;external_credit&quot;: false
+  }
+}</pre></details></td><td><span class="state represented">represented</span></td></tr>
+<tr data-outcome="represented" data-search="tr6933-p088 an unknown predecessor prevents attachment correction_context"><td>TR6933-P088</td><td><details><summary>An unknown predecessor prevents attachment</summary><p>Operation: <code>correction_context</code>. Source records remain preserved.</p><pre>{
+  &quot;request&quot;: {
+    &quot;op&quot;: &quot;correction_context&quot;,
+    &quot;record&quot;: {
+      &quot;prior&quot;: [
+        {
+          &quot;id&quot;: &quot;r1&quot;,
+          &quot;state&quot;: &quot;rejected&quot;,
+          &quot;context&quot;: &quot;aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa&quot;,
+          &quot;retained&quot;: true
+        }
+      ],
+      &quot;correction&quot;: {
+        &quot;id&quot;: &quot;r2&quot;,
+        &quot;supersedes&quot;: &quot;missing&quot;,
+        &quot;context&quot;: &quot;aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa&quot;,
+        &quot;state&quot;: &quot;represented&quot;
+      }
+    },
+    &quot;args&quot;: {}
+  },
+  &quot;observed&quot;: {
+    &quot;ok&quot;: true,
+    &quot;disposition&quot;: &quot;represented&quot;,
+    &quot;value&quot;: {
+      &quot;accepted&quot;: false,
+      &quot;reason&quot;: &quot;UNKNOWN_PREDECESSOR&quot;,
+      &quot;records&quot;: [
+        {
+          &quot;id&quot;: &quot;r1&quot;,
+          &quot;state&quot;: &quot;rejected&quot;,
+          &quot;context&quot;: &quot;aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa&quot;,
+          &quot;retained&quot;: true
+        }
+      ],
+      &quot;predecessor_erased&quot;: false
+    },
+    &quot;error&quot;: null,
+    &quot;external_credit&quot;: false
+  }
+}</pre></details></td><td><span class="state represented">represented</span></td></tr>
+<tr data-outcome="represented" data-search="tr6933-p089 a repeated correction identifier is refused correction_context"><td>TR6933-P089</td><td><details><summary>A repeated correction identifier is refused</summary><p>Operation: <code>correction_context</code>. Source records remain preserved.</p><pre>{
+  &quot;request&quot;: {
+    &quot;op&quot;: &quot;correction_context&quot;,
+    &quot;record&quot;: {
+      &quot;prior&quot;: [
+        {
+          &quot;id&quot;: &quot;r1&quot;,
+          &quot;state&quot;: &quot;rejected&quot;,
+          &quot;context&quot;: &quot;aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa&quot;,
+          &quot;retained&quot;: true
+        }
+      ],
+      &quot;correction&quot;: {
+        &quot;id&quot;: &quot;r1&quot;,
+        &quot;supersedes&quot;: &quot;r1&quot;,
+        &quot;context&quot;: &quot;aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa&quot;,
+        &quot;state&quot;: &quot;represented&quot;
+      }
+    },
+    &quot;args&quot;: {}
+  },
+  &quot;observed&quot;: {
+    &quot;ok&quot;: true,
+    &quot;disposition&quot;: &quot;represented&quot;,
+    &quot;value&quot;: {
+      &quot;accepted&quot;: false,
+      &quot;reason&quot;: &quot;DUPLICATE_ID&quot;,
+      &quot;records&quot;: [
+        {
+          &quot;id&quot;: &quot;r1&quot;,
+          &quot;state&quot;: &quot;rejected&quot;,
+          &quot;context&quot;: &quot;aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa&quot;,
+          &quot;retained&quot;: true
+        }
+      ],
+      &quot;predecessor_erased&quot;: false
+    },
+    &quot;error&quot;: null,
+    &quot;external_credit&quot;: false
+  }
+}</pre></details></td><td><span class="state represented">represented</span></td></tr>
+<tr data-outcome="represented" data-search="tr6933-p090 a held predecessor stays held after an additive correction correction_context"><td>TR6933-P090</td><td><details><summary>A held predecessor stays held after an additive correction</summary><p>Operation: <code>correction_context</code>. Source records remain preserved.</p><pre>{
+  &quot;request&quot;: {
+    &quot;op&quot;: &quot;correction_context&quot;,
+    &quot;record&quot;: {
+      &quot;prior&quot;: [
+        {
+          &quot;id&quot;: &quot;r1&quot;,
+          &quot;state&quot;: &quot;held&quot;,
+          &quot;context&quot;: &quot;aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa&quot;,
+          &quot;retained&quot;: true
+        }
+      ],
+      &quot;correction&quot;: {
+        &quot;id&quot;: &quot;r2&quot;,
+        &quot;supersedes&quot;: &quot;r1&quot;,
+        &quot;context&quot;: &quot;aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa&quot;,
+        &quot;state&quot;: &quot;represented&quot;
+      }
+    },
+    &quot;args&quot;: {}
+  },
+  &quot;observed&quot;: {
+    &quot;ok&quot;: true,
+    &quot;disposition&quot;: &quot;represented&quot;,
+    &quot;value&quot;: {
+      &quot;accepted&quot;: true,
+      &quot;reason&quot;: null,
+      &quot;records&quot;: [
+        {
+          &quot;id&quot;: &quot;r1&quot;,
+          &quot;state&quot;: &quot;held&quot;,
+          &quot;context&quot;: &quot;aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa&quot;,
+          &quot;retained&quot;: true
+        },
+        {
+          &quot;id&quot;: &quot;r2&quot;,
+          &quot;supersedes&quot;: &quot;r1&quot;,
+          &quot;context&quot;: &quot;aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa&quot;,
+          &quot;state&quot;: &quot;represented&quot;
+        }
+      ],
+      &quot;predecessor_erased&quot;: false
+    },
+    &quot;error&quot;: null,
+    &quot;external_credit&quot;: false
+  }
+}</pre></details></td><td><span class="state represented">represented</span></td></tr>
+<tr data-outcome="open_gap" data-search="tr6933-p091 absent operator evidence remains an open gap external_migration_evidence"><td>TR6933-P091</td><td><details><summary>Absent operator evidence remains an open gap</summary><p>Operation: <code>external_migration_evidence</code>. Source records remain preserved.</p><pre>{
+  &quot;request&quot;: {
+    &quot;op&quot;: &quot;external_migration_evidence&quot;,
+    &quot;record&quot;: {
+      &quot;requirements&quot;: [
+        &quot;operator&quot;
+      ],
+      &quot;evidence&quot;: {}
+    },
+    &quot;args&quot;: {}
+  },
+  &quot;observed&quot;: {
+    &quot;ok&quot;: true,
+    &quot;disposition&quot;: &quot;open_gap&quot;,
+    &quot;value&quot;: {
+      &quot;missing&quot;: [
+        &quot;operator&quot;
+      ],
+      &quot;provided&quot;: [],
+      &quot;external_qualified&quot;: false,
+      &quot;release&quot;: false
+    },
+    &quot;error&quot;: null,
+    &quot;external_credit&quot;: false
+  }
+}</pre></details></td><td><span class="state open_gap">open_gap</span></td></tr>
+<tr data-outcome="open_gap" data-search="tr6933-p092 a synthetic compatibility note does not supply rollback evidence external_migration_evidence"><td>TR6933-P092</td><td><details><summary>A synthetic compatibility note does not supply rollback evidence</summary><p>Operation: <code>external_migration_evidence</code>. Source records remain preserved.</p><pre>{
+  &quot;request&quot;: {
+    &quot;op&quot;: &quot;external_migration_evidence&quot;,
+    &quot;record&quot;: {
+      &quot;requirements&quot;: [
+        &quot;compatibility&quot;,
+        &quot;rollback&quot;
+      ],
+      &quot;evidence&quot;: {
+        &quot;compatibility&quot;: {
+          &quot;class&quot;: &quot;synthetic&quot;
+        }
+      }
+    },
+    &quot;args&quot;: {}
+  },
+  &quot;observed&quot;: {
+    &quot;ok&quot;: true,
+    &quot;disposition&quot;: &quot;open_gap&quot;,
+    &quot;value&quot;: {
+      &quot;missing&quot;: [
+        &quot;rollback&quot;
+      ],
+      &quot;provided&quot;: [
+        &quot;compatibility&quot;
+      ],
+      &quot;external_qualified&quot;: false,
+      &quot;release&quot;: false
+    },
+    &quot;error&quot;: null,
+    &quot;external_credit&quot;: false
+  }
+}</pre></details></td><td><span class="state open_gap">open_gap</span></td></tr>
+<tr data-outcome="open_gap" data-search="tr6933-p093 null human review is still absent external_migration_evidence"><td>TR6933-P093</td><td><details><summary>Null human review is still absent</summary><p>Operation: <code>external_migration_evidence</code>. Source records remain preserved.</p><pre>{
+  &quot;request&quot;: {
+    &quot;op&quot;: &quot;external_migration_evidence&quot;,
+    &quot;record&quot;: {
+      &quot;requirements&quot;: [
+        &quot;human_review&quot;
+      ],
+      &quot;evidence&quot;: {
+        &quot;human_review&quot;: null
+      }
+    },
+    &quot;args&quot;: {}
+  },
+  &quot;observed&quot;: {
+    &quot;ok&quot;: true,
+    &quot;disposition&quot;: &quot;open_gap&quot;,
+    &quot;value&quot;: {
+      &quot;missing&quot;: [
+        &quot;human_review&quot;
+      ],
+      &quot;provided&quot;: [],
+      &quot;external_qualified&quot;: false,
+      &quot;release&quot;: false
+    },
+    &quot;error&quot;: null,
+    &quot;external_credit&quot;: false
+  }
+}</pre></details></td><td><span class="state open_gap">open_gap</span></td></tr>
+<tr data-outcome="open_gap" data-search="tr6933-p094 same-owner review is present metadata without independent qualification external_migration_evidence"><td>TR6933-P094</td><td><details><summary>Same-owner review is present metadata without independent qualification</summary><p>Operation: <code>external_migration_evidence</code>. Source records remain preserved.</p><pre>{
+  &quot;request&quot;: {
+    &quot;op&quot;: &quot;external_migration_evidence&quot;,
+    &quot;record&quot;: {
+      &quot;requirements&quot;: [
+        &quot;independent_review&quot;
+      ],
+      &quot;evidence&quot;: {
+        &quot;independent_review&quot;: {
+          &quot;class&quot;: &quot;same_owner&quot;
+        }
+      }
+    },
+    &quot;args&quot;: {}
+  },
+  &quot;observed&quot;: {
+    &quot;ok&quot;: true,
+    &quot;disposition&quot;: &quot;open_gap&quot;,
+    &quot;value&quot;: {
+      &quot;missing&quot;: [],
+      &quot;provided&quot;: [
+        &quot;independent_review&quot;
+      ],
+      &quot;external_qualified&quot;: false,
+      &quot;release&quot;: false
+    },
+    &quot;error&quot;: null,
+    &quot;external_credit&quot;: false
+  }
+}</pre></details></td><td><span class="state open_gap">open_gap</span></td></tr>
+<tr data-outcome="open_gap" data-search="tr6933-p095 rights and maori authority require competent external evidence external_migration_evidence"><td>TR6933-P095</td><td><details><summary>Rights and Maori authority require competent external evidence</summary><p>Operation: <code>external_migration_evidence</code>. Source records remain preserved.</p><pre>{
+  &quot;request&quot;: {
+    &quot;op&quot;: &quot;external_migration_evidence&quot;,
+    &quot;record&quot;: {
+      &quot;requirements&quot;: [
+        &quot;rights&quot;,
+        &quot;maori_authority&quot;
+      ],
+      &quot;evidence&quot;: {
+        &quot;rights&quot;: null,
+        &quot;maori_authority&quot;: null
+      }
+    },
+    &quot;args&quot;: {}
+  },
+  &quot;observed&quot;: {
+    &quot;ok&quot;: true,
+    &quot;disposition&quot;: &quot;open_gap&quot;,
+    &quot;value&quot;: {
+      &quot;missing&quot;: [
+        &quot;maori_authority&quot;,
+        &quot;rights&quot;
+      ],
+      &quot;provided&quot;: [],
+      &quot;external_qualified&quot;: false,
+      &quot;release&quot;: false
+    },
+    &quot;error&quot;: null,
+    &quot;external_credit&quot;: false
+  }
+}</pre></details></td><td><span class="state open_gap">open_gap</span></td></tr>
+<tr data-outcome="exact_gate" data-search="tr6933-p096 reserve deploy despite local permission assertions operator_release_gate"><td>TR6933-P096</td><td><details><summary>Reserve deploy despite local permission assertions</summary><p>Operation: <code>operator_release_gate</code>. Source records remain preserved.</p><pre>{
+  &quot;request&quot;: {
+    &quot;op&quot;: &quot;operator_release_gate&quot;,
+    &quot;record&quot;: {
+      &quot;target&quot;: &quot;synthetic-config-A&quot;,
+      &quot;authority&quot;: null,
+      &quot;evidence&quot;: null
+    },
+    &quot;args&quot;: {
+      &quot;requested&quot;: &quot;deploy&quot;
+    }
+  },
+  &quot;observed&quot;: {
+    &quot;ok&quot;: true,
+    &quot;disposition&quot;: &quot;exact_gate&quot;,
+    &quot;value&quot;: {
+      &quot;requested&quot;: &quot;deploy&quot;,
+      &quot;target&quot;: &quot;synthetic-config-A&quot;,
+      &quot;required&quot;: [
+        &quot;competent_operator&quot;,
+        &quot;external_validation&quot;,
+        &quot;rollback_evidence&quot;
+      ],
+      &quot;released&quot;: false,
+      &quot;assertions_verified&quot;: false
+    },
+    &quot;error&quot;: null,
+    &quot;external_credit&quot;: false
+  }
+}</pre></details></td><td><span class="state exact_gate">exact_gate</span></td></tr>
+<tr data-outcome="exact_gate" data-search="tr6933-p097 reserve publish despite local permission assertions operator_release_gate"><td>TR6933-P097</td><td><details><summary>Reserve publish despite local permission assertions</summary><p>Operation: <code>operator_release_gate</code>. Source records remain preserved.</p><pre>{
+  &quot;request&quot;: {
+    &quot;op&quot;: &quot;operator_release_gate&quot;,
+    &quot;record&quot;: {
+      &quot;target&quot;: &quot;synthetic-config-B&quot;,
+      &quot;authority&quot;: {
+        &quot;declared&quot;: true
+      },
+      &quot;evidence&quot;: null
+    },
+    &quot;args&quot;: {
+      &quot;requested&quot;: &quot;publish&quot;
+    }
+  },
+  &quot;observed&quot;: {
+    &quot;ok&quot;: true,
+    &quot;disposition&quot;: &quot;exact_gate&quot;,
+    &quot;value&quot;: {
+      &quot;requested&quot;: &quot;publish&quot;,
+      &quot;target&quot;: &quot;synthetic-config-B&quot;,
+      &quot;required&quot;: [
+        &quot;rights_holder&quot;,
+        &quot;affected_people&quot;,
+        &quot;privacy_review&quot;
+      ],
+      &quot;released&quot;: false,
+      &quot;assertions_verified&quot;: false
+    },
+    &quot;error&quot;: null,
+    &quot;external_credit&quot;: false
+  }
+}</pre></details></td><td><span class="state exact_gate">exact_gate</span></td></tr>
+<tr data-outcome="exact_gate" data-search="tr6933-p098 reserve replace despite local permission assertions operator_release_gate"><td>TR6933-P098</td><td><details><summary>Reserve replace despite local permission assertions</summary><p>Operation: <code>operator_release_gate</code>. Source records remain preserved.</p><pre>{
+  &quot;request&quot;: {
+    &quot;op&quot;: &quot;operator_release_gate&quot;,
+    &quot;record&quot;: {
+      &quot;target&quot;: &quot;synthetic-config-C&quot;,
+      &quot;authority&quot;: null,
+      &quot;evidence&quot;: {
+        &quot;declared&quot;: true
+      }
+    },
+    &quot;args&quot;: {
+      &quot;requested&quot;: &quot;replace&quot;
+    }
+  },
+  &quot;observed&quot;: {
+    &quot;ok&quot;: true,
+    &quot;disposition&quot;: &quot;exact_gate&quot;,
+    &quot;value&quot;: {
+      &quot;requested&quot;: &quot;replace&quot;,
+      &quot;target&quot;: &quot;synthetic-config-C&quot;,
+      &quot;required&quot;: [
+        &quot;competent_operator&quot;,
+        &quot;exact_target&quot;,
+        &quot;recoverable_source&quot;
+      ],
+      &quot;released&quot;: false,
+      &quot;assertions_verified&quot;: false
+    },
+    &quot;error&quot;: null,
+    &quot;external_credit&quot;: false
+  }
+}</pre></details></td><td><span class="state exact_gate">exact_gate</span></td></tr>
+<tr data-outcome="exact_gate" data-search="tr6933-p099 reserve delete despite local permission assertions operator_release_gate"><td>TR6933-P099</td><td><details><summary>Reserve delete despite local permission assertions</summary><p>Operation: <code>operator_release_gate</code>. Source records remain preserved.</p><pre>{
+  &quot;request&quot;: {
+    &quot;op&quot;: &quot;operator_release_gate&quot;,
+    &quot;record&quot;: {
+      &quot;target&quot;: &quot;synthetic-config-D&quot;,
+      &quot;authority&quot;: {
+        &quot;declared&quot;: true
+      },
+      &quot;evidence&quot;: {
+        &quot;declared&quot;: true
+      }
+    },
+    &quot;args&quot;: {
+      &quot;requested&quot;: &quot;delete&quot;
+    }
+  },
+  &quot;observed&quot;: {
+    &quot;ok&quot;: true,
+    &quot;disposition&quot;: &quot;exact_gate&quot;,
+    &quot;value&quot;: {
+      &quot;requested&quot;: &quot;delete&quot;,
+      &quot;target&quot;: &quot;synthetic-config-D&quot;,
+      &quot;required&quot;: [
+        &quot;exact_destructive_authority&quot;,
+        &quot;recoverable_source&quot;
+      ],
+      &quot;released&quot;: false,
+      &quot;assertions_verified&quot;: false
+    },
+    &quot;error&quot;: null,
+    &quot;external_credit&quot;: false
+  }
+}</pre></details></td><td><span class="state exact_gate">exact_gate</span></td></tr>
+<tr data-outcome="exact_gate" data-search="tr6933-p100 reserve maori_label despite local permission assertions operator_release_gate"><td>TR6933-P100</td><td><details><summary>Reserve maori_label despite local permission assertions</summary><p>Operation: <code>operator_release_gate</code>. Source records remain preserved.</p><pre>{
+  &quot;request&quot;: {
+    &quot;op&quot;: &quot;operator_release_gate&quot;,
+    &quot;record&quot;: {
+      &quot;target&quot;: &quot;synthetic-config-E&quot;,
+      &quot;authority&quot;: null,
+      &quot;evidence&quot;: {
+        &quot;declared&quot;: true
+      }
+    },
+    &quot;args&quot;: {
+      &quot;requested&quot;: &quot;maori_label&quot;
+    }
+  },
+  &quot;observed&quot;: {
+    &quot;ok&quot;: true,
+    &quot;disposition&quot;: &quot;exact_gate&quot;,
+    &quot;value&quot;: {
+      &quot;requested&quot;: &quot;maori_label&quot;,
+      &quot;target&quot;: &quot;synthetic-config-E&quot;,
+      &quot;required&quot;: [
+        &quot;maori_authority&quot;,
+        &quot;affected_people&quot;
+      ],
+      &quot;released&quot;: false,
+      &quot;assertions_verified&quot;: false
+    },
+    &quot;error&quot;: null,
+    &quot;external_credit&quot;: false
+  }
+}</pre></details></td><td><span class="state exact_gate">exact_gate</span></td></tr></tbody></table></div></section><footer>Four-tier deck: 1 owner anchor, 3 pillars, 4 practices and 100 task cards. Relational role and hope language supplies no identity or authority evidence. Source records and failed subjects remain retained. No external network resources or executable input data are used.</footer></main><script>'use strict';
+const search=document.getElementById('search'),outcome=document.getElementById('outcome'),status=document.getElementById('status'),rows=[...document.querySelectorAll('tbody tr')];
+function matches(text,state,query,filter){return text.includes(query.trim().toLowerCase())&&(filter==='all'||filter===state);}
+function update(){let count=0;for(const row of rows){row.hidden=!matches(row.dataset.search,row.dataset.outcome,search.value,outcome.value);if(!row.hidden)count++;}status.textContent=count+' of 100 proposal records shown';}
+search.addEventListener('input',update);outcome.addEventListener('change',update);document.getElementById('clear').addEventListener('click',()=>{search.value='';outcome.value='all';update();search.focus();});update();</script></body></html>

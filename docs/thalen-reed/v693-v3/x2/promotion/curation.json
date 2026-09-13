@@ -1,0 +1,307 @@
+{
+  "groups": [
+    {
+      "name": "fields",
+      "indices": [
+        0,
+        1,
+        6,
+        8
+      ],
+      "skill": "ghc-family-config-reconcile-fields",
+      "runner": "ghc_family_config_reconcile_fields.txt",
+      "operations": [
+        "field_inventory",
+        "field_correspondence",
+        "required_field_check",
+        "schema_delta"
+      ],
+      "sources": [
+        {
+          "stage": "x1",
+          "skill": "ghc-family-migration-field-inventory"
+        },
+        {
+          "stage": "x1",
+          "skill": "ghc-family-migration-field-correspondence"
+        },
+        {
+          "stage": "x1",
+          "skill": "ghc-family-migration-required-field-check"
+        },
+        {
+          "stage": "x1",
+          "skill": "ghc-family-migration-schema-delta"
+        }
+      ],
+      "source_bindings": [
+        {
+          "path": "x1/skills/ghc-family-migration-field-inventory/SKILL.md",
+          "sha256": "3d3617b267722fe089e78d898deff3c47298f6f9b9df93d54a4b5941d9d1c445"
+        },
+        {
+          "path": "x1/skills/ghc-family-migration-field-correspondence/SKILL.md",
+          "sha256": "4a3e2615db59195d53310c3f7470f9532bb2824bbdf78754d13642dd067c7bae"
+        },
+        {
+          "path": "x1/skills/ghc-family-migration-required-field-check/SKILL.md",
+          "sha256": "433733bd4c9f9065122c92e95b3fb24fcbe159b66900123e362c6b49d290e757"
+        },
+        {
+          "path": "x1/skills/ghc-family-migration-schema-delta/SKILL.md",
+          "sha256": "8b8c3cec1621bfc165d8d33cb7ae4cae57823bb75acb849028dd1fbe77624908"
+        }
+      ],
+      "shared_library_sha256": "c600609ff627cf8805d81e7a96688996c2a6a39f104f66691d1276206606e00a",
+      "disposition": "remaster_additive",
+      "known_owner_callers": 4,
+      "external_callers": "open_gap",
+      "local_entrypoints_retained": true,
+      "overwrites": 0
+    },
+    {
+      "name": "rules",
+      "indices": [
+        2,
+        3,
+        4,
+        5
+      ],
+      "skill": "ghc-family-config-reconcile-rules",
+      "runner": "ghc_family_config_reconcile_rules.txt",
+      "operations": [
+        "rename_preview",
+        "default_overlay",
+        "coercion_preview",
+        "enum_mapping"
+      ],
+      "sources": [
+        {
+          "stage": "x1",
+          "skill": "ghc-family-migration-rename-preview"
+        },
+        {
+          "stage": "x1",
+          "skill": "ghc-family-migration-default-overlay"
+        },
+        {
+          "stage": "x1",
+          "skill": "ghc-family-migration-coercion-preview"
+        },
+        {
+          "stage": "x1",
+          "skill": "ghc-family-migration-enum-mapping"
+        }
+      ],
+      "source_bindings": [
+        {
+          "path": "x1/skills/ghc-family-migration-rename-preview/SKILL.md",
+          "sha256": "50b63a3e0f7b134fc0877394a445a789cc136c83fcb5ba88186e390200eb102f"
+        },
+        {
+          "path": "x1/skills/ghc-family-migration-default-overlay/SKILL.md",
+          "sha256": "8bf57385d6c2e3634b48b7564ac71750096b999ebd35dc07f0d35dda8328cc9d"
+        },
+        {
+          "path": "x1/skills/ghc-family-migration-coercion-preview/SKILL.md",
+          "sha256": "7588a9ce004c5aee71a97684bb51ce7bb1988f2d5684eff863d4cee9dfd74e54"
+        },
+        {
+          "path": "x1/skills/ghc-family-migration-enum-mapping/SKILL.md",
+          "sha256": "d8629f813cc61448a453d56d13c1f550eadb41ddfe22cd627df204c26e7489f2"
+        }
+      ],
+      "shared_library_sha256": "c600609ff627cf8805d81e7a96688996c2a6a39f104f66691d1276206606e00a",
+      "disposition": "remaster_additive",
+      "known_owner_callers": 4,
+      "external_callers": "open_gap",
+      "local_entrypoints_retained": true,
+      "overwrites": 0
+    },
+    {
+      "name": "conflicts",
+      "indices": [
+        10,
+        11,
+        12,
+        13
+      ],
+      "skill": "ghc-family-config-reconcile-conflicts",
+      "runner": "ghc_family_config_reconcile_conflicts.txt",
+      "operations": [
+        "three_way_merge",
+        "conflict_kinds",
+        "resolution_preview",
+        "resolution_receipt"
+      ],
+      "sources": [
+        {
+          "stage": "x2",
+          "skill": "ghc-family-migration-three-way-merge"
+        },
+        {
+          "stage": "x2",
+          "skill": "ghc-family-migration-conflict-kinds"
+        },
+        {
+          "stage": "x2",
+          "skill": "ghc-family-migration-resolution-preview"
+        },
+        {
+          "stage": "x2",
+          "skill": "ghc-family-migration-resolution-receipt"
+        }
+      ],
+      "source_bindings": [
+        {
+          "path": "x2/skills/ghc-family-migration-three-way-merge/SKILL.md",
+          "sha256": "84b8e9fa6d25708ec21bb6a8384257a146c59c5ea89443a0ef737381b2c1bf8f"
+        },
+        {
+          "path": "x2/skills/ghc-family-migration-conflict-kinds/SKILL.md",
+          "sha256": "68d94d738913ec481d122560c78218520ee9c3002f2b9c33ebdda72eb0624f36"
+        },
+        {
+          "path": "x2/skills/ghc-family-migration-resolution-preview/SKILL.md",
+          "sha256": "afc7c7c98dbaacfe35b37b8e1cfa3d31760c2f0f62ce805b737c1dcfa066baaf"
+        },
+        {
+          "path": "x2/skills/ghc-family-migration-resolution-receipt/SKILL.md",
+          "sha256": "36c47d4c99bc0e4788dc25a4b7d8403dc10e2bc4c8488482ae5c18afbea5872b"
+        }
+      ],
+      "shared_library_sha256": "c600609ff627cf8805d81e7a96688996c2a6a39f104f66691d1276206606e00a",
+      "disposition": "remaster_additive",
+      "known_owner_callers": 4,
+      "external_callers": "open_gap",
+      "local_entrypoints_retained": true,
+      "overwrites": 0
+    },
+    {
+      "name": "recovery",
+      "indices": [
+        9,
+        14,
+        15,
+        17
+      ],
+      "skill": "ghc-family-config-reconcile-recovery",
+      "runner": "ghc_family_config_reconcile_recovery.txt",
+      "operations": [
+        "rename_cycle_analysis",
+        "loss_snapshot",
+        "atomic_migration_pipeline",
+        "correction_context"
+      ],
+      "sources": [
+        {
+          "stage": "x1",
+          "skill": "ghc-family-migration-rename-cycle-analysis"
+        },
+        {
+          "stage": "x2",
+          "skill": "ghc-family-migration-loss-snapshot"
+        },
+        {
+          "stage": "x2",
+          "skill": "ghc-family-migration-atomic-migration-pipeline"
+        },
+        {
+          "stage": "x2",
+          "skill": "ghc-family-migration-correction-context"
+        }
+      ],
+      "source_bindings": [
+        {
+          "path": "x1/skills/ghc-family-migration-rename-cycle-analysis/SKILL.md",
+          "sha256": "8a81233cec307619a68969e046eff6f6c7c3d8f48f2f1f006b3220c5452a4922"
+        },
+        {
+          "path": "x2/skills/ghc-family-migration-loss-snapshot/SKILL.md",
+          "sha256": "1471573eba78555501c809fd1838d35d7adeee66ddd32aca9ecbc110f24fb1bc"
+        },
+        {
+          "path": "x2/skills/ghc-family-migration-atomic-migration-pipeline/SKILL.md",
+          "sha256": "148fcae9c474c21d030a5423b9dc56015aa2ba4a4e7ab00c37f62b536379b458"
+        },
+        {
+          "path": "x2/skills/ghc-family-migration-correction-context/SKILL.md",
+          "sha256": "d3f99f51b95f741a04975009d70328c66e49a57dd5657608b65145294ce18a11"
+        }
+      ],
+      "shared_library_sha256": "c600609ff627cf8805d81e7a96688996c2a6a39f104f66691d1276206606e00a",
+      "disposition": "remaster_additive",
+      "known_owner_callers": 4,
+      "external_callers": "open_gap",
+      "local_entrypoints_retained": true,
+      "overwrites": 0
+    },
+    {
+      "name": "handover",
+      "indices": [
+        7,
+        16,
+        18,
+        19
+      ],
+      "skill": "ghc-family-config-reconcile-handover",
+      "runner": "ghc_family_config_reconcile_handover.txt",
+      "operations": [
+        "unknown_field_projection",
+        "accessible_resolution_summary",
+        "external_migration_evidence",
+        "operator_release_gate"
+      ],
+      "sources": [
+        {
+          "stage": "x1",
+          "skill": "ghc-family-migration-unknown-field-projection"
+        },
+        {
+          "stage": "x2",
+          "skill": "ghc-family-migration-accessible-resolution-summary"
+        },
+        {
+          "stage": "x2",
+          "skill": "ghc-family-migration-external-migration-evidence"
+        },
+        {
+          "stage": "x2",
+          "skill": "ghc-family-migration-operator-release-gate"
+        }
+      ],
+      "source_bindings": [
+        {
+          "path": "x1/skills/ghc-family-migration-unknown-field-projection/SKILL.md",
+          "sha256": "692cc9ca935d835f294697e27aae43281fa5d993f48525a8f70074249df633ca"
+        },
+        {
+          "path": "x2/skills/ghc-family-migration-accessible-resolution-summary/SKILL.md",
+          "sha256": "14f2ede8605956b2738f55069293f5b9a8b6691f8e66f7af1b978546c24076fc"
+        },
+        {
+          "path": "x2/skills/ghc-family-migration-external-migration-evidence/SKILL.md",
+          "sha256": "0ad33c98062a2e8ee6dbb8158d4abb6c20077a974fbbe6a5b8ce8de9ce646f33"
+        },
+        {
+          "path": "x2/skills/ghc-family-migration-operator-release-gate/SKILL.md",
+          "sha256": "b3804a2848211a1d1abacfc7e7572554663527f6f71eddd66c60a9672f7445d9"
+        }
+      ],
+      "shared_library_sha256": "c600609ff627cf8805d81e7a96688996c2a6a39f104f66691d1276206606e00a",
+      "disposition": "remaster_additive",
+      "known_owner_callers": 4,
+      "external_callers": "open_gap",
+      "local_entrypoints_retained": true,
+      "overwrites": 0
+    }
+  ],
+  "local_sources": 20,
+  "global_skills": 5,
+  "public_runners": 5,
+  "shared_libraries": 1,
+  "parity_files": 16,
+  "lexical_similarity_is_not_equivalence": true,
+  "compatibility": "All twenty source skills and ten local entry points remain unchanged.",
+  "boundary": "Only bounded synthetic software contracts are curated; no external authority transfer."
+}
