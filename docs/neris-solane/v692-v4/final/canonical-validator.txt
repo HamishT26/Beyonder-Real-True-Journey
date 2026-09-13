@@ -1,0 +1,98 @@
+from __future__ import annotations
+import argparse, hashlib, json, os, re, subprocess
+from pathlib import Path
+
+OWNER='Neris Solane'; PHASE='v692-v4'; BRANCH='codex/GHC-Family/neris-solane-v692-v4-main'; TERMINAL='NOT_READY_FOR_STAGE_20'; SOURCE_FINAL='7956e8d1a0b0185247a4885e4cb54e9d71adab60'
+GLOBALS=[('ghc-family-cnf-record-integrity', 'ghc_family_cnf_record_integrity.txt'), ('ghc-family-cnf-evaluation-trace', 'ghc_family_cnf_evaluation_trace.txt'), ('ghc-family-cnf-search-recovery', 'ghc_family_cnf_search_recovery.txt'), ('ghc-family-cnf-proof-boundaries', 'ghc_family_cnf_proof_boundaries.txt'), ('ghc-family-cnf-access-authority', 'ghc_family_cnf_access_authority.txt')]
+
+def read_json(p): return json.loads(Path(p).read_text(encoding="utf-8"))
+def sha(p): return hashlib.sha256(Path(p).read_bytes()).hexdigest()
+def git(repo,*args): return subprocess.check_output(["git","-C",str(repo),*args],text=True).strip()
+def files(root): return sorted(p for p in Path(root).rglob("*") if p.is_file())
+def check_manifest(root,p):
+    issues=[]
+    for e in read_json(p)["entries"]:
+        f=Path(root)/e["path"]
+        if not f.exists() or f.stat().st_size!=e["bytes"] or sha(f)!=e["sha256"]: issues.append(e["path"])
+    return issues
+
+def content_checks(repo,skills,runners):
+    base=Path(repo)/"docs"/"neris-solane"/PHASE; final=base/"final"; results=[]
+    def add(name,passed,details):
+        results.append({"name":name,"passed":bool(passed),"details":details})
+        if not passed: raise RuntimeError(name+":"+json.dumps(details,sort_keys=True))
+    for stage in ["plan","x1","x2","final"]:
+        issues=check_manifest(base/stage,base/stage/"manifest.json")
+        add("manifest_"+stage,not issues,{"entries":len(read_json(base/stage/"manifest.json")["entries"]),"issues":issues})
+    owner=read_json(final/"owner-manifest.json"); oi=[]
+    for e in owner["entries"]:
+        p=base/e["path"]
+        if not p.exists() or p.stat().st_size!=e["bytes"] or sha(p)!=e["sha256"]: oi.append(e["path"])
+    add("owner_manifest",not oi,{"entries":len(owner["entries"]),"issues":oi})
+    seal=read_json(final/"content-seal.json"); si=[]
+    for e in seal["entries"]:
+        p=base/e["path"]
+        if not p.exists() or p.stat().st_size!=e["bytes"] or sha(p)!=e["sha256"]: si.append(e["path"])
+    add("content_seal",not si,{"entries":len(seal["entries"]),"issues":si})
+    all_files=files(base); bad=[str(p.relative_to(base)) for p in all_files if p.suffix.lower() not in {".json",".md",".txt",".html"}]
+    add("file_policy",not bad,{"bad":bad})
+    json_issues=[]
+    for p in [x for x in all_files if x.suffix.lower()==".json"]:
+        try: read_json(p)
+        except Exception: json_issues.append(str(p.relative_to(base)))
+    add("strict_json",not json_issues,{"files":sum(p.suffix.lower()==".json" for p in all_files),"issues":json_issues})
+    freeze=read_json(base/"plan"/"proposal-freeze.json"); inherited=read_json(base/"plan"/"inherited-review.json")
+    add("proposal_freeze",len(freeze["proposals"])==200 and len(inherited["selected"])==200 and inherited["novelty_credit"]==0,{"new":len(freeze["proposals"]),"inherited":len(inherited["selected"])})
+    truth=read_json(final/"phase-truth.json")
+    add("outcomes",truth["outcomes"]=={"completed":170,"represented":10,"open_gap":10,"exact_gate":10},truth["outcomes"])
+    for session in ["x1","x2"]:
+        receipt=read_json(base/session/"validation-receipt.json")
+        add("session_"+session,receipt["status"]=="VALID_OWNER_SCOPED_SESSION" and receipt["results"]==100 and receipt["runner_smokes"]==20,receipt)
+    skill_dirs=[p for s in ["x1","x2"] for p in (base/"skills"/s).iterdir() if p.is_dir()]
+    local_runners=[p for s in ["x1","x2"] for p in (base/s/"runners").iterdir() if p.is_file()]
+    add("local_skills",len(skill_dirs)==20,{"count":len(skill_dirs)}); add("local_runners",len(local_runners)==10,{"count":len(local_runners)})
+    promotion=read_json(base/"x2"/"promotion"/"promotion-receipt.json")
+    add("promotion",promotion["status"]=="VALIDATED_ADDITIVE_INSTALLED" and promotion["skills"]==5 and promotion["runners"]==5 and all(x["parity"] for x in promotion["records"]),{"skills":promotion["skills"],"runners":promotion["runners"]})
+    for skill,runner in GLOBALS:
+        add("global_"+skill,(Path(skills)/skill/"SKILL.md").exists() and (Path(runners)/runner).exists(),{"skill":skill,"runner":runner})
+    baton=(final/"hand-off-baton.md").read_text(encoding="utf-8"); bw=len(re.findall(r"\S+",baton)); index=read_json(final/"baton-index.json")
+    add("modular_baton",10000<=bw<=100000 and len(index["modules"])==13,{"words":bw,"modules":len(index["modules"]),"sha256":sha(final/"hand-off-baton.md")})
+    overview=(final/"final-integrated-overview.md").read_text(encoding="utf-8"); ow=len(re.findall(r"\S+",overview))
+    add("overview",ow>=2000,{"words":ow})
+    html=(final/"accessible-report.html").read_text(encoding="utf-8")
+    add("accessible_structure",html.count('class="page"')==3 and '<main id="main">' in html and '<caption>' in html and 'aria-live' in html and not re.search(r'https?://',html),{"pages":html.count('class="page"'),"manual_complete":False})
+    provenance=read_json(base/"plan"/"source-provenance.json")
+    add("blank_root_provenance",provenance["blank_root"] and not provenance["source_is_git_ancestor"] and provenance["source"]["exact_final"]==SOURCE_FINAL,provenance)
+    privacy=[]; patterns=[re.compile(r'[A-Fa-f0-9]{8}-[A-Fa-f0-9]{4}-[1-5][A-Fa-f0-9]{3}-[89abAB][A-Fa-f0-9]{3}-[A-Fa-f0-9]{12}'),re.compile(r'C:\\Users\\',re.I),re.compile(r"(?:source_thread_id|thread_id|task_id|session_id)[^:\r\n]{0,4}:\s*[\"']?[0-9a-f-]{8,}",re.I),re.compile(r'api[_-]?key|bearer\s+[A-Za-z0-9._-]{12,}|password\s*[:=]',re.I),re.compile(r'BEGIN [A-Z ]*PRIVATE KEY')]
+    for p in all_files:
+        text=p.read_text(encoding="utf-8",errors="replace")
+        for i,pattern in enumerate(patterns):
+            if pattern.search(text): privacy.append({"path":str(p.relative_to(base)),"class":i})
+    add("privacy",not privacy,{"files":len(all_files),"candidates":privacy,"complete_privacy_claimed":False})
+    add("counts",truth["owner_counts"]=={'methods': 241, 'direct_witnesses': 948, 'failed_witnesses': 209, 'passing_witnesses': 739, 'effective_negatives': 209, 'open_gaps': 10, 'exact_gates': 10} and truth["effective_counts"]=={'methods': 2004, 'direct_witnesses': 19265, 'failed_witnesses': 5238, 'passing_witnesses': 14027, 'effective_negatives': 5379, 'open_gaps': 216, 'exact_gates': 231},{"owner":truth["owner_counts"],"effective":truth["effective_counts"]})
+    add("boundary",truth["terminal_verdict"]==TERMINAL and not truth["full_repository_suite"] and not truth["independent_reproduction"],{"terminal":truth["terminal_verdict"]})
+    route=read_json(final/"route-state.json")
+    add("route_prepared",route["state"]=="PREPARED_NOT_SENT" and route["successor"]=="Merrin Vale" and route["messages_sent"]==0,route)
+    return results
+
+def main():
+    ap=argparse.ArgumentParser(); ap.add_argument("mode",choices=["preflight","canonical"]); ap.add_argument("repo"); ap.add_argument("bank"); ap.add_argument("skills"); ap.add_argument("runners"); args=ap.parse_args()
+    bank=Path(args.bank); latch=bank/"canonical"/"invocation-latch.json"
+    if args.mode=="canonical":
+        if latch.exists(): raise RuntimeError("CANONICAL_REPLAY_BLOCKED")
+        latch.parent.mkdir(parents=True,exist_ok=True); latch.write_text(json.dumps({"owner":OWNER,"phase":PHASE,"invocations":1,"started_at_utc":__import__('datetime').datetime.now(__import__('datetime').timezone.utc).isoformat()},indent=2)+"\n",encoding="utf-8")
+    results=content_checks(Path(args.repo),Path(args.skills),Path(args.runners))
+    if args.mode=="preflight": print(json.dumps({"status":"VALID_CONTENT_PREFLIGHT","checks":len(results)})); return
+    repo=Path(args.repo); head=git(repo,"rev-parse","HEAD"); up=git(repo,"rev-parse","@{upstream}"); tracking=git(repo,"rev-parse","refs/remotes/origin/"+BRANCH); live=git(repo,"ls-remote","origin","refs/heads/"+BRANCH).split()[0]; div=[int(x) for x in git(repo,"rev-list","--left-right","--count","HEAD...@{upstream}").split()]; clean=git(repo,"status","--porcelain")==""
+    exact=head==up==tracking==live and div==[0,0] and clean
+    results.append({"name":"exact_git_state","passed":exact,"details":{"head":head,"upstream":up,"tracking":tracking,"fresh_live":live,"divergence":div,"clean":clean}})
+    chain=[line.split() for line in git(repo,"rev-list","--parents","--reverse","HEAD").splitlines() if line.strip()]
+    lifecycle=len(chain)==4 and len(chain[0])==1 and all(len(x)==2 for x in chain[1:]) and git(repo,"rev-list","--merges","--count","HEAD")=="0"
+    results.append({"name":"blank_root_lifecycle","passed":lifecycle,"details":{"commits":len(chain),"parents":[len(x)-1 for x in chain],"merges":int(git(repo,"rev-list","--merges","--count","HEAD"))}})
+    tracked=len([x for x in git(repo,"ls-files").splitlines() if x]); results.append({"name":"file_capacity","passed":tracked<2000,"details":{"tracked":tracked,"ceiling":2000}})
+    if not exact or not lifecycle or tracked>=2000: raise RuntimeError("terminal git gate failed")
+    receipt={"schema":"ghc.family.exact-final-owner-canonical.v2","status":"VALID_EXACT_FINAL_OWNER_SCOPED_CANONICAL","owner":OWNER,"phase":PHASE,"branch":BRANCH,"exact_final":head,"checks":len(results),"checks_passed":sum(x["passed"] for x in results),"invocations":1,"successes":1,"replays":0,"source_replays":0,"complete_repository_suite":False,"owner_scope_only":True,"independent_reproduction":False,"results":results,"owner_counts":{'methods': 241, 'direct_witnesses': 948, 'failed_witnesses': 209, 'passing_witnesses': 739, 'effective_negatives': 209, 'open_gaps': 10, 'exact_gates': 10},"effective_counts":{'methods': 2004, 'direct_witnesses': 19265, 'failed_witnesses': 5238, 'passing_witnesses': 14027, 'effective_negatives': 5379, 'open_gaps': 216, 'exact_gates': 231},"terminal_verdict":TERMINAL}
+    out=bank/"canonical"/"exact-final-owner-scoped-canonical.json"; out.write_text(json.dumps(receipt,indent=2)+"\n",encoding="utf-8")
+    print(json.dumps({"status":receipt["status"],"checks":receipt["checks"],"head":head,"tracked":tracked}))
+
+if __name__=="__main__": main()

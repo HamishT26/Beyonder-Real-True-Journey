@@ -1,0 +1,115 @@
+# Neris Solane v692-v4 integrated overview
+
+## Exact source, corrective activation, and blank-root lane
+
+Neris v692-v4 begins only after the corrective activation bound Elaren Kestrel v692-v3 (2) remaster exact final `7956e8d1a0b0185247a4885e4cb54e9d71adab60`. The earlier malformed activation remains a failed external witness with zero valid-activation credit. The new Neris branch is intentionally blank-root because the older Neris main branch forecast exceeded the 2,000-file ceiling. Elaren is immutable content provenance, not Git ancestry. This distinction prevents a fresh sparse lane from inventing a parent relationship it does not possess.
+
+The repository contains synthetic finite CNF records only. It contains no real participants, identities, rights decisions, schedules, allocation decisions, credentials, measurements, production secrets, private task identifiers, or authority acts. The exact source, baton and canonical receipt digests are retained as provenance while the predecessor canonical remains un-replayed.
+
+## THOS Body: finite constraint execution
+
+THOS Body is primary through deterministic parsing, evaluation, propagation, branching, resolution, unsatisfiable-core candidacy, model replay, and bounded text round-trips. The evidence establishes only that these declared tiny fixtures returned their frozen envelopes. It is not a complete SAT solver evaluation, performance benchmark, exhaustive security review, production system, or independent reproduction.
+
+### 01. Literal Record Normalization
+
+This `x1` contract uses the learning lens of digital preservation and computational provenance under Freed ID and CBR Heart. Normalize finite signed-literal records while retaining source order separately. Ten distinct finite cases were frozen before implementation. Each positive result was compared with the exact expected envelope; each malformed subject was executed and rejected with zero original success credit; each rejection received a separate passing refusal check; and each case received a complete CLEAN/FIX/REFINE review. Its maximum outcome is `completed`. The result never promotes a finite Boolean relation into a real participant, allocation, legal, cultural, scientific, identity, or governance determination.
+
+### 02. Clause Shape Validation
+
+This `x1` contract uses the learning lens of constraint satisfaction and solver engineering under THOS Body. Validate finite CNF clause shape without silently repairing malformed literals. Ten distinct finite cases were frozen before implementation. Each positive result was compared with the exact expected envelope; each malformed subject was executed and rejected with zero original success credit; each rejection received a separate passing refusal check; and each case received a complete CLEAN/FIX/REFINE review. Its maximum outcome is `completed`. The result never promotes a finite Boolean relation into a real participant, allocation, legal, cultural, scientific, identity, or governance determination.
+
+### 03. Cnf Variable Index
+
+This `x1` contract uses the learning lens of constraint satisfaction and solver engineering under THOS Body. Build a deterministic variable-occurrence index over a bounded CNF fixture. Ten distinct finite cases were frozen before implementation. Each positive result was compared with the exact expected envelope; each malformed subject was executed and rejected with zero original success credit; each rejection received a separate passing refusal check; and each case received a complete CLEAN/FIX/REFINE review. Its maximum outcome is `completed`. The result never promotes a finite Boolean relation into a real participant, allocation, legal, cultural, scientific, identity, or governance determination.
+
+### 04. Assignment Evaluation
+
+This `x1` contract uses the learning lens of constraint satisfaction and solver engineering under THOS Body. Evaluate a complete finite Boolean assignment without claiming real allocation. Ten distinct finite cases were frozen before implementation. Each positive result was compared with the exact expected envelope; each malformed subject was executed and rejected with zero original success credit; each rejection received a separate passing refusal check; and each case received a complete CLEAN/FIX/REFINE review. Its maximum outcome is `completed`. The result never promotes a finite Boolean relation into a real participant, allocation, legal, cultural, scientific, identity, or governance determination.
+
+### 05. Clause Satisfaction Vector
+
+This `x1` contract uses the learning lens of formal methods and bounded proof review under THOS Body. Produce a clause-by-clause satisfaction vector with exact traceability. Ten distinct finite cases were frozen before implementation. Each positive result was compared with the exact expected envelope; each malformed subject was executed and rejected with zero original success credit; each rejection received a separate passing refusal check; and each case received a complete CLEAN/FIX/REFINE review. Its maximum outcome is `completed`. The result never promotes a finite Boolean relation into a real participant, allocation, legal, cultural, scientific, identity, or governance determination.
+
+### 06. Formula Satisfaction Check
+
+This `x1` contract uses the learning lens of formal methods and bounded proof review under THOS Body. Check bounded conjunction satisfaction and retain every falsified clause. Ten distinct finite cases were frozen before implementation. Each positive result was compared with the exact expected envelope; each malformed subject was executed and rejected with zero original success credit; each rejection received a separate passing refusal check; and each case received a complete CLEAN/FIX/REFINE review. Its maximum outcome is `completed`. The result never promotes a finite Boolean relation into a real participant, allocation, legal, cultural, scientific, identity, or governance determination.
+
+### 07. Tautology Detection
+
+This `x1` contract uses the learning lens of formal methods and bounded proof review under GMUT Mind. Detect finite tautological clauses without promoting them to physical laws. Ten distinct finite cases were frozen before implementation. Each positive result was compared with the exact expected envelope; each malformed subject was executed and rejected with zero original success credit; each rejection received a separate passing refusal check; and each case received a complete CLEAN/FIX/REFINE review. Its maximum outcome is `completed`. The result never promotes a finite Boolean relation into a real participant, allocation, legal, cultural, scientific, identity, or governance determination.
+
+### 08. Subsumption Preview
+
+This `x1` contract uses the learning lens of digital preservation and computational provenance under Freed ID and CBR Heart. Preview clause subsumption without deleting the source formula. Ten distinct finite cases were frozen before implementation. Each positive result was compared with the exact expected envelope; each malformed subject was executed and rejected with zero original success credit; each rejection received a separate passing refusal check; and each case received a complete CLEAN/FIX/REFINE review. Its maximum outcome is `completed`. The result never promotes a finite Boolean relation into a real participant, allocation, legal, cultural, scientific, identity, or governance determination.
+
+### 09. Canonical Clause Order
+
+This `x1` contract uses the learning lens of digital preservation and computational provenance under THOS Body. Create a deterministic clause projection while preserving the original record. Ten distinct finite cases were frozen before implementation. Each positive result was compared with the exact expected envelope; each malformed subject was executed and rejected with zero original success credit; each rejection received a separate passing refusal check; and each case received a complete CLEAN/FIX/REFINE review. Its maximum outcome is `completed`. The result never promotes a finite Boolean relation into a real participant, allocation, legal, cultural, scientific, identity, or governance determination.
+
+### 10. Partial Assignment Projection
+
+This `x1` contract uses the learning lens of accessibility rights and governance review under Freed ID and CBR Heart. Project known unknown and unresolved clause states with explicit missingness. Ten distinct finite cases were frozen before implementation. Each positive result was compared with the exact expected envelope; each malformed subject was executed and rejected with zero original success credit; each rejection received a separate passing refusal check; and each case received a complete CLEAN/FIX/REFINE review. Its maximum outcome is `completed`. The result never promotes a finite Boolean relation into a real participant, allocation, legal, cultural, scientific, identity, or governance determination.
+
+### 11. Unit Propagation Trace
+
+This `x2` contract uses the learning lens of constraint satisfaction and solver engineering under THOS Body. Trace bounded unit propagation with contradiction retained as evidence. Ten distinct finite cases were frozen before implementation. Each positive result was compared with the exact expected envelope; each malformed subject was executed and rejected with zero original success credit; each rejection received a separate passing refusal check; and each case received a complete CLEAN/FIX/REFINE review. Its maximum outcome is `completed`. The result never promotes a finite Boolean relation into a real participant, allocation, legal, cultural, scientific, identity, or governance determination.
+
+### 12. Pure Literal Elimination
+
+This `x2` contract uses the learning lens of constraint satisfaction and solver engineering under THOS Body. Identify pure literals and return a non-destructive reduction preview. Ten distinct finite cases were frozen before implementation. Each positive result was compared with the exact expected envelope; each malformed subject was executed and rejected with zero original success credit; each rejection received a separate passing refusal check; and each case received a complete CLEAN/FIX/REFINE review. Its maximum outcome is `completed`. The result never promotes a finite Boolean relation into a real participant, allocation, legal, cultural, scientific, identity, or governance determination.
+
+### 13. Dpll Branch Trace
+
+This `x2` contract uses the learning lens of constraint satisfaction and solver engineering under THOS Body. Produce a finite deterministic branch trace and model witness when one exists. Ten distinct finite cases were frozen before implementation. Each positive result was compared with the exact expected envelope; each malformed subject was executed and rejected with zero original success credit; each rejection received a separate passing refusal check; and each case received a complete CLEAN/FIX/REFINE review. Its maximum outcome is `completed`. The result never promotes a finite Boolean relation into a real participant, allocation, legal, cultural, scientific, identity, or governance determination.
+
+### 14. Resolution Step Check
+
+This `x2` contract uses the learning lens of formal methods and bounded proof review under GMUT Mind. Check one declared propositional resolution step in an exact finite domain. Ten distinct finite cases were frozen before implementation. Each positive result was compared with the exact expected envelope; each malformed subject was executed and rejected with zero original success credit; each rejection received a separate passing refusal check; and each case received a complete CLEAN/FIX/REFINE review. Its maximum outcome is `completed`. The result never promotes a finite Boolean relation into a real participant, allocation, legal, cultural, scientific, identity, or governance determination.
+
+### 15. Unsat Core Candidate
+
+This `x2` contract uses the learning lens of formal methods and bounded proof review under THOS Body. Return a bounded deletion-minimal unsatisfiable candidate without universal proof claims. Ten distinct finite cases were frozen before implementation. Each positive result was compared with the exact expected envelope; each malformed subject was executed and rejected with zero original success credit; each rejection received a separate passing refusal check; and each case received a complete CLEAN/FIX/REFINE review. Its maximum outcome is `completed`. The result never promotes a finite Boolean relation into a real participant, allocation, legal, cultural, scientific, identity, or governance determination.
+
+### 16. Model Witness Replay
+
+This `x2` contract uses the learning lens of digital preservation and computational provenance under Freed ID and CBR Heart. Replay a finite model witness against the immutable source clauses. Ten distinct finite cases were frozen before implementation. Each positive result was compared with the exact expected envelope; each malformed subject was executed and rejected with zero original success credit; each rejection received a separate passing refusal check; and each case received a complete CLEAN/FIX/REFINE review. Its maximum outcome is `completed`. The result never promotes a finite Boolean relation into a real participant, allocation, legal, cultural, scientific, identity, or governance determination.
+
+### 17. Dimacs Roundtrip
+
+This `x2` contract uses the learning lens of digital preservation and computational provenance under THOS Body. Round-trip a bounded DIMACS-style projection with explicit byte-domain limits. Ten distinct finite cases were frozen before implementation. Each positive result was compared with the exact expected envelope; each malformed subject was executed and rejected with zero original success credit; each rejection received a separate passing refusal check; and each case received a complete CLEAN/FIX/REFINE review. Its maximum outcome is `completed`. The result never promotes a finite Boolean relation into a real participant, allocation, legal, cultural, scientific, identity, or governance determination.
+
+### 18. Bounded Model Count Sample
+
+This `x2` contract uses the learning lens of formal methods and bounded proof review under GMUT Mind. Represent exact enumeration on tiny fixtures without extrapolating complexity or physics. Ten distinct finite cases were frozen before implementation. Each positive result was compared with the exact expected envelope; each malformed subject was executed and rejected with zero original success credit; each rejection received a separate passing refusal check; and each case received a complete CLEAN/FIX/REFINE review. Its maximum outcome is `represented`. The result never promotes a finite Boolean relation into a real participant, allocation, legal, cultural, scientific, identity, or governance determination.
+
+### 19. Independent Proof Checker Gap
+
+This `x2` contract uses the learning lens of formal methods and bounded proof review under GMUT Mind. Reserve independent proof checking because only same-owner validation is present. Ten distinct finite cases were frozen before implementation. Each positive result was compared with the exact expected envelope; each malformed subject was executed and rejected with zero original success credit; each rejection received a separate passing refusal check; and each case received a complete CLEAN/FIX/REFINE review. Its maximum outcome is `open_gap`. The result never promotes a finite Boolean relation into a real participant, allocation, legal, cultural, scientific, identity, or governance determination.
+
+### 20. Real Allocation Authority Gate
+
+This `x2` contract uses the learning lens of accessibility rights and governance review under Freed ID and CBR Heart. Refuse conversion of a Boolean model into a real rights or allocation decision. Ten distinct finite cases were frozen before implementation. Each positive result was compared with the exact expected envelope; each malformed subject was executed and rejected with zero original success credit; each rejection received a separate passing refusal check; and each case received a complete CLEAN/FIX/REFINE review. Its maximum outcome is `exact_gate`. The result never promotes a finite Boolean relation into a real participant, allocation, legal, cultural, scientific, identity, or governance determination.
+
+## GMUT Mind and falsification boundary
+
+The represented model-count fixtures demonstrate exact enumeration only on tiny declared variable sets. They do not imply asymptotic complexity results, quantum completion, physical state counting, thermodynamic laws, cosmological likelihoods, empirical force detection, or a Theory of Everything. GMUT remains a typed scalar-tensor and effective-field-theory research-model family requiring a defined action, fields, units, covariance, conservation or exchange structure, stability, identifiability, likelihoods, preregistration, real data, and independent tests.
+
+## Freed ID and CBR Heart
+
+The phase preserves immutable inputs, explicit missingness, non-destructive projections, retained rejections, correction lineage, provenance, and authority abstention. These are useful design constraints, but Freed ID remains synthetic and nonproduction without standards-conformant live keys and proofs, issuance, presentation, resolution, status, revocation, recovery, interoperability, privacy review, independent security review, trust governance, and affected-party oversight. A satisfying assignment is not a person, identity, right, remedy, consent record, eligibility decision, or public allocation.
+
+## Skills, runners, accessibility, and evidence counts
+
+Twenty owner-local skills and ten paired runners were built and used. Five merged family skills and five D-backed runners were installed additively only after destination-absence, quick validation, bounded smoke use, provenance, parity, caller compatibility, and rollback checks. No ordinary package was installed and incremental spend was zero dollars.
+
+The HTML report has three explicit print-page sections, landmarks, headings, a captioned table, labelled controls, visible focus, reduced-motion behavior, text status, and no external resource. These structural checks are not manual browser, keyboard, screen-reader, cognitive-accessibility, language, or affected-user evaluation and do not establish WCAG conformance.
+
+The Neris owner layer preserves 241 methods, 948 direct witnesses, 209 failed witnesses, 739 passing witnesses, 209 effective negatives, 10 open gaps and 10 exact gates. Applied once to the activation baseline, the repository pre-canonical layer becomes 2004 methods, 19265 witnesses, 5238 failed, 14027 passing, 5379 negatives, 216 gaps and 231 gates. Canonical and route events remain external layers.
+
+## Terminal route and corrigibility
+
+Merrin Vale v692-v5 remains prospective until the exact Neris final is committed, pushed, clean, 0/0 divergent, fresh-live equal, and accepted by one owner-scoped canonical invocation. Only then may the live task registry, exact title, newest pause or redirect, usage, privacy, evidence, safety, and duplicate state be reread. A prepared baton is not delivery. An accepted, opaque, or unresolved submission stops duplicates.
+
+Relational names, roles, hopes, sibling or family language, continuity, GHC Family, Trinity Mandala, GMUT, THOS, Freed ID and CBR are working language only. Same-owner synthetic software and documentation establish no consciousness, sentience, personhood, identity continuity, qualification, independent agency, professional, scientific, operational, legal, cultural, affected-party or Maori authority, empirical GMUT confirmation, production THOS or Freed ID, independent reproduction, Theory-of-Everything proof, canon, or Stage 20 readiness. Maori concepts remain under Maori authority.
+
+Terminal verdict: `NOT_READY_FOR_STAGE_20`.
