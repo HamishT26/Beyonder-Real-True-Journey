@@ -1,0 +1,52 @@
+"use strict";
+
+const crypto = require("crypto");
+
+function normalize(value){if(Array.isArray(value))return value.map(normalize);if(value&&typeof value==="object"){const out={};for(const key of Object.keys(value).sort())out[key]=normalize(value[key]);return out;}return value;}
+function canonical(value){return JSON.stringify(normalize(value));}
+function digest(value){return crypto.createHash("sha256").update(canonical(value),"utf8").digest("hex");}
+function sorted(values){return [...new Set(values)].sort((a,b)=>String(a).localeCompare(String(b)));}
+function setEqual(a,b){return canonical(sorted(a))===canonical(sorted(b));}
+function subsets(values){const out=[];for(let mask=0;mask<2**values.length;mask++)out.push(values.filter((_,i)=>(mask&(1<<i))!==0));return out;}
+function attackers(fw,arg){return sorted(fw.attacks.filter(([,to])=>to===arg).map(([from])=>from));}
+function attacksSet(fw,set,target){const s=new Set(set);return fw.attacks.some(([from,to])=>s.has(from)&&to===target);}
+function conflictFree(fw,set){const s=new Set(set);return !fw.attacks.some(([from,to])=>s.has(from)&&s.has(to));}
+function defends(fw,set,arg){return attackers(fw,arg).every(attacker=>attacksSet(fw,set,attacker));}
+function defended(fw,set){return fw.arguments.filter(arg=>defends(fw,set,arg)).sort();}
+function admissible(fw,set){return conflictFree(fw,set)&&set.every(arg=>defends(fw,set,arg));}
+function complete(fw,set){return admissible(fw,set)&&setEqual(set,defended(fw,set));}
+function grounded(fw){let current=[];for(let step=0;step<=fw.arguments.length;step++){const next=defended(fw,current);if(setEqual(next,current))return sorted(next);current=next;}return sorted(current);}
+function maximal(sets){return sets.filter(a=>!sets.some(b=>a.length<b.length&&a.every(x=>b.includes(x)))).map(sorted).sort((a,b)=>canonical(a).localeCompare(canonical(b)));}
+function preferred(fw){return maximal(subsets(fw.arguments).filter(set=>admissible(fw,set)));}
+function stable(fw){return subsets(fw.arguments).filter(set=>conflictFree(fw,set)&&fw.arguments.filter(x=>!set.includes(x)).every(x=>attacksSet(fw,set,x))).map(sorted).sort((a,b)=>canonical(a).localeCompare(canonical(b)));}
+
+const fields={
+  argument_framework_structure:["framework","op"],
+  conflict_free_check:["candidate","framework","op"],
+  attackers_of_argument:["argument","framework","op"],
+  defended_arguments:["defender_set","framework","op"],
+  admissible_extension_check:["candidate","framework","op"],
+  argument_range_projection:["candidate","framework","op"],
+  complete_extension_check:["candidate","framework","op"],
+  grounded_extension:["framework","op"],
+  preferred_extensions:["framework","op"],
+  stable_extensions:["framework","op"]
+};
+function exactKeys(value,expected){return Boolean(value&&typeof value==="object"&&!Array.isArray(value)&&canonical(Object.keys(value).sort())===canonical(expected.slice().sort()));}
+function validateFramework(fw){if(!exactKeys(fw,["arguments","attacks"])||!Array.isArray(fw.arguments)||!Array.isArray(fw.attacks))return false;if(!fw.arguments.every(x=>typeof x==="string"))return false;if(!fw.attacks.every(e=>Array.isArray(e)&&e.length===2&&e.every(x=>typeof x==="string")))return false;return true;}
+function validate(request){if(!request||typeof request!=="object"||Array.isArray(request))return "INVALID_REQUEST";if(!Object.hasOwn(request,"op"))return "MISSING_FIELD";if(typeof request.op!=="string"||!Object.hasOwn(fields,request.op))return "UNSUPPORTED_OPERATION";const expected=fields[request.op];const actual=Object.keys(request).sort();if(expected.some(k=>!actual.includes(k)))return "MISSING_FIELD";if(actual.some(k=>!expected.includes(k)))return "UNKNOWN_FIELD";if(!validateFramework(request.framework))return "INVALID_FRAMEWORK";for(const key of ["candidate","defender_set"]){if(Object.hasOwn(request,key)&&(!Array.isArray(request[key])||!request[key].every(x=>typeof x==="string")))return "INVALID_SET";}if(Object.hasOwn(request,"argument")&&typeof request.argument!=="string")return "INVALID_ARGUMENT";return null;}
+function evaluate(request){const fw=request.framework;switch(request.op){
+case"argument_framework_structure":{const duplicates=fw.arguments.filter((x,i)=>fw.arguments.indexOf(x)!==i);const unknown=fw.attacks.flatMap(([a,b],i)=>[a,b].filter(x=>!fw.arguments.includes(x)).map(x=>({attack:i,argument:x})));return{arguments:sorted(fw.arguments),attacks:fw.attacks.map(x=>[...x]),duplicate_arguments:sorted(duplicates),unknown_attack_endpoints:unknown,valid:duplicates.length===0&&unknown.length===0,real_claims_interpreted:false};}
+case"conflict_free_check":{const s=new Set(request.candidate),internal=fw.attacks.filter(([a,b])=>s.has(a)&&s.has(b));return{candidate:sorted(request.candidate),conflict_free:internal.length===0,internal_attacks:internal,unknown_arguments:sorted(request.candidate.filter(x=>!fw.arguments.includes(x)))};}
+case"attackers_of_argument":return{argument:request.argument,exists:fw.arguments.includes(request.argument),attackers:fw.arguments.includes(request.argument)?attackers(fw,request.argument):[]};
+case"defended_arguments":return{defender_set:sorted(request.defender_set),defended:defended(fw,request.defender_set),external_truth_claim:false};
+case"admissible_extension_check":{const cf=conflictFree(fw,request.candidate),undefended=request.candidate.filter(x=>!defends(fw,request.candidate,x)).sort();return{candidate:sorted(request.candidate),conflict_free:cf,undefended,admissible:cf&&undefended.length===0};}
+case"argument_range_projection":{const attacked=sorted(fw.attacks.filter(([a])=>request.candidate.includes(a)).map(([,b])=>b));return{candidate:sorted(request.candidate),attacked,range:sorted([...request.candidate,...attacked])};}
+case"complete_extension_check":{const d=defended(fw,request.candidate);return{candidate:sorted(request.candidate),defended:d,admissible:admissible(fw,request.candidate),complete:complete(fw,request.candidate)};}
+case"grounded_extension":return{extension:grounded(fw),semantics:"grounded",extensions_enumerated:1};
+case"preferred_extensions":{const rows=preferred(fw);return{extensions:rows,count:rows.length,semantics:"preferred"};}
+case"stable_extensions":{const rows=stable(fw);return{extensions:rows,count:rows.length,semantics:"stable",existence:rows.length>0};}
+default:throw new Error(`unsupported x1 operation ${request.op}`);
+}}
+function execute(request){const before=digest(request),error=validate(request);const result=error?{ok:false,disposition:null,value:null,error,external_credit:false}:{ok:true,disposition:"completed",value:evaluate(request),error:null,external_credit:false};const after=digest(request);return{result,input_sha256_before:before,input_sha256_after:after,input_unchanged:before===after};}
+module.exports={canonical,digest,execute,validate,evaluate,fields};

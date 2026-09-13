@@ -1,0 +1,8 @@
+"use strict";
+const fs=require("fs"),path=require("path"),core=require("../lib/argumentation-x1.txt");
+const proposals=JSON.parse(fs.readFileSync(path.resolve(__dirname,"..","..","plan","proposals.json"),"utf8")).proposals;
+const operations=["argument_framework_structure","conflict_free_check"];
+const rows=proposals.filter(p=>p.stage==="x1"&&operations.includes(p.op));
+const detail=rows.map(p=>{const positive=core.execute(JSON.parse(JSON.stringify(p.request)));const candidates=p.candidates.map(c=>core.execute(JSON.parse(JSON.stringify(c.subject))));return{proposal_id:p.proposal_id,positive:core.canonical(positive.result)===core.canonical(p.expected)&&positive.input_unchanged,candidates:candidates.every((x,i)=>core.canonical(x.result)===core.canonical(p.candidates[i].expected)&&x.input_unchanged)};});
+const unsupported=core.execute({op:"unsupported_argument_operation"});
+const receipt={runner:"ghc_family_argument_argument_framework_structure_conflict_free_check.txt",operations,proposals:rows.length,positive_passes:detail.filter(x=>x.positive).length,candidate_refusals:detail.filter(x=>x.candidates).length*2,unsupported_subject:{result:"fail",observed:unsupported.result,original_subject_success_credit:0},unsupported_refusal:unsupported.result.error==="UNSUPPORTED_OPERATION",valid:rows.length===10&&detail.every(x=>x.positive&&x.candidates)&&unsupported.result.ok===false&&unsupported.result.error==="UNSUPPORTED_OPERATION",same_owner_only:true,independent_reproduction:false};process.stdout.write(JSON.stringify(receipt)+"\n");if(!receipt.valid)process.exitCode=1;
