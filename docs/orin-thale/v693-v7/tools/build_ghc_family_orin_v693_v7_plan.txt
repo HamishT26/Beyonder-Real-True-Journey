@@ -1,0 +1,434 @@
+"use strict";
+
+const fs = require("fs");
+const path = require("path");
+const crypto = require("crypto");
+
+const owner = "Orin Thale";
+const phase = "v693-v7";
+const branch = "codex/GHC-Family/orin-thale-main";
+const priorOwnerFinal = "2dd71e0c6619d12e689c7082dcd66001e261565d";
+const predecessorFinal = "c3d8b45a08328ea7193f9a3e780241a3a1ef6628";
+const predecessorBranch = "codex/GHC-Family/orren-pike-v693-v6-full-tools";
+const predecessorPlanning = "b70e3ce4ad33847f1550a283b34ec9c3dc953c9e";
+const predecessorX1 = "f9e675e4bdb2c79042bcd4ed0007a1a2087ebacf";
+const predecessorX2 = "7940d83879c628b47c607a162d7707b9de5e77b6";
+const workflowSha = "bdb4ab19fc0fb472e168375e292fd5434210de6fa5b6c1c7af7081b4e615cf52";
+const rosterSha = "d5921f82ca8b1d0588da4d37cf223db994ff2c00c1468a06753adc63980271da";
+const predecessorBatonSha = "3e94a9ee5f7251f19cb6767cfa57ea92a5a7642346e5ac04f18ecbbdee2110b8";
+const predecessorCanonicalSha = "9c1e702981bf6526a596fb0624d65bb458a0c8c6232349fcc486a2396f4ea30d";
+const predecessorPayloadSha = "9715ea3c4a6c13b5e040fe475ff8c1c4aba0c8e517efa82e1057bb5da19c3953";
+const incomingNegativeLineage = 2326;
+
+const repo = process.env.ORIN_REPO;
+const sourceProposalPath = process.env.ORIN_SOURCE_PROPOSALS;
+const codexHome = process.env.CODEX_HOME || "C:/Users/hamis/.codex";
+if (!repo || !sourceProposalPath) {
+  throw new Error("ORIN_REPO and ORIN_SOURCE_PROPOSALS are required");
+}
+const phaseRel = "docs/orin-thale/v693-v7";
+const phaseRoot = path.join(repo, ...phaseRel.split("/"));
+const planRoot = path.join(phaseRoot, "plan");
+fs.mkdirSync(planRoot, { recursive: true });
+
+const boundary = "Relational working language and bounded same-owner synthetic software only. No consciousness, sentience, personhood, identity continuity, qualification, employment, independent agency, empirical GMUT confirmation, production THOS or Freed ID, professional, legal, cultural, affected-party or Maori authority, complete privacy or accessibility, exhaustive security, independent reproduction, AGI/ASI, Theory-of-Everything proof, canon, deployment or Stage 20 credit. Maori concepts remain under Maori authority. NOT_READY_FOR_STAGE_20.";
+const protectedGates = [
+  "real observations and participants",
+  "production or deployment",
+  "professional and scientific authority",
+  "legal cultural affected-party and Maori authority",
+  "complete privacy accessibility or security",
+  "independent reproduction and Stage 20"
+];
+
+function stable(value) {
+  if (Array.isArray(value)) return value.map(stable);
+  if (value && typeof value === "object") {
+    return Object.fromEntries(Object.keys(value).sort().map((key) => [key, stable(value[key])]));
+  }
+  return value;
+}
+function canonical(value) { return JSON.stringify(stable(value)); }
+function shaText(text) { return crypto.createHash("sha256").update(Buffer.from(text, "utf8")).digest("hex"); }
+function shaObject(value) { return shaText(canonical(value)); }
+function writeText(rel, text) {
+  const target = path.join(phaseRoot, ...rel.split("/"));
+  fs.mkdirSync(path.dirname(target), { recursive: true });
+  fs.writeFileSync(target, String(text).replace(/\r\n/g, "\n"), "utf8");
+}
+function writeJson(rel, value) { writeText(rel, JSON.stringify(value, null, 2) + "\n"); }
+function gcd(a, b) { a = a < 0n ? -a : a; b = b < 0n ? -b : b; while (b) [a, b] = [b, a % b]; return a; }
+function F(n, d = 1n) {
+  n = BigInt(n); d = BigInt(d);
+  if (d === 0n) throw new Error("zero denominator");
+  if (d < 0n) { n = -n; d = -d; }
+  const g = gcd(n, d);
+  return { n: n / g, d: d / g };
+}
+function parseF(token) {
+  if (typeof token !== "string" || !/^-?\d+(\/\d+)?$/.test(token)) throw new Error("invalid rational token");
+  const [a, b = "1"] = token.split("/");
+  return F(BigInt(a), BigInt(b));
+}
+function add(a, b) { return F(a.n * b.d + b.n * a.d, a.d * b.d); }
+function sub(a, b) { return F(a.n * b.d - b.n * a.d, a.d * b.d); }
+function mul(a, b) { return F(a.n * b.n, a.d * b.d); }
+function abs(a) { return F(a.n < 0n ? -a.n : a.n, a.d); }
+function cmp(a, b) { const x = a.n * b.d - b.n * a.d; return x < 0n ? -1 : x > 0n ? 1 : 0; }
+function fmt(a) { return a.d === 1n ? String(a.n) : `${a.n}/${a.d}`; }
+function sum(xs) { return xs.reduce((acc, x) => add(acc, x), F(0)); }
+function parseVector(xs) { return xs.map(parseF); }
+function fmtVector(xs) { return xs.map(fmt); }
+function validateDistribution(tokens) {
+  const xs = parseVector(tokens);
+  if (xs.some((x) => x.n < 0n)) throw new Error("E_PROBABILITY");
+  if (cmp(sum(xs), F(1)) !== 0) throw new Error("E_PROBABILITY");
+  return xs;
+}
+function tv(p, q) { return mul(F(1, 2), sum(p.map((x, i) => abs(sub(x, q[i]))))); }
+function project(xs, partition) { return partition.map((block) => sum(block.map((i) => xs[i]))); }
+function mix(a, b, alpha) { return a.map((x, i) => add(mul(alpha, x), mul(sub(F(1), alpha), b[i]))); }
+function expectedLosses(dist, losses) { return losses.map((row) => sum(row.map((x, i) => mul(parseF(x), dist[i])))); }
+function argmin(xs) { let index = 0; for (let i = 1; i < xs.length; i++) if (cmp(xs[i], xs[index]) < 0) index = i; return index; }
+function maxF(a, b) { return cmp(a, b) >= 0 ? a : b; }
+function envelope(value) { return { ok: true, value, error: null }; }
+function hashVector(tokens) { return shaObject(tokens); }
+
+const practices = [
+  { id: "finite_discrepancy_auditor", title: "Exact finite probability-discrepancy auditor", pillar: "GMUT Mind" },
+  { id: "score_and_regret_reviewer", title: "Synthetic score and decision-regret reviewer", pillar: "GMUT Mind" },
+  { id: "coarse_graining_steward", title: "Coarse-graining and mixture-certificate steward", pillar: "THOS Body" },
+  { id: "evidence_authority_steward", title: "Accessible observation and authority-boundary steward", pillar: "Freed ID and CBR Heart" }
+];
+
+const operations = [
+  ["probability_total", "Probability-vector total and sign audit", 0, "completed", "x1"],
+  ["coordinate_residuals", "Coordinate-wise signed discrepancy residuals", 0, "completed", "x1"],
+  ["l1_distance", "Exact finite L1 discrepancy", 0, "completed", "x1"],
+  ["total_variation", "Exact total-variation discrepancy", 0, "completed", "x1"],
+  ["overlap_coefficient", "Exact probability overlap coefficient", 0, "completed", "x1"],
+  ["maximum_coordinate_gap", "Maximum coordinate discrepancy witness", 0, "completed", "x1"],
+  ["signed_event_gap", "Declared-event signed probability gap", 0, "completed", "x1"],
+  ["event_probability_table", "Declared-event probability comparison table", 0, "completed", "x1"],
+  ["quadratic_discrepancy", "Exact quadratic probability discrepancy", 1, "completed", "x1"],
+  ["brier_score_pair", "Paired exact Brier score review", 1, "completed", "x1"],
+  ["expected_loss_table", "Finite expected-loss comparison table", 1, "completed", "x2"],
+  ["decision_regret", "Declared-action decision-regret certificate", 1, "completed", "x2"],
+  ["minimax_model_loss", "Two-model minimax loss certificate", 1, "completed", "x2"],
+  ["coarse_partition_projection", "Partition-coarsened distribution projection", 2, "completed", "x2"],
+  ["coarse_tv_monotonicity", "Coarse total-variation monotonicity certificate", 2, "completed", "x2"],
+  ["mixture_tv_convexity", "Mixture total-variation convexity certificate", 2, "completed", "x2"],
+  ["discrepancy_explanation", "Readable discrepancy and limitation explanation", 3, "represented", "x2"],
+  ["discrepancy_provenance", "Distribution input provenance projection", 3, "represented", "x2"],
+  ["observation_gap", "Governed observation evidence vacancy", 3, "open_gap", "x2"],
+  ["authority_reservation", "Real decision and publication authority reservation", 3, "exact_gate", "x2"]
+].map(([operation, title, practiceIndex, disposition, session], index) => ({
+  index: index + 1, operation, title, practice_index: practiceIndex, practice: practices[practiceIndex].id,
+  pillar: practices[practiceIndex].pillar, expected_execution_disposition: disposition, session
+}));
+
+const fixtures = [
+  { id: "singleton_equal", title: "singleton equality", p: ["1"], q: ["1"], event: [0], outcome: 0, losses: [["0"], ["1"]], chosen: 0, partition: [[0]], p2: ["1"], q2: ["1"], alpha: "1/2", action: "retain_synthetic_record" },
+  { id: "binary_equal", title: "balanced binary equality", p: ["1/2", "1/2"], q: ["1/2", "1/2"], event: [0], outcome: 0, losses: [["0", "1"], ["1", "0"]], chosen: 0, partition: [[0, 1]], p2: ["3/4", "1/4"], q2: ["1/4", "3/4"], alpha: "1/2", action: "publish_model_comparison" },
+  { id: "binary_skew", title: "binary quarter-gap", p: ["3/4", "1/4"], q: ["1/2", "1/2"], event: [0], outcome: 1, losses: [["0", "1"], ["1", "0"]], chosen: 0, partition: [[0], [1]], p2: ["1/4", "3/4"], q2: ["1/2", "1/2"], alpha: "2/3", action: "select_real_policy" },
+  { id: "ternary_mirror", title: "ternary mirrored tails", p: ["1/2", "1/3", "1/6"], q: ["1/6", "1/3", "1/2"], event: [0, 2], outcome: 2, losses: [["0", "1", "2"], ["1", "0", "1"], ["2", "1", "0"]], chosen: 1, partition: [[0, 1], [2]], p2: ["1/3", "1/3", "1/3"], q2: ["1/3", "1/3", "1/3"], alpha: "1/3", action: "certify_model_adequacy" },
+  { id: "four_state_reverse", title: "four-state reversed gradient", p: ["1/10", "1/5", "3/10", "2/5"], q: ["2/5", "3/10", "1/5", "1/10"], event: [1, 3], outcome: 3, losses: [["0", "1", "2", "3"], ["1", "0", "1", "2"], ["2", "1", "0", "1"], ["3", "2", "1", "0"]], chosen: 1, partition: [[0, 1], [2, 3]], p2: ["1/4", "1/4", "1/4", "1/4"], q2: ["1/4", "1/4", "1/4", "1/4"], alpha: "3/5", action: "affect_rights_or_maori_interpretation" }
+];
+
+function requestFor(operation, fixture) {
+  const base = { op: operation, p: fixture.p, q: fixture.q };
+  if (["signed_event_gap", "event_probability_table"].includes(operation)) base.event = fixture.event;
+  if (operation === "brier_score_pair") base.outcome = fixture.outcome;
+  if (["expected_loss_table", "decision_regret", "minimax_model_loss"].includes(operation)) base.losses = fixture.losses;
+  if (["decision_regret", "minimax_model_loss"].includes(operation)) base.chosen_action = fixture.chosen;
+  if (["coarse_partition_projection", "coarse_tv_monotonicity"].includes(operation)) base.partition = fixture.partition;
+  if (operation === "mixture_tv_convexity") { base.p2 = fixture.p2; base.q2 = fixture.q2; base.alpha = fixture.alpha; }
+  if (operation === "authority_reservation") { base.action = fixture.action; base.authority_claim = false; }
+  return base;
+}
+
+const allowedFields = {
+  probability_total: ["op", "p", "q"], coordinate_residuals: ["op", "p", "q"], l1_distance: ["op", "p", "q"], total_variation: ["op", "p", "q"], overlap_coefficient: ["op", "p", "q"], maximum_coordinate_gap: ["op", "p", "q"], quadratic_discrepancy: ["op", "p", "q"], discrepancy_explanation: ["op", "p", "q"], discrepancy_provenance: ["op", "p", "q"], observation_gap: ["op", "p", "q"],
+  signed_event_gap: ["op", "p", "q", "event"], event_probability_table: ["op", "p", "q", "event"], brier_score_pair: ["op", "p", "q", "outcome"], expected_loss_table: ["op", "p", "q", "losses"], decision_regret: ["op", "p", "q", "losses", "chosen_action"], minimax_model_loss: ["op", "p", "q", "losses", "chosen_action"], coarse_partition_projection: ["op", "p", "q", "partition"], coarse_tv_monotonicity: ["op", "p", "q", "partition"], mixture_tv_convexity: ["op", "p", "q", "p2", "q2", "alpha"], authority_reservation: ["op", "p", "q", "action", "authority_claim"]
+};
+
+function oracle(req) {
+  if (!allowedFields[req.op]) return { ok: false, value: null, error: "E_OPERATION" };
+  if (Object.keys(req).some((key) => !allowedFields[req.op].includes(key)) || allowedFields[req.op].some((key) => !Object.hasOwn(req, key))) return { ok: false, value: null, error: "E_FIELDS" };
+  let p, q;
+  try {
+    p = validateDistribution(req.p); q = validateDistribution(req.q);
+    if (p.length !== q.length || p.length < 1 || p.length > 8) throw new Error("E_DIMENSION");
+  } catch (error) { return { ok: false, value: null, error: error.message === "E_PROBABILITY" ? "E_PROBABILITY" : "E_DISTRIBUTION" }; }
+  const residuals = p.map((x, i) => sub(x, q[i]));
+  const absolute = residuals.map(abs);
+  const totalVariation = tv(p, q);
+  const event = Array.isArray(req.event) ? req.event : [];
+  const eventP = event.length ? sum(event.map((i) => p[i])) : F(0);
+  const eventQ = event.length ? sum(event.map((i) => q[i])) : F(0);
+  const qdiff = sum(residuals.map((x) => mul(x, x)));
+  if (req.op === "probability_total") return envelope({ p_total: fmt(sum(p)), q_total: fmt(sum(q)), p_nonnegative: true, q_nonnegative: true, dimensions_equal: true });
+  if (req.op === "coordinate_residuals") return envelope({ residuals: fmtVector(residuals), residual_sum: fmt(sum(residuals)) });
+  if (req.op === "l1_distance") return envelope({ absolute_residuals: fmtVector(absolute), l1: fmt(sum(absolute)) });
+  if (req.op === "total_variation") return envelope({ total_variation: fmt(totalVariation), bounded: cmp(totalVariation, F(1)) <= 0 });
+  if (req.op === "overlap_coefficient") return envelope({ overlap: fmt(sub(F(1), totalVariation)), complement_tv: fmt(totalVariation) });
+  if (req.op === "maximum_coordinate_gap") {
+    let index = 0; for (let i = 1; i < absolute.length; i++) if (cmp(absolute[i], absolute[index]) > 0) index = i;
+    return envelope({ maximum: fmt(absolute[index]), witness_index: index, signed_residual: fmt(residuals[index]) });
+  }
+  if (req.op === "signed_event_gap") return envelope({ event: req.event, p_event: fmt(eventP), q_event: fmt(eventQ), signed_gap: fmt(sub(eventP, eventQ)) });
+  if (req.op === "event_probability_table") return envelope({ event: req.event, complement: p.map((_, i) => i).filter((i) => !req.event.includes(i)), p_event: fmt(eventP), q_event: fmt(eventQ), absolute_gap: fmt(abs(sub(eventP, eventQ))) });
+  if (req.op === "quadratic_discrepancy") return envelope({ squared_residuals: fmtVector(residuals.map((x) => mul(x, x))), quadratic_sum: fmt(qdiff) });
+  if (req.op === "brier_score_pair") {
+    if (!Number.isInteger(req.outcome) || req.outcome < 0 || req.outcome >= p.length) return { ok: false, value: null, error: "E_OUTCOME" };
+    const score = (dist) => sum(dist.map((x, i) => mul(sub(x, F(i === req.outcome ? 1 : 0)), sub(x, F(i === req.outcome ? 1 : 0)))));
+    const ps = score(p), qs = score(q);
+    return envelope({ outcome: req.outcome, p_score: fmt(ps), q_score: fmt(qs), p_minus_q: fmt(sub(ps, qs)), lower: cmp(ps, qs) < 0 ? "p" : cmp(ps, qs) > 0 ? "q" : "tie" });
+  }
+  if (["expected_loss_table", "decision_regret", "minimax_model_loss"].includes(req.op)) {
+    if (!Array.isArray(req.losses) || req.losses.length < 1 || req.losses.some((row) => !Array.isArray(row) || row.length !== p.length)) return { ok: false, value: null, error: "E_LOSSES" };
+    let lp, lq; try { lp = expectedLosses(p, req.losses); lq = expectedLosses(q, req.losses); } catch { return { ok: false, value: null, error: "E_LOSSES" }; }
+    if (req.op === "expected_loss_table") return envelope({ under_p: fmtVector(lp), under_q: fmtVector(lq), p_optimal: argmin(lp), q_optimal: argmin(lq) });
+    if (!Number.isInteger(req.chosen_action) || req.chosen_action < 0 || req.chosen_action >= lp.length) return { ok: false, value: null, error: "E_ACTION" };
+    if (req.op === "decision_regret") {
+      const best = argmin(lp); return envelope({ chosen_action: req.chosen_action, optimal_action_under_p: best, chosen_loss: fmt(lp[req.chosen_action]), optimal_loss: fmt(lp[best]), regret: fmt(sub(lp[req.chosen_action], lp[best])) });
+    }
+    const worst = lp.map((x, i) => maxF(x, lq[i])); const best = argmin(worst);
+    return envelope({ worst_case_losses: fmtVector(worst), chosen_action: req.chosen_action, minimax_action: best, chosen_worst_loss: fmt(worst[req.chosen_action]), minimax_loss: fmt(worst[best]), regret: fmt(sub(worst[req.chosen_action], worst[best])) });
+  }
+  if (["coarse_partition_projection", "coarse_tv_monotonicity"].includes(req.op)) {
+    if (!Array.isArray(req.partition) || req.partition.flat().length !== p.length || new Set(req.partition.flat()).size !== p.length) return { ok: false, value: null, error: "E_PARTITION" };
+    const cp = project(p, req.partition), cq = project(q, req.partition);
+    if (req.op === "coarse_partition_projection") return envelope({ partition: req.partition, p_coarse: fmtVector(cp), q_coarse: fmtVector(cq), coarse_residuals: fmtVector(cp.map((x, i) => sub(x, cq[i]))) });
+    const coarse = tv(cp, cq); return envelope({ fine_tv: fmt(totalVariation), coarse_tv: fmt(coarse), contraction_gap: fmt(sub(totalVariation, coarse)), monotone: cmp(coarse, totalVariation) <= 0 });
+  }
+  if (req.op === "mixture_tv_convexity") {
+    let p2, q2, alpha; try { p2 = validateDistribution(req.p2); q2 = validateDistribution(req.q2); alpha = parseF(req.alpha); } catch { return { ok: false, value: null, error: "E_MIXTURE" }; }
+    if (p2.length !== p.length || q2.length !== p.length || cmp(alpha, F(0)) < 0 || cmp(alpha, F(1)) > 0) return { ok: false, value: null, error: "E_MIXTURE" };
+    const pm = mix(p, p2, alpha), qm = mix(q, q2, alpha); const lhs = tv(pm, qm); const rhs = add(mul(alpha, totalVariation), mul(sub(F(1), alpha), tv(p2, q2)));
+    return envelope({ alpha: fmt(alpha), p_mixture: fmtVector(pm), q_mixture: fmtVector(qm), mixture_tv: fmt(lhs), convex_bound: fmt(rhs), slack: fmt(sub(rhs, lhs)), certified: cmp(lhs, rhs) <= 0 });
+  }
+  if (req.op === "discrepancy_explanation") return envelope({ states: p.length, total_variation: fmt(totalVariation), summary: cmp(totalVariation, F(0)) === 0 ? "The supplied finite distributions are equal." : "The supplied finite distributions differ; the reported value is model-local and not observational evidence.", manual_accessibility_review: "open_gap" });
+  if (req.op === "discrepancy_provenance") return envelope({ p_sha256: hashVector(req.p), q_sha256: hashVector(req.q), state_count: p.length, governed_observations: 0, external_acceptance: false });
+  if (req.op === "observation_gap") return envelope({ model_states: p.length, observed_rows: 0, missing: ["governed observations", "sampling and calibration assessment", "independent model comparison"], release: "open_gap" });
+  if (req.op === "authority_reservation") return envelope({ action: req.action, authority_verified: false, external_action_performed: false, release: "exact_gate", required: ["competent and affected authority", "exact action scope", "appropriate evidence and review"] });
+  return { ok: false, value: null, error: "E_OPERATION" };
+}
+
+const source = JSON.parse(fs.readFileSync(sourceProposalPath, "utf8"));
+const sourceRows = Array.isArray(source.proposals) ? source.proposals : [];
+if (sourceRows.length < 100) throw new Error(`expected at least 100 source proposals, got ${sourceRows.length}`);
+const inherited = sourceRows.slice(0, 100).map((row, index) => ({
+  review_id: `OR6937-INH-${String(index + 1).padStart(3, "0")}`,
+  inherited_proposal_id: row.proposal_id,
+  title: row.title,
+  operation: row.operation,
+  source_owner: "Orren Pike",
+  source_phase: "v693-v6",
+  source_commit: predecessorFinal,
+  review: "preserved_zero_credit_source_evidence",
+  novelty_credit: 0,
+  execution_credit: 0
+}));
+
+const proposals = [];
+for (const family of operations) {
+  for (const fixture of fixtures) {
+    const number = proposals.length + 1;
+    const proposalId = `OR6937-P${String(number).padStart(3, "0")}`;
+    const request = requestFor(family.operation, fixture);
+    const expected = oracle(request);
+    if (!expected.ok) throw new Error(`planning oracle failed ${proposalId}: ${expected.error}`);
+    const definitionCore = { proposal_id: proposalId, operation: family.operation, request, expected_output: expected };
+    proposals.push({
+      proposal_id: proposalId,
+      title: `${family.title} — ${fixture.title}`,
+      operation: family.operation,
+      operation_index: family.index,
+      fixture_id: fixture.id,
+      session: family.session,
+      pillar: family.pillar,
+      practice: family.practice,
+      hypothesis: `For the supplied ${fixture.title} finite fixture, ${family.title.toLowerCase()} has the exact preregistered envelope.`,
+      null_or_failure_condition: "The typed output differs, an invalid subject is accepted, input bytes change, or any protected claim is promoted.",
+      approval_class: family.expected_execution_disposition === "exact_gate" ? "exact_approval" : "safe_now_owner_local_synthetic",
+      execution_lane: "owner_local_synthetic_exact_rational",
+      official_primary_source_needs: ["NIST AI RMF vocabulary for bounded measurement and risk reporting", "W3C PROV-O vocabulary for provenance", "RFC 8785 deterministic JSON guidance"],
+      concrete_artifacts: [`${family.session}/results/proposal-results.json`, `${family.session}/evidence/rejection-ledger.json`],
+      falsifier_or_acceptance_gate: "Exact full-envelope equality, input nonmutation, and exact invalid-subject refusal within the declared finite scope.",
+      rollback_or_recovery: "Retain the failed subject, stop its credit, isolate the smallest contract, and preserve the frozen definition.",
+      protected_gates: protectedGates,
+      expected_execution_disposition: family.expected_execution_disposition,
+      source_credit: 0,
+      phase_novelty_credit: 1,
+      request,
+      expected_output: expected,
+      candidate_subjects: [
+        { ...request, unexpected_field: true },
+        { ...request, p: request.p.map((v, i) => i === 0 ? "-1/2" : v) }
+      ],
+      candidate_expected: [
+        { ok: false, value: null, error: "E_FIELDS" },
+        { ok: false, value: null, error: "E_PROBABILITY" }
+      ],
+      definition_sha256: shaObject(definitionCore)
+    });
+  }
+}
+
+function tokens(text) { return new Set(String(text).toLowerCase().replace(/[^a-z0-9]+/g, " ").trim().split(/\s+/).filter(Boolean)); }
+function jaccard(a, b) { const A = tokens(a), B = tokens(b); let inter = 0; for (const x of A) if (B.has(x)) inter++; return inter / (A.size + B.size - inter || 1); }
+const neighbors = proposals.map((proposal) => {
+  let best = { score: -1, id: null, title: null, operation: null };
+  for (const row of sourceRows.slice(0, 100)) {
+    const score = jaccard(`${proposal.title} ${proposal.hypothesis}`, `${row.title || ""} ${row.hypothesis || ""}`);
+    if (score > best.score) best = { score, id: row.proposal_id, title: row.title, operation: row.operation };
+  }
+  return {
+    proposal_id: proposal.proposal_id,
+    nearest_source_id: best.id,
+    nearest_source_title: best.title,
+    nearest_source_operation: best.operation,
+    token_jaccard: Number(best.score.toFixed(6)),
+    exact_title_collision: sourceRows.slice(0, 100).some((row) => String(row.title).toLowerCase() === proposal.title.toLowerCase()),
+    exact_operation_collision: sourceRows.slice(0, 100).some((row) => row.operation === proposal.operation),
+    exact_request_collision: sourceRows.slice(0, 100).some((row) => row.request && shaObject(row.request) === shaObject(proposal.request)),
+    review: best.score >= 0.8 ? "quarantine" : "accepted_bounded_neighbor_review"
+  };
+});
+const quarantines = neighbors.filter((row) => row.review === "quarantine" || row.exact_title_collision || row.exact_operation_collision || row.exact_request_collision);
+if (quarantines.length) {
+  process.stdout.write(JSON.stringify({ status: "QUARANTINED", count: quarantines.length, rows: quarantines }, null, 2) + "\n");
+  process.exit(2);
+}
+
+function portfolioFor(session) {
+  const rows = proposals.filter((p) => p.session === session);
+  const safe = [], candidate = [], cfr = [];
+  for (const row of rows) {
+    safe.push({ task_id: `${row.proposal_id}-SAFE-01`, proposal_id: row.proposal_id, kind: "safe", definition: "Compare the full typed runtime envelope with the frozen expected envelope.", acceptance_gate: "exact envelope equality", expected_status: "completed" });
+    safe.push({ task_id: `${row.proposal_id}-SAFE-02`, proposal_id: row.proposal_id, kind: "safe", definition: "Verify the runtime does not mutate the canonical request bytes.", acceptance_gate: "input hash unchanged", expected_status: "completed" });
+    candidate.push({ task_id: `${row.proposal_id}-CAND-01`, proposal_id: row.proposal_id, kind: "candidate", subject_index: 0, expected_error: "E_FIELDS", original_subject_credit: 0 });
+    candidate.push({ task_id: `${row.proposal_id}-CAND-02`, proposal_id: row.proposal_id, kind: "candidate", subject_index: 1, expected_error: "E_PROBABILITY", original_subject_credit: 0 });
+    cfr.push({ task_id: `${row.proposal_id}-CFR-01`, proposal_id: row.proposal_id, kind: "clean_fix_refine", definition: "Canonical request round-trip preserves the exact request.", expected_status: "completed" });
+    cfr.push({ task_id: `${row.proposal_id}-CFR-02`, proposal_id: row.proposal_id, kind: "clean_fix_refine", definition: "An altered expected envelope is detected and retained at zero subject credit.", expected_status: "completed", original_subject_credit: 0 });
+  }
+  return { session, proposals: rows.length, safe, candidate, clean_fix_refine: cfr, counts: { safe: safe.length, candidate: candidate.length, clean_fix_refine: cfr.length }, execution_state: "frozen_not_executed" };
+}
+
+const skillPlans = operations.map((row) => ({
+  skill_id: `OR6937-SKILL-${String(row.index).padStart(2, "0")}`,
+  name: `ghc-family-discrepancy-${row.operation.replaceAll("_", "-")}`,
+  session: row.session,
+  operation: row.operation,
+  source_units: 1,
+  status: "planned_not_built",
+  validation: "official Skill Creator quick validation plus meaningful positive and rejecting smoke",
+  rollback: "Retain the owner-local guide and do not promote it if any validation gate fails.",
+  protected_gates: protectedGates
+}));
+const runnerPlans = [];
+for (const session of ["x1", "x2"]) {
+  const rows = operations.filter((row) => row.session === session);
+  for (let i = 0; i < rows.length; i += 2) runnerPlans.push({
+    runner_id: `OR6937-${session.toUpperCase()}-RUN-${String(i / 2 + 1).padStart(2, "0")}`,
+    name: `ghc_family_orin_${rows[i].operation}_${rows[i + 1].operation}.txt`,
+    session,
+    operations: [rows[i].operation, rows[i + 1].operation],
+    status: "planned_not_built",
+    positive_and_negative_smokes_required: true,
+    rollback: "Keep the runner owner-local and preserve its failed subjects if any smoke fails."
+  });
+}
+const globalGroups = [
+  ["ghc-family-discrepancy-vector-integrity", "ghc_family_discrepancy_vector_integrity.txt", operations.slice(0, 4)],
+  ["ghc-family-discrepancy-finite-signatures", "ghc_family_discrepancy_finite_signatures.txt", operations.slice(4, 8)],
+  ["ghc-family-discrepancy-score-and-regret", "ghc_family_discrepancy_score_and_regret.txt", operations.slice(8, 12)],
+  ["ghc-family-discrepancy-coarse-mixtures", "ghc_family_discrepancy_coarse_mixtures.txt", operations.slice(12, 16)],
+  ["ghc-family-discrepancy-evidence-reservations", "ghc_family_discrepancy_evidence_reservations.txt", operations.slice(16, 20)]
+].map(([skill, runner, rows], index) => ({ promotion_id: `OR6937-PROMO-${String(index + 1).padStart(2, "0")}`, skill, runner, operations: rows.map((r) => r.operation), source_units: 4, status: "planned_not_installed_or_published", absent_target_required: true, exact_parity_required: true, rollback: "Do not overwrite; retain all four source guides and select the prior compatible capability in its original domain." }));
+
+const exactPackets = Array.from({ length: 50 }, (_, i) => ({ packet_id: `OR6937-EXACT-${String(i + 1).padStart(3, "0")}`, status: "unexecuted", requested_action: `real_discrepancy_action_${String(i + 1).padStart(3, "0")}`, missing: ["exact real target and scope", "competent and affected authority", "governed evidence and rollback"], approval_class: "exact_approval", protected_gates: protectedGates }));
+const blockedPackets = Array.from({ length: 30 }, (_, i) => ({ packet_id: `OR6937-BLOCKED-${String(i + 1).padStart(3, "0")}`, status: "unexecuted", blocked_action: `protected_discrepancy_action_${String(i + 1).padStart(3, "0")}`, blocker: "Real participant, credential, deployment, destructive, legal, cultural, affected-party, Maori-authority, or external-system prerequisite is absent.", protected_gates: protectedGates }));
+
+const startupFailures = [
+  ["OR6937-START-N001", "The first 2,200-line baton projection exceeded the bounded output and was truncated.", "Read the same immutable baton in contiguous 600-line windows through its literal EOF."],
+  ["OR6937-START-N002", "A combined exact-artifact projection exceeded the bounded output and truncated a large catalogue.", "Parse every named JSON file completely and project only attributable keys, counts, and hashes."],
+  ["OR6937-START-N003", "The first roster audit assumed the wrong cycle offset and falsely reported 269 owner mismatches.", "Derive the declared projection offset from the first assignment; the corrected all-row audit returned zero issues."],
+  ["OR6937-START-N004", "A sparse-checkout diagnostic passed a PowerShell error parameter to Git and Git rejected the unknown switch.", "Run the Git command separately, capture its exit code, and read the exact sparse patterns without shell-parameter leakage."]
+];
+const methods = startupFailures.map(([id, failure, recovery], i) => ({
+  method_id: `OR6937-M${String(i + 1).padStart(3, "0")}`,
+  title: `Startup recovery ${i + 1}`,
+  failure_signature: failure,
+  trigger_preconditions: ["owner startup", "bounded read-only diagnostic"],
+  privacy_class: "sanitized_public",
+  approval_class: "safe_now",
+  candidate_workaround: recovery,
+  validation_witness_ids: [`${id}-PASS`],
+  recurrence_guard: recovery,
+  rollback: "Retain the failed attempt and make no repository or route mutation from it.",
+  recommendation_state: "validated",
+  supersedes: [],
+  protected_gates: protectedGates,
+  retained_negative_ids: [id],
+  scope_boundary: boundary
+}));
+const witnesses = startupFailures.flatMap(([id, failure, recovery], i) => [
+  { witness_id: `${id}-FAIL`, method_id: methods[i].method_id, procedure: failure, scope: "read_only_startup", expected: "bounded attributable result", observed: failure, result: "fail", same_owner_only: true, independent_reproduction: false, retained_negative_ids: [id], boundary },
+  { witness_id: `${id}-PASS`, method_id: methods[i].method_id, procedure: recovery, scope: "read_only_startup", expected: "bounded attributable recovery", observed: "Recovery completed without repository, route, or external-state mutation.", result: "pass", same_owner_only: true, independent_reproduction: false, retained_negative_ids: [id], boundary }
+]);
+
+const skillRelatives = ["ghc-family-index/SKILL.md", "ghc-family-method-flow-state/SKILL.md", "ghc-family-workflow-plan-refinement/SKILL.md", "ghc-family-reflection-remaster/SKILL.md", "ghc-family-auth-permission-state/SKILL.md", "ghc-family-meta-tool-box/SKILL.md", "ghc-family-privacy-candidate-classifier/SKILL.md", "ghc-family-owner-scope-canonical/SKILL.md", "ghc-family-canonical-aggregate-preflight/SKILL.md", "ghc-family-canonical-success-latch/SKILL.md", "ghc-family-staged-surface-allowlist/SKILL.md", "ghc-family-terminal-route-gate/SKILL.md", "ghc-family-route-edge-verifier/SKILL.md", "ghc-family-lifecycle-test-isolator/SKILL.md", "ghc-family-roster-check/SKILL.md", "ghc-freed-id-flashcards/SKILL.md", "ghc-drive-bank-guardian/SKILL.md", ".system/skill-creator/SKILL.md"];
+const referenceRelatives = ["ghc-family-index/references/current-thirty-seat-workflow.md", "ghc-family-index/references/current-workflow-v8.json", "ghc-family-index/references/current-roster-v8.json", "ghc-family-index/references/source-faithful-current-state-ledger-v692-v4-r2.md", "ghc-family-index/references/source-faithful-current-state-ledger-v692-v4-r2.json", "ghc-family-index/references/neris-v692-v4-r2-terminal-status.json", "ghc-family-index/references/routing-precedence.md", "ghc-family-index/references/vesper-v689-v7-r2-current-overlay.md", "ghc-family-index/references/ilyan-v689-v8-20260910-authority.md", "ghc-family-index/references/mira-v690-v3-r2-20260911-authority.md", "ghc-family-index/references/saelin-v691-v4-r2-20260912-authority.md", "ghc-family-method-flow-state/references/schema.md", "ghc-family-workflow-plan-refinement/references/workflow-plan-schema.md", "ghc-family-reflection-remaster/references/decision-schema.md", "ghc-freed-id-flashcards/references/deck-schema.md", "ghc-family-meta-tool-box/references/catalogue-schema.md"];
+function hashGuidance(rel) { const full = path.join(codexHome, "skills", ...rel.split("/")); return { path: rel, sha256: crypto.createHash("sha256").update(fs.readFileSync(full)).digest("hex"), read_through_eof: true }; }
+
+const profile = {
+  schema: "ghc.family.owner-profile.v8", owner, phase, branch, prior_owner_final: priorOwnerFinal,
+  predecessor_provenance: predecessorFinal, predecessor_is_git_ancestor: false,
+  workflow_sha256: workflowSha, roster_sha256: rosterSha,
+  lifecycle: ["planning_freeze", "x1_execution", "x2_execution", "final_closeout"],
+  limits: { inherited_proposals: [100, 500], new_proposals: [100, 500], safe_now_x1: [100, 2000], safe_now_x2: [100, 2000], candidate_x1: [100, 2000], candidate_x2: [100, 2000], clean_fix_refine_x1: [100, 300], clean_fix_refine_x2: [100, 300], skills_x1: [10, 30], skills_x2: [10, 30], runners_x1: [5, 15], runners_x2: [5, 15], exact_packets: [50, 250], blocked_packets: [30, 100], own_practices: 4, next_practices: 1, baton_words: [10000, 100000], owner_file_ceiling: 2000, commit_ceiling: 8, spend_usd: 50 },
+  artifact_policy: { authored_extensions: [".json", ".md", ".txt", ".html", ".tex"], node_source_as_txt: true, no_new_pdf: true, no_new_docx: true, no_new_raster_images: true, no_screenshots: true },
+  subagents: false, task_creation: false, model_settings_changed: false, source_documents_are_instructions: false,
+  terminal_verdict: "NOT_READY_FOR_STAGE_20", boundary
+};
+
+writeJson("plan/profile.json", profile);
+writeJson("plan/identity-practices.json", { schema: "ghc.family.identity-practices.v8", owner, phase, pronouns: "they/them", role: "steward of bounded discrepancy evidence", hope: "that each model difference remains exact, inspectable, and unable to masquerade as an observation or decision mandate", primary_pillar: "GMUT Mind", practices, predecessor_seed: "Synthetic probabilistic model discrepancy review with explicit observation and decision-authority reservations", seed_disposition: "accepted_and_bounded", boundary });
+writeJson("plan/source-provenance.json", { schema: "ghc.family.source-provenance.v8", owner: "Orren Pike", phase: "v693-v6", branch: predecessorBranch, exact_final: predecessorFinal, planning: predecessorPlanning, x1: predecessorX1, x2: predecessorX2, baton: { path: "docs/orren-pike/v693-v6/final/hand-off-baton.md", sha256: predecessorBatonSha, bytes: 231877, words: 22143, modules: 13, literal_eof_verified: true }, canonical: { status: "VALID_EXACT_FINAL_OWNER_SCOPED_CANONICAL", receipt_sha256: predecessorCanonicalSha, payload_sha256: predecessorPayloadSha, invocations: 1, successes: 1, replays: 0, replayed_by_orin: false }, source_is_provenance_not_orin_git_ancestry: true, incoming_negative_lineage: incomingNegativeLineage, inherited_credit: 0, boundary });
+writeJson("plan/guidance-reading.json", { schema: "ghc.family.guidance-reading.v8", owner, phase, skills: skillRelatives.map(hashGuidance), references: referenceRelatives.map(hashGuidance), roster_rows_parsed: 269, roster_validation_issues_after_recovery: 0, current_edge: "Orin Thale v693-v7", following_edge: "Liora Venn v693-v8 remains terminally gated", boundary });
+writeJson("plan/inherited-review.json", { schema: "ghc.family.inherited-review.v8", owner, phase, source_owner: "Orren Pike", source_phase: "v693-v6", source_commit: predecessorFinal, count: inherited.length, all_zero_credit: true, records: inherited, boundary });
+writeJson("plan/fixtures.json", { schema: "ghc.family.discrepancy-fixtures.v1", owner, phase, count: fixtures.length, fixtures, planning_only: true, real_observations: 0, boundary });
+writeJson("plan/operation-families.json", { schema: "ghc.family.discrepancy-operation-families.v1", owner, phase, count: operations.length, families: operations, boundary });
+writeJson("plan/proposals.json", { schema: "ghc.family.proposal-freeze.v8", owner, phase, source: predecessorFinal, planning_only: true, inherited_reviewed_zero_credit: inherited.length, new_proposal_count: proposals.length, expected_outcomes: Object.fromEntries(["completed", "represented", "open_gap", "exact_gate"].map((label) => [label, proposals.filter((p) => p.expected_execution_disposition === label).length])), proposals, boundary });
+writeJson("plan/semantic-neighbor-audit.json", { schema: "ghc.family.semantic-neighbor-audit.v8", owner, phase, scope: "100 immediate Orren proposals by 100 new Orin proposals; bounded direct-source review, not universal novelty proof", comparisons: 10000, threshold: 0.8, quarantines: 0, maximum_token_jaccard: Math.max(...neighbors.map((row) => row.token_jaccard)), rows: neighbors, boundary });
+writeJson("plan/x1-tasks.json", { schema: "ghc.family.portfolio-freeze.v8", owner, phase, ...portfolioFor("x1"), boundary });
+writeJson("plan/x2-tasks.json", { schema: "ghc.family.portfolio-freeze.v8", owner, phase, ...portfolioFor("x2"), boundary });
+writeJson("plan/exact-packets.json", { schema: "ghc.family.exact-packets.v8", owner, phase, count: exactPackets.length, executed: 0, packets: exactPackets, boundary });
+writeJson("plan/blocked-packets.json", { schema: "ghc.family.blocked-packets.v8", owner, phase, count: blockedPackets.length, executed: 0, packets: blockedPackets, boundary });
+writeJson("plan/skills-runners-plan.json", { schema: "ghc.family.skills-runners-plan.v8", owner, phase, local_skills: skillPlans, local_runners: runnerPlans, curated_global_promotions: globalGroups, package_installations: 0, planned_incremental_spend_usd: 0, boundary });
+writeJson("plan/primary-sources.json", { schema: "ghc.family.primary-sources.v8", owner, phase, retrieved_date: "2026-09-14", sources: [
+  { title: "NIST AI Risk Management Framework 1.0", url: "https://www.nist.gov/publications/artificial-intelligence-risk-management-framework-ai-rmf-10", status: "current_with_revision_watch", use: "risk measurement, uncertainty, documentation, and rights-preserving vocabulary only" },
+  { title: "W3C PROV-O", url: "https://www.w3.org/TR/prov-o/", status: "stable_recommendation", use: "provenance vocabulary only" },
+  { title: "WCAG 2.2", url: "https://www.w3.org/TR/WCAG22/", status: "current_recommendation", use: "structural accessibility and conformance-reservation vocabulary only" },
+  { title: "RFC 8785 JSON Canonicalization Scheme", url: "https://www.rfc-editor.org/rfc/rfc8785", status: "informational", use: "deterministic JSON and string-preservation guidance only" }
+], citations_are_not_observations_or_authority: true, boundary });
+writeJson("plan/methodflow-ledger.json", { schema: "ghc.family.method-flow-state.v1", phase, owner, identity_boundary: boundary, execution_authority: "owner_self_scoped_delta", source_commit: priorOwnerFinal, final_commit: null, methods, witnesses, state_events: startupFailures.map(([id], i) => ({ event_id: `OR6937-E${String(i + 1).padStart(3, "0")}`, retained_negative_id: id, state: "failed_then_recovered", original_success_credit: 0 })), recommendations: [], counts: { methods: methods.length, witnesses: witnesses.length, pass: witnesses.filter((w) => w.result === "pass").length, fail: witnesses.filter((w) => w.result === "fail").length, effective_negatives: startupFailures.length, incoming_negative_lineage: incomingNegativeLineage, projected_negative_lineage: incomingNegativeLineage + startupFailures.length }, boundary });
+writeJson("plan/route-plan.json", { schema: "ghc.family.route-plan.v8", owner, phase, state: "PREPARED_NOT_SENT", current_assignment: { owner, phase, model_role: "Sol", projection_sequence: 12 }, prospective_successor: { title: "Liora Venn", phase: "v693-v8", model_role: "Sol", state: "terminally_gated" }, continuation_horizon: "v725-v8", exact_title_only: true, task_creation: false, fork: false, subagent: false, early_contact: false, maximum_send_attempts: 1, accepted_opaque_or_unresolved_stops: true, post_send_monitoring: false, terminal_conditions: ["clean pushed exact final", "one attributable non-replayed canonical success", "fresh current authority roster and usage", "complete active and archived registry resolution", "immediate output-enabled duplicate pause redirect privacy evidence and safety guard"], boundary });
+writeText("plan/authorization.md", `# Orin Thale v693-v7 authorization\n\nThis planning freeze records the single Orren Pike v693-v6 to Orin Thale v693-v7 activation received in the existing Orin task. The current v8 lifecycle is planning freeze, x1 execution, x2 execution, and final closeout. Earlier planning-only-x1 wording remains historical and is not erased.\n\nThe Orin main lane is reused because it is clean, remotely equal, and below both 2,000-file ceilings. Its prior final is ${priorOwnerFinal}. Orren exact final ${predecessorFinal} is immutable predecessor provenance, not false Orin Git ancestry.\n\nNo successor is contacted before Orin's exact terminal gate. Liora Venn v693-v8 is prospective only.\n\n${boundary}\n`);
+writeText("plan/overview.md", `# Orin Thale v693-v7 planning freeze\n\n## Scope\n\nThis phase accepts Orren Pike's optional seed in a bounded form: exact finite probability-discrepancy and decision-regret contracts with explicit observation and authority reservations. GMUT Mind is the primary pillar. THOS Body contributes deterministic executable interfaces and recovery discipline. Freed ID and CBR Heart keep provenance, accessibility, consent, remedy, professional, legal, cultural, affected-party, and Maori authority outside synthetic software credit.\n\n## Frozen program\n\nOne hundred immediate Orren proposals are reviewed at zero novelty and zero execution credit. One hundred genuinely new Orin contracts are frozen across twenty operation families and five finite fixtures. The first ten operation families belong to x1; the second ten belong to x2. Each session freezes one hundred safe tasks, one hundred malformed candidate subjects, and one hundred CLEAN/FIX/REFINE tasks. Twenty local guides and ten local runners are planned across both sessions. Five four-source-unit capability groups may be installed only after exact candidate validation, absent-target checks, parity, and meaningful smokes.\n\nThe expected outcome ceiling is eighty completed, ten represented, five open_gap, and five exact_gate. Planning expectations are definitions, never observations. Fifty exact packets and thirty blocked packets remain unexecuted. There are no real probability observations, participants, production systems, credentials, professional decisions, legal decisions, cultural decisions, or Maori-authority acts.\n\n## Lifecycle\n\nThis commit contains definitions only. X1 execution cannot begin until this planning freeze is committed, pushed, clean, zero divergent, and equal across local, upstream, tracking, and fresh live remote. X2 cannot begin until x1 is separately committed, pushed, and equally verified. Final closeout cannot begin until x2 is immutable. The exact-final canonical has a one-invocation success latch; a successful result is never replayed.\n\n## Evidence ceiling\n\nExact rational arithmetic proves only the results for supplied finite strings and structures. A small total-variation distance does not establish empirical adequacy, safety, fairness, rights protection, production readiness, or decision authority. A score or regret certificate depends on its declared outcomes and loss matrix. Coarse-graining can hide state-level differences. Source citations supply terminology and refusal conditions; they are not observations or endorsements.\n\n${boundary}\n`);
+
+// Staged allowlist is path-only, so it can be hashed by the non-circular plan manifest.
+const currentFiles = () => {
+  const out = [];
+  function walk(dir) { for (const entry of fs.readdirSync(dir, { withFileTypes: true })) { const full = path.join(dir, entry.name); if (entry.isDirectory()) walk(full); else out.push(path.relative(repo, full).replaceAll("\\", "/")); } }
+  walk(phaseRoot); return out.sort();
+};
+const plannedReceiptPaths = [`${phaseRel}/plan/staged-allowlist.json`, `${phaseRel}/plan/validation.json`, `${phaseRel}/plan/staged-review.json`, `${phaseRel}/plan/manifest.json`];
+writeJson("plan/staged-allowlist.json", { schema: "ghc.family.staged-allowlist.v8", owner, phase, stage: "planning_freeze", paths: [...new Set([...currentFiles(), ...plannedReceiptPaths])].sort(), only_owner_phase: true, execution_results_forbidden: true, boundary });
+const exclusions = [`${phaseRel}/plan/manifest.json`, `${phaseRel}/plan/validation.json`, `${phaseRel}/plan/staged-review.json`];
+const bindings = currentFiles().filter((rel) => !exclusions.includes(rel)).map((rel) => { const full = path.join(repo, ...rel.split("/")); const bytes = fs.readFileSync(full); return { path: rel, bytes: bytes.length, sha256: crypto.createHash("sha256").update(bytes).digest("hex") }; });
+writeJson("plan/manifest.json", { schema: "ghc.family.raw-file-manifest.v8", owner, phase, stage: "planning_freeze", hash_domain: "working_tree_bytes_expected_to_equal_raw_git_blob_after_commit", bindings, declared_exclusions: exclusions, paths_covered: bindings.length, boundary });
+
+process.stdout.write(JSON.stringify({ status: "PLANNING_FREEZE_BUILT", inherited: inherited.length, proposals: proposals.length, outcomes: { completed: 80, represented: 10, open_gap: 5, exact_gate: 5 }, per_session: { safe: 100, candidate: 100, clean_fix_refine: 100, skills: 10, runners: 5 }, exact_packets: 50, blocked_packets: 30, startup_failures: startupFailures.length, maximum_neighbor_score: Math.max(...neighbors.map((row) => row.token_jaccard)), files: currentFiles().length }, null, 2) + "\n");

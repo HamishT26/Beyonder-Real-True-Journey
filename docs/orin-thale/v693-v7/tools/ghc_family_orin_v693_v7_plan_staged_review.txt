@@ -1,0 +1,39 @@
+"use strict";
+
+const fs = require("fs");
+const path = require("path");
+const crypto = require("crypto");
+const cp = require("child_process");
+
+const repo = process.env.ORIN_REPO;
+if (!repo) throw new Error("ORIN_REPO is required");
+const baseRel = "docs/orin-thale/v693-v7";
+const base = path.join(repo, ...baseRel.split("/"));
+const allowlist = JSON.parse(fs.readFileSync(path.join(base, "plan", "staged-allowlist.json"), "utf8"));
+function git(args) { return cp.execFileSync("git", ["-C", repo, ...args], { encoding: "utf8" }); }
+const stagedBeforeReceipt = git(["diff", "--cached", "--name-only", "--diff-filter=ACMR"]).trim().split(/\r?\n/).filter(Boolean).sort();
+const expectedBeforeReceipt = allowlist.paths.filter((rel) => rel !== `${baseRel}/plan/staged-review.json`).sort();
+const missing = expectedBeforeReceipt.filter((rel) => !stagedBeforeReceipt.includes(rel));
+const unexpected = stagedBeforeReceipt.filter((rel) => !expectedBeforeReceipt.includes(rel));
+let diffCheck = "";
+let diffCheckExit = 0;
+try { diffCheck = git(["diff", "--cached", "--check"]); } catch (error) { diffCheckExit = error.status || 1; diffCheck = `${error.stdout || ""}${error.stderr || ""}`; }
+const pathsOwnerOnly = stagedBeforeReceipt.every((rel) => rel.startsWith(`${baseRel}/`));
+const noExecution = stagedBeforeReceipt.every((rel) => !rel.startsWith(`${baseRel}/x1/`) && !rel.startsWith(`${baseRel}/x2/`) && !rel.startsWith(`${baseRel}/final/`));
+const allowedExt = stagedBeforeReceipt.every((rel) => [".json", ".md", ".txt", ".html", ".tex"].includes(path.extname(rel).toLowerCase()));
+const receipt = {
+  schema: "ghc.family.staged-review.v8", owner: "Orin Thale", phase: "v693-v7", stage: "planning_freeze",
+  status: missing.length === 0 && unexpected.length === 0 && diffCheckExit === 0 && pathsOwnerOnly && noExecution && allowedExt ? "VALID_EXACT_STAGED_PLANNING_SURFACE" : "INVALID_STAGED_SURFACE",
+  staged_before_receipt: stagedBeforeReceipt,
+  expected_before_receipt: expectedBeforeReceipt,
+  staged_count_before_receipt: stagedBeforeReceipt.length,
+  missing, unexpected, diff_check_exit: diffCheckExit, diff_check_output: diffCheck.trim(),
+  owner_only: pathsOwnerOnly, execution_material_absent: noExecution, authorized_extensions_only: allowedExt,
+  receipt_path_declared_exclusion: `${baseRel}/plan/staged-review.json`,
+  same_owner_only: true, independent_reproduction: false, route: "PREPARED_NOT_SENT", terminal_verdict: "NOT_READY_FOR_STAGE_20"
+};
+const target = path.join(base, "plan", "staged-review.json");
+fs.writeFileSync(target, JSON.stringify(receipt, null, 2) + "\n", "utf8");
+const bytes = fs.readFileSync(target);
+process.stdout.write(JSON.stringify({ status: receipt.status, staged_count_before_receipt: receipt.staged_count_before_receipt, missing: missing.length, unexpected: unexpected.length, diff_check_exit: diffCheckExit, receipt_sha256: crypto.createHash("sha256").update(bytes).digest("hex") }, null, 2) + "\n");
+process.exit(receipt.status.startsWith("VALID") ? 0 : 2);

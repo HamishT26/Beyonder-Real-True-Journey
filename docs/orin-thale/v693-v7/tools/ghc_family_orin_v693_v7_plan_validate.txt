@@ -1,0 +1,117 @@
+"use strict";
+
+const fs = require("fs");
+const path = require("path");
+const crypto = require("crypto");
+const vm = require("vm");
+
+const repo = process.env.ORIN_REPO;
+if (!repo) throw new Error("ORIN_REPO is required");
+const baseRel = "docs/orin-thale/v693-v7";
+const base = path.join(repo, ...baseRel.split("/"));
+const checks = [];
+function check(name, pass, detail = null) { checks.push({ name, pass: Boolean(pass), detail }); }
+function readJson(rel) { return JSON.parse(fs.readFileSync(path.join(base, ...rel.split("/")), "utf8")); }
+function stable(value) { if (Array.isArray(value)) return value.map(stable); if (value && typeof value === "object") return Object.fromEntries(Object.keys(value).sort().map((k) => [k, stable(value[k])])); return value; }
+function shaObject(value) { return crypto.createHash("sha256").update(JSON.stringify(stable(value)), "utf8").digest("hex"); }
+function files(dir) { const out = []; for (const entry of fs.readdirSync(dir, { withFileTypes: true })) { const full = path.join(dir, entry.name); if (entry.isDirectory()) out.push(...files(full)); else out.push(full); } return out; }
+function words(text) { return (String(text).match(/\S+/g) || []).length; }
+
+const profile = readJson("plan/profile.json");
+const identity = readJson("plan/identity-practices.json");
+const source = readJson("plan/source-provenance.json");
+const guidance = readJson("plan/guidance-reading.json");
+const inherited = readJson("plan/inherited-review.json");
+const operations = readJson("plan/operation-families.json");
+const proposals = readJson("plan/proposals.json");
+const neighbors = readJson("plan/semantic-neighbor-audit.json");
+const x1 = readJson("plan/x1-tasks.json");
+const x2 = readJson("plan/x2-tasks.json");
+const exact = readJson("plan/exact-packets.json");
+const blocked = readJson("plan/blocked-packets.json");
+const toolPlan = readJson("plan/skills-runners-plan.json");
+const sources = readJson("plan/primary-sources.json");
+const methodflow = readJson("plan/methodflow-ledger.json");
+const route = readJson("plan/route-plan.json");
+const manifest = readJson("plan/manifest.json");
+const allowlist = readJson("plan/staged-allowlist.json");
+const rows = proposals.proposals;
+
+check("profile owner and phase", profile.owner === "Orin Thale" && profile.phase === "v693-v7");
+check("current v8 workflow hashes", profile.workflow_sha256 === "bdb4ab19fc0fb472e168375e292fd5434210de6fa5b6c1c7af7081b4e615cf52" && profile.roster_sha256 === "d5921f82ca8b1d0588da4d37cf223db994ff2c00c1468a06753adc63980271da");
+check("four-stage lifecycle", JSON.stringify(profile.lifecycle) === JSON.stringify(["planning_freeze", "x1_execution", "x2_execution", "final_closeout"]));
+check("owner lane reuse and explicit predecessor provenance", profile.prior_owner_final === "2dd71e0c6619d12e689c7082dcd66001e261565d" && profile.predecessor_provenance === "c3d8b45a08328ea7193f9a3e780241a3a1ef6628" && profile.predecessor_is_git_ancestor === false);
+check("source exact anchors", source.exact_final === "c3d8b45a08328ea7193f9a3e780241a3a1ef6628" && source.planning === "b70e3ce4ad33847f1550a283b34ec9c3dc953c9e" && source.x1 === "f9e675e4bdb2c79042bcd4ed0007a1a2087ebacf" && source.x2 === "7940d83879c628b47c607a162d7707b9de5e77b6");
+check("source canonical not replayed", source.canonical.invocations === 1 && source.canonical.successes === 1 && source.canonical.replays === 0 && source.canonical.replayed_by_orin === false);
+check("source baton binding", source.baton.sha256 === "3e94a9ee5f7251f19cb6767cfa57ea92a5a7642346e5ac04f18ecbbdee2110b8" && source.baton.literal_eof_verified === true);
+check("guidance skill hashes", guidance.skills.length === 18 && guidance.skills.every((row) => /^[0-9a-f]{64}$/.test(row.sha256) && row.read_through_eof === true));
+check("guidance reference hashes", guidance.references.length === 16 && guidance.references.every((row) => /^[0-9a-f]{64}$/.test(row.sha256) && row.read_through_eof === true));
+check("roster parse and edge", guidance.roster_rows_parsed === 269 && guidance.roster_validation_issues_after_recovery === 0 && guidance.current_edge === "Orin Thale v693-v7" && guidance.following_edge.includes("Liora Venn v693-v8"));
+check("four practices and primary pillar", identity.practices.length === 4 && identity.primary_pillar === "GMUT Mind");
+check("inherited reviews", inherited.count === 100 && inherited.records.length === 100 && inherited.records.every((row) => row.novelty_credit === 0 && row.execution_credit === 0));
+check("twenty operation families", operations.count === 20 && new Set(operations.families.map((row) => row.operation)).size === 20);
+check("one hundred unique proposals", rows.length === 100 && new Set(rows.map((row) => row.proposal_id)).size === 100);
+check("fifty proposals per session", rows.filter((row) => row.session === "x1").length === 50 && rows.filter((row) => row.session === "x2").length === 50);
+check("five fixtures per operation", operations.families.every((family) => rows.filter((row) => row.operation === family.operation).length === 5));
+const allowedOutcomes = new Set(["completed", "represented", "open_gap", "exact_gate"]);
+check("authorized outcome vocabulary", rows.every((row) => allowedOutcomes.has(row.expected_execution_disposition)));
+check("outcome ceilings", rows.filter((row) => row.expected_execution_disposition === "completed").length === 80 && rows.filter((row) => row.expected_execution_disposition === "represented").length === 10 && rows.filter((row) => row.expected_execution_disposition === "open_gap").length === 5 && rows.filter((row) => row.expected_execution_disposition === "exact_gate").length === 5);
+check("proposal field completeness", rows.every((row) => ["hypothesis", "null_or_failure_condition", "approval_class", "execution_lane", "official_primary_source_needs", "concrete_artifacts", "falsifier_or_acceptance_gate", "rollback_or_recovery", "protected_gates", "expected_execution_disposition", "request", "expected_output", "definition_sha256"].every((key) => Object.hasOwn(row, key))));
+check("proposal definition hashes", rows.every((row) => row.definition_sha256 === shaObject({ proposal_id: row.proposal_id, operation: row.operation, request: row.request, expected_output: row.expected_output })));
+check("invalid candidates frozen", rows.every((row) => row.candidate_subjects.length === 2 && row.candidate_expected[0].error === "E_FIELDS" && row.candidate_expected[1].error === "E_PROBABILITY"));
+check("semantic neighbor audit", neighbors.comparisons === 10000 && neighbors.quarantines === 0 && neighbors.maximum_token_jaccard < neighbors.threshold && neighbors.rows.length === 100);
+for (const [name, portfolio] of [["x1", x1], ["x2", x2]]) {
+  check(`${name} portfolio counts`, portfolio.counts.safe === 100 && portfolio.counts.candidate === 100 && portfolio.counts.clean_fix_refine === 100);
+  check(`${name} portfolio frozen`, portfolio.execution_state === "frozen_not_executed");
+}
+check("fifty exact packets unexecuted", exact.count === 50 && exact.executed === 0 && exact.packets.every((row) => row.status === "unexecuted"));
+check("thirty blocked packets unexecuted", blocked.count === 30 && blocked.executed === 0 && blocked.packets.every((row) => row.status === "unexecuted"));
+check("twenty local skills planned", toolPlan.local_skills.length === 20 && toolPlan.local_skills.filter((row) => row.session === "x1").length === 10 && toolPlan.local_skills.filter((row) => row.session === "x2").length === 10);
+check("ten local runners planned", toolPlan.local_runners.length === 10 && toolPlan.local_runners.filter((row) => row.session === "x1").length === 5 && toolPlan.local_runners.filter((row) => row.session === "x2").length === 5);
+check("five four-source promotions planned", toolPlan.curated_global_promotions.length === 5 && toolPlan.curated_global_promotions.every((row) => row.source_units === 4 && row.status === "planned_not_installed_or_published"));
+check("no package or spend quota", toolPlan.package_installations === 0 && toolPlan.planned_incremental_spend_usd === 0);
+check("primary and official sources", sources.sources.length === 4 && sources.sources.every((row) => /^https:\/\//.test(row.url)) && sources.citations_are_not_observations_or_authority === true);
+check("startup Method Flow arithmetic", methodflow.counts.methods === 4 && methodflow.counts.witnesses === 8 && methodflow.counts.pass === 4 && methodflow.counts.fail === 4 && methodflow.counts.projected_negative_lineage === 2330);
+check("failed witnesses retained", methodflow.witnesses.filter((row) => row.result === "fail").length === 4 && methodflow.witnesses.every((row) => row.same_owner_only === true && row.independent_reproduction === false));
+check("route remains terminally gated", route.state === "PREPARED_NOT_SENT" && route.prospective_successor.title === "Liora Venn" && route.prospective_successor.phase === "v693-v8" && route.early_contact === false && route.maximum_send_attempts === 1);
+check("manifest domain and exclusions", manifest.hash_domain === "working_tree_bytes_expected_to_equal_raw_git_blob_after_commit" && manifest.declared_exclusions.length === 3);
+const manifestIssues = [];
+for (const row of manifest.bindings) {
+  const full = path.join(repo, ...row.path.split("/"));
+  if (!fs.existsSync(full)) manifestIssues.push(`${row.path}:missing`);
+  else {
+    const bytes = fs.readFileSync(full);
+    if (bytes.length !== row.bytes) manifestIssues.push(`${row.path}:bytes`);
+    if (crypto.createHash("sha256").update(bytes).digest("hex") !== row.sha256) manifestIssues.push(`${row.path}:sha256`);
+  }
+}
+check("planning manifest working-byte parity", manifestIssues.length === 0, manifestIssues);
+check("staged allowlist owner-only", allowlist.paths.every((rel) => rel.startsWith(`${baseRel}/`)) && allowlist.execution_results_forbidden === true);
+check("no execution stage materialized", !fs.existsSync(path.join(base, "x1")) && !fs.existsSync(path.join(base, "x2")) && !fs.existsSync(path.join(base, "final")));
+const allFiles = files(base);
+const forbiddenExtensions = allFiles.filter((file) => ![".json", ".md", ".txt", ".html", ".tex"].includes(path.extname(file).toLowerCase()));
+check("authorized file types only", forbiddenExtensions.length === 0, forbiddenExtensions.map((file) => path.relative(repo, file)));
+const overWords = allFiles.filter((file) => [".json", ".md", ".txt", ".html", ".tex"].includes(path.extname(file).toLowerCase())).map((file) => ({ file, words: words(fs.readFileSync(file, "utf8")) })).filter((row) => row.words > 100000);
+check("document word ceiling", overWords.length === 0, overWords.map((row) => ({ path: path.relative(repo, row.file), words: row.words })));
+check("owner file ceiling", allFiles.length < 2000, allFiles.length);
+for (const file of allFiles.filter((x) => path.extname(x).toLowerCase() === ".txt")) {
+  try { new vm.Script(`(function(require,module,exports){\n${fs.readFileSync(file, "utf8")}\n})`, { filename: file }); }
+  catch (error) { check(`trusted TXT compiles ${path.basename(file)}`, false, error.message); }
+}
+check("trusted TXT compilation", !checks.some((row) => row.name.startsWith("trusted TXT compiles") && !row.pass));
+const serialized = allFiles.map((file) => fs.readFileSync(file, "utf8")).join("\n");
+const privacyPatterns = [
+  ["private_task_uuid", /\b[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}\b/ig],
+  ["credentials", /(?:api[_-]?key|password|secret|bearer)\s*[:=]\s*[\"']?[A-Za-z0-9_\-]{12,}/ig],
+  ["private_c_path", /C:\\Users\\[^\s\"']+/ig],
+  ["private_d_path", /D:\\GHC-Archives\\[^\s\"']+/ig],
+  ["email", /\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}\b/ig]
+];
+const privacy = privacyPatterns.map(([kind, pattern]) => ({ kind, candidates: [...serialized.matchAll(pattern)].map((m) => m[0]).slice(0, 10) }));
+check("zero confirmed five-class privacy candidates", privacy.every((row) => row.candidates.length === 0), privacy);
+
+const failed = checks.filter((row) => !row.pass);
+const receipt = { schema: "ghc.family.plan-validation.v8", owner: "Orin Thale", phase: "v693-v7", status: failed.length ? "INVALID_PLANNING_FREEZE" : "VALID_PLANNING_FREEZE", checks_total: checks.length, checks_passed: checks.length - failed.length, checks_failed: failed.length, checks, same_owner_only: true, independent_reproduction: false, execution_credit: 0, route: "PREPARED_NOT_SENT", terminal_verdict: "NOT_READY_FOR_STAGE_20" };
+fs.writeFileSync(path.join(base, "plan", "validation.json"), JSON.stringify(receipt, null, 2) + "\n", "utf8");
+process.stdout.write(JSON.stringify({ status: receipt.status, checks_total: receipt.checks_total, checks_passed: receipt.checks_passed, checks_failed: receipt.checks_failed }, null, 2) + "\n");
+process.exit(failed.length ? 2 : 0);
