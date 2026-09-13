@@ -1,0 +1,7 @@
+import json, pathlib, sys
+root=pathlib.Path(sys.argv[1])/"docs"/"neris-solane"/"v692-v4"/'x1'
+results=json.loads((root/"results.json").read_text(encoding="utf-8"))["results"]
+receipt=json.loads((root/"validation-receipt.json").read_text(encoding="utf-8"))
+assert len(results)==100 and all(x["positive_exact_match"] and x["refusal_check_passed"] and x["clean_fix_refine"]["passed"] for x in results)
+assert receipt["status"]=="VALID_OWNER_SCOPED_SESSION" and receipt["runner_smokes"]==20
+print(json.dumps({"status":receipt["status"],"session":'x1',"results":len(results),"smokes":20}))
