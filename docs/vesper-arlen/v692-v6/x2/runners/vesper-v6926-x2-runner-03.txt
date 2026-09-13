@@ -1,0 +1,8 @@
+'use strict';
+require.extensions['.txt'] = require.extensions['.js'];
+const engine = require('../../tooling/simplicial-extended.txt');
+const fs = require('fs');
+const allowed = new Set(["coboundary", "coboundary_squared"]);
+const request = JSON.parse(fs.readFileSync(0, 'utf8'));
+const output = allowed.has(request.op) ? engine.safeExecute(request) : {ok:false,value:null,error:{code:'operation_not_allowed',message:'operation_not_allowed'},external_credit:false};
+process.stdout.write(JSON.stringify(output));

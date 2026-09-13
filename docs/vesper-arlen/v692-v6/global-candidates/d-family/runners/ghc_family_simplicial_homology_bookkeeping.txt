@@ -1,0 +1,11 @@
+'use strict';
+require.extensions['.txt'] = require.extensions['.js'];
+const fs = require('fs');
+const core = require('../lib/simplicial-core.txt');
+const extended = require('../lib/simplicial-extended.txt');
+const allowed = new Set(["chain_boundary", "boundary_squared", "complex_closure", "incidence_matrix"]);
+const request = JSON.parse(fs.readFileSync(0, 'utf8'));
+let output;
+if (!allowed.has(request.op)) output = {ok:false,value:null,error:{code:'operation_not_allowed',message:'operation_not_allowed'},external_credit:false};
+else { const first = core.safeExecute(request); output = first.error && first.error.code === 'unknown_operation' ? extended.safeExecute(request) : first; }
+process.stdout.write(JSON.stringify(output));

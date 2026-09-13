@@ -1,0 +1,228 @@
+'use strict';
+
+require.extensions['.txt'] = require.extensions['.js'];
+const fs = require('fs');
+const core = require('./simplicial-core.txt');
+
+const SPECS = {
+  boundary_membership: ['simplices', 'dimension', 'chain'],
+  betti_numbers: ['simplices'],
+  euler_characteristic: ['simplices'],
+  cochain_evaluate: ['cochain', 'chain'],
+  coboundary: ['simplices', 'degree', 'cochain'],
+  coboundary_squared: ['simplices', 'degree', 'cochain'],
+  stokes_identity: ['simplices', 'degree', 'cochain', 'chain'],
+  chain_map: ['source_complex', 'target_complex', 'vertex_map', 'chain'],
+  model_obligations: ['claim', 'provided'],
+  release_gate: ['request', 'evidence', 'authority'],
+};
+
+const OBLIGATIONS = {
+  covariant_gmut_action: ['field_content', 'covariant_action', 'symmetries', 'boundary_terms'],
+  covariant_conservation: ['diffeomorphism_invariance', 'matter_coupling', 'discrete_to_continuum_map'],
+  empirical_prediction: ['dataset', 'likelihood', 'uncertainty_model', 'competing_baseline'],
+  well_posedness: ['initial_data', 'boundary_data', 'principal_symbol', 'existence_uniqueness_argument'],
+  production_identity: ['real_keys', 'proofs', 'lifecycle', 'interoperability', 'privacy_security_review', 'trust_governance'],
+};
+
+const GATES = {
+  empirical_gmut_claim: ['independent_evidence', 'competent_scientific_review'],
+  public_accessibility_certification: ['manual_evaluation', 'affected_user_review'],
+  maori_wording_ratification: ['maori_authority', 'affected_governance'],
+  personhood_certification: ['not_established_by_software_tests'],
+  production_freed_id_launch: ['real_lifecycle_review', 'independent_security_review', 'trust_governance'],
+};
+
+function gcd(a, b) {
+  a = a < 0n ? -a : a;
+  b = b < 0n ? -b : b;
+  while (b) [a, b] = [b, a % b];
+  return a || 1n;
+}
+
+function pair(n, d) {
+  if (!d) throw new Error('division_by_zero');
+  if (d < 0n) { n = -n; d = -d; }
+  const g = gcd(n, d);
+  return [n / g, d / g];
+}
+
+function rational(value) {
+  if (typeof value === 'boolean' || value === null || (typeof value !== 'string' && typeof value !== 'number')) throw new Error('invalid_rational');
+  const text = String(value);
+  if (!/^-?\d+(?:\/-?\d+)?$/.test(text)) throw new Error('invalid_rational');
+  const [n, d = '1'] = text.split('/');
+  return pair(BigInt(n), BigInt(d));
+}
+
+function add(a, b) { return pair(a[0] * b[1] + b[0] * a[1], a[1] * b[1]); }
+function sub(a, b) { return pair(a[0] * b[1] - b[0] * a[1], a[1] * b[1]); }
+function mul(a, b) { return pair(a[0] * b[0], a[1] * b[1]); }
+function div(a, b) { if (!b[0]) throw new Error('division_by_zero'); return pair(a[0] * b[1], a[1] * b[0]); }
+function zero(a) { return a[0] === 0n; }
+function text(a) { return a[1] === 1n ? String(a[0]) : `${a[0]}/${a[1]}`; }
+
+function guard(request, operation) {
+  if (!request || typeof request !== 'object' || Array.isArray(request)) throw new Error('invalid_request');
+  const required = SPECS[operation];
+  if (!required) throw new Error('unknown_operation');
+  const allowed = new Set(['op', ...required]);
+  for (const key of Object.keys(request)) if (!allowed.has(key)) throw new Error('unknown_field');
+  for (const key of required) if (!Object.prototype.hasOwnProperty.call(request, key)) throw new Error('missing_field');
+}
+
+function solve(matrixValue, targetValue) {
+  if (!Array.isArray(matrixValue) || !Array.isArray(targetValue) || matrixValue.length !== targetValue.length) throw new Error('dimension_mismatch');
+  const cols = matrixValue.length ? matrixValue[0].length : 0;
+  if (matrixValue.some(row => !Array.isArray(row) || row.length !== cols)) throw new Error('ragged_matrix');
+  const a = matrixValue.map((row, i) => [...row.map(rational), rational(targetValue[i])]);
+  let pivotRow = 0;
+  const pivots = [];
+  for (let column = 0; column < cols && pivotRow < a.length; column++) {
+    let pivot = pivotRow;
+    while (pivot < a.length && zero(a[pivot][column])) pivot++;
+    if (pivot === a.length) continue;
+    [a[pivotRow], a[pivot]] = [a[pivot], a[pivotRow]];
+    const q = a[pivotRow][column];
+    a[pivotRow] = a[pivotRow].map(value => div(value, q));
+    for (let row = 0; row < a.length; row++) {
+      if (row === pivotRow || zero(a[row][column])) continue;
+      const factor = a[row][column];
+      a[row] = a[row].map((value, i) => sub(value, mul(factor, a[pivotRow][i])));
+    }
+    pivots.push(column);
+    pivotRow++;
+  }
+  if (a.some(row => row.slice(0, cols).every(zero) && !zero(row[cols]))) return { member: false, solution: [] };
+  const solution = Array.from({ length: cols }, () => [0n, 1n]);
+  pivots.forEach((column, row) => { solution[column] = a[row][cols]; });
+  return { member: true, solution };
+}
+
+function cochainMap(terms) {
+  if (!Array.isArray(terms)) throw new Error('invalid_cochain');
+  const result = new Map();
+  for (const term of terms) {
+    if (!term || typeof term !== 'object' || Array.isArray(term) || Object.keys(term).sort().join(',') !== 'simplex,value') throw new Error('invalid_cochain_term');
+    const oriented = core.canonicalSimplex(term.simplex);
+    const value = mul(rational(term.value), [BigInt(oriented.orientation), 1n]);
+    const key = JSON.stringify(oriented.simplex);
+    result.set(key, add(result.get(key) || [0n, 1n], value));
+  }
+  return result;
+}
+
+function cochainEvaluate(cochain, chain) {
+  const values = cochainMap(cochain);
+  let total = [0n, 1n];
+  for (const term of core.canonicalChain(chain)) {
+    const value = values.get(JSON.stringify(term.simplex)) || [0n, 1n];
+    total = add(total, mul(rational(term.coefficient), value));
+  }
+  return total;
+}
+
+function coboundary(simplices, degree, cochain) {
+  if (!Number.isInteger(degree) || degree < 0) throw new Error('invalid_degree');
+  const basis = core.complexBasis(simplices).get(degree + 1) || [];
+  const terms = [];
+  for (const simplex of basis) {
+    const value = cochainEvaluate(cochain, core.simplexBoundary(simplex));
+    if (!zero(value)) terms.push({ value: text(value), simplex });
+  }
+  return { degree: degree + 1, terms };
+}
+
+function execute(request) {
+  const operation = request && request.op;
+  guard(request, operation);
+  let value;
+  if (operation === 'boundary_membership') {
+    if (!Number.isInteger(request.dimension) || request.dimension < 0) throw new Error('invalid_dimension');
+    const info = core.incidence(request.simplices, request.dimension + 1);
+    const targetMap = new Map(core.canonicalChain(request.chain).map(term => [JSON.stringify(term.simplex), rational(term.coefficient)]));
+    const target = info.lower_basis.map(simplex => text(targetMap.get(JSON.stringify(simplex)) || [0n, 1n]));
+    const answer = solve(info.matrix, target);
+    const witness = answer.member ? answer.solution.map((coefficient, i) => ({ coefficient: text(coefficient), simplex: info.upper_basis[i] })).filter(term => term.coefficient !== '0') : [];
+    value = { member: answer.member, witness_chain: witness };
+  } else if (operation === 'betti_numbers') {
+    const basis = core.complexBasis(request.simplices);
+    const dimensions = [...basis.keys()];
+    const max = dimensions.length ? Math.max(...dimensions) : 0;
+    const counts = Array.from({ length: max + 1 }, (_, k) => (basis.get(k) || []).length);
+    const ranks = [0, ...Array.from({ length: max }, (_, i) => core.matrixRank(core.incidence(request.simplices, i + 1).matrix))];
+    const betti = counts.map((count, k) => count - ranks[k] - (k < max ? ranks[k + 1] : 0));
+    value = { simplex_counts: counts, boundary_ranks: ranks, betti, coefficient_field: 'Q' };
+  } else if (operation === 'euler_characteristic') {
+    const basis = core.complexBasis(request.simplices);
+    const dimensions = [...basis.keys()];
+    const max = dimensions.length ? Math.max(...dimensions) : 0;
+    const counts = Array.from({ length: max + 1 }, (_, k) => (basis.get(k) || []).length);
+    value = { simplex_counts: counts, euler_characteristic: counts.reduce((sum, count, k) => sum + (k % 2 ? -count : count), 0) };
+  } else if (operation === 'cochain_evaluate') {
+    value = { value: text(cochainEvaluate(request.cochain, request.chain)) };
+  } else if (operation === 'coboundary') {
+    value = coboundary(request.simplices, request.degree, request.cochain);
+  } else if (operation === 'coboundary_squared') {
+    const first = coboundary(request.simplices, request.degree, request.cochain);
+    const second = coboundary(request.simplices, request.degree + 1, first.terms);
+    value = { first, second, zero: second.terms.length === 0 };
+  } else if (operation === 'stokes_identity') {
+    const delta = coboundary(request.simplices, request.degree, request.cochain).terms;
+    const left = cochainEvaluate(delta, request.chain);
+    const right = cochainEvaluate(request.cochain, core.chainBoundary(request.chain));
+    value = { left: text(left), right: text(right), equal: left[0] * right[1] === right[0] * left[1], finite_only: true };
+  } else if (operation === 'chain_map') {
+    const mapping = request.vertex_map;
+    if (!mapping || typeof mapping !== 'object' || Array.isArray(mapping) || Object.entries(mapping).some(([k, v]) => typeof k !== 'string' || typeof v !== 'string')) throw new Error('invalid_vertex_map');
+    const targetBasis = core.complexBasis(request.target_complex);
+    const target = new Set([...targetBasis.values()].flat().map(simplex => JSON.stringify(simplex)));
+    const mapTerms = terms => {
+      const output = [];
+      for (const term of core.canonicalChain(terms)) {
+        const mapped = term.simplex.map(vertex => mapping[vertex]);
+        if (mapped.some(vertex => vertex === undefined)) throw new Error('missing_vertex_map');
+        if (new Set(mapped).size !== mapped.length) continue;
+        const oriented = core.canonicalSimplex(mapped);
+        if (!target.has(JSON.stringify(oriented.simplex))) throw new Error('non_simplicial_map');
+        output.push({ coefficient: text(mul(rational(term.coefficient), [BigInt(oriented.orientation), 1n])), simplex: oriented.simplex });
+      }
+      return core.canonicalChain(output);
+    };
+    const mapped = mapTerms(request.chain);
+    const boundaryThenMap = mapTerms(core.chainBoundary(request.chain));
+    const mapThenBoundary = core.chainBoundary(mapped);
+    value = { mapped_chain: mapped, boundary_then_map: boundaryThenMap, map_then_boundary: mapThenBoundary, commutes: JSON.stringify(boundaryThenMap) === JSON.stringify(mapThenBoundary), finite_only: true };
+  } else if (operation === 'model_obligations') {
+    if (!Object.prototype.hasOwnProperty.call(OBLIGATIONS, request.claim) || !Array.isArray(request.provided)) throw new Error('invalid_claim');
+    value = { claim: request.claim, missing: OBLIGATIONS[request.claim].filter(role => !request.provided.includes(role)), source_placeholders_resolved: false, externally_satisfied: false };
+  } else if (operation === 'release_gate') {
+    if (!Object.prototype.hasOwnProperty.call(GATES, request.request)) throw new Error('invalid_release_request');
+    value = { decision: 'exact_gate', missing: GATES[request.request], authorized: false };
+  } else {
+    throw new Error('unknown_operation');
+  }
+  return { ok: true, value, error: null, external_credit: false };
+}
+
+function safeExecute(request) {
+  try {
+    return execute(request);
+  } catch (error) {
+    const code = error && error.message ? error.message : 'invalid_request';
+    return { ok: false, value: null, error: { code, message: code }, external_credit: false };
+  }
+}
+
+module.exports = { safeExecute, solve, cochainMap, cochainEvaluate, coboundary };
+
+if (require.main === module) {
+  try {
+    const request = JSON.parse(fs.readFileSync(0, 'utf8'));
+    const output = Array.isArray(request) ? request.map(safeExecute) : safeExecute(request);
+    process.stdout.write(JSON.stringify(output));
+  } catch (error) {
+    const code = error && error.message ? error.message : 'invalid_json';
+    process.stdout.write(JSON.stringify({ ok: false, value: null, error: { code, message: code }, external_credit: false }));
+  }
+}
