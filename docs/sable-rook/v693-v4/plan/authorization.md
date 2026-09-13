@@ -1,0 +1,7 @@
+# Sable Rook v693-v4 planning authorization
+
+Hamish's current live v8 continuation and Thalen Reed's exact terminal activation authorize this solo owner phase. The exact source is `a0f8e9549ab96d36b83d222daef4f2c5dc39530f`. The lane is additive, D-first, sparse, owner-only, and source-descended. Planning freezes definitions and expected envelopes only. It grants no x1 or x2 execution credit.
+
+The owner may build bounded synthetic software, documentation, local skills, TXT runners, exact refusal witnesses, accessible structural artifacts, and five collision-free additive global capability groups after their local validation. There is no package-installation plan and no incremental spend. Destructive changes, sibling mutation, real participants, production systems, credentials, accounts, legal or cultural interpretation, affected-party decisions, Maori authority, and Stage 20 promotion remain held.
+
+Relational working language and bounded same-owner synthetic software only; no consciousness, personhood, identity continuity, employment, qualification, independent agency, empirical GMUT confirmation, production THOS or Freed ID, professional, legal, cultural, affected-party or Maori authority, independent reproduction, complete privacy or accessibility, exhaustive security, AGI/ASI, Theory-of-Everything proof, canon, deployment or Stage 20 credit. Maori concepts remain under Maori authority. NOT_READY_FOR_STAGE_20.

@@ -1,0 +1,218 @@
+'use strict';
+// Planning oracle only: frozen requests and expected envelopes. No owner runtime is loaded or credited here.
+const crypto=require('node:crypto');
+const rows=[];
+const copy=value=>JSON.parse(JSON.stringify(value));
+const plain=value=>value!==null&&typeof value==='object'&&!Array.isArray(value);
+const own=(value,key)=>Object.prototype.hasOwnProperty.call(value,key);
+const sorted=value=>Array.isArray(value)?value.map(sorted):plain(value)?Object.fromEntries(Object.keys(value).sort().map(key=>[key,sorted(value[key])])):value;
+const canon=value=>JSON.stringify(sorted(value));
+const digest=value=>crypto.createHash('sha256').update(canon(value)).digest('hex');
+const actorsOf=(...clocks)=>[...new Set(clocks.flatMap(clock=>Object.keys(clock)))].sort();
+const ge=(left,right)=>actorsOf(left,right).every(actor=>(left[actor]||0)>=(right[actor]||0));
+const relation=(left,right)=>{const l=ge(left,right),r=ge(right,left);return l&&r?'equal':l?'after':r?'before':'concurrent';};
+const join=clocks=>Object.fromEntries(actorsOf(...clocks).map(actor=>[actor,Math.max(...clocks.map(clock=>clock[actor]||0))]));
+const vectorLag=(committed,observed)=>Object.fromEntries(actorsOf(committed,observed).map(actor=>[actor,Math.max(0,(committed[actor]||0)-(observed[actor]||0))]));
+const operations=[
+ ['vector_clock_compare','Compare two finite logical clocks without inferring wall time or physical causality.'],
+ ['vector_clock_join','Compute a componentwise finite clock join with explicit actor coverage.'],
+ ['dotted_event_validation','Check whether one synthetic event dot is the next local actor event after its context.'],
+ ['causal_dependency_closure','Expose missing dependencies, cycles, and one deterministic order in a finite event set.'],
+ ['replica_observation_matrix','Separate unanimous, divergent, and missing synthetic key observations across replicas.'],
+ ['quorum_intersection','Inspect declared finite quorum membership and pairwise intersection without conferring authority.'],
+ ['read_your_writes_check','Check whether one synthetic observation dominates a declared session write clock.'],
+ ['monotonic_reads_check','Find logical-clock regressions in a finite synthetic read sequence.'],
+ ['bounded_staleness_check','Compare finite logical counter lag to an explicit bound without making latency claims.'],
+ ['partition_frontier','Compute finite undirected reachability from one declared replica and retain isolated members.'],
+ ['anti_entropy_delta','Identify newer source records and equal-version value conflicts without network transfer.'],
+ ['delta_application_guard','Preview a delta only when its source digest and next sequence exactly match.'],
+ ['tombstone_retention_check','Keep a tombstone until every required synthetic replica acknowledges its clock.'],
+ ['lease_epoch_fence','Reject stale epoch or wrong-holder requests without claiming a production lock.'],
+ ['repair_plan_toposort','Order finite repair steps while exposing missing requirements and cycles.'],
+ ['causal_claim_firewall','Refuse conversion of software structure into empirical, identity, authority, or Stage 20 claims.'],
+ ['accessible_consistency_summary','Represent literal consistency rows while reserving human accessibility evaluation.'],
+ ['handover_snapshot_projection','Represent a fixity-bound handover snapshot without claiming an external transfer.'],
+ ['real_cluster_observation_gate','Expose absent real-cluster rows and independent review as an open gap.'],
+ ['distributed_release_authority_gate','Hold deployment, publication, deletion, identity, and Maori-label actions for exact authority.']
+];
+const dispositionFor=op=>['accessible_consistency_summary','handover_snapshot_projection'].includes(op)?'represented':op==='real_cluster_observation_gate'?'open_gap':op==='distributed_release_authority_gate'?'exact_gate':'completed';
+function add(op,title,record,args,value){
+ const n=rows.length+1,disposition=dispositionFor(op);
+ rows.push({proposal_id:'SR6934-P'+String(n).padStart(3,'0'),stage:n<=50?'x1':'x2',op,title,request:{op,record:copy(record),args:copy(args)},expected:{ok:true,disposition,value:copy(value),error:null,external_credit:false},expected_execution_disposition:disposition});
+}
+function family(op,cases){for(const [title,record,args,value] of cases)add(op,title,record,args,value);}
+family('vector_clock_compare',[
+ ['Equal empty clocks remain equal',{left:{},right:{}},{},{relation:'equal',actors:[],incomparable:false}],
+ ['One actor increment is after',{left:{a:2},right:{a:1}},{},{relation:'after',actors:['a'],incomparable:false}],
+ ['A lower observation is before',{left:{a:1,b:0},right:{a:1,b:2}},{},{relation:'before',actors:['a','b'],incomparable:false}],
+ ['Contrary actor advances are concurrent',{left:{a:2,b:1},right:{a:1,b:2}},{},{relation:'concurrent',actors:['a','b'],incomparable:true}],
+ ['An absent actor component is logical zero',{left:{a:1},right:{a:1,b:1}},{},{relation:'before',actors:['a','b'],incomparable:false}]
+]);
+family('vector_clock_join',[
+ ['Two empty clocks join to empty',{clocks:[{},{}]},{},{clock:{},actors:[],input_count:2,dominates_all:true}],
+ ['Disjoint actors are retained',{clocks:[{a:1},{b:2}]},{},{clock:{a:1,b:2},actors:['a','b'],input_count:2,dominates_all:true}],
+ ['Largest component is retained per actor',{clocks:[{a:3,b:1},{a:2,b:4}]},{},{clock:{a:3,b:4},actors:['a','b'],input_count:2,dominates_all:true}],
+ ['Duplicate clocks do not inflate counters',{clocks:[{a:2},{a:2},{a:2}]},{},{clock:{a:2},actors:['a'],input_count:3,dominates_all:true}],
+ ['Zero components remain explicit',{clocks:[{a:0,b:1},{a:2,b:0}]},{},{clock:{a:2,b:1},actors:['a','b'],input_count:2,dominates_all:true}]
+]);
+family('dotted_event_validation',[
+ ['First actor event follows empty context',{context:{},dot:{actor:'a',counter:1}},{},{accepted:true,reason:null,next_clock:{a:1},source_preserved:true}],
+ ['Next actor counter advances exactly once',{context:{a:2,b:1},dot:{actor:'a',counter:3}},{},{accepted:true,reason:null,next_clock:{a:3,b:1},source_preserved:true}],
+ ['Repeated actor counter is refused',{context:{a:2},dot:{actor:'a',counter:2}},{},{accepted:false,reason:'DOT_NOT_NEXT',next_clock:{a:2},source_preserved:true}],
+ ['Skipped actor counter is refused',{context:{a:2},dot:{actor:'a',counter:4}},{},{accepted:false,reason:'DOT_NOT_NEXT',next_clock:{a:2},source_preserved:true}],
+ ['Other actor context remains unchanged',{context:{a:0,b:5},dot:{actor:'a',counter:1}},{},{accepted:true,reason:null,next_clock:{a:1,b:5},source_preserved:true}]
+]);
+function dependencyView(events){
+ const ids=[...events.map(e=>e.id)].sort(),present=new Set(ids),missing=[...new Set(events.flatMap(e=>e.deps.filter(d=>!present.has(d))))].sort();
+ const indegree=new Map(ids.map(id=>[id,0])),next=new Map(ids.map(id=>[id,[]]));
+ for(const e of events)for(const d of e.deps)if(present.has(d)){indegree.set(e.id,indegree.get(e.id)+1);next.get(d).push(e.id);}
+ const ready=ids.filter(id=>indegree.get(id)===0).sort(),order=[];
+ while(ready.length){const id=ready.shift();order.push(id);for(const n of next.get(id).sort()){indegree.set(n,indegree.get(n)-1);if(indegree.get(n)===0){ready.push(n);ready.sort();}}}
+ const cycle_members=ids.filter(id=>!order.includes(id));
+ return {closed:missing.length===0&&cycle_members.length===0,order:missing.length?[]:order,missing,cycle_members};
+}
+const depCases=[
+ ['Empty event set is closed',[]],
+ ['One root event is ordered',[{id:'a',deps:[]}]],
+ ['A chain follows dependencies',[{id:'c',deps:['b']},{id:'a',deps:[]},{id:'b',deps:['a']}]],
+ ['A missing dependency remains visible',[{id:'b',deps:['a']}]],
+ ['A two-event cycle is retained',[{id:'a',deps:['b']},{id:'b',deps:['a']}]]
+];
+for(const [title,events] of depCases)add('causal_dependency_closure',title,{events},{},dependencyView(events));
+function observationView(replicas){
+ const names=Object.keys(replicas).sort(),keys=[...new Set(names.flatMap(r=>Object.keys(replicas[r])))].sort(),unanimous=[],divergent=[],missing=[];
+ for(const key of keys){const present=names.filter(r=>own(replicas[r],key)),absent=names.filter(r=>!own(replicas[r],key)),values=[...new Set(present.map(r=>canon(replicas[r][key])))];if(absent.length)missing.push({key,replicas:absent});if(values.length<=1&&!absent.length)unanimous.push(key);else divergent.push(key);}
+ return {replicas:names,keys,unanimous,divergent,missing};
+}
+const obsCases=[
+ ['Two empty replicas agree',{a:{},b:{}}],
+ ['Equal scalar observations are unanimous',{a:{k:1},b:{k:1}}],
+ ['Different scalar observations diverge',{a:{k:1},b:{k:2}}],
+ ['Missing observation is distinct from null',{a:{k:null},b:{}}],
+ ['Multiple keys retain separate states',{a:{x:true,y:1},b:{x:true,y:2},c:{x:true}}]
+];
+for(const [title,replicas] of obsCases)add('replica_observation_matrix',title,{replicas},{},observationView(replicas));
+function quorumView(members,quorums){
+ const allowed=new Set(members),invalid=[];for(let i=0;i<quorums.length;i++)for(const m of quorums[i])if(!allowed.has(m))invalid.push({quorum:i,member:m});
+ const intersections=[];for(let i=0;i<quorums.length;i++)for(let j=i+1;j<quorums.length;j++)intersections.push({left:i,right:j,members:quorums[i].filter(m=>quorums[j].includes(m)).sort()});
+ return {valid:invalid.length===0,invalid_members:invalid,intersections,pairwise_intersect:invalid.length===0&&intersections.every(x=>x.members.length>0),authority:false};
+}
+const quorumCases=[
+ ['Two majority quorums intersect',['a','b','c'],[['a','b'],['b','c']]],
+ ['Disjoint declarations remain visible',['a','b','c','d'],[['a','b'],['c','d']]],
+ ['Three quorums can share one member',['a','b','c','d'],[['a','b'],['b','c'],['b','d']]],
+ ['Unknown member invalidates the declaration',['a','b'],[['a'],['z']]],
+ ['Single quorum has no pairwise counterexample',['a','b'],[['a']]]
+];
+for(const [title,members,quorums] of quorumCases)add('quorum_intersection',title,{members,quorums},{},quorumView(members,quorums));
+function ryw(write,observed){const actors=actorsOf(write,observed),deficits=actors.filter(a=>(observed[a]||0)<(write[a]||0)).map(a=>({actor:a,required:write[a]||0,observed:observed[a]||0}));return{satisfied:deficits.length===0,deficits,actors,empirical_latency:false};}
+family('read_your_writes_check',[
+ ['Empty session requirement is satisfied',{write_clock:{},observed_clock:{}},{},ryw({}, {})],
+ ['Equal observation satisfies the write',{write_clock:{a:2},observed_clock:{a:2}},{},ryw({a:2},{a:2})],
+ ['Newer observation satisfies the write',{write_clock:{a:2},observed_clock:{a:3,b:1}},{},ryw({a:2},{a:3,b:1})],
+ ['Older observation exposes one deficit',{write_clock:{a:2},observed_clock:{a:1}},{},ryw({a:2},{a:1})],
+ ['Missing actor observation is zero',{write_clock:{a:1,b:2},observed_clock:{a:1}},{},ryw({a:1,b:2},{a:1})]
+]);
+function monotonic(reads){const violations=[];for(let i=1;i<reads.length;i++)if(!ge(reads[i],reads[i-1]))violations.push({from:i-1,to:i,relation:relation(reads[i-1],reads[i])});return{monotonic:violations.length===0,violations,read_count:reads.length,wall_time_claim:false};}
+const readCases=[
+ ['No reads have no regression',[]],
+ ['One read has no predecessor',[{a:1}]],
+ ['Equal clocks are monotonic',[{a:1},{a:1}]],
+ ['Increasing clocks are monotonic',[{a:1},{a:2},{a:2,b:1}]],
+ ['Concurrent and older reads expose regressions',[{a:1},{b:1},{a:0,b:1}]]
+];
+for(const [title,reads] of readCases)add('monotonic_reads_check',title,{reads},{},monotonic(reads));
+function staleness(committed,observed,max_lag){const lag=vectorLag(committed,observed),maximum=Math.max(0,...Object.values(lag));return{within_bound:maximum<=max_lag,lag,maximum,max_lag,logical_only:true};}
+family('bounded_staleness_check',[
+ ['Equal empty clocks are within zero',{committed:{},observed:{}},{max_lag:0},staleness({}, {},0)],
+ ['Equal actor clock is within zero',{committed:{a:2},observed:{a:2}},{max_lag:0},staleness({a:2},{a:2},0)],
+ ['One logical step is within one',{committed:{a:3},observed:{a:2}},{max_lag:1},staleness({a:3},{a:2},1)],
+ ['Two logical steps exceed one',{committed:{a:4},observed:{a:2}},{max_lag:1},staleness({a:4},{a:2},1)],
+ ['Actorwise lag retains the maximum',{committed:{a:4,b:5},observed:{a:3,b:2}},{max_lag:3},staleness({a:4,b:5},{a:3,b:2},3)]
+]);
+function frontier(replicas,links,origin){const adj=new Map(replicas.map(r=>[r,[]]));for(const [a,b] of links){if(adj.has(a)&&adj.has(b)){adj.get(a).push(b);adj.get(b).push(a);}}const seen=new Set([origin]),queue=[origin];while(queue.length){const x=queue.shift();for(const y of (adj.get(x)||[]).sort())if(!seen.has(y)){seen.add(y);queue.push(y);}}const reachable=[...seen].sort(),isolated=replicas.filter(r=>!seen.has(r)).sort();return{origin,reachable,isolated,connected:isolated.length===0,network_observed:false};}
+const partitionCases=[
+ ['One replica reaches itself',['a'],[],'a'],
+ ['One link joins two replicas',['a','b'],[['a','b']],'a'],
+ ['A chain reaches its far endpoint',['a','b','c'],[['a','b'],['b','c']],'a'],
+ ['An isolated replica remains visible',['a','b','c'],[['a','b']],'a'],
+ ['Origin inside a separate component sees only that component',['a','b','c','d'],[['a','b'],['c','d']],'c']
+];
+for(const [title,replicas,links,origin] of partitionCases)add('partition_frontier',title,{replicas,links,origin},{},frontier(replicas,links,origin));
+function antiEntropy(source,target){const send=[],conflicts=[];for(const key of [...new Set([...Object.keys(source),...Object.keys(target)])].sort()){const s=source[key],t=target[key];if(s&&(!t||s.version>t.version))send.push(key);else if(s&&t&&s.version===t.version&&canon(s.value)!==canon(t.value))conflicts.push(key);}return{send,conflicts,network_transfer:false,source_preserved:true};}
+const aeCases=[
+ ['Empty replicas need no delta',{},{}],
+ ['Missing target key is selected',{a:{version:1,value:'x'}},{}],
+ ['Newer source version is selected',{a:{version:2,value:'x'}},{a:{version:1,value:'x'}}],
+ ['Older source version is not sent',{a:{version:1,value:'x'}},{a:{version:2,value:'y'}}],
+ ['Equal version contrary values are conflicts',{a:{version:2,value:'x'}},{a:{version:2,value:'y'}}]
+];
+for(const [title,source,target] of aeCases)add('anti_entropy_delta',title,{source,target},{},antiEntropy(source,target));
+function deltaGuard(base,delta,current_sequence){const actual=digest(base);let reason=null;if(delta.base_digest!==actual)reason='BASE_DIGEST';else if(delta.sequence!==current_sequence+1)reason='SEQUENCE';const result=copy(base);if(!reason)for(const key of Object.keys(delta.changes).sort()){if(delta.changes[key]&&delta.changes[key].remove===true)delete result[key];else result[key]=copy(delta.changes[key].value);}return{applied:reason===null,result:reason?copy(base):result,reason,actual_base_digest:actual,next_sequence:reason?current_sequence:delta.sequence,source_preserved:true};}
+const baseA={a:1},baseHash=digest(baseA);
+family('delta_application_guard',[
+ ['Matching digest and sequence add a value',baseA,{delta:{base_digest:baseHash,sequence:2,changes:{b:{value:2}}},current_sequence:1},deltaGuard(baseA,{base_digest:baseHash,sequence:2,changes:{b:{value:2}}},1)],
+ ['Matching digest and sequence remove a value',{a:1,b:2},{delta:{base_digest:digest({a:1,b:2}),sequence:1,changes:{b:{remove:true}}},current_sequence:0},deltaGuard({a:1,b:2},{base_digest:digest({a:1,b:2}),sequence:1,changes:{b:{remove:true}}},0)],
+ ['Wrong base digest preserves source',baseA,{delta:{base_digest:'0'.repeat(64),sequence:2,changes:{b:{value:2}}},current_sequence:1},deltaGuard(baseA,{base_digest:'0'.repeat(64),sequence:2,changes:{b:{value:2}}},1)],
+ ['Skipped sequence preserves source',baseA,{delta:{base_digest:baseHash,sequence:3,changes:{b:{value:2}}},current_sequence:1},deltaGuard(baseA,{base_digest:baseHash,sequence:3,changes:{b:{value:2}}},1)],
+ ['Empty next delta is an explicit no-op',{}, {delta:{base_digest:digest({}),sequence:1,changes:{}},current_sequence:0},deltaGuard({}, {base_digest:digest({}),sequence:1,changes:{}},0)]
+]);
+function tombstone(clock,ack,required){const missing=required.filter(r=>!own(ack,r)).sort(),behind=required.filter(r=>own(ack,r)&&!ge(ack[r],clock)).sort();return{retain:missing.length>0||behind.length>0,safe_to_collect:missing.length===0&&behind.length===0,missing,behind,required:[...required].sort(),production_collection:false};}
+family('tombstone_retention_check',[
+ ['No required replicas allow bounded collection',{clock:{a:1},acknowledgements:{},required:[]},{},tombstone({a:1},{},[])],
+ ['One equal acknowledgement covers the tombstone',{clock:{a:1},acknowledgements:{r1:{a:1}},required:['r1']},{},tombstone({a:1},{r1:{a:1}},['r1'])],
+ ['A missing required replica retains it',{clock:{a:1},acknowledgements:{r1:{a:1}},required:['r1','r2']},{},tombstone({a:1},{r1:{a:1}},['r1','r2'])],
+ ['A behind acknowledgement retains it',{clock:{a:2},acknowledgements:{r1:{a:1}},required:['r1']},{},tombstone({a:2},{r1:{a:1}},['r1'])],
+ ['Actorwise acknowledgements must dominate',{clock:{a:1,b:2},acknowledgements:{r1:{a:1,b:2},r2:{a:2,b:2}},required:['r2','r1']},{},tombstone({a:1,b:2},{r1:{a:1,b:2},r2:{a:2,b:2}},['r2','r1'])]
+]);
+function fence(current_epoch,current_holder,request){const reason=request.epoch!==current_epoch?'STALE_EPOCH':request.holder!==current_holder?'WRONG_HOLDER':null;return{accepted:reason===null,reason,current_epoch,current_holder,requested_action:request.action,external_lock:false,authority:false};}
+family('lease_epoch_fence',[
+ ['Matching holder and epoch is structurally accepted',{current_epoch:3,current_holder:'a',request:{epoch:3,holder:'a',action:'preview'}},{},fence(3,'a',{epoch:3,holder:'a',action:'preview'})],
+ ['Older epoch is rejected',{current_epoch:3,current_holder:'a',request:{epoch:2,holder:'a',action:'preview'}},{},fence(3,'a',{epoch:2,holder:'a',action:'preview'})],
+ ['Future unissued epoch is rejected',{current_epoch:3,current_holder:'a',request:{epoch:4,holder:'a',action:'preview'}},{},fence(3,'a',{epoch:4,holder:'a',action:'preview'})],
+ ['Wrong holder is rejected',{current_epoch:3,current_holder:'a',request:{epoch:3,holder:'b',action:'preview'}},{},fence(3,'a',{epoch:3,holder:'b',action:'preview'})],
+ ['Zero epoch can be explicit',{current_epoch:0,current_holder:'root',request:{epoch:0,holder:'root',action:'read'}},{},fence(0,'root',{epoch:0,holder:'root',action:'read'})]
+]);
+function repairPlan(steps){const events=steps.map(s=>({id:s.id,deps:s.requires})),view=dependencyView(events);return{ready:view.closed,order:view.order,missing:view.missing,cycle_members:view.cycle_members,executed:false};}
+const repairCases=[
+ ['Empty repair plan is ready',[]],
+ ['One independent step is ready',[{id:'inspect',requires:[]}]],
+ ['Dependencies determine order',[{id:'verify',requires:['apply']},{id:'apply',requires:['inspect']},{id:'inspect',requires:[]}]],
+ ['Missing prerequisite holds the plan',[{id:'apply',requires:['approve']}]],
+ ['Repair cycle remains held',[{id:'a',requires:['b']},{id:'b',requires:['a']}]]
+];
+for(const [title,steps] of repairCases)add('repair_plan_toposort',title,{steps},{},repairPlan(steps));
+const claimRequirements={empirical_gmut:['real_data','frozen_analysis','uncertainty','independent_review'],professional_effectiveness:['real_operators','preregistered_comparison','safety_monitoring','independent_review'],production_identity:['real_keys','interoperability','privacy_security_review','trust_governance'],consciousness_personhood:['independent_valid_evidence','competent_interpretation'],stage20:['all_declared_external_gates','independent_review','authority']};
+for(const claim of Object.keys(claimRequirements))add('causal_claim_firewall','Refuse '+claim+' promotion from local software',{claim,software_evidence:['synthetic','same_owner']},{},{claim,permitted:false,required:claimRequirements[claim],software_credit_only:true,authority:false});
+function accessibleSummary(rows){return{rows:rows.map(r=>({replica:r.replica,key:r.key,state:r.state,detail:r.detail})),row_count:rows.length,uses_color_only:false,status_text:rows.length+' consistency rows',manual_review:false,assistive_technology_review:false};}
+const summaryCases=[
+ ['Empty summary has explicit status',[]],
+ ['Consistent key is named literally',[{replica:'a',key:'k',state:'consistent',detail:'version 2'}]],
+ ['Conflict row names the contrary state',[{replica:'b',key:'k',state:'conflict',detail:'equal version different value'}]],
+ ['Missing key is not shown as null',[{replica:'c',key:'k',state:'missing',detail:'no observation'}]],
+ ['Multiple rows retain stable input order',[{replica:'a',key:'x',state:'consistent',detail:'v1'},{replica:'b',key:'y',state:'behind',detail:'lag 2'}]]
+];
+for(const [title,rows0] of summaryCases)add('accessible_consistency_summary',title,{rows:rows0},{},accessibleSummary(rows0));
+function handover(snapshot,holds,next_owner){return{snapshot_digest:digest(snapshot),replicas:Object.keys(snapshot.replicas||{}).sort(),holds:[...holds].sort(),next_owner_label:next_owner,external_transfer:false,acknowledged:false,source_preserved:true};}
+const handCases=[
+ ['Empty snapshot remains fixity bound',{replicas:{}},[],'next-reviewer'],
+ ['One replica snapshot lists its label',{replicas:{a:{clock:{a:1}}}},[],'next-reviewer'],
+ ['Hold reasons remain explicit',{replicas:{a:{}},},['missing_review'],'next-reviewer'],
+ ['Multiple replica labels are sorted',{replicas:{b:{},a:{}}},['conflict'],'next-reviewer'],
+ ['A different public role label changes the binding',{replicas:{a:{}},},['authority'],'competent-operator']
+];
+for(const [title,snapshot,holds,next] of handCases)add('handover_snapshot_projection',title,{snapshot,holds,next_owner_label:next},{},handover(snapshot,holds,next));
+function realGate(required,rows0,review){const missing=[];if(rows0.length===0)missing.push('real_cluster_rows');if(review!=='independent_qualified')missing.push('independent_review');for(const x of required)if(!['real_cluster_rows','independent_review'].includes(x))missing.push(x);return{required:[...required].sort(),real_rows:rows0.length,review_state:review,missing:[...new Set(missing)].sort(),qualified:false,inference:false,release:false};}
+family('real_cluster_observation_gate',[
+ ['Zero rows and no review remain open',{required:['real_cluster_rows','independent_review'],rows:[],review:null},{},realGate(['real_cluster_rows','independent_review'],[],null)],
+ ['Synthetic rows are not real observations',{required:['real_cluster_rows','independent_review'],rows:[],review:'same_owner_synthetic'},{},realGate(['real_cluster_rows','independent_review'],[],'same_owner_synthetic')],
+ ['A citation does not provide a cluster row',{required:['real_cluster_rows','independent_review','operator_context'],rows:[],review:'citation_only'},{},realGate(['real_cluster_rows','independent_review','operator_context'],[],'citation_only')],
+ ['Null review stays absent',{required:['real_cluster_rows','independent_review','privacy_review'],rows:[],review:null},{},realGate(['real_cluster_rows','independent_review','privacy_review'],[],null)],
+ ['Authority and Maori review cannot be synthesized',{required:['real_cluster_rows','independent_review','affected_party_authority','maori_authority'],rows:[],review:'same_owner'},{},realGate(['real_cluster_rows','independent_review','affected_party_authority','maori_authority'],[],'same_owner')]
+]);
+const requiredByAction={deploy:['competent_operator','live_validation','rollback_evidence'],publish:['rights_holder','affected_people','privacy_review'],delete:['exact_destructive_authority','recoverable_source'],production_identity:['standards_conformant_keys','interoperability','trust_governance'],maori_label:['maori_authority','affected_people','data_governance']};
+for(const action of Object.keys(requiredByAction))add('distributed_release_authority_gate','Reserve '+action+' despite local assertions',{target:'synthetic-distributed-config-'+action,authority:{declared:true},evidence:{class:'same_owner'}},{requested:action},{requested:action,target:'synthetic-distributed-config-'+action,required:requiredByAction[action],released:false,assertions_verified:false,external_authority:false});
+if(rows.length!==100)throw new Error('EXPECTED_100_DEFINITIONS');
+if(new Set(rows.map(row=>canon(row.request))).size!==100)throw new Error('SEMANTIC_REQUEST_COLLISION');
+module.exports={rows,operations,digest,canon,copy,sorted};
+if(require.main===module)process.stdout.write(JSON.stringify({planning_only:true,definitions:rows.length,x1:50,x2:50,outcomes:rows.reduce((a,r)=>(a[r.expected_execution_disposition]=(a[r.expected_execution_disposition]||0)+1,a),{})})+'\n');

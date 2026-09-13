@@ -1,0 +1,11 @@
+'use strict';
+const fs=require('node:fs'),path=require('node:path');
+const root=path.resolve(process.argv[2]||'.'),stage=process.argv[3];
+if(!['plan','x1','x2'].includes(stage))throw new Error('STAGE');
+const ownerRoot=path.join(root,'docs/sable-rook/v693-v4'),stageRoot=path.join(ownerRoot,stage),target=path.join(stageRoot,'staged-allowlist.json');
+if(fs.existsSync(target))throw new Error('ALLOWLIST_EXISTS');
+const files=fs.readdirSync(stageRoot,{recursive:true}).filter(rel=>fs.statSync(path.join(stageRoot,rel)).isFile()).map(rel=>stage+'/'+rel.replaceAll('\\','/'));
+files.push(stage+'/staged-allowlist.json',stage+'/manifest.json');
+const paths=[...new Set(files)].sort();
+fs.writeFileSync(target,JSON.stringify({schema:'ghc.family.staged-surface-allowlist.v1',owner:'Sable Rook',phase:'v693-v4',stage,paths,path_count:paths.length,owner_only:true,source_or_sibling_paths:0,hash_domain:'raw Git blob bytes after staging',lifecycle_separation:true,boundary:'Same-owner staged review only. NOT_READY_FOR_STAGE_20.'},null,2)+'\n',{encoding:'utf8',flag:'wx'});
+process.stdout.write(JSON.stringify({stage,path_count:paths.length})+'\n');
