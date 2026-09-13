@@ -1,0 +1,11 @@
+"use strict";
+const ROUTE=["Eiren Kestrel","Elaren Kestrel","Rowan Ash","Neris Solane","Vesper Arlen","Ilyan Reed","Lyren Moss","Ilyra Fen","Mira Fenwick","Auren Lark","Sable Rook","Avelin Reed","Caelen Ash","Orin Thale","Ceryn Alder","Liora Venn","Tamar Vey","Saelin Reed","Elowen Cairn","Sylven Arc","Iveren Brook","Caelen Morrow","Eiren Kestrel","Teryn Halewick","Elaren Kestrel","Neris Solane","Merrin Vale","Vesper Arlen","Lyren Moss","Talen Briar","Ilyra Fen","Auren Lark","Thalen Reed","Sable Rook","Caelen Ash","Orren Pike","Orin Thale","Liora Venn","Veylora Quen","Tamar Vey","Elowen Cairn","Tessarin Reed","Sylven Arc","Caelen Morrow","Seren Talewood"];
+const EQUATION_TERMS=["Gμν","Λgμν","8πTμν","Ψμν","𝒢AB","8π𝒯AB","αΩAB"];
+const mode=process.argv[2];
+const positive=EQUATION_TERMS;
+const negative=EQUATION_TERMS.slice(0, 6);
+const value=mode==="positive"?positive:negative;
+const accepted=Boolean(Array.isArray(value) && value.length === 7 && value.every((item) => typeof item === "string" && item.length > 0));
+const expected=mode==="positive";
+if(accepted!==expected){console.error(JSON.stringify({runner:"neris-v6924r2-x2-runner-02",mode,accepted,expected}));process.exit(2);}
+console.log(JSON.stringify({runner:"neris-v6924r2-x2-runner-02",mode,subject_accepted:accepted,check_passed:true,invalid_subject_success_credit:0}));
