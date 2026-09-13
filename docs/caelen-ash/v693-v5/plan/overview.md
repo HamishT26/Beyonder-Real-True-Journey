@@ -1,0 +1,9 @@
+# Caelen Ash v693-v5 planning-only overview
+
+This planning commit freezes 100 finite abstract-argumentation contracts after reviewing all 100 immediate Sable proposals at zero Caelen novelty, completion and authority credit. Twenty operation families have five cases each. Families 1 through 10 are reserved for x1 and families 11 through 20 for x2. The expected phase tally is 80 completed, 10 represented, 5 open gaps and 5 exact gates; these are preregistered expectations, not observations.
+
+THOS Body is primary. Four bounded practices are synthetic argumentation-semantics verification, finite counterexample explanation, provenance-aware claim challenge, and accessible disagreement handover. Dung semantics, ICCMA task vocabulary, PROV-O, WCAG 2.2, RFC 8259 and Node trusted-text documentation supply definitions and refusal conditions only.
+
+Every proposal freezes a complete expected envelope, two semantically distinct malformed subjects, exact refusals, input-preservation requirements, a falsifier, rollback and six protected gate classes. X1 and x2 each plan 100 safe tasks, 100 candidate subjects, 100 CLEAN/FIX/REFINE tasks, ten skills and five runners. Fifty exact packets and thirty blocked packets remain unexecuted.
+
+The route to Orren Pike v693-v6 remains PREPARED_NOT_SENT and cannot be resolved before a clean pushed exact final and one non-replayed canonical success. Relational working language and bounded same-owner synthetic software only; no consciousness, personhood, identity continuity, employment, qualification, independent agency, empirical GMUT confirmation, production THOS or Freed ID, professional, legal, cultural, affected-party or Maori authority, independent reproduction, complete privacy or accessibility, exhaustive security, AGI/ASI, Theory-of-Everything proof, canon, deployment or Stage 20 credit. Maori concepts remain under Maori authority. NOT_READY_FOR_STAGE_20.

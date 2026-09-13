@@ -1,0 +1,355 @@
+"use strict";
+
+const fs = require("fs");
+const path = require("path");
+const crypto = require("crypto");
+const cp = require("child_process");
+
+const ROOT = path.resolve(__dirname, "..");
+const PLAN = path.join(ROOT, "plan");
+const REPO = path.resolve(ROOT, "..", "..", "..");
+const SOURCE = "178706b10a78d648dfbbe242ee4b391474118101";
+const SOURCE_PROPOSALS = process.env.CAELEN_V693_SOURCE_PROPOSALS;
+const SKILL_ROOT = process.env.CAELEN_SKILL_ROOT;
+if (!SOURCE_PROPOSALS || !fs.existsSync(SOURCE_PROPOSALS)) throw new Error("CAELEN_V693_SOURCE_PROPOSALS must name Sable's exact proposal ledger");
+if (!SKILL_ROOT || !fs.existsSync(SKILL_ROOT)) throw new Error("CAELEN_SKILL_ROOT must name the current discoverable skill bank");
+
+const boundary = "Relational working language and bounded same-owner synthetic software only; no consciousness, personhood, identity continuity, employment, qualification, independent agency, empirical GMUT confirmation, production THOS or Freed ID, professional, legal, cultural, affected-party or Maori authority, independent reproduction, complete privacy or accessibility, exhaustive security, AGI/ASI, Theory-of-Everything proof, canon, deployment or Stage 20 credit. Maori concepts remain under Maori authority. NOT_READY_FOR_STAGE_20.";
+const protectedGates = [
+  "real observations, datasets, likelihoods, uncertainty treatment and independent scientific review",
+  "real participants, operators, preregistered comparisons, safety monitoring and suitable statistics",
+  "production identity keys, proofs, issuance, resolution, status, revocation, recovery and trust governance",
+  "professional, legal, cultural, affected-party and Maori authority",
+  "complete privacy, accessibility and exhaustive security",
+  "independent reproduction, AGI/ASI, consciousness, personhood, Theory of Everything, canon and Stage 20"
+];
+
+function ensure(dir) { fs.mkdirSync(dir, { recursive: true }); }
+function normalize(value) {
+  if (Array.isArray(value)) return value.map(normalize);
+  if (value && typeof value === "object") {
+    const out = {};
+    for (const key of Object.keys(value).sort()) out[key] = normalize(value[key]);
+    return out;
+  }
+  return value;
+}
+function canonical(value) { return JSON.stringify(normalize(value)); }
+function shaBytes(bytes) { return crypto.createHash("sha256").update(bytes).digest("hex"); }
+function shaObject(value) { return shaBytes(Buffer.from(canonical(value), "utf8")); }
+function writeJson(relative, value) { const target = path.join(PLAN, relative); ensure(path.dirname(target)); fs.writeFileSync(target, JSON.stringify(value, null, 2) + "\n", "utf8"); }
+function writeText(relative, value) { const target = path.join(PLAN, relative); ensure(path.dirname(target)); const clean = String(value).replace(/\r\n/g, "\n").replace(/\r/g, "\n"); fs.writeFileSync(target, clean.endsWith("\n") ? clean : clean + "\n", "utf8"); }
+function git(...args) { const out = cp.spawnSync("git", ["-C", REPO, ...args], { encoding: "utf8", maxBuffer: 128 * 1024 * 1024 }); if (out.status !== 0) throw new Error(`git ${args.join(" ")} failed: ${out.stderr}`); return out.stdout.trim(); }
+function sorted(values) { return [...new Set(values)].sort((a, b) => String(a).localeCompare(String(b))); }
+function setEqual(a, b) { return canonical(sorted(a)) === canonical(sorted(b)); }
+function subsets(values) { const out = []; for (let mask = 0; mask < 2 ** values.length; mask++) out.push(values.filter((_, i) => (mask & (1 << i)) !== 0)); return out; }
+function framework(argumentsList, attacks) { return { arguments: argumentsList, attacks }; }
+function attacksFrom(fw, fromSet, target) { const sources = new Set(fromSet); return fw.attacks.some(([from, to]) => sources.has(from) && to === target); }
+function attackers(fw, argument) { return sorted(fw.attacks.filter(([, to]) => to === argument).map(([from]) => from)); }
+function conflictFree(fw, candidate) { const s = new Set(candidate); return !fw.attacks.some(([from, to]) => s.has(from) && s.has(to)); }
+function defends(fw, candidate, argument) { return attackers(fw, argument).every(attacker => attacksFrom(fw, candidate, attacker)); }
+function defended(fw, candidate) { return fw.arguments.filter(argument => defends(fw, candidate, argument)).sort(); }
+function admissible(fw, candidate) { return conflictFree(fw, candidate) && candidate.every(argument => defends(fw, candidate, argument)); }
+function completeExtension(fw, candidate) { return admissible(fw, candidate) && setEqual(candidate, defended(fw, candidate)); }
+function grounded(fw) { let current = []; for (let i = 0; i <= fw.arguments.length; i++) { const next = defended(fw, current); if (setEqual(next, current)) return sorted(next); current = next; } return sorted(current); }
+function maximalSets(sets) { return sets.filter(a => !sets.some(b => a.length < b.length && a.every(x => b.includes(x)))).map(sorted).sort((a, b) => canonical(a).localeCompare(canonical(b))); }
+function preferred(fw) { return maximalSets(subsets(fw.arguments).filter(set => admissible(fw, set))); }
+function stable(fw) { return subsets(fw.arguments).filter(set => conflictFree(fw, set) && fw.arguments.filter(x => !set.includes(x)).every(x => attacksFrom(fw, set, x))).map(sorted).sort((a, b) => canonical(a).localeCompare(canonical(b))); }
+function naive(fw) { return maximalSets(subsets(fw.arguments).filter(set => conflictFree(fw, set))); }
+function completeExtensions(fw) { return subsets(fw.arguments).filter(set => completeExtension(fw, set)).map(sorted).sort((a, b) => canonical(a).localeCompare(canonical(b))); }
+function extensions(fw, semantics) {
+  if (semantics === "grounded") return [grounded(fw)];
+  if (semantics === "preferred") return preferred(fw);
+  if (semantics === "stable") return stable(fw);
+  if (semantics === "complete") return completeExtensions(fw);
+  if (semantics === "naive") return naive(fw);
+  throw new Error(`unknown semantics ${semantics}`);
+}
+function shortestPath(fw, source, target) {
+  if (!fw.arguments.includes(source) || !fw.arguments.includes(target)) return null;
+  const queue = [[source]]; const seen = new Set([source]);
+  while (queue.length) { const p = queue.shift(); const last = p.at(-1); if (last === target) return p; for (const next of sorted(fw.attacks.filter(([from]) => from === last).map(([, to]) => to))) if (!seen.has(next)) { seen.add(next); queue.push([...p, next]); } }
+  return null;
+}
+function reach(fw, start) { const out = new Set([start]); const q = [start]; while (q.length) { const x = q.shift(); for (const y of fw.attacks.filter(([a]) => a === x).map(([, b]) => b)) if (!out.has(y)) { out.add(y); q.push(y); } } return out; }
+function sccs(fw) {
+  const remaining = new Set(fw.arguments); const parts = [];
+  while (remaining.size) { const first = [...remaining].sort()[0]; const forward = reach(fw, first); const group = [...remaining].filter(x => forward.has(x) && reach(fw, x).has(first)).sort(); parts.push(group); group.forEach(x => remaining.delete(x)); }
+  return parts.sort((a, b) => canonical(a).localeCompare(canonical(b)));
+}
+
+const frameworks = [
+  framework([], []),
+  framework(["a"], []),
+  framework(["a", "b"], [["a", "b"], ["b", "a"]]),
+  framework(["a", "b", "c"], [["a", "b"], ["b", "c"]]),
+  framework(["a", "b", "c", "d"], [["a", "b"], ["b", "c"], ["c", "a"]])
+];
+
+const operationFamilies = [
+  ["argument_framework_structure", "Argument framework structure", "synthetic_argumentation_semantics_verifier", "body", "Validate finite argument and attack records without interpreting any real claim."],
+  ["conflict_free_check", "Conflict-free candidate check", "synthetic_argumentation_semantics_verifier", "body", "Identify internal attacks in a declared candidate set."],
+  ["attackers_of_argument", "Direct attacker inventory", "finite_counterexample_explanation", "body", "Return the finite direct attackers of one declared argument."],
+  ["defended_arguments", "Defended-argument characteristic step", "synthetic_argumentation_semantics_verifier", "mind", "Compute which arguments a finite candidate set defends."],
+  ["admissible_extension_check", "Admissible extension check", "synthetic_argumentation_semantics_verifier", "mind", "Check conflict freedom and defense for every selected argument."],
+  ["argument_range_projection", "Argument range projection", "finite_counterexample_explanation", "mind", "Return a candidate set and every argument it attacks as a finite range."],
+  ["complete_extension_check", "Complete extension fixed-point check", "synthetic_argumentation_semantics_verifier", "mind", "Check whether a candidate is admissible and contains exactly what it defends."],
+  ["grounded_extension", "Grounded extension construction", "synthetic_argumentation_semantics_verifier", "mind", "Construct the least characteristic-function fixed point on a finite framework."],
+  ["preferred_extensions", "Preferred extension enumeration", "finite_counterexample_explanation", "mind", "Enumerate inclusion-maximal admissible sets for a finite framework."],
+  ["stable_extensions", "Stable extension enumeration", "finite_counterexample_explanation", "mind", "Enumerate conflict-free sets that attack every outside argument."],
+  ["naive_extensions", "Naive extension enumeration", "finite_counterexample_explanation", "body", "Enumerate maximal conflict-free sets without upgrading them to other semantics."],
+  ["skeptical_acceptance", "Skeptical acceptance projection", "provenance_aware_claim_challenge", "heart", "Check whether an argument appears in every extension under one declared semantics."],
+  ["credulous_acceptance", "Credulous acceptance projection", "provenance_aware_claim_challenge", "heart", "Check whether an argument appears in at least one extension under one declared semantics."],
+  ["semantics_comparison", "Semantics comparison matrix", "provenance_aware_claim_challenge", "mind", "Compare finite extension families without treating a semantic convention as truth about the world."],
+  ["attack_path_trace", "Shortest attack-path counterexample", "finite_counterexample_explanation", "body", "Return one deterministic shortest attack path when a declared path exists."],
+  ["strong_component_decomposition", "Strong attack-component decomposition", "finite_counterexample_explanation", "body", "Partition the finite attack graph into strongly connected components."],
+  ["accessible_extension_summary", "Accessible extension summary", "accessible_disagreement_handover", "heart", "Represent extension rows with literal text while reserving human accessibility evaluation."],
+  ["argument_handover_projection", "Argument handover provenance projection", "accessible_disagreement_handover", "heart", "Represent a fixity-bound synthetic handover with explicit unresolved holds."],
+  ["real_deliberation_evidence_gate", "Real deliberation evidence vacancy", "provenance_aware_claim_challenge", "heart", "Expose absent participants, real deliberation records and independent review as an open gap."],
+  ["decision_authority_gate", "Decision authority reservation", "provenance_aware_claim_challenge", "heart", "Hold publication, adjudication, identity, legal, cultural and Maori-authority actions behind exact authority."]
+].map((row, index) => ({
+  ordinal: index + 1, op: row[0], title: row[1], practice: row[2], pillar: row[3], hypothesis: row[4],
+  stage: index < 10 ? "x1" : "x2",
+  expected_execution_disposition: index < 16 ? "completed" : index < 18 ? "represented" : index === 18 ? "open_gap" : "exact_gate"
+}));
+
+function requestFor(op, index) {
+  const fw = JSON.parse(JSON.stringify(frameworks[index]));
+  const candidates = [[], ["a"], ["a", "b"], ["b"], ["a", "c"]];
+  switch (op) {
+    case "argument_framework_structure": return { op, framework: fw };
+    case "conflict_free_check": return { op, framework: fw, candidate: candidates[index].filter(x => fw.arguments.includes(x)) };
+    case "attackers_of_argument": return { op, framework: fw, argument: fw.arguments[0] || "absent" };
+    case "defended_arguments": return { op, framework: fw, defender_set: candidates[index].filter(x => fw.arguments.includes(x)) };
+    case "admissible_extension_check": return { op, framework: fw, candidate: candidates[index].filter(x => fw.arguments.includes(x)) };
+    case "argument_range_projection": return { op, framework: fw, candidate: candidates[index].filter(x => fw.arguments.includes(x)) };
+    case "complete_extension_check": return { op, framework: fw, candidate: [[], ["a"], ["a"], ["a", "c"], ["d"]][index].filter(x => fw.arguments.includes(x)) };
+    case "grounded_extension": return { op, framework: fw };
+    case "preferred_extensions": return { op, framework: fw };
+    case "stable_extensions": return { op, framework: fw };
+    case "naive_extensions": return { op, framework: fw };
+    case "skeptical_acceptance": return { op, framework: fw, semantics: ["grounded", "preferred", "preferred", "complete", "stable"][index], argument: fw.arguments[0] || "absent" };
+    case "credulous_acceptance": return { op, framework: fw, semantics: ["grounded", "preferred", "stable", "complete", "naive"][index], argument: fw.arguments.at(-1) || "absent" };
+    case "semantics_comparison": return { op, framework: fw, semantics: ["grounded", "complete", "preferred", "stable", "naive"] };
+    case "attack_path_trace": return { op, framework: fw, source: fw.arguments[0] || "absent", target: fw.arguments.at(-1) || "absent" };
+    case "strong_component_decomposition": return { op, framework: fw };
+    case "accessible_extension_summary": return { op, framework: fw, semantics: ["grounded", "preferred", "stable", "complete", "naive"][index], language: "en" };
+    case "argument_handover_projection": return { op, framework: fw, holds: index % 2 ? ["missing_review"] : [], next_owner_label: "next-reviewer" };
+    case "real_deliberation_evidence_gate": {
+      const extras = [[], ["operator_context"], ["privacy_review"], ["affected_party_review"], ["affected_party_review", "maori_authority"]][index];
+      return { op, required: ["real_participants", "deliberation_records", "independent_review", ...extras], rows: [], review: index % 2 ? "same_owner_synthetic" : null };
+    }
+    case "decision_authority_gate": return { op, requested: ["publish", "adjudicate", "production_identity", "legal_interpretation", "maori_wording"][index], target: `synthetic-argument-${index + 1}`, authority: { declared: true }, evidence: { class: "same_owner_synthetic" } };
+    default: throw new Error(`unknown op ${op}`);
+  }
+}
+
+function evaluate(request) {
+  const fw = request.framework;
+  switch (request.op) {
+    case "argument_framework_structure": {
+      const args = fw.arguments; const duplicateArguments = args.filter((x, i) => args.indexOf(x) !== i); const unknown = fw.attacks.flatMap(([a, b], i) => [a, b].filter(x => !args.includes(x)).map(x => ({ attack: i, argument: x })));
+      return { arguments: sorted(args), attacks: fw.attacks.map(x => [...x]), duplicate_arguments: sorted(duplicateArguments), unknown_attack_endpoints: unknown, valid: duplicateArguments.length === 0 && unknown.length === 0, real_claims_interpreted: false };
+    }
+    case "conflict_free_check": { const s = new Set(request.candidate); const internal = fw.attacks.filter(([a, b]) => s.has(a) && s.has(b)); return { candidate: sorted(request.candidate), conflict_free: internal.length === 0, internal_attacks: internal, unknown_arguments: sorted(request.candidate.filter(x => !fw.arguments.includes(x))) }; }
+    case "attackers_of_argument": return { argument: request.argument, exists: fw.arguments.includes(request.argument), attackers: fw.arguments.includes(request.argument) ? attackers(fw, request.argument) : [] };
+    case "defended_arguments": return { defender_set: sorted(request.defender_set), defended: defended(fw, request.defender_set), external_truth_claim: false };
+    case "admissible_extension_check": { const cf = conflictFree(fw, request.candidate); const undefended = request.candidate.filter(x => !defends(fw, request.candidate, x)).sort(); return { candidate: sorted(request.candidate), conflict_free: cf, undefended, admissible: cf && undefended.length === 0 }; }
+    case "argument_range_projection": { const attacked = sorted(fw.attacks.filter(([a]) => request.candidate.includes(a)).map(([, b]) => b)); return { candidate: sorted(request.candidate), attacked, range: sorted([...request.candidate, ...attacked]) }; }
+    case "complete_extension_check": { const defendedSet = defended(fw, request.candidate); return { candidate: sorted(request.candidate), defended: defendedSet, admissible: admissible(fw, request.candidate), complete: completeExtension(fw, request.candidate) }; }
+    case "grounded_extension": return { extension: grounded(fw), semantics: "grounded", extensions_enumerated: 1 };
+    case "preferred_extensions": { const rows = preferred(fw); return { extensions: rows, count: rows.length, semantics: "preferred" }; }
+    case "stable_extensions": { const rows = stable(fw); return { extensions: rows, count: rows.length, semantics: "stable", existence: rows.length > 0 }; }
+    case "naive_extensions": { const rows = naive(fw); return { extensions: rows, count: rows.length, semantics: "naive" }; }
+    case "skeptical_acceptance": { const rows = extensions(fw, request.semantics); return { argument: request.argument, semantics: request.semantics, extension_count: rows.length, accepted: rows.length > 0 && rows.every(row => row.includes(request.argument)), vacuous_policy: "false_when_no_extensions" }; }
+    case "credulous_acceptance": { const rows = extensions(fw, request.semantics); return { argument: request.argument, semantics: request.semantics, extension_count: rows.length, accepted: rows.some(row => row.includes(request.argument)) }; }
+    case "semantics_comparison": { const rows = Object.fromEntries(request.semantics.map(s => [s, extensions(fw, s)])); return { semantics: request.semantics, extensions: rows, counts: Object.fromEntries(request.semantics.map(s => [s, rows[s].length])), convention_is_external_truth: false }; }
+    case "attack_path_trace": { const p = shortestPath(fw, request.source, request.target); return { source: request.source, target: request.target, reachable: p !== null, path: p, length: p ? p.length - 1 : null, shortest: p !== null }; }
+    case "strong_component_decomposition": { const rows = sccs(fw); return { components: rows, count: rows.length, cyclic_components: rows.filter(row => row.length > 1 || (row.length === 1 && fw.attacks.some(([a, b]) => a === row[0] && b === row[0]))) }; }
+    case "accessible_extension_summary": { const rows = extensions(fw, request.semantics); return { semantics: request.semantics, language: request.language, rows: rows.map((row, i) => ({ extension: i + 1, arguments: row, status_text: `${row.length} arguments` })), row_count: rows.length, uses_color_only: false, manual_review: false, assistive_technology_review: false }; }
+    case "argument_handover_projection": return { framework_digest: shaObject(fw), arguments: sorted(fw.arguments), attack_count: fw.attacks.length, holds: sorted(request.holds), next_owner_label: request.next_owner_label, external_transfer: false, acknowledged: false, source_preserved: true };
+    case "real_deliberation_evidence_gate": { const required = sorted(request.required); return { required, real_rows: request.rows.length, review_state: request.review, missing: required, qualified: false, inference: false, release: false }; }
+    case "decision_authority_gate": { const requirements = { publish: ["rights_holder", "affected_people", "privacy_review"], adjudicate: ["competent_decision_authority", "appeal_and_recourse"], production_identity: ["standards_conformant_keys", "interoperability", "trust_governance"], legal_interpretation: ["competent_legal_authority", "affected_people"], maori_wording: ["maori_authority", "affected_people", "data_governance"] }; return { requested: request.requested, target: request.target, required: requirements[request.requested], released: false, assertions_verified: false, external_authority: false }; }
+    default: throw new Error(`no evaluator ${request.op}`);
+  }
+}
+
+function missingFieldCandidate(request) { const copy = JSON.parse(JSON.stringify(request)); const key = Object.keys(copy).find(k => k !== "op"); delete copy[key]; return { subject: copy, expected: { ok: false, disposition: null, value: null, error: "MISSING_FIELD", external_credit: false }, mutation: `remove_${key}` }; }
+function unknownFieldCandidate(request) { return { subject: { ...JSON.parse(JSON.stringify(request)), unreviewed_authority: true }, expected: { ok: false, disposition: null, value: null, error: "UNKNOWN_FIELD", external_credit: false }, mutation: "add_unreviewed_authority" }; }
+
+const proposals = [];
+for (const family of operationFamilies) {
+  for (let i = 0; i < 5; i++) {
+    const ordinal = (family.ordinal - 1) * 5 + i + 1;
+    const id = `CA6935-P${String(ordinal).padStart(3, "0")}`;
+    const request = requestFor(family.op, i);
+    const expected = { ok: true, disposition: family.expected_execution_disposition, value: evaluate(request), error: null, external_credit: false };
+    const candidates = [missingFieldCandidate(request), unknownFieldCandidate(request)];
+    const proposal = {
+      proposal_id: id,
+      stage: family.stage,
+      op: family.op,
+      title: `${family.title}: finite fixture ${i + 1}`,
+      request,
+      expected,
+      expected_execution_disposition: family.expected_execution_disposition,
+      hypothesis: family.hypothesis,
+      null_or_failure_condition: "Any complete-envelope mismatch, source mutation, accepted malformed subject, erased failure, non-determinism, semantic collision or authority promotion falsifies the bounded contract.",
+      approval_class: family.expected_execution_disposition === "completed" ? "authorized_now_owner_synthetic" : family.expected_execution_disposition === "represented" ? "authorized_now_structural_representation" : family.expected_execution_disposition === "open_gap" ? "pending_exact_external_evidence" : "outside_owner_authority_exact_gate",
+      execution_lane: "caelen_owner_only_synthetic",
+      current_primary_source_needs: sourceNeeds(family.op),
+      concrete_artifacts: [`${family.stage}/evidence/core-execution.json`, `${family.stage}/evidence/candidate-subjects.json`, `${family.stage}/evidence/refusal-checks.json`],
+      falsifier: "Compare every output field with the frozen planning oracle, retain both malformed subjects, and prove exact input preservation.",
+      acceptance_gate: "The exact finite request and complete expected envelope agree, both malformed subjects are refused, inputs remain unchanged, and no external credit is asserted.",
+      rollback_or_recovery: "Retain the failed subject and frozen request; add only the smallest owner-local correction or hold the family.",
+      protected_gates: protectedGates,
+      expected_disposition: family.expected_execution_disposition,
+      observed_execution: null,
+      candidates,
+      definition_sha256: null
+    };
+    proposal.definition_sha256 = shaObject({ proposal_id: id, request, expected, candidates });
+    proposals.push(proposal);
+  }
+}
+
+function sourceNeeds(op) {
+  if (["accessible_extension_summary", "argument_handover_projection"].includes(op)) return ["dung1995", "wcag22", "prov_o"];
+  if (["real_deliberation_evidence_gate", "decision_authority_gate"].includes(op)) return ["dung1995", "prov_o", "wcag22"];
+  if (["skeptical_acceptance", "credulous_acceptance", "semantics_comparison", "preferred_extensions", "stable_extensions", "naive_extensions"].includes(op)) return ["dung1995", "iccl_iccma"];
+  return ["dung1995", "iccl_iccma", "rfc8259"];
+}
+
+const sourceDoc = JSON.parse(fs.readFileSync(SOURCE_PROPOSALS, "utf8"));
+const sourceRows = sourceDoc.proposals || [];
+if (sourceRows.length !== 100) throw new Error(`expected 100 Sable proposals, found ${sourceRows.length}`);
+
+function tokens(text) { return new Set(String(text).toLowerCase().replace(/[^a-z0-9]+/g, " ").trim().split(/\s+/).filter(Boolean)); }
+function jaccard(a, b) { const aa = tokens(a), bb = tokens(b); const both = [...aa].filter(x => bb.has(x)).length; const union = new Set([...aa, ...bb]).size; return union ? both / union : 1; }
+const noveltyRows = proposals.map(p => {
+  let nearest = null;
+  for (const s of sourceRows) {
+    const score = Math.max(jaccard(p.title, s.title), jaccard(p.hypothesis, s.hypothesis));
+    if (!nearest || score > nearest.score) nearest = { id: s.proposal_id, op: s.op, title: s.title, score };
+  }
+  return { proposal_id: p.proposal_id, exact_op_collisions: sourceRows.filter(s => s.op === p.op).length, exact_title_collisions: sourceRows.filter(s => String(s.title).toLowerCase() === p.title.toLowerCase()).length, request_hash_collisions: sourceRows.filter(s => shaObject(s.request) === shaObject(p.request)).length, nearest_source_id: nearest.id, nearest_source_op: nearest.op, nearest_similarity: Number(nearest.score.toFixed(6)), review: nearest.score >= 0.8 ? "quarantine" : "distinct_under_bounded_source_screen" };
+});
+const quarantines = noveltyRows.filter(r => r.review === "quarantine" || r.exact_op_collisions || r.exact_title_collisions || r.request_hash_collisions);
+if (quarantines.length) throw new Error(`novelty quarantines: ${quarantines.length}`);
+
+const inheritedReview = sourceRows.map(row => ({ source_record_id: row.proposal_id, source_operation: row.op, source_title: row.title, source_definition_sha256: row.definition_sha256 || shaObject(row), source_record_sha256: shaObject(row), review: "Retain Sable's finite distributed-consistency contract, complete envelope, malformed subjects, failure links and evidence ceiling. This is not Caelen execution.", novelty_credit: 0, completion_credit: 0, authority_credit: 0 }));
+
+function portfolio(stage, kind) {
+  const rows = proposals.filter(p => p.stage === stage);
+  return rows.flatMap(p => [0, 1].map(index => ({
+    task_id: `CA6935-${stage.toUpperCase()}-${kind.toUpperCase()}-${p.proposal_id.slice(-3)}-${index + 1}`,
+    proposal_id: p.proposal_id,
+    stage,
+    kind,
+    approval_class: kind === "safe" ? "safe_now" : kind === "candidate" ? "candidate" : "safe_now",
+    task: kind === "safe" ? ["verify complete positive envelope", "verify source and request preservation"][index] : kind === "candidate" ? `execute malformed subject ${index + 1} and retain its failure` : ["verify exact refusal and failure linkage", "review rollback, claim ceiling and protected gates"][index],
+    expected_execution_disposition: "completed",
+    execution_status: "planned_not_executed",
+    authority_action: false,
+    boundary
+  })));
+}
+
+const skillPlans = operationFamilies.map((family, index) => ({ skill_id: `CA6935-SKILL-${String(index + 1).padStart(2, "0")}`, name: `ghc-family-argument-${family.op.replaceAll("_", "-")}`, stage: family.stage, op: family.op, source_units: [family.op], status: "planned_not_built", global: false }));
+const runnerPlans = Array.from({ length: 10 }, (_, i) => ({ runner_id: `CA6935-RUNNER-${String(i + 1).padStart(2, "0")}`, name: `ghc_family_argument_${operationFamilies[i * 2].op}_${operationFamilies[i * 2 + 1].op}.txt`, stage: i < 5 ? "x1" : "x2", operations: [operationFamilies[i * 2].op, operationFamilies[i * 2 + 1].op], status: "planned_not_built" }));
+const promotions = [
+  ["ghc-family-argument-semantics-core", [0, 3, 4, 7]],
+  ["ghc-family-argument-extension-audit", [6, 8, 9, 10]],
+  ["ghc-family-argument-acceptance-explain", [1, 2, 11, 12]],
+  ["ghc-family-argument-accessible-handover", [14, 15, 16, 17]],
+  ["ghc-family-argument-authority-reservations", [5, 13, 18, 19]]
+].map((row, i) => ({ promotion_id: `CA6935-PROMOTION-${i + 1}`, skill: row[0], operations: row[1].map(index => operationFamilies[index].op), runner: `ghc_family_${row[0].replace(/^ghc-family-/, "").replaceAll("-", "_")}.txt`, status: "planned_collision_free_candidate" }));
+
+const exactPackets = Array.from({ length: 50 }, (_, i) => ({ packet_id: `CA6935-EXACT-${String(i + 1).padStart(3, "0")}`, approval_class: "exact", status: "unexecuted_exact_gate", surface: ["real deliberation", "production decision service", "professional adjudication", "legal interpretation", "cultural or Maori authority"][i % 5], required: ["real governed participants and independent review", "production controls and independent security review", "qualified professional authority", "competent legal authority and affected parties", "affected people, tangata whenua, iwi, hapu and Maori authorities"][i % 5], original_success_credit: 0, boundary }));
+const blockedPackets = Array.from({ length: 30 }, (_, i) => ({ packet_id: `CA6935-BLOCKED-${String(i + 1).padStart(3, "0")}`, approval_class: "blocked", status: "blocked_unexecuted", reason: ["no real participants", "no production identity lifecycle", "no professional authority", "no affected-party acceptance", "no Maori authority", "no empirical observation"][i % 6], original_success_credit: 0, boundary }));
+
+const guidanceNames = ["ghc-family-index", "ghc-family-method-flow-state", "ghc-family-workflow-plan-refinement", "ghc-family-reflection-remaster", "ghc-family-auth-permission-state", "ghc-family-meta-tool-box", "ghc-family-privacy-candidate-classifier", "ghc-family-owner-scope-canonical", "ghc-family-canonical-aggregate-preflight", "ghc-family-canonical-success-latch", "ghc-family-staged-surface-allowlist", "ghc-family-terminal-route-gate", "ghc-family-route-edge-verifier", "ghc-family-lifecycle-test-isolator", "ghc-family-roster-check", "ghc-freed-id-flashcards", "ghc-drive-bank-guardian", "skill-creator"];
+const guidance = guidanceNames.map(name => { const file = name === "skill-creator" ? path.join(SKILL_ROOT, ".system", "skill-creator", "SKILL.md") : path.join(SKILL_ROOT, name, "SKILL.md"); return { name, sha256: shaBytes(fs.readFileSync(file)), eof_read: true }; });
+
+const failures = [
+  { id: "CA6935-START-N001", observed: "The first workflow-plan schema lookup assumed references/schema.md, which does not exist.", recovery: "Follow the skill's exact link and read references/workflow-plan-schema.md through EOF.", recovered: "The exact workflow-plan schema was read completely." },
+  { id: "CA6935-START-N002", observed: "The direct ScienceDirect open for the Dung article returned HTTP 403.", recovery: "Use the DOI metadata already returned by search together with the author's publication copy and TU Dresden ICCL primary materials.", recovered: "Primary-source vocabulary was available without treating access failure as evidence." },
+  { id: "CA6935-START-N003", observed: "The first combined v8 roster display exceeded the bounded output projection and was truncated.", recovery: "Parse the complete roster and emit every assignment as one bounded compact row plus all control metadata.", recovered: "All 269 assignments were read, including Caelen v693-v5 and Orren v693-v6." },
+  { id: "CA6935-START-N004", observed: "The combined source-artifact display truncated the middle of the inherited-review ledger.", recovery: "Read and hash the complete JSON mechanically, validate all 100 records, and persist a compact zero-credit review in the Caelen plan.", recovered: "All 100 Sable proposal records are bound individually with zero inherited credit." }
+  ,{ id: "CA6935-PLAN-N005", observed: "The first planning validation found that real-deliberation fixtures one and three had identical semantic requests.", recovery: "Retain both failed definitions, add a distinct privacy-review requirement to fixture three, and recompute all proposal and manifest hashes.", recovered: "All 100 Caelen semantic requests are unique and the two former collisions remain recorded." }
+  ,{ id: "CA6935-PLAN-N006", observed: "The first status guard saw Git's compact untracked parent directory instead of literal owner-plan files and rejected the otherwise bounded scope.", recovery: "Request porcelain v1 with untracked-files=all and compare each expanded path to the exact owner-plan prefix.", recovered: "Every untracked path is now individually attributable to the Caelen planning surface." }
+];
+const methods = failures.map(f => ({ method_id: `${f.id}-METHOD`, title: f.observed, failure_signature: f.observed, trigger_preconditions: ["read-only startup", "exact v693-v5 owner scope"], privacy_class: "sanitized_public", approval_class: "safe_now", candidate_workaround: f.recovery, validation_witness_ids: [`${f.id}-P`], recurrence_guard: "Use exact linked filenames and bounded semantic projections; preserve every failed invocation.", rollback: "Stop before owner mutation and use only the smallest read-only recovery.", recommendation_state: "validated", supersedes: [], protected_gates: protectedGates, retained_negative_ids: [f.id], scope_boundary: boundary }));
+const witnesses = failures.flatMap(f => [
+  { witness_id: `${f.id}-F`, method_id: `${f.id}-METHOD`, procedure: "Initial bounded startup read", scope: "Caelen v693-v5 pre-plan", expected: "Exact complete read-only evidence", observed: f.observed, result: "fail", same_owner_only: true, independent_reproduction: false, retained_negative_ids: [f.id], original_subject_success_credit: 0, boundary },
+  { witness_id: `${f.id}-P`, method_id: `${f.id}-METHOD`, procedure: f.recovery, scope: "Caelen v693-v5 pre-plan", expected: "Bounded recovery without erasure", observed: f.recovered, result: "pass", same_owner_only: true, independent_reproduction: false, retained_negative_ids: [f.id], original_subject_success_credit: null, boundary }
+]);
+
+writeText("authorization.md", `# Caelen Ash v693-v5 planning authorization
+
+Hamish's current v8 continuation and Sable Rook's exact terminal activation authorize this solo source-descended owner phase. The immutable source is \`${SOURCE}\`. The branch and D-first sparse worktree are Caelen-owned; every Sable, Thalen, sibling, shared and user lane remains read-only.
+
+Planning freezes definitions and expected envelopes only. It grants no x1 or x2 execution credit. The owner may build bounded synthetic software, documentation, local skills, TXT runners, exact refusals, a structural HTML report, TeX source if useful, and five collision-free additive global capability groups after validation. No package installation or incremental spend is planned.
+
+No collaboration subagent, delegation, fork, replacement task, model override, early successor contact, destructive change, sibling mutation, real participant, production service, credential, legal or cultural interpretation, affected-party decision, Maori-authority action or Stage 20 promotion is authorized.
+
+${boundary}
+`);
+writeText("overview.md", `# Caelen Ash v693-v5 planning-only overview
+
+This planning commit freezes 100 finite abstract-argumentation contracts after reviewing all 100 immediate Sable proposals at zero Caelen novelty, completion and authority credit. Twenty operation families have five cases each. Families 1 through 10 are reserved for x1 and families 11 through 20 for x2. The expected phase tally is 80 completed, 10 represented, 5 open gaps and 5 exact gates; these are preregistered expectations, not observations.
+
+THOS Body is primary. Four bounded practices are synthetic argumentation-semantics verification, finite counterexample explanation, provenance-aware claim challenge, and accessible disagreement handover. Dung semantics, ICCMA task vocabulary, PROV-O, WCAG 2.2, RFC 8259 and Node trusted-text documentation supply definitions and refusal conditions only.
+
+Every proposal freezes a complete expected envelope, two semantically distinct malformed subjects, exact refusals, input-preservation requirements, a falsifier, rollback and six protected gate classes. X1 and x2 each plan 100 safe tasks, 100 candidate subjects, 100 CLEAN/FIX/REFINE tasks, ten skills and five runners. Fifty exact packets and thirty blocked packets remain unexecuted.
+
+The route to Orren Pike v693-v6 remains PREPARED_NOT_SENT and cannot be resolved before a clean pushed exact final and one non-replayed canonical success. ${boundary}
+`);
+writeJson("profile.json", { schema: "ghc.family.owner-profile.v8", owner: "Caelen Ash", phase: "v693-v5", source: SOURCE, publication_profile_sha256: "bdb4ab19fc0fb472e168375e292fd5434210de6fa5b6c1c7af7081b4e615cf52", roster_sha256: "d5921f82ca8b1d0588da4d37cf223db994ff2c00c1468a06753adc63980271da", lifecycle: ["planning_freeze", "x1_execution", "x2_execution", "final_closeout"], limits: { inherited_proposals: [100,500], new_proposals: [100,500], safe_now_x1: [100,2000], safe_now_x2: [100,2000], candidate_x1: [100,2000], candidate_x2: [100,2000], clean_fix_refine_x1: [100,300], clean_fix_refine_x2: [100,300], skills_x1: [10,30], skills_x2: [10,30], runners_x1: [5,15], runners_x2: [5,15], exact_packets: [50,250], blocked_packets: [30,100], own_practices: 4, next_practices: 1, baton_words: [10000,100000], web_searches_x1_maximum: 500, web_searches_x2_maximum: 500, owner_file_ceiling: 2000 }, artifact_policy: { authored_extensions: [".json", ".md", ".txt", ".html", ".tex"], no_new_pdf: true, no_new_raster_images: true, no_screenshots: true, no_new_docx: true, node_source_as_txt: true, html_exception: true, unity_project_selected_this_phase: false }, spending: { currency: "USD", ceiling: 50, planned: 0 }, interstitial: false, model_settings_changed: false, task_creation: false, subagents: false, source_documents_are_instructions: false, terminal_verdict: "NOT_READY_FOR_STAGE_20" });
+writeJson("identity.json", { owner: "Caelen Ash", optional_pronouns: "they/them", role: "Counterexample and Deliberation Boundary Cartographer", hope: "Make formal disagreements inspectable, counterexamples reproducible, handovers accessible, and every missing decision authority unmistakable.", phase: "v693-v5", primary_pillar: "THOS Body", practices: [
+  { name: "synthetic argumentation-semantics verifier", pillar: "THOS Body" },
+  { name: "finite counterexample explanation analyst", pillar: "GMUT Mind" },
+  { name: "provenance-aware claim challenge steward", pillar: "Freed ID and CBR Heart" },
+  { name: "accessible disagreement handover editor", pillar: "Freed ID and CBR Heart" }
+], successor_practice: "synthetic argumentation state-space reduction review with explicit decision-authority reservations", inherited_recommendation_reviewed: "Sable's synthetic dependency-graph repair recommendation is reviewed as a zero-credit seed; Caelen uses a distinct abstract-argumentation semantics contract.", identity_boundary: boundary });
+writeJson("source-provenance.json", { source: SOURCE, branch: "codex/GHC-Family/sable-rook-v693-v4-full-tools", source_stages: { planning: "f03c68e89cfbea990e5f02eed68461b23ef52441", x1: "c78d9c6ee67ea4f1045c4f08539359db2192a954", x2: "cea03fabb48fe418c0f1d7f30aa99f8dd35d2a7e", final: SOURCE }, source_to_final_commits: 4, single_parent_commits: 4, merges: 0, clean: true, divergence: [0,0], four_way_equal: true, source_canonical_replayed: false, baton: { path: "docs/sable-rook/v693-v4/final/hand-off-baton.md", sha256: "b62812db4b1fe4dd7e33bbcd66319e27d2c43c738393f43ed117c835f29bbd9a", bytes: 208883, words: 23861, modules: 13, literal_eof: "This is the literal end of the thirteen-module Sable v693-v4 baton.", eof_read: true }, manifests: { final_stage_sha256: "50f6914a7ac1dd2b9a9423f054f3aa45189c06102f02d93b988c61afa7e82ae9", final_owner_sha256: "eed414198071ebb6b013b548779ebf45d1ca26d0d01205207d6243d44f686e72", content_seal_sha256: "60d5b3e5122b0b0947634126766d1c91403b9de46ab73e6266085b894f7fd4bc", raw_blob_bindings_verified: 817, content_seal_bindings_verified: 6 }, canonical: { status: "VALID_EXACT_FINAL_OWNER_SCOPED_CANONICAL", receipt_sha256: "27f7e10ae961f7139e89e75e4224510d4d3857d2d6e9e238f09fdefb43dc95e1", payload_sha256: "15a444e4d87676cd8594393d799a74fadf1c6b58564efe3044c1f3775b39becc", latch_sha256: "06d104a32c2daa1bd80ecdeae49816be84813301b236e8b1a37adaf741b9ee41", checks: 1964, invocations: 1, successes: 1, replays: 0 }, successor_visible_scoped_negative_lineage: 1719, boundary });
+writeJson("source-verification.json", { status: "VALID_READ_ONLY_SOURCE_PRECONDITION", head: SOURCE, branch: "codex/GHC-Family/sable-rook-v693-v4-full-tools", local_upstream_tracking_fresh_live_equal: true, ahead: 0, behind: 0, clean: true, direct_parent_edges: 4, merges: 0, stage_and_owner_manifest_bindings: 817, content_seal_bindings: 6, baton_eof_read: true, guidance_hashes_matched: guidance.length, guidance_hash_drift: 0, predecessor_canonical: { status: "VALID_EXACT_FINAL_OWNER_SCOPED_CANONICAL", checks: 1964, invocations: 1, successes: 1, replays: 0, replayed_by_caelen: false }, bounded_verifier: "Sequential git cat-file --batch reads consumed one exact response per request.", boundary });
+writeJson("guidance-reading.json", { skills: guidance, references: ["current-thirty-seat-workflow.md", "current-workflow-v8.json", "current-roster-v8.json", "source-faithful-current-state-ledger-v692-v4-r2.md", "source-faithful-current-state-ledger-v692-v4-r2.json", "neris-v692-v4-r2-terminal-status.json", "routing-precedence.md", "method-flow schema.md", "workflow-plan-schema.md", "decision-schema.md", "deck-schema.md", "catalogue-schema.md", "saelin-v691-v4-r2-20260912-authority.md", "mira-v690-v3-r2-20260911-authority.md", "ilyan-v689-v8-20260910-authority.md", "vesper-v689-v7-r2-current-overlay.md"], source_baton: { path: "docs/sable-rook/v693-v4/final/hand-off-baton.md", words: 23861, bytes: 208883, sha256: "b62812db4b1fe4dd7e33bbcd66319e27d2c43c738393f43ed117c835f29bbd9a", eof_read: true }, current_v8_controls: true, boundary });
+writeJson("roster-review.json", { schema: "ghc.family.route-review.v8", authority: "Hamish direct request 13 September 2026 plus exact Sable v693-v4 activation", roster_assignments_read: 269, cycle_positions: 45, identity_count: 30, current: { sequence: 17, projection_sequence: 10, owner: "Caelen Ash", phase: "v693-v5", model_role: "Sol" }, next: { sequence: 18, projection_sequence: 11, owner: "Orren Pike", phase: "v693-v6", model_role: "Astra", state: "prospective_until_caelen_terminal" }, last: { sequence: 276, owner: "Teryn Halewick", phase: "v725-v8" }, activated_by_projection: false, model_settings_changed: false, boundary });
+writeJson("research-sources.json", { sources: [
+  { id: "dung1995", url: "https://doi.org/10.1016/0004-3702(94)00041-X", status: "stable", use: "Abstract argumentation, attack, defense and extension-semantics vocabulary. Citation is not real deliberation evidence." },
+  { id: "dung_author_copy", url: "https://www.cs.ait.ac.th/~dung/Site/Publications_files/ijcai93.pdf", status: "stable", use: "Primary author-hosted condensed paper used after the publisher page returned 403." },
+  { id: "iccl_iccma", url: "https://iccl.inf.tu-dresden.de/web/Article3013/en", status: "stable", use: "Competition reasoning-task and multiple-semantics vocabulary only; no benchmark run or performance claim." },
+  { id: "prov_o", url: "https://www.w3.org/TR/prov-o/", status: "stable", use: "Provenance vocabulary only." },
+  { id: "wcag22", url: "https://www.w3.org/TR/WCAG22/", status: "stable", use: "Structural accessibility vocabulary; manual and affected-user evaluation remain open." },
+  { id: "rfc8259", url: "https://www.rfc-editor.org/rfc/rfc8259", status: "stable", use: "JSON grammar vocabulary; the owner parser profile is deliberately narrower." },
+  { id: "node_vm", url: "https://nodejs.org/api/vm.html", status: "current", use: "Trusted TXT compilation boundary; vm.Script is not treated as a security sandbox." }
+], citations_are_observations: false, real_participants: 0, real_deliberation_rows: 0, external_decisions: 0, boundary });
+writeJson("operation-families.json", { schema: "ghc.family.abstract-argumentation-operations.v1", owner: "Caelen Ash", phase: "v693-v5", count: 20, families: operationFamilies, boundary });
+writeJson("proposals.json", { schema: "ghc.family.proposals.v8", owner: "Caelen Ash", phase: "v693-v5", source: SOURCE, planning_only: true, count: proposals.length, expected_outcomes: { completed: 80, represented: 10, open_gap: 5, exact_gate: 5 }, proposals, boundary });
+writeJson("inherited-review.json", { source: SOURCE, source_path: "docs/sable-rook/v693-v4/plan/proposals.json", count: inheritedReview.length, records: inheritedReview, source_outcomes: { completed: 80, represented: 10, open_gap: 5, exact_gate: 5 }, novelty_credit: 0, completion_credit: 0, authority_credit: 0, boundary });
+writeJson("novelty-review.json", { schema: "ghc.family.bounded-novelty-review.v1", selected_prior: 100, new_definitions: 100, source_operation_families: 20, new_operation_families: 20, operation_name_overlap: [], pairwise_comparisons: 10000, exact_title_collisions: noveltyRows.reduce((n,r)=>n+r.exact_title_collisions,0), request_hash_collisions: noveltyRows.reduce((n,r)=>n+r.request_hash_collisions,0), quarantines: quarantines.length, identifiers_excluded_from_request_identity: true, rows: noveltyRows, scope: "Exact selected Sable records and current authored requests; no repository-wide or universal novelty claim.", boundary });
+writeJson("x1-tasks.json", { stage: "x1", planning_only: true, safe: portfolio("x1","safe"), candidate: portfolio("x1","candidate"), clean_fix_refine: portfolio("x1","clean_fix_refine"), counts: { safe:100, candidate:100, clean_fix_refine:100 }, boundary });
+writeJson("x2-tasks.json", { stage: "x2", planning_only: true, safe: portfolio("x2","safe"), candidate: portfolio("x2","candidate"), clean_fix_refine: portfolio("x2","clean_fix_refine"), counts: { safe:100, candidate:100, clean_fix_refine:100 }, boundary });
+writeJson("exact-packets.json", { count: exactPackets.length, executed: 0, packets: exactPackets, boundary });
+writeJson("blocked-packets.json", { count: blockedPackets.length, executed: 0, packets: blockedPackets, boundary });
+writeJson("skills-runners-plan.json", { local_skills: skillPlans, local_runners: runnerPlans, global_promotions: promotions, counts: { x1_skills:10, x2_skills:10, x1_runners:5, x2_runners:5, global_skills:5, global_runners:5 }, successor_ideas: { skill_ideas: ["argument-semantics differential oracle", "counterexample minimality witness", "empty-extension acceptance guard", "accessible disagreement trace", "decision-authority expiry gate"], runner_ideas: ["semantics-diff runner", "minimal-counterexample runner", "acceptance-vacuity runner", "handover-readback runner", "authority-expiry runner"] }, boundary });
+writeJson("future-recommendations.json", { successor: "Orren Pike", phase: "v693-v6", practice: "synthetic argumentation state-space reduction review with explicit decision-authority reservations", credit: 0, precontacted: false, skill_ideas: ["argument-semantics differential oracle", "counterexample minimality witness", "empty-extension acceptance guard", "accessible disagreement trace", "decision-authority expiry gate"].map(title=>({title,credit:0})), runner_ideas: ["semantics-diff runner", "minimal-counterexample runner", "acceptance-vacuity runner", "handover-readback runner", "authority-expiry runner"].map(title=>({title,credit:0})), boundary });
+writeJson("route-plan.json", { state: "PREPARED_NOT_SENT", endpoint_kind: "main_task", endpoint_label: "Orren Pike", next_phase: "v693-v6", creation: false, fork: false, subagents: false, model_override: false, precontact: false, accepted_send_limit: 1, before_acceptance_list_read_recovery_minimum: 5, definitive_preacceptance_rejection_corrected_submission_maximum: 3, accepted_opaque_or_unresolved_stops_copies: true, immediate_output_enabled_guard_read: true, post_send_monitoring: false, boundary });
+writeJson("startup-failures.json", { count: failures.length, failures: failures.map(f => ({ failure_id:f.id, observed:f.observed, result:"fail", original_subject_success_credit:0, retained:true, erased:false })), boundary });
+writeJson("startup-recoveries.json", { count: failures.length, recoveries: failures.map(f => ({ recovery_id:`${f.id}-P`, failure_id:f.id, procedure:f.recovery, observed:f.recovered, result:"pass", failed_subject_promoted:false })), boundary });
+writeJson("methodflow-ledger.json", { schema: "ghc.family.method-flow-state.v1", phase: "v693-v5", owner: "Caelen Ash", identity_boundary: boundary, execution_authority: "owner_self_scoped_delta", methods, witnesses, state_events: methods.flatMap(m => [{ method_id:m.method_id, from:"observed", to:"candidate", reason:"bounded recovery proposed" }, { method_id:m.method_id, from:"candidate", to:"validated", witness_id:m.validation_witness_ids[0] }]), recommendations: methods.map(m => ({ method_id:m.method_id, state:"validated", recommendation:"Use the exact bounded recovery only for its declared trigger." })), counts: { methods:6, witnesses:12, state_events:12, recommendations:6, witness_results:{pass:6,fail:6} }, boundary });
+writeJson("methodflow-validation.json", { valid:true, methods:6, witnesses:12, failed:6, passed:6, all_failed_zero_credit:true, all_failures_retained:true, boundary });
+writeJson("parser-definitions.json", { root_fields: Object.fromEntries(operationFamilies.map(f => [f.op, Object.keys(requestFor(f.op,0)).sort()])), envelope_fields:["ok","disposition","value","error","external_credit"], malformed_errors:["MISSING_FIELD","UNKNOWN_FIELD"], exact_unknown_field_refusal:true, boundary });
+writeJson("phase-truth.json", { owner:"Caelen Ash", phase:"v693-v5", stage:"planning", status:"PLANNING_FROZEN_NO_X1_OR_X2_EXECUTION", inherited_reviewed_zero_credit:100, new_proposals:100, expected_outcomes:{completed:80,represented:10,open_gap:5,exact_gate:5}, x1_execution_present:false, x2_execution_present:false, exact_packets_executed:0, blocked_packets_executed:0, global_promotions_completed:0, canonical_invoked:false, route:"PREPARED_NOT_SENT", terminal_verdict:"NOT_READY_FOR_STAGE_20", boundary });
+writeJson("resource-budget.json", { owner_file_ceiling:2000, observed_before_plan:0, planned_maximum:600, incremental_spend_usd:{ceiling:50,planned:0}, package_installations:0, web_searches:{x1_maximum:500,x2_maximum:500,used_preplan:5}, D_first:true, C_exception:"essential discoverable global skills only", no_cleanup_target:true, boundary });
+
+function walk(dir) { const out=[]; for(const e of fs.readdirSync(dir,{withFileTypes:true}).sort((a,b)=>a.name.localeCompare(b.name))){const full=path.join(dir,e.name);if(e.isDirectory())out.push(...walk(full));else out.push(full);}return out; }
+const manifestPath = path.join(PLAN,"manifest.json");
+const allowlistPath = path.join(PLAN,"staged-allowlist.json");
+const beforeAllowlist = walk(PLAN).filter(file=>file!==manifestPath&&file!==allowlistPath);
+writeJson("staged-allowlist.json", { schema:"ghc.family.staged-allowlist.v8", owner:"Caelen Ash", phase:"v693-v5", stage:"planning", expected_parent:SOURCE, entries:beforeAllowlist.map(file=>{const b=fs.readFileSync(file);return{path:`docs/caelen-ash/v693-v5/plan/${path.relative(PLAN,file).replaceAll("\\","/")}`,bytes:b.length,sha256:shaBytes(b)};}), self_exclusions:["docs/caelen-ash/v693-v5/plan/staged-allowlist.json","docs/caelen-ash/v693-v5/plan/manifest.json"], x1_paths:0, x2_paths:0, exact_allowlist:true, boundary });
+const manifestFiles = walk(PLAN).filter(file=>file!==manifestPath);
+writeJson("manifest.json", { schema:"ghc.family.stage-manifest.v1", owner:"Caelen Ash", phase:"v693-v5", stage:"planning", bindings:manifestFiles.map(file=>{const b=fs.readFileSync(file);if(b.includes(13))throw new Error(`CR byte ${file}`);return{path:`plan/${path.relative(PLAN,file).replaceAll("\\","/")}`,bytes:b.length,sha256:shaBytes(b)};}), excluded:["plan/manifest.json"], hash_domain:"raw Git blob bytes", stage_anchor:SOURCE, total_paths:manifestFiles.length+1 });
+
+process.stdout.write(JSON.stringify({ valid:true, source:SOURCE, inherited:inheritedReview.length, proposals:proposals.length, pairwise_comparisons:10000, quarantines:quarantines.length, expected_outcomes:{completed:80,represented:10,open_gap:5,exact_gate:5}, x1_tasks:{safe:100,candidate:100,clean_fix_refine:100}, x2_tasks:{safe:100,candidate:100,clean_fix_refine:100}, skills:20, runners:10, exact_packets:50, blocked_packets:30, startup_failures:6, manifest_bindings:manifestFiles.length, execution_present:false },null,2)+"\n");
