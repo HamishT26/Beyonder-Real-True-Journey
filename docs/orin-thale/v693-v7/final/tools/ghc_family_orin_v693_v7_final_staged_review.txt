@@ -1,0 +1,24 @@
+"use strict";
+
+const fs = require("fs");
+const path = require("path");
+const crypto = require("crypto");
+const cp = require("child_process");
+const repo = process.env.ORIN_REPO;
+if (!repo) throw new Error("ORIN_REPO is required");
+const baseRel = "docs/orin-thale/v693-v7";
+const base = path.join(repo, ...baseRel.split("/"));
+const allowlist = JSON.parse(fs.readFileSync(path.join(base, "final", "staged-allowlist.json"), "utf8"));
+function git(args) { return cp.execFileSync("git", ["-C", repo, ...args], { encoding: "utf8" }); }
+const staged = git(["diff", "--cached", "--name-only", "--diff-filter=ACMR"]).trim().split(/\r?\n/).filter(Boolean).sort();
+const expected = allowlist.paths.filter((row) => row !== `${baseRel}/final/staged-review.json`).sort();
+const missing = expected.filter((row) => !staged.includes(row));
+const unexpected = staged.filter((row) => !expected.includes(row));
+let diffOutput = "", diffExit = 0;
+try { diffOutput = git(["diff", "--cached", "--check"]); } catch (error) { diffExit = error.status || 1; diffOutput = `${error.stdout || ""}${error.stderr || ""}`; }
+const ownerOnly = staged.every((row) => row.startsWith(`${baseRel}/final/`));
+const status = missing.length === 0 && unexpected.length === 0 && diffExit === 0 && ownerOnly ? "VALID_EXACT_STAGED_FINAL_SURFACE" : "INVALID_STAGED_FINAL_SURFACE";
+const receipt = { schema: "ghc.family.staged-review.v8", owner: "Orin Thale", phase: "v693-v7", stage: "final_closeout", status, staged_before_receipt: staged, expected_before_receipt: expected, staged_count_before_receipt: staged.length, missing, unexpected, diff_check_exit: diffExit, diff_check_output: diffOutput.trim(), owner_only: ownerOnly, receipt_path_declared_exclusion: `${baseRel}/final/staged-review.json`, same_owner_only: true, independent_reproduction: false, route: "PREPARED_NOT_SENT", terminal_verdict: "NOT_READY_FOR_STAGE_20" };
+const target = path.join(base, "final", "staged-review.json"); fs.writeFileSync(target, JSON.stringify(receipt, null, 2) + "\n", "utf8");
+process.stdout.write(JSON.stringify({ status, staged_count_before_receipt: staged.length, missing: missing.length, unexpected: unexpected.length, diff_check_exit: diffExit, receipt_sha256: crypto.createHash("sha256").update(fs.readFileSync(target)).digest("hex") }, null, 2) + "\n");
+process.exit(status.startsWith("VALID") ? 0 : 2);

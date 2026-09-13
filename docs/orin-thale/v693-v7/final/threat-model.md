@@ -1,0 +1,9 @@
+# Orin Thale v693-v7 bounded threat model
+
+The owner runtime accepts only finite JSON-shaped requests, rational strings, vectors of at most eight states, closed operation fields, bounded loss tables, bounded partitions, and declared mixture weights. It performs no network, account, credential, deployment, publication, participant, or task-routing action. Unknown fields, negative probabilities, non-normalized distributions, dimension mismatches, malformed events, partitions, losses, actions, and mixtures fail closed in the tested contracts.
+
+Risks retained include resource abuse outside the declared bounds, mistakes in same-owner fixtures or implementations, semantic misuse of a valid numeric result, inaccessible explanation, false empirical promotion, model-selection bias, unreviewed loss functions, and attempts to turn a score into legal, cultural, professional, affected-party, or Maori authority. Compilation is not a sandbox. Validation is same-owner and bounded.
+
+The first public-runner installation exposed a real path-resolution failure. Its five wrappers and misplaced payload copies remain retained. Five corrected _v2 wrappers were added without overwrite and passed bounded smokes. The recovery does not erase the failed invocation or prove safety outside the declared interface.
+
+Relational working language and bounded same-owner synthetic software only. No consciousness, sentience, personhood, identity continuity, qualification, employment, independent agency, empirical GMUT confirmation, production THOS or Freed ID, professional, legal, cultural, affected-party or Maori authority, complete privacy or accessibility, exhaustive security, independent reproduction, AGI/ASI, Theory-of-Everything proof, canon, deployment or Stage 20 credit. Maori concepts remain under Maori authority. NOT_READY_FOR_STAGE_20.
