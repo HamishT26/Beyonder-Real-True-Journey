@@ -1,0 +1,132 @@
+'use strict';
+const fs=require('node:fs');
+const path=require('node:path');
+const vm=require('node:vm');
+const cp=require('node:child_process');
+const crypto=require('node:crypto');
+const root=path.resolve(process.argv[2]||'');
+const expectedHead=process.argv[3];
+const receiptDir=path.resolve(process.argv[4]||'');
+const skillRoot=path.resolve(process.argv[5]||'');
+const toolRoot=path.resolve(process.argv[6]||'');
+const sourceReceiptDir=path.resolve(process.argv[7]||'');
+if(!root||!expectedHead||!receiptDir||!skillRoot||!toolRoot||!sourceReceiptDir)throw new Error('CANONICAL_ARGUMENTS');
+const SOURCE='a0f8e9549ab96d36b83d222daef4f2c5dc39530f';
+const PLAN='f03c68e89cfbea990e5f02eed68461b23ef52441';
+const X1='c78d9c6ee67ea4f1045c4f08539359db2192a954';
+const X2='cea03fabb48fe418c0f1d7f30aa99f8dd35d2a7e';
+const BRANCH='codex/GHC-Family/sable-rook-v693-v4-full-tools';
+const PREFIX='docs/sable-rook/v693-v4/';
+const PROFILE_SHA='bdb4ab19fc0fb472e168375e292fd5434210de6fa5b6c1c7af7081b4e615cf52';
+const ROSTER_SHA='d5921f82ca8b1d0588da4d37cf223db994ff2c00c1468a06753adc63980271da';
+function loadText(file){const source=fs.readFileSync(file,'utf8'),mod={exports:{}};new vm.Script('(function(module,exports,require){'+source+'\n})',{filename:file}).runInThisContext()(mod,mod.exports,require);return mod.exports;}
+const validation=loadText(path.join(__dirname,'validation-lib.txt'));
+const {sha,strictJSON,git,createBlobReader}=validation;
+const checks=[];
+function check(name,value,detail=null){checks.push({name,pass:!!value,detail});if(!value)throw new Error('Gate failed: '+name+(detail?' :: '+detail:''));}
+function localFiles(directory){return fs.readdirSync(directory,{recursive:true}).filter(rel=>fs.statSync(path.join(directory,rel)).isFile()).map(rel=>rel.replaceAll('\\','/')).sort();}
+function words(bytes){return bytes.toString('utf8').trim().split(/\s+/).filter(Boolean).length;}
+function loadModuleBytes(bytes,label){const mod={exports:{}};new vm.Script('(function(module,exports,require){'+bytes.toString('utf8')+'\n})',{filename:label}).runInThisContext()(mod,mod.exports,require);return mod.exports;}
+async function main(){
+ check('exclusive canonical namespace absent',!fs.existsSync(receiptDir));
+ fs.mkdirSync(receiptDir,{recursive:false});
+ fs.writeFileSync(path.join(receiptDir,'invocation.json'),JSON.stringify({owner:'Sable Rook',phase:'v693-v4',head:expectedHead,invocations:1,successes:0,replays:0,state:'INVOKED'},null,2)+'\n',{encoding:'utf8',flag:'wx'});
+ const beforeStatus=git(root,'status','--porcelain');
+ const head=git(root,'rev-parse','HEAD');
+ const local=git(root,'rev-parse','refs/heads/'+BRANCH);
+ const upstream=git(root,'rev-parse','@{upstream}');
+ const tracking=git(root,'rev-parse','refs/remotes/origin/'+BRANCH);
+ const liveLine=git(root,'ls-remote','--heads','origin','refs/heads/'+BRANCH);
+ const live=liveLine.split(/\s+/)[0];
+ const divergence=git(root,'rev-list','--left-right','--count','HEAD...refs/remotes/origin/'+BRANCH).split(/\s+/).map(Number);
+ check('exact final head',head===expectedHead,{head,expectedHead});
+ check('owner branch',git(root,'branch','--show-current')===BRANCH);
+ check('clean final worktree before',beforeStatus==='');
+ check('four-way equality',head===local&&head===upstream&&head===tracking&&head===live,{head,local,upstream,tracking,live});
+ check('typed zero divergence',divergence.length===2&&divergence[0]===0&&divergence[1]===0,divergence);
+ check('planning direct child',git(root,'rev-parse',PLAN+'^')===SOURCE);
+ check('x1 direct child',git(root,'rev-parse',X1+'^')===PLAN);
+ check('x2 direct child',git(root,'rev-parse',X2+'^')===X1);
+ check('final direct child',git(root,'rev-parse',head+'^')===X2);
+ check('four owner stage commits',Number(git(root,'rev-list','--count',SOURCE+'..'+head))===4);
+ check('zero merge commits',Number(git(root,'rev-list','--merges','--count',SOURCE+'..'+head))===0);
+ const changed=git(root,'diff','--name-only',SOURCE+'..'+head).split(/\r?\n/).filter(Boolean);
+ check('owner-only additive delta',changed.length>0&&changed.every(rel=>rel.startsWith(PREFIX)),changed.filter(rel=>!rel.startsWith(PREFIX)));
+ const ownerRoot=path.join(root,'docs/sable-rook/v693-v4'),materialized=localFiles(ownerRoot);
+ check('materialized owner-only files',materialized.length<2000,materialized.length);
+ const treePaths=git(root,'ls-tree','-r','--name-only',head,'--',PREFIX).split(/\r?\n/).filter(Boolean);
+ check('owner tree file ceiling',treePaths.length<2000,treePaths.length);
+ check('materialized tree count',treePaths.length===materialized.length,{tree:treePaths.length,materialized:materialized.length});
+ const profileBytes=fs.readFileSync(path.join(skillRoot,'ghc-family-index/references/current-workflow-v8.json'));
+ const rosterBytes=fs.readFileSync(path.join(skillRoot,'ghc-family-index/references/current-roster-v8.json'));
+ check('current profile hash',sha(profileBytes)===PROFILE_SHA);
+ check('current roster hash',sha(rosterBytes)===ROSTER_SHA);
+ const sourceReceipt=fs.readFileSync(path.join(sourceReceiptDir,'exact-final-owner-scoped-canonical.json'));
+ const sourcePayload=fs.readFileSync(path.join(sourceReceiptDir,'canonical-payload.json'));
+ check('source canonical receipt hash',sha(sourceReceipt)==='0645260f00d26933e68b2f5aa559e81ddb5dea4689c01c234c55fb8919bc7cd2');
+ check('source canonical payload hash',sha(sourcePayload)==='bb6561d6f66b6fc01818d2f2b474397a8563bb890fd3dc18f25f204a9ed0d22c');
+ const reader=createBlobReader(root);
+ const manifestSpecs=[[PLAN,'plan/manifest.json'],[X1,'x1/manifest.json'],[X2,'x2/manifest.json'],[head,'final/manifest.json'],[head,'final/owner-manifest.json']];
+ let manifestBindings=0,stageManifestChecks=0;
+ for(const [commit,rel] of manifestSpecs){const manifestBytes=await reader.read(commit+':'+PREFIX+rel),manifest=strictJSON(manifestBytes);for(const binding of manifest.bindings){const bytes=await reader.read(commit+':'+PREFIX+binding.path);check('manifest binding '+rel+' '+binding.path,bytes.length===binding.bytes&&sha(bytes)===binding.sha256);manifestBindings++;}check('manifest total '+rel,manifest.bindings.length+(manifest.excluded||[]).length===manifest.total_paths);stageManifestChecks++;}
+ const ownerManifest=strictJSON(await reader.read(head+':'+PREFIX+'final/owner-manifest.json'));
+ check('owner manifest covers tree',ownerManifest.total_paths===treePaths.length&&ownerManifest.bindings.length+ownerManifest.excluded.length===treePaths.length,{manifest:ownerManifest.total_paths,tree:treePaths.length});
+ const sealBytes=await reader.read(head+':'+PREFIX+'final/content-seal.json'),seal=strictJSON(sealBytes);let sealBindings=0;
+ for(const binding of seal.bindings){const bytes=await reader.read(head+':'+PREFIX+binding.path);check('content seal '+binding.path,sha(bytes)===binding.sha256);sealBindings++;}
+ const allowedExtensions=new Set(['.json','.md','.txt','.html','.tex']);
+ let strictJsonFiles=0,compiledTxtFiles=0,largestDocumentWords=0,privacyCandidates=0,confirmedPrivacyHits=0;
+ const privacyPatterns={raw_uuid:/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/ig,windows_path:/(?<![A-Za-z0-9+.-])[A-Za-z]:[\\/](?![\\/])[^\s"'<>]*/g,credential:/(?:bearer\s+[A-Za-z0-9._-]+|private[_ -]?key\s*[:=]|api[_ -]?key\s*[:=])/ig,private_route:/(?:threadId|task[_ -]?id|session[_ -]?stream|private callable)/ig,private_content:/(?:raw transcript|screenshot payload|private app state)/ig};
+ const scannerDefinitions=new Set(['x2/tools/precommit-validator.txt','final/canonical-validator.txt','final/precommit-validator.txt']);
+ const retainedIncident='plan/retained/privacy-self-description-candidate/failure-before-self-description-correction.json';
+ for(const fullPath of treePaths){const rel=fullPath.slice(PREFIX.length),bytes=await reader.read(head+':'+fullPath),extension=path.extname(rel);check('allowed artifact '+rel,allowedExtensions.has(extension));const count=words(bytes);largestDocumentWords=Math.max(largestDocumentWords,count);check('document word ceiling '+rel,count<=100000,count);if(extension==='.json'){strictJSON(bytes);strictJsonFiles++;}const text=bytes.toString('utf8');for(const [className,re] of Object.entries(privacyPatterns)){const hits=text.match(re)||[];if(hits.length){privacyCandidates+=hits.length;const allowed=scannerDefinitions.has(rel)||rel===retainedIncident;check('privacy candidate disposition '+className+' '+rel,allowed,hits.length);if(!allowed)confirmedPrivacyHits+=hits.length;}}if(extension==='.txt'&&!rel.includes('/retained/')&&rel!=='x2/promotion/tools/consistency-core.txt'){new vm.Script(text,{filename:rel});compiledTxtFiles++;}}
+ check('zero confirmed privacy hits',confirmedPrivacyHits===0,confirmedPrivacyHits);
+ const definitions=loadModuleBytes(await reader.read(head+':'+PREFIX+'plan/fixture-definitions.txt'),'fixture-definitions.txt');
+ const runtime=loadModuleBytes(await reader.read(head+':'+PREFIX+'x2/lib/consistency-x2.txt'),'consistency-x2.txt');
+ let frozenCases=0;
+ for(const row of definitions.rows){const actual=runtime.execute(runtime.helpers.clone(row.request));check('frozen case '+row.proposal_id,runtime.helpers.canon(actual)===runtime.helpers.canon(row.expected));frozenCases++;}
+ const proposals=strictJSON(await reader.read(head+':'+PREFIX+'plan/proposals.json')).proposals;
+ const observedOutcomes=proposals.reduce((acc,row)=>(acc[row.expected_disposition]=(acc[row.expected_disposition]||0)+1,acc),{});
+ check('proposal count',proposals.length===100);
+ check('observed outcomes',JSON.stringify(observedOutcomes)===JSON.stringify({completed:80,represented:10,open_gap:5,exact_gate:5}),observedOutcomes);
+ const x1Summary=strictJSON(await reader.read(head+':'+PREFIX+'x1/execution-summary.json'));
+ const x2Summary=strictJSON(await reader.read(head+':'+PREFIX+'x2/execution-summary.json'));
+ check('x1 portfolio counts',x1Summary.safe===100&&x1Summary.candidate_failed_subjects===100&&x1Summary.candidate_refusals===100&&x1Summary.clean_fix_refine===100&&x1Summary.unexpected_failures===0);
+ check('x2 portfolio counts',x2Summary.safe===100&&x2Summary.candidate_failed_subjects===100&&x2Summary.candidate_refusals===100&&x2Summary.clean_fix_refine===100&&x2Summary.unexpected_failures===0);
+ const methodFlow=strictJSON(await reader.read(head+':'+PREFIX+'final/methodflow-ledger.json'));
+ check('methodflow counts',methodFlow.counts.methods===46&&methodFlow.counts.witnesses===1063&&methodFlow.counts.state_events===136&&methodFlow.counts.recommendations===46&&methodFlow.counts.states.preferred===45&&methodFlow.counts.states.candidate===1&&methodFlow.counts.witness_results.pass===778&&methodFlow.counts.witness_results.fail===285,methodFlow.counts);
+ check('methodflow unique methods',new Set(methodFlow.methods.map(row=>row.method_id)).size===46);
+ check('methodflow unique witnesses',new Set(methodFlow.witnesses.map(row=>row.witness_id)).size===1063);
+ check('methodflow failures linked',methodFlow.witnesses.filter(row=>row.result==='fail').every(row=>row.retained_negative_ids.length>0));
+ const methodValidation=strictJSON(await reader.read(head+':'+PREFIX+'final/methodflow-validation.json'));
+ check('official methodflow validation',methodValidation.valid===true&&methodValidation.issue_count===0);
+ const deckIndex=strictJSON(await reader.read(head+':'+PREFIX+'x2/deck/deck-index.json'));
+ const cardManifest=strictJSON(await reader.read(head+':'+PREFIX+'x2/deck/card-manifest.json'));
+ check('deck counts',deckIndex.counts.cards===108&&deckIndex.counts.tier1===1&&deckIndex.counts.tier2===3&&deckIndex.counts.tier3===4&&deckIndex.counts.tier4===100);
+ for(const binding of cardManifest.bindings){const bytes=await reader.read(head+':'+PREFIX+'x2/deck/'+binding.path);check('card manifest '+binding.path,bytes.length===binding.bytes&&sha(bytes)===binding.sha256);}
+ const batonBytes=await reader.read(head+':'+PREFIX+'final/hand-off-baton.md'),batonText=batonBytes.toString('utf8');
+ check('baton word range',words(batonBytes)>=10000&&words(batonBytes)<=100000,words(batonBytes));
+ check('thirteen baton modules',(batonText.match(/^## Module /gm)||[]).length===13);
+ check('literal baton EOF',batonText.endsWith('This is the literal end of the thirteen-module Sable v693-v4 baton.\n'));
+ const phaseTruth=strictJSON(await reader.read(head+':'+PREFIX+'final/phase-truth.json'));
+ check('repository canonical pending truth',phaseTruth.canonical_invoked_in_this_snapshot===false&&phaseTruth.successor_route==='PREPARED_NOT_SENT');
+ check('terminal verdict',phaseTruth.terminal_verdict==='NOT_READY_FOR_STAGE_20');
+ const promotionBase='x2/promotion/correction-v2/';
+ const skillNames=['ghc-family-distributed-clock-contracts-v2','ghc-family-replica-visibility-review-v2','ghc-family-consistency-repair-evidence-v2','ghc-family-accessible-consistency-handover-v2','ghc-family-distributed-authority-reservations-v2'];
+ const runnerNames=['ghc_family_distributed_clock_contracts_v2.txt','ghc_family_replica_visibility_review_v2.txt','ghc_family_consistency_repair_evidence_v2.txt','ghc_family_accessible_consistency_handover_v2.txt','ghc_family_distributed_authority_reservations_v2.txt'];
+ let installedBindings=0;
+ for(const name of skillNames)for(const rel of ['SKILL.md','references/contracts.md']){const sourceBytes=await reader.read(head+':'+PREFIX+promotionBase+'skills/'+name+'/'+rel),installedBytes=fs.readFileSync(path.join(skillRoot,name,rel));check('installed skill parity '+name+' '+rel,sourceBytes.equals(installedBytes));installedBindings++;}
+ const sourceCore=await reader.read(head+':'+PREFIX+promotionBase+'tools/consistency-core-v2.txt'),installedCore=fs.readFileSync(path.join(toolRoot,'consistency-core-v2.txt'));check('installed core parity',sourceCore.equals(installedCore));installedBindings++;
+ for(const name of runnerNames){const sourceBytes=await reader.read(head+':'+PREFIX+promotionBase+'tools/'+name),installedBytes=fs.readFileSync(path.join(toolRoot,name));check('installed runner parity '+name,sourceBytes.equals(installedBytes));installedBindings++;}
+ let installedPositive=0,installedFailedSubjects=0,installedRefusals=0;
+ const groups=[['ghc_family_distributed_clock_contracts_v2.txt',['vector_clock_compare','vector_clock_join','dotted_event_validation','read_your_writes_check']],['ghc_family_replica_visibility_review_v2.txt',['causal_dependency_closure','replica_observation_matrix','quorum_intersection','partition_frontier']],['ghc_family_consistency_repair_evidence_v2.txt',['anti_entropy_delta','delta_application_guard','tombstone_retention_check','repair_plan_toposort']],['ghc_family_accessible_consistency_handover_v2.txt',['monotonic_reads_check','bounded_staleness_check','accessible_consistency_summary','handover_snapshot_projection']],['ghc_family_distributed_authority_reservations_v2.txt',['lease_epoch_fence','causal_claim_firewall','real_cluster_observation_gate','distributed_release_authority_gate']]];
+ for(const [runnerName,operations] of groups){for(const operation of operations){const fixture=proposals.find(row=>row.op===operation),run=cp.spawnSync(process.execPath,[path.join(toolRoot,runnerName)],{input:JSON.stringify(fixture.request),encoding:'utf8',timeout:15000}),actual=JSON.parse(run.stdout);check('installed positive '+operation,run.status===0&&runtime.helpers.canon(actual)===runtime.helpers.canon(fixture.expected));installedPositive++;}const fixture=proposals.find(row=>row.op===operations[0]),request={...fixture.request,op:'unsupported_'+operations[0]},run=cp.spawnSync(process.execPath,[path.join(toolRoot,runnerName)],{input:JSON.stringify(request),encoding:'utf8',timeout:15000}),actual=JSON.parse(run.stdout),expected=runtime.envelope(false,null,'RUNNER_OPERATION');check('installed unsupported subject failed '+runnerName,run.status===1);installedFailedSubjects++;check('installed refusal '+runnerName,runtime.helpers.canon(actual)===runtime.helpers.canon(expected));installedRefusals++;}
+ const afterStatus=git(root,'status','--porcelain');
+ check('clean final worktree after',afterStatus==='');
+ const postLiveLine=git(root,'ls-remote','--heads','origin','refs/heads/'+BRANCH),postLive=postLiveLine.split(/\s+/)[0];
+ check('fresh live remote unchanged',postLive===head,{head,postLive});
+ reader.close();
+ const payload={owner:'Sable Rook',phase:'v693-v4',status:'VALID_EXACT_FINAL_OWNER_SCOPED_CANONICAL',source:SOURCE,head,anchors:{planning:PLAN,x1:X1,x2:X2,final:head},checks,checks_passed:checks.filter(row=>row.pass).length,checks_total:checks.length,manifest_bindings:manifestBindings,stage_manifest_checks:stageManifestChecks,seal_bindings:sealBindings,owner_paths:treePaths.length,strict_json_files:strictJsonFiles,compiled_txt_files:compiledTxtFiles,largest_document_words:largestDocumentWords,baton_words:words(batonBytes),privacy_candidates:privacyCandidates,confirmed_privacy_hits:confirmedPrivacyHits,frozen_cases:frozenCases,installed_bindings:installedBindings,installed_positive_checks:installedPositive,installed_failed_subjects:installedFailedSubjects,installed_refusal_checks:installedRefusals,outcomes:observedOutcomes,methods:46,witnesses:1063,passing_witnesses:778,failed_witnesses:285,lineage:1717,complete_repository_suite:false,independent_reproduction:false,terminal_verdict:'NOT_READY_FOR_STAGE_20',boundary:'Exact-final same-owner synthetic software validation only; no predecessor canonical replay, independent reproduction, deployment, scientific, authority, identity or Stage 20 credit.'};
+ const payloadBytes=Buffer.from(JSON.stringify(payload,null,2)+'\n'),payloadHash=sha(payloadBytes);fs.writeFileSync(path.join(receiptDir,'canonical-payload.json'),payloadBytes,{flag:'wx'});
+ const receipt={schema:'ghc.family.exact-final-owner-scoped-canonical.v1',owner:'Sable Rook',phase:'v693-v4',status:'VALID_EXACT_FINAL_OWNER_SCOPED_CANONICAL',source:SOURCE,head,payload_sha256:payloadHash,checks_passed:payload.checks_passed,checks_total:payload.checks_total,invocations:1,successes:1,replays:0,terminal_verdict:'NOT_READY_FOR_STAGE_20'};fs.writeFileSync(path.join(receiptDir,'exact-final-owner-scoped-canonical.json'),JSON.stringify(receipt,null,2)+'\n',{encoding:'utf8',flag:'wx'});fs.writeFileSync(path.join(receiptDir,'success-latch.json'),JSON.stringify({head,invocations:1,successes:1,replays:0,status:'LATCHED_SUCCESS_NO_REPLAY'},null,2)+'\n',{encoding:'utf8',flag:'wx'});process.stdout.write(JSON.stringify(receipt,null,2)+'\n');
+}
+main().catch(error=>{try{if(fs.existsSync(receiptDir))fs.writeFileSync(path.join(receiptDir,'failed.json'),JSON.stringify({owner:'Sable Rook',phase:'v693-v4',status:'FAILED_ZERO_CANONICAL_SUCCESS_CREDIT',error:error.message,invocations:1,successes:0,replays:0},null,2)+'\n',{encoding:'utf8',flag:'wx'});}catch{}console.error(error.stack||error.message);process.exitCode=1;});

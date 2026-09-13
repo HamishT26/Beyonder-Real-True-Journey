@@ -1,0 +1,115 @@
+'use strict';
+const fs=require('node:fs');
+const path=require('node:path');
+const crypto=require('node:crypto');
+const root=path.resolve(process.argv[2]||'.');
+const base=path.join(root,'docs/sable-rook/v693-v4/final');
+const boundary='Relational working language and bounded same-owner synthetic software only; no consciousness, personhood, identity continuity, employment, qualification, independent agency, empirical GMUT confirmation, production THOS or Freed ID, professional, legal, cultural, affected-party or Maori authority, independent reproduction, complete privacy or accessibility, exhaustive security, AGI/ASI, Theory-of-Everything proof, canon, deployment or Stage 20 credit. Maori concepts remain under Maori authority. NOT_READY_FOR_STAGE_20.';
+const readJSON=rel=>JSON.parse(fs.readFileSync(path.join(base,rel),'utf8'));
+const writeJSON=(rel,value)=>fs.writeFileSync(path.join(base,rel),JSON.stringify(value,null,2)+'\n','utf8');
+function replaceExact(text,from,to,label){
+  const count=text.split(from).length-1;
+  if(count!==1)throw new Error('REPLACE_COUNT:'+label+':'+count);
+  return text.replace(from,to);
+}
+const ledger=readJSON('methodflow-ledger.json');
+const failureLedger=readJSON('operational-failures.json');
+if(ledger.counts.methods!==46||ledger.counts.witnesses!==1063||ledger.counts.state_events!==136||ledger.counts.recommendations!==46||ledger.counts.states.preferred!==45||ledger.counts.states.candidate!==1||ledger.counts.witness_results.pass!==778||ledger.counts.witness_results.fail!==285)throw new Error('FINAL_METHODFLOW_COUNTS');
+if(failureLedger.count!==1||failureLedger.records[0].id!=='SR6934-FINAL-N016')throw new Error('FINAL_FAILURE_LEDGER');
+const failure=failureLedger.records[0];
+
+const accounting=readJSON('evidence-accounting.json');
+accounting.methodflow=ledger.counts;
+accounting.lineage.sable_failed_witnesses=285;
+accounting.lineage.successor_visible=1717;
+accounting.repository_methodflow={methods:46,witnesses:1063,passing_witnesses:778,failed_witnesses:285,state_events:136,recommendations:46,preferred_methods:45,candidate_methods:1};
+accounting.actual_session_operation_failures=16;
+accounting.actual_session_operation_recoveries=15;
+accounting.external_staged_recovery_pending=1;
+accounting.successor_visible_lineage=1717;
+writeJSON('evidence-accounting.json',accounting);
+
+const negatives=readJSON('retained-negative-register.json');
+negatives.sable_failed_witnesses=285;
+negatives.successor_visible_lineage=1717;
+negatives.categories.actual_session_operation_failures=16;
+if(!negatives.actual_session_failures.some(row=>row.id===failure.id))negatives.actual_session_failures.push({id:failure.id,stage:'final',failure:failure.failure,result:'fail',success_credit:0,original_failure_erased:false});
+negatives.repository_recoveries=15;
+negatives.external_staged_recovery_pending=1;
+writeJSON('retained-negative-register.json',negatives);
+
+const closeout=readJSON('closeout-receipt.json');
+closeout.methodflow=ledger.counts;
+closeout.final_staged_review_failure_retained=failure.id;
+closeout.final_staged_review_recovery='external_pending_after_fixed_point';
+writeJSON('closeout-receipt.json',closeout);
+
+const phaseTruth=readJSON('phase-truth.json');
+phaseTruth.repository_methodflow={methods:46,witnesses:1063,passing_witnesses:778,failed_witnesses:285,preferred_methods:45,candidate_methods:1};
+phaseTruth.final_staged_review_failure_retained=failure.id;
+phaseTruth.final_staged_review_recovery='external_pending_after_fixed_point';
+phaseTruth.successor_visible_lineage=1717;
+writeJSON('phase-truth.json',phaseTruth);
+
+let overview=fs.readFileSync(path.join(base,'overview.md'),'utf8');
+overview=replaceExact(overview,'The final repository Method Flow contains forty-five preferred methods and 1,062 witnesses: 778 bounded passes and 284 retained failures. Preferred means only that a method has a passing witness for its declared trigger. It does not mean general correctness, security, accessibility, independent reproduction, scientific confirmation, or production readiness.','The final repository Method Flow contains 46 methods, comprising forty-five preferred methods and one candidate method, with 1,063 witnesses: 778 bounded passes and 285 retained failures. Preferred means only that a method has a passing witness for its declared trigger. The candidate method retains its failed staged-wrapper witness while its corrected staged review remains external and pending. Neither state means general correctness, security, accessibility, independent reproduction, scientific confirmation, or production readiness.','overview-methods');
+overview=replaceExact(overview,'The 284 failures include 200 malformed proposal subjects, twenty-four parser subjects, ten local unsupported-runner subjects, thirty failed v1 promotion integration witnesses, five corrected-v2 unsupported subjects, and fifteen real session-operation failures. Those session failures cover a lost high-cardinality manifest wrapper result, sparse index materialization, candidate collisions, privacy scanner false positives and attribution, symbolic upstream mapping, PowerShell sequencing, version-probe attribution, two promotion-builder defects, the raw-core byte-domain defect, an inline validator syntax defect, scanner-definition classification, and a Method Flow word-ceiling failure. Each remains linked to a separate recovery. No passing refusal or recovery subtracts a failure.','The 285 failures include 200 malformed proposal subjects, twenty-four parser subjects, ten local unsupported-runner subjects, thirty failed v1 promotion integration witnesses, five corrected-v2 unsupported subjects, and sixteen real session-operation failures. Those session failures cover a lost high-cardinality manifest wrapper result, sparse index materialization, candidate collisions, privacy scanner false positives and attribution, symbolic upstream mapping, PowerShell sequencing, version-probe attribution, two promotion-builder defects, the raw-core byte-domain defect, an inline validator syntax defect, scanner-definition classification, a Method Flow word-ceiling failure, and one malformed final staged-review wrapper. The final wrapper staged the intended surface and proved allowlist parity, but its malformed x1 revision token made the remaining summary non-attributable. It has zero success credit; its scalar fixed-point recovery remains external and pending. No passing refusal or recovery subtracts a failure.','overview-failures');
+overview=replaceExact(overview,"The scoped lineage is explicit rather than universal: Thalen's sealed lineage contributes 1,429, its three external route failures remain separate, and Sable contributes 284 failed witnesses, yielding a successor-visible scoped lineage of 1,716. This is not a universal GHC program total.","The scoped lineage is explicit rather than universal: Thalen's sealed lineage contributes 1,429, its three external route failures remain separate, and Sable contributes 285 failed witnesses, yielding a successor-visible scoped lineage of 1,717. This is not a universal GHC program total. The eventual corrected staged-review pass, if obtained, is an external bounded witness and does not rewrite the repository-sealed failure count.",'overview-lineage');
+fs.writeFileSync(path.join(base,'overview.md'),overview,'utf8');
+
+let html=fs.readFileSync(path.join(base,'overview.html'),'utf8');
+html=replaceExact(html,'<td>1062</td>','<td>1063</td>','html-witnesses');
+html=replaceExact(html,'All 284 failed witnesses remain visible.','All 285 failed witnesses remain visible, including the zero-credit staged-wrapper failure; its corrected staged review remains external and pending.','html-failures');
+fs.writeFileSync(path.join(base,'overview.html'),html,'utf8');
+
+let baton=fs.readFileSync(path.join(base,'hand-off-baton.md'),'utf8');
+baton=replaceExact(baton,'The repository ledger contains 45 methods and 1,062 witnesses: 778 pass and 284 fail. There are 135 state events and 45 recommendations. Every preferred method has a bounded passing witness for its declared trigger only.','The repository ledger contains 46 methods and 1,063 witnesses: 778 pass and 285 fail. There are 136 state events and 46 recommendations. Forty-five methods are preferred for their exact declared triggers; one final staged-review method remains candidate because its failed wrapper has zero credit and the corrected staged review is external and pending.','baton-methods');
+baton=replaceExact(baton,'The fifteen actual session-operation failures remain below. They supplement 200 malformed proposal subjects, 24 parser subjects, 10 local unsupported-runner subjects, 30 failed v1 promotion witnesses, and five v2 unsupported subjects. No recovery erases a failure.','The sixteen actual session-operation failures remain below. They supplement 200 malformed proposal subjects, 24 parser subjects, 10 local unsupported-runner subjects, 30 failed v1 promotion witnesses, and five v2 unsupported subjects. No recovery erases a failure.','baton-failure-count');
+const insertion='### SR6934-FINAL-N016\n\nFailure: '+failure.failure+'\n\nRecovery: '+failure.recovery+' The recovery result is external and pending at repository freeze.\n\nOriginal success credit: zero. Original failure erased: false.\n\n';
+baton=replaceExact(baton,'The first cumulative ledger exceeded the word ceiling and is preserved as a verified Base64 byte record. The current ledger shortens only repeated boundary prose.',insertion+'The first cumulative ledger exceeded the word ceiling and is preserved as a verified Base64 byte record. The current ledger shortens only repeated boundary prose.','baton-failure-insertion');
+const oldCounts=`{\n  "methods": 45,\n  "witnesses": 1062,\n  "state_events": 135,\n  "recommendations": 45,\n  "states": {\n    "observed": 0,\n    "candidate": 0,\n    "validated": 0,\n    "preferred": 45,\n    "superseded": 0,\n    "deprecated": 0\n  },\n  "witness_results": {\n    "pass": 778,\n    "fail": 284\n  }\n}`;
+baton=replaceExact(baton,oldCounts,JSON.stringify(ledger.counts,null,2),'baton-count-json');
+fs.writeFileSync(path.join(base,'hand-off-baton.md'),baton,'utf8');
+
+const batonBytes=Buffer.from(baton,'utf8');
+const batonIndex=readJSON('baton-index.json');
+batonIndex.words=baton.trim().split(/\s+/).filter(Boolean).length;
+batonIndex.bytes=batonBytes.length;
+batonIndex.sha256=crypto.createHash('sha256').update(batonBytes).digest('hex');
+writeJSON('baton-index.json',batonIndex);
+
+for(const rel of ['precommit-validator.txt','canonical-validator.txt']){
+  let text=fs.readFileSync(path.join(base,rel),'utf8');
+  text=text.replaceAll("parsed.get('x2/methodflow-ledger.json')","parsed.get('final/methodflow-ledger.json')");
+  text=text.replaceAll("head+':'+PREFIX+'x2/methodflow-ledger.json'","head+':'+PREFIX+'final/methodflow-ledger.json'");
+  text=text.replaceAll("head+':'+PREFIX+'x2/evidence/methodflow-validation.json'","head+':'+PREFIX+'final/methodflow-validation.json'");
+  text=text.replaceAll('methodFlow.counts.methods===45&&methodFlow.counts.witnesses===1062&&methodFlow.counts.state_events===135&&methodFlow.counts.recommendations===45&&methodFlow.counts.witness_results.pass===778&&methodFlow.counts.witness_results.fail===284','methodFlow.counts.methods===46&&methodFlow.counts.witnesses===1063&&methodFlow.counts.state_events===136&&methodFlow.counts.recommendations===46&&methodFlow.counts.states.preferred===45&&methodFlow.counts.states.candidate===1&&methodFlow.counts.witness_results.pass===778&&methodFlow.counts.witness_results.fail===285');
+  text=text.replaceAll('ledger.counts.methods===45&&ledger.counts.witnesses===1062&&ledger.counts.witness_results.pass===778&&ledger.counts.witness_results.fail===284','ledger.counts.methods===46&&ledger.counts.witnesses===1063&&ledger.counts.state_events===136&&ledger.counts.recommendations===46&&ledger.counts.states.preferred===45&&ledger.counts.states.candidate===1&&ledger.counts.witness_results.pass===778&&ledger.counts.witness_results.fail===285');
+  text=text.replaceAll('size===45','size===46');
+  text=text.replaceAll('size===1062','size===1063');
+  text=text.replaceAll('methods:45,witnesses:1062,passing_witnesses:778,failed_witnesses:284,lineage:1716','methods:46,witnesses:1063,passing_witnesses:778,failed_witnesses:285,lineage:1717');
+  fs.writeFileSync(path.join(base,rel),text,'utf8');
+}
+
+let builder=fs.readFileSync(path.join(base,'final-builder.txt'),'utf8');
+if(!builder.startsWith("'use strict';"))throw new Error('BUILDER_HEADER');
+builder=builder.replace("'use strict';","'use strict';\n// Initial one-shot assembly recipe retained in place; current final count truth is reconciled by update-final-counts.txt and preserved snapshots record the earlier fixed points.");
+builder=builder.replace("method=read('x2/methodflow-ledger.json')","method=read('final/methodflow-ledger.json')");
+builder=builder.replace("...read('x2/evidence/precommit-failures.json').records]","...read('x2/evidence/precommit-failures.json').records,...read('final/operational-failures.json').records]");
+builder=builder.replace("actualFailures.length!==15||method.counts.witness_results.fail!==284","actualFailures.length!==16||method.counts.witness_results.fail!==285");
+builder=builder.replaceAll('repository_methodflow:{methods:45,witnesses:1062,passing_witnesses:778,failed_witnesses:284},actual_session_operation_failures:15,actual_session_operation_recoveries:15,source_external_route_failures:3,successor_visible_lineage:1716','repository_methodflow:{methods:46,witnesses:1063,passing_witnesses:778,failed_witnesses:285,state_events:136,recommendations:46,preferred_methods:45,candidate_methods:1},actual_session_operation_failures:16,actual_session_operation_recoveries:15,external_staged_recovery_pending:1,source_external_route_failures:3,successor_visible_lineage:1717');
+builder=builder.replaceAll('sable_failed_witnesses:284,successor_visible_lineage:1716','sable_failed_witnesses:285,successor_visible_lineage:1717');
+builder=builder.replaceAll('actual_session_operation_failures:15','actual_session_operation_failures:16');
+builder=builder.replaceAll('The final repository Method Flow contains forty-five preferred methods and 1,062 witnesses: 778 bounded passes and 284 retained failures.','The final repository Method Flow contains 46 methods, forty-five preferred and one candidate, with 1,063 witnesses: 778 bounded passes and 285 retained failures.');
+builder=builder.replaceAll('The 284 failures include 200 malformed proposal subjects, twenty-four parser subjects, ten local unsupported-runner subjects, thirty failed v1 promotion integration witnesses, five corrected-v2 unsupported subjects, and fifteen real session-operation failures.','The 285 failures include 200 malformed proposal subjects, twenty-four parser subjects, ten local unsupported-runner subjects, thirty failed v1 promotion integration witnesses, five corrected-v2 unsupported subjects, and sixteen real session-operation failures.');
+builder=builder.replaceAll("Sable contributes 284 failed witnesses, yielding a successor-visible scoped lineage of 1,716","Sable contributes 285 failed witnesses, yielding a successor-visible scoped lineage of 1,717");
+builder=builder.replaceAll('<td>1062</td>','<td>1063</td>');
+builder=builder.replaceAll('All 284 failed witnesses remain visible.','All 285 failed witnesses remain visible.');
+builder=builder.replaceAll('The repository ledger contains 45 methods and 1,062 witnesses: 778 pass and 284 fail. There are 135 state events and 45 recommendations.','The repository ledger contains 46 methods and 1,063 witnesses: 778 pass and 285 fail. There are 136 state events and 46 recommendations.');
+builder=builder.replaceAll('The fifteen actual session-operation failures remain below.','The sixteen actual session-operation failures remain below.');
+fs.writeFileSync(path.join(base,'final-builder.txt'),builder,'utf8');
+
+const owner=path.dirname(base);
+closeout.owner_files_before_final_controls=fs.readdirSync(owner,{recursive:true}).filter(rel=>fs.statSync(path.join(owner,rel)).isFile()).length;
+writeJSON('closeout-receipt.json',closeout);
+process.stdout.write(JSON.stringify({status:'FINAL_COUNT_MIRRORS_RECONCILED',methodflow:ledger.counts,owner_files_before_controls:closeout.owner_files_before_final_controls,baton:{words:batonIndex.words,bytes:batonIndex.bytes,sha256:batonIndex.sha256},failure:failure.id,recovery:'external_pending'},null,2)+'\n');
