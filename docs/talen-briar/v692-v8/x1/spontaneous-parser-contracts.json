@@ -1,0 +1,79 @@
+{
+  "defined_before_execution": true,
+  "candidate_cases": [
+    {
+      "negative_id": "TB6928-x1-parser-duplicate-key",
+      "raw": "{\"op\": \"interval_elements\", \"poset\": {\"id\": \"C3\", \"labels\": [\"0\", \"a\", \"1\"], \"covers\": [[0, 1], [1, 2]]}, \"args\": {},\"op\":\"interval_elements\"}",
+      "expected_error": "duplicate_key",
+      "success_credit": 0
+    },
+    {
+      "negative_id": "TB6928-x1-parser-trailing",
+      "raw": "{\"op\": \"interval_elements\", \"poset\": {\"id\": \"C3\", \"labels\": [\"0\", \"a\", \"1\"], \"covers\": [[0, 1], [1, 2]]}, \"args\": {}} false",
+      "expected_error": "json_syntax",
+      "success_credit": 0
+    },
+    {
+      "negative_id": "TB6928-x1-parser-fraction",
+      "raw": "{\"op\": \"interval_elements\", \"poset\": {\"id\": \"C3\", \"labels\": [\"0\", \"a\", \"1\"], \"covers\": [[0, 1], [1, 2]]}, \"args\": {\"n\": 0.5}}",
+      "expected_error": "integer_range",
+      "success_credit": 0
+    },
+    {
+      "negative_id": "TB6928-x1-parser-unsafe",
+      "raw": "{\"op\": \"interval_elements\", \"poset\": {\"id\": \"C3\", \"labels\": [\"0\", \"a\", \"1\"], \"covers\": [[0, 1], [1, 2]]}, \"args\": {\"n\": 9007199254740992}}",
+      "expected_error": "integer_range",
+      "success_credit": 0
+    },
+    {
+      "negative_id": "TB6928-x1-parser-cycle",
+      "raw": "{\"op\": \"interval_elements\", \"poset\": {\"id\": \"C3\", \"labels\": [\"0\", \"a\", \"1\"], \"covers\": [[0, 1], [1, 0]]}, \"args\": {}}",
+      "expected_error": "cycle",
+      "success_credit": 0
+    },
+    {
+      "negative_id": "TB6928-x1-parser-redundant-cover",
+      "raw": "{\"op\": \"interval_elements\", \"poset\": {\"id\": \"C3\", \"labels\": [\"0\", \"a\", \"1\"], \"covers\": [[0, 1], [1, 2], [0, 2]]}, \"args\": {}}",
+      "expected_error": "redundant_cover",
+      "success_credit": 0
+    },
+    {
+      "negative_id": "TB6928-x1-parser-duplicate-label",
+      "raw": "{\"op\": \"interval_elements\", \"poset\": {\"id\": \"C3\", \"labels\": [\"a\", \"a\", \"1\"], \"covers\": [[0, 1], [1, 2]]}, \"args\": {}}",
+      "expected_error": "labels",
+      "success_credit": 0
+    },
+    {
+      "negative_id": "TB6928-x1-parser-index-range",
+      "raw": "{\"op\": \"interval_elements\", \"poset\": {\"id\": \"C3\", \"labels\": [\"0\", \"a\", \"1\"], \"covers\": [[0, 9]]}, \"args\": {}}",
+      "expected_error": "covers",
+      "success_credit": 0
+    },
+    {
+      "negative_id": "TB6928-x1-parser-unknown-operation",
+      "raw": "{\"op\": \"unregistered\", \"poset\": {\"id\": \"C3\", \"labels\": [\"0\", \"a\", \"1\"], \"covers\": [[0, 1], [1, 2]]}, \"args\": {}}",
+      "expected_error": "operation",
+      "success_credit": 0
+    },
+    {
+      "negative_id": "TB6928-x1-parser-null-poset",
+      "raw": "{\"op\": \"interval_elements\", \"poset\": null, \"args\": {}}",
+      "expected_error": "field_set",
+      "success_credit": 0
+    },
+    {
+      "negative_id": "TB6928-x1-parser-invalid-json",
+      "raw": "{",
+      "expected_error": "json_syntax",
+      "success_credit": 0
+    },
+    {
+      "negative_id": "TB6928-x1-parser-depth",
+      "raw": "[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[0]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]",
+      "expected_error": "depth_budget",
+      "success_credit": 0
+    }
+  ],
+  "candidate_credit": 0,
+  "scope": "Additional parser boundary checks; no new proposal or inherited credit."
+}

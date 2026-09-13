@@ -1,0 +1,56 @@
+'use strict';
+// Trusted program text. Call parseStrict on JSON data; never compile caller data.
+const OPS=['interval_elements','incidence_zeta','incidence_delta','incidence_convolution','mobius_recursive','mobius_chain_sum','zeta_transform','mobius_inversion','open_interval_euler','convolution_associativity'];
+function fail(code){throw new Error(code);}
+function integer(n){if(!Number.isSafeInteger(n))fail('integer_range');return n;}
+function keys(o,ks){if(!o||typeof o!=='object'||Array.isArray(o)||Object.keys(o).sort().join('|')!==ks.slice().sort().join('|'))fail('field_set');}
+function parseStrict(text){
+ if(typeof text!=='string'||text.length>1048576)fail('input_budget');let p=0;
+ const ws=()=>{while(/[\x20\t\r\n]/.test(text[p]||'!'))p++;};
+ function str(){const start=p++;while(p<text.length){const c=text[p++];if(c==='"'){try{return JSON.parse(text.slice(start,p));}catch{fail('json_syntax');}}if(c==='\\')p++;}fail('json_syntax');}
+ function value(depth){if(depth>32)fail('depth_budget');ws();let c=text[p];
+  if(c==='"')return str();
+  if(c==='{'){p++;const o=Object.create(null);ws();if(text[p]==='}'){p++;return o;}while(true){ws();if(text[p]!=='"')fail('json_syntax');const k=str();if(Object.hasOwn(o,k))fail('duplicate_key');ws();if(text[p++]!==':')fail('json_syntax');o[k]=value(depth+1);ws();c=text[p++];if(c==='}')return o;if(c!==',')fail('json_syntax');}}
+  if(c==='['){p++;const a=[];ws();if(text[p]===']'){p++;return a;}while(true){a.push(value(depth+1));ws();c=text[p++];if(c===']')return a;if(c!==',')fail('json_syntax');}}
+  for(const [token,v] of [['true',true],['false',false],['null',null]])if(text.slice(p,p+token.length)===token){p+=token.length;return v;}
+  const m=text.slice(p).match(/^-?(?:0|[1-9][0-9]*)(?:\.[0-9]+)?(?:[eE][+-]?[0-9]+)?/);if(!m)fail('json_syntax');p+=m[0].length;return integer(Number(m[0]));
+ }
+ const v=value(0);ws();if(p!==text.length)fail('json_syntax');return v;
+}
+function order(p,cap=8){
+ keys(p,['id','labels','covers']);if(typeof p.id!=='string'||!/^[A-Za-z0-9_-]{1,24}$/.test(p.id))fail('identifier');
+ if(!Array.isArray(p.labels)||p.labels.length<1||p.labels.length>cap||p.labels.some(x=>typeof x!=='string'||!/^[A-Za-z0-9_-]{1,24}$/.test(x))||new Set(p.labels).size!==p.labels.length)fail('labels');
+ const n=p.labels.length;if(!Array.isArray(p.covers)||p.covers.length>n*n)fail('covers');const z=identity(n),seen=new Set();
+ for(const e of p.covers){if(!Array.isArray(e)||e.length!==2||e.some(x=>!Number.isInteger(x)||x<0||x>=n)||e[0]===e[1]||seen.has(e.join(',')))fail('covers');seen.add(e.join(','));z[e[0]][e[1]]=1;}
+ for(let k=0;k<n;k++)for(let i=0;i<n;i++)for(let j=0;j<n;j++)if(z[i][k]&&z[k][j])z[i][j]=1;
+ for(let i=0;i<n;i++)for(let j=0;j<n;j++)if(i!==j&&z[i][j]&&z[j][i])fail('cycle');
+ for(const [i,j] of p.covers)for(let k=0;k<n;k++)if(k!==i&&k!==j&&z[i][k]&&z[k][j])fail('redundant_cover');return z;
+}
+function identity(n){return Array.from({length:n},(_,i)=>Array.from({length:n},(_,j)=>+(i===j)));}
+function zero(n){return Array.from({length:n},()=>Array(n).fill(0));}
+function transpose(a){return a[0].map((_,j)=>a.map(r=>r[j]));}
+function mm(a,b){const n=a.length,c=zero(n);for(let i=0;i<n;i++)for(let j=0;j<n;j++)for(let k=0;k<n;k++)c[i][j]=integer(c[i][j]+integer(a[i][k]*b[k][j]));return c;}
+function mv(a,b){return a.map(r=>r.reduce((s,v,i)=>integer(s+integer(v*b[i])),0));}
+function matrix(a,z){const n=z.length;if(!Array.isArray(a)||a.length!==n||a.some((r,i)=>!Array.isArray(r)||r.length!==n||r.some((v,j)=>!Number.isSafeInteger(v)||Math.abs(v)>1000000||(!z[i][j]&&v!==0))))fail('matrix');return a;}
+function vector(a,n){if(!Array.isArray(a)||a.length!==n||a.some(v=>!Number.isSafeInteger(v)||Math.abs(v)>1000000))fail('vector');return a;}
+function mobius(z){const n=z.length,m=Array.from({length:n},()=>Array(n));function mu(i,j){if(m[i][j]!==undefined)return m[i][j];if(!z[i][j])return m[i][j]=0;if(i===j)return m[i][j]=1;let s=0;for(let k=0;k<n;k++)if(k!==j&&z[i][k]&&z[k][j])s=integer(s+mu(i,k));return m[i][j]=-s;}for(let i=0;i<n;i++)for(let j=0;j<n;j++)mu(i,j);return m;}
+function chainInverse(z){const n=z.length,strict=z.map((r,i)=>r.map((v,j)=>i===j?0:v)),out=identity(n);let power=identity(n);for(let k=1;k<n;k++){power=mm(power,strict);for(let i=0;i<n;i++)for(let j=0;j<n;j++)out[i][j]=integer(out[i][j]+(k%2?-1:1)*power[i][j]);}return out;}
+function envelope(value,disposition='completed'){return {ok:true,error:null,disposition,value,external_credit:false};}
+function rejected(error){return {ok:false,error,disposition:'exact_gate',value:null,external_credit:false};}
+function evaluate(input){keys(input,['op','poset','args']);if(!OPS.includes(input.op))fail('operation');const z=order(input.poset),n=z.length,a=input.args,op=input.op;let v,d='completed';
+ if(['incidence_convolution'].includes(op))keys(a,['left','right']);else if(op==='zeta_transform')keys(a,['values']);else if(op==='mobius_inversion')keys(a,['totals']);else if(op==='convolution_associativity')keys(a,['first','second','third']);else keys(a,[]);
+ if(op==='interval_elements')v=z.map((r,i)=>r.map((_,j)=>Array.from({length:n},(_,k)=>k).filter(k=>z[i][k]&&z[k][j])));
+ else if(op==='incidence_zeta')v=z;
+ else if(op==='incidence_delta')v=identity(n);
+ else if(op==='incidence_convolution')v=mm(matrix(a.left,z),matrix(a.right,z));
+ else if(op==='mobius_recursive')v=mobius(z);
+ else if(op==='mobius_chain_sum')v=chainInverse(z);
+ else if(op==='zeta_transform')v=mv(z,vector(a.values,n));
+ else if(op==='mobius_inversion')v=mv(mobius(z),vector(a.totals,n));
+ else if(op==='open_interval_euler'){const m=chainInverse(z);v={coefficients:z.map((r,i)=>r.map((v,j)=>i!==j&&v?m[i][j]:null)),topological_space_measured:false};d='represented';}
+ else {const f=matrix(a.first,z),g=matrix(a.second,z),h=matrix(a.third,z),left=mm(mm(f,g),h),right=mm(f,mm(g,h));v={left,right,equal:JSON.stringify(left)===JSON.stringify(right)};}
+ return envelope(v,d);
+}
+function dispatch(input){try{return evaluate(input);}catch(e){return rejected(e.message);}}
+function fromText(text){try{return dispatch(parseStrict(text));}catch(e){return rejected(e.message);}}
+module.exports={OPS,keys,order,identity,zero,transpose,mm,mv,mobius,chainInverse,envelope,rejected,parseStrict,dispatch,fromText,integer};
