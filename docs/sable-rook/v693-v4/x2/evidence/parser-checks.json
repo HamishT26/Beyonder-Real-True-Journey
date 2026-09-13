@@ -1,0 +1,113 @@
+{
+  "stage": "x2",
+  "records": [
+    {
+      "id": "SR6934-X2-PARSER-duplicate_root",
+      "raw": "{\"a\":1,\"a\":2}",
+      "expected_error": "DUPLICATE_KEY",
+      "subject_success_credit": 0,
+      "actual": "DUPLICATE_KEY",
+      "subject_result": "fail",
+      "refusal_result": "pass"
+    },
+    {
+      "id": "SR6934-X2-PARSER-duplicate_nested",
+      "raw": "{\"x\":{\"a\":1,\"a\":2}}",
+      "expected_error": "DUPLICATE_KEY",
+      "subject_success_credit": 0,
+      "actual": "DUPLICATE_KEY",
+      "subject_result": "fail",
+      "refusal_result": "pass"
+    },
+    {
+      "id": "SR6934-X2-PARSER-trailing_comma",
+      "raw": "{\"a\":1,}",
+      "expected_error": "JSON_SYNTAX",
+      "subject_success_credit": 0,
+      "actual": "JSON_SYNTAX",
+      "subject_result": "fail",
+      "refusal_result": "pass"
+    },
+    {
+      "id": "SR6934-X2-PARSER-trailing_text",
+      "raw": "{\"a\":1}x",
+      "expected_error": "JSON_SYNTAX",
+      "subject_success_credit": 0,
+      "actual": "JSON_SYNTAX",
+      "subject_result": "fail",
+      "refusal_result": "pass"
+    },
+    {
+      "id": "SR6934-X2-PARSER-fraction",
+      "raw": "{\"a\":1.5}",
+      "expected_error": "NUMERIC_PROFILE",
+      "subject_success_credit": 0,
+      "actual": "NUMERIC_PROFILE",
+      "subject_result": "fail",
+      "refusal_result": "pass"
+    },
+    {
+      "id": "SR6934-X2-PARSER-exponent",
+      "raw": "{\"a\":1e2}",
+      "expected_error": "NUMERIC_PROFILE",
+      "subject_success_credit": 0,
+      "actual": "NUMERIC_PROFILE",
+      "subject_result": "fail",
+      "refusal_result": "pass"
+    },
+    {
+      "id": "SR6934-X2-PARSER-negative_zero",
+      "raw": "{\"a\":-0}",
+      "expected_error": "NUMERIC_PROFILE",
+      "subject_success_credit": 0,
+      "actual": "NUMERIC_PROFILE",
+      "subject_result": "fail",
+      "refusal_result": "pass"
+    },
+    {
+      "id": "SR6934-X2-PARSER-unsafe_integer",
+      "raw": "{\"a\":9007199254740992}",
+      "expected_error": "NUMERIC_PROFILE",
+      "subject_success_credit": 0,
+      "actual": "NUMERIC_PROFILE",
+      "subject_result": "fail",
+      "refusal_result": "pass"
+    },
+    {
+      "id": "SR6934-X2-PARSER-reserved_key",
+      "raw": "{\"__proto__\":1}",
+      "expected_error": "RESERVED_KEY",
+      "subject_success_credit": 0,
+      "actual": "RESERVED_KEY",
+      "subject_result": "fail",
+      "refusal_result": "pass"
+    },
+    {
+      "id": "SR6934-X2-PARSER-single_quote",
+      "raw": "{'a':1}",
+      "expected_error": "JSON_SYNTAX",
+      "subject_success_credit": 0,
+      "actual": "JSON_SYNTAX",
+      "subject_result": "fail",
+      "refusal_result": "pass"
+    },
+    {
+      "id": "SR6934-X2-PARSER-literal_control",
+      "raw": "{\"a\":\"x\u0001y\"}",
+      "expected_error": "JSON_SYNTAX",
+      "subject_success_credit": 0,
+      "actual": "JSON_SYNTAX",
+      "subject_result": "fail",
+      "refusal_result": "pass"
+    },
+    {
+      "id": "SR6934-X2-PARSER-over_array",
+      "raw": "[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]",
+      "expected_error": "COLLECTION_LIMIT",
+      "subject_success_credit": 0,
+      "actual": "COLLECTION_LIMIT",
+      "subject_result": "fail",
+      "refusal_result": "pass"
+    }
+  ]
+}

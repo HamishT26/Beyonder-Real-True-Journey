@@ -1,0 +1,16 @@
+'use strict';
+const fs=require('node:fs'),path=require('node:path'),crypto=require('node:crypto');
+const root=path.resolve(process.argv[2]||'.'),x2=path.join(root,'docs/sable-rook/v693-v4/x2'),retained=path.join(x2,'retained/pre-word-ceiling-methodflow'),source=path.join(retained,'methodflow-ledger.json'),target=path.join(x2,'methodflow-ledger.json'),summaryTarget=path.join(x2,'methodflow-summary.json');
+if(fs.existsSync(target)||fs.existsSync(summaryTarget))throw new Error('COMPACT_TARGET_EXISTS');
+const beforeBytes=fs.readFileSync(source),ledger=JSON.parse(beforeBytes),short='Same-owner synthetic evidence only; no independent reproduction, authority, production, or Stage 20 credit.';
+for(const method of ledger.methods)method.scope_boundary=short;
+for(const witness of ledger.witnesses)witness.boundary=short;
+for(const recommendation of ledger.recommendations)recommendation.scope_boundary=short;
+const after=Buffer.from(JSON.stringify(ledger,null,2)+'\n'),sha=bytes=>crypto.createHash('sha256').update(bytes).digest('hex'),words=bytes=>bytes.toString('utf8').trim().split(/\s+/).filter(Boolean).length;
+if(ledger.methods.length!==42||ledger.witnesses.length!==1056||ledger.state_events.length!==126||ledger.recommendations.length!==42||ledger.counts.witness_results.pass!==775||ledger.counts.witness_results.fail!==281)throw new Error('EVIDENCE_COUNT_DRIFT');
+if(words(after)>100000)throw new Error('WORD_CEILING');
+fs.writeFileSync(target,after,{flag:'wx'});
+const priorSummary=JSON.parse(fs.readFileSync(path.join(retained,'methodflow-summary.json'),'utf8'));
+priorSummary.compaction={reason:'Repeated boundary text exceeded the v8 per-document ceiling by 336 words.',before_words:words(beforeBytes),after_words:words(after),before_sha256:sha(beforeBytes),after_sha256:sha(after),methods_preserved:42,witnesses_preserved:1056,state_events_preserved:126,recommendations_preserved:42,passes_preserved:775,failures_preserved:281,fields_deleted:0,failed_source_retained:true};
+fs.writeFileSync(summaryTarget,JSON.stringify(priorSummary,null,2)+'\n',{encoding:'utf8',flag:'wx'});
+process.stdout.write(JSON.stringify({status:'VALID_ADDITIVE_METHODFLOW_COMPACTION',before_words:words(beforeBytes),after_words:words(after),counts:ledger.counts,fields_deleted:0})+'\n');

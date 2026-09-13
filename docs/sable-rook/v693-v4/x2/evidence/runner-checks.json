@@ -1,0 +1,403 @@
+{
+  "stage": "x2",
+  "records": [
+    {
+      "id": "SR6934-X2-RUNNER-1-positive",
+      "runner": "ghc_family_distributed_consistency_x2_1.txt",
+      "kind": "positive",
+      "request": {
+        "op": "anti_entropy_delta",
+        "record": {
+          "source": {},
+          "target": {}
+        },
+        "args": {}
+      },
+      "actual": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "send": [],
+          "conflicts": [],
+          "network_transfer": false,
+          "source_preserved": true
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "send": [],
+          "conflicts": [],
+          "network_transfer": false,
+          "source_preserved": true
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "exit_code": 0,
+      "result": "pass",
+      "subject_result": "pass",
+      "subject_success_credit": 1
+    },
+    {
+      "id": "SR6934-X2-RUNNER-1-negative",
+      "runner": "ghc_family_distributed_consistency_x2_1.txt",
+      "kind": "negative",
+      "request": {
+        "op": "unsupported_anti_entropy_delta",
+        "record": {
+          "source": {},
+          "target": {}
+        },
+        "args": {}
+      },
+      "actual": {
+        "ok": false,
+        "disposition": "open_gap",
+        "value": null,
+        "error": "RUNNER_OPERATION",
+        "external_credit": false
+      },
+      "expected": {
+        "ok": false,
+        "disposition": "open_gap",
+        "value": null,
+        "error": "RUNNER_OPERATION",
+        "external_credit": false
+      },
+      "exit_code": 1,
+      "result": "pass",
+      "subject_result": "fail",
+      "subject_success_credit": 0
+    },
+    {
+      "id": "SR6934-X2-RUNNER-2-positive",
+      "runner": "ghc_family_distributed_consistency_x2_2.txt",
+      "kind": "positive",
+      "request": {
+        "op": "tombstone_retention_check",
+        "record": {
+          "clock": {
+            "a": 1
+          },
+          "acknowledgements": {},
+          "required": []
+        },
+        "args": {}
+      },
+      "actual": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "retain": false,
+          "safe_to_collect": true,
+          "missing": [],
+          "behind": [],
+          "required": [],
+          "production_collection": false
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "retain": false,
+          "safe_to_collect": true,
+          "missing": [],
+          "behind": [],
+          "required": [],
+          "production_collection": false
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "exit_code": 0,
+      "result": "pass",
+      "subject_result": "pass",
+      "subject_success_credit": 1
+    },
+    {
+      "id": "SR6934-X2-RUNNER-2-negative",
+      "runner": "ghc_family_distributed_consistency_x2_2.txt",
+      "kind": "negative",
+      "request": {
+        "op": "unsupported_tombstone_retention_check",
+        "record": {
+          "clock": {
+            "a": 1
+          },
+          "acknowledgements": {},
+          "required": []
+        },
+        "args": {}
+      },
+      "actual": {
+        "ok": false,
+        "disposition": "open_gap",
+        "value": null,
+        "error": "RUNNER_OPERATION",
+        "external_credit": false
+      },
+      "expected": {
+        "ok": false,
+        "disposition": "open_gap",
+        "value": null,
+        "error": "RUNNER_OPERATION",
+        "external_credit": false
+      },
+      "exit_code": 1,
+      "result": "pass",
+      "subject_result": "fail",
+      "subject_success_credit": 0
+    },
+    {
+      "id": "SR6934-X2-RUNNER-3-positive",
+      "runner": "ghc_family_distributed_consistency_x2_3.txt",
+      "kind": "positive",
+      "request": {
+        "op": "repair_plan_toposort",
+        "record": {
+          "steps": []
+        },
+        "args": {}
+      },
+      "actual": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "ready": true,
+          "order": [],
+          "missing": [],
+          "cycle_members": [],
+          "executed": false
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "ready": true,
+          "order": [],
+          "missing": [],
+          "cycle_members": [],
+          "executed": false
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "exit_code": 0,
+      "result": "pass",
+      "subject_result": "pass",
+      "subject_success_credit": 1
+    },
+    {
+      "id": "SR6934-X2-RUNNER-3-negative",
+      "runner": "ghc_family_distributed_consistency_x2_3.txt",
+      "kind": "negative",
+      "request": {
+        "op": "unsupported_repair_plan_toposort",
+        "record": {
+          "steps": []
+        },
+        "args": {}
+      },
+      "actual": {
+        "ok": false,
+        "disposition": "open_gap",
+        "value": null,
+        "error": "RUNNER_OPERATION",
+        "external_credit": false
+      },
+      "expected": {
+        "ok": false,
+        "disposition": "open_gap",
+        "value": null,
+        "error": "RUNNER_OPERATION",
+        "external_credit": false
+      },
+      "exit_code": 1,
+      "result": "pass",
+      "subject_result": "fail",
+      "subject_success_credit": 0
+    },
+    {
+      "id": "SR6934-X2-RUNNER-4-positive",
+      "runner": "ghc_family_distributed_consistency_x2_4.txt",
+      "kind": "positive",
+      "request": {
+        "op": "accessible_consistency_summary",
+        "record": {
+          "rows": []
+        },
+        "args": {}
+      },
+      "actual": {
+        "ok": true,
+        "disposition": "represented",
+        "value": {
+          "rows": [],
+          "row_count": 0,
+          "uses_color_only": false,
+          "status_text": "0 consistency rows",
+          "manual_review": false,
+          "assistive_technology_review": false
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "represented",
+        "value": {
+          "rows": [],
+          "row_count": 0,
+          "uses_color_only": false,
+          "status_text": "0 consistency rows",
+          "manual_review": false,
+          "assistive_technology_review": false
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "exit_code": 0,
+      "result": "pass",
+      "subject_result": "pass",
+      "subject_success_credit": 1
+    },
+    {
+      "id": "SR6934-X2-RUNNER-4-negative",
+      "runner": "ghc_family_distributed_consistency_x2_4.txt",
+      "kind": "negative",
+      "request": {
+        "op": "unsupported_accessible_consistency_summary",
+        "record": {
+          "rows": []
+        },
+        "args": {}
+      },
+      "actual": {
+        "ok": false,
+        "disposition": "open_gap",
+        "value": null,
+        "error": "RUNNER_OPERATION",
+        "external_credit": false
+      },
+      "expected": {
+        "ok": false,
+        "disposition": "open_gap",
+        "value": null,
+        "error": "RUNNER_OPERATION",
+        "external_credit": false
+      },
+      "exit_code": 1,
+      "result": "pass",
+      "subject_result": "fail",
+      "subject_success_credit": 0
+    },
+    {
+      "id": "SR6934-X2-RUNNER-5-positive",
+      "runner": "ghc_family_distributed_consistency_x2_5.txt",
+      "kind": "positive",
+      "request": {
+        "op": "real_cluster_observation_gate",
+        "record": {
+          "required": [
+            "real_cluster_rows",
+            "independent_review"
+          ],
+          "rows": [],
+          "review": null
+        },
+        "args": {}
+      },
+      "actual": {
+        "ok": true,
+        "disposition": "open_gap",
+        "value": {
+          "required": [
+            "independent_review",
+            "real_cluster_rows"
+          ],
+          "real_rows": 0,
+          "review_state": null,
+          "missing": [
+            "independent_review",
+            "real_cluster_rows"
+          ],
+          "qualified": false,
+          "inference": false,
+          "release": false
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "open_gap",
+        "value": {
+          "required": [
+            "independent_review",
+            "real_cluster_rows"
+          ],
+          "real_rows": 0,
+          "review_state": null,
+          "missing": [
+            "independent_review",
+            "real_cluster_rows"
+          ],
+          "qualified": false,
+          "inference": false,
+          "release": false
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "exit_code": 0,
+      "result": "pass",
+      "subject_result": "pass",
+      "subject_success_credit": 1
+    },
+    {
+      "id": "SR6934-X2-RUNNER-5-negative",
+      "runner": "ghc_family_distributed_consistency_x2_5.txt",
+      "kind": "negative",
+      "request": {
+        "op": "unsupported_real_cluster_observation_gate",
+        "record": {
+          "required": [
+            "real_cluster_rows",
+            "independent_review"
+          ],
+          "rows": [],
+          "review": null
+        },
+        "args": {}
+      },
+      "actual": {
+        "ok": false,
+        "disposition": "open_gap",
+        "value": null,
+        "error": "RUNNER_OPERATION",
+        "external_credit": false
+      },
+      "expected": {
+        "ok": false,
+        "disposition": "open_gap",
+        "value": null,
+        "error": "RUNNER_OPERATION",
+        "external_credit": false
+      },
+      "exit_code": 1,
+      "result": "pass",
+      "subject_result": "fail",
+      "subject_success_credit": 0
+    }
+  ]
+}

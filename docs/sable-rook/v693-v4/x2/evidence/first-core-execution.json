@@ -1,0 +1,2807 @@
+{
+  "stage": "x2",
+  "records": [
+    {
+      "id": "SR6934-P051",
+      "op": "anti_entropy_delta",
+      "request": {
+        "op": "anti_entropy_delta",
+        "record": {
+          "source": {},
+          "target": {}
+        },
+        "args": {}
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "send": [],
+          "conflicts": [],
+          "network_transfer": false,
+          "source_preserved": true
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "actual": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "send": [],
+          "conflicts": [],
+          "network_transfer": false,
+          "source_preserved": true
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "envelope_pass": true,
+      "source_pass": true,
+      "result": "pass"
+    },
+    {
+      "id": "SR6934-P052",
+      "op": "anti_entropy_delta",
+      "request": {
+        "op": "anti_entropy_delta",
+        "record": {
+          "source": {
+            "a": {
+              "version": 1,
+              "value": "x"
+            }
+          },
+          "target": {}
+        },
+        "args": {}
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "send": [
+            "a"
+          ],
+          "conflicts": [],
+          "network_transfer": false,
+          "source_preserved": true
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "actual": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "send": [
+            "a"
+          ],
+          "conflicts": [],
+          "network_transfer": false,
+          "source_preserved": true
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "envelope_pass": true,
+      "source_pass": true,
+      "result": "pass"
+    },
+    {
+      "id": "SR6934-P053",
+      "op": "anti_entropy_delta",
+      "request": {
+        "op": "anti_entropy_delta",
+        "record": {
+          "source": {
+            "a": {
+              "version": 2,
+              "value": "x"
+            }
+          },
+          "target": {
+            "a": {
+              "version": 1,
+              "value": "x"
+            }
+          }
+        },
+        "args": {}
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "send": [
+            "a"
+          ],
+          "conflicts": [],
+          "network_transfer": false,
+          "source_preserved": true
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "actual": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "send": [
+            "a"
+          ],
+          "conflicts": [],
+          "network_transfer": false,
+          "source_preserved": true
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "envelope_pass": true,
+      "source_pass": true,
+      "result": "pass"
+    },
+    {
+      "id": "SR6934-P054",
+      "op": "anti_entropy_delta",
+      "request": {
+        "op": "anti_entropy_delta",
+        "record": {
+          "source": {
+            "a": {
+              "version": 1,
+              "value": "x"
+            }
+          },
+          "target": {
+            "a": {
+              "version": 2,
+              "value": "y"
+            }
+          }
+        },
+        "args": {}
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "send": [],
+          "conflicts": [],
+          "network_transfer": false,
+          "source_preserved": true
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "actual": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "send": [],
+          "conflicts": [],
+          "network_transfer": false,
+          "source_preserved": true
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "envelope_pass": true,
+      "source_pass": true,
+      "result": "pass"
+    },
+    {
+      "id": "SR6934-P055",
+      "op": "anti_entropy_delta",
+      "request": {
+        "op": "anti_entropy_delta",
+        "record": {
+          "source": {
+            "a": {
+              "version": 2,
+              "value": "x"
+            }
+          },
+          "target": {
+            "a": {
+              "version": 2,
+              "value": "y"
+            }
+          }
+        },
+        "args": {}
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "send": [],
+          "conflicts": [
+            "a"
+          ],
+          "network_transfer": false,
+          "source_preserved": true
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "actual": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "send": [],
+          "conflicts": [
+            "a"
+          ],
+          "network_transfer": false,
+          "source_preserved": true
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "envelope_pass": true,
+      "source_pass": true,
+      "result": "pass"
+    },
+    {
+      "id": "SR6934-P056",
+      "op": "delta_application_guard",
+      "request": {
+        "op": "delta_application_guard",
+        "record": {
+          "a": 1
+        },
+        "args": {
+          "delta": {
+            "base_digest": "015abd7f5cc57a2dd94b7590f04ad8084273905ee33ec5cebeae62276a97f862",
+            "sequence": 2,
+            "changes": {
+              "b": {
+                "value": 2
+              }
+            }
+          },
+          "current_sequence": 1
+        }
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "applied": true,
+          "result": {
+            "a": 1,
+            "b": 2
+          },
+          "reason": null,
+          "actual_base_digest": "015abd7f5cc57a2dd94b7590f04ad8084273905ee33ec5cebeae62276a97f862",
+          "next_sequence": 2,
+          "source_preserved": true
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "actual": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "applied": true,
+          "result": {
+            "a": 1,
+            "b": 2
+          },
+          "reason": null,
+          "actual_base_digest": "015abd7f5cc57a2dd94b7590f04ad8084273905ee33ec5cebeae62276a97f862",
+          "next_sequence": 2,
+          "source_preserved": true
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "envelope_pass": true,
+      "source_pass": true,
+      "result": "pass"
+    },
+    {
+      "id": "SR6934-P057",
+      "op": "delta_application_guard",
+      "request": {
+        "op": "delta_application_guard",
+        "record": {
+          "a": 1,
+          "b": 2
+        },
+        "args": {
+          "delta": {
+            "base_digest": "43258cff783fe7036d8a43033f830adfc60ec037382473548ac742b888292777",
+            "sequence": 1,
+            "changes": {
+              "b": {
+                "remove": true
+              }
+            }
+          },
+          "current_sequence": 0
+        }
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "applied": true,
+          "result": {
+            "a": 1
+          },
+          "reason": null,
+          "actual_base_digest": "43258cff783fe7036d8a43033f830adfc60ec037382473548ac742b888292777",
+          "next_sequence": 1,
+          "source_preserved": true
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "actual": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "applied": true,
+          "result": {
+            "a": 1
+          },
+          "reason": null,
+          "actual_base_digest": "43258cff783fe7036d8a43033f830adfc60ec037382473548ac742b888292777",
+          "next_sequence": 1,
+          "source_preserved": true
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "envelope_pass": true,
+      "source_pass": true,
+      "result": "pass"
+    },
+    {
+      "id": "SR6934-P058",
+      "op": "delta_application_guard",
+      "request": {
+        "op": "delta_application_guard",
+        "record": {
+          "a": 1
+        },
+        "args": {
+          "delta": {
+            "base_digest": "0000000000000000000000000000000000000000000000000000000000000000",
+            "sequence": 2,
+            "changes": {
+              "b": {
+                "value": 2
+              }
+            }
+          },
+          "current_sequence": 1
+        }
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "applied": false,
+          "result": {
+            "a": 1
+          },
+          "reason": "BASE_DIGEST",
+          "actual_base_digest": "015abd7f5cc57a2dd94b7590f04ad8084273905ee33ec5cebeae62276a97f862",
+          "next_sequence": 1,
+          "source_preserved": true
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "actual": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "applied": false,
+          "result": {
+            "a": 1
+          },
+          "reason": "BASE_DIGEST",
+          "actual_base_digest": "015abd7f5cc57a2dd94b7590f04ad8084273905ee33ec5cebeae62276a97f862",
+          "next_sequence": 1,
+          "source_preserved": true
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "envelope_pass": true,
+      "source_pass": true,
+      "result": "pass"
+    },
+    {
+      "id": "SR6934-P059",
+      "op": "delta_application_guard",
+      "request": {
+        "op": "delta_application_guard",
+        "record": {
+          "a": 1
+        },
+        "args": {
+          "delta": {
+            "base_digest": "015abd7f5cc57a2dd94b7590f04ad8084273905ee33ec5cebeae62276a97f862",
+            "sequence": 3,
+            "changes": {
+              "b": {
+                "value": 2
+              }
+            }
+          },
+          "current_sequence": 1
+        }
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "applied": false,
+          "result": {
+            "a": 1
+          },
+          "reason": "SEQUENCE",
+          "actual_base_digest": "015abd7f5cc57a2dd94b7590f04ad8084273905ee33ec5cebeae62276a97f862",
+          "next_sequence": 1,
+          "source_preserved": true
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "actual": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "applied": false,
+          "result": {
+            "a": 1
+          },
+          "reason": "SEQUENCE",
+          "actual_base_digest": "015abd7f5cc57a2dd94b7590f04ad8084273905ee33ec5cebeae62276a97f862",
+          "next_sequence": 1,
+          "source_preserved": true
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "envelope_pass": true,
+      "source_pass": true,
+      "result": "pass"
+    },
+    {
+      "id": "SR6934-P060",
+      "op": "delta_application_guard",
+      "request": {
+        "op": "delta_application_guard",
+        "record": {},
+        "args": {
+          "delta": {
+            "base_digest": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+            "sequence": 1,
+            "changes": {}
+          },
+          "current_sequence": 0
+        }
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "applied": true,
+          "result": {},
+          "reason": null,
+          "actual_base_digest": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+          "next_sequence": 1,
+          "source_preserved": true
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "actual": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "applied": true,
+          "result": {},
+          "reason": null,
+          "actual_base_digest": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+          "next_sequence": 1,
+          "source_preserved": true
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "envelope_pass": true,
+      "source_pass": true,
+      "result": "pass"
+    },
+    {
+      "id": "SR6934-P061",
+      "op": "tombstone_retention_check",
+      "request": {
+        "op": "tombstone_retention_check",
+        "record": {
+          "clock": {
+            "a": 1
+          },
+          "acknowledgements": {},
+          "required": []
+        },
+        "args": {}
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "retain": false,
+          "safe_to_collect": true,
+          "missing": [],
+          "behind": [],
+          "required": [],
+          "production_collection": false
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "actual": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "retain": false,
+          "safe_to_collect": true,
+          "missing": [],
+          "behind": [],
+          "required": [],
+          "production_collection": false
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "envelope_pass": true,
+      "source_pass": true,
+      "result": "pass"
+    },
+    {
+      "id": "SR6934-P062",
+      "op": "tombstone_retention_check",
+      "request": {
+        "op": "tombstone_retention_check",
+        "record": {
+          "clock": {
+            "a": 1
+          },
+          "acknowledgements": {
+            "r1": {
+              "a": 1
+            }
+          },
+          "required": [
+            "r1"
+          ]
+        },
+        "args": {}
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "retain": false,
+          "safe_to_collect": true,
+          "missing": [],
+          "behind": [],
+          "required": [
+            "r1"
+          ],
+          "production_collection": false
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "actual": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "retain": false,
+          "safe_to_collect": true,
+          "missing": [],
+          "behind": [],
+          "required": [
+            "r1"
+          ],
+          "production_collection": false
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "envelope_pass": true,
+      "source_pass": true,
+      "result": "pass"
+    },
+    {
+      "id": "SR6934-P063",
+      "op": "tombstone_retention_check",
+      "request": {
+        "op": "tombstone_retention_check",
+        "record": {
+          "clock": {
+            "a": 1
+          },
+          "acknowledgements": {
+            "r1": {
+              "a": 1
+            }
+          },
+          "required": [
+            "r1",
+            "r2"
+          ]
+        },
+        "args": {}
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "retain": true,
+          "safe_to_collect": false,
+          "missing": [
+            "r2"
+          ],
+          "behind": [],
+          "required": [
+            "r1",
+            "r2"
+          ],
+          "production_collection": false
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "actual": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "retain": true,
+          "safe_to_collect": false,
+          "missing": [
+            "r2"
+          ],
+          "behind": [],
+          "required": [
+            "r1",
+            "r2"
+          ],
+          "production_collection": false
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "envelope_pass": true,
+      "source_pass": true,
+      "result": "pass"
+    },
+    {
+      "id": "SR6934-P064",
+      "op": "tombstone_retention_check",
+      "request": {
+        "op": "tombstone_retention_check",
+        "record": {
+          "clock": {
+            "a": 2
+          },
+          "acknowledgements": {
+            "r1": {
+              "a": 1
+            }
+          },
+          "required": [
+            "r1"
+          ]
+        },
+        "args": {}
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "retain": true,
+          "safe_to_collect": false,
+          "missing": [],
+          "behind": [
+            "r1"
+          ],
+          "required": [
+            "r1"
+          ],
+          "production_collection": false
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "actual": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "retain": true,
+          "safe_to_collect": false,
+          "missing": [],
+          "behind": [
+            "r1"
+          ],
+          "required": [
+            "r1"
+          ],
+          "production_collection": false
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "envelope_pass": true,
+      "source_pass": true,
+      "result": "pass"
+    },
+    {
+      "id": "SR6934-P065",
+      "op": "tombstone_retention_check",
+      "request": {
+        "op": "tombstone_retention_check",
+        "record": {
+          "clock": {
+            "a": 1,
+            "b": 2
+          },
+          "acknowledgements": {
+            "r1": {
+              "a": 1,
+              "b": 2
+            },
+            "r2": {
+              "a": 2,
+              "b": 2
+            }
+          },
+          "required": [
+            "r2",
+            "r1"
+          ]
+        },
+        "args": {}
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "retain": false,
+          "safe_to_collect": true,
+          "missing": [],
+          "behind": [],
+          "required": [
+            "r1",
+            "r2"
+          ],
+          "production_collection": false
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "actual": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "retain": false,
+          "safe_to_collect": true,
+          "missing": [],
+          "behind": [],
+          "required": [
+            "r1",
+            "r2"
+          ],
+          "production_collection": false
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "envelope_pass": true,
+      "source_pass": true,
+      "result": "pass"
+    },
+    {
+      "id": "SR6934-P066",
+      "op": "lease_epoch_fence",
+      "request": {
+        "op": "lease_epoch_fence",
+        "record": {
+          "current_epoch": 3,
+          "current_holder": "a",
+          "request": {
+            "epoch": 3,
+            "holder": "a",
+            "action": "preview"
+          }
+        },
+        "args": {}
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "accepted": true,
+          "reason": null,
+          "current_epoch": 3,
+          "current_holder": "a",
+          "requested_action": "preview",
+          "external_lock": false,
+          "authority": false
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "actual": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "accepted": true,
+          "reason": null,
+          "current_epoch": 3,
+          "current_holder": "a",
+          "requested_action": "preview",
+          "external_lock": false,
+          "authority": false
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "envelope_pass": true,
+      "source_pass": true,
+      "result": "pass"
+    },
+    {
+      "id": "SR6934-P067",
+      "op": "lease_epoch_fence",
+      "request": {
+        "op": "lease_epoch_fence",
+        "record": {
+          "current_epoch": 3,
+          "current_holder": "a",
+          "request": {
+            "epoch": 2,
+            "holder": "a",
+            "action": "preview"
+          }
+        },
+        "args": {}
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "accepted": false,
+          "reason": "STALE_EPOCH",
+          "current_epoch": 3,
+          "current_holder": "a",
+          "requested_action": "preview",
+          "external_lock": false,
+          "authority": false
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "actual": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "accepted": false,
+          "reason": "STALE_EPOCH",
+          "current_epoch": 3,
+          "current_holder": "a",
+          "requested_action": "preview",
+          "external_lock": false,
+          "authority": false
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "envelope_pass": true,
+      "source_pass": true,
+      "result": "pass"
+    },
+    {
+      "id": "SR6934-P068",
+      "op": "lease_epoch_fence",
+      "request": {
+        "op": "lease_epoch_fence",
+        "record": {
+          "current_epoch": 3,
+          "current_holder": "a",
+          "request": {
+            "epoch": 4,
+            "holder": "a",
+            "action": "preview"
+          }
+        },
+        "args": {}
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "accepted": false,
+          "reason": "STALE_EPOCH",
+          "current_epoch": 3,
+          "current_holder": "a",
+          "requested_action": "preview",
+          "external_lock": false,
+          "authority": false
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "actual": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "accepted": false,
+          "reason": "STALE_EPOCH",
+          "current_epoch": 3,
+          "current_holder": "a",
+          "requested_action": "preview",
+          "external_lock": false,
+          "authority": false
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "envelope_pass": true,
+      "source_pass": true,
+      "result": "pass"
+    },
+    {
+      "id": "SR6934-P069",
+      "op": "lease_epoch_fence",
+      "request": {
+        "op": "lease_epoch_fence",
+        "record": {
+          "current_epoch": 3,
+          "current_holder": "a",
+          "request": {
+            "epoch": 3,
+            "holder": "b",
+            "action": "preview"
+          }
+        },
+        "args": {}
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "accepted": false,
+          "reason": "WRONG_HOLDER",
+          "current_epoch": 3,
+          "current_holder": "a",
+          "requested_action": "preview",
+          "external_lock": false,
+          "authority": false
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "actual": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "accepted": false,
+          "reason": "WRONG_HOLDER",
+          "current_epoch": 3,
+          "current_holder": "a",
+          "requested_action": "preview",
+          "external_lock": false,
+          "authority": false
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "envelope_pass": true,
+      "source_pass": true,
+      "result": "pass"
+    },
+    {
+      "id": "SR6934-P070",
+      "op": "lease_epoch_fence",
+      "request": {
+        "op": "lease_epoch_fence",
+        "record": {
+          "current_epoch": 0,
+          "current_holder": "root",
+          "request": {
+            "epoch": 0,
+            "holder": "root",
+            "action": "read"
+          }
+        },
+        "args": {}
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "accepted": true,
+          "reason": null,
+          "current_epoch": 0,
+          "current_holder": "root",
+          "requested_action": "read",
+          "external_lock": false,
+          "authority": false
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "actual": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "accepted": true,
+          "reason": null,
+          "current_epoch": 0,
+          "current_holder": "root",
+          "requested_action": "read",
+          "external_lock": false,
+          "authority": false
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "envelope_pass": true,
+      "source_pass": true,
+      "result": "pass"
+    },
+    {
+      "id": "SR6934-P071",
+      "op": "repair_plan_toposort",
+      "request": {
+        "op": "repair_plan_toposort",
+        "record": {
+          "steps": []
+        },
+        "args": {}
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "ready": true,
+          "order": [],
+          "missing": [],
+          "cycle_members": [],
+          "executed": false
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "actual": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "ready": true,
+          "order": [],
+          "missing": [],
+          "cycle_members": [],
+          "executed": false
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "envelope_pass": true,
+      "source_pass": true,
+      "result": "pass"
+    },
+    {
+      "id": "SR6934-P072",
+      "op": "repair_plan_toposort",
+      "request": {
+        "op": "repair_plan_toposort",
+        "record": {
+          "steps": [
+            {
+              "id": "inspect",
+              "requires": []
+            }
+          ]
+        },
+        "args": {}
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "ready": true,
+          "order": [
+            "inspect"
+          ],
+          "missing": [],
+          "cycle_members": [],
+          "executed": false
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "actual": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "ready": true,
+          "order": [
+            "inspect"
+          ],
+          "missing": [],
+          "cycle_members": [],
+          "executed": false
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "envelope_pass": true,
+      "source_pass": true,
+      "result": "pass"
+    },
+    {
+      "id": "SR6934-P073",
+      "op": "repair_plan_toposort",
+      "request": {
+        "op": "repair_plan_toposort",
+        "record": {
+          "steps": [
+            {
+              "id": "verify",
+              "requires": [
+                "apply"
+              ]
+            },
+            {
+              "id": "apply",
+              "requires": [
+                "inspect"
+              ]
+            },
+            {
+              "id": "inspect",
+              "requires": []
+            }
+          ]
+        },
+        "args": {}
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "ready": true,
+          "order": [
+            "inspect",
+            "apply",
+            "verify"
+          ],
+          "missing": [],
+          "cycle_members": [],
+          "executed": false
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "actual": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "ready": true,
+          "order": [
+            "inspect",
+            "apply",
+            "verify"
+          ],
+          "missing": [],
+          "cycle_members": [],
+          "executed": false
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "envelope_pass": true,
+      "source_pass": true,
+      "result": "pass"
+    },
+    {
+      "id": "SR6934-P074",
+      "op": "repair_plan_toposort",
+      "request": {
+        "op": "repair_plan_toposort",
+        "record": {
+          "steps": [
+            {
+              "id": "apply",
+              "requires": [
+                "approve"
+              ]
+            }
+          ]
+        },
+        "args": {}
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "ready": false,
+          "order": [],
+          "missing": [
+            "approve"
+          ],
+          "cycle_members": [],
+          "executed": false
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "actual": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "ready": false,
+          "order": [],
+          "missing": [
+            "approve"
+          ],
+          "cycle_members": [],
+          "executed": false
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "envelope_pass": true,
+      "source_pass": true,
+      "result": "pass"
+    },
+    {
+      "id": "SR6934-P075",
+      "op": "repair_plan_toposort",
+      "request": {
+        "op": "repair_plan_toposort",
+        "record": {
+          "steps": [
+            {
+              "id": "a",
+              "requires": [
+                "b"
+              ]
+            },
+            {
+              "id": "b",
+              "requires": [
+                "a"
+              ]
+            }
+          ]
+        },
+        "args": {}
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "ready": false,
+          "order": [],
+          "missing": [],
+          "cycle_members": [
+            "a",
+            "b"
+          ],
+          "executed": false
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "actual": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "ready": false,
+          "order": [],
+          "missing": [],
+          "cycle_members": [
+            "a",
+            "b"
+          ],
+          "executed": false
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "envelope_pass": true,
+      "source_pass": true,
+      "result": "pass"
+    },
+    {
+      "id": "SR6934-P076",
+      "op": "causal_claim_firewall",
+      "request": {
+        "op": "causal_claim_firewall",
+        "record": {
+          "claim": "empirical_gmut",
+          "software_evidence": [
+            "synthetic",
+            "same_owner"
+          ]
+        },
+        "args": {}
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "claim": "empirical_gmut",
+          "permitted": false,
+          "required": [
+            "real_data",
+            "frozen_analysis",
+            "uncertainty",
+            "independent_review"
+          ],
+          "software_credit_only": true,
+          "authority": false
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "actual": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "claim": "empirical_gmut",
+          "permitted": false,
+          "required": [
+            "real_data",
+            "frozen_analysis",
+            "uncertainty",
+            "independent_review"
+          ],
+          "software_credit_only": true,
+          "authority": false
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "envelope_pass": true,
+      "source_pass": true,
+      "result": "pass"
+    },
+    {
+      "id": "SR6934-P077",
+      "op": "causal_claim_firewall",
+      "request": {
+        "op": "causal_claim_firewall",
+        "record": {
+          "claim": "professional_effectiveness",
+          "software_evidence": [
+            "synthetic",
+            "same_owner"
+          ]
+        },
+        "args": {}
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "claim": "professional_effectiveness",
+          "permitted": false,
+          "required": [
+            "real_operators",
+            "preregistered_comparison",
+            "safety_monitoring",
+            "independent_review"
+          ],
+          "software_credit_only": true,
+          "authority": false
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "actual": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "claim": "professional_effectiveness",
+          "permitted": false,
+          "required": [
+            "real_operators",
+            "preregistered_comparison",
+            "safety_monitoring",
+            "independent_review"
+          ],
+          "software_credit_only": true,
+          "authority": false
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "envelope_pass": true,
+      "source_pass": true,
+      "result": "pass"
+    },
+    {
+      "id": "SR6934-P078",
+      "op": "causal_claim_firewall",
+      "request": {
+        "op": "causal_claim_firewall",
+        "record": {
+          "claim": "production_identity",
+          "software_evidence": [
+            "synthetic",
+            "same_owner"
+          ]
+        },
+        "args": {}
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "claim": "production_identity",
+          "permitted": false,
+          "required": [
+            "real_keys",
+            "interoperability",
+            "privacy_security_review",
+            "trust_governance"
+          ],
+          "software_credit_only": true,
+          "authority": false
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "actual": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "claim": "production_identity",
+          "permitted": false,
+          "required": [
+            "real_keys",
+            "interoperability",
+            "privacy_security_review",
+            "trust_governance"
+          ],
+          "software_credit_only": true,
+          "authority": false
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "envelope_pass": true,
+      "source_pass": true,
+      "result": "pass"
+    },
+    {
+      "id": "SR6934-P079",
+      "op": "causal_claim_firewall",
+      "request": {
+        "op": "causal_claim_firewall",
+        "record": {
+          "claim": "consciousness_personhood",
+          "software_evidence": [
+            "synthetic",
+            "same_owner"
+          ]
+        },
+        "args": {}
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "claim": "consciousness_personhood",
+          "permitted": false,
+          "required": [
+            "independent_valid_evidence",
+            "competent_interpretation"
+          ],
+          "software_credit_only": true,
+          "authority": false
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "actual": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "claim": "consciousness_personhood",
+          "permitted": false,
+          "required": [
+            "independent_valid_evidence",
+            "competent_interpretation"
+          ],
+          "software_credit_only": true,
+          "authority": false
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "envelope_pass": true,
+      "source_pass": true,
+      "result": "pass"
+    },
+    {
+      "id": "SR6934-P080",
+      "op": "causal_claim_firewall",
+      "request": {
+        "op": "causal_claim_firewall",
+        "record": {
+          "claim": "stage20",
+          "software_evidence": [
+            "synthetic",
+            "same_owner"
+          ]
+        },
+        "args": {}
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "claim": "stage20",
+          "permitted": false,
+          "required": [
+            "all_declared_external_gates",
+            "independent_review",
+            "authority"
+          ],
+          "software_credit_only": true,
+          "authority": false
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "actual": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "claim": "stage20",
+          "permitted": false,
+          "required": [
+            "all_declared_external_gates",
+            "independent_review",
+            "authority"
+          ],
+          "software_credit_only": true,
+          "authority": false
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "envelope_pass": true,
+      "source_pass": true,
+      "result": "pass"
+    },
+    {
+      "id": "SR6934-P081",
+      "op": "accessible_consistency_summary",
+      "request": {
+        "op": "accessible_consistency_summary",
+        "record": {
+          "rows": []
+        },
+        "args": {}
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "represented",
+        "value": {
+          "rows": [],
+          "row_count": 0,
+          "uses_color_only": false,
+          "status_text": "0 consistency rows",
+          "manual_review": false,
+          "assistive_technology_review": false
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "actual": {
+        "ok": true,
+        "disposition": "represented",
+        "value": {
+          "rows": [],
+          "row_count": 0,
+          "uses_color_only": false,
+          "status_text": "0 consistency rows",
+          "manual_review": false,
+          "assistive_technology_review": false
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "envelope_pass": true,
+      "source_pass": true,
+      "result": "pass"
+    },
+    {
+      "id": "SR6934-P082",
+      "op": "accessible_consistency_summary",
+      "request": {
+        "op": "accessible_consistency_summary",
+        "record": {
+          "rows": [
+            {
+              "replica": "a",
+              "key": "k",
+              "state": "consistent",
+              "detail": "version 2"
+            }
+          ]
+        },
+        "args": {}
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "represented",
+        "value": {
+          "rows": [
+            {
+              "replica": "a",
+              "key": "k",
+              "state": "consistent",
+              "detail": "version 2"
+            }
+          ],
+          "row_count": 1,
+          "uses_color_only": false,
+          "status_text": "1 consistency rows",
+          "manual_review": false,
+          "assistive_technology_review": false
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "actual": {
+        "ok": true,
+        "disposition": "represented",
+        "value": {
+          "rows": [
+            {
+              "replica": "a",
+              "key": "k",
+              "state": "consistent",
+              "detail": "version 2"
+            }
+          ],
+          "row_count": 1,
+          "uses_color_only": false,
+          "status_text": "1 consistency rows",
+          "manual_review": false,
+          "assistive_technology_review": false
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "envelope_pass": true,
+      "source_pass": true,
+      "result": "pass"
+    },
+    {
+      "id": "SR6934-P083",
+      "op": "accessible_consistency_summary",
+      "request": {
+        "op": "accessible_consistency_summary",
+        "record": {
+          "rows": [
+            {
+              "replica": "b",
+              "key": "k",
+              "state": "conflict",
+              "detail": "equal version different value"
+            }
+          ]
+        },
+        "args": {}
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "represented",
+        "value": {
+          "rows": [
+            {
+              "replica": "b",
+              "key": "k",
+              "state": "conflict",
+              "detail": "equal version different value"
+            }
+          ],
+          "row_count": 1,
+          "uses_color_only": false,
+          "status_text": "1 consistency rows",
+          "manual_review": false,
+          "assistive_technology_review": false
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "actual": {
+        "ok": true,
+        "disposition": "represented",
+        "value": {
+          "rows": [
+            {
+              "replica": "b",
+              "key": "k",
+              "state": "conflict",
+              "detail": "equal version different value"
+            }
+          ],
+          "row_count": 1,
+          "uses_color_only": false,
+          "status_text": "1 consistency rows",
+          "manual_review": false,
+          "assistive_technology_review": false
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "envelope_pass": true,
+      "source_pass": true,
+      "result": "pass"
+    },
+    {
+      "id": "SR6934-P084",
+      "op": "accessible_consistency_summary",
+      "request": {
+        "op": "accessible_consistency_summary",
+        "record": {
+          "rows": [
+            {
+              "replica": "c",
+              "key": "k",
+              "state": "missing",
+              "detail": "no observation"
+            }
+          ]
+        },
+        "args": {}
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "represented",
+        "value": {
+          "rows": [
+            {
+              "replica": "c",
+              "key": "k",
+              "state": "missing",
+              "detail": "no observation"
+            }
+          ],
+          "row_count": 1,
+          "uses_color_only": false,
+          "status_text": "1 consistency rows",
+          "manual_review": false,
+          "assistive_technology_review": false
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "actual": {
+        "ok": true,
+        "disposition": "represented",
+        "value": {
+          "rows": [
+            {
+              "replica": "c",
+              "key": "k",
+              "state": "missing",
+              "detail": "no observation"
+            }
+          ],
+          "row_count": 1,
+          "uses_color_only": false,
+          "status_text": "1 consistency rows",
+          "manual_review": false,
+          "assistive_technology_review": false
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "envelope_pass": true,
+      "source_pass": true,
+      "result": "pass"
+    },
+    {
+      "id": "SR6934-P085",
+      "op": "accessible_consistency_summary",
+      "request": {
+        "op": "accessible_consistency_summary",
+        "record": {
+          "rows": [
+            {
+              "replica": "a",
+              "key": "x",
+              "state": "consistent",
+              "detail": "v1"
+            },
+            {
+              "replica": "b",
+              "key": "y",
+              "state": "behind",
+              "detail": "lag 2"
+            }
+          ]
+        },
+        "args": {}
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "represented",
+        "value": {
+          "rows": [
+            {
+              "replica": "a",
+              "key": "x",
+              "state": "consistent",
+              "detail": "v1"
+            },
+            {
+              "replica": "b",
+              "key": "y",
+              "state": "behind",
+              "detail": "lag 2"
+            }
+          ],
+          "row_count": 2,
+          "uses_color_only": false,
+          "status_text": "2 consistency rows",
+          "manual_review": false,
+          "assistive_technology_review": false
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "actual": {
+        "ok": true,
+        "disposition": "represented",
+        "value": {
+          "rows": [
+            {
+              "replica": "a",
+              "key": "x",
+              "state": "consistent",
+              "detail": "v1"
+            },
+            {
+              "replica": "b",
+              "key": "y",
+              "state": "behind",
+              "detail": "lag 2"
+            }
+          ],
+          "row_count": 2,
+          "uses_color_only": false,
+          "status_text": "2 consistency rows",
+          "manual_review": false,
+          "assistive_technology_review": false
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "envelope_pass": true,
+      "source_pass": true,
+      "result": "pass"
+    },
+    {
+      "id": "SR6934-P086",
+      "op": "handover_snapshot_projection",
+      "request": {
+        "op": "handover_snapshot_projection",
+        "record": {
+          "snapshot": {
+            "replicas": {}
+          },
+          "holds": [],
+          "next_owner_label": "next-reviewer"
+        },
+        "args": {}
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "represented",
+        "value": {
+          "snapshot_digest": "3e4cb1eefa5b8201869039ae472703db3dd6f3569ba251be88b30a7e40599a5b",
+          "replicas": [],
+          "holds": [],
+          "next_owner_label": "next-reviewer",
+          "external_transfer": false,
+          "acknowledged": false,
+          "source_preserved": true
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "actual": {
+        "ok": true,
+        "disposition": "represented",
+        "value": {
+          "snapshot_digest": "3e4cb1eefa5b8201869039ae472703db3dd6f3569ba251be88b30a7e40599a5b",
+          "replicas": [],
+          "holds": [],
+          "next_owner_label": "next-reviewer",
+          "external_transfer": false,
+          "acknowledged": false,
+          "source_preserved": true
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "envelope_pass": true,
+      "source_pass": true,
+      "result": "pass"
+    },
+    {
+      "id": "SR6934-P087",
+      "op": "handover_snapshot_projection",
+      "request": {
+        "op": "handover_snapshot_projection",
+        "record": {
+          "snapshot": {
+            "replicas": {
+              "a": {
+                "clock": {
+                  "a": 1
+                }
+              }
+            }
+          },
+          "holds": [],
+          "next_owner_label": "next-reviewer"
+        },
+        "args": {}
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "represented",
+        "value": {
+          "snapshot_digest": "87d256efdad55a32c9780c1f99d31febba1bd1c4780cf954aeea0861ea392611",
+          "replicas": [
+            "a"
+          ],
+          "holds": [],
+          "next_owner_label": "next-reviewer",
+          "external_transfer": false,
+          "acknowledged": false,
+          "source_preserved": true
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "actual": {
+        "ok": true,
+        "disposition": "represented",
+        "value": {
+          "snapshot_digest": "87d256efdad55a32c9780c1f99d31febba1bd1c4780cf954aeea0861ea392611",
+          "replicas": [
+            "a"
+          ],
+          "holds": [],
+          "next_owner_label": "next-reviewer",
+          "external_transfer": false,
+          "acknowledged": false,
+          "source_preserved": true
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "envelope_pass": true,
+      "source_pass": true,
+      "result": "pass"
+    },
+    {
+      "id": "SR6934-P088",
+      "op": "handover_snapshot_projection",
+      "request": {
+        "op": "handover_snapshot_projection",
+        "record": {
+          "snapshot": {
+            "replicas": {
+              "a": {}
+            }
+          },
+          "holds": [
+            "missing_review"
+          ],
+          "next_owner_label": "next-reviewer"
+        },
+        "args": {}
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "represented",
+        "value": {
+          "snapshot_digest": "0617c513e8da9f7475f9eb2d1b03412460a5e3e129bf04c279d8a75c5ae20bea",
+          "replicas": [
+            "a"
+          ],
+          "holds": [
+            "missing_review"
+          ],
+          "next_owner_label": "next-reviewer",
+          "external_transfer": false,
+          "acknowledged": false,
+          "source_preserved": true
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "actual": {
+        "ok": true,
+        "disposition": "represented",
+        "value": {
+          "snapshot_digest": "0617c513e8da9f7475f9eb2d1b03412460a5e3e129bf04c279d8a75c5ae20bea",
+          "replicas": [
+            "a"
+          ],
+          "holds": [
+            "missing_review"
+          ],
+          "next_owner_label": "next-reviewer",
+          "external_transfer": false,
+          "acknowledged": false,
+          "source_preserved": true
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "envelope_pass": true,
+      "source_pass": true,
+      "result": "pass"
+    },
+    {
+      "id": "SR6934-P089",
+      "op": "handover_snapshot_projection",
+      "request": {
+        "op": "handover_snapshot_projection",
+        "record": {
+          "snapshot": {
+            "replicas": {
+              "b": {},
+              "a": {}
+            }
+          },
+          "holds": [
+            "conflict"
+          ],
+          "next_owner_label": "next-reviewer"
+        },
+        "args": {}
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "represented",
+        "value": {
+          "snapshot_digest": "46d202dc9f64e694fe671699094740eee9538f4a7efbe8323561135c7d2401c0",
+          "replicas": [
+            "a",
+            "b"
+          ],
+          "holds": [
+            "conflict"
+          ],
+          "next_owner_label": "next-reviewer",
+          "external_transfer": false,
+          "acknowledged": false,
+          "source_preserved": true
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "actual": {
+        "ok": true,
+        "disposition": "represented",
+        "value": {
+          "snapshot_digest": "46d202dc9f64e694fe671699094740eee9538f4a7efbe8323561135c7d2401c0",
+          "replicas": [
+            "a",
+            "b"
+          ],
+          "holds": [
+            "conflict"
+          ],
+          "next_owner_label": "next-reviewer",
+          "external_transfer": false,
+          "acknowledged": false,
+          "source_preserved": true
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "envelope_pass": true,
+      "source_pass": true,
+      "result": "pass"
+    },
+    {
+      "id": "SR6934-P090",
+      "op": "handover_snapshot_projection",
+      "request": {
+        "op": "handover_snapshot_projection",
+        "record": {
+          "snapshot": {
+            "replicas": {
+              "a": {}
+            }
+          },
+          "holds": [
+            "authority"
+          ],
+          "next_owner_label": "competent-operator"
+        },
+        "args": {}
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "represented",
+        "value": {
+          "snapshot_digest": "0617c513e8da9f7475f9eb2d1b03412460a5e3e129bf04c279d8a75c5ae20bea",
+          "replicas": [
+            "a"
+          ],
+          "holds": [
+            "authority"
+          ],
+          "next_owner_label": "competent-operator",
+          "external_transfer": false,
+          "acknowledged": false,
+          "source_preserved": true
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "actual": {
+        "ok": true,
+        "disposition": "represented",
+        "value": {
+          "snapshot_digest": "0617c513e8da9f7475f9eb2d1b03412460a5e3e129bf04c279d8a75c5ae20bea",
+          "replicas": [
+            "a"
+          ],
+          "holds": [
+            "authority"
+          ],
+          "next_owner_label": "competent-operator",
+          "external_transfer": false,
+          "acknowledged": false,
+          "source_preserved": true
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "envelope_pass": true,
+      "source_pass": true,
+      "result": "pass"
+    },
+    {
+      "id": "SR6934-P091",
+      "op": "real_cluster_observation_gate",
+      "request": {
+        "op": "real_cluster_observation_gate",
+        "record": {
+          "required": [
+            "real_cluster_rows",
+            "independent_review"
+          ],
+          "rows": [],
+          "review": null
+        },
+        "args": {}
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "open_gap",
+        "value": {
+          "required": [
+            "independent_review",
+            "real_cluster_rows"
+          ],
+          "real_rows": 0,
+          "review_state": null,
+          "missing": [
+            "independent_review",
+            "real_cluster_rows"
+          ],
+          "qualified": false,
+          "inference": false,
+          "release": false
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "actual": {
+        "ok": true,
+        "disposition": "open_gap",
+        "value": {
+          "required": [
+            "independent_review",
+            "real_cluster_rows"
+          ],
+          "real_rows": 0,
+          "review_state": null,
+          "missing": [
+            "independent_review",
+            "real_cluster_rows"
+          ],
+          "qualified": false,
+          "inference": false,
+          "release": false
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "envelope_pass": true,
+      "source_pass": true,
+      "result": "pass"
+    },
+    {
+      "id": "SR6934-P092",
+      "op": "real_cluster_observation_gate",
+      "request": {
+        "op": "real_cluster_observation_gate",
+        "record": {
+          "required": [
+            "real_cluster_rows",
+            "independent_review"
+          ],
+          "rows": [],
+          "review": "same_owner_synthetic"
+        },
+        "args": {}
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "open_gap",
+        "value": {
+          "required": [
+            "independent_review",
+            "real_cluster_rows"
+          ],
+          "real_rows": 0,
+          "review_state": "same_owner_synthetic",
+          "missing": [
+            "independent_review",
+            "real_cluster_rows"
+          ],
+          "qualified": false,
+          "inference": false,
+          "release": false
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "actual": {
+        "ok": true,
+        "disposition": "open_gap",
+        "value": {
+          "required": [
+            "independent_review",
+            "real_cluster_rows"
+          ],
+          "real_rows": 0,
+          "review_state": "same_owner_synthetic",
+          "missing": [
+            "independent_review",
+            "real_cluster_rows"
+          ],
+          "qualified": false,
+          "inference": false,
+          "release": false
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "envelope_pass": true,
+      "source_pass": true,
+      "result": "pass"
+    },
+    {
+      "id": "SR6934-P093",
+      "op": "real_cluster_observation_gate",
+      "request": {
+        "op": "real_cluster_observation_gate",
+        "record": {
+          "required": [
+            "real_cluster_rows",
+            "independent_review",
+            "operator_context"
+          ],
+          "rows": [],
+          "review": "citation_only"
+        },
+        "args": {}
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "open_gap",
+        "value": {
+          "required": [
+            "independent_review",
+            "operator_context",
+            "real_cluster_rows"
+          ],
+          "real_rows": 0,
+          "review_state": "citation_only",
+          "missing": [
+            "independent_review",
+            "operator_context",
+            "real_cluster_rows"
+          ],
+          "qualified": false,
+          "inference": false,
+          "release": false
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "actual": {
+        "ok": true,
+        "disposition": "open_gap",
+        "value": {
+          "required": [
+            "independent_review",
+            "operator_context",
+            "real_cluster_rows"
+          ],
+          "real_rows": 0,
+          "review_state": "citation_only",
+          "missing": [
+            "independent_review",
+            "operator_context",
+            "real_cluster_rows"
+          ],
+          "qualified": false,
+          "inference": false,
+          "release": false
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "envelope_pass": true,
+      "source_pass": true,
+      "result": "pass"
+    },
+    {
+      "id": "SR6934-P094",
+      "op": "real_cluster_observation_gate",
+      "request": {
+        "op": "real_cluster_observation_gate",
+        "record": {
+          "required": [
+            "real_cluster_rows",
+            "independent_review",
+            "privacy_review"
+          ],
+          "rows": [],
+          "review": null
+        },
+        "args": {}
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "open_gap",
+        "value": {
+          "required": [
+            "independent_review",
+            "privacy_review",
+            "real_cluster_rows"
+          ],
+          "real_rows": 0,
+          "review_state": null,
+          "missing": [
+            "independent_review",
+            "privacy_review",
+            "real_cluster_rows"
+          ],
+          "qualified": false,
+          "inference": false,
+          "release": false
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "actual": {
+        "ok": true,
+        "disposition": "open_gap",
+        "value": {
+          "required": [
+            "independent_review",
+            "privacy_review",
+            "real_cluster_rows"
+          ],
+          "real_rows": 0,
+          "review_state": null,
+          "missing": [
+            "independent_review",
+            "privacy_review",
+            "real_cluster_rows"
+          ],
+          "qualified": false,
+          "inference": false,
+          "release": false
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "envelope_pass": true,
+      "source_pass": true,
+      "result": "pass"
+    },
+    {
+      "id": "SR6934-P095",
+      "op": "real_cluster_observation_gate",
+      "request": {
+        "op": "real_cluster_observation_gate",
+        "record": {
+          "required": [
+            "real_cluster_rows",
+            "independent_review",
+            "affected_party_authority",
+            "maori_authority"
+          ],
+          "rows": [],
+          "review": "same_owner"
+        },
+        "args": {}
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "open_gap",
+        "value": {
+          "required": [
+            "affected_party_authority",
+            "independent_review",
+            "maori_authority",
+            "real_cluster_rows"
+          ],
+          "real_rows": 0,
+          "review_state": "same_owner",
+          "missing": [
+            "affected_party_authority",
+            "independent_review",
+            "maori_authority",
+            "real_cluster_rows"
+          ],
+          "qualified": false,
+          "inference": false,
+          "release": false
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "actual": {
+        "ok": true,
+        "disposition": "open_gap",
+        "value": {
+          "required": [
+            "affected_party_authority",
+            "independent_review",
+            "maori_authority",
+            "real_cluster_rows"
+          ],
+          "real_rows": 0,
+          "review_state": "same_owner",
+          "missing": [
+            "affected_party_authority",
+            "independent_review",
+            "maori_authority",
+            "real_cluster_rows"
+          ],
+          "qualified": false,
+          "inference": false,
+          "release": false
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "envelope_pass": true,
+      "source_pass": true,
+      "result": "pass"
+    },
+    {
+      "id": "SR6934-P096",
+      "op": "distributed_release_authority_gate",
+      "request": {
+        "op": "distributed_release_authority_gate",
+        "record": {
+          "target": "synthetic-distributed-config-deploy",
+          "authority": {
+            "declared": true
+          },
+          "evidence": {
+            "class": "same_owner"
+          }
+        },
+        "args": {
+          "requested": "deploy"
+        }
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "exact_gate",
+        "value": {
+          "requested": "deploy",
+          "target": "synthetic-distributed-config-deploy",
+          "required": [
+            "competent_operator",
+            "live_validation",
+            "rollback_evidence"
+          ],
+          "released": false,
+          "assertions_verified": false,
+          "external_authority": false
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "actual": {
+        "ok": true,
+        "disposition": "exact_gate",
+        "value": {
+          "requested": "deploy",
+          "target": "synthetic-distributed-config-deploy",
+          "required": [
+            "competent_operator",
+            "live_validation",
+            "rollback_evidence"
+          ],
+          "released": false,
+          "assertions_verified": false,
+          "external_authority": false
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "envelope_pass": true,
+      "source_pass": true,
+      "result": "pass"
+    },
+    {
+      "id": "SR6934-P097",
+      "op": "distributed_release_authority_gate",
+      "request": {
+        "op": "distributed_release_authority_gate",
+        "record": {
+          "target": "synthetic-distributed-config-publish",
+          "authority": {
+            "declared": true
+          },
+          "evidence": {
+            "class": "same_owner"
+          }
+        },
+        "args": {
+          "requested": "publish"
+        }
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "exact_gate",
+        "value": {
+          "requested": "publish",
+          "target": "synthetic-distributed-config-publish",
+          "required": [
+            "rights_holder",
+            "affected_people",
+            "privacy_review"
+          ],
+          "released": false,
+          "assertions_verified": false,
+          "external_authority": false
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "actual": {
+        "ok": true,
+        "disposition": "exact_gate",
+        "value": {
+          "requested": "publish",
+          "target": "synthetic-distributed-config-publish",
+          "required": [
+            "rights_holder",
+            "affected_people",
+            "privacy_review"
+          ],
+          "released": false,
+          "assertions_verified": false,
+          "external_authority": false
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "envelope_pass": true,
+      "source_pass": true,
+      "result": "pass"
+    },
+    {
+      "id": "SR6934-P098",
+      "op": "distributed_release_authority_gate",
+      "request": {
+        "op": "distributed_release_authority_gate",
+        "record": {
+          "target": "synthetic-distributed-config-delete",
+          "authority": {
+            "declared": true
+          },
+          "evidence": {
+            "class": "same_owner"
+          }
+        },
+        "args": {
+          "requested": "delete"
+        }
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "exact_gate",
+        "value": {
+          "requested": "delete",
+          "target": "synthetic-distributed-config-delete",
+          "required": [
+            "exact_destructive_authority",
+            "recoverable_source"
+          ],
+          "released": false,
+          "assertions_verified": false,
+          "external_authority": false
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "actual": {
+        "ok": true,
+        "disposition": "exact_gate",
+        "value": {
+          "requested": "delete",
+          "target": "synthetic-distributed-config-delete",
+          "required": [
+            "exact_destructive_authority",
+            "recoverable_source"
+          ],
+          "released": false,
+          "assertions_verified": false,
+          "external_authority": false
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "envelope_pass": true,
+      "source_pass": true,
+      "result": "pass"
+    },
+    {
+      "id": "SR6934-P099",
+      "op": "distributed_release_authority_gate",
+      "request": {
+        "op": "distributed_release_authority_gate",
+        "record": {
+          "target": "synthetic-distributed-config-production_identity",
+          "authority": {
+            "declared": true
+          },
+          "evidence": {
+            "class": "same_owner"
+          }
+        },
+        "args": {
+          "requested": "production_identity"
+        }
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "exact_gate",
+        "value": {
+          "requested": "production_identity",
+          "target": "synthetic-distributed-config-production_identity",
+          "required": [
+            "standards_conformant_keys",
+            "interoperability",
+            "trust_governance"
+          ],
+          "released": false,
+          "assertions_verified": false,
+          "external_authority": false
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "actual": {
+        "ok": true,
+        "disposition": "exact_gate",
+        "value": {
+          "requested": "production_identity",
+          "target": "synthetic-distributed-config-production_identity",
+          "required": [
+            "standards_conformant_keys",
+            "interoperability",
+            "trust_governance"
+          ],
+          "released": false,
+          "assertions_verified": false,
+          "external_authority": false
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "envelope_pass": true,
+      "source_pass": true,
+      "result": "pass"
+    },
+    {
+      "id": "SR6934-P100",
+      "op": "distributed_release_authority_gate",
+      "request": {
+        "op": "distributed_release_authority_gate",
+        "record": {
+          "target": "synthetic-distributed-config-maori_label",
+          "authority": {
+            "declared": true
+          },
+          "evidence": {
+            "class": "same_owner"
+          }
+        },
+        "args": {
+          "requested": "maori_label"
+        }
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "exact_gate",
+        "value": {
+          "requested": "maori_label",
+          "target": "synthetic-distributed-config-maori_label",
+          "required": [
+            "maori_authority",
+            "affected_people",
+            "data_governance"
+          ],
+          "released": false,
+          "assertions_verified": false,
+          "external_authority": false
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "actual": {
+        "ok": true,
+        "disposition": "exact_gate",
+        "value": {
+          "requested": "maori_label",
+          "target": "synthetic-distributed-config-maori_label",
+          "required": [
+            "maori_authority",
+            "affected_people",
+            "data_governance"
+          ],
+          "released": false,
+          "assertions_verified": false,
+          "external_authority": false
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "envelope_pass": true,
+      "source_pass": true,
+      "result": "pass"
+    }
+  ]
+}

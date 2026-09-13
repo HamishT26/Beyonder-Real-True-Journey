@@ -1,0 +1,91 @@
+'use strict';
+const fs=require('node:fs');
+const path=require('node:path');
+const vm=require('node:vm');
+const cp=require('node:child_process');
+const crypto=require('node:crypto');
+const root=path.resolve(process.argv[2]||'.');
+const skillRoot=path.resolve(process.argv[3]||'');
+const toolRoot=path.resolve(process.argv[4]||'');
+const base=path.join(root,'docs/sable-rook/v693-v4');
+const files=fs.readdirSync(base,{recursive:true}).filter(rel=>fs.statSync(path.join(base,rel)).isFile()).map(rel=>rel.replaceAll('\\','/')).sort();
+const jsonFiles=files.filter(rel=>rel.endsWith('.json'));
+const parsed=new Map(jsonFiles.map(rel=>[rel,JSON.parse(fs.readFileSync(path.join(base,rel),'utf8'))]));
+function load(file){const source=fs.readFileSync(file,'utf8'),mod={exports:{}};new vm.Script('(function(module,exports,require){'+source+'\n})',{filename:file}).runInThisContext()(mod,mod.exports,require);return mod.exports;}
+const defs=load(path.join(base,'plan/fixture-definitions.txt'));
+const lib=load(path.join(base,'x2/lib/consistency-x2.txt'));
+const caseFailures=[];
+for(const row of defs.rows){const actual=lib.execute(lib.helpers.clone(row.request));if(lib.helpers.canon(actual)!==lib.helpers.canon(row.expected))caseFailures.push(row.proposal_id);}
+const first=parsed.get('x2/evidence/first-core-execution.json').records;
+const safe=parsed.get('x2/evidence/safe-checks.json').records;
+const candidates=parsed.get('x2/evidence/candidate-subjects.json').records;
+const refusals=parsed.get('x2/evidence/refusal-checks.json').records;
+const recoveries=parsed.get('x2/evidence/clean-fix-refine.json').records;
+const parser=parsed.get('x2/evidence/parser-checks.json').records;
+const runners=parsed.get('x2/evidence/runner-checks.json').records;
+const skills=parsed.get('x2/evidence/skill-validation.json');
+const skillUse=parsed.get('x2/evidence/skill-use.json').records;
+const ledger=parsed.get('x2/methodflow-ledger.json');
+const ledgerValidation=parsed.get('x2/evidence/methodflow-validation.json');
+const deck=parsed.get('x2/deck/deck-index.json');
+const cardManifest=parsed.get('x2/deck/card-manifest.json');
+const promotionSummary=parsed.get('x2/promotion-summary.json');
+const txtFiles=files.filter(rel=>rel.endsWith('.txt'));
+const trustedTxt=txtFiles.filter(rel=>!rel.includes('/retained/')&&rel!=='x2/promotion/tools/consistency-core.txt');
+const compile=[];
+for(const rel of trustedTxt){try{new vm.Script(fs.readFileSync(path.join(base,rel),'utf8'),{filename:rel});compile.push({path:rel,pass:true});}catch(error){compile.push({path:rel,pass:false,error:error.message});}}
+const html=fs.readFileSync(path.join(base,'x2/deck/accessible-report.html'),'utf8');
+const match=html.match(/<script>([\s\S]*)<\/script>/);
+let htmlCompiles=!!match;
+if(match)try{new vm.Script(match[1]);}catch{htmlCompiles=false;}
+const patterns={
+ raw_uuid:/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/ig,
+ windows_path:/(?<![A-Za-z0-9+.-])[A-Za-z]:[\\/](?![\\/])[^\s"'<>]*/g,
+ credential:/(?:bearer\s+[A-Za-z0-9._-]+|private[_ -]?key\s*[:=]|api[_ -]?key\s*[:=])/ig,
+ private_route:/(?:threadId|task[_ -]?id|session[_ -]?stream|private callable)/ig,
+ private_content:/(?:raw transcript|screenshot payload|private app state)/ig
+};
+const privacy=[];
+for(const [className,re] of Object.entries(patterns))for(const rel of files){const hits=fs.readFileSync(path.join(base,rel),'utf8').match(re)||[];if(hits.length){const disposition=rel==='plan/retained/privacy-self-description-candidate/failure-before-self-description-correction.json'?'retained_incident_definition':rel==='x2/tools/precommit-validator.txt'?'scanner_definition':'unresolved';privacy.push({class:className,path:rel,count:hits.length,disposition});}}
+const unresolved=privacy.filter(row=>row.disposition==='unresolved');
+const sha=bytes=>crypto.createHash('sha256').update(bytes).digest('hex');
+const cardMismatches=cardManifest.bindings.filter(binding=>{const bytes=fs.readFileSync(path.join(base,'x2/deck',binding.path));return bytes.length!==binding.bytes||sha(bytes)!==binding.sha256;});
+const skillNames=['ghc-family-distributed-clock-contracts-v2','ghc-family-replica-visibility-review-v2','ghc-family-consistency-repair-evidence-v2','ghc-family-accessible-consistency-handover-v2','ghc-family-distributed-authority-reservations-v2'];
+const runnerNames=['ghc_family_distributed_clock_contracts_v2.txt','ghc_family_replica_visibility_review_v2.txt','ghc_family_consistency_repair_evidence_v2.txt','ghc_family_accessible_consistency_handover_v2.txt','ghc_family_distributed_authority_reservations_v2.txt'];
+const promotion=path.join(base,'x2/promotion/correction-v2');
+const parity=[];
+for(const name of skillNames)for(const rel of ['SKILL.md','references/contracts.md'])parity.push(fs.readFileSync(path.join(promotion,'skills',name,rel)).equals(fs.readFileSync(path.join(skillRoot,name,rel))));
+parity.push(fs.readFileSync(path.join(promotion,'tools/consistency-core-v2.txt')).equals(fs.readFileSync(path.join(toolRoot,'consistency-core-v2.txt'))));
+for(const name of runnerNames)parity.push(fs.readFileSync(path.join(promotion,'tools',name)).equals(fs.readFileSync(path.join(toolRoot,name))));
+const x1Diff=cp.execFileSync('git',['-C',root,'diff','--name-only','c78d9c6ee67ea4f1045c4f08539359db2192a954','--','docs/sable-rook/v693-v4/x1'],{encoding:'utf8'}).trim();
+const planDiff=cp.execFileSync('git',['-C',root,'diff','--name-only','f03c68e89cfbea990e5f02eed68461b23ef52441','--','docs/sable-rook/v693-v4/plan'],{encoding:'utf8'}).trim();
+const maximumWords=Math.max(...files.map(rel=>fs.readFileSync(path.join(base,rel),'utf8').trim().split(/\s+/).filter(Boolean).length));
+const checks={
+ owner_file_ceiling:files.length<2000,
+ json_parse:jsonFiles.length>0,
+ all_frozen_cases:caseFailures.length===0,
+ x2_core:first.length===50&&first.every(row=>row.result==='pass'),
+ x2_safe:safe.length===100&&safe.every(row=>row.result==='pass'),
+ x2_candidates:candidates.length===100&&candidates.every(row=>row.result==='fail'&&row.subject_success_credit===0),
+ x2_refusals:refusals.length===100&&refusals.every(row=>row.result==='pass'),
+ x2_recoveries:recoveries.length===100&&recoveries.every(row=>row.result==='pass'&&row.original_subject_credit===0),
+ x2_parser:parser.length===12&&parser.every(row=>row.subject_result==='fail'&&row.refusal_result==='pass'),
+ x2_runners:runners.length===10&&runners.filter(row=>row.kind==='positive').every(row=>row.result==='pass')&&runners.filter(row=>row.kind==='negative').every(row=>row.subject_result==='fail'&&row.result==='pass'),
+ x2_skills:skills.passed===10&&skills.failed===0&&skillUse.length===10&&skillUse.every(row=>row.result==='pass'),
+ methodflow:ledger.counts.methods===45&&ledger.counts.witnesses===1062&&ledger.counts.witness_results.pass===778&&ledger.counts.witness_results.fail===284&&ledgerValidation.valid,
+ deck:deck.counts.cards===108&&cardManifest.bindings.length===116&&cardMismatches.length===0&&htmlCompiles,
+ failed_v1_retained:promotionSummary.v1.status==='FAILED_LIBRARY_BINDING_ZERO_BEHAVIOR_CREDIT'&&promotionSummary.v1.positive_passed===0&&promotionSummary.v1.refusal_checks_passed===0,
+ corrected_v2_valid:promotionSummary.v2.status==='VALID_ADDITIVE_CORRECTION_V2'&&promotionSummary.v2.positive_passed===20&&promotionSummary.v2.refusal_checks_passed===5,
+ installed_parity:parity.length===16&&parity.every(Boolean),
+ trusted_txt:compile.every(row=>row.pass),
+ x1_immutable:x1Diff==='',
+ plan_immutable:planDiff==='',
+ privacy:unresolved.length===0,
+ word_ceiling:maximumWords<=100000,
+ allowed_extensions:files.every(rel=>['.json','.md','.txt','.html','.tex'].includes(path.extname(rel))),
+ no_final:!fs.existsSync(path.join(base,'final')),
+ no_pycache:!files.some(rel=>rel.includes('__pycache__'))
+};
+const valid=Object.values(checks).every(Boolean);
+process.stdout.write(JSON.stringify({status:valid?'VALID_X2_PRECOMMIT_CONTENT':'INVALID',checks,files:{owner:files.length,x2:files.filter(rel=>rel.startsWith('x2/')).length,json:jsonFiles.length,txt:txtFiles.length,trusted_txt:trustedTxt.length},frozen_case_failures:caseFailures,compile_failures:compile.filter(row=>!row.pass),deck_manifest_mismatches:cardMismatches.map(row=>row.path),installed_parity:parity.length,privacy:{candidates:privacy,unresolved:unresolved.length,confirmed_hits:0},maximum_document_words:maximumWords},null,2)+'\n');
+if(!valid)process.exitCode=1;

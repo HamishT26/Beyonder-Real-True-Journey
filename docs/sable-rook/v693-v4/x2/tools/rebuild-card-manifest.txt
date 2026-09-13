@@ -1,0 +1,7 @@
+'use strict';
+const fs=require('node:fs'),path=require('node:path'),crypto=require('node:crypto');
+const root=path.resolve(process.argv[2]||'.'),deck=path.join(root,'docs/sable-rook/v693-v4/x2/deck'),target=path.join(deck,'card-manifest.json');
+if(fs.existsSync(target))throw new Error('CARD_MANIFEST_EXISTS');
+const files=fs.readdirSync(deck,{recursive:true}).filter(rel=>fs.statSync(path.join(deck,rel)).isFile()).map(rel=>rel.replaceAll('\\','/')).filter(rel=>rel!=='card-manifest.json').sort(),sha=bytes=>crypto.createHash('sha256').update(bytes).digest('hex'),bindings=files.map(rel=>{const bytes=fs.readFileSync(path.join(deck,rel));return{path:rel,bytes:bytes.length,sha256:sha(bytes)};});
+fs.writeFileSync(target,JSON.stringify({schema:'ghc.family.card-manifest.v1',bindings,excluded:['card-manifest.json'],hash_domain:'raw file bytes before Git staging',total_paths:bindings.length+1,boundary:'Same-owner deck fixity only. Manual accessibility evaluation remains open. NOT_READY_FOR_STAGE_20.'},null,2)+'\n',{encoding:'utf8',flag:'wx'});
+process.stdout.write(JSON.stringify({bindings:bindings.length,excluded:1,total:bindings.length+1})+'\n');

@@ -1,0 +1,15 @@
+'use strict';
+const fs=require('node:fs'),path=require('node:path'),crypto=require('node:crypto'),vm=require('node:vm');
+const allowed=["vector_clock_compare","vector_clock_join","dotted_event_validation","read_your_writes_check"];
+const expected='95a09cdbbe962918b487edee2730decba8e4d969b5f3359d904ad5c22c6646c4';
+const failure=error=>({ok:false,disposition:'open_gap',value:null,error,external_credit:false});
+let response;
+try{
+ if(process.argv.length!==2)throw new Error('CLI_ARGUMENTS');
+ const core=path.join(__dirname,'consistency-core.txt'),bytes=fs.readFileSync(core);
+ if(crypto.createHash('sha256').update(bytes).digest('hex')!==expected)throw new Error('LIBRARY_BINDING');
+ const mod={exports:{}};const trustedRequire=name=>{if(name!=='node:crypto')throw new Error('REQUIRE_DENIED');return require(name);};
+ new vm.Script('(function(module,exports,require){'+bytes.toString('utf8')+'\n})',{filename:'consistency-core.txt'}).runInThisContext()(mod,mod.exports,trustedRequire);
+ const request=mod.exports.parseStrict(fs.readFileSync(0));response=allowed.includes(request.op)?mod.exports.execute(request):failure('RUNNER_OPERATION');
+}catch(error){response=failure(error.code||error.message);}
+process.stdout.write(JSON.stringify(response)+'\n');if(!response.ok)process.exitCode=1;

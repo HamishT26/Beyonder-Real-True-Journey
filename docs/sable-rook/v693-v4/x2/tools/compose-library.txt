@@ -1,0 +1,10 @@
+'use strict';
+const fs=require('node:fs'),path=require('node:path'),crypto=require('node:crypto');
+const root=path.resolve(process.argv[2]||'.'),owner=path.join(root,'docs/sable-rook/v693-v4'),x1=path.join(owner,'x1/lib/consistency-x1.txt'),extension=path.join(owner,'x2/lib/extension-source.txt'),target=path.join(owner,'x2/lib/consistency-x2.txt'),binding=path.join(owner,'x2/lib/source-binding.json');
+const sha=bytes=>crypto.createHash('sha256').update(bytes).digest('hex'),x1Bytes=fs.readFileSync(x1),extensionBytes=fs.readFileSync(extension),expected='400252bbc89b847d1d10f5dfd85b728686f1c63da19760c1d135e65b29a7a75d';
+if(sha(x1Bytes)!==expected)throw new Error('IMMUTABLE_X1_BINDING');
+if(fs.existsSync(target)||fs.existsSync(binding))throw new Error('X2_TARGET_EXISTS');
+const source="'use strict';\nconst x1=(()=>{const module={exports:{}};const exports=module.exports;(function(module,exports,require){\n"+x1Bytes.toString('utf8')+"\n})(module,exports,require);return module.exports;})();\nconst extension=(()=>{const module={exports:{}};const exports=module.exports;(function(module,exports,require){\n"+extensionBytes.toString('utf8')+"\n})(module,exports,require);return module.exports;})();\nmodule.exports=extension(x1);\n";
+fs.writeFileSync(target,source,{encoding:'utf8',flag:'wx'});
+fs.writeFileSync(binding,JSON.stringify({immutable_x1_sha256:sha(x1Bytes),extension_sha256:sha(extensionBytes),combined_sha256:sha(Buffer.from(source)),x1_modified:false,composition:'Two lexical module closures; the immutable x1 bytes are embedded exactly and extended by a separately retained factory.',boundary:'Same-owner trusted-source composition only. Input records remain data; vm.Script is not a security sandbox. NOT_READY_FOR_STAGE_20.'},null,2)+'\n',{encoding:'utf8',flag:'wx'});
+process.stdout.write(JSON.stringify({x1_sha256:sha(x1Bytes),extension_sha256:sha(extensionBytes),combined_sha256:sha(Buffer.from(source))})+'\n');
