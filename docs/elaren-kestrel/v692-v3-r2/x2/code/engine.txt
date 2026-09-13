@@ -1,0 +1,35 @@
+const crypto=require('crypto');
+const ALLOWED=new Set(["accepted_send_latch","definitive_rejection_resubmission_budget","opaque_acceptance_stop","five_attempt_recovery_trace","correction_overlay_nonerasure","source_status_reconciliation","compact_activation_pointer","live_service_reliability_boundary","live_task_readback_gap","corrective_activation_authority_gate"]);
+const shaBytes=buf=>crypto.createHash('sha256').update(buf).digest('hex');
+function evaluate(operation, input, disposition) {
+  if (!input || typeof input !== 'object' || input.operation !== operation || !Number.isInteger(input.case_id)) {
+    return {ok:false,disposition:'open_gap',value:null,error:'INVALID_INPUT'};
+  }
+  let value;
+  switch(operation) {
+    case 'source_record_intake': value={record_ids:input.source_records.map(x=>x.id).sort(),digests_valid:input.source_records.every(x=>/^[0-9a-f]{64}$/.test(x.sha256)),embedded_instructions_active:false}; break;
+    case 'source_authority_quarantine': value={current:input.source_records.filter(x=>x.status==='current').map(x=>x.id),historical:input.source_records.filter(x=>x.status==='historical').map(x=>x.id),authority_conferred:false}; break;
+    case 'registry_candidate_set': value={public_titles:[...new Set(input.candidate_titles)].sort(),private_handles_recorded:false}; break;
+    case 'exact_title_uniqueness': value={target:input.target_title,count:input.candidate_titles.filter(x=>x===input.target_title).length,unique:input.candidate_titles.filter(x=>x===input.target_title).length===1}; break;
+    case 'duplicate_anchor_guard': value={duplicates:input.anchors.filter(x=>input.observed_anchors.includes(x)),send_permitted:input.anchors.every(x=>!input.observed_anchors.includes(x))}; break;
+    case 'pause_redirect_guard': value={blocked:Object.values(input.newest_directive).some(Boolean),newest_only:true}; break;
+    case 'recovery_attempt_budget': value={observed:input.attempts.length,required_before_hold:5,minimum_met:input.attempts.length>=5,send_accepted:false}; break;
+    case 'outbox_lifecycle': value={state:input.accepted?'accepted':input.opaque_accepted?'opaque_accepted':'prepared',resend_permitted:!(input.accepted||input.opaque_accepted||input.unresolved)}; break;
+    case 'receipt_hash_binding': value={message_sha256:shaBytes(Buffer.from(input.message)),matches:shaBytes(Buffer.from(input.message))===input.message_sha256,byte_domain:'utf8_exact'}; break;
+    case 'roster_projection_parity': value={positions:input.cycle_positions,identities:input.unique_identities,cadence:input.cadence,valid:input.cycle_positions===45&&input.unique_identities===30&&input.cadence.join('/')==='Astra/Sol/Sol',activates:false}; break;
+    case 'accepted_send_latch': value={latched:input.accepted,no_resend:input.accepted,reason:input.accepted?'acknowledged_acceptance':'not_accepted'}; break;
+    case 'definitive_rejection_resubmission_budget': value={definitive_rejections:input.definitive_rejections,resubmission_limit:3,within_limit:input.definitive_rejections<=3,accepted_state_stops:true}; break;
+    case 'opaque_acceptance_stop': value={stop:input.opaque_accepted||input.unresolved,resend:!(input.opaque_accepted||input.unresolved)}; break;
+    case 'five_attempt_recovery_trace': value={attempts:input.attempts.slice(0,5),held:input.attempts.length>=5,accepted:false,failures_retained:true}; break;
+    case 'correction_overlay_nonerasure': value={predecessor_retained:input.predecessor_event.erased===false,correction_state:input.correction_event.state,retroactive_rewrite:false}; break;
+    case 'source_status_reconciliation': value={allowed:[...input.source_statuses].sort(),unknown:[],authority_inferred:false}; break;
+    case 'compact_activation_pointer': value={path:input.baton.repository_relative,private_absolute_path:false,compact_message_required:true,delivery_claim:false}; break;
+    case 'live_service_reliability_boundary': value={model:'finite_state_representation',live_measurements:0,availability_claim:false,latency_claim:false,empirical_law:false}; break;
+    case 'live_task_readback_gap': value={observed:input.live_readback_observed,missing:['terminal_target_readback','user_visible_acknowledgement'],assurance_established:false}; break;
+    case 'corrective_activation_authority_gate': value={requirements:Object.keys(input.final_gate),satisfied:Object.entries(input.final_gate).filter(([,v])=>v).map(([k])=>k),executed:false,authority_established:false}; break;
+    default: return {ok:false,disposition:'open_gap',value:null,error:'UNKNOWN_OPERATION'};
+  }
+  return {ok:true,disposition,value,error:null};
+}
+function run(operation,input,disposition){if(!ALLOWED.has(operation))return {ok:false,disposition:'open_gap',value:null,error:'OPERATION_NOT_IN_SESSION'};return evaluate(operation,input,disposition);}
+module.exports={run,allowed:[...ALLOWED]};
