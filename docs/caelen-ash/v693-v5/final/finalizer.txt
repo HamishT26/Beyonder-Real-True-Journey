@@ -1,0 +1,31 @@
+'use strict';
+const fs=require('node:fs');
+const path=require('node:path');
+const crypto=require('node:crypto');
+const cp=require('node:child_process');
+const root=path.resolve(process.argv[2]||'.');
+const owner=path.join(root,'docs','caelen-ash','v693-v5');
+const out=path.join(owner,'final');
+const X2='a63e8265155caaea84b2bd634192000a6a5288f8';
+const boundary='Relational working language and bounded same-owner synthetic software only; no consciousness, personhood, identity continuity, employment, qualification, independent agency, empirical GMUT confirmation, production THOS or Freed ID, professional, legal, cultural, affected-party or Maori authority, independent reproduction, complete privacy or accessibility, exhaustive security, AGI/ASI, Theory-of-Everything proof, canon, deployment or Stage 20 credit. Maori concepts remain under Maori authority. NOT_READY_FOR_STAGE_20.';
+const controls=['manifest.json','owner-manifest.json','staged-allowlist.json','content-seal.json'];
+const sha=b=>crypto.createHash('sha256').update(b).digest('hex');
+function walk(dir){const rows=[];for(const entry of fs.readdirSync(dir,{withFileTypes:true}).sort((a,b)=>a.name.localeCompare(b.name))){const full=path.join(dir,entry.name);if(entry.isDirectory())rows.push(...walk(full));else rows.push(full);}return rows;}
+function bind(base,file){const bytes=fs.readFileSync(file);return {path:path.relative(base,file).replaceAll('\\','/'),bytes:bytes.length,sha256:sha(bytes)};}
+function writeExclusive(file,value){fs.writeFileSync(file,JSON.stringify(value,null,2)+'\n',{encoding:'utf8',flag:'wx'});}
+if(cp.execFileSync('git',['-C',root,'rev-parse','HEAD'],{encoding:'utf8'}).trim()!==X2)throw new Error('X2_HEAD_GATE');
+for(const name of controls)if(fs.existsSync(path.join(out,name)))throw new Error('CONTROL_EXISTS:'+name);
+const finalBaseFiles=walk(out).filter(file=>!controls.includes(path.relative(out,file).replaceAll('\\','/')));
+const finalManifest={schema:'ghc.family.git-blob-manifest.v1',owner:'Caelen Ash',phase:'v693-v5',stage:'final',hash_domain:'working bytes before commit; canonical replays identical raw Git blobs at exact final',bindings:finalBaseFiles.map(file=>bind(out,file)),exclusions:controls.map(path=>({path,reason:'self-referential final control'})),total_paths:finalBaseFiles.length+controls.length,boundary};
+writeExclusive(path.join(out,'manifest.json'),finalManifest);
+const ownerExclusions=['final/owner-manifest.json','final/staged-allowlist.json','final/content-seal.json'];
+const ownerFiles=walk(owner).filter(file=>!ownerExclusions.includes(path.relative(owner,file).replaceAll('\\','/')));
+const ownerManifest={schema:'ghc.family.git-blob-owner-manifest.v1',owner:'Caelen Ash',phase:'v693-v5',source:'178706b10a78d648dfbbe242ee4b391474118101',hash_domain:'working bytes before commit; canonical replays identical raw Git blobs at exact final',bindings:ownerFiles.map(file=>bind(owner,file)),exclusions:ownerExclusions.map(path=>({path,reason:'self-referential owner control'})),total_paths:ownerFiles.length+ownerExclusions.length,owner_file_ceiling:2000,boundary};
+writeExclusive(path.join(out,'owner-manifest.json'),ownerManifest);
+const allFinalPaths=[...finalBaseFiles.map(file=>'docs/caelen-ash/v693-v5/final/'+path.relative(out,file).replaceAll('\\','/')),...controls.map(name=>'docs/caelen-ash/v693-v5/final/'+name)].sort();
+const allowlist={schema:'ghc.family.staged-surface-allowlist.v1',owner:'Caelen Ash',phase:'v693-v5',stage:'final',exact_allowlist:true,paths:allFinalPaths,count:allFinalPaths.length,non_final_paths:0,boundary};
+writeExclusive(path.join(out,'staged-allowlist.json'),allowlist);
+const sealPaths=['baton-index.json','closeout-receipt.json','evidence-accounting.json','manifest.json','methodflow-ledger.json','owner-manifest.json','staged-allowlist.json'];
+const contentSeal={schema:'ghc.family.content-seal.v1',owner:'Caelen Ash',phase:'v693-v5',hash_domain:'working bytes before commit; canonical replays identical raw Git blobs at exact final',bindings:sealPaths.map(rel=>bind(out,path.join(out,rel))),exclusions:[{path:'content-seal.json',reason:'self-reference'}],count:sealPaths.length,boundary};
+writeExclusive(path.join(out,'content-seal.json'),contentSeal);
+process.stdout.write(JSON.stringify({status:'FINAL_CONTROLS_CREATED',final_manifest_bindings:finalManifest.bindings.length,final_manifest_exclusions:finalManifest.exclusions.length,owner_manifest_bindings:ownerManifest.bindings.length,owner_manifest_exclusions:ownerManifest.exclusions.length,staged_paths:allowlist.count,content_seal_bindings:contentSeal.bindings.length,owner_total_paths:ownerManifest.total_paths},null,2)+'\n');

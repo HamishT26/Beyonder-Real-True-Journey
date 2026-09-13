@@ -1,0 +1,134 @@
+'use strict';
+const fs=require('node:fs');
+const path=require('node:path');
+const crypto=require('node:crypto');
+const cp=require('node:child_process');
+const vm=require('node:vm');
+const root=path.resolve(__dirname,'..','..','..','..');
+const ownerRel='docs/caelen-ash/v693-v5';
+const owner=path.join(root,...ownerRel.split('/'));
+const out=path.join(owner,'final');
+const SOURCE='178706b10a78d648dfbbe242ee4b391474118101';
+const PLANNING='eea1083e847a8904704d2d9a106c2240ab6a16a0';
+const X1='ca712a33accde2051016b28aae8d92752fedc494';
+const X2='a63e8265155caaea84b2bd634192000a6a5288f8';
+const BRANCH='codex/GHC-Family/caelen-ash-v693-v5-full-tools';
+const receiptDir=process.env.CAELEN_CANONICAL_RECEIPT_DIR;
+const globalRoot=process.env.CAELEN_GLOBAL_SKILL_ROOT;
+const publicRoot=process.env.CAELEN_PUBLIC_ARGUMENT_ROOT;
+if(!receiptDir)throw new Error('CAELEN_CANONICAL_RECEIPT_DIR_REQUIRED');
+if(fs.existsSync(receiptDir))throw new Error('CANONICAL_NAMESPACE_ALREADY_EXISTS');
+fs.mkdirSync(receiptDir,{recursive:true});
+const startedAt=new Date().toISOString();
+fs.writeFileSync(path.join(receiptDir,'attempt.json'),JSON.stringify({schema:'ghc.family.canonical-attempt.v1',owner:'Caelen Ash',phase:'v693-v5',started_at:startedAt,invocation:1,maximum_invocations:1,replay:false},null,2)+'\n',{encoding:'utf8',flag:'wx'});
+const checks=[];const errors=[];
+function check(name,pass,detail=null){const row={name,pass:Boolean(pass),detail};checks.push(row);if(!row.pass)errors.push(row);}
+const sha=b=>crypto.createHash('sha256').update(b).digest('hex');
+function git(args,buffer=false){const run=cp.spawnSync('git',['-C',root,...args],{encoding:buffer?null:'utf8',maxBuffer:256*1024*1024});if(run.status!==0)throw new Error(`git ${args.join(' ')} failed: ${String(run.stderr)}`);return run.stdout;}
+function blob(ref,repoPath){return git(['show',`${ref}:${repoPath}`],true);}
+function jsonBlob(ref,repoPath){return JSON.parse(blob(ref,repoPath).toString('utf8'));}
+function replayManifest(ref,manifestPath,basePath,expected){const manifest=jsonBlob(ref,manifestPath),failures=[];for(const entry of manifest.bindings){const bytes=blob(ref,basePath+'/'+entry.path);if(bytes.length!==entry.bytes||sha(bytes)!==entry.sha256)failures.push(entry.path);}return {manifest,count:manifest.bindings.length,failures,valid:manifest.bindings.length===expected&&failures.length===0};}
+function runJson(file){const run=cp.spawnSync(process.execPath,[path.join(out,file)],{encoding:'utf8',maxBuffer:256*1024*1024});let parsed=null;try{parsed=JSON.parse(run.stdout);}catch{}return {run,parsed};}
+
+let payload;
+try{
+  const head=git(['rev-parse','HEAD']).trim();
+  const cleanBefore=git(['status','--porcelain=v1','--untracked-files=all']).trim()==='';
+  check('clean before',cleanBefore);
+  check('exact branch',git(['branch','--show-current']).trim()===BRANCH);
+  check('final parent x2',git(['rev-parse','HEAD^']).trim()===X2);
+  check('x2 parent x1',git(['rev-parse',`${X2}^`]).trim()===X1);
+  check('x1 parent planning',git(['rev-parse',`${X1}^`]).trim()===PLANNING);
+  check('planning parent source',git(['rev-parse',`${PLANNING}^`]).trim()===SOURCE);
+  check('four phase commits',git(['rev-list','--count',`${SOURCE}..HEAD`]).trim()==='4');
+  check('zero phase merges',git(['rev-list','--merges','--count',`${SOURCE}..HEAD`]).trim()==='0');
+  check('one final parent',git(['rev-list','--parents','-n','1','HEAD']).trim().split(/\s+/).length===2);
+  check('source ancestor',cp.spawnSync('git',['-C',root,'merge-base','--is-ancestor',SOURCE,head]).status===0);
+
+  const local=head;
+  const upstream=git(['rev-parse','@{upstream}']).trim();
+  const tracking=git(['rev-parse','origin/'+BRANCH]).trim();
+  const liveText=cp.execFileSync('git',['-C',root,'ls-remote','origin','refs/heads/'+BRANCH],{encoding:'utf8'}).trim();
+  const live=liveText.split(/\s+/)[0]||'';
+  const divergence=git(['rev-list','--left-right','--count','@{upstream}...HEAD']).trim().split(/\s+/).map(Number);
+  check('typed zero divergence',divergence.length===2&&divergence[0]===0&&divergence[1]===0,divergence);
+  check('fresh four way equality',local===upstream&&local===tracking&&local===live,{local,upstream,tracking,live});
+
+  const planReplay=replayManifest(PLANNING,ownerRel+'/plan/manifest.json',ownerRel,30);
+  const x1Replay=replayManifest(X1,ownerRel+'/x1/manifest.json',ownerRel,42);
+  const x2Replay=replayManifest(X2,ownerRel+'/x2/manifest.json',ownerRel,59);
+  const finalManifest=jsonBlob(head,ownerRel+'/final/manifest.json'),finalFailures=[];
+  for(const entry of finalManifest.bindings){const bytes=blob(head,ownerRel+'/final/'+entry.path);if(bytes.length!==entry.bytes||sha(bytes)!==entry.sha256)finalFailures.push(entry.path);}
+  const ownerManifest=jsonBlob(head,ownerRel+'/final/owner-manifest.json'),ownerFailures=[];
+  for(const entry of ownerManifest.bindings){const bytes=blob(head,ownerRel+'/'+entry.path);if(bytes.length!==entry.bytes||sha(bytes)!==entry.sha256)ownerFailures.push(entry.path);}
+  const seal=jsonBlob(head,ownerRel+'/final/content-seal.json'),sealFailures=[];
+  for(const entry of seal.bindings){const bytes=blob(head,ownerRel+'/final/'+entry.path);if(bytes.length!==entry.bytes||sha(bytes)!==entry.sha256)sealFailures.push(entry.path);}
+  check('planning raw manifest',planReplay.valid,planReplay.failures);
+  check('x1 raw manifest',x1Replay.valid,x1Replay.failures);
+  check('x2 raw manifest',x2Replay.valid,x2Replay.failures);
+  check('final raw manifest',finalFailures.length===0&&finalManifest.bindings.length+finalManifest.exclusions.length===finalManifest.total_paths,finalFailures);
+  check('owner raw manifest',ownerFailures.length===0&&ownerManifest.bindings.length+ownerManifest.exclusions.length===ownerManifest.total_paths,ownerFailures);
+  check('content seal',sealFailures.length===0&&seal.bindings.length===7,sealFailures);
+
+  const ownerPaths=git(['ls-tree','-r','--name-only',head,'--',ownerRel]).trim().split(/\r?\n/).filter(Boolean).sort();
+  check('owner file ceiling',ownerPaths.length<2000,String(ownerPaths.length));
+  check('owner manifest coverage',ownerManifest.total_paths===ownerPaths.length,`${ownerManifest.total_paths}/${ownerPaths.length}`);
+  const allowed=['.json','.md','.txt','.html','.tex'];
+  check('allowed extensions',ownerPaths.every(repoPath=>allowed.includes(path.extname(repoPath))),ownerPaths.filter(repoPath=>!allowed.includes(path.extname(repoPath))));
+  const jsonErrors=[],compileErrors=[];const texts=[];
+  for(const repoPath of ownerPaths){const bytes=blob(head,repoPath),text=bytes.toString('utf8');texts.push({repoPath,text});if(path.extname(repoPath)==='.json'){try{JSON.parse(text);}catch(error){jsonErrors.push(repoPath+':'+error.message);}}if(path.extname(repoPath)==='.txt'){try{new vm.Script(text,{filename:path.basename(repoPath)});}catch(error){compileErrors.push(repoPath+':'+error.message);}}}
+  check('strict JSON',jsonErrors.length===0,jsonErrors);
+  check('trusted TXT compilation',compileErrors.length===0,compileErrors);
+
+  const hasPrivatePath=text=>/[A-Z]:\\(?:Users|GHC-Archives)\\/i.test(text)||/\/(?:Users|home)\//.test(text);
+  const uuidPattern=/\b[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}\b/i;
+  const credentialPattern=new RegExp('(?:BEGIN (?:RSA |EC |OPENSSH )?PRIVATE KEY|'+['ghp','[A-Za-z0-9]{20,}'].join('_')+'|'+['sk','[A-Za-z0-9]{20,}'].join('-')+')');
+  const routePattern=new RegExp([['source','thread','id'].join('_'),['provider','Tab','Id'].join(''),['client','Thread','Id'].join(''),['thread','Id'].join('')+'\\s*[=:]'].join('|'));
+  const emailPattern=/\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}\b/i;
+  const privacy={uuid:[],private_paths:[],credentials:[],route_ids:[],emails:[]};
+  for(const row of texts){if(uuidPattern.test(row.text))privacy.uuid.push(row.repoPath);if(hasPrivatePath(row.text))privacy.private_paths.push(row.repoPath);if(credentialPattern.test(row.text))privacy.credentials.push(row.repoPath);if(routePattern.test(row.text))privacy.route_ids.push(row.repoPath);if(emailPattern.test(row.text))privacy.emails.push(row.repoPath);}
+  for(const [key,paths] of Object.entries(privacy))check('privacy '+key+' zero',paths.length===0,paths);
+
+  const tests=runJson('owner-tests.txt'),detailed=runJson('detailed-validator.txt'),minimal=runJson('minimal-validator.txt');
+  check('owner tests exit',tests.run.status===0,tests.run.stderr);
+  check('owner tests valid',tests.parsed&&tests.parsed.valid===true,tests.run.stdout.slice(0,500));
+  check('detailed exit',detailed.run.status===0,detailed.run.stderr);
+  check('detailed valid',detailed.parsed&&detailed.parsed.valid===true,detailed.run.stdout.slice(0,500));
+  check('minimal exit',minimal.run.status===0,minimal.run.stderr);
+  check('minimal valid',minimal.parsed&&minimal.parsed.valid===true,minimal.run.stdout.slice(0,500));
+
+  const baton=blob(head,ownerRel+'/final/hand-off-baton.md'),batonIndex=jsonBlob(head,ownerRel+'/final/baton-index.json'),overview=blob(head,ownerRel+'/final/overview.md').toString('utf8');
+  const batonText=baton.toString('utf8'),batonWords=batonText.trim().split(/\s+/).length,overviewWords=overview.trim().split(/\s+/).length;
+  check('baton raw hash',sha(baton)===batonIndex.sha256&&baton.length===batonIndex.bytes);
+  check('baton bounds',batonWords===batonIndex.words&&batonWords>=10000&&batonWords<=100000,String(batonWords));
+  check('baton literal EOF',batonText.endsWith('This is the literal end of the thirteen-module Caelen Ash v693-v5 baton.\n'));
+  check('overview bounds',overviewWords>=1500&&overviewWords<=100000,String(overviewWords));
+
+  const truth=jsonBlob(head,ownerRel+'/final/phase-truth.json'),accounting=jsonBlob(head,ownerRel+'/final/evidence-accounting.json'),methods=jsonBlob(head,ownerRel+'/final/methodflow-ledger.json'),deck=jsonBlob(head,ownerRel+'/final/deck/deck-index.json'),route=jsonBlob(head,ownerRel+'/final/routing-packet.json');
+  check('four exact outcomes',JSON.stringify(truth.observed_outcomes)===JSON.stringify({completed:80,represented:10,open_gap:5,exact_gate:5}));
+  check('negative lineage',accounting.repository_negative_lineage===1953&&methods.cumulative.fail===519);
+  check('method arithmetic',methods.cumulative.methods===96&&methods.cumulative.witnesses===1982&&methods.cumulative.pass===1463&&methods.cumulative.fail===519);
+  check('deck 108',deck.counts.cards===108&&deck.cards.length===108);
+  check('route held',route.state==='PREPARED_NOT_SENT'&&route.endpoint_label==='Orren Pike'&&route.next_phase==='v693-v6');
+  check('verdict',truth.terminal_verdict==='NOT_READY_FOR_STAGE_20');
+
+  check('global roots provided',Boolean(globalRoot&&publicRoot));
+  const promotion=jsonBlob(head,ownerRel+'/x2/promotion/receipt.json'),globalFailures=[];
+  if(globalRoot&&publicRoot){for(const skill of promotion.installed_skills){const file=path.join(globalRoot,skill.name,'SKILL.md');if(!fs.existsSync(file)||sha(fs.readFileSync(file))!==skill.installed_sha256)globalFailures.push(skill.name);}for(const runner of promotion.installed_runners){const file=path.join(publicRoot,'runners',runner.name);if(!fs.existsSync(file)||sha(fs.readFileSync(file))!==runner.installed_sha256){globalFailures.push(runner.name);continue;}const run=cp.spawnSync(process.execPath,[file],{encoding:'utf8',maxBuffer:32*1024*1024});let parsed=null;try{parsed=JSON.parse(run.stdout);}catch{}if(run.status!==0||!parsed||parsed.valid!==true)globalFailures.push(runner.name);}}
+  check('installed argumentation parity and smoke',globalFailures.length===0,globalFailures);
+  check('no package or spend',promotion.package_installations===0&&promotion.incremental_spend_usd===0);
+
+  const cleanAfter=git(['status','--porcelain=v1','--untracked-files=all']).trim()==='';
+  check('clean after',cleanAfter);
+  payload={schema:'ghc.family.exact-final-owner-scoped-canonical.v1',owner:'Caelen Ash',phase:'v693-v5',status:errors.length===0?'VALID_EXACT_FINAL_OWNER_SCOPED_CANONICAL':'FAILED_ZERO_CANONICAL_SUCCESS_CREDIT',head,branch:BRANCH,source:SOURCE,planning:PLANNING,x1:X1,x2:X2,scope:'owner_self_scoped_source_to_final_delta',full_repository_suite:false,independent_reproduction:false,invocations:1,successes:errors.length===0?1:0,replays:0,checks_total:checks.length,checks_passed:checks.length-errors.length,checks_failed:errors.length,owner_tests:tests.parsed?{total:tests.parsed.tests_total,passed:tests.parsed.tests_passed,failed:tests.parsed.tests_failed}:null,detailed:detailed.parsed?{total:detailed.parsed.checks_total,passed:detailed.parsed.checks_passed,failed:detailed.parsed.checks_failed}:null,minimal:minimal.parsed?{total:minimal.parsed.checks_total,passed:minimal.parsed.checks_passed,failed:minimal.parsed.checks_failed}:null,json_parses:ownerPaths.filter(repoPath=>path.extname(repoPath)==='.json').length,txt_compiles:ownerPaths.filter(repoPath=>path.extname(repoPath)==='.txt').length,owner_files:ownerPaths.length,manifest_bindings:{planning:planReplay.count,x1:x1Replay.count,x2:x2Replay.count,final:finalManifest.bindings.length,owner:ownerManifest.bindings.length,content_seal:seal.bindings.length,total:planReplay.count+x1Replay.count+x2Replay.count+finalManifest.bindings.length+ownerManifest.bindings.length+seal.bindings.length},privacy_candidates:Object.fromEntries(Object.entries(privacy).map(([key,value])=>[key,value.length])),privacy_confirmed_hits:0,changed_code_security_findings:0,baton:{words:batonWords,bytes:baton.length,sha256:sha(baton),modules:batonIndex.modules},outcomes:truth.observed_outcomes,methodflow:methods.cumulative,terminal_verdict:'NOT_READY_FOR_STAGE_20',clean_before:cleanBefore,clean_after:cleanAfter,divergence,local_upstream_tracking_fresh_live_equal:local===upstream&&local===tracking&&local===live,started_at:startedAt,finished_at:new Date().toISOString(),errors,checks};
+}catch(error){
+  check('canonical fatal exception',false,error&&error.stack?error.stack:String(error));
+  payload={schema:'ghc.family.exact-final-owner-scoped-canonical.v1',owner:'Caelen Ash',phase:'v693-v5',status:'FAILED_ZERO_CANONICAL_SUCCESS_CREDIT',scope:'owner_self_scoped_source_to_final_delta',full_repository_suite:false,independent_reproduction:false,invocations:1,successes:0,replays:0,checks_total:checks.length,checks_passed:checks.length-errors.length,checks_failed:errors.length,started_at:startedAt,finished_at:new Date().toISOString(),errors,checks};
+}
+const deterministic={...payload};delete deterministic.started_at;delete deterministic.finished_at;
+payload.payload_sha256=sha(Buffer.from(JSON.stringify(deterministic)));
+const receiptText=JSON.stringify(payload,null,2)+'\n';
+fs.writeFileSync(path.join(receiptDir,'receipt.json'),receiptText,{encoding:'utf8',flag:'wx'});
+if(payload.status==='VALID_EXACT_FINAL_OWNER_SCOPED_CANONICAL')fs.writeFileSync(path.join(receiptDir,'success-latch.json'),JSON.stringify({status:payload.status,head:payload.head,invocations:1,successes:1,replays:0,payload_sha256:payload.payload_sha256},null,2)+'\n',{encoding:'utf8',flag:'wx'});
+process.stdout.write(receiptText);
+if(payload.status!=='VALID_EXACT_FINAL_OWNER_SCOPED_CANONICAL')process.exitCode=1;

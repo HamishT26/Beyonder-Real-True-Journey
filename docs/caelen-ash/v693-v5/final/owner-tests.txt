@@ -1,0 +1,46 @@
+'use strict';
+const fs=require('node:fs');
+const path=require('node:path');
+const cp=require('node:child_process');
+const root=path.resolve(__dirname,'..');
+const proposals=JSON.parse(fs.readFileSync(path.join(root,'plan','proposals.json'),'utf8')).proposals;
+const x1=require(path.join(root,'x1','lib','argumentation-x1.txt'));
+const x2=require(path.join(root,'x2','lib','argumentation-x2.txt'));
+const x1Portfolio=JSON.parse(fs.readFileSync(path.join(root,'x1','evidence','portfolio-results.json'),'utf8'));
+const x2Portfolio=JSON.parse(fs.readFileSync(path.join(root,'x2','evidence','portfolio-results.json'),'utf8'));
+const x1Runners=JSON.parse(fs.readFileSync(path.join(root,'x1','evidence','runner-validation.json'),'utf8'));
+const x2Runners=JSON.parse(fs.readFileSync(path.join(root,'x2','evidence','runner-validation.json'),'utf8'));
+const promotion=JSON.parse(fs.readFileSync(path.join(root,'x2','promotion','receipt.json'),'utf8'));
+function canonical(value){if(Array.isArray(value))return value.map(canonical);if(value&&typeof value==='object')return Object.fromEntries(Object.keys(value).sort().map(k=>[k,canonical(value[k])]));return value;}
+const same=(a,b)=>JSON.stringify(canonical(a))===JSON.stringify(canonical(b));
+const checks=[];
+function check(name,pass,detail=null){checks.push({name,pass:Boolean(pass),detail});}
+for(const proposal of proposals){
+  const core=proposal.stage==='x1'?x1:x2;
+  const positive=core.execute(JSON.parse(JSON.stringify(proposal.request)));
+  check(proposal.proposal_id+' positive envelope',same(positive.result,proposal.expected),positive.result);
+  check(proposal.proposal_id+' positive input',positive.input_unchanged===true);
+  check(proposal.proposal_id+' disposition',positive.result.disposition===proposal.expected_disposition);
+  proposal.candidates.forEach((candidate,index)=>{
+    const negative=core.execute(JSON.parse(JSON.stringify(candidate.subject)));
+    check(proposal.proposal_id+' candidate '+(index+1),same(negative.result,candidate.expected)&&negative.input_unchanged===true,negative.result);
+  });
+}
+for(const [stage,portfolio] of [['x1',x1Portfolio],['x2',x2Portfolio]]){
+  check(stage+' safe count',portfolio.counts.safe===100&&portfolio.safe.every(row=>row.result==='pass'));
+  check(stage+' candidate count',portfolio.counts.candidate===100&&portfolio.candidate.every(row=>row.result==='pass'));
+  check(stage+' clean fix refine count',portfolio.counts.clean_fix_refine===100&&portfolio.clean_fix_refine.every(row=>row.result==='pass'));
+  check(stage+' authority packets held',portfolio.exact_packets_executed===0&&portfolio.blocked_packets_executed===0);
+}
+for(const [stage,runners,dir] of [['x1',x1Runners,path.join(root,'x1','runners')],['x2',x2Runners,path.join(root,'x2','runners')]]){
+  check(stage+' runner receipt',runners.count===5&&runners.all_valid);
+  for(const record of runners.records){const run=cp.spawnSync(process.execPath,[path.join(dir,record.runner)],{encoding:'utf8',maxBuffer:32*1024*1024});let parsed=null;try{parsed=JSON.parse(run.stdout);}catch{}check(stage+' runner '+record.runner,run.status===0&&parsed&&parsed.valid===true,run.stderr);}
+}
+check('promotion status',promotion.status==='VALID_COLLISION_FREE_GLOBAL_ARGUMENTATION_PROMOTION');
+check('promotion parity',promotion.parity_bindings===16&&promotion.parity.length===16&&promotion.parity.every(row=>row.match));
+check('promotion no overwrite',promotion.overwrites===0);
+check('promotion no install spend',promotion.package_installations===0&&promotion.incremental_spend_usd===0);
+const failed=checks.filter(row=>!row.pass);
+const result={schema:'ghc.family.owner-tests.v1',owner:'Caelen Ash',phase:'v693-v5',valid:failed.length===0,tests_total:checks.length,tests_passed:checks.length-failed.length,tests_failed:failed.length,positive_envelopes:100,input_preservation:100,disposition_checks:100,rejecting_mutations:200,runner_replays:10,scope:'owner_self_scoped_only',full_repository_suite:false,independent_reproduction:false,errors:failed,checks};
+process.stdout.write(JSON.stringify(result,null,2)+'\n');
+if(!result.valid)process.exitCode=1;

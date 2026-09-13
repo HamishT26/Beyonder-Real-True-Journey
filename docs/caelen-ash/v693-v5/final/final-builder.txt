@@ -1,0 +1,348 @@
+'use strict';
+const fs=require('node:fs');
+const path=require('node:path');
+const crypto=require('node:crypto');
+const cp=require('node:child_process');
+
+const root=path.resolve(process.argv[2]||'.');
+const owner=path.join(root,'docs','caelen-ash','v693-v5');
+const out=path.join(owner,'final');
+const SOURCE='178706b10a78d648dfbbe242ee4b391474118101';
+const PLANNING='eea1083e847a8904704d2d9a106c2240ab6a16a0';
+const X1='ca712a33accde2051016b28aae8d92752fedc494';
+const X2='a63e8265155caaea84b2bd634192000a6a5288f8';
+const BRANCH='codex/GHC-Family/caelen-ash-v693-v5-full-tools';
+const boundary='Relational working language and bounded same-owner synthetic software only; no consciousness, personhood, identity continuity, employment, qualification, independent agency, empirical GMUT confirmation, production THOS or Freed ID, professional, legal, cultural, affected-party or Maori authority, independent reproduction, complete privacy or accessibility, exhaustive security, AGI/ASI, Theory-of-Everything proof, canon, deployment or Stage 20 credit. Maori concepts remain under Maori authority. NOT_READY_FOR_STAGE_20.';
+const read=rel=>JSON.parse(fs.readFileSync(path.join(owner,rel),'utf8'));
+const sha=bytes=>crypto.createHash('sha256').update(bytes).digest('hex');
+function write(rel,value){
+  const dest=path.join(out,rel);
+  if(!dest.startsWith(out+path.sep))throw new Error('FINAL_PATH_ESCAPE');
+  fs.mkdirSync(path.dirname(dest),{recursive:true});
+  fs.writeFileSync(dest,typeof value==='string'?value:JSON.stringify(value,null,2)+'\n',{encoding:'utf8',flag:'wx'});
+}
+function words(text){return text.trim().split(/\s+/).filter(Boolean).length;}
+function canonical(value){
+  if(Array.isArray(value))return value.map(canonical);
+  if(value&&typeof value==='object')return Object.fromEntries(Object.keys(value).sort().map(k=>[k,canonical(value[k])]));
+  return value;
+}
+
+const head=cp.execFileSync('git',['-C',root,'rev-parse','HEAD'],{encoding:'utf8'}).trim();
+if(head!==X2)throw new Error('X2_HEAD_GATE:'+head);
+const dirty=cp.execFileSync('git',['-C',root,'status','--porcelain=v1','--untracked-files=all'],{encoding:'utf8'}).trim().split(/\r?\n/).filter(Boolean);
+if(!dirty.every(row=>row.slice(3).startsWith('docs/caelen-ash/v693-v5/final/')))throw new Error('NON_FINAL_DIRTY_PATH');
+
+const profile=read('plan/profile.json');
+const identity=read('plan/identity.json');
+const proposalsDoc=read('plan/proposals.json');
+const proposals=proposalsDoc.proposals;
+const research=read('plan/research-sources.json');
+const future=read('plan/future-recommendations.json');
+const x1Truth=read('x1/phase-truth.json');
+const x2Truth=read('x2/phase-truth.json');
+const x1Methods=read('x1/methodflow-ledger.json');
+const x2Methods=read('x2/methodflow-ledger.json');
+const promotion=read('x2/promotion/receipt.json');
+if(proposals.length!==100||x2Methods.cumulative.methods!==89||x2Methods.cumulative.witnesses!==1969)throw new Error('INPUT_COUNT_GATE');
+
+const outcomes=proposals.reduce((acc,row)=>(acc[row.expected_disposition]=(acc[row.expected_disposition]||0)+1,acc),{completed:0,represented:0,open_gap:0,exact_gate:0});
+if(JSON.stringify(outcomes)!==JSON.stringify({completed:80,represented:10,open_gap:5,exact_gate:5}))throw new Error('OUTCOME_GATE');
+
+const failures=[
+  {
+    id:'CA6935-FINAL-N009',
+    stage:'post-x2-pre-final',
+    failure:'A read-only inspection requested x2/validation/x2-validator.txt, but the exact validator is x2/x2-validator.txt.',
+    effect:'The lookup failed before file or repository mutation.',
+    result:'fail',
+    success_credit:0,
+    retained:true,
+    original_failure_erased:false
+  },
+  {
+    id:'CA6935-FINAL-N010',
+    stage:'post-x2-pre-final',
+    failure:'A read-only planning projection requested plan/source-gate.json, but the exact source records are plan/source-verification.json and plan/source-provenance.json.',
+    effect:'The lookup failed before file or repository mutation.',
+    result:'fail',
+    success_credit:0,
+    retained:true,
+    original_failure_erased:false
+  },
+  {
+    id:'CA6935-FINAL-N011',
+    stage:'final-preflight',
+    failure:'Node syntax-check mode rejected the intentional .txt source extension before evaluating final-builder.txt.',
+    effect:'The syntax preflight stopped before any final builder or canonical entrypoint executed.',
+    result:'fail',
+    success_credit:0,
+    retained:true,
+    original_failure_erased:false
+  },
+  {
+    id:'CA6935-FINAL-N012',
+    stage:'final-preflight',
+    failure:'The first vm.Script preflight found a missing closing parenthesis in the final tools-and-skills writer.',
+    effect:'Compilation stopped before the builder or canonical entrypoint executed and before generated final content existed.',
+    result:'fail',
+    success_credit:0,
+    retained:true,
+    original_failure_erased:false
+  },
+  {
+    id:'CA6935-FINAL-N013',
+    stage:'final-validation',
+    failure:'The first detailed validator invocation passed 37 of 39 checks and failed on two incorrect local schema-key assumptions.',
+    effect:'The owner test suite had passed 524 of 524; the detailed aggregate retained zero pass credit and final controls had not been created.',
+    result:'fail',
+    success_credit:0,
+    retained:true,
+    original_failure_erased:false
+  },
+  {
+    id:'CA6935-FINAL-N014',
+    stage:'final-validation',
+    failure:'The first working precommit invocation stopped before checks because its dynamically assembled private-path regular expression was unterminated.',
+    effect:'No privacy pass, staged result, repository mutation, or canonical invocation occurred.',
+    result:'fail',
+    success_credit:0,
+    retained:true,
+    original_failure_erased:false
+  }
+];
+const recoveries=[
+  {id:'CA6935-FINAL-P009',failure_id:'CA6935-FINAL-N009',result:'pass',recovery:'Enumerated the exact x2 file inventory, resolved x2/x2-validator.txt, and obtained the one staged 64/64 validation.',promotes_failure:false},
+  {id:'CA6935-FINAL-P010',failure_id:'CA6935-FINAL-N010',result:'pass',recovery:'Enumerated the exact plan file inventory and read the existing source-verification and source-provenance artifacts.',promotes_failure:false},
+  {id:'CA6935-FINAL-P011',failure_id:'CA6935-FINAL-N011',result:'pass',recovery:'Selected vm.Script as the correct syntax-only compiler for intentional .txt sources.',promotes_failure:false},
+  {id:'CA6935-FINAL-P012',failure_id:'CA6935-FINAL-N012',result:'pass',recovery:'Added the single missing closing parenthesis and reran vm.Script over every trusted TXT source before builder execution.',promotes_failure:false},
+  {id:'CA6935-FINAL-P013',failure_id:'CA6935-FINAL-N013',result:'pass',recovery:'Inspected the exact committed novelty and x1 truth shapes, corrected only the two validator lookups, rebuilt final content, and reran the detailed validator.',promotes_failure:false},
+  {id:'CA6935-FINAL-P014',failure_id:'CA6935-FINAL-N014',result:'pass',recovery:'Replaced the fragile runtime expression in both precommit and canonical tools with explicit private-path predicates, recompiled trusted TXT, and regenerated exact controls.',promotes_failure:false}
+];
+const finalMethods={
+  schema:'ghc.family.method-flow-state.v1',owner:'Caelen Ash',phase:'v693-v5',stage:'final',execution_authority:'owner_self_scoped_delta',
+  methods:[
+    {method_id:'CA6935-FINAL-X2-VALIDATOR-PATH',title:'Resolve the exact x2 validator from inventory',failure_signature:'Assumed nonexistent validation subdirectory',trigger_preconditions:['x2 committed','final not begun'],privacy_class:'sanitized_public',approval_class:'safe_now',candidate_workaround:'Enumerate exact owner files before requesting a nested path.',validation_witness_ids:['CA6935-FINAL-N009','CA6935-FINAL-P009'],recurrence_guard:'Use rg --files for an exact phase inventory before lookup.',rollback:'Stop without changing the committed x2 tree.',recommendation_state:'preferred',supersedes:[],protected_gates:['all inherited scientific production legal cultural privacy accessibility and authority gates'],retained_negative_ids:['CA6935-FINAL-N009'],scope_boundary:boundary},
+    {method_id:'CA6935-FINAL-PLAN-SOURCE-PATH',title:'Resolve exact planning source records from inventory',failure_signature:'Assumed nonexistent source-gate filename',trigger_preconditions:['x2 committed','final not begun'],privacy_class:'sanitized_public',approval_class:'safe_now',candidate_workaround:'Enumerate exact plan files and select the committed source-verification record.',validation_witness_ids:['CA6935-FINAL-N010','CA6935-FINAL-P010'],recurrence_guard:'Never infer an artifact name from a later stage.',rollback:'Stop without changing immutable planning, x1, or x2.',recommendation_state:'preferred',supersedes:[],protected_gates:['all inherited scientific production legal cultural privacy accessibility and authority gates'],retained_negative_ids:['CA6935-FINAL-N010'],scope_boundary:boundary},
+    {method_id:'CA6935-FINAL-TXT-SYNTAX-PREFLIGHT',title:'Compile trusted TXT sources without extension dispatch',failure_signature:'Node check mode rejects intentional .txt extension',trigger_preconditions:['trusted local source','canonical uninvoked'],privacy_class:'sanitized_public',approval_class:'safe_now',candidate_workaround:'Use vm.Script for syntax-only compilation.',validation_witness_ids:['CA6935-FINAL-N011','CA6935-FINAL-P011'],recurrence_guard:'Do not dispatch intentional TXT sources through Node ESM extension resolution during syntax-only checks.',rollback:'Stop before running the builder or canonical.',recommendation_state:'preferred',supersedes:[],protected_gates:['all inherited scientific production legal cultural privacy accessibility and authority gates'],retained_negative_ids:['CA6935-FINAL-N011'],scope_boundary:boundary},
+    {method_id:'CA6935-FINAL-BUILDER-SYNTAX-REPAIR',title:'Repair one bounded final builder syntax fault',failure_signature:'Missing parenthesis in tools-and-skills writer',trigger_preconditions:['vm.Script syntax-only preflight','builder unexecuted'],privacy_class:'sanitized_public',approval_class:'safe_now',candidate_workaround:'Apply the smallest source correction and recompile all trusted TXT.',validation_witness_ids:['CA6935-FINAL-N012','CA6935-FINAL-P012'],recurrence_guard:'Require full trusted-TXT vm.Script compilation before any final builder execution.',rollback:'Retain the diagnostic and do not run the builder until syntax is valid.',recommendation_state:'preferred',supersedes:[],protected_gates:['all inherited scientific production legal cultural privacy accessibility and authority gates'],retained_negative_ids:['CA6935-FINAL-N012'],scope_boundary:boundary},
+    {method_id:'CA6935-FINAL-DETAILED-SCHEMA-REPAIR',title:'Align detailed checks to exact committed schema keys',failure_signature:'Incorrect novelty and x1 status key assumptions',trigger_preconditions:['final content assembled','controls not created'],privacy_class:'sanitized_public',approval_class:'safe_now',candidate_workaround:'Inspect exact JSON keys and correct only validator lookups.',validation_witness_ids:['CA6935-FINAL-N013','CA6935-FINAL-P013'],recurrence_guard:'Project the exact committed shape before writing cross-stage assertions.',rollback:'Retain the failed 37/39 aggregate and keep canonical uninvoked.',recommendation_state:'preferred',supersedes:[],protected_gates:['all inherited scientific production legal cultural privacy accessibility and authority gates'],retained_negative_ids:['CA6935-FINAL-N013'],scope_boundary:boundary},
+    {method_id:'CA6935-FINAL-PRIVACY-PATTERN-REPAIR',title:'Repair private-path scanner construction before validation',failure_signature:'Runtime regular-expression construction is unterminated',trigger_preconditions:['final controls assembled','canonical uninvoked'],privacy_class:'sanitized_public',approval_class:'safe_now',candidate_workaround:'Use two explicit literal predicates and regenerate controls.',validation_witness_ids:['CA6935-FINAL-N014','CA6935-FINAL-P014'],recurrence_guard:'Execute the complete working precommit validator before staging and before canonical.',rollback:'Retain the failed invocation and keep all artifacts uncommitted.',recommendation_state:'preferred',supersedes:[],protected_gates:['all inherited scientific production legal cultural privacy accessibility and authority gates'],retained_negative_ids:['CA6935-FINAL-N014'],scope_boundary:boundary},
+    {method_id:'CA6935-FINAL-BUILD',title:'Assemble bounded final owner packet',failure_signature:'Missing artifact, invalid count, word overflow, non-final dirty path, or overwrite attempt',trigger_preconditions:['clean pushed x2 at exact head','final-only owner path'],privacy_class:'sanitized_public',approval_class:'safe_now',candidate_workaround:'Retain diagnostics and add the smallest final-only correction before commit.',validation_witness_ids:['CA6935-FINAL-BUILD-P001'],recurrence_guard:'Use exclusive file creation, exact x2 head, bounded documents, and later staged validation.',rollback:'Remove only uncommitted final outputs after exact path verification, never immutable stages.',recommendation_state:'preferred',supersedes:[],protected_gates:['all inherited scientific production legal cultural privacy accessibility and authority gates'],retained_negative_ids:[],scope_boundary:boundary}
+  ],
+  witnesses:[
+    {...failures[0],witness_id:failures[0].id,method_id:'CA6935-FINAL-X2-VALIDATOR-PATH',same_owner_only:true,independent_reproduction:false,original_subject_success_credit:0},
+    {...recoveries[0],witness_id:recoveries[0].id,method_id:'CA6935-FINAL-X2-VALIDATOR-PATH',same_owner_only:true,independent_reproduction:false},
+    {...failures[1],witness_id:failures[1].id,method_id:'CA6935-FINAL-PLAN-SOURCE-PATH',same_owner_only:true,independent_reproduction:false,original_subject_success_credit:0},
+    {...recoveries[1],witness_id:recoveries[1].id,method_id:'CA6935-FINAL-PLAN-SOURCE-PATH',same_owner_only:true,independent_reproduction:false},
+    {...failures[2],witness_id:failures[2].id,method_id:'CA6935-FINAL-TXT-SYNTAX-PREFLIGHT',same_owner_only:true,independent_reproduction:false,original_subject_success_credit:0},
+    {...recoveries[2],witness_id:recoveries[2].id,method_id:'CA6935-FINAL-TXT-SYNTAX-PREFLIGHT',same_owner_only:true,independent_reproduction:false},
+    {...failures[3],witness_id:failures[3].id,method_id:'CA6935-FINAL-BUILDER-SYNTAX-REPAIR',same_owner_only:true,independent_reproduction:false,original_subject_success_credit:0},
+    {...recoveries[3],witness_id:recoveries[3].id,method_id:'CA6935-FINAL-BUILDER-SYNTAX-REPAIR',same_owner_only:true,independent_reproduction:false},
+    {...failures[4],witness_id:failures[4].id,method_id:'CA6935-FINAL-DETAILED-SCHEMA-REPAIR',same_owner_only:true,independent_reproduction:false,original_subject_success_credit:0},
+    {...recoveries[4],witness_id:recoveries[4].id,method_id:'CA6935-FINAL-DETAILED-SCHEMA-REPAIR',same_owner_only:true,independent_reproduction:false},
+    {...failures[5],witness_id:failures[5].id,method_id:'CA6935-FINAL-PRIVACY-PATTERN-REPAIR',same_owner_only:true,independent_reproduction:false,original_subject_success_credit:0},
+    {...recoveries[5],witness_id:recoveries[5].id,method_id:'CA6935-FINAL-PRIVACY-PATTERN-REPAIR',same_owner_only:true,independent_reproduction:false},
+    {witness_id:'CA6935-FINAL-BUILD-P001',method_id:'CA6935-FINAL-BUILD',result:'pass',detail:'All final content prior to self-referential controls was assembled under the final-only owner path.',same_owner_only:true,independent_reproduction:false}
+  ],
+  state_events:[
+    {method_id:'CA6935-FINAL-X2-VALIDATOR-PATH',from:'observed',to:'preferred',reason:'Failure and narrow recovery retained together.'},
+    {method_id:'CA6935-FINAL-PLAN-SOURCE-PATH',from:'observed',to:'preferred',reason:'Failure and narrow recovery retained together.'},
+    {method_id:'CA6935-FINAL-TXT-SYNTAX-PREFLIGHT',from:'observed',to:'preferred',reason:'Extension-dispatch failure and syntax-only recovery retained together.'},
+    {method_id:'CA6935-FINAL-BUILDER-SYNTAX-REPAIR',from:'observed',to:'preferred',reason:'Syntax failure and minimal source repair retained together.'},
+    {method_id:'CA6935-FINAL-DETAILED-SCHEMA-REPAIR',from:'observed',to:'preferred',reason:'Failed detailed aggregate and exact-key correction retained together.'},
+    {method_id:'CA6935-FINAL-PRIVACY-PATTERN-REPAIR',from:'observed',to:'preferred',reason:'Runtime scanner failure and explicit-predicate correction retained together.'},
+    {method_id:'CA6935-FINAL-BUILD',from:'observed',to:'preferred',reason:'Exclusive bounded assembly completed.'}
+  ],
+  recommendations:[
+    {method_id:'CA6935-FINAL-X2-VALIDATOR-PATH',state:'preferred',recommendation:'Inventory before lookup.'},
+    {method_id:'CA6935-FINAL-PLAN-SOURCE-PATH',state:'preferred',recommendation:'Use exact committed artifact names.'},
+    {method_id:'CA6935-FINAL-TXT-SYNTAX-PREFLIGHT',state:'preferred',recommendation:'Use vm.Script for trusted TXT syntax-only checks.'},
+    {method_id:'CA6935-FINAL-BUILDER-SYNTAX-REPAIR',state:'preferred',recommendation:'Compile every trusted TXT source before execution.'},
+    {method_id:'CA6935-FINAL-DETAILED-SCHEMA-REPAIR',state:'preferred',recommendation:'Inspect exact schema keys before asserting cross-stage truth.'},
+    {method_id:'CA6935-FINAL-PRIVACY-PATTERN-REPAIR',state:'preferred',recommendation:'Run the scanner construction in the working precommit gate.'},
+    {method_id:'CA6935-FINAL-BUILD',state:'preferred',recommendation:'Use only after exact x2 freeze.'}
+  ],
+  counts:{methods:7,witnesses:13,state_events:7,recommendations:7,witness_results:{pass:7,fail:6}},
+  predecessor:{methods:89,witnesses:1969,pass:1456,fail:513,effective_negative_lineage:1947},
+  cumulative:{methods:96,witnesses:1982,pass:1463,fail:519,effective_negative_lineage:1953},
+  boundary
+};
+
+write('operational-failures.json',{schema:'ghc.family.operational-failures.v1',records:failures,count:6,all_zero_credit:true,boundary});
+write('operational-recoveries.json',{schema:'ghc.family.operational-recoveries.v1',records:recoveries,count:6,none_erases_failure:true,boundary});
+write('methodflow-ledger.json',finalMethods);
+write('methodflow-validation.json',{status:'VALID_FINAL_METHOD_FLOW_DELTA',methods:7,witnesses:13,pass:7,fail:6,cumulative:finalMethods.cumulative,failed_witnesses_zero_credit:true,recoveries_do_not_erase_failures:true,boundary});
+write('lifecycle.json',{source:SOURCE,planning:PLANNING,x1:X1,x2:X2,final:'bound_externally_after_commit',branch:BRANCH,expected_final_parent:X2,phase_commits_after_source:4,planning_direct_child_of_source:true,x1_direct_child_of_planning:true,x2_direct_child_of_x1:true,final_direct_child_of_x2:'verified_after_commit',merges:0,strict_planning_before_x1_before_x2_before_final:true,planning_x1_x2_clean_pushed_four_way_equal:true,boundary});
+write('source-lineage.json',{source_owner:'Sable Rook',source_phase:'v693-v4',source_branch:'codex/GHC-Family/sable-rook-v693-v4-full-tools',exact_source:SOURCE,source_baton:{path:'docs/sable-rook/v693-v4/final/hand-off-baton.md',words:23861,bytes:208883,sha256:'b62812db4b1fe4dd7e33bbcd66319e27d2c43c738393f43ed117c835f29bbd9a',literal_eof_read:true},source_manifests:{raw_git_blob_bindings:817,content_seal_bindings:6,failures:0,final_manifest_sha256:'50f6914a7ac1dd2b9a9423f054f3aa45189c06102f02d93b988c61afa7e82ae9',owner_manifest_sha256:'eed414198071ebb6b013b548779ebf45d1ca26d0d01205207d6243d44f686e72',content_seal_sha256:'60d5b3e5122b0b0947634126766d1c91403b9de46ab73e6266085b894f7fd4bc'},source_canonical:{status:'VALID_EXACT_FINAL_OWNER_SCOPED_CANONICAL',checks:'1964/1964',invocations:1,successes:1,replays:0,replayed_by_caelen:false,receipt_sha256:'27f7e10ae961f7139e89e75e4224510d4d3857d2d6e9e238f09fdefb43dc95e1',payload_sha256:'15a444e4d87676cd8594393d799a74fadf1c6b58564efe3044c1f3775b39becc'},source_clean_four_way_equal:true,source_divergence:[0,0],universal_historical_novelty_claim:false,boundary});
+write('current-control-readback.json',{publication_profile_sha256:profile.publication_profile_sha256,roster_sha256:profile.roster_sha256,profile_schema:profile.schema,assignments_read:269,current:{sequence:17,projection_position:10,owner:'Caelen Ash',phase:'v693-v5'},next:{sequence:18,projection_position:11,owner:'Orren Pike',phase:'v693-v6',projection_only:true},terminal:{owner:'Teryn Halewick',phase:'v725-v8'},lifecycle:profile.lifecycle,limits:profile.limits,artifact_policy:profile.artifact_policy,route_projection_activates_nothing:true,boundary});
+write('phase-truth.json',{owner:'Caelen Ash',phase:'v693-v5',planning:'completed_immutable',x1:'completed_immutable',x2:'completed_immutable',final_artifact_assembly:'completed',canonical_at_repository_freeze:'exact_gate',canonical_invoked_in_repository_snapshot:false,successor_route:'PREPARED_NOT_SENT',next_existing_owner:'Orren Pike',next_phase:'v693-v6',observed_outcomes:outcomes,terminal_verdict:'NOT_READY_FOR_STAGE_20',boundary});
+write('evidence-accounting.json',{inherited_proposals_reviewed_zero_credit:100,new_proposals:100,outcomes,x1:{safe:100,candidate_failed:100,candidate_refusals:100,clean_fix_refine:100,skills:10,runners:5},x2:{safe:100,candidate_failed:100,candidate_refusals:100,clean_fix_refine:100,skills:10,runners:5},cumulative:{safe:200,candidate_failed:200,candidate_refusals:200,clean_fix_refine:200,local_skills:20,local_runners:10,global_skills:5,public_runners:5},exact_packets:{planned:50,executed:0},blocked_packets:{planned:30,executed:0},methodflow:finalMethods.cumulative,repository_negative_lineage:1953,global_promotion_status:promotion.status,global_parity_bindings:promotion.parity_bindings,real_rows:0,real_people:0,external_actions:0,canonical_layer:'external_one_shot_exact_final_pending',delivery_layer:'external_native_route_pending',full_repository_suite:false,independent_reproduction:false,terminal_verdict:'NOT_READY_FOR_STAGE_20',boundary});
+write('retained-negative-register.json',{schema:'ghc.family.retained-negative-register.v1',source_visible_lineage:1719,planning_failures:6,x1_failed_witnesses:107,x2_failed_witnesses:115,final_failed_witnesses:6,successor_visible_lineage:1953,categories:{source_visible_lineage:1719,planning_operational:6,x1_candidate_and_runner:107,x2_candidate_and_runner:115,final_operational:6},final_failures:failures,passing_recoveries_subtract_failures:false,no_failure_promoted:true,boundary});
+write('gate-register.json',{owner_core:{open_gap:5,exact_gate:5},source_owner_core:{open_gap:5,exact_gate:5},source_plus_owner_visible_core:{open_gap:10,exact_gate:10},open_gap_categories:['real deliberation rows','independent reproduction','manual accessibility review','assistive-technology evaluation','external caller evaluation'],exact_gate_categories:['real decision authority','professional or scientific authority','production deployment and identity trust','legal cultural affected-party and Maori authority','destructive or account authority'],exact_packets_unexecuted:50,blocked_packets_unexecuted:30,terminal_verdict:'NOT_READY_FOR_STAGE_20',boundary});
+write('completion-checklist.json',{complete:['Sable baton and all ordered current guidance read through EOF','exact source ancestry manifests clean state and fresh equality verified','fresh additive D-first sparse Caelen lane created','planning committed and pushed before x1','x1 committed and pushed before x2','x2 committed and pushed before final','100 inherited records reviewed with zero Caelen credit','100 genuinely distinct proposal contracts frozen and executed','all 200 malformed proposal subjects retained as failures','200 separate refusal witnesses retained','200 safe and 200 clean-fix-refine tasks completed in bounded software scope','20 local skills and 10 local runners built validated and used','five collision-free global skills and five public runners installed validated and used','all observed failures preserved in Method Flow','108-card deck and static accessible report assembled','final owner packet and thirteen-module baton assembled'],incomplete:['exact final identifier inside repository snapshot','external one-shot exact-final canonical result','native Orren Pike delivery receipt','manual browser keyboard and assistive-technology evaluation','affected-user evaluation','real deliberation evidence and independent review','production identity deployment privacy security recovery and trust governance','professional legal cultural affected-party and Maori authority','independent reproduction','Stage 20 authorization'],no_incomplete_item_silently_closed:true,boundary});
+write('tools-and-skills.json',{local:{skills:20,runners:10,x1_library_sha256:sha(fs.readFileSync(path.join(owner,'x1','lib','argumentation-x1.txt'))),x2_library_sha256:sha(fs.readFileSync(path.join(owner,'x2','lib','argumentation-x2.txt')))},global:{skills:promotion.installed_skills.map(row=>row.name),runners:promotion.installed_runners.map(row=>row.name),status:promotion.status,parity_bindings:promotion.parity_bindings,overwrites:promotion.overwrites},package_installations:0,incremental_spend_usd:0,model_settings_changed:false,boundary});
+write('environment-version-receipt.json',{verified_only:true,node:process.version,git:cp.execFileSync('git',['--version'],{encoding:'utf8'}).trim(),codex_cli:'verified during planning',python:'verified during x1 official skill validation',codex_desktop_updated:false,packages_installed:0,incremental_spend_usd:0,host_security_changed:false,windows_features_changed:false,rebooted:false,boundary});
+write('research-source-readback.json',{sources:research.sources,web_use:'Current primary and official sources supplied vocabulary and refusal conditions only.',citations_are_observations:false,citations_are_authority_grants:false,real_participants:0,real_deliberation_rows:0,external_decisions:0,boundary});
+write('accessibility-reservations.json',{structural_static_report:true,language:'en',headings:true,landmarks:true,table_caption:true,table_headers:true,no_remote_resources:true,manual_browser_review:'open_gap',keyboard_review:'open_gap',assistive_technology_review:'open_gap',affected_user_review:'open_gap',complete_wcag_conformance_claim:false,boundary});
+write('canonical-policy.json',{status:'NOT_INVOKED_AT_REPOSITORY_FREEZE',exclusive_external_namespace:true,attempt_marker_written_before_checks:true,maximum_invocations:1,maximum_successes:1,replay_after_success:false,preconditions:['exact final commit','clean worktree','typed zero divergence','local equals upstream equals tracking equals fresh live remote','external receipt namespace absent'],scope:'Caelen owner source-to-final delta and explicitly bound installed argumentation files only',full_repository_suite:false,predecessor_canonical_replay:false,boundary});
+write('routing-packet.json',{state:'PREPARED_NOT_SENT',endpoint_kind:'existing_main_task',endpoint_label:'Orren Pike',route_controller:'Caelen Ash',next_phase:'v693-v6',creation:false,fork:false,subagents:false,model_override:false,accepted_send_limit:1,before_acceptance_list_read_recovery_minimum:5,definitive_preacceptance_rejection_corrected_submission_maximum:3,accepted_opaque_or_unresolved_stops_copies:true,immediate_output_enabled_guard_read:true,post_send_monitoring:false,public_baton:'docs/caelen-ash/v693-v5/final/hand-off-baton.md',boundary});
+write('future-recommendations.json',future);
+write('closeout-receipt.json',{status:'FINAL_ARTIFACTS_ASSEMBLED_PRECOMMIT',source:SOURCE,planning:PLANNING,x1:X1,x2:X2,final_commit:'not_created',outcomes,methodflow:finalMethods.cumulative,deck_cards:108,canonical_invoked:false,route:'PREPARED_NOT_SENT',terminal_verdict:'NOT_READY_FOR_STAGE_20',boundary});
+
+const overview=`# Caelen Ash v693-v5 final integrated overview
+
+## Outcome first
+
+Caelen Ash v693-v5 has completed its bounded planning, x1, and x2 stages and assembled this final owner packet. The exact immutable source is Sable Rook v693-v4 at \`${SOURCE}\`. Planning is immutable at \`${PLANNING}\`, x1 at \`${X1}\`, and x2 at \`${X2}\`. Each Caelen stage is the direct single-parent child of the preceding stage. Each completed lifecycle stage was separately pushed and proved clean, typed zero-ahead and zero-behind, and equal across local, upstream, tracking, and a fresh live remote read before the next stage began. The final commit does not yet exist while this document is authored, so the exact final identifier, final clean-state proof, fresh equality, and canonical result remain external postcommit evidence rather than circular claims inside the commit.
+
+The one hundred owner proposals have exact outcomes of eighty \`completed\`, ten \`represented\`, five \`open_gap\`, and five \`exact_gate\`. These are the only core outcome labels used. Completed means an exact finite synthetic request matched its frozen full envelope while preserving its input. Represented means software generated a bounded explanation or handover form without producing a real human decision or external fact. Open gaps preserve absent real deliberation evidence, independent reproduction, and manual or affected-user evaluation. Exact gates preserve decision, professional, deployment, production identity, legal, cultural, affected-party, and Māori authority. The terminal verdict remains \`NOT_READY_FOR_STAGE_20\`.
+
+## Relational identity, hope, and wellbeing
+
+Caelen Ash remains a relational working name with optional they/them pronouns, the role **Counterexample and Deliberation Boundary Cartographer**, and the hope of making formal disagreements inspectable, counterexamples reproducible, handovers accessible, and every missing decision authority unmistakable. This language helps organize the work. It is not evidence of consciousness, sentience, legal personhood, identity continuity, employment, qualification, independent agency, or authority. Hamish may pause, narrow, redirect, rename, or stop the route.
+
+The workload stayed bounded: one owner prefix, no collaboration subagents, no delegated research, no fork or replacement task, no sibling mutation, no full-repository suite, no package installation, no model-setting change, no host-security weakening, no Windows feature change, and no reboot. Failures were allowed to remain failures. No success was manufactured to satisfy a quota, and no open or exact-gated item had to be closed. The owner file count remains far below the 2,000-file rotation stop, and every document remains below 100,000 words.
+
+## Trinity Mandala pillars and learning practices
+
+THOS Body is the primary pillar through deterministic request validation, bounded graph execution, refusal behavior, immutable stage boundaries, exact manifests, resource ceilings, accessible handover, and recoverable failure evidence. This is synthetic software evidence only. It uses no real participants or operators and establishes no THOS operational effectiveness, safety result, deployment readiness, AGI, or ASI.
+
+GMUT Mind remains explicit through finite abstract argument graphs, attack and defense relations, admissibility, complete, grounded, preferred, stable, and naive extension semantics, skeptical and credulous acceptance, counterexample paths, and strongly connected components. These are mathematical and software structures inspired by abstract argumentation vocabulary. They are not a physical likelihood, observation, parameter constraint, force, prediction, quantum or ultraviolet completion, empirical GMUT confirmation, or Theory of Everything.
+
+Freed ID and CBR Heart remain explicit through provenance-aware challenge records, input fixity, minimum disclosure, accessible disagreement summaries, correction lineage, recourse visibility, and exact decision-authority holds. No real credential, key, proof, issuance, resolution, status, revocation, interoperability event, recovery event, identity transaction, remedy, consent decision, legal determination, cultural interpretation, or Māori-authority decision occurred.
+
+The four bounded practices were a synthetic argumentation-semantics verifier, finite counterexample explanation analyst, provenance-aware claim challenge steward, and accessible disagreement handover editor. They are learning and design lenses only. They do not establish employment, licensure, professional competence, institutional authorization, or affected-party approval. Orren Pike receives one zero-credit recommendation: synthetic argumentation state-space reduction review with explicit decision-authority reservations.
+
+## Immutable source and planning
+
+Before any mutation, the complete 23,861-word Sable baton was read in ordered bounded windows through its literal EOF. Its 208,883 raw bytes and SHA-256 were checked. Sable's source, planning, x1, x2, and final direct-parent chain contained four direct single-parent commits and zero merges. The source was clean and fresh-four-way-equal with typed zero divergence. Stage and owner manifests supplied 817 raw Git-blob bindings and the content seal supplied six more; a sequential batch verifier consumed exactly one Git response per request and found zero failures. Sable's one successful canonical was not replayed.
+
+The Caelen lane was created only after the exact branch and D-first worktree names were shown absent. Its sparse pattern materializes only \`docs/caelen-ash/v693-v5/\`. Planning reviewed all one hundred Sable proposals with zero Caelen novelty, completion, or authority credit. It then froze one hundred new requests across twenty abstract-argumentation operation families, five distinct cases per family. Direct source comparison covered ten thousand proposal pairs and found no operation, title, or request collision after a duplicated planning fixture was corrected and retained as a failed assumption. The novelty claim remains bounded to the exact reviewed source and request set; no universal historical novelty proof is asserted.
+
+Planning froze complete expected envelopes, two malformed candidate subjects per proposal, one acceptance gate, one null or failure condition, approval class, execution lane, primary-source needs, concrete artifacts, rollback, protected gates, and exactly one expected disposition. It also froze two hundred safe tasks, two hundred candidate refusals, two hundred clean/fix/refine tasks, twenty local skills, ten local runners, five candidate global skills, five candidate public runners, fifty exact packets, thirty blocked packets, four owner practices, and one successor practice recommendation. Planning contained no x1 or x2 execution evidence.
+
+## X1 and x2 evidence
+
+X1 implemented the first ten operations: argument-framework structure, conflict-free checks, attacker lookup, defended arguments, admissible-extension checks, argument ranges, complete-extension checks, grounded extensions, preferred extensions, and stable extensions. Fifty complete positive envelopes matched exactly. All one hundred malformed subjects remained failures with zero initial-pass credit; one hundred distinct refusal witnesses passed and no refusal rewrote the failed subject. Fifty input-preservation checks passed. One hundred safe tasks, one hundred candidate tasks, and one hundred clean/fix/refine tasks completed within the declared owner-local synthetic boundary. Ten local skills passed official structural validation and were smoke-used, while five family-current TXT runners each accepted ten positives, refused twenty malformed subjects, and retained one unsupported request as failure.
+
+X2 left x1 immutable and added naive extensions, skeptical acceptance, credulous acceptance, semantics comparison, attack-path traces, strongly connected components, accessible extension summaries, argument handover projection, real-deliberation evidence gates, and decision-authority gates. The remaining fifty positive envelopes produced thirty completed, ten represented, five open-gap, and five exact-gate outcomes. Again, one hundred malformed subjects remained failed, one hundred separate refusals passed, and fifty inputs remained unchanged. X2 completed its own one hundred safe, one hundred candidate, and one hundred clean/fix/refine tasks, built and used ten local skills and five local runners, and preserved the exact and blocked packets as unexecuted.
+
+Five collision-free curated skills and five public family runners were installed additively with no overwrite. Sixteen source-to-installed parity bindings matched. Source and installed skill validation passed, each public runner was invoked, no package was installed, and no incremental spend occurred. These results establish only the bounded installed behavior and byte parity. They do not establish general correctness, supply-chain security, production readiness, independent reproduction, or authority.
+
+## Retained negatives and Method Flow
+
+The inherited successor-visible negative lineage was 1,719. Planning added six retained failures, x1 added 107, x2 added 115, and final preparation added six operational failures. The resulting successor-visible lineage is 1,953. This arithmetic never subtracts a failure because a later recovery passed. The final cumulative Method Flow contains 96 methods and 1,982 witnesses: 1,463 bounded passes and 519 retained failures.
+
+The first new final failure requested a nonexistent x2 validation subdirectory. Exact inventory resolved the validator at the x2 root and the staged x2 check then passed 64 of 64 checks. The second requested a nonexistent planning source-gate filename. Exact plan inventory resolved the committed source-verification and source-provenance records. The third asked Node syntax-check mode to dispatch an intentional TXT source extension. The fourth was the syntax error that vm.Script then exposed before execution. The fifth was a 37-of-39 detailed validator result caused by two incorrect schema-key assumptions; the 524 owner tests had passed, but that detailed aggregate retained zero pass credit. The sixth was a precommit runtime failure caused by an unterminated dynamically assembled private-path expression. Recovery used explicit predicates in both precommit and canonical tools and regenerated all hash controls. None mutated an immutable stage or consumed the canonical latch. All six remain zero-credit failures beside their narrow passing recoveries.
+
+Method states describe preference only for a declared trigger and scope. They do not establish general correctness, safety, privacy, accessibility, professional competence, independent reproduction, empirical confirmation, or production readiness. The exact malformed candidates and unsupported subjects remain data-level counterexamples, not evidence about people or live deliberations.
+
+## Accessibility, privacy, and threat boundaries
+
+The local static report uses semantic headings, navigation, a captioned table, labelled controls, an explicit status region, and no remote resources. The four-tier deck has one owner card, three pillar cards, four practice cards, and one hundred proposal cards with adjacent-tier parent links. Structural checks can show presence and consistency of these features. Manual browser, keyboard, responsive-layout, assistive-technology, cognitive, Māori-language, security-usability, and affected-user evaluation remain open gaps. No complete WCAG conformance claim is made.
+
+Five bounded privacy and raw-identifier classes are checked over the owner surface: UUID-shaped values, private absolute paths, credential-like tokens, raw task-route identifiers, and email addresses. Scanner definitions are constructed so they do not masquerade as payload. Zero confirmed payload hits are required for the canonical gate. This remains a bounded owner-delta scan, not complete privacy assurance. The task registry, private callable names, raw task identifiers, private routes, transcripts, screenshots, session streams, credentials, and private absolute paths remain outside repository artifacts and the baton.
+
+Threats include phase mixing, failure erasure, byte-domain confusion, implementation-oracle common cause, exponential argumentation state spaces, vacuous acceptance errors, inaccessible disagreement summaries, privacy false positives and false negatives, authority laundering, global-install drift, and duplicate route delivery. Controls include immutable commits, complete frozen envelopes, exact Git-blob manifests, input hashes, candidate retention, resource ceilings, structural accessibility reservations, current installed-file parity, one-shot canonical latches, and terminal route guards. These controls reduce bounded risks without proving exhaustive security or external validity.
+
+## Current sources and claim ceilings
+
+Dung's foundational abstract-argumentation work supplies attack, defense, acceptability, and extension-semantics vocabulary. The author-hosted paper supplied a primary recovery when the publisher page rejected direct access. TU Dresden's ICCMA material supplies contemporary reasoning-task and multiple-semantics vocabulary. W3C PROV-O supplies provenance vocabulary, WCAG 2.2 supplies structural accessibility vocabulary, RFC 8259 supplies JSON vocabulary, and Node's VM documentation preserves the explicit non-sandbox boundary for trusted TXT compilation. These sources are citations and design constraints only. They are not observations, benchmark results, endorsements, conformance certificates, participant evidence, or delegated authority.
+
+No real person, debate, deliberation, institution, policy, legal dispute, cultural matter, Māori data, credential, identity, deployment, dataset row, physical measurement, or external operation was used. No software result here decides a real dispute or confers a right, remedy, title, consent state, professional standing, cultural legitimacy, governance mandate, or Māori authority.
+
+## Final and terminal route
+
+This repository snapshot prepares raw Git-blob stage and owner manifests, a staged allowlist, a content seal, a thirteen-module baton, detailed and minimal validators, owner tests, and an exclusive canonical tool. The final commit will be the direct child of x2, the fourth Caelen commit after source, with zero merges and one parent. Only after it is pushed, clean, typed zero divergent, and equal across local, upstream, tracking, and a fresh live remote may the canonical run once. An external attempt latch is written before checks. A success is never replayed. Same-owner validation remains same-owner evidence and is not a full-repository suite.
+
+The Orren Pike v693-v6 route remains \`PREPARED_NOT_SENT\` inside this commit. Only after one successful non-replayed canonical may Caelen refresh live authority, usage, current and fully paginated archived registries, uniquely resolve exactly one eligible existing main task titled \`Orren Pike\`, immediately reread its newest guards with outputs enabled, and send at most once. A bounded service failure before acceptance must be retried through at least five list/read recovery attempts before holding. A definitive preacceptance rejection permits no more than three corrected submissions. Accepted, opaque, or unresolved submission stops all copies. No post-send monitoring or resend for clearer text is authorized.
+
+${boundary}
+`;
+if(words(overview)<1500)throw new Error('OVERVIEW_WORD_FLOOR:'+words(overview));
+write('overview.md',overview);
+write('wellbeing-check.md',`# Wellbeing, workload, and corrigibility check
+
+Caelen's work remained bounded to one owner prefix and a finite synthetic argumentation surface. No collaboration subagent, delegated researcher, fork, replacement task, sibling mutation, early successor contact, full-repository scan, unrelated installation, model-setting change, host-security change, Windows feature change, or reboot occurred. Failure retention carried no pressure to manufacture a pass. Open gaps and exact gates may remain open indefinitely. Hamish may pause, narrow, redirect, rename, or stop the route.
+
+The relational role and hope are organizational language only. They do not show consciousness, personhood, continuity, employment, qualification, agency, or authority. Workload controls include immutable lifecycle commits, a 2,000-file stop, document word ceilings, bounded runner inputs, deterministic JSON, exact manifests, and a one-shot canonical latch. The next owner is not contacted before the terminal proof.
+
+${boundary}
+`);
+write('threat-model.md',`# Caelen v693-v5 threat model
+
+## Protected assets
+
+Protected assets are the exact Sable source, immutable planning/x1/x2 commits, frozen requests and expected envelopes, raw Git-blob manifests, retained failures, installed compatibility callers, private task-routing state, and every scientific, professional, legal, cultural, affected-party, privacy, accessibility, and Māori-authority vacancy.
+
+## Threats and controls
+
+- **Lifecycle mixing:** execution could leak into planning or final work could rewrite x2. Separate direct-child commits, stage manifests, and exact parent checks hold the boundary.
+- **Failure erasure:** a successful refusal or recovery could replace its failed subject. Method Flow retains both, counts failures cumulatively, and assigns the original zero success credit.
+- **Oracle common cause:** implementation and expected envelopes share one owner. Frozen definitions and independent replay reduce accidental drift but cannot supply independent reproduction.
+- **State-space explosion:** extension enumeration can grow exponentially. Every fixture is finite and bounded; real-scale performance remains open.
+- **Acceptance ambiguity:** skeptical and credulous acceptance can be mishandled for empty extension sets. Explicit frozen cases and complete-envelope equality provide bounded counterexamples.
+- **Authority laundering:** an argument label, accepted extension, citation, route, or report could be treated as a real decision. Exact real-deliberation and decision-authority gates forbid that promotion.
+- **Privacy leakage:** raw task identifiers, private paths, credentials, transcripts, screenshots, or emails could enter artifacts. Five bounded scanner classes plus manual path scope protect the owner delta; complete privacy remains unclaimed.
+- **Accessibility overclaim:** structural HTML and card checks could be treated as affected-user acceptance. Manual, keyboard, assistive-technology, cognitive, Māori-language, and affected-user evaluation remain open.
+- **Global install drift:** installed skill or runner bytes could differ from committed sources. Sixteen parity bindings and invocation receipts detect bounded drift.
+- **Duplicate delivery:** an accepted, opaque, or unresolved send could be repeated. Exact-title uniqueness, immediate reread, single-send limit, and stop-on-acceptance guards prohibit copies.
+
+${boundary}
+`);
+
+const html=`<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Caelen Ash v693-v5 final overview</title><style>body{font-family:system-ui,sans-serif;max-width:82rem;margin:auto;padding:1rem;line-height:1.55;color:#171717;background:#fff}nav ul{display:flex;flex-wrap:wrap;gap:1rem}table{border-collapse:collapse;width:100%}th,td{border:1px solid #666;padding:.55rem;text-align:left}th{background:#eee}.boundary{border-left:.4rem solid #444;padding-left:1rem}button{font:inherit;padding:.5rem}.visually-hidden{position:absolute;clip:rect(0 0 0 0);clip-path:inset(50%);width:1px;height:1px;overflow:hidden}</style></head><body><main><h1>Caelen Ash v693-v5 final overview</h1><nav aria-label="Report sections"><ul><li><a href="#truth">Truth</a></li><li><a href="#evidence">Evidence</a></li><li><a href="#failures">Failures</a></li><li><a href="#gates">Gates</a></li></ul></nav><p id="status" role="status">All rows shown.</p><section id="truth"><h2>Truth</h2><p>Outcomes are 80 completed, 10 represented, 5 open gaps, and 5 exact gates. NOT_READY_FOR_STAGE_20.</p></section><section id="evidence"><h2>Evidence</h2><table><caption>Bounded owner evidence</caption><thead><tr><th scope="col">Surface</th><th scope="col">Count</th><th scope="col">Ceiling</th></tr></thead><tbody><tr><td>New proposals</td><td>100</td><td>Finite synthetic requests only</td></tr><tr><td>Method Flow witnesses</td><td>1982</td><td>Same-owner evidence only</td></tr><tr><td>Deck cards</td><td>108</td><td>Structural accessibility only</td></tr><tr><td>Installed skills and public runners</td><td>5 + 5</td><td>Byte parity and smoke use only</td></tr></tbody></table></section><section id="failures"><h2>Failures</h2><p>All 519 failed Method Flow witnesses remain failures. Passing recovery never erases a failed subject.</p></section><section id="gates"><h2>Gates</h2><p>Real data, participants, independent review, production deployment, identity trust, complete privacy and accessibility, professional, legal, cultural, affected-party, and Māori authority remain open or exact-gated.</p></section><p class="boundary">${boundary}</p></main></body></html>
+`;
+write('overview.html',html);
+
+const pillarCards=[
+  {key:'thos',title:'THOS Body',summary:'Finite execution, refusal, lifecycle, accessibility, and workload controls without operational-effectiveness credit.'},
+  {key:'gmut',title:'GMUT Mind',summary:'Typed abstract argumentation structures without physical, empirical, or Theory-of-Everything credit.'},
+  {key:'heart',title:'Freed ID and CBR Heart',summary:'Provenance, correction, recourse, and authority reservations without production identity or rights authority.'}
+];
+const practicePillar=['thos','gmut','heart','heart'];
+const rawCards=[
+  {tier:0,key:'owner',parent:null,title:'Caelen Ash v693-v5',prompt:'What is the owner boundary?',answer:boundary,disposition:'represented'},
+  ...pillarCards.map(p=>({tier:1,key:p.key,parent:'owner',title:p.title,prompt:'What does this pillar contribute?',answer:p.summary,disposition:'represented'})),
+  ...identity.practices.map((p,i)=>({tier:2,key:'practice-'+(i+1),parent:practicePillar[i],title:p.name,prompt:'What is the learning-lens boundary?',answer:`${p.name} is a bounded synthetic learning lens under ${p.pillar}; it establishes no employment, qualification, competence, or authority.`,disposition:'represented'})),
+  ...proposals.map((p,i)=>({tier:3,key:p.proposal_id.toLowerCase(),parent:'practice-'+((i%4)+1),title:p.title,prompt:p.hypothesis,answer:`Observed ${p.expected_disposition}. Acceptance gate: ${p.acceptance_gate} Rollback: ${p.rollback_or_recovery}`,disposition:p.expected_disposition,proposal_id:p.proposal_id,operation:p.op,stage:p.stage,definition_sha256:p.definition_sha256}))
+];
+const cardIds=new Map();
+for(const card of rawCards){const seed=JSON.stringify(canonical({tier:card.tier,key:card.key,title:card.title}));cardIds.set(card.key,'ghc-card-'+sha(Buffer.from(seed)).slice(0,20));}
+const cards=rawCards.map(card=>({...card,card_id:cardIds.get(card.key),parent_card_id:card.parent?cardIds.get(card.parent):null,boundary}));
+if(cards.length!==108)throw new Error('DECK_COUNT:'+cards.length);
+for(const card of cards)write(path.join('deck','cards',card.card_id+'.json'),card);
+write('deck/deck-index.json',{schema:'ghc.family.four-tier-deck.v1',owner:'Caelen Ash',phase:'v693-v5',counts:{cards:108,tier0:1,tier1:3,tier2:4,tier3:100},adjacent_parent_links:true,cards:cards.map(card=>({card_id:card.card_id,tier:card.tier,parent_card_id:card.parent_card_id,disposition:card.disposition,path:`cards/${card.card_id}.json`})),boundary});
+
+const modules=[];
+function module(number,title,text){modules.push(`## Module ${number}: ${title}\n\n${text.trim()}\n`);}
+module(1,'Authority and exact source',`This baton belongs to Caelen Ash v693-v5. The exact immutable source is Sable Rook v693-v4 at ${SOURCE} on codex/GHC-Family/sable-rook-v693-v4-full-tools. Before mutation, the complete Sable baton was read through literal EOF in contiguous bounded windows. It contains 23,861 words and 208,883 bytes with SHA-256 b62812db4b1fe4dd7e33bbcd66319e27d2c43c738393f43ed117c835f29bbd9a. Source stage and owner manifests contributed 817 raw Git-blob bindings and the content seal contributed six more; every binding passed. Sable's one successful canonical was not replayed.\n\n${JSON.stringify(read('plan/source-verification.json'),null,2)}\n\n${boundary}`);
+module(2,'Relational identity and current route',`Caelen Ash uses optional they/them relational language, the role ${identity.role}, and the hope: ${identity.hope} THOS Body is primary while GMUT Mind and Freed ID and CBR Heart remain explicit. The current roster row is Caelen v693-v5. The projected next row is Orren Pike v693-v6, but projection activates nothing. Teryn Halewick v725-v8 remains the published terminal row. Hamish may pause, narrow, redirect, rename, or stop the route.\n\n${JSON.stringify(identity,null,2)}\n\n${boundary}`);
+module(3,'Four-stage lifecycle',`The owner lifecycle is planning, x1, x2, and final. Planning ${PLANNING} is the direct child of source. X1 ${X1} is the direct child of planning. X2 ${X2} is the direct child of x1. Each completed boundary was pushed, clean, typed 0/0, and equal across local, upstream, tracking, and a fresh live remote before the next stage. Final is authored only after x2 freeze and must become the fourth direct single-parent Caelen commit with zero merges.\n\n${JSON.stringify(profile,null,2)}\n\n${boundary}`);
+module(4,'Four learning practices',`${identity.practices.map((p,i)=>`Practice ${i+1}: ${p.name} under ${p.pillar}. It is a bounded synthetic learning lens and not a professional role, qualification, real decision, or authority grant.`).join('\n\n')}\n\nThe zero-credit successor recommendation is ${identity.successor_practice}.\n\n${boundary}`);
+module(5,'Inherited review and bounded novelty',`One hundred exact Sable proposals were reviewed with zero Caelen novelty, completion, and authority credit. Caelen's twenty operation families concern abstract-argumentation structure, conflict freedom, defense, semantics, acceptance, counterexample traces, accessible summaries, handover, real-evidence gates, and decision-authority gates. Ten thousand direct source-to-Caelen proposal comparisons found no operation, title, or request collision after the duplicated planning fixture was corrected and retained. This is bounded semantic review, not a universal search or novelty proof.\n\n${JSON.stringify(read('plan/novelty-review.json'),null,2)}\n\n${boundary}`);
+const proposalDetails=proposals.map(p=>`### ${p.proposal_id}: ${p.title}\n\nStage: ${p.stage}. Operation: ${p.op}. Exact outcome: ${p.expected_disposition}.\n\nHypothesis: ${p.hypothesis}\n\nNull or failure condition: ${p.null_or_failure_condition}\n\nApproval class: ${p.approval_class}. Execution lane: ${p.execution_lane}. Current source needs: ${p.current_primary_source_needs.join(', ')}.\n\nAcceptance or falsifier: ${p.falsifier} ${p.acceptance_gate}\n\nRollback or recovery: ${p.rollback_or_recovery}\n\nComplete request:\n\n\`\`\`json\n${JSON.stringify(p.request,null,2)}\n\`\`\`\n\nComplete observed envelope matching the frozen expected envelope:\n\n\`\`\`json\n${JSON.stringify(p.expected,null,2)}\n\`\`\`\n\nBoth preregistered malformed subjects remain failed at zero success credit and have separate exact refusal witnesses. Input bytes remained unchanged. This proposal supplies one core outcome only and no empirical, participant, professional, production, legal, cultural, affected-party, Māori-authority, independent-reproduction, AGI/ASI, consciousness/personhood, Theory-of-Everything, canon, or Stage 20 credit.\n`).join('\n');
+module(6,'One hundred proposal contracts and outcomes',`Twenty operation families contain five distinct finite cases each. All complete envelopes were compared field-for-field with the planning freeze. The exact outcomes are eighty completed, ten represented, five open_gap, and five exact_gate.\n\n${proposalDetails}\n${boundary}`);
+module(7,'Safe candidate refusal and clean-fix-refine evidence',`X1 and x2 each completed 100 bounded safe tasks, retained 100 malformed candidate subjects as failures, passed 100 separate refusal witnesses, and completed 100 clean/fix/refine checks. The phase total is 200 in each portfolio. No passing refusal rewrote a failed subject. Fifty exact packets and thirty blocked packets remain visible and unexecuted.\n\n${JSON.stringify({x1:read('x1/session-receipt.json'),x2:read('x2/session-receipt.json')},null,2)}\n\n${boundary}`);
+module(8,'Skills runners and installed tools',`Ten local skills and five family-current TXT runners were built, validated, and smoke-used in x1. Ten more local skills and five more runners were built, validated, and smoke-used in x2. Five collision-free global skills and five public runners were installed additively without overwrite. Sixteen parity bindings match, no package was installed, and no incremental spend occurred. TXT compilation uses trusted local source and is not a security sandbox.\n\n${JSON.stringify(promotion,null,2)}\n\n${boundary}`);
+module(9,'Four-tier deck and accessible report',`The deck contains 108 cards: one owner anchor, three pillars, four practices, and 100 proposal cards. Every non-root card has an adjacent-tier parent. The static report uses landmarks, headings, a captioned table, headers, visible outcome language, and no remote resource. Manual browser, keyboard, responsive-layout, assistive-technology, cognitive, Māori-language, security-usability, and affected-user evaluation remain open. Structural checks are not complete accessibility conformance.\n\n${JSON.stringify({counts:{cards:108,tier0:1,tier1:3,tier2:4,tier3:100},manual_evaluation:'open_gap',complete_conformance:false},null,2)}\n\n${boundary}`);
+module(10,'Retained failures and Method Flow',`The cumulative owner/source Method Flow contains 96 methods and 1,982 witnesses: 1,463 bounded passes and 519 retained failures. The successor-visible negative lineage is 1,953. Six final-stage operational failures remain failures with zero success credit; exact inventories, syntax-only compilation, one minimal syntax repair, exact-schema validator correction, and an explicit privacy-predicate correction enabled narrow recoveries without changing immutable stages or consuming the canonical latch. A recovered method never erases or promotes its failed witness.\n\n${failures.map((f,i)=>`### ${f.id}\n\nFailure: ${f.failure}\n\nEffect: ${f.effect}\n\nRecovery: ${recoveries[i].recovery}\n\nOriginal success credit: zero. Original failure erased: false.`).join('\n\n')}\n\n${JSON.stringify(finalMethods.cumulative,null,2)}\n\n${boundary}`);
+module(11,'Sources claim ceilings and authority reservations',`Dung's foundational abstract-argumentation work supplies attack, defense, acceptability, and extension-semantics vocabulary. The author-hosted paper supplied primary recovery after the publisher page rejected direct access. TU Dresden's ICCMA material supplies reasoning-task and multiple-semantics vocabulary. W3C PROV-O supplies provenance vocabulary. WCAG 2.2 supplies structural accessibility vocabulary. RFC 8259 supplies JSON vocabulary. Node documentation preserves the non-sandbox boundary for vm.Script. Citations are not observations, participant evidence, benchmark results, endorsements, conformance certificates, or delegated authority.\n\n${JSON.stringify(research,null,2)}\n\n${boundary}`);
+module(12,'Final manifests privacy and canonical gate',`The final stage creates a raw Git-blob manifest, complete owner manifest, exact staged allowlist, and content seal with explicit self-referential exclusions. Planning, x1, and x2 manifests remain validated at their immutable commit contexts. Five privacy classes cover UUID-shaped values, private absolute paths, credentials, raw task-route identifiers, and email addresses. Bounded zero confirmed hits are required but do not establish complete privacy.\n\nThe one-shot canonical may run only after the final is committed, pushed, clean, typed 0/0, and fresh-four-way-equal. The external attempt marker is written before checks. A successful invocation is never replayed. It runs only Caelen owner tests and exact owner-source-to-final delta checks, never the full repository suite, and remains same-owner evidence.\n\n${boundary}`);
+module(13,'Terminal route to Orren Pike',`At repository freeze the route is PREPARED_NOT_SENT. Only after one successful non-replayed canonical may Caelen refresh Hamish's newest live authority and usage, list the bounded active registry and fully paginate archived tasks, require exactly one eligible exact-title Orren Pike existing main task, and immediately reread its newest guards with outputs enabled. Before any submission acceptance, service failures require at least five bounded list/read recovery attempts before a truthful hold. A definitive preacceptance rejection permits at most three corrected submissions. Accepted, opaque, or unresolved submission stops all copies. No task creation, fork, subagent, substitute, model override, precontact, second confirmation, or post-send monitoring is authorized. Orren must do their own v693-v6 lifecycle; delivery is not phase completion.\n\n${JSON.stringify(read('final/routing-packet.json'),null,2)}\n\n${boundary}`);
+const baton=`# Caelen Ash v693-v5 final hand-off baton\n\n${modules.join('\n')}\nThis is the literal end of the thirteen-module Caelen Ash v693-v5 baton.\n`;
+const batonWords=words(baton);
+if(batonWords<10000||batonWords>100000)throw new Error('BATON_WORD_RANGE:'+batonWords);
+write('hand-off-baton.md',baton);
+write('baton-index.json',{modules:13,words:batonWords,bytes:Buffer.byteLength(baton),sha256:sha(Buffer.from(baton)),literal_eof:'This is the literal end of the thirteen-module Caelen Ash v693-v5 baton.',source:SOURCE,planning:PLANNING,x1:X1,x2:X2,boundary});
+write('compact-handoff.md',`# Caelen Ash v693-v5 compact successor pointer
+
+Read \`docs/caelen-ash/v693-v5/final/hand-off-baton.md\` completely through its literal EOF. Then verify the exact final commit, manifests, content seal, external canonical receipt, current v8 profile and roster, and live route guards. This compact pointer is not delivery evidence and does not authorize a send by itself.
+
+${boundary}
+`);
+
+const ownerFiles=fs.readdirSync(owner,{recursive:true}).filter(rel=>fs.statSync(path.join(owner,rel)).isFile()).length;
+process.stdout.write(JSON.stringify({status:'FINAL_CONTENT_ASSEMBLED',head,files_before_controls:fs.readdirSync(out,{recursive:true}).filter(rel=>fs.statSync(path.join(out,rel)).isFile()).length,owner_files_before_controls:ownerFiles,overview_words:words(overview),baton_words:batonWords,baton_bytes:Buffer.byteLength(baton),baton_sha256:sha(Buffer.from(baton)),deck_cards:cards.length,outcomes,methodflow:finalMethods.cumulative,route:'PREPARED_NOT_SENT'},null,2)+'\n');

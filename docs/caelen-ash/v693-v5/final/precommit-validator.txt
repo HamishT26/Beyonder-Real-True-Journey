@@ -1,0 +1,98 @@
+'use strict';
+const fs=require('node:fs');
+const path=require('node:path');
+const crypto=require('node:crypto');
+const cp=require('node:child_process');
+const vm=require('node:vm');
+const root=path.resolve(__dirname,'..','..','..','..');
+const owner=path.join(root,'docs','caelen-ash','v693-v5');
+const out=path.join(owner,'final');
+const SOURCE='178706b10a78d648dfbbe242ee4b391474118101';
+const PLANNING='eea1083e847a8904704d2d9a106c2240ab6a16a0';
+const X1='ca712a33accde2051016b28aae8d92752fedc494';
+const X2='a63e8265155caaea84b2bd634192000a6a5288f8';
+const BRANCH='codex/GHC-Family/caelen-ash-v693-v5-full-tools';
+const staged=process.argv.includes('--staged');
+const checks=[];const errors=[];
+function check(name,pass,detail=null){const row={name,pass:Boolean(pass),detail};checks.push(row);if(!row.pass)errors.push(row);}
+const sha=b=>crypto.createHash('sha256').update(b).digest('hex');
+function git(args,buffer=false){const run=cp.spawnSync('git',['-C',root,...args],{encoding:buffer?null:'utf8',maxBuffer:256*1024*1024});if(run.status!==0)throw new Error(`git ${args.join(' ')} failed: ${String(run.stderr)}`);return run.stdout;}
+function walk(dir){const rows=[];for(const entry of fs.readdirSync(dir,{withFileTypes:true}).sort((a,b)=>a.name.localeCompare(b.name))){const full=path.join(dir,entry.name);if(entry.isDirectory())rows.push(...walk(full));else rows.push(full);}return rows;}
+function runJson(file){const run=cp.spawnSync(process.execPath,[path.join(out,file)],{encoding:'utf8',maxBuffer:256*1024*1024});let parsed=null;try{parsed=JSON.parse(run.stdout);}catch{}return {run,parsed};}
+function replayStage(commit,manifestPath,expected){const manifest=JSON.parse(git(['show',`${commit}:docs/caelen-ash/v693-v5/${manifestPath}`]));const failures=[];for(const entry of manifest.bindings){const bytes=git(['show',`${commit}:docs/caelen-ash/v693-v5/${entry.path}`],true);if(bytes.length!==entry.bytes||sha(bytes)!==entry.sha256)failures.push(entry.path);}return {manifest,count:manifest.bindings.length,failures,valid:manifest.bindings.length===expected&&failures.length===0};}
+
+const head=git(['rev-parse','HEAD']).trim();
+check('exact x2 head',head===X2,head);
+check('exact branch',git(['branch','--show-current']).trim()===BRANCH);
+check('x2 parent x1',git(['rev-parse',`${X2}^`]).trim()===X1);
+check('x1 parent planning',git(['rev-parse',`${X1}^`]).trim()===PLANNING);
+check('planning parent source',git(['rev-parse',`${PLANNING}^`]).trim()===SOURCE);
+check('three commits before final',git(['rev-list','--count',`${SOURCE}..${X2}`]).trim()==='3');
+check('zero merges before final',git(['rev-list','--merges','--count',`${SOURCE}..${X2}`]).trim()==='0');
+check('immutable plan working',git(['diff','--name-only','--','docs/caelen-ash/v693-v5/plan']).trim()==='');
+check('immutable x1 working',git(['diff','--name-only','--','docs/caelen-ash/v693-v5/x1']).trim()==='');
+check('immutable x2 working',git(['diff','--name-only','--','docs/caelen-ash/v693-v5/x2']).trim()==='');
+
+const planReplay=replayStage(PLANNING,'plan/manifest.json',30),x1Replay=replayStage(X1,'x1/manifest.json',42),x2Replay=replayStage(X2,'x2/manifest.json',59);
+check('planning raw manifest',planReplay.valid,planReplay.failures.join(','));
+check('x1 raw manifest',x1Replay.valid,x1Replay.failures.join(','));
+check('x2 raw manifest',x2Replay.valid,x2Replay.failures.join(','));
+
+const finalManifest=JSON.parse(fs.readFileSync(path.join(out,'manifest.json'),'utf8'));
+const ownerManifest=JSON.parse(fs.readFileSync(path.join(out,'owner-manifest.json'),'utf8'));
+const allowlist=JSON.parse(fs.readFileSync(path.join(out,'staged-allowlist.json'),'utf8'));
+const seal=JSON.parse(fs.readFileSync(path.join(out,'content-seal.json'),'utf8'));
+const finalFailures=[];for(const entry of finalManifest.bindings){const bytes=fs.readFileSync(path.join(out,...entry.path.split('/')));if(bytes.length!==entry.bytes||sha(bytes)!==entry.sha256)finalFailures.push(entry.path);}
+check('final manifest bindings',finalFailures.length===0&&finalManifest.bindings.length+finalManifest.exclusions.length===finalManifest.total_paths,finalFailures.join(','));
+check('final exclusions',JSON.stringify(finalManifest.exclusions.map(row=>row.path).sort())===JSON.stringify(['content-seal.json','manifest.json','owner-manifest.json','staged-allowlist.json']));
+const ownerFailures=[];for(const entry of ownerManifest.bindings){const bytes=fs.readFileSync(path.join(owner,...entry.path.split('/')));if(bytes.length!==entry.bytes||sha(bytes)!==entry.sha256)ownerFailures.push(entry.path);}
+check('owner manifest bindings',ownerFailures.length===0&&ownerManifest.bindings.length+ownerManifest.exclusions.length===ownerManifest.total_paths,ownerFailures.join(','));
+check('owner exclusions',JSON.stringify(ownerManifest.exclusions.map(row=>row.path).sort())===JSON.stringify(['final/content-seal.json','final/owner-manifest.json','final/staged-allowlist.json']));
+const sealFailures=[];for(const entry of seal.bindings){const bytes=fs.readFileSync(path.join(out,...entry.path.split('/')));if(bytes.length!==entry.bytes||sha(bytes)!==entry.sha256)sealFailures.push(entry.path);}
+check('content seal',sealFailures.length===0&&seal.count===7,sealFailures.join(','));
+
+const ownerFiles=walk(owner),finalFiles=walk(out);
+check('owner file ceiling',ownerFiles.length<2000,String(ownerFiles.length));
+check('allowlist count',allowlist.count===finalFiles.length&&allowlist.paths.length===finalFiles.length,`${allowlist.count}/${finalFiles.length}`);
+check('allowlist exact paths',JSON.stringify(allowlist.paths)===JSON.stringify(finalFiles.map(file=>'docs/caelen-ash/v693-v5/final/'+path.relative(out,file).replaceAll('\\','/')).sort()));
+check('allowed extensions',ownerFiles.every(file=>['.json','.md','.txt','.html','.tex'].includes(path.extname(file))),ownerFiles.filter(file=>!['.json','.md','.txt','.html','.tex'].includes(path.extname(file))).join(','));
+
+const jsonErrors=[],compileErrors=[];for(const file of ownerFiles){if(path.extname(file)==='.json'){try{JSON.parse(fs.readFileSync(file,'utf8'));}catch(error){jsonErrors.push(path.relative(owner,file)+':'+error.message);}}if(path.extname(file)==='.txt'){try{new vm.Script(fs.readFileSync(file,'utf8'),{filename:path.basename(file)});}catch(error){compileErrors.push(path.relative(owner,file)+':'+error.message);}}}
+check('strict owner JSON',jsonErrors.length===0,jsonErrors.join(';'));
+check('trusted TXT compiles',compileErrors.length===0,compileErrors.join(';'));
+
+const hasPrivatePath=text=>/[A-Z]:\\(?:Users|GHC-Archives)\\/i.test(text)||/\/(?:Users|home)\//.test(text);
+const uuidPattern=/\b[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}\b/i;
+const credentialPattern=new RegExp('(?:BEGIN (?:RSA |EC |OPENSSH )?PRIVATE KEY|'+['ghp','[A-Za-z0-9]{20,}'].join('_')+'|'+['sk','[A-Za-z0-9]{20,}'].join('-')+')');
+const routePattern=new RegExp([['source','thread','id'].join('_'),['provider','Tab','Id'].join(''),['client','Thread','Id'].join(''),['thread','Id'].join('')+'\\s*[=:]'].join('|'));
+const emailPattern=/\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}\b/i;
+const privacy={uuid:[],private_paths:[],credentials:[],route_ids:[],emails:[]};
+for(const file of ownerFiles){const text=fs.readFileSync(file,'utf8'),rel=path.relative(owner,file).replaceAll('\\','/');if(uuidPattern.test(text))privacy.uuid.push(rel);if(hasPrivatePath(text))privacy.private_paths.push(rel);if(credentialPattern.test(text))privacy.credentials.push(rel);if(routePattern.test(text))privacy.route_ids.push(rel);if(emailPattern.test(text))privacy.emails.push(rel);}
+check('privacy UUID zero',privacy.uuid.length===0,privacy.uuid.join(','));
+check('privacy private path zero',privacy.private_paths.length===0,privacy.private_paths.join(','));
+check('privacy credential zero',privacy.credentials.length===0,privacy.credentials.join(','));
+check('privacy route id zero',privacy.route_ids.length===0,privacy.route_ids.join(','));
+check('privacy email zero',privacy.emails.length===0,privacy.emails.join(','));
+
+const batonText=fs.readFileSync(path.join(out,'hand-off-baton.md'),'utf8'),batonIndex=JSON.parse(fs.readFileSync(path.join(out,'baton-index.json'),'utf8')),overviewText=fs.readFileSync(path.join(out,'overview.md'),'utf8');
+const batonWords=batonText.trim().split(/\s+/).length,overviewWords=overviewText.trim().split(/\s+/).length;
+check('baton hash',sha(Buffer.from(batonText))===batonIndex.sha256&&Buffer.byteLength(batonText)===batonIndex.bytes);
+check('baton word range',batonWords===batonIndex.words&&batonWords>=10000&&batonWords<=100000,String(batonWords));
+check('baton literal EOF',batonText.endsWith('This is the literal end of the thirteen-module Caelen Ash v693-v5 baton.\n'));
+check('overview word floor',overviewWords>=1500&&overviewWords<=100000,String(overviewWords));
+check('HTML local',!/(?:src|href)=["']https?:/i.test(fs.readFileSync(path.join(out,'overview.html'),'utf8')));
+
+for(const file of ['owner-tests.txt','detailed-validator.txt','minimal-validator.txt']){const result=runJson(file);check(file+' exit',result.run.status===0,result.run.stderr);check(file+' valid',result.parsed&&result.parsed.valid===true,result.run.stdout.slice(0,500));}
+const status=git(['status','--porcelain=v1','--untracked-files=all']).trim().split(/\r?\n/).filter(Boolean);
+check('only final changes',status.every(row=>row.slice(3).startsWith('docs/caelen-ash/v693-v5/final/')),status.join('|'));
+if(staged){
+  const stagedPaths=git(['diff','--cached','--name-only','--diff-filter=ACMR']).trim().split(/\r?\n/).filter(Boolean).sort();
+  check('staged exact allowlist',JSON.stringify(stagedPaths)===JSON.stringify(allowlist.paths),`${stagedPaths.length}/${allowlist.paths.length}`);
+  const unstaged=git(['diff','--name-only']).trim().split(/\r?\n/).filter(Boolean);
+  check('no unstaged changes',unstaged.length===0,unstaged.join(','));
+  const mismatches=[];for(const repoPath of stagedPaths){const working=fs.readFileSync(path.join(root,...repoPath.split('/'))),index=git(['show',`:${repoPath}`],true);if(!working.equals(index))mismatches.push(repoPath);}
+  check('staged bytes equal working',mismatches.length===0,mismatches.join(','));
+  check('staged diff hygiene',git(['diff','--cached','--check']).trim()==='');
+}
+const result={schema:'ghc.family.precommit-validation.v1',owner:'Caelen Ash',phase:'v693-v5',mode:staged?'staged':'working',valid:errors.length===0,checks_total:checks.length,checks_passed:checks.length-errors.length,checks_failed:errors.length,manifest_bindings:{planning:planReplay.count,x1:x1Replay.count,x2:x2Replay.count,final:finalManifest.bindings.length,owner:ownerManifest.bindings.length,seal:seal.bindings.length},files:{owner:ownerFiles.length,final:finalFiles.length,json:ownerFiles.filter(file=>path.extname(file)==='.json').length,txt:ownerFiles.filter(file=>path.extname(file)==='.txt').length},privacy_candidates:Object.fromEntries(Object.entries(privacy).map(([key,value])=>[key,value.length])),owner_tests:runJson('owner-tests.txt').parsed?.tests_total||0,detailed_checks:runJson('detailed-validator.txt').parsed?.checks_total||0,minimal_checks:runJson('minimal-validator.txt').parsed?.checks_total||0,errors,checks};
+process.stdout.write(JSON.stringify(result,null,2)+'\n');if(!result.valid)process.exitCode=1;

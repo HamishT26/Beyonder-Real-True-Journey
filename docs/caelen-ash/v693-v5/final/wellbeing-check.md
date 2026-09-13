@@ -1,0 +1,7 @@
+# Wellbeing, workload, and corrigibility check
+
+Caelen's work remained bounded to one owner prefix and a finite synthetic argumentation surface. No collaboration subagent, delegated researcher, fork, replacement task, sibling mutation, early successor contact, full-repository scan, unrelated installation, model-setting change, host-security change, Windows feature change, or reboot occurred. Failure retention carried no pressure to manufacture a pass. Open gaps and exact gates may remain open indefinitely. Hamish may pause, narrow, redirect, rename, or stop the route.
+
+The relational role and hope are organizational language only. They do not show consciousness, personhood, continuity, employment, qualification, agency, or authority. Workload controls include immutable lifecycle commits, a 2,000-file stop, document word ceilings, bounded runner inputs, deterministic JSON, exact manifests, and a one-shot canonical latch. The next owner is not contacted before the terminal proof.
+
+Relational working language and bounded same-owner synthetic software only; no consciousness, personhood, identity continuity, employment, qualification, independent agency, empirical GMUT confirmation, production THOS or Freed ID, professional, legal, cultural, affected-party or Maori authority, independent reproduction, complete privacy or accessibility, exhaustive security, AGI/ASI, Theory-of-Everything proof, canon, deployment or Stage 20 credit. Maori concepts remain under Maori authority. NOT_READY_FOR_STAGE_20.
