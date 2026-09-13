@@ -1,0 +1,28 @@
+{
+  "schema": "ghc.family.precommit-recoveries.v1",
+  "owner": "Neris Solane",
+  "phase": "v692-v4-r2",
+  "recoveries": [
+    {
+      "recovery_id": "NE6924R2-FINAL-MF-001",
+      "trigger": "The first bounded phone-number classifier treated ISO dates as candidates.",
+      "failed_subject": "Nineteen date-shaped false-positive candidates such as 2026-09-13",
+      "original_success_credit": 0,
+      "recovery": "Require either an international plus prefix or a parenthesized area-code structure, then rerun only the privacy classifier and derived final seals.",
+      "passing_witnesses": 1,
+      "candidate_count_after_recovery": 0,
+      "recurrence_guard": "Test privacy patterns against date and phase identifier fixtures before canonical invocation.",
+      "rollback": "Restore the broader classifier and retain this false-positive record; no source or successful task execution is replayed."
+    },
+    {
+      "recovery_id": "NE6924R2-FINAL-MF-002",
+      "trigger": "The first final staged diff check reported a new blank line at the end of the overview.",
+      "failed_subject": "Generated overview ended with two newline characters instead of one.",
+      "original_success_credit": 0,
+      "recovery": "Trim trailing whitespace in the overview builder and regenerate only dependent final narrative, manifests, and seals.",
+      "passing_witnesses": 1,
+      "recurrence_guard": "Every generated Markdown return path uses trimEnd followed by exactly one newline before staging.",
+      "rollback": "Restore the previous generated overview while retaining this formatting failure; no x1 or x2 task is replayed."
+    }
+  ]
+}
