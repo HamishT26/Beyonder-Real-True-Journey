@@ -1,0 +1,2735 @@
+{
+  "stage": "x1",
+  "records": [
+    {
+      "id": "SR6934-P001",
+      "op": "vector_clock_compare",
+      "request": {
+        "op": "vector_clock_compare",
+        "record": {
+          "left": {},
+          "right": {}
+        },
+        "args": {}
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "relation": "equal",
+          "actors": [],
+          "incomparable": false
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "actual": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "relation": "equal",
+          "actors": [],
+          "incomparable": false
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "envelope_pass": true,
+      "source_pass": true,
+      "result": "pass"
+    },
+    {
+      "id": "SR6934-P002",
+      "op": "vector_clock_compare",
+      "request": {
+        "op": "vector_clock_compare",
+        "record": {
+          "left": {
+            "a": 2
+          },
+          "right": {
+            "a": 1
+          }
+        },
+        "args": {}
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "relation": "after",
+          "actors": [
+            "a"
+          ],
+          "incomparable": false
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "actual": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "relation": "after",
+          "actors": [
+            "a"
+          ],
+          "incomparable": false
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "envelope_pass": true,
+      "source_pass": true,
+      "result": "pass"
+    },
+    {
+      "id": "SR6934-P003",
+      "op": "vector_clock_compare",
+      "request": {
+        "op": "vector_clock_compare",
+        "record": {
+          "left": {
+            "a": 1,
+            "b": 0
+          },
+          "right": {
+            "a": 1,
+            "b": 2
+          }
+        },
+        "args": {}
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "relation": "before",
+          "actors": [
+            "a",
+            "b"
+          ],
+          "incomparable": false
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "actual": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "relation": "before",
+          "actors": [
+            "a",
+            "b"
+          ],
+          "incomparable": false
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "envelope_pass": true,
+      "source_pass": true,
+      "result": "pass"
+    },
+    {
+      "id": "SR6934-P004",
+      "op": "vector_clock_compare",
+      "request": {
+        "op": "vector_clock_compare",
+        "record": {
+          "left": {
+            "a": 2,
+            "b": 1
+          },
+          "right": {
+            "a": 1,
+            "b": 2
+          }
+        },
+        "args": {}
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "relation": "concurrent",
+          "actors": [
+            "a",
+            "b"
+          ],
+          "incomparable": true
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "actual": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "relation": "concurrent",
+          "actors": [
+            "a",
+            "b"
+          ],
+          "incomparable": true
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "envelope_pass": true,
+      "source_pass": true,
+      "result": "pass"
+    },
+    {
+      "id": "SR6934-P005",
+      "op": "vector_clock_compare",
+      "request": {
+        "op": "vector_clock_compare",
+        "record": {
+          "left": {
+            "a": 1
+          },
+          "right": {
+            "a": 1,
+            "b": 1
+          }
+        },
+        "args": {}
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "relation": "before",
+          "actors": [
+            "a",
+            "b"
+          ],
+          "incomparable": false
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "actual": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "relation": "before",
+          "actors": [
+            "a",
+            "b"
+          ],
+          "incomparable": false
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "envelope_pass": true,
+      "source_pass": true,
+      "result": "pass"
+    },
+    {
+      "id": "SR6934-P006",
+      "op": "vector_clock_join",
+      "request": {
+        "op": "vector_clock_join",
+        "record": {
+          "clocks": [
+            {},
+            {}
+          ]
+        },
+        "args": {}
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "clock": {},
+          "actors": [],
+          "input_count": 2,
+          "dominates_all": true
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "actual": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "clock": {},
+          "actors": [],
+          "input_count": 2,
+          "dominates_all": true
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "envelope_pass": true,
+      "source_pass": true,
+      "result": "pass"
+    },
+    {
+      "id": "SR6934-P007",
+      "op": "vector_clock_join",
+      "request": {
+        "op": "vector_clock_join",
+        "record": {
+          "clocks": [
+            {
+              "a": 1
+            },
+            {
+              "b": 2
+            }
+          ]
+        },
+        "args": {}
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "clock": {
+            "a": 1,
+            "b": 2
+          },
+          "actors": [
+            "a",
+            "b"
+          ],
+          "input_count": 2,
+          "dominates_all": true
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "actual": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "clock": {
+            "a": 1,
+            "b": 2
+          },
+          "actors": [
+            "a",
+            "b"
+          ],
+          "input_count": 2,
+          "dominates_all": true
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "envelope_pass": true,
+      "source_pass": true,
+      "result": "pass"
+    },
+    {
+      "id": "SR6934-P008",
+      "op": "vector_clock_join",
+      "request": {
+        "op": "vector_clock_join",
+        "record": {
+          "clocks": [
+            {
+              "a": 3,
+              "b": 1
+            },
+            {
+              "a": 2,
+              "b": 4
+            }
+          ]
+        },
+        "args": {}
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "clock": {
+            "a": 3,
+            "b": 4
+          },
+          "actors": [
+            "a",
+            "b"
+          ],
+          "input_count": 2,
+          "dominates_all": true
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "actual": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "clock": {
+            "a": 3,
+            "b": 4
+          },
+          "actors": [
+            "a",
+            "b"
+          ],
+          "input_count": 2,
+          "dominates_all": true
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "envelope_pass": true,
+      "source_pass": true,
+      "result": "pass"
+    },
+    {
+      "id": "SR6934-P009",
+      "op": "vector_clock_join",
+      "request": {
+        "op": "vector_clock_join",
+        "record": {
+          "clocks": [
+            {
+              "a": 2
+            },
+            {
+              "a": 2
+            },
+            {
+              "a": 2
+            }
+          ]
+        },
+        "args": {}
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "clock": {
+            "a": 2
+          },
+          "actors": [
+            "a"
+          ],
+          "input_count": 3,
+          "dominates_all": true
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "actual": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "clock": {
+            "a": 2
+          },
+          "actors": [
+            "a"
+          ],
+          "input_count": 3,
+          "dominates_all": true
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "envelope_pass": true,
+      "source_pass": true,
+      "result": "pass"
+    },
+    {
+      "id": "SR6934-P010",
+      "op": "vector_clock_join",
+      "request": {
+        "op": "vector_clock_join",
+        "record": {
+          "clocks": [
+            {
+              "a": 0,
+              "b": 1
+            },
+            {
+              "a": 2,
+              "b": 0
+            }
+          ]
+        },
+        "args": {}
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "clock": {
+            "a": 2,
+            "b": 1
+          },
+          "actors": [
+            "a",
+            "b"
+          ],
+          "input_count": 2,
+          "dominates_all": true
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "actual": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "clock": {
+            "a": 2,
+            "b": 1
+          },
+          "actors": [
+            "a",
+            "b"
+          ],
+          "input_count": 2,
+          "dominates_all": true
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "envelope_pass": true,
+      "source_pass": true,
+      "result": "pass"
+    },
+    {
+      "id": "SR6934-P011",
+      "op": "dotted_event_validation",
+      "request": {
+        "op": "dotted_event_validation",
+        "record": {
+          "context": {},
+          "dot": {
+            "actor": "a",
+            "counter": 1
+          }
+        },
+        "args": {}
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "accepted": true,
+          "reason": null,
+          "next_clock": {
+            "a": 1
+          },
+          "source_preserved": true
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "actual": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "accepted": true,
+          "reason": null,
+          "next_clock": {
+            "a": 1
+          },
+          "source_preserved": true
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "envelope_pass": true,
+      "source_pass": true,
+      "result": "pass"
+    },
+    {
+      "id": "SR6934-P012",
+      "op": "dotted_event_validation",
+      "request": {
+        "op": "dotted_event_validation",
+        "record": {
+          "context": {
+            "a": 2,
+            "b": 1
+          },
+          "dot": {
+            "actor": "a",
+            "counter": 3
+          }
+        },
+        "args": {}
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "accepted": true,
+          "reason": null,
+          "next_clock": {
+            "a": 3,
+            "b": 1
+          },
+          "source_preserved": true
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "actual": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "accepted": true,
+          "reason": null,
+          "next_clock": {
+            "a": 3,
+            "b": 1
+          },
+          "source_preserved": true
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "envelope_pass": true,
+      "source_pass": true,
+      "result": "pass"
+    },
+    {
+      "id": "SR6934-P013",
+      "op": "dotted_event_validation",
+      "request": {
+        "op": "dotted_event_validation",
+        "record": {
+          "context": {
+            "a": 2
+          },
+          "dot": {
+            "actor": "a",
+            "counter": 2
+          }
+        },
+        "args": {}
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "accepted": false,
+          "reason": "DOT_NOT_NEXT",
+          "next_clock": {
+            "a": 2
+          },
+          "source_preserved": true
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "actual": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "accepted": false,
+          "reason": "DOT_NOT_NEXT",
+          "next_clock": {
+            "a": 2
+          },
+          "source_preserved": true
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "envelope_pass": true,
+      "source_pass": true,
+      "result": "pass"
+    },
+    {
+      "id": "SR6934-P014",
+      "op": "dotted_event_validation",
+      "request": {
+        "op": "dotted_event_validation",
+        "record": {
+          "context": {
+            "a": 2
+          },
+          "dot": {
+            "actor": "a",
+            "counter": 4
+          }
+        },
+        "args": {}
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "accepted": false,
+          "reason": "DOT_NOT_NEXT",
+          "next_clock": {
+            "a": 2
+          },
+          "source_preserved": true
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "actual": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "accepted": false,
+          "reason": "DOT_NOT_NEXT",
+          "next_clock": {
+            "a": 2
+          },
+          "source_preserved": true
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "envelope_pass": true,
+      "source_pass": true,
+      "result": "pass"
+    },
+    {
+      "id": "SR6934-P015",
+      "op": "dotted_event_validation",
+      "request": {
+        "op": "dotted_event_validation",
+        "record": {
+          "context": {
+            "a": 0,
+            "b": 5
+          },
+          "dot": {
+            "actor": "a",
+            "counter": 1
+          }
+        },
+        "args": {}
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "accepted": true,
+          "reason": null,
+          "next_clock": {
+            "a": 1,
+            "b": 5
+          },
+          "source_preserved": true
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "actual": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "accepted": true,
+          "reason": null,
+          "next_clock": {
+            "a": 1,
+            "b": 5
+          },
+          "source_preserved": true
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "envelope_pass": true,
+      "source_pass": true,
+      "result": "pass"
+    },
+    {
+      "id": "SR6934-P016",
+      "op": "causal_dependency_closure",
+      "request": {
+        "op": "causal_dependency_closure",
+        "record": {
+          "events": []
+        },
+        "args": {}
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "closed": true,
+          "order": [],
+          "missing": [],
+          "cycle_members": []
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "actual": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "closed": true,
+          "order": [],
+          "missing": [],
+          "cycle_members": []
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "envelope_pass": true,
+      "source_pass": true,
+      "result": "pass"
+    },
+    {
+      "id": "SR6934-P017",
+      "op": "causal_dependency_closure",
+      "request": {
+        "op": "causal_dependency_closure",
+        "record": {
+          "events": [
+            {
+              "id": "a",
+              "deps": []
+            }
+          ]
+        },
+        "args": {}
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "closed": true,
+          "order": [
+            "a"
+          ],
+          "missing": [],
+          "cycle_members": []
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "actual": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "closed": true,
+          "order": [
+            "a"
+          ],
+          "missing": [],
+          "cycle_members": []
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "envelope_pass": true,
+      "source_pass": true,
+      "result": "pass"
+    },
+    {
+      "id": "SR6934-P018",
+      "op": "causal_dependency_closure",
+      "request": {
+        "op": "causal_dependency_closure",
+        "record": {
+          "events": [
+            {
+              "id": "c",
+              "deps": [
+                "b"
+              ]
+            },
+            {
+              "id": "a",
+              "deps": []
+            },
+            {
+              "id": "b",
+              "deps": [
+                "a"
+              ]
+            }
+          ]
+        },
+        "args": {}
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "closed": true,
+          "order": [
+            "a",
+            "b",
+            "c"
+          ],
+          "missing": [],
+          "cycle_members": []
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "actual": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "closed": true,
+          "order": [
+            "a",
+            "b",
+            "c"
+          ],
+          "missing": [],
+          "cycle_members": []
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "envelope_pass": true,
+      "source_pass": true,
+      "result": "pass"
+    },
+    {
+      "id": "SR6934-P019",
+      "op": "causal_dependency_closure",
+      "request": {
+        "op": "causal_dependency_closure",
+        "record": {
+          "events": [
+            {
+              "id": "b",
+              "deps": [
+                "a"
+              ]
+            }
+          ]
+        },
+        "args": {}
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "closed": false,
+          "order": [],
+          "missing": [
+            "a"
+          ],
+          "cycle_members": []
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "actual": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "closed": false,
+          "order": [],
+          "missing": [
+            "a"
+          ],
+          "cycle_members": []
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "envelope_pass": true,
+      "source_pass": true,
+      "result": "pass"
+    },
+    {
+      "id": "SR6934-P020",
+      "op": "causal_dependency_closure",
+      "request": {
+        "op": "causal_dependency_closure",
+        "record": {
+          "events": [
+            {
+              "id": "a",
+              "deps": [
+                "b"
+              ]
+            },
+            {
+              "id": "b",
+              "deps": [
+                "a"
+              ]
+            }
+          ]
+        },
+        "args": {}
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "closed": false,
+          "order": [],
+          "missing": [],
+          "cycle_members": [
+            "a",
+            "b"
+          ]
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "actual": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "closed": false,
+          "order": [],
+          "missing": [],
+          "cycle_members": [
+            "a",
+            "b"
+          ]
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "envelope_pass": true,
+      "source_pass": true,
+      "result": "pass"
+    },
+    {
+      "id": "SR6934-P021",
+      "op": "replica_observation_matrix",
+      "request": {
+        "op": "replica_observation_matrix",
+        "record": {
+          "replicas": {
+            "a": {},
+            "b": {}
+          }
+        },
+        "args": {}
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "replicas": [
+            "a",
+            "b"
+          ],
+          "keys": [],
+          "unanimous": [],
+          "divergent": [],
+          "missing": []
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "actual": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "replicas": [
+            "a",
+            "b"
+          ],
+          "keys": [],
+          "unanimous": [],
+          "divergent": [],
+          "missing": []
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "envelope_pass": true,
+      "source_pass": true,
+      "result": "pass"
+    },
+    {
+      "id": "SR6934-P022",
+      "op": "replica_observation_matrix",
+      "request": {
+        "op": "replica_observation_matrix",
+        "record": {
+          "replicas": {
+            "a": {
+              "k": 1
+            },
+            "b": {
+              "k": 1
+            }
+          }
+        },
+        "args": {}
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "replicas": [
+            "a",
+            "b"
+          ],
+          "keys": [
+            "k"
+          ],
+          "unanimous": [
+            "k"
+          ],
+          "divergent": [],
+          "missing": []
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "actual": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "replicas": [
+            "a",
+            "b"
+          ],
+          "keys": [
+            "k"
+          ],
+          "unanimous": [
+            "k"
+          ],
+          "divergent": [],
+          "missing": []
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "envelope_pass": true,
+      "source_pass": true,
+      "result": "pass"
+    },
+    {
+      "id": "SR6934-P023",
+      "op": "replica_observation_matrix",
+      "request": {
+        "op": "replica_observation_matrix",
+        "record": {
+          "replicas": {
+            "a": {
+              "k": 1
+            },
+            "b": {
+              "k": 2
+            }
+          }
+        },
+        "args": {}
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "replicas": [
+            "a",
+            "b"
+          ],
+          "keys": [
+            "k"
+          ],
+          "unanimous": [],
+          "divergent": [
+            "k"
+          ],
+          "missing": []
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "actual": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "replicas": [
+            "a",
+            "b"
+          ],
+          "keys": [
+            "k"
+          ],
+          "unanimous": [],
+          "divergent": [
+            "k"
+          ],
+          "missing": []
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "envelope_pass": true,
+      "source_pass": true,
+      "result": "pass"
+    },
+    {
+      "id": "SR6934-P024",
+      "op": "replica_observation_matrix",
+      "request": {
+        "op": "replica_observation_matrix",
+        "record": {
+          "replicas": {
+            "a": {
+              "k": null
+            },
+            "b": {}
+          }
+        },
+        "args": {}
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "replicas": [
+            "a",
+            "b"
+          ],
+          "keys": [
+            "k"
+          ],
+          "unanimous": [],
+          "divergent": [
+            "k"
+          ],
+          "missing": [
+            {
+              "key": "k",
+              "replicas": [
+                "b"
+              ]
+            }
+          ]
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "actual": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "replicas": [
+            "a",
+            "b"
+          ],
+          "keys": [
+            "k"
+          ],
+          "unanimous": [],
+          "divergent": [
+            "k"
+          ],
+          "missing": [
+            {
+              "key": "k",
+              "replicas": [
+                "b"
+              ]
+            }
+          ]
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "envelope_pass": true,
+      "source_pass": true,
+      "result": "pass"
+    },
+    {
+      "id": "SR6934-P025",
+      "op": "replica_observation_matrix",
+      "request": {
+        "op": "replica_observation_matrix",
+        "record": {
+          "replicas": {
+            "a": {
+              "x": true,
+              "y": 1
+            },
+            "b": {
+              "x": true,
+              "y": 2
+            },
+            "c": {
+              "x": true
+            }
+          }
+        },
+        "args": {}
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "replicas": [
+            "a",
+            "b",
+            "c"
+          ],
+          "keys": [
+            "x",
+            "y"
+          ],
+          "unanimous": [
+            "x"
+          ],
+          "divergent": [
+            "y"
+          ],
+          "missing": [
+            {
+              "key": "y",
+              "replicas": [
+                "c"
+              ]
+            }
+          ]
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "actual": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "replicas": [
+            "a",
+            "b",
+            "c"
+          ],
+          "keys": [
+            "x",
+            "y"
+          ],
+          "unanimous": [
+            "x"
+          ],
+          "divergent": [
+            "y"
+          ],
+          "missing": [
+            {
+              "key": "y",
+              "replicas": [
+                "c"
+              ]
+            }
+          ]
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "envelope_pass": true,
+      "source_pass": true,
+      "result": "pass"
+    },
+    {
+      "id": "SR6934-P026",
+      "op": "quorum_intersection",
+      "request": {
+        "op": "quorum_intersection",
+        "record": {
+          "members": [
+            "a",
+            "b",
+            "c"
+          ],
+          "quorums": [
+            [
+              "a",
+              "b"
+            ],
+            [
+              "b",
+              "c"
+            ]
+          ]
+        },
+        "args": {}
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "valid": true,
+          "invalid_members": [],
+          "intersections": [
+            {
+              "left": 0,
+              "right": 1,
+              "members": [
+                "b"
+              ]
+            }
+          ],
+          "pairwise_intersect": true,
+          "authority": false
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "actual": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "valid": true,
+          "invalid_members": [],
+          "intersections": [
+            {
+              "left": 0,
+              "right": 1,
+              "members": [
+                "b"
+              ]
+            }
+          ],
+          "pairwise_intersect": true,
+          "authority": false
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "envelope_pass": true,
+      "source_pass": true,
+      "result": "pass"
+    },
+    {
+      "id": "SR6934-P027",
+      "op": "quorum_intersection",
+      "request": {
+        "op": "quorum_intersection",
+        "record": {
+          "members": [
+            "a",
+            "b",
+            "c",
+            "d"
+          ],
+          "quorums": [
+            [
+              "a",
+              "b"
+            ],
+            [
+              "c",
+              "d"
+            ]
+          ]
+        },
+        "args": {}
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "valid": true,
+          "invalid_members": [],
+          "intersections": [
+            {
+              "left": 0,
+              "right": 1,
+              "members": []
+            }
+          ],
+          "pairwise_intersect": false,
+          "authority": false
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "actual": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "valid": true,
+          "invalid_members": [],
+          "intersections": [
+            {
+              "left": 0,
+              "right": 1,
+              "members": []
+            }
+          ],
+          "pairwise_intersect": false,
+          "authority": false
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "envelope_pass": true,
+      "source_pass": true,
+      "result": "pass"
+    },
+    {
+      "id": "SR6934-P028",
+      "op": "quorum_intersection",
+      "request": {
+        "op": "quorum_intersection",
+        "record": {
+          "members": [
+            "a",
+            "b",
+            "c",
+            "d"
+          ],
+          "quorums": [
+            [
+              "a",
+              "b"
+            ],
+            [
+              "b",
+              "c"
+            ],
+            [
+              "b",
+              "d"
+            ]
+          ]
+        },
+        "args": {}
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "valid": true,
+          "invalid_members": [],
+          "intersections": [
+            {
+              "left": 0,
+              "right": 1,
+              "members": [
+                "b"
+              ]
+            },
+            {
+              "left": 0,
+              "right": 2,
+              "members": [
+                "b"
+              ]
+            },
+            {
+              "left": 1,
+              "right": 2,
+              "members": [
+                "b"
+              ]
+            }
+          ],
+          "pairwise_intersect": true,
+          "authority": false
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "actual": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "valid": true,
+          "invalid_members": [],
+          "intersections": [
+            {
+              "left": 0,
+              "right": 1,
+              "members": [
+                "b"
+              ]
+            },
+            {
+              "left": 0,
+              "right": 2,
+              "members": [
+                "b"
+              ]
+            },
+            {
+              "left": 1,
+              "right": 2,
+              "members": [
+                "b"
+              ]
+            }
+          ],
+          "pairwise_intersect": true,
+          "authority": false
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "envelope_pass": true,
+      "source_pass": true,
+      "result": "pass"
+    },
+    {
+      "id": "SR6934-P029",
+      "op": "quorum_intersection",
+      "request": {
+        "op": "quorum_intersection",
+        "record": {
+          "members": [
+            "a",
+            "b"
+          ],
+          "quorums": [
+            [
+              "a"
+            ],
+            [
+              "z"
+            ]
+          ]
+        },
+        "args": {}
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "valid": false,
+          "invalid_members": [
+            {
+              "quorum": 1,
+              "member": "z"
+            }
+          ],
+          "intersections": [
+            {
+              "left": 0,
+              "right": 1,
+              "members": []
+            }
+          ],
+          "pairwise_intersect": false,
+          "authority": false
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "actual": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "valid": false,
+          "invalid_members": [
+            {
+              "quorum": 1,
+              "member": "z"
+            }
+          ],
+          "intersections": [
+            {
+              "left": 0,
+              "right": 1,
+              "members": []
+            }
+          ],
+          "pairwise_intersect": false,
+          "authority": false
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "envelope_pass": true,
+      "source_pass": true,
+      "result": "pass"
+    },
+    {
+      "id": "SR6934-P030",
+      "op": "quorum_intersection",
+      "request": {
+        "op": "quorum_intersection",
+        "record": {
+          "members": [
+            "a",
+            "b"
+          ],
+          "quorums": [
+            [
+              "a"
+            ]
+          ]
+        },
+        "args": {}
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "valid": true,
+          "invalid_members": [],
+          "intersections": [],
+          "pairwise_intersect": true,
+          "authority": false
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "actual": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "valid": true,
+          "invalid_members": [],
+          "intersections": [],
+          "pairwise_intersect": true,
+          "authority": false
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "envelope_pass": true,
+      "source_pass": true,
+      "result": "pass"
+    },
+    {
+      "id": "SR6934-P031",
+      "op": "read_your_writes_check",
+      "request": {
+        "op": "read_your_writes_check",
+        "record": {
+          "write_clock": {},
+          "observed_clock": {}
+        },
+        "args": {}
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "satisfied": true,
+          "deficits": [],
+          "actors": [],
+          "empirical_latency": false
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "actual": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "satisfied": true,
+          "deficits": [],
+          "actors": [],
+          "empirical_latency": false
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "envelope_pass": true,
+      "source_pass": true,
+      "result": "pass"
+    },
+    {
+      "id": "SR6934-P032",
+      "op": "read_your_writes_check",
+      "request": {
+        "op": "read_your_writes_check",
+        "record": {
+          "write_clock": {
+            "a": 2
+          },
+          "observed_clock": {
+            "a": 2
+          }
+        },
+        "args": {}
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "satisfied": true,
+          "deficits": [],
+          "actors": [
+            "a"
+          ],
+          "empirical_latency": false
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "actual": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "satisfied": true,
+          "deficits": [],
+          "actors": [
+            "a"
+          ],
+          "empirical_latency": false
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "envelope_pass": true,
+      "source_pass": true,
+      "result": "pass"
+    },
+    {
+      "id": "SR6934-P033",
+      "op": "read_your_writes_check",
+      "request": {
+        "op": "read_your_writes_check",
+        "record": {
+          "write_clock": {
+            "a": 2
+          },
+          "observed_clock": {
+            "a": 3,
+            "b": 1
+          }
+        },
+        "args": {}
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "satisfied": true,
+          "deficits": [],
+          "actors": [
+            "a",
+            "b"
+          ],
+          "empirical_latency": false
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "actual": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "satisfied": true,
+          "deficits": [],
+          "actors": [
+            "a",
+            "b"
+          ],
+          "empirical_latency": false
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "envelope_pass": true,
+      "source_pass": true,
+      "result": "pass"
+    },
+    {
+      "id": "SR6934-P034",
+      "op": "read_your_writes_check",
+      "request": {
+        "op": "read_your_writes_check",
+        "record": {
+          "write_clock": {
+            "a": 2
+          },
+          "observed_clock": {
+            "a": 1
+          }
+        },
+        "args": {}
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "satisfied": false,
+          "deficits": [
+            {
+              "actor": "a",
+              "required": 2,
+              "observed": 1
+            }
+          ],
+          "actors": [
+            "a"
+          ],
+          "empirical_latency": false
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "actual": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "satisfied": false,
+          "deficits": [
+            {
+              "actor": "a",
+              "required": 2,
+              "observed": 1
+            }
+          ],
+          "actors": [
+            "a"
+          ],
+          "empirical_latency": false
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "envelope_pass": true,
+      "source_pass": true,
+      "result": "pass"
+    },
+    {
+      "id": "SR6934-P035",
+      "op": "read_your_writes_check",
+      "request": {
+        "op": "read_your_writes_check",
+        "record": {
+          "write_clock": {
+            "a": 1,
+            "b": 2
+          },
+          "observed_clock": {
+            "a": 1
+          }
+        },
+        "args": {}
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "satisfied": false,
+          "deficits": [
+            {
+              "actor": "b",
+              "required": 2,
+              "observed": 0
+            }
+          ],
+          "actors": [
+            "a",
+            "b"
+          ],
+          "empirical_latency": false
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "actual": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "satisfied": false,
+          "deficits": [
+            {
+              "actor": "b",
+              "required": 2,
+              "observed": 0
+            }
+          ],
+          "actors": [
+            "a",
+            "b"
+          ],
+          "empirical_latency": false
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "envelope_pass": true,
+      "source_pass": true,
+      "result": "pass"
+    },
+    {
+      "id": "SR6934-P036",
+      "op": "monotonic_reads_check",
+      "request": {
+        "op": "monotonic_reads_check",
+        "record": {
+          "reads": []
+        },
+        "args": {}
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "monotonic": true,
+          "violations": [],
+          "read_count": 0,
+          "wall_time_claim": false
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "actual": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "monotonic": true,
+          "violations": [],
+          "read_count": 0,
+          "wall_time_claim": false
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "envelope_pass": true,
+      "source_pass": true,
+      "result": "pass"
+    },
+    {
+      "id": "SR6934-P037",
+      "op": "monotonic_reads_check",
+      "request": {
+        "op": "monotonic_reads_check",
+        "record": {
+          "reads": [
+            {
+              "a": 1
+            }
+          ]
+        },
+        "args": {}
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "monotonic": true,
+          "violations": [],
+          "read_count": 1,
+          "wall_time_claim": false
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "actual": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "monotonic": true,
+          "violations": [],
+          "read_count": 1,
+          "wall_time_claim": false
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "envelope_pass": true,
+      "source_pass": true,
+      "result": "pass"
+    },
+    {
+      "id": "SR6934-P038",
+      "op": "monotonic_reads_check",
+      "request": {
+        "op": "monotonic_reads_check",
+        "record": {
+          "reads": [
+            {
+              "a": 1
+            },
+            {
+              "a": 1
+            }
+          ]
+        },
+        "args": {}
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "monotonic": true,
+          "violations": [],
+          "read_count": 2,
+          "wall_time_claim": false
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "actual": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "monotonic": true,
+          "violations": [],
+          "read_count": 2,
+          "wall_time_claim": false
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "envelope_pass": true,
+      "source_pass": true,
+      "result": "pass"
+    },
+    {
+      "id": "SR6934-P039",
+      "op": "monotonic_reads_check",
+      "request": {
+        "op": "monotonic_reads_check",
+        "record": {
+          "reads": [
+            {
+              "a": 1
+            },
+            {
+              "a": 2
+            },
+            {
+              "a": 2,
+              "b": 1
+            }
+          ]
+        },
+        "args": {}
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "monotonic": true,
+          "violations": [],
+          "read_count": 3,
+          "wall_time_claim": false
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "actual": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "monotonic": true,
+          "violations": [],
+          "read_count": 3,
+          "wall_time_claim": false
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "envelope_pass": true,
+      "source_pass": true,
+      "result": "pass"
+    },
+    {
+      "id": "SR6934-P040",
+      "op": "monotonic_reads_check",
+      "request": {
+        "op": "monotonic_reads_check",
+        "record": {
+          "reads": [
+            {
+              "a": 1
+            },
+            {
+              "b": 1
+            },
+            {
+              "a": 0,
+              "b": 1
+            }
+          ]
+        },
+        "args": {}
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "monotonic": false,
+          "violations": [
+            {
+              "from": 0,
+              "to": 1,
+              "relation": "concurrent"
+            }
+          ],
+          "read_count": 3,
+          "wall_time_claim": false
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "actual": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "monotonic": false,
+          "violations": [
+            {
+              "from": 0,
+              "to": 1,
+              "relation": "concurrent"
+            }
+          ],
+          "read_count": 3,
+          "wall_time_claim": false
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "envelope_pass": true,
+      "source_pass": true,
+      "result": "pass"
+    },
+    {
+      "id": "SR6934-P041",
+      "op": "bounded_staleness_check",
+      "request": {
+        "op": "bounded_staleness_check",
+        "record": {
+          "committed": {},
+          "observed": {}
+        },
+        "args": {
+          "max_lag": 0
+        }
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "within_bound": true,
+          "lag": {},
+          "maximum": 0,
+          "max_lag": 0,
+          "logical_only": true
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "actual": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "within_bound": true,
+          "lag": {},
+          "maximum": 0,
+          "max_lag": 0,
+          "logical_only": true
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "envelope_pass": true,
+      "source_pass": true,
+      "result": "pass"
+    },
+    {
+      "id": "SR6934-P042",
+      "op": "bounded_staleness_check",
+      "request": {
+        "op": "bounded_staleness_check",
+        "record": {
+          "committed": {
+            "a": 2
+          },
+          "observed": {
+            "a": 2
+          }
+        },
+        "args": {
+          "max_lag": 0
+        }
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "within_bound": true,
+          "lag": {
+            "a": 0
+          },
+          "maximum": 0,
+          "max_lag": 0,
+          "logical_only": true
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "actual": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "within_bound": true,
+          "lag": {
+            "a": 0
+          },
+          "maximum": 0,
+          "max_lag": 0,
+          "logical_only": true
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "envelope_pass": true,
+      "source_pass": true,
+      "result": "pass"
+    },
+    {
+      "id": "SR6934-P043",
+      "op": "bounded_staleness_check",
+      "request": {
+        "op": "bounded_staleness_check",
+        "record": {
+          "committed": {
+            "a": 3
+          },
+          "observed": {
+            "a": 2
+          }
+        },
+        "args": {
+          "max_lag": 1
+        }
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "within_bound": true,
+          "lag": {
+            "a": 1
+          },
+          "maximum": 1,
+          "max_lag": 1,
+          "logical_only": true
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "actual": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "within_bound": true,
+          "lag": {
+            "a": 1
+          },
+          "maximum": 1,
+          "max_lag": 1,
+          "logical_only": true
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "envelope_pass": true,
+      "source_pass": true,
+      "result": "pass"
+    },
+    {
+      "id": "SR6934-P044",
+      "op": "bounded_staleness_check",
+      "request": {
+        "op": "bounded_staleness_check",
+        "record": {
+          "committed": {
+            "a": 4
+          },
+          "observed": {
+            "a": 2
+          }
+        },
+        "args": {
+          "max_lag": 1
+        }
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "within_bound": false,
+          "lag": {
+            "a": 2
+          },
+          "maximum": 2,
+          "max_lag": 1,
+          "logical_only": true
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "actual": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "within_bound": false,
+          "lag": {
+            "a": 2
+          },
+          "maximum": 2,
+          "max_lag": 1,
+          "logical_only": true
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "envelope_pass": true,
+      "source_pass": true,
+      "result": "pass"
+    },
+    {
+      "id": "SR6934-P045",
+      "op": "bounded_staleness_check",
+      "request": {
+        "op": "bounded_staleness_check",
+        "record": {
+          "committed": {
+            "a": 4,
+            "b": 5
+          },
+          "observed": {
+            "a": 3,
+            "b": 2
+          }
+        },
+        "args": {
+          "max_lag": 3
+        }
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "within_bound": true,
+          "lag": {
+            "a": 1,
+            "b": 3
+          },
+          "maximum": 3,
+          "max_lag": 3,
+          "logical_only": true
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "actual": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "within_bound": true,
+          "lag": {
+            "a": 1,
+            "b": 3
+          },
+          "maximum": 3,
+          "max_lag": 3,
+          "logical_only": true
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "envelope_pass": true,
+      "source_pass": true,
+      "result": "pass"
+    },
+    {
+      "id": "SR6934-P046",
+      "op": "partition_frontier",
+      "request": {
+        "op": "partition_frontier",
+        "record": {
+          "replicas": [
+            "a"
+          ],
+          "links": [],
+          "origin": "a"
+        },
+        "args": {}
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "origin": "a",
+          "reachable": [
+            "a"
+          ],
+          "isolated": [],
+          "connected": true,
+          "network_observed": false
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "actual": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "origin": "a",
+          "reachable": [
+            "a"
+          ],
+          "isolated": [],
+          "connected": true,
+          "network_observed": false
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "envelope_pass": true,
+      "source_pass": true,
+      "result": "pass"
+    },
+    {
+      "id": "SR6934-P047",
+      "op": "partition_frontier",
+      "request": {
+        "op": "partition_frontier",
+        "record": {
+          "replicas": [
+            "a",
+            "b"
+          ],
+          "links": [
+            [
+              "a",
+              "b"
+            ]
+          ],
+          "origin": "a"
+        },
+        "args": {}
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "origin": "a",
+          "reachable": [
+            "a",
+            "b"
+          ],
+          "isolated": [],
+          "connected": true,
+          "network_observed": false
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "actual": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "origin": "a",
+          "reachable": [
+            "a",
+            "b"
+          ],
+          "isolated": [],
+          "connected": true,
+          "network_observed": false
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "envelope_pass": true,
+      "source_pass": true,
+      "result": "pass"
+    },
+    {
+      "id": "SR6934-P048",
+      "op": "partition_frontier",
+      "request": {
+        "op": "partition_frontier",
+        "record": {
+          "replicas": [
+            "a",
+            "b",
+            "c"
+          ],
+          "links": [
+            [
+              "a",
+              "b"
+            ],
+            [
+              "b",
+              "c"
+            ]
+          ],
+          "origin": "a"
+        },
+        "args": {}
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "origin": "a",
+          "reachable": [
+            "a",
+            "b",
+            "c"
+          ],
+          "isolated": [],
+          "connected": true,
+          "network_observed": false
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "actual": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "origin": "a",
+          "reachable": [
+            "a",
+            "b",
+            "c"
+          ],
+          "isolated": [],
+          "connected": true,
+          "network_observed": false
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "envelope_pass": true,
+      "source_pass": true,
+      "result": "pass"
+    },
+    {
+      "id": "SR6934-P049",
+      "op": "partition_frontier",
+      "request": {
+        "op": "partition_frontier",
+        "record": {
+          "replicas": [
+            "a",
+            "b",
+            "c"
+          ],
+          "links": [
+            [
+              "a",
+              "b"
+            ]
+          ],
+          "origin": "a"
+        },
+        "args": {}
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "origin": "a",
+          "reachable": [
+            "a",
+            "b"
+          ],
+          "isolated": [
+            "c"
+          ],
+          "connected": false,
+          "network_observed": false
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "actual": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "origin": "a",
+          "reachable": [
+            "a",
+            "b"
+          ],
+          "isolated": [
+            "c"
+          ],
+          "connected": false,
+          "network_observed": false
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "envelope_pass": true,
+      "source_pass": true,
+      "result": "pass"
+    },
+    {
+      "id": "SR6934-P050",
+      "op": "partition_frontier",
+      "request": {
+        "op": "partition_frontier",
+        "record": {
+          "replicas": [
+            "a",
+            "b",
+            "c",
+            "d"
+          ],
+          "links": [
+            [
+              "a",
+              "b"
+            ],
+            [
+              "c",
+              "d"
+            ]
+          ],
+          "origin": "c"
+        },
+        "args": {}
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "origin": "c",
+          "reachable": [
+            "c",
+            "d"
+          ],
+          "isolated": [
+            "a",
+            "b"
+          ],
+          "connected": false,
+          "network_observed": false
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "actual": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "origin": "c",
+          "reachable": [
+            "c",
+            "d"
+          ],
+          "isolated": [
+            "a",
+            "b"
+          ],
+          "connected": false,
+          "network_observed": false
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "envelope_pass": true,
+      "source_pass": true,
+      "result": "pass"
+    }
+  ]
+}

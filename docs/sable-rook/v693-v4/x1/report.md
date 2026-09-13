@@ -1,0 +1,11 @@
+# Sable Rook v693-v4 x1 report
+
+X1 began only after the planning commit `f03c68e89cfbea990e5f02eed68461b23ef52441` was pushed, clean, typed zero-ahead and zero-behind, and equal across local, upstream, tracking, and a fresh live remote read. The planning artifacts remain immutable. X1 did not edit the frozen proposal or task definitions.
+
+The first fifty distributed-consistency proposals executed against the separately authored x1 runtime. All fifty complete envelopes and all fifty source-preservation checks passed. One hundred malformed subjects remain failed at zero success credit; their one hundred separate refusal comparisons passed. One hundred clean/fix/refine rows restored the exact frozen request and passed without erasing the failed subject. Twelve parser-profile subjects remain failed with twelve separate passing refusals. Five positive runner smokes passed, five unsupported-operation subjects remain failed, and five separate runner refusals passed.
+
+Ten phase-local skills were built with concrete five-case contract references. The official Skill Creator quick validator passed all ten under the existing D-hosted isolated Python runtime with UTF-8 enabled and bytecode writing disabled. Each skill was then used on one frozen case. Five local TXT runners hash the fixed trusted library before compiling it. Input JSON is never compiled, and Node `vm.Script` is not represented as a security sandbox.
+
+The primary pillar remains GMUT Mind through logical-clock and causal-order structure. THOS Body remains explicit through bounded runtime behavior, retained failures, resource discipline, and clean staging. Freed ID and CBR Heart remain explicit through fixity, correction, minimum disclosure, accessibility reservation, and authority gates. These are synthetic learning practices only.
+
+The x1 evidence establishes finite same-owner software behavior. It uses no real cluster, operator, participant, credential, deployment, production system, legal case, cultural matter, Māori data, or authority action. It establishes no empirical GMUT result, production THOS or Freed ID readiness, professional competence, complete accessibility, complete privacy, exhaustive security, independent reproduction, AGI or ASI, consciousness or personhood, Theory of Everything, canon, deployment approval, or Stage 20 readiness. `NOT_READY_FOR_STAGE_20`.
