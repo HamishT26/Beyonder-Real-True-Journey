@@ -1,0 +1,244 @@
+"use strict";
+
+const OPERATIONS = new Set([
+  "context_shape",
+  "object_derivation",
+  "attribute_derivation",
+  "object_closure",
+  "attribute_closure",
+  "formal_concept_check",
+  "concept_enumerate",
+  "concept_order",
+  "cover_relation",
+  "lattice_meet"
+]);
+
+const REQUIRED = {
+  context_shape: ["context", "op"],
+  object_derivation: ["context", "objects", "op"],
+  attribute_derivation: ["attributes", "context", "op"],
+  object_closure: ["context", "objects", "op"],
+  attribute_closure: ["attributes", "context", "op"],
+  formal_concept_check: ["context", "extent", "intent", "op"],
+  concept_enumerate: ["context", "op"],
+  concept_order: ["context", "left_intent", "op", "right_intent"],
+  cover_relation: ["context", "left_intent", "op", "right_intent"],
+  lattice_meet: ["context", "left_intent", "op", "right_intent"]
+};
+
+function clone(value) {
+  return JSON.parse(JSON.stringify(value));
+}
+
+function ordered(value) {
+  if (Array.isArray(value)) return value.map(ordered);
+  if (value && typeof value === "object") {
+    return Object.fromEntries(Object.keys(value).sort().map((key) => [key, ordered(value[key])]));
+  }
+  return value;
+}
+
+function canonical(value) {
+  return JSON.stringify(ordered(value));
+}
+
+function sortStrings(values) {
+  return [...new Set(values)].sort();
+}
+
+function assertStringSet(value, known, label) {
+  if (!Array.isArray(value) || value.some((item) => typeof item !== "string")) throw new Error("invalid_" + label);
+  if (new Set(value).size !== value.length) throw new Error("duplicate_" + label);
+  if (known && value.some((item) => !known.includes(item))) throw new Error("unknown_" + label);
+  return sortStrings(value);
+}
+
+function normalizeContext(raw) {
+  if (!raw || typeof raw !== "object" || Array.isArray(raw)) throw new Error("invalid_context");
+  if (canonical(Object.keys(raw).sort()) !== canonical(["attributes", "incidence", "objects"])) throw new Error("invalid_context_fields");
+  const objects = assertStringSet(raw.objects, null, "objects");
+  const attributes = assertStringSet(raw.attributes, null, "attributes");
+  if (!Array.isArray(raw.incidence)) throw new Error("invalid_incidence");
+  const seen = new Set();
+  const incidence = raw.incidence.map((row) => {
+    if (!Array.isArray(row) || row.length !== 2 || typeof row[0] !== "string" || typeof row[1] !== "string") throw new Error("invalid_incidence_pair");
+    if (!objects.includes(row[0]) || !attributes.includes(row[1])) throw new Error("unknown_incidence_member");
+    const key = row[0] + "\u0000" + row[1];
+    if (seen.has(key)) throw new Error("duplicate_incidence_pair");
+    seen.add(key);
+    return [row[0], row[1]];
+  }).sort((left, right) => left[0].localeCompare(right[0]) || left[1].localeCompare(right[1]));
+  return { objects, attributes, incidence };
+}
+
+function incidenceSet(context) {
+  return new Set(context.incidence.map((row) => row[0] + "\u0000" + row[1]));
+}
+
+function deriveAttributes(context, objects) {
+  const selected = assertStringSet(objects, context.objects, "objects");
+  const pairs = incidenceSet(context);
+  return context.attributes.filter((attribute) => selected.every((object) => pairs.has(object + "\u0000" + attribute)));
+}
+
+function deriveObjects(context, attributes) {
+  const selected = assertStringSet(attributes, context.attributes, "attributes");
+  const pairs = incidenceSet(context);
+  return context.objects.filter((object) => selected.every((attribute) => pairs.has(object + "\u0000" + attribute)));
+}
+
+function attributeClosure(context, attributes) {
+  return deriveAttributes(context, deriveObjects(context, attributes));
+}
+
+function objectClosure(context, objects) {
+  return deriveObjects(context, deriveAttributes(context, objects));
+}
+
+function subsets(values) {
+  const rows = [];
+  for (let mask = 0; mask < 2 ** values.length; mask += 1) {
+    rows.push(values.filter((_, index) => mask & (1 << index)));
+  }
+  return rows;
+}
+
+function concepts(context) {
+  const seen = new Map();
+  for (const seed of subsets(context.attributes)) {
+    const intent = attributeClosure(context, seed);
+    const extent = deriveObjects(context, intent);
+    seen.set(JSON.stringify(intent), { extent, intent });
+  }
+  return [...seen.values()].sort((left, right) =>
+    left.extent.length - right.extent.length ||
+    JSON.stringify(left.extent).localeCompare(JSON.stringify(right.extent)) ||
+    JSON.stringify(left.intent).localeCompare(JSON.stringify(right.intent))
+  );
+}
+
+function asConcept(context, intentSeed) {
+  const intent = attributeClosure(context, intentSeed);
+  return { extent: deriveObjects(context, intent), intent };
+}
+
+function subset(left, right) {
+  return left.every((value) => right.includes(value));
+}
+
+function gcd(left, right) {
+  while (right) [left, right] = [right, left % right];
+  return left;
+}
+
+function reduceFraction(numerator, denominator) {
+  if (denominator === 0) return "0/1";
+  const divisor = gcd(numerator, denominator);
+  return String(numerator / divisor) + "/" + String(denominator / divisor);
+}
+
+function evaluate(input) {
+  const op = input.op;
+  if (op === "context_shape") {
+    const context = normalizeContext(input.context);
+    const possible = context.objects.length * context.attributes.length;
+    return {
+      object_count: context.objects.length,
+      attribute_count: context.attributes.length,
+      incidence_count: context.incidence.length,
+      density_fraction: reduceFraction(context.incidence.length, possible),
+      context
+    };
+  }
+  if (op === "object_derivation") {
+    const context = normalizeContext(input.context);
+    return { objects: assertStringSet(input.objects, context.objects, "objects"), attributes: deriveAttributes(context, input.objects) };
+  }
+  if (op === "attribute_derivation") {
+    const context = normalizeContext(input.context);
+    return { attributes: assertStringSet(input.attributes, context.attributes, "attributes"), objects: deriveObjects(context, input.attributes) };
+  }
+  if (op === "object_closure") {
+    const context = normalizeContext(input.context);
+    const seed = assertStringSet(input.objects, context.objects, "objects");
+    const commonAttributes = deriveAttributes(context, seed);
+    return { seed, common_attributes: commonAttributes, closure: objectClosure(context, seed) };
+  }
+  if (op === "attribute_closure") {
+    const context = normalizeContext(input.context);
+    const seed = assertStringSet(input.attributes, context.attributes, "attributes");
+    const supportingObjects = deriveObjects(context, seed);
+    return { seed, supporting_objects: supportingObjects, closure: attributeClosure(context, seed) };
+  }
+  if (op === "formal_concept_check") {
+    const context = normalizeContext(input.context);
+    const extent = assertStringSet(input.extent, context.objects, "extent");
+    const intent = assertStringSet(input.intent, context.attributes, "intent");
+    const extentPrime = deriveAttributes(context, extent);
+    const intentPrime = deriveObjects(context, intent);
+    return { extent, intent, extent_prime: extentPrime, intent_prime: intentPrime, formal_concept: canonical(extentPrime) === canonical(intent) && canonical(intentPrime) === canonical(extent) };
+  }
+  if (op === "concept_enumerate") {
+    const context = normalizeContext(input.context);
+    const rows = concepts(context);
+    return { concept_count: rows.length, concepts: rows, finite_exhaustive_for_declared_context: true };
+  }
+  if (op === "concept_order") {
+    const context = normalizeContext(input.context);
+    assertStringSet(input.left_intent, context.attributes, "left_intent");
+    assertStringSet(input.right_intent, context.attributes, "right_intent");
+    const left = asConcept(context, input.left_intent);
+    const right = asConcept(context, input.right_intent);
+    const leq = subset(left.extent, right.extent);
+    const geq = subset(right.extent, left.extent);
+    return { left, right, leq, strict: leq && !geq, comparable: leq || geq };
+  }
+  if (op === "cover_relation") {
+    const context = normalizeContext(input.context);
+    assertStringSet(input.left_intent, context.attributes, "left_intent");
+    assertStringSet(input.right_intent, context.attributes, "right_intent");
+    const left = asConcept(context, input.left_intent);
+    const right = asConcept(context, input.right_intent);
+    const rows = concepts(context);
+    const leq = subset(left.extent, right.extent);
+    const middle = rows.filter((row) =>
+      subset(left.extent, row.extent) && subset(row.extent, right.extent) &&
+      canonical(row) !== canonical(left) && canonical(row) !== canonical(right)
+    );
+    return { left, right, cover: leq && canonical(left) !== canonical(right) && middle.length === 0, intervening: middle };
+  }
+  if (op === "lattice_meet") {
+    const context = normalizeContext(input.context);
+    assertStringSet(input.left_intent, context.attributes, "left_intent");
+    assertStringSet(input.right_intent, context.attributes, "right_intent");
+    const left = asConcept(context, input.left_intent);
+    const right = asConcept(context, input.right_intent);
+    const extent = left.extent.filter((value) => right.extent.includes(value));
+    return { left, right, meet: { extent, intent: deriveAttributes(context, extent) } };
+  }
+  throw new Error("unknown_operation");
+}
+
+function failure(error) {
+  return { ok: false, error, external_credit: false, value: null };
+}
+
+function safeExecute(raw) {
+  const before = canonical(raw);
+  if (!raw || typeof raw !== "object" || Array.isArray(raw) || typeof raw.op !== "string") return failure("invalid_request");
+  if (!OPERATIONS.has(raw.op)) return failure("unknown_operation");
+  const observedFields = Object.keys(raw).sort();
+  const requiredFields = REQUIRED[raw.op];
+  const missing = requiredFields.some((field) => !observedFields.includes(field));
+  if (missing) return failure("missing_field");
+  if (canonical(observedFields) !== canonical(requiredFields)) return failure("unknown_field");
+  try {
+    const value = evaluate(clone(raw));
+    if (canonical(raw) !== before) return failure("input_mutated");
+    return { ok: true, error: null, external_credit: false, disposition: "completed", value };
+  } catch (error) {
+    return failure(error && error.message ? error.message : "invalid_input");
+  }
+}
+
+module.exports = { OPERATIONS: [...OPERATIONS], safeExecute };
