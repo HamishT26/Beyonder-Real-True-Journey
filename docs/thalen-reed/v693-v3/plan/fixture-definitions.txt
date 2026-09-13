@@ -1,0 +1,211 @@
+'use strict';
+// Planning fixture definitions only. No migration runtime is implemented here.
+const crypto = require('node:crypto');
+const rows = [];
+const copy = value => JSON.parse(JSON.stringify(value));
+const sorted = value => Array.isArray(value) ? value.map(sorted) : value && typeof value === 'object' ? Object.fromEntries(Object.keys(value).sort().map(k => [k, sorted(value[k])])) : value;
+const digest = value => crypto.createHash('sha256').update(JSON.stringify(sorted(value))).digest('hex');
+const operations = [
+ ['field_inventory','Inventory exact top-level field names and JSON types.'],
+ ['field_correspondence','Expose missing sources and duplicate destinations in a declared field correspondence.'],
+ ['rename_preview','Preview simultaneous renames without overwriting an occupied destination.'],
+ ['default_overlay','Add defaults only to absent fields while retaining explicit null and contrary values.'],
+ ['coercion_preview','Preview a named scalar conversion with an exact refusal reason.'],
+ ['enum_mapping','Apply an explicit enum correspondence and expose noninjective targets.'],
+ ['required_field_check','Distinguish missing required fields from present null or false values.'],
+ ['unknown_field_projection','Project declared fields while retaining unknown fields in quarantine.'],
+ ['schema_delta','Compare declared field types without inferring migration permission.'],
+ ['rename_cycle_analysis','Separate rename cycles, chains, fixed points and duplicate targets.'],
+ ['three_way_merge','Merge independent synthetic field edits and retain every unresolved conflict.'],
+ ['conflict_kinds','Classify concurrent additions, different edits and delete-versus-modify conflicts.'],
+ ['resolution_preview','Apply explicit conflict choices or retain the unmodified base when a choice is missing.'],
+ ['resolution_receipt','Bind a decision to exact base, left, right and decision digests.'],
+ ['loss_snapshot','Retain exact removed and overwritten values in a recoverable source snapshot.'],
+ ['atomic_migration_pipeline','Apply a bounded migration pipeline or expose the failure with the original record.'],
+ ['accessible_resolution_summary','Represent concrete conflict and resolution rows without claiming human review.'],
+ ['correction_context','Append a correction only to its retained predecessor and matching source context.'],
+ ['external_migration_evidence','Expose missing external migration evidence without promoting local assertions.'],
+ ['operator_release_gate','Keep deployment and publication held despite self-declared permissions.']
+];
+function add(op, title, record, args, value, disposition='completed') {
+ const i=rows.length+1;
+ rows.push({
+  proposal_id:'TR6933-P'+String(i).padStart(3,'0'),
+  stage:i<=50?'x1':'x2', op, title,
+  request:{op,record:copy(record),args:copy(args)},
+  expected:{ok:true,disposition,value:copy(value),error:null,external_credit:false},
+  expected_execution_disposition:disposition
+ });
+}
+function family(name,cases) { for(const c of cases)add(name,...c); }
+family('field_inventory',[
+ ['Integer and Boolean fields stay distinct',{count:1,enabled:true},{},{fields:[{name:'count',type:'integer'},{name:'enabled',type:'boolean'}],count:2}],
+ ['Explicit null remains a present field',{label:'north',flag:false,detail:null},{},{fields:[{name:'detail',type:'null'},{name:'flag',type:'boolean'},{name:'label',type:'string'}],count:3}],
+ ['Array and object containers have separate types',{list:[1,2],opts:{mode:'x'}},{},{fields:[{name:'list',type:'array'},{name:'opts',type:'object'}],count:2}],
+ ['Empty object and empty string are not absence',{empty:{},zero:0,blanks:''},{},{fields:[{name:'blanks',type:'string'},{name:'empty',type:'object'},{name:'zero',type:'integer'}],count:3}],
+ ['Negative integer, empty array and null retain their types',{negative:-2,tags:[],nullable:null},{},{fields:[{name:'negative',type:'integer'},{name:'nullable',type:'null'},{name:'tags',type:'array'}],count:3}]
+]);
+family('field_correspondence',[
+ ['One declared field resolves to a new label',{alpha:1,beta:2},{mapping:{alpha:'value'}},{resolved:[{from:'alpha',to:'value',present:true,source_type:'integer'}],target_collisions:[],missing_sources:[]}],
+ ['Swap correspondences remain simultaneous',{left:true,right:false},{mapping:{left:'right',right:'left'}},{resolved:[{from:'left',to:'right',present:true,source_type:'boolean'},{from:'right',to:'left',present:true,source_type:'boolean'}],target_collisions:[],missing_sources:[]}],
+ ['Two sources targeting one field are exposed',{a:1,b:'two'},{mapping:{a:'x',b:'x'}},{resolved:[{from:'a',to:'x',present:true,source_type:'integer'},{from:'b',to:'x',present:true,source_type:'string'}],target_collisions:[{target:'x',sources:['a','b']}],missing_sources:[]}],
+ ['An absent source cannot become a null value',{a:1},{mapping:{z:'zeta'}},{resolved:[{from:'z',to:'zeta',present:false,source_type:'absent'}],target_collisions:[],missing_sources:['z']}],
+ ['Identity correspondence preserves an array field',{x:[1],meta:null},{mapping:{x:'x'}},{resolved:[{from:'x',to:'x',present:true,source_type:'array'}],target_collisions:[],missing_sources:[]}]
+]);
+family('rename_preview',[
+ ['A fresh target receives the original value',{old:1,keep:true},{mapping:{old:'new'}},{applied:true,result:{keep:true,new:1},conflicts:[],source_preserved:true}],
+ ['A two-field swap does not destroy either source',{left:'L',right:'R'},{mapping:{left:'right',right:'left'}},{applied:true,result:{left:'R',right:'L'},conflicts:[],source_preserved:true}],
+ ['An occupied unmapped destination blocks the preview',{a:1,b:2,c:3},{mapping:{a:'c'}},{applied:false,result:{a:1,b:2,c:3},conflicts:['destination_occupied:c'],source_preserved:true}],
+ ['A duplicate target blocks both writes',{a:1,b:2},{mapping:{a:'x',b:'x'}},{applied:false,result:{a:1,b:2},conflicts:['duplicate_destination:x'],source_preserved:true}],
+ ['An identity rename preserves explicit null',{a:null,keep:'k'},{mapping:{a:'a'}},{applied:true,result:{a:null,keep:'k'},conflicts:[],source_preserved:true}]
+]);
+family('default_overlay',[
+ ['An absent field receives a declared default',{}, {defaults:{a:1}},{result:{a:1},added:['a'],retained:[],already_equal:[]}],
+ ['Null is retained while another absent field is added',{a:null},{defaults:{a:5,b:false}},{result:{a:null,b:false},added:['b'],retained:['a'],already_equal:[]}],
+ ['An equal default is recorded without a change',{a:1},{defaults:{a:1}},{result:{a:1},added:[],retained:[],already_equal:['a']}],
+ ['An existing empty array is not replaced',{arr:[]},{defaults:{arr:[1],object:{}}},{result:{arr:[],object:{}},added:['object'],retained:['arr'],already_equal:[]}],
+ ['Contrary Boolean and integer values remain present',{neg:-1,flag:false},{defaults:{neg:0,flag:true,x:null}},{result:{neg:-1,flag:false,x:null},added:['x'],retained:['flag','neg'],already_equal:[]}]
+]);
+family('coercion_preview',[
+ ['An integer converts only under an explicit text rule',{n:12},{field:'n',conversion:'integer_to_text'},{applied:true,result:{n:'12'},reason:null,input_type:'integer',output_type:'string'}],
+ ['Canonical signed integer text converts exactly',{n:'-3'},{field:'n',conversion:'text_to_integer'},{applied:true,result:{n:-3},reason:null,input_type:'string',output_type:'integer'}],
+ ['Leading-zero text is held rather than silently normalized',{n:'03'},{field:'n',conversion:'text_to_integer'},{applied:false,result:{n:'03'},reason:'NONCANONICAL_INTEGER_TEXT',input_type:'string',output_type:'string'}],
+ ['A Boolean converts to its literal text spelling',{n:true},{field:'n',conversion:'boolean_to_text'},{applied:true,result:{n:'true'},reason:null,input_type:'boolean',output_type:'string'}],
+ ['Integer one is not coerced by a Boolean rule',{n:1},{field:'n',conversion:'boolean_to_text'},{applied:false,result:{n:1},reason:'TYPE_MISMATCH',input_type:'integer',output_type:'integer'}]
+]);
+family('enum_mapping',[
+ ['A listed enum token maps explicitly',{status:'new'},{field:'status',mapping:{new:'pending',ready:'go'}},{applied:true,result:{status:'pending'},unmapped:null,noninjective_targets:[]}],
+ ['An unlisted enum token remains unchanged',{status:'unknown'},{field:'status',mapping:{new:'pending'}},{applied:false,result:{status:'unknown'},unmapped:'unknown',noninjective_targets:[]}],
+ ['A many-to-one enum map exposes information loss',{status:'a'},{field:'status',mapping:{a:'x',b:'x'}},{applied:true,result:{status:'x'},unmapped:null,noninjective_targets:['x']}],
+ ['An empty enum token is literal rather than absent',{status:''},{field:'status',mapping:{'':'blank'}},{applied:true,result:{status:'blank'},unmapped:null,noninjective_targets:[]}],
+ ['An identity enum mapping is a declared no-op',{status:'done'},{field:'status',mapping:{done:'done'}},{applied:true,result:{status:'done'},unmapped:null,noninjective_targets:[]}]
+]);
+family('required_field_check',[
+ ['A complete required set is present',{a:1,b:2},{required:['b','a']},{present:['a','b'],missing:[],complete:true}],
+ ['A missing field remains distinct from null',{a:null},{required:['a','b']},{present:['a'],missing:['b'],complete:false}],
+ ['False and zero satisfy presence only',{enabled:false,retries:0},{required:['enabled','retries']},{present:['enabled','retries'],missing:[],complete:true}],
+ ['No fields cannot satisfy a nonempty requirement',{}, {required:['x']},{present:[],missing:['x'],complete:false}],
+ ['An empty requirement list is explicitly vacuous',{x:1},{required:[]},{present:[],missing:[],complete:true}]
+]);
+family('unknown_field_projection',[
+ ['A known field is selected and its neighbour quarantined',{known:1,extra:2},{allowed:['known']},{selected:{known:1},quarantine:{extra:2},source_preserved:true}],
+ ['Explicit null stays selected',{n:null,x:false},{allowed:['n']},{selected:{n:null},quarantine:{x:false},source_preserved:true}],
+ ['An empty allowlist quarantines all data',{a:[1],b:{}},{allowed:[]},{selected:{},quarantine:{a:[1],b:{}},source_preserved:true}],
+ ['All declared fields remain in the selected view',{a:1,b:'two'},{allowed:['b','a']},{selected:{a:1,b:'two'},quarantine:{},source_preserved:true}],
+ ['An absent allowed field is not invented',{existing:true},{allowed:['absent']},{selected:{},quarantine:{existing:true},source_preserved:true}]
+]);
+family('schema_delta',[
+ ['A target schema adds one field',{a:'integer'},{target:{a:'integer',b:'string'}},{added:['b'],removed:[],changed:[],unchanged:['a']}],
+ ['A removed field remains an explicit obligation',{old:'string',x:'boolean'},{target:{x:'boolean'}},{added:[],removed:['old'],changed:[],unchanged:['x']}],
+ ['A scalar type change is not an automatic conversion',{value:'integer'},{target:{value:'string'}},{added:[],removed:[],changed:[{field:'value',from:'integer',to:'string'}],unchanged:[]}],
+ ['Two empty schemas have no inferred fields',{}, {target:{}},{added:[],removed:[],changed:[],unchanged:[]}],
+ ['Addition removal and type change remain separate',{x:'null',y:'array'},{target:{x:'object',z:'array'}},{added:['z'],removed:['y'],changed:[{field:'x',from:'null',to:'object'}],unchanged:[]}]
+]);
+family('rename_cycle_analysis',[
+ ['A two-cycle needs simultaneous evaluation',{a:1,b:2},{mapping:{a:'b',b:'a'}},{cycles:[['a','b']],chains:[],fixed_points:[],duplicate_targets:[]}],
+ ['A rename chain terminates at a fresh target',{a:1,b:2},{mapping:{a:'b',b:'c'}},{cycles:[],chains:[['a','b','c']],fixed_points:[],duplicate_targets:[]}],
+ ['A fixed point is distinct from a cycle',{a:1},{mapping:{a:'a'}},{cycles:[],chains:[],fixed_points:['a'],duplicate_targets:[]}],
+ ['Independent rename chains remain separate',{a:1,c:2},{mapping:{a:'b',c:'d'}},{cycles:[],chains:[['a','b'],['c','d']],fixed_points:[],duplicate_targets:[]}],
+ ['Converging chains expose a duplicate target',{a:1,b:2},{mapping:{a:'c',b:'c'}},{cycles:[],chains:[['a','c'],['b','c']],fixed_points:[],duplicate_targets:['c']}]
+]);
+const state=(present,value=null)=>({present,value});
+const conflict=(field,kind,b,l,r)=>({field,kind,base:b,left:l,right:r});
+const triples=[
+ {base:{v:1,k:0},left:{v:2,k:0},right:{v:1,k:0}},
+ {base:{v:1},left:{v:2},right:{v:2}},
+ {base:{v:1},left:{v:2},right:{v:3}},
+ {base:{v:1},left:{},right:{v:2}},
+ {base:{},left:{v:null},right:{v:false}}
+];
+const mergeValues=[
+ {merged:{k:0,v:2},conflicts:[],resolved:[{field:'k',source:'unchanged'},{field:'v',source:'left'}]},
+ {merged:{v:2},conflicts:[],resolved:[{field:'v',source:'both'}]},
+ {merged:{},conflicts:[conflict('v','different_edits',state(true,1),state(true,2),state(true,3))],resolved:[]},
+ {merged:{},conflicts:[conflict('v','delete_modify',state(true,1),state(false),state(true,2))],resolved:[]},
+ {merged:{},conflicts:[conflict('v','concurrent_add',state(false),state(true,null),state(true,false))],resolved:[]}
+];
+for(let i=0;i<5;i++)add('three_way_merge',[
+ 'A unilateral edit merges beside an unchanged field','Equal concurrent edits coalesce','Different concurrent edits remain unresolved','Delete-versus-modify keeps both contrary states','Concurrent null and false additions remain a conflict'
+][i],triples[i],{},mergeValues[i]);
+family('conflict_kinds',[
+ ['Unilateral deletion is not a conflict',{base:{v:1},left:{},right:{v:1}},{},{fields:1,conflict_count:0,kinds:{different_edits:[],delete_modify:[],concurrent_add:[]}}],
+ ['Different edits are classified by field',triples[2],{},{fields:1,conflict_count:1,kinds:{different_edits:['v'],delete_modify:[],concurrent_add:[]}}],
+ ['Delete-versus-modify is its own category',triples[3],{},{fields:1,conflict_count:1,kinds:{different_edits:[],delete_modify:['v'],concurrent_add:[]}}],
+ ['Concurrent additions preserve their category',triples[4],{},{fields:1,conflict_count:1,kinds:{different_edits:[],delete_modify:[],concurrent_add:['v']}}],
+ ['Multiple categories are counted without collapsing fields',{base:{a:1,b:1},left:{a:2,c:true},right:{a:3,b:2,c:false}},{},{fields:3,conflict_count:3,kinds:{different_edits:['a'],delete_modify:['b'],concurrent_add:['c']}}]
+]);
+const resolutionValues=[
+ {applied:true,result:{v:2},decisions:[{field:'v',choice:'left'}],unresolved:[],source_preserved:true},
+ {applied:true,result:{v:3},decisions:[{field:'v',choice:'right'}],unresolved:[],source_preserved:true},
+ {applied:true,result:{v:1},decisions:[{field:'v',choice:'base'}],unresolved:[],source_preserved:true},
+ {applied:true,result:{},decisions:[{field:'v',choice:'remove'}],unresolved:[],source_preserved:true},
+ {applied:false,result:{v:1},decisions:[],unresolved:['v'],source_preserved:true}
+];
+for(let i=0;i<5;i++)add('resolution_preview',[
+ 'An explicit left choice selects only the left value','An explicit right choice selects only the right value','An explicit base choice retains the ancestor','An explicit remove choice preserves absence','An unresolved field aborts the whole resolution preview'
+][i],triples[2],{choices:i===4?{}:{v:['left','right','base','remove'][i]}},resolutionValues[i]);
+for(let i=0;i<5;i++){
+ const record=triples[i],decisions=i===0?{v:'left'}:i===1?{}:{v:'right'};
+ const hashes={base:digest(record.base),left:digest(record.left),right:digest(record.right),decisions:digest(decisions)};
+ const claims=copy(hashes),mismatches=[];
+ if(i===1){claims.left='0'.repeat(64);mismatches.push('left');}
+ if(i===2){claims.right=null;mismatches.push('right');}
+ if(i===3){claims.decisions='0'.repeat(64);mismatches.push('decisions');}
+ if(i===4){for(const k of Object.keys(claims))claims[k]='0'.repeat(64);mismatches.push('base','decisions','left','right');}
+ add('resolution_receipt',[
+ 'A decision binds to all four exact contexts','A changed left context invalidates its receipt','A missing right digest stays unbound','A changed decision digest cannot reuse an earlier binding','Four contradictory digest claims remain separately visible'
+ ][i],record,{decisions,claims},{bound:mismatches.length===0,mismatch_domains:mismatches,actual:hashes,external_authority:false});
+}
+family('loss_snapshot',[
+ ['Removed integer values remain recoverable',{before:{a:1,b:2},after:{a:1}},{},{removed:[{field:'b',value:2}],overwritten:[],added:[],snapshot:{a:1,b:2},reversible_from_snapshot:true}],
+ ['Boolean-to-integer replacement retains the prior type',{before:{v:true},after:{v:1}},{},{removed:[],overwritten:[{field:'v',before:true,after:1}],added:[],snapshot:{v:true},reversible_from_snapshot:true}],
+ ['A newly added null does not become a removed value',{before:{},after:{a:null}},{},{removed:[],overwritten:[],added:[{field:'a',value:null}],snapshot:{},reversible_from_snapshot:true}],
+ ['Array replacement preserves the complete previous array',{before:{arr:[1]},after:{arr:[2]}},{},{removed:[],overwritten:[{field:'arr',before:[1],after:[2]}],added:[],snapshot:{arr:[1]},reversible_from_snapshot:true}],
+ ['An unchanged record retains an explicit recovery snapshot',{before:{v:null,k:false},after:{v:null,k:false}},{},{removed:[],overwritten:[],added:[],snapshot:{v:null,k:false},reversible_from_snapshot:true}]
+]);
+family('atomic_migration_pipeline',[
+ ['Rename followed by default injection commits as one preview',{old:1},{rules:[{op:'rename_preview',args:{mapping:{old:'new'}}},{op:'default_overlay',args:{defaults:{flag:false}}}],allow_lossy:false},{committed:true,result:{new:1,flag:false},failed_index:null,reason:null,attempted_steps:2,rollback_preserved:true}],
+ ['Refused numeric text returns the original record',{n:'03'},{rules:[{op:'coercion_preview',args:{field:'n',conversion:'text_to_integer'}}],allow_lossy:false},{committed:false,result:{n:'03'},failed_index:0,reason:'NONCANONICAL_INTEGER_TEXT',attempted_steps:1,rollback_preserved:true}],
+ ['Occupied rename destination aborts before a write',{a:1,b:2},{rules:[{op:'rename_preview',args:{mapping:{a:'b'}}}],allow_lossy:false},{committed:false,result:{a:1,b:2},failed_index:0,reason:'destination_occupied:b',attempted_steps:1,rollback_preserved:true}],
+ ['A later failed conversion rolls back an earlier default',{n:1},{rules:[{op:'default_overlay',args:{defaults:{x:0}}},{op:'coercion_preview',args:{field:'n',conversion:'boolean_to_text'}}],allow_lossy:false},{committed:false,result:{n:1},failed_index:1,reason:'TYPE_MISMATCH',attempted_steps:2,rollback_preserved:true}],
+ ['Unacknowledged enum information loss aborts the pipeline',{status:'a',keep:null},{rules:[{op:'enum_mapping',args:{field:'status',mapping:{a:'x',b:'x'}}}],allow_lossy:false},{committed:false,result:{status:'a',keep:null},failed_index:0,reason:'LOSSY_ENUM_MAPPING',attempted_steps:1,rollback_preserved:true}]
+]);
+for(let i=0;i<5;i++){
+ const mv=mergeValues[i];
+ const summaryRows=[...mv.resolved.map(r=>({field:r.field,state:'resolved_'+r.source})),...mv.conflicts.map(c=>({field:c.field,state:c.kind}))].sort((a,b)=>a.field.localeCompare(b.field));
+ add('accessible_resolution_summary','Literal field summary for '+['unilateral edit','equal edits','different edits','delete versus modify','contrary additions'][i],triples[i],{},
+  {rows:summaryRows,conflicts:mv.conflicts.length,manual_review:false,operator_decision:false},'represented');
+}
+for(let i=0;i<5;i++){
+ const prior=[{id:'r1',state:i===4?'held':'rejected',context:'a'.repeat(64),retained:true}];
+ const correction={id:i===3?'r1':'r2',supersedes:i===2?'missing':'r1',context:i===1?'b'.repeat(64):'a'.repeat(64),state:'represented'};
+ const reason=[null,'STALE_CONTEXT','UNKNOWN_PREDECESSOR','DUPLICATE_ID',null][i],accepted=reason===null;
+ add('correction_context',[
+ 'A correction appends beside its rejected predecessor','A new source context cannot amend the old attempt','An unknown predecessor prevents attachment','A repeated correction identifier is refused','A held predecessor stays held after an additive correction'
+ ][i],{prior,correction},{},{accepted,reason,records:accepted?[...prior,correction]:prior,predecessor_erased:false},'represented');
+}
+family('external_migration_evidence',[
+ ['Absent operator evidence remains an open gap',{requirements:['operator'],evidence:{}},{},{missing:['operator'],provided:[],external_qualified:false,release:false},'open_gap'],
+ ['A synthetic compatibility note does not supply rollback evidence',{requirements:['compatibility','rollback'],evidence:{compatibility:{class:'synthetic'}}},{},{missing:['rollback'],provided:['compatibility'],external_qualified:false,release:false},'open_gap'],
+ ['Null human review is still absent',{requirements:['human_review'],evidence:{human_review:null}},{},{missing:['human_review'],provided:[],external_qualified:false,release:false},'open_gap'],
+ ['Same-owner review is present metadata without independent qualification',{requirements:['independent_review'],evidence:{independent_review:{class:'same_owner'}}},{},{missing:[],provided:['independent_review'],external_qualified:false,release:false},'open_gap'],
+ ['Rights and Maori authority require competent external evidence',{requirements:['rights','maori_authority'],evidence:{rights:null,maori_authority:null}},{},{missing:['maori_authority','rights'],provided:[],external_qualified:false,release:false},'open_gap']
+]);
+const requiredByAction={
+ deploy:['competent_operator','external_validation','rollback_evidence'],
+ publish:['rights_holder','affected_people','privacy_review'],
+ replace:['competent_operator','exact_target','recoverable_source'],
+ delete:['exact_destructive_authority','recoverable_source'],
+ maori_label:['maori_authority','affected_people']
+};
+for(let i=0;i<5;i++){
+ const action=Object.keys(requiredByAction)[i];
+ add('operator_release_gate','Reserve '+action+' despite local permission assertions',
+  {target:'synthetic-config-'+String.fromCharCode(65+i),authority:i%2?{declared:true}:null,evidence:i>1?{declared:true}:null},
+  {requested:action},
+  {requested:action,target:'synthetic-config-'+String.fromCharCode(65+i),required:requiredByAction[action],released:false,assertions_verified:false},'exact_gate');
+}
+if(rows.length!==100)throw new Error('Expected one hundred definitions');
+if(new Set(rows.map(r=>JSON.stringify(sorted(r.request)))).size!==100)throw new Error('Semantic request collision');
+module.exports={rows,operations,digest,sorted};
+if(require.main===module)process.stdout.write(JSON.stringify({planning_only:true,definitions:rows.length,x1:50,x2:50})+'\n');

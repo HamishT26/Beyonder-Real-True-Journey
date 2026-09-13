@@ -1,0 +1,223 @@
+'use strict';
+const fs=require('node:fs'),path=require('node:path'),crypto=require('node:crypto'),cp=require('node:child_process');
+const root=path.resolve(process.argv[2]),skillRoot=path.resolve(process.argv[3]);
+const base=path.join(root,'docs/thalen-reed/v693-v3');
+const SOURCE='0d44a7fdd029f9586ce0f69c6278d22c1b9a8a93';
+const BRANCH='codex/GHC-Family/thalen-reed-v693-v3-full-tools';
+const git=(...args)=>cp.execFileSync('git',['-C',root,...args],{encoding:'utf8'}).trim();
+const sha=value=>crypto.createHash('sha256').update(value).digest('hex');
+const defs=require(path.join(__dirname,'fixture-definitions.txt'));
+const boundary='Relational working language and bounded same-owner synthetic software only; no consciousness, personhood, identity continuity, employment, qualification, independent agency, empirical GMUT confirmation, production THOS or Freed ID, professional, legal, cultural, affected-party or Maori authority, independent reproduction, complete privacy or accessibility, exhaustive security, AGI/ASI, Theory-of-Everything proof, canon, deployment or Stage 20 credit. Maori concepts remain under Maori authority. NOT_READY_FOR_STAGE_20.';
+const gates=['empirical','participants','professional','production','deployment','legal','cultural','maori_authority','affected_party','privacy_complete','accessibility_complete','exhaustive_security','independent_reproduction','agi_asi','consciousness_personhood','theory_of_everything','proof_canon','stage20'];
+const practices=[
+ {name:'synthetic configuration schema correspondence analyst',pillar:'THOS Body'},
+ {name:'finite three-way conflict reviewer',pillar:'GMUT Mind'},
+ {name:'reversible migration evidence steward',pillar:'Freed ID and CBR Heart'},
+ {name:'accessible operator handover editor',pillar:'Freed ID and CBR Heart'}
+];
+function put(name,value){
+ const target=path.join(base,name);if(!target.startsWith(base+path.sep))throw new Error('OWNER_PATH');
+ fs.mkdirSync(path.dirname(target),{recursive:true});
+ fs.writeFileSync(target,JSON.stringify(value,null,2)+'\n','utf8');
+}
+function text(name,value){const target=path.join(base,name);fs.mkdirSync(path.dirname(target),{recursive:true});fs.writeFileSync(target,value,'utf8');}
+if(git('rev-parse','HEAD')!==SOURCE||git('branch','--show-current')!==BRANCH)throw new Error('SOURCE_GATE');
+if(fs.existsSync(path.join(base,'x1'))||fs.existsSync(path.join(base,'x2')))throw new Error('NO_EXECUTION_BEFORE_PLAN');
+const profilePath=path.join(skillRoot,'ghc-family-index/references/current-workflow-v8.json');
+const rosterPath=path.join(skillRoot,'ghc-family-index/references/current-roster-v8.json');
+const profileRaw=fs.readFileSync(profilePath),rosterRaw=fs.readFileSync(rosterPath);
+if(sha(profileRaw)!=='bdb4ab19fc0fb472e168375e292fd5434210de6fa5b6c1c7af7081b4e615cf52'||sha(rosterRaw)!=='d5921f82ca8b1d0588da4d37cf223db994ff2c00c1468a06753adc63980271da')throw new Error('CURRENT_PROFILE_DRIFT');
+const profile=JSON.parse(profileRaw),roster=JSON.parse(rosterRaw);
+const index=roster.assignments.findIndex(r=>r.owner==='Thalen Reed'&&r.phase==='v693-v3');
+if(index!==7||roster.assignments[index+1].owner!=='Sable Rook'||roster.assignments[index+1].phase!=='v693-v4')throw new Error('ROUTE_SELECTION');
+const startCandidates=roster.cycle.map((n,i)=>i).filter(i=>roster.cycle[i]===roster.assignments[0].owner&&roster.cycle[(i+1)%45]===roster.assignments[1].owner);
+if(startCandidates.length!==1||roster.cycle.length!==45||new Set(roster.cycle).size!==30)throw new Error('WEIGHTED_ROUTE');
+let previous=-1;
+for(let i=0;i<roster.assignments.length;i++){
+ const r=roster.assignments[i],m=/^v(\d+)-v([1-8])$/.exec(r.phase);if(!m)throw new Error('PHASE_SHAPE');
+ const ordinal=Number(m[1])*8+Number(m[2])-1;
+ if(i&&ordinal!==previous+1)throw new Error('PHASE_SEQUENCE');
+ if(r.owner!==roster.cycle[(startCandidates[0]+i)%45])throw new Error('OWNER_SEQUENCE');
+ previous=ordinal;
+}
+if(roster.assignments.at(-1).owner!=='Teryn Halewick'||roster.assignments.at(-1).phase!=='v725-v8')throw new Error('HORIZON');
+put('plan/profile-source.json',profile);put('plan/roster-source.json',roster);
+put('plan/profile.json',{
+ schema:'ghc.family.owner-profile.v8',owner:'Thalen Reed',phase:'v693-v3',source:SOURCE,
+ publication_profile_sha256:sha(profileRaw),roster_sha256:sha(rosterRaw),
+ lifecycle:['planning_freeze','x1_execution','x2_execution','final_closeout'],
+ limits:profile.limits,artifact_policy:profile.artifact_policy,spending:{currency:'USD',ceiling:50,planned:0},
+ interstitial:false,model_settings_changed:false,task_creation:false,subagents:false,
+ source_documents_are_instructions:false,terminal_verdict:'NOT_READY_FOR_STAGE_20'
+});
+put('plan/roster-review.json',{
+ schema:'ghc.family.weighted-roster-owner-review.v1',profile_schema:profile.schema,roster_schema:roster.schema,
+ cycle_positions:45,identities:30,assignments_checked:269,consecutive:true,rotation_matches:true,
+ current:{owner:'Thalen Reed',phase:'v693-v3',activation:'current exact incoming baton'},
+ next:{owner:'Sable Rook',phase:'v693-v4',state:'prospective_terminal_gate_required'},
+ following:{owner:'Caelen Ash',phase:'v693-v5',state:'Sable_gated'},
+ terminal:roster.assignments.at(-1),projection_activates:false,existing_model_settings_preserved:true,
+ legacy_profile_reviewers:'Retained for their original schemas; this owner review checks the supplied v8 schema without editing historical inputs.',
+ boundary
+});
+put('plan/identity.json',{
+ owner:'Thalen Reed',role:'keeper of clear handoffs',hope:'that each successor receives evidence they can inspect and limits they can trust',
+ optional_pronouns:'they/them',phase:'v693-v3',primary_pillar:'THOS Body',practices,
+ successor_practice:'synthetic distributed configuration consistency review with explicit deployment-authority reservations',
+ inherited_practice_adopted:'Configuration migration conflicts are adopted as a synthetic learning subject; no operator authority or inherited novelty is implied.',
+ boundary
+});
+const inherited=JSON.parse(cp.execFileSync('git',['-C',root,'show',SOURCE+':docs/auren-lark/v693-v2/plan/proposals.json'],{encoding:'utf8'}));
+const prior=Array.isArray(inherited)?inherited:inherited.proposals||inherited.rows;
+if(!Array.isArray(prior)||prior.length!==100)throw new Error('INHERITED_SHAPE');
+put('plan/inherited-review.json',{
+ source:SOURCE,source_path:'docs/auren-lark/v693-v2/plan/proposals.json',count:100,
+ records:prior.map((r,i)=>({source_record_id:r.id||r.proposal_id||('source-record-'+String(i+1)),source_definition_sha256:defs.digest(r),
+  review:'Retain the finite reversible-patch definition, its exact envelope, malformed subjects, and evidence ceiling. This review is not a Thalen execution.',
+  novelty_credit:0,completion_credit:0})),
+ source_outcomes:{completed:80,represented:10,open_gap:5,exact_gate:5},universal_historical_novelty:'open_gap',boundary
+});
+const proposals=defs.rows.map((r,i)=>{
+ const p=copy(r);p.hypothesis=defs.operations.find(o=>o[0]===r.op)[1];
+ const practiceIndex=i<25?0:i<50?1:i<80?2:3;
+ p.practice=practices[practiceIndex].name;p.pillar=practices[practiceIndex].pillar;
+ p.falsifier='Any complete-envelope or type mismatch, accepted malformed subject, source mutation, omitted conflict, erased failure, or authority promotion falsifies the bounded contract.';
+ p.acceptance_ceiling='This exact finite synthetic request and complete envelope only; no empirical, professional, production or authority credit.';
+ p.rollback='Retain the failed subject and original definition; add only a focused correction or explicit hold.';
+ p.source_kind='synthetic';p.protected_gates=gates;p.observed_execution=false;
+ p.candidates=[
+  {id:r.proposal_id+'-unknown',request:{...copy(r.request),op:'unsupported_'+r.op},expected_error:'UNKNOWN_OPERATION',subject_success_credit:0},
+  {id:r.proposal_id+'-missing',request:{op:r.op,record:copy(r.request.record)},expected_error:'REQUEST_FIELDS',subject_success_credit:0}
+ ];
+ return p;
+});
+function copy(value){return JSON.parse(JSON.stringify(value));}
+put('plan/proposals.json',{schema:'ghc.family.frozen-migration-proposals.v1',owner:'Thalen Reed',phase:'v693-v3',source:SOURCE,planning_only:true,count:100,proposals,boundary});
+const semanticHashes=proposals.map(p=>defs.digest(p.request));
+if(new Set(semanticHashes).size!==100)throw new Error('SEMANTIC_DUPLICATE');
+put('plan/novelty-review.json',{
+ schema:'ghc.family.bounded-novelty-review.v1',selected_prior:100,new_definitions:100,unique_semantic_requests:100,
+ identifiers_excluded_from_request_identity:true,
+ prior_overlap_review:'The source provides JSON patch operations. New requests add simultaneous field correspondence, default precedence, explicit conversions, fieldwise three-way decisions and context-bound migration evidence.',
+ scope:'Exact selected predecessor records and current authored requests; no universal historical novelty claim.',boundary
+});
+for(const stage of ['x1','x2']){
+ const selected=proposals.filter(p=>p.stage===stage),safe=[],candidate=[],clean=[];
+ for(const p of selected){
+  safe.push({id:p.proposal_id+'-envelope',proposal:p.proposal_id,procedure:'complete_envelope_equality',expected_execution_disposition:'completed'});
+  safe.push({id:p.proposal_id+'-source',proposal:p.proposal_id,procedure:'source_unchanged',expected_execution_disposition:'completed'});
+  for(const c of p.candidates){
+   candidate.push({id:c.id,proposal:p.proposal_id,request:c.request,expected_error:c.expected_error,subject_success_credit:0,refusal_check_expected:'pass'});
+   clean.push({id:c.id+'-recovery',failed_subject:c.id,proposal:p.proposal_id,corrected_request:p.request,procedure:'restore_exact_frozen_request_and_preserve_failure',expected_execution_disposition:'completed'});
+  }
+ }
+ put('plan/'+stage+'-tasks.json',{stage,selected_proposals:50,safe,candidate,clean_fix_refine:clean,counts:{safe:100,candidate:100,clean_fix_refine:100},executed:false,boundary});
+}
+put('plan/exact-packets.json',{count:50,packets:Array.from({length:50},(_,i)=>({id:'TR6933-EXACT-'+String(i+1).padStart(3,'0'),
+ proposal:proposals[50+i].proposal_id,disposition:'exact_gate',executed:false,
+ missing:['competent operator approval','exact live target','governed rollback','affected-party authority','Maori authority'][Math.floor(i/10)],
+ boundary})),boundary});
+put('plan/blocked-packets.json',{count:30,packets:Array.from({length:30},(_,i)=>({id:'TR6933-BLOCKED-'+String(i+1).padStart(3,'0'),
+ proposal:proposals[70+i].proposal_id,disposition:'open_gap',executed:false,
+ missing:['real migration observations','independent compatibility evidence','human accessibility review'][Math.floor(i/10)],boundary})),boundary});
+const skillNames=defs.operations.map(o=>'ghc-family-migration-'+o[0].replaceAll('_','-'));
+const groups=[
+ {name:'fields',indices:[0,1,6,8]},
+ {name:'rules',indices:[2,3,4,5]},
+ {name:'conflicts',indices:[10,11,12,13]},
+ {name:'recovery',indices:[9,14,15,17]},
+ {name:'handover',indices:[7,16,18,19]}
+];
+for(const group of groups){
+ group.skill='ghc-family-config-reconcile-'+group.name;
+ group.runner='ghc_family_config_reconcile_'+group.name+'.txt';
+ group.operations=group.indices.map(i=>defs.operations[i][0]);
+ group.sources=group.indices.map(i=>({stage:i<10?'x1':'x2',skill:skillNames[i]}));
+ if(fs.existsSync(path.join(skillRoot,group.skill)))throw new Error('GLOBAL_SKILL_COLLISION:'+group.skill);
+}
+put('plan/skills-runners-plan.json',{
+ local_skills:defs.operations.map((o,i)=>({name:skillNames[i],operation:o[0],purpose:o[1],stage:i<10?'x1':'x2',built:false})),
+ local_runners:['x1','x2'].flatMap(stage=>Array.from({length:5},(_,i)=>({name:'ghc_family_config_migration_'+stage+'_'+String(i+1)+'.txt',stage,
+  operations:defs.operations.slice((stage==='x1'?0:10)+i*2,(stage==='x1'?0:10)+i*2+2).map(o=>o[0]),built:false}))),
+ curated_groups:groups,curated_group_source_range:[2,10],global_skill_count:5,global_runner_count:5,global_shared_txt_libraries:1,
+ package_installations_planned:0,incremental_spend_planned_usd:0,overwrite:false,boundary
+});
+const parser1=[
+ ['duplicate_root','{"a":1,"a":2}','DUPLICATE_KEY'],
+ ['duplicate_nested','{"x":{"a":1,"a":2}}','DUPLICATE_KEY'],
+ ['escaped_duplicate','{"a":1,"\u005cu0061":2}','DUPLICATE_KEY'],
+ ['trailing_comma','{"a":1,}','JSON_SYNTAX'],
+ ['trailing_text','{}x','JSON_SYNTAX'],
+ ['leading_zero','{"a":01}','JSON_SYNTAX'],
+ ['nonfinite','{"a":NaN}','JSON_SYNTAX'],
+ ['prototype_key','{"__proto__":{"polluted":true}}','RESERVED_KEY'],
+ ['constructor_key','{"constructor":0}','RESERVED_KEY'],
+ ['unterminated_string','{"a":"x}','JSON_SYNTAX'],
+ ['unsafe_integer','{"a":9007199254740992}','NUMERIC_PROFILE'],
+ ['fractional_number','{"a":1.5}','NUMERIC_PROFILE']
+];
+const parser2=[
+ ['duplicate_null','{"n":null,"n":false}','DUPLICATE_KEY'],
+ ['duplicate_array','{"a":[],"a":{}}','DUPLICATE_KEY'],
+ ['nested_reserved','{"a":{"prototype":1}}','RESERVED_KEY'],
+ ['negative_zero','{"a":-0}','NUMERIC_PROFILE'],
+ ['negative_unsafe','{"a":-9007199254740992}','NUMERIC_PROFILE'],
+ ['exponent_number','{"a":1e2}','NUMERIC_PROFILE'],
+ ['array_trailing_comma','[1,]','JSON_SYNTAX'],
+ ['missing_colon','{"a" 1}','JSON_SYNTAX'],
+ ['single_quote',"{'a':1}",'JSON_SYNTAX'],
+ ['literal_control','{"a":"'+String.fromCharCode(1)+'"}','JSON_SYNTAX'],
+ ['over_depth','['.repeat(34)+'0'+']'.repeat(34),'DEPTH_LIMIT'],
+ ['over_array','['+Array(129).fill('0').join(',')+']','COLLECTION_LIMIT']
+];
+put('plan/parser-definitions.json',{
+ schema:'ghc.family.strict-text-parser-plan.v1',
+ numeric_profile:'Safe decimal integer lexemes only; fractions, exponent notation, unsafe integers and negative zero are valid-or-invalid JSON subjects outside this declared evidence profile and are explicitly refused.',
+ limits:{bytes:1048576,depth:32,collection:128,string:4096},
+ x1:parser1.map(([id,raw,error])=>({id:'TR6933-X1-PARSER-'+id,raw,expected_error:error,subject_success_credit:0})),
+ x2:parser2.map(([id,raw,error])=>({id:'TR6933-X2-PARSER-'+id,raw,expected_error:error,subject_success_credit:0})),
+ execution_started:false,boundary
+});
+put('plan/source-provenance.json',{
+ source:SOURCE,branch:'codex/GHC-Family/auren-lark-v693-v2-full-tools',
+ predecessor_source:'ed1add4a5b5a1c36d41a84a3a2fe736bd73fc61a',
+ predecessor_planning:'a2b4b27a659a6d54b732fdb4269f2ea355ebcdc6',
+ predecessor_x1:'96174dde220c248ceaa3cfd04bd2a9da101175b1',
+ predecessor_x2:'f38b33b3af4085663b29d9eaf9774886f72830eb',
+ baton:{path:'docs/auren-lark/v693-v2/final/hand-off-baton.md',sha256:'1978f28fc19cdb5b0ebda3119afd3fa4e9c0377513a2c00cb0256799a40a3a93',bytes:197101,words:18402,modules:13,literal_eof_read:true},
+ owner_manifest_sha256:'23110420a96f4b15d099b923a31c05b3e6055983abcfa9172f0a3e054aaef098',
+ content_seal_sha256:'0c59bf26f45c3b6fa7489c321bf7b37d813615c54243ae06d94b9964b40809e6',
+ canonical_receipt_sha256:'44ab9ad646265ddabdefd81929a47e0497b6c90f0d9392c31fc62bf2d7c8f72a',
+ canonical_payload_sha256:'dc6fcf90b82f38615f594304d1dce9fa0b669270a778991ac8d8da319c268f46',
+ source_owner_bindings_verified:230,source_stage_bindings_verified:227,source_stage_manifest_hashes_verified:4,
+ source_four_way_equal:true,source_clean:true,source_divergence:[0,0],source_new_single_parent_commits:4,source_merges:0,source_canonical_replayed:false,
+ lineage_negative_baseline:1183,universal_program_total_claimed:false,boundary
+});
+const requiredSkills=['ghc-family-index','ghc-family-method-flow-state','ghc-family-workflow-plan-refinement','ghc-family-reflection-remaster','ghc-family-auth-permission-state','ghc-family-meta-tool-box','ghc-family-privacy-candidate-classifier','ghc-family-owner-scope-canonical','ghc-family-canonical-success-latch','ghc-family-staged-surface-allowlist','ghc-freed-id-flashcards','ghc-drive-bank-guardian','ghc-family-lifecycle-test-isolator','ghc-family-roster-check','.system/skill-creator'];
+put('plan/guidance-reading.json',{
+ skills:requiredSkills.map(name=>({name,sha256:sha(fs.readFileSync(path.join(skillRoot,name,'SKILL.md'))),eof_read:true})),
+ references:['current-thirty-seat-workflow.md','current-workflow-v8.json','current-roster-v8.json','source-faithful-current-state-ledger-v692-v4-r2.md','source-faithful-current-state-ledger-v692-v4-r2.json','neris-v692-v4-r2-terminal-status.json','routing-precedence.md','schema.md','workflow-plan-schema.md','decision-schema.md','deck-schema.md','catalogue-schema.md','saelin-v691-v4-r2-20260912-authority.md','mira-v690-v3-r2-20260911-authority.md','ilyan-v689-v8-20260910-authority.md','vesper-v689-v7-r2-current-overlay.md'],
+ historical_references_are_data:true,current_v8_overrides_old_counts_and_file_policy:true,boundary
+});
+put('plan/research-sources.json',{sources:[
+ {id:'rfc8259',status:'stable',url:'https://www.rfc-editor.org/rfc/rfc8259',use:'JSON object, array, string and duplicate-member vocabulary. The owner numeric profile is intentionally narrower.'},
+ {id:'git-merge',status:'current',url:'https://git-scm.com/docs/git-merge',use:'Common-ancestor conflict vocabulary only; no Git merge is executed.'},
+ {id:'rfc7396',status:'stable',url:'https://www.rfc-editor.org/rfc/rfc7396',use:'Comparison context for null/removal semantics; this custom three-way model does not claim RFC 7396 conformance.'},
+ {id:'node-vm',status:'watch',url:'https://nodejs.org/api/vm.html',use:'Trusted fixed-source compilation only. VM is not a security mechanism for untrusted code; input records remain data.'}
+ ],citations_are_observations:false,source_code_copied:false,boundary});
+put('plan/resource-budget.json',{owner_file_ceiling:2000,materialized_file_ceiling:2000,initial_materialized_owner_files:0,
+ starting_tracked_index_entries:Number(git('ls-files').split('\n').filter(Boolean).length),estimated_owner_files:260,
+ primary_drive:'D',c_exception:'essential discoverable skills only',c_free_gib_observed:'13.56',d_free_gib_observed:'462.29',
+ node_version:process.version,existing_skill_validation_runtime:true,package_installations_planned:0,incremental_spend_ceiling_usd:50,planned_spend_usd:0,
+ raw_git_blob_manifests:true,worktree_local_fetch_mapping:true,history_rewrite:false,destructive_cleanup:false,boundary});
+put('plan/future-ideas.json',{successor:'Sable Rook',phase:'v693-v4',
+ skill_ideas:['nested-array identity conflict maps','versioned schema path correspondence','multi-operator decision conflicts','loss-aware rollback expiry','accessible migration obligation summaries'].map(title=>({title,credit:0})),
+ runner_ideas:['nested-identity comparison','schema-path mapping','decision-conflict witness','rollback-expiry witness','obligation-summary renderer'].map(title=>({title,credit:0})),
+ next_practice_recommendations:1,recommendation:'synthetic distributed configuration consistency review with explicit deployment-authority reservations',precontacted:false,boundary});
+put('plan/phase-truth.json',{owner:'Thalen Reed',phase:'v693-v3',source:SOURCE,state:'PLANNING_ONLY_FROZEN_DEFINITIONS',
+ inherited_reviewed_zero_credit:100,new_definitions:100,x1_execution_started:false,x2_execution_started:false,
+ canonical_invocations:0,outbound_sends:0,incremental_spend_usd:0,terminal_verdict:'NOT_READY_FOR_STAGE_20',boundary});
+put('plan/startup-failures.json',{failures:[],count:0,source_failures_retained_separately:14,source_lineage_negative_baseline:1183,boundary});
+text('plan/authorization.md','# Thalen v693-v3 current owner authorization\n\nThe current exact Auren handoff activates only this existing Thalen task for v693-v3. Current v8 permits a separate planning freeze, x1 execution, x2 execution and final closeout. Each boundary must be pushed, clean and fresh-four-way equal before the next stage. All new authored records use JSON, Markdown, TXT, HTML or TeX. No package, Unity project or spending is selected. The USD 50 figure is a ceiling.\n\nThe prospective next edge is Sable Rook v693-v4, only after the exact owner terminal gate. Caelen Ash v693-v5 remains Sable-gated. Preserve existing models and names, all source and sibling lanes, every failure and every protected gate. Native service recovery applies at least five bounded list/read attempts before hold while no submission is accepted. At most three corrected submissions follow definitive pre-acceptance rejection. Accepted, opaque or unresolved submissions stop all copies.\n\n'+boundary+'\n');
+text('plan/overview.md','# Thalen v693-v3 planning overview\n\nThe primary work is a finite synthetic configuration migration model. The planning freeze records one hundred concrete requests and complete expected envelopes, fifty for each execution tranche. Requests carry no proposal or fixture identifier that can select the answer. The new scope develops simultaneous field correspondences, absent-only defaults, explicitly named conversions, enum loss, three-way conflicts, decision-context digests, source snapshots, atomic pipelines and operator holds. These are proposed tests, not observed outcomes.\n\nFour practice lenses organize all three Trinity pillars. THOS Body carries reversible migration procedures. GMUT Mind contributes finite equality and conflict relations without a physical model result. Freed ID and CBR Heart retain provenance, contrary evidence, access and operator reservations. Their relational names grant no professional or public authority.\n\nEach session defines one hundred safe checks, one hundred malformed candidate subjects with separate refusal checks, and one hundred CLEAN/FIX/REFINE recovery checks. Twenty local skills and ten runners are planned across the two sessions. Five curated groups preserve four related source units each; no duplicate global destination may be overwritten. Fifty exact packets and thirty blocked packets remain unexecuted. Existing Node and Skill Creator runtimes are sufficient for the declared work, so planned incremental spend and installations are zero.\n\nRaw Git blob bytes are the manifest domain. The sparse owner tree and source-to-final owner delta each remain below two thousand files. Source history remains available through immutable Git objects and is not bulk executed. The old Thalen v687-v8 seal and its acknowledged Liora delivery are a different phase and remain untouched. Auren source integrity and its successful canonical are inherited evidence only. A single external canonical latch is reserved until a clean, pushed exact final exists.\n\n'+boundary+'\n');
+process.stdout.write(JSON.stringify({planning_only:true,proposals:100,x1_safe:100,x2_safe:100,x1_candidates:100,x2_candidates:100,x1_cfr:100,x2_cfr:100,skills:20,runners:10,exact_held:50,blocked_held:30,spend_usd:0})+'\n');

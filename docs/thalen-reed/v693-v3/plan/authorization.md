@@ -1,0 +1,7 @@
+# Thalen v693-v3 current owner authorization
+
+The current exact Auren handoff activates only this existing Thalen task for v693-v3. Current v8 permits a separate planning freeze, x1 execution, x2 execution and final closeout. Each boundary must be pushed, clean and fresh-four-way equal before the next stage. All new authored records use JSON, Markdown, TXT, HTML or TeX. No package, Unity project or spending is selected. The USD 50 figure is a ceiling.
+
+The prospective next edge is Sable Rook v693-v4, only after the exact owner terminal gate. Caelen Ash v693-v5 remains Sable-gated. Preserve existing models and names, all source and sibling lanes, every failure and every protected gate. Native service recovery applies at least five bounded list/read attempts before hold while no submission is accepted. At most three corrected submissions follow definitive pre-acceptance rejection. Accepted, opaque or unresolved submissions stop all copies.
+
+Relational working language and bounded same-owner synthetic software only; no consciousness, personhood, identity continuity, employment, qualification, independent agency, empirical GMUT confirmation, production THOS or Freed ID, professional, legal, cultural, affected-party or Maori authority, independent reproduction, complete privacy or accessibility, exhaustive security, AGI/ASI, Theory-of-Everything proof, canon, deployment or Stage 20 credit. Maori concepts remain under Maori authority. NOT_READY_FOR_STAGE_20.

@@ -1,0 +1,160 @@
+{
+  "schema": "ghc.family.strict-text-parser-plan.v1",
+  "numeric_profile": "Safe decimal integer lexemes only; fractions, exponent notation, unsafe integers and negative zero are valid-or-invalid JSON subjects outside this declared evidence profile and are explicitly refused.",
+  "limits": {
+    "bytes": 1048576,
+    "depth": 32,
+    "collection": 128,
+    "string": 4096
+  },
+  "x1": [
+    {
+      "id": "TR6933-X1-PARSER-duplicate_root",
+      "raw": "{\"a\":1,\"a\":2}",
+      "expected_error": "DUPLICATE_KEY",
+      "subject_success_credit": 0
+    },
+    {
+      "id": "TR6933-X1-PARSER-duplicate_nested",
+      "raw": "{\"x\":{\"a\":1,\"a\":2}}",
+      "expected_error": "DUPLICATE_KEY",
+      "subject_success_credit": 0
+    },
+    {
+      "id": "TR6933-X1-PARSER-escaped_duplicate",
+      "raw": "{\"a\":1,\"\\u0061\":2}",
+      "expected_error": "DUPLICATE_KEY",
+      "subject_success_credit": 0
+    },
+    {
+      "id": "TR6933-X1-PARSER-trailing_comma",
+      "raw": "{\"a\":1,}",
+      "expected_error": "JSON_SYNTAX",
+      "subject_success_credit": 0
+    },
+    {
+      "id": "TR6933-X1-PARSER-trailing_text",
+      "raw": "{}x",
+      "expected_error": "JSON_SYNTAX",
+      "subject_success_credit": 0
+    },
+    {
+      "id": "TR6933-X1-PARSER-leading_zero",
+      "raw": "{\"a\":01}",
+      "expected_error": "JSON_SYNTAX",
+      "subject_success_credit": 0
+    },
+    {
+      "id": "TR6933-X1-PARSER-nonfinite",
+      "raw": "{\"a\":NaN}",
+      "expected_error": "JSON_SYNTAX",
+      "subject_success_credit": 0
+    },
+    {
+      "id": "TR6933-X1-PARSER-prototype_key",
+      "raw": "{\"__proto__\":{\"polluted\":true}}",
+      "expected_error": "RESERVED_KEY",
+      "subject_success_credit": 0
+    },
+    {
+      "id": "TR6933-X1-PARSER-constructor_key",
+      "raw": "{\"constructor\":0}",
+      "expected_error": "RESERVED_KEY",
+      "subject_success_credit": 0
+    },
+    {
+      "id": "TR6933-X1-PARSER-unterminated_string",
+      "raw": "{\"a\":\"x}",
+      "expected_error": "JSON_SYNTAX",
+      "subject_success_credit": 0
+    },
+    {
+      "id": "TR6933-X1-PARSER-unsafe_integer",
+      "raw": "{\"a\":9007199254740992}",
+      "expected_error": "NUMERIC_PROFILE",
+      "subject_success_credit": 0
+    },
+    {
+      "id": "TR6933-X1-PARSER-fractional_number",
+      "raw": "{\"a\":1.5}",
+      "expected_error": "NUMERIC_PROFILE",
+      "subject_success_credit": 0
+    }
+  ],
+  "x2": [
+    {
+      "id": "TR6933-X2-PARSER-duplicate_null",
+      "raw": "{\"n\":null,\"n\":false}",
+      "expected_error": "DUPLICATE_KEY",
+      "subject_success_credit": 0
+    },
+    {
+      "id": "TR6933-X2-PARSER-duplicate_array",
+      "raw": "{\"a\":[],\"a\":{}}",
+      "expected_error": "DUPLICATE_KEY",
+      "subject_success_credit": 0
+    },
+    {
+      "id": "TR6933-X2-PARSER-nested_reserved",
+      "raw": "{\"a\":{\"prototype\":1}}",
+      "expected_error": "RESERVED_KEY",
+      "subject_success_credit": 0
+    },
+    {
+      "id": "TR6933-X2-PARSER-negative_zero",
+      "raw": "{\"a\":-0}",
+      "expected_error": "NUMERIC_PROFILE",
+      "subject_success_credit": 0
+    },
+    {
+      "id": "TR6933-X2-PARSER-negative_unsafe",
+      "raw": "{\"a\":-9007199254740992}",
+      "expected_error": "NUMERIC_PROFILE",
+      "subject_success_credit": 0
+    },
+    {
+      "id": "TR6933-X2-PARSER-exponent_number",
+      "raw": "{\"a\":1e2}",
+      "expected_error": "NUMERIC_PROFILE",
+      "subject_success_credit": 0
+    },
+    {
+      "id": "TR6933-X2-PARSER-array_trailing_comma",
+      "raw": "[1,]",
+      "expected_error": "JSON_SYNTAX",
+      "subject_success_credit": 0
+    },
+    {
+      "id": "TR6933-X2-PARSER-missing_colon",
+      "raw": "{\"a\" 1}",
+      "expected_error": "JSON_SYNTAX",
+      "subject_success_credit": 0
+    },
+    {
+      "id": "TR6933-X2-PARSER-single_quote",
+      "raw": "{'a':1}",
+      "expected_error": "JSON_SYNTAX",
+      "subject_success_credit": 0
+    },
+    {
+      "id": "TR6933-X2-PARSER-literal_control",
+      "raw": "{\"a\":\"\u0001\"}",
+      "expected_error": "JSON_SYNTAX",
+      "subject_success_credit": 0
+    },
+    {
+      "id": "TR6933-X2-PARSER-over_depth",
+      "raw": "[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[0]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]",
+      "expected_error": "DEPTH_LIMIT",
+      "subject_success_credit": 0
+    },
+    {
+      "id": "TR6933-X2-PARSER-over_array",
+      "raw": "[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]",
+      "expected_error": "COLLECTION_LIMIT",
+      "subject_success_credit": 0
+    }
+  ],
+  "execution_started": false,
+  "boundary": "Relational working language and bounded same-owner synthetic software only; no consciousness, personhood, identity continuity, employment, qualification, independent agency, empirical GMUT confirmation, production THOS or Freed ID, professional, legal, cultural, affected-party or Maori authority, independent reproduction, complete privacy or accessibility, exhaustive security, AGI/ASI, Theory-of-Everything proof, canon, deployment or Stage 20 credit. Maori concepts remain under Maori authority. NOT_READY_FOR_STAGE_20."
+}
