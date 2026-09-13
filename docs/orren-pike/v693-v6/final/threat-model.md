@@ -1,0 +1,7 @@
+# Bounded interface review
+
+The computational runners accept supplied finite JSON on standard input, emit one JSON envelope and do not perform network, task, account, credential, deployment or publication actions. Duplicate JSON keys are refused before dispatch. Closed operation fields, eight-state and six-step limits, exact rational tokens, row normalization and disjoint partition cover prevent the tested malformed requests from acquiring a valid result. Prototype-shaped object keys are parsed into objects without a prototype and rejected by field admission. No input is evaluated as code.
+
+The lifecycle and validation scripts use explicit owner paths and fixed Git subprocess arguments without a shell. They remain trusted local tooling. This review does not establish exhaustive security or prove safety for arbitrary hostile resource exhaustion. Global installation was additive into absent exact targets; no caller or shared history was removed.
+
+Relational working language and bounded same-owner synthetic software only. No consciousness, personhood, identity continuity, qualification, independent agency, empirical GMUT confirmation, production THOS or Freed ID, professional, legal, cultural, affected-party or Maori authority, complete privacy or accessibility, exhaustive security, independent reproduction, AGI/ASI, Theory-of-Everything proof, canon, deployment or Stage 20 credit. Maori concepts remain under Maori authority. NOT_READY_FOR_STAGE_20.

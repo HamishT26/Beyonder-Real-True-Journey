@@ -1,0 +1,9 @@
+# Exact owner validation scope
+
+Validation covers only docs/orren-pike/v693-v6 and the 37 explicitly bound installed files of this owner capability publication. The immutable source is 47999e715135245314bd411f7eced92bab1aec10. Historical planning and execution manifests are checked at their exact commits and against the final bytes. No unchanged predecessor module, sibling lane or complete repository suite is executed.
+
+The semantic suite has 970 checks: one hundred full envelopes, one hundred input-preservation checks, one hundred sealed-observation and ceiling comparisons, two hundred malformed-input refusals, thirty-eight additional parser refusals, twenty local runner checks, one algebra process/coverage check, four hundred five algebra checks, and six synthetic canonical-prerequisite checks. These are same-owner checks with overlapping fixtures, not that many independent experiments or new proposals.
+
+Source and installed parity, strict JSON, trusted TXT compilation, document and file ceilings, staged allowlists, five privacy classes, bounded changed-code review, exact ancestry, clean state and fresh four-way equality complete the owner gate. Compilation with vm.Script does not execute the code or provide a security sandbox. The canonical itself is invoked once only after exact final push.
+
+Relational working language and bounded same-owner synthetic software only. No consciousness, personhood, identity continuity, qualification, independent agency, empirical GMUT confirmation, production THOS or Freed ID, professional, legal, cultural, affected-party or Maori authority, complete privacy or accessibility, exhaustive security, independent reproduction, AGI/ASI, Theory-of-Everything proof, canon, deployment or Stage 20 credit. Maori concepts remain under Maori authority. NOT_READY_FOR_STAGE_20.
