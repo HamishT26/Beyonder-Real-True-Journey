@@ -1,0 +1,10 @@
+import json, pathlib, sys
+root=pathlib.Path(sys.argv[1])/"docs"/"neris-solane"/"v692-v4"/"plan"
+freeze=json.loads((root/"proposal-freeze.json").read_text(encoding="utf-8"))
+inherited=json.loads((root/"inherited-review.json").read_text(encoding="utf-8"))
+route=json.loads((root/"route-projection.json").read_text(encoding="utf-8"))
+assert freeze["frozen_before_execution"] and len(freeze["proposals"])==200
+assert len(inherited["selected"])==200 and inherited["novelty_credit"]==0
+assert len(route["assignments"])==269 and route["first_numbered_edge"]["owner"]=="Neris Solane"
+assert not (root.parent/"x1").exists()
+print(json.dumps({"status":"VALID_PLANNING_ONLY","new":200,"inherited":200,"assignments":269}))
