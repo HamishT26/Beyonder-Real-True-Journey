@@ -1,0 +1,77 @@
+{
+  "defined_before_execution": true,
+  "candidate_cases": [
+    {
+      "negative_id": "IF6931-x1-parser-duplicate-key",
+      "raw": "{\"op\": \"graph_shape\", \"graph\": {\"id\": \"C4\", \"nodes\": [\"intake\", \"review\", \"decision\", \"archive\"], \"edges\": [[0, 1], [1, 2], [2, 3]]}, \"args\": {},\"op\":\"graph_shape\"}",
+      "expected_error": "duplicate_key",
+      "success_credit": 0
+    },
+    {
+      "negative_id": "IF6931-x1-parser-trailing",
+      "raw": "{\"op\": \"graph_shape\", \"graph\": {\"id\": \"C4\", \"nodes\": [\"intake\", \"review\", \"decision\", \"archive\"], \"edges\": [[0, 1], [1, 2], [2, 3]]}, \"args\": {}} false",
+      "expected_error": "json_syntax",
+      "success_credit": 0
+    },
+    {
+      "negative_id": "IF6931-x1-parser-fraction",
+      "raw": "{\"op\": \"graph_shape\", \"graph\": {\"id\": \"C4\", \"nodes\": [\"intake\", \"review\", \"decision\", \"archive\"], \"edges\": [[0, 1], [1, 2], [2, 3]]}, \"args\": {\"n\": 0.5}}",
+      "expected_error": "integer_range",
+      "success_credit": 0
+    },
+    {
+      "negative_id": "IF6931-x1-parser-unsafe",
+      "raw": "{\"op\": \"graph_shape\", \"graph\": {\"id\": \"C4\", \"nodes\": [\"intake\", \"review\", \"decision\", \"archive\"], \"edges\": [[0, 1], [1, 2], [2, 3]]}, \"args\": {\"n\": 9007199254740992}}",
+      "expected_error": "integer_range",
+      "success_credit": 0
+    },
+    {
+      "negative_id": "IF6931-x1-parser-cycle",
+      "raw": "{\"op\": \"graph_shape\", \"graph\": {\"id\": \"C4\", \"nodes\": [\"intake\", \"review\", \"decision\", \"archive\"], \"edges\": [[0, 1], [1, 0]]}, \"args\": {}}",
+      "expected_error": "cycle",
+      "success_credit": 0
+    },
+    {
+      "negative_id": "IF6931-x1-parser-duplicate-label",
+      "raw": "{\"op\": \"graph_shape\", \"graph\": {\"id\": \"C4\", \"nodes\": [\"intake\", \"intake\", \"decision\", \"archive\"], \"edges\": [[0, 1], [1, 2], [2, 3]]}, \"args\": {}}",
+      "expected_error": "nodes",
+      "success_credit": 0
+    },
+    {
+      "negative_id": "IF6931-x1-parser-index-range",
+      "raw": "{\"op\": \"graph_shape\", \"graph\": {\"id\": \"C4\", \"nodes\": [\"intake\", \"review\", \"decision\", \"archive\"], \"edges\": [[0, 99]]}, \"args\": {}}",
+      "expected_error": "edges",
+      "success_credit": 0
+    },
+    {
+      "negative_id": "IF6931-x1-parser-unknown-operation",
+      "raw": "{\"op\": \"unregistered\", \"graph\": {\"id\": \"C4\", \"nodes\": [\"intake\", \"review\", \"decision\", \"archive\"], \"edges\": [[0, 1], [1, 2], [2, 3]]}, \"args\": {}}",
+      "expected_error": "operation",
+      "success_credit": 0
+    },
+    {
+      "negative_id": "IF6931-x1-parser-null-graph",
+      "raw": "{\"op\": \"graph_shape\", \"graph\": null, \"args\": {}}",
+      "expected_error": "field_set",
+      "success_credit": 0
+    },
+    {
+      "negative_id": "IF6931-x1-parser-invalid-json",
+      "raw": "{",
+      "expected_error": "json_syntax",
+      "success_credit": 0
+    },
+    {
+      "negative_id": "IF6931-x1-parser-depth",
+      "raw": "[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[0]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]",
+      "expected_error": "depth_budget",
+      "success_credit": 0
+    },
+    {
+      "negative_id": "IF6931-x1-parser-self-edge",
+      "raw": "{\"op\": \"graph_shape\", \"graph\": {\"id\": \"C4\", \"nodes\": [\"intake\", \"review\", \"decision\", \"archive\"], \"edges\": [[0, 0]]}, \"args\": {}}",
+      "expected_error": "edges",
+      "success_credit": 0
+    }
+  ]
+}
