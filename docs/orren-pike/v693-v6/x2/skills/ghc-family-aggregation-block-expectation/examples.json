@@ -1,0 +1,789 @@
+{
+  "operation": "aggregation_block_expectation",
+  "examples": [
+    {
+      "proposal_id": "OP6936-P056",
+      "request": {
+        "op": "aggregation_block_expectation",
+        "kernel": [
+          [
+            "1"
+          ]
+        ],
+        "partition": [
+          [
+            0
+          ]
+        ],
+        "distribution": [
+          "1"
+        ],
+        "rewards": [
+          "2"
+        ]
+      },
+      "expected": {
+        "ok": true,
+        "value": {
+          "block_constant": true,
+          "coarse_rewards": [
+            "2"
+          ],
+          "state_expectation": "2",
+          "block_expectation": "2",
+          "preserved": true
+        },
+        "error": null
+      },
+      "adverse": [
+        {
+          "negative_id": "OP6936-P056-N1",
+          "request": {
+            "op": "aggregation_block_expectation",
+            "kernel": [
+              [
+                "1"
+              ]
+            ],
+            "partition": [
+              [
+                0
+              ]
+            ],
+            "distribution": [
+              "1"
+            ],
+            "rewards": [
+              "2"
+            ],
+            "unexpected": true
+          },
+          "expected": {
+            "ok": false,
+            "value": null,
+            "error": "E_FIELDS"
+          },
+          "subject_success_credit": 0
+        },
+        {
+          "negative_id": "OP6936-P056-N2",
+          "request": {
+            "op": "aggregation_block_expectation",
+            "kernel": [
+              [
+                "0"
+              ]
+            ],
+            "partition": [
+              [
+                0
+              ]
+            ],
+            "distribution": [
+              "1"
+            ],
+            "rewards": [
+              "2"
+            ]
+          },
+          "expected": {
+            "ok": false,
+            "value": null,
+            "error": "E_STOCHASTIC"
+          },
+          "subject_success_credit": 0
+        }
+      ]
+    },
+    {
+      "proposal_id": "OP6936-P057",
+      "request": {
+        "op": "aggregation_block_expectation",
+        "kernel": [
+          [
+            "1/2",
+            "0",
+            "1/2"
+          ],
+          [
+            "0",
+            "1/2",
+            "1/2"
+          ],
+          [
+            "0",
+            "0",
+            "1"
+          ]
+        ],
+        "partition": [
+          [
+            0,
+            1
+          ],
+          [
+            2
+          ]
+        ],
+        "distribution": [
+          "1/2",
+          "1/2",
+          "0"
+        ],
+        "rewards": [
+          "2",
+          "2",
+          "0"
+        ]
+      },
+      "expected": {
+        "ok": true,
+        "value": {
+          "block_constant": true,
+          "coarse_rewards": [
+            "2",
+            "0"
+          ],
+          "state_expectation": "2",
+          "block_expectation": "2",
+          "preserved": true
+        },
+        "error": null
+      },
+      "adverse": [
+        {
+          "negative_id": "OP6936-P057-N1",
+          "request": {
+            "op": "aggregation_block_expectation",
+            "kernel": [
+              [
+                "1/2",
+                "0",
+                "1/2"
+              ],
+              [
+                "0",
+                "1/2",
+                "1/2"
+              ],
+              [
+                "0",
+                "0",
+                "1"
+              ]
+            ],
+            "partition": [
+              [
+                0,
+                1
+              ],
+              [
+                2
+              ]
+            ],
+            "distribution": [
+              "1/2",
+              "1/2",
+              "0"
+            ],
+            "rewards": [
+              "2",
+              "2",
+              "0"
+            ],
+            "unexpected": true
+          },
+          "expected": {
+            "ok": false,
+            "value": null,
+            "error": "E_FIELDS"
+          },
+          "subject_success_credit": 0
+        },
+        {
+          "negative_id": "OP6936-P057-N2",
+          "request": {
+            "op": "aggregation_block_expectation",
+            "kernel": [
+              [
+                "0",
+                "0",
+                "0"
+              ],
+              [
+                "0",
+                "1/2",
+                "1/2"
+              ],
+              [
+                "0",
+                "0",
+                "1"
+              ]
+            ],
+            "partition": [
+              [
+                0,
+                1
+              ],
+              [
+                2
+              ]
+            ],
+            "distribution": [
+              "1/2",
+              "1/2",
+              "0"
+            ],
+            "rewards": [
+              "2",
+              "2",
+              "0"
+            ]
+          },
+          "expected": {
+            "ok": false,
+            "value": null,
+            "error": "E_STOCHASTIC"
+          },
+          "subject_success_credit": 0
+        }
+      ]
+    },
+    {
+      "proposal_id": "OP6936-P058",
+      "request": {
+        "op": "aggregation_block_expectation",
+        "kernel": [
+          [
+            "1/2",
+            "0",
+            "1/2"
+          ],
+          [
+            "0",
+            "1/4",
+            "3/4"
+          ],
+          [
+            "0",
+            "0",
+            "1"
+          ]
+        ],
+        "partition": [
+          [
+            0,
+            1
+          ],
+          [
+            2
+          ]
+        ],
+        "distribution": [
+          "1/2",
+          "1/2",
+          "0"
+        ],
+        "rewards": [
+          "2",
+          "3",
+          "0"
+        ]
+      },
+      "expected": {
+        "ok": true,
+        "value": {
+          "block_constant": false,
+          "coarse_rewards": null,
+          "state_expectation": "5/2",
+          "block_expectation": null,
+          "preserved": false
+        },
+        "error": null
+      },
+      "adverse": [
+        {
+          "negative_id": "OP6936-P058-N1",
+          "request": {
+            "op": "aggregation_block_expectation",
+            "kernel": [
+              [
+                "1/2",
+                "0",
+                "1/2"
+              ],
+              [
+                "0",
+                "1/4",
+                "3/4"
+              ],
+              [
+                "0",
+                "0",
+                "1"
+              ]
+            ],
+            "partition": [
+              [
+                0,
+                1
+              ],
+              [
+                2
+              ]
+            ],
+            "distribution": [
+              "1/2",
+              "1/2",
+              "0"
+            ],
+            "rewards": [
+              "2",
+              "3",
+              "0"
+            ],
+            "unexpected": true
+          },
+          "expected": {
+            "ok": false,
+            "value": null,
+            "error": "E_FIELDS"
+          },
+          "subject_success_credit": 0
+        },
+        {
+          "negative_id": "OP6936-P058-N2",
+          "request": {
+            "op": "aggregation_block_expectation",
+            "kernel": [
+              [
+                "0",
+                "0",
+                "0"
+              ],
+              [
+                "0",
+                "1/4",
+                "3/4"
+              ],
+              [
+                "0",
+                "0",
+                "1"
+              ]
+            ],
+            "partition": [
+              [
+                0,
+                1
+              ],
+              [
+                2
+              ]
+            ],
+            "distribution": [
+              "1/2",
+              "1/2",
+              "0"
+            ],
+            "rewards": [
+              "2",
+              "3",
+              "0"
+            ]
+          },
+          "expected": {
+            "ok": false,
+            "value": null,
+            "error": "E_STOCHASTIC"
+          },
+          "subject_success_credit": 0
+        }
+      ]
+    },
+    {
+      "proposal_id": "OP6936-P059",
+      "request": {
+        "op": "aggregation_block_expectation",
+        "kernel": [
+          [
+            "0",
+            "0",
+            "1",
+            "0"
+          ],
+          [
+            "0",
+            "0",
+            "0",
+            "1"
+          ],
+          [
+            "0",
+            "0",
+            "1",
+            "0"
+          ],
+          [
+            "1",
+            "0",
+            "0",
+            "0"
+          ]
+        ],
+        "partition": [
+          [
+            0,
+            1
+          ],
+          [
+            2,
+            3
+          ]
+        ],
+        "distribution": [
+          "1/2",
+          "1/2",
+          "0",
+          "0"
+        ],
+        "rewards": [
+          "2",
+          "2",
+          "0",
+          "0"
+        ]
+      },
+      "expected": {
+        "ok": true,
+        "value": {
+          "block_constant": true,
+          "coarse_rewards": [
+            "2",
+            "0"
+          ],
+          "state_expectation": "2",
+          "block_expectation": "2",
+          "preserved": true
+        },
+        "error": null
+      },
+      "adverse": [
+        {
+          "negative_id": "OP6936-P059-N1",
+          "request": {
+            "op": "aggregation_block_expectation",
+            "kernel": [
+              [
+                "0",
+                "0",
+                "1",
+                "0"
+              ],
+              [
+                "0",
+                "0",
+                "0",
+                "1"
+              ],
+              [
+                "0",
+                "0",
+                "1",
+                "0"
+              ],
+              [
+                "1",
+                "0",
+                "0",
+                "0"
+              ]
+            ],
+            "partition": [
+              [
+                0,
+                1
+              ],
+              [
+                2,
+                3
+              ]
+            ],
+            "distribution": [
+              "1/2",
+              "1/2",
+              "0",
+              "0"
+            ],
+            "rewards": [
+              "2",
+              "2",
+              "0",
+              "0"
+            ],
+            "unexpected": true
+          },
+          "expected": {
+            "ok": false,
+            "value": null,
+            "error": "E_FIELDS"
+          },
+          "subject_success_credit": 0
+        },
+        {
+          "negative_id": "OP6936-P059-N2",
+          "request": {
+            "op": "aggregation_block_expectation",
+            "kernel": [
+              [
+                "0",
+                "0",
+                "0",
+                "0"
+              ],
+              [
+                "0",
+                "0",
+                "0",
+                "1"
+              ],
+              [
+                "0",
+                "0",
+                "1",
+                "0"
+              ],
+              [
+                "1",
+                "0",
+                "0",
+                "0"
+              ]
+            ],
+            "partition": [
+              [
+                0,
+                1
+              ],
+              [
+                2,
+                3
+              ]
+            ],
+            "distribution": [
+              "1/2",
+              "1/2",
+              "0",
+              "0"
+            ],
+            "rewards": [
+              "2",
+              "2",
+              "0",
+              "0"
+            ]
+          },
+          "expected": {
+            "ok": false,
+            "value": null,
+            "error": "E_STOCHASTIC"
+          },
+          "subject_success_credit": 0
+        }
+      ]
+    },
+    {
+      "proposal_id": "OP6936-P060",
+      "request": {
+        "op": "aggregation_block_expectation",
+        "kernel": [
+          [
+            "0",
+            "1/2",
+            "1/2",
+            "0"
+          ],
+          [
+            "1/2",
+            "0",
+            "0",
+            "1/2"
+          ],
+          [
+            "1/4",
+            "0",
+            "3/4",
+            "0"
+          ],
+          [
+            "0",
+            "1/4",
+            "0",
+            "3/4"
+          ]
+        ],
+        "partition": [
+          [
+            0,
+            1
+          ],
+          [
+            2,
+            3
+          ]
+        ],
+        "distribution": [
+          "1/6",
+          "1/6",
+          "1/3",
+          "1/3"
+        ],
+        "rewards": [
+          "1",
+          "1",
+          "4",
+          "4"
+        ]
+      },
+      "expected": {
+        "ok": true,
+        "value": {
+          "block_constant": true,
+          "coarse_rewards": [
+            "1",
+            "4"
+          ],
+          "state_expectation": "3",
+          "block_expectation": "3",
+          "preserved": true
+        },
+        "error": null
+      },
+      "adverse": [
+        {
+          "negative_id": "OP6936-P060-N1",
+          "request": {
+            "op": "aggregation_block_expectation",
+            "kernel": [
+              [
+                "0",
+                "1/2",
+                "1/2",
+                "0"
+              ],
+              [
+                "1/2",
+                "0",
+                "0",
+                "1/2"
+              ],
+              [
+                "1/4",
+                "0",
+                "3/4",
+                "0"
+              ],
+              [
+                "0",
+                "1/4",
+                "0",
+                "3/4"
+              ]
+            ],
+            "partition": [
+              [
+                0,
+                1
+              ],
+              [
+                2,
+                3
+              ]
+            ],
+            "distribution": [
+              "1/6",
+              "1/6",
+              "1/3",
+              "1/3"
+            ],
+            "rewards": [
+              "1",
+              "1",
+              "4",
+              "4"
+            ],
+            "unexpected": true
+          },
+          "expected": {
+            "ok": false,
+            "value": null,
+            "error": "E_FIELDS"
+          },
+          "subject_success_credit": 0
+        },
+        {
+          "negative_id": "OP6936-P060-N2",
+          "request": {
+            "op": "aggregation_block_expectation",
+            "kernel": [
+              [
+                "0",
+                "0",
+                "0",
+                "0"
+              ],
+              [
+                "1/2",
+                "0",
+                "0",
+                "1/2"
+              ],
+              [
+                "1/4",
+                "0",
+                "3/4",
+                "0"
+              ],
+              [
+                "0",
+                "1/4",
+                "0",
+                "3/4"
+              ]
+            ],
+            "partition": [
+              [
+                0,
+                1
+              ],
+              [
+                2,
+                3
+              ]
+            ],
+            "distribution": [
+              "1/6",
+              "1/6",
+              "1/3",
+              "1/3"
+            ],
+            "rewards": [
+              "1",
+              "1",
+              "4",
+              "4"
+            ]
+          },
+          "expected": {
+            "ok": false,
+            "value": null,
+            "error": "E_STOCHASTIC"
+          },
+          "subject_success_credit": 0
+        }
+      ]
+    }
+  ],
+  "boundary": "Relational working language and bounded same-owner synthetic software only. No consciousness, personhood, identity continuity, qualification, independent agency, empirical GMUT confirmation, production THOS or Freed ID, professional, legal, cultural, affected-party or Maori authority, complete privacy or accessibility, exhaustive security, independent reproduction, AGI/ASI, Theory-of-Everything proof, canon, deployment or Stage 20 credit. Maori concepts remain under Maori authority. NOT_READY_FOR_STAGE_20."
+}

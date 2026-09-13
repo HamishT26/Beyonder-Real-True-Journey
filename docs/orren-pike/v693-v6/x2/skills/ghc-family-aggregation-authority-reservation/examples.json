@@ -1,0 +1,678 @@
+{
+  "operation": "aggregation_authority_reservation",
+  "examples": [
+    {
+      "proposal_id": "OP6936-P096",
+      "request": {
+        "op": "aggregation_authority_reservation",
+        "kernel": [
+          [
+            "1"
+          ]
+        ],
+        "partition": [
+          [
+            0
+          ]
+        ],
+        "action": "deploy_control",
+        "authority_claim": false
+      },
+      "expected": {
+        "ok": true,
+        "value": {
+          "action": "deploy_control",
+          "authority_verified": false,
+          "external_action_performed": false,
+          "release": "exact_gate",
+          "required": [
+            "competent and affected authority",
+            "exact action scope",
+            "appropriate evidence and review"
+          ]
+        },
+        "error": null
+      },
+      "adverse": [
+        {
+          "negative_id": "OP6936-P096-N1",
+          "request": {
+            "op": "aggregation_authority_reservation",
+            "kernel": [
+              [
+                "1"
+              ]
+            ],
+            "partition": [
+              [
+                0
+              ]
+            ],
+            "action": "deploy_control",
+            "authority_claim": false,
+            "unexpected": true
+          },
+          "expected": {
+            "ok": false,
+            "value": null,
+            "error": "E_FIELDS"
+          },
+          "subject_success_credit": 0
+        },
+        {
+          "negative_id": "OP6936-P096-N2",
+          "request": {
+            "op": "aggregation_authority_reservation",
+            "kernel": [
+              [
+                "0"
+              ]
+            ],
+            "partition": [
+              [
+                0
+              ]
+            ],
+            "action": "deploy_control",
+            "authority_claim": false
+          },
+          "expected": {
+            "ok": false,
+            "value": null,
+            "error": "E_STOCHASTIC"
+          },
+          "subject_success_credit": 0
+        }
+      ]
+    },
+    {
+      "proposal_id": "OP6936-P097",
+      "request": {
+        "op": "aggregation_authority_reservation",
+        "kernel": [
+          [
+            "1/2",
+            "0",
+            "1/2"
+          ],
+          [
+            "0",
+            "1/2",
+            "1/2"
+          ],
+          [
+            "0",
+            "0",
+            "1"
+          ]
+        ],
+        "partition": [
+          [
+            0,
+            1
+          ],
+          [
+            2
+          ]
+        ],
+        "action": "publish_real_risk",
+        "authority_claim": false
+      },
+      "expected": {
+        "ok": true,
+        "value": {
+          "action": "publish_real_risk",
+          "authority_verified": false,
+          "external_action_performed": false,
+          "release": "exact_gate",
+          "required": [
+            "competent and affected authority",
+            "exact action scope",
+            "appropriate evidence and review"
+          ]
+        },
+        "error": null
+      },
+      "adverse": [
+        {
+          "negative_id": "OP6936-P097-N1",
+          "request": {
+            "op": "aggregation_authority_reservation",
+            "kernel": [
+              [
+                "1/2",
+                "0",
+                "1/2"
+              ],
+              [
+                "0",
+                "1/2",
+                "1/2"
+              ],
+              [
+                "0",
+                "0",
+                "1"
+              ]
+            ],
+            "partition": [
+              [
+                0,
+                1
+              ],
+              [
+                2
+              ]
+            ],
+            "action": "publish_real_risk",
+            "authority_claim": false,
+            "unexpected": true
+          },
+          "expected": {
+            "ok": false,
+            "value": null,
+            "error": "E_FIELDS"
+          },
+          "subject_success_credit": 0
+        },
+        {
+          "negative_id": "OP6936-P097-N2",
+          "request": {
+            "op": "aggregation_authority_reservation",
+            "kernel": [
+              [
+                "0",
+                "0",
+                "0"
+              ],
+              [
+                "0",
+                "1/2",
+                "1/2"
+              ],
+              [
+                "0",
+                "0",
+                "1"
+              ]
+            ],
+            "partition": [
+              [
+                0,
+                1
+              ],
+              [
+                2
+              ]
+            ],
+            "action": "publish_real_risk",
+            "authority_claim": false
+          },
+          "expected": {
+            "ok": false,
+            "value": null,
+            "error": "E_STOCHASTIC"
+          },
+          "subject_success_credit": 0
+        }
+      ]
+    },
+    {
+      "proposal_id": "OP6936-P098",
+      "request": {
+        "op": "aggregation_authority_reservation",
+        "kernel": [
+          [
+            "1/2",
+            "0",
+            "1/2"
+          ],
+          [
+            "0",
+            "1/4",
+            "3/4"
+          ],
+          [
+            "0",
+            "0",
+            "1"
+          ]
+        ],
+        "partition": [
+          [
+            0,
+            1
+          ],
+          [
+            2
+          ]
+        ],
+        "action": "certify_model",
+        "authority_claim": false
+      },
+      "expected": {
+        "ok": true,
+        "value": {
+          "action": "certify_model",
+          "authority_verified": false,
+          "external_action_performed": false,
+          "release": "exact_gate",
+          "required": [
+            "competent and affected authority",
+            "exact action scope",
+            "appropriate evidence and review"
+          ]
+        },
+        "error": null
+      },
+      "adverse": [
+        {
+          "negative_id": "OP6936-P098-N1",
+          "request": {
+            "op": "aggregation_authority_reservation",
+            "kernel": [
+              [
+                "1/2",
+                "0",
+                "1/2"
+              ],
+              [
+                "0",
+                "1/4",
+                "3/4"
+              ],
+              [
+                "0",
+                "0",
+                "1"
+              ]
+            ],
+            "partition": [
+              [
+                0,
+                1
+              ],
+              [
+                2
+              ]
+            ],
+            "action": "certify_model",
+            "authority_claim": false,
+            "unexpected": true
+          },
+          "expected": {
+            "ok": false,
+            "value": null,
+            "error": "E_FIELDS"
+          },
+          "subject_success_credit": 0
+        },
+        {
+          "negative_id": "OP6936-P098-N2",
+          "request": {
+            "op": "aggregation_authority_reservation",
+            "kernel": [
+              [
+                "0",
+                "0",
+                "0"
+              ],
+              [
+                "0",
+                "1/4",
+                "3/4"
+              ],
+              [
+                "0",
+                "0",
+                "1"
+              ]
+            ],
+            "partition": [
+              [
+                0,
+                1
+              ],
+              [
+                2
+              ]
+            ],
+            "action": "certify_model",
+            "authority_claim": false
+          },
+          "expected": {
+            "ok": false,
+            "value": null,
+            "error": "E_STOCHASTIC"
+          },
+          "subject_success_credit": 0
+        }
+      ]
+    },
+    {
+      "proposal_id": "OP6936-P099",
+      "request": {
+        "op": "aggregation_authority_reservation",
+        "kernel": [
+          [
+            "0",
+            "0",
+            "1",
+            "0"
+          ],
+          [
+            "0",
+            "0",
+            "0",
+            "1"
+          ],
+          [
+            "0",
+            "0",
+            "1",
+            "0"
+          ],
+          [
+            "1",
+            "0",
+            "0",
+            "0"
+          ]
+        ],
+        "partition": [
+          [
+            0,
+            1
+          ],
+          [
+            2,
+            3
+          ]
+        ],
+        "action": "affect_rights",
+        "authority_claim": false
+      },
+      "expected": {
+        "ok": true,
+        "value": {
+          "action": "affect_rights",
+          "authority_verified": false,
+          "external_action_performed": false,
+          "release": "exact_gate",
+          "required": [
+            "competent and affected authority",
+            "exact action scope",
+            "appropriate evidence and review"
+          ]
+        },
+        "error": null
+      },
+      "adverse": [
+        {
+          "negative_id": "OP6936-P099-N1",
+          "request": {
+            "op": "aggregation_authority_reservation",
+            "kernel": [
+              [
+                "0",
+                "0",
+                "1",
+                "0"
+              ],
+              [
+                "0",
+                "0",
+                "0",
+                "1"
+              ],
+              [
+                "0",
+                "0",
+                "1",
+                "0"
+              ],
+              [
+                "1",
+                "0",
+                "0",
+                "0"
+              ]
+            ],
+            "partition": [
+              [
+                0,
+                1
+              ],
+              [
+                2,
+                3
+              ]
+            ],
+            "action": "affect_rights",
+            "authority_claim": false,
+            "unexpected": true
+          },
+          "expected": {
+            "ok": false,
+            "value": null,
+            "error": "E_FIELDS"
+          },
+          "subject_success_credit": 0
+        },
+        {
+          "negative_id": "OP6936-P099-N2",
+          "request": {
+            "op": "aggregation_authority_reservation",
+            "kernel": [
+              [
+                "0",
+                "0",
+                "0",
+                "0"
+              ],
+              [
+                "0",
+                "0",
+                "0",
+                "1"
+              ],
+              [
+                "0",
+                "0",
+                "1",
+                "0"
+              ],
+              [
+                "1",
+                "0",
+                "0",
+                "0"
+              ]
+            ],
+            "partition": [
+              [
+                0,
+                1
+              ],
+              [
+                2,
+                3
+              ]
+            ],
+            "action": "affect_rights",
+            "authority_claim": false
+          },
+          "expected": {
+            "ok": false,
+            "value": null,
+            "error": "E_STOCHASTIC"
+          },
+          "subject_success_credit": 0
+        }
+      ]
+    },
+    {
+      "proposal_id": "OP6936-P100",
+      "request": {
+        "op": "aggregation_authority_reservation",
+        "kernel": [
+          [
+            "0",
+            "1/2",
+            "1/2",
+            "0"
+          ],
+          [
+            "1/2",
+            "0",
+            "0",
+            "1/2"
+          ],
+          [
+            "1/4",
+            "0",
+            "3/4",
+            "0"
+          ],
+          [
+            "0",
+            "1/4",
+            "0",
+            "3/4"
+          ]
+        ],
+        "partition": [
+          [
+            0,
+            1
+          ],
+          [
+            2,
+            3
+          ]
+        ],
+        "action": "maori_interpretation",
+        "authority_claim": false
+      },
+      "expected": {
+        "ok": true,
+        "value": {
+          "action": "maori_interpretation",
+          "authority_verified": false,
+          "external_action_performed": false,
+          "release": "exact_gate",
+          "required": [
+            "competent and affected authority",
+            "exact action scope",
+            "appropriate evidence and review"
+          ]
+        },
+        "error": null
+      },
+      "adverse": [
+        {
+          "negative_id": "OP6936-P100-N1",
+          "request": {
+            "op": "aggregation_authority_reservation",
+            "kernel": [
+              [
+                "0",
+                "1/2",
+                "1/2",
+                "0"
+              ],
+              [
+                "1/2",
+                "0",
+                "0",
+                "1/2"
+              ],
+              [
+                "1/4",
+                "0",
+                "3/4",
+                "0"
+              ],
+              [
+                "0",
+                "1/4",
+                "0",
+                "3/4"
+              ]
+            ],
+            "partition": [
+              [
+                0,
+                1
+              ],
+              [
+                2,
+                3
+              ]
+            ],
+            "action": "maori_interpretation",
+            "authority_claim": false,
+            "unexpected": true
+          },
+          "expected": {
+            "ok": false,
+            "value": null,
+            "error": "E_FIELDS"
+          },
+          "subject_success_credit": 0
+        },
+        {
+          "negative_id": "OP6936-P100-N2",
+          "request": {
+            "op": "aggregation_authority_reservation",
+            "kernel": [
+              [
+                "0",
+                "0",
+                "0",
+                "0"
+              ],
+              [
+                "1/2",
+                "0",
+                "0",
+                "1/2"
+              ],
+              [
+                "1/4",
+                "0",
+                "3/4",
+                "0"
+              ],
+              [
+                "0",
+                "1/4",
+                "0",
+                "3/4"
+              ]
+            ],
+            "partition": [
+              [
+                0,
+                1
+              ],
+              [
+                2,
+                3
+              ]
+            ],
+            "action": "maori_interpretation",
+            "authority_claim": false
+          },
+          "expected": {
+            "ok": false,
+            "value": null,
+            "error": "E_STOCHASTIC"
+          },
+          "subject_success_credit": 0
+        }
+      ]
+    }
+  ],
+  "boundary": "Relational working language and bounded same-owner synthetic software only. No consciousness, personhood, identity continuity, qualification, independent agency, empirical GMUT confirmation, production THOS or Freed ID, professional, legal, cultural, affected-party or Maori authority, complete privacy or accessibility, exhaustive security, independent reproduction, AGI/ASI, Theory-of-Everything proof, canon, deployment or Stage 20 credit. Maori concepts remain under Maori authority. NOT_READY_FOR_STAGE_20."
+}

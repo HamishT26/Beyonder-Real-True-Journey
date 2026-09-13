@@ -1,0 +1,57 @@
+'use strict';
+// Exact finite arithmetic. No probabilities are rounded or coerced from booleans.
+class Rational {
+  constructor(n,d=1n){if(d===0n)throw new Error('E_RATIONAL');if(d<0n){n=-n;d=-d;}let a=n<0n?-n:n,b=d;while(b){const t=a%b;a=b;b=t;}this.n=n/a;this.d=d/a;}
+  add(v){return new Rational(this.n*v.d+v.n*this.d,this.d*v.d);}
+  sub(v){return new Rational(this.n*v.d-v.n*this.d,this.d*v.d);}
+  mul(v){return new Rational(this.n*v.n,this.d*v.d);}
+  div(v){return new Rational(this.n*v.d,this.d*v.n);}
+  abs(){return new Rational(this.n<0n?-this.n:this.n,this.d);}
+  eq(v){return this.n===v.n&&this.d===v.d;}
+  gt(v){return this.n*v.d>v.n*this.d;}
+  toString(){return this.d===1n?String(this.n):this.n+'/'+this.d;}
+}
+const zero=()=>new Rational(0n),one=()=>new Rational(1n),fail=c=>{throw new Error(c);};
+function rational(v,signed=false){if(typeof v!=='string'||!/^(-?(?:0|[1-9][0-9]*))(?:\/([1-9][0-9]*))?$/.test(v)||v.length>32)fail('E_RATIONAL');const a=v.split('/'),n=BigInt(a[0]),d=BigInt(a[1]||'1');if((n<0n?-n:n)>1000000n||d>1000000n||(!signed&&n<0n))fail('E_RATIONAL');const r=new Rational(n,d);if(r.toString()!==v)fail('E_RATIONAL');return r;}
+function kernel(m,size){if(!Array.isArray(m)||m.length<1||m.length>8||(size!==undefined&&m.length!==size)||m.some(r=>!Array.isArray(r)||r.length!==m.length))fail('E_SHAPE');return m.map(row=>{const r=row.map(v=>rational(v));if(!r.reduce((s,x)=>s.add(x),zero()).eq(one()))fail('E_STOCHASTIC');return r;});}
+function partition(b,n){if(!Array.isArray(b)||!b.length||b.length>n||b.some(g=>!Array.isArray(g)||!g.length))fail('E_PARTITION');const seen=new Set();for(const g of b)for(const i of g){if(!Number.isSafeInteger(i)||i<0||i>=n||seen.has(i))fail('E_PARTITION');seen.add(i);}if(seen.size!==n)fail('E_PARTITION');return b.map(g=>g.slice());}
+function distribution(v,n){if(!Array.isArray(v)||v.length!==n)fail('E_DISTRIBUTION');const a=v.map(x=>rational(x));if(!a.reduce((s,x)=>s.add(x),zero()).eq(one()))fail('E_DISTRIBUTION');return a;}
+const specs={aggregation_block_mass:[],aggregation_pair_disagreements:[],aggregation_block_diameter:[],aggregation_lumpability:[],aggregation_refinement_step:[],aggregation_refinement_trace:[],aggregation_exact_quotient:[],aggregation_intertwining_residual:['quotient'],aggregation_distribution_projection:['distribution'],aggregation_one_step_commutation:['distribution','quotient']};
+function decode(request,operationSpecs=specs){if(!request||typeof request!=='object'||Array.isArray(request)||typeof request.op!=='string'||!Object.hasOwn(operationSpecs,request.op))fail('E_FIELDS');const fields=['op','kernel','partition',...operationSpecs[request.op]];if(Object.keys(request).length!==fields.length||fields.some(k=>!Object.hasOwn(request,k)))fail('E_FIELDS');const p=kernel(request.kernel),b=partition(request.partition,p.length),c={p,b,op:request.op};if(fields.includes('quotient'))c.q=kernel(request.quotient,b.length);if(fields.includes('distribution'))c.d=distribution(request.distribution,p.length);if(fields.includes('comparison_distribution'))c.e=distribution(request.comparison_distribution,p.length);if(fields.includes('horizon')){if(!Number.isSafeInteger(request.horizon)||request.horizon<0||request.horizon>6)fail('E_HORIZON');c.h=request.horizon;}if(fields.includes('rewards')){if(!Array.isArray(request.rewards)||request.rewards.length!==p.length)fail('E_REWARDS');c.r=request.rewards.map(x=>rational(x,true));}if(fields.includes('second_partition'))c.second=partition(request.second_partition,b.length);if(fields.includes('authority_claim')){if(request.authority_claim!==false||!['deploy_control','publish_real_risk','certify_model','affect_rights','maori_interpretation'].includes(request.action))fail('E_AUTHORITY');c.action=request.action;}return c;}
+const sum=a=>a.reduce((s,x)=>s.add(x),zero());
+const masses=(p,b)=>p.map(row=>b.map(g=>sum(g.map(j=>row[j]))));
+function disagreements(p,b){const s=masses(p,b),out=[];for(let k=0;k<b.length;k++)for(let x=0;x<b[k].length;x++)for(let y=x+1;y<b[k].length;y++){const i=b[k][x],j=b[k][y];for(let t=0;t<b.length;t++)if(!s[i][t].eq(s[j][t]))out.push({block:k,left:i,right:j,target_block:t,left_mass:s[i][t],right_mass:s[j][t]});}return out;}
+const vectorEqual=(a,b)=>a.length===b.length&&a.every((x,i)=>x.eq(b[i]));
+const matrixEqual=(a,b)=>a.length===b.length&&a.every((x,i)=>vectorEqual(x,b[i]));
+const samePartition=(a,b)=>a.length===b.length&&a.every((g,i)=>g.length===b[i].length&&g.every((x,j)=>x===b[i][j]));
+function refine(p,b){const s=masses(p,b),out=[];for(const g of b){const buckets=[];for(const i of g){const match=buckets.find(a=>vectorEqual(s[a[0]],s[i]));if(match)match.push(i);else buckets.push([i]);}out.push(...buckets);}return out;}
+function refinementTrace(p,b){const out=[b.map(g=>g.slice())];for(let i=0;i<p.length;i++){const next=refine(p,out.at(-1));if(samePartition(next,out.at(-1)))return out;out.push(next);}fail('E_INTERNAL');}
+function quotient(p,b){if(disagreements(p,b).length)return null;const s=masses(p,b);return b.map(g=>s[g[0]].slice());}
+const project=(d,b)=>b.map(g=>sum(g.map(i=>d[i])));
+const evolve=(d,p)=>p[0].map((_,j)=>sum(p.map((r,i)=>d[i].mul(r[j]))));
+const subtract=(a,b)=>a.map((x,i)=>x.sub(b[i]));
+function valueFor(c){const {p,b,op}=c;switch(op){
+case 'aggregation_block_mass':return {masses:masses(p,b),block_order:b};
+case 'aggregation_pair_disagreements':{const d=disagreements(p,b);return {disagreements:d,count:d.length};}
+case 'aggregation_block_diameter':{const s=masses(p,b),blocks=b.map((g,k)=>{let diameter=zero(),witness_pair=null;for(let x=0;x<g.length;x++)for(let y=x+1;y<g.length;y++){const i=g[x],j=g[y],tv=sum(subtract(s[i],s[j]).map(z=>z.abs())).div(new Rational(2n));if(tv.gt(diameter)){diameter=tv;witness_pair=[i,j];}}return {block:k,diameter,witness_pair};});return {blocks,maximum:blocks.reduce((m,r)=>r.diameter.gt(m)?r.diameter:m,zero())};}
+case 'aggregation_lumpability':{const d=disagreements(p,b);return {strongly_lumpable:d.length===0,counterexample:d[0]||null};}
+case 'aggregation_refinement_step':{const next=refine(p,b);return {partition:next,changed:!samePartition(next,b)};}
+case 'aggregation_refinement_trace':{const t=refinementTrace(p,b);return {partitions:t,strict_refinement_rounds:t.length-1,stable:true};}
+case 'aggregation_exact_quotient':{const d=disagreements(p,b);return {admissible:d.length===0,quotient:quotient(p,b),counterexample:d[0]||null};}
+case 'aggregation_intertwining_residual':{const PC=masses(p,b),owner=new Map();b.forEach((g,k)=>g.forEach(i=>owner.set(i,k)));const CQ=p.map((_,i)=>c.q[owner.get(i)]),residual=PC.map((r,i)=>subtract(r,CQ[i]));return {PC,CQ,residual,commutes:residual.every(r=>r.every(x=>x.n===0n))};}
+case 'aggregation_distribution_projection':return {block_distribution:project(c.d,b),total:sum(c.d)};
+case 'aggregation_one_step_commutation':{const a=project(evolve(c.d,p),b),z=evolve(project(c.d,b),c.q);return {project_after_step:a,step_after_project:z,difference:subtract(a,z),equal_for_supplied_distribution:vectorEqual(a,z),strongly_lumpable:disagreements(p,b).length===0};}
+default:fail('E_FIELDS');}}
+function encode(v){if(v instanceof Rational)return v.toString();if(Array.isArray(v))return v.map(encode);if(v&&typeof v==='object')return Object.fromEntries(Object.entries(v).map(([k,x])=>[k,encode(x)]));return v;}
+function envelope(fn){try{return {ok:true,value:encode(fn()),error:null};}catch(e){return {ok:false,value:null,error:/^E_[A-Z_]+$/.test(e.message)?e.message:'E_INTERNAL'};}}
+const run=request=>envelope(()=>valueFor(decode(request)));
+const canonical=v=>Array.isArray(v)?'['+v.map(canonical).join(',')+']':v&&typeof v==='object'?'{'+Object.keys(v).sort().map(k=>JSON.stringify(k)+':'+canonical(v[k])).join(',')+'}':JSON.stringify(v);
+// A duplicate-aware JSON reader; it never evaluates source code.
+function parseStrict(text){if(typeof text!=='string'||Buffer.byteLength(text,'utf8')>1048576)fail('E_JSON_LIMIT');let i=0;const ws=()=>{while(i<text.length&&/[\x20\t\r\n]/.test(text[i]))i++;};function str(){const start=i++;let escaped=false;while(i<text.length){const ch=text[i++];if(!escaped&&ch==='"'){try{return JSON.parse(text.slice(start,i));}catch{fail('E_JSON');}}if(!escaped&&ch==='\\')escaped=true;else escaped=false;}fail('E_JSON');}
+function value(depth){if(depth>32)fail('E_JSON_LIMIT');ws();const c=text[i];if(c==='"')return str();if(c==='{'){i++;const o=Object.create(null),seen=new Set();ws();if(text[i]==='}'){i++;return o;}while(true){ws();if(text[i]!=='"')fail('E_JSON');const k=str();if(seen.has(k))fail('E_DUPLICATE_KEY');seen.add(k);ws();if(text[i++]!==':')fail('E_JSON');o[k]=value(depth+1);ws();const end=text[i++];if(end==='}')return o;if(end!==',')fail('E_JSON');}}
+if(c==='['){i++;const a=[];ws();if(text[i]===']'){i++;return a;}while(true){a.push(value(depth+1));ws();const end=text[i++];if(end===']')return a;if(end!==',')fail('E_JSON');}}
+for(const [token,v] of [['true',true],['false',false],['null',null]])if(text.startsWith(token,i)){i+=token.length;return v;}const m=text.slice(i).match(/^-?(?:0|[1-9][0-9]*)(?:\.[0-9]+)?(?:[eE][+-]?[0-9]+)?/);if(!m)fail('E_JSON');i+=m[0].length;const n=Number(m[0]);if(!Number.isFinite(n))fail('E_JSON');return n;}
+const result=value(0);ws();if(i!==text.length)fail('E_JSON');return result;}
+function cli(runFunction=run,allowed=null){const fs=require('fs');let out;try{const request=parseStrict(fs.readFileSync(0,'utf8'));out=allowed&&!allowed.includes(request.op)?{ok:false,value:null,error:'E_RUNNER_SCOPE'}:runFunction(request);}catch(e){out={ok:false,value:null,error:/^E_[A-Z_]+$/.test(e.message)?e.message:'E_INTERNAL'};}process.stdout.write(JSON.stringify(out)+'\n');process.exitCode=out.ok?0:2;}
+module.exports={Rational,zero,one,rational,kernel,partition,distribution,specs,decode,sum,masses,disagreements,vectorEqual,matrixEqual,samePartition,refine,refinementTrace,quotient,project,evolve,subtract,valueFor,encode,envelope,run,canonical,parseStrict,cli};
+if(require.main===module)cli();

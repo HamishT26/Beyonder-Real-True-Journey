@@ -1,0 +1,896 @@
+{
+  "operation": "aggregation_stationary_projection",
+  "examples": [
+    {
+      "proposal_id": "OP6936-P061",
+      "request": {
+        "op": "aggregation_stationary_projection",
+        "kernel": [
+          [
+            "1"
+          ]
+        ],
+        "partition": [
+          [
+            0
+          ]
+        ],
+        "distribution": [
+          "1"
+        ],
+        "quotient": [
+          [
+            "1"
+          ]
+        ]
+      },
+      "expected": {
+        "ok": true,
+        "value": {
+          "state_stationary": true,
+          "state_residual": [
+            "0"
+          ],
+          "block_distribution": [
+            "1"
+          ],
+          "block_stationary": true,
+          "block_residual": [
+            "0"
+          ],
+          "strongly_lumpable": true,
+          "theorem_prerequisites": true
+        },
+        "error": null
+      },
+      "adverse": [
+        {
+          "negative_id": "OP6936-P061-N1",
+          "request": {
+            "op": "aggregation_stationary_projection",
+            "kernel": [
+              [
+                "1"
+              ]
+            ],
+            "partition": [
+              [
+                0
+              ]
+            ],
+            "distribution": [
+              "1"
+            ],
+            "quotient": [
+              [
+                "1"
+              ]
+            ],
+            "unexpected": true
+          },
+          "expected": {
+            "ok": false,
+            "value": null,
+            "error": "E_FIELDS"
+          },
+          "subject_success_credit": 0
+        },
+        {
+          "negative_id": "OP6936-P061-N2",
+          "request": {
+            "op": "aggregation_stationary_projection",
+            "kernel": [
+              [
+                "0"
+              ]
+            ],
+            "partition": [
+              [
+                0
+              ]
+            ],
+            "distribution": [
+              "1"
+            ],
+            "quotient": [
+              [
+                "1"
+              ]
+            ]
+          },
+          "expected": {
+            "ok": false,
+            "value": null,
+            "error": "E_STOCHASTIC"
+          },
+          "subject_success_credit": 0
+        }
+      ]
+    },
+    {
+      "proposal_id": "OP6936-P062",
+      "request": {
+        "op": "aggregation_stationary_projection",
+        "kernel": [
+          [
+            "1/2",
+            "0",
+            "1/2"
+          ],
+          [
+            "0",
+            "1/2",
+            "1/2"
+          ],
+          [
+            "0",
+            "0",
+            "1"
+          ]
+        ],
+        "partition": [
+          [
+            0,
+            1
+          ],
+          [
+            2
+          ]
+        ],
+        "distribution": [
+          "1/2",
+          "1/2",
+          "0"
+        ],
+        "quotient": [
+          [
+            "1/2",
+            "1/2"
+          ],
+          [
+            "0",
+            "1"
+          ]
+        ]
+      },
+      "expected": {
+        "ok": true,
+        "value": {
+          "state_stationary": false,
+          "state_residual": [
+            "-1/4",
+            "-1/4",
+            "1/2"
+          ],
+          "block_distribution": [
+            "1",
+            "0"
+          ],
+          "block_stationary": false,
+          "block_residual": [
+            "-1/2",
+            "1/2"
+          ],
+          "strongly_lumpable": true,
+          "theorem_prerequisites": false
+        },
+        "error": null
+      },
+      "adverse": [
+        {
+          "negative_id": "OP6936-P062-N1",
+          "request": {
+            "op": "aggregation_stationary_projection",
+            "kernel": [
+              [
+                "1/2",
+                "0",
+                "1/2"
+              ],
+              [
+                "0",
+                "1/2",
+                "1/2"
+              ],
+              [
+                "0",
+                "0",
+                "1"
+              ]
+            ],
+            "partition": [
+              [
+                0,
+                1
+              ],
+              [
+                2
+              ]
+            ],
+            "distribution": [
+              "1/2",
+              "1/2",
+              "0"
+            ],
+            "quotient": [
+              [
+                "1/2",
+                "1/2"
+              ],
+              [
+                "0",
+                "1"
+              ]
+            ],
+            "unexpected": true
+          },
+          "expected": {
+            "ok": false,
+            "value": null,
+            "error": "E_FIELDS"
+          },
+          "subject_success_credit": 0
+        },
+        {
+          "negative_id": "OP6936-P062-N2",
+          "request": {
+            "op": "aggregation_stationary_projection",
+            "kernel": [
+              [
+                "0",
+                "0",
+                "0"
+              ],
+              [
+                "0",
+                "1/2",
+                "1/2"
+              ],
+              [
+                "0",
+                "0",
+                "1"
+              ]
+            ],
+            "partition": [
+              [
+                0,
+                1
+              ],
+              [
+                2
+              ]
+            ],
+            "distribution": [
+              "1/2",
+              "1/2",
+              "0"
+            ],
+            "quotient": [
+              [
+                "1/2",
+                "1/2"
+              ],
+              [
+                "0",
+                "1"
+              ]
+            ]
+          },
+          "expected": {
+            "ok": false,
+            "value": null,
+            "error": "E_STOCHASTIC"
+          },
+          "subject_success_credit": 0
+        }
+      ]
+    },
+    {
+      "proposal_id": "OP6936-P063",
+      "request": {
+        "op": "aggregation_stationary_projection",
+        "kernel": [
+          [
+            "1/2",
+            "0",
+            "1/2"
+          ],
+          [
+            "0",
+            "1/4",
+            "3/4"
+          ],
+          [
+            "0",
+            "0",
+            "1"
+          ]
+        ],
+        "partition": [
+          [
+            0,
+            1
+          ],
+          [
+            2
+          ]
+        ],
+        "distribution": [
+          "1/2",
+          "1/2",
+          "0"
+        ],
+        "quotient": [
+          [
+            "1/2",
+            "1/2"
+          ],
+          [
+            "0",
+            "1"
+          ]
+        ]
+      },
+      "expected": {
+        "ok": true,
+        "value": {
+          "state_stationary": false,
+          "state_residual": [
+            "-1/4",
+            "-3/8",
+            "5/8"
+          ],
+          "block_distribution": [
+            "1",
+            "0"
+          ],
+          "block_stationary": false,
+          "block_residual": [
+            "-1/2",
+            "1/2"
+          ],
+          "strongly_lumpable": false,
+          "theorem_prerequisites": false
+        },
+        "error": null
+      },
+      "adverse": [
+        {
+          "negative_id": "OP6936-P063-N1",
+          "request": {
+            "op": "aggregation_stationary_projection",
+            "kernel": [
+              [
+                "1/2",
+                "0",
+                "1/2"
+              ],
+              [
+                "0",
+                "1/4",
+                "3/4"
+              ],
+              [
+                "0",
+                "0",
+                "1"
+              ]
+            ],
+            "partition": [
+              [
+                0,
+                1
+              ],
+              [
+                2
+              ]
+            ],
+            "distribution": [
+              "1/2",
+              "1/2",
+              "0"
+            ],
+            "quotient": [
+              [
+                "1/2",
+                "1/2"
+              ],
+              [
+                "0",
+                "1"
+              ]
+            ],
+            "unexpected": true
+          },
+          "expected": {
+            "ok": false,
+            "value": null,
+            "error": "E_FIELDS"
+          },
+          "subject_success_credit": 0
+        },
+        {
+          "negative_id": "OP6936-P063-N2",
+          "request": {
+            "op": "aggregation_stationary_projection",
+            "kernel": [
+              [
+                "0",
+                "0",
+                "0"
+              ],
+              [
+                "0",
+                "1/4",
+                "3/4"
+              ],
+              [
+                "0",
+                "0",
+                "1"
+              ]
+            ],
+            "partition": [
+              [
+                0,
+                1
+              ],
+              [
+                2
+              ]
+            ],
+            "distribution": [
+              "1/2",
+              "1/2",
+              "0"
+            ],
+            "quotient": [
+              [
+                "1/2",
+                "1/2"
+              ],
+              [
+                "0",
+                "1"
+              ]
+            ]
+          },
+          "expected": {
+            "ok": false,
+            "value": null,
+            "error": "E_STOCHASTIC"
+          },
+          "subject_success_credit": 0
+        }
+      ]
+    },
+    {
+      "proposal_id": "OP6936-P064",
+      "request": {
+        "op": "aggregation_stationary_projection",
+        "kernel": [
+          [
+            "0",
+            "0",
+            "1",
+            "0"
+          ],
+          [
+            "0",
+            "0",
+            "0",
+            "1"
+          ],
+          [
+            "0",
+            "0",
+            "1",
+            "0"
+          ],
+          [
+            "1",
+            "0",
+            "0",
+            "0"
+          ]
+        ],
+        "partition": [
+          [
+            0,
+            1
+          ],
+          [
+            2,
+            3
+          ]
+        ],
+        "distribution": [
+          "1/2",
+          "1/2",
+          "0",
+          "0"
+        ],
+        "quotient": [
+          [
+            "0",
+            "1"
+          ],
+          [
+            "0",
+            "1"
+          ]
+        ]
+      },
+      "expected": {
+        "ok": true,
+        "value": {
+          "state_stationary": false,
+          "state_residual": [
+            "-1/2",
+            "-1/2",
+            "1/2",
+            "1/2"
+          ],
+          "block_distribution": [
+            "1",
+            "0"
+          ],
+          "block_stationary": false,
+          "block_residual": [
+            "-1",
+            "1"
+          ],
+          "strongly_lumpable": false,
+          "theorem_prerequisites": false
+        },
+        "error": null
+      },
+      "adverse": [
+        {
+          "negative_id": "OP6936-P064-N1",
+          "request": {
+            "op": "aggregation_stationary_projection",
+            "kernel": [
+              [
+                "0",
+                "0",
+                "1",
+                "0"
+              ],
+              [
+                "0",
+                "0",
+                "0",
+                "1"
+              ],
+              [
+                "0",
+                "0",
+                "1",
+                "0"
+              ],
+              [
+                "1",
+                "0",
+                "0",
+                "0"
+              ]
+            ],
+            "partition": [
+              [
+                0,
+                1
+              ],
+              [
+                2,
+                3
+              ]
+            ],
+            "distribution": [
+              "1/2",
+              "1/2",
+              "0",
+              "0"
+            ],
+            "quotient": [
+              [
+                "0",
+                "1"
+              ],
+              [
+                "0",
+                "1"
+              ]
+            ],
+            "unexpected": true
+          },
+          "expected": {
+            "ok": false,
+            "value": null,
+            "error": "E_FIELDS"
+          },
+          "subject_success_credit": 0
+        },
+        {
+          "negative_id": "OP6936-P064-N2",
+          "request": {
+            "op": "aggregation_stationary_projection",
+            "kernel": [
+              [
+                "0",
+                "0",
+                "0",
+                "0"
+              ],
+              [
+                "0",
+                "0",
+                "0",
+                "1"
+              ],
+              [
+                "0",
+                "0",
+                "1",
+                "0"
+              ],
+              [
+                "1",
+                "0",
+                "0",
+                "0"
+              ]
+            ],
+            "partition": [
+              [
+                0,
+                1
+              ],
+              [
+                2,
+                3
+              ]
+            ],
+            "distribution": [
+              "1/2",
+              "1/2",
+              "0",
+              "0"
+            ],
+            "quotient": [
+              [
+                "0",
+                "1"
+              ],
+              [
+                "0",
+                "1"
+              ]
+            ]
+          },
+          "expected": {
+            "ok": false,
+            "value": null,
+            "error": "E_STOCHASTIC"
+          },
+          "subject_success_credit": 0
+        }
+      ]
+    },
+    {
+      "proposal_id": "OP6936-P065",
+      "request": {
+        "op": "aggregation_stationary_projection",
+        "kernel": [
+          [
+            "0",
+            "1/2",
+            "1/2",
+            "0"
+          ],
+          [
+            "1/2",
+            "0",
+            "0",
+            "1/2"
+          ],
+          [
+            "1/4",
+            "0",
+            "3/4",
+            "0"
+          ],
+          [
+            "0",
+            "1/4",
+            "0",
+            "3/4"
+          ]
+        ],
+        "partition": [
+          [
+            0,
+            1
+          ],
+          [
+            2,
+            3
+          ]
+        ],
+        "distribution": [
+          "1/6",
+          "1/6",
+          "1/3",
+          "1/3"
+        ],
+        "quotient": [
+          [
+            "1/2",
+            "1/2"
+          ],
+          [
+            "1/4",
+            "3/4"
+          ]
+        ]
+      },
+      "expected": {
+        "ok": true,
+        "value": {
+          "state_stationary": true,
+          "state_residual": [
+            "0",
+            "0",
+            "0",
+            "0"
+          ],
+          "block_distribution": [
+            "1/3",
+            "2/3"
+          ],
+          "block_stationary": true,
+          "block_residual": [
+            "0",
+            "0"
+          ],
+          "strongly_lumpable": true,
+          "theorem_prerequisites": true
+        },
+        "error": null
+      },
+      "adverse": [
+        {
+          "negative_id": "OP6936-P065-N1",
+          "request": {
+            "op": "aggregation_stationary_projection",
+            "kernel": [
+              [
+                "0",
+                "1/2",
+                "1/2",
+                "0"
+              ],
+              [
+                "1/2",
+                "0",
+                "0",
+                "1/2"
+              ],
+              [
+                "1/4",
+                "0",
+                "3/4",
+                "0"
+              ],
+              [
+                "0",
+                "1/4",
+                "0",
+                "3/4"
+              ]
+            ],
+            "partition": [
+              [
+                0,
+                1
+              ],
+              [
+                2,
+                3
+              ]
+            ],
+            "distribution": [
+              "1/6",
+              "1/6",
+              "1/3",
+              "1/3"
+            ],
+            "quotient": [
+              [
+                "1/2",
+                "1/2"
+              ],
+              [
+                "1/4",
+                "3/4"
+              ]
+            ],
+            "unexpected": true
+          },
+          "expected": {
+            "ok": false,
+            "value": null,
+            "error": "E_FIELDS"
+          },
+          "subject_success_credit": 0
+        },
+        {
+          "negative_id": "OP6936-P065-N2",
+          "request": {
+            "op": "aggregation_stationary_projection",
+            "kernel": [
+              [
+                "0",
+                "0",
+                "0",
+                "0"
+              ],
+              [
+                "1/2",
+                "0",
+                "0",
+                "1/2"
+              ],
+              [
+                "1/4",
+                "0",
+                "3/4",
+                "0"
+              ],
+              [
+                "0",
+                "1/4",
+                "0",
+                "3/4"
+              ]
+            ],
+            "partition": [
+              [
+                0,
+                1
+              ],
+              [
+                2,
+                3
+              ]
+            ],
+            "distribution": [
+              "1/6",
+              "1/6",
+              "1/3",
+              "1/3"
+            ],
+            "quotient": [
+              [
+                "1/2",
+                "1/2"
+              ],
+              [
+                "1/4",
+                "3/4"
+              ]
+            ]
+          },
+          "expected": {
+            "ok": false,
+            "value": null,
+            "error": "E_STOCHASTIC"
+          },
+          "subject_success_credit": 0
+        }
+      ]
+    }
+  ],
+  "boundary": "Relational working language and bounded same-owner synthetic software only. No consciousness, personhood, identity continuity, qualification, independent agency, empirical GMUT confirmation, production THOS or Freed ID, professional, legal, cultural, affected-party or Maori authority, complete privacy or accessibility, exhaustive security, independent reproduction, AGI/ASI, Theory-of-Everything proof, canon, deployment or Stage 20 credit. Maori concepts remain under Maori authority. NOT_READY_FOR_STAGE_20."
+}

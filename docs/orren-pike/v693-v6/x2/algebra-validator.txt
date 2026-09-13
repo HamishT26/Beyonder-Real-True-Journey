@@ -1,0 +1,15 @@
+'use strict';
+const fs=require('fs'),path=require('path'),api=require('./aggregation-extension.txt');
+const definitions=JSON.parse(fs.readFileSync(path.join(__dirname,'algebra-definitions.json'),'utf8'));
+const refines=(fine,coarse)=>fine.every(g=>coarse.some(b=>g.every(i=>b.includes(i))));
+function directStable(targets,partition){
+  const owner=[];
+  partition.forEach((group,k)=>group.forEach(i=>owner[i]=k));
+  return partition.every(group=>{
+    const expectedBlock=owner[targets[group[0]]];
+    return group.every(state=>owner[targets[state]]===expectedBlock);
+  });
+}
+const rows=[];for(const t of definitions.cases){const request={op:'aggregation_lumpability',kernel:t.kernel,partition:t.partition},criterion=api.run(request),certificate=api.run({...request,op:'aggregation_refinement_certificate'}),expected=directStable(t.targets,t.partition),fine=certificate.value?.stable_partition||[],enumerated=definitions.partitions.filter(p=>refines(p,t.partition)&&directStable(t.targets,p));
+rows.push({case_id:t.case_id,expected_lumpability:expected,observed_lumpability:criterion.value?.strongly_lumpable,refinement:fine,enumerated_stable_refinements:enumerated,checks:{criterion:criterion.ok&&criterion.value.strongly_lumpable===expected,stable_refinement:certificate.ok&&fine.length>0&&refines(fine,t.partition)&&directStable(t.targets,fine),coarsest_refinement:certificate.ok&&enumerated.length>0&&enumerated.every(p=>refines(p,fine))}});}
+const passed=rows.reduce((s,r)=>s+Object.values(r.checks).filter(Boolean).length,0),total=rows.length*3,result={schema:'ghc.family.finite-aggregation-algebra.v1',valid:passed===total,cases:rows.length,checks_total:total,checks_passed:passed,rows,scope:definitions.scope,same_owner_only:true,independent_reproduction:false};process.stdout.write(JSON.stringify(result,null,2)+'\n');process.exitCode=result.valid?0:2;

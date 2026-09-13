@@ -1,0 +1,981 @@
+{
+  "operation": "aggregation_horizon_commutation",
+  "examples": [
+    {
+      "proposal_id": "OP6936-P051",
+      "request": {
+        "op": "aggregation_horizon_commutation",
+        "kernel": [
+          [
+            "1"
+          ]
+        ],
+        "partition": [
+          [
+            0
+          ]
+        ],
+        "distribution": [
+          "1"
+        ],
+        "quotient": [
+          [
+            "1"
+          ]
+        ],
+        "horizon": 0
+      },
+      "expected": {
+        "ok": true,
+        "value": {
+          "horizon": 0,
+          "concrete_projected": [
+            [
+              "1"
+            ]
+          ],
+          "quotient_evolved": [
+            [
+              "1"
+            ]
+          ],
+          "first_mismatch": null,
+          "bounded_equal": true
+        },
+        "error": null
+      },
+      "adverse": [
+        {
+          "negative_id": "OP6936-P051-N1",
+          "request": {
+            "op": "aggregation_horizon_commutation",
+            "kernel": [
+              [
+                "1"
+              ]
+            ],
+            "partition": [
+              [
+                0
+              ]
+            ],
+            "distribution": [
+              "1"
+            ],
+            "quotient": [
+              [
+                "1"
+              ]
+            ],
+            "horizon": 0,
+            "unexpected": true
+          },
+          "expected": {
+            "ok": false,
+            "value": null,
+            "error": "E_FIELDS"
+          },
+          "subject_success_credit": 0
+        },
+        {
+          "negative_id": "OP6936-P051-N2",
+          "request": {
+            "op": "aggregation_horizon_commutation",
+            "kernel": [
+              [
+                "0"
+              ]
+            ],
+            "partition": [
+              [
+                0
+              ]
+            ],
+            "distribution": [
+              "1"
+            ],
+            "quotient": [
+              [
+                "1"
+              ]
+            ],
+            "horizon": 0
+          },
+          "expected": {
+            "ok": false,
+            "value": null,
+            "error": "E_STOCHASTIC"
+          },
+          "subject_success_credit": 0
+        }
+      ]
+    },
+    {
+      "proposal_id": "OP6936-P052",
+      "request": {
+        "op": "aggregation_horizon_commutation",
+        "kernel": [
+          [
+            "1/2",
+            "0",
+            "1/2"
+          ],
+          [
+            "0",
+            "1/2",
+            "1/2"
+          ],
+          [
+            "0",
+            "0",
+            "1"
+          ]
+        ],
+        "partition": [
+          [
+            0,
+            1
+          ],
+          [
+            2
+          ]
+        ],
+        "distribution": [
+          "1/2",
+          "1/2",
+          "0"
+        ],
+        "quotient": [
+          [
+            "1/2",
+            "1/2"
+          ],
+          [
+            "0",
+            "1"
+          ]
+        ],
+        "horizon": 2
+      },
+      "expected": {
+        "ok": true,
+        "value": {
+          "horizon": 2,
+          "concrete_projected": [
+            [
+              "1",
+              "0"
+            ],
+            [
+              "1/2",
+              "1/2"
+            ],
+            [
+              "1/4",
+              "3/4"
+            ]
+          ],
+          "quotient_evolved": [
+            [
+              "1",
+              "0"
+            ],
+            [
+              "1/2",
+              "1/2"
+            ],
+            [
+              "1/4",
+              "3/4"
+            ]
+          ],
+          "first_mismatch": null,
+          "bounded_equal": true
+        },
+        "error": null
+      },
+      "adverse": [
+        {
+          "negative_id": "OP6936-P052-N1",
+          "request": {
+            "op": "aggregation_horizon_commutation",
+            "kernel": [
+              [
+                "1/2",
+                "0",
+                "1/2"
+              ],
+              [
+                "0",
+                "1/2",
+                "1/2"
+              ],
+              [
+                "0",
+                "0",
+                "1"
+              ]
+            ],
+            "partition": [
+              [
+                0,
+                1
+              ],
+              [
+                2
+              ]
+            ],
+            "distribution": [
+              "1/2",
+              "1/2",
+              "0"
+            ],
+            "quotient": [
+              [
+                "1/2",
+                "1/2"
+              ],
+              [
+                "0",
+                "1"
+              ]
+            ],
+            "horizon": 2,
+            "unexpected": true
+          },
+          "expected": {
+            "ok": false,
+            "value": null,
+            "error": "E_FIELDS"
+          },
+          "subject_success_credit": 0
+        },
+        {
+          "negative_id": "OP6936-P052-N2",
+          "request": {
+            "op": "aggregation_horizon_commutation",
+            "kernel": [
+              [
+                "0",
+                "0",
+                "0"
+              ],
+              [
+                "0",
+                "1/2",
+                "1/2"
+              ],
+              [
+                "0",
+                "0",
+                "1"
+              ]
+            ],
+            "partition": [
+              [
+                0,
+                1
+              ],
+              [
+                2
+              ]
+            ],
+            "distribution": [
+              "1/2",
+              "1/2",
+              "0"
+            ],
+            "quotient": [
+              [
+                "1/2",
+                "1/2"
+              ],
+              [
+                "0",
+                "1"
+              ]
+            ],
+            "horizon": 2
+          },
+          "expected": {
+            "ok": false,
+            "value": null,
+            "error": "E_STOCHASTIC"
+          },
+          "subject_success_credit": 0
+        }
+      ]
+    },
+    {
+      "proposal_id": "OP6936-P053",
+      "request": {
+        "op": "aggregation_horizon_commutation",
+        "kernel": [
+          [
+            "1/2",
+            "0",
+            "1/2"
+          ],
+          [
+            "0",
+            "1/4",
+            "3/4"
+          ],
+          [
+            "0",
+            "0",
+            "1"
+          ]
+        ],
+        "partition": [
+          [
+            0,
+            1
+          ],
+          [
+            2
+          ]
+        ],
+        "distribution": [
+          "1/2",
+          "1/2",
+          "0"
+        ],
+        "quotient": [
+          [
+            "1/2",
+            "1/2"
+          ],
+          [
+            "0",
+            "1"
+          ]
+        ],
+        "horizon": 2
+      },
+      "expected": {
+        "ok": true,
+        "value": {
+          "horizon": 2,
+          "concrete_projected": [
+            [
+              "1",
+              "0"
+            ],
+            [
+              "3/8",
+              "5/8"
+            ],
+            [
+              "5/32",
+              "27/32"
+            ]
+          ],
+          "quotient_evolved": [
+            [
+              "1",
+              "0"
+            ],
+            [
+              "1/2",
+              "1/2"
+            ],
+            [
+              "1/4",
+              "3/4"
+            ]
+          ],
+          "first_mismatch": 1,
+          "bounded_equal": false
+        },
+        "error": null
+      },
+      "adverse": [
+        {
+          "negative_id": "OP6936-P053-N1",
+          "request": {
+            "op": "aggregation_horizon_commutation",
+            "kernel": [
+              [
+                "1/2",
+                "0",
+                "1/2"
+              ],
+              [
+                "0",
+                "1/4",
+                "3/4"
+              ],
+              [
+                "0",
+                "0",
+                "1"
+              ]
+            ],
+            "partition": [
+              [
+                0,
+                1
+              ],
+              [
+                2
+              ]
+            ],
+            "distribution": [
+              "1/2",
+              "1/2",
+              "0"
+            ],
+            "quotient": [
+              [
+                "1/2",
+                "1/2"
+              ],
+              [
+                "0",
+                "1"
+              ]
+            ],
+            "horizon": 2,
+            "unexpected": true
+          },
+          "expected": {
+            "ok": false,
+            "value": null,
+            "error": "E_FIELDS"
+          },
+          "subject_success_credit": 0
+        },
+        {
+          "negative_id": "OP6936-P053-N2",
+          "request": {
+            "op": "aggregation_horizon_commutation",
+            "kernel": [
+              [
+                "0",
+                "0",
+                "0"
+              ],
+              [
+                "0",
+                "1/4",
+                "3/4"
+              ],
+              [
+                "0",
+                "0",
+                "1"
+              ]
+            ],
+            "partition": [
+              [
+                0,
+                1
+              ],
+              [
+                2
+              ]
+            ],
+            "distribution": [
+              "1/2",
+              "1/2",
+              "0"
+            ],
+            "quotient": [
+              [
+                "1/2",
+                "1/2"
+              ],
+              [
+                "0",
+                "1"
+              ]
+            ],
+            "horizon": 2
+          },
+          "expected": {
+            "ok": false,
+            "value": null,
+            "error": "E_STOCHASTIC"
+          },
+          "subject_success_credit": 0
+        }
+      ]
+    },
+    {
+      "proposal_id": "OP6936-P054",
+      "request": {
+        "op": "aggregation_horizon_commutation",
+        "kernel": [
+          [
+            "0",
+            "0",
+            "1",
+            "0"
+          ],
+          [
+            "0",
+            "0",
+            "0",
+            "1"
+          ],
+          [
+            "0",
+            "0",
+            "1",
+            "0"
+          ],
+          [
+            "1",
+            "0",
+            "0",
+            "0"
+          ]
+        ],
+        "partition": [
+          [
+            0,
+            1
+          ],
+          [
+            2,
+            3
+          ]
+        ],
+        "distribution": [
+          "1/2",
+          "1/2",
+          "0",
+          "0"
+        ],
+        "quotient": [
+          [
+            "0",
+            "1"
+          ],
+          [
+            "0",
+            "1"
+          ]
+        ],
+        "horizon": 3
+      },
+      "expected": {
+        "ok": true,
+        "value": {
+          "horizon": 3,
+          "concrete_projected": [
+            [
+              "1",
+              "0"
+            ],
+            [
+              "0",
+              "1"
+            ],
+            [
+              "1/2",
+              "1/2"
+            ],
+            [
+              "0",
+              "1"
+            ]
+          ],
+          "quotient_evolved": [
+            [
+              "1",
+              "0"
+            ],
+            [
+              "0",
+              "1"
+            ],
+            [
+              "0",
+              "1"
+            ],
+            [
+              "0",
+              "1"
+            ]
+          ],
+          "first_mismatch": 2,
+          "bounded_equal": false
+        },
+        "error": null
+      },
+      "adverse": [
+        {
+          "negative_id": "OP6936-P054-N1",
+          "request": {
+            "op": "aggregation_horizon_commutation",
+            "kernel": [
+              [
+                "0",
+                "0",
+                "1",
+                "0"
+              ],
+              [
+                "0",
+                "0",
+                "0",
+                "1"
+              ],
+              [
+                "0",
+                "0",
+                "1",
+                "0"
+              ],
+              [
+                "1",
+                "0",
+                "0",
+                "0"
+              ]
+            ],
+            "partition": [
+              [
+                0,
+                1
+              ],
+              [
+                2,
+                3
+              ]
+            ],
+            "distribution": [
+              "1/2",
+              "1/2",
+              "0",
+              "0"
+            ],
+            "quotient": [
+              [
+                "0",
+                "1"
+              ],
+              [
+                "0",
+                "1"
+              ]
+            ],
+            "horizon": 3,
+            "unexpected": true
+          },
+          "expected": {
+            "ok": false,
+            "value": null,
+            "error": "E_FIELDS"
+          },
+          "subject_success_credit": 0
+        },
+        {
+          "negative_id": "OP6936-P054-N2",
+          "request": {
+            "op": "aggregation_horizon_commutation",
+            "kernel": [
+              [
+                "0",
+                "0",
+                "0",
+                "0"
+              ],
+              [
+                "0",
+                "0",
+                "0",
+                "1"
+              ],
+              [
+                "0",
+                "0",
+                "1",
+                "0"
+              ],
+              [
+                "1",
+                "0",
+                "0",
+                "0"
+              ]
+            ],
+            "partition": [
+              [
+                0,
+                1
+              ],
+              [
+                2,
+                3
+              ]
+            ],
+            "distribution": [
+              "1/2",
+              "1/2",
+              "0",
+              "0"
+            ],
+            "quotient": [
+              [
+                "0",
+                "1"
+              ],
+              [
+                "0",
+                "1"
+              ]
+            ],
+            "horizon": 3
+          },
+          "expected": {
+            "ok": false,
+            "value": null,
+            "error": "E_STOCHASTIC"
+          },
+          "subject_success_credit": 0
+        }
+      ]
+    },
+    {
+      "proposal_id": "OP6936-P055",
+      "request": {
+        "op": "aggregation_horizon_commutation",
+        "kernel": [
+          [
+            "0",
+            "1/2",
+            "1/2",
+            "0"
+          ],
+          [
+            "1/2",
+            "0",
+            "0",
+            "1/2"
+          ],
+          [
+            "1/4",
+            "0",
+            "3/4",
+            "0"
+          ],
+          [
+            "0",
+            "1/4",
+            "0",
+            "3/4"
+          ]
+        ],
+        "partition": [
+          [
+            0,
+            1
+          ],
+          [
+            2,
+            3
+          ]
+        ],
+        "distribution": [
+          "1/6",
+          "1/6",
+          "1/3",
+          "1/3"
+        ],
+        "quotient": [
+          [
+            "1/2",
+            "1/2"
+          ],
+          [
+            "1/4",
+            "3/4"
+          ]
+        ],
+        "horizon": 3
+      },
+      "expected": {
+        "ok": true,
+        "value": {
+          "horizon": 3,
+          "concrete_projected": [
+            [
+              "1/3",
+              "2/3"
+            ],
+            [
+              "1/3",
+              "2/3"
+            ],
+            [
+              "1/3",
+              "2/3"
+            ],
+            [
+              "1/3",
+              "2/3"
+            ]
+          ],
+          "quotient_evolved": [
+            [
+              "1/3",
+              "2/3"
+            ],
+            [
+              "1/3",
+              "2/3"
+            ],
+            [
+              "1/3",
+              "2/3"
+            ],
+            [
+              "1/3",
+              "2/3"
+            ]
+          ],
+          "first_mismatch": null,
+          "bounded_equal": true
+        },
+        "error": null
+      },
+      "adverse": [
+        {
+          "negative_id": "OP6936-P055-N1",
+          "request": {
+            "op": "aggregation_horizon_commutation",
+            "kernel": [
+              [
+                "0",
+                "1/2",
+                "1/2",
+                "0"
+              ],
+              [
+                "1/2",
+                "0",
+                "0",
+                "1/2"
+              ],
+              [
+                "1/4",
+                "0",
+                "3/4",
+                "0"
+              ],
+              [
+                "0",
+                "1/4",
+                "0",
+                "3/4"
+              ]
+            ],
+            "partition": [
+              [
+                0,
+                1
+              ],
+              [
+                2,
+                3
+              ]
+            ],
+            "distribution": [
+              "1/6",
+              "1/6",
+              "1/3",
+              "1/3"
+            ],
+            "quotient": [
+              [
+                "1/2",
+                "1/2"
+              ],
+              [
+                "1/4",
+                "3/4"
+              ]
+            ],
+            "horizon": 3,
+            "unexpected": true
+          },
+          "expected": {
+            "ok": false,
+            "value": null,
+            "error": "E_FIELDS"
+          },
+          "subject_success_credit": 0
+        },
+        {
+          "negative_id": "OP6936-P055-N2",
+          "request": {
+            "op": "aggregation_horizon_commutation",
+            "kernel": [
+              [
+                "0",
+                "0",
+                "0",
+                "0"
+              ],
+              [
+                "1/2",
+                "0",
+                "0",
+                "1/2"
+              ],
+              [
+                "1/4",
+                "0",
+                "3/4",
+                "0"
+              ],
+              [
+                "0",
+                "1/4",
+                "0",
+                "3/4"
+              ]
+            ],
+            "partition": [
+              [
+                0,
+                1
+              ],
+              [
+                2,
+                3
+              ]
+            ],
+            "distribution": [
+              "1/6",
+              "1/6",
+              "1/3",
+              "1/3"
+            ],
+            "quotient": [
+              [
+                "1/2",
+                "1/2"
+              ],
+              [
+                "1/4",
+                "3/4"
+              ]
+            ],
+            "horizon": 3
+          },
+          "expected": {
+            "ok": false,
+            "value": null,
+            "error": "E_STOCHASTIC"
+          },
+          "subject_success_credit": 0
+        }
+      ]
+    }
+  ],
+  "boundary": "Relational working language and bounded same-owner synthetic software only. No consciousness, personhood, identity continuity, qualification, independent agency, empirical GMUT confirmation, production THOS or Freed ID, professional, legal, cultural, affected-party or Maori authority, complete privacy or accessibility, exhaustive security, independent reproduction, AGI/ASI, Theory-of-Everything proof, canon, deployment or Stage 20 credit. Maori concepts remain under Maori authority. NOT_READY_FOR_STAGE_20."
+}

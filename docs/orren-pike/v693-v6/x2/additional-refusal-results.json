@@ -1,0 +1,279 @@
+{
+  "stage": "x2",
+  "cases": [
+    {
+      "negative_id": "OP6936-X2-PARSER-N001",
+      "title": "horizon upper limit",
+      "raw": "{\"op\":\"aggregation_horizon_commutation\",\"kernel\":[[\"1/2\",\"0\",\"1/2\"],[\"0\",\"1/2\",\"1/2\"],[\"0\",\"0\",\"1\"]],\"partition\":[[0,1],[2]],\"distribution\":[\"1/2\",\"1/2\",\"0\"],\"quotient\":[[\"1/2\",\"1/2\"],[\"0\",\"1\"]],\"horizon\":7}",
+      "expected": {
+        "ok": false,
+        "value": null,
+        "error": "E_HORIZON"
+      },
+      "original_subject_success_credit": 0,
+      "observed": {
+        "ok": false,
+        "value": null,
+        "error": "E_HORIZON"
+      },
+      "refusal_pass": true
+    },
+    {
+      "negative_id": "OP6936-X2-PARSER-N002",
+      "title": "negative horizon",
+      "raw": "{\"op\":\"aggregation_horizon_commutation\",\"kernel\":[[\"1/2\",\"0\",\"1/2\"],[\"0\",\"1/2\",\"1/2\"],[\"0\",\"0\",\"1\"]],\"partition\":[[0,1],[2]],\"distribution\":[\"1/2\",\"1/2\",\"0\"],\"quotient\":[[\"1/2\",\"1/2\"],[\"0\",\"1\"]],\"horizon\":-1}",
+      "expected": {
+        "ok": false,
+        "value": null,
+        "error": "E_HORIZON"
+      },
+      "original_subject_success_credit": 0,
+      "observed": {
+        "ok": false,
+        "value": null,
+        "error": "E_HORIZON"
+      },
+      "refusal_pass": true
+    },
+    {
+      "negative_id": "OP6936-X2-PARSER-N003",
+      "title": "boolean horizon",
+      "raw": "{\"op\":\"aggregation_horizon_commutation\",\"kernel\":[[\"1/2\",\"0\",\"1/2\"],[\"0\",\"1/2\",\"1/2\"],[\"0\",\"0\",\"1\"]],\"partition\":[[0,1],[2]],\"distribution\":[\"1/2\",\"1/2\",\"0\"],\"quotient\":[[\"1/2\",\"1/2\"],[\"0\",\"1\"]],\"horizon\":true}",
+      "expected": {
+        "ok": false,
+        "value": null,
+        "error": "E_HORIZON"
+      },
+      "original_subject_success_credit": 0,
+      "observed": {
+        "ok": false,
+        "value": null,
+        "error": "E_HORIZON"
+      },
+      "refusal_pass": true
+    },
+    {
+      "negative_id": "OP6936-X2-PARSER-N004",
+      "title": "fractional horizon",
+      "raw": "{\"op\":\"aggregation_horizon_commutation\",\"kernel\":[[\"1/2\",\"0\",\"1/2\"],[\"0\",\"1/2\",\"1/2\"],[\"0\",\"0\",\"1\"]],\"partition\":[[0,1],[2]],\"distribution\":[\"1/2\",\"1/2\",\"0\"],\"quotient\":[[\"1/2\",\"1/2\"],[\"0\",\"1\"]],\"horizon\":1.5}",
+      "expected": {
+        "ok": false,
+        "value": null,
+        "error": "E_HORIZON"
+      },
+      "original_subject_success_credit": 0,
+      "observed": {
+        "ok": false,
+        "value": null,
+        "error": "E_HORIZON"
+      },
+      "refusal_pass": true
+    },
+    {
+      "negative_id": "OP6936-X2-PARSER-N005",
+      "title": "wrong quotient dimension",
+      "raw": "{\"op\":\"aggregation_horizon_commutation\",\"kernel\":[[\"1/2\",\"0\",\"1/2\"],[\"0\",\"1/2\",\"1/2\"],[\"0\",\"0\",\"1\"]],\"partition\":[[0,1],[2]],\"distribution\":[\"1/2\",\"1/2\",\"0\"],\"quotient\":[[\"1\"]],\"horizon\":2}",
+      "expected": {
+        "ok": false,
+        "value": null,
+        "error": "E_SHAPE"
+      },
+      "original_subject_success_credit": 0,
+      "observed": {
+        "ok": false,
+        "value": null,
+        "error": "E_SHAPE"
+      },
+      "refusal_pass": true
+    },
+    {
+      "negative_id": "OP6936-X2-PARSER-N006",
+      "title": "zero quotient row",
+      "raw": "{\"op\":\"aggregation_horizon_commutation\",\"kernel\":[[\"1/2\",\"0\",\"1/2\"],[\"0\",\"1/2\",\"1/2\"],[\"0\",\"0\",\"1\"]],\"partition\":[[0,1],[2]],\"distribution\":[\"1/2\",\"1/2\",\"0\"],\"quotient\":[[\"0\",\"0\"],[\"0\",\"1\"]],\"horizon\":2}",
+      "expected": {
+        "ok": false,
+        "value": null,
+        "error": "E_STOCHASTIC"
+      },
+      "original_subject_success_credit": 0,
+      "observed": {
+        "ok": false,
+        "value": null,
+        "error": "E_STOCHASTIC"
+      },
+      "refusal_pass": true
+    },
+    {
+      "negative_id": "OP6936-X2-PARSER-N007",
+      "title": "wrong distribution total",
+      "raw": "{\"op\":\"aggregation_stationary_projection\",\"kernel\":[[\"1/2\",\"0\",\"1/2\"],[\"0\",\"1/2\",\"1/2\"],[\"0\",\"0\",\"1\"]],\"partition\":[[0,1],[2]],\"distribution\":[\"1\",\"1\",\"0\"],\"quotient\":[[\"1/2\",\"1/2\"],[\"0\",\"1\"]]}",
+      "expected": {
+        "ok": false,
+        "value": null,
+        "error": "E_DISTRIBUTION"
+      },
+      "original_subject_success_credit": 0,
+      "observed": {
+        "ok": false,
+        "value": null,
+        "error": "E_DISTRIBUTION"
+      },
+      "refusal_pass": true
+    },
+    {
+      "negative_id": "OP6936-X2-PARSER-N008",
+      "title": "wrong reward dimension",
+      "raw": "{\"op\":\"aggregation_block_expectation\",\"kernel\":[[\"1/2\",\"0\",\"1/2\"],[\"0\",\"1/2\",\"1/2\"],[\"0\",\"0\",\"1\"]],\"partition\":[[0,1],[2]],\"distribution\":[\"1/2\",\"1/2\",\"0\"],\"rewards\":[\"1\"]}",
+      "expected": {
+        "ok": false,
+        "value": null,
+        "error": "E_REWARDS"
+      },
+      "original_subject_success_credit": 0,
+      "observed": {
+        "ok": false,
+        "value": null,
+        "error": "E_REWARDS"
+      },
+      "refusal_pass": true
+    },
+    {
+      "negative_id": "OP6936-X2-PARSER-N009",
+      "title": "boolean reward",
+      "raw": "{\"op\":\"aggregation_block_expectation\",\"kernel\":[[\"1/2\",\"0\",\"1/2\"],[\"0\",\"1/2\",\"1/2\"],[\"0\",\"0\",\"1\"]],\"partition\":[[0,1],[2]],\"distribution\":[\"1/2\",\"1/2\",\"0\"],\"rewards\":[true,\"2\",\"0\"]}",
+      "expected": {
+        "ok": false,
+        "value": null,
+        "error": "E_RATIONAL"
+      },
+      "original_subject_success_credit": 0,
+      "observed": {
+        "ok": false,
+        "value": null,
+        "error": "E_RATIONAL"
+      },
+      "refusal_pass": true
+    },
+    {
+      "negative_id": "OP6936-X2-PARSER-N010",
+      "title": "negative-zero reward",
+      "raw": "{\"op\":\"aggregation_block_expectation\",\"kernel\":[[\"1/2\",\"0\",\"1/2\"],[\"0\",\"1/2\",\"1/2\"],[\"0\",\"0\",\"1\"]],\"partition\":[[0,1],[2]],\"distribution\":[\"1/2\",\"1/2\",\"0\"],\"rewards\":[\"-0\",\"2\",\"0\"]}",
+      "expected": {
+        "ok": false,
+        "value": null,
+        "error": "E_RATIONAL"
+      },
+      "original_subject_success_credit": 0,
+      "observed": {
+        "ok": false,
+        "value": null,
+        "error": "E_RATIONAL"
+      },
+      "refusal_pass": true
+    },
+    {
+      "negative_id": "OP6936-X2-PARSER-N011",
+      "title": "overlapping second partition",
+      "raw": "{\"op\":\"aggregation_composed_quotient\",\"kernel\":[[\"1/2\",\"0\",\"1/2\"],[\"0\",\"1/2\",\"1/2\"],[\"0\",\"0\",\"1\"]],\"partition\":[[0,1],[2]],\"second_partition\":[[0],[0,1]]}",
+      "expected": {
+        "ok": false,
+        "value": null,
+        "error": "E_PARTITION"
+      },
+      "original_subject_success_credit": 0,
+      "observed": {
+        "ok": false,
+        "value": null,
+        "error": "E_PARTITION"
+      },
+      "refusal_pass": true
+    },
+    {
+      "negative_id": "OP6936-X2-PARSER-N012",
+      "title": "missing second partition",
+      "raw": "{\"op\":\"aggregation_composed_quotient\",\"kernel\":[[\"1/2\",\"0\",\"1/2\"],[\"0\",\"1/2\",\"1/2\"],[\"0\",\"0\",\"1\"]],\"partition\":[[0,1],[2]]}",
+      "expected": {
+        "ok": false,
+        "value": null,
+        "error": "E_FIELDS"
+      },
+      "original_subject_success_credit": 0,
+      "observed": {
+        "ok": false,
+        "value": null,
+        "error": "E_FIELDS"
+      },
+      "refusal_pass": true
+    },
+    {
+      "negative_id": "OP6936-X2-PARSER-N013",
+      "title": "invalid comparison distribution",
+      "raw": "{\"op\":\"aggregation_same_block_mass\",\"kernel\":[[\"1/2\",\"0\",\"1/2\"],[\"0\",\"1/2\",\"1/2\"],[\"0\",\"0\",\"1\"]],\"partition\":[[0,1],[2]],\"distribution\":[\"1/2\",\"1/2\",\"0\"],\"comparison_distribution\":null}",
+      "expected": {
+        "ok": false,
+        "value": null,
+        "error": "E_DISTRIBUTION"
+      },
+      "original_subject_success_credit": 0,
+      "observed": {
+        "ok": false,
+        "value": null,
+        "error": "E_DISTRIBUTION"
+      },
+      "refusal_pass": true
+    },
+    {
+      "negative_id": "OP6936-X2-PARSER-N014",
+      "title": "unproven authority claim",
+      "raw": "{\"op\":\"aggregation_authority_reservation\",\"kernel\":[[\"1/2\",\"0\",\"1/2\"],[\"0\",\"1/2\",\"1/2\"],[\"0\",\"0\",\"1\"]],\"partition\":[[0,1],[2]],\"action\":\"publish_real_risk\",\"authority_claim\":true}",
+      "expected": {
+        "ok": false,
+        "value": null,
+        "error": "E_AUTHORITY"
+      },
+      "original_subject_success_credit": 0,
+      "observed": {
+        "ok": false,
+        "value": null,
+        "error": "E_AUTHORITY"
+      },
+      "refusal_pass": true
+    },
+    {
+      "negative_id": "OP6936-X2-PARSER-N015",
+      "title": "undeclared action",
+      "raw": "{\"op\":\"aggregation_authority_reservation\",\"kernel\":[[\"1/2\",\"0\",\"1/2\"],[\"0\",\"1/2\",\"1/2\"],[\"0\",\"0\",\"1\"]],\"partition\":[[0,1],[2]],\"action\":\"unspecified_action\",\"authority_claim\":false}",
+      "expected": {
+        "ok": false,
+        "value": null,
+        "error": "E_AUTHORITY"
+      },
+      "original_subject_success_credit": 0,
+      "observed": {
+        "ok": false,
+        "value": null,
+        "error": "E_AUTHORITY"
+      },
+      "refusal_pass": true
+    },
+    {
+      "negative_id": "OP6936-X2-PARSER-N016",
+      "title": "provenance input unknown member",
+      "raw": "{\"op\":\"aggregation_provenance_projection\",\"kernel\":[[\"1/2\",\"0\",\"1/2\"],[\"0\",\"1/2\",\"1/2\"],[\"0\",\"0\",\"1\"]],\"partition\":[[0,1],[2]],\"extra\":\"outside_contract\"}",
+      "expected": {
+        "ok": false,
+        "value": null,
+        "error": "E_FIELDS"
+      },
+      "original_subject_success_credit": 0,
+      "observed": {
+        "ok": false,
+        "value": null,
+        "error": "E_FIELDS"
+      },
+      "refusal_pass": true
+    }
+  ],
+  "original_subject_success_credit": 0,
+  "boundary": "Relational working language and bounded same-owner synthetic software only. No consciousness, personhood, identity continuity, qualification, independent agency, empirical GMUT confirmation, production THOS or Freed ID, professional, legal, cultural, affected-party or Maori authority, complete privacy or accessibility, exhaustive security, independent reproduction, AGI/ASI, Theory-of-Everything proof, canon, deployment or Stage 20 credit. Maori concepts remain under Maori authority. NOT_READY_FOR_STAGE_20."
+}
