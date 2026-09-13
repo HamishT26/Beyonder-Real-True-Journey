@@ -1,0 +1,37 @@
+'use strict';
+const fs=require('node:fs'),path=require('node:path');
+const root=process.argv[2],stage=process.argv[3],p=path.join(root,'docs/thalen-reed/v693-v3');
+const read=f=>JSON.parse(fs.readFileSync(path.join(p,f),'utf8'));
+const write=(f,v)=>fs.writeFileSync(path.join(p,f),JSON.stringify(v,null,2)+'\n',{flag:'wx'});
+const boundary='Bounded same-owner synthetic software evidence. No independent reproduction, scientific, authority, identity, complete accessibility, exhaustive security or production credit. NOT_READY_FOR_STAGE_20.';
+const ledger=stage==='x2'?read('x1/methodflow-ledger.json'):{schema:'ghc.family.method-flow-state.v1',phase:'v693-v3',owner:'Thalen Reed',identity_boundary:'Relational working language only; no continuity or authority claim.',execution_authority:'owner_self_scoped_delta',source_commit:'0d44a7fdd029f9586ce0f69c6278d22c1b9a8a93',final_commit:null,final_commit_binding:'External canonical binds the exact final commit without an impossible self-reference.',repository_scan:false,cross_lane_scan:false,unchanged_history_scan:false,sibling_lane_mutation:false,methods:[],witnesses:[],state_events:[],recommendations:[],counts:{},boundary};
+const selected=read('plan/skills-runners-plan.json').local_skills.filter(r=>r.stage===stage);
+function method(id,title,negative,workaround){const m={method_id:id,title,failure_signature:negative,trigger_preconditions:['Explicit frozen synthetic record','Preserve the exact original subject'],privacy_class:'sanitized_public',approval_class:'owner_self_scoped_delta',candidate_workaround:workaround,validation_witness_ids:[],recurrence_guard:'Compare the complete envelope and retain every failure; stop at a stale binding.',rollback:'Retain the source and reject the preview; no external mutation is performed.',recommendation_state:'candidate',supersedes:[],protected_gates:['external_validation','competent_authority','deployment','Stage_20'],retained_negative_ids:[negative],scope_boundary:boundary};ledger.methods.push(m);ledger.state_events.push({event_index:ledger.state_events.length+1,method_id:id,before:null,after:'candidate',reason:'Declared bounded method with retained negative linkage',witness_id:null});return m;}
+function witness(id,mid,procedure,expected,observed,result,negative){const m=ledger.methods.find(r=>r.method_id===mid);const w={witness_id:id,method_id:mid,procedure,scope:stage+' owner delta',expected,observed,result,same_owner_only:true,independent_reproduction:false,retained_negative_ids:negative?[negative]:[],boundary};ledger.witnesses.push(w);m.validation_witness_ids.push(id);if(negative&&!m.retained_negative_ids.includes(negative))m.retained_negative_ids.push(negative);}
+const opmid=new Map(selected.map(s=>[s.operation,'TR6933-M-'+s.operation]));
+for(const s of selected)method(opmid.get(s.operation),s.purpose,require(path.join(p,'plan/fixture-definitions.txt')).rows.find(r=>r.op===s.operation).proposal_id+'-unknown','Use exact '+s.operation+' contract with source preservation and complete refusal envelopes.');
+const first=read(stage+'/evidence/first-core-execution.json').records;
+const fixtures=require(path.join(p,'plan/fixture-definitions.txt')).rows;
+const mid=id=>opmid.get(fixtures.find(r=>r.proposal_id===id).op);
+for(const kind of ['safe-checks','candidate-subjects','refusal-checks','clean-fix-refine'])for(const r of read(stage+'/evidence/'+kind+'.json').records){
+ const proposal=r.proposal||r.id.slice(0,11);const subject=r.failed_subject||((kind==='candidate-subjects')?r.id:null);
+ witness(r.id,mid(proposal),r.procedure||kind,r.expected||{operation_succeeds:kind==='candidate-subjects'},r.actual||{result:r.result},r.result,subject);
+}
+const parserid='TR6933-M-strict-parser',runnerid='TR6933-M-trusted-runners';
+if(stage==='x1'){method(parserid,'Strict bounded JSON text parsing','TR6933-X1-PARSER-duplicate_root','Refuse malformed and out-of-profile text before runtime dispatch.');method(runnerid,'Trusted fixed TXT source runner','TR6933-X1-RUNNER-1-negative','Hash exact trusted library bytes before compilation and constrain each runner operation set.');}
+for(const r of read(stage+'/evidence/parser-checks.json').records){witness(r.id,parserid,'Attempt parsing the retained negative text',{accepted:true},{error:r.actual},'fail',r.id);witness(r.id+'-refusal',parserid,'Verify the exact declared refusal',{error:r.expected_error},{error:r.actual},r.refusal_result,r.id);}
+for(const r of read(stage+'/evidence/runner-checks.json').records){if(r.kind==='negative')witness(r.id,runnerid,'Attempt unsupported operation through CLI',{operation_succeeds:true},r.actual,'fail',r.id);witness(r.id+'-check',runnerid,'Verify complete CLI envelope and exit code',r.expected,r.actual,r.result,r.kind==='negative'?r.id:null);}
+if(stage==='x1'){
+ const cases=[['START-N001','Planning inherited row shape','Writer guessed an absent top-level collection and failed.','Selected the actual records collection after inspecting the source.'],['START-N002','TXT compilation invocation','node --check on a TXT path exited one.','Compiled the same trusted TXT bytes with vm.Script.'],['X1-OPS-N003','Guidance path resolution','Read attempted a nonexistent methodflow skill alias.','Resolved method-flow-state with a bounded file inventory and read its schema.']];
+ write('x1/evidence/operational-failures.json',{records:cases.map(([id,title,failed,recovered])=>({id:'TR6933-'+id,title,failed,result:'fail',subject_success_credit:0,recovered,recovery_result:'pass',original_retained:true,scope:'Owner session operation; not a scientific or business-method pass'}))});
+ for(const [id,title,failed,recovered] of cases){const m='TR6933-M-'+id;method(m,title,'TR6933-'+id,recovered);witness('TR6933-'+id,m,title,{operation_succeeds:true},{message:failed},'fail','TR6933-'+id);witness('TR6933-'+id+'-recovery',m,'Smallest dependency-correct recovery',{recovery_succeeds:true},{message:recovered},'pass','TR6933-'+id);}
+}
+for(const m of ledger.methods.filter(r=>r.recommendation_state==='candidate')){
+ const w=ledger.witnesses.find(r=>r.method_id===m.method_id&&r.result==='pass');if(!w)continue;
+ for(const [before,after,reason] of [['candidate','validated','Bounded witness passed'],['validated','preferred','Recommend only for matching synthetic preconditions']])ledger.state_events.push({event_index:ledger.state_events.length+1,method_id:m.method_id,before,after,reason,witness_id:w.witness_id});
+ m.recommendation_state='preferred';ledger.recommendations.push({recommendation_index:ledger.recommendations.length+1,method_id:m.method_id,preconditions:m.trigger_preconditions,method:m.candidate_workaround,witness_ids:[w.witness_id],recurrence_guard:m.recurrence_guard,rollback:m.rollback,scope_boundary:boundary});
+}
+ledger.counts={methods:ledger.methods.length,witnesses:ledger.witnesses.length,state_events:ledger.state_events.length,recommendations:ledger.recommendations.length,states:Object.fromEntries(['observed','candidate','validated','preferred','superseded','deprecated'].map(s=>[s,ledger.methods.filter(m=>m.recommendation_state===s).length])),witness_results:Object.fromEntries(['pass','fail'].map(s=>[s,ledger.witnesses.filter(w=>w.result===s).length]))};
+if(new Set(ledger.witnesses.map(w=>w.witness_id)).size!==ledger.witnesses.length)throw new Error('Duplicate witness');
+write(stage+'/methodflow-ledger.json',ledger);
+console.log(JSON.stringify(ledger.counts));

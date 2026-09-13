@@ -1,0 +1,113 @@
+{
+  "stage": "x1",
+  "records": [
+    {
+      "id": "TR6933-X1-PARSER-duplicate_root",
+      "raw": "{\"a\":1,\"a\":2}",
+      "expected_error": "DUPLICATE_KEY",
+      "subject_success_credit": 0,
+      "actual": "DUPLICATE_KEY",
+      "subject_result": "fail",
+      "refusal_result": "pass"
+    },
+    {
+      "id": "TR6933-X1-PARSER-duplicate_nested",
+      "raw": "{\"x\":{\"a\":1,\"a\":2}}",
+      "expected_error": "DUPLICATE_KEY",
+      "subject_success_credit": 0,
+      "actual": "DUPLICATE_KEY",
+      "subject_result": "fail",
+      "refusal_result": "pass"
+    },
+    {
+      "id": "TR6933-X1-PARSER-escaped_duplicate",
+      "raw": "{\"a\":1,\"\\u0061\":2}",
+      "expected_error": "DUPLICATE_KEY",
+      "subject_success_credit": 0,
+      "actual": "DUPLICATE_KEY",
+      "subject_result": "fail",
+      "refusal_result": "pass"
+    },
+    {
+      "id": "TR6933-X1-PARSER-trailing_comma",
+      "raw": "{\"a\":1,}",
+      "expected_error": "JSON_SYNTAX",
+      "subject_success_credit": 0,
+      "actual": "JSON_SYNTAX",
+      "subject_result": "fail",
+      "refusal_result": "pass"
+    },
+    {
+      "id": "TR6933-X1-PARSER-trailing_text",
+      "raw": "{}x",
+      "expected_error": "JSON_SYNTAX",
+      "subject_success_credit": 0,
+      "actual": "JSON_SYNTAX",
+      "subject_result": "fail",
+      "refusal_result": "pass"
+    },
+    {
+      "id": "TR6933-X1-PARSER-leading_zero",
+      "raw": "{\"a\":01}",
+      "expected_error": "JSON_SYNTAX",
+      "subject_success_credit": 0,
+      "actual": "JSON_SYNTAX",
+      "subject_result": "fail",
+      "refusal_result": "pass"
+    },
+    {
+      "id": "TR6933-X1-PARSER-nonfinite",
+      "raw": "{\"a\":NaN}",
+      "expected_error": "JSON_SYNTAX",
+      "subject_success_credit": 0,
+      "actual": "JSON_SYNTAX",
+      "subject_result": "fail",
+      "refusal_result": "pass"
+    },
+    {
+      "id": "TR6933-X1-PARSER-prototype_key",
+      "raw": "{\"__proto__\":{\"polluted\":true}}",
+      "expected_error": "RESERVED_KEY",
+      "subject_success_credit": 0,
+      "actual": "RESERVED_KEY",
+      "subject_result": "fail",
+      "refusal_result": "pass"
+    },
+    {
+      "id": "TR6933-X1-PARSER-constructor_key",
+      "raw": "{\"constructor\":0}",
+      "expected_error": "RESERVED_KEY",
+      "subject_success_credit": 0,
+      "actual": "RESERVED_KEY",
+      "subject_result": "fail",
+      "refusal_result": "pass"
+    },
+    {
+      "id": "TR6933-X1-PARSER-unterminated_string",
+      "raw": "{\"a\":\"x}",
+      "expected_error": "JSON_SYNTAX",
+      "subject_success_credit": 0,
+      "actual": "JSON_SYNTAX",
+      "subject_result": "fail",
+      "refusal_result": "pass"
+    },
+    {
+      "id": "TR6933-X1-PARSER-unsafe_integer",
+      "raw": "{\"a\":9007199254740992}",
+      "expected_error": "NUMERIC_PROFILE",
+      "subject_success_credit": 0,
+      "actual": "NUMERIC_PROFILE",
+      "subject_result": "fail",
+      "refusal_result": "pass"
+    },
+    {
+      "id": "TR6933-X1-PARSER-fractional_number",
+      "raw": "{\"a\":1.5}",
+      "expected_error": "NUMERIC_PROFILE",
+      "subject_success_credit": 0,
+      "actual": "NUMERIC_PROFILE",
+      "subject_result": "fail",
+      "refusal_result": "pass"
+    }
+  ]
+}

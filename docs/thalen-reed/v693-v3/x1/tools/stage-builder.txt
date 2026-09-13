@@ -1,0 +1,59 @@
+'use strict';
+const fs=require('node:fs'),path=require('node:path'),crypto=require('node:crypto'),vm=require('node:vm'),cp=require('node:child_process');
+const root=process.argv[2],stage=process.argv[3],action=process.argv[4];
+if(!root||!['x1','x2'].includes(stage))throw new Error('Explicit owner root and stage required');
+const p=path.join(root,'docs/thalen-reed/v693-v3'),out=path.join(p,stage);
+const read=f=>JSON.parse(fs.readFileSync(path.join(p,f),'utf8'));
+const sha=b=>crypto.createHash('sha256').update(b).digest('hex');
+function write(f,v){const dest=path.join(out,f);fs.mkdirSync(path.dirname(dest),{recursive:true});fs.writeFileSync(dest,typeof v==='string'?v:JSON.stringify(v,null,2)+'\n',{flag:'wx'});}
+function load(file){const src=fs.readFileSync(file,'utf8'),mod={exports:{}};new vm.Script('(function(module,exports,require){'+src+'\n})',{filename:path.basename(file)}).runInThisContext()(mod,mod.exports,require);return mod.exports;}
+const {rows,operations}=load(path.join(p,'plan/fixture-definitions.txt'));
+const selected=rows.filter(r=>r.stage===stage),start=stage==='x1'?0:10;
+const skillsPlan=read('plan/skills-runners-plan.json'),tasks=read('plan/'+stage+'-tasks.json');
+const libpath=path.join(out,'lib/migration-'+stage+'.txt'),libsha=sha(fs.readFileSync(libpath)),lib=load(libpath);
+const boundary='Same-owner synthetic software evidence only. No deployment, independent reproduction, scientific validation, complete accessibility, authority, personhood, consciousness, identity continuity, or Stage 20 credit. NOT_READY_FOR_STAGE_20.';
+if(action==='prepare'){
+ for(let i=0;i<10;i++){
+  const [op,purpose]=operations[start+i],name='ghc-family-migration-'+op.replaceAll('_','-');
+  const cases=selected.filter(r=>r.op===op),runner='ghc_family_config_migration_'+stage+'_'+(Math.floor(i/2)+1)+'.txt';
+  const text='---\nname: '+name+'\ndescription: '+purpose+' Use for bounded synthetic configuration review with explicit inputs and retained refusals.\n---\n\n# '+purpose+'\n\nUse this skill when a reviewer needs the exact '+op+' contract. Read the operation guide in references/contract.md before execution.\n\n1. Keep the original record and the full request envelope. Supply exactly op, record and args.\n2. Use operation '+op+' with the literal argument shape shown in the guide. No external changes are performed.\n3. Run the adjacent owner TXT runner '+runner+' with a UTF-8 request on stdin. Its fixed source binding must match before compilation.\n4. Compare the complete response, including disposition, error, external_credit and all value fields. Preserve malformed subjects separately from a passing refusal check.\n5. Preserve the original input and every failed attempt. A corrected request is a separate witness and does not erase failure.\n\n'+boundary+'\n';
+  write('skills/'+name+'/SKILL.md',text);
+  write('skills/'+name+'/references/contract.md','# '+op+'\n\n'+purpose+'\n\nThe data profile admits null, booleans, safe decimal integers, strings, arrays and objects. Fractions, exponent lexemes, negative zero and reserved object keys are outside this profile. Limits are one MiB, depth 32, 128 collection members and 4096 string units. This narrower profile is not a claim that all refused subjects are invalid JSON.\n\nThe following frozen cases show complete input and output, including deliberate business holds.\n\n'+cases.map(r=>'## '+r.title+'\n\nRequest:\n```json\n'+JSON.stringify(r.request,null,2)+'\n```\n\nExpected complete envelope:\n```json\n'+JSON.stringify(r.expected,null,2)+'\n```\n').join('\n')+'\n'+boundary+'\n');
+ }
+ for(let i=0;i<5;i++){
+  const allowed=operations.slice(start+i*2,start+i*2+2).map(x=>x[0]);
+  const txt="'use strict';\nconst fs=require('node:fs'),path=require('node:path'),crypto=require('node:crypto'),vm=require('node:vm');\nconst allowed="+JSON.stringify(allowed)+";\nconst expected='"+libsha+"';\nconst failure=error=>({ok:false,disposition:'open_gap',value:null,error,external_credit:false});\nlet response;\ntry{\n if(process.argv.length!==2)throw new Error('CLI_ARGUMENTS');\n const literal=path.join(__dirname,'../lib/migration-"+stage+".txt');\n const bytes=fs.readFileSync(literal);\n if(crypto.createHash('sha256').update(bytes).digest('hex')!==expected)throw new Error('LIBRARY_BINDING');\n const mod={exports:{}};\n const trustedRequire=name=>{if(name!=='node:crypto')throw new Error('REQUIRE_DENIED');return require(name);};\n new vm.Script('(function(module,exports,require){'+bytes.toString('utf8')+'\\n})',{filename:'migration-"+stage+".txt'}).runInThisContext()(mod,mod.exports,trustedRequire);\n const api=mod.exports,request=api.parseStrict(fs.readFileSync(0));\n if(!request||!allowed.includes(request.op))response=failure('RUNNER_OPERATION');\n else response=api.execute(request);\n}catch(error){response=failure(error.code||error.message);}\nprocess.stdout.write(JSON.stringify(response)+'\\n');\nif(!response.ok)process.exitCode=1;\n";
+  write('runners/ghc_family_config_migration_'+stage+'_'+(i+1)+'.txt',txt);
+ }
+ write('skills-runners-inventory.json',{stage,library_sha256:libsha,skills:skillsPlan.local_skills.filter(s=>s.stage===stage).map(s=>({...s,built:true})),runners:Array.from({length:5},(_,i)=>({name:'ghc_family_config_migration_'+stage+'_'+(i+1)+'.txt',operations:operations.slice(start+i*2,start+i*2+2).map(x=>x[0]),library_sha256:libsha})),boundary});
+ console.log(JSON.stringify({stage,prepared_skills:10,runners:5,library_sha256:libsha}));
+}else if(action==='execute'){
+ const safe=[],candidate=[],refusals=[],recovery=[],parser=[],runners=[];
+ const first=read(stage+'/evidence/first-core-execution.json');
+ for(const r of first.records){safe.push({id:r.id+'-envelope',proposal:r.id,procedure:'complete_envelope_equality',result:r.envelope_pass?'pass':'fail',actual:r.actual,expected:r.expected});safe.push({id:r.id+'-source',proposal:r.id,procedure:'source_unchanged',result:r.source_pass?'pass':'fail'});}
+ for(const c of tasks.candidate){
+  const before=lib.helpers.canon(c.request),actual=lib.execute(lib.helpers.clone(c.request));
+  const expected=lib.envelope(false,null,c.expected_error),pass=lib.helpers.equal(actual,expected)&&before===lib.helpers.canon(c.request);
+  candidate.push({...c,actual,result:'fail',subject_success_credit:0,boundary:'The malformed operation did not succeed; refusal verification is a separate witness.'});
+  refusals.push({id:c.id+'-refusal',failed_subject:c.id,actual,expected,result:pass?'pass':'fail',external_credit:false});
+ }
+ for(const c of tasks.clean_fix_refine){const original=selected.find(r=>r.proposal_id===c.proposal),request=lib.helpers.clone(c.corrected_request),before=lib.helpers.canon(request),actual=lib.execute(request);recovery.push({...c,actual,expected:original.expected,result:lib.helpers.equal(actual,original.expected)&&before===lib.helpers.canon(request)?'pass':'fail',original_subject_credit:0,retained:true});}
+ for(const c of read('plan/parser-definitions.json')[stage]){
+  let actual='ACCEPTED';try{lib.parseStrict(c.raw===undefined?Buffer.from(c.bytes):c.raw);}catch(error){actual=error.code||error.message;}
+  parser.push({...c,actual,subject_result:'fail',refusal_result:actual===c.expected_error?'pass':'fail',subject_success_credit:0});
+ }
+ for(let i=0;i<5;i++){
+  const op=operations[start+i*2][0],fixture=selected.find(r=>r.op===op),file=path.join(out,'runners/ghc_family_config_migration_'+stage+'_'+(i+1)+'.txt');
+  for(const kind of ['positive','negative']){
+   const request=kind==='positive'?fixture.request:{...fixture.request,op:'unsupported_'+op};
+   const expected=kind==='positive'?fixture.expected:lib.envelope(false,null,'RUNNER_OPERATION');
+   const run=cp.spawnSync(process.execPath,[file],{input:JSON.stringify(request),encoding:'utf8',timeout:15000});let actual;try{actual=JSON.parse(run.stdout);}catch{actual={stdout:run.stdout,stderr:run.stderr,error:run.error?String(run.error):null};}
+   const pass=run.status===(kind==='positive'?0:1)&&lib.helpers.equal(actual,expected);
+   runners.push({id:'TR6933-'+stage.toUpperCase()+'-RUNNER-'+(i+1)+'-'+kind,runner:path.basename(file),kind,request,actual,expected,exit_code:run.status,result:pass?'pass':'fail',subject_result:kind==='negative'?'fail':'pass',subject_success_credit:kind==='negative'?0:1});
+  }
+ }
+ write('evidence/safe-checks.json',{stage,records:safe});write('evidence/candidate-subjects.json',{stage,records:candidate});write('evidence/refusal-checks.json',{stage,records:refusals});write('evidence/clean-fix-refine.json',{stage,records:recovery});write('evidence/parser-checks.json',{stage,records:parser});write('evidence/runner-checks.json',{stage,records:runners});
+ const failures=[...safe,...refusals,...recovery,...runners].filter(x=>x.result!=='pass').concat(parser.filter(x=>x.refusal_result!=='pass'));
+ write('execution-summary.json',{stage,library_sha256:libsha,safe:safe.length,candidate_failed_subjects:candidate.length,candidate_refusals:refusals.length,clean_fix_refine:recovery.length,parser_failed_subjects:parser.length,parser_refusals:parser.length,runner_positive:5,runner_failed_subjects:5,runner_refusals:5,unexpected_failures:failures.length,failed_ids:failures.map(x=>x.id),outcomes:selected.reduce((a,r)=>(a[r.expected_execution_disposition]=(a[r.expected_execution_disposition]||0)+1,a),{}),boundary});
+ console.log(JSON.stringify({stage,unexpected_failures:failures.length,failures},null,2));if(failures.length)process.exitCode=1;
+}else throw new Error('Use prepare or execute');

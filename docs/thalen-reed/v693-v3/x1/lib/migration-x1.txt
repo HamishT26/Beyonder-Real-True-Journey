@@ -1,0 +1,186 @@
+'use strict';
+// Trusted owner source. Input records are data, never executable text.
+const crypto=require('node:crypto');
+const RESERVED=new Set(['__proto__','prototype','constructor']);
+class Refusal extends Error { constructor(code){super(code);this.code=code;} }
+function need(condition,code){if(!condition)throw new Refusal(code);}
+const own=(o,k)=>Object.prototype.hasOwnProperty.call(o,k);
+const plain=o=>o!==null&&typeof o==='object'&&!Array.isArray(o)&&(Object.getPrototypeOf(o)===Object.prototype||Object.getPrototypeOf(o)===null);
+function keys(o,expected,code='ARG_FIELDS'){need(plain(o)&&Object.keys(o).length===expected.length&&expected.every(k=>own(o,k)),code);}
+function field(s){need(typeof s==='string'&&s.length<=80&&!RESERVED.has(s),'FIELD_NAME');return s;}
+function type(v){return v===null?'null':Array.isArray(v)?'array':typeof v==='object'?'object':typeof v==='number'?'integer':typeof v;}
+function canon(v){
+ if(Array.isArray(v))return '['+v.map(canon).join(',')+']';
+ if(plain(v))return '{'+Object.keys(v).sort().map(k=>JSON.stringify(k)+':'+canon(v[k])).join(',')+'}';
+ return JSON.stringify(v);
+}
+const clone=v=>JSON.parse(canon(v));
+const equal=(a,b)=>canon(a)===canon(b);
+const digest=v=>crypto.createHash('sha256').update(canon(v)).digest('hex');
+function validateJSON(v,depth=0){
+ need(depth<=32,'DEPTH_LIMIT');
+ if(v===null||typeof v==='boolean')return;
+ if(typeof v==='number'){need(Number.isSafeInteger(v)&&!Object.is(v,-0),'NUMERIC_PROFILE');return;}
+ if(typeof v==='string'){need(v.length<=4096,'STRING_LIMIT');return;}
+ if(Array.isArray(v)){need(v.length<=128,'COLLECTION_LIMIT');for(const x of v)validateJSON(x,depth+1);return;}
+ need(plain(v),'JSON_VALUE_TYPE');const names=Object.keys(v);need(names.length<=128,'COLLECTION_LIMIT');
+ for(const k of names){need(!RESERVED.has(k),'RESERVED_KEY');need(k.length<=4096,'STRING_LIMIT');validateJSON(v[k],depth+1);}
+}
+function parseStrict(input){
+ let source;
+ try{source=Buffer.isBuffer(input)?new TextDecoder('utf-8',{fatal:true}).decode(input):input;}catch{throw new Refusal('UTF8_ENCODING');}
+ need(typeof source==='string','JSON_SYNTAX');need(Buffer.byteLength(source,'utf8')<=1048576,'BYTE_LIMIT');
+ let pos=0;
+ const white=()=>{while(pos<source.length&&' \t\r\n'.includes(source[pos]))pos++;};
+ function string(){
+  need(source[pos]==='"','JSON_SYNTAX');const start=pos++;
+  while(pos<source.length){
+   const c=source[pos++];
+   if(c==='"'){
+    let value;try{value=JSON.parse(source.slice(start,pos));}catch{throw new Refusal('JSON_SYNTAX');}
+    need(value.length<=4096,'STRING_LIMIT');return value;
+   }
+   if(c==='\\'){need(pos<source.length,'JSON_SYNTAX');pos++;}
+   else need(c.charCodeAt(0)>=32,'JSON_SYNTAX');
+  }
+  throw new Refusal('JSON_SYNTAX');
+ }
+ function value(depth){
+  need(depth<=32,'DEPTH_LIMIT');white();const c=source[pos];
+  if(c==='"')return string();
+  if(c==='{'){
+   pos++;white();const out={};let count=0;if(source[pos]==='}'){pos++;return out;}
+   while(true){
+    white();const k=string();need(!RESERVED.has(k),'RESERVED_KEY');need(!own(out,k),'DUPLICATE_KEY');
+    white();need(source[pos++]===':','JSON_SYNTAX');out[k]=value(depth+1);need(++count<=128,'COLLECTION_LIMIT');
+    white();if(source[pos]==='}'){pos++;return out;}need(source[pos++ ]===',','JSON_SYNTAX');
+   }
+  }
+  if(c==='['){
+   pos++;white();const out=[];if(source[pos]===']'){pos++;return out;}
+   while(true){out.push(value(depth+1));need(out.length<=128,'COLLECTION_LIMIT');white();if(source[pos]===']'){pos++;return out;}need(source[pos++]===',','JSON_SYNTAX');}
+  }
+  for(const [literal,answer] of [['true',true],['false',false],['null',null]])if(source.startsWith(literal,pos)){pos+=literal.length;return answer;}
+  const match=/^-?(?:0|[1-9][0-9]*)(?:\.[0-9]+)?(?:[eE][+-]?[0-9]+)?/.exec(source.slice(pos));
+  need(match!==null,'JSON_SYNTAX');pos+=match[0].length;
+  need(/^-?(?:0|[1-9][0-9]*)$/.test(match[0])&&match[0]!=='-0','NUMERIC_PROFILE');
+  const number=Number(match[0]);need(Number.isSafeInteger(number),'NUMERIC_PROFILE');return number;
+ }
+ const result=value(0);white();need(pos===source.length,'JSON_SYNTAX');return result;
+}
+function mappingData(mapping,names=true){
+ need(plain(mapping),'MAPPING_TYPE');need(Object.keys(mapping).length<=128,'COLLECTION_LIMIT');
+ const targets=new Map();
+ for(const from of Object.keys(mapping).sort()){
+  if(names){field(from);field(mapping[from]);}
+  else need(typeof mapping[from]==='string'&&mapping[from].length<=80,'ENUM_MAP');
+  const to=mapping[from];if(!targets.has(to))targets.set(to,[]);targets.get(to).push(from);
+ }
+ return [...targets].filter(([,sources])=>sources.length>1).sort(([a],[b])=>a<b?-1:a>b?1:0).map(([target,sources])=>({target,sources}));
+}
+function listNames(value){need(Array.isArray(value)&&value.length<=128,'FIELD_LIST');value.forEach(field);need(new Set(value).size===value.length,'DUPLICATE_FIELD');return [...value].sort();}
+const OPS={};
+OPS.field_inventory=(record,args)=>{
+ keys(args,[]);const fields=Object.keys(record).sort().map(name=>({name,type:type(record[name])}));return {fields,count:fields.length};
+};
+OPS.field_correspondence=(record,args)=>{
+ keys(args,['mapping']);const collisions=mappingData(args.mapping);
+ const resolved=Object.keys(args.mapping).sort().map(from=>({from,to:args.mapping[from],present:own(record,from),source_type:own(record,from)?type(record[from]):'absent'}));
+ return {resolved,target_collisions:collisions,missing_sources:resolved.filter(r=>!r.present).map(r=>r.from)};
+};
+OPS.rename_preview=(record,args)=>{
+ keys(args,['mapping']);const collisions=mappingData(args.mapping);const names=Object.keys(args.mapping).sort();
+ const conflicts=collisions.map(c=>'duplicate_destination:'+c.target);
+ for(const from of names){
+  if(!own(record,from))conflicts.push('missing_source:'+from);
+  const to=args.mapping[from];if(own(record,to)&&!own(args.mapping,to))conflicts.push('destination_occupied:'+to);
+ }
+ conflicts.sort();if(conflicts.length)return {applied:false,result:clone(record),conflicts,source_preserved:true};
+ const result={};for(const k of Object.keys(record).sort())if(!own(args.mapping,k))result[k]=clone(record[k]);
+ for(const from of names)result[args.mapping[from]]=clone(record[from]);
+ return {applied:true,result,conflicts:[],source_preserved:true};
+};
+OPS.default_overlay=(record,args)=>{
+ keys(args,['defaults']);need(plain(args.defaults),'DEFAULTS_TYPE');
+ const result=clone(record),added=[],retained=[],already_equal=[];
+ for(const k of Object.keys(args.defaults).sort()){
+  field(k);
+  if(!own(record,k)){result[k]=clone(args.defaults[k]);added.push(k);}
+  else if(equal(record[k],args.defaults[k]))already_equal.push(k);
+  else retained.push(k);
+ }
+ return {result,added,retained,already_equal};
+};
+OPS.coercion_preview=(record,args)=>{
+ keys(args,['field','conversion']);field(args.field);need(own(record,args.field),'MISSING_FIELD');
+ const original=record[args.field],inputType=type(original),result=clone(record);
+ let replacement=original,reason=null;
+ if(args.conversion==='integer_to_text'){if(Number.isSafeInteger(original)&&typeof original==='number')replacement=String(original);else reason='TYPE_MISMATCH';}
+ else if(args.conversion==='boolean_to_text'){if(typeof original==='boolean')replacement=String(original);else reason='TYPE_MISMATCH';}
+ else if(args.conversion==='text_to_integer'){
+  if(typeof original!=='string')reason='TYPE_MISMATCH';
+  else if(!/^-?(?:0|[1-9][0-9]*)$/.test(original)||original==='-0'||!Number.isSafeInteger(Number(original)))reason='NONCANONICAL_INTEGER_TEXT';
+  else replacement=Number(original);
+ }else throw new Refusal('CONVERSION');
+ if(reason===null)result[args.field]=replacement;
+ return {applied:reason===null,result,reason,input_type:inputType,output_type:type(result[args.field])};
+};
+OPS.enum_mapping=(record,args)=>{
+ keys(args,['field','mapping']);field(args.field);need(own(record,args.field)&&typeof record[args.field]==='string','ENUM_FIELD');
+ const collisions=mappingData(args.mapping,false);const original=record[args.field],result=clone(record),applied=own(args.mapping,original);
+ if(applied)result[args.field]=args.mapping[original];
+ return {applied,result,unmapped:applied?null:original,noninjective_targets:collisions.map(c=>c.target)};
+};
+OPS.required_field_check=(record,args)=>{
+ keys(args,['required']);const names=listNames(args.required),present=names.filter(k=>own(record,k)),missing=names.filter(k=>!own(record,k));
+ return {present,missing,complete:missing.length===0};
+};
+OPS.unknown_field_projection=(record,args)=>{
+ keys(args,['allowed']);const allowed=new Set(listNames(args.allowed));const selected={},quarantine={};
+ for(const k of Object.keys(record).sort())(allowed.has(k)?selected:quarantine)[k]=clone(record[k]);
+ return {selected,quarantine,source_preserved:true};
+};
+OPS.schema_delta=(record,args)=>{
+ keys(args,['target']);need(plain(args.target),'SCHEMA_TYPE');const allowedTypes=new Set(['integer','number','string','boolean','null','array','object']);
+ for(const s of [record,args.target])for(const [k,v] of Object.entries(s)){field(k);need(allowedTypes.has(v),'SCHEMA_TYPE');}
+ const added=[],removed=[],changed=[],unchanged=[];
+ for(const k of [...new Set([...Object.keys(record),...Object.keys(args.target)])].sort()){
+  if(!own(record,k))added.push(k);else if(!own(args.target,k))removed.push(k);
+  else if(record[k]!==args.target[k])changed.push({field:k,from:record[k],to:args.target[k]});else unchanged.push(k);
+ }
+ return {added,removed,changed,unchanged};
+};
+OPS.rename_cycle_analysis=(record,args)=>{
+ keys(args,['mapping']);const duplicateTargets=mappingData(args.mapping).map(x=>x.target),m=args.mapping,names=Object.keys(m).sort();
+ const fixed=names.filter(k=>m[k]===k),cycles=new Map(),incoming=new Map(names.map(k=>[k,0]));
+ for(const k of names)if(m[k]!==k&&incoming.has(m[k]))incoming.set(m[k],incoming.get(m[k])+1);
+ for(const start of names){
+  const trail=[],positions=new Map();let cursor=start;
+  while(own(m,cursor)&&m[cursor]!==cursor){
+   if(positions.has(cursor)){
+    const cycle=trail.slice(positions.get(cursor));const smallest=[...cycle].sort()[0],i=cycle.indexOf(smallest),rotated=cycle.slice(i).concat(cycle.slice(0,i));
+    cycles.set(JSON.stringify(rotated),rotated);break;
+   }
+   positions.set(cursor,trail.length);trail.push(cursor);cursor=m[cursor];
+  }
+ }
+ const chains=[];
+ for(const start of names.filter(k=>incoming.get(k)===0&&m[k]!==k)){
+  const trail=[start];let cursor=start;
+  while(own(m,cursor)&&m[cursor]!==cursor){const next=m[cursor];if(trail.includes(next))break;trail.push(next);cursor=next;}
+  chains.push(trail);
+ }
+ return {cycles:[...cycles.values()].sort((a,b)=>JSON.stringify(a)<JSON.stringify(b)?-1:1),chains,fixed_points:fixed,duplicate_targets:duplicateTargets};
+};
+function envelope(ok,value=null,error=null,disposition='completed'){return {ok,disposition:ok?disposition:'open_gap',value,error,external_credit:false};}
+function execute(request){
+ try{
+  keys(request,['op','record','args'],'REQUEST_FIELDS');
+  need(typeof request.op==='string'&&own(OPS,request.op),'UNKNOWN_OPERATION');
+  need(plain(request.record),'RECORD_TYPE');need(plain(request.args),'ARGS_TYPE');
+  validateJSON(request);
+  const result=OPS[request.op](request.record,request.args);validateJSON(result);
+  return envelope(true,result);
+ }catch(error){if(error instanceof Refusal)return envelope(false,null,error.code);throw error;}
+}
+module.exports={execute,parseStrict,envelope,Refusal,helpers:{need,own,plain,keys,field,type,canon,clone,equal,digest,validateJSON},operations:OPS};

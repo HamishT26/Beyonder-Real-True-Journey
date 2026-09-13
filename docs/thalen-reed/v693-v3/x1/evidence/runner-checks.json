@@ -1,0 +1,433 @@
+{
+  "stage": "x1",
+  "records": [
+    {
+      "id": "TR6933-X1-RUNNER-1-positive",
+      "runner": "ghc_family_config_migration_x1_1.txt",
+      "kind": "positive",
+      "request": {
+        "op": "field_inventory",
+        "record": {
+          "count": 1,
+          "enabled": true
+        },
+        "args": {}
+      },
+      "actual": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "fields": [
+            {
+              "name": "count",
+              "type": "integer"
+            },
+            {
+              "name": "enabled",
+              "type": "boolean"
+            }
+          ],
+          "count": 2
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "fields": [
+            {
+              "name": "count",
+              "type": "integer"
+            },
+            {
+              "name": "enabled",
+              "type": "boolean"
+            }
+          ],
+          "count": 2
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "exit_code": 0,
+      "result": "pass",
+      "subject_result": "pass",
+      "subject_success_credit": 1
+    },
+    {
+      "id": "TR6933-X1-RUNNER-1-negative",
+      "runner": "ghc_family_config_migration_x1_1.txt",
+      "kind": "negative",
+      "request": {
+        "op": "unsupported_field_inventory",
+        "record": {
+          "count": 1,
+          "enabled": true
+        },
+        "args": {}
+      },
+      "actual": {
+        "ok": false,
+        "disposition": "open_gap",
+        "value": null,
+        "error": "RUNNER_OPERATION",
+        "external_credit": false
+      },
+      "expected": {
+        "ok": false,
+        "disposition": "open_gap",
+        "value": null,
+        "error": "RUNNER_OPERATION",
+        "external_credit": false
+      },
+      "exit_code": 1,
+      "result": "pass",
+      "subject_result": "fail",
+      "subject_success_credit": 0
+    },
+    {
+      "id": "TR6933-X1-RUNNER-2-positive",
+      "runner": "ghc_family_config_migration_x1_2.txt",
+      "kind": "positive",
+      "request": {
+        "op": "rename_preview",
+        "record": {
+          "old": 1,
+          "keep": true
+        },
+        "args": {
+          "mapping": {
+            "old": "new"
+          }
+        }
+      },
+      "actual": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "applied": true,
+          "result": {
+            "keep": true,
+            "new": 1
+          },
+          "conflicts": [],
+          "source_preserved": true
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "applied": true,
+          "result": {
+            "keep": true,
+            "new": 1
+          },
+          "conflicts": [],
+          "source_preserved": true
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "exit_code": 0,
+      "result": "pass",
+      "subject_result": "pass",
+      "subject_success_credit": 1
+    },
+    {
+      "id": "TR6933-X1-RUNNER-2-negative",
+      "runner": "ghc_family_config_migration_x1_2.txt",
+      "kind": "negative",
+      "request": {
+        "op": "unsupported_rename_preview",
+        "record": {
+          "old": 1,
+          "keep": true
+        },
+        "args": {
+          "mapping": {
+            "old": "new"
+          }
+        }
+      },
+      "actual": {
+        "ok": false,
+        "disposition": "open_gap",
+        "value": null,
+        "error": "RUNNER_OPERATION",
+        "external_credit": false
+      },
+      "expected": {
+        "ok": false,
+        "disposition": "open_gap",
+        "value": null,
+        "error": "RUNNER_OPERATION",
+        "external_credit": false
+      },
+      "exit_code": 1,
+      "result": "pass",
+      "subject_result": "fail",
+      "subject_success_credit": 0
+    },
+    {
+      "id": "TR6933-X1-RUNNER-3-positive",
+      "runner": "ghc_family_config_migration_x1_3.txt",
+      "kind": "positive",
+      "request": {
+        "op": "coercion_preview",
+        "record": {
+          "n": 12
+        },
+        "args": {
+          "field": "n",
+          "conversion": "integer_to_text"
+        }
+      },
+      "actual": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "applied": true,
+          "result": {
+            "n": "12"
+          },
+          "reason": null,
+          "input_type": "integer",
+          "output_type": "string"
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "applied": true,
+          "result": {
+            "n": "12"
+          },
+          "reason": null,
+          "input_type": "integer",
+          "output_type": "string"
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "exit_code": 0,
+      "result": "pass",
+      "subject_result": "pass",
+      "subject_success_credit": 1
+    },
+    {
+      "id": "TR6933-X1-RUNNER-3-negative",
+      "runner": "ghc_family_config_migration_x1_3.txt",
+      "kind": "negative",
+      "request": {
+        "op": "unsupported_coercion_preview",
+        "record": {
+          "n": 12
+        },
+        "args": {
+          "field": "n",
+          "conversion": "integer_to_text"
+        }
+      },
+      "actual": {
+        "ok": false,
+        "disposition": "open_gap",
+        "value": null,
+        "error": "RUNNER_OPERATION",
+        "external_credit": false
+      },
+      "expected": {
+        "ok": false,
+        "disposition": "open_gap",
+        "value": null,
+        "error": "RUNNER_OPERATION",
+        "external_credit": false
+      },
+      "exit_code": 1,
+      "result": "pass",
+      "subject_result": "fail",
+      "subject_success_credit": 0
+    },
+    {
+      "id": "TR6933-X1-RUNNER-4-positive",
+      "runner": "ghc_family_config_migration_x1_4.txt",
+      "kind": "positive",
+      "request": {
+        "op": "required_field_check",
+        "record": {
+          "a": 1,
+          "b": 2
+        },
+        "args": {
+          "required": [
+            "b",
+            "a"
+          ]
+        }
+      },
+      "actual": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "present": [
+            "a",
+            "b"
+          ],
+          "missing": [],
+          "complete": true
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "present": [
+            "a",
+            "b"
+          ],
+          "missing": [],
+          "complete": true
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "exit_code": 0,
+      "result": "pass",
+      "subject_result": "pass",
+      "subject_success_credit": 1
+    },
+    {
+      "id": "TR6933-X1-RUNNER-4-negative",
+      "runner": "ghc_family_config_migration_x1_4.txt",
+      "kind": "negative",
+      "request": {
+        "op": "unsupported_required_field_check",
+        "record": {
+          "a": 1,
+          "b": 2
+        },
+        "args": {
+          "required": [
+            "b",
+            "a"
+          ]
+        }
+      },
+      "actual": {
+        "ok": false,
+        "disposition": "open_gap",
+        "value": null,
+        "error": "RUNNER_OPERATION",
+        "external_credit": false
+      },
+      "expected": {
+        "ok": false,
+        "disposition": "open_gap",
+        "value": null,
+        "error": "RUNNER_OPERATION",
+        "external_credit": false
+      },
+      "exit_code": 1,
+      "result": "pass",
+      "subject_result": "fail",
+      "subject_success_credit": 0
+    },
+    {
+      "id": "TR6933-X1-RUNNER-5-positive",
+      "runner": "ghc_family_config_migration_x1_5.txt",
+      "kind": "positive",
+      "request": {
+        "op": "schema_delta",
+        "record": {
+          "a": "integer"
+        },
+        "args": {
+          "target": {
+            "a": "integer",
+            "b": "string"
+          }
+        }
+      },
+      "actual": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "added": [
+            "b"
+          ],
+          "removed": [],
+          "changed": [],
+          "unchanged": [
+            "a"
+          ]
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "added": [
+            "b"
+          ],
+          "removed": [],
+          "changed": [],
+          "unchanged": [
+            "a"
+          ]
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "exit_code": 0,
+      "result": "pass",
+      "subject_result": "pass",
+      "subject_success_credit": 1
+    },
+    {
+      "id": "TR6933-X1-RUNNER-5-negative",
+      "runner": "ghc_family_config_migration_x1_5.txt",
+      "kind": "negative",
+      "request": {
+        "op": "unsupported_schema_delta",
+        "record": {
+          "a": "integer"
+        },
+        "args": {
+          "target": {
+            "a": "integer",
+            "b": "string"
+          }
+        }
+      },
+      "actual": {
+        "ok": false,
+        "disposition": "open_gap",
+        "value": null,
+        "error": "RUNNER_OPERATION",
+        "external_credit": false
+      },
+      "expected": {
+        "ok": false,
+        "disposition": "open_gap",
+        "value": null,
+        "error": "RUNNER_OPERATION",
+        "external_credit": false
+      },
+      "exit_code": 1,
+      "result": "pass",
+      "subject_result": "fail",
+      "subject_success_credit": 0
+    }
+  ]
+}
