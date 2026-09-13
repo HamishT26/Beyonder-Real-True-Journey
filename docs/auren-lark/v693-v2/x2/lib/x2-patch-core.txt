@@ -1,0 +1,12 @@
+'use strict';
+const ALLOWED = new Set(["accessible_change_projection","correction_nonerasure","dependency_order","external_validation_gap","inverse_transaction","operator_authority_vacancy","path_conflict_quarantine","release_gate","rollback_digest","structural_diff"]);
+function response(error) { return {ok:false,disposition:'represented',value:null,error,external_credit:false}; }
+function validateRequest(req) {
+  if (!req || typeof req !== 'object' || Array.isArray(req)) return response('REQUEST_NOT_OBJECT');
+  const keys = Object.keys(req).sort();
+  if (JSON.stringify(keys) !== JSON.stringify(['args','document','fixture','op'])) return response('REQUEST_KEYS');
+  if (!ALLOWED.has(req.op)) return response('OP_NOT_ALLOWED');
+  if (!req.document || typeof req.document !== 'object') return response('DOCUMENT_TYPE');
+  return {ok:true,op:req.op,fixture:req.fixture};
+}
+module.exports = { ALLOWED, validateRequest };

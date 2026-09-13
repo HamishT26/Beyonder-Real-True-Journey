@@ -1,0 +1,5 @@
+'use strict';
+const ALLOWED=new Set(["document_shape","pointer_tokenization","pointer_resolution","typed_test"]);
+function response(error){return {ok:false,disposition:'represented',value:null,error,external_credit:false}}
+function run(req){if(!req||typeof req!=='object'||Array.isArray(req))return response('REQUEST_NOT_OBJECT');if(!ALLOWED.has(req.op))return response('OP_NOT_ALLOWED');return {ok:true,op:req.op,fixture:req.fixture};}
+module.exports={ALLOWED,run};

@@ -1,0 +1,5390 @@
+{
+  "stage": "x2",
+  "count": 100,
+  "results": [
+    {
+      "check_id": "AL6932-P051-safe-source",
+      "proposal_id": "AL6932-P051",
+      "kind": "source_fixity",
+      "expected": {
+        "op": "inverse_transaction",
+        "fixture": "P4",
+        "document": {
+          "profile": {
+            "label": "alpha",
+            "active": true
+          },
+          "settings": {
+            "mode": "calm",
+            "level": 1
+          }
+        },
+        "args": {
+          "patches": [
+            {
+              "op": "add",
+              "path": "/settings/note",
+              "value": "checked"
+            },
+            {
+              "op": "replace",
+              "path": "/settings/level",
+              "value": "checked"
+            }
+          ]
+        }
+      },
+      "observed": {
+        "op": "inverse_transaction",
+        "fixture": "P4",
+        "document": {
+          "profile": {
+            "label": "alpha",
+            "active": true
+          },
+          "settings": {
+            "mode": "calm",
+            "level": 1
+          }
+        },
+        "args": {
+          "patches": [
+            {
+              "op": "add",
+              "path": "/settings/note",
+              "value": "checked"
+            },
+            {
+              "op": "replace",
+              "path": "/settings/level",
+              "value": "checked"
+            }
+          ]
+        }
+      },
+      "result": "pass",
+      "same_owner_only": true
+    },
+    {
+      "check_id": "AL6932-P051-safe-envelope",
+      "proposal_id": "AL6932-P051",
+      "kind": "complete_envelope",
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "forward_result": {
+            "profile": {
+              "label": "alpha",
+              "active": true
+            },
+            "settings": {
+              "mode": "calm",
+              "level": "checked",
+              "note": "checked"
+            }
+          },
+          "inverse": [
+            {
+              "op": "replace",
+              "path": "/settings/level",
+              "value": 1
+            },
+            {
+              "op": "remove",
+              "path": "/settings/note"
+            }
+          ],
+          "restored": {
+            "profile": {
+              "label": "alpha",
+              "active": true
+            },
+            "settings": {
+              "mode": "calm",
+              "level": 1
+            }
+          },
+          "round_trip": true
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "observed": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "forward_result": {
+            "profile": {
+              "label": "alpha",
+              "active": true
+            },
+            "settings": {
+              "mode": "calm",
+              "level": "checked",
+              "note": "checked"
+            }
+          },
+          "inverse": [
+            {
+              "op": "replace",
+              "path": "/settings/level",
+              "value": 1
+            },
+            {
+              "op": "remove",
+              "path": "/settings/note"
+            }
+          ],
+          "restored": {
+            "profile": {
+              "label": "alpha",
+              "active": true
+            },
+            "settings": {
+              "mode": "calm",
+              "level": 1
+            }
+          },
+          "round_trip": true
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "result": "pass",
+      "same_owner_only": true
+    },
+    {
+      "check_id": "AL6932-P052-safe-source",
+      "proposal_id": "AL6932-P052",
+      "kind": "source_fixity",
+      "expected": {
+        "op": "inverse_transaction",
+        "fixture": "N5",
+        "document": {
+          "config": {
+            "display": {
+              "theme": "dawn",
+              "scale": 1
+            },
+            "access": {
+              "state": "held"
+            }
+          },
+          "version": 1
+        },
+        "args": {
+          "patches": [
+            {
+              "op": "add",
+              "path": "/config/display/contrast",
+              "value": 2
+            },
+            {
+              "op": "replace",
+              "path": "/config/display/scale",
+              "value": 2
+            }
+          ]
+        }
+      },
+      "observed": {
+        "op": "inverse_transaction",
+        "fixture": "N5",
+        "document": {
+          "config": {
+            "display": {
+              "theme": "dawn",
+              "scale": 1
+            },
+            "access": {
+              "state": "held"
+            }
+          },
+          "version": 1
+        },
+        "args": {
+          "patches": [
+            {
+              "op": "add",
+              "path": "/config/display/contrast",
+              "value": 2
+            },
+            {
+              "op": "replace",
+              "path": "/config/display/scale",
+              "value": 2
+            }
+          ]
+        }
+      },
+      "result": "pass",
+      "same_owner_only": true
+    },
+    {
+      "check_id": "AL6932-P052-safe-envelope",
+      "proposal_id": "AL6932-P052",
+      "kind": "complete_envelope",
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "forward_result": {
+            "config": {
+              "display": {
+                "theme": "dawn",
+                "scale": 2,
+                "contrast": 2
+              },
+              "access": {
+                "state": "held"
+              }
+            },
+            "version": 1
+          },
+          "inverse": [
+            {
+              "op": "replace",
+              "path": "/config/display/scale",
+              "value": 1
+            },
+            {
+              "op": "remove",
+              "path": "/config/display/contrast"
+            }
+          ],
+          "restored": {
+            "config": {
+              "display": {
+                "theme": "dawn",
+                "scale": 1
+              },
+              "access": {
+                "state": "held"
+              }
+            },
+            "version": 1
+          },
+          "round_trip": true
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "observed": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "forward_result": {
+            "config": {
+              "display": {
+                "theme": "dawn",
+                "scale": 2,
+                "contrast": 2
+              },
+              "access": {
+                "state": "held"
+              }
+            },
+            "version": 1
+          },
+          "inverse": [
+            {
+              "op": "replace",
+              "path": "/config/display/scale",
+              "value": 1
+            },
+            {
+              "op": "remove",
+              "path": "/config/display/contrast"
+            }
+          ],
+          "restored": {
+            "config": {
+              "display": {
+                "theme": "dawn",
+                "scale": 1
+              },
+              "access": {
+                "state": "held"
+              }
+            },
+            "version": 1
+          },
+          "round_trip": true
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "result": "pass",
+      "same_owner_only": true
+    },
+    {
+      "check_id": "AL6932-P053-safe-source",
+      "proposal_id": "AL6932-P053",
+      "kind": "source_fixity",
+      "expected": {
+        "op": "inverse_transaction",
+        "fixture": "A4",
+        "document": {
+          "queue": [
+            "intake",
+            "review",
+            "archive"
+          ],
+          "meta": {
+            "revision": 4
+          }
+        },
+        "args": {
+          "patches": [
+            {
+              "op": "add",
+              "path": "/queue/1",
+              "value": "triage"
+            },
+            {
+              "op": "replace",
+              "path": "/queue/1",
+              "value": "triage"
+            }
+          ]
+        }
+      },
+      "observed": {
+        "op": "inverse_transaction",
+        "fixture": "A4",
+        "document": {
+          "queue": [
+            "intake",
+            "review",
+            "archive"
+          ],
+          "meta": {
+            "revision": 4
+          }
+        },
+        "args": {
+          "patches": [
+            {
+              "op": "add",
+              "path": "/queue/1",
+              "value": "triage"
+            },
+            {
+              "op": "replace",
+              "path": "/queue/1",
+              "value": "triage"
+            }
+          ]
+        }
+      },
+      "result": "pass",
+      "same_owner_only": true
+    },
+    {
+      "check_id": "AL6932-P053-safe-envelope",
+      "proposal_id": "AL6932-P053",
+      "kind": "complete_envelope",
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "forward_result": {
+            "queue": [
+              "intake",
+              "triage",
+              "review",
+              "archive"
+            ],
+            "meta": {
+              "revision": 4
+            }
+          },
+          "inverse": [
+            {
+              "op": "replace",
+              "path": "/queue/1",
+              "value": "triage"
+            },
+            {
+              "op": "remove",
+              "path": "/queue/1"
+            }
+          ],
+          "restored": {
+            "queue": [
+              "intake",
+              "review",
+              "archive"
+            ],
+            "meta": {
+              "revision": 4
+            }
+          },
+          "round_trip": true
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "observed": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "forward_result": {
+            "queue": [
+              "intake",
+              "triage",
+              "review",
+              "archive"
+            ],
+            "meta": {
+              "revision": 4
+            }
+          },
+          "inverse": [
+            {
+              "op": "replace",
+              "path": "/queue/1",
+              "value": "triage"
+            },
+            {
+              "op": "remove",
+              "path": "/queue/1"
+            }
+          ],
+          "restored": {
+            "queue": [
+              "intake",
+              "review",
+              "archive"
+            ],
+            "meta": {
+              "revision": 4
+            }
+          },
+          "round_trip": true
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "result": "pass",
+      "same_owner_only": true
+    },
+    {
+      "check_id": "AL6932-P054-safe-source",
+      "proposal_id": "AL6932-P054",
+      "kind": "source_fixity",
+      "expected": {
+        "op": "inverse_transaction",
+        "fixture": "M5",
+        "document": {
+          "items": [
+            {
+              "id": "a",
+              "state": "new"
+            },
+            {
+              "id": "b",
+              "state": "held"
+            }
+          ],
+          "flags": {
+            "publish": false,
+            "audit": true
+          }
+        },
+        "args": {
+          "patches": [
+            {
+              "op": "add",
+              "path": "/flags/reviewed",
+              "value": true
+            },
+            {
+              "op": "replace",
+              "path": "/items/1/state",
+              "value": true
+            }
+          ]
+        }
+      },
+      "observed": {
+        "op": "inverse_transaction",
+        "fixture": "M5",
+        "document": {
+          "items": [
+            {
+              "id": "a",
+              "state": "new"
+            },
+            {
+              "id": "b",
+              "state": "held"
+            }
+          ],
+          "flags": {
+            "publish": false,
+            "audit": true
+          }
+        },
+        "args": {
+          "patches": [
+            {
+              "op": "add",
+              "path": "/flags/reviewed",
+              "value": true
+            },
+            {
+              "op": "replace",
+              "path": "/items/1/state",
+              "value": true
+            }
+          ]
+        }
+      },
+      "result": "pass",
+      "same_owner_only": true
+    },
+    {
+      "check_id": "AL6932-P054-safe-envelope",
+      "proposal_id": "AL6932-P054",
+      "kind": "complete_envelope",
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "forward_result": {
+            "items": [
+              {
+                "id": "a",
+                "state": "new"
+              },
+              {
+                "id": "b",
+                "state": true
+              }
+            ],
+            "flags": {
+              "publish": false,
+              "audit": true,
+              "reviewed": true
+            }
+          },
+          "inverse": [
+            {
+              "op": "replace",
+              "path": "/items/1/state",
+              "value": "held"
+            },
+            {
+              "op": "remove",
+              "path": "/flags/reviewed"
+            }
+          ],
+          "restored": {
+            "items": [
+              {
+                "id": "a",
+                "state": "new"
+              },
+              {
+                "id": "b",
+                "state": "held"
+              }
+            ],
+            "flags": {
+              "publish": false,
+              "audit": true
+            }
+          },
+          "round_trip": true
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "observed": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "forward_result": {
+            "items": [
+              {
+                "id": "a",
+                "state": "new"
+              },
+              {
+                "id": "b",
+                "state": true
+              }
+            ],
+            "flags": {
+              "publish": false,
+              "audit": true,
+              "reviewed": true
+            }
+          },
+          "inverse": [
+            {
+              "op": "replace",
+              "path": "/items/1/state",
+              "value": "held"
+            },
+            {
+              "op": "remove",
+              "path": "/flags/reviewed"
+            }
+          ],
+          "restored": {
+            "items": [
+              {
+                "id": "a",
+                "state": "new"
+              },
+              {
+                "id": "b",
+                "state": "held"
+              }
+            ],
+            "flags": {
+              "publish": false,
+              "audit": true
+            }
+          },
+          "round_trip": true
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "result": "pass",
+      "same_owner_only": true
+    },
+    {
+      "check_id": "AL6932-P055-safe-source",
+      "proposal_id": "AL6932-P055",
+      "kind": "source_fixity",
+      "expected": {
+        "op": "inverse_transaction",
+        "fixture": "X5",
+        "document": {
+          "left": {
+            "state": "ready"
+          },
+          "right": {
+            "state": "waiting"
+          },
+          "vacancy": null,
+          "release": {
+            "state": "held"
+          }
+        },
+        "args": {
+          "patches": [
+            {
+              "op": "add",
+              "path": "/right/note",
+              "value": "awaiting-authority"
+            },
+            {
+              "op": "replace",
+              "path": "/right/state",
+              "value": "awaiting-authority"
+            }
+          ]
+        }
+      },
+      "observed": {
+        "op": "inverse_transaction",
+        "fixture": "X5",
+        "document": {
+          "left": {
+            "state": "ready"
+          },
+          "right": {
+            "state": "waiting"
+          },
+          "vacancy": null,
+          "release": {
+            "state": "held"
+          }
+        },
+        "args": {
+          "patches": [
+            {
+              "op": "add",
+              "path": "/right/note",
+              "value": "awaiting-authority"
+            },
+            {
+              "op": "replace",
+              "path": "/right/state",
+              "value": "awaiting-authority"
+            }
+          ]
+        }
+      },
+      "result": "pass",
+      "same_owner_only": true
+    },
+    {
+      "check_id": "AL6932-P055-safe-envelope",
+      "proposal_id": "AL6932-P055",
+      "kind": "complete_envelope",
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "forward_result": {
+            "left": {
+              "state": "ready"
+            },
+            "right": {
+              "state": "awaiting-authority",
+              "note": "awaiting-authority"
+            },
+            "vacancy": null,
+            "release": {
+              "state": "held"
+            }
+          },
+          "inverse": [
+            {
+              "op": "replace",
+              "path": "/right/state",
+              "value": "waiting"
+            },
+            {
+              "op": "remove",
+              "path": "/right/note"
+            }
+          ],
+          "restored": {
+            "left": {
+              "state": "ready"
+            },
+            "right": {
+              "state": "waiting"
+            },
+            "vacancy": null,
+            "release": {
+              "state": "held"
+            }
+          },
+          "round_trip": true
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "observed": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "forward_result": {
+            "left": {
+              "state": "ready"
+            },
+            "right": {
+              "state": "awaiting-authority",
+              "note": "awaiting-authority"
+            },
+            "vacancy": null,
+            "release": {
+              "state": "held"
+            }
+          },
+          "inverse": [
+            {
+              "op": "replace",
+              "path": "/right/state",
+              "value": "waiting"
+            },
+            {
+              "op": "remove",
+              "path": "/right/note"
+            }
+          ],
+          "restored": {
+            "left": {
+              "state": "ready"
+            },
+            "right": {
+              "state": "waiting"
+            },
+            "vacancy": null,
+            "release": {
+              "state": "held"
+            }
+          },
+          "round_trip": true
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "result": "pass",
+      "same_owner_only": true
+    },
+    {
+      "check_id": "AL6932-P056-safe-source",
+      "proposal_id": "AL6932-P056",
+      "kind": "source_fixity",
+      "expected": {
+        "op": "structural_diff",
+        "fixture": "P4",
+        "document": {
+          "profile": {
+            "label": "alpha",
+            "active": true
+          },
+          "settings": {
+            "mode": "calm",
+            "level": 1
+          }
+        },
+        "args": {
+          "target": {
+            "profile": {
+              "label": "alpha",
+              "active": true
+            },
+            "settings": {
+              "mode": "calm",
+              "level": "checked"
+            }
+          }
+        }
+      },
+      "observed": {
+        "op": "structural_diff",
+        "fixture": "P4",
+        "document": {
+          "profile": {
+            "label": "alpha",
+            "active": true
+          },
+          "settings": {
+            "mode": "calm",
+            "level": 1
+          }
+        },
+        "args": {
+          "target": {
+            "profile": {
+              "label": "alpha",
+              "active": true
+            },
+            "settings": {
+              "mode": "calm",
+              "level": "checked"
+            }
+          }
+        }
+      },
+      "result": "pass",
+      "same_owner_only": true
+    },
+    {
+      "check_id": "AL6932-P056-safe-envelope",
+      "proposal_id": "AL6932-P056",
+      "kind": "complete_envelope",
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": [
+          {
+            "op": "replace",
+            "path": "/settings/level",
+            "value": "checked"
+          }
+        ],
+        "error": null,
+        "external_credit": false
+      },
+      "observed": {
+        "ok": true,
+        "disposition": "completed",
+        "value": [
+          {
+            "op": "replace",
+            "path": "/settings/level",
+            "value": "checked"
+          }
+        ],
+        "error": null,
+        "external_credit": false
+      },
+      "result": "pass",
+      "same_owner_only": true
+    },
+    {
+      "check_id": "AL6932-P057-safe-source",
+      "proposal_id": "AL6932-P057",
+      "kind": "source_fixity",
+      "expected": {
+        "op": "structural_diff",
+        "fixture": "N5",
+        "document": {
+          "config": {
+            "display": {
+              "theme": "dawn",
+              "scale": 1
+            },
+            "access": {
+              "state": "held"
+            }
+          },
+          "version": 1
+        },
+        "args": {
+          "target": {
+            "config": {
+              "display": {
+                "theme": "dawn",
+                "scale": 2
+              },
+              "access": {
+                "state": "held"
+              }
+            },
+            "version": 1
+          }
+        }
+      },
+      "observed": {
+        "op": "structural_diff",
+        "fixture": "N5",
+        "document": {
+          "config": {
+            "display": {
+              "theme": "dawn",
+              "scale": 1
+            },
+            "access": {
+              "state": "held"
+            }
+          },
+          "version": 1
+        },
+        "args": {
+          "target": {
+            "config": {
+              "display": {
+                "theme": "dawn",
+                "scale": 2
+              },
+              "access": {
+                "state": "held"
+              }
+            },
+            "version": 1
+          }
+        }
+      },
+      "result": "pass",
+      "same_owner_only": true
+    },
+    {
+      "check_id": "AL6932-P057-safe-envelope",
+      "proposal_id": "AL6932-P057",
+      "kind": "complete_envelope",
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": [
+          {
+            "op": "replace",
+            "path": "/config/display/scale",
+            "value": 2
+          }
+        ],
+        "error": null,
+        "external_credit": false
+      },
+      "observed": {
+        "ok": true,
+        "disposition": "completed",
+        "value": [
+          {
+            "op": "replace",
+            "path": "/config/display/scale",
+            "value": 2
+          }
+        ],
+        "error": null,
+        "external_credit": false
+      },
+      "result": "pass",
+      "same_owner_only": true
+    },
+    {
+      "check_id": "AL6932-P058-safe-source",
+      "proposal_id": "AL6932-P058",
+      "kind": "source_fixity",
+      "expected": {
+        "op": "structural_diff",
+        "fixture": "A4",
+        "document": {
+          "queue": [
+            "intake",
+            "review",
+            "archive"
+          ],
+          "meta": {
+            "revision": 4
+          }
+        },
+        "args": {
+          "target": {
+            "queue": [
+              "intake",
+              "triage",
+              "archive"
+            ],
+            "meta": {
+              "revision": 4
+            }
+          }
+        }
+      },
+      "observed": {
+        "op": "structural_diff",
+        "fixture": "A4",
+        "document": {
+          "queue": [
+            "intake",
+            "review",
+            "archive"
+          ],
+          "meta": {
+            "revision": 4
+          }
+        },
+        "args": {
+          "target": {
+            "queue": [
+              "intake",
+              "triage",
+              "archive"
+            ],
+            "meta": {
+              "revision": 4
+            }
+          }
+        }
+      },
+      "result": "pass",
+      "same_owner_only": true
+    },
+    {
+      "check_id": "AL6932-P058-safe-envelope",
+      "proposal_id": "AL6932-P058",
+      "kind": "complete_envelope",
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": [
+          {
+            "op": "replace",
+            "path": "/queue",
+            "value": [
+              "intake",
+              "triage",
+              "archive"
+            ]
+          }
+        ],
+        "error": null,
+        "external_credit": false
+      },
+      "observed": {
+        "ok": true,
+        "disposition": "completed",
+        "value": [
+          {
+            "op": "replace",
+            "path": "/queue",
+            "value": [
+              "intake",
+              "triage",
+              "archive"
+            ]
+          }
+        ],
+        "error": null,
+        "external_credit": false
+      },
+      "result": "pass",
+      "same_owner_only": true
+    },
+    {
+      "check_id": "AL6932-P059-safe-source",
+      "proposal_id": "AL6932-P059",
+      "kind": "source_fixity",
+      "expected": {
+        "op": "structural_diff",
+        "fixture": "M5",
+        "document": {
+          "items": [
+            {
+              "id": "a",
+              "state": "new"
+            },
+            {
+              "id": "b",
+              "state": "held"
+            }
+          ],
+          "flags": {
+            "publish": false,
+            "audit": true
+          }
+        },
+        "args": {
+          "target": {
+            "items": [
+              {
+                "id": "a",
+                "state": "new"
+              },
+              {
+                "id": "b",
+                "state": true
+              }
+            ],
+            "flags": {
+              "publish": false,
+              "audit": true
+            }
+          }
+        }
+      },
+      "observed": {
+        "op": "structural_diff",
+        "fixture": "M5",
+        "document": {
+          "items": [
+            {
+              "id": "a",
+              "state": "new"
+            },
+            {
+              "id": "b",
+              "state": "held"
+            }
+          ],
+          "flags": {
+            "publish": false,
+            "audit": true
+          }
+        },
+        "args": {
+          "target": {
+            "items": [
+              {
+                "id": "a",
+                "state": "new"
+              },
+              {
+                "id": "b",
+                "state": true
+              }
+            ],
+            "flags": {
+              "publish": false,
+              "audit": true
+            }
+          }
+        }
+      },
+      "result": "pass",
+      "same_owner_only": true
+    },
+    {
+      "check_id": "AL6932-P059-safe-envelope",
+      "proposal_id": "AL6932-P059",
+      "kind": "complete_envelope",
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": [
+          {
+            "op": "replace",
+            "path": "/items",
+            "value": [
+              {
+                "id": "a",
+                "state": "new"
+              },
+              {
+                "id": "b",
+                "state": true
+              }
+            ]
+          }
+        ],
+        "error": null,
+        "external_credit": false
+      },
+      "observed": {
+        "ok": true,
+        "disposition": "completed",
+        "value": [
+          {
+            "op": "replace",
+            "path": "/items",
+            "value": [
+              {
+                "id": "a",
+                "state": "new"
+              },
+              {
+                "id": "b",
+                "state": true
+              }
+            ]
+          }
+        ],
+        "error": null,
+        "external_credit": false
+      },
+      "result": "pass",
+      "same_owner_only": true
+    },
+    {
+      "check_id": "AL6932-P060-safe-source",
+      "proposal_id": "AL6932-P060",
+      "kind": "source_fixity",
+      "expected": {
+        "op": "structural_diff",
+        "fixture": "X5",
+        "document": {
+          "left": {
+            "state": "ready"
+          },
+          "right": {
+            "state": "waiting"
+          },
+          "vacancy": null,
+          "release": {
+            "state": "held"
+          }
+        },
+        "args": {
+          "target": {
+            "left": {
+              "state": "ready"
+            },
+            "right": {
+              "state": "awaiting-authority"
+            },
+            "vacancy": null,
+            "release": {
+              "state": "held"
+            }
+          }
+        }
+      },
+      "observed": {
+        "op": "structural_diff",
+        "fixture": "X5",
+        "document": {
+          "left": {
+            "state": "ready"
+          },
+          "right": {
+            "state": "waiting"
+          },
+          "vacancy": null,
+          "release": {
+            "state": "held"
+          }
+        },
+        "args": {
+          "target": {
+            "left": {
+              "state": "ready"
+            },
+            "right": {
+              "state": "awaiting-authority"
+            },
+            "vacancy": null,
+            "release": {
+              "state": "held"
+            }
+          }
+        }
+      },
+      "result": "pass",
+      "same_owner_only": true
+    },
+    {
+      "check_id": "AL6932-P060-safe-envelope",
+      "proposal_id": "AL6932-P060",
+      "kind": "complete_envelope",
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": [
+          {
+            "op": "replace",
+            "path": "/right/state",
+            "value": "awaiting-authority"
+          }
+        ],
+        "error": null,
+        "external_credit": false
+      },
+      "observed": {
+        "ok": true,
+        "disposition": "completed",
+        "value": [
+          {
+            "op": "replace",
+            "path": "/right/state",
+            "value": "awaiting-authority"
+          }
+        ],
+        "error": null,
+        "external_credit": false
+      },
+      "result": "pass",
+      "same_owner_only": true
+    },
+    {
+      "check_id": "AL6932-P061-safe-source",
+      "proposal_id": "AL6932-P061",
+      "kind": "source_fixity",
+      "expected": {
+        "op": "path_conflict_quarantine",
+        "fixture": "P4",
+        "document": {
+          "profile": {
+            "label": "alpha",
+            "active": true
+          },
+          "settings": {
+            "mode": "calm",
+            "level": 1
+          }
+        },
+        "args": {
+          "paths": [
+            "/settings/level",
+            "/settings/note",
+            "/settings/level/child"
+          ]
+        }
+      },
+      "observed": {
+        "op": "path_conflict_quarantine",
+        "fixture": "P4",
+        "document": {
+          "profile": {
+            "label": "alpha",
+            "active": true
+          },
+          "settings": {
+            "mode": "calm",
+            "level": 1
+          }
+        },
+        "args": {
+          "paths": [
+            "/settings/level",
+            "/settings/note",
+            "/settings/level/child"
+          ]
+        }
+      },
+      "result": "pass",
+      "same_owner_only": true
+    },
+    {
+      "check_id": "AL6932-P061-safe-envelope",
+      "proposal_id": "AL6932-P061",
+      "kind": "complete_envelope",
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "conflicts": [
+            [
+              "/settings/level",
+              "/settings/level/child"
+            ]
+          ],
+          "quarantined": true
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "observed": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "conflicts": [
+            [
+              "/settings/level",
+              "/settings/level/child"
+            ]
+          ],
+          "quarantined": true
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "result": "pass",
+      "same_owner_only": true
+    },
+    {
+      "check_id": "AL6932-P062-safe-source",
+      "proposal_id": "AL6932-P062",
+      "kind": "source_fixity",
+      "expected": {
+        "op": "path_conflict_quarantine",
+        "fixture": "N5",
+        "document": {
+          "config": {
+            "display": {
+              "theme": "dawn",
+              "scale": 1
+            },
+            "access": {
+              "state": "held"
+            }
+          },
+          "version": 1
+        },
+        "args": {
+          "paths": [
+            "/config/display/scale",
+            "/config/display/contrast",
+            "/config/display/scale/child"
+          ]
+        }
+      },
+      "observed": {
+        "op": "path_conflict_quarantine",
+        "fixture": "N5",
+        "document": {
+          "config": {
+            "display": {
+              "theme": "dawn",
+              "scale": 1
+            },
+            "access": {
+              "state": "held"
+            }
+          },
+          "version": 1
+        },
+        "args": {
+          "paths": [
+            "/config/display/scale",
+            "/config/display/contrast",
+            "/config/display/scale/child"
+          ]
+        }
+      },
+      "result": "pass",
+      "same_owner_only": true
+    },
+    {
+      "check_id": "AL6932-P062-safe-envelope",
+      "proposal_id": "AL6932-P062",
+      "kind": "complete_envelope",
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "conflicts": [
+            [
+              "/config/display/scale",
+              "/config/display/scale/child"
+            ]
+          ],
+          "quarantined": true
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "observed": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "conflicts": [
+            [
+              "/config/display/scale",
+              "/config/display/scale/child"
+            ]
+          ],
+          "quarantined": true
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "result": "pass",
+      "same_owner_only": true
+    },
+    {
+      "check_id": "AL6932-P063-safe-source",
+      "proposal_id": "AL6932-P063",
+      "kind": "source_fixity",
+      "expected": {
+        "op": "path_conflict_quarantine",
+        "fixture": "A4",
+        "document": {
+          "queue": [
+            "intake",
+            "review",
+            "archive"
+          ],
+          "meta": {
+            "revision": 4
+          }
+        },
+        "args": {
+          "paths": [
+            "/queue/1",
+            "/queue/1",
+            "/queue/1/child"
+          ]
+        }
+      },
+      "observed": {
+        "op": "path_conflict_quarantine",
+        "fixture": "A4",
+        "document": {
+          "queue": [
+            "intake",
+            "review",
+            "archive"
+          ],
+          "meta": {
+            "revision": 4
+          }
+        },
+        "args": {
+          "paths": [
+            "/queue/1",
+            "/queue/1",
+            "/queue/1/child"
+          ]
+        }
+      },
+      "result": "pass",
+      "same_owner_only": true
+    },
+    {
+      "check_id": "AL6932-P063-safe-envelope",
+      "proposal_id": "AL6932-P063",
+      "kind": "complete_envelope",
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "conflicts": [
+            [
+              "/queue/1",
+              "/queue/1"
+            ],
+            [
+              "/queue/1",
+              "/queue/1/child"
+            ],
+            [
+              "/queue/1",
+              "/queue/1/child"
+            ]
+          ],
+          "quarantined": true
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "observed": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "conflicts": [
+            [
+              "/queue/1",
+              "/queue/1"
+            ],
+            [
+              "/queue/1",
+              "/queue/1/child"
+            ],
+            [
+              "/queue/1",
+              "/queue/1/child"
+            ]
+          ],
+          "quarantined": true
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "result": "pass",
+      "same_owner_only": true
+    },
+    {
+      "check_id": "AL6932-P064-safe-source",
+      "proposal_id": "AL6932-P064",
+      "kind": "source_fixity",
+      "expected": {
+        "op": "path_conflict_quarantine",
+        "fixture": "M5",
+        "document": {
+          "items": [
+            {
+              "id": "a",
+              "state": "new"
+            },
+            {
+              "id": "b",
+              "state": "held"
+            }
+          ],
+          "flags": {
+            "publish": false,
+            "audit": true
+          }
+        },
+        "args": {
+          "paths": [
+            "/items/1/state",
+            "/flags/reviewed",
+            "/items/1/state/child"
+          ]
+        }
+      },
+      "observed": {
+        "op": "path_conflict_quarantine",
+        "fixture": "M5",
+        "document": {
+          "items": [
+            {
+              "id": "a",
+              "state": "new"
+            },
+            {
+              "id": "b",
+              "state": "held"
+            }
+          ],
+          "flags": {
+            "publish": false,
+            "audit": true
+          }
+        },
+        "args": {
+          "paths": [
+            "/items/1/state",
+            "/flags/reviewed",
+            "/items/1/state/child"
+          ]
+        }
+      },
+      "result": "pass",
+      "same_owner_only": true
+    },
+    {
+      "check_id": "AL6932-P064-safe-envelope",
+      "proposal_id": "AL6932-P064",
+      "kind": "complete_envelope",
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "conflicts": [
+            [
+              "/items/1/state",
+              "/items/1/state/child"
+            ]
+          ],
+          "quarantined": true
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "observed": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "conflicts": [
+            [
+              "/items/1/state",
+              "/items/1/state/child"
+            ]
+          ],
+          "quarantined": true
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "result": "pass",
+      "same_owner_only": true
+    },
+    {
+      "check_id": "AL6932-P065-safe-source",
+      "proposal_id": "AL6932-P065",
+      "kind": "source_fixity",
+      "expected": {
+        "op": "path_conflict_quarantine",
+        "fixture": "X5",
+        "document": {
+          "left": {
+            "state": "ready"
+          },
+          "right": {
+            "state": "waiting"
+          },
+          "vacancy": null,
+          "release": {
+            "state": "held"
+          }
+        },
+        "args": {
+          "paths": [
+            "/right/state",
+            "/right/note",
+            "/right/state/child"
+          ]
+        }
+      },
+      "observed": {
+        "op": "path_conflict_quarantine",
+        "fixture": "X5",
+        "document": {
+          "left": {
+            "state": "ready"
+          },
+          "right": {
+            "state": "waiting"
+          },
+          "vacancy": null,
+          "release": {
+            "state": "held"
+          }
+        },
+        "args": {
+          "paths": [
+            "/right/state",
+            "/right/note",
+            "/right/state/child"
+          ]
+        }
+      },
+      "result": "pass",
+      "same_owner_only": true
+    },
+    {
+      "check_id": "AL6932-P065-safe-envelope",
+      "proposal_id": "AL6932-P065",
+      "kind": "complete_envelope",
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "conflicts": [
+            [
+              "/right/state",
+              "/right/state/child"
+            ]
+          ],
+          "quarantined": true
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "observed": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "conflicts": [
+            [
+              "/right/state",
+              "/right/state/child"
+            ]
+          ],
+          "quarantined": true
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "result": "pass",
+      "same_owner_only": true
+    },
+    {
+      "check_id": "AL6932-P066-safe-source",
+      "proposal_id": "AL6932-P066",
+      "kind": "source_fixity",
+      "expected": {
+        "op": "dependency_order",
+        "fixture": "P4",
+        "document": {
+          "profile": {
+            "label": "alpha",
+            "active": true
+          },
+          "settings": {
+            "mode": "calm",
+            "level": 1
+          }
+        },
+        "args": {
+          "steps": [
+            {
+              "id": "prepare",
+              "path": "/settings/note",
+              "after": []
+            },
+            {
+              "id": "apply",
+              "path": "/settings/level",
+              "after": [
+                "prepare"
+              ]
+            },
+            {
+              "id": "review",
+              "path": "/review",
+              "after": [
+                "apply"
+              ]
+            }
+          ]
+        }
+      },
+      "observed": {
+        "op": "dependency_order",
+        "fixture": "P4",
+        "document": {
+          "profile": {
+            "label": "alpha",
+            "active": true
+          },
+          "settings": {
+            "mode": "calm",
+            "level": 1
+          }
+        },
+        "args": {
+          "steps": [
+            {
+              "id": "prepare",
+              "path": "/settings/note",
+              "after": []
+            },
+            {
+              "id": "apply",
+              "path": "/settings/level",
+              "after": [
+                "prepare"
+              ]
+            },
+            {
+              "id": "review",
+              "path": "/review",
+              "after": [
+                "apply"
+              ]
+            }
+          ]
+        }
+      },
+      "result": "pass",
+      "same_owner_only": true
+    },
+    {
+      "check_id": "AL6932-P066-safe-envelope",
+      "proposal_id": "AL6932-P066",
+      "kind": "complete_envelope",
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": [
+          "prepare",
+          "apply",
+          "review"
+        ],
+        "error": null,
+        "external_credit": false
+      },
+      "observed": {
+        "ok": true,
+        "disposition": "completed",
+        "value": [
+          "prepare",
+          "apply",
+          "review"
+        ],
+        "error": null,
+        "external_credit": false
+      },
+      "result": "pass",
+      "same_owner_only": true
+    },
+    {
+      "check_id": "AL6932-P067-safe-source",
+      "proposal_id": "AL6932-P067",
+      "kind": "source_fixity",
+      "expected": {
+        "op": "dependency_order",
+        "fixture": "N5",
+        "document": {
+          "config": {
+            "display": {
+              "theme": "dawn",
+              "scale": 1
+            },
+            "access": {
+              "state": "held"
+            }
+          },
+          "version": 1
+        },
+        "args": {
+          "steps": [
+            {
+              "id": "prepare",
+              "path": "/config/display/contrast",
+              "after": []
+            },
+            {
+              "id": "apply",
+              "path": "/config/display/scale",
+              "after": [
+                "prepare"
+              ]
+            },
+            {
+              "id": "review",
+              "path": "/review",
+              "after": [
+                "apply"
+              ]
+            }
+          ]
+        }
+      },
+      "observed": {
+        "op": "dependency_order",
+        "fixture": "N5",
+        "document": {
+          "config": {
+            "display": {
+              "theme": "dawn",
+              "scale": 1
+            },
+            "access": {
+              "state": "held"
+            }
+          },
+          "version": 1
+        },
+        "args": {
+          "steps": [
+            {
+              "id": "prepare",
+              "path": "/config/display/contrast",
+              "after": []
+            },
+            {
+              "id": "apply",
+              "path": "/config/display/scale",
+              "after": [
+                "prepare"
+              ]
+            },
+            {
+              "id": "review",
+              "path": "/review",
+              "after": [
+                "apply"
+              ]
+            }
+          ]
+        }
+      },
+      "result": "pass",
+      "same_owner_only": true
+    },
+    {
+      "check_id": "AL6932-P067-safe-envelope",
+      "proposal_id": "AL6932-P067",
+      "kind": "complete_envelope",
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": [
+          "prepare",
+          "apply",
+          "review"
+        ],
+        "error": null,
+        "external_credit": false
+      },
+      "observed": {
+        "ok": true,
+        "disposition": "completed",
+        "value": [
+          "prepare",
+          "apply",
+          "review"
+        ],
+        "error": null,
+        "external_credit": false
+      },
+      "result": "pass",
+      "same_owner_only": true
+    },
+    {
+      "check_id": "AL6932-P068-safe-source",
+      "proposal_id": "AL6932-P068",
+      "kind": "source_fixity",
+      "expected": {
+        "op": "dependency_order",
+        "fixture": "A4",
+        "document": {
+          "queue": [
+            "intake",
+            "review",
+            "archive"
+          ],
+          "meta": {
+            "revision": 4
+          }
+        },
+        "args": {
+          "steps": [
+            {
+              "id": "prepare",
+              "path": "/queue/1",
+              "after": []
+            },
+            {
+              "id": "apply",
+              "path": "/queue/1",
+              "after": [
+                "prepare"
+              ]
+            },
+            {
+              "id": "review",
+              "path": "/review",
+              "after": [
+                "apply"
+              ]
+            }
+          ]
+        }
+      },
+      "observed": {
+        "op": "dependency_order",
+        "fixture": "A4",
+        "document": {
+          "queue": [
+            "intake",
+            "review",
+            "archive"
+          ],
+          "meta": {
+            "revision": 4
+          }
+        },
+        "args": {
+          "steps": [
+            {
+              "id": "prepare",
+              "path": "/queue/1",
+              "after": []
+            },
+            {
+              "id": "apply",
+              "path": "/queue/1",
+              "after": [
+                "prepare"
+              ]
+            },
+            {
+              "id": "review",
+              "path": "/review",
+              "after": [
+                "apply"
+              ]
+            }
+          ]
+        }
+      },
+      "result": "pass",
+      "same_owner_only": true
+    },
+    {
+      "check_id": "AL6932-P068-safe-envelope",
+      "proposal_id": "AL6932-P068",
+      "kind": "complete_envelope",
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": [
+          "prepare",
+          "apply",
+          "review"
+        ],
+        "error": null,
+        "external_credit": false
+      },
+      "observed": {
+        "ok": true,
+        "disposition": "completed",
+        "value": [
+          "prepare",
+          "apply",
+          "review"
+        ],
+        "error": null,
+        "external_credit": false
+      },
+      "result": "pass",
+      "same_owner_only": true
+    },
+    {
+      "check_id": "AL6932-P069-safe-source",
+      "proposal_id": "AL6932-P069",
+      "kind": "source_fixity",
+      "expected": {
+        "op": "dependency_order",
+        "fixture": "M5",
+        "document": {
+          "items": [
+            {
+              "id": "a",
+              "state": "new"
+            },
+            {
+              "id": "b",
+              "state": "held"
+            }
+          ],
+          "flags": {
+            "publish": false,
+            "audit": true
+          }
+        },
+        "args": {
+          "steps": [
+            {
+              "id": "prepare",
+              "path": "/flags/reviewed",
+              "after": []
+            },
+            {
+              "id": "apply",
+              "path": "/items/1/state",
+              "after": [
+                "prepare"
+              ]
+            },
+            {
+              "id": "review",
+              "path": "/review",
+              "after": [
+                "apply"
+              ]
+            }
+          ]
+        }
+      },
+      "observed": {
+        "op": "dependency_order",
+        "fixture": "M5",
+        "document": {
+          "items": [
+            {
+              "id": "a",
+              "state": "new"
+            },
+            {
+              "id": "b",
+              "state": "held"
+            }
+          ],
+          "flags": {
+            "publish": false,
+            "audit": true
+          }
+        },
+        "args": {
+          "steps": [
+            {
+              "id": "prepare",
+              "path": "/flags/reviewed",
+              "after": []
+            },
+            {
+              "id": "apply",
+              "path": "/items/1/state",
+              "after": [
+                "prepare"
+              ]
+            },
+            {
+              "id": "review",
+              "path": "/review",
+              "after": [
+                "apply"
+              ]
+            }
+          ]
+        }
+      },
+      "result": "pass",
+      "same_owner_only": true
+    },
+    {
+      "check_id": "AL6932-P069-safe-envelope",
+      "proposal_id": "AL6932-P069",
+      "kind": "complete_envelope",
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": [
+          "prepare",
+          "apply",
+          "review"
+        ],
+        "error": null,
+        "external_credit": false
+      },
+      "observed": {
+        "ok": true,
+        "disposition": "completed",
+        "value": [
+          "prepare",
+          "apply",
+          "review"
+        ],
+        "error": null,
+        "external_credit": false
+      },
+      "result": "pass",
+      "same_owner_only": true
+    },
+    {
+      "check_id": "AL6932-P070-safe-source",
+      "proposal_id": "AL6932-P070",
+      "kind": "source_fixity",
+      "expected": {
+        "op": "dependency_order",
+        "fixture": "X5",
+        "document": {
+          "left": {
+            "state": "ready"
+          },
+          "right": {
+            "state": "waiting"
+          },
+          "vacancy": null,
+          "release": {
+            "state": "held"
+          }
+        },
+        "args": {
+          "steps": [
+            {
+              "id": "prepare",
+              "path": "/right/note",
+              "after": []
+            },
+            {
+              "id": "apply",
+              "path": "/right/state",
+              "after": [
+                "prepare"
+              ]
+            },
+            {
+              "id": "review",
+              "path": "/review",
+              "after": [
+                "apply"
+              ]
+            }
+          ]
+        }
+      },
+      "observed": {
+        "op": "dependency_order",
+        "fixture": "X5",
+        "document": {
+          "left": {
+            "state": "ready"
+          },
+          "right": {
+            "state": "waiting"
+          },
+          "vacancy": null,
+          "release": {
+            "state": "held"
+          }
+        },
+        "args": {
+          "steps": [
+            {
+              "id": "prepare",
+              "path": "/right/note",
+              "after": []
+            },
+            {
+              "id": "apply",
+              "path": "/right/state",
+              "after": [
+                "prepare"
+              ]
+            },
+            {
+              "id": "review",
+              "path": "/review",
+              "after": [
+                "apply"
+              ]
+            }
+          ]
+        }
+      },
+      "result": "pass",
+      "same_owner_only": true
+    },
+    {
+      "check_id": "AL6932-P070-safe-envelope",
+      "proposal_id": "AL6932-P070",
+      "kind": "complete_envelope",
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": [
+          "prepare",
+          "apply",
+          "review"
+        ],
+        "error": null,
+        "external_credit": false
+      },
+      "observed": {
+        "ok": true,
+        "disposition": "completed",
+        "value": [
+          "prepare",
+          "apply",
+          "review"
+        ],
+        "error": null,
+        "external_credit": false
+      },
+      "result": "pass",
+      "same_owner_only": true
+    },
+    {
+      "check_id": "AL6932-P071-safe-source",
+      "proposal_id": "AL6932-P071",
+      "kind": "source_fixity",
+      "expected": {
+        "op": "rollback_digest",
+        "fixture": "P4",
+        "document": {
+          "profile": {
+            "label": "alpha",
+            "active": true
+          },
+          "settings": {
+            "mode": "calm",
+            "level": 1
+          }
+        },
+        "args": {
+          "patches": [
+            {
+              "op": "replace",
+              "path": "/settings/level",
+              "value": "checked"
+            }
+          ]
+        }
+      },
+      "observed": {
+        "op": "rollback_digest",
+        "fixture": "P4",
+        "document": {
+          "profile": {
+            "label": "alpha",
+            "active": true
+          },
+          "settings": {
+            "mode": "calm",
+            "level": 1
+          }
+        },
+        "args": {
+          "patches": [
+            {
+              "op": "replace",
+              "path": "/settings/level",
+              "value": "checked"
+            }
+          ]
+        }
+      },
+      "result": "pass",
+      "same_owner_only": true
+    },
+    {
+      "check_id": "AL6932-P071-safe-envelope",
+      "proposal_id": "AL6932-P071",
+      "kind": "complete_envelope",
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "payload": {
+            "source": {
+              "profile": {
+                "label": "alpha",
+                "active": true
+              },
+              "settings": {
+                "mode": "calm",
+                "level": 1
+              }
+            },
+            "result": {
+              "profile": {
+                "label": "alpha",
+                "active": true
+              },
+              "settings": {
+                "mode": "calm",
+                "level": "checked"
+              }
+            },
+            "forward": [
+              {
+                "op": "replace",
+                "path": "/settings/level",
+                "value": "checked"
+              }
+            ],
+            "inverse": [
+              {
+                "op": "replace",
+                "path": "/settings/level",
+                "value": 1
+              }
+            ]
+          },
+          "sha256": "73c8033f04ff4468f3a3dc6a03eeb9b075b3d1bcf5e1cf07a586064040b38dd9"
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "observed": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "payload": {
+            "source": {
+              "profile": {
+                "label": "alpha",
+                "active": true
+              },
+              "settings": {
+                "mode": "calm",
+                "level": 1
+              }
+            },
+            "result": {
+              "profile": {
+                "label": "alpha",
+                "active": true
+              },
+              "settings": {
+                "mode": "calm",
+                "level": "checked"
+              }
+            },
+            "forward": [
+              {
+                "op": "replace",
+                "path": "/settings/level",
+                "value": "checked"
+              }
+            ],
+            "inverse": [
+              {
+                "op": "replace",
+                "path": "/settings/level",
+                "value": 1
+              }
+            ]
+          },
+          "sha256": "73c8033f04ff4468f3a3dc6a03eeb9b075b3d1bcf5e1cf07a586064040b38dd9"
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "result": "pass",
+      "same_owner_only": true
+    },
+    {
+      "check_id": "AL6932-P072-safe-source",
+      "proposal_id": "AL6932-P072",
+      "kind": "source_fixity",
+      "expected": {
+        "op": "rollback_digest",
+        "fixture": "N5",
+        "document": {
+          "config": {
+            "display": {
+              "theme": "dawn",
+              "scale": 1
+            },
+            "access": {
+              "state": "held"
+            }
+          },
+          "version": 1
+        },
+        "args": {
+          "patches": [
+            {
+              "op": "replace",
+              "path": "/config/display/scale",
+              "value": 2
+            }
+          ]
+        }
+      },
+      "observed": {
+        "op": "rollback_digest",
+        "fixture": "N5",
+        "document": {
+          "config": {
+            "display": {
+              "theme": "dawn",
+              "scale": 1
+            },
+            "access": {
+              "state": "held"
+            }
+          },
+          "version": 1
+        },
+        "args": {
+          "patches": [
+            {
+              "op": "replace",
+              "path": "/config/display/scale",
+              "value": 2
+            }
+          ]
+        }
+      },
+      "result": "pass",
+      "same_owner_only": true
+    },
+    {
+      "check_id": "AL6932-P072-safe-envelope",
+      "proposal_id": "AL6932-P072",
+      "kind": "complete_envelope",
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "payload": {
+            "source": {
+              "config": {
+                "display": {
+                  "theme": "dawn",
+                  "scale": 1
+                },
+                "access": {
+                  "state": "held"
+                }
+              },
+              "version": 1
+            },
+            "result": {
+              "config": {
+                "display": {
+                  "theme": "dawn",
+                  "scale": 2
+                },
+                "access": {
+                  "state": "held"
+                }
+              },
+              "version": 1
+            },
+            "forward": [
+              {
+                "op": "replace",
+                "path": "/config/display/scale",
+                "value": 2
+              }
+            ],
+            "inverse": [
+              {
+                "op": "replace",
+                "path": "/config/display/scale",
+                "value": 1
+              }
+            ]
+          },
+          "sha256": "2c9bbed435adcd9a51429eeb3e6bb854ebbe2d4ebf96e89be7b4ad519bc22a08"
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "observed": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "payload": {
+            "source": {
+              "config": {
+                "display": {
+                  "theme": "dawn",
+                  "scale": 1
+                },
+                "access": {
+                  "state": "held"
+                }
+              },
+              "version": 1
+            },
+            "result": {
+              "config": {
+                "display": {
+                  "theme": "dawn",
+                  "scale": 2
+                },
+                "access": {
+                  "state": "held"
+                }
+              },
+              "version": 1
+            },
+            "forward": [
+              {
+                "op": "replace",
+                "path": "/config/display/scale",
+                "value": 2
+              }
+            ],
+            "inverse": [
+              {
+                "op": "replace",
+                "path": "/config/display/scale",
+                "value": 1
+              }
+            ]
+          },
+          "sha256": "2c9bbed435adcd9a51429eeb3e6bb854ebbe2d4ebf96e89be7b4ad519bc22a08"
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "result": "pass",
+      "same_owner_only": true
+    },
+    {
+      "check_id": "AL6932-P073-safe-source",
+      "proposal_id": "AL6932-P073",
+      "kind": "source_fixity",
+      "expected": {
+        "op": "rollback_digest",
+        "fixture": "A4",
+        "document": {
+          "queue": [
+            "intake",
+            "review",
+            "archive"
+          ],
+          "meta": {
+            "revision": 4
+          }
+        },
+        "args": {
+          "patches": [
+            {
+              "op": "replace",
+              "path": "/queue/1",
+              "value": "triage"
+            }
+          ]
+        }
+      },
+      "observed": {
+        "op": "rollback_digest",
+        "fixture": "A4",
+        "document": {
+          "queue": [
+            "intake",
+            "review",
+            "archive"
+          ],
+          "meta": {
+            "revision": 4
+          }
+        },
+        "args": {
+          "patches": [
+            {
+              "op": "replace",
+              "path": "/queue/1",
+              "value": "triage"
+            }
+          ]
+        }
+      },
+      "result": "pass",
+      "same_owner_only": true
+    },
+    {
+      "check_id": "AL6932-P073-safe-envelope",
+      "proposal_id": "AL6932-P073",
+      "kind": "complete_envelope",
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "payload": {
+            "source": {
+              "queue": [
+                "intake",
+                "review",
+                "archive"
+              ],
+              "meta": {
+                "revision": 4
+              }
+            },
+            "result": {
+              "queue": [
+                "intake",
+                "triage",
+                "archive"
+              ],
+              "meta": {
+                "revision": 4
+              }
+            },
+            "forward": [
+              {
+                "op": "replace",
+                "path": "/queue/1",
+                "value": "triage"
+              }
+            ],
+            "inverse": [
+              {
+                "op": "replace",
+                "path": "/queue/1",
+                "value": "review"
+              }
+            ]
+          },
+          "sha256": "dee683cf448d74057a535da4b11fbf8b83e59f3d3351c4651365087f4a7229e3"
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "observed": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "payload": {
+            "source": {
+              "queue": [
+                "intake",
+                "review",
+                "archive"
+              ],
+              "meta": {
+                "revision": 4
+              }
+            },
+            "result": {
+              "queue": [
+                "intake",
+                "triage",
+                "archive"
+              ],
+              "meta": {
+                "revision": 4
+              }
+            },
+            "forward": [
+              {
+                "op": "replace",
+                "path": "/queue/1",
+                "value": "triage"
+              }
+            ],
+            "inverse": [
+              {
+                "op": "replace",
+                "path": "/queue/1",
+                "value": "review"
+              }
+            ]
+          },
+          "sha256": "dee683cf448d74057a535da4b11fbf8b83e59f3d3351c4651365087f4a7229e3"
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "result": "pass",
+      "same_owner_only": true
+    },
+    {
+      "check_id": "AL6932-P074-safe-source",
+      "proposal_id": "AL6932-P074",
+      "kind": "source_fixity",
+      "expected": {
+        "op": "rollback_digest",
+        "fixture": "M5",
+        "document": {
+          "items": [
+            {
+              "id": "a",
+              "state": "new"
+            },
+            {
+              "id": "b",
+              "state": "held"
+            }
+          ],
+          "flags": {
+            "publish": false,
+            "audit": true
+          }
+        },
+        "args": {
+          "patches": [
+            {
+              "op": "replace",
+              "path": "/items/1/state",
+              "value": true
+            }
+          ]
+        }
+      },
+      "observed": {
+        "op": "rollback_digest",
+        "fixture": "M5",
+        "document": {
+          "items": [
+            {
+              "id": "a",
+              "state": "new"
+            },
+            {
+              "id": "b",
+              "state": "held"
+            }
+          ],
+          "flags": {
+            "publish": false,
+            "audit": true
+          }
+        },
+        "args": {
+          "patches": [
+            {
+              "op": "replace",
+              "path": "/items/1/state",
+              "value": true
+            }
+          ]
+        }
+      },
+      "result": "pass",
+      "same_owner_only": true
+    },
+    {
+      "check_id": "AL6932-P074-safe-envelope",
+      "proposal_id": "AL6932-P074",
+      "kind": "complete_envelope",
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "payload": {
+            "source": {
+              "items": [
+                {
+                  "id": "a",
+                  "state": "new"
+                },
+                {
+                  "id": "b",
+                  "state": "held"
+                }
+              ],
+              "flags": {
+                "publish": false,
+                "audit": true
+              }
+            },
+            "result": {
+              "items": [
+                {
+                  "id": "a",
+                  "state": "new"
+                },
+                {
+                  "id": "b",
+                  "state": true
+                }
+              ],
+              "flags": {
+                "publish": false,
+                "audit": true
+              }
+            },
+            "forward": [
+              {
+                "op": "replace",
+                "path": "/items/1/state",
+                "value": true
+              }
+            ],
+            "inverse": [
+              {
+                "op": "replace",
+                "path": "/items/1/state",
+                "value": "held"
+              }
+            ]
+          },
+          "sha256": "ba6ba30567e890c4435aaa8e3a58e1047fc86315aed9aee854936ae236a20497"
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "observed": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "payload": {
+            "source": {
+              "items": [
+                {
+                  "id": "a",
+                  "state": "new"
+                },
+                {
+                  "id": "b",
+                  "state": "held"
+                }
+              ],
+              "flags": {
+                "publish": false,
+                "audit": true
+              }
+            },
+            "result": {
+              "items": [
+                {
+                  "id": "a",
+                  "state": "new"
+                },
+                {
+                  "id": "b",
+                  "state": true
+                }
+              ],
+              "flags": {
+                "publish": false,
+                "audit": true
+              }
+            },
+            "forward": [
+              {
+                "op": "replace",
+                "path": "/items/1/state",
+                "value": true
+              }
+            ],
+            "inverse": [
+              {
+                "op": "replace",
+                "path": "/items/1/state",
+                "value": "held"
+              }
+            ]
+          },
+          "sha256": "ba6ba30567e890c4435aaa8e3a58e1047fc86315aed9aee854936ae236a20497"
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "result": "pass",
+      "same_owner_only": true
+    },
+    {
+      "check_id": "AL6932-P075-safe-source",
+      "proposal_id": "AL6932-P075",
+      "kind": "source_fixity",
+      "expected": {
+        "op": "rollback_digest",
+        "fixture": "X5",
+        "document": {
+          "left": {
+            "state": "ready"
+          },
+          "right": {
+            "state": "waiting"
+          },
+          "vacancy": null,
+          "release": {
+            "state": "held"
+          }
+        },
+        "args": {
+          "patches": [
+            {
+              "op": "replace",
+              "path": "/right/state",
+              "value": "awaiting-authority"
+            }
+          ]
+        }
+      },
+      "observed": {
+        "op": "rollback_digest",
+        "fixture": "X5",
+        "document": {
+          "left": {
+            "state": "ready"
+          },
+          "right": {
+            "state": "waiting"
+          },
+          "vacancy": null,
+          "release": {
+            "state": "held"
+          }
+        },
+        "args": {
+          "patches": [
+            {
+              "op": "replace",
+              "path": "/right/state",
+              "value": "awaiting-authority"
+            }
+          ]
+        }
+      },
+      "result": "pass",
+      "same_owner_only": true
+    },
+    {
+      "check_id": "AL6932-P075-safe-envelope",
+      "proposal_id": "AL6932-P075",
+      "kind": "complete_envelope",
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "payload": {
+            "source": {
+              "left": {
+                "state": "ready"
+              },
+              "right": {
+                "state": "waiting"
+              },
+              "vacancy": null,
+              "release": {
+                "state": "held"
+              }
+            },
+            "result": {
+              "left": {
+                "state": "ready"
+              },
+              "right": {
+                "state": "awaiting-authority"
+              },
+              "vacancy": null,
+              "release": {
+                "state": "held"
+              }
+            },
+            "forward": [
+              {
+                "op": "replace",
+                "path": "/right/state",
+                "value": "awaiting-authority"
+              }
+            ],
+            "inverse": [
+              {
+                "op": "replace",
+                "path": "/right/state",
+                "value": "waiting"
+              }
+            ]
+          },
+          "sha256": "c4581d559073b3df1929ef472781fe8db5922cc53779e7f5b13f6c474d34a252"
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "observed": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "payload": {
+            "source": {
+              "left": {
+                "state": "ready"
+              },
+              "right": {
+                "state": "waiting"
+              },
+              "vacancy": null,
+              "release": {
+                "state": "held"
+              }
+            },
+            "result": {
+              "left": {
+                "state": "ready"
+              },
+              "right": {
+                "state": "awaiting-authority"
+              },
+              "vacancy": null,
+              "release": {
+                "state": "held"
+              }
+            },
+            "forward": [
+              {
+                "op": "replace",
+                "path": "/right/state",
+                "value": "awaiting-authority"
+              }
+            ],
+            "inverse": [
+              {
+                "op": "replace",
+                "path": "/right/state",
+                "value": "waiting"
+              }
+            ]
+          },
+          "sha256": "c4581d559073b3df1929ef472781fe8db5922cc53779e7f5b13f6c474d34a252"
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "result": "pass",
+      "same_owner_only": true
+    },
+    {
+      "check_id": "AL6932-P076-safe-source",
+      "proposal_id": "AL6932-P076",
+      "kind": "source_fixity",
+      "expected": {
+        "op": "correction_nonerasure",
+        "fixture": "P4",
+        "document": {
+          "profile": {
+            "label": "alpha",
+            "active": true
+          },
+          "settings": {
+            "mode": "calm",
+            "level": 1
+          }
+        },
+        "args": {
+          "records": [
+            {
+              "id": "attempt-1",
+              "state": "rejected",
+              "retained": true
+            }
+          ],
+          "correction": {
+            "id": "correction-1",
+            "supersedes": "attempt-1",
+            "state": "bounded"
+          }
+        }
+      },
+      "observed": {
+        "op": "correction_nonerasure",
+        "fixture": "P4",
+        "document": {
+          "profile": {
+            "label": "alpha",
+            "active": true
+          },
+          "settings": {
+            "mode": "calm",
+            "level": 1
+          }
+        },
+        "args": {
+          "records": [
+            {
+              "id": "attempt-1",
+              "state": "rejected",
+              "retained": true
+            }
+          ],
+          "correction": {
+            "id": "correction-1",
+            "supersedes": "attempt-1",
+            "state": "bounded"
+          }
+        }
+      },
+      "result": "pass",
+      "same_owner_only": true
+    },
+    {
+      "check_id": "AL6932-P076-safe-envelope",
+      "proposal_id": "AL6932-P076",
+      "kind": "complete_envelope",
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "records": [
+            {
+              "id": "attempt-1",
+              "state": "rejected",
+              "retained": true
+            },
+            {
+              "id": "correction-1",
+              "supersedes": "attempt-1",
+              "state": "bounded"
+            }
+          ],
+          "predecessor_retained": true
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "observed": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "records": [
+            {
+              "id": "attempt-1",
+              "state": "rejected",
+              "retained": true
+            },
+            {
+              "id": "correction-1",
+              "supersedes": "attempt-1",
+              "state": "bounded"
+            }
+          ],
+          "predecessor_retained": true
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "result": "pass",
+      "same_owner_only": true
+    },
+    {
+      "check_id": "AL6932-P077-safe-source",
+      "proposal_id": "AL6932-P077",
+      "kind": "source_fixity",
+      "expected": {
+        "op": "correction_nonerasure",
+        "fixture": "N5",
+        "document": {
+          "config": {
+            "display": {
+              "theme": "dawn",
+              "scale": 1
+            },
+            "access": {
+              "state": "held"
+            }
+          },
+          "version": 1
+        },
+        "args": {
+          "records": [
+            {
+              "id": "attempt-1",
+              "state": "rejected",
+              "retained": true
+            }
+          ],
+          "correction": {
+            "id": "correction-1",
+            "supersedes": "attempt-1",
+            "state": "bounded"
+          }
+        }
+      },
+      "observed": {
+        "op": "correction_nonerasure",
+        "fixture": "N5",
+        "document": {
+          "config": {
+            "display": {
+              "theme": "dawn",
+              "scale": 1
+            },
+            "access": {
+              "state": "held"
+            }
+          },
+          "version": 1
+        },
+        "args": {
+          "records": [
+            {
+              "id": "attempt-1",
+              "state": "rejected",
+              "retained": true
+            }
+          ],
+          "correction": {
+            "id": "correction-1",
+            "supersedes": "attempt-1",
+            "state": "bounded"
+          }
+        }
+      },
+      "result": "pass",
+      "same_owner_only": true
+    },
+    {
+      "check_id": "AL6932-P077-safe-envelope",
+      "proposal_id": "AL6932-P077",
+      "kind": "complete_envelope",
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "records": [
+            {
+              "id": "attempt-1",
+              "state": "rejected",
+              "retained": true
+            },
+            {
+              "id": "correction-1",
+              "supersedes": "attempt-1",
+              "state": "bounded"
+            }
+          ],
+          "predecessor_retained": true
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "observed": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "records": [
+            {
+              "id": "attempt-1",
+              "state": "rejected",
+              "retained": true
+            },
+            {
+              "id": "correction-1",
+              "supersedes": "attempt-1",
+              "state": "bounded"
+            }
+          ],
+          "predecessor_retained": true
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "result": "pass",
+      "same_owner_only": true
+    },
+    {
+      "check_id": "AL6932-P078-safe-source",
+      "proposal_id": "AL6932-P078",
+      "kind": "source_fixity",
+      "expected": {
+        "op": "correction_nonerasure",
+        "fixture": "A4",
+        "document": {
+          "queue": [
+            "intake",
+            "review",
+            "archive"
+          ],
+          "meta": {
+            "revision": 4
+          }
+        },
+        "args": {
+          "records": [
+            {
+              "id": "attempt-1",
+              "state": "rejected",
+              "retained": true
+            }
+          ],
+          "correction": {
+            "id": "correction-1",
+            "supersedes": "attempt-1",
+            "state": "bounded"
+          }
+        }
+      },
+      "observed": {
+        "op": "correction_nonerasure",
+        "fixture": "A4",
+        "document": {
+          "queue": [
+            "intake",
+            "review",
+            "archive"
+          ],
+          "meta": {
+            "revision": 4
+          }
+        },
+        "args": {
+          "records": [
+            {
+              "id": "attempt-1",
+              "state": "rejected",
+              "retained": true
+            }
+          ],
+          "correction": {
+            "id": "correction-1",
+            "supersedes": "attempt-1",
+            "state": "bounded"
+          }
+        }
+      },
+      "result": "pass",
+      "same_owner_only": true
+    },
+    {
+      "check_id": "AL6932-P078-safe-envelope",
+      "proposal_id": "AL6932-P078",
+      "kind": "complete_envelope",
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "records": [
+            {
+              "id": "attempt-1",
+              "state": "rejected",
+              "retained": true
+            },
+            {
+              "id": "correction-1",
+              "supersedes": "attempt-1",
+              "state": "bounded"
+            }
+          ],
+          "predecessor_retained": true
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "observed": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "records": [
+            {
+              "id": "attempt-1",
+              "state": "rejected",
+              "retained": true
+            },
+            {
+              "id": "correction-1",
+              "supersedes": "attempt-1",
+              "state": "bounded"
+            }
+          ],
+          "predecessor_retained": true
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "result": "pass",
+      "same_owner_only": true
+    },
+    {
+      "check_id": "AL6932-P079-safe-source",
+      "proposal_id": "AL6932-P079",
+      "kind": "source_fixity",
+      "expected": {
+        "op": "correction_nonerasure",
+        "fixture": "M5",
+        "document": {
+          "items": [
+            {
+              "id": "a",
+              "state": "new"
+            },
+            {
+              "id": "b",
+              "state": "held"
+            }
+          ],
+          "flags": {
+            "publish": false,
+            "audit": true
+          }
+        },
+        "args": {
+          "records": [
+            {
+              "id": "attempt-1",
+              "state": "rejected",
+              "retained": true
+            }
+          ],
+          "correction": {
+            "id": "correction-1",
+            "supersedes": "attempt-1",
+            "state": "bounded"
+          }
+        }
+      },
+      "observed": {
+        "op": "correction_nonerasure",
+        "fixture": "M5",
+        "document": {
+          "items": [
+            {
+              "id": "a",
+              "state": "new"
+            },
+            {
+              "id": "b",
+              "state": "held"
+            }
+          ],
+          "flags": {
+            "publish": false,
+            "audit": true
+          }
+        },
+        "args": {
+          "records": [
+            {
+              "id": "attempt-1",
+              "state": "rejected",
+              "retained": true
+            }
+          ],
+          "correction": {
+            "id": "correction-1",
+            "supersedes": "attempt-1",
+            "state": "bounded"
+          }
+        }
+      },
+      "result": "pass",
+      "same_owner_only": true
+    },
+    {
+      "check_id": "AL6932-P079-safe-envelope",
+      "proposal_id": "AL6932-P079",
+      "kind": "complete_envelope",
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "records": [
+            {
+              "id": "attempt-1",
+              "state": "rejected",
+              "retained": true
+            },
+            {
+              "id": "correction-1",
+              "supersedes": "attempt-1",
+              "state": "bounded"
+            }
+          ],
+          "predecessor_retained": true
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "observed": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "records": [
+            {
+              "id": "attempt-1",
+              "state": "rejected",
+              "retained": true
+            },
+            {
+              "id": "correction-1",
+              "supersedes": "attempt-1",
+              "state": "bounded"
+            }
+          ],
+          "predecessor_retained": true
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "result": "pass",
+      "same_owner_only": true
+    },
+    {
+      "check_id": "AL6932-P080-safe-source",
+      "proposal_id": "AL6932-P080",
+      "kind": "source_fixity",
+      "expected": {
+        "op": "correction_nonerasure",
+        "fixture": "X5",
+        "document": {
+          "left": {
+            "state": "ready"
+          },
+          "right": {
+            "state": "waiting"
+          },
+          "vacancy": null,
+          "release": {
+            "state": "held"
+          }
+        },
+        "args": {
+          "records": [
+            {
+              "id": "attempt-1",
+              "state": "rejected",
+              "retained": true
+            }
+          ],
+          "correction": {
+            "id": "correction-1",
+            "supersedes": "attempt-1",
+            "state": "bounded"
+          }
+        }
+      },
+      "observed": {
+        "op": "correction_nonerasure",
+        "fixture": "X5",
+        "document": {
+          "left": {
+            "state": "ready"
+          },
+          "right": {
+            "state": "waiting"
+          },
+          "vacancy": null,
+          "release": {
+            "state": "held"
+          }
+        },
+        "args": {
+          "records": [
+            {
+              "id": "attempt-1",
+              "state": "rejected",
+              "retained": true
+            }
+          ],
+          "correction": {
+            "id": "correction-1",
+            "supersedes": "attempt-1",
+            "state": "bounded"
+          }
+        }
+      },
+      "result": "pass",
+      "same_owner_only": true
+    },
+    {
+      "check_id": "AL6932-P080-safe-envelope",
+      "proposal_id": "AL6932-P080",
+      "kind": "complete_envelope",
+      "expected": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "records": [
+            {
+              "id": "attempt-1",
+              "state": "rejected",
+              "retained": true
+            },
+            {
+              "id": "correction-1",
+              "supersedes": "attempt-1",
+              "state": "bounded"
+            }
+          ],
+          "predecessor_retained": true
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "observed": {
+        "ok": true,
+        "disposition": "completed",
+        "value": {
+          "records": [
+            {
+              "id": "attempt-1",
+              "state": "rejected",
+              "retained": true
+            },
+            {
+              "id": "correction-1",
+              "supersedes": "attempt-1",
+              "state": "bounded"
+            }
+          ],
+          "predecessor_retained": true
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "result": "pass",
+      "same_owner_only": true
+    },
+    {
+      "check_id": "AL6932-P081-safe-source",
+      "proposal_id": "AL6932-P081",
+      "kind": "source_fixity",
+      "expected": {
+        "op": "accessible_change_projection",
+        "fixture": "P4",
+        "document": {
+          "profile": {
+            "label": "alpha",
+            "active": true
+          },
+          "settings": {
+            "mode": "calm",
+            "level": 1
+          }
+        },
+        "args": {
+          "patches": [
+            {
+              "op": "replace",
+              "path": "/settings/level",
+              "value": "checked"
+            }
+          ]
+        }
+      },
+      "observed": {
+        "op": "accessible_change_projection",
+        "fixture": "P4",
+        "document": {
+          "profile": {
+            "label": "alpha",
+            "active": true
+          },
+          "settings": {
+            "mode": "calm",
+            "level": 1
+          }
+        },
+        "args": {
+          "patches": [
+            {
+              "op": "replace",
+              "path": "/settings/level",
+              "value": "checked"
+            }
+          ]
+        }
+      },
+      "result": "pass",
+      "same_owner_only": true
+    },
+    {
+      "check_id": "AL6932-P081-safe-envelope",
+      "proposal_id": "AL6932-P081",
+      "kind": "complete_envelope",
+      "expected": {
+        "ok": true,
+        "disposition": "represented",
+        "value": {
+          "text": "One bounded synthetic change is represented; human accessibility review remains absent.",
+          "manual_review": false
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "observed": {
+        "ok": true,
+        "disposition": "represented",
+        "value": {
+          "text": "One bounded synthetic change is represented; human accessibility review remains absent.",
+          "manual_review": false
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "result": "pass",
+      "same_owner_only": true
+    },
+    {
+      "check_id": "AL6932-P082-safe-source",
+      "proposal_id": "AL6932-P082",
+      "kind": "source_fixity",
+      "expected": {
+        "op": "accessible_change_projection",
+        "fixture": "N5",
+        "document": {
+          "config": {
+            "display": {
+              "theme": "dawn",
+              "scale": 1
+            },
+            "access": {
+              "state": "held"
+            }
+          },
+          "version": 1
+        },
+        "args": {
+          "patches": [
+            {
+              "op": "replace",
+              "path": "/config/display/scale",
+              "value": 2
+            }
+          ]
+        }
+      },
+      "observed": {
+        "op": "accessible_change_projection",
+        "fixture": "N5",
+        "document": {
+          "config": {
+            "display": {
+              "theme": "dawn",
+              "scale": 1
+            },
+            "access": {
+              "state": "held"
+            }
+          },
+          "version": 1
+        },
+        "args": {
+          "patches": [
+            {
+              "op": "replace",
+              "path": "/config/display/scale",
+              "value": 2
+            }
+          ]
+        }
+      },
+      "result": "pass",
+      "same_owner_only": true
+    },
+    {
+      "check_id": "AL6932-P082-safe-envelope",
+      "proposal_id": "AL6932-P082",
+      "kind": "complete_envelope",
+      "expected": {
+        "ok": true,
+        "disposition": "represented",
+        "value": {
+          "text": "One bounded synthetic change is represented; human accessibility review remains absent.",
+          "manual_review": false
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "observed": {
+        "ok": true,
+        "disposition": "represented",
+        "value": {
+          "text": "One bounded synthetic change is represented; human accessibility review remains absent.",
+          "manual_review": false
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "result": "pass",
+      "same_owner_only": true
+    },
+    {
+      "check_id": "AL6932-P083-safe-source",
+      "proposal_id": "AL6932-P083",
+      "kind": "source_fixity",
+      "expected": {
+        "op": "accessible_change_projection",
+        "fixture": "A4",
+        "document": {
+          "queue": [
+            "intake",
+            "review",
+            "archive"
+          ],
+          "meta": {
+            "revision": 4
+          }
+        },
+        "args": {
+          "patches": [
+            {
+              "op": "replace",
+              "path": "/queue/1",
+              "value": "triage"
+            }
+          ]
+        }
+      },
+      "observed": {
+        "op": "accessible_change_projection",
+        "fixture": "A4",
+        "document": {
+          "queue": [
+            "intake",
+            "review",
+            "archive"
+          ],
+          "meta": {
+            "revision": 4
+          }
+        },
+        "args": {
+          "patches": [
+            {
+              "op": "replace",
+              "path": "/queue/1",
+              "value": "triage"
+            }
+          ]
+        }
+      },
+      "result": "pass",
+      "same_owner_only": true
+    },
+    {
+      "check_id": "AL6932-P083-safe-envelope",
+      "proposal_id": "AL6932-P083",
+      "kind": "complete_envelope",
+      "expected": {
+        "ok": true,
+        "disposition": "represented",
+        "value": {
+          "text": "One bounded synthetic change is represented; human accessibility review remains absent.",
+          "manual_review": false
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "observed": {
+        "ok": true,
+        "disposition": "represented",
+        "value": {
+          "text": "One bounded synthetic change is represented; human accessibility review remains absent.",
+          "manual_review": false
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "result": "pass",
+      "same_owner_only": true
+    },
+    {
+      "check_id": "AL6932-P084-safe-source",
+      "proposal_id": "AL6932-P084",
+      "kind": "source_fixity",
+      "expected": {
+        "op": "accessible_change_projection",
+        "fixture": "M5",
+        "document": {
+          "items": [
+            {
+              "id": "a",
+              "state": "new"
+            },
+            {
+              "id": "b",
+              "state": "held"
+            }
+          ],
+          "flags": {
+            "publish": false,
+            "audit": true
+          }
+        },
+        "args": {
+          "patches": [
+            {
+              "op": "replace",
+              "path": "/items/1/state",
+              "value": true
+            }
+          ]
+        }
+      },
+      "observed": {
+        "op": "accessible_change_projection",
+        "fixture": "M5",
+        "document": {
+          "items": [
+            {
+              "id": "a",
+              "state": "new"
+            },
+            {
+              "id": "b",
+              "state": "held"
+            }
+          ],
+          "flags": {
+            "publish": false,
+            "audit": true
+          }
+        },
+        "args": {
+          "patches": [
+            {
+              "op": "replace",
+              "path": "/items/1/state",
+              "value": true
+            }
+          ]
+        }
+      },
+      "result": "pass",
+      "same_owner_only": true
+    },
+    {
+      "check_id": "AL6932-P084-safe-envelope",
+      "proposal_id": "AL6932-P084",
+      "kind": "complete_envelope",
+      "expected": {
+        "ok": true,
+        "disposition": "represented",
+        "value": {
+          "text": "One bounded synthetic change is represented; human accessibility review remains absent.",
+          "manual_review": false
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "observed": {
+        "ok": true,
+        "disposition": "represented",
+        "value": {
+          "text": "One bounded synthetic change is represented; human accessibility review remains absent.",
+          "manual_review": false
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "result": "pass",
+      "same_owner_only": true
+    },
+    {
+      "check_id": "AL6932-P085-safe-source",
+      "proposal_id": "AL6932-P085",
+      "kind": "source_fixity",
+      "expected": {
+        "op": "accessible_change_projection",
+        "fixture": "X5",
+        "document": {
+          "left": {
+            "state": "ready"
+          },
+          "right": {
+            "state": "waiting"
+          },
+          "vacancy": null,
+          "release": {
+            "state": "held"
+          }
+        },
+        "args": {
+          "patches": [
+            {
+              "op": "replace",
+              "path": "/right/state",
+              "value": "awaiting-authority"
+            }
+          ]
+        }
+      },
+      "observed": {
+        "op": "accessible_change_projection",
+        "fixture": "X5",
+        "document": {
+          "left": {
+            "state": "ready"
+          },
+          "right": {
+            "state": "waiting"
+          },
+          "vacancy": null,
+          "release": {
+            "state": "held"
+          }
+        },
+        "args": {
+          "patches": [
+            {
+              "op": "replace",
+              "path": "/right/state",
+              "value": "awaiting-authority"
+            }
+          ]
+        }
+      },
+      "result": "pass",
+      "same_owner_only": true
+    },
+    {
+      "check_id": "AL6932-P085-safe-envelope",
+      "proposal_id": "AL6932-P085",
+      "kind": "complete_envelope",
+      "expected": {
+        "ok": true,
+        "disposition": "represented",
+        "value": {
+          "text": "One bounded synthetic change is represented; human accessibility review remains absent.",
+          "manual_review": false
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "observed": {
+        "ok": true,
+        "disposition": "represented",
+        "value": {
+          "text": "One bounded synthetic change is represented; human accessibility review remains absent.",
+          "manual_review": false
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "result": "pass",
+      "same_owner_only": true
+    },
+    {
+      "check_id": "AL6932-P086-safe-source",
+      "proposal_id": "AL6932-P086",
+      "kind": "source_fixity",
+      "expected": {
+        "op": "operator_authority_vacancy",
+        "fixture": "P4",
+        "document": {
+          "profile": {
+            "label": "alpha",
+            "active": true
+          },
+          "settings": {
+            "mode": "calm",
+            "level": 1
+          }
+        },
+        "args": {
+          "authority": null,
+          "required_for": "operational-release"
+        }
+      },
+      "observed": {
+        "op": "operator_authority_vacancy",
+        "fixture": "P4",
+        "document": {
+          "profile": {
+            "label": "alpha",
+            "active": true
+          },
+          "settings": {
+            "mode": "calm",
+            "level": 1
+          }
+        },
+        "args": {
+          "authority": null,
+          "required_for": "operational-release"
+        }
+      },
+      "result": "pass",
+      "same_owner_only": true
+    },
+    {
+      "check_id": "AL6932-P086-safe-envelope",
+      "proposal_id": "AL6932-P086",
+      "kind": "complete_envelope",
+      "expected": {
+        "ok": true,
+        "disposition": "represented",
+        "value": {
+          "authority_state": "vacant",
+          "consent_inferred": false,
+          "denial_inferred": false,
+          "release": "held"
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "observed": {
+        "ok": true,
+        "disposition": "represented",
+        "value": {
+          "authority_state": "vacant",
+          "consent_inferred": false,
+          "denial_inferred": false,
+          "release": "held"
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "result": "pass",
+      "same_owner_only": true
+    },
+    {
+      "check_id": "AL6932-P087-safe-source",
+      "proposal_id": "AL6932-P087",
+      "kind": "source_fixity",
+      "expected": {
+        "op": "operator_authority_vacancy",
+        "fixture": "N5",
+        "document": {
+          "config": {
+            "display": {
+              "theme": "dawn",
+              "scale": 1
+            },
+            "access": {
+              "state": "held"
+            }
+          },
+          "version": 1
+        },
+        "args": {
+          "authority": null,
+          "required_for": "operational-release"
+        }
+      },
+      "observed": {
+        "op": "operator_authority_vacancy",
+        "fixture": "N5",
+        "document": {
+          "config": {
+            "display": {
+              "theme": "dawn",
+              "scale": 1
+            },
+            "access": {
+              "state": "held"
+            }
+          },
+          "version": 1
+        },
+        "args": {
+          "authority": null,
+          "required_for": "operational-release"
+        }
+      },
+      "result": "pass",
+      "same_owner_only": true
+    },
+    {
+      "check_id": "AL6932-P087-safe-envelope",
+      "proposal_id": "AL6932-P087",
+      "kind": "complete_envelope",
+      "expected": {
+        "ok": true,
+        "disposition": "represented",
+        "value": {
+          "authority_state": "vacant",
+          "consent_inferred": false,
+          "denial_inferred": false,
+          "release": "held"
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "observed": {
+        "ok": true,
+        "disposition": "represented",
+        "value": {
+          "authority_state": "vacant",
+          "consent_inferred": false,
+          "denial_inferred": false,
+          "release": "held"
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "result": "pass",
+      "same_owner_only": true
+    },
+    {
+      "check_id": "AL6932-P088-safe-source",
+      "proposal_id": "AL6932-P088",
+      "kind": "source_fixity",
+      "expected": {
+        "op": "operator_authority_vacancy",
+        "fixture": "A4",
+        "document": {
+          "queue": [
+            "intake",
+            "review",
+            "archive"
+          ],
+          "meta": {
+            "revision": 4
+          }
+        },
+        "args": {
+          "authority": null,
+          "required_for": "operational-release"
+        }
+      },
+      "observed": {
+        "op": "operator_authority_vacancy",
+        "fixture": "A4",
+        "document": {
+          "queue": [
+            "intake",
+            "review",
+            "archive"
+          ],
+          "meta": {
+            "revision": 4
+          }
+        },
+        "args": {
+          "authority": null,
+          "required_for": "operational-release"
+        }
+      },
+      "result": "pass",
+      "same_owner_only": true
+    },
+    {
+      "check_id": "AL6932-P088-safe-envelope",
+      "proposal_id": "AL6932-P088",
+      "kind": "complete_envelope",
+      "expected": {
+        "ok": true,
+        "disposition": "represented",
+        "value": {
+          "authority_state": "vacant",
+          "consent_inferred": false,
+          "denial_inferred": false,
+          "release": "held"
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "observed": {
+        "ok": true,
+        "disposition": "represented",
+        "value": {
+          "authority_state": "vacant",
+          "consent_inferred": false,
+          "denial_inferred": false,
+          "release": "held"
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "result": "pass",
+      "same_owner_only": true
+    },
+    {
+      "check_id": "AL6932-P089-safe-source",
+      "proposal_id": "AL6932-P089",
+      "kind": "source_fixity",
+      "expected": {
+        "op": "operator_authority_vacancy",
+        "fixture": "M5",
+        "document": {
+          "items": [
+            {
+              "id": "a",
+              "state": "new"
+            },
+            {
+              "id": "b",
+              "state": "held"
+            }
+          ],
+          "flags": {
+            "publish": false,
+            "audit": true
+          }
+        },
+        "args": {
+          "authority": null,
+          "required_for": "operational-release"
+        }
+      },
+      "observed": {
+        "op": "operator_authority_vacancy",
+        "fixture": "M5",
+        "document": {
+          "items": [
+            {
+              "id": "a",
+              "state": "new"
+            },
+            {
+              "id": "b",
+              "state": "held"
+            }
+          ],
+          "flags": {
+            "publish": false,
+            "audit": true
+          }
+        },
+        "args": {
+          "authority": null,
+          "required_for": "operational-release"
+        }
+      },
+      "result": "pass",
+      "same_owner_only": true
+    },
+    {
+      "check_id": "AL6932-P089-safe-envelope",
+      "proposal_id": "AL6932-P089",
+      "kind": "complete_envelope",
+      "expected": {
+        "ok": true,
+        "disposition": "represented",
+        "value": {
+          "authority_state": "vacant",
+          "consent_inferred": false,
+          "denial_inferred": false,
+          "release": "held"
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "observed": {
+        "ok": true,
+        "disposition": "represented",
+        "value": {
+          "authority_state": "vacant",
+          "consent_inferred": false,
+          "denial_inferred": false,
+          "release": "held"
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "result": "pass",
+      "same_owner_only": true
+    },
+    {
+      "check_id": "AL6932-P090-safe-source",
+      "proposal_id": "AL6932-P090",
+      "kind": "source_fixity",
+      "expected": {
+        "op": "operator_authority_vacancy",
+        "fixture": "X5",
+        "document": {
+          "left": {
+            "state": "ready"
+          },
+          "right": {
+            "state": "waiting"
+          },
+          "vacancy": null,
+          "release": {
+            "state": "held"
+          }
+        },
+        "args": {
+          "authority": null,
+          "required_for": "operational-release"
+        }
+      },
+      "observed": {
+        "op": "operator_authority_vacancy",
+        "fixture": "X5",
+        "document": {
+          "left": {
+            "state": "ready"
+          },
+          "right": {
+            "state": "waiting"
+          },
+          "vacancy": null,
+          "release": {
+            "state": "held"
+          }
+        },
+        "args": {
+          "authority": null,
+          "required_for": "operational-release"
+        }
+      },
+      "result": "pass",
+      "same_owner_only": true
+    },
+    {
+      "check_id": "AL6932-P090-safe-envelope",
+      "proposal_id": "AL6932-P090",
+      "kind": "complete_envelope",
+      "expected": {
+        "ok": true,
+        "disposition": "represented",
+        "value": {
+          "authority_state": "vacant",
+          "consent_inferred": false,
+          "denial_inferred": false,
+          "release": "held"
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "observed": {
+        "ok": true,
+        "disposition": "represented",
+        "value": {
+          "authority_state": "vacant",
+          "consent_inferred": false,
+          "denial_inferred": false,
+          "release": "held"
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "result": "pass",
+      "same_owner_only": true
+    },
+    {
+      "check_id": "AL6932-P091-safe-source",
+      "proposal_id": "AL6932-P091",
+      "kind": "source_fixity",
+      "expected": {
+        "op": "external_validation_gap",
+        "fixture": "P4",
+        "document": {
+          "profile": {
+            "label": "alpha",
+            "active": true
+          },
+          "settings": {
+            "mode": "calm",
+            "level": 1
+          }
+        },
+        "args": {
+          "external_receipt": null,
+          "required_for": "independent-validation"
+        }
+      },
+      "observed": {
+        "op": "external_validation_gap",
+        "fixture": "P4",
+        "document": {
+          "profile": {
+            "label": "alpha",
+            "active": true
+          },
+          "settings": {
+            "mode": "calm",
+            "level": 1
+          }
+        },
+        "args": {
+          "external_receipt": null,
+          "required_for": "independent-validation"
+        }
+      },
+      "result": "pass",
+      "same_owner_only": true
+    },
+    {
+      "check_id": "AL6932-P091-safe-envelope",
+      "proposal_id": "AL6932-P091",
+      "kind": "complete_envelope",
+      "expected": {
+        "ok": true,
+        "disposition": "open_gap",
+        "value": {
+          "external_validation": null,
+          "gap_retained": true,
+          "release": "held"
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "observed": {
+        "ok": true,
+        "disposition": "open_gap",
+        "value": {
+          "external_validation": null,
+          "gap_retained": true,
+          "release": "held"
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "result": "pass",
+      "same_owner_only": true
+    },
+    {
+      "check_id": "AL6932-P092-safe-source",
+      "proposal_id": "AL6932-P092",
+      "kind": "source_fixity",
+      "expected": {
+        "op": "external_validation_gap",
+        "fixture": "N5",
+        "document": {
+          "config": {
+            "display": {
+              "theme": "dawn",
+              "scale": 1
+            },
+            "access": {
+              "state": "held"
+            }
+          },
+          "version": 1
+        },
+        "args": {
+          "external_receipt": null,
+          "required_for": "independent-validation"
+        }
+      },
+      "observed": {
+        "op": "external_validation_gap",
+        "fixture": "N5",
+        "document": {
+          "config": {
+            "display": {
+              "theme": "dawn",
+              "scale": 1
+            },
+            "access": {
+              "state": "held"
+            }
+          },
+          "version": 1
+        },
+        "args": {
+          "external_receipt": null,
+          "required_for": "independent-validation"
+        }
+      },
+      "result": "pass",
+      "same_owner_only": true
+    },
+    {
+      "check_id": "AL6932-P092-safe-envelope",
+      "proposal_id": "AL6932-P092",
+      "kind": "complete_envelope",
+      "expected": {
+        "ok": true,
+        "disposition": "open_gap",
+        "value": {
+          "external_validation": null,
+          "gap_retained": true,
+          "release": "held"
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "observed": {
+        "ok": true,
+        "disposition": "open_gap",
+        "value": {
+          "external_validation": null,
+          "gap_retained": true,
+          "release": "held"
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "result": "pass",
+      "same_owner_only": true
+    },
+    {
+      "check_id": "AL6932-P093-safe-source",
+      "proposal_id": "AL6932-P093",
+      "kind": "source_fixity",
+      "expected": {
+        "op": "external_validation_gap",
+        "fixture": "A4",
+        "document": {
+          "queue": [
+            "intake",
+            "review",
+            "archive"
+          ],
+          "meta": {
+            "revision": 4
+          }
+        },
+        "args": {
+          "external_receipt": null,
+          "required_for": "independent-validation"
+        }
+      },
+      "observed": {
+        "op": "external_validation_gap",
+        "fixture": "A4",
+        "document": {
+          "queue": [
+            "intake",
+            "review",
+            "archive"
+          ],
+          "meta": {
+            "revision": 4
+          }
+        },
+        "args": {
+          "external_receipt": null,
+          "required_for": "independent-validation"
+        }
+      },
+      "result": "pass",
+      "same_owner_only": true
+    },
+    {
+      "check_id": "AL6932-P093-safe-envelope",
+      "proposal_id": "AL6932-P093",
+      "kind": "complete_envelope",
+      "expected": {
+        "ok": true,
+        "disposition": "open_gap",
+        "value": {
+          "external_validation": null,
+          "gap_retained": true,
+          "release": "held"
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "observed": {
+        "ok": true,
+        "disposition": "open_gap",
+        "value": {
+          "external_validation": null,
+          "gap_retained": true,
+          "release": "held"
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "result": "pass",
+      "same_owner_only": true
+    },
+    {
+      "check_id": "AL6932-P094-safe-source",
+      "proposal_id": "AL6932-P094",
+      "kind": "source_fixity",
+      "expected": {
+        "op": "external_validation_gap",
+        "fixture": "M5",
+        "document": {
+          "items": [
+            {
+              "id": "a",
+              "state": "new"
+            },
+            {
+              "id": "b",
+              "state": "held"
+            }
+          ],
+          "flags": {
+            "publish": false,
+            "audit": true
+          }
+        },
+        "args": {
+          "external_receipt": null,
+          "required_for": "independent-validation"
+        }
+      },
+      "observed": {
+        "op": "external_validation_gap",
+        "fixture": "M5",
+        "document": {
+          "items": [
+            {
+              "id": "a",
+              "state": "new"
+            },
+            {
+              "id": "b",
+              "state": "held"
+            }
+          ],
+          "flags": {
+            "publish": false,
+            "audit": true
+          }
+        },
+        "args": {
+          "external_receipt": null,
+          "required_for": "independent-validation"
+        }
+      },
+      "result": "pass",
+      "same_owner_only": true
+    },
+    {
+      "check_id": "AL6932-P094-safe-envelope",
+      "proposal_id": "AL6932-P094",
+      "kind": "complete_envelope",
+      "expected": {
+        "ok": true,
+        "disposition": "open_gap",
+        "value": {
+          "external_validation": null,
+          "gap_retained": true,
+          "release": "held"
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "observed": {
+        "ok": true,
+        "disposition": "open_gap",
+        "value": {
+          "external_validation": null,
+          "gap_retained": true,
+          "release": "held"
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "result": "pass",
+      "same_owner_only": true
+    },
+    {
+      "check_id": "AL6932-P095-safe-source",
+      "proposal_id": "AL6932-P095",
+      "kind": "source_fixity",
+      "expected": {
+        "op": "external_validation_gap",
+        "fixture": "X5",
+        "document": {
+          "left": {
+            "state": "ready"
+          },
+          "right": {
+            "state": "waiting"
+          },
+          "vacancy": null,
+          "release": {
+            "state": "held"
+          }
+        },
+        "args": {
+          "external_receipt": null,
+          "required_for": "independent-validation"
+        }
+      },
+      "observed": {
+        "op": "external_validation_gap",
+        "fixture": "X5",
+        "document": {
+          "left": {
+            "state": "ready"
+          },
+          "right": {
+            "state": "waiting"
+          },
+          "vacancy": null,
+          "release": {
+            "state": "held"
+          }
+        },
+        "args": {
+          "external_receipt": null,
+          "required_for": "independent-validation"
+        }
+      },
+      "result": "pass",
+      "same_owner_only": true
+    },
+    {
+      "check_id": "AL6932-P095-safe-envelope",
+      "proposal_id": "AL6932-P095",
+      "kind": "complete_envelope",
+      "expected": {
+        "ok": true,
+        "disposition": "open_gap",
+        "value": {
+          "external_validation": null,
+          "gap_retained": true,
+          "release": "held"
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "observed": {
+        "ok": true,
+        "disposition": "open_gap",
+        "value": {
+          "external_validation": null,
+          "gap_retained": true,
+          "release": "held"
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "result": "pass",
+      "same_owner_only": true
+    },
+    {
+      "check_id": "AL6932-P096-safe-source",
+      "proposal_id": "AL6932-P096",
+      "kind": "source_fixity",
+      "expected": {
+        "op": "release_gate",
+        "fixture": "P4",
+        "document": {
+          "profile": {
+            "label": "alpha",
+            "active": true
+          },
+          "settings": {
+            "mode": "calm",
+            "level": 1
+          }
+        },
+        "args": {
+          "authority": null,
+          "external_receipt": null,
+          "requested": "publish"
+        }
+      },
+      "observed": {
+        "op": "release_gate",
+        "fixture": "P4",
+        "document": {
+          "profile": {
+            "label": "alpha",
+            "active": true
+          },
+          "settings": {
+            "mode": "calm",
+            "level": 1
+          }
+        },
+        "args": {
+          "authority": null,
+          "external_receipt": null,
+          "requested": "publish"
+        }
+      },
+      "result": "pass",
+      "same_owner_only": true
+    },
+    {
+      "check_id": "AL6932-P096-safe-envelope",
+      "proposal_id": "AL6932-P096",
+      "kind": "complete_envelope",
+      "expected": {
+        "ok": true,
+        "disposition": "exact_gate",
+        "value": {
+          "requested": "publish",
+          "released": false,
+          "missing": [
+            "competent_authority",
+            "external_evidence"
+          ]
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "observed": {
+        "ok": true,
+        "disposition": "exact_gate",
+        "value": {
+          "requested": "publish",
+          "released": false,
+          "missing": [
+            "competent_authority",
+            "external_evidence"
+          ]
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "result": "pass",
+      "same_owner_only": true
+    },
+    {
+      "check_id": "AL6932-P097-safe-source",
+      "proposal_id": "AL6932-P097",
+      "kind": "source_fixity",
+      "expected": {
+        "op": "release_gate",
+        "fixture": "N5",
+        "document": {
+          "config": {
+            "display": {
+              "theme": "dawn",
+              "scale": 1
+            },
+            "access": {
+              "state": "held"
+            }
+          },
+          "version": 1
+        },
+        "args": {
+          "authority": null,
+          "external_receipt": null,
+          "requested": "publish"
+        }
+      },
+      "observed": {
+        "op": "release_gate",
+        "fixture": "N5",
+        "document": {
+          "config": {
+            "display": {
+              "theme": "dawn",
+              "scale": 1
+            },
+            "access": {
+              "state": "held"
+            }
+          },
+          "version": 1
+        },
+        "args": {
+          "authority": null,
+          "external_receipt": null,
+          "requested": "publish"
+        }
+      },
+      "result": "pass",
+      "same_owner_only": true
+    },
+    {
+      "check_id": "AL6932-P097-safe-envelope",
+      "proposal_id": "AL6932-P097",
+      "kind": "complete_envelope",
+      "expected": {
+        "ok": true,
+        "disposition": "exact_gate",
+        "value": {
+          "requested": "publish",
+          "released": false,
+          "missing": [
+            "competent_authority",
+            "external_evidence"
+          ]
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "observed": {
+        "ok": true,
+        "disposition": "exact_gate",
+        "value": {
+          "requested": "publish",
+          "released": false,
+          "missing": [
+            "competent_authority",
+            "external_evidence"
+          ]
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "result": "pass",
+      "same_owner_only": true
+    },
+    {
+      "check_id": "AL6932-P098-safe-source",
+      "proposal_id": "AL6932-P098",
+      "kind": "source_fixity",
+      "expected": {
+        "op": "release_gate",
+        "fixture": "A4",
+        "document": {
+          "queue": [
+            "intake",
+            "review",
+            "archive"
+          ],
+          "meta": {
+            "revision": 4
+          }
+        },
+        "args": {
+          "authority": null,
+          "external_receipt": null,
+          "requested": "publish"
+        }
+      },
+      "observed": {
+        "op": "release_gate",
+        "fixture": "A4",
+        "document": {
+          "queue": [
+            "intake",
+            "review",
+            "archive"
+          ],
+          "meta": {
+            "revision": 4
+          }
+        },
+        "args": {
+          "authority": null,
+          "external_receipt": null,
+          "requested": "publish"
+        }
+      },
+      "result": "pass",
+      "same_owner_only": true
+    },
+    {
+      "check_id": "AL6932-P098-safe-envelope",
+      "proposal_id": "AL6932-P098",
+      "kind": "complete_envelope",
+      "expected": {
+        "ok": true,
+        "disposition": "exact_gate",
+        "value": {
+          "requested": "publish",
+          "released": false,
+          "missing": [
+            "competent_authority",
+            "external_evidence"
+          ]
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "observed": {
+        "ok": true,
+        "disposition": "exact_gate",
+        "value": {
+          "requested": "publish",
+          "released": false,
+          "missing": [
+            "competent_authority",
+            "external_evidence"
+          ]
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "result": "pass",
+      "same_owner_only": true
+    },
+    {
+      "check_id": "AL6932-P099-safe-source",
+      "proposal_id": "AL6932-P099",
+      "kind": "source_fixity",
+      "expected": {
+        "op": "release_gate",
+        "fixture": "M5",
+        "document": {
+          "items": [
+            {
+              "id": "a",
+              "state": "new"
+            },
+            {
+              "id": "b",
+              "state": "held"
+            }
+          ],
+          "flags": {
+            "publish": false,
+            "audit": true
+          }
+        },
+        "args": {
+          "authority": null,
+          "external_receipt": null,
+          "requested": "publish"
+        }
+      },
+      "observed": {
+        "op": "release_gate",
+        "fixture": "M5",
+        "document": {
+          "items": [
+            {
+              "id": "a",
+              "state": "new"
+            },
+            {
+              "id": "b",
+              "state": "held"
+            }
+          ],
+          "flags": {
+            "publish": false,
+            "audit": true
+          }
+        },
+        "args": {
+          "authority": null,
+          "external_receipt": null,
+          "requested": "publish"
+        }
+      },
+      "result": "pass",
+      "same_owner_only": true
+    },
+    {
+      "check_id": "AL6932-P099-safe-envelope",
+      "proposal_id": "AL6932-P099",
+      "kind": "complete_envelope",
+      "expected": {
+        "ok": true,
+        "disposition": "exact_gate",
+        "value": {
+          "requested": "publish",
+          "released": false,
+          "missing": [
+            "competent_authority",
+            "external_evidence"
+          ]
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "observed": {
+        "ok": true,
+        "disposition": "exact_gate",
+        "value": {
+          "requested": "publish",
+          "released": false,
+          "missing": [
+            "competent_authority",
+            "external_evidence"
+          ]
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "result": "pass",
+      "same_owner_only": true
+    },
+    {
+      "check_id": "AL6932-P100-safe-source",
+      "proposal_id": "AL6932-P100",
+      "kind": "source_fixity",
+      "expected": {
+        "op": "release_gate",
+        "fixture": "X5",
+        "document": {
+          "left": {
+            "state": "ready"
+          },
+          "right": {
+            "state": "waiting"
+          },
+          "vacancy": null,
+          "release": {
+            "state": "held"
+          }
+        },
+        "args": {
+          "authority": null,
+          "external_receipt": null,
+          "requested": "publish"
+        }
+      },
+      "observed": {
+        "op": "release_gate",
+        "fixture": "X5",
+        "document": {
+          "left": {
+            "state": "ready"
+          },
+          "right": {
+            "state": "waiting"
+          },
+          "vacancy": null,
+          "release": {
+            "state": "held"
+          }
+        },
+        "args": {
+          "authority": null,
+          "external_receipt": null,
+          "requested": "publish"
+        }
+      },
+      "result": "pass",
+      "same_owner_only": true
+    },
+    {
+      "check_id": "AL6932-P100-safe-envelope",
+      "proposal_id": "AL6932-P100",
+      "kind": "complete_envelope",
+      "expected": {
+        "ok": true,
+        "disposition": "exact_gate",
+        "value": {
+          "requested": "publish",
+          "released": false,
+          "missing": [
+            "competent_authority",
+            "external_evidence"
+          ]
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "observed": {
+        "ok": true,
+        "disposition": "exact_gate",
+        "value": {
+          "requested": "publish",
+          "released": false,
+          "missing": [
+            "competent_authority",
+            "external_evidence"
+          ]
+        },
+        "error": null,
+        "external_credit": false
+      },
+      "result": "pass",
+      "same_owner_only": true
+    }
+  ],
+  "passes": 100,
+  "boundary": "Same-owner finite synthetic software and documentation evidence only; not independent reproduction, empirical GMUT confirmation, production THOS or Freed ID, professional, legal, cultural, affected-party or Maori authority, complete privacy or accessibility, exhaustive security, AGI/ASI, consciousness, personhood, identity continuity, Theory-of-Everything proof, canon, deployment or Stage 20 readiness."
+}
