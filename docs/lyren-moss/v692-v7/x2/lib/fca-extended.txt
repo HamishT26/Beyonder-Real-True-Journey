@@ -1,0 +1,225 @@
+"use strict";
+
+const fs = require("fs");
+const path = require("path");
+const Module = require("module");
+
+function loadTextModule(file) {
+  const instance = new Module(file, module);
+  instance.filename = file;
+  instance.paths = Module._nodeModulePaths(path.dirname(file));
+  instance._compile(fs.readFileSync(file, "utf8"), file);
+  return instance.exports;
+}
+
+const core = loadTextModule(path.resolve(__dirname, "../../x1/lib/fca-core.txt"));
+const EXTENDED = [
+  "lattice_join",
+  "implication_holds",
+  "implication_closure",
+  "incidence_reconstruct",
+  "galois_connection",
+  "dual_context",
+  "implication_basis_summary",
+  "context_reduction_summary",
+  "model_obligations",
+  "release_gate"
+];
+const OPERATIONS = [...core.OPERATIONS, ...EXTENDED];
+const REQUIRED = {
+  lattice_join: ["context", "left_intent", "op", "right_intent"],
+  implication_holds: ["conclusion", "context", "op", "premise"],
+  implication_closure: ["attributes", "implications", "op", "seed"],
+  incidence_reconstruct: ["attributes", "object_intents", "objects", "op"],
+  galois_connection: ["attributes", "context", "objects", "op"],
+  dual_context: ["context", "op"],
+  implication_basis_summary: ["context", "op"],
+  context_reduction_summary: ["context", "op"],
+  model_obligations: ["claim", "op", "provided"],
+  release_gate: ["authority", "evidence", "op", "request"]
+};
+const DISPOSITION = {
+  lattice_join: "completed",
+  implication_holds: "completed",
+  implication_closure: "completed",
+  incidence_reconstruct: "completed",
+  galois_connection: "completed",
+  dual_context: "completed",
+  implication_basis_summary: "represented",
+  context_reduction_summary: "represented",
+  model_obligations: "open_gap",
+  release_gate: "exact_gate"
+};
+const OBLIGATIONS = {
+  inferred_attribute_governance: ["source_provenance", "affected_party_review", "inference_policy"],
+  empirical_gmut_mapping: ["dataset", "likelihood", "uncertainty_model", "competing_baseline"],
+  production_thos_decision: ["governed_service", "safety_monitoring", "suitable_statistics", "independent_review"],
+  production_freed_id_attribute: ["live_keys", "proofs", "lifecycle", "interoperability", "trust_governance"],
+  accessible_publication: ["manual_evaluation", "affected_user_review", "language_review"]
+};
+const RELEASE = {
+  inferred_identity_assertion: ["real_identity_evidence", "consent", "competent_authority"],
+  legal_eligibility_decision: ["competent_legal_authority", "due_process", "appeal_path"],
+  maori_attribute_ratification: ["Maori_authority", "affected_governance"],
+  production_access_control: ["independent_security_review", "trust_governance", "recovery_evidence"],
+  stage20_promotion: ["all_empirical_professional_production_legal_cultural_identity_and_review_gates"]
+};
+
+function ordered(value) {
+  if (Array.isArray(value)) return value.map(ordered);
+  if (value && typeof value === "object") return Object.fromEntries(Object.keys(value).sort().map((key) => [key, ordered(value[key])]));
+  return value;
+}
+function canonical(value) { return JSON.stringify(ordered(value)); }
+function clone(value) { return JSON.parse(JSON.stringify(value)); }
+function uniqueStrings(value, known, label) {
+  if (!Array.isArray(value) || value.some((item) => typeof item !== "string")) throw new Error("invalid_" + label);
+  if (new Set(value).size !== value.length) throw new Error("duplicate_" + label);
+  const sorted = [...value].sort();
+  if (known && sorted.some((item) => !known.includes(item))) throw new Error("unknown_" + label);
+  return sorted;
+}
+function coreValue(request) {
+  const result = core.safeExecute(request);
+  if (!result.ok) throw new Error(result.error);
+  return result.value;
+}
+function contextOf(raw) { return coreValue({ op: "context_shape", context: raw }).context; }
+function conceptFromIntent(context, intent) {
+  const result = coreValue({ op: "attribute_closure", context, attributes: intent });
+  return { extent: result.supporting_objects, intent: result.closure };
+}
+function isSubset(left, right) { return left.every((value) => right.includes(value)); }
+function latticeJoin(input) {
+  const context = contextOf(input.context);
+  const left = conceptFromIntent(context, uniqueStrings(input.left_intent, context.attributes, "left_intent"));
+  const right = conceptFromIntent(context, uniqueStrings(input.right_intent, context.attributes, "right_intent"));
+  const seed = [...new Set([...left.extent, ...right.extent])].sort();
+  const joined = coreValue({ op: "object_closure", context, objects: seed });
+  return { left, right, join: { extent: joined.closure, intent: joined.common_attributes } };
+}
+function implicationHolds(input) {
+  const context = contextOf(input.context);
+  const premise = uniqueStrings(input.premise, context.attributes, "premise");
+  const conclusion = uniqueStrings(input.conclusion, context.attributes, "conclusion");
+  const result = coreValue({ op: "attribute_closure", context, attributes: premise });
+  return { premise, conclusion, closure: result.closure, support_objects: result.supporting_objects, holds: isSubset(conclusion, result.closure) };
+}
+function implicationClosure(input) {
+  const universe = uniqueStrings(input.attributes, null, "attributes");
+  const seed = uniqueStrings(input.seed, universe, "seed");
+  if (!Array.isArray(input.implications)) throw new Error("invalid_implications");
+  const implications = input.implications.map((row) => {
+    if (!row || typeof row !== "object" || Array.isArray(row) || canonical(Object.keys(row).sort()) !== canonical(["conclusion", "premise"])) throw new Error("invalid_implication");
+    return { premise: uniqueStrings(row.premise, universe, "premise"), conclusion: uniqueStrings(row.conclusion, universe, "conclusion") };
+  });
+  let closure = [...seed];
+  const applied = [];
+  let changed = true;
+  while (changed) {
+    changed = false;
+    implications.forEach((row, index) => {
+      if (isSubset(row.premise, closure)) {
+        const before = closure.length;
+        closure = [...new Set([...closure, ...row.conclusion])].sort();
+        if (closure.length > before) { changed = true; if (!applied.includes(index)) applied.push(index); }
+      }
+    });
+  }
+  return { universe, seed, closure, applied_implication_indices: applied };
+}
+function incidenceReconstruct(input) {
+  const objects = uniqueStrings(input.objects, null, "objects");
+  const attributes = uniqueStrings(input.attributes, null, "attributes");
+  if (!Array.isArray(input.object_intents)) throw new Error("invalid_object_intents");
+  const seen = new Set();
+  const incidence = [];
+  for (const row of input.object_intents) {
+    if (!row || typeof row !== "object" || Array.isArray(row) || canonical(Object.keys(row).sort()) !== canonical(["attributes", "object"])) throw new Error("invalid_object_intent");
+    if (typeof row.object !== "string" || !objects.includes(row.object) || seen.has(row.object)) throw new Error("invalid_object_intent_object");
+    seen.add(row.object);
+    for (const attribute of uniqueStrings(row.attributes, attributes, "object_attributes")) incidence.push([row.object, attribute]);
+  }
+  incidence.sort((left, right) => left[0].localeCompare(right[0]) || left[1].localeCompare(right[1]));
+  return { context: { objects, attributes, incidence }, all_objects_declared: seen.size === objects.length, semantic_identity_claimed: false };
+}
+function galoisConnection(input) {
+  const context = contextOf(input.context);
+  const objects = uniqueStrings(input.objects, context.objects, "objects");
+  const attributes = uniqueStrings(input.attributes, context.attributes, "attributes");
+  const objectPrime = coreValue({ op: "object_derivation", context, objects }).attributes;
+  const attributePrime = coreValue({ op: "attribute_derivation", context, attributes }).objects;
+  const leftSubset = isSubset(objects, attributePrime);
+  const rightSubset = isSubset(attributes, objectPrime);
+  return { objects, attributes, object_prime: objectPrime, attribute_prime: attributePrime, left_subset: leftSubset, right_subset: rightSubset, equivalent: leftSubset === rightSubset, finite_only: true };
+}
+function dualContext(input) {
+  const context = contextOf(input.context);
+  const incidence = context.incidence.map((row) => [row[1], row[0]]).sort((left, right) => left[0].localeCompare(right[0]) || left[1].localeCompare(right[1]));
+  return { dual: { objects: context.attributes, attributes: context.objects, incidence }, incidence_count_preserved: incidence.length === context.incidence.length, semantic_equivalence_claimed: false };
+}
+function implicationBasisSummary(input) {
+  const context = contextOf(input.context);
+  if (context.attributes.length > 20) throw new Error("context_too_large_for_bounded_summary");
+  const candidates = [];
+  const limit = 2 ** context.attributes.length;
+  for (let mask = 0; mask < limit; mask += 1) {
+    const premise = context.attributes.filter((_, index) => (mask & (1 << index)) !== 0);
+    const closure = coreValue({ op: "attribute_closure", context, attributes: premise }).closure;
+    for (const attribute of context.attributes) if (!premise.includes(attribute) && closure.includes(attribute)) candidates.push({ premise, conclusion: [attribute] });
+  }
+  return { candidates, candidate_count: candidates.length, valid_for_declared_context: true, minimal_basis_claimed: false, canonical_basis_claimed: false };
+}
+function duplicateGroups(items, signature) {
+  const groups = new Map();
+  for (const item of items) { const key = canonical(signature(item)); if (!groups.has(key)) groups.set(key, []); groups.get(key).push(item); }
+  return [...groups.values()].filter((group) => group.length > 1).map((group) => group.sort());
+}
+function contextReductionSummary(input) {
+  const context = contextOf(input.context);
+  const pairs = new Set(context.incidence.map((row) => row[0] + "\u0000" + row[1]));
+  const duplicateObjects = duplicateGroups(context.objects, (object) => context.attributes.filter((attribute) => pairs.has(object + "\u0000" + attribute)));
+  const duplicateAttributes = duplicateGroups(context.attributes, (attribute) => context.objects.filter((object) => pairs.has(object + "\u0000" + attribute)));
+  return { duplicate_object_groups: duplicateObjects, duplicate_attribute_groups: duplicateAttributes, reduced_context_constructed: false, semantic_reduction_claimed: false, affected_party_review: "reserved" };
+}
+function modelObligations(input) {
+  if (typeof input.claim !== "string" || !Object.prototype.hasOwnProperty.call(OBLIGATIONS, input.claim)) throw new Error("unknown_claim");
+  const provided = uniqueStrings(input.provided, OBLIGATIONS[input.claim], "provided");
+  return { claim: input.claim, externally_satisfied: false, missing: OBLIGATIONS[input.claim].filter((item) => !provided.includes(item)), mathematical_closure_is_authority: false };
+}
+function releaseGate(input) {
+  if (typeof input.request !== "string" || !Object.prototype.hasOwnProperty.call(RELEASE, input.request)) throw new Error("unknown_request");
+  if (input.evidence !== "synthetic" || input.authority !== "unsupplied") throw new Error("unsupported_release_evidence");
+  return { authorized: false, decision: "exact_gate", request: input.request, missing: RELEASE[input.request] };
+}
+function evaluate(input) {
+  if (input.op === "lattice_join") return latticeJoin(input);
+  if (input.op === "implication_holds") return implicationHolds(input);
+  if (input.op === "implication_closure") return implicationClosure(input);
+  if (input.op === "incidence_reconstruct") return incidenceReconstruct(input);
+  if (input.op === "galois_connection") return galoisConnection(input);
+  if (input.op === "dual_context") return dualContext(input);
+  if (input.op === "implication_basis_summary") return implicationBasisSummary(input);
+  if (input.op === "context_reduction_summary") return contextReductionSummary(input);
+  if (input.op === "model_obligations") return modelObligations(input);
+  if (input.op === "release_gate") return releaseGate(input);
+  throw new Error("unknown_operation");
+}
+function failure(error) { return { ok: false, error, external_credit: false, value: null }; }
+function safeExecute(raw) {
+  const before = canonical(raw);
+  if (!raw || typeof raw !== "object" || Array.isArray(raw) || typeof raw.op !== "string") return failure("invalid_request");
+  if (core.OPERATIONS.includes(raw.op)) return core.safeExecute(raw);
+  if (!EXTENDED.includes(raw.op)) return failure("unknown_operation");
+  const observedFields = Object.keys(raw).sort();
+  const requiredFields = REQUIRED[raw.op];
+  if (requiredFields.some((field) => !observedFields.includes(field))) return failure("missing_field");
+  if (canonical(observedFields) !== canonical(requiredFields)) return failure("unknown_field");
+  try {
+    const value = evaluate(clone(raw));
+    if (canonical(raw) !== before) return failure("input_mutated");
+    return { ok: true, error: null, external_credit: false, disposition: DISPOSITION[raw.op], value };
+  } catch (error) { return failure(error && error.message ? error.message : "invalid_input"); }
+}
+
+module.exports = { OPERATIONS, EXTENDED, safeExecute };

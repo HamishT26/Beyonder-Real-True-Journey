@@ -1,0 +1,10 @@
+"use strict";
+
+const fs = require("fs");
+const Module = require("module");
+const path = require("path");
+function loadTextModule(file) { const instance = new Module(file, module); instance.filename = file; instance.paths = Module._nodeModulePaths(path.dirname(file)); instance._compile(fs.readFileSync(file, "utf8"), file); return instance.exports; }
+const engine = loadTextModule(path.resolve(__dirname, "../lib/fca-extended.txt"));
+const ALLOWED = ["implication_basis_summary","context_reduction_summary"];
+function run(request) { if (!request || !ALLOWED.includes(request.op)) return { ok: false, error: "operation_outside_runner", external_credit: false, value: null }; return engine.safeExecute(request); }
+module.exports = { ALLOWED, run, runner: "lyren-v6927-runner-09" };

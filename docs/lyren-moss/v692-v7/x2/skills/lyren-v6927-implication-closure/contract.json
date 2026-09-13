@@ -1,0 +1,140 @@
+{
+  "operation": "implication_closure",
+  "accepted": {
+    "op": "implication_closure",
+    "attributes": [
+      "a",
+      "b",
+      "c"
+    ],
+    "implications": [
+      {
+        "premise": [
+          "a"
+        ],
+        "conclusion": [
+          "b"
+        ]
+      },
+      {
+        "premise": [
+          "b"
+        ],
+        "conclusion": [
+          "c"
+        ]
+      }
+    ],
+    "seed": [
+      "a"
+    ]
+  },
+  "expected": {
+    "ok": true,
+    "error": null,
+    "external_credit": false,
+    "disposition": "completed",
+    "value": {
+      "universe": [
+        "a",
+        "b",
+        "c"
+      ],
+      "seed": [
+        "a"
+      ],
+      "closure": [
+        "a",
+        "b",
+        "c"
+      ],
+      "applied_implication_indices": [
+        0,
+        1
+      ]
+    }
+  },
+  "rejecting": [
+    {
+      "candidate_id": "LM6927-P061-C-UNKNOWN",
+      "kind": "unknown_field",
+      "input": {
+        "op": "implication_closure",
+        "attributes": [
+          "a",
+          "b",
+          "c"
+        ],
+        "implications": [
+          {
+            "premise": [
+              "a"
+            ],
+            "conclusion": [
+              "b"
+            ]
+          },
+          {
+            "premise": [
+              "b"
+            ],
+            "conclusion": [
+              "c"
+            ]
+          }
+        ],
+        "seed": [
+          "a"
+        ],
+        "unreviewed_authority_grant": true
+      },
+      "expected": {
+        "ok": false,
+        "error": "unknown_field",
+        "external_credit": false,
+        "value": null
+      },
+      "original_success_credit": 0
+    },
+    {
+      "candidate_id": "LM6927-P061-C-MISSING",
+      "kind": "missing_field",
+      "removed_field": "seed",
+      "input": {
+        "op": "implication_closure",
+        "attributes": [
+          "a",
+          "b",
+          "c"
+        ],
+        "implications": [
+          {
+            "premise": [
+              "a"
+            ],
+            "conclusion": [
+              "b"
+            ]
+          },
+          {
+            "premise": [
+              "b"
+            ],
+            "conclusion": [
+              "c"
+            ]
+          }
+        ]
+      },
+      "expected": {
+        "ok": false,
+        "error": "missing_field",
+        "external_credit": false,
+        "value": null
+      },
+      "original_success_credit": 0
+    }
+  ],
+  "rollback": "Retain the failed witness; repair only the attributable operation and rerun only the failed dependency before any successful aggregate.",
+  "boundary": "Bounded same-owner finite Formal Concept Analysis software and documentation evidence only. It is not empirical GMUT confirmation, production THOS or Freed ID, professional qualification, legal or cultural authority, Maori authority, complete privacy or accessibility assurance, exhaustive security, independent reproduction, AGI or ASI evidence, consciousness or personhood evidence, Theory-of-Everything proof, canon, or Stage 20 readiness."
+}

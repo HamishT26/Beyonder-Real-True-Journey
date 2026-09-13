@@ -1,0 +1,164 @@
+{
+  "operation": "dual_context",
+  "accepted": {
+    "op": "dual_context",
+    "context": {
+      "objects": [
+        "A",
+        "B",
+        "C"
+      ],
+      "attributes": [
+        "red",
+        "round",
+        "small"
+      ],
+      "incidence": [
+        [
+          "A",
+          "red"
+        ],
+        [
+          "A",
+          "round"
+        ],
+        [
+          "B",
+          "red"
+        ],
+        [
+          "B",
+          "small"
+        ],
+        [
+          "C",
+          "round"
+        ],
+        [
+          "C",
+          "small"
+        ]
+      ]
+    }
+  },
+  "expected": {
+    "ok": true,
+    "error": null,
+    "external_credit": false,
+    "disposition": "completed",
+    "value": {
+      "dual": {
+        "objects": [
+          "red",
+          "round",
+          "small"
+        ],
+        "attributes": [
+          "A",
+          "B",
+          "C"
+        ],
+        "incidence": [
+          [
+            "red",
+            "A"
+          ],
+          [
+            "red",
+            "B"
+          ],
+          [
+            "round",
+            "A"
+          ],
+          [
+            "round",
+            "C"
+          ],
+          [
+            "small",
+            "B"
+          ],
+          [
+            "small",
+            "C"
+          ]
+        ]
+      },
+      "incidence_count_preserved": true,
+      "semantic_equivalence_claimed": false
+    }
+  },
+  "rejecting": [
+    {
+      "candidate_id": "LM6927-P076-C-UNKNOWN",
+      "kind": "unknown_field",
+      "input": {
+        "op": "dual_context",
+        "context": {
+          "objects": [
+            "A",
+            "B",
+            "C"
+          ],
+          "attributes": [
+            "red",
+            "round",
+            "small"
+          ],
+          "incidence": [
+            [
+              "A",
+              "red"
+            ],
+            [
+              "A",
+              "round"
+            ],
+            [
+              "B",
+              "red"
+            ],
+            [
+              "B",
+              "small"
+            ],
+            [
+              "C",
+              "round"
+            ],
+            [
+              "C",
+              "small"
+            ]
+          ]
+        },
+        "unreviewed_authority_grant": true
+      },
+      "expected": {
+        "ok": false,
+        "error": "unknown_field",
+        "external_credit": false,
+        "value": null
+      },
+      "original_success_credit": 0
+    },
+    {
+      "candidate_id": "LM6927-P076-C-MISSING",
+      "kind": "missing_field",
+      "removed_field": "context",
+      "input": {
+        "op": "dual_context"
+      },
+      "expected": {
+        "ok": false,
+        "error": "missing_field",
+        "external_credit": false,
+        "value": null
+      },
+      "original_success_credit": 0
+    }
+  ],
+  "rollback": "Retain the failed witness; repair only the attributable operation and rerun only the failed dependency before any successful aggregate.",
+  "boundary": "Bounded same-owner finite Formal Concept Analysis software and documentation evidence only. It is not empirical GMUT confirmation, production THOS or Freed ID, professional qualification, legal or cultural authority, Maori authority, complete privacy or accessibility assurance, exhaustive security, independent reproduction, AGI or ASI evidence, consciousness or personhood evidence, Theory-of-Everything proof, canon, or Stage 20 readiness."
+}
