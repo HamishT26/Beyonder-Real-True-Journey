@@ -1,0 +1,10 @@
+'use strict';
+const base = require('../lib/x1-patch-core.txt');
+const OPS = ["typed_test","atomic_transaction"];
+function run(req) {
+  const checked = base.validateRequest(req);
+  if (!checked.ok) return checked;
+  if (!OPS.includes(req.op)) return {ok:false,disposition:'represented',value:null,error:'RUNNER_OP_NOT_ALLOWED',external_credit:false};
+  return checked;
+}
+module.exports = {OPS,run};
