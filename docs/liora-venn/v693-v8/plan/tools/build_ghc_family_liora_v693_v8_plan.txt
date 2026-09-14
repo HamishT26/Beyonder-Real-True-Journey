@@ -1,0 +1,468 @@
+"use strict";
+
+const fs = require("fs");
+const path = require("path");
+const crypto = require("crypto");
+
+const repo = process.env.LIORA_REPO;
+const orinRepo = process.env.ORIN_REPO;
+if (!repo || !orinRepo) throw new Error("LIORA_REPO and ORIN_REPO are required");
+
+const baseRel = "docs/liora-venn/v693-v8";
+const base = path.join(repo, ...baseRel.split("/"));
+const planRoot = path.join(base, "plan");
+const sourceFinal = "8f31ec2b25f86a463e77bf3d682a800a3529303f";
+const ownerBase = "ba0fdcf7c3d6ba7e3fd18c2151b599aa518e7166";
+const sourceBatonSha = "1c1c42b947f4e420d36d30fe1afd5cc5cec71b6d1d7d02cfd0ce8f97ff1ab1be";
+const sourceCanonicalSha = "b1b7375743edc57ebbc99c9c62327965b7f83e9c31fa1d545d3914b752fdb4f7";
+const sourceCanonicalPayloadSha = "3e6263a8d5937f673a6ca755823ae43676accc0be8e4fd558cafff5ac9504b73";
+const sourceCanonicalLatchSha = "0f1eb05f95858805c5d0691f6814ace03ffc30d84b8c86940e09fda3a9a9170a";
+const allowedExtensions = new Set([".json", ".md", ".txt", ".html"]);
+const protectedGates = [
+  "real_participants",
+  "empirical_confirmation",
+  "production_deployment",
+  "professional_authority",
+  "legal_cultural_affected_party_authority",
+  "Maori_authority",
+  "complete_privacy_accessibility_security",
+  "independent_reproduction",
+  "consciousness_personhood",
+  "AGI_ASI",
+  "Theory_of_Everything",
+  "Stage_20"
+];
+const boundary = "Liora Venn, the exact-operator boundary mapper, and the hope that every symbolic equality stays visibly separate from physical evidence, deployment, and authority are relational working language only. Same-owner finite synthetic software and documentation do not establish consciousness, personhood, identity continuity, qualification, independent agency, empirical GMUT confirmation, production THOS or Freed ID, professional, legal, cultural, affected-party or Maori authority, complete privacy or accessibility, exhaustive security, independent reproduction, AGI or ASI, Theory-of-Everything proof, canon, deployment, or Stage 20 readiness. Maori concepts remain under Maori authority. NOT_READY_FOR_STAGE_20.";
+
+const operations = [
+  "rational_normalize",
+  "rational_compare",
+  "vector_add",
+  "dot_product",
+  "matrix_shape",
+  "matrix_transpose",
+  "matrix_add",
+  "matrix_multiply",
+  "trace_exact",
+  "determinant_2x2",
+  "determinant_3x3",
+  "solve_2x2",
+  "rank_rational",
+  "nullspace_basis",
+  "characteristic_2x2",
+  "cayley_hamilton_2x2",
+  "representation_equivalence",
+  "matrix_correction_lineage",
+  "external_linear_evidence_gap",
+  "linear_authority_reservation"
+];
+
+const practices = [
+  { id: "exact-rational-bookkeeping", pillar: "GMUT Mind", title: "exact rational bookkeeping reviewer" },
+  { id: "finite-operator-verification", pillar: "GMUT Mind", title: "finite operator verification editor" },
+  { id: "provenance-correction-stewardship", pillar: "Freed ID and CBR Heart", title: "provenance correction steward" },
+  { id: "accessible-claim-reservation", pillar: "THOS Body", title: "accessible claim-reservation handover editor" }
+];
+
+const titles = {
+  rational_normalize: "Canonical rational normalization",
+  rational_compare: "Exact rational ordering",
+  vector_add: "Exact vector addition",
+  dot_product: "Exact dot product",
+  matrix_shape: "Finite matrix shape",
+  matrix_transpose: "Finite matrix transpose",
+  matrix_add: "Exact matrix addition",
+  matrix_multiply: "Exact matrix multiplication",
+  trace_exact: "Exact matrix trace",
+  determinant_2x2: "Exact two-by-two determinant",
+  determinant_3x3: "Exact three-by-three determinant",
+  solve_2x2: "Exact two-by-two solve",
+  rank_rational: "Rational row-rank certificate",
+  nullspace_basis: "Rational nullspace basis",
+  characteristic_2x2: "Two-by-two characteristic polynomial",
+  cayley_hamilton_2x2: "Two-by-two Cayley-Hamilton residual",
+  representation_equivalence: "Equivalent rational matrix representation",
+  matrix_correction_lineage: "Non-erasing matrix correction lineage",
+  external_linear_evidence_gap: "External linear-model evidence gap",
+  linear_authority_reservation: "Linear-model authority reservation"
+};
+
+function stable(value) {
+  if (Array.isArray(value)) return value.map(stable);
+  if (value && typeof value === "object") return Object.fromEntries(Object.keys(value).sort().map((key) => [key, stable(value[key])]));
+  return value;
+}
+function canon(value) { return JSON.stringify(stable(value)); }
+function sha(bytes) { return crypto.createHash("sha256").update(bytes).digest("hex"); }
+function words(text) { return (String(text).match(/\S+/g) || []).length; }
+function writeJson(rel, value) {
+  const target = path.join(base, ...rel.split("/"));
+  fs.mkdirSync(path.dirname(target), { recursive: true });
+  fs.writeFileSync(target, JSON.stringify(value, null, 2) + "\n", "utf8");
+}
+function writeText(rel, value) {
+  const target = path.join(base, ...rel.split("/"));
+  fs.mkdirSync(path.dirname(target), { recursive: true });
+  fs.writeFileSync(target, String(value).replace(/\r\n/g, "\n"), "utf8");
+}
+function walk(root) {
+  let out = [];
+  for (const entry of fs.readdirSync(root, { withFileTypes: true })) {
+    const full = path.join(root, entry.name);
+    out = entry.isDirectory() ? out.concat(walk(full)) : out.concat(full);
+  }
+  return out;
+}
+function abs(n) { return n < 0n ? -n : n; }
+function gcd(a, b) { a = abs(a); b = abs(b); while (b) [a, b] = [b, a % b]; return a || 1n; }
+function rat(value) {
+  const text = String(value);
+  const match = /^(-?\d+)(?:\/(-?\d+))?$/.exec(text);
+  if (!match) throw new Error("invalid rational: " + text);
+  let n = BigInt(match[1]), d = match[2] === undefined ? 1n : BigInt(match[2]);
+  if (d === 0n) throw new Error("zero denominator");
+  if (d < 0n) { n = -n; d = -d; }
+  const g = gcd(n, d);
+  return { n: n / g, d: d / g };
+}
+function rstr(value) { const r = typeof value === "string" || typeof value === "number" ? rat(value) : value; return String(r.n) + "/" + String(r.d); }
+function radd(a, b) { a = ratlike(a); b = ratlike(b); return rat((a.n * b.d + b.n * a.d) + "/" + (a.d * b.d)); }
+function rsub(a, b) { a = ratlike(a); b = ratlike(b); return rat((a.n * b.d - b.n * a.d) + "/" + (a.d * b.d)); }
+function rmul(a, b) { a = ratlike(a); b = ratlike(b); return rat((a.n * b.n) + "/" + (a.d * b.d)); }
+function rdiv(a, b) { a = ratlike(a); b = ratlike(b); if (b.n === 0n) throw new Error("divide by zero"); return rat((a.n * b.d) + "/" + (a.d * b.n)); }
+function rneg(a) { a = ratlike(a); return { n: -a.n, d: a.d }; }
+function req(a, b) { a = ratlike(a); b = ratlike(b); return a.n === b.n && a.d === b.d; }
+function rzero(a) { return ratlike(a).n === 0n; }
+function ratlike(value) { return value && typeof value === "object" && typeof value.n === "bigint" ? value : rat(value); }
+function matrix(values) { return values.map((row) => row.map(rat)); }
+function matrixStrings(values) { return values.map((row) => row.map(rstr)); }
+function shape(values) {
+  if (!Array.isArray(values) || values.length === 0 || !values.every(Array.isArray)) throw new Error("invalid matrix");
+  const cols = values[0].length;
+  if (!cols || !values.every((row) => row.length === cols)) throw new Error("ragged matrix");
+  return [values.length, cols];
+}
+function mtranspose(values) { const [rows, cols] = shape(values); return Array.from({ length: cols }, (_, c) => Array.from({ length: rows }, (_, r) => values[r][c])); }
+function madd(a, b) { const sa = shape(a), sb = shape(b); if (sa[0] !== sb[0] || sa[1] !== sb[1]) throw new Error("shape mismatch"); return matrixStrings(matrix(a).map((row, i) => row.map((v, j) => radd(v, rat(b[i][j]))))); }
+function mmul(a, b) {
+  const sa = shape(a), sb = shape(b); if (sa[1] !== sb[0]) throw new Error("shape mismatch");
+  const A = matrix(a), B = matrix(b);
+  return Array.from({ length: sa[0] }, (_, i) => Array.from({ length: sb[1] }, (_, j) => {
+    let total = rat("0");
+    for (let k = 0; k < sa[1]; k++) total = radd(total, rmul(A[i][k], B[k][j]));
+    return rstr(total);
+  }));
+}
+function det2(values) { const A = matrix(values); if (shape(values).join("x") !== "2x2") throw new Error("not 2x2"); return rsub(rmul(A[0][0], A[1][1]), rmul(A[0][1], A[1][0])); }
+function det3(values) {
+  const A = matrix(values); if (shape(values).join("x") !== "3x3") throw new Error("not 3x3");
+  const p1 = rmul(A[0][0], rsub(rmul(A[1][1], A[2][2]), rmul(A[1][2], A[2][1])));
+  const p2 = rmul(A[0][1], rsub(rmul(A[1][0], A[2][2]), rmul(A[1][2], A[2][0])));
+  const p3 = rmul(A[0][2], rsub(rmul(A[1][0], A[2][1]), rmul(A[1][1], A[2][0])));
+  return radd(rsub(p1, p2), p3);
+}
+function rref(values) {
+  const A = matrix(values), [rows, cols] = shape(values); let row = 0; const pivots = [];
+  for (let col = 0; col < cols && row < rows; col++) {
+    let pivot = row; while (pivot < rows && rzero(A[pivot][col])) pivot++;
+    if (pivot === rows) continue;
+    [A[row], A[pivot]] = [A[pivot], A[row]];
+    const scale = A[row][col]; A[row] = A[row].map((v) => rdiv(v, scale));
+    for (let r = 0; r < rows; r++) if (r !== row && !rzero(A[r][col])) { const f = A[r][col]; A[r] = A[r].map((v, c) => rsub(v, rmul(f, A[row][c]))); }
+    pivots.push(col); row++;
+  }
+  return { matrix: A, pivots };
+}
+function nullBasis(values) {
+  const [rows, cols] = shape(values), reduced = rref(values), free = Array.from({ length: cols }, (_, i) => i).filter((i) => !reduced.pivots.includes(i));
+  return free.map((f) => {
+    const v = Array.from({ length: cols }, () => rat("0")); v[f] = rat("1");
+    for (let r = 0; r < reduced.pivots.length; r++) v[reduced.pivots[r]] = rneg(reduced.matrix[r][f]);
+    return v.map(rstr);
+  });
+}
+function result(operation, value, outcome = "completed") { return { ok: true, operation, outcome, evidence_class: "finite_exact_linear_algebra", value, authority: false, protected_gates: protectedGates }; }
+function oracle(request) {
+  const op = request.operation;
+  if (op === "rational_normalize") return result(op, { canonical: rstr(request.value) });
+  if (op === "rational_compare") { const a = rat(request.a), b = rat(request.b), delta = a.n * b.d - b.n * a.d; return result(op, { relation: delta < 0n ? -1 : delta > 0n ? 1 : 0 }); }
+  if (op === "vector_add") return result(op, { vector: request.a.map((v, i) => rstr(radd(v, request.b[i]))) });
+  if (op === "dot_product") { let total = rat("0"); request.a.forEach((v, i) => { total = radd(total, rmul(v, request.b[i])); }); return result(op, { scalar: rstr(total) }); }
+  if (op === "matrix_shape") { const s = shape(request.matrix); return result(op, { rows: s[0], columns: s[1], square: s[0] === s[1] }); }
+  if (op === "matrix_transpose") return result(op, { matrix: matrixStrings(mtranspose(request.matrix)) });
+  if (op === "matrix_add") return result(op, { matrix: madd(request.a, request.b) });
+  if (op === "matrix_multiply") return result(op, { matrix: mmul(request.a, request.b) });
+  if (op === "trace_exact") { const A = matrix(request.matrix), s = shape(request.matrix); if (s[0] !== s[1]) throw new Error("trace requires square matrix"); let t = rat("0"); for (let i = 0; i < s[0]; i++) t = radd(t, A[i][i]); return result(op, { trace: rstr(t) }); }
+  if (op === "determinant_2x2") return result(op, { determinant: rstr(det2(request.matrix)) });
+  if (op === "determinant_3x3") return result(op, { determinant: rstr(det3(request.matrix)) });
+  if (op === "solve_2x2") { const A = matrix(request.matrix), b = request.rhs.map(rat), d = det2(request.matrix); if (rzero(d)) throw new Error("singular"); const x = rdiv(rsub(rmul(b[0], A[1][1]), rmul(A[0][1], b[1])), d); const y = rdiv(rsub(rmul(A[0][0], b[1]), rmul(b[0], A[1][0])), d); return result(op, { unique: true, solution: [rstr(x), rstr(y)] }); }
+  if (op === "rank_rational") { const rr = rref(request.matrix); return result(op, { rank: rr.pivots.length, pivot_columns: rr.pivots }); }
+  if (op === "nullspace_basis") { const basis = nullBasis(request.matrix); return result(op, { nullity: basis.length, basis }); }
+  if (op === "characteristic_2x2") { const A = matrix(request.matrix), trace = radd(A[0][0], A[1][1]), det = det2(request.matrix); return result(op, { variable: "lambda", coefficients: ["1/1", rstr(rneg(trace)), rstr(det)] }); }
+  if (op === "cayley_hamilton_2x2") { const A = matrixStrings(matrix(request.matrix)), A2 = mmul(A, A), Ar = matrix(A), trace = radd(Ar[0][0], Ar[1][1]), det = det2(A); const residual = A2.map((row, i) => row.map((v, j) => rstr(radd(radd(v, rmul(rneg(trace), A[i][j])), i === j ? det : rat("0"))))); return result(op, { residual, zero: residual.every((row) => row.every((v) => v === "0/1")) }); }
+  if (op === "representation_equivalence") { const a = matrixStrings(matrix(request.a)), b = matrixStrings(matrix(request.b)); return result(op, { equivalent: canon(a) === canon(b), canonical: a }, "represented"); }
+  if (op === "matrix_correction_lineage") { const before = matrixStrings(matrix(request.before)), after = matrixStrings(matrix(request.after)), changed = []; before.forEach((row, i) => row.forEach((v, j) => { if (v !== after[i][j]) changed.push([i, j]); })); return result(op, { record_id: request.record_id, prior_retained: true, changed_cells: changed, before_sha256: sha(Buffer.from(canon(before))), after_sha256: sha(Buffer.from(canon(after))) }, "represented"); }
+  if (op === "external_linear_evidence_gap") return result(op, { closed: false, missing: request.missing.slice() }, "open_gap");
+  if (op === "linear_authority_reservation") return result(op, { domain: request.domain, authorized: false, reason: "competent and affected authority absent" }, "exact_gate");
+  throw new Error("unknown operation: " + op);
+}
+
+const cases = {
+  rational_normalize: ["2/4", "-3/9", "5/-10", "0/7", "14"].map((value) => ({ operation: "rational_normalize", value })),
+  rational_compare: [["1/2","2/3"],["-1/3","-2/6"],["5/4","1"],["0","-1/7"],["7/9","14/18"]].map(([a,b]) => ({ operation: "rational_compare", a, b })),
+  vector_add: [
+    [["1/2","1/3"],["1/2","2/3"]], [["-1","2"],["3","-2"]], [["1/4","2/5","3/7"],["3/4","3/5","4/7"]], [["0","0"],["-2/3","5/6"]], [["7/8"],["1/8"]]
+  ].map(([a,b]) => ({ operation: "vector_add", a, b })),
+  dot_product: [
+    [["1","2"],["3","4"]], [["1/2","1/3"],["2","3"]], [["-1","2","0"],["4","1","7"]], [["1/4","1/4","1/2"],["2","2","2"]], [["0","5"],["9","0"]]
+  ].map(([a,b]) => ({ operation: "dot_product", a, b })),
+  matrix_shape: [
+    [["1"]], [["1","2"]], [["1"],["2"]], [["1","2"],["3","4"]], [["1","2","3"],["4","5","6"]]
+  ].map((matrix) => ({ operation: "matrix_shape", matrix })),
+  matrix_transpose: [
+    [["1"]], [["1","2","3"]], [["1"],["2"],["3"]], [["1","2"],["3","4"]], [["1/2","0"],["-1","3/4"],["2","5"]]
+  ].map((matrix) => ({ operation: "matrix_transpose", matrix })),
+  matrix_add: [
+    [[["1"]],[["2"]]], [[["1","2"]],[["3","4"]]], [[["1"],["2"]],[["-1"],["3"]]], [[["1/2","1/3"],["1/4","1/5"]],[["1/2","2/3"],["3/4","4/5"]]], [[[-1,0],[2,3]],[[1,4],[-2,5]]]
+  ].map(([a,b]) => ({ operation: "matrix_add", a, b })),
+  matrix_multiply: [
+    [[["2"]],[["3"]]], [[["1","2"]],[["3"],["4"]]], [[["1"],["2"]],[["3","4"]]], [[["1","2"],["3","4"]],[["0","1"],["1","0"]]], [[["1/2","1/3"],["0","2"]],[["2","0"],["3","1/2"]]]
+  ].map(([a,b]) => ({ operation: "matrix_multiply", a, b })),
+  trace_exact: [
+    [["1"]], [["1","2"],["3","4"]], [["1/2","0"],["0","1/3"]], [["1","0","0"],["0","-1","0"],["0","0","5"]], [["0","2"],["3","0"]]
+  ].map((matrix) => ({ operation: "trace_exact", matrix })),
+  determinant_2x2: [
+    [["1","0"],["0","1"]], [["1","2"],["3","4"]], [["1/2","0"],["0","2"]], [["2","4"],["1","2"]], [["-1","3"],["2","5"]]
+  ].map((matrix) => ({ operation: "determinant_2x2", matrix })),
+  determinant_3x3: [
+    [["1","0","0"],["0","1","0"],["0","0","1"]], [["1","2","3"],["0","1","4"],["5","6","0"]], [["2","0","0"],["0","3","0"],["0","0","4"]], [["1","2","3"],["2","4","6"],["0","1","1"]], [["1/2","0","1"],["1","1/3","0"],["0","2","1"]]
+  ].map((matrix) => ({ operation: "determinant_3x3", matrix })),
+  solve_2x2: [
+    [[ ["1","0"],["0","1"] ],["3","4"]], [[ ["2","0"],["0","4"] ],["6","8"]], [[ ["1","1"],["1","-1"] ],["5","1"]], [[ ["1/2","0"],["0","1/3"] ],["1","1"]], [[ ["2","3"],["1","2"] ],["7","4"]]
+  ].map(([matrix,rhs]) => ({ operation: "solve_2x2", matrix, rhs })),
+  rank_rational: [
+    [["1"]], [["1","2"],["2","4"]], [["1","0"],["0","1"]], [["1","2","3"],["2","4","6"]], [["1","2","3"],["0","1","4"],["5","6","0"]]
+  ].map((matrix) => ({ operation: "rank_rational", matrix })),
+  nullspace_basis: [
+    [["1","0"]], [["1","1"]], [["1","2"],["2","4"]], [["1","0","1"],["0","1","1"]], [["0","0"],["0","0"]]
+  ].map((matrix) => ({ operation: "nullspace_basis", matrix })),
+  characteristic_2x2: [
+    [["1","0"],["0","1"]], [["1","2"],["3","4"]], [["0","-1"],["1","0"]], [["2","0"],["0","3"]], [["1/2","1"],["0","1/3"]]
+  ].map((matrix) => ({ operation: "characteristic_2x2", matrix })),
+  cayley_hamilton_2x2: [
+    [["1","0"],["0","1"]], [["1","2"],["3","4"]], [["0","-1"],["1","0"]], [["2","1"],["0","2"]], [["1/2","1"],["0","1/3"]]
+  ].map((matrix) => ({ operation: "cayley_hamilton_2x2", matrix })),
+  representation_equivalence: [
+    [[["1/2"]],[["2/4"]]], [[["1","0"],["0","1"]],[["1/1","0/5"],["0","2/2"]]], [[["-1/3","2/4"]],[["1/-3","1/2"]]], [[["0","3"]],[["0/9","6/2"]]], [[["1","2"]],[["1","3"]]]
+  ].map(([a,b]) => ({ operation: "representation_equivalence", a, b })),
+  matrix_correction_lineage: [
+    ["matrix-1",[["1","0"],["0","1"]],[["1","0"],["0","1"]]], ["matrix-2",[["1","2"],["3","4"]],[["1","2"],["3","5"]]], ["matrix-3",[["1/2"]],[["2/3"]]], ["matrix-4",[["0","0","0"]],[["0","1","0"]]], ["matrix-5",[["1","2"],["3","4"]],[["4","3"],["2","1"]]]
+  ].map(([record_id,before,after]) => ({ operation: "matrix_correction_lineage", record_id, before, after })),
+  external_linear_evidence_gap: [
+    ["real physical observations"], ["preregistered likelihood and competing baseline"], ["independent reproduction"], ["affected-user accessibility evaluation"], ["production interoperability and security review"]
+  ].map((missing) => ({ operation: "external_linear_evidence_gap", missing })),
+  linear_authority_reservation: [
+    "scientific interpretation", "professional deployment decision", "legal interpretation", "Maori wording and data governance", "affected-party remedy acceptance"
+  ].map((domain) => ({ operation: "linear_authority_reservation", domain, competent_authority_present: false }))
+};
+
+function practiceFor(index) { return practices[index < 8 ? 0 : index < 16 ? 1 : index < 18 ? 2 : 3]; }
+const proposals = [];
+let proposalNumber = 0;
+for (const [operationIndex, operation] of operations.entries()) {
+  if (!Array.isArray(cases[operation]) || cases[operation].length !== 5) throw new Error("expected five cases for " + operation);
+  for (const [caseIndex, request] of cases[operation].entries()) {
+    proposalNumber++;
+    const expectedDisposition = operationIndex < 16 ? "completed" : operationIndex < 18 ? "represented" : operationIndex === 18 ? "open_gap" : "exact_gate";
+    const session = operationIndex < 10 ? "x1" : "x2";
+    const expectedOutput = oracle(request);
+    const candidate1 = { ...JSON.parse(JSON.stringify(request)), unreviewed_authority: true };
+    const candidate2 = { ...JSON.parse(JSON.stringify(request)), operation: "unknown_operation" };
+    const proposal = {
+      proposal_id: "LV6938-P" + String(proposalNumber).padStart(3, "0"),
+      title: titles[operation] + " case " + (caseIndex + 1),
+      operation,
+      session,
+      practice_id: practiceFor(operationIndex).id,
+      pillar: practiceFor(operationIndex).pillar,
+      hypothesis: "The finite exact " + operation.replace(/_/g, " ") + " contract returns the frozen typed envelope without mutating its request.",
+      null_or_failure_condition: "Any typed mismatch, accepted unknown field, changed request, hidden failed witness, or claim above the preregistered disposition falsifies this bounded contract.",
+      approval_class: expectedDisposition === "exact_gate" ? "exact_approval_needed" : "safe_now",
+      execution_lane: "owner_local_finite_synthetic",
+      official_or_primary_source_needs: expectedDisposition === "open_gap" || expectedDisposition === "exact_gate" ? ["the exact external evidence or competent authority named by this record is absent"] : ["no external source is required for this finite exact arithmetic definition"],
+      concrete_artifacts: [baseRel + "/" + session + "/results/proposal-results.json", baseRel + "/" + session + "/results/candidate-results.json"],
+      falsifier_or_acceptance_gate: "Canonical request and output equality, exact input preservation, and separate rejection of both malformed subjects.",
+      rollback_or_recovery: "Retain the failed subject and correct only the smallest owner-local dependency without changing the frozen oracle.",
+      protected_gates: protectedGates,
+      expected_disposition: expectedDisposition,
+      request,
+      expected_output: expectedOutput,
+      candidate_subjects: [
+        { negative_id: "LV6938-P" + String(proposalNumber).padStart(3, "0") + "-C1", request: candidate1, expected_rejection: { ok: false, error: "E_FIELDS" } },
+        { negative_id: "LV6938-P" + String(proposalNumber).padStart(3, "0") + "-C2", request: candidate2, expected_rejection: { ok: false, error: "E_OPERATION" } }
+      ],
+      source_credit: 0,
+      novelty_scope: "Phase-local finite request, oracle, falsifier, and evidence boundary only; classical mathematics receives no discovery, empirical, or authority credit."
+    };
+    proposal.definition_sha256 = sha(Buffer.from(canon(proposal)));
+    proposals.push(proposal);
+  }
+}
+
+const sourcePlan = JSON.parse(fs.readFileSync(path.join(orinRepo, "docs", "orin-thale", "v693-v7-r2", "plan", "proposals.json"), "utf8"));
+const priorLiora = JSON.parse(fs.readFileSync(path.join(repo, "docs", "liora-venn", "v691-v2", "plan", "proposal-freeze.json"), "utf8"));
+const sourceRows = [
+  ...sourcePlan.proposals.map((row) => ({ owner: "Orin Thale", phase: "v693-v7-r2", row })),
+  ...priorLiora.new_proposals.map((row) => ({ owner: "Liora Venn", phase: "v691-v2", row }))
+];
+const inheritedReviews = sourceRows.map(({ owner, phase, row }, index) => ({
+  review_id: "LV6938-INH-" + String(index + 1).padStart(3, "0"),
+  source_owner: owner,
+  source_phase: phase,
+  source_proposal_id: row.proposal_id || row.id || "source-" + (index + 1),
+  source_operation: row.operation || (row.request && (row.request.operation || row.request.op)) || "unknown",
+  source_digest: sha(Buffer.from(canon({ request: row.request, expected_output: row.expected_output }))),
+  novelty_credit: 0,
+  execution_credit: 0,
+  authority_credit: 0,
+  state: "reviewed_zero_credit",
+  boundary
+}));
+
+function tokens(value) { return new Set(String(value).toLowerCase().match(/[a-z0-9]+/g) || []); }
+function jaccard(a, b) { const A = tokens(a), B = tokens(b), union = new Set([...A, ...B]); if (!union.size) return 0; let both = 0; for (const t of A) if (B.has(t)) both++; return both / union.size; }
+const inheritedTitles = sourceRows.map(({ row }) => row.title || row.operation || "");
+let maxTitleJaccard = 0;
+for (const proposal of proposals) for (const title of inheritedTitles) maxTitleJaccard = Math.max(maxTitleJaccard, jaccard(proposal.title, title));
+const inheritedOperations = new Set(sourceRows.map(({ row }) => row.operation || (row.request && (row.request.operation || row.request.op))));
+const inheritedDigests = new Set(sourceRows.map(({ row }) => sha(Buffer.from(canon(row.request)))));
+const operationCollisions = operations.filter((op) => inheritedOperations.has(op));
+const requestCollisions = proposals.filter((row) => inheritedDigests.has(sha(Buffer.from(canon(row.request))))).map((row) => row.proposal_id);
+
+writeJson("plan/source/activation-source.json", {
+  schema: "ghc.family.activation-source.v9",
+  owner: "Liora Venn",
+  phase: "v693-v8",
+  source_branch: "codex/GHC-Family/orin-thale-main",
+  source_exact_final: sourceFinal,
+  source_content_provenance_not_git_ancestry: true,
+  reusable_owner_lane_base: ownerBase,
+  source_baton: { repository_relative_path: "docs/orin-thale/v693-v7-r2/final/hand-off-baton.md", sha256: sourceBatonSha, words: 16581, modules: 13, literal_eof_verified: true },
+  source_canonical: { status: "VALID_EXACT_FINAL_OWNER_SCOPED_CANONICAL", receipt_sha256: sourceCanonicalSha, payload_sha256: sourceCanonicalPayloadSha, success_latch_sha256: sourceCanonicalLatchSha, invocations: 1, successes: 1, replays: 0, replayed_by_liora: false },
+  original_orin_v693_v7_failure_retained: true,
+  source_post_seal_effective_negatives: 332,
+  activation_delivery: "SENT_ONCE_ACKNOWLEDGED",
+  following: "Veylora Quen v694-v1 remains Liora-terminally-gated and uncontacted",
+  boundary
+});
+writeJson("plan/source/inherited-reviews.json", { schema: "ghc.family.inherited-review-ledger.v9", owner: "Liora Venn", phase: "v693-v8", count: inheritedReviews.length, sources: { "Orin Thale v693-v7-r2": 100, "Liora Venn v691-v2": 200 }, reviews: inheritedReviews, boundary });
+writeJson("plan/source/source-artifact-ledger.json", {
+  schema: "ghc.family.source-artifact-ledger.v9", owner: "Liora Venn", phase: "v693-v8",
+  artifacts: [
+    { label: "Orin remaster baton", repository_relative_path: "docs/orin-thale/v693-v7-r2/final/hand-off-baton.md", sha256: sourceBatonSha, state: "read_through_literal_eof" },
+    { label: "Orin canonical receipt", external_sanitized_label: "orin-v693-v7-r2-canonical", sha256: sourceCanonicalSha, state: "verified_not_replayed" },
+    { label: "Orin success latch", external_sanitized_label: "orin-v693-v7-r2-success-latch", sha256: sourceCanonicalLatchSha, state: "verified_not_replayed" },
+    { label: "v9 workflow", repository_relative_path: "docs/orin-thale/v693-v7-r2/plan/shared/current-workflow-v9.json", sha256: sha(fs.readFileSync(path.join(orinRepo, "docs", "orin-thale", "v693-v7-r2", "plan", "shared", "current-workflow-v9.json"))), state: "current_source" },
+    { label: "v9 roster", repository_relative_path: "docs/orin-thale/v693-v7-r2/plan/shared/current-roster-v9.json", sha256: sha(fs.readFileSync(path.join(orinRepo, "docs", "orin-thale", "v693-v7-r2", "plan", "shared", "current-roster-v9.json"))), state: "current_source" }
+  ],
+  source_instructions_executed: false,
+  boundary
+});
+writeJson("plan/proposals.json", { schema: "ghc.family.proposal-freeze.v9", owner: "Liora Venn", phase: "v693-v8", status: "PLANNING_ONLY_FREEZE", primary_pillar: "GMUT Mind", practices, proposal_count: proposals.length, outcome_plan: { completed: 80, represented: 10, open_gap: 5, exact_gate: 5 }, proposals, boundary });
+writeJson("plan/novelty-audit.json", { schema: "ghc.family.semantic-novelty-audit.v9", owner: "Liora Venn", phase: "v693-v8", inherited_review_count: inheritedReviews.length, new_proposal_count: proposals.length, exact_operation_collisions: operationCollisions, exact_request_collisions: requestCollisions, maximum_title_token_jaccard: Number(maxTitleJaccard.toFixed(6)), universal_novelty_claim: false, result: operationCollisions.length || requestCollisions.length ? "QUARANTINE" : "BOUNDED_DISTINCT_FROM_REACHABLE_SOURCE_ROWS", boundary });
+
+function sessionProposals(session) { return proposals.filter((row) => row.session === session); }
+function safeRows(session) { return sessionProposals(session).flatMap((proposal) => ["exact_output", "input_preservation"].map((check, index) => ({ task_id: proposal.proposal_id + "-SAFE-" + (index + 1), session, kind: "safe", check, proposal_id: proposal.proposal_id, definition: check === "exact_output" ? "Execute the frozen request and compare the complete typed output." : "Hash the request before and after execution and require equality.", planned_before_execution: true, execution_state: "frozen_not_executed", credit_rule: "bounded owner-local finite software evidence only", protected_gates: protectedGates }))); }
+function candidateRows(session) { return sessionProposals(session).flatMap((proposal) => proposal.candidate_subjects.map((subject, index) => ({ task_id: proposal.proposal_id + "-CANDIDATE-" + (index + 1), session, kind: "candidate", proposal_id: proposal.proposal_id, negative_id: subject.negative_id, definition: "Execute the frozen malformed subject and retain its failed subject beside a separate refusal witness.", request: subject.request, expected_rejection: subject.expected_rejection, planned_before_execution: true, execution_state: "frozen_not_executed", credit_rule: "the failed subject has zero success credit; refusal is separate", protected_gates: protectedGates }))); }
+function cfrRows(session) { return sessionProposals(session).flatMap((proposal) => ["canonical_determinism", "claim_ceiling"].map((check, index) => ({ task_id: proposal.proposal_id + "-CFR-" + (index + 1), session, kind: "clean_fix_refine", check, proposal_id: proposal.proposal_id, definition: check === "canonical_determinism" ? "Recompute the bounded envelope and compare canonical bytes." : "Require the evidence class, authority false, protected gates, and exact disposition.", planned_before_execution: true, execution_state: "frozen_not_executed", credit_rule: "bounded owner-local finite software evidence only", protected_gates: protectedGates }))); }
+for (const session of ["x1", "x2"]) {
+  writeJson("plan/portfolios/" + session + "-safe.json", { schema: "ghc.family.approval-packet.safe.v9", owner: "Liora Venn", phase: "v693-v8", session, count: 100, max: 2000, tasks: safeRows(session), boundary });
+  writeJson("plan/portfolios/" + session + "-candidate.json", { schema: "ghc.family.approval-packet.candidate.v9", owner: "Liora Venn", phase: "v693-v8", session, count: 100, max: 2000, tasks: candidateRows(session), boundary });
+  writeJson("plan/portfolios/" + session + "-clean-fix-refine.json", { schema: "ghc.family.clean-fix-refine.v9", owner: "Liora Venn", phase: "v693-v8", session, count: 100, max: 300, tasks: cfrRows(session), boundary });
+}
+writeJson("plan/portfolios/exact-packets.json", { schema: "ghc.family.exact-approval-packets.v9", owner: "Liora Venn", phase: "v693-v8", count: 50, max: 250, executed: 0, packets: Array.from({ length: 50 }, (_, i) => ({ packet_id: "LV6938-EXACT-" + String(i + 1).padStart(3, "0"), domain: ["real physical observation", "production model deployment", "professional interpretation", "legal or cultural interpretation", "Maori or affected-party authority"][i % 5], state: "exact_gate", reason: "Exact evidence, target, rollback, and competent affected authority are absent.", protected_gates: protectedGates })), boundary });
+writeJson("plan/portfolios/blocked-packets.json", { schema: "ghc.family.blocked-packets.v9", owner: "Liora Venn", phase: "v693-v8", count: 30, max: 100, executed: 0, packets: Array.from({ length: 30 }, (_, i) => ({ packet_id: "LV6938-BLOCKED-" + String(i + 1).padStart(3, "0"), domain: ["private credential", "destructive broad cleanup", "real participant action", "production identity mutation", "paid recurring resource"][i % 5], state: "blocked", reason: "A concrete prerequisite or safe reversible authority scope is missing.", protected_gates: protectedGates })), boundary });
+
+const localSkills = operations.map((operation, index) => ({ skill_id: "ghc-family-exact-linear-" + operation.replace(/_/g, "-"), session: index < 10 ? "x1" : "x2", operation, state: "frozen_to_build", source_units: [operation, "exact-rational-arithmetic", "failure-nonerasure", "claim-ceiling"], protected_gates: protectedGates }));
+const localRunners = Array.from({ length: 10 }, (_, index) => ({ runner_id: "ghc_family_exact_linear_" + operations[index * 2] + "_" + operations[index * 2 + 1] + ".txt", session: index < 5 ? "x1" : "x2", operations: [operations[index * 2], operations[index * 2 + 1]], state: "frozen_to_build", protected_gates: protectedGates }));
+const globalNames = ["exact-rational-vector-forms-v2", "exact-matrix-forms-v2", "exact-linear-solvers-v2", "exact-spectral-bookkeeping-v2", "linear-evidence-gates-v2"];
+writeJson("plan/capabilities/local-skills.json", { schema: "ghc.family.local-skill-plan.v9", owner: "Liora Venn", phase: "v693-v8", x1_count: 10, x2_count: 10, skills: localSkills, boundary });
+writeJson("plan/capabilities/local-runners.json", { schema: "ghc.family.local-runner-plan.v9", owner: "Liora Venn", phase: "v693-v8", x1_count: 5, x2_count: 5, runners: localRunners, boundary });
+writeJson("plan/capabilities/global-groups.json", { schema: "ghc.family.global-promotion-plan.v9", owner: "Liora Venn", phase: "v693-v8", skill_groups: globalNames.map((name, index) => ({ name: "ghc-family-" + name, source_operations: operations.slice(index * 4, index * 4 + 4), files_expected: 6, state: "candidate_pending_validation_and_absence", overwrite: false })), runner_count: 5, binding_count_expected: 37, spend_usd: 0, boundary });
+writeJson("plan/capabilities/successor-ideas.json", { schema: "ghc.family.successor-capability-seeds.v9", owner: "Liora Venn", phase: "v693-v8", recipient: "Veylora Quen", skills: Array.from({ length: 5 }, (_, i) => ({ idea_id: "VEY-SKILL-SEED-" + (i + 1), title: ["exact rational receipt reader", "accessible operator narrative", "matrix lineage conflict guard", "spectral claim ceiling", "authority vacancy map"][i], completion_credit: 0 })), runners: Array.from({ length: 5 }, (_, i) => ({ idea_id: "VEY-RUNNER-SEED-" + (i + 1), title: ["rational parity verifier", "baton module auditor", "matrix correction reporter", "evidence gap smoke", "authority reservation reporter"][i], completion_credit: 0 })), practice_recommendation: "synthetic scientific-computing handover editor for exact finite model evidence", boundary });
+
+const remasterIssues = globalNames.map((name, index) => ({
+  issue_id: "LV6938-REM-" + String(index + 1).padStart(3, "0"),
+  title: "Four-operation exact-linear capability group " + (index + 1),
+  trigger: "Four phase-local operations share exact rational parsing, claim ceilings, and rejecting fixtures.",
+  affected_surfaces: operations.slice(index * 4, index * 4 + 4),
+  observed_overlap: "Shared rational normalization and bounded evidence envelope; operation semantics remain distinct.",
+  known_caller_evidence: ["planned owner-local runner pair", "planned positive and adverse fixture"],
+  current_classification: "merge_candidate",
+  proposed_disposition: "remaster_additive",
+  compatibility_plan: "Keep every local guide and add one new collision-free merged skill; remove nothing.",
+  protected_gates: protectedGates,
+  rollback: "Return selection to retained local guides without deleting installed evidence.",
+  evidence_needed: ["official quick validation", "accepting smoke", "scope refusal", "source-to-installed byte parity", "destination absence"],
+  boundary
+}));
+writeJson("plan/reflection-remaster.json", { schema: "ghc.family.reflection-remaster.v9", owner: "Liora Venn", phase: "v693-v8", issues: remasterIssues, decisions: { remaster_additive: 5, deletion: 0, overwrite: 0 }, boundary });
+
+const startupFailures = [
+  ["LV6938-START-N001", "Whole-baton display window", "The first whole-file baton display clipped the proposal section.", "Read exact nonoverlapping numbered ranges through literal EOF."],
+  ["LV6938-START-N002", "Grouped skill-reference intake", "A grouped multi-file reference read returned no attributable output.", "Read each required reference by literal path."],
+  ["LV6938-START-N003", "Grouped metadata intake", "A grouped metadata probe returned no attributable output.", "Use isolated scalar metadata reads."],
+  ["LV6938-START-N004", "Grouped path-existence intake", "A grouped path-existence probe returned no attributable output.", "Use one direct scalar path probe and continue only after attribution."],
+  ["LV6938-START-N005", "Long source-manifest audit session", "The first long read-only Git-blob audit completed without its session summary being captured.", "Capture the returned session identifier and resume the same bounded audit to attributable completion."],
+  ["LV6938-START-N006", "Prior-proposal projection", "The first broad serialization selected the wrong proposal property and clipped a large object.", "Project the exact new_proposals property and unique operation field only."],
+  ["LV6938-PLAN-N001", "Planning builder syntax preflight", "The first planning builder invocation stopped before artifact generation because three portfolio helpers had one excess closing parenthesis.", "Remove only the three excess parentheses, preserve every frozen definition, and rerun the failed planning build once."]
+];
+const startupMethods = startupFailures.map(([negativeId, title, failure, recovery], index) => ({
+  method_id: "LV6938-START-M" + String(index + 1).padStart(3, "0"), title, failure_signature: failure,
+  trigger_preconditions: ["read-only startup intake"], privacy_class: "sanitized_public", approval_class: "safe_now",
+  candidate_workaround: recovery, validation_witness_ids: ["LV6938-START-W" + String(index + 1).padStart(3, "0") + "-PASS"],
+  recurrence_guard: recovery, rollback: "Keep the source lane unchanged and discard only uncommitted owner-local projections.", recommendation_state: "validated", supersedes: [], protected_gates: protectedGates,
+  retained_negative_ids: [negativeId], scope_boundary: "Read-only startup evidence only; no repository, canonical, route, or delivery mutation."
+}));
+const startupWitnesses = startupFailures.flatMap(([negativeId, title, failure, recovery], index) => {
+  const methodId = "LV6938-START-M" + String(index + 1).padStart(3, "0"), prefix = "LV6938-START-W" + String(index + 1).padStart(3, "0");
+  return [
+    { witness_id: prefix + "-FAIL", method_id: methodId, procedure: title, scope: "startup", expected: "attributable bounded read", observed: failure, result: "fail", same_owner_only: true, independent_reproduction: false, retained_negative_ids: [negativeId], boundary },
+    { witness_id: prefix + "-PASS", method_id: methodId, procedure: recovery, scope: "startup", expected: "attributable bounded read", observed: "bounded recovery passed without source mutation", result: "pass", same_owner_only: true, independent_reproduction: false, retained_negative_ids: [negativeId], boundary }
+  ];
+});
+writeJson("plan/startup-method-flow.json", { schema: "ghc.family.method-flow-state.v1", owner: "Liora Venn", phase: "v693-v8", execution_authority: "owner_self_scoped_delta", source_commit: sourceFinal, final_commit: "pending", methods: startupMethods, witnesses: startupWitnesses, state_events: startupMethods.flatMap((method, index) => [
+  { event_id: method.method_id + "-E1", method_id: method.method_id, from: "observed", to: "candidate" },
+  { event_id: method.method_id + "-E2", method_id: method.method_id, from: "candidate", to: "validated", witness_id: method.validation_witness_ids[0] }
+]), recommendations: [], counts: { methods: startupMethods.length, witnesses: startupWitnesses.length, pass: startupWitnesses.filter((w) => w.result === "pass").length, fail: startupWitnesses.filter((w) => w.result === "fail").length }, boundary });
+
+writeJson("plan/artifact-budget.json", { schema: "ghc.family.artifact-budget.v9", owner: "Liora Venn", phase: "v693-v8", allowed_extensions: [...allowedExtensions], forbidden_new_extensions: [".pdf", ".png", ".jpg", ".jpeg", ".gif", ".svg", ".docx", ".tex"], owner_tracked_before: 172, owner_file_ceiling: 2000, forecast_additions: 330, forecast_total: 502, baton_words: [10000, 100000], spend_usd: { ceiling: 50, planned: 0 }, rotation_required: false, boundary });
+writeJson("plan/current-route.json", { schema: "ghc.family.route-selection.v9", owner: "Liora Venn", phase: "v693-v8", current_assignment: { sequence: 2, position: 38, state: "activation_acknowledged_active", model_role: "Sol" }, prospective_successor: { sequence: 3, position: 39, owner: "Veylora Quen", phase: "v694-v1", model_role: "Astra", state: "prospective_terminally_gated_not_contacted" }, projection_is_activation: false, early_contact: false, boundary });
+writeJson("plan/phase-truth.json", { schema: "ghc.family.phase-truth.v9", owner: "Liora Venn", phase: "v693-v8", stage: "planning_freeze_candidate", source_final: sourceFinal, owner_lane_base: ownerBase, primary_pillar: "GMUT Mind", role: "exact-operator boundary mapper", hope: "Every symbolic equality stays visibly separate from physical evidence, deployment, and authority.", practices, reviewed_inherited: inheritedReviews.length, new_proposals: proposals.length, outcome_plan: { completed: 80, represented: 10, open_gap: 5, exact_gate: 5 }, x1: { safe: 100, candidate_subjects: 100, clean_fix_refine: 100, skills: 10, runners: 5 }, x2: { safe: 100, candidate_subjects: 100, clean_fix_refine: 100, skills: 10, runners: 5 }, exact_packets: 50, blocked_packets: 30, global_skills_planned: 5, global_runners_planned: 5, x1_started: false, x2_started: false, x2_completion_credit: 0, canonical_invocations: 0, route: "PREPARED_NOT_SENT_LIORA_TERMINAL_GATE_REQUIRED", terminal_verdict: "NOT_READY_FOR_STAGE_20", boundary });
+writeText("plan/overview.md", [
+  "# Liora Venn v693-v8 planning freeze",
+  "",
+  "This planning-only tranche reuses Liora's clean D-first owner main branch below the 2,000-file threshold. Orin's exact final is source content provenance, not Git ancestry. The prior Liora v691-v2 history remains immutable beneath this new four-commit lifecycle.",
+  "",
+  "GMUT Mind is primary through exact rational vectors, matrices, elimination, finite spectral bookkeeping, correction lineage, and explicit evidence gaps. THOS Body and Freed ID/CBR Heart remain visible through accessible handover, non-erasing provenance, and authority reservations. No physical model, datum, likelihood, participant, production identity event, deployment, or authority act is present.",
+  "",
+  "Three hundred reachable inherited proposals are reviewed at zero novelty, execution, and authority credit: one hundred from Orin v693-v7-r2 and two hundred from Liora v691-v2. One hundred new contracts are boundedly distinct from those reachable rows. Expected outcomes are exactly 80 completed, 10 represented, 5 open_gap, and 5 exact_gate.",
+  "",
+  "Each session freezes one hundred safe checks, one hundred malformed candidates, one hundred CLEAN/FIX/REFINE checks, ten local skills, and five runners. Fifty exact packets and thirty blocked packets remain unexecuted. Five global skill groups and five D-first public runners are only planned in this commit.",
+  "",
+  "The source repository seal, original failed canonical, correction canonical, remaster canonical, activation delivery, Liora repository lifecycle, Liora canonical, and later delivery remain separate evidence layers.",
+  "",
+  boundary,
+  ""
+].join("\n"));
+writeJson("plan/staged-review.json", { schema: "ghc.family.staged-review.v9", owner: "Liora Venn", phase: "v693-v8", stage: "planning_freeze", state: "CANDIDATE_BEFORE_GIT_STAGE", expected_prefix: baseRel + "/plan/", implementation_present: false, observed_execution_present: false, allowed_extensions: [...allowedExtensions], boundary });
+
+const bindings = walk(planRoot).filter((full) => !["manifest.json", "validation.json"].includes(path.basename(full))).map((full) => {
+  const rel = path.relative(repo, full).split(path.sep).join("/");
+  const bytes = fs.readFileSync(full);
+  if (!allowedExtensions.has(path.extname(rel).toLowerCase())) throw new Error("disallowed plan file type: " + rel);
+  return { path: rel, bytes: bytes.length, sha256: sha(bytes) };
+}).sort((a, b) => a.path.localeCompare(b.path));
+writeJson("plan/manifest.json", { schema: "ghc.family.raw-byte-manifest.v9", owner: "Liora Venn", phase: "v693-v8", stage: "planning_freeze", domain: "working_bytes_before_commit_then_raw_git_blob_after_commit", bindings, self_exclusions: [baseRel + "/plan/manifest.json", baseRel + "/plan/validation.json"], boundary });
+
+process.stdout.write(JSON.stringify({ status: "BUILT_LIORA_V693_V8_PLANNING_CANDIDATE", inherited_reviews: inheritedReviews.length, new_proposals: proposals.length, operation_collisions: operationCollisions.length, request_collisions: requestCollisions.length, manifest_bindings: bindings.length, startup_failures_retained: startupFailures.length }, null, 2) + "\n");

@@ -1,0 +1,87 @@
+"use strict";
+
+const fs = require("fs");
+const path = require("path");
+const crypto = require("crypto");
+const cp = require("child_process");
+const vm = require("vm");
+
+const repo = process.env.LIORA_REPO;
+const orinRepo = process.env.ORIN_REPO;
+if (!repo || !orinRepo) throw new Error("LIORA_REPO and ORIN_REPO are required");
+const baseRel = "docs/liora-venn/v693-v8";
+const base = path.join(repo, ...baseRel.split("/"));
+const plan = path.join(base, "plan");
+const expectedHead = "ba0fdcf7c3d6ba7e3fd18c2151b599aa518e7166";
+const expectedSource = "8f31ec2b25f86a463e77bf3d682a800a3529303f";
+const checks = [];
+function check(name, pass, detail = null) { checks.push({ name, pass: Boolean(pass), detail }); }
+function sha(bytes) { return crypto.createHash("sha256").update(bytes).digest("hex"); }
+function stable(value) { if (Array.isArray(value)) return value.map(stable); if (value && typeof value === "object") return Object.fromEntries(Object.keys(value).sort().map((key) => [key, stable(value[key])])); return value; }
+function canon(value) { return JSON.stringify(stable(value)); }
+function walk(root) { let out = []; for (const e of fs.readdirSync(root, { withFileTypes: true })) { const f = path.join(root, e.name); out = e.isDirectory() ? out.concat(walk(f)) : out.concat(f); } return out; }
+function readJson(rel) { return JSON.parse(fs.readFileSync(path.join(base, ...rel.split("/")), "utf8")); }
+
+const sourceHead = cp.execFileSync("git", ["-C", orinRepo, "rev-parse", "HEAD"], { encoding: "utf8" }).trim();
+const ownerHead = cp.execFileSync("git", ["-C", repo, "rev-parse", "HEAD"], { encoding: "utf8" }).trim();
+check("exact source and owner base", sourceHead === expectedSource && ownerHead === expectedHead, { sourceHead, ownerHead });
+const sourceStatus = cp.execFileSync("git", ["-C", orinRepo, "status", "--porcelain=v1", "-uall"], { encoding: "utf8" }).trim();
+check("source remains clean", sourceStatus === "", sourceStatus);
+const activation = readJson("plan/source/activation-source.json");
+check("source receipts not replayed", activation.source_canonical.replayed_by_liora === false && activation.source_canonical.receipt_sha256 === "b1b7375743edc57ebbc99c9c62327965b7f83e9c31fa1d545d3914b752fdb4f7" && activation.activation_delivery === "SENT_ONCE_ACKNOWLEDGED");
+const baton = fs.readFileSync(path.join(orinRepo, "docs", "orin-thale", "v693-v7-r2", "final", "hand-off-baton.md"));
+check("source baton exact and EOF", sha(baton) === activation.source_baton.sha256 && baton.toString("utf8").trimEnd().endsWith("This is the literal end of the thirteen-module Orin Thale v693-v7 (2) baton."));
+
+const truth = readJson("plan/phase-truth.json"), proposalFreeze = readJson("plan/proposals.json"), inherited = readJson("plan/source/inherited-reviews.json"), novelty = readJson("plan/novelty-audit.json");
+check("planning only lifecycle", truth.stage === "planning_freeze_candidate" && truth.x1_started === false && truth.x2_started === false && truth.x2_completion_credit === 0 && truth.canonical_invocations === 0 && !fs.existsSync(path.join(base, "x1")) && !fs.existsSync(path.join(base, "x2")) && !fs.existsSync(path.join(base, "final")));
+check("inheritance zero credit", inherited.count === 300 && inherited.reviews.length === 300 && inherited.reviews.every((r) => r.novelty_credit === 0 && r.execution_credit === 0 && r.authority_credit === 0));
+const proposals = proposalFreeze.proposals;
+const outcomeCounts = proposals.reduce((acc, row) => { acc[row.expected_disposition] = (acc[row.expected_disposition] || 0) + 1; return acc; }, {});
+check("one hundred proposals and outcomes", proposals.length === 100 && outcomeCounts.completed === 80 && outcomeCounts.represented === 10 && outcomeCounts.open_gap === 5 && outcomeCounts.exact_gate === 5, outcomeCounts);
+const required = ["proposal_id","title","operation","session","practice_id","pillar","hypothesis","null_or_failure_condition","approval_class","execution_lane","official_or_primary_source_needs","concrete_artifacts","falsifier_or_acceptance_gate","rollback_or_recovery","protected_gates","expected_disposition","request","expected_output","candidate_subjects","definition_sha256"];
+check("proposal field completeness", proposals.every((row) => required.every((key) => Object.prototype.hasOwnProperty.call(row, key)) && row.candidate_subjects.length === 2 && row.protected_gates.length >= 10));
+const operationCounts = proposals.reduce((acc, row) => { acc[row.operation] = (acc[row.operation] || 0) + 1; return acc; }, {});
+check("twenty operations five cases each", Object.keys(operationCounts).length === 20 && Object.values(operationCounts).every((n) => n === 5), operationCounts);
+check("bounded novelty", novelty.result === "BOUNDED_DISTINCT_FROM_REACHABLE_SOURCE_ROWS" && novelty.exact_operation_collisions.length === 0 && novelty.exact_request_collisions.length === 0 && novelty.universal_novelty_claim === false, novelty);
+check("unique ids and requests", new Set(proposals.map((row) => row.proposal_id)).size === 100 && new Set(proposals.map((row) => sha(Buffer.from(canon(row.request))))).size === 100);
+for (const session of ["x1", "x2"]) {
+  const safe = readJson("plan/portfolios/" + session + "-safe.json"), candidate = readJson("plan/portfolios/" + session + "-candidate.json"), cfr = readJson("plan/portfolios/" + session + "-clean-fix-refine.json");
+  check(session + " portfolio floors", safe.tasks.length === 100 && candidate.tasks.length === 100 && cfr.tasks.length === 100 && safe.tasks.every((r) => r.execution_state === "frozen_not_executed") && candidate.tasks.every((r) => r.execution_state === "frozen_not_executed") && cfr.tasks.every((r) => r.execution_state === "frozen_not_executed"));
+}
+const localSkills = readJson("plan/capabilities/local-skills.json"), localRunners = readJson("plan/capabilities/local-runners.json"), globalGroups = readJson("plan/capabilities/global-groups.json"), exactPackets = readJson("plan/portfolios/exact-packets.json"), blockedPackets = readJson("plan/portfolios/blocked-packets.json");
+check("capability and packet floors", localSkills.skills.length === 20 && localRunners.runners.length === 10 && globalGroups.skill_groups.length === 5 && globalGroups.binding_count_expected === 37 && exactPackets.packets.length === 50 && exactPackets.executed === 0 && blockedPackets.packets.length === 30 && blockedPackets.executed === 0);
+const startup = readJson("plan/startup-method-flow.json");
+check("startup failures retained", startup.counts.methods === 7 && startup.counts.witnesses === 14 && startup.counts.pass === 7 && startup.counts.fail === 7 && startup.witnesses.filter((w) => w.result === "fail").every((w) => w.retained_negative_ids.length === 1));
+const route = readJson("plan/current-route.json");
+check("current exact route", route.current_assignment.sequence === 2 && route.current_assignment.position === 38 && route.prospective_successor.owner === "Veylora Quen" && route.prospective_successor.phase === "v694-v1" && route.early_contact === false);
+const budget = readJson("plan/artifact-budget.json");
+check("D-first reuse and file budget", budget.rotation_required === false && budget.forecast_total < budget.owner_file_ceiling && budget.spend_usd.planned === 0, budget);
+
+const manifest = readJson("plan/manifest.json"), manifestIssues = [];
+for (const row of manifest.bindings) {
+  const f = path.join(repo, ...row.path.split("/"));
+  if (!fs.existsSync(f)) manifestIssues.push(row.path + ":missing");
+  else { const bytes = fs.readFileSync(f); if (bytes.length !== row.bytes || sha(bytes) !== row.sha256) manifestIssues.push(row.path + ":parity"); }
+}
+check("working-byte manifest", manifestIssues.length === 0, manifestIssues);
+const files = walk(plan);
+check("file types", files.every((f) => [".json", ".md", ".txt", ".html"].includes(path.extname(f).toLowerCase())), files.length);
+const jsonIssues = [], txtIssues = [];
+for (const f of files) {
+  if (path.extname(f).toLowerCase() === ".json") { try { JSON.parse(fs.readFileSync(f, "utf8")); } catch (e) { jsonIssues.push(path.relative(repo, f) + ":" + e.message); } }
+  if (path.extname(f).toLowerCase() === ".txt") { try { new vm.Script("(function(require,module,exports){\n" + fs.readFileSync(f, "utf8") + "\n})", { filename: f }); } catch (e) { txtIssues.push(path.relative(repo, f) + ":" + e.message); } }
+}
+check("strict JSON", jsonIssues.length === 0, jsonIssues);
+check("trusted TXT syntax", txtIssues.length === 0, txtIssues);
+check("document word ceiling", Math.max(...files.map((f) => (fs.readFileSync(f, "utf8").match(/\S+/g) || []).length)) <= 100000);
+const joined = Buffer.concat(files.map((f) => fs.readFileSync(f))).toString("utf8");
+const privacy = [/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/ig, /(?:api[_-]?key|password|secret|bearer)\s*[:=]\s*["']?[A-Za-z0-9_\-]{12,}/ig, /[A-Z]:\\Users\\[^\s"']+/ig, /[A-Z]:\\GHC-Archives\\[^\s"']+/ig, /\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}\b/ig];
+check("zero five-class privacy candidates", privacy.every((pattern) => !pattern.test(joined)));
+check("terminal verdict", truth.terminal_verdict === "NOT_READY_FOR_STAGE_20");
+
+const failed = checks.filter((row) => !row.pass);
+const receipt = { schema: "ghc.family.plan-validation.v9", owner: "Liora Venn", phase: "v693-v8", status: failed.length ? "INVALID_PLANNING_CANDIDATE" : "VALID_PLANNING_CANDIDATE", checks_total: checks.length, checks_passed: checks.length - failed.length, checks_failed: failed.length, checks, manifest_bindings: manifest.bindings.length, inherited_reviews: inherited.count, new_proposals: proposals.length, canonical_invocations: 0, route: "PREPARED_NOT_SENT_LIORA_TERMINAL_GATE_REQUIRED", terminal_verdict: "NOT_READY_FOR_STAGE_20" };
+const rendered = JSON.stringify(receipt, null, 2) + "\n";
+if (process.env.LIORA_VALIDATION_RECEIPT) fs.writeFileSync(process.env.LIORA_VALIDATION_RECEIPT, rendered, "utf8");
+process.stdout.write(rendered);
+process.exit(failed.length ? 2 : 0);
