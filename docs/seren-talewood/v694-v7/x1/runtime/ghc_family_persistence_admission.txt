@@ -1,0 +1,22 @@
+'use strict';
+const crypto=require('node:crypto');
+const canonical=x=>JSON.stringify(x,(_,v)=>v&&typeof v==='object'&&!Array.isArray(v)?Object.fromEntries(Object.keys(v).sort().map(k=>[k,v[k]])):v);
+const digest=x=>crypto.createHash('sha256').update(canonical(x)).digest('hex');
+function need(v,code){if(!v){const e=new Error(code);e.code=code;throw e;}}
+function admit(p,view='definition'){
+ need(['definition','scope','oracle','metadata','outcome'].includes(view),'E_VIEW');
+ need(p&&typeof p==='object'&&!Array.isArray(p),'E_OBJECT');
+ const fields=['proposal_id','title','operation','case_id','practice_id','criterion','expected_execution_disposition','request','oracle','boundary','definition_sha256'];
+ need(Object.keys(p).length===fields.length&&Object.keys(p).every(x=>fields.includes(x)),'E_FIELDS');
+ need(/^ST6947-P\d{3}$/.test(p.proposal_id)&&typeof p.title==='string'&&p.title.length>8&&p.title.length<200,'E_IDENTITY');
+ const body={...p};delete body.definition_sha256;
+ need(digest(body)===p.definition_sha256,'E_DIGEST');
+ need(['completed','represented','open_gap','exact_gate'].includes(p.expected_execution_disposition),'E_OUTCOME');
+ need(p.request&&p.request.synthetic===true&&p.request.operation===p.operation&&p.request.complex.name===p.case_id,'E_SCOPE');
+ need(p.oracle&&p.oracle.field===2&&Array.isArray(p.oracle.expected_intervals)&&p.oracle.fixture===p.case_id,'E_ORACLE');
+ need(typeof p.criterion==='string'&&p.criterion.length>10&&p.boundary.includes('NOT_READY_FOR_STAGE_20'),'E_BOUNDARY');
+ return {accepted:true,view,proposal_id:p.proposal_id,definition_sha256:p.definition_sha256,core_execution:false,observed_core_outcome:null};
+}
+function clean(p){const before=JSON.parse(JSON.stringify(p));const out=JSON.parse(canonical(p));need(canonical(before)===canonical(out),'E_LOSSY');return {record:out,changed_serialization:JSON.stringify(before)!==JSON.stringify(out),typed_content_preserved:true,digest:admit(out).definition_sha256};}
+function run(p,view){try{return admit(p,view);}catch(e){return {accepted:false,error:e.code||e.message,original_success_credit:0,core_execution:false};}}
+module.exports={admit,clean,run,canonical,digest};
