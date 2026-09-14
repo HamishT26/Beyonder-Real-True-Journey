@@ -1,0 +1,55 @@
+"use strict";
+const fs=require("fs"),path=require("path"),vm=require("vm");
+const BASE="docs/veylora-quen/v694-v1";
+function walk(d){return fs.readdirSync(d,{withFileTypes:true}).flatMap(x=>x.isDirectory()?walk(d+"/"+x.name):[d+"/"+x.name]);}
+function reviewData(files,c){
+ const checks=[],check=(name,pass,detail=null)=>checks.push({name,pass:!!pass,detail}),text=f=>files.get(BASE+"/"+f).toString("utf8"),json=f=>c.parseJSON(text(f));
+ const plan=json("plan/proposals.json"),truth=json("final/phase-truth.json"),flow=json("final/method-flow.json"),neg=json("final/retained-negative-register.json"),lineage=json("final/lineage-accounting.json"),gates=json("final/gate-register.json"),cards=[...files].filter(([f])=>f.startsWith(BASE+"/final/deck/cards/")).map(([,b])=>c.parseJSON(b.toString("utf8"))),deck=json("final/deck/deck-index.json");
+ const results=[...json("x1/results/proposals.json").rows,...json("x2/results/proposals.json").rows];
+ check("100 recorded full-envelope observations",plan.proposals.length===100&&results.length===100&&results.every(r=>r.matches&&r.input_unchanged&&c.canon(r.output)===c.canon(plan.proposals.find(p=>p.proposal_id===r.proposal_id).expected_output)));
+ check("observed outcome truth",results.filter(r=>r.outcome==="completed").length===90&&results.filter(r=>r.outcome==="represented").length===10&&truth.outcomes.completed===90&&truth.outcomes.represented===10);
+ check("two complete portfolio sessions",["x1","x2"].every(s=>["safe","clean-fix-refine"].every(k=>{const r=json(s+"/results/"+k+".json");return r.rows.length===100&&r.rows.every(x=>x.pass);})));
+ check("200 candidate subjects and 100 altered subjects retained",["x1","x2"].every(s=>{const n=json(s+"/results/candidates.json"),a=json(s+"/results/altered-expected.json");return n.rows.length===100&&n.rows.every(x=>x.subject_success_credit===0&&x.refusal_check_pass)&&a.rows.length===50&&a.rows.every(x=>x.subject_success_credit===0&&x.refusal_check_pass);}));
+ check("twenty local guides and ten local interfaces",["x1","x2"].every(s=>{const r=json(s+"/evidence/local-capabilities.json");return r.skills.length===10&&r.skills.every(x=>x.official_validation_pass&&x.accepting_pass&&x.adverse_refusal_pass)&&r.runners.length===5&&r.runners.every(x=>x.refusal_pass);}));
+ const smokes=json("x2/evidence/global-smokes.json"),bindings=json("x2/evidence/installed-bindings.json");
+ check("five merged skills and five public runners",bindings.global_skills===5&&bindings.public_runners===5&&bindings.count===37&&smokes.guide_validations===5&&smokes.operation_smokes.length===40&&smokes.operation_smokes.every(x=>x.pass)&&smokes.scope_refusals===5);
+ check("twelve declared domain refusals",json("x2/evidence/domain-results.json").passed===12);
+ check("five frozen final adverse subjects",json("final/preflight-adverse.json").rows.length===5&&json("final/preflight-adverse.json").rows.every(x=>x.refusal_pass&&x.subject_success_credit===0));
+ check("method counts and unique witness IDs",flow.counts.methods===flow.methods.length&&flow.counts.witnesses===flow.witnesses.length&&new Set(flow.methods.map(x=>x.method_id)).size===flow.methods.length&&new Set(flow.witnesses.map(x=>x.witness_id)).size===flow.witnesses.length);
+ check("negative count and failed witness bijection",neg.count===neg.records.length&&new Set(neg.records.map(x=>x.negative_id)).size===neg.count&&flow.witnesses.filter(w=>w.result==="fail").length===neg.count&&neg.records.every(n=>n.subject_success_credit===0&&flow.witnesses.filter(w=>w.result==="fail"&&w.retained_negative_ids.includes(n.negative_id)).length===1));
+ check("method legal transitions and passing evidence",flow.methods.every(m=>m.recommendation_state==="preferred"&&m.retained_negative_ids.length>0&&flow.witnesses.some(w=>w.method_id===m.method_id&&w.result==="pass"))&&flow.state_events.length===flow.methods.length*2&&flow.state_events.every(e=>(e.from==="candidate"&&e.to==="validated")||(e.from==="validated"&&e.to==="preferred")));
+ const schema=json("final/method-schema-validation.json");check("official final Method Flow validation",schema.valid&&schema.method_count===flow.methods.length&&schema.witness_count===flow.witnesses.length);
+ check("selected-lineage arithmetic without old total inflation",Object.keys(lineage.owner_delta).every(k=>lineage.incoming[k]+lineage.owner_delta[k]===lineage.selected_lineage[k])&&lineage.old_veylora_totals_added===false&&lineage.selected_lineage.open_gaps===10&&lineage.selected_lineage.exact_gates===10);
+ check("current reservations stay unclosed",gates.current_open_gaps.length===5&&gates.current_exact_gates.length===10&&gates.current_gates_closed===0&&gates.authority_actions===0&&truth.terminal_verdict==="NOT_READY_FOR_STAGE_20");
+ const packets=[json("plan/portfolios/exact-packets.json"),json("plan/portfolios/blocked-packets.json")];
+ check("exact and blocked packets remain prepared",packets[0].rows.length===50&&packets[1].rows.length===30&&json("final/completion-checklist.json").exact_packets_executed===0&&json("final/completion-checklist.json").blocked_packets_executed===0);
+ const map=new Map(cards.map(x=>[x.card_id,x]));
+ check("four-tier deck counts",cards.length===123&&deck.cards===123&&[1,2,3,4].every(t=>cards.filter(x=>x.tier===t).length===deck.counts[t])&&deck.counts[1]===1&&deck.counts[2]===3&&deck.counts[3]===4&&deck.counts[4]===115);
+ check("deterministic card hashes and parent topology",cards.every(card=>{const p={...card};delete p.card_id;return card.card_id==="ghc-card-"+c.sha(c.canon(p)).slice(0,24)&&(card.tier===1?card.parent_ids.length===0:card.parent_ids.length===1&&map.has(card.parent_ids[0])&&map.get(card.parent_ids[0]).tier===card.tier-1);}));
+ check("deck ordered identities and stable partition",new Set(deck.order).size===cards.length&&deck.order.every(id=>map.has(id))&&json("final/deck/stable-prefix.json").order.length===8&&json("final/deck/volatile-index.json").order.length===115&&json("final/deck/volatile-index.json").implicit_completion===false);
+ const baton=text("final/hand-off-baton.md"),meta=json("final/baton-metadata.json"),wordCount=(baton.match(/\S+/g)||[]).length;
+ check("thirteen-module full baton and literal EOF",(baton.match(/^## Module \d{2} — /gm)||[]).length===13&&meta.module_count===13&&wordCount===meta.words&&wordCount>=10000&&wordCount<=100000&&meta.bytes===Buffer.byteLength(baton)&&meta.sha256===c.sha(baton)&&baton.trimEnd().endsWith(meta.literal_eof));
+ check("baton includes every exact contract",plan.proposals.every(p=>baton.includes(p.proposal_id+" — "+p.title)&&baton.includes(p.definition_sha256)));
+ const html=text("final/accessible-report.html"),scripts=[...html.matchAll(/<script>([\s\S]*?)<\/script>/g)].map(x=>x[1]);
+ check("HTML structure and local-only resources",/<h1>/.test(html)&&/<main id="main">/.test(html)&&/<caption>/.test(html)&&/aria-live="polite"/.test(html)&&/<label for="filter">/.test(html)&&/<th scope="col">/.test(html)&&!/(?:src|href)=["']https?:/i.test(html)&&scripts.length===1);
+ const rows=[...html.matchAll(/<tr data-search="([^"]*)">/g)].map(x=>({dataset:{search:x[1]},hidden:false})),input={value:"",addEventListener:(type,fn)=>{input.onInput=fn;}},count={textContent:""};
+ const document={getElementById:id=>id==="filter"?input:count,querySelectorAll:selector=>rows};
+ new vm.Script(scripts[0]).runInNewContext({document});
+ const trials=[["represented",10],["no-such-contract-token",0],["",100]].map(([query,expected])=>{input.value=query;input.onInput();return {query,expected,observed:rows.filter(r=>!r.hidden).length,status:count.textContent};});
+ check("HTML filtering in bounded DOM model",trials.every(x=>x.observed===x.expected&&x.status===x.expected+" contracts shown"),{trials,manual_assistive_technology_review:false});
+ const parsed=[],syntax=[],privacy=[];let maximumWords=0;
+ const patterns=[["uuid",/\b[0-9a-f]{8}(?:-[0-9a-f]{4}){3}-[0-9a-f]{12}\b/ig],["local_path",/\b[A-Za-z]:[\\/]/g],["private_route",/(?:chatgpt\.com\/c\/|codex:\/\/)[a-z0-9_-]{12,}/ig],["credential",/(?:sk-[a-z0-9]{20,}|gh[pousr]_[a-z0-9]{20,}|Bearer\s+[a-z0-9._-]{16,})/ig],["private_payload",/"(?:raw_transcript|raw_screenshot|private_execution_stream)"\s*:\s*"[^"]+"/ig]];
+ for(const [f,b] of files){const s=b.toString("utf8"),ext=path.extname(f);maximumWords=Math.max(maximumWords,(s.match(/\S+/g)||[]).length);if(ext===".json"){try{c.parseJSON(s);}catch(e){parsed.push(f);}}if(ext===".txt"&&!f.includes("/retained/")){try{new vm.Script(s);}catch(e){syntax.push(f);}}for(const [kind,re] of patterns){re.lastIndex=0;if(re.test(s))privacy.push({path:f,kind});}}
+ check("strict JSON and active TXT syntax",parsed.length===0&&syntax.length===0,{json_issues:parsed,txt_issues:syntax,retained_failed_sources_excluded_from_active_syntax:true});
+ check("allowed authored formats and owner file ceiling",files.size<2000&&[...files.keys()].every(f=>[".json",".md",".txt",".html"].includes(path.extname(f))),files.size);
+ check("all documents below word ceiling",maximumWords<100000,maximumWords);
+ check("five-class privacy candidate scan",privacy.length===0,privacy);
+ const reflection=json("final/reflection-remaster.json");check("five documented additive remaster issues and methods",reflection.issues.length===5&&reflection.methods.length===5&&reflection.issues.every(x=>x.observed_disposition==="merged_additively_and_installed")&&reflection.destructive_operations===0);
+ const route=json("final/route-packet.json"),policy=json("final/canonical-policy.json");
+ check("prospective exact recipient and no premature send",route.endpoint_kind==="existing_main_task"&&route.endpoint_label==="Tamar Vey"&&route.successor_phase==="v694-v2"&&route.state==="PREPARED_NOT_SENT"&&route.task_creation===false&&route.subagents===false);
+ check("one-invocation non-replay policy",policy.maximum_invocations===1&&policy.maximum_successes===1&&policy.maximum_replays===0&&policy.source_canonical_replay===false&&policy.owner_scope_only===true);
+ check("effective phase label and no spend",json("final/effective-workflow-profile.json").display_phase==="v694-v1"&&truth.incremental_spend_usd===0&&truth.ordinary_packages_installed===0);
+ return {schema:"ghc.family.final-structural-review.v9",checks,checks_total:checks.length,checks_passed:checks.filter(x=>x.pass).length,valid:checks.every(x=>x.pass),owner_files:files.size,maximum_document_words:maximumWords,canonical_invoked:false,independent_reproduction:false};
+}
+module.exports={walk,reviewData};
+if(require.main===module){const c=require(path.resolve(BASE,"x1/prime-field-core.txt")),files=new Map(walk(BASE).map(f=>[f,fs.readFileSync(f)])),r=reviewData(files,c);fs.writeFileSync(BASE+"/final/structural-review.json",JSON.stringify(r,null,2)+"\n",{flag:"wx"});console.log(JSON.stringify({valid:r.valid,checks:r.checks_total,passed:r.checks_passed,owner_files:r.owner_files,maximum_document_words:r.maximum_document_words,failed:r.checks.filter(x=>!x.pass)}));process.exitCode=r.valid?0:2;}

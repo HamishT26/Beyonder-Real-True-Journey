@@ -1,0 +1,53 @@
+"use strict";
+const fs=require("fs"),path=require("path"),cp=require("child_process"),crypto=require("crypto");
+const [repo,exactFinal,receiptRoot,skillRoot,publicRoot,sourceGuardFile]=process.argv.slice(2);
+if(!repo||!/^[0-9a-f]{40}$/.test(exactFinal||"")||!receiptRoot||!skillRoot||!publicRoot||!sourceGuardFile)throw Error("explicit canonical arguments required");
+if(fs.existsSync(receiptRoot))throw Error("canonical namespace exists; invocation refused without replay");
+fs.mkdirSync(path.dirname(receiptRoot),{recursive:true});fs.mkdirSync(receiptRoot);
+const started=new Date().toISOString(),owner="Veylora Quen",phase="v694-v1",BASE="docs/veylora-quen/v694-v1",checks=[];
+const sha=b=>crypto.createHash("sha256").update(b).digest("hex"),put=(name,v)=>fs.writeFileSync(path.join(receiptRoot,name),JSON.stringify(v,null,2)+"\n",{flag:"wx"});
+const attempt={schema:"ghc.family.canonical-attempt.v9",owner,phase,exact_final:exactFinal,invocations:1,replays:0,state:"ATTEMPT_LATCHED_BEFORE_CHECKS",started_at:started};put("attempt.json",attempt);
+const git=args=>cp.execFileSync("git",["-C",repo,...args],{encoding:"utf8",maxBuffer:67108864}).trim();
+const check=(name,pass,detail=null)=>checks.push({name,pass:!!pass,detail});
+let ownerFiles=0,ownerPassed=0,adversePassed=0,payloadCanon=null;
+try{
+ const branch=git(["branch","--show-current"]),head=git(["rev-parse","HEAD"]);
+ check("exact final on owner branch",branch==="codex/GHC-Family/veylora-quen-main"&&head===exactFinal);
+ function equality(){const upstream=git(["rev-parse","@{u}"]),tracking=git(["rev-parse","refs/remotes/origin/codex/GHC-Family/veylora-quen-main"]),live=git(["ls-remote","--heads","origin","refs/heads/codex/GHC-Family/veylora-quen-main"]).split(/\s/)[0],divergence=git(["rev-list","--left-right","--count","HEAD...@{u}"]).split(/\s+/).map(Number);return {head:git(["rev-parse","HEAD"]),upstream,tracking,live,clean:git(["status","--porcelain=v1","-uall"])==="",divergence};}
+ function equal(r){return r.clean&&[r.head,r.upstream,r.tracking,r.live].every(x=>x===exactFinal)&&r.divergence.every(x=>x===0);}
+ const before=equality();check("clean fresh four-way before checks",equal(before),before);
+ const planning="0b358b71c69e4ce7185d3e42e54d6927798a6691",x1="128a1248af36e07e6465969a13d06c7e8ca0ac08",x2="738bebb2aee6a4478dfd36acf40bf9e6d5b1f7c6",parent=s=>git(["show","-s","--format=%P",s]);
+ check("four direct commits from blank owner root",parent(planning)===""&&parent(x1)===planning&&parent(x2)===x1&&parent(exactFinal)===x2&&git(["rev-list","--count",exactFinal])==="4"&&git(["rev-list","--merges",exactFinal])==="");
+ check("earlier owner freezes unchanged",[[planning,"plan"],[x1,"x1"],[x2,"x2"]].every(([commit,stage])=>git(["diff","--name-only",commit,exactFinal,"--",BASE+"/"+stage])===""));
+ const names=git(["ls-tree","-r","--name-only",exactFinal,"--",BASE]).split(/\r?\n/).filter(Boolean);ownerFiles=names.length;
+ const raw=cp.execFileSync("git",["-C",repo,"cat-file","--batch"],{input:names.map(n=>exactFinal+":"+n+"\n").join(""),maxBuffer:67108864});
+ let offset=0;const files=new Map();
+ for(const name of names){const end=raw.indexOf(10,offset);if(end<0)throw Error("batch header incomplete");const header=raw.subarray(offset,end).toString("ascii").split(" "),size=Number(header[2]);if(header[1]!=="blob"||!Number.isSafeInteger(size)||size<0)throw Error("batch blob header");const start=end+1,finish=start+size;if(finish>=raw.length||raw[finish]!==10)throw Error("batch blob incomplete");files.set(name,Buffer.from(raw.subarray(start,finish)));offset=finish+1;}
+ check("complete declared raw Git byte stream",offset===raw.length&&files.size===names.length);
+ const workingParity=names.every(n=>fs.existsSync(path.join(repo,n))&&files.get(n).equals(fs.readFileSync(path.join(repo,n))));check("worktree runtime bytes equal exact Git blobs",workingParity);if(!workingParity)throw Error("runtime bytes are not exact final");
+ const c=require(path.join(repo,BASE,"x1/prime-field-core.txt"));payloadCanon=c.canon;
+ const json=f=>c.parseJSON(files.get(BASE+"/"+f).toString("utf8"));
+ const structural=require(path.join(repo,BASE,"final/tools/review-final.txt")).reviewData(files,c);for(const row of structural.checks)checks.push({...row,name:"structure: "+row.name});
+ const manifests=["plan/manifest.json","x1/manifest.json","x2/manifest.json","final/delta-manifest.json","final/owner-manifest.json","final/deck/card-manifest.json"];
+ const manifestResults=manifests.map(f=>{const m=json(f),issues=[];for(const r of m.bindings){const b=files.get(r.path);if(!b||b.length!==r.bytes||sha(b)!==r.sha256)issues.push(r.path);}return {path:f,bindings:m.bindings.length,exclusions:(m.exclusions||[]).length,issues};});
+ check("six exact raw Git manifests",manifestResults.every(x=>x.issues.length===0),manifestResults);
+ const ownerManifest=json("final/owner-manifest.json"),covered=[...ownerManifest.bindings.map(x=>x.path),...ownerManifest.exclusions].sort();check("complete owner manifest partition",c.canon(covered)===c.canon(names.slice().sort())&&new Set(covered).size===names.length);
+ const seal=json("final/content-seal.json");check("content seal exact bytes",seal.targets.every(r=>{const b=files.get(r.path);return b&&b.length===r.bytes&&sha(b)===r.sha256;}));
+ const runtime=require(path.join(repo,BASE,"x2/polynomial-core.txt")).createRuntime(c),proposals=json("plan/proposals.json").proposals;
+ for(const p of proposals){const request=c.clone(p.request),before=c.canon(request),out=runtime.evaluate(request);if(c.canon(out)===c.canon(p.expected_output)&&before===c.canon(request))ownerPassed++;}
+ check("100 exact-final owner contract executions",proposals.length===100&&ownerPassed===100,{total:100,passed:ownerPassed});
+ for(const p of json("plan/canonical-adverse-definitions.json").subjects){const out=runtime.evaluate(c.clone(p.request));if(out.ok===false&&out.error===p.error)adversePassed++;}
+ check("five exact-final frozen adverse refusals",adversePassed===5,{total:5,passed:adversePassed,new_failed_subject_credit:0});
+ const installed=json("x2/evidence/installed-bindings.json").bindings,installedIssues=[];
+ for(const r of installed){let target;if(r.destination_key.startsWith("skills/"))target=path.join(skillRoot,r.destination_key.slice(7));else if(r.destination_key.startsWith("public-runners/"))target=path.join(publicRoot,r.destination_key.slice(15));else throw Error("destination key");if(!fs.existsSync(target)||sha(fs.readFileSync(target))!==r.sha256||!files.get(r.source).equals(fs.readFileSync(target)))installedIssues.push(r.destination_key);}
+ check("37 live source-installed bindings",installed.length===37&&installedIssues.length===0,installedIssues);
+ const guard=JSON.parse(fs.readFileSync(sourceGuardFile,"utf8")),guardRows=[];
+ for(const s of guard.repositories){const head=cp.execFileSync("git",["-C",s.path,"rev-parse","HEAD"],{encoding:"utf8"}).trim(),status=cp.execFileSync("git",["-C",s.path,"status","--porcelain=v1","-uall"],{encoding:"utf8"}).trim();guardRows.push({label:s.label,head_equal:head===s.exact_head,status_equal:sha(Buffer.from(status))===s.status_sha256});}
+ for(const r of guard.files)guardRows.push({label:r.label,hash_equal:sha(fs.readFileSync(r.path))===r.sha256});
+ check("bounded source and older-owner guards retained",guardRows.every(r=>r.hash_equal===true||(r.head_equal===true&&r.status_equal===true)),guardRows);
+ const after=equality();check("clean fresh four-way after checks",equal(after),after);
+}catch(error){check("canonical operational completion",false,{error_type:error.name,message:String(error.message).replace(/[A-Za-z]:[\\/][^\n]*/g,"[private path omitted]").slice(0,500)});}
+const failed=checks.filter(x=>!x.pass),success=failed.length===0,body={schema:"ghc.family.exact-final-owner-scoped-canonical.v9",owner,phase,status:success?"VALID_EXACT_FINAL_OWNER_SCOPED_CANONICAL":"INVALID_EXACT_FINAL_OWNER_SCOPED_CANONICAL",exact_final:exactFinal,invocations:1,successes:success?1:0,replays:0,checks_total:checks.length,checks_passed:checks.length-failed.length,checks_failed:failed.length,checks,owner_tests:{total:100,passed:ownerPassed},adverse_tests:{total:5,passed:adversePassed},owner_files:ownerFiles,full_repository_suite:false,independent_reproduction:false,route:success?"TERMINAL_REPOSITORY_GATE_PASSED_ROUTE_GUARDS_REQUIRED":"CANONICAL_FAILED_ZERO_SUCCESS_CREDIT",terminal_verdict:"NOT_READY_FOR_STAGE_20",started_at:started,finished_at:new Date().toISOString()};
+const payload=sha(Buffer.from(payloadCanon?payloadCanon(body):JSON.stringify(body))),receipt={...body,payload_sha256:payload};put("receipt.json",receipt);
+if(success)put("success-latch.json",{schema:"ghc.family.canonical-success-latch.v9",owner,phase,state:"SUCCESS_LATCHED_NO_REPLAY",exact_final:exactFinal,attempt_sha256:sha(fs.readFileSync(path.join(receiptRoot,"attempt.json"))),receipt_sha256:sha(fs.readFileSync(path.join(receiptRoot,"receipt.json"))),payload_sha256:payload,invocations:1,successes:1,replays:0});
+console.log(JSON.stringify({status:receipt.status,exact_final:exactFinal,checks_total:checks.length,checks_passed:receipt.checks_passed,failed:failed.map(x=>x.name),owner_tests:receipt.owner_tests,adverse_tests:receipt.adverse_tests,owner_files:ownerFiles,receipt_sha256:sha(fs.readFileSync(path.join(receiptRoot,"receipt.json"))),payload_sha256:payload,success_latch:success,invocations:1,successes:success?1:0,replays:0}));process.exitCode=success?0:2;

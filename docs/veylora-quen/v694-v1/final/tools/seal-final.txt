@@ -1,0 +1,20 @@
+"use strict";
+const fs=require("fs"),path=require("path"),cp=require("child_process"),vm=require("vm"),BASE="docs/veylora-quen/v694-v1",dir=BASE+"/final";
+const c=require(path.resolve(BASE,"x1/prime-field-core.txt")),walk=require("./review-final.txt").walk;
+const put=(f,v)=>fs.writeFileSync(f,JSON.stringify(v,null,2)+"\n",{flag:"wx"}),binding=f=>({path:f,bytes:fs.statSync(f).size,sha256:c.sha(fs.readFileSync(f))});
+const parent=cp.execFileSync("git",["rev-parse","HEAD"],{encoding:"utf8"}).trim();if(parent!=="738bebb2aee6a4478dfd36acf40bf9e6d5b1f7c6")throw Error("final parent");
+for(const stage of ["plan","x1","x2"])if(cp.execFileSync("git",["diff","--name-only","HEAD","--",BASE+"/"+stage],{encoding:"utf8"}).trim())throw Error("earlier phase changed");
+const coreTargets=["phase-truth.json","method-flow.json","retained-negative-register.json","lineage-accounting.json","gate-register.json","source-retention.json","completion-checklist.json","canonical-policy.json","route-packet.json","reflection-remaster.json","hand-off-baton.md","baton-metadata.json","accessible-report.html","deck/deck-index.json","successor-ideas.json","effective-workflow-profile.json"];
+put(dir+"/content-seal.json",{schema:"ghc.family.content-seal.v9",domain:"raw_git_blob",targets:coreTargets.map(f=>binding(dir+"/"+f)),boundary:"Same-owner bounded evidence; no canonical or route invocation in this source seal."});
+const deckPaths=walk(dir+"/deck");put(dir+"/deck/card-manifest.json",{schema:"ghc.family.raw-byte-manifest.v9",domain:"raw_git_blob",bindings:deckPaths.map(binding),exclusions:[dir+"/deck/card-manifest.json"]});
+const syntaxIssues=[];let jsonCount=0;
+for(const f of walk(BASE)){const text=fs.readFileSync(f,"utf8");if(f.endsWith(".json")){c.parseJSON(text);jsonCount++;}if(f.endsWith(".txt")&&!f.includes("/retained/")){try{new vm.Script(text);}catch(e){syntaxIssues.push(f);}}}
+if(syntaxIssues.length)throw Error("new or active source syntax");
+put(dir+"/seal-preflight.json",{schema:"ghc.family.seal-preflight.v9",parent,prior_structural_review:"structural-review.json",prior_structural_checks:30,prior_structural_valid:true,new_active_sources_parse:true,strict_json_files:jsonCount,earlier_phases_unchanged:true,source_guards:"external phase-bank source-guards.json",content_seal_targets:16,deck_bindings:deckPaths.length,canonical_invoked:false,source_canonical_replayed:false});
+const excluded=[dir+"/delta-manifest.json",dir+"/owner-manifest.json",dir+"/staged-review.json"];
+put(dir+"/delta-manifest.json",{schema:"ghc.family.raw-byte-manifest.v9",owner:"Veylora Quen",phase:"v694-v1",stage:"final",domain:"raw_git_blob",bindings:walk(dir).filter(f=>!excluded.includes(f)).map(binding),exclusions:excluded});
+put(dir+"/owner-manifest.json",{schema:"ghc.family.raw-byte-manifest.v9",owner:"Veylora Quen",phase:"v694-v1",domain:"raw_git_blob",bindings:walk(BASE).filter(f=>!excluded.includes(f)).map(binding),exclusions:excluded});
+const paths=[...walk(dir),dir+"/staged-review.json"].sort();put(dir+"/staged-review.json",{schema:"ghc.family.staged-review.v9",parent,only_additions:true,paths,owner_files:walk(BASE).length+1,earlier_phases_unchanged:true,source_execution:false,canonical_invoked:false});
+cp.execFileSync("git",["add","--",dir]);cp.execFileSync("git",["diff","--cached","--check"],{stdio:"pipe"});
+const changes=cp.execFileSync("git",["diff","--cached","--name-status"],{encoding:"utf8"}).trim().split("\n");if(changes.some(x=>!x.startsWith("A\t"+dir+"/")))throw Error("staged scope");
+console.log(JSON.stringify({staged_additions:changes.length,owner_files:walk(BASE).length,delta_bindings:JSON.parse(fs.readFileSync(dir+"/delta-manifest.json")).bindings.length,owner_bindings:JSON.parse(fs.readFileSync(dir+"/owner-manifest.json")).bindings.length,deck_bindings:deckPaths.length,content_seal_targets:16,canonical_invoked:false}));
