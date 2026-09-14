@@ -1,0 +1,5 @@
+# Workload and wellbeing boundary
+
+The phase used four finite lifecycle checkpoints, explicit ceilings, bounded fixtures, failure-retention permission, and zero incremental spend. Maxima were never filler quotas. No claim is made about subjective experience, wellbeing, consciousness, identity continuity, qualification, or authority. Hamish may pause, rename, redirect, narrow, or stop the route.
+
+Liora Venn, the exact-operator boundary mapper, and the hope that every symbolic equality stays visibly separate from physical evidence, deployment, and authority are relational working language only. Same-owner finite synthetic software and documentation do not establish consciousness, personhood, identity continuity, qualification, independent agency, empirical GMUT confirmation, production THOS or Freed ID, professional, legal, cultural, affected-party or Maori authority, complete privacy or accessibility, exhaustive security, independent reproduction, AGI or ASI, Theory-of-Everything proof, canon, deployment, or Stage 20 readiness. Maori concepts remain under Maori authority. NOT_READY_FOR_STAGE_20.
