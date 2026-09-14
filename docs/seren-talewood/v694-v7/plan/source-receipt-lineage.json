@@ -1,0 +1,327 @@
+{
+  "receipts": [
+    {
+      "name": "invalid-canonical-d7465df024.json",
+      "sha256": "b7182049f8e23c9bac6c1ed09f4c05448aea3e80fe9ce42839e4b0e8d806d1e7",
+      "record": {
+        "schema": "ghc.family.caelen-invalid-canonical.v1",
+        "owner": "Caelen Morrow",
+        "phase": "v694-v6",
+        "exact_final": "d7465df024508f41517277059097e798e268a746",
+        "status": "INVALID_EXACT_FINAL_OWNER_SCOPED_CANONICAL_ZERO_SUCCESS_CREDIT",
+        "canonical_invocation_count": 1,
+        "canonical_success_count": 0,
+        "canonical_replay_count": 0,
+        "lock_sha256": "b4ea0d33858cc171dcda083e9dc1f3fbf228c31cebfb5324a955d3d2676ea58e",
+        "initial_checks_completed_before_failure": [
+          "exact local, upstream, tracking, and fresh-live equality",
+          "clean state before validation",
+          "planning, x1, x2, and final direct-parent chain",
+          "four owner-phase commits",
+          "zero owner-phase merges",
+          "one parent for each owner-phase commit"
+        ],
+        "failed_dependency": {
+          "name": "largest-document accumulator mutability",
+          "error": "TypeError: Assignment to constant variable.",
+          "location": "owner-file scan before the first largest-document update",
+          "cause": "The validator declared the accumulator with const and then reassigned it when the first nonempty file became the current maximum.",
+          "aggregate_success_credit": 0
+        },
+        "recovery_rule": "Do not replay the canonical aggregate. Continue only the not-yet-completed owner-tree, manifest, privacy, syntax, deck, content-seal, and closeout dependencies with a mutable accumulator, then publish a separately named composite receipt.",
+        "recorded_at": "2026-09-15T05:26:02.9812809+12:00",
+        "terminal_verdict": "NOT_READY_FOR_STAGE_20"
+      }
+    },
+    {
+      "name": "canonical-dependency-recovery-d7465df024.json",
+      "sha256": "2ad82075e60a266cf1c4efbb11545a715479c79f456ec5a164c7250389e8d2b6",
+      "record": {
+        "schema": "ghc.family.caelen-canonical-dependency-recovery.v1",
+        "status": "VALID_DEPENDENCY_CORRECTED_COMPOSITE_WITH_ZERO_CANONICAL_AGGREGATE_CREDIT",
+        "owner": "Caelen Morrow",
+        "phase": "v694-v6",
+        "exact_final": "d7465df024508f41517277059097e798e268a746",
+        "failed_canonical": {
+          "invocations": 1,
+          "successes": 0,
+          "replays": 0,
+          "failure_receipt_sha256": "b7182049f8e23c9bac6c1ed09f4c05448aea3e80fe9ce42839e4b0e8d806d1e7"
+        },
+        "dependency_recovery": {
+          "invocations": 1,
+          "successes": 1,
+          "scope": "owner tree, word ceiling, JSON, privacy, syntax, manifests, seal, Method Flow, deck, phase truth, promotion, staged review, and route preparation after the mutable-accumulator failure boundary"
+        },
+        "initial_checks_inherited_from_failed_invocation": [
+          "exact local, upstream, tracking, and fresh-live equality",
+          "clean state before validation",
+          "planning, x1, x2, and final direct-parent chain",
+          "four owner-phase commits",
+          "zero owner-phase merges",
+          "one parent for each owner-phase commit"
+        ],
+        "checks": 2294,
+        "owner_files": 361,
+        "json_parses": 292,
+        "privacy_hits": 0,
+        "largest_document": {
+          "path": "docs/caelen-morrow/v694-v6/x2/method-flow-ledger.json",
+          "words": 53541,
+          "bytes": 691109
+        },
+        "node_syntax_checks": 35,
+        "manifest_entries": 815,
+        "content_seal_entries": 16,
+        "deck_cards": 108,
+        "baton_words": 17872,
+        "outcomes": {
+          "completed": 80,
+          "represented": 10,
+          "open_gap": 5,
+          "exact_gate": 5
+        },
+        "full_repository_suite_run": false,
+        "same_owner_only": true,
+        "independent_reproduction": false,
+        "terminal_verdict": "NOT_READY_FOR_STAGE_20",
+        "payload_sha256": "148450f8f4035ff2da3bfc15b4dd073551cf6426a46317c39f3150209e60bef3",
+        "recorded_at_utc": "2026-09-14T17:28:55.334Z",
+        "boundary": "The sole canonical aggregate remains invalid with zero success credit. This separately named recovery validates only the dependency-closed remainder and does not replay or retroactively promote the aggregate."
+      }
+    },
+    {
+      "name": "post-final-external-overlay.json",
+      "sha256": "6b1d6423e0353528bc29ca4c2a2bccef19464e1b86416a0dc8aacfb1ec6f7ba2",
+      "record": {
+        "schema": "ghc.family.caelen-post-final-external-overlay.v1",
+        "owner": "Caelen Morrow",
+        "phase": "v694-v6",
+        "exact_final": "d7465df024508f41517277059097e798e268a746",
+        "repository_seal": {
+          "methods": 438,
+          "witnesses": 9635,
+          "passing_witnesses": 7059,
+          "failed_witnesses_and_effective_negatives": 2576,
+          "open_gaps": 40,
+          "exact_gates": 40
+        },
+        "external_failures": [
+          {
+            "failure_id": "CM6946-POST-N001",
+            "failure": "The final builder crossed its reporting window and returned no direct receipt even though it completed all output files.",
+            "original_success_credit": 0,
+            "recovery": "Inspect the exact Node process and marker files, then run the independent final precommit validator without replaying the builder.",
+            "passing_witness": "No builder process remained; phase truth, baton, staged review, and seal existed; 887 precommit checks passed."
+          },
+          {
+            "failure_id": "CM6946-POST-N002",
+            "failure": "The sole exact-final canonical aggregate failed with TypeError: Assignment to constant variable when its const largest-document accumulator was reassigned.",
+            "original_success_credit": 0,
+            "recovery": "Keep the canonical latch at invocation 1, success 0, replay 0 and execute only the not-yet-completed dependency-closed remainder with a mutable accumulator.",
+            "passing_witness": "The separately named dependency-corrected continuation passed 2294 checks with zero privacy hits and did not replay the aggregate."
+          }
+        ],
+        "invalid_canonical_receipt_sha256": "b7182049f8e23c9bac6c1ed09f4c05448aea3e80fe9ce42839e4b0e8d806d1e7",
+        "canonical_lock_sha256": "b4ea0d33858cc171dcda083e9dc1f3fbf228c31cebfb5324a955d3d2676ea58e",
+        "dependency_recovery_payload_sha256": "148450f8f4035ff2da3bfc15b4dd073551cf6426a46317c39f3150209e60bef3",
+        "dependency_recovery_receipt_sha256": "2ad82075e60a266cf1c4efbb11545a715479c79f456ec5a164c7250389e8d2b6",
+        "canonical_invocation_success_replay": [
+          1,
+          0,
+          0
+        ],
+        "dependency_recovery_invocation_success": [
+          1,
+          1
+        ],
+        "successor_visible_counts": {
+          "methods": 440,
+          "witnesses": 9639,
+          "passing_witnesses": 7061,
+          "failed_witnesses_and_effective_negatives": 2578,
+          "open_gaps": 40,
+          "exact_gates": 40
+        },
+        "terminal_validation_state": "VALID_DEPENDENCY_CORRECTED_COMPOSITE_WITH_ZERO_CANONICAL_AGGREGATE_CREDIT",
+        "terminal_verdict": "NOT_READY_FOR_STAGE_20"
+      }
+    },
+    {
+      "name": "post-delivery-verification-overlay.json",
+      "sha256": "4969623380554d082d8092c73d84b9101bc52c437fa7eafd8db0279fdc314874",
+      "record": {
+        "schema": "ghc.family.caelen-post-delivery-verification-overlay.v1",
+        "owner": "Caelen Morrow",
+        "phase": "v694-v6",
+        "exact_final": "d7465df024508f41517277059097e798e268a746",
+        "delivery_state": "SENT_ONCE_ACKNOWLEDGED",
+        "delivery_receipt_sha256": "0439c5cc70d334e5cdf1d62068e3762f61fee2413180c65dda2d5b60f7b24891",
+        "failure": {
+          "failure_id": "CM6946-POST-N003",
+          "failure": "The first post-delivery verification wrapper exceeded its reporting window while recursively counting materialized files.",
+          "original_success_credit": 0,
+          "recovery": "Do not reread or monitor the recipient. Verify only scalar Git refs, divergence, clean state, phase history, receipt hashes, tracked owner-file count, and installed capability presence.",
+          "passing_witness": "Exact final, upstream, tracking, and fresh live were equal; divergence was 0/0; the lane was clean; four phase commits and zero merges remained; 361 tracked phase files, five installed skills, and the D-first runner bank were present."
+        },
+        "post_delivery_visible_counts": {
+          "methods": 441,
+          "witnesses": 9641,
+          "passing_witnesses": 7062,
+          "failed_witnesses_and_effective_negatives": 2579,
+          "open_gaps": 40,
+          "exact_gates": 40
+        },
+        "recipient_reread_after_send": false,
+        "recipient_monitored_after_send": false,
+        "resend_authorized": false,
+        "terminal_verdict": "NOT_READY_FOR_STAGE_20"
+      }
+    },
+    {
+      "name": "post-delivery-environment-overlay.json",
+      "sha256": "5d5ee617a7a937f1ee18e065083ba381e3a86e8e71fe46ee717b9c422dcb54f8",
+      "record": {
+        "schema": "ghc.family.caelen-post-delivery-environment-overlay.v1",
+        "owner": "Caelen Morrow",
+        "phase": "v694-v6",
+        "exact_final": "d7465df024508f41517277059097e798e268a746",
+        "immutable_environment_receipt_state": "git_node_python_powershell_verified_npm_and_pytest_child_resolution_unavailable",
+        "methods": [
+          {
+            "method_id": "CM6946-POST-ENV-M001",
+            "failed_witnesses": [
+              {
+                "negative_id": "CM6946-POST-ENV-N001",
+                "failure": "The final builder's Node child-process wrapper returned null status and no version for npm.cmd.",
+                "original_success_credit": 0
+              }
+            ],
+            "recovery": "Resolve npm.cmd through the current PowerShell command table and execute only --version.",
+            "passing_witness": {
+              "version": "12.0.2",
+              "exit_code": 0,
+              "updated": false,
+              "installed": false
+            }
+          },
+          {
+            "method_id": "CM6946-POST-ENV-M002",
+            "failed_witnesses": [
+              {
+                "negative_id": "CM6946-POST-ENV-N002",
+                "failure": "The final builder's Node child-process wrapper returned null status and no version for pytest.",
+                "original_success_credit": 0
+              },
+              {
+                "negative_id": "CM6946-POST-ENV-N003",
+                "failure": "The first direct bare pytest command was not present on this shell PATH and stopped the combined presentation.",
+                "original_success_credit": 0
+              }
+            ],
+            "recovery": "Use the already verified Python interpreter with python -m pytest --version; do not install or alter PATH.",
+            "passing_witness": {
+              "version": "pytest 9.1.1",
+              "exit_code": 0,
+              "updated": false,
+              "installed": false
+            }
+          }
+        ],
+        "additional_version_only_witness": {
+          "tool": "Codex CLI",
+          "version": "codex-cli 0.154.0",
+          "exit_code": 0,
+          "updated": false,
+          "installed": false
+        },
+        "post_environment_visible_counts": {
+          "methods": 443,
+          "witnesses": 9646,
+          "passing_witnesses": 7064,
+          "failed_witnesses_and_effective_negatives": 2582,
+          "open_gaps": 40,
+          "exact_gates": 40
+        },
+        "repository_mutated": false,
+        "recipient_reread_after_send": false,
+        "recipient_monitored_after_send": false,
+        "resend_authorized": false,
+        "terminal_verdict": "NOT_READY_FOR_STAGE_20"
+      }
+    },
+    {
+      "name": "seren-v694-v7-delivery.json",
+      "sha256": "0439c5cc70d334e5cdf1d62068e3762f61fee2413180c65dda2d5b60f7b24891",
+      "record": {
+        "schema": "ghc.family.caelen-route-delivery.v1",
+        "state": "SENT_ONCE_ACKNOWLEDGED",
+        "owner": "Caelen Morrow",
+        "phase": "v694-v6",
+        "recipient": "Seren Talewood",
+        "recipient_phase": "v694-v7",
+        "recipient_model_role": "Astra",
+        "exact_final": "d7465df024508f41517277059097e798e268a746",
+        "terminal_validation_state": "VALID_DEPENDENCY_CORRECTED_COMPOSITE_WITH_ZERO_CANONICAL_AGGREGATE_CREDIT",
+        "canonical_invocation_success_replay": [
+          1,
+          0,
+          0
+        ],
+        "dependency_recovery_invocation_success": [
+          1,
+          1
+        ],
+        "invalid_canonical_receipt_sha256": "b7182049f8e23c9bac6c1ed09f4c05448aea3e80fe9ce42839e4b0e8d806d1e7",
+        "dependency_recovery_receipt_sha256": "2ad82075e60a266cf1c4efbb11545a715479c79f456ec5a164c7250389e8d2b6",
+        "post_final_overlay_sha256": "6b1d6423e0353528bc29ca4c2a2bccef19464e1b86416a0dc8aacfb1ec6f7ba2",
+        "pre_send_guard_sha256": "a8174300aab3f9f7579f72b1c2b93f882fb0efa68ff747abfb4cf2a243766faa",
+        "message_sha256": "d41bde220d96efbb611ba5c190bc3199067380208729bc031995b50ebe510eee",
+        "recorded_at": "2026-09-15T05:35:16.4687419+12:00",
+        "native_task_surface_acknowledged": true,
+        "send_attempts": 1,
+        "resend_authorized": false,
+        "second_confirmation_sent": false,
+        "recipient_reread_after_send": false,
+        "recipient_monitored_after_send": false,
+        "task_created": false,
+        "task_forked": false,
+        "subagent_spawned": false,
+        "standby_contacted": false,
+        "later_endpoint_contacted": false,
+        "model_or_reasoning_setting_changed": false,
+        "repository_mutated_after_final": false,
+        "prospective_recipient_after_seren_snapshot_only": {
+          "owner": "Eiren Kestrel",
+          "phase": "v694-v8",
+          "must_be_refreshed_by_seren_at_terminal": true
+        },
+        "terminal_verdict": "NOT_READY_FOR_STAGE_20"
+      }
+    }
+  ],
+  "at_send": {
+    "methods": 440,
+    "witnesses": 9639,
+    "pass": 7061,
+    "fail": 2578
+  },
+  "latest_readback": {
+    "methods": 443,
+    "witnesses": 9646,
+    "pass": 7064,
+    "fail": 2582,
+    "open_gaps": 40,
+    "exact_gates": 40
+  },
+  "aggregate_invocation_success_replay": [
+    1,
+    0,
+    0
+  ],
+  "dependency_recovery_invocation_success": [
+    1,
+    1
+  ],
+  "no_recredit": true
+}
