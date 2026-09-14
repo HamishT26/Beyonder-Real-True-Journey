@@ -1,0 +1,3 @@
+"use strict";
+require.extensions[".txt"]=require.extensions[".js"];
+const fs=require("fs"),kernel=require("../../tooling/graph-plan-kernel.txt"),allowed=["condensation_dag","transitive_closure","transitive_reduction","weak_components"],file=process.argv[2];if(!file)throw new Error("fixture_path_required");const p=JSON.parse(fs.readFileSync(file,"utf8"));if(!allowed.includes(p.operation))throw new Error("operation_outside_runner_group");const result=kernel.validatePlan(p);process.stdout.write(JSON.stringify(result)+"\n");process.exitCode=result.accepted?0:2;
