@@ -1,0 +1,500 @@
+{
+  "count": 5,
+  "fixtures": [
+    {
+      "abstract": {
+        "initial": "idle",
+        "states": [
+          "idle",
+          "pending",
+          "done"
+        ],
+        "transitions": [
+          [
+            "idle",
+            "request",
+            "pending"
+          ],
+          [
+            "pending",
+            "ack",
+            "done"
+          ],
+          [
+            "done",
+            "reset",
+            "idle"
+          ]
+        ]
+      },
+      "case_id": "request-ack",
+      "concrete": {
+        "initial": "c-idle",
+        "states": [
+          "c-idle",
+          "c-queued",
+          "c-sent",
+          "c-done"
+        ],
+        "transitions": [
+          [
+            "c-idle",
+            "request",
+            "c-queued"
+          ],
+          [
+            "c-queued",
+            "tau",
+            "c-sent"
+          ],
+          [
+            "c-sent",
+            "ack",
+            "c-done"
+          ],
+          [
+            "c-done",
+            "reset",
+            "c-idle"
+          ]
+        ]
+      },
+      "relation": [
+        [
+          "c-idle",
+          "idle"
+        ],
+        [
+          "c-queued",
+          "pending"
+        ],
+        [
+          "c-sent",
+          "pending"
+        ],
+        [
+          "c-done",
+          "done"
+        ]
+      ],
+      "requirements": [
+        {
+          "action": "request",
+          "id": "R-REQ",
+          "parent": null
+        },
+        {
+          "action": "ack",
+          "id": "R-ACK",
+          "parent": "R-REQ"
+        },
+        {
+          "action": "reset",
+          "id": "R-RESET",
+          "parent": "R-ACK"
+        }
+      ],
+      "synthetic": true
+    },
+    {
+      "abstract": {
+        "initial": "empty",
+        "states": [
+          "empty",
+          "loaded"
+        ],
+        "transitions": [
+          [
+            "empty",
+            "put",
+            "loaded"
+          ],
+          [
+            "loaded",
+            "take",
+            "empty"
+          ],
+          [
+            "loaded",
+            "put",
+            "loaded"
+          ]
+        ]
+      },
+      "case_id": "queue-drain",
+      "concrete": {
+        "initial": "q0",
+        "states": [
+          "q0",
+          "q1",
+          "q2"
+        ],
+        "transitions": [
+          [
+            "q0",
+            "put",
+            "q1"
+          ],
+          [
+            "q1",
+            "put",
+            "q2"
+          ],
+          [
+            "q2",
+            "put",
+            "q2"
+          ],
+          [
+            "q1",
+            "take",
+            "q0"
+          ],
+          [
+            "q2",
+            "take",
+            "q1"
+          ]
+        ]
+      },
+      "relation": [
+        [
+          "q0",
+          "empty"
+        ],
+        [
+          "q1",
+          "loaded"
+        ],
+        [
+          "q2",
+          "loaded"
+        ]
+      ],
+      "requirements": [
+        {
+          "action": "put",
+          "id": "R-PUT",
+          "parent": null
+        },
+        {
+          "action": "take",
+          "id": "R-TAKE",
+          "parent": "R-PUT"
+        }
+      ],
+      "synthetic": true
+    },
+    {
+      "abstract": {
+        "initial": "start",
+        "states": [
+          "start",
+          "work",
+          "finish"
+        ],
+        "transitions": [
+          [
+            "start",
+            "begin",
+            "work"
+          ],
+          [
+            "work",
+            "complete",
+            "finish"
+          ],
+          [
+            "finish",
+            "restart",
+            "start"
+          ]
+        ]
+      },
+      "case_id": "redundant-path",
+      "concrete": {
+        "initial": "s0",
+        "states": [
+          "s0",
+          "left",
+          "right",
+          "end"
+        ],
+        "transitions": [
+          [
+            "s0",
+            "begin",
+            "left"
+          ],
+          [
+            "s0",
+            "begin",
+            "right"
+          ],
+          [
+            "left",
+            "complete",
+            "end"
+          ],
+          [
+            "right",
+            "complete",
+            "end"
+          ],
+          [
+            "end",
+            "restart",
+            "s0"
+          ]
+        ]
+      },
+      "relation": [
+        [
+          "s0",
+          "start"
+        ],
+        [
+          "left",
+          "work"
+        ],
+        [
+          "right",
+          "work"
+        ],
+        [
+          "end",
+          "finish"
+        ]
+      ],
+      "requirements": [
+        {
+          "action": "begin",
+          "id": "R-BEGIN",
+          "parent": null
+        },
+        {
+          "action": "complete",
+          "id": "R-COMPLETE",
+          "parent": "R-BEGIN"
+        },
+        {
+          "action": "restart",
+          "id": "R-RESTART",
+          "parent": "R-COMPLETE"
+        }
+      ],
+      "synthetic": true
+    },
+    {
+      "abstract": {
+        "initial": "ready",
+        "states": [
+          "ready",
+          "active",
+          "resolved"
+        ],
+        "transitions": [
+          [
+            "ready",
+            "start",
+            "active"
+          ],
+          [
+            "active",
+            "retry",
+            "active"
+          ],
+          [
+            "active",
+            "resolve",
+            "resolved"
+          ],
+          [
+            "resolved",
+            "reset",
+            "ready"
+          ]
+        ]
+      },
+      "case_id": "retry-fallback",
+      "concrete": {
+        "initial": "r0",
+        "states": [
+          "r0",
+          "r1",
+          "r2",
+          "r3"
+        ],
+        "transitions": [
+          [
+            "r0",
+            "start",
+            "r1"
+          ],
+          [
+            "r1",
+            "tau",
+            "r2"
+          ],
+          [
+            "r2",
+            "retry",
+            "r1"
+          ],
+          [
+            "r1",
+            "resolve",
+            "r3"
+          ],
+          [
+            "r2",
+            "resolve",
+            "r3"
+          ],
+          [
+            "r3",
+            "reset",
+            "r0"
+          ]
+        ]
+      },
+      "relation": [
+        [
+          "r0",
+          "ready"
+        ],
+        [
+          "r1",
+          "active"
+        ],
+        [
+          "r2",
+          "active"
+        ],
+        [
+          "r3",
+          "resolved"
+        ]
+      ],
+      "requirements": [
+        {
+          "action": "start",
+          "id": "R-START",
+          "parent": null
+        },
+        {
+          "action": "retry",
+          "id": "R-RETRY",
+          "parent": "R-START"
+        },
+        {
+          "action": "resolve",
+          "id": "R-RESOLVE",
+          "parent": "R-START"
+        },
+        {
+          "action": "reset",
+          "id": "R-RESET",
+          "parent": "R-RESOLVE"
+        }
+      ],
+      "synthetic": true
+    },
+    {
+      "abstract": {
+        "initial": "filed",
+        "states": [
+          "filed",
+          "review",
+          "closed"
+        ],
+        "transitions": [
+          [
+            "filed",
+            "submit",
+            "review"
+          ],
+          [
+            "review",
+            "decide",
+            "closed"
+          ],
+          [
+            "closed",
+            "reopen",
+            "review"
+          ]
+        ]
+      },
+      "case_id": "appeal-remedy",
+      "concrete": {
+        "initial": "a0",
+        "states": [
+          "a0",
+          "a1",
+          "a2",
+          "a3"
+        ],
+        "transitions": [
+          [
+            "a0",
+            "submit",
+            "a1"
+          ],
+          [
+            "a1",
+            "tau",
+            "a2"
+          ],
+          [
+            "a2",
+            "decide",
+            "a3"
+          ],
+          [
+            "a3",
+            "reopen",
+            "a1"
+          ]
+        ]
+      },
+      "relation": [
+        [
+          "a0",
+          "filed"
+        ],
+        [
+          "a1",
+          "review"
+        ],
+        [
+          "a2",
+          "review"
+        ],
+        [
+          "a3",
+          "closed"
+        ]
+      ],
+      "requirements": [
+        {
+          "action": "submit",
+          "id": "R-SUBMIT",
+          "parent": null
+        },
+        {
+          "action": "decide",
+          "id": "R-DECIDE",
+          "parent": "R-SUBMIT"
+        },
+        {
+          "action": "reopen",
+          "id": "R-REOPEN",
+          "parent": "R-DECIDE"
+        }
+      ],
+      "synthetic": true
+    }
+  ],
+  "real_records": 0
+}
