@@ -1,0 +1,10 @@
+"use strict";
+const fs=require("fs"),path=require("path");
+const root=path.resolve(__dirname,"..");
+const core=require(path.join(root,"payload","x1","route-resilience-core.txt"));
+const ext=require(path.join(root,"payload","x2","route-resilience-extension.txt"));
+const runtime=ext.createExtended(core);
+const allowed=["budget_admission","source_hash_binding","ledger_current_selection","ledger_nonerasure"];
+const request=JSON.parse(fs.readFileSync(0,"utf8"));
+if(!allowed.includes(request.operation)){process.stdout.write(JSON.stringify({ok:false,error:"E_RUNNER_SCOPE"})+"\n");process.exit(2);}
+const out=runtime.execute(request);process.stdout.write(JSON.stringify(out)+"\n");process.exit(out.ok?0:2);
