@@ -1,0 +1,130 @@
+'use strict';
+
+const X1 = require('../../x1/code/engine.txt');
+const assert = (condition, code) => { if (!condition) throw new Error(code); };
+const exactKeys = (value, keys, code) => {
+  assert(value !== null && typeof value === 'object' && !Array.isArray(value), code);
+  assert(JSON.stringify(Object.keys(value).sort()) === JSON.stringify(keys.slice().sort()), code);
+};
+const pairKey = (a, b) => [a, b].sort().join('\u0000');
+const OPS = [
+  'foata_layers', 'poset_width', 'poset_height', 'concurrency_pairs', 'prefix_trace_classes',
+  'refinement_map_check', 'structural_interpretation_boundary', 'uncertainty_boundary',
+  'empirical_gap', 'deployment_authority_gate'
+];
+
+function reachability(model) {
+  const dag = X1.dependencyDag(model);
+  const count = model.word.length;
+  const reach = Array.from({ length: count }, () => Array(count).fill(false));
+  for (const [a, b] of dag.edges) reach[a][b] = true;
+  for (let k = 0; k < count; k += 1) {
+    for (let i = 0; i < count; i += 1) {
+      for (let j = 0; j < count; j += 1) reach[i][j] ||= reach[i][k] && reach[k][j];
+    }
+  }
+  return { dag, reach };
+}
+
+function foataLayers(model) {
+  const { dag } = reachability(model);
+  const level = Array(model.word.length).fill(0);
+  for (let event = 0; event < model.word.length; event += 1) {
+    const predecessors = dag.edges.filter(([, target]) => target === event).map(([source]) => source);
+    level[event] = predecessors.length ? 1 + Math.max(...predecessors.map((source) => level[source])) : 0;
+  }
+  const maximum = level.length ? Math.max(...level) : -1;
+  return Array.from({ length: maximum + 1 }, (_, layer) => model.word.map((label, index) => ({ index, label })).filter((event) => level[event.index] === layer));
+}
+
+function widthWitness(model) {
+  const { reach } = reachability(model);
+  const count = model.word.length;
+  let best = [];
+  for (let mask = 0; mask < (1 << count); mask += 1) {
+    const candidate = [...Array(count).keys()].filter((i) => mask & (1 << i));
+    if (candidate.length <= best.length) continue;
+    if (candidate.every((a, i) => candidate.slice(i + 1).every((b) => !reach[a][b] && !reach[b][a]))) best = candidate;
+  }
+  return best;
+}
+
+function posetHeight(model) {
+  const { dag } = reachability(model);
+  const height = Array(model.word.length).fill(1);
+  for (let event = 0; event < model.word.length; event += 1) {
+    const predecessors = dag.edges.filter(([, target]) => target === event).map(([source]) => source);
+    if (predecessors.length) height[event] = 1 + Math.max(...predecessors.map((source) => height[source]));
+  }
+  return height.length ? Math.max(...height) : 0;
+}
+
+function validateRefinement(parameters, model) {
+  exactKeys(parameters, ['mapping', 'target_alphabet', 'target_independence'], 'E_PARAMETER_FIELDS');
+  exactKeys(parameters.mapping, model.alphabet, 'E_MAPPING');
+  assert(model.alphabet.every((a) => typeof parameters.mapping[a] === 'string'), 'E_MAPPING');
+  assert(Array.isArray(parameters.target_alphabet) && parameters.target_alphabet.length >= 1 && parameters.target_alphabet.length <= 8 && new Set(parameters.target_alphabet).size === parameters.target_alphabet.length, 'E_TARGET_ALPHABET');
+  assert(Object.values(parameters.mapping).every((x) => parameters.target_alphabet.includes(x)), 'E_MAPPING');
+  assert(Array.isArray(parameters.target_independence), 'E_TARGET_INDEPENDENCE');
+  const seen = new Set();
+  for (const pair of parameters.target_independence) {
+    assert(Array.isArray(pair) && pair.length === 2 && pair[0] !== pair[1] && pair.every((x) => parameters.target_alphabet.includes(x)), 'E_TARGET_INDEPENDENCE');
+    const key = pairKey(pair[0], pair[1]); assert(!seen.has(key), 'E_TARGET_INDEPENDENCE_DUPLICATE'); seen.add(key);
+  }
+}
+
+function execute(request) {
+  if (request && X1.OPS.includes(request.operation)) return X1.execute(request);
+  exactKeys(request, ['operation', 'model', 'parameters'], 'E_REQUEST_FIELDS');
+  assert(OPS.includes(request.operation), 'E_OPERATION');
+  X1.validateModel(request.model);
+  const operation = request.operation;
+  const model = request.model;
+  if (operation === 'refinement_map_check') validateRefinement(request.parameters, model);
+  else exactKeys(request.parameters, [], 'E_PARAMETER_FIELDS');
+  let result;
+  let outcome = 'completed';
+  if (operation === 'foata_layers') {
+    result = { layers: foataLayers(model) };
+  } else if (operation === 'poset_width') {
+    const witness = widthWitness(model); result = { width: witness.length, witness: witness.map((index) => ({ index, label: model.word[index] })) };
+  } else if (operation === 'poset_height') {
+    result = { height: posetHeight(model) };
+  } else if (operation === 'concurrency_pairs') {
+    const { reach } = reachability(model); const pairs = [];
+    for (let i = 0; i < model.word.length; i += 1) for (let j = i + 1; j < model.word.length; j += 1) if (!reach[i][j] && !reach[j][i]) pairs.push([{ index: i, label: model.word[i] }, { index: j, label: model.word[j] }]);
+    result = { pairs };
+  } else if (operation === 'prefix_trace_classes') {
+    result = { prefixes: Array.from({ length: model.word.length + 1 }, (_, length) => ({ length, canonical: X1.canonicalWord({ ...model, word: model.word.slice(0, length) }) })) };
+  } else if (operation === 'refinement_map_check') {
+    const targetIndependent = (a, b) => a !== b && request.parameters.target_independence.some((p) => pairKey(p[0], p[1]) === pairKey(a, b));
+    const injective = new Set(Object.values(request.parameters.mapping)).size === model.alphabet.length;
+    let preservesIndependence = true; let preservesDependence = true;
+    for (let i = 0; i < model.alphabet.length; i += 1) for (let j = i; j < model.alphabet.length; j += 1) {
+      const a = model.alphabet[i], b = model.alphabet[j], ta = request.parameters.mapping[a], tb = request.parameters.mapping[b];
+      if (X1.isIndependent(model, a, b) && !targetIndependent(ta, tb)) preservesIndependence = false;
+      if (!X1.isIndependent(model, a, b) && targetIndependent(ta, tb)) preservesDependence = false;
+    }
+    result = { injective, preserves_dependence: preservesDependence, preserves_independence: preservesIndependence };
+  } else if (operation === 'structural_interpretation_boundary') {
+    outcome = 'represented'; result = { case_id: model.id, event_meaning: 'abstract_synthetic_action', physical_law_claimed: false, personhood_claimed: false };
+  } else if (operation === 'uncertainty_boundary') {
+    outcome = 'represented'; result = { arithmetic: 'finite_exact_combinatorics', case_id: model.id, empirical_confidence: null, measurement_model: null, model_adequacy: 'unmeasured' };
+  } else if (operation === 'empirical_gap') {
+    outcome = 'open_gap'; result = { case_id: model.id, measured: false, missing: ['governed_observations', 'preregistered_prediction', 'external_baseline', 'uncertainty_model', 'independent_evaluation'] };
+  } else {
+    outcome = 'exact_gate'; result = { authorized: false, case_id: model.id, missing: ['specific_target', 'affected_party_authority', 'professional_review', 'independent_safety_privacy_review', 'legal_and_cultural_authority_where_applicable'] };
+  }
+  return { operation, case_id: model.id, outcome, result, scope: 'finite_synthetic_trace_monoid', independent_reproduction: false };
+}
+
+module.exports = { execute, OPS, reachability, foataLayers, widthWitness, posetHeight, validateRefinement };
+if (require.main === module) {
+  try {
+    const fs = require('fs'); const raw = process.argv[2] ?? fs.readFileSync(0, 'utf8');
+    if (Buffer.byteLength(raw) > 131072) throw new Error('E_INPUT_BYTES');
+    console.log(JSON.stringify(execute(JSON.parse(raw))));
+  } catch (error) {
+    console.log(JSON.stringify({ accepted: false, error: error.message, subject_success_credit: 0 })); process.exitCode = 2;
+  }
+}

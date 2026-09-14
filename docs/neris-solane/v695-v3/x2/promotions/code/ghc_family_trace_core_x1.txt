@@ -1,0 +1,151 @@
+'use strict';
+
+// Finite trace-monoid operations over explicitly declared synthetic words.
+// Input objects are validated and never mutated.
+const assert = (condition, code) => { if (!condition) throw new Error(code); };
+const exactKeys = (value, keys, code) => {
+  assert(value !== null && typeof value === 'object' && !Array.isArray(value), code);
+  assert(JSON.stringify(Object.keys(value).sort()) === JSON.stringify(keys.slice().sort()), code);
+};
+const symbolName = (value) => typeof value === 'string' && /^[a-z][a-z0-9_-]{0,23}$/.test(value);
+const pairKey = (a, b) => [a, b].sort().join('\u0000');
+
+function validateWord(word, alphabet, code = 'E_WORD') {
+  assert(Array.isArray(word) && word.length <= 8 && word.every((x) => alphabet.includes(x)), code);
+}
+
+function validateModel(model) {
+  exactKeys(model, ['id', 'alphabet', 'independence', 'word', 'lesson'], 'E_MODEL_FIELDS');
+  assert(symbolName(model.id), 'E_MODEL_ID');
+  assert(typeof model.lesson === 'string' && model.lesson.length > 0 && model.lesson.length <= 512, 'E_LESSON');
+  assert(Array.isArray(model.alphabet) && model.alphabet.length >= 1 && model.alphabet.length <= 8, 'E_ALPHABET');
+  assert(model.alphabet.every(symbolName) && new Set(model.alphabet).size === model.alphabet.length, 'E_ALPHABET');
+  assert(Array.isArray(model.independence) && model.independence.length <= 28, 'E_INDEPENDENCE');
+  const seen = new Set();
+  for (const pair of model.independence) {
+    assert(Array.isArray(pair) && pair.length === 2, 'E_INDEPENDENCE');
+    assert(pair.every((x) => model.alphabet.includes(x)) && pair[0] !== pair[1], 'E_INDEPENDENCE');
+    const key = pairKey(pair[0], pair[1]);
+    assert(!seen.has(key), 'E_INDEPENDENCE_DUPLICATE');
+    seen.add(key);
+  }
+  validateWord(model.word, model.alphabet);
+}
+
+const isIndependent = (model, a, b) => a !== b && model.independence.some((pair) => pairKey(pair[0], pair[1]) === pairKey(a, b));
+const compareWords = (model, left, right) => {
+  const rank = new Map(model.alphabet.map((x, i) => [x, i]));
+  for (let i = 0; i < Math.min(left.length, right.length); i += 1) {
+    if (rank.get(left[i]) !== rank.get(right[i])) return rank.get(left[i]) - rank.get(right[i]);
+  }
+  return left.length - right.length;
+};
+
+function dependencyDag(model, word = model.word) {
+  validateWord(word, model.alphabet);
+  const edges = [];
+  for (let i = 0; i < word.length; i += 1) {
+    for (let j = i + 1; j < word.length; j += 1) {
+      if (!isIndependent(model, word[i], word[j])) edges.push([i, j]);
+    }
+  }
+  return { events: word.map((label, index) => ({ index, label })), edges };
+}
+
+function topologicalLinearizations(model, word = model.word, cap = 256) {
+  assert(Number.isSafeInteger(cap) && cap >= 1 && cap <= 256, 'E_CAP');
+  const dag = dependencyDag(model, word);
+  const predecessors = Array.from({ length: word.length }, () => new Set());
+  for (const [a, b] of dag.edges) predecessors[b].add(a);
+  const eventOrders = [];
+  const used = new Set();
+  const visit = (prefix) => {
+    if (eventOrders.length >= cap && prefix.length < word.length) throw new Error('E_TRACE_CLASS_CAP');
+    if (prefix.length === word.length) { eventOrders.push([...prefix]); return; }
+    const candidates = [];
+    for (let i = 0; i < word.length; i += 1) {
+      if (!used.has(i) && [...predecessors[i]].every((p) => used.has(p))) candidates.push(i);
+    }
+    candidates.sort((a, b) => compareWords(model, [word[a]], [word[b]]) || a - b);
+    for (const event of candidates) {
+      used.add(event); prefix.push(event); visit(prefix); prefix.pop(); used.delete(event);
+    }
+  };
+  visit([]);
+  const byWord = new Map();
+  for (const order of eventOrders) {
+    const labels = order.map((i) => word[i]);
+    byWord.set(labels.join('\u0000'), { order, word: labels });
+  }
+  return [...byWord.values()].sort((a, b) => compareWords(model, a.word, b.word));
+}
+
+const canonicalWord = (model, word = model.word) => topologicalLinearizations(model, word, 256)[0].word;
+const OPS = [
+  'alphabet_structure', 'independence_validation', 'word_inventory', 'dependent_projections',
+  'adjacent_independent_swaps', 'canonical_trace_word', 'trace_equivalence', 'trace_class',
+  'dependency_dag', 'topological_linearizations'
+];
+
+function execute(request) {
+  exactKeys(request, ['operation', 'model', 'parameters'], 'E_REQUEST_FIELDS');
+  assert(OPS.includes(request.operation), 'E_OPERATION');
+  validateModel(request.model);
+  exactKeys(request.parameters, request.operation === 'trace_equivalence' ? ['other_word'] : (request.operation === 'trace_class' || request.operation === 'topological_linearizations') ? ['cap'] : [], 'E_PARAMETER_FIELDS');
+  const model = request.model;
+  const operation = request.operation;
+  let result;
+  if (operation === 'alphabet_structure') {
+    const dependencePairs = [];
+    for (let i = 0; i < model.alphabet.length; i += 1) {
+      for (let j = i; j < model.alphabet.length; j += 1) {
+        if (!isIndependent(model, model.alphabet[i], model.alphabet[j])) dependencePairs.push([model.alphabet[i], model.alphabet[j]]);
+      }
+    }
+    result = { alphabet: model.alphabet.slice(), dependence_pairs: dependencePairs, independence_pairs: model.independence.map((p) => [...p].sort()).sort() };
+  } else if (operation === 'independence_validation') {
+    result = { irreflexive: true, symmetric_normal_form: true, pair_count: model.independence.length };
+  } else if (operation === 'word_inventory') {
+    result = { counts: Object.fromEntries(model.alphabet.map((a) => [a, model.word.filter((x) => x === a).length])), length: model.word.length, word: model.word.slice() };
+  } else if (operation === 'dependent_projections') {
+    const pairs = [];
+    for (let i = 0; i < model.alphabet.length; i += 1) for (let j = i; j < model.alphabet.length; j += 1) if (!isIndependent(model, model.alphabet[i], model.alphabet[j])) pairs.push([model.alphabet[i], model.alphabet[j]]);
+    result = { projections: pairs.map(([a, b]) => ({ pair: [a, b], word: model.word.filter((x) => x === a || x === b) })) };
+  } else if (operation === 'adjacent_independent_swaps') {
+    const swaps = [];
+    for (let i = 0; i + 1 < model.word.length; i += 1) {
+      if (isIndependent(model, model.word[i], model.word[i + 1])) {
+        const word = model.word.slice(); [word[i], word[i + 1]] = [word[i + 1], word[i]]; swaps.push({ index: i, word });
+      }
+    }
+    result = { swaps };
+  } else if (operation === 'canonical_trace_word') {
+    const traceClass = topologicalLinearizations(model, model.word, 256);
+    result = { canonical: traceClass[0].word, class_size: traceClass.length };
+  } else if (operation === 'trace_equivalence') {
+    validateWord(request.parameters.other_word, model.alphabet, 'E_OTHER_WORD');
+    result = { equivalent: JSON.stringify(canonicalWord(model)) === JSON.stringify(canonicalWord(model, request.parameters.other_word)), left_canonical: canonicalWord(model), right_canonical: canonicalWord(model, request.parameters.other_word) };
+  } else if (operation === 'trace_class') {
+    const traceClass = topologicalLinearizations(model, model.word, request.parameters.cap);
+    result = { complete: true, count: traceClass.length, words: traceClass.map((x) => x.word) };
+  } else if (operation === 'dependency_dag') {
+    result = dependencyDag(model);
+  } else {
+    const traceClass = topologicalLinearizations(model, model.word, request.parameters.cap);
+    result = { complete: true, count: traceClass.length, linearizations: traceClass };
+  }
+  return { operation, case_id: model.id, outcome: 'completed', result, scope: 'finite_synthetic_trace_monoid', independent_reproduction: false };
+}
+
+module.exports = { execute, OPS, validateModel, validateWord, isIndependent, dependencyDag, topologicalLinearizations, canonicalWord };
+if (require.main === module) {
+  try {
+    const fs = require('fs');
+    const raw = process.argv[2] ?? fs.readFileSync(0, 'utf8');
+    if (Buffer.byteLength(raw) > 131072) throw new Error('E_INPUT_BYTES');
+    console.log(JSON.stringify(execute(JSON.parse(raw))));
+  } catch (error) {
+    console.log(JSON.stringify({ accepted: false, error: error.message, subject_success_credit: 0 }));
+    process.exitCode = 2;
+  }
+}
