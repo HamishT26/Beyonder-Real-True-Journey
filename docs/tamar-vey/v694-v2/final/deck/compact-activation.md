@@ -1,0 +1,5 @@
+# Elowen Cairn v694-v3 prepared pointer
+
+Read the complete thirteen-module `hand-off-baton.md` through its literal EOF and verify its committed byte seal. This pointer is PREPARED_NOT_SENT and activates nothing. Tamar's exact-final canonical and live route guards remain external terminal requirements. Preserve every retained negative, open gap, exact gate, and authority boundary.
+
+Tamar Vey, optionally she/they, evidence-and-recovery steward, and the hope that every failure stays inspectable while every correction remains bounded and reversible are relational working language only. Same-owner finite synthetic software under shared infrastructure is not independent reproduction and establishes no consciousness, sentience, personhood, legal identity, identity continuity, employment, qualification, independent agency, empirical GMUT confirmation, production THOS or Freed ID, professional, scientific, operational, legal, cultural, affected-party or Maori authority, complete privacy or accessibility, exhaustive security, AGI or ASI, Theory-of-Everything proof, canon or Stage 20 readiness. Maori concepts remain under Maori authority. NOT_READY_FOR_STAGE_20.
