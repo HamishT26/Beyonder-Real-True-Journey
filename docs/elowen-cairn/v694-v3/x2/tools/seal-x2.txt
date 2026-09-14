@@ -1,0 +1,54 @@
+"use strict";
+
+const fs = require("node:fs");
+const path = require("node:path");
+const crypto = require("node:crypto");
+
+const BASE = "docs/elowen-cairn/v694-v3/x2";
+const root = process.cwd();
+const sha = (bytes) => crypto.createHash("sha256").update(bytes).digest("hex");
+const read = (relative) => JSON.parse(fs.readFileSync(path.join(root, relative), "utf8"));
+const write = (relative, value) => fs.writeFileSync(path.join(root, relative), `${JSON.stringify(value, null, 2)}\n`, "utf8");
+const localValidation = read(`${BASE}/evidence/skill-validation.json`);
+const promotionValidation = read(`${BASE}/evidence/promotion-skill-validation.json`);
+if (localValidation.complete_read_by_owner_pending !== true || promotionValidation.complete_read_by_owner_pending !== true) throw new Error("x2 skill read seal already applied or unexpected state");
+const localReads = localValidation.rows.map((row) => {
+  const relative = `${BASE}/skills/${row.skill}/SKILL.md`, bytes = fs.readFileSync(path.join(root, relative));
+  return { skill: row.skill, operation: row.operation, path: relative, bytes: bytes.length, sha256: sha(bytes), complete_read_by_owner: true };
+});
+const promotionReads = promotionValidation.rows.map((row) => {
+  const relative = `${BASE}/promotion/source-skills/${row.skill}/SKILL.md`, bytes = fs.readFileSync(path.join(root, relative));
+  return { skill: row.skill, path: relative, bytes: bytes.length, sha256: sha(bytes), complete_read_by_owner: true };
+});
+localValidation.complete_read_by_owner_pending = false;
+localValidation.complete_read_by_owner = true;
+localValidation.rows = localValidation.rows.map((row) => ({ ...row, complete_read_by_owner: true }));
+promotionValidation.complete_read_by_owner_pending = false;
+promotionValidation.complete_read_by_owner = true;
+promotionValidation.rows = promotionValidation.rows.map((row) => ({ ...row, complete_read_by_owner: true }));
+write(`${BASE}/evidence/skill-validation.json`, localValidation);
+write(`${BASE}/evidence/promotion-skill-validation.json`, promotionValidation);
+write(`${BASE}/evidence/skill-read-through.json`, { schema: "ghc.family.skill-read-through.v9", owner: "Elowen Cairn", phase: "v694-v3", session: "x2", local_count: localReads.length, promotion_count: promotionReads.length, local: localReads, promotion: promotionReads, boundary: "Complete read-through covers finite synthetic instructions only and creates no real-service, professional, legal, cultural, Maori, or independent authority. NOT_READY_FOR_STAGE_20." });
+const summary = read(`${BASE}/summary.json`);
+summary.skills.complete_read_pending = false;
+summary.skills.promotion_read_pending = false;
+summary.skills.complete_local_reads = localReads.length;
+summary.skills.complete_promotion_reads = promotionReads.length;
+summary.global_installation = { skills: 5, public_runners: 5, runtime_modules: 2, bindings: read(`${BASE}/evidence/installed-bindings.json`).count, overwrites: 0, removals: 0, installed_smokes_valid: read(`${BASE}/evidence/installed-smokes.json`).valid };
+write(`${BASE}/summary.json`, summary);
+write(`${BASE}/freeze-receipt.json`, { schema: "ghc.family.x2-freeze-candidate.v9", owner: "Elowen Cairn", phase: "v694-v3", parent: "5dae75b7d17696641394f34b37aa4928d0ac06ed", x1_immutable: true, proposal_results: 50, outcomes: { completed: 30, represented: 10, open_gap: 5, exact_gate: 5 }, proposal_replays_after_builder_failure: 0, retained_candidate_failures: 100, owner_operational_failures: 1, total_x2_retained_failures: 101, safe_tasks: 100, clean_fix_refine_tasks: 100, local_skills: 10, local_runners: 5, global_skills: 5, public_runners: 5, exact_packets_executed: 0, blocked_packets_executed: 0, canonical_invoked: false, successor_contacts: 0, terminal_verdict: "NOT_READY_FOR_STAGE_20" });
+const bindings = [];
+function walk(relative) {
+  for (const entry of fs.readdirSync(path.join(root, relative), { withFileTypes: true })) {
+    const child = path.posix.join(relative.replaceAll("\\", "/"), entry.name);
+    if (entry.isDirectory()) walk(child);
+    else if (!child.endsWith("/manifest.json")) {
+      const bytes = fs.readFileSync(path.join(root, child));
+      bindings.push({ path: child, bytes: bytes.length, sha256: sha(bytes) });
+    }
+  }
+}
+walk(BASE);
+bindings.sort((a, b) => a.path.localeCompare(b.path));
+write(`${BASE}/manifest.json`, { schema: "ghc.family.precommit-byte-manifest.v9", domain: "raw_worktree_candidate_bytes", bindings, exclusions: [`${BASE}/manifest.json`], skill_metadata_extension_exception: ["agents/openai.yaml"] });
+process.stdout.write(`${JSON.stringify({ ok: true, local_reads: localReads.length, promotion_reads: promotionReads.length, manifest_entries: bindings.length })}\n`);

@@ -1,0 +1,93 @@
+"use strict";
+
+const fs = require("node:fs");
+const path = require("node:path");
+const crypto = require("node:crypto");
+const cp = require("node:child_process");
+
+const BASE = "docs/elowen-cairn/v694-v3/x2";
+const root = process.cwd();
+const plan = JSON.parse(fs.readFileSync(path.join(root, "docs/elowen-cairn/v694-v3/plan/proposals.json"), "utf8"));
+const promotion = JSON.parse(fs.readFileSync(path.join(root, `${BASE}/promotion/promotion-plan.json`), "utf8"));
+const codexRoot = process.env.CODEX_HOME || path.join(process.env.USERPROFILE || "", ".codex");
+const skillRoot = path.join(codexRoot, "skills");
+const publicRoot = process.env.GHC_PUBLIC_RUNNERS_ROOT;
+if (!publicRoot) throw new Error("GHC_PUBLIC_RUNNERS_ROOT required");
+const runnerDestination = path.join(publicRoot, "elowen-cairn-v694-v3");
+const sha = (bytes) => crypto.createHash("sha256").update(bytes).digest("hex");
+const write = (relative, value) => fs.writeFileSync(path.join(root, relative), `${JSON.stringify(value, null, 2)}\n`, "utf8");
+const bindings = [];
+const createdDestinations = [];
+for (const name of promotion.global_skills) {
+  const source = path.join(root, `${BASE}/promotion/source-skills/${name}`);
+  const destination = path.join(skillRoot, name);
+  if (!fs.existsSync(source)) throw new Error(`missing source skill ${name}`);
+  if (fs.existsSync(destination)) throw new Error(`destination collision ${name}`);
+}
+if (fs.existsSync(runnerDestination)) throw new Error("public runner destination collision");
+
+for (const name of promotion.global_skills) {
+  const source = path.join(root, `${BASE}/promotion/source-skills/${name}`);
+  const destination = path.join(skillRoot, name);
+  fs.cpSync(source, destination, { recursive: true, errorOnExist: true, force: false });
+  createdDestinations.push(`skills/${name}`);
+  const stack = [source];
+  while (stack.length) {
+    const current = stack.pop();
+    for (const entry of fs.readdirSync(current, { withFileTypes: true })) {
+      const sourcePath = path.join(current, entry.name);
+      if (entry.isDirectory()) stack.push(sourcePath);
+      else {
+        const relative = path.relative(source, sourcePath).replaceAll("\\", "/");
+        const destinationPath = path.join(destination, relative);
+        const sourceBytes = fs.readFileSync(sourcePath), destinationBytes = fs.readFileSync(destinationPath);
+        if (!sourceBytes.equals(destinationBytes)) throw new Error(`skill parity ${name}/${relative}`);
+        bindings.push({ source: `${BASE}/promotion/source-skills/${name}/${relative}`, destination_key: `skills/${name}/${relative}`, bytes: sourceBytes.length, sha256: sha(sourceBytes), parity: true });
+      }
+    }
+  }
+}
+fs.mkdirSync(runnerDestination, { recursive: false });
+createdDestinations.push("public-runners/elowen-cairn-v694-v3");
+for (const entry of fs.readdirSync(path.join(root, `${BASE}/promotion/source-runners`), { withFileTypes: true })) {
+  if (!entry.isFile()) continue;
+  const sourcePath = path.join(root, `${BASE}/promotion/source-runners`, entry.name);
+  const destinationPath = path.join(runnerDestination, entry.name);
+  fs.copyFileSync(sourcePath, destinationPath, fs.constants.COPYFILE_EXCL);
+  const sourceBytes = fs.readFileSync(sourcePath), destinationBytes = fs.readFileSync(destinationPath);
+  if (!sourceBytes.equals(destinationBytes)) throw new Error(`runner parity ${entry.name}`);
+  bindings.push({ source: `${BASE}/promotion/source-runners/${entry.name}`, destination_key: `public-runners/elowen-cairn-v694-v3/${entry.name}`, bytes: sourceBytes.length, sha256: sha(sourceBytes), parity: true });
+}
+
+const quickValidator = path.join(codexRoot, "skills", ".system", "skill-creator", "scripts", "quick_validate.py");
+const installedSkills = promotion.global_skills.map((name) => {
+  let output = "", status = 0;
+  try { output = cp.execFileSync("python", [quickValidator, path.join(skillRoot, name)], { cwd: root, encoding: "utf8" }).trim(); }
+  catch (error) { status = error.status; output = `${String(error.stdout || "")}\n${String(error.stderr || "")}`.trim(); }
+  return { skill: name, quick_validate_status: status, quick_validate_output: output, passed: status === 0 };
+});
+const loader = "const fs=require('node:fs'),path=require('node:path'),Module=require('node:module');const p=path.resolve(process.argv[1]);const m=new Module(p);m.filename=p;m.paths=Module._nodeModulePaths(path.dirname(p));m._compile(fs.readFileSync(p,'utf8'),p);";
+const installedRunners = promotion.public_runners.map((name, index) => {
+  const operationGroups = [
+    ["transit_service_profile", "transit_time_seconds", "transit_stop_sequence", "transit_trip_duration"],
+    ["transit_dwell_duration", "transit_running_time", "transit_calendar_membership", "transit_calendar_exception", "transit_frequency_count", "transit_headway_gap"],
+    ["transit_transfer_feasibility", "transit_transfer_slack", "transit_route_reachability", "transit_earliest_arrival"],
+    ["transit_block_conflict", "transit_vehicle_sequence", "transit_alert_window", "transit_status_projection"],
+    ["transit_independent_review_vacancy", "transit_release_authority_hold"]
+  ];
+  const operations = operationGroups[index];
+  const acceptingProposal = plan.rows.find((proposal) => operations.includes(proposal.operation));
+  const rejectingProposal = plan.rows.find((proposal) => !operations.includes(proposal.operation));
+  const runnerPath = path.join(runnerDestination, `${name}.txt`);
+  const accepting = JSON.parse(cp.execFileSync(process.execPath, ["-e", loader, runnerPath, JSON.stringify(acceptingProposal.request)], { cwd: root, encoding: "utf8" }).trim());
+  let rejectingText = "", rejectingStatus = 0;
+  try { rejectingText = cp.execFileSync(process.execPath, ["-e", loader, runnerPath, JSON.stringify(rejectingProposal.request)], { cwd: root, encoding: "utf8", stdio: ["ignore", "pipe", "pipe"] }).trim(); }
+  catch (error) { rejectingStatus = error.status; rejectingText = String(error.stdout || "").trim(); }
+  const rejecting = JSON.parse(rejectingText);
+  return { runner: name, accepting: { output: accepting, passed: accepting.ok === true }, rejecting: { output: rejecting, process_status: rejectingStatus, passed: rejecting.ok === false && rejecting.error === "E_SCOPE" } };
+});
+const valid = bindings.every((binding) => binding.parity) && installedSkills.every((row) => row.passed) && installedRunners.every((row) => row.accepting.passed && row.rejecting.passed);
+write(`${BASE}/evidence/installed-bindings.json`, { schema: "ghc.family.installed-binding-map.v9", count: bindings.length, bindings: bindings.sort((a, b) => a.destination_key.localeCompare(b.destination_key)), global_skills: promotion.global_skills.length, public_runners: promotion.public_runners.length, runtime_modules: promotion.runtime_modules.length, overwrites: 0, removals: 0, created_destinations: createdDestinations, private_absolute_paths_in_receipt: false, boundary: "Additive byte parity only; installation and smoke tests create no live transit, professional, legal, cultural, Maori, empirical, production, independent, or Stage 20 authority." });
+write(`${BASE}/evidence/installed-smokes.json`, { schema: "ghc.family.installed-capability-smokes.v9", valid, installed_skills: installedSkills, installed_runners: installedRunners, accepting_passes: installedRunners.filter((row) => row.accepting.passed).length, rejecting_passes: installedRunners.filter((row) => row.rejecting.passed).length, boundary: "Installed behavior remains finite synthetic same-owner evidence only. NOT_READY_FOR_STAGE_20." });
+if (!valid) throw new Error("installed capability validation failed");
+process.stdout.write(`${JSON.stringify({ ok: true, bindings: bindings.length, global_skills: installedSkills.length, public_runners: installedRunners.length, overwrites: 0 })}\n`);

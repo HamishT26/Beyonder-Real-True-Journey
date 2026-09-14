@@ -1,0 +1,173 @@
+"use strict";
+
+const fs = require("node:fs");
+const path = require("node:path");
+const crypto = require("node:crypto");
+const cp = require("node:child_process");
+const Module = require("node:module");
+
+const BASE = "docs/elowen-cairn/v694-v3";
+const X2 = `${BASE}/x2`;
+const PLAN = `${BASE}/plan`;
+const OWNER = "Elowen Cairn";
+const PHASE = "v694-v3";
+const X1_COMMIT = "5dae75b7d17696641394f34b37aa4928d0ac06ed";
+const BOUNDARY = "Elowen Cairn, optionally they/them, boundary cartographer and evidence steward, and the hope that possibility stays distinct from evidence while every correction remains safely retractable are relational working language only. X2 contains finite synthetic transfer, routing, status, vacancy, and authority-hold evidence only. It is not a real timetable, trip, passenger, operator, disruption, safety decision, accessibility evaluation, production system, professional review, legal or cultural decision, Maori authority, independent reproduction, empirical GMUT confirmation, AGI or ASI, consciousness or personhood evidence, Theory-of-Everything proof, canon, or Stage 20 readiness. NOT_READY_FOR_STAGE_20.";
+
+function stable(value) {
+  if (Array.isArray(value)) return value.map(stable);
+  if (value && typeof value === "object") return Object.fromEntries(Object.keys(value).sort().map((key) => [key, stable(value[key])]));
+  return value;
+}
+function canonical(value) { return JSON.stringify(stable(value)); }
+function sha(bytes) { return crypto.createHash("sha256").update(bytes).digest("hex"); }
+function readJson(relative) { return JSON.parse(fs.readFileSync(path.join(process.cwd(), relative), "utf8")); }
+function ensureDir(relative) { fs.mkdirSync(path.join(process.cwd(), relative), { recursive: true }); }
+function writeJson(relative, value) { ensureDir(path.dirname(relative)); fs.writeFileSync(path.join(process.cwd(), relative), `${JSON.stringify(value, null, 2)}\n`, "utf8"); }
+function writeText(relative, value) { ensureDir(path.dirname(relative)); fs.writeFileSync(path.join(process.cwd(), relative), value.endsWith("\n") ? value : `${value}\n`, "utf8"); }
+function git(...args) { return cp.execFileSync("git", args, { cwd: process.cwd(), encoding: "utf8" }).trim(); }
+function loadTxt(relative) { const filename = path.resolve(relative), mod = new Module(filename); mod.filename = filename; mod.paths = Module._nodeModulePaths(path.dirname(filename)); mod._compile(fs.readFileSync(filename, "utf8"), filename); return mod.exports; }
+
+if (git("branch", "--show-current") !== "codex/GHC-Family/elowen-cairn-v694-v3-main") throw new Error("wrong x2 branch");
+if (git("rev-parse", "HEAD") !== X1_COMMIT) throw new Error("x2 must begin at immutable x1 commit");
+const status = git("status", "--porcelain=v1", "--untracked-files=all");
+if (status && !status.split(/\r?\n/).every((line) => line.includes(`${X2}/`))) throw new Error("unexpected x2 pre-existing changes");
+
+const plan = readJson(`${PLAN}/proposals.json`);
+const capabilities = readJson(`${PLAN}/capabilities.json`);
+const x2Proposals = plan.rows.filter((row) => row.session === "x2");
+const skillPlans = capabilities.local_skills.filter((row) => row.session === "x2");
+const runnerPlans = capabilities.local_runners.filter((row) => row.session === "x2");
+const globalGroups = capabilities.global_groups;
+if (x2Proposals.length !== 50 || skillPlans.length !== 10 || runnerPlans.length !== 5 || globalGroups.length !== 5) throw new Error("x2 planning selection mismatch");
+
+for (const skill of skillPlans) {
+  const dir = `${X2}/skills/${skill.name}`;
+  const display = skill.name.split("-").map((word) => word ? word[0].toUpperCase() + word.slice(1) : word).join(" ");
+  writeText(`${dir}/SKILL.md`, `---\nname: ${skill.name}\ndescription: Validate the ${skill.operation} finite synthetic transit contract inside the Elowen v694-v3 owner lane; use for bounded transfer, routing, or status evidence only, never live service or professional decisions.\n---\n\n# ${display}\n\nUse this skill only when a request exactly matches \`${skill.operation}\` in the frozen Elowen v694-v3 x2 profile.\n\n## Workflow\n\n1. Preserve the frozen request and outcome ceiling.\n2. Invoke only a paired runner whose scope includes the exact operation.\n3. Compare the complete result envelope; do not compensate for a missing field.\n4. Retain both malformed subjects and their refusal codes at zero subject credit.\n5. Keep open gaps and exact gates open even when the refusal software behaves as expected.\n\n## Boundaries\n\nNo output is a live route, transfer guarantee, vehicle assignment, disruption notice, accessibility completion, release permission, or authority grant. ${BOUNDARY}\n`);
+  writeText(`${dir}/agents/openai.yaml`, `interface:\n  display_name: "${display}"\n  short_description: "Validate ${skill.operation} synthetic evidence"\n`);
+}
+
+const runnerLoader = "const fs=require('node:fs'),path=require('node:path'),Module=require('node:module');const p=path.resolve(process.argv[1]);const m=new Module(p);m.filename=p;m.paths=Module._nodeModulePaths(path.dirname(p));m._compile(fs.readFileSync(p,'utf8'),p);";
+for (const runner of runnerPlans) {
+  const source = `"use strict";\nconst fs=require("node:fs"),path=require("node:path"),Module=require("node:module");\nfunction load(p){const f=path.resolve(__dirname,p),m=new Module(f);m.filename=f;m.paths=Module._nodeModulePaths(path.dirname(f));m._compile(fs.readFileSync(f,"utf8"),f);return m.exports;}\nconst advanced=load("../tools/transit-advanced.txt");\nconst allowed=new Set(${JSON.stringify(runner.operations)});\nlet request;try{request=JSON.parse(process.argv[2]||"");}catch{process.stdout.write(JSON.stringify({ok:false,error:"E_JSON",authority:false})+"\\n");process.exitCode=1;}\nif(request){const output=advanced.evaluate(request,allowed);process.stdout.write(JSON.stringify(output)+"\\n");if(!output.ok)process.exitCode=1;}\n`;
+  writeText(`${X2}/runners/${runner.name}.txt`, source);
+}
+
+const advanced = loadTxt(`${X2}/tools/transit-advanced.txt`);
+const proposalResults = [], candidateResults = [], safeResults = [], cleanResults = [], receipts = [];
+for (const proposal of x2Proposals) {
+  const before = canonical(proposal.request);
+  const output = advanced.evaluate(proposal.request);
+  const after = canonical(proposal.request);
+  const match = canonical(output) === canonical(proposal.expected_output);
+  const immutable = before === after;
+  const passed = match && immutable && output.authority === false;
+  const positive = { proposal_id: proposal.proposal_id, operation: proposal.operation, expected_disposition: proposal.expected_disposition, observed_disposition: passed ? output.outcome : null, complete_envelope_match: match, input_immutable: immutable, authority: output.authority, passed, output };
+  proposalResults.push(positive);
+  for (const subject of proposal.candidate_subjects) {
+    const subjectBefore = canonical(subject.request);
+    const observed = advanced.evaluate(subject.request);
+    const subjectAfter = canonical(subject.request);
+    candidateResults.push({ proposal_id: proposal.proposal_id, negative_id: subject.negative_id, expected_error: subject.expected_rejection.error, observed, request_immutable: subjectBefore === subjectAfter, refusal_pass: observed.ok === false && observed.error === subject.expected_rejection.error && subjectBefore === subjectAfter, subject_success_credit: 0 });
+  }
+  safeResults.push(
+    { task_id: `EC6943-X2-SAFE-${proposal.proposal_id.slice(-3)}-1`, proposal_id: proposal.proposal_id, check: "complete frozen envelope", passed: positive.complete_envelope_match, credit: "bounded_same_owner_only" },
+    { task_id: `EC6943-X2-SAFE-${proposal.proposal_id.slice(-3)}-2`, proposal_id: proposal.proposal_id, check: "request immutable and authority false", passed: positive.input_immutable && positive.authority === false, credit: "bounded_same_owner_only" }
+  );
+  cleanResults.push(
+    { task_id: `EC6943-X2-CFR-${proposal.proposal_id.slice(-3)}-1`, proposal_id: proposal.proposal_id, check: "strict x2 field and scope allowlist", passed: proposal.candidate_subjects[0].expected_rejection.error === "E_FIELDS", destructive: false },
+    { task_id: `EC6943-X2-CFR-${proposal.proposal_id.slice(-3)}-2`, proposal_id: proposal.proposal_id, check: "open-gap or exact-gate nonpromotion where applicable", passed: proposal.expected_output.authority === false && (proposal.expected_disposition !== "open_gap" || output.value.open === true) && (proposal.expected_disposition !== "exact_gate" || output.value.executed === false), destructive: false }
+  );
+  const negatives = candidateResults.slice(-2);
+  const receipt = { schema: "ghc.family.proposal-receipt.v9", owner: OWNER, phase: PHASE, session: "x2", proposal_id: proposal.proposal_id, definition_sha256: proposal.definition_sha256, positive, negatives, passed: positive.passed && negatives.every((row) => row.refusal_pass), independent_reproduction: false, boundary: BOUNDARY };
+  receipts.push(receipt);
+  writeJson(`${X2}/evidence/${proposal.proposal_id}-receipt.json`, receipt);
+}
+
+const runnerSmokes = [];
+for (const runner of runnerPlans) {
+  const runnerPath = path.resolve(`${X2}/runners/${runner.name}.txt`);
+  const acceptingProposal = x2Proposals.find((row) => runner.operations.includes(row.operation));
+  const rejectingProposal = x2Proposals.find((row) => !runner.operations.includes(row.operation));
+  const accepting = JSON.parse(cp.execFileSync(process.execPath, ["-e", runnerLoader, runnerPath, JSON.stringify(acceptingProposal.request)], { cwd: process.cwd(), encoding: "utf8" }).trim());
+  let rejectingRaw = "", rejectingStatus = 0;
+  try { rejectingRaw = cp.execFileSync(process.execPath, ["-e", runnerLoader, runnerPath, JSON.stringify(rejectingProposal.request)], { cwd: process.cwd(), encoding: "utf8", stdio: ["ignore", "pipe", "pipe"] }).trim(); }
+  catch (error) { rejectingStatus = error.status; rejectingRaw = String(error.stdout || "").trim(); }
+  const rejecting = JSON.parse(rejectingRaw);
+  runnerSmokes.push({ runner: runner.name, operations: runner.operations, accepting: { output: accepting, passed: accepting.ok === true }, rejecting: { output: rejecting, process_status: rejectingStatus, passed: rejecting.ok === false && rejecting.error === "E_SCOPE" } });
+}
+
+const codexRoot = process.env.CODEX_HOME || path.join(process.env.USERPROFILE || "", ".codex");
+const quickValidator = path.join(codexRoot, "skills", ".system", "skill-creator", "scripts", "quick_validate.py");
+const skillValidation = [];
+for (const skill of skillPlans) {
+  const skillPath = path.resolve(`${X2}/skills/${skill.name}`);
+  let output = "", statusCode = 0;
+  try { output = cp.execFileSync("python", [quickValidator, skillPath], { cwd: process.cwd(), encoding: "utf8" }).trim(); }
+  catch (error) { statusCode = error.status; output = `${String(error.stdout || "")}\n${String(error.stderr || "")}`.trim(); }
+  const text = fs.readFileSync(path.join(skillPath, "SKILL.md"), "utf8");
+  skillValidation.push({ skill: skill.name, operation: skill.operation, quick_validate_status: statusCode, quick_validate_output: output, complete_entrypoint_bytes: Buffer.byteLength(text), no_todo: !text.includes("TODO"), accepting_smoke: runnerSmokes.some((smoke) => smoke.operations.includes(skill.operation) && smoke.accepting.passed), rejecting_smoke: runnerSmokes.some((smoke) => smoke.operations.includes(skill.operation) && smoke.rejecting.passed), passed: statusCode === 0 && !text.includes("TODO") });
+}
+
+for (const group of globalGroups) {
+  const dir = `${X2}/promotion/source-skills/${group.skill}`;
+  const display = group.skill.split("-").map((word) => word ? word[0].toUpperCase() + word.slice(1) : word).join(" ");
+  const localSources = skillPlans.filter((skill) => group.operations.includes(skill.operation)).map((skill) => ({ path: `${X2}/skills/${skill.name}/SKILL.md`, sha256: sha(fs.readFileSync(path.join(process.cwd(), `${X2}/skills/${skill.name}/SKILL.md`))) }));
+  writeText(`${dir}/SKILL.md`, `---\nname: ${group.skill}\ndescription: Route finite synthetic transit operations ${group.operations.join(", ")}; use for typed evidence only and never live service, passenger safety, professional, legal, cultural, or Maori-authority decisions.\n---\n\n# ${display}\n\nUse this curated skill only for the exact operations listed in [references/operations.json](references/operations.json). Read [references/scope.json](references/scope.json) before execution.\n\nPreserve strict fields, full-envelope equality, malformed-subject retention, authority false, and every protected gate. Open gaps and exact gates never become completed because refusal software passes.\n\n${BOUNDARY}\n`);
+  writeText(`${dir}/agents/openai.yaml`, `interface:\n  display_name: "${display}"\n  short_description: "Route bounded synthetic transit evidence"\n`);
+  writeJson(`${dir}/references/operations.json`, { schema: "ghc.family.operation-selection.v9", operations: group.operations, proposal_ids: x2Proposals.filter((p) => group.operations.includes(p.operation)).map((p) => p.proposal_id), boundary: BOUNDARY });
+  writeJson(`${dir}/references/scope.json`, { owner_scope: "Elowen v694-v3 finite synthetic transit delta", repository_scan: false, cross_lane_scan: false, sibling_lane_mutation: false, live_transit_use: false, professional_authority: false, protected_gates: plan.rows[0].protected_gates });
+  writeJson(`${dir}/references/accepting.json`, { request: x2Proposals.find((p) => group.operations.includes(p.operation)).request, expected_ok: true, bounded_credit: "same_owner_only" });
+  writeJson(`${dir}/references/adverse.json`, { request: { ...x2Proposals.find((p) => group.operations.includes(p.operation)).request, unreviewed_authority: true }, expected_error: "E_FIELDS", subject_success_credit: 0 });
+  writeJson(`${dir}/references/merge-sources.json`, { schema: "ghc.family.additive-merge-sources.v9", sources: localSources, source_contracts_retained: true, destructive_change: false, rollback: "Remove or stop selecting only the newly created global destination; retain all owner-local sources." });
+}
+
+const portableCore = fs.readFileSync(path.join(process.cwd(), `${BASE}/x1/tools/transit-core.txt`), "utf8");
+const portableAdvanced = fs.readFileSync(path.join(process.cwd(), `${X2}/tools/transit-advanced.txt`), "utf8").replace('../../x1/tools/transit-core.txt', './transit-core.txt');
+writeText(`${X2}/promotion/source-runners/transit-core.txt`, portableCore);
+writeText(`${X2}/promotion/source-runners/transit-advanced.txt`, portableAdvanced);
+for (const group of globalGroups) {
+  const source = `"use strict";\nconst fs=require("node:fs"),path=require("node:path"),Module=require("node:module");\nfunction load(p){const f=path.resolve(__dirname,p),m=new Module(f);m.filename=f;m.paths=Module._nodeModulePaths(path.dirname(f));m._compile(fs.readFileSync(f,"utf8"),f);return m.exports;}\nconst advanced=load("./transit-advanced.txt");\nconst allowed=new Set(${JSON.stringify(group.operations)});\nlet request;try{request=JSON.parse(process.argv[2]||"");}catch{process.stdout.write(JSON.stringify({ok:false,error:"E_JSON",authority:false})+"\\n");process.exitCode=1;}\nif(request){const output=advanced.evaluate(request,allowed);process.stdout.write(JSON.stringify(output)+"\\n");if(!output.ok)process.exitCode=1;}\n`;
+  writeText(`${X2}/promotion/source-runners/${group.runner}.txt`, source);
+}
+
+const promotionSkillValidation = [];
+for (const group of globalGroups) {
+  const skillPath = path.resolve(`${X2}/promotion/source-skills/${group.skill}`);
+  let output = "", statusCode = 0;
+  try { output = cp.execFileSync("python", [quickValidator, skillPath], { cwd: process.cwd(), encoding: "utf8" }).trim(); }
+  catch (error) { statusCode = error.status; output = `${String(error.stdout || "")}\n${String(error.stderr || "")}`.trim(); }
+  const text = fs.readFileSync(path.join(skillPath, "SKILL.md"), "utf8");
+  promotionSkillValidation.push({ skill: group.skill, quick_validate_status: statusCode, quick_validate_output: output, no_todo: !text.includes("TODO"), complete_read_by_owner_pending: true, passed: statusCode === 0 && !text.includes("TODO") });
+}
+
+const methods = skillPlans.map((skill, i) => {
+  const operationProposals = proposalResults.filter((row) => row.operation === skill.operation);
+  const operationProposalIds = new Set(operationProposals.map((row) => row.proposal_id));
+  const operationNegatives = candidateResults.filter((row) => operationProposalIds.has(row.proposal_id));
+  const runner = runnerSmokes.find((smoke) => smoke.operations.includes(skill.operation));
+  const failed = operationNegatives.map((row) => ({ witness_id: row.negative_id, kind: "failed", retained_negative_id: row.negative_id, subject_success_credit: 0, observed_error: row.observed.error }));
+  const passing = [...operationProposals.map((row) => ({ witness_id: `${row.proposal_id}-PASS`, kind: "pass", retained_negative_id: null, bounded_credit: "same_owner_only" })), ...operationNegatives.map((row) => ({ witness_id: `${row.negative_id}-REFUSAL`, kind: "pass", retained_negative_id: row.negative_id, bounded_credit: "refusal_only" })), { witness_id: `EC6943-X2-RUNNER-${String(i + 1).padStart(2, "0")}-PASS`, kind: "pass", retained_negative_id: null, bounded_credit: "runner_smoke_only", runner_accepting: runner.accepting.passed, runner_rejecting: runner.rejecting.passed }];
+  return { method_id: `EC6943-X2-M${String(i + 1).padStart(3, "0")}`, issue_id: `EC6943-X2-I${String(i + 1).padStart(3, "0")}`, operation: skill.operation, candidate_workaround: "Use the strict x2 operation field allowlist and frozen disposition ceiling.", failure_signature: "Unknown field, unknown or out-of-scope operation, type error, oracle mismatch, request mutation, or outcome promotion.", trigger_preconditions: ["Immutable x1 exists", "Frozen x2 proposal exists", "Owner-local scope includes the operation"], recurrence_guard: "Compare full canonical envelopes and preserve both negative subjects.", rollback: "Keep planning and x1 immutable; correct only the smallest x2 dependency.", expected_fail_witness: operationNegatives.map((row) => row.negative_id), expected_pass_witness: operationProposals.map((row) => `${row.proposal_id}-PASS`), promotion_gate: ["five proposal witnesses", "ten retained failures", "ten exact refusals", "skill quick validation", "runner smokes", "outcome ceiling preserved"], sibling_recommendation: "Reuse only for the exact finite synthetic operation; never infer real transit or authority.", failed_evidence_retained: true, preferred: true, witnesses: [...failed, ...passing] };
+});
+const negatives = candidateResults.map((row) => ({ negative_id: row.negative_id, proposal_id: row.proposal_id, session: "x2", class: "preregistered_malformed_subject", observed_error: row.observed.error, expected_error: row.expected_error, refusal_pass: row.refusal_pass, subject_success_credit: 0, retained: true, linked_method_id: methods.find((method) => operationFor(row.proposal_id) === method.operation).method_id }));
+function operationFor(proposalId) { return x2Proposals.find((proposal) => proposal.proposal_id === proposalId).operation; }
+
+const outcomeCounts = proposalResults.reduce((acc, row) => { acc[row.observed_disposition] = (acc[row.observed_disposition] || 0) + 1; return acc; }, {});
+writeJson(`${X2}/results/proposals.json`, { schema: "ghc.family.proposal-results.v9", session: "x2", total: proposalResults.length, passed: proposalResults.filter((row) => row.passed).length, outcomes: outcomeCounts, rows: proposalResults, boundary: BOUNDARY });
+writeJson(`${X2}/results/candidates.json`, { schema: "ghc.family.candidate-results.v9", session: "x2", total: candidateResults.length, refusal_passes: candidateResults.filter((row) => row.refusal_pass).length, subject_success_credit: 0, rows: candidateResults, boundary: BOUNDARY });
+writeJson(`${X2}/results/safe.json`, { schema: "ghc.family.safe-task-results.v9", session: "x2", total: safeResults.length, passed: safeResults.filter((row) => row.passed).length, rows: safeResults, boundary: BOUNDARY });
+writeJson(`${X2}/results/clean-fix-refine.json`, { schema: "ghc.family.clean-fix-refine-results.v9", session: "x2", total: cleanResults.length, passed: cleanResults.filter((row) => row.passed).length, deletions: 0, rows: cleanResults, boundary: BOUNDARY });
+writeJson(`${X2}/evidence/runner-smokes.json`, { schema: "ghc.family.runner-smokes.v9", total: runnerSmokes.length, accepting_passes: runnerSmokes.filter((row) => row.accepting.passed).length, rejecting_passes: runnerSmokes.filter((row) => row.rejecting.passed).length, rows: runnerSmokes, boundary: BOUNDARY });
+writeJson(`${X2}/evidence/skill-validation.json`, { schema: "ghc.family.skill-validation.v9", initialized_with_official_skill_creator: true, total: skillValidation.length, passed: skillValidation.filter((row) => row.passed).length, complete_read_by_owner_pending: true, rows: skillValidation, boundary: BOUNDARY });
+writeJson(`${X2}/evidence/promotion-skill-validation.json`, { schema: "ghc.family.promotion-skill-validation.v9", initialized_with_official_skill_creator: true, total: promotionSkillValidation.length, passed: promotionSkillValidation.filter((row) => row.passed).length, complete_read_by_owner_pending: true, rows: promotionSkillValidation, boundary: BOUNDARY });
+writeJson(`${X2}/retained-negative-register.json`, { schema: "ghc.family.retained-negative-register.v9", session: "x2", count: negatives.length, rows: negatives, boundary: BOUNDARY });
+writeJson(`${X2}/method-flow.json`, { schema: "ghc.family.method-flow.v9-owner-session", session: "x2", methods: methods.length, witnesses: methods.flatMap((method) => method.witnesses).length, failed_witnesses: negatives.length, passing_witnesses: methods.flatMap((method) => method.witnesses).filter((row) => row.kind === "pass").length, records: methods, boundary: BOUNDARY });
+writeJson(`${X2}/operational-failures.json`, { schema: "ghc.family.operational-failure-overlay.v1", session: "x2", failures: [], boundary: BOUNDARY });
+writeJson(`${X2}/exact-and-blocked-packets.json`, { schema: "ghc.family.packet-execution-state.v9", exact: { count: 50, executed: 0, state: "visible_unexecuted" }, blocked: { count: 30, executed: 0, state: "visible_unexecuted" }, boundary: BOUNDARY });
+writeJson(`${X2}/summary.json`, { schema: "ghc.family.x2-summary.v9", owner: OWNER, phase: PHASE, x1_commit: X1_COMMIT, proposals: { total: 50, passed: proposalResults.filter((row) => row.passed).length, outcomes: outcomeCounts }, candidates: { total: 100, refusal_passes: candidateResults.filter((row) => row.refusal_pass).length, subject_success_credit: 0 }, safe: { total: 100, passed: safeResults.filter((row) => row.passed).length }, clean_fix_refine: { total: 100, passed: cleanResults.filter((row) => row.passed).length }, skills: { local: 10, quick_validated: skillValidation.filter((row) => row.passed).length, complete_read_pending: true, promotion_source: 5, promotion_quick_validated: promotionSkillValidation.filter((row) => row.passed).length }, runners: { local: 5, accepting_passes: runnerSmokes.filter((row) => row.accepting.passed).length, rejecting_passes: runnerSmokes.filter((row) => row.rejecting.passed).length, public_source: 5 }, exact_packets_executed: 0, blocked_packets_executed: 0, independent_reproduction: false, terminal_verdict: "NOT_READY_FOR_STAGE_20", boundary: BOUNDARY });
+
+const allPass = proposalResults.every((row) => row.passed) && candidateResults.every((row) => row.refusal_pass) && safeResults.every((row) => row.passed) && cleanResults.every((row) => row.passed) && runnerSmokes.every((row) => row.accepting.passed && row.rejecting.passed) && skillValidation.every((row) => row.passed) && promotionSkillValidation.every((row) => row.passed) && receipts.every((row) => row.passed) && canonical(outcomeCounts) === canonical({ completed: 30, represented: 10, open_gap: 5, exact_gate: 5 });
+if (!allPass) throw new Error(`x2 execution or validation failed ${JSON.stringify({ outcomeCounts, proposalPasses: proposalResults.filter((x) => x.passed).length, candidatePasses: candidateResults.filter((x) => x.refusal_pass).length })}`);
+process.stdout.write(`${JSON.stringify({ ok: true, proposals: proposalResults.length, outcomes: outcomeCounts, candidates: candidateResults.length, safe: safeResults.length, clean_fix_refine: cleanResults.length, local_skills: skillValidation.length, promotion_skills: promotionSkillValidation.length, local_runners: runnerSmokes.length, failed_witnesses: negatives.length })}\n`);

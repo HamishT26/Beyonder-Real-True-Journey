@@ -1,0 +1,145 @@
+"use strict";
+
+const fs = require("node:fs");
+const path = require("node:path");
+const Module = require("node:module");
+
+function load(relative) {
+  const filename = path.resolve(__dirname, relative);
+  const mod = new Module(filename);
+  mod.filename = filename;
+  mod.paths = Module._nodeModulePaths(path.dirname(filename));
+  mod._compile(fs.readFileSync(filename, "utf8"), filename);
+  return mod.exports;
+}
+
+const core = load("../../x1/tools/transit-core.txt");
+const X2_OPERATIONS = new Set([
+  "transit_transfer_feasibility",
+  "transit_transfer_slack",
+  "transit_route_reachability",
+  "transit_earliest_arrival",
+  "transit_block_conflict",
+  "transit_vehicle_sequence",
+  "transit_alert_window",
+  "transit_status_projection",
+  "transit_independent_review_vacancy",
+  "transit_release_authority_hold"
+]);
+const ALL_OPERATIONS = new Set([...core.X1_OPERATIONS, ...X2_OPERATIONS]);
+
+function isRecord(value) { return value !== null && typeof value === "object" && !Array.isArray(value); }
+function fail(error) { return { ok: false, error, authority: false }; }
+function isInteger(value, minimum = Number.MIN_SAFE_INTEGER) { return Number.isSafeInteger(value) && value >= minimum; }
+function hasExactKeys(value, required) {
+  if (!isRecord(value) || !required.every((key) => Object.hasOwn(value, key))) return false;
+  const allowed = new Set(required);
+  return Object.keys(value).every((key) => allowed.has(key));
+}
+function success(operation, outcome, value) {
+  return { ok: true, operation, outcome, evidence_class: "finite_synthetic_transit_contract", value, authority: false, protected_gates: core.GATES };
+}
+function operationKeys(operation) {
+  switch (operation) {
+    case "transit_transfer_feasibility":
+    case "transit_transfer_slack": return ["operation", "arrival_time", "departure_time", "min_transfer_time"];
+    case "transit_route_reachability": return ["operation", "origin", "destination", "edges"];
+    case "transit_earliest_arrival": return ["operation", "origin", "destination", "departure_seconds", "connections"];
+    case "transit_block_conflict": return ["operation", "first", "second"];
+    case "transit_vehicle_sequence": return ["operation", "trips"];
+    case "transit_alert_window": return ["operation", "alert_id", "begins", "ends", "as_of", "source_status"];
+    case "transit_status_projection": return ["operation", "route_label", "status", "updated", "live_service_claim"];
+    case "transit_independent_review_vacancy": return ["operation", "subject", "independent_review_present"];
+    case "transit_release_authority_hold": return ["operation", "subject", "release_authority_present", "affected_party_approval_present"];
+    default: return null;
+  }
+}
+function validateNode(value) { return typeof value === "string" && value.length > 0 && value.length <= 80; }
+function validateInterval(value) { return hasExactKeys(value, ["trip_id", "start", "end"]) && validateNode(value.trip_id) && isInteger(value.start, 0) && isInteger(value.end, value.start); }
+
+function evaluate(request, allowedOperations = ALL_OPERATIONS) {
+  if (!isRecord(request)) return fail("E_RECORD");
+  if (typeof request.operation !== "string" || !ALL_OPERATIONS.has(request.operation)) return fail("E_OPERATION");
+  if (allowedOperations && !allowedOperations.has(request.operation)) return fail("E_SCOPE");
+  if (core.X1_OPERATIONS.has(request.operation)) return core.evaluate(request, allowedOperations);
+  const keys = operationKeys(request.operation);
+  if (!hasExactKeys(request, keys)) return fail("E_FIELDS");
+
+  switch (request.operation) {
+    case "transit_transfer_feasibility":
+    case "transit_transfer_slack": {
+      const arrival = core.timeSeconds(request.arrival_time), departure = core.timeSeconds(request.departure_time);
+      if (arrival === null || departure === null || departure < arrival || !isInteger(request.min_transfer_time, 0)) return fail("E_TRANSFER");
+      const slack = departure - arrival - request.min_transfer_time;
+      if (request.operation === "transit_transfer_feasibility") return success(request.operation, "completed", { feasible: slack >= 0 });
+      return success(request.operation, "completed", { seconds: slack });
+    }
+    case "transit_route_reachability": {
+      if (!validateNode(request.origin) || !validateNode(request.destination) || !Array.isArray(request.edges) || !request.edges.every((edge) => Array.isArray(edge) && edge.length === 2 && edge.every(validateNode))) return fail("E_GRAPH");
+      const adjacency = new Map();
+      for (const [from, to] of request.edges) { if (!adjacency.has(from)) adjacency.set(from, []); adjacency.get(from).push(to); }
+      const queue = [[request.origin]];
+      const seen = new Set([request.origin]);
+      let found = null;
+      while (queue.length && !found) {
+        const pathSoFar = queue.shift();
+        const node = pathSoFar.at(-1);
+        if (node === request.destination) { found = pathSoFar; break; }
+        for (const next of adjacency.get(node) || []) if (!seen.has(next)) { seen.add(next); queue.push([...pathSoFar, next]); }
+      }
+      return success(request.operation, "completed", { reachable: found !== null, path: found || [] });
+    }
+    case "transit_earliest_arrival": {
+      if (!validateNode(request.origin) || !validateNode(request.destination) || !isInteger(request.departure_seconds, 0) || !Array.isArray(request.connections)) return fail("E_CONNECTIONS");
+      if (!request.connections.every((c) => hasExactKeys(c, ["from", "to", "departure", "arrival"]) && validateNode(c.from) && validateNode(c.to) && isInteger(c.departure, 0) && isInteger(c.arrival, c.departure))) return fail("E_CONNECTIONS");
+      const arrival = new Map([[request.origin, request.departure_seconds]]);
+      const paths = new Map([[request.origin, [request.origin]]]);
+      for (const c of [...request.connections].sort((a, b) => a.departure - b.departure || a.arrival - b.arrival)) {
+        if (arrival.has(c.from) && arrival.get(c.from) <= c.departure && (!arrival.has(c.to) || c.arrival < arrival.get(c.to))) {
+          arrival.set(c.to, c.arrival);
+          paths.set(c.to, [...paths.get(c.from), c.to]);
+        }
+      }
+      if (!arrival.has(request.destination)) return success(request.operation, "completed", { arrival_seconds: null, path: [] });
+      return success(request.operation, "completed", { arrival_seconds: arrival.get(request.destination), path: paths.get(request.destination) });
+    }
+    case "transit_block_conflict": {
+      if (!validateInterval(request.first) || !validateInterval(request.second) || request.first.trip_id === request.second.trip_id) return fail("E_BLOCK");
+      const conflict = request.first.start < request.second.end && request.second.start < request.first.end;
+      const separation = conflict ? 0 : Math.max(request.second.start - request.first.end, request.first.start - request.second.end);
+      return success(request.operation, "completed", { conflict, separation_seconds: separation });
+    }
+    case "transit_vehicle_sequence": {
+      if (!Array.isArray(request.trips) || request.trips.length < 1 || !request.trips.every(validateInterval)) return fail("E_TRIPS");
+      const ids = new Set();
+      let priorEnd = -1;
+      for (const trip of request.trips) {
+        if (ids.has(trip.trip_id) || trip.start < priorEnd) return success(request.operation, "completed", { valid: false, trip_ids: request.trips.map((x) => x.trip_id) });
+        ids.add(trip.trip_id);
+        priorEnd = trip.end;
+      }
+      return success(request.operation, "completed", { valid: true, trip_ids: request.trips.map((x) => x.trip_id) });
+    }
+    case "transit_alert_window": {
+      if (!validateNode(request.alert_id) || request.source_status !== "synthetic_only") return fail("E_ALERT");
+      const begins = core.timeSeconds(request.begins), ends = core.timeSeconds(request.ends), asOf = core.timeSeconds(request.as_of);
+      if (begins === null || ends === null || asOf === null || ends < begins) return fail("E_ALERT_TIME");
+      return success(request.operation, "represented", { state: asOf >= begins && asOf <= ends ? "synthetic_active_window" : "synthetic_inactive_window", begins: request.begins, ends: request.ends, real_alert: false });
+    }
+    case "transit_status_projection": {
+      if (!validateNode(request.route_label) || typeof request.status !== "string" || !request.status || core.timeSeconds(request.updated) === null || request.live_service_claim !== false) return fail("E_STATUS");
+      return success(request.operation, "represented", { text: `${request.route_label}: ${request.status}; no live service claim.`, live_region: "polite", accessibility_complete: false });
+    }
+    case "transit_independent_review_vacancy": {
+      if (!validateNode(request.subject) || request.independent_review_present !== false) return fail("E_REVIEW_STATE");
+      return success(request.operation, "open_gap", { open: true, independent_review_present: false });
+    }
+    case "transit_release_authority_hold": {
+      if (!validateNode(request.subject) || request.release_authority_present !== false || request.affected_party_approval_present !== false) return fail("E_AUTHORITY_STATE");
+      return success(request.operation, "exact_gate", { executed: false, release_authority_present: false, affected_party_approval_present: false });
+    }
+    default: return fail("E_OPERATION");
+  }
+}
+
+module.exports = { X2_OPERATIONS, ALL_OPERATIONS, evaluate };

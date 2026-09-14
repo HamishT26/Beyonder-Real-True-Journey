@@ -1,0 +1,51 @@
+"use strict";
+
+const fs = require("node:fs");
+const path = require("node:path");
+const crypto = require("node:crypto");
+
+const BASE = "docs/elowen-cairn/v694-v3/x2";
+const root = process.cwd();
+const read = (relative) => JSON.parse(fs.readFileSync(path.join(root, BASE, relative), "utf8"));
+const hash = (bytes) => crypto.createHash("sha256").update(bytes).digest("hex");
+const proposals = read("results/proposals.json"), candidates = read("results/candidates.json"), safe = read("results/safe.json"), clean = read("results/clean-fix-refine.json"), localSkills = read("evidence/skill-validation.json"), promotionSkills = read("evidence/promotion-skill-validation.json"), reads = read("evidence/skill-read-through.json"), runners = read("evidence/runner-smokes.json"), sourcePromotion = read("evidence/source-promotion-smokes.json"), installed = read("evidence/installed-bindings.json"), installedSmokes = read("evidence/installed-smokes.json"), negatives = read("retained-negative-register.json"), methods = read("method-flow.json"), packets = read("exact-and-blocked-packets.json"), manifest = read("manifest.json");
+const issues = [];
+const check = (condition, issue) => { if (!condition) issues.push(issue); };
+check(proposals.total === 50 && proposals.passed === 50 && proposals.proposal_replays === 0, "proposal results");
+check(JSON.stringify(proposals.outcomes) === JSON.stringify({ completed: 30, represented: 10, open_gap: 5, exact_gate: 5 }), "x2 outcomes");
+check(candidates.total === 100 && candidates.refusal_passes === 100 && candidates.subject_success_credit === 0 && candidates.subject_replays === 0, "candidate results");
+check(safe.total === 100 && safe.passed === 100, "safe results");
+check(clean.total === 100 && clean.passed === 100 && clean.deletions === 0, "clean results");
+check(localSkills.total === 10 && localSkills.passed === 10 && localSkills.complete_read_by_owner === true, "local skills");
+check(promotionSkills.total === 5 && promotionSkills.passed === 5 && promotionSkills.complete_read_by_owner === true, "promotion skills");
+check(reads.local_count === 10 && reads.promotion_count === 5, "skill reads");
+check(runners.total === 5 && runners.accepting_passes === 5 && runners.rejecting_passes === 5, "local runner smokes");
+check(sourcePromotion.total === 5 && sourcePromotion.accepting_passes === 5 && sourcePromotion.rejecting_passes === 5, "source promotion smokes");
+check(installed.count === 42 && installed.global_skills === 5 && installed.public_runners === 5 && installed.runtime_modules === 2 && installed.overwrites === 0 && installed.removals === 0 && installed.bindings.every((row) => row.parity), "installed bindings");
+check(installedSmokes.valid === true && installedSmokes.accepting_passes === 5 && installedSmokes.rejecting_passes === 5, "installed smokes");
+check(negatives.count === 101 && negatives.rows.every((row) => row.retained && row.subject_success_credit === 0), "negative register");
+check(methods.methods === 11 && methods.failed_witnesses === 101 && methods.records.every((row) => row.preferred && row.failed_evidence_retained), "Method Flow");
+check(packets.exact.count === 50 && packets.exact.executed === 0 && packets.blocked.count === 30 && packets.blocked.executed === 0, "packet holds");
+for (const binding of manifest.bindings) {
+  const target = path.join(root, binding.path);
+  check(fs.existsSync(target), `manifest missing ${binding.path}`);
+  if (fs.existsSync(target)) { const bytes = fs.readFileSync(target); check(bytes.length === binding.bytes, `manifest bytes ${binding.path}`); check(hash(bytes) === binding.sha256, `manifest hash ${binding.path}`); }
+}
+const allowed = /\.(?:json|md|txt|html)$/;
+const forbidden = /(?:<codex_delegation>|(?:^|[\s"'(])[A-Za-z]:\\|(?:api[_-]?key\s*[:=])|(?:token\s*[:=]))/im;
+const scannerCandidates = [], metadataExceptions = [];
+for (const binding of manifest.bindings) {
+  if (!allowed.test(binding.path)) {
+    if (binding.path.endsWith("/agents/openai.yaml")) metadataExceptions.push(binding.path);
+    else issues.push(`format ${binding.path}`);
+  }
+  const text = fs.readFileSync(path.join(root, binding.path), "utf8");
+  if (forbidden.test(text)) {
+    if (binding.path.endsWith("/tools/validate-x2.txt")) scannerCandidates.push({ path: binding.path, classification: "scanner_definition_metadata", confirmed_payload_hit: false });
+    else issues.push(`privacy candidate ${binding.path}`);
+  }
+}
+check(metadataExceptions.length === 15, "skill metadata exception count");
+const receipt = { schema: "ghc.family.x2-validator.v9", owner: "Elowen Cairn", phase: "v694-v3", valid: issues.length === 0, issue_count: issues.length, issues, checks: { proposals: 50, candidates: 100, safe: 100, clean_fix_refine: 100, local_skills: 10, promotion_skills: 5, local_runners: 5, public_runners: 5, manifest_entries: manifest.bindings.length }, scanner_candidates: scannerCandidates, confirmed_privacy_hits: 0, skill_metadata_exceptions: metadataExceptions.length, canonical_invoked: false, successor_contacts: 0, independent_reproduction: false, terminal_verdict: "NOT_READY_FOR_STAGE_20" };
+process.stdout.write(`${JSON.stringify(receipt)}\n`);
+if (issues.length) process.exitCode = 1;
