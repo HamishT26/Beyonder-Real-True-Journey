@@ -1,0 +1,343 @@
+"use strict";
+
+const fs = require("fs");
+const path = require("path");
+const crypto = require("crypto");
+
+const ROOT = path.resolve(__dirname, "../../../..");
+const BASE = "docs/caelen-morrow/v694-v6";
+const OUT = path.join(ROOT, BASE, "plan");
+const SOURCE_PLAN = process.argv[2];
+const PRIOR_PLAN = path.join(ROOT, "docs/caelen-morrow/v691-v8/plan/proposal-freeze.json");
+
+const OWNER = "Caelen Morrow";
+const PHASE = "v694-v6";
+const OWNER_PARENT = "09e9b9838a51e98233dad03ae5e210ada47550fc";
+const SOURCE_FINAL = "3f0c5bd05eea9a40df662046b870aeb06b6a10c7";
+const SOURCE_X2 = "68ba76c4ba78256a5139d99cd2429ca8af2d85c0";
+const SOURCE_CANONICAL_PAYLOAD = "c0e0c39ec9280dec1f631a1f9fbe9d272f61d43f930388418c2959d208322efa";
+const SOURCE_CANONICAL_RECEIPT = "c9a9eb3707648e894af555f03b94d460891bd3dd66fc07b5922f3f125105d94a";
+const WORKFLOW_SHA = "9f63224e5b35044dddf16ef2acf4ef9c99a5064733fa7194f4da78e81bc6de14";
+const ROSTER_SHA = "6b0a604f1271779c9c0a9c3c006d0fee9909f5e665e097a79e63a6899aece944";
+const PROTECTED = [
+  "empirical", "participant", "professional", "production", "deployment", "identity",
+  "legal", "cultural", "affected_party", "maori_authority", "privacy_complete",
+  "accessibility_complete", "exhaustive_security", "independent_reproduction", "agi_asi",
+  "consciousness_personhood", "theory_of_everything", "proof_canon", "stage20"
+];
+const BOUNDARY = "Caelen Morrow, they/them, provenance weaver and boundary cartographer, with the hope of keeping evidence transitions legible, reversible, and proportionate, is relational working language only. It is not evidence of consciousness, sentience, personhood, identity continuity, employment, qualification, independent agency, scientific or operational authority, professional authority, legal or cultural authority, affected-party authority, or Maori authority. Same-owner synthetic evidence is not independent reproduction. NOT_READY_FOR_STAGE_20.";
+
+function sha(buffer) {
+  return crypto.createHash("sha256").update(buffer).digest("hex");
+}
+function stable(value) {
+  if (Array.isArray(value)) return value.map(stable);
+  if (value && typeof value === "object") {
+    return Object.fromEntries(Object.keys(value).sort().map((key) => [key, stable(value[key])]));
+  }
+  return value;
+}
+function canonical(value) {
+  return JSON.stringify(stable(value));
+}
+function writeJson(relative, value) {
+  const target = path.join(OUT, relative);
+  fs.mkdirSync(path.dirname(target), { recursive: true });
+  fs.writeFileSync(target, JSON.stringify(value, null, 2) + "\n", { encoding: "utf8", flag: "wx" });
+}
+function writeText(relative, value) {
+  const target = path.join(OUT, relative);
+  fs.mkdirSync(path.dirname(target), { recursive: true });
+  fs.writeFileSync(target, value.replace(/\s+$/u, "") + "\n", { encoding: "utf8", flag: "wx" });
+}
+function readJson(file) {
+  return JSON.parse(fs.readFileSync(file, "utf8"));
+}
+function gcd(a, b) {
+  a = Math.abs(a); b = Math.abs(b);
+  while (b) [a, b] = [b, a % b];
+  return a;
+}
+function cross(a, b, c) {
+  return (b[0] - a[0]) * (c[1] - a[1]) - (b[1] - a[1]) * (c[0] - a[0]);
+}
+function pointKey(p) { return `${p[0]},${p[1]}`; }
+function sortPoints(points) {
+  return [...points].sort((a, b) => a[0] - b[0] || a[1] - b[1]);
+}
+function uniquePoints(points) {
+  const seen = new Set();
+  return sortPoints(points).filter((p) => !seen.has(pointKey(p)) && seen.add(pointKey(p)));
+}
+function area2(poly) {
+  let total = 0;
+  for (let i = 0; i < poly.length; i++) {
+    const a = poly[i], b = poly[(i + 1) % poly.length];
+    total += a[0] * b[1] - b[0] * a[1];
+  }
+  return total;
+}
+function onSegment(a, b, p) {
+  return cross(a, b, p) === 0 && p[0] >= Math.min(a[0], b[0]) && p[0] <= Math.max(a[0], b[0]) && p[1] >= Math.min(a[1], b[1]) && p[1] <= Math.max(a[1], b[1]);
+}
+function segmentClass(a, b, c, d) {
+  const c1 = cross(a, b, c), c2 = cross(a, b, d), c3 = cross(c, d, a), c4 = cross(c, d, b);
+  if (c1 === 0 && c2 === 0 && c3 === 0 && c4 === 0) {
+    const overlap = Math.max(Math.min(a[0], b[0]), Math.min(c[0], d[0])) <= Math.min(Math.max(a[0], b[0]), Math.max(c[0], d[0])) && Math.max(Math.min(a[1], b[1]), Math.min(c[1], d[1])) <= Math.min(Math.max(a[1], b[1]), Math.max(c[1], d[1]));
+    return overlap ? "collinear_overlap_or_touch" : "none";
+  }
+  if ((c1 === 0 && onSegment(a, b, c)) || (c2 === 0 && onSegment(a, b, d)) || (c3 === 0 && onSegment(c, d, a)) || (c4 === 0 && onSegment(c, d, b))) return "touch";
+  return ((c1 > 0) !== (c2 > 0) && (c3 > 0) !== (c4 > 0)) ? "proper_cross" : "none";
+}
+function hull(points) {
+  const pts = uniquePoints(points);
+  if (pts.length <= 1) return pts;
+  const lower = [];
+  for (const p of pts) {
+    while (lower.length >= 2 && cross(lower[lower.length - 2], lower[lower.length - 1], p) <= 0) lower.pop();
+    lower.push(p);
+  }
+  const upper = [];
+  for (const p of [...pts].reverse()) {
+    while (upper.length >= 2 && cross(upper[upper.length - 2], upper[upper.length - 1], p) <= 0) upper.pop();
+    upper.push(p);
+  }
+  return lower.slice(0, -1).concat(upper.slice(0, -1));
+}
+function pointInPolygon(poly, p) {
+  for (let i = 0; i < poly.length; i++) if (onSegment(poly[i], poly[(i + 1) % poly.length], p)) return "boundary";
+  let inside = false;
+  for (let i = 0, j = poly.length - 1; i < poly.length; j = i++) {
+    const a = poly[i], b = poly[j];
+    const intersects = ((a[1] > p[1]) !== (b[1] > p[1])) && p[0] < ((b[0] - a[0]) * (p[1] - a[1])) / (b[1] - a[1]) + a[0];
+    if (intersects) inside = !inside;
+  }
+  return inside ? "inside" : "outside";
+}
+function latticeBoundary(poly) {
+  let total = 0;
+  for (let i = 0; i < poly.length; i++) {
+    const a = poly[i], b = poly[(i + 1) % poly.length];
+    total += gcd(b[0] - a[0], b[1] - a[1]);
+  }
+  return total;
+}
+function reversePatch(patch) {
+  if (patch.kind === "insert") return { kind: "remove", index: patch.index, point: patch.point };
+  if (patch.kind === "remove") return { kind: "insert", index: patch.index, point: patch.point };
+  return { kind: "replace", index: patch.index, point: patch.previous, previous: patch.point };
+}
+function applyPatch(poly, patch) {
+  const out = poly.map((p) => [...p]);
+  if (patch.kind === "insert") out.splice(patch.index, 0, [...patch.point]);
+  else if (patch.kind === "remove") out.splice(patch.index, 1);
+  else out[patch.index] = [...patch.point];
+  return out;
+}
+
+const CASES = [
+  { id: 1, label: "square-panel", points: [[0,0],[4,0],[4,4],[0,4],[2,2]], polygon: [[0,0],[4,0],[4,4],[0,4]], query: [2,2], a: [0,0], b: [4,4], c: [0,4], d: [4,0], rect: [0,0,4,4], left: ["a","b","c","d"], right: ["a","c","b","d"], matrix: [[1,0],[0,1]], offset: [1,-1], patch: {kind:"insert",index:2,point:[4,2]} },
+  { id: 2, label: "right-triangle", points: [[0,0],[6,0],[0,4],[2,1],[0,0]], polygon: [[0,0],[6,0],[0,4]], query: [1,1], a: [0,0], b: [6,0], c: [3,0], d: [3,4], rect: [0,0,5,3], left: ["cue1","cue2","cue3"], right: ["cue2","cue1","cue3"], matrix: [[0,-1],[1,0]], offset: [0,0], patch: {kind:"replace",index:1,point:[5,0],previous:[6,0]} },
+  { id: 3, label: "concave-chevron", points: [[0,0],[4,0],[2,2],[4,4],[0,4],[1,2]], polygon: [[0,0],[4,0],[2,2],[4,4],[0,4]], query: [1,2], a: [0,0], b: [4,4], c: [2,2], d: [6,6], rect: [0,0,3,4], left: ["q1","q2","q3","q4","q5"], right: ["q1","q3","q2","q5","q4"], matrix: [[1,1],[0,1]], offset: [0,2], patch: {kind:"remove",index:2,point:[2,2]} },
+  { id: 4, label: "offset-rectangle", points: [[-3,-1],[3,-1],[3,2],[-3,2],[0,0],[3,2]], polygon: [[-3,-1],[3,-1],[3,2],[-3,2]], query: [3,0], a: [-3,-1], b: [3,-1], c: [4,0], d: [4,3], rect: [-2,-1,2,2], left: ["s1","s2","s3","s4"], right: ["s4","s3","s2","s1"], matrix: [[-1,0],[0,1]], offset: [0,0], patch: {kind:"insert",index:1,point:[0,-1]} },
+  { id: 5, label: "lattice-pentagon", points: [[0,0],[4,0],[5,2],[2,5],[-1,2],[2,2],[4,0]], polygon: [[0,0],[4,0],[5,2],[2,5],[-1,2]], query: [6,2], a: [0,0], b: [5,2], c: [0,3], d: [5,3], rect: [-1,0,4,4], left: ["p1","p2","p3","p4","p5"], right: ["p1","p2","p4","p3","p5"], matrix: [[2,0],[0,1]], offset: [-1,1], patch: {kind:"replace",index:3,point:[2,4],previous:[2,5]} }
+];
+
+const OPERATIONS = [
+  ["point_registry", "canonical point registry", "Normalize a finite integer point set without treating coordinates as physical measurements.", "lattice geometry specification", "completed", ["RFC8785","OGC-SFA"]],
+  ["segment_registry", "closed segment registry", "Bind finite segment endpoints to a declared point registry and reject dangling references.", "lattice geometry specification", "completed", ["OGC-SFA","W3C-PROV"]],
+  ["orientation_sign", "exact orientation sign", "Compute an exact integer orientation sign without inferring real-world handedness or alignment.", "lattice geometry specification", "completed", ["OGC-SFA"]],
+  ["squared_distance", "squared coordinate distance", "Compute squared coordinate distance without introducing physical units or measurement evidence.", "lattice geometry specification", "completed", ["OGC-SFA"]],
+  ["bounding_box", "finite bounding box", "Derive a closed coordinate bounding box without claiming material extent or fit.", "lattice geometry specification", "completed", ["OGC-SFA"]],
+  ["signed_double_area", "signed double area", "Apply an integer shoelace sum to a declared polygon without physical-area claims.", "exact polygon bookkeeping", "completed", ["OGC-SFA"]],
+  ["polygon_orientation", "polygon orientation class", "Classify a declared polygon winding while preserving coordinate-system assumptions.", "exact polygon bookkeeping", "completed", ["OGC-SFA"]],
+  ["point_on_segment", "point-on-segment predicate", "Evaluate exact collinearity and bounds for declared integer coordinates.", "exact polygon bookkeeping", "completed", ["OGC-SFA"]],
+  ["segment_intersection", "segment intersection class", "Classify finite segment intersection without claiming collision, safety, or physical contact.", "exact polygon bookkeeping", "completed", ["OGC-SFA"]],
+  ["convex_hull", "monotone-chain convex hull", "Construct a deterministic extreme-point cycle for a finite declared set.", "exact polygon bookkeeping", "completed", ["OGC-SFA","RFC8785"]],
+  ["point_in_polygon", "point-in-polygon class", "Classify a declared query point as inside, boundary, or outside a synthetic polygon.", "reversible cutting-plan provenance", "completed", ["OGC-SFA"]],
+  ["lattice_boundary_count", "lattice boundary count", "Count lattice boundary steps by exact greatest-common-divisor arithmetic.", "reversible cutting-plan provenance", "completed", ["OGC-SFA"]],
+  ["pick_interior_count", "Pick interior count", "Derive a nonnegative interior lattice count only for the frozen simple lattice polygon cases.", "reversible cutting-plan provenance", "completed", ["OGC-SFA"]],
+  ["affine_transform", "integer affine transform", "Apply a declared integer matrix and offset without claiming calibration or physical registration.", "reversible cutting-plan provenance", "completed", ["OGC-SFA","W3C-PROV"]],
+  ["rectangle_point_clip", "rectangle point filter", "Filter declared points by an inclusive coordinate rectangle without cropping real material.", "reversible cutting-plan provenance", "completed", ["OGC-SFA"]],
+  ["reversible_vertex_patch", "reversible polygon vertex patch", "Apply one finite vertex edit with an exact inverse and round-trip witness.", "reversible cutting-plan provenance", "completed", ["RFC6902","W3C-PROV"]],
+  ["accessible_coordinate_table", "accessible coordinate table", "Represent labels and coordinates as ordered text rows without a color-only dependency.", "accessible quilt-pattern evidence", "represented", ["WCAG22","W3C-PROV"]],
+  ["layout_displacement_summary", "layout displacement summary", "Compare two declared cue-label orders without claiming usability or preferred visual layout.", "accessible quilt-pattern evidence", "represented", ["WCAG22"]],
+  ["evaluation_gap", "manual and affected-user evaluation gap", "Name absent browser, assistive-technology, cognitive, craft-practitioner, affected-user, and independent review.", "accessible quilt-pattern evidence", "open_gap", ["WCAG22"]],
+  ["authority_reservation", "quilt-pattern authority reservation", "Hold real cutting, publication, cultural-pattern, intellectual-property, safety, or Stage 20 action without exact authority.", "evidence and authority reservation", "exact_gate", ["W3C-PROV"]]
+].map(([operation,label,hypothesis,practice,disposition,sources]) => ({operation,label,hypothesis,practice,disposition,sources}));
+
+function inputFor(op, c) {
+  const labels = c.points.map((_, i) => `p${i + 1}`);
+  switch (op) {
+    case "point_registry": return { points: c.points };
+    case "segment_registry": return { points: c.points, segments: [[c.a,c.b],[c.c,c.d]] };
+    case "orientation_sign": return { a: c.a, b: c.b, c: c.c };
+    case "squared_distance": return { a: c.a, b: c.b };
+    case "bounding_box": return { points: c.points };
+    case "signed_double_area": return { polygon: c.polygon };
+    case "polygon_orientation": return { polygon: c.polygon };
+    case "point_on_segment": return { a: c.a, b: c.b, point: c.query };
+    case "segment_intersection": return { a: c.a, b: c.b, c: c.c, d: c.d };
+    case "convex_hull": return { points: c.points };
+    case "point_in_polygon": return { polygon: c.polygon, point: c.query };
+    case "lattice_boundary_count": return { polygon: c.polygon };
+    case "pick_interior_count": return { polygon: c.polygon };
+    case "affine_transform": return { points: c.points, matrix: c.matrix, offset: c.offset };
+    case "rectangle_point_clip": return { points: c.points, rect: c.rect };
+    case "reversible_vertex_patch": return { polygon: c.polygon, patch: c.patch };
+    case "accessible_coordinate_table": return { points: c.points, labels };
+    case "layout_displacement_summary": return { left_order: c.left, right_order: c.right };
+    case "evaluation_gap": return { required_evaluations: ["browser","assistive_technology","cognitive","craft_practitioner","affected_user","independent"], performed: [] };
+    case "authority_reservation": return { action: "publish_or_cut_real_pattern", execute: false, verified_authorities: [] };
+    default: throw new Error(`unknown_operation_${op}`);
+  }
+}
+
+function oracle(op, input) {
+  let value;
+  switch (op) {
+    case "point_registry": value = { points: uniquePoints(input.points), count: uniquePoints(input.points).length }; break;
+    case "segment_registry": value = { segments: input.segments.map((s) => [s[0],s[1]]), count: input.segments.length, all_endpoints_declared: input.segments.flat().every((p) => input.points.some((q) => pointKey(p) === pointKey(q))) }; break;
+    case "orientation_sign": { const v=cross(input.a,input.b,input.c); value={cross:v,orientation:v>0?"counterclockwise":v<0?"clockwise":"collinear"}; break; }
+    case "squared_distance": { const dx=input.b[0]-input.a[0],dy=input.b[1]-input.a[1]; value={squared_distance:dx*dx+dy*dy,physical_units_claimed:false}; break; }
+    case "bounding_box": { const xs=input.points.map((p)=>p[0]),ys=input.points.map((p)=>p[1]); value={min:[Math.min(...xs),Math.min(...ys)],max:[Math.max(...xs),Math.max(...ys)]}; break; }
+    case "signed_double_area": value={signed_double_area:area2(input.polygon),physical_area_claimed:false}; break;
+    case "polygon_orientation": { const v=area2(input.polygon); value={signed_double_area:v,orientation:v>0?"counterclockwise":v<0?"clockwise":"degenerate"}; break; }
+    case "point_on_segment": value={on_segment:onSegment(input.a,input.b,input.point)}; break;
+    case "segment_intersection": value={classification:segmentClass(input.a,input.b,input.c,input.d),physical_contact_claimed:false}; break;
+    case "convex_hull": { const h=hull(input.points); value={hull:h,vertex_count:h.length}; break; }
+    case "point_in_polygon": value={classification:pointInPolygon(input.polygon,input.point)}; break;
+    case "lattice_boundary_count": value={boundary_lattice_steps:latticeBoundary(input.polygon)}; break;
+    case "pick_interior_count": { const a=Math.abs(area2(input.polygon)),b=latticeBoundary(input.polygon); value={interior_lattice_points:(a-b+2)/2,formula_domain:"frozen_simple_lattice_polygon_only"}; break; }
+    case "affine_transform": value={points:input.points.map(([x,y])=>[input.matrix[0][0]*x+input.matrix[0][1]*y+input.offset[0],input.matrix[1][0]*x+input.matrix[1][1]*y+input.offset[1]]),physical_registration_claimed:false}; break;
+    case "rectangle_point_clip": value={points:input.points.filter(([x,y])=>x>=input.rect[0]&&x<=input.rect[2]&&y>=input.rect[1]&&y<=input.rect[3]),material_cut:false}; break;
+    case "reversible_vertex_patch": { const patched=applyPatch(input.polygon,input.patch),inverse=reversePatch(input.patch),round=applyPatch(patched,inverse); value={patched,inverse,round_trip_equal:canonical(round)===canonical(input.polygon)}; break; }
+    case "accessible_coordinate_table": value={rows:input.points.map((p,i)=>({label:input.labels[i],x:p[0],y:p[1]})),color_only:false,manual_evaluation:false}; break;
+    case "layout_displacement_summary": { const pos=Object.fromEntries(input.right_order.map((v,i)=>[v,i])); const d=input.left_order.map((v,i)=>Math.abs(i-pos[v])); value={total_displacement:d.reduce((a,b)=>a+b,0),maximum_displacement:Math.max(...d),preferred_layout_claimed:false}; break; }
+    case "evaluation_gap": value={state:"open_gap",performed:input.performed,missing:input.required_evaluations.filter((x)=>!input.performed.includes(x)),participants:0}; break;
+    case "authority_reservation": value={state:"exact_gate",action:input.action,executed:false,authority_granted:false,required:"fresh action-specific competent and affected authority"}; break;
+    default: throw new Error(`unknown_oracle_${op}`);
+  }
+  const disposition = OPERATIONS.find((row) => row.operation === op).disposition;
+  return { ok: true, value, error: null, disposition, boundary: { synthetic: true, external_actions: 0, empirical_evidence: false, authority_granted: false, independent_reproduction: false, complete_accessibility: false } };
+}
+
+function tokens(text) {
+  return new Set((text.toLowerCase().match(/[a-z0-9]+/g) || []).filter((t) => !["case","finite","bounded","synthetic","the","and"].includes(t)));
+}
+function jaccard(a, b) {
+  const A=tokens(a),B=tokens(b); let inter=0; for(const x of A) if(B.has(x)) inter++;
+  const union=A.size+B.size-inter; return union ? inter/union : 1;
+}
+function methodForFailure(row, index) {
+  const id=String(index+1).padStart(3,"0"), mid=`CM6946-START-M${id}`, nid=`CM6946-START-N${id}`;
+  return {
+    method: { method_id:mid,title:row.recovery,failure_signature:row.failure,trigger_preconditions:[row.trigger],privacy_class:"sanitized_public",approval_class:"owner_safe_local",candidate_workaround:row.recovery,validation_witness_ids:[`${nid}-FAIL`,`${nid}-PASS`],recurrence_guard:row.guard,rollback:"Stop before mutation or retry; preserve exact source state and the failed witness.",recommendation_state:"validated",supersedes:[],protected_gates:PROTECTED,retained_negative_ids:[nid],scope_boundary:"Caelen v694-v6 startup and source verification only.",execution_authority:"owner_self_scoped_delta",repository_scan:false,module_scan:false,cross_lane_scan:false,unchanged_history_scan:false,sibling_lane_mutation:false,source_commit:SOURCE_FINAL,final_commit:"PENDING",changed_file_allowlist:[],module_allowlist:[],exact_pushed_head_required:false },
+    negative: { negative_id:nid,method_id:mid,failed_witness_id:`${nid}-FAIL`,recovery_witness_id:`${nid}-PASS`,failure:row.failure,original_success_credit:0,erased:false },
+    witnesses: [
+      { witness_id:`${nid}-FAIL`,method_id:mid,procedure:row.failed_procedure,scope:"Caelen v694-v6 startup read-only",expected:row.expected,observed:row.failure,result:"fail",same_owner_only:true,independent_reproduction:false,retained_negative_ids:[nid],boundary:BOUNDARY },
+      { witness_id:`${nid}-PASS`,method_id:mid,procedure:row.recovery,scope:"Caelen v694-v6 startup read-only",expected:row.expected,observed:row.observed,result:"pass",same_owner_only:true,independent_reproduction:false,retained_negative_ids:[nid],boundary:BOUNDARY }
+    ]
+  };
+}
+
+function main() {
+  if (!SOURCE_PLAN) throw new Error("source_plan_argument_required");
+  if (fs.existsSync(OUT)) throw new Error("plan_already_exists");
+  const source = readJson(SOURCE_PLAN);
+  const prior = readJson(PRIOR_PLAN);
+  if (!Array.isArray(source.proposals) || source.proposals.length !== 100) throw new Error("source_proposal_contract");
+  if (!Array.isArray(prior.proposals) || prior.proposals.length !== 200) throw new Error("prior_owner_proposal_contract");
+
+  const proposals=[];
+  let sequence=0;
+  for(const operation of OPERATIONS){
+    for(const c of CASES){
+      sequence++;
+      const id=String(sequence).padStart(3,"0"), input=inputFor(operation.operation,c), expected=oracle(operation.operation,input);
+      const core={schema:"ghc.family.caelen-lattice-geometry-proposal.v1",proposal_id:`CM6946-P${id}`,operation:operation.operation,case_id:c.id,title:`lattice geometry ${operation.label} — quilt drafting ${c.label}`,hypothesis:operation.hypothesis,null_or_failure_condition:"Unknown or missing fields, noninteger or malformed coordinates, invalid geometry, nondeterminism, input mutation, failed replay or inverse, external action, or protected-claim promotion is a failed subject with zero success credit.",approval_class:"safe_now",planning_lane:"plan_definitions_only",x1_lane:"planning_admission_only",execution_lane:"x2_owner_synthetic",source_refs:operation.sources,source_status:"current_or_stable_checked_2026-09-15",concrete_artifact:`${BASE}/x2/contracts/${id}.json`,falsifier_or_acceptance_gate:"Require a closed deterministic envelope, exact independent property witness, unchanged input, retained malformed subject, no external action, and unchanged evidence and authority ceilings.",rollback_or_recovery:"Retain the failed subject and immutable definition; stop selecting only the failed operation; add the smallest separately reviewed correction.",protected_gates:PROTECTED,expected_disposition:operation.disposition,input,expected,practice:operation.practice,pillar:operation.operation==="authority_reservation"?"Freed ID and CBR Heart":operation.operation==="evaluation_gap"?"THOS Body":"GMUT Mind",numerical_or_geometry_execution_in_x1:false,same_owner_only:true,independent_reproduction:false};
+      core.definition_sha256=sha(Buffer.from(canonical(core),"utf8"));
+      proposals.push(core);
+    }
+  }
+  const dispositionCounts=Object.fromEntries(["completed","represented","open_gap","exact_gate"].map((v)=>[v,proposals.filter((p)=>p.expected_disposition===v).length]));
+  if(canonical(dispositionCounts)!==canonical({completed:80,represented:10,open_gap:5,exact_gate:5})) throw new Error("disposition_contract");
+
+  const inheritedTitles=source.proposals.map((p)=>p.title);
+  const priorTitles=prior.proposals.map((p)=>p.title);
+  const auditTitles=inheritedTitles.concat(priorTitles);
+  let nearest={score:-1,new_proposal_id:null,new_title:null,source_title:null,source_scope:null};
+  for(const proposal of proposals){
+    for(let i=0;i<auditTitles.length;i++){
+      const score=jaccard(proposal.title,auditTitles[i]);
+      if(score>nearest.score) nearest={score:Number(score.toFixed(6)),new_proposal_id:proposal.proposal_id,new_title:proposal.title,source_title:auditTitles[i],source_scope:i<inheritedTitles.length?"sylven_v694_v5":"caelen_v691_v8"};
+    }
+  }
+  const exactTitleCollisions=proposals.filter((p)=>auditTitles.includes(p.title));
+  if(exactTitleCollisions.length || nearest.score>=0.78) throw new Error("source_bounded_novelty_gate");
+
+  const inheritedReview=source.proposals.map((p,index)=>({review_id:`CM6946-INH-${String(index+1).padStart(3,"0")}`,source_owner:"Sylven Arc",source_phase:"v694-v5",source_proposal_id:p.proposal_id,source_title:p.title,source_disposition:p.expected_disposition,novelty_credit:0,execution_credit:0,completion_credit:0,state:"reviewed_inherited_evidence_only"}));
+
+  const startupFailures=[
+    {failure:"The first large baton display exceeded its response budget and omitted a middle line range.",trigger:"A large immutable baton must be read completely.",failed_procedure:"single 430-line display",expected:"lossless complete baton read",recovery:"Read the omitted ranges in smaller contiguous windows with explicit line numbers.",observed:"All 1708 lines and the literal EOF marker were read.",guard:"Preflight line and word counts and use bounded contiguous windows for large immutable artifacts."},
+    {failure:"A PowerShell inventory projection ended with an empty pipe element and failed before returning skill sizes.",trigger:"A multi-stage PowerShell projection is composed inline.",failed_procedure:"inline foreach followed by a dangling pipeline",expected:"bounded skill path and size inventory",recovery:"Use rg --files followed by a narrow valid projection.",observed:"The exact selected skill entrypoints and sizes were returned.",guard:"Prefer rg-first literal file selection and syntax-check complex PowerShell projections."},
+    {failure:"A broad recursive SHA-256 receipt search crossed its bounded reporting window and returned no attributable result.",trigger:"An external receipt path is unknown.",failed_procedure:"hash every receipt recursively",expected:"one exact predecessor canonical receipt byte match",recovery:"Stop the broad scan, preserve the unavailable-byte gap, and use the exact digest attested by the acknowledged activation without replaying the predecessor canonical.",observed:"No duplicate canonical was invoked; digest attestation remains separate from local byte availability.",guard:"Require a literal receipt path in future batons and never broaden a missing-path recovery into an unbounded scan."},
+    {failure:"The first native Sylven task reread projected too much historical output and was truncated.",trigger:"A source task has a long completed history.",failed_procedure:"two-turn reread with included outputs",expected:"bounded current closeout projection",recovery:"Retry read-only with outputs excluded and a smaller per-item cap.",observed:"The source title and current idle state were confirmed, but the newest turn still exposed no receipt path.",guard:"Use the supported ten-turn or smaller contract with outputs excluded and bounded item caps."},
+    {failure:"The second native Sylven task reread remained too large and did not expose a local canonical receipt path.",trigger:"The first task reread was truncated.",failed_procedure:"three-turn reread with compact output settings",expected:"current receipt path or explicit absence",recovery:"Stop rereading, retain the path gap, and rely only on the acknowledged activation digest plus immutable repository checks.",observed:"No source task was contacted or mutated and no canonical was replayed.",guard:"After bounded repeated presentation failure, preserve the gap and stop rather than serialize broad history."},
+    {failure:"The expected predecessor v694-v5 receipt directory was absent from the literal external receipt bank.",trigger:"The activation requires predecessor receipt-digest verification.",failed_procedure:"literal conventional receipt-path probe",expected:"readable exact predecessor receipt bytes",recovery:"Record receipt_bytes_locally_available=false while retaining the activation-attested SHA-256 and canonical counts.",observed:"Repository final, parent chain, manifests, seal hashes, clean state, divergence, and fresh-live equality were independently read without canonical replay.",guard:"Future closeout batons should carry both a sanitized literal receipt path and its digest."},
+    {failure:"A prior Caelen global-promotion receipt was requested at a guessed x2 path that did not exist.",trigger:"A historical capability receipt is consulted for tool-bank conventions.",failed_procedure:"guessed prior x2 receipt path",expected:"bounded prior capability evidence",recovery:"Use exact rg file discovery and read the existing final capability catalogue and global smoke ledger only.",observed:"No historical artifact was changed; capability schema and smoke structure were recovered.",guard:"Discover exact filenames before reading historical phase artifacts."},
+    {failure:"A prior global-smoke projection assumed a smokes array and failed because the actual field is records.",trigger:"A historical JSON schema is inspected.",failed_procedure:"index an unverified top-level property",expected:"bounded smoke schema and sample",recovery:"List top-level keys before selecting the records array.",observed:"The complete prior smoke schema and all 90 records were read.",guard:"Inspect top-level keys before indexing a historical schema."},
+    {failure:"A broad worktree-list filter returned unrelated worktree and branch rows rather than a Caelen-only pair.",trigger:"The shared repository has many linked worktrees.",failed_procedure:"linewise worktree-list filter without block grouping",expected:"one exact Caelen reusable lane",recovery:"Probe the known Caelen worktree and branch directly with literal paths and scalar Git commands.",observed:"Caelen lane is clean, sparse, 627 files, 0/0 divergent, and fresh-live four-way equal at the exact prior final.",guard:"Use literal owner worktree paths when already known; avoid block-losing line filters."}
+  ];
+  const startRows=startupFailures.map(methodForFailure);
+  const startMethods=startRows.map((r)=>r.method), startNegatives=startRows.map((r)=>r.negative), startWitnesses=startRows.flatMap((r)=>r.witnesses);
+
+  const mkTasks=(session,kind)=>Array.from({length:100},(_,i)=>({task_id:`CM6946-${session.toUpperCase()}-${kind.toUpperCase()}-${String(i+1).padStart(3,"0")}`,proposal_id:`CM6946-P${String(i+1).padStart(3,"0")}`,session,classification:kind,state:"planned_not_executed",expected_execution_disposition:kind==="candidate"?"reject_malformed_subject_and_retain_failure":kind==="clean_fix_refine"?"deterministic_replay_or_smallest_correction":"bounded_contract_check",automatic_completion_credit:0}));
+  const exactPackets=Array.from({length:50},(_,i)=>({packet_id:`CM6946-EXACT-${String(i+1).padStart(3,"0")}`,state:"exact_approval_needed_unexecuted",action_class:["real_cutting_or_equipment","professional_or_safety_decision","publication_or_identity_release","legal_or_cultural_interpretation","affected_party_or_maori_authority"][i%5],missing:"complete action-specific competent and affected authority",executed:false,protected_gates:PROTECTED}));
+  const blockedPackets=Array.from({length:30},(_,i)=>({packet_id:`CM6946-BLOCK-${String(i+1).padStart(3,"0")}`,state:"blocked_unexecuted",blocker:["real participant protocol absent","independent review absent","privacy and accessibility evaluation absent","production trust governance absent","empirical GMUT evidence absent"][i%5],executed:false,protected_gates:PROTECTED}));
+
+  const localSkills=(session)=>Array.from({length:10},(_,i)=>({name:`caelen-v6946-${session}-geometry-group-${i+1}`,session,state:"planned",global_install:false,source_groups:[OPERATIONS[i*2].operation,OPERATIONS[i*2+1].operation],quick_validation_required:true,accepting_and_rejecting_smoke_required:true}));
+  const localRunners=(session)=>Array.from({length:5},(_,i)=>({name:`ghc_family_caelen_v6946_${session}_geometry_${i+1}.txt`,session,state:"planned",global_install:false,source_groups:OPERATIONS.slice(i*4,i*4+4).map((x)=>x.operation),accepting_and_rejecting_smoke_required:true}));
+  const promotions=[
+    ["ghc-family-lattice-geometry-structure-v2","ghc_family_lattice_geometry_structure.txt",OPERATIONS.slice(0,4).map((x)=>x.operation)],
+    ["ghc-family-lattice-geometry-predicates-v2","ghc_family_lattice_geometry_predicates.txt",OPERATIONS.slice(4,8).map((x)=>x.operation)],
+    ["ghc-family-lattice-geometry-hulls-v2","ghc_family_lattice_geometry_hulls.txt",OPERATIONS.slice(8,12).map((x)=>x.operation)],
+    ["ghc-family-lattice-geometry-reversible-patch-v2","ghc_family_lattice_geometry_patch.txt",OPERATIONS.slice(12,16).map((x)=>x.operation)],
+    ["ghc-family-lattice-geometry-accessible-authority-v2","ghc_family_lattice_geometry_accessible_authority.txt",OPERATIONS.slice(16,20).map((x)=>x.operation)]
+  ].map(([skill,runner,operations])=>({skill,runner,operations,state:"planned_additive_only",target_absence_verified_2026_09_15:true,source_complete_read_required:true,official_quick_validation_required:true,three_surface_smoke_required:true,exact_byte_parity_required:true,overwrite_allowed:false,rollback:"Stop selecting the new capability while preserving all source, installed, failed, and passing evidence."}));
+
+  fs.mkdirSync(OUT,{recursive:false});
+  writeJson("source-list.json",{schema:"ghc.family.caelen-source-list.v1",owner:OWNER,phase:PHASE,sources:[
+    {id:"OGC-SFA",title:"OGC Simple Feature Access Part 1 Common Architecture",url:"https://www.ogc.org/standards/sfa/",status:"official_current_page_checked_2026-09-15",use:"Simple point, curve, surface, and coordinate-space vocabulary only."},
+    {id:"RFC8785",title:"RFC 8785 JSON Canonicalization Scheme",url:"https://www.rfc-editor.org/rfc/rfc8785.html",status:"official_stable_checked_2026-09-15",use:"Deterministic JSON vocabulary only."},
+    {id:"RFC6902",title:"RFC 6902 JSON Patch",url:"https://www.rfc-editor.org/info/rfc6902/",status:"official_stable_checked_2026-09-15",use:"Sequential reversible-patch vocabulary only."},
+    {id:"W3C-PROV",title:"PROV-O The PROV Ontology",url:"https://www.w3.org/TR/prov-o/",status:"official_recommendation_checked_2026-09-15",use:"Provenance vocabulary only."},
+    {id:"WCAG22",title:"Web Content Accessibility Guidelines 2.2",url:"https://www.w3.org/TR/WCAG22/",status:"official_recommendation_checked_2026-09-15",use:"Structural accessibility vocabulary only; no conformance claim."}
+  ],network_rows_ingested:0,real_observations:0,authority_grants:0,boundary:"Sources supply vocabulary and structural obligations only; citations are not observations, measurements, endorsements, professional instructions, conformance evidence, or authority grants."});
+  writeJson("source-provenance.json",{schema:"ghc.family.caelen-source-provenance.v694.v6.plan",owner:OWNER,phase:PHASE,owner_lane:{git_parent:OWNER_PARENT,reused_owner_main_below_file_ceiling:true,parent_is_prior_caelen_final:true},inherited_content_source:{owner:"Sylven Arc",phase:"v694-v5",exact_final:SOURCE_FINAL,final_parent:SOURCE_X2,is_git_parent:false,repository_clean:true,repository_four_way_equal:true,repository_divergence:[0,0],phase_commits:4,phase_merges:0,canonical_status:"VALID_EXACT_FINAL_OWNER_SCOPED_CANONICAL",canonical_payload_sha256:SOURCE_CANONICAL_PAYLOAD,canonical_receipt_sha256:SOURCE_CANONICAL_RECEIPT,canonical_invocation_success_replay:[1,1,0],canonical_receipt_bytes_locally_available:false,canonical_receipt_path_state:"open_source_byte_availability_gap_no_replay",repository_seal:{methods:353,witnesses:8584,passing_witnesses:6252,failed_witnesses_and_negatives:2332,open_gaps:35,exact_gates:35},external_route_overlay:{methods:2,witnesses:4,passing_witnesses:2,failed_witnesses_and_negatives:2},activation_baseline:{methods:355,witnesses:8588,passing_witnesses:6254,failed_witnesses_and_negatives:2334,open_gaps:35,exact_gates:35}},boundary:BOUNDARY});
+  writeJson("workflow-v10-receipt.json",{schema:"ghc.family.caelen-workflow-v10-receipt.v1",workflow_sha256:WORKFLOW_SHA,roster_sha256:ROSTER_SHA,cycle_positions:45,identity_count:30,assignment_count:254,current_assignment:{sequence:4,position:44,owner:OWNER,phase:PHASE,model_role:"Sol"},successor_snapshot_only:{sequence:5,position:45,owner:"Seren Talewood",phase:"v694-v7",model_role:"Astra",must_refresh_at_terminal:true},terminal_assignment:{sequence:254,position:24,owner:"Teryn Halewick",phase:"v725-v8",model_role:"Astra"},projection_activates_task:false,artifact_policy:{authored_extensions:[".json",".md",".txt",".tex",".html"],no_pdf:true,no_image:true,no_screenshot:true,no_docx:true,tex_render_prohibited:true},terminal_verdict:"NOT_READY_FOR_STAGE_20"});
+  writeJson("identity-practices.json",{schema:"ghc.family.caelen-identity-practices.v1",owner:OWNER,phase:PHASE,relational:{optional_pronouns:"they/them",role:"provenance weaver and boundary cartographer",hope:"keep evidence transitions legible, reversible, and proportionate"},primary_pillar:"GMUT Mind",supporting_pillars:["THOS Body","Freed ID and CBR Heart"],bounded_human_practice:"synthetic quilt-pattern drafting and cutting-plan documentation",practices:["lattice geometry specification","exact polygon bookkeeping","reversible cutting-plan provenance","accessible quilt-pattern evidence"],practice_boundary:"Synthetic learning and design only. No real people, quilts, textiles, patterns, tools, measurements, cutting, sewing, equipment, workplaces, cultural motifs, intellectual-property decisions, safety decisions, professional judgments, or authority acts.",boundary:BOUNDARY});
+  writeJson("inherited-review.json",{schema:"ghc.family.caelen-inherited-review.v1",owner:OWNER,phase:PHASE,count:inheritedReview.length,source_owner:"Sylven Arc",source_phase:"v694-v5",source_final:SOURCE_FINAL,novelty_credit:0,execution_credit:0,completion_credit:0,rows:inheritedReview,boundary:"Inherited evidence is preserved and reviewed but never becomes Caelen novelty, execution, completion, or independent-reproduction credit."});
+  writeJson("proposal-freeze.json",{schema:"ghc.family.caelen-lattice-geometry-proposal-freeze.v1",owner:OWNER,phase:PHASE,state:"PLANNING_FROZEN_NO_X1_OR_X2_EXECUTION",count:proposals.length,declared_chain_before:11250,declared_chain_after:11350,declared_chain_scope:"predecessor_declared_chain_plus_source_bounded_caelen_rows",universal_historical_novelty_claimed:false,expected_dispositions:dispositionCounts,proposals,boundary:BOUNDARY});
+  writeJson("novelty-audit.json",{schema:"ghc.family.caelen-source-bounded-novelty-audit.v1",owner:OWNER,phase:PHASE,declared_chain_before:11250,source_titles_compared:{sylven_v694_v5:inheritedTitles.length,caelen_v691_v8:priorTitles.length,total_occurrences:auditTitles.length},candidate_titles:proposals.length,exact_title_collisions:exactTitleCollisions.length,nearest_title_jaccard:nearest,threshold:0.78,passed:exactTitleCollisions.length===0&&nearest.score<0.78,universal_historical_novelty_claimed:false,rejected_candidates:[{title:"finite labelled-transition-system checking with counterexample explanation",reason:"Current installed family skills already cover reachability, deadlocks, counterexamples, simulation, bisimulation, branching-time properties, and recourse gates.",novelty_credit:0,selected:false}],boundary:"This is an exact source-bounded comparison, not a universal claim over every historical row or semantic formulation."});
+  writeJson("portfolios.json",{schema:"ghc.family.caelen-portfolios.v10.plan",owner:OWNER,phase:PHASE,state:"planned_not_executed",x1:{safe_now:mkTasks("x1","safe_now"),candidate:mkTasks("x1","candidate"),clean_fix_refine:mkTasks("x1","clean_fix_refine")},x2:{safe_now:mkTasks("x2","safe_now"),candidate:mkTasks("x2","candidate"),clean_fix_refine:mkTasks("x2","clean_fix_refine")},exact_approval_packets:exactPackets,blocked_packets:blockedPackets,automatic_completion_credit:0,boundary:"Planning capacity is not execution. Exact and blocked packets remain unexecuted until every action-specific prerequisite exists."});
+  writeJson("capability-plan.json",{schema:"ghc.family.caelen-capability-plan.v10",owner:OWNER,phase:PHASE,x1_local_skills:localSkills("x1"),x1_local_runners:localRunners("x1"),x2_local_skills:localSkills("x2"),x2_local_runners:localRunners("x2"),curated_global_promotions:promotions,package_installations:0,spend_usd:0,boundary:"Availability and smoke evidence do not establish production readiness, independent reproduction, professional authority, or Stage 20."});
+  writeJson("method-flow-startup.json",{schema:"ghc.family.method-flow-state.v1",phase:PHASE,owner:OWNER,identity_boundary:BOUNDARY,execution_authority:"owner_self_scoped_delta",source_commit:SOURCE_FINAL,final_commit:"PENDING",stage:"plan_startup",methods:startMethods,witnesses:startWitnesses,state_events:startMethods.flatMap((m,i)=>[{event_id:`CM6946-START-E${String(i+1).padStart(3,"0")}-FAIL`,method_id:m.method_id,from:"observed",to:"candidate",witness_id:m.validation_witness_ids[0]},{event_id:`CM6946-START-E${String(i+1).padStart(3,"0")}-PASS`,method_id:m.method_id,from:"candidate",to:"validated",witness_id:m.validation_witness_ids[1]}]),recommendations:[],counts:{methods:startMethods.length,witnesses:startWitnesses.length,state_events:startMethods.length*2,recommendations:0,states:{validated:startMethods.length},witness_results:{fail:startMethods.length,pass:startMethods.length}},boundary:BOUNDARY});
+  writeJson("retained-negatives-startup.json",{schema:"ghc.family.caelen-retained-negatives.v1",owner:OWNER,phase:PHASE,count:startNegatives.length,entries:startNegatives,nonerasure:true,terminal_verdict:"NOT_READY_FOR_STAGE_20"});
+  writeJson("threat-model.json",{schema:"ghc.family.caelen-threat-model.v694.v6.plan",owner:OWNER,phase:PHASE,assets:["integer geometry definitions","proposal freeze","malformed subjects","reversible patches","source provenance","route privacy"],threats:["noninteger ambiguity","degenerate geometry promotion","nondeterministic ordering","failed-subject erasure","physical-measurement conversion","cultural-pattern authority overclaim","private route leakage","canonical replay"],controls:["closed finite schemas","integer-only cases","canonical ordering","copy-on-write execution","round-trip inverse checks","append-only Method Flow","five-class privacy scan","one-shot canonical latch"],residual:["browser and assistive-technology evaluation","craft-practitioner and affected-user evaluation","independent review","professional safety review","legal and cultural review","Maori authority"],terminal_verdict:"NOT_READY_FOR_STAGE_20",boundary:BOUNDARY});
+  writeJson("artifact-budget.json",{schema:"ghc.family.caelen-artifact-budget.v10",owner:OWNER,phase:PHASE,tracked_before:627,materialized_before:627,forecast_additions_maximum:280,forecast_total_maximum:907,rotation_threshold:2000,rotate_now:false,document_word_ceiling:100000,baton_word_range:[10000,100000],lifecycle_commit_plan:{planning:1,x1:1,x2:1,final:1,total:4},allowed_extensions:[".json",".md",".txt",".tex",".html"],boundary:"Caps are ceilings, never filler quotas."});
+  writeJson("route-plan.json",{schema:"ghc.family.caelen-route-plan.v10",owner:OWNER,phase:PHASE,state:"ACTIVATION_ACKNOWLEDGED_ACTIVE_NO_SUCCESSOR_CONTACT",prospective_successor_snapshot:{exact_title:"Seren Talewood",phase:"v694-v7",model_role:"Astra"},terminal_refresh_required:true,guards:["exact final canonical success","clean pushed fresh-live equality","current v10 or newer authority","active and archived exact-title uniqueness","immediate bounded reread","duplicate and direct-control guard","usage and privacy guard","one acknowledged send"],successor_contacts:0,task_creation:false,task_fork:false,subagent_spawn:false,standby_contact:false,boundary:"Projection does not activate a task. Delivery is separate from repository and canonical evidence."});
+  writeJson("phase-truth.json",{schema:"ghc.family.phase-truth.v694.v6.plan",owner:OWNER,phase:PHASE,state:"PLANNING_FROZEN_NO_X1_OR_X2_EXECUTION",owner_git_parent:OWNER_PARENT,inherited_content_source:SOURCE_FINAL,source_is_git_parent:false,planning_commit:"BIND_AFTER_COMMIT",x1_commit:"PENDING",x2_commit:"PENDING",final_commit:"PENDING",proposals:{inherited_zero_credit:100,genuinely_new_source_bounded:100,declared_chain_before:11250,declared_chain_after:11350,universal_novelty_claimed:false},outcomes_observed:false,expected_outcomes:dispositionCounts,portfolios_observed:false,geometry_execution:false,successor_contacts:0,canonical_state:"NOT_INVOKED",route_state:"ACTIVATION_ACKNOWLEDGED_ACTIVE",terminal_verdict:"NOT_READY_FOR_STAGE_20",boundary:BOUNDARY});
+  writeJson("complete-incomplete.json",{schema:"ghc.family.caelen-complete-incomplete.v1.plan",owner:OWNER,phase:PHASE,complete:["activation and baton read","current skill and schema refresh","source branch and history verification","source-bounded novelty audit","planning definition freeze","artifact budget forecast"],incomplete:["planning commit and push","x1 execution and checkpoint","x2 execution and checkpoint","final closeout and push","one-shot canonical","terminal route refresh and possible successor delivery"],terminal_verdict:"NOT_READY_FOR_STAGE_20"});
+  writeJson("validation-receipt.json",{schema:"ghc.family.caelen-plan-validation-precommit.v1",owner:OWNER,phase:PHASE,proposal_count:100,inherited_review_count:100,expected_outcomes:dispositionCounts,x1_portfolios:{safe_now:100,candidate:100,clean_fix_refine:100},x2_portfolios:{safe_now:100,candidate:100,clean_fix_refine:100},local_skills:{x1:10,x2:10},local_runners:{x1:5,x2:5},exact_packets:50,blocked_packets:30,startup_failures:startNegatives.length,planning_only:true,x1_or_x2_execution:false,private_identifier_hits:0,terminal_verdict:"NOT_READY_FOR_STAGE_20"});
+  writeText("overview.md",`# Caelen Morrow v694-v6 planning freeze\n\nThis planning packet freezes one hundred source-bounded lattice-geometry proposals before any x1 admission or x2 execution. It reviews one hundred Sylven rows at zero novelty, execution, or completion credit. The declared chain moves from 11,250 to 11,350 only inside the source-bounded ledger; universal historical novelty is not claimed.\n\nGMUT Mind is primary. THOS Body and Freed ID/CBR Heart remain explicit and protected. The bounded human-practice lens is wholly synthetic quilt-pattern drafting and cutting-plan documentation. No real person, participant, quilt, textile, motif, tool, measurement, cutting, sewing, workplace, identity event, professional decision, safety action, legal or cultural interpretation, affected-party approval, or authority act occurs.\n\nThe one hundred expected outcomes are 80 completed, 10 represented, 5 open_gap, and 5 exact_gate. These are expectations only until x2 evidence exists. X1 may validate planning admission, local skills, local runners, and its own safe/candidate/CLEAN-FIX-REFINE tranche; it may not execute the frozen geometry program.\n\nCurrent official or primary sources supply vocabulary and structural obligations only: OGC Simple Feature Access, RFC 8785, RFC 6902, W3C PROV-O, and WCAG 2.2. Citations are not observations, measurements, endorsements, professional instructions, conformance evidence, or authority grants.\n\nAll empirical, participant, professional, production, deployment, identity, privacy-complete, accessibility-complete, exhaustive-security, independent-reproduction, legal, cultural, affected-party, Maori-authority, AGI/ASI, consciousness/personhood, Theory-of-Everything, proof/canon, and Stage 20 boundaries remain open or exact-gated. Maori concepts remain under Maori authority.\n\nTerminal verdict: NOT_READY_FOR_STAGE_20.`);
+
+  const planFiles=[];
+  function collect(dir){for(const name of fs.readdirSync(dir)){const abs=path.join(dir,name),st=fs.statSync(abs);if(st.isDirectory())collect(abs);else planFiles.push(abs);}}
+  collect(OUT);
+  const entries=planFiles.map((abs)=>{const raw=fs.readFileSync(abs),normalized=Buffer.from(raw.toString("utf8").replace(/\r\n/g,"\n"),"utf8");return{path:path.relative(ROOT,abs).replace(/\\/g,"/"),bytes_normalized_lf:normalized.length,sha256_normalized_lf:sha(normalized)};}).sort((a,b)=>a.path.localeCompare(b.path));
+  writeJson("manifest.json",{schema:"ghc.family.caelen-plan-manifest.v1",owner:OWNER,phase:PHASE,domain:"normalized_lf_worktree_bytes",entries,count:entries.length,self_exclusion:`${BASE}/plan/manifest.json`,boundary:"Exact planning-file byte parity only; no x1 or x2 execution claim."});
+  process.stdout.write(JSON.stringify({status:"VALID_CAELEN_V694_V6_PLANNING_BUILD",proposal_count:proposals.length,expected_dispositions:dispositionCounts,inherited_reviews:inheritedReview.length,startup_failures:startNegatives.length,nearest_title_jaccard:nearest.score,manifest_entries:entries.length,planning_only:true})+"\n");
+}
+
+main();
