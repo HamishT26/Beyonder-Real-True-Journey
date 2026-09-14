@@ -1,0 +1,103 @@
+'use strict';
+function stable(value) {
+  if (Array.isArray(value)) return value.map(stable);
+  if (value && typeof value === 'object') {
+    return Object.fromEntries(Object.keys(value).sort().map(function (key) { return [key, stable(value[key])]; }));
+  }
+  return value;
+};
+function compact(value) { return JSON.stringify(stable(value)); };
+function clone(value) { return JSON.parse(JSON.stringify(value)); };
+function sorted(values) { return Array.from(values).sort(); };
+function setEqual(left, right) { return compact(sorted(left)) === compact(sorted(right)); };
+function difference(universe, subset) {
+  const have = new Set(subset);
+  return universe.filter(function (value) { return !have.has(value); });
+};
+function assert(condition, message) { if (!condition) throw new Error(message); };
+function validateModel(input) {
+  const expectedKeys = ['case_id', 'guard_atom', 'initial', 'labels', 'states', 'synthetic', 'target_atom', 'transitions'];
+  assert(input && typeof input === 'object' && !Array.isArray(input), 'E_OBJECT');
+  assert(compact(Object.keys(input).sort()) === compact(expectedKeys), 'E_FIELDS');
+  assert(input.synthetic === true, 'E_SYNTHETIC');
+  assert(typeof input.case_id === 'string' && /^[a-z][a-z0-9-]{0,39}$/.test(input.case_id), 'E_CASE');
+  assert(Array.isArray(input.states) && input.states.length > 0 && input.states.length <= 12, 'E_STATES');
+  assert(input.states.every(function (state) { return typeof state === 'string' && /^[a-z][a-z0-9-]{0,39}$/.test(state); }), 'E_STATE_NAME');
+  assert(new Set(input.states).size === input.states.length, 'E_STATE_DUPLICATE');
+  const states = new Set(input.states);
+  assert(states.has(input.initial), 'E_INITIAL');
+  assert(Array.isArray(input.transitions) && input.transitions.length <= 48, 'E_TRANSITIONS');
+  assert(input.transitions.every(function (edge) { return Array.isArray(edge) && edge.length === 2 && states.has(edge[0]) && states.has(edge[1]); }), 'E_EDGE');
+  assert(new Set(input.transitions.map(function (edge) { return edge[0] + '\u0000' + edge[1]; })).size === input.transitions.length, 'E_EDGE_DUPLICATE');
+  assert(input.labels && typeof input.labels === 'object' && !Array.isArray(input.labels), 'E_LABELS');
+  assert(compact(Object.keys(input.labels).sort()) === compact(input.states.slice().sort()), 'E_LABEL_STATE');
+  input.states.forEach(function (state) {
+    const labels = input.labels[state];
+    assert(Array.isArray(labels) && labels.every(function (label) { return typeof label === 'string' && /^[a-z][a-z0-9_-]{0,39}$/.test(label); }), 'E_LABEL');
+    assert(new Set(labels).size === labels.length, 'E_LABEL_DUPLICATE');
+  });
+  assert(typeof input.target_atom === 'string' && typeof input.guard_atom === 'string', 'E_ATOM');
+  input.states.forEach(function (state) {
+    assert(input.transitions.some(function (edge) { return edge[0] === state; }), 'E_TOTALITY');
+  });
+};
+function oraclePrepare(input) {
+  validateModel(input);
+  const states = input.states.slice().sort(), successors = {};
+  states.forEach(function (state) { successors[state] = input.transitions.filter(function (edge) { return edge[0] === state; }).map(function (edge) { return edge[1]; }).sort(); });
+  return { states: states, successors: successors, target: new Set(states.filter(function (state) { return input.labels[state].includes(input.target_atom); })), guard: new Set(states.filter(function (state) { return input.labels[state].includes(input.guard_atom); })) };
+};
+function canReach(model, start, targets, allowed) {
+  const queue = [start], seen = new Set();
+  while (queue.length) {
+    const state = queue.shift();
+    if (targets.has(state)) return true;
+    if (seen.has(state) || (allowed && !allowed.has(state))) continue;
+    seen.add(state); model.successors[state].forEach(function (next) { queue.push(next); });
+  }
+  return false;
+};
+function reachableBad(model, start, allowed) {
+  const queue = [start], seen = new Set();
+  while (queue.length) {
+    const state = queue.shift();
+    if (seen.has(state)) continue;
+    seen.add(state); if (!allowed.has(state)) return true;
+    model.successors[state].forEach(function (next) { queue.push(next); });
+  }
+  return false;
+};
+function reachesCycle(model, start, allowed) {
+  function visit(state, pathSet) {
+    if (!allowed.has(state)) return false;
+    if (pathSet.has(state)) return true;
+    const nextPath = new Set(pathSet); nextPath.add(state);
+    return model.successors[state].some(function (next) { return visit(next, nextPath); });
+  }
+  return visit(start, new Set());
+};
+function oracleRun(operation, input) {
+  const model = oraclePrepare(input), all = model.states, target = model.target, guard = model.guard;
+  if (operation === 'af_states') {
+    const avoid = new Set(all.filter(function (state) { return !target.has(state); }));
+    return all.filter(function (state) { return !reachesCycle(model, state, avoid); }).sort();
+  }
+  if (operation === 'eg_states') return all.filter(function (state) { return target.has(state) && reachesCycle(model, state, target); }).sort();
+  if (operation === 'ag_states') return all.filter(function (state) { return !reachableBad(model, state, target); }).sort();
+  if (operation === 'eu_states') return all.filter(function (state) { return canReach(model, state, target, new Set(Array.from(guard).concat(Array.from(target)))); }).sort();
+  if (operation === 'au_states') {
+    const allowed = new Set(Array.from(guard).concat(Array.from(target)));
+    const avoidTarget = new Set(Array.from(guard).filter(function (state) { return !target.has(state); }));
+    return all.filter(function (state) { return !reachableBad(model, state, allowed) && !reachesCycle(model, state, avoidTarget); }).sort();
+  }
+  if (operation === 'duality_certificate') {
+    const targetArray = Array.from(target), notTarget = new Set(all.filter(function (state) { return !target.has(state); }));
+    const af = all.filter(function (state) { return !reachesCycle(model, state, notTarget); }).sort();
+    const egNot = all.filter(function (state) { return notTarget.has(state) && reachesCycle(model, state, notTarget); }).sort();
+    const ag = all.filter(function (state) { return !reachableBad(model, state, target); }).sort();
+    const efNot = all.filter(function (state) { return canReach(model, state, notTarget, null); }).sort();
+    return { not_af_equals_eg_not: setEqual(difference(all, af), egNot), not_ag_equals_ef_not: setEqual(difference(all, ag), efNot), target_count: targetArray.length };
+  }
+  throw new Error('E_ORACLE_OPERATION');
+};
+module.exports={oracleRun};

@@ -1,0 +1,252 @@
+'use strict';
+const crypto=require('crypto');
+const ALLOWED=["af_states","eg_states","ag_states","eu_states","au_states","duality_certificate","accessible_witness_table","uncertainty_boundary","empirical_evaluation_gap","deployment_authority_gate"];
+function stable(value) {
+  if (Array.isArray(value)) return value.map(stable);
+  if (value && typeof value === 'object') {
+    return Object.fromEntries(Object.keys(value).sort().map(function (key) { return [key, stable(value[key])]; }));
+  }
+  return value;
+};
+function compact(value) { return JSON.stringify(stable(value)); };
+function shaBytes(value) { return crypto.createHash('sha256').update(value).digest('hex'); };
+function shaValue(value) { return shaBytes(Buffer.from(compact(value), 'utf8')); };
+function clone(value) { return JSON.parse(JSON.stringify(value)); };
+function sorted(values) { return Array.from(values).sort(); };
+function setEqual(left, right) { return compact(sorted(left)) === compact(sorted(right)); };
+function difference(universe, subset) {
+  const have = new Set(subset);
+  return universe.filter(function (value) { return !have.has(value); });
+};
+function assert(condition, message) { if (!condition) throw new Error(message); };
+function validateModel(input) {
+  const expectedKeys = ['case_id', 'guard_atom', 'initial', 'labels', 'states', 'synthetic', 'target_atom', 'transitions'];
+  assert(input && typeof input === 'object' && !Array.isArray(input), 'E_OBJECT');
+  assert(compact(Object.keys(input).sort()) === compact(expectedKeys), 'E_FIELDS');
+  assert(input.synthetic === true, 'E_SYNTHETIC');
+  assert(typeof input.case_id === 'string' && /^[a-z][a-z0-9-]{0,39}$/.test(input.case_id), 'E_CASE');
+  assert(Array.isArray(input.states) && input.states.length > 0 && input.states.length <= 12, 'E_STATES');
+  assert(input.states.every(function (state) { return typeof state === 'string' && /^[a-z][a-z0-9-]{0,39}$/.test(state); }), 'E_STATE_NAME');
+  assert(new Set(input.states).size === input.states.length, 'E_STATE_DUPLICATE');
+  const states = new Set(input.states);
+  assert(states.has(input.initial), 'E_INITIAL');
+  assert(Array.isArray(input.transitions) && input.transitions.length <= 48, 'E_TRANSITIONS');
+  assert(input.transitions.every(function (edge) { return Array.isArray(edge) && edge.length === 2 && states.has(edge[0]) && states.has(edge[1]); }), 'E_EDGE');
+  assert(new Set(input.transitions.map(function (edge) { return edge[0] + '\u0000' + edge[1]; })).size === input.transitions.length, 'E_EDGE_DUPLICATE');
+  assert(input.labels && typeof input.labels === 'object' && !Array.isArray(input.labels), 'E_LABELS');
+  assert(compact(Object.keys(input.labels).sort()) === compact(input.states.slice().sort()), 'E_LABEL_STATE');
+  input.states.forEach(function (state) {
+    const labels = input.labels[state];
+    assert(Array.isArray(labels) && labels.every(function (label) { return typeof label === 'string' && /^[a-z][a-z0-9_-]{0,39}$/.test(label); }), 'E_LABEL');
+    assert(new Set(labels).size === labels.length, 'E_LABEL_DUPLICATE');
+  });
+  assert(typeof input.target_atom === 'string' && typeof input.guard_atom === 'string', 'E_ATOM');
+  input.states.forEach(function (state) {
+    assert(input.transitions.some(function (edge) { return edge[0] === state; }), 'E_TOTALITY');
+  });
+};
+function prepare(input) {
+  validateModel(input);
+  const states = input.states.slice().sort();
+  const successors = Object.fromEntries(states.map(function (state) { return [state, []]; }));
+  input.transitions.forEach(function (edge) { successors[edge[0]].push(edge[1]); });
+  states.forEach(function (state) { successors[state].sort(); });
+  const labels = Object.fromEntries(states.map(function (state) { return [state, new Set(input.labels[state])]; }));
+  return { input: input, states: states, successors: successors, labels: labels, initial: input.initial };
+};
+function atomStates(model, atom) { return model.states.filter(function (state) { return model.labels[state].has(atom); }); };
+function preE(model, states) {
+  const set = new Set(states);
+  return model.states.filter(function (state) { return model.successors[state].some(function (next) { return set.has(next); }); });
+};
+function preA(model, states) {
+  const set = new Set(states);
+  return model.states.filter(function (state) { return model.successors[state].every(function (next) { return set.has(next); }); });
+};
+function leastFixedPoint(seed, step) {
+  let current = sorted(seed), trace = [current];
+  for (;;) {
+    const next = sorted(new Set(current.concat(step(current))));
+    if (setEqual(current, next)) return { states: current, trace: trace };
+    current = next; trace.push(current);
+  }
+};
+function greatestFixedPoint(seed, step) {
+  let current = sorted(seed), trace = [current];
+  for (;;) {
+    const next = sorted(step(current));
+    if (setEqual(current, next)) return { states: current, trace: trace };
+    current = next; trace.push(current);
+  }
+};
+function reachable(model) {
+  const seen = new Set([model.initial]), queue = [model.initial];
+  while (queue.length) {
+    const state = queue.shift();
+    model.successors[state].forEach(function (next) { if (!seen.has(next)) { seen.add(next); queue.push(next); } });
+  }
+  return sorted(seen);
+};
+function sccs(model) {
+  let index = 0;
+  const stack = [], indices = {}, low = {}, onStack = new Set(), output = [];
+  function visit(state) {
+    indices[state] = index; low[state] = index; index += 1; stack.push(state); onStack.add(state);
+    model.successors[state].forEach(function (next) {
+      if (indices[next] === undefined) { visit(next); low[state] = Math.min(low[state], low[next]); }
+      else if (onStack.has(next)) low[state] = Math.min(low[state], indices[next]);
+    });
+    if (low[state] === indices[state]) {
+      const component = [];
+      for (;;) {
+        const next = stack.pop(); onStack.delete(next); component.push(next);
+        if (next === state) break;
+      }
+      output.push(component.sort());
+    }
+  }
+  model.states.forEach(function (state) { if (indices[state] === undefined) visit(state); });
+  return output.sort(function (left, right) { return left[0].localeCompare(right[0]); });
+};
+function normalizeModel(input) {
+  const copy = clone(input);
+  copy.states.sort();
+  copy.transitions.sort(function (a, b) { return a[0].localeCompare(b[0]) || a[1].localeCompare(b[1]); });
+  const labels = {};
+  Object.keys(copy.labels).sort().forEach(function (state) { labels[state] = copy.labels[state].slice().sort(); });
+  copy.labels = labels;
+  return copy;
+};
+function reversePresentation(input) {
+  const copy = clone(input);
+  copy.states.reverse(); copy.transitions.reverse();
+  const labels = {};
+  Object.keys(copy.labels).reverse().forEach(function (state) { labels[state] = copy.labels[state].slice().reverse(); });
+  copy.labels = labels;
+  return copy;
+};
+function relabelModel(input) {
+  const original = input.states.slice().sort();
+  const map = Object.fromEntries(original.map(function (state, index) { return [state, 'q' + index]; }));
+  const inverse = Object.fromEntries(Object.entries(map).map(function (entry) { return [entry[1], entry[0]]; }));
+  const labels = {};
+  original.forEach(function (state) { labels[map[state]] = input.labels[state].slice(); });
+  return {
+    model: {
+      case_id: input.case_id + '-renamed', states: original.map(function (state) { return map[state]; }), initial: map[input.initial],
+      transitions: input.transitions.map(function (edge) { return [map[edge[0]], map[edge[1]]]; }), labels: labels,
+      target_atom: input.target_atom, guard_atom: input.guard_atom, synthetic: true
+    },
+    map: map, inverse: inverse
+  };
+};
+function temporalSets(model) {
+  const target = atomStates(model, model.input.target_atom);
+  const guard = atomStates(model, model.input.guard_atom);
+  const ef = leastFixedPoint(target, function (current) { return preE(model, current); });
+  const af = leastFixedPoint(target, function (current) { return preA(model, current); });
+  const eg = greatestFixedPoint(target, function (current) {
+    const currentSet = new Set(current);
+    return target.filter(function (state) { return preE(model, current).includes(state) && currentSet.has(state); });
+  });
+  const ag = greatestFixedPoint(target, function (current) {
+    const currentSet = new Set(current);
+    return target.filter(function (state) { return preA(model, current).includes(state) && currentSet.has(state); });
+  });
+  const eu = leastFixedPoint(target, function (current) {
+    const predecessor = new Set(preE(model, current));
+    return guard.filter(function (state) { return predecessor.has(state); });
+  });
+  const au = leastFixedPoint(target, function (current) {
+    const predecessor = new Set(preA(model, current));
+    return guard.filter(function (state) { return predecessor.has(state); });
+  });
+  return { target: target, guard: guard, ef: ef, af: af, eg: eg, ag: ag, eu: eu, au: au };
+};
+function accepted(operation, input, value, outcome) {
+  return { accepted: true, operation: operation, case_id: input.case_id, outcome: outcome || 'completed', value: value, same_owner_only: true, independent_reproduction: false };
+};
+function rejected(operation, error) {
+  return { accepted: false, operation: operation, error: error || 'E_KRIPKE_MODEL', outcome: 'open_gap', original_success_credit: 0, same_owner_only: true, independent_reproduction: false };
+};
+function run(operation, input) {
+  try {
+    const model = prepare(input), sets = temporalSets(model), target = sets.target, guard = sets.guard;
+    let value, outcome = 'completed';
+    if (operation === 'model_summary') {
+      value = { states: model.states.length, transitions: input.transitions.length, atoms: sorted(new Set(Object.values(input.labels).flat())), initial: input.initial, total: true };
+    } else if (operation === 'transition_totality') {
+      value = model.states.map(function (state) { return { state: state, successor_count: model.successors[state].length, total: model.successors[state].length > 0 }; });
+    } else if (operation === 'reachable_states') {
+      value = { initial: model.initial, reachable: reachable(model), unreachable: difference(model.states, reachable(model)) };
+    } else if (operation === 'scc_decomposition') {
+      value = { components: sccs(model), component_count: sccs(model).length };
+    } else if (operation === 'predecessor_sets') {
+      value = Object.fromEntries(model.states.map(function (state) {
+        return [state, model.states.filter(function (candidate) { return model.successors[candidate].includes(state); })];
+      }));
+    } else if (operation === 'ex_states') {
+      value = { atom: input.target_atom, states: preE(model, target) };
+    } else if (operation === 'ax_states') {
+      value = { atom: input.target_atom, states: preA(model, target) };
+    } else if (operation === 'ef_states') {
+      value = { atom: input.target_atom, states: sets.ef.states, iterations: sets.ef.trace };
+    } else if (operation === 'relabel_invariance') {
+      const renamed = relabelModel(input), renamedModel = prepare(renamed.model), renamedTarget = atomStates(renamedModel, input.target_atom);
+      const renamedEf = leastFixedPoint(renamedTarget, function (current) { return preE(renamedModel, current); }).states.map(function (state) { return renamed.inverse[state]; }).sort();
+      value = { original_ef: sets.ef.states, renamed_back_ef: renamedEf, equivalent: setEqual(sets.ef.states, renamedEf), reversible_mapping: renamed.map };
+    } else if (operation === 'normalized_equivalence') {
+      const normalized = prepare(normalizeModel(input));
+      const normalizedTarget = atomStates(normalized, input.target_atom);
+      const normalizedEf = leastFixedPoint(normalizedTarget, function (current) { return preE(normalized, current); }).states;
+      value = { original_ef: sets.ef.states, normalized_ef: normalizedEf, equivalent: setEqual(sets.ef.states, normalizedEf), source_input_retained: true };
+    } else if (operation === 'af_states') {
+      value = { atom: input.target_atom, states: sets.af.states, iterations: sets.af.trace };
+    } else if (operation === 'eg_states') {
+      value = { atom: input.target_atom, states: sets.eg.states, iterations: sets.eg.trace };
+    } else if (operation === 'ag_states') {
+      value = { atom: input.target_atom, states: sets.ag.states, iterations: sets.ag.trace };
+    } else if (operation === 'eu_states') {
+      value = { guard_atom: input.guard_atom, target_atom: input.target_atom, states: sets.eu.states, iterations: sets.eu.trace };
+    } else if (operation === 'au_states') {
+      value = { guard_atom: input.guard_atom, target_atom: input.target_atom, states: sets.au.states, iterations: sets.au.trace };
+    } else if (operation === 'duality_certificate') {
+      const notTarget = difference(model.states, target);
+      const efNot = leastFixedPoint(notTarget, function (current) { return preE(model, current); }).states;
+      const afNot = leastFixedPoint(notTarget, function (current) { return preA(model, current); }).states;
+      const egNot = greatestFixedPoint(notTarget, function (current) {
+        const currentSet = new Set(current);
+        return notTarget.filter(function (state) { return preE(model, current).includes(state) && currentSet.has(state); });
+      }).states;
+      const agNot = greatestFixedPoint(notTarget, function (current) {
+        const currentSet = new Set(current);
+        return notTarget.filter(function (state) { return preA(model, current).includes(state) && currentSet.has(state); });
+      }).states;
+      value = {
+        not_af_equals_eg_not: setEqual(difference(model.states, sets.af.states), egNot),
+        not_ef_equals_ag_not: setEqual(difference(model.states, sets.ef.states), agNot),
+        not_eg_equals_af_not: setEqual(difference(model.states, sets.eg.states), afNot),
+        not_ag_equals_ef_not: setEqual(difference(model.states, sets.ag.states), efNot),
+        convention: 'total finite transitions'
+      };
+    } else if (operation === 'accessible_witness_table') {
+      outcome = 'represented';
+      value = model.states.map(function (state, index) { return { row: index + 1, state: state, labels: sorted(model.labels[state]), successors: model.successors[state], evaluation: 'structural representation; human accessibility evaluation pending' }; });
+    } else if (operation === 'uncertainty_boundary') {
+      outcome = 'represented';
+      value = { measurand_defined: false, observations: 0, type_a_evaluation: false, type_b_evaluation: false, combined_standard_uncertainty: null, model_checking_result_is_measurement: false };
+    } else if (operation === 'empirical_evaluation_gap') {
+      outcome = 'open_gap';
+      value = { state: 'open_gap', missing: ['real task distribution', 'governed observations', 'measurement model', 'uncertainty analysis', 'matched comparison', 'independent evaluation'], real_world_effectiveness_claimed: false };
+    } else if (operation === 'deployment_authority_gate') {
+      outcome = 'exact_gate';
+      value = { state: 'exact_gate', missing: ['declared deployment scope', 'competent professional review', 'affected-party authorization', 'independent privacy and security evaluation', 'legal and cultural authority where applicable'], deployment_performed: false };
+    } else {
+      return rejected(operation, 'E_OPERATION');
+    }
+    return accepted(operation, input, value, outcome);
+  } catch (error) {
+    return rejected(operation, 'E_KRIPKE_MODEL');
+  }
+};
+function cli(){let request;try{request=JSON.parse(process.argv[2]||'{}');}catch(error){console.log(JSON.stringify(rejected('unknown','E_JSON')));return 2;}if(!ALLOWED.includes(request.operation)){console.log(JSON.stringify(rejected(request.operation,'E_OPERATION')));return 2;}const output=run(request.operation,request.input);console.log(JSON.stringify(stable(output)));return output.accepted?0:2;}if(require.main===module)process.exitCode=cli();module.exports={run,normalizeModel,reversePresentation};
