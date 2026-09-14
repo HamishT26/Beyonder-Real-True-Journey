@@ -1,0 +1,769 @@
+"use strict";
+
+const fs = require("fs");
+const path = require("path");
+const crypto = require("crypto");
+const cp = require("child_process");
+
+const ROOT = path.resolve(__dirname, "../../../..");
+const BASE = "docs/sylven-arc/v694-v5";
+const PHASE_ROOT = path.join(ROOT, BASE);
+const FINAL = path.join(PHASE_ROOT, "final");
+const HANDOFFS = path.join(PHASE_ROOT, "handoffs");
+const VALIDATION = path.join(PHASE_ROOT, "validation");
+const SEAL = path.join(PHASE_ROOT, "seal");
+const SOURCE = "a681f7f8fca4cb7b4cd1ec363b23bbf896f0cbe1";
+const OWNER_PARENT = "cce7c0dbbc44044b1e648be731663def37c76db9";
+const PLAN_COMMIT = "89bdb2a4e204ed6d813f609257f2bacd3d2f5cff";
+const X1_COMMIT = "24cc18a6e6ea1c4c1deeed02bf97c6a35c404f17";
+const X2_COMMIT = "68ba76c4ba78256a5139d99cd2429ca8af2d85c0";
+const PROTECTED = [
+  "empirical",
+  "participant",
+  "professional",
+  "production",
+  "deployment",
+  "legal",
+  "cultural",
+  "affected_party",
+  "maori_authority",
+  "privacy_complete",
+  "accessibility_complete",
+  "exhaustive_security",
+  "independent_reproduction",
+  "agi_asi",
+  "consciousness_personhood",
+  "theory_of_everything",
+  "proof_canon",
+  "stage20",
+];
+const BOUNDARY =
+  "Sylven Arc, optionally they/them, continuity gardener and evidence-bound systems steward, with the hope of making finite graph changes inspectable, reversible, and accessible without overstating what they prove, is relational working language only. It is not evidence of consciousness, sentience, personhood, identity continuity, employment, qualification, independent agency, scientific or operational authority, professional authority, legal or cultural authority, affected-party authority, or Maori authority. Same-owner synthetic evidence is not independent reproduction. NOT_READY_FOR_STAGE_20.";
+
+function g(args) {
+  return cp.execFileSync("git", args, { cwd: ROOT, encoding: "utf8", maxBuffer: 64 * 1024 * 1024 }).trim();
+}
+
+function read(relative) {
+  return fs.readFileSync(path.join(ROOT, relative), "utf8");
+}
+
+function readJson(relative) {
+  return JSON.parse(read(relative));
+}
+
+function write(relative, content) {
+  const absolute = path.join(ROOT, relative);
+  fs.mkdirSync(path.dirname(absolute), { recursive: true });
+  fs.writeFileSync(absolute, content, { encoding: "utf8", flag: "wx" });
+}
+
+function writeJson(relative, value) {
+  write(relative, `${JSON.stringify(value, null, 2)}\n`);
+}
+
+function sha(value) {
+  return crypto.createHash("sha256").update(value).digest("hex");
+}
+
+function normalizedBytes(absolute) {
+  return Buffer.from(fs.readFileSync(absolute, "utf8").replace(/\r\n/g, "\n"), "utf8");
+}
+
+function collect(directory, output = []) {
+  if (!fs.existsSync(directory)) return output;
+  for (const name of fs.readdirSync(directory).sort()) {
+    const absolute = path.join(directory, name);
+    const stat = fs.statSync(absolute);
+    if (stat.isDirectory()) collect(absolute, output);
+    else output.push(absolute);
+  }
+  return output;
+}
+
+function words(text) {
+  return (text.match(/\S+/g) || []).length;
+}
+
+function canonicalCard(card) {
+  const content = { ...card };
+  delete content.content_sha256;
+  return JSON.stringify(content);
+}
+
+function finalizeCard(card) {
+  return { ...card, content_sha256: sha(Buffer.from(canonicalCard(card), "utf8")) };
+}
+
+function escapeHtml(value) {
+  return String(value).replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll('"', "&quot;");
+}
+
+function baseMethod(id, title, witnessIds) {
+  return {
+    method_id: id,
+    title,
+    failure_signature: "Missing binding, count mismatch, mutable history, privacy leak, unsupported claim, route overreach, or lifecycle mismatch.",
+    trigger_preconditions: ["The immutable x2 commit is pushed, clean, and fresh-live equal.", "All owner evidence is available under the exact phase path."],
+    privacy_class: "sanitized_public",
+    approval_class: "owner_safe_local",
+    candidate_workaround: "Retain the failed witness and correct only the smallest closeout dependency before the final commit.",
+    validation_witness_ids: witnessIds,
+    recurrence_guard: "Require exact content hashes, bounded owner scope, explicit exclusions, source-faithful counts, and no route delivery before canonical success.",
+    rollback: "Stop before commit or routing; preserve plan, x1, x2, and every retained negative.",
+    recommendation_state: "validated",
+    supersedes: [],
+    protected_gates: PROTECTED,
+    retained_negative_ids: [],
+    scope_boundary: "Sylven v694-v5 closeout only.",
+    execution_authority: "owner_self_scoped_delta",
+    repository_scan: false,
+    module_scan: true,
+    cross_lane_scan: false,
+    unchanged_history_scan: false,
+    sibling_lane_mutation: false,
+    source_commit: SOURCE,
+    final_commit: "BIND_EXTERNALLY_AFTER_COMMIT",
+    changed_file_allowlist: [BASE],
+    module_allowlist: [BASE],
+    exact_pushed_head_required: true,
+  };
+}
+
+function baseWitness(id, methodId, procedure, observed) {
+  return {
+    witness_id: id,
+    method_id: methodId,
+    procedure,
+    scope: "Sylven v694-v5 closeout",
+    expected: "Exact bounded closeout evidence",
+    observed,
+    result: "pass",
+    same_owner_only: true,
+    independent_reproduction: false,
+    retained_negative_ids: [],
+    boundary: BOUNDARY,
+  };
+}
+
+function main() {
+  for (const directory of [FINAL, HANDOFFS, VALIDATION, SEAL]) {
+    if (fs.existsSync(directory)) throw new Error(`directory_exists_${path.basename(directory)}`);
+  }
+  if (g(["rev-parse", "HEAD"]) !== X2_COMMIT) throw new Error("head_not_x2");
+  if (g(["rev-parse", "HEAD^"]) !== X1_COMMIT || g(["rev-parse", "HEAD^^"]) !== PLAN_COMMIT || g(["rev-parse", "HEAD^^^"]) !== OWNER_PARENT) {
+    throw new Error("owner_lifecycle_chain");
+  }
+  if (g(["status", "--porcelain"]) !== "?? docs/sylven-arc/v694-v5/tooling/build-final.txt\n?? docs/sylven-arc/v694-v5/tooling/canonical-final.txt\n?? docs/sylven-arc/v694-v5/tooling/validate-final-precommit.txt") {
+    throw new Error("unexpected_prebuild_changes");
+  }
+  const refs = [g(["rev-parse", "HEAD"]), g(["rev-parse", "HEAD@{upstream}"]), g(["rev-parse", "refs/remotes/origin/codex/GHC-Family/sylven-arc-main"])];
+  const live = g(["ls-remote", "--heads", "origin", "refs/heads/codex/GHC-Family/sylven-arc-main"]).split(/\s+/)[0];
+  if (new Set([...refs, live]).size !== 1 || g(["rev-list", "--left-right", "--count", "HEAD...HEAD@{upstream}"]) !== "0\t0") {
+    throw new Error("x2_not_four_way_equal");
+  }
+
+  const proposalFreeze = readJson(`${BASE}/plan/proposal-freeze.json`);
+  const planTruth = readJson(`${BASE}/plan/phase-truth.json`);
+  const x1Truth = readJson(`${BASE}/x1/phase-truth.json`);
+  const x2Truth = readJson(`${BASE}/x2/phase-truth-final.json`);
+  const startupFlow = readJson(`${BASE}/plan/method-flow-startup.json`);
+  const x1Flow = readJson(`${BASE}/x1/method-flow-ledger.json`);
+  const x2Flow = readJson(`${BASE}/x2/method-flow-final.json`);
+  const startupNegatives = readJson(`${BASE}/plan/retained-negatives-startup.json`);
+  const x1Negatives = readJson(`${BASE}/x1/retained-negatives.json`);
+  const x2Negatives = readJson(`${BASE}/x2/retained-negatives-final.json`);
+  const sourceList = readJson(`${BASE}/plan/source-list.json`);
+  const sourceVerification = readJson(`${BASE}/plan/source-verification.json`);
+  const identity = readJson(`${BASE}/plan/identity-practices.json`);
+  const portfolios = readJson(`${BASE}/plan/portfolios.json`);
+  const workflow = readJson(`${BASE}/plan/workflow-v10-receipt.json`);
+  const planThreat = readJson(`${BASE}/plan/threat-model.json`);
+  const installation = readJson(`${BASE}/x2/global-installation-receipt.json`);
+  const interfaceReceipt = readJson(`${BASE}/x2/interface-validation-receipt.json`);
+
+  if (proposalFreeze.count !== 100 || proposalFreeze.proposals.length !== 100) throw new Error("proposals");
+  if (x2Truth.x2_owner_delta.methods !== 22 || x2Truth.x2_owner_delta.witnesses !== 501) throw new Error("x2_truth");
+  if (startupNegatives.count !== 5 || x1Negatives.count !== 105 || x2Negatives.count !== 131) throw new Error("negative_sources");
+  if (installation.parity_count !== 52 || interfaceReceipt.totals.witnesses !== 19) throw new Error("x2_receipts");
+
+  const contracts = proposalFreeze.proposals.map((proposal, index) => readJson(`${BASE}/x2/contracts/${String(index + 1).padStart(3, "0")}.json`));
+  const outcomeCounts = contracts.reduce((acc, contract) => {
+    acc[contract.observed.disposition] = (acc[contract.observed.disposition] || 0) + 1;
+    return acc;
+  }, {});
+  if (JSON.stringify(outcomeCounts) !== JSON.stringify({ completed: 80, represented: 10, open_gap: 5, exact_gate: 5 })) throw new Error("outcome_counts");
+
+  const tier1 = finalizeCard({
+    schema: "ghc.family.freed-id-flashcard.v2",
+    card_id: "SA6945-CARD-IDENTITY",
+    tier: 1,
+    parent_card_ids: [],
+    title: "Sylven Arc owner-scope identity card",
+    representation: { owner: identity.owner, optional_pronouns: "they/them", role: identity.role, hope: identity.hope },
+    source_status: "current_owner_declared_relational_working_language",
+    lifecycle_anchor: X2_COMMIT,
+    hypothesis: "A compact owner card can retrieve role, hope, scope, and boundaries without asserting identity continuity or personhood.",
+    null_or_failure_condition: "Any consciousness, sentience, personhood, continuity, qualification, agency, or authority inference fails the card.",
+    acceptance_gate: "All relational fields and nonclaim boundaries remain explicit and privacy-safe.",
+    rollback: "Stop selecting this card and retain the underlying source records unchanged.",
+    evidence_status: "represented",
+    retained_failure_register: `${BASE}/final/retained-negative-register.json`,
+    open_gaps: ["No external identity continuity or personhood evidence is claimed."],
+    exact_gates: ["Identity, legal, cultural, affected-party, and Maori authority remain unavailable."],
+    protected_gates: PROTECTED,
+    supersedes: [],
+    erased: false,
+  });
+  const pillarCards = [
+    ["THOS Body", "primary", "Finite directed-graph operations and reversible patch contracts are bounded software semantics, not participant or operational effectiveness evidence."],
+    ["GMUT Mind", "supporting", "Graph analogies remain mathematical bookkeeping and establish no physical model, force, likelihood, prediction, or Theory-of-Everything result."],
+    ["Freed ID and CBR Heart", "supporting", "Provenance, correction, minimization, challenge, and authority reservations remain synthetic and nonproduction."],
+  ].map(([title, priority, summary], index) => finalizeCard({
+    schema: "ghc.family.freed-id-flashcard.v2",
+    card_id: `SA6945-CARD-PILLAR-${index + 1}`,
+    tier: 2,
+    parent_card_ids: [tier1.card_id],
+    title,
+    representation: { priority, summary },
+    source_status: "current_phase_declared",
+    lifecycle_anchor: X2_COMMIT,
+    hypothesis: "A pillar card can preserve the intended research lens while retaining explicit nonconversion boundaries.",
+    null_or_failure_condition: "Treating synthetic software evidence as empirical, participant, professional, production, authority, proof, or Stage 20 evidence fails the card.",
+    acceptance_gate: "Priority and evidence ceiling remain simultaneously visible.",
+    rollback: "Return to the identity card and underlying source ledger without deleting this historical representation.",
+    evidence_status: "represented",
+    retained_failure_register: `${BASE}/final/retained-negative-register.json`,
+    open_gaps: ["Real evaluation and independent reproduction remain absent."],
+    exact_gates: ["Professional, legal, cultural, affected-party, and Maori authority remain exact-gated."],
+    protected_gates: PROTECTED,
+    supersedes: [],
+    erased: false,
+  }));
+  const practiceCards = identity.own_practices.map((practice, index) => finalizeCard({
+    schema: "ghc.family.freed-id-flashcard.v2",
+    card_id: `SA6945-CARD-PRACTICE-${index + 1}`,
+    tier: 3,
+    parent_card_ids: [pillarCards[0].card_id],
+    title: practice,
+    representation: { practice, synthetic_learning_and_design_lens_only: true },
+    source_status: "current_phase_declared",
+    lifecycle_anchor: X2_COMMIT,
+    hypothesis: "A bounded practice lens can organize software work without conferring employment, competence, qualification, or professional authority.",
+    null_or_failure_condition: "Any real-world professional, safety, treatment, release, participant, or authority inference fails the card.",
+    acceptance_gate: "The practice is used only to structure finite synthetic graph artifacts.",
+    rollback: "Stop selecting the lens while retaining its card and every linked witness.",
+    evidence_status: "represented",
+    retained_failure_register: `${BASE}/final/retained-negative-register.json`,
+    open_gaps: ["No practitioner, participant, or affected-user evaluation occurred."],
+    exact_gates: ["Professional practice and all protected decisions remain exact-gated."],
+    protected_gates: PROTECTED,
+    supersedes: [],
+    erased: false,
+  }));
+  const practiceIndex = new Map(identity.own_practices.map((practice, index) => [practice, practiceCards[index].card_id]));
+  const taskCards = contracts.map((contract, index) => {
+    const proposal = contract.proposal;
+    const relatedNegative = `SA6945-X2-N-${String(index + 1).padStart(3, "0")}`;
+    return finalizeCard({
+      schema: "ghc.family.freed-id-flashcard.v2",
+      card_id: `SA6945-CARD-TASK-${String(index + 1).padStart(3, "0")}`,
+      tier: 4,
+      parent_card_ids: [practiceIndex.get(proposal.practice)],
+      title: proposal.title,
+      representation: { proposal_id: proposal.proposal_id, operation: proposal.operation, case_id: proposal.case_id, input: proposal.input, observed: contract.observed },
+      source_status: proposal.source_status,
+      source_refs: proposal.source_refs,
+      lifecycle_anchor: X2_COMMIT,
+      hypothesis: proposal.hypothesis,
+      null_or_failure_condition: proposal.null_or_failure_condition,
+      acceptance_gate: proposal.falsifier_or_acceptance_gate,
+      rollback: proposal.rollback_or_recovery,
+      evidence_status: contract.observed.disposition,
+      property_validation: contract.property_validation,
+      input_unchanged: contract.input_unchanged,
+      replay_equal: contract.replay_equal,
+      retained_failure_ids: [relatedNegative],
+      retained_failure_register: `${BASE}/final/retained-negative-register.json`,
+      open_gaps: contract.observed.disposition === "open_gap" ? ["Browser, assistive-technology, cognitive, affected-user, or independent evaluation remains absent."] : [],
+      exact_gates: contract.observed.disposition === "exact_gate" ? ["Professional, legal, cultural, affected-party, privacy, accessibility, security, and Maori authority remain unavailable."] : [],
+      protected_gates: proposal.protected_gates,
+      same_owner_only: true,
+      independent_reproduction: false,
+      supersedes: [],
+      erased: false,
+    });
+  });
+  const cards = [tier1, ...pillarCards, ...practiceCards, ...taskCards];
+  if (cards.length !== 108 || cards.filter((card) => card.tier === 1).length !== 1 || cards.filter((card) => card.tier === 2).length !== 3 || cards.filter((card) => card.tier === 3).length !== 4 || cards.filter((card) => card.tier === 4).length !== 100) {
+    throw new Error("deck_tiers");
+  }
+  if (new Set(cards.map((card) => card.card_id)).size !== cards.length || cards.some((card) => sha(Buffer.from(canonicalCard(card), "utf8")) !== card.content_sha256)) throw new Error("deck_hashes");
+  const deckIndex = sha(Buffer.from(cards.map((card) => `${card.card_id}:${card.content_sha256}`).join("\n"), "utf8"));
+  writeJson(`${BASE}/final/four-tier-flashcard-deck.json`, {
+    schema: "ghc.family.freed-id-four-tier-deck.v2",
+    owner: "Sylven Arc",
+    phase: "v694-v5",
+    tier_counts: { identity: 1, pillars: 3, practices: 4, tasks: 100 },
+    card_count: cards.length,
+    content_address_algorithm: "sha256_of_ordered_json_card_without_content_sha256",
+    index_sha256: deckIndex,
+    cards,
+    supersession_policy: "Additive only. A newer card may reference an older card but never erase or rewrite it or its failed witnesses.",
+    zero_row_or_synthetic_only: true,
+    terminal_verdict: "NOT_READY_FOR_STAGE_20",
+  });
+
+  const outcomeRows = contracts.map((contract) => ({
+    proposal_id: contract.proposal.proposal_id,
+    title: contract.proposal.title,
+    operation: contract.proposal.operation,
+    case_id: contract.proposal.case_id,
+    expected_disposition: contract.proposal.expected_disposition,
+    observed_disposition: contract.observed.disposition,
+    property_validation: contract.property_validation,
+    input_unchanged: contract.input_unchanged,
+    replay_equal: contract.replay_equal,
+    contract_path: contract.proposal.concrete_artifact,
+    same_owner_only: true,
+    independent_reproduction: false,
+  }));
+  writeJson(`${BASE}/final/proposal-outcome-ledger.json`, {
+    schema: "ghc.family.sylven-proposal-outcome-ledger.v1",
+    owner: "Sylven Arc",
+    phase: "v694-v5",
+    declared_chain_before: proposalFreeze.declared_chain_before,
+    declared_chain_after: proposalFreeze.declared_chain_after,
+    declared_chain_scope: proposalFreeze.declared_chain_scope,
+    universal_novelty_claimed: proposalFreeze.universal_novelty_claimed,
+    inherited_rows: { count: 100, novelty_credit: 0, completion_credit: 0, source: `${BASE}/plan/inherited-review.json` },
+    new_rows: { count: 100, outcomes: outcomeCounts, rows: outcomeRows },
+    terminal_verdict: "NOT_READY_FOR_STAGE_20",
+  });
+
+  const currentOpen = contracts.filter((contract) => contract.observed.disposition === "open_gap").map((contract) => ({
+    proposal_id: contract.proposal.proposal_id,
+    title: contract.proposal.title,
+    missing_evidence: ["real browser evaluation", "assistive-technology evaluation", "cognitive review", "affected-user evaluation", "independent review"],
+    current_evidence: "Same-owner Node VM/DOM-stub and static structural evidence only.",
+    closed: false,
+  }));
+  const currentExact = contracts.filter((contract) => contract.observed.disposition === "exact_gate").map((contract) => ({
+    proposal_id: contract.proposal.proposal_id,
+    title: contract.proposal.title,
+    missing_authority: ["professional", "legal", "cultural", "affected_party", "privacy", "accessibility", "security", "Maori_authority"],
+    current_evidence: "Synthetic refusal and reservation record only.",
+    executed: false,
+  }));
+  writeJson(`${BASE}/final/open-gap-register.json`, { schema: "ghc.family.open-gap-register.v694.v5", inherited_count: 30, phase_count: 5, effective_count: 35, entries: currentOpen, terminal_verdict: "NOT_READY_FOR_STAGE_20" });
+  writeJson(`${BASE}/final/exact-gate-register.json`, { schema: "ghc.family.exact-gate-register.v694.v5", inherited_count: 30, phase_count: 5, effective_count: 35, entries: currentExact, exact_approval_packets_visible_unexecuted: 50, blocked_packets_visible_unexecuted: 30, terminal_verdict: "NOT_READY_FOR_STAGE_20" });
+
+  const retainedEntries = [...startupNegatives.entries, ...x1Negatives.entries, ...x2Negatives.entries];
+  if (retainedEntries.length !== 241 || new Set(retainedEntries.map((item) => item.negative_id)).size !== 241 || retainedEntries.some((item) => item.original_success_credit !== 0 || item.erased !== false)) throw new Error("final_nonerasure");
+  writeJson(`${BASE}/final/retained-negative-register.json`, {
+    schema: "ghc.family.retained-negatives.v694.v5.final",
+    owner: "Sylven Arc",
+    phase: "v694-v5",
+    count: 241,
+    sources: { startup: 5, x1: 105, x2: 131 },
+    entries: retainedEntries,
+    nonerasure: true,
+    terminal_verdict: "NOT_READY_FOR_STAGE_20",
+  });
+
+  const closeoutMethods = [];
+  const closeoutWitnesses = [];
+  const closeoutEvents = [];
+  const closeoutSpecs = [
+    ["lifecycle and four-way source checkpoint", `Owner parent, planning, x1, and x2 are direct; x2 was clean, typed 0/0, and four-way equal at ${X2_COMMIT}.`],
+    ["source and provenance boundary", `Tessarin final ${SOURCE} is content provenance, not the Git parent; five official sources supplied vocabulary only.`],
+    ["proposal and outcome reconciliation", "One hundred new rows reconcile to 80 completed, 10 represented, 5 open_gap, and 5 exact_gate."],
+    ["portfolio and approval reconciliation", "Both lifecycle sessions carry 100 safe, 100 candidate, and 100 CLEAN/FIX/REFINE records; protected packets remain unexecuted."],
+    ["global installation reconciliation", "Five skills, five public runners, two support files, and 52 byte-parity bindings passed with zero overwrite."],
+    ["static interface evidence ceiling", "Five contract matches and bounded DOM/TeX checks passed; browser, AT, affected-user, and independent evaluation remain open."],
+    ["Method Flow and retained-negative nonerasure", "Forty-seven final phase methods and all 241 owner failed witnesses remain source-linked and un-erased."],
+    ["four-tier content-addressed flashcard deck", `The deck contains 108 cards with deterministic SHA-256 addresses and root index ${deckIndex}.`],
+    ["modular report and baton bounds", "The overview, static report, and modular handoff preserve exact evidence and authority boundaries without inline task identifiers."],
+    ["manifest, seal, and prepared route boundary", "The final manifests, staged review, content seal, and PREPARED_NOT_SENT route are additive and delivery-neutral."],
+  ];
+  closeoutSpecs.forEach(([title, observed], index) => {
+    const ordinal = String(index + 1).padStart(3, "0");
+    const methodId = `SA6945-FINAL-M${ordinal}`;
+    const structuralId = `${methodId}-P001`;
+    const boundaryId = `${methodId}-P002`;
+    closeoutMethods.push(baseMethod(methodId, title, [structuralId, boundaryId]));
+    closeoutWitnesses.push(baseWitness(structuralId, methodId, `${title} structural check`, observed));
+    closeoutWitnesses.push(baseWitness(boundaryId, methodId, `${title} evidence-ceiling check`, "The result remains same-owner structural evidence and preserves every protected gate."));
+    closeoutEvents.push({ event_index: index * 2 + 1, method_id: methodId, before: null, after: "candidate", reason: "Closeout method admitted", witness_id: structuralId });
+    closeoutEvents.push({ event_index: index * 2 + 2, method_id: methodId, before: "candidate", after: "validated", reason: "Structural and boundary witnesses passed", witness_id: boundaryId });
+  });
+  const finalMethods = [...startupFlow.methods, ...x1Flow.methods, ...x2Flow.methods, ...closeoutMethods];
+  const finalWitnesses = [...startupFlow.witnesses, ...x1Flow.witnesses, ...x2Flow.witnesses, ...closeoutWitnesses];
+  const finalEvents = [
+    ...startupFlow.state_events,
+    ...x1Flow.state_events.map((item) => ({ ...item, event_index: startupFlow.state_events.length + item.event_index })),
+    ...x2Flow.state_events.map((item) => ({ ...item, event_index: startupFlow.state_events.length + x1Flow.state_events.length + item.event_index })),
+    ...closeoutEvents.map((item) => ({ ...item, event_index: startupFlow.state_events.length + x1Flow.state_events.length + x2Flow.state_events.length + item.event_index })),
+  ];
+  const finalPass = finalWitnesses.filter((item) => item.result === "pass").length;
+  const finalFail = finalWitnesses.filter((item) => item.result === "fail").length;
+  if (finalMethods.length !== 47 || finalWitnesses.length !== 941 || finalPass !== 700 || finalFail !== 241 || finalEvents.length !== 94) throw new Error("final_flow_accounting");
+  writeJson(`${BASE}/final/method-flow-ledger.json`, {
+    schema: "ghc.family.method-flow-state.v1",
+    owner: "Sylven Arc",
+    phase: "v694-v5",
+    identity_boundary: BOUNDARY,
+    execution_authority: "owner_self_scoped_delta",
+    source_commit: SOURCE,
+    final_commit: "BIND_EXTERNALLY_AFTER_COMMIT",
+    stage: "final_precommit_candidate",
+    methods: finalMethods,
+    witnesses: finalWitnesses,
+    state_events: finalEvents,
+    recommendations: [],
+    counts: { methods: 47, witnesses: 941, state_events: 94, recommendations: 0, states: { validated: 47 }, witness_results: { fail: 241, pass: 700 } },
+    boundary: BOUNDARY,
+  });
+
+  writeJson(`${BASE}/final/source-provenance-ledger.json`, {
+    schema: "ghc.family.sylven-source-provenance.v694.v5",
+    owner: "Sylven Arc",
+    phase: "v694-v5",
+    owner_git_lifecycle: { parent: OWNER_PARENT, planning: PLAN_COMMIT, x1: X1_COMMIT, x2: X2_COMMIT, final: "BIND_EXTERNALLY_AFTER_COMMIT", direct_single_parent: true, merges: 0 },
+    inherited_content_source: { owner: "Tessarin Reed", phase: "v694-v4", exact_final: SOURCE, is_git_parent: false, canonical_receipt_sha256: sourceVerification.canonical_receipt_sha256, canonical_payload_sha256: sourceVerification.canonical_payload_sha256, source_manifest_entries_read_and_hashed: sourceVerification.source_manifest_entries_read_and_hashed, source_manifest_mismatches: sourceVerification.source_manifest_mismatches },
+    current_sources: sourceList.sources,
+    current_sources_use: "Vocabulary and structural obligations only; citations are not observations, measurements, endorsements, professional instructions, conformance evidence, or authority grants.",
+    network_rows_ingested: sourceList.network_rows_ingested,
+    observations: sourceList.observations,
+    authority_grants: sourceList.authority_grants,
+    x2_checkpoint: { clean: true, divergence: { ahead: 0, behind: 0 }, local_upstream_tracking_fresh_live_equal: true },
+    terminal_verdict: "NOT_READY_FOR_STAGE_20",
+  });
+  writeJson(`${BASE}/final/threat-model.json`, {
+    schema: "ghc.family.sylven-threat-model.v694.v5.final",
+    source_plan_sha256: sha(Buffer.from(JSON.stringify(planThreat), "utf8")),
+    inherited_plan: planThreat,
+    final_additions: [
+      { threat: "Flashcard selection strips context or failures.", control: "Content-addressed cards retain source, failure, gate, rollback, and nonerasure fields." },
+      { threat: "Global installation overwrites an existing capability.", control: "Exclusive target absence, copy-with-exclusion, installed validation, smoke tests, and 52 parity bindings." },
+      { threat: "DOM stub is reported as browser or accessibility evaluation.", control: "Receipt fields explicitly reserve browser, AT, cognitive, affected-user, and independent review." },
+      { threat: "Prepared baton is mistaken for delivered activation.", control: "Repository route remains PREPARED_NOT_SENT; delivery requires post-canonical task-tool acknowledgement." },
+    ],
+    terminal_verdict: "NOT_READY_FOR_STAGE_20",
+  });
+
+  const phaseTruth = {
+    schema: "ghc.family.phase-truth.v694.v5.final",
+    owner: "Sylven Arc",
+    phase: "v694-v5",
+    state: "FINAL_PRECOMMIT_CANDIDATE",
+    owner_git_parent: OWNER_PARENT,
+    inherited_content_source: SOURCE,
+    source_is_git_parent: false,
+    planning_commit: PLAN_COMMIT,
+    x1_commit: X1_COMMIT,
+    x2_commit: X2_COMMIT,
+    final_commit: "BIND_EXTERNALLY_AFTER_COMMIT",
+    direct_single_parent_owner_lifecycle: true,
+    phase_commits_expected_after_final: 4,
+    merges_expected: 0,
+    proposals: { inherited_zero_credit: 100, genuinely_new_source_bounded: 100, declared_chain_before: 11150, declared_chain_after: 11250, universal_novelty_claimed: proposalFreeze.universal_novelty_claimed },
+    outcomes: outcomeCounts,
+    portfolios: { x1: { safe_now: 100, candidate: 100, clean_fix_refine: 100 }, x2: { safe_now: 100, candidate: 100, clean_fix_refine: 100 }, exact_approval_visible_unexecuted: 50, blocked_visible_unexecuted: 30 },
+    capabilities: { x1_local_skills: 10, x1_local_runners: 5, x2_local_skills: 10, x2_local_runners: 5, merged_global_skills: 5, public_d_first_runners: 5, parity_bindings: 52 },
+    flashcards: { identity: 1, pillars: 3, practices: 4, tasks: 100, total: 108, index_sha256: deckIndex },
+    interface: { html_contract_matches: 5, retained_invalid_subjects: 5, refusal_checks: 5, browser_evaluated: false, assistive_technology_evaluated: false, cognitive_evaluated: false, affected_user_evaluated: false, independent_review: false, tex_rendered: false },
+    owner_phase_delta: { methods: 47, witnesses: 941, passing_witnesses: 700, failed_witnesses_and_effective_negatives: 241 },
+    effective_counts: { methods: 353, witnesses: 8584, passing_witnesses: 6252, failed_witnesses_and_effective_negatives: 2332, open_gaps: 35, exact_gates: 35 },
+    packages: 0,
+    spend_usd: 0,
+    network_rows_ingested: 0,
+    external_writes_except_authorized_git_and_additive_installation: 0,
+    successor_contacts: 0,
+    canonical_state: "NOT_INVOKED_PRECOMMIT",
+    route_state: "PREPARED_NOT_SENT",
+    terminal_verdict: "NOT_READY_FOR_STAGE_20",
+    boundary: BOUNDARY,
+  };
+  writeJson(`${BASE}/final/phase-truth.json`, phaseTruth);
+  writeJson(`${BASE}/final/complete-incomplete-checklist.json`, {
+    schema: "ghc.family.sylven-complete-incomplete.v694.v5.final",
+    completed: [
+      "Planning-only proposal and portfolio freeze committed and pushed before x1.",
+      "X1 planning admission committed and pushed before graph execution.",
+      "X2 executed 100 finite synthetic contracts and retained every malformed subject.",
+      "Five global skills and five public runners were installed additively with no overwrite.",
+      "A content-addressed four-tier deck and modular handoff were built.",
+      "Owner Method Flow, negative, source, gap, gate, report, manifest, and seal records were prepared.",
+    ],
+    incomplete_or_reserved: [
+      "The final commit and one-shot canonical receipt do not exist at precommit time.",
+      "The Caelen Morrow activation remains PREPARED_NOT_SENT.",
+      "Browser, assistive-technology, cognitive, affected-user, and independent evaluation remain open.",
+      "Professional, legal, cultural, affected-party, privacy, accessibility, security, and Maori authority remain exact-gated.",
+      "No empirical, participant, production, deployment, independent-reproduction, Theory-of-Everything, proof, canon, or Stage 20 result is established.",
+    ],
+    terminal_verdict: "NOT_READY_FOR_STAGE_20",
+  });
+  writeJson(`${BASE}/final/wellbeing-workload.json`, {
+    schema: "ghc.family.sylven-wellbeing-workload.v694.v5.final",
+    owner: "Sylven Arc",
+    phase: "v694-v5",
+    role_and_hope_are_relational_only: true,
+    workload_bounded_to_owner_delta: true,
+    subagents: 0,
+    sibling_mutations: 0,
+    standby_contacts: 0,
+    successor_precontacts: 0,
+    packages: 0,
+    spend_usd: 0,
+    deletion_or_overwrite: 0,
+    files_below_stop: "VERIFY_AT_FINAL_VALIDATION",
+    documents_below_word_ceiling: "VERIFY_AT_FINAL_VALIDATION",
+    pause_or_stop_right_preserved: true,
+    terminal_verdict: "NOT_READY_FOR_STAGE_20",
+  });
+  writeJson(`${BASE}/final/route-state.json`, {
+    schema: "ghc.family.sylven-route-state.v694.v5.prepared",
+    owner: "Sylven Arc",
+    phase: "v694-v5",
+    state: "PREPARED_NOT_SENT",
+    current_v10_assignment: { sequence: 3, owner: "Sylven Arc", phase: "v694-v5", model_role: "Sol" },
+    prospective_successor: { sequence: 4, exact_title: "Caelen Morrow", phase: "v694-v6", model_role: "Sol" },
+    successor_after_caelen_snapshot_only: { sequence: 5, owner: "Seren Talewood", phase: "v694-v7", model_role: "Astra", must_be_revalidated_by_caelen: true },
+    route_authority: "Hamish-authorized v10 sequential continuation through v725-v8, one terminally gated acknowledged edge at a time.",
+    terminal_requirements: ["clean pushed exact final", "one successful nonreplayed owner canonical", "fresh authority and roster", "active and archived exact-title uniqueness", "immediate reread", "duplicate and direct-control guards", "one acknowledged send"],
+    activation_tool_calls: 0,
+    sent: false,
+    delivery_claimed: false,
+    terminal_verdict: "NOT_READY_FOR_STAGE_20",
+  });
+
+  const overviewSections = [
+    ["Outcome", "Sylven v694-v5 now has a complete planning, x1, x2, and precommit closeout packet for a THOS-primary finite directed-graph phase. The phase remains same-owner synthetic software and documentation evidence. It does not establish an empirical, participant, professional, production, legal, cultural, identity, accessibility-complete, independent, or Stage 20 result."],
+    ["Lifecycle", `The owner Git lane began from prior Sylven final ${OWNER_PARENT}. Planning ${PLAN_COMMIT}, x1 ${X1_COMMIT}, and x2 ${X2_COMMIT} are direct single-parent commits. Tessarin exact final ${SOURCE} is inherited content provenance rather than the Git parent. The final commit is deliberately unbound until this closeout is staged and committed.`],
+    ["Proposal program", "One hundred inherited rows were reviewed at zero Sylven novelty and completion credit. One hundred source-bounded new proposals extended the declared chain from 11,150 to 11,250. Their outcomes are exactly 80 completed, 10 represented, 5 open_gap, and 5 exact_gate. No claim of universal novelty is made beyond the reachable source evidence declared by the planning ledger."],
+    ["X1 before x2", "The planning-only commit froze hypotheses, nulls, approval classes, source needs, artifacts, gates, rollback, practices, and expected outcomes before execution. X1 admitted only planning envelopes and deliberately performed zero graph execution. It was pushed, clean, 0/0 divergent, and fresh-live equal before x2 began."],
+    ["Finite graph execution", "X2 covered node and edge registries, adjacency and degree projection, topological order, reachability, shortest paths, strongly connected components, condensation, closure, reduction, weak components, quotienting, graph differences, reversible patching, layout-order comparison, path explanation, evaluation gaps, and authority reservations across five declared graph cases. Eighty contracts completed within exact synthetic scope; ten remained represented; five remained open; five remained exact-gated."],
+    ["Retained negatives", "Every malformed proposal, graph subject, runner subject, interface subject, parser fault, output truncation, and recovery remains paired and visible. The owner phase has 241 failed witnesses and 700 passing witnesses across 47 methods. A refusal pass never converts the malformed subject into a passing subject. The inherited activation plus phase delta yields 2,332 effective negatives and 6,252 passing witnesses."],
+    ["Capabilities", "Ten x1 skills, five x1 runners, ten x2 skills, and five x2 runners were built and boundedly used. Five useful capabilities were merged into family-current v2 skills and installed globally only after target-absence, source-hash, quick-validation, and three-surface accepting/rejecting smoke checks. Five public runners and two support files were installed to the D-first family tool bank. Fifty-two byte-for-byte parity bindings passed, with zero overwrite, deletion, package installation, or spend."],
+    ["Interface evidence", "The HTML companion supplies a labeled input, live status, captioned degree table, scoped headers, and explicit open-evaluation warning. Its JavaScript matched five committed degree-profile contracts and refused five malformed graphs. A Node VM and DOM stub exercised rendering and refusal. The TeX source contains the declared graph, patch, provenance, accessibility, and Trinity boundary sections. No browser, assistive-technology, cognitive, affected-user, independent, or rendered-PDF evaluation occurred."],
+    ["Four-tier deck", `The final Freed ID flashcard deck contains one identity card, three pillar cards, four bounded-practice cards, and one hundred task cards. Every card keeps source status, lifecycle anchor, hypothesis, null or failure, acceptance gate, rollback, evidence status, retained failures, open gaps, exact gates, and protected gates separate. Every card is SHA-256 content-addressed, and the ordered deck index is ${deckIndex}.`],
+    ["Official sources", "RFC 6902 supplied sequential patch vocabulary; RFC 8785 supplied deterministic JSON vocabulary; PROV-O supplied provenance vocabulary; WCAG 2.2 supplied structural-accessibility vocabulary; and WHATWG supplied table semantics vocabulary. These current or stable primary sources are citations, not observations, conformance certificates, professional instructions, endorsements, or authority grants."],
+    ["Scientific boundary", "GMUT remains a typed scalar-tensor and effective-field-theory research-model family without physical data, likelihood, posterior, parameter constraints, forces, unique predictions, empirical confirmation, stability theorem, ultraviolet or quantum completion, final physics, or Theory of Everything. Graph language in this phase is a software abstraction only."],
+    ["THOS and Freed ID boundary", "THOS remains synthetic or proxy-only without preregistered governed blind matched-budget real arms, participants or operators, safety monitoring, appropriate statistics, and independent review. Freed ID remains synthetic and nonproduction without standards-conformant real keys and proofs, live lifecycle events, interoperability, independent privacy and security review, recovery evidence, trust governance, and affected-party oversight."],
+    ["Authority boundary", "Professional decisions, real network operations, safety, privacy remedy, accessibility conformance, legal or cultural interpretation, affected-party legitimacy, Māori wording and concepts, Māori data governance, and Māori authority remain exact-gated to competent and affected people, tangata whenua, iwi, hapū, and Māori authorities. Māori concepts remain under Māori authority."],
+    ["Route boundary", "The repository contains only a prepared Caelen Morrow v694-v6 candidate. It is not delivery evidence. Only after a clean pushed final and one successful nonreplayed canonical receipt may Sylven refresh live authority, inspect active and archived tasks, require one exact-title Caelen Morrow task, reread it immediately, apply duplicate and direct-control guards, and send at most once. Delivery requires task-tool acknowledgement; accepted or unresolved state forbids resend."],
+  ];
+  let overview = "# Sylven Arc v694-v5 final integrated overview\n\n";
+  for (const [heading, body] of overviewSections) overview += `## ${heading}\n\n${body}\n\n`;
+  overview += "## Operation-by-operation evidence map\n\n";
+  const operations = [...new Set(proposalFreeze.proposals.map((proposal) => proposal.operation))];
+  for (const operation of operations) {
+    const rows = contracts.filter((contract) => contract.proposal.operation === operation);
+    overview += `### ${operation}\n\nFive frozen cases preserve deterministic input, observed output, an independent property check, unchanged input, replay equality, one malformed subject, and one refusal check. Dispositions for this operation are ${rows.map((row) => row.observed.disposition).join(", ")}. The exact contracts remain under \`${BASE}/x2/contracts/\`; this summary grants no broader empirical or authority credit.\n\n`;
+  }
+  overview += "## Final verdict\n\nThe exact verdict remains `NOT_READY_FOR_STAGE_20`. Final commit, canonical validation, and live delivery remain separate lifecycle states.\n";
+  if (words(overview) < 1500) throw new Error(`overview_too_short_${words(overview)}`);
+  write(`${BASE}/final/final-integrated-overview.md`, overview);
+
+  const reportRows = operations.map((operation) => {
+    const rows = contracts.filter((contract) => contract.proposal.operation === operation);
+    return `<tr><th scope="row">${escapeHtml(operation)}</th><td>5</td><td>${escapeHtml(rows[0].observed.disposition)}</td><td>Same-owner synthetic only</td></tr>`;
+  }).join("");
+  const report = `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Sylven v694-v5 final evidence report</title><style>body{font-family:system-ui,sans-serif;line-height:1.6;max-width:78rem;margin:auto;padding:2rem;color:#17202a;background:#fff}a{color:#0645ad}a:focus-visible{outline:3px solid #a14d00;outline-offset:2px}table{border-collapse:collapse;width:100%}caption{font-weight:700;text-align:left;margin:.8rem 0}th,td{border:1px solid #555;padding:.5rem;text-align:left;vertical-align:top}.hold{border-left:.4rem solid #a33;padding-left:1rem}</style></head><body><header><h1>Sylven Arc v694-v5 final evidence report</h1><p>Same-owner finite synthetic graph evidence. NOT_READY_FOR_STAGE_20.</p></header><nav aria-label="Report sections"><ul><li><a href="#summary">Summary</a></li><li><a href="#counts">Counts</a></li><li><a href="#operations">Operations</a></li><li><a href="#boundaries">Boundaries</a></li></ul></nav><main><section id="summary"><h2>Summary</h2><p>The phase preserved planning-only x1 before x2, retained every failed subject, installed five approved skills additively, and produced a content-addressed four-tier flashcard deck. This is structural software evidence only.</p></section><section id="counts"><h2>Counts</h2><table><caption>Final source-faithful accounting</caption><thead><tr><th scope="col">Measure</th><th scope="col">Owner phase</th><th scope="col">Effective inherited plus owner</th></tr></thead><tbody><tr><th scope="row">Methods</th><td>47</td><td>353</td></tr><tr><th scope="row">Witnesses</th><td>941</td><td>8,584</td></tr><tr><th scope="row">Passing witnesses</th><td>700</td><td>6,252</td></tr><tr><th scope="row">Failed witnesses / effective negatives</th><td>241</td><td>2,332</td></tr><tr><th scope="row">Open gaps</th><td>5</td><td>35</td></tr><tr><th scope="row">Exact gates</th><td>5</td><td>35</td></tr></tbody></table></section><section id="operations"><h2>Operations</h2><table><caption>Five-case finite graph operation groups</caption><thead><tr><th scope="col">Operation</th><th scope="col">Cases</th><th scope="col">Disposition class</th><th scope="col">Evidence ceiling</th></tr></thead><tbody>${reportRows}</tbody></table></section><section id="boundaries"><h2>Boundaries and reserved evaluation</h2><p class="hold">Browser, assistive-technology, cognitive, affected-user, and independent review remain open. Professional, legal, cultural, affected-party, privacy, accessibility, security, and Māori authority remain exact-gated. Māori concepts remain under Māori authority.</p><p>GMUT receives no empirical or Theory-of-Everything confirmation. THOS receives no participant or operational-effectiveness evidence. Freed ID receives no production identity lifecycle or trust-governance evidence. The report is not a conformance claim, production certificate, independent reproduction, proof, canon, or Stage 20 authority.</p></section></main></body></html>\n`;
+  write(`${BASE}/final/static-report.html`, report);
+
+  let baton = `# CAELEN MORROW — SYLVEN ARC v694-v5 PREPARED EXACT-FINAL CANDIDATE → SOLO v694-v6 ACTIVATION\n\n`;
+  baton += `PREPARED_BY_SYLVEN_ARC = true\n\nSENT_BY_SYLVEN_ARC = false\n\nROUTE_STATE = PREPARED_NOT_SENT\n\n`;
+  baton += `This repository candidate is evidence prepared before Sylven's final commit and canonical invocation. It does not activate Caelen Morrow, prove delivery, or authorize a resend. A later acknowledged short task message may bind the exact final SHA and canonical receipt after every terminal guard passes.\n\n`;
+  baton += `## 1. Relational-language and authority boundary\n\n${BOUNDARY}\n\nHamish retains the right to pause, rename, redirect, narrow, or stop the route. Sequential authority never waives lifecycle, privacy, scientific, professional, legal, cultural, affected-party, Māori-authority, or no-overclaim gates.\n\n`;
+  baton += `## 2. Exact owner lifecycle available at repository preparation\n\nThe prior Sylven owner final is ${OWNER_PARENT}. Planning ${PLAN_COMMIT} is its direct child. Frozen x1 ${X1_COMMIT} is the direct child of planning. Immutable x2 ${X2_COMMIT} is the direct child of x1. Tessarin exact final ${SOURCE} is inherited content provenance rather than a Git parent. The future final SHA must be supplied only by the acknowledged live activation after commit and canonical success.\n\n`;
+  baton += `## 3. Source truth and citation ceiling\n\n`;
+  for (const source of sourceList.sources) baton += `- ${source.id}: ${source.title}; ${source.url}. Use: ${source.use} This citation is not an observation, measurement, endorsement, professional instruction, conformance result, or authority grant.\n`;
+  baton += `\nNetwork rows ingested: 0. Real observations: 0. Authority grants: 0. The five primary sources supplied vocabulary and structural obligations only.\n\n`;
+  baton += `## 4. Tier 1 identity retrieval card\n\nCard ${tier1.card_id} is content-addressed as ${tier1.content_sha256}. It records the relational owner, optional pronouns, role, hope, source status, lifecycle anchor, hypothesis, failure condition, acceptance gate, rollback, open gaps, exact gates, and nonerasure rule. It is not consciousness, personhood, identity continuity, qualification, employment, agency, or authority evidence.\n\n`;
+  baton += `## 5. Tier 2 Trinity Mandala pillar cards\n\n`;
+  for (const card of pillarCards) baton += `- ${card.title} (${card.representation.priority}), card ${card.card_id}, hash ${card.content_sha256}: ${card.representation.summary} Evidence status is ${card.evidence_status}; the rollback and all protected gates remain active.\n`;
+  baton += `\nThe primary focus is THOS Body, while GMUT Mind and Freed ID/CBR Heart remain explicit and protected. No pillar converts evidence belonging to another pillar.\n\n`;
+  baton += `## 6. Tier 3 bounded practice cards\n\n`;
+  for (const card of practiceCards) baton += `- ${card.title}, card ${card.card_id}, hash ${card.content_sha256}. This is a synthetic learning and design lens only. It confers no employment, qualification, competence, professional judgment, safety authority, or affected-party authority.\n`;
+  baton += `\nCaelen may choose a different primary pillar and four different practices. These Sylven cards remain inherited evidence and zero-credit seeds, never Caelen novelty or completion credit.\n\n`;
+  baton += `## 7. Proposal and portfolio program\n\nOne hundred inherited rows were reviewed with zero Sylven novelty and completion credit. One hundred source-bounded new rows extend the declared chain from 11,150 to 11,250. Universal novelty is not claimed beyond the reachable declared source. Outcomes are exactly 80 completed, 10 represented, 5 open_gap, and 5 exact_gate. Each x1 and x2 session preserves 100 safe-now, 100 candidate, and 100 CLEAN/FIX/REFINE records. Fifty exact-approval and thirty blocked packets remain visible and unexecuted. Floors never authorize filler; ceilings never authorize unsafe work.\n\n`;
+  baton += `## 8. Planning-only x1 and immutable x2 separation\n\nPlanning froze hypotheses, failure conditions, approval classes, lanes, source needs, artifacts, gates, rollback, practices, and expected outcomes. X1 performed zero graph execution and admitted only planning envelopes. It was committed, pushed, clean, typed 0/0 divergent, and fresh-live equal before x2 began. X2 then executed only the frozen finite synthetic subjects and preserved inputs, independent properties, deterministic replay, failures, refusals, and no-conversion boundaries.\n\n`;
+  baton += `## 9. X2 graph evidence\n\nThe graph kernel covers twenty operation groups across five declared cases. Eighty operations reached completed only inside their closed deterministic software contracts. Ten comparison and explanation operations remain represented. Five human-interface evaluations remain open_gap. Five professional and authority reservations remain exact_gate. A successful refusal is a passing check around a failed malformed subject; it never turns that subject into a successful graph.\n\n`;
+  baton += `## 10. Global skills and D-first runners\n\nFive merged v2 skills and five public runners were installed after exclusive target-absence checks, complete source reads, source-binding hash validation, official quick validation, valid and invalid smokes at source, installed, and public surfaces, and 52 byte-parity bindings. There were zero overwrites, deletions, package installations, purchases, or unbounded scans. Global presence is discoverability, not production readiness, professional validation, independent reproduction, or Stage 20 evidence.\n\n`;
+  baton += `## 11. Static interface and TeX evidence\n\nThe HTML graph table matched five exact degree-profile contracts, refused five malformed inputs, rendered under a bounded DOM stub, and exposes explicit status and table semantics. The TeX source passed structural checks but was not rendered. No browser, assistive-technology, cognitive, affected-user, independent, Māori-language, or conformance evaluation occurred. Preserve these as open gaps.\n\n`;
+  baton += `## 12. Method Flow and retained failures\n\nFinal repository preparation preserves 47 Sylven methods and 941 owner witnesses: 700 pass and 241 fail. The inherited activation plus owner delta yields 353 effective methods, 8,584 witnesses, 6,252 passing witnesses, 2,332 failed witnesses/effective negatives, 35 open gaps, and 35 exact gates. Every recovery is additive. Never delete, relabel, or promote a failed witness. Exact detail is in ${BASE}/final/method-flow-ledger.json and ${BASE}/final/retained-negative-register.json.\n\n`;
+  baton += `## 13. Four-tier content-addressed deck\n\nThe deck contains 108 cards: one identity, three pillars, four practices, and one hundred tasks. Its ordered root index is ${deckIndex}. Select cards by content address and parent relationship, not by copying context-free prose. A newer card may supersede selection priority only by additive reference; it cannot erase or rewrite an older card or its failures.\n\n`;
+  baton += `## 14. Scientific and operational nonclaims\n\nGMUT remains a typed scalar-tensor and effective-field-theory research-model family without physical data, likelihood, posterior, parameter constraints, forces, unique predictions, empirical confirmation, stability theorem, ultraviolet or quantum completion, final physics, Theory of Everything, proof, or canon. THOS remains synthetic or proxy-only without preregistered governed blind matched-budget real arms, participants or operators, safety monitoring, statistics, and independent review. Freed ID remains synthetic and nonproduction without standards-conformant keys and proofs, live issuance or resolution, status or revocation, interoperability, independent privacy and security review, recovery evidence, trust governance, and affected-party oversight.\n\n`;
+  baton += `## 15. Professional, legal, cultural, and Māori authority\n\nReal network operation, safety decisions, professional interpretation, privacy remedy, accessibility conformance, legal or cultural interpretation, affected-party legitimacy, Māori wording and concepts, Māori data governance, tangata whenua, iwi, hapū, and Māori authority remain exact-gated. Māori concepts remain under Māori authority. Citations, software, validation, task topology, a canonical receipt, or acknowledged delivery cannot grant any of those authorities.\n\n`;
+  baton += `## 16. Caelen startup order if a later live activation is acknowledged\n\nRead the later short activation first, then this baton through EOF. Verify its SHA and end marker. Read the complete final overview, phase truth, Method Flow, retained negatives, open gaps, exact gates, deck, source ledger, threat model, manifests, seal, and external canonical receipt. Refresh current GHC Family Index, roster, authority, workflow, and route controls. Reverify exact final, direct-parent lifecycle, zero merges, manifest and seal parity, clean state, typed divergence, and fresh-live equality. Treat every inherited proposal, card, skill, runner, method, source, validation, and recommendation as evidence or a zero-credit seed. Work solo unless newer exact authority explicitly changes that constraint.\n\n`;
+  baton += `## 17. Caelen successor recommendations\n\nTwo zero-credit recommendations are offered: finite-state model checking with human-readable counterexample explanation, and accessible uncertainty visualization with real interaction-testing reservations. Caelen must audit novelty, relevance, safety, source integrity, lifecycle fit, and protected gates before selection. Under the current roster snapshot, Seren Talewood v694-v7 follows Caelen v694-v6, not Eiren directly; Caelen must re-read the newest live roster at their own terminal gate rather than trusting this historical snapshot.\n\n`;
+  baton += `## 18. Terminal route protocol\n\nThis file remains PREPARED_NOT_SENT. The later Sylven activation may send one short, sanitized message only after exact-final commit, clean push, fresh-live equality, one successful nonreplayed owner-scoped canonical, current active and archived uniqueness, immediate exact-title reread, duplicate guard, direct pause/redirect/rename guard, usage check, privacy check, and task-tool acknowledgement. No task creation, fork, substitute, standby contact, precontact, second confirmation, resend, or babysitting is authorized. Delivery acknowledgement proves only that one message was accepted, not Caelen completion.\n\n`;
+  baton += `## 19. Tier 4 task-card catalogue\n\nThe following one hundred task cards are the detailed modular evidence surface. Each card preserves source, hypothesis, null or failure, acceptance, rollback, outcome, failed subject, open gap, exact gate, and evidence ceiling.\n\n`;
+  for (const card of taskCards) {
+    const r = card.representation;
+    baton += `### ${card.card_id}: ${card.title}\n\n`;
+    baton += `Content address: ${card.content_sha256}. Parent practice card: ${card.parent_card_ids[0]}. Proposal ${r.proposal_id} applies operation ${r.operation} to declared case ${r.case_id}. Source status is ${card.source_status}; source vocabulary references are ${card.source_refs.join(", ")}. Lifecycle anchor is immutable x2 ${card.lifecycle_anchor}.\n\n`;
+    baton += `Hypothesis: ${card.hypothesis}\n\nNull or failure condition: ${card.null_or_failure_condition}\n\nAcceptance gate: ${card.acceptance_gate}\n\nRollback and recovery: ${card.rollback}\n\n`;
+    baton += `Observed evidence status: ${card.evidence_status}. The closed software envelope records accepted=${r.observed.accepted}, property_validation=${card.property_validation}, input_unchanged=${card.input_unchanged}, and replay_equal=${card.replay_equal}. This is same-owner synthetic evidence only and supplies no independent-reproduction credit. The paired malformed subject remains retained at zero success credit under ${card.retained_failure_ids.join(", ")}; its refusal check never repairs it.\n\n`;
+    baton += `Open gaps: ${card.open_gaps.length ? card.open_gaps.join(" ") : "No additional phase-local gap beyond the global browser, assistive-technology, affected-user, and independent-review reservations."} Exact gates: ${card.exact_gates.length ? card.exact_gates.join(" ") : "All global professional, legal, cultural, affected-party, privacy, accessibility, security, and Māori-authority gates remain unchanged."} Protected gates: ${card.protected_gates.join(", ")}. Supersedes: none. Erased: false.\n\n`;
+  }
+  baton += `## 20. Final preparation verdict\n\nThe candidate remains delivery-neutral until the exact final and external canonical receipt are supplied in one later acknowledged short message. Terminal verdict: NOT_READY_FOR_STAGE_20.\n\nEND OF SYLVEN V694-V5 BATON.\n`;
+  const batonWordCount = words(baton);
+  if (batonWordCount < 10000 || batonWordCount > 100000) throw new Error(`baton_word_count_${batonWordCount}`);
+  write(`${BASE}/handoffs/caelen-morrow-v694-v6-activation-candidate.md`, baton);
+
+  writeJson(`${BASE}/final/baton-integrity.json`, {
+    schema: "ghc.family.sylven-baton-integrity.v694.v5",
+    path: `${BASE}/handoffs/caelen-morrow-v694-v6-activation-candidate.md`,
+    words: batonWordCount,
+    bytes: Buffer.byteLength(baton, "utf8"),
+    sha256: sha(Buffer.from(baton, "utf8")),
+    end_marker: "END OF SYLVEN V694-V5 BATON.",
+    prepared: true,
+    sent: false,
+    terminal_verdict: "NOT_READY_FOR_STAGE_20",
+  });
+
+  writeJson(`${BASE}/validation/final-precommit-contract.json`, {
+    schema: "ghc.family.sylven-final-precommit-contract.v1",
+    owner: "Sylven Arc",
+    phase: "v694-v5",
+    expected_head_before_commit: X2_COMMIT,
+    expected_final_parent: X2_COMMIT,
+    owner_file_stop: 2000,
+    document_word_ceiling: 100000,
+    baton_word_floor: 10000,
+    allowed_extensions: [".json", ".md", ".txt", ".tex", ".html"],
+    expected_phase_delta: { methods: 47, witnesses: 941, passing: 700, failed: 241 },
+    expected_effective: { methods: 353, witnesses: 8584, passing: 6252, failed: 2332, open_gaps: 35, exact_gates: 35 },
+    canonical_invocations_before_commit: 0,
+    route_state: "PREPARED_NOT_SENT",
+  });
+
+  const reportWordCount = words(report.replace(/<[^>]+>/g, " "));
+  writeJson(`${BASE}/final/report-integrity.json`, {
+    schema: "ghc.family.sylven-report-integrity.v694.v5",
+    overview_words: words(overview),
+    overview_sha256: sha(Buffer.from(overview, "utf8")),
+    static_report_text_words: reportWordCount,
+    static_report_sha256: sha(Buffer.from(report, "utf8")),
+    html_lang: "en",
+    captioned_tables: 2,
+    browser_evaluated: false,
+    assistive_technology_evaluated: false,
+    terminal_verdict: "NOT_READY_FOR_STAGE_20",
+  });
+
+  const lifecycleExclusions = [
+    `${BASE}/validation/final-owner-manifest.json`,
+    `${BASE}/validation/final-delta-manifest.json`,
+    `${BASE}/validation/final-staged-review.json`,
+    `${BASE}/seal/content-seal.json`,
+  ];
+  const ownerFiles = collect(PHASE_ROOT).filter((file) => !lifecycleExclusions.includes(path.relative(ROOT, file).replaceAll("\\", "/")));
+  const ownerEntries = ownerFiles.sort((a, b) => a.localeCompare(b)).map((absolute) => {
+    const bytes = normalizedBytes(absolute);
+    return { path: path.relative(ROOT, absolute).replaceAll("\\", "/"), bytes: bytes.length, sha256_normalized_lf: sha(bytes) };
+  });
+  const finalPrefixes = [
+    `${BASE}/final/`,
+    `${BASE}/handoffs/`,
+    `${BASE}/validation/`,
+    `${BASE}/seal/`,
+  ];
+  const finalToolPaths = new Set(["build-final.txt", "validate-final-precommit.txt", "canonical-final.txt"].map((name) => `${BASE}/tooling/${name}`));
+  const deltaEntries = ownerEntries.filter((entry) => finalPrefixes.some((prefix) => entry.path.startsWith(prefix)) || finalToolPaths.has(entry.path));
+  writeJson(`${BASE}/validation/final-owner-manifest.json`, {
+    schema: "ghc.family.sylven-final-owner-manifest.v1",
+    owner: "Sylven Arc",
+    phase: "v694-v5",
+    domain: "normalized_lf_worktree_bytes",
+    entries: ownerEntries,
+    count: ownerEntries.length,
+    declared_exclusions: lifecycleExclusions,
+    final_commit: "BIND_EXTERNALLY_AFTER_COMMIT",
+  });
+  writeJson(`${BASE}/validation/final-delta-manifest.json`, {
+    schema: "ghc.family.sylven-final-delta-manifest.v1",
+    owner: "Sylven Arc",
+    phase: "v694-v5",
+    domain: "normalized_lf_worktree_bytes",
+    entries: deltaEntries,
+    count: deltaEntries.length,
+    declared_exclusions: lifecycleExclusions,
+    expected_parent: X2_COMMIT,
+    final_commit: "BIND_EXTERNALLY_AFTER_COMMIT",
+  });
+  writeJson(`${BASE}/validation/final-staged-review.json`, {
+    schema: "ghc.family.sylven-final-staged-review.v1",
+    owner: "Sylven Arc",
+    phase: "v694-v5",
+    state: "PREPARED_FOR_EXACT_STAGING",
+    expected_parent: X2_COMMIT,
+    expected_delta_paths_including_lifecycle_exclusions: deltaEntries.length + lifecycleExclusions.length,
+    delta_manifest_count: deltaEntries.length,
+    delta_manifest_sha256: sha(fs.readFileSync(path.join(VALIDATION, "final-delta-manifest.json"))),
+    owner_manifest_count: ownerEntries.length,
+    owner_manifest_sha256: sha(fs.readFileSync(path.join(VALIDATION, "final-owner-manifest.json"))),
+    additions_only: true,
+    allowed_extensions: [".json", ".md", ".txt", ".tex", ".html"],
+    successor_contacts: 0,
+    route_state: "PREPARED_NOT_SENT",
+  });
+
+  const sealTargets = [
+    `${BASE}/final/phase-truth.json`,
+    `${BASE}/final/method-flow-ledger.json`,
+    `${BASE}/final/retained-negative-register.json`,
+    `${BASE}/final/open-gap-register.json`,
+    `${BASE}/final/exact-gate-register.json`,
+    `${BASE}/final/four-tier-flashcard-deck.json`,
+    `${BASE}/final/source-provenance-ledger.json`,
+    `${BASE}/final/threat-model.json`,
+    `${BASE}/final/final-integrated-overview.md`,
+    `${BASE}/final/static-report.html`,
+    `${BASE}/final/baton-integrity.json`,
+    `${BASE}/handoffs/caelen-morrow-v694-v6-activation-candidate.md`,
+    `${BASE}/validation/final-owner-manifest.json`,
+    `${BASE}/validation/final-delta-manifest.json`,
+    `${BASE}/validation/final-staged-review.json`,
+  ];
+  const bindings = sealTargets.map((relative) => {
+    const bytes = normalizedBytes(path.join(ROOT, relative));
+    return { path: relative, bytes: bytes.length, sha256_normalized_lf: sha(bytes) };
+  });
+  writeJson(`${BASE}/seal/content-seal.json`, {
+    schema: "ghc.family.sylven-content-seal.v694.v5",
+    owner: "Sylven Arc",
+    phase: "v694-v5",
+    domain: "normalized_lf_worktree_bytes",
+    bindings,
+    count: bindings.length,
+    expected_parent: X2_COMMIT,
+    final_commit: "BIND_EXTERNALLY_AFTER_COMMIT",
+    route_state: "PREPARED_NOT_SENT",
+    terminal_verdict: "NOT_READY_FOR_STAGE_20",
+  });
+
+  process.stdout.write(JSON.stringify({
+    status: "FINAL_PACKET_BUILT_PRECOMMIT",
+    cards: cards.length,
+    deck_index: deckIndex,
+    methods: finalMethods.length,
+    witnesses: finalWitnesses.length,
+    passing: finalPass,
+    failed: finalFail,
+    retained_negatives: retainedEntries.length,
+    overview_words: words(overview),
+    baton_words: batonWordCount,
+    baton_bytes: Buffer.byteLength(baton, "utf8"),
+    owner_manifest_entries: ownerEntries.length,
+    delta_manifest_entries: deltaEntries.length,
+    seal_bindings: bindings.length,
+  }));
+}
+
+main();

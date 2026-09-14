@@ -1,0 +1,334 @@
+"use strict";
+
+const fs = require("fs");
+const path = require("path");
+const crypto = require("crypto");
+const cp = require("child_process");
+
+const ROOT = path.resolve(__dirname, "../../../..");
+const BASE = "docs/sylven-arc/v694-v5";
+const BRANCH = "codex/GHC-Family/sylven-arc-main";
+const SOURCE = "a681f7f8fca4cb7b4cd1ec363b23bbf896f0cbe1";
+const OWNER_PARENT = "cce7c0dbbc44044b1e648be731663def37c76db9";
+const PLAN = "89bdb2a4e204ed6d813f609257f2bacd3d2f5cff";
+const X1 = "24cc18a6e6ea1c4c1deeed02bf97c6a35c404f17";
+const X2 = "68ba76c4ba78256a5139d99cd2429ca8af2d85c0";
+
+function g(args, encoding = "utf8") {
+  return cp.execFileSync("git", args, { cwd: ROOT, encoding, maxBuffer: 128 * 1024 * 1024 });
+}
+
+function sha(value) {
+  return crypto.createHash("sha256").update(value).digest("hex");
+}
+
+function blob(head, relative) {
+  return g(["cat-file", "blob", `${head}:${relative}`], null);
+}
+
+function normalized(buffer) {
+  return Buffer.from(buffer.toString("utf8").replace(/\r\n/g, "\n"), "utf8");
+}
+
+function jsonBlob(head, relative) {
+  return JSON.parse(blob(head, relative).toString("utf8"));
+}
+
+function canonicalCard(card) {
+  const content = { ...card };
+  delete content.content_sha256;
+  return JSON.stringify(content);
+}
+
+function main() {
+  const receiptRoot = process.argv[2];
+  if (!receiptRoot) throw new Error("receipt_root_required");
+  const head = g(["rev-parse", "HEAD"]).trim();
+  const phaseReceiptRoot = path.join(receiptRoot, "sylven-arc", "v694-v5");
+  fs.mkdirSync(phaseReceiptRoot, { recursive: true });
+  const latch = path.join(phaseReceiptRoot, head);
+  if (fs.existsSync(latch)) throw new Error("canonical_latch_exists_no_replay");
+  fs.mkdirSync(latch, { recursive: false });
+  const invocation = { schema: "ghc.family.canonical-invocation.v1", owner: "Sylven Arc", phase: "v694-v5", exact_head: head, invocation: 1, started: true, success_credit: 0 };
+  fs.writeFileSync(path.join(latch, "invocation.json"), `${JSON.stringify(invocation, null, 2)}\n`, { encoding: "utf8", flag: "wx" });
+
+  try {
+    const branch = g(["branch", "--show-current"]).trim();
+    const parent = g(["rev-parse", "HEAD^"]).trim();
+    const planParent = g(["rev-parse", `${PLAN}^`]).trim();
+    const x1Parent = g(["rev-parse", `${X1}^`]).trim();
+    const x2Parent = g(["rev-parse", `${X2}^`]).trim();
+    const phaseCommits = Number(g(["rev-list", "--count", `${OWNER_PARENT}..HEAD`]).trim());
+    const merges = Number(g(["rev-list", "--merges", "--count", `${OWNER_PARENT}..HEAD`]).trim());
+    const finalParents = g(["rev-list", "--parents", "-n", "1", "HEAD"]).trim().split(/\s+/).length - 1;
+    const cleanBefore = g(["status", "--porcelain"]).trim() === "";
+    const divergence = g(["rev-list", "--left-right", "--count", "HEAD...HEAD@{upstream}"]).trim().split(/\s+/).map(Number);
+    const upstream = g(["rev-parse", "HEAD@{upstream}"]).trim();
+    const tracking = g(["rev-parse", `refs/remotes/origin/${BRANCH}`]).trim();
+    const live = g(["ls-remote", "--heads", "origin", `refs/heads/${BRANCH}`]).trim().split(/\s+/)[0];
+
+    const ownerPaths = g(["ls-tree", "-r", "--name-only", "HEAD", "--", BASE]).trim().split(/\r?\n/).filter(Boolean).sort((a, b) => a.localeCompare(b));
+    const jsonPaths = ownerPaths.filter((item) => item.endsWith(".json"));
+    const allowed = new Set([".json", ".md", ".txt", ".tex", ".html"]);
+    const jsonObjects = new Map();
+    let maxWords = 0;
+    const privacyCandidates = [];
+    const patterns = [
+      new RegExp("\\b" + "sk-" + "[A-Za-z0-9_-]{10,}\\b", "g"),
+      new RegExp("\\b(?:ghp|" + "github_pat" + ")_[A-Za-z0-9_]{10,}\\b", "g"),
+      new RegExp("\\b019[a-f0-9]{29}\\b", "gi"),
+      new RegExp("[A-Z]:" + "\\\\Users\\\\" + "[^\\s\"']+", "g"),
+      new RegExp("(?:api[_-]?key|password|" + "secret|bearer)\\s*[:=]\\s*[\"'][^\"']+[\"']", "gi"),
+    ];
+    for (const relative of ownerPaths) {
+      const buffer = blob(head, relative);
+      const text = buffer.toString("utf8");
+      maxWords = Math.max(maxWords, (text.match(/\S+/g) || []).length);
+      if (relative.endsWith(".json")) jsonObjects.set(relative, JSON.parse(text));
+      patterns.forEach((pattern, classIndex) => {
+        pattern.lastIndex = 0;
+        if (pattern.test(text)) privacyCandidates.push({ path: relative, class_index: classIndex });
+      });
+    }
+
+    const truth = jsonObjects.get(`${BASE}/final/phase-truth.json`);
+    const flow = jsonObjects.get(`${BASE}/final/method-flow-ledger.json`);
+    const negatives = jsonObjects.get(`${BASE}/final/retained-negative-register.json`);
+    const gaps = jsonObjects.get(`${BASE}/final/open-gap-register.json`);
+    const gates = jsonObjects.get(`${BASE}/final/exact-gate-register.json`);
+    const deck = jsonObjects.get(`${BASE}/final/four-tier-flashcard-deck.json`);
+    const outcomes = jsonObjects.get(`${BASE}/final/proposal-outcome-ledger.json`);
+    const route = jsonObjects.get(`${BASE}/final/route-state.json`);
+    const batonIntegrity = jsonObjects.get(`${BASE}/final/baton-integrity.json`);
+    const reportIntegrity = jsonObjects.get(`${BASE}/final/report-integrity.json`);
+    const installation = jsonObjects.get(`${BASE}/x2/global-installation-receipt.json`);
+    const interfaceReceipt = jsonObjects.get(`${BASE}/x2/interface-validation-receipt.json`);
+    const ownerManifest = jsonObjects.get(`${BASE}/validation/final-owner-manifest.json`);
+    const deltaManifest = jsonObjects.get(`${BASE}/validation/final-delta-manifest.json`);
+    const staged = jsonObjects.get(`${BASE}/validation/final-staged-review.json`);
+    const seal = jsonObjects.get(`${BASE}/seal/content-seal.json`);
+
+    const detailed = [];
+    const check = (label, value) => {
+      detailed.push({ label, pass: Boolean(value) });
+      if (!value) throw new Error(label);
+    };
+    check("branch_exact", branch === BRANCH);
+    check("final_parent_x2", parent === X2);
+    check("planning_parent", planParent === OWNER_PARENT);
+    check("x1_parent", x1Parent === PLAN);
+    check("x2_parent", x2Parent === X1);
+    check("phase_commit_count", phaseCommits === 4);
+    check("zero_merges", merges === 0);
+    check("one_final_parent", finalParents === 1);
+    check("clean_before", cleanBefore);
+    check("typed_zero_divergence", divergence[0] === 0 && divergence[1] === 0);
+    check("four_way_equal_before", new Set([head, upstream, tracking, live]).size === 1);
+    check("owner_file_stop", ownerPaths.length < 2000);
+    check("allowed_extensions", ownerPaths.every((item) => allowed.has(path.extname(item).toLowerCase())));
+    check("json_parses", jsonObjects.size === jsonPaths.length);
+    check("word_ceiling", maxWords <= 100000);
+    check("privacy_zero", privacyCandidates.length === 0);
+
+    const exclusions = new Set(ownerManifest.declared_exclusions);
+    const expectedOwnerPaths = ownerPaths.filter((item) => !exclusions.has(item));
+    check("owner_manifest_count", ownerManifest.count === expectedOwnerPaths.length && ownerManifest.entries.length === expectedOwnerPaths.length);
+    check("owner_manifest_paths", JSON.stringify(ownerManifest.entries.map((item) => item.path)) === JSON.stringify(expectedOwnerPaths));
+    check("owner_manifest_hashes", ownerManifest.entries.every((entry) => {
+      const bytes = normalized(blob(head, entry.path));
+      return bytes.length === entry.bytes && sha(bytes) === entry.sha256_normalized_lf;
+    }));
+
+    const finalDeltaPaths = g(["diff-tree", "--no-commit-id", "--name-only", "-r", "HEAD"]).trim().split(/\r?\n/).filter(Boolean).sort();
+    const expectedDeltaPaths = [...deltaManifest.entries.map((item) => item.path), ...deltaManifest.declared_exclusions].sort();
+    check("delta_manifest_count", deltaManifest.count === deltaManifest.entries.length);
+    check("delta_paths", JSON.stringify(finalDeltaPaths) === JSON.stringify(expectedDeltaPaths));
+    check("delta_manifest_hashes", deltaManifest.entries.every((entry) => {
+      const bytes = normalized(blob(head, entry.path));
+      return bytes.length === entry.bytes && sha(bytes) === entry.sha256_normalized_lf;
+    }));
+    check("staged_review", staged.expected_delta_paths_including_lifecycle_exclusions === expectedDeltaPaths.length && staged.additions_only === true);
+    check("staged_manifest_hashes", sha(blob(head, `${BASE}/validation/final-owner-manifest.json`)) === staged.owner_manifest_sha256 && sha(blob(head, `${BASE}/validation/final-delta-manifest.json`)) === staged.delta_manifest_sha256);
+    check("content_seal", seal.bindings.every((binding) => {
+      const bytes = normalized(blob(head, binding.path));
+      return bytes.length === binding.bytes && sha(bytes) === binding.sha256_normalized_lf;
+    }));
+
+    check("phase_owner_counts", truth.owner_phase_delta.methods === 47 && truth.owner_phase_delta.witnesses === 941 && truth.owner_phase_delta.passing_witnesses === 700 && truth.owner_phase_delta.failed_witnesses_and_effective_negatives === 241);
+    check("phase_effective_counts", truth.effective_counts.methods === 353 && truth.effective_counts.witnesses === 8584 && truth.effective_counts.passing_witnesses === 6252 && truth.effective_counts.failed_witnesses_and_effective_negatives === 2332 && truth.effective_counts.open_gaps === 35 && truth.effective_counts.exact_gates === 35);
+    check("method_flow", flow.methods.length === 47 && flow.witnesses.length === 941 && flow.counts.witness_results.pass === 700 && flow.counts.witness_results.fail === 241 && new Set(flow.methods.map((item) => item.method_id)).size === 47 && new Set(flow.witnesses.map((item) => item.witness_id)).size === 941);
+    check("negative_nonerasure", negatives.count === 241 && negatives.entries.length === 241 && new Set(negatives.entries.map((item) => item.negative_id)).size === 241 && negatives.entries.every((item) => item.original_success_credit === 0 && item.erased === false));
+    check("proposal_outcomes", outcomes.new_rows.count === 100 && outcomes.new_rows.rows.length === 100 && JSON.stringify(outcomes.new_rows.outcomes) === JSON.stringify({ completed: 80, represented: 10, open_gap: 5, exact_gate: 5 }));
+    check("open_gaps", gaps.inherited_count === 30 && gaps.phase_count === 5 && gaps.effective_count === 35 && gaps.entries.length === 5);
+    check("exact_gates", gates.inherited_count === 30 && gates.phase_count === 5 && gates.effective_count === 35 && gates.entries.length === 5 && gates.exact_approval_packets_visible_unexecuted === 50 && gates.blocked_packets_visible_unexecuted === 30);
+
+    const deckHashes = deck.cards.every((card) => sha(Buffer.from(canonicalCard(card), "utf8")) === card.content_sha256 && card.erased === false);
+    const deckIndex = sha(Buffer.from(deck.cards.map((card) => `${card.card_id}:${card.content_sha256}`).join("\n"), "utf8"));
+    check("flashcard_deck", deck.card_count === 108 && new Set(deck.cards.map((card) => card.card_id)).size === 108 && deckHashes && deckIndex === deck.index_sha256);
+    const batonBuffer = blob(head, batonIntegrity.path);
+    const baton = batonBuffer.toString("utf8");
+    check("baton_integrity", (baton.match(/\S+/g) || []).length === batonIntegrity.words && batonIntegrity.words >= 10000 && batonIntegrity.words <= 100000 && batonBuffer.length === batonIntegrity.bytes && sha(batonBuffer) === batonIntegrity.sha256 && baton.trimEnd().endsWith(batonIntegrity.end_marker));
+    const overviewBuffer = blob(head, `${BASE}/final/final-integrated-overview.md`);
+    const reportBuffer = blob(head, `${BASE}/final/static-report.html`);
+    check("overview_report", (overviewBuffer.toString("utf8").match(/\S+/g) || []).length === reportIntegrity.overview_words && reportIntegrity.overview_words >= 1500 && sha(overviewBuffer) === reportIntegrity.overview_sha256 && sha(reportBuffer) === reportIntegrity.static_report_sha256 && reportBuffer.toString("utf8").includes("NOT_READY_FOR_STAGE_20"));
+    check("global_installation", installation.status === "VALIDATED_ADDITIVE_GLOBAL_INSTALLATION" && installation.parity_count === 52 && installation.overwrites === 0 && installation.deletions === 0 && installation.new_packages === 0 && installation.spend_usd === 0);
+    check("interface_ceiling", interfaceReceipt.status === "VALID_BOUNDED_STATIC_INTERFACE_EVIDENCE" && interfaceReceipt.totals.witnesses === 19 && interfaceReceipt.browser_evaluated === false && interfaceReceipt.assistive_technology_evaluated === false && interfaceReceipt.tex_rendered === false);
+    check("route_prepared_not_sent", route.state === "PREPARED_NOT_SENT" && route.sent === false && route.delivery_claimed === false && route.activation_tool_calls === 0 && route.prospective_successor.exact_title === "Caelen Morrow" && route.prospective_successor.phase === "v694-v6" && baton.includes("SENT_BY_SYLVEN_ARC = false") && !baton.includes("SENT_BY_SYLVEN_ARC = true"));
+    check("terminal_nonpromotion", truth.packages === 0 && truth.spend_usd === 0 && truth.canonical_state === "NOT_INVOKED_PRECOMMIT" && truth.terminal_verdict === "NOT_READY_FOR_STAGE_20" && SOURCE === truth.inherited_content_source);
+
+    const tests = [
+      branch === BRANCH,
+      parent === X2,
+      planParent === OWNER_PARENT,
+      x1Parent === PLAN,
+      x2Parent === X1,
+      phaseCommits === 4,
+      merges === 0,
+      cleanBefore,
+      divergence.every((item) => item === 0),
+      new Set([head, upstream, tracking, live]).size === 1,
+      ownerPaths.length < 2000,
+      jsonObjects.size === jsonPaths.length,
+      maxWords <= 100000,
+      privacyCandidates.length === 0,
+      ownerManifest.count === expectedOwnerPaths.length,
+      JSON.stringify(finalDeltaPaths) === JSON.stringify(expectedDeltaPaths),
+      seal.bindings.length === seal.count,
+      flow.witnesses.length === 941,
+      negatives.entries.length === 241,
+      outcomes.new_rows.rows.length === 100,
+      deck.card_count === 108,
+      batonIntegrity.words >= 10000,
+      installation.parity_count === 52,
+      route.state === "PREPARED_NOT_SENT",
+      truth.terminal_verdict === "NOT_READY_FOR_STAGE_20",
+    ];
+    if (!tests.every(Boolean)) throw new Error("owner_tests");
+    const minimal = [
+      head.length === 40,
+      finalParents === 1,
+      phaseCommits === 4,
+      merges === 0,
+      cleanBefore,
+      divergence.every((item) => item === 0),
+      ownerPaths.length < 2000,
+      maxWords <= 100000,
+      privacyCandidates.length === 0,
+      flow.counts.methods === 47,
+      negatives.count === 241,
+      gaps.effective_count === 35,
+      gates.effective_count === 35,
+      route.sent === false,
+      truth.terminal_verdict === "NOT_READY_FOR_STAGE_20",
+    ];
+    if (!minimal.every(Boolean)) throw new Error("minimal_checks");
+
+    const cleanAfter = g(["status", "--porcelain"]).trim() === "";
+    const upstreamAfter = g(["rev-parse", "HEAD@{upstream}"]).trim();
+    const trackingAfter = g(["rev-parse", `refs/remotes/origin/${BRANCH}`]).trim();
+    const liveAfter = g(["ls-remote", "--heads", "origin", `refs/heads/${BRANCH}`]).trim().split(/\s+/)[0];
+    check("clean_after", cleanAfter);
+    check("four_way_equal_after", new Set([head, upstreamAfter, trackingAfter, liveAfter]).size === 1);
+
+    const payload = {
+      schema: "ghc.family.sylven-owner-scoped-canonical.v1",
+      status: "VALID_EXACT_FINAL_OWNER_SCOPED_CANONICAL",
+      owner: "Sylven Arc",
+      phase: "v694-v5",
+      exact_head: head,
+      branch,
+      inherited_content_source: SOURCE,
+      owner_parent: OWNER_PARENT,
+      planning_commit: PLAN,
+      x1_commit: X1,
+      x2_commit: X2,
+      final_parent: parent,
+      phase_commits: phaseCommits,
+      merges,
+      final_parents: finalParents,
+      canonical_invocation_count: 1,
+      canonical_success_count: 1,
+      canonical_replay_count: 0,
+      owner_tests: { passed: tests.length, total: tests.length },
+      detailed_checks: { passed: detailed.length, total: detailed.length, checks: detailed },
+      minimal_checks: { passed: minimal.length, total: minimal.length },
+      json_parses: jsonObjects.size,
+      owner_files: ownerPaths.length,
+      owner_manifest_entries: ownerManifest.count,
+      final_delta_entries: expectedDeltaPaths.length,
+      content_seal_bindings: seal.count,
+      max_document_words: maxWords,
+      privacy_candidates: privacyCandidates,
+      privacy_confirmed_hits: 0,
+      methods: 47,
+      witnesses: 941,
+      passing_witnesses: 700,
+      failed_witnesses_and_effective_negatives: 241,
+      effective_methods: 353,
+      effective_witnesses: 8584,
+      effective_passing_witnesses: 6252,
+      effective_failed_witnesses_and_negatives: 2332,
+      open_gaps: 35,
+      exact_gates: 35,
+      flashcards: 108,
+      packages: 0,
+      spend_usd: 0,
+      route_state: "PREPARED_NOT_SENT",
+      clean_before: cleanBefore,
+      clean_after: cleanAfter,
+      divergence_before: { ahead: divergence[0], behind: divergence[1] },
+      four_way_equal_before: true,
+      four_way_equal_after: true,
+      full_repository_suite_run: false,
+      same_owner_only: true,
+      independent_reproduction: false,
+      empirical_validation: false,
+      professional_validation: false,
+      production_certification: false,
+      complete_privacy_assurance: false,
+      complete_accessibility_assurance: false,
+      exhaustive_security: false,
+      proof_or_canon: false,
+      terminal_verdict: "NOT_READY_FOR_STAGE_20",
+    };
+    const payloadText = `${JSON.stringify(payload, null, 2)}\n`;
+    const payloadSha = sha(Buffer.from(payloadText, "utf8"));
+    fs.writeFileSync(path.join(latch, "payload.json"), payloadText, { encoding: "utf8", flag: "wx" });
+    const receipt = {
+      schema: "ghc.family.canonical-receipt.v1",
+      status: payload.status,
+      owner: payload.owner,
+      phase: payload.phase,
+      exact_head: head,
+      payload_sha256: payloadSha,
+      payload_file: "payload.json",
+      invocation_count: 1,
+      success_count: 1,
+      replay_count: 0,
+      terminal_verdict: "NOT_READY_FOR_STAGE_20",
+    };
+    const receiptText = `${JSON.stringify(receipt, null, 2)}\n`;
+    fs.writeFileSync(path.join(latch, "receipt.json"), receiptText, { encoding: "utf8", flag: "wx" });
+    fs.writeFileSync(path.join(latch, "SUCCESS"), `${head}\n`, { encoding: "utf8", flag: "wx" });
+    process.stdout.write(JSON.stringify({
+      status: receipt.status,
+      exact_head: head,
+      owner_tests: tests.length,
+      detailed_checks: detailed.length,
+      minimal_checks: minimal.length,
+      json_parses: jsonObjects.size,
+      owner_files: ownerPaths.length,
+      payload_sha256: payloadSha,
+      receipt_sha256: sha(Buffer.from(receiptText, "utf8")),
+      invocation_count: 1,
+      success_count: 1,
+      replay_count: 0,
+    }));
+  } catch (error) {
+    const failed = { schema: "ghc.family.canonical-receipt.v1", status: "INVALID_EXACT_FINAL_OWNER_SCOPED_CANONICAL", owner: "Sylven Arc", phase: "v694-v5", exact_head: head, error: String(error && error.message ? error.message : error), invocation_count: 1, success_count: 0, replay_count: 0, terminal_verdict: "NOT_READY_FOR_STAGE_20" };
+    fs.writeFileSync(path.join(latch, "FAILED.json"), `${JSON.stringify(failed, null, 2)}\n`, { encoding: "utf8", flag: "wx" });
+    throw error;
+  }
+}
+
+main();

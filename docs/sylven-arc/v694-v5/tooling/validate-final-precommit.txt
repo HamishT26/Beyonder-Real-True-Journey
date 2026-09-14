@@ -1,0 +1,179 @@
+"use strict";
+
+const fs = require("fs");
+const path = require("path");
+const crypto = require("crypto");
+const cp = require("child_process");
+
+const ROOT = path.resolve(__dirname, "../../../..");
+const BASE = "docs/sylven-arc/v694-v5";
+const PHASE_ROOT = path.join(ROOT, BASE);
+const X2 = "68ba76c4ba78256a5139d99cd2429ca8af2d85c0";
+const X1 = "24cc18a6e6ea1c4c1deeed02bf97c6a35c404f17";
+const PLAN = "89bdb2a4e204ed6d813f609257f2bacd3d2f5cff";
+const OWNER_PARENT = "cce7c0dbbc44044b1e648be731663def37c76db9";
+
+function g(args, encoding = "utf8") {
+  return cp.execFileSync("git", args, { cwd: ROOT, encoding, maxBuffer: 64 * 1024 * 1024 });
+}
+
+function readJson(relative) {
+  return JSON.parse(fs.readFileSync(path.join(ROOT, relative), "utf8"));
+}
+
+function sha(buffer) {
+  return crypto.createHash("sha256").update(buffer).digest("hex");
+}
+
+function normalizedBytes(absolute) {
+  return Buffer.from(fs.readFileSync(absolute, "utf8").replace(/\r\n/g, "\n"), "utf8");
+}
+
+function collect(directory, output = []) {
+  for (const name of fs.readdirSync(directory).sort()) {
+    const absolute = path.join(directory, name);
+    const stat = fs.statSync(absolute);
+    if (stat.isDirectory()) collect(absolute, output);
+    else output.push(absolute);
+  }
+  return output;
+}
+
+function canonicalCard(card) {
+  const content = { ...card };
+  delete content.content_sha256;
+  return JSON.stringify(content);
+}
+
+function assert(value, label) {
+  if (!value) throw new Error(label);
+}
+
+function main() {
+  assert(g(["rev-parse", "HEAD"]).trim() === X2, "head");
+  assert(g(["rev-parse", "HEAD^"]).trim() === X1 && g(["rev-parse", "HEAD^^"]).trim() === PLAN && g(["rev-parse", "HEAD^^^"]).trim() === OWNER_PARENT, "lifecycle");
+  assert(g(["diff", "--cached", "--name-only"]).trim() === "", "precommit_index_not_empty");
+
+  const ownerManifest = readJson(`${BASE}/validation/final-owner-manifest.json`);
+  const deltaManifest = readJson(`${BASE}/validation/final-delta-manifest.json`);
+  const staged = readJson(`${BASE}/validation/final-staged-review.json`);
+  const seal = readJson(`${BASE}/seal/content-seal.json`);
+  const truth = readJson(`${BASE}/final/phase-truth.json`);
+  const flow = readJson(`${BASE}/final/method-flow-ledger.json`);
+  const negatives = readJson(`${BASE}/final/retained-negative-register.json`);
+  const gaps = readJson(`${BASE}/final/open-gap-register.json`);
+  const gates = readJson(`${BASE}/final/exact-gate-register.json`);
+  const deck = readJson(`${BASE}/final/four-tier-flashcard-deck.json`);
+  const outcomes = readJson(`${BASE}/final/proposal-outcome-ledger.json`);
+  const route = readJson(`${BASE}/final/route-state.json`);
+  const batonIntegrity = readJson(`${BASE}/final/baton-integrity.json`);
+  const reportIntegrity = readJson(`${BASE}/final/report-integrity.json`);
+  const installation = readJson(`${BASE}/x2/global-installation-receipt.json`);
+  const interfaceReceipt = readJson(`${BASE}/x2/interface-validation-receipt.json`);
+
+  assert(truth.owner_phase_delta.methods === 47 && truth.owner_phase_delta.witnesses === 941 && truth.owner_phase_delta.passing_witnesses === 700 && truth.owner_phase_delta.failed_witnesses_and_effective_negatives === 241, "owner_counts");
+  assert(truth.effective_counts.methods === 353 && truth.effective_counts.witnesses === 8584 && truth.effective_counts.passing_witnesses === 6252 && truth.effective_counts.failed_witnesses_and_effective_negatives === 2332 && truth.effective_counts.open_gaps === 35 && truth.effective_counts.exact_gates === 35, "effective_counts");
+  assert(flow.methods.length === 47 && flow.witnesses.length === 941 && flow.counts.witness_results.pass === 700 && flow.counts.witness_results.fail === 241, "flow_counts");
+  assert(new Set(flow.methods.map((item) => item.method_id)).size === 47 && new Set(flow.witnesses.map((item) => item.witness_id)).size === 941, "flow_uniqueness");
+  assert(negatives.count === 241 && negatives.entries.length === 241 && new Set(negatives.entries.map((item) => item.negative_id)).size === 241, "negative_counts");
+  assert(negatives.entries.every((item) => item.original_success_credit === 0 && item.erased === false), "negative_nonerasure");
+  assert(gaps.inherited_count === 30 && gaps.phase_count === 5 && gaps.effective_count === 35 && gaps.entries.length === 5, "gaps");
+  assert(gates.inherited_count === 30 && gates.phase_count === 5 && gates.effective_count === 35 && gates.entries.length === 5 && gates.exact_approval_packets_visible_unexecuted === 50 && gates.blocked_packets_visible_unexecuted === 30, "gates");
+  assert(outcomes.new_rows.count === 100 && outcomes.new_rows.rows.length === 100 && JSON.stringify(outcomes.new_rows.outcomes) === JSON.stringify({ completed: 80, represented: 10, open_gap: 5, exact_gate: 5 }), "outcomes");
+
+  assert(deck.card_count === 108 && JSON.stringify(deck.tier_counts) === JSON.stringify({ identity: 1, pillars: 3, practices: 4, tasks: 100 }), "deck_counts");
+  assert(new Set(deck.cards.map((card) => card.card_id)).size === 108, "deck_ids");
+  assert(deck.cards.every((card) => sha(Buffer.from(canonicalCard(card), "utf8")) === card.content_sha256 && card.erased === false), "deck_hashes");
+  const deckIndex = sha(Buffer.from(deck.cards.map((card) => `${card.card_id}:${card.content_sha256}`).join("\n"), "utf8"));
+  assert(deckIndex === deck.index_sha256, "deck_index");
+
+  const batonPath = path.join(ROOT, batonIntegrity.path);
+  const baton = fs.readFileSync(batonPath, "utf8");
+  assert((baton.match(/\S+/g) || []).length === batonIntegrity.words && batonIntegrity.words >= 10000 && batonIntegrity.words <= 100000, "baton_words");
+  assert(Buffer.byteLength(baton, "utf8") === batonIntegrity.bytes && sha(Buffer.from(baton, "utf8")) === batonIntegrity.sha256 && baton.trimEnd().endsWith(batonIntegrity.end_marker), "baton_integrity");
+  assert(baton.includes("PREPARED_NOT_SENT") && baton.includes("SENT_BY_SYLVEN_ARC = false") && !baton.includes("SENT_BY_SYLVEN_ARC = true"), "baton_route_state");
+  const overview = fs.readFileSync(path.join(PHASE_ROOT, "final", "final-integrated-overview.md"), "utf8");
+  const report = fs.readFileSync(path.join(PHASE_ROOT, "final", "static-report.html"), "utf8");
+  assert((overview.match(/\S+/g) || []).length === reportIntegrity.overview_words && reportIntegrity.overview_words >= 1500 && sha(Buffer.from(overview, "utf8")) === reportIntegrity.overview_sha256, "overview");
+  assert(sha(Buffer.from(report, "utf8")) === reportIntegrity.static_report_sha256 && report.includes('<html lang="en">') && (report.match(/<caption>/g) || []).length === 2 && report.includes("NOT_READY_FOR_STAGE_20"), "report");
+
+  const exclusions = new Set(ownerManifest.declared_exclusions);
+  const actualOwner = collect(PHASE_ROOT).filter((file) => !exclusions.has(path.relative(ROOT, file).replaceAll("\\", "/"))).sort((a, b) => a.localeCompare(b));
+  assert(actualOwner.length === ownerManifest.count && ownerManifest.entries.length === ownerManifest.count, "owner_manifest_count");
+  assert(JSON.stringify(actualOwner.map((file) => path.relative(ROOT, file).replaceAll("\\", "/"))) === JSON.stringify(ownerManifest.entries.map((item) => item.path)), "owner_manifest_paths");
+  ownerManifest.entries.forEach((entry, index) => {
+    const bytes = normalizedBytes(actualOwner[index]);
+    assert(bytes.length === entry.bytes && sha(bytes) === entry.sha256_normalized_lf, `owner_manifest_${entry.path}`);
+  });
+
+  const statusRaw = g(["status", "--porcelain=v1", "-z", "--untracked-files=all"], null);
+  const statusParts = statusRaw.toString("utf8").split("\0").filter(Boolean);
+  const statusRows = statusParts.map((part) => ({ status: part.slice(0, 2), path: part.slice(3).replaceAll("\\", "/") }));
+  assert(statusRows.every((row) => row.status === "??" && row.path.startsWith(`${BASE}/`)), "status_scope");
+  const expectedDelta = [...deltaManifest.entries.map((item) => item.path), ...deltaManifest.declared_exclusions].sort();
+  assert(JSON.stringify(statusRows.map((row) => row.path).sort()) === JSON.stringify(expectedDelta), "delta_status_paths");
+  assert(staged.expected_delta_paths_including_lifecycle_exclusions === expectedDelta.length && staged.additions_only === true, "staged_review");
+  assert(sha(fs.readFileSync(path.join(PHASE_ROOT, "validation", "final-owner-manifest.json"))) === staged.owner_manifest_sha256, "staged_owner_hash");
+  assert(sha(fs.readFileSync(path.join(PHASE_ROOT, "validation", "final-delta-manifest.json"))) === staged.delta_manifest_sha256, "staged_delta_hash");
+  assert(deltaManifest.entries.length === deltaManifest.count, "delta_manifest_count");
+  for (const entry of deltaManifest.entries) {
+    const bytes = normalizedBytes(path.join(ROOT, entry.path));
+    assert(bytes.length === entry.bytes && sha(bytes) === entry.sha256_normalized_lf, `delta_manifest_${entry.path}`);
+  }
+  for (const binding of seal.bindings) {
+    const bytes = normalizedBytes(path.join(ROOT, binding.path));
+    assert(bytes.length === binding.bytes && sha(bytes) === binding.sha256_normalized_lf, `seal_${binding.path}`);
+  }
+
+  const ownerFiles = collect(PHASE_ROOT);
+  const allowed = new Set([".json", ".md", ".txt", ".tex", ".html"]);
+  assert(ownerFiles.length < 2000 && ownerFiles.every((file) => allowed.has(path.extname(file).toLowerCase())), "file_policy");
+  let maxWords = 0;
+  let jsonParses = 0;
+  const privacyCandidates = [];
+  const patterns = [
+    new RegExp("\\b" + "sk-" + "[A-Za-z0-9_-]{10,}\\b", "g"),
+    new RegExp("\\b(?:ghp|" + "github_pat" + ")_[A-Za-z0-9_]{10,}\\b", "g"),
+    new RegExp("\\b019[a-f0-9]{29}\\b", "gi"),
+    new RegExp("[A-Z]:" + "\\\\Users\\\\" + "[^\\s\"']+", "g"),
+    new RegExp("(?:api[_-]?key|password|" + "secret|bearer)\\s*[:=]\\s*[\"'][^\"']+[\"']", "gi"),
+  ];
+  for (const file of ownerFiles) {
+    const text = fs.readFileSync(file, "utf8");
+    maxWords = Math.max(maxWords, (text.match(/\S+/g) || []).length);
+    if (file.endsWith(".json")) {
+      JSON.parse(text);
+      jsonParses += 1;
+    }
+    patterns.forEach((pattern, classIndex) => {
+      pattern.lastIndex = 0;
+      if (pattern.test(text)) privacyCandidates.push({ path: path.relative(ROOT, file).replaceAll("\\", "/"), class_index: classIndex });
+    });
+  }
+  assert(maxWords <= 100000 && privacyCandidates.length === 0, "words_or_privacy");
+  assert(installation.status === "VALIDATED_ADDITIVE_GLOBAL_INSTALLATION" && installation.parity_count === 52 && installation.overwrites === 0 && installation.deletions === 0, "installation");
+  assert(interfaceReceipt.status === "VALID_BOUNDED_STATIC_INTERFACE_EVIDENCE" && interfaceReceipt.browser_evaluated === false && interfaceReceipt.assistive_technology_evaluated === false && interfaceReceipt.tex_rendered === false, "interface_ceiling");
+  assert(route.state === "PREPARED_NOT_SENT" && route.sent === false && route.delivery_claimed === false && route.activation_tool_calls === 0 && route.prospective_successor.exact_title === "Caelen Morrow" && route.prospective_successor.phase === "v694-v6", "route");
+  assert(truth.packages === 0 && truth.spend_usd === 0 && truth.canonical_state === "NOT_INVOKED_PRECOMMIT" && truth.terminal_verdict === "NOT_READY_FOR_STAGE_20", "terminal_truth");
+
+  process.stdout.write(JSON.stringify({
+    status: "VALID_FINAL_PRECOMMIT_PACKET",
+    owner_files: ownerFiles.length,
+    delta_paths: expectedDelta.length,
+    owner_manifest_entries: ownerManifest.count,
+    delta_manifest_entries: deltaManifest.count,
+    seal_bindings: seal.count,
+    json_parses: jsonParses,
+    max_words: maxWords,
+    privacy_candidates: privacyCandidates.length,
+    cards: deck.card_count,
+    baton_words: batonIntegrity.words,
+    methods: flow.counts.methods,
+    witnesses: flow.counts.witnesses,
+    passing: flow.counts.witness_results.pass,
+    failed: flow.counts.witness_results.fail,
+    route: route.state,
+  }));
+}
+
+main();
