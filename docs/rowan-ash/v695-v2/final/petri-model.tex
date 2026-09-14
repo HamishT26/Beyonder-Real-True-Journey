@@ -1,0 +1,18 @@
+\documentclass{article}
+\usepackage{amsmath,amssymb}
+\title{Rowan v695-v2: finite token models and inference limits}
+\author{GHC working document}
+\begin{document}\maketitle
+\section{Declared synthetic model}
+Let $m\in\mathbb{N}^{|P|}$ and let $\mathrm{Pre},\mathrm{Post}$ contain nonnegative integer arc weights. A transition $t$ is enabled exactly when $m_p\geq\mathrm{Pre}_{pt}$ for every place. Its firing is
+\[m'=m-\mathrm{Pre}_{:t}+\mathrm{Post}_{:t}=m+C_{:t},\qquad C=\mathrm{Post}-\mathrm{Pre}.\]
+The input and output arcs remain part of the model even where $C_{pt}=0$.
+\section{Supplied certificates}
+A nonzero vector $y\geq0$ with $y^TC=0$ gives $y^Tm'=y^Tm$. If every $y_p>0$, every reachable marking satisfies
+\[m_p\leq \left\lfloor\frac{y^Tm_0}{y_p}\right\rfloor.\]
+A transition-count vector $x\geq0$ with $Cx=0$ describes algebraic balance. It does not supply an enabled ordering from $m_0$.
+\section{Counterexamples and scope}
+The trap fixture preserves one token but has a reachable deadlock. The buffer fixture has cancelling self-loop arcs whose enabling conditions are lost in $C$ alone. A balanced start/finish multiset in the cycle cannot fire finish first from the idle marking. The mutex permits an A-only schedule that starves B, despite finite L4 possibility of B from every reachable marking.
+\section{Evidence boundary}
+These are exact statements about declared finite synthetic nets. Tokens have no supplied physical units or consciousness interpretation. No empirical law, production deployment, independent reproduction, professional authority or Stage 20 readiness is established. Source code and test receipts remain separate from scientific and affected-party evaluation. This TeX source was not rendered.
+\end{document}
