@@ -1,0 +1,39 @@
+{
+  "schema": "ghc.family.operational-failures.v10",
+  "owner": "Elowen Cairn",
+  "phase": "v694-v3-r2",
+  "count": 3,
+  "rows": [
+    {
+      "negative_id": "EC6943R2-X2-OP-N001",
+      "method_id": "EC6943R2-X2-M039",
+      "failure": "The first additive shared-skill patch was rejected by the wrapper parser because Markdown code delimiters collided with the JavaScript string delimiter.",
+      "original_success_credit": 0,
+      "repository_or_shared_files_changed": false,
+      "recovery": "Remove delimiter-sensitive formatting and split the patch into smaller exact scopes.",
+      "recovery_passed": true,
+      "retained": true
+    },
+    {
+      "negative_id": "EC6943R2-X2-OP-N002",
+      "method_id": "EC6943R2-X2-M040",
+      "failure": "The second additive shared-skill patch still contained one delimiter-sensitive context line and was rejected before mutation.",
+      "original_success_credit": 0,
+      "repository_or_shared_files_changed": false,
+      "recovery": "Separate the context-bearing meta-tool edit from the delimiter-safe references and core-skill patches.",
+      "recovery_passed": true,
+      "retained": true
+    },
+    {
+      "negative_id": "EC6943R2-X2-OP-N003",
+      "method_id": "EC6943R2-X2-M041",
+      "failure": "The first meta-tool heading reorder used escaped delimiter characters that did not match the literal file context.",
+      "original_success_credit": 0,
+      "repository_or_shared_files_changed": false,
+      "recovery": "Reorder only the delimiter-free heading block, then validate the complete skill.",
+      "recovery_passed": true,
+      "retained": true
+    }
+  ],
+  "boundary": "Each patch failure occurred before mutation, remains zero-credit evidence, and is paired with a bounded passing recovery."
+}

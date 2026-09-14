@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Evidence-bounded scalar teaching sandbox</title>
+<style>
+body{font-family:system-ui,sans-serif;line-height:1.5;max-width:72rem;margin:auto;padding:1rem;color:#17212b;background:#f7fafc}
+a:focus,button:focus,input:focus{outline:3px solid #8a5a00;outline-offset:2px}
+.skip{position:absolute;left:-9999px}.skip:focus{left:1rem;top:1rem;background:white;padding:.5rem;z-index:2}
+fieldset{border:2px solid #174a67;padding:1rem}label{display:block;margin:.6rem 0}input{font:inherit;width:9rem}
+button{font:inherit;padding:.6rem 1rem;background:#174a67;color:white;border:0;border-radius:.25rem}
+table{border-collapse:collapse;width:100%;margin-top:1rem;background:white}caption{font-weight:700;text-align:left;padding:.5rem}
+th,td{border:1px solid #7a8792;padding:.45rem;text-align:right}th:first-child,td:first-child{text-align:left}
+.boundary{border-left:.4rem solid #8a5a00;padding:.8rem;background:#fff8e8}
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to simulation</a>
+<main id="main">
+<h1>Evidence-bounded scalar teaching sandbox</h1>
+<p class="boundary"><strong>Boundary:</strong> This is a dimensionless harmonic-oscillator teaching fixture. It is not a cosmological fit, physical observation, stability theorem, consciousness model, unique GMUT prediction, or Theory-of-Everything evidence.</p>
+<form id="controls">
+<fieldset><legend>Finite toy parameters</legend>
+<label>Initial field value <input id="phi" type="number" step="0.1" value="1"></label>
+<label>Initial velocity <input id="velocity" type="number" step="0.1" value="0"></label>
+<label>Mass squared <input id="mass2" type="number" min="0" max="10" step="0.1" value="1"></label>
+<label>Step size <input id="dt" type="number" min="0.001" max="1" step="0.001" value="0.05"></label>
+<label>Steps <input id="steps" type="number" min="1" max="2000" step="1" value="200"></label>
+<button type="submit">Run finite toy</button>
+</fieldset>
+</form>
+<p id="status" role="status" aria-live="polite">Ready. No physical data is loaded.</p>
+<table><caption>Sampled dimensionless states</caption><thead><tr><th scope="col">Step</th><th scope="col">Time</th><th scope="col">Field</th><th scope="col">Velocity</th><th scope="col">Energy</th></tr></thead><tbody id="rows"></tbody></table>
+<h2>Interpretation limits</h2>
+<ul><li>Numerical bookkeeping only.</li><li>No network requests or remote resources.</li><li>Manual keyboard, browser, assistive-technology, cognitive-accessibility, and affected-user review remain open.</li></ul>
+</main>
+<script>
+'use strict';
+const q=id=>document.getElementById(id);
+const round=x=>Math.round((x+Number.EPSILON)*1e12)/1e12;
+function step(phi,velocity,mass2,dt){const v=round(velocity-dt*mass2*phi);return{phi:round(phi+dt*v),velocity:v};}
+function energy(phi,velocity,mass2){return round(.5*velocity*velocity+.5*mass2*phi*phi);}
+q('controls').addEventListener('submit',event=>{event.preventDefault();let phi=Number(q('phi').value),velocity=Number(q('velocity').value),mass2=Number(q('mass2').value),dt=Number(q('dt').value),steps=Number(q('steps').value);
+if(![phi,velocity,mass2,dt,steps].every(Number.isFinite)||mass2<0||dt<=0||dt>1||!Number.isInteger(steps)||steps<1||steps>2000){q('status').textContent='Refused: parameters are outside the finite declared domain.';return;}
+const body=q('rows');body.textContent='';const stride=Math.max(1,Math.ceil(steps/20));const initial=energy(phi,velocity,mass2);let final=initial,maxDrift=0;
+for(let i=0;i<=steps;i++){const e=energy(phi,velocity,mass2);final=e;maxDrift=Math.max(maxDrift,Math.abs(e-initial));if(i%stride===0||i===steps){const tr=document.createElement('tr');[i,round(i*dt),phi,velocity,e].forEach((v,j)=>{const cell=document.createElement(j===0?'th':'td');if(j===0)cell.scope='row';cell.textContent=String(v);tr.appendChild(cell);});body.appendChild(tr);}if(i<steps){const next=step(phi,velocity,mass2,dt);phi=next.phi;velocity=next.velocity;}}
+q('status').textContent='Completed '+steps+' synthetic steps. Initial energy '+initial+', final energy '+final+', maximum absolute drift '+round(maxDrift)+'. This is not empirical evidence.';});
+q('controls').dispatchEvent(new Event('submit',{cancelable:true,bubbles:true}));
+</script>
+</body>
+</html>

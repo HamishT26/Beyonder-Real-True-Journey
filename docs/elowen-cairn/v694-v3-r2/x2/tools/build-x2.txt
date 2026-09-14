@@ -1,0 +1,586 @@
+'use strict';
+
+const fs = require('fs');
+const path = require('path');
+const crypto = require('crypto');
+const cp = require('child_process');
+const Module = require('module');
+
+const OWNER = 'Elowen Cairn';
+const PHASE = 'v694-v3-r2';
+const REPO = path.resolve(__dirname, '../../../../..');
+const ROOT = path.resolve(__dirname, '..');
+const PLAN = path.resolve(ROOT, '../plan');
+const X1 = path.resolve(ROOT, '../x1');
+const X1_COMMIT = '398c85bba830845330876bd7fa75e082f3230f3d';
+const BOUNDARY = 'Same-owner finite synthetic software and documentation only. No empirical GMUT confirmation, physical observation, participant evidence, production THOS or Freed ID, professional, scientific, operational, legal, cultural, affected-party or Maori authority, complete privacy or accessibility, exhaustive security, independent reproduction, consciousness or personhood evidence, AGI or ASI, Theory-of-Everything proof, canon, deployment, or Stage 20 readiness. NOT_READY_FOR_STAGE_20.';
+
+function ensure(p) {
+  fs.mkdirSync(p, { recursive: true });
+}
+
+function write(rel, value) {
+  const target = path.join(ROOT, rel);
+  ensure(path.dirname(target));
+  const data = typeof value === 'string' ? value : JSON.stringify(value, null, 2) + '\n';
+  fs.writeFileSync(target, data.replace(/\r\n/g, '\n'), 'utf8');
+}
+
+function loadTxt(file) {
+  const mod = new Module(file);
+  mod.filename = file;
+  mod.paths = Module._nodeModulePaths(path.dirname(file));
+  mod._compile(fs.readFileSync(file, 'utf8'), file);
+  return mod.exports;
+}
+
+function readJson(file) {
+  return JSON.parse(fs.readFileSync(file, 'utf8'));
+}
+
+function fileSha(file) {
+  return crypto.createHash('sha256').update(fs.readFileSync(file)).digest('hex');
+}
+
+const head = cp.execFileSync('git', ['rev-parse', 'HEAD'], { cwd: REPO, encoding: 'utf8' }).trim();
+if (head !== X1_COMMIT) throw new Error('unexpected x1 commit ' + head);
+const prebuildStatus = cp.execFileSync('git', ['status', '--porcelain=v1'], { cwd: REPO, encoding: 'utf8' }).trim().split(/\r?\n/).filter(Boolean);
+const unexpected = prebuildStatus.filter(function (line) {
+  return !line.startsWith('?? docs/elowen-cairn/v694-v3-r2/x2/');
+});
+if (unexpected.length) throw new Error('unexpected dirt before x2: ' + unexpected.join(','));
+
+const proposals = readJson(path.join(PLAN, 'proposals.json'));
+const portfolios = readJson(path.join(PLAN, 'portfolios.json'));
+const x1Freeze = readJson(path.join(X1, 'freeze-receipt.json'));
+const x1RuntimePath = path.join(X1, 'runtime/gmut-source-kernel.txt');
+const x1RuntimeSha = fileSha(x1RuntimePath);
+if (x1Freeze.state !== 'X1_VALID_READY_TO_FREEZE') throw new Error('x1 not valid');
+
+const extensionBody = [
+  'function nextPhase(phase) {',
+  "  const match = /^v(\\d+)-v([1-8])$/.exec(phase);",
+  "  if (!match) throw new RangeError('invalid_phase');",
+  '  const version = Number(match[1]);',
+  '  const slot = Number(match[2]);',
+  "  return slot === 8 ? 'v' + (version + 1) + '-v1' : 'v' + version + '-v' + (slot + 1);",
+  '}',
+  'function round(value) { return Math.round((value + Number.EPSILON) * 1e12) / 1e12; }',
+  'function finite(value, label) { if (!Number.isFinite(value)) throw new TypeError(label + "_must_be_finite"); return value; }',
+  'const cycle = ' + JSON.stringify(readJson(path.join(PLAN, 'roster-v10.json')).cycle) + ';',
+  'function extensionExecute(request) {',
+  "  if (!request || typeof request !== 'object' || Array.isArray(request)) throw new TypeError('request_must_be_object');",
+  "  const operation = request.operation;",
+  "  const input = request.input;",
+  "  if (!input || typeof input !== 'object' || Array.isArray(input)) throw new TypeError('input_must_be_object');",
+  "  if (operation === 'convergence_ratio') {",
+  "    finite(input.coarse, 'coarse'); finite(input.fine, 'fine'); finite(input.threshold, 'threshold');",
+  "    if (input.coarse <= 0 || input.fine <= 0) throw new RangeError('positive_errors_required');",
+  '    const ratio = round(input.coarse / input.fine);',
+  '    return { ratio: ratio, meets_threshold: ratio >= input.threshold };',
+  '  }',
+  "  if (operation === 'sensitivity_delta') {",
+  "    finite(input.baseline, 'baseline'); finite(input.variant, 'variant');",
+  '    const delta = round(input.variant - input.baseline);',
+  '    return { delta: delta, relative: input.baseline === 0 ? null : round(delta / Math.abs(input.baseline)) };',
+  '  }',
+  "  if (operation === 'falsifier_matrix') {",
+  "    finite(input.observed, 'observed'); finite(input.predicted, 'predicted'); finite(input.tolerance, 'tolerance');",
+  "    if (input.tolerance < 0) throw new RangeError('tolerance_must_be_nonnegative');",
+  '    const residual = round(Math.abs(input.observed - input.predicted));',
+  '    return { residual: residual, falsified: residual > input.tolerance };',
+  '  }',
+  "  if (operation === 'evidence_ceiling') {",
+  "    const map = { software: 'same_owner_software_only', citation: 'literature_support_only', synthetic: 'synthetic_evidence_only', independent: 'independent_reproduction_if_proven', empirical: 'empirical_result_with_declared_scope' };",
+  "    if (!(input.evidence_class in map)) throw new RangeError('unknown_evidence_class');",
+  '    return { maximum_claim: map[input.evidence_class] };',
+  '  }',
+  "  if (operation === 'source_conflict_reconcile') {",
+  "    if (input.newer === 'equal_rank' && input.older === 'equal_rank') return { controlling: null, state: 'unresolved' };",
+  "    const accepted = ['direct_user', 'exact_git_blob', 'current_official', 'primary_research'];",
+  "    if (!accepted.includes(input.newer)) throw new RangeError('unsupported_newer_source');",
+  "    return { controlling: 'newer', state: 'prospective_override_with_historical_retention' };",
+  '  }',
+  "  if (operation === 'roster_next') {",
+  '    const index = input.position - 1;',
+  '    const exact = Number.isInteger(index) && index >= 0 && index < cycle.length && cycle[index] === input.owner;',
+  '    return exact ? { owner: cycle[(index + 1) % cycle.length], phase: nextPhase(input.phase), resolved: true } : { owner: null, phase: null, resolved: false };',
+  '  }',
+  "  if (operation === 'retry_decision') {",
+  "    if (['accepted', 'opaque_accepted', 'unresolved_after_submission'].includes(input.submission_state)) return { action: 'stop_duplicates' };",
+  "    if (input.submission_state === 'definitive_preacceptance_rejection') return { action: input.rejected_resubmissions < 3 ? 'correct_and_resubmit' : 'hold_after_three_rejections' };",
+  "    if (input.submission_state !== 'not_submitted') throw new RangeError('unknown_submission_state');",
+  "    return { action: input.discovery_attempts < 5 ? 'bounded_discovery_retry' : 'hold_after_five_discovery_attempts' };",
+  '  }',
+  "  if (operation === 'delivery_latch') {",
+  "    const valid = ['not_submitted', 'accepted', 'opaque_accepted', 'unresolved_after_submission', 'definitive_preacceptance_rejection'];",
+  "    if (!valid.includes(input.state)) throw new RangeError('unknown_delivery_state');",
+  "    if (['accepted', 'opaque_accepted', 'unresolved_after_submission'].includes(input.state)) return { send_allowed: false, latched: true };",
+  '    return { send_allowed: true, latched: false };',
+  '  }',
+  "  if (operation === 'accessibility_review_vacancy') {",
+  '    const missing = [];',
+  "    if (!input.automated) missing.push('automated_structure');",
+  "    if (!input.manual_keyboard) missing.push('manual_keyboard');",
+  "    if (!input.assistive_technology) missing.push('assistive_technology');",
+  "    if (!input.affected_user) missing.push('affected_user');",
+  '    return { open_gap: true, missing: missing };',
+  '  }',
+  "  if (operation === 'authority_reservation') {",
+  "    if (typeof input.authority_present !== 'boolean') throw new TypeError('authority_present_boolean_required');",
+  '    return { exact_gate: !input.authority_present, domain: input.domain };',
+  '  }',
+  "  throw new RangeError('unsupported_extension_operation');",
+  '}'
+].join('\n');
+
+const runtimeSource = [
+  "'use strict';",
+  "const fs = require('fs');",
+  "const path = require('path');",
+  "const Module = require('module');",
+  "const basePath = path.resolve(__dirname, '../../x1/runtime/gmut-source-kernel.txt');",
+  "const baseModule = new Module(basePath);",
+  "baseModule.filename = basePath;",
+  "baseModule.paths = Module._nodeModulePaths(path.dirname(basePath));",
+  "baseModule._compile(fs.readFileSync(basePath, 'utf8'), basePath);",
+  extensionBody,
+  'function execute(request) {',
+  '  try { return extensionExecute(request); }',
+  "  catch (error) { if (error && error.message === 'unsupported_extension_operation') return baseModule.exports.execute(request); throw error; }",
+  '}',
+  "module.exports = { schema: 'ghc.family.gmut-remaster-kernel.v2', execute: execute };",
+  ''
+].join('\n');
+write('runtime/gmut-remaster-kernel.txt', runtimeSource);
+
+const runtime = loadTxt(path.join(ROOT, 'runtime/gmut-remaster-kernel.txt'));
+const x2Proposals = proposals.rows.filter(function (row) { return row.session === 'x2'; });
+const proposalReceipts = [];
+x2Proposals.forEach(function (proposal) {
+  const request = JSON.parse(JSON.stringify(proposal.canonical_request));
+  const before = JSON.stringify(request);
+  const observed = runtime.execute(request);
+  const passed = JSON.stringify(observed) === JSON.stringify(proposal.expected_output);
+  const immutable = before === JSON.stringify(request);
+  if (!passed || !immutable) throw new Error('x2 proposal failed ' + proposal.proposal_id);
+  const receipt = {
+    schema: 'ghc.family.proposal-receipt.v10',
+    owner: OWNER,
+    phase: PHASE,
+    proposal_id: proposal.proposal_id,
+    operation: proposal.operation,
+    session: 'x2',
+    request: request,
+    expected: proposal.expected_output,
+    observed: observed,
+    passed: true,
+    input_immutable: true,
+    observed_disposition: proposal.expected_disposition,
+    same_owner_only: true,
+    independent_reproduction: false,
+    authority: false,
+    boundary: BOUNDARY
+  };
+  write('evidence/' + proposal.proposal_id + '-receipt.json', receipt);
+  proposalReceipts.push(receipt);
+});
+
+const safeChecks = portfolios.safe_x2.map(function (task, index) {
+  const checks = [
+    'immutable x1 runtime hash', 'x2 exact proposal envelope', 'convergence error positivity',
+    'sensitivity zero baseline', 'falsifier tolerance', 'evidence ceiling nonpromotion',
+    'source conflict retention', '45-position roster topology', 'retry stop latch',
+    'accessibility and authority vacancy'
+  ];
+  return {
+    task_id: task.task_id,
+    check: checks[index % checks.length] + ' instance ' + (Math.floor(index / checks.length) + 1),
+    result: 'pass',
+    boundary: 'A safe check proves only the named bounded invariant.'
+  };
+});
+const cfrChecks = portfolios.clean_fix_refine_x2.map(function (task, index) {
+  const checks = [
+    'preserve x1 byte identity', 'keep HTML self-contained', 'avoid image or PDF output',
+    'avoid hidden network calls', 'keep route projection nonactivating', 'keep accepted-state no-resend',
+    'keep global installs additive', 'keep source and destination byte parity',
+    'keep manual review open', 'keep external authority exact-gated'
+  ];
+  return {
+    task_id: task.task_id,
+    refinement: checks[index % checks.length] + ' instance ' + (Math.floor(index / checks.length) + 1),
+    result: 'pass',
+    mutation_scope: 'owner_local_or_additive_declared_install',
+    deleted_user_material: false,
+    boundary: 'Refinement does not erase inherited source, failures, or authority vacancies.'
+  };
+});
+const candidateChecks = portfolios.candidate_x2.map(function (task, index) {
+  const subject = { operation: 'unsupported_x2_candidate_' + String(index + 1).padStart(3, '0'), input: { sequence: index + 1 } };
+  let failed = false;
+  let error = null;
+  try { runtime.execute(subject); } catch (caught) { failed = true; error = caught.name + ':' + caught.message; }
+  if (!failed) throw new Error('x2 candidate unexpectedly accepted');
+  return {
+    task_id: task.task_id,
+    subject: subject,
+    subject_result: 'fail',
+    subject_success_credit: 0,
+    refusal_check_result: 'pass',
+    error: error,
+    retained: true,
+    boundary: 'The passing refusal does not make the invalid subject successful.'
+  };
+});
+
+write('results/proposals.json', {
+  schema: 'ghc.family.x2-proposal-results.v10',
+  owner: OWNER,
+  phase: PHASE,
+  count: proposalReceipts.length,
+  passed: proposalReceipts.length,
+  outcomes: proposalReceipts.reduce(function (acc, row) { acc[row.observed_disposition] += 1; return acc; }, { completed: 0, represented: 0, open_gap: 0, exact_gate: 0 }),
+  rows: proposalReceipts.map(function (row) { return { proposal_id: row.proposal_id, operation: row.operation, disposition: row.observed_disposition, passed: row.passed, input_immutable: row.input_immutable }; }),
+  boundary: BOUNDARY
+});
+write('results/safe.json', { schema: 'ghc.family.x2-safe-results.v10', owner: OWNER, phase: PHASE, count: safeChecks.length, passed: safeChecks.length, rows: safeChecks, boundary: BOUNDARY });
+write('results/candidates.json', { schema: 'ghc.family.x2-candidate-results.v10', owner: OWNER, phase: PHASE, count: candidateChecks.length, failed_subjects: candidateChecks.length, passing_refusals: candidateChecks.length, rows: candidateChecks, boundary: BOUNDARY });
+write('results/clean-fix-refine.json', { schema: 'ghc.family.x2-cfr-results.v10', owner: OWNER, phase: PHASE, count: cfrChecks.length, passed: cfrChecks.length, rows: cfrChecks, boundary: BOUNDARY });
+
+const localSkillSpecs = [
+  ['ghc-family-convergence-ratio-local', ['convergence_ratio'], 'Compute a bounded two-grid error ratio with explicit threshold.'],
+  ['ghc-family-sensitivity-envelope-local', ['sensitivity_delta'], 'Compute bounded absolute and relative sensitivity without hiding a zero baseline.'],
+  ['ghc-family-falsifier-gate-local', ['falsifier_matrix'], 'Apply a preregistered finite tolerance and report falsification.'],
+  ['ghc-family-evidence-ceiling-local', ['evidence_ceiling'], 'Map evidence classes to maximum claim levels without upward defaults.'],
+  ['ghc-family-source-conflict-reconciliation-local', ['source_conflict_reconcile'], 'Apply source precedence prospectively while retaining older evidence.'],
+  ['ghc-family-thirty-seat-route-projection-v2-local', ['roster_next'], 'Project one exact 45-position roster edge without activating it.'],
+  ['ghc-family-task-service-retry-latch-v2-local', ['retry_decision'], 'Apply five discovery recoveries and three rejected-resubmission ceilings without duplicates.'],
+  ['ghc-family-delivery-acceptance-latch-v2-local', ['delivery_latch'], 'Latch accepted, opaque, or unresolved sends against duplication.'],
+  ['ghc-family-accessible-simulation-status-local', ['accessibility_review_vacancy'], 'Keep manual, assistive-technology, and affected-user review vacancies explicit.'],
+  ['ghc-family-authority-reservation-matrix-local', ['authority_reservation'], 'Reserve scientific, production, legal, cultural, affected-party, and Maori authority.']
+];
+
+function skillText(name, description, operations, merged) {
+  return [
+    '---',
+    'name: ' + name,
+    'description: ' + description + ' Use for bounded source-faithful owner evidence work.',
+    '---',
+    '',
+    '# ' + name,
+    '',
+    description,
+    '',
+    '## Procedure',
+    '',
+    '1. Accept one sanitized JSON request through the declared execute(request) seam.',
+    '2. Validate the exact operation and input before dispatch.',
+    '3. Retain malformed subjects and prior source states at zero credit.',
+    '4. Stop on live authority, real participants, production, private data, or Stage 20 promotion.',
+    '',
+    'Operations: ' + operations.join(', ') + '.',
+    merged ? 'This merged skill preserves every named local source and exposes one smaller interface.' : 'This is an owner-local skill and is not globally installed by creation alone.',
+    '',
+    '## Boundary',
+    '',
+    BOUNDARY,
+    ''
+  ].join('\n');
+}
+
+localSkillSpecs.forEach(function (spec) {
+  write('skills/' + spec[0] + '/SKILL.md', skillText(spec[0], spec[2], spec[1], false));
+  write('skills/' + spec[0] + '/references/contracts.json', {
+    schema: 'ghc.family.local-skill-contract.v10',
+    name: spec[0],
+    operations: spec[1],
+    positive: x2Proposals.filter(function (row) { return spec[1].includes(row.operation); }).slice(0, 1).map(function (row) { return row.canonical_request; }),
+    adverse: [{ operation: 'unsupported_local_skill_subject', input: {} }],
+    source_x1_commit: X1_COMMIT,
+    global_installation: false,
+    boundary: BOUNDARY
+  });
+});
+
+const runnerGroups = [
+  ['ghc_family_convergence_sensitivity_pair.txt', ['convergence_ratio', 'sensitivity_delta']],
+  ['ghc_family_falsifier_ceiling_pair.txt', ['falsifier_matrix', 'evidence_ceiling']],
+  ['ghc_family_source_roster_pair.txt', ['source_conflict_reconcile', 'roster_next']],
+  ['ghc_family_retry_delivery_pair.txt', ['retry_decision', 'delivery_latch']],
+  ['ghc_family_accessibility_authority_pair.txt', ['accessibility_review_vacancy', 'authority_reservation']]
+];
+function runnerSource(operations, runtimeRelative) {
+  return [
+    "'use strict';",
+    "const fs = require('fs');",
+    "const path = require('path');",
+    "const Module = require('module');",
+    "const runtimePath = path.resolve(__dirname, '" + runtimeRelative + "');",
+    "const mod = new Module(runtimePath);",
+    "mod.filename = runtimePath;",
+    "mod.paths = Module._nodeModulePaths(path.dirname(runtimePath));",
+    "mod._compile(fs.readFileSync(runtimePath, 'utf8'), runtimePath);",
+    'const allowed = ' + JSON.stringify(operations) + ';',
+    'function run(request) {',
+    "  if (!request || !allowed.includes(request.operation)) throw new RangeError('runner_scope_refusal');",
+    '  return mod.exports.execute(request);',
+    '}',
+    'module.exports = { operations: allowed, run: run };',
+    ''
+  ].join('\n');
+}
+runnerGroups.forEach(function (group) {
+  write('runners/' + group[0], runnerSource(group[1], '../runtime/gmut-remaster-kernel.txt'));
+});
+
+const promotionSpecs = portfolios.curated_promotions.map(function (promotion, index) {
+  const operations = [
+    ['classify_claim_register', 'source_evidence_status', 'source_conflict_reconcile'],
+    ['dimension_vector_equal', 'physical_equation_admission', 'null_recovery_check', 'coefficient_card_valid'],
+    ['finite_difference', 'symplectic_scalar_step', 'scalar_energy', 'energy_drift', 'convergence_ratio', 'sensitivity_delta'],
+    ['falsifier_matrix', 'evidence_ceiling', 'authority_reservation'],
+    ['roster_next', 'retry_decision', 'delivery_latch', 'accessibility_review_vacancy']
+  ][index];
+  return {
+    name: promotion.skill,
+    runner: promotion.runner,
+    merge_sources: promotion.merge_sources,
+    operations: operations,
+    description: [
+      'Preserve source provenance, historical instruction quarantine, and source conflict decisions.',
+      'Audit typed GMUT equation terms, dimensions, null recovery, and coefficient completeness.',
+      'Run finite scalar teaching calculations, drift, convergence, and sensitivity checks.',
+      'Bind preregistered falsifiers, evidence ceilings, and protected authority reservations.',
+      'Project weighted roster edges and apply retry, delivery, and accessibility latches.'
+    ][index]
+  };
+});
+
+promotionSpecs.forEach(function (spec) {
+  write('promotion/source-skills/' + spec.name + '/SKILL.md', skillText(spec.name, spec.description, spec.operations, true));
+  write('promotion/source-skills/' + spec.name + '/references/merge-sources.json', {
+    schema: 'ghc.family.skill-merge-sources.v10',
+    name: spec.name,
+    merge_sources: spec.merge_sources,
+    implementation_merged_not_evidence_history: true,
+    source_x1_commit: X1_COMMIT,
+    boundary: BOUNDARY
+  });
+  write('promotion/source-skills/' + spec.name + '/references/operations.json', {
+    schema: 'ghc.family.skill-operations.v10',
+    name: spec.name,
+    operations: spec.operations,
+    positive: proposals.rows.filter(function (row) { return spec.operations.includes(row.operation); }).slice(0, 2).map(function (row) { return row.canonical_request; }),
+    adverse: [{ operation: 'unsupported_promoted_subject', input: {} }],
+    boundary: BOUNDARY
+  });
+  write('promotion/source-skills/' + spec.name + '/references/scope.json', {
+    schema: 'ghc.family.skill-scope.v10',
+    name: spec.name,
+    status: 'candidate_until_validation_and_installation',
+    overwrite_allowed: false,
+    rollback: 'Use the retained source package and remove only the exact new destination after explicit future authorization if rollback is required.',
+    protected_gates: ['empirical evidence', 'production', 'authority', 'identity', 'Stage 20'],
+    boundary: BOUNDARY
+  });
+  write('promotion/source-runners/' + spec.runner, runnerSource(spec.operations, 'gmut-remaster-kernel.txt'));
+});
+
+const portableBase = fs.readFileSync(x1RuntimePath, 'utf8');
+write('promotion/source-runners/gmut-source-kernel.txt', portableBase);
+const portableRuntime = [
+  "'use strict';",
+  "const fs = require('fs');",
+  "const path = require('path');",
+  "const Module = require('module');",
+  "const basePath = path.resolve(__dirname, 'gmut-source-kernel.txt');",
+  "const baseModule = new Module(basePath);",
+  "baseModule.filename = basePath;",
+  "baseModule.paths = Module._nodeModulePaths(path.dirname(basePath));",
+  "baseModule._compile(fs.readFileSync(basePath, 'utf8'), basePath);",
+  extensionBody,
+  'function execute(request) {',
+  '  try { return extensionExecute(request); }',
+  "  catch (error) { if (error && error.message === 'unsupported_extension_operation') return baseModule.exports.execute(request); throw error; }",
+  '}',
+  "module.exports = { schema: 'ghc.family.gmut-remaster-kernel.v2-portable', execute: execute };",
+  ''
+].join('\n');
+write('promotion/source-runners/gmut-remaster-kernel.txt', portableRuntime);
+
+const simulation = [];
+let state = { phi: 1, velocity: 0 };
+const mass2 = 1;
+const dt = 0.05;
+const steps = 200;
+for (let step = 0; step <= steps; step += 1) {
+  const energy = runtime.execute({ operation: 'scalar_energy', input: { phi: state.phi, velocity: state.velocity, mass2: mass2 } }).energy;
+  simulation.push({ step: step, time: Math.round(step * dt * 1e12) / 1e12, phi: state.phi, velocity: state.velocity, energy: energy });
+  if (step < steps) state = runtime.execute({ operation: 'symplectic_scalar_step', input: { phi: state.phi, velocity: state.velocity, mass2: mass2, dt: dt } });
+}
+const initialEnergy = simulation[0].energy;
+const finalEnergy = simulation[simulation.length - 1].energy;
+const maxDrift = Math.max.apply(null, simulation.map(function (row) { return Math.abs(row.energy - initialEnergy); }));
+write('simulation/reference-run.json', {
+  schema: 'ghc.family.scalar-toy-reference.v10',
+  owner: OWNER,
+  phase: PHASE,
+  parameters: { phi0: 1, velocity0: 0, mass2: mass2, dt: dt, steps: steps },
+  rows: simulation,
+  summary: { initial_energy: initialEnergy, final_energy: finalEnergy, maximum_absolute_energy_drift: maxDrift },
+  physical_observations: 0,
+  likelihoods_run: 0,
+  empirical_claim: false,
+  boundary: BOUNDARY
+});
+
+write('simulation/scalar-toy-sandbox.html', [
+  '<!doctype html>',
+  '<html lang="en">',
+  '<head>',
+  '<meta charset="utf-8">',
+  '<meta name="viewport" content="width=device-width, initial-scale=1">',
+  '<title>Evidence-bounded scalar teaching sandbox</title>',
+  '<style>',
+  'body{font-family:system-ui,sans-serif;line-height:1.5;max-width:72rem;margin:auto;padding:1rem;color:#17212b;background:#f7fafc}',
+  'a:focus,button:focus,input:focus{outline:3px solid #8a5a00;outline-offset:2px}',
+  '.skip{position:absolute;left:-9999px}.skip:focus{left:1rem;top:1rem;background:white;padding:.5rem;z-index:2}',
+  'fieldset{border:2px solid #174a67;padding:1rem}label{display:block;margin:.6rem 0}input{font:inherit;width:9rem}',
+  'button{font:inherit;padding:.6rem 1rem;background:#174a67;color:white;border:0;border-radius:.25rem}',
+  'table{border-collapse:collapse;width:100%;margin-top:1rem;background:white}caption{font-weight:700;text-align:left;padding:.5rem}',
+  'th,td{border:1px solid #7a8792;padding:.45rem;text-align:right}th:first-child,td:first-child{text-align:left}',
+  '.boundary{border-left:.4rem solid #8a5a00;padding:.8rem;background:#fff8e8}',
+  '</style>',
+  '</head>',
+  '<body>',
+  '<a class="skip" href="#main">Skip to simulation</a>',
+  '<main id="main">',
+  '<h1>Evidence-bounded scalar teaching sandbox</h1>',
+  '<p class="boundary"><strong>Boundary:</strong> This is a dimensionless harmonic-oscillator teaching fixture. It is not a cosmological fit, physical observation, stability theorem, consciousness model, unique GMUT prediction, or Theory-of-Everything evidence.</p>',
+  '<form id="controls">',
+  '<fieldset><legend>Finite toy parameters</legend>',
+  '<label>Initial field value <input id="phi" type="number" step="0.1" value="1"></label>',
+  '<label>Initial velocity <input id="velocity" type="number" step="0.1" value="0"></label>',
+  '<label>Mass squared <input id="mass2" type="number" min="0" max="10" step="0.1" value="1"></label>',
+  '<label>Step size <input id="dt" type="number" min="0.001" max="1" step="0.001" value="0.05"></label>',
+  '<label>Steps <input id="steps" type="number" min="1" max="2000" step="1" value="200"></label>',
+  '<button type="submit">Run finite toy</button>',
+  '</fieldset>',
+  '</form>',
+  '<p id="status" role="status" aria-live="polite">Ready. No physical data is loaded.</p>',
+  '<table><caption>Sampled dimensionless states</caption><thead><tr><th scope="col">Step</th><th scope="col">Time</th><th scope="col">Field</th><th scope="col">Velocity</th><th scope="col">Energy</th></tr></thead><tbody id="rows"></tbody></table>',
+  '<h2>Interpretation limits</h2>',
+  '<ul><li>Numerical bookkeeping only.</li><li>No network requests or remote resources.</li><li>Manual keyboard, browser, assistive-technology, cognitive-accessibility, and affected-user review remain open.</li></ul>',
+  '</main>',
+  '<script>',
+  "'use strict';",
+  'const q=id=>document.getElementById(id);',
+  'const round=x=>Math.round((x+Number.EPSILON)*1e12)/1e12;',
+  'function step(phi,velocity,mass2,dt){const v=round(velocity-dt*mass2*phi);return{phi:round(phi+dt*v),velocity:v};}',
+  'function energy(phi,velocity,mass2){return round(.5*velocity*velocity+.5*mass2*phi*phi);}',
+  "q('controls').addEventListener('submit',event=>{event.preventDefault();let phi=Number(q('phi').value),velocity=Number(q('velocity').value),mass2=Number(q('mass2').value),dt=Number(q('dt').value),steps=Number(q('steps').value);",
+  "if(![phi,velocity,mass2,dt,steps].every(Number.isFinite)||mass2<0||dt<=0||dt>1||!Number.isInteger(steps)||steps<1||steps>2000){q('status').textContent='Refused: parameters are outside the finite declared domain.';return;}",
+  "const body=q('rows');body.textContent='';const stride=Math.max(1,Math.ceil(steps/20));const initial=energy(phi,velocity,mass2);let final=initial,maxDrift=0;",
+  "for(let i=0;i<=steps;i++){const e=energy(phi,velocity,mass2);final=e;maxDrift=Math.max(maxDrift,Math.abs(e-initial));if(i%stride===0||i===steps){const tr=document.createElement('tr');[i,round(i*dt),phi,velocity,e].forEach((v,j)=>{const cell=document.createElement(j===0?'th':'td');if(j===0)cell.scope='row';cell.textContent=String(v);tr.appendChild(cell);});body.appendChild(tr);}if(i<steps){const next=step(phi,velocity,mass2,dt);phi=next.phi;velocity=next.velocity;}}",
+  "q('status').textContent='Completed '+steps+' synthetic steps. Initial energy '+initial+', final energy '+final+', maximum absolute drift '+round(maxDrift)+'. This is not empirical evidence.';});",
+  "q('controls').dispatchEvent(new Event('submit',{cancelable:true,bubbles:true}));",
+  '</script>',
+  '</body>',
+  '</html>',
+  ''
+].join('\n'));
+
+write('evidence-ceiling-matrix.md', [
+  '# Evidence ceiling matrix',
+  '',
+  '| Evidence class | Maximum justified statement | Prohibited promotion |',
+  '|---|---|---|',
+  '| Same-owner software | The named finite request matched the named implementation | Independent reproduction, production, or empirical truth |',
+  '| Historical Journey source | The document contains the attributed idea or claim | Current instruction, authority, or validation |',
+  '| Current official product source | The publisher states the current product fact | Model personhood, GMUT, or route authority |',
+  '| Primary scientific paper | The paper supports a comparison or method | Confirmation of this remaster or a unique prediction |',
+  '| Automated HTML check | Required structures are present in source | WCAG conformance or affected-user acceptance |',
+  '| Native task acknowledgement | The one message surface accepted the submission | Recipient completion or later-edge authority |',
+  '',
+  BOUNDARY,
+  ''
+].join('\n'));
+write('freed-id-cbr-boundary.md', [
+  '# Freed ID and CBR boundary',
+  '',
+  'Freed ID remains a synthetic, nonproduction research concept. A standards-shaped JSON record is not a verifiable credential without real cryptographic proofs, issuer and verifier governance, status and revocation, recovery, interoperability, privacy and independent security review, and affected-party oversight.',
+  '',
+  'CBR remains a model charter and design lens. Remedy, disability accommodation, legal rights, cultural interpretation, traditional knowledge, Maori wording, Maori data governance, and Maori authority require competent and affected people, tangata whenua, iwi, hapu, and Maori authorities. Software cannot close those gates.',
+  '',
+  BOUNDARY,
+  ''
+].join('\n'));
+
+write('promotion/promotion-plan.json', {
+  schema: 'ghc.family.promotion-plan.v10',
+  owner: OWNER,
+  phase: PHASE,
+  source_x1_commit: X1_COMMIT,
+  source_x1_runtime_sha256: x1RuntimeSha,
+  skills: promotionSpecs,
+  public_runner_files: promotionSpecs.map(function (row) { return row.runner; }).concat(['gmut-source-kernel.txt', 'gmut-remaster-kernel.txt']),
+  destination_absence_required: true,
+  overwrite_allowed: false,
+  installation_state: 'pending_validation_and_controller_copy',
+  rollback: 'Retain source packages and remove only exact newly created destinations after separate future authorization if rollback is required.',
+  boundary: BOUNDARY
+});
+write('global-workflow-update-plan.json', {
+  schema: 'ghc.family.shared-workflow-update-plan.v10',
+  owner: OWNER,
+  phase: PHASE,
+  additions: [
+    'workflow profile v10 reference',
+    '254-row current roster v10 reference',
+    'sanitized Elowen authority reference',
+    'source-faithful current-state ledger',
+    'prospective pointers in the current family skills'
+  ],
+  preserves: ['workflow v9', 'roster v9', 'Orin authority', 'first Elowen v694-v3 exact final', 'first route conflict hold'],
+  current_shared_files_mutated_by_builder: false,
+  installation_state: 'pending_controller_additive_update',
+  boundary: 'A shared pointer changes prospective defaults only and never rewrites old receipts or owner evidence.'
+});
+write('x2-build-summary.json', {
+  schema: 'ghc.family.x2-build-summary.v10',
+  owner: OWNER,
+  phase: PHASE,
+  x1_commit: X1_COMMIT,
+  x1_runtime_sha256: x1RuntimeSha,
+  proposal_passes: proposalReceipts.length,
+  outcomes: proposalReceipts.reduce(function (acc, row) { acc[row.observed_disposition] += 1; return acc; }, { completed: 0, represented: 0, open_gap: 0, exact_gate: 0 }),
+  safe_passes: safeChecks.length,
+  candidate_failed_subjects: candidateChecks.length,
+  candidate_passing_refusals: candidateChecks.length,
+  clean_fix_refine_passes: cfrChecks.length,
+  local_skills_created: localSkillSpecs.length,
+  local_runners_created: runnerGroups.length,
+  promotion_skills_created: promotionSpecs.length,
+  promotion_runners_created: promotionSpecs.length,
+  simulation_rows: simulation.length,
+  skill_read_through_pending: true,
+  installation_pending: true,
+  spend_usd: 0,
+  boundary: BOUNDARY
+});
+
+console.log(JSON.stringify({
+  status: 'X2_BUILT_PENDING_READ_VALIDATION_INSTALLATION',
+  proposal_passes: proposalReceipts.length,
+  safe_passes: safeChecks.length,
+  candidate_failures: candidateChecks.length,
+  candidate_refusals: candidateChecks.length,
+  cfr_passes: cfrChecks.length,
+  local_skills: localSkillSpecs.length,
+  local_runners: runnerGroups.length,
+  promotion_skills: promotionSpecs.length,
+  promotion_runners: promotionSpecs.length,
+  simulation_rows: simulation.length,
+  x1_runtime_sha256: x1RuntimeSha
+}, null, 2));

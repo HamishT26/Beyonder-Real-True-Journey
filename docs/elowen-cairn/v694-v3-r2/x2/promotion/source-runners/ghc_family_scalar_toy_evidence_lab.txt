@@ -1,0 +1,15 @@
+'use strict';
+const fs = require('fs');
+const path = require('path');
+const Module = require('module');
+const runtimePath = path.resolve(__dirname, 'gmut-remaster-kernel.txt');
+const mod = new Module(runtimePath);
+mod.filename = runtimePath;
+mod.paths = Module._nodeModulePaths(path.dirname(runtimePath));
+mod._compile(fs.readFileSync(runtimePath, 'utf8'), runtimePath);
+const allowed = ["finite_difference","symplectic_scalar_step","scalar_energy","energy_drift","convergence_ratio","sensitivity_delta"];
+function run(request) {
+  if (!request || !allowed.includes(request.operation)) throw new RangeError('runner_scope_refusal');
+  return mod.exports.execute(request);
+}
+module.exports = { operations: allowed, run: run };

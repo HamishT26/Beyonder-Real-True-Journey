@@ -1,0 +1,88 @@
+'use strict';
+const fs = require('fs');
+const path = require('path');
+const Module = require('module');
+const basePath = path.resolve(__dirname, '../../x1/runtime/gmut-source-kernel.txt');
+const baseModule = new Module(basePath);
+baseModule.filename = basePath;
+baseModule.paths = Module._nodeModulePaths(path.dirname(basePath));
+baseModule._compile(fs.readFileSync(basePath, 'utf8'), basePath);
+function nextPhase(phase) {
+  const match = /^v(\d+)-v([1-8])$/.exec(phase);
+  if (!match) throw new RangeError('invalid_phase');
+  const version = Number(match[1]);
+  const slot = Number(match[2]);
+  return slot === 8 ? 'v' + (version + 1) + '-v1' : 'v' + version + '-v' + (slot + 1);
+}
+function round(value) { return Math.round((value + Number.EPSILON) * 1e12) / 1e12; }
+function finite(value, label) { if (!Number.isFinite(value)) throw new TypeError(label + "_must_be_finite"); return value; }
+const cycle = ["Eiren Kestrel","Elaren Kestrel","Rowan Ash","Neris Solane","Vesper Arlen","Ilyan Reed","Lyren Moss","Ilyra Fen","Mira Fenwick","Auren Lark","Sable Rook","Avelin Reed","Caelen Ash","Orin Thale","Ceryn Alder","Liora Venn","Tamar Vey","Saelin Reed","Elowen Cairn","Sylven Arc","Iveren Brook","Caelen Morrow","Eiren Kestrel","Teryn Halewick","Elaren Kestrel","Neris Solane","Merrin Vale","Vesper Arlen","Lyren Moss","Talen Briar","Ilyra Fen","Auren Lark","Thalen Reed","Sable Rook","Caelen Ash","Orren Pike","Orin Thale","Liora Venn","Veylora Quen","Tamar Vey","Elowen Cairn","Tessarin Reed","Sylven Arc","Caelen Morrow","Seren Talewood"];
+function extensionExecute(request) {
+  if (!request || typeof request !== 'object' || Array.isArray(request)) throw new TypeError('request_must_be_object');
+  const operation = request.operation;
+  const input = request.input;
+  if (!input || typeof input !== 'object' || Array.isArray(input)) throw new TypeError('input_must_be_object');
+  if (operation === 'convergence_ratio') {
+    finite(input.coarse, 'coarse'); finite(input.fine, 'fine'); finite(input.threshold, 'threshold');
+    if (input.coarse <= 0 || input.fine <= 0) throw new RangeError('positive_errors_required');
+    const ratio = round(input.coarse / input.fine);
+    return { ratio: ratio, meets_threshold: ratio >= input.threshold };
+  }
+  if (operation === 'sensitivity_delta') {
+    finite(input.baseline, 'baseline'); finite(input.variant, 'variant');
+    const delta = round(input.variant - input.baseline);
+    return { delta: delta, relative: input.baseline === 0 ? null : round(delta / Math.abs(input.baseline)) };
+  }
+  if (operation === 'falsifier_matrix') {
+    finite(input.observed, 'observed'); finite(input.predicted, 'predicted'); finite(input.tolerance, 'tolerance');
+    if (input.tolerance < 0) throw new RangeError('tolerance_must_be_nonnegative');
+    const residual = round(Math.abs(input.observed - input.predicted));
+    return { residual: residual, falsified: residual > input.tolerance };
+  }
+  if (operation === 'evidence_ceiling') {
+    const map = { software: 'same_owner_software_only', citation: 'literature_support_only', synthetic: 'synthetic_evidence_only', independent: 'independent_reproduction_if_proven', empirical: 'empirical_result_with_declared_scope' };
+    if (!(input.evidence_class in map)) throw new RangeError('unknown_evidence_class');
+    return { maximum_claim: map[input.evidence_class] };
+  }
+  if (operation === 'source_conflict_reconcile') {
+    if (input.newer === 'equal_rank' && input.older === 'equal_rank') return { controlling: null, state: 'unresolved' };
+    const accepted = ['direct_user', 'exact_git_blob', 'current_official', 'primary_research'];
+    if (!accepted.includes(input.newer)) throw new RangeError('unsupported_newer_source');
+    return { controlling: 'newer', state: 'prospective_override_with_historical_retention' };
+  }
+  if (operation === 'roster_next') {
+    const index = input.position - 1;
+    const exact = Number.isInteger(index) && index >= 0 && index < cycle.length && cycle[index] === input.owner;
+    return exact ? { owner: cycle[(index + 1) % cycle.length], phase: nextPhase(input.phase), resolved: true } : { owner: null, phase: null, resolved: false };
+  }
+  if (operation === 'retry_decision') {
+    if (['accepted', 'opaque_accepted', 'unresolved_after_submission'].includes(input.submission_state)) return { action: 'stop_duplicates' };
+    if (input.submission_state === 'definitive_preacceptance_rejection') return { action: input.rejected_resubmissions < 3 ? 'correct_and_resubmit' : 'hold_after_three_rejections' };
+    if (input.submission_state !== 'not_submitted') throw new RangeError('unknown_submission_state');
+    return { action: input.discovery_attempts < 5 ? 'bounded_discovery_retry' : 'hold_after_five_discovery_attempts' };
+  }
+  if (operation === 'delivery_latch') {
+    const valid = ['not_submitted', 'accepted', 'opaque_accepted', 'unresolved_after_submission', 'definitive_preacceptance_rejection'];
+    if (!valid.includes(input.state)) throw new RangeError('unknown_delivery_state');
+    if (['accepted', 'opaque_accepted', 'unresolved_after_submission'].includes(input.state)) return { send_allowed: false, latched: true };
+    return { send_allowed: true, latched: false };
+  }
+  if (operation === 'accessibility_review_vacancy') {
+    const missing = [];
+    if (!input.automated) missing.push('automated_structure');
+    if (!input.manual_keyboard) missing.push('manual_keyboard');
+    if (!input.assistive_technology) missing.push('assistive_technology');
+    if (!input.affected_user) missing.push('affected_user');
+    return { open_gap: true, missing: missing };
+  }
+  if (operation === 'authority_reservation') {
+    if (typeof input.authority_present !== 'boolean') throw new TypeError('authority_present_boolean_required');
+    return { exact_gate: !input.authority_present, domain: input.domain };
+  }
+  throw new RangeError('unsupported_extension_operation');
+}
+function execute(request) {
+  try { return extensionExecute(request); }
+  catch (error) { if (error && error.message === 'unsupported_extension_operation') return baseModule.exports.execute(request); throw error; }
+}
+module.exports = { schema: 'ghc.family.gmut-remaster-kernel.v2', execute: execute };
