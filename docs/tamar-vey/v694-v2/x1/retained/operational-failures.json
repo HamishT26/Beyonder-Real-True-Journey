@@ -1,0 +1,50 @@
+{
+  "schema": "ghc.family.operational-failure-overlay.v1",
+  "owner": "Tamar Vey",
+  "phase": "v694-v2",
+  "session": "x1",
+  "failures": [
+    {
+      "negative_id": "TV6942-X1-OP-N001",
+      "failure": "The first external x1 builder self-test stopped before repository mutation because its loadModule helper declared a local variable named module and referenced module.parent inside that variable's temporal dead zone.",
+      "failed_builder_sha256": "13c84abb83fd41a5e8b5cf980ec0707790be37864f8993597fc81d500a79a219",
+      "recovery": "Retain the failed builder, rename only the local binding to loaded, and rerun only the in-memory x1 proposal/candidate self-test.",
+      "corrected_builder_sha256": "b73ebb6329a989557bd62ff3583fcc1dc5dcfbfa831d31eb123ea82ef229d75f",
+      "recovery_result": {
+        "proposals": 50,
+        "candidate_subjects": 100,
+        "failures": 0,
+        "passed": true
+      },
+      "repository_changed_at_failure": false,
+      "subject_success_credit": 0
+    },
+    {
+      "negative_id": "TV6942-X1-OP-N003",
+      "failure": "The x1 materializer interpreted each planned SKILL.md file path as a directory, creating ten skill/SKILL.md/SKILL.md layouts before any validator or smoke ran.",
+      "recovery": "Move every misnested directory into the retained x1 evidence area, recreate the intended skill/SKILL.md plus references layout byte-for-byte, and add path.dirname at both builder call sites.",
+      "recovery_result": {
+        "skills_repaired": 10,
+        "byte_equal": 10,
+        "validators_or_smokes_before_recovery": 0,
+        "passed": true
+      },
+      "repository_changed_at_failure": true,
+      "immutable_planning_changed": false,
+      "subject_success_credit": 0
+    },
+    {
+      "negative_id": "TV6942-X1-OP-N002",
+      "failure": "The first combined projection of five generated contract references exceeded the model-visible output window midway through the third file, so it could not establish complete reading.",
+      "recovery": "Read the same ten exact contract references in bounded two-file batches through each literal EOF before any capability smoke.",
+      "recovery_result": {
+        "contract_references": 10,
+        "complete_reads": 10,
+        "passed": true
+      },
+      "repository_changed_at_failure": false,
+      "subject_success_credit": 0
+    }
+  ],
+  "boundary": "The corrected self-test does not erase or promote the failed builder. Same-owner finite synthetic software evidence only; NOT_READY_FOR_STAGE_20."
+}

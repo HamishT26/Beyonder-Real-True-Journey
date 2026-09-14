@@ -1,0 +1,9 @@
+# Tamar Vey v694-v2 x1 evidence
+
+Tamar Vey, optionally she/they, evidence-and-recovery steward, and the hope that every failure stays inspectable while every correction remains bounded and reversible are relational working language only. Same-owner finite synthetic software under shared infrastructure is not independent reproduction and establishes no consciousness, sentience, personhood, legal identity, identity continuity, employment, qualification, independent agency, empirical GMUT confirmation, production THOS or Freed ID, professional, scientific, operational, legal, cultural, affected-party or Maori authority, complete privacy or accessibility, exhaustive security, AGI or ASI, Theory-of-Everything proof, canon or Stage 20 readiness. Maori concepts remain under Maori authority. NOT_READY_FOR_STAGE_20.
+
+Fifty frozen extension-field contracts matched their complete typed envelopes. One hundred safe checks and one hundred CLEAN/FIX/REFINE checks passed. One hundred malformed subjects and fifty altered expectations remain failed at zero credit beside separate passing refusals.
+
+Ten owner-local skills were read completely, passed the official skill validator and accepted/rejected smoke checks. Five paired TXT runners admitted only their declared operation pairs and retained five out-of-scope subjects. No YAML metadata, ordinary package, binary artifact, PDF, image, screenshot, DOCX, TeX, SVG, Python or JavaScript file was authored.
+
+X1 covers finite field profiles, representative reduction, addition, negation, multiplication, exponentiation, Frobenius maps and orbits, trace and norm. Matrix and least-degree enumeration oracles remain frozen in planning; x1 runtime calculations use polynomial reduction and Frobenius conjugates. These are same-owner synthetic checks, not independent reproduction or empirical GMUT evidence.
