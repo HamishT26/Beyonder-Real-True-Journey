@@ -1,0 +1,7 @@
+"use strict";
+const fs=require("fs");
+const core=require(process.env.GHC_FAMILY_ROUTE_CORE);
+const allowed=["artifact_admission","file_rotation_admission"];
+const request=JSON.parse(fs.readFileSync(0,"utf8"));
+if(!allowed.includes(request.operation)){process.stdout.write(JSON.stringify({ok:false,error:"E_RUNNER_SCOPE"})+"\n");process.exit(2);}
+const out=core.execute(request);process.stdout.write(JSON.stringify(out)+"\n");process.exit(out.ok?0:2);
