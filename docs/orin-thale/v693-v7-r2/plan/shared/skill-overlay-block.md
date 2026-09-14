@@ -1,0 +1,3 @@
+## Hamish confirmation of 14 September 2026
+
+For current work, read [the Orin v693-v7 (2) authority](../ghc-family-index/references/orin-v693-v7-r2-20260914-authority.md), [workflow v9](../ghc-family-index/references/current-workflow-v9.json), [roster v9](../ghc-family-index/references/current-roster-v9.json), and [source-faithful ledger](../ghc-family-index/references/source-faithful-current-state-ledger-v693-v7-r2.md) before older prospective defaults. Preserve the first v693-v7 failure and additive correction while applying the JSON/MD/TXT/HTML-only policy and bounded route recovery prospectively.

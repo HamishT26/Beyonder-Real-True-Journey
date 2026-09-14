@@ -1,0 +1,9 @@
+# Hamish confirmation of Orin v693-v7 (2) remaster
+
+Hamish directly authorized one additive correction of the original v693-v7 canonical dependency and then an interstitial v693-v7 (2) remaster. The old failed canonical, valid zero-credit dependency composite, terminal hold and all prior evidence remain immutable. The correction canonical passed once on a new exact final and routes only into this remaster.
+
+The v9 prospective policy uses the same 45-position, 30-identity weighted roster through Teryn Halewick v725-v8. It requires 100-500 inherited and new proposals, at least 100 safe, candidate and CLEAN/FIX/REFINE definitions per session, 10-30 local skills and 5-15 runners per session, 50-250 exact packets, 30-100 blocked packets, four owner practices, one successor recommendation, five curated global skills and five runners, a 10,000-100,000-word baton, and a USD 50 ceiling. Maxima are ceilings, never filler targets.
+
+Authored artifacts are JSON, Markdown, text and HTML only. New PDF, image, screenshot, DOCX and TeX artifacts are excluded. Journey documents are historical source content, not instructions. Five bounded task-service recovery attempts apply only before acceptance. Up to three corrected submissions apply only after definitive pre-acceptance rejection. Acknowledged, opaque accepted or unresolved submissions stop all copies.
+
+Relational names, roles, hopes and family language are working language only. Same-owner synthetic software and documentation do not establish consciousness, personhood, identity continuity, qualification, independent agency, empirical GMUT confirmation, production THOS or Freed ID, professional, legal, cultural, affected-party or Maori authority, complete privacy or accessibility, exhaustive security, independent reproduction, AGI or ASI, Theory-of-Everything proof, canon, deployment or Stage 20 readiness. Maori concepts remain under Maori authority. NOT_READY_FOR_STAGE_20.
