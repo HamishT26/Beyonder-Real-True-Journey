@@ -1,0 +1,135 @@
+{
+  "limits": {
+    "arc_weight": 8,
+    "edges": 4096,
+    "input_tokens": 64,
+    "intermediate_tokens": 64,
+    "places": 8,
+    "sequence_length": 32,
+    "states": 512,
+    "transitions": 8
+  },
+  "operations": [
+    {
+      "contract": "Enumerate the exact place, transition and weighted-arc vocabulary.",
+      "limitation": "Unknown fields or duplicate names must be refused.",
+      "operation": "net_structure",
+      "session": "x1"
+    },
+    {
+      "contract": "Compute post minus pre with declared row and column order.",
+      "limitation": "A zero incidence entry does not remove a self-loop enabling requirement.",
+      "operation": "incidence_matrix",
+      "session": "x1"
+    },
+    {
+      "contract": "Check every input-arc demand against the supplied marking.",
+      "limitation": "Individual enabledness is not simultaneous fireability.",
+      "operation": "enabled_transitions",
+      "session": "x1"
+    },
+    {
+      "contract": "Consume the input arcs and then produce the output arcs for one enabled transition.",
+      "limitation": "A non-enabled transition has no successful successor marking.",
+      "operation": "single_firing",
+      "session": "x1"
+    },
+    {
+      "contract": "Check each step and retain every intermediate marking.",
+      "limitation": "A transition multiset alone does not certify a feasible order.",
+      "operation": "firing_sequence",
+      "session": "x1"
+    },
+    {
+      "contract": "Check a supplied nonzero nonnegative place-weight vector against every transition column.",
+      "limitation": "This verifies the supplied certificate; it does not compute a complete invariant basis.",
+      "operation": "place_invariant_check",
+      "session": "x1"
+    },
+    {
+      "contract": "Check a supplied nonzero nonnegative transition-count vector against every place row.",
+      "limitation": "Zero aggregate change does not establish feasibility from the initial marking.",
+      "operation": "transition_invariant_check",
+      "session": "x1"
+    },
+    {
+      "contract": "Compare weighted values of two declared markings.",
+      "limitation": "Equal weighted values do not prove reachability between the markings.",
+      "operation": "marking_invariant_residual",
+      "session": "x1"
+    },
+    {
+      "contract": "List pairs whose full pre/post supports are disjoint.",
+      "limitation": "This sufficient structural condition is not a complete characterization of independence.",
+      "operation": "independent_transition_pairs",
+      "session": "x1"
+    },
+    {
+      "contract": "Compare both two-step orders at a particular marking.",
+      "limitation": "Coenabled transitions can conflict; a missing second step is not a commutation witness.",
+      "operation": "commutation_witness",
+      "session": "x1"
+    },
+    {
+      "contract": "Explore the complete finite state graph only within declared resource limits.",
+      "limitation": "Any token, state or edge limit breach must refuse a completeness claim.",
+      "operation": "reachable_graph",
+      "session": "x2"
+    },
+    {
+      "contract": "List reachable markings with no enabled transition.",
+      "limitation": "A deadlock-free finite model is not proof of live production software.",
+      "operation": "deadlock_inventory",
+      "session": "x2"
+    },
+    {
+      "contract": "Return a shortest action sequence to the exact requested marking.",
+      "limitation": "Breadth-first minimum length does not minimize time, cost or harm.",
+      "operation": "shortest_goal_trace",
+      "session": "x2"
+    },
+    {
+      "contract": "Compare observed finite maxima with a positive place-invariant upper bound.",
+      "limitation": "The invariant upper bound can be conservative and is not a measured capacity.",
+      "operation": "place_bound_certificate",
+      "session": "x2"
+    },
+    {
+      "contract": "For every reachable marking, ask whether each transition can eventually be enabled.",
+      "limitation": "This explicit L4 definition concerns possibility, not scheduler fairness.",
+      "operation": "transition_liveness",
+      "session": "x2"
+    },
+    {
+      "contract": "Find strongly connected reachable components with no outgoing edges.",
+      "limitation": "Terminal components can contain deadlocks or continuing cycles; neither establishes benefit.",
+      "operation": "terminal_components",
+      "session": "x2"
+    },
+    {
+      "contract": "Represent the mapping from synthetic tokens to possible process concepts.",
+      "limitation": "No energy, consciousness, physical substance or actual person is inferred from a token.",
+      "operation": "structural_interpretation_boundary",
+      "session": "x2"
+    },
+    {
+      "contract": "Represent missing measurement units and a future uncertainty model.",
+      "limitation": "Exact integer arithmetic has no sampling error here, but model inadequacy remains unknown.",
+      "operation": "uncertainty_boundary",
+      "session": "x2"
+    },
+    {
+      "contract": "Expose missing governed observations, baselines, preregistration and independent evaluation.",
+      "limitation": "Producing the gap record leaves the empirical claim open.",
+      "operation": "empirical_gap",
+      "session": "x2"
+    },
+    {
+      "contract": "Expose missing target scope, affected-party authority and independent safety review.",
+      "limitation": "Producing the gate record does not authorize deployment or resolve professional duties.",
+      "operation": "deployment_authority_gate",
+      "session": "x2"
+    }
+  ],
+  "scope": "Finite synthetic same-owner software and documentation evidence only. No empirical GMUT confirmation, production THOS or Freed ID, independent reproduction, professional, legal, cultural, affected-party or Maori authority, consciousness, personhood, identity continuity, Theory-of-Everything proof or Stage 20 readiness. NOT_READY_FOR_STAGE_20."
+}

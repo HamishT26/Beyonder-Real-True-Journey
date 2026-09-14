@@ -1,0 +1,1193 @@
+{
+  "fixtures": [
+    {
+      "ab": null,
+      "ba": null,
+      "coenabled": false,
+      "commutes": false,
+      "deadlocks": [],
+      "edges": [
+        [
+          [
+            1,
+            0
+          ],
+          "start",
+          [
+            0,
+            1
+          ]
+        ],
+        [
+          [
+            0,
+            1
+          ],
+          "finish",
+          [
+            1,
+            0
+          ]
+        ]
+      ],
+      "goal": [
+        0,
+        1
+      ],
+      "goal_trace": [
+        "start"
+      ],
+      "independent": [],
+      "lesson": "A conserved single token cycles forever in the model, but no physical time, reliability or fairness has been measured.",
+      "mark": [
+        1,
+        0
+      ],
+      "net": {
+        "case_id": "cycle",
+        "initial": [
+          1,
+          0
+        ],
+        "places": [
+          "idle",
+          "busy"
+        ],
+        "synthetic": true,
+        "transitions": [
+          {
+            "id": "start",
+            "post": [
+              0,
+              1
+            ],
+            "pre": [
+              1,
+              0
+            ]
+          },
+          {
+            "id": "finish",
+            "post": [
+              1,
+              0
+            ],
+            "pre": [
+              0,
+              1
+            ]
+          }
+        ]
+      },
+      "pair": [
+        "start",
+        "finish"
+      ],
+      "path": [
+        [
+          1,
+          0
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          0
+        ]
+      ],
+      "sequence": [
+        "start",
+        "finish"
+      ],
+      "single": "start",
+      "states": [
+        [
+          1,
+          0
+        ],
+        [
+          0,
+          1
+        ]
+      ],
+      "terminal": [
+        [
+          [
+            1,
+            0
+          ],
+          [
+            0,
+            1
+          ]
+        ]
+      ],
+      "tweights": [
+        1,
+        1
+      ],
+      "weights": [
+        1,
+        1
+      ]
+    },
+    {
+      "ab": [
+        0,
+        0,
+        0,
+        1,
+        1,
+        0
+      ],
+      "ba": [
+        0,
+        0,
+        0,
+        1,
+        1,
+        0
+      ],
+      "coenabled": true,
+      "commutes": true,
+      "deadlocks": [],
+      "edges": [
+        [
+          [
+            1,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "fork",
+          [
+            0,
+            1,
+            1,
+            0,
+            0,
+            0
+          ]
+        ],
+        [
+          [
+            0,
+            1,
+            1,
+            0,
+            0,
+            0
+          ],
+          "left",
+          [
+            0,
+            0,
+            1,
+            1,
+            0,
+            0
+          ]
+        ],
+        [
+          [
+            0,
+            1,
+            1,
+            0,
+            0,
+            0
+          ],
+          "right",
+          [
+            0,
+            1,
+            0,
+            0,
+            1,
+            0
+          ]
+        ],
+        [
+          [
+            0,
+            0,
+            1,
+            1,
+            0,
+            0
+          ],
+          "right",
+          [
+            0,
+            0,
+            0,
+            1,
+            1,
+            0
+          ]
+        ],
+        [
+          [
+            0,
+            1,
+            0,
+            0,
+            1,
+            0
+          ],
+          "left",
+          [
+            0,
+            0,
+            0,
+            1,
+            1,
+            0
+          ]
+        ],
+        [
+          [
+            0,
+            0,
+            0,
+            1,
+            1,
+            0
+          ],
+          "join",
+          [
+            0,
+            0,
+            0,
+            0,
+            0,
+            1
+          ]
+        ],
+        [
+          [
+            0,
+            0,
+            0,
+            0,
+            0,
+            1
+          ],
+          "reset",
+          [
+            1,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        ]
+      ],
+      "goal": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        1
+      ],
+      "goal_trace": [
+        "fork",
+        "left",
+        "right",
+        "join"
+      ],
+      "independent": [
+        [
+          "fork",
+          "join"
+        ],
+        [
+          "left",
+          "reset"
+        ],
+        [
+          "left",
+          "right"
+        ],
+        [
+          "reset",
+          "right"
+        ]
+      ],
+      "lesson": "The two branch completions commute after the fork. Structural independence is a sufficient condition, and its pairs need not be simultaneously enabled in a reachable marking.",
+      "mark": [
+        0,
+        1,
+        1,
+        0,
+        0,
+        0
+      ],
+      "net": {
+        "case_id": "fork-join",
+        "initial": [
+          1,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "places": [
+          "ready",
+          "left_pending",
+          "right_pending",
+          "left_done",
+          "right_done",
+          "done"
+        ],
+        "synthetic": true,
+        "transitions": [
+          {
+            "id": "fork",
+            "post": [
+              0,
+              1,
+              1,
+              0,
+              0,
+              0
+            ],
+            "pre": [
+              1,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          {
+            "id": "left",
+            "post": [
+              0,
+              0,
+              0,
+              1,
+              0,
+              0
+            ],
+            "pre": [
+              0,
+              1,
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          {
+            "id": "right",
+            "post": [
+              0,
+              0,
+              0,
+              0,
+              1,
+              0
+            ],
+            "pre": [
+              0,
+              0,
+              1,
+              0,
+              0,
+              0
+            ]
+          },
+          {
+            "id": "join",
+            "post": [
+              0,
+              0,
+              0,
+              0,
+              0,
+              1
+            ],
+            "pre": [
+              0,
+              0,
+              0,
+              1,
+              1,
+              0
+            ]
+          },
+          {
+            "id": "reset",
+            "post": [
+              1,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            "pre": [
+              0,
+              0,
+              0,
+              0,
+              0,
+              1
+            ]
+          }
+        ]
+      },
+      "pair": [
+        "left",
+        "right"
+      ],
+      "path": [
+        [
+          1,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          1,
+          1,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          1,
+          1,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          1,
+          1,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          1
+        ],
+        [
+          1,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      ],
+      "sequence": [
+        "fork",
+        "left",
+        "right",
+        "join",
+        "reset"
+      ],
+      "single": "left",
+      "states": [
+        [
+          1,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          1,
+          1,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          1,
+          1,
+          0,
+          0
+        ],
+        [
+          0,
+          1,
+          0,
+          0,
+          1,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          1,
+          1,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          1
+        ]
+      ],
+      "terminal": null,
+      "tweights": [
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "weights": [
+        2,
+        1,
+        1,
+        1,
+        1,
+        2
+      ]
+    },
+    {
+      "ab": null,
+      "ba": null,
+      "coenabled": true,
+      "commutes": false,
+      "deadlocks": [],
+      "edges": [
+        [
+          [
+            1,
+            1,
+            0,
+            1,
+            0
+          ],
+          "enter_a",
+          [
+            0,
+            0,
+            1,
+            1,
+            0
+          ]
+        ],
+        [
+          [
+            0,
+            0,
+            1,
+            1,
+            0
+          ],
+          "exit_a",
+          [
+            1,
+            1,
+            0,
+            1,
+            0
+          ]
+        ],
+        [
+          [
+            1,
+            1,
+            0,
+            1,
+            0
+          ],
+          "enter_b",
+          [
+            0,
+            1,
+            0,
+            0,
+            1
+          ]
+        ],
+        [
+          [
+            0,
+            1,
+            0,
+            0,
+            1
+          ],
+          "exit_b",
+          [
+            1,
+            1,
+            0,
+            1,
+            0
+          ]
+        ]
+      ],
+      "goal": [
+        0,
+        1,
+        0,
+        0,
+        1
+      ],
+      "goal_trace": [
+        "enter_b"
+      ],
+      "independent": [],
+      "lesson": "Both entries are individually enabled initially, but they compete for one resource token. L4 possibility of future progress does not establish fairness or freedom from starvation.",
+      "mark": [
+        1,
+        1,
+        0,
+        1,
+        0
+      ],
+      "net": {
+        "case_id": "mutex",
+        "initial": [
+          1,
+          1,
+          0,
+          1,
+          0
+        ],
+        "places": [
+          "resource",
+          "a_idle",
+          "a_busy",
+          "b_idle",
+          "b_busy"
+        ],
+        "synthetic": true,
+        "transitions": [
+          {
+            "id": "enter_a",
+            "post": [
+              0,
+              0,
+              1,
+              0,
+              0
+            ],
+            "pre": [
+              1,
+              1,
+              0,
+              0,
+              0
+            ]
+          },
+          {
+            "id": "exit_a",
+            "post": [
+              1,
+              1,
+              0,
+              0,
+              0
+            ],
+            "pre": [
+              0,
+              0,
+              1,
+              0,
+              0
+            ]
+          },
+          {
+            "id": "enter_b",
+            "post": [
+              0,
+              0,
+              0,
+              0,
+              1
+            ],
+            "pre": [
+              1,
+              0,
+              0,
+              1,
+              0
+            ]
+          },
+          {
+            "id": "exit_b",
+            "post": [
+              1,
+              0,
+              0,
+              1,
+              0
+            ],
+            "pre": [
+              0,
+              0,
+              0,
+              0,
+              1
+            ]
+          }
+        ]
+      },
+      "pair": [
+        "enter_a",
+        "enter_b"
+      ],
+      "path": [
+        [
+          1,
+          1,
+          0,
+          1,
+          0
+        ],
+        [
+          0,
+          0,
+          1,
+          1,
+          0
+        ],
+        [
+          1,
+          1,
+          0,
+          1,
+          0
+        ],
+        [
+          0,
+          1,
+          0,
+          0,
+          1
+        ],
+        [
+          1,
+          1,
+          0,
+          1,
+          0
+        ]
+      ],
+      "sequence": [
+        "enter_a",
+        "exit_a",
+        "enter_b",
+        "exit_b"
+      ],
+      "single": "enter_a",
+      "states": [
+        [
+          1,
+          1,
+          0,
+          1,
+          0
+        ],
+        [
+          0,
+          0,
+          1,
+          1,
+          0
+        ],
+        [
+          0,
+          1,
+          0,
+          0,
+          1
+        ]
+      ],
+      "terminal": null,
+      "tweights": [
+        1,
+        1,
+        1,
+        1
+      ],
+      "weights": [
+        1,
+        1,
+        2,
+        1,
+        2
+      ]
+    },
+    {
+      "ab": null,
+      "ba": null,
+      "coenabled": false,
+      "commutes": false,
+      "deadlocks": [],
+      "edges": [
+        [
+          [
+            1,
+            0,
+            1,
+            1
+          ],
+          "put",
+          [
+            0,
+            1,
+            1,
+            1
+          ]
+        ],
+        [
+          [
+            0,
+            1,
+            1,
+            1
+          ],
+          "get",
+          [
+            1,
+            0,
+            1,
+            1
+          ]
+        ]
+      ],
+      "goal": [
+        0,
+        1,
+        1,
+        1
+      ],
+      "goal_trace": [
+        "put"
+      ],
+      "independent": [],
+      "lesson": "Readiness tokens are self-loops whose pre and post contributions cancel in the incidence matrix. Their enabling requirements remain essential even when their net change is zero.",
+      "mark": [
+        1,
+        0,
+        1,
+        1
+      ],
+      "net": {
+        "case_id": "buffer",
+        "initial": [
+          1,
+          0,
+          1,
+          1
+        ],
+        "places": [
+          "empty",
+          "full",
+          "producer_ready",
+          "consumer_ready"
+        ],
+        "synthetic": true,
+        "transitions": [
+          {
+            "id": "put",
+            "post": [
+              0,
+              1,
+              1,
+              0
+            ],
+            "pre": [
+              1,
+              0,
+              1,
+              0
+            ]
+          },
+          {
+            "id": "get",
+            "post": [
+              1,
+              0,
+              0,
+              1
+            ],
+            "pre": [
+              0,
+              1,
+              0,
+              1
+            ]
+          }
+        ]
+      },
+      "pair": [
+        "put",
+        "get"
+      ],
+      "path": [
+        [
+          1,
+          0,
+          1,
+          1
+        ],
+        [
+          0,
+          1,
+          1,
+          1
+        ],
+        [
+          1,
+          0,
+          1,
+          1
+        ]
+      ],
+      "sequence": [
+        "put",
+        "get"
+      ],
+      "single": "put",
+      "states": [
+        [
+          1,
+          0,
+          1,
+          1
+        ],
+        [
+          0,
+          1,
+          1,
+          1
+        ]
+      ],
+      "terminal": null,
+      "tweights": [
+        1,
+        1
+      ],
+      "weights": [
+        1,
+        1,
+        1,
+        1
+      ]
+    },
+    {
+      "ab": null,
+      "ba": null,
+      "coenabled": true,
+      "commutes": false,
+      "deadlocks": [
+        [
+          0,
+          1,
+          0
+        ]
+      ],
+      "edges": [
+        [
+          [
+            1,
+            0,
+            0
+          ],
+          "trap",
+          [
+            0,
+            1,
+            0
+          ]
+        ],
+        [
+          [
+            1,
+            0,
+            0
+          ],
+          "finish",
+          [
+            0,
+            0,
+            1
+          ]
+        ],
+        [
+          [
+            0,
+            0,
+            1
+          ],
+          "restart",
+          [
+            1,
+            0,
+            0
+          ]
+        ]
+      ],
+      "goal": [
+        0,
+        1,
+        0
+      ],
+      "goal_trace": [
+        "trap"
+      ],
+      "independent": [],
+      "lesson": "The single token is conserved even after entering the permanent trap. This is a direct counterexample to the claim that conservation guarantees deadlock freedom or liveness.",
+      "mark": [
+        1,
+        0,
+        0
+      ],
+      "net": {
+        "case_id": "trap",
+        "initial": [
+          1,
+          0,
+          0
+        ],
+        "places": [
+          "live",
+          "trap",
+          "done"
+        ],
+        "synthetic": true,
+        "transitions": [
+          {
+            "id": "trap",
+            "post": [
+              0,
+              1,
+              0
+            ],
+            "pre": [
+              1,
+              0,
+              0
+            ]
+          },
+          {
+            "id": "finish",
+            "post": [
+              0,
+              0,
+              1
+            ],
+            "pre": [
+              1,
+              0,
+              0
+            ]
+          },
+          {
+            "id": "restart",
+            "post": [
+              1,
+              0,
+              0
+            ],
+            "pre": [
+              0,
+              0,
+              1
+            ]
+          }
+        ]
+      },
+      "pair": [
+        "finish",
+        "trap"
+      ],
+      "path": [
+        [
+          1,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          1
+        ],
+        [
+          1,
+          0,
+          0
+        ]
+      ],
+      "sequence": [
+        "finish",
+        "restart"
+      ],
+      "single": "finish",
+      "states": [
+        [
+          1,
+          0,
+          0
+        ],
+        [
+          0,
+          1,
+          0
+        ],
+        [
+          0,
+          0,
+          1
+        ]
+      ],
+      "terminal": [
+        [
+          [
+            0,
+            1,
+            0
+          ]
+        ]
+      ],
+      "tweights": [
+        0,
+        1,
+        1
+      ],
+      "weights": [
+        1,
+        1,
+        1
+      ]
+    }
+  ],
+  "oracle_origin": "Hand-declared markings, transitions, paths and terminal components; direct integer formulas only. No implementation or source test was run to create expected outputs."
+}
