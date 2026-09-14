@@ -1,0 +1,8 @@
+"use strict";
+const path=require("path");
+require.extensions[".txt"]=require.extensions[".js"];
+const runtime=require(path.join(__dirname,"..","payload","x2","exact-linear-extension.txt"));
+const allowed=new Set(["rational_normalize","rational_compare","vector_add","dot_product"]);
+function run(request){if(!request||!allowed.has(request.operation))return {ok:false,error:"E_SCOPE",authority:false};return runtime.execute(request);}
+module.exports={run,operations:[...allowed]};
+if(require.main===module){let data="";process.stdin.setEncoding("utf8");process.stdin.on("data",c=>data+=c);process.stdin.on("end",()=>process.stdout.write(JSON.stringify(run(JSON.parse(data)))+"\n"));}

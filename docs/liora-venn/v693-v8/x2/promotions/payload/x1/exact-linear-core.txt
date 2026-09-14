@@ -1,0 +1,106 @@
+"use strict";
+
+const crypto = require("crypto");
+
+const protectedGates = [
+  "real_participants", "empirical_confirmation", "production_deployment", "professional_authority",
+  "legal_cultural_affected_party_authority", "Maori_authority", "complete_privacy_accessibility_security",
+  "independent_reproduction", "consciousness_personhood", "AGI_ASI", "Theory_of_Everything", "Stage_20"
+];
+
+const fields = {
+  rational_normalize: ["operation", "value"],
+  rational_compare: ["a", "b", "operation"],
+  vector_add: ["a", "b", "operation"],
+  dot_product: ["a", "b", "operation"],
+  matrix_shape: ["matrix", "operation"],
+  matrix_transpose: ["matrix", "operation"],
+  matrix_add: ["a", "b", "operation"],
+  matrix_multiply: ["a", "b", "operation"],
+  trace_exact: ["matrix", "operation"],
+  determinant_2x2: ["matrix", "operation"]
+};
+
+function stable(value) {
+  if (Array.isArray(value)) return value.map(stable);
+  if (value && typeof value === "object") return Object.fromEntries(Object.keys(value).sort().map((key) => [key, stable(value[key])]));
+  return value;
+}
+function canon(value) { return JSON.stringify(stable(value)); }
+function sha(value) { return crypto.createHash("sha256").update(Buffer.isBuffer(value) ? value : Buffer.from(String(value))).digest("hex"); }
+function abs(n) { return n < 0n ? -n : n; }
+function gcd(a, b) { a = abs(a); b = abs(b); while (b) [a, b] = [b, a % b]; return a || 1n; }
+function rat(value) {
+  const match = /^(-?\d+)(?:\/(-?\d+))?$/.exec(String(value));
+  if (!match) throw new Error("E_RATIONAL");
+  let n = BigInt(match[1]), d = match[2] === undefined ? 1n : BigInt(match[2]);
+  if (d === 0n) throw new Error("E_DENOMINATOR");
+  if (d < 0n) { n = -n; d = -d; }
+  const g = gcd(n, d);
+  return { n: n / g, d: d / g };
+}
+function ratlike(value) { return value && typeof value === "object" && typeof value.n === "bigint" ? value : rat(value); }
+function rstr(value) { const r = ratlike(value); return String(r.n) + "/" + String(r.d); }
+function radd(a, b) { a = ratlike(a); b = ratlike(b); return rat((a.n * b.d + b.n * a.d) + "/" + (a.d * b.d)); }
+function rsub(a, b) { a = ratlike(a); b = ratlike(b); return rat((a.n * b.d - b.n * a.d) + "/" + (a.d * b.d)); }
+function rmul(a, b) { a = ratlike(a); b = ratlike(b); return rat((a.n * b.n) + "/" + (a.d * b.d)); }
+function matrix(values) { return values.map((row) => row.map(rat)); }
+function matrixStrings(values) { return values.map((row) => row.map(rstr)); }
+function shape(values) {
+  if (!Array.isArray(values) || values.length === 0 || !values.every(Array.isArray)) throw new Error("E_MATRIX");
+  const cols = values[0].length;
+  if (!cols || !values.every((row) => row.length === cols)) throw new Error("E_MATRIX");
+  return [values.length, cols];
+}
+function transpose(values) { const [rows, cols] = shape(values); return Array.from({ length: cols }, (_, c) => Array.from({ length: rows }, (_, r) => values[r][c])); }
+function matrixAdd(a, b) {
+  const sa = shape(a), sb = shape(b);
+  if (sa[0] !== sb[0] || sa[1] !== sb[1]) throw new Error("E_SHAPE");
+  const A = matrix(a), B = matrix(b);
+  return A.map((row, i) => row.map((value, j) => rstr(radd(value, B[i][j]))));
+}
+function matrixMultiply(a, b) {
+  const sa = shape(a), sb = shape(b);
+  if (sa[1] !== sb[0]) throw new Error("E_SHAPE");
+  const A = matrix(a), B = matrix(b);
+  return Array.from({ length: sa[0] }, (_, i) => Array.from({ length: sb[1] }, (_, j) => {
+    let total = rat("0");
+    for (let k = 0; k < sa[1]; k++) total = radd(total, rmul(A[i][k], B[k][j]));
+    return rstr(total);
+  }));
+}
+function determinant2(values) {
+  if (shape(values).join("x") !== "2x2") throw new Error("E_SHAPE");
+  const A = matrix(values);
+  return rsub(rmul(A[0][0], A[1][1]), rmul(A[0][1], A[1][0]));
+}
+function result(operation, value) {
+  return { ok: true, operation, outcome: "completed", evidence_class: "finite_exact_linear_algebra", value, authority: false, protected_gates: protectedGates };
+}
+function reject(error) { return { ok: false, error, authority: false }; }
+
+function execute(request) {
+  if (!request || typeof request !== "object" || Array.isArray(request)) return reject("E_RECORD");
+  if (typeof request.operation !== "string" || !Object.prototype.hasOwnProperty.call(fields, request.operation)) return reject("E_OPERATION");
+  const expected = fields[request.operation].slice().sort();
+  const observed = Object.keys(request).slice().sort();
+  if (canon(expected) !== canon(observed)) return reject("E_FIELDS");
+  try {
+    const op = request.operation;
+    if (op === "rational_normalize") return result(op, { canonical: rstr(request.value) });
+    if (op === "rational_compare") { const a = rat(request.a), b = rat(request.b), delta = a.n * b.d - b.n * a.d; return result(op, { relation: delta < 0n ? -1 : delta > 0n ? 1 : 0 }); }
+    if (op === "vector_add") { if (!Array.isArray(request.a) || !Array.isArray(request.b) || request.a.length !== request.b.length) throw new Error("E_VECTOR"); return result(op, { vector: request.a.map((v, i) => rstr(radd(v, request.b[i]))) }); }
+    if (op === "dot_product") { if (!Array.isArray(request.a) || !Array.isArray(request.b) || request.a.length !== request.b.length) throw new Error("E_VECTOR"); let total = rat("0"); request.a.forEach((v, i) => { total = radd(total, rmul(v, request.b[i])); }); return result(op, { scalar: rstr(total) }); }
+    if (op === "matrix_shape") { const s = shape(request.matrix); return result(op, { rows: s[0], columns: s[1], square: s[0] === s[1] }); }
+    if (op === "matrix_transpose") return result(op, { matrix: matrixStrings(transpose(request.matrix)) });
+    if (op === "matrix_add") return result(op, { matrix: matrixAdd(request.a, request.b) });
+    if (op === "matrix_multiply") return result(op, { matrix: matrixMultiply(request.a, request.b) });
+    if (op === "trace_exact") { const A = matrix(request.matrix), s = shape(request.matrix); if (s[0] !== s[1]) throw new Error("E_SHAPE"); let total = rat("0"); for (let i = 0; i < s[0]; i++) total = radd(total, A[i][i]); return result(op, { trace: rstr(total) }); }
+    if (op === "determinant_2x2") return result(op, { determinant: rstr(determinant2(request.matrix)) });
+    return reject("E_OPERATION");
+  } catch (error) {
+    return reject(error && /^E_/.test(error.message) ? error.message : "E_RECORD");
+  }
+}
+
+module.exports = { canon, execute, fields: Object.keys(fields), protectedGates, sha };

@@ -1,0 +1,68 @@
+"use strict";
+
+const path = require("path");
+const crypto = require("crypto");
+const core = require(path.join(__dirname, "..", "x1", "exact-linear-core.txt"));
+
+const fields = {
+  determinant_3x3: ["matrix", "operation"],
+  solve_2x2: ["matrix", "operation", "rhs"],
+  rank_rational: ["matrix", "operation"],
+  nullspace_basis: ["matrix", "operation"],
+  characteristic_2x2: ["matrix", "operation"],
+  cayley_hamilton_2x2: ["matrix", "operation"],
+  representation_equivalence: ["a", "b", "operation"],
+  matrix_correction_lineage: ["after", "before", "operation", "record_id"],
+  external_linear_evidence_gap: ["missing", "operation"],
+  linear_authority_reservation: ["competent_authority_present", "domain", "operation"]
+};
+
+function stable(value) { if (Array.isArray(value)) return value.map(stable); if (value && typeof value === "object") return Object.fromEntries(Object.keys(value).sort().map((key) => [key, stable(value[key])])); return value; }
+function canon(value) { return JSON.stringify(stable(value)); }
+function sha(value) { return crypto.createHash("sha256").update(Buffer.isBuffer(value) ? value : Buffer.from(String(value))).digest("hex"); }
+function abs(n) { return n < 0n ? -n : n; }
+function gcd(a, b) { a = abs(a); b = abs(b); while (b) [a, b] = [b, a % b]; return a || 1n; }
+function rat(value) { const match = /^(-?\d+)(?:\/(-?\d+))?$/.exec(String(value)); if (!match) throw new Error("E_RATIONAL"); let n = BigInt(match[1]), d = match[2] === undefined ? 1n : BigInt(match[2]); if (d === 0n) throw new Error("E_DENOMINATOR"); if (d < 0n) { n = -n; d = -d; } const g = gcd(n, d); return { n: n / g, d: d / g }; }
+function ratlike(value) { return value && typeof value === "object" && typeof value.n === "bigint" ? value : rat(value); }
+function rstr(value) { const r = ratlike(value); return String(r.n) + "/" + String(r.d); }
+function radd(a, b) { a = ratlike(a); b = ratlike(b); return rat((a.n * b.d + b.n * a.d) + "/" + (a.d * b.d)); }
+function rsub(a, b) { a = ratlike(a); b = ratlike(b); return rat((a.n * b.d - b.n * a.d) + "/" + (a.d * b.d)); }
+function rmul(a, b) { a = ratlike(a); b = ratlike(b); return rat((a.n * b.n) + "/" + (a.d * b.d)); }
+function rdiv(a, b) { a = ratlike(a); b = ratlike(b); if (b.n === 0n) throw new Error("E_DIVIDE"); return rat((a.n * b.d) + "/" + (a.d * b.n)); }
+function rneg(a) { a = ratlike(a); return { n: -a.n, d: a.d }; }
+function rzero(a) { return ratlike(a).n === 0n; }
+function matrix(values) { return values.map((row) => row.map(rat)); }
+function matrixStrings(values) { return values.map((row) => row.map(rstr)); }
+function shape(values) { if (!Array.isArray(values) || values.length === 0 || !values.every(Array.isArray)) throw new Error("E_MATRIX"); const cols = values[0].length; if (!cols || !values.every((row) => row.length === cols)) throw new Error("E_MATRIX"); return [values.length, cols]; }
+function matrixMultiply(a, b) { const sa = shape(a), sb = shape(b); if (sa[1] !== sb[0]) throw new Error("E_SHAPE"); const A = matrix(a), B = matrix(b); return Array.from({ length: sa[0] }, (_, i) => Array.from({ length: sb[1] }, (_, j) => { let total = rat("0"); for (let k = 0; k < sa[1]; k++) total = radd(total, rmul(A[i][k], B[k][j])); return rstr(total); })); }
+function determinant2(values) { if (shape(values).join("x") !== "2x2") throw new Error("E_SHAPE"); const A = matrix(values); return rsub(rmul(A[0][0], A[1][1]), rmul(A[0][1], A[1][0])); }
+function determinant3(values) { if (shape(values).join("x") !== "3x3") throw new Error("E_SHAPE"); const A = matrix(values); const p1 = rmul(A[0][0], rsub(rmul(A[1][1], A[2][2]), rmul(A[1][2], A[2][1]))); const p2 = rmul(A[0][1], rsub(rmul(A[1][0], A[2][2]), rmul(A[1][2], A[2][0]))); const p3 = rmul(A[0][2], rsub(rmul(A[1][0], A[2][1]), rmul(A[1][1], A[2][0]))); return radd(rsub(p1, p2), p3); }
+function rref(values) { const A = matrix(values), [rows, cols] = shape(values); let row = 0; const pivots = []; for (let col = 0; col < cols && row < rows; col++) { let pivot = row; while (pivot < rows && rzero(A[pivot][col])) pivot++; if (pivot === rows) continue; [A[row], A[pivot]] = [A[pivot], A[row]]; const scale = A[row][col]; A[row] = A[row].map((v) => rdiv(v, scale)); for (let r = 0; r < rows; r++) if (r !== row && !rzero(A[r][col])) { const factor = A[r][col]; A[r] = A[r].map((v, c) => rsub(v, rmul(factor, A[row][c]))); } pivots.push(col); row++; } return { matrix: A, pivots }; }
+function nullBasis(values) { const [, cols] = shape(values), reduced = rref(values), free = Array.from({ length: cols }, (_, i) => i).filter((i) => !reduced.pivots.includes(i)); return free.map((f) => { const vector = Array.from({ length: cols }, () => rat("0")); vector[f] = rat("1"); for (let r = 0; r < reduced.pivots.length; r++) vector[reduced.pivots[r]] = rneg(reduced.matrix[r][f]); return vector.map(rstr); }); }
+function result(operation, value, outcome = "completed") { return { ok: true, operation, outcome, evidence_class: "finite_exact_linear_algebra", value, authority: false, protected_gates: core.protectedGates }; }
+function reject(error) { return { ok: false, error, authority: false }; }
+
+function execute(request) {
+  if (request && typeof request === "object" && !Array.isArray(request) && core.fields.includes(request.operation)) return core.execute(request);
+  if (!request || typeof request !== "object" || Array.isArray(request)) return reject("E_RECORD");
+  if (typeof request.operation !== "string" || !Object.prototype.hasOwnProperty.call(fields, request.operation)) return reject("E_OPERATION");
+  if (canon(Object.keys(request).sort()) !== canon(fields[request.operation].slice().sort())) return reject("E_FIELDS");
+  try {
+    const op = request.operation;
+    if (op === "determinant_3x3") return result(op, { determinant: rstr(determinant3(request.matrix)) });
+    if (op === "solve_2x2") { const A = matrix(request.matrix), b = request.rhs.map(rat), d = determinant2(request.matrix); if (rzero(d)) throw new Error("E_SINGULAR"); const x = rdiv(rsub(rmul(b[0], A[1][1]), rmul(A[0][1], b[1])), d); const y = rdiv(rsub(rmul(A[0][0], b[1]), rmul(b[0], A[1][0])), d); return result(op, { unique: true, solution: [rstr(x), rstr(y)] }); }
+    if (op === "rank_rational") { const reduced = rref(request.matrix); return result(op, { rank: reduced.pivots.length, pivot_columns: reduced.pivots }); }
+    if (op === "nullspace_basis") { const basis = nullBasis(request.matrix); return result(op, { nullity: basis.length, basis }); }
+    if (op === "characteristic_2x2") { const A = matrix(request.matrix), trace = radd(A[0][0], A[1][1]), determinant = determinant2(request.matrix); return result(op, { variable: "lambda", coefficients: ["1/1", rstr(rneg(trace)), rstr(determinant)] }); }
+    if (op === "cayley_hamilton_2x2") { const A = matrixStrings(matrix(request.matrix)), A2 = matrixMultiply(A, A), Ar = matrix(A), trace = radd(Ar[0][0], Ar[1][1]), determinant = determinant2(A); const residual = A2.map((row, i) => row.map((value, j) => rstr(radd(radd(value, rmul(rneg(trace), A[i][j])), i === j ? determinant : rat("0"))))); return result(op, { residual, zero: residual.every((row) => row.every((value) => value === "0/1")) }); }
+    if (op === "representation_equivalence") { const a = matrixStrings(matrix(request.a)), b = matrixStrings(matrix(request.b)); return result(op, { equivalent: canon(a) === canon(b), canonical: a }, "represented"); }
+    if (op === "matrix_correction_lineage") { const before = matrixStrings(matrix(request.before)), after = matrixStrings(matrix(request.after)), changed = []; if (shape(before).join("x") !== shape(after).join("x")) throw new Error("E_SHAPE"); before.forEach((row, i) => row.forEach((value, j) => { if (value !== after[i][j]) changed.push([i, j]); })); return result(op, { record_id: request.record_id, prior_retained: true, changed_cells: changed, before_sha256: sha(canon(before)), after_sha256: sha(canon(after)) }, "represented"); }
+    if (op === "external_linear_evidence_gap") { if (!Array.isArray(request.missing) || request.missing.length === 0) throw new Error("E_RECORD"); return result(op, { closed: false, missing: request.missing.slice() }, "open_gap"); }
+    if (op === "linear_authority_reservation") { if (request.competent_authority_present !== false) throw new Error("E_AUTHORITY_STATE"); return result(op, { domain: request.domain, authorized: false, reason: "competent and affected authority absent" }, "exact_gate"); }
+    return reject("E_OPERATION");
+  } catch (error) {
+    return reject(error && /^E_/.test(error.message) ? error.message : "E_RECORD");
+  }
+}
+
+module.exports = { canon, execute, fields: core.fields.concat(Object.keys(fields)), protectedGates: core.protectedGates, sha };

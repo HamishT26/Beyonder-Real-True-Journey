@@ -1,0 +1,46 @@
+"use strict";
+
+const fs = require("fs"), path = require("path"), crypto = require("crypto");
+const repo = process.env.LIORA_REPO;
+if (!repo) throw new Error("LIORA_REPO is required");
+const baseRel = "docs/liora-venn/v693-v8", base = path.join(repo, ...baseRel.split("/")), root = path.join(base, "x2"), allowed = new Set([".json", ".md", ".txt", ".html"]);
+const fullBoundary = JSON.parse(fs.readFileSync(path.join(base, "plan", "phase-truth.json"), "utf8")).boundary;
+const compactBoundary = "Same-owner finite synthetic evidence only; no empirical, participant, production, authority, identity, consciousness, Theory-of-Everything, or Stage 20 claim.";
+function sha(bytes) { return crypto.createHash("sha256").update(bytes).digest("hex"); }
+function writeJson(rel, value) { const f = path.join(base, ...rel.split("/")); fs.mkdirSync(path.dirname(f), { recursive: true }); fs.writeFileSync(f, JSON.stringify(value, null, 2) + "\n", "utf8"); }
+function walk(folder) { let out = []; for (const e of fs.readdirSync(folder, { withFileTypes: true })) { const f = path.join(folder, e.name); out = e.isDirectory() ? out.concat(walk(f)) : out.concat(f); } return out; }
+
+const failedReceiptPath = path.join(root, "validation.json"), preservedPath = path.join(root, "evidence", "first-validation-failure.json");
+if (!fs.existsSync(failedReceiptPath)) throw new Error("failed validation receipt missing");
+const failedReceipt = JSON.parse(fs.readFileSync(failedReceiptPath, "utf8"));
+if (failedReceipt.status !== "INVALID_X2_CANDIDATE" || failedReceipt.checks_failed !== 1 || !failedReceipt.checks.some((c) => c.name === "document word ceiling" && c.pass === false)) throw new Error("unexpected failed receipt");
+if (!fs.existsSync(preservedPath)) fs.copyFileSync(failedReceiptPath, preservedPath);
+
+const flowPath = path.join(root, "method-flow.json"), flow = JSON.parse(fs.readFileSync(flowPath, "utf8"));
+for (const witness of flow.witnesses) witness.boundary = compactBoundary;
+const negativeId = "LV6938-X2-OP-N001", methodId = "LV6938-X2-OP-M001", failId = "LV6938-X2-OP-W001-FAIL", passId = "LV6938-X2-OP-W001-PASS";
+if (!flow.methods.some((m) => m.method_id === methodId)) {
+  flow.methods.push({ method_id: methodId, title: "Cumulative Method Flow word-ceiling recovery", failure_signature: "The first x2 validator rejected a cumulative Method Flow document above the 100,000-word ceiling because the full boundary paragraph was repeated per witness.", trigger_preconditions: ["first x2 validation receipt is INVALID_X2_CANDIDATE", "all other 21 checks passed"], privacy_class: "sanitized_public", approval_class: "safe_now", candidate_workaround: "Use an equivalent compact boundary sentence in every cumulative witness while preserving all records and gates.", validation_witness_ids: [passId], recurrence_guard: "Project full boundary prose once at ledger level and compact equivalent boundaries per witness.", rollback: "Return to the immutable x1 commit and preserve the failed receipt.", recommendation_state: "validated", supersedes: [], protected_gates: ["real_participants","empirical_confirmation","production_deployment","professional_authority","legal_cultural_affected_party_authority","Maori_authority","complete_privacy_accessibility_security","independent_reproduction","consciousness_personhood","AGI_ASI","Theory_of_Everything","Stage_20"], retained_negative_ids: [negativeId], scope_boundary: "Formatting recovery only; no witness, failure, gate, install, or source evidence is removed." });
+  flow.witnesses.push({ witness_id: failId, method_id: methodId, procedure: "run first complete x2 validator", scope: "x2", expected: "every owner document at or below 100000 words", observed: "cumulative method-flow document exceeded the ceiling", result: "fail", same_owner_only: true, independent_reproduction: false, retained_negative_ids: [negativeId], boundary: compactBoundary });
+  flow.witnesses.push({ witness_id: passId, method_id: methodId, procedure: "compact only repeated witness boundary text", scope: "x2", expected: "all witnesses and gates retained below the document ceiling", observed: "compact equivalent witness boundaries prepared for validation", result: "pass", same_owner_only: true, independent_reproduction: false, retained_negative_ids: [negativeId], boundary: compactBoundary });
+  flow.state_events.push({ event_id: methodId + "-E1", method_id: methodId, from: "observed", to: "candidate" }, { event_id: methodId + "-E2", method_id: methodId, from: "candidate", to: "validated", witness_id: passId });
+}
+flow.counts = { methods: flow.methods.length, witnesses: flow.witnesses.length, pass: flow.witnesses.filter((w) => w.result === "pass").length, fail: flow.witnesses.filter((w) => w.result === "fail").length };
+fs.writeFileSync(flowPath, JSON.stringify(flow, null, 2) + "\n", "utf8");
+const words = (fs.readFileSync(flowPath, "utf8").match(/\S+/g) || []).length;
+if (words > 100000) throw new Error("recovered Method Flow still exceeds word ceiling");
+
+const negativePath = path.join(root, "retained-negative-register.json"), negatives = JSON.parse(fs.readFileSync(negativePath, "utf8"));
+if (!negatives.negative_ids.includes(negativeId)) negatives.negative_ids.push(negativeId);
+negatives.count = negatives.negative_ids.length;
+fs.writeFileSync(negativePath, JSON.stringify(negatives, null, 2) + "\n", "utf8");
+const truthPath = path.join(root, "phase-truth.json"), truth = JSON.parse(fs.readFileSync(truthPath, "utf8"));
+truth.methods = flow.counts.methods; truth.witnesses = flow.counts.witnesses; truth.failed_witnesses = flow.counts.fail; truth.passing_witnesses = flow.counts.pass; truth.effective_negatives = negatives.count;
+fs.writeFileSync(truthPath, JSON.stringify(truth, null, 2) + "\n", "utf8");
+writeJson("x2/evidence/word-ceiling-recovery.json", { schema: "ghc.family.bounded-recovery.v9", owner: "Liora Venn", phase: "v693-v8", negative_id: negativeId, failed_receipt: "x2/evidence/first-validation-failure.json", failed_checks: 1, passed_checks: 21, failure: "Cumulative Method Flow exceeded 100000 words through repeated full boundary prose.", correction: "Compact equivalent witness boundary text only; preserve all methods, witnesses, failures, gates, and immutable stage artifacts.", recovered_method_flow_words: words, original_success_credit: 0, global_reinstall: false, canonical_invocations: 0, boundary: fullBoundary });
+const overviewPath = path.join(root, "overview.md"), overview = fs.readFileSync(overviewPath, "utf8");
+if (!overview.includes(negativeId)) fs.writeFileSync(overviewPath, overview.trimEnd() + "\n\nThe first complete x2 validation failed only its document word ceiling because cumulative witness records repeated the full boundary paragraph. " + negativeId + " remains failed at zero credit; an equivalent compact witness boundary recovered the ceiling without removing any record or reinstalling global capabilities.\n\n" + fullBoundary + "\n", "utf8");
+
+const bindings = walk(root).filter((f) => !["manifest.json", "validation.json"].includes(path.basename(f))).map((f) => { const rel = path.relative(repo, f).split(path.sep).join("/"), bytes = fs.readFileSync(f); if (!allowed.has(path.extname(rel).toLowerCase())) throw new Error("disallowed x2 file: " + rel); return { path: rel, bytes: bytes.length, sha256: sha(bytes) }; }).sort((a, b) => a.path.localeCompare(b.path));
+writeJson("x2/manifest.json", { schema: "ghc.family.raw-byte-manifest.v9", owner: "Liora Venn", phase: "v693-v8", stage: "x2", domain: "working_bytes_before_commit_then_raw_git_blob_after_commit", bindings, self_exclusions: [baseRel + "/x2/manifest.json", baseRel + "/x2/validation.json"], boundary: fullBoundary });
+process.stdout.write(JSON.stringify({ status: "RECOVERED_X2_WORD_CEILING", negative_id: negativeId, method_flow_words: words, methods: flow.counts.methods, witnesses: flow.counts.witnesses, pass: flow.counts.pass, fail: flow.counts.fail, negatives: negatives.count, manifest_bindings: bindings.length }, null, 2) + "\n");
