@@ -1,0 +1,44 @@
+"use strict";
+const fs=require("node:fs"),path=require("node:path"),crypto=require("node:crypto");
+const [ownerRoot,bankRoot]=process.argv.slice(2);
+if(!ownerRoot||!bankRoot)throw new Error("explicit owner and bank roots required");
+const base=path.join(ownerRoot,"docs","tamar-vey","v694-v2","x2"),retained=path.join(base,"retained");
+const validationPath=path.join(base,"validation.json"),manifestPath=path.join(base,"manifest.json");
+const validation=JSON.parse(fs.readFileSync(validationPath,"utf8"));
+if(validation.valid!==false||validation.checks_failed!==1||!validation.checks.some(row=>row.name==="negative bijection"&&row.pass===false))throw new Error("unexpected failed validation domain");
+const ledgerPath=path.join(base,"method-flow.json"),negativePath=path.join(base,"retained-negative-register.json"),truthPath=path.join(base,"phase-truth.json"),overlayPath=path.join(base,"retained","operational-failures.json"),bankOverlayPath=path.join(bankRoot,"x2-operational-failures.json");
+const originalLedger=JSON.parse(fs.readFileSync(ledgerPath,"utf8")),originalNegatives=JSON.parse(fs.readFileSync(negativePath,"utf8")),truth=JSON.parse(fs.readFileSync(truthPath,"utf8")),oldOverlay=JSON.parse(fs.readFileSync(overlayPath,"utf8")),overlay=JSON.parse(fs.readFileSync(bankOverlayPath,"utf8"));
+if(oldOverlay.failures.length!==4||overlay.failures.length!==6||overlay.failures.some(row=>!row.recovery_result||row.recovery_result.passed!==true))throw new Error("unexpected operational overlay domain");
+const ledger=JSON.parse(JSON.stringify(originalLedger)),negatives=JSON.parse(JSON.stringify(originalNegatives));
+function addWitness(method,id,result,procedure,observed,negativeIds=[]){ledger.witnesses.push({witness_id:id,method_id:method.method_id,procedure,scope:"docs/tamar-vey/v694-v2/x2/retained",expected:"The failed operational attempt remains visible and its smallest bounded recovery is separately inspectable.",observed,result,same_owner_only:true,independent_reproduction:false,retained_negative_ids:negativeIds,boundary:"Same-owner finite synthetic software only; no empirical, production, professional, legal, cultural, affected-party, Maori-authority, consciousness/personhood, AGI/ASI, Theory-of-Everything, canon or Stage 20 credit."});method.validation_witness_ids.push(id);}
+for(const failure of overlay.failures){
+  if(negatives.records.some(row=>row.negative_id===failure.negative_id))continue;
+  const method=JSON.parse(JSON.stringify(ledger.methods[0]));
+  method.method_id="TV6942-X2-M"+String(ledger.methods.length+1).padStart(3,"0");
+  method.title="Retained x2 operational recovery "+failure.negative_id;
+  method.validation_witness_ids=[];
+  method.retained_negative_ids=[failure.negative_id];
+  method.recommendation_state="preferred";
+  method.supersedes=[];
+  ledger.methods.push(method);
+  negatives.records.push({negative_id:failure.negative_id,subject:{failed_builder_sha256:failure.failed_builder_sha256||null},failure:failure.failure,subject_success_credit:0,source:"docs/tamar-vey/v694-v2/x2/retained/operational-failures.json"});
+  addWitness(method,failure.negative_id+"-FAILED","fail","failed_operational_attempt",failure.failure,[failure.negative_id]);
+  addWitness(method,failure.negative_id+"-RECOVERY","pass","bounded_operational_recovery",failure.recovery_result);
+  ledger.state_events.push({method_id:method.method_id,from:"candidate",to:"validated",note:"Failed attempt retained and bounded recovery passed."},{method_id:method.method_id,from:"validated",to:"preferred",note:"Select only the bounded recovered method while retaining the original failure."});
+  ledger.recommendations.push({method_id:method.method_id,recommendation:method.recurrence_guard,delivered:false});
+}
+ledger.counts={methods:ledger.methods.length,witnesses:ledger.witnesses.length,state_events:ledger.state_events.length,recommendations:ledger.recommendations.length,states:{observed:0,candidate:0,validated:0,preferred:ledger.methods.length,superseded:0,deprecated:0},witness_results:{pass:ledger.witnesses.filter(row=>row.result==="pass").length,fail:ledger.witnesses.filter(row=>row.result==="fail").length}};
+negatives.count=negatives.records.length;
+truth.methods=ledger.counts.methods;truth.witnesses=ledger.counts.witnesses;truth.failed_witnesses=ledger.counts.witness_results.fail;truth.passing_witnesses=ledger.counts.witness_results.pass;truth.effective_negatives=negatives.count;
+const expected=160+overlay.failures.length,unique=new Set(negatives.records.map(row=>row.negative_id)).size,unlinked=negatives.records.filter(row=>!ledger.witnesses.some(w=>w.result==="fail"&&w.retained_negative_ids.includes(row.negative_id))).map(row=>row.negative_id),preferred=ledger.methods.every(method=>method.recommendation_state==="preferred"&&ledger.witnesses.some(row=>row.method_id===method.method_id&&row.result==="pass"));
+if(negatives.records.length!==expected||unique!==expected||unlinked.length||!preferred)throw new Error("repaired accounting predicate failed before write");
+fs.mkdirSync(retained,{recursive:true});
+const moves=[[validationPath,path.join(retained,"validation-attempt-1.json")],[manifestPath,path.join(retained,"manifest-attempt-1.json")]],copies=[[ledgerPath,path.join(retained,"method-flow-before-validation-repair.json")],[negativePath,path.join(retained,"retained-negative-register-before-validation-repair.json")],[truthPath,path.join(retained,"phase-truth-before-validation-repair.json")],[overlayPath,path.join(retained,"operational-failures-before-validation-repair.json")]];
+for(const [,destination] of [...moves,...copies])if(fs.existsSync(destination))throw new Error("retained destination exists "+path.basename(destination));
+for(const [source,destination] of copies)fs.copyFileSync(source,destination,fs.constants.COPYFILE_EXCL);
+for(const [source,destination] of moves)fs.renameSync(source,destination);
+const save=(file,value)=>fs.writeFileSync(file,JSON.stringify(value,null,2)+"\n","utf8");
+save(ledgerPath,ledger);save(negativePath,negatives);save(truthPath,truth);save(overlayPath,overlay);
+const sha=file=>crypto.createHash("sha256").update(fs.readFileSync(file)).digest("hex");
+save(path.join(retained,"validation-accounting-recovery.json"),{schema:"ghc.family.validation-accounting-recovery.v1",owner:"Tamar Vey",phase:"v694-v2",failed_validation_retained:"docs/tamar-vey/v694-v2/x2/retained/validation-attempt-1.json",failed_manifest_retained:"docs/tamar-vey/v694-v2/x2/retained/manifest-attempt-1.json",failed_validation_sha256:sha(path.join(retained,"validation-attempt-1.json")),failed_checks:1,passed_checks:19,corrected_dependency:"unique negative cardinality now uses the dynamic expected count including the operational overlay",operational_failures:overlay.failures.length,negative_records:negatives.records.length,unique_negative_ids:unique,unlinked_negative_ids:unlinked,methods:ledger.counts.methods,witnesses:ledger.counts.witnesses,failed_witnesses:ledger.counts.witness_results.fail,passing_witnesses:ledger.counts.witness_results.pass,isolated_negative_bijection_pass:true,preferred_method_predicate_pass:preferred,full_validation_rerun_pending:true,subject_success_credit:0,boundary:"The first failed validation remains zero-credit evidence. This bounded accounting repair does not replay or promote it; NOT_READY_FOR_STAGE_20."});
+process.stdout.write(JSON.stringify({status:"PASS",retained_failed_validation:true,operational_failures:overlay.failures.length,negative_records:negatives.records.length,methods:ledger.counts.methods,witnesses:ledger.counts.witnesses,failed:ledger.counts.witness_results.fail,passing:ledger.counts.witness_results.pass,isolated_negative_bijection_pass:true,full_validation_rerun_pending:true})+"\n");

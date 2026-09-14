@@ -1,0 +1,67 @@
+{
+  "schema": "ghc.family.operational-failure-overlay.v1",
+  "owner": "Tamar Vey",
+  "phase": "v694-v2",
+  "session": "x2",
+  "failures": [
+    {
+      "negative_id": "TV6942-X2-OP-N001",
+      "failure": "The first global-promotion invocation stopped before destination mutation because each generated public runner used the advanced runtime for inherited x1 operations and the advanced runtime did not dispatch those operations back to the retained core; the first ext_field_profile smoke returned E_OPERATION.",
+      "failed_builder_sha256": "11c99bed8de2609f4c0f33ffe09fbf6b3eab7edc8bdec6ff2e6e0d8748e45e2a",
+      "recovery": "Retain the failed invocation, add explicit core-operation dispatch to the advanced runtime, bind each grouped operation smoke to that operation's frozen proposal request rather than one representative fixture, validate the source capability domain before any destination copy, then retry promotion once.",
+      "recovery_result": {
+        "builder_selftest_proposals": 50,
+        "builder_selftest_candidate_subjects": 100,
+        "builder_selftest_failures": 0,
+        "source_skill_validations": 5,
+        "source_operation_smokes": 40,
+        "source_scope_refusals": 5,
+        "destinations_mutated_by_recovery_preflight": false,
+        "passed": true
+      },
+      "repository_changed_at_failure": false,
+      "global_destinations_changed_at_failure": false,
+      "subject_success_credit": 0
+    },
+    {
+      "negative_id": "TV6942-X2-OP-N002",
+      "failure": "The first attempt to inspect the inherited x1 operational-failure register assumed it was under x1/evidence, so the literal-path read failed.",
+      "recovery": "Use a bounded filename search within the exact x1 owner root, then read the resolved x1/retained/operational-failures.json file directly.",
+      "recovery_result": {
+        "resolved_repository_path": "docs/tamar-vey/v694-v2/x1/retained/operational-failures.json",
+        "complete_read": true,
+        "passed": true
+      },
+      "repository_changed_at_failure": false,
+      "global_destinations_changed_at_failure": false,
+      "subject_success_credit": 0
+    },
+    {
+      "negative_id": "TV6942-X2-OP-N003",
+      "failure": "The first combined apply-patch recovery requested two long-line replacements at once; the second context did not match exactly, so the patch transaction applied nothing.",
+      "recovery": "Retain the failed patch and apply each exact long-line replacement as a separate bounded apply-patch transaction.",
+      "recovery_result": {
+        "failed_patch_applied_files": 0,
+        "separate_exact_replacements_selected": true,
+        "passed": true
+      },
+      "repository_changed_at_failure": false,
+      "global_destinations_changed_at_failure": false,
+      "subject_success_credit": 0
+    },
+    {
+      "negative_id": "TV6942-X2-OP-N004",
+      "failure": "The first exact builder-copy helper assumed TextDecoder was available inside the orchestration isolate and stopped with ReferenceError before applying any patch.",
+      "recovery": "Retain the helper failure and use the exact command output strings directly, trimming only the terminal newline before apply-patch replacement.",
+      "recovery_result": {
+        "external_and_repository_builder_byte_equal": true,
+        "replacement_lines_applied_with_apply_patch": true,
+        "passed": true
+      },
+      "repository_changed_at_failure": false,
+      "global_destinations_changed_at_failure": false,
+      "subject_success_credit": 0
+    }
+  ],
+  "boundary": "A bounded recovery never erases or promotes its failed witness. Same-owner finite synthetic software evidence only; NOT_READY_FOR_STAGE_20."
+}
