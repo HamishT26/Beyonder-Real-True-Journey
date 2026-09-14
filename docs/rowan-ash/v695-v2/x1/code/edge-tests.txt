@@ -1,0 +1,57 @@
+'use strict';
+const test=require('node:test'),assert=require('node:assert/strict'),fs=require('fs'),path=require('path');
+const E=require('./engine.txt');
+const f=JSON.parse(fs.readFileSync(path.join(__dirname,'../../plan/fixtures.json'),'utf8')).fixtures;
+const req=(i,operation,parameters={})=>({operation,net:structuredClone(f[i].net),parameters});
+test('buffer self-loop has zero incidence but still controls enabling',()=>{
+ const a=req(3,'incidence_matrix'),b=structuredClone(a);b.net.transitions[0].pre[2]++;b.net.transitions[0].post[2]++;
+ assert.deepEqual(E.execute(a).result.matrix,E.execute(b).result.matrix);
+ a.operation=b.operation='enabled_transitions';a.parameters=b.parameters={marking:[1,0,1,1]};
+ assert.deepEqual(E.execute(a).result.enabled,['put']);assert.deepEqual(E.execute(b).result.enabled,[]);
+});
+test('transition invariant does not provide a feasible ordering',()=>{
+ assert.equal(E.execute(req(0,'transition_invariant_check',{weights:[1,1]})).result.holds,true);
+ assert.throws(()=>E.execute(req(0,'firing_sequence',{marking:[1,0],sequence:['finish','start']})),/E_NOT_ENABLED/);
+});
+test('equal weighted markings need not be reachable',()=>{
+ const r=req(3,'marking_invariant_residual',{weights:[1,1,1,1],marking:[3,0,0,0]});assert.equal(E.execute(r).result.conserved,true);
+ assert.equal(E.execute(req(3,'enabled_transitions',{marking:[3,0,0,0]})).result.enabled.length,0);
+});
+test('coenabled mutex entries conflict',()=>{
+ const x=E.execute(req(2,'commutation_witness',{marking:f[2].mark,pair:['enter_a','enter_b']})).result;
+ assert.equal(x.coenabled,true);assert.equal(x.commutes,false);assert.equal(x.ab,null);assert.equal(x.ba,null);
+});
+test('fork branch operations commute in both orders',()=>{
+ const x=E.execute(req(1,'commutation_witness',{marking:f[1].mark,pair:['left','right']})).result;
+ assert.equal(x.commutes,true);assert.deepEqual(x.ab,[0,0,0,1,1,0]);
+});
+test('an empty firing sequence preserves its marking',()=>assert.deepEqual(E.execute(req(0,'firing_sequence',{marking:[1,0],sequence:[]})).result.markings,[[1,0]]));
+test('an invalid but well-typed place certificate returns false',()=>assert.equal(E.execute(req(0,'place_invariant_check',{weights:[1,0]})).result.holds,false));
+test('an invalid but well-typed transition certificate returns false',()=>assert.equal(E.execute(req(0,'transition_invariant_check',{weights:[1,0]})).result.holds,false));
+test('structural independence is sufficient and may not be coenabled',()=>{
+ assert(E.execute(req(1,'independent_transition_pairs')).result.pairs.some(x=>x[0]==='fork'&&x[1]==='join'));
+ assert.equal(E.execute(req(1,'commutation_witness',{marking:f[1].net.initial,pair:['fork','join']})).result.coenabled,false);
+});
+const invalid=[
+ ['unknown request field',r=>{r.extra=1;},'E_REQUEST_FIELDS'],['unknown net field',r=>{r.net.extra=1;},'E_NET_FIELDS'],
+ ['non-synthetic',r=>{r.net.synthetic=false;},'E_SYNTHETIC'],['duplicate place',r=>{r.net.places[1]=r.net.places[0];},'E_PLACES'],
+ ['boolean token',r=>{r.net.initial[0]=true;},'E_INITIAL'],['fractional token',r=>{r.net.initial[0]=0.5;},'E_INITIAL'],
+ ['negative token',r=>{r.net.initial[0]=-1;},'E_INITIAL'],['token limit',r=>{r.net.initial[0]=65;},'E_INITIAL'],
+ ['fractional arc',r=>{r.net.transitions[0].pre[0]=0.5;},'E_ARC'],['duplicate transition',r=>{r.net.transitions[1].id=r.net.transitions[0].id;},'E_TRANSITION_DUPLICATE'],
+ ['unknown transition field',r=>{r.net.transitions[0].priority=1;},'E_TRANSITION_FIELDS'],['parameters null',r=>{r.parameters=null;},'E_PARAMETERS'],
+ ['unknown parameter field',r=>{r.parameters.extra=1;},'E_PARAMETER_FIELDS'],['unknown operation',r=>{r.operation='deployment';},'E_OPERATION']
+];
+for(const [title,mutate,error] of invalid)test(title+' is refused',()=>{const r=req(0,'net_structure');mutate(r);assert.throws(()=>E.execute(r),new RegExp(error));});
+test('zero weight certificate is refused',()=>assert.throws(()=>E.execute(req(0,'place_invariant_check',{weights:[0,0]})),/E_WEIGHTS/));
+test('unknown action is refused',()=>assert.throws(()=>E.execute(req(0,'single_firing',{marking:[1,0],transition:'missing'})),/E_TRANSITION_UNKNOWN/));
+test('runtime token growth refuses overflow instead of wrapping',()=>{
+ const r=req(0,'single_firing',{marking:[64,0],transition:'grow'});r.net.transitions=[{id:'grow',pre:[0,0],post:[1,0]}];assert.throws(()=>E.execute(r),/E_TOKEN_LIMIT/);
+});
+test('all 90 finite enabled transitions preserve their supplied invariant',()=>{
+ let checked=0;
+ for(const example of f)for(let scale=1;scale<=5;scale++)for(const edge of example.edges){
+  const m=edge[0].map(x=>x*scale),t=E.byId(example.net,edge[1]);
+  assert(E.enabled(m,t));const out=E.fire(m,t);assert.equal(E.dot(example.weights,m),E.dot(example.weights,out));checked++;
+ }
+ assert.equal(checked,90);
+});

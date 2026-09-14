@@ -1,0 +1,4 @@
+'use strict';
+const fs=require('fs'),E=require('../code/engine.txt');
+const allowed=["firing_sequence", "place_invariant_check"];
+try{const raw=process.argv[2]??fs.readFileSync(0,'utf8');if(Buffer.byteLength(raw)>131072)throw new Error('E_INPUT_BYTES');const r=JSON.parse(raw);if(!allowed.includes(r.operation))throw new Error('E_WRAPPER_OPERATION');console.log(JSON.stringify(E.execute(r)));}catch(e){console.log(JSON.stringify({accepted:false,error:e.message,subject_success_credit:0}));process.exitCode=2;}
