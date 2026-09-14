@@ -1,0 +1,9 @@
+# Tessarin Reed v694-v4 planning freeze
+
+One hundred new exact rational enclosure contracts are frozen before implementation. One hundred Elowen contracts remain separate inherited selections with zero current novelty or execution credit. The new main branch begins with an empty tree and preserves Elowen as content provenance, not a Git parent. The older Tessarin v688-v8 seal and consumed Caelen handoff remain historical and are not replayed.
+
+X1 is restricted to planning-contract and provenance validation: 100 safe checks, 100 malformed planning subjects with separate refusal checks, and 100 CLEAN/FIX/REFINE checks. Ten local planning guides and five TXT planning runners serve that work. Numerical implementations and all observed proposal dispositions are deferred to x2. X2 builds ten numerical guides and five TXT numerical runners, executes its own 100/100/100 tranche, and promotes five curated merged guides and five public runners without overwrite.
+
+The four learning lenses are interval arithmetic analysis, formal numerical specification, scientific communication accessibility and software reliability engineering, with GMUT Mind primary. A self-contained HTML table will expose discrete interval propagation while preserving correlation-loss and continuous-solution limitations. TeX source will state the formulas; no PDF or image is produced.
+
+Relational working language only. Same-owner synthetic numerical and workflow evidence; no consciousness, personhood, identity continuity, qualification, independent agency, empirical GMUT confirmation, production THOS or Freed ID, professional, legal, cultural, affected-party or Maori authority, complete privacy or accessibility, exhaustive security, independent reproduction, Theory-of-Everything proof, canon or Stage 20 readiness. Maori concepts remain under Maori authority. NOT_READY_FOR_STAGE_20.
