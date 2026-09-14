@@ -1,0 +1,276 @@
+{
+  "count": 5,
+  "fixtures": [
+    {
+      "case_id": "toggle",
+      "guard_atom": "continuable",
+      "initial": "off",
+      "labels": {
+        "off": [
+          "continuable",
+          "idle"
+        ],
+        "on": [
+          "active",
+          "goal"
+        ]
+      },
+      "states": [
+        "off",
+        "on"
+      ],
+      "synthetic": true,
+      "target_atom": "goal",
+      "transitions": [
+        [
+          "off",
+          "on"
+        ],
+        [
+          "on",
+          "off"
+        ]
+      ]
+    },
+    {
+      "case_id": "request-grant",
+      "guard_atom": "continuable",
+      "initial": "idle",
+      "labels": {
+        "denied": [
+          "goal",
+          "resolved"
+        ],
+        "granted": [
+          "goal",
+          "resolved"
+        ],
+        "idle": [
+          "continuable",
+          "idle"
+        ],
+        "pending": [
+          "continuable",
+          "pending"
+        ]
+      },
+      "states": [
+        "idle",
+        "pending",
+        "granted",
+        "denied"
+      ],
+      "synthetic": true,
+      "target_atom": "goal",
+      "transitions": [
+        [
+          "idle",
+          "pending"
+        ],
+        [
+          "pending",
+          "granted"
+        ],
+        [
+          "pending",
+          "denied"
+        ],
+        [
+          "granted",
+          "idle"
+        ],
+        [
+          "denied",
+          "idle"
+        ]
+      ]
+    },
+    {
+      "case_id": "degraded-recovery",
+      "guard_atom": "continuable",
+      "initial": "healthy",
+      "labels": {
+        "degraded": [
+          "continuable",
+          "fault"
+        ],
+        "healthy": [
+          "goal",
+          "healthy"
+        ],
+        "recovering": [
+          "continuable",
+          "recovery"
+        ]
+      },
+      "states": [
+        "healthy",
+        "degraded",
+        "recovering"
+      ],
+      "synthetic": true,
+      "target_atom": "goal",
+      "transitions": [
+        [
+          "healthy",
+          "healthy"
+        ],
+        [
+          "healthy",
+          "degraded"
+        ],
+        [
+          "degraded",
+          "degraded"
+        ],
+        [
+          "degraded",
+          "recovering"
+        ],
+        [
+          "recovering",
+          "healthy"
+        ],
+        [
+          "recovering",
+          "degraded"
+        ]
+      ]
+    },
+    {
+      "case_id": "fork-join",
+      "guard_atom": "continuable",
+      "initial": "start",
+      "labels": {
+        "done": [
+          "done",
+          "goal"
+        ],
+        "join": [
+          "continuable",
+          "join"
+        ],
+        "left": [
+          "branch",
+          "continuable"
+        ],
+        "right": [
+          "branch",
+          "continuable"
+        ],
+        "start": [
+          "continuable",
+          "start"
+        ]
+      },
+      "states": [
+        "start",
+        "left",
+        "right",
+        "join",
+        "done"
+      ],
+      "synthetic": true,
+      "target_atom": "goal",
+      "transitions": [
+        [
+          "start",
+          "left"
+        ],
+        [
+          "start",
+          "right"
+        ],
+        [
+          "left",
+          "join"
+        ],
+        [
+          "right",
+          "join"
+        ],
+        [
+          "join",
+          "done"
+        ],
+        [
+          "done",
+          "done"
+        ]
+      ]
+    },
+    {
+      "case_id": "appeal-loop",
+      "guard_atom": "continuable",
+      "initial": "filed",
+      "labels": {
+        "accepted": [
+          "continuable",
+          "resolved"
+        ],
+        "appeal": [
+          "appeal",
+          "continuable"
+        ],
+        "closed": [
+          "closed",
+          "goal"
+        ],
+        "filed": [
+          "continuable",
+          "filed"
+        ],
+        "rejected": [
+          "continuable",
+          "rejected"
+        ],
+        "review": [
+          "continuable",
+          "review"
+        ]
+      },
+      "states": [
+        "filed",
+        "review",
+        "accepted",
+        "rejected",
+        "appeal",
+        "closed"
+      ],
+      "synthetic": true,
+      "target_atom": "goal",
+      "transitions": [
+        [
+          "filed",
+          "review"
+        ],
+        [
+          "review",
+          "accepted"
+        ],
+        [
+          "review",
+          "rejected"
+        ],
+        [
+          "accepted",
+          "closed"
+        ],
+        [
+          "rejected",
+          "appeal"
+        ],
+        [
+          "appeal",
+          "review"
+        ],
+        [
+          "closed",
+          "closed"
+        ]
+      ]
+    }
+  ],
+  "real_rows": 0,
+  "total_transition_required": true
+}
