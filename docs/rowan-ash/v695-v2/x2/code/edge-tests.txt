@@ -1,0 +1,57 @@
+'use strict';
+const test=require('node:test'),A=require('node:assert/strict'),fs=require('fs'),path=require('path');const E=require('./engine.txt');
+const f=JSON.parse(fs.readFileSync(path.join(__dirname,'../../plan/fixtures.json'),'utf8')).fixtures;
+const req=(i,operation,parameters={})=>({operation,net:structuredClone(f[i].net),parameters});
+test('positive conservation does not imply absence of deadlock',()=>{
+ A.equal(E.execute(req(4,'place_invariant_check',{weights:[1,1,1]})).result.holds,true);
+ A.deepEqual(E.execute(req(4,'deadlock_inventory')).result.deadlocks,[[0,1,0]]);
+});
+test('a transition-cycle certificate can omit the trapping transition',()=>{
+ A.equal(E.execute(req(4,'transition_invariant_check',{weights:[0,1,1]})).result.holds,true);
+ A(E.execute(req(4,'transition_liveness')).result.transitions.every(t=>!t.live));
+});
+test('L4 liveness is explicitly separated from fairness',()=>{
+ const x=E.execute(req(2,'transition_liveness')).result;A(x.transitions.every(t=>t.live));A.equal(x.fairness_claimed,false);
+ // The feasible A-only cycle can repeat and starve B, despite B remaining possible.
+ A.deepEqual(E.execute(req(2,'firing_sequence',{marking:f[2].net.initial,sequence:['enter_a','exit_a','enter_a','exit_a']})).result.end,f[2].net.initial);
+});
+test('initial marking is reached by an empty shortest trace',()=>A.deepEqual(E.execute(req(0,'shortest_goal_trace',{goal:[1,0]})).result,{reachable:true,goal:[1,0],trace:[],length:0}));
+test('conservation-compatible but unreachable buffer marking stays unreachable',()=>A.equal(E.execute(req(3,'shortest_goal_trace',{goal:[3,0,0,0]})).result.reachable,false));
+test('invariant capacity bounds can be strictly conservative',()=>{
+ const x=E.execute(req(1,'place_bound_certificate',{weights:[2,1,1,1,1,2]})).result;A.equal(x.observed_max[1],1);A.equal(x.invariant_upper_bounds[1],2);
+});
+test('zero place weights cannot certify all-place finite bounds',()=>A.throws(()=>E.execute(req(0,'place_bound_certificate',{weights:[1,0]})),/E_WEIGHTS/));
+test('positive non-invariant weights cannot certify a bound',()=>A.throws(()=>E.execute(req(0,'place_bound_certificate',{weights:[1,2]})),/E_NOT_POSITIVE_INVARIANT/));
+test('unbounded growth does not return a truncated complete graph',()=>{
+ const r=req(0,'reachable_graph');r.net={case_id:'growth',synthetic:true,places:['p'],initial:[0],transitions:[{id:'grow',pre:[0],post:[1]}]};A.throws(()=>E.execute(r),/E_TOKEN_LIMIT/);
+});
+test('state budget stops exploration before a false completeness claim',()=>{
+ const r=req(0,'reachable_graph');r.net={case_id:'grid-growth',synthetic:true,places:['p','q'],initial:[0,0],transitions:[{id:'p',pre:[0,0],post:[1,0]},{id:'q',pre:[0,0],post:[0,1]}]};A.throws(()=>E.execute(r),/E_STATE_LIMIT/);
+});
+test('a one-state deadlock is still a terminal strongly connected component',()=>{
+ const r=req(0,'terminal_components');r.net={case_id:'stopped',synthetic:true,places:['p'],initial:[0],transitions:[{id:'take',pre:[1],post:[0]}]};A.deepEqual(E.execute(r).result.components,[[[0]]]);
+});
+test('unreachable trap state cannot appear in reachable deadlock inventory',()=>{
+ const r=req(4,'deadlock_inventory');r.net.transitions=r.net.transitions.filter(t=>t.id!=='trap');A.deepEqual(E.execute(r).result.deadlocks,[]);
+});
+test('extra parameters are refused for all six finite graph operations',()=>{
+ for(const op of E.OPS.slice(0,6)){const params=op==='shortest_goal_trace'?{goal:[1,0]}:op==='place_bound_certificate'?{weights:[1,1]}:{};params.injected=true;A.throws(()=>E.execute(req(0,op,params)),/E_PARAMETER_FIELDS/);}
+});
+test('malformed goal dimensions are refused',()=>A.throws(()=>E.execute(req(0,'shortest_goal_trace',{goal:[1]})),/E_GOAL/));
+test('representation predicates do not close empirical or authority gaps',()=>{
+ A.equal(E.execute(req(0,'structural_interpretation_boundary')).outcome,'represented');A.equal(E.execute(req(0,'uncertainty_boundary')).outcome,'represented');
+ A.equal(E.execute(req(0,'empirical_gap')).outcome,'open_gap');A.equal(E.execute(req(0,'deployment_authority_gate')).outcome,'exact_gate');
+});
+test('renaming preserves finite graph cardinalities without identity claims',()=>{
+ for(let i=0;i<f.length;i++){const a=req(i,'reachable_graph'),b=structuredClone(a);b.net.case_id='renamed-'+i;b.net.places=b.net.places.map((_,j)=>'place-'+j);b.net.transitions.forEach((t,j)=>{t.id='action-'+j;});const x=E.execute(a).result,y=E.execute(b).result;A.equal(x.markings.length,y.markings.length);A.equal(x.edges.length,y.edges.length);}
+});
+test('independent fixed-point relation oracle agrees with finite liveness',()=>{
+ // This oracle uses the hand-declared edge list, not engine-generated transitions.
+ for(let i=0;i<f.length;i++){
+  const example=f[i],states=example.states,N=states.length,K=m=>JSON.stringify(m),index=new Map(states.map((m,j)=>[K(m),j])),R=Array.from({length:N},(_,j)=>Array.from({length:N},(_,k)=>j===k));
+  for(const [a,_,b] of example.edges)R[index.get(K(a))][index.get(K(b))]=true;
+  for(let k=0;k<N;k++)for(let a=0;a<N;a++)for(let b=0;b<N;b++)R[a][b]=R[a][b]||(R[a][k]&&R[k][b]);
+  const observed=E.execute(req(i,'transition_liveness')).result.transitions;
+  for(const t of example.net.transitions){const target=new Set(example.edges.filter(e=>e[1]===t.id).map(e=>index.get(K(e[0]))));const live=R.every(row=>Array.from(target).some(j=>row[j]));A.equal(observed.find(x=>x.id===t.id).live,live);}
+ }
+});

@@ -1,0 +1,72 @@
+'use strict';
+const C=require('../../x1/code/engine.txt');
+const OPS=['reachable_graph','deadlock_inventory','shortest_goal_trace','place_bound_certificate','transition_liveness','terminal_components','structural_interpretation_boundary','uncertainty_boundary','empirical_gap','deployment_authority_gate'];
+const key=m=>m.join(',');
+const compare=(a,b)=>{for(let i=0;i<Math.min(a.length,b.length);i++)if(a[i]!==b[i])return a[i]-b[i];return a.length-b.length;};
+const tsorted=n=>n.transitions.slice().sort((a,b)=>a.id<b.id?-1:a.id>b.id?1:0);
+function graph(n){
+  const states=[n.initial.slice()],seen=new Map([[key(n.initial),0]]),edges=[],actions=tsorted(n),paths=[[]];
+  for(let i=0;i<states.length;i++){
+    const m=states[i];
+    for(const t of actions)if(C.enabled(m,t)){
+      const next=C.fire(m,t),k=key(next);
+      if(!seen.has(k)){
+        C.assert(states.length<512,'E_STATE_LIMIT');seen.set(k,states.length);states.push(next);paths.push(paths[i].concat(t.id));
+      }
+      C.assert(edges.length<4096,'E_EDGE_LIMIT');edges.push([m.slice(),t.id,next]);
+    }
+  }
+  // Only queue exhaustion reaches this return: no truncated graph is labelled complete.
+  return {states,edges,paths,seen};
+}
+function reachFrom(g,start){
+  const out=new Map(g.states.map(m=>[key(m),[]]));for(const [a,_,b] of g.edges)out.get(key(a)).push(key(b));
+  const found=new Set([start]),q=[start];for(let i=0;i<q.length;i++)for(const b of out.get(q[i]))if(!found.has(b)){found.add(b);q.push(b);}return found;
+}
+function terminal(g){
+  const stateKeys=g.states.map(key),reach=new Map(stateKeys.map(k=>[k,reachFrom(g,k)])),unused=new Set(stateKeys),result=[];
+  for(const a of stateKeys){
+    if(!unused.has(a))continue;
+    const component=stateKeys.filter(b=>reach.get(a).has(b)&&reach.get(b).has(a));for(const k of component)unused.delete(k);
+    const members=new Set(component);
+    if(!g.edges.some(([x,_,y])=>members.has(key(x))&&!members.has(key(y))))result.push(component.map(k=>g.states[g.seen.get(k)]).sort(compare));
+  }
+  return result.sort((a,b)=>compare(a[0],b[0]));
+}
+function execute(r){
+  if(r&&C.OPS.includes(r.operation))return C.execute(r);
+  C.envelope(r,OPS);const n=r.net,p=r.parameters,k=r.operation;let result,outcome='completed';
+  const params=k==='shortest_goal_trace'?['goal']:k==='place_bound_certificate'?['weights']:[];C.ownKeys(p,params,'E_PARAMETER_FIELDS');
+  if(k==='shortest_goal_trace')C.vec(p.goal,n.places.length,64,'E_GOAL');
+  if(k==='place_bound_certificate'){
+    C.weighted(p.weights,n.places.length,true);
+    C.assert(n.transitions.every(t=>C.dot(p.weights,t.pre)===C.dot(p.weights,t.post)),'E_NOT_POSITIVE_INVARIANT');
+  }
+  if(OPS.indexOf(k)<6){
+    const g=graph(n);
+    if(k==='reachable_graph')result={complete:true,markings:g.states.slice().sort(compare),edges:g.edges.slice().sort((a,b)=>compare(a[0],b[0])||(a[1]<b[1]?-1:a[1]>b[1]?1:0)||compare(a[2],b[2]))};
+    else if(k==='deadlock_inventory')result={complete:true,deadlocks:g.states.filter(m=>!n.transitions.some(t=>C.enabled(m,t))).sort(compare)};
+    else if(k==='shortest_goal_trace'){
+      const i=g.seen.get(key(p.goal));result={reachable:i!==undefined,goal:p.goal.slice(),trace:i===undefined?null:g.paths[i],length:i===undefined?null:g.paths[i].length};
+    } else if(k==='place_bound_certificate'){
+      const constant=C.dot(p.weights,n.initial);result={complete:true,observed_max:n.places.map((_,i)=>Math.max(...g.states.map(m=>m[i]))),invariant_upper_bounds:p.weights.map(w=>Math.floor(constant/w)),weights:p.weights.slice(),constant};
+    } else if(k==='transition_liveness'){
+      const reach=new Map(g.states.map(m=>[key(m),reachFrom(g,key(m))]));
+      result={definition:'L4_eventual_enabledness_from_every_reachable_marking',transitions:tsorted(n).map(t=>{
+        const targets=g.states.filter(m=>C.enabled(m,t)).map(key),blocking=g.states.filter(m=>!targets.some(k=>reach.get(key(m)).has(k))).sort(compare);
+        return {id:t.id,live:blocking.length===0,blocking_markings:blocking};
+      }),fairness_claimed:false};
+    } else result={complete:true,components:terminal(g)};
+  } else if(k==='structural_interpretation_boundary'){
+    outcome='represented';result={case_id:n.case_id,token_meaning:'abstract_process_counter',physical_units:null,physical_law_claimed:false,personhood_claimed:false};
+  } else if(k==='uncertainty_boundary'){
+    outcome='represented';result={case_id:n.case_id,arithmetic:'exact_bounded_integers',measurement_model:null,model_adequacy:'unmeasured',empirical_confidence:null};
+  } else if(k==='empirical_gap'){
+    outcome='open_gap';result={case_id:n.case_id,measured:false,missing:['governed_observations','preregistered_prediction','external_baseline','uncertainty_model','independent_evaluation']};
+  } else {
+    outcome='exact_gate';result={case_id:n.case_id,authorized:false,missing:['specific_target','affected_party_authority','professional_review','independent_safety_privacy_review','legal_and_cultural_authority_where_applicable']};
+  }
+  return C.wrap(r,result,outcome);
+}
+module.exports={execute,OPS,graph,terminal,reachFrom,compare};
+if(require.main===module){try{const fs=require('fs');const raw=process.argv[2]??fs.readFileSync(0,'utf8');if(Buffer.byteLength(raw)>131072)throw new Error('E_INPUT_BYTES');console.log(JSON.stringify(execute(JSON.parse(raw))));}catch(e){console.log(JSON.stringify({accepted:false,error:e.message,subject_success_credit:0}));process.exitCode=2;}}

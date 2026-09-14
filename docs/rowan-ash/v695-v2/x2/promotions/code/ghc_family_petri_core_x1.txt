@@ -1,0 +1,94 @@
+'use strict';
+// Pure finite weighted P/T-net operations. Supplied JSON is never mutated.
+const assert = (condition, code) => { if (!condition) throw new Error(code); };
+const ownKeys = (v, keys, code) => {
+  assert(v !== null && typeof v === 'object' && !Array.isArray(v), code);
+  assert(JSON.stringify(Object.keys(v).sort()) === JSON.stringify(keys.slice().sort()), code);
+};
+const name = v => typeof v === 'string' && /^[a-z][a-z0-9_-]{0,39}$/.test(v);
+const vec = (v, size, max, code) => {
+  assert(Array.isArray(v) && v.length === size && v.every(x => Number.isSafeInteger(x) && x >= 0 && x <= max), code);
+};
+function validateNet(n) {
+  ownKeys(n, ['case_id','synthetic','places','initial','transitions'], 'E_NET_FIELDS');
+  assert(n.synthetic === true && name(n.case_id), 'E_SYNTHETIC');
+  assert(Array.isArray(n.places) && n.places.length >= 1 && n.places.length <= 8 && n.places.every(name) && new Set(n.places).size === n.places.length, 'E_PLACES');
+  vec(n.initial, n.places.length, 64, 'E_INITIAL');
+  assert(Array.isArray(n.transitions) && n.transitions.length >= 1 && n.transitions.length <= 8, 'E_TRANSITIONS');
+  for (const t of n.transitions) {
+    ownKeys(t, ['id','pre','post'], 'E_TRANSITION_FIELDS');
+    assert(name(t.id), 'E_TRANSITION_ID');
+    vec(t.pre, n.places.length, 8, 'E_ARC'); vec(t.post, n.places.length, 8, 'E_ARC');
+  }
+  assert(new Set(n.transitions.map(t => t.id)).size === n.transitions.length, 'E_TRANSITION_DUPLICATE');
+}
+function envelope(r, allowed) {
+  ownKeys(r, ['operation','net','parameters'], 'E_REQUEST_FIELDS');
+  assert(allowed.includes(r.operation), 'E_OPERATION');
+  validateNet(r.net);
+  assert(r.parameters !== null && typeof r.parameters === 'object' && !Array.isArray(r.parameters), 'E_PARAMETERS');
+}
+const byId = (n, id) => { const t=n.transitions.find(x=>x.id===id); assert(t, 'E_TRANSITION_UNKNOWN'); return t; };
+const enabled = (m,t) => t.pre.every((x,i)=>m[i]>=x);
+function fire(m,t) {
+  assert(enabled(m,t), 'E_NOT_ENABLED');
+  const out=m.map((x,i)=>x-t.pre[i]+t.post[i]);
+  assert(out.every(x=>Number.isSafeInteger(x) && x>=0 && x<=64), 'E_TOKEN_LIMIT');
+  return out;
+}
+const incidence = n => n.places.map((_,i)=>n.transitions.map(t=>t.post[i]-t.pre[i]));
+const dot = (a,b) => a.reduce((s,x,i)=>s+x*b[i],0);
+const weighted = (w,size,positive=false) => { vec(w,size,8,'E_WEIGHTS'); assert(w.some(x=>x>0)&&(!positive||w.every(x=>x>0)), 'E_WEIGHTS'); };
+const wrap = (r,result,outcome='completed') => ({operation:r.operation,case_id:r.net.case_id,outcome,result,scope:'finite_synthetic',independent_reproduction:false});
+const OPS=['net_structure','incidence_matrix','enabled_transitions','single_firing','firing_sequence','place_invariant_check','transition_invariant_check','marking_invariant_residual','independent_transition_pairs','commutation_witness'];
+function execute(r) {
+  envelope(r,OPS);
+  const n=r.net,p=r.parameters,k=r.operation;let result;
+  if(k==='net_structure') {
+    ownKeys(p,[],'E_PARAMETER_FIELDS');
+    result={places:n.places.slice(),transitions:n.transitions.map(t=>t.id),initial:n.initial.slice(),arc_count:n.transitions.reduce((s,t)=>s+t.pre.filter(x=>x>0).length+t.post.filter(x=>x>0).length,0),semantics:'weighted_place_transition'};
+  } else if(k==='incidence_matrix') {
+    ownKeys(p,[],'E_PARAMETER_FIELDS');result={rows:n.places.slice(),columns:n.transitions.map(t=>t.id),matrix:incidence(n)};
+  } else if(k==='enabled_transitions') {
+    ownKeys(p,['marking'],'E_PARAMETER_FIELDS');vec(p.marking,n.places.length,64,'E_MARKING');
+    result={marking:p.marking.slice(),enabled:n.transitions.filter(t=>enabled(p.marking,t)).map(t=>t.id).sort()};
+  } else if(k==='single_firing') {
+    ownKeys(p,['marking','transition'],'E_PARAMETER_FIELDS');vec(p.marking,n.places.length,64,'E_MARKING');
+    result={from:p.marking.slice(),transition:p.transition,to:fire(p.marking,byId(n,p.transition))};
+  } else if(k==='firing_sequence') {
+    ownKeys(p,['marking','sequence'],'E_PARAMETER_FIELDS');vec(p.marking,n.places.length,64,'E_MARKING');
+    assert(Array.isArray(p.sequence)&&p.sequence.length<=32&&p.sequence.every(name),'E_SEQUENCE');
+    const ts=p.sequence.map(id=>byId(n,id));const markings=[p.marking.slice()];
+    for(const t of ts)markings.push(fire(markings[markings.length-1],t));
+    result={initial:p.marking.slice(),sequence:p.sequence.slice(),markings,end:markings[markings.length-1]};
+  } else if(k==='place_invariant_check') {
+    ownKeys(p,['weights'],'E_PARAMETER_FIELDS');weighted(p.weights,n.places.length);
+    const residual=n.transitions.map(t=>dot(p.weights,t.post)-dot(p.weights,t.pre));
+    result={weights:p.weights.slice(),residual,constant:dot(p.weights,n.initial),holds:residual.every(x=>x===0)};
+  } else if(k==='transition_invariant_check') {
+    ownKeys(p,['weights'],'E_PARAMETER_FIELDS');weighted(p.weights,n.transitions.length);
+    const residual=incidence(n).map(row=>dot(row,p.weights));
+    result={weights:p.weights.slice(),residual,holds:residual.every(x=>x===0),feasible_order_claimed:false};
+  } else if(k==='marking_invariant_residual') {
+    ownKeys(p,['weights','marking'],'E_PARAMETER_FIELDS');weighted(p.weights,n.places.length);vec(p.marking,n.places.length,64,'E_MARKING');
+    const initial_value=dot(p.weights,n.initial),marking_value=dot(p.weights,p.marking),difference=marking_value-initial_value;
+    result={initial_value,marking_value,difference,conserved:difference===0};
+  } else if(k==='independent_transition_pairs') {
+    ownKeys(p,[],'E_PARAMETER_FIELDS');const ts=n.transitions.slice().sort((a,b)=>a.id<b.id?-1:a.id>b.id?1:0);const pairs=[];
+    for(let i=0;i<ts.length;i++)for(let j=i+1;j<ts.length;j++) {
+      if(n.places.every((_,p)=>!(ts[i].pre[p]||ts[i].post[p]) || !(ts[j].pre[p]||ts[j].post[p])))pairs.push([ts[i].id,ts[j].id]);
+    }
+    result={pairs,condition:'disjoint_full_arc_support_sufficient_only'};
+  } else if(k==='commutation_witness') {
+    ownKeys(p,['marking','pair'],'E_PARAMETER_FIELDS');vec(p.marking,n.places.length,64,'E_MARKING');
+    assert(Array.isArray(p.pair)&&p.pair.length===2&&p.pair[0]!==p.pair[1],'E_PAIR');
+    const [a,b]=p.pair.map(id=>byId(n,id)),coenabled=enabled(p.marking,a)&&enabled(p.marking,b);
+    const order=(a,b)=>{if(!enabled(p.marking,a))return null;const mid=fire(p.marking,a);return enabled(mid,b)?fire(mid,b):null;};
+    const ab=order(a,b),ba=order(b,a);
+    // A witness requires both transitions initially enabled, and both orders feasible.
+    result={pair:p.pair.slice(),coenabled,ab:coenabled?ab:null,ba:coenabled?ba:null,commutes:coenabled&&ab!==null&&ba!==null&&ab.every((x,i)=>x===ba[i])};
+  }
+  return wrap(r,result);
+}
+module.exports={execute,OPS,ownKeys,vec,validateNet,envelope,byId,enabled,fire,incidence,dot,weighted,wrap,assert};
+if(require.main===module){try{const fs=require('fs');const raw=process.argv[2]??fs.readFileSync(0,'utf8');if(Buffer.byteLength(raw)>131072)throw new Error('E_INPUT_BYTES');console.log(JSON.stringify(execute(JSON.parse(raw))));}catch(e){console.log(JSON.stringify({accepted:false,error:e.message,subject_success_credit:0}));process.exitCode=2;}}
