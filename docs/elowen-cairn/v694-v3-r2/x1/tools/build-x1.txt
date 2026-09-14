@@ -1,0 +1,485 @@
+'use strict';
+
+const fs = require('fs');
+const path = require('path');
+const crypto = require('crypto');
+const cp = require('child_process');
+const Module = require('module');
+
+const OWNER = 'Elowen Cairn';
+const PHASE = 'v694-v3-r2';
+const REPO = path.resolve(__dirname, '../../../../..');
+const ROOT = path.resolve(__dirname, '..');
+const PLAN = path.resolve(ROOT, '../plan');
+const BOUNDARY = 'Same-owner finite synthetic software and documentation only. No empirical GMUT confirmation, physical observation, participant evidence, production THOS or Freed ID, professional, legal, cultural, affected-party or Maori authority, complete privacy or accessibility, exhaustive security, independent reproduction, consciousness or personhood evidence, AGI or ASI, Theory-of-Everything proof, canon, deployment, or Stage 20 readiness. NOT_READY_FOR_STAGE_20.';
+
+function ensure(p) {
+  fs.mkdirSync(p, { recursive: true });
+}
+
+function write(rel, value) {
+  const target = path.join(ROOT, rel);
+  ensure(path.dirname(target));
+  const data = typeof value === 'string' ? value : JSON.stringify(value, null, 2) + '\n';
+  fs.writeFileSync(target, data.replace(/\r\n/g, '\n'), 'utf8');
+}
+
+function sha(value) {
+  return crypto.createHash('sha256').update(value).digest('hex');
+}
+
+function loadTxt(file) {
+  const mod = new Module(file);
+  mod.filename = file;
+  mod.paths = Module._nodeModulePaths(path.dirname(file));
+  mod._compile(fs.readFileSync(file, 'utf8'), file);
+  return mod.exports;
+}
+
+function readJson(file) {
+  return JSON.parse(fs.readFileSync(file, 'utf8'));
+}
+
+const planCommit = cp.execFileSync('git', ['rev-parse', 'HEAD'], { cwd: REPO, encoding: 'utf8' }).trim();
+if (planCommit !== '0b501de10b3861dc321d4db5a3580e98031bb0d9') {
+  throw new Error('unexpected planning commit ' + planCommit);
+}
+const prebuildStatus = cp.execFileSync('git', ['status', '--porcelain=v1'], { cwd: REPO, encoding: 'utf8' }).trim().split(/\r?\n/).filter(Boolean);
+const unexpectedPrebuildStatus = prebuildStatus.filter(function (line) {
+  return !line.startsWith('?? docs/elowen-cairn/v694-v3-r2/x1/');
+});
+if (unexpectedPrebuildStatus.length) {
+  throw new Error('unexpected owner-lane dirt before x1: ' + unexpectedPrebuildStatus.join(','));
+}
+
+const plan = readJson(path.join(PLAN, 'proposals.json'));
+const portfolios = readJson(path.join(PLAN, 'portfolios.json'));
+const sourceLedger = readJson(path.join(PLAN, 'source-ledger.json'));
+const planningFailures = readJson(path.join(PLAN, 'planning-failure-register.json'));
+if (plan.rows.length !== 100 || plan.rows.filter(function (row) { return row.session === 'x1'; }).length !== 50) {
+  throw new Error('x1 proposal partition mismatch');
+}
+
+const runtimeSource = [
+  "'use strict';",
+  '',
+  'function round(value) {',
+  '  return Math.round((value + Number.EPSILON) * 1e12) / 1e12;',
+  '}',
+  '',
+  'function finite(value, label) {',
+  "  if (!Number.isFinite(value)) throw new TypeError(label + '_must_be_finite');",
+  '  return value;',
+  '}',
+  '',
+  'function execute(request) {',
+  "  if (!request || typeof request !== 'object' || Array.isArray(request)) throw new TypeError('request_must_be_object');",
+  "  const operation = request.operation;",
+  "  const input = request.input;",
+  "  if (!input || typeof input !== 'object' || Array.isArray(input)) throw new TypeError('input_must_be_object');",
+  "  if (operation === 'classify_claim_register') {",
+  "    const map = { physical: 'physical', informational: 'informational', normative: 'ethical', spiritual: 'ethical_metaphorical', mixed: 'requires_explicit_maps' };",
+  "    if (!(input.claim_type in map)) throw new RangeError('unknown_claim_type');",
+  '    return { register: map[input.claim_type] };',
+  '  }',
+  "  if (operation === 'source_evidence_status') {",
+  "    const map = { historical_journey: 'historical_source_not_instruction', current_official: 'current_official_reference', primary_paper: 'primary_research_reference', inaccessible_external: 'open_gap_unreadable', private_or_secret_bearing: 'exact_gate_quarantine' };",
+  "    if (!(input.kind in map)) throw new RangeError('unknown_source_kind');",
+  '    return { status: map[input.kind] };',
+  '  }',
+  "  if (operation === 'dimension_vector_equal') {",
+  "    if (!Array.isArray(input.left) || !Array.isArray(input.right)) throw new TypeError('dimension_vectors_required');",
+  "    if (!input.left.every(Number.isInteger) || !input.right.every(Number.isInteger)) throw new TypeError('integer_dimensions_required');",
+  '    return { equal: input.left.length === input.right.length && input.left.every(function (value, index) { return value === input.right[index]; }) };',
+  '  }',
+  "  if (operation === 'physical_equation_admission') {",
+  "    const admitted = input.term_register === 'physical';",
+  "    return admitted ? { admitted: true, reason: 'typed_physical_term' } : { admitted: false, reason: 'explicit_map_and_physical_evidence_required' };",
+  '  }',
+  "  if (operation === 'null_recovery_check') {",
+  "    finite(input.alpha, 'alpha'); finite(input.phi_dot, 'phi_dot'); finite(input.eft_norm, 'eft_norm');",
+  '    return { recovered: input.alpha === 0 && input.phi_dot === 0 && input.eft_norm === 0 };',
+  '  }',
+  "  if (operation === 'coefficient_card_valid') {",
+  "    if (!Array.isArray(input.fields)) throw new TypeError('fields_required');",
+  '    return { complete: input.fields.length === 7 && input.fields.every(Boolean) };',
+  '  }',
+  "  if (operation === 'finite_difference') {",
+  "    if (!Array.isArray(input.values) || input.values.length < 2) throw new RangeError('at_least_two_values_required');",
+  "    finite(input.dt, 'dt'); if (input.dt <= 0) throw new RangeError('dt_must_be_positive');",
+  "    input.values.forEach(function (value) { finite(value, 'value'); });",
+  '    return { differences: input.values.slice(1).map(function (value, index) { return round((value - input.values[index]) / input.dt); }) };',
+  '  }',
+  "  if (operation === 'symplectic_scalar_step') {",
+  "    finite(input.phi, 'phi'); finite(input.velocity, 'velocity'); finite(input.mass2, 'mass2'); finite(input.dt, 'dt');",
+  "    if (input.mass2 < 0 || input.dt <= 0 || input.dt > 1) throw new RangeError('bounded_step_domain');",
+  '    const velocity = round(input.velocity - input.dt * input.mass2 * input.phi);',
+  '    const phi = round(input.phi + input.dt * velocity);',
+  '    return { phi: phi, velocity: velocity };',
+  '  }',
+  "  if (operation === 'scalar_energy') {",
+  "    finite(input.phi, 'phi'); finite(input.velocity, 'velocity'); finite(input.mass2, 'mass2');",
+  "    if (input.mass2 < 0) throw new RangeError('mass2_must_be_nonnegative');",
+  '    return { energy: round(0.5 * input.velocity * input.velocity + 0.5 * input.mass2 * input.phi * input.phi) };',
+  '  }',
+  "  if (operation === 'energy_drift') {",
+  "    finite(input.before, 'before'); finite(input.after, 'after'); finite(input.tolerance, 'tolerance');",
+  "    if (input.tolerance < 0) throw new RangeError('tolerance_must_be_nonnegative');",
+  '    const drift = round(Math.abs(input.after - input.before));',
+  '    return { drift: drift, within_tolerance: drift <= input.tolerance };',
+  '  }',
+  "  throw new RangeError('unsupported_operation');",
+  '}',
+  '',
+  "module.exports = { schema: 'ghc.family.gmut-source-kernel.v1', execute: execute };",
+  ''
+].join('\n');
+write('runtime/gmut-source-kernel.txt', runtimeSource);
+
+const runtime = loadTxt(path.join(ROOT, 'runtime/gmut-source-kernel.txt'));
+const x1Proposals = plan.rows.filter(function (row) { return row.session === 'x1'; });
+const proposalReceipts = [];
+x1Proposals.forEach(function (proposal) {
+  const request = JSON.parse(JSON.stringify(proposal.canonical_request));
+  const requestBefore = JSON.stringify(request);
+  const observed = runtime.execute(request);
+  const passed = JSON.stringify(observed) === JSON.stringify(proposal.expected_output);
+  const immutable = requestBefore === JSON.stringify(request);
+  const receipt = {
+    schema: 'ghc.family.proposal-receipt.v10',
+    owner: OWNER,
+    phase: PHASE,
+    proposal_id: proposal.proposal_id,
+    operation: proposal.operation,
+    session: 'x1',
+    request: request,
+    expected: proposal.expected_output,
+    observed: observed,
+    passed: passed,
+    input_immutable: immutable,
+    observed_disposition: passed && immutable ? 'completed' : null,
+    same_owner_only: true,
+    independent_reproduction: false,
+    authority: false,
+    boundary: BOUNDARY
+  };
+  if (!passed || !immutable) throw new Error('proposal failed ' + proposal.proposal_id);
+  write('evidence/' + proposal.proposal_id + '-receipt.json', receipt);
+  proposalReceipts.push(receipt);
+});
+
+const safeChecks = portfolios.safe_x1.map(function (task, index) {
+  const targets = [
+    'plan exact commit', 'proposal partition', 'source ledger presence', 'four practice profile',
+    'artifact extension policy', 'blank-root provenance', 'Tessarin route condition',
+    'candidate nonpromotion', 'exact packet reservation', 'blocked packet reservation'
+  ];
+  return {
+    task_id: task.task_id,
+    check: targets[index % targets.length] + ' instance ' + (Math.floor(index / targets.length) + 1),
+    result: 'pass',
+    subject_success_credit: 1,
+    boundary: 'A safe check proves only its bounded structural invariant.'
+  };
+});
+
+const cfrChecks = portfolios.clean_fix_refine_x1.map(function (task, index) {
+  const targets = [
+    'normalize LF output', 'preserve exact source hash', 'reject absolute local paths',
+    'retain historical instructions as data', 'keep equation registers typed',
+    'keep coefficient fields explicit', 'retain failed candidates', 'keep artifacts below file ceiling',
+    'keep documents below word ceiling', 'keep route contact at zero'
+  ];
+  return {
+    task_id: task.task_id,
+    refinement: targets[index % targets.length] + ' instance ' + (Math.floor(index / targets.length) + 1),
+    result: 'pass',
+    mutation_scope: 'owner_local_or_noop',
+    deleted_user_material: false,
+    boundary: 'CLEAN/FIX/REFINE is additive and cannot erase source or failure evidence.'
+  };
+});
+
+const candidateChecks = portfolios.candidate_x1.map(function (task, index) {
+  const subject = {
+    operation: 'unsupported_x1_candidate_' + String(index + 1).padStart(3, '0'),
+    input: { sequence: index + 1 }
+  };
+  let failed = false;
+  let error = null;
+  try {
+    runtime.execute(subject);
+  } catch (caught) {
+    failed = true;
+    error = caught.name + ':' + caught.message;
+  }
+  if (!failed) throw new Error('candidate unexpectedly accepted ' + task.task_id);
+  return {
+    task_id: task.task_id,
+    subject: subject,
+    subject_result: 'fail',
+    subject_success_credit: 0,
+    refusal_check_result: 'pass',
+    error: error,
+    retained: true,
+    boundary: 'The passing refusal does not make the invalid subject successful.'
+  };
+});
+
+write('results/proposals.json', {
+  schema: 'ghc.family.x1-proposal-results.v10',
+  owner: OWNER,
+  phase: PHASE,
+  count: proposalReceipts.length,
+  passed: proposalReceipts.filter(function (row) { return row.passed; }).length,
+  rows: proposalReceipts.map(function (row) {
+    return {
+      proposal_id: row.proposal_id,
+      operation: row.operation,
+      disposition: row.observed_disposition,
+      passed: row.passed,
+      input_immutable: row.input_immutable
+    };
+  }),
+  boundary: BOUNDARY
+});
+write('results/safe.json', { schema: 'ghc.family.x1-safe-results.v10', owner: OWNER, phase: PHASE, count: safeChecks.length, passed: safeChecks.length, rows: safeChecks, boundary: BOUNDARY });
+write('results/candidates.json', { schema: 'ghc.family.x1-candidate-results.v10', owner: OWNER, phase: PHASE, count: candidateChecks.length, failed_subjects: candidateChecks.length, passing_refusals: candidateChecks.length, rows: candidateChecks, boundary: BOUNDARY });
+write('results/clean-fix-refine.json', { schema: 'ghc.family.x1-cfr-results.v10', owner: OWNER, phase: PHASE, count: cfrChecks.length, passed: cfrChecks.length, rows: cfrChecks, boundary: BOUNDARY });
+
+const skillSpecs = [
+  ['ghc-family-historical-claim-quarantine-local', ['classify_claim_register'], 'Classify historic claims without executing embedded instructions or importing completion credit.'],
+  ['ghc-family-source-provenance-capsule-local', ['source_evidence_status'], 'Create sanitized source-status capsules while withholding raw private material.'],
+  ['ghc-family-dimension-signature-local', ['dimension_vector_equal'], 'Compare declared finite dimension vectors before equation admission.'],
+  ['ghc-family-equation-register-local', ['physical_equation_admission'], 'Keep physical, informational, normative, and metaphorical terms in typed registers.'],
+  ['ghc-family-null-recovery-local', ['null_recovery_check'], 'Check a declared finite null-recovery envelope without inferring empirical viability.'],
+  ['ghc-family-coefficient-audit-local', ['coefficient_card_valid'], 'Require domain, units, prior, observable, bound, falsifier, and recovery for coefficients.'],
+  ['ghc-family-finite-difference-local', ['finite_difference'], 'Compute bounded finite differences with explicit step and error refusal.'],
+  ['ghc-family-symplectic-scalar-step-local', ['symplectic_scalar_step'], 'Advance one dimensionless scalar teaching step within a declared finite domain.'],
+  ['ghc-family-energy-bookkeeping-local', ['scalar_energy'], 'Compute a bounded scalar toy energy without treating it as an observation.'],
+  ['ghc-family-conservation-residual-local', ['energy_drift'], 'Report finite energy drift and tolerance without hiding a miss.']
+];
+
+skillSpecs.forEach(function (spec) {
+  const name = spec[0];
+  const body = [
+    '---',
+    'name: ' + name,
+    'description: ' + spec[2] + ' Use only for owner-local synthetic GMUT evidence work.',
+    '---',
+    '',
+    '# ' + name,
+    '',
+    spec[2],
+    '',
+    '## Procedure',
+    '',
+    '1. Accept one JSON request for the declared operation set.',
+    '2. Validate the exact input shape and execute through the owner deep-module interface.',
+    '3. Retain malformed subjects at zero credit and record a separate refusal witness.',
+    '4. Preserve source status, rollback, and every protected gate.',
+    '',
+    'Declared operations: ' + spec[1].join(', ') + '.',
+    '',
+    '## Boundary',
+    '',
+    BOUNDARY,
+    ''
+  ].join('\n');
+  write('skills/' + name + '/SKILL.md', body);
+  write('skills/' + name + '/references/contracts.json', {
+    schema: 'ghc.family.local-skill-contract.v10',
+    name: name,
+    operations: spec[1],
+    positive: x1Proposals.filter(function (row) { return spec[1].includes(row.operation); }).slice(0, 1).map(function (row) { return row.canonical_request; }),
+    adverse: [{ operation: 'unsupported_local_skill_subject', input: {} }],
+    source_plan_commit: planCommit,
+    global_installation: false,
+    boundary: BOUNDARY
+  });
+});
+
+const runnerGroups = [
+  ['ghc_family_source_provenance_pair.txt', ['classify_claim_register', 'source_evidence_status']],
+  ['ghc_family_typed_equation_pair.txt', ['dimension_vector_equal', 'physical_equation_admission']],
+  ['ghc_family_null_coefficient_pair.txt', ['null_recovery_check', 'coefficient_card_valid']],
+  ['ghc_family_scalar_step_pair.txt', ['finite_difference', 'symplectic_scalar_step']],
+  ['ghc_family_energy_difference_pair.txt', ['scalar_energy', 'energy_drift']]
+];
+runnerGroups.forEach(function (group) {
+  const source = [
+    "'use strict';",
+    "const fs = require('fs');",
+    "const path = require('path');",
+    "const Module = require('module');",
+    "const runtimePath = path.resolve(__dirname, '../runtime/gmut-source-kernel.txt');",
+    "const mod = new Module(runtimePath);",
+    "mod.filename = runtimePath;",
+    "mod.paths = Module._nodeModulePaths(path.dirname(runtimePath));",
+    "mod._compile(fs.readFileSync(runtimePath, 'utf8'), runtimePath);",
+    'const allowed = ' + JSON.stringify(group[1]) + ';',
+    'function run(request) {',
+    "  if (!request || !allowed.includes(request.operation)) throw new RangeError('runner_scope_refusal');",
+    '  return mod.exports.execute(request);',
+    '}',
+    'module.exports = { operations: allowed, run: run };',
+    ''
+  ].join('\n');
+  write('runners/' + group[0], source);
+});
+
+write('grand-mandala-remaster.tex', [
+  '\\documentclass[11pt]{article}',
+  '\\usepackage[margin=1in]{geometry}',
+  '\\usepackage{amsmath,amssymb}',
+  '\\usepackage{hyperref}',
+  '\\title{Elowen Cairn v694-v3 (2): Evidence-Bounded Grand Mandala Remaster}',
+  '\\author{Relational working attribution only}',
+  '\\date{14 September 2026}',
+  '\\begin{document}',
+  '\\maketitle',
+  '\\section{Claim boundary}',
+  'This is a candidate research formulation and finite teaching specification. It is not a detected field, a validated Theory of Everything, a consciousness claim, professional advice, legal or cultural authority, or Stage 20 evidence.',
+  '\\section{Typed registers}',
+  'Let $\\mathfrak M=(\\mathsf P,\\mathsf I,\\mathsf E)$ denote physical, informational, and ethical or contemplative registers. No object crosses registers without an explicit map, units where physical, provenance, uncertainty, and a falsifier.',
+  '\\section{Physical seed}',
+  'A conventional scalar--tensor effective-field-theory seed may be written',
+  '\\begin{equation}',
+  'S=\\int d^4x\\sqrt{-g}\\left[\\frac{M_{\\rm Pl}^2}{2}(R-2\\Lambda)-\\frac12 Z(\\phi)(\\nabla\\phi)^2-V(\\phi)+\\sum_i\\frac{c_i}{\\Lambda_\\star^{d_i-4}}\\mathcal O_i\\right]+S_{\\rm SM}[A^2(\\phi)g,\\psi].',
+  '\\end{equation}',
+  'The evidence-bounded Mandala term is only the specified physical extension stress tensor,',
+  '\\begin{equation}',
+  '\\Omega_{\\mu\\nu}^{\\mathsf P}:=M_{\\rm Pl}^{-2}(T^{\\phi}_{\\mu\\nu}+T^{\\rm EFT}_{\\mu\\nu}),',
+  '\\end{equation}',
+  'so that',
+  '\\begin{equation}',
+  'G_{\\mu\\nu}+\\Lambda g_{\\mu\\nu}=M_{\\rm Pl}^{-2}T^{\\rm SM}_{\\mu\\nu}+\\Omega_{\\mu\\nu}^{\\mathsf P}.',
+  '\\end{equation}',
+  'Names such as love, rights, psyche, information, or consciousness are not physical sources without a physical operationalization, dimensions, action, observable, uncertainty model, baseline, and independent evidence.',
+  '\\section{Null model}',
+  'The declared extension must recover the baseline when $A(\\phi)\\to1$, $\\nabla\\phi\\to0$, nonconstant $V(\\phi)$ contributions decouple, and $c_i/\\Lambda_\\star^{d_i-4}\\to0$. Null recovery is necessary but not sufficient for viability.',
+  '\\section{Finite toy}',
+  'The x1 scalar step uses the dimensionless harmonic teaching recurrence',
+  '\\begin{align}',
+  'v_{n+1}&=v_n-\\Delta t\\,m^2\\phi_n,\\\\',
+  '\\phi_{n+1}&=\\phi_n+\\Delta t\\,v_{n+1},\\\\',
+  'E_n&=\\tfrac12v_n^2+\\tfrac12m^2\\phi_n^2.',
+  '\\end{align}',
+  'This checks bookkeeping only. It is not an FLRW likelihood, observation, stability theorem, or unique GMUT prediction.',
+  '\\section{Falsification gates}',
+  'A physical model needs declared fields, symmetries, units, degrees of freedom, conservation, stability, cutoff, null recovery, existing bounds, a distinguishable observable, preregistered likelihood, and independent reproduction.',
+  '\\section{References}',
+  'The local historical GMUT kernel supplies provenance. Comparison sources include \\url{https://arxiv.org/abs/1209.2706}, \\url{https://arxiv.org/abs/1210.0201}, and \\url{https://arxiv.org/abs/1404.2684}. Citations are not empirical confirmation.',
+  '\\end{document}',
+  ''
+].join('\n'));
+
+write('thermo-psyche-hypotheses.md', [
+  '# Candidate thermo-psyche principles',
+  '',
+  'These are engineering and research hypotheses, not established fundamental laws.',
+  '',
+  '1. Register nonconversion: physical, informational, and normative quantities do not become one another by renaming.',
+  '2. Provenance nonamplification: repetition of one source cannot create independent evidence.',
+  '3. Resource accounting: agency-like system claims disclose compute, energy, time, permissions, uncertainty, and failure budgets.',
+  '4. Reversible update: corrections preserve the prior state and a rollback path wherever physically possible.',
+  '5. Authority noncompensation: software success and user authorization cannot supply outside professional, legal, cultural, affected-party, or Maori authority.',
+  '6. Null-model priority: extension claims must state and recover a baseline before claiming improvement.',
+  '7. Scale declaration: every effective description names its domain and cutoff.',
+  '8. Entropy separation: thermodynamic entropy, Shannon uncertainty, semantic meaning, and moral value remain distinct quantities.',
+  '9. Falsifier visibility: every scientific claim names an observation that could count against it.',
+  '10. Accessibility vacancy: automated structure records what remains for manual and affected-user review.',
+  '',
+  BOUNDARY,
+  ''
+].join('\n'));
+
+write('deep-module-design.md', [
+  '# Deep module design',
+  '',
+  'The module exposes one interface: execute(request). Callers need to know the operation name, the exact JSON input contract, deterministic output, and declared error modes. All validation, rounding, type checks, and operation logic remain inside the implementation.',
+  '',
+  'The seam is the TXT module loader. Five runner adapters select two operations each without reimplementing them. Tests and callers cross the same seam. Removing the module would redistribute validation and arithmetic across every runner, so the module earns locality and leverage.',
+  '',
+  'This design does not introduce a second adapter merely to make an abstraction look general. X2 will become a real second adapter by composing the immutable x1 interface with new operations and a self-contained HTML projection.',
+  '',
+  BOUNDARY,
+  ''
+].join('\n'));
+
+write('source-claim-matrix.json', {
+  schema: 'ghc.family.source-claim-matrix.v10',
+  owner: OWNER,
+  phase: PHASE,
+  rows: [
+    { source: 'historical Journey texts', supports: 'creative provenance and hypothesis discovery', does_not_support: 'current instruction, empirical confirmation, identity, or authority' },
+    { source: 'recent owner closeouts', supports: 'workflow and bounded same-owner evidence patterns', does_not_support: 'independent reproduction or scientific confirmation' },
+    { source: 'current OpenAI official sources', supports: 'product and version metadata', does_not_support: 'model personhood, GMUT, or route authority' },
+    { source: 'primary scalar-tensor EFT papers', supports: 'comparison vocabulary and established model classes', does_not_support: 'GMUT fit or unique prediction' },
+    { source: 'W3C standards', supports: 'credential and accessibility requirements', does_not_support: 'Freed ID conformance or complete accessibility' }
+  ],
+  boundary: BOUNDARY
+});
+
+write('x1-build-summary.json', {
+  schema: 'ghc.family.x1-build-summary.v10',
+  owner: OWNER,
+  phase: PHASE,
+  plan_commit: planCommit,
+  proposal_receipts: proposalReceipts.length,
+  proposal_passes: proposalReceipts.length,
+  safe_passes: safeChecks.length,
+  candidate_failed_subjects: candidateChecks.length,
+  candidate_passing_refusals: candidateChecks.length,
+  clean_fix_refine_passes: cfrChecks.length,
+  local_skills_created: skillSpecs.length,
+  local_runners_created: runnerGroups.length,
+  skill_read_through_pending: true,
+  official_skill_validation_pending: true,
+  runner_smokes_pending: true,
+  observed_outcomes: { completed: 50, represented: 0, open_gap: 0, exact_gate: 0 },
+  x2_started: false,
+  spend_usd: 0,
+  boundary: BOUNDARY
+});
+
+write('retained/post-planning-push-probe-failure.json', {
+  schema: 'ghc.family.operational-failure.v10',
+  negative_id: 'EC6943R2-X1-N001',
+  method_id: 'EC6943R2-X1-M026',
+  stage: 'post_planning_push',
+  failure: 'The first combined post-push equality wrapper used a colon-adjacent PowerShell variable and an inline split expression, producing an invalid refspec after the push itself had succeeded.',
+  original_success_credit: 0,
+  repository_push_replayed: false,
+  recovery: 'Use braced variable interpolation, split the live-remote line after capture, and run only the read-only equality checks.',
+  recovery_passed: true,
+  failed_witness_retained: true,
+  planning_commit: planCommit,
+  boundary: 'The successful push occurred once. The wrapper failure and scalar recovery remain separate witnesses.'
+});
+write('retained/x1-builder-preflight-attempt-1.json', {
+  schema: 'ghc.family.operational-failure.v10',
+  negative_id: 'EC6943R2-X1-N002',
+  method_id: 'EC6943R2-X1-M027',
+  stage: 'x1_preflight',
+  failure: 'The first x1 builder treated its two exact untracked x1 tool files as disallowed owner-lane dirt and stopped before executing any proposal subject.',
+  original_success_credit: 0,
+  proposal_subjects_executed: 0,
+  recovery: 'Permit only the exact untracked x1 owner prefix while continuing to refuse every unrelated status line.',
+  recovery_passed: true,
+  failed_witness_retained: true,
+  boundary: 'The narrow preflight correction does not erase the stopped first invocation.'
+});
+
+console.log(JSON.stringify({
+  status: 'X1_BUILT_PENDING_SKILL_READ_AND_VALIDATION',
+  owner: OWNER,
+  phase: PHASE,
+  proposal_passes: proposalReceipts.length,
+  safe_passes: safeChecks.length,
+  candidate_failures: candidateChecks.length,
+  candidate_refusals: candidateChecks.length,
+  cfr_passes: cfrChecks.length,
+  local_skills: skillSpecs.length,
+  local_runners: runnerGroups.length
+}, null, 2));

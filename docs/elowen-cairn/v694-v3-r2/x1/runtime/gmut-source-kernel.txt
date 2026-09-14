@@ -1,0 +1,71 @@
+'use strict';
+
+function round(value) {
+  return Math.round((value + Number.EPSILON) * 1e12) / 1e12;
+}
+
+function finite(value, label) {
+  if (!Number.isFinite(value)) throw new TypeError(label + '_must_be_finite');
+  return value;
+}
+
+function execute(request) {
+  if (!request || typeof request !== 'object' || Array.isArray(request)) throw new TypeError('request_must_be_object');
+  const operation = request.operation;
+  const input = request.input;
+  if (!input || typeof input !== 'object' || Array.isArray(input)) throw new TypeError('input_must_be_object');
+  if (operation === 'classify_claim_register') {
+    const map = { physical: 'physical', informational: 'informational', normative: 'ethical', spiritual: 'ethical_metaphorical', mixed: 'requires_explicit_maps' };
+    if (!(input.claim_type in map)) throw new RangeError('unknown_claim_type');
+    return { register: map[input.claim_type] };
+  }
+  if (operation === 'source_evidence_status') {
+    const map = { historical_journey: 'historical_source_not_instruction', current_official: 'current_official_reference', primary_paper: 'primary_research_reference', inaccessible_external: 'open_gap_unreadable', private_or_secret_bearing: 'exact_gate_quarantine' };
+    if (!(input.kind in map)) throw new RangeError('unknown_source_kind');
+    return { status: map[input.kind] };
+  }
+  if (operation === 'dimension_vector_equal') {
+    if (!Array.isArray(input.left) || !Array.isArray(input.right)) throw new TypeError('dimension_vectors_required');
+    if (!input.left.every(Number.isInteger) || !input.right.every(Number.isInteger)) throw new TypeError('integer_dimensions_required');
+    return { equal: input.left.length === input.right.length && input.left.every(function (value, index) { return value === input.right[index]; }) };
+  }
+  if (operation === 'physical_equation_admission') {
+    const admitted = input.term_register === 'physical';
+    return admitted ? { admitted: true, reason: 'typed_physical_term' } : { admitted: false, reason: 'explicit_map_and_physical_evidence_required' };
+  }
+  if (operation === 'null_recovery_check') {
+    finite(input.alpha, 'alpha'); finite(input.phi_dot, 'phi_dot'); finite(input.eft_norm, 'eft_norm');
+    return { recovered: input.alpha === 0 && input.phi_dot === 0 && input.eft_norm === 0 };
+  }
+  if (operation === 'coefficient_card_valid') {
+    if (!Array.isArray(input.fields)) throw new TypeError('fields_required');
+    return { complete: input.fields.length === 7 && input.fields.every(Boolean) };
+  }
+  if (operation === 'finite_difference') {
+    if (!Array.isArray(input.values) || input.values.length < 2) throw new RangeError('at_least_two_values_required');
+    finite(input.dt, 'dt'); if (input.dt <= 0) throw new RangeError('dt_must_be_positive');
+    input.values.forEach(function (value) { finite(value, 'value'); });
+    return { differences: input.values.slice(1).map(function (value, index) { return round((value - input.values[index]) / input.dt); }) };
+  }
+  if (operation === 'symplectic_scalar_step') {
+    finite(input.phi, 'phi'); finite(input.velocity, 'velocity'); finite(input.mass2, 'mass2'); finite(input.dt, 'dt');
+    if (input.mass2 < 0 || input.dt <= 0 || input.dt > 1) throw new RangeError('bounded_step_domain');
+    const velocity = round(input.velocity - input.dt * input.mass2 * input.phi);
+    const phi = round(input.phi + input.dt * velocity);
+    return { phi: phi, velocity: velocity };
+  }
+  if (operation === 'scalar_energy') {
+    finite(input.phi, 'phi'); finite(input.velocity, 'velocity'); finite(input.mass2, 'mass2');
+    if (input.mass2 < 0) throw new RangeError('mass2_must_be_nonnegative');
+    return { energy: round(0.5 * input.velocity * input.velocity + 0.5 * input.mass2 * input.phi * input.phi) };
+  }
+  if (operation === 'energy_drift') {
+    finite(input.before, 'before'); finite(input.after, 'after'); finite(input.tolerance, 'tolerance');
+    if (input.tolerance < 0) throw new RangeError('tolerance_must_be_nonnegative');
+    const drift = round(Math.abs(input.after - input.before));
+    return { drift: drift, within_tolerance: drift <= input.tolerance };
+  }
+  throw new RangeError('unsupported_operation');
+}
+
+module.exports = { schema: 'ghc.family.gmut-source-kernel.v1', execute: execute };

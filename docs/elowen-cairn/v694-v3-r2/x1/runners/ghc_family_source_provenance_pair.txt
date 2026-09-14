@@ -1,0 +1,15 @@
+'use strict';
+const fs = require('fs');
+const path = require('path');
+const Module = require('module');
+const runtimePath = path.resolve(__dirname, '../runtime/gmut-source-kernel.txt');
+const mod = new Module(runtimePath);
+mod.filename = runtimePath;
+mod.paths = Module._nodeModulePaths(path.dirname(runtimePath));
+mod._compile(fs.readFileSync(runtimePath, 'utf8'), runtimePath);
+const allowed = ["classify_claim_register","source_evidence_status"];
+function run(request) {
+  if (!request || !allowed.includes(request.operation)) throw new RangeError('runner_scope_refusal');
+  return mod.exports.execute(request);
+}
+module.exports = { operations: allowed, run: run };
