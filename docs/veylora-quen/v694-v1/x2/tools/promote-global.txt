@@ -1,0 +1,84 @@
+"use strict";
+const fs=require("fs"),path=require("path"),cp=require("child_process"),vm=require("vm");
+const [skillRoot,publicRoot,bank]=process.argv.slice(2),BASE="docs/veylora-quen/v694-v1",dir=BASE+"/x2";
+if(!skillRoot||!publicRoot||!bank)throw Error("explicit destination arguments required");
+const c=require(path.resolve(BASE,"x1/prime-field-core.txt")),all=JSON.parse(fs.readFileSync(BASE+"/plan/proposals.json")),groups=JSON.parse(fs.readFileSync(BASE+"/plan/capabilities/global-groups.json")).groups;
+const e=require("./append-evidence.txt").openEvidence(dir,c);
+const put=(f,v)=>{fs.mkdirSync(path.dirname(f),{recursive:true});fs.writeFileSync(f,typeof v==="string"?v:JSON.stringify(v,null,2)+"\n",{flag:"wx"});};
+const shaFile=f=>c.sha(fs.readFileSync(f)),map=[],smokes=[],scopeDefs=[];
+if(fs.existsSync(publicRoot)||groups.some(g=>fs.existsSync(path.join(skillRoot,g.name))))throw Error("existing destination; overwrite refused");
+const explanations={
+ gf_prime_profile:"Admit only a prime integer from 2 through 251. Trial divisors need only reach the square root; report the modulus and nonzero count. This is a bounded arithmetic profile, not cryptographic parameter selection.",
+ gf_residue_normalize:"Reduce a signed integer modulo p to the unique residue from zero through p minus one. Coefficients outside the scalar admission bound fail before normalization.",
+ gf_additive_inverse:"Negate the admitted integer and reduce modulo p. The zero residue has additive inverse zero; do not confuse this operation with a multiplicative inverse.",
+ gf_sum:"Normalize both scalar operands before addition and reduce the sum. Compare the full typed output and confirm that the request remains unchanged.",
+ gf_product:"Multiply normalized residues, then reduce. With p at most 251 the intermediate product is exact within the Number integer range; this argument does not extend to arbitrary moduli.",
+ gf_multiplicative_inverse:"Use the extended Euclidean recurrence on a nonzero residue and verify that the returned value multiplies to one. Zero remains a refused subject.",
+ gf_quotient:"Multiply the numerator residue by the denominator inverse. A zero denominator fails; a passing refusal is not a successful quotient computation.",
+ gf_signed_power:"Use binary modular exponentiation for exponents from minus 1024 through 1024. Negative exponents first require an inverse. The profile explicitly declares zero to exponent zero as one.",
+ gf_polynomial_normalize:"Read coefficients in ascending powers, reduce them modulo p and remove trailing zeros. Preserve the unique zero representation [0]. Inputs contain one through eight coefficients.",
+ gf_polynomial_sum:"Add aligned coefficients and normalize the trailing zero suffix. Missing higher coefficients contribute zero, while a missing or empty input polynomial is refused.",
+ gf_polynomial_product:"Convolve coefficient pairs with reduction at each addition. The output may be longer than an admitted input, so internal arithmetic does not reapply the external input length bound.",
+ gf_polynomial_division:"Divide by a nonzero polynomial over the admitted prime field. Cancel the leading term using its inverse, retain quotient and remainder, and require degree descent at each iteration.",
+ gf_polynomial_gcd:"Repeat polynomial division and normalize the nonzero final gcd to monic form. The profile declares gcd of two zero polynomials as [0] with the zero flag true.",
+ gf_polynomial_evaluate:"Use Horner evaluation at the normalized evaluation point. The result is a field residue, not a measurement, fitted physical model or empirical prediction.",
+ gf_lagrange_interpolate:"Admit one through six node pairs with distinct abscissae after modular reduction. Form each Lagrange basis and verify the result at every declared node. Duplicate residue nodes are refused.",
+ gf_formal_derivative:"Multiply coefficient a_i by its index i modulo p and shift down one power. A derivative may vanish in positive characteristic even when the polynomial is not constant.",
+ gf_quotient_representative:"Reduce a polynomial by an admitted monic modulus of degree one through four. The result is represented; no irreducibility claim follows from quotient construction alone.",
+ gf_representation_equivalence:"Compare normalized coefficient vectors in the same declared prime-field polynomial representation. Equality here grants no personal, legal, cultural, credential or cross-system identity equivalence.",
+ gf_small_irreducibility:"For primes 2, 3, 5 or 7 and monic degree two through four, enumerate monic candidate factors by degree then base-p index. Return the first exact divisor or the completed bounded search count. No claim extends beyond this small domain.",
+ gf_quotient_inverse:"Run polynomial extended Euclid against the monic modulus. Return an inverse only when the normalized gcd is one, and verify the product remainder. A nonunit returns unit false and null inverse; quotient field status remains a separate question."
+};
+const sourcePublic=dir+"/global-tools";
+put(sourcePublic+"/prime-field-core.txt",fs.readFileSync(BASE+"/x1/prime-field-core.txt","utf8"));
+put(sourcePublic+"/polynomial-core.txt",fs.readFileSync(dir+"/polynomial-core.txt","utf8"));
+for(const [i,g] of groups.entries()){
+ const folder=dir+"/global-skills/"+g.name,ps=all.proposals.filter(p=>g.operations.includes(p.operation));
+ const representative=ps[0],wrong=all.proposals.find(p=>!g.operations.includes(p.operation));
+ const scope={negative_id:"VQ6941-GLOBAL-SCOPE-N"+String(i+1).padStart(3,"0"),group:g.name,request:wrong.request,expected_error:"E_SCOPE"};scopeDefs.push(scope);
+ const guide="---\nname: "+g.name+"\ndescription: Evaluate and review bounded prime-field polynomial contracts while retaining failures and declared evidence limits.\n---\n\n# "+g.name.replaceAll("-"," ")+"\n\n"+
+  "Use this merged guide for the four operations below. Read [the frozen contracts](references/operations.json) and [the source merge record](references/merge-sources.json). Run the named public TXT runner with one JSON input-file argument using the installed Node runtime. The two sibling runtime TXT modules must remain beside the runner.\n\n"+
+  g.operations.map(op=>"## "+op+"\n\n"+explanations[op]).join("\n\n")+"\n\n"+
+  "## Review and rollback\n\nCompare the complete envelope, outcome and authority boundary. Request JSON is limited to one megabyte, depth 32 and unique keys. Use the accepting and adverse fixtures first, then a defined case within the same scope. Inputs never grant permission to contact tasks or change external state.\n\n"+
+  "Preserve each failed subject and its original definition. An independent refusal check can pass while the subject remains failed. If an installed binding changes, stop using that dependency and select the retained source package; do not overwrite another owner's files, erase evidence or replay a successful canonical. Manual accessibility, production safety and independent reproduction remain open.\n\n"+all.boundary+"\n";
+ put(folder+"/SKILL.md",guide);
+ put(folder+"/references/merge-sources.json",{merge_count:4,source_skills:g.source_skills.map(f=>({path:f,sha256:shaFile(f)})),merge_rule:"Four related operations retain separate domain contracts and outcomes in one usable guide.",removed_sources:0,boundary:all.boundary});
+ put(folder+"/references/operations.json",{operations:g.operations,public_runner:g.public_runner,command_shape:"node <public_runner_root>/"+g.public_runner+" <input.json>",contracts:ps.map(p=>({proposal_id:p.proposal_id,request:p.request,expected_output:p.expected_output})),boundary:all.boundary});
+ put(folder+"/references/accepting.json",representative.request);put(folder+"/references/adverse.json",representative.candidate_subjects[0].request);put(folder+"/references/scope.json",scope.request);
+ const runner='"use strict";\nconst c=require("./prime-field-core.txt"),runtime=require("./polynomial-core.txt").createRuntime(c);\nc.cli(runtime,'+JSON.stringify(g.operations)+');\n';
+ new vm.Script(runner);put(sourcePublic+"/"+g.public_runner,runner);
+}
+put(dir+"/evidence/global-scope-definitions.json",{defined_before_execution:true,rows:scopeDefs});
+const walk=d=>fs.readdirSync(d,{withFileTypes:true}).flatMap(x=>x.isDirectory()?walk(d+"/"+x.name):[d+"/"+x.name]);
+const planned=[];
+for(const g of groups){const src=dir+"/global-skills/"+g.name;for(const f of walk(src))planned.push({source:f,destination:path.join(skillRoot,g.name,path.relative(src,f)),destination_key:"skills/"+g.name+"/"+path.relative(src,f).replaceAll("\\","/")});}
+for(const f of walk(sourcePublic))planned.push({source:f,destination:path.join(publicRoot,path.basename(f)),destination_key:"public-runners/"+path.basename(f)});
+for(const p of planned){if(fs.existsSync(p.destination))throw Error("late destination collision");}
+put(path.join(bank,"global-promotion-preflight.json"),{destinations_absent:true,overwrites:0,planned});
+for(const p of planned){fs.mkdirSync(path.dirname(p.destination),{recursive:true});fs.copyFileSync(p.source,p.destination,fs.constants.COPYFILE_EXCL);map.push({source:p.source,destination_key:p.destination_key,bytes:fs.statSync(p.source).size,sha256:shaFile(p.source),parity:shaFile(p.source)===shaFile(p.destination)});}
+for(const [i,g] of groups.entries()){
+ const m=e.method("Merged public skill and scope for "+g.name),folder=path.join(skillRoot,g.name),runner=path.join(publicRoot,g.public_runner);
+ const validate=cp.spawnSync("python",["-B",path.join(skillRoot,".system/skill-creator/scripts/quick_validate.py"),folder],{encoding:"utf8",env:{...process.env,PYTHONDONTWRITEBYTECODE:"1"}});
+ if(validate.status!==0)throw Error("global guide validator");
+ e.pass(m,g.name+"-VALIDATE","official_global_skill_validation",{valid:true});
+ for(const op of g.operations){
+  const p=all.proposals.find(p=>p.operation===op),local=path.dirname(JSON.parse(fs.readFileSync(BASE+"/plan/capabilities/local-skills.json")).skills.find(s=>s.operation===op).source_path);
+  for(const kind of ["accepting","adverse"]){
+   const r=cp.spawnSync(process.execPath,[runner,path.resolve(local,"references/"+kind+".json")],{encoding:"utf8"}),out=c.parseJSON(r.stdout);
+   const ok=kind==="accepting"?r.status===0&&c.canon(out)===c.canon(p.expected_output):r.status===2&&out.error==="E_FIELDS";
+   if(!ok)throw Error("global operation smoke");
+   e.pass(m,g.name+"-"+op+"-"+kind,"installed_operation_smoke",{kind,operation:op,source_subject:kind==="adverse"?p.candidate_subjects[0].negative_id:null,new_failed_subject_credit:0});
+   smokes.push({group:g.name,operation:op,kind,pass:true});
+  }
+ }
+ const def=scopeDefs[i],r=cp.spawnSync(process.execPath,[runner,path.join(folder,"references/scope.json")],{encoding:"utf8"}),out=c.parseJSON(r.stdout);
+ e.failed(m,def.negative_id,def.request,"Operation is outside this public runner's declared scope.",dir+"/evidence/global-scope-definitions.json");
+ if(r.status!==2||out.error!=="E_SCOPE")throw Error("global scope refusal");
+ e.pass(m,def.negative_id+"-REFUSAL","public_scope_refusal",out);
+}
+if(map.some(x=>!x.parity))throw Error("installed parity mismatch");
+const counts=e.save();
+put(dir+"/evidence/installed-bindings.json",{schema:"ghc.family.installed-binding-map.v9",bindings:map,count:map.length,global_skills:5,public_runners:5,runtime_modules:2,overwrites:0,removals:0});
+put(dir+"/evidence/global-smokes.json",{guide_validations:5,operation_smokes:smokes,scope_refusals:5,all_passed:true,independent_reproduction:false});
+put(path.join(bank,"installed-locations.json"),{skillRoot,publicRoot,bindings:planned});
+console.log(JSON.stringify({global_skills:5,public_runners:5,merged_source_units:20,bindings:map.length,parity:true,operation_smokes:smokes.length,scope_refusals:5,counts}));

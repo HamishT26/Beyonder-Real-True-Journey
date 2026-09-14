@@ -1,0 +1,38 @@
+"use strict";
+const fs=require("fs"),path=require("path");
+function openEvidence(dir,c){
+ const load=f=>JSON.parse(fs.readFileSync(path.join(dir,f),"utf8")),put=(f,v)=>fs.writeFileSync(path.join(dir,f),JSON.stringify(v,null,2)+"\n");
+ const ledger=load("method-flow.json"),negatives=load("retained-negative-register.json"),truth=load("phase-truth.json");
+ function method(title){
+  const id="VQ6941-x2-M"+String(ledger.methods.length+1).padStart(3,"0"),m={...c.clone(ledger.methods[0]),method_id:id,title,
+   validation_witness_ids:[],retained_negative_ids:[],recommendation_state:"candidate",supersedes:[]};
+  ledger.methods.push(m);return m;
+ }
+ function witness(m,id,result,procedure,observed,negativeIds=[]){
+  if(ledger.witnesses.some(w=>w.witness_id===id))throw Error("duplicate witness");
+  ledger.witnesses.push({witness_id:id,method_id:m.method_id,procedure,scope:dir.replaceAll("\\","/"),expected:"Declared bounded predicate with failed subjects retained.",observed,result,same_owner_only:true,independent_reproduction:false,retained_negative_ids:negativeIds,boundary:m.scope_boundary});
+  m.validation_witness_ids.push(id);
+ }
+ function failed(m,id,subject,failure,source){
+  if(negatives.records.some(n=>n.negative_id===id))throw Error("duplicate failed subject");
+  negatives.records.push({negative_id:id,subject,failure,source,subject_success_credit:0});m.retained_negative_ids.push(id);
+  witness(m,id+"-FAILED","fail","failed_subject_admission",failure,[id]);
+ }
+ function pass(m,id,procedure,observed){witness(m,id,"pass",procedure,observed);}
+ function save(){
+  for(const m of ledger.methods.filter(m=>m.recommendation_state==="candidate")){
+   if(!m.retained_negative_ids.length||!ledger.witnesses.some(w=>w.method_id===m.method_id&&w.result==="pass"))throw Error("method lacks counterexample or pass");
+   m.recommendation_state="preferred";
+   ledger.state_events.push({method_id:m.method_id,from:"candidate",to:"validated",note:"Bounded checks recorded with retained negatives."},{method_id:m.method_id,from:"validated",to:"preferred",note:"Select only within declared finite owner scope."});
+   ledger.recommendations.push({method_id:m.method_id,recommendation:m.recurrence_guard,delivered:false});
+  }
+  ledger.source_commit_role="content provenance only, not Git ancestry";
+  ledger.counts={methods:ledger.methods.length,witnesses:ledger.witnesses.length,state_events:ledger.state_events.length,recommendations:ledger.recommendations.length,states:{observed:0,candidate:0,validated:0,preferred:ledger.methods.length,superseded:0,deprecated:0},witness_results:{pass:ledger.witnesses.filter(w=>w.result==="pass").length,fail:ledger.witnesses.filter(w=>w.result==="fail").length}};
+  negatives.count=negatives.records.length;
+  Object.assign(truth,{methods:ledger.counts.methods,witnesses:ledger.counts.witnesses,passing_witnesses:ledger.counts.witness_results.pass,failed_witnesses:ledger.counts.witness_results.fail,effective_negatives:negatives.count});
+  put("method-flow.json",ledger);put("retained-negative-register.json",negatives);put("phase-truth.json",truth);
+  return ledger.counts;
+ }
+ return {ledger,negatives,truth,method,failed,pass,save};
+}
+module.exports={openEvidence};

@@ -1,0 +1,87 @@
+"use strict";
+function createRuntime(c){
+ const {mod,integer,inverse,trim,polynomial,addPoly,requireThat}=c;
+ const added={gf_polynomial_product:["operation","p","a","b"],gf_polynomial_division:["operation","p","a","b"],gf_polynomial_gcd:["operation","p","a","b"],gf_polynomial_evaluate:["operation","p","a","at"],gf_lagrange_interpolate:["operation","p","points"],gf_formal_derivative:["operation","p","a"],gf_quotient_representative:["operation","p","a","modulus"],gf_representation_equivalence:["operation","p","a","b"],gf_small_irreducibility:["operation","p","a"],gf_quotient_inverse:["operation","p","a","modulus"]};
+ const fields={...c.fields,...added},zero=a=>a.length===1&&a[0]===0;
+ const scale=(a,n,p)=>trim(a.map(x=>mod(x*n,p)));
+ const sub=(a,b,p)=>addPoly(a,scale(b,-1,p),p);
+ function product(a,b,p){
+  const out=Array(a.length+b.length-1).fill(0);
+  for(let i=0;i<a.length;i++)for(let j=0;j<b.length;j++)out[i+j]=mod(out[i+j]+a[i]*b[j],p);
+  return trim(out);
+ }
+ function division(a,b,p){
+  requireThat(!zero(b),"E_ZERO_DIVISOR");
+  let r=a.slice();const q=Array(Math.max(1,a.length-b.length+1)).fill(0),leadInv=inverse(b.at(-1),p);
+  while(!zero(r)&&r.length>=b.length){
+   const offset=r.length-b.length,factor=mod(r.at(-1)*leadInv,p),prior=r.length;
+   q[offset]=factor;
+   for(let j=0;j<b.length;j++)r[j+offset]=mod(r[j+offset]-factor*b[j],p);
+   r=trim(r);requireThat(zero(r)||r.length<prior,"E_DIVISION_CHECK");
+  }
+  return {quotient:trim(q),remainder:r};
+ }
+ function gcd(a,b,p){
+  while(!zero(b)){[a,b]=[b,division(a,b,p).remainder];}
+  return zero(a)?[0]:scale(a,inverse(a.at(-1),p),p);
+ }
+ function at(a,x,p){let value=0;for(let i=a.length-1;i>=0;i--)value=mod(value*x+a[i],p);return value;}
+ function modulusPolynomial(a,p){const m=polynomial(a,p);requireThat(m.length>=2&&m.length<=5&&m.at(-1)===1,"E_QUOTIENT_MODULUS");return m;}
+ function interpolate(raw,p){
+  requireThat(Array.isArray(raw)&&raw.length>=1&&raw.length<=6,"E_POINTS");
+  const pts=raw.map(v=>{requireThat(Array.isArray(v)&&v.length===2,"E_POINTS");return v.map(n=>mod(integer(n),p));});
+  requireThat(new Set(pts.map(v=>v[0])).size===pts.length,"E_DUPLICATE_NODE");
+  let sum=[0];
+  for(let i=0;i<pts.length;i++){
+   let basis=[1],den=1;
+   for(let j=0;j<pts.length;j++)if(j!==i){basis=product(basis,[mod(-pts[j][0],p),1],p);den=mod(den*mod(pts[i][0]-pts[j][0],p),p);}
+   sum=addPoly(sum,scale(basis,mod(pts[i][1]*inverse(den,p),p),p),p);
+  }
+  requireThat(pts.every(([x,y])=>at(sum,x,p)===y),"E_INTERPOLATION_CHECK");return sum;
+ }
+ function irreducibility(a,p){
+  requireThat([2,3,5,7].includes(p)&&a.length>=3&&a.length<=5&&a.at(-1)===1,"E_IRREDUCIBILITY_SCOPE");
+  const degree=a.length-1;let checked=0;
+  for(let d=1;d<=Math.floor(degree/2);d++)for(let code=0;code<p**d;code++){
+   let q=code;const factor=[];for(let j=0;j<d;j++){factor.push(q%p);q=Math.floor(q/p);}factor.push(1);checked++;
+   if(zero(division(a,factor,p).remainder))return {irreducible:false,degree,first_factor:factor,checked_monic_factors:checked};
+  }
+  return {irreducible:true,degree,first_factor:null,checked_monic_factors:checked};
+ }
+ function quotientInverse(a,m,p){
+  a=division(a,m,p).remainder;
+  let r0=m.slice(),r1=a.slice(),t0=[0],t1=[1];
+  while(!zero(r1)){
+   const d=division(r0,r1,p),next=sub(t0,product(d.quotient,t1,p),p);
+   [r0,r1]=[r1,d.remainder];[t0,t1]=[t1,next];
+  }
+  const lead=inverse(r0.at(-1),p),g=scale(r0,lead,p);
+  if(g.length!==1||g[0]!==1)return {unit:false,inverse:null,gcd:g,product_remainder:null};
+  const inv=division(scale(t0,lead,p),m,p).remainder,check=division(product(a,inv,p),m,p).remainder;
+  requireThat(c.canon(check)==="[1]","E_QUOTIENT_INVERSE_CHECK");
+  return {unit:true,inverse:inv,gcd:g,product_remainder:check};
+ }
+ function evaluate(r){
+  if(c.record(r)&&Object.hasOwn(c.fields,r.operation))return c.evaluate(r);
+  try{
+   const p=c.checkRequest(r,fields),op=r.operation;let value,outcome="completed";
+   switch(op){
+    case "gf_polynomial_product":value={coefficients:product(polynomial(r.a,p),polynomial(r.b,p),p)};break;
+    case "gf_polynomial_division":value=division(polynomial(r.a,p),polynomial(r.b,p),p);break;
+    case "gf_polynomial_gcd":{const g=gcd(polynomial(r.a,p),polynomial(r.b,p),p);value={gcd:g,zero:zero(g)};break;}
+    case "gf_polynomial_evaluate":value={value:at(polynomial(r.a,p),mod(integer(r.at),p),p)};break;
+    case "gf_lagrange_interpolate":value={coefficients:interpolate(r.points,p)};break;
+    case "gf_formal_derivative":{const a=polynomial(r.a,p);value={coefficients:trim(a.slice(1).map((x,i)=>mod(x*(i+1),p)))};break;}
+    case "gf_quotient_representative":{const a=polynomial(r.a,p),m=modulusPolynomial(r.modulus,p);value={residue:division(a,m,p).remainder,modulus:m,irreducibility_claimed:false};outcome="represented";break;}
+    case "gf_representation_equivalence":{const a=polynomial(r.a,p),b=polynomial(r.b,p);value={a,b,equivalent:c.canon(a)===c.canon(b)};outcome="represented";break;}
+    case "gf_small_irreducibility":value=irreducibility(polynomial(r.a,p),p);break;
+    case "gf_quotient_inverse":value=quotientInverse(polynomial(r.a,p),modulusPolynomial(r.modulus,p),p);break;
+    default:throw new c.ContractError("E_OPERATION");
+   }
+   return c.envelope(op,value,outcome);
+  }catch(e){return c.rejection(e);}
+ }
+ return {...c,fields,evaluate,product,division,gcd,at,interpolate,modulusPolynomial,irreducibility,quotientInverse};
+}
+module.exports={createRuntime};
+if(require.main===module){const c=require(require("path").resolve(__dirname,"../x1/prime-field-core.txt")),runtime=createRuntime(c);c.cli(runtime);}

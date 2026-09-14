@@ -1,0 +1,193 @@
+{
+  "defined_before_execution": true,
+  "cases": [
+    {
+      "negative_id": "VQ6941-X2-DOMAIN-N001",
+      "title": "zero divisor",
+      "request": {
+        "operation": "gf_polynomial_division",
+        "p": 5,
+        "a": [
+          1
+        ],
+        "b": [
+          0
+        ]
+      },
+      "expected_error": "E_ZERO_DIVISOR"
+    },
+    {
+      "negative_id": "VQ6941-X2-DOMAIN-N002",
+      "title": "duplicate residue nodes",
+      "request": {
+        "operation": "gf_lagrange_interpolate",
+        "p": 5,
+        "points": [
+          [
+            0,
+            1
+          ],
+          [
+            5,
+            2
+          ]
+        ]
+      },
+      "expected_error": "E_DUPLICATE_NODE"
+    },
+    {
+      "negative_id": "VQ6941-X2-DOMAIN-N003",
+      "title": "empty nodes",
+      "request": {
+        "operation": "gf_lagrange_interpolate",
+        "p": 5,
+        "points": []
+      },
+      "expected_error": "E_POINTS"
+    },
+    {
+      "negative_id": "VQ6941-X2-DOMAIN-N004",
+      "title": "malformed node",
+      "request": {
+        "operation": "gf_lagrange_interpolate",
+        "p": 5,
+        "points": [
+          [
+            0,
+            1,
+            2
+          ]
+        ]
+      },
+      "expected_error": "E_POINTS"
+    },
+    {
+      "negative_id": "VQ6941-X2-DOMAIN-N005",
+      "title": "nonmonic quotient",
+      "request": {
+        "operation": "gf_quotient_inverse",
+        "p": 5,
+        "a": [
+          1
+        ],
+        "modulus": [
+          1,
+          2
+        ]
+      },
+      "expected_error": "E_QUOTIENT_MODULUS"
+    },
+    {
+      "negative_id": "VQ6941-X2-DOMAIN-N006",
+      "title": "constant quotient modulus",
+      "request": {
+        "operation": "gf_quotient_representative",
+        "p": 5,
+        "a": [
+          1
+        ],
+        "modulus": [
+          1
+        ]
+      },
+      "expected_error": "E_QUOTIENT_MODULUS"
+    },
+    {
+      "negative_id": "VQ6941-X2-DOMAIN-N007",
+      "title": "quotient degree ceiling",
+      "request": {
+        "operation": "gf_quotient_inverse",
+        "p": 5,
+        "a": [
+          1
+        ],
+        "modulus": [
+          1,
+          0,
+          0,
+          0,
+          0,
+          1
+        ]
+      },
+      "expected_error": "E_QUOTIENT_MODULUS"
+    },
+    {
+      "negative_id": "VQ6941-X2-DOMAIN-N008",
+      "title": "irreducibility prime scope",
+      "request": {
+        "operation": "gf_small_irreducibility",
+        "p": 11,
+        "a": [
+          1,
+          0,
+          1
+        ]
+      },
+      "expected_error": "E_IRREDUCIBILITY_SCOPE"
+    },
+    {
+      "negative_id": "VQ6941-X2-DOMAIN-N009",
+      "title": "irreducibility monicity",
+      "request": {
+        "operation": "gf_small_irreducibility",
+        "p": 5,
+        "a": [
+          1,
+          0,
+          2
+        ]
+      },
+      "expected_error": "E_IRREDUCIBILITY_SCOPE"
+    },
+    {
+      "negative_id": "VQ6941-X2-DOMAIN-N010",
+      "title": "fractional coefficient",
+      "request": {
+        "operation": "gf_polynomial_product",
+        "p": 5,
+        "a": [
+          1.5
+        ],
+        "b": [
+          1
+        ]
+      },
+      "expected_error": "E_INTEGER"
+    },
+    {
+      "negative_id": "VQ6941-X2-DOMAIN-N011",
+      "title": "empty polynomial",
+      "request": {
+        "operation": "gf_polynomial_gcd",
+        "p": 5,
+        "a": [],
+        "b": [
+          1
+        ]
+      },
+      "expected_error": "E_POLYNOMIAL"
+    },
+    {
+      "negative_id": "VQ6941-X2-DOMAIN-N012",
+      "title": "input degree ceiling",
+      "request": {
+        "operation": "gf_formal_derivative",
+        "p": 5,
+        "a": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1
+        ]
+      },
+      "expected_error": "E_POLYNOMIAL"
+    }
+  ],
+  "planned_contract_values_changed": false
+}

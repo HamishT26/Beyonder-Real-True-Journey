@@ -1,0 +1,4 @@
+"use strict";
+const path=require("path"),c=require(path.resolve(__dirname,"../../x1/prime-field-core.txt"));
+const kernel=require(path.resolve(__dirname,"../polynomial-core.txt")).createRuntime(c);
+require(path.resolve(__dirname,"../../x1/tools/run-session.txt")).runSession({session:"x2",kernel,bank:process.argv[2],skillRoot:process.argv[3],requiredParent:"128a1248af36e07e6465969a13d06c7e8ca0ac08",runnerSource:operations=>'"use strict";\nconst path=require("path"),c=require(path.resolve(__dirname,"../../x1/prime-field-core.txt"));\nconst runtime=require(path.resolve(__dirname,"../polynomial-core.txt")).createRuntime(c);\nc.cli(runtime,'+JSON.stringify(operations)+');\n'});

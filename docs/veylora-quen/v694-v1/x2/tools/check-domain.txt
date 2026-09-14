@@ -1,0 +1,14 @@
+"use strict";
+const fs=require("fs"),path=require("path"),dir="docs/veylora-quen/v694-v1/x2";
+const c=require(path.resolve(dir,"../x1/prime-field-core.txt")),r=require(path.resolve(dir,"polynomial-core.txt")).createRuntime(c);
+const e=require("./append-evidence.txt").openEvidence(dir,c),m=e.method("Polynomial domain admission and exceptional cases");
+const d=JSON.parse(fs.readFileSync(dir+"/evidence/domain-definitions.json")),rows=[];
+for(const t of d.cases){
+ const before=c.canon(t.request),out=r.evaluate(t.request),ok=out.ok===false&&out.error===t.expected_error&&before===c.canon(t.request);
+ e.failed(m,t.negative_id,t.request,t.title,dir+"/evidence/domain-definitions.json");
+ rows.push({negative_id:t.negative_id,output:out,pass:ok,subject_success_credit:0});
+ if(ok)e.pass(m,t.negative_id+"-REFUSAL","declared_domain_refusal",out);
+}
+fs.writeFileSync(dir+"/evidence/domain-results.json",JSON.stringify({total:rows.length,passed:rows.filter(r=>r.pass).length,rows},null,2)+"\n",{flag:"wx"});
+const counts=e.save();console.log(JSON.stringify({domain_total:rows.length,domain_passed:rows.filter(r=>r.pass).length,counts}));
+if(rows.some(r=>!r.pass))process.exitCode=2;

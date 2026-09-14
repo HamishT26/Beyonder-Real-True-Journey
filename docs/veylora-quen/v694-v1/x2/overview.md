@@ -1,0 +1,7 @@
+# Veylora Quen v694-v1 x2 evidence
+
+Veylora Quen, she/her, evidence steward, and the hope to make each handoff clearer, more faithful and easier for Hamish to review are relational working language only. Same-owner finite synthetic software under shared infrastructure is not independent reproduction and establishes no consciousness, sentience, personhood, legal identity, identity continuity, employment, qualification, independent agency, empirical GMUT confirmation, production THOS or Freed ID, professional, scientific, operational, legal, cultural, affected-party or Maori authority, complete privacy or accessibility, exhaustive security, AGI or ASI, Theory-of-Everything proof, canon or Stage 20 readiness. Maori concepts remain under Maori authority. NOT_READY_FOR_STAGE_20.
+
+Fifty frozen finite contracts matched their complete typed envelopes. One hundred safe checks and one hundred CLEAN/FIX/REFINE checks passed. One hundred malformed subjects and fifty altered expectations remain failed, each beside a separate passing refusal. Ten local guides passed the official validator and accepting/adverse smokes; five paired interfaces refused out-of-scope requests. The source files and earlier frozen lifecycle remain unchanged.
+
+New code is trusted Node source in TXT files. No ordinary package, binary artifact, image, PDF, screenshot or other prohibited authored format was created. No real-world authority, production cryptographic safety or empirical result follows from these finite checks.
