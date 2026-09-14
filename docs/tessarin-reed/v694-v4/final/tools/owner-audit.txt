@@ -1,0 +1,134 @@
+"""Bounded audit of this owner phase's exact Git blobs; never scans source tests."""
+import ast
+import copy
+import hashlib
+import json
+import pathlib
+import re
+import runpy
+import subprocess
+
+REL = "docs/tessarin-reed/v694-v4"
+BRANCH = "codex/GHC-Family/tessarin-reed-main"
+SOURCE = "63f2fab4613361bee101af73c1f908ef024055d1"
+PREFIX = ["d5798a5f31f431f1e5c409aa35e6ced3b23ae4c6", "83715b072e435c8f231b1e6bdb90275bdb466344", "801721f336ee0069c41d1e7a23c704bade3ad809"]
+
+def sha(data):
+    return hashlib.sha256(data).hexdigest()
+
+def strict(data):
+    def pairs(rows):
+        result = {}
+        for key,value in rows:
+            if key in result:
+                raise ValueError("duplicate JSON key")
+            result[key] = value
+        return result
+    return json.loads(data,object_pairs_hook=pairs,parse_constant=lambda _: (_ for _ in ()).throw(ValueError("nonfinite JSON")))
+
+def audit(repo, final, skills_root, public_tools, execute_tests):
+    repo = pathlib.Path(repo)
+    def git(*args, raw=False):
+        out = subprocess.check_output(["git","-C",str(repo),*args],timeout=90)
+        return out if raw else out.decode("utf-8").strip()
+    checks = []
+    def check(name, condition, detail=None):
+        checks.append({"name":name,"passed":bool(condition),"detail":detail})
+        if not condition:
+            raise AssertionError("Owner audit failed: "+name)
+    check("exact_final_head",re.fullmatch(r"[0-9a-f]{40}",final) is not None and git("rev-parse","HEAD")==final)
+    check("owner_branch",git("branch","--show-current")==BRANCH)
+    check("clean_worktree",git("status","--porcelain=v1")=="")
+    upstream=git("rev-parse","@{upstream}");tracking=git("rev-parse","refs/remotes/origin/"+BRANCH)
+    live=git("ls-remote","--heads","origin","refs/heads/"+BRANCH).split()
+    check("four_way_equality",upstream==tracking==final and len(live)==2 and live[0]==final)
+    check("zero_divergence",git("rev-list","--left-right","--count","HEAD...@{upstream}").split()==["0","0"])
+    chain=git("rev-list","--reverse","HEAD").splitlines()
+    check("blank_root_four_commit_chain",chain==PREFIX+[final] and git("show","-s","--format=%P",PREFIX[0])=="")
+    check("direct_parents_no_merge",all(git("show","-s","--format=%P",chain[i])==chain[i-1] for i in range(1,4)))
+    paths=git("ls-tree","-r","--name-only",final,"--",REL).splitlines()
+    check("owner_file_budget",0<len(paths)<=2000 and all(p.startswith(REL+"/") for p in paths),len(paths))
+    query="".join(final+":"+p+"\n" for p in paths).encode()
+    info=subprocess.check_output(["git","-C",str(repo),"cat-file","--batch-check"],input=query,timeout=90).decode().splitlines()
+    sizes=[int(x.split()[2]) for x in info]
+    check("blob_buffer_preflight",len(sizes)==len(paths) and max(sizes)<=4000000 and sum(sizes)<=32000000,{"largest_bytes":max(sizes),"total_bytes":sum(sizes)})
+    data=subprocess.check_output(["git","-C",str(repo),"cat-file","--batch"],input=query,timeout=90)
+    blobs={};pos=0
+    for path in paths:
+        end=data.index(b"\n",pos);count=int(data[pos:end].split()[2]);body=data[end+1:end+1+count]
+        if len(body)!=count or data[end+1+count:end+2+count]!=b"\n":
+            raise ValueError("short Git blob read")
+        blobs[path]=body;pos=end+count+2
+    check("exact_blob_framing",pos==len(data) and len(blobs)==len(paths))
+    objects={};maxwords=0;python_modules=0
+    for path,body in blobs.items():
+        text=body.decode("utf-8");maxwords=max(maxwords,len(text.split()))
+        if pathlib.PurePosixPath(path).suffix not in {".json",".md",".txt",".tex",".html"} or "\r" in text:
+            raise ValueError("format or newline contract")
+        if path.endswith(".json"):
+            objects[path]=strict(body)
+        if path.endswith(".txt") and ("/tools/" in path or "/scripts/" in path or "/public-runners/" in path):
+            ast.parse(text);python_modules+=1
+        for pattern in [r"(?<![A-Za-z0-9])[A-Za-z]:[\\/]",r"\b[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\b",r"\b(?:sk-|ghp_)[a-zA-Z0-9]{20,}",r"(?:codex|mcp|file)://",r"<(?:codex_delegation|conversation_export)>"]:
+            if re.search(pattern,text):
+                raise ValueError("private payload candidate")
+        if (repo/path).read_bytes()!=body:
+            raise ValueError("checkout differs from Git blob")
+    check("formats_strict_JSON_AST_privacy_checkout",maxwords<=100000,{"JSON":len(objects),"Python_TXT":python_modules,"maximum_words":maxwords})
+    bindings=0
+    for stage in ["plan","x1","x2","final"]:
+        manifest=objects[REL+"/"+stage+"/manifest.json"]
+        expected={p for p in paths if p.startswith(REL+"/"+stage+"/")}-set(manifest["self_exclusions"])
+        actual={e["path"] for e in manifest["entries"]}
+        if actual!=expected or len(actual)!=len(manifest["entries"]):
+            raise ValueError("stage manifest closure")
+        for row in manifest["entries"]:
+            if sha(blobs[row["path"]])!=row["sha256"] or len(blobs[row["path"]])!=row["bytes"]:
+                raise ValueError("stage manifest mismatch")
+            bindings+=1
+    check("four_stage_manifest_closure",True,bindings)
+    owner=objects[REL+"/final/owner-manifest.json"]
+    check("owner_manifest_closure",set(e["path"] for e in owner["entries"])==set(paths)-set(owner["self_exclusions"]) and len(owner["entries"])==len(paths)-2)
+    for row in owner["entries"]:
+        if sha(blobs[row["path"]])!=row["sha256"] or len(blobs[row["path"]])!=row["bytes"]:
+            raise ValueError("owner manifest mismatch")
+    seal=objects[REL+"/final/content-seal.json"]
+    check("content_seal",all(row["path"] in blobs and sha(blobs[row["path"]])==row["sha256"] for row in seal["entries"]) and seal["source_final"]==SOURCE,len(seal["entries"]))
+    ledger=objects[REL+"/final/method-flow-ledger.json"]
+    methods=ledger["methods"];witnesses=ledger["witnesses"];mids={m["method_id"]:m for m in methods};wids={w["witness_id"] for w in witnesses}
+    check("ledger_ids_and_backlinks",len(mids)==len(methods) and len(wids)==len(witnesses) and all(w["witness_id"] in mids[w["method_id"]]["validation_witness_ids"] for w in witnesses))
+    negatives=objects[REL+"/final/retained-negatives.json"]["entries"];fails=[w for w in witnesses if w["result"]=="fail"]
+    check("negative_bijection",len(negatives)==len(fails) and {n["failed_witness_id"] for n in negatives}=={w["witness_id"] for w in fails} and len({n["negative_id"] for n in negatives})==len(negatives))
+    check("same_owner_boundaries",all(w["same_owner_only"] is True and w["independent_reproduction"] is False for w in witnesses) and all(not m[k] for m in methods for k in ["repository_scan","cross_lane_scan","unchanged_history_scan","sibling_lane_mutation"]))
+    counts=objects[REL+"/final/source-faithful-ledger.json"]
+    delta=counts["owner_delta"];baseline=counts["activation_baseline"];total=counts["effective_repository_totals"]
+    check("source_overlay_owner_count_arithmetic",delta["methods"]==len(methods) and delta["witnesses"]==len(witnesses) and delta["passing_witnesses"]==len(witnesses)-len(fails) and delta["failed_witnesses_and_effective_negatives"]==len(fails) and all(total[k]==baseline[k]+delta[k] for k in total))
+    proposals=objects[REL+"/plan/proposals.json"]["proposals"];result=objects[REL+"/x2/proposal-ledger.json"]
+    check("proposal_dispositions_and_zero_inherited_credit",len(proposals)==100 and result["dispositions"]=={"completed":80,"represented":10,"open_gap":5,"exact_gate":5} and result["inherited_new_credit"]==0)
+    check("portfolios",all(objects[REL+"/"+s+"/"+f+"-receipts.json"]["count"]==100 for s in ["x1","x2"] for f in ["safe","candidate","clean_fix_refine"]))
+    packets=objects[REL+"/x2/exact-and-blocked-packets.json"]
+    check("exact_and_blocked_unexecuted",len(packets["exact_packets"])==50 and len(packets["blocked_packets"])==30 and all(p["executed"] is False for p in packets["exact_packets"]+packets["blocked_packets"]))
+    install=objects[REL+"/x2/global-installation-receipt.json"]
+    for row in install["parity_bindings"]:
+        alias=row["destination_alias"]
+        target=pathlib.Path(skills_root)/alias.removeprefix("skills/") if alias.startswith("skills/") else pathlib.Path(public_tools)/alias.removeprefix("public-runners/")
+        if sha(target.read_bytes())!=row["sha256"] or sha(blobs[row["source_path"]])!=row["sha256"]:
+            raise ValueError("installed parity mismatch")
+    check("global_installation_parity",len(install["parity_bindings"])==52 and install["overwrites"]==0 and install["spend_usd"]==0)
+    baton=blobs[REL+"/final/hand-off-baton.md"].decode()
+    check("baton_word_and_module_bounds",10000<=len(baton.split())<=100000 and len(re.findall(r"^## Module ",baton,re.M))==13 and baton.rstrip().endswith("END OF TESSARIN V694-V4 BATON."),len(baton.split()))
+    check("x1_planning_boundary",objects[REL+"/x1/planning-validation-summary.json"]["numerical_implementation_executed"] is False and objects[REL+"/x1/planning-validation-summary.json"]["proposal_completion_credit"]==0)
+    route=objects[REL+"/final/route-packet.json"]
+    check("reserved_terminal_route",route["state"]=="PREPARED_NOT_SENT" and route["successor_title"]=="Sylven Arc" and route["successor_phase"]=="v694-v5" and route["later_owner"]=="Caelen Morrow" and route["later_owner_contacted"] is False)
+    tests=[];adverse=[]
+    if execute_tests:
+        code=blobs[REL+"/x2/tools/enclosure-kernel.txt"].decode();namespace={"__name__":"owner_canonical_kernel"};exec(compile(code,"enclosure-kernel.txt","exec"),namespace)
+        for p in proposals:
+            request=copy.deepcopy(p["input"]);before=copy.deepcopy(request);out=namespace["evaluate"](request)
+            tests.append({"id":p["proposal_id"],"passed":out==p["expected"] and before==request})
+        for group in namespace["GROUPS"]:
+            p=next(p for p in proposals if p["operation"] in namespace["GROUPS"][group] and p["expected"]["accepted"]);bad=copy.deepcopy(p["input"]);bad["unexpected"]=True
+            out=namespace["evaluate"](bad,group);adverse.append({"group":group,"passed":out["accepted"] is False,"subject_success_credit":0})
+        check("owner_frozen_contract_tests",len(tests)==100 and all(t["passed"] for t in tests))
+        check("owner_adverse_refusals",len(adverse)==5 and all(t["passed"] for t in adverse))
+    return {"schema":"ghc.family.owner-canonical-payload.v1","owner":"Tessarin Reed","phase":"v694-v4","final":final,"source_final":SOURCE,"status":"VALID_EXACT_FINAL_OWNER_SCOPED_CANONICAL" if execute_tests else "PREFLIGHT_ONLY","checks":checks,"checks_passed":len(checks),"tests":tests,"adverse_refusals":adverse,"tests_executed":execute_tests,"file_count":len(paths),"source_canonical_replayed":False,"repository_scan":False,"cross_lane_scan":False,"unchanged_history_scan":False,"independent_reproduction":False,"terminal_verdict":"NOT_READY_FOR_STAGE_20"}

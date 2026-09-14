@@ -1,0 +1,47 @@
+"""One exclusive exact-final canonical. A retained attempt latch forbids replay."""
+import argparse
+import hashlib
+import json
+import pathlib
+import runpy
+
+def write(path, value):
+    body=(json.dumps(value,sort_keys=True,indent=2,ensure_ascii=False,allow_nan=False)+"\n").encode()
+    with path.open("xb") as file:
+        file.write(body)
+    return hashlib.sha256(body).hexdigest()
+
+def main():
+    parser=argparse.ArgumentParser()
+    parser.add_argument("--repo",required=True)
+    parser.add_argument("--final",required=True)
+    parser.add_argument("--receipt-dir",required=True)
+    parser.add_argument("--skills-root",required=True)
+    parser.add_argument("--public-tools",required=True)
+    parser.add_argument("--preflight",action="store_true")
+    args=parser.parse_args();bank=pathlib.Path(args.receipt_dir);bank.mkdir(parents=True,exist_ok=True)
+    audit=runpy.run_path(str(pathlib.Path(__file__).with_name("owner-audit.txt")))["audit"]
+    if args.preflight:
+        if (bank/"attempt-latch.json").exists():
+            raise SystemExit("Canonical already attempted; no replay or preflight restart allowed.")
+        result=audit(args.repo,args.final,args.skills_root,args.public_tools,False)
+        digest=write(bank/"preflight.json",result)
+        print(json.dumps({"status":"PREFLIGHT_ONLY","final":args.final,"checks":result["checks_passed"],"sha256":digest,"canonical_invocations":0}))
+        return
+    preflight=json.loads((bank/"preflight.json").read_text(encoding="utf-8"))
+    if preflight.get("status")!="PREFLIGHT_ONLY" or preflight.get("final")!=args.final:
+        raise SystemExit("Exact-final successful preflight is required.")
+    write(bank/"attempt-latch.json",{"owner":"Tessarin Reed","phase":"v694-v4","final":args.final,"invocations":1,"replays":0,"state":"ATTEMPT_CONSUMED"})
+    try:
+        result=audit(args.repo,args.final,args.skills_root,args.public_tools,True)
+        payload_hash=write(bank/"payload.json",result)
+        receipt={"status":result["status"],"owner":"Tessarin Reed","phase":"v694-v4","final":args.final,"payload_sha256":payload_hash,"checks_passed":result["checks_passed"],"checks_total":len(result["checks"]),"owner_tests_passed":len(result["tests"]),"adverse_refusals_passed":len(result["adverse_refusals"]),"canonical_invocations":1,"canonical_successes":1,"canonical_replays":0,"terminal_verdict":"NOT_READY_FOR_STAGE_20"}
+        receipt_hash=write(bank/"receipt.json",receipt)
+        write(bank/"success-latch.json",{"state":"SUCCESS_CONSUMED_NO_REPLAY","final":args.final,"payload_sha256":payload_hash,"receipt_sha256":receipt_hash,"canonical_invocations":1,"canonical_successes":1,"canonical_replays":0})
+        print(json.dumps({**receipt,"receipt_sha256":receipt_hash}))
+    except Exception as exc:
+        write(bank/"failure.json",{"status":"FAILED_CANONICAL_RETAINED","final":args.final,"error_class":type(exc).__name__,"canonical_invocations":1,"canonical_successes":0,"canonical_replays":0,"retry_authorized":False})
+        raise
+
+if __name__=="__main__":
+    main()
