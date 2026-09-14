@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Exact rational enclosure sandbox</title>
+<style>
+:root{font-family:system-ui,sans-serif;color:#152334;background:#f5f7fa;line-height:1.55}body{max-width:76rem;margin:auto;padding:2rem}h1{font-size:2.2rem;line-height:1.2}a{color:#164ba0}main{background:white;padding:2rem;border:1px solid #b4becb;border-radius:.7rem}fieldset{border:1px solid #7d8b9c;border-radius:.4rem;margin:1.2rem 0;padding:1rem}.inputs{display:grid;grid-template-columns:repeat(auto-fit,minmax(13rem,1fr));gap:1rem}label{display:block;font-weight:600}input,select,button{font:inherit;padding:.55rem;border:1px solid #627188;border-radius:.25rem;max-width:100%;box-sizing:border-box}input,select{width:100%}button{background:#174f91;color:white;cursor:pointer}button:focus-visible,input:focus-visible,select:focus-visible,a:focus-visible{outline:3px solid #9b5100;outline-offset:3px}.note{border-left:4px solid #35659e;padding-left:1rem}.table-wrap{overflow-x:auto}table{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums}th,td{text-align:left;border-bottom:1px solid #b4becb;padding:.7rem;overflow-wrap:anywhere}caption{text-align:left;font-weight:600;margin:.7rem 0}#status{min-height:1.6rem;font-weight:600}.small{font-size:.92rem;color:#3c4c62}code{overflow-wrap:anywhere}@media(max-width:600px){body{padding:.5rem}main{padding:1rem}h1{font-size:1.7rem}}
+</style>
+</head>
+<body>
+<main>
+<p class="small">Tessarin Reed · v694-v4 · synthetic teaching calculation</p>
+<h1>Exact rational enclosure sandbox</h1>
+<p>Explore how three declared discrete maps carry a box of possible positions and velocities. Every displayed endpoint is an exact rational number. Repeated boxes may widen as information about correlations is lost.</p>
+<p class="note">This table encloses the chosen discrete map. It does not certify a continuous trajectory, measure empirical uncertainty, or provide a physical GMUT prediction.</p>
+<form id="controls">
+<fieldset><legend>Initial box and map</legend><div class="inputs">
+<div><label for="xlo">Position lower bound</label><input id="xlo" value="-1" required spellcheck="false"></div>
+<div><label for="xhi">Position upper bound</label><input id="xhi" value="1" required spellcheck="false"></div>
+<div><label for="vlo">Velocity lower bound</label><input id="vlo" value="0" required spellcheck="false"></div>
+<div><label for="vhi">Velocity upper bound</label><input id="vhi" value="1" required spellcheck="false"></div>
+<div><label for="step">Step size</label><input id="step" value="1/4" required spellcheck="false"></div>
+<div><label for="mass">Squared mass parameter</label><input id="mass" value="1" required spellcheck="false"></div>
+<div><label for="method">Discrete map</label><select id="method"><option value="euler">Euler</option><option value="symplectic">Velocity-first symplectic</option><option value="verlet" selected>Velocity Verlet</option></select></div>
+<div><label for="steps">Number of steps</label><input id="steps" type="number" min="0" max="8" step="1" value="4" required></div>
+</div></fieldset>
+<p class="small">Use reduced rational strings such as <code>-2</code> or <code>1/4</code>. Numerator magnitude and denominator must be at most one million. Step size and squared mass must be nonnegative. The calculation allows zero through eight steps.</p>
+<button type="submit">Calculate exact boxes</button>
+</form>
+<p id="status" role="status" aria-live="polite"></p>
+<div class="table-wrap"><table><caption>Declared discrete-map boxes</caption><thead><tr><th scope="col">Step</th><th scope="col">Position interval</th><th scope="col">Velocity interval</th></tr></thead><tbody id="rows"></tbody></table></div>
+<details><summary>What the table supports</summary><p>A matrix row gives the exact coordinate extrema over the current independent box. The two-coordinate box may include points outside the actual matrix image. Repeated reboxing may lose correlation. A point interval and a zero step are valid inputs.</p><p>Matching another implementation supplies bounded same-owner software evidence. Continuous-solution bounds require additional truncation analysis. Physical claims require a specified physical model, traceable observations and independent review. Real controller deployment, safety certification, CBR remedies, cultural interpretation and Stage 20 promotion remain reserved.</p></details>
+<p class="small">Names and roles are relational working language. Maori concepts remain under Maori authority. THOS is proxy-only; Freed ID is synthetic and nonproduction. NOT_READY_FOR_STAGE_20.</p>
+<p><a href="../research/grand-mandala-enclosures.tex">Read the TeX source note</a> · <a href="../proposal-ledger.json">Inspect the proposal ledger</a></p>
+</main>
+<script>
+"use strict";
+function gcd(a,b){a=a<0n?-a:a;while(b){const t=a%b;a=b;b=t;}return a;}
+function rat(n,d=1n){if(d===0n)throw Error("Zero denominator.");if(d<0n){n=-n;d=-d;}const g=gcd(n,d);n/=g;d/=g;if((n<0n?-n:n).toString(2).length>512||d.toString(2).length>512)throw Error("Intermediate rational budget exceeded.");return [n,d];}
+function textq(a){return a[1]===1n?String(a[0]):String(a[0])+"/"+String(a[1]);}
+function parseq(s){if(typeof s!=="string"||s.length>32||! /^-?(?:0|[1-9][0-9]*)(?:\/[1-9][0-9]*)?$/.test(s))throw Error("Use a canonical rational string.");const p=s.split("/"),q=rat(BigInt(p[0]),p.length===2?BigInt(p[1]):1n);if(textq(q)!==s)throw Error("Reduce the rational string first.");if((q[0]<0n?-q[0]:q[0])>1000000n||q[1]>1000000n)throw Error("Input rational budget exceeded.");return q;}
+function plus(a,b){return rat(a[0]*b[1]+b[0]*a[1],a[1]*b[1]);}
+function times(a,b){return rat(a[0]*b[0],a[1]*b[1]);}
+function neg(a){return [-a[0],a[1]];}
+function minus(a,b){return plus(a,neg(b));}
+function less(a,b){return a[0]*b[1]<b[0]*a[1];}
+function pair(a){if(!Array.isArray(a)||a.length!==2)throw Error("Supply two interval endpoints.");const x=a.map(parseq);if(less(x[1],x[0]))throw Error("Interval endpoints are reversed.");return x;}
+function scaleq(c,a){const x=times(c,a[0]),y=times(c,a[1]);return less(x,y)?[x,y]:[y,x];}
+function plusbox(a,b){return [plus(a[0],b[0]),plus(a[1],b[1])];}
+function mapmatrix(method,h,k){const one=rat(1n),u=times(times(h,h),k),hk=times(h,k);if(method==="euler")return [[one,h],[neg(hk),one]];if(method==="symplectic")return [[minus(one,u),h],[neg(hk),one]];if(method!=="verlet")throw Error("Unknown discrete map.");const a=minus(one,times(u,rat(1n,2n)));return [[a,h],[neg(times(hk,minus(one,times(u,rat(1n,4n))))),a]];}
+function simulate(r){let x=pair(r.position),v=pair(r.velocity);const h=parseq(r.step),k=parseq(r.mass_squared);if(h[0]<0n||k[0]<0n)throw Error("Step size and squared mass must be nonnegative.");if(!Number.isInteger(r.steps)||r.steps<0||r.steps>8)throw Error("Use zero through eight steps.");const m=mapmatrix(r.method,h,k),states=[];for(let i=0;i<=r.steps;i++){states.push({step:i,position:x.map(textq),velocity:v.map(textq)});if(i<r.steps){const out=m.map(row=>plusbox(scaleq(row[0],x),scaleq(row[1],v)));[x,v]=out;}}return states;}
+globalThis.enclosureSandbox={simulate};
+if(typeof document!=="undefined"){
+ const get=id=>document.getElementById(id);
+ function render(event){if(event)event.preventDefault();get("rows").replaceChildren();try{const rawSteps=get("steps").value;if(!/^[0-8]$/.test(rawSteps))throw Error("Use a whole number from zero through eight.");const states=simulate({position:[get("xlo").value,get("xhi").value],velocity:[get("vlo").value,get("vhi").value],step:get("step").value,mass_squared:get("mass").value,method:get("method").value,steps:Number(rawSteps)});for(const row of states){const tr=document.createElement("tr");for(const value of [row.step,"["+row.position.join(", ")+"]","["+row.velocity.join(", ")+"]"]){const td=document.createElement("td");td.textContent=String(value);tr.appendChild(td);}get("rows").appendChild(tr);}get("status").textContent=states.length+" exact boxes shown. Discrete map only.";}catch(error){get("status").textContent="Input refused: "+error.message;}}
+ get("controls").addEventListener("submit",render);render();
+}
+</script>
+</body>
+</html>

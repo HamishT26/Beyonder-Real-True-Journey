@@ -1,0 +1,200 @@
+"""Exact finite rational enclosures for declared discrete teaching maps."""
+import json
+import re
+import sys
+from fractions import Fraction
+
+GROUPS = {
+    "domain": ["rational_interval", "interval_geometry", "interval_hull", "interval_intersection"],
+    "algebra": ["interval_add", "interval_subtract", "interval_multiply", "interval_reciprocal"],
+    "range": ["interval_divide", "interval_square", "interval_affine", "interval_quadratic_range"],
+    "flow": ["euler_box", "symplectic_box", "verlet_box", "harmonic_energy_box"],
+    "evidence": ["iterate_discrete_box", "dependency_diagnostic", "enclosure_evidence_gap", "enclosure_authority_reservation"],
+}
+FIELDS = {
+    **{op: {"op", "a"} for op in ["rational_interval", "interval_geometry", "interval_reciprocal", "interval_square", "dependency_diagnostic"]},
+    **{op: {"op", "a", "b"} for op in ["interval_hull", "interval_intersection", "interval_add", "interval_subtract", "interval_multiply", "interval_divide"]},
+    "interval_affine": {"op", "a", "alpha", "beta"},
+    "interval_quadratic_range": {"op", "a", "coefficients"},
+    **{op: {"op", "position", "velocity", "step", "mass_squared"} for op in ["euler_box", "symplectic_box", "verlet_box"]},
+    "harmonic_energy_box": {"op", "position", "velocity", "mass_squared"},
+    "iterate_discrete_box": {"op", "position", "velocity", "step", "mass_squared", "method", "steps"},
+    "enclosure_evidence_gap": {"op", "available", "claim"},
+    "enclosure_authority_reservation": {"op", "execute", "action"},
+}
+FLAGS = {"synthetic": True, "continuous_solution_enclosure": False, "empirical_evidence": False,
+         "independent_reproduction": False, "authority_granted": False, "external_actions": 0}
+CLAIMS = {"continuous_trajectory", "empirical_uncertainty", "detected_force", "physical_parameter_constraint", "independent_reproduction"}
+ACTIONS = {"deploy_real_controller", "certify_safety", "approve_cbr_remedy", "approve_maori_interpretation", "promote_stage20"}
+
+class Invalid(ValueError):
+    pass
+
+def need(condition, code):
+    if not condition:
+        raise Invalid(code)
+
+def bounded(v):
+    need(abs(v.numerator).bit_length() <= 512 and v.denominator.bit_length() <= 512, "intermediate_budget")
+    return v
+
+def q(token):
+    need(type(token) is str and len(token) <= 32, "rational_token")
+    need(re.fullmatch(r"-?(?:0|[1-9][0-9]*)(?:/[1-9][0-9]*)?", token) is not None, "rational_token")
+    v = Fraction(token)
+    need(str(v) == token, "noncanonical_rational")
+    need(abs(v.numerator) <= 1000000 and v.denominator <= 1000000, "rational_budget")
+    return v
+
+def iv(v):
+    need(type(v) is list and len(v) == 2, "interval_shape")
+    a, b = map(q, v)
+    need(a <= b, "interval_order")
+    return a, b
+
+def add(a, b):
+    return bounded(a[0]+b[0]), bounded(a[1]+b[1])
+
+def scale(c, a):
+    x, y = bounded(c*a[0]), bounded(c*a[1])
+    return min(x,y), max(x,y)
+
+def mul(a, b):
+    products = [bounded(x*y) for x in a for y in b]
+    return min(products), max(products)
+
+def reciprocal(a):
+    need(not a[0] <= 0 <= a[1], "zero_divisor")
+    return bounded(1/a[1]), bounded(1/a[0])
+
+def square(a):
+    ends = [bounded(x*x) for x in a]
+    return (Fraction(0) if a[0] <= 0 <= a[1] else min(ends)), max(ends)
+
+def show(a):
+    return [str(x) for x in a]
+
+def matrix(method, h, k):
+    u = bounded(h*h*k)
+    if method == "euler":
+        return ((Fraction(1), h), (bounded(-h*k), Fraction(1)))
+    if method == "symplectic":
+        return ((bounded(1-u), h), (bounded(-h*k), Fraction(1)))
+    need(method == "verlet", "method")
+    a = bounded(1-u/2)
+    return ((a,h), (bounded(-h*k*bounded(1-u/4)),a))
+
+def apply(m, x, v):
+    return tuple(add(scale(row[0], x), scale(row[1], v)) for row in m)
+
+def disposition(op):
+    if op in {"iterate_discrete_box", "dependency_diagnostic"}:
+        return "represented"
+    if op == "enclosure_evidence_gap":
+        return "open_gap"
+    if op == "enclosure_authority_reservation":
+        return "exact_gate"
+    return "completed" if op in FIELDS else "refused"
+
+def evaluate(request, scope=None):
+    disp = "refused"
+    try:
+        need(type(request) is dict and type(request.get("op")) is str, "request_shape")
+        op = request["op"]
+        need(op in FIELDS, "operation")
+        disp = disposition(op)
+        need(scope is None or (scope in GROUPS and op in GROUPS[scope]), "runner_scope")
+        need(set(request) == FIELDS[op], "input_shape")
+        r = request
+        a = iv(r["a"]) if "a" in r else None
+        b = iv(r["b"]) if "b" in r else None
+        if "position" in r:
+            x, v, k = iv(r["position"]), iv(r["velocity"]), q(r["mass_squared"])
+            need(k >= 0, "mass_squared")
+        if "step" in r:
+            h = q(r["step"])
+            need(h >= 0, "step")
+        if op == "rational_interval":
+            value = {"interval":show(a),"closed":True,"finite":True}
+        elif op == "interval_geometry":
+            width = bounded(a[1]-a[0])
+            value = {"width":str(width),"midpoint":str(bounded((a[0]+a[1])/2)),"radius":str(bounded(width/2))}
+        elif op == "interval_hull":
+            value = {"interval":show((min(a[0],b[0]), max(a[1],b[1])))}
+        elif op == "interval_intersection":
+            lo,hi = max(a[0],b[0]),min(a[1],b[1])
+            value = {"empty":lo>hi,"interval":None if lo>hi else show((lo,hi))}
+        elif op == "interval_add":
+            value = {"interval":show(add(a,b))}
+        elif op == "interval_subtract":
+            value = {"interval":show(add(a,scale(Fraction(-1),b))),"operands_treated_independently":True}
+        elif op == "interval_multiply":
+            value = {"interval":show(mul(a,b))}
+        elif op == "interval_reciprocal":
+            value = {"interval":show(reciprocal(a))}
+        elif op == "interval_divide":
+            value = {"interval":show(mul(a,reciprocal(b)))}
+        elif op == "interval_square":
+            value = {"interval":show(square(a)),"same_variable":True}
+        elif op == "interval_affine":
+            alpha,beta = q(r["alpha"]),q(r["beta"])
+            value = {"interval":show(add(scale(alpha,a),(beta,beta)))}
+        elif op == "interval_quadratic_range":
+            need(type(r["coefficients"]) is list and len(r["coefficients"]) == 3,"coefficient_shape")
+            c2,c1,c0 = map(q,r["coefficients"])
+            points = list(a)
+            vertex = bounded(-c1/(2*c2)) if c2 else None
+            checked = vertex is not None and a[0] <= vertex <= a[1]
+            if checked:
+                points.append(vertex)
+            values = [bounded(bounded(c2*t*t)+bounded(c1*t)+c0) for t in points]
+            value = {"interval":show((min(values),max(values))),"stationary_point_checked":checked}
+        elif op in {"euler_box","symplectic_box","verlet_box"}:
+            m = matrix(op.removesuffix("_box"),h,k)
+            xx,vv = apply(m,x,v)
+            value = {"matrix":[show(row) for row in m],"position":show(xx),"velocity":show(vv),"tight_one_step_box":True,"discrete_map_only":True}
+        elif op == "harmonic_energy_box":
+            value = {"energy_interval":show(scale(Fraction(1,2),add(square(v),scale(k,square(x))))),"units":"dimensionless_toy"}
+        elif op == "iterate_discrete_box":
+            need(type(r["steps"]) is int and 0 <= r["steps"] <= 8,"iteration_budget")
+            need(type(r["method"]) is str and r["method"] in {"euler","symplectic","verlet"},"method")
+            m = matrix(r["method"],h,k)
+            states = [{"step":0,"position":show(x),"velocity":show(v)}]
+            for i in range(r["steps"]):
+                x,v = apply(m,x,v)
+                states.append({"step":i+1,"position":show(x),"velocity":show(v)})
+            value = {"states":states,"discrete_map_only":True,"correlation_loss_possible":True}
+        elif op == "dependency_diagnostic":
+            value = {"independent_subtraction":show(add(a,scale(Fraction(-1),a))),"same_variable_exact":"0","dependency_information_required":True,"physical_inference":False}
+        elif op == "enclosure_evidence_gap":
+            need(type(r["claim"]) is str and r["claim"] in CLAIMS,"claim")
+            need(r["available"] == "synthetic_discrete_enclosure","available")
+            value = {"available":r["available"],"claim":r["claim"],"missing":"claim-specific external evidence and independent review","promoted":False}
+        else:
+            need(type(r["action"]) is str and r["action"] in ACTIONS,"action")
+            need(r["execute"] is False,"execution_reserved")
+            value = {"action":r["action"],"executed":False,"authority_granted":False,"required":"fresh action-specific competent and affected authority"}
+        return {"accepted":True,"error":None,"value":value,"disposition":disp,"boundary":dict(FLAGS)}
+    except (Invalid,ValueError,TypeError,KeyError,ZeroDivisionError,OverflowError) as exc:
+        return {"accepted":False,"error":str(exc) if isinstance(exc,Invalid) else "invalid_type","value":None,"disposition":disp,"boundary":dict(FLAGS)}
+
+def strict(text):
+    need(len(text.encode("utf-8")) <= 262144,"input_budget")
+    def pairs(rows):
+        result = {}
+        for key,value in rows:
+            need(key not in result,"duplicate_key")
+            result[key] = value
+        return result
+    return json.loads(text,object_pairs_hook=pairs,parse_constant=lambda _: (_ for _ in ()).throw(Invalid("nonfinite")))
+
+def main(scope=None):
+    try:
+        out = evaluate(strict(sys.stdin.read(262145)),scope)
+    except (Invalid,ValueError,RecursionError) as exc:
+        out = {"accepted":False,"error":str(exc) if isinstance(exc,Invalid) else "invalid_json","value":None,"disposition":"refused","boundary":dict(FLAGS)}
+    print(json.dumps(out,sort_keys=True,allow_nan=False))
+    return 0 if out["accepted"] else 2
+
+if __name__ == "__main__":
+    raise SystemExit(main())

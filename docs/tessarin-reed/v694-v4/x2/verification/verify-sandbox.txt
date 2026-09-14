@@ -1,0 +1,33 @@
+"use strict";
+const fs=require("fs"),path=require("path"),vm=require("vm"),assert=require("assert");
+const base=path.resolve(__dirname,".."),html=fs.readFileSync(path.join(base,"simulation/rational-enclosure-sandbox.html"),"utf8");
+const blocks=[...html.matchAll(/<script>([\s\S]*?)<\/script>/g)];assert.equal(blocks.length,1);
+assert(!/<(?:img|svg|canvas|iframe)\b/i.test(html));assert(!/<script[^>]+src=/i.test(html));
+assert(!/\b(?:fetch|XMLHttpRequest|WebSocket)\s*\(/.test(blocks[0][1]));
+const code=new vm.Script(blocks[0][1]);const context=vm.createContext({});code.runInContext(context,{timeout:3000});
+const proposals=JSON.parse(fs.readFileSync(path.join(base,"../plan/proposals.json"),"utf8")).proposals;
+const results=[];
+for(const p of proposals.slice(60,75)){
+ const r={...p.input,method:p.operation.replace("_box",""),steps:1};const rows=context.enclosureSandbox.simulate(r),last=rows[1];
+ assert.deepStrictEqual(JSON.parse(JSON.stringify(last.position)),p.expected.value.position);
+ assert.deepStrictEqual(JSON.parse(JSON.stringify(last.velocity)),p.expected.value.velocity);
+ results.push({proposal_id:p.proposal_id,kind:"one_step",matched:true});
+}
+for(const p of proposals.slice(80,85)){
+ const rows=JSON.parse(JSON.stringify(context.enclosureSandbox.simulate(p.input)));
+ assert.deepStrictEqual(rows,p.expected.value.states);results.push({proposal_id:p.proposal_id,kind:"iteration",matched:true});
+}
+function element(value=""){return {value,children:[],textContent:"",handlers:{},replaceChildren(){this.children=[];},appendChild(x){this.children.push(x);},addEventListener(k,f){this.handlers[k]=f;}};}
+const controls={xlo:element("-1"),xhi:element("1"),vlo:element("0"),vhi:element("1"),step:element("1/4"),mass:element("1"),method:element("verlet"),steps:element("4"),rows:element(),status:element(),controls:element()};
+const dom=vm.createContext({document:{getElementById:id=>controls[id],createElement:()=>element()}});code.runInContext(dom,{timeout:3000});
+assert.equal(controls.rows.children.length,5);assert.equal(controls.rows.children[0].children.length,3);assert(controls.status.textContent.includes("Discrete map only"));
+controls.xlo.value="1/0";controls.controls.handlers.submit({preventDefault(){}});assert.equal(controls.rows.children.length,0);assert(controls.status.textContent.startsWith("Input refused:"));
+controls.xlo.value="-1";controls.controls.handlers.submit({preventDefault(){}});assert.equal(controls.rows.children.length,5);
+const rejected=[];
+for(const patch of [{step:"-1"},{mass_squared:"-1"},{steps:9},{steps:true},{position:["1","-1"]},{position:["01","2"]},{position:["1000001","1000001"]},{method:"unknown"}]){
+ const request={position:["-1","1"],velocity:["0","1"],step:"1/4",mass_squared:"1",steps:4,method:"verlet",...patch};
+ let error=null;try{context.enclosureSandbox.simulate(request);}catch(e){error=e.message;}assert(error);rejected.push({patch,subject_result:"fail",subject_credit:0,refusal_check:"pass",error});
+}
+const report={valid:true,scope:"Node VM arithmetic and DOM stub; no browser or assistive-technology session",frozen_comparisons:results,comparisons:20,dom_initial_rows:5,dom_invalid_clears_rows:true,dom_recovery_rows:5,rejected_subjects:rejected,no_external_resources:true,no_images_or_screenshots_created:true,complete_accessibility_claim:false};
+if(process.argv[2])fs.writeFileSync(process.argv[2],JSON.stringify(report,null,2)+"\n",{flag:"wx"});
+process.stdout.write(JSON.stringify({valid:true,frozen_comparisons:20,refusals:8,dom_stub_checks:3,browser_checked:false})+"\n");
