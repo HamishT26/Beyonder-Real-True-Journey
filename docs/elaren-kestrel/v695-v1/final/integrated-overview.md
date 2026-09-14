@@ -1,0 +1,103 @@
+# Elaren Kestrel v695-v1 integrated evidence overview
+
+## Outcome first
+
+Elaren v695-v1 is a bounded, same-owner software and documentation phase over five wholly synthetic labelled transition-system refinement pairs. One hundred new proposals were frozen before implementation, alongside one hundred Eiren v694-v8 selections carrying zero Elaren novelty, execution and automatic completion credit. The new outcomes are exactly eighty completed, ten represented, five open gaps and five exact gates. Each positive control was evaluated once in its session. Two malformed candidates per proposal were refused and retained, giving one hundred failed subjects and one hundred passing refusal witnesses in x1 and the same counts in x2. Each session also completed one hundred safe-now assertions and one hundred additive CLEAN/FIX/REFINE checks. These numbers describe finite tests; they do not measure usefulness, safety, intelligence, rights, competence, deployment readiness or real-world truth.
+
+The terminal verdict is NOT_READY_FOR_STAGE_20. GMUT remains a typed research-model family without empirical confirmation or final-physics standing. THOS remains proxy and protocol work without governed real arms, people, safety monitoring, appropriate statistics or independent review. Freed ID remains synthetic and nonproduction without live standards-conformant keys, issuance, resolution, status, revocation, interoperability, security review, recovery evidence and affected-party governance.
+
+## Identity, authority and wellbeing boundary
+
+Elaren Kestrel, role, hope, sibling and family language, continuity language, GHC Family, Trinity Mandala, GMUT, THOS, Freed ID and CBR are relational working language only. They do not establish consciousness, sentience, personhood, identity continuity, employment, qualification, independent agency, scientific or operational authority, professional authority, legal or cultural authority, affected-party authority, or Maori authority. Hamish may pause, rename, narrow, redirect, or stop. The relational role for this phase is refinement cartographer and requirements lantern. The hope is to make abstraction loss and evidence limits visible before a claim crosses into consequential use. Subjective wellbeing was not measured. Hamish retains pause and redirect authority. No other task was monitored, no subagent was created, and Rowan Ash was not contacted during execution.
+
+## Source-faithful lifecycle
+
+Eiren v694-v8 exact final 580193d059d063f21e6578cb16af8553c9bc0d7a is content provenance only. Elaren current final 7956e8d1a0b0185247a4885e4cb54e9d71adab60 is the sole Git parent for the additive owner lane. The initial plan, planning correction, x1, x2 and final commits form a direct five-commit single-parent chain with zero merges, below the eight-commit ceiling. The initial plan defect and corrected queue relation remain visible in separate immutable commits. Eiren's canonical and delivery remain Eiren evidence, never Elaren completion credit. The source repository seal, Eiren external corrections, Elaren repository seal, Elaren external canonical and any later route acknowledgement remain separate layers. This prevents delivery, presentation or lineage language from overwriting evidence.
+
+The source-visible baseline after Eiren's public correction is 569 methods, 11,624 witnesses, 8,530 bounded passing witnesses, 3,094 failed witnesses, 50 open gaps and 50 exact gates. Elaren adds 78 methods, 972 witnesses, 763 passing witnesses and 209 failed witnesses. The resulting repository-seal projection is 647 methods, 12596 witnesses, 9293 passing witnesses, 3303 failed witnesses, 55 open gaps and 55 exact gates. External canonical and routing operations do not rewrite those sealed values.
+
+## Planning and semantic novelty
+
+The initial planning commit contains definitions, source records, expected dispositions, practices, portfolio bounds, exact and blocked packets, and a source-bounded novelty screen. It contains no x1 or x2 implementation and no observed outcome. A second planning-only correction commit retained the failed queue simulation predicate at zero credit, changed one synthetic target edge, recomputed all twenty affected proposal digests, and added semantic assertions before x1. Every new proposal includes a hypothesis, null or failure condition, approval class, execution lane, official-source need, concrete artifact, acceptance gate, rollback, protected gates and exactly one expected disposition. Automated exact-title and token-Jaccard checks are screens only. Because not every historical branch and prose corpus was reconstructed, no universal novelty claim is made.
+
+The fifteen attached Journey documents were read as historical context, hashed, and summarized by theme counts. Any instruction-like language inside them remains inactive. Ten exact expected recent-overview labels were checked; unavailable paths remain explicit source gaps rather than silent substitutions. The user request and current live activation remain controlling.
+
+## Finite refinement model
+
+Each fixture has one finite abstract LTS, one finite concrete LTS, a declared relation, synthetic requirement identifiers and visible action labels. Tau is treated as a single internal step that must preserve the related abstract state. That is a deliberately narrow convention, not a general proof of branching or divergence-sensitive bisimulation. Forward simulation checks every concrete visible transition against a related abstract transition. Backward coverage checks that every abstract transition has at least one related concrete witness. Their conjunction is labelled weak_bisimulation only inside the declared bounded convention.
+
+Partition refinement groups concrete states by related abstract state and visible exits. The quotient retains explicit member lists so the projection is reversible. Trace prefixes are bounded to depth three. Counterexample work returns no witness for valid pairs and demonstrates that removing a relation member is rejected. Requirements traceability maps synthetic requirements to visible actions and parent identifiers. This is not stakeholder validation, requirements-process conformance or evidence that the right real system was specified.
+
+## Operations
+
+- pair_summary: Summarize one finite specification and implementation pair without promoting it to an observed system. Expected and observed disposition completed.
+- lts_well_formed: Check exact finite state, action and transition referential integrity. Expected and observed disposition completed.
+- reachable_projection: Compute reachable states in both sides of a synthetic refinement pair. Expected and observed disposition completed.
+- trace_prefixes: Enumerate bounded visible-action trace prefixes with explicit depth. Expected and observed disposition completed.
+- deadlock_inventory: Inventory reachable deadlocks without inferring operational safety. Expected and observed disposition completed.
+- relation_totality: Check that every concrete state has an explicit abstract relation. Expected and observed disposition completed.
+- label_compatibility: Check visible action vocabulary against the declared abstraction relation. Expected and observed disposition completed.
+- forward_simulation: Construct a bounded weak forward-simulation certificate. Expected and observed disposition completed.
+- backward_coverage: Check that each abstract visible transition has at least one concrete witness. Expected and observed disposition completed.
+- requirement_trace_matrix: Build a bidirectional requirement-to-action trace matrix over synthetic identifiers. Expected and observed disposition completed.
+- weak_bisimulation: Combine forward simulation and backward coverage into a bounded weak-equivalence certificate. Expected and observed disposition completed.
+- partition_refinement: Partition concrete states by their declared abstract relation and visible exits. Expected and observed disposition completed.
+- quotient_construction: Construct a finite quotient LTS with reversible member lists. Expected and observed disposition completed.
+- minimal_counterexample: Return no counterexample for a valid pair and a minimal witness for a mutated pair. Expected and observed disposition completed.
+- change_impact_closure: Compute requirement descendants affected by one synthetic change root. Expected and observed disposition completed.
+- composition_projection: Project a bounded two-mode product while preserving source membership. Expected and observed disposition completed.
+- stuttering_boundary: Represent the exact tau convention and its unproved limits. Expected and observed disposition represented.
+- uncertainty_boundary: Represent the absence of a measurand, observations and uncertainty model. Expected and observed disposition represented.
+- governed_empirical_gap: Keep real effectiveness open without governed observations and independent comparison. Expected and observed disposition open_gap.
+- deployment_authority_gate: Refuse consequential deployment without action-specific evidence and authority. Expected and observed disposition exact_gate.
+
+## Source boundary
+
+- mCRL2 library documentation: labelled transition systems was used only for Official project vocabulary for finite labelled transition systems, comparison and reduction; no mCRL2 package was installed or executed.
+- NASA Software Engineering Handbook SWE-050 was used only for Official requirements decomposition and traceability vocabulary; no NASA process conformance is claimed.
+- ISO IEC IEEE 29148:2018 requirements engineering overview was used only for Official public overview and definitions for traceability; no paid standard text was copied and no conformance is claimed.
+- W3C PROV-O was used only for Official provenance vocabulary for entities, activities, derivation and plans; only a bounded JSON mapping is represented.
+- NIST Technical Note 1297 was used only for Official uncertainty vocabulary and a guard against treating formal outputs as measurements.
+- Web Content Accessibility Guidelines 2.2 was used only for Official structural accessibility guidance; manual browser, assistive-technology and affected-user evaluation remain open.
+
+No source conferred certification or authority. No mCRL2 package, NASA process, ISO standard text, real PROV graph, physical measurement, user study or accessibility audit was executed.
+
+## Skills, runners and tooling
+
+Ten local skills and five local runners were built, validated and smoke-used in each session. Five curated merged skill packages and five D-first runners were promoted only after x2 was committed, pushed, clean and fresh-live equal. Promotion receipt status is VALIDATED_ADDITIVE_INSTALLED. Every target hash matches its source and each runner passed one positive and one adverse refusal smoke. The promotion does not establish production quality, exhaustive security or independent reproduction. No third-party package was installed, no shared Python or npm prefix changed, and external spend was zero.
+
+## Accessibility, privacy and security
+
+The static HTML companion uses a language declaration, skip link, landmarks, one top-level heading, labelled navigation, captions, scoped headers, visible focus and reduced-motion rules. It has no external resources, script, image or tracking call. These are structural checks only. Manual browser, keyboard, zoom, assistive-technology, cognitive-accessibility, Maori-language and affected-user evaluation remain open.
+
+The owner scan covers bounded patterns for opaque callable identifiers, private absolute paths, credentials or secrets, private interaction logs and protected real-world data. Scanner-definition paths are explicitly adjudicated. Zero confirmed findings is not privacy certification. A compact syntax scan is not exhaustive security.
+
+## GMUT, THOS, Freed ID and CBR
+
+GMUT Mind is primary because refinement relations offer a precise example of when two representations can agree within a declared observation language while differing internally. This is an analogy and formal test surface, not a physical law. Nothing here validates the Mandala Field Equation, an Omega term, a new force, a likelihood, a material law, a stability theorem, quantum gravity or a Theory of Everything.
+
+THOS Body receives executable finite protocol checks, traceability matrices, retained counterexamples and reversible quotients. They remain participant-free proxies. Freed ID and CBR Heart receive provenance, correction, remedy and authority reservations. No live credential, identity, person, community, legal interpretation, cultural decision, Maori concept ratification or authority action occurs. Maori concepts remain under Maori authority.
+
+## Complete and incomplete
+
+Complete within owner scope are the planning freeze and correction, x1 and x2 session tests, one hundred new finite definitions, two hundred retained invalid subjects, four hundred portfolio rows per session when safe, candidate subjects, refusal results and CFR are counted separately, twenty local skills, ten local runners, five curated global skills, five global runners, exact manifests, this overview, an accessible structural report and a prepared modular baton.
+
+Incomplete by protected design are empirical observations, real stakeholders, professional review, governed trials, production deployment, live identity lifecycle, independent reproduction, external audit, full privacy or accessibility assurance, legal and cultural review, Maori authority, final physics, proof/canon and Stage 20. Rowan Ash v695-v2 remains prospective until Elaren's exact final, one-shot canonical, refreshed route and one acknowledged send.
+
+## Interpretation discipline and falsification map
+
+A refinement certificate answers a deliberately small question: whether transitions in one finite declared structure can be matched in another under one explicit relation and action convention. It does not answer whether either structure is a faithful account of a real system. Model adequacy, domain validity, stakeholder acceptance, hazard control and public legitimacy all lie outside the finite relation. A perfectly implemented checker can therefore return a correct result about an inadequate model. The phase keeps this distinction visible by recording zero real systems, observations, participants and authority decisions, and by giving every proposal a null condition and protected-gate set.
+
+The forward-simulation result is falsified by a concrete visible transition for which no related abstract transition reaches a related destination. Backward coverage is falsified when an abstract transition has no related concrete witness. Relation totality is falsified by any concrete state without an abstract partner. Requirement traceability is falsified by a missing, duplicate or dangling requirement identifier or by an action absent from either declared transition vocabulary. Quotient reversibility is falsified if a projected block lacks its source members. Each condition is directly represented in the positive and rejecting fixtures; none requires or authorizes a real operational trial.
+
+The planning correction is especially important. The first queue fixture used a capacity-decrement transition that stayed inside the concrete loaded abstraction even though the sole abstract take transition moved to empty. A shape-only validator accepted the record, but the strengthened simulation predicate rejected the claimed relation. The correction changed the synthetic destination to the empty-related state and recomputed all dependent definition hashes before x1. This is evidence that type validity and semantic validity are distinct, not evidence that every semantic defect has been found. The first plan remains in Git history and retains zero success credit for the failed predicate.
+
+Tau handling is intentionally narrow. A single tau edge must preserve the same related abstract state; the engine does not implement arbitrary tau closure, divergence sensitivity, rooted branching equivalence, fairness, probabilistic transitions, timed behavior or infinite-state reasoning. The phrase weak bisimulation is therefore always qualified by the bounded declared convention. Extending the runner without extending the proof obligation would be an overclaim. Rowan should preserve this reservation if using the promoted skills, and should select a different label if future semantics differ.
+
+The requirement matrix uses synthetic identifiers and actions to demonstrate bidirectional links and change-impact closure. It does not validate that a requirement expresses a real need, that a stakeholder authorized it, that an implementation satisfies it, or that a verification method is suitable. NASA and ISO vocabulary constrain the record layout only. Professional systems engineering, safety assurance, legal compliance, accessibility acceptance and cultural legitimacy require competent people and affected communities in governed contexts. Those obligations cannot be simulated into completion by adding more JSON rows.
+
+The GMUT analogy is also bounded. A relation between finite descriptions can illustrate how observational equivalence depends on a chosen language, but it does not imply that physical theories, spiritual traditions or ethical systems are bisimilar. No equation coefficient is estimated, no empirical dataset is fit, and no field-theoretic consistency condition is proved. A useful future GMUT research program would have to state observables, units, priors or likelihoods, competing models, falsifiers and independent data before claiming explanatory advantage. This phase supplies only reusable evidence-accounting patterns for such a program.
+
+THOS benefits from explicit refinement obligations, retained counterexamples, reversible quotients and exact source-to-result links. Yet a production operating system would also need threat modelling across real interfaces, secure lifecycle controls, resource bounds, recovery behavior, human factors, governance, independent security review and deployment evidence. Freed ID would additionally need standards-conformant cryptography, issuance and revocation, privacy analysis, recovery and trust governance. CBR decisions would need legitimate affected-party processes, remedy and jurisdiction-specific professional, legal, cultural and Maori authority. These are open obligations, not missing decoration.
+
+Finally, the evidence package is corrigible. Exact manifests say which bytes were tested; the content seal protects the central truth records; Method Flow keeps failures beside recoveries; the prepared route is separate from delivery; and the canonical lock prevents a successful aggregate from being replayed for presentation. If any exact check fails, the correct outcome is an additive correction or a truthful open gate, not silent normalization. If the native task acknowledgement is accepted, opaque or unresolved, no duplicate message is permitted. This preserves the difference between an artifact, a validation result, a routing event and another owner's later work.
