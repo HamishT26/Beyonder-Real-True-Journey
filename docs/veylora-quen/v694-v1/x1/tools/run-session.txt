@@ -1,0 +1,187 @@
+"use strict";
+const fs=require("fs"),path=require("path"),cp=require("child_process"),vm=require("vm");
+const ROOT=process.cwd(),BASE="docs/veylora-quen/v694-v1",OWNER="Veylora Quen",PHASE="v694-v1";
+function runSession(spec){
+ const {session,kernel:c,bank,skillRoot,requiredParent}=spec,dir=path.join(ROOT,BASE,session),plan=path.join(ROOT,BASE,"plan");
+ function load(p){return JSON.parse(fs.readFileSync(p,"utf8"));}
+ function put(rel,obj){const p=path.join(dir,rel);fs.mkdirSync(path.dirname(p),{recursive:true});fs.writeFileSync(p,typeof obj==="string"?obj.trimEnd()+"\n":JSON.stringify(obj,null,2)+"\n",{encoding:"utf8",flag:"wx"});}
+ const head=cp.execFileSync("git",["rev-parse","HEAD"],{cwd:ROOT,encoding:"utf8"}).trim();
+ if(head!==requiredParent)throw Error("required immutable parent mismatch");
+ if(fs.existsSync(path.join(dir,"results/proposals.json")))throw Error("session outputs already exist");
+ const all=load(path.join(plan,"proposals.json")),ps=all.proposals.filter(p=>p.session===session),G=ps[0].protected_gates,B=all.boundary;
+ const methods=[],witnesses=[],negativeRecords=[],events=[],recommendations=[],methodByKey=new Map(),negativeSet=new Set();
+ const shortBoundary="Same-owner finite evidence only; no independent reproduction, real-world authority, consciousness or Stage 20 credit.";
+ function method(key,title){
+  if(methodByKey.has(key))return methodByKey.get(key);
+  const id="VQ6941-"+session+"-M"+String(methods.length+1).padStart(3,"0");
+  const m={method_id:id,title,failure_signature:"The declared malformed subject, altered expectation or operational method fails its admission condition.",
+   trigger_preconditions:["Exact frozen definition and owner scope","Matching synthetic or retained operational input"],
+   privacy_class:"sanitized_public",approval_class:"safe_now",candidate_workaround:"Use the exact valid definition and preserve every failed subject beside its bounded refusal.",
+   validation_witness_ids:[],recurrence_guard:"Compare the complete envelope and preserve source bytes and explicit field boundaries.",
+   rollback:"Stop selecting the failed owner dependency; retain the failed definition and correct only that dependency.",
+   recommendation_state:"candidate",supersedes:[],protected_gates:G,retained_negative_ids:[],scope_boundary:shortBoundary};
+  methods.push(m);methodByKey.set(key,m);return m;
+ }
+ function witness(m,id,result,type,expected,observed,negativeIds=[],scope=""){
+  if(witnesses.some(w=>w.witness_id===id))throw Error("duplicate witness");
+  const w={witness_id:id,method_id:m.method_id,procedure:type,scope:scope||BASE+"/"+session,
+   expected,observed,result,same_owner_only:true,independent_reproduction:false,retained_negative_ids:negativeIds,boundary:shortBoundary};
+  witnesses.push(w);m.validation_witness_ids.push(id);return w;
+ }
+ function negative(m,id,subject,why,scope){
+  if(negativeSet.has(id))return;
+  negativeSet.add(id);negativeRecords.push({negative_id:id,subject,failure:why,subject_success_credit:0,source:scope});
+  m.retained_negative_ids.push(id);
+  witness(m,id+"-FAILED-SUBJECT","fail","failed_subject_admission","The subject must remain failed; a refusal check is separate.",why,[id],scope);
+ }
+ function pass(m,id,type,observed,scope){return witness(m,id,"pass",type,"The bounded declared predicate must hold.",observed,[],scope);}
+ const proposalRows=[],candidateRows=[],alteredRows=[];
+ for(const p of ps){
+  const m=method(p.operation,p.operation.replaceAll("_"," "));
+  const request=c.clone(p.request),before=c.canon(request),output=c.evaluate(request),expected=p.expected_output;
+  const matches=c.canon(output)===c.canon(expected),unchanged=c.canon(request)===before;
+  proposalRows.push({proposal_id:p.proposal_id,definition_sha256:p.definition_sha256,request,expected_output:expected,output,matches,input_unchanged:unchanged,outcome:output.outcome});
+  if(!matches||!unchanged){put("results/failed-proposal-attempt.json",{rows:proposalRows});throw Error("proposal mismatch:"+p.proposal_id);}
+  pass(m,p.proposal_id+"-PRIMARY","frozen_complete_envelope",{output_sha256:c.sha(c.canon(output)),input_unchanged:true},BASE+"/"+session+"/results/proposals.json");
+  for(const s of p.candidate_subjects){
+   const req=c.clone(s.request),beforeBad=c.canon(req),actual=c.evaluate(req),refusal=actual.ok===false&&actual.error===s.expected_rejection.error&&c.canon(req)===beforeBad;
+   negative(m,s.negative_id,req,"Malformed subject remains failed.",BASE+"/plan/proposals.json");
+   candidateRows.push({negative_id:s.negative_id,proposal_id:p.proposal_id,request:req,output:actual,subject_failed:true,subject_success_credit:0,refusal_check_pass:refusal,input_unchanged:c.canon(req)===beforeBad});
+   if(!refusal){put("results/failed-candidate-attempt.json",{rows:candidateRows});throw Error("candidate refusal mismatch:"+s.negative_id);}
+   pass(m,s.negative_id+"-REFUSAL","separate_refusal_check",{error:actual.error,subject_success_credit:0},BASE+"/"+session+"/results/candidates.json");
+  }
+  const altered=c.clone(expected);altered.value={altered_expected_subject:true};
+  const refused=c.canon(output)!==c.canon(altered),nid=p.proposal_id+"-ALTERED";
+  negative(m,nid,altered,"Altered expected subject does not match the observed complete envelope.",BASE+"/plan/proposals.json");
+  alteredRows.push({negative_id:nid,proposal_id:p.proposal_id,altered_expected:altered,observed_output_sha256:c.sha(c.canon(output)),subject_success_credit:0,refusal_check_pass:refused});
+  if(!refused)throw Error("altered expectation admitted");
+  pass(m,nid+"-REFUSAL","altered_expected_refusal",{refused:true},BASE+"/"+session+"/results/altered-expected.json");
+ }
+ put("results/proposals.json",{session,count:ps.length,rows:proposalRows,all_passed:true});
+ put("results/candidates.json",{session,failed_subjects:candidateRows.length,passing_refusals:candidateRows.length,rows:candidateRows});
+ put("results/altered-expected.json",{session,failed_subjects:alteredRows.length,passing_refusals:alteredRows.length,rows:alteredRows});
+ for(const category of ["safe","clean-fix-refine"]){
+  const rows=[];
+  for(const t of load(path.join(plan,"portfolios/"+session+"-"+category+".json")).rows){
+   const p=ps.find(p=>p.proposal_id===t.proposal_id),m=methodByKey.get(p.operation);
+   let request=c.clone(p.request);
+   if(t.procedure==="request_key_order")request=Object.fromEntries(Object.entries(request).reverse());
+   const before=c.canon(request),output=c.evaluate(request);
+   const round=t.procedure==="result_roundtrip"?c.parseJSON(c.canon(output)):output;
+   const ok=c.canon(round)===c.canon(p.expected_output)&&c.canon(request)===before;
+   rows.push({task_id:t.task_id,proposal_id:p.proposal_id,procedure:t.procedure,pass:ok,output_sha256:c.sha(c.canon(output)),input_unchanged:c.canon(request)===before});
+   if(!ok){put("results/failed-"+category+".json",{rows});throw Error("portfolio mismatch:"+t.task_id);}
+   pass(m,t.task_id,"defined_"+t.procedure,{output_sha256:c.sha(c.canon(output)),input_unchanged:true},BASE+"/"+session+"/results/"+category+".json");
+  }
+  put("results/"+category+".json",{session,count:rows.length,passed:rows.length,rows});
+ }
+ const localSkills=load(path.join(plan,"capabilities/local-skills.json")).skills.filter(s=>s.session===session);
+ const localRunners=load(path.join(plan,"capabilities/local-runners.json")).runners.filter(r=>r.session===session);
+ const runnerSource=spec.runnerSource;
+ for(const r of localRunners)put("runners/"+r.name,runnerSource(r.operations));
+ const scopes=localRunners.map((r,i)=>{
+  const wrong=all.proposals.find(p=>!r.operations.includes(p.operation)&&Object.hasOwn(c.fields,p.operation));
+  return {negative_id:"VQ6941-"+session+"-RUNNER-SCOPE-"+(i+1),runner:r.name,request:wrong.request,expected_error:"E_SCOPE"};
+ });
+ put("evidence/runner-scope-definitions.json",{defined_before_execution:true,rows:scopes});
+ const skillResults=[],runnerResults=[];
+ function cli(script,input){
+  const proc=cp.spawnSync(process.execPath,[script,input],{cwd:ROOT,encoding:"utf8",maxBuffer:1024*1024});
+  if(proc.error)throw proc.error;
+  let output;try{output=c.parseJSON(proc.stdout);}catch(e){throw Error("runner output format");}
+  return {code:proc.status,output};
+ }
+ for(const s of localSkills){
+  const p=ps.find(p=>p.operation===s.operation),runner=localRunners.find(r=>r.operations.includes(s.operation));
+  const folder=path.dirname(path.join(ROOT,s.source_path)),localRel=path.relative(dir,folder).replaceAll("\\","/");
+  const guide="---\nname: "+s.name+"\ndescription: Check the bounded "+s.operation.replaceAll("_"," ")+" contract over declared finite data; retain failures and evidence limits.\n---\n\n# "+p.title.split(" — ")[0]+"\n\n"+
+   "Read [the exact contracts](references/contracts.json) and select the request matching the stated input scope. Use the paired TXT runner recorded in that reference. Inputs are data; this guide does not authorize external actions.\n\n"+
+   "The coefficient order is ascending powers. The modulus is a prime integer from 2 through 251, with narrower bounds where the operation says so. Normalize zero polynomials to one zero coefficient. Distinguish arithmetic in a declared quotient ring from an irreducibility or field claim. A computed inverse or factor certificate establishes only the stated finite algebraic property.\n\n"+
+   "Compare the entire output envelope with the frozen expected value. Keep malformed subjects failed even when their refusal checks pass. Record the original failure before a focused correction. Never change an immutable oracle to match an implementation.\n\n"+
+   "Rollback means selecting the retained source guide and runner. It does not delete evidence, rewrite history or reopen a successful canonical. "+B;
+  put(localRel+"/SKILL.md",guide);
+  put(localRel+"/references/contracts.json",{operation:s.operation,paired_runner:BASE+"/"+session+"/runners/"+runner.name,
+   contracts:ps.filter(p=>p.operation===s.operation).map(p=>({proposal_id:p.proposal_id,request:p.request,expected_output:p.expected_output})),
+   source_kind:"finite_synthetic",boundary:B});
+  put(localRel+"/references/accepting.json",p.request);
+  put(localRel+"/references/adverse.json",p.candidate_subjects[0].request);
+  const validator=path.join(skillRoot,".system/skill-creator/scripts/quick_validate.py");
+  const quick=cp.spawnSync("python",["-B",validator,folder],{cwd:ROOT,encoding:"utf8",maxBuffer:1024*1024,env:{...process.env,PYTHONDONTWRITEBYTECODE:"1"}});
+  if(quick.status!==0)throw Error("official skill validation:"+s.name);
+  const good=cli(path.join(dir,"runners",runner.name),path.join(folder,"references/accepting.json"));
+  const bad=cli(path.join(dir,"runners",runner.name),path.join(folder,"references/adverse.json"));
+  const ok=good.code===0&&c.canon(good.output)===c.canon(p.expected_output)&&bad.code===2&&bad.output.error==="E_FIELDS";
+  if(!ok)throw Error("skill smoke:"+s.name);
+  skillResults.push({name:s.name,official_validation_pass:true,accepting_pass:true,adverse_refusal_pass:true,subject_ref:p.candidate_subjects[0].negative_id,
+   guide_sha256:c.sha(fs.readFileSync(path.join(folder,"SKILL.md"))),new_yaml_metadata:false});
+  const m=methodByKey.get(p.operation);
+  pass(m,s.name+"-QUICK","official_skill_validation",{pass:true},s.source_path);
+  pass(m,s.name+"-ACCEPT","local_skill_runner_smoke",{output_sha256:c.sha(c.canon(good.output))},s.source_path);
+  pass(m,s.name+"-REFUSE","same_failed_subject_local_interface_refusal",{subject_ref:p.candidate_subjects[0].negative_id,error:bad.output.error,new_subject_credit:0},s.source_path);
+ }
+ for(const s of scopes){
+  const fixture="evidence/"+s.negative_id+".json";put(fixture,s.request);
+  const r=cli(path.join(dir,"runners",s.runner),path.join(dir,fixture));
+  const m=method("runner_scope","Paired runner scope admission");
+  negative(m,s.negative_id,s.request,"Request lies outside this paired runner's admitted operations.",BASE+"/"+session+"/evidence/runner-scope-definitions.json");
+  if(r.code!==2||r.output.error!=="E_SCOPE")throw Error("runner scope refusal");
+  pass(m,s.negative_id+"-REFUSAL","paired_runner_scope_refusal",{error:r.output.error},BASE+"/"+session+"/runners/"+s.runner);
+  runnerResults.push({runner:s.runner,scope_subject:s.negative_id,refusal_pass:true,source_sha256:c.sha(fs.readFileSync(path.join(dir,"runners",s.runner)))});
+ }
+ put("evidence/local-capabilities.json",{skills:skillResults,runners:runnerResults,skill_count:10,runner_count:5,overwrites:0,ordinary_packages_installed:0});
+ if(session==="x1"){
+  const startup=load(path.join(plan,"source/startup-observations.json"));
+  const author=load(path.join(plan,"retained/git-author-failure.json"));
+  const issues=[...startup.failures,{id:author.negative_id,signature:author.failure,recovery:author.recovery}];
+  for(const issue of issues){
+   const m=method(issue.id,issue.recovery);
+   negative(m,issue.id,{scope:"startup or planning"} ,issue.signature,BASE+"/plan/source/startup-observations.json");
+   pass(m,issue.id+"-RECOVERY","bounded_startup_recovery",{recovery:issue.recovery,scope:"declared bounded coverage only"},BASE+"/plan");
+  }
+  const definitions=load(path.join(dir,"evidence/parser-definitions.json")),initial=load(path.join(dir,"evidence/parser-initial.json")),recovery=load(path.join(dir,"evidence/parser-recovery.json"));
+  const m=method("request_reader","Strict JSON request reader");
+  for(const d of definitions.cases){
+   const r=recovery.rows.find(r=>r.id===d.id)||initial.rows.find(r=>r.id===d.id);
+   if(!r.pass)throw Error("unrecovered parser subject");
+   if(d.expected_error)negative(m,d.id,{text:d.text},"Malformed JSON subject remains refused.",BASE+"/x1/evidence/parser-definitions.json");
+   pass(m,d.id+"-CHECK","bounded_parser_predicate",{error:r.observed_error,source:r===initial.rows.find(x=>x.id===d.id)?"initial":"focused_recovery"},BASE+"/x1/evidence/parser-initial.json");
+  }
+  const fail=load(path.join(dir,"retained/json-whitespace-failure.json"));
+  negative(m,fail.negative_id,{case:fail.failed_subject},fail.failure,BASE+"/x1/retained/json-whitespace-failure.json");
+  pass(m,fail.negative_id+"-RECOVERY","focused_parser_recovery",{passed:2,failed_definition_retained:true},BASE+"/x1/evidence/parser-recovery.json");
+ }
+ for(const m of methods){
+  if(!m.retained_negative_ids.length)throw Error("method has no retained negative");
+  if(!witnesses.some(w=>w.method_id===m.method_id&&w.result==="pass"))throw Error("method lacks passing witness");
+  m.recommendation_state="preferred";
+  events.push({method_id:m.method_id,from:"candidate",to:"validated",note:"Bounded passing witness recorded; failures retained."},
+   {method_id:m.method_id,from:"validated",to:"preferred",note:"Only matching finite owner scopes are recommended."});
+  recommendations.push({method_id:m.method_id,recommendation:m.recurrence_guard,delivered:false});
+ }
+ const states={observed:0,candidate:0,validated:0,preferred:methods.length,superseded:0,deprecated:0};
+ const counts={methods:methods.length,witnesses:witnesses.length,state_events:events.length,recommendations:recommendations.length,
+  states,witness_results:{pass:witnesses.filter(w=>w.result==="pass").length,fail:witnesses.filter(w=>w.result==="fail").length}};
+ const ledger={schema:"ghc.family.method-flow-state.v1",owner:OWNER,phase:PHASE,session,identity_boundary:B,
+  execution_authority:"owner_self_scoped_delta",source_commit:"5752a612330a69f938bf915697cf607ca0412fe5",final_commit:null,
+  methods,witnesses,state_events:events,recommendations,counts,boundary:B};
+ put("method-flow.json",ledger);
+ put("retained-negative-register.json",{session,count:negativeRecords.length,records:negativeRecords,erased:0,subject_success_credit:0});
+ put("phase-truth.json",{schema:"ghc.family.phase-truth.v9",owner:OWNER,phase:PHASE,stage:session+"_evidence",
+  parent:requiredParent,source_final:"5752a612330a69f938bf915697cf607ca0412fe5",contracts:50,
+  outcomes:{completed:ps.filter(p=>p.expected_disposition==="completed").length,represented:ps.filter(p=>p.expected_disposition==="represented").length,open_gap:0,exact_gate:0},
+  safe_checks:100,candidate_failed_subjects:100,candidate_refusal_passes:100,clean_fix_refine_checks:100,altered_expected_failed_subjects:50,
+  local_skills:10,local_runners:5,methods:methods.length,witnesses:witnesses.length,failed_witnesses:counts.witness_results.fail,passing_witnesses:counts.witness_results.pass,
+  effective_negatives:negativeRecords.length,ordinary_packages_installed:0,incremental_spend_usd:0,canonical_invocations:0,successor_contacts:0,
+  terminal_verdict:"NOT_READY_FOR_STAGE_20",boundary:B});
+ put("overview.md","# "+OWNER+" "+PHASE+" "+session+" evidence\n\n"+B+"\n\n"+
+  "Fifty frozen finite contracts matched their complete typed envelopes. One hundred safe checks and one hundred CLEAN/FIX/REFINE checks passed. One hundred malformed subjects and fifty altered expectations remain failed, each beside a separate passing refusal. Ten local guides passed the official validator and accepting/adverse smokes; five paired interfaces refused out-of-scope requests. The source files and earlier frozen lifecycle remain unchanged.\n\n"+
+  "New code is trusted Node source in TXT files. No ordinary package, binary artifact, image, PDF, screenshot or other prohibited authored format was created. No real-world authority, production cryptographic safety or empirical result follows from these finite checks.");
+ console.log(JSON.stringify({session,contracts:50,safe:100,candidates_failed:100,candidate_refusals:100,clean_fix_refine:100,altered_failed:50,
+  skills:10,runners:5,methods:methods.length,witnesses:witnesses.length,failed:counts.witness_results.fail,passing:counts.witness_results.pass}));
+}
+module.exports={runSession};
+if(require.main===module){
+ const kernel=require(path.resolve(__dirname,"../prime-field-core.txt"));
+ runSession({session:"x1",kernel,bank:process.argv[2],skillRoot:process.argv[3],requiredParent:"0b358b71c69e4ce7185d3e42e54d6927798a6691",
+  runnerSource:operations=>'"use strict";\nconst core=require(require("path").resolve(__dirname,"../prime-field-core.txt"));\ncore.cli(core,'+JSON.stringify(operations)+');\n'});
+}

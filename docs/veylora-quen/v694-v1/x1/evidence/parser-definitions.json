@@ -1,0 +1,57 @@
+{
+  "schema": "ghc.family.spontaneous-test-definitions.v9",
+  "defined_before_execution": true,
+  "scope": "strict JSON input boundary; no external data or authority",
+  "cases": [
+    {
+      "id": "VQ6941-JSON-A01",
+      "text": " \t\r\n{\"operation\":\"gf_prime_profile\",\"p\":2}\n",
+      "expected_error": null
+    },
+    {
+      "id": "VQ6941-JSON-N01",
+      "text": "{\"p\":2,\"p\":3}",
+      "expected_error": "E_JSON_DUPLICATE"
+    },
+    {
+      "id": "VQ6941-JSON-N02",
+      "text": "{\"p\":02}",
+      "expected_error": "E_JSON_SYNTAX"
+    },
+    {
+      "id": "VQ6941-JSON-N03",
+      "text": "{\"p\":NaN}",
+      "expected_error": "E_JSON_SYNTAX"
+    },
+    {
+      "id": "VQ6941-JSON-N04",
+      "text": "{\"p\":1e400}",
+      "expected_error": "E_JSON_NUMBER"
+    },
+    {
+      "id": "VQ6941-JSON-N05",
+      "text": " {}",
+      "expected_error": "E_JSON_SYNTAX"
+    },
+    {
+      "id": "VQ6941-JSON-N06",
+      "text": "{\"a\":\"line\nbreak\"}",
+      "expected_error": "E_JSON_STRING"
+    },
+    {
+      "id": "VQ6941-JSON-N07",
+      "text": "{\"p\":2}{}",
+      "expected_error": "E_JSON_TRAILING"
+    },
+    {
+      "id": "VQ6941-JSON-N08",
+      "text": "{\"a\":\"\\q\"}",
+      "expected_error": "E_JSON_STRING"
+    },
+    {
+      "id": "VQ6941-JSON-N09",
+      "text": "[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[0]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]",
+      "expected_error": "E_JSON_DEPTH"
+    }
+  ]
+}

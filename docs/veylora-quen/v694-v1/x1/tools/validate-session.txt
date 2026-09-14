@@ -1,0 +1,73 @@
+"use strict";
+const fs=require("fs"),path=require("path"),cp=require("child_process"),vm=require("vm");
+const ROOT=process.cwd(),BASE="docs/veylora-quen/v694-v1";
+function enumerate(dir){return fs.readdirSync(dir,{withFileTypes:true}).flatMap(d=>d.isDirectory()?enumerate(path.join(dir,d.name)):[path.join(dir,d.name)]);}
+function validateSession(session,c,parent,options={}){
+ const dir=path.join(ROOT,BASE,session),plan=path.join(ROOT,BASE,"plan"),checks=[];
+ const load=p=>JSON.parse(fs.readFileSync(p,"utf8"));
+ const check=(name,pass,detail=null)=>checks.push({name,pass:!!pass,detail});
+ const ps=load(path.join(plan,"proposals.json")).proposals.filter(p=>p.session===session);
+ const r=load(path.join(dir,"results/proposals.json"));
+ check("fifty complete observed contracts",r.rows.length===50&&r.rows.every(x=>x.matches&&x.input_unchanged&&c.canon(x.output)===c.canon(ps.find(p=>p.proposal_id===x.proposal_id).expected_output)));
+ const candidates=load(path.join(dir,"results/candidates.json")),altered=load(path.join(dir,"results/altered-expected.json"));
+ check("100 failed subjects retained with refusal passes",candidates.rows.length===100&&candidates.rows.every(x=>x.subject_failed&&x.subject_success_credit===0&&x.refusal_check_pass&&x.output.ok===false));
+ check("50 altered expected subjects remain failed",altered.rows.length===50&&altered.rows.every(x=>x.subject_success_credit===0&&x.refusal_check_pass));
+ check("100 safe checks",load(path.join(dir,"results/safe.json")).rows.every(x=>x.pass)&&load(path.join(dir,"results/safe.json")).rows.length===100);
+ check("100 clean fix refine checks",load(path.join(dir,"results/clean-fix-refine.json")).rows.every(x=>x.pass)&&load(path.join(dir,"results/clean-fix-refine.json")).rows.length===100);
+ const caps=load(path.join(dir,"evidence/local-capabilities.json"));
+ check("ten officially validated local skills",caps.skills.length===10&&caps.skills.every(s=>s.official_validation_pass&&s.accepting_pass&&s.adverse_refusal_pass));
+ check("five paired scope refusals",caps.runners.length===5&&caps.runners.every(r=>r.refusal_pass));
+ const ledger=load(path.join(dir,"method-flow.json")),neg=load(path.join(dir,"retained-negative-register.json"));
+ check("exact method derived counts",ledger.counts.methods===ledger.methods.length&&ledger.counts.witnesses===ledger.witnesses.length&&ledger.counts.witness_results.fail===ledger.witnesses.filter(w=>w.result==="fail").length&&ledger.counts.witness_results.pass===ledger.witnesses.filter(w=>w.result==="pass").length);
+ check("negative identifiers unique and zero credit",new Set(neg.records.map(n=>n.negative_id)).size===neg.records.length&&neg.records.every(n=>n.subject_success_credit===0));
+ check("negative subjects have failed witnesses",neg.records.every(n=>ledger.witnesses.some(w=>w.result==="fail"&&w.retained_negative_ids.includes(n.negative_id))));
+ check("preferred methods have witnesses",ledger.methods.every(m=>m.recommendation_state==="preferred"&&ledger.witnesses.some(w=>w.method_id===m.method_id&&w.result==="pass")));
+ check("legal state transitions",ledger.state_events.every(e=>(e.from==="candidate"&&e.to==="validated")||(e.from==="validated"&&e.to==="preferred")));
+ const schemaFile=fs.readdirSync(path.join(dir,"evidence")).filter(n=>/^method-schema-validation(?:-v\d+)?\.json$/.test(n)).sort((a,b)=>Number((a.match(/-v(\d+)/)||[])[1]||1)-Number((b.match(/-v(\d+)/)||[])[1]||1)).at(-1);
+ const schemaReceipt=load(path.join(dir,"evidence",schemaFile));
+ check("official Method Flow schema",schemaReceipt.valid===true&&schemaReceipt.method_count===ledger.methods.length&&schemaReceipt.witness_count===ledger.witnesses.length);
+ check("earlier planning immutable",cp.execFileSync("git",["diff","--name-only","0b358b71c69e4ce7185d3e42e54d6927798a6691","--",BASE+"/plan"],{cwd:ROOT,encoding:"utf8"}).trim()==="");
+ check("expected lifecycle parent",cp.execFileSync("git",["rev-parse","HEAD"],{cwd:ROOT,encoding:"utf8"}).trim()===parent);
+ if(session==="x1"){
+  check("x2 not executed",!fs.existsSync(path.join(ROOT,BASE,"x2")));
+  const a=load(path.join(dir,"evidence/parser-initial.json")),b=load(path.join(dir,"evidence/parser-recovery.json"));
+  check("initial reader failure retained",a.total===10&&a.passed===9&&a.rows.some(r=>!r.pass));
+  check("focused reader recovery",b.total===2&&b.passed===2&&b.initial_failure_retained===true);
+  check("retained old core hash",c.sha(fs.readFileSync(path.join(dir,"retained/prime-field-core-v1.txt")))===a.kernel_sha256);
+  check("effective display label corrected additively",load(path.join(dir,"effective-workflow-profile.json")).display_phase==="v694-v1"&&load(path.join(plan,"workflow-profile.json")).display_phase==="v693-v7 (2) remaster");
+ }
+ const all=enumerate(path.join(ROOT,BASE)),privacy=[],syntax=[];let maxWords=0,parsed=0;
+ const pats=[["uuid",/\b[0-9a-f]{8}(?:-[0-9a-f]{4}){3}-[0-9a-f]{12}\b/ig],["local_path",/\b[A-Za-z]:[\\/]/g],
+ ["private_route",/(?:chatgpt\.com\/c\/|codex:\/\/)[a-z0-9_-]{12,}/ig],["credential",/(?:sk-[a-z0-9]{20,}|gh[pousr]_[a-z0-9]{20,}|Bearer\s+[a-z0-9._-]{16,})/ig],
+ ["private_payload",/"(?:raw_transcript|raw_screenshot|private_execution_stream)"\s*:\s*"[^"]+"/ig]];
+ for(const f of all){
+  const rel=path.relative(ROOT,f).replaceAll("\\","/"),ext=path.extname(f),text=fs.readFileSync(f,"utf8");
+  if(![".json",".md",".txt",".html"].includes(ext))throw Error("authored format");
+  maxWords=Math.max(maxWords,(text.match(/\S+/g)||[]).length);
+  if(ext===".json"){c.parseJSON(text);parsed++;}
+  for(const [cls,re] of pats){re.lastIndex=0;if(re.test(text))privacy.push({path:rel,category:cls});}
+  if(ext===".txt"&&!rel.includes("/retained/"))try{new vm.Script(text,{filename:path.basename(f)});}catch(e){syntax.push({path:rel,error:e.name});}
+ }
+ check("allowed file formats",true);
+ check("owner materialization below ceiling",all.length<2000,all.length);
+ check("all documents below word ceiling",maxWords<=100000,maxWords);
+ check("strict owner JSON parsed",parsed>0,parsed);
+ check("trusted active TXT sources parse",syntax.length===0,syntax);
+ check("zero five-class candidates",privacy.length===0,privacy);
+ const truth=load(path.join(dir,"phase-truth.json"));
+ check("no spending or package installation",truth.incremental_spend_usd===0&&truth.ordinary_packages_installed===0);
+ check("no premature canonical or contact",truth.canonical_invocations===0&&truth.successor_contacts===0);
+ check("terminal boundary",truth.terminal_verdict==="NOT_READY_FOR_STAGE_20");
+ const valid=checks.every(r=>r.pass);
+ fs.writeFileSync(path.join(dir,options.validationName||"validation.json"),JSON.stringify({schema:"ghc.family.session-validation.v9",session,checks,checks_total:checks.length,checks_passed:checks.filter(r=>r.pass).length,valid,privacy,maximum_document_words:maxWords,canonical_invoked:false},null,2)+"\n",{flag:"wx"});
+ if(valid&&options.writeManifest!==false){
+  const current=enumerate(dir),exclusions=[BASE+"/"+session+"/manifest.json",BASE+"/"+session+"/staged-review.json"];
+  const manifest={schema:"ghc.family.raw-byte-manifest.v9",owner:"Veylora Quen",phase:"v694-v1",stage:session,domain:"raw_git_blob",
+   bindings:current.filter(f=>!exclusions.includes(path.relative(ROOT,f).replaceAll("\\","/"))).map(f=>({path:path.relative(ROOT,f).replaceAll("\\","/"),bytes:fs.statSync(f).size,sha256:c.sha(fs.readFileSync(f))})),exclusions};
+  fs.writeFileSync(path.join(dir,"manifest.json"),JSON.stringify(manifest,null,2)+"\n",{flag:"wx"});
+ }
+ console.log(JSON.stringify({session,valid,checks:checks.length,passed:checks.filter(r=>r.pass).length,owner_files:all.length,maximum_document_words:maxWords,failed:checks.filter(r=>!r.pass).map(r=>r.name)}));
+ return valid;
+}
+module.exports={validateSession};
+if(require.main===module){const c=require(path.resolve(__dirname,"../prime-field-core.txt"));process.exitCode=validateSession("x1",c,"0b358b71c69e4ce7185d3e42e54d6927798a6691")?0:2;}

@@ -1,0 +1,129 @@
+"use strict";
+const crypto=require("crypto"),fs=require("fs");
+const protectedGates=["real_participants","empirical_confirmation","production_deployment","professional_authority","legal_cultural_affected_party_authority","Maori_authority","complete_privacy_accessibility_security","independent_reproduction","consciousness_personhood","AGI_ASI","Theory_of_Everything","Stage_20"];
+const fields={
+ gf_prime_profile:["operation","p"],gf_residue_normalize:["operation","p","n"],gf_additive_inverse:["operation","p","n"],
+ gf_sum:["operation","p","a","b"],gf_product:["operation","p","a","b"],gf_multiplicative_inverse:["operation","p","n"],
+ gf_quotient:["operation","p","a","b"],gf_signed_power:["operation","p","n","exponent"],
+ gf_polynomial_normalize:["operation","p","a"],gf_polynomial_sum:["operation","p","a","b"]};
+class ContractError extends Error{constructor(code){super(code);this.code=code;}}
+function requireThat(ok,code){if(!ok)throw new ContractError(code);}
+function record(v){return !!v&&typeof v==="object"&&!Array.isArray(v)&&(Object.getPrototypeOf(v)===Object.prototype||Object.getPrototypeOf(v)===null);}
+function stable(v){
+ if(typeof v==="number")requireThat(Number.isFinite(v),"E_JSON_NUMBER");
+ if(Array.isArray(v))return v.map(stable);
+ if(v&&typeof v==="object")return Object.fromEntries(Object.keys(v).sort().map(k=>[k,stable(v[k])]));
+ return v;
+}
+const canon=v=>JSON.stringify(stable(v));
+const clone=v=>JSON.parse(canon(v));
+const sha=v=>crypto.createHash("sha256").update(Buffer.isBuffer(v)?v:Buffer.from(String(v))).digest("hex");
+function integer(n){requireThat(Number.isSafeInteger(n)&&Math.abs(n)<=1000000,"E_INTEGER");return n;}
+function modulus(p){
+ requireThat(Number.isSafeInteger(p)&&p>=2&&p<=251,"E_MODULUS");
+ for(let d=2;d*d<=p;d++)requireThat(p%d!==0,"E_MODULUS");
+ return p;
+}
+function mod(n,p){return ((n%p)+p)%p;}
+function inverse(n,p){
+ n=mod(integer(n),p);requireThat(n!==0,"E_ZERO_INVERSE");
+ let t=0,nextT=1,r=p,nextR=n;
+ while(nextR){const q=Math.floor(r/nextR);[t,nextT]=[nextT,t-q*nextT];[r,nextR]=[nextR,r-q*nextR];}
+ requireThat(r===1,"E_NONUNIT");const answer=mod(t,p);requireThat(mod(answer*n,p)===1,"E_INVERSE_CHECK");return answer;
+}
+function power(n,e,p){
+ n=mod(integer(n),p);requireThat(Number.isSafeInteger(e)&&Math.abs(e)<=1024,"E_EXPONENT");
+ if(e<0){n=inverse(n,p);e=-e;}
+ let result=1;
+ while(e){if(e%2===1)result=mod(result*n,p);n=mod(n*n,p);e=Math.floor(e/2);}
+ return result;
+}
+function trim(a){const b=a.slice();while(b.length>1&&b[b.length-1]===0)b.pop();return b.length?b:[0];}
+function polynomial(a,p){
+ requireThat(Array.isArray(a)&&a.length>=1&&a.length<=8,"E_POLYNOMIAL");
+ return trim(a.map(n=>mod(integer(n),p)));
+}
+function addPoly(a,b,p){
+ const out=Array(Math.max(a.length,b.length)).fill(0);
+ for(let i=0;i<out.length;i++)out[i]=mod((a[i]||0)+(b[i]||0),p);
+ return trim(out);
+}
+function checkRequest(r,table=fields){
+ requireThat(record(r),"E_RECORD");
+ requireThat(typeof r.operation==="string"&&Object.hasOwn(table,r.operation),"E_OPERATION");
+ requireThat(canon(Object.keys(r).sort())===canon(table[r.operation].slice().sort()),"E_FIELDS");
+ return modulus(r.p);
+}
+function envelope(op,value,outcome="completed"){
+ return {ok:true,operation:op,outcome,evidence_class:"finite_prime_field_polynomial",value,authority:false,protected_gates:protectedGates.slice()};
+}
+function rejection(e){if(!(e instanceof ContractError))throw e;return {ok:false,error:e.code,authority:false};}
+function evaluate(r){
+ try{
+  const p=checkRequest(r),op=r.operation;let value;
+  switch(op){
+   case "gf_prime_profile":value={modulus:p,prime:true,nonzero_elements:p-1};break;
+   case "gf_residue_normalize":value={residue:mod(integer(r.n),p)};break;
+   case "gf_additive_inverse":value={inverse:mod(-integer(r.n),p)};break;
+   case "gf_sum":value={sum:mod(mod(integer(r.a),p)+mod(integer(r.b),p),p)};break;
+   case "gf_product":value={product:mod(mod(integer(r.a),p)*mod(integer(r.b),p),p)};break;
+   case "gf_multiplicative_inverse":value={inverse:inverse(r.n,p)};break;
+   case "gf_quotient":value={quotient:mod(mod(integer(r.a),p)*inverse(r.b,p),p)};break;
+   case "gf_signed_power":value={power:power(r.n,r.exponent,p)};break;
+   case "gf_polynomial_normalize":value={coefficients:polynomial(r.a,p)};break;
+   case "gf_polynomial_sum":value={coefficients:addPoly(polynomial(r.a,p),polynomial(r.b,p),p)};break;
+   default:throw new ContractError("E_OPERATION");
+  }
+  return envelope(op,value);
+ }catch(e){return rejection(e);}
+}
+function parseJSON(text){
+ requireThat(typeof text==="string"&&Buffer.byteLength(text,"utf8")<=1048576,"E_JSON_SIZE");
+ let at=0;
+ function ws(){while(/\s/.test(text[at]||"")&&at<text.length)at++;}
+ function string(){
+  requireThat(text[at]==='"',"E_JSON_STRING");const start=at++;
+  while(at<text.length){
+   const c=text[at++];
+   if(c==='"'){try{return JSON.parse(text.slice(start,at));}catch(e){throw new ContractError("E_JSON_STRING");}}
+   if(c==="\\"){requireThat(at<text.length,"E_JSON_STRING");at++;}
+  }
+  throw new ContractError("E_JSON_STRING");
+ }
+ function value(depth){
+  requireThat(depth<=32,"E_JSON_DEPTH");ws();const c=text[at];
+  if(c==='"')return string();
+  if(c==="{"){
+   at++;ws();const result=Object.create(null),seen=new Set();
+   if(text[at]==="}"){at++;return result;}
+   while(at<text.length){
+    ws();const key=string();requireThat(!seen.has(key),"E_JSON_DUPLICATE");seen.add(key);ws();
+    requireThat(text[at++]===":","E_JSON_SYNTAX");result[key]=value(depth+1);ws();
+    const sep=text[at++];if(sep==="}")return result;requireThat(sep===",","E_JSON_SYNTAX");
+   }
+   throw new ContractError("E_JSON_SYNTAX");
+  }
+  if(c==="["){
+   at++;ws();const result=[];if(text[at]==="]"){at++;return result;}
+   while(at<text.length){result.push(value(depth+1));ws();const sep=text[at++];if(sep==="]")return result;requireThat(sep===",","E_JSON_SYNTAX");}
+   throw new ContractError("E_JSON_SYNTAX");
+  }
+  for(const [token,v] of [["true",true],["false",false],["null",null]])if(text.startsWith(token,at)){at+=token.length;return v;}
+  const match=/-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?/.exec(text.slice(at));
+  requireThat(match&&match.index===0,"E_JSON_SYNTAX");at+=match[0].length;const n=Number(match[0]);requireThat(Number.isFinite(n),"E_JSON_NUMBER");return n;
+ }
+ const result=value(0);ws();requireThat(at===text.length,"E_JSON_TRAILING");return result;
+}
+function cli(runtime,allowed){
+ let result;
+ try{
+  const filename=process.argv[2];requireThat(typeof filename==="string","E_INPUT_FILE");
+  requireThat(fs.statSync(filename).size<=1048576,"E_JSON_SIZE");
+  const r=parseJSON(fs.readFileSync(filename,"utf8"));
+  if(allowed)requireThat(record(r)&&allowed.includes(r.operation),"E_SCOPE");
+  result=runtime.evaluate(r);
+ }catch(e){if(e instanceof ContractError)result=rejection(e);else result={ok:false,error:"E_INPUT_IO",authority:false};}
+ process.stdout.write(canon(result)+"\n");process.exitCode=result.ok?0:2;
+}
+module.exports={fields,protectedGates,ContractError,requireThat,record,stable,canon,clone,sha,integer,modulus,mod,inverse,power,trim,polynomial,addPoly,checkRequest,envelope,rejection,evaluate,parseJSON,cli};
+if(require.main===module)cli(module.exports);
