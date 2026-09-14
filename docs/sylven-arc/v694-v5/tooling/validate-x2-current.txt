@@ -1,0 +1,133 @@
+"use strict";
+
+const fs = require("fs");
+const path = require("path");
+const crypto = require("crypto");
+
+const ROOT = path.resolve(__dirname, "../../../..");
+const BASE = "docs/sylven-arc/v694-v5";
+const X2 = path.join(ROOT, BASE, "x2");
+
+function readJson(relative) {
+  return JSON.parse(fs.readFileSync(path.join(ROOT, relative), "utf8"));
+}
+
+function sha(buffer) {
+  return crypto.createHash("sha256").update(buffer).digest("hex");
+}
+
+function collect(directory, output = []) {
+  for (const name of fs.readdirSync(directory).sort()) {
+    const absolute = path.join(directory, name);
+    const stat = fs.statSync(absolute);
+    if (stat.isDirectory()) collect(absolute, output);
+    else output.push(absolute);
+  }
+  return output;
+}
+
+function assert(value, label) {
+  if (!value) throw new Error(label);
+}
+
+function main() {
+  const flow = readJson(`${BASE}/x2/method-flow-final.json`);
+  const negatives = readJson(`${BASE}/x2/retained-negatives-final.json`);
+  const truth = readJson(`${BASE}/x2/phase-truth-final.json`);
+  const installation = readJson(`${BASE}/x2/global-installation-receipt.json`);
+  const interfaceReceipt = readJson(`${BASE}/x2/interface-validation-receipt.json`);
+  const manifest = readJson(`${BASE}/x2/manifest-final.json`);
+  const tools = readJson(`${BASE}/x2/tool-selection-final.json`);
+  const checklist = readJson(`${BASE}/x2/complete-incomplete.json`);
+  const sourceSummary = readJson(`${BASE}/x2/source-skill-installation-summary.json`);
+  const operations = readJson(`${BASE}/x2/operational-failures.json`);
+  const globalMethods = readJson(`${BASE}/x2/global-installation-methods.json`);
+
+  assert(flow.counts.methods === 22 && flow.methods.length === 22, "methods");
+  assert(flow.counts.witnesses === 501 && flow.witnesses.length === 501, "witnesses");
+  assert(flow.counts.witness_results.pass === 370 && flow.counts.witness_results.fail === 131, "witness_results");
+  assert(flow.counts.state_events === 44 && flow.state_events.length === 44, "events");
+  assert(new Set(flow.methods.map((item) => item.method_id)).size === 22, "method_uniqueness");
+  assert(new Set(flow.witnesses.map((item) => item.witness_id)).size === 501, "witness_uniqueness");
+  assert(negatives.count === 131 && negatives.entries.length === 131, "negatives");
+  assert(new Set(negatives.entries.map((item) => item.negative_id)).size === 131, "negative_uniqueness");
+  assert(negatives.entries.every((item) => item.original_success_credit === 0 && item.erased === false), "nonerasure");
+  assert(operations.counts.methods === 6 && operations.counts.retained_negatives === 6, "operations");
+  assert(globalMethods.counts.methods === 5 && globalMethods.counts.witnesses === 60 && globalMethods.counts.failed_witnesses === 15, "global_methods");
+  assert(installation.status === "VALIDATED_ADDITIVE_GLOBAL_INSTALLATION" && installation.parity_count === 52 && installation.overwrites === 0, "installation");
+  assert(sourceSummary.complete_source_read_count === 30 && sourceSummary.source_binding_hashes_verified === 20, "source_reads");
+  assert(interfaceReceipt.status === "VALID_BOUNDED_STATIC_INTERFACE_EVIDENCE" && interfaceReceipt.totals.witnesses === 19, "interface");
+  assert(interfaceReceipt.browser_evaluated === false && interfaceReceipt.assistive_technology_evaluated === false && interfaceReceipt.tex_rendered === false, "interface_ceiling");
+  assert(truth.state === "X2_VALIDATED_READY_FOR_COMMIT" && truth.dispositions.completed === 80 && truth.dispositions.represented === 10 && truth.dispositions.open_gap === 5 && truth.dispositions.exact_gate === 5, "truth");
+  assert(truth.phase_owner_delta.methods === 37 && truth.phase_owner_delta.witnesses === 921 && truth.phase_owner_delta.passing_witnesses === 680 && truth.phase_owner_delta.failed_witnesses_and_effective_negatives === 241, "phase_delta");
+  assert(truth.effective_after_x2.methods === 343 && truth.effective_after_x2.witnesses === 8564 && truth.effective_after_x2.passing_witnesses === 6232 && truth.effective_after_x2.failed_witnesses_and_effective_negatives === 2332 && truth.effective_after_x2.open_gaps === 35 && truth.effective_after_x2.exact_gates === 35, "effective_counts");
+  assert(truth.packages === 0 && truth.spend_usd === 0 && truth.successor_contacts === 0, "external_boundaries");
+  assert(checklist.completed.length >= 7 && checklist.incomplete_or_reserved.length >= 4, "checklist");
+  assert(tools.tools.some((item) => item.state === "historical_failed_unselected") && tools.tools.some((item) => item.path.endsWith("validate-x2-current.txt")), "tool_selection");
+
+  const actualJson = collect(X2).filter((file) => file.endsWith(".json"));
+  for (const file of actualJson) JSON.parse(fs.readFileSync(file, "utf8"));
+  const actualFiles = [
+    ...collect(X2).filter((file) => path.basename(file) !== "manifest-final.json"),
+    ...[
+      "graph-kernel.txt",
+      "build-x2.txt",
+      "build-x2-current.txt",
+      "validate-x2.txt",
+      "promote-x2.txt",
+      "verify-interface.txt",
+      "finalize-x2.txt",
+      "validate-x2-current.txt",
+    ].map((name) => path.join(ROOT, BASE, "tooling", name)),
+  ].sort((a, b) => a.localeCompare(b));
+  assert(actualFiles.length === manifest.count && manifest.entries.length === manifest.count, "manifest_count");
+  const actualPaths = actualFiles.map((file) => path.relative(ROOT, file).replaceAll("\\", "/"));
+  assert(JSON.stringify(actualPaths) === JSON.stringify(manifest.entries.map((item) => item.path)), "manifest_paths");
+  manifest.entries.forEach((entry, index) => {
+    const buffer = fs.readFileSync(actualFiles[index]);
+    const normalized = Buffer.from(buffer.toString("utf8").replace(/\r\n/g, "\n"), "utf8");
+    assert(normalized.length === entry.bytes && sha(normalized) === entry.sha256_normalized_lf, `manifest_${entry.path}`);
+  });
+
+  const allowedExtensions = new Set([".json", ".md", ".txt", ".tex", ".html"]);
+  assert(collect(X2).every((file) => allowedExtensions.has(path.extname(file).toLowerCase())), "extension_policy");
+  const texts = collect(X2).filter((file) => [".json", ".md", ".txt", ".tex", ".html"].includes(path.extname(file).toLowerCase()));
+  let maxWords = 0;
+  const privacyCandidates = [];
+  const privacyPatterns = [
+    /\bsk-[A-Za-z0-9_-]{10,}\b/g,
+    /\b(?:ghp|github_pat)_[A-Za-z0-9_]{10,}\b/g,
+    /\b019[a-f0-9]{29}\b/gi,
+    /[A-Z]:\\Users\\[^\s"']+/g,
+    /(?:api[_-]?key|password|secret|bearer)\s*[:=]\s*["'][^"']+["']/gi,
+  ];
+  for (const file of texts) {
+    const text = fs.readFileSync(file, "utf8");
+    maxWords = Math.max(maxWords, (text.match(/\S+/g) || []).length);
+    privacyPatterns.forEach((pattern, classIndex) => {
+      pattern.lastIndex = 0;
+      if (pattern.test(text)) privacyCandidates.push({ path: path.relative(ROOT, file).replaceAll("\\", "/"), class_index: classIndex });
+    });
+  }
+  assert(maxWords <= 100000, "word_ceiling");
+  assert(privacyCandidates.length === 0, `privacy_candidates_${privacyCandidates.length}`);
+  assert(collect(X2).length < 2000, "file_ceiling");
+
+  process.stdout.write(JSON.stringify({
+    status: "VALID_X2_PACKET",
+    methods: 22,
+    witnesses: 501,
+    passing: 370,
+    failed: 131,
+    retained_negatives: 131,
+    json_parses: actualJson.length,
+    manifest_entries: manifest.count,
+    owner_files: collect(X2).length,
+    max_words: maxWords,
+    privacy_candidates: privacyCandidates.length,
+    packages: 0,
+    spend_usd: 0,
+  }));
+}
+
+main();

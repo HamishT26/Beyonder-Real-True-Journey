@@ -1,0 +1,286 @@
+"use strict";
+
+const fs = require("fs");
+const path = require("path");
+const vm = require("vm");
+
+const ROOT = path.resolve(__dirname, "../../../..");
+const BASE = "docs/sylven-arc/v694-v5";
+const X2 = path.join(ROOT, BASE, "x2");
+const HTML_PATH = path.join(X2, "simulation", "graph-evidence-table.html");
+const TEX_PATH = path.join(X2, "research", "finite-graph-contracts.tex");
+const RECEIPT_PATH = path.join(X2, "interface-validation-receipt.json");
+
+function read(file) {
+  return fs.readFileSync(file, "utf8");
+}
+
+function exact(a, b) {
+  return JSON.stringify(a) === JSON.stringify(b);
+}
+
+function witness(id, result, subjectResult, note, successCredit) {
+  return {
+    witness_id: id,
+    result,
+    subject_result: subjectResult,
+    note,
+    success_credit: successCredit,
+  };
+}
+
+function extractScript(html) {
+  const match = html.match(/<script>([\s\S]*?)<\/script>/i);
+  if (!match) throw new Error("missing_script");
+  return match[1];
+}
+
+function buildDom() {
+  const elements = {
+    graph: {
+      value: '{"case_id":"example","nodes":["a","b"],"edges":[["a","b"]]}',
+    },
+    form: {
+      handler: null,
+      addEventListener(type, handler) {
+        if (type !== "submit" || typeof handler !== "function") {
+          throw new Error("unexpected_listener");
+        }
+        this.handler = handler;
+      },
+    },
+    status: { textContent: "" },
+    rows: {
+      children: [],
+      replaceChildren() {
+        this.children = [];
+      },
+      appendChild(child) {
+        this.children.push(child);
+      },
+    },
+  };
+  const document = {
+    getElementById(id) {
+      if (!Object.hasOwn(elements, id)) throw new Error(`unknown_dom_id_${id}`);
+      return elements[id];
+    },
+    createElement(tag) {
+      return {
+        tag,
+        textContent: "",
+        children: [],
+        appendChild(child) {
+          this.children.push(child);
+        },
+      };
+    },
+  };
+  return { document, elements };
+}
+
+function main() {
+  if (fs.existsSync(RECEIPT_PATH)) throw new Error("receipt_exists");
+  const html = read(HTML_PATH);
+  const tex = read(TEX_PATH);
+  const script = extractScript(html);
+  const witnesses = [];
+
+  const functionSandbox = {};
+  functionSandbox.globalThis = functionSandbox;
+  vm.runInNewContext(script, functionSandbox, {
+    filename: "graph-evidence-table.inline.txt",
+    timeout: 1000,
+  });
+  const graphTable = functionSandbox.graphEvidence?.graphTable;
+  if (typeof graphTable !== "function") throw new Error("graph_table_not_exported");
+
+  for (let index = 16; index <= 20; index += 1) {
+    const contract = JSON.parse(
+      read(path.join(X2, "contracts", `${String(index).padStart(3, "0")}.json`)),
+    );
+    const actual = JSON.parse(JSON.stringify(graphTable(contract.proposal.input)));
+    const expected = contract.observed.value.rows;
+    if (!exact(actual, expected)) throw new Error(`degree_rows_${index}`);
+    witnesses.push(
+      witness(
+        `SA6945-X2-IFACE-P${String(index - 15).padStart(3, "0")}`,
+        "pass",
+        "valid",
+        `HTML graphTable exactly matched contract ${String(index).padStart(3, "0")}.`,
+        1,
+      ),
+    );
+  }
+
+  const invalidSubjects = [
+    { nodes: ["a"], edges: [] },
+    { case_id: "duplicate", nodes: ["a", "a"], edges: [] },
+    { case_id: "shape", nodes: ["a", "b"], edges: [["a"]] },
+    { case_id: "source", nodes: ["a"], edges: [["b", "a"]] },
+    { case_id: "target", nodes: ["a"], edges: [["a", "b"]] },
+  ];
+  invalidSubjects.forEach((subject, index) => {
+    let refused = false;
+    try {
+      graphTable(subject);
+    } catch (error) {
+      refused = error instanceof Error || typeof error?.message === "string";
+    }
+    if (!refused) throw new Error(`invalid_subject_accepted_${index + 1}`);
+    witnesses.push(
+      witness(
+        `SA6945-X2-IFACE-N${String(index + 1).padStart(3, "0")}`,
+        "fail",
+        "invalid",
+        "Malformed graph subject retained at zero credit.",
+        0,
+      ),
+    );
+    witnesses.push(
+      witness(
+        `SA6945-X2-IFACE-R${String(index + 1).padStart(3, "0")}`,
+        "pass",
+        "refusal_check",
+        "The malformed graph was refused; refusal success does not repair the subject.",
+        1,
+      ),
+    );
+  });
+
+  const htmlTokens = [
+    '<html lang="en">',
+    '<label for="graph">',
+    '<p id="status" role="status" aria-live="polite">',
+    '<table><caption>Declared node degrees</caption>',
+    '<th scope="col">Node</th>',
+    "Browser, assistive-technology, cognitive, affected-user, and independent evaluation remain open",
+    "NOT_READY_FOR_STAGE_20",
+  ];
+  if (!htmlTokens.every((token) => html.includes(token))) {
+    throw new Error("html_structure");
+  }
+  if (/\b(fetch|XMLHttpRequest|WebSocket)\s*\(/.test(script)) {
+    throw new Error("html_network_primitive");
+  }
+  witnesses.push(
+    witness(
+      "SA6945-X2-IFACE-P006",
+      "pass",
+      "valid",
+      "Static HTML labels, live status, scoped headers, table caption, open evaluation gap, and terminal boundary are explicit.",
+      1,
+    ),
+  );
+
+  const dom = buildDom();
+  const domSandbox = { document: dom.document };
+  domSandbox.globalThis = domSandbox;
+  vm.runInNewContext(script, domSandbox, {
+    filename: "graph-evidence-table.dom-stub.txt",
+    timeout: 1000,
+  });
+  if (
+    dom.elements.status.textContent !== "2 declared nodes shown." ||
+    dom.elements.rows.children.length !== 2 ||
+    dom.elements.rows.children.some((row) => row.children.length !== 3) ||
+    typeof dom.elements.form.handler !== "function"
+  ) {
+    throw new Error("dom_bootstrap");
+  }
+  witnesses.push(
+    witness(
+      "SA6945-X2-IFACE-P007",
+      "pass",
+      "valid",
+      "Bounded DOM stub rendered two declared rows and registered one submit handler.",
+      1,
+    ),
+  );
+  dom.elements.graph.value = '{"case_id":"invalid","nodes":["a"],"edges":[["a","b"]]}';
+  dom.elements.form.handler({ preventDefault() {} });
+  if (!dom.elements.status.textContent.startsWith("Input refused: ") || dom.elements.rows.children.length !== 0) {
+    throw new Error("dom_refusal");
+  }
+  witnesses.push(
+    witness(
+      "SA6945-X2-IFACE-P008",
+      "pass",
+      "refusal_check",
+      "DOM stub surfaced an invalid-edge refusal in the live status and retained zero table rows.",
+      1,
+    ),
+  );
+
+  const texTokens = [
+    "\\documentclass[11pt]{article}",
+    "\\section{Finite graph register}",
+    "\\section{Patch and provenance register}",
+    "\\section{Accessibility register}",
+    "\\section{Trinity boundaries}",
+    "NOT\\_READY\\_FOR\\_STAGE\\_20",
+    "\\end{document}",
+  ];
+  if (!texTokens.every((token) => tex.includes(token))) throw new Error("tex_structure");
+  witnesses.push(
+    witness(
+      "SA6945-X2-IFACE-P009",
+      "pass",
+      "valid",
+      "TeX source contains the bounded structural sections and terminal nonpromotion statement; it was not rendered.",
+      1,
+    ),
+  );
+
+  const passing = witnesses.filter((item) => item.result === "pass").length;
+  const failed = witnesses.filter((item) => item.result === "fail").length;
+  if (witnesses.length !== 19 || passing !== 14 || failed !== 5) {
+    throw new Error(`witness_accounting_${witnesses.length}_${passing}_${failed}`);
+  }
+  const receipt = {
+    schema: "ghc.family.sylven-interface-validation.v1",
+    status: "VALID_BOUNDED_STATIC_INTERFACE_EVIDENCE",
+    owner: "Sylven Arc",
+    phase: "v694-v5",
+    html_degree_contracts: 5,
+    invalid_subjects_retained: 5,
+    refusal_checks: 5,
+    dom_stub_bootstrap: "pass",
+    dom_stub_refusal: "pass",
+    tex_structural_check: "pass",
+    tex_rendered: false,
+    browser_evaluated: false,
+    assistive_technology_evaluated: false,
+    cognitive_evaluated: false,
+    affected_user_evaluated: false,
+    independent_review: false,
+    network_calls: 0,
+    external_writes: 0,
+    witnesses,
+    totals: {
+      witnesses: witnesses.length,
+      passing_witnesses: passing,
+      failed_witnesses_and_effective_negatives: failed,
+    },
+    same_owner_only: true,
+    complete_accessibility_claim: false,
+    terminal_verdict: "NOT_READY_FOR_STAGE_20",
+  };
+  fs.writeFileSync(RECEIPT_PATH, `${JSON.stringify(receipt, null, 2)}\n`, {
+    encoding: "utf8",
+    flag: "wx",
+  });
+  process.stdout.write(
+    JSON.stringify({
+      status: receipt.status,
+      witnesses: witnesses.length,
+      passing,
+      failed,
+      browser: false,
+      assistive_technology: false,
+      tex_rendered: false,
+    }),
+  );
+}
+
+main();

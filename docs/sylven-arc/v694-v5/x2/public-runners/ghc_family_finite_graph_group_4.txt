@@ -1,0 +1,3 @@
+"use strict";
+require.extensions[".txt"]=require.extensions[".js"];
+const path=require("path"),fs=require("fs"),kernel=require(path.join(__dirname,"graph-kernel.txt")),allowed=["partition_quotient","graph_diff","reversible_patch","label_table_projection"],file=process.argv[2],invalid=process.argv.includes("--invalid");if(!file)throw new Error("contract_path_required");const raw=JSON.parse(fs.readFileSync(file,"utf8")),p=raw.proposal||raw;if(!allowed.includes(p.operation))throw new Error("operation_outside_runner_group");const input=JSON.parse(JSON.stringify(p.input));if(invalid)input.__unknown_field__=true;const result=kernel.execute(p.operation,input,p.expected_disposition);process.stdout.write(JSON.stringify(result)+"\n");process.exitCode=result.accepted?0:2;

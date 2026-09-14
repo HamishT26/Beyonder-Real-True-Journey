@@ -1,0 +1,15 @@
+"use strict";
+const crypto=require("crypto");
+function stable(v){if(Array.isArray(v))return v.map(stable);if(v&&typeof v==="object")return Object.fromEntries(Object.keys(v).sort().map(k=>[k,stable(v[k])]));return v;}
+function sha(v){return crypto.createHash("sha256").update(Buffer.from(JSON.stringify(stable(v)))).digest("hex");}
+function validatePlan(p){
+ const required=["schema","proposal_id","operation","case_id","title","hypothesis","null_or_failure_condition","approval_class","planning_lane","execution_lane","source_refs","source_status","concrete_artifact","falsifier_or_acceptance_gate","rollback_or_recovery","protected_gates","expected_disposition","input","practice","pillar","numerical_or_graph_execution_in_x1","same_owner_only","independent_reproduction","definition_sha256"];
+ if(!p||typeof p!=="object"||Array.isArray(p))return {accepted:false,error:"input_shape",numerical_execution:false,planning_only:true,proposal_completion_credit:0};for(const key of required)if(!(key in p))return {accepted:false,error:`missing_${key}`,numerical_execution:false,planning_only:true,proposal_completion_credit:0};
+ if(p.schema!=="ghc.family.finite-graph-proposal.v1"||!/^SA6945-P[0-9]{3}$/.test(p.proposal_id)||!Number.isInteger(p.case_id)||p.case_id<1||p.case_id>5)return {accepted:false,error:"proposal_identity",numerical_execution:false,planning_only:true,proposal_completion_credit:0};
+ if(p.numerical_or_graph_execution_in_x1!==false)return {accepted:false,error:"x1_execution_boundary",numerical_execution:false,planning_only:true,proposal_completion_credit:0};if(p.planning_lane!=="x1_planning_only"||p.execution_lane!=="x2_owner_synthetic")return {accepted:false,error:"lane_boundary",numerical_execution:false,planning_only:true,proposal_completion_credit:0};
+ if(!Array.isArray(p.source_refs)||p.source_refs.length===0||!Array.isArray(p.protected_gates)||p.protected_gates.length===0||!["completed","represented","open_gap","exact_gate"].includes(p.expected_disposition))return {accepted:false,error:"evidence_boundary",numerical_execution:false,planning_only:true,proposal_completion_credit:0};
+ if(p.same_owner_only!==true||p.independent_reproduction!==false)return {accepted:false,error:"evidence_class",numerical_execution:false,planning_only:true,proposal_completion_credit:0};const expected=sha({operation:p.operation,input:p.input,hypothesis:p.hypothesis,disposition:p.expected_disposition});if(expected!==p.definition_sha256)return {accepted:false,error:"definition_hash",numerical_execution:false,planning_only:true,proposal_completion_credit:0};
+ return {accepted:true,error:null,proposal_id:p.proposal_id,operation:p.operation,expected_disposition:p.expected_disposition,definition_sha256:p.definition_sha256,numerical_execution:false,planning_only:true,proposal_completion_credit:0};
+}
+function main(){const fs=require("fs"),file=process.argv[2];if(!file)throw new Error("fixture_path_required");const result=validatePlan(JSON.parse(fs.readFileSync(file,"utf8")));process.stdout.write(JSON.stringify(result)+"\n");process.exitCode=result.accepted?0:2;}
+module.exports={validatePlan,stable,sha};if(require.main===module)main();

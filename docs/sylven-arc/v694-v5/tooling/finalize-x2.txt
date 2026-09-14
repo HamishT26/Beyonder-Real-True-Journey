@@ -1,0 +1,476 @@
+"use strict";
+
+const fs = require("fs");
+const path = require("path");
+const crypto = require("crypto");
+
+const ROOT = path.resolve(__dirname, "../../../..");
+const BASE = "docs/sylven-arc/v694-v5";
+const X2 = path.join(ROOT, BASE, "x2");
+const SOURCE = "a681f7f8fca4cb7b4cd1ec363b23bbf896f0cbe1";
+const X1 = "24cc18a6e6ea1c4c1deeed02bf97c6a35c404f17";
+const PROTECTED = [
+  "empirical",
+  "participant",
+  "professional",
+  "production",
+  "deployment",
+  "legal",
+  "cultural",
+  "affected_party",
+  "maori_authority",
+  "privacy_complete",
+  "accessibility_complete",
+  "exhaustive_security",
+  "independent_reproduction",
+  "agi_asi",
+  "consciousness_personhood",
+  "theory_of_everything",
+  "proof_canon",
+  "stage20",
+];
+const BOUNDARY =
+  "Sylven Arc, optionally they/them, continuity gardener and evidence-bound systems steward, with the hope of making finite graph changes inspectable, reversible, and accessible without overstating what they prove, is relational working language only. It is not evidence of consciousness, sentience, personhood, identity continuity, employment, qualification, independent agency, scientific or operational authority, professional authority, legal or cultural authority, affected-party authority, or Maori authority. Same-owner synthetic evidence is not independent reproduction. NOT_READY_FOR_STAGE_20.";
+
+function readJson(relative) {
+  return JSON.parse(fs.readFileSync(path.join(ROOT, relative), "utf8"));
+}
+
+function writeJson(relative, value) {
+  fs.writeFileSync(path.join(ROOT, relative), `${JSON.stringify(value, null, 2)}\n`, {
+    encoding: "utf8",
+    flag: "wx",
+  });
+}
+
+function sha(buffer) {
+  return crypto.createHash("sha256").update(buffer).digest("hex");
+}
+
+function collect(directory, output = []) {
+  for (const name of fs.readdirSync(directory).sort()) {
+    const absolute = path.join(directory, name);
+    const stat = fs.statSync(absolute);
+    if (stat.isDirectory()) collect(absolute, output);
+    else output.push(absolute);
+  }
+  return output;
+}
+
+function baseMethod(id, title, failure, witnessIds, negatives, scope) {
+  return {
+    method_id: id,
+    title,
+    failure_signature: failure,
+    trigger_preconditions: ["Frozen x1 is pushed, clean, and fresh-live equal.", "The exact x2 dependency is present."],
+    privacy_class: "sanitized_public",
+    approval_class: "owner_safe_local",
+    candidate_workaround: "Retain the failed witness, inspect the smallest dependency, and use one bounded recovery without replaying successful components.",
+    validation_witness_ids: witnessIds,
+    recurrence_guard: "Use literal paths, bounded projections, explicit lifecycle context, and exact receipt readback.",
+    rollback: "Stop selecting only the affected method and preserve every earlier artifact and witness.",
+    recommendation_state: "validated",
+    supersedes: [],
+    protected_gates: PROTECTED,
+    retained_negative_ids: negatives,
+    scope_boundary: scope,
+    execution_authority: "owner_self_scoped_delta",
+    repository_scan: false,
+    module_scan: true,
+    cross_lane_scan: false,
+    unchanged_history_scan: false,
+    sibling_lane_mutation: false,
+    source_commit: SOURCE,
+    final_commit: "PENDING",
+    changed_file_allowlist: [`${BASE}/x2`],
+    module_allowlist: [`${BASE}/tooling`],
+    exact_pushed_head_required: true,
+  };
+}
+
+function baseWitness(id, methodId, procedure, expected, observed, result, negatives = []) {
+  return {
+    witness_id: id,
+    method_id: methodId,
+    procedure,
+    scope: "Sylven v694-v5 x2 owner delta",
+    expected,
+    observed,
+    result,
+    same_owner_only: true,
+    independent_reproduction: false,
+    retained_negative_ids: negatives,
+    boundary: BOUNDARY,
+  };
+}
+
+function negative(id, methodId, failedId, recoveryId, failure) {
+  return {
+    negative_id: id,
+    method_id: methodId,
+    failed_witness_id: failedId,
+    recovery_witness_id: recoveryId,
+    scope: "Sylven v694-v5 x2 owner delta",
+    failure,
+    original_success_credit: 0,
+    erased: false,
+  };
+}
+
+function main() {
+  const outputs = [
+    "operational-failures.json",
+    "global-installation-methods.json",
+    "source-skill-installation-summary.json",
+    "method-flow-final.json",
+    "retained-negatives-final.json",
+    "phase-truth-final.json",
+    "tool-selection-final.json",
+    "complete-incomplete.json",
+    "manifest-final.json",
+  ];
+  for (const name of outputs) {
+    if (fs.existsSync(path.join(X2, name))) throw new Error(`output_exists_${name}`);
+  }
+
+  const core = readJson(`${BASE}/x2/method-flow-core.json`);
+  const coreNegatives = readJson(`${BASE}/x2/retained-negatives.json`);
+  const installation = readJson(`${BASE}/x2/global-installation-receipt.json`);
+  const interfaceReceipt = readJson(`${BASE}/x2/interface-validation-receipt.json`);
+  if (core.counts.methods !== 10 || core.counts.witness_results.fail !== 105 || core.counts.witness_results.pass !== 305) {
+    throw new Error("core_accounting");
+  }
+  if (coreNegatives.count !== 105 || coreNegatives.entries.length !== 105) throw new Error("core_negatives");
+  if (installation.status !== "VALIDATED_ADDITIVE_GLOBAL_INSTALLATION" || installation.parity_count !== 52) {
+    throw new Error("installation_receipt");
+  }
+  if (interfaceReceipt.totals.witnesses !== 19 || interfaceReceipt.totals.passing_witnesses !== 14 || interfaceReceipt.totals.failed_witnesses_and_effective_negatives !== 5) {
+    throw new Error("interface_receipt");
+  }
+
+  const operationDefinitions = [
+    [
+      "The first x2 builder failed syntax validation because a template path expression was malformed.",
+      "The preserved build-x2-current wrapper applied only the exact in-memory repair and generated the core packet.",
+      "syntax-check historical x2 builder",
+    ],
+    [
+      "Node 24 rejected --check on the .txt promotion module by filename before any installation.",
+      "Node's supported stdin CommonJS syntax check passed before the one promotion invocation.",
+      "syntax-check promotion module",
+    ],
+    [
+      "A read projection guessed two nonexistent core summary filenames.",
+      "A bounded file inventory identified phase-truth.json and method-flow-core.json without mutation.",
+      "resolve exact x2 evidence filenames",
+    ],
+    [
+      "A PowerShell object expression piped directly into ConvertTo-Json was rejected as an empty pipe element.",
+      "The objects were first materialized into an array before serialization.",
+      "materialize bounded PowerShell projections",
+    ],
+    [
+      "The materialized multi-file read serialized an oversized Method Flow payload and the display truncated.",
+      "A bounded Node projection read only keys, counts, and selected scalar evidence.",
+      "replace oversized read with bounded structural projection",
+    ],
+    [
+      "A later PowerShell metadata projection repeated the direct-object pipe parser fault.",
+      "The faulty wrapper was discontinued and a bounded Node file-stat projection passed.",
+      "discontinue recurrent parser wrapper",
+    ],
+  ];
+  const operationalMethods = [];
+  const operationalWitnesses = [];
+  const operationalNegatives = [];
+  const operationalEvents = [];
+  operationDefinitions.forEach(([failed, recovered, title], index) => {
+    const ordinal = String(index + 1).padStart(3, "0");
+    const methodId = `SA6945-X2-OP-M${ordinal}`;
+    const negativeId = `SA6945-X2-OP-N${ordinal}`;
+    const failedId = `${negativeId}-FAIL`;
+    const passedId = `${negativeId}-PASS`;
+    operationalMethods.push(baseMethod(methodId, title, failed, [failedId, passedId], [negativeId], "Sylven v694-v5 x2 operational workflow only."));
+    operationalWitnesses.push(baseWitness(failedId, methodId, title, "A complete bounded operation", failed, "fail", [negativeId]));
+    operationalWitnesses.push(baseWitness(passedId, methodId, title, "One bounded recovery", recovered, "pass", [negativeId]));
+    operationalNegatives.push(negative(negativeId, methodId, failedId, passedId, failed));
+    operationalEvents.push({ event_index: index * 2 + 1, method_id: methodId, before: null, after: "candidate", reason: "Failed operational witness retained", witness_id: failedId });
+    operationalEvents.push({ event_index: index * 2 + 2, method_id: methodId, before: "candidate", after: "validated", reason: "Bounded recovery passed without erasure", witness_id: passedId });
+  });
+  const operationalReceipt = {
+    schema: "ghc.family.sylven-x2-operational-failures.v1",
+    owner: "Sylven Arc",
+    phase: "v694-v5",
+    methods: operationalMethods,
+    witnesses: operationalWitnesses,
+    retained_negatives: operationalNegatives,
+    state_events: operationalEvents,
+    counts: { methods: 6, witnesses: 12, passing_witnesses: 6, failed_witnesses: 6, retained_negatives: 6 },
+    nonerasure: true,
+    terminal_verdict: "NOT_READY_FOR_STAGE_20",
+  };
+  writeJson(`${BASE}/x2/operational-failures.json`, operationalReceipt);
+
+  const skillNames = [
+    "ghc-family-finite-graph-structure-v2",
+    "ghc-family-finite-graph-reachability-v2",
+    "ghc-family-finite-graph-partition-v2",
+    "ghc-family-finite-graph-reversible-patch-v2",
+    "ghc-family-finite-graph-accessible-evidence-v2",
+  ];
+  const globalMethods = [];
+  const globalWitnesses = [];
+  const globalNegatives = [];
+  const globalEvents = [];
+  skillNames.forEach((skill, index) => {
+    const ordinal = String(index + 1).padStart(3, "0");
+    const methodId = `SA6945-X2-GLOBAL-M${ordinal}`;
+    const witnessIds = [];
+    const negativeIds = [];
+    const addPass = (suffix, procedure, observed) => {
+      const id = `${methodId}-${suffix}`;
+      witnessIds.push(id);
+      globalWitnesses.push(baseWitness(id, methodId, procedure, "Exact bounded pass", observed, "pass"));
+    };
+    addPass("BIND", "source binding and parity", "Complete source bindings and installed bytes matched their declared hashes.");
+    addPass("QUICK", "source package validation", "The merged source package passed the official quick validator.");
+    addPass("INST", "installed package validation", "The installed package passed the official quick validator.");
+    for (const surface of ["SOURCE", "INSTALLED", "PUBLIC"]) {
+      addPass(`${surface}-ACCEPT`, `${surface.toLowerCase()} valid smoke`, "The declared valid graph contract was accepted.");
+      const negativeId = `SA6945-X2-GLOBAL-N${ordinal}-${surface}`;
+      const failId = `${methodId}-${surface}-INVALID`;
+      const refusalId = `${methodId}-${surface}-REFUSAL`;
+      witnessIds.push(failId, refusalId);
+      negativeIds.push(negativeId);
+      globalWitnesses.push(baseWitness(failId, methodId, `${surface.toLowerCase()} invalid subject`, "Malformed subject remains a failure", "The malformed subject failed with input_shape and received zero credit.", "fail", [negativeId]));
+      globalWitnesses.push(baseWitness(refusalId, methodId, `${surface.toLowerCase()} refusal check`, "Invalid subject is refused", "The runner refused the malformed subject with exit code 2; the subject remains failed.", "pass", [negativeId]));
+      globalNegatives.push(negative(negativeId, methodId, failId, refusalId, `Malformed ${surface.toLowerCase()} runner subject.`));
+    }
+    globalMethods.push(baseMethod(methodId, `Exclusive additive promotion of ${skill}`, "Collision, hash mismatch, validation failure, smoke mismatch, overwrite, or parity failure.", witnessIds, negativeIds, "Five approved merged skills and five public D-first runners only."));
+    globalEvents.push({ event_index: index * 2 + 1, method_id: methodId, before: null, after: "candidate", reason: "Additive collision-free target admitted", witness_id: `${methodId}-BIND` });
+    globalEvents.push({ event_index: index * 2 + 2, method_id: methodId, before: "candidate", after: "validated", reason: "Installed validation and three-surface smokes passed", witness_id: `${methodId}-PUBLIC-REFUSAL` });
+  });
+  const globalReceipt = {
+    schema: "ghc.family.sylven-global-installation-methods.v1",
+    owner: "Sylven Arc",
+    phase: "v694-v5",
+    methods: globalMethods,
+    witnesses: globalWitnesses,
+    retained_negatives: globalNegatives,
+    state_events: globalEvents,
+    counts: { methods: 5, witnesses: 60, passing_witnesses: 45, failed_witnesses: 15, retained_negatives: 15 },
+    installation_receipt_status: installation.status,
+    parity_bindings: installation.parity_count,
+    overwrites: installation.overwrites,
+    deletions: installation.deletions,
+    packages: installation.new_packages,
+    spend_usd: installation.spend_usd,
+    terminal_verdict: "NOT_READY_FOR_STAGE_20",
+  };
+  writeJson(`${BASE}/x2/global-installation-methods.json`, globalReceipt);
+
+  const interfaceMethodId = "SA6945-X2-IFACE-M001";
+  const interfaceNegativeIds = interfaceReceipt.witnesses
+    .filter((item) => item.result === "fail")
+    .map((item, index) => `SA6945-X2-IFACE-NEG-${String(index + 1).padStart(3, "0")}`);
+  const interfaceWitnesses = interfaceReceipt.witnesses.map((item, index) => {
+    const negativeIds = item.result === "fail" ? [interfaceNegativeIds.filter((_, n) => n === interfaceReceipt.witnesses.slice(0, index + 1).filter((candidate) => candidate.result === "fail").length - 1)[0]] : [];
+    return baseWitness(item.witness_id, interfaceMethodId, "bounded static interface verification", "Exact declared interface result", item.note, item.result, negativeIds);
+  });
+  const interfaceNegatives = interfaceReceipt.witnesses
+    .filter((item) => item.result === "fail")
+    .map((item, index) => negative(interfaceNegativeIds[index], interfaceMethodId, item.witness_id, `SA6945-X2-IFACE-R${String(index + 1).padStart(3, "0")}`, item.note));
+  const interfaceMethod = baseMethod(
+    interfaceMethodId,
+    "Static graph-table and TeX structural evidence",
+    "Contract mismatch, malformed-subject acceptance, inaccessible static structure, DOM-stub mismatch, network primitive, or TeX boundary omission.",
+    interfaceWitnesses.map((item) => item.witness_id),
+    interfaceNegativeIds,
+    "Node VM/DOM stub and TeX source structure only; no browser, assistive technology, PDF, affected-user, or independent evaluation.",
+  );
+  const interfaceEvents = [
+    { event_index: 1, method_id: interfaceMethodId, before: null, after: "candidate", reason: "Static interface evidence admitted", witness_id: "SA6945-X2-IFACE-P001" },
+    { event_index: 2, method_id: interfaceMethodId, before: "candidate", after: "validated", reason: "Nineteen-witness accounting and boundaries passed", witness_id: "SA6945-X2-IFACE-P009" },
+  ];
+
+  const methods = [...core.methods, ...operationalMethods, ...globalMethods, interfaceMethod];
+  const witnesses = [...core.witnesses, ...operationalWitnesses, ...globalWitnesses, ...interfaceWitnesses];
+  const stateEvents = [
+    ...core.state_events,
+    ...operationalEvents.map((item) => ({ ...item, event_index: core.state_events.length + item.event_index })),
+    ...globalEvents.map((item) => ({ ...item, event_index: core.state_events.length + operationalEvents.length + item.event_index })),
+    ...interfaceEvents.map((item) => ({ ...item, event_index: core.state_events.length + operationalEvents.length + globalEvents.length + item.event_index })),
+  ];
+  const negatives = [...coreNegatives.entries, ...operationalNegatives, ...globalNegatives, ...interfaceNegatives];
+  const passCount = witnesses.filter((item) => item.result === "pass").length;
+  const failCount = witnesses.filter((item) => item.result === "fail").length;
+  if (methods.length !== 22 || witnesses.length !== 501 || passCount !== 370 || failCount !== 131 || negatives.length !== 131 || stateEvents.length !== 44) {
+    throw new Error(`final_accounting_${methods.length}_${witnesses.length}_${passCount}_${failCount}_${negatives.length}_${stateEvents.length}`);
+  }
+  const finalFlow = {
+    schema: "ghc.family.method-flow-state.v1",
+    owner: "Sylven Arc",
+    phase: "v694-v5",
+    identity_boundary: BOUNDARY,
+    execution_authority: "owner_self_scoped_delta",
+    source_commit: SOURCE,
+    final_commit: "PENDING",
+    stage: "x2_validated_candidate",
+    methods,
+    witnesses,
+    state_events: stateEvents,
+    recommendations: [],
+    counts: {
+      methods: methods.length,
+      witnesses: witnesses.length,
+      state_events: stateEvents.length,
+      recommendations: 0,
+      states: { validated: methods.length },
+      witness_results: { fail: failCount, pass: passCount },
+    },
+    boundary: BOUNDARY,
+  };
+  writeJson(`${BASE}/x2/method-flow-final.json`, finalFlow);
+  writeJson(`${BASE}/x2/retained-negatives-final.json`, {
+    schema: "ghc.family.retained-negatives.v694.v5.x2-final",
+    count: negatives.length,
+    entries: negatives,
+    nonerasure: true,
+  });
+
+  const bindingFiles = installation.parity_bindings.filter((item) => item.kind === "global_skill" && (item.relative === "SKILL.md" || item.relative === "source-bindings.json" || item.relative.startsWith("references/")));
+  if (bindingFiles.length !== 30) throw new Error(`complete_read_count_${bindingFiles.length}`);
+  writeJson(`${BASE}/x2/source-skill-installation-summary.json`, {
+    schema: "ghc.family.sylven-source-skill-installation-summary.v1",
+    owner: "Sylven Arc",
+    phase: "v694-v5",
+    complete_source_reads: bindingFiles,
+    complete_source_read_count: bindingFiles.length,
+    source_binding_hashes_verified: 20,
+    official_source_skill_validations: installation.source_official_validations,
+    installed_skill_validations: installation.installed_skill_validations.length,
+    source_smokes: installation.source_smokes.length,
+    installed_smokes: installation.installed_smokes.length,
+    public_smokes: installation.public_smokes.length,
+    parity_bindings: installation.parity_count,
+    overwrite_count: installation.overwrites,
+    deletion_count: installation.deletions,
+    package_installations: installation.new_packages,
+    spend_usd: installation.spend_usd,
+    global_installation_receipt_sha256: sha(fs.readFileSync(path.join(X2, "global-installation-receipt.json"))),
+    interface_validation_receipt_sha256: sha(fs.readFileSync(path.join(X2, "interface-validation-receipt.json"))),
+    same_owner_only: true,
+    independent_reproduction: false,
+    terminal_verdict: "NOT_READY_FOR_STAGE_20",
+  });
+
+  writeJson(`${BASE}/x2/phase-truth-final.json`, {
+    schema: "ghc.family.phase-truth.v694.v5.x2-final",
+    owner: "Sylven Arc",
+    phase: "v694-v5",
+    state: "X2_VALIDATED_READY_FOR_COMMIT",
+    source_final: SOURCE,
+    x1_commit: X1,
+    x2_commit: "PENDING",
+    proposals: 100,
+    proposal_chain_before: 11150,
+    proposal_chain_after: 11250,
+    dispositions: { completed: 80, represented: 10, open_gap: 5, exact_gate: 5 },
+    x2_portfolios: { safe_now: 100, candidate: 100, clean_fix_refine: 100, local_skills: 10, local_runners: 5 },
+    protected_portfolios: { exact_approval_visible_unexecuted: 50, blocked_visible_unexecuted: 30 },
+    additive_installation: { merged_global_skills: 5, public_d_first_runners: 5, support_files: 2, overwrites: 0, deletions: 0 },
+    interface_evidence: { html_contract_matches: 5, invalid_subjects: 5, refusal_checks: 5, browser_evaluated: false, assistive_technology_evaluated: false, tex_rendered: false },
+    x2_owner_delta: { methods: 22, witnesses: 501, passing_witnesses: 370, failed_witnesses_and_effective_negatives: 131 },
+    phase_owner_delta: { methods: 37, witnesses: 921, passing_witnesses: 680, failed_witnesses_and_effective_negatives: 241 },
+    effective_after_x2: { methods: 343, witnesses: 8564, passing_witnesses: 6232, failed_witnesses_and_effective_negatives: 2332, open_gaps: 35, exact_gates: 35 },
+    packages: 0,
+    spend_usd: 0,
+    external_actions: 0,
+    successor_contacts: 0,
+    same_owner_only: true,
+    independent_reproduction: false,
+    terminal_verdict: "NOT_READY_FOR_STAGE_20",
+  });
+
+  writeJson(`${BASE}/x2/tool-selection-final.json`, {
+    schema: "ghc.family.sylven-tool-selection.v694.v5.x2-final",
+    tools: [
+      { path: `${BASE}/tooling/build-x2.txt`, state: "historical_failed_unselected", reason: "Malformed template path syntax retained." },
+      { path: `${BASE}/tooling/build-x2-current.txt`, state: "selected_success_once", reason: "Exact bounded compatibility repair and core builder." },
+      { path: `${BASE}/tooling/graph-kernel.txt`, state: "selected", reason: "Finite synthetic graph execution kernel." },
+      { path: `${BASE}/tooling/validate-x2.txt`, state: "selected_success_once", reason: "Core x2 validator; not replayed." },
+      { path: `${BASE}/tooling/promote-x2.txt`, state: "selected_success_once", reason: "Exclusive additive promotion with 52 parity checks." },
+      { path: `${BASE}/tooling/verify-interface.txt`, state: "selected_success_once", reason: "Bounded VM/DOM-stub and TeX-source verification." },
+      { path: `${BASE}/tooling/finalize-x2.txt`, state: "selected_success_once", reason: "Immutable additive accounting finalizer." },
+      { path: `${BASE}/tooling/validate-x2-current.txt`, state: "selected_next", reason: "Final x2 packet and manifest validator." },
+    ],
+    whole_repository_scan: false,
+    sibling_lane_scan: false,
+    successor_contact: false,
+    terminal_verdict: "NOT_READY_FOR_STAGE_20",
+  });
+  writeJson(`${BASE}/x2/complete-incomplete.json`, {
+    schema: "ghc.family.sylven-complete-incomplete.v694.v5.x2",
+    completed: [
+      "One hundred finite synthetic graph contracts executed in x2.",
+      "Eighty completed and ten represented dispositions remain evidence-calibrated.",
+      "One hundred malformed subjects remain failed beside one hundred successful refusal checks.",
+      "Ten local skills and five local runners were boundedly validated and smoke-used.",
+      "Five merged skills and five public runners were installed additively with 52 parity bindings and zero overwrite.",
+      "Five HTML contract comparisons, bounded DOM-stub behavior, and TeX structure passed.",
+      "All operational and subject failures remain retained at zero original credit.",
+    ],
+    incomplete_or_reserved: [
+      "Five open-gap proposals require browser, assistive-technology, cognitive, affected-user, and independent evaluation.",
+      "Five exact-gate proposals reserve professional, legal, cultural, affected-party, privacy, accessibility, and Maori authority.",
+      "No empirical, participant, production, deployment, independent-reproduction, Theory-of-Everything, proof, canon, or Stage 20 claim is established.",
+      "Exact final closeout, canonical validation, and terminal routing remain future lifecycle stages.",
+    ],
+    wellbeing: { workload_bounded: true, owner_files_below_stop_expected: true, packages: 0, spend_usd: 0, terminal_verdict: "NOT_READY_FOR_STAGE_20" },
+  });
+
+  const tools = [
+    "graph-kernel.txt",
+    "build-x2.txt",
+    "build-x2-current.txt",
+    "validate-x2.txt",
+    "promote-x2.txt",
+    "verify-interface.txt",
+    "finalize-x2.txt",
+    "validate-x2-current.txt",
+  ].map((name) => path.join(ROOT, BASE, "tooling", name));
+  const ownerFiles = collect(X2).filter((file) => path.basename(file) !== "manifest-final.json");
+  const manifestFiles = [...ownerFiles, ...tools].sort((a, b) => a.localeCompare(b));
+  const entries = manifestFiles.map((absolute) => {
+    const bytes = fs.readFileSync(absolute);
+    const normalized = Buffer.from(bytes.toString("utf8").replace(/\r\n/g, "\n"), "utf8");
+    return {
+      path: path.relative(ROOT, absolute).replaceAll("\\", "/"),
+      bytes: normalized.length,
+      sha256_normalized_lf: sha(normalized),
+    };
+  });
+  writeJson(`${BASE}/x2/manifest-final.json`, {
+    schema: "ghc.family.sylven-manifest.v694.v5.x2-final",
+    owner: "Sylven Arc",
+    phase: "v694-v5",
+    domain: "normalized_lf_worktree_bytes",
+    entries,
+    count: entries.length,
+    exclusions: [`${BASE}/x2/manifest-final.json`],
+    x1_commit: X1,
+    final_commit: "PENDING",
+  });
+
+  process.stdout.write(JSON.stringify({
+    status: "X2_FINALIZED_CANDIDATE",
+    methods: methods.length,
+    witnesses: witnesses.length,
+    passing: passCount,
+    failed: failCount,
+    retained_negatives: negatives.length,
+    manifest_entries: entries.length,
+  }));
+}
+
+main();

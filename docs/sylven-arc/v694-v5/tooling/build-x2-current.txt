@@ -1,0 +1,12 @@
+"use strict";
+const fs=require("fs"),path=require("path"),Module=require("module");
+const target=path.join(__dirname,"build-x2.txt");let source=fs.readFileSync(target,"utf8");
+const replacements=[
+ ['path.join(ROOT,BASE,"x1","skills",`ghc-family-graph-plan-group-${n}","SKILL.md")','path.join(ROOT,BASE,"x1","skills",`ghc-family-graph-plan-group-${n}`,"SKILL.md")'],
+ ['path.join(OUT,"skills",`ghc-family-graph-execution-group-${n}","SKILL.md")','path.join(OUT,"skills",`ghc-family-graph-execution-group-${n}`,"SKILL.md")'],
+ ['expected=new Set([`?? ${BASE}/tooling/graph-kernel.txt`,`?? ${BASE}/tooling/build-x2.txt`,`?? ${BASE}/tooling/validate-x2.txt`])','expected=new Set([`?? ${BASE}/tooling/graph-kernel.txt`,`?? ${BASE}/tooling/build-x2.txt`,`?? ${BASE}/tooling/build-x2-current.txt`,`?? ${BASE}/tooling/validate-x2.txt`])'],
+ ['status.length!==3','status.length!==4'],
+ ['tools=["graph-kernel.txt","build-x2.txt","validate-x2.txt"]','tools=["graph-kernel.txt","build-x2.txt","build-x2-current.txt","validate-x2.txt"]']
+];
+for(const [before,after] of replacements){if(!source.includes(before))throw new Error(`repair_pattern_missing_${before.slice(0,32)}`);source=source.replace(before,after);}
+const compiled=new Module(target,module);compiled.filename=target;compiled.paths=module.paths;compiled._compile(source,target);
