@@ -1,0 +1,91 @@
+"use strict";
+
+const fs = require("node:fs");
+const path = require("node:path");
+const crypto = require("node:crypto");
+
+const BASE = "docs/elowen-cairn/v694-v3/x1";
+const root = process.cwd();
+const read = (relative) => JSON.parse(fs.readFileSync(path.join(root, relative), "utf8"));
+const write = (relative, value) => fs.writeFileSync(path.join(root, relative), `${JSON.stringify(value, null, 2)}\n`, "utf8");
+const sha = (bytes) => crypto.createHash("sha256").update(bytes).digest("hex");
+const failures = [
+  {
+    negative_id: "EC6943-X1-OP-N001",
+    failure: "The first sealed x1 validator matched e-backslash across the end of interface: and the escaped newline in the builder YAML template, classifying source serialization as a Windows path.",
+    recovery: "Require a left path boundary before the drive-letter classifier and preserve the exact scanner-definition self-adjudication.",
+    recovery_passed: true,
+    repository_changed_at_failure: false,
+    subject_success_credit: 0,
+    method_id: "EC6943-X1-M011"
+  },
+  {
+    negative_id: "EC6943-X1-OP-N002",
+    failure: "The first x1 privacy-candidate diagnostic piped directly after a PowerShell foreach block and failed with an empty-pipe-element parser error.",
+    recovery: "Materialize diagnostic rows in an explicit array before serialization and inspect the exact matching line.",
+    recovery_passed: true,
+    repository_changed_at_failure: false,
+    subject_success_credit: 0,
+    method_id: "EC6943-X1-M012"
+  }
+];
+const priorOperational = read(`${BASE}/operational-failures.json`);
+if ((priorOperational.failures || []).length !== 0) throw new Error("x1 validation correction already applied or unexpected operational overlay");
+write(`${BASE}/operational-failures.json`, { schema: "ghc.family.operational-failure-overlay.v1", session: "x1", count: failures.length, failures, boundary: "Both failures remain zero-credit witnesses. Their bounded recoveries do not replay or promote any proposal, skill, or runner subject. NOT_READY_FOR_STAGE_20." });
+const flow = read(`${BASE}/method-flow.json`);
+if (flow.records.some((row) => failures.some((failure) => failure.method_id === row.method_id))) throw new Error("duplicate x1 validation correction method");
+for (const failure of failures) {
+  flow.records.push({
+    method_id: failure.method_id,
+    issue_id: failure.negative_id,
+    operation: "x1_validation_recovery",
+    candidate_workaround: failure.recovery,
+    failure_signature: failure.failure,
+    trigger_preconditions: ["The x1 validation dependency is required", "All successful proposal and runner results are immutable and must not be replayed"],
+    recurrence_guard: failure.recovery,
+    rollback: "Retain the failed validation or diagnostic and return to the sealed pre-validation x1 candidate.",
+    expected_fail_witness: [failure.negative_id],
+    expected_pass_witness: [`${failure.negative_id}-RECOVERY`],
+    promotion_gate: ["bounded dependency only", "no subject replay", "failure retained", "privacy boundary unchanged"],
+    sibling_recommendation: failure.recovery,
+    failed_evidence_retained: true,
+    preferred: true,
+    witnesses: [
+      { witness_id: failure.negative_id, kind: "failed", retained_negative_id: failure.negative_id, subject_success_credit: 0 },
+      { witness_id: `${failure.negative_id}-RECOVERY`, kind: "pass", retained_negative_id: failure.negative_id, bounded_credit: "dependency_recovery_only" }
+    ]
+  });
+}
+flow.methods = flow.records.length;
+flow.witnesses = flow.records.flatMap((row) => row.witnesses).length;
+flow.failed_witnesses = flow.records.flatMap((row) => row.witnesses).filter((row) => row.kind === "failed").length;
+flow.passing_witnesses = flow.records.flatMap((row) => row.witnesses).filter((row) => row.kind === "pass").length;
+write(`${BASE}/method-flow.json`, flow);
+const negativeRegister = read(`${BASE}/retained-negative-register.json`);
+negativeRegister.rows.push(...failures.map((failure) => ({ negative_id: failure.negative_id, proposal_id: null, session: "x1", class: "owner_operational_failure", observed_error: "retained_failure", expected_error: null, refusal_pass: null, subject_success_credit: 0, retained: true, linked_method_id: failure.method_id })));
+negativeRegister.count = negativeRegister.rows.length;
+write(`${BASE}/retained-negative-register.json`, negativeRegister);
+const summary = read(`${BASE}/summary.json`);
+summary.operational_failures = failures.length;
+summary.total_x1_retained_failures = negativeRegister.count;
+summary.method_flow = { methods: flow.methods, witnesses: flow.witnesses, failed_witnesses: flow.failed_witnesses, passing_witnesses: flow.passing_witnesses };
+write(`${BASE}/summary.json`, summary);
+const freeze = read(`${BASE}/freeze-receipt.json`);
+freeze.owner_operational_failures = failures.length;
+freeze.total_x1_retained_failures = negativeRegister.count;
+write(`${BASE}/freeze-receipt.json`, freeze);
+const bindings = [];
+function walk(relative) {
+  for (const entry of fs.readdirSync(path.join(root, relative), { withFileTypes: true })) {
+    const child = path.posix.join(relative.replaceAll("\\", "/"), entry.name);
+    if (entry.isDirectory()) walk(child);
+    else if (!child.endsWith("/manifest.json")) {
+      const bytes = fs.readFileSync(path.join(root, child));
+      bindings.push({ path: child, bytes: bytes.length, sha256: sha(bytes) });
+    }
+  }
+}
+walk(BASE);
+bindings.sort((a, b) => a.path.localeCompare(b.path));
+write(`${BASE}/manifest.json`, { schema: "ghc.family.precommit-byte-manifest.v9", domain: "raw_worktree_candidate_bytes", bindings, exclusions: [`${BASE}/manifest.json`] });
+process.stdout.write(`${JSON.stringify({ ok: true, operational_failures: failures.length, methods: flow.methods, failed_witnesses: flow.failed_witnesses, manifest_entries: bindings.length })}\n`);

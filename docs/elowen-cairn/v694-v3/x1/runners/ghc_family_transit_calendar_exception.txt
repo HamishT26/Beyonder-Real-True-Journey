@@ -1,0 +1,7 @@
+"use strict";
+const fs=require("node:fs"),path=require("node:path"),Module=require("node:module");
+function load(p){const f=path.resolve(__dirname,p),m=new Module(f);m.filename=f;m.paths=Module._nodeModulePaths(path.dirname(f));m._compile(fs.readFileSync(f,"utf8"),f);return m.exports;}
+const core=load("../tools/transit-core.txt");
+const allowed=new Set(["transit_calendar_membership","transit_calendar_exception"]);
+let request;try{request=JSON.parse(process.argv[2]||"");}catch{process.stdout.write(JSON.stringify({ok:false,error:"E_JSON",authority:false})+"\n");process.exitCode=1;}
+if(request){const output=core.evaluate(request,allowed);process.stdout.write(JSON.stringify(output)+"\n");if(!output.ok)process.exitCode=1;}

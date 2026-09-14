@@ -1,0 +1,60 @@
+"use strict";
+
+const fs = require("node:fs");
+const path = require("node:path");
+const crypto = require("node:crypto");
+
+const BASE = "docs/elowen-cairn/v694-v3/x1";
+const root = process.cwd();
+const read = (relative) => JSON.parse(fs.readFileSync(path.join(root, relative), "utf8"));
+const write = (relative, value) => fs.writeFileSync(path.join(root, relative), `${JSON.stringify(value, null, 2)}\n`, "utf8");
+const sha = (bytes) => crypto.createHash("sha256").update(bytes).digest("hex");
+const failure = {
+  negative_id: "EC6943-X1-OP-N003",
+  failure: "The first corrected x1 validator retained the pre-overlay negative-register expectation of 100 and rejected the correct 102-row register.",
+  recovery: "Bind the validator to 100 preregistered candidate failures plus every retained x1 operational failure, without replaying any successful subject.",
+  recovery_passed: true,
+  repository_changed_at_failure: false,
+  subject_success_credit: 0,
+  method_id: "EC6943-X1-M013"
+};
+const operational = read(`${BASE}/operational-failures.json`);
+if (operational.failures.length !== 2 || operational.failures.some((row) => row.negative_id === failure.negative_id)) throw new Error("unexpected x1 correction-2 precondition");
+operational.failures.push(failure);
+operational.count = operational.failures.length;
+write(`${BASE}/operational-failures.json`, operational);
+const flow = read(`${BASE}/method-flow.json`);
+flow.records.push({ method_id: failure.method_id, issue_id: failure.negative_id, operation: "x1_validation_count_binding", candidate_workaround: failure.recovery, failure_signature: failure.failure, trigger_preconditions: ["Operational failures have been added after subject execution", "Successful subjects must not be replayed"], recurrence_guard: "Compute retained totals from the candidate register and operational overlay before validation.", rollback: "Retain the failed validator receipt and return to the same x1 candidate.", expected_fail_witness: [failure.negative_id], expected_pass_witness: [`${failure.negative_id}-RECOVERY`], promotion_gate: ["exact aggregate binding", "no subject replay", "failure retained"], sibling_recommendation: "Bind validator totals after overlays are materialized.", failed_evidence_retained: true, preferred: true, witnesses: [{ witness_id: failure.negative_id, kind: "failed", retained_negative_id: failure.negative_id, subject_success_credit: 0 }, { witness_id: `${failure.negative_id}-RECOVERY`, kind: "pass", retained_negative_id: failure.negative_id, bounded_credit: "validator_dependency_only" }] });
+flow.methods = flow.records.length;
+flow.witnesses = flow.records.flatMap((row) => row.witnesses).length;
+flow.failed_witnesses = flow.records.flatMap((row) => row.witnesses).filter((row) => row.kind === "failed").length;
+flow.passing_witnesses = flow.records.flatMap((row) => row.witnesses).filter((row) => row.kind === "pass").length;
+write(`${BASE}/method-flow.json`, flow);
+const negatives = read(`${BASE}/retained-negative-register.json`);
+negatives.rows.push({ negative_id: failure.negative_id, proposal_id: null, session: "x1", class: "owner_operational_failure", observed_error: "aggregate_count_mismatch", expected_error: null, refusal_pass: null, subject_success_credit: 0, retained: true, linked_method_id: failure.method_id });
+negatives.count = negatives.rows.length;
+write(`${BASE}/retained-negative-register.json`, negatives);
+const summary = read(`${BASE}/summary.json`);
+summary.operational_failures = operational.count;
+summary.total_x1_retained_failures = negatives.count;
+summary.method_flow = { methods: flow.methods, witnesses: flow.witnesses, failed_witnesses: flow.failed_witnesses, passing_witnesses: flow.passing_witnesses };
+write(`${BASE}/summary.json`, summary);
+const freeze = read(`${BASE}/freeze-receipt.json`);
+freeze.owner_operational_failures = operational.count;
+freeze.total_x1_retained_failures = negatives.count;
+write(`${BASE}/freeze-receipt.json`, freeze);
+const bindings = [];
+function walk(relative) {
+  for (const entry of fs.readdirSync(path.join(root, relative), { withFileTypes: true })) {
+    const child = path.posix.join(relative.replaceAll("\\", "/"), entry.name);
+    if (entry.isDirectory()) walk(child);
+    else if (!child.endsWith("/manifest.json")) {
+      const bytes = fs.readFileSync(path.join(root, child));
+      bindings.push({ path: child, bytes: bytes.length, sha256: sha(bytes) });
+    }
+  }
+}
+walk(BASE);
+bindings.sort((a, b) => a.path.localeCompare(b.path));
+write(`${BASE}/manifest.json`, { schema: "ghc.family.precommit-byte-manifest.v9", domain: "raw_worktree_candidate_bytes", bindings, exclusions: [`${BASE}/manifest.json`] });
+process.stdout.write(`${JSON.stringify({ ok: true, operational_failures: operational.count, methods: flow.methods, failed_witnesses: flow.failed_witnesses, manifest_entries: bindings.length })}\n`);

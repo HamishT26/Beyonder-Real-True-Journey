@@ -1,0 +1,59 @@
+"use strict";
+
+const fs = require("node:fs");
+const path = require("node:path");
+const crypto = require("node:crypto");
+
+const BASE = "docs/elowen-cairn/v694-v3/x1";
+const root = process.cwd();
+const read = (name) => JSON.parse(fs.readFileSync(path.join(root, BASE, name), "utf8"));
+const hash = (bytes) => crypto.createHash("sha256").update(bytes).digest("hex");
+const summary = read("summary.json");
+const proposals = read("results/proposals.json");
+const candidates = read("results/candidates.json");
+const safe = read("results/safe.json");
+const clean = read("results/clean-fix-refine.json");
+const skills = read("evidence/skill-validation.json");
+const skillReads = read("evidence/skill-read-through.json");
+const runners = read("evidence/runner-smokes.json");
+const negatives = read("retained-negative-register.json");
+const methods = read("method-flow.json");
+const manifest = read("manifest.json");
+const issues = [];
+const check = (condition, issue) => { if (!condition) issues.push(issue); };
+
+check(proposals.total === 50 && proposals.passed === 50, "proposal results");
+check(JSON.stringify(proposals.outcomes) === JSON.stringify({ completed: 50, represented: 0, open_gap: 0, exact_gate: 0 }), "x1 outcomes");
+check(candidates.total === 100 && candidates.refusal_passes === 100 && candidates.subject_success_credit === 0, "candidate results");
+check(safe.total === 100 && safe.passed === 100, "safe results");
+check(clean.total === 100 && clean.passed === 100 && clean.deletions === 0, "clean results");
+check(skills.total === 10 && skills.passed === 10 && skills.complete_read_by_owner === true, "skill validation");
+check(skillReads.count === 10 && skillReads.rows.every((row) => row.complete_read_by_owner === true), "skill read-through");
+check(runners.total === 5 && runners.accepting_passes === 5 && runners.rejecting_passes === 5, "runner smokes");
+check(negatives.count === 103 && negatives.rows.every((row) => row.retained === true && row.subject_success_credit === 0), "negative register");
+check(methods.methods === 13 && methods.failed_witnesses === 103 && methods.records.every((row) => row.preferred && row.failed_evidence_retained), "Method Flow");
+check(summary.planning_commit === "e92c4d143de5c41e48149fea984b46b1c04cc34a", "planning parent");
+check(!fs.existsSync(path.join(root, "docs/elowen-cairn/v694-v3/x2")), "x2 path appeared before x1 freeze");
+for (const binding of manifest.bindings) {
+  const target = path.join(root, binding.path);
+  check(fs.existsSync(target), `manifest missing ${binding.path}`);
+  if (fs.existsSync(target)) {
+    const bytes = fs.readFileSync(target);
+    check(bytes.length === binding.bytes, `manifest bytes ${binding.path}`);
+    check(hash(bytes) === binding.sha256, `manifest hash ${binding.path}`);
+  }
+}
+const allowed = /\.(?:json|md|txt|yaml)$/;
+const forbidden = /(?:<codex_delegation>|(?:^|[\s"'(])[A-Za-z]:\\|(?:api[_-]?key\s*[:=])|(?:token\s*[:=]))/im;
+const scannerCandidates = [];
+for (const binding of manifest.bindings) {
+  check(allowed.test(binding.path), `format ${binding.path}`);
+  const text = fs.readFileSync(path.join(root, binding.path), "utf8");
+  if (forbidden.test(text)) {
+    if (binding.path.endsWith("/tools/validate-x1.txt")) scannerCandidates.push({ path: binding.path, classification: "scanner_definition_metadata", confirmed_payload_hit: false });
+    else issues.push(`privacy candidate ${binding.path}`);
+  }
+}
+const receipt = { schema: "ghc.family.x1-validator.v9", owner: "Elowen Cairn", phase: "v694-v3", valid: issues.length === 0, issue_count: issues.length, issues, checks: { proposals: 50, candidates: 100, safe: 100, clean_fix_refine: 100, skills: 10, runners: 5, manifest_entries: manifest.bindings.length }, scanner_candidates: scannerCandidates, confirmed_privacy_hits: 0, canonical_invoked: false, successor_contacts: 0, independent_reproduction: false, terminal_verdict: "NOT_READY_FOR_STAGE_20" };
+process.stdout.write(`${JSON.stringify(receipt)}\n`);
+if (issues.length) process.exitCode = 1;

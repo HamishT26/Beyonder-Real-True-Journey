@@ -1,0 +1,163 @@
+"use strict";
+
+const GATES = [
+  "real_participants",
+  "empirical_confirmation",
+  "production_deployment",
+  "professional_authority",
+  "legal_cultural_affected_party_authority",
+  "Maori_authority",
+  "complete_privacy_accessibility_security",
+  "independent_reproduction",
+  "consciousness_personhood",
+  "AGI_ASI",
+  "Theory_of_Everything",
+  "Stage_20"
+];
+
+const X1_OPERATIONS = new Set([
+  "transit_service_profile",
+  "transit_time_seconds",
+  "transit_stop_sequence",
+  "transit_trip_duration",
+  "transit_dwell_duration",
+  "transit_running_time",
+  "transit_calendar_membership",
+  "transit_calendar_exception",
+  "transit_frequency_count",
+  "transit_headway_gap"
+]);
+
+function isRecord(value) {
+  return value !== null && typeof value === "object" && !Array.isArray(value);
+}
+function fail(error) { return { ok: false, error, authority: false }; }
+function hasExactKeys(value, required, optional = []) {
+  if (!isRecord(value)) return false;
+  const keys = Object.keys(value).sort();
+  const allowed = new Set([...required, ...optional]);
+  return required.every((key) => Object.hasOwn(value, key)) && keys.every((key) => allowed.has(key));
+}
+function isInteger(value, minimum = Number.MIN_SAFE_INTEGER) {
+  return Number.isSafeInteger(value) && value >= minimum;
+}
+function isDate(value) {
+  if (!/^\d{8}$/.test(value)) return false;
+  const y = Number(value.slice(0, 4)), m = Number(value.slice(4, 6)), d = Number(value.slice(6, 8));
+  const parsed = new Date(Date.UTC(y, m - 1, d));
+  return parsed.getUTCFullYear() === y && parsed.getUTCMonth() === m - 1 && parsed.getUTCDate() === d;
+}
+function dateOrdinal(value) {
+  return Date.UTC(Number(value.slice(0, 4)), Number(value.slice(4, 6)) - 1, Number(value.slice(6, 8))) / 86400000;
+}
+function weekdayMondayZero(value) {
+  const y = Number(value.slice(0, 4)), m = Number(value.slice(4, 6)), d = Number(value.slice(6, 8));
+  return (new Date(Date.UTC(y, m - 1, d)).getUTCDay() + 6) % 7;
+}
+function timeSeconds(value) {
+  const match = /^(\d{2}):(\d{2}):(\d{2})$/.exec(value);
+  if (!match) return null;
+  const hour = Number(match[1]), minute = Number(match[2]), second = Number(match[3]);
+  if (hour > 47 || minute > 59 || second > 59) return null;
+  return hour * 3600 + minute * 60 + second;
+}
+function success(operation, outcome, value) {
+  return {
+    ok: true,
+    operation,
+    outcome,
+    evidence_class: "finite_synthetic_transit_contract",
+    value,
+    authority: false,
+    protected_gates: GATES
+  };
+}
+function operationKeys(operation) {
+  switch (operation) {
+    case "transit_service_profile": return ["operation", "service_id", "start_date", "end_date", "weekday_flags", "exceptions"];
+    case "transit_time_seconds": return ["operation", "time"];
+    case "transit_stop_sequence": return ["operation", "stops"];
+    case "transit_trip_duration": return ["operation", "departure_time", "arrival_time"];
+    case "transit_dwell_duration": return ["operation", "arrival_time", "departure_time"];
+    case "transit_running_time": return ["operation", "departure_time", "next_arrival_time"];
+    case "transit_calendar_membership": return ["operation", "date", "start_date", "end_date", "weekday_flags", "exceptions"];
+    case "transit_calendar_exception": return ["operation", "base_active", "exception_type"];
+    case "transit_frequency_count": return ["operation", "start_time", "end_time", "headway_secs"];
+    case "transit_headway_gap": return ["operation", "departure_seconds", "minimum_secs", "maximum_secs"];
+    default: return null;
+  }
+}
+
+function evaluate(request, allowedOperations = X1_OPERATIONS) {
+  if (!isRecord(request)) return fail("E_RECORD");
+  if (typeof request.operation !== "string" || !X1_OPERATIONS.has(request.operation)) return fail("E_OPERATION");
+  if (allowedOperations && !allowedOperations.has(request.operation)) return fail("E_SCOPE");
+  const keys = operationKeys(request.operation);
+  if (!hasExactKeys(request, keys)) return fail("E_FIELDS");
+
+  switch (request.operation) {
+    case "transit_service_profile": {
+      if (typeof request.service_id !== "string" || !request.service_id.startsWith("SYN-") || !isDate(request.start_date) || !isDate(request.end_date) || dateOrdinal(request.end_date) < dateOrdinal(request.start_date)) return fail("E_SERVICE_PROFILE");
+      if (!Array.isArray(request.weekday_flags) || request.weekday_flags.length !== 7 || !request.weekday_flags.every((x) => x === 0 || x === 1)) return fail("E_WEEKDAYS");
+      if (!Array.isArray(request.exceptions) || !request.exceptions.every((x) => hasExactKeys(x, ["date", "exception_type"]) && isDate(x.date) && (x.exception_type === 1 || x.exception_type === 2))) return fail("E_EXCEPTIONS");
+      return success(request.operation, "completed", { service_id: request.service_id, date_range: [request.start_date, request.end_date], active_weekday_count: request.weekday_flags.reduce((a, b) => a + b, 0), exception_count: request.exceptions.length });
+    }
+    case "transit_time_seconds": {
+      const seconds = timeSeconds(request.time);
+      if (seconds === null) return fail("E_TIME");
+      return success(request.operation, "completed", { time: request.time, seconds });
+    }
+    case "transit_stop_sequence": {
+      if (!Array.isArray(request.stops) || request.stops.length < 2) return fail("E_STOPS");
+      const ids = new Set();
+      let previous = -1;
+      for (const stop of request.stops) {
+        if (!hasExactKeys(stop, ["stop_id", "stop_sequence"]) || typeof stop.stop_id !== "string" || !stop.stop_id || !isInteger(stop.stop_sequence, 0) || stop.stop_sequence <= previous || ids.has(stop.stop_id)) return fail("E_STOP_SEQUENCE");
+        ids.add(stop.stop_id);
+        previous = stop.stop_sequence;
+      }
+      return success(request.operation, "completed", { ordered_stop_ids: request.stops.map((x) => x.stop_id), count: request.stops.length });
+    }
+    case "transit_trip_duration": {
+      const a = timeSeconds(request.departure_time), b = timeSeconds(request.arrival_time);
+      if (a === null || b === null || b < a) return fail("E_DURATION");
+      return success(request.operation, "completed", { seconds: b - a });
+    }
+    case "transit_dwell_duration": {
+      const a = timeSeconds(request.arrival_time), b = timeSeconds(request.departure_time);
+      if (a === null || b === null || b < a) return fail("E_DWELL");
+      return success(request.operation, "completed", { seconds: b - a });
+    }
+    case "transit_running_time": {
+      const a = timeSeconds(request.departure_time), b = timeSeconds(request.next_arrival_time);
+      if (a === null || b === null || b < a) return fail("E_RUNNING_TIME");
+      return success(request.operation, "completed", { seconds: b - a });
+    }
+    case "transit_calendar_membership": {
+      if (![request.date, request.start_date, request.end_date].every(isDate) || dateOrdinal(request.end_date) < dateOrdinal(request.start_date)) return fail("E_DATE");
+      if (!Array.isArray(request.weekday_flags) || request.weekday_flags.length !== 7 || !request.weekday_flags.every((x) => x === 0 || x === 1) || !Array.isArray(request.exceptions)) return fail("E_CALENDAR");
+      if (!request.exceptions.every((x) => hasExactKeys(x, ["date", "exception_type"]) && isDate(x.date) && (x.exception_type === 1 || x.exception_type === 2))) return fail("E_EXCEPTIONS");
+      let active = dateOrdinal(request.date) >= dateOrdinal(request.start_date) && dateOrdinal(request.date) <= dateOrdinal(request.end_date) && request.weekday_flags[weekdayMondayZero(request.date)] === 1;
+      for (const exception of request.exceptions) if (exception.date === request.date) active = exception.exception_type === 1;
+      return success(request.operation, "completed", { active });
+    }
+    case "transit_calendar_exception": {
+      if (typeof request.base_active !== "boolean" || ![1, 2].includes(request.exception_type)) return fail("E_EXCEPTION");
+      return success(request.operation, "completed", { active: request.exception_type === 1, applied: request.exception_type === 1 ? "add" : "remove" });
+    }
+    case "transit_frequency_count": {
+      const a = timeSeconds(request.start_time), b = timeSeconds(request.end_time);
+      if (a === null || b === null || b <= a || !isInteger(request.headway_secs, 1)) return fail("E_FREQUENCY");
+      return success(request.operation, "completed", { count: Math.ceil((b - a) / request.headway_secs), end_exclusive: true });
+    }
+    case "transit_headway_gap": {
+      if (!Array.isArray(request.departure_seconds) || request.departure_seconds.length < 2 || !request.departure_seconds.every((x) => isInteger(x, 0)) || !isInteger(request.minimum_secs, 0) || !isInteger(request.maximum_secs, request.minimum_secs)) return fail("E_HEADWAY");
+      const gaps = request.departure_seconds.slice(1).map((value, i) => value - request.departure_seconds[i]);
+      if (gaps.some((gap) => gap < 0)) return fail("E_SEQUENCE");
+      return success(request.operation, "completed", { gaps, minimum: Math.min(...gaps), maximum: Math.max(...gaps), valid: gaps.every((gap) => gap >= request.minimum_secs && gap <= request.maximum_secs) });
+    }
+    default: return fail("E_OPERATION");
+  }
+}
+
+module.exports = { GATES, X1_OPERATIONS, evaluate, timeSeconds };

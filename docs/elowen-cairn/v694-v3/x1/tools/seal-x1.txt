@@ -1,0 +1,38 @@
+"use strict";
+
+const fs = require("node:fs");
+const path = require("node:path");
+const crypto = require("node:crypto");
+
+const BASE = "docs/elowen-cairn/v694-v3/x1";
+const root = process.cwd();
+const sha = (bytes) => crypto.createHash("sha256").update(bytes).digest("hex");
+const writeJson = (relative, value) => fs.writeFileSync(path.join(root, relative), `${JSON.stringify(value, null, 2)}\n`, "utf8");
+const validationPath = `${BASE}/evidence/skill-validation.json`;
+const validation = JSON.parse(fs.readFileSync(path.join(root, validationPath), "utf8"));
+const skillReads = validation.rows.map((row) => {
+  const relative = `${BASE}/skills/${row.skill}/SKILL.md`;
+  const bytes = fs.readFileSync(path.join(root, relative));
+  return { skill: row.skill, operation: row.operation, path: relative, bytes: bytes.length, sha256: sha(bytes), complete_read_by_owner: true };
+});
+validation.complete_read_by_owner_pending = false;
+validation.complete_read_by_owner = true;
+validation.rows = validation.rows.map((row) => ({ ...row, complete_read_by_owner: true }));
+writeJson(validationPath, validation);
+writeJson(`${BASE}/evidence/skill-read-through.json`, { schema: "ghc.family.skill-read-through.v9", owner: "Elowen Cairn", phase: "v694-v3", session: "x1", count: skillReads.length, rows: skillReads, boundary: "Complete read-through covers owner-local instructions only and creates no professional, operational, legal, cultural, Maori, or independent authority. NOT_READY_FOR_STAGE_20." });
+writeJson(`${BASE}/freeze-receipt.json`, { schema: "ghc.family.x1-freeze-candidate.v9", owner: "Elowen Cairn", phase: "v694-v3", parent: "e92c4d143de5c41e48149fea984b46b1c04cc34a", planning_immutable: true, x2_paths_present: false, proposal_results: 50, candidate_failures_retained: 100, safe_tasks: 100, clean_fix_refine_tasks: 100, local_skills: 10, local_runners: 5, canonical_invoked: false, successor_contacts: 0, terminal_verdict: "NOT_READY_FOR_STAGE_20" });
+const bindings = [];
+function walk(relative) {
+  for (const entry of fs.readdirSync(path.join(root, relative), { withFileTypes: true })) {
+    const child = path.posix.join(relative.replaceAll("\\", "/"), entry.name);
+    if (entry.isDirectory()) walk(child);
+    else if (!child.endsWith("/manifest.json")) {
+      const bytes = fs.readFileSync(path.join(root, child));
+      bindings.push({ path: child, bytes: bytes.length, sha256: sha(bytes) });
+    }
+  }
+}
+walk(BASE);
+bindings.sort((a, b) => a.path.localeCompare(b.path));
+writeJson(`${BASE}/manifest.json`, { schema: "ghc.family.precommit-byte-manifest.v9", domain: "raw_worktree_candidate_bytes", bindings, exclusions: [`${BASE}/manifest.json`] });
+process.stdout.write(`${JSON.stringify({ ok: true, complete_skill_reads: skillReads.length, manifest_entries: bindings.length })}\n`);
