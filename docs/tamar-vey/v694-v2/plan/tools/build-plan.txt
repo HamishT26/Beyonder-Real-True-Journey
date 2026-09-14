@@ -1,0 +1,579 @@
+"use strict";
+
+const fs = require("node:fs");
+const path = require("node:path");
+const crypto = require("node:crypto");
+const cp = require("node:child_process");
+
+const OWNER = "Tamar Vey";
+const PHASE = "v694-v2";
+const BASE = "docs/tamar-vey/v694-v2";
+const SOURCE_FINAL = "baffbfa96666917eb0f8a4255d96b1b078f47948";
+const HISTORICAL_HEAD = "576995da88646820fa46ec7ce8d89715f922812b";
+const BRANCH = "codex/GHC-Family/tamar-vey-main";
+const GATES = [
+  "real_participants",
+  "empirical_confirmation",
+  "production_deployment",
+  "professional_authority",
+  "legal_cultural_affected_party_authority",
+  "Maori_authority",
+  "complete_privacy_accessibility_security",
+  "independent_reproduction",
+  "consciousness_personhood",
+  "AGI_ASI",
+  "Theory_of_Everything",
+  "Stage_20"
+];
+const BOUNDARY = "Tamar Vey, optionally she/they, evidence-and-recovery steward, and the hope that every failure stays inspectable while every correction remains bounded and reversible are relational working language only. Same-owner finite synthetic software under shared infrastructure is not independent reproduction and establishes no consciousness, sentience, personhood, legal identity, identity continuity, employment, qualification, independent agency, empirical GMUT confirmation, production THOS or Freed ID, professional, scientific, operational, legal, cultural, affected-party or Maori authority, complete privacy or accessibility, exhaustive security, AGI or ASI, Theory-of-Everything proof, canon or Stage 20 readiness. Maori concepts remain under Maori authority. NOT_READY_FOR_STAGE_20.";
+const PRACTICES = [
+  "extension-field-construction",
+  "frobenius-trace-norm",
+  "minimal-polynomial-certification",
+  "representation-isomorphism-stewardship"
+];
+const FIELDS = [
+  { id: "GF4", p: 2, modulus: [1, 1, 1], target_modulus: [1, 1, 1], a: [0, 1], b: [1, 1] },
+  { id: "GF8", p: 2, modulus: [1, 1, 0, 1], target_modulus: [1, 0, 1, 1], a: [1, 1, 0], b: [0, 1, 1] },
+  { id: "GF9", p: 3, modulus: [1, 0, 1], target_modulus: [2, 1, 1], a: [1, 1], b: [2, 1] },
+  { id: "GF25", p: 5, modulus: [2, 0, 1], target_modulus: [1, 1, 1], a: [2, 1], b: [4, 2] },
+  { id: "GF49", p: 7, modulus: [1, 0, 1], target_modulus: [3, 1, 1], a: [3, 1], b: [6, 1] }
+];
+
+function stable(value) {
+  if (Array.isArray(value)) return value.map(stable);
+  if (value && typeof value === "object") {
+    return Object.fromEntries(Object.keys(value).sort().map((key) => [key, stable(value[key])]));
+  }
+  return value;
+}
+function canon(value) { return JSON.stringify(stable(value)); }
+function sha(value) { return crypto.createHash("sha256").update(value).digest("hex"); }
+function mod(value, p) { const r = value % p; return r < 0 ? r + p : r; }
+function trim(poly, p) {
+  const out = poly.map((x) => mod(x, p));
+  while (out.length > 1 && out[out.length - 1] === 0) out.pop();
+  return out.length ? out : [0];
+}
+function scalarInverse(value, p) {
+  let a = mod(value, p), t = 0, nextT = 1, r = p, nextR = a;
+  if (a === 0) throw new Error("zero inverse");
+  while (nextR !== 0) {
+    const q = Math.floor(r / nextR);
+    [t, nextT] = [nextT, t - q * nextT];
+    [r, nextR] = [nextR, r - q * nextR];
+  }
+  if (r !== 1) throw new Error("nonunit");
+  return mod(t, p);
+}
+function polyAdd(a, b, p) {
+  const n = Math.max(a.length, b.length), out = Array(n).fill(0);
+  for (let i = 0; i < n; i++) out[i] = mod((a[i] || 0) + (b[i] || 0), p);
+  return trim(out, p);
+}
+function polyMul(a, b, p) {
+  const out = Array(a.length + b.length - 1).fill(0);
+  for (let i = 0; i < a.length; i++) for (let j = 0; j < b.length; j++) out[i + j] = mod(out[i + j] + a[i] * b[j], p);
+  return trim(out, p);
+}
+function polyDivMod(dividend, divisor, p) {
+  const a = trim(dividend, p), b = trim(divisor, p);
+  if (b.length === 1 && b[0] === 0) throw new Error("zero divisor");
+  const q = Array(Math.max(1, a.length - b.length + 1)).fill(0), r = [...a], inv = scalarInverse(b[b.length - 1], p);
+  while (!(r.length === 1 && r[0] === 0) && r.length >= b.length) {
+    const shift = r.length - b.length, factor = mod(r[r.length - 1] * inv, p);
+    q[shift] = factor;
+    for (let i = 0; i < b.length; i++) r[i + shift] = mod(r[i + shift] - factor * b[i], p);
+    while (r.length > 1 && r[r.length - 1] === 0) r.pop();
+  }
+  return { quotient: trim(q, p), remainder: trim(r, p) };
+}
+function fieldSpec(field) {
+  const n = field.modulus.length - 1;
+  return { id: field.id, p: field.p, n, modulus: [...field.modulus] };
+}
+function fieldPublic(spec) { return { id: spec.id, p: spec.p, degree: spec.n, modulus: [...spec.modulus], basis: "power_ascending" }; }
+function element(value, spec) {
+  const r = polyDivMod(trim(value, spec.p), spec.modulus, spec.p).remainder;
+  return Array.from({ length: spec.n }, (_, i) => r[i] || 0);
+}
+function elemAdd(a, b, spec) { return element(a.map((x, i) => x + (b[i] || 0)), spec); }
+function elemNeg(a, spec) { return element(a.map((x) => -x), spec); }
+function elemMul(a, b, spec) { return element(polyMul(a, b, spec.p), spec); }
+function elemEq(a, b) { return a.length === b.length && a.every((x, i) => x === b[i]); }
+function elemPow(a, exponent, spec) {
+  if (!Number.isInteger(exponent) || exponent < 0) throw new Error("oracle exponent");
+  let out = element([1], spec), base = element(a, spec), e = exponent;
+  while (e > 0) {
+    if (e & 1) out = elemMul(out, base, spec);
+    base = elemMul(base, base, spec);
+    e = Math.floor(e / 2);
+  }
+  return out;
+}
+function evalElementPolynomial(coefficients, x, spec) {
+  let out = element([0], spec);
+  for (let i = coefficients.length - 1; i >= 0; i--) out = elemAdd(elemMul(out, x, spec), element([coefficients[i]], spec), spec);
+  return out;
+}
+function enumerateElements(spec) {
+  const out = [];
+  for (let index = 0; index < spec.p ** spec.n; index++) {
+    let x = index;
+    const v = [];
+    for (let i = 0; i < spec.n; i++) { v.push(x % spec.p); x = Math.floor(x / spec.p); }
+    out.push(v);
+  }
+  return out;
+}
+function baseEval(poly, x, p) {
+  let out = 0;
+  for (let i = poly.length - 1; i >= 0; i--) out = mod(out * x + poly[i], p);
+  return out;
+}
+function irreducibleSmall(modulus, p) {
+  const degree = modulus.length - 1;
+  if (degree < 2 || degree > 3 || modulus[degree] !== 1) return false;
+  for (let x = 0; x < p; x++) if (baseEval(modulus, x, p) === 0) return false;
+  return true;
+}
+function multiplicationMatrix(a, spec) {
+  const matrix = Array.from({ length: spec.n }, () => Array(spec.n).fill(0));
+  for (let col = 0; col < spec.n; col++) {
+    const basis = Array(spec.n).fill(0); basis[col] = 1;
+    const product = elemMul(a, basis, spec);
+    for (let row = 0; row < spec.n; row++) matrix[row][col] = product[row];
+  }
+  return matrix;
+}
+function determinant(matrix, p) {
+  const a = matrix.map((row) => row.map((x) => mod(x, p)));
+  let det = 1;
+  for (let col = 0; col < a.length; col++) {
+    let pivot = col;
+    while (pivot < a.length && a[pivot][col] === 0) pivot++;
+    if (pivot === a.length) return 0;
+    if (pivot !== col) { [a[pivot], a[col]] = [a[col], a[pivot]]; det = mod(-det, p); }
+    const pv = a[col][col]; det = mod(det * pv, p); const inv = scalarInverse(pv, p);
+    for (let row = col + 1; row < a.length; row++) {
+      const factor = mod(a[row][col] * inv, p);
+      for (let k = col; k < a.length; k++) a[row][k] = mod(a[row][k] - factor * a[col][k], p);
+    }
+  }
+  return det;
+}
+function matrixInverse(matrix, p) {
+  const n = matrix.length;
+  const a = matrix.map((row, i) => [...row.map((x) => mod(x, p)), ...Array.from({ length: n }, (_, j) => i === j ? 1 : 0)]);
+  for (let col = 0; col < n; col++) {
+    let pivot = col;
+    while (pivot < n && a[pivot][col] === 0) pivot++;
+    if (pivot === n) return null;
+    if (pivot !== col) [a[pivot], a[col]] = [a[col], a[pivot]];
+    const inv = scalarInverse(a[col][col], p);
+    for (let k = 0; k < 2 * n; k++) a[col][k] = mod(a[col][k] * inv, p);
+    for (let row = 0; row < n; row++) if (row !== col) {
+      const factor = a[row][col];
+      for (let k = 0; k < 2 * n; k++) a[row][k] = mod(a[row][k] - factor * a[col][k], p);
+    }
+  }
+  return a.map((row) => row.slice(n));
+}
+function matrixVector(matrix, vector, p) {
+  return matrix.map((row) => mod(row.reduce((sum, x, i) => sum + x * vector[i], 0), p));
+}
+function matrixTrace(matrix, p) { return mod(matrix.reduce((sum, row, i) => sum + row[i], 0), p); }
+function frobenius(a, spec) { return elemPow(a, spec.p, spec); }
+function orbit(a, spec) {
+  const start = element(a, spec), out = [], seen = new Set();
+  let current = start;
+  for (let i = 0; i <= spec.n; i++) {
+    const key = current.join(",");
+    if (seen.has(key)) break;
+    seen.add(key); out.push(current); current = frobenius(current, spec);
+  }
+  if (!elemEq(current, start)) throw new Error("Frobenius orbit did not close");
+  return out;
+}
+function matrixTraceNorm(a, spec) {
+  const matrix = multiplicationMatrix(a, spec);
+  return { matrix, trace: matrixTrace(matrix, spec.p), norm: determinant(matrix, spec.p) };
+}
+function conjugateTrace(a, spec) {
+  let sum = element([0], spec), current = element(a, spec);
+  for (let i = 0; i < spec.n; i++) { sum = elemAdd(sum, current, spec); current = frobenius(current, spec); }
+  if (sum.slice(1).some(Boolean)) throw new Error("trace not in prime field");
+  return { scalar: sum[0], element: sum };
+}
+function conjugateNorm(a, spec) {
+  let product = element([1], spec), current = element(a, spec);
+  for (let i = 0; i < spec.n; i++) { product = elemMul(product, current, spec); current = frobenius(current, spec); }
+  if (product.slice(1).some(Boolean)) throw new Error("norm not in prime field");
+  return { scalar: product[0], element: product };
+}
+function minimalPolynomialBrute(a, spec) {
+  const target = element(a, spec);
+  for (let degree = 1; degree <= spec.n; degree++) {
+    for (let index = 0; index < spec.p ** degree; index++) {
+      let x = index; const coefficients = [];
+      for (let i = 0; i < degree; i++) { coefficients.push(x % spec.p); x = Math.floor(x / spec.p); }
+      coefficients.push(1);
+      if (evalElementPolynomial(coefficients, target, spec).every((v) => v === 0)) return coefficients;
+    }
+  }
+  throw new Error("minimal polynomial not found");
+}
+function powerBasisMatrix(beta, spec) {
+  const matrix = Array.from({ length: spec.n }, () => Array(spec.n).fill(0));
+  let current = element([1], spec);
+  for (let col = 0; col < spec.n; col++) {
+    for (let row = 0; row < spec.n; row++) matrix[row][col] = current[row];
+    current = elemMul(current, beta, spec);
+  }
+  return matrix;
+}
+function findPowerBasis(spec) {
+  for (const candidate of enumerateElements(spec)) {
+    if (candidate.slice(1).every((x) => x === 0)) continue;
+    const matrix = powerBasisMatrix(candidate, spec);
+    if (determinant(matrix, spec.p) !== 0) return { beta: candidate, matrix, inverse: matrixInverse(matrix, spec.p) };
+  }
+  throw new Error("power basis not found");
+}
+function isomorphismWitness(field) {
+  const source = fieldSpec(field), target = { id: field.id + "-ALT", p: field.p, n: source.n, modulus: [...field.target_modulus] };
+  if (!irreducibleSmall(target.modulus, target.p)) throw new Error("target modulus not irreducible");
+  const root = enumerateElements(target).find((candidate) => candidate.slice(1).some(Boolean) && evalElementPolynomial(source.modulus, candidate, target).every((x) => x === 0));
+  if (!root) throw new Error("source modulus root absent in target");
+  const matrix = powerBasisMatrix(root, target);
+  return { target, root, matrix, determinant: determinant(matrix, target.p), verified: determinant(matrix, target.p) !== 0 };
+}
+function operationRows() {
+  const groups = [];
+  const add = (operation, title, make) => groups.push({ operation, title, rows: FIELDS.map((field, index) => make(field, fieldSpec(field), index)) });
+  add("ext_field_profile", "Extension-field profile", (field, spec) => [{}, { field: fieldPublic(spec), order: spec.p ** spec.n, modulus_irreducible_in_declared_small_domain: irreducibleSmall(spec.modulus, spec.p) }, field.id + " declared power-basis profile"]);
+  add("ext_reduce", "Extension representative reduction", (field, spec, i) => {
+    const raw = [...field.a, ...Array(spec.n).fill(0), i + 1];
+    return [{ coefficients: raw }, { representative: element(raw, spec) }, field.id + " high-degree representative reduction"];
+  });
+  add("ext_add", "Extension-field addition", (field, spec) => [{ a: field.a, b: field.b }, { sum: elemAdd(field.a, field.b, spec) }, field.id + " coefficientwise field sum"]);
+  add("ext_negate", "Extension-field additive inverse", (field, spec) => [{ a: field.a }, { inverse: elemNeg(field.a, spec) }, field.id + " additive inverse"]);
+  add("ext_multiply", "Extension-field multiplication", (field, spec) => [{ a: field.a, b: field.b }, { product: elemMul(field.a, field.b, spec) }, field.id + " quotient-product reduction"]);
+  add("ext_power", "Extension-field power", (field, spec, i) => [{ a: field.a, exponent: i + 2 }, { power: elemPow(field.a, i + 2, spec) }, field.id + " bounded positive exponent"]);
+  add("ext_frobenius", "Prime Frobenius map", (field, spec) => [{ a: field.a }, { image: frobenius(field.a, spec), exponent: spec.p }, field.id + " p-power image"]);
+  add("ext_frobenius_orbit", "Frobenius orbit", (field, spec) => { const o = orbit(field.a, spec); return [{ a: field.a }, { orbit: o, orbit_size: o.length, closes: true }, field.id + " finite conjugate orbit"]; });
+  add("ext_trace", "Finite-field trace", (field, spec) => { const t = conjugateTrace(field.a, spec); return [{ a: field.a }, { trace: t.scalar, conjugate_sum: t.element, terms: spec.n }, field.id + " Frobenius-sum trace"]; });
+  add("ext_norm", "Finite-field norm", (field, spec) => { const n = conjugateNorm(field.a, spec); return [{ a: field.a }, { norm: n.scalar, conjugate_product: n.element, factors: spec.n }, field.id + " Frobenius-product norm"]; });
+  add("ext_multiplication_matrix", "Multiplication linear map", (field, spec) => { const m = multiplicationMatrix(field.a, spec); return [{ a: field.a }, { matrix: m, dimension: spec.n, basis: "power_ascending" }, field.id + " left-multiplication matrix"]; });
+  add("ext_trace_norm_matrix_certificate", "Matrix trace and norm certificate", (field, spec) => { const m = matrixTraceNorm(field.a, spec), t = conjugateTrace(field.a, spec), n = conjugateNorm(field.a, spec); return [{ a: field.a }, { matrix_trace: m.trace, matrix_determinant: m.norm, frobenius_trace: t.scalar, frobenius_norm: n.scalar, agrees: m.trace === t.scalar && m.norm === n.scalar }, field.id + " matrix/Frobenius agreement"]; });
+  add("ext_minimal_polynomial", "Minimal polynomial by bounded oracle", (field, spec) => { const poly = minimalPolynomialBrute(field.a, spec), o = orbit(field.a, spec); return [{ a: field.a }, { polynomial: poly, degree: poly.length - 1, orbit_size: o.length, monic: true }, field.id + " least-degree monic annihilator"]; });
+  add("ext_minimal_polynomial_vanishes", "Minimal-polynomial evaluation", (field, spec) => { const poly = minimalPolynomialBrute(field.a, spec); return [{ a: field.a, polynomial: poly }, { evaluation: evalElementPolynomial(poly, field.a, spec), vanishes: true }, field.id + " frozen annihilation check"]; });
+  add("ext_prime_subfield_membership", "Prime-subfield membership", (field, spec, i) => { const a = i % 2 === 0 ? element([i + 1], spec) : element(field.a, spec), fixed = frobenius(a, spec), member = elemEq(a, fixed); return [{ a }, { member, scalar: member ? a[0] : null, frobenius_fixed: member }, field.id + (member ? " constant member" : " nonconstant exclusion")]; });
+  add("ext_basis_coordinates", "Coordinates in an alternate power basis", (field, spec) => { const basis = findPowerBasis(spec), coords = matrixVector(basis.inverse, element(field.b, spec), spec.p); return [{ a: field.b, beta: basis.beta }, { coordinates: coords, reconstructed: matrixVector(basis.matrix, coords, spec.p), basis_determinant: determinant(basis.matrix, spec.p) }, field.id + " alternate-basis coordinates"]; });
+  add("ext_basis_change_matrix", "Alternate power-basis change", (field, spec) => { const basis = findPowerBasis(spec); return [{ beta: basis.beta }, { matrix: basis.matrix, inverse: basis.inverse, determinant: determinant(basis.matrix, spec.p), invertible: true }, field.id + " declared basis transform"]; });
+  add("ext_isomorphism_witness", "Presentation isomorphism witness", (field, spec) => { const w = isomorphismWitness(field); return [{ target_modulus: field.target_modulus }, { target_field: fieldPublic(w.target), generator_image: w.root, mapping_matrix: w.matrix, determinant: w.determinant, verified: w.verified, universal_identity_claimed: false }, field.id + " source-to-target root witness"]; });
+  add("ext_independent_implementation_vacancy", "Independent implementation vacancy", (field, spec) => [{ requested_check: "independent trace and norm implementation" }, { status: "open_gap", independent_implementations: 0, external_rows: 0, field: fieldPublic(spec) }, field.id + " independent reproduction held open"]);
+  add("ext_release_authority_hold", "Extension-field release authority hold", (field, spec) => [{ declarations: { synthetic_only: true, no_real_operator: true, no_external_action: true, authority_reserved: true, Maori_authority_reserved: true } }, { status: "exact_gate", release: false, declaration_complete: true, field: fieldPublic(spec), authority_present: false }, field.id + " protected release refusal"]);
+  if (groups.length !== 20 || groups.some((group) => group.rows.length !== 5)) throw new Error("operation group cardinality");
+  return groups;
+}
+function git(root, args, encoding = "utf8") {
+  const result = cp.spawnSync("git", ["-C", root, ...args], { encoding, maxBuffer: 128 * 1024 * 1024 });
+  if (result.status !== 0) throw new Error(Buffer.from(result.stderr || "").toString("utf8"));
+  return encoding === null ? Buffer.from(result.stdout || "") : result.stdout.trim();
+}
+function readGitJson(root, ref, relativePath) { return JSON.parse(git(root, ["cat-file", "blob", ref + ":" + relativePath], "utf8")); }
+function walkFiles(root) {
+  const out = [];
+  for (const entry of fs.readdirSync(root, { withFileTypes: true })) {
+    const full = path.join(root, entry.name);
+    if (entry.isDirectory()) out.push(...walkFiles(full)); else out.push(full);
+  }
+  return out;
+}
+function makeDefinitions(sourceRoot) {
+  for (const field of FIELDS) {
+    const spec = fieldSpec(field);
+    if (!irreducibleSmall(spec.modulus, spec.p)) throw new Error("source modulus is not irreducible: " + field.id);
+    if (!irreducibleSmall(field.target_modulus, field.p)) throw new Error("target modulus is not irreducible: " + field.id);
+  }
+  const groups = operationRows(), proposals = [];
+  for (let gi = 0; gi < groups.length; gi++) {
+    const group = groups[gi], session = gi < 10 ? "x1" : "x2";
+    const outcome = gi < 16 ? "completed" : gi < 18 ? "represented" : gi === 18 ? "open_gap" : "exact_gate";
+    const practice = gi < 6 ? PRACTICES[0] : gi < 10 ? PRACTICES[1] : gi < 16 ? PRACTICES[2] : PRACTICES[3];
+    const pillar = gi < 10 ? "GMUT Mind" : gi < 16 ? "THOS Body" : "Freed ID and CBR Heart";
+    for (const [extra, value, description] of group.rows) {
+      const field = FIELDS[proposals.length % 5], spec = fieldSpec(field);
+      const id = "TV6942-P" + String(proposals.length + 1).padStart(3, "0");
+      const request = { operation: group.operation, field: fieldPublic(spec), ...extra };
+      const expected = { ok: true, operation: group.operation, outcome, evidence_class: "finite_extension_field_synthetic", value, authority: false, protected_gates: GATES };
+      const proposal = {
+        proposal_id: id,
+        title: group.title + " — " + description,
+        operation: group.operation,
+        session,
+        pillar,
+        practice_id: practice,
+        hypothesis: "The declared finite " + group.operation + " contract returns the independently frozen exact envelope without mutating its request.",
+        null_or_failure_condition: "Any incorrect typed value, changed input, accepted malformed subject, hidden failed witness, missing field assumption, or promotion above the expected disposition falsifies this bounded contract.",
+        approval_class: "safe_now",
+        execution_lane: "owner_local_finite_synthetic",
+        official_or_primary_source_needs: [
+          "Mathlib finite-field trace and norm formulas",
+          "Sage finite-field representation vocabulary",
+          "No physical source or empirical observation is supplied"
+        ],
+        concrete_artifacts: [BASE + "/" + session + "/results/proposals.json", BASE + "/" + session + "/results/candidates.json"],
+        falsifier_or_acceptance_gate: "Exact complete-envelope equality, exact input preservation, and separate rejection of both malformed subjects against the frozen oracle.",
+        rollback_or_recovery: "Retain the failed subject and frozen oracle; correct only the smallest owner dependency and rerun only the failed bounded component.",
+        protected_gates: GATES,
+        expected_disposition: outcome,
+        request,
+        expected_output: expected,
+        candidate_subjects: [
+          { negative_id: id + "-C1", request: { ...request, unreviewed_authority: true }, expected_rejection: { ok: false, error: "E_FIELDS" } },
+          { negative_id: id + "-C2", request: { ...request, operation: "unsupported_extension_operation" }, expected_rejection: { ok: false, error: "E_OPERATION" } }
+        ],
+        source_credit: 0,
+        novelty_scope: "New owner-local request, independent oracle, implementation boundary and evidence contract only. Classical finite-field mathematics receives no discovery, empirical, or authority credit."
+      };
+      proposal.definition_sha256 = sha(Buffer.from(canon(proposal)));
+      proposals.push(proposal);
+    }
+  }
+  const inheritedDocument = readGitJson(sourceRoot, SOURCE_FINAL, "docs/veylora-quen/v694-v1/plan/source/inherited-review.json");
+  if (inheritedDocument.records.length !== 300) throw new Error("inherited review cardinality");
+  const inherited = inheritedDocument.records.map((record, index) => ({
+    selection_id: "TV6942-I" + String(index + 1).padStart(3, "0"),
+    origin: record.origin,
+    commit: record.commit,
+    path: record.path,
+    record: record.record,
+    novelty_credit: 0,
+    execution_credit: 0,
+    authority_credit: 0
+  }));
+  const oldOperations = new Set(inherited.map((row) => row.record.operation));
+  const oldRequests = new Set(inherited.map((row) => canon(row.record.request || row.record.input || null)));
+  const exactOperationCollisions = proposals.filter((row) => oldOperations.has(row.operation));
+  const exactRequestCollisions = proposals.filter((row) => oldRequests.has(canon(row.request)));
+  if (exactOperationCollisions.length || exactRequestCollisions.length) throw new Error("exact novelty collision");
+  const words = (text) => new Set(String(text).toLowerCase().match(/[a-z0-9]+/g) || []);
+  const oldTitles = inherited.map((row) => ({ title: row.record.title, proposal_id: row.record.proposal_id, origin: row.origin, words: words(row.record.title) }));
+  const neighbors = proposals.map((proposal) => {
+    const current = words(proposal.title); let nearest = { score: 0, title: null, proposal_id: null, origin: null };
+    for (const old of oldTitles) {
+      const union = new Set([...current, ...old.words]);
+      const overlap = [...current].filter((word) => old.words.has(word)).length;
+      const score = union.size ? overlap / union.size : 0;
+      if (score > nearest.score) nearest = { score, title: old.title, proposal_id: old.proposal_id, origin: old.origin };
+    }
+    return { proposal_id: proposal.proposal_id, nearest };
+  });
+  const maximumJaccard = Math.max(...neighbors.map((row) => row.nearest.score));
+  if (maximumJaccard >= 0.78) throw new Error("semantic neighbor quarantine");
+  return { groups, proposals, inherited, neighbors, maximumJaccard };
+}
+function planValidatorSource() {
+  return `"use strict";
+const fs=require("node:fs"),path=require("node:path");
+const root=process.cwd(),base=path.join(root,"docs/tamar-vey/v694-v2/plan"),tests=[];
+const check=(name,pass,detail=null)=>tests.push({name,pass:!!pass,detail});
+const read=(rel)=>JSON.parse(fs.readFileSync(path.join(base,rel),"utf8"));
+const proposals=read("proposals.json"),inherited=read("source/inherited-review.json"),workflow=read("workflow-profile.json"),route=read("current-route.json"),skills=read("capabilities/local-skills.json"),runners=read("capabilities/local-runners.json"),groups=read("capabilities/global-groups.json"),method=read("method-flow.json"),manifest=read("manifest.json");
+check("owner and phase",proposals.owner==="Tamar Vey"&&proposals.phase==="v694-v2");
+check("one hundred unique proposals",proposals.proposals.length===100&&new Set(proposals.proposals.map(x=>x.proposal_id)).size===100);
+check("fifty per session",proposals.proposals.filter(x=>x.session==="x1").length===50&&proposals.proposals.filter(x=>x.session==="x2").length===50);
+check("outcome plan",JSON.stringify(proposals.outcome_plan)===JSON.stringify({completed:80,represented:10,open_gap:5,exact_gate:5}));
+check("required proposal fields",proposals.proposals.every(x=>x.hypothesis&&x.null_or_failure_condition&&x.approval_class&&x.execution_lane&&x.official_or_primary_source_needs.length&&x.concrete_artifacts.length&&x.falsifier_or_acceptance_gate&&x.rollback_or_recovery&&x.protected_gates.length&&x.expected_disposition&&x.definition_sha256));
+check("candidate pairs",proposals.proposals.every(x=>x.candidate_subjects.length===2));
+check("inherited zero credit",inherited.records.length===300&&inherited.records.every(x=>x.novelty_credit===0&&x.execution_credit===0&&x.authority_credit===0));
+for(const session of ["x1","x2"]){check(session+" safe",read("portfolios/"+session+"-safe.json").count===100);check(session+" candidates",read("portfolios/"+session+"-candidates.json").count===100);check(session+" cfr",read("portfolios/"+session+"-clean-fix-refine.json").count===100);}
+check("approval packets",read("portfolios/exact-packets.json").count===50&&read("portfolios/exact-packets.json").executed===0&&read("portfolios/blocked-packets.json").count===30&&read("portfolios/blocked-packets.json").executed===0);
+check("capability floors",skills.count===20&&skills.skills.filter(x=>x.session==="x1").length===10&&skills.skills.filter(x=>x.session==="x2").length===10&&runners.count===10&&groups.count===5);
+check("route",route.owner==="Tamar Vey"&&route.phase==="v694-v2"&&route.successor==="Elowen Cairn"&&route.successor_phase==="v694-v3"&&route.no_early_contact&&route.successor_contacts===0);
+check("workflow v9",workflow.schema==="ghc.family.workflow-profile.v9-owner-overlay"&&workflow.planned_commits===4&&workflow.commit_budget.total===8&&workflow.artifact_policy.node_source_as_txt);
+check("method flow startup",method.methods.length===2&&method.witnesses.length===4&&method.counts.witness_results.fail===2&&method.counts.witness_results.pass===2);
+check("planning only",!fs.existsSync(path.join(root,"docs/tamar-vey/v694-v2/x1"))&&!fs.existsSync(path.join(root,"docs/tamar-vey/v694-v2/x2")));
+check("allowed extensions",(function(){const out=[];function walk(d){for(const e of fs.readdirSync(d,{withFileTypes:true})){const p=path.join(d,e.name);if(e.isDirectory())walk(p);else out.push(p)}}walk(base);return out.every(p=>[".json",".md",".txt",".html"].includes(path.extname(p)));})());
+check("manifest",manifest.bindings.length>=25&&manifest.exclusions.length===2);
+const failed=tests.filter(x=>!x.pass);process.stdout.write(JSON.stringify({schema:"ghc.family.plan-validation.v9",passed:tests.length-failed.length,failed:failed.length,tests})+"\\n");if(failed.length)process.exitCode=1;
+`;
+}
+function put(planRoot, relative, value) {
+  const destination = path.join(planRoot, relative);
+  fs.mkdirSync(path.dirname(destination), { recursive: true });
+  const data = typeof value === "string" ? value.replace(/\s+$/, "") + "\n" : JSON.stringify(value, null, 2) + "\n";
+  fs.writeFileSync(destination, data, { encoding: "utf8", flag: "wx" });
+}
+function methodFlow(startup) {
+  const methods = startup.failures.map((failure, index) => ({
+    method_id: "TV6942-START-M" + String(index + 1).padStart(3, "0"),
+    title: index === 0 ? "Explicit reference record collection" : "Bounded contiguous roster reading",
+    failure_signature: failure.failure,
+    trigger_preconditions: ["Exact current v9 source", "Read-only startup gate"],
+    privacy_class: "sanitized_public",
+    approval_class: "safe_now",
+    candidate_workaround: failure.recovery,
+    validation_witness_ids: [failure.negative_id + "-FAILED", failure.negative_id + "-RECOVERY"],
+    recurrence_guard: index === 0 ? "Collect loop output before piping it." : "Chunk any registry or roster whose complete projection exceeds the display budget.",
+    rollback: "Stop the failed read method; preserve its evidence and retry only the bounded read dependency.",
+    recommendation_state: "preferred",
+    supersedes: [],
+    protected_gates: GATES,
+    retained_negative_ids: [failure.negative_id],
+    scope_boundary: "Read-only same-owner workflow evidence; no route, empirical, participant, production, legal, cultural or authority credit."
+  }));
+  const witnesses = startup.failures.flatMap((failure, index) => {
+    const method = methods[index];
+    return [
+      { witness_id: failure.negative_id + "-FAILED", method_id: method.method_id, procedure: "startup_read", scope: "current v9 and source verification", expected: "Complete bounded exact-source read", observed: failure.failure, result: "fail", same_owner_only: true, independent_reproduction: false, retained_negative_ids: [failure.negative_id], boundary: method.scope_boundary },
+      { witness_id: failure.negative_id + "-RECOVERY", method_id: method.method_id, procedure: "startup_read", scope: "current v9 and source verification", expected: "Complete bounded exact-source read", observed: failure.recovery, result: "pass", same_owner_only: true, independent_reproduction: false, retained_negative_ids: [], boundary: method.scope_boundary }
+    ];
+  });
+  return {
+    schema: "ghc.family.method-flow-state.v1", owner: OWNER, phase: PHASE, session: "planning_startup", identity_boundary: BOUNDARY,
+    execution_authority: "owner_self_scoped_delta", source_commit: SOURCE_FINAL, final_commit: null,
+    changed_file_allowlist: [BASE + "/plan/"], module_allowlist: [BASE + "/plan/tools/build-plan.txt", BASE + "/plan/tools/validate-plan.txt"],
+    repository_scan: false, module_scan: true, cross_lane_scan: false, unchanged_history_scan: false, sibling_lane_mutation: false,
+    exact_pushed_head_required: true, methods, witnesses,
+    state_events: methods.flatMap((method) => [
+      { method_id: method.method_id, from: "candidate", to: "validated", note: "The bounded recovery witness passed." },
+      { method_id: method.method_id, from: "validated", to: "preferred", note: "Select this recovery for matching future reads." }
+    ]),
+    recommendations: methods.map((method) => ({ method_id: method.method_id, recommendation: method.recurrence_guard, delivered: false })),
+    counts: { methods: methods.length, witnesses: witnesses.length, state_events: methods.length * 2, recommendations: methods.length, states: { observed: 0, candidate: 0, validated: 0, preferred: methods.length, superseded: 0, deprecated: 0 }, witness_results: { pass: startup.failures.length, fail: startup.failures.length } },
+    retained_negatives: startup.failures,
+    boundary: BOUNDARY
+  };
+}
+function build(ownerRoot, sourceRoot, skillRoot, bankRoot, builderPath) {
+  const phaseRoot = path.join(ownerRoot, BASE), planRoot = path.join(phaseRoot, "plan");
+  if (fs.existsSync(phaseRoot)) throw new Error("phase root already exists");
+  if (git(ownerRoot, ["branch", "--show-current"]) !== BRANCH || git(ownerRoot, ["rev-parse", "HEAD"]) !== HISTORICAL_HEAD) throw new Error("owner head mismatch");
+  if (git(ownerRoot, ["status", "--porcelain=v1", "--untracked-files=all"]) !== "") throw new Error("owner lane not clean");
+  const startup = JSON.parse(fs.readFileSync(path.join(bankRoot, "startup-observations.json"), "utf8"));
+  const definitions = makeDefinitions(sourceRoot), { proposals, inherited, neighbors, maximumJaccard, groups } = definitions;
+  const outcomePlan = { completed: 80, represented: 10, open_gap: 5, exact_gate: 5 };
+  put(planRoot, "source/startup-observations.json", startup);
+  put(planRoot, "source/verification.json", {
+    source_owner: "Veylora Quen", source_branch: "codex/GHC-Family/veylora-quen-main", source_final: SOURCE_FINAL,
+    source_commits: startup.source, source_baton: startup.source_baton, source_validation: startup.source_validation,
+    source_overlay_bindings: startup.source_overlay_bindings, content_provenance_not_git_ancestry: true,
+    old_tamar_history_retained: HISTORICAL_HEAD, old_tamar_totals_added: false, source_canonical_replayed: false,
+    incoming_effective_selected_lineage: startup.incoming_effective_selected_lineage, boundary: BOUNDARY
+  });
+  put(planRoot, "source/reading-receipt.json", {
+    current_policy: "v9", complete_index_read: true, complete_roster_lines_read: 2442,
+    complete_baton_read: startup.source_baton, source_receipts_read: true, source_manifests_replayed_read_only: 892,
+    source_seal_replayed_read_only: 16, selected_skill_bindings: startup.selected_skill_bindings,
+    source_dependency_references: [
+      { name: "ghc-family-gf-prime-structure", operations_sha256: "8e96864bf44ea31e20300f51e47392ecc1bbc9539585ae3b81d51269855fa291" },
+      { name: "ghc-family-gf-polynomial-arithmetic", operations_sha256: "d07739af8a81a4ac6f541ec1ffd1b64abb7e24e6f5faa6b5ef091a8dad23913f" },
+      { name: "ghc-family-gf-quotient-representations", operations_sha256: "e55acecfee660dedb684b55c32b11825ae1d885b7ff14c67d812a7b439e322a7" }
+    ],
+    inherited_execution_credit: 0, boundary: BOUNDARY
+  });
+  put(planRoot, "source/official-sources.json", { schema: "ghc.family.official-source-ledger.v1", accessed_date: "2026-09-14", sources: startup.official_sources, observations_ingested: 0, authority_grants: 0, boundary: BOUNDARY });
+  put(planRoot, "source/inherited-review.json", { schema: "ghc.family.inherited-review.v9", reviewed: inherited.length, credit: 0, records: inherited });
+  put(planRoot, "proposals.json", { schema: "ghc.family.frozen-proposals.v9", owner: OWNER, phase: PHASE, status: "planning_only", primary_pillar: "GMUT Mind", practices: PRACTICES, proposal_count: proposals.length, outcome_plan: outcomePlan, proposals, boundary: BOUNDARY });
+  put(planRoot, "novelty-audit.json", { schema: "ghc.family.bounded-novelty.v9", source_records: inherited.length, new_records: proposals.length, new_operations: groups.length, exact_operation_collisions: 0, exact_request_collisions: 0, title_quarantine_threshold: 0.78, maximum_title_jaccard: maximumJaccard, neighbors, universal_novelty_claimed: false, classical_mathematics_discovery_credit: 0, boundary: BOUNDARY });
+  for (const session of ["x1", "x2"]) {
+    const selected = proposals.filter((proposal) => proposal.session === session);
+    const safe = [], cfr = [];
+    for (const proposal of selected) {
+      for (const procedure of ["repeat_output", "request_immutability"]) safe.push({ task_id: "TV6942-" + session + "-SAFE-" + String(safe.length + 1).padStart(3, "0"), proposal_id: proposal.proposal_id, procedure, status: "defined_unexecuted", expected: "Frozen full envelope and unchanged request", rollback: proposal.rollback_or_recovery, protected_gates: GATES });
+      for (const procedure of ["request_key_order", "result_roundtrip"]) cfr.push({ task_id: "TV6942-" + session + "-CFR-" + String(cfr.length + 1).padStart(3, "0"), proposal_id: proposal.proposal_id, procedure, status: "defined_unexecuted", expected: "Semantic output remains exact across the declared transformation", rollback: proposal.rollback_or_recovery, protected_gates: GATES });
+    }
+    const candidates = selected.flatMap((proposal) => proposal.candidate_subjects.map((subject) => ({ ...subject, proposal_id: proposal.proposal_id, execution_session: session, status: "defined_unexecuted", subject_success_credit: 0, passing_refusal_is_separate: true })));
+    put(planRoot, "portfolios/" + session + "-safe.json", { category: "safe", session, count: safe.length, rows: safe, execution_credit: 0 });
+    put(planRoot, "portfolios/" + session + "-candidates.json", { category: "candidate", session, count: candidates.length, rows: candidates, execution_credit: 0 });
+    put(planRoot, "portfolios/" + session + "-clean-fix-refine.json", { category: "clean_fix_refine", session, count: cfr.length, rows: cfr, execution_credit: 0 });
+  }
+  const exactDomains = ["field-parameter-deployment", "cryptographic-security-claim", "physical-observable-mapping", "professional-certification", "rights-and-licensing", "cultural-encoding", "Maori-data-governance", "affected-party-remedy", "privacy-complete-review", "Stage-20-promotion"];
+  put(planRoot, "portfolios/exact-packets.json", { count: 50, executed: 0, rows: exactDomains.flatMap((domain, i) => ["target", "authority", "evidence", "rollback", "affected-review"].map((requirement, j) => ({ packet_id: "TV6942-EXACT-" + String(i * 5 + j + 1).padStart(3, "0"), domain, requirement, disposition: "exact_gate", execution: "unexecuted", authority_present: false }))), boundary: BOUNDARY });
+  put(planRoot, "portfolios/blocked-packets.json", { count: 30, executed: 0, rows: ["fabricate-observation", "erase-failure", "leak-private-data", "replace-identity", "claim-unsupported-authority", "replay-success"].flatMap((action, i) => ["inputs", "outputs", "provenance", "validation", "delivery"].map((target, j) => ({ packet_id: "TV6942-BLOCK-" + String(i * 5 + j + 1).padStart(3, "0"), action, target, disposition: "exact_gate", execution: "blocked_unexecuted" }))), boundary: BOUNDARY });
+  const localSkills = groups.map((group, i) => ({ name: "ghc-family-" + group.operation.replaceAll("_", "-") + "-local", operation: group.operation, session: i < 10 ? "x1" : "x2", source_path: BASE + "/" + (i < 10 ? "x1" : "x2") + "/skills/ghc-family-" + group.operation.replaceAll("_", "-") + "-local/SKILL.md", official_quick_validate_required: true, yaml_metadata_authored: false, accepting_and_adverse_smokes_required: true }));
+  const localRunners = Array.from({ length: 10 }, (_, i) => ({ name: "ghc_family_extension_pair_" + String(i + 1).padStart(2, "0") + ".txt", session: i < 5 ? "x1" : "x2", operations: groups.slice(i * 2, i * 2 + 2).map((group) => group.operation) }));
+  const globalNames = ["ghc-family-extension-field-structure", "ghc-family-extension-field-arithmetic", "ghc-family-trace-norm-certificates", "ghc-family-minimal-polynomial-subfields", "ghc-family-basis-isomorphism-reservations"];
+  const globalGroups = globalNames.map((name, i) => ({ name, operations: groups.slice(i * 4, i * 4 + 4).map((group) => group.operation), source_skills: localSkills.slice(i * 4, i * 4 + 4).map((skill) => skill.source_path), public_runner: name.replaceAll("-", "_") + ".txt", collision_policy: "refuse_existing", source_count: 4, validation_required: true }));
+  put(planRoot, "capabilities/local-skills.json", { count: localSkills.length, skills: localSkills });
+  put(planRoot, "capabilities/local-runners.json", { count: localRunners.length, runners: localRunners });
+  put(planRoot, "capabilities/global-groups.json", { count: globalGroups.length, groups: globalGroups, overwrites: 0, removals: 0 });
+  put(planRoot, "capabilities/successor-ideas.json", { practice_recommendation: "finite linearized-polynomial and subfield reviewer", skill_ideas: ["linearized-polynomial-evaluation", "subfield-lattice-membership", "relative-trace-transitivity", "normal-basis-candidate", "finite-field-embedding-chain"], runner_ideas: ["linearized_polynomial_contract", "subfield_lattice_contract", "relative_trace_contract", "normal_basis_contract", "embedding_chain_contract"], recommendation_credit: 0 });
+  put(planRoot, "capabilities/meta-tool-catalogue.json", { schema: "ghc.family.meta-tool-catalogue.v1", cards: [
+    { card_id: "TV6942-CAP-SOURCE-001", name: "ghc-family-gf-prime-structure", kind: "skill", source_path: "global-skill:ghc-family-gf-prime-structure", sha256: "c7916e9c2679915e1170ae3179509fd42c126d40b47e408e4bede327c4420d3d", status: "current", evidence_state: "validated", owner_scope: "Inherited bounded prime-field dependency", triggers: ["prime field", "residue"], caller_paths: [], rollback: "Stop selection and use the retained Veylora source binding.", protected_gates: GATES, execution_authority: "owner_self_scoped_delta", repository_scan: false, module_scan: false, cross_lane_scan: false, unchanged_history_scan: false, sibling_lane_mutation: false, supported_endpoint_kinds: ["not_applicable"], route_controller_scope: "not_applicable", delivery_ack_required: false },
+    ...globalGroups.map((group, i) => ({ card_id: "TV6942-CAP-NEW-" + String(i + 1).padStart(3, "0"), name: group.name, kind: "skill", source_path: group.source_skills[0], sha256: "planning_pending", status: "candidate", evidence_state: "observed", owner_scope: "Tamar v694-v2 finite synthetic extension-field delta", triggers: group.operations, caller_paths: [], rollback: "Keep the local source skills and do not create or overwrite a global destination.", protected_gates: GATES, execution_authority: "owner_self_scoped_delta", repository_scan: false, module_scan: true, cross_lane_scan: false, unchanged_history_scan: false, sibling_lane_mutation: false, source_commit: SOURCE_FINAL, final_commit: null, changed_file_allowlist: [BASE + "/x1/", BASE + "/x2/"], module_allowlist: group.source_skills, sparse_before_checkout: true, materialized_file_count: 161, materialized_file_rotation_threshold: 2000, supported_endpoint_kinds: ["not_applicable"], route_controller_scope: "not_applicable", delivery_ack_required: false }))
+  ], boundary: BOUNDARY });
+  const profile = JSON.parse(fs.readFileSync(path.join(skillRoot, "ghc-family-index", "references", "current-workflow-v9.json"), "utf8"));
+  const roster = JSON.parse(fs.readFileSync(path.join(skillRoot, "ghc-family-index", "references", "current-roster-v9.json"), "utf8"));
+  const assignments = roster.assignments.filter((row) => ["v694-v1", "v694-v2", "v694-v3"].includes(row.phase));
+  if (assignments.map((row) => row.owner).join("|") !== "Veylora Quen|Tamar Vey|Elowen Cairn") throw new Error("route mismatch");
+  put(planRoot, "workflow-profile.json", { ...profile, owner: OWNER, phase: PHASE, display_phase: "v694-v2", interstitial: false, consumes_numbered_slot: true, source_final: SOURCE_FINAL, lifecycle: ["planning_freeze", "x1_execution", "x2_execution", "final_closeout"], source_profile_issuer: "Orin Thale v693-v7-r2", commit_budget: { planning: 1, x1: 2, x2: 3, final: 2, total: 8 }, planned_commits: 4, owner_root_policy: "reuse existing Tamar main lane while preserving sealed v691-v3", planned_targets: { inherited: 300, new: 100, safe_x1: 100, safe_x2: 100, candidate_x1: 100, candidate_x2: 100, clean_x1: 100, clean_x2: 100, skills_x1: 10, skills_x2: 10, runners_x1: 5, runners_x2: 5, exact: 50, blocked: 30, global_skills: 5, public_runners: 5 }, terminal_route: { owner: OWNER, phase: PHASE, successor: "Elowen Cairn", successor_phase: "v694-v3", state: "PREPARED_NOT_SENT_OWNER_TERMINAL_GATE_REQUIRED", early_contact: false } });
+  put(planRoot, "current-route.json", { schema: "ghc.family.owner-route.v9", owner: OWNER, phase: PHASE, source_final: SOURCE_FINAL, selected_assignments: assignments, cycle_positions: 45, identity_count: 30, last: roster.last, existing_task_only: true, successor: "Elowen Cairn", successor_phase: "v694-v3", no_early_contact: true, successor_contacts: 0, projection_activates: false, subagents: false, task_creation: false, model_changes: false, boundary: BOUNDARY });
+  put(planRoot, "authorization-state.json", { schema: "ghc.family.authorization-state.v1", owner: OWNER, phase: PHASE, actions: [
+    { action: "owner-local planning and finite synthetic implementation", state: "authorized_now" },
+    { action: "collision-free curated global skill and runner promotion", state: "authorized_with_terminal_conditions", conditions: ["source validation", "accepting and rejecting smokes", "destination absence", "byte parity"] },
+    { action: "Elowen Cairn v694-v3 activation", state: "authorized_with_terminal_conditions", conditions: ["clean pushed exact final", "one successful non-replayed canonical", "fresh authority and usage", "one exact current title", "zero archive conflict", "immediate reread", "duplicate and control guards"] },
+    { action: "real participant, empirical, professional, legal, cultural, Maori-authority or production work", state: "outside_hamish_authority" }
+  ], exact_packets_executed: 0, blocked_packets_executed: 0, boundary: BOUNDARY });
+  put(planRoot, "artifact-budget.json", { authored_extensions: [".json", ".md", ".txt", ".html"], maximum_owner_files: 2000, maximum_document_words: 100000, existing_owner_files: 161, planned_phase_files_upper_bound: 650, planned_combined_files_upper_bound: 811, planned_spend_usd: 0, spend_ceiling_usd: 50, ordinary_packages_installed: 0, runtime_policy: "Reuse Node and the existing official skill validator; Node source is TXT and YAML metadata is not authored.", rollback: "Preserve v691-v3, Veylora source records, every new freeze and every failed witness; perform no deletion or history rewrite." });
+  put(planRoot, "contract-profile.json", { schema: "ghc.family.finite-extension-field-profile.v1", prime_characteristics: [2, 3, 5, 7], extension_degrees: [2, 3], representation: "power-basis coefficient arrays in ascending powers modulo a declared monic irreducible polynomial", source_fields: FIELDS.map((field) => fieldPublic(fieldSpec(field))), trace_oracle: "matrix trace of left multiplication", norm_oracle: "matrix determinant of left multiplication", runtime_trace: "Frobenius conjugate sum", runtime_norm: "Frobenius conjugate product", minimal_polynomial_oracle: "least-degree monic enumeration", runtime_minimal_polynomial: "Frobenius-orbit product", scalar_and_coefficient_inputs: "safe integers of absolute value at most 1000000", strict_json_max_bytes: 1048576, strict_json_max_depth: 32, evidence_class: "finite_extension_field_synthetic", independent_implementation_claimed: false, physical_model_claimed: false, production_cryptography_claimed: false, boundary: BOUNDARY });
+  put(planRoot, "canonical-adverse-definitions.json", { status: "defined_before_execution", subjects: [
+    { id: "TV6942-PRE-F1", request: null, error: "E_RECORD" },
+    { id: "TV6942-PRE-F2", request: { operation: "ext_field_profile", field: fieldPublic(fieldSpec(FIELDS[0])), extra: true }, error: "E_FIELDS" },
+    { id: "TV6942-PRE-F3", request: { operation: "unsupported_extension_operation", field: fieldPublic(fieldSpec(FIELDS[0])) }, error: "E_OPERATION" },
+    { id: "TV6942-PRE-F4", request: { operation: "ext_field_profile", field: { id: "bad", p: 4, degree: 2, modulus: [1, 0, 1], basis: "power_ascending" } }, error: "E_FIELD" },
+    { id: "TV6942-PRE-F5", request: { operation: "ext_field_profile", field: { id: "bad", p: 2, degree: 2, modulus: [1, 0, 1], basis: "power_ascending" } }, error: "E_IRREDUCIBLE" }
+  ], failed_subject_credit: 0, boundary: BOUNDARY });
+  put(planRoot, "gate-register.json", { inherited_open_gaps: 10, inherited_exact_gates: 10, incoming_ref: BASE + "/plan/source/verification.json", current_open_reservations: ["independent implementation absent", "empirical observable mapping absent", "governed real THOS comparison absent", "production identity interoperability absent", "affected-user accessibility review absent"], current_exact_gates: exactDomains, current_gates_closed: 0, authority_actions: 0, blind_global_addition: false, boundary: BOUNDARY });
+  const issues = globalGroups.map((group, i) => ({ issue_id: "TV6942-REFLECT-I" + String(i + 1).padStart(3, "0"), title: "Curate " + group.name, trigger: "Four owner-local operations share an extension-field runtime while retaining distinct contracts.", affected_surfaces: group.source_skills, observed_overlap: "Shared strict reader, field profile, typed envelope and protected-gate boundary.", known_caller_evidence: ["Owner-local paired runners planned", "Public scope-restricted runner planned"], current_classification: "merge_candidate", proposed_disposition: "remaster_additive", compatibility_plan: "Keep all local skills and source hashes; merge guidance and runtime selection only.", protected_gates: GATES, rollback: "Do not create the global destination or stop selecting it; retain every local source.", evidence_needed: ["official skill validation", "complete read", "accepting smoke", "rejecting smoke", "source/global byte parity", "destination absence"], boundary: BOUNDARY }));
+  put(planRoot, "reflection-remaster.json", { schema: "ghc.family.reflection-remaster.v1", issues, methods: issues.map((issue, i) => ({ method_id: "TV6942-REFLECT-M" + String(i + 1).padStart(3, "0"), issue_id: issue.issue_id, candidate_workaround: issue.compatibility_plan, failure_signature: "Merged surface changes or erases a source contract, caller, evidence hash or protected gate.", trigger_preconditions: ["All four local units complete", "No global destination exists"], recurrence_guard: "Bind every source, run both smoke classes, and verify byte parity before promotion.", rollback: issue.rollback, expected_fail_witness: "Destination collision or any source/global mismatch", expected_pass_witness: "All sources bound, validator and smokes pass, exact parity holds", promotion_gate: issue.evidence_needed, sibling_recommendation: "Reuse only when the exact operation scope matches.", failed_evidence_retained: true })), source_dependencies_kept_current: ["ghc-family-gf-prime-structure", "ghc-family-gf-polynomial-arithmetic", "ghc-family-gf-quotient-representations"], deletion_candidates: 0, boundary: BOUNDARY });
+  put(planRoot, "method-flow.json", methodFlow(startup));
+  put(planRoot, "phase-truth.json", { schema: "ghc.family.phase-truth.v9", owner: OWNER, phase: PHASE, stage: "planning_freeze", source_final: SOURCE_FINAL, historical_owner_head: HISTORICAL_HEAD, git_parent: HISTORICAL_HEAD, content_provenance_is_git_ancestry: false, proposal_count: proposals.length, inherited_review_count: inherited.length, outcome_plan: outcomePlan, x1_execution_credit: 0, x2_execution_credit: 0, skills_built: 0, runners_built: 0, ordinary_packages_installed: 0, incremental_spend_usd: 0, canonical_invocations: 0, successor_contacts: 0, incoming_effective_selected_lineage: startup.incoming_effective_selected_lineage, planning_overlay: { methods: 2, witnesses: 4, passing_witnesses: 2, failed_witnesses: 2, effective_negatives: 2 }, effective_selected_lineage_at_planning: { methods: 108, witnesses: 3570, passing_witnesses: 2545, failed_witnesses: 1025, effective_negatives: 1025, open_gaps: 10, exact_gates: 10 }, terminal_verdict: "NOT_READY_FOR_STAGE_20", boundary: BOUNDARY });
+  put(planRoot, "overview.md", "# Tamar Vey v694-v2 planning freeze\n\n" + BOUNDARY + "\n\nThis planning-only tranche extends Tamar's reusable owner lane while preserving v691-v3 unchanged. Veylora Quen v694-v1 is exact content provenance, not Tamar Git ancestry. Three hundred inherited records are reviewed at zero new novelty, execution or authority credit.\n\nThe new scope freezes one hundred finite extension-field contracts across four practices: extension-field construction, Frobenius trace and norm, minimal-polynomial certification, and representation/isomorphism stewardship. Independent planning oracles use multiplication matrices, determinants and least-degree monic enumeration. The future runtime will use polynomial reduction, Frobenius conjugates and orbit products. This separation is bounded same-owner cross-checking, not independent reproduction.\n\nX1 contains the first fifty proposals, one hundred safe definitions, one hundred malformed candidates, one hundred CLEAN/FIX/REFINE definitions, ten local skills and five paired runners. X2 contains the remaining fifty and the same portfolio and capability floors. The planned outcomes are eighty completed, ten represented, five open_gap and five exact_gate. Fifty exact packets and thirty blocked packets remain unexecuted.\n\nFive curated global skills will each retain four local source units. Promotion requires destination absence, complete skill reads, official quick validation, accepting and rejecting smokes, exact source bindings and byte parity. No global destination is overwritten. No ordinary package is installed and planned incremental spend is zero.\n\nOnly JSON, Markdown, TXT and HTML may be authored. Node source remains TXT. No PDF, raster image, screenshot, DOCX, TeX, SVG, Python, JavaScript or YAML artifact is created. All documents remain below one hundred thousand words and the owner lane below two thousand files.\n\nThe route remains PREPARED_NOT_SENT. Elowen Cairn v694-v3 is considered only after Tamar's clean pushed exact final, fresh equality, one successful non-replayed owner canonical, current usage and authority, complete current and archived title resolution, immediate reread and duplicate/control guards.\n\nLiteral planning EOF. X1 and x2 execution credit remain zero.");
+  put(planRoot, "tools/validate-plan.txt", planValidatorSource());
+  fs.mkdirSync(path.join(planRoot, "tools"), { recursive: true });
+  fs.copyFileSync(builderPath, path.join(planRoot, "tools", "build-plan.txt"), fs.constants.COPYFILE_EXCL);
+  const all = walkFiles(planRoot).filter((file) => !["manifest.json", "staged-review.json"].includes(path.basename(file))).sort();
+  const bindings = all.map((file) => { const data = fs.readFileSync(file); return { path: path.relative(ownerRoot, file).replaceAll(path.sep, "/"), bytes: data.length, sha256: sha(data) }; });
+  put(planRoot, "manifest.json", { schema: "ghc.family.raw-git-manifest.v9", owner: OWNER, phase: PHASE, stage: "planning", domain: "normalized-LF text bytes intended for exact staged Git blobs", bindings, exclusions: [BASE + "/plan/manifest.json", BASE + "/plan/staged-review.json"] });
+  process.stdout.write(JSON.stringify({ planning_only: true, proposals: proposals.length, inherited: inherited.length, operations: groups.length, maximum_title_jaccard: maximumJaccard, planned_skills: localSkills.length, planned_runners: localRunners.length, global_groups: globalGroups.length, manifest_bindings: bindings.length, execution_credit: 0 }) + "\n");
+}
+function stageReview(ownerRoot) {
+  const planRoot = path.join(ownerRoot, BASE, "plan"), reviewPath = path.join(planRoot, "staged-review.json");
+  if (fs.existsSync(reviewPath)) throw new Error("staged review already exists");
+  const staged = git(ownerRoot, ["diff", "--cached", "--name-only", "--diff-filter=ACMR"]).split(/\r?\n/).filter(Boolean);
+  const deleted = git(ownerRoot, ["diff", "--cached", "--name-only", "--diff-filter=D"]).split(/\r?\n/).filter(Boolean);
+  const issues = [];
+  if (deleted.length) issues.push({ code: "DELETE", paths: deleted });
+  if (!staged.length || staged.some((file) => !file.startsWith(BASE + "/plan/"))) issues.push({ code: "SCOPE", paths: staged.filter((file) => !file.startsWith(BASE + "/plan/")) });
+  const manifest = JSON.parse(fs.readFileSync(path.join(planRoot, "manifest.json"), "utf8"));
+  for (const binding of manifest.bindings) {
+    const data = git(ownerRoot, ["cat-file", "blob", ":" + binding.path], null);
+    if (data.length !== binding.bytes || sha(data) !== binding.sha256) issues.push({ code: "BINDING", path: binding.path });
+  }
+  const expected = new Set([...manifest.bindings.map((row) => row.path), BASE + "/plan/manifest.json"]);
+  const missing = [...expected].filter((file) => !staged.includes(file));
+  const extra = staged.filter((file) => !expected.has(file));
+  if (missing.length) issues.push({ code: "MISSING", paths: missing });
+  if (extra.length) issues.push({ code: "EXTRA", paths: extra });
+  const extensions = new Set(staged.map((file) => path.extname(file)));
+  if ([...extensions].some((ext) => ![".json", ".md", ".txt", ".html"].includes(ext))) issues.push({ code: "EXTENSION", extensions: [...extensions] });
+  put(planRoot, "staged-review.json", { schema: "ghc.family.staged-review.v9", owner: OWNER, phase: PHASE, stage: "planning", candidate_paths: staged.length, manifest_bindings: manifest.bindings.length, manifest_exclusions: manifest.exclusions.length, deletions: deleted.length, issues, valid: issues.length === 0, planning_only: true, x1_execution_credit: 0, x2_execution_credit: 0, boundary: BOUNDARY });
+  process.stdout.write(JSON.stringify({ staged_paths: staged.length, manifest_bindings: manifest.bindings.length, issues: issues.length, valid: issues.length === 0 }) + "\n");
+  if (issues.length) process.exitCode = 1;
+}
+function main() {
+  const [mode, ownerRoot, sourceRoot, skillRoot, bankRoot, builderPath] = process.argv.slice(2);
+  if (!["selftest", "build", "stage-review"].includes(mode)) throw new Error("mode");
+  if (!ownerRoot || !sourceRoot || !skillRoot || !bankRoot || !builderPath) throw new Error("explicit paths required");
+  if (mode === "selftest") {
+    const definitions = makeDefinitions(sourceRoot);
+    const counts = definitions.proposals.reduce((acc, proposal) => { acc[proposal.expected_disposition] = (acc[proposal.expected_disposition] || 0) + 1; return acc; }, {});
+    process.stdout.write(JSON.stringify({ status: "PASS", proposals: definitions.proposals.length, inherited: definitions.inherited.length, operations: definitions.groups.length, outcomes: counts, maximum_title_jaccard: definitions.maximumJaccard, fields: FIELDS.map((field) => field.id) }) + "\n");
+  } else if (mode === "build") build(ownerRoot, sourceRoot, skillRoot, bankRoot, builderPath);
+  else stageReview(ownerRoot);
+}
+main();

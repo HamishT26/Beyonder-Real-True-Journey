@@ -1,0 +1,23 @@
+"use strict";
+const fs=require("node:fs"),path=require("node:path");
+const root=process.cwd(),base=path.join(root,"docs/tamar-vey/v694-v2/plan"),tests=[];
+const check=(name,pass,detail=null)=>tests.push({name,pass:!!pass,detail});
+const read=(rel)=>JSON.parse(fs.readFileSync(path.join(base,rel),"utf8"));
+const proposals=read("proposals.json"),inherited=read("source/inherited-review.json"),workflow=read("workflow-profile.json"),route=read("current-route.json"),skills=read("capabilities/local-skills.json"),runners=read("capabilities/local-runners.json"),groups=read("capabilities/global-groups.json"),method=read("method-flow.json"),manifest=read("manifest.json");
+check("owner and phase",proposals.owner==="Tamar Vey"&&proposals.phase==="v694-v2");
+check("one hundred unique proposals",proposals.proposals.length===100&&new Set(proposals.proposals.map(x=>x.proposal_id)).size===100);
+check("fifty per session",proposals.proposals.filter(x=>x.session==="x1").length===50&&proposals.proposals.filter(x=>x.session==="x2").length===50);
+check("outcome plan",JSON.stringify(proposals.outcome_plan)===JSON.stringify({completed:80,represented:10,open_gap:5,exact_gate:5}));
+check("required proposal fields",proposals.proposals.every(x=>x.hypothesis&&x.null_or_failure_condition&&x.approval_class&&x.execution_lane&&x.official_or_primary_source_needs.length&&x.concrete_artifacts.length&&x.falsifier_or_acceptance_gate&&x.rollback_or_recovery&&x.protected_gates.length&&x.expected_disposition&&x.definition_sha256));
+check("candidate pairs",proposals.proposals.every(x=>x.candidate_subjects.length===2));
+check("inherited zero credit",inherited.records.length===300&&inherited.records.every(x=>x.novelty_credit===0&&x.execution_credit===0&&x.authority_credit===0));
+for(const session of ["x1","x2"]){check(session+" safe",read("portfolios/"+session+"-safe.json").count===100);check(session+" candidates",read("portfolios/"+session+"-candidates.json").count===100);check(session+" cfr",read("portfolios/"+session+"-clean-fix-refine.json").count===100);}
+check("approval packets",read("portfolios/exact-packets.json").count===50&&read("portfolios/exact-packets.json").executed===0&&read("portfolios/blocked-packets.json").count===30&&read("portfolios/blocked-packets.json").executed===0);
+check("capability floors",skills.count===20&&skills.skills.filter(x=>x.session==="x1").length===10&&skills.skills.filter(x=>x.session==="x2").length===10&&runners.count===10&&groups.count===5);
+check("route",route.owner==="Tamar Vey"&&route.phase==="v694-v2"&&route.successor==="Elowen Cairn"&&route.successor_phase==="v694-v3"&&route.no_early_contact&&route.successor_contacts===0);
+check("workflow v9",workflow.schema==="ghc.family.workflow-profile.v9-owner-overlay"&&workflow.planned_commits===4&&workflow.commit_budget.total===8&&workflow.artifact_policy.node_source_as_txt);
+check("method flow startup",method.methods.length===2&&method.witnesses.length===4&&method.counts.witness_results.fail===2&&method.counts.witness_results.pass===2);
+check("planning only",!fs.existsSync(path.join(root,"docs/tamar-vey/v694-v2/x1"))&&!fs.existsSync(path.join(root,"docs/tamar-vey/v694-v2/x2")));
+check("allowed extensions",(function(){const out=[];function walk(d){for(const e of fs.readdirSync(d,{withFileTypes:true})){const p=path.join(d,e.name);if(e.isDirectory())walk(p);else out.push(p)}}walk(base);return out.every(p=>[".json",".md",".txt",".html"].includes(path.extname(p)));})());
+check("manifest",manifest.bindings.length>=25&&manifest.exclusions.length===2);
+const failed=tests.filter(x=>!x.pass);process.stdout.write(JSON.stringify({schema:"ghc.family.plan-validation.v9",passed:tests.length-failed.length,failed:failed.length,tests})+"\n");if(failed.length)process.exitCode=1;
