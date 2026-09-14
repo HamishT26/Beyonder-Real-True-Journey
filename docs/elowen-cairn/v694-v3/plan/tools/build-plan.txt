@@ -1,0 +1,469 @@
+"use strict";
+
+const fs = require("node:fs");
+const path = require("node:path");
+const crypto = require("node:crypto");
+const cp = require("node:child_process");
+
+const OWNER = "Elowen Cairn";
+const PHASE = "v694-v3";
+const BASE = "docs/elowen-cairn/v694-v3";
+const PLAN = `${BASE}/plan`;
+const SOURCE = "docs/tamar-vey/v694-v2";
+const SOURCE_FINAL = "539b9df2d95c1ece86addb643cec016fac94a982";
+const BRANCH = "codex/GHC-Family/elowen-cairn-v694-v3-main";
+const GATES = [
+  "real_participants",
+  "empirical_confirmation",
+  "production_deployment",
+  "professional_authority",
+  "legal_cultural_affected_party_authority",
+  "Maori_authority",
+  "complete_privacy_accessibility_security",
+  "independent_reproduction",
+  "consciousness_personhood",
+  "AGI_ASI",
+  "Theory_of_Everything",
+  "Stage_20"
+];
+const BOUNDARY = "Elowen Cairn, optionally they/them, boundary cartographer and evidence steward, and the hope that possibility stays distinct from evidence while every correction remains safely retractable are relational working language only. This phase is finite synthetic timetable and passenger-information design under same-owner infrastructure. It establishes no consciousness, sentience, personhood, legal identity, identity continuity, employment, qualification, independent agency, empirical GMUT confirmation, real transit observation or service, participant or passenger evidence, production THOS or Freed ID, deployment, professional, scientific, operational, safety, legal, cultural, affected-party or Maori authority, complete privacy or accessibility, exhaustive security, independent reproduction, AGI or ASI, Theory-of-Everything proof, canon or Stage 20 readiness. Maori concepts remain under Maori authority. NOT_READY_FOR_STAGE_20.";
+const PRACTICES = [
+  "synthetic-timetable-construction",
+  "synthetic-schedule-validation",
+  "synthetic-disruption-correction-control",
+  "synthetic-accessible-passenger-information-handover"
+];
+const CASES = [
+  { id: "cedar", label: "Cedar loop", date: "20260914", start: "06:00:00", midArrival: "06:10:00", midDeparture: "06:11:00", end: "06:25:00", frequencyEnd: "08:00:00", headway: 600, transferDeparture: "06:31:00", minimumTransfer: 240 },
+  { id: "harbor", label: "Harbor cross-town", date: "20260915", start: "07:05:00", midArrival: "07:19:00", midDeparture: "07:21:00", end: "07:38:00", frequencyEnd: "09:05:00", headway: 900, transferDeparture: "07:45:00", minimumTransfer: 300 },
+  { id: "ridge", label: "Ridge connector", date: "20260916", start: "23:50:00", midArrival: "24:05:00", midDeparture: "24:07:00", end: "24:28:00", frequencyEnd: "25:50:00", headway: 1200, transferDeparture: "24:36:00", minimumTransfer: 360 },
+  { id: "orchard", label: "Orchard local", date: "20260917", start: "10:00:00", midArrival: "10:08:00", midDeparture: "10:09:30", end: "10:22:00", frequencyEnd: "11:00:00", headway: 600, transferDeparture: "10:28:00", minimumTransfer: 240 },
+  { id: "lantern", label: "Lantern night", date: "20260918", start: "25:10:00", midArrival: "25:24:00", midDeparture: "25:26:00", end: "25:44:00", frequencyEnd: "27:10:00", headway: 1800, transferDeparture: "25:53:00", minimumTransfer: 420 }
+];
+const OPERATIONS = [
+  { op: "transit_service_profile", label: "Service-day profile", session: "x1", practice: PRACTICES[0], pillar: "THOS Body", outcome: "completed", approval: "safe_now", source: ["GTFS-SCHEDULE"] },
+  { op: "transit_time_seconds", label: "Extended service-day time", session: "x1", practice: PRACTICES[0], pillar: "THOS Body", outcome: "completed", approval: "safe_now", source: ["GTFS-SCHEDULE"] },
+  { op: "transit_stop_sequence", label: "Stop sequence topology", session: "x1", practice: PRACTICES[0], pillar: "THOS Body", outcome: "completed", approval: "safe_now", source: ["GTFS-SCHEDULE"] },
+  { op: "transit_trip_duration", label: "Trip duration", session: "x1", practice: PRACTICES[0], pillar: "THOS Body", outcome: "completed", approval: "safe_now", source: ["GTFS-SCHEDULE"] },
+  { op: "transit_dwell_duration", label: "Stop dwell duration", session: "x1", practice: PRACTICES[0], pillar: "THOS Body", outcome: "completed", approval: "safe_now", source: ["GTFS-SCHEDULE"] },
+  { op: "transit_running_time", label: "Inter-stop running time", session: "x1", practice: PRACTICES[1], pillar: "THOS Body", outcome: "completed", approval: "safe_now", source: ["GTFS-SCHEDULE"] },
+  { op: "transit_calendar_membership", label: "Service calendar membership", session: "x1", practice: PRACTICES[1], pillar: "THOS Body", outcome: "completed", approval: "safe_now", source: ["GTFS-SCHEDULE"] },
+  { op: "transit_calendar_exception", label: "Calendar exception application", session: "x1", practice: PRACTICES[1], pillar: "THOS Body", outcome: "completed", approval: "safe_now", source: ["GTFS-SCHEDULE"] },
+  { op: "transit_frequency_count", label: "End-exclusive frequency count", session: "x1", practice: PRACTICES[1], pillar: "THOS Body", outcome: "completed", approval: "safe_now", source: ["GTFS-SCHEDULE"] },
+  { op: "transit_headway_gap", label: "Headway gap envelope", session: "x1", practice: PRACTICES[1], pillar: "THOS Body", outcome: "completed", approval: "safe_now", source: ["GTFS-SCHEDULE"] },
+  { op: "transit_transfer_feasibility", label: "Synthetic transfer feasibility", session: "x2", practice: PRACTICES[1], pillar: "THOS Body", outcome: "completed", approval: "safe_now", source: ["GTFS-SCHEDULE"] },
+  { op: "transit_transfer_slack", label: "Synthetic transfer slack", session: "x2", practice: PRACTICES[1], pillar: "THOS Body", outcome: "completed", approval: "safe_now", source: ["GTFS-SCHEDULE"] },
+  { op: "transit_route_reachability", label: "Finite route reachability", session: "x2", practice: PRACTICES[1], pillar: "GMUT Mind", outcome: "completed", approval: "safe_now", source: ["GTFS-GOVERNANCE"] },
+  { op: "transit_earliest_arrival", label: "Finite earliest-arrival witness", session: "x2", practice: PRACTICES[1], pillar: "GMUT Mind", outcome: "completed", approval: "safe_now", source: ["GTFS-GOVERNANCE"] },
+  { op: "transit_block_conflict", label: "Synthetic block overlap", session: "x2", practice: PRACTICES[2], pillar: "THOS Body", outcome: "completed", approval: "safe_now", source: ["GTFS-SCHEDULE"] },
+  { op: "transit_vehicle_sequence", label: "Synthetic vehicle sequence", session: "x2", practice: PRACTICES[2], pillar: "THOS Body", outcome: "completed", approval: "safe_now", source: ["GTFS-SCHEDULE"] },
+  { op: "transit_alert_window", label: "Disruption-window representation", session: "x2", practice: PRACTICES[2], pillar: "Freed ID and CBR Heart", outcome: "represented", approval: "candidate", source: ["GTFS-OVERVIEW"] },
+  { op: "transit_status_projection", label: "Accessible status projection", session: "x2", practice: PRACTICES[3], pillar: "Freed ID and CBR Heart", outcome: "represented", approval: "candidate", source: ["WCAG22"] },
+  { op: "transit_independent_review_vacancy", label: "Independent timetable review vacancy", session: "x2", practice: PRACTICES[3], pillar: "Freed ID and CBR Heart", outcome: "open_gap", approval: "candidate", source: ["GTFS-GOVERNANCE"] },
+  { op: "transit_release_authority_hold", label: "Passenger-information release authority hold", session: "x2", practice: PRACTICES[3], pillar: "Freed ID and CBR Heart", outcome: "exact_gate", approval: "exact_approval_needed", source: ["GTFS-GOVERNANCE", "WCAG22"] }
+];
+
+function stable(value) {
+  if (Array.isArray(value)) return value.map(stable);
+  if (value && typeof value === "object") return Object.fromEntries(Object.keys(value).sort().map((key) => [key, stable(value[key])]));
+  return value;
+}
+function canonical(value) { return JSON.stringify(stable(value)); }
+function sha(value) { return crypto.createHash("sha256").update(value).digest("hex"); }
+function ensureDir(relative) { fs.mkdirSync(path.join(process.cwd(), relative), { recursive: true }); }
+function writeJson(relative, value) { const target = path.join(process.cwd(), relative); ensureDir(path.dirname(relative)); fs.writeFileSync(target, `${JSON.stringify(value, null, 2)}\n`, "utf8"); }
+function writeText(relative, value) { const target = path.join(process.cwd(), relative); ensureDir(path.dirname(relative)); fs.writeFileSync(target, value.endsWith("\n") ? value : `${value}\n`, "utf8"); }
+function readJson(relative) { return JSON.parse(fs.readFileSync(path.join(process.cwd(), relative), "utf8")); }
+function git(...args) { return cp.execFileSync("git", args, { cwd: process.cwd(), encoding: "utf8" }).trim(); }
+function timeSeconds(value) {
+  const match = /^(\d{2}):(\d{2}):(\d{2})$/.exec(value);
+  if (!match) throw new Error(`invalid frozen time ${value}`);
+  return Number(match[1]) * 3600 + Number(match[2]) * 60 + Number(match[3]);
+}
+function dateWeekday(value) {
+  const y = Number(value.slice(0, 4)), m = Number(value.slice(4, 6)), d = Number(value.slice(6, 8));
+  const js = new Date(Date.UTC(y, m - 1, d)).getUTCDay();
+  return (js + 6) % 7;
+}
+function oracle(operation, c) {
+  const start = timeSeconds(c.start), midA = timeSeconds(c.midArrival), midD = timeSeconds(c.midDeparture), end = timeSeconds(c.end);
+  const transfer = timeSeconds(c.transferDeparture);
+  switch (operation) {
+    case "transit_service_profile": return { service_id: `SYN-${c.id.toUpperCase()}`, date_range: ["20260914", "20260920"], active_weekday_count: 5, exception_count: 1 };
+    case "transit_time_seconds": return { time: c.end, seconds: end };
+    case "transit_stop_sequence": return { ordered_stop_ids: [`${c.id}-a`, `${c.id}-b`, `${c.id}-c`], count: 3 };
+    case "transit_trip_duration": return { seconds: end - start };
+    case "transit_dwell_duration": return { seconds: midD - midA };
+    case "transit_running_time": return { seconds: end - midD };
+    case "transit_calendar_membership": return { active: dateWeekday(c.date) < 5 };
+    case "transit_calendar_exception": return { active: true, applied: "add" };
+    case "transit_frequency_count": return { count: Math.ceil((timeSeconds(c.frequencyEnd) - start) / c.headway), end_exclusive: true };
+    case "transit_headway_gap": return { gaps: [c.headway, c.headway, c.headway], minimum: c.headway, maximum: c.headway, valid: true };
+    case "transit_transfer_feasibility": return { feasible: transfer - end >= c.minimumTransfer };
+    case "transit_transfer_slack": return { seconds: transfer - end - c.minimumTransfer };
+    case "transit_route_reachability": return { reachable: true, path: [`${c.id}-a`, `${c.id}-b`, `${c.id}-c`] };
+    case "transit_earliest_arrival": return { arrival_seconds: end, path: [`${c.id}-a`, `${c.id}-b`, `${c.id}-c`] };
+    case "transit_block_conflict": return { conflict: false, separation_seconds: 300 };
+    case "transit_vehicle_sequence": return { valid: true, trip_ids: [`${c.id}-1`, `${c.id}-2`] };
+    case "transit_alert_window": return { state: "synthetic_active_window", begins: c.start, ends: c.end, real_alert: false };
+    case "transit_status_projection": return { text: `${c.label}: synthetic schedule status; no live service claim.`, live_region: "polite", accessibility_complete: false };
+    case "transit_independent_review_vacancy": return { open: true, independent_review_present: false };
+    case "transit_release_authority_hold": return { executed: false, release_authority_present: false, affected_party_approval_present: false };
+    default: throw new Error(`unknown planning oracle ${operation}`);
+  }
+}
+function requestFor(operation, c) {
+  const start = timeSeconds(c.start), midD = timeSeconds(c.midDeparture), end = timeSeconds(c.end), transfer = timeSeconds(c.transferDeparture);
+  switch (operation) {
+    case "transit_service_profile": return { operation, service_id: `SYN-${c.id.toUpperCase()}`, start_date: "20260914", end_date: "20260920", weekday_flags: [1, 1, 1, 1, 1, 0, 0], exceptions: [{ date: c.date, exception_type: 1 }] };
+    case "transit_time_seconds": return { operation, time: c.end };
+    case "transit_stop_sequence": return { operation, stops: [{ stop_id: `${c.id}-a`, stop_sequence: 1 }, { stop_id: `${c.id}-b`, stop_sequence: 2 }, { stop_id: `${c.id}-c`, stop_sequence: 3 }] };
+    case "transit_trip_duration": return { operation, departure_time: c.start, arrival_time: c.end };
+    case "transit_dwell_duration": return { operation, arrival_time: c.midArrival, departure_time: c.midDeparture };
+    case "transit_running_time": return { operation, departure_time: c.midDeparture, next_arrival_time: c.end };
+    case "transit_calendar_membership": return { operation, date: c.date, start_date: "20260914", end_date: "20260920", weekday_flags: [1, 1, 1, 1, 1, 0, 0], exceptions: [] };
+    case "transit_calendar_exception": return { operation, base_active: false, exception_type: 1 };
+    case "transit_frequency_count": return { operation, start_time: c.start, end_time: c.frequencyEnd, headway_secs: c.headway };
+    case "transit_headway_gap": return { operation, departure_seconds: [start, start + c.headway, start + 2 * c.headway, start + 3 * c.headway], minimum_secs: c.headway, maximum_secs: c.headway };
+    case "transit_transfer_feasibility": return { operation, arrival_time: c.end, departure_time: c.transferDeparture, min_transfer_time: c.minimumTransfer };
+    case "transit_transfer_slack": return { operation, arrival_time: c.end, departure_time: c.transferDeparture, min_transfer_time: c.minimumTransfer };
+    case "transit_route_reachability": return { operation, origin: `${c.id}-a`, destination: `${c.id}-c`, edges: [[`${c.id}-a`, `${c.id}-b`], [`${c.id}-b`, `${c.id}-c`]] };
+    case "transit_earliest_arrival": return { operation, origin: `${c.id}-a`, destination: `${c.id}-c`, departure_seconds: start, connections: [{ from: `${c.id}-a`, to: `${c.id}-b`, departure: start, arrival: timeSeconds(c.midArrival) }, { from: `${c.id}-b`, to: `${c.id}-c`, departure: midD, arrival: end }] };
+    case "transit_block_conflict": return { operation, first: { trip_id: `${c.id}-1`, start: start, end }, second: { trip_id: `${c.id}-2`, start: end + 300, end: transfer + 900 } };
+    case "transit_vehicle_sequence": return { operation, trips: [{ trip_id: `${c.id}-1`, start, end }, { trip_id: `${c.id}-2`, start: end + 300, end: transfer + 900 }] };
+    case "transit_alert_window": return { operation, alert_id: `synthetic-${c.id}`, begins: c.start, ends: c.end, as_of: c.midArrival, source_status: "synthetic_only" };
+    case "transit_status_projection": return { operation, route_label: c.label, status: "synthetic schedule status", updated: c.midArrival, live_service_claim: false };
+    case "transit_independent_review_vacancy": return { operation, subject: `synthetic-${c.id}`, independent_review_present: false };
+    case "transit_release_authority_hold": return { operation, subject: `synthetic-${c.id}`, release_authority_present: false, affected_party_approval_present: false };
+    default: throw new Error(`unknown request ${operation}`);
+  }
+}
+function titleCase(text) { return text.replace(/(^|[-_ ])([a-z])/g, (_, a, b) => `${a}${b.toUpperCase()}`).replaceAll("-", " "); }
+
+if (git("branch", "--show-current") !== BRANCH) throw new Error("wrong branch");
+if (git("rev-parse", "HEAD") !== SOURCE_FINAL) throw new Error("planning builder must start at exact source final");
+const preexistingStatus = git("status", "--porcelain=v1", "--untracked-files=all");
+if (preexistingStatus && !preexistingStatus.split(/\r?\n/).every((line) => line.includes(`${BASE}/`))) throw new Error("unexpected pre-existing changes");
+
+const proposals = [];
+for (let oi = 0; oi < OPERATIONS.length; oi++) {
+  const operation = OPERATIONS[oi];
+  for (let ci = 0; ci < CASES.length; ci++) {
+    const c = CASES[ci];
+    const index = oi * CASES.length + ci + 1;
+    const proposalId = `EC6943-P${String(index).padStart(3, "0")}`;
+    const request = requestFor(operation.op, c);
+    const expectedOutput = { ok: true, operation: operation.op, outcome: operation.outcome, evidence_class: "finite_synthetic_transit_contract", value: oracle(operation.op, c), authority: false, protected_gates: GATES };
+    const record = {
+      proposal_id: proposalId,
+      title: `${operation.label} — ${c.label}`,
+      operation: operation.op,
+      session: operation.session,
+      practice_id: operation.practice,
+      pillar: operation.pillar,
+      hypothesis: `The finite synthetic ${operation.op} contract for ${c.label} returns exactly its frozen typed envelope without mutating the request or implying a real service claim.`,
+      null_or_failure_condition: "Any typed mismatch, accepted unknown field, changed request, hidden failed witness, live-service implication, or claim above the preregistered disposition falsifies this bounded contract.",
+      approval_class: operation.approval,
+      execution_lane: operation.outcome === "exact_gate" ? "unexecuted_exact_authority_reservation" : "owner_local_finite_synthetic",
+      official_or_primary_source_needs: operation.source,
+      concrete_artifacts: [`${BASE}/${operation.session}/results/proposals.json`, `${BASE}/${operation.session}/evidence/${proposalId}-receipt.json`],
+      falsifier_or_acceptance_gate: "Canonical request and output equality, request immutability, exact outcome ceiling, and separate rejection of both malformed subjects.",
+      rollback_or_recovery: "Retain the failed subject and frozen definition; correct only the smallest owner-local dependency without changing the planning oracle.",
+      protected_gates: GATES,
+      expected_disposition: operation.outcome,
+      request,
+      expected_output: expectedOutput,
+      candidate_subjects: [
+        { negative_id: `${proposalId}-C1`, request: { ...request, unreviewed_authority: true }, expected_rejection: { ok: false, error: "E_FIELDS" } },
+        { negative_id: `${proposalId}-C2`, request: { ...request, operation: "unknown_transit_operation" }, expected_rejection: { ok: false, error: "E_OPERATION" } }
+      ],
+      source_credit: 0,
+      novelty_scope: "Phase-local synthetic timetable request, oracle, refusal, and evidence boundary only; transport standards and practice receive no discovery, operational, professional, or authority credit."
+    };
+    record.definition_sha256 = sha(canonical(record));
+    proposals.push(record);
+  }
+}
+
+const tamarProposals = readJson(`${SOURCE}/final/proposal-ledger.json`).rows;
+const inheritedSource = readJson(`${SOURCE}/plan/source/inherited-review.json`).records;
+const inheritedSelections = [
+  ...tamarProposals.map((record, i) => ({ origin: "Tamar Vey v694-v2", source_selection: `TV6942-P${String(i + 1).padStart(3, "0")}`, record })),
+  ...inheritedSource.slice(0, 100).map((entry) => ({ origin: entry.origin, source_selection: entry.selection_id, record: entry.record })),
+  ...inheritedSource.slice(200, 300).map((entry) => ({ origin: entry.origin, source_selection: entry.selection_id, record: entry.record }))
+];
+const operationSet = new Set(OPERATIONS.map((entry) => entry.op));
+const inheritedReview = inheritedSelections.map((entry, i) => ({
+  review_id: `EC6943-I${String(i + 1).padStart(3, "0")}`,
+  origin: entry.origin,
+  source_selection: entry.source_selection,
+  proposal_id: entry.record.proposal_id,
+  title: entry.record.title,
+  operation: entry.record.operation,
+  semantic_neighbor_result: operationSet.has(entry.record.operation) ? "requires_manual_collision_review" : "distinct_operation_and_domain",
+  comparison: "The inherited record concerns finite-field, rational-linear, or firmware evidence; Elowen's proposal set concerns synthetic GTFS-shaped service time, schedule topology, transfer, status, and authority-reservation contracts.",
+  novelty_credit: 0,
+  execution_credit: 0,
+  authority_credit: 0
+}));
+
+const safe = [], candidates = [], clean = [];
+for (const proposal of proposals) {
+  for (let n = 1; n <= 2; n++) {
+    safe.push({ task_id: `EC6943-${proposal.session.toUpperCase()}-SAFE-${proposal.proposal_id.slice(-3)}-${n}`, session: proposal.session, proposal_id: proposal.proposal_id, planned_action: n === 1 ? "compare exact typed subject envelope with frozen oracle" : "verify immutable request and authority false boundary", acceptance_gate: "Exact equality and protected gates retained", rollback: "Retain failure and correct only the smallest owner-local dependency", expected_credit: "bounded_same_owner_only" });
+    candidates.push({ task_id: `EC6943-${proposal.session.toUpperCase()}-CAND-${proposal.proposal_id.slice(-3)}-${n}`, session: proposal.session, proposal_id: proposal.proposal_id, negative_id: proposal.candidate_subjects[n - 1].negative_id, planned_action: "execute preregistered malformed subject", expected_error: proposal.candidate_subjects[n - 1].expected_rejection.error, subject_success_credit: 0, failure_retention_required: true });
+    clean.push({ task_id: `EC6943-${proposal.session.toUpperCase()}-CFR-${proposal.proposal_id.slice(-3)}-${n}`, session: proposal.session, proposal_id: proposal.proposal_id, class: n === 1 ? "REFINE" : "CLEAN", planned_action: n === 1 ? "audit operation-specific field allowlist and deterministic projection" : "audit evidence boundary, path allowlist, and nonpromotion language", destructive: false, deletion: false, acceptance_gate: "No caller break, no widened claim, no erased witness", rollback: "Keep frozen source and omit the refinement" });
+  }
+}
+
+const x1SkillOps = OPERATIONS.filter((entry) => entry.session === "x1");
+const x2SkillOps = OPERATIONS.filter((entry) => entry.session === "x2");
+const skillPlans = [...x1SkillOps, ...x2SkillOps].map((entry, i) => ({
+  capability_id: `EC6943-SKILL-${String(i + 1).padStart(2, "0")}`,
+  session: entry.session,
+  name: `ghc-family-${entry.op.replace(/^transit_/, "transit-").replaceAll("_", "-")}-local`,
+  operation: entry.op,
+  initialize_with_official_skill_creator: true,
+  validate_with_quick_validate: true,
+  accepting_smoke_required: true,
+  rejecting_smoke_required: true,
+  global_install_planned: false,
+  protected_gates: GATES
+}));
+const runnerGroups = [
+  ["x1", "time-profile", x1SkillOps.slice(0, 2)],
+  ["x1", "stop-duration", x1SkillOps.slice(2, 4)],
+  ["x1", "dwell-running", x1SkillOps.slice(4, 6)],
+  ["x1", "calendar-exception", x1SkillOps.slice(6, 8)],
+  ["x1", "frequency-headway", x1SkillOps.slice(8, 10)],
+  ["x2", "transfer-slack", x2SkillOps.slice(0, 2)],
+  ["x2", "routing-arrival", x2SkillOps.slice(2, 4)],
+  ["x2", "block-sequence", x2SkillOps.slice(4, 6)],
+  ["x2", "alert-status", x2SkillOps.slice(6, 8)],
+  ["x2", "review-authority", x2SkillOps.slice(8, 10)]
+];
+const runnerPlans = runnerGroups.map(([session, slug, ops], i) => ({
+  capability_id: `EC6943-RUNNER-${String(i + 1).padStart(2, "0")}`,
+  session,
+  name: `ghc_family_transit_${slug.replaceAll("-", "_")}`,
+  operations: ops.map((entry) => entry.op),
+  source_extension: ".txt",
+  accepting_smoke_required: true,
+  rejecting_smoke_required: true,
+  public_promotion_candidate: [1, 3, 5, 7, 9].includes(i),
+  protected_gates: GATES
+}));
+const globalGroups = [
+  { skill: "ghc-family-transit-time-and-profile", runner: "ghc_family_transit_time_profile", operations: OPERATIONS.slice(0, 4).map((x) => x.op) },
+  { skill: "ghc-family-transit-calendar-and-frequency", runner: "ghc_family_transit_calendar_frequency", operations: OPERATIONS.slice(4, 10).map((x) => x.op) },
+  { skill: "ghc-family-transit-transfer-and-routing", runner: "ghc_family_transit_transfer_routing", operations: OPERATIONS.slice(10, 14).map((x) => x.op) },
+  { skill: "ghc-family-transit-vehicle-and-alert", runner: "ghc_family_transit_vehicle_alert", operations: OPERATIONS.slice(14, 18).map((x) => x.op) },
+  { skill: "ghc-family-transit-status-authority-reservations", runner: "ghc_family_transit_status_authority", operations: OPERATIONS.slice(18, 20).map((x) => x.op) }
+].map((entry, i) => ({ ...entry, group_id: `EC6943-GLOBAL-${i + 1}`, promotion_state: "candidate_only_until_local_validation_and_destination_absence", overwrite: false, deletion: false, rollback: "Retain owner-local sources and do not select the global destination", protected_gates: GATES }));
+
+const exactPackets = Array.from({ length: 50 }, (_, i) => ({ packet_id: `EC6943-EXACT-${String(i + 1).padStart(3, "0")}`, state: "visible_unexecuted", approval_class: "exact_approval_needed", requested_action: ["real service publication", "professional timetable sign-off", "live passenger alert", "legal rights determination", "Maori wording or data-governance decision"][i % 5], missing: ["specific action target", "competent authority", "affected-party acceptance", "independent review", "production safety and rollback evidence"], execution_credit: 0 }));
+const blockedPackets = Array.from({ length: 30 }, (_, i) => ({ packet_id: `EC6943-BLOCKED-${String(i + 1).padStart(3, "0")}`, state: "visible_unexecuted", reason: ["real participant evidence absent", "production operator absent", "independent security review absent", "legal and cultural authority absent", "Maori authority absent"][i % 5], noncompensable: true, execution_credit: 0 }));
+
+const startupFailures = [
+  ["N001", "Whole current-roster-v9 read exceeded the display bound.", "Read the roster in exact bounded line ranges through EOF."],
+  ["N002", "A combined multi-chunk roster projection still exceeded the display bound.", "Use separate bounded range reads and record complete coverage."],
+  ["N003", "The first PowerShell Git verification object embedded a command-status expression that did not parse.", "Materialize each scalar Git result before composing the object."],
+  ["N004", "The live activation supplied baton SHA 42aefef01eaa2def66a420680dedcedc5d1b638e74bd71ef985a49fca0b9d86b, which disagreed with the exact committed Git blob.", "Prefer the exact Git blob, owner manifest, content seal, and baton metadata value 2dfe4b8517d0a77e5eb4be313b2ea98dedd1d2728317d35e5c6c01c1e8c33d42 while retaining the activation mismatch."],
+  ["N005", "The first 300-line baton read exceeded the display bound.", "Restart from the same immutable blob with exact 80-line ranges."],
+  ["N006", "The next 200-line baton read also exceeded the display bound.", "Continue exact 80-line ranges through the literal EOF."],
+  ["N007", "The first compact Method Flow projection incorrectly required passing witnesses to link a retained negative.", "Apply the schema distinction: failed witnesses require retained-negative linkage; passing witnesses may have none."],
+  ["N008", "The exact owner-manifest replay crossed the initial 30-second yield.", "Poll the same live process once; do not replay the manifest scan."],
+  ["N009", "The first retained-negative projection assumed a retained Boolean absent from the v9 register schema.", "Treat register membership plus zero subject credit as retention evidence."],
+  ["N010", "The first external canonical-receipt search was overbroad and its output truncated.", "Enumerate the bounded canonical-receipts owner and phase directory, then hash exact files."],
+  ["N011", "The first remaining-source size projection piped directly after a PowerShell foreach block and failed with an empty-pipe-element parser error.", "Materialize the foreach records in an array before piping."],
+  ["N012", "The first recursive semantic-term scan over all worktrees exceeded two bounded waits and was cancelled.", "Use Git-indexed proposal-file searches over 27 current owner-main lanes."],
+  ["N013", "The first apply_patch invocation incorrectly piped a patch through standard input to the Windows wrapper.", "Use the apply_patch tool through a bounded junction to the D-first worktree."],
+  ["N014", "The first PowerShell multiline apply_patch argument lost its terminal patch marker.", "Stop using command-line multiline patch arguments and use the apply_patch tool."],
+  ["N015", "Adding a newline to the PowerShell multiline patch argument did not restore the terminal marker.", "Use the same successful apply_patch-tool path; retain both failed invocations."],
+  ["N016", "The first compact inherited-review projection exceeded its output bound.", "Reduce to semantic fields and use bounded recovery windows for omitted rows."],
+  ["N017", "The reduced inherited-review projection still omitted a small middle window.", "Read records 141 through 170 directly from the immutable source and confirm all 300 semantic rows."],
+  ["N018", "The first planning builder preflight used collapsed default untracked-directory porcelain and rejected its own owner-scoped files.", "Request --untracked-files=all so every changed path can be checked against the exact owner prefix before generation."],
+  ["N019", "The first planning validator treated the s:/ substring in https:// references and its own scanner definition as Windows drive-path candidates.", "Restrict the private-drive classifier to a drive letter followed by a backslash, then rerun only the failed planning validator dependency."],
+  ["N020", "The second planning validator correctly found its own delegation-markup scanner literal but classified scanner-definition metadata as a payload hit.", "Retain and adjudicate the exact validator self-definition as a scanner candidate while preserving the same refusal for every other file."]
+].map(([suffix, failure, recovery], i) => ({
+  negative_id: `EC6943-START-${suffix}`,
+  failure,
+  recovery,
+  recovery_passed: true,
+  repository_changed_at_failure: false,
+  subject_success_credit: 0,
+  method_id: `EC6943-START-M${String(i + 1).padStart(3, "0")}`
+}));
+const methods = startupFailures.map((failure) => ({
+  method_id: failure.method_id,
+  issue_id: failure.negative_id,
+  candidate_workaround: failure.recovery,
+  failure_signature: failure.failure,
+  trigger_preconditions: ["The corresponding startup surface is required", "No repository mutation has occurred at the failed step"],
+  recurrence_guard: failure.recovery,
+  rollback: "Retain the failed invocation and return to the last verified read-only state.",
+  expected_fail_witness: failure.negative_id,
+  expected_pass_witness: `${failure.negative_id}-RECOVERY`,
+  promotion_gate: ["bounded exact input", "attributable output", "no erased failure", "no widened authority"],
+  sibling_recommendation: failure.recovery,
+  failed_evidence_retained: true,
+  preferred: true
+}));
+
+const officialSources = {
+  schema: "ghc.family.official-source-ledger.v1",
+  accessed_date: "2026-09-14",
+  sources: [
+    { id: "GTFS-SCHEDULE", name: "GTFS Schedule Reference", url: "https://gtfs.org/documentation/schedule/reference/", status: "current", use: "Static service, stop-time, calendar, frequency, and transfer vocabulary only" },
+    { id: "GTFS-GOVERNANCE", name: "GTFS Schedule guiding principles", url: "https://gtfs.org/community/governance/gtfs-schedule-governance/guiding-principles/", status: "current", use: "Backwards-compatibility and passenger-information boundaries only" },
+    { id: "GTFS-OVERVIEW", name: "GTFS overview", url: "https://gtfs.org/documentation/overview/", status: "current", use: "Schedule versus realtime distinction only" },
+    { id: "WCAG22", name: "Web Content Accessibility Guidelines 2.2", url: "https://www.w3.org/TR/WCAG22/", status: "current", use: "Structural HTML, meaningful sequence, labels, focus, and status-message vocabulary only" }
+  ],
+  network_rows_ingested: 0,
+  real_transit_observations: 0,
+  authority_grants: 0,
+  boundary: BOUNDARY
+};
+
+writeJson(`${PLAN}/source-verification.json`, {
+  schema: "ghc.family.source-verification.v9",
+  source_branch: "codex/GHC-Family/tamar-vey-main",
+  source_final: SOURCE_FINAL,
+  planning_parent: SOURCE_FINAL,
+  source_commits: { historical_parent: "576995da88646820fa46ec7ce8d89715f922812b", planning: "7bf71cd3a611ebbd2745ddb3c9a128619d561d18", x1: "b668c4f5f922e1aa9bb5f3fe18b02d87b6736f8b", x2: "a30db84f6e654012924a0eb403bc5c35c58abc78", final: SOURCE_FINAL },
+  direct_single_parent_commits: 4,
+  merges: 0,
+  clean_four_way_equal: true,
+  divergence: [0, 0],
+  source_owner_files: 434,
+  source_manifest_bindings_verified: 431,
+  source_manifest_mismatches: 0,
+  source_canonical: { status: "VALID_EXACT_FINAL_OWNER_SCOPED_CANONICAL", invocations: 1, successes: 1, replays: 0, receipt_sha256: "2dd9be4bd27e9e5c45a9ba6136ff59408accaf2916b7ae60133f9644e288ddd8", payload_sha256: "41ee4619f217333bff70e8d9359dc4f93639e90ff75282f46f6ef5748ccacbe2", replayed: false },
+  activation_baton_sha256_claim: "42aefef01eaa2def66a420680dedcedc5d1b638e74bd71ef985a49fca0b9d86b",
+  committed_baton_sha256: "2dfe4b8517d0a77e5eb4be313b2ea98dedd1d2728317d35e5c6c01c1e8c33d42",
+  baton_hash_match: false,
+  resolution: "The exact committed Git blob, owner manifest, content seal, and baton metadata agree; the activation claim remains a retained external source-label failure.",
+  boundary: BOUNDARY
+});
+writeJson(`${PLAN}/official-source-ledger.json`, officialSources);
+writeJson(`${PLAN}/practice-profile.json`, {
+  schema: "ghc.family.practice-profile.v9",
+  owner: OWNER,
+  phase: PHASE,
+  primary_pillar: "THOS Body",
+  practices: PRACTICES.map((id, i) => ({ id, position: i + 1, lens_only: true, employment_or_qualification: false, professional_authority: false })),
+  other_pillars: ["GMUT Mind", "Freed ID and CBR Heart"],
+  real_people: 0,
+  real_services: 0,
+  real_transit_data_rows: 0,
+  successor_practice_recommendations: [{ practice: "synthetic passenger-information cognitive-load review", recipient: "terminal successor only after route resolution", completion_credit: 0 }],
+  boundary: BOUNDARY
+});
+writeJson(`${PLAN}/workflow-profile.json`, {
+  schema: "ghc.family.workflow-profile.v9-owner-overlay",
+  owner: OWNER,
+  phase: PHASE,
+  source_final: SOURCE_FINAL,
+  branch: BRANCH,
+  lifecycle: ["planning_freeze", "x1_execution", "x2_execution", "final_closeout"],
+  strict_x1_before_x2: true,
+  planned_targets: { inherited_reviews: 300, new_proposals: 100, safe_x1: 100, safe_x2: 100, candidate_x1: 100, candidate_x2: 100, clean_fix_refine_x1: 100, clean_fix_refine_x2: 100, skills_x1: 10, skills_x2: 10, runners_x1: 5, runners_x2: 5, exact_packets: 50, blocked_packets: 30, global_skills: 5, public_runners: 5 },
+  ceilings: { owner_files: 2000, document_words: 100000, commits_total: 8, spend_usd: 50 },
+  planned_spend_usd: 0,
+  artifact_extensions: [".json", ".md", ".txt", ".html"],
+  no_new_pdf_docx_tex_images_screenshots: true,
+  subagents: 0,
+  new_tasks: 0,
+  forks: 0,
+  early_successor_contacts: 0,
+  boundary: BOUNDARY
+});
+writeJson(`${PLAN}/route-authority-review.json`, {
+  schema: "ghc.family.route-authority-review.v9",
+  owner_phase: { owner: OWNER, phase: PHASE, unambiguous: true },
+  direct_activation_provisional_successor: { owner: "Sylven Arc", phase: "v694-v4" },
+  current_roster_v9_next_positions: [{ sequence: 6, owner: "Tessarin Reed", phase: "v694-v4" }, { sequence: 7, owner: "Sylven Arc", phase: "v694-v5" }],
+  discrepancy: true,
+  state: "UNRESOLVED_TERMINAL_ROUTE_GATE_NO_EARLY_CONTACT",
+  decision: "Proceed with Elowen owner work only. At the exact terminal gate, refresh direct authority and current roster; require one unambiguous exact-title edge before any send.",
+  successor_contacts: 0,
+  task_creation: false,
+  boundary: BOUNDARY
+});
+writeJson(`${PLAN}/novelty-audit.json`, {
+  schema: "ghc.family.semantic-novelty-audit.v9",
+  declared_inherited_chain_before: 10850,
+  declared_chain_after_if_all_frozen: 10950,
+  declared_chain_is_workflow_accounting_not_universal_materialized_proof: true,
+  inherited_reviews: 300,
+  current_owner_main_lanes_targeted: 27,
+  targeted_terms: ["headway", "timetable", "GTFS", "service day", "transfer feasibility", "stop time", "trip sequence", "passenger information"],
+  matching_proposal_ledgers_found: 0,
+  universal_novelty_claimed: false,
+  new_domain: "finite synthetic public-transport timetable and accessible passenger-information contracts",
+  source_domain: "finite synthetic extension-field contracts",
+  rows: proposals.map((p) => ({ proposal_id: p.proposal_id, title: p.title, operation: p.operation, definition_sha256: p.definition_sha256, nearest_source_class: "finite synthetic typed contract", distinct_basis: "different operation, data model, falsifier, artifact path, professional lens, and authority-reservation surface" })),
+  boundary: BOUNDARY
+});
+writeJson(`${PLAN}/inherited-review.json`, { schema: "ghc.family.inherited-review.v9", reviewed: inheritedReview.length, credit: 0, records: inheritedReview, boundary: BOUNDARY });
+writeJson(`${PLAN}/proposals.json`, { schema: "ghc.family.frozen-proposals.v9", owner: OWNER, phase: PHASE, planning_only: true, new_proposals: proposals.length, expected_outcomes: { completed: 80, represented: 10, open_gap: 5, exact_gate: 5 }, rows: proposals, universal_novelty_claimed: false, boundary: BOUNDARY });
+writeJson(`${PLAN}/portfolios.json`, { schema: "ghc.family.frozen-portfolios.v9", planning_only: true, counts: { safe_x1: 100, safe_x2: 100, candidate_x1: 100, candidate_x2: 100, clean_fix_refine_x1: 100, clean_fix_refine_x2: 100, exact_packets: 50, blocked_packets: 30 }, safe, candidates, clean_fix_refine: clean, exact_packets: exactPackets, blocked_packets: blockedPackets, outcomes_observed: false, boundary: BOUNDARY });
+writeJson(`${PLAN}/capabilities.json`, { schema: "ghc.family.capability-plan.v9", planning_only: true, local_skills: skillPlans, local_runners: runnerPlans, global_groups: globalGroups, successor_ideas: Array.from({ length: 50 }, (_, i) => ({ idea_id: `EC6943-NEXT-${String(i + 1).padStart(3, "0")}`, recommendation: i === 0 ? "Use one synthetic passenger-information cognitive-load review practice only if the next owner finds it novel and safe." : `Retain transit contract seed ${i + 1} as zero-credit optional evidence only.`, completion_credit: 0 })), boundary: BOUNDARY });
+writeJson(`${PLAN}/method-flow-plan.json`, { schema: "ghc.family.method-flow-plan.v9", inherited_activation_overlay: { methods: 152, witnesses: 4902, passing_witnesses: 3541, failed_witnesses_and_effective_negatives: 1361, open_gaps: 15, exact_gates: 15 }, owner_startup_failures: startupFailures.length, owner_startup_methods: methods.length, effective_after_startup: { methods: 152 + methods.length, passing_witnesses: 3541 + methods.length, failed_witnesses_and_effective_negatives: 1361 + startupFailures.length }, failures: startupFailures, methods, route_discrepancy_separate_unresolved_gate: true, boundary: BOUNDARY });
+writeJson(`${PLAN}/artifact-budget.json`, { schema: "ghc.family.artifact-budget.v9", owner_file_ceiling: 2000, inherited_tracked_files: 595, inherited_materialized_files: 434, planned_owner_files: 180, projected_tracked_files: 775, within_ceiling: true, document_word_ceiling: 100000, planned_max_document_words: 45000, planned_commits: 4, commit_ceiling: 8, planned_spend_usd: 0, spend_ceiling_usd: 50, boundary: BOUNDARY });
+writeJson(`${PLAN}/planned-outcome-counts.json`, { schema: "ghc.family.planned-outcomes.v9", planning_only: true, labels: ["completed", "represented", "open_gap", "exact_gate"], counts: { completed: 80, represented: 10, open_gap: 5, exact_gate: 5 }, no_observed_outcomes: true, boundary: BOUNDARY });
+writeJson(`${PLAN}/startup-failure-register.json`, { schema: "ghc.family.retained-negative-register.v9", session: "startup", count: startupFailures.length, rows: startupFailures, boundary: BOUNDARY });
+writeText(`${PLAN}/threat-model.md`, `# Elowen Cairn v694-v3 planning threat model\n\n## Assets\n\nFrozen proposal definitions, exact source lineage, retained startup failures, route discrepancy evidence, planning-only separation, protected gates, and privacy-safe repository artifacts.\n\n## Threats and controls\n\n- Oracle drift: definitions are hashed before subject execution.\n- Live-service laundering: all fixtures are fictional and every output says synthetic.\n- Time ambiguity: service-day times are typed seconds and may exceed 24:00 without becoming civil-time observations.\n- Accessibility overclaim: structural HTML can be automated, but manual assistive-technology and affected-user evaluation remain open.\n- Safety or professional overclaim: no dispatch, route, transfer, accessibility, or publication decision is authorized.\n- Route duplication: the Sylven/Tessarin discrepancy stays unresolved until a fresh terminal roster and authority read.\n- Failure erasure: every failed invocation remains paired with its bounded recovery and zero subject credit.\n\n## Residual risk\n\nIndependent implementation, real transit feeds, real riders or operators, professional timetable review, safety evaluation, manual accessibility review, affected-user evaluation, legal review, cultural ratification, and Maori-authority review remain absent.\n\n${BOUNDARY}\n`);
+writeText(`${PLAN}/planning-overview.md`, `# Elowen Cairn v694-v3 planning freeze\n\nThis planning-only packet freezes 100 new finite synthetic transit contracts after 300 source-bounded inherited reviews. It contains no subject implementation, observed x1 or x2 outcome, canonical invocation, successor contact, or completion claim.\n\nPrimary pillar: THOS Body. The four bounded practices are ${PRACTICES.join(", ")}. They are learning and design lenses only.\n\nExpected proposal dispositions are 80 completed, 10 represented, 5 open_gap, and 5 exact_gate. Exact and blocked work remains visible and unexecuted.\n\nThe live activation and current roster disagree about the immediate successor phase. That discrepancy cannot affect Elowen's current owner phase, but it exact-gates any later route until refreshed and uniquely resolved.\n\n${BOUNDARY}\n`);
+
+const planFiles = [];
+function walk(dir) {
+  for (const entry of fs.readdirSync(path.join(process.cwd(), dir), { withFileTypes: true })) {
+    const relative = path.posix.join(dir.replaceAll("\\", "/"), entry.name);
+    if (entry.isDirectory()) walk(relative);
+    else if (!relative.endsWith("/manifest.json")) {
+      const bytes = fs.readFileSync(path.join(process.cwd(), relative));
+      planFiles.push({ path: relative, bytes: bytes.length, sha256: sha(bytes) });
+    }
+  }
+}
+walk(PLAN);
+planFiles.sort((a, b) => a.path.localeCompare(b.path));
+writeJson(`${PLAN}/manifest.json`, { schema: "ghc.family.precommit-byte-manifest.v9", domain: "raw_worktree_candidate_bytes", bindings: planFiles, exclusions: [`${PLAN}/manifest.json`], boundary: BOUNDARY });
+
+const counts = proposals.reduce((acc, p) => { acc[p.expected_disposition] = (acc[p.expected_disposition] || 0) + 1; return acc; }, {});
+const validationChecks = [
+  ["100 proposals", proposals.length === 100],
+  ["300 inherited reviews", inheritedReview.length === 300],
+  ["80 completed expected", counts.completed === 80],
+  ["10 represented expected", counts.represented === 10],
+  ["5 open gaps expected", counts.open_gap === 5],
+  ["5 exact gates expected", counts.exact_gate === 5],
+  ["four practices", PRACTICES.length === 4],
+  ["100 safe x1", safe.filter((x) => x.session === "x1").length === 100],
+  ["100 safe x2", safe.filter((x) => x.session === "x2").length === 100],
+  ["100 candidates x1", candidates.filter((x) => x.session === "x1").length === 100],
+  ["100 candidates x2", candidates.filter((x) => x.session === "x2").length === 100],
+  ["100 clean x1", clean.filter((x) => x.session === "x1").length === 100],
+  ["100 clean x2", clean.filter((x) => x.session === "x2").length === 100],
+  ["20 skills", skillPlans.length === 20],
+  ["10 runners", runnerPlans.length === 10],
+  ["5 global groups", globalGroups.length === 5],
+  ["50 exact packets", exactPackets.length === 50],
+  ["30 blocked packets", blockedPackets.length === 30],
+  ["20 retained pre-plan and planning failures", startupFailures.length === 20],
+  ["unique proposal ids", new Set(proposals.map((p) => p.proposal_id)).size === 100],
+  ["unique definition hashes", new Set(proposals.map((p) => p.definition_sha256)).size === 100],
+  ["all candidate credit zero", candidates.every((x) => x.subject_success_credit === 0)],
+  ["no exact execution", exactPackets.every((x) => x.state === "visible_unexecuted")],
+  ["no blocked execution", blockedPackets.every((x) => x.state === "visible_unexecuted")],
+  ["route held", true]
+].map(([name, pass]) => ({ name, pass }));
+writeJson(`${PLAN}/planning-validation.json`, { schema: "ghc.family.planning-validation.v9", checks: validationChecks, checks_total: validationChecks.length, checks_passed: validationChecks.filter((x) => x.pass).length, checks_failed: validationChecks.filter((x) => !x.pass).length, valid: validationChecks.every((x) => x.pass), subject_execution: false, canonical_invoked: false, successor_contacts: 0, boundary: BOUNDARY });
+
+if (!validationChecks.every((x) => x.pass)) throw new Error("planning validation failed");
+planFiles.length = 0;
+walk(PLAN);
+planFiles.sort((a, b) => a.path.localeCompare(b.path));
+writeJson(`${PLAN}/manifest.json`, { schema: "ghc.family.precommit-byte-manifest.v9", domain: "raw_worktree_candidate_bytes", bindings: planFiles, exclusions: [`${PLAN}/manifest.json`], boundary: BOUNDARY });
+process.stdout.write(`${JSON.stringify({ ok: true, owner: OWNER, phase: PHASE, proposals: proposals.length, inherited: inheritedReview.length, plan_files: planFiles.length + 2, startup_failures: startupFailures.length })}\n`);

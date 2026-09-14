@@ -1,0 +1,83 @@
+"use strict";
+
+const fs = require("node:fs");
+const path = require("node:path");
+const crypto = require("node:crypto");
+
+const BASE = "docs/elowen-cairn/v694-v3/plan";
+const root = process.cwd();
+const read = (name) => JSON.parse(fs.readFileSync(path.join(root, BASE, name), "utf8"));
+const hash = (bytes) => crypto.createHash("sha256").update(bytes).digest("hex");
+const proposals = read("proposals.json");
+const inherited = read("inherited-review.json");
+const portfolios = read("portfolios.json");
+const capabilities = read("capabilities.json");
+const routes = read("route-authority-review.json");
+const methods = read("method-flow-plan.json");
+const manifest = read("manifest.json");
+const outcomes = proposals.rows.reduce((acc, row) => { acc[row.expected_disposition] = (acc[row.expected_disposition] || 0) + 1; return acc; }, {});
+const issues = [];
+const check = (condition, issue) => { if (!condition) issues.push(issue); };
+
+check(proposals.planning_only === true, "proposals not planning-only");
+check(proposals.rows.length === 100, "proposal count");
+check(inherited.records.length === 300, "inherited review count");
+check(new Set(proposals.rows.map((row) => row.proposal_id)).size === 100, "duplicate proposal ids");
+check(new Set(proposals.rows.map((row) => row.definition_sha256)).size === 100, "duplicate definition hashes");
+check(JSON.stringify(outcomes) === JSON.stringify({ completed: 80, represented: 10, open_gap: 5, exact_gate: 5 }), "outcome counts");
+for (const row of proposals.rows) {
+  for (const key of ["hypothesis", "null_or_failure_condition", "approval_class", "execution_lane", "official_or_primary_source_needs", "concrete_artifacts", "falsifier_or_acceptance_gate", "rollback_or_recovery", "protected_gates", "expected_disposition"]) check(Object.hasOwn(row, key), `missing ${key}: ${row.proposal_id}`);
+  check(["completed", "represented", "open_gap", "exact_gate"].includes(row.expected_disposition), `bad label: ${row.proposal_id}`);
+  check(row.candidate_subjects.length === 2, `candidate definitions: ${row.proposal_id}`);
+}
+for (const session of ["x1", "x2"]) {
+  check(portfolios.safe.filter((row) => row.session === session).length === 100, `safe ${session}`);
+  check(portfolios.candidates.filter((row) => row.session === session).length === 100, `candidates ${session}`);
+  check(portfolios.clean_fix_refine.filter((row) => row.session === session).length === 100, `clean ${session}`);
+}
+check(portfolios.exact_packets.length === 50 && portfolios.exact_packets.every((row) => row.state === "visible_unexecuted"), "exact packets");
+check(portfolios.blocked_packets.length === 30 && portfolios.blocked_packets.every((row) => row.state === "visible_unexecuted"), "blocked packets");
+check(capabilities.local_skills.length === 20, "skill plan count");
+check(capabilities.local_runners.length === 10, "runner plan count");
+check(capabilities.global_groups.length === 5, "global group count");
+check(routes.discrepancy === true && routes.state === "UNRESOLVED_TERMINAL_ROUTE_GATE_NO_EARLY_CONTACT", "route discrepancy not held");
+check(methods.owner_startup_failures === 20 && methods.failures.every((row) => row.subject_success_credit === 0), "startup failures");
+for (const binding of manifest.bindings) {
+  const target = path.join(root, binding.path);
+  check(fs.existsSync(target), `manifest missing ${binding.path}`);
+  if (fs.existsSync(target)) {
+    const bytes = fs.readFileSync(target);
+    check(bytes.length === binding.bytes, `manifest bytes ${binding.path}`);
+    check(hash(bytes) === binding.sha256, `manifest hash ${binding.path}`);
+  }
+}
+const forbidden = /(?:<codex_delegation>|(?:[A-Za-z]:\\)|(?:api[_-]?key\s*[:=])|(?:token\s*[:=]))/i;
+const scannerCandidates = [];
+for (const binding of manifest.bindings) {
+  if (!/\.(?:json|md|txt|html)$/.test(binding.path)) issues.push(`format ${binding.path}`);
+  const text = fs.readFileSync(path.join(root, binding.path), "utf8");
+  if (forbidden.test(text)) {
+    if (binding.path.endsWith("/tools/validate-plan.txt")) scannerCandidates.push({ path: binding.path, classification: "scanner_definition_metadata", confirmed_payload_hit: false });
+    else issues.push(`privacy candidate ${binding.path}`);
+  }
+}
+
+const receipt = {
+  schema: "ghc.family.planning-validator.v9",
+  owner: "Elowen Cairn",
+  phase: "v694-v3",
+  valid: issues.length === 0,
+  issue_count: issues.length,
+  issues,
+  proposals: proposals.rows.length,
+  inherited_reviews: inherited.records.length,
+  manifest_entries: manifest.bindings.length,
+  scanner_candidates: scannerCandidates,
+  confirmed_privacy_hits: 0,
+  subject_execution: false,
+  canonical_invoked: false,
+  successor_contacts: 0,
+  terminal_verdict: "NOT_READY_FOR_STAGE_20"
+};
+process.stdout.write(`${JSON.stringify(receipt)}\n`);
+if (issues.length) process.exitCode = 1;
