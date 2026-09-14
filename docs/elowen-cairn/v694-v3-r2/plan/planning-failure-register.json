@@ -1,0 +1,34 @@
+{
+  "schema": "ghc.family.planning-failures.v10",
+  "owner": "Elowen Cairn",
+  "phase": "v694-v3-r2",
+  "count": 2,
+  "rows": [
+    {
+      "negative_id": "EC6943R2-PLAN-N001",
+      "method_id": "EC6943R2-PLAN-M001",
+      "stage": "planning",
+      "failure": "The first planning validator rejected duplicate canonical request fingerprints caused by two repeated edge fixtures.",
+      "original_success_credit": 0,
+      "recovery": "Retain the invalid receipt, distinguish the two edge fixtures with explicit input context, rebuild the uncommitted plan, and rerun only the failed planning validator.",
+      "recovery_passed": true,
+      "failed_witness_retained": true,
+      "x1_started": false,
+      "boundary": "The corrected freeze does not erase or promote the invalid first planning attempt."
+    },
+    {
+      "negative_id": "EC6943R2-PLAN-N002",
+      "method_id": "EC6943R2-PLAN-M002",
+      "stage": "planning",
+      "failure": "The first exact git add matched the new owner files outside the inherited worktree-specific sparse pattern and staged zero paths.",
+      "original_success_credit": 0,
+      "recovery": "Inspect the inherited sparse configuration, set the worktree-specific sparse pattern to the exact new owner prefix, and rerun only the exact staging operation.",
+      "recovery_passed": true,
+      "failed_witness_retained": true,
+      "staged_paths_at_failure": 0,
+      "repository_commit_created_at_failure": false,
+      "boundary": "The sparse-pattern recovery preserves the failed zero-staging witness and changes no inherited branch."
+    }
+  ],
+  "boundary": "The failed validator remains zero-credit evidence after the narrow corrected pass."
+}

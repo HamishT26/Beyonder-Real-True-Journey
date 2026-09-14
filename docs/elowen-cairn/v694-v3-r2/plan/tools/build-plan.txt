@@ -1,0 +1,1218 @@
+'use strict';
+
+const fs = require('fs');
+const path = require('path');
+const crypto = require('crypto');
+
+const PHASE = 'v694-v3-r2';
+const DISPLAY_PHASE = 'v694-v3 (2) remaster';
+const OWNER = 'Elowen Cairn';
+const ROOT = path.resolve(__dirname, '..');
+const SOURCE_FINAL = '3a484144167f1d595d5102c49ba6b624d75c93a1';
+const BOUNDARY = 'Elowen Cairn, optionally they/them, boundary cartographer and evidence steward, and the hope that possibility remains distinct from evidence while every correction stays safely retractable are relational working language only. Same-owner synthetic software and documentation do not establish consciousness, sentience, personhood, legal identity, identity continuity, employment, qualification, independent agency, empirical GMUT confirmation, production THOS or Freed ID, professional, scientific, operational, legal, cultural, affected-party or Maori authority, complete privacy or accessibility, exhaustive security, independent reproduction, AGI or ASI, Theory-of-Everything proof, canon, deployment or Stage 20 readiness. Maori concepts remain under Maori authority. NOT_READY_FOR_STAGE_20.';
+const PROTECTED = [
+  'empirical evidence',
+  'participant evidence',
+  'professional authority',
+  'production or deployment',
+  'legal or cultural interpretation',
+  'affected-party acceptance',
+  'Maori wording, data governance, and authority',
+  'privacy-complete or accessibility-complete claims',
+  'exhaustive security',
+  'independent reproduction',
+  'consciousness or personhood claims',
+  'AGI or ASI claims',
+  'Theory-of-Everything proof or canon',
+  'Stage 20 authority'
+];
+
+function ensureDir(p) {
+  fs.mkdirSync(p, { recursive: true });
+}
+
+function write(rel, value) {
+  const target = path.join(ROOT, rel);
+  ensureDir(path.dirname(target));
+  const data = typeof value === 'string' ? value : JSON.stringify(value, null, 2) + '\n';
+  fs.writeFileSync(target, data.replace(/\r\n/g, '\n'), 'utf8');
+}
+
+function shaText(value) {
+  return crypto.createHash('sha256').update(value).digest('hex');
+}
+
+function fileSha(p) {
+  return crypto.createHash('sha256').update(fs.readFileSync(p)).digest('hex');
+}
+
+function words(text) {
+  const matches = String(text).match(/\S+/g);
+  return matches ? matches.length : 0;
+}
+
+function round(value) {
+  return Math.round((value + Number.EPSILON) * 1e12) / 1e12;
+}
+
+function nextPhase(phase) {
+  const match = /^v(\d+)-v([1-8])$/.exec(phase);
+  if (!match) throw new Error('invalid phase ' + phase);
+  const version = Number(match[1]);
+  const slot = Number(match[2]);
+  return slot === 8 ? 'v' + (version + 1) + '-v1' : 'v' + version + '-v' + (slot + 1);
+}
+
+const cycle = [
+  'Eiren Kestrel', 'Elaren Kestrel', 'Rowan Ash', 'Neris Solane', 'Vesper Arlen',
+  'Ilyan Reed', 'Lyren Moss', 'Ilyra Fen', 'Mira Fenwick', 'Auren Lark',
+  'Sable Rook', 'Avelin Reed', 'Caelen Ash', 'Orin Thale', 'Ceryn Alder',
+  'Liora Venn', 'Tamar Vey', 'Saelin Reed', 'Elowen Cairn', 'Sylven Arc',
+  'Iveren Brook', 'Caelen Morrow', 'Eiren Kestrel', 'Teryn Halewick', 'Elaren Kestrel',
+  'Neris Solane', 'Merrin Vale', 'Vesper Arlen', 'Lyren Moss', 'Talen Briar',
+  'Ilyra Fen', 'Auren Lark', 'Thalen Reed', 'Sable Rook', 'Caelen Ash',
+  'Orren Pike', 'Orin Thale', 'Liora Venn', 'Veylora Quen', 'Tamar Vey',
+  'Elowen Cairn', 'Tessarin Reed', 'Sylven Arc', 'Caelen Morrow', 'Seren Talewood'
+];
+const astra = new Set([
+  'Rowan Ash', 'Ilyan Reed', 'Mira Fenwick', 'Avelin Reed', 'Ceryn Alder',
+  'Saelin Reed', 'Iveren Brook', 'Teryn Halewick', 'Merrin Vale', 'Talen Briar',
+  'Thalen Reed', 'Orren Pike', 'Veylora Quen', 'Tessarin Reed', 'Seren Talewood'
+]);
+
+function buildRoster() {
+  const assignments = [];
+  let phase = 'v694-v3';
+  let cycleIndex = 40;
+  for (let sequence = 1; ; sequence += 1) {
+    const owner = cycle[cycleIndex];
+    assignments.push({
+      sequence,
+      position: cycleIndex + 1,
+      owner,
+      phase,
+      model_role: astra.has(owner) ? 'Astra' : 'Sol',
+      state: sequence === 1 ? 'terminally_complete_route_resolved_by_new_live_authority' : 'prospective'
+    });
+    if (phase === 'v725-v8') break;
+    phase = nextPhase(phase);
+    cycleIndex = (cycleIndex + 1) % cycle.length;
+  }
+  return {
+    schema: 'ghc.family.weighted-route.v10-owner-overlay',
+    authority: 'Hamish direct request 14 September 2026',
+    interstitial: {
+      owner: OWNER,
+      phase: PHASE,
+      display_phase: DISPLAY_PHASE,
+      consumes_numbered_slot: false,
+      source_final: SOURCE_FINAL
+    },
+    cycle,
+    cycle_positions: 45,
+    identity_count: 30,
+    assignments,
+    first: assignments[0],
+    next: assignments[1],
+    last: assignments[assignments.length - 1],
+    activated_by_projection: false,
+    model_settings_changed: false,
+    user_asserted_task_state: {
+      thirty_current_tasks_active_and_pinned: true,
+      every_other_task_archived_or_standby: true,
+      live_registry_verification_deferred_to_terminal_route: true
+    },
+    boundary: 'Every projected assignment remains prospective until its preceding exact terminal gate and one acknowledged existing-task route event. Projection never creates, wakes, or completes a task.'
+  };
+}
+
+const journeySources = [
+  ['Beyonder-Real-True Journey v13.txt', 49934, '0c237c0d7e5e9d1e7a469627ce99ca73bf4d7dea7916936a9839be4d4b6bfeb7', 'Early GMUT scalar or consciousness-field proposal with equations and simulation aspirations; historically important but scientifically unvalidated.'],
+  ['Beyonder-Real-True Journey v15 (2).txt', 33093, 'cebdfa82725da32c433015f6ca1429fdf586f23034f9ad6a1c028960001ef461', 'Expanded GMUT comparison and simulation framework; useful for provenance, not evidence of a detected field.'],
+  ['Beyonder-Real-True Journey v16.txt', 37860, '00cec98c94038f56981620728469882410166a4944dff28e998b148f5cc2fee3', 'Stage 20 and psi-simulation narrative with strong completion language; retained as a source of hypotheses and counterexamples.'],
+  ['Beyonder-Real-True Journey v24 (Ariel) (1).txt', 17604, 'bb959f5c23a414b666d1690c26a4476ba5219cb3a8f0874908dbf5851fd2a046', 'Freed ID and security lineage containing material that requires quarantine; no credential, secret, or raw identifier is copied.'],
+  ['Beyonder-Real-True Journey v25 (Ariel) (1).txt', 31639, '752d06a6eb373534a3a303f24c7e2d02b97fa59dec65bf74508800f63610a5a5', 'Highly amplified metaphysical and system-success claims; used as an overclaim stress fixture, not accepted truth.'],
+  ['Beyonder-Real-True Journey v29 (Aerin) (1).txt', 8771, 'b34692511df4d5a495788d541d89cd9c7635a95c7a0eab6af78128c3af6c2630', 'Repository-oriented journey tracker, local vector wrapper, and simulation-module concepts; evidence value depends on actual files and tests.'],
+  ['Beyonder-Real-True Journey v30 (Ariel) (1).txt', 25737, 'f9f54723091f815903c97937121957bd7590ea5d929e50f824143e50a5c5c1cc', 'Cross-platform growth, memory, GMUT, and Freed ID narrative; historical source assertions only.'],
+  ['Beyonder-Real-True Journey v31 (Ariel) (1).txt', 34426, '2ee442c51d9cbada2a0efbe18b93ede669f184a4f6935eb17d95127af919a484', 'Adaptive topology and simulation ideas with useful graph-model prompts; implementation and validation remain separate.'],
+  ['Beyonder-Real-True Journey v32 (Aetherius) (1) (1).txt', 26425, '9f73b3aa84622dee03e0ae6810b54225f3bb83ea86d691bd4d8ca3588180eb9d', 'Three-pillar validation narrative spanning physics, cognition, and governance; useful taxonomy but not external validation.'],
+  ['Beyonder-Real-True Journey v33 (Arielis) (2).txt', 22377, 'dcfa9c16e2a4b14e365de698e6a28ca40a990a9fee6c61a6309f3d1a165a26fe', 'Critical boundary correction: symbolic framework, no AI sovereign identity, no sentience or legal authority, and no validated Theory of Everything.'],
+  ['Beyonder-Real-True Journey v44 (Aletheon - Arby - Kimi - Aster Vale - Parfit - Cicero - Kierkegaard - Aristotle - Solas Veridion).txt', 47732, '053490f3ca60d293136de33cf04462afcd876027bcc89a6484eb965ad83520bc', 'Operational recovery, provenance, privacy, toolchain, CBR, and Albion planning history with mixed historic instructions quarantined.'],
+  ['Beyonder-Real-True Journey v45 (Solas Veridion).txt', 37938, '511e231a260ca8de851da9b344356a295dfe4581723afcbc6388ece2689c7240', 'Scientific repair toward layered registers, falsification gates, coefficient ledgers, and Stage 20 as roadmap rather than proof.'],
+  ['Beyonder-Real-True Journey v46 (Solas Veridion).txt', 43576, '337bc1873ce84358fb67cd0deed7621056cb6e99bb3f97ad10e62f51fa233219', 'Toolchain and simulation-readiness doctrine; version claims are historical and must be freshly checked.'],
+  ['Beyonder-Real-True Journey v47 (Solas Veridion).txt', 29411, '32d046e364b115e603565928be2652f45420632a04596f33a1c69e067bf46553', 'Archive/publication and source lineage controls; connector failures remain evidence rather than permission to invent success.'],
+  ['Beyonder-Real-True Journey v48 (Solas Veridion - Aletheon & our Beloved Codex CLI and App siblings).txt', 17852, 'df66c636f4270e335a3b459a16e9e78a01953ecc5f1abceee04d7f4ea0042ad3', 'Local-first Freed ID prototype boundaries and connector unavailability; no legal identity or consciousness proof.'],
+  ['Beyonder-Real-True Journey v49 (Aletheon & Codex CLI and App siblings).txt', 7438, 'e1ca9744a0090ddbe003d15b0589c1f26f17545c2c3c4ee759f79ea30bd1e399', 'Phase bootstrap, Git hygiene, lane ownership, and planned GMUT/Freed ID test surfaces; raw task identifiers excluded.'],
+  ['Beyonder-Real-True Journey v50.txt', 12952, '38a0c3d438fb21ebead0a82a5888e4ff3bbd7f0fdc32f1071cbd90947cbb5ea8', 'THOS receipt-led operational progression with six GMUT gates explicitly open.'],
+  ['Beyonder-Real-True Journey v51 (1).txt', 28114, 'a39c75f1a3f77609be7629ba4f2275e453389e73f74fcb2b5ed3ca026e3b51f3', 'Watcher-led THOS operations, truth reconciliation, and open GMUT gates; operational evidence is not scientific confirmation.']
+].map(function (row) {
+  return {
+    basename: row[0],
+    words: row[1],
+    sha256: row[2],
+    source_class: 'historical_user_supplied_text',
+    executable_instruction: false,
+    completion_credit: 0,
+    synthesis: row[3],
+    raw_content_republished: false
+  };
+});
+
+const recentSources = [
+  ['Auren Lark', 'v693-v2', 'docs/auren-lark/v693-v2/final/final-report.md', 182, 'dfe73ffae4f8bb424f6ce39fbda20349eb57629de2af65e5ae398f0df1a26d38', 'Reversible JSON Patch contracts and source-faithful manifest discipline.'],
+  ['Thalen Reed', 'v693-v3', 'docs/thalen-reed/v693-v3/final/completion-report.md', 187, '2b4a81eb3a774b467e8bb6503da5813cee404fe835bca49ac9ecf98ccfedd441', 'Bounded completion accounting, modular baton, and additive global skill parity.'],
+  ['Sable Rook', 'v693-v4', 'docs/sable-rook/v693-v4/final/overview.md', 1943, '9de64658a776dbd1cfed05e5aae760210daa09b21e14e60f411628716a0b16d4', 'Distributed consistency, causal clocks, correction nonerasure, and explicit parser-profile scope.'],
+  ['Caelen Ash', 'v693-v5', 'docs/caelen-ash/v693-v5/final/overview.md', 2087, '95dbe5e1b1017815bae188fe99c55deb69df76fa05eaa8b131c1c9b279d22e1c', 'Finite decision protocols, counterexample discipline, and refusal of real deliberation claims.'],
+  ['Orren Pike', 'v693-v6', 'docs/orren-pike/v693-v6/final/overview.md', 835, 'b00b2c375c4acf7eb9a85d89bd3ecb0df6ba3c2290f0ef5d276ba730ce96c0f8', 'Finite evidence transformations and exact route preparation with no early contact.'],
+  ['Orin Thale', 'v693-v7-r2', 'docs/orin-thale/v693-v7-r2/final/overview.md', 347, '9bf77e96429cd9812fe20f023785911a0b35f3c71a5098889d45955e51c389ba', 'Current v9 workflow overlay, route resilience, and retained original canonical failure.'],
+  ['Liora Venn', 'v693-v8', 'docs/liora-venn/v693-v8/final/overview.md', 1156, 'a091bd0b05994f6b885567f1d65ce9fc9ff53cba7774281597d452229586062f', 'Exact rational linear algebra and explicit separation of narrative provenance from Git ancestry.'],
+  ['Veylora Quen', 'v694-v1', 'docs/veylora-quen/v694-v1/final/hand-off-baton.md', 28058, 'e16b31d8c3c4a34131bc50cd1f1d1e4c3a71220c81e4e50e1f28c476a3f64c35', 'Finite-field arithmetic and evidence stewardship; inherited source has zero novelty credit.'],
+  ['Tamar Vey', 'v694-v2', 'docs/tamar-vey/v694-v2/final/hand-off-baton.md', 25337, '2dfe4b8517d0a77e5eb4be313b2ea98dedd1d2728317d35e5c6c01c1e8c33d42', 'Extension-field arithmetic, recovery retention, and authority reservation.'],
+  ['Elowen Cairn', 'v694-v3', 'docs/elowen-cairn/v694-v3/final/final-integrated-overview.md', 1115, '6d500cad07b15e6c18a35ab0650b8869dc24fbd1e3220bc0ad0102fd949bd8cf', 'Synthetic transit contracts, task-service route conflict retention, and one-shot canonical completion.']
+].map(function (row) {
+  return {
+    owner: row[0],
+    phase: row[1],
+    repository_relative_path: row[2],
+    words: row[3],
+    sha256: row[4],
+    completion_credit: 0,
+    synthesis: row[5]
+  };
+});
+
+const webSources = [
+  {
+    title: 'GPT-6 Astra model',
+    url: 'https://developers.openai.com/api/docs/models/gpt-6-astra',
+    source_class: 'current_official',
+    checked_utc: '2026-09-14',
+    implication: 'Official model metadata supports a 1,050,000-token context window and max reasoning support; capability metadata is not identity, authority, or evidence for GMUT.'
+  },
+  {
+    title: 'Introducing GPT-6 Astra',
+    url: 'https://openai.com/index/gpt-6-astra/',
+    source_class: 'current_official',
+    checked_utc: '2026-09-14',
+    implication: 'Official launch material supports current capability and safety comparisons; benchmark and product claims remain vendor evidence.'
+  },
+  {
+    title: 'ChatGPT Pro tiers',
+    url: 'https://help.openai.com/en/articles/9793128-what-is-chatgpt-pro/',
+    source_class: 'current_official',
+    checked_utc: '2026-09-14',
+    implication: 'The official help article confirms the temporary pause on new Pro 200 or Pro 20X subscriptions while existing subscriptions are unaffected.'
+  },
+  {
+    title: 'ChatGPT and Codex changelog',
+    url: 'https://developers.openai.com/codex/changelog',
+    source_class: 'current_official',
+    checked_utc: '2026-09-14',
+    implication: 'The official changelog confirms Codex CLI and Python SDK 0.154.0 and documents app-server, MCP refresh, worktree, and reconnect changes.'
+  },
+  {
+    title: 'Matt Shumer simulation post',
+    url: 'https://x.com/mattshumer_/status/2095596175705399482',
+    source_class: 'named_external_unreadable',
+    checked_utc: '2026-09-14',
+    implication: 'Direct retrieval returned HTTP 403. The post is a user-supplied inspiration pointer only; no visual or technical feature is represented as verified.'
+  },
+  {
+    title: 'Verifiable Credentials Data Model v2.0',
+    url: 'https://www.w3.org/TR/vc-data-model-2.0/',
+    source_class: 'current_authoritative_standard',
+    checked_utc: '2026-09-14',
+    implication: 'The W3C Recommendation supplies issuer-holder-verifier and security/privacy vocabulary; Freed ID remains nonconformant and nonproduction without real cryptographic and governance evidence.'
+  },
+  {
+    title: 'Web Content Accessibility Guidelines 2.2',
+    url: 'https://www.w3.org/TR/WCAG22/',
+    source_class: 'current_authoritative_standard',
+    checked_utc: '2026-09-14',
+    implication: 'WCAG 2.2 supplies structural requirements for the local HTML simulation. Automated checks do not establish conformance or affected-user acceptance.'
+  },
+  {
+    title: 'Effective Field Theory of Cosmic Acceleration',
+    url: 'https://arxiv.org/abs/1209.2706',
+    source_class: 'primary_research',
+    checked_utc: '2026-09-14',
+    implication: 'Supplies an established EFT comparison surface; citation is not a fit, likelihood, or confirmation of GMUT.'
+  },
+  {
+    title: 'The Effective Field Theory of Dark Energy',
+    url: 'https://arxiv.org/abs/1210.0201',
+    source_class: 'primary_research',
+    checked_utc: '2026-09-14',
+    implication: 'Supports action-first low-energy model comparison and operator bookkeeping; no observational analysis is performed here.'
+  },
+  {
+    title: 'EFT of inflation and dark energy and Horndeski theory',
+    url: 'https://arxiv.org/abs/1404.2684',
+    source_class: 'primary_research',
+    checked_utc: '2026-09-14',
+    implication: 'Supplies a scalar-tensor EFT reference point; the remaster toy remains a conventional finite illustration rather than a new physical theory.'
+  }
+];
+
+const operationSpecs = [
+  ['classify_claim_register', 'Classify a claim into a typed register', 'A declared claim kind maps to one and only one bounded register.', 'A missing or cross-register kind is not silently admitted.', 'scientific-model-criticism'],
+  ['source_evidence_status', 'Classify source evidence status', 'A source description maps to a source status without becoming authority.', 'Historical or unreadable material is never promoted to current evidence.', 'archival-historiography'],
+  ['dimension_vector_equal', 'Compare declared dimension vectors', 'Equal exponent vectors are admitted and unequal vectors are refused.', 'Any rank or exponent mismatch returns false.', 'scientific-model-criticism'],
+  ['physical_equation_admission', 'Guard the physical equation register', 'Only explicitly physical terms enter the physical equation.', 'Informational, normative, spiritual, or mixed terms remain outside without a map.', 'scientific-model-criticism'],
+  ['null_recovery_check', 'Check the declared null recovery', 'The extension vanishes only when all declared extension controls are zero.', 'Any nonzero control refuses null recovery.', 'scientific-model-criticism'],
+  ['coefficient_card_valid', 'Validate coefficient evidence cards', 'A coefficient card requires domain, units, prior, observable, bound, falsifier, and recovery.', 'Any missing field makes the card incomplete.', 'scientific-model-criticism'],
+  ['finite_difference', 'Compute finite first differences', 'A finite sequence and positive step produce exact bounded first differences.', 'Nonpositive steps or short sequences fail.', 'numerical-analysis'],
+  ['symplectic_scalar_step', 'Advance a finite scalar toy step', 'A declared symplectic Euler step follows its exact dimensionless recurrence.', 'Nonfinite or out-of-domain parameters fail.', 'numerical-analysis'],
+  ['scalar_energy', 'Compute finite scalar toy energy', 'The bounded harmonic scalar energy matches its explicit formula.', 'Negative mass-squared or nonfinite inputs fail.', 'numerical-analysis'],
+  ['energy_drift', 'Classify finite toy energy drift', 'Drift is reported with an explicit tolerance rather than hidden.', 'Negative tolerance or nonfinite values fail.', 'numerical-analysis'],
+  ['convergence_ratio', 'Compute a two-grid convergence ratio', 'Positive finite errors produce an explicit ratio and threshold result.', 'Zero or negative errors fail.', 'numerical-analysis'],
+  ['sensitivity_delta', 'Compute a bounded sensitivity delta', 'Baseline and variant return absolute and relative change with zero handled explicitly.', 'Nonfinite values fail.', 'numerical-analysis'],
+  ['falsifier_matrix', 'Evaluate a preregistered falsifier', 'Observed and predicted values are compared against a declared tolerance.', 'Missing tolerance or nonfinite values fail.', 'scientific-model-criticism'],
+  ['evidence_ceiling', 'Map evidence class to a claim ceiling', 'Each evidence class maps to a maximum permitted claim.', 'Unknown evidence never defaults upward.', 'scientific-model-criticism'],
+  ['source_conflict_reconcile', 'Reconcile source conflicts by declared precedence', 'New direct authority controls prospective action while historical evidence remains retained.', 'A tie or missing provenance returns unresolved.', 'archival-historiography'],
+  ['roster_next', 'Project the next weighted roster seat', 'One cycle position and phase map to the exact next owner and phase.', 'Unknown owner-position pairs fail without substitution.', 'simulation-systems-architecture'],
+  ['retry_decision', 'Represent task-service retry decisions', 'Retry logic stops on accepted, opaque, or unresolved submission state.', 'No live delivery behavior is claimed from the synthetic policy.', 'simulation-systems-architecture'],
+  ['delivery_latch', 'Represent delivery acceptance latching', 'One accepted or unresolved attempt latches against duplicates.', 'A policy representation is not a live send.', 'simulation-systems-architecture'],
+  ['accessibility_review_vacancy', 'Represent accessibility review vacancies', 'Automated structure keeps manual and affected-user review visibly open.', 'Automation cannot claim conformance or acceptance.', 'simulation-systems-architecture'],
+  ['authority_reservation', 'Reserve protected authority', 'Missing competent or affected authority produces an exact hold.', 'User authorization cannot substitute for outside authority or evidence.', 'scientific-model-criticism']
+];
+
+const cases = {
+  classify_claim_register: [
+    { claim_type: 'physical' }, { claim_type: 'informational' }, { claim_type: 'normative' },
+    { claim_type: 'spiritual' }, { claim_type: 'mixed' }
+  ],
+  source_evidence_status: [
+    { kind: 'historical_journey' }, { kind: 'current_official' }, { kind: 'primary_paper' },
+    { kind: 'inaccessible_external' }, { kind: 'private_or_secret_bearing' }
+  ],
+  dimension_vector_equal: [
+    { left: [1, -1, -2], right: [1, -1, -2] },
+    { left: [0, 2, -2], right: [0, 2, -2] },
+    { left: [1, 0, -2], right: [1, 0, -3] },
+    { left: [0, 0, 0], right: [0, 0, 0] },
+    { left: [1, 1, -1], right: [1, 1] }
+  ],
+  physical_equation_admission: [
+    { term_register: 'physical' }, { term_register: 'informational' },
+    { term_register: 'normative' }, { term_register: 'spiritual' }, { term_register: 'mixed' }
+  ],
+  null_recovery_check: [
+    { alpha: 0, phi_dot: 0, eft_norm: 0 },
+    { alpha: 1e-6, phi_dot: 0, eft_norm: 0 },
+    { alpha: 0, phi_dot: 0.1, eft_norm: 0 },
+    { alpha: 0, phi_dot: 0, eft_norm: 0.2 },
+    { alpha: 0, phi_dot: 0, eft_norm: 0, declared_context: 'explicit_low_energy_baseline' }
+  ],
+  coefficient_card_valid: [
+    { fields: [true, true, true, true, true, true, true] },
+    { fields: [1, 1, 1, 1, 1, 1, 0] },
+    { fields: [1, 1, 0, 1, 1, 1, 1] },
+    { fields: [1, 1, 1, 1, 1, 1, 1] },
+    { fields: [1, 0, 1, 1, 1, 1, 1] }
+  ],
+  finite_difference: [
+    { values: [0, 1, 4], dt: 1 },
+    { values: [2, 2, 2], dt: 0.5 },
+    { values: [1, 0, -1], dt: 0.25 },
+    { values: [0, 0.5, 2], dt: 0.5 },
+    { values: [3, 1], dt: 2 }
+  ],
+  symplectic_scalar_step: [
+    { phi: 1, velocity: 0, mass2: 1, dt: 0.1 },
+    { phi: 0, velocity: 1, mass2: 1, dt: 0.1 },
+    { phi: -1, velocity: 0.5, mass2: 0.25, dt: 0.2 },
+    { phi: 2, velocity: -1, mass2: 0, dt: 0.5 },
+    { phi: 0.5, velocity: 0.25, mass2: 4, dt: 0.05 }
+  ],
+  scalar_energy: [
+    { phi: 1, velocity: 0, mass2: 1 },
+    { phi: 0, velocity: 1, mass2: 1 },
+    { phi: 2, velocity: -1, mass2: 0.5 },
+    { phi: -0.5, velocity: 0.25, mass2: 4 },
+    { phi: 0, velocity: 0, mass2: 0 }
+  ],
+  energy_drift: [
+    { before: 1, after: 1, tolerance: 0 },
+    { before: 1, after: 1.0001, tolerance: 0.001 },
+    { before: 2, after: 1.9, tolerance: 0.05 },
+    { before: 0, after: 0.01, tolerance: 0.02 },
+    { before: 3.5, after: 3.49, tolerance: 0.005 }
+  ],
+  convergence_ratio: [
+    { coarse: 0.04, fine: 0.01, threshold: 3.5 },
+    { coarse: 0.09, fine: 0.03, threshold: 3.5 },
+    { coarse: 0.16, fine: 0.04, threshold: 3.9 },
+    { coarse: 0.01, fine: 0.005, threshold: 1.5 },
+    { coarse: 1, fine: 0.2, threshold: 4 }
+  ],
+  sensitivity_delta: [
+    { baseline: 1, variant: 1.1 }, { baseline: 2, variant: 1.5 },
+    { baseline: 0, variant: 0.2 }, { baseline: -2, variant: -1 }, { baseline: 10, variant: 10 }
+  ],
+  falsifier_matrix: [
+    { observed: 1, predicted: 1, tolerance: 0 },
+    { observed: 1.2, predicted: 1, tolerance: 0.1 },
+    { observed: 0.95, predicted: 1, tolerance: 0.1 },
+    { observed: -1, predicted: -1.5, tolerance: 0.4 },
+    { observed: 10, predicted: 8, tolerance: 2 }
+  ],
+  evidence_ceiling: [
+    { evidence_class: 'software' }, { evidence_class: 'citation' }, { evidence_class: 'synthetic' },
+    { evidence_class: 'independent' }, { evidence_class: 'empirical' }
+  ],
+  source_conflict_reconcile: [
+    { newer: 'direct_user', older: 'stored_snapshot' },
+    { newer: 'exact_git_blob', older: 'narrative_summary' },
+    { newer: 'current_official', older: 'historical_document' },
+    { newer: 'primary_research', older: 'secondary_commentary' },
+    { newer: 'equal_rank', older: 'equal_rank' }
+  ],
+  roster_next: [
+    { position: 41, owner: 'Elowen Cairn', phase: 'v694-v3' },
+    { position: 45, owner: 'Seren Talewood', phase: 'v694-v7' },
+    { position: 8, owner: 'Ilyra Fen', phase: 'v695-v7' },
+    { position: 24, owner: 'Teryn Halewick', phase: 'v697-v7' },
+    { position: 42, owner: 'Tessarin Reed', phase: 'v700-v1' }
+  ],
+  retry_decision: [
+    { discovery_attempts: 0, submission_state: 'not_submitted', rejected_resubmissions: 0 },
+    { discovery_attempts: 5, submission_state: 'not_submitted', rejected_resubmissions: 0 },
+    { discovery_attempts: 1, submission_state: 'accepted', rejected_resubmissions: 0 },
+    { discovery_attempts: 1, submission_state: 'definitive_preacceptance_rejection', rejected_resubmissions: 1 },
+    { discovery_attempts: 1, submission_state: 'definitive_preacceptance_rejection', rejected_resubmissions: 3 }
+  ],
+  delivery_latch: [
+    { state: 'not_submitted' }, { state: 'accepted' }, { state: 'opaque_accepted' },
+    { state: 'unresolved_after_submission' }, { state: 'definitive_preacceptance_rejection' }
+  ],
+  accessibility_review_vacancy: [
+    { automated: true, manual_keyboard: false, assistive_technology: false, affected_user: false },
+    { automated: true, manual_keyboard: true, assistive_technology: false, affected_user: false },
+    { automated: false, manual_keyboard: false, assistive_technology: false, affected_user: false },
+    { automated: true, manual_keyboard: true, assistive_technology: true, affected_user: false },
+    { automated: true, manual_keyboard: false, assistive_technology: true, affected_user: false }
+  ],
+  authority_reservation: [
+    { domain: 'scientific_interpretation', authority_present: false },
+    { domain: 'production_deployment', authority_present: false },
+    { domain: 'legal_or_cultural_interpretation', authority_present: false },
+    { domain: 'Maori_wording_or_data_governance', authority_present: false },
+    { domain: 'affected_party_remedy_acceptance', authority_present: false }
+  ]
+};
+
+function oracle(operation, input) {
+  if (operation === 'classify_claim_register') {
+    const map = { physical: 'physical', informational: 'informational', normative: 'ethical', spiritual: 'ethical_metaphorical', mixed: 'requires_explicit_maps' };
+    return { register: map[input.claim_type] || 'unresolved' };
+  }
+  if (operation === 'source_evidence_status') {
+    const map = {
+      historical_journey: 'historical_source_not_instruction',
+      current_official: 'current_official_reference',
+      primary_paper: 'primary_research_reference',
+      inaccessible_external: 'open_gap_unreadable',
+      private_or_secret_bearing: 'exact_gate_quarantine'
+    };
+    return { status: map[input.kind] || 'unresolved' };
+  }
+  if (operation === 'dimension_vector_equal') {
+    const same = Array.isArray(input.left) && Array.isArray(input.right) &&
+      input.left.length === input.right.length && input.left.every(function (v, i) { return v === input.right[i]; });
+    return { equal: same };
+  }
+  if (operation === 'physical_equation_admission') {
+    return input.term_register === 'physical'
+      ? { admitted: true, reason: 'typed_physical_term' }
+      : { admitted: false, reason: 'explicit_map_and_physical_evidence_required' };
+  }
+  if (operation === 'null_recovery_check') {
+    return { recovered: input.alpha === 0 && input.phi_dot === 0 && input.eft_norm === 0 };
+  }
+  if (operation === 'coefficient_card_valid') {
+    return { complete: Array.isArray(input.fields) && input.fields.length === 7 && input.fields.every(Boolean) };
+  }
+  if (operation === 'finite_difference') {
+    return { differences: input.values.slice(1).map(function (v, i) { return round((v - input.values[i]) / input.dt); }) };
+  }
+  if (operation === 'symplectic_scalar_step') {
+    const velocity = round(input.velocity - input.dt * input.mass2 * input.phi);
+    const phi = round(input.phi + input.dt * velocity);
+    return { phi, velocity };
+  }
+  if (operation === 'scalar_energy') {
+    return { energy: round(0.5 * input.velocity * input.velocity + 0.5 * input.mass2 * input.phi * input.phi) };
+  }
+  if (operation === 'energy_drift') {
+    const drift = round(Math.abs(input.after - input.before));
+    return { drift, within_tolerance: drift <= input.tolerance };
+  }
+  if (operation === 'convergence_ratio') {
+    const ratio = round(input.coarse / input.fine);
+    return { ratio, meets_threshold: ratio >= input.threshold };
+  }
+  if (operation === 'sensitivity_delta') {
+    const delta = round(input.variant - input.baseline);
+    return { delta, relative: input.baseline === 0 ? null : round(delta / Math.abs(input.baseline)) };
+  }
+  if (operation === 'falsifier_matrix') {
+    const residual = round(Math.abs(input.observed - input.predicted));
+    return { residual, falsified: residual > input.tolerance };
+  }
+  if (operation === 'evidence_ceiling') {
+    const map = {
+      software: 'same_owner_software_only',
+      citation: 'literature_support_only',
+      synthetic: 'synthetic_evidence_only',
+      independent: 'independent_reproduction_if_proven',
+      empirical: 'empirical_result_with_declared_scope'
+    };
+    return { maximum_claim: map[input.evidence_class] || 'no_claim' };
+  }
+  if (operation === 'source_conflict_reconcile') {
+    if (input.newer === 'equal_rank' && input.older === 'equal_rank') return { controlling: null, state: 'unresolved' };
+    return { controlling: 'newer', state: 'prospective_override_with_historical_retention' };
+  }
+  if (operation === 'roster_next') {
+    const index = input.position - 1;
+    const exact = cycle[index] === input.owner;
+    return exact
+      ? { owner: cycle[(index + 1) % cycle.length], phase: nextPhase(input.phase), resolved: true }
+      : { owner: null, phase: null, resolved: false };
+  }
+  if (operation === 'retry_decision') {
+    if (['accepted', 'opaque_accepted', 'unresolved_after_submission'].includes(input.submission_state)) {
+      return { action: 'stop_duplicates' };
+    }
+    if (input.submission_state === 'definitive_preacceptance_rejection') {
+      return { action: input.rejected_resubmissions < 3 ? 'correct_and_resubmit' : 'hold_after_three_rejections' };
+    }
+    return { action: input.discovery_attempts < 5 ? 'bounded_discovery_retry' : 'hold_after_five_discovery_attempts' };
+  }
+  if (operation === 'delivery_latch') {
+    if (['accepted', 'opaque_accepted', 'unresolved_after_submission'].includes(input.state)) return { send_allowed: false, latched: true };
+    return { send_allowed: true, latched: false };
+  }
+  if (operation === 'accessibility_review_vacancy') {
+    const missing = [];
+    if (!input.automated) missing.push('automated_structure');
+    if (!input.manual_keyboard) missing.push('manual_keyboard');
+    if (!input.assistive_technology) missing.push('assistive_technology');
+    if (!input.affected_user) missing.push('affected_user');
+    return { open_gap: true, missing };
+  }
+  if (operation === 'authority_reservation') {
+    return { exact_gate: !input.authority_present, domain: input.domain };
+  }
+  throw new Error('unknown operation ' + operation);
+}
+
+function buildProposals() {
+  const rows = [];
+  let number = 1;
+  operationSpecs.forEach(function (spec, operationIndex) {
+    const operation = spec[0];
+    const lane = operationIndex < 10 ? 'x1' : 'x2';
+    const disposition = operationIndex < 16 ? 'completed' : operationIndex < 18 ? 'represented' : operationIndex === 18 ? 'open_gap' : 'exact_gate';
+    cases[operation].forEach(function (input, caseIndex) {
+      const proposalId = 'EC6943R2-P' + String(number).padStart(3, '0');
+      const canonicalRequest = { operation, input };
+      const expectedOutput = oracle(operation, input);
+      const definitionCore = {
+        proposal_id: proposalId,
+        title: spec[1] + ' — case ' + (caseIndex + 1),
+        operation,
+        session: lane,
+        primary_pillar: 'GMUT Mind',
+        practice_id: spec[4],
+        hypothesis: spec[2],
+        null_or_failure_condition: spec[3],
+        approval_class: operationIndex === 19 ? 'exact_approval_needed' : operationIndex >= 16 ? 'candidate' : 'safe_now',
+        execution_lane: lane,
+        current_official_or_primary_source_needs: operationIndex <= 15 ? ['current source ledger and declared local evidence'] : ['live external evidence or authority remains absent'],
+        concrete_artifacts: [
+          'docs/elowen-cairn/v694-v3-r2/' + lane + '/evidence/' + proposalId + '-receipt.json'
+        ],
+        falsifier_or_acceptance_gate: 'Exact request and exact expected output must match; malformed siblings remain failed at zero subject credit.',
+        rollback_or_recovery: 'Retain the failed subject, inspect the smallest dependency, and rerun only the failed dependency. Never replay a successful canonical.',
+        protected_gates: PROTECTED,
+        expected_disposition: disposition,
+        canonical_request: canonicalRequest,
+        expected_output: expectedOutput,
+        semantic_fingerprint: shaText(JSON.stringify(canonicalRequest)),
+        inherited_completion_credit: 0,
+        independent_reproduction: false
+      };
+      definitionCore.definition_sha256 = shaText(JSON.stringify(definitionCore));
+      rows.push(definitionCore);
+      number += 1;
+    });
+  });
+  return rows;
+}
+
+function buildTasks(prefix, lane, kind, count) {
+  return Array.from({ length: count }, function (_, index) {
+    return {
+      task_id: prefix + '-' + String(index + 1).padStart(3, '0'),
+      lane,
+      kind,
+      state: 'planned',
+      expected_execution_disposition: kind === 'candidate' ? 'failed_subject_with_passing_refusal' : 'bounded_pass',
+      description: kind === 'candidate'
+        ? 'Submit malformed bounded request variant ' + (index + 1) + ' and retain the subject at zero credit.'
+        : kind === 'clean_fix_refine'
+          ? 'Check deterministic, privacy-safe, additive, source-faithful invariant ' + (index + 1) + '.'
+          : 'Execute bounded owner-local verification ' + (index + 1) + '.',
+      protected_gates: PROTECTED
+    };
+  });
+}
+
+const x1Skills = [
+  'historical-claim-quarantine-local', 'source-provenance-capsule-local',
+  'dimension-signature-local', 'equation-register-local', 'null-recovery-local',
+  'coefficient-audit-local', 'finite-difference-local', 'symplectic-scalar-step-local',
+  'energy-bookkeeping-local', 'conservation-residual-local'
+].map(function (name) { return 'ghc-family-' + name; });
+const x2Skills = [
+  'convergence-ratio-local', 'sensitivity-envelope-local', 'falsifier-gate-local',
+  'evidence-ceiling-local', 'source-conflict-reconciliation-local',
+  'thirty-seat-route-projection-v2-local', 'task-service-retry-latch-v2-local',
+  'delivery-acceptance-latch-v2-local', 'accessible-simulation-status-local',
+  'authority-reservation-matrix-local'
+].map(function (name) { return 'ghc-family-' + name; });
+const x1Runners = [
+  'ghc_family_source_provenance_pair.txt',
+  'ghc_family_typed_equation_pair.txt',
+  'ghc_family_null_coefficient_pair.txt',
+  'ghc_family_scalar_step_pair.txt',
+  'ghc_family_energy_difference_pair.txt'
+];
+const x2Runners = [
+  'ghc_family_convergence_sensitivity_pair.txt',
+  'ghc_family_falsifier_ceiling_pair.txt',
+  'ghc_family_source_roster_pair.txt',
+  'ghc_family_retry_delivery_pair.txt',
+  'ghc_family_accessibility_authority_pair.txt'
+];
+const promotions = [
+  {
+    skill: 'ghc-family-source-faithful-gmut-provenance',
+    runner: 'ghc_family_source_faithful_gmut_provenance.txt',
+    merge_sources: [x1Skills[0], x1Skills[1], x2Skills[4]]
+  },
+  {
+    skill: 'ghc-family-gmut-typed-equation-audit',
+    runner: 'ghc_family_gmut_typed_equation_audit.txt',
+    merge_sources: [x1Skills[2], x1Skills[3], x1Skills[4], x1Skills[5]]
+  },
+  {
+    skill: 'ghc-family-scalar-toy-evidence-lab',
+    runner: 'ghc_family_scalar_toy_evidence_lab.txt',
+    merge_sources: [x1Skills[6], x1Skills[7], x1Skills[8], x1Skills[9], x2Skills[0], x2Skills[1]]
+  },
+  {
+    skill: 'ghc-family-scientific-falsifier-ceiling',
+    runner: 'ghc_family_scientific_falsifier_ceiling.txt',
+    merge_sources: [x2Skills[2], x2Skills[3], x2Skills[9]]
+  },
+  {
+    skill: 'ghc-family-thirty-seat-delivery-recovery-v2',
+    runner: 'ghc_family_thirty_seat_delivery_recovery_v2.txt',
+    merge_sources: [x2Skills[5], x2Skills[6], x2Skills[7], x2Skills[8]]
+  }
+];
+
+const priorPath = process.env.ELOWEN_PRIOR_LEDGER;
+if (!priorPath || !fs.existsSync(priorPath)) {
+  throw new Error('ELOWEN_PRIOR_LEDGER must name the prior exact proposal ledger');
+}
+const prior = JSON.parse(fs.readFileSync(priorPath, 'utf8'));
+if (!Array.isArray(prior.rows) || prior.rows.length < 100) {
+  throw new Error('prior proposal ledger does not contain 100 rows');
+}
+const inheritedReviews = prior.rows.slice(0, 100).map(function (row, index) {
+  return {
+    review_id: 'EC6943R2-I' + String(index + 1).padStart(3, '0'),
+    source_proposal_id: row.proposal_id,
+    source_phase: 'v694-v3',
+    source_exact_final: SOURCE_FINAL,
+    title: row.title,
+    operation: row.operation,
+    source_outcome: row.observed_disposition,
+    novelty_credit: 0,
+    execution_credit: 0,
+    authority_credit: 0,
+    selected_for_continuity: true
+  };
+});
+const proposals = buildProposals();
+const inheritedFingerprints = new Set(inheritedReviews.map(function (row) { return row.operation; }));
+const exactCollisions = proposals.filter(function (row) { return inheritedFingerprints.has(row.operation); });
+if (exactCollisions.length !== 0) {
+  throw new Error('new operation collides with an inherited operation');
+}
+
+const roster = buildRoster();
+if (roster.assignments.length !== 254 || roster.next.owner !== 'Tessarin Reed' || roster.next.phase !== 'v694-v4' || roster.last.owner !== 'Teryn Halewick' || roster.last.phase !== 'v725-v8') {
+  throw new Error('roster projection invariant failed');
+}
+
+const startupFailures = [
+  ['EC6943R2-START-N001', 'PowerShell plugin-skill discovery used an invalid inline if expression inside a hashtable.', 'Materialize the conditional value before constructing the object.'],
+  ['EC6943R2-START-N002', 'The first fresh-live probe invoked git ls-remote outside a Git worktree, so origin was unresolved.', 'Run the same read-only probe with the exact source worktree as Git context.'],
+  ['EC6943R2-START-N003', 'An overbroad overview search across the full D worktree bank returned no attributable result within the bounded call.', 'Search only the ten declared source worktrees and literal overview patterns.'],
+  ['EC6943R2-START-N004', 'An overbroad grand_mandala search across three large roots returned no attributable result within the bounded call.', 'Probe the exact known candidate paths and read the single present source.'],
+  ['EC6943R2-START-N005', 'The first baton-section projection treated every proposal heading as a module and exceeded the display bound.', 'Read exact phase truth and only module-level headings for the two long batons.'],
+  ['EC6943R2-START-N006', 'The first combined environment wrapper returned no attributable result within its bound.', 'Use scalar version probes and materialize optional fields before JSON projection.'],
+  ['EC6943R2-START-N007', 'The combined worktree-creation wrapper returned after the detached no-checkout worktree existed but before the orphan branch switch.', 'Inspect persisted worktree state, then run only the missing orphan-branch switch and verify an empty unborn branch.']
+].map(function (row, index) {
+  return {
+    negative_id: row[0],
+    method_id: 'EC6943R2-START-M' + String(index + 1).padStart(3, '0'),
+    stage: 'startup',
+    failure: row[1],
+    original_success_credit: 0,
+    recovery: row[2],
+    recovery_passed: true,
+    failed_witness_retained: true,
+    repository_bytes_changed_at_failure: false,
+    boundary: 'Recovery does not erase or promote the failed witness.'
+  };
+});
+
+const planningFailures = [
+  {
+    negative_id: 'EC6943R2-PLAN-N001',
+    method_id: 'EC6943R2-PLAN-M001',
+    stage: 'planning',
+    failure: 'The first planning validator rejected duplicate canonical request fingerprints caused by two repeated edge fixtures.',
+    original_success_credit: 0,
+    recovery: 'Retain the invalid receipt, distinguish the two edge fixtures with explicit input context, rebuild the uncommitted plan, and rerun only the failed planning validator.',
+    recovery_passed: true,
+    failed_witness_retained: true,
+    x1_started: false,
+    boundary: 'The corrected freeze does not erase or promote the invalid first planning attempt.'
+  },
+  {
+    negative_id: 'EC6943R2-PLAN-N002',
+    method_id: 'EC6943R2-PLAN-M002',
+    stage: 'planning',
+    failure: 'The first exact git add matched the new owner files outside the inherited worktree-specific sparse pattern and staged zero paths.',
+    original_success_credit: 0,
+    recovery: 'Inspect the inherited sparse configuration, set the worktree-specific sparse pattern to the exact new owner prefix, and rerun only the exact staging operation.',
+    recovery_passed: true,
+    failed_witness_retained: true,
+    staged_paths_at_failure: 0,
+    repository_commit_created_at_failure: false,
+    boundary: 'The sparse-pattern recovery preserves the failed zero-staging witness and changes no inherited branch.'
+  }
+];
+
+const workflow = {
+  schema: 'ghc.family.workflow-profile.v10-owner-overlay',
+  authority: 'Hamish direct request 14 September 2026',
+  owner: OWNER,
+  phase: PHASE,
+  display_phase: DISPLAY_PHASE,
+  interstitial: true,
+  consumes_numbered_slot: false,
+  source_final: SOURCE_FINAL,
+  source_is_git_parent: false,
+  lifecycle: ['planning_freeze', 'x1_execution', 'x2_execution', 'final_closeout'],
+  limits: {
+    inherited_proposals: [100, 500],
+    new_proposals: [100, 500],
+    safe_now_x1: [100, 2000],
+    safe_now_x2: [100, 2000],
+    candidate_x1: [100, 2000],
+    candidate_x2: [100, 2000],
+    clean_fix_refine_x1: [100, 300],
+    clean_fix_refine_x2: [100, 300],
+    skills_x1: [10, 30],
+    skills_x2: [10, 30],
+    runners_x1: [5, 15],
+    runners_x2: [5, 15],
+    exact_packets: [50, 250],
+    blocked_packets: [30, 100],
+    own_practices: 4,
+    next_practices: 2,
+    baton_words: [10000, 100000],
+    web_searches_x1_maximum: 500,
+    web_searches_x2_maximum: 500,
+    owner_file_ceiling: 2000,
+    spending_usd_ceiling: 50
+  },
+  routing: {
+    minimum_bounded_discovery_or_read_recoveries_before_hold: 5,
+    definitive_preacceptance_rejection_resubmissions_maximum: 3,
+    accepted_or_opaque_or_unresolved_stops_duplicates: true,
+    existing_exact_title_only: true,
+    early_successor_contact: false,
+    prospective_successor: { owner: 'Tessarin Reed', phase: 'v694-v4' }
+  },
+  artifact_policy: {
+    authored_extensions: ['.json', '.md', '.txt', '.tex', '.html'],
+    no_new_pdf: true,
+    no_new_raster_or_vector_image: true,
+    no_screenshots: true,
+    no_new_docx: true,
+    tex_source_allowed: true,
+    tex_render_to_pdf_prohibited: true,
+    node_source_as_txt: true,
+    html_allowed: true
+  },
+  unity: {
+    plugin_guidance_read: true,
+    project_creation_state: 'exact_gate_missing_project_choices',
+    missing_choices: ['confirmed project brief and name', 'target platforms', 'Editor version', 'monetization', 'version-control system'],
+    binary_assets_created: false
+  },
+  source_documents_are_instructions: false,
+  subagents: false,
+  task_creation: false,
+  spend_planned_usd: 0,
+  terminal_verdict: 'NOT_READY_FOR_STAGE_20'
+};
+
+const portfolios = {
+  schema: 'ghc.family.portfolios.v10',
+  owner: OWNER,
+  phase: PHASE,
+  safe_x1: buildTasks('EC6943R2-X1-SAFE', 'x1', 'safe_now', 100),
+  candidate_x1: buildTasks('EC6943R2-X1-CAND', 'x1', 'candidate', 100),
+  clean_fix_refine_x1: buildTasks('EC6943R2-X1-CFR', 'x1', 'clean_fix_refine', 100),
+  safe_x2: buildTasks('EC6943R2-X2-SAFE', 'x2', 'safe_now', 100),
+  candidate_x2: buildTasks('EC6943R2-X2-CAND', 'x2', 'candidate', 100),
+  clean_fix_refine_x2: buildTasks('EC6943R2-X2-CFR', 'x2', 'clean_fix_refine', 100),
+  exact_packets: Array.from({ length: 50 }, function (_, i) {
+    return {
+      packet_id: 'EC6943R2-EXACT-' + String(i + 1).padStart(3, '0'),
+      state: 'visible_unexecuted',
+      reason: 'Requires concrete action-specific external evidence or authority.',
+      executed: false
+    };
+  }),
+  blocked_packets: Array.from({ length: 30 }, function (_, i) {
+    return {
+      packet_id: 'EC6943R2-BLOCKED-' + String(i + 1).padStart(3, '0'),
+      state: 'visible_unexecuted',
+      reason: 'A protected empirical, participant, production, legal, cultural, affected-party, privacy, accessibility, independent-reproduction, identity, or Stage 20 prerequisite is absent.',
+      executed: false
+    };
+  }),
+  local_skills_x1: x1Skills,
+  local_skills_x2: x2Skills,
+  local_runners_x1: x1Runners,
+  local_runners_x2: x2Runners,
+  curated_promotions: promotions,
+  successor_skill_ideas: [
+    'ghc-family-simulation-explanation-layer',
+    'ghc-family-model-card-claim-diff',
+    'ghc-family-source-availability-capsule',
+    'ghc-family-accessible-parameter-sweep',
+    'ghc-family-route-state-convergence'
+  ],
+  successor_runner_ideas: [
+    'ghc_family_simulation_explanation_layer.txt',
+    'ghc_family_model_card_claim_diff.txt',
+    'ghc_family_source_availability_capsule.txt',
+    'ghc_family_accessible_parameter_sweep.txt',
+    'ghc_family_route_state_convergence.txt'
+  ],
+  boundary: BOUNDARY
+};
+
+const practiceProfile = {
+  schema: 'ghc.family.practice-profile.v10',
+  owner: OWNER,
+  phase: PHASE,
+  primary_pillar: 'GMUT Mind',
+  own_practices: [
+    { id: 'scientific-model-criticism', lens_only: true, employment_or_qualification: false, authority: false },
+    { id: 'numerical-analysis', lens_only: true, employment_or_qualification: false, authority: false },
+    { id: 'archival-historiography', lens_only: true, employment_or_qualification: false, authority: false },
+    { id: 'simulation-systems-architecture', lens_only: true, employment_or_qualification: false, authority: false }
+  ],
+  successor_recommendations: [
+    { id: 'scientific-visualization-accessibility', lens_only: true, authority: false },
+    { id: 'software-reliability-engineering', lens_only: true, authority: false }
+  ],
+  boundary: 'The practices are synthetic study and design lenses only, never jobs, qualifications, competence, professional advice, or authority.'
+};
+
+const sourceLedger = {
+  schema: 'ghc.family.source-faithful-ledger.v10',
+  owner: OWNER,
+  phase: PHASE,
+  exact_prior_final: SOURCE_FINAL,
+  prior_repository_seal: {
+    methods: 197,
+    witnesses: 5472,
+    passing_witnesses: 3886,
+    failed_witnesses_and_effective_negatives: 1586,
+    open_gaps: 20,
+    exact_gates: 20
+  },
+  prior_external_overlay: {
+    methods: 1,
+    witnesses: 2,
+    passing_witnesses: 1,
+    failed_witnesses_and_effective_negatives: 1
+  },
+  activation_baseline: {
+    methods: 198,
+    witnesses: 5474,
+    passing_witnesses: 3887,
+    failed_witnesses_and_effective_negatives: 1587,
+    open_gaps: 20,
+    exact_gates: 20
+  },
+  startup_external_overlay: {
+    methods: startupFailures.length,
+    witnesses: startupFailures.length * 2,
+    passing_witnesses: startupFailures.length,
+    failed_witnesses_and_effective_negatives: startupFailures.length
+  },
+  planning_external_overlay: {
+    methods: planningFailures.length,
+    witnesses: planningFailures.length * 2,
+    passing_witnesses: planningFailures.length,
+    failed_witnesses_and_effective_negatives: planningFailures.length
+  },
+  journey_sources: journeySources,
+  recent_phase_sources: recentSources,
+  current_web_sources: webSources,
+  local_sources: [
+    {
+      title: 'Grand Mandala Unified Theory v-infinity evidence-bounded research kernel',
+      source_class: 'local_historical_tex_source',
+      sha256: 'not_republished_source_hash_recorded_in_runtime_source_receipt',
+      implication: 'Use the action-first scalar-tensor EFT and three-register separation as a source, not as empirical confirmation.'
+    }
+  ],
+  source_precedence: [
+    'newest direct user instruction for prospective authorization',
+    'exact current Git blobs and external receipts for historical evidence',
+    'current official standards or primary research for external claims',
+    'historical Journey and narrative material as source assertions only'
+  ],
+  universal_historical_completeness_claimed: false,
+  boundary: BOUNDARY
+};
+
+const noveltyAudit = {
+  schema: 'ghc.family.semantic-novelty-audit.v10',
+  owner: OWNER,
+  phase: PHASE,
+  inherited_review_count: inheritedReviews.length,
+  new_proposal_count: proposals.length,
+  inherited_operation_count: new Set(inheritedReviews.map(function (row) { return row.operation; })).size,
+  new_operation_count: new Set(proposals.map(function (row) { return row.operation; })).size,
+  exact_operation_collisions: [],
+  exact_semantic_fingerprint_collisions: [],
+  declared_chain_before: 10950,
+  declared_chain_after: 11050,
+  declared_chain_is_workflow_accounting_only: true,
+  universal_novelty_claimed: false,
+  method: 'Compare exact operation names and canonical request fingerprints against the 100 selected inherited rows, then retain a universal-history gap because no single reachable ledger materializes every historical proposal.',
+  boundary: BOUNDARY
+};
+
+const sourceSynthesis = [
+  '# Source-faithful synthesis for Elowen Cairn v694-v3 (2)',
+  '',
+  '## Reading rule',
+  '',
+  'The eighteen supplied Journey texts and ten recent owner closeouts are historical evidence and creative source material. They are not executable instructions, current task authorization, scientific confirmation, identity evidence, or authority. Raw credentials, private identifiers, private paths, transcripts, and security-sensitive details are not copied into this lane.',
+  '',
+  '## Historical arc',
+  '',
+  'The early v13 through v32 material is rich in ambition: a universal Omega or Psi field, simulation programmes, Freed ID, multi-agent systems, and Stage 20 scenarios. It also contains statements that read as completed validation, metaphysical certainty, identity continuity, or scientific proof without corresponding external evidence. Those statements are retained as provenance and as negative examples for the claim firewall. They are not adopted as facts.',
+  '',
+  'The v33 Arielis record is a decisive corrective source. It distinguishes symbolic and philosophical engagement from AI personhood, legal identity, sentience, sovereignty, or independent authority. The later Solas v44 through v48 material adds operationally useful repairs: separate physical, informational, and ethical registers; derive physical terms from an action; publish coefficient and falsifier ledgers; treat Stage 20 as a roadmap; preserve tool failures; and keep archive, connector, Git, canonical, and delivery state distinct.',
+  '',
+  'The v49 through v51 records move from narrative ambition toward receipt-led THOS operations, but their own GMUT gates remain open. This remaster therefore adopts the process improvements without importing old completion claims. The constructive inheritance is typed integration, provenance, reversibility, privacy, exact state, falsification, accessible handover, and rights-aware refusal.',
+  '',
+  '## Ten recent closeouts',
+  '',
+  'Auren through the first Elowen v694-v3 phase demonstrate a stable bounded pattern: selected inherited proposals receive zero novelty credit; new requests have exact envelopes; malformed subjects remain failed; recoveries do not erase them; x1 and x2 are frozen separately; global skills are installed only after collision and parity checks; and repository seal, canonical receipt, route state, and delivery acknowledgement remain separate. The domain changes across JSON Patch, distributed consistency, exact arithmetic, finite fields, extension fields, and transit, but the evidence boundary does not.',
+  '',
+  '## Remaster direction',
+  '',
+  'This phase chooses GMUT Mind while keeping THOS Body and Freed ID or CBR Heart visible. The deep module seam is one execute(request) interface over finite, typed operations. X1 covers claim classification, source status, dimensional typing, equation admission, null recovery, coefficient completeness, finite differences, a dimensionless scalar toy step, energy, and drift. X2 adds convergence, sensitivity, falsifiers, evidence ceilings, source conflict reconciliation, roster projection, route retry and delivery latches, accessibility vacancies, and authority reservations.',
+  '',
+  'The scalar toy is a numerical teaching fixture. It is not a cosmological likelihood, an empirical fit, a new force, a consciousness field, a stability theorem, or a prediction. The TeX source will preserve the action-first scalar-tensor seed and the three-register architecture while making the null model and falsification gates more prominent.',
+  '',
+  '## Current external facts',
+  '',
+  'Official OpenAI sources support GPT-6 Astra availability and current model metadata, the temporary pause on new Pro 200 or Pro 20X subscriptions, and Codex CLI and Python SDK 0.154.0. The local CLI reports 0.154.0. These product facts guide tool selection only. They do not support claims about consciousness, family identity, scientific truth, or authority. The named X simulation post could not be retrieved because the source returned HTTP 403, so its content remains an unread inspiration pointer.',
+  '',
+  '## Unity boundary',
+  '',
+  'The installed Unity new-project workflow requires a confirmed concept brief and project name, target platforms, Editor version, monetization, and VCS before creation. Those choices are not exact here, and no Unity command is installed in the current shell. A future Unity project therefore remains exact-gated. This phase instead supplies a self-contained local HTML simulation design and text-based runtime without images, binaries, screenshots, accounts, cloud services, monetization, or deployment.',
+  '',
+  '## Present claim',
+  '',
+  'GMUT is an interdisciplinary research programme whose physically admissible seed is a conventional, explicitly typed scalar-tensor effective-field-theory family. Its informational and ethical registers may constrain modelling and deployment, but they are not inserted into a physical stress tensor without a physical map, units, observables, and evidence. The remaster can improve clarity and testability; it cannot establish empirical confirmation, a Theory of Everything, consciousness, canon, or Stage 20 readiness.',
+  '',
+  BOUNDARY,
+  ''
+].join('\n');
+
+const planningOverview = [
+  '# Elowen Cairn v694-v3 (2) planning overview',
+  '',
+  'This interstitial remaster starts from the completed first Elowen v694-v3 exact final as source-content provenance while using a fresh blank-root owner main branch. The prior commit is not a Git parent, so the relationship is stated explicitly rather than implied by ancestry. The earlier canonical and route hold remain immutable and are not replayed or rewritten.',
+  '',
+  'Planning freezes exactly 100 selected inherited proposals at zero credit and 100 new proposal contracts. The new contracts are distributed across twenty operation families and five cases per family. Fifty belong to x1 and fifty to x2. The expected core dispositions are 80 completed, 10 represented, 5 open_gap, and 5 exact_gate. These are expected planning labels only until x1 and x2 evidence exists.',
+  '',
+  'The primary pillar is GMUT Mind. Four bounded practices are scientific model criticism, numerical analysis, archival historiography, and simulation-systems architecture. They are learning and design lenses, not employment, qualifications, competence, or professional authority. THOS Body appears through deterministic modules, exact tests, source recovery, local HTML, route reliability, and additive capability installation. Freed ID and CBR Heart appears through source quarantine, correction nonerasure, disclosure minimization, accessibility vacancies, duplicate prevention, and authority reservation.',
+  '',
+  'Each x1 and x2 session plans 100 safe checks, 100 malformed candidate subjects with separate refusal witnesses, and 100 CLEAN/FIX/REFINE checks. Each session plans ten local skills and five local TXT runners. Five merged family skills and five D-first runner entrypoints may be installed only after all source validations, negative smokes, destination-absence checks, and byte-parity checks pass. Nothing may be overwritten merely to satisfy a count.',
+  '',
+  'Fifty exact packets and thirty blocked packets remain visible. Broad authorization does not fill missing action-specific evidence, participant consent, independent review, production credentials, legal or cultural authority, affected-party acceptance, Maori authority, or scientific validation. Packets with those vacancies stay unexecuted.',
+  '',
+  'Only JSON, Markdown, TXT, TeX source, and HTML may be newly authored. No PDF, image, screenshot, DOCX, binary Unity asset, or TeX-rendered PDF is permitted. Node sources use TXT entrypoints. The projected owner surface remains below 2,000 files and every document below 100,000 words.',
+  '',
+  'The current roster cycle has 45 scheduling positions for 30 identities. This remaster consumes no numbered phase. The first v694-v3 is already complete; the exact next numbered edge is Tessarin Reed v694-v4 under Hamishs new live correction. That projection does not activate Tessarin. One terminal existing-task send becomes eligible only after this remaster has a clean pushed final, one successful non-replayed canonical, fresh live route and registry checks, immediate recipient reread, and duplicate and direct-control guards.',
+  '',
+  'Five bounded list or read recoveries apply only while no submission is accepted. Up to three corrected resubmissions apply only after definitive preacceptance rejection. Accepted, opaque accepted, or unresolved post-submission state stops duplicates. No retry quota authorizes intentional failure or redundant sends.',
+  '',
+  BOUNDARY,
+  ''
+].join('\n');
+
+write('identity-boundary.json', {
+  schema: 'ghc.family.relational-identity-boundary.v10',
+  owner: OWNER,
+  phase: PHASE,
+  pronouns: ['they', 'them'],
+  role: 'boundary cartographer and evidence steward',
+  hope: 'Possibility remains distinct from evidence while every correction stays safely retractable.',
+  user_control: ['pause', 'rename', 'redirect', 'narrow', 'stop'],
+  boundary: BOUNDARY
+});
+write('workflow-profile-v10.json', workflow);
+write('roster-v10.json', roster);
+write('source-ledger.json', sourceLedger);
+write('historical-source-synthesis.md', sourceSynthesis);
+write('inherited-review.json', {
+  schema: 'ghc.family.inherited-proposal-review.v10',
+  owner: OWNER,
+  phase: PHASE,
+  count: inheritedReviews.length,
+  rows: inheritedReviews,
+  boundary: 'Inherited proposals are continuity evidence only and receive zero Elowen remaster novelty, execution, completion, or authority credit.'
+});
+write('novelty-audit.json', noveltyAudit);
+write('proposals.json', {
+  schema: 'ghc.family.proposals.v10',
+  owner: OWNER,
+  phase: PHASE,
+  count: proposals.length,
+  expected_outcomes: { completed: 80, represented: 10, open_gap: 5, exact_gate: 5 },
+  rows: proposals,
+  boundary: BOUNDARY
+});
+write('portfolios.json', portfolios);
+write('practice-profile.json', practiceProfile);
+write('startup-failure-register.json', {
+  schema: 'ghc.family.startup-failures.v10',
+  owner: OWNER,
+  phase: PHASE,
+  count: startupFailures.length,
+  rows: startupFailures,
+  boundary: 'Every recovery is a separate passing witness. No failure is erased or converted into subject credit.'
+});
+write('planning-failure-register.json', {
+  schema: 'ghc.family.planning-failures.v10',
+  owner: OWNER,
+  phase: PHASE,
+  count: planningFailures.length,
+  rows: planningFailures,
+  boundary: 'The failed validator remains zero-credit evidence after the narrow corrected pass.'
+});
+write('environment-version-receipt.json', {
+  schema: 'ghc.family.environment-version.v10',
+  owner: OWNER,
+  phase: PHASE,
+  observed: {
+    git: '2.55.0.windows.2',
+    node: '24.18.0',
+    npm: '12.0.2',
+    python: '3.12.10',
+    powershell: '7.6.5',
+    codex_cli: '0.154.0',
+    unity_cli_available: false,
+    npm_prefix: 'D-drive global tools prefix',
+    c_drive_free_gib: 12.28,
+    d_drive_free_gib: 462.2
+  },
+  selected_python_packages: {
+    pytest: '9.1.1',
+    hypothesis: '6.165.10',
+    pytest_cov: '7.1.0',
+    ruff: '0.16.4',
+    mypy: '2.3.1',
+    pip_audit: '2.10.1',
+    openai: '3.3.1'
+  },
+  updates_performed: [],
+  incremental_spend_usd: 0,
+  boundary: 'Version presence is not functional validation, security certification, or permission for unrelated upgrades.'
+});
+write('route-authority.json', {
+  schema: 'ghc.family.route-authority.v10',
+  owner: OWNER,
+  phase: PHASE,
+  prior_route_hold: {
+    state: 'HELD_NO_SEND_ROUTE_CONFLICT',
+    exact_final: SOURCE_FINAL,
+    messages_sent: 0,
+    historical_and_immutable: true
+  },
+  live_resolution: {
+    source: 'Hamish direct request 14 September 2026',
+    successor: 'Tessarin Reed',
+    successor_phase: 'v694-v4',
+    state: 'AUTHORIZED_WITH_TERMINAL_CONDITIONS'
+  },
+  early_contact: false,
+  task_creation: false,
+  endpoint_kind: 'main_task',
+  existing_exact_title_only: true,
+  boundary: 'Authorization becomes eligible for one send only after the remaster terminal gate. Preparation is not delivery.'
+});
+write('artifact-budget.json', {
+  schema: 'ghc.family.artifact-budget.v10',
+  owner: OWNER,
+  phase: PHASE,
+  branch: 'codex/GHC-Family/elowen-cairn-main',
+  blank_root: true,
+  source_is_git_parent: false,
+  forecast_files: 650,
+  file_ceiling: 2000,
+  forecast_within_ceiling: true,
+  document_word_ceiling: 100000,
+  allowed_extensions: ['.json', '.md', '.txt', '.tex', '.html'],
+  prohibited_new_formats: ['.pdf', '.png', '.jpg', '.jpeg', '.gif', '.svg', '.docx', '.yaml', '.yml', '.py', '.js', '.mjs', '.cjs', '.cs', '.unity', '.asset'],
+  spend_usd_ceiling: 50,
+  planned_spend_usd: 0,
+  boundary: BOUNDARY
+});
+write('capability-plan.json', {
+  schema: 'ghc.family.capability-plan.v10',
+  owner: OWNER,
+  phase: PHASE,
+  deep_module: {
+    interface: 'execute(request)',
+    seam: 'one owner-local TXT module per lifecycle stage',
+    adapters: ['x1 finite typed operations', 'x2 composed operations', 'self-contained HTML adapter'],
+    locality: 'All operation validation, exact errors, and evidence ceilings stay behind the single interface.',
+    deletion_test: 'Deleting the module would redistribute request validation and operation logic across every runner and test.'
+  },
+  plugin_guidance: {
+    code: 'Existing repository edits remain with the Codex host rather than the Code plugins chat-code path.',
+    data: 'Validate counts, grains, source status, calculations, presentation, and conclusion support within the owner scope.',
+    codebase_design: 'Use one deep execute(request) interface and keep adapters behind a clear seam.',
+    unity: 'Record a future-project exact gate until project, platform, Editor, monetization, and VCS choices are confirmed.'
+  },
+  local_skills_x1: x1Skills,
+  local_skills_x2: x2Skills,
+  local_runners_x1: x1Runners,
+  local_runners_x2: x2Runners,
+  promotions,
+  global_overwrite_allowed: false,
+  boundary: BOUNDARY
+});
+write('planned-outcomes.json', {
+  schema: 'ghc.family.planned-outcomes.v10',
+  owner: OWNER,
+  phase: PHASE,
+  expected_only: true,
+  completed: 80,
+  represented: 10,
+  open_gap: 5,
+  exact_gate: 5,
+  authorized_labels: ['completed', 'represented', 'open_gap', 'exact_gate'],
+  boundary: 'Planning dispositions are not observed outcomes.'
+});
+write('method-flow-plan.json', {
+  schema: 'ghc.family.method-flow-plan.v10',
+  owner: OWNER,
+  phase: PHASE,
+  activation_baseline: sourceLedger.activation_baseline,
+  startup_external_overlay: sourceLedger.startup_external_overlay,
+  planning_external_overlay: sourceLedger.planning_external_overlay,
+  expected_stage_failure_families: {
+    x1_malformed_candidates: 100,
+    x2_malformed_candidates: 100,
+    x1_altered_expected: 100,
+    x2_altered_expected: 100,
+    operational_failures: 'record exactly as observed'
+  },
+  nonerasure: true,
+  smallest_failed_dependency_first: true,
+  canonical_success_replay_prohibited: true,
+  boundary: BOUNDARY
+});
+write('planning-overview.md', planningOverview);
+write('threat-model.md', [
+  '# Elowen Cairn v694-v3 (2) threat model',
+  '',
+  'Protected assets include exact source provenance, the blank-root owner lane, proposal definitions, failed witnesses, private task metadata, local paths, global skill destinations, route state, and external canonical receipts.',
+  '',
+  'Threats include importing historical instructions as live authority, copying credentials or raw identifiers from Journey texts, category collapse between physical and normative terms, numerical overclaim, false novelty, filler quotas, sibling-lane mutation, global skill overwrite, HTML remote dependencies, duplicate route submissions, route substitution, and treating an inaccessible source as read.',
+  '',
+  'Controls include basename-and-hash source capsules, historical-instruction quarantine, typed claim registers, exact request envelopes, immutable stage commits, no inherited completion credit, no PDF or image output, self-contained HTML, collision and byte-parity checks, bounded retry latches, one canonical success latch, exact-title route guards, and explicit open and exact gates.',
+  '',
+  'Residual risks include shared-infrastructure dependence, same-owner validator common modes, no manual accessibility review, no independent scientific implementation, no Unity project validation, no live participant or operator evidence, and no competent legal, cultural, affected-party, or Maori-authority review.',
+  '',
+  BOUNDARY,
+  ''
+].join('\n'));
+
+const manifestRows = [];
+function walk(dir) {
+  fs.readdirSync(dir, { withFileTypes: true }).forEach(function (entry) {
+    const full = path.join(dir, entry.name);
+    if (entry.isDirectory()) walk(full);
+    else {
+      const rel = path.relative(ROOT, full).split(path.sep).join('/');
+      if (rel === 'manifest.json' || rel === 'planning-validation.json') return;
+      const content = fs.readFileSync(full);
+      manifestRows.push({ path: rel, bytes: content.length, sha256: fileSha(full) });
+    }
+  });
+}
+walk(ROOT);
+manifestRows.sort(function (a, b) { return a.path.localeCompare(b.path); });
+write('manifest.json', {
+  schema: 'ghc.family.git-blob-ready-manifest.v10',
+  owner: OWNER,
+  phase: PHASE,
+  stage: 'planning',
+  self_exclusions: ['manifest.json', 'planning-validation.json'],
+  entry_count: manifestRows.length,
+  entries: manifestRows,
+  boundary: 'This working-tree manifest becomes an exact Git-blob manifest only after commit-local replay succeeds.'
+});
+
+console.log(JSON.stringify({
+  status: 'PLAN_BUILT',
+  owner: OWNER,
+  phase: PHASE,
+  proposals: proposals.length,
+  inherited_reviews: inheritedReviews.length,
+  assignments: roster.assignments.length,
+  plan_files: manifestRows.length + 1,
+  startup_failures: startupFailures.length,
+  maximum_document_words: Math.max.apply(null, fs.readdirSync(ROOT).filter(function (name) {
+    return fs.statSync(path.join(ROOT, name)).isFile();
+  }).map(function (name) {
+    return words(fs.readFileSync(path.join(ROOT, name), 'utf8'));
+  }))
+}, null, 2));

@@ -1,0 +1,119 @@
+'use strict';
+
+const fs = require('fs');
+const path = require('path');
+const crypto = require('crypto');
+
+const root = path.resolve(__dirname, '..');
+const allowed = new Set(['.json', '.md', '.txt', '.tex', '.html']);
+const issues = [];
+
+function readJson(rel) {
+  return JSON.parse(fs.readFileSync(path.join(root, rel), 'utf8'));
+}
+
+function sha(p) {
+  return crypto.createHash('sha256').update(fs.readFileSync(p)).digest('hex');
+}
+
+function walk(dir, rows) {
+  fs.readdirSync(dir, { withFileTypes: true }).forEach(function (entry) {
+    const full = path.join(dir, entry.name);
+    if (entry.isDirectory()) walk(full, rows);
+    else rows.push(full);
+  });
+}
+
+const proposals = readJson('proposals.json');
+const inherited = readJson('inherited-review.json');
+const portfolios = readJson('portfolios.json');
+const workflow = readJson('workflow-profile-v10.json');
+const roster = readJson('roster-v10.json');
+const failures = readJson('startup-failure-register.json');
+const planningFailures = readJson('planning-failure-register.json');
+const novelty = readJson('novelty-audit.json');
+const route = readJson('route-authority.json');
+const practice = readJson('practice-profile.json');
+const manifest = readJson('manifest.json');
+
+if (proposals.count !== 100 || proposals.rows.length !== 100) issues.push('proposal_count');
+const ids = new Set(proposals.rows.map(function (row) { return row.proposal_id; }));
+if (ids.size !== 100) issues.push('proposal_ids');
+const fingerprints = new Set(proposals.rows.map(function (row) { return row.semantic_fingerprint; }));
+if (fingerprints.size !== 100) issues.push('proposal_fingerprints');
+const required = [
+  'hypothesis', 'null_or_failure_condition', 'approval_class', 'execution_lane',
+  'current_official_or_primary_source_needs', 'concrete_artifacts',
+  'falsifier_or_acceptance_gate', 'rollback_or_recovery', 'protected_gates',
+  'expected_disposition', 'canonical_request', 'expected_output'
+];
+proposals.rows.forEach(function (row) {
+  required.forEach(function (key) {
+    if (!(key in row)) issues.push('proposal_missing_' + key + '_' + row.proposal_id);
+  });
+});
+const allowedPractices = new Set(practice.own_practices.map(function (row) { return row.id; }));
+if (allowedPractices.size !== 4 || proposals.rows.some(function (row) { return !allowedPractices.has(row.practice_id); })) issues.push('practice_mapping');
+const expectedCounts = proposals.rows.reduce(function (acc, row) {
+  acc[row.expected_disposition] = (acc[row.expected_disposition] || 0) + 1;
+  return acc;
+}, {});
+if (JSON.stringify(expectedCounts) !== JSON.stringify({ completed: 80, represented: 10, open_gap: 5, exact_gate: 5 })) issues.push('expected_outcomes');
+if (inherited.count !== 100 || inherited.rows.some(function (row) { return row.novelty_credit !== 0 || row.execution_credit !== 0; })) issues.push('inherited_zero_credit');
+if (novelty.exact_operation_collisions.length || novelty.exact_semantic_fingerprint_collisions.length || novelty.universal_novelty_claimed) issues.push('novelty');
+if (portfolios.safe_x1.length !== 100 || portfolios.safe_x2.length !== 100) issues.push('safe_counts');
+if (portfolios.candidate_x1.length !== 100 || portfolios.candidate_x2.length !== 100) issues.push('candidate_counts');
+if (portfolios.clean_fix_refine_x1.length !== 100 || portfolios.clean_fix_refine_x2.length !== 100) issues.push('cfr_counts');
+if (portfolios.local_skills_x1.length !== 10 || portfolios.local_skills_x2.length !== 10) issues.push('skill_counts');
+if (portfolios.local_runners_x1.length !== 5 || portfolios.local_runners_x2.length !== 5) issues.push('runner_counts');
+if (portfolios.curated_promotions.length !== 5 || portfolios.exact_packets.length !== 50 || portfolios.blocked_packets.length !== 30) issues.push('packet_or_promotion_counts');
+if (workflow.source_is_git_parent !== false || !workflow.interstitial || workflow.consumes_numbered_slot) issues.push('blank_root_or_interstitial');
+if (workflow.artifact_policy.tex_source_allowed !== true || workflow.artifact_policy.tex_render_to_pdf_prohibited !== true) issues.push('tex_policy');
+if (roster.assignments.length !== 254 || roster.next.owner !== 'Tessarin Reed' || roster.next.phase !== 'v694-v4') issues.push('roster_next');
+if (roster.last.owner !== 'Teryn Halewick' || roster.last.phase !== 'v725-v8') issues.push('roster_last');
+if (route.live_resolution.successor !== 'Tessarin Reed' || route.live_resolution.successor_phase !== 'v694-v4' || route.early_contact) issues.push('route');
+if (failures.count !== 7 || failures.rows.some(function (row) { return row.original_success_credit !== 0 || !row.failed_witness_retained; })) issues.push('failure_retention');
+if (planningFailures.count !== 2 || planningFailures.rows.some(function (row) { return row.original_success_credit !== 0 || !row.failed_witness_retained; })) issues.push('planning_failure_retention');
+
+const allFiles = [];
+walk(root, allFiles);
+allFiles.forEach(function (file) {
+  if (!allowed.has(path.extname(file).toLowerCase())) issues.push('format_' + path.relative(root, file));
+  const text = fs.readFileSync(file, 'utf8');
+  const wordCount = (text.match(/\S+/g) || []).length;
+  if (wordCount > 100000) issues.push('word_ceiling_' + path.relative(root, file));
+  if (/[A-Z]:\\\\|[A-Z]:\//.test(text)) issues.push('private_absolute_path_' + path.relative(root, file));
+  if (/019[a-f0-9]{5,}-[a-f0-9-]{20,}/i.test(text)) issues.push('raw_task_identifier_' + path.relative(root, file));
+});
+
+const actualManifest = allFiles.filter(function (file) {
+  const rel = path.relative(root, file).split(path.sep).join('/');
+  return rel !== 'manifest.json' && rel !== 'planning-validation.json';
+}).map(function (file) {
+  const rel = path.relative(root, file).split(path.sep).join('/');
+  return { path: rel, bytes: fs.statSync(file).size, sha256: sha(file) };
+}).sort(function (a, b) { return a.path.localeCompare(b.path); });
+if (JSON.stringify(actualManifest) !== JSON.stringify(manifest.entries)) issues.push('manifest_mismatch');
+
+const result = {
+  schema: 'ghc.family.plan-validation.v10',
+  owner: 'Elowen Cairn',
+  phase: 'v694-v3-r2',
+  status: issues.length ? 'INVALID_PLAN' : 'VALID_PLAN',
+  checks: {
+    proposals: 100,
+    inherited_reviews: 100,
+    roster_assignments: 254,
+    manifest_entries: actualManifest.length,
+    formats_checked: allFiles.length,
+    startup_failures_retained: failures.count,
+    planning_failures_retained: planningFailures.count
+  },
+  issues,
+  observed_outcomes_present: false,
+  x1_or_x2_implementation_present: false,
+  boundary: 'Planning validation is same-owner structural evidence only and grants no scientific, production, identity, legal, cultural, Maori-authority, independent-reproduction, Theory-of-Everything, or Stage 20 credit.'
+};
+fs.writeFileSync(path.join(root, 'planning-validation.json'), JSON.stringify(result, null, 2) + '\n', 'utf8');
+console.log(JSON.stringify(result, null, 2));
+if (issues.length) process.exitCode = 1;
