@@ -1,0 +1,2 @@
+'use strict';
+const path=require('path');const core=require(path.join(__dirname,'engine.txt'));module.exports={compare:function(operation,input,observed){const fresh=core.runContract(operation,input);return {same:JSON.stringify(fresh.value)===JSON.stringify(observed),same_owner:true,independent_reproduction:false};}};

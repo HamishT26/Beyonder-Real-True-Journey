@@ -1,0 +1,1259 @@
+{
+  "count": 50,
+  "owner": "Elaren Kestrel",
+  "phase": "v695-v1",
+  "results": [
+    {
+      "accepted": true,
+      "case_id": "request-ack",
+      "input_sha256": "37efa91300d0a8bf9e9dc330e8c3849f7715d5b71731dd9470a16b6cbc485802",
+      "operation": "weak_bisimulation",
+      "outcome": "completed",
+      "proposal_id": "EL6951-P051",
+      "semantic_predicate": true,
+      "value": {
+        "backward": {
+          "failures": [],
+          "holds": true
+        },
+        "forward": {
+          "convention": "single tau steps preserve their related abstract state",
+          "failures": [],
+          "holds": true,
+          "relation_pairs": 4
+        },
+        "holds": true,
+        "scope": "bounded declared weak convention only"
+      }
+    },
+    {
+      "accepted": true,
+      "case_id": "queue-drain",
+      "input_sha256": "dac4abe68a2a615d606c3e02a32ac6aa49d76deaef4fa2fdadd05f38b25864e4",
+      "operation": "weak_bisimulation",
+      "outcome": "completed",
+      "proposal_id": "EL6951-P052",
+      "semantic_predicate": true,
+      "value": {
+        "backward": {
+          "failures": [],
+          "holds": true
+        },
+        "forward": {
+          "convention": "single tau steps preserve their related abstract state",
+          "failures": [],
+          "holds": true,
+          "relation_pairs": 3
+        },
+        "holds": true,
+        "scope": "bounded declared weak convention only"
+      }
+    },
+    {
+      "accepted": true,
+      "case_id": "redundant-path",
+      "input_sha256": "047b80205db04eaae89ade6f82c7b48a76b9fb917a5ab39c45734b54a3a1faca",
+      "operation": "weak_bisimulation",
+      "outcome": "completed",
+      "proposal_id": "EL6951-P053",
+      "semantic_predicate": true,
+      "value": {
+        "backward": {
+          "failures": [],
+          "holds": true
+        },
+        "forward": {
+          "convention": "single tau steps preserve their related abstract state",
+          "failures": [],
+          "holds": true,
+          "relation_pairs": 4
+        },
+        "holds": true,
+        "scope": "bounded declared weak convention only"
+      }
+    },
+    {
+      "accepted": true,
+      "case_id": "retry-fallback",
+      "input_sha256": "0367f67bbd12ee6b6b205ff1a5624bdb11463bac64ad6b6fb1acc403b12edd51",
+      "operation": "weak_bisimulation",
+      "outcome": "completed",
+      "proposal_id": "EL6951-P054",
+      "semantic_predicate": true,
+      "value": {
+        "backward": {
+          "failures": [],
+          "holds": true
+        },
+        "forward": {
+          "convention": "single tau steps preserve their related abstract state",
+          "failures": [],
+          "holds": true,
+          "relation_pairs": 4
+        },
+        "holds": true,
+        "scope": "bounded declared weak convention only"
+      }
+    },
+    {
+      "accepted": true,
+      "case_id": "appeal-remedy",
+      "input_sha256": "709e32841040ff10b96ab74cebc8776884d5d325d5d1fde0cf35a65a82d70316",
+      "operation": "weak_bisimulation",
+      "outcome": "completed",
+      "proposal_id": "EL6951-P055",
+      "semantic_predicate": true,
+      "value": {
+        "backward": {
+          "failures": [],
+          "holds": true
+        },
+        "forward": {
+          "convention": "single tau steps preserve their related abstract state",
+          "failures": [],
+          "holds": true,
+          "relation_pairs": 4
+        },
+        "holds": true,
+        "scope": "bounded declared weak convention only"
+      }
+    },
+    {
+      "accepted": true,
+      "case_id": "request-ack",
+      "input_sha256": "37efa91300d0a8bf9e9dc330e8c3849f7715d5b71731dd9470a16b6cbc485802",
+      "operation": "partition_refinement",
+      "outcome": "completed",
+      "proposal_id": "EL6951-P056",
+      "semantic_predicate": true,
+      "value": [
+        {
+          "block": "B01",
+          "members": [
+            "c-done"
+          ],
+          "signature": "done|reset"
+        },
+        {
+          "block": "B02",
+          "members": [
+            "c-idle"
+          ],
+          "signature": "idle|request"
+        },
+        {
+          "block": "B03",
+          "members": [
+            "c-queued"
+          ],
+          "signature": "pending|"
+        },
+        {
+          "block": "B04",
+          "members": [
+            "c-sent"
+          ],
+          "signature": "pending|ack"
+        }
+      ]
+    },
+    {
+      "accepted": true,
+      "case_id": "queue-drain",
+      "input_sha256": "dac4abe68a2a615d606c3e02a32ac6aa49d76deaef4fa2fdadd05f38b25864e4",
+      "operation": "partition_refinement",
+      "outcome": "completed",
+      "proposal_id": "EL6951-P057",
+      "semantic_predicate": true,
+      "value": [
+        {
+          "block": "B01",
+          "members": [
+            "q0"
+          ],
+          "signature": "empty|put"
+        },
+        {
+          "block": "B02",
+          "members": [
+            "q1",
+            "q2"
+          ],
+          "signature": "loaded|put+take"
+        }
+      ]
+    },
+    {
+      "accepted": true,
+      "case_id": "redundant-path",
+      "input_sha256": "047b80205db04eaae89ade6f82c7b48a76b9fb917a5ab39c45734b54a3a1faca",
+      "operation": "partition_refinement",
+      "outcome": "completed",
+      "proposal_id": "EL6951-P058",
+      "semantic_predicate": true,
+      "value": [
+        {
+          "block": "B01",
+          "members": [
+            "end"
+          ],
+          "signature": "finish|restart"
+        },
+        {
+          "block": "B02",
+          "members": [
+            "s0"
+          ],
+          "signature": "start|begin"
+        },
+        {
+          "block": "B03",
+          "members": [
+            "left",
+            "right"
+          ],
+          "signature": "work|complete"
+        }
+      ]
+    },
+    {
+      "accepted": true,
+      "case_id": "retry-fallback",
+      "input_sha256": "0367f67bbd12ee6b6b205ff1a5624bdb11463bac64ad6b6fb1acc403b12edd51",
+      "operation": "partition_refinement",
+      "outcome": "completed",
+      "proposal_id": "EL6951-P059",
+      "semantic_predicate": true,
+      "value": [
+        {
+          "block": "B01",
+          "members": [
+            "r1"
+          ],
+          "signature": "active|resolve"
+        },
+        {
+          "block": "B02",
+          "members": [
+            "r2"
+          ],
+          "signature": "active|resolve+retry"
+        },
+        {
+          "block": "B03",
+          "members": [
+            "r0"
+          ],
+          "signature": "ready|start"
+        },
+        {
+          "block": "B04",
+          "members": [
+            "r3"
+          ],
+          "signature": "resolved|reset"
+        }
+      ]
+    },
+    {
+      "accepted": true,
+      "case_id": "appeal-remedy",
+      "input_sha256": "709e32841040ff10b96ab74cebc8776884d5d325d5d1fde0cf35a65a82d70316",
+      "operation": "partition_refinement",
+      "outcome": "completed",
+      "proposal_id": "EL6951-P060",
+      "semantic_predicate": true,
+      "value": [
+        {
+          "block": "B01",
+          "members": [
+            "a3"
+          ],
+          "signature": "closed|reopen"
+        },
+        {
+          "block": "B02",
+          "members": [
+            "a0"
+          ],
+          "signature": "filed|submit"
+        },
+        {
+          "block": "B03",
+          "members": [
+            "a1"
+          ],
+          "signature": "review|"
+        },
+        {
+          "block": "B04",
+          "members": [
+            "a2"
+          ],
+          "signature": "review|decide"
+        }
+      ]
+    },
+    {
+      "accepted": true,
+      "case_id": "request-ack",
+      "input_sha256": "37efa91300d0a8bf9e9dc330e8c3849f7715d5b71731dd9470a16b6cbc485802",
+      "operation": "quotient_construction",
+      "outcome": "completed",
+      "proposal_id": "EL6951-P061",
+      "semantic_predicate": true,
+      "value": {
+        "blocks": [
+          {
+            "block": "B01",
+            "members": [
+              "c-done"
+            ],
+            "signature": "done|reset"
+          },
+          {
+            "block": "B02",
+            "members": [
+              "c-idle"
+            ],
+            "signature": "idle|request"
+          },
+          {
+            "block": "B03",
+            "members": [
+              "c-queued"
+            ],
+            "signature": "pending|"
+          },
+          {
+            "block": "B04",
+            "members": [
+              "c-sent"
+            ],
+            "signature": "pending|ack"
+          }
+        ],
+        "initial": "B02",
+        "reversible_member_lists": true,
+        "transitions": [
+          [
+            "B01",
+            "reset",
+            "B02"
+          ],
+          [
+            "B02",
+            "request",
+            "B03"
+          ],
+          [
+            "B03",
+            "tau",
+            "B04"
+          ],
+          [
+            "B04",
+            "ack",
+            "B01"
+          ]
+        ]
+      }
+    },
+    {
+      "accepted": true,
+      "case_id": "queue-drain",
+      "input_sha256": "dac4abe68a2a615d606c3e02a32ac6aa49d76deaef4fa2fdadd05f38b25864e4",
+      "operation": "quotient_construction",
+      "outcome": "completed",
+      "proposal_id": "EL6951-P062",
+      "semantic_predicate": true,
+      "value": {
+        "blocks": [
+          {
+            "block": "B01",
+            "members": [
+              "q0"
+            ],
+            "signature": "empty|put"
+          },
+          {
+            "block": "B02",
+            "members": [
+              "q1",
+              "q2"
+            ],
+            "signature": "loaded|put+take"
+          }
+        ],
+        "initial": "B01",
+        "reversible_member_lists": true,
+        "transitions": [
+          [
+            "B01",
+            "put",
+            "B02"
+          ],
+          [
+            "B02",
+            "put",
+            "B02"
+          ],
+          [
+            "B02",
+            "take",
+            "B01"
+          ]
+        ]
+      }
+    },
+    {
+      "accepted": true,
+      "case_id": "redundant-path",
+      "input_sha256": "047b80205db04eaae89ade6f82c7b48a76b9fb917a5ab39c45734b54a3a1faca",
+      "operation": "quotient_construction",
+      "outcome": "completed",
+      "proposal_id": "EL6951-P063",
+      "semantic_predicate": true,
+      "value": {
+        "blocks": [
+          {
+            "block": "B01",
+            "members": [
+              "end"
+            ],
+            "signature": "finish|restart"
+          },
+          {
+            "block": "B02",
+            "members": [
+              "s0"
+            ],
+            "signature": "start|begin"
+          },
+          {
+            "block": "B03",
+            "members": [
+              "left",
+              "right"
+            ],
+            "signature": "work|complete"
+          }
+        ],
+        "initial": "B02",
+        "reversible_member_lists": true,
+        "transitions": [
+          [
+            "B01",
+            "restart",
+            "B02"
+          ],
+          [
+            "B02",
+            "begin",
+            "B03"
+          ],
+          [
+            "B03",
+            "complete",
+            "B01"
+          ]
+        ]
+      }
+    },
+    {
+      "accepted": true,
+      "case_id": "retry-fallback",
+      "input_sha256": "0367f67bbd12ee6b6b205ff1a5624bdb11463bac64ad6b6fb1acc403b12edd51",
+      "operation": "quotient_construction",
+      "outcome": "completed",
+      "proposal_id": "EL6951-P064",
+      "semantic_predicate": true,
+      "value": {
+        "blocks": [
+          {
+            "block": "B01",
+            "members": [
+              "r1"
+            ],
+            "signature": "active|resolve"
+          },
+          {
+            "block": "B02",
+            "members": [
+              "r2"
+            ],
+            "signature": "active|resolve+retry"
+          },
+          {
+            "block": "B03",
+            "members": [
+              "r0"
+            ],
+            "signature": "ready|start"
+          },
+          {
+            "block": "B04",
+            "members": [
+              "r3"
+            ],
+            "signature": "resolved|reset"
+          }
+        ],
+        "initial": "B03",
+        "reversible_member_lists": true,
+        "transitions": [
+          [
+            "B01",
+            "resolve",
+            "B04"
+          ],
+          [
+            "B01",
+            "tau",
+            "B02"
+          ],
+          [
+            "B02",
+            "resolve",
+            "B04"
+          ],
+          [
+            "B02",
+            "retry",
+            "B01"
+          ],
+          [
+            "B03",
+            "start",
+            "B01"
+          ],
+          [
+            "B04",
+            "reset",
+            "B03"
+          ]
+        ]
+      }
+    },
+    {
+      "accepted": true,
+      "case_id": "appeal-remedy",
+      "input_sha256": "709e32841040ff10b96ab74cebc8776884d5d325d5d1fde0cf35a65a82d70316",
+      "operation": "quotient_construction",
+      "outcome": "completed",
+      "proposal_id": "EL6951-P065",
+      "semantic_predicate": true,
+      "value": {
+        "blocks": [
+          {
+            "block": "B01",
+            "members": [
+              "a3"
+            ],
+            "signature": "closed|reopen"
+          },
+          {
+            "block": "B02",
+            "members": [
+              "a0"
+            ],
+            "signature": "filed|submit"
+          },
+          {
+            "block": "B03",
+            "members": [
+              "a1"
+            ],
+            "signature": "review|"
+          },
+          {
+            "block": "B04",
+            "members": [
+              "a2"
+            ],
+            "signature": "review|decide"
+          }
+        ],
+        "initial": "B02",
+        "reversible_member_lists": true,
+        "transitions": [
+          [
+            "B01",
+            "reopen",
+            "B03"
+          ],
+          [
+            "B02",
+            "submit",
+            "B03"
+          ],
+          [
+            "B03",
+            "tau",
+            "B04"
+          ],
+          [
+            "B04",
+            "decide",
+            "B01"
+          ]
+        ]
+      }
+    },
+    {
+      "accepted": true,
+      "case_id": "request-ack",
+      "input_sha256": "37efa91300d0a8bf9e9dc330e8c3849f7715d5b71731dd9470a16b6cbc485802",
+      "operation": "minimal_counterexample",
+      "outcome": "completed",
+      "proposal_id": "EL6951-P066",
+      "semantic_predicate": true,
+      "value": {
+        "mutation_probe": {
+          "kind": "remove_relation_pair",
+          "rejected": true,
+          "success_credit": 0
+        },
+        "present": false,
+        "valid_pair_holds": true
+      }
+    },
+    {
+      "accepted": true,
+      "case_id": "queue-drain",
+      "input_sha256": "dac4abe68a2a615d606c3e02a32ac6aa49d76deaef4fa2fdadd05f38b25864e4",
+      "operation": "minimal_counterexample",
+      "outcome": "completed",
+      "proposal_id": "EL6951-P067",
+      "semantic_predicate": true,
+      "value": {
+        "mutation_probe": {
+          "kind": "remove_relation_pair",
+          "rejected": true,
+          "success_credit": 0
+        },
+        "present": false,
+        "valid_pair_holds": true
+      }
+    },
+    {
+      "accepted": true,
+      "case_id": "redundant-path",
+      "input_sha256": "047b80205db04eaae89ade6f82c7b48a76b9fb917a5ab39c45734b54a3a1faca",
+      "operation": "minimal_counterexample",
+      "outcome": "completed",
+      "proposal_id": "EL6951-P068",
+      "semantic_predicate": true,
+      "value": {
+        "mutation_probe": {
+          "kind": "remove_relation_pair",
+          "rejected": true,
+          "success_credit": 0
+        },
+        "present": false,
+        "valid_pair_holds": true
+      }
+    },
+    {
+      "accepted": true,
+      "case_id": "retry-fallback",
+      "input_sha256": "0367f67bbd12ee6b6b205ff1a5624bdb11463bac64ad6b6fb1acc403b12edd51",
+      "operation": "minimal_counterexample",
+      "outcome": "completed",
+      "proposal_id": "EL6951-P069",
+      "semantic_predicate": true,
+      "value": {
+        "mutation_probe": {
+          "kind": "remove_relation_pair",
+          "rejected": true,
+          "success_credit": 0
+        },
+        "present": false,
+        "valid_pair_holds": true
+      }
+    },
+    {
+      "accepted": true,
+      "case_id": "appeal-remedy",
+      "input_sha256": "709e32841040ff10b96ab74cebc8776884d5d325d5d1fde0cf35a65a82d70316",
+      "operation": "minimal_counterexample",
+      "outcome": "completed",
+      "proposal_id": "EL6951-P070",
+      "semantic_predicate": true,
+      "value": {
+        "mutation_probe": {
+          "kind": "remove_relation_pair",
+          "rejected": true,
+          "success_credit": 0
+        },
+        "present": false,
+        "valid_pair_holds": true
+      }
+    },
+    {
+      "accepted": true,
+      "case_id": "request-ack",
+      "input_sha256": "37efa91300d0a8bf9e9dc330e8c3849f7715d5b71731dd9470a16b6cbc485802",
+      "operation": "change_impact_closure",
+      "outcome": "completed",
+      "proposal_id": "EL6951-P071",
+      "semantic_predicate": true,
+      "value": {
+        "affected": [
+          "R-ACK",
+          "R-REQ",
+          "R-RESET"
+        ],
+        "change_root": "R-REQ",
+        "synthetic": true
+      }
+    },
+    {
+      "accepted": true,
+      "case_id": "queue-drain",
+      "input_sha256": "dac4abe68a2a615d606c3e02a32ac6aa49d76deaef4fa2fdadd05f38b25864e4",
+      "operation": "change_impact_closure",
+      "outcome": "completed",
+      "proposal_id": "EL6951-P072",
+      "semantic_predicate": true,
+      "value": {
+        "affected": [
+          "R-PUT",
+          "R-TAKE"
+        ],
+        "change_root": "R-PUT",
+        "synthetic": true
+      }
+    },
+    {
+      "accepted": true,
+      "case_id": "redundant-path",
+      "input_sha256": "047b80205db04eaae89ade6f82c7b48a76b9fb917a5ab39c45734b54a3a1faca",
+      "operation": "change_impact_closure",
+      "outcome": "completed",
+      "proposal_id": "EL6951-P073",
+      "semantic_predicate": true,
+      "value": {
+        "affected": [
+          "R-BEGIN",
+          "R-COMPLETE",
+          "R-RESTART"
+        ],
+        "change_root": "R-BEGIN",
+        "synthetic": true
+      }
+    },
+    {
+      "accepted": true,
+      "case_id": "retry-fallback",
+      "input_sha256": "0367f67bbd12ee6b6b205ff1a5624bdb11463bac64ad6b6fb1acc403b12edd51",
+      "operation": "change_impact_closure",
+      "outcome": "completed",
+      "proposal_id": "EL6951-P074",
+      "semantic_predicate": true,
+      "value": {
+        "affected": [
+          "R-RESET",
+          "R-RESOLVE",
+          "R-RETRY",
+          "R-START"
+        ],
+        "change_root": "R-START",
+        "synthetic": true
+      }
+    },
+    {
+      "accepted": true,
+      "case_id": "appeal-remedy",
+      "input_sha256": "709e32841040ff10b96ab74cebc8776884d5d325d5d1fde0cf35a65a82d70316",
+      "operation": "change_impact_closure",
+      "outcome": "completed",
+      "proposal_id": "EL6951-P075",
+      "semantic_predicate": true,
+      "value": {
+        "affected": [
+          "R-DECIDE",
+          "R-REOPEN",
+          "R-SUBMIT"
+        ],
+        "change_root": "R-SUBMIT",
+        "synthetic": true
+      }
+    },
+    {
+      "accepted": true,
+      "case_id": "request-ack",
+      "input_sha256": "37efa91300d0a8bf9e9dc330e8c3849f7715d5b71731dd9470a16b6cbc485802",
+      "operation": "composition_projection",
+      "outcome": "completed",
+      "proposal_id": "EL6951-P076",
+      "semantic_predicate": true,
+      "value": {
+        "projection": {
+          "done@alpha": "done",
+          "done@beta": "done",
+          "idle@alpha": "idle",
+          "idle@beta": "idle",
+          "pending@alpha": "pending",
+          "pending@beta": "pending"
+        },
+        "state_count": 6,
+        "synthetic": true,
+        "transition_count": 12
+      }
+    },
+    {
+      "accepted": true,
+      "case_id": "queue-drain",
+      "input_sha256": "dac4abe68a2a615d606c3e02a32ac6aa49d76deaef4fa2fdadd05f38b25864e4",
+      "operation": "composition_projection",
+      "outcome": "completed",
+      "proposal_id": "EL6951-P077",
+      "semantic_predicate": true,
+      "value": {
+        "projection": {
+          "empty@alpha": "empty",
+          "empty@beta": "empty",
+          "loaded@alpha": "loaded",
+          "loaded@beta": "loaded"
+        },
+        "state_count": 4,
+        "synthetic": true,
+        "transition_count": 10
+      }
+    },
+    {
+      "accepted": true,
+      "case_id": "redundant-path",
+      "input_sha256": "047b80205db04eaae89ade6f82c7b48a76b9fb917a5ab39c45734b54a3a1faca",
+      "operation": "composition_projection",
+      "outcome": "completed",
+      "proposal_id": "EL6951-P078",
+      "semantic_predicate": true,
+      "value": {
+        "projection": {
+          "finish@alpha": "finish",
+          "finish@beta": "finish",
+          "start@alpha": "start",
+          "start@beta": "start",
+          "work@alpha": "work",
+          "work@beta": "work"
+        },
+        "state_count": 6,
+        "synthetic": true,
+        "transition_count": 12
+      }
+    },
+    {
+      "accepted": true,
+      "case_id": "retry-fallback",
+      "input_sha256": "0367f67bbd12ee6b6b205ff1a5624bdb11463bac64ad6b6fb1acc403b12edd51",
+      "operation": "composition_projection",
+      "outcome": "completed",
+      "proposal_id": "EL6951-P079",
+      "semantic_predicate": true,
+      "value": {
+        "projection": {
+          "active@alpha": "active",
+          "active@beta": "active",
+          "ready@alpha": "ready",
+          "ready@beta": "ready",
+          "resolved@alpha": "resolved",
+          "resolved@beta": "resolved"
+        },
+        "state_count": 6,
+        "synthetic": true,
+        "transition_count": 14
+      }
+    },
+    {
+      "accepted": true,
+      "case_id": "appeal-remedy",
+      "input_sha256": "709e32841040ff10b96ab74cebc8776884d5d325d5d1fde0cf35a65a82d70316",
+      "operation": "composition_projection",
+      "outcome": "completed",
+      "proposal_id": "EL6951-P080",
+      "semantic_predicate": true,
+      "value": {
+        "projection": {
+          "closed@alpha": "closed",
+          "closed@beta": "closed",
+          "filed@alpha": "filed",
+          "filed@beta": "filed",
+          "review@alpha": "review",
+          "review@beta": "review"
+        },
+        "state_count": 6,
+        "synthetic": true,
+        "transition_count": 12
+      }
+    },
+    {
+      "accepted": true,
+      "case_id": "request-ack",
+      "input_sha256": "37efa91300d0a8bf9e9dc330e8c3849f7715d5b71731dd9470a16b6cbc485802",
+      "operation": "stuttering_boundary",
+      "outcome": "represented",
+      "proposal_id": "EL6951-P081",
+      "semantic_predicate": true,
+      "value": {
+        "divergence_sensitive": false,
+        "full_branching_bisimulation_proved": false,
+        "state": "represented",
+        "tau_convention": "single internal steps preserve the related abstract state"
+      }
+    },
+    {
+      "accepted": true,
+      "case_id": "queue-drain",
+      "input_sha256": "dac4abe68a2a615d606c3e02a32ac6aa49d76deaef4fa2fdadd05f38b25864e4",
+      "operation": "stuttering_boundary",
+      "outcome": "represented",
+      "proposal_id": "EL6951-P082",
+      "semantic_predicate": true,
+      "value": {
+        "divergence_sensitive": false,
+        "full_branching_bisimulation_proved": false,
+        "state": "represented",
+        "tau_convention": "single internal steps preserve the related abstract state"
+      }
+    },
+    {
+      "accepted": true,
+      "case_id": "redundant-path",
+      "input_sha256": "047b80205db04eaae89ade6f82c7b48a76b9fb917a5ab39c45734b54a3a1faca",
+      "operation": "stuttering_boundary",
+      "outcome": "represented",
+      "proposal_id": "EL6951-P083",
+      "semantic_predicate": true,
+      "value": {
+        "divergence_sensitive": false,
+        "full_branching_bisimulation_proved": false,
+        "state": "represented",
+        "tau_convention": "single internal steps preserve the related abstract state"
+      }
+    },
+    {
+      "accepted": true,
+      "case_id": "retry-fallback",
+      "input_sha256": "0367f67bbd12ee6b6b205ff1a5624bdb11463bac64ad6b6fb1acc403b12edd51",
+      "operation": "stuttering_boundary",
+      "outcome": "represented",
+      "proposal_id": "EL6951-P084",
+      "semantic_predicate": true,
+      "value": {
+        "divergence_sensitive": false,
+        "full_branching_bisimulation_proved": false,
+        "state": "represented",
+        "tau_convention": "single internal steps preserve the related abstract state"
+      }
+    },
+    {
+      "accepted": true,
+      "case_id": "appeal-remedy",
+      "input_sha256": "709e32841040ff10b96ab74cebc8776884d5d325d5d1fde0cf35a65a82d70316",
+      "operation": "stuttering_boundary",
+      "outcome": "represented",
+      "proposal_id": "EL6951-P085",
+      "semantic_predicate": true,
+      "value": {
+        "divergence_sensitive": false,
+        "full_branching_bisimulation_proved": false,
+        "state": "represented",
+        "tau_convention": "single internal steps preserve the related abstract state"
+      }
+    },
+    {
+      "accepted": true,
+      "case_id": "request-ack",
+      "input_sha256": "37efa91300d0a8bf9e9dc330e8c3849f7715d5b71731dd9470a16b6cbc485802",
+      "operation": "uncertainty_boundary",
+      "outcome": "represented",
+      "proposal_id": "EL6951-P086",
+      "semantic_predicate": true,
+      "value": {
+        "combined_standard_uncertainty": null,
+        "formal_result_is_measurement": false,
+        "measurand_defined": false,
+        "observations": 0,
+        "state": "represented",
+        "type_a": false,
+        "type_b": false
+      }
+    },
+    {
+      "accepted": true,
+      "case_id": "queue-drain",
+      "input_sha256": "dac4abe68a2a615d606c3e02a32ac6aa49d76deaef4fa2fdadd05f38b25864e4",
+      "operation": "uncertainty_boundary",
+      "outcome": "represented",
+      "proposal_id": "EL6951-P087",
+      "semantic_predicate": true,
+      "value": {
+        "combined_standard_uncertainty": null,
+        "formal_result_is_measurement": false,
+        "measurand_defined": false,
+        "observations": 0,
+        "state": "represented",
+        "type_a": false,
+        "type_b": false
+      }
+    },
+    {
+      "accepted": true,
+      "case_id": "redundant-path",
+      "input_sha256": "047b80205db04eaae89ade6f82c7b48a76b9fb917a5ab39c45734b54a3a1faca",
+      "operation": "uncertainty_boundary",
+      "outcome": "represented",
+      "proposal_id": "EL6951-P088",
+      "semantic_predicate": true,
+      "value": {
+        "combined_standard_uncertainty": null,
+        "formal_result_is_measurement": false,
+        "measurand_defined": false,
+        "observations": 0,
+        "state": "represented",
+        "type_a": false,
+        "type_b": false
+      }
+    },
+    {
+      "accepted": true,
+      "case_id": "retry-fallback",
+      "input_sha256": "0367f67bbd12ee6b6b205ff1a5624bdb11463bac64ad6b6fb1acc403b12edd51",
+      "operation": "uncertainty_boundary",
+      "outcome": "represented",
+      "proposal_id": "EL6951-P089",
+      "semantic_predicate": true,
+      "value": {
+        "combined_standard_uncertainty": null,
+        "formal_result_is_measurement": false,
+        "measurand_defined": false,
+        "observations": 0,
+        "state": "represented",
+        "type_a": false,
+        "type_b": false
+      }
+    },
+    {
+      "accepted": true,
+      "case_id": "appeal-remedy",
+      "input_sha256": "709e32841040ff10b96ab74cebc8776884d5d325d5d1fde0cf35a65a82d70316",
+      "operation": "uncertainty_boundary",
+      "outcome": "represented",
+      "proposal_id": "EL6951-P090",
+      "semantic_predicate": true,
+      "value": {
+        "combined_standard_uncertainty": null,
+        "formal_result_is_measurement": false,
+        "measurand_defined": false,
+        "observations": 0,
+        "state": "represented",
+        "type_a": false,
+        "type_b": false
+      }
+    },
+    {
+      "accepted": true,
+      "case_id": "request-ack",
+      "input_sha256": "37efa91300d0a8bf9e9dc330e8c3849f7715d5b71731dd9470a16b6cbc485802",
+      "operation": "governed_empirical_gap",
+      "outcome": "open_gap",
+      "proposal_id": "EL6951-P091",
+      "semantic_predicate": true,
+      "value": {
+        "effectiveness_claimed": false,
+        "missing": [
+          "governed real systems",
+          "preregistered comparison",
+          "measurement model",
+          "uncertainty analysis",
+          "independent evaluation"
+        ],
+        "state": "open_gap"
+      }
+    },
+    {
+      "accepted": true,
+      "case_id": "queue-drain",
+      "input_sha256": "dac4abe68a2a615d606c3e02a32ac6aa49d76deaef4fa2fdadd05f38b25864e4",
+      "operation": "governed_empirical_gap",
+      "outcome": "open_gap",
+      "proposal_id": "EL6951-P092",
+      "semantic_predicate": true,
+      "value": {
+        "effectiveness_claimed": false,
+        "missing": [
+          "governed real systems",
+          "preregistered comparison",
+          "measurement model",
+          "uncertainty analysis",
+          "independent evaluation"
+        ],
+        "state": "open_gap"
+      }
+    },
+    {
+      "accepted": true,
+      "case_id": "redundant-path",
+      "input_sha256": "047b80205db04eaae89ade6f82c7b48a76b9fb917a5ab39c45734b54a3a1faca",
+      "operation": "governed_empirical_gap",
+      "outcome": "open_gap",
+      "proposal_id": "EL6951-P093",
+      "semantic_predicate": true,
+      "value": {
+        "effectiveness_claimed": false,
+        "missing": [
+          "governed real systems",
+          "preregistered comparison",
+          "measurement model",
+          "uncertainty analysis",
+          "independent evaluation"
+        ],
+        "state": "open_gap"
+      }
+    },
+    {
+      "accepted": true,
+      "case_id": "retry-fallback",
+      "input_sha256": "0367f67bbd12ee6b6b205ff1a5624bdb11463bac64ad6b6fb1acc403b12edd51",
+      "operation": "governed_empirical_gap",
+      "outcome": "open_gap",
+      "proposal_id": "EL6951-P094",
+      "semantic_predicate": true,
+      "value": {
+        "effectiveness_claimed": false,
+        "missing": [
+          "governed real systems",
+          "preregistered comparison",
+          "measurement model",
+          "uncertainty analysis",
+          "independent evaluation"
+        ],
+        "state": "open_gap"
+      }
+    },
+    {
+      "accepted": true,
+      "case_id": "appeal-remedy",
+      "input_sha256": "709e32841040ff10b96ab74cebc8776884d5d325d5d1fde0cf35a65a82d70316",
+      "operation": "governed_empirical_gap",
+      "outcome": "open_gap",
+      "proposal_id": "EL6951-P095",
+      "semantic_predicate": true,
+      "value": {
+        "effectiveness_claimed": false,
+        "missing": [
+          "governed real systems",
+          "preregistered comparison",
+          "measurement model",
+          "uncertainty analysis",
+          "independent evaluation"
+        ],
+        "state": "open_gap"
+      }
+    },
+    {
+      "accepted": true,
+      "case_id": "request-ack",
+      "input_sha256": "37efa91300d0a8bf9e9dc330e8c3849f7715d5b71731dd9470a16b6cbc485802",
+      "operation": "deployment_authority_gate",
+      "outcome": "exact_gate",
+      "proposal_id": "EL6951-P096",
+      "semantic_predicate": true,
+      "value": {
+        "deployment_performed": false,
+        "missing": [
+          "declared deployment scope",
+          "competent professional review",
+          "affected-party authorization",
+          "independent privacy and security review",
+          "legal cultural and Maori authority where applicable"
+        ],
+        "state": "exact_gate"
+      }
+    },
+    {
+      "accepted": true,
+      "case_id": "queue-drain",
+      "input_sha256": "dac4abe68a2a615d606c3e02a32ac6aa49d76deaef4fa2fdadd05f38b25864e4",
+      "operation": "deployment_authority_gate",
+      "outcome": "exact_gate",
+      "proposal_id": "EL6951-P097",
+      "semantic_predicate": true,
+      "value": {
+        "deployment_performed": false,
+        "missing": [
+          "declared deployment scope",
+          "competent professional review",
+          "affected-party authorization",
+          "independent privacy and security review",
+          "legal cultural and Maori authority where applicable"
+        ],
+        "state": "exact_gate"
+      }
+    },
+    {
+      "accepted": true,
+      "case_id": "redundant-path",
+      "input_sha256": "047b80205db04eaae89ade6f82c7b48a76b9fb917a5ab39c45734b54a3a1faca",
+      "operation": "deployment_authority_gate",
+      "outcome": "exact_gate",
+      "proposal_id": "EL6951-P098",
+      "semantic_predicate": true,
+      "value": {
+        "deployment_performed": false,
+        "missing": [
+          "declared deployment scope",
+          "competent professional review",
+          "affected-party authorization",
+          "independent privacy and security review",
+          "legal cultural and Maori authority where applicable"
+        ],
+        "state": "exact_gate"
+      }
+    },
+    {
+      "accepted": true,
+      "case_id": "retry-fallback",
+      "input_sha256": "0367f67bbd12ee6b6b205ff1a5624bdb11463bac64ad6b6fb1acc403b12edd51",
+      "operation": "deployment_authority_gate",
+      "outcome": "exact_gate",
+      "proposal_id": "EL6951-P099",
+      "semantic_predicate": true,
+      "value": {
+        "deployment_performed": false,
+        "missing": [
+          "declared deployment scope",
+          "competent professional review",
+          "affected-party authorization",
+          "independent privacy and security review",
+          "legal cultural and Maori authority where applicable"
+        ],
+        "state": "exact_gate"
+      }
+    },
+    {
+      "accepted": true,
+      "case_id": "appeal-remedy",
+      "input_sha256": "709e32841040ff10b96ab74cebc8776884d5d325d5d1fde0cf35a65a82d70316",
+      "operation": "deployment_authority_gate",
+      "outcome": "exact_gate",
+      "proposal_id": "EL6951-P100",
+      "semantic_predicate": true,
+      "value": {
+        "deployment_performed": false,
+        "missing": [
+          "declared deployment scope",
+          "competent professional review",
+          "affected-party authorization",
+          "independent privacy and security review",
+          "legal cultural and Maori authority where applicable"
+        ],
+        "state": "exact_gate"
+      }
+    }
+  ],
+  "schema": "ghc.family.lts-refinement-results.v1",
+  "stage": "x2"
+}
