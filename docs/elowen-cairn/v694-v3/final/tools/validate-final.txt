@@ -1,0 +1,71 @@
+"use strict";
+
+const fs = require("node:fs");
+const path = require("node:path");
+const crypto = require("node:crypto");
+const vm = require("node:vm");
+
+const BASE = "docs/elowen-cairn/v694-v3";
+const FINAL = `${BASE}/final`;
+const root = process.cwd();
+const read = (relative) => JSON.parse(fs.readFileSync(path.join(root, relative), "utf8"));
+const hash = (bytes) => crypto.createHash("sha256").update(bytes).digest("hex");
+const phase = read(`${FINAL}/phase-truth.json`), proposals = read(`${FINAL}/proposal-ledger.json`), negatives = read(`${FINAL}/retained-negative-register.json`), methods = read(`${FINAL}/method-flow.json`), gaps = read(`${FINAL}/open-gap-register.json`), gates = read(`${FINAL}/exact-gate-register.json`), deck = read(`${FINAL}/deck/deck-index.json`), cards = read(`${FINAL}/deck/card-manifest.json`), baton = read(`${FINAL}/baton-metadata.json`), contentSeal = read(`${FINAL}/content-seal.json`), delta = read(`${FINAL}/delta-manifest.json`), owner = read(`${FINAL}/owner-manifest.json`), route = read(`${FINAL}/route-packet.json`), staged = read(`${FINAL}/staged-review.json`), checklist = read(`${FINAL}/completion-checklist.json`);
+const issues = [];
+const check = (condition, issue) => { if (!condition) issues.push(issue); };
+check(proposals.rows.length === 100 && JSON.stringify(proposals.outcomes) === JSON.stringify({ completed: 80, represented: 10, open_gap: 5, exact_gate: 5 }), "proposal ledger");
+check(negatives.owner_count === 225 && negatives.effective_count === 1586 && negatives.rows.every((row) => row.subject_success_credit === 0), "negative register");
+check(methods.owner_methods === 45 && methods.owner_witnesses === 570 && methods.owner_passing_witnesses === 345 && methods.owner_failed_witnesses === 225, "Method Flow");
+check(gaps.activation_baseline === 15 && gaps.owner_additions === 5 && gaps.effective === 20 && gaps.rows.length === 5, "open gaps");
+check(gates.activation_baseline === 15 && gates.owner_additions === 5 && gates.effective === 20 && gates.rows.length === 5 && gates.rows.every((row) => row.executed === false), "exact gates");
+check(phase.effective.methods === 197 && phase.effective.witnesses === 5472 && phase.effective.passing_witnesses === 3886 && phase.effective.failed_witnesses_and_effective_negatives === 1586, "effective lineage");
+check(deck.cards === 123 && deck.tier_counts["1"] === 1 && deck.tier_counts["2"] === 3 && deck.tier_counts["3"] === 4 && deck.tier_counts["4"] === 115, "deck counts");
+check(cards.bindings.length === 123, "card manifest count");
+check(baton.module_count === 13 && baton.words >= 10000 && baton.words <= 100000 && baton.route_state === "PREPARED_NOT_SENT_EXACT_ROUTE_CONFLICT", "baton metadata");
+const batonBytes = fs.readFileSync(path.join(root, FINAL, "hand-off-baton.md"));
+check(batonBytes.length === baton.bytes && hash(batonBytes) === baton.sha256 && batonBytes.toString("utf8").trimEnd().endsWith(baton.literal_eof), "baton bytes");
+check(route.conflict === true && route.successor_contacts === 0 && route.state === "PREPARED_NOT_SENT_EXACT_ROUTE_CONFLICT", "route hold");
+check(checklist.exact_executed === 0 && checklist.blocked_executed === 0 && checklist.owner_canonical_invocations_at_repository_seal === 0, "packet and canonical holds");
+check(staged.valid === true && staged.deletions === 0 && staged.within_ceiling === true, "staged review");
+for (const binding of [...cards.bindings, ...contentSeal.targets, ...delta.bindings, ...owner.bindings]) {
+  const target = path.join(root, binding.path);
+  check(fs.existsSync(target), `missing bound file ${binding.path}`);
+  if (fs.existsSync(target)) { const bytes = fs.readFileSync(target); check(bytes.length === binding.bytes, `bound bytes ${binding.path}`); check(hash(bytes) === binding.sha256, `bound hash ${binding.path}`); }
+}
+const ownerPaths = owner.bindings.map((row) => row.path);
+check(new Set(ownerPaths).size === ownerPaths.length, "duplicate owner manifest path");
+check(owner.owner_file_count === owner.bindings.length + owner.exclusions.length && owner.owner_file_count <= 2000, "owner file count");
+const jsonIssues = [], txtIssues = [], formatIssues = [], scannerCandidates = [], confirmedPrivacy = [], metadataExceptions = [];
+const forbidden = [
+  ["credential_assignment", /(?:api[_-]?key|password|token)\s*[:=]\s*["'][^"']+["']/i],
+  ["delegation_markup", /<codex_delegation>/i],
+  ["private_local_path", /(?:^|[\s"'(])[A-Za-z]:\\/m],
+  ["private_uri", /(?:app|plugin|codex):\/\//i],
+  ["raw_uuid", /\b[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}\b/i]
+];
+let maximumWords = 0;
+for (const binding of owner.bindings) {
+  const text = fs.readFileSync(path.join(root, binding.path), "utf8");
+  maximumWords = Math.max(maximumWords, (text.match(/\S+/g) || []).length);
+  const extension = path.extname(binding.path);
+  if (![".json", ".md", ".txt", ".html"].includes(extension)) {
+    if (binding.path.endsWith("/agents/openai.yaml")) metadataExceptions.push(binding.path);
+    else formatIssues.push(binding.path);
+  }
+  if (extension === ".json") { try { JSON.parse(text); } catch (error) { jsonIssues.push({ path: binding.path, error: error.message }); } }
+  if (extension === ".txt") { try { new vm.Script(text, { filename: binding.path }); } catch (error) { txtIssues.push({ path: binding.path, error: error.message }); } }
+  for (const [className, pattern] of forbidden) if (pattern.test(text)) {
+    if (binding.path.includes("/tools/") && /(?:validate|canonical)/.test(path.basename(binding.path))) scannerCandidates.push({ path: binding.path, class: className, classification: "scanner_definition_metadata", confirmed_payload_hit: false });
+    else confirmedPrivacy.push({ path: binding.path, class: className });
+  }
+}
+check(jsonIssues.length === 0, "strict JSON");
+check(txtIssues.length === 0, "TXT syntax");
+check(formatIssues.length === 0 && metadataExceptions.length === 25, "formats and skill metadata exception");
+check(confirmedPrivacy.length === 0, "confirmed privacy hits");
+check(maximumWords <= 100000, "document word ceiling");
+const html = fs.readFileSync(path.join(root, FINAL, "accessible-report.html"), "utf8");
+for (const marker of ['lang="en"', 'href="#main"', '<main id="main">', '<table>', '<caption>', 'scope="col"', 'scope="row"', 'role="status"', 'aria-live="polite"', '<label for="query">']) check(html.includes(marker), `HTML marker ${marker}`);
+const receipt = { schema: "ghc.family.final-candidate-validator.v9", owner: "Elowen Cairn", phase: "v694-v3", valid: issues.length === 0, issue_count: issues.length, issues, checks: { proposals: 100, owner_failures: 225, methods: 45, witnesses: 570, deck_cards: 123, delta_bindings: delta.bindings.length, owner_bindings: owner.bindings.length, strict_json: owner.bindings.filter((row) => row.path.endsWith(".json")).length, txt_syntax: owner.bindings.filter((row) => row.path.endsWith(".txt")).length }, scanner_candidates: scannerCandidates, confirmed_privacy_hits: confirmedPrivacy, skill_metadata_exceptions: metadataExceptions.length, maximum_document_words: maximumWords, canonical_invoked: false, successor_contacts: 0, full_repository_suite: false, independent_reproduction: false, terminal_verdict: "NOT_READY_FOR_STAGE_20" };
+process.stdout.write(`${JSON.stringify(receipt)}\n`);
+if (issues.length) process.exitCode = 1;
