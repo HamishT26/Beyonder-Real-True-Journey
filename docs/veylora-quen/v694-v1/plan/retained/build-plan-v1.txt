@@ -1,0 +1,283 @@
+"use strict";
+// Planning-only authoring: static expected values; no execution kernel is loaded.
+const fs=require("fs"),path=require("path"),crypto=require("crypto"),cp=require("child_process");
+const ROOT=process.cwd(), BASE="docs/veylora-quen/v694-v1", OWNER="Veylora Quen", PHASE="v694-v1";
+const SOURCE="5752a612330a69f938bf915697cf607ca0412fe5", PRIOR="e7db6f3be1327de72f93873eb6540aabfc773344";
+const GATES=["real_participants","empirical_confirmation","production_deployment","professional_authority","legal_cultural_affected_party_authority","Maori_authority","complete_privacy_accessibility_security","independent_reproduction","consciousness_personhood","AGI_ASI","Theory_of_Everything","Stage_20"];
+const BOUNDARY="Veylora Quen, she/her, evidence steward, and the hope to make each handoff clearer, more faithful and easier for Hamish to review are relational working language only. Same-owner finite synthetic software under shared infrastructure is not independent reproduction and establishes no consciousness, sentience, personhood, legal identity, identity continuity, employment, qualification, independent agency, empirical GMUT confirmation, production THOS or Freed ID, professional, scientific, operational, legal, cultural, affected-party or Maori authority, complete privacy or accessibility, exhaustive security, AGI or ASI, Theory-of-Everything proof, canon or Stage 20 readiness. Maori concepts remain under Maori authority. NOT_READY_FOR_STAGE_20.";
+const practices=["prime-field-bookkeeping","polynomial-operator-verification","quotient-certificate-review","representation-provenance-stewardship"];
+const groups=[];
+function add(op,title,rows){if(rows.length!==5)throw Error(op);groups.push({op,title,rows});}
+add("gf_prime_profile","Prime-field profile",[
+ [{p:2},{modulus:2,prime:true,nonzero_elements:1},"smallest prime modulus"],
+ [{p:3},{modulus:3,prime:true,nonzero_elements:2},"odd prime modulus three"],
+ [{p:5},{modulus:5,prime:true,nonzero_elements:4},"five-element field"],
+ [{p:7},{modulus:7,prime:true,nonzero_elements:6},"seven-element field"],
+ [{p:251},{modulus:251,prime:true,nonzero_elements:250},"maximum admitted prime"]]);
+add("gf_residue_normalize","Residue normalization",[
+ [{p:2,n:-1},{residue:1},"negative unit modulo two"],
+ [{p:5,n:7},{residue:2},"positive overflow modulo five"],
+ [{p:7,n:-15},{residue:6},"multiple negative periods modulo seven"],
+ [{p:11,n:0},{residue:0},"explicit additive zero"],
+ [{p:251,n:65535},{residue:24},"large integer at maximum prime"]]);
+add("gf_additive_inverse","Additive inverse",[
+ [{p:2,n:1},{inverse:1},"characteristic-two self-inverse"],
+ [{p:5,n:4},{inverse:1},"maximal residue modulo five"],
+ [{p:7,n:0},{inverse:0},"zero maps to zero"],
+ [{p:11,n:-3},{inverse:3},"negative representative normalization"],
+ [{p:251,n:250},{inverse:1},"upper residue at maximum prime"]]);
+add("gf_sum","Field sum",[
+ [{p:2,a:1,b:1},{sum:0},"one plus one in characteristic two"],
+ [{p:5,a:4,b:4},{sum:3},"two upper residues wrap"],
+ [{p:7,a:-1,b:3},{sum:2},"mixed signed representatives"],
+ [{p:11,a:10,b:1},{sum:0},"additive cancellation"],
+ [{p:251,a:200,b:200},{sum:149},"wide residue sum"]]);
+add("gf_product","Field product",[
+ [{p:2,a:1,b:1},{product:1},"smallest multiplicative unit"],
+ [{p:5,a:2,b:3},{product:1},"nontrivial inverse pair"],
+ [{p:7,a:-2,b:3},{product:1},"negative factor representative"],
+ [{p:11,a:10,b:10},{product:1},"square of negative unit"],
+ [{p:251,a:125,b:2},{product:250},"upper bounded product"]]);
+add("gf_multiplicative_inverse","Multiplicative inverse",[
+ [{p:2,n:1},{inverse:1},"only nonzero residue modulo two"],
+ [{p:5,n:2},{inverse:3},"inverse of two modulo five"],
+ [{p:7,n:3},{inverse:5},"inverse of three modulo seven"],
+ [{p:11,n:10},{inverse:10},"negative-unit self-inverse"],
+ [{p:251,n:250},{inverse:250},"maximum-prime negative unit"]]);
+add("gf_quotient","Field quotient",[
+ [{p:2,a:1,b:1},{quotient:1},"unit divided by unit"],
+ [{p:5,a:3,b:2},{quotient:4},"division through a modular inverse"],
+ [{p:7,a:6,b:3},{quotient:2},"exact residue quotient"],
+ [{p:11,a:5,b:7},{quotient:7},"non-integer ordinary quotient"],
+ [{p:251,a:0,b:249},{quotient:0},"zero numerator with nonzero divisor"]]);
+add("gf_signed_power","Signed modular power",[
+ [{p:2,n:1,exponent:0},{power:1},"explicit zero exponent"],
+ [{p:5,n:2,exponent:4},{power:1},"finite nonzero period"],
+ [{p:7,n:3,exponent:-1},{power:5},"negative exponent uses inverse"],
+ [{p:11,n:0,exponent:3},{power:0},"positive power of zero"],
+ [{p:251,n:250,exponent:2},{power:1},"square of maximal residue"]]);
+add("gf_polynomial_normalize","Polynomial coefficient normalization",[
+ [{p:2,a:[0,1,0,0]},{coefficients:[0,1]},"trim trailing zero coefficients"],
+ [{p:5,a:[7,-1,0]},{coefficients:[2,4]},"normalize signed coefficients"],
+ [{p:7,a:[0,0]},{coefficients:[0]},"unique zero polynomial representation"],
+ [{p:11,a:[12]},{coefficients:[1]},"constant reduction"],
+ [{p:251,a:[-1,252,0]},{coefficients:[250,1]},"upper-prime coefficient wrap"]]);
+add("gf_polynomial_sum","Polynomial addition",[
+ [{p:2,a:[1,1],b:[1,0,1]},{coefficients:[0,1,1]},"unequal degrees in characteristic two"],
+ [{p:5,a:[1,2],b:[4,3]},{coefficients:[0]},"complete polynomial cancellation"],
+ [{p:7,a:[6],b:[2,3]},{coefficients:[1,3]},"constant added to linear polynomial"],
+ [{p:11,a:[0],b:[1,0,1]},{coefficients:[1,0,1]},"zero-polynomial identity"],
+ [{p:251,a:[250,1],b:[1,250]},{coefficients:[0]},"upper-prime cancellation"]]);
+add("gf_polynomial_product","Polynomial multiplication",[
+ [{p:2,a:[1,1],b:[1,1]},{coefficients:[1,0,1]},"cross terms vanish in characteristic two"],
+ [{p:5,a:[1,2],b:[3,4]},{coefficients:[3,0,3]},"convolution with a zero middle coefficient"],
+ [{p:7,a:[0],b:[1,2]},{coefficients:[0]},"zero annihilator"],
+ [{p:11,a:[1,0,1],b:[1,1]},{coefficients:[1,1,1,1]},"sparse quadratic times linear"],
+ [{p:251,a:[250,1],b:[250,1]},{coefficients:[1,249,1]},"square of x minus one"]]);
+add("gf_polynomial_division","Polynomial quotient and remainder",[
+ [{p:2,a:[1,0,1],b:[1,1]},{quotient:[1,1],remainder:[0]},"exact repeated linear factor"],
+ [{p:5,a:[4,0,1],b:[1,1]},{quotient:[4,1],remainder:[0]},"difference of squares"],
+ [{p:7,a:[1,2,3],b:[1,1]},{quotient:[6,3],remainder:[2]},"nonzero constant remainder"],
+ [{p:11,a:[1],b:[1,0,1]},{quotient:[0],remainder:[1]},"dividend degree below divisor"],
+ [{p:251,a:[1,2,3],b:[2]},{quotient:[126,1,127],remainder:[0]},"division by non-monic constant"]]);
+add("gf_polynomial_gcd","Monic polynomial greatest common divisor",[
+ [{p:2,a:[1,0,1],b:[1,1]},{gcd:[1,1],zero:false},"repeated factor in characteristic two"],
+ [{p:5,a:[4,0,1],b:[1,1]},{gcd:[1,1],zero:false},"shared linear factor"],
+ [{p:7,a:[1,1],b:[2,1]},{gcd:[1],zero:false},"coprime linear factors"],
+ [{p:11,a:[0],b:[2,2]},{gcd:[1,1],zero:false},"zero operand and monic normalization"],
+ [{p:251,a:[0],b:[0]},{gcd:[0],zero:true},"declared gcd of two zero polynomials"]]);
+add("gf_polynomial_evaluate","Polynomial evaluation",[
+ [{p:2,a:[1,1],at:1},{value:0},"root at the nonzero binary element"],
+ [{p:5,a:[1,2,3],at:2},{value:2},"quadratic Horner reduction"],
+ [{p:7,a:[0,1],at:-1},{value:6},"negative evaluation representative"],
+ [{p:11,a:[1,0,1],at:3},{value:10},"sparse quadratic evaluation"],
+ [{p:251,a:[250,1],at:1},{value:0},"upper-prime linear root"]]);
+add("gf_lagrange_interpolate","Finite Lagrange interpolation",[
+ [{p:2,points:[[0,1],[1,0]]},{coefficients:[1,1]},"two distinct binary nodes"],
+ [{p:5,points:[[0,1],[1,3]]},{coefficients:[1,2]},"linear interpolant modulo five"],
+ [{p:7,points:[[0,1],[1,2],[2,5]]},{coefficients:[1,0,1]},"quadratic interpolant from three nodes"],
+ [{p:11,points:[[3,4]]},{coefficients:[4]},"one-node constant interpolant"],
+ [{p:251,points:[[0,250],[1,0]]},{coefficients:[250,1]},"upper-prime wrap across interpolation nodes"]]);
+add("gf_formal_derivative","Formal polynomial derivative",[
+ [{p:2,a:[1,1,1]},{coefficients:[1]},"quadratic term vanishes in characteristic two"],
+ [{p:5,a:[0,1,2,3]},{coefficients:[1,4,4]},"degree multipliers reduced modulo five"],
+ [{p:7,a:[3]},{coefficients:[0]},"constant derivative is zero"],
+ [{p:11,a:[1,0,0,1]},{coefficients:[0,0,3]},"sparse cubic derivative"],
+ [{p:251,a:[0,250,1]},{coefficients:[250,2]},"upper coefficient remains explicit"]]);
+add("gf_quotient_representative","Declared quotient-ring representative",[
+ [{p:2,a:[0,0,0,1],modulus:[1,1,1]},{residue:[1],modulus:[1,1,1],irreducibility_claimed:false},"cubic reduction under a declared quadratic"],
+ [{p:5,a:[0,0,1],modulus:[1,0,1]},{residue:[4],modulus:[1,0,1],irreducibility_claimed:false},"quadratic residue minus one"],
+ [{p:7,a:[1,2,3],modulus:[0,0,1]},{residue:[1,2],modulus:[0,0,1],irreducibility_claimed:false},"reducible modulus remains a ring declaration"],
+ [{p:11,a:[0,0,1],modulus:[1,1]},{residue:[1],modulus:[1,1],irreducibility_claimed:false},"linear-modulus representative"],
+ [{p:251,a:[0,0,1],modulus:[1,0,1]},{residue:[250],modulus:[1,0,1],irreducibility_claimed:false},"upper-prime quadratic residue"]]);
+add("gf_representation_equivalence","Polynomial representation comparison",[
+ [{p:2,a:[1,1],b:[3,3,0]},{a:[1,1],b:[1,1],equivalent:true},"different integer lifts modulo two"],
+ [{p:5,a:[1,2],b:[6,7]},{a:[1,2],b:[1,2],equivalent:true},"coefficient lifts by five"],
+ [{p:7,a:[0],b:[7,0]},{a:[0],b:[0],equivalent:true},"zero with padded multiple of modulus"],
+ [{p:11,a:[1],b:[2]},{a:[1],b:[2],equivalent:false},"distinct constant representations"],
+ [{p:251,a:[-1,1],b:[250,252]},{a:[250,1],b:[250,1],equivalent:true},"signed upper-prime representatives"]]);
+add("gf_small_irreducibility","Bounded monic-factor search",[
+ [{p:2,a:[1,1,1]},{irreducible:true,degree:2,first_factor:null,checked_monic_factors:2},"binary irreducible quadratic"],
+ [{p:2,a:[1,0,1]},{irreducible:false,degree:2,first_factor:[1,1],checked_monic_factors:2},"binary repeated linear factor"],
+ [{p:3,a:[1,0,1]},{irreducible:true,degree:2,first_factor:null,checked_monic_factors:3},"ternary quadratic with no root"],
+ [{p:3,a:[2,0,1]},{irreducible:false,degree:2,first_factor:[1,1],checked_monic_factors:2},"ternary factor witness"],
+ [{p:2,a:[1,1,0,0,1]},{irreducible:true,degree:4,first_factor:null,checked_monic_factors:6},"binary quartic factor search"]]);
+add("gf_quotient_inverse","Quotient-ring unit certificate",[
+ [{p:2,a:[0,1],modulus:[1,1,1]},{unit:true,inverse:[1,1],gcd:[1],product_remainder:[1]},"inverse of x in a binary quadratic quotient"],
+ [{p:5,a:[1,1],modulus:[1,0,1]},{unit:true,inverse:[3,2],gcd:[1],product_remainder:[1]},"nontrivial linear unit certificate"],
+ [{p:7,a:[0,1],modulus:[0,0,1]},{unit:false,inverse:null,gcd:[0,1],product_remainder:null},"nonunit retained under a reducible modulus"],
+ [{p:11,a:[2],modulus:[1,1]},{unit:true,inverse:[6],gcd:[1],product_remainder:[1]},"constant inverse in a linear quotient"],
+ [{p:251,a:[1],modulus:[1,0,1]},{unit:true,inverse:[1],gcd:[1],product_remainder:[1]},"identity unit at maximum prime"]]);
+function stable(v){if(Array.isArray(v))return v.map(stable);if(v&&typeof v==="object")return Object.fromEntries(Object.keys(v).sort().map(k=>[k,stable(v[k])]));return v;}
+function canon(v){return JSON.stringify(stable(v));}
+function sha(v){return crypto.createHash("sha256").update(v).digest("hex");}
+function git(cwd,args){return cp.execFileSync("git",args,{cwd,encoding:"utf8",maxBuffer:64*1024*1024});}
+function put(rel,obj){const p=path.join(ROOT,BASE,"plan",rel);fs.mkdirSync(path.dirname(p),{recursive:true});fs.writeFileSync(p,typeof obj==="string"?obj.trimEnd()+"\n":JSON.stringify(obj,null,2)+"\n",{encoding:"utf8",flag:"wx"});}
+function main(){
+ const [sourceRoot,priorRoot,bank,skillRoot]=process.argv.slice(2);
+ if(!sourceRoot||!priorRoot||!bank||!skillRoot)throw Error("explicit roots required");
+ if(fs.existsSync(path.join(ROOT,BASE,"plan","proposals.json")))throw Error("planning output already exists");
+ const sourceDoc=JSON.parse(git(sourceRoot,["show",SOURCE+":docs/liora-venn/v693-v8/plan/proposals.json"]));
+ const priorDoc=JSON.parse(git(priorRoot,["show",PRIOR+":docs/veylora-quen/v688-v6/x1/new-proposals.json"]));
+ const inherited=[...sourceDoc.proposals.map(p=>({origin:"Liora v693-v8",commit:SOURCE,path:"docs/liora-venn/v693-v8/plan/proposals.json",record:p})),
+ ...priorDoc.proposals.map(p=>({origin:"Veylora v688-v6",commit:PRIOR,path:"docs/veylora-quen/v688-v6/x1/new-proposals.json",record:p}))];
+ if(inherited.length!==300)throw Error("inherited count");
+ const proposals=[];
+ for(let gi=0;gi<groups.length;gi++){
+  const g=groups[gi],session=gi<10?"x1":"x2",outcome=gi===16||gi===17?"represented":"completed";
+  const practice=gi<8?practices[0]:gi<16?practices[1]:gi<18?practices[3]:practices[2];
+  const pillar=gi===16||gi===17?"Freed ID and CBR Heart":gi>=18?"THOS Body":"GMUT Mind";
+  for(const [input,value,description] of g.rows){
+   const id="VQ6941-P"+String(proposals.length+1).padStart(3,"0"),request={operation:g.op,...input};
+   const expected={ok:true,operation:g.op,outcome,evidence_class:"finite_prime_field_polynomial",value,authority:false,protected_gates:GATES};
+   const row={proposal_id:id,title:g.title+" — "+description,operation:g.op,session,pillar,practice_id:practice,
+    hypothesis:"The declared finite "+g.op+" contract returns the frozen exact envelope and preserves its input.",
+    null_or_failure_condition:"Any incorrect typed value, changed input, accepted malformed subject, hidden failure, or promotion beyond the declared evidence scope rejects this contract.",
+    approval_class:"safe_now",execution_lane:"owner_local_finite_synthetic",request,expected_output:expected,expected_disposition:outcome,
+    official_or_primary_source_needs:["Explicit finite mathematical definition; no physical source or empirical observation is supplied."],
+    concrete_artifacts:[BASE+"/"+session+"/results/proposals.json",BASE+"/"+session+"/results/candidates.json"],
+    falsifier_or_acceptance_gate:"Exact complete envelope equality and separate preservation of every malformed subject and refusal witness.",
+    rollback_or_recovery:"Retain the frozen definition and failure, then correct only the owner dependency; never replay a successful canonical.",
+    protected_gates:GATES,source_credit:0,
+    novelty_scope:"New owner-local request, oracle, algorithm boundary and evidence contract only. Classical mathematics is inherited knowledge, not discovery or authority.",
+    candidate_subjects:[{negative_id:id+"-C1",request:{...request,unexpected:true},expected_rejection:{ok:false,error:"E_FIELDS"}},
+     {negative_id:id+"-C2",request:{...request,p:session==="x1"?false:4},expected_rejection:{ok:false,error:"E_MODULUS"}}]};
+   row.definition_sha256=sha(canon(row));proposals.push(row);
+  }
+ }
+ const oldOps=new Set(inherited.map(r=>r.record.operation)),oldRequests=new Set(inherited.map(r=>canon(r.record.request||r.record.input)));
+ const collisions=proposals.filter(p=>oldOps.has(p.operation)||oldRequests.has(canon(p.request)));
+ if(collisions.length)throw Error("source collision");
+ const token=s=>new Set(s.toLowerCase().match(/[a-z0-9]+/g)||[]);
+ const oldTitles=inherited.map(r=>({title:r.record.title,proposal_id:r.record.proposal_id,words:token(r.record.title||""),source:r.origin}));
+ const neighbors=proposals.map(p=>{const words=token(p.title);let best={score:0,source:null,proposal_id:null,title:null};
+  for(const r of oldTitles){const union=new Set([...words,...r.words]),common=[...words].filter(w=>r.words.has(w)).length,score=common/union.size;
+   if(score>best.score)best={score,source:r.source,proposal_id:r.proposal_id,title:r.title};}
+  return {proposal_id:p.proposal_id,nearest:best};});
+ if(neighbors.some(n=>n.nearest.score>=0.78))throw Error("title quarantine");
+ const globalNames=["ghc-family-gf-prime-structure","ghc-family-gf-multiplicative-contracts","ghc-family-gf-polynomial-arithmetic","ghc-family-gf-polynomial-certificates","ghc-family-gf-quotient-representations"];
+ for(const n of globalNames)if(fs.existsSync(path.join(skillRoot,n)))throw Error("global destination collision");
+ const startup=JSON.parse(fs.readFileSync(path.join(bank,"startup-observations.json"),"utf8"));
+ const extra=JSON.parse(fs.readFileSync(path.join(bank,"startup-additional-failures.json"),"utf8"));
+ startup.failures=[...startup.failures,...extra.failures];
+ const sourceMeta={source_final:SOURCE,source_branch:"codex/GHC-Family/liora-venn-main",prior_owner_final:PRIOR,
+  git_ancestry:"new blank owner root; source records are content provenance, not parents",
+  canonical_receipt_sha256:"f63e51021728969e2688931202180bc06753e4ecd633d2351347b3ee79b8879a",
+  source_payload_sha256:"55bb06977364511c7cbcc4ca57e9ec79d0f92f45d815514c1d67ec4cf6e40fbd",
+  source_latch_sha256:"4f6267a110fc712955229783ae15b7d77821cc56e62203a781835c6af9bb6747",source_replayed:false,
+  source_manifest_bindings:723,source_seal_bindings:16,source_mismatches:0,incoming_baseline:startup.activation_baseline,
+  counts_scope:"Selected incoming lineage only; older Veylora and universal program totals are not summed.",boundary:BOUNDARY};
+ put("source/verification.json",sourceMeta);put("source/startup-observations.json",startup);
+ put("source/inherited-review.json",{schema:"ghc.family.inherited-review.v9",reviewed:300,credit:0,
+  records:inherited.map((r,i)=>({selection_id:"VQ6941-I"+String(i+1).padStart(3,"0"),...r,novelty_credit:0,execution_credit:0,authority_credit:0}))});
+ put("proposals.json",{schema:"ghc.family.frozen-proposals.v9",owner:OWNER,phase:PHASE,status:"planning_only",primary_pillar:"GMUT Mind",
+  practices,proposal_count:100,outcome_plan:{completed:90,represented:10,open_gap:0,exact_gate:0},proposals,boundary:BOUNDARY});
+ put("novelty-audit.json",{schema:"ghc.family.bounded-novelty.v9",source_records:300,new_records:100,new_operations:20,
+  exact_operation_collisions:0,exact_request_collisions:0,title_quarantine_threshold:0.78,
+  maximum_title_jaccard:Math.max(...neighbors.map(n=>n.nearest.score)),neighbors,universal_novelty_claimed:false,classical_mathematics_discovery_credit:0});
+ for(const session of ["x1","x2"]){
+  const selected=proposals.filter(p=>p.session===session);
+  for(const [category,modes] of [["safe",["repeat_output","request_immutability"]],["clean-fix-refine",["request_key_order","result_roundtrip"]]]){
+   const rows=[];
+   for(const p of selected)for(const mode of modes)rows.push({task_id:"VQ6941-"+session+"-"+category+"-"+String(rows.length+1).padStart(3,"0"),
+    proposal_id:p.proposal_id,procedure:mode,execution_session:session,status:"defined_unexecuted",expected:"full frozen envelope and unchanged source definition",
+    rollback:"Retain failures and isolate the owner dependency.",protected_gates:GATES});
+   put("portfolios/"+session+"-"+category+".json",{category,session,count:100,rows,execution_credit:0});
+  }
+  put("portfolios/"+session+"-candidates.json",{session,count:100,subjects:selected.flatMap(p=>p.candidate_subjects.map(s=>({...s,proposal_id:p.proposal_id,subject_success_credit:0,
+   execution_session:session,status:"defined_unexecuted",passing_refusal_is_separate:true})))});
+ }
+ const exactDomains=["field-parameter-deployment","cryptographic-security-claim","physical-observable-mapping","professional-certification","rights-and-licensing",
+ "cultural-encoding","Maori-data-governance","affected-party-remedy","privacy-complete-review","Stage-20-promotion"];
+ put("portfolios/exact-packets.json",{count:50,executed:0,rows:exactDomains.flatMap((domain,i)=>["target","authority","evidence","rollback","affected-review"].map((requirement,j)=>({
+  packet_id:"VQ6941-EXACT-"+String(i*5+j+1).padStart(3,"0"),domain,requirement,disposition:"exact_gate",execution:"unexecuted",authority_present:false})))});
+ put("portfolios/blocked-packets.json",{count:30,executed:0,rows:["fabricate-observation","erase-failure","leak-private-data","replace-identity","claim-unsupported-authority","replay-success"].flatMap((action,i)=>["inputs","outputs","provenance","validation","delivery"].map((target,j)=>({
+  packet_id:"VQ6941-BLOCK-"+String(i*5+j+1).padStart(3,"0"),action,target,disposition:"exact_gate",execution:"blocked_unexecuted"})))});
+ const localSkills=groups.map((g,i)=>({name:"ghc-family-gf-"+g.op.slice(3).replaceAll("_","-")+"-local",operation:g.op,session:i<10?"x1":"x2",
+  source_path:BASE+"/"+(i<10?"x1":"x2")+"/skills/gf-"+g.op.slice(3).replaceAll("_","-")+"/SKILL.md",official_quick_validate_required:true,
+  new_yaml_metadata:false,accepting_and_adverse_smokes_required:true}));
+ const runners=Array.from({length:10},(_,i)=>({name:"ghc_family_gf_pair_"+String(i+1).padStart(2,"0")+".txt",session:i<5?"x1":"x2",operations:groups.slice(i*2,i*2+2).map(g=>g.op)}));
+ const globalGroups=globalNames.map((name,i)=>({name,operations:groups.slice(i*4,i*4+4).map(g=>g.op),source_skills:localSkills.slice(i*4,i*4+4).map(s=>s.source_path),
+  public_runner:name.replaceAll("-","_")+".txt",collision_policy:"refuse_existing",source_count:4,validation_required:true}));
+ put("capabilities/local-skills.json",{count:20,skills:localSkills});put("capabilities/local-runners.json",{count:10,runners});
+ put("capabilities/global-groups.json",{count:5,groups:globalGroups,overwrites:0,removals:0});
+ put("capabilities/successor-ideas.json",{practice_recommendation:"finite extension-field trace and norm reviewer",
+  skill_ideas:["extension-field-trace","extension-field-norm","finite-minimal-polynomial","quotient-basis-change","field-isomorphism-witness"],
+  runner_ideas:["field_trace_contract","field_norm_contract","minimal_polynomial_contract","quotient_basis_contract","field_isomorphism_contract"],
+  recommendation_credit:0});
+ put("contract-profile.json",{schema:"ghc.family.finite-field-profile.v1",modulus:"prime integer from 2 through 251",
+  integer_inputs:"safe integers of absolute value at most 1000000",coefficient_order:"ascending powers",
+  polynomial_input_length:[1,8],zero_polynomial:[0],modulus_polynomial:"monic degree 1 through 4",interpolation_nodes:[1,6],
+  distinct_nodes:"distinct after residue normalization",exponent_bounds:[-1024,1024],zero_to_zero:"defined as multiplicative identity 1",
+  irreducibility_scope:"monic degree 2 through 4 over primes 2,3,5,7; enumerate monic factors in increasing degree, then base-p coefficient index",
+  gcd_zero_zero:[0],quotient_inverse:"return a normalized gcd and either inverse certificate or an explicit nonunit result",
+  quotient_representative_irreducibility_claim:false,strict_json_max_bytes:1048576,strict_json_max_depth:32,
+  evidence_class:"finite_prime_field_polynomial",classical_mathematics_discovery_credit:0,physical_model_claim:false,production_cryptography_claim:false,boundary:BOUNDARY});
+ const v9=JSON.parse(fs.readFileSync(path.join(skillRoot,"ghc-family-index/references/current-workflow-v9.json"),"utf8"));
+ const roster=JSON.parse(fs.readFileSync(path.join(skillRoot,"ghc-family-index/references/current-roster-v9.json"),"utf8"));
+ const selected=roster.assignments.filter(r=>["v694-v1","v694-v2","v694-v3"].includes(r.phase));
+ if(selected.map(r=>r.owner).join("|")!=="Veylora Quen|Tamar Vey|Elowen Cairn")throw Error("route mismatch");
+ put("workflow-profile.json",{...v9,owner:OWNER,phase:PHASE,interstitial:false,consumes_numbered_slot:true,
+  source_final:SOURCE,source_profile_issuer:"Orin Thale v693-v7-r2",lifecycle:["planning_freeze","x1_execution","x2_execution","final_closeout"],
+  commit_budget:{planning:1,x1:2,x2:3,final:2,total:8},planned_commits:4,owner_root_policy:"fresh blank owner main; future reuse under both file ceilings",
+  planned_targets:{inherited:300,new:100,safe_x1:100,safe_x2:100,candidate_x1:100,candidate_x2:100,clean_x1:100,clean_x2:100,skills_x1:10,skills_x2:10,runners_x1:5,runners_x2:5,exact:50,blocked:30,global_skills:5,public_runners:5},
+  terminal_route:{owner:OWNER,phase:PHASE,successor:"Tamar Vey",successor_phase:"v694-v2",following:"Elowen Cairn v694-v3 is Tamar-gated",state:"PREPARED_NOT_SENT_OWNER_TERMINAL_GATE_REQUIRED"}});
+ put("current-route.json",{schema:"ghc.family.owner-route.v9",owner:OWNER,phase:PHASE,source_final:SOURCE,
+  selected_assignments:selected,cycle_positions:45,identity_count:30,last:roster.last,existing_task_only:true,
+  successor:"Tamar Vey",successor_phase:"v694-v2",no_early_contact:true,projection_activates:false,subagents:false,task_creation:false,model_changes:false});
+ put("artifact-budget.json",{authored_extensions:[".json",".md",".txt",".html"],maximum_owner_files:1999,maximum_document_words:100000,
+  planned_owner_files_upper_bound:650,planned_spend_usd:0,spend_ceiling_usd:50,ordinary_packages_installed:0,
+  runtime_policy:"Reuse Node and existing official skill validator; keep Node source as TXT and optional YAML metadata uncreated.",
+  rollback:"Preserve the earlier Veylora lane, this owner root, source records and every failed witness; no deletion or history rewrite."});
+ put("canonical-adverse-definitions.json",{status:"defined_before_execution",subjects:[
+  {id:"VQ6941-PRE-F1",request:null,error:"E_RECORD"},
+  {id:"VQ6941-PRE-F2",request:{operation:"gf_prime_profile",p:2,extra:1},error:"E_FIELDS"},
+  {id:"VQ6941-PRE-F3",request:{operation:"unsupported",p:2},error:"E_OPERATION"},
+  {id:"VQ6941-PRE-F4",request:{operation:"gf_prime_profile",p:4},error:"E_MODULUS"},
+  {id:"VQ6941-PRE-F5",request:{operation:"gf_polynomial_division",p:2,a:[1],b:[0]},error:"E_ZERO_DIVISOR"}],failed_subject_credit:0});
+ put("gate-register.json",{inherited_open_gaps:10,inherited_exact_gates:10,incoming_ref:BASE+"/plan/source/verification.json",
+  current_open_gaps:["physical model and observable mapping absent","independent implementation and reproduction absent","governed real THOS comparison absent","production identity interoperability absent","affected-user accessibility review absent"],
+  current_exact_gates:exactDomains,current_gates_closed:0,authority_actions:0,boundary:BOUNDARY});
+ put("reflection-remaster.json",{decisions:globalGroups.map(g=>({name:g.name,decision:"merge_candidate",sources:g.source_skills,
+  reason:"Four related operation guides share a bounded parser, modular algebra core and evidence envelope; operations and witnesses remain distinct.",
+  caller_plan:"Owner-local pairs and one public scope-restricted interface",promotion_gate:["official skill validation","all operation smokes","scope rejection","byte parity","destination absence"],
+  rollback:"Return selection to retained local guides; delete and overwrite nothing."})),prior_v688_tools:"retained unchanged as compatibility evidence",source_instructions_quarantined:true});
+ put("phase-truth.json",{schema:"ghc.family.phase-truth.v9",owner:OWNER,phase:PHASE,stage:"planning_freeze",
+  source_final:SOURCE,prior_owner_final:PRIOR,git_parent:null,git_ancestry_claim:false,proposal_count:100,inherited_review_count:300,
+  x1_execution_credit:0,x2_execution_credit:0,skills_built:0,runners_built:0,ordinary_packages_installed:0,incremental_spend_usd:0,
+  canonical_invocations:0,successor_contacts:0,terminal_verdict:"NOT_READY_FOR_STAGE_20",boundary:BOUNDARY});
+ put("overview.md","# Veylora Quen v694-v1 planning freeze\n\n"+BOUNDARY+"\n\n"+
+  "The new owner main lane is a blank root in the existing remote repository. Liora's exact final and Veylora's prior sealed final are content provenance, not Git parents. No earlier source or sibling lane is changed. Three hundred inherited records are reviewed at zero new credit. The new hundred finite-field and polynomial contracts use explicit, static expected values and a complete typed envelope.\n\n"+
+  "The planning freeze precedes every x1 implementation. X1 will implement its first ten operation families and exercise fifty contracts, one hundred safe procedures, one hundred malformed candidates and one hundred CLEAN/FIX/REFINE checks. X1 also builds ten local skills and five runner interfaces. After x1 is pushed cleanly and freshly equal, x2 implements the remaining ten families and performs the same bounded portfolio and capability counts. Five global merged skills and five public runners are promoted only after exact validation and destination-absence checks.\n\n"+
+  "The outcome plan is ninety completed local software predicates and ten represented quotient or equivalence records. No result establishes a physical theory, production cryptographic safety, personhood or authority. All ten inherited gaps and ten inherited exact gates remain; current absent evidence and exact packets stay explicit. Fifty exact and thirty blocked packets remain unexecuted.\n\n"+
+  "Only JSON, Markdown, text and HTML are authored. Node source is text. Existing runtimes are reused and planned incremental spend is zero under the USD 50 ceiling. No new PDF, raster image, screenshot, DOCX, SVG or TeX is created. Every artifact stays below one hundred thousand words and owner materialization stays below two thousand files.\n\n"+
+  "After an exact final, clean push, fresh equality and one non-replayed canonical, only the existing Tamar Vey task for v694-v2 may be considered under current live authority, registry and immediate-reread guards. Tamar's later edge is Elowen Cairn v694-v3. No precontact, task creation, fork, subagent, delegation, identity replacement or model override is authorized.\n\nLiteral planning EOF. Execution credit remains zero.");
+ const readSkills=["ghc-family-index","ghc-family-workflow-plan-refinement","ghc-family-roster-check","ghc-family-method-flow-state","ghc-family-auth-permission-state","ghc-family-owned-bundle-rotation","ghc-family-meta-tool-box","ghc-family-reflection-remaster","ghc-freed-id-flashcards","ghc-private-evidence-firewall","ghc-approval-packet-splitter","ghc-family-canonical-success-latch","ghc-family-canonical-aggregate-preflight","ghc-family-owner-scope-canonical","ghc-family-terminal-route-latch","ghc-family-staged-surface-allowlist","ghc-family-historical-instruction-quarantine","ghc-family-git-blob-byte-domain","ghc-family-artifact-and-budget-admission-v2","ghc-family-delivery-and-authority-latch-v2"];
+ put("source/reading-receipt.json",{baton_sha256:startup.baton_sha256,baton_words:18175,baton_lines:2468,baton_modules:13,literal_eof_read:true,
+  read_projection:"Exact duplicate lines suppressed; invariant expected-envelope fields factored without losing variable fields.",
+  skills:readSkills.map(s=>({name:s,sha256:sha(fs.readFileSync(path.join(skillRoot,s,"SKILL.md"))))})),
+  skill_creator_sha256:sha(fs.readFileSync(path.join(skillRoot,".system/skill-creator/SKILL.md"))),current_v9_profile_and_route_read:true,
+  compatibility_sources_not_current_authority:true,source_core_prefix_only:true,source_core_reuse_or_execution:false,boundary:BOUNDARY});
+ console.log(JSON.stringify({planning_only:true,proposals:100,inherited:300,operations:20,maximum_jaccard:Math.max(...neighbors.map(n=>n.nearest.score)),planned_skills:20,planned_runners:10,global_groups:5,execution_credit:0}));
+}
+main();

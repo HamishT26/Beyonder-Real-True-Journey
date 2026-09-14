@@ -1,0 +1,70 @@
+"use strict";
+const fs=require("fs"),path=require("path"),crypto=require("crypto"),vm=require("vm");
+const ROOT=process.cwd(),BASE="docs/veylora-quen/v694-v1",P=path.join(ROOT,BASE,"plan");
+const read=n=>JSON.parse(fs.readFileSync(path.join(P,n),"utf8"));
+const sha=b=>crypto.createHash("sha256").update(b).digest("hex");
+function stable(v){if(Array.isArray(v))return v.map(stable);if(v&&typeof v==="object")return Object.fromEntries(Object.keys(v).sort().map(k=>[k,stable(v[k])]));return v;}
+const canon=v=>JSON.stringify(stable(v));
+function files(dir){return fs.readdirSync(dir,{withFileTypes:true}).flatMap(e=>e.isDirectory()?files(path.join(dir,e.name)):[path.join(dir,e.name)]);}
+function put(n,obj){fs.writeFileSync(path.join(P,n),JSON.stringify(obj,null,2)+"\n",{encoding:"utf8",flag:"wx"});}
+const checks=[];
+function check(name,pass,detail=null){checks.push({name,pass:!!pass,detail});}
+const doc=read("proposals.json"),ps=doc.proposals;
+check("100 frozen proposals",ps.length===100);
+check("20 distinct operations",new Set(ps.map(p=>p.operation)).size===20);
+check("100 exact request identities",new Set(ps.map(p=>canon(p.request))).size===100);
+check("50 contracts per execution session",ps.filter(p=>p.session==="x1").length===50&&ps.filter(p=>p.session==="x2").length===50);
+check("static definition hashes",ps.every(p=>{const q={...p};delete q.definition_sha256;return sha(canon(q))===p.definition_sha256;}));
+check("bounded outcomes",ps.filter(p=>p.expected_disposition==="completed").length===90&&ps.filter(p=>p.expected_disposition==="represented").length===10);
+check("authority and source credit remain zero",ps.every(p=>p.source_credit===0&&p.expected_output.authority===false));
+check("300 inherited zero-credit records",read("source/inherited-review.json").records.length===300&&read("source/inherited-review.json").records.every(r=>r.execution_credit===0&&r.novelty_credit===0));
+for(const session of ["x1","x2"])for(const category of ["safe","candidates","clean-fix-refine"]){
+ const p=read("portfolios/"+session+"-"+category+".json");check(session+" "+category+" definitions",p.count===100&&(p.rows||p.subjects).length===100);
+}
+check("fifty exact packets unexecuted",read("portfolios/exact-packets.json").count===50&&read("portfolios/exact-packets.json").executed===0);
+check("thirty blocked packets unexecuted",read("portfolios/blocked-packets.json").count===30&&read("portfolios/blocked-packets.json").executed===0);
+const skills=read("capabilities/local-skills.json").skills,runners=read("capabilities/local-runners.json").runners,groups=read("capabilities/global-groups.json").groups;
+check("10 skills per session",["x1","x2"].every(s=>skills.filter(r=>r.session===s).length===10));
+check("5 runners per session",["x1","x2"].every(s=>runners.filter(r=>r.session===s).length===5));
+check("skill names and directory names align",skills.every(s=>path.basename(path.dirname(s.source_path))===s.name));
+check("five four-source promotion groups",groups.length===5&&groups.every(g=>g.source_count===4&&g.source_skills.length===4));
+check("four owner practices and one successor practice",doc.practices.length===4&&typeof read("capabilities/successor-ideas.json").practice_recommendation==="string");
+check("current route is Veylora to Tamar",read("current-route.json").successor==="Tamar Vey"&&read("current-route.json").successor_phase==="v694-v2");
+check("no implementation before freeze",!fs.existsSync(path.join(ROOT,BASE,"x1"))&&!fs.existsSync(path.join(ROOT,BASE,"x2")));
+check("zero spend and zero package quota",read("artifact-budget.json").planned_spend_usd===0&&read("artifact-budget.json").ordinary_packages_installed===0);
+check("source content is not Git ancestry",read("phase-truth.json").git_parent===null&&read("phase-truth.json").git_ancestry_claim===false);
+check("source exact and manifest verification retained",read("source/verification.json").source_final==="5752a612330a69f938bf915697cf607ca0412fe5"&&read("source/verification.json").source_manifest_bindings===723);
+check("complete source baton read",read("source/reading-receipt.json").literal_eof_read===true);
+const all=files(P),privacy=[],syntax=[];let maxWords=0,jsonCount=0;
+const patterns=[
+ ["raw_uuid",/\b[0-9a-f]{8}(?:-[0-9a-f]{4}){3}-[0-9a-f]{12}\b/ig],
+ ["private_local_path",/\b[A-Za-z]:[\\/]/g],
+ ["private_uri",/(?:chatgpt\.com\/c\/|codex:\/\/)[a-z0-9_-]{12,}/ig],
+ ["credential_value",/(?:sk-[a-z0-9]{20,}|gh[pousr]_[a-z0-9]{20,}|Bearer\s+[a-z0-9._-]{16,})/ig],
+ ["private_payload",/"(?:raw_transcript|raw_screenshot|private_execution_stream)"\s*:\s*"[^"]+"/ig]];
+for(const f of all){
+ const rel=path.relative(ROOT,f).replaceAll("\\","/"),ext=path.extname(f),text=fs.readFileSync(f,"utf8");
+ if(![".json",".md",".txt",".html"].includes(ext))throw Error("disallowed format");
+ maxWords=Math.max(maxWords,(text.match(/\S+/g)||[]).length);
+ if(ext===".json"){JSON.parse(text);jsonCount++;}
+ for(const [category,re] of patterns){re.lastIndex=0;if(re.test(text))privacy.push({path:rel,category});}
+ if(ext===".txt"&&rel.includes("/tools/")){try{new vm.Script(text,{filename:path.basename(f)});}catch(e){syntax.push({path:rel,error:e.name});}}
+}
+check("allowed authored file formats",true);
+check("document word ceiling",maxWords<=100000,maxWords);
+check("owner file ceiling",all.length<2000,all.length);
+check("JSON parses",jsonCount>0,jsonCount);
+check("trusted planning TXT syntax",syntax.length===0,syntax);
+check("zero configured privacy candidates",privacy.length===0,privacy);
+let retainedSyntaxRefused=false;try{new vm.Script(fs.readFileSync(path.join(P,"retained/build-plan-v1.txt"),"utf8"));}catch(e){retainedSyntaxRefused=e instanceof SyntaxError;}
+check("original planning syntax fault retained",retainedSyntaxRefused);
+const valid=checks.every(c=>c.pass);
+put("validation.json",{schema:"ghc.family.plan-validation.v9",owner:"Veylora Quen",phase:"v694-v1",checks,checks_total:checks.length,checks_passed:checks.filter(c=>c.pass).length,valid,execution_credit:0,canonical_invoked:false,privacy,maximum_document_words:maxWords});
+if(valid){
+ const current=files(P);
+ put("manifest.json",{schema:"ghc.family.raw-byte-manifest.v9",owner:"Veylora Quen",phase:"v694-v1",stage:"planning_freeze",domain:"raw_git_blob",
+  bindings:current.map(f=>({path:path.relative(ROOT,f).replaceAll("\\","/"),bytes:fs.statSync(f).size,sha256:sha(fs.readFileSync(f))})).sort((a,b)=>a.path.localeCompare(b.path)),
+  exclusions:[BASE+"/plan/manifest.json",BASE+"/plan/staged-review.json"]});
+}
+console.log(JSON.stringify({valid,checks:checks.length,passed:checks.filter(c=>c.pass).length,files:all.length,maximum_document_words:maxWords,failed:checks.filter(c=>!c.pass).map(c=>c.name)}));
+process.exitCode=valid?0:2;
