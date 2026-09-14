@@ -1,0 +1,241 @@
+'use strict';
+
+const fs = require('fs');
+const path = require('path');
+const crypto = require('crypto');
+const cp = require('child_process');
+const vm = require('vm');
+
+const REPO = path.resolve(__dirname, '../../../../..');
+const ROOT = path.resolve(__dirname, '..');
+const BASE = path.resolve(ROOT, '..');
+const PREFIX = 'docs/elowen-cairn/v694-v3-r2/';
+const X2_COMMIT = 'c7f2bc28fc4fe15c89619d1d57185e3d1a77fe40';
+const allowed = new Set(['.json', '.md', '.txt', '.tex', '.html']);
+const issues = [];
+function readJson(file) { return JSON.parse(fs.readFileSync(file, 'utf8')); }
+function sha(file) { return crypto.createHash('sha256').update(fs.readFileSync(file)).digest('hex'); }
+function words(text) { const m = String(text).match(/\S+/g); return m ? m.length : 0; }
+function write(rel, value) {
+  const target = path.join(ROOT, rel);
+  fs.mkdirSync(path.dirname(target), { recursive: true });
+  fs.writeFileSync(target, JSON.stringify(value, null, 2) + '\n', 'utf8');
+}
+function walk(dir, rows) {
+  fs.readdirSync(dir, { withFileTypes: true }).forEach(function (entry) {
+    const full = path.join(dir, entry.name);
+    if (entry.isDirectory()) walk(full, rows);
+    else rows.push(full);
+  });
+}
+
+const head = cp.execFileSync('git', ['rev-parse', 'HEAD'], { cwd: REPO, encoding: 'utf8' }).trim();
+if (head !== X2_COMMIT) issues.push('x2_head');
+const truth = readJson(path.join(ROOT, 'phase-truth.json'));
+const proposals = readJson(path.join(ROOT, 'proposal-ledger.json'));
+const flow = readJson(path.join(ROOT, 'method-flow.json'));
+const negatives = readJson(path.join(ROOT, 'retained-negative-register.json'));
+const gaps = readJson(path.join(ROOT, 'open-gap-register.json'));
+const gates = readJson(path.join(ROOT, 'exact-gate-register.json'));
+const route = readJson(path.join(ROOT, 'route-packet.json'));
+const batonMeta = readJson(path.join(ROOT, 'baton-metadata.json'));
+const checklist = readJson(path.join(ROOT, 'completion-checklist.json'));
+if (JSON.stringify(truth.outcomes) !== JSON.stringify({ completed: 80, represented: 10, open_gap: 5, exact_gate: 5 })) issues.push('outcomes');
+if (proposals.rows.length !== 100 || new Set(proposals.rows.map(function (row) { return row.proposal_id; })).size !== 100) issues.push('proposal_ledger');
+if (flow.methods.length !== 77 || flow.witnesses.length !== 1117) issues.push('method_flow_counts');
+if (flow.counts.owner_additions.passing_witnesses !== 888 || flow.counts.owner_additions.failed_witnesses_and_effective_negatives !== 229) issues.push('method_flow_split');
+if (negatives.owner_count !== 229 || negatives.effective_count !== 1816 || negatives.rows.length !== 229) issues.push('negative_counts');
+if (gaps.new_count !== 5 || gaps.effective_count !== 25 || gates.new_count !== 5 || gates.effective_count !== 25) issues.push('gate_counts');
+if (route.live_authorized_successor.owner !== 'Tessarin Reed' || route.live_authorized_successor.phase !== 'v694-v4' || route.messages_sent_at_repository_seal !== 0) issues.push('route');
+if (batonMeta.modules !== 13 || batonMeta.words < 10000 || batonMeta.words > 100000) issues.push('baton');
+if (checklist.incomplete_or_reserved.length === 0 || truth.terminal_verdict !== 'NOT_READY_FOR_STAGE_20') issues.push('terminal_boundary');
+
+const finalHtml = fs.readFileSync(path.join(ROOT, 'accessible-report.html'), 'utf8');
+const htmlScript = /<script>([\s\S]*?)<\/script>/.exec(finalHtml);
+const finalHtmlChecks = {
+  doctype: /^<!doctype html>/i.test(finalHtml),
+  lang: /<html lang="en">/.test(finalHtml),
+  main: /<main id="main">/.test(finalHtml),
+  skip: /class="skip"/.test(finalHtml),
+  label: /<label for="outcome">/.test(finalHtml),
+  status: /role="status"/.test(finalHtml),
+  caption: /<caption>/.test(finalHtml),
+  headers: /scope="col"/.test(finalHtml) && /scope="row"/.test(finalHtml),
+  no_remote: !/(src|href)="https?:/i.test(finalHtml),
+  no_images: !/<(img|svg|canvas)\b/i.test(finalHtml),
+  script_compiles: false
+};
+if (htmlScript) {
+  try { new vm.Script(htmlScript[1]); finalHtmlChecks.script_compiles = true; } catch (error) { finalHtmlChecks.script_error = String(error); }
+}
+if (Object.values(finalHtmlChecks).some(function (value) { return value === false; })) issues.push('final_html');
+
+const simulationHtml = fs.readFileSync(path.join(BASE, 'x2/simulation/scalar-toy-sandbox.html'), 'utf8');
+const simScript = /<script>([\s\S]*?)<\/script>/.exec(simulationHtml);
+try { new vm.Script(simScript[1]); } catch (error) { issues.push('simulation_script'); }
+const tex = fs.readFileSync(path.join(BASE, 'x1/grand-mandala-remaster.tex'), 'utf8');
+let depth = 0;
+for (const ch of tex) {
+  if (ch === '{') depth += 1;
+  if (ch === '}') depth -= 1;
+  if (depth < 0) issues.push('tex_braces');
+}
+if (depth !== 0 || /\\includegraphics/.test(tex)) issues.push('tex_structure');
+
+const files = [];
+walk(path.join(REPO, 'docs/elowen-cairn'), files);
+const jsonIssues = [];
+const formatIssues = [];
+const wordIssues = [];
+const privacyCandidates = [];
+const confirmedPrivacy = [];
+const privacyPatterns = [
+  ['raw_uuid', /\b[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}\b/i],
+  ['absolute_windows_path', /[A-Z]:\\\\|[A-Z]:\//],
+  ['credential_or_key', /(?:sk-[A-Za-z0-9]{12,}|BEGIN PRIVATE KEY|api[_-]?key\s*[:=])/i],
+  ['private_route_or_identifier', /(?:source_thread_id|private_callable|session_stream|codex_delegation)/i],
+  ['transcript_or_screenshot', /(?:raw transcript payload|screenshot data|private application state dump)/i]
+];
+files.forEach(function (file) {
+  const rel = path.relative(REPO, file).split(path.sep).join('/');
+  const ext = path.extname(file).toLowerCase();
+  if (!allowed.has(ext)) formatIssues.push(rel);
+  const text = fs.readFileSync(file, 'utf8');
+  if (ext === '.json') {
+    try { JSON.parse(text); } catch (error) { jsonIssues.push(rel); }
+  }
+  if (words(text) > 100000) wordIssues.push(rel);
+  privacyPatterns.forEach(function (pair) {
+    if (pair[1].test(text)) {
+      const candidate = { path: rel, class: pair[0], classification: rel.includes('/tools/') ? 'scanner_definition_metadata' : 'unresolved', confirmed_payload_hit: !rel.includes('/tools/') };
+      privacyCandidates.push(candidate);
+      if (candidate.confirmed_payload_hit) confirmedPrivacy.push(candidate);
+    }
+  });
+});
+if (jsonIssues.length) issues.push('json_parse');
+if (formatIssues.length) issues.push('format');
+if (wordIssues.length) issues.push('word_ceiling');
+if (confirmedPrivacy.length) issues.push('privacy');
+if (files.length > 2000) issues.push('file_ceiling');
+
+const staged = cp.execFileSync('git', ['diff', '--cached', '--name-only'], { cwd: REPO, encoding: 'utf8' }).trim().split(/\r?\n/).filter(Boolean);
+if (staged.length) issues.push('unexpected_staged_before_final_review');
+
+write('privacy-review.json', {
+  schema: 'ghc.family.five-class-privacy-review.v10',
+  owner: 'Elowen Cairn',
+  phase: 'v694-v3-r2',
+  files_scanned: files.length,
+  candidates: privacyCandidates,
+  confirmed_hits: confirmedPrivacy,
+  complete_privacy_assurance: false,
+  boundary: 'A bounded five-class scan is not complete privacy assurance.'
+});
+write('precommit-validation.json', {
+  schema: 'ghc.family.final-precommit-validation.v10',
+  owner: 'Elowen Cairn',
+  phase: 'v694-v3-r2',
+  status: issues.length ? 'INVALID_FINAL_CANDIDATE' : 'VALID_FINAL_CANDIDATE',
+  checks: {
+    proposals: proposals.rows.length,
+    methods: flow.methods.length,
+    witnesses: flow.witnesses.length,
+    failed_witnesses: negatives.owner_count,
+    JSON_files: files.filter(function (file) { return path.extname(file).toLowerCase() === '.json'; }).length,
+    files: files.length,
+    baton_words: batonMeta.words,
+    final_html: finalHtmlChecks,
+    privacy_candidates: privacyCandidates.length,
+    privacy_confirmed: confirmedPrivacy.length
+  },
+  issues: issues,
+  canonical_invoked: false,
+  successor_contacted: false,
+  boundary: 'Precommit validation is same-owner evidence and not the exact-final canonical.'
+});
+
+const finalFiles = [];
+walk(ROOT, finalFiles);
+const deltaEntries = finalFiles.filter(function (file) {
+  const rel = path.relative(ROOT, file).split(path.sep).join('/');
+  return !['final-delta-manifest.json', 'final-owner-manifest.json', 'content-seal.json'].includes(rel);
+}).map(function (file) {
+  return { path: PREFIX + 'final/' + path.relative(ROOT, file).split(path.sep).join('/'), bytes: fs.statSync(file).size, sha256: sha(file) };
+}).sort(function (a, b) { return a.path.localeCompare(b.path); });
+write('final-delta-manifest.json', {
+  schema: 'ghc.family.final-delta-manifest.v10',
+  owner: 'Elowen Cairn',
+  phase: 'v694-v3-r2',
+  self_exclusions: [
+    PREFIX + 'final/final-delta-manifest.json',
+    PREFIX + 'final/final-owner-manifest.json',
+    PREFIX + 'final/content-seal.json'
+  ],
+  entry_count: deltaEntries.length,
+  entries: deltaEntries,
+  boundary: 'Bindings become exact Git-blob evidence only after final commit replay.'
+});
+
+const ownerFiles = [];
+walk(path.join(REPO, 'docs/elowen-cairn'), ownerFiles);
+const ownerEntries = ownerFiles.filter(function (file) {
+  const rel = path.relative(REPO, file).split(path.sep).join('/');
+  return ![
+    PREFIX + 'final/final-owner-manifest.json',
+    PREFIX + 'final/content-seal.json'
+  ].includes(rel);
+}).map(function (file) {
+  return { path: path.relative(REPO, file).split(path.sep).join('/'), bytes: fs.statSync(file).size, sha256: sha(file) };
+}).sort(function (a, b) { return a.path.localeCompare(b.path); });
+write('final-owner-manifest.json', {
+  schema: 'ghc.family.final-owner-manifest.v10',
+  owner: 'Elowen Cairn',
+  phase: 'v694-v3-r2',
+  self_exclusions: [
+    PREFIX + 'final/final-owner-manifest.json',
+    PREFIX + 'final/content-seal.json'
+  ],
+  entry_count: ownerEntries.length,
+  entries: ownerEntries,
+  boundary: 'This owner-only blank-root branch contains no sibling tree.'
+});
+
+const sealTargets = [
+  'final-integrated-overview.md', 'phase-truth.json', 'proposal-ledger.json',
+  'method-flow.json', 'retained-negative-register.json', 'open-gap-register.json',
+  'exact-gate-register.json', 'source-faithful-final-ledger.json', 'capability-catalogue.json',
+  'workflow-and-roster-receipt.json', 'completion-checklist.json', 'route-packet.json',
+  'hand-off-baton.md', 'baton-metadata.json', 'accessible-report.html',
+  '../x1/grand-mandala-remaster.tex', '../x2/simulation/scalar-toy-sandbox.html',
+  '../x2/simulation/reference-run.json'
+].map(function (rel) {
+  const file = path.resolve(ROOT, rel);
+  return { path: path.relative(REPO, file).split(path.sep).join('/'), bytes: fs.statSync(file).size, sha256: sha(file) };
+});
+write('content-seal.json', {
+  schema: 'ghc.family.content-seal.v10',
+  owner: 'Elowen Cairn',
+  phase: 'v694-v3-r2',
+  targets: sealTargets,
+  exact_final: 'external_after_commit',
+  boundary: 'Content fixity is not scientific, production, identity, authority, or Stage 20 proof.'
+});
+
+const result = {
+  status: issues.length ? 'INVALID_FINAL_CANDIDATE' : 'VALID_FINAL_CANDIDATE',
+  files: files.length,
+  JSON_files: files.filter(function (file) { return path.extname(file).toLowerCase() === '.json'; }).length,
+  methods: flow.methods.length,
+  witnesses: flow.witnesses.length,
+  failed_witnesses: negatives.owner_count,
+  passing_witnesses: flow.counts.owner_additions.passing_witnesses,
+  baton_words: batonMeta.words,
+  privacy_candidates: privacyCandidates.length,
+  privacy_confirmed: confirmedPrivacy.length,
+  final_delta_entries: deltaEntries.length,
+  final_owner_entries: ownerEntries.length,
+  issues: issues
+};
+console.log(JSON.stringify(result, null, 2));
+if (issues.length) process.exitCode = 1;

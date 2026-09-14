@@ -1,0 +1,234 @@
+'use strict';
+
+const fs = require('fs');
+const path = require('path');
+const crypto = require('crypto');
+const cp = require('child_process');
+const Module = require('module');
+const vm = require('vm');
+
+const REPO = path.resolve(__dirname, '../../../../..');
+const ROOT = path.resolve(__dirname, '..');
+const BASE = path.resolve(ROOT, '..');
+const PREFIX = 'docs/elowen-cairn/v694-v3-r2/';
+const branch = 'codex/GHC-Family/elowen-cairn-main';
+const exactFinal = process.env.EXACT_FINAL;
+const receiptDir = process.env.CANONICAL_RECEIPT_DIR;
+if (!exactFinal || !/^[0-9a-f]{40}$/.test(exactFinal)) throw new Error('EXACT_FINAL required');
+if (!receiptDir) throw new Error('CANONICAL_RECEIPT_DIR required');
+if (fs.existsSync(path.join(receiptDir, 'success-latch.json'))) throw new Error('SUCCESS_LATCHED_NO_REPLAY');
+fs.mkdirSync(receiptDir, { recursive: true });
+const attemptPath = path.join(receiptDir, 'attempt-latch.json');
+if (fs.existsSync(attemptPath)) throw new Error('CANONICAL_ATTEMPT_ALREADY_EXISTS');
+fs.writeFileSync(attemptPath, JSON.stringify({ schema: 'ghc.family.canonical-attempt-latch.v10', exact_final: exactFinal, invocations: 1, successes: 0, replays: 0 }, null, 2) + '\n', 'utf8');
+
+function readJson(file) { return JSON.parse(fs.readFileSync(file, 'utf8')); }
+function digest(buffer) { return crypto.createHash('sha256').update(buffer).digest('hex'); }
+function loadTxt(file) {
+  const mod = new Module(file);
+  mod.filename = file;
+  mod.paths = Module._nodeModulePaths(path.dirname(file));
+  mod._compile(fs.readFileSync(file, 'utf8'), file);
+  return mod.exports;
+}
+function walk(dir, rows) {
+  fs.readdirSync(dir, { withFileTypes: true }).forEach(function (entry) {
+    const full = path.join(dir, entry.name);
+    if (entry.isDirectory()) walk(full, rows);
+    else rows.push(full);
+  });
+}
+function git(args) { return cp.execFileSync('git', args, { cwd: REPO, encoding: 'utf8' }).trim(); }
+function check(name, pass, detail) {
+  checks.push({ name: name, pass: Boolean(pass), detail: detail === undefined ? null : detail });
+}
+function verifyManifest(rel) {
+  const manifest = readJson(path.join(REPO, rel));
+  const failures = [];
+  manifest.entries.forEach(function (entry) {
+    const full = entry.path.startsWith('docs/') ? entry.path : path.posix.join(path.posix.dirname(rel), entry.path);
+    let blob;
+    try { blob = cp.execFileSync('git', ['cat-file', 'blob', exactFinal + ':' + full], { cwd: REPO }); }
+    catch (error) { failures.push(full + ':missing'); return; }
+    if (blob.length !== entry.bytes || digest(blob) !== entry.sha256) failures.push(full + ':mismatch');
+  });
+  return { path: rel, bindings: manifest.entries.length, failures: failures };
+}
+
+const checks = [];
+const startedAt = new Date().toISOString();
+const head = git(['rev-parse', 'HEAD']);
+check('exact final head and branch', head === exactFinal && git(['branch', '--show-current']) === branch, { head: head });
+const statusBefore = git(['status', '--porcelain=v1']);
+const upstream = git(['rev-parse', '@{u}']);
+const tracking = git(['rev-parse', 'refs/remotes/origin/' + branch]);
+const liveLine = git(['ls-remote', 'origin', 'refs/heads/' + branch]);
+const live = liveLine.split(/\s+/)[0];
+const divergence = git(['rev-list', '--left-right', '--count', 'HEAD...@{u}']).split(/\s+/).map(Number);
+check('clean fresh four-way before checks', statusBefore === '' && head === upstream && head === tracking && head === live && divergence[0] === 0 && divergence[1] === 0, { head: head, upstream: upstream, tracking: tracking, live: live, divergence: divergence, clean: statusBefore === '' });
+
+const commits = git(['rev-list', '--reverse', '--parents', 'HEAD']).split(/\r?\n/);
+const mergeCount = git(['rev-list', '--merges', '--count', 'HEAD']);
+check('four direct owner commits and zero merges', commits.length === 4 && mergeCount === '0' && commits.every(function (line, index) { return index === 0 ? line.trim().split(/\s+/).length === 1 : line.trim().split(/\s+/).length === 2; }), { commits: commits.length, merges: Number(mergeCount) });
+const expectedCommits = [
+  '0b501de10b3861dc321d4db5a3580e98031bb0d9',
+  '398c85bba830845330876bd7fa75e082f3230f3d',
+  'c7f2bc28fc4fe15c89619d1d57185e3d1a77fe40',
+  exactFinal
+];
+check('exact lifecycle commits', commits.map(function (line) { return line.split(/\s+/)[0]; }).every(function (value, index) { return value === expectedCommits[index]; }), expectedCommits);
+
+const manifestPaths = [
+  PREFIX + 'plan/manifest.json',
+  PREFIX + 'x1/manifest.json',
+  PREFIX + 'x2/manifest.json',
+  PREFIX + 'final/final-delta-manifest.json',
+  PREFIX + 'final/final-owner-manifest.json'
+];
+const manifestResults = manifestPaths.map(verifyManifest);
+check('exact Git blob manifests', manifestResults.every(function (row) { return row.failures.length === 0; }), manifestResults);
+const seal = readJson(path.join(ROOT, 'content-seal.json'));
+const sealFailures = [];
+seal.targets.forEach(function (entry) {
+  let blob;
+  try { blob = cp.execFileSync('git', ['cat-file', 'blob', exactFinal + ':' + entry.path], { cwd: REPO }); }
+  catch (error) { sealFailures.push(entry.path + ':missing'); return; }
+  if (blob.length !== entry.bytes || digest(blob) !== entry.sha256) sealFailures.push(entry.path + ':mismatch');
+});
+check('content seal exact bytes', sealFailures.length === 0, { targets: seal.targets.length, failures: sealFailures });
+
+const plan = readJson(path.join(BASE, 'plan/proposals.json'));
+const ledger = readJson(path.join(ROOT, 'proposal-ledger.json'));
+const runtime = loadTxt(path.join(BASE, 'x2/runtime/gmut-remaster-kernel.txt'));
+let ownerPassed = 0;
+const ownerFailures = [];
+plan.rows.forEach(function (proposal) {
+  try {
+    const request = JSON.parse(JSON.stringify(proposal.canonical_request));
+    const before = JSON.stringify(request);
+    const observed = runtime.execute(request);
+    if (JSON.stringify(observed) === JSON.stringify(proposal.expected_output) && before === JSON.stringify(request)) ownerPassed += 1;
+    else ownerFailures.push(proposal.proposal_id);
+  } catch (error) { ownerFailures.push(proposal.proposal_id + ':' + error.message); }
+});
+check('100 exact-final owner tests', ownerPassed === 100, { total: 100, passed: ownerPassed, failures: ownerFailures });
+const adverse = [
+  { operation: 'unknown_canonical_1', input: {} },
+  { operation: 'unknown_canonical_2', input: {} },
+  { operation: 'unknown_canonical_3', input: {} },
+  { operation: 'unknown_canonical_4', input: {} },
+  { operation: 'unknown_canonical_5', input: {} }
+];
+let adversePassed = 0;
+adverse.forEach(function (request) { try { runtime.execute(request); } catch (error) { adversePassed += 1; } });
+check('five canonical adverse refusals', adversePassed === 5, { total: 5, passed: adversePassed, subject_success_credit: 0 });
+check('proposal outcomes exact', JSON.stringify(ledger.outcomes) === JSON.stringify({ completed: 80, represented: 10, open_gap: 5, exact_gate: 5 }), ledger.outcomes);
+
+const flow = readJson(path.join(ROOT, 'method-flow.json'));
+const negatives = readJson(path.join(ROOT, 'retained-negative-register.json'));
+check('Method Flow exact counts', flow.methods.length === 77 && flow.witnesses.length === 1117 && flow.counts.owner_additions.passing_witnesses === 888 && flow.counts.owner_additions.failed_witnesses_and_effective_negatives === 229, flow.counts);
+check('negative failed-witness bijection', negatives.rows.length === 229 && new Set(negatives.rows.map(function (row) { return row.negative_id; })).size === 229, { negatives: negatives.rows.length });
+check('effective lineage counts', JSON.stringify(flow.counts.effective) === JSON.stringify({ methods: 275, witnesses: 6591, passing_witnesses: 4775, failed_witnesses_and_effective_negatives: 1816, open_gaps: 25, exact_gates: 25 }), flow.counts.effective);
+
+const files = [];
+walk(path.join(REPO, 'docs/elowen-cairn'), files);
+const allowed = new Set(['.json', '.md', '.txt', '.tex', '.html']);
+const formatIssues = [];
+const jsonIssues = [];
+const wordIssues = [];
+const privacyCandidates = [];
+const confirmed = [];
+const patterns = [
+  ['raw_uuid', /\b[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}\b/i],
+  ['absolute_windows_path', /[A-Z]:\\\\|[A-Z]:\//],
+  ['credential_or_key', /(?:sk-[A-Za-z0-9]{12,}|BEGIN PRIVATE KEY|api[_-]?key\s*[:=])/i],
+  ['private_route_or_identifier', /(?:source_thread_id|private_callable|session_stream|codex_delegation)/i],
+  ['transcript_or_screenshot', /(?:raw transcript payload|screenshot data|private application state dump)/i]
+];
+files.forEach(function (file) {
+  const rel = path.relative(REPO, file).split(path.sep).join('/');
+  const ext = path.extname(file).toLowerCase();
+  if (!allowed.has(ext)) formatIssues.push(rel);
+  const text = fs.readFileSync(file, 'utf8');
+  if (ext === '.json') { try { JSON.parse(text); } catch (error) { jsonIssues.push(rel); } }
+  if ((text.match(/\S+/g) || []).length > 100000) wordIssues.push(rel);
+  patterns.forEach(function (pair) {
+    if (pair[1].test(text)) {
+      const item = { path: rel, class: pair[0], classification: rel.includes('/tools/') ? 'scanner_definition_metadata' : 'unresolved', confirmed_payload_hit: !rel.includes('/tools/') };
+      privacyCandidates.push(item);
+      if (item.confirmed_payload_hit) confirmed.push(item);
+    }
+  });
+});
+check('allowed formats and file ceiling', formatIssues.length === 0 && files.length <= 2000, { files: files.length, issues: formatIssues });
+check('strict JSON parse and word ceiling', jsonIssues.length === 0 && wordIssues.length === 0, { JSON_files: files.filter(function (file) { return path.extname(file).toLowerCase() === '.json'; }).length, JSON_issues: jsonIssues, word_issues: wordIssues });
+check('five-class privacy scan', confirmed.length === 0, { files: files.length, candidates: privacyCandidates, confirmed: confirmed });
+
+const finalHtml = fs.readFileSync(path.join(ROOT, 'accessible-report.html'), 'utf8');
+const finalScript = /<script>([\s\S]*?)<\/script>/.exec(finalHtml);
+let finalScriptPass = false;
+try { new vm.Script(finalScript[1]); finalScriptPass = true; } catch (error) {}
+const simHtml = fs.readFileSync(path.join(BASE, 'x2/simulation/scalar-toy-sandbox.html'), 'utf8');
+const simScript = /<script>([\s\S]*?)<\/script>/.exec(simHtml);
+let simScriptPass = false;
+try { new vm.Script(simScript[1]); simScriptPass = true; } catch (error) {}
+check('HTML structure and script compilation', finalScriptPass && simScriptPass && /role="status"/.test(finalHtml) && /<caption>/.test(finalHtml) && !/<(img|svg|canvas)\b/i.test(finalHtml + simHtml), { final_script: finalScriptPass, simulation_script: simScriptPass });
+const tex = fs.readFileSync(path.join(BASE, 'x1/grand-mandala-remaster.tex'), 'utf8');
+let depth = 0;
+for (const ch of tex) { if (ch === '{') depth += 1; if (ch === '}') depth -= 1; }
+check('TeX source structure without PDF or image', depth === 0 && !/\\includegraphics/.test(tex), { brace_depth: depth });
+
+const parity = readJson(path.join(BASE, 'x2/evidence/installation-parity.json'));
+check('27 additive installation bindings', parity.binding_count === 27 && parity.rows.every(function (row) { return row.parity && !row.overwritten; }) && parity.overwrites === 0 && parity.removals === 0, { bindings: parity.binding_count });
+const route = readJson(path.join(ROOT, 'route-packet.json'));
+check('Tessarin route prepared not sent', route.state === 'PREPARED_NOT_SENT_TERMINAL_GATED' && route.live_authorized_successor.owner === 'Tessarin Reed' && route.messages_sent_at_repository_seal === 0, null);
+const baton = fs.readFileSync(path.join(ROOT, 'hand-off-baton.md'), 'utf8');
+const batonWords = (baton.match(/\S+/g) || []).length;
+check('thirteen-module bounded baton', (baton.match(/^## Module /gm) || []).length === 13 && batonWords >= 10000 && batonWords <= 100000, { words: batonWords });
+check('owner-scoped not full repository suite', readJson(path.join(ROOT, 'phase-truth.json')).full_repository_suite === false, null);
+
+const statusAfter = git(['status', '--porcelain=v1']);
+const headAfter = git(['rev-parse', 'HEAD']);
+const upstreamAfter = git(['rev-parse', '@{u}']);
+const trackingAfter = git(['rev-parse', 'refs/remotes/origin/' + branch]);
+const liveAfterLine = git(['ls-remote', 'origin', 'refs/heads/' + branch]);
+const liveAfter = liveAfterLine.split(/\s+/)[0];
+const divergenceAfter = git(['rev-list', '--left-right', '--count', 'HEAD...@{u}']).split(/\s+/).map(Number);
+check('clean fresh four-way after checks', statusAfter === '' && headAfter === exactFinal && headAfter === upstreamAfter && headAfter === trackingAfter && headAfter === liveAfter && divergenceAfter[0] === 0 && divergenceAfter[1] === 0, { head: headAfter, upstream: upstreamAfter, tracking: trackingAfter, live: liveAfter, divergence: divergenceAfter, clean: statusAfter === '' });
+
+const passed = checks.filter(function (row) { return row.pass; }).length;
+const failed = checks.length - passed;
+const payload = {
+  schema: 'ghc.family.exact-final-owner-scoped-canonical.v10',
+  owner: 'Elowen Cairn',
+  phase: 'v694-v3-r2',
+  status: failed === 0 ? 'VALID_EXACT_FINAL_OWNER_SCOPED_CANONICAL' : 'INVALID_EXACT_FINAL_OWNER_SCOPED_CANONICAL',
+  exact_final: exactFinal,
+  invocations: 1,
+  successes: failed === 0 ? 1 : 0,
+  replays: 0,
+  checks_total: checks.length,
+  checks_passed: passed,
+  checks_failed: failed,
+  checks: checks,
+  owner_tests: { total: 100, passed: ownerPassed },
+  adverse_tests: { total: 5, passed: adversePassed, subject_success_credit: 0 },
+  full_repository_suite: false,
+  independent_reproduction: false,
+  successor_contacted: false,
+  route: failed === 0 ? 'TERMINAL_REPOSITORY_GATE_PASSED_ROUTE_CHECKS_ELIGIBLE' : 'HELD_CANONICAL_FAILED',
+  terminal_verdict: 'NOT_READY_FOR_STAGE_20',
+  started_at: startedAt,
+  finished_at: new Date().toISOString()
+};
+const payloadText = JSON.stringify(payload, null, 2) + '\n';
+const payloadSha = digest(Buffer.from(payloadText));
+payload.payload_sha256 = payloadSha;
+const receiptText = JSON.stringify(payload, null, 2) + '\n';
+fs.writeFileSync(path.join(receiptDir, 'payload.json'), payloadText, 'utf8');
+fs.writeFileSync(path.join(receiptDir, 'receipt.json'), receiptText, 'utf8');
+if (failed === 0) {
+  fs.writeFileSync(path.join(receiptDir, 'success-latch.json'), JSON.stringify({ schema: 'ghc.family.canonical-success-latch.v10', exact_final: exactFinal, status: 'SUCCESS_LATCHED_NO_REPLAY', invocations: 1, successes: 1, replays: 0, payload_sha256: payloadSha }, null, 2) + '\n', 'utf8');
+}
+console.log(JSON.stringify({ status: payload.status, exact_final: exactFinal, checks: checks.length, passed: passed, failed: failed, owner_tests: ownerPassed, adverse_tests: adversePassed, invocations: 1, successes: failed === 0 ? 1 : 0, replays: 0, payload_sha256: payloadSha }, null, 2));
+if (failed) process.exitCode = 1;
