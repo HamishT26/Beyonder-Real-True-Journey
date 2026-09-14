@@ -1,0 +1,287 @@
+{
+  "count": 5,
+  "fixtures": [
+    {
+      "id": "nat_add",
+      "lesson": "Recursive addition normalization supplies a terminating deterministic chain without becoming a physical arithmetic measurement.",
+      "probe_position": [
+        0
+      ],
+      "rules": [
+        {
+          "id": "N1",
+          "lhs": {
+            "args": [
+              "0",
+              "?y"
+            ],
+            "fun": "add"
+          },
+          "rhs": "?y"
+        },
+        {
+          "id": "N2",
+          "lhs": {
+            "args": [
+              {
+                "args": [
+                  "?x"
+                ],
+                "fun": "s"
+              },
+              "?y"
+            ],
+            "fun": "add"
+          },
+          "rhs": {
+            "args": [
+              {
+                "args": [
+                  "?x",
+                  "?y"
+                ],
+                "fun": "add"
+              }
+            ],
+            "fun": "s"
+          }
+        }
+      ],
+      "start": {
+        "args": [
+          {
+            "args": [
+              "0"
+            ],
+            "fun": "s"
+          },
+          {
+            "args": [
+              "0"
+            ],
+            "fun": "s"
+          }
+        ],
+        "fun": "add"
+      }
+    },
+    {
+      "id": "bool_simplify",
+      "lesson": "Two available simplifications create a finite joinable peak whose agreement is structural rather than a claim about real reasoning.",
+      "probe_position": [
+        1
+      ],
+      "rules": [
+        {
+          "id": "B1",
+          "lhs": {
+            "args": [
+              {
+                "args": [
+                  "?x"
+                ],
+                "fun": "not"
+              }
+            ],
+            "fun": "not"
+          },
+          "rhs": "?x"
+        },
+        {
+          "id": "B2",
+          "lhs": {
+            "args": [
+              "true",
+              "?x"
+            ],
+            "fun": "and"
+          },
+          "rhs": "?x"
+        },
+        {
+          "id": "B3",
+          "lhs": {
+            "args": [
+              "false",
+              "?x"
+            ],
+            "fun": "and"
+          },
+          "rhs": "false"
+        }
+      ],
+      "start": {
+        "args": [
+          "true",
+          {
+            "args": [
+              {
+                "args": [
+                  "false"
+                ],
+                "fun": "not"
+              }
+            ],
+            "fun": "not"
+          }
+        ],
+        "fun": "and"
+      }
+    },
+    {
+      "id": "list_append",
+      "lesson": "Finite list normalization exposes nested redex positions and substitution without operating on user data.",
+      "probe_position": [
+        0
+      ],
+      "rules": [
+        {
+          "id": "L1",
+          "lhs": {
+            "args": [
+              "nil",
+              "?y"
+            ],
+            "fun": "append"
+          },
+          "rhs": "?y"
+        },
+        {
+          "id": "L2",
+          "lhs": {
+            "args": [
+              {
+                "args": [
+                  "?x",
+                  "?xs"
+                ],
+                "fun": "cons"
+              },
+              "?y"
+            ],
+            "fun": "append"
+          },
+          "rhs": {
+            "args": [
+              "?x",
+              {
+                "args": [
+                  "?xs",
+                  "?y"
+                ],
+                "fun": "append"
+              }
+            ],
+            "fun": "cons"
+          }
+        }
+      ],
+      "start": {
+        "args": [
+          {
+            "args": [
+              "a",
+              {
+                "args": [
+                  "b",
+                  "nil"
+                ],
+                "fun": "cons"
+              }
+            ],
+            "fun": "cons"
+          },
+          {
+            "args": [
+              "c",
+              "nil"
+            ],
+            "fun": "cons"
+          }
+        ],
+        "fun": "append"
+      }
+    },
+    {
+      "id": "joinable_peak",
+      "lesson": "A deliberately branching finite peak rejoins at d and distinguishes observed joinability from universal confluence.",
+      "probe_position": [
+        0
+      ],
+      "rules": [
+        {
+          "id": "J1",
+          "lhs": {
+            "args": [
+              "a"
+            ],
+            "fun": "f"
+          },
+          "rhs": "b"
+        },
+        {
+          "id": "J2",
+          "lhs": {
+            "args": [
+              "a"
+            ],
+            "fun": "f"
+          },
+          "rhs": "c"
+        },
+        {
+          "id": "J3",
+          "lhs": "b",
+          "rhs": "d"
+        },
+        {
+          "id": "J4",
+          "lhs": "c",
+          "rhs": "d"
+        }
+      ],
+      "start": {
+        "args": [
+          "a"
+        ],
+        "fun": "f"
+      }
+    },
+    {
+      "id": "divergent_peak",
+      "lesson": "A finite non-joinable peak is retained as a counterexample to overbroad confluence claims.",
+      "probe_position": [
+        0
+      ],
+      "rules": [
+        {
+          "id": "D1",
+          "lhs": {
+            "args": [
+              "a"
+            ],
+            "fun": "f"
+          },
+          "rhs": "b"
+        },
+        {
+          "id": "D2",
+          "lhs": {
+            "args": [
+              "a"
+            ],
+            "fun": "f"
+          },
+          "rhs": "c"
+        }
+      ],
+      "start": {
+        "args": [
+          "a"
+        ],
+        "fun": "f"
+      }
+    }
+  ],
+  "schema": "ghc.family.term-rewriting-fixtures.v1"
+}
