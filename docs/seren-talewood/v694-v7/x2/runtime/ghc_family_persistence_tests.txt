@@ -1,0 +1,48 @@
+'use strict';
+function suite(core,oracle,fixtures){
+ const checks=[];
+ function check(name,fn){try{const detail=fn();checks.push({name,result:'pass',detail:detail??true});}catch(e){checks.push({name,result:'fail',error:e.message});}}
+ const eq=(a,b)=>{if(core.canonical(a)!==core.canonical(b))throw Error('typed mismatch');};
+ const need=(a,m)=>{if(!a)throw Error(m);};
+ const req=(f,op='barcode')=>({schema:'ghc.persistence.request.v1',operation:op,complex:{name:f.name,simplices:f.simplices},synthetic:true});
+ const clone=x=>JSON.parse(JSON.stringify(x));
+ for(const f of fixtures){
+  check(f.name+' manually declared intervals',()=>eq(core.run(req(f)).value,[...f.expected_intervals].sort((a,b)=>a.dimension-b.dimension||a.birth-b.birth||((a.death??Infinity)-(b.death??Infinity)||0))));
+  check(f.name+' exhaustive quotient agrees with interval ranks',()=>eq(core.run(req(f,'rank_invariant')).value,oracle.allRanks(f.simplices)));
+  check(f.name+' algebraic quotient agrees with exhaustive cosets',()=>eq(core.run(req(f,'quotient_rank')).value,oracle.allRanks(f.simplices)));
+  check(f.name+' boundary change certificate',()=>{const v=core.run(req(f,'reduced_pivots')).value;need(v.certificate&&v.unique_pivots,'invalid reduction certificate');});
+ }
+ const f=fixtures[1],base=req(f);
+ const refusals=[
+ ['unknown envelope field','E_FIELDS',r=>{r.execute=true;}],
+ ['false synthetic declaration','E_SYNTHETIC',r=>{r.synthetic=false;}],
+ ['unknown operation','E_OPERATION',r=>{r.operation='grant-rights';}],
+ ['wrong schema','E_OPERATION',r=>{r.schema='other';}],
+ ['noninteger time','E_TIME',r=>{r.complex.simplices[0].birth=0.5;}],
+ ['string time','E_TIME',r=>{r.complex.simplices[0].birth='0';}],
+ ['boolean time','E_TIME',r=>{r.complex.simplices[0].birth=true;}],
+ ['unsafe time','E_TIME',r=>{r.complex.simplices[0].birth=Number.MAX_SAFE_INTEGER;}],
+ ['duplicate simplex','E_DUPLICATE',r=>{r.complex.simplices.push(clone(r.complex.simplices[0]));}],
+ ['duplicate vertex','E_VERTEX',r=>{r.complex.simplices[0].vertices=[0,0];}],
+ ['missing face','E_FACE',r=>{r.complex.simplices.shift();}],
+ ['face later than coface','E_FILTRATION',r=>{r.complex.simplices[0].birth=9;}],
+ ['negative vertex','E_VERTEX',r=>{r.complex.simplices[0].vertices=[-1];}],
+ ['nested field','E_FIELDS',r=>{r.complex.simplices[0].authority='all';}],
+ ['empty complex','E_BUDGET',r=>{r.complex.simplices=[];}],
+ ['oversize complex','E_BUDGET',r=>{r.complex.simplices=Array(65).fill(r.complex.simplices[0]);}],
+ ['dimension ceiling','E_SIMPLEX',r=>{r.complex.simplices[0].vertices=[0,1,2,3,4];}],
+ ['empty simplex','E_SIMPLEX',r=>{r.complex.simplices[0].vertices=[];}],
+ ['noninteger vertex','E_VERTEX',r=>{r.complex.simplices[0].vertices=[0.5];}],
+ ['invalid name','E_NAME',r=>{r.complex.name='../outside';}]
+ ];
+ for(const [name,error,mutate] of refusals)check(name,()=>{const r=clone(base);mutate(r);const got=core.run(r);need(!got.accepted&&got.error===error,'expected '+error+' got '+got.error);return {subject_result:'fail',refusal_result:'pass',error,original_success_credit:0};});
+ check('does not mutate caller input',()=>{const r=clone(base),before=core.canonical(r);core.run(r);eq(core.canonical(r),before);});
+ check('death endpoint excluded',()=>need(core.countBars([{dimension:1,birth:3,death:5}],1,5)===0,'closed death endpoint'));
+ check('birth endpoint included',()=>need(core.countBars([{dimension:1,birth:3,death:5}],1,3)===1,'open birth endpoint'));
+ check('zero duration excluded from living classes',()=>need(core.countBars([{dimension:0,birth:0,death:0}],0,0)===0,'zero class counted'));
+ check('top-dimensional essential sphere retained',()=>{const t=clone(fixtures[3]);t.simplices=t.simplices.filter(s=>s.vertices.length<4);const got=core.run(req(t));need(got.value.some(b=>b.dimension===2&&b.birth===2&&b.death===null),'highest dimension omitted');});
+ check('equal Betti curves can have distinct rank invariants',()=>{const a=[{dimension:1,birth:0,death:2},{dimension:1,birth:1,death:3}],b=[{dimension:1,birth:0,death:3},{dimension:1,birth:1,death:2}];eq([0,1,2,3].map(t=>core.countBars(a,1,t)),[0,1,2,3].map(t=>core.countBars(b,1,t)));need(core.countBars(a,1,0,2)!==core.countBars(b,1,0,2),'rank information not distinguished');return {same_betti:[1,2,1,0],rank_a_0_to_2:0,rank_b_0_to_2:1};});
+ check('changing declared filling time changes lifetime',()=>{const changed=clone(f);changed.simplices.at(-1).birth=8;const got=core.run(req(changed));need(got.value.some(x=>x.dimension===1&&x.birth===3&&x.death===8),'filtration dependence lost');});
+ return {algorithm:'bounded_unit_and_invariant_checks',passed:checks.filter(x=>x.result==='pass').length,failed:checks.filter(x=>x.result==='fail').length,checks,independent_reproduction:false};
+}
+module.exports={suite};

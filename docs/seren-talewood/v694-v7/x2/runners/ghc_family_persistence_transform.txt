@@ -1,0 +1,4 @@
+'use strict';
+const core=require('../runtime/ghc_family_persistence_core.txt');
+const ops=["shift_filtration","scale_filtration","relabel_vertices","reverse_ties"];
+module.exports={run:r=>ops.includes(r?.operation)?core.run(r):{accepted:false,error:'E_SCOPE',original_success_credit:0}};

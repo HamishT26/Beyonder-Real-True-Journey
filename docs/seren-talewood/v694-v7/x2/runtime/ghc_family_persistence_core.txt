@@ -1,0 +1,64 @@
+'use strict';
+const crypto=require('node:crypto');
+const OPS=['filtration_summary','canonical_order','face_precedence','boundary_squared','reduced_pivots','barcode','zero_pairs','betti_trace','rank_invariant','quotient_rank','euler_trace','cycle_certificates','shift_filtration','scale_filtration','relabel_vertices','reverse_ties','accessible_intervals','sensitivity_summary','empirical_gap','authority_reservation'];
+const canonical=x=>JSON.stringify(x,(_,v)=>v&&typeof v==='object'&&!Array.isArray(v)?Object.fromEntries(Object.keys(v).sort().map(k=>[k,v[k]])):v);
+function need(x,code){if(!x){const e=new Error(code);e.code=code;throw e;}}
+function exact(x,fields,code='E_FIELDS'){need(x&&typeof x==='object'&&!Array.isArray(x),code);need(Object.keys(x).length===fields.length&&Object.keys(x).every(k=>fields.includes(k)),code);}
+const key=v=>v.join(',');
+const compare=(a,b)=>{for(let i=0;i<Math.min(a.length,b.length);i++)if(a[i]!==b[i])return a[i]-b[i];return a.length-b.length;};
+function validate(req){
+ exact(req,['schema','operation','complex','synthetic']);
+ need(req.schema==='ghc.persistence.request.v1'&&OPS.includes(req.operation),'E_OPERATION');
+ need(req.synthetic===true,'E_SYNTHETIC');
+ exact(req.complex,['name','simplices']);
+ need(typeof req.complex.name==='string'&&/^[a-z0-9-]{1,64}$/.test(req.complex.name),'E_NAME');
+ const a=req.complex.simplices;need(Array.isArray(a)&&a.length>0&&a.length<=64,'E_BUDGET');
+ const seen=new Map(),vertices=new Set();
+ const out=a.map(x=>{exact(x,['vertices','birth']);need(Array.isArray(x.vertices)&&x.vertices.length>=1&&x.vertices.length<=4,'E_SIMPLEX');need(x.vertices.every(v=>Number.isSafeInteger(v)&&v>=0&&v<=100000),'E_VERTEX');need(new Set(x.vertices).size===x.vertices.length,'E_VERTEX');need(Number.isSafeInteger(x.birth)&&Math.abs(x.birth)<=1000000,'E_TIME');const v=[...x.vertices].sort((x,y)=>x-y),k=key(v);need(!seen.has(k),'E_DUPLICATE');seen.set(k,x.birth);v.forEach(t=>vertices.add(t));return {vertices:v,birth:x.birth};});
+ need(vertices.size<=12,'E_BUDGET');
+ for(const s of out)if(s.vertices.length>1)for(let i=0;i<s.vertices.length;i++){const k=key(s.vertices.filter((_,j)=>j!==i));need(seen.has(k),'E_FACE');need(seen.get(k)<=s.birth,'E_FILTRATION');}
+ return out;
+}
+function order(a,reverse=false){return a.map(x=>({vertices:[...x.vertices],birth:x.birth})).sort((x,y)=>x.birth-y.birth||x.vertices.length-y.vertices.length||(reverse?-1:1)*compare(x.vertices,y.vertices));}
+function boundary(a){const lookup=new Map(a.map((x,i)=>[key(x.vertices),i]));return a.map(s=>{let b=0n;if(s.vertices.length>1)for(let i=0;i<s.vertices.length;i++){const j=lookup.get(key(s.vertices.filter((_,k)=>i!==k)));need(j!==undefined,'E_FACE');b^=1n<<BigInt(j);}return b;});}
+function indices(x){const out=[];let i=0;while(x){if(x&1n)out.push(i);x>>=1n;i++;}return out;}
+function top(x){need(x>0n,'E_ZERO_PIVOT');return x.toString(2).length-1;}
+function rank(columns){const pivots=new Map();for(let x of columns){while(x&&pivots.has(top(x)))x^=pivots.get(top(x));if(x)pivots.set(top(x),x);}return pivots.size;}
+function apply(columns,v){let result=0n;for(const i of indices(v))result^=columns[i]??0n;return result;}
+function reduce(a){const D=boundary(a),R=[],V=[],pivots=new Map(),pairs=[];for(let j=0;j<D.length;j++){let r=D[j],v=1n<<BigInt(j);while(r&&pivots.has(top(r))){const k=pivots.get(top(r));r^=R[k];v^=V[k];}R.push(r);V.push(v);if(r){const i=top(r);pivots.set(i,j);pairs.push([i,j]);}}return {D,R,V,pairs};}
+const barSort=(a,b)=>a.dimension-b.dimension||a.birth-b.birth||((a.death??Infinity)-(b.death??Infinity)||0);
+function intervals(a,r){const killed=new Set(r.pairs.map(p=>p[0])),out=r.pairs.map(([i,j])=>({dimension:a[i].vertices.length-1,birth:a[i].birth,death:a[j].birth}));for(let i=0;i<r.R.length;i++)if(r.R[i]===0n&&!killed.has(i))out.push({dimension:a[i].vertices.length-1,birth:a[i].birth,death:null});return out.sort(barSort);}
+function matrixAt(a,dimension,time){const rows=a.filter(s=>s.vertices.length===dimension),columns=a.filter(s=>s.vertices.length===dimension+1&&s.birth<=time),lookup=new Map(rows.map((x,i)=>[key(x.vertices),i]));return {rows,columns,vectors:columns.map(s=>{let v=0n;if(dimension>0)for(let i=0;i<s.vertices.length;i++)v^=1n<<BigInt(lookup.get(key(s.vertices.filter((_,j)=>j!==i))));return v;})};}
+function kernelBasis(columns){const basis=[],reduced=[],supports=[],pivots=new Map();for(let j=0;j<columns.length;j++){let r=columns[j],v=1n<<BigInt(j);while(r&&pivots.has(top(r))){const k=pivots.get(top(r));r^=reduced[k];v^=supports[k];}reduced.push(r);supports.push(v);if(r)pivots.set(top(r),j);else basis.push(v);}return basis;}
+function quotientRank(a,p,from,to){const source=matrixAt(a,p,from),global=a.filter(s=>s.vertices.length===p+1),lookup=new Map(global.map((s,i)=>[key(s.vertices),i]));const cycles=kernelBasis(source.vectors).map(v=>indices(v).reduce((n,i)=>n^(1n<<BigInt(lookup.get(key(source.columns[i].vertices)))),0n));const b=matrixAt(a,p+1,to).vectors;return rank([...cycles,...b])-rank(b);}
+function context(req,reverse=false){const a=order(validate(req),reverse),r=reduce(a),all=intervals(a,r),bars=all.filter(x=>x.death===null||x.death>x.birth),zeros=all.filter(x=>x.death===x.birth),dimension=Math.max(...a.map(x=>x.vertices.length-1)),levels=[...new Set(a.map(x=>x.birth))].sort((x,y)=>x-y),times=[levels[0]-1,...levels,levels.at(-1)+1];return {a,r,bars,zeros,dimension,levels,times};}
+function countBars(bars,p,a,b=a){return bars.filter(x=>x.dimension===p&&x.birth<=a&&(x.death===null||x.death>b)).length;}
+function evaluate(req){
+ const c=context(req),{a,r,bars,zeros,dimension,levels,times}=c;let value;
+ switch(req.operation){
+ case 'filtration_summary':value={simplices:a.length,dimension,levels,by_dimension:Array.from({length:dimension+1},(_,p)=>a.filter(x=>x.vertices.length===p+1).length)};break;
+ case 'canonical_order':value=a;break;
+ case 'face_precedence':value=r.D.flatMap((v,j)=>indices(v).map(i=>({face:i,coface:j,precedes:i<j})));break;
+ case 'boundary_squared':value=r.D.map((v,j)=>({column:j,boundary_squared:indices(apply(r.D,v))}));break;
+ case 'reduced_pivots':value={pairs:r.pairs,reduced_columns:r.R.map(indices),change_columns:r.V.map(indices),certificate:r.R.every((v,j)=>apply(r.D,r.V[j])===v),unique_pivots:new Set(r.pairs.map(p=>p[0])).size===r.pairs.length};break;
+ case 'barcode':value=bars;break;
+ case 'zero_pairs':value=zeros;break;
+ case 'betti_trace':value=times.map(t=>({time:t,betti:Array.from({length:dimension+1},(_,p)=>{const m=matrixAt(a,p,t),b=matrixAt(a,p+1,t);return m.columns.length-rank(m.vectors)-rank(b.vectors);})}));break;
+ case 'rank_invariant':case 'quotient_rank':value=times.flatMap((from,i)=>times.slice(i).map(to=>({from,to,ranks:Array.from({length:dimension+1},(_,p)=>req.operation==='rank_invariant'?countBars(bars,p,from,to):quotientRank(a,p,from,to))})));break;
+ case 'euler_trace':value=times.map(t=>{const simplex=a.filter(s=>s.birth<=t).reduce((n,s)=>n+(-1)**(s.vertices.length-1),0),homology=Array.from({length:dimension+1},(_,p)=>(-1)**p*countBars(bars,p,t)).reduce((x,y)=>x+y,0);return {time:t,simplex,homology,equal:simplex===homology};});break;
+ case 'cycle_certificates':value=r.R.flatMap((v,j)=>v===0n?[{birth_index:j,dimension:a[j].vertices.length-1,cycle_indices:indices(r.V[j]),boundary:indices(apply(r.D,r.V[j])),latest_time:Math.max(...indices(r.V[j]).map(i=>a[i].birth))}]:[]);break;
+ case 'shift_filtration':case 'scale_filtration':{const scale=req.operation==='scale_filtration'?3:1,shift=req.operation==='shift_filtration'?2:0;const transformed={...req,complex:{...req.complex,simplices:a.map(s=>({vertices:s.vertices,birth:s.birth*scale+shift}))}};value={scale,shift,intervals:context(transformed).bars};break;}
+ case 'relabel_vertices':{const vs=[...new Set(a.flatMap(s=>s.vertices))].sort((x,y)=>x-y),mapping=vs.map((v,i)=>[v,100+vs.length-i]),map=new Map(mapping);const changed={...req,complex:{...req.complex,simplices:a.map(s=>({birth:s.birth,vertices:s.vertices.map(v=>map.get(v))}))}};value={mapping,intervals:context(changed).bars};break;}
+ case 'reverse_ties':value={intervals:context(req,true).bars,zero_pairs:context(req,true).zeros,order_changed:canonical(a)!==canonical(context(req,true).a)};break;
+ case 'accessible_intervals':value=bars.map((x,i)=>({row:i+1,dimension:x.dimension,birth:x.birth,death:x.death,description:'H'+x.dimension+' begins at '+x.birth+' and '+(x.death===null?'has no death in the supplied filtration':'ends before '+x.death),evaluation:'represented; manual accessibility evaluation pending'}));break;
+ case 'sensitivity_summary':value=Array.from({length:dimension+1},(_,p)=>({dimension:p,finite_lifetimes:bars.filter(x=>x.dimension===p&&x.death!==null).map(x=>x.death-x.birth),essential_count:bars.filter(x=>x.dimension===p&&x.death===null).length,parameter_units:'unspecified synthetic threshold',physical_duration:false}));break;
+ case 'empirical_gap':value={case:req.complex.name,state:'open_gap',missing:['measurement map','physical observations','uncertainty model','competing explanation','independent empirical evaluation'],synthetic_output_is_empirical_evidence:false};break;
+ case 'authority_reservation':value={case:req.complex.name,state:'exact_gate',missing:['declared real-world scope','affected-party authorization','independent privacy and security evaluation','appropriate professional review'],public_action_taken:false};break;
+ }
+ const i=OPS.indexOf(req.operation),outcome=i<16?'completed':i<18?'represented':i===18?'open_gap':'exact_gate';
+ return {accepted:true,operation:req.operation,case:req.complex.name,field:2,outcome,value,same_owner_only:true,independent_reproduction:false};
+}
+function run(req){try{return evaluate(req);}catch(e){return {accepted:false,error:e.code||e.message,original_success_credit:0};}}
+function normalize(req){const a=order(validate(req));return {schema:req.schema,operation:req.operation,complex:{name:req.complex.name,simplices:a},synthetic:true};}
+function cli(){const fs=require('node:fs');const file=process.argv[2];const text=file?fs.readFileSync(file,'utf8'):fs.readFileSync(0,'utf8');try{process.stdout.write(JSON.stringify(run(JSON.parse(text)))+'\n');}catch(e){process.stdout.write(JSON.stringify({accepted:false,error:'E_JSON',original_success_credit:0})+'\n');}}
+module.exports={OPS,canonical,validate,order,boundary,indices,rank,apply,reduce,intervals,matrixAt,kernelBasis,quotientRank,context,countBars,run,normalize,cli};
