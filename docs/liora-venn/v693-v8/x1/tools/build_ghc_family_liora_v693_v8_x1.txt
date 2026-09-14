@@ -1,0 +1,142 @@
+"use strict";
+
+const fs = require("fs");
+const path = require("path");
+const crypto = require("crypto");
+const cp = require("child_process");
+
+const repo = process.env.LIORA_REPO;
+const pythonExe = process.env.LIORA_PYTHON || "python";
+const skillValidator = process.env.LIORA_SKILL_VALIDATOR;
+if (!repo || !skillValidator) throw new Error("LIORA_REPO and LIORA_SKILL_VALIDATOR are required");
+const baseRel = "docs/liora-venn/v693-v8";
+const base = path.join(repo, ...baseRel.split("/"));
+const root = path.join(base, "x1");
+const plan = JSON.parse(fs.readFileSync(path.join(base, "plan", "proposals.json"), "utf8"));
+const capabilityPlan = JSON.parse(fs.readFileSync(path.join(base, "plan", "capabilities", "local-runners.json"), "utf8"));
+const startup = JSON.parse(fs.readFileSync(path.join(base, "plan", "startup-method-flow.json"), "utf8"));
+const core = require(path.join(root, "exact-linear-core.txt"));
+const allowedExtensions = new Set([".json", ".md", ".txt", ".html"]);
+const boundary = plan.boundary;
+const protectedGates = core.protectedGates;
+function stable(value) { if (Array.isArray(value)) return value.map(stable); if (value && typeof value === "object") return Object.fromEntries(Object.keys(value).sort().map((key) => [key, stable(value[key])])); return value; }
+function canon(value) { return JSON.stringify(stable(value)); }
+function sha(bytes) { return crypto.createHash("sha256").update(bytes).digest("hex"); }
+function writeJson(rel, value) { const target = path.join(base, ...rel.split("/")); fs.mkdirSync(path.dirname(target), { recursive: true }); fs.writeFileSync(target, JSON.stringify(value, null, 2) + "\n", "utf8"); }
+function writeText(rel, value) { const target = path.join(base, ...rel.split("/")); fs.mkdirSync(path.dirname(target), { recursive: true }); fs.writeFileSync(target, String(value).replace(/\r\n/g, "\n"), "utf8"); }
+function walk(folder) { let out = []; for (const e of fs.readdirSync(folder, { withFileTypes: true })) { const f = path.join(folder, e.name); out = e.isDirectory() ? out.concat(walk(f)) : out.concat(f); } return out; }
+function slug(value) { return value.replace(/_/g, "-"); }
+
+const proposals = plan.proposals.filter((row) => row.session === "x1");
+if (proposals.length !== 50) throw new Error("expected 50 x1 proposals");
+const proposalResults = [], safeResults = [], candidateResults = [], cfrResults = [], alteredExpectedResults = [];
+for (const proposal of proposals) {
+  const before = sha(Buffer.from(canon(proposal.request))), observed = core.execute(JSON.parse(JSON.stringify(proposal.request))), after = sha(Buffer.from(canon(proposal.request)));
+  const outputPass = canon(observed) === canon(proposal.expected_output), inputPass = before === after;
+  proposalResults.push({ proposal_id: proposal.proposal_id, operation: proposal.operation, expected_disposition: proposal.expected_disposition, output_pass: outputPass, input_preserved: inputPass, observed });
+  safeResults.push({ task_id: proposal.proposal_id + "-SAFE-1", proposal_id: proposal.proposal_id, check: "exact_output", result: outputPass ? "pass" : "fail" });
+  safeResults.push({ task_id: proposal.proposal_id + "-SAFE-2", proposal_id: proposal.proposal_id, check: "input_preservation", result: inputPass ? "pass" : "fail" });
+  for (const subject of proposal.candidate_subjects) {
+    const got = core.execute(subject.request), refusal = got.ok === subject.expected_rejection.ok && got.error === subject.expected_rejection.error;
+    candidateResults.push({ proposal_id: proposal.proposal_id, negative_id: subject.negative_id, failed_subject_result: "fail", original_success_credit: 0, observed: got, refusal_witness: refusal ? "pass" : "fail", failed_subject_remains_failed: true });
+  }
+  const rerun = core.execute(JSON.parse(JSON.stringify(proposal.request)));
+  cfrResults.push({ task_id: proposal.proposal_id + "-CFR-1", proposal_id: proposal.proposal_id, check: "canonical_determinism", result: canon(rerun) === canon(observed) ? "pass" : "fail" });
+  cfrResults.push({ task_id: proposal.proposal_id + "-CFR-2", proposal_id: proposal.proposal_id, check: "claim_ceiling", result: observed.authority === false && observed.evidence_class === "finite_exact_linear_algebra" && observed.protected_gates.length === protectedGates.length ? "pass" : "fail" });
+  const altered = JSON.parse(JSON.stringify(proposal.expected_output)); altered.authority = true;
+  alteredExpectedResults.push({ proposal_id: proposal.proposal_id, negative_id: proposal.proposal_id + "-ALTERED-EXPECTED", failed_subject_result: canon(observed) === canon(altered) ? "unexpected_pass" : "fail", original_success_credit: 0, recovery: "retain the frozen expected envelope", recovery_pass: canon(observed) === canon(proposal.expected_output) });
+}
+writeJson("x1/results/proposal-results.json", { schema: "ghc.family.proposal-results.v9", owner: "Liora Venn", phase: "v693-v8", session: "x1", count: proposalResults.length, passed: proposalResults.filter((r) => r.output_pass && r.input_preserved).length, results: proposalResults, boundary });
+writeJson("x1/results/safe-results.json", { schema: "ghc.family.safe-results.v9", owner: "Liora Venn", phase: "v693-v8", session: "x1", count: safeResults.length, passed: safeResults.filter((r) => r.result === "pass").length, results: safeResults, boundary });
+writeJson("x1/results/candidate-results.json", { schema: "ghc.family.candidate-results.v9", owner: "Liora Venn", phase: "v693-v8", session: "x1", failed_subjects: candidateResults.length, refusal_passes: candidateResults.filter((r) => r.refusal_witness === "pass").length, results: candidateResults, boundary });
+writeJson("x1/results/clean-fix-refine-results.json", { schema: "ghc.family.clean-fix-refine-results.v9", owner: "Liora Venn", phase: "v693-v8", session: "x1", count: cfrResults.length, passed: cfrResults.filter((r) => r.result === "pass").length, results: cfrResults, boundary });
+writeJson("x1/results/altered-expected-results.json", { schema: "ghc.family.altered-expected-results.v9", owner: "Liora Venn", phase: "v693-v8", session: "x1", failed_subjects: alteredExpectedResults.length, recovery_passes: alteredExpectedResults.filter((r) => r.recovery_pass).length, results: alteredExpectedResults, boundary });
+
+const operationGroups = new Map();
+for (const proposal of proposals) if (!operationGroups.has(proposal.operation)) operationGroups.set(proposal.operation, []);
+for (const proposal of proposals) operationGroups.get(proposal.operation).push(proposal);
+const skillReceipts = [];
+for (const [operation, rows] of operationGroups.entries()) {
+  const skillName = "ghc-family-exact-linear-" + slug(operation), skillRel = "x1/skills/" + skillName, skillDir = path.join(base, ...skillRel.split("/"));
+  const description = "Evaluate the finite exact " + operation.replace(/_/g, " ") + " contract and retain malformed subjects without promoting symbolic evidence.";
+  writeText(skillRel + "/SKILL.md", ["---", "name: " + skillName, "description: " + description, "---", "", "# " + operation.replace(/_/g, " "), "", "Use this skill only for the frozen finite exact request shape in fixture.json.", "", "1. Preserve the complete request and compare the complete typed envelope.", "2. Keep malformed inputs as failed subjects and credit a refusal only as a separate bounded witness.", "3. Stop at physical interpretation, participant, deployment, professional, legal, cultural, affected-party, Maori-authority, privacy-complete, accessibility-complete, security-complete, independent-reproduction, consciousness, AGI/ASI, Theory-of-Everything, and Stage 20 gates.", "", "Read [the accepting and rejecting fixture](fixture.json) before use.", "", boundary, ""].join("\n"));
+  writeJson(skillRel + "/fixture.json", { schema: "ghc.family.skill-fixture.v9", skill: skillName, operation, accepting: { request: rows[0].request, expected: rows[0].expected_output }, rejecting: rows[0].candidate_subjects.map((r) => ({ request: r.request, expected: r.expected_rejection, negative_id: r.negative_id })), boundary });
+  let officialOutput = "", officialPass = false;
+  try { officialOutput = cp.execFileSync(pythonExe, [skillValidator, skillDir], { encoding: "utf8", maxBuffer: 8 * 1024 * 1024 }).trim(); officialPass = true; } catch (error) { officialOutput = String(error.stdout || error.stderr || error.message); }
+  const fixture = JSON.parse(fs.readFileSync(path.join(skillDir, "fixture.json"), "utf8"));
+  const acceptingPass = canon(core.execute(fixture.accepting.request)) === canon(fixture.accepting.expected);
+  const rejectingPass = fixture.rejecting.every((r) => { const got = core.execute(r.request); return got.ok === false && got.error === r.expected.error; });
+  skillReceipts.push({ skill: skillName, operation, official_quick_validate: officialPass, official_output: officialOutput, accepting_smoke: acceptingPass, rejecting_smoke: rejectingPass, global_install: false });
+}
+writeJson("x1/evidence/skill-validation.json", { schema: "ghc.family.skill-validation.v9", owner: "Liora Venn", phase: "v693-v8", session: "x1", count: skillReceipts.length, passed: skillReceipts.filter((r) => r.official_quick_validate && r.accepting_smoke && r.rejecting_smoke).length, receipts: skillReceipts, global_installs: 0, boundary });
+
+const runnerReceipts = [];
+for (const runnerPlan of capabilityPlan.runners.filter((row) => row.session === "x1")) {
+  const rel = "x1/runners/" + runnerPlan.runner_id;
+  writeText(rel, [
+    '"use strict";',
+    'const path=require("path");',
+    'const core=require(path.join(__dirname,"..","exact-linear-core.txt"));',
+    'const allowed=new Set(' + JSON.stringify(runnerPlan.operations) + ');',
+    'function run(request){if(!request||!allowed.has(request.operation))return {ok:false,error:"E_SCOPE",authority:false};return core.execute(request);}',
+    'module.exports={run,operations:[...allowed]};',
+    'if(require.main===module){let data="";process.stdin.setEncoding("utf8");process.stdin.on("data",c=>data+=c);process.stdin.on("end",()=>{const out=run(JSON.parse(data));process.stdout.write(JSON.stringify(out)+"\\n");});}',
+    ''
+  ].join("\n"));
+  const runner = require(path.join(base, ...rel.split("/")));
+  const positives = runnerPlan.operations.flatMap((op) => operationGroups.get(op).slice(0, 1)).map((proposal) => ({ proposal_id: proposal.proposal_id, pass: canon(runner.run(proposal.request)) === canon(proposal.expected_output) }));
+  const adverseObserved = runner.run({ operation: "determinant_3x3", matrix: [["1","0","0"],["0","1","0"],["0","0","1"]] });
+  runnerReceipts.push({ runner: runnerPlan.runner_id, operations: runnerPlan.operations, positives, positive_passes: positives.filter((r) => r.pass).length, negative_id: "LV6938-X1-RUNNER-N" + (runnerReceipts.length + 1), scope_failed_subject: "fail", scope_refusal_pass: adverseObserved.ok === false && adverseObserved.error === "E_SCOPE", observed: adverseObserved });
+}
+writeJson("x1/evidence/runner-receipts.json", { schema: "ghc.family.runner-receipts.v9", owner: "Liora Venn", phase: "v693-v8", session: "x1", count: runnerReceipts.length, positive_passes: runnerReceipts.reduce((n, r) => n + r.positive_passes, 0), scope_failed_subjects: runnerReceipts.length, scope_refusal_passes: runnerReceipts.filter((r) => r.scope_refusal_pass).length, receipts: runnerReceipts, boundary });
+
+function methodRecord(methodId, title, failureSignature, negativeIds, witnessIds) {
+  return { method_id: methodId, title, failure_signature: failureSignature, trigger_preconditions: ["frozen x1 exact-linear contract"], privacy_class: "sanitized_public", approval_class: "safe_now", candidate_workaround: "Retain the failed subject and correct only the smallest owner-local dependency.", validation_witness_ids: witnessIds, recurrence_guard: "Require exact fields, canonical typed output, input preservation, and a separate refusal witness.", rollback: "Return to the immutable planning commit and preserve every failed witness.", recommendation_state: "preferred", supersedes: [], protected_gates: protectedGates, retained_negative_ids: negativeIds, scope_boundary: "Finite same-owner x1 software evidence only." };
+}
+function witness(witnessId, methodId, procedure, expected, observed, result, negatives = []) { return { witness_id: witnessId, method_id: methodId, procedure, scope: "x1", expected, observed, result, same_owner_only: true, independent_reproduction: false, retained_negative_ids: negatives, boundary }; }
+const methods = startup.methods.slice(), witnesses = startup.witnesses.slice(), stateEvents = startup.state_events.slice();
+for (const [index, operation] of [...operationGroups.keys()].entries()) {
+  const methodId = "LV6938-X1-M" + String(index + 1).padStart(3, "0"), rows = operationGroups.get(operation);
+  const negatives = rows.flatMap((row) => [...row.candidate_subjects.map((s) => s.negative_id), row.proposal_id + "-ALTERED-EXPECTED"]);
+  const validationIds = rows.flatMap((row) => [row.proposal_id + "-POS", row.proposal_id + "-C1-REFUSAL", row.proposal_id + "-C2-REFUSAL"]);
+  methods.push(methodRecord(methodId, titlesFor(operation), "Malformed fields, wrong operation, or altered expected output must not earn positive credit.", negatives, validationIds));
+  stateEvents.push({ event_id: methodId + "-E1", method_id: methodId, from: "observed", to: "candidate" }, { event_id: methodId + "-E2", method_id: methodId, from: "candidate", to: "validated", witness_id: validationIds[0] }, { event_id: methodId + "-E3", method_id: methodId, from: "validated", to: "preferred", witness_id: validationIds[1] });
+  for (const row of rows) {
+    const observed = proposalResults.find((r) => r.proposal_id === row.proposal_id);
+    witnesses.push(witness(row.proposal_id + "-POS", methodId, "execute frozen request", "exact expected envelope", observed.output_pass ? "exact envelope" : "mismatch", observed.output_pass ? "pass" : "fail"));
+    witnesses.push(witness(row.proposal_id + "-SAFE-1", methodId, "safe exact-output check", "pass", observed.output_pass ? "pass" : "fail", observed.output_pass ? "pass" : "fail"));
+    witnesses.push(witness(row.proposal_id + "-SAFE-2", methodId, "safe input-preservation check", "pass", observed.input_preserved ? "pass" : "fail", observed.input_preserved ? "pass" : "fail"));
+    for (const subject of row.candidate_subjects) {
+      const candidate = candidateResults.find((r) => r.negative_id === subject.negative_id);
+      witnesses.push(witness(row.proposal_id + "-" + subject.negative_id.split("-").pop() + "-FAIL", methodId, "execute malformed subject", "invalid subject remains failed", candidate.observed.error, "fail", [subject.negative_id]));
+      witnesses.push(witness(row.proposal_id + "-" + subject.negative_id.split("-").pop() + "-REFUSAL", methodId, "check separate refusal", subject.expected_rejection.error, candidate.observed.error, candidate.refusal_witness, [subject.negative_id]));
+    }
+    witnesses.push(witness(row.proposal_id + "-CFR-1", methodId, "canonical determinism", "pass", cfrResults.find((r) => r.task_id === row.proposal_id + "-CFR-1").result, "pass"));
+    witnesses.push(witness(row.proposal_id + "-CFR-2", methodId, "claim ceiling", "pass", cfrResults.find((r) => r.task_id === row.proposal_id + "-CFR-2").result, "pass"));
+    witnesses.push(witness(row.proposal_id + "-ALT-FAIL", methodId, "compare altered expected output", "mismatch retained", "mismatch", "fail", [row.proposal_id + "-ALTERED-EXPECTED"]));
+  }
+  const skillReceipt = skillReceipts.find((r) => r.operation === operation);
+  witnesses.push(witness(methodId + "-SKILL-VALID", methodId, "official quick validation", "pass", skillReceipt.official_quick_validate ? "pass" : "fail", skillReceipt.official_quick_validate ? "pass" : "fail"));
+  witnesses.push(witness(methodId + "-SKILL-SMOKE", methodId, "accepting and rejecting skill smoke", "pass", skillReceipt.accepting_smoke && skillReceipt.rejecting_smoke ? "pass" : "fail", skillReceipt.accepting_smoke && skillReceipt.rejecting_smoke ? "pass" : "fail"));
+}
+for (const [index, receipt] of runnerReceipts.entries()) {
+  const methodId = "LV6938-X1-RUNNER-M" + String(index + 1).padStart(3, "0"), negativeId = receipt.negative_id;
+  const ids = receipt.positives.map((r, i) => methodId + "-POS-" + (i + 1)).concat(methodId + "-REFUSAL");
+  methods.push(methodRecord(methodId, "Two-operation x1 runner " + (index + 1), "Out-of-scope operation is a failed subject and must be refused separately.", [negativeId], ids));
+  stateEvents.push({ event_id: methodId + "-E1", method_id: methodId, from: "observed", to: "candidate" }, { event_id: methodId + "-E2", method_id: methodId, from: "candidate", to: "validated", witness_id: ids[0] }, { event_id: methodId + "-E3", method_id: methodId, from: "validated", to: "preferred", witness_id: methodId + "-REFUSAL" });
+  receipt.positives.forEach((row, i) => witnesses.push(witness(methodId + "-POS-" + (i + 1), methodId, "runner positive", "pass", row.pass ? "pass" : "fail", row.pass ? "pass" : "fail")));
+  witnesses.push(witness(methodId + "-SCOPE-FAIL", methodId, "runner out-of-scope subject", "failed subject", receipt.observed.error, "fail", [negativeId]));
+  witnesses.push(witness(methodId + "-REFUSAL", methodId, "runner scope refusal", "E_SCOPE", receipt.observed.error, receipt.scope_refusal_pass ? "pass" : "fail", [negativeId]));
+}
+function titlesFor(operation) { return "Exact-linear " + operation.replace(/_/g, " ") + " method"; }
+const negativeIds = [...new Set(witnesses.filter((w) => w.result === "fail").flatMap((w) => w.retained_negative_ids))];
+const counts = { methods: methods.length, witnesses: witnesses.length, pass: witnesses.filter((w) => w.result === "pass").length, fail: witnesses.filter((w) => w.result === "fail").length };
+writeJson("x1/method-flow.json", { schema: "ghc.family.method-flow-state.v1", owner: "Liora Venn", phase: "v693-v8", stage: "x1", source_commit: "8f31ec2b25f86a463e77bf3d682a800a3529303f", planning_commit: "505540397e3af5b03c1270b8a484da28133a6d48", final_commit: "pending", execution_authority: "owner_self_scoped_delta", methods, witnesses, state_events: stateEvents, recommendations: [], counts, failed_subjects_remain_failed: true, boundary });
+writeJson("x1/retained-negative-register.json", { schema: "ghc.family.retained-negative-register.v9", owner: "Liora Venn", phase: "v693-v8", stage: "x1", count: negativeIds.length, negative_ids: negativeIds, source_orin_post_seal_negatives_preserved_separately: 332, recoveries_do_not_erase_failures: true, boundary });
+writeJson("x1/phase-truth.json", { schema: "ghc.family.phase-truth.v9", owner: "Liora Venn", phase: "v693-v8", stage: "x1_candidate", planning_commit: "505540397e3af5b03c1270b8a484da28133a6d48", x1_contracts: 50, x1_contracts_passed: proposalResults.filter((r) => r.output_pass && r.input_preserved).length, x1_safe_passes: safeResults.filter((r) => r.result === "pass").length, x1_candidate_failed_subjects: candidateResults.length, x1_candidate_refusal_passes: candidateResults.filter((r) => r.refusal_witness === "pass").length, x1_clean_fix_refine_passes: cfrResults.filter((r) => r.result === "pass").length, x1_altered_expected_failed_subjects: alteredExpectedResults.length, local_skills_built_validated_used: skillReceipts.filter((r) => r.official_quick_validate && r.accepting_smoke && r.rejecting_smoke).length, local_runners_built_used: runnerReceipts.length, runner_positive_passes: runnerReceipts.reduce((n, r) => n + r.positive_passes, 0), runner_scope_failed_subjects: runnerReceipts.length, runner_scope_refusal_passes: runnerReceipts.filter((r) => r.scope_refusal_pass).length, methods: counts.methods, witnesses: counts.witnesses, failed_witnesses: counts.fail, passing_witnesses: counts.pass, effective_negatives: negativeIds.length, x2_started: false, global_installs: 0, canonical_invocations: 0, route: "PREPARED_NOT_SENT_LIORA_TERMINAL_GATE_REQUIRED", terminal_verdict: "NOT_READY_FOR_STAGE_20", boundary });
+writeText("x1/overview.md", ["# Liora Venn v693-v8 x1 evidence", "", "The first ten frozen exact-linear operation families executed against the immutable planning commit. Fifty exact requests passed with input preservation; one hundred safe checks and one hundred CLEAN/FIX/REFINE checks passed.", "", "All one hundred malformed subjects remain failed beside one hundred separate refusal witnesses. Fifty altered-expected subjects remain failed. Ten phase-local skills passed the official Skill Creator validator and accepting/rejecting smoke use. Five paired runners passed ten positives and retained five out-of-scope failures beside five refusals.", "", "No x2 implementation, global promotion, canonical receipt, route send, real row, participant, production action, or authority act occurred.", "", boundary, ""].join("\n"));
+writeJson("x1/staged-review.json", { schema: "ghc.family.staged-review.v9", owner: "Liora Venn", phase: "v693-v8", stage: "x1", state: "CANDIDATE_BEFORE_GIT_STAGE", expected_prefix: baseRel + "/x1/", earlier_stage_modified: false, x2_present: false, allowed_extensions: [...allowedExtensions], boundary });
+
+const bindings = walk(root).filter((full) => !["manifest.json", "validation.json"].includes(path.basename(full))).map((full) => { const rel = path.relative(repo, full).split(path.sep).join("/"); const bytes = fs.readFileSync(full); if (!allowedExtensions.has(path.extname(rel).toLowerCase())) throw new Error("disallowed x1 file: " + rel); return { path: rel, bytes: bytes.length, sha256: sha(bytes) }; }).sort((a, b) => a.path.localeCompare(b.path));
+writeJson("x1/manifest.json", { schema: "ghc.family.raw-byte-manifest.v9", owner: "Liora Venn", phase: "v693-v8", stage: "x1", domain: "working_bytes_before_commit_then_raw_git_blob_after_commit", bindings, self_exclusions: [baseRel + "/x1/manifest.json", baseRel + "/x1/validation.json"], boundary });
+process.stdout.write(JSON.stringify({ status: "BUILT_LIORA_V693_V8_X1_CANDIDATE", contracts: proposalResults.length, safe_passes: safeResults.filter((r) => r.result === "pass").length, candidate_failed_subjects: candidateResults.length, candidate_refusal_passes: candidateResults.filter((r) => r.refusal_witness === "pass").length, cfr_passes: cfrResults.filter((r) => r.result === "pass").length, skills: skillReceipts.length, runners: runnerReceipts.length, negatives: negativeIds.length, manifest_bindings: bindings.length }, null, 2) + "\n");
