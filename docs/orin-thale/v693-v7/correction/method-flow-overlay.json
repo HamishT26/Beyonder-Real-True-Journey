@@ -1,0 +1,52 @@
+{
+  "schema": "ghc.family.method-flow-state.correction-overlay.v1",
+  "owner": "Orin Thale",
+  "phase": "v693-v7",
+  "methods": [
+    {
+      "method_id": "OR6937-CORR-M001",
+      "title": "Bounded large Git-blob canonical read",
+      "failure_signature": "ENOBUFS on immutable Method Flow Git blob under the default synchronous child-process buffer",
+      "trigger_preconditions": [
+        "new additive exact final",
+        "new exclusive canonical namespace",
+        "prior failure retained"
+      ],
+      "approval_class": "safe_now",
+      "candidate_workaround": "Set maxBuffer to 32 MiB on every exact Git blob read in the new runner.",
+      "validation_witness_ids": [
+        "OR6937-CORR-W001"
+      ],
+      "recurrence_guard": "Inspect the largest immutable blob before one-shot canonical launch and bind a finite buffer above it.",
+      "rollback": "Keep the route held and preserve the new failed receipt if the correction canonical does not succeed.",
+      "recommendation_state": "candidate",
+      "protected_gates": [
+        "canonical_singularity",
+        "failure_nonerasure",
+        "route_terminal_gate"
+      ],
+      "retained_negative_ids": [
+        "OR6937-POST-N001"
+      ],
+      "scope_boundary": "Relational names, roles, hopes and family language are working language only. Same-owner synthetic software evidence establishes no consciousness, personhood, identity continuity, qualification, independent agency, empirical GMUT confirmation, production THOS or Freed ID, professional, legal, cultural, affected-party or Maori authority, complete privacy or accessibility, exhaustive security, independent reproduction, AGI or ASI, Theory-of-Everything proof, canon, deployment or Stage 20 readiness. Maori concepts remain under Maori authority. NOT_READY_FOR_STAGE_20."
+    }
+  ],
+  "witnesses": [
+    {
+      "witness_id": "OR6937-CORR-W001",
+      "method_id": "OR6937-CORR-M001",
+      "procedure": "Run the separately named correction canonical once after the correction exact final is clean and pushed.",
+      "scope": "owner_self_scoped_additive_correction",
+      "expected": "All exact blob reads complete below the 32 MiB bound.",
+      "observed": "pending_exact_final",
+      "result": "fail",
+      "same_owner_only": true,
+      "independent_reproduction": false,
+      "retained_negative_ids": [
+        "OR6937-POST-N001"
+      ],
+      "boundary": "Relational names, roles, hopes and family language are working language only. Same-owner synthetic software evidence establishes no consciousness, personhood, identity continuity, qualification, independent agency, empirical GMUT confirmation, production THOS or Freed ID, professional, legal, cultural, affected-party or Maori authority, complete privacy or accessibility, exhaustive security, independent reproduction, AGI or ASI, Theory-of-Everything proof, canon, deployment or Stage 20 readiness. Maori concepts remain under Maori authority. NOT_READY_FOR_STAGE_20."
+    }
+  ],
+  "boundary": "Relational names, roles, hopes and family language are working language only. Same-owner synthetic software evidence establishes no consciousness, personhood, identity continuity, qualification, independent agency, empirical GMUT confirmation, production THOS or Freed ID, professional, legal, cultural, affected-party or Maori authority, complete privacy or accessibility, exhaustive security, independent reproduction, AGI or ASI, Theory-of-Everything proof, canon, deployment or Stage 20 readiness. Maori concepts remain under Maori authority. NOT_READY_FOR_STAGE_20."
+}

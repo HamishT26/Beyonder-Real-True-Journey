@@ -1,0 +1,198 @@
+"use strict";
+
+const fs = require("fs");
+const path = require("path");
+const crypto = require("crypto");
+
+const repo = process.env.ORIN_REPO;
+if (!repo) throw new Error("ORIN_REPO is required");
+const baseRel = "docs/orin-thale/v693-v7/correction";
+const base = path.join(repo, ...baseRel.split("/"));
+const priorFinal = "0e89f4da9745e419730ac62cc6760bcfbda14d3a";
+const boundary = "Relational names, roles, hopes and family language are working language only. Same-owner synthetic software evidence establishes no consciousness, personhood, identity continuity, qualification, independent agency, empirical GMUT confirmation, production THOS or Freed ID, professional, legal, cultural, affected-party or Maori authority, complete privacy or accessibility, exhaustive security, independent reproduction, AGI or ASI, Theory-of-Everything proof, canon, deployment or Stage 20 readiness. Maori concepts remain under Maori authority. NOT_READY_FOR_STAGE_20.";
+const utc = process.env.ORIN_EVENT_UTC || "2026-09-14T01:15:00Z";
+const nz = process.env.ORIN_EVENT_NZ || "2026-09-14T13:15:00+12:00";
+
+function stable(value) {
+  if (Array.isArray(value)) return value.map(stable);
+  if (value && typeof value === "object") return Object.fromEntries(Object.keys(value).sort().map((key) => [key, stable(value[key])]));
+  return value;
+}
+function canonical(value) { return JSON.stringify(stable(value)); }
+function sha(bytes) { return crypto.createHash("sha256").update(bytes).digest("hex"); }
+function writeJson(rel, value) {
+  const target = path.join(base, ...rel.split("/"));
+  fs.mkdirSync(path.dirname(target), { recursive: true });
+  fs.writeFileSync(target, JSON.stringify(value, null, 2) + "\n", "utf8");
+}
+function writeText(rel, value) {
+  const target = path.join(base, ...rel.split("/"));
+  fs.mkdirSync(path.dirname(target), { recursive: true });
+  fs.writeFileSync(target, value.replace(/\r\n/g, "\n"), "utf8");
+}
+function walk(root) {
+  const out = [];
+  for (const entry of fs.readdirSync(root, { withFileTypes: true })) {
+    const full = path.join(root, entry.name);
+    if (entry.isDirectory()) out.push(...walk(full));
+    else out.push(full);
+  }
+  return out;
+}
+
+fs.mkdirSync(base, { recursive: true });
+writeJson("retained-source-bindings.json", {
+  schema: "ghc.family.additive-terminal-correction.bindings.v1",
+  owner: "Orin Thale",
+  phase: "v693-v7",
+  correction: "terminal-correction-1",
+  prior_exact_final: priorFinal,
+  prior_canonical: {
+    status: "FAILED_EXACT_FINAL_OWNER_SCOPED_CANONICAL_ZERO_SUCCESS_CREDIT_NO_REPLAY",
+    invocations: 1,
+    successes: 0,
+    replays: 0,
+    attempt_sha256: "a6af3cd6386afabd301b5e2afee96addee483275007d846c44ce0ec1868efd2c",
+    failure_receipt_sha256: "fc7302a3874a94fb632b6ac60dcd206befda90a6044262fabeb7d183b1b6a1cf",
+    failure_code: "ENOBUFS"
+  },
+  dependency_composite: {
+    status: "VALID_DEPENDENCY_CORRECTED_TERMINAL_COMPOSITE_WITH_ZERO_CANONICAL_SUCCESS_CREDIT",
+    receipt_sha256: "e88e983cb109c1b9025b1a22bc99fefb608ce813acbcd22c9b0e956ffcab5b9b",
+    canonical_success_credit: 0
+  },
+  terminal_hold_sha256: "01fa8ab49b09efb2fc630e022c9d0d791eacc49154f59bc4f03adca919afd2e0",
+  post_seal_overlay_sha256: "53dcac839d91ec95209b7d9e0496529ce0f5fcfa6b3d33db76cb3a5ba0af7116",
+  correction_authority: "Hamish direct authorization on 14 September 2026 to have another bounded attempt through an additive exact final and a new canonical namespace",
+  old_evidence_rewritten: false,
+  boundary
+});
+writeJson("phase-truth.json", {
+  schema: "ghc.family.phase-truth.additive-correction.v1",
+  owner: "Orin Thale",
+  phase: "v693-v7",
+  correction: "terminal-correction-1",
+  prior_exact_final: priorFinal,
+  correction_state: "candidate_pending_exact_commit_and_new_canonical",
+  defect: "The original exact-final canonical used Node synchronous Git reads without an explicit maxBuffer and failed on a 1075253-byte immutable Method Flow blob.",
+  correction: {
+    method: "Use a separately named canonical runner with a bounded 32 MiB Git-read buffer.",
+    prior_invocation_replayed: false,
+    prior_success_credit_changed: false,
+    exact_final_bound_externally_after_commit: true
+  },
+  original_outcomes_unchanged: { completed: 80, represented: 10, open_gap: 5, exact_gate: 5 },
+  new_core_outcome_credit: 0,
+  file_policy: { authored: [".json", ".md", ".txt", ".html"], new_pdf: false, new_image: false, new_docx: false, new_tex: false },
+  route: "REDIRECTED_TO_INTERSTITIAL_ORIN_V693_V7_R2_AFTER_CORRECTION_GATE",
+  liora_contact_authorized_at_this_gate: false,
+  terminal_verdict: "NOT_READY_FOR_STAGE_20",
+  recorded_at_utc: utc,
+  recorded_at_nz: nz,
+  boundary
+});
+writeJson("canonical-policy.json", {
+  schema: "ghc.family.canonical-policy.additive-correction.v1",
+  owner: "Orin Thale",
+  phase: "v693-v7",
+  correction: "terminal-correction-1",
+  namespace: "canonical-receipts/orin-thale/v693-v7-correction-1",
+  maximum_invocations: 1,
+  maximum_successes: 1,
+  maximum_replays: 0,
+  attempt_latch_before_checks: true,
+  prior_namespace_reused: false,
+  max_git_blob_bytes: 33554432,
+  owner_scope_only: true,
+  full_repository_suite: false,
+  route_after_success: "BEGIN_INTERSTITIAL_V693_V7_R2_WITHOUT_SUCCESSOR_CONTACT",
+  boundary
+});
+writeJson("method-flow-overlay.json", {
+  schema: "ghc.family.method-flow-state.correction-overlay.v1",
+  owner: "Orin Thale",
+  phase: "v693-v7",
+  methods: [{
+    method_id: "OR6937-CORR-M001",
+    title: "Bounded large Git-blob canonical read",
+    failure_signature: "ENOBUFS on immutable Method Flow Git blob under the default synchronous child-process buffer",
+    trigger_preconditions: ["new additive exact final", "new exclusive canonical namespace", "prior failure retained"],
+    approval_class: "safe_now",
+    candidate_workaround: "Set maxBuffer to 32 MiB on every exact Git blob read in the new runner.",
+    validation_witness_ids: ["OR6937-CORR-W001"],
+    recurrence_guard: "Inspect the largest immutable blob before one-shot canonical launch and bind a finite buffer above it.",
+    rollback: "Keep the route held and preserve the new failed receipt if the correction canonical does not succeed.",
+    recommendation_state: "candidate",
+    protected_gates: ["canonical_singularity", "failure_nonerasure", "route_terminal_gate"],
+    retained_negative_ids: ["OR6937-POST-N001"],
+    scope_boundary: boundary
+  }],
+  witnesses: [{
+    witness_id: "OR6937-CORR-W001",
+    method_id: "OR6937-CORR-M001",
+    procedure: "Run the separately named correction canonical once after the correction exact final is clean and pushed.",
+    scope: "owner_self_scoped_additive_correction",
+    expected: "All exact blob reads complete below the 32 MiB bound.",
+    observed: "pending_exact_final",
+    result: "fail",
+    same_owner_only: true,
+    independent_reproduction: false,
+    retained_negative_ids: ["OR6937-POST-N001"],
+    boundary
+  }],
+  boundary
+});
+writeJson("route-state.json", {
+  schema: "ghc.family.route-state.additive-correction.v1",
+  owner: "Orin Thale",
+  phase: "v693-v7",
+  state: "PREPARED_NOT_SENT_CORRECTION_CANONICAL_REQUIRED",
+  next_owner_action: "Orin Thale v693-v7-r2 interstitial remaster",
+  consumes_numbered_slot: false,
+  external_successor_contact: false,
+  Liora_Venn_v693_v8: "remaster_terminally_gated",
+  boundary
+});
+writeText("terminal-correction-overview.md", [
+  "# Orin Thale v693-v7 additive terminal correction",
+  "",
+  "The original exact final remains immutable at " + priorFinal + ". Its one canonical invocation failed with ENOBUFS while reading the 1,075,253-byte Method Flow Git blob. That invocation retains zero success credit and is never replayed or relabelled.",
+  "",
+  "Hamish's current direct instruction authorizes one additive correction exact final and a separately named one-shot canonical. Every Git blob read in the new runner uses an explicit 32 MiB buffer. The valid dependency-corrected composite remains evidence of the dependency repair but is not retroactive canonical success.",
+  "",
+  "A successful correction canonical closes only the original repository terminal defect. The live route is redirected into the interstitial Orin v693-v7 (2) remaster; Liora Venn is not contacted until that remaster independently reaches its own exact-final canonical and current route guards.",
+  "",
+  boundary,
+  ""
+].join("\n"));
+writeJson("staged-review.json", {
+  schema: "ghc.family.staged-review.additive-correction.v1",
+  owner: "Orin Thale",
+  phase: "v693-v7",
+  state: "CANDIDATE_BEFORE_GIT_STAGE",
+  expected_prefix: baseRel + "/",
+  lifecycle_mixed: false,
+  source_files_modified: false,
+  allowed_extensions: [".json", ".md", ".txt", ".html"],
+  boundary
+});
+const allowed = new Set([".json", ".md", ".txt", ".html"]);
+const bindings = walk(base)
+  .filter((full) => path.basename(full) !== "manifest.json")
+  .map((full) => {
+    const rel = path.relative(repo, full).split(path.sep).join("/");
+    const bytes = fs.readFileSync(full);
+    if (!allowed.has(path.extname(rel).toLowerCase())) throw new Error("disallowed correction file type: " + rel);
+    return { path: rel, bytes: bytes.length, sha256: sha(bytes) };
+  })
+  .sort((a, b) => a.path.localeCompare(b.path));
+writeJson("manifest.json", {
+  schema: "ghc.family.raw-byte-manifest.additive-correction.v1",
+  owner: "Orin Thale",
+  phase: "v693-v7",
+  domain: "working_bytes_before_commit_then_raw_git_blob_after_commit",
+  bindings,
+  self_exclusions: [baseRel + "/manifest.json"],
+  boundary
+});
+process.stdout.write(JSON.stringify({ status: "BUILT_V693_V7_ADDITIVE_CORRECTION_CANDIDATE", files: bindings.length + 1, manifest_bindings: bindings.length, digest: sha(Buffer.from(canonical(bindings), "utf8")) }, null, 2) + "\n");

@@ -1,0 +1,149 @@
+"use strict";
+
+const fs = require("fs");
+const path = require("path");
+const crypto = require("crypto");
+const cp = require("child_process");
+const vm = require("vm");
+
+const repo = process.env.ORIN_REPO;
+const exactFinal = process.env.ORIN_EXACT_FINAL;
+const receiptRoot = process.env.ORIN_CORRECTION_RECEIPT_ROOT;
+const priorReceiptRoot = process.env.ORIN_PRIOR_RECEIPT_ROOT;
+const globalSkillRoot = process.env.ORIN_GLOBAL_SKILL_ROOT;
+const publicRoot = process.env.ORIN_PUBLIC_ROOT;
+if (!repo || !exactFinal || !receiptRoot || !priorReceiptRoot || !globalSkillRoot || !publicRoot) throw new Error("canonical roots and exact final are required");
+if (fs.existsSync(receiptRoot)) throw new Error("correction canonical namespace already exists; replay refused");
+fs.mkdirSync(receiptRoot, { recursive: true });
+const startedAt = new Date().toISOString();
+const attemptPath = path.join(receiptRoot, "attempt.json");
+const receiptPath = path.join(receiptRoot, "receipt.json");
+const latchPath = path.join(receiptRoot, "success-latch.json");
+fs.writeFileSync(attemptPath, JSON.stringify({ schema: "ghc.family.canonical-attempt.additive-correction.v1", owner: "Orin Thale", phase: "v693-v7", correction: "terminal-correction-1", exact_final: exactFinal, status: "ATTEMPT_LATCHED_BEFORE_CHECKS", started_at: startedAt }, null, 2) + "\n", { encoding: "utf8", flag: "wx" });
+
+const maxBuffer = 32 * 1024 * 1024;
+const priorFinal = "0e89f4da9745e419730ac62cc6760bcfbda14d3a";
+const priorOwnerFinal = "2dd71e0c6619d12e689c7082dcd66001e261565d";
+const planning = "f3b35b450af2bd472c8af940778d8819a85316b0";
+const x1 = "73985efc89ee0977c6ed7d5f0b2d041fcb48dec7";
+const x2 = "3b506900abaea54797e30a668b134ad7c72507a9";
+const base = "docs/orin-thale/v693-v7";
+const correction = base + "/correction";
+const checks = [];
+function check(name, pass, detail = null) { checks.push({ name, pass: Boolean(pass), detail }); }
+function sha(bytes) { return crypto.createHash("sha256").update(bytes).digest("hex"); }
+function stable(value) { if (Array.isArray(value)) return value.map(stable); if (value && typeof value === "object") return Object.fromEntries(Object.keys(value).sort().map((key) => [key, stable(value[key])])); return value; }
+function canon(value) { return JSON.stringify(stable(value)); }
+function gitBuffer(args) { return cp.execFileSync("git", ["-C", repo, ...args], { encoding: null, maxBuffer }); }
+function git(args) { return gitBuffer(args).toString("utf8").trim(); }
+function blob(commit, rel) { return gitBuffer(["show", commit + ":" + rel]); }
+function json(commit, rel) { return JSON.parse(blob(commit, rel).toString("utf8")); }
+function load(bytes) { const module = { exports: {} }; new Function("require", "module", "exports", bytes.toString("utf8"))(require, module, module.exports); return module.exports; }
+function words(text) { return (String(text).match(/\S+/g) || []).length; }
+function manifest(commit, rel) { const data = json(commit, rel); const issues = []; for (const row of data.bindings) { let bytes; try { bytes = blob(commit, row.path); } catch (error) { issues.push({ path: row.path, issue: "missing", error: error.message }); continue; } if (bytes.length !== row.bytes) issues.push({ path: row.path, issue: "bytes" }); if (sha(bytes) !== row.sha256) issues.push({ path: row.path, issue: "sha256" }); } return { rel, bindings: data.bindings.length, issues }; }
+
+try {
+  const branch = git(["branch", "--show-current"]);
+  const head = git(["rev-parse", "HEAD"]);
+  const upstream = git(["rev-parse", "@{upstream}"]);
+  const tracking = git(["rev-parse", "refs/remotes/origin/" + branch]);
+  const live = git(["ls-remote", "--heads", "origin", "refs/heads/" + branch]).split(/\s+/)[0];
+  const divergence = git(["rev-list", "--left-right", "--count", head + "..." + upstream]).split(/\s+/).map(Number);
+  check("exact owner branch and final", branch === "codex/GHC-Family/orin-thale-main" && head === exactFinal, { branch, head });
+  check("clean fresh four-way equality", git(["status", "--porcelain"]) === "" && divergence[0] === 0 && divergence[1] === 0 && head === upstream && head === tracking && head === live, { upstream, tracking, live, divergence });
+  check("additive correction ancestry", git(["rev-parse", exactFinal + "^"]) === priorFinal && Number(git(["rev-list", "--count", priorFinal + ".." + exactFinal])) === 1 && Number(git(["rev-list", "--merges", "--count", priorFinal + ".." + exactFinal])) === 0);
+  check("original lifecycle remains exact", git(["rev-parse", planning + "^"]) === priorOwnerFinal && git(["rev-parse", x1 + "^"]) === planning && git(["rev-parse", x2 + "^"]) === x1 && git(["rev-parse", priorFinal + "^"]) === x2);
+
+  const priorHashes = {
+    "attempt.json": "a6af3cd6386afabd301b5e2afee96addee483275007d846c44ce0ec1868efd2c",
+    "failure-receipt.json": "fc7302a3874a94fb632b6ac60dcd206befda90a6044262fabeb7d183b1b6a1cf",
+    "dependency-corrected-terminal-composite.json": "e88e983cb109c1b9025b1a22bc99fefb608ce813acbcd22c9b0e956ffcab5b9b",
+    "terminal-route-hold.json": "01fa8ab49b09efb2fc630e022c9d0d791eacc49154f59bc4f03adca919afd2e0",
+    "post-seal-operational-overlay.json": "53dcac839d91ec95209b7d9e0496529ce0f5fcfa6b3d33db76cb3a5ba0af7116"
+  };
+  const priorIssues = [];
+  for (const [name, expected] of Object.entries(priorHashes)) { const target = path.join(priorReceiptRoot, name); if (!fs.existsSync(target) || sha(fs.readFileSync(target)) !== expected) priorIssues.push(name); }
+  check("prior failure and composite receipts retained", priorIssues.length === 0 && !fs.existsSync(path.join(priorReceiptRoot, "success-latch.json")) && !fs.existsSync(path.join(priorReceiptRoot, "receipt.json")), priorIssues);
+
+  const manifests = [
+    manifest(planning, base + "/plan/manifest.json"),
+    manifest(x1, base + "/x1/manifest.json"),
+    manifest(x2, base + "/x2/manifest.json"),
+    manifest(priorFinal, base + "/final/delta-manifest.json"),
+    manifest(priorFinal, base + "/final/owner-manifest.json"),
+    manifest(priorFinal, base + "/final/deck/card-manifest.json"),
+    manifest(exactFinal, correction + "/manifest.json")
+  ];
+  check("all raw Git-blob manifests under bounded buffer", manifests.every((row) => row.issues.length === 0), manifests);
+
+  const correctionTruth = json(exactFinal, correction + "/phase-truth.json");
+  const correctionPolicy = json(exactFinal, correction + "/canonical-policy.json");
+  const bindings = json(exactFinal, correction + "/retained-source-bindings.json");
+  check("old failed canonical nonerasure", bindings.prior_canonical.invocations === 1 && bindings.prior_canonical.successes === 0 && bindings.prior_canonical.replays === 0 && bindings.dependency_composite.canonical_success_credit === 0);
+  check("correction policy singular and redirected", correctionPolicy.maximum_invocations === 1 && correctionPolicy.maximum_replays === 0 && correctionPolicy.prior_namespace_reused === false && correctionPolicy.route_after_success === "BEGIN_INTERSTITIAL_V693_V7_R2_WITHOUT_SUCCESSOR_CONTACT");
+  check("correction truth no new core credit", correctionTruth.new_core_outcome_credit === 0 && correctionTruth.liora_contact_authorized_at_this_gate === false && correctionTruth.terminal_verdict === "NOT_READY_FOR_STAGE_20");
+
+  const ownerPaths = git(["ls-tree", "-r", "--name-only", exactFinal, "--", base]).split(/\r?\n/).filter(Boolean);
+  const correctionPaths = ownerPaths.filter((rel) => rel.startsWith(correction + "/"));
+  check("owner file ceiling and correction file policy", ownerPaths.length < 2000 && correctionPaths.every((rel) => [".json", ".md", ".txt", ".html"].includes(path.extname(rel).toLowerCase())), { owner_files: ownerPaths.length, correction_files: correctionPaths.length });
+  const jsonPaths = ownerPaths.filter((rel) => path.extname(rel).toLowerCase() === ".json");
+  const jsonErrors = [];
+  for (const rel of jsonPaths) { try { JSON.parse(blob(exactFinal, rel).toString("utf8")); } catch (error) { jsonErrors.push({ rel, error: error.message }); } }
+  check("strict owner JSON", jsonErrors.length === 0, jsonErrors);
+  const txtPaths = ownerPaths.filter((rel) => path.extname(rel).toLowerCase() === ".txt");
+  const compileErrors = [];
+  for (const rel of txtPaths) { try { new vm.Script("(function(require,module,exports){\n" + blob(exactFinal, rel).toString("utf8") + "\n})", { filename: rel }); } catch (error) { compileErrors.push({ rel, error: error.message }); } }
+  check("trusted TXT compilation", compileErrors.length === 0, compileErrors);
+
+  const plan = json(exactFinal, base + "/plan/proposals.json");
+  const core = load(blob(exactFinal, base + "/x1/discrepancy-core.txt"));
+  const extension = load(blob(exactFinal, base + "/x2/discrepancy-extension.txt"));
+  const runtime = extension.createExtended(core);
+  const tests = plan.proposals.map((row) => canon(runtime.execute(row.request)) === canon(row.expected_output));
+  check("original 100 owner contracts remain exact", tests.length === 100 && tests.every(Boolean), { total: tests.length, passed: tests.filter(Boolean).length });
+  const baseMutation = plan.proposals.find((row) => row.request.p && row.request.p.length === 2 && row.session === "x1");
+  const mutations = [[{ op: baseMutation.operation, p: baseMutation.request.p }, "E_FIELDS"], [{ ...baseMutation.request, extra: true }, "E_FIELDS"], [{ ...baseMutation.request, p: ["-1/2", "3/2"] }, "E_PROBABILITY"], [{ ...baseMutation.request, q: ["1"] }, "E_DIMENSION"], [{ ...baseMutation.request, op: "unknown_operation" }, "E_OPERATION"]].map(([request, expected]) => ({ expected, observed: runtime.execute(request) }));
+  check("five preflight mutations rejected", mutations.every((row) => !row.observed.ok && row.observed.error === row.expected), mutations);
+
+  const promotion = json(exactFinal, base + "/x2/evidence/global-promotion-receipt.json");
+  const parity = promotion.bindings.map((row) => { const source = blob(exactFinal, row.source_path); const target = row.target_kind === "skill" ? path.join(globalSkillRoot, ...row.target_relative.split("/")) : path.join(path.dirname(publicRoot), ...row.target_relative.split("/")); return fs.existsSync(target) && source.equals(fs.readFileSync(target)); });
+  check("37 installed bindings remain exact", parity.length === 37 && parity.every(Boolean));
+  const joined = Buffer.concat(ownerPaths.map((rel) => blob(exactFinal, rel))).toString("utf8");
+  const privacy = [/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/ig, /(?:api[_-]?key|password|secret|bearer)\s*[:=]\s*["']?[A-Za-z0-9_\-]{12,}/ig, /C:\\Users\\[^\s"']+/ig, /D:\\GHC-Archives\\[^\s"']+/ig, /\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}\b/ig];
+  check("zero confirmed five-class privacy hits", privacy.every((pattern) => !pattern.test(joined)));
+  check("document word ceiling", Math.max(...ownerPaths.map((rel) => words(blob(exactFinal, rel).toString("utf8")))) <= 100000);
+} catch (error) {
+  checks.push({ name: "canonical operational exception", pass: false, detail: { name: error.name, code: error.code || null, message: error.message } });
+}
+
+const failed = checks.filter((row) => !row.pass);
+const receipt = {
+  schema: "ghc.family.exact-final-owner-scoped-canonical.additive-correction.v1",
+  owner: "Orin Thale",
+  phase: "v693-v7",
+  correction: "terminal-correction-1",
+  status: failed.length ? "INVALID_ADDITIVE_CORRECTION_EXACT_FINAL_CANONICAL_ZERO_SUCCESS_CREDIT" : "VALID_ADDITIVE_CORRECTION_EXACT_FINAL_OWNER_SCOPED_CANONICAL",
+  exact_final: exactFinal,
+  prior_canonical_invocations: 1,
+  prior_canonical_successes: 0,
+  prior_canonical_replays: 0,
+  correction_canonical_invocations: 1,
+  correction_canonical_successes: failed.length ? 0 : 1,
+  correction_canonical_replays: 0,
+  dependency_correction: "All synchronous Git reads use a bounded 32 MiB maxBuffer.",
+  checks_total: checks.length,
+  checks_passed: checks.length - failed.length,
+  checks_failed: failed.length,
+  checks,
+  route_after_success: failed.length ? "PREPARED_NOT_SENT_CORRECTION_CANONICAL_FAILURE" : "BEGIN_INTERSTITIAL_V693_V7_R2_WITHOUT_SUCCESSOR_CONTACT",
+  full_repository_suite: false,
+  independent_reproduction: false,
+  terminal_verdict: "NOT_READY_FOR_STAGE_20",
+  started_at: startedAt,
+  finished_at: new Date().toISOString()
+};
+receipt.payload_sha256 = sha(Buffer.from(canon(receipt), "utf8"));
+fs.writeFileSync(receiptPath, JSON.stringify(receipt, null, 2) + "\n", { encoding: "utf8", flag: "wx" });
+if (!failed.length) fs.writeFileSync(latchPath, JSON.stringify({ schema: "ghc.family.canonical-success-latch.additive-correction.v1", owner: "Orin Thale", phase: "v693-v7", correction: "terminal-correction-1", exact_final: exactFinal, state: "SUCCESS_LATCHED_NO_REPLAY", attempt_sha256: sha(fs.readFileSync(attemptPath)), receipt_sha256: sha(fs.readFileSync(receiptPath)), payload_sha256: receipt.payload_sha256, invocations: 1, successes: 1, replays: 0 }, null, 2) + "\n", { encoding: "utf8", flag: "wx" });
+process.stdout.write(JSON.stringify({ status: receipt.status, checks_total: receipt.checks_total, checks_passed: receipt.checks_passed, checks_failed: receipt.checks_failed, exact_final: exactFinal, payload_sha256: receipt.payload_sha256, receipt_sha256: sha(fs.readFileSync(receiptPath)), success_latch_sha256: fs.existsSync(latchPath) ? sha(fs.readFileSync(latchPath)) : null, route_after_success: receipt.route_after_success }, null, 2) + "\n");
+process.exit(failed.length ? 2 : 0);
