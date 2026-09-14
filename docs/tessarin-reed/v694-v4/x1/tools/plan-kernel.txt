@@ -1,0 +1,126 @@
+"""Planning admission only. This module does not execute numerical proposals."""
+import copy
+import json
+import re
+import sys
+from fractions import Fraction
+
+SOURCE = "63f2fab4613361bee101af73c1f908ef024055d1"
+GROUPS = {
+    "domain": ["rational_interval", "interval_geometry", "interval_hull", "interval_intersection"],
+    "algebra": ["interval_add", "interval_subtract", "interval_multiply", "interval_reciprocal"],
+    "range": ["interval_divide", "interval_square", "interval_affine", "interval_quadratic_range"],
+    "flow": ["euler_box", "symplectic_box", "verlet_box", "harmonic_energy_box"],
+    "evidence": ["iterate_discrete_box", "dependency_diagnostic", "enclosure_evidence_gap", "enclosure_authority_reservation"],
+}
+FLAGS = {"synthetic": True, "continuous_solution_enclosure": False, "empirical_evidence": False,
+         "independent_reproduction": False, "authority_granted": False, "external_actions": 0}
+FIELDS = {"acceptance", "artifact", "execution_stage", "expected", "falsifier", "hypothesis", "input",
+          "null_or_failure", "operation", "planning_only", "practice", "proposal_id", "protected_gates",
+          "register", "rollback", "source", "title"}
+GATES = ["empirical", "continuous_solution", "participant", "professional", "production", "deployment",
+         "legal", "cultural", "affected_party", "maori_authority", "privacy_complete", "accessibility_complete",
+         "exhaustive_security", "independent_reproduction", "consciousness_personhood", "theory_of_everything", "stage20"]
+
+class Invalid(ValueError):
+    pass
+
+def require(condition, code):
+    if not condition:
+        raise Invalid(code)
+
+def strict(text):
+    def pairs(rows):
+        result = {}
+        for key, value in rows:
+            require(key not in result, "duplicate_key")
+            result[key] = value
+        return result
+    require(len(text.encode("utf-8")) <= 262144, "input_budget")
+    return json.loads(text, object_pairs_hook=pairs,
+                      parse_constant=lambda _: (_ for _ in ()).throw(Invalid("nonfinite")))
+
+def rational(token):
+    require(type(token) is str and len(token) <= 32, "rational_token")
+    require(re.fullmatch(r"-?(?:0|[1-9][0-9]*)(?:/[1-9][0-9]*)?", token) is not None, "rational_token")
+    value = Fraction(token)
+    require(str(value) == token, "noncanonical_rational")
+    require(abs(value.numerator) <= 1000000 and value.denominator <= 1000000, "rational_budget")
+    return value
+
+def disposition(op):
+    if op in GROUPS["evidence"][:2]:
+        return "represented"
+    if op == "enclosure_evidence_gap":
+        return "open_gap"
+    if op == "enclosure_authority_reservation":
+        return "exact_gate"
+    return "completed"
+
+def validate(request, scope=None):
+    try:
+        require(type(request) is dict and set(request) == {"check", "proposal"}, "request_shape")
+        group = request["check"]
+        require(type(group) is str and group in GROUPS, "check")
+        require(scope is None or group == scope, "runner_scope")
+        p = request["proposal"]
+        require(type(p) is dict and set(p) == FIELDS, "proposal_shape")
+        require(p["source"] == SOURCE, "source_binding")
+        require(p["execution_stage"] == "x2" and p["planning_only"] is True, "planning_boundary")
+        require(type(p["proposal_id"]) is str and re.fullmatch(r"TER6944-P(?:00[1-9]|0[1-9][0-9]|100)", p["proposal_id"]) is not None, "proposal_id")
+        number = int(p["proposal_id"][-3:])
+        op = p["operation"]
+        require(type(op) is str and op in sum(GROUPS.values(), []), "operation")
+        require(op == sum(GROUPS.values(), [])[(number-1)//5], "proposal_operation_binding")
+        require(p["artifact"] == "docs/tessarin-reed/v694-v4/x2/contracts/" + f"{number:03d}.json", "artifact_binding")
+        require(type(p["input"]) is dict and p["input"].get("op") == op, "input_operation")
+        require(p["register"] == "numerical_representation", "register")
+        require(p["protected_gates"] == GATES, "protected_gates")
+        for key in ["title", "acceptance", "falsifier", "hypothesis", "null_or_failure", "rollback", "practice"]:
+            require(type(p[key]) is str and 0 < len(p[key]) <= 2048, "text_contract")
+        expected = p["expected"]
+        require(type(expected) is dict and set(expected) == {"accepted", "boundary", "disposition", "error", "value"}, "envelope_shape")
+        require(type(expected["accepted"]) is bool, "accepted_type")
+        require(expected["disposition"] == disposition(op), "disposition")
+        require(type(expected["boundary"]) is dict and set(expected["boundary"]) == set(FLAGS), "boundary_shape")
+        require(all(type(expected["boundary"][k]) is type(v) and expected["boundary"][k] == v for k,v in FLAGS.items()), "claim_boundary")
+        if expected["accepted"]:
+            require(expected["error"] is None and type(expected["value"]) is dict, "acceptance_envelope")
+        else:
+            require(expected["error"] == "zero_divisor" and expected["value"] is None and op in ["interval_reciprocal", "interval_divide"], "refusal_envelope")
+        # These are admission checks on declarations, not evaluations of an interval operation.
+        if group == "domain":
+            for key in ["a", "b", "x", "v"]:
+                if key in p["input"]:
+                    pair = p["input"][key]
+                    require(type(pair) is list and len(pair) == 2, "interval_shape")
+                    require(rational(pair[0]) <= rational(pair[1]), "interval_order")
+        elif group == "algebra":
+            require("Full-envelope equality" in p["acceptance"] and "unchanged" in p["acceptance"], "comparison_contract")
+        elif group == "range":
+            require("exact" in p["hypothesis"] and "endpoint" in p["falsifier"], "falsifiable_range")
+        elif group == "flow":
+            for key in ["h", "k"]:
+                if key in p["input"]:
+                    require(rational(p["input"][key]) >= 0, "nonnegative_parameter")
+            if "steps" in p["input"]:
+                require(type(p["input"]["steps"]) is int and 0 <= p["input"]["steps"] <= 8, "iteration_budget")
+        elif group == "evidence":
+            require("unsupported real-world inference" in p["falsifier"], "inference_falsifier")
+        return {"accepted": True, "error": None, "check": group, "proposal_id": p["proposal_id"],
+                "planning_only": True, "numerical_execution": False, "proposal_completion_credit": 0}
+    except (Invalid, TypeError, KeyError, ValueError, OverflowError) as exc:
+        return {"accepted": False, "error": str(exc) if isinstance(exc, Invalid) else "invalid_type",
+                "planning_only": True, "numerical_execution": False, "proposal_completion_credit": 0}
+
+def main(scope=None):
+    try:
+        result = validate(strict(sys.stdin.read(262145)), scope)
+    except (Invalid, ValueError, RecursionError) as exc:
+        result = {"accepted": False, "error": str(exc) if isinstance(exc, Invalid) else "invalid_json",
+                  "planning_only": True, "numerical_execution": False, "proposal_completion_credit": 0}
+    print(json.dumps(result, sort_keys=True, allow_nan=False))
+    return 0 if result["accepted"] else 2
+
+if __name__ == "__main__":
+    raise SystemExit(main())
