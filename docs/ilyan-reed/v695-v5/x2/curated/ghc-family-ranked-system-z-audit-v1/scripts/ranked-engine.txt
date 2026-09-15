@@ -1,0 +1,50 @@
+"""Finite default toleration, System Z and explicit evidence boundaries."""
+import importlib.machinery,importlib.util
+from pathlib import Path
+HERE=Path(__file__).resolve().parent
+base_path=HERE/'ranked-base.txt'
+if not base_path.is_file():base_path=HERE.parent/'x1/ranked-core.txt'
+loader=importlib.machinery.SourceFileLoader('ir_ranked_base',str(base_path));spec=importlib.util.spec_from_loader('ir_ranked_base',loader);base=importlib.util.module_from_spec(spec);loader.exec_module(base)
+X2_OPS=['default_verification','tolerated_defaults','z_partition','z_world_ranks','z_query','rational_monotony','interpretation_boundary','adequacy_boundary','empirical_gap','authority_gate']
+def masks(m):
+ return [{'id':d['id'],'verify':base.truth(d['if'],m['atoms'])&base.truth(d['then'],m['atoms']),'violate':base.truth(d['if'],m['atoms'])&~base.truth(d['then'],m['atoms'])} for d in m['defaults']]
+def tolerated(rows):
+ forbidden=0
+ for d in rows:forbidden|=d['violate']
+ return [d['id'] for d in rows if d['verify']&~forbidden]
+def partition(rows):
+ rest=rows[:];layers=[]
+ while rest:
+  chosen=tolerated(rest)
+  if not chosen:return {'consistent':False,'layers':layers,'unranked':[d['id'] for d in rest]}
+  layers.append(chosen);rest=[d for d in rest if d['id'] not in chosen]
+ return {'consistent':True,'layers':layers,'unranked':[]}
+def z_ranks(rows,n):
+ p=partition(rows)
+ if not p['consistent']:return {'available':False,'reason':'z_inconsistent','ranks':None}
+ default_ranks={name:i for i,layer in enumerate(p['layers']) for name in layer};ranks=[]
+ for w in range(n):ranks.append(max([default_ranks[d['id']]+1 for d in rows if d['violate']&(1<<w)] or [0]))
+ return {'available':True,'ranks':ranks,'default_ranks':default_ranks}
+def evaluate(request):
+ try:
+  m=base.validate(request,base.X1_OPS+X2_OPS);op=request['operation']
+  if op in base.X1_OPS:return base.evaluate(request)
+  n=len(m['ranks']);rows=masks(m);am,bm,cm=[base.truth(m['query'][k],m['atoms']) for k in ['a','b','c']];universe=(1<<n)-1
+  if op=='default_verification':v={'defaults':[{'id':d['id'],'verified':base.worlds(d['verify'],n),'violated':base.worlds(d['violate'],n)} for d in rows]}
+  elif op=='tolerated_defaults':v={'tolerated':tolerated(rows)}
+  elif op=='z_partition':v=partition(rows)
+  elif op=='z_world_ranks':v=z_ranks(rows,n)
+  elif op=='z_query':
+   z=z_ranks(rows,n)
+   if not z['available']:v={'available':False,'reason':'z_inconsistent','holds':None}
+   elif not am:v={'available':False,'reason':'impossible_antecedent','holds':None}
+   else:v={'available':True,**base.conditional(am,bm,z['ranks'])}
+  elif op=='rational_monotony':
+   one=base.conditional(am,bm,m['ranks']);two=base.conditional(am,universe^cm,m['ranks']);last=base.conditional(am&cm,bm,m['ranks']);premises=one['holds'] and not two['holds'];v={'premises_hold':premises,'conclusion_holds':last['holds'],'valid_implication':not premises or last['holds'],'minimal_strengthened_worlds':last['minimal_worlds']}
+  elif op=='interpretation_boundary':v={'model':m['id'],'semantics':'declared_finite_ranked_worlds','probability':None,'human_preference_measured':False}
+  elif op=='adequacy_boundary':v={'model':m['id'],'calibration':None,'observation_rows':0,'adequacy':'unmeasured'}
+  elif op=='empirical_gap':v={'model':m['id'],'missing':['preregistered_observable','governed_observations','matched_comparator','uncertainty_model','independent_reproduction']}
+  else:v={'model':m['id'],'authorized':False,'missing':['specific_target','affected_party_authority','competent_review','credential_lifecycle','applicable_legal_and_cultural_authority']}
+  outcome='completed' if X2_OPS.index(op)<6 else 'represented' if X2_OPS.index(op)<8 else 'open_gap' if op=='empirical_gap' else 'exact_gate'
+  return {'ok':True,'operation':op,'outcome':outcome,'value':v}
+ except base.ContractError as e:return {'ok':False,'error':str(e),'original_success_credit':0}

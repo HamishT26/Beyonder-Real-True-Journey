@@ -1,0 +1,6 @@
+"""Explicit portable ranked-default capability interface."""
+import argparse,importlib.machinery,importlib.util,json
+from pathlib import Path
+def main():
+ ap=argparse.ArgumentParser();ap.add_argument("--input",required=True);a=ap.parse_args();here=Path(__file__).resolve().parent;p=here/"ranked-engine.txt";l=importlib.machinery.SourceFileLoader("ranked_engine",str(p));s=importlib.util.spec_from_loader("ranked_engine",l);m=importlib.util.module_from_spec(s);l.exec_module(m);request=json.loads(Path(a.input).read_text(encoding="utf8"));out={"ok":False,"error":"E_RUNNER_SCOPE","original_success_credit":0} if type(request) is dict and request.get("operation") not in ['rank_model_shape', 'formula_truth', 'classical_entailment', 'minimal_worlds'] else m.evaluate(request);print(json.dumps(out,ensure_ascii=False,sort_keys=True))
+if __name__=="__main__":main()

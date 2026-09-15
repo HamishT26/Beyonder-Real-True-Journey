@@ -1,0 +1,54 @@
+"""System Z examples, invariance properties and a complete small rational-monotony domain."""
+import copy,importlib.machinery,importlib.util,itertools,json
+from pathlib import Path
+BASE=Path(__file__).resolve().parents[1]
+def load(name,path):
+ l=importlib.machinery.SourceFileLoader(name,str(path));s=importlib.util.spec_from_loader(name,l);m=importlib.util.module_from_spec(s);l.exec_module(m);return m
+io=load('ir_x2_io',BASE/'plan/io.txt');core=load('ir_x2_core',BASE/'x2/ranked-core.txt')
+def main():
+ models=io.read('plan/fixtures.json')['models'];rows=[]
+ def check(name,expected,observed,subject=None):
+  r={'id':f'IR6955-X2-E{len(rows)+1:03d}','test':name,'expected':expected,'observed':observed,'passed':io.canonical(expected)==io.canonical(observed)}
+  if subject is not None:r.update(failed_subject=subject,subject_state='failed',original_success_credit=0)
+  rows.append(r)
+ def value(op,m):return core.evaluate({'operation':op,'model':m})['value']
+ for m,layers in zip(models[:4],[[['O1']],[['E1'],['E2','E3']],[['H1','H2'],['H3','H4']],[['C1','C2']]]):check(m['id']+' exact tolerance partition',layers,value('z_partition',m)['layers'])
+ check('inconsistent residual is not assigned ranks',{'consistent':False,'layers':[],'unranked':['I1','I2']},value('z_partition',models[4]))
+ empty=copy.deepcopy(models[0]);empty['defaults']=[];check('empty default base has rank zero',{'available':True,'ranks':[0]*4,'default_ranks':{}},value('z_world_ranks',empty))
+ reverse=copy.deepcopy(models[2]);reverse['defaults'].reverse();check('rule order does not change world ranks',value('z_world_ranks',models[2])['ranks'],value('z_world_ranks',reverse)['ranks'])
+ repeated=copy.deepcopy(models[0]);repeated['defaults'].append({'id':'O2','if':'a','then':'b'});check('equivalent distinct rules do not change world ranks',value('z_world_ranks',models[0])['ranks'],value('z_world_ranks',repeated)['ranks'])
+ renamed=copy.deepcopy(models[0]);renamed['atoms']=['x','y'];renamed['defaults']=[{'id':'O1','if':'x','then':'y'}];renamed['query']={'a':'x','b':'y','c':['not','y']};check('consistent atom renaming preserves ranks',value('z_world_ranks',models[0])['ranks'],value('z_world_ranks',renamed)['ranks'])
+ check('declared examples match derived ranks where consistent',[m['ranks'] for m in models[:4]],[value('z_world_ranks',m)['ranks'] for m in models[:4]])
+ admissible=[]
+ for m in models[:4]:
+  z=value('z_world_ranks',m)['ranks']
+  for d in m['defaults']:admissible.append(core.base.conditional(core.base.truth(d['if'],m['atoms']),core.base.truth(d['then'],m['atoms']),z)['holds'])
+ check('each consistent base satisfies its defaults',True,all(admissible))
+ check('exceptional subclass inheritance blockage',[False,[3]],[value('z_query',models[2])['holds'],value('z_query',models[2])['counterexamples']])
+ exception=copy.deepcopy(models[1]);exception['query']={'a':'a','b':['not','c'],'c':'b'};check('specific exception conclusion retained',True,value('z_query',exception)['holds'])
+ badbase=models[4];mask_rows=core.masks(badbase);forbidden=0
+ for r in mask_rows:forbidden|=r['violate']
+ check('material satisfiability does not imply Z consistency',[True,False],[forbidden!=15,value('z_partition',badbase)['consistent']])
+ impossible=copy.deepcopy(models[0]);impossible['query']['a']=False;check('strict Z query reserves impossible antecedent',{'available':False,'reason':'impossible_antecedent','holds':None},value('z_query',impossible))
+ nonvacuous=copy.deepcopy(models[0]);nonvacuous['query']={'a':True,'b':True,'c':'a'};check('rational monotony has a nonvacuous applicable case',[True,True],[value('rational_monotony',nonvacuous)['premises_hold'],value('rational_monotony',nonvacuous)['conclusion_holds']])
+ cautious=[]
+ for m in models:
+  a,b,c=[core.base.truth(m['query'][k],m['atoms']) for k in ['a','b','c']];rr=m['ranks'];prem=core.base.conditional(a,b,rr)['holds'] and core.base.conditional(a,c,rr)['holds'];cautious.append(not prem or core.base.conditional(a&b,c,rr)['holds'])
+ check('cautious monotony on all five declared queries',True,all(cautious))
+ changed=copy.deepcopy(models[1]);changed['ranks'].reverse();check('declared ordinal ranks do not overwrite Z-derived ranks',value('z_query',models[1]),value('z_query',changed))
+ check('all fixture rational-monotony implications hold',True,all(value('rational_monotony',m)['valid_implication'] for m in models))
+ evaluations=0;counterexamples=[]
+ for ranks in itertools.product(range(3),repeat=4):
+  mins=[core.base.minimum(a,list(ranks)) for a in range(16)];holds=[[mins[a]&~b==0 for b in range(16)] for a in range(16)]
+  for a,b,c in itertools.product(range(16),repeat=3):
+   evaluations+=1
+   if holds[a][b] and not holds[a][15^c] and not holds[a&c][b]:counterexamples.append({'ranks':list(ranks),'a':a,'b':b,'c':c})
+ check('complete small rational-monotony domain',{'rank_vectors':81,'truth_set_triples_per_vector':4096,'implications':331776,'counterexamples':[]},{'rank_vectors':81,'truth_set_triples_per_vector':4096,'implications':evaluations,'counterexamples':counterexamples})
+ request={'operation':'z_partition','model':copy.deepcopy(models[0])}
+ for name,mutate,error in [('duplicate default identifier',lambda r:r['model']['defaults'].append(copy.deepcopy(r['model']['defaults'][0])),'E_DEFAULT_ID'),('unbound default atom',lambda r:r['model']['defaults'][0].__setitem__('if','outside'),'E_FORMULA'),('default count cap',lambda r:r['model'].__setitem__('defaults',[{'id':'R'+str(i),'if':'a','then':'b'} for i in range(13)]),'E_DEFAULTS'),('negative ordinal rank',lambda r:r['model']['ranks'].__setitem__(0,-1),'E_RANKS'),('invented model authority',lambda r:r['model'].__setitem__('authority',True),'E_FIELDS')]:
+  r=copy.deepcopy(request);mutate(r);check(name,{'ok':False,'error':error,'original_success_credit':0},core.evaluate(r),r)
+ io.write('x2/edge-results.json',{'tests':len(rows),'passed':sum(r['passed'] for r in rows),'records':rows,'internal_postulate_implications':evaluations,'independent_reproduction':False});assert len(rows)==25 and all(r['passed'] for r in rows),[r for r in rows if not r['passed']]
+ claims=[{'id':'IR6955-RESEARCH-N001','claim':'A materially satisfiable default base always has a complete System Z partition.','observed':value('z_partition',models[4]),'materially_satisfiable_worlds':[0,2],'original_success_credit':0,'refutation_check_passed':True},{'id':'IR6955-RESEARCH-N002','claim':'A subclass exceptional in one property automatically inherits every other parent default in System Z.','observed':value('z_query',models[2]),'counterexample_worlds':[3],'original_success_credit':0,'refutation_check_passed':True}]
+ io.write('x2/research-witnesses.json',{'retained_failed_claims':claims,'new_fundamental_laws':0,'empirical_rows':0,'scope':'finite declared counterexamples to overbroad statements about an established formalism'})
+ print(json.dumps({'tests':25,'passed':25,'retained_adverse_subjects':5,'retained_failed_research_claims':2,'internal_postulate_implications':evaluations}))
+if __name__=='__main__':main()
