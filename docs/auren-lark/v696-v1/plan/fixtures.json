@@ -1,0 +1,154 @@
+{
+  "fixtures": [
+    {
+      "id": "certainty_p",
+      "lesson": "One atom has a unique minimal p-world; rank remains ordinal rather than probabilistic.",
+      "atoms": [
+        "p"
+      ],
+      "ranks": [
+        2,
+        0
+      ],
+      "query": {
+        "input": "p",
+        "target": "p",
+        "alternate": [
+          "not",
+          [
+            "not",
+            "p"
+          ]
+        ]
+      }
+    },
+    {
+      "id": "tied_two",
+      "lesson": "Two minimal worlds disagree on p, preserving an explicit counterexample to entailment.",
+      "atoms": [
+        "p",
+        "q"
+      ],
+      "ranks": [
+        1,
+        0,
+        0,
+        2
+      ],
+      "query": {
+        "input": "q",
+        "target": "p",
+        "alternate": [
+          "not",
+          [
+            "not",
+            "p"
+          ]
+        ]
+      }
+    },
+    {
+      "id": "layered_three",
+      "lesson": "Three atoms create four ordinal layers and a nontrivial conjunctive revision target.",
+      "atoms": [
+        "p",
+        "q",
+        "r"
+      ],
+      "ranks": [
+        0,
+        1,
+        2,
+        3,
+        1,
+        2,
+        3,
+        4
+      ],
+      "query": {
+        "input": [
+          "and",
+          "p",
+          "q"
+        ],
+        "target": [
+          "or",
+          "p",
+          "r"
+        ],
+        "alternate": [
+          "or",
+          "r",
+          "p"
+        ]
+      }
+    },
+    {
+      "id": "impossible_input",
+      "lesson": "The input p and not-p has no worlds, so revision availability remains explicitly false.",
+      "atoms": [
+        "p",
+        "q"
+      ],
+      "ranks": [
+        0,
+        1,
+        1,
+        2
+      ],
+      "query": {
+        "input": [
+          "and",
+          "p",
+          [
+            "not",
+            "p"
+          ]
+        ],
+        "target": "q",
+        "alternate": [
+          "not",
+          [
+            "not",
+            "q"
+          ]
+        ]
+      }
+    },
+    {
+      "id": "revision_split",
+      "lesson": "A disjunctive input exposes how bounded revision policies can select different rank projections.",
+      "atoms": [
+        "p",
+        "q"
+      ],
+      "ranks": [
+        0,
+        3,
+        1,
+        2
+      ],
+      "query": {
+        "input": [
+          "or",
+          "p",
+          "q"
+        ],
+        "target": [
+          "and",
+          "p",
+          "q"
+        ],
+        "alternate": [
+          "and",
+          "q",
+          "p"
+        ]
+      }
+    }
+  ],
+  "count": 5,
+  "all_synthetic": true,
+  "real_records": 0,
+  "boundary": "Bounded same-owner finite propositional belief-change software and documentation evidence under shared infrastructure only. It is not empirical GMUT confirmation, production THOS or Freed ID, a measurement of any person's beliefs, identity or consent evidence, professional qualification, legal or cultural authority, Maori authority, affected-party authority, complete privacy or accessibility assurance, exhaustive security, independent reproduction, AGI or ASI evidence, consciousness or personhood evidence, Theory-of-Everything proof, canon, deployment authority, or Stage 20 readiness."
+}
