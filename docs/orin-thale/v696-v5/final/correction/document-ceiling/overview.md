@@ -1,0 +1,7 @@
+# Orin Thale v696-v5 document-ceiling correction
+
+Two uncommitted inline Method Flow projections exceeded the 100,000-word document ceiling and receive zero terminal credit. Their exact SHA-256 digests are retained. All 3,110 owner witnesses, including every failed subject and recovery, now live in four bounded JSON chunks with an exact chunk manifest. Compact pointer documents replace the two oversized projections, preserving reconstruction without weakening the ceiling.
+
+The final cumulative Method Flow is 101 methods and 6,302 witnesses: 5,049 passes and 1,253 retained failures. Selected-lineage negatives are 4,480. Outcomes remain 239 completed, 31 represented, 15 open_gap, and 15 exact_gate. The two first invalid canonical scripts remain retained and excluded from trusted execution; the final raw-string canonical entrypoint is separately named below this directory. Canonical is uninvoked, the route is PREPARED_NOT_SENT, and Ceryn remains uncontacted.
+
+Relational working language and bounded same-owner finite synthetic software only; no consciousness, personhood, identity continuity, employment, qualification, independent agency, empirical GMUT confirmation, production THOS or Freed ID, professional, legal, cultural, affected-party or Maori authority, independent reproduction, complete privacy or accessibility, exhaustive security, AGI/ASI, Theory-of-Everything proof, canon, deployment or Stage 20 credit. Maori concepts remain under Maori authority. NOT_READY_FOR_STAGE_20.

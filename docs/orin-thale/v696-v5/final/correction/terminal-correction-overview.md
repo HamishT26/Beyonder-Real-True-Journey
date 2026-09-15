@@ -1,0 +1,9 @@
+# Orin Thale v696-v5 terminal correction overview
+
+The first generated canonical runner and validator are retained invalid files with zero success credit. Nested template evaluation converted quoted newline and regular-expression backslashes into invalid JavaScript. They were never invoked as canonical. Separately named raw-string corrected scripts are authoritative. Every other trusted CommonJS TXT artifact remains subject to syntax validation; only the two named invalid originals are excluded, and the exclusion is itself manifest-bound.
+
+The original four-tier deck remains content-addressed and unchanged. Its additive parent projection passed the installed four-tier skill with exact tier counts 1, 3, 8, and 300. A selection smoke over OR6965-P001, OR6965-P156, and OR6965-P300 returned the selected cards plus every immediate ancestor. This is structural same-owner evidence, not identity, memory, consciousness, linguistic, accessibility, production, legal, cultural, or authority evidence.
+
+The corrected cumulative Method Flow is 100 methods and 6,300 witnesses: 5,048 passes and 1,252 retained failures. Selected-lineage negatives are 4,479. The owner outcome partition remains 239 completed, 31 represented, 15 open_gap, and 15 exact_gate. Canonical remains uninvoked; the route remains PREPARED_NOT_SENT; Ceryn remains uncontacted.
+
+Relational working language and bounded same-owner finite synthetic software only; no consciousness, personhood, identity continuity, employment, qualification, independent agency, empirical GMUT confirmation, production THOS or Freed ID, professional, legal, cultural, affected-party or Maori authority, independent reproduction, complete privacy or accessibility, exhaustive security, AGI/ASI, Theory-of-Everything proof, canon, deployment or Stage 20 credit. Maori concepts remain under Maori authority. NOT_READY_FOR_STAGE_20.
