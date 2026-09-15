@@ -1,0 +1,35 @@
+'use strict';
+const OPS=['model_shape','partition_classes','atomic_truth','negation_truth','conjunction_truth','knowledge_a','possibility_a','everyone_truth','distributed_truth','common_truth'];
+const bad=e=>({ok:false,error:e,original_success_credit:0});
+const exact=(o,ks)=>o!==null&&typeof o==='object'&&!Array.isArray(o)&&Object.keys(o).length===ks.length&&Object.keys(o).every(k=>ks.includes(k));
+const ordered=a=>Array.isArray(a)&&a.every((n,i)=>Number.isSafeInteger(n)&&n>=0&&n<=63&&(i===0||a[i-1]<n));
+function validate(q,allowed=OPS){
+ if(!exact(q,['model','operation']))return 'E_FIELDS';
+ if(!allowed.includes(q.operation))return 'E_OPERATION';
+ const m=q.model;if(!exact(m,['id','worlds','valuation','partitions','lesson']))return 'E_FIELDS';
+ if(typeof m.id!=='string'||!/^[a-z][a-z0-9_]{0,63}$/.test(m.id)||typeof m.lesson!=='string'||m.lesson.length>1000)return 'E_MODEL';
+ const W=m.worlds;if(!ordered(W)||W.length<1||W.length>16)return 'E_WORLDS';
+ if(!exact(m.valuation,['p','q'])||!exact(m.partitions,['a','b']))return 'E_FIELDS';
+ for(const name of ['p','q'])if(!ordered(m.valuation[name])||m.valuation[name].some(w=>!W.includes(w)))return 'E_VALUATION';
+ for(const a of ['a','b']){const cs=m.partitions[a];if(!Array.isArray(cs)||cs.length<1||cs.length>W.length)return 'E_PARTITION';let all=[];for(const c of cs){if(!ordered(c)||c.length<1||c.some(w=>!W.includes(w)))return 'E_PARTITION';all.push(...c);}if(all.length!==W.length||new Set(all).size!==W.length||W.some(w=>!all.includes(w)))return 'E_PARTITION';}
+ return null;
+}
+function matrices(m){const W=m.worlds;return Object.fromEntries(['a','b'].map(a=>{const labels=new Map();m.partitions[a].forEach((c,i)=>c.forEach(w=>labels.set(w,i)));return[a,W.map(u=>W.map(v=>labels.get(u)===labels.get(v)))];}));}
+function modal(W,R,T,universal=true){const truth=new Set(T);return W.filter((u,i)=>universal?W.every((v,j)=>!R[i][j]||truth.has(v)):W.some((v,j)=>R[i][j]&&truth.has(v)));}
+function analyze(m,op){const W=m.worlds,R=matrices(m),P=m.valuation.p,Q=m.valuation.q;let value;
+ switch(op){
+ case 'model_shape':value={worlds:[...W],world_count:W.length,atoms:['p','q'],observers:['a','b']};break;
+ case 'partition_classes':value={classes:structuredClone(m.partitions)};break;
+ case 'atomic_truth':value={worlds:[...P]};break;
+ case 'negation_truth':value={worlds:W.filter(w=>!P.includes(w))};break;
+ case 'conjunction_truth':value={worlds:W.filter(w=>P.includes(w)&&Q.includes(w))};break;
+ case 'knowledge_a':value={worlds:modal(W,R.a,P)};break;
+ case 'possibility_a':value={worlds:modal(W,R.a,P,false)};break;
+ case 'everyone_truth':value={worlds:modal(W,R.a,P).filter(w=>modal(W,R.b,P).includes(w))};break;
+ case 'distributed_truth':value={worlds:modal(W,R.a.map((row,i)=>row.map((v,j)=>v&&R.b[i][j])),P)};break;
+ case 'common_truth':{const C=R.a.map((row,i)=>row.map((v,j)=>i===j||v||R.b[i][j]));for(let k=0;k<W.length;k++)for(let i=0;i<W.length;i++)for(let j=0;j<W.length;j++)C[i][j]=C[i][j]||(C[i][k]&&C[k][j]);value={worlds:modal(W,C,P),reachable:W.map((w,i)=>({world:w,worlds:W.filter((v,j)=>C[i][j])}))};break;}
+ default:throw Error('Internal operation mismatch');
+ }return{ok:true,operation:op,outcome:'completed',value};
+}
+function run(q){try{const e=validate(q);return e?bad(e):analyze(q.model,q.operation);}catch(e){return bad('E_INPUT');}}
+module.exports={OPS,bad,validate,matrices,modal,analyze,run};

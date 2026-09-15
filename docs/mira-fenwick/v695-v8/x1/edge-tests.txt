@@ -1,0 +1,33 @@
+'use strict';
+const core=require('./lib/epistemic-core.txt');
+const fs=require('fs');
+const resultPath=__dirname+'/edge-results.json';if(fs.existsSync(resultPath))throw Error('No successful edge-suite replay');
+const partitions=[[[0,1,2]],[[0],[1,2]],[[1],[0,2]],[[2],[0,1]],[[0],[1],[2]]];
+const subset=(a,b)=>a.every(x=>b.includes(x)),equal=(a,b)=>JSON.stringify(a)===JSON.stringify(b);
+let rows=[];
+for(let ai=0;ai<5;ai++)for(let bi=0;bi<5;bi++)for(let mask=0;mask<8;mask++){
+ const m={id:'property_model',worlds:[0,1,2],valuation:{p:[0,1,2].filter(i=>mask&(1<<i)),q:[]},partitions:{a:partitions[ai],b:partitions[bi]},lesson:'Enumerated finite equivalence and valuation law check.'};
+ const out=op=>core.run({model:m,operation:op}).value.worlds;
+ const K=out('knowledge_a'),E=out('everyone_truth'),D=out('distributed_truth'),C=out('common_truth'),L=out('possibility_a');
+ const neg=structuredClone(m);neg.valuation.p=m.worlds.filter(w=>!m.valuation.p.includes(w));const Kneg=core.run({model:neg,operation:'knowledge_a'}).value.worlds;
+ const laws={knowledge_truthful:subset(K,m.valuation.p),common_implies_everyone:subset(C,E),everyone_implies_individual:subset(E,K),everyone_implies_distributed:subset(E,D),distributed_truthful:subset(D,m.valuation.p),possibility_dual:equal(L,m.worlds.filter(w=>!Kneg.includes(w)))};
+ rows.push({a_partition:ai,b_partition:bi,valuation_mask:mask,laws,passed:Object.values(laws).every(Boolean)});
+}
+const base={model:{id:'edge',worlds:[0,1],valuation:{p:[1],q:[]},partitions:{a:[[0,1]],b:[[0],[1]]},lesson:'Synthetic edge fixture.'},operation:'knowledge_a'};
+const cases=[
+ ['unknown_operation',q=>q.operation='unsupported','E_OPERATION'],
+ ['unknown_request_field',q=>q.extra=1,'E_FIELDS'],
+ ['boolean_world',q=>q.model.worlds[0]=false,'E_WORLDS'],
+ ['duplicate_world',q=>q.model.worlds=[0,0],'E_WORLDS'],
+ ['unsorted_worlds',q=>q.model.worlds=[1,0],'E_WORLDS'],
+ ['empty_worlds',q=>q.model.worlds=[],'E_WORLDS'],
+ ['world_label_cap',q=>q.model.worlds=[0,64],'E_WORLDS'],
+ ['world_count_cap',q=>q.model.worlds=Array.from({length:17},(_,i)=>i),'E_WORLDS'],
+ ['unknown_valuation_world',q=>q.model.valuation.p=[2],'E_VALUATION'],
+ ['partition_missing_world',q=>q.model.partitions.a=[[0]],'E_PARTITION'],
+ ['partition_overlap',q=>q.model.partitions.a=[[0,1],[1]],'E_PARTITION'],
+ ['empty_partition_class',q=>q.model.partitions.a=[[],[0,1]],'E_PARTITION']
+];
+const adverse=cases.map(([name,mutate,error])=>{const q=structuredClone(base);mutate(q);const observed=core.run(q);return{name,expected:error,observed,passed:observed.ok===false&&observed.error===error,original_subject_success_credit:0};});
+const receipt={schema:'ghc.family.finite-edge-evidence.v1',owner:'Mira Fenwick',phase:'v695-v8-x1',finite_models:rows.length,law_assertions:rows.length*6,adverse_cases:adverse.length,rows,adverse,passed:rows.every(x=>x.passed)&&adverse.every(x=>x.passed),independent_reproduction:false,counts_separate_from_frozen_portfolio:true};
+fs.writeFileSync(resultPath,JSON.stringify(receipt,null,2)+'\n',{flag:'wx'});console.log(JSON.stringify({passed:receipt.passed,finite_models:rows.length,law_assertions:receipt.law_assertions,adverse_cases:adverse.length}));if(!receipt.passed)process.exitCode=1;
