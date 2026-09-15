@@ -1,0 +1,30 @@
+'use strict';
+const fs=require('node:fs');
+const path=require('node:path');
+const cp=require('node:child_process');
+const root=path.resolve(__dirname,'..','..','..','..');
+const out=path.join(root,'docs','caelen-ash','v696-v4','final');
+const SOURCE='f4174abc9139b18ec34d45e7e3f60a2d7fd1018f',PLAN='1eddad0043f01fc052d75980c9b95a6f0b4cf8dd',X1='b5a75bfc6189b33648ef6679bf3159f7fc74a963',X2='6ee2601fbf23ae825566ed2e1c7667ca6a79174b';
+const exactIndex=process.argv.indexOf('--exact-final'),exact=exactIndex>=0,expected=exact?process.argv[exactIndex+1]:X2;
+const read=name=>JSON.parse(fs.readFileSync(path.join(out,name),'utf8'));
+const git=args=>cp.execFileSync('git',['-C',root,...args],{encoding:'utf8'}).trim();
+const truth=read('phase-truth.json'),methods=read('method-flow-final.json'),route=read('routing-packet.json'),deck=read('deck/deck-index.json');
+const checks=[
+  ['head',git(['rev-parse','HEAD'])===expected],
+  ['source-parent-plan',git(['rev-parse',PLAN+'^'])===SOURCE],
+  ['plan-parent-x1',git(['rev-parse',X1+'^'])===PLAN],
+  ['x1-parent-x2',git(['rev-parse',X2+'^'])===X1],
+  ['final-parent',!exact||git(['rev-parse',expected+'^'])===X2],
+  ['outcomes',JSON.stringify(truth.outcomes)===JSON.stringify({completed:240,represented:30,open_gap:15,exact_gate:15})],
+  ['portfolios',truth.safe===600&&truth.candidate_failed===600&&truth.cfr===600],
+  ['capabilities',truth.skills===20&&truth.runners===10&&truth.tests===18&&truth.models===5],
+  ['method-flow',methods.cumulative.methods===50&&methods.cumulative.witnesses===3190&&methods.cumulative.fail===626],
+  ['gates',truth.open_gaps===60&&truth.exact_gates===60],
+  ['deck',deck.counts.cards===312],
+  ['canonical-uninvoked',truth.canonical_invoked===false],
+  ['route-prepared',route.state==='PREPARED_NOT_SENT'],
+  ['successor',route.prospective_successor.owner==='Orin Thale'&&route.prospective_successor.phase==='v696-v5'],
+  ['terminal',truth.terminal_verdict==='NOT_READY_FOR_STAGE_20']
+].map(([name,pass])=>({name,pass:Boolean(pass)}));
+const failed=checks.filter(c=>!c.pass);const result={schema:'ghc.family.minimal-validation.v11',owner:'Caelen Ash',phase:'v696-v4',mode:exact?'exact_final':'precommit_working',valid:failed.length===0,checks_total:checks.length,checks_passed:checks.length-failed.length,checks_failed:failed.length,errors:failed,checks};
+process.stdout.write(JSON.stringify(result,null,2)+'\n');if(!result.valid)process.exitCode=1;

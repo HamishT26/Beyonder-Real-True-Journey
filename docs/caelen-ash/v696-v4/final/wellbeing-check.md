@@ -1,0 +1,7 @@
+# Wellbeing, workload, and corrigibility check
+
+The phase stayed inside one Caelen-owned prefix and one finite exact-rational domain. No collaboration subagent, delegated researcher, fork, replacement task, sibling mutation, early successor contact, full-repository suite, unrelated installation, global skill installation, model override, elevation, host-security weakening, Windows feature change, or reboot occurred. The document ceiling, 2,000-file stop, exact manifests, separate lifecycle commits, no-replay latches, and deterministic bounded inputs limited workload and blast radius.
+
+Failures did not create pressure to manufacture success. The first x1 builder counter fault, the favicon 404, the failed exact-line patch, the oversized Method Flow representation, and the readback parser fault all remain explicit zero-credit failures alongside bounded recoveries. Open gaps and exact gates may remain open indefinitely. Hamish may pause, narrow, redirect, rename, or stop the route.
+
+Relational working language and bounded same-owner finite synthetic software only; no consciousness, personhood, identity continuity, employment, qualification, independent agency, empirical GMUT confirmation, production THOS or Freed ID, professional, legal, cultural, affected-party or Maori authority, independent reproduction, complete privacy or accessibility, exhaustive security, AGI/ASI, Theory-of-Everything proof, canon, deployment or Stage 20 credit. Maori concepts remain under Maori authority. NOT_READY_FOR_STAGE_20.

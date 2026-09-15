@@ -1,0 +1,31 @@
+'use strict';
+const fs=require('node:fs');
+const path=require('node:path');
+const crypto=require('node:crypto');
+const cp=require('node:child_process');
+const root=path.resolve(process.argv[2]||'.');
+const owner=path.join(root,'docs','caelen-ash','v696-v4');
+const out=path.join(owner,'final');
+const X2='6ee2601fbf23ae825566ed2e1c7667ca6a79174b';
+const SOURCE='f4174abc9139b18ec34d45e7e3f60a2d7fd1018f';
+const boundary='Relational working language and bounded same-owner finite synthetic software only; no consciousness, personhood, identity continuity, employment, qualification, independent agency, empirical GMUT confirmation, production THOS or Freed ID, professional, legal, cultural, affected-party or Maori authority, independent reproduction, complete privacy or accessibility, exhaustive security, AGI/ASI, Theory-of-Everything proof, canon, deployment or Stage 20 credit. Maori concepts remain under Maori authority. NOT_READY_FOR_STAGE_20.';
+const controls=['manifest.json','owner-manifest.json','staged-allowlist.json','content-seal.json'];
+const sha=b=>crypto.createHash('sha256').update(b).digest('hex');
+function walk(dir){const rows=[];for(const e of fs.readdirSync(dir,{withFileTypes:true}).sort((a,b)=>a.name.localeCompare(b.name))){const f=path.join(dir,e.name);if(e.isDirectory())rows.push(...walk(f));else rows.push(f);}return rows;}
+function bind(base,file){const bytes=fs.readFileSync(file);return{path:path.relative(base,file).replaceAll('\\','/'),bytes:bytes.length,sha256:sha(bytes)};}
+function write(name,value){fs.writeFileSync(path.join(out,name),JSON.stringify(value,null,2)+'\n',{encoding:'utf8',flag:'wx'});}
+const head=cp.execFileSync('git',['-C',root,'rev-parse','HEAD'],{encoding:'utf8'}).trim();if(head!==X2)throw Error('x2 head gate');
+for(const name of controls)if(fs.existsSync(path.join(out,name)))throw Error('control exists '+name);
+const finalBase=walk(out).filter(file=>!controls.includes(path.relative(out,file).replaceAll('\\','/')));
+const manifest={schema:'ghc.family.raw-git-manifest.v11',owner:'Caelen Ash',phase:'v696-v4',stage:'final',source:X2,hash_domain:'working bytes before commit; exact final raw Git blobs after commit',bindings:finalBase.map(file=>bind(out,file)),exclusions:controls.map(name=>({path:name,reason:'self-referential final control'})),total_paths:finalBase.length+controls.length,boundary};
+write('manifest.json',manifest);
+const ownerExclusions=['final/owner-manifest.json','final/staged-allowlist.json','final/content-seal.json'];
+const ownerFiles=walk(owner).filter(file=>!ownerExclusions.includes(path.relative(owner,file).replaceAll('\\','/')));
+const ownerManifest={schema:'ghc.family.raw-git-owner-manifest.v11',owner:'Caelen Ash',phase:'v696-v4',source:SOURCE,hash_domain:'working bytes before commit; exact final raw Git blobs after commit',bindings:ownerFiles.map(file=>bind(owner,file)),exclusions:ownerExclusions.map(name=>({path:name,reason:'self-referential owner control'})),total_paths:ownerFiles.length+ownerExclusions.length,owner_file_ceiling:2000,boundary};
+write('owner-manifest.json',ownerManifest);
+const allFinalPaths=[...finalBase.map(file=>'docs/caelen-ash/v696-v4/final/'+path.relative(out,file).replaceAll('\\','/')),...controls.map(name=>'docs/caelen-ash/v696-v4/final/'+name)].sort();
+write('staged-allowlist.json',{schema:'ghc.family.staged-allowlist.v11',owner:'Caelen Ash',phase:'v696-v4',stage:'final',exact:true,count:allFinalPaths.length,paths:allFinalPaths,non_final_paths:0,boundary});
+const sealPaths=['baton-index.json','closeout-receipt.json','evidence-accounting.json','manifest.json','method-flow-final.json','owner-manifest.json','phase-truth.json','staged-allowlist.json'];
+const seal={schema:'ghc.family.content-seal.v11',owner:'Caelen Ash',phase:'v696-v4',hash_domain:'working bytes before commit; exact final raw Git blobs after commit',bindings:sealPaths.map(rel=>bind(out,path.join(out,rel))),exclusions:[{path:'content-seal.json',reason:'self-reference'}],count:sealPaths.length,boundary};
+write('content-seal.json',seal);
+process.stdout.write(JSON.stringify({status:'FINAL_CONTROLS_CREATED',final_manifest_bindings:manifest.bindings.length,final_manifest_exclusions:manifest.exclusions.length,owner_manifest_bindings:ownerManifest.bindings.length,owner_manifest_exclusions:ownerManifest.exclusions.length,staged_paths:allFinalPaths.length,content_seal_bindings:seal.bindings.length,owner_total_paths:ownerManifest.total_paths},null,2)+'\n');

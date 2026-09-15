@@ -1,0 +1,25 @@
+'use strict';
+const cp=require('node:child_process');
+const path=require('node:path');
+const root=path.resolve(__dirname,'..','..','..','..');
+const PLAN='1eddad0043f01fc052d75980c9b95a6f0b4cf8dd';
+const x1=require('../x1/core.txt');
+const x2=require('../x2/core.txt');
+const canonical=value=>JSON.stringify(value,Object.keys(value||{}).sort());
+const deep=value=>Array.isArray(value)?value.map(deep):(value&&typeof value==='object'?Object.fromEntries(Object.keys(value).sort().map(k=>[k,deep(value[k])])):value);
+const equal=(a,b)=>JSON.stringify(deep(a))===JSON.stringify(deep(b));
+const raw=cp.execFileSync('git',['-C',root,'show',PLAN+':docs/caelen-ash/v696-v4/plan/new-proposals.json'],{encoding:'utf8',maxBuffer:64*1024*1024});
+const proposals=JSON.parse(raw).records;
+const errors=[];let passed=0;
+for(const proposal of proposals){
+  const core=proposal.stage==='x1'?x1:x2;
+  const positive=core.execute(JSON.parse(JSON.stringify(proposal.request)));
+  if(equal(positive.result,proposal.expected)&&positive.input_unchanged)passed++;else errors.push({id:proposal.proposal_id,kind:'positive'});
+  for(const malformed of proposal.malformed){
+    const observed=core.execute(JSON.parse(JSON.stringify(malformed.subject)));
+    if(equal(observed.result,malformed.expected)&&observed.input_unchanged)passed++;else errors.push({id:proposal.proposal_id+'-'+malformed.id_suffix,kind:'malformed'});
+  }
+}
+const result={schema:'ghc.family.owner-tests.v11',owner:'Caelen Ash',phase:'v696-v4',selection:'300 exact positive envelopes plus 600 retained malformed envelopes',tests_total:900,tests_passed:passed,tests_failed:errors.length,valid:proposals.length===300&&passed===900&&errors.length===0,full_repository_suite:false,same_owner_only:true,independent_reproduction:false,errors};
+process.stdout.write(JSON.stringify(result,null,2)+'\n');
+if(!result.valid)process.exitCode=1;
