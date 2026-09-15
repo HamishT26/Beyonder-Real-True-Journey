@@ -1,0 +1,15 @@
+'use strict';
+// Shared exact arithmetic only. Polynomial reference and production algorithms are separate.
+const abs=x=>x<0n?-x:x;
+function gcd(a,b){a=abs(a);b=abs(b);while(b){const t=a%b;a=b;b=t;}return a;}
+function pair(n,d=1n){if(!d)throw Error('zero_denominator');if(d<0n){n=-n;d=-d;}const g=gcd(n,d);return[n/g,d/g];}
+function q(s){const a=String(s).split('/');return pair(BigInt(a[0]),a[1]===undefined?1n:BigInt(a[1]));}
+const out=x=>x[1]===1n?String(x[0]):`${x[0]}/${x[1]}`;
+const add=(x,y)=>pair(x[0]*y[1]+y[0]*x[1],x[1]*y[1]);
+const neg=x=>[-x[0],x[1]],sub=(x,y)=>add(x,neg(y));
+const mul=(x,y)=>pair(x[0]*y[0],x[1]*y[1]);
+const div=(x,y)=>pair(x[0]*y[1],x[1]*y[0]);
+const eq=(x,y)=>x[0]===y[0]&&x[1]===y[1];
+const cmp=(x,y)=>{const t=x[0]*y[1]-y[0]*x[1];return t<0n?-1:t>0n?1:0;};
+function pow(x,k){let r=q(1);for(let i=0;i<k;i++)r=mul(r,x);return r;}
+module.exports={abs,gcd,pair,q,out,add,neg,sub,mul,div,eq,cmp,pow};

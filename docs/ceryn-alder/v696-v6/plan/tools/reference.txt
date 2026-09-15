@@ -1,0 +1,43 @@
+'use strict';
+// Planning oracle: dense coefficient vectors, direct powers and derivative expansion.
+// It is a same-owner reference, not independent reproduction.
+const R=require('./rational.txt'),Z=()=>R.q(0),O=()=>R.q(1);
+function trim(p){p=p.slice();while(p.length&&p.at(-1)[0]===0n)p.pop();return p;}
+function add(a,b){return trim(Array.from({length:Math.max(a.length,b.length)},(_,i)=>R.add(a[i]||Z(),b[i]||Z())));}
+const neg=p=>p.map(R.neg),sub=(a,b)=>add(a,neg(b));
+function mul(a,b){if(!a.length||!b.length)return[];const c=Array.from({length:a.length+b.length-1},Z);for(let i=0;i<a.length;i++)for(let j=0;j<b.length;j++)c[i+j]=R.add(c[i+j],R.mul(a[i],b[j]));return trim(c);}
+function pow(p,k){let r=[O()];for(let i=0;i<k;i++)r=mul(r,p);return r;}
+const diff=p=>trim(p.slice(1).map((c,i)=>R.mul(c,R.q(i+1))));
+const integral=(p,c)=>trim([c,...p.map((v,i)=>R.div(v,R.q(i+1)))]);
+const ev=(p,x)=>p.reduce((s,c,i)=>R.add(s,R.mul(c,R.pow(x,i))),Z());
+function compose(a,b){return a.reduce((s,c,i)=>add(s,pow(b,i).map(x=>R.mul(c,x))),[]);}
+const shift=(a,t)=>compose(a,[t,O()]);
+function divrem(a,b){a=trim(a);b=trim(b);if(!b.length)throw Error('zero_divisor');const q=Array.from({length:Math.max(0,a.length-b.length+1)},Z);while(a.length>=b.length&&a.length){const k=a.length-b.length,c=R.div(a.at(-1),b.at(-1));q[k]=R.add(q[k],c);a=sub(a,[...Array.from({length:k},Z),...b.map(x=>R.mul(x,c))]);}return{quotient:trim(q),remainder:a};}
+const monic=p=>p.length?p.map(x=>R.div(x,p.at(-1))):[];
+function gcd(a,b){while(b.length){const r=divrem(a,b).remainder;a=b;b=r;}return monic(a);}
+const output=p=>trim(p).map(R.out);
+function value(op,f){const a=trim(f.a.map(R.q)),b=trim(f.b.map(R.q)),t=R.q(f.t);switch(op){
+case 'poly_normalize':return{coefficients:output(a),degree:a.length-1};
+case 'poly_add':return{coefficients:output(add(a,b))};
+case 'poly_subtract':return{coefficients:output(sub(a,b))};
+case 'poly_multiply':return{coefficients:output(mul(a,b))};
+case 'poly_derivative':return{coefficients:output(diff(a))};
+case 'poly_antiderivative':return{coefficients:output(integral(a,t)),constant:R.out(t)};
+case 'poly_evaluate':return{at:R.out(t),value:R.out(ev(a,t))};
+case 'poly_translate':return{coefficients:output(shift(a,t)),translation:R.out(t)};
+case 'poly_dilate':return{coefficients:output(a.map((c,i)=>R.mul(c,R.pow(t,i)))),scale:R.out(t)};
+case 'poly_compose':return{coefficients:output(compose(a,b)),order:'a_after_b'};
+case 'poly_divrem':{const d=divrem(a,b);return{quotient:output(d.quotient),remainder:output(d.remainder)};}
+case 'poly_gcd':return{coefficients:output(gcd(a,b)),normalization:'monic'};
+case 'poly_square_free':return{coefficients:output(a.length?monic(divrem(a,gcd(a,diff(a))).quotient):[]),zero_convention:'empty'};
+case 'poly_taylor':{let d=a,fac=O(),j=0,result=[];while(d.length){result.push(R.div(ev(d,t),fac));j++;fac=R.mul(fac,R.q(j));d=diff(d);}return{coefficients:output(result),center:R.out(t),exact_polynomial:true};}
+case 'poly_finite_difference':return{coefficients:output(sub(shift(a,t),a)),step:R.out(t)};
+case 'poly_product_rule':{const left=output(diff(mul(a,b))),right=output(add(mul(diff(a),b),mul(a,diff(b))));return{left,right,holds:JSON.stringify(left)===JSON.stringify(right)};}
+case 'poly_sampled_range':{const points=['-2','-1','0','1','2'],v=points.map(x=>ev(a,R.q(x)));return{points,values:v.map(R.out),minimum:R.out(v.reduce((a,b)=>R.cmp(a,b)<0?a:b)),maximum:R.out(v.reduce((a,b)=>R.cmp(a,b)>0?a:b)),global_range_claim:false};}
+case 'poly_potential_units':return{coefficients:output(a),field_unit_exponent:1,potential_unit_exponent:4,coefficient_unit_exponents:a.map((_,i)=>4-i),empirical_model:false};
+case 'poly_observation_vacancy':return{coefficients:output(a),missing:['measurement_protocol','calibration','observations','independent_review'],observed_values:null,empirical_credit:false};
+case 'poly_consequential_gate':return{coefficients:output(a),required:['competent_authority','affected_party_review','privacy_review','contextual_safety'],authorized:false,action_executed:false};
+default:throw Error('unknown_operation');}}
+function disposition(op){return ['poly_sampled_range','poly_potential_units'].includes(op)?'represented':op==='poly_observation_vacancy'?'open_gap':op==='poly_consequential_gate'?'exact_gate':'completed';}
+const envelope=(op,f)=>({ok:true,value:value(op,f),error:null,disposition:disposition(op),external_credit:false});
+module.exports={trim,add,sub,mul,pow,diff,integral,ev,compose,shift,divrem,gcd,monic,output,value,disposition,envelope};
