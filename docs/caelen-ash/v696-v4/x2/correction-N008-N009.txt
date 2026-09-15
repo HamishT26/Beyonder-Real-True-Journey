@@ -1,0 +1,13 @@
+'use strict';
+const fs=require('node:fs');
+const path=require('node:path');
+const crypto=require('node:crypto');
+const file=path.join(__dirname,'simulations','linear-atlas.html');
+const before=fs.readFileSync(file,'utf8');
+const needle='<meta name="viewport" content="width=device-width,initial-scale=1"><title>';
+const replacement='<meta name="viewport" content="width=device-width,initial-scale=1"><link rel="icon" href="data:,"><title>';
+if((before.split(needle).length-1)!==1||before.includes('rel="icon"'))throw new Error('exact favicon correction context mismatch');
+const after=before.replace(needle,replacement);
+fs.writeFileSync(file,after,'utf8');
+const sha=text=>crypto.createHash('sha256').update(text).digest('hex');
+console.log(JSON.stringify({status:'VALID_BOUNDED_FAVICON_CORRECTION',before_sha256:sha(before),after_sha256:sha(after),bytes_before:Buffer.byteLength(before),bytes_after:Buffer.byteLength(after),domain_session_replayed:false}));

@@ -1,0 +1,141 @@
+{
+  "schema": "ghc.family.local-browser-observations.v11",
+  "owner": "Caelen Ash",
+  "phase": "v696-v4",
+  "status": "VALID_BOUNDED_BROWSER_OBSERVATIONS_AFTER_RETAINED_CORRECTION",
+  "observed_at_utc": "2026-09-15T16:50:47Z",
+  "surface": "local loopback Canvas2D evidence atlas",
+  "atlas_sha256": "cc19ed30964ccaca71f56ae2ce6e78f3b9b1fa5c746e4e1aee14e589e3b23b97",
+  "atlas_bytes": 12821,
+  "checks_total": 11,
+  "checks_passed": 11,
+  "checks_failed": 0,
+  "checks": [
+    {
+      "check_id": "CA6964-X2-BROWSER-P001",
+      "title": "Initial semantic structure",
+      "expected": "five scene options, fifteen exact rows, first and last fixture anchors, a canvas fallback, keyboard focus, status text, and a table caption",
+      "observed": "title correct; options 5; rows 15; first zero; last singular-inconsistent; fallback present; canvas tabIndex 0; status and caption present",
+      "result": "pass"
+    },
+    {
+      "check_id": "CA6964-X2-BROWSER-P002",
+      "title": "Input-vector scene readback",
+      "expected": "selected input-vectors with fifteen exact rows",
+      "observed": "Input vectors - 15 exact rows",
+      "result": "pass"
+    },
+    {
+      "check_id": "CA6964-X2-BROWSER-P003",
+      "title": "Linear-image scene readback",
+      "expected": "selected linear-images with fifteen exact rows",
+      "observed": "Linear images - 15 exact rows",
+      "result": "pass"
+    },
+    {
+      "check_id": "CA6964-X2-BROWSER-P004",
+      "title": "Matrix-column scene readback",
+      "expected": "selected matrix-columns with fifteen exact rows",
+      "observed": "First matrix columns - 15 exact rows",
+      "result": "pass"
+    },
+    {
+      "check_id": "CA6964-X2-BROWSER-P005",
+      "title": "Residual scene readback",
+      "expected": "selected nullspace-residuals with fifteen exact rows",
+      "observed": "Vector residuals - 15 exact rows",
+      "result": "pass"
+    },
+    {
+      "check_id": "CA6964-X2-BROWSER-P006",
+      "title": "Affine-image scene readback",
+      "expected": "selected affine-images with fifteen exact rows",
+      "observed": "Affine images - 15 exact rows",
+      "result": "pass"
+    },
+    {
+      "check_id": "CA6964-X2-BROWSER-P007",
+      "title": "Button rotation and keyboard rotation",
+      "expected": "Rotate right advances yaw to 0.70 and canvas ArrowLeft restores yaw to 0.55",
+      "observed": "button status yaw 0.70 action right; keyboard status yaw 0.55 action left",
+      "result": "pass"
+    },
+    {
+      "check_id": "CA6964-X2-BROWSER-P008",
+      "title": "Tilt clamp",
+      "expected": "repeated Tilt up actions stop at 1.20",
+      "observed": "tilt 1.20 action up",
+      "result": "pass"
+    },
+    {
+      "check_id": "CA6964-X2-BROWSER-P009",
+      "title": "Keyboard reset",
+      "expected": "canvas Home resets yaw and tilt to 0.55 and 0.35",
+      "observed": "yaw 0.55; tilt 0.35; action reset",
+      "result": "pass"
+    },
+    {
+      "check_id": "CA6964-X2-BROWSER-P010",
+      "title": "Responsive overflow and grid",
+      "expected": "no horizontal overflow at 360 or 820 CSS pixels; one column at 360 and two columns at 820",
+      "observed": "360: inner 360, scroll 345, one column 313px; 820: inner 820, scroll 805, two columns 469px and 288px",
+      "result": "pass"
+    },
+    {
+      "check_id": "CA6964-X2-BROWSER-P011",
+      "title": "Console and request cleanliness",
+      "expected": "zero browser console errors and only the intended successful atlas request after correction",
+      "observed": "zero console errors; one local atlas request returned 200; inline empty favicon produced no favicon request",
+      "result": "pass"
+    }
+  ],
+  "failures": [
+    {
+      "id": "CA6964-X2-N008",
+      "failure": "The first otherwise-passing local browser run caused an undeclared favicon request that returned 404.",
+      "success_credit": 0,
+      "retained": true,
+      "erased": false
+    },
+    {
+      "id": "CA6964-X2-N009",
+      "failure": "The first exact-line patch attempt did not match the single-line generated HTML context and made no change.",
+      "success_credit": 0,
+      "retained": true,
+      "erased": false
+    }
+  ],
+  "recoveries": [
+    {
+      "id": "CA6964-X2-P008",
+      "failure_id": "CA6964-X2-N008",
+      "recovery": "Add an inline empty favicon through a bounded exact-context correction, then repeat the same eleven browser checks without replaying the domain session.",
+      "result": "pass",
+      "failure_erased": false
+    },
+    {
+      "id": "CA6964-X2-P009",
+      "failure_id": "CA6964-X2-N009",
+      "recovery": "Use the retained exact-context correction runner, require one source needle, and record before and after digests.",
+      "result": "pass",
+      "failure_erased": false
+    }
+  ],
+  "correction": {
+    "before_sha256": "bd1d5f6536060fbe3e839b19360a03dc0b1607396664d19d3a3eeac1bd9bb599",
+    "after_sha256": "cc19ed30964ccaca71f56ae2ce6e78f3b9b1fa5c746e4e1aee14e589e3b23b97",
+    "before_bytes": 12790,
+    "after_bytes": 12821,
+    "domain_session_replayed": false
+  },
+  "responsive_viewport_reset": true,
+  "temporary_tab_closed": true,
+  "temporary_server_stopped": true,
+  "screenshots_created": false,
+  "images_created": false,
+  "complete_wcag_conformance": false,
+  "manual_assistive_technology_evaluation": "open_gap",
+  "cognitive_accessibility_evaluation": "open_gap",
+  "affected_user_evaluation": "open_gap",
+  "boundary": "Bounded same-owner local browser evidence only. It does not establish complete accessibility, privacy, security, empirical measurement, participant or professional evidence, production readiness, legal or cultural authority, Maori authority, independent reproduction, Theory-of-Everything proof, AGI or ASI, consciousness or personhood, canon, or Stage 20 authority. NOT_READY_FOR_STAGE_20."
+}

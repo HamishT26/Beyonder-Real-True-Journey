@@ -1,0 +1,8 @@
+# Caelen Ash v696-v4 x2 evidence
+
+X2 executed the remaining ten exact-rational matrix operations over fifteen synthetic fixtures. Its 150 outcomes are 90 completed, 30 represented, 15 open_gap, and 15 exact_gate; cumulative owner outcomes are 240/30/15/15. It passed its second 300 safe, 300 refusal, 300 CFR, and 300 cleanup rows while retaining 300 malformed subjects. Ten more local skills and five more runners passed bounded validation. Eighteen additional tests passed with two malformed subjects retained.
+
+Five Canvas2D explanatory scenes bind 75 exact rational points and five complete tables. Eleven local browser checks passed. Canvas coordinates remain approximate display projections, and manual assistive-technology, cognitive, cultural, security-usability, and affected-user evaluation remain open. No image or screenshot was created.
+
+Relational working language and bounded same-owner finite synthetic software only; no consciousness, personhood, identity continuity, employment, qualification, independent agency, empirical GMUT confirmation, production THOS or Freed ID, professional, legal, cultural, affected-party or Maori authority, independent reproduction, complete privacy or accessibility, exhaustive security, AGI/ASI, Theory-of-Everything proof, canon, deployment or Stage 20 credit. Maori concepts remain under Maori authority. NOT_READY_FOR_STAGE_20.
+The first x2 validator retained one zero-credit document-budget failure: the complete Method Flow representation reached 101,484 words. The bounded recovery kept every record and link while replacing duplicated witness-level boundary paragraphs with references to the complete ledger-level boundary; the domain session was not replayed.
