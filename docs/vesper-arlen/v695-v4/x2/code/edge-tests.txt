@@ -1,0 +1,43 @@
+from __future__ import annotations
+import copy,json
+from pathlib import Path
+phase=Path(__file__).parents[2]
+ns={'__name__':'edge_engine'}
+engine=Path(__file__).with_name('rewrite-extended.txt')
+exec(compile(engine.read_text(encoding='utf-8'),str(engine),'exec'),ns)
+proposals=json.loads((phase/'plan'/'proposals.json').read_text(encoding='utf-8'))['proposals']
+tests=[]
+def t(name,condition):
+    if not condition: raise AssertionError(name)
+    tests.append(name)
+def p(op,fixture): return next(x for x in proposals if x['operation']==op and x['fixture_id']==fixture)
+def run(op,fixture): return ns['execute'](copy.deepcopy(p(op,fixture)['request']))
+def err(code,request):
+    observed=ns['safe_execute'](request)
+    return not observed['accepted'] and observed['error']==code and observed['subject_success_credit']==0
+t('twenty operations',len(ns['OPS'])==20)
+t('fifty x2 proposals',len([x for x in proposals if x['session']=='x2'])==50)
+t('nat trace complete',run('strategy_trace','nat_add')['result']['complete'])
+t('bool trace normal false',run('strategy_trace','bool_simplify')['result']['normal_form']=='false')
+t('list trace complete',run('strategy_trace','list_append')['result']['complete'])
+t('joinable reachable four',run('reachable_terms','joinable_peak')['result']['count']==4)
+t('divergent reachable three',run('reachable_terms','divergent_peak')['result']['count']==3)
+t('joinable peak count one',run('peak_pairs','joinable_peak')['result']['count']==1)
+t('divergent peak count one',run('peak_pairs','divergent_peak')['result']['count']==1)
+t('joinable peak joins',run('peak_joinability','joinable_peak')['result']['joinable']==1)
+t('divergent peak does not join',run('peak_joinability','divergent_peak')['result']['joinable']==0)
+t('joinable bounded confluence true',run('bounded_confluence_check','joinable_peak')['result']['confluent_within_bound'])
+t('divergent bounded confluence false',not run('bounded_confluence_check','divergent_peak')['result']['confluent_within_bound'])
+t('derivation nodes explicit',len(run('derivation_edges','joinable_peak')['result']['nodes'])==4)
+t('derivation edges explicit',len(run('derivation_edges','joinable_peak')['result']['edges'])==4)
+bad=copy.deepcopy(p('reachable_terms','nat_add')['request']);bad['parameters']['depth_cap']=17;t('depth cap',err('E_DEPTH_CAP',bad))
+bad=copy.deepcopy(p('reachable_terms','nat_add')['request']);bad['parameters']['state_cap']=0;t('state cap parameter',err('E_STATE_CAP',bad))
+bad=copy.deepcopy(p('strategy_trace','nat_add')['request']);bad['parameters']['step_cap']=0;t('step cap',err('E_STEP_CAP',bad))
+bad=copy.deepcopy(p('reachable_terms','nat_add')['request']);bad['operation']='unknown';t('unknown operation',err('E_OPERATION',bad))
+request=copy.deepcopy(p('reachable_terms','nat_add')['request']);before=json.dumps(request,sort_keys=True);ns['execute'](request);t('input fixed',json.dumps(request,sort_keys=True)==before)
+t('interpretation represented',run('structural_interpretation_boundary','nat_add')['outcome']=='represented')
+t('adequacy represented',run('adequacy_boundary','nat_add')['result']['model_adequacy']=='unmeasured')
+t('empirical gap retained',run('empirical_gap','nat_add')['outcome']=='open_gap')
+t('authority gate retained',run('deployment_authority_gate','nat_add')['outcome']=='exact_gate')
+t('json round trip',json.loads(json.dumps(run('peak_joinability','joinable_peak')))['accepted'])
+print(json.dumps({'status':'PASS','tests':len(tests),'names':tests,'independent_reproduction':False},sort_keys=True))

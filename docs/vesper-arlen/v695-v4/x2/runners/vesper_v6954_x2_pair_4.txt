@@ -1,0 +1,16 @@
+from __future__ import annotations
+import json,sys
+from pathlib import Path
+engine_path=Path(__file__).parents[1]/'code'/'rewrite-extended.txt'
+ns={'__name__':'runner_engine'}
+exec(compile(engine_path.read_text(encoding='utf-8'),str(engine_path),'exec'),ns)
+allowed=['structural_interpretation_boundary', 'adequacy_boundary']
+try:
+    raw=sys.argv[1] if len(sys.argv)>1 else sys.stdin.read()
+    if len(raw.encode('utf-8'))>262144: raise ValueError('E_INPUT_BYTES')
+    request=json.loads(raw)
+    if request.get('operation') not in allowed: raise ValueError('E_WRAPPER_OPERATION')
+    print(json.dumps(ns['execute'](request),ensure_ascii=False,sort_keys=True,separators=(',',':')))
+except Exception as exc:
+    print(json.dumps({'accepted':False,'error':str(exc),'subject_success_credit':0},sort_keys=True,separators=(',',':')))
+    raise SystemExit(2)
