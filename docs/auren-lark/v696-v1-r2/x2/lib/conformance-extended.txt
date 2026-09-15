@@ -1,0 +1,20 @@
+"use strict";
+const fs = require("fs");
+const Module = require("module");
+const path = require("path");
+function loadTextModule(file) { const item = new Module(file, module); item.filename = file; item.paths = Module._nodeModulePaths(path.dirname(file)); item._compile(fs.readFileSync(file, "utf8"), file); return item.exports; }
+const core = loadTextModule(path.resolve(__dirname, "../../../v696-v1/x2/lib/belief-extended.txt"));
+const ALLOWED = ["state_shape","formula_truth","belief_worlds","belief_entails","rank_layers","expansion","conditioning_revision","formula_equivalence","contradiction_witness","rank_normalization","natural_revision","lexicographic_revision","distance_revision","revision_disagreement","harper_contraction","postulate_checks","interpretation_boundary","adequacy_boundary","empirical_gap","authority_gate"];
+function sortDeep(value) { if (Array.isArray(value)) return value.map(sortDeep); if (value && typeof value === "object") { const out = {}; for (const key of Object.keys(value).sort()) out[key] = sortDeep(value[key]); return out; } return value; }
+function stable(value) { return JSON.stringify(sortDeep(value)); }
+function run(subject) {
+  if (!subject || typeof subject !== "object" || Array.isArray(subject) || stable(Object.keys(subject).sort()) !== stable(["contract_id","request"])) return {ok:false,error:"E_CONTRACT_FIELDS",original_success_credit:0};
+  if (typeof subject.contract_id !== "string" || !/^AL6961R2-P[0-9]{3}$/.test(subject.contract_id)) return {ok:false,error:"E_CONTRACT_ID",original_success_credit:0};
+  if (!subject.request || !ALLOWED.includes(subject.request.operation)) return {ok:false,error:"E_OPERATION",original_success_credit:0};
+  const before = stable(subject.request);
+  const result = core.safeExecute(subject.request);
+  if (before !== stable(subject.request)) return {ok:false,error:"E_MUTATION",original_success_credit:0};
+  return result;
+}
+module.exports = { ALLOWED, run };
+if (require.main === module) { const input = JSON.parse(fs.readFileSync(0, "utf8")); process.stdout.write(JSON.stringify(run(input)) + "\n"); }

@@ -1,0 +1,166 @@
+"use strict";
+
+const fs = require("fs");
+
+const ALLOWED = ["state_shape", "formula_truth", "belief_worlds", "belief_entails", "rank_layers", "expansion", "conditioning_revision", "formula_equivalence", "contradiction_witness", "rank_normalization", "natural_revision", "lexicographic_revision", "distance_revision", "revision_disagreement", "harper_contraction", "postulate_checks", "interpretation_boundary", "adequacy_boundary", "empirical_gap", "authority_gate"];
+const OUTCOME = {"state_shape": "completed", "formula_truth": "completed", "belief_worlds": "completed", "belief_entails": "completed", "rank_layers": "completed", "expansion": "completed", "conditioning_revision": "completed", "formula_equivalence": "completed", "contradiction_witness": "completed", "rank_normalization": "completed", "natural_revision": "completed", "lexicographic_revision": "completed", "distance_revision": "completed", "revision_disagreement": "completed", "harper_contraction": "completed", "postulate_checks": "completed", "interpretation_boundary": "represented", "adequacy_boundary": "represented", "empirical_gap": "open_gap", "authority_gate": "exact_gate"};
+
+function equal(left, right) { return JSON.stringify(left) === JSON.stringify(right); }
+function unique(values) { return [...new Set(values)].sort((a, b) => a - b); }
+function compare(left, right) {
+  if (Array.isArray(left) && Array.isArray(right)) {
+    for (let i = 0; i < Math.min(left.length, right.length); i += 1) {
+      if (left[i] !== right[i]) return left[i] - right[i];
+    }
+    return left.length - right.length;
+  }
+  return left - right;
+}
+function dense(values) {
+  const distinct = [];
+  for (const value of values) if (!distinct.some((item) => equal(item, value))) distinct.push(value);
+  distinct.sort(compare);
+  return values.map((value) => distinct.findIndex((item) => equal(item, value)));
+}
+function evaluate(formula, atoms, world) {
+  if (typeof formula === "boolean") return formula;
+  if (typeof formula === "string") {
+    const index = atoms.indexOf(formula);
+    if (index < 0) throw new Error("E_FORMULA");
+    return Boolean(world & (1 << index));
+  }
+  if (!Array.isArray(formula) || !formula.length || typeof formula[0] !== "string") throw new Error("E_FORMULA");
+  if (formula[0] === "not" && formula.length === 2) return !evaluate(formula[1], atoms, world);
+  if (formula[0] === "and" && formula.length === 3) return evaluate(formula[1], atoms, world) && evaluate(formula[2], atoms, world);
+  if (formula[0] === "or" && formula.length === 3) return evaluate(formula[1], atoms, world) || evaluate(formula[2], atoms, world);
+  throw new Error("E_FORMULA");
+}
+function validate(request) {
+  if (!request || typeof request !== "object" || Array.isArray(request) || !equal(Object.keys(request).sort(), ["model", "operation"])) throw new Error("E_FIELDS");
+  if (!ALLOWED.includes(request.operation)) throw new Error("E_OPERATION");
+  const model = request.model;
+  if (!model || typeof model !== "object" || Array.isArray(model) || !equal(Object.keys(model).sort(), ["atoms", "id", "lesson", "query", "ranks"])) throw new Error("E_MODEL");
+  const atoms = model.atoms;
+  if (!Array.isArray(atoms) || atoms.length < 1 || atoms.length > 4 || atoms.some((item) => typeof item !== "string") || new Set(atoms).size !== atoms.length) throw new Error("E_MODEL");
+  if (!Array.isArray(model.ranks) || model.ranks.length !== 2 ** atoms.length || model.ranks.some((rank) => typeof rank !== "number" || !Number.isInteger(rank) || rank < 0)) throw new Error("E_RANKS");
+  if (!model.query || typeof model.query !== "object" || Array.isArray(model.query) || !equal(Object.keys(model.query).sort(), ["alternate", "input", "target"])) throw new Error("E_MODEL");
+  for (const formula of Object.values(model.query)) for (let world = 0; world < 2 ** atoms.length; world += 1) evaluate(formula, atoms, world);
+  return [request.operation, model];
+}
+function truth(formula, atoms) {
+  const rows = [];
+  for (let world = 0; world < 2 ** atoms.length; world += 1) if (evaluate(formula, atoms, world)) rows.push(world);
+  return rows;
+}
+function minima(worlds, ranks) {
+  if (!worlds.length) return [null, []];
+  const level = Math.min(...worlds.map((world) => ranks[world]));
+  return [level, worlds.filter((world) => ranks[world] === level)];
+}
+function symmetric(left, right) { return unique([...left.filter((value) => !right.includes(value)), ...right.filter((value) => !left.includes(value))]); }
+function hamming(left, right) {
+  let value = left ^ right;
+  let count = 0;
+  while (value) { count += value & 1; value >>>= 1; }
+  return count;
+}
+function execute(request) {
+  const [operation, model] = validate(request);
+  const atoms = model.atoms;
+  const ranks = model.ranks;
+  const query = model.query;
+  const worlds = Array.from({ length: 2 ** atoms.length }, (_, index) => index);
+  const inputWorlds = truth(query.input, atoms);
+  const targetWorlds = truth(query.target, atoms);
+  const alternateWorlds = truth(query.alternate, atoms);
+  const [beliefRank, belief] = minima(worlds, ranks);
+  const [inputRank, inputBest] = minima(inputWorlds, ranks);
+  const notTarget = worlds.filter((world) => !targetWorlds.includes(world));
+  const notTargetBest = minima(notTarget, ranks)[1];
+  let value;
+  if (operation === "state_shape") value = { atoms, world_count: worlds.length, rank_count: new Set(ranks).size, query_fields: Object.keys(query).sort() };
+  else if (operation === "formula_truth") value = { input: inputWorlds, target: targetWorlds, alternate: alternateWorlds };
+  else if (operation === "belief_worlds") value = { rank: beliefRank, worlds: belief };
+  else if (operation === "belief_entails") {
+    const counterexamples = belief.filter((world) => !targetWorlds.includes(world));
+    value = { holds: !counterexamples.length, belief_worlds: belief, counterexamples };
+  }
+  else if (operation === "rank_layers") value = { layers: [...new Set(ranks)].sort((a, b) => a - b).map((rank) => ({ rank, worlds: worlds.filter((world) => ranks[world] === rank) })) };
+  else if (operation === "expansion") {
+    const expanded = belief.filter((world) => inputWorlds.includes(world));
+    value = { worlds: expanded, consistent: expanded.length > 0, input_possible: inputWorlds.length > 0 };
+  }
+  else if (operation === "conditioning_revision") value = { available: inputWorlds.length > 0, rank: inputRank, worlds: inputWorlds.length ? inputBest : [] };
+  else if (operation === "formula_equivalence") {
+    const differing = symmetric(targetWorlds, alternateWorlds);
+    value = { equivalent: !differing.length, differing_worlds: differing };
+  }
+  else if (operation === "contradiction_witness") {
+    const complement = worlds.filter((world) => !inputWorlds.includes(world));
+    value = { input_worlds: inputWorlds, negated_input_worlds: complement, overlap: [], exhaustive: equal(unique([...inputWorlds, ...complement]), worlds) };
+  }
+  else if (operation === "rank_normalization") {
+    const normalized = dense(ranks);
+    const orderPreserved = worlds.every((a) => worlds.every((b) => (ranks[a] <= ranks[b]) === (normalized[a] <= normalized[b])));
+    value = { ranks: normalized, order_preserved: orderPreserved };
+  }
+
+  else if (operation === "natural_revision" || operation === "lexicographic_revision") {
+    if (!inputWorlds.length) value = { available: false, ranks: null, belief_worlds: [], reason: "impossible_input" };
+    else {
+      const raw = operation === "natural_revision"
+        ? worlds.map((world) => inputBest.includes(world) ? 0 : ranks[world] + 1)
+        : worlds.map((world) => [inputWorlds.includes(world) ? 0 : 1, ranks[world]]);
+      const normalized = dense(raw);
+      const revised = minima(worlds, normalized)[1];
+      value = { available: true, ranks: normalized, belief_worlds: revised, input_satisfied: revised.every((world) => inputWorlds.includes(world)) };
+    }
+  }
+  else if (operation === "distance_revision") {
+    if (!inputWorlds.length) value = { available: false, distance: null, belief_worlds: [], reason: "impossible_input" };
+    else {
+      const distances = Object.fromEntries(inputWorlds.map((world) => [world, Math.min(...belief.map((prior) => hamming(world, prior)))]));
+      const best = Math.min(...Object.values(distances));
+      value = { available: true, distance: best, belief_worlds: inputWorlds.filter((world) => distances[world] === best) };
+    }
+  }
+  else if (operation === "revision_disagreement") {
+    if (!inputWorlds.length) value = { available: false, natural: [], lexicographic: [], symmetric_difference: [] };
+    else {
+      const naturalRanks = dense(worlds.map((world) => inputBest.includes(world) ? 0 : ranks[world] + 1));
+      const lexicalRanks = dense(worlds.map((world) => [inputWorlds.includes(world) ? 0 : 1, ranks[world]]));
+      const natural = minima(worlds, naturalRanks)[1];
+      const lexicographic = minima(worlds, lexicalRanks)[1];
+      value = { available: true, natural, lexicographic, symmetric_difference: symmetric(natural, lexicographic) };
+    }
+  }
+  else if (operation === "harper_contraction") {
+    const contracted = unique([...belief, ...notTargetBest]);
+    value = { worlds: contracted, target_retained: contracted.every((world) => targetWorlds.includes(world)), representation: "finite_harper_world_union" };
+  }
+  else if (operation === "postulate_checks") {
+    const success = !inputWorlds.length || inputBest.every((world) => inputWorlds.includes(world));
+    const consistency = !inputWorlds.length || inputBest.length > 0;
+    const equivalent = equal(targetWorlds, alternateWorlds);
+    const targetBest = minima(targetWorlds, ranks)[1];
+    const alternateBest = minima(alternateWorlds, ranks)[1];
+    value = { success, consistency_when_input_possible: consistency, extensionality_antecedent: equivalent, extensionality_implication: !equivalent || equal(targetBest, alternateBest) };
+  }
+  else if (operation === "interpretation_boundary") value = { model: model.id, semantics: "declared_finite_total_preorder", probability: null, human_belief_measured: false };
+  else if (operation === "adequacy_boundary") value = { model: model.id, observation_rows: 0, calibration: null, adequacy: "unmeasured" };
+  else if (operation === "empirical_gap") value = { model: model.id, missing: ["preregistered_observable", "governed_observations", "matched_comparator", "uncertainty_model", "independent_reproduction"] };
+  else if (operation === "authority_gate") value = { model: model.id, authorized: false, missing: ["specific_target", "affected_party_authority", "competent_review", "appeal_and_recourse", "applicable_legal_and_cultural_authority"] };
+
+  else throw new Error("E_OPERATION");
+  return { ok: true, operation, outcome: OUTCOME[operation], value };
+}
+function safeExecute(request) {
+  try { return execute(JSON.parse(JSON.stringify(request))); }
+  catch (error) { return { ok: false, error: error.message, original_success_credit: 0 }; }
+}
+module.exports = { ALLOWED, OUTCOME, safeExecute };
+
+if (require.main === module) {
+  const input = fs.readFileSync(0, "utf8");
+  process.stdout.write(JSON.stringify(safeExecute(JSON.parse(input))) + "\n");
+}
