@@ -1,0 +1,17 @@
+# Consequential allocation authority hold contract
+
+Operation: `cg_authority_gate`. Keep actual authority and external action false for this declared allocation.
+
+```json
+{"operation":"cg_authority_gate","game":{"players":["A","B","C"],"values":[0,1,2,5,0,2,3,9]},"allocation":[[9,1],[1,1],[0,1]]}
+```
+
+Expected complete envelope:
+
+```json
+{"ok":true,"value":{"game_sha256":"d832885bf9c7c6a006791efd2a52c514ba7d84ce6dbd1bf24047e826f8affade","nominal_allocation":[[9,1],[1,1],[0,1]],"authority_granted":false,"external_action":false,"missing":["competent-authority","affected-party","Maori-authority"],"outcome":"exact_gate"},"error":null}
+```
+
+Reject unknown fields, other symbol sets, wrong vector sizes, noninteger or out-of-range worths, nonzero empty worth and malformed rational pairs. The request remains unchanged. The integer grid, where used, covers only the zero-to-twelve cube; it does not establish a continuous-core result. Historical and current callers remain available. A correction is additive and never replays a successful domain session or canonical.
+
+Same-owner synthetic evidence only; NOT_READY_FOR_STAGE_20.

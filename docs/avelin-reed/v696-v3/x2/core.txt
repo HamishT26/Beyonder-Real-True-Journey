@@ -1,0 +1,17 @@
+'use strict';
+const p=require('../x1/protocol.txt'),u=require('../plan/lib.txt');const operations=['cg_efficiency','cg_individual','cg_excesses','cg_core','cg_integer_imputations','cg_dual','cg_summary','cg_handover','cg_observation_gap','cg_authority_gate'];
+function allocationSum(x,mask){let total=p.rational(0);for(let i=0;i<3;i++)if(mask&(1<<i))total=p.add(total,x[i]);return total;}
+function excess(v,x,mask){return p.subtract(p.rational(v[mask]),allocationSum(x,mask));}
+function value(q){p.validate(q,operations);const v=q.game.values,x=q.allocation;switch(q.operation){
+case'cg_efficiency':{const sum=allocationSum(x,7),gap=p.subtract(p.rational(v[7]),sum);return{allocation_sum:sum,grand_worth:v[7],gap,efficient:gap[0]===0};}
+case'cg_individual':{const deficits=[0,1,2].map(i=>{const gap=p.subtract(p.rational(v[1<<i]),x[i]);return gap[0]>0?gap:p.rational(0);});return{deficits,holds:deficits.every(d=>d[0]===0)};}
+case'cg_excesses':return v.map((_,mask)=>({mask,excess:excess(v,x,mask)}));
+case'cg_core':{const efficient=excess(v,x,7)[0]===0,coalition_violations=[];for(let mask=0;mask<8;mask++)if(excess(v,x,mask)[0]>0)coalition_violations.push(mask);return{efficient,coalition_violations,in_core:efficient&&coalition_violations.length===0};}
+case'cg_integer_imputations':{const allocations=[];for(let a=0;a<=12;a++)for(let b=0;b<=12;b++)for(let c=0;c<=12;c++)if(a+b+c===v[7]&&a>=v[1]&&b>=v[2]&&c>=v[4])allocations.push([a,b,c]);return{grid_min:0,grid_max:12,allocations,continuous_core_claim:false};}
+case'cg_dual':return v.map((_,mask)=>v[7]-v[7^mask]);
+case'cg_summary':return{symbols:3,coalitions:8,worth_range:[Math.min(...v),Math.max(...v)],grand_worth:v[7],human_evaluation:false};
+case'cg_handover':return{allocation:x.map(f=>f.slice()),conservation_gap:excess(v,x,7),review_performed:false,external_action:false};
+case'cg_observation_gap':return{game_sha256:u.hash(u.canon(q.game)),required:['observations','calibration','uncertainty','independent-review'],real_rows:0,outcome:'open_gap'};
+case'cg_authority_gate':return{game_sha256:u.hash(u.canon(q.game)),nominal_allocation:x.map(f=>f.slice()),authority_granted:false,external_action:false,missing:['competent-authority','affected-party','Maori-authority'],outcome:'exact_gate'};
+}}
+const run=q=>p.wrap(value,q);module.exports={run,value,operations,allocationSum,excess};if(require.main===module)p.cli(run);
