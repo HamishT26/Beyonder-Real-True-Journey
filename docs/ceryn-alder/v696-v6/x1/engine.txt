@@ -1,0 +1,34 @@
+'use strict';
+// Production polynomial arithmetic: sparse exponent maps and Horner composition.
+const R=require('../plan/tools/rational.txt');
+const operations=['poly_normalize','poly_add','poly_subtract','poly_multiply','poly_derivative','poly_antiderivative','poly_evaluate','poly_translate','poly_dilate','poly_compose'];
+const reject=error=>({ok:false,value:null,error,disposition:null,external_credit:false});
+const plain=x=>x!==null&&typeof x==='object'&&!Array.isArray(x);
+function rational(s){if(typeof s!=='string'||s.length>30||!/^(-?(0|[1-9][0-9]*))(\/[1-9][0-9]*)?$/.test(s))return false;try{const q=R.q(s);return R.out(q)===s&&R.abs(q[0])<=1000000n&&q[1]<=1000000n;}catch{return false;}}
+function check(request,allowed){if(!plain(request))return'object_required';if(Object.keys(request).some(k=>!['operation','fixture'].includes(k)))return'unknown_field';if(!allowed.includes(request.operation))return'unknown_operation';const f=request.fixture;if(!plain(f))return'missing_fixture';if(Object.keys(f).sort().join(',')!=='a,b,t')return'fixture_fields';if(!Array.isArray(f.a)||!Array.isArray(f.b)||f.a.length>9||f.b.length>9)return'polynomial_bounds';if(![...f.a,...f.b,f.t].every(rational))return'invalid_rational';return null;}
+function from(v){const p=new Map();v.forEach((s,k)=>{const q=R.q(s);if(q[0])p.set(k,q);});return p;}
+const degree=p=>p.size?Math.max(...p.keys()):-1;
+function to(p){return Array.from({length:degree(p)+1},(_,i)=>R.out(p.get(i)||R.q(0)));}
+function put(p,k,v){if(v[0])p.set(k,v);else p.delete(k);}
+function plus(a,b){const p=new Map(a);for(const[k,v]of b)put(p,k,R.add(p.get(k)||R.q(0),v));return p;}
+const minus=(a,b)=>plus(a,new Map([...b].map(([k,v])=>[k,R.neg(v)])));
+function times(a,b){const p=new Map();for(const[i,v]of a)for(const[j,w]of b)put(p,i+j,R.add(p.get(i+j)||R.q(0),R.mul(v,w)));return p;}
+const derivative=p=>new Map([...p].filter(([i])=>i>0).map(([i,v])=>[i-1,R.mul(v,R.q(i))]));
+function evaluate(p,x){let v=R.q(0);for(let i=degree(p);i>=0;i--)v=R.add(R.mul(v,x),p.get(i)||R.q(0));return v;}
+function choose(n,k){let r=1n;for(let j=1;j<=k;j++)r=r*BigInt(n-j+1)/BigInt(j);return R.pair(r);}
+function translate(p,t){const q=new Map();for(const[i,v]of p)for(let k=0;k<=i;k++)put(q,k,R.add(q.get(k)||R.q(0),R.mul(v,R.mul(choose(i,k),R.pow(t,i-k)))));return q;}
+function compose(a,b){let p=new Map();for(let i=degree(a);i>=0;i--){p=times(p,b);put(p,0,R.add(p.get(0)||R.q(0),a.get(i)||R.q(0)));}return p;}
+function value(op,f){const a=from(f.a),b=from(f.b),t=R.q(f.t);switch(op){
+case 'poly_normalize':return{coefficients:to(a),degree:degree(a)};
+case 'poly_add':return{coefficients:to(plus(a,b))};
+case 'poly_subtract':return{coefficients:to(minus(a,b))};
+case 'poly_multiply':return{coefficients:to(times(a,b))};
+case 'poly_derivative':return{coefficients:to(derivative(a))};
+case 'poly_antiderivative':{const p=new Map([...a].map(([k,v])=>[k+1,R.div(v,R.q(k+1))]));put(p,0,t);return{coefficients:to(p),constant:R.out(t)};}
+case 'poly_evaluate':return{at:R.out(t),value:R.out(evaluate(a,t))};
+case 'poly_translate':return{coefficients:to(translate(a,t)),translation:R.out(t)};
+case 'poly_dilate':{const p=new Map();for(const[k,v]of a)put(p,k,R.mul(v,R.pow(t,k)));return{coefficients:to(p),scale:R.out(t)};}
+case 'poly_compose':return{coefficients:to(compose(a,b)),order:'a_after_b'};
+default:throw Error('unsupported');}}
+function run(request){const error=check(request,operations);if(error)return reject(error);return{ok:true,value:value(request.operation,request.fixture),error:null,disposition:'completed',external_credit:false};}
+module.exports={operations,reject,check,rational,from,to,degree,put,plus,minus,times,derivative,evaluate,translate,compose,value,run};

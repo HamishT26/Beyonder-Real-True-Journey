@@ -1,0 +1,2 @@
+'use strict';
+const E=require('../engine.txt');const operations=["poly_evaluate","poly_translate"];function run(request){if(!request||!operations.includes(request.operation))return E.reject('unsupported_group_operation');return E.run(request);}if(require.main===module){let result;try{result=run(JSON.parse(require('fs').readFileSync(0,'utf8')));}catch{result=E.reject('invalid_json');}process.stdout.write(JSON.stringify(result)+'\n');}module.exports={operations,run};
