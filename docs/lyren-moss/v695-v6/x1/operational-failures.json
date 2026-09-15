@@ -1,0 +1,34 @@
+{
+  "all_original_success_credit_zero": true,
+  "count": 4,
+  "rows": [
+    {
+      "failure": "The first multi-command precommit inspection wrapper contained an unmatched JavaScript delimiter and failed before launching any shell command.",
+      "failure_id": "LM6956-PLAN-N001",
+      "original_success_credit": 0,
+      "recovery": "Split the inspection into separate bounded read-only calls, retain this wrapper failure, and do not replay the successful planning build.",
+      "recovery_state": "passed"
+    },
+    {
+      "failure": "The first non-sparse Git add rejected every new planning path outside the existing sparse definition; the empty staged-set comparison then emitted a nonterminating null-list error before printing an invalid success label.",
+      "failure_id": "LM6956-PLAN-N002",
+      "original_success_credit": 0,
+      "recovery": "Use Git add with the explicit sparse option, set PowerShell errors to terminating, require a nonempty staged set, and compare it exactly with the committed allowlist.",
+      "recovery_state": "passed"
+    },
+    {
+      "failure": "The first x1 session reached the first local-runner smoke after its in-memory contract checks, then Node rejected the generated runner because the Python f-string emitted a literal line break inside a JavaScript string.",
+      "failure_id": "LM6956-X1-N001",
+      "original_success_credit": 0,
+      "recovery": "Correct only the runner newline escaping, preserve this exact failed receipt, and resume the failed x1 session; no successful session is replayed.",
+      "recovery_state": "passed"
+    },
+    {
+      "failure": "Node --check rejected both TXT entrypoints with ERR_UNKNOWN_FILE_EXTENSION before it could inspect their syntax.",
+      "failure_id": "LM6956-X1-N002",
+      "original_success_credit": 0,
+      "recovery": "Use the same Node CommonJS main execution and Module._compile loader that the TXT interfaces declare, then inspect captured stderr from the exact runner.",
+      "recovery_state": "passed"
+    }
+  ]
+}

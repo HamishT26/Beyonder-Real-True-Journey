@@ -1,0 +1,29 @@
+{
+  "additional_diagnostic_failure": {
+    "failure": "Node --check rejected both TXT entrypoints with ERR_UNKNOWN_FILE_EXTENSION before it could inspect their syntax.",
+    "failure_id": "LM6956-X1-N002",
+    "original_success_credit": 0,
+    "recovery": "Use the same Node CommonJS main execution and Module._compile loader that the TXT interfaces declare, then inspect captured stderr from the exact runner.",
+    "recovery_state": "passed"
+  },
+  "attempt": 1,
+  "broken_runner_bytes": 910,
+  "broken_runner_sha256": "ec19712d3352187d420712af4fb2517e2bdca65508a132bd31e8fcee4c12a2cf",
+  "core_bytes": 7156,
+  "core_sha256": "3384ffc7af473234ada1610e489cad1edbc30744196761cfed1752ba38059f4c",
+  "dependency_correction": "runner newline escape corrected; TXT syntax inspected through CommonJS execution and Module._compile rather than node --check",
+  "error_class": "SyntaxError",
+  "error_excerpt": "Invalid or unexpected token at process.stdout.write",
+  "failure": "The first x1 session reached the first local-runner smoke after its in-memory contract checks, then Node rejected the generated runner because the Python f-string emitted a literal line break inside a JavaScript string.",
+  "failure_id": "LM6956-X1-N001",
+  "original_success_credit": 0,
+  "owner": "Lyren Moss",
+  "phase": "v695-v6-x1",
+  "planning_commit": "24e85a6dc44c4c4b37073621f2be5bcbff7914c4",
+  "recovery": "Correct only the runner newline escaping, preserve this exact failed receipt, and resume the failed x1 session; no successful session is replayed.",
+  "recovery_state": "passed",
+  "return_code": 1,
+  "schema": "ghc.family.failed-session-attempt.v1",
+  "session_success_credit": 0,
+  "status": "FAILED_ZERO_SESSION_SUCCESS_CREDIT"
+}
