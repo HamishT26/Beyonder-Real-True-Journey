@@ -1,0 +1,110 @@
+"""One exact-final owner-delta canonical; recorded passing domain components are not replayed."""
+import argparse,ast,copy,datetime,importlib.machinery,importlib.util,json,re,subprocess,warnings
+from collections import Counter
+from html.parser import HTMLParser
+from pathlib import Path
+BASE=Path(__file__).resolve().parents[1]
+def load(name,path):
+ l=importlib.machinery.SourceFileLoader(name,str(path));s=importlib.util.spec_from_loader(name,l);m=importlib.util.module_from_spec(s);l.exec_module(m);return m
+io=load('canonical_io',BASE/'plan/io.txt')
+PLAN='522e5cc7aab73614378a4a93d8183007cd66908f';X1='7a25ebecc66fa8040d08cba7be4e05b448eec7fe';X2='1d746b1533da1c4844bd407562b402d0aed164fc'
+class Structure(HTMLParser):
+ def __init__(self):super().__init__();self.lang=False;self.tags=[];self.images=0;self.labels=set();self.ids=set();self.named_controls=[]
+ def handle_starttag(self,tag,attrs):
+  a=dict(attrs);self.tags.append(tag)
+  if tag=='html':self.lang=a.get('lang')=='en'
+  if tag=='img':self.images+=1
+  if a.get('id'):self.ids.add(a['id'])
+  if tag=='label':self.labels.add(a.get('for'))
+  if tag in ['input','select','textarea']:self.named_controls.append(a.get('id'))
+def strict_pairs(pairs):
+ d={}
+ for k,v in pairs:
+  if k in d:raise ValueError('duplicate JSON key')
+  d[k]=v
+ return d
+def main():
+ ap=argparse.ArgumentParser();ap.add_argument('--expected-final',required=True);ap.add_argument('--receipt-dir',required=True);ap.add_argument('--skills-root',required=True);ap.add_argument('--runner-root',required=True);ap.add_argument('--method-runner',required=True);ap.add_argument('--meta-runner',required=True);a=ap.parse_args();dest=Path(a.receipt_dir);dest.mkdir(parents=True,exist_ok=True);marker=dest/'invocation.marker.json';receipt=dest/'exact-final-owner-scoped-canonical.json';latch=dest/'success.marker.json'
+ if marker.exists() or receipt.exists() or latch.exists():raise SystemExit('Existing invocation or receipt: canonical replay refused')
+ with marker.open('x',encoding='utf8',newline='\n') as f:json.dump({'owner':'Ilyan Reed','phase':'v695-v5','expected_final':a.expected_final,'invocations':1,'utc':datetime.datetime.now(datetime.timezone.utc).isoformat()},f,indent=2);f.write('\n')
+ report={'schema':'ghc.family.ilyan.owner-canonical.v1','owner':'Ilyan Reed','phase':'v695-v5','branch':io.BRANCH,'owner_git_parent':io.BASELINE,'source':io.SOURCE,'source_is_git_parent':False,'final_commit':a.expected_final,'canonical_invocations':1,'canonical_successes':0,'canonical_replays':0,'domain_test_replays':0,'source_test_replays':0,'source_canonical_replays':0,'complete_repository_suite':False,'independent_reproduction':False,'terminal_verdict':'NOT_READY_FOR_STAGE_20'};checks=[]
+ def check(name,condition,detail=None):
+  checks.append({'name':name,'passed':bool(condition),'detail':detail})
+  if not condition:raise ValueError(name)
+ try:
+  eq=io.equality();check('exact clean four-way equality',eq['head']==a.expected_final and eq['four_way_equal'] and eq['clean'] and eq['divergence']=='0\t0',eq);check('exact owner branch',io.git('branch','--show-current').decode().strip()==io.BRANCH)
+  history=io.git('rev-list','--reverse',io.BASELINE+'..HEAD').decode().splitlines();check('four current owner commits',history==[PLAN,X1,X2,a.expected_final],history)
+  parents={h:io.git('show','-s','--format=%P',h).decode().strip() for h in history};check('direct source-to-final parent chain',parents==dict(zip(history,[io.BASELINE,PLAN,X1,X2])),parents)
+  changes=io.git('diff','--name-status',io.BASELINE,a.expected_final).decode().splitlines();check('only additive current owner delta',bool(changes) and all(c.startswith('A\t'+io.PREFIX) for c in changes))
+  paths=io.git('ls-tree','-r','--name-only',a.expected_final,'--',io.PREFIX).decode().splitlines();tracked=io.git('ls-files').decode().splitlines();materialized=[p for p in io.ROOT.rglob('*') if p.is_file() and p.name!='.git'];check('tracked and materialized ceilings',len(tracked)<2000 and len(materialized)<2000,{'tracked':len(tracked),'materialized':len(materialized),'current_phase':len(paths)})
+  check('exact current phase inventory',{io.rel(p) for p in io.files()}==set(paths)=={c[2:] for c in changes})
+  blobs=dict(zip(paths,io.batch([a.expected_final+':'+p for p in paths])));check('materialized exact current Git bytes',all((io.ROOT/p).read_bytes()==raw for p,raw in blobs.items()))
+  manifest_details=[];coverage=set()
+  for phase,commit in zip(['plan','x1','x2','final'],history):
+   mp=io.PREFIX+phase+'/manifest.json';d=json.loads(blobs[mp]);entries=d['entries'];historical=io.batch([commit+':'+r['path'] for r in entries]);ok=all(io.sha(b)==r['sha256'] and len(b)==r['bytes'] for r,b in zip(entries,historical));check(phase+' raw manifest',ok,len(entries));allow=json.loads(blobs[io.PREFIX+phase+'/allowlist.json'])['paths'];delta=io.git('diff-tree','--no-commit-id','--name-status','-r',commit).decode().splitlines();check(phase+' exact staged allowlist',d['self_exclusions']==[mp] and set(allow)=={r['path'] for r in entries}|{mp} and all(x.startswith('A\t') for x in delta) and sorted(x[2:] for x in delta)==sorted(allow));coverage.update(r['path'] for r in entries);manifest_details.append({'phase':phase,'commit':commit,'entries':len(entries)})
+  exclusions={io.PREFIX+p+'/manifest.json' for p in ['plan','x1','x2','final']};check('complete phase manifest coverage',coverage==set(paths)-exclusions)
+  seal=io.read('final/content-seal.json');excluded={io.PREFIX+'final/content-seal.json',io.PREFIX+'final/manifest.json'};check('content seal with two exact exclusions',set(seal['self_exclusions'])==excluded and {r['path'] for r in seal['entries']}==set(paths)-excluded and all(io.sha(blobs[r['path']])==r['sha256'] and len(blobs[r['path']])==r['bytes'] for r in seal['entries']),len(seal['entries']))
+  with warnings.catch_warnings(record=True) as source_warnings:
+   warnings.simplefilter('always');review=io.inspect([io.ROOT/p for p in paths])
+  check('v10 formats and declared privacy/security checks',review['valid'],review)
+  json_paths=[p for p in paths if p.endswith('.json')]
+  for p in json_paths:json.loads(blobs[p].decode('utf8'),object_pairs_hook=strict_pairs,parse_constant=lambda s:(_ for _ in ()).throw(ValueError('nonfinite JSON')))
+  check('strict current JSON documents',True,len(json_paths))
+  allowed_warning=io.PREFIX+'final/retained/build-documents-escape-warning.txt';active_diagnostics=[]
+  for p in paths:
+   if p.endswith('.txt') and blobs[p].startswith(b'"""'):
+    with warnings.catch_warnings(record=True) as ws:
+     warnings.simplefilter('always');ast.parse(blobs[p].decode(),filename=p)
+    if ws and p!=allowed_warning:active_diagnostics.append({'path':p,'warnings':[str(w.message) for w in ws]})
+  diagnostic=io.read('final/source-diagnostic.json');check('active Python source and retained warning',not active_diagnostics and diagnostic['ast_equivalent'] and io.sha(blobs[allowed_warning])==diagnostic['original_driver_sha256'] and io.sha(blobs[io.PREFIX+'final/build-documents.txt'])==diagnostic['corrected_driver_sha256'],{'retained_warning_files':1,'active_diagnostics':active_diagnostics})
+  for p in [p for p in paths if p.endswith('.html')]:
+   doc=Structure();doc.feed(blobs[p].decode());check('HTML structure '+p,doc.lang and 'main' in doc.tags and 'title' in doc.tags and doc.images==0 and all(i in doc.labels for i in doc.named_controls))
+  browser=io.read('final/html-verification.json');check('recorded HTML caller checks',browser['display_transitions']==browser['passed']==10 and browser['screenshots']==0,browser['scope'])
+  tex=blobs[io.PREFIX+'x2/ranked-definitions.tex'].decode();check('unrendered TeX structure',tex.count('{')==tex.count('}') and '\\begin{document}' in tex and '\\end{document}' in tex)
+  baton=io.read('final/baton-manifest.json');combined='# Ilyan Reed v695-v5 complete baton for Lyren Moss v695-v6\n\n';ok=len(baton['modules'])==13
+  for r in baton['modules']:
+   raw=blobs[r['path']];ok=ok and io.sha(raw)==r['sha256'] and len(raw)==r['bytes'] and len(raw.decode().split())==r['words'];combined+=raw.decode()+'\n'
+  combined+='END OF ILYAN REED V695-V5 BATON.\n';raw=blobs[baton['path']];check('complete thirteen-module baton',ok and raw==combined.encode() and io.sha(raw)==baton['sha256'] and len(raw)==baton['bytes'] and len(combined.split())==baton['words'] and 10000<=baton['words']<=100000,{'words':baton['words'],'bytes':baton['bytes'],'sha256':baton['sha256']})
+  proposals=io.read('plan/new-proposals.json')['proposals'];by={p['id']:p for p in proposals};check('one hundred distinct frozen contracts',len(by)==len(proposals)==100 and io.read('plan/new-proposals.json')['production_evaluator_executed'] is False)
+  outcomes=Counter();test_count=0
+  for lane in ['x1','x2']:
+   r=io.read(lane+'/results.json')['records'];safe=io.read(lane+'/safe-results.json')['records'];bad=io.read(lane+'/candidate-subjects.json')['records'];refuse=io.read(lane+'/refusal-results.json')['records'];clean=io.read(lane+'/refinements.json')['records'];edges=io.read(lane+'/edge-results.json');test_count+=edges['tests']
+   check(lane+' recorded results and predicates',len(r)==50 and all(x['passed'] and io.canonical(x['observed'])==io.canonical(by[x['id']]['expected']) for x in r) and len(safe)==len(bad)==len(refuse)==len(clean)==100 and all(x['passed'] for x in safe+refuse+clean) and all(x['subject_state']=='failed' and x['original_success_credit']==0 for x in bad) and edges['tests']==edges['passed']==25 and all(x['passed'] for x in edges['records']))
+   outcomes.update(x['outcome'] for x in r)
+  check('four core outcome labels',outcomes=={'completed':80,'represented':10,'open_gap':5,'exact_gate':5},dict(outcomes))
+  selected=io.read('plan/inherited-selections.json')['rows'];refinements=[r for lane in ['x1','x2'] for r in io.read(lane+'/refinements.json')['records'] if r['id'].endswith('-source-view-fixity')];check('inherited record fixity and zero credit',len(selected)==len(refinements)==100 and all(io.sha(io.canonical(s['record']))==s['record_sha256']==r['source_sha256'] and io.canonical(s['record'])==io.canonical(r['view']) and s['execution_credit']==s['novelty_credit']==0 for s,r in zip(selected,refinements)))
+  deck=io.read('x2/deck/deck-index.json');cards=[json.loads(blobs[io.PREFIX+'x2/deck/cards/'+cid+'.json']) for cid in deck['order']];cardmap={c['card_id']:c for c in cards};check('108 immediate-parent cards',len(cards)==len(cardmap)==108 and Counter(c['tier'] for c in cards)=={1:1,2:3,3:4,4:100} and all((c['tier']==1 and not c['parent_ids']) or (len(c['parent_ids'])==1 and cardmap[c['parent_ids'][0]]['tier']==c['tier']-1) for c in cards))
+  dm=io.read('x2/deck/card-manifest.json');dp={p for p in paths if p.startswith(io.PREFIX+'x2/deck/')};check('deck exact manifest',set(dm['self_exclusions'])=={io.PREFIX+'x2/deck/card-manifest.json'} and {r['path'] for r in dm['entries']}==dp-set(dm['self_exclusions']) and all(io.sha(blobs[r['path']])==r['sha256'] and len(blobs[r['path']])==r['bytes'] for r in dm['entries']))
+  mf=load('current_method_flow',a.method_runner);ledger=io.read('final/method-flow.json');check('current method schema',mf.validate_ledger(ledger)['valid']);previous=None
+  for name in ['x1/method-flow.json','x2/method-flow.json','x2/effective-method-flow.json','final/method-flow.json']:
+   current=io.read(name)
+   if previous is not None:check('retained witness prefix '+name,current['witnesses'][:len(previous['witnesses'])]==previous['witnesses'])
+   previous=current
+  neg=io.read('final/negative-index.json');check('negative index and accounting',len(neg['owner_ids'])==len(set(neg['owner_ids']))==231 and set(neg['owner_ids'])=={n for m in ledger['methods'] for n in m['retained_negative_ids']} and ledger['counts']['witnesses']==1063 and ledger['counts']['witness_results']=={'pass':832,'fail':231})
+  completion=io.read('final/completion-ledger.json');source=completion['selected_source_lineage'];combined_counts=completion['selected_source_plus_owner'];check('explicit source versus owner count arithmetic',combined_counts=={'methods':source['methods']+7,'witnesses':source['witnesses']+1063,'passing':source['passing']+832,'failed':source['failed']+231,'gaps':source['gaps']+5,'gates':source['gates']+5} and completion['source_plus_owner_activation_negatives']==218+231)
+  guards=io.read('final/guard-results.json');check('recorded structural preflight fixtures',len(guards['records'])==6 and all(r['passed'] and r['observed']==r['expected'] for r in guards['records']) and all(r['original_subject_success_credit']==0 for r in guards['records'][1:]) and guards['live_canonical_invoked'] is False)
+  meta=load('current_meta',a.meta_runner);catalogue=io.read('x2/meta-tool-catalogue.json');check('forty-card current catalogue',meta.validate(catalogue)['valid'] and len(catalogue['cards'])==40)
+  promotion=io.read('x2/global-promotion.json');skills=Path(a.skills_root);runner=Path(a.runner_root);failures=[]
+  for binding in promotion['parity_bindings']:
+   kind=binding['kind']
+   if kind=='global_skill':path=skills/binding['name']/binding['path']
+   elif kind=='global_runner_bank':path=runner/binding['path']
+   elif kind=='meta_catalogue':path=skills/'ghc-family-meta-tool-box'/binding['path']
+   elif kind=='family_index_metadata':path=skills/'ghc-family-index'/binding['path']
+   else:raise ValueError('unknown parity kind')
+   if io.sha(path.read_bytes())!=binding['sha256']:failures.append({'kind':kind,'path':binding['path']})
+  check('69 installed exact parity bindings',len(promotion['parity_bindings'])==69 and not failures and promotion['existing_files_overwritten']==0,{'bindings':69,'failures':failures})
+  check('recorded local and curated validation',all(r['passed'] for lane in ['x1','x2'] for name in ['skill-validation.json','runner-smokes.json'] for r in io.read(lane+'/'+name)['records']) and io.read('x2/promotion-witnesses.json')['all_passed'] and io.read('x2/promotion-witnesses.json')['count']==110)
+  check('packet counts and reserved actions',len(io.read('plan/exact-packets.json')['packets'])==50 and len(io.read('plan/blocked-packets.json')['packets'])==30 and all(p['operation_executed'] is False for name in ['exact','blocked'] for p in io.read('plan/'+name+'-packets.json')['packets']))
+  check('recent overview and source intake binding',io.read('x1/recent-overview-review.json')['count']==10 and io.read('plan/source-intake.json')['source_manifest_bindings']==542 and io.read('plan/source-intake.json')['baton']['complete_through_eof'])
+  source_receipt=io.read('plan/source-canonical.json');payload=copy.deepcopy(source_receipt);digest=payload.pop('canonical_payload_sha256');check('source receipt payload retained',io.sha(io.canonical(payload))==digest=='e8e4b63de9a17c4e80d5d4b62a5589a50b3531be84d56ab7dd57e186949983fc')
+  authority=io.read('plan/current-authority.json');check('prepared exact next route and boundaries',authority['next_owner']=='Lyren Moss' and authority['next_phase']=='v695-v6' and authority['route_state']=='PREPARED_NOT_SENT' and completion['canonical_state']=='NOT_INVOKED_PRE_FINAL' and completion['terminal_verdict']=='NOT_READY_FOR_STAGE_20' and completion['paid_external_spend_usd']==0)
+  end=io.equality();check('post-validation clean equality',end['head']==a.expected_final and end['clean'] and end['four_way_equal'] and end['divergence']=='0\t0')
+  report.update(status='VALID_EXACT_FINAL_OWNER_SCOPED_CANONICAL',canonical_successes=1,history=history,phase_files=len(paths),tracked_files=len(tracked),materialized_files=len(materialized),json_documents=len(json_paths),manifest_entries=sum(r['entries'] for r in manifest_details),manifests=manifest_details,content_seal_entries=len(seal['entries']),baton_words=baton['words'],baton_bytes=baton['bytes'],baton_sha256=baton['sha256'],recorded_domain_tests=test_count,recorded_structural_predicates=6,recorded_html_display_checks=10,domain_tests_executed_by_canonical=0,owner_negatives=231,source_plus_owner_activation_negatives=449,selected_source_plus_owner=combined_counts,core_outcomes=dict(outcomes),route_state='PREPARED_NOT_SENT',clean=True,four_way_equal=True,divergence=[0,0])
+ except Exception as error:report.update(status='INVALID_EXACT_FINAL_OWNER_SCOPED_CANONICAL',error_type=type(error).__name__,failed_check=checks[-1]['name'] if checks else 'initial dependency',original_success_credit=0)
+ report.update(checks=checks,passed=sum(c['passed'] for c in checks),total=len(checks),finished_utc=datetime.datetime.now(datetime.timezone.utc).isoformat());report['canonical_payload_sha256']=io.sha(io.canonical(report))
+ with receipt.open('x',encoding='utf8',newline='\n') as f:json.dump(report,f,ensure_ascii=False,sort_keys=True,indent=2);f.write('\n')
+ if report['canonical_successes']:
+  with latch.open('x',encoding='utf8',newline='\n') as f:json.dump({'final_commit':a.expected_final,'receipt_sha256':io.sha(receipt.read_bytes()),'invocations':1,'successes':1,'replays':0},f,indent=2);f.write('\n')
+ print(json.dumps({'status':report['status'],'passed':report['passed'],'total':report['total'],'final_commit':a.expected_final,'canonical_invocations':1,'canonical_successes':report['canonical_successes'],'canonical_replays':0,'receipt_sha256':io.sha(receipt.read_bytes())}));raise SystemExit(0 if report['canonical_successes'] else 1)
+if __name__=='__main__':main()

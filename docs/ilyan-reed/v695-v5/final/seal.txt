@@ -1,0 +1,20 @@
+"""Prepare exact additive final allowlists and two-exclusion raw content seal."""
+import importlib.machinery,importlib.util,json,subprocess,warnings
+from pathlib import Path
+BASE=Path(__file__).resolve().parents[1]
+l=importlib.machinery.SourceFileLoader('final_seal_io',str(BASE/'plan/io.txt'));s=importlib.util.spec_from_loader('final_seal_io',l);io=importlib.util.module_from_spec(s);l.exec_module(io)
+def main():
+ assert io.git('rev-parse','HEAD').decode().strip()=='1d746b1533da1c4844bd407562b402d0aed164fc';tracked=set(io.git('ls-files').decode().splitlines());assert not io.git('diff','--name-only').strip()
+ new=[p for p in io.files() if io.rel(p) not in tracked]
+ with warnings.catch_warnings(record=True) as observed:
+  warnings.simplefilter('always');review=io.inspect(new)
+ assert review['valid'],review
+ io.write('final/preflight.json',{**review,'recorded_domain_tests':50,'recorded_domain_test_replays':0,'recorded_guard_predicates':6,'recorded_html_display_checks':10,'declared_retained_source_warning':'final/retained/build-documents-escape-warning.txt','retained_warning_messages':[str(w.message) for w in observed],'source_warning_correction_ast_equivalent':io.read('final/source-diagnostic.json')['ast_equivalent'],'canonical_invoked':False})
+ prefix=io.PREFIX+'final/';paths=sorted([io.rel(p) for p in io.files() if io.rel(p) not in tracked]+[prefix+'allowlist.json',prefix+'content-seal.json',prefix+'manifest.json']);io.write('final/allowlist.json',{'paths':paths,'change_type':'A','prior_files_immutable':True})
+ entries=[{'path':io.rel(p),'bytes':len(p.read_bytes()),'sha256':io.sha(p.read_bytes())} for p in io.files()];io.write('final/content-seal.json',{'schema':'ghc.family.raw-owner-content-seal.v1','hash_domain':'exact Git blob bytes','entries':entries,'self_exclusions':[prefix+'content-seal.json',prefix+'manifest.json']})
+ final_entries=[{'path':io.rel(p),'bytes':len(p.read_bytes()),'sha256':io.sha(p.read_bytes())} for p in io.files() if io.rel(p) not in tracked];io.write('final/manifest.json',{'schema':'ghc.family.raw-git-manifest.v1','hash_domain':'exact Git blob bytes','entries':final_entries,'self_exclusions':[prefix+'manifest.json']})
+ assert len(tracked)+len(paths)<2000
+ subprocess.run(['git','-c','core.autocrlf=false','-C',str(io.ROOT),'add','--sparse','--pathspec-from-file=-','--pathspec-file-nul'],input=b'\0'.join(p.encode() for p in paths)+b'\0',check=True)
+ changes=io.git('diff','--cached','--name-status').decode().splitlines();assert all(c.startswith('A\t') for c in changes) and sorted(c[2:] for c in changes)==paths;assert all(io.sha(b)==r['sha256'] and len(b)==r['bytes'] for b,r in zip(io.batch([':'+r['path'] for r in final_entries]),final_entries))
+ print(json.dumps({'final_additions':len(paths),'final_manifest_entries':len(final_entries),'content_seal_entries':len(entries),'phase_files':len(io.files()),'owner_branch_files':len(tracked)+len(paths),'canonical_invoked':False}))
+if __name__=='__main__':main()

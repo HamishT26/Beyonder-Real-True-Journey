@@ -1,0 +1,14 @@
+"""Bounded structural admission and success-latch fixture; no live canonical invocation."""
+import json
+def validate(record):
+ required={'synthetic','owner','phase','head','expected','clean','paths','file_count','prior_success'}
+ if type(record) is not dict or set(record)!=required:return {'valid':False,'issues':['fields']}
+ issues=[]
+ if record['synthetic'] is not True:issues.append('fixture_scope')
+ if record['owner']!='Ilyan Reed' or record['phase']!='v695-v5':issues.append('owner_phase')
+ if record['head']!=record['expected']:issues.append('head')
+ if record['clean'] is not True:issues.append('clean')
+ if type(record['paths']) is not list or not record['paths'] or any(type(p) is not str or not p.startswith('docs/ilyan-reed/v695-v5/') or '..' in p.split('/') for p in record['paths']):issues.append('scope')
+ if type(record['file_count']) is not int or not 0<record['file_count']<2000:issues.append('ceiling')
+ if record['prior_success'] is not False:issues.append('success_latch')
+ return {'valid':not issues,'issues':issues}

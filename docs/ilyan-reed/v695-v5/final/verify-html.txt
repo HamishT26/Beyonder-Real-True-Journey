@@ -1,0 +1,31 @@
+// Node source: exercise the report's ten fixture/mode displays without screenshots.
+const fs=require('node:fs');
+const path=require('node:path');
+const vm=require('node:vm');
+const assert=require('node:assert/strict');
+const root=__dirname;
+const markup=fs.readFileSync(path.join(root,'overview.html'),'utf8');
+const source=fs.readFileSync(path.join(root,'overview-script.txt'),'utf8');
+const embedded=markup.match(/<script id="data" type="application\/json">([\s\S]*?)<\/script>/);
+assert(embedded);
+const data=JSON.parse(embedded[1]);
+function element(tag){return {tag,textContent:'',value:'',children:[],handlers:{},append(...items){this.children.push(...items);},replaceChildren(...items){this.children=[...items];},addEventListener(name,fn){this.handlers[name]=fn;}};}
+const nodes=Object.fromEntries(['data','fixture','mode','lesson','query','conclusion','worlds','status'].map(id=>[id,element('div')]));
+nodes.data.textContent=embedded[1];nodes.fixture.value='0';nodes.mode.value='supplied';
+const document={getElementById(id){assert(nodes[id]);return nodes[id];},createElement:element};
+const context=vm.createContext({document});new vm.Script(source,{filename:'overview-script.txt'}).runInContext(context,{timeout:1000});
+const results=[];
+for(let i=0;i<data.length;i++)for(const mode of ['supplied','z']){
+ nodes.fixture.value=String(i);nodes.mode.value=mode;nodes.fixture.handlers.change();
+ const row=data[i];const ranks=mode==='z'?row.results.z_world_ranks.ranks:row.model.ranks;
+ const expected=mode==='z'?row.results.z_query:row.results.ranked_conditional;
+ assert.deepEqual(JSON.parse(nodes.query.textContent),row.model.query);
+ assert.deepEqual(JSON.parse(nodes.conclusion.textContent),expected);
+ assert.equal(nodes.worlds.children.length,ranks?ranks.length:0);
+ if(ranks)assert.deepEqual(nodes.worlds.children.map(tr=>Number(tr.children[2].textContent)),ranks);
+ else assert.match(nodes.status.textContent,/inconsistent/);
+ results.push({fixture:row.model.id,mode,rows:nodes.worlds.children.length,passed:true});
+}
+const receipt={syntax_valid:true,display_transitions:results.length,passed:results.length,records:results,scope:'Node VM with a minimal DOM test double; no real browser or assistive-technology evaluation',screenshots:0,independent_reproduction:false,extra_proposal_credit:0};
+fs.writeFileSync(path.join(root,'html-verification.json'),JSON.stringify(receipt,null,2)+'\n',{encoding:'utf8',flag:'wx'});
+process.stdout.write(JSON.stringify({display_transitions:results.length,passed:results.length,screenshots:0})+'\n');

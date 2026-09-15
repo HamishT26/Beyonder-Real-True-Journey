@@ -1,0 +1,15 @@
+# 11 — Pillars And Practices
+
+The four-tier deck has exactly 108 cards: one relational owner anchor, three pillars, four study practices and one hundred proposal cards. A tier-two card has the owner anchor as its only parent. A tier-three practice has one pillar parent. A tier-four proposal has one practice parent. There are no tier skips, missing parents or cycles. The card manifest binds all other deck files and self-excludes only itself. Source provenance, expected outcome and observed result remain separate fields.
+
+Freed ID and CBR Heart are primary because a default rule can be applied correctly while its consequential use remains unjustified. A proof about ranks does not establish consent, credential status, a right, an appeal outcome or legitimate decision authority. The exact-gate operation names missing targets and reviews instead of generating a fictional approval. Any real credential use requires standards-conformant keys and proofs, issuance, status, expiry, revocation, interoperability, recovery, security/privacy review and governed trust decisions.
+
+GMUT Mind receives a disciplined logical example: distinguish a formal consequence from a statement about reality. Neither an ordinal integer nor a preferred model supplies an empirical likelihood. The historical field expression and Omega notation remain research context requiring typed fields, units, action, conservation, stability, observables, comparator data and falsifiers before physical interpretation. No equation in this phase adds a measured physical sector or establishes a Theory of Everything.
+
+THOS Body receives inspectable typed interfaces, caps, deterministic finite outputs and retained error envelopes. Those are useful local capabilities, but governed real workloads, operators, safety monitoring, suitable statistics and independent review are still missing. The library is not a deployed operating system, autonomous population or proof of AGI/ASI. Source text describing a service, a model or an earlier demonstration never becomes execution authority merely by being retrieved.
+
+The HTML overview offers a bounded fixture selector and a table of supplied versus default-derived world ranks. It uses text, controls, headings and table structure without images or screenshots. The source and embedded script are checked structurally and syntactically. Manual keyboard, screen-reader, cognitive, browser-diverse, Maori-language and affected-user evaluation remain separate. Neither a markup pass nor a well-labeled table establishes complete accessibility.
+
+The stable-prefix deck may help retrieval, but no cache-speed or retention benchmark was performed. The volatile index explicitly denies implicit completion. Names, roles, hopes and family language remain corrigible context. They do not establish personal continuity across runs, permanent memory, consciousness, personhood, employment or authority. The operational wellbeing record concerns scope, resource bounds and recoverable work, not a measured subjective state.
+
+END MODULE 11.
