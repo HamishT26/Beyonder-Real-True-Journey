@@ -1,0 +1,64 @@
+"""Planning reference: explicit sets of worlds and direct truth recursion, no production imports."""
+import itertools
+OPS=['rank_model_shape','formula_truth','classical_entailment','minimal_worlds','ranked_conditional','countermodel_partition','rank_layers','rank_normalization','conditional_strengthening','formula_equivalence','default_verification','tolerated_defaults','z_partition','z_world_ranks','z_query','rational_monotony','interpretation_boundary','adequacy_boundary','empirical_gap','authority_gate']
+def sat(f,world,atoms):
+ if type(f) is bool:return f
+ if isinstance(f,str):return bool(world & (1<<atoms.index(f)))
+ op=f[0]
+ if op=='not':return not sat(f[1],world,atoms)
+ if op=='and':return sat(f[1],world,atoms) and sat(f[2],world,atoms)
+ if op=='or':return sat(f[1],world,atoms) or sat(f[2],world,atoms)
+ raise ValueError('formula')
+def evaluate(request):
+ m=request['model'];op=request['operation'];a,b,c=[m['query'][k] for k in ['a','b','c']];atoms=m['atoms'];worlds=list(range(2**len(atoms)));ranks=m['ranks'];defaults=m['defaults']
+ def truth(f):return [w for w in worlds if sat(f,w,atoms)]
+ def minimum(f,rr=ranks):
+  ws=truth(f)
+  if not ws:return []
+  low=min(rr[w] for w in ws);return [w for w in ws if rr[w]==low]
+ def cond(x,y,rr=ranks):
+  mins=minimum(x,rr);return {'holds':all(sat(y,w,atoms) for w in mins),'vacuous':not mins,'minimal_worlds':mins,'counterexamples':[w for w in mins if not sat(y,w,atoms)]}
+ def verified(d):return truth(['and',d['if'],d['then']])
+ def violated(d):return truth(['and',d['if'],['not',d['then']]])
+ def tolerated(ds):return [d['id'] for d in ds if any(w in verified(d) and all(w not in violated(e) for e in ds) for w in worlds)]
+ def z():
+  remaining=defaults[:];layers=[]
+  while remaining:
+   chosen=tolerated(remaining)
+   if not chosen:return {'consistent':False,'layers':layers,'unranked':[d['id'] for d in remaining]}
+   layers.append(chosen);remaining=[d for d in remaining if d['id'] not in chosen]
+  return {'consistent':True,'layers':layers,'unranked':[]}
+ def zr():
+  result=z()
+  if not result['consistent']:return {'available':False,'reason':'z_inconsistent','ranks':None}
+  table={d:i for i,row in enumerate(result['layers']) for d in row};rr=[max([table[d['id']]+1 for d in defaults if w in violated(d)] or [0]) for w in worlds]
+  return {'available':True,'ranks':rr,'default_ranks':table}
+ if op=='rank_model_shape':v={'atoms':atoms,'world_count':len(worlds),'rank_count':len(set(ranks)),'defaults':len(defaults)}
+ elif op=='formula_truth':v={'a':truth(a),'b':truth(b),'c':truth(c)}
+ elif op=='classical_entailment':v={'holds':all(sat(b,w,atoms) for w in truth(a)),'vacuous':not truth(a),'counterexamples':[w for w in truth(a) if not sat(b,w,atoms)]}
+ elif op=='minimal_worlds':v={'worlds':minimum(a),'rank':min((ranks[w] for w in truth(a)),default=None)}
+ elif op=='ranked_conditional':v=cond(a,b)
+ elif op=='countermodel_partition':v={'supporting':[w for w in minimum(a) if sat(b,w,atoms)],'minimal_counterexamples':[w for w in minimum(a) if not sat(b,w,atoms)],'nonminimal_counterexamples':[w for w in truth(a) if w not in minimum(a) and not sat(b,w,atoms)]}
+ elif op=='rank_layers':v={'layers':[{'rank':r,'worlds':[w for w in worlds if ranks[w]==r]} for r in sorted(set(ranks))]}
+ elif op=='rank_normalization':v={'ranks':[sorted(set(ranks)).index(r) for r in ranks],'order_preserved':all((ranks[u]<ranks[w])==(sorted(set(ranks)).index(ranks[u])<sorted(set(ranks)).index(ranks[w])) for u in worlds for w in worlds)}
+ elif op=='conditional_strengthening':
+  before=cond(a,b);after=cond(['and',a,c],b);v={'before':before,'after':after,'monotonicity_counterexample':before['holds'] and not after['holds']}
+ elif op=='formula_equivalence':v={'equivalent':truth(a)==truth(b),'differing_worlds':[w for w in worlds if sat(a,w,atoms)!=sat(b,w,atoms)]}
+ elif op=='default_verification':v={'defaults':[{'id':d['id'],'verified':verified(d),'violated':violated(d)} for d in defaults]}
+ elif op=='tolerated_defaults':v={'tolerated':tolerated(defaults)}
+ elif op=='z_partition':v=z()
+ elif op=='z_world_ranks':v=zr()
+ elif op=='z_query':
+  rr=zr()
+  if not rr['available']:v={'available':False,'reason':'z_inconsistent','holds':None}
+  elif not truth(a):v={'available':False,'reason':'impossible_antecedent','holds':None}
+  else:v={'available':True,**cond(a,b,rr['ranks'])}
+ elif op=='rational_monotony':
+  first=cond(a,b);second=cond(a,['not',c]);last=cond(['and',a,c],b);prem=first['holds'] and not second['holds'];v={'premises_hold':prem,'conclusion_holds':last['holds'],'valid_implication':not prem or last['holds'],'minimal_strengthened_worlds':last['minimal_worlds']}
+ elif op=='interpretation_boundary':v={'model':m['id'],'semantics':'declared_finite_ranked_worlds','probability':None,'human_preference_measured':False}
+ elif op=='adequacy_boundary':v={'model':m['id'],'calibration':None,'observation_rows':0,'adequacy':'unmeasured'}
+ elif op=='empirical_gap':v={'model':m['id'],'missing':['preregistered_observable','governed_observations','matched_comparator','uncertainty_model','independent_reproduction']}
+ elif op=='authority_gate':v={'model':m['id'],'authorized':False,'missing':['specific_target','affected_party_authority','competent_review','credential_lifecycle','applicable_legal_and_cultural_authority']}
+ else:raise ValueError(op)
+ outcome='completed' if OPS.index(op)<16 else 'represented' if OPS.index(op)<18 else 'open_gap' if op=='empirical_gap' else 'exact_gate'
+ return {'ok':True,'operation':op,'outcome':outcome,'value':v}

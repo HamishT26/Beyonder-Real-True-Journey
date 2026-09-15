@@ -1,0 +1,223 @@
+{
+  "bit_order": "atom index zero is the least significant world bit",
+  "caps": {
+    "atoms": 4,
+    "defaults": 12,
+    "formula_depth": 12,
+    "formula_nodes": 64,
+    "rank": 1000,
+    "worlds": 16
+  },
+  "default_ranks_and_declared_ranks_distinct": true,
+  "models": [
+    {
+      "atoms": [
+        "a",
+        "b"
+      ],
+      "defaults": [
+        {
+          "id": "O1",
+          "if": "a",
+          "then": "b"
+        }
+      ],
+      "id": "ordinary_default",
+      "lesson": "A low-ranked default conclusion can differ from classical entailment.",
+      "query": {
+        "a": "a",
+        "b": "b",
+        "c": [
+          "not",
+          "b"
+        ]
+      },
+      "ranks": [
+        0,
+        1,
+        0,
+        0
+      ]
+    },
+    {
+      "atoms": [
+        "a",
+        "b",
+        "c"
+      ],
+      "defaults": [
+        {
+          "id": "E1",
+          "if": "b",
+          "then": "c"
+        },
+        {
+          "id": "E2",
+          "if": "a",
+          "then": "b"
+        },
+        {
+          "id": "E3",
+          "if": "a",
+          "then": [
+            "not",
+            "c"
+          ]
+        }
+      ],
+      "id": "specific_exception",
+      "lesson": "Strengthening the antecedent with an exceptional subclass can retract a conclusion.",
+      "query": {
+        "a": "b",
+        "b": "c",
+        "c": "a"
+      },
+      "ranks": [
+        0,
+        2,
+        1,
+        1,
+        0,
+        2,
+        0,
+        2
+      ]
+    },
+    {
+      "atoms": [
+        "a",
+        "b",
+        "c",
+        "d"
+      ],
+      "defaults": [
+        {
+          "id": "H1",
+          "if": "b",
+          "then": "c"
+        },
+        {
+          "id": "H2",
+          "if": "b",
+          "then": "d"
+        },
+        {
+          "id": "H3",
+          "if": "a",
+          "then": "b"
+        },
+        {
+          "id": "H4",
+          "if": "a",
+          "then": [
+            "not",
+            "c"
+          ]
+        }
+      ],
+      "id": "inheritance_block",
+      "lesson": "An exceptional subclass need not inherit an otherwise unrelated default property under System Z.",
+      "query": {
+        "a": "a",
+        "b": "d",
+        "c": "b"
+      },
+      "ranks": [
+        0,
+        2,
+        1,
+        1,
+        0,
+        2,
+        1,
+        2,
+        0,
+        2,
+        1,
+        1,
+        0,
+        2,
+        0,
+        2
+      ]
+    },
+    {
+      "atoms": [
+        "a",
+        "b",
+        "c"
+      ],
+      "defaults": [
+        {
+          "id": "C1",
+          "if": "a",
+          "then": "c"
+        },
+        {
+          "id": "C2",
+          "if": "b",
+          "then": [
+            "not",
+            "c"
+          ]
+        }
+      ],
+      "id": "conflicting_defaults",
+      "lesson": "Competing defaults leave tied best worlds with opposing conclusions.",
+      "query": {
+        "a": [
+          "and",
+          "a",
+          "b"
+        ],
+        "b": "c",
+        "c": "b"
+      },
+      "ranks": [
+        0,
+        1,
+        0,
+        1,
+        0,
+        0,
+        1,
+        1
+      ]
+    },
+    {
+      "atoms": [
+        "a",
+        "b"
+      ],
+      "defaults": [
+        {
+          "id": "I1",
+          "if": "a",
+          "then": "b"
+        },
+        {
+          "id": "I2",
+          "if": "a",
+          "then": [
+            "not",
+            "b"
+          ]
+        }
+      ],
+      "id": "inconsistent_defaults",
+      "lesson": "Material satisfiability at not-a does not establish System Z consistency; declared flat ranks are a separate model.",
+      "query": {
+        "a": "a",
+        "b": "b",
+        "c": true
+      },
+      "ranks": [
+        0,
+        0,
+        0,
+        0
+      ]
+    }
+  ],
+  "wholly_synthetic": true
+}
