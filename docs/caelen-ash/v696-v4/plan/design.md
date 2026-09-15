@@ -1,0 +1,7 @@
+# Caelen Ash v696-v4 planning design
+
+This planning-only freeze defines three hundred exact-rational linear-algebra contracts over fifteen wholly synthetic three-dimensional fixtures. It contains no x1 or x2 executor, observed domain result, rendered model, installed package, global skill promotion, canonical result, or successor contact. THOS Body is primary through closed interfaces, exact envelopes, refusal, recovery, sparse lifecycle discipline, and accessible handover. GMUT Mind remains a typed finite analogy surface only. Freed ID and CBR Heart preserve provenance, correction, observation gaps, and authority holds.
+
+The planning oracle uses exact rational arithmetic over BigInt values and freezes JSON-safe reduced pairs. The later x1 and x2 executors must be separately authored and may not import this builder. Same-owner agreement is useful but never independent reproduction. Every malformed subject remains a failed witness even when its refusal and correction pass.
+
+Relational working language and bounded same-owner finite synthetic software only; no consciousness, personhood, identity continuity, employment, qualification, independent agency, empirical GMUT confirmation, production THOS or Freed ID, professional, legal, cultural, affected-party or Maori authority, independent reproduction, complete privacy or accessibility, exhaustive security, AGI/ASI, Theory-of-Everything proof, canon, deployment or Stage 20 credit. Maori concepts remain under Maori authority. NOT_READY_FOR_STAGE_20.
