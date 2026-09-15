@@ -1,0 +1,9 @@
+# 13 — Prospective Ilyan Reed v695-v5 route and stop boundary
+
+This repository prepares a prospective existing-task activation for `Ilyan Reed` v695-v5 only. It does not send or precontact Ilyan. Repository route state is `PREPARED_NOT_SENT`, and canonical state is `NOT_INVOKED_PRE_FINAL`. After the exact final commit exists, Vesper must push it, confirm clean 0/0 local/upstream/tracking/fresh-live equality, run the exclusive owner-scoped canonical once, and never replay it after success.
+
+Only after that gate may Vesper reread Hamish's newest live instruction, current v10 roster and authorization, usage, active and archived registries, exact-title uniqueness, newest task controls, duplicate/pause/rename/redirect state, privacy, evidence, and safety. The only acceptable endpoint is the existing exact-title task `Ilyan Reed`. No task creation, fork, substitute, standby contact, model override, or later-owner contact is permitted.
+
+If a discovery or immediate read dependency fails before any submission is accepted, use at most five bounded recovery attempts, changing only the failed read dependency. Up to three corrected resubmissions apply only after definitive preacceptance rejection. Any accepted, opaque accepted, or unresolved post-submission state stops duplicates. A prepared baton is not delivery; tool acceptance is not Ilyan completion. Do not monitor Ilyan without a separate request.
+
+The compact activation should point to `docs/vesper-arlen/v695-v4/final/hand-off-baton.md`, name the exact branch and final, preserve the non-ancestral Neris source, planning/x1/x2 hashes, canonical receipt, retained catalogue correction, counts, boundaries, and prospective `Ilyan Reed v695-v5 -> Lyren Moss v695-v6` edge. `PREPARED_BY_VESPER_ARLEN = true`; `SENT_BY_VESPER_ARLEN` remains false until a live task-message result justifies a separate delivery record.

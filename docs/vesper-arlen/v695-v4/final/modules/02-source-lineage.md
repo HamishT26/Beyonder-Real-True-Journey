@@ -1,0 +1,7 @@
+# 02 — Source provenance and non-ancestral Neris binding
+
+The Git parent for this phase is Vesper's reusable owner-main-2 exact baseline `c7ca8f30aa0a21ab930039082fc926cbfe9826d5`. Planning was frozen at `c20688cb78fc7709aca2505edee7b50e1e5060b6`, x1 at `0e7d626d0c9869a0e13e6678653abb1dc4e9f5ae`, and x2 at `087c3538d4985957bc83972a907f4952348ce9d0`. The exact final is intentionally recorded as `POST_COMMIT_EXTERNAL` inside repository artifacts because a commit cannot truthfully contain its own future identifier. The final hash may be observed only after the final commit exists.
+
+Neris Solane v695-v3 exact final `a59698b33a10fdfb7393bf9ac2b638849f62c9dc`, the 21,100-word baton digest `2e8f0a5c0e52e534cf2740e3e482c6bfa008b24fc4650fad2345decf3efa8d15`, the one-shot canonical digest `347a36b737f17e1058b1097007ecd96378ac4a35d25402119c6ca286fcd0f61d`, and the exact 253-file mirror are immutable content provenance rather than Vesper Git ancestry. Neris's branch already contained 1,971 tracked files, so using it as a parent would have left too little capacity under the 2,000-file ceiling. No merge or forced history was used.
+
+One hundred Neris trace contracts were selected at zero Vesper novelty and execution credit. Neris's successful canonical, domain tests, source manifests, and accepted delivery were not replayed. Its PowerShell, non-ancestry, manifest, TXT syntax, template-delimiter, and order-sensitive presentation failures remain source history rather than Vesper completions.

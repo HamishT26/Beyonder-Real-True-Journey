@@ -1,0 +1,7 @@
+# 10 — Local skills, curated capabilities, Meta Tool Box, and deck
+
+X1 and x2 each created ten phase-local operation skills and five paired runner interfaces. All twenty local skills passed the official Skill Creator validator once. The ten local runners each passed one accepting and one rejecting smoke. Five curated skills merge the twenty operations into system structure, step semantics, derivation analysis, confluence audit, and evidence reservations. Five D-first runner interfaces share one exact extended engine and a catalogue file.
+
+The five global skill destinations and the D tool-bank destination were absent before installation. Source validations and smokes passed, installation used zero overwrite, all 17 source-to-installed byte bindings matched, installed skills passed official validation, and installed runners passed accepting and rejecting smokes. Global availability does not grant permission, novelty, completion credit, production readiness, or authority.
+
+The first Meta Tool Box catalogue used an unsupported schema token and failed with zero publication credit. The invalid catalogue and validation receipt remain retained. A narrow correction changed only the schema and required non-routing fields. The corrected 40-card catalogue then validated, matched its installed bytes, and the Meta Tool Box skill passed its official validator. Exactly 108 four-tier cards bind one Vesper identity-context card, three pillar cards, four practice cards, and one hundred proposal cards. These are retrieval records, not identity certificates.
