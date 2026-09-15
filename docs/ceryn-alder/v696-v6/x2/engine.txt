@@ -1,0 +1,20 @@
+'use strict';
+const E=require('../x1/engine.txt'),R=require('../plan/tools/rational.txt');
+const operations=['poly_divrem','poly_gcd','poly_square_free','poly_taylor','poly_finite_difference','poly_product_rule','poly_sampled_range','poly_potential_units','poly_observation_vacancy','poly_consequential_gate'];
+function division(a,b){if(!b.size)throw Error('zero_divisor');const q=new Map(),r=new Map(a),db=E.degree(b);while(r.size&&E.degree(r)>=db){const dr=E.degree(r),k=dr-db,v=R.div(r.get(dr),b.get(db));E.put(q,k,R.add(q.get(k)||R.q(0),v));for(const[i,c]of b)E.put(r,i+k,R.sub(r.get(i+k)||R.q(0),R.mul(c,v)));}return{q,r};}
+const monic=p=>p.size?new Map([...p].map(([k,v])=>[k,R.div(v,p.get(E.degree(p)))])):new Map();
+function gcd(a,b){a=new Map(a);b=new Map(b);while(b.size){const r=division(a,b).r;a=b;b=r;}return monic(a);}
+function value(op,f){const a=E.from(f.a),b=E.from(f.b),t=R.q(f.t);switch(op){
+case 'poly_divrem':{const d=division(a,b);return{quotient:E.to(d.q),remainder:E.to(d.r)};}
+case 'poly_gcd':return{coefficients:E.to(gcd(a,b)),normalization:'monic'};
+case 'poly_square_free':return{coefficients:E.to(a.size?monic(division(a,gcd(a,E.derivative(a))).q):new Map()),zero_convention:'empty'};
+case 'poly_taylor':return{coefficients:E.to(E.translate(a,t)),center:R.out(t),exact_polynomial:true};
+case 'poly_finite_difference':return{coefficients:E.to(E.minus(E.translate(a,t),a)),step:R.out(t)};
+case 'poly_product_rule':{const left=E.to(E.derivative(E.times(a,b))),right=E.to(E.plus(E.times(E.derivative(a),b),E.times(a,E.derivative(b))));return{left,right,holds:JSON.stringify(left)===JSON.stringify(right)};}
+case 'poly_sampled_range':{const points=['-2','-1','0','1','2'],values=points.map(x=>E.evaluate(a,R.q(x))),ordered=values.slice().sort(R.cmp);return{points,values:values.map(R.out),minimum:R.out(ordered[0]),maximum:R.out(ordered.at(-1)),global_range_claim:false};}
+case 'poly_potential_units':return{coefficients:E.to(a),field_unit_exponent:1,potential_unit_exponent:4,coefficient_unit_exponents:Array.from({length:E.degree(a)+1},(_,i)=>4-i),empirical_model:false};
+case 'poly_observation_vacancy':return{coefficients:E.to(a),missing:['measurement_protocol','calibration','observations','independent_review'],observed_values:null,empirical_credit:false};
+case 'poly_consequential_gate':return{coefficients:E.to(a),required:['competent_authority','affected_party_review','privacy_review','contextual_safety'],authorized:false,action_executed:false};
+default:throw Error('unsupported');}}
+function run(request){const error=E.check(request,operations);if(error)return E.reject(error);if(request.operation==='poly_divrem'&&!E.from(request.fixture.b).size)return E.reject('zero_divisor');const op=request.operation,disposition=op==='poly_observation_vacancy'?'open_gap':op==='poly_consequential_gate'?'exact_gate':['poly_sampled_range','poly_potential_units'].includes(op)?'represented':'completed';return{ok:true,value:value(op,request.fixture),error:null,disposition,external_credit:false};}
+module.exports={operations,reject:E.reject,division,gcd,monic,value,run};

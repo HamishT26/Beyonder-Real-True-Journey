@@ -1,0 +1,25 @@
+'use strict';
+const A=require('assert'),E=require('./engine.txt'),P=require('../x1/engine.txt'),R=require('../plan/tools/rational.txt');
+function main(){const tests=[];const test=(id,fn)=>{fn();tests.push({id,passed:true});};const f=(a,b=['1'],t='0')=>({a,b,t});const run=(operation,fixture)=>E.run({operation,fixture});
+test('quotient-reconstruction',()=>{const a=P.from(['1','2','3','4']),b=P.from(['2','1']),d=E.division(a,b);A.deepEqual(P.to(P.plus(P.times(b,d.q),d.r)),P.to(a));A(P.degree(d.r)<P.degree(b));});
+test('division-smaller-degree',()=>A.deepEqual(run('poly_divrem',f(['1'],['1','0','1'])).value,{quotient:[],remainder:['1']}));
+test('zero-divisor-refused',()=>A.equal(run('poly_divrem',f(['1'],[])).error,'zero_divisor'));
+test('gcd-monic-factor',()=>A.deepEqual(run('poly_gcd',f(['-2','0','2'],['-3','3'])).value.coefficients,['-1','1']));
+test('gcd-with-zero',()=>A.deepEqual(run('poly_gcd',f([],['2','4'])).value.coefficients,['1/2','1']));
+test('gcd-two-zero',()=>A.deepEqual(run('poly_gcd',f([],[])).value.coefficients,[]));
+test('square-free-repeated-root',()=>A.deepEqual(run('poly_square_free',f(['1','-2','1'])).value.coefficients,['-1','1']));
+test('square-free-constant',()=>A.deepEqual(run('poly_square_free',f(['7'])).value.coefficients,['1']));
+test('square-free-zero',()=>A.deepEqual(run('poly_square_free',f([])).value.coefficients,[]));
+test('taylor-exact-coefficients',()=>A.deepEqual(run('poly_taylor',f(['1','2','3'],['1'],'2')).value.coefficients,['17','14','3']));
+test('taylor-rational-center',()=>A.deepEqual(run('poly_taylor',f(['0','0','1'],['1'],'1/2')).value.coefficients,['1/4','1','1']));
+test('finite-difference-cubic',()=>A.deepEqual(run('poly_finite_difference',f(['0','0','0','1'],['1'],'2')).value.coefficients,['8','12','6']));
+test('finite-difference-zero-step',()=>A.deepEqual(run('poly_finite_difference',f(['1','2','3'],['1'],'0')).value.coefficients,[]));
+test('product-rule-exact',()=>{const r=run('poly_product_rule',f(['1','2','3'],['-1','4'])).value;A(r.holds);A.deepEqual(r.left, r.right);});
+test('sample-range-counterexample',()=>{const r=run('poly_sampled_range',f(['0','-1','1'])).value;A.equal(r.minimum,'0');A.equal(R.out(P.evaluate(P.from(['0','-1','1']),R.q('1/2'))),'-1/4');A.equal(r.global_range_claim,false);});
+test('units-have-no-empirical-credit',()=>{const r=run('poly_potential_units',f(['1','2','3']));A.equal(r.disposition,'represented');A.deepEqual(r.value.coefficient_unit_exponents,[4,3,2]);A.equal(r.value.empirical_model,false);});
+test('missing-observations-stay-null',()=>{const r=run('poly_observation_vacancy',f(['1']));A.equal(r.disposition,'open_gap');A.equal(r.value.observed_values,null);A.equal(r.value.empirical_credit,false);});
+test('authority-is-not-computation',()=>{const r=run('poly_consequential_gate',f(['1']));A.equal(r.disposition,'exact_gate');A.equal(r.value.authorized,false);A.equal(r.value.action_executed,false);});
+test('nested-field-refused',()=>A.equal(run('poly_gcd',{...f(['1']),approved:true}).error,'fixture_fields'));
+test('division-input-preserved',()=>{const req={operation:'poly_divrem',fixture:f(['1','2','3'],['1','1'])},before=JSON.stringify(req);E.run(req);A.equal(JSON.stringify(req),before);});
+return{count:tests.length,passed:tests.length,failed:0,tests};}
+module.exports={main};if(require.main===module)console.log(JSON.stringify(main()));

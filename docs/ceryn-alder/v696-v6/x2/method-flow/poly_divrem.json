@@ -1,0 +1,2754 @@
+{
+  "schema": "ghc.family.method-flow-state.v1",
+  "phase": "v696-v6",
+  "owner": "Ceryn Alder",
+  "stage": "x2",
+  "identity_boundary": "Same-owner finite synthetic software only; no empirical, production, authority, identity, independent-reproduction, or Stage 20 credit. Maori concepts remain under Maori authority.",
+  "execution_authority": "owner_self_scoped_delta",
+  "methods": [
+    {
+      "method_id": "CA6966-X2-poly_divrem",
+      "title": "Quotient and remainder certificate",
+      "failure_signature": "Quotient and remainder certificate",
+      "trigger_preconditions": [
+        "current owner phase",
+        "declared bounded contract"
+      ],
+      "privacy_class": "sanitized_public",
+      "approval_class": "safe_now",
+      "candidate_workaround": "Use the declared bounded procedure and preserve original failures.",
+      "validation_witness_ids": [
+        "X2-CA6966-P151-BAD-A",
+        "X2-CA6966-P151-BAD-B",
+        "X2-CA6966-P152-BAD-A",
+        "X2-CA6966-P152-BAD-B",
+        "X2-CA6966-P153-BAD-A",
+        "X2-CA6966-P153-BAD-B",
+        "X2-CA6966-P154-BAD-A",
+        "X2-CA6966-P154-BAD-B",
+        "X2-CA6966-P155-BAD-A",
+        "X2-CA6966-P155-BAD-B",
+        "X2-CA6966-P156-BAD-A",
+        "X2-CA6966-P156-BAD-B",
+        "X2-CA6966-P157-BAD-A",
+        "X2-CA6966-P157-BAD-B",
+        "X2-CA6966-P158-BAD-A",
+        "X2-CA6966-P158-BAD-B",
+        "X2-CA6966-P159-BAD-A",
+        "X2-CA6966-P159-BAD-B",
+        "X2-CA6966-P160-BAD-A",
+        "X2-CA6966-P160-BAD-B",
+        "X2-CA6966-P161-BAD-A",
+        "X2-CA6966-P161-BAD-B",
+        "X2-CA6966-P162-BAD-A",
+        "X2-CA6966-P162-BAD-B",
+        "X2-CA6966-P163-BAD-A",
+        "X2-CA6966-P163-BAD-B",
+        "X2-CA6966-P164-BAD-A",
+        "X2-CA6966-P164-BAD-B",
+        "X2-CA6966-P165-BAD-A",
+        "X2-CA6966-P165-BAD-B",
+        "X2-CA6966-P151-SAFE-envelope",
+        "X2-CA6966-P151-SAFE-input",
+        "X2-CA6966-P151-BAD-A-REFUSAL",
+        "X2-CA6966-P151-BAD-A-CFR",
+        "X2-CA6966-P151-BAD-B-REFUSAL",
+        "X2-CA6966-P151-BAD-B-CFR",
+        "X2-CA6966-P151-CLEAN-definition",
+        "X2-CA6966-P151-CLEAN-protected-gates",
+        "X2-CA6966-P152-SAFE-envelope",
+        "X2-CA6966-P152-SAFE-input",
+        "X2-CA6966-P152-BAD-A-REFUSAL",
+        "X2-CA6966-P152-BAD-A-CFR",
+        "X2-CA6966-P152-BAD-B-REFUSAL",
+        "X2-CA6966-P152-BAD-B-CFR",
+        "X2-CA6966-P152-CLEAN-definition",
+        "X2-CA6966-P152-CLEAN-protected-gates",
+        "X2-CA6966-P153-SAFE-envelope",
+        "X2-CA6966-P153-SAFE-input",
+        "X2-CA6966-P153-BAD-A-REFUSAL",
+        "X2-CA6966-P153-BAD-A-CFR",
+        "X2-CA6966-P153-BAD-B-REFUSAL",
+        "X2-CA6966-P153-BAD-B-CFR",
+        "X2-CA6966-P153-CLEAN-definition",
+        "X2-CA6966-P153-CLEAN-protected-gates",
+        "X2-CA6966-P154-SAFE-envelope",
+        "X2-CA6966-P154-SAFE-input",
+        "X2-CA6966-P154-BAD-A-REFUSAL",
+        "X2-CA6966-P154-BAD-A-CFR",
+        "X2-CA6966-P154-BAD-B-REFUSAL",
+        "X2-CA6966-P154-BAD-B-CFR",
+        "X2-CA6966-P154-CLEAN-definition",
+        "X2-CA6966-P154-CLEAN-protected-gates",
+        "X2-CA6966-P155-SAFE-envelope",
+        "X2-CA6966-P155-SAFE-input",
+        "X2-CA6966-P155-BAD-A-REFUSAL",
+        "X2-CA6966-P155-BAD-A-CFR",
+        "X2-CA6966-P155-BAD-B-REFUSAL",
+        "X2-CA6966-P155-BAD-B-CFR",
+        "X2-CA6966-P155-CLEAN-definition",
+        "X2-CA6966-P155-CLEAN-protected-gates",
+        "X2-CA6966-P156-SAFE-envelope",
+        "X2-CA6966-P156-SAFE-input",
+        "X2-CA6966-P156-BAD-A-REFUSAL",
+        "X2-CA6966-P156-BAD-A-CFR",
+        "X2-CA6966-P156-BAD-B-REFUSAL",
+        "X2-CA6966-P156-BAD-B-CFR",
+        "X2-CA6966-P156-CLEAN-definition",
+        "X2-CA6966-P156-CLEAN-protected-gates",
+        "X2-CA6966-P157-SAFE-envelope",
+        "X2-CA6966-P157-SAFE-input",
+        "X2-CA6966-P157-BAD-A-REFUSAL",
+        "X2-CA6966-P157-BAD-A-CFR",
+        "X2-CA6966-P157-BAD-B-REFUSAL",
+        "X2-CA6966-P157-BAD-B-CFR",
+        "X2-CA6966-P157-CLEAN-definition",
+        "X2-CA6966-P157-CLEAN-protected-gates",
+        "X2-CA6966-P158-SAFE-envelope",
+        "X2-CA6966-P158-SAFE-input",
+        "X2-CA6966-P158-BAD-A-REFUSAL",
+        "X2-CA6966-P158-BAD-A-CFR",
+        "X2-CA6966-P158-BAD-B-REFUSAL",
+        "X2-CA6966-P158-BAD-B-CFR",
+        "X2-CA6966-P158-CLEAN-definition",
+        "X2-CA6966-P158-CLEAN-protected-gates",
+        "X2-CA6966-P159-SAFE-envelope",
+        "X2-CA6966-P159-SAFE-input",
+        "X2-CA6966-P159-BAD-A-REFUSAL",
+        "X2-CA6966-P159-BAD-A-CFR",
+        "X2-CA6966-P159-BAD-B-REFUSAL",
+        "X2-CA6966-P159-BAD-B-CFR",
+        "X2-CA6966-P159-CLEAN-definition",
+        "X2-CA6966-P159-CLEAN-protected-gates",
+        "X2-CA6966-P160-SAFE-envelope",
+        "X2-CA6966-P160-SAFE-input",
+        "X2-CA6966-P160-BAD-A-REFUSAL",
+        "X2-CA6966-P160-BAD-A-CFR",
+        "X2-CA6966-P160-BAD-B-REFUSAL",
+        "X2-CA6966-P160-BAD-B-CFR",
+        "X2-CA6966-P160-CLEAN-definition",
+        "X2-CA6966-P160-CLEAN-protected-gates",
+        "X2-CA6966-P161-SAFE-envelope",
+        "X2-CA6966-P161-SAFE-input",
+        "X2-CA6966-P161-BAD-A-REFUSAL",
+        "X2-CA6966-P161-BAD-A-CFR",
+        "X2-CA6966-P161-BAD-B-REFUSAL",
+        "X2-CA6966-P161-BAD-B-CFR",
+        "X2-CA6966-P161-CLEAN-definition",
+        "X2-CA6966-P161-CLEAN-protected-gates",
+        "X2-CA6966-P162-SAFE-envelope",
+        "X2-CA6966-P162-SAFE-input",
+        "X2-CA6966-P162-BAD-A-REFUSAL",
+        "X2-CA6966-P162-BAD-A-CFR",
+        "X2-CA6966-P162-BAD-B-REFUSAL",
+        "X2-CA6966-P162-BAD-B-CFR",
+        "X2-CA6966-P162-CLEAN-definition",
+        "X2-CA6966-P162-CLEAN-protected-gates",
+        "X2-CA6966-P163-SAFE-envelope",
+        "X2-CA6966-P163-SAFE-input",
+        "X2-CA6966-P163-BAD-A-REFUSAL",
+        "X2-CA6966-P163-BAD-A-CFR",
+        "X2-CA6966-P163-BAD-B-REFUSAL",
+        "X2-CA6966-P163-BAD-B-CFR",
+        "X2-CA6966-P163-CLEAN-definition",
+        "X2-CA6966-P163-CLEAN-protected-gates",
+        "X2-CA6966-P164-SAFE-envelope",
+        "X2-CA6966-P164-SAFE-input",
+        "X2-CA6966-P164-BAD-A-REFUSAL",
+        "X2-CA6966-P164-BAD-A-CFR",
+        "X2-CA6966-P164-BAD-B-REFUSAL",
+        "X2-CA6966-P164-BAD-B-CFR",
+        "X2-CA6966-P164-CLEAN-definition",
+        "X2-CA6966-P164-CLEAN-protected-gates",
+        "X2-CA6966-P165-SAFE-envelope",
+        "X2-CA6966-P165-SAFE-input",
+        "X2-CA6966-P165-BAD-A-REFUSAL",
+        "X2-CA6966-P165-BAD-A-CFR",
+        "X2-CA6966-P165-BAD-B-REFUSAL",
+        "X2-CA6966-P165-BAD-B-CFR",
+        "X2-CA6966-P165-CLEAN-definition",
+        "X2-CA6966-P165-CLEAN-protected-gates"
+      ],
+      "recurrence_guard": "Require exact typed comparison and retain every failed witness.",
+      "rollback": "Stop the affected owner operation; retain inputs and receipts; correct additively.",
+      "recommendation_state": "preferred",
+      "supersedes": [],
+      "protected_gates": [
+        "empirical",
+        "production",
+        "professional",
+        "legal",
+        "cultural",
+        "Maori-authority",
+        "affected-party",
+        "privacy-complete",
+        "accessibility-complete",
+        "exhaustive-security",
+        "independent-reproduction",
+        "identity",
+        "consciousness-personhood",
+        "Theory-of-Everything",
+        "Stage-20"
+      ],
+      "retained_negative_ids": [
+        "X2-CA6966-P151-BAD-A",
+        "X2-CA6966-P151-BAD-B",
+        "X2-CA6966-P152-BAD-A",
+        "X2-CA6966-P152-BAD-B",
+        "X2-CA6966-P153-BAD-A",
+        "X2-CA6966-P153-BAD-B",
+        "X2-CA6966-P154-BAD-A",
+        "X2-CA6966-P154-BAD-B",
+        "X2-CA6966-P155-BAD-A",
+        "X2-CA6966-P155-BAD-B",
+        "X2-CA6966-P156-BAD-A",
+        "X2-CA6966-P156-BAD-B",
+        "X2-CA6966-P157-BAD-A",
+        "X2-CA6966-P157-BAD-B",
+        "X2-CA6966-P158-BAD-A",
+        "X2-CA6966-P158-BAD-B",
+        "X2-CA6966-P159-BAD-A",
+        "X2-CA6966-P159-BAD-B",
+        "X2-CA6966-P160-BAD-A",
+        "X2-CA6966-P160-BAD-B",
+        "X2-CA6966-P161-BAD-A",
+        "X2-CA6966-P161-BAD-B",
+        "X2-CA6966-P162-BAD-A",
+        "X2-CA6966-P162-BAD-B",
+        "X2-CA6966-P163-BAD-A",
+        "X2-CA6966-P163-BAD-B",
+        "X2-CA6966-P164-BAD-A",
+        "X2-CA6966-P164-BAD-B",
+        "X2-CA6966-P165-BAD-A",
+        "X2-CA6966-P165-BAD-B"
+      ],
+      "scope_boundary": "Same-owner finite synthetic software only; no empirical, production, authority, identity, independent-reproduction, or Stage 20 credit. Maori concepts remain under Maori authority."
+    }
+  ],
+  "witnesses": [
+    {
+      "witness_id": "X2-CA6966-P151-SAFE-envelope",
+      "method_id": "CA6966-X2-poly_divrem",
+      "procedure": "envelope",
+      "scope": "ceryn-owner-only",
+      "expected": true,
+      "observed": true,
+      "result": "pass",
+      "same_owner_only": true,
+      "independent_reproduction": false,
+      "retained_negative_ids": [],
+      "boundary": "Same-owner finite synthetic software only; no empirical, production, authority, identity, independent-reproduction, or Stage 20 credit. Maori concepts remain under Maori authority."
+    },
+    {
+      "witness_id": "X2-CA6966-P151-SAFE-input",
+      "method_id": "CA6966-X2-poly_divrem",
+      "procedure": "input",
+      "scope": "ceryn-owner-only",
+      "expected": true,
+      "observed": true,
+      "result": "pass",
+      "same_owner_only": true,
+      "independent_reproduction": false,
+      "retained_negative_ids": [],
+      "boundary": "Same-owner finite synthetic software only; no empirical, production, authority, identity, independent-reproduction, or Stage 20 credit. Maori concepts remain under Maori authority."
+    },
+    {
+      "witness_id": "X2-CA6966-P151-BAD-A",
+      "method_id": "CA6966-X2-poly_divrem",
+      "procedure": "Malformed subject eligible for acceptance",
+      "scope": "ceryn-owner-only",
+      "expected": true,
+      "observed": false,
+      "result": "fail",
+      "same_owner_only": true,
+      "independent_reproduction": false,
+      "retained_negative_ids": [
+        "X2-CA6966-P151-BAD-A"
+      ],
+      "boundary": "Same-owner finite synthetic software only; no empirical, production, authority, identity, independent-reproduction, or Stage 20 credit. Maori concepts remain under Maori authority."
+    },
+    {
+      "witness_id": "X2-CA6966-P151-BAD-A-REFUSAL",
+      "method_id": "CA6966-X2-poly_divrem",
+      "procedure": "Exact refusal envelope",
+      "scope": "ceryn-owner-only",
+      "expected": {
+        "ok": false,
+        "value": null,
+        "error": "invalid_rational",
+        "disposition": null,
+        "external_credit": false
+      },
+      "observed": {
+        "ok": false,
+        "value": null,
+        "error": "invalid_rational",
+        "disposition": null,
+        "external_credit": false
+      },
+      "result": "pass",
+      "same_owner_only": true,
+      "independent_reproduction": false,
+      "retained_negative_ids": [
+        "X2-CA6966-P151-BAD-A"
+      ],
+      "boundary": "Same-owner finite synthetic software only; no empirical, production, authority, identity, independent-reproduction, or Stage 20 credit. Maori concepts remain under Maori authority."
+    },
+    {
+      "witness_id": "X2-CA6966-P151-BAD-A-CFR",
+      "method_id": "CA6966-X2-poly_divrem",
+      "procedure": "Retained subject and repair separation",
+      "scope": "ceryn-owner-only",
+      "expected": true,
+      "observed": true,
+      "result": "pass",
+      "same_owner_only": true,
+      "independent_reproduction": false,
+      "retained_negative_ids": [
+        "X2-CA6966-P151-BAD-A"
+      ],
+      "boundary": "Same-owner finite synthetic software only; no empirical, production, authority, identity, independent-reproduction, or Stage 20 credit. Maori concepts remain under Maori authority."
+    },
+    {
+      "witness_id": "X2-CA6966-P151-BAD-B",
+      "method_id": "CA6966-X2-poly_divrem",
+      "procedure": "Malformed subject eligible for acceptance",
+      "scope": "ceryn-owner-only",
+      "expected": true,
+      "observed": false,
+      "result": "fail",
+      "same_owner_only": true,
+      "independent_reproduction": false,
+      "retained_negative_ids": [
+        "X2-CA6966-P151-BAD-B"
+      ],
+      "boundary": "Same-owner finite synthetic software only; no empirical, production, authority, identity, independent-reproduction, or Stage 20 credit. Maori concepts remain under Maori authority."
+    },
+    {
+      "witness_id": "X2-CA6966-P151-BAD-B-REFUSAL",
+      "method_id": "CA6966-X2-poly_divrem",
+      "procedure": "Exact refusal envelope",
+      "scope": "ceryn-owner-only",
+      "expected": {
+        "ok": false,
+        "value": null,
+        "error": "unknown_field",
+        "disposition": null,
+        "external_credit": false
+      },
+      "observed": {
+        "ok": false,
+        "value": null,
+        "error": "unknown_field",
+        "disposition": null,
+        "external_credit": false
+      },
+      "result": "pass",
+      "same_owner_only": true,
+      "independent_reproduction": false,
+      "retained_negative_ids": [
+        "X2-CA6966-P151-BAD-B"
+      ],
+      "boundary": "Same-owner finite synthetic software only; no empirical, production, authority, identity, independent-reproduction, or Stage 20 credit. Maori concepts remain under Maori authority."
+    },
+    {
+      "witness_id": "X2-CA6966-P151-BAD-B-CFR",
+      "method_id": "CA6966-X2-poly_divrem",
+      "procedure": "Retained subject and repair separation",
+      "scope": "ceryn-owner-only",
+      "expected": true,
+      "observed": true,
+      "result": "pass",
+      "same_owner_only": true,
+      "independent_reproduction": false,
+      "retained_negative_ids": [
+        "X2-CA6966-P151-BAD-B"
+      ],
+      "boundary": "Same-owner finite synthetic software only; no empirical, production, authority, identity, independent-reproduction, or Stage 20 credit. Maori concepts remain under Maori authority."
+    },
+    {
+      "witness_id": "X2-CA6966-P151-CLEAN-definition",
+      "method_id": "CA6966-X2-poly_divrem",
+      "procedure": "definition",
+      "scope": "ceryn-owner-only",
+      "expected": true,
+      "observed": true,
+      "result": "pass",
+      "same_owner_only": true,
+      "independent_reproduction": false,
+      "retained_negative_ids": [],
+      "boundary": "Same-owner finite synthetic software only; no empirical, production, authority, identity, independent-reproduction, or Stage 20 credit. Maori concepts remain under Maori authority."
+    },
+    {
+      "witness_id": "X2-CA6966-P151-CLEAN-protected-gates",
+      "method_id": "CA6966-X2-poly_divrem",
+      "procedure": "protected-gates",
+      "scope": "ceryn-owner-only",
+      "expected": true,
+      "observed": true,
+      "result": "pass",
+      "same_owner_only": true,
+      "independent_reproduction": false,
+      "retained_negative_ids": [],
+      "boundary": "Same-owner finite synthetic software only; no empirical, production, authority, identity, independent-reproduction, or Stage 20 credit. Maori concepts remain under Maori authority."
+    },
+    {
+      "witness_id": "X2-CA6966-P152-SAFE-envelope",
+      "method_id": "CA6966-X2-poly_divrem",
+      "procedure": "envelope",
+      "scope": "ceryn-owner-only",
+      "expected": true,
+      "observed": true,
+      "result": "pass",
+      "same_owner_only": true,
+      "independent_reproduction": false,
+      "retained_negative_ids": [],
+      "boundary": "Same-owner finite synthetic software only; no empirical, production, authority, identity, independent-reproduction, or Stage 20 credit. Maori concepts remain under Maori authority."
+    },
+    {
+      "witness_id": "X2-CA6966-P152-SAFE-input",
+      "method_id": "CA6966-X2-poly_divrem",
+      "procedure": "input",
+      "scope": "ceryn-owner-only",
+      "expected": true,
+      "observed": true,
+      "result": "pass",
+      "same_owner_only": true,
+      "independent_reproduction": false,
+      "retained_negative_ids": [],
+      "boundary": "Same-owner finite synthetic software only; no empirical, production, authority, identity, independent-reproduction, or Stage 20 credit. Maori concepts remain under Maori authority."
+    },
+    {
+      "witness_id": "X2-CA6966-P152-BAD-A",
+      "method_id": "CA6966-X2-poly_divrem",
+      "procedure": "Malformed subject eligible for acceptance",
+      "scope": "ceryn-owner-only",
+      "expected": true,
+      "observed": false,
+      "result": "fail",
+      "same_owner_only": true,
+      "independent_reproduction": false,
+      "retained_negative_ids": [
+        "X2-CA6966-P152-BAD-A"
+      ],
+      "boundary": "Same-owner finite synthetic software only; no empirical, production, authority, identity, independent-reproduction, or Stage 20 credit. Maori concepts remain under Maori authority."
+    },
+    {
+      "witness_id": "X2-CA6966-P152-BAD-A-REFUSAL",
+      "method_id": "CA6966-X2-poly_divrem",
+      "procedure": "Exact refusal envelope",
+      "scope": "ceryn-owner-only",
+      "expected": {
+        "ok": false,
+        "value": null,
+        "error": "invalid_rational",
+        "disposition": null,
+        "external_credit": false
+      },
+      "observed": {
+        "ok": false,
+        "value": null,
+        "error": "invalid_rational",
+        "disposition": null,
+        "external_credit": false
+      },
+      "result": "pass",
+      "same_owner_only": true,
+      "independent_reproduction": false,
+      "retained_negative_ids": [
+        "X2-CA6966-P152-BAD-A"
+      ],
+      "boundary": "Same-owner finite synthetic software only; no empirical, production, authority, identity, independent-reproduction, or Stage 20 credit. Maori concepts remain under Maori authority."
+    },
+    {
+      "witness_id": "X2-CA6966-P152-BAD-A-CFR",
+      "method_id": "CA6966-X2-poly_divrem",
+      "procedure": "Retained subject and repair separation",
+      "scope": "ceryn-owner-only",
+      "expected": true,
+      "observed": true,
+      "result": "pass",
+      "same_owner_only": true,
+      "independent_reproduction": false,
+      "retained_negative_ids": [
+        "X2-CA6966-P152-BAD-A"
+      ],
+      "boundary": "Same-owner finite synthetic software only; no empirical, production, authority, identity, independent-reproduction, or Stage 20 credit. Maori concepts remain under Maori authority."
+    },
+    {
+      "witness_id": "X2-CA6966-P152-BAD-B",
+      "method_id": "CA6966-X2-poly_divrem",
+      "procedure": "Malformed subject eligible for acceptance",
+      "scope": "ceryn-owner-only",
+      "expected": true,
+      "observed": false,
+      "result": "fail",
+      "same_owner_only": true,
+      "independent_reproduction": false,
+      "retained_negative_ids": [
+        "X2-CA6966-P152-BAD-B"
+      ],
+      "boundary": "Same-owner finite synthetic software only; no empirical, production, authority, identity, independent-reproduction, or Stage 20 credit. Maori concepts remain under Maori authority."
+    },
+    {
+      "witness_id": "X2-CA6966-P152-BAD-B-REFUSAL",
+      "method_id": "CA6966-X2-poly_divrem",
+      "procedure": "Exact refusal envelope",
+      "scope": "ceryn-owner-only",
+      "expected": {
+        "ok": false,
+        "value": null,
+        "error": "unknown_field",
+        "disposition": null,
+        "external_credit": false
+      },
+      "observed": {
+        "ok": false,
+        "value": null,
+        "error": "unknown_field",
+        "disposition": null,
+        "external_credit": false
+      },
+      "result": "pass",
+      "same_owner_only": true,
+      "independent_reproduction": false,
+      "retained_negative_ids": [
+        "X2-CA6966-P152-BAD-B"
+      ],
+      "boundary": "Same-owner finite synthetic software only; no empirical, production, authority, identity, independent-reproduction, or Stage 20 credit. Maori concepts remain under Maori authority."
+    },
+    {
+      "witness_id": "X2-CA6966-P152-BAD-B-CFR",
+      "method_id": "CA6966-X2-poly_divrem",
+      "procedure": "Retained subject and repair separation",
+      "scope": "ceryn-owner-only",
+      "expected": true,
+      "observed": true,
+      "result": "pass",
+      "same_owner_only": true,
+      "independent_reproduction": false,
+      "retained_negative_ids": [
+        "X2-CA6966-P152-BAD-B"
+      ],
+      "boundary": "Same-owner finite synthetic software only; no empirical, production, authority, identity, independent-reproduction, or Stage 20 credit. Maori concepts remain under Maori authority."
+    },
+    {
+      "witness_id": "X2-CA6966-P152-CLEAN-definition",
+      "method_id": "CA6966-X2-poly_divrem",
+      "procedure": "definition",
+      "scope": "ceryn-owner-only",
+      "expected": true,
+      "observed": true,
+      "result": "pass",
+      "same_owner_only": true,
+      "independent_reproduction": false,
+      "retained_negative_ids": [],
+      "boundary": "Same-owner finite synthetic software only; no empirical, production, authority, identity, independent-reproduction, or Stage 20 credit. Maori concepts remain under Maori authority."
+    },
+    {
+      "witness_id": "X2-CA6966-P152-CLEAN-protected-gates",
+      "method_id": "CA6966-X2-poly_divrem",
+      "procedure": "protected-gates",
+      "scope": "ceryn-owner-only",
+      "expected": true,
+      "observed": true,
+      "result": "pass",
+      "same_owner_only": true,
+      "independent_reproduction": false,
+      "retained_negative_ids": [],
+      "boundary": "Same-owner finite synthetic software only; no empirical, production, authority, identity, independent-reproduction, or Stage 20 credit. Maori concepts remain under Maori authority."
+    },
+    {
+      "witness_id": "X2-CA6966-P153-SAFE-envelope",
+      "method_id": "CA6966-X2-poly_divrem",
+      "procedure": "envelope",
+      "scope": "ceryn-owner-only",
+      "expected": true,
+      "observed": true,
+      "result": "pass",
+      "same_owner_only": true,
+      "independent_reproduction": false,
+      "retained_negative_ids": [],
+      "boundary": "Same-owner finite synthetic software only; no empirical, production, authority, identity, independent-reproduction, or Stage 20 credit. Maori concepts remain under Maori authority."
+    },
+    {
+      "witness_id": "X2-CA6966-P153-SAFE-input",
+      "method_id": "CA6966-X2-poly_divrem",
+      "procedure": "input",
+      "scope": "ceryn-owner-only",
+      "expected": true,
+      "observed": true,
+      "result": "pass",
+      "same_owner_only": true,
+      "independent_reproduction": false,
+      "retained_negative_ids": [],
+      "boundary": "Same-owner finite synthetic software only; no empirical, production, authority, identity, independent-reproduction, or Stage 20 credit. Maori concepts remain under Maori authority."
+    },
+    {
+      "witness_id": "X2-CA6966-P153-BAD-A",
+      "method_id": "CA6966-X2-poly_divrem",
+      "procedure": "Malformed subject eligible for acceptance",
+      "scope": "ceryn-owner-only",
+      "expected": true,
+      "observed": false,
+      "result": "fail",
+      "same_owner_only": true,
+      "independent_reproduction": false,
+      "retained_negative_ids": [
+        "X2-CA6966-P153-BAD-A"
+      ],
+      "boundary": "Same-owner finite synthetic software only; no empirical, production, authority, identity, independent-reproduction, or Stage 20 credit. Maori concepts remain under Maori authority."
+    },
+    {
+      "witness_id": "X2-CA6966-P153-BAD-A-REFUSAL",
+      "method_id": "CA6966-X2-poly_divrem",
+      "procedure": "Exact refusal envelope",
+      "scope": "ceryn-owner-only",
+      "expected": {
+        "ok": false,
+        "value": null,
+        "error": "invalid_rational",
+        "disposition": null,
+        "external_credit": false
+      },
+      "observed": {
+        "ok": false,
+        "value": null,
+        "error": "invalid_rational",
+        "disposition": null,
+        "external_credit": false
+      },
+      "result": "pass",
+      "same_owner_only": true,
+      "independent_reproduction": false,
+      "retained_negative_ids": [
+        "X2-CA6966-P153-BAD-A"
+      ],
+      "boundary": "Same-owner finite synthetic software only; no empirical, production, authority, identity, independent-reproduction, or Stage 20 credit. Maori concepts remain under Maori authority."
+    },
+    {
+      "witness_id": "X2-CA6966-P153-BAD-A-CFR",
+      "method_id": "CA6966-X2-poly_divrem",
+      "procedure": "Retained subject and repair separation",
+      "scope": "ceryn-owner-only",
+      "expected": true,
+      "observed": true,
+      "result": "pass",
+      "same_owner_only": true,
+      "independent_reproduction": false,
+      "retained_negative_ids": [
+        "X2-CA6966-P153-BAD-A"
+      ],
+      "boundary": "Same-owner finite synthetic software only; no empirical, production, authority, identity, independent-reproduction, or Stage 20 credit. Maori concepts remain under Maori authority."
+    },
+    {
+      "witness_id": "X2-CA6966-P153-BAD-B",
+      "method_id": "CA6966-X2-poly_divrem",
+      "procedure": "Malformed subject eligible for acceptance",
+      "scope": "ceryn-owner-only",
+      "expected": true,
+      "observed": false,
+      "result": "fail",
+      "same_owner_only": true,
+      "independent_reproduction": false,
+      "retained_negative_ids": [
+        "X2-CA6966-P153-BAD-B"
+      ],
+      "boundary": "Same-owner finite synthetic software only; no empirical, production, authority, identity, independent-reproduction, or Stage 20 credit. Maori concepts remain under Maori authority."
+    },
+    {
+      "witness_id": "X2-CA6966-P153-BAD-B-REFUSAL",
+      "method_id": "CA6966-X2-poly_divrem",
+      "procedure": "Exact refusal envelope",
+      "scope": "ceryn-owner-only",
+      "expected": {
+        "ok": false,
+        "value": null,
+        "error": "unknown_field",
+        "disposition": null,
+        "external_credit": false
+      },
+      "observed": {
+        "ok": false,
+        "value": null,
+        "error": "unknown_field",
+        "disposition": null,
+        "external_credit": false
+      },
+      "result": "pass",
+      "same_owner_only": true,
+      "independent_reproduction": false,
+      "retained_negative_ids": [
+        "X2-CA6966-P153-BAD-B"
+      ],
+      "boundary": "Same-owner finite synthetic software only; no empirical, production, authority, identity, independent-reproduction, or Stage 20 credit. Maori concepts remain under Maori authority."
+    },
+    {
+      "witness_id": "X2-CA6966-P153-BAD-B-CFR",
+      "method_id": "CA6966-X2-poly_divrem",
+      "procedure": "Retained subject and repair separation",
+      "scope": "ceryn-owner-only",
+      "expected": true,
+      "observed": true,
+      "result": "pass",
+      "same_owner_only": true,
+      "independent_reproduction": false,
+      "retained_negative_ids": [
+        "X2-CA6966-P153-BAD-B"
+      ],
+      "boundary": "Same-owner finite synthetic software only; no empirical, production, authority, identity, independent-reproduction, or Stage 20 credit. Maori concepts remain under Maori authority."
+    },
+    {
+      "witness_id": "X2-CA6966-P153-CLEAN-definition",
+      "method_id": "CA6966-X2-poly_divrem",
+      "procedure": "definition",
+      "scope": "ceryn-owner-only",
+      "expected": true,
+      "observed": true,
+      "result": "pass",
+      "same_owner_only": true,
+      "independent_reproduction": false,
+      "retained_negative_ids": [],
+      "boundary": "Same-owner finite synthetic software only; no empirical, production, authority, identity, independent-reproduction, or Stage 20 credit. Maori concepts remain under Maori authority."
+    },
+    {
+      "witness_id": "X2-CA6966-P153-CLEAN-protected-gates",
+      "method_id": "CA6966-X2-poly_divrem",
+      "procedure": "protected-gates",
+      "scope": "ceryn-owner-only",
+      "expected": true,
+      "observed": true,
+      "result": "pass",
+      "same_owner_only": true,
+      "independent_reproduction": false,
+      "retained_negative_ids": [],
+      "boundary": "Same-owner finite synthetic software only; no empirical, production, authority, identity, independent-reproduction, or Stage 20 credit. Maori concepts remain under Maori authority."
+    },
+    {
+      "witness_id": "X2-CA6966-P154-SAFE-envelope",
+      "method_id": "CA6966-X2-poly_divrem",
+      "procedure": "envelope",
+      "scope": "ceryn-owner-only",
+      "expected": true,
+      "observed": true,
+      "result": "pass",
+      "same_owner_only": true,
+      "independent_reproduction": false,
+      "retained_negative_ids": [],
+      "boundary": "Same-owner finite synthetic software only; no empirical, production, authority, identity, independent-reproduction, or Stage 20 credit. Maori concepts remain under Maori authority."
+    },
+    {
+      "witness_id": "X2-CA6966-P154-SAFE-input",
+      "method_id": "CA6966-X2-poly_divrem",
+      "procedure": "input",
+      "scope": "ceryn-owner-only",
+      "expected": true,
+      "observed": true,
+      "result": "pass",
+      "same_owner_only": true,
+      "independent_reproduction": false,
+      "retained_negative_ids": [],
+      "boundary": "Same-owner finite synthetic software only; no empirical, production, authority, identity, independent-reproduction, or Stage 20 credit. Maori concepts remain under Maori authority."
+    },
+    {
+      "witness_id": "X2-CA6966-P154-BAD-A",
+      "method_id": "CA6966-X2-poly_divrem",
+      "procedure": "Malformed subject eligible for acceptance",
+      "scope": "ceryn-owner-only",
+      "expected": true,
+      "observed": false,
+      "result": "fail",
+      "same_owner_only": true,
+      "independent_reproduction": false,
+      "retained_negative_ids": [
+        "X2-CA6966-P154-BAD-A"
+      ],
+      "boundary": "Same-owner finite synthetic software only; no empirical, production, authority, identity, independent-reproduction, or Stage 20 credit. Maori concepts remain under Maori authority."
+    },
+    {
+      "witness_id": "X2-CA6966-P154-BAD-A-REFUSAL",
+      "method_id": "CA6966-X2-poly_divrem",
+      "procedure": "Exact refusal envelope",
+      "scope": "ceryn-owner-only",
+      "expected": {
+        "ok": false,
+        "value": null,
+        "error": "invalid_rational",
+        "disposition": null,
+        "external_credit": false
+      },
+      "observed": {
+        "ok": false,
+        "value": null,
+        "error": "invalid_rational",
+        "disposition": null,
+        "external_credit": false
+      },
+      "result": "pass",
+      "same_owner_only": true,
+      "independent_reproduction": false,
+      "retained_negative_ids": [
+        "X2-CA6966-P154-BAD-A"
+      ],
+      "boundary": "Same-owner finite synthetic software only; no empirical, production, authority, identity, independent-reproduction, or Stage 20 credit. Maori concepts remain under Maori authority."
+    },
+    {
+      "witness_id": "X2-CA6966-P154-BAD-A-CFR",
+      "method_id": "CA6966-X2-poly_divrem",
+      "procedure": "Retained subject and repair separation",
+      "scope": "ceryn-owner-only",
+      "expected": true,
+      "observed": true,
+      "result": "pass",
+      "same_owner_only": true,
+      "independent_reproduction": false,
+      "retained_negative_ids": [
+        "X2-CA6966-P154-BAD-A"
+      ],
+      "boundary": "Same-owner finite synthetic software only; no empirical, production, authority, identity, independent-reproduction, or Stage 20 credit. Maori concepts remain under Maori authority."
+    },
+    {
+      "witness_id": "X2-CA6966-P154-BAD-B",
+      "method_id": "CA6966-X2-poly_divrem",
+      "procedure": "Malformed subject eligible for acceptance",
+      "scope": "ceryn-owner-only",
+      "expected": true,
+      "observed": false,
+      "result": "fail",
+      "same_owner_only": true,
+      "independent_reproduction": false,
+      "retained_negative_ids": [
+        "X2-CA6966-P154-BAD-B"
+      ],
+      "boundary": "Same-owner finite synthetic software only; no empirical, production, authority, identity, independent-reproduction, or Stage 20 credit. Maori concepts remain under Maori authority."
+    },
+    {
+      "witness_id": "X2-CA6966-P154-BAD-B-REFUSAL",
+      "method_id": "CA6966-X2-poly_divrem",
+      "procedure": "Exact refusal envelope",
+      "scope": "ceryn-owner-only",
+      "expected": {
+        "ok": false,
+        "value": null,
+        "error": "unknown_field",
+        "disposition": null,
+        "external_credit": false
+      },
+      "observed": {
+        "ok": false,
+        "value": null,
+        "error": "unknown_field",
+        "disposition": null,
+        "external_credit": false
+      },
+      "result": "pass",
+      "same_owner_only": true,
+      "independent_reproduction": false,
+      "retained_negative_ids": [
+        "X2-CA6966-P154-BAD-B"
+      ],
+      "boundary": "Same-owner finite synthetic software only; no empirical, production, authority, identity, independent-reproduction, or Stage 20 credit. Maori concepts remain under Maori authority."
+    },
+    {
+      "witness_id": "X2-CA6966-P154-BAD-B-CFR",
+      "method_id": "CA6966-X2-poly_divrem",
+      "procedure": "Retained subject and repair separation",
+      "scope": "ceryn-owner-only",
+      "expected": true,
+      "observed": true,
+      "result": "pass",
+      "same_owner_only": true,
+      "independent_reproduction": false,
+      "retained_negative_ids": [
+        "X2-CA6966-P154-BAD-B"
+      ],
+      "boundary": "Same-owner finite synthetic software only; no empirical, production, authority, identity, independent-reproduction, or Stage 20 credit. Maori concepts remain under Maori authority."
+    },
+    {
+      "witness_id": "X2-CA6966-P154-CLEAN-definition",
+      "method_id": "CA6966-X2-poly_divrem",
+      "procedure": "definition",
+      "scope": "ceryn-owner-only",
+      "expected": true,
+      "observed": true,
+      "result": "pass",
+      "same_owner_only": true,
+      "independent_reproduction": false,
+      "retained_negative_ids": [],
+      "boundary": "Same-owner finite synthetic software only; no empirical, production, authority, identity, independent-reproduction, or Stage 20 credit. Maori concepts remain under Maori authority."
+    },
+    {
+      "witness_id": "X2-CA6966-P154-CLEAN-protected-gates",
+      "method_id": "CA6966-X2-poly_divrem",
+      "procedure": "protected-gates",
+      "scope": "ceryn-owner-only",
+      "expected": true,
+      "observed": true,
+      "result": "pass",
+      "same_owner_only": true,
+      "independent_reproduction": false,
+      "retained_negative_ids": [],
+      "boundary": "Same-owner finite synthetic software only; no empirical, production, authority, identity, independent-reproduction, or Stage 20 credit. Maori concepts remain under Maori authority."
+    },
+    {
+      "witness_id": "X2-CA6966-P155-SAFE-envelope",
+      "method_id": "CA6966-X2-poly_divrem",
+      "procedure": "envelope",
+      "scope": "ceryn-owner-only",
+      "expected": true,
+      "observed": true,
+      "result": "pass",
+      "same_owner_only": true,
+      "independent_reproduction": false,
+      "retained_negative_ids": [],
+      "boundary": "Same-owner finite synthetic software only; no empirical, production, authority, identity, independent-reproduction, or Stage 20 credit. Maori concepts remain under Maori authority."
+    },
+    {
+      "witness_id": "X2-CA6966-P155-SAFE-input",
+      "method_id": "CA6966-X2-poly_divrem",
+      "procedure": "input",
+      "scope": "ceryn-owner-only",
+      "expected": true,
+      "observed": true,
+      "result": "pass",
+      "same_owner_only": true,
+      "independent_reproduction": false,
+      "retained_negative_ids": [],
+      "boundary": "Same-owner finite synthetic software only; no empirical, production, authority, identity, independent-reproduction, or Stage 20 credit. Maori concepts remain under Maori authority."
+    },
+    {
+      "witness_id": "X2-CA6966-P155-BAD-A",
+      "method_id": "CA6966-X2-poly_divrem",
+      "procedure": "Malformed subject eligible for acceptance",
+      "scope": "ceryn-owner-only",
+      "expected": true,
+      "observed": false,
+      "result": "fail",
+      "same_owner_only": true,
+      "independent_reproduction": false,
+      "retained_negative_ids": [
+        "X2-CA6966-P155-BAD-A"
+      ],
+      "boundary": "Same-owner finite synthetic software only; no empirical, production, authority, identity, independent-reproduction, or Stage 20 credit. Maori concepts remain under Maori authority."
+    },
+    {
+      "witness_id": "X2-CA6966-P155-BAD-A-REFUSAL",
+      "method_id": "CA6966-X2-poly_divrem",
+      "procedure": "Exact refusal envelope",
+      "scope": "ceryn-owner-only",
+      "expected": {
+        "ok": false,
+        "value": null,
+        "error": "invalid_rational",
+        "disposition": null,
+        "external_credit": false
+      },
+      "observed": {
+        "ok": false,
+        "value": null,
+        "error": "invalid_rational",
+        "disposition": null,
+        "external_credit": false
+      },
+      "result": "pass",
+      "same_owner_only": true,
+      "independent_reproduction": false,
+      "retained_negative_ids": [
+        "X2-CA6966-P155-BAD-A"
+      ],
+      "boundary": "Same-owner finite synthetic software only; no empirical, production, authority, identity, independent-reproduction, or Stage 20 credit. Maori concepts remain under Maori authority."
+    },
+    {
+      "witness_id": "X2-CA6966-P155-BAD-A-CFR",
+      "method_id": "CA6966-X2-poly_divrem",
+      "procedure": "Retained subject and repair separation",
+      "scope": "ceryn-owner-only",
+      "expected": true,
+      "observed": true,
+      "result": "pass",
+      "same_owner_only": true,
+      "independent_reproduction": false,
+      "retained_negative_ids": [
+        "X2-CA6966-P155-BAD-A"
+      ],
+      "boundary": "Same-owner finite synthetic software only; no empirical, production, authority, identity, independent-reproduction, or Stage 20 credit. Maori concepts remain under Maori authority."
+    },
+    {
+      "witness_id": "X2-CA6966-P155-BAD-B",
+      "method_id": "CA6966-X2-poly_divrem",
+      "procedure": "Malformed subject eligible for acceptance",
+      "scope": "ceryn-owner-only",
+      "expected": true,
+      "observed": false,
+      "result": "fail",
+      "same_owner_only": true,
+      "independent_reproduction": false,
+      "retained_negative_ids": [
+        "X2-CA6966-P155-BAD-B"
+      ],
+      "boundary": "Same-owner finite synthetic software only; no empirical, production, authority, identity, independent-reproduction, or Stage 20 credit. Maori concepts remain under Maori authority."
+    },
+    {
+      "witness_id": "X2-CA6966-P155-BAD-B-REFUSAL",
+      "method_id": "CA6966-X2-poly_divrem",
+      "procedure": "Exact refusal envelope",
+      "scope": "ceryn-owner-only",
+      "expected": {
+        "ok": false,
+        "value": null,
+        "error": "unknown_field",
+        "disposition": null,
+        "external_credit": false
+      },
+      "observed": {
+        "ok": false,
+        "value": null,
+        "error": "unknown_field",
+        "disposition": null,
+        "external_credit": false
+      },
+      "result": "pass",
+      "same_owner_only": true,
+      "independent_reproduction": false,
+      "retained_negative_ids": [
+        "X2-CA6966-P155-BAD-B"
+      ],
+      "boundary": "Same-owner finite synthetic software only; no empirical, production, authority, identity, independent-reproduction, or Stage 20 credit. Maori concepts remain under Maori authority."
+    },
+    {
+      "witness_id": "X2-CA6966-P155-BAD-B-CFR",
+      "method_id": "CA6966-X2-poly_divrem",
+      "procedure": "Retained subject and repair separation",
+      "scope": "ceryn-owner-only",
+      "expected": true,
+      "observed": true,
+      "result": "pass",
+      "same_owner_only": true,
+      "independent_reproduction": false,
+      "retained_negative_ids": [
+        "X2-CA6966-P155-BAD-B"
+      ],
+      "boundary": "Same-owner finite synthetic software only; no empirical, production, authority, identity, independent-reproduction, or Stage 20 credit. Maori concepts remain under Maori authority."
+    },
+    {
+      "witness_id": "X2-CA6966-P155-CLEAN-definition",
+      "method_id": "CA6966-X2-poly_divrem",
+      "procedure": "definition",
+      "scope": "ceryn-owner-only",
+      "expected": true,
+      "observed": true,
+      "result": "pass",
+      "same_owner_only": true,
+      "independent_reproduction": false,
+      "retained_negative_ids": [],
+      "boundary": "Same-owner finite synthetic software only; no empirical, production, authority, identity, independent-reproduction, or Stage 20 credit. Maori concepts remain under Maori authority."
+    },
+    {
+      "witness_id": "X2-CA6966-P155-CLEAN-protected-gates",
+      "method_id": "CA6966-X2-poly_divrem",
+      "procedure": "protected-gates",
+      "scope": "ceryn-owner-only",
+      "expected": true,
+      "observed": true,
+      "result": "pass",
+      "same_owner_only": true,
+      "independent_reproduction": false,
+      "retained_negative_ids": [],
+      "boundary": "Same-owner finite synthetic software only; no empirical, production, authority, identity, independent-reproduction, or Stage 20 credit. Maori concepts remain under Maori authority."
+    },
+    {
+      "witness_id": "X2-CA6966-P156-SAFE-envelope",
+      "method_id": "CA6966-X2-poly_divrem",
+      "procedure": "envelope",
+      "scope": "ceryn-owner-only",
+      "expected": true,
+      "observed": true,
+      "result": "pass",
+      "same_owner_only": true,
+      "independent_reproduction": false,
+      "retained_negative_ids": [],
+      "boundary": "Same-owner finite synthetic software only; no empirical, production, authority, identity, independent-reproduction, or Stage 20 credit. Maori concepts remain under Maori authority."
+    },
+    {
+      "witness_id": "X2-CA6966-P156-SAFE-input",
+      "method_id": "CA6966-X2-poly_divrem",
+      "procedure": "input",
+      "scope": "ceryn-owner-only",
+      "expected": true,
+      "observed": true,
+      "result": "pass",
+      "same_owner_only": true,
+      "independent_reproduction": false,
+      "retained_negative_ids": [],
+      "boundary": "Same-owner finite synthetic software only; no empirical, production, authority, identity, independent-reproduction, or Stage 20 credit. Maori concepts remain under Maori authority."
+    },
+    {
+      "witness_id": "X2-CA6966-P156-BAD-A",
+      "method_id": "CA6966-X2-poly_divrem",
+      "procedure": "Malformed subject eligible for acceptance",
+      "scope": "ceryn-owner-only",
+      "expected": true,
+      "observed": false,
+      "result": "fail",
+      "same_owner_only": true,
+      "independent_reproduction": false,
+      "retained_negative_ids": [
+        "X2-CA6966-P156-BAD-A"
+      ],
+      "boundary": "Same-owner finite synthetic software only; no empirical, production, authority, identity, independent-reproduction, or Stage 20 credit. Maori concepts remain under Maori authority."
+    },
+    {
+      "witness_id": "X2-CA6966-P156-BAD-A-REFUSAL",
+      "method_id": "CA6966-X2-poly_divrem",
+      "procedure": "Exact refusal envelope",
+      "scope": "ceryn-owner-only",
+      "expected": {
+        "ok": false,
+        "value": null,
+        "error": "invalid_rational",
+        "disposition": null,
+        "external_credit": false
+      },
+      "observed": {
+        "ok": false,
+        "value": null,
+        "error": "invalid_rational",
+        "disposition": null,
+        "external_credit": false
+      },
+      "result": "pass",
+      "same_owner_only": true,
+      "independent_reproduction": false,
+      "retained_negative_ids": [
+        "X2-CA6966-P156-BAD-A"
+      ],
+      "boundary": "Same-owner finite synthetic software only; no empirical, production, authority, identity, independent-reproduction, or Stage 20 credit. Maori concepts remain under Maori authority."
+    },
+    {
+      "witness_id": "X2-CA6966-P156-BAD-A-CFR",
+      "method_id": "CA6966-X2-poly_divrem",
+      "procedure": "Retained subject and repair separation",
+      "scope": "ceryn-owner-only",
+      "expected": true,
+      "observed": true,
+      "result": "pass",
+      "same_owner_only": true,
+      "independent_reproduction": false,
+      "retained_negative_ids": [
+        "X2-CA6966-P156-BAD-A"
+      ],
+      "boundary": "Same-owner finite synthetic software only; no empirical, production, authority, identity, independent-reproduction, or Stage 20 credit. Maori concepts remain under Maori authority."
+    },
+    {
+      "witness_id": "X2-CA6966-P156-BAD-B",
+      "method_id": "CA6966-X2-poly_divrem",
+      "procedure": "Malformed subject eligible for acceptance",
+      "scope": "ceryn-owner-only",
+      "expected": true,
+      "observed": false,
+      "result": "fail",
+      "same_owner_only": true,
+      "independent_reproduction": false,
+      "retained_negative_ids": [
+        "X2-CA6966-P156-BAD-B"
+      ],
+      "boundary": "Same-owner finite synthetic software only; no empirical, production, authority, identity, independent-reproduction, or Stage 20 credit. Maori concepts remain under Maori authority."
+    },
+    {
+      "witness_id": "X2-CA6966-P156-BAD-B-REFUSAL",
+      "method_id": "CA6966-X2-poly_divrem",
+      "procedure": "Exact refusal envelope",
+      "scope": "ceryn-owner-only",
+      "expected": {
+        "ok": false,
+        "value": null,
+        "error": "unknown_field",
+        "disposition": null,
+        "external_credit": false
+      },
+      "observed": {
+        "ok": false,
+        "value": null,
+        "error": "unknown_field",
+        "disposition": null,
+        "external_credit": false
+      },
+      "result": "pass",
+      "same_owner_only": true,
+      "independent_reproduction": false,
+      "retained_negative_ids": [
+        "X2-CA6966-P156-BAD-B"
+      ],
+      "boundary": "Same-owner finite synthetic software only; no empirical, production, authority, identity, independent-reproduction, or Stage 20 credit. Maori concepts remain under Maori authority."
+    },
+    {
+      "witness_id": "X2-CA6966-P156-BAD-B-CFR",
+      "method_id": "CA6966-X2-poly_divrem",
+      "procedure": "Retained subject and repair separation",
+      "scope": "ceryn-owner-only",
+      "expected": true,
+      "observed": true,
+      "result": "pass",
+      "same_owner_only": true,
+      "independent_reproduction": false,
+      "retained_negative_ids": [
+        "X2-CA6966-P156-BAD-B"
+      ],
+      "boundary": "Same-owner finite synthetic software only; no empirical, production, authority, identity, independent-reproduction, or Stage 20 credit. Maori concepts remain under Maori authority."
+    },
+    {
+      "witness_id": "X2-CA6966-P156-CLEAN-definition",
+      "method_id": "CA6966-X2-poly_divrem",
+      "procedure": "definition",
+      "scope": "ceryn-owner-only",
+      "expected": true,
+      "observed": true,
+      "result": "pass",
+      "same_owner_only": true,
+      "independent_reproduction": false,
+      "retained_negative_ids": [],
+      "boundary": "Same-owner finite synthetic software only; no empirical, production, authority, identity, independent-reproduction, or Stage 20 credit. Maori concepts remain under Maori authority."
+    },
+    {
+      "witness_id": "X2-CA6966-P156-CLEAN-protected-gates",
+      "method_id": "CA6966-X2-poly_divrem",
+      "procedure": "protected-gates",
+      "scope": "ceryn-owner-only",
+      "expected": true,
+      "observed": true,
+      "result": "pass",
+      "same_owner_only": true,
+      "independent_reproduction": false,
+      "retained_negative_ids": [],
+      "boundary": "Same-owner finite synthetic software only; no empirical, production, authority, identity, independent-reproduction, or Stage 20 credit. Maori concepts remain under Maori authority."
+    },
+    {
+      "witness_id": "X2-CA6966-P157-SAFE-envelope",
+      "method_id": "CA6966-X2-poly_divrem",
+      "procedure": "envelope",
+      "scope": "ceryn-owner-only",
+      "expected": true,
+      "observed": true,
+      "result": "pass",
+      "same_owner_only": true,
+      "independent_reproduction": false,
+      "retained_negative_ids": [],
+      "boundary": "Same-owner finite synthetic software only; no empirical, production, authority, identity, independent-reproduction, or Stage 20 credit. Maori concepts remain under Maori authority."
+    },
+    {
+      "witness_id": "X2-CA6966-P157-SAFE-input",
+      "method_id": "CA6966-X2-poly_divrem",
+      "procedure": "input",
+      "scope": "ceryn-owner-only",
+      "expected": true,
+      "observed": true,
+      "result": "pass",
+      "same_owner_only": true,
+      "independent_reproduction": false,
+      "retained_negative_ids": [],
+      "boundary": "Same-owner finite synthetic software only; no empirical, production, authority, identity, independent-reproduction, or Stage 20 credit. Maori concepts remain under Maori authority."
+    },
+    {
+      "witness_id": "X2-CA6966-P157-BAD-A",
+      "method_id": "CA6966-X2-poly_divrem",
+      "procedure": "Malformed subject eligible for acceptance",
+      "scope": "ceryn-owner-only",
+      "expected": true,
+      "observed": false,
+      "result": "fail",
+      "same_owner_only": true,
+      "independent_reproduction": false,
+      "retained_negative_ids": [
+        "X2-CA6966-P157-BAD-A"
+      ],
+      "boundary": "Same-owner finite synthetic software only; no empirical, production, authority, identity, independent-reproduction, or Stage 20 credit. Maori concepts remain under Maori authority."
+    },
+    {
+      "witness_id": "X2-CA6966-P157-BAD-A-REFUSAL",
+      "method_id": "CA6966-X2-poly_divrem",
+      "procedure": "Exact refusal envelope",
+      "scope": "ceryn-owner-only",
+      "expected": {
+        "ok": false,
+        "value": null,
+        "error": "invalid_rational",
+        "disposition": null,
+        "external_credit": false
+      },
+      "observed": {
+        "ok": false,
+        "value": null,
+        "error": "invalid_rational",
+        "disposition": null,
+        "external_credit": false
+      },
+      "result": "pass",
+      "same_owner_only": true,
+      "independent_reproduction": false,
+      "retained_negative_ids": [
+        "X2-CA6966-P157-BAD-A"
+      ],
+      "boundary": "Same-owner finite synthetic software only; no empirical, production, authority, identity, independent-reproduction, or Stage 20 credit. Maori concepts remain under Maori authority."
+    },
+    {
+      "witness_id": "X2-CA6966-P157-BAD-A-CFR",
+      "method_id": "CA6966-X2-poly_divrem",
+      "procedure": "Retained subject and repair separation",
+      "scope": "ceryn-owner-only",
+      "expected": true,
+      "observed": true,
+      "result": "pass",
+      "same_owner_only": true,
+      "independent_reproduction": false,
+      "retained_negative_ids": [
+        "X2-CA6966-P157-BAD-A"
+      ],
+      "boundary": "Same-owner finite synthetic software only; no empirical, production, authority, identity, independent-reproduction, or Stage 20 credit. Maori concepts remain under Maori authority."
+    },
+    {
+      "witness_id": "X2-CA6966-P157-BAD-B",
+      "method_id": "CA6966-X2-poly_divrem",
+      "procedure": "Malformed subject eligible for acceptance",
+      "scope": "ceryn-owner-only",
+      "expected": true,
+      "observed": false,
+      "result": "fail",
+      "same_owner_only": true,
+      "independent_reproduction": false,
+      "retained_negative_ids": [
+        "X2-CA6966-P157-BAD-B"
+      ],
+      "boundary": "Same-owner finite synthetic software only; no empirical, production, authority, identity, independent-reproduction, or Stage 20 credit. Maori concepts remain under Maori authority."
+    },
+    {
+      "witness_id": "X2-CA6966-P157-BAD-B-REFUSAL",
+      "method_id": "CA6966-X2-poly_divrem",
+      "procedure": "Exact refusal envelope",
+      "scope": "ceryn-owner-only",
+      "expected": {
+        "ok": false,
+        "value": null,
+        "error": "unknown_field",
+        "disposition": null,
+        "external_credit": false
+      },
+      "observed": {
+        "ok": false,
+        "value": null,
+        "error": "unknown_field",
+        "disposition": null,
+        "external_credit": false
+      },
+      "result": "pass",
+      "same_owner_only": true,
+      "independent_reproduction": false,
+      "retained_negative_ids": [
+        "X2-CA6966-P157-BAD-B"
+      ],
+      "boundary": "Same-owner finite synthetic software only; no empirical, production, authority, identity, independent-reproduction, or Stage 20 credit. Maori concepts remain under Maori authority."
+    },
+    {
+      "witness_id": "X2-CA6966-P157-BAD-B-CFR",
+      "method_id": "CA6966-X2-poly_divrem",
+      "procedure": "Retained subject and repair separation",
+      "scope": "ceryn-owner-only",
+      "expected": true,
+      "observed": true,
+      "result": "pass",
+      "same_owner_only": true,
+      "independent_reproduction": false,
+      "retained_negative_ids": [
+        "X2-CA6966-P157-BAD-B"
+      ],
+      "boundary": "Same-owner finite synthetic software only; no empirical, production, authority, identity, independent-reproduction, or Stage 20 credit. Maori concepts remain under Maori authority."
+    },
+    {
+      "witness_id": "X2-CA6966-P157-CLEAN-definition",
+      "method_id": "CA6966-X2-poly_divrem",
+      "procedure": "definition",
+      "scope": "ceryn-owner-only",
+      "expected": true,
+      "observed": true,
+      "result": "pass",
+      "same_owner_only": true,
+      "independent_reproduction": false,
+      "retained_negative_ids": [],
+      "boundary": "Same-owner finite synthetic software only; no empirical, production, authority, identity, independent-reproduction, or Stage 20 credit. Maori concepts remain under Maori authority."
+    },
+    {
+      "witness_id": "X2-CA6966-P157-CLEAN-protected-gates",
+      "method_id": "CA6966-X2-poly_divrem",
+      "procedure": "protected-gates",
+      "scope": "ceryn-owner-only",
+      "expected": true,
+      "observed": true,
+      "result": "pass",
+      "same_owner_only": true,
+      "independent_reproduction": false,
+      "retained_negative_ids": [],
+      "boundary": "Same-owner finite synthetic software only; no empirical, production, authority, identity, independent-reproduction, or Stage 20 credit. Maori concepts remain under Maori authority."
+    },
+    {
+      "witness_id": "X2-CA6966-P158-SAFE-envelope",
+      "method_id": "CA6966-X2-poly_divrem",
+      "procedure": "envelope",
+      "scope": "ceryn-owner-only",
+      "expected": true,
+      "observed": true,
+      "result": "pass",
+      "same_owner_only": true,
+      "independent_reproduction": false,
+      "retained_negative_ids": [],
+      "boundary": "Same-owner finite synthetic software only; no empirical, production, authority, identity, independent-reproduction, or Stage 20 credit. Maori concepts remain under Maori authority."
+    },
+    {
+      "witness_id": "X2-CA6966-P158-SAFE-input",
+      "method_id": "CA6966-X2-poly_divrem",
+      "procedure": "input",
+      "scope": "ceryn-owner-only",
+      "expected": true,
+      "observed": true,
+      "result": "pass",
+      "same_owner_only": true,
+      "independent_reproduction": false,
+      "retained_negative_ids": [],
+      "boundary": "Same-owner finite synthetic software only; no empirical, production, authority, identity, independent-reproduction, or Stage 20 credit. Maori concepts remain under Maori authority."
+    },
+    {
+      "witness_id": "X2-CA6966-P158-BAD-A",
+      "method_id": "CA6966-X2-poly_divrem",
+      "procedure": "Malformed subject eligible for acceptance",
+      "scope": "ceryn-owner-only",
+      "expected": true,
+      "observed": false,
+      "result": "fail",
+      "same_owner_only": true,
+      "independent_reproduction": false,
+      "retained_negative_ids": [
+        "X2-CA6966-P158-BAD-A"
+      ],
+      "boundary": "Same-owner finite synthetic software only; no empirical, production, authority, identity, independent-reproduction, or Stage 20 credit. Maori concepts remain under Maori authority."
+    },
+    {
+      "witness_id": "X2-CA6966-P158-BAD-A-REFUSAL",
+      "method_id": "CA6966-X2-poly_divrem",
+      "procedure": "Exact refusal envelope",
+      "scope": "ceryn-owner-only",
+      "expected": {
+        "ok": false,
+        "value": null,
+        "error": "invalid_rational",
+        "disposition": null,
+        "external_credit": false
+      },
+      "observed": {
+        "ok": false,
+        "value": null,
+        "error": "invalid_rational",
+        "disposition": null,
+        "external_credit": false
+      },
+      "result": "pass",
+      "same_owner_only": true,
+      "independent_reproduction": false,
+      "retained_negative_ids": [
+        "X2-CA6966-P158-BAD-A"
+      ],
+      "boundary": "Same-owner finite synthetic software only; no empirical, production, authority, identity, independent-reproduction, or Stage 20 credit. Maori concepts remain under Maori authority."
+    },
+    {
+      "witness_id": "X2-CA6966-P158-BAD-A-CFR",
+      "method_id": "CA6966-X2-poly_divrem",
+      "procedure": "Retained subject and repair separation",
+      "scope": "ceryn-owner-only",
+      "expected": true,
+      "observed": true,
+      "result": "pass",
+      "same_owner_only": true,
+      "independent_reproduction": false,
+      "retained_negative_ids": [
+        "X2-CA6966-P158-BAD-A"
+      ],
+      "boundary": "Same-owner finite synthetic software only; no empirical, production, authority, identity, independent-reproduction, or Stage 20 credit. Maori concepts remain under Maori authority."
+    },
+    {
+      "witness_id": "X2-CA6966-P158-BAD-B",
+      "method_id": "CA6966-X2-poly_divrem",
+      "procedure": "Malformed subject eligible for acceptance",
+      "scope": "ceryn-owner-only",
+      "expected": true,
+      "observed": false,
+      "result": "fail",
+      "same_owner_only": true,
+      "independent_reproduction": false,
+      "retained_negative_ids": [
+        "X2-CA6966-P158-BAD-B"
+      ],
+      "boundary": "Same-owner finite synthetic software only; no empirical, production, authority, identity, independent-reproduction, or Stage 20 credit. Maori concepts remain under Maori authority."
+    },
+    {
+      "witness_id": "X2-CA6966-P158-BAD-B-REFUSAL",
+      "method_id": "CA6966-X2-poly_divrem",
+      "procedure": "Exact refusal envelope",
+      "scope": "ceryn-owner-only",
+      "expected": {
+        "ok": false,
+        "value": null,
+        "error": "unknown_field",
+        "disposition": null,
+        "external_credit": false
+      },
+      "observed": {
+        "ok": false,
+        "value": null,
+        "error": "unknown_field",
+        "disposition": null,
+        "external_credit": false
+      },
+      "result": "pass",
+      "same_owner_only": true,
+      "independent_reproduction": false,
+      "retained_negative_ids": [
+        "X2-CA6966-P158-BAD-B"
+      ],
+      "boundary": "Same-owner finite synthetic software only; no empirical, production, authority, identity, independent-reproduction, or Stage 20 credit. Maori concepts remain under Maori authority."
+    },
+    {
+      "witness_id": "X2-CA6966-P158-BAD-B-CFR",
+      "method_id": "CA6966-X2-poly_divrem",
+      "procedure": "Retained subject and repair separation",
+      "scope": "ceryn-owner-only",
+      "expected": true,
+      "observed": true,
+      "result": "pass",
+      "same_owner_only": true,
+      "independent_reproduction": false,
+      "retained_negative_ids": [
+        "X2-CA6966-P158-BAD-B"
+      ],
+      "boundary": "Same-owner finite synthetic software only; no empirical, production, authority, identity, independent-reproduction, or Stage 20 credit. Maori concepts remain under Maori authority."
+    },
+    {
+      "witness_id": "X2-CA6966-P158-CLEAN-definition",
+      "method_id": "CA6966-X2-poly_divrem",
+      "procedure": "definition",
+      "scope": "ceryn-owner-only",
+      "expected": true,
+      "observed": true,
+      "result": "pass",
+      "same_owner_only": true,
+      "independent_reproduction": false,
+      "retained_negative_ids": [],
+      "boundary": "Same-owner finite synthetic software only; no empirical, production, authority, identity, independent-reproduction, or Stage 20 credit. Maori concepts remain under Maori authority."
+    },
+    {
+      "witness_id": "X2-CA6966-P158-CLEAN-protected-gates",
+      "method_id": "CA6966-X2-poly_divrem",
+      "procedure": "protected-gates",
+      "scope": "ceryn-owner-only",
+      "expected": true,
+      "observed": true,
+      "result": "pass",
+      "same_owner_only": true,
+      "independent_reproduction": false,
+      "retained_negative_ids": [],
+      "boundary": "Same-owner finite synthetic software only; no empirical, production, authority, identity, independent-reproduction, or Stage 20 credit. Maori concepts remain under Maori authority."
+    },
+    {
+      "witness_id": "X2-CA6966-P159-SAFE-envelope",
+      "method_id": "CA6966-X2-poly_divrem",
+      "procedure": "envelope",
+      "scope": "ceryn-owner-only",
+      "expected": true,
+      "observed": true,
+      "result": "pass",
+      "same_owner_only": true,
+      "independent_reproduction": false,
+      "retained_negative_ids": [],
+      "boundary": "Same-owner finite synthetic software only; no empirical, production, authority, identity, independent-reproduction, or Stage 20 credit. Maori concepts remain under Maori authority."
+    },
+    {
+      "witness_id": "X2-CA6966-P159-SAFE-input",
+      "method_id": "CA6966-X2-poly_divrem",
+      "procedure": "input",
+      "scope": "ceryn-owner-only",
+      "expected": true,
+      "observed": true,
+      "result": "pass",
+      "same_owner_only": true,
+      "independent_reproduction": false,
+      "retained_negative_ids": [],
+      "boundary": "Same-owner finite synthetic software only; no empirical, production, authority, identity, independent-reproduction, or Stage 20 credit. Maori concepts remain under Maori authority."
+    },
+    {
+      "witness_id": "X2-CA6966-P159-BAD-A",
+      "method_id": "CA6966-X2-poly_divrem",
+      "procedure": "Malformed subject eligible for acceptance",
+      "scope": "ceryn-owner-only",
+      "expected": true,
+      "observed": false,
+      "result": "fail",
+      "same_owner_only": true,
+      "independent_reproduction": false,
+      "retained_negative_ids": [
+        "X2-CA6966-P159-BAD-A"
+      ],
+      "boundary": "Same-owner finite synthetic software only; no empirical, production, authority, identity, independent-reproduction, or Stage 20 credit. Maori concepts remain under Maori authority."
+    },
+    {
+      "witness_id": "X2-CA6966-P159-BAD-A-REFUSAL",
+      "method_id": "CA6966-X2-poly_divrem",
+      "procedure": "Exact refusal envelope",
+      "scope": "ceryn-owner-only",
+      "expected": {
+        "ok": false,
+        "value": null,
+        "error": "invalid_rational",
+        "disposition": null,
+        "external_credit": false
+      },
+      "observed": {
+        "ok": false,
+        "value": null,
+        "error": "invalid_rational",
+        "disposition": null,
+        "external_credit": false
+      },
+      "result": "pass",
+      "same_owner_only": true,
+      "independent_reproduction": false,
+      "retained_negative_ids": [
+        "X2-CA6966-P159-BAD-A"
+      ],
+      "boundary": "Same-owner finite synthetic software only; no empirical, production, authority, identity, independent-reproduction, or Stage 20 credit. Maori concepts remain under Maori authority."
+    },
+    {
+      "witness_id": "X2-CA6966-P159-BAD-A-CFR",
+      "method_id": "CA6966-X2-poly_divrem",
+      "procedure": "Retained subject and repair separation",
+      "scope": "ceryn-owner-only",
+      "expected": true,
+      "observed": true,
+      "result": "pass",
+      "same_owner_only": true,
+      "independent_reproduction": false,
+      "retained_negative_ids": [
+        "X2-CA6966-P159-BAD-A"
+      ],
+      "boundary": "Same-owner finite synthetic software only; no empirical, production, authority, identity, independent-reproduction, or Stage 20 credit. Maori concepts remain under Maori authority."
+    },
+    {
+      "witness_id": "X2-CA6966-P159-BAD-B",
+      "method_id": "CA6966-X2-poly_divrem",
+      "procedure": "Malformed subject eligible for acceptance",
+      "scope": "ceryn-owner-only",
+      "expected": true,
+      "observed": false,
+      "result": "fail",
+      "same_owner_only": true,
+      "independent_reproduction": false,
+      "retained_negative_ids": [
+        "X2-CA6966-P159-BAD-B"
+      ],
+      "boundary": "Same-owner finite synthetic software only; no empirical, production, authority, identity, independent-reproduction, or Stage 20 credit. Maori concepts remain under Maori authority."
+    },
+    {
+      "witness_id": "X2-CA6966-P159-BAD-B-REFUSAL",
+      "method_id": "CA6966-X2-poly_divrem",
+      "procedure": "Exact refusal envelope",
+      "scope": "ceryn-owner-only",
+      "expected": {
+        "ok": false,
+        "value": null,
+        "error": "unknown_field",
+        "disposition": null,
+        "external_credit": false
+      },
+      "observed": {
+        "ok": false,
+        "value": null,
+        "error": "unknown_field",
+        "disposition": null,
+        "external_credit": false
+      },
+      "result": "pass",
+      "same_owner_only": true,
+      "independent_reproduction": false,
+      "retained_negative_ids": [
+        "X2-CA6966-P159-BAD-B"
+      ],
+      "boundary": "Same-owner finite synthetic software only; no empirical, production, authority, identity, independent-reproduction, or Stage 20 credit. Maori concepts remain under Maori authority."
+    },
+    {
+      "witness_id": "X2-CA6966-P159-BAD-B-CFR",
+      "method_id": "CA6966-X2-poly_divrem",
+      "procedure": "Retained subject and repair separation",
+      "scope": "ceryn-owner-only",
+      "expected": true,
+      "observed": true,
+      "result": "pass",
+      "same_owner_only": true,
+      "independent_reproduction": false,
+      "retained_negative_ids": [
+        "X2-CA6966-P159-BAD-B"
+      ],
+      "boundary": "Same-owner finite synthetic software only; no empirical, production, authority, identity, independent-reproduction, or Stage 20 credit. Maori concepts remain under Maori authority."
+    },
+    {
+      "witness_id": "X2-CA6966-P159-CLEAN-definition",
+      "method_id": "CA6966-X2-poly_divrem",
+      "procedure": "definition",
+      "scope": "ceryn-owner-only",
+      "expected": true,
+      "observed": true,
+      "result": "pass",
+      "same_owner_only": true,
+      "independent_reproduction": false,
+      "retained_negative_ids": [],
+      "boundary": "Same-owner finite synthetic software only; no empirical, production, authority, identity, independent-reproduction, or Stage 20 credit. Maori concepts remain under Maori authority."
+    },
+    {
+      "witness_id": "X2-CA6966-P159-CLEAN-protected-gates",
+      "method_id": "CA6966-X2-poly_divrem",
+      "procedure": "protected-gates",
+      "scope": "ceryn-owner-only",
+      "expected": true,
+      "observed": true,
+      "result": "pass",
+      "same_owner_only": true,
+      "independent_reproduction": false,
+      "retained_negative_ids": [],
+      "boundary": "Same-owner finite synthetic software only; no empirical, production, authority, identity, independent-reproduction, or Stage 20 credit. Maori concepts remain under Maori authority."
+    },
+    {
+      "witness_id": "X2-CA6966-P160-SAFE-envelope",
+      "method_id": "CA6966-X2-poly_divrem",
+      "procedure": "envelope",
+      "scope": "ceryn-owner-only",
+      "expected": true,
+      "observed": true,
+      "result": "pass",
+      "same_owner_only": true,
+      "independent_reproduction": false,
+      "retained_negative_ids": [],
+      "boundary": "Same-owner finite synthetic software only; no empirical, production, authority, identity, independent-reproduction, or Stage 20 credit. Maori concepts remain under Maori authority."
+    },
+    {
+      "witness_id": "X2-CA6966-P160-SAFE-input",
+      "method_id": "CA6966-X2-poly_divrem",
+      "procedure": "input",
+      "scope": "ceryn-owner-only",
+      "expected": true,
+      "observed": true,
+      "result": "pass",
+      "same_owner_only": true,
+      "independent_reproduction": false,
+      "retained_negative_ids": [],
+      "boundary": "Same-owner finite synthetic software only; no empirical, production, authority, identity, independent-reproduction, or Stage 20 credit. Maori concepts remain under Maori authority."
+    },
+    {
+      "witness_id": "X2-CA6966-P160-BAD-A",
+      "method_id": "CA6966-X2-poly_divrem",
+      "procedure": "Malformed subject eligible for acceptance",
+      "scope": "ceryn-owner-only",
+      "expected": true,
+      "observed": false,
+      "result": "fail",
+      "same_owner_only": true,
+      "independent_reproduction": false,
+      "retained_negative_ids": [
+        "X2-CA6966-P160-BAD-A"
+      ],
+      "boundary": "Same-owner finite synthetic software only; no empirical, production, authority, identity, independent-reproduction, or Stage 20 credit. Maori concepts remain under Maori authority."
+    },
+    {
+      "witness_id": "X2-CA6966-P160-BAD-A-REFUSAL",
+      "method_id": "CA6966-X2-poly_divrem",
+      "procedure": "Exact refusal envelope",
+      "scope": "ceryn-owner-only",
+      "expected": {
+        "ok": false,
+        "value": null,
+        "error": "invalid_rational",
+        "disposition": null,
+        "external_credit": false
+      },
+      "observed": {
+        "ok": false,
+        "value": null,
+        "error": "invalid_rational",
+        "disposition": null,
+        "external_credit": false
+      },
+      "result": "pass",
+      "same_owner_only": true,
+      "independent_reproduction": false,
+      "retained_negative_ids": [
+        "X2-CA6966-P160-BAD-A"
+      ],
+      "boundary": "Same-owner finite synthetic software only; no empirical, production, authority, identity, independent-reproduction, or Stage 20 credit. Maori concepts remain under Maori authority."
+    },
+    {
+      "witness_id": "X2-CA6966-P160-BAD-A-CFR",
+      "method_id": "CA6966-X2-poly_divrem",
+      "procedure": "Retained subject and repair separation",
+      "scope": "ceryn-owner-only",
+      "expected": true,
+      "observed": true,
+      "result": "pass",
+      "same_owner_only": true,
+      "independent_reproduction": false,
+      "retained_negative_ids": [
+        "X2-CA6966-P160-BAD-A"
+      ],
+      "boundary": "Same-owner finite synthetic software only; no empirical, production, authority, identity, independent-reproduction, or Stage 20 credit. Maori concepts remain under Maori authority."
+    },
+    {
+      "witness_id": "X2-CA6966-P160-BAD-B",
+      "method_id": "CA6966-X2-poly_divrem",
+      "procedure": "Malformed subject eligible for acceptance",
+      "scope": "ceryn-owner-only",
+      "expected": true,
+      "observed": false,
+      "result": "fail",
+      "same_owner_only": true,
+      "independent_reproduction": false,
+      "retained_negative_ids": [
+        "X2-CA6966-P160-BAD-B"
+      ],
+      "boundary": "Same-owner finite synthetic software only; no empirical, production, authority, identity, independent-reproduction, or Stage 20 credit. Maori concepts remain under Maori authority."
+    },
+    {
+      "witness_id": "X2-CA6966-P160-BAD-B-REFUSAL",
+      "method_id": "CA6966-X2-poly_divrem",
+      "procedure": "Exact refusal envelope",
+      "scope": "ceryn-owner-only",
+      "expected": {
+        "ok": false,
+        "value": null,
+        "error": "unknown_field",
+        "disposition": null,
+        "external_credit": false
+      },
+      "observed": {
+        "ok": false,
+        "value": null,
+        "error": "unknown_field",
+        "disposition": null,
+        "external_credit": false
+      },
+      "result": "pass",
+      "same_owner_only": true,
+      "independent_reproduction": false,
+      "retained_negative_ids": [
+        "X2-CA6966-P160-BAD-B"
+      ],
+      "boundary": "Same-owner finite synthetic software only; no empirical, production, authority, identity, independent-reproduction, or Stage 20 credit. Maori concepts remain under Maori authority."
+    },
+    {
+      "witness_id": "X2-CA6966-P160-BAD-B-CFR",
+      "method_id": "CA6966-X2-poly_divrem",
+      "procedure": "Retained subject and repair separation",
+      "scope": "ceryn-owner-only",
+      "expected": true,
+      "observed": true,
+      "result": "pass",
+      "same_owner_only": true,
+      "independent_reproduction": false,
+      "retained_negative_ids": [
+        "X2-CA6966-P160-BAD-B"
+      ],
+      "boundary": "Same-owner finite synthetic software only; no empirical, production, authority, identity, independent-reproduction, or Stage 20 credit. Maori concepts remain under Maori authority."
+    },
+    {
+      "witness_id": "X2-CA6966-P160-CLEAN-definition",
+      "method_id": "CA6966-X2-poly_divrem",
+      "procedure": "definition",
+      "scope": "ceryn-owner-only",
+      "expected": true,
+      "observed": true,
+      "result": "pass",
+      "same_owner_only": true,
+      "independent_reproduction": false,
+      "retained_negative_ids": [],
+      "boundary": "Same-owner finite synthetic software only; no empirical, production, authority, identity, independent-reproduction, or Stage 20 credit. Maori concepts remain under Maori authority."
+    },
+    {
+      "witness_id": "X2-CA6966-P160-CLEAN-protected-gates",
+      "method_id": "CA6966-X2-poly_divrem",
+      "procedure": "protected-gates",
+      "scope": "ceryn-owner-only",
+      "expected": true,
+      "observed": true,
+      "result": "pass",
+      "same_owner_only": true,
+      "independent_reproduction": false,
+      "retained_negative_ids": [],
+      "boundary": "Same-owner finite synthetic software only; no empirical, production, authority, identity, independent-reproduction, or Stage 20 credit. Maori concepts remain under Maori authority."
+    },
+    {
+      "witness_id": "X2-CA6966-P161-SAFE-envelope",
+      "method_id": "CA6966-X2-poly_divrem",
+      "procedure": "envelope",
+      "scope": "ceryn-owner-only",
+      "expected": true,
+      "observed": true,
+      "result": "pass",
+      "same_owner_only": true,
+      "independent_reproduction": false,
+      "retained_negative_ids": [],
+      "boundary": "Same-owner finite synthetic software only; no empirical, production, authority, identity, independent-reproduction, or Stage 20 credit. Maori concepts remain under Maori authority."
+    },
+    {
+      "witness_id": "X2-CA6966-P161-SAFE-input",
+      "method_id": "CA6966-X2-poly_divrem",
+      "procedure": "input",
+      "scope": "ceryn-owner-only",
+      "expected": true,
+      "observed": true,
+      "result": "pass",
+      "same_owner_only": true,
+      "independent_reproduction": false,
+      "retained_negative_ids": [],
+      "boundary": "Same-owner finite synthetic software only; no empirical, production, authority, identity, independent-reproduction, or Stage 20 credit. Maori concepts remain under Maori authority."
+    },
+    {
+      "witness_id": "X2-CA6966-P161-BAD-A",
+      "method_id": "CA6966-X2-poly_divrem",
+      "procedure": "Malformed subject eligible for acceptance",
+      "scope": "ceryn-owner-only",
+      "expected": true,
+      "observed": false,
+      "result": "fail",
+      "same_owner_only": true,
+      "independent_reproduction": false,
+      "retained_negative_ids": [
+        "X2-CA6966-P161-BAD-A"
+      ],
+      "boundary": "Same-owner finite synthetic software only; no empirical, production, authority, identity, independent-reproduction, or Stage 20 credit. Maori concepts remain under Maori authority."
+    },
+    {
+      "witness_id": "X2-CA6966-P161-BAD-A-REFUSAL",
+      "method_id": "CA6966-X2-poly_divrem",
+      "procedure": "Exact refusal envelope",
+      "scope": "ceryn-owner-only",
+      "expected": {
+        "ok": false,
+        "value": null,
+        "error": "invalid_rational",
+        "disposition": null,
+        "external_credit": false
+      },
+      "observed": {
+        "ok": false,
+        "value": null,
+        "error": "invalid_rational",
+        "disposition": null,
+        "external_credit": false
+      },
+      "result": "pass",
+      "same_owner_only": true,
+      "independent_reproduction": false,
+      "retained_negative_ids": [
+        "X2-CA6966-P161-BAD-A"
+      ],
+      "boundary": "Same-owner finite synthetic software only; no empirical, production, authority, identity, independent-reproduction, or Stage 20 credit. Maori concepts remain under Maori authority."
+    },
+    {
+      "witness_id": "X2-CA6966-P161-BAD-A-CFR",
+      "method_id": "CA6966-X2-poly_divrem",
+      "procedure": "Retained subject and repair separation",
+      "scope": "ceryn-owner-only",
+      "expected": true,
+      "observed": true,
+      "result": "pass",
+      "same_owner_only": true,
+      "independent_reproduction": false,
+      "retained_negative_ids": [
+        "X2-CA6966-P161-BAD-A"
+      ],
+      "boundary": "Same-owner finite synthetic software only; no empirical, production, authority, identity, independent-reproduction, or Stage 20 credit. Maori concepts remain under Maori authority."
+    },
+    {
+      "witness_id": "X2-CA6966-P161-BAD-B",
+      "method_id": "CA6966-X2-poly_divrem",
+      "procedure": "Malformed subject eligible for acceptance",
+      "scope": "ceryn-owner-only",
+      "expected": true,
+      "observed": false,
+      "result": "fail",
+      "same_owner_only": true,
+      "independent_reproduction": false,
+      "retained_negative_ids": [
+        "X2-CA6966-P161-BAD-B"
+      ],
+      "boundary": "Same-owner finite synthetic software only; no empirical, production, authority, identity, independent-reproduction, or Stage 20 credit. Maori concepts remain under Maori authority."
+    },
+    {
+      "witness_id": "X2-CA6966-P161-BAD-B-REFUSAL",
+      "method_id": "CA6966-X2-poly_divrem",
+      "procedure": "Exact refusal envelope",
+      "scope": "ceryn-owner-only",
+      "expected": {
+        "ok": false,
+        "value": null,
+        "error": "unknown_field",
+        "disposition": null,
+        "external_credit": false
+      },
+      "observed": {
+        "ok": false,
+        "value": null,
+        "error": "unknown_field",
+        "disposition": null,
+        "external_credit": false
+      },
+      "result": "pass",
+      "same_owner_only": true,
+      "independent_reproduction": false,
+      "retained_negative_ids": [
+        "X2-CA6966-P161-BAD-B"
+      ],
+      "boundary": "Same-owner finite synthetic software only; no empirical, production, authority, identity, independent-reproduction, or Stage 20 credit. Maori concepts remain under Maori authority."
+    },
+    {
+      "witness_id": "X2-CA6966-P161-BAD-B-CFR",
+      "method_id": "CA6966-X2-poly_divrem",
+      "procedure": "Retained subject and repair separation",
+      "scope": "ceryn-owner-only",
+      "expected": true,
+      "observed": true,
+      "result": "pass",
+      "same_owner_only": true,
+      "independent_reproduction": false,
+      "retained_negative_ids": [
+        "X2-CA6966-P161-BAD-B"
+      ],
+      "boundary": "Same-owner finite synthetic software only; no empirical, production, authority, identity, independent-reproduction, or Stage 20 credit. Maori concepts remain under Maori authority."
+    },
+    {
+      "witness_id": "X2-CA6966-P161-CLEAN-definition",
+      "method_id": "CA6966-X2-poly_divrem",
+      "procedure": "definition",
+      "scope": "ceryn-owner-only",
+      "expected": true,
+      "observed": true,
+      "result": "pass",
+      "same_owner_only": true,
+      "independent_reproduction": false,
+      "retained_negative_ids": [],
+      "boundary": "Same-owner finite synthetic software only; no empirical, production, authority, identity, independent-reproduction, or Stage 20 credit. Maori concepts remain under Maori authority."
+    },
+    {
+      "witness_id": "X2-CA6966-P161-CLEAN-protected-gates",
+      "method_id": "CA6966-X2-poly_divrem",
+      "procedure": "protected-gates",
+      "scope": "ceryn-owner-only",
+      "expected": true,
+      "observed": true,
+      "result": "pass",
+      "same_owner_only": true,
+      "independent_reproduction": false,
+      "retained_negative_ids": [],
+      "boundary": "Same-owner finite synthetic software only; no empirical, production, authority, identity, independent-reproduction, or Stage 20 credit. Maori concepts remain under Maori authority."
+    },
+    {
+      "witness_id": "X2-CA6966-P162-SAFE-envelope",
+      "method_id": "CA6966-X2-poly_divrem",
+      "procedure": "envelope",
+      "scope": "ceryn-owner-only",
+      "expected": true,
+      "observed": true,
+      "result": "pass",
+      "same_owner_only": true,
+      "independent_reproduction": false,
+      "retained_negative_ids": [],
+      "boundary": "Same-owner finite synthetic software only; no empirical, production, authority, identity, independent-reproduction, or Stage 20 credit. Maori concepts remain under Maori authority."
+    },
+    {
+      "witness_id": "X2-CA6966-P162-SAFE-input",
+      "method_id": "CA6966-X2-poly_divrem",
+      "procedure": "input",
+      "scope": "ceryn-owner-only",
+      "expected": true,
+      "observed": true,
+      "result": "pass",
+      "same_owner_only": true,
+      "independent_reproduction": false,
+      "retained_negative_ids": [],
+      "boundary": "Same-owner finite synthetic software only; no empirical, production, authority, identity, independent-reproduction, or Stage 20 credit. Maori concepts remain under Maori authority."
+    },
+    {
+      "witness_id": "X2-CA6966-P162-BAD-A",
+      "method_id": "CA6966-X2-poly_divrem",
+      "procedure": "Malformed subject eligible for acceptance",
+      "scope": "ceryn-owner-only",
+      "expected": true,
+      "observed": false,
+      "result": "fail",
+      "same_owner_only": true,
+      "independent_reproduction": false,
+      "retained_negative_ids": [
+        "X2-CA6966-P162-BAD-A"
+      ],
+      "boundary": "Same-owner finite synthetic software only; no empirical, production, authority, identity, independent-reproduction, or Stage 20 credit. Maori concepts remain under Maori authority."
+    },
+    {
+      "witness_id": "X2-CA6966-P162-BAD-A-REFUSAL",
+      "method_id": "CA6966-X2-poly_divrem",
+      "procedure": "Exact refusal envelope",
+      "scope": "ceryn-owner-only",
+      "expected": {
+        "ok": false,
+        "value": null,
+        "error": "invalid_rational",
+        "disposition": null,
+        "external_credit": false
+      },
+      "observed": {
+        "ok": false,
+        "value": null,
+        "error": "invalid_rational",
+        "disposition": null,
+        "external_credit": false
+      },
+      "result": "pass",
+      "same_owner_only": true,
+      "independent_reproduction": false,
+      "retained_negative_ids": [
+        "X2-CA6966-P162-BAD-A"
+      ],
+      "boundary": "Same-owner finite synthetic software only; no empirical, production, authority, identity, independent-reproduction, or Stage 20 credit. Maori concepts remain under Maori authority."
+    },
+    {
+      "witness_id": "X2-CA6966-P162-BAD-A-CFR",
+      "method_id": "CA6966-X2-poly_divrem",
+      "procedure": "Retained subject and repair separation",
+      "scope": "ceryn-owner-only",
+      "expected": true,
+      "observed": true,
+      "result": "pass",
+      "same_owner_only": true,
+      "independent_reproduction": false,
+      "retained_negative_ids": [
+        "X2-CA6966-P162-BAD-A"
+      ],
+      "boundary": "Same-owner finite synthetic software only; no empirical, production, authority, identity, independent-reproduction, or Stage 20 credit. Maori concepts remain under Maori authority."
+    },
+    {
+      "witness_id": "X2-CA6966-P162-BAD-B",
+      "method_id": "CA6966-X2-poly_divrem",
+      "procedure": "Malformed subject eligible for acceptance",
+      "scope": "ceryn-owner-only",
+      "expected": true,
+      "observed": false,
+      "result": "fail",
+      "same_owner_only": true,
+      "independent_reproduction": false,
+      "retained_negative_ids": [
+        "X2-CA6966-P162-BAD-B"
+      ],
+      "boundary": "Same-owner finite synthetic software only; no empirical, production, authority, identity, independent-reproduction, or Stage 20 credit. Maori concepts remain under Maori authority."
+    },
+    {
+      "witness_id": "X2-CA6966-P162-BAD-B-REFUSAL",
+      "method_id": "CA6966-X2-poly_divrem",
+      "procedure": "Exact refusal envelope",
+      "scope": "ceryn-owner-only",
+      "expected": {
+        "ok": false,
+        "value": null,
+        "error": "unknown_field",
+        "disposition": null,
+        "external_credit": false
+      },
+      "observed": {
+        "ok": false,
+        "value": null,
+        "error": "unknown_field",
+        "disposition": null,
+        "external_credit": false
+      },
+      "result": "pass",
+      "same_owner_only": true,
+      "independent_reproduction": false,
+      "retained_negative_ids": [
+        "X2-CA6966-P162-BAD-B"
+      ],
+      "boundary": "Same-owner finite synthetic software only; no empirical, production, authority, identity, independent-reproduction, or Stage 20 credit. Maori concepts remain under Maori authority."
+    },
+    {
+      "witness_id": "X2-CA6966-P162-BAD-B-CFR",
+      "method_id": "CA6966-X2-poly_divrem",
+      "procedure": "Retained subject and repair separation",
+      "scope": "ceryn-owner-only",
+      "expected": true,
+      "observed": true,
+      "result": "pass",
+      "same_owner_only": true,
+      "independent_reproduction": false,
+      "retained_negative_ids": [
+        "X2-CA6966-P162-BAD-B"
+      ],
+      "boundary": "Same-owner finite synthetic software only; no empirical, production, authority, identity, independent-reproduction, or Stage 20 credit. Maori concepts remain under Maori authority."
+    },
+    {
+      "witness_id": "X2-CA6966-P162-CLEAN-definition",
+      "method_id": "CA6966-X2-poly_divrem",
+      "procedure": "definition",
+      "scope": "ceryn-owner-only",
+      "expected": true,
+      "observed": true,
+      "result": "pass",
+      "same_owner_only": true,
+      "independent_reproduction": false,
+      "retained_negative_ids": [],
+      "boundary": "Same-owner finite synthetic software only; no empirical, production, authority, identity, independent-reproduction, or Stage 20 credit. Maori concepts remain under Maori authority."
+    },
+    {
+      "witness_id": "X2-CA6966-P162-CLEAN-protected-gates",
+      "method_id": "CA6966-X2-poly_divrem",
+      "procedure": "protected-gates",
+      "scope": "ceryn-owner-only",
+      "expected": true,
+      "observed": true,
+      "result": "pass",
+      "same_owner_only": true,
+      "independent_reproduction": false,
+      "retained_negative_ids": [],
+      "boundary": "Same-owner finite synthetic software only; no empirical, production, authority, identity, independent-reproduction, or Stage 20 credit. Maori concepts remain under Maori authority."
+    },
+    {
+      "witness_id": "X2-CA6966-P163-SAFE-envelope",
+      "method_id": "CA6966-X2-poly_divrem",
+      "procedure": "envelope",
+      "scope": "ceryn-owner-only",
+      "expected": true,
+      "observed": true,
+      "result": "pass",
+      "same_owner_only": true,
+      "independent_reproduction": false,
+      "retained_negative_ids": [],
+      "boundary": "Same-owner finite synthetic software only; no empirical, production, authority, identity, independent-reproduction, or Stage 20 credit. Maori concepts remain under Maori authority."
+    },
+    {
+      "witness_id": "X2-CA6966-P163-SAFE-input",
+      "method_id": "CA6966-X2-poly_divrem",
+      "procedure": "input",
+      "scope": "ceryn-owner-only",
+      "expected": true,
+      "observed": true,
+      "result": "pass",
+      "same_owner_only": true,
+      "independent_reproduction": false,
+      "retained_negative_ids": [],
+      "boundary": "Same-owner finite synthetic software only; no empirical, production, authority, identity, independent-reproduction, or Stage 20 credit. Maori concepts remain under Maori authority."
+    },
+    {
+      "witness_id": "X2-CA6966-P163-BAD-A",
+      "method_id": "CA6966-X2-poly_divrem",
+      "procedure": "Malformed subject eligible for acceptance",
+      "scope": "ceryn-owner-only",
+      "expected": true,
+      "observed": false,
+      "result": "fail",
+      "same_owner_only": true,
+      "independent_reproduction": false,
+      "retained_negative_ids": [
+        "X2-CA6966-P163-BAD-A"
+      ],
+      "boundary": "Same-owner finite synthetic software only; no empirical, production, authority, identity, independent-reproduction, or Stage 20 credit. Maori concepts remain under Maori authority."
+    },
+    {
+      "witness_id": "X2-CA6966-P163-BAD-A-REFUSAL",
+      "method_id": "CA6966-X2-poly_divrem",
+      "procedure": "Exact refusal envelope",
+      "scope": "ceryn-owner-only",
+      "expected": {
+        "ok": false,
+        "value": null,
+        "error": "invalid_rational",
+        "disposition": null,
+        "external_credit": false
+      },
+      "observed": {
+        "ok": false,
+        "value": null,
+        "error": "invalid_rational",
+        "disposition": null,
+        "external_credit": false
+      },
+      "result": "pass",
+      "same_owner_only": true,
+      "independent_reproduction": false,
+      "retained_negative_ids": [
+        "X2-CA6966-P163-BAD-A"
+      ],
+      "boundary": "Same-owner finite synthetic software only; no empirical, production, authority, identity, independent-reproduction, or Stage 20 credit. Maori concepts remain under Maori authority."
+    },
+    {
+      "witness_id": "X2-CA6966-P163-BAD-A-CFR",
+      "method_id": "CA6966-X2-poly_divrem",
+      "procedure": "Retained subject and repair separation",
+      "scope": "ceryn-owner-only",
+      "expected": true,
+      "observed": true,
+      "result": "pass",
+      "same_owner_only": true,
+      "independent_reproduction": false,
+      "retained_negative_ids": [
+        "X2-CA6966-P163-BAD-A"
+      ],
+      "boundary": "Same-owner finite synthetic software only; no empirical, production, authority, identity, independent-reproduction, or Stage 20 credit. Maori concepts remain under Maori authority."
+    },
+    {
+      "witness_id": "X2-CA6966-P163-BAD-B",
+      "method_id": "CA6966-X2-poly_divrem",
+      "procedure": "Malformed subject eligible for acceptance",
+      "scope": "ceryn-owner-only",
+      "expected": true,
+      "observed": false,
+      "result": "fail",
+      "same_owner_only": true,
+      "independent_reproduction": false,
+      "retained_negative_ids": [
+        "X2-CA6966-P163-BAD-B"
+      ],
+      "boundary": "Same-owner finite synthetic software only; no empirical, production, authority, identity, independent-reproduction, or Stage 20 credit. Maori concepts remain under Maori authority."
+    },
+    {
+      "witness_id": "X2-CA6966-P163-BAD-B-REFUSAL",
+      "method_id": "CA6966-X2-poly_divrem",
+      "procedure": "Exact refusal envelope",
+      "scope": "ceryn-owner-only",
+      "expected": {
+        "ok": false,
+        "value": null,
+        "error": "unknown_field",
+        "disposition": null,
+        "external_credit": false
+      },
+      "observed": {
+        "ok": false,
+        "value": null,
+        "error": "unknown_field",
+        "disposition": null,
+        "external_credit": false
+      },
+      "result": "pass",
+      "same_owner_only": true,
+      "independent_reproduction": false,
+      "retained_negative_ids": [
+        "X2-CA6966-P163-BAD-B"
+      ],
+      "boundary": "Same-owner finite synthetic software only; no empirical, production, authority, identity, independent-reproduction, or Stage 20 credit. Maori concepts remain under Maori authority."
+    },
+    {
+      "witness_id": "X2-CA6966-P163-BAD-B-CFR",
+      "method_id": "CA6966-X2-poly_divrem",
+      "procedure": "Retained subject and repair separation",
+      "scope": "ceryn-owner-only",
+      "expected": true,
+      "observed": true,
+      "result": "pass",
+      "same_owner_only": true,
+      "independent_reproduction": false,
+      "retained_negative_ids": [
+        "X2-CA6966-P163-BAD-B"
+      ],
+      "boundary": "Same-owner finite synthetic software only; no empirical, production, authority, identity, independent-reproduction, or Stage 20 credit. Maori concepts remain under Maori authority."
+    },
+    {
+      "witness_id": "X2-CA6966-P163-CLEAN-definition",
+      "method_id": "CA6966-X2-poly_divrem",
+      "procedure": "definition",
+      "scope": "ceryn-owner-only",
+      "expected": true,
+      "observed": true,
+      "result": "pass",
+      "same_owner_only": true,
+      "independent_reproduction": false,
+      "retained_negative_ids": [],
+      "boundary": "Same-owner finite synthetic software only; no empirical, production, authority, identity, independent-reproduction, or Stage 20 credit. Maori concepts remain under Maori authority."
+    },
+    {
+      "witness_id": "X2-CA6966-P163-CLEAN-protected-gates",
+      "method_id": "CA6966-X2-poly_divrem",
+      "procedure": "protected-gates",
+      "scope": "ceryn-owner-only",
+      "expected": true,
+      "observed": true,
+      "result": "pass",
+      "same_owner_only": true,
+      "independent_reproduction": false,
+      "retained_negative_ids": [],
+      "boundary": "Same-owner finite synthetic software only; no empirical, production, authority, identity, independent-reproduction, or Stage 20 credit. Maori concepts remain under Maori authority."
+    },
+    {
+      "witness_id": "X2-CA6966-P164-SAFE-envelope",
+      "method_id": "CA6966-X2-poly_divrem",
+      "procedure": "envelope",
+      "scope": "ceryn-owner-only",
+      "expected": true,
+      "observed": true,
+      "result": "pass",
+      "same_owner_only": true,
+      "independent_reproduction": false,
+      "retained_negative_ids": [],
+      "boundary": "Same-owner finite synthetic software only; no empirical, production, authority, identity, independent-reproduction, or Stage 20 credit. Maori concepts remain under Maori authority."
+    },
+    {
+      "witness_id": "X2-CA6966-P164-SAFE-input",
+      "method_id": "CA6966-X2-poly_divrem",
+      "procedure": "input",
+      "scope": "ceryn-owner-only",
+      "expected": true,
+      "observed": true,
+      "result": "pass",
+      "same_owner_only": true,
+      "independent_reproduction": false,
+      "retained_negative_ids": [],
+      "boundary": "Same-owner finite synthetic software only; no empirical, production, authority, identity, independent-reproduction, or Stage 20 credit. Maori concepts remain under Maori authority."
+    },
+    {
+      "witness_id": "X2-CA6966-P164-BAD-A",
+      "method_id": "CA6966-X2-poly_divrem",
+      "procedure": "Malformed subject eligible for acceptance",
+      "scope": "ceryn-owner-only",
+      "expected": true,
+      "observed": false,
+      "result": "fail",
+      "same_owner_only": true,
+      "independent_reproduction": false,
+      "retained_negative_ids": [
+        "X2-CA6966-P164-BAD-A"
+      ],
+      "boundary": "Same-owner finite synthetic software only; no empirical, production, authority, identity, independent-reproduction, or Stage 20 credit. Maori concepts remain under Maori authority."
+    },
+    {
+      "witness_id": "X2-CA6966-P164-BAD-A-REFUSAL",
+      "method_id": "CA6966-X2-poly_divrem",
+      "procedure": "Exact refusal envelope",
+      "scope": "ceryn-owner-only",
+      "expected": {
+        "ok": false,
+        "value": null,
+        "error": "invalid_rational",
+        "disposition": null,
+        "external_credit": false
+      },
+      "observed": {
+        "ok": false,
+        "value": null,
+        "error": "invalid_rational",
+        "disposition": null,
+        "external_credit": false
+      },
+      "result": "pass",
+      "same_owner_only": true,
+      "independent_reproduction": false,
+      "retained_negative_ids": [
+        "X2-CA6966-P164-BAD-A"
+      ],
+      "boundary": "Same-owner finite synthetic software only; no empirical, production, authority, identity, independent-reproduction, or Stage 20 credit. Maori concepts remain under Maori authority."
+    },
+    {
+      "witness_id": "X2-CA6966-P164-BAD-A-CFR",
+      "method_id": "CA6966-X2-poly_divrem",
+      "procedure": "Retained subject and repair separation",
+      "scope": "ceryn-owner-only",
+      "expected": true,
+      "observed": true,
+      "result": "pass",
+      "same_owner_only": true,
+      "independent_reproduction": false,
+      "retained_negative_ids": [
+        "X2-CA6966-P164-BAD-A"
+      ],
+      "boundary": "Same-owner finite synthetic software only; no empirical, production, authority, identity, independent-reproduction, or Stage 20 credit. Maori concepts remain under Maori authority."
+    },
+    {
+      "witness_id": "X2-CA6966-P164-BAD-B",
+      "method_id": "CA6966-X2-poly_divrem",
+      "procedure": "Malformed subject eligible for acceptance",
+      "scope": "ceryn-owner-only",
+      "expected": true,
+      "observed": false,
+      "result": "fail",
+      "same_owner_only": true,
+      "independent_reproduction": false,
+      "retained_negative_ids": [
+        "X2-CA6966-P164-BAD-B"
+      ],
+      "boundary": "Same-owner finite synthetic software only; no empirical, production, authority, identity, independent-reproduction, or Stage 20 credit. Maori concepts remain under Maori authority."
+    },
+    {
+      "witness_id": "X2-CA6966-P164-BAD-B-REFUSAL",
+      "method_id": "CA6966-X2-poly_divrem",
+      "procedure": "Exact refusal envelope",
+      "scope": "ceryn-owner-only",
+      "expected": {
+        "ok": false,
+        "value": null,
+        "error": "unknown_field",
+        "disposition": null,
+        "external_credit": false
+      },
+      "observed": {
+        "ok": false,
+        "value": null,
+        "error": "unknown_field",
+        "disposition": null,
+        "external_credit": false
+      },
+      "result": "pass",
+      "same_owner_only": true,
+      "independent_reproduction": false,
+      "retained_negative_ids": [
+        "X2-CA6966-P164-BAD-B"
+      ],
+      "boundary": "Same-owner finite synthetic software only; no empirical, production, authority, identity, independent-reproduction, or Stage 20 credit. Maori concepts remain under Maori authority."
+    },
+    {
+      "witness_id": "X2-CA6966-P164-BAD-B-CFR",
+      "method_id": "CA6966-X2-poly_divrem",
+      "procedure": "Retained subject and repair separation",
+      "scope": "ceryn-owner-only",
+      "expected": true,
+      "observed": true,
+      "result": "pass",
+      "same_owner_only": true,
+      "independent_reproduction": false,
+      "retained_negative_ids": [
+        "X2-CA6966-P164-BAD-B"
+      ],
+      "boundary": "Same-owner finite synthetic software only; no empirical, production, authority, identity, independent-reproduction, or Stage 20 credit. Maori concepts remain under Maori authority."
+    },
+    {
+      "witness_id": "X2-CA6966-P164-CLEAN-definition",
+      "method_id": "CA6966-X2-poly_divrem",
+      "procedure": "definition",
+      "scope": "ceryn-owner-only",
+      "expected": true,
+      "observed": true,
+      "result": "pass",
+      "same_owner_only": true,
+      "independent_reproduction": false,
+      "retained_negative_ids": [],
+      "boundary": "Same-owner finite synthetic software only; no empirical, production, authority, identity, independent-reproduction, or Stage 20 credit. Maori concepts remain under Maori authority."
+    },
+    {
+      "witness_id": "X2-CA6966-P164-CLEAN-protected-gates",
+      "method_id": "CA6966-X2-poly_divrem",
+      "procedure": "protected-gates",
+      "scope": "ceryn-owner-only",
+      "expected": true,
+      "observed": true,
+      "result": "pass",
+      "same_owner_only": true,
+      "independent_reproduction": false,
+      "retained_negative_ids": [],
+      "boundary": "Same-owner finite synthetic software only; no empirical, production, authority, identity, independent-reproduction, or Stage 20 credit. Maori concepts remain under Maori authority."
+    },
+    {
+      "witness_id": "X2-CA6966-P165-SAFE-envelope",
+      "method_id": "CA6966-X2-poly_divrem",
+      "procedure": "envelope",
+      "scope": "ceryn-owner-only",
+      "expected": true,
+      "observed": true,
+      "result": "pass",
+      "same_owner_only": true,
+      "independent_reproduction": false,
+      "retained_negative_ids": [],
+      "boundary": "Same-owner finite synthetic software only; no empirical, production, authority, identity, independent-reproduction, or Stage 20 credit. Maori concepts remain under Maori authority."
+    },
+    {
+      "witness_id": "X2-CA6966-P165-SAFE-input",
+      "method_id": "CA6966-X2-poly_divrem",
+      "procedure": "input",
+      "scope": "ceryn-owner-only",
+      "expected": true,
+      "observed": true,
+      "result": "pass",
+      "same_owner_only": true,
+      "independent_reproduction": false,
+      "retained_negative_ids": [],
+      "boundary": "Same-owner finite synthetic software only; no empirical, production, authority, identity, independent-reproduction, or Stage 20 credit. Maori concepts remain under Maori authority."
+    },
+    {
+      "witness_id": "X2-CA6966-P165-BAD-A",
+      "method_id": "CA6966-X2-poly_divrem",
+      "procedure": "Malformed subject eligible for acceptance",
+      "scope": "ceryn-owner-only",
+      "expected": true,
+      "observed": false,
+      "result": "fail",
+      "same_owner_only": true,
+      "independent_reproduction": false,
+      "retained_negative_ids": [
+        "X2-CA6966-P165-BAD-A"
+      ],
+      "boundary": "Same-owner finite synthetic software only; no empirical, production, authority, identity, independent-reproduction, or Stage 20 credit. Maori concepts remain under Maori authority."
+    },
+    {
+      "witness_id": "X2-CA6966-P165-BAD-A-REFUSAL",
+      "method_id": "CA6966-X2-poly_divrem",
+      "procedure": "Exact refusal envelope",
+      "scope": "ceryn-owner-only",
+      "expected": {
+        "ok": false,
+        "value": null,
+        "error": "invalid_rational",
+        "disposition": null,
+        "external_credit": false
+      },
+      "observed": {
+        "ok": false,
+        "value": null,
+        "error": "invalid_rational",
+        "disposition": null,
+        "external_credit": false
+      },
+      "result": "pass",
+      "same_owner_only": true,
+      "independent_reproduction": false,
+      "retained_negative_ids": [
+        "X2-CA6966-P165-BAD-A"
+      ],
+      "boundary": "Same-owner finite synthetic software only; no empirical, production, authority, identity, independent-reproduction, or Stage 20 credit. Maori concepts remain under Maori authority."
+    },
+    {
+      "witness_id": "X2-CA6966-P165-BAD-A-CFR",
+      "method_id": "CA6966-X2-poly_divrem",
+      "procedure": "Retained subject and repair separation",
+      "scope": "ceryn-owner-only",
+      "expected": true,
+      "observed": true,
+      "result": "pass",
+      "same_owner_only": true,
+      "independent_reproduction": false,
+      "retained_negative_ids": [
+        "X2-CA6966-P165-BAD-A"
+      ],
+      "boundary": "Same-owner finite synthetic software only; no empirical, production, authority, identity, independent-reproduction, or Stage 20 credit. Maori concepts remain under Maori authority."
+    },
+    {
+      "witness_id": "X2-CA6966-P165-BAD-B",
+      "method_id": "CA6966-X2-poly_divrem",
+      "procedure": "Malformed subject eligible for acceptance",
+      "scope": "ceryn-owner-only",
+      "expected": true,
+      "observed": false,
+      "result": "fail",
+      "same_owner_only": true,
+      "independent_reproduction": false,
+      "retained_negative_ids": [
+        "X2-CA6966-P165-BAD-B"
+      ],
+      "boundary": "Same-owner finite synthetic software only; no empirical, production, authority, identity, independent-reproduction, or Stage 20 credit. Maori concepts remain under Maori authority."
+    },
+    {
+      "witness_id": "X2-CA6966-P165-BAD-B-REFUSAL",
+      "method_id": "CA6966-X2-poly_divrem",
+      "procedure": "Exact refusal envelope",
+      "scope": "ceryn-owner-only",
+      "expected": {
+        "ok": false,
+        "value": null,
+        "error": "unknown_field",
+        "disposition": null,
+        "external_credit": false
+      },
+      "observed": {
+        "ok": false,
+        "value": null,
+        "error": "unknown_field",
+        "disposition": null,
+        "external_credit": false
+      },
+      "result": "pass",
+      "same_owner_only": true,
+      "independent_reproduction": false,
+      "retained_negative_ids": [
+        "X2-CA6966-P165-BAD-B"
+      ],
+      "boundary": "Same-owner finite synthetic software only; no empirical, production, authority, identity, independent-reproduction, or Stage 20 credit. Maori concepts remain under Maori authority."
+    },
+    {
+      "witness_id": "X2-CA6966-P165-BAD-B-CFR",
+      "method_id": "CA6966-X2-poly_divrem",
+      "procedure": "Retained subject and repair separation",
+      "scope": "ceryn-owner-only",
+      "expected": true,
+      "observed": true,
+      "result": "pass",
+      "same_owner_only": true,
+      "independent_reproduction": false,
+      "retained_negative_ids": [
+        "X2-CA6966-P165-BAD-B"
+      ],
+      "boundary": "Same-owner finite synthetic software only; no empirical, production, authority, identity, independent-reproduction, or Stage 20 credit. Maori concepts remain under Maori authority."
+    },
+    {
+      "witness_id": "X2-CA6966-P165-CLEAN-definition",
+      "method_id": "CA6966-X2-poly_divrem",
+      "procedure": "definition",
+      "scope": "ceryn-owner-only",
+      "expected": true,
+      "observed": true,
+      "result": "pass",
+      "same_owner_only": true,
+      "independent_reproduction": false,
+      "retained_negative_ids": [],
+      "boundary": "Same-owner finite synthetic software only; no empirical, production, authority, identity, independent-reproduction, or Stage 20 credit. Maori concepts remain under Maori authority."
+    },
+    {
+      "witness_id": "X2-CA6966-P165-CLEAN-protected-gates",
+      "method_id": "CA6966-X2-poly_divrem",
+      "procedure": "protected-gates",
+      "scope": "ceryn-owner-only",
+      "expected": true,
+      "observed": true,
+      "result": "pass",
+      "same_owner_only": true,
+      "independent_reproduction": false,
+      "retained_negative_ids": [],
+      "boundary": "Same-owner finite synthetic software only; no empirical, production, authority, identity, independent-reproduction, or Stage 20 credit. Maori concepts remain under Maori authority."
+    }
+  ],
+  "state_events": [
+    {
+      "method_id": "CA6966-X2-poly_divrem",
+      "from": "candidate",
+      "to": "preferred",
+      "note": "Declared passing witness observed; failed subjects remain retained."
+    }
+  ],
+  "recommendations": [
+    {
+      "method_id": "CA6966-X2-poly_divrem",
+      "state": "preferred",
+      "recommendation": "Require exact typed comparison and retain every failed witness."
+    }
+  ],
+  "counts": {
+    "methods": 1,
+    "witnesses": 150,
+    "state_events": 1,
+    "recommendations": 1,
+    "states": {
+      "observed": 0,
+      "candidate": 0,
+      "validated": 0,
+      "preferred": 1,
+      "superseded": 0,
+      "deprecated": 0
+    },
+    "witness_results": {
+      "pass": 120,
+      "fail": 30
+    }
+  },
+  "boundary": "Same-owner finite synthetic software only; no empirical, production, authority, identity, independent-reproduction, or Stage 20 credit. Maori concepts remain under Maori authority."
+}

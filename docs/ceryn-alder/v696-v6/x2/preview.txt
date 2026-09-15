@@ -1,0 +1,7 @@
+'use strict';
+// Read-only loopback preview, serving one fixed owner HTML file.
+const fs=require('fs'),path=require('path'),http=require('http');
+const body=fs.readFileSync(path.join(__dirname,'polynomial-field-notes.html'));
+const server=http.createServer((req,res)=>{if(req.method!=='GET'||req.url!=='/'){res.writeHead(404);res.end();return;}res.writeHead(200,{'Content-Type':'text/html; charset=utf-8','Cache-Control':'no-store'});res.end(body);});
+server.listen(0,'127.0.0.1',()=>console.log(JSON.stringify({port:server.address().port,pid:process.pid,scope:'single owner HTML'})));
+process.on('SIGINT',()=>server.close(()=>process.exit(0)));process.on('SIGTERM',()=>server.close(()=>process.exit(0)));
