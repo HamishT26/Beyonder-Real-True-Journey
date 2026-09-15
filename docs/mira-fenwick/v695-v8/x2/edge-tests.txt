@@ -1,0 +1,13 @@
+'use strict';
+const core=require('./lib/epistemic-update.txt'),fs=require('fs');
+const dest=__dirname+'/edge-results.json';if(fs.existsSync(dest))throw Error('No successful edge-suite replay');
+const ps=[[[0,1,2]],[[0],[1,2]],[[1],[0,2]],[[2],[0,1]],[[0],[1],[2]]];let rows=[];
+for(let a=0;a<5;a++)for(let b=0;b<5;b++)for(let mask=0;mask<8;mask++){
+ const m={id:'update_property',worlds:[0,1,2],valuation:{p:[0,1,2].filter(w=>mask&(1<<w)),q:[0,1,2].filter(w=>mask&(1<<((w+1)%3)))},partitions:{a:ps[a],b:ps[b]},lesson:'Finite public-announcement property fixture.'};
+ const run=operation=>core.run({model:m,operation}).value;
+ const restriction=run('announcement_restrict'),knowledge=run('knowledge_after'),size=run('uncertainty_delta'),sequence=run('announcement_sequence'),moore=run('moore_self_refutation');
+ const laws={public_boolean_known:JSON.stringify(knowledge.worlds)===JSON.stringify(restriction.retained),uncertainty_nonincrease:size.rows.every(r=>r.after<=r.before),boolean_sequence:sequence.equal,moore_after_empty:moore.after.length===0};
+ rows.push({a_partition:a,b_partition:b,valuation_mask:mask,empty_restriction:restriction.empty,moore_applicable:!moore.announcement_empty,laws,passed:Object.values(laws).every(Boolean)});
+}
+const receipt={schema:'ghc.family.finite-update-edge-evidence.v1',owner:'Mira Fenwick',phase:'v695-v8-x2',finite_models:rows.length,law_assertions:rows.length*4,rows,passed:rows.every(r=>r.passed),independent_reproduction:false,counts_separate_from_frozen_portfolio:true};
+fs.writeFileSync(dest,JSON.stringify(receipt,null,2)+'\n',{flag:'wx'});console.log(JSON.stringify({passed:receipt.passed,finite_models:rows.length,law_assertions:receipt.law_assertions}));if(!receipt.passed)process.exitCode=1;

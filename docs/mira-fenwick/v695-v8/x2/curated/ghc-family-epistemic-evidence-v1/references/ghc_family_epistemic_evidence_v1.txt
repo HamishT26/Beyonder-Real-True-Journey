@@ -1,0 +1,5 @@
+'use strict';
+const core=require('./epistemic-update.txt');const operations=["disclosure_profile","knowledge_claim_boundary","external_validation_gap","consequential_use_gate"];
+function run(q){return q&&operations.includes(q.operation)?core.run(q):{ok:false,error:'E_OPERATION',original_success_credit:0};}
+module.exports={run,operations};
+if(require.main===module){let out;try{const s=require('fs').readFileSync(0,'utf8');out=s.length>131072?{ok:false,error:'E_SIZE',original_success_credit:0}:run(JSON.parse(s));}catch(e){out={ok:false,error:'E_JSON',original_success_credit:0};}process.stdout.write(JSON.stringify(out)+'\n');}

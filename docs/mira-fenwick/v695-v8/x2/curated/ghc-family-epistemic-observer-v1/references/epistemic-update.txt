@@ -1,0 +1,22 @@
+'use strict';
+const core=require('./epistemic-core.txt');
+const NEW=['announcement_restrict','knowledge_after','uncertainty_delta','announcement_sequence','moore_self_refutation','relation_properties','disclosure_profile','knowledge_claim_boundary','external_validation_gap','consequential_use_gate'];
+const OPS=core.OPS.concat(NEW);
+function restrict(m,keep){const set=new Set(keep);return{id:m.id,worlds:m.worlds.filter(w=>set.has(w)),valuation:{p:m.valuation.p.filter(w=>set.has(w)),q:m.valuation.q.filter(w=>set.has(w))},partitions:{a:m.partitions.a.map(c=>c.filter(w=>set.has(w))).filter(c=>c.length),b:m.partitions.b.map(c=>c.filter(w=>set.has(w))).filter(c=>c.length)},lesson:m.lesson};}
+function analyze(m,op){const W=m.worlds,P=m.valuation.p,R=core.matrices(m),updated=restrict(m,P);let value,outcome='completed';
+ switch(op){
+ case 'announcement_restrict':value={retained:updated.worlds,removed:W.filter(w=>!updated.worlds.includes(w)),empty:updated.worlds.length===0,valuation:updated.valuation,partitions:updated.partitions};break;
+ case 'knowledge_after':value={retained:updated.worlds,worlds:core.modal(updated.worlds,core.matrices(updated).a,updated.valuation.p),empty:updated.worlds.length===0};break;
+ case 'uncertainty_delta':{const U=core.matrices(updated);value={rows:updated.worlds.flatMap((w,i)=>['a','b'].map(a=>{const oldRow=R[a][W.indexOf(w)],newRow=U[a][i];return{world:w,observer:a,before:oldRow.filter(Boolean).length,after:newRow.filter(Boolean).length,removed_alternatives:W.filter((v,j)=>oldRow[j]&&!updated.worlds.includes(v))};})),removed_worlds:W.filter(w=>!updated.worlds.includes(w))};break;}
+ case 'announcement_sequence':{const sequential=restrict(updated,updated.valuation.q).worlds,conjunction=W.filter(w=>P.includes(w)&&m.valuation.q.includes(w));value={sequential,conjunction,equal:JSON.stringify(sequential)===JSON.stringify(conjunction),boolean_only:true};break;}
+ case 'moore_self_refutation':{const K=core.modal(W,R.a,P),before=P.filter(w=>!K.includes(w)),M=restrict(m,before),newK=core.modal(M.worlds,core.matrices(M).a,M.valuation.p),after=M.valuation.p.filter(w=>!newK.includes(w));value={before,after,self_refuting:before.length>0&&after.length===0,announcement_empty:before.length===0};break;}
+ case 'relation_properties':value={observers:['a','b'].map(a=>{let reflexive=true,symmetric=true,transitive=true;for(let i=0;i<W.length;i++){reflexive=reflexive&&R[a][i][i];for(let j=0;j<W.length;j++){symmetric=symmetric&&(R[a][i][j]===R[a][j][i]);for(let k=0;k<W.length;k++)if(R[a][i][j]&&R[a][j][k]&&!R[a][i][k])transitive=false;}}return{observer:a,reflexive,symmetric,transitive};})};break;
+ case 'disclosure_profile':outcome='represented';value={model:m.id,formal_release:[...P],real_disclosure:false,consent_established:false,privacy_complete:false};break;
+ case 'knowledge_claim_boundary':outcome='represented';value={model:m.id,semantics:'universal_finite_accessibility',human_knowledge_inferred:false,consciousness_inferred:false,identity_inferred:false};break;
+ case 'external_validation_gap':outcome='open_gap';value={model:m.id,missing:['governed_real_dataset','validated_observation_model','participant_review','independent_reproduction','privacy_evaluation']};break;
+ case 'consequential_use_gate':outcome='exact_gate';value={model:m.id,authorized:false,missing:['specific_target','affected_party_consent','competent_authority','appeal_and_recourse','applicable_legal_cultural_and_maori_authority']};break;
+ default:throw Error('Unsupported update operation');
+ }return{ok:true,operation:op,outcome,value};
+}
+function run(q){try{const e=core.validate(q,OPS);if(e)return core.bad(e);return core.OPS.includes(q.operation)?core.analyze(q.model,q.operation):analyze(q.model,q.operation);}catch(e){return core.bad('E_INPUT');}}
+module.exports={OPS,NEW,restrict,run};
