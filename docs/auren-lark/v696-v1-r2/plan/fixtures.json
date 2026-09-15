@@ -1,0 +1,559 @@
+{
+  "schema": "ghc.family.auren-v696-v1-r2.fixtures.v1",
+  "frozen": true,
+  "count": 15,
+  "fixtures": [
+    {
+      "id": "certain_p",
+      "atoms": [
+        "p"
+      ],
+      "ranks": [
+        2,
+        0
+      ],
+      "query": {
+        "input": "p",
+        "target": "p",
+        "alternate": [
+          "not",
+          [
+            "not",
+            "p"
+          ]
+        ]
+      },
+      "lesson": "One atom has one minimal p-world."
+    },
+    {
+      "id": "tied_pq",
+      "atoms": [
+        "p",
+        "q"
+      ],
+      "ranks": [
+        1,
+        0,
+        0,
+        2
+      ],
+      "query": {
+        "input": "q",
+        "target": "p",
+        "alternate": [
+          "not",
+          [
+            "not",
+            "p"
+          ]
+        ]
+      },
+      "lesson": "Tied minimal worlds expose a consequence countermodel."
+    },
+    {
+      "id": "layered_pqr",
+      "atoms": [
+        "p",
+        "q",
+        "r"
+      ],
+      "ranks": [
+        0,
+        1,
+        2,
+        3,
+        1,
+        2,
+        3,
+        4
+      ],
+      "query": {
+        "input": [
+          "and",
+          "p",
+          "q"
+        ],
+        "target": [
+          "or",
+          "p",
+          "r"
+        ],
+        "alternate": [
+          "or",
+          "r",
+          "p"
+        ]
+      },
+      "lesson": "A layered model exposes an equivalent alternate presentation."
+    },
+    {
+      "id": "impossible_pq",
+      "atoms": [
+        "p",
+        "q"
+      ],
+      "ranks": [
+        0,
+        1,
+        1,
+        2
+      ],
+      "query": {
+        "input": [
+          "and",
+          "p",
+          [
+            "not",
+            "p"
+          ]
+        ],
+        "target": "q",
+        "alternate": [
+          "not",
+          [
+            "not",
+            "q"
+          ]
+        ]
+      },
+      "lesson": "Contradictory input has no satisfying world."
+    },
+    {
+      "id": "split_pq",
+      "atoms": [
+        "p",
+        "q"
+      ],
+      "ranks": [
+        0,
+        3,
+        1,
+        2
+      ],
+      "query": {
+        "input": [
+          "or",
+          "p",
+          "q"
+        ],
+        "target": [
+          "and",
+          "p",
+          "q"
+        ],
+        "alternate": [
+          "and",
+          "q",
+          "p"
+        ]
+      },
+      "lesson": "A disjunctive input can separate revision policies."
+    },
+    {
+      "id": "ridge_pqr",
+      "atoms": [
+        "p",
+        "q",
+        "r"
+      ],
+      "ranks": [
+        3,
+        0,
+        2,
+        1,
+        2,
+        1,
+        0,
+        3
+      ],
+      "query": {
+        "input": [
+          "or",
+          "p",
+          "r"
+        ],
+        "target": "q",
+        "alternate": [
+          "not",
+          [
+            "not",
+            "q"
+          ]
+        ]
+      },
+      "lesson": "Two distant minima create a ridge-shaped ordinal surface."
+    },
+    {
+      "id": "basin_pqr",
+      "atoms": [
+        "p",
+        "q",
+        "r"
+      ],
+      "ranks": [
+        4,
+        2,
+        2,
+        0,
+        3,
+        1,
+        1,
+        2
+      ],
+      "query": {
+        "input": [
+          "and",
+          "q",
+          "r"
+        ],
+        "target": "p",
+        "alternate": [
+          "or",
+          "p",
+          false
+        ]
+      },
+      "lesson": "A narrow basin tests input minima and equivalent targets."
+    },
+    {
+      "id": "all_tied_pqr",
+      "atoms": [
+        "p",
+        "q",
+        "r"
+      ],
+      "ranks": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "query": {
+        "input": "p",
+        "target": "q",
+        "alternate": [
+          "not",
+          [
+            "not",
+            "q"
+          ]
+        ]
+      },
+      "lesson": "A total tie preserves every world as initially minimal."
+    },
+    {
+      "id": "dual_min_pqr",
+      "atoms": [
+        "p",
+        "q",
+        "r"
+      ],
+      "ranks": [
+        2,
+        0,
+        0,
+        3,
+        1,
+        2,
+        3,
+        4
+      ],
+      "query": {
+        "input": [
+          "or",
+          "q",
+          "r"
+        ],
+        "target": "p",
+        "alternate": [
+          "and",
+          "p",
+          true
+        ]
+      },
+      "lesson": "Two minima test disagreement and extensional identity."
+    },
+    {
+      "id": "opposed_target_pqr",
+      "atoms": [
+        "p",
+        "q",
+        "r"
+      ],
+      "ranks": [
+        0,
+        1,
+        1,
+        2,
+        2,
+        3,
+        3,
+        4
+      ],
+      "query": {
+        "input": "r",
+        "target": "p",
+        "alternate": [
+          "not",
+          "p"
+        ]
+      },
+      "lesson": "Opposed targets preserve an explicit non-equivalence witness."
+    },
+    {
+      "id": "ladder_pqrs",
+      "atoms": [
+        "p",
+        "q",
+        "r",
+        "s"
+      ],
+      "ranks": [
+        0,
+        1,
+        2,
+        3,
+        1,
+        2,
+        3,
+        4,
+        2,
+        3,
+        4,
+        5,
+        3,
+        4,
+        5,
+        6
+      ],
+      "query": {
+        "input": [
+          "and",
+          [
+            "or",
+            "p",
+            "q"
+          ],
+          [
+            "or",
+            "r",
+            "s"
+          ]
+        ],
+        "target": [
+          "and",
+          "p",
+          "r"
+        ],
+        "alternate": [
+          "and",
+          "r",
+          "p"
+        ]
+      },
+      "lesson": "Four atoms exercise a monotone ordinal ladder."
+    },
+    {
+      "id": "basin_pqrs",
+      "atoms": [
+        "p",
+        "q",
+        "r",
+        "s"
+      ],
+      "ranks": [
+        4,
+        3,
+        3,
+        2,
+        3,
+        2,
+        2,
+        1,
+        3,
+        2,
+        2,
+        1,
+        2,
+        1,
+        1,
+        0
+      ],
+      "query": {
+        "input": [
+          "or",
+          [
+            "and",
+            "p",
+            "q"
+          ],
+          [
+            "and",
+            "r",
+            "s"
+          ]
+        ],
+        "target": "s",
+        "alternate": [
+          "not",
+          [
+            "not",
+            "s"
+          ]
+        ]
+      },
+      "lesson": "A reversed basin places the unique minimum at the final world."
+    },
+    {
+      "id": "twin_min_pqrs",
+      "atoms": [
+        "p",
+        "q",
+        "r",
+        "s"
+      ],
+      "ranks": [
+        2,
+        0,
+        3,
+        1,
+        0,
+        2,
+        1,
+        3,
+        4,
+        2,
+        3,
+        1,
+        2,
+        4,
+        3,
+        5
+      ],
+      "query": {
+        "input": [
+          "or",
+          "p",
+          "s"
+        ],
+        "target": [
+          "and",
+          "q",
+          "r"
+        ],
+        "alternate": [
+          "and",
+          "r",
+          "q"
+        ]
+      },
+      "lesson": "Twin minima exercise countermodels over four atoms."
+    },
+    {
+      "id": "impossible_pqrs",
+      "atoms": [
+        "p",
+        "q",
+        "r",
+        "s"
+      ],
+      "ranks": [
+        0,
+        1,
+        1,
+        2,
+        1,
+        2,
+        2,
+        3,
+        2,
+        3,
+        3,
+        4,
+        3,
+        4,
+        4,
+        5
+      ],
+      "query": {
+        "input": [
+          "and",
+          "s",
+          [
+            "not",
+            "s"
+          ]
+        ],
+        "target": [
+          "or",
+          "p",
+          "q"
+        ],
+        "alternate": [
+          "or",
+          "q",
+          "p"
+        ]
+      },
+      "lesson": "Four-atom impossible input tests explicit unavailability."
+    },
+    {
+      "id": "revision_split_pqrs",
+      "atoms": [
+        "p",
+        "q",
+        "r",
+        "s"
+      ],
+      "ranks": [
+        0,
+        4,
+        2,
+        3,
+        1,
+        5,
+        3,
+        2,
+        2,
+        3,
+        1,
+        4,
+        3,
+        2,
+        5,
+        1
+      ],
+      "query": {
+        "input": [
+          "and",
+          [
+            "or",
+            "p",
+            "q"
+          ],
+          [
+            "or",
+            "r",
+            "s"
+          ]
+        ],
+        "target": [
+          "and",
+          "p",
+          "r"
+        ],
+        "alternate": [
+          "and",
+          "r",
+          "p"
+        ]
+      },
+      "lesson": "A four-atom split stresses natural, lexical, and distance policies."
+    }
+  ],
+  "boundary": "Bounded same-owner finite synthetic ranked-belief conformance software, documentation, and interactive HTML evidence under shared infrastructure only. It is not empirical GMUT confirmation, production THOS or Freed ID, a measurement of any person's beliefs, identity or consent evidence, professional qualification, legal or cultural authority, Maori authority, affected-party authority, complete privacy or accessibility assurance, exhaustive security, independent reproduction, AGI or ASI evidence, consciousness or personhood evidence, Theory-of-Everything proof, canon, deployment authority, a fundamental law of nature or psyche, or Stage 20 readiness."
+}
