@@ -1,0 +1,181 @@
+{
+  "formula_cap": 5,
+  "formula_depth_cap": 12,
+  "knowledge_bases": [
+    {
+      "atoms": [
+        "a",
+        "b"
+      ],
+      "formulas": [
+        {
+          "expr": "a",
+          "id": "f1",
+          "source": "source_a"
+        },
+        {
+          "expr": [
+            "implies",
+            "a",
+            "b"
+          ],
+          "id": "f2",
+          "source": "source_b"
+        },
+        {
+          "expr": "b",
+          "id": "f3",
+          "source": "source_a"
+        }
+      ],
+      "id": "consistent_support",
+      "lesson": "A jointly satisfiable base has no minimal conflict and needs no correction.",
+      "weights": [
+        1,
+        2,
+        1
+      ]
+    },
+    {
+      "atoms": [
+        "a"
+      ],
+      "formulas": [
+        {
+          "expr": "a",
+          "id": "f1",
+          "source": "source_a"
+        },
+        {
+          "expr": [
+            "not",
+            "a"
+          ],
+          "id": "f2",
+          "source": "source_b"
+        }
+      ],
+      "id": "direct_conflict",
+      "lesson": "A direct contradiction has one two-formula minimal inconsistent set.",
+      "weights": [
+        1,
+        2
+      ]
+    },
+    {
+      "atoms": [
+        "a",
+        "b"
+      ],
+      "formulas": [
+        {
+          "expr": "a",
+          "id": "f1",
+          "source": "source_a"
+        },
+        {
+          "expr": [
+            "not",
+            "a"
+          ],
+          "id": "f2",
+          "source": "source_b"
+        },
+        {
+          "expr": "b",
+          "id": "f3",
+          "source": "source_c"
+        }
+      ],
+      "id": "redundant_conflict",
+      "lesson": "A formula outside every minimal conflict remains free even when the whole base is inconsistent.",
+      "weights": [
+        3,
+        1,
+        2
+      ]
+    },
+    {
+      "atoms": [
+        "a",
+        "b"
+      ],
+      "formulas": [
+        {
+          "expr": "a",
+          "id": "f1",
+          "source": "source_a"
+        },
+        {
+          "expr": [
+            "not",
+            "a"
+          ],
+          "id": "f2",
+          "source": "source_b"
+        },
+        {
+          "expr": "b",
+          "id": "f3",
+          "source": "source_a"
+        },
+        {
+          "expr": [
+            "not",
+            "b"
+          ],
+          "id": "f4",
+          "source": "source_c"
+        }
+      ],
+      "id": "dual_conflict",
+      "lesson": "Two disjoint conflicts require a correction hitting each minimal inconsistent set.",
+      "weights": [
+        1,
+        4,
+        2,
+        3
+      ]
+    },
+    {
+      "atoms": [
+        "a",
+        "b"
+      ],
+      "formulas": [
+        {
+          "expr": "a",
+          "id": "f1",
+          "source": "source_a"
+        },
+        {
+          "expr": [
+            "implies",
+            "a",
+            "b"
+          ],
+          "id": "f2",
+          "source": "source_b"
+        },
+        {
+          "expr": [
+            "not",
+            "b"
+          ],
+          "id": "f3",
+          "source": "source_c"
+        }
+      ],
+      "id": "implication_conflict",
+      "lesson": "A three-formula implication conflict distinguishes direct contradiction from derived inconsistency.",
+      "weights": [
+        2,
+        5,
+        1
+      ]
+    }
+  ],
+  "schema": "ghc.family.finite-inconsistency-fixtures.v1",
+  "wholly_synthetic": true,
+  "world_cap": 8
+}
