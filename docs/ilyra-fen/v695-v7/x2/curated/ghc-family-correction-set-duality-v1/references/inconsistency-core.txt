@@ -1,0 +1,75 @@
+"use strict";
+const fs = require("fs");
+const ALLOWED = ["knowledge_base_shape", "formula_model_sets", "joint_model_set", "subset_consistency_table", "minimal_inconsistent_sets", "maximal_consistent_sets", "minimal_correction_sets", "conflict_hypergraph", "free_formula_set", "consistency_partition"];
+const OUTCOMES = {"knowledge_base_shape": "completed", "formula_model_sets": "completed", "joint_model_set": "completed", "subset_consistency_table": "completed", "minimal_inconsistent_sets": "completed", "maximal_consistent_sets": "completed", "minimal_correction_sets": "completed", "conflict_hypergraph": "completed", "free_formula_set": "completed", "consistency_partition": "completed"};
+function error(code) { throw new Error(code); }
+function exactKeys(value, keys, code) {
+  if (!value || typeof value !== "object" || Array.isArray(value) || Object.keys(value).sort().join("|") !== [...keys].sort().join("|")) error(code);
+}
+function evalFormula(formula, atoms, world) {
+  if (typeof formula === "boolean") return formula;
+  if (typeof formula === "string") { if (!atoms.includes(formula)) error("E_FORMULA"); return Boolean(world & (1 << atoms.indexOf(formula))); }
+  if (!Array.isArray(formula) || !formula.length || typeof formula[0] !== "string") error("E_FORMULA");
+  const op = formula[0];
+  if (op === "not" && formula.length === 2) return !evalFormula(formula[1], atoms, world);
+  if (op === "and" && formula.length === 3) return evalFormula(formula[1], atoms, world) && evalFormula(formula[2], atoms, world);
+  if (op === "or" && formula.length === 3) return evalFormula(formula[1], atoms, world) || evalFormula(formula[2], atoms, world);
+  if (op === "implies" && formula.length === 3) return !evalFormula(formula[1], atoms, world) || evalFormula(formula[2], atoms, world);
+  error("E_FORMULA");
+}
+function validate(request) {
+  exactKeys(request, ["operation", "knowledge_base"], "E_FIELDS");
+  if (!ALLOWED.includes(request.operation)) error("E_OPERATION");
+  const kb = request.knowledge_base; exactKeys(kb, ["atoms", "formulas", "id", "lesson", "weights"], "E_KB");
+  if (!Array.isArray(kb.atoms) || kb.atoms.length < 1 || kb.atoms.length > 3 || kb.atoms.some((x) => typeof x !== "string" || !/^[a-z][a-z0-9_]{0,15}$/.test(x)) || new Set(kb.atoms).size !== kb.atoms.length) error("E_KB");
+  if (!Array.isArray(kb.formulas) || kb.formulas.length < 1 || kb.formulas.length > 5) error("E_FORMULAS");
+  const ids = [];
+  for (const row of kb.formulas) { exactKeys(row, ["expr", "id", "source"], "E_FORMULAS"); if (typeof row.id !== "string" || typeof row.source !== "string") error("E_FORMULAS"); ids.push(row.id); for (let world = 0; world < 2 ** kb.atoms.length; world++) evalFormula(row.expr, kb.atoms, world); }
+  if (new Set(ids).size !== ids.length) error("E_FORMULAS");
+  if (!Array.isArray(kb.weights) || kb.weights.length !== kb.formulas.length || kb.weights.some((x) => typeof x !== "number" || !Number.isInteger(x) || x <= 0 || x > 100)) error("E_WEIGHTS");
+  if (typeof kb.id !== "string" || typeof kb.lesson !== "string") error("E_KB");
+  return [request.operation, kb];
+}
+function truth(formula, atoms) { return Array.from({length: 2 ** atoms.length}, (_, world) => world).filter((world) => evalFormula(formula, atoms, world)); }
+function formulaModels(kb) { return kb.formulas.map((row) => truth(row.expr, kb.atoms)); }
+function subsetRows(kb) {
+  const ids = kb.formulas.map((row) => row.id), models = formulaModels(kb), worlds = Array.from({length: 2 ** kb.atoms.length}, (_, index) => index), output = [];
+  for (let mask = 0; mask < 2 ** ids.length; mask++) { const chosen = ids.map((_, index) => index).filter((index) => mask & (1 << index)); const satisfying = worlds.filter((world) => chosen.every((index) => models[index].includes(world))); output.push({ mask, formula_ids: chosen.map((index) => ids[index]), consistent: satisfying.length > 0, worlds: satisfying }); }
+  return output;
+}
+function minimalInconsistent(kb) {
+  const rows = subsetRows(kb), output = [];
+  for (const row of rows) { if (row.consistent) continue; const chosen = kb.formulas.map((_, index) => index).filter((index) => row.mask & (1 << index)); if (chosen.every((index) => rows.find((item) => item.mask === (row.mask & ~(1 << index))).consistent)) output.push(chosen); }
+  return output;
+}
+function maximalConsistent(kb) {
+  const rows = subsetRows(kb), n = kb.formulas.length, output = [];
+  for (const row of rows) { if (!row.consistent) continue; const chosen = Array.from({length:n},(_,i)=>i).filter((i)=>row.mask&(1<<i)); const outside = Array.from({length:n},(_,i)=>i).filter((i)=>!chosen.includes(i)); if (outside.every((index) => !rows.find((item) => item.mask === (row.mask | (1 << index))).consistent)) output.push(chosen); }
+  return output;
+}
+function compareArrays(a,b){ if(a.length!==b.length)return a.length-b.length; for(let i=0;i<a.length;i++){if(a[i]!==b[i])return a[i]-b[i];} return 0; }
+function minimalCorrections(kb){const n=kb.formulas.length;return maximalConsistent(kb).map((row)=>Array.from({length:n},(_,i)=>i).filter((i)=>!row.includes(i))).sort(compareArrays);}
+function combinations(values,size){const out=[];function visit(start,current){if(current.length===size){out.push([...current]);return;}for(let i=start;i<values.length;i++)visit(i+1,[...current,values[i]]);}visit(0,[]);return out;}
+function minimalHittingSets(conflicts,n){if(!conflicts.length)return [[]];const output=[];const values=Array.from({length:n},(_,i)=>i);for(let size=0;size<=n;size++)for(const combo of combinations(values,size)){const chosen=new Set(combo);if(conflicts.every((conflict)=>conflict.some((item)=>chosen.has(item)))&&!output.some((prior)=>prior.every((item)=>chosen.has(item))))output.push(combo);}return output;}
+function idsFor(kb,sets){const ids=kb.formulas.map((row)=>row.id);return sets.map((set)=>set.map((index)=>ids[index]));}
+function same(a,b){return JSON.stringify(a)===JSON.stringify(b);}
+function execute(request) {
+  const [operation, kb] = validate(request), ids = kb.formulas.map((row) => row.id), models = formulaModels(kb), rows = subsetRows(kb), full = rows[rows.length - 1], conflicts = minimalInconsistent(kb), maximal = maximalConsistent(kb), corrections = minimalCorrections(kb), free = ids.map((_, index) => index).filter((index) => conflicts.every((conflict) => !conflict.includes(index)));
+  let value;
+  if (operation === "knowledge_base_shape") value = { atoms: kb.atoms, formula_ids: ids, formula_count: ids.length, world_count: 2 ** kb.atoms.length, source_labels: [...new Set(kb.formulas.map((row)=>row.source))].sort() };
+  else if (operation === "formula_model_sets") value = { models: models.map((worlds,index)=>({formula_id:ids[index],worlds})) };
+  else if (operation === "joint_model_set") value = { consistent: full.consistent, worlds: full.worlds };
+  else if (operation === "subset_consistency_table") value = { rows };
+  else if (operation === "minimal_inconsistent_sets") value = { sets: idsFor(kb, conflicts), count: conflicts.length };
+  else if (operation === "maximal_consistent_sets") value = { sets: idsFor(kb, maximal), count: maximal.length };
+  else if (operation === "minimal_correction_sets") value = { sets: idsFor(kb, corrections), count: corrections.length };
+  else if (operation === "conflict_hypergraph") value = { vertices: ids, hyperedges: idsFor(kb, conflicts), syntactic_only: true };
+  else if (operation === "free_formula_set") value = { formula_ids: free.map((index)=>ids[index]), blame_inferred: false };
+  else if (operation === "consistency_partition") value = { conflicting_formula_ids: ids.filter((_,index)=>!free.includes(index)), free_formula_ids: free.map((index)=>ids[index]), blame_inferred: false };
+
+  else error("E_OPERATION");
+  return { ok: true, operation, outcome: OUTCOMES[operation], value };
+}
+function safeExecute(request){try{return execute(request);}catch(err){return {ok:false,error:err.message,original_success_credit:0};}}
+module.exports={ALLOWED,OUTCOMES,evalFormula,validate,truth,formulaModels,subsetRows,minimalInconsistent,maximalConsistent,minimalCorrections,minimalHittingSets,idsFor,execute,safeExecute};
+if(require.main===module){const input=fs.readFileSync(0,"utf8");process.stdout.write(JSON.stringify(safeExecute(JSON.parse(input)))+"\n");}
