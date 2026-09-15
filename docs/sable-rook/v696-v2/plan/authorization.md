@@ -1,0 +1,5 @@
+# Sable Rook v696-v2 planning authorization
+
+The live Auren activation and current v11 profile authorize one Sable-only numbered phase from exact Auren final `abeda8be811da4b72bd09818bc2e61184b427dc3`. Planning freezes definitions only. It does not contain x1 or x2 execution outcomes. Avelin Reed remains uncontacted until Sable terminal proof.
+
+Bounded same-owner finite synthetic abstract-argumentation software, documentation, and explanatory HTML evidence under shared infrastructure only. It is not empirical GMUT confirmation, production THOS or Freed ID, a measurement of any person, participant or organization, valid consent or identity evidence, professional qualification, legal or cultural authority, Māori authority, affected-party authority, complete privacy or accessibility assurance, exhaustive security, independent reproduction, AGI or ASI evidence, consciousness or personhood evidence, Theory-of-Everything proof, canon, deployment authority, a law of nature or psyche, or Stage 20 readiness. NOT_READY_FOR_STAGE_20.
