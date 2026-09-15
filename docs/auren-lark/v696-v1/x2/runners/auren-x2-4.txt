@@ -1,0 +1,10 @@
+"use strict";
+const fs = require("fs");
+const Module = require("module");
+const path = require("path");
+function loadTextModule(file) { const item = new Module(file, module); item.filename = file; item.paths = Module._nodeModulePaths(path.dirname(file)); item._compile(fs.readFileSync(file, "utf8"), file); return item.exports; }
+const core = loadTextModule(path.resolve(__dirname, "../lib/belief-extended.txt"));
+const ALLOWED = ["interpretation_boundary","adequacy_boundary"];
+function run(request) { if (!request || !ALLOWED.includes(request.operation)) return {ok:false,error:"E_RUNNER_OPERATION",original_success_credit:0}; return core.safeExecute(request); }
+module.exports = {ALLOWED, run, runner: path.basename(__filename)};
+if (require.main === module) { const input = JSON.parse(fs.readFileSync(0, "utf8")); process.stdout.write(JSON.stringify(run(input)) + "\n"); }
