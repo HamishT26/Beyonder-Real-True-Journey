@@ -1,0 +1,19 @@
+"""Bounded read-only key-overview review; no predecessor tests or canonical execution."""
+import importlib.machinery,importlib.util,json,subprocess
+from pathlib import Path
+BASE=Path(__file__).resolve().parents[1]
+def main():
+ import argparse
+ ap=argparse.ArgumentParser();ap.add_argument('--worktree-bank',required=True);a=ap.parse_args();bank=Path(a.worktree_bank)
+ l=importlib.machinery.SourceFileLoader('overview_io',str(BASE/'plan/io.txt'));s=importlib.util.spec_from_loader('overview_io',l);io=importlib.util.module_from_spec(s);l.exec_module(io)
+ records=[]
+ cases=[('vesper-arlen-main-2','vesper-arlen','v695-v4','overview.md','e37f7037a54e7a0aefd84b2673c3bfcba9880199'),('neris-solane-main','neris-solane','v695-v3','overview.md','a59698b33a10fdfb7393bf9ac2b638849f62c9dc'),('rowan-ash-main','rowan-ash','v695-v2','overview.md','HEAD'),('elaren-kestrel-main','elaren-kestrel','v695-v1','integrated-overview.md','1982b25d147cbe11e3eeb0888acbe6f9b8da8405'),('eiren-kestrel-main','eiren-kestrel','v694-v8','integrated-overview.md','580193d059d063f21e6578cb16af8553c9bc0d7a'),('seren-talewood-main','seren-talewood','v694-v7','overview.md','HEAD'),('caelen-morrow-v691-v8-main','caelen-morrow','v694-v6','final-integrated-overview.md','d7465df024508f41517277059097e798e268a746'),('sylven-arc-main','sylven-arc','v694-v5','final-integrated-overview.md','HEAD'),('tessarin-reed-main','tessarin-reed','v694-v4','overview.md','HEAD'),('elowen-cairn-main','elowen-cairn','v694-v3-r2','final-integrated-overview.md','63f2fab4613361bee101af73c1f908ef024055d1')]
+ for dirname,owner,phase,name,rev in cases:
+  root=bank/dirname;head=subprocess.check_output(['git','-C',str(root),'rev-parse',rev],text=True).strip();path=f'docs/{owner}/{phase}/final/{name}';raw=subprocess.check_output(['git','-C',str(root),'show',head+':'+path]);text=raw.decode('utf8');paras=[p.strip() for p in text.split('\n\n') if p.strip()];selected=[]
+  for p in paras:
+   if len(p)>80 and any(k in p.lower() for k in ['outcome','gmut','thos','freed','counterexample','retained','canonical','new ']):
+    selected.append(p)
+    if len('\n\n'.join(selected))>=2500:break
+  excerpt='\n\n'.join(selected)[:3200];record={'owner':owner,'phase':phase,'source_commit':head,'path':path,'bytes':len(raw),'sha256_raw':io.sha(raw),'key_excerpt':excerpt,'source_credit':0,'scope':'bounded key-overview read, not a full predecessor suite or new raw Journey reading'};records.append(record);print(json.dumps(record,ensure_ascii=False),flush=True)
+ io.write('x1/recent-overview-review.json',{'records':records,'count':len(records),'source_canonical_replays':0,'source_test_replays':0})
+if __name__=='__main__':main()

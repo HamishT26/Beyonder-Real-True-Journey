@@ -1,0 +1,51 @@
+"""Derive the current method ledger from distinct recorded subjects and predicates."""
+import argparse,importlib.machinery,importlib.util,json
+from pathlib import Path
+BASE=Path(__file__).resolve().parents[1]
+def load(name,path):
+ l=importlib.machinery.SourceFileLoader(name,str(path));s=importlib.util.spec_from_loader(name,l);m=importlib.util.module_from_spec(s);l.exec_module(m);return m
+io=load('ir_ledger_io',BASE/'plan/io.txt')
+def main():
+ ap=argparse.ArgumentParser();ap.add_argument('--lane',choices=['x1','x2'],required=True);ap.add_argument('--method-runner',required=True);a=ap.parse_args();mf=load('method_flow',a.method_runner);lane=a.lane;ledger=mf.new_ledger('v695-v5','Ilyan Reed') if lane=='x1' else io.read('x1/method-flow.json');ledger.update(identity_boundary=io.BOUNDARY,execution_authority='owner_self_scoped_delta',source_commit=io.SOURCE,owner_git_parent=io.BASELINE,source_is_git_parent=False,planning_commit='522e5cc7aab73614378a4a93d8183007cd66908f',final_commit='POST_COMMIT_EXTERNAL')
+ proposals=io.read('plan/new-proposals.json')['proposals'];groups=io.read('plan/skills-runners.json')['global_groups'];by={m['method_id']:m for m in ledger['methods']}
+ def mid_for_op(op):return 'IR6955-M'+str(next(i+1 for i,g in enumerate(groups) if op in g['operations'])).zfill(2)
+ def ensure(mid,title,negatives):
+  if mid in by:
+   by[mid]['retained_negative_ids']=sorted(set(by[mid]['retained_negative_ids'])|set(negatives));return
+  m={'method_id':mid,'title':title,'failure_signature':'Typed finite counterexamples, malformed subjects or recorded operational faults','trigger_preconditions':['Exact Ilyan v695-v5 owner scope and matching declared operation','Source and protected authority remain separate'],'privacy_class':'sanitized_public','approval_class':'safe_now_bounded_synthetic','candidate_workaround':'Use the declared bounded procedure and retain the original failed subject with its separate predicate.','validation_witness_ids':[],'recurrence_guard':'Check exact field inventory, formula vocabulary, finite caps, source hash and applicable evidence disposition.','rollback':'Select prior source or hold the affected operation without deleting evidence.','recommendation_state':'validated','supersedes':[],'protected_gates':io.GATES,'retained_negative_ids':sorted(set(negatives)),'scope_boundary':'Same-owner finite software and workflow evidence only.','execution_authority':'owner_self_scoped_delta','repository_scan':False,'module_scan':True,'cross_lane_scan':False,'unchanged_history_scan':False,'sibling_lane_mutation':False,'source_commit':io.SOURCE,'final_commit':'POST_COMMIT_EXTERNAL','changed_file_allowlist':[io.PREFIX+lane+'/results.json'],'module_allowlist':[io.PREFIX+lane+'/ranked-core.txt'],'exact_pushed_head_required':True}
+  ledger['methods'].append(m);by[mid]=m
+ def witness(mid,identifier,procedure,expected,observed,result,ref,negative_ids=None):
+  m=by[mid];wid='W-'+identifier;assert not any(w['witness_id']==wid for w in ledger['witnesses']);m['validation_witness_ids'].append(wid);ledger['witnesses'].append({'witness_id':wid,'method_id':mid,'procedure':procedure,'scope':'Ilyan Reed v695-v5 '+lane,'expected':expected,'observed':observed,'result':result,'same_owner_only':True,'independent_reproduction':False,'retained_negative_ids':negative_ids or m['retained_negative_ids'],'boundary':io.GATES,'evidence_ref':ref})
+ rows=[p for p in proposals if p['lane']==lane];lookup={p['id']:p for p in rows}
+ for g in groups:
+  selected=[p for p in rows if p['operation'] in g['operations']]
+  if selected:ensure(mid_for_op(selected[0]['operation']),g['name'],[c['id'] for p in selected for c in p['candidates']])
+ for file,category in [('safe-results.json','safe assertion'),('candidate-subjects.json','original malformed subject'),('refusal-results.json','refusal predicate'),('refinements.json','source refinement')]:
+  ref=io.PREFIX+lane+'/'+file
+  for r in io.read(lane+'/'+file)['records']:
+   pid='-'.join(r['id'].split('-')[:2]);m=mid_for_op(lookup[pid]['operation']);is_subject=category=='original malformed subject';witness(m,r['id']+'-'+category.replace(' ','_'),category,'valid_subject' if is_subject else True,r['subject_state'] if is_subject else r['passed'],'fail' if is_subject or not r['passed'] else 'pass',ref,[r['id']] if is_subject else None)
+ edge=io.read(lane+'/edge-results.json')
+ for r in edge['records']:
+  mid='IR6955-M01' if lane=='x1' else 'IR6955-M04';ensure(mid,groups[int(mid[-2:])-1]['name'],[r['id']] if 'failed_subject' in r else by[mid]['retained_negative_ids']);witness(mid,r['id']+'-predicate',r['test'],r['expected'],r['observed'],'pass' if r['passed'] else 'fail',io.PREFIX+lane+'/edge-results.json')
+  if 'failed_subject' in r:witness(mid,r['id']+'-original','Original edge-test malformed subject','valid_subject','failed','fail',io.PREFIX+lane+'/edge-results.json',[r['id']])
+ tools=io.read('plan/skills-runners.json');skillmap={s['name']:s['operation'] for s in tools['skills']};runnermap={r['name']:r['operations'][0] for r in tools['runners']}
+ for r in io.read(lane+'/skill-validation.json')['records']:witness(mid_for_op(skillmap[r['name']]),lane+'-'+r['name']+'-skill','Official skill validation',True,r['passed'],'pass' if r['passed'] else 'fail',io.PREFIX+lane+'/skill-validation.json')
+ for r in io.read(lane+'/runner-smokes.json')['records']:witness(mid_for_op(runnermap[r['runner']]),lane+'-'+r['runner']+'-'+r['kind'],'New paired caller '+r['kind'],True,r['passed'],'pass' if r['passed'] else 'fail',io.PREFIX+lane+'/runner-smokes.json')
+ ops=[]
+ if lane=='x1':ops+=io.read('plan/startup-failures.json')['records']
+ if (BASE/lane/'operational-corrections.json').exists():ops+=io.read(lane+'/operational-corrections.json')['records']
+ if ops:
+  ensure('IR6955-M06','Bounded source and runtime recovery',[r['id'] for r in ops])
+  for r in ops:
+   witness('IR6955-M06',r['id']+'-original','Retained operational failure','successful declared procedure',r['failure'],'fail',io.PREFIX+('plan/startup-failures.json' if 'START' in r['id'] else lane+'/operational-corrections.json'),[r['id']])
+   if r['recovered']:witness('IR6955-M06',r['id']+'-recovery','Narrow dependency recovery','matching dependency resolved',r['recovery'],'pass',io.PREFIX+('plan/startup-failures.json' if 'START' in r['id'] else lane+'/operational-corrections.json'),[r['id']])
+ if lane=='x1':
+  for i,r in enumerate(io.read('x1/recent-overview-review.json')['records'],1):witness('IR6955-M06',f'IR6955-OV{i:02d}','Read-only key overview bound to exact Git blob','bounded source record read',{'source_commit':r['source_commit'],'sha256_raw':r['sha256_raw'],'source_credit':0},'pass',io.PREFIX+'x1/recent-overview-review.json')
+ if lane=='x2' and (BASE/'x2/promotion-witnesses.json').exists():
+  for r in io.read('x2/promotion-witnesses.json')['records']:witness(r['method_id'],r['id'],r['procedure'],r['expected'],r['observed'],'pass' if r['passed'] else 'fail',r['evidence_ref'])
+ event_methods={e['method_id'] for e in ledger['state_events']}
+ for m in ledger['methods']:
+  if m['method_id'] not in event_methods:
+   passing=next(w['witness_id'] for w in ledger['witnesses'] if w['method_id']==m['method_id'] and w['result']=='pass');mf.append_event(ledger,m['method_id'],'candidate','validated','Declared passing witness with retained original negative',passing);ledger['recommendations'].append({'method_id':m['method_id'],'preconditions':m['trigger_preconditions'],'recommendation':m['recurrence_guard'],'rollback':m['rollback']})
+ mf.refresh_counts(ledger);valid=mf.validate_ledger(ledger);assert valid['valid'],valid;io.write(lane+'/method-flow.json',ledger);io.write(lane+'/method-flow-validation.json',valid);neg=sorted({n for m in ledger['methods'] for n in m['retained_negative_ids']});io.write(lane+'/negative-index.json',{'ids':neg,'owner_count':len(neg),'source_activation_negatives':218,'source_plus_owner_activation_negatives':218+len(neg),'source_selected_lineage_kept_separate':True,'original_subject_success_credit':0});print(json.dumps({'counts':ledger['counts'],'unique_negatives':len(neg),'valid':valid['valid']}))
+if __name__=='__main__':main()

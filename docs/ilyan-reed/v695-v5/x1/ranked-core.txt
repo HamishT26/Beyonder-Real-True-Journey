@@ -1,0 +1,55 @@
+"""Finite ranked-model implementation using truth-set bit masks and strict typed records."""
+import re
+X1_OPS=['rank_model_shape','formula_truth','classical_entailment','minimal_worlds','ranked_conditional','countermodel_partition','rank_layers','rank_normalization','conditional_strengthening','formula_equivalence']
+class ContractError(ValueError):pass
+def require(condition,code):
+ if not condition:raise ContractError(code)
+def closed(x,keys):require(type(x) is dict and set(x)==set(keys),'E_FIELDS')
+def formula(f,atoms,depth=0,budget=None):
+ budget=[0] if budget is None else budget;budget[0]+=1;require(depth<=12 and budget[0]<=64,'E_FORMULA_CAP')
+ if type(f) is bool:return
+ if type(f) is str:require(f in atoms,'E_FORMULA');return
+ require(type(f) is list and len(f) in [2,3],'E_FORMULA');require(type(f[0]) is str and f[0] in ['not','and','or'],'E_FORMULA');require(len(f)==(2 if f[0]=='not' else 3),'E_FORMULA')
+ for child in f[1:]:formula(child,atoms,depth+1,budget)
+def validate(request,allowed):
+ closed(request,['operation','model']);require(type(request['operation']) is str and request['operation'] in allowed,'E_OPERATION');m=request['model'];closed(m,['id','atoms','ranks','defaults','query','lesson'])
+ require(type(m['id']) is str and re.fullmatch('[a-z][a-z0-9_]{0,47}',m['id']) is not None,'E_ID');atoms=m['atoms'];require(type(atoms) is list and 1<=len(atoms)<=4 and all(type(a) is str and re.fullmatch('[a-z][a-z0-9_]{0,31}',a) for a in atoms),'E_ATOMS');require(len(set(atoms))==len(atoms),'E_ATOMS')
+ require(type(m['ranks']) is list and len(m['ranks'])==(1<<len(atoms)) and all(type(x) is int and 0<=x<=1000 for x in m['ranks']),'E_RANKS');require(type(m['lesson']) is str and len(m['lesson'])<=1000,'E_LESSON');closed(m['query'],['a','b','c'])
+ for f in m['query'].values():formula(f,atoms)
+ ds=m['defaults'];require(type(ds) is list and len(ds)<=12,'E_DEFAULTS');ids=[]
+ for d in ds:
+  closed(d,['id','if','then']);require(type(d['id']) is str and re.fullmatch('[A-Za-z][A-Za-z0-9_]{0,31}',d['id']) is not None,'E_DEFAULT_ID');ids.append(d['id']);formula(d['if'],atoms);formula(d['then'],atoms)
+ require(len(set(ids))==len(ids),'E_DEFAULT_ID');return m
+def truth(f,atoms):
+ n=1<<len(atoms);universe=(1<<n)-1
+ if type(f) is bool:return universe if f else 0
+ if type(f) is str:
+  bit=1<<atoms.index(f);return sum(1<<w for w in range(n) if w&bit)
+ if f[0]=='not':return universe^truth(f[1],atoms)
+ if f[0]=='and':return truth(f[1],atoms)&truth(f[2],atoms)
+ return truth(f[1],atoms)|truth(f[2],atoms)
+def worlds(mask,n):return [w for w in range(n) if mask&(1<<w)]
+def minimum(mask,ranks):
+ active=worlds(mask,len(ranks))
+ if not active:return 0
+ low=min(ranks[w] for w in active);return sum(1<<w for w in active if ranks[w]==low)
+def conditional(am,bm,ranks):
+ mins=minimum(am,ranks);bad=mins&~bm;return {'holds':bad==0,'vacuous':mins==0,'minimal_worlds':worlds(mins,len(ranks)),'counterexamples':worlds(bad,len(ranks))}
+def success(op,value):return {'ok':True,'operation':op,'outcome':'completed','value':value}
+def evaluate(request):
+ try:
+  m=validate(request,X1_OPS);op=request['operation'];atoms=m['atoms'];rr=m['ranks'];n=len(rr);am,bm,cm=[truth(m['query'][k],atoms) for k in ['a','b','c']];mins=minimum(am,rr)
+  if op=='rank_model_shape':v={'atoms':atoms[:],'world_count':n,'rank_count':len(set(rr)),'defaults':len(m['defaults'])}
+  elif op=='formula_truth':v={'a':worlds(am,n),'b':worlds(bm,n),'c':worlds(cm,n)}
+  elif op=='classical_entailment':v={'holds':am&~bm==0,'vacuous':am==0,'counterexamples':worlds(am&~bm,n)}
+  elif op=='minimal_worlds':v={'worlds':worlds(mins,n),'rank':min((rr[w] for w in worlds(am,n)),default=None)}
+  elif op=='ranked_conditional':v=conditional(am,bm,rr)
+  elif op=='countermodel_partition':v={'supporting':worlds(mins&bm,n),'minimal_counterexamples':worlds(mins&~bm,n),'nonminimal_counterexamples':worlds(am&~mins&~bm,n)}
+  elif op=='rank_layers':v={'layers':[{'rank':rank,'worlds':[w for w in range(n) if rr[w]==rank]} for rank in sorted(set(rr))]}
+  elif op=='rank_normalization':
+   mapping={r:i for i,r in enumerate(sorted(set(rr)))};v={'ranks':[mapping[r] for r in rr],'order_preserved':all((rr[u]<rr[w])==(mapping[rr[u]]<mapping[rr[w]]) for u in range(n) for w in range(n))}
+  elif op=='conditional_strengthening':
+   before=conditional(am,bm,rr);after=conditional(am&cm,bm,rr);v={'before':before,'after':after,'monotonicity_counterexample':before['holds'] and not after['holds']}
+  else:v={'equivalent':am==bm,'differing_worlds':worlds(am^bm,n)}
+  return success(op,v)
+ except ContractError as e:return {'ok':False,'error':str(e),'original_success_credit':0}

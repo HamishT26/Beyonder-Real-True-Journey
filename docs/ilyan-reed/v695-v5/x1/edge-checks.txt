@@ -1,0 +1,41 @@
+"""Finite invariants and rejecting boundaries independent of the planning oracle."""
+import copy,importlib.machinery,importlib.util,json
+from pathlib import Path
+BASE=Path(__file__).resolve().parents[1]
+def load(name,path):
+ l=importlib.machinery.SourceFileLoader(name,str(path));s=importlib.util.spec_from_loader(name,l);m=importlib.util.module_from_spec(s);l.exec_module(m);return m
+io=load('io_ir_edge',BASE/'plan/io.txt');core=load('core_ir_edge',BASE/'x1/ranked-core.txt')
+def main():
+ models=io.read('plan/fixtures.json')['models'];ordinary=models[0];atoms=ordinary['atoms'];rows=[]
+ def check(name,expected,observed,subject=None):
+  num=len(rows)+1;r={'id':f'IR6955-X1-E{num:03d}','test':name,'expected':expected,'observed':observed,'passed':io.canonical(expected)==io.canonical(observed)}
+  if subject is not None:r.update(failed_subject=subject,subject_state='failed',original_success_credit=0)
+  rows.append(r)
+ def value(op,model):return core.evaluate({'operation':op,'model':model})['value']
+ check('atom bit order',[1,3],core.worlds(core.truth('a',atoms),4))
+ check('true covers universe',15,core.truth(True,atoms));check('false covers no world',0,core.truth(False,atoms))
+ check('negation is finite complement',15^core.truth('a',atoms),core.truth(['not','a'],atoms))
+ check('conjunction is truth intersection',core.truth('a',atoms)&core.truth('b',atoms),core.truth(['and','a','b'],atoms))
+ check('disjunction is truth union',core.truth('a',atoms)|core.truth('b',atoms),core.truth(['or','a','b'],atoms))
+ check('distributivity',core.truth(['and','a',['or','b',['not','a']]],atoms),core.truth(['or',['and','a','b'],['and','a',['not','a']]],atoms))
+ check('De Morgan',core.truth(['not',['and','a','b']],atoms),core.truth(['or',['not','a'],['not','b']],atoms))
+ check('double negation',core.truth('a',atoms),core.truth(['not',['not','a']],atoms))
+ empty=copy.deepcopy(ordinary);empty['query']['a']=False;check('explicit empty-antecedent convention',{'holds':True,'vacuous':True,'minimal_worlds':[],'counterexamples':[]},value('ranked_conditional',empty))
+ check('default differs from classical entailment',[False,True],[value('classical_entailment',ordinary)['holds'],value('ranked_conditional',ordinary)['holds']])
+ check('specific exception retracts conclusion',True,value('conditional_strengthening',models[1])['monotonicity_counterexample'])
+ check('opposed tied minima remain visible',[3,7],value('ranked_conditional',models[3])['minimal_worlds'])
+ flat=copy.deepcopy(ordinary);flat['ranks']=[7]*4;check('flat rank normalization',[0]*4,value('rank_normalization',flat)['ranks'])
+ gaps=copy.deepcopy(ordinary);gaps['ranks']=[7,10,20,7];check('nonconsecutive rank normalization',[0,1,2,0],value('rank_normalization',gaps)['ranks'])
+ transformed=copy.deepcopy(models[1]);transformed['ranks']=[2*r+7 for r in transformed['ranks']];check('strictly increasing rank map preserves conditional',value('ranked_conditional',models[1]),value('ranked_conditional',transformed))
+ layers=value('rank_layers',models[2])['layers'];check('layers partition the complete world set',list(range(16)),sorted(w for l in layers for w in l['worlds']))
+ partition=value('countermodel_partition',ordinary);check('nonminimal countermodel coexists with default truth',[True,[1]],[value('ranked_conditional',ordinary)['holds'],partition['nonminimal_counterexamples']])
+ check('support and counterexample partition the minima',value('minimal_worlds',models[3])['worlds'],sorted(value('countermodel_partition',models[3])['supporting']+value('countermodel_partition',models[3])['minimal_counterexamples']))
+ request={'operation':'rank_model_shape','model':copy.deepcopy(ordinary)};snapshot=copy.deepcopy(request);core.evaluate(request);check('nested input retained',snapshot,request)
+ for name,mutate,error in [('Boolean rank',lambda r:r['model']['ranks'].__setitem__(0,True),'E_RANKS'),('Unbound query atom',lambda r:r['model']['query'].__setitem__('b','outside'),'E_FORMULA'),('Deep formula',lambda r:r['model']['query'].__setitem__('a',deep(14)),'E_FORMULA_CAP'),('Duplicate atoms',lambda r:r['model'].__setitem__('atoms',['a','a']),'E_ATOMS'),('Unsupported operation',lambda r:r.__setitem__('operation','arbitrary_authority'),'E_OPERATION')]:
+  r=copy.deepcopy(request);mutate(r);check(name,{'ok':False,'error':error,'original_success_credit':0},core.evaluate(r),r)
+ io.write('x1/edge-results.json',{'tests':len(rows),'passed':sum(r['passed'] for r in rows),'records':rows,'same_owner_only':True,'independent_reproduction':False});assert len(rows)==25 and all(r['passed'] for r in rows),[r for r in rows if not r['passed']];print(json.dumps({'tests':25,'passed':25,'retained_adverse_subjects':5}))
+def deep(n):
+ f='a'
+ for _ in range(n):f=['not',f]
+ return f
+if __name__=='__main__':main()

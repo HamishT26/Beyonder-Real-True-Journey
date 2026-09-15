@@ -1,0 +1,6 @@
+"""Explicit paired finite ranked-default runner; closed operation scope."""
+import argparse,importlib.machinery,importlib.util,json
+from pathlib import Path
+def main():
+ ap=argparse.ArgumentParser();ap.add_argument("--input",required=True);a=ap.parse_args();p=Path(__file__).resolve().parents[1]/"ranked-core.txt";loader=importlib.machinery.SourceFileLoader("ranked_engine",str(p));spec=importlib.util.spec_from_loader("ranked_engine",loader);m=importlib.util.module_from_spec(spec);loader.exec_module(m);request=json.loads(Path(a.input).read_text(encoding="utf8"));out=m.evaluate(request) if request.get("operation") in ['rank_model_shape', 'formula_truth'] else {"ok":False,"error":"E_RUNNER_SCOPE","original_success_credit":0};print(json.dumps(out,ensure_ascii=False,sort_keys=True))
+if __name__=="__main__":main()
