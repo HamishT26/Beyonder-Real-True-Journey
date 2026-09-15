@@ -1,0 +1,208 @@
+'use strict';
+
+const fs = require('node:fs');
+const path = require('node:path');
+const crypto = require('node:crypto');
+const cp = require('node:child_process');
+
+const root = path.resolve(process.argv[2] || '.');
+const base = path.join(root, 'docs', 'orin-thale', 'v696-v5');
+const x1 = path.join(base, 'x1');
+const core = require(path.join(x1, 'core.txt'));
+
+const SOURCE = '6f62271cceeac7818601f111bb8c20b56e328ad4';
+const PLAN = '4b128c616ff36c704e3a5db7ea558d6ce00182f9';
+const boundary = 'Relational working language and bounded same-owner finite synthetic software only; no consciousness, personhood, identity continuity, employment, qualification, independent agency, empirical GMUT confirmation, production THOS or Freed ID, professional, legal, cultural, affected-party or Maori authority, independent reproduction, complete privacy or accessibility, exhaustive security, AGI/ASI, Theory-of-Everything proof, canon, deployment or Stage 20 credit. Maori concepts remain under Maori authority. NOT_READY_FOR_STAGE_20.';
+
+const sha = bytes => crypto.createHash('sha256').update(bytes).digest('hex');
+const canon = value => {
+  if (Array.isArray(value)) return value.map(canon);
+  if (value && typeof value === 'object') return Object.fromEntries(Object.keys(value).sort().map(key => [key, canon(value[key])]));
+  return value;
+};
+const canonical = value => JSON.stringify(canon(value));
+function write(rel, value, pretty = false) {
+  const dest = path.join(base, rel);
+  if (!dest.startsWith(base + path.sep)) throw new Error('path escape');
+  fs.mkdirSync(path.dirname(dest), { recursive: true });
+  const text = typeof value === 'string' ? value : (pretty ? JSON.stringify(value, null, 2) : JSON.stringify(value)) + '\n';
+  fs.writeFileSync(dest, text, { encoding: 'utf8', flag: 'wx' });
+}
+function git(args, buffer = false) {
+  const result = cp.spawnSync('git', ['-C', root, ...args], { encoding: buffer ? null : 'utf8', maxBuffer: 64 * 1024 * 1024 });
+  if (result.status !== 0) throw new Error(`git ${args.join(' ')} failed: ${String(result.stderr)}`);
+  return result.stdout;
+}
+function runTxt(file, input) {
+  return cp.spawnSync(process.execPath, ['-e', 'require(process.argv[1])', file], { input, encoding: 'utf8', maxBuffer: 8 * 1024 * 1024 });
+}
+
+if (git(['rev-parse', 'HEAD']).trim() !== PLAN) throw new Error('planning head gate');
+if (git(['rev-parse', `${PLAN}^`]).trim() !== SOURCE) throw new Error('planning ancestry gate');
+if (git(['status', '--porcelain=v1']).trim() !== '?? docs/orin-thale/v696-v5/x1/') throw new Error('unexpected pre-x1 state');
+
+const proposals = JSON.parse(git(['show', `${PLAN}:docs/orin-thale/v696-v5/plan/new-proposals.json`]).toString('utf8')).records.filter(row => row.stage === 'x1');
+if (proposals.length !== 150) throw new Error('x1 proposal count');
+const results = [];
+const candidates = [];
+const refusals = [];
+const safe = [];
+const cfr = [];
+const cleanup = [];
+
+for (const proposal of proposals) {
+  const input = JSON.parse(JSON.stringify(proposal.request));
+  const run = core.execute(input);
+  const match = canonical(run.result) === canonical(proposal.expected);
+  results.push({ proposal_id: proposal.proposal_id, operation: proposal.operation, fixture: proposal.fixture, expected_disposition: proposal.expected_disposition, observed_disposition: run.result.disposition, full_envelope_match: match, input_unchanged: run.input_unchanged, input_sha256_before: run.input_sha256_before, input_sha256_after: run.input_sha256_after, result: run.result });
+  safe.push({ task_id: `${proposal.proposal_id}-SAFE-1`, proposal_id: proposal.proposal_id, check: 'complete_typed_envelope', result: match ? 'pass' : 'fail' });
+  safe.push({ task_id: `${proposal.proposal_id}-SAFE-2`, proposal_id: proposal.proposal_id, check: 'input_preservation', result: run.input_unchanged ? 'pass' : 'fail' });
+  proposal.malformed.forEach((malformed, index) => {
+    const bad = core.execute(JSON.parse(JSON.stringify(malformed.subject)));
+    const exactRefusal = canonical(bad.result) === canonical(malformed.expected);
+    const negativeId = `${proposal.proposal_id}-M${index + 1}`;
+    candidates.push({ negative_id: negativeId, proposal_id: proposal.proposal_id, subject: malformed.subject, expected: malformed.expected, observed: bad.result, result: 'fail', original_success_credit: 0, retained: true, erased: false, input_unchanged: bad.input_unchanged });
+    refusals.push({ witness_id: `${negativeId}-REFUSAL`, negative_id: negativeId, result: exactRefusal && bad.input_unchanged ? 'pass' : 'fail', exact_refusal: exactRefusal, failed_subject_promoted: false });
+    cfr.push({ task_id: `${proposal.proposal_id}-CFR-${index + 1}`, negative_id: negativeId, result: exactRefusal ? 'pass' : 'fail', recovery: malformed.repair, promotes_failure: false });
+  });
+  cleanup.push({ task_id: `${proposal.proposal_id}-CLEAN-1`, proposal_id: proposal.proposal_id, review: 'source_projection_integrity', result: proposal.source_credit === 0 ? 'pass' : 'fail' });
+  cleanup.push({ task_id: `${proposal.proposal_id}-CLEAN-2`, proposal_id: proposal.proposal_id, review: 'scope_projection_integrity', result: proposal.boundary === boundary ? 'pass' : 'fail' });
+}
+if (results.length !== 150 || !results.every(row => row.full_envelope_match && row.input_unchanged)) throw new Error('x1 contract mismatch');
+if (!refusals.every(row => row.result === 'pass') || !safe.every(row => row.result === 'pass') || !cfr.every(row => row.result === 'pass') || !cleanup.every(row => row.result === 'pass')) throw new Error('x1 portfolio mismatch');
+
+write('x1/contract-results.json', { count: 150, outcomes: { completed: 150, represented: 0, open_gap: 0, exact_gate: 0 }, records: results, session: { invocations: 1, successes: 1, replays: 0 }, boundary });
+write('x1/candidate-results.json', { count: 300, records: candidates, all_failed_zero_credit: true, boundary });
+write('x1/refusal-results.json', { count: 300, records: refusals, all_pass: true, failed_subjects_promoted: false, boundary });
+write('x1/safe-results.json', { count: 300, records: safe, all_pass: true, boundary });
+write('x1/cfr-results.json', { count: 300, records: cfr, all_pass: true, failures_erased: false, boundary });
+write('x1/cleanup-results.json', { count: 300, records: cleanup, all_pass: true, boundary });
+
+const interstageFailures = [
+  { id: 'OR6965-PLAN-N006', failure: 'The first planning privacy precheck treated scanner-definition and task-plan lexical substrings as confirmed secret hits.', result: 'fail', success_credit: 0, retained: true, erased: false },
+  { id: 'OR6965-PLAN-N007', failure: 'The first narrowed PowerShell recovery used bare true instead of the PowerShell literal $true and stopped during object construction.', result: 'fail', success_credit: 0, retained: true, erased: false }
+];
+const interstageRecoveries = [
+  { id: 'OR6965-PLAN-P006', failure_id: 'OR6965-PLAN-N006', recovery: 'Separated scanner candidates from confirmed payload hits; all three candidates were scanner-definition or task-plan lexical matches and zero were confirmed.', result: 'pass', promotes_failure: false },
+  { id: 'OR6965-PLAN-P007', failure_id: 'OR6965-PLAN-N007', recovery: 'Used PowerShell $true and $false literals and completed the exact 34-file planning precommit validation.', result: 'pass', promotes_failure: false }
+];
+write('x1/operational-failures.json', { count: interstageFailures.length, records: interstageFailures, all_zero_credit: true, boundary }, true);
+write('x1/operational-recoveries.json', { count: interstageRecoveries.length, records: interstageRecoveries, none_erases_failure: true, boundary }, true);
+
+const skillPlan = JSON.parse(git(['show', `${PLAN}:docs/orin-thale/v696-v5/plan/skills-runners-plan.json`]).toString('utf8'));
+const skillRows = skillPlan.skills.filter(row => row.stage === 'x1');
+const runnerRows = skillPlan.runners.filter(row => row.stage === 'x1');
+for (const skill of skillRows) {
+  const dir = `x1/skills/${skill.name}`;
+  write(`${dir}/SKILL.md`, `---\nname: ${skill.name}\ndescription: Evaluate the bounded ${skill.operation} contract for Orin v696-v5 finite token-sequence fixtures; exclude natural-language, Unicode-conformance, empirical, production, professional, legal, cultural, and authority decisions.\n---\n\n# ${skill.name}\n\nRead [the exact contract](references/contract.md). Accept only the declared bounded token-pair fixture and return the complete typed envelope through the phase-local runner. Retain malformed subjects and use the smallest additive correction. This skill is phase-local same-owner software evidence only.\n\n${boundary}\n`);
+  write(`${dir}/references/contract.md`, `# ${skill.operation} contract\n\nOperation: \`${skill.operation}\`. Frozen cases: 15. Positive envelopes, two malformed subjects per case, input preservation, refusal, correction, and cleanup are separately evidenced. The core is \`docs/orin-thale/v696-v5/x1/core.txt\`. Token arrays are explicit and establish no grapheme, word, linguistic, or Unicode-conformance claim.\n\n${boundary}\n`);
+}
+for (const runner of runnerRows) {
+  const source = `'use strict';\nconst fs=require('node:fs'),path=require('node:path'),core=require(path.join(__dirname,'..','core.txt'));\nconst allowed=new Set(${JSON.stringify(runner.operations)});let request;try{request=JSON.parse(fs.readFileSync(0,'utf8'));}catch{console.log(JSON.stringify({ok:false,value:null,error:'invalid_json',disposition:null,external_credit:false}));process.exit(2);}\nif(!allowed.has(request.operation)){console.log(JSON.stringify({ok:false,value:null,error:'unsupported_operation',disposition:null,external_credit:false}));process.exit(2);}\nconst out=core.execute(request).result;console.log(JSON.stringify(out));if(!out.ok)process.exitCode=2;\n`;
+  write(`x1/runners/${runner.name}`, source);
+}
+
+const skillPython = process.env.SKILL_CREATOR_PYTHON;
+const skillValidator = process.env.SKILL_CREATOR_VALIDATOR;
+if (!skillPython || !skillValidator) throw new Error('skill validator environment required');
+const skillObservations = [];
+for (const skill of skillRows) {
+  const dir = path.join(x1, 'skills', skill.name);
+  const run = cp.spawnSync(skillPython, ['-X', 'utf8', '-B', skillValidator, dir], { encoding: 'utf8', env: { ...process.env, PYTHONDONTWRITEBYTECODE: '1' }, maxBuffer: 1024 * 1024 });
+  skillObservations.push({ name: skill.name, operation: skill.operation, exit: run.status, valid: run.status === 0, output: (run.stdout || '').trim() });
+  if (run.status !== 0) throw new Error(`skill validation ${skill.name}: ${run.stderr || run.stdout}`);
+}
+const runnerObservations = [];
+for (const runner of runnerRows) {
+  const file = path.join(x1, 'runners', runner.name);
+  const selected = proposals.filter(proposal => runner.operations.includes(proposal.operation));
+  let positive = 0;
+  let candidateRefusals = 0;
+  for (const proposal of selected) {
+    const run = runTxt(file, JSON.stringify(proposal.request));
+    if (run.status === 0 && canonical(JSON.parse(run.stdout)) === canonical(proposal.expected)) positive++;
+    for (const malformed of proposal.malformed) {
+      const bad = runTxt(file, JSON.stringify(malformed.subject));
+      if (bad.status === 2 && canonical(JSON.parse(bad.stdout)) === canonical(malformed.expected)) candidateRefusals++;
+    }
+  }
+  const unsupported = runTxt(file, JSON.stringify({ ...selected[0].request, operation: 'not_supported' }));
+  const unsupportedEnvelope = JSON.parse(unsupported.stdout);
+  runnerObservations.push({ name: runner.name, operations: runner.operations, positive_passes: positive, candidate_refusals: candidateRefusals, unsupported_subject_result: 'fail', unsupported_original_success_credit: 0, unsupported_refusal_pass: unsupported.status === 2 && unsupportedEnvelope.error === 'unsupported_operation', valid: positive === 30 && candidateRefusals === 60 && unsupported.status === 2 && unsupportedEnvelope.error === 'unsupported_operation' });
+}
+if (!runnerObservations.every(row => row.valid)) throw new Error('runner observations');
+write('x1/capability-observations.json', { skills: skillObservations, runners: runnerObservations, counts: { skills: 10, runners: 5, positive_runner_passes: 150, candidate_runner_refusals: 300, unsupported_runner_subjects: 5, unsupported_runner_refusals: 5 }, all_valid: true, global_installations: 0, boundary });
+
+const methods = [];
+const witnesses = [];
+for (let index = 0; index < interstageFailures.length; index++) {
+  const failure = interstageFailures[index];
+  const recovery = interstageRecoveries[index];
+  const methodId = `${failure.id}-METHOD`;
+  witnesses.push({ witness_id: failure.id, method_id: methodId, procedure: 'Initial planning precommit check.', scope: 'planning staged surface', expected: 'Exact candidate versus confirmed-hit separation and valid PowerShell object construction.', observed: failure.failure, result: 'fail', same_owner_only: true, independent_reproduction: false, retained_negative_ids: [failure.id], boundary });
+  witnesses.push({ witness_id: recovery.id, method_id: methodId, procedure: recovery.recovery, scope: 'smallest planning precommit recovery', expected: 'Pass without failure erasure.', observed: 'Recovered the exact planning precommit gate.', result: 'pass', same_owner_only: true, independent_reproduction: false, retained_negative_ids: [failure.id], boundary });
+  methods.push({ method_id: methodId, title: failure.failure, failure_signature: failure.failure, trigger_preconditions: ['planning assembled', 'precommit validation'], privacy_class: 'sanitized_public', approval_class: 'safe_now', candidate_workaround: recovery.recovery, validation_witness_ids: [failure.id, recovery.id], recurrence_guard: 'Adjudicate scanner candidates separately and use native PowerShell Boolean literals.', rollback: 'Leave planning uncommitted until the bounded correction passes.', recommendation_state: 'preferred', supersedes: [], protected_gates: ['all inherited scientific production legal cultural privacy accessibility and authority gates'], retained_negative_ids: [failure.id], scope_boundary: boundary });
+}
+for (const operation of [...new Set(proposals.map(row => row.operation))]) {
+  const rows = proposals.filter(row => row.operation === operation);
+  const methodId = `OR6965-X1-${operation}`;
+  const ids = [];
+  for (const proposal of rows) {
+    for (const item of safe.filter(row => row.proposal_id === proposal.proposal_id)) {
+      ids.push(item.task_id);
+      witnesses.push({ witness_id: item.task_id, method_id: methodId, procedure: item.check, scope: proposal.proposal_id, expected: 'pass', observed: item.result, result: item.result, same_owner_only: true, independent_reproduction: false, retained_negative_ids: [], boundary });
+    }
+    for (const negative of candidates.filter(row => row.proposal_id === proposal.proposal_id)) {
+      ids.push(negative.negative_id);
+      witnesses.push({ witness_id: negative.negative_id, method_id: methodId, procedure: 'execute malformed subject', scope: proposal.proposal_id, expected: 'fail retained', observed: 'fail retained', result: 'fail', same_owner_only: true, independent_reproduction: false, retained_negative_ids: [negative.negative_id], boundary });
+      const refusal = refusals.find(row => row.negative_id === negative.negative_id);
+      const repair = cfr.find(row => row.negative_id === negative.negative_id);
+      for (const [suffix, procedure, result] of [['-REFUSAL', 'exact refusal check', refusal.result], ['-CFR', 'correction reversal check', repair.result]]) {
+        const id = `${negative.negative_id}${suffix}`;
+        ids.push(id);
+        witnesses.push({ witness_id: id, method_id: methodId, procedure, scope: proposal.proposal_id, expected: 'pass without failure erasure', observed: result, result, same_owner_only: true, independent_reproduction: false, retained_negative_ids: [negative.negative_id], boundary });
+      }
+    }
+    for (const item of cleanup.filter(row => row.proposal_id === proposal.proposal_id)) {
+      ids.push(item.task_id);
+      witnesses.push({ witness_id: item.task_id, method_id: methodId, procedure: item.review, scope: proposal.proposal_id, expected: 'pass', observed: item.result, result: item.result, same_owner_only: true, independent_reproduction: false, retained_negative_ids: [], boundary });
+    }
+  }
+  methods.push({ method_id: methodId, title: `Execute and refuse ${operation}`, failure_signature: 'Complete-envelope mismatch, input mutation, malformed acceptance, failure erasure, token-boundary overclaim, or authority promotion.', trigger_preconditions: ['immutable planning', 'x1-only operation'], privacy_class: 'sanitized_public', approval_class: 'safe_now', candidate_workaround: 'Retain subject and correct the smallest x1 dependency.', validation_witness_ids: ids, recurrence_guard: 'Complete envelope, input digest, exact refusal, CFR, cleanup, and explicit-token boundary.', rollback: 'Stop x1 without creating x2.', recommendation_state: 'preferred', supersedes: [], protected_gates: ['all inherited scientific production legal cultural privacy accessibility and authority gates'], retained_negative_ids: candidates.filter(row => rows.some(proposal => proposal.proposal_id === row.proposal_id)).map(row => row.negative_id), scope_boundary: boundary });
+}
+runnerObservations.forEach((runner, index) => {
+  const methodId = `OR6965-X1-CAP-${index + 1}`;
+  const negativeId = `OR6965-X1-RUNNER-N${index + 1}`;
+  const records = [
+    { witness_id: `${methodId}-SKILLS`, procedure: 'officially validate paired skills', result: 'pass', retained_negative_ids: [] },
+    { witness_id: `${methodId}-POSITIVES`, procedure: 'replay thirty positive runner requests', result: 'pass', retained_negative_ids: [] },
+    { witness_id: `${methodId}-CANDIDATES`, procedure: 'refuse sixty malformed runner requests', result: 'pass', retained_negative_ids: [] },
+    { witness_id: negativeId, procedure: 'submit unsupported operation', result: 'fail', retained_negative_ids: [negativeId] },
+    { witness_id: `${negativeId}-REFUSAL`, procedure: 'verify unsupported-operation refusal', result: 'pass', retained_negative_ids: [negativeId] }
+  ];
+  for (const record of records) witnesses.push({ ...record, method_id: methodId, scope: runner.name, expected: record.result === 'fail' ? 'fail retained' : 'pass', observed: record.result, same_owner_only: true, independent_reproduction: false, boundary });
+  methods.push({ method_id: methodId, title: `Validate paired x1 capabilities ${index + 1}`, failure_signature: 'Skill validation, runner envelope, or unsupported refusal mismatch.', trigger_preconditions: ['x1 skills present', 'paired runner present'], privacy_class: 'sanitized_public', approval_class: 'safe_now', candidate_workaround: 'Retain runner subject and correct only the paired capability.', validation_witness_ids: records.map(row => row.witness_id), recurrence_guard: 'Official skill validation plus all positive, malformed, and unsupported smokes.', rollback: 'Keep phase-local artifacts without promotion.', recommendation_state: 'preferred', supersedes: [], protected_gates: ['all inherited scientific production legal cultural privacy accessibility and authority gates'], retained_negative_ids: [negativeId], scope_boundary: boundary });
+});
+const pass = witnesses.filter(row => row.result === 'pass').length;
+const fail = witnesses.filter(row => row.result === 'fail').length;
+if (methods.length !== 17 || witnesses.length !== 1529 || pass !== 1222 || fail !== 307) throw new Error(`method counts ${methods.length}/${witnesses.length}/${pass}/${fail}`);
+write('x1/method-flow.json', { schema: 'ghc.family.method-flow-state.v1', phase: 'v696-v5', owner: 'Orin Thale', stage: 'x1', identity_boundary: boundary, execution_authority: 'owner_self_scoped_delta', methods, witnesses, state_events: methods.map(method => ({ method_id: method.method_id, from: 'validated', to: 'preferred', reason: 'All declared bounded positive and refusal checks passed; failures remain retained.' })), recommendations: methods.map(method => ({ method_id: method.method_id, state: 'preferred', recommendation: method.recurrence_guard })), counts: { methods: 17, witnesses: 1529, state_events: 17, recommendations: 17, states: { preferred: 17 }, witness_results: { pass, fail } }, predecessor: { methods: 56, witnesses: 3202, pass: 2570, fail: 632, selected_lineage_negatives: 3859, core_open_gaps: 60, core_exact_gates: 60 }, cumulative: { methods: 73, witnesses: 4731, pass: 3792, fail: 939, selected_lineage_negatives: 4166, core_open_gaps: 60, core_exact_gates: 60 }, boundary });
+write('x1/method-flow-validation.json', { status: 'VALID_X1_METHOD_FLOW', methods: 17, witnesses: 1529, pass, fail, cumulative: { methods: 73, witnesses: 4731, pass: 3792, fail: 939, selected_lineage_negatives: 4166 }, failed_zero_credit: true, recoveries_do_not_erase_failures: true, boundary }, true);
+write('x1/domain-receipt.json', { status: 'VALID_X1_DOMAIN_SESSION', source: SOURCE, planning: PLAN, invocations: 1, successes: 1, replays: 0, contracts: 150, outcomes: { completed: 150, represented: 0, open_gap: 0, exact_gate: 0 }, safe: 300, candidate_failures: 300, refusals: 300, cfr: 300, cleanup_refinement: 300, skills: 10, runners: 5, global_installations: 0, packages: 0, external_actions: 0, boundary }, true);
+write('x1/phase-truth.json', { owner: 'Orin Thale', phase: 'v696-v5', stage: 'x1', status: 'X1_FROZEN_NO_X2', outcomes: { completed: 150, represented: 0, open_gap: 0, exact_gate: 0 }, safe: 300, candidate_failed: 300, candidate_refusals: 300, cfr: 300, cleanup_refinement: 300, skills: 10, runners: 5, x2_present: false, simulations_rendered: 0, exact_packets_executed: 0, blocked_packets_executed: 0, canonical_invoked: false, route: 'PREPARED_NOT_SENT', terminal_verdict: 'NOT_READY_FOR_STAGE_20', boundary }, true);
+write('x1/source-gate.json', { source: SOURCE, planning: PLAN, observed_head_before_commit: PLAN, planning_direct_child_of_source: git(['rev-parse', `${PLAN}^`]).trim() === SOURCE, planning_clean_four_way_equal: true, plan_manifest_entries: 33, x2_present: false, boundary }, true);
+write('x1/overview.md', `# Orin Thale v696-v5 x1 evidence\n\nX1 executed the first ten finite sequence operations over fifteen wholly synthetic token-pair fixtures: 150 completed contracts. It passed 300 safe checks, retained 300 malformed subjects at zero credit, passed 300 separate refusal checks, 300 CFR checks, and 300 cleanup reviews. Ten phase-local skills passed the official structural validator, and five paired family-current runners accepted 150 positive requests, refused 300 malformed requests, and retained five unsupported-operation subjects.\n\nTwo planning-precommit failures remain visible: an overbroad scanner candidate classification and a PowerShell Boolean-literal fault. Planning remains immutable, x2 is absent, and no simulation, package, global installation, canonical, or route action occurred. Explicit token arrays establish no grapheme, word, linguistic, or Unicode-conformance result.\n\n${boundary}\n`);
+
+const files = fs.readdirSync(x1, { recursive: true }).filter(rel => fs.statSync(path.join(x1, rel)).isFile()).map(String).map(rel => rel.replaceAll('\\', '/')).sort();
+const entries = files.filter(rel => rel !== 'manifest.json' && rel !== 'staged-allowlist.json').map(rel => {
+  const bytes = fs.readFileSync(path.join(x1, ...rel.split('/')));
+  return { path: `docs/orin-thale/v696-v5/x1/${rel}`, bytes: bytes.length, sha256: sha(bytes) };
+});
+const allPaths = [...entries.map(row => row.path), 'docs/orin-thale/v696-v5/x1/manifest.json', 'docs/orin-thale/v696-v5/x1/staged-allowlist.json'].sort();
+write('x1/staged-allowlist.json', { schema: 'ghc.family.staged-allowlist.v11', stage: 'x1', count: allPaths.length, paths: allPaths, exact: true, non_x1_paths: 0, boundary }, true);
+const stagedBytes = fs.readFileSync(path.join(x1, 'staged-allowlist.json'));
+entries.push({ path: 'docs/orin-thale/v696-v5/x1/staged-allowlist.json', bytes: stagedBytes.length, sha256: sha(stagedBytes) });
+entries.sort((a, b) => a.path.localeCompare(b.path));
+write('x1/manifest.json', { schema: 'ghc.family.raw-git-manifest.v11', owner: 'Orin Thale', phase: 'v696-v5', stage: 'x1', source: PLAN, entries, exclusions: ['docs/orin-thale/v696-v5/x1/manifest.json'], total_paths: entries.length + 1, hash_domain: 'working bytes before commit; staged bytes and immutable Git blobs after commit', boundary }, true);
+
+console.log(JSON.stringify({ status: 'X1_CONTENT_ASSEMBLED', contracts: 150, safe: 300, candidates: 300, refusals: 300, cfr: 300, cleanup: 300, skills: 10, runners: 5, methods: 17, witnesses: 1529, pass, fail, files: entries.length + 1 }, null, 2));

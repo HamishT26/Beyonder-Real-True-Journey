@@ -1,0 +1,135 @@
+'use strict';
+
+const crypto = require('node:crypto');
+
+const allowed = new Set([
+  'seq_shape', 'seq_reverse', 'seq_concat', 'seq_common_prefix', 'seq_common_suffix',
+  'seq_mismatch_profile', 'seq_lcs_length', 'seq_lcs_witness', 'seq_levenshtein',
+  'seq_edit_matrix'
+]);
+
+const sha = bytes => crypto.createHash('sha256').update(bytes).digest('hex');
+const canon = value => {
+  if (Array.isArray(value)) return value.map(canon);
+  if (value && typeof value === 'object') return Object.fromEntries(Object.keys(value).sort().map(key => [key, canon(value[key])]));
+  return value;
+};
+const canonical = value => JSON.stringify(canon(value));
+
+function prefix(a, b) {
+  let index = 0;
+  while (index < a.length && index < b.length && a[index] === b[index]) index++;
+  return a.slice(0, index);
+}
+
+function suffix(a, b) {
+  let count = 0;
+  while (count < a.length && count < b.length && a[a.length - count - 1] === b[b.length - count - 1]) count++;
+  return count ? a.slice(a.length - count) : [];
+}
+
+function lcsGrid(a, b) {
+  const grid = Array.from({ length: a.length + 1 }, () => Array(b.length + 1).fill(0));
+  for (let row = a.length - 1; row >= 0; row--) {
+    for (let column = b.length - 1; column >= 0; column--) {
+      grid[row][column] = a[row] === b[column]
+        ? grid[row + 1][column + 1] + 1
+        : Math.max(grid[row + 1][column], grid[row][column + 1]);
+    }
+  }
+  return grid;
+}
+
+function lcsCertificate(a, b) {
+  const grid = lcsGrid(a, b);
+  const sequence = [];
+  const pairs = [];
+  let row = 0;
+  let column = 0;
+  while (row < a.length && column < b.length) {
+    if (a[row] === b[column]) {
+      sequence.push(a[row]);
+      pairs.push([row, column]);
+      row++;
+      column++;
+    } else if (grid[row + 1][column] >= grid[row][column + 1]) row++;
+    else column++;
+  }
+  return { sequence, pairs, length: sequence.length };
+}
+
+function unitEditGrid(a, b) {
+  const grid = Array.from({ length: a.length + 1 }, () => Array(b.length + 1).fill(0));
+  for (let row = 1; row <= a.length; row++) grid[row][0] = row;
+  for (let column = 1; column <= b.length; column++) grid[0][column] = column;
+  for (let row = 1; row <= a.length; row++) {
+    for (let column = 1; column <= b.length; column++) {
+      grid[row][column] = Math.min(
+        grid[row - 1][column] + 1,
+        grid[row][column - 1] + 1,
+        grid[row - 1][column - 1] + (a[row - 1] === b[column - 1] ? 0 : 1)
+      );
+    }
+  }
+  return grid;
+}
+
+function validate(request) {
+  if (!request || typeof request !== 'object' || Array.isArray(request)) return 'invalid_request';
+  const keys = Object.keys(request);
+  if (!keys.includes('operation')) return 'missing_operation';
+  if (!keys.includes('fixture')) return 'missing_fixture';
+  if (keys.some(key => !['operation', 'fixture'].includes(key))) return 'unknown_field';
+  if (!allowed.has(request.operation)) return 'unsupported_operation';
+  const fixture = request.fixture;
+  if (!fixture || typeof fixture !== 'object' || Array.isArray(fixture)) return 'invalid_fixture';
+  const fixtureKeys = Object.keys(fixture);
+  const expected = ['id', 'a', 'b'];
+  if (expected.some(key => !fixtureKeys.includes(key))) return 'missing_fixture_field';
+  if (fixtureKeys.some(key => !expected.includes(key))) return 'unknown_fixture_field';
+  if (typeof fixture.id !== 'string' || !fixture.id) return 'invalid_fixture_id';
+  const validSequence = value => Array.isArray(value) && value.length <= 10 && value.every(token => typeof token === 'string' && token.length >= 1 && token.length <= 5 && /^[A-Za-z]+$/.test(token));
+  if (!validSequence(fixture.a) || !validSequence(fixture.b)) return 'invalid_sequence';
+  return null;
+}
+
+function value(operation, fixture) {
+  const a = fixture.a;
+  const b = fixture.b;
+  switch (operation) {
+    case 'seq_shape': return { a_length: a.length, b_length: b.length, total: a.length + b.length, bounded: true };
+    case 'seq_reverse': return { a_reversed: [...a].reverse(), b_reversed: [...b].reverse() };
+    case 'seq_concat': return { ab: [...a, ...b], ba: [...b, ...a] };
+    case 'seq_common_prefix': { const result = prefix(a, b); return { value: result, length: result.length }; }
+    case 'seq_common_suffix': { const result = suffix(a, b); return { value: result, length: result.length }; }
+    case 'seq_mismatch_profile': {
+      const overlap = Math.min(a.length, b.length);
+      const mismatch_indices = [];
+      for (let index = 0; index < overlap; index++) if (a[index] !== b[index]) mismatch_indices.push(index);
+      return { overlap, mismatch_indices, length_delta: b.length - a.length };
+    }
+    case 'seq_lcs_length': return { length: lcsGrid(a, b)[0][0] };
+    case 'seq_lcs_witness': return lcsCertificate(a, b);
+    case 'seq_levenshtein': { const grid = unitEditGrid(a, b); return { distance: grid[a.length][b.length] }; }
+    case 'seq_edit_matrix': { const grid = unitEditGrid(a, b); return { rows: grid.length, columns: grid[0].length, table: grid }; }
+    default: throw new Error('unreachable operation');
+  }
+}
+
+function execute(request) {
+  const before = canonical(request);
+  const beforeHash = sha(Buffer.from(before));
+  const error = validate(request);
+  const result = error
+    ? { ok: false, value: null, error, disposition: null, external_credit: false }
+    : { ok: true, value: value(request.operation, request.fixture), error: null, disposition: 'completed', external_credit: false };
+  const after = canonical(request);
+  return {
+    result,
+    input_unchanged: before === after,
+    input_sha256_before: beforeHash,
+    input_sha256_after: sha(Buffer.from(after))
+  };
+}
+
+module.exports = { execute, validate, canonical, sha };

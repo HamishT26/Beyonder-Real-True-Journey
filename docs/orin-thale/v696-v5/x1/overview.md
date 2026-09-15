@@ -1,0 +1,7 @@
+# Orin Thale v696-v5 x1 evidence
+
+X1 executed the first ten finite sequence operations over fifteen wholly synthetic token-pair fixtures: 150 completed contracts. It passed 300 safe checks, retained 300 malformed subjects at zero credit, passed 300 separate refusal checks, 300 CFR checks, and 300 cleanup reviews. Ten phase-local skills passed the official structural validator, and five paired family-current runners accepted 150 positive requests, refused 300 malformed requests, and retained five unsupported-operation subjects.
+
+Two planning-precommit failures remain visible: an overbroad scanner candidate classification and a PowerShell Boolean-literal fault. Planning remains immutable, x2 is absent, and no simulation, package, global installation, canonical, or route action occurred. Explicit token arrays establish no grapheme, word, linguistic, or Unicode-conformance result.
+
+Relational working language and bounded same-owner finite synthetic software only; no consciousness, personhood, identity continuity, employment, qualification, independent agency, empirical GMUT confirmation, production THOS or Freed ID, professional, legal, cultural, affected-party or Maori authority, independent reproduction, complete privacy or accessibility, exhaustive security, AGI/ASI, Theory-of-Everything proof, canon, deployment or Stage 20 credit. Maori concepts remain under Maori authority. NOT_READY_FOR_STAGE_20.
