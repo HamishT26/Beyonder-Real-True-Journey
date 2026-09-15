@@ -1,0 +1,549 @@
+'use strict';
+
+const fs = require('node:fs');
+const path = require('node:path');
+const crypto = require('node:crypto');
+const cp = require('node:child_process');
+
+const root = path.resolve(process.argv[2] || '.');
+const base = path.join(root, 'docs', 'orin-thale', 'v696-v5');
+const plan = path.join(base, 'plan');
+
+const SOURCE = '6f62271cceeac7818601f111bb8c20b56e328ad4';
+const CAELEN_X2 = '6ee2601fbf23ae825566ed2e1c7667ca6a79174b';
+const CAELEN_X1 = 'b5a75bfc6189b33648ef6679bf3159f7fc74a963';
+const CAELEN_PLAN = '1eddad0043f01fc052d75980c9b95a6f0b4cf8dd';
+const AVELIN_SOURCE = 'f4174abc9139b18ec34d45e7e3f60a2d7fd1018f';
+const BRANCH = 'codex/GHC-Family/orin-thale-v696-v5-full-tools';
+const SOURCE_BRANCH = 'codex/GHC-Family/caelen-ash-v696-v4-full-tools';
+
+const boundary = 'Relational working language and bounded same-owner finite synthetic software only; no consciousness, personhood, identity continuity, employment, qualification, independent agency, empirical GMUT confirmation, production THOS or Freed ID, professional, legal, cultural, affected-party or Maori authority, independent reproduction, complete privacy or accessibility, exhaustive security, AGI/ASI, Theory-of-Everything proof, canon, deployment or Stage 20 credit. Maori concepts remain under Maori authority. NOT_READY_FOR_STAGE_20.';
+const protectedGates = [
+  'empirical', 'participant', 'professional', 'production', 'legal', 'cultural',
+  'Maori-authority', 'affected-party', 'privacy-complete', 'accessibility-complete',
+  'exhaustive-security', 'independent-reproduction', 'identity', 'AGI-ASI',
+  'consciousness-personhood', 'Theory-of-Everything', 'Stage-20'
+];
+
+const sha = bytes => crypto.createHash('sha256').update(bytes).digest('hex');
+const canon = value => {
+  if (Array.isArray(value)) return value.map(canon);
+  if (value && typeof value === 'object') {
+    return Object.fromEntries(Object.keys(value).sort().map(key => [key, canon(value[key])]));
+  }
+  return value;
+};
+const canonical = value => JSON.stringify(canon(value));
+
+function write(rel, value, pretty = false) {
+  const dest = path.join(base, rel);
+  if (!dest.startsWith(base + path.sep)) throw new Error('path escape');
+  fs.mkdirSync(path.dirname(dest), { recursive: true });
+  const text = typeof value === 'string'
+    ? value
+    : (pretty ? JSON.stringify(value, null, 2) : JSON.stringify(value)) + '\n';
+  fs.writeFileSync(dest, text, { encoding: 'utf8', flag: 'wx' });
+}
+
+function git(args, buffer = false) {
+  const result = cp.spawnSync('git', ['-C', root, ...args], {
+    encoding: buffer ? null : 'utf8',
+    maxBuffer: 64 * 1024 * 1024
+  });
+  if (result.status !== 0) {
+    throw new Error(`git ${args.join(' ')} failed: ${String(result.stderr)}`);
+  }
+  return result.stdout;
+}
+
+const clone = value => JSON.parse(JSON.stringify(value));
+const commonPrefix = (a, b) => {
+  let i = 0;
+  while (i < a.length && i < b.length && a[i] === b[i]) i++;
+  return a.slice(0, i);
+};
+const commonSuffix = (a, b) => {
+  let i = 0;
+  while (i < a.length && i < b.length && a[a.length - 1 - i] === b[b.length - 1 - i]) i++;
+  return i === 0 ? [] : a.slice(a.length - i);
+};
+function lcsTable(a, b) {
+  const dp = Array.from({ length: a.length + 1 }, () => Array(b.length + 1).fill(0));
+  for (let i = a.length - 1; i >= 0; i--) {
+    for (let j = b.length - 1; j >= 0; j--) {
+      dp[i][j] = a[i] === b[j] ? 1 + dp[i + 1][j + 1] : Math.max(dp[i + 1][j], dp[i][j + 1]);
+    }
+  }
+  return dp;
+}
+function lcsWitness(a, b) {
+  const dp = lcsTable(a, b);
+  const sequence = [];
+  const pairs = [];
+  let i = 0;
+  let j = 0;
+  while (i < a.length && j < b.length) {
+    if (a[i] === b[j]) {
+      sequence.push(a[i]);
+      pairs.push([i, j]);
+      i++;
+      j++;
+    } else if (dp[i + 1][j] >= dp[i][j + 1]) {
+      i++;
+    } else {
+      j++;
+    }
+  }
+  return { sequence, pairs, length: sequence.length };
+}
+function editTable(a, b, costs = { insert: 1, delete: 1, substitute: 1 }) {
+  const dp = Array.from({ length: a.length + 1 }, () => Array(b.length + 1).fill(0));
+  for (let i = 1; i <= a.length; i++) dp[i][0] = i * costs.delete;
+  for (let j = 1; j <= b.length; j++) dp[0][j] = j * costs.insert;
+  for (let i = 1; i <= a.length; i++) {
+    for (let j = 1; j <= b.length; j++) {
+      dp[i][j] = Math.min(
+        dp[i - 1][j] + costs.delete,
+        dp[i][j - 1] + costs.insert,
+        dp[i - 1][j - 1] + (a[i - 1] === b[j - 1] ? 0 : costs.substitute)
+      );
+    }
+  }
+  return dp;
+}
+function damerauDistance(a, b) {
+  const dp = editTable(a, b);
+  for (let i = 2; i <= a.length; i++) {
+    for (let j = 2; j <= b.length; j++) {
+      if (a[i - 1] === b[j - 2] && a[i - 2] === b[j - 1]) {
+        dp[i][j] = Math.min(dp[i][j], dp[i - 2][j - 2] + 1);
+      }
+    }
+  }
+  return dp[a.length][b.length];
+}
+function shortestCommonSupersequence(a, b) {
+  const dp = lcsTable(a, b);
+  const out = [];
+  let i = 0;
+  let j = 0;
+  while (i < a.length || j < b.length) {
+    if (i === a.length) out.push(b[j++]);
+    else if (j === b.length) out.push(a[i++]);
+    else if (a[i] === b[j]) {
+      out.push(a[i]);
+      i++;
+      j++;
+    } else if (dp[i + 1][j] >= dp[i][j + 1]) out.push(a[i++]);
+    else out.push(b[j++]);
+  }
+  return out;
+}
+function alignmentColumns(a, b) {
+  const dp = editTable(a, b);
+  const columns = [];
+  let i = a.length;
+  let j = b.length;
+  while (i > 0 || j > 0) {
+    if (i > 0 && j > 0 && dp[i][j] === dp[i - 1][j - 1] + (a[i - 1] === b[j - 1] ? 0 : 1)) {
+      columns.push([a[i - 1], b[j - 1], a[i - 1] === b[j - 1] ? 'match' : 'substitute']);
+      i--;
+      j--;
+    } else if (i > 0 && dp[i][j] === dp[i - 1][j] + 1) {
+      columns.push([a[i - 1], null, 'delete']);
+      i--;
+    } else {
+      columns.push([null, b[j - 1], 'insert']);
+      j--;
+    }
+  }
+  columns.reverse();
+  return { columns, cost: dp[a.length][b.length] };
+}
+function bigrams(sequence) {
+  const out = [];
+  for (let i = 0; i + 1 < sequence.length; i++) out.push(sequence[i] + '\u241f' + sequence[i + 1]);
+  return [...new Set(out)].sort();
+}
+function oracle(operation, fixture) {
+  const a = fixture.a;
+  const b = fixture.b;
+  switch (operation) {
+    case 'seq_shape': return { a_length: a.length, b_length: b.length, total: a.length + b.length, bounded: true };
+    case 'seq_reverse': return { a_reversed: [...a].reverse(), b_reversed: [...b].reverse() };
+    case 'seq_concat': return { ab: [...a, ...b], ba: [...b, ...a] };
+    case 'seq_common_prefix': { const value = commonPrefix(a, b); return { value, length: value.length }; }
+    case 'seq_common_suffix': { const value = commonSuffix(a, b); return { value, length: value.length }; }
+    case 'seq_mismatch_profile': {
+      const overlap = Math.min(a.length, b.length);
+      const mismatch_indices = [];
+      for (let i = 0; i < overlap; i++) if (a[i] !== b[i]) mismatch_indices.push(i);
+      return { overlap, mismatch_indices, length_delta: b.length - a.length };
+    }
+    case 'seq_lcs_length': return { length: lcsTable(a, b)[0][0] };
+    case 'seq_lcs_witness': return lcsWitness(a, b);
+    case 'seq_levenshtein': { const table = editTable(a, b); return { distance: table[a.length][b.length] }; }
+    case 'seq_edit_matrix': { const table = editTable(a, b); return { rows: table.length, columns: table[0].length, table }; }
+    case 'seq_damerau_distance': return { distance: damerauDistance(a, b) };
+    case 'seq_weighted_distance': {
+      const costs = { insert: 2, delete: 2, substitute: 3 };
+      const table = editTable(a, b, costs);
+      return { costs, distance: table[a.length][b.length] };
+    }
+    case 'seq_shortest_common_supersequence': { const value = shortestCommonSupersequence(a, b); return { value, length: value.length }; }
+    case 'seq_alignment_columns': return alignmentColumns(a, b);
+    case 'seq_bigram_overlap': {
+      const left = bigrams(a);
+      const right = bigrams(b);
+      const intersection = left.filter(x => right.includes(x));
+      const union = [...new Set([...left, ...right])].sort();
+      return { left, right, intersection, union, intersection_count: intersection.length, union_count: union.length };
+    }
+    case 'seq_bounded_transducer': {
+      const map = { a: 'A', e: 'E', i: 'I', o: 'O', u: 'U' };
+      return { a_output: a.map(x => map[x] || x), b_output: b.map(x => map[x] || x), rule: 'ascii-vowel-uppercase' };
+    }
+    case 'seq_accessible_summary': {
+      const distance = editTable(a, b)[a.length][b.length];
+      return { fixture: fixture.id, a_length: a.length, b_length: b.length, edit_distance: distance, summary: `${fixture.label}: lengths ${a.length} and ${b.length}; edit distance ${distance}. Synthetic token sequences only.`, human_evaluation: false };
+    }
+    case 'seq_provenance_handover': return { fixture: fixture.id, input_sha256: sha(Buffer.from(canonical({ a, b }))), correction_state: 'none', external_authority: false };
+    case 'seq_observation_gate': return { fixture: fixture.id, observed_rows: 0, required: ['real language samples', 'declared segmentation profile', 'independent review'], gate_open: true };
+    case 'seq_authority_gate': return { fixture: fixture.id, authority_present: false, required: ['competent domain authority', 'affected-party authority', 'legal and cultural authority', 'Maori authority where applicable'], release: false };
+    default: throw new Error(`unknown operation ${operation}`);
+  }
+}
+
+const fixtures = [
+  ['both-empty', 'two empty sequences', [], []],
+  ['identical-short', 'identical short tokens', ['a', 'b', 'c'], ['a', 'b', 'c']],
+  ['prefix-insert', 'single prefix insertion', ['a', 'b', 'c'], ['x', 'a', 'b', 'c']],
+  ['suffix-delete', 'single suffix deletion', ['a', 'b', 'c', 'd'], ['a', 'b', 'c']],
+  ['middle-substitute', 'single middle substitution', ['k', 'i', 't', 't', 'e', 'n'], ['s', 'i', 't', 't', 'e', 'n']],
+  ['adjacent-swap', 'adjacent token swap', ['a', 'b', 'c', 'd'], ['a', 'c', 'b', 'd']],
+  ['repeated-run', 'repeated token run', ['a', 'a', 'a', 'b'], ['a', 'a', 'b']],
+  ['disjoint', 'fully disjoint tokens', ['a', 'b', 'c'], ['x', 'y', 'z']],
+  ['common-prefix', 'shared prefix only', ['a', 'b', 'c', 'd', 'e'], ['a', 'b', 'x', 'y', 'z']],
+  ['common-suffix', 'shared suffix only', ['x', 'y', 'z', 'a', 'b'], ['p', 'q', 'a', 'b']],
+  ['alternating', 'alternating offset', ['a', 'b', 'a', 'b', 'a', 'b'], ['b', 'a', 'b', 'a', 'b', 'a']],
+  ['palindrome-edit', 'palindrome near match', ['r', 'a', 'd', 'a', 'r'], ['r', 'a', 'd', 'e', 'r']],
+  ['case-distinct', 'ASCII case distinct', ['A', 'a'], ['a', 'A']],
+  ['word-tokens', 'bounded word-token insertion', ['red', 'blue'], ['red', 'green', 'blue']],
+  ['bounded-long', 'ten-token bounded sequence', ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j'], ['a', 'b', 'x', 'd', 'e', 'y', 'g', 'h', 'i', 'z']]
+].map(([id, label, a, b]) => ({ id, label, a, b }));
+
+const operations = [
+  ['seq_shape', 'Sequence shape and bounds', 'x1', 'completed', 'schema'],
+  ['seq_reverse', 'Exact sequence reversal', 'x1', 'completed', 'schema'],
+  ['seq_concat', 'Ordered sequence concatenation', 'x1', 'completed', 'schema'],
+  ['seq_common_prefix', 'Maximal common prefix witness', 'x1', 'completed', 'alignment'],
+  ['seq_common_suffix', 'Maximal common suffix witness', 'x1', 'completed', 'alignment'],
+  ['seq_mismatch_profile', 'Positional mismatch profile', 'x1', 'completed', 'counterexample'],
+  ['seq_lcs_length', 'Longest common subsequence length', 'x1', 'completed', 'dynamic-programming'],
+  ['seq_lcs_witness', 'Deterministic LCS witness', 'x1', 'completed', 'dynamic-programming'],
+  ['seq_levenshtein', 'Unit-cost edit distance', 'x1', 'completed', 'edit-distance'],
+  ['seq_edit_matrix', 'Complete edit-distance matrix', 'x1', 'completed', 'edit-distance'],
+  ['seq_damerau_distance', 'Adjacent-transposition edit distance', 'x2', 'completed', 'edit-distance'],
+  ['seq_weighted_distance', 'Weighted edit distance', 'x2', 'completed', 'counterexample'],
+  ['seq_shortest_common_supersequence', 'Deterministic shortest common supersequence', 'x2', 'completed', 'dynamic-programming'],
+  ['seq_alignment_columns', 'Deterministic alignment columns', 'x2', 'completed', 'alignment'],
+  ['seq_bigram_overlap', 'Bounded bigram overlap', 'x2', 'completed', 'counterexample'],
+  ['seq_bounded_transducer', 'Bounded token transducer', 'x2', 'completed', 'transducer'],
+  ['seq_accessible_summary', 'Accessible sequence summary', 'x2', 'represented', 'transducer'],
+  ['seq_provenance_handover', 'Provenance-bound sequence handover', 'x2', 'represented', 'provenance'],
+  ['seq_observation_gate', 'Real-language observation gate', 'x2', 'open_gap', 'authority'],
+  ['seq_authority_gate', 'Consequential language authority gate', 'x2', 'exact_gate', 'authority']
+].map(([id, title, stage, disposition, practice]) => ({ id, title, stage, disposition, practice }));
+
+const practices = [
+  { id: 'schema', title: 'finite sequence schema registrar', pillar: 'THOS Body' },
+  { id: 'dynamic-programming', title: 'dynamic-programming witness auditor', pillar: 'GMUT Mind' },
+  { id: 'edit-distance', title: 'edit-distance recurrence reviewer', pillar: 'GMUT Mind' },
+  { id: 'counterexample', title: 'alignment counterexample analyst', pillar: 'GMUT Mind' },
+  { id: 'alignment', title: 'bounded alignment interface verifier', pillar: 'THOS Body' },
+  { id: 'transducer', title: 'accessible transducer evidence designer', pillar: 'THOS Body' },
+  { id: 'provenance', title: 'provenance and correction ledger steward', pillar: 'Freed ID and CBR Heart' },
+  { id: 'authority', title: 'language observation and authority boundary reviewer', pillar: 'Freed ID and CBR Heart' }
+];
+const practiceMap = new Map(practices.map(x => [x.id, x]));
+
+if (git(['rev-parse', 'HEAD']).trim() !== SOURCE) throw new Error('exact source head gate');
+if (git(['branch', '--show-current']).trim() !== BRANCH) throw new Error('owner branch gate');
+if (git(['status', '--porcelain=v1']).trim() !== '?? docs/orin-thale/') throw new Error('unexpected pre-plan worktree state');
+const sourceParents = [CAELEN_PLAN, CAELEN_X1, CAELEN_X2, SOURCE].map(commit => git(['rev-parse', `${commit}^`]).trim());
+if (sourceParents[0] !== AVELIN_SOURCE || sourceParents[1] !== CAELEN_PLAN || sourceParents[2] !== CAELEN_X1 || sourceParents[3] !== CAELEN_X2) throw new Error('source ancestry gate');
+const sourceMerges = Number(git(['rev-list', '--merges', `${AVELIN_SOURCE}..${SOURCE}`, '--count']).trim());
+if (sourceMerges !== 0) throw new Error('source merge gate');
+const liveLine = git(['ls-remote', 'origin', `refs/heads/${SOURCE_BRANCH}`]).trim();
+if (!liveLine.startsWith(SOURCE + '\t')) throw new Error('fresh live source equality gate');
+
+const sourceBaton = git(['show', `${SOURCE}:docs/caelen-ash/v696-v4/final/hand-off-baton.md`], true);
+const sourceBatonText = sourceBaton.toString('utf8');
+const sourceBatonWords = (sourceBatonText.match(/\S+/g) || []).length;
+if (sourceBaton.length !== 394059 || sourceBatonWords !== 46019 || sha(sourceBaton) !== 'cf22e43a0fd85b803cb76678e387686d233b7ce08f9bdb94b9eaa839903c608f' || !sourceBatonText.trimEnd().endsWith('END OF CAELEN ASH V696-V4 BATON.')) throw new Error('source baton gate');
+
+const proposals = [];
+let serial = 0;
+for (const operation of operations) {
+  for (const fixture of fixtures) {
+    serial++;
+    const request = { operation: operation.id, fixture: { id: fixture.id, a: fixture.a, b: fixture.b } };
+    const expected = { ok: true, value: oracle(operation.id, fixture), error: null, disposition: operation.disposition, external_credit: false };
+    const row = {
+      proposal_id: `OR6965-P${String(serial).padStart(3, '0')}`,
+      title: `${operation.title} / ${fixture.label}`,
+      stage: operation.stage,
+      operation: operation.id,
+      fixture: fixture.id,
+      pillar: practiceMap.get(operation.practice).pillar,
+      practice: operation.practice,
+      hypothesis: `Return the exact bounded ${operation.title.toLowerCase()} envelope for synthetic fixture ${fixture.id}.`,
+      null_or_failure_condition: 'Any complete-envelope mismatch, input mutation, malformed acceptance, erased failure, nondeterminism, source collision, segmentation overclaim, or authority promotion fails this contract.',
+      approval_class: 'safe_now',
+      execution_lane: 'orin_owner_only_finite_synthetic',
+      current_primary_source_needs: ['unicode-uax29', 'rfc8259', 'prov-o', 'wcag22', 'whatwg-canvas'],
+      concrete_artifacts: [`${operation.stage}/contract-results.json`, `${operation.stage}/candidate-results.json`, `${operation.stage}/refusal-results.json`],
+      falsifier: 'Compare every key, value, type, array position, null, disposition, and external-credit field; retain both malformed subjects; verify input preservation and declared token boundary.',
+      acceptance_gate: 'The exact request matches the frozen complete envelope, both malformed subjects are refused, input remains unchanged, and no Unicode-conformance, external, empirical, professional, or independent credit is asserted.',
+      rollback: 'Retain the request and every result; correct only the smallest Orin-owned dependency or leave the contract open.',
+      protected_gates: protectedGates,
+      expected_disposition: operation.disposition,
+      request,
+      expected,
+      malformed: [
+        { id_suffix: 'A', subject: { operation: operation.id }, expected: { ok: false, value: null, error: 'missing_fixture', disposition: null, external_credit: false }, repair: 'restore exact fixture' },
+        { id_suffix: 'B', subject: { ...request, unreviewed_authority: true }, expected: { ok: false, value: null, error: 'unknown_field', disposition: null, external_credit: false }, repair: 'remove unreviewed field' }
+      ],
+      safe_checks: ['complete_typed_envelope', 'input_preservation'],
+      cfr_checks: ['refuse_A_without_erasure', 'refuse_B_without_erasure'],
+      cleanup_reviews: ['source_projection_integrity', 'scope_projection_integrity'],
+      source_credit: 0,
+      novelty_scope: 'Distinct phase-local operation and token-sequence contract over bounded exact computation; no universal algorithm, natural-language, linguistic, scientific, or historical novelty claim.',
+      boundary
+    };
+    row.definition_sha256 = sha(Buffer.from(canonical(row)));
+    proposals.push(row);
+  }
+}
+if (proposals.length !== 300) throw new Error('proposal count');
+
+const inherited = JSON.parse(git(['show', `${SOURCE}:docs/caelen-ash/v696-v4/plan/new-proposals.json`]).toString('utf8')).records;
+if (inherited.length !== 300) throw new Error('inherited proposal count');
+const inheritedSelections = inherited.map(row => ({
+  source_proposal_id: row.proposal_id,
+  source_title: row.title,
+  source_operation: row.operation,
+  source_fixture: row.fixture,
+  source_definition_sha256: row.definition_sha256,
+  novelty_credit: 0,
+  execution_credit: 0,
+  completion_credit: 0,
+  authority_credit: 0,
+  review: 'Retain exact Caelen source as finite matrix evidence; do not rerun or promote it as Orin work.'
+}));
+const tokenize = text => new Set(String(text).toLowerCase().match(/[a-z0-9]+/g) || []);
+const similarity = (left, right) => {
+  const a = tokenize(left);
+  const b = tokenize(right);
+  const union = new Set([...a, ...b]);
+  const intersection = [...a].filter(x => b.has(x));
+  return union.size ? intersection.length / union.size : 1;
+};
+const inheritedTitles = new Set(inherited.map(x => x.title));
+const inheritedOps = new Set(inherited.map(x => x.operation));
+const inheritedRequests = new Set(inherited.map(x => sha(Buffer.from(canonical(x.request)))));
+const newTitles = new Set();
+const newRequests = new Set();
+let exactTitle = 0;
+let operationOverlap = 0;
+let requestCollision = 0;
+const nearest = [];
+for (const proposal of proposals) {
+  if (inheritedTitles.has(proposal.title)) exactTitle++;
+  if (inheritedOps.has(proposal.operation)) operationOverlap++;
+  const requestHash = sha(Buffer.from(canonical(proposal.request)));
+  if (inheritedRequests.has(requestHash)) requestCollision++;
+  newTitles.add(proposal.title);
+  newRequests.add(requestHash);
+  let best = { source: null, similarity: 0 };
+  for (const source of inherited) {
+    const score = similarity(proposal.title, source.title);
+    if (score > best.similarity) best = { source: source.proposal_id, similarity: Number(score.toFixed(6)) };
+  }
+  nearest.push({ proposal_id: proposal.proposal_id, nearest_source_id: best.source, nearest_title_similarity: best.similarity, review: 'distinct_under_exact_selected_source_screen' });
+}
+const outcomes = proposals.reduce((acc, proposal) => {
+  acc[proposal.expected_disposition]++;
+  return acc;
+}, { completed: 0, represented: 0, open_gap: 0, exact_gate: 0 });
+if (operationOverlap !== 0 || exactTitle !== 0 || requestCollision !== 0 || newTitles.size !== 300 || newRequests.size !== 300) throw new Error('bounded novelty collision');
+
+const startupFailures = [
+  ['OR6965-START-N001', 'The first broad 190-line source-baton projection exceeded its output budget and truncated before a complete contiguous read.'],
+  ['OR6965-START-N002', 'A PowerShell foreach result was piped without first materializing the collection, producing an empty-pipe parser error before any repository mutation.'],
+  ['OR6965-START-N003', 'The new --no-checkout sparse worktree initially exposed 1,511 inherited paths as staged deletions before index materialization.'],
+  ['OR6965-START-N004', 'Direct node --check on the .txt generator was rejected because Node 24 does not infer a module format for the .txt extension.'],
+  ['OR6965-START-N005', 'The first planning build stopped before file generation because the accessible-summary operation named an undeclared ninth practice key.']
+].map(([id, failure]) => ({ id, failure, result: 'fail', success_credit: 0, repository_or_remote_content_changed: false, retained: true, erased: false }));
+const startupRecoveries = [
+  ['OR6965-START-P001', 'OR6965-START-N001', 'Read the entire 1,466-line baton in bounded contiguous windows and verified its literal EOF, bytes, word count, and SHA-256.'],
+  ['OR6965-START-P002', 'OR6965-START-N002', 'Collected every PowerShell loop result into an explicit array before JSON projection.'],
+  ['OR6965-START-P003', 'OR6965-START-N003', 'Applied git read-tree -mu HEAD inside the new Orin lane, restoring a clean exact-source sparse index without reset or sibling mutation.'],
+  ['OR6965-START-P004', 'OR6965-START-N004', 'Streamed the exact generator bytes to node --input-type=commonjs --check; the supported syntax check passed without repository output.'],
+  ['OR6965-START-P005', 'OR6965-START-N005', 'Bound the accessible summary to the already declared accessible-transducer practice and preserved the eight-practice ceiling.']
+].map(([id, failure_id, recovery]) => ({ id, failure_id, recovery, result: 'pass', promotes_failure: false }));
+
+const skillRoot = process.env.GHC_SKILL_ROOT;
+if (!skillRoot) throw new Error('GHC_SKILL_ROOT required');
+const guidanceNames = [
+  'ghc-family-index', 'ghc-family-method-flow-state', 'ghc-family-meta-tool-box',
+  'ghc-family-workflow-plan-refinement', 'ghc-family-reflection-remaster',
+  'ghc-family-auth-permission-state', 'ghc-family-roster-check',
+  'ghc-family-owner-scope-canonical', 'ghc-family-canonical-aggregate-preflight',
+  'ghc-family-canonical-success-latch', 'ghc-family-staged-surface-allowlist',
+  'ghc-family-terminal-route-gate', 'ghc-family-route-edge-verifier',
+  'ghc-drive-bank-guardian', 'ghc-family-four-tier-context-selection',
+  'content-addressed-flashcard-index', 'ghc-family-bounded-file-scan',
+  'ghc-family-git-blob-byte-domain', 'ghc-web-reflection-ledger'
+];
+const guidance = guidanceNames.map(name => {
+  const file = path.join(skillRoot, name, 'SKILL.md');
+  const bytes = fs.readFileSync(file);
+  return { name, relative_path: `${name}/SKILL.md`, bytes: bytes.length, sha256: sha(bytes), read_through_eof: true };
+});
+const workflowPath = path.join(skillRoot, 'ghc-family-index', 'references', 'current-workflow-v11.json');
+const rosterPath = path.join(skillRoot, 'ghc-family-index', 'references', 'current-roster-v11.json');
+const authorityPath = path.join(skillRoot, 'ghc-family-index', 'references', 'auren-v696-v1-r2-20260915-authority.md');
+const workflowBytes = fs.readFileSync(workflowPath);
+const rosterBytes = fs.readFileSync(rosterPath);
+const authorityBytes = fs.readFileSync(authorityPath);
+const workflow = JSON.parse(workflowBytes);
+const roster = JSON.parse(rosterBytes);
+const currentRows = roster.assignments.filter(x => x.owner === 'Orin Thale' && x.phase === 'v696-v5');
+const next = roster.assignments.find(x => x.sequence === 5);
+if (currentRows.length !== 1 || !next || next.owner !== 'Ceryn Alder' || next.phase !== 'v696-v6') throw new Error('v11 roster edge');
+
+write('plan/identity.json', {
+  owner: 'Orin Thale', phase: 'v696-v5', optional_pronouns: 'he/him',
+  role: 'Finite Sequence Alignment and Correction Cartographer',
+  hope: 'Keep every bounded alignment, counterexample, correction path, and missing language or decision authority inspectable and reversible.',
+  primary_pillar: 'GMUT Mind', practices,
+  successor_recommendations: [
+    'finite edit-cost sensitivity and stability auditing',
+    'independently designed sequence-oracle comparison',
+    'accessible alignment and provenance visualization',
+    'participatory language interpretation under competent authority'
+  ],
+  relational_only: true, boundary
+}, true);
+write('plan/workflow-v11.json', { ...workflow, owner: 'Orin Thale', phase: 'v696-v5', display_phase: 'v696-v5', interstitial: false, consumes_numbered_slot: true, source_final: SOURCE, source_is_git_parent: true, routing: { ...workflow.routing, prospective_successor: { owner: 'Ceryn Alder', phase: 'v696-v6' } } });
+write('plan/roster-v11.json', roster);
+write('plan/authority-reading.json', { current_workflow_sha256: sha(workflowBytes), current_roster_sha256: sha(rosterBytes), current_authority_sha256: sha(authorityBytes), current_row: currentRows[0], next_row: next, terminal: roster.last, projection_activates_nothing: true, activation_message_controlling: true, boundary }, true);
+write('plan/guidance-reading.json', { count: guidance.length, records: guidance, schemas_read: ['ghc-family-method-flow-state/references/schema.md', 'ghc-family-meta-tool-box/references/catalogue-schema.md', 'ghc-family-workflow-plan-refinement/references/workflow-plan-schema.md', 'ghc-family-reflection-remaster/references/decision-schema.md', 'ghc-family-auth-permission-state/references/auth-permission-schema.md', 'ghc-family-roster-check/references/roster-schema.md', 'ghc-family-four-tier-context-selection/references/request-profile.json'], system_skill_creator_read: true, all_through_eof: true, boundary }, true);
+write('plan/source-readback.json', {
+  status: 'VALID_READ_ONLY_CAELEN_SOURCE', source_branch: SOURCE_BRANCH,
+  avelin_source: AVELIN_SOURCE, planning: CAELEN_PLAN, x1: CAELEN_X1, x2: CAELEN_X2, exact_final: SOURCE,
+  source_to_final_commits: 4, merges: 0, final_parent_count: 1, clean: true,
+  divergence: [0, 0], fresh_four_way_equal: true,
+  baton: { words: sourceBatonWords, bytes: sourceBaton.length, sha256: sha(sourceBaton), literal_eof: 'END OF CAELEN ASH V696-V4 BATON.', read_through_eof: true },
+  manifests: { x1: 63, x2: 488, final_delta: 347, owner: 489, total_bindings: 976 },
+  canonical: { status: 'VALID_EXACT_FINAL_OWNER_SCOPED_CANONICAL', checks: 900, invocation: 1, success: 1, replay: 0, receipt_sha256: 'b76c9c907caaae3232152032ab957659d7e5bfa00dcc900445477ef03d6449a3', payload_sha256: '35f5456d3763052ff323108491abf05bd69980c4526af7eb94383e236cce9d5c', success_latch_sha256: '739bc5d34139cdc6761185b4ae690927334f5301f2333e06fde5ea006275faa5', replayed_by_orin: false },
+  repository_method_flow: { methods: 50, witnesses: 3190, pass: 2564, fail: 626, selected_lineage_negatives: 3853, open_gaps: 60, exact_gates: 60 },
+  activation_overlay: { methods: 51, witnesses: 3192, pass: 2565, fail: 627, selected_lineage_negatives: 3854, open_gaps: 60, exact_gates: 60, external_failure: 'CA6964-POST-N001' },
+  delivery: { state: 'SENT_ONCE_ACKNOWLEDGED', recipient: 'Orin Thale', recipient_phase: 'v696-v5', recipient_completion_credit: 0 },
+  boundary
+}, true);
+write('plan/inherited-selections.json', { schema: 'ghc.family.inherited-review.v11', source: SOURCE, count: 300, records: inheritedSelections, all_zero_credit: true, boundary });
+write('plan/fixtures.json', { schema: 'ghc.family.sequence-fixtures.v1', count: fixtures.length, records: fixtures, bounds: { token_count_each_maximum: 10, token_length_maximum: 5, token_domain: 'declared ASCII and bounded word tokens', unicode_segmentation_claim: false }, real_observations: 0, boundary }, true);
+write('plan/operations.json', { schema: 'ghc.family.sequence-operations.v1', count: operations.length, records: operations, stage_counts: { x1: 10, x2: 10 }, dispositions: { x1: { completed: 150 }, x2: { completed: 90, represented: 30, open_gap: 15, exact_gate: 15 } }, boundary }, true);
+write('plan/new-proposals.json', { schema: 'ghc.family.sequence-proposals.v1', frozen: true, production_executor_invoked: false, count: 300, outcomes, records: proposals, boundary });
+write('plan/novelty-audit.json', { schema: 'ghc.family.bounded-novelty-review.v11', selected_prior: 300, new_definitions: 300, pairwise_comparisons: 90000, source_operation_families: new Set(inherited.map(x => x.operation)).size, new_operation_families: operations.length, operation_name_overlap: operationOverlap, exact_title_collisions: exactTitle, request_hash_collisions: requestCollision, new_titles_unique: newTitles.size === 300, new_requests_unique: newRequests.size === 300, quarantines: 0, rows: nearest, scope: 'Exact selected Caelen records versus exact Orin definitions; no universal history, linguistic, or algorithm novelty claim.', boundary });
+
+function taskRows(stage, kind) {
+  return proposals.filter(x => x.stage === stage).flatMap(proposal => [0, 1].map(index => ({
+    task_id: `${proposal.proposal_id}-${kind.toUpperCase()}-${index + 1}`,
+    proposal_id: proposal.proposal_id, stage, kind, status: 'planned_not_executed',
+    approval_class: 'safe_now', protected_gates: protectedGates, boundary
+  })));
+}
+for (const stage of ['x1', 'x2']) {
+  write(`plan/${stage}-tasks.json`, { schema: 'ghc.family.session-task-plan.v11', stage, safe: taskRows(stage, 'safe'), candidate: taskRows(stage, 'candidate'), cfr: taskRows(stage, 'cfr'), cleanup_refinement: taskRows(stage, 'cleanup'), counts: { safe: 300, candidate: 300, cfr: 300, cleanup_refinement: 300 }, all_planned_not_executed: true, boundary });
+}
+write('plan/exact-packets.json', { count: 50, executed: 0, records: Array.from({ length: 50 }, (_, index) => ({ packet_id: `OR6965-EXACT-${String(index + 1).padStart(3, '0')}`, status: 'exact_gate', executed: false, required: 'Exact competent external evidence and authority.', boundary })), boundary });
+write('plan/blocked-packets.json', { count: 30, executed: 0, records: Array.from({ length: 30 }, (_, index) => ({ packet_id: `OR6965-BLOCKED-${String(index + 1).padStart(3, '0')}`, status: 'exact_gate', executed: false, blocker: 'Protected empirical, participant, production, legal, cultural, affected-party, privacy, accessibility, security, identity, or Maori-authority prerequisite.', boundary })), boundary });
+
+const skills = operations.map((operation, index) => ({ skill_id: `OR6965-SKILL-${String(index + 1).padStart(2, '0')}`, name: `ghc-family-${operation.id.replaceAll('_', '-')}-v696-v5`, operation: operation.id, stage: operation.stage, status: 'planned_not_built', global: false }));
+const runners = [];
+for (const stage of ['x1', 'x2']) {
+  const rows = operations.filter(x => x.stage === stage);
+  for (let index = 0; index < 5; index++) {
+    runners.push({ runner_id: `OR6965-RUNNER-${String(runners.length + 1).padStart(2, '0')}`, name: `ghc_family_sequence_${stage}_${index + 1}.txt`, stage, operations: [rows[index * 2].id, rows[index * 2 + 1].id], status: 'planned_not_built' });
+  }
+}
+write('plan/skills-runners-plan.json', { skills, runners, counts: { x1_skills: 10, x2_skills: 10, x1_runners: 5, x2_runners: 5 }, meta_toolbox_cards: 30, new_global_installations: 0, ordinary_package_installations: 0, inherited_caelen_tools_zero_credit: true, boundary }, true);
+write('plan/simulation-plan.json', { count: 5, models: [
+  { id: 'length-pair-cloud', title: 'Length-pair evidence cloud' },
+  { id: 'distance-witness-grid', title: 'Edit-distance witness grid' },
+  { id: 'prefix-suffix-corridor', title: 'Prefix and suffix corridor' },
+  { id: 'lcs-path-field', title: 'LCS path field' },
+  { id: 'edit-cost-surface', title: 'Weighted edit-cost surface' }
+].map(model => ({ ...model, fixtures: 15, exact_table_required: true, canvas_projection_approximate: true, status: 'planned_not_rendered' })), total_exact_rows: 75, no_image_or_screenshot: true, human_evaluation: 'open_gap', boundary }, true);
+write('plan/additional-tests-plan.json', { count: 20, tests: [
+  'empty-sequence identities', 'reversal involution', 'concatenation order', 'prefix maximality',
+  'suffix maximality', 'mismatch length delta', 'LCS empty boundary', 'LCS witness subsequence',
+  'Levenshtein symmetry', 'edit-matrix boundary row', 'Damerau adjacent swap', 'weighted nonnegativity',
+  'supersequence containment', 'alignment reconstruction', 'bigram set uniqueness', 'transducer length preservation',
+  'accessible summary reservation', 'provenance digest determinism', 'duplicate JSON key refusal', 'unknown-field refusal'
+].map((title, index) => ({ test_id: `OR6965-X2-T${String(index + 1).padStart(2, '0')}`, title, status: 'planned_not_executed' })), boundary }, true);
+write('plan/research-sources.json', { sources: [
+  { id: 'unicode-uax29', title: 'Unicode Standard Annex 29: Unicode Text Segmentation', url: 'https://www.unicode.org/reports/tr29/', status: 'Unicode 17.0.0 revision 47 observed 2026-09-16', use: 'Segmentation vocabulary and an explicit reminder that code points need not equal user-perceived characters. The phase implements no UAX 29 conformance.' },
+  { id: 'rfc8259', title: 'RFC 8259 JSON Data Interchange Format', url: 'https://www.rfc-editor.org/info/rfc8259/', status: 'Internet Standard observed 2026-09-16', use: 'UTF-8 JSON grammar and interoperability vocabulary only.' },
+  { id: 'prov-o', title: 'PROV-O: The PROV Ontology', url: 'https://www.w3.org/TR/2013/REC-prov-o-20130430/', status: 'W3C Recommendation observed 2026-09-16', use: 'Provenance vocabulary only.' },
+  { id: 'wcag22', title: 'Web Content Accessibility Guidelines 2.2', url: 'https://www.w3.org/TR/WCAG22/', status: 'W3C Recommendation observed 2026-09-16', use: 'Structural accessibility vocabulary; no conformance claim.' },
+  { id: 'whatwg-canvas', title: 'HTML Standard canvas element', url: 'https://html.spec.whatwg.org/multipage/canvas.html', status: 'Living Standard surface observed 2026-09-16', use: 'Canvas2D and fallback-content vocabulary only.' }
+], web_queries: 4, direct_opens: 5, citations_are_observations: false, citations_are_authority: false, real_rows: 0, boundary }, true);
+write('plan/startup-failures.json', { count: startupFailures.length, records: startupFailures, all_zero_credit: true, boundary }, true);
+write('plan/startup-recoveries.json', { count: startupRecoveries.length, records: startupRecoveries, none_erases_failure: true, boundary }, true);
+
+const methods = startupFailures.map((failure, index) => ({
+  method_id: `${failure.id}-METHOD`, title: failure.failure, failure_signature: failure.failure,
+  trigger_preconditions: ['pre-mutation startup', 'exact Caelen activation'], privacy_class: 'sanitized_public', approval_class: 'safe_now',
+  candidate_workaround: startupRecoveries[index].recovery,
+  validation_witness_ids: [failure.id, startupRecoveries[index].id],
+  recurrence_guard: 'Use bounded contiguous reads, materialized PowerShell collections, and explicit sparse-index materialization before treating a lane as clean.',
+  rollback: 'Stop before owner content mutation and retain the failed observation.', recommendation_state: 'preferred', supersedes: [],
+  protected_gates: protectedGates, retained_negative_ids: [failure.id], scope_boundary: boundary
+}));
+const witnesses = startupFailures.flatMap((failure, index) => [
+  { witness_id: failure.id, method_id: `${failure.id}-METHOD`, procedure: 'Initial bounded startup attempt.', scope: 'read-only pre-mutation', expected: 'Exact bounded source, collection, or sparse-lane result.', observed: failure.failure, result: 'fail', same_owner_only: true, independent_reproduction: false, retained_negative_ids: [failure.id], boundary },
+  { witness_id: startupRecoveries[index].id, method_id: `${failure.id}-METHOD`, procedure: startupRecoveries[index].recovery, scope: 'smallest read-only or index-only recovery', expected: 'Bounded exact evidence without erasing failure.', observed: 'Recovered the required bounded evidence.', result: 'pass', same_owner_only: true, independent_reproduction: false, retained_negative_ids: [failure.id], boundary }
+]);
+write('plan/method-flow.json', { schema: 'ghc.family.method-flow-state.v1', phase: 'v696-v5', owner: 'Orin Thale', stage: 'planning', identity_boundary: boundary, execution_authority: 'owner_self_scoped_delta', methods, witnesses, state_events: methods.map(method => ({ method_id: method.method_id, from: 'observed', to: 'preferred', reason: 'A bounded recovery passed while the failure remains retained.' })), recommendations: methods.map(method => ({ method_id: method.method_id, state: 'preferred', recommendation: method.recurrence_guard })), counts: { methods: 5, witnesses: 10, state_events: 5, recommendations: 5, states: { preferred: 5 }, witness_results: { pass: 5, fail: 5 } }, predecessor: { methods: 51, witnesses: 3192, pass: 2565, fail: 627, selected_lineage_negatives: 3854, core_open_gaps: 60, core_exact_gates: 60 }, cumulative: { methods: 56, witnesses: 3202, pass: 2570, fail: 632, selected_lineage_negatives: 3859, core_open_gaps: 60, core_exact_gates: 60 }, boundary });
+write('plan/method-flow-validation.json', { status: 'VALID_PLANNING_METHOD_FLOW', methods: 5, witnesses: 10, pass: 5, fail: 5, failed_witnesses_zero_credit: true, recoveries_do_not_erase_failures: true, official_schema_read: true, boundary }, true);
+write('plan/reflection-decisions.json', { schema: 'ghc.family.reflection-remaster.v1', decisions: [
+  { id: 'OR6965-REFLECT-001', title: 'Retain Caelen exact-linear tools as source evidence', disposition: 'keep_compatibility', reason: 'Known sealed callers and evidence remain valid in their exact source phase.', replacement: null, rollback: 'Use the source only in its immutable context.' },
+  { id: 'OR6965-REFLECT-002', title: 'Create phase-local finite sequence capabilities', disposition: 'remaster_additive', reason: 'Sequence alignment is semantically distinct and requires separate token-boundary contracts.', replacement: 'twenty Orin phase-local skills and ten paired runners', rollback: 'Keep planning definitions and remove only uncommitted Orin implementation if validation fails.' },
+  { id: 'OR6965-REFLECT-003', title: 'Do not claim Unicode segmentation conformance', disposition: 'exact_gate', reason: 'The fixtures use explicitly declared tokens and do not implement UAX 29.', replacement: null, rollback: 'Keep natural-language and user-perceived-character claims absent.' },
+  { id: 'OR6965-REFLECT-004', title: 'Do not delete or merge inherited evidence', disposition: 'exact_gate', reason: 'Deletion or cross-owner mutation lacks exact authority.', replacement: null, rollback: 'Leave all inherited artifacts untouched.' }
+], boundary }, true);
+write('plan/resource-budget.json', { owner_file_ceiling: 2000, materialized_file_ceiling: 2000, document_word_ceiling: 100000, baton_words: [2000, 100000], incremental_spending_usd_ceiling: 50, planned_spend_usd: 0, packages_planned: 0, new_global_installations: 0, authored_extensions: ['.json', '.md', '.txt', '.html'], D_drive_free_gb_before_lane: 462.03, C_drive_free_gb_before_lane: 17.05, boundary }, true);
+write('plan/route-plan.json', { state: 'PREPARED_NOT_SENT', current: { owner: 'Orin Thale', phase: 'v696-v5' }, next: { owner: 'Ceryn Alder', phase: 'v696-v6', endpoint_kind: 'existing_main_task' }, projection_activates_nothing: true, early_contact: false, task_creation: false, fork: false, subagents: false, model_override: false, terminal_requirements: ['clean pushed exact final', 'fresh four-way equality', 'one successful non-replayed owner canonical', 'fresh live authority and roster', 'unique exact-title active and paginated archived discovery', 'immediate output-enabled guard read', 'one acknowledged send maximum'], minimum_discovery_read_recoveries_before_hold: 5, corrected_resubmissions_after_definitive_preacceptance_rejection_maximum: 3, accepted_opaque_or_unresolved_stops_duplicates: true, post_send_monitoring: false, boundary }, true);
+write('plan/phase-truth.json', { owner: 'Orin Thale', phase: 'v696-v5', stage: 'planning', status: 'PLANNING_FROZEN_NO_X1_OR_X2_EXECUTION', inherited_reviewed_zero_credit: 300, new_proposals: 300, expected_outcomes: outcomes, x1_execution_present: false, x2_execution_present: false, simulations_rendered: 0, exact_packets_executed: 0, blocked_packets_executed: 0, skills_built: 0, runners_built: 0, canonical_invoked: false, route: 'PREPARED_NOT_SENT', terminal_verdict: 'NOT_READY_FOR_STAGE_20', boundary }, true);
+write('plan/validation-contract.json', { source: SOURCE, expected_head_before_commit: SOURCE, branch: BRANCH, planning_only: true, new_proposals: 300, inherited_reviews: 300, fixtures: 15, operations: 20, stage_operations: { x1: 10, x2: 10 }, per_session: { safe: 300, candidate: 300, cfr: 300, cleanup_refinement: 300, skills: 10, runners: 5 }, exact_packets: 50, blocked_packets: 30, x2_tests: 20, x2_models: 5, owner_file_ceiling: 2000, materialized_file_ceiling: 2000, document_word_ceiling: 100000, allowed_extensions: ['.json', '.md', '.txt', '.html'], privacy_classes: ['raw_task_identifiers', 'private_absolute_paths', 'credentials', 'transcripts_or_session_streams', 'real_protected_data'], canonical_maximum: 1, full_repository_suite: false, boundary }, true);
+write('plan/design.md', `# Orin Thale v696-v5 planning design\n\nThis planning-only freeze defines three hundred exact finite sequence-alignment contracts over fifteen wholly synthetic bounded token-pair fixtures. It contains no x1 or x2 executor, observed domain result, rendered model, installed package, global skill promotion, canonical result, or successor contact. GMUT Mind is primary through exact recurrences, tie-breaks, counterexamples, and falsifiers. THOS Body remains visible through closed interfaces, deterministic envelopes, refusal, recovery, and accessible handover. Freed ID and CBR Heart preserve provenance, correction, observation gaps, and authority holds.\n\nThe planning oracle treats every fixture as an explicit token array. It does not claim grapheme-cluster, word-boundary, linguistic, translation, accessibility, cultural, or Unicode conformance. A separately authored x1 core must agree with the frozen envelopes while remaining same-owner evidence only. Every malformed subject remains a failed witness even when its refusal and correction pass.\n\n${boundary}\n`);
+write('plan/overview.md', `# Orin Thale v696-v5 planning freeze\n\nOutcome first: 300 inherited Caelen contracts are reviewed at zero Orin credit, and 300 distinct finite sequence-alignment contracts are frozen across twenty operations and fifteen token-pair fixtures. Expected dispositions are 240 completed, 30 represented, 15 open_gap, and 15 exact_gate. Planning contains definitions only.\n\nThe exact source is ${SOURCE}; this branch descends directly from it. Five startup failures and five bounded recoveries remain visible. The selected-lineage activation baseline is 3,854 negatives and the planning-visible baseline is 3,859. No source count is rewritten. Eight study-only practices and four successor recommendations are frozen. Exact and blocked packets remain held.\n\n${boundary}\n`);
+write('plan/build-receipt.json', { status: 'PLANNING_CONTENT_ASSEMBLED', source: SOURCE, proposals: proposals.length, inherited: inheritedSelections.length, operations: operations.length, fixtures: fixtures.length, outcomes, failures: startupFailures.length, recoveries: startupRecoveries.length, selected_lineage_negatives: 3859, route: 'PREPARED_NOT_SENT' }, true);
+
+const files = fs.readdirSync(plan, { recursive: true }).filter(rel => fs.statSync(path.join(plan, rel)).isFile()).map(String).map(rel => rel.replaceAll('\\', '/')).sort();
+const manifestEntries = files.filter(rel => rel !== 'manifest.json' && rel !== 'staged-allowlist.json').map(rel => {
+  const bytes = fs.readFileSync(path.join(plan, ...rel.split('/')));
+  return { path: `docs/orin-thale/v696-v5/plan/${rel}`, bytes: bytes.length, sha256: sha(bytes) };
+});
+const allowPaths = [...manifestEntries.map(x => x.path), 'docs/orin-thale/v696-v5/plan/staged-allowlist.json', 'docs/orin-thale/v696-v5/plan/manifest.json'].sort();
+write('plan/staged-allowlist.json', { schema: 'ghc.family.staged-allowlist.v11', stage: 'planning', count: allowPaths.length, paths: allowPaths, exact: true, non_plan_paths: 0, boundary }, true);
+const stagedBytes = fs.readFileSync(path.join(plan, 'staged-allowlist.json'));
+manifestEntries.push({ path: 'docs/orin-thale/v696-v5/plan/staged-allowlist.json', bytes: stagedBytes.length, sha256: sha(stagedBytes) });
+manifestEntries.sort((a, b) => a.path.localeCompare(b.path));
+write('plan/manifest.json', { schema: 'ghc.family.raw-git-manifest.v11', owner: 'Orin Thale', phase: 'v696-v5', stage: 'planning', source: SOURCE, entries: manifestEntries, exclusions: ['docs/orin-thale/v696-v5/plan/manifest.json'], total_paths: manifestEntries.length + 1, hash_domain: 'working bytes before commit; staged bytes and immutable Git blobs after commit', boundary }, true);
+
+console.log(JSON.stringify({ status: 'PLANNING_CONTENT_ASSEMBLED', proposals: proposals.length, inherited: inheritedSelections.length, operations: operations.length, fixtures: fixtures.length, outcomes, failures: startupFailures.length, recoveries: startupRecoveries.length, plan_files: manifestEntries.length + 1, manifest_entries: manifestEntries.length, workflow_sha256: sha(workflowBytes), roster_sha256: sha(rosterBytes), source_baton_sha256: sha(sourceBaton) }, null, 2));
