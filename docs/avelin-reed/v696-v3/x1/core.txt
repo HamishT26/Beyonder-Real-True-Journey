@@ -1,0 +1,18 @@
+'use strict';
+const p=require('./protocol.txt');const operations=['cg_shape','cg_marginals','cg_dividends','cg_shapley','cg_uniform_marginal','cg_dummy','cg_symmetry','cg_monotone','cg_superadditive','cg_convex'];
+function marginals(game){const out=[];for(let i=0;i<3;i++)for(let mask=0;mask<8;mask++)if(!(mask&(1<<i)))out.push({player:game.players[i],before:mask,after:mask|(1<<i),delta:game.values[mask|(1<<i)]-game.values[mask]});return out;}
+function dividends(v){const d=v.slice();for(let bit=1;bit<8;bit<<=1)for(let mask=0;mask<8;mask++)if(mask&bit)d[mask]-=d[mask^bit];return d;}
+function shapley(v){const sums=[0,0,0];for(let a=0;a<3;a++)for(let b=0;b<3;b++)if(a!==b){const c=3-a-b,order=[a,b,c];let mask=0;for(const i of order){const next=mask|(1<<i);sums[i]+=v[next]-v[mask];mask=next;}}return sums.map(n=>p.rational(n,6));}
+function value(q){p.validate(q,operations);const {players,values:v}=q.game;switch(q.operation){
+case'cg_shape':return{players:players.slice(),coalitions:v.map((worth,mask)=>({mask,members:players.filter((_,i)=>mask&(1<<i)),worth})),grand_worth:v[7]};
+case'cg_marginals':return marginals(q.game);
+case'cg_dividends':return dividends(v);
+case'cg_shapley':return shapley(v);
+case'cg_uniform_marginal':{const m=marginals(q.game);return players.map(player=>p.rational(m.filter(r=>r.player===player).reduce((n,r)=>n+r.delta,0),4));}
+case'cg_dummy':{const m=marginals(q.game),dummy=players.filter((player,i)=>m.filter(r=>r.player===player).every(r=>r.delta===v[1<<i]));return{dummy,null_symbols:dummy.filter(player=>v[1<<players.indexOf(player)]===0)};}
+case'cg_symmetry':{const result=[];for(let i=0;i<3;i++)for(let j=i+1;j<3;j++){const k=3-i-j;if(v[1<<i]===v[1<<j]&&v[(1<<i)|(1<<k)]===v[(1<<j)|(1<<k)])result.push([players[i],players[j]]);}return result;}
+case'cg_monotone':{const cover_violations=marginals(q.game).filter(r=>r.delta<0).map(r=>({lower:r.before,upper:r.after,change:r.delta})).sort((a,b)=>a.lower-b.lower||(a.upper-a.lower)-(b.upper-b.lower));return{monotone:cover_violations.length===0,cover_violations};}
+case'cg_superadditive':{const counterexamples=[];for(let left=0;left<8;left++)for(let right=left+1;right<8;right++)if((left&right)===0){const union=left|right,deficit=v[left]+v[right]-v[union];if(deficit>0)counterexamples.push({left,right,union,deficit});}return{superadditive:counterexamples.length===0,counterexamples};}
+case'cg_convex':{const counterexamples=[];for(let left=0;left<8;left++)for(let right=left+1;right<8;right++){const union=left|right,intersection=left&right,deficit=v[left]+v[right]-v[union]-v[intersection];if(deficit>0)counterexamples.push({left,right,union,intersection,deficit});}return{convex:counterexamples.length===0,counterexamples};}
+}}
+const run=q=>p.wrap(value,q);module.exports={run,value,operations,marginals,dividends,shapley};if(require.main===module)p.cli(run);

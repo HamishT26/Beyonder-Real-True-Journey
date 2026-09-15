@@ -1,0 +1,5 @@
+'use strict';
+const p=require('../protocol.txt'),core=require('../core.txt');
+const allowed=["cg_dividends","cg_shapley"];
+const run=q=>allowed.includes(q?.operation)?core.run(q):{ok:false,value:null,error:'outside_group'};
+module.exports={run};if(require.main===module)p.cli(run);
