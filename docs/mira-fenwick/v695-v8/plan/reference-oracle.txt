@@ -1,0 +1,33 @@
+function reference(model,operation){
+ const W=model.worlds,P=model.valuation.p,Q=model.valuation.q;
+ const cls=(m,a,w)=>m.partitions[a].find(c=>c.includes(w));
+ const know=(m,a,t)=>m.worlds.filter(w=>cls(m,a,w).every(v=>t.includes(v)));
+ const restrict=(m,T)=>({id:m.id,worlds:m.worlds.filter(w=>T.includes(w)),valuation:Object.fromEntries(Object.entries(m.valuation).map(([a,t])=>[a,t.filter(w=>T.includes(w))])),partitions:Object.fromEntries(Object.entries(m.partitions).map(([a,cs])=>[a,cs.map(c=>c.filter(w=>T.includes(w))).filter(c=>c.length)])),lesson:m.lesson});
+ const updated=restrict(model,P),Ka=know(model,'a',P),Kb=know(model,'b',P);
+ const closure=w=>{let seen=[w],todo=[w];while(todo.length){const u=todo.shift();for(const a of ['a','b'])for(const v of cls(model,a,u))if(!seen.includes(v)){seen.push(v);todo.push(v);}}return seen.sort((a,b)=>a-b);};
+ let value,outcome='completed';
+ switch(operation){
+ case 'model_shape':value={worlds:W,world_count:W.length,atoms:['p','q'],observers:['a','b']};break;
+ case 'partition_classes':value={classes:model.partitions};break;
+ case 'atomic_truth':value={worlds:P};break;
+ case 'negation_truth':value={worlds:W.filter(w=>!P.includes(w))};break;
+ case 'conjunction_truth':value={worlds:P.filter(w=>Q.includes(w))};break;
+ case 'knowledge_a':value={worlds:Ka};break;
+ case 'possibility_a':value={worlds:W.filter(w=>cls(model,'a',w).some(v=>P.includes(v)))};break;
+ case 'everyone_truth':value={worlds:Ka.filter(w=>Kb.includes(w))};break;
+ case 'distributed_truth':value={worlds:W.filter(w=>cls(model,'a',w).filter(v=>cls(model,'b',w).includes(v)).every(v=>P.includes(v)))};break;
+ case 'common_truth':value={worlds:W.filter(w=>closure(w).every(v=>P.includes(v))),reachable:W.map(w=>({world:w,worlds:closure(w)}))};break;
+ case 'announcement_restrict':value={retained:updated.worlds,removed:W.filter(w=>!P.includes(w)),empty:updated.worlds.length===0,valuation:updated.valuation,partitions:updated.partitions};break;
+ case 'knowledge_after':value={retained:updated.worlds,worlds:know(updated,'a',updated.valuation.p),empty:updated.worlds.length===0};break;
+ case 'uncertainty_delta':value={rows:updated.worlds.flatMap(w=>['a','b'].map(a=>({world:w,observer:a,before:cls(model,a,w).length,after:cls(updated,a,w).length,removed_alternatives:cls(model,a,w).filter(v=>!cls(updated,a,w).includes(v))}))),removed_worlds:W.filter(w=>!P.includes(w))};break;
+ case 'announcement_sequence':{const second=restrict(updated,updated.valuation.q),joint=P.filter(w=>Q.includes(w));value={sequential:second.worlds,conjunction:joint,equal:JSON.stringify(second.worlds)===JSON.stringify(joint),boolean_only:true};break;}
+ case 'moore_self_refutation':{const before=P.filter(w=>!Ka.includes(w)),m=restrict(model,before),after=m.valuation.p.filter(w=>!know(m,'a',m.valuation.p).includes(w));value={before,after,self_refuting:before.length>0&&after.length===0,announcement_empty:before.length===0};break;}
+ case 'relation_properties':value={observers:['a','b'].map(a=>{const r=(u,v)=>cls(model,a,u).includes(v);return {observer:a,reflexive:W.every(w=>r(w,w)),symmetric:W.every(u=>W.every(v=>r(u,v)===r(v,u))),transitive:W.every(u=>W.every(v=>W.every(t=>!r(u,v)||!r(v,t)||r(u,t))))};})};break;
+ case 'disclosure_profile':outcome='represented';value={model:model.id,formal_release:P,real_disclosure:false,consent_established:false,privacy_complete:false};break;
+ case 'knowledge_claim_boundary':outcome='represented';value={model:model.id,semantics:'universal_finite_accessibility',human_knowledge_inferred:false,consciousness_inferred:false,identity_inferred:false};break;
+ case 'external_validation_gap':outcome='open_gap';value={model:model.id,missing:['governed_real_dataset','validated_observation_model','participant_review','independent_reproduction','privacy_evaluation']};break;
+ case 'consequential_use_gate':outcome='exact_gate';value={model:model.id,authorized:false,missing:['specific_target','affected_party_consent','competent_authority','appeal_and_recourse','applicable_legal_cultural_and_maori_authority']};break;
+ default:throw Error('Unknown reference operation');
+ }
+ return {ok:true,operation,outcome,value};
+}
