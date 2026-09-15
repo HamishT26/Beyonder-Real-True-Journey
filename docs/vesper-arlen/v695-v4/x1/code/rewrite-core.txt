@@ -1,0 +1,285 @@
+from __future__ import annotations
+
+import copy
+import json
+import re
+import sys
+
+
+OPS = [
+    "rewrite_system_structure",
+    "term_shape",
+    "term_positions",
+    "subterm_projection",
+    "pattern_match",
+    "substitution_apply",
+    "redex_inventory",
+    "one_step_rewrites",
+    "normal_form_check",
+    "leftmost_outermost_step",
+]
+
+TOKEN = re.compile(r"^[A-Za-z0-9_?+-]{1,32}$")
+
+
+def stable(value):
+    if isinstance(value, list):
+        return [stable(item) for item in value]
+    if isinstance(value, dict):
+        return {key: stable(value[key]) for key in sorted(value)}
+    return value
+
+
+def term_key(term) -> str:
+    return json.dumps(stable(term), ensure_ascii=False, sort_keys=True, separators=(",", ":"))
+
+
+def is_var(term) -> bool:
+    return isinstance(term, str) and term.startswith("?")
+
+
+def _fail(code: str):
+    raise ValueError(code)
+
+
+def _validate_token(value, code: str):
+    if not isinstance(value, str) or not TOKEN.fullmatch(value):
+        _fail(code)
+
+
+def _validate_term(term, *, allow_variables: bool, budget=None):
+    if budget is None:
+        budget = {"nodes": 0}
+    budget["nodes"] += 1
+    if budget["nodes"] > 64:
+        _fail("E_TERM_SIZE")
+    if isinstance(term, str):
+        _validate_token(term, "E_TERM_TOKEN")
+        if is_var(term) and not allow_variables:
+            _fail("E_GROUND_TERM")
+        return
+    if not isinstance(term, dict) or set(term) != {"fun", "args"}:
+        _fail("E_TERM_SHAPE")
+    _validate_token(term["fun"], "E_FUNCTION_TOKEN")
+    if term["fun"].startswith("?") or not isinstance(term["args"], list) or len(term["args"]) > 8:
+        _fail("E_TERM_SHAPE")
+    for child in term["args"]:
+        _validate_term(child, allow_variables=allow_variables, budget=budget)
+
+
+def _variables(term) -> set[str]:
+    if is_var(term):
+        return {term}
+    if isinstance(term, str):
+        return set()
+    found = set()
+    for child in term["args"]:
+        found.update(_variables(child))
+    return found
+
+
+def _collect_signature(term, signature: dict[str, int]):
+    if is_var(term):
+        return
+    if isinstance(term, str):
+        name, arity, children = term, 0, []
+    else:
+        name, arity, children = term["fun"], len(term["args"]), term["args"]
+    if name in signature and signature[name] != arity:
+        _fail("E_SIGNATURE_ARITY")
+    signature[name] = arity
+    for child in children:
+        _collect_signature(child, signature)
+
+
+def _positions(term, prefix=()):
+    result = [prefix]
+    if isinstance(term, dict):
+        for index, child in enumerate(term["args"]):
+            result.extend(_positions(child, prefix + (index,)))
+    return result
+
+
+def _subterm(term, position):
+    cursor = term
+    for index in position:
+        if not isinstance(index, int) or index < 0 or not isinstance(cursor, dict) or index >= len(cursor["args"]):
+            _fail("E_POSITION")
+        cursor = cursor["args"][index]
+    return cursor
+
+
+def _replace(term, position, replacement):
+    if not position:
+        return copy.deepcopy(replacement)
+    result = copy.deepcopy(term)
+    cursor = result
+    for index in position[:-1]:
+        cursor = cursor["args"][index]
+    cursor["args"][position[-1]] = copy.deepcopy(replacement)
+    return result
+
+
+def _match(pattern, term, substitution=None):
+    substitution = {} if substitution is None else substitution
+    if is_var(pattern):
+        if pattern in substitution and term_key(substitution[pattern]) != term_key(term):
+            return None
+        substitution[pattern] = copy.deepcopy(term)
+        return substitution
+    if isinstance(pattern, str) or isinstance(term, str):
+        return substitution if pattern == term else None
+    if pattern["fun"] != term.get("fun") or len(pattern["args"]) != len(term.get("args", [])):
+        return None
+    for left, right in zip(pattern["args"], term["args"]):
+        substitution = _match(left, right, substitution)
+        if substitution is None:
+            return None
+    return substitution
+
+
+def _substitute(term, substitution):
+    if is_var(term):
+        if term not in substitution:
+            _fail("E_SUBSTITUTION_MISSING")
+        return copy.deepcopy(substitution[term])
+    if isinstance(term, str):
+        return term
+    return {"fun": term["fun"], "args": [_substitute(child, substitution) for child in term["args"]]}
+
+
+def _validate_system(system):
+    if not isinstance(system, dict) or set(system) != {"id", "rules", "start", "probe_position", "lesson"}:
+        _fail("E_SYSTEM_FIELDS")
+    _validate_token(system["id"], "E_SYSTEM_ID")
+    if not isinstance(system["lesson"], str) or not system["lesson"].strip() or len(system["lesson"]) > 500:
+        _fail("E_LESSON")
+    if not isinstance(system["rules"], list) or not 1 <= len(system["rules"]) <= 16:
+        _fail("E_RULES")
+    ids = set()
+    signature = {}
+    for rule in system["rules"]:
+        if not isinstance(rule, dict) or set(rule) != {"id", "lhs", "rhs"}:
+            _fail("E_RULE_FIELDS")
+        _validate_token(rule["id"], "E_RULE_ID")
+        if rule["id"] in ids:
+            _fail("E_RULE_ID_DUPLICATE")
+        ids.add(rule["id"])
+        _validate_term(rule["lhs"], allow_variables=True)
+        _validate_term(rule["rhs"], allow_variables=True)
+        if is_var(rule["lhs"]):
+            _fail("E_RULE_LHS_VARIABLE")
+        if not _variables(rule["rhs"]).issubset(_variables(rule["lhs"])):
+            _fail("E_RULE_VARIABLE")
+        _collect_signature(rule["lhs"], signature)
+        _collect_signature(rule["rhs"], signature)
+    _validate_term(system["start"], allow_variables=False)
+    _collect_signature(system["start"], signature)
+    if not isinstance(system["probe_position"], list) or any(not isinstance(x, int) or x < 0 for x in system["probe_position"]):
+        _fail("E_POSITION")
+    _subterm(system["start"], tuple(system["probe_position"]))
+    return signature
+
+
+def _validate_parameters(operation, parameters):
+    expected = {
+        "rewrite_system_structure": set(), "term_shape": set(), "term_positions": set(),
+        "subterm_projection": {"position"}, "pattern_match": {"pattern", "term"},
+        "substitution_apply": {"term", "substitution"}, "redex_inventory": set(),
+        "one_step_rewrites": set(), "normal_form_check": set(), "leftmost_outermost_step": set(),
+    }[operation]
+    if not isinstance(parameters, dict) or set(parameters) != expected:
+        _fail("E_PARAMETER_FIELDS")
+    if operation == "subterm_projection":
+        if not isinstance(parameters["position"], list) or any(not isinstance(x, int) or x < 0 for x in parameters["position"]):
+            _fail("E_POSITION")
+    elif operation == "pattern_match":
+        _validate_term(parameters["pattern"], allow_variables=True)
+        _validate_term(parameters["term"], allow_variables=False)
+    elif operation == "substitution_apply":
+        _validate_term(parameters["term"], allow_variables=True)
+        sub = parameters["substitution"]
+        if not isinstance(sub, dict) or any(not is_var(key) for key in sub):
+            _fail("E_SUBSTITUTION")
+        for value in sub.values():
+            _validate_term(value, allow_variables=False)
+
+
+def rewrite_steps(term, rules):
+    steps = []
+    seen = set()
+    for position in _positions(term):
+        current = _subterm(term, position)
+        for rule in rules:
+            substitution = _match(rule["lhs"], current, {})
+            if substitution is None:
+                continue
+            result = _replace(term, position, _substitute(rule["rhs"], substitution))
+            key = (position, rule["id"], term_key(result))
+            if key in seen:
+                continue
+            seen.add(key)
+            steps.append({"position": list(position), "rule_id": rule["id"], "substitution": {name: substitution[name] for name in sorted(substitution)}, "result": result})
+    return steps
+
+
+def _shape(term):
+    if isinstance(term, str):
+        return 1, 1
+    children = [_shape(item) for item in term["args"]]
+    return 1 + sum(nodes for nodes, _ in children), 1 + max((depth for _, depth in children), default=0)
+
+
+def execute(request):
+    if not isinstance(request, dict) or set(request) != {"operation", "system", "parameters"}:
+        _fail("E_REQUEST_FIELDS")
+    operation = request["operation"]
+    if operation not in OPS:
+        _fail("E_OPERATION")
+    signature = _validate_system(request["system"])
+    _validate_parameters(operation, request["parameters"])
+    system, parameters = request["system"], request["parameters"]
+    rules, start = system["rules"], system["start"]
+    if operation == "rewrite_system_structure":
+        result = {"function_symbols": [{"arity": signature[name], "symbol": name} for name in sorted(signature)], "rule_ids": [rule["id"] for rule in rules], "rules": len(rules), "system_id": system["id"], "variables": sorted(set().union(*(_variables(rule["lhs"]) | _variables(rule["rhs"]) for rule in rules)))}
+    elif operation == "term_shape":
+        nodes, depth = _shape(start); result = {"depth": depth, "ground": not bool(_variables(start)), "nodes": nodes, "term": start}
+    elif operation == "term_positions":
+        result = {"positions": [{"path": list(position), "subterm": _subterm(start, position)} for position in _positions(start)]}
+    elif operation == "subterm_projection":
+        position = tuple(parameters["position"]); result = {"position": list(position), "subterm": _subterm(start, position)}
+    elif operation == "pattern_match":
+        substitution = _match(parameters["pattern"], parameters["term"], {}); result = {"matched": substitution is not None, "substitution": None if substitution is None else {name: substitution[name] for name in sorted(substitution)}}
+    elif operation == "substitution_apply":
+        result = {"result": _substitute(parameters["term"], parameters["substitution"])}
+    elif operation == "redex_inventory":
+        steps = rewrite_steps(start, rules); result = {"count": len(steps), "redexes": [{"position": step["position"], "rule_id": step["rule_id"], "substitution": step["substitution"]} for step in steps]}
+    elif operation == "one_step_rewrites":
+        steps = rewrite_steps(start, rules); result = {"count": len(steps), "steps": [{"position": step["position"], "result": step["result"], "rule_id": step["rule_id"]} for step in steps]}
+    elif operation == "normal_form_check":
+        steps = rewrite_steps(start, rules); result = {"is_normal_form": not bool(steps), "redex_count": len(steps), "term": start}
+    elif operation == "leftmost_outermost_step":
+        steps = rewrite_steps(start, rules); result = {"available": bool(steps), "step": None if not steps else {"position": steps[0]["position"], "result": steps[0]["result"], "rule_id": steps[0]["rule_id"]}}
+    else:
+        _fail("E_OPERATION")
+    return {"accepted": True, "operation": operation, "outcome": "completed", "result": stable(result)}
+
+
+def safe_execute(request):
+    try:
+        return execute(request)
+    except Exception as exc:
+        return {"accepted": False, "error": str(exc), "subject_success_credit": 0}
+
+
+if __name__ == "__main__":
+    try:
+        raw = sys.argv[1] if len(sys.argv) > 1 else sys.stdin.read()
+        if len(raw.encode("utf-8")) > 262144:
+            _fail("E_INPUT_BYTES")
+        payload = json.loads(raw)
+        output = [safe_execute(item) for item in payload] if isinstance(payload, list) else safe_execute(payload)
+        print(json.dumps(stable(output), ensure_ascii=False, sort_keys=True, separators=(",", ":")))
+    except Exception as exc:
+        print(json.dumps({"accepted": False, "error": str(exc), "subject_success_credit": 0}, sort_keys=True, separators=(",", ":")))
+        raise SystemExit(2)

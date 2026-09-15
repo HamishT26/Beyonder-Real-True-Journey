@@ -1,0 +1,43 @@
+from __future__ import annotations
+import copy,json
+from pathlib import Path
+phase=Path(__file__).parents[2]
+ns={'__name__':'edge_engine'}
+engine=Path(__file__).with_name('rewrite-core.txt')
+exec(compile(engine.read_text(encoding='utf-8'),str(engine),'exec'),ns)
+fixtures=json.loads((phase/'plan'/'fixtures.json').read_text(encoding='utf-8'))['fixtures']
+proposals=json.loads((phase/'plan'/'proposals.json').read_text(encoding='utf-8'))['proposals']
+tests=[]
+def t(name,condition):
+    if not condition: raise AssertionError(name)
+    tests.append(name)
+def err(code,request):
+    observed=ns['safe_execute'](request)
+    return not observed['accepted'] and observed['error']==code and observed['subject_success_credit']==0
+t('ten x1 operations',len(ns['OPS'])==10)
+t('fifty x1 proposals',len([p for p in proposals if p['session']=='x1'])==50)
+base=copy.deepcopy(next(p for p in proposals if p['operation']=='term_shape')['request'])
+bad=copy.deepcopy(base);bad['extra']=1;t('unknown request field',err('E_REQUEST_FIELDS',bad))
+bad=copy.deepcopy(base);bad['operation']='unknown';t('unknown operation',err('E_OPERATION',bad))
+bad=copy.deepcopy(base);bad['system']['extra']=1;t('unknown system field',err('E_SYSTEM_FIELDS',bad))
+bad=copy.deepcopy(base);bad['system']['rules'].append(copy.deepcopy(bad['system']['rules'][0]));t('duplicate rule id',err('E_RULE_ID_DUPLICATE',bad))
+bad=copy.deepcopy(base);bad['system']['rules'][0]['rhs']='?unbound';t('unbound rhs variable',err('E_RULE_VARIABLE',bad))
+bad=copy.deepcopy(base);bad['system']['rules'][0]['lhs']='?x';t('variable lhs',err('E_RULE_LHS_VARIABLE',bad))
+bad=copy.deepcopy(base);bad['system']['rules'].append({'id':'X','lhs':{'fun':'s','args':['0','0']},'rhs':'0'});t('arity collision',err('E_SIGNATURE_ARITY',bad))
+bad=copy.deepcopy(base);bad['system']['probe_position']=[99];t('invalid probe',err('E_POSITION',bad))
+bad=copy.deepcopy(base);bad['parameters']={'x':1};t('unknown parameters',err('E_PARAMETER_FIELDS',bad))
+match=next(p for p in proposals if p['operation']=='pattern_match' and p['fixture_id']=='nat_add');t('pattern matched',ns['execute'](copy.deepcopy(match['request']))['result']['matched'])
+sub=next(p for p in proposals if p['operation']=='substitution_apply' and p['fixture_id']=='nat_add');t('substitution concrete',not ns['_variables'](ns['execute'](copy.deepcopy(sub['request']))['result']['result']))
+redex=next(p for p in proposals if p['operation']=='redex_inventory' and p['fixture_id']=='bool_simplify');t('bool has two redexes',ns['execute'](copy.deepcopy(redex['request']))['result']['count']==2)
+join=next(p for p in proposals if p['operation']=='one_step_rewrites' and p['fixture_id']=='joinable_peak');t('joinable peak two steps',ns['execute'](copy.deepcopy(join['request']))['result']['count']==2)
+div=next(p for p in proposals if p['operation']=='one_step_rewrites' and p['fixture_id']=='divergent_peak');t('divergent peak two steps',ns['execute'](copy.deepcopy(div['request']))['result']['count']==2)
+left=next(p for p in proposals if p['operation']=='leftmost_outermost_step' and p['fixture_id']=='list_append');t('list leftmost rule',ns['execute'](copy.deepcopy(left['request']))['result']['step']['rule_id']=='L2')
+normal=next(p for p in proposals if p['operation']=='normal_form_check');t('start reducible',not ns['execute'](copy.deepcopy(normal['request']))['result']['is_normal_form'])
+positions=next(p for p in proposals if p['operation']=='term_positions' and p['fixture_id']=='joinable_peak');t('root and child positions',len(ns['execute'](copy.deepcopy(positions['request']))['result']['positions'])==2)
+before=json.dumps(base,sort_keys=True);ns['execute'](base);t('input fixed',json.dumps(base,sort_keys=True)==before)
+huge=copy.deepcopy(base);huge['system']['start']={'fun':'z','args':['0']*65};t('term size cap',err('E_TERM_SHAPE',huge) or err('E_TERM_SIZE',huge))
+bad=copy.deepcopy(base);bad['system']['start']='?x';t('ground start',err('E_GROUND_TERM',bad))
+t('json round trip',json.loads(json.dumps(ns['execute'](copy.deepcopy(base))))['accepted'])
+bad=copy.deepcopy(base);bad['extra']=1;t('safe refusal zero credit',ns['safe_execute'](bad)['subject_success_credit']==0)
+t('all fixtures finite',all(len(f['rules'])<=4 for f in fixtures))
+print(json.dumps({'status':'PASS','tests':len(tests),'names':tests,'independent_reproduction':False},sort_keys=True))

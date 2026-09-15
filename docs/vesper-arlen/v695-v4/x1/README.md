@@ -1,0 +1,5 @@
+# Vesper Arlen v695-v4 x1
+
+X1 executes only the first fifty frozen finite term-rewriting contracts: system structure, term shape, positions, subterm projection, matching, substitution, redex inventory, one-step rewriting, normal-form classification, and a deterministic leftmost-outermost step. It includes no bounded derivation, peak, confluence, empirical-gap, authority-gate, or x2 implementation.
+
+One hundred malformed candidates remain failed subjects at zero credit, while one hundred refusal checks are separate passes. One hundred CLEAN/FIX/REFINE tasks and one hundred inherited-reference integrity checks passed. Five Neris trace capabilities were called only for zero-credit structural contrast. No source canonical or test was replayed. `Bounded same-owner finite synthetic term-rewriting software evidence only; no empirical, production, professional, legal, cultural, Maori-authority, identity, consciousness, independent-reproduction, Theory-of-Everything, or Stage 20 claim. NOT_READY_FOR_STAGE_20.`
