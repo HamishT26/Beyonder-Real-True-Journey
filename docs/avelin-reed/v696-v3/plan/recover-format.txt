@@ -1,0 +1,18 @@
+'use strict';
+const fs=require('node:fs'),path=require('node:path'),vm=require('node:vm');
+const file=path.join(__dirname,'builder.txt'),original=fs.readFileSync(file,'utf8'),marker='for(const [p,text]of pending){if(text.trim().split(/\\s+/u).length>100000)';
+const offset=original.indexOf(marker);if(offset<0)throw Error('exact final writer marker absent');
+const tail=String.raw`
+const rejectedPath=BASE+'/plan/new-proposals.json',rejected=pending.get(rejectedPath),retained=BASE+'/plan/retained';
+if(!rejected)throw Error('rejected definition document missing');
+fs.mkdirSync(retained,{recursive:true});
+const failedBytes=Buffer.from(rejected,'utf8');
+const encoded={schema:'ghc.family.retained-original-bytes.v11',subject:rejectedPath,original_words:rejected.trim().split(/\s+/u).length,original_bytes:failedBytes.length,original_sha256:hash(failedBytes),encoding:'base64',content_base64:failedBytes.toString('base64'),original_success_credit:0,reason:'First planning document exceeded the 100000-word ceiling before any definition write.'};
+fs.writeFileSync(retained+'/over-ceiling-proposals.json',JSON.stringify(encoded,null,2)+'\n',{flag:'wx'});
+let maximum=0,changed=0;
+for(const [name,text]of pending){if(name.endsWith('.json')){const object=JSON.parse(text);let compact;if(Array.isArray(object.records)){const {records,...rest}=object;compact='{\n'+Object.entries(rest).map(([k,v])=>'  '+JSON.stringify(k)+': '+JSON.stringify(v)).join(',\n')+',\n  "records": [\n'+records.map(r=>'    '+JSON.stringify(r)).join(',\n')+'\n  ]\n}\n';}else compact=JSON.stringify(object)+'\n';if(canon(JSON.parse(compact))!==canon(object))throw Error('semantic drift '+name);pending.set(name,compact);changed++;}const words=pending.get(name).trim().split(/\s+/u).length;maximum=Math.max(maximum,words);if(words>100000)throw Error('word bound remains '+name);}
+for(const [name,text]of pending){fs.mkdirSync(path.dirname(name),{recursive:true});fs.writeFileSync(name,text,{flag:'wx'});}
+const current=fs.readFileSync(rejectedPath,'utf8');fs.writeFileSync(BASE+'/plan/format-recovery.json',JSON.stringify({schema:'ghc.family.format-recovery.v11',original_sha256:hash(failedBytes),corrected_sha256:hash(current),original_words:encoded.original_words,corrected_words:current.trim().split(/\s+/u).length,semantic_equality:canon(JSON.parse(rejected))===canon(JSON.parse(current)),format_only:true,documents_compacted:changed,maximum_live_words:maximum,domain_sessions_invoked:0,original_success_credit:0},null,2)+'\n',{flag:'wx'});
+console.log(JSON.stringify({definitions:records.length,inherited:inherited.length,original_words:encoded.original_words,corrected_words:current.trim().split(/\s+/u).length,maximum_live_words:maximum,semantic_equality:true,domain_executions:0}));
+`;
+new vm.Script('(function(require,module,exports,__dirname,__filename){\n'+original.slice(0,offset)+tail+'\n})',{filename:'avelin-planning-format-recovery-runtime.txt'}).runInThisContext()(require,module,exports,__dirname,__filename);
