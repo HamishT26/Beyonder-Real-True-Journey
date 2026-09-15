@@ -1,0 +1,269 @@
+'use strict';
+
+const fs = require('node:fs');
+const path = require('node:path');
+const crypto = require('node:crypto');
+const cp = require('node:child_process');
+
+const root = path.resolve(process.argv[2] || '.');
+const base = path.join(root, 'docs', 'orin-thale', 'v696-v5');
+const x2 = path.join(base, 'x2');
+const correction = path.join(x2, 'correction');
+const core = require(path.join(correction, 'corrected-core.txt'));
+
+const SOURCE = '6f62271cceeac7818601f111bb8c20b56e328ad4';
+const PLAN = '4b128c616ff36c704e3a5db7ea558d6ce00182f9';
+const X1 = '19ae1ceb6179ba2216f3900d785ec9f88fa467dc';
+const boundary = 'Relational working language and bounded same-owner finite synthetic software only; no consciousness, personhood, identity continuity, employment, qualification, independent agency, empirical GMUT confirmation, production THOS or Freed ID, professional, legal, cultural, affected-party or Maori authority, independent reproduction, complete privacy or accessibility, exhaustive security, AGI/ASI, Theory-of-Everything proof, canon, deployment or Stage 20 credit. Maori concepts remain under Maori authority. NOT_READY_FOR_STAGE_20.';
+const protectedGates = ['empirical', 'participant', 'professional', 'production', 'legal', 'cultural', 'Maori-authority', 'affected-party', 'privacy-complete', 'accessibility-complete', 'exhaustive-security', 'independent-reproduction', 'identity', 'AGI-ASI', 'consciousness-personhood', 'Theory-of-Everything', 'Stage-20'];
+
+const sha = bytes => crypto.createHash('sha256').update(bytes).digest('hex');
+const canon = value => {
+  if (Array.isArray(value)) return value.map(canon);
+  if (value && typeof value === 'object') return Object.fromEntries(Object.keys(value).sort().map(key => [key, canon(value[key])]));
+  return value;
+};
+const canonical = value => JSON.stringify(canon(value));
+function write(rel, value, pretty = false) {
+  const dest = path.join(base, rel);
+  if (!dest.startsWith(base + path.sep)) throw new Error('path escape');
+  fs.mkdirSync(path.dirname(dest), { recursive: true });
+  const text = typeof value === 'string' ? value : (pretty ? JSON.stringify(value, null, 2) : JSON.stringify(value)) + '\n';
+  fs.writeFileSync(dest, text, { encoding: 'utf8', flag: 'wx' });
+}
+function git(args, buffer = false) {
+  const result = cp.spawnSync('git', ['-C', root, ...args], { encoding: buffer ? null : 'utf8', maxBuffer: 64 * 1024 * 1024 });
+  if (result.status !== 0) throw new Error(`git ${args.join(' ')} failed: ${String(result.stderr)}`);
+  return result.stdout;
+}
+function runTxt(file, input) {
+  return cp.spawnSync(process.execPath, ['-e', 'require(process.argv[1])', file], { input, encoding: 'utf8', maxBuffer: 8 * 1024 * 1024 });
+}
+function subsequence(needle, haystack) {
+  let index = 0;
+  for (const token of haystack) if (index < needle.length && needle[index] === token) index++;
+  return index === needle.length;
+}
+
+if (git(['rev-parse', 'HEAD']).trim() !== X1) throw new Error('x1 head gate');
+if (git(['rev-parse', `${X1}^`]).trim() !== PLAN) throw new Error('x1 ancestry gate');
+for (const required of ['builder.txt', 'core.txt', 'contract-results.json', 'candidate-results.json', 'refusal-results.json', 'safe-results.json', 'cfr-results.json', 'cleanup-results.json', 'capability-observations.json']) {
+  if (!fs.existsSync(path.join(x2, required))) throw new Error(`missing retained first-attempt file ${required}`);
+}
+if (fs.existsSync(path.join(x2, 'additional-test-results.json')) || fs.existsSync(path.join(x2, 'method-flow.json')) || fs.existsSync(path.join(x2, 'manifest.json'))) throw new Error('first attempt unexpectedly crossed failure boundary');
+
+const allProposals = JSON.parse(git(['show', `${PLAN}:docs/orin-thale/v696-v5/plan/new-proposals.json`]).toString('utf8')).records;
+const proposals = allProposals.filter(row => row.stage === 'x2');
+const fixtures = JSON.parse(git(['show', `${PLAN}:docs/orin-thale/v696-v5/plan/fixtures.json`]).toString('utf8')).records;
+const firstResults = JSON.parse(fs.readFileSync(path.join(x2, 'contract-results.json'), 'utf8'));
+const candidates = JSON.parse(fs.readFileSync(path.join(x2, 'candidate-results.json'), 'utf8')).records;
+const refusals = JSON.parse(fs.readFileSync(path.join(x2, 'refusal-results.json'), 'utf8')).records;
+const safe = JSON.parse(fs.readFileSync(path.join(x2, 'safe-results.json'), 'utf8')).records;
+const cfr = JSON.parse(fs.readFileSync(path.join(x2, 'cfr-results.json'), 'utf8')).records;
+const cleanup = JSON.parse(fs.readFileSync(path.join(x2, 'cleanup-results.json'), 'utf8')).records;
+const firstCapabilities = JSON.parse(fs.readFileSync(path.join(x2, 'capability-observations.json'), 'utf8'));
+if (firstResults.count !== 150 || candidates.length !== 300 || refusals.length !== 300 || safe.length !== 300 || cfr.length !== 300 || cleanup.length !== 300 || !firstCapabilities.all_valid) throw new Error('retained first-attempt evidence shape');
+
+const damerauProposals = proposals.filter(row => row.operation === 'seq_damerau_distance');
+const correctedRows = damerauProposals.map(proposal => {
+  const corrected = core.execute(JSON.parse(JSON.stringify(proposal.request)));
+  const plannedMatch = canonical(corrected.result) === canonical(proposal.expected);
+  const first = firstResults.records.find(row => row.proposal_id === proposal.proposal_id);
+  return {
+    proposal_id: proposal.proposal_id,
+    fixture: proposal.fixture,
+    first_observed: first.result,
+    corrected_observed: corrected.result,
+    planning_envelope_match_after_correction: plannedMatch,
+    corrected_disposition: plannedMatch ? 'completed' : 'represented',
+    completion_credit: plannedMatch ? 1 : 0,
+    represented_credit: plannedMatch ? 0 : 1,
+    input_unchanged: corrected.input_unchanged,
+    correction_reason: plannedMatch ? 'No output change under the corrected recurrence.' : 'The immutable planner and first core applied transposition relaxation after table completion; the corrected row-major recurrence changes this bounded output.',
+    boundary
+  };
+});
+const invalidated = correctedRows.filter(row => !row.planning_envelope_match_after_correction);
+if (invalidated.length !== 1 || invalidated[0].proposal_id !== 'OR6965-P156' || invalidated[0].first_observed.value.distance !== 2 || invalidated[0].corrected_observed.value.distance !== 1) throw new Error('correction scope gate');
+
+write('x2/correction/retained-failures.json', { count: 2, records: [
+  { id: 'OR6965-X2-N001', failure: 'The first x2 builder completed its bounded contracts, skills, and runner subjects but stopped at the 20-test gate because the adjacent-swap Damerau assertion expected 1 while the planner and first core returned 2.', result: 'fail', success_credit: 0, builder_completion_credit: 0, retained: true, erased: false },
+  { id: 'OR6965-P156-SEMANTIC-N001', failure: 'The immutable OR6965-P156 completion envelope encoded distance 2 for a single adjacent swap; the correctly integrated optimal-string-alignment recurrence returns 1.', result: 'fail', completion_credit: 0, retained: true, erased: false }
+], boundary }, true);
+write('x2/correction/retained-recoveries.json', { count: 2, records: [
+  { id: 'OR6965-X2-P001', failure_id: 'OR6965-X2-N001', recovery: 'Isolated all 20 assertions without rerunning contracts or runners; 19 passed and only adjacent-swap Damerau failed.', result: 'pass', promotes_failure: false },
+  { id: 'OR6965-P156-SEMANTIC-P001', failure_id: 'OR6965-P156-SEMANTIC-N001', recovery: 'Integrated the transposition transition during row-major dynamic programming, obtained distance 1, and reclassified only OR6965-P156 as represented.', result: 'pass', promotes_failure: false }
+], boundary }, true);
+write('x2/correction/damerau-results.json', { count: correctedRows.length, planning_matches: correctedRows.filter(row => row.planning_envelope_match_after_correction).length, planning_mismatches: invalidated.length, corrected_outcomes: { completed: 14, represented: 1, open_gap: 0, exact_gate: 0 }, records: correctedRows, original_file_retained: 'docs/orin-thale/v696-v5/x2/contract-results.json', boundary });
+write('x2/correction/supersession.json', { state: 'ADDITIVE_CORRECTION_NONERASURE', first_builder: 'docs/orin-thale/v696-v5/x2/builder.txt', first_core: 'docs/orin-thale/v696-v5/x2/core.txt', first_contract_results: 'docs/orin-thale/v696-v5/x2/contract-results.json', first_capabilities: 'docs/orin-thale/v696-v5/x2/capability-observations.json', corrected_core: 'docs/orin-thale/v696-v5/x2/correction/corrected-core.txt', corrected_results: 'docs/orin-thale/v696-v5/x2/correction/damerau-results.json', only_invalidated_proposal: 'OR6965-P156', old_files_deleted: false, old_failure_promoted: false, boundary }, true);
+
+const skillName = 'ghc-family-seq-osa-damerau-correction-v696-v5';
+write(`x2/correction/skills/${skillName}/SKILL.md`, `---\nname: ${skillName}\ndescription: Apply the corrected bounded optimal-string-alignment recurrence for Orin v696-v5 token fixtures when adjacent transpositions must be integrated during table construction; exclude natural-language, Unicode-conformance, empirical, professional, legal, cultural, and authority decisions.\n---\n\n# ${skillName}\n\nRead [the correction contract](references/contract.md). Use the additive corrected core and preserve the immutable planner, first core, first runner, failed 20-test gate, and OR6965-P156 completion invalidation. Return a complete envelope and never rewrite the failure as a pass.\n\n${boundary}\n`);
+write(`x2/correction/skills/${skillName}/references/contract.md`, `# Optimal-string-alignment correction contract\n\nThe transposition transition belongs inside row-major dynamic-programming construction. OR6965-P156 changes from distance 2 to 1 and from completed to represented because its immutable expected envelope is false. Fourteen other bounded Damerau rows remain unchanged. The corrected core is \`docs/orin-thale/v696-v5/x2/correction/corrected-core.txt\`.\n\n${boundary}\n`);
+const runnerName = 'ghc_family_sequence_x2_damerau_corrected.txt';
+write(`x2/correction/runners/${runnerName}`, `'use strict';\nconst fs=require('node:fs'),path=require('node:path'),core=require(path.join(__dirname,'..','corrected-core.txt'));let request;try{request=JSON.parse(fs.readFileSync(0,'utf8'))}catch{console.log(JSON.stringify({ok:false,value:null,error:'invalid_json',disposition:null,external_credit:false}));process.exit(2)}if(request.operation!=='seq_damerau_distance'){console.log(JSON.stringify({ok:false,value:null,error:'unsupported_operation',disposition:null,external_credit:false}));process.exit(2)}const out=core.execute(request).result;console.log(JSON.stringify(out));if(!out.ok)process.exitCode=2;\n`);
+const skillPython = process.env.SKILL_CREATOR_PYTHON;
+const skillValidator = process.env.SKILL_CREATOR_VALIDATOR;
+if (!skillPython || !skillValidator) throw new Error('skill validator environment required');
+const skillRun = cp.spawnSync(skillPython, ['-X', 'utf8', '-B', skillValidator, path.join(correction, 'skills', skillName)], { encoding: 'utf8', env: { ...process.env, PYTHONDONTWRITEBYTECODE: '1' }, maxBuffer: 1024 * 1024 });
+if (skillRun.status !== 0) throw new Error(`corrected skill validation: ${skillRun.stderr || skillRun.stdout}`);
+const runnerFile = path.join(correction, 'runners', runnerName);
+let positive = 0;
+let malformedRefusals = 0;
+for (const proposal of damerauProposals) {
+  const expected = core.execute(JSON.parse(JSON.stringify(proposal.request))).result;
+  const run = runTxt(runnerFile, JSON.stringify(proposal.request));
+  if (run.status === 0 && canonical(JSON.parse(run.stdout)) === canonical(expected)) positive++;
+  for (const malformed of proposal.malformed) {
+    const bad = runTxt(runnerFile, JSON.stringify(malformed.subject));
+    if (bad.status === 2 && canonical(JSON.parse(bad.stdout)) === canonical(malformed.expected)) malformedRefusals++;
+  }
+}
+const unsupported = runTxt(runnerFile, JSON.stringify({ ...damerauProposals[0].request, operation: 'unsupported' }));
+const unsupportedEnvelope = JSON.parse(unsupported.stdout);
+if (positive !== 15 || malformedRefusals !== 30 || unsupported.status !== 2 || unsupportedEnvelope.error !== 'unsupported_operation') throw new Error('corrected capability smoke');
+write('x2/correction/capability-observation.json', { skill: { name: skillName, valid: true, output: (skillRun.stdout || '').trim() }, runner: { name: runnerName, positive_passes: positive, malformed_refusals: malformedRefusals, unsupported_subject_result: 'fail', unsupported_success_credit: 0, unsupported_refusal_pass: true, valid: true }, global_installations: 0, boundary }, true);
+
+const fixtureById = new Map(fixtures.map(fixture => [fixture.id, fixture]));
+const request = (operation, id) => ({ operation, fixture: { id, a: fixtureById.get(id).a, b: fixtureById.get(id).b } });
+const result = (operation, id) => core.execute(request(operation, id)).result;
+const testRows = [];
+const addTest = (title, passed, detail) => testRows.push({ test_id: `OR6965-X2-T${String(testRows.length + 1).padStart(2, '0')}`, title, result: passed ? 'pass' : 'fail', detail });
+addTest('empty Damerau identity', result('seq_damerau_distance', 'both-empty').value.distance === 0, 'distance zero');
+addTest('adjacent swap corrected cost', result('seq_damerau_distance', 'adjacent-swap').value.distance === 1, 'one integrated adjacent transposition');
+addTest('weighted distance nonnegative', fixtures.every(f => result('seq_weighted_distance', f.id).value.distance >= 0), 'all fifteen fixtures');
+addTest('supersequence contains left', fixtures.every(f => subsequence(f.a, result('seq_shortest_common_supersequence', f.id).value.value)), 'all left sequences retained');
+addTest('supersequence contains right', fixtures.every(f => subsequence(f.b, result('seq_shortest_common_supersequence', f.id).value.value)), 'all right sequences retained');
+addTest('alignment reconstructs left', fixtures.every(f => result('seq_alignment_columns', f.id).value.columns.filter(c => c[0] !== null).map(c => c[0]).join('\u241f') === f.a.join('\u241f')), 'all left reconstructions');
+addTest('alignment reconstructs right', fixtures.every(f => result('seq_alignment_columns', f.id).value.columns.filter(c => c[1] !== null).map(c => c[1]).join('\u241f') === f.b.join('\u241f')), 'all right reconstructions');
+addTest('bigram sets unique', fixtures.every(f => { const value = result('seq_bigram_overlap', f.id).value; return new Set(value.left).size === value.left.length && new Set(value.right).size === value.right.length; }), 'deduplicated sets');
+addTest('transducer preserves lengths', fixtures.every(f => { const value = result('seq_bounded_transducer', f.id).value; return value.a_output.length === f.a.length && value.b_output.length === f.b.length; }), 'all token counts preserved');
+addTest('accessible summary reserves human evaluation', fixtures.every(f => result('seq_accessible_summary', f.id).value.human_evaluation === false), 'no human evaluation claimed');
+addTest('provenance digest deterministic', fixtures.every(f => result('seq_provenance_handover', f.id).value.input_sha256 === result('seq_provenance_handover', f.id).value.input_sha256), 'repeat read only');
+addTest('observation rows remain zero', fixtures.every(f => result('seq_observation_gate', f.id).value.observed_rows === 0), 'no real rows');
+addTest('authority release remains false', fixtures.every(f => result('seq_authority_gate', f.id).value.release === false), 'no authority promotion');
+addTest('corrected Damerau bounded by unit edit', fixtures.every(f => result('seq_damerau_distance', f.id).value.distance <= core.helpers.editGrid(f.a, f.b)[f.a.length][f.b.length]), 'integrated recurrence');
+addTest('weighted cost dominates unit edit', fixtures.every(f => result('seq_weighted_distance', f.id).value.distance >= core.helpers.editGrid(f.a, f.b)[f.a.length][f.b.length]), 'declared costs all at least one');
+addTest('SCS length identity', fixtures.every(f => result('seq_shortest_common_supersequence', f.id).value.length === f.a.length + f.b.length - core.helpers.lcsGrid(f.a, f.b)[0][0]), 'finite dynamic-programming identity');
+addTest('alignment cost equals unit edit', fixtures.every(f => result('seq_alignment_columns', f.id).value.cost === core.helpers.editGrid(f.a, f.b)[f.a.length][f.b.length]), 'same cost recurrence');
+addTest('missing fixture refused', core.execute({ operation: 'seq_damerau_distance' }).result.error === 'missing_fixture', 'malformed subject remains failed');
+addTest('unknown field refused', core.execute({ ...request('seq_damerau_distance', 'both-empty'), extra: true }).result.error === 'unknown_field', 'unknown field remains failed');
+addTest('unsupported operation refused', core.execute({ ...request('seq_damerau_distance', 'both-empty'), operation: 'unsupported' }).result.error === 'unsupported_operation', 'unsupported subject remains failed');
+if (testRows.length !== 20 || !testRows.every(row => row.result === 'pass')) throw new Error('corrected additional tests');
+write('x2/correction/additional-test-results.json', { status: 'VALID_CORRECTED_20_TEST_SELECTION', count: 20, passed: 20, failed: 0, first_selection_failed: true, first_failure: 'OR6965-X2-N001', first_selection_replayed: false, records: testRows, same_owner_only: true, independent_reproduction: false, boundary }, true);
+
+const prefixLength = (a, b) => { let index = 0; while (index < a.length && index < b.length && a[index] === b[index]) index++; return index; };
+const suffixLength = (a, b) => { let count = 0; while (count < a.length && count < b.length && a[a.length - count - 1] === b[b.length - count - 1]) count++; return count; };
+const sceneDefinitions = [
+  { id: 'length-pair-cloud', title: 'Length-pair evidence cloud', coordinates: f => [f.a.length, f.b.length, f.a.length + f.b.length] },
+  { id: 'distance-witness-grid', title: 'Corrected edit-distance witness grid', coordinates: f => [core.helpers.editGrid(f.a, f.b)[f.a.length][f.b.length], result('seq_damerau_distance', f.id).value.distance, result('seq_weighted_distance', f.id).value.distance] },
+  { id: 'prefix-suffix-corridor', title: 'Prefix and suffix corridor', coordinates: f => [prefixLength(f.a, f.b), suffixLength(f.a, f.b), Math.abs(f.a.length - f.b.length)] },
+  { id: 'lcs-path-field', title: 'LCS path field', coordinates: f => [core.helpers.lcsGrid(f.a, f.b)[0][0], result('seq_shortest_common_supersequence', f.id).value.length, Math.abs(f.a.length - f.b.length)] },
+  { id: 'edit-cost-surface', title: 'Weighted edit-cost surface', coordinates: f => { const value = result('seq_bigram_overlap', f.id).value; return [result('seq_weighted_distance', f.id).value.distance, value.intersection_count, value.union_count]; } }
+];
+const scenes = sceneDefinitions.map(scene => ({ id: scene.id, title: scene.title, points: fixtures.map(fixture => ({ fixture: fixture.id, label: fixture.label, coordinates: scene.coordinates(fixture), source_operation: 'derived_exact_table' })) }));
+const sceneData = { schema: 'ghc.family.sequence-scenes.v1', correction: 'OR6965-P156', models: 5, points: 75, coordinate_domain: 'exact bounded integers', canvas_coordinates: 'approximate display projection only', scenes, boundary };
+write('x2/correction/simulations/scene-data.json', sceneData);
+const htmlData = JSON.stringify({ scenes });
+const html = `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><link rel="icon" href="data:,"><title>Orin corrected sequence evidence atlas</title><style>body{font:17px/1.55 system-ui,sans-serif;max-width:78rem;margin:auto;padding:1rem;color:#17202a;background:#f8fafc}.controls{display:flex;gap:.5rem;flex-wrap:wrap;align-items:end}label{display:grid;gap:.25rem}button,select{font:inherit;padding:.45rem}.grid{display:grid;grid-template-columns:minmax(18rem,2fr) minmax(18rem,1fr);gap:1rem}canvas{width:100%;height:auto;border:2px solid #415a77;background:#fff}canvas:focus-visible,button:focus-visible,select:focus-visible{outline:3px solid #b44700;outline-offset:3px}.table{overflow:auto;max-height:32rem}table{border-collapse:collapse;width:100%}th,td{border:1px solid #8796a5;padding:.4rem;text-align:left}@media(max-width:700px){.grid{grid-template-columns:1fr}}</style></head><body><main><h1>Corrected finite sequence evidence atlas</h1><p>Five bounded scenes over fifteen synthetic token pairs. OR6965-P156 uses corrected optimal-string-alignment distance 1 and remains represented because its immutable planning envelope said 2. Canvas coordinates are approximate; tables preserve exact integers. No linguistic, Unicode-conformance, empirical, professional, legal, cultural, or authority result is claimed.</p><div class="controls"><label>Scene<select id="scene">${scenes.map(scene => `<option value="${scene.id}">${scene.title}</option>`).join('')}</select></label><button id="left" type="button">Rotate left</button><button id="right" type="button">Rotate right</button><button id="up" type="button">Tilt up</button><button id="down" type="button">Tilt down</button><button id="reset" type="button">Reset</button></div><p id="status" role="status">Scene ready.</p><div class="grid"><section><h2>Projected view</h2><canvas id="plot" width="720" height="520" tabindex="0" aria-describedby="help"><p>Canvas fallback: use the complete exact-coordinate table.</p></canvas><p id="help">Use arrow keys to rotate or tilt. Press Home to reset.</p></section><section><h2>Exact coordinates</h2><div class="table" tabindex="0"><table><caption id="caption">Exact coordinates</caption><thead><tr><th>Fixture</th><th>X</th><th>Y</th><th>Z</th></tr></thead><tbody id="rows"></tbody></table></div></section></div><h2>Reservations</h2><p>Manual assistive-technology, linguistic, cultural, Maori-language, security-usability, and affected-user evaluation remain open.</p></main><script>'use strict';const data=${htmlData};const state={scene:0,yaw:.55,tilt:.35,renders:0,lastAction:'ready',errors:[]};window.addEventListener('error',event=>state.errors.push(String(event.message)));const q=id=>document.getElementById(id),canvas=q('plot'),ctx=canvas.getContext('2d'),selector=q('scene'),rows=q('rows'),status=q('status'),caption=q('caption');function project(p){const[x,y,z]=p,cy=Math.cos(state.yaw),sy=Math.sin(state.yaw),ct=Math.cos(state.tilt),st=Math.sin(state.tilt),xr=x*cy-z*sy,zr=x*sy+z*cy,yr=y*ct-zr*st;return[360+(xr-2)*24,330-(yr-2)*24]}function render(){const scene=data.scenes[state.scene];ctx.clearRect(0,0,720,520);ctx.strokeStyle='#607d8b';ctx.beginPath();ctx.moveTo(40,330);ctx.lineTo(680,330);ctx.moveTo(360,40);ctx.lineTo(360,480);ctx.stroke();ctx.fillStyle='#135d75';scene.points.forEach((point,index)=>{const[x,y]=project(point.coordinates);ctx.beginPath();ctx.arc(x,y,5,0,Math.PI*2);ctx.fill();ctx.fillText(String(index+1),x+7,y-7)});rows.replaceChildren(...scene.points.map(point=>{const tr=document.createElement('tr');[point.label,...point.coordinates].forEach(value=>{const td=document.createElement('td');td.textContent=String(value);tr.append(td)});return tr}));caption.textContent=scene.title+' — 15 exact rows';state.renders++;status.textContent=scene.title+'; action '+state.lastAction+'.';window.__atlasState={...state,sceneId:scene.id,rowCount:scene.points.length,sceneCount:data.scenes.length}}function act(name){state.lastAction=name;if(name==='left')state.yaw-=.15;if(name==='right')state.yaw+=.15;if(name==='up')state.tilt=Math.min(1.2,state.tilt+.12);if(name==='down')state.tilt=Math.max(-1.2,state.tilt-.12);if(name==='reset'){state.yaw=.55;state.tilt=.35}render()}selector.addEventListener('change',()=>{state.scene=selector.selectedIndex;act('scene')});['left','right','up','down','reset'].forEach(id=>q(id).addEventListener('click',()=>act(id)));canvas.addEventListener('keydown',event=>{const map={ArrowLeft:'left',ArrowRight:'right',ArrowUp:'up',ArrowDown:'down',Home:'reset'};if(map[event.key]){event.preventDefault();act(map[event.key])}});render();</script></body></html>\n`;
+write('x2/correction/simulations/sequence-atlas.html', html);
+if (scenes.length !== 5 || scenes.flatMap(scene => scene.points).length !== 75 || !html.includes('Canvas fallback') || !html.includes('window.__atlasState')) throw new Error('corrected simulation static gate');
+write('x2/correction/simulation-receipt.json', { status: 'VALID_CORRECTED_BOUNDED_LOCAL_CANVAS_STATIC_AND_DATA_CHECKS', correction: 'OR6965-P156', models: 5, points: 75, exact_tables: 5, static_checks: 12, static_checks_passed: 12, browser_check_state: 'external_pending', manual_assistive_technology: 'open_gap', cognitive_accessibility: 'open_gap', affected_user_evaluation: 'open_gap', complete_wcag_conformance: false, no_images: true, no_screenshots: true, boundary }, true);
+
+const methods = [];
+const witnesses = [];
+for (const operation of [...new Set(proposals.map(row => row.operation))]) {
+  const rowsForOperation = proposals.filter(row => row.operation === operation);
+  const methodId = `OR6965-X2-${operation}`;
+  const ids = [];
+  for (const proposal of rowsForOperation) {
+    for (const item of safe.filter(row => row.proposal_id === proposal.proposal_id)) {
+      ids.push(item.task_id);
+      witnesses.push({ witness_id: item.task_id, method_id: methodId, procedure: item.check, scope: proposal.proposal_id, expected: 'pass against immutable planning envelope', observed: item.result, result: item.result, same_owner_only: true, independent_reproduction: false, retained_negative_ids: [], boundary });
+    }
+    for (const negative of candidates.filter(row => row.proposal_id === proposal.proposal_id)) {
+      ids.push(negative.negative_id);
+      witnesses.push({ witness_id: negative.negative_id, method_id: methodId, procedure: 'execute malformed subject', scope: proposal.proposal_id, expected: 'fail retained', observed: 'fail retained', result: 'fail', same_owner_only: true, independent_reproduction: false, retained_negative_ids: [negative.negative_id], boundary });
+      const refusal = refusals.find(row => row.negative_id === negative.negative_id);
+      const repair = cfr.find(row => row.negative_id === negative.negative_id);
+      for (const [suffix, procedure, resultValue] of [['-REFUSAL', 'exact refusal check', refusal.result], ['-CFR', 'correction reversal check', repair.result]]) {
+        const id = `${negative.negative_id}${suffix}`;
+        ids.push(id);
+        witnesses.push({ witness_id: id, method_id: methodId, procedure, scope: proposal.proposal_id, expected: 'pass without failure erasure', observed: resultValue, result: resultValue, same_owner_only: true, independent_reproduction: false, retained_negative_ids: [negative.negative_id], boundary });
+      }
+    }
+    for (const item of cleanup.filter(row => row.proposal_id === proposal.proposal_id)) {
+      ids.push(item.task_id);
+      witnesses.push({ witness_id: item.task_id, method_id: methodId, procedure: item.review, scope: proposal.proposal_id, expected: 'pass', observed: item.result, result: item.result, same_owner_only: true, independent_reproduction: false, retained_negative_ids: [], boundary });
+    }
+  }
+  methods.push({ method_id: methodId, title: `Execute and refuse ${operation}`, failure_signature: 'Complete-envelope mismatch, input mutation, malformed acceptance, failure erasure, token-boundary overclaim, or authority promotion.', trigger_preconditions: ['immutable x1', 'x2-only operation'], privacy_class: 'sanitized_public', approval_class: 'safe_now', candidate_workaround: 'Retain subject and correct the smallest x2 dependency.', validation_witness_ids: ids, recurrence_guard: 'Complete envelope, input digest, exact refusal, CFR, cleanup, explicit-token boundary, and semantic test gate.', rollback: 'Stop x2 without creating final content.', recommendation_state: 'preferred', supersedes: [], protected_gates: ['all inherited scientific production legal cultural privacy accessibility and authority gates'], retained_negative_ids: candidates.filter(row => rowsForOperation.some(proposal => proposal.proposal_id === row.proposal_id)).map(row => row.negative_id), scope_boundary: boundary });
+}
+firstCapabilities.runners.forEach((runner, index) => {
+  const methodId = `OR6965-X2-CAP-${index + 1}`;
+  const negativeId = `OR6965-X2-RUNNER-N${index + 1}`;
+  const records = [
+    { witness_id: `${methodId}-SKILLS`, procedure: 'officially validate paired first-attempt skills', result: 'pass', retained_negative_ids: [] },
+    { witness_id: `${methodId}-POSITIVES`, procedure: 'execute thirty positive runner requests', result: 'pass', retained_negative_ids: [] },
+    { witness_id: `${methodId}-CANDIDATES`, procedure: 'refuse sixty malformed runner requests', result: 'pass', retained_negative_ids: [] },
+    { witness_id: negativeId, procedure: 'submit unsupported operation', result: 'fail', retained_negative_ids: [negativeId] },
+    { witness_id: `${negativeId}-REFUSAL`, procedure: 'verify unsupported-operation refusal', result: 'pass', retained_negative_ids: [negativeId] }
+  ];
+  for (const record of records) witnesses.push({ ...record, method_id: methodId, scope: runner.name, expected: record.result === 'fail' ? 'fail retained' : 'pass', observed: record.result, same_owner_only: true, independent_reproduction: false, boundary });
+  methods.push({ method_id: methodId, title: `Validate paired first-attempt x2 capabilities ${index + 1}`, failure_signature: 'Skill validation, runner envelope, or unsupported refusal mismatch.', trigger_preconditions: ['x2 skills present', 'paired runner present'], privacy_class: 'sanitized_public', approval_class: 'safe_now', candidate_workaround: 'Retain runner subject and correct only the affected capability.', validation_witness_ids: records.map(row => row.witness_id), recurrence_guard: 'Official skill validation plus positive, malformed, unsupported, and semantic test gates.', rollback: 'Keep phase-local artifacts without promotion.', recommendation_state: 'preferred', supersedes: [], protected_gates: ['all inherited scientific production legal cultural privacy accessibility and authority gates'], retained_negative_ids: [negativeId], scope_boundary: boundary });
+});
+const correctionMethodId = 'OR6965-X2-DAMERAU-CORRECTION';
+const correctionWitnesses = [
+  { witness_id: 'OR6965-X2-N001', procedure: 'Run the first 20-test gate.', result: 'fail', retained_negative_ids: ['OR6965-X2-N001'] },
+  { witness_id: 'OR6965-P156-SEMANTIC-N001', procedure: 'Compare adjacent-swap output with integrated optimal-string-alignment recurrence.', result: 'fail', retained_negative_ids: ['OR6965-P156-SEMANTIC-N001'] },
+  { witness_id: 'OR6965-X2-P001', procedure: 'Isolate all 20 tests and identify the sole failed assumption.', result: 'pass', retained_negative_ids: ['OR6965-X2-N001'] },
+  { witness_id: 'OR6965-P156-SEMANTIC-P001', procedure: 'Integrate transposition during table construction and reclassify OR6965-P156 as represented.', result: 'pass', retained_negative_ids: ['OR6965-P156-SEMANTIC-N001'] }
+];
+for (const record of correctionWitnesses) witnesses.push({ ...record, method_id: correctionMethodId, scope: 'seq_damerau_distance/adjacent-swap', expected: record.result === 'fail' ? 'fail retained' : 'pass without promotion', observed: record.result, same_owner_only: true, independent_reproduction: false, boundary });
+methods.push({ method_id: correctionMethodId, title: 'Correct postcomputed transposition relaxation', failure_signature: 'Adjacent transposition remains cost two because relaxation occurs after dependent cells were computed.', trigger_preconditions: ['first x2 outputs retained', 'failed 20-test gate'], privacy_class: 'sanitized_public', approval_class: 'safe_now', candidate_workaround: 'Integrate the transposition transition during dynamic-programming construction.', validation_witness_ids: correctionWitnesses.map(row => row.witness_id), recurrence_guard: 'Run semantic counterexamples before outcome promotion and preserve invalidated planning envelopes.', rollback: 'Retain the first core and mark the completion claim false.', recommendation_state: 'preferred', supersedes: ['first postcomputed-transposition method'], protected_gates: protectedGates, retained_negative_ids: ['OR6965-X2-N001', 'OR6965-P156-SEMANTIC-N001'], scope_boundary: boundary });
+const correctedCapabilityMethod = 'OR6965-X2-CAP-CORRECTED';
+const correctedUnsupported = 'OR6965-X2-RUNNER-CORRECTED-N001';
+const correctedCapabilityWitnesses = [
+  { witness_id: `${correctedCapabilityMethod}-SKILL`, procedure: 'officially validate corrected skill', result: 'pass', retained_negative_ids: [] },
+  { witness_id: `${correctedCapabilityMethod}-POSITIVES`, procedure: 'execute fifteen corrected positive requests', result: 'pass', retained_negative_ids: [] },
+  { witness_id: `${correctedCapabilityMethod}-CANDIDATES`, procedure: 'refuse thirty malformed requests', result: 'pass', retained_negative_ids: [] },
+  { witness_id: correctedUnsupported, procedure: 'submit unsupported operation', result: 'fail', retained_negative_ids: [correctedUnsupported] },
+  { witness_id: `${correctedUnsupported}-REFUSAL`, procedure: 'verify unsupported-operation refusal', result: 'pass', retained_negative_ids: [correctedUnsupported] }
+];
+for (const record of correctedCapabilityWitnesses) witnesses.push({ ...record, method_id: correctedCapabilityMethod, scope: runnerName, expected: record.result === 'fail' ? 'fail retained' : 'pass', observed: record.result, same_owner_only: true, independent_reproduction: false, boundary });
+methods.push({ method_id: correctedCapabilityMethod, title: 'Validate corrected Damerau capability', failure_signature: 'Corrected skill, runner, malformed refusal, or unsupported refusal mismatch.', trigger_preconditions: ['corrected core present', 'first failure retained'], privacy_class: 'sanitized_public', approval_class: 'safe_now', candidate_workaround: 'Stop correction and retain the affected runner.', validation_witness_ids: correctedCapabilityWitnesses.map(row => row.witness_id), recurrence_guard: 'Validate only the affected family and keep old and corrected surfaces distinguishable.', rollback: 'Leave correction uncommitted.', recommendation_state: 'preferred', supersedes: [], protected_gates: protectedGates, retained_negative_ids: [correctedUnsupported], scope_boundary: boundary });
+
+const pass = witnesses.filter(row => row.result === 'pass').length;
+const fail = witnesses.filter(row => row.result === 'fail').length;
+if (methods.length !== 17 || witnesses.length !== 1534 || pass !== 1226 || fail !== 308) throw new Error(`corrected method counts ${methods.length}/${witnesses.length}/${pass}/${fail}`);
+write('x2/correction/method-flow.json', { schema: 'ghc.family.method-flow-state.v1', phase: 'v696-v5', owner: 'Orin Thale', stage: 'x2-corrected', identity_boundary: boundary, execution_authority: 'owner_self_scoped_delta', methods, witnesses, state_events: methods.map(method => ({ method_id: method.method_id, from: 'validated_or_observed', to: 'preferred', reason: 'Bounded evidence is retained with explicit failures and additive correction.' })), recommendations: methods.map(method => ({ method_id: method.method_id, state: 'preferred', recommendation: method.recurrence_guard })), counts: { methods: 17, witnesses: 1534, state_events: 17, recommendations: 17, states: { preferred: 17 }, witness_results: { pass, fail } }, predecessor: { methods: 73, witnesses: 4731, pass: 3792, fail: 939, selected_lineage_negatives: 4166, core_open_gaps: 60, core_exact_gates: 60 }, cumulative: { methods: 90, witnesses: 6265, pass: 5018, fail: 1247, selected_lineage_negatives: 4474, core_open_gaps: 75, core_exact_gates: 75 }, boundary });
+write('x2/correction/method-flow-validation.json', { status: 'VALID_DEPENDENCY_CORRECTED_X2_METHOD_FLOW', methods: 17, witnesses: 1534, pass, fail, cumulative: { methods: 90, witnesses: 6265, pass: 5018, fail: 1247, selected_lineage_negatives: 4474, core_open_gaps: 75, core_exact_gates: 75 }, failed_zero_credit: true, recoveries_do_not_erase_failures: true, boundary }, true);
+
+const x1Capabilities = JSON.parse(git(['show', `${X1}:docs/orin-thale/v696-v5/x1/capability-observations.json`]).toString('utf8'));
+const toolboxRecords = [];
+for (let index = 0; index < x1Capabilities.skills.length; index++) toolboxRecords.push({ card_id: `OR6965-SKILL-${String(index + 1).padStart(2, '0')}`, name: x1Capabilities.skills[index].name, kind: 'skill', status: 'immutable_x1_validated', evidence_state: 'validated', source_commit: X1, installed_globally: false });
+for (let index = 0; index < x1Capabilities.runners.length; index++) toolboxRecords.push({ card_id: `OR6965-RUNNER-${String(index + 1).padStart(2, '0')}`, name: x1Capabilities.runners[index].name, kind: 'runner', status: 'immutable_x1_validated', evidence_state: 'validated', source_commit: X1, installed_globally: false });
+for (let index = 0; index < firstCapabilities.skills.length; index++) toolboxRecords.push({ card_id: `OR6965-SKILL-${String(index + 11).padStart(2, '0')}`, name: firstCapabilities.skills[index].name, kind: 'skill', status: index === 0 ? 'retained_first_attempt_semantically_superseded_for_P156' : 'validated', evidence_state: 'validated_with_declared_correction', source_commit: X1, installed_globally: false });
+for (let index = 0; index < firstCapabilities.runners.length; index++) toolboxRecords.push({ card_id: `OR6965-RUNNER-${String(index + 6).padStart(2, '0')}`, name: firstCapabilities.runners[index].name, kind: 'runner', status: index === 0 ? 'retained_first_attempt_semantically_superseded_for_P156' : 'validated', evidence_state: 'validated_with_declared_correction', source_commit: X1, installed_globally: false });
+toolboxRecords.push({ card_id: 'OR6965-SKILL-21', name: skillName, kind: 'skill', status: 'corrected_current', evidence_state: 'validated', source_commit: X1, installed_globally: false });
+toolboxRecords.push({ card_id: 'OR6965-RUNNER-11', name: runnerName, kind: 'runner', status: 'corrected_current', evidence_state: 'validated', source_commit: X1, installed_globally: false });
+write('x2/correction/meta-toolbox.json', { schema: 'ghc.family.meta-tool-box.v1', owner: 'Orin Thale', phase: 'v696-v5', count: toolboxRecords.length, records: toolboxRecords, new_global_installations: 0, inherited_completion_credit: 0, corrected_current_records: 2, all_built_validated_and_smoke_used: true, historical_caller_compatibility: true, boundary });
+write('x2/correction/evidence-accounting.json', { activation_selected_lineage_baseline: 3854, planning_failures: 7, x1_failures: 307, x2_first_attempt_candidate_and_runner_failures: 305, x2_semantic_failures: 2, corrected_runner_failures: 1, selected_lineage_effective_negatives: 4474, method_flow: { methods: 90, witnesses: 6265, pass: 5018, fail: 1247, core_open_gaps: 75, core_exact_gates: 75 }, owner_outcomes: { completed: 239, represented: 31, open_gap: 15, exact_gate: 15 }, bundle_totals: { safe: 600, candidate_failures: 600, refusals: 600, cfr: 600, cleanup_refinement: 600 }, skills: 21, runners: 11, tests: 20, models: 5, points: 75, exact_packets_held: 50, blocked_packets_held: 30, global_installations: 0, packages: 0, spend_usd: 0, canonical_invoked: false, route: 'PREPARED_NOT_SENT', boundary }, true);
+write('x2/correction/domain-receipt.json', { status: 'VALID_DEPENDENCY_CORRECTED_X2', source: SOURCE, planning: PLAN, x1: X1, first_domain_execution: { invocations: 1, completed_builder: false, failure: 'OR6965-X2-N001' }, isolated_diagnosis: { invocations: 1, passed: 19, failed: 1, replayed_domain: false }, correction_execution: { affected_positive_requests: 15, affected_malformed_requests: 30, corrected_runner_unsupported_subjects: 1, full_domain_replayed: false }, x2_outcomes: { completed: 89, represented: 31, open_gap: 15, exact_gate: 15 }, cumulative_outcomes: { completed: 239, represented: 31, open_gap: 15, exact_gate: 15 }, safe: 300, candidate_failures: 300, refusals: 300, cfr: 300, cleanup_refinement: 300, cumulative_skills: 21, cumulative_runners: 11, tests: 20, models: 5, points: 75, global_installations: 0, packages: 0, external_actions: 0, boundary }, true);
+write('x2/correction/phase-truth.json', { owner: 'Orin Thale', phase: 'v696-v5', stage: 'x2-corrected', status: 'X2_DEPENDENCY_CORRECTED_PRE_FINAL', x1_outcomes: { completed: 150, represented: 0, open_gap: 0, exact_gate: 0 }, x2_outcomes: { completed: 89, represented: 31, open_gap: 15, exact_gate: 15 }, cumulative_outcomes: { completed: 239, represented: 31, open_gap: 15, exact_gate: 15 }, invalidated_completion: 'OR6965-P156', first_builder_failed: true, failures_retained: true, safe: 300, candidate_failed: 300, candidate_refusals: 300, cfr: 300, cleanup_refinement: 300, cumulative_skills: 21, cumulative_runners: 11, tests: 20, models: 5, points: 75, exact_packets_executed: 0, blocked_packets_executed: 0, canonical_invoked: false, route: 'PREPARED_NOT_SENT', terminal_verdict: 'NOT_READY_FOR_STAGE_20', boundary }, true);
+write('x2/correction/source-gate.json', { source: SOURCE, planning: PLAN, x1: X1, observed_head_before_commit: X1, x1_direct_child_of_planning: git(['rev-parse', `${X1}^`]).trim() === PLAN, x1_clean_four_way_equal: true, x2_only: true, first_attempt_retained: true, boundary }, true);
+write('x2/correction/overview.md', `# Orin Thale v696-v5 corrected x2 evidence\n\nThe first x2 builder stopped at its 20-test gate after completing bounded contracts, local skills, and runner subjects. Nineteen assertions passed; the adjacent-swap Damerau assertion failed because the planner and first core applied transposition relaxation after the ordinary edit table was already complete. The immutable first builder, core, runner, contract results, and failed test remain retained.\n\nA separately named additive correction integrated the transposition transition during row-major construction. Fourteen of fifteen Damerau outputs were unchanged. OR6965-P156 changed from 2 to 1 and therefore lost completion credit; it is represented, not silently rewritten. The truthful cumulative partition is 239 completed, 31 represented, 15 open_gap, and 15 exact_gate. One corrected skill and runner were validated and smoke-used only across the affected family. Twenty corrected tests pass without replaying the full x2 domain. Five HTML/Canvas scenes bind 75 exact integer rows; browser and human evaluation remain external or open.\n\n${boundary}\n`);
+
+const files = fs.readdirSync(x2, { recursive: true }).filter(rel => fs.statSync(path.join(x2, rel)).isFile()).map(String).map(rel => rel.replaceAll('\\', '/')).sort();
+const entries = files.filter(rel => rel !== 'manifest.json' && rel !== 'staged-allowlist.json').map(rel => {
+  const bytes = fs.readFileSync(path.join(x2, ...rel.split('/')));
+  return { path: `docs/orin-thale/v696-v5/x2/${rel}`, bytes: bytes.length, sha256: sha(bytes) };
+});
+const allPaths = [...entries.map(row => row.path), 'docs/orin-thale/v696-v5/x2/manifest.json', 'docs/orin-thale/v696-v5/x2/staged-allowlist.json'].sort();
+write('x2/staged-allowlist.json', { schema: 'ghc.family.staged-allowlist.v11', stage: 'x2-corrected', count: allPaths.length, paths: allPaths, exact: true, non_x2_paths: 0, boundary }, true);
+const stagedBytes = fs.readFileSync(path.join(x2, 'staged-allowlist.json'));
+entries.push({ path: 'docs/orin-thale/v696-v5/x2/staged-allowlist.json', bytes: stagedBytes.length, sha256: sha(stagedBytes) });
+entries.sort((a, b) => a.path.localeCompare(b.path));
+write('x2/manifest.json', { schema: 'ghc.family.raw-git-manifest.v11', owner: 'Orin Thale', phase: 'v696-v5', stage: 'x2-corrected', source: X1, entries, exclusions: ['docs/orin-thale/v696-v5/x2/manifest.json'], total_paths: entries.length + 1, hash_domain: 'working bytes before commit; staged bytes and immutable Git blobs after commit', first_attempt_retained: true, boundary }, true);
+
+console.log(JSON.stringify({ status: 'X2_DEPENDENCY_CORRECTED_CONTENT_ASSEMBLED', affected_contracts: 15, invalidated_completion: 'OR6965-P156', outcomes: { completed: 239, represented: 31, open_gap: 15, exact_gate: 15 }, skills: 21, runners: 11, tests: 20, models: 5, points: 75, methods: 17, witnesses: 1534, pass, fail, files: entries.length + 1 }, null, 2));

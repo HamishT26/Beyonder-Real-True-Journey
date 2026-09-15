@@ -1,0 +1,41 @@
+'use strict';
+
+const path = require('node:path');
+const original = require(path.join(__dirname, '..', 'core.txt'));
+
+function osaDistance(a, b) {
+  const grid = Array.from({ length: a.length + 1 }, () => Array(b.length + 1).fill(0));
+  for (let row = 0; row <= a.length; row++) grid[row][0] = row;
+  for (let column = 0; column <= b.length; column++) grid[0][column] = column;
+  for (let row = 1; row <= a.length; row++) {
+    for (let column = 1; column <= b.length; column++) {
+      grid[row][column] = Math.min(
+        grid[row - 1][column] + 1,
+        grid[row][column - 1] + 1,
+        grid[row - 1][column - 1] + (a[row - 1] === b[column - 1] ? 0 : 1)
+      );
+      if (row > 1 && column > 1 && a[row - 1] === b[column - 2] && a[row - 2] === b[column - 1]) {
+        grid[row][column] = Math.min(grid[row][column], grid[row - 2][column - 2] + 1);
+      }
+    }
+  }
+  return grid[a.length][b.length];
+}
+
+function execute(request) {
+  const baseline = original.execute(request);
+  if (!baseline.result.ok || request.operation !== 'seq_damerau_distance') return baseline;
+  return {
+    ...baseline,
+    result: {
+      ...baseline.result,
+      value: { distance: osaDistance(request.fixture.a, request.fixture.b) }
+    }
+  };
+}
+
+module.exports = {
+  ...original,
+  execute,
+  helpers: { ...original.helpers, damerau: osaDistance, osaDistance }
+};

@@ -1,0 +1,194 @@
+'use strict';
+
+const crypto = require('node:crypto');
+
+const dispositions = new Map([
+  ['seq_damerau_distance', 'completed'],
+  ['seq_weighted_distance', 'completed'],
+  ['seq_shortest_common_supersequence', 'completed'],
+  ['seq_alignment_columns', 'completed'],
+  ['seq_bigram_overlap', 'completed'],
+  ['seq_bounded_transducer', 'completed'],
+  ['seq_accessible_summary', 'represented'],
+  ['seq_provenance_handover', 'represented'],
+  ['seq_observation_gate', 'open_gap'],
+  ['seq_authority_gate', 'exact_gate']
+]);
+const fixtureLabels = new Map([
+  ['both-empty', 'two empty sequences'],
+  ['identical-short', 'identical short tokens'],
+  ['prefix-insert', 'single prefix insertion'],
+  ['suffix-delete', 'single suffix deletion'],
+  ['middle-substitute', 'single middle substitution'],
+  ['adjacent-swap', 'adjacent token swap'],
+  ['repeated-run', 'repeated token run'],
+  ['disjoint', 'fully disjoint tokens'],
+  ['common-prefix', 'shared prefix only'],
+  ['common-suffix', 'shared suffix only'],
+  ['alternating', 'alternating offset'],
+  ['palindrome-edit', 'palindrome near match'],
+  ['case-distinct', 'ASCII case distinct'],
+  ['word-tokens', 'bounded word-token insertion'],
+  ['bounded-long', 'ten-token bounded sequence']
+]);
+
+const sha = bytes => crypto.createHash('sha256').update(bytes).digest('hex');
+const canon = value => {
+  if (Array.isArray(value)) return value.map(canon);
+  if (value && typeof value === 'object') return Object.fromEntries(Object.keys(value).sort().map(key => [key, canon(value[key])]));
+  return value;
+};
+const canonical = value => JSON.stringify(canon(value));
+
+function lcsGrid(a, b) {
+  const grid = Array.from({ length: a.length + 1 }, () => Array(b.length + 1).fill(0));
+  for (let row = a.length - 1; row >= 0; row--) {
+    for (let column = b.length - 1; column >= 0; column--) {
+      grid[row][column] = a[row] === b[column]
+        ? 1 + grid[row + 1][column + 1]
+        : Math.max(grid[row + 1][column], grid[row][column + 1]);
+    }
+  }
+  return grid;
+}
+
+function editGrid(a, b, costs = { insert: 1, delete: 1, substitute: 1 }) {
+  const grid = Array.from({ length: a.length + 1 }, () => Array(b.length + 1).fill(0));
+  for (let row = 1; row <= a.length; row++) grid[row][0] = row * costs.delete;
+  for (let column = 1; column <= b.length; column++) grid[0][column] = column * costs.insert;
+  for (let row = 1; row <= a.length; row++) {
+    for (let column = 1; column <= b.length; column++) {
+      grid[row][column] = Math.min(
+        grid[row - 1][column] + costs.delete,
+        grid[row][column - 1] + costs.insert,
+        grid[row - 1][column - 1] + (a[row - 1] === b[column - 1] ? 0 : costs.substitute)
+      );
+    }
+  }
+  return grid;
+}
+
+function damerau(a, b) {
+  const grid = editGrid(a, b);
+  for (let row = 2; row <= a.length; row++) {
+    for (let column = 2; column <= b.length; column++) {
+      if (a[row - 1] === b[column - 2] && a[row - 2] === b[column - 1]) {
+        grid[row][column] = Math.min(grid[row][column], grid[row - 2][column - 2] + 1);
+      }
+    }
+  }
+  return grid[a.length][b.length];
+}
+
+function supersequence(a, b) {
+  const grid = lcsGrid(a, b);
+  const output = [];
+  let row = 0;
+  let column = 0;
+  while (row < a.length || column < b.length) {
+    if (row === a.length) output.push(b[column++]);
+    else if (column === b.length) output.push(a[row++]);
+    else if (a[row] === b[column]) {
+      output.push(a[row]);
+      row++;
+      column++;
+    } else if (grid[row + 1][column] >= grid[row][column + 1]) output.push(a[row++]);
+    else output.push(b[column++]);
+  }
+  return output;
+}
+
+function columns(a, b) {
+  const grid = editGrid(a, b);
+  const output = [];
+  let row = a.length;
+  let column = b.length;
+  while (row > 0 || column > 0) {
+    if (row > 0 && column > 0 && grid[row][column] === grid[row - 1][column - 1] + (a[row - 1] === b[column - 1] ? 0 : 1)) {
+      output.push([a[row - 1], b[column - 1], a[row - 1] === b[column - 1] ? 'match' : 'substitute']);
+      row--;
+      column--;
+    } else if (row > 0 && grid[row][column] === grid[row - 1][column] + 1) {
+      output.push([a[row - 1], null, 'delete']);
+      row--;
+    } else {
+      output.push([null, b[column - 1], 'insert']);
+      column--;
+    }
+  }
+  output.reverse();
+  return { columns: output, cost: grid[a.length][b.length] };
+}
+
+function ngrams(sequence) {
+  const values = [];
+  for (let index = 0; index + 1 < sequence.length; index++) values.push(`${sequence[index]}\u241f${sequence[index + 1]}`);
+  return [...new Set(values)].sort();
+}
+
+function validate(request) {
+  if (!request || typeof request !== 'object' || Array.isArray(request)) return 'invalid_request';
+  const keys = Object.keys(request);
+  if (!keys.includes('operation')) return 'missing_operation';
+  if (!keys.includes('fixture')) return 'missing_fixture';
+  if (keys.some(key => !['operation', 'fixture'].includes(key))) return 'unknown_field';
+  if (!dispositions.has(request.operation)) return 'unsupported_operation';
+  const fixture = request.fixture;
+  if (!fixture || typeof fixture !== 'object' || Array.isArray(fixture)) return 'invalid_fixture';
+  const fixtureKeys = Object.keys(fixture);
+  const expected = ['id', 'a', 'b'];
+  if (expected.some(key => !fixtureKeys.includes(key))) return 'missing_fixture_field';
+  if (fixtureKeys.some(key => !expected.includes(key))) return 'unknown_fixture_field';
+  if (typeof fixture.id !== 'string' || !fixture.id) return 'invalid_fixture_id';
+  const validSequence = value => Array.isArray(value) && value.length <= 10 && value.every(token => typeof token === 'string' && token.length >= 1 && token.length <= 5 && /^[A-Za-z]+$/.test(token));
+  if (!validSequence(fixture.a) || !validSequence(fixture.b)) return 'invalid_sequence';
+  return null;
+}
+
+function value(operation, fixture) {
+  const a = fixture.a;
+  const b = fixture.b;
+  switch (operation) {
+    case 'seq_damerau_distance': return { distance: damerau(a, b) };
+    case 'seq_weighted_distance': {
+      const costs = { insert: 2, delete: 2, substitute: 3 };
+      const grid = editGrid(a, b, costs);
+      return { costs, distance: grid[a.length][b.length] };
+    }
+    case 'seq_shortest_common_supersequence': { const result = supersequence(a, b); return { value: result, length: result.length }; }
+    case 'seq_alignment_columns': return columns(a, b);
+    case 'seq_bigram_overlap': {
+      const left = ngrams(a);
+      const right = ngrams(b);
+      const intersection = left.filter(value => right.includes(value));
+      const union = [...new Set([...left, ...right])].sort();
+      return { left, right, intersection, union, intersection_count: intersection.length, union_count: union.length };
+    }
+    case 'seq_bounded_transducer': {
+      const map = { a: 'A', e: 'E', i: 'I', o: 'O', u: 'U' };
+      return { a_output: a.map(token => map[token] || token), b_output: b.map(token => map[token] || token), rule: 'ascii-vowel-uppercase' };
+    }
+    case 'seq_accessible_summary': {
+      const grid = editGrid(a, b);
+      const distance = grid[a.length][b.length];
+      return { fixture: fixture.id, a_length: a.length, b_length: b.length, edit_distance: distance, summary: `${fixtureLabels.get(fixture.id)}: lengths ${a.length} and ${b.length}; edit distance ${distance}. Synthetic token sequences only.`, human_evaluation: false };
+    }
+    case 'seq_provenance_handover': return { fixture: fixture.id, input_sha256: sha(Buffer.from(canonical({ a, b }))), correction_state: 'none', external_authority: false };
+    case 'seq_observation_gate': return { fixture: fixture.id, observed_rows: 0, required: ['real language samples', 'declared segmentation profile', 'independent review'], gate_open: true };
+    case 'seq_authority_gate': return { fixture: fixture.id, authority_present: false, required: ['competent domain authority', 'affected-party authority', 'legal and cultural authority', 'Maori authority where applicable'], release: false };
+    default: throw new Error('unreachable operation');
+  }
+}
+
+function execute(request) {
+  const before = canonical(request);
+  const beforeHash = sha(Buffer.from(before));
+  const error = validate(request);
+  const result = error
+    ? { ok: false, value: null, error, disposition: null, external_credit: false }
+    : { ok: true, value: value(request.operation, request.fixture), error: null, disposition: dispositions.get(request.operation), external_credit: false };
+  const after = canonical(request);
+  return { result, input_unchanged: before === after, input_sha256_before: beforeHash, input_sha256_after: sha(Buffer.from(after)) };
+}
+
+module.exports = { execute, validate, canonical, sha, helpers: { editGrid, lcsGrid, damerau, supersequence, columns, ngrams } };

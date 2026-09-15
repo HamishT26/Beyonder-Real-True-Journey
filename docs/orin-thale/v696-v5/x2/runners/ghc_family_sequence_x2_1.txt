@@ -1,0 +1,5 @@
+'use strict';
+const fs=require('node:fs'),path=require('node:path'),core=require(path.join(__dirname,'..','core.txt'));
+const allowed=new Set(["seq_damerau_distance","seq_weighted_distance"]);let request;try{request=JSON.parse(fs.readFileSync(0,'utf8'));}catch{console.log(JSON.stringify({ok:false,value:null,error:'invalid_json',disposition:null,external_credit:false}));process.exit(2);}
+if(!allowed.has(request.operation)){console.log(JSON.stringify({ok:false,value:null,error:'unsupported_operation',disposition:null,external_credit:false}));process.exit(2);}
+const out=core.execute(request).result;console.log(JSON.stringify(out));if(!out.ok)process.exitCode=2;
