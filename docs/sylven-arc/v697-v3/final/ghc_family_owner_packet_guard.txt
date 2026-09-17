@@ -1,0 +1,12 @@
+'use strict';
+// Phase-bound structural packet contract, not a phase-neutral validator or authority issuer.
+function validate(packet){const errors=[],check=(ok,label)=>{if(!ok)errors.push(label);};
+ check(packet?.owner==='Sylven Arc'&&packet?.phase==='v697-v3'&&packet?.namespace==='docs/sylven-arc/v697-v3','owner_namespace');
+ const c=packet?.counts;check(c?.methods===35&&c?.witnesses===3275&&c?.pass===2606&&c?.fail===669&&c.pass+c.fail===c.witnesses,'selected_counts');
+ const o=packet?.outcomes;check(o?.completed===480&&o?.represented===60&&o?.open_gap===30&&o?.exact_gate===30,'outcomes');
+ check(packet?.source_is_git_parent===false&&packet?.content_source==='647ec57ba05b6f506d2312773d05b4d3d6dd7e42'&&packet?.git_parent==='3f0c5bd05eea9a40df662046b870aeb06b6a10c7','content_provenance');
+ const r=packet?.route;check(r?.state==='PREPARED_NOT_SENT'&&r?.endpoint_kind==='main_task'&&r?.recipient==='Iveren Brook'&&r?.phase==='v697-v4','route_preparation');
+ const x=packet?.controls;check(x?.memory_write===false&&x?.package_updates===false&&x?.task_creation===false&&x?.subagents===false&&x?.sibling_mutation===false&&x?.source_replay===false&&x?.domain_replay===false,'protected_controls');
+ check(packet?.limits?.files===2000&&packet?.limits?.words===100000&&packet?.limits?.commits===6&&packet?.terminal_verdict==='NOT_READY_FOR_STAGE_20','caps_and_truth');
+ return {valid:errors.length===0,errors,scope:'Sylven v697-v3 owner packet structure only',delivery_verified:false,authority_granted:false,independent_reproduction:false};}
+module.exports={validate};
