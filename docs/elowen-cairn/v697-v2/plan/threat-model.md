@@ -1,0 +1,9 @@
+# Elowen v697-v2 threat model
+
+Closed rational wire objects must not select paths, commands, URLs, credentials or decision endpoints. Risks include duplicate decoded keys, exponent or array growth, lost zero-credit subjects, a loose interval treated as an attained extremum, a scaled direction treated as unit speed, truncated Taylor terms treated as a complete model, source authority leakage, and duplicate native activation.
+
+Inputs are finite sparse power-basis records. Unknown fields, booleans as rationals, negative or excessive degrees, zero denominators, excessive raw terms, oversized wire input and excessive nesting are refused. Output bytes and derived degree/term budgets are explicit. No evaluation by executable string or network request is permitted.
+
+Exact coefficients do not include a measured error model. A componentwise coordinate polynomial is not a covariant field. CBR professional, legal, cultural, affected-party and Maori authority remains reserved. Manual, assistive, cognitive, cultural and affected-user accessibility evaluation stays open.
+
+Elowen Cairn, they/them, boundary cartographer and evidence steward, and the hope that possibility stays distinct from evidence and correction retractable are relational working language only. Bounded same-owner finite synthetic software and documentation under shared infrastructure, not consciousness, sentience, personhood, identity continuity, employment, qualification, agency, empirical GMUT confirmation, professional or scientific authority, production THOS or Freed ID, deployment, legal or cultural authority, affected-party approval, Maori authority, complete privacy or accessibility, exhaustive security, independent reproduction, AGI/ASI, Theory-of-Everything proof, a law of nature or psyche, proof/canon or Stage 20 readiness. Maori concepts remain under Maori authority. NOT_READY_FOR_STAGE_20.
