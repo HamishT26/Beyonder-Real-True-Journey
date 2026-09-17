@@ -1,0 +1,4 @@
+'use strict';
+const B=require('../lib/x1/bernstein-core.txt'),E=require('../lib/x2/bernstein-extended.txt'),allowed=["bernstein_derivative","bernstein_integral","bernstein_elevate","bernstein_split"];
+const run=req=>!allowed.includes(req?.op)?{refused:true,code:'E_SCHEMA',authority:false}:B.x1Ops.includes(req.op)?B.run(req):E.run(req);
+module.exports={run,main:()=>B.main(allowed,run)};

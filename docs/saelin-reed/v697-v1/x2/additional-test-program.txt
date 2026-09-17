@@ -1,0 +1,24 @@
+'use strict';
+const fs=require('fs');const root='D:/GHC-Archives/worktrees/saelin-reed-main/docs/saelin-reed/v697-v1',B=require(root+'/x1/bernstein-core.txt'),E=require(root+'/x2/bernstein-extended.txt'),f=JSON.parse(fs.readFileSync(root+'/plan/families.json')).families.map(x=>B.decode(x.polynomial)),grid=B.coords([2,2,2]).map(c=>c.map(n=>B.rat(n,2))),records=[],bads=[],eq=(a,b)=>JSON.stringify(a)===JSON.stringify(b),same=(a,b)=>B.cmp(a,b)===0;
+function check(title,expected,observed,instances=1){records.push({id:'SR6971-X2-T'+String(records.length+1).padStart(2,'0'),title,expected,observed,instances,result:eq(expected,observed)?'pass':'fail'});}const square=B.decode({degrees:[2,0,0],coefficients:['1/4','-1/4','1/4']}),ramp=B.decode({degrees:[1,0,0],coefficients:['0','1']}),z=B.decode({degrees:[0,0,0],coefficients:['0']});
+check('degree elevation preserves grid values',true,f.every((p,k)=>grid.every(t=>same(B.evalAt(p,t),B.evalAt(B.elevate(p,k%3),t)))),810);
+check('split child parameter mapping',true,f.every((p,k)=>{const axis=k%3,s=E.split(p,axis,B.rat(1,3));return grid.every(t=>{const l=t.slice(),r=t.slice();l[axis]=B.mul(t[axis],B.rat(1,3));r[axis]=B.add(B.rat(1,3),B.mul(t[axis],B.rat(2,3)));return same(B.evalAt(p,l),B.evalAt(s.left,t))&&same(B.evalAt(p,r),B.evalAt(s.right,t));});}),1620);
+check('split interface continuity',true,f.every((p,k)=>{const axis=k%3,s=E.split(p,axis,B.rat(1,2));return grid.every(t=>{const l=t.slice(),r=t.slice();l[axis]=B.one();r[axis]=B.zero();return same(B.evalAt(s.left,l),B.evalAt(s.right,r));});}),810);
+check('product value identity',true,f.every((p,k)=>{const q=f[(k+7)%30],r=E.multiply(p,q);return grid.every(t=>same(B.evalAt(r,t),B.mul(B.evalAt(p,t),B.evalAt(q,t))));}),810);
+check('square values nonnegative',true,f.every(p=>{const r=E.multiply(p,p);return grid.every(t=>same(B.evalAt(r,t),B.mul(B.evalAt(p,t),B.evalAt(p,t)))&&B.cmp(B.evalAt(r,t),B.zero())>=0);}),810);
+check('permutation round trip',true,f.every(p=>eq(B.encode(p),B.encode(E.permute(E.permute(p,[1,2,0]),[2,0,1])))),30);
+check('nested subdivision bounds',true,f.every(p=>{let h=B.hull(p);for(let d=1;d<=3;d++){const s=E.subdivide(p,d).bound;if(B.cmp(B.readRat(s.lo),B.readRat(h.lo))<0||B.cmp(B.readRat(s.hi),B.readRat(h.hi))>0)return false;h=s;}return true;}),90);
+check('quadratic bound tightening',{lo:'0/1',hi:'1/4'},E.subdivide(square,1).bound);
+check('zero subdivision width',true,E.subdivide(z,3).leaves.every(c=>c.bound.lo==='0/1'&&c.bound.hi==='0/1'),8);
+check('unit-ramp product integral','1/3',B.str(B.integral(E.multiply(ramp,ramp))));
+check('elevation retains endpoint corners',true,f.every((p,k)=>eq(B.corners(p),B.corners(B.elevate(p,k%3)))),240);
+check('mixed derivatives commute',true,f.every(p=>eq(B.encode(B.derivative(B.derivative(p,0),1)),B.encode(B.derivative(B.derivative(p,1),0)))),30);
+const run=(op,p,x={})=>E.run({op:'bernstein_'+op,input:{a:B.encode(p),...x}});
+check('sufficient coefficient certificate','sufficient_nonnegative',run('nonnegative_certificate',ramp).value.certificate);
+check('negative corner refutes nonnegativity','negative_corner',run('nonnegative_certificate',B.scale(ramp,B.rat(-1))).value.certificate);
+check('loose square certificate remains undetermined','undetermined',run('nonnegative_certificate',square).value.certificate);
+check('unit annotation no calibration',false,run('observation_units',ramp,{unit:'declared_length_squared'}).value.physical_calibration);
+check('observation vacancy persists',{outcome:'open_gap',real_rows:0},{outcome:run('observation_gap',ramp,{real_rows:0}).outcome,real_rows:run('observation_gap',ramp,{real_rows:0}).value.real_rows});
+check('authority remains gated',{outcome:'exact_gate',authority:false,release:false},{outcome:run('authority_gate',ramp,{authority:false}).outcome,authority:run('authority_gate',ramp,{authority:false}).value.authority,release:run('authority_gate',ramp,{authority:false}).value.release});
+for(const [title,op,extra]of [['depth overflow','subdivide_bounds',{depth:4}],['split endpoint','split',{axis:0,at:'0'}],['unknown unit','observation_units',{unit:'measured_consciousness'}]]){const request={op:'bernstein_'+op,input:{a:B.encode(ramp),...extra}},observed=E.run(request),negative_id='SR6971-X2-TEST-N'+(bads.length+1);bads.push({title,request,observed,negative_id,subject_result:'fail'});check(title,{refused:true,code:'E_SCHEMA',authority:false},observed);}
+const out={session:'x2',tests:records,retained_subjects:bads,test_pass:records.filter(r=>r.result==='pass').length,test_count:records.length,property_instances:records.reduce((n,r)=>n+r.instances,0),independent_reproduction:false};fs.writeFileSync(root+'/x2/additional-tests.json',JSON.stringify(out,null,2)+'\n',{flag:'wx'});console.log(JSON.stringify({pass:out.test_pass,total:out.test_count,instances:out.property_instances,retained:bads.length}));if(out.test_pass!==out.test_count)throw Error('x2 additional failure');

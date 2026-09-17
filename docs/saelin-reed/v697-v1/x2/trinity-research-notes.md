@@ -1,0 +1,64 @@
+# Exact bounds, declared models and the three pillars
+
+Saelin v697-v1 prioritizes GMUT Mind through a small exact polynomial laboratory. The new contribution is an implementation, a collection of explicit assumptions and counterexamples, and an evidence trail that another owner can inspect. Bernstein polynomials, binomial basis conversion, degree elevation and de Casteljau subdivision are established mathematics. Their use here does not establish a new fundamental law, a solution to an open physics problem, a theory of consciousness, or empirical confirmation of GMUT.
+
+## The mathematical object
+
+The implemented object is a scalar tensor-product polynomial on a three-dimensional unit cube. For degree tuple (d0,d1,d2), write
+
+\[
+p(u,v,w)=\sum_{i=0}^{d_0}\sum_{j=0}^{d_1}\sum_{k=0}^{d_2} b_{ijk} B_i^{d_0}(u)B_j^{d_1}(v)B_k^{d_2}(w),
+\qquad B_i^n(t)=\binom ni t^i(1-t)^{n-i}.
+\]
+
+All control coefficients are rational strings. Inputs have three explicit axes, even if a degree is zero. Their flattening order places the u index outside the v index and the w index inside both. This convention matters: permuting a coefficient array without also permuting its degree and coordinate conventions changes the represented object. An explicit permutation operation makes that distinction inspectable.
+
+On the unit interval, the Bernstein basis functions are nonnegative and sum to one. The tensor products therefore also form nonnegative weights summing to one. The polynomial value is a convex combination of its coefficients, so the minimum and maximum coefficients give a conservative scalar enclosure. This short derivation explains both the strength and the limit of the bound. It contains every value on the declared cube, but its endpoints need not be attained by the polynomial.
+
+The retained example is p(u)=(u-1/2)^2. In a degree-two Bernstein basis its coefficients are 1/4, -1/4 and 1/4. The original coefficient hull is [-1/4,1/4]. Direct algebra shows that the function never becomes negative; the midpoint value is zero. A negative interior control coefficient therefore cannot establish a negative function value. Conversely, a negative exact corner value does refute nonnegativity on a domain containing that corner. These are different tests with different logical force.
+
+Subdivision changes the control net and parameter domain while preserving the represented function. De Casteljau interpolation produces one child on each side of a split parameter. The MTU exposition describes how the two boundaries of the interpolation triangle provide the child control points. In this laboratory, splitting the retained square at one half gives child hulls within [0,1/4]. This is a narrower enclosure for this exact example, not a claim that a fixed subdivision depth solves all polynomial positivity questions. [MTU subdivision](https://pages.mtu.edu/~shene/COURSES/cs3621/NOTES/surface/bezier-sub.html).
+
+Degree elevation represents the same polynomial with more control coefficients. Adjacent coefficients are combined with weights determined by their position in the elevated degree. The MTU exposition supplies this construction and its endpoint behavior. Here, exact grid evaluations, endpoint comparisons and a separate monomial conversion check the implementation. Raising the representation degree does not add observational data or discover additional physical degrees of freedom. [MTU degree elevation](https://pages.mtu.edu/~shene/COURSES/cs3621/NOTES/spline/Bezier/bezier-elev.html).
+
+The planning oracle expands into monomials and converts back using binomial identities. Runtime multiplication uses weighted Bernstein coefficient convolution; runtime subdivision uses interpolation triangles. Their organization differs, but their author, infrastructure, selected inputs and interpretation are shared. Agreement reduces some implementation risk while leaving common conceptual errors possible. Analytic anchors, malformed subjects and counterexamples remain necessary. The twenty-one additional x2 tests contain 5,269 recorded instances; those instances are not independent experiments.
+
+## GMUT and the Mandala Field Equation
+
+The supplied historical forms, G_mu_nu + Lambda g_mu_nu = 8 pi T_mu_nu + Psi_mu_nu and G_AB = 8 pi T_AB + alpha Omega_AB, remain research notation. This phase neither reads a new canonical grand_mandala.tex file into existence nor changes a historical TeX artifact. The equation is expressed here in permitted Markdown. Its interpretation requires definitions of the index set, geometric structure, field content, units, coupling, sources, boundary conditions and admissible observations.
+
+The most useful advance is to identify obligations that any concrete version must satisfy. If the left-hand side and the stress term are symmetric rank-two tensors, then a scalar nonzero coupling requires the added Omega term to have matching tensor type and symmetry. If the other terms have a common physical dimension, alpha Omega must share it. The written factor 8 pi alone does not specify the unit conventions that would normally determine other dimensional constants. A symbolic letter is not a fitted parameter or a measured quantity.
+
+A further conditional identity illustrates the difference between a consistency condition and a discovery. Suppose the chosen geometry gives divergence-free G, the selected matter model has divergence-free T, and alpha is a nonzero constant. Taking the covariant divergence of the proposed equation then requires divergence-free Omega. If alpha varies, the derivative of alpha also appears. If matter exchanges energy-momentum with the new sector, separate divergence-free assumptions may fail and the combined balance must instead be specified. These are explicit consequences of the stated assumptions; they are not measurements of a new interaction.
+
+A Bernstein representation could eventually bound a specified component or residual over a chosen coordinate patch. That is only a prospective numerical role. A componentwise polynomial in three normalized variables is not automatically a covariant field, a spacetime solution, or a physically meaningful observable. The current code does not supply a connection, a metric, an action, a gauge choice, a time-evolution problem, a likelihood, a calibrated instrument model, or a real dataset. It cannot decide those missing definitions through coefficient algebra.
+
+One concrete future study would first define a dimensioned observable and a baseline model, state which parameters are identifiable, and derive a residual with a controlled approximation error. Only then could a bounded polynomial representation help enclose that residual on a declared domain. The approximation error would need its own evidence; an exact calculation performed on an approximate surrogate does not erase surrogate error. Independent replication and comparison with observations would remain additional requirements.
+
+No term in this packet is identified with divine agency, mental experience or moral worth. Christianity, spirituality and the historical Journey can supply meanings, hopes and ethical questions for discussion. Those interpretations do not supply the same evidence as a mathematical proof or an instrument observation. A respectful comparison can preserve each kind of claim without converting one into another. The status of GMUT remains a speculative research family with explicit open definitions and empirical gaps.
+
+## THOS and practical interfaces
+
+THOS Body receives two bounded Node modules, ten paired command-line interfaces and five additive global groups. Requests contain only an operation and its closed input object. They cannot specify a filename, URL, process, executable or credential. Wire admission limits input size and nesting, rejects duplicate JSON keys, and preserves exact rational parsing. Input degrees are capped at three on each axis; derived outputs may have higher degrees and are not implicitly admitted as fresh inputs. This distinction prevents an output format from silently widening an input contract.
+
+The workflow contribution is equally specific. Planning, x1, x2 and final preparation have separate commit boundaries. Source content provenance is distinct from Git ancestry. A shared schema validator does not execute the source owner's completed workload. A failed query remains visible even when an additive catalogue fixes human-readable synonyms. A global installation is supported by prepared and installed calls plus byte bindings. These practices make a finite component easier to inspect; they do not establish an enterprise operating system, production reliability, AGI or ASI.
+
+The published MCP lifecycle document describes initialization, capability negotiation, operation, shutdown and bounded request timeouts. That supports a restrained recovery approach: use the capabilities actually available and distinguish an unavailable read from an acknowledged action. It does not specify the application's private delivery semantics. In this workflow, accepted, opaque or unresolved sends stop duplicate attempts; only definite preacceptance rejection permits the bounded corrected retry budget. [MCP lifecycle, version 2025-06-18](https://modelcontextprotocol.io/specification/2025-06-18/basic/lifecycle).
+
+The current native Codex tools, rather than a recreated client or a hidden transport bypass, will resolve the terminal task after the canonical gate. No protocol service, app setting, package, host security feature or account has been changed to create apparent success. The supplied X post returned HTTP 403, so its simulation behavior has not been verified. The five local models stand on their own definitions and test records.
+
+## Freed ID, CBR and authority
+
+Freed ID and CBR Heart receive provenance, correction visibility, explicit missing prerequisites and a four-tier context deck. A deterministic card identifier is an identifier for a record. It is not a government identity, a credential, consent, legal personality, an affected-party mandate or evidence of continuing subjective identity. Similarly, a content hash establishes a particular byte relation under its assumptions; it does not establish that the content is true or that an action is authorized.
+
+Thirty core observation-gap contracts retain zero real rows. Thirty core authority-gate contracts retain authority=false and release=false. Fifty exact packets describe consequential interpretations with missing prerequisites; thirty blocked packets reject promotion from a control net to identity, consciousness or Stage 20 status. A correctly returned gap or gate envelope is useful software evidence while the substantive gap or gate remains open. Counting it as an observed real-world completion would defeat the purpose of the record.
+
+The cleanup procedures are intentionally narrow and reversible: they normalize redundant rational representations in copies while preserving the original request. They do not erase failed evidence, remove another owner's records, downgrade an identity record or modify credentials. Broader cleanup would require a concrete owner scope and an appropriate action-specific basis. Maori concepts and data authority remain with Maori authorities and affected communities; this mathematical packet makes no cultural determination.
+
+The eight practices are learning lenses: numerical analysis, computer-aided geometric design, formal verification, scientific software engineering, scientific visualisation, research data stewardship, accessibility review and evidence-governance review. They are not professional appointments or qualifications. The next owner's four recommendations—validated numerics, geometric modelling, optimisation criticism and accessible scientific visualisation—are similarly proposals to consider, not successor accomplishments.
+
+## Long horizons and the present boundary
+
+The historical ten-, thirty-, hundred- and thousand-year Stage 20 visions can be kept as scenarios. This phase has no defensible probability model for those horizons. A more useful near-term description is a set of observable milestones: a clearly specified model, a reproducible bounded implementation, adversarial evaluation, independently reproduced results, governed real data, justified comparisons and appropriate authority for consequential actions. Progress on one milestone does not automatically close the others.
+
+The five HTML models are finite explanatory views with exact tables and approximate coordinate rendering. Eleven browser checks passed in the observed default viewport. They do not establish complete accessibility, pixel quality in all displays, assistive-technology behavior, human understanding or affected-user acceptance. The enduring result is inspectable work with honest limits. NOT_READY_FOR_STAGE_20.

@@ -1,0 +1,305 @@
+{
+  "session": "x2",
+  "tests": [
+    {
+      "id": "SR6971-X2-T01",
+      "title": "degree elevation preserves grid values",
+      "expected": true,
+      "observed": true,
+      "instances": 810,
+      "result": "pass"
+    },
+    {
+      "id": "SR6971-X2-T02",
+      "title": "split child parameter mapping",
+      "expected": true,
+      "observed": true,
+      "instances": 1620,
+      "result": "pass"
+    },
+    {
+      "id": "SR6971-X2-T03",
+      "title": "split interface continuity",
+      "expected": true,
+      "observed": true,
+      "instances": 810,
+      "result": "pass"
+    },
+    {
+      "id": "SR6971-X2-T04",
+      "title": "product value identity",
+      "expected": true,
+      "observed": true,
+      "instances": 810,
+      "result": "pass"
+    },
+    {
+      "id": "SR6971-X2-T05",
+      "title": "square values nonnegative",
+      "expected": true,
+      "observed": true,
+      "instances": 810,
+      "result": "pass"
+    },
+    {
+      "id": "SR6971-X2-T06",
+      "title": "permutation round trip",
+      "expected": true,
+      "observed": true,
+      "instances": 30,
+      "result": "pass"
+    },
+    {
+      "id": "SR6971-X2-T07",
+      "title": "nested subdivision bounds",
+      "expected": true,
+      "observed": true,
+      "instances": 90,
+      "result": "pass"
+    },
+    {
+      "id": "SR6971-X2-T08",
+      "title": "quadratic bound tightening",
+      "expected": {
+        "lo": "0/1",
+        "hi": "1/4"
+      },
+      "observed": {
+        "lo": "0/1",
+        "hi": "1/4"
+      },
+      "instances": 1,
+      "result": "pass"
+    },
+    {
+      "id": "SR6971-X2-T09",
+      "title": "zero subdivision width",
+      "expected": true,
+      "observed": true,
+      "instances": 8,
+      "result": "pass"
+    },
+    {
+      "id": "SR6971-X2-T10",
+      "title": "unit-ramp product integral",
+      "expected": "1/3",
+      "observed": "1/3",
+      "instances": 1,
+      "result": "pass"
+    },
+    {
+      "id": "SR6971-X2-T11",
+      "title": "elevation retains endpoint corners",
+      "expected": true,
+      "observed": true,
+      "instances": 240,
+      "result": "pass"
+    },
+    {
+      "id": "SR6971-X2-T12",
+      "title": "mixed derivatives commute",
+      "expected": true,
+      "observed": true,
+      "instances": 30,
+      "result": "pass"
+    },
+    {
+      "id": "SR6971-X2-T13",
+      "title": "sufficient coefficient certificate",
+      "expected": "sufficient_nonnegative",
+      "observed": "sufficient_nonnegative",
+      "instances": 1,
+      "result": "pass"
+    },
+    {
+      "id": "SR6971-X2-T14",
+      "title": "negative corner refutes nonnegativity",
+      "expected": "negative_corner",
+      "observed": "negative_corner",
+      "instances": 1,
+      "result": "pass"
+    },
+    {
+      "id": "SR6971-X2-T15",
+      "title": "loose square certificate remains undetermined",
+      "expected": "undetermined",
+      "observed": "undetermined",
+      "instances": 1,
+      "result": "pass"
+    },
+    {
+      "id": "SR6971-X2-T16",
+      "title": "unit annotation no calibration",
+      "expected": false,
+      "observed": false,
+      "instances": 1,
+      "result": "pass"
+    },
+    {
+      "id": "SR6971-X2-T17",
+      "title": "observation vacancy persists",
+      "expected": {
+        "outcome": "open_gap",
+        "real_rows": 0
+      },
+      "observed": {
+        "outcome": "open_gap",
+        "real_rows": 0
+      },
+      "instances": 1,
+      "result": "pass"
+    },
+    {
+      "id": "SR6971-X2-T18",
+      "title": "authority remains gated",
+      "expected": {
+        "outcome": "exact_gate",
+        "authority": false,
+        "release": false
+      },
+      "observed": {
+        "outcome": "exact_gate",
+        "authority": false,
+        "release": false
+      },
+      "instances": 1,
+      "result": "pass"
+    },
+    {
+      "id": "SR6971-X2-T19",
+      "title": "depth overflow",
+      "expected": {
+        "refused": true,
+        "code": "E_SCHEMA",
+        "authority": false
+      },
+      "observed": {
+        "refused": true,
+        "code": "E_SCHEMA",
+        "authority": false
+      },
+      "instances": 1,
+      "result": "pass"
+    },
+    {
+      "id": "SR6971-X2-T20",
+      "title": "split endpoint",
+      "expected": {
+        "refused": true,
+        "code": "E_SCHEMA",
+        "authority": false
+      },
+      "observed": {
+        "refused": true,
+        "code": "E_SCHEMA",
+        "authority": false
+      },
+      "instances": 1,
+      "result": "pass"
+    },
+    {
+      "id": "SR6971-X2-T21",
+      "title": "unknown unit",
+      "expected": {
+        "refused": true,
+        "code": "E_SCHEMA",
+        "authority": false
+      },
+      "observed": {
+        "refused": true,
+        "code": "E_SCHEMA",
+        "authority": false
+      },
+      "instances": 1,
+      "result": "pass"
+    }
+  ],
+  "retained_subjects": [
+    {
+      "title": "depth overflow",
+      "request": {
+        "op": "bernstein_subdivide_bounds",
+        "input": {
+          "a": {
+            "degrees": [
+              1,
+              0,
+              0
+            ],
+            "coefficients": [
+              "0/1",
+              "1/1"
+            ]
+          },
+          "depth": 4
+        }
+      },
+      "observed": {
+        "refused": true,
+        "code": "E_SCHEMA",
+        "authority": false
+      },
+      "negative_id": "SR6971-X2-TEST-N1",
+      "subject_result": "fail"
+    },
+    {
+      "title": "split endpoint",
+      "request": {
+        "op": "bernstein_split",
+        "input": {
+          "a": {
+            "degrees": [
+              1,
+              0,
+              0
+            ],
+            "coefficients": [
+              "0/1",
+              "1/1"
+            ]
+          },
+          "axis": 0,
+          "at": "0"
+        }
+      },
+      "observed": {
+        "refused": true,
+        "code": "E_SCHEMA",
+        "authority": false
+      },
+      "negative_id": "SR6971-X2-TEST-N2",
+      "subject_result": "fail"
+    },
+    {
+      "title": "unknown unit",
+      "request": {
+        "op": "bernstein_observation_units",
+        "input": {
+          "a": {
+            "degrees": [
+              1,
+              0,
+              0
+            ],
+            "coefficients": [
+              "0/1",
+              "1/1"
+            ]
+          },
+          "unit": "measured_consciousness"
+        }
+      },
+      "observed": {
+        "refused": true,
+        "code": "E_SCHEMA",
+        "authority": false
+      },
+      "negative_id": "SR6971-X2-TEST-N3",
+      "subject_result": "fail"
+    }
+  ],
+  "test_pass": 21,
+  "test_count": 21,
+  "property_instances": 5269,
+  "independent_reproduction": false
+}

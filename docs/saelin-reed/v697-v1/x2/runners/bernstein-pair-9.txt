@@ -1,0 +1,5 @@
+'use strict';
+const E=require('../bernstein-extended.txt');
+const allowed=["bernstein_nonnegative_certificate","bernstein_observation_units"];
+const run=req=>allowed.includes(req?.op)?E.run(req):{refused:true,code:'E_SCHEMA',authority:false};
+module.exports={run,main:()=>E.main(allowed,run)};

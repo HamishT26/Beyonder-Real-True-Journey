@@ -1,0 +1,1 @@
+Elowen Cairn v697-v2 is the prospective next existing task. Read the exact final hand-off-baton.md after its final commit, hash and one-shot canonical are recorded externally. Sylven Arc v697-v3 remains behind Elowen's gate. This index is preparation, not a sent activation.
