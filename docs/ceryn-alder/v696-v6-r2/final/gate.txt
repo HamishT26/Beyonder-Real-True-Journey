@@ -1,0 +1,6 @@
+'use strict';
+const assert=require('assert/strict');
+function gate(x){return x.owner==='Ceryn Alder'&&x.phase==='v696-v6-r2'&&x.clean===true&&Array.isArray(x.divergence)&&x.divergence.length===2&&x.divergence.every(n=>Number.isInteger(n)&&n===0)&&typeof x.final==='string'&&/^[a-f0-9]{40}$/.test(x.final)&&Array.isArray(x.heads)&&x.heads.length===4&&x.heads.every(h=>h===x.final)&&x.scope==='docs/ceryn-alder/v696-v6-r2/'&&x.canonical_successes===0;}
+const valid={owner:'Ceryn Alder',phase:'v696-v6-r2',clean:true,divergence:[0,0],final:'1'.repeat(40),heads:Array(4).fill('1'.repeat(40)),scope:'docs/ceryn-alder/v696-v6-r2/',canonical_successes:0};
+const fixtures=[{name:'valid structural fixture',input:valid,expected:true},{name:'dirty checkout',input:{...valid,clean:false},expected:false},{name:'diverged branch',input:{...valid,divergence:[0,1]},expected:false},{name:'different remote head',input:{...valid,heads:['2'.repeat(40),...valid.heads.slice(1)]},expected:false},{name:'foreign owner scope',input:{...valid,scope:'docs/another-owner/'},expected:false},{name:'prior canonical success',input:{...valid,canonical_successes:1},expected:false}];
+const cases=fixtures.map(f=>[f.name,()=>assert.equal(gate(f.input),f.expected)]);module.exports={gate,fixtures,cases};
