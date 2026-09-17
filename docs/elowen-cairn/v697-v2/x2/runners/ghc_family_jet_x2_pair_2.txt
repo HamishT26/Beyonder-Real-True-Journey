@@ -1,0 +1,4 @@
+'use strict';
+const fs=require('fs'),path=require('path'),Module=require('module');
+const p=path.join(__dirname,'..','ghc_family_polynomial_jet_extended.txt'),m=new Module(p);m.filename=p;m.paths=Module._nodeModulePaths(path.dirname(p));m._compile(fs.readFileSync(p,'utf8'),p);
+m.exports.cli(["jet_hessian_at","jet_taylor_remainder"]);

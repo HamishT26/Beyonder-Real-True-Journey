@@ -1,0 +1,50 @@
+'use strict';
+// Closed finite sparse-polynomial interface. Mathematical output is not observation, calibration or authority.
+const crypto=require('crypto');
+class Refusal extends Error {constructor(code){super(code);this.code=code;}}
+const need=(ok,code='domain')=>{if(!ok)throw new Refusal(code);};
+const keys=(x,names)=>{need(x!==null&&typeof x==='object'&&!Array.isArray(x),'record');need([Object.prototype,null].includes(Object.getPrototypeOf(x)),'record');need(Object.keys(x).length===names.length&&names.every(k=>Object.hasOwn(x,k)),'fields');return x;};
+const integer=(x,lo,hi)=>{need(typeof x==='number'&&Number.isInteger(x)&&x>=lo&&x<=hi,'integer');return x;};
+const absolute=n=>n<0n?-n:n;
+function gcd(a,b){a=absolute(a);b=absolute(b);while(b!==0n){const t=a%b;a=b;b=t;}return a||1n;}
+function rational(n,d=1n){need(d!==0n,'denominator');if(d<0n){n=-n;d=-d;}const g=gcd(n,d);return {n:n/g,d:d/g};}
+function parseRational(s){need(typeof s==='string'&&/^-?\d{1,30}(?:\/\d{1,30})?$/.test(s),'rational');const a=s.split('/');return rational(BigInt(a[0]),BigInt(a[1]||'1'));}
+const zero=()=>rational(0n),one=()=>rational(1n),fromInt=n=>rational(BigInt(n)),format=a=>a.n+'/'+a.d,neg=a=>({n:-a.n,d:a.d}),plus=(a,b)=>rational(a.n*b.d+b.n*a.d,a.d*b.d),times=(a,b)=>rational(a.n*b.n,a.d*b.d),quotient=(a,b)=>rational(a.n*b.d,a.d*b.n),compare=(a,b)=>a.n*b.d<b.n*a.d?-1:a.n*b.d>b.n*a.d?1:0,abs=a=>a.n<0n?neg(a):a;
+function power(a,n){let v=one();for(let i=0;i<n;i++)v=times(v,a);return v;}
+const least=a=>a.reduce((x,y)=>compare(x,y)<=0?x:y),greatest=a=>a.reduce((x,y)=>compare(x,y)>=0?x:y);
+function vector(v){need(Array.isArray(v)&&v.length===3,'vector');return v.map(parseRational);}
+function box(v){need(Array.isArray(v)&&v.length===3,'box');return v.map(a=>{need(Array.isArray(a)&&a.length===2,'box');const x=a.map(parseRational);need(compare(x[0],x[1])<=0,'box_order');return x;});}
+function admitPolynomial(p){keys(p,['terms']);need(Array.isArray(p.terms)&&p.terms.length<=48,'term_budget');const out=new Map();for(const t of p.terms){keys(t,['exponents','coefficient']);need(Array.isArray(t.exponents)&&t.exponents.length===3,'exponents');const e=t.exponents.map(v=>integer(v,0,6));need(e.reduce((a,b)=>a+b,0)<=6,'degree_budget');const k=e.join(','),c=parseRational(t.coefficient);out.set(k,plus(out.get(k)||zero(),c));}return prune(out);}
+function prune(m){return new Map([...m].filter(([k,c])=>c.n!==0n));}
+function serialize(m){m=prune(m);need(m.size<=1330,'derived_term_budget');const rows=[...m].map(([k,c])=>{const e=k.split(',').map(Number);need(e.reduce((a,b)=>a+b,0)<=18,'derived_degree_budget');need(absolute(c.n).toString().length<=4000&&c.d.toString().length<=4000,'derived_rational_budget');return {exponents:e,coefficient:format(c)};});rows.sort((a,b)=>{for(let i=0;i<3;i++)if(a.exponents[i]!==b.exponents[i])return a.exponents[i]-b.exponents[i];return 0;});return {terms:rows};}
+function merge(a,b,sign=1){const m=new Map(a);for(const [k,c]of b)m.set(k,plus(m.get(k)||zero(),sign===1?c:neg(c)));return prune(m);}
+const scale=(a,c)=>prune(new Map([...a].map(([k,v])=>[k,times(v,c)])));
+function valueAt(a,p){let sum=zero();for(const [k,c]of a){const e=k.split(',').map(Number);let v=c;for(let i=0;i<3;i++)v=times(v,power(p[i],e[i]));sum=plus(sum,v);}return sum;}
+function derivative(a,axis){const m=new Map();for(const [k,c]of a){const e=k.split(',').map(Number),n=e[axis];if(n){e[axis]--;const t=e.join(',');m.set(t,plus(m.get(t)||zero(),times(c,fromInt(n))));}}return prune(m);}
+function multiply(a,b){const m=new Map();for(const [ka,ca]of a)for(const [kb,cb]of b){const aexp=ka.split(',').map(Number),bexp=kb.split(',').map(Number),k=aexp.map((n,i)=>n+bexp[i]).join(',');m.set(k,plus(m.get(k)||zero(),times(ca,cb)));}return prune(m);}
+function pullback(a,s,o){let out=new Map();for(const [k,c]of a){const e=k.split(',').map(Number);let term=new Map([['0,0,0',c]]);for(let axis=0;axis<3;axis++){const exp=[0,0,0];exp[axis]=1;const linear=prune(new Map([['0,0,0',o[axis]],[exp.join(','),s[axis]]]));for(let count=0;count<e[axis];count++)term=multiply(term,linear);}out=merge(out,term);}return out;}
+function envelope(outcome,value){const result={outcome,value,evidence_class:'same_owner_finite_synthetic',authority:false};need(Buffer.byteLength(JSON.stringify(result))<=1048576,'output_budget');return result;}
+const operations=['jet_shape','jet_normalize','jet_evaluate','jet_add','jet_subtract','jet_scale','jet_gradient','jet_directional','jet_integrate_box','jet_affine_pullback'];
+function evaluate(request,allowed=operations){keys(request,['op','input']);need(typeof request.op==='string'&&allowed.includes(request.op),'operation');const op=request.op,i=request.input,fields={jet_shape:['a'],jet_normalize:['a'],jet_evaluate:['a','point'],jet_add:['a','b'],jet_subtract:['a','b'],jet_scale:['a','factor'],jet_gradient:['a'],jet_directional:['a','direction'],jet_integrate_box:['a','box'],jet_affine_pullback:['a','scale','offset']};need(Object.hasOwn(fields,op),'operation');keys(i,fields[op]);const a=admitPolynomial(i.a);let value;
+switch(op){
+case 'jet_shape':{const p=serialize(a);value={raw_terms:i.a.terms.length,normalized_terms:p.terms.length,axis_degrees:[0,1,2].map(axis=>Math.max(0,...p.terms.map(t=>t.exponents[axis]))),total_degree:Math.max(0,...p.terms.map(t=>t.exponents.reduce((x,y)=>x+y,0)))};break;}
+case 'jet_normalize':value=serialize(a);break;
+case 'jet_evaluate':value=format(valueAt(a,vector(i.point)));break;
+case 'jet_add':value=serialize(merge(a,admitPolynomial(i.b)));break;
+case 'jet_subtract':value=serialize(merge(a,admitPolynomial(i.b),-1));break;
+case 'jet_scale':value=serialize(scale(a,parseRational(i.factor)));break;
+case 'jet_gradient':value=[0,1,2].map(axis=>serialize(derivative(a,axis)));break;
+case 'jet_directional':{const d=vector(i.direction);value=serialize([0,1,2].reduce((m,axis)=>merge(m,scale(derivative(a,axis),d[axis])),new Map()));break;}
+case 'jet_integrate_box':{const b=box(i.box);let sum=zero();for(const [k,c]of a){const e=k.split(',').map(Number);let v=c;for(let axis=0;axis<3;axis++)v=times(v,quotient(plus(power(b[axis][1],e[axis]+1),neg(power(b[axis][0],e[axis]+1))),fromInt(e[axis]+1)));sum=plus(sum,v);}value=format(sum);break;}
+case 'jet_affine_pullback':value=serialize(pullback(a,vector(i.scale),vector(i.offset)));break;
+}return envelope('completed',value);}
+function strictParse(raw){need(Buffer.byteLength(raw)<=65536,'wire_budget');let pos=0;const white=()=>{while(/[ \t\r\n]/.test(raw[pos]||'')&&pos<raw.length)pos++;};function string(){const start=pos;need(raw[pos++]==='"','json');let escaped=false;while(pos<raw.length){const c=raw[pos++];if(!escaped&&c==='"'){try{return JSON.parse(raw.slice(start,pos));}catch{throw new Refusal('json');}}if(!escaped&&c==='\\')escaped=true;else escaped=false;}throw new Refusal('json');}
+function read(depth){need(depth<=16,'nesting_budget');white();const c=raw[pos];if(c==='"')return string();if(c==='{'){pos++;white();const o=Object.create(null),seen=new Set();if(raw[pos]==='}'){pos++;return o;}while(true){white();const k=string();need(!seen.has(k),'duplicate_key');seen.add(k);white();need(raw[pos++]===':','json');o[k]=read(depth+1);white();const s=raw[pos++];if(s==='}')return o;need(s===',','json');}}
+if(c==='['){pos++;white();const a=[];if(raw[pos]===']'){pos++;return a;}while(true){need(a.length<100,'array_budget');a.push(read(depth+1));white();const s=raw[pos++];if(s===']')return a;need(s===',','json');}}
+for(const [s,v]of [['true',true],['false',false],['null',null]])if(raw.slice(pos,pos+s.length)===s){pos+=s.length;return v;}
+const m=raw.slice(pos).match(/^-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?/);need(Boolean(m),'json');pos+=m[0].length;const n=Number(m[0]);need(Number.isFinite(n),'json_number');return n;}
+const result=read(0);white();need(pos===raw.length,'trailing_json');return result;}
+function invoke(request,allowed=operations){try{return {accepted:true,result:evaluate(request,allowed)};}catch(e){if(!(e instanceof Refusal))throw e;return {accepted:false,refusal:e.code,subject_credit:0,authority:false};}}
+function readWire(){const fs=require('fs'),chunks=[];let size=0;while(size<=65536){const b=Buffer.alloc(Math.min(4096,65537-size)),n=fs.readSync(0,b,0,b.length,null);if(n===0)break;chunks.push(b.subarray(0,n));size+=n;}need(size<=65536,'wire_budget');try{return new TextDecoder('utf-8',{fatal:true}).decode(Buffer.concat(chunks));}catch{throw new Refusal('utf8');}}
+function cli(allowed=operations,evaluator=evaluate){try{need(process.argv.length<=2,'arguments');const result=evaluator(strictParse(readWire()),allowed);process.stdout.write(JSON.stringify(result)+'\n');}catch(e){if(!(e instanceof Refusal))throw e;process.stdout.write(JSON.stringify({status:'refused',error:e.code,authority:false,execution_credit:0})+'\n');process.exitCode=2;}}
+module.exports={Refusal,need,keys,integer,parseRational,rational,zero,one,fromInt,format,neg,plus,times,quotient,compare,abs,power,least,greatest,vector,box,admitPolynomial,prune,serialize,merge,scale,valueAt,derivative,multiply,pullback,envelope,operations,evaluate,strictParse,invoke,cli};

@@ -1,0 +1,39 @@
+{
+  "status": "FAILED_ISOLATED_PRODUCT_PREDICATE_ZERO_SUCCESS_CREDIT",
+  "negative_id": "EC6972-X2-OP-N002",
+  "helper_source_sha256": "cf271db4758e0b5014386cc5d05b87dd2e5456ecbc0fd4c9d2064aa136439bd4",
+  "failure": "The additional-test decoder used Map construction from raw terms, so duplicate exponent keys overwrote rather than summed their coefficients",
+  "retained_successful_prefix": [
+    "Hessian is symmetric for every declared model",
+    "Saddle Hessian keeps negative curvature",
+    "Integer coefficient decoder recovery"
+  ],
+  "failed_component": "Product values match separate evaluations",
+  "runtime_kernel_changed": false,
+  "domain_replayed": false,
+  "smallest_counterexample": {
+    "terms": [
+      {
+        "exponents": [
+          0,
+          0,
+          0
+        ],
+        "coefficient": "5"
+      },
+      {
+        "exponents": [
+          0,
+          0,
+          0
+        ],
+        "coefficient": "-2"
+      }
+    ],
+    "expected_normalized_constant": "3/1",
+    "overwriting_decoder_constant": "-2/1"
+  },
+  "recurrence_guard": "Accumulate every decoded coefficient by exponent key before evaluating raw or derived polynomial records",
+  "rollback": "Retain both earlier failures and every successful prefix; repair only decoder accumulation",
+  "recorded_at_utc": "2026-09-17T15:48:27.653Z"
+}
