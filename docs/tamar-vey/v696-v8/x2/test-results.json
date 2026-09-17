@@ -1,0 +1,440 @@
+{
+  "valid_predicates": [
+    {
+      "name": "shared difference preserves zero",
+      "passed": true
+    },
+    {
+      "name": "support union sorted",
+      "passed": true
+    },
+    {
+      "name": "relabel is bijective",
+      "passed": true
+    },
+    {
+      "name": "relabel range unchanged",
+      "passed": true
+    },
+    {
+      "name": "projection validates all forms",
+      "passed": true
+    },
+    {
+      "name": "product linear term expansion",
+      "passed": true
+    },
+    {
+      "name": "product diagonal residual sign",
+      "passed": true
+    },
+    {
+      "name": "product cross residual magnitude",
+      "passed": true
+    },
+    {
+      "name": "square shared-variable flag",
+      "passed": true
+    },
+    {
+      "name": "square one-noise nonnegative remainder",
+      "passed": true
+    },
+    {
+      "name": "zero product enclosure",
+      "passed": true
+    },
+    {
+      "name": "constant product exact",
+      "passed": true
+    },
+    {
+      "name": "corner image count",
+      "passed": true
+    },
+    {
+      "name": "corner hull agrees with affine range",
+      "passed": true
+    },
+    {
+      "name": "three-axis output count",
+      "passed": true
+    },
+    {
+      "name": "unit label unconverted",
+      "passed": true
+    },
+    {
+      "name": "observation gap zero rows",
+      "passed": true
+    },
+    {
+      "name": "authority gate no release",
+      "passed": true
+    }
+  ],
+  "invalid_subjects": [
+    {
+      "name": "nonbijective relabel",
+      "subject": {
+        "op": "affine_relabel_preview",
+        "input": {
+          "case_label": "synthetic-targeted-x2",
+          "form": {
+            "centre": "0",
+            "terms": [
+              {
+                "noise": "n1",
+                "coefficient": "1"
+              },
+              {
+                "noise": "n2",
+                "coefficient": "1"
+              }
+            ]
+          },
+          "mapping": {
+            "n1": "m1",
+            "n2": "m1"
+          }
+        }
+      },
+      "result": {
+        "refused": true,
+        "code": "E_DOMAIN",
+        "authority": false
+      },
+      "subject_passed": false,
+      "subject_credit": 0,
+      "refusal_passed": true
+    },
+    {
+      "name": "missing relabel key",
+      "subject": {
+        "op": "affine_relabel_preview",
+        "input": {
+          "case_label": "synthetic-targeted-x2",
+          "form": {
+            "centre": "0",
+            "terms": [
+              {
+                "noise": "n1",
+                "coefficient": "1"
+              },
+              {
+                "noise": "n2",
+                "coefficient": "1"
+              }
+            ]
+          },
+          "mapping": {
+            "n1": "m1"
+          }
+        }
+      },
+      "result": {
+        "refused": true,
+        "code": "E_SCHEMA",
+        "authority": false
+      },
+      "subject_passed": false,
+      "subject_credit": 0,
+      "refusal_passed": true
+    },
+    {
+      "name": "invalid unselected projection form",
+      "subject": {
+        "op": "affine_projection_bundle",
+        "input": {
+          "case_label": "synthetic-targeted-x2",
+          "forms": [
+            {
+              "centre": "0",
+              "terms": [
+                {
+                  "noise": "n1",
+                  "coefficient": "1"
+                }
+              ]
+            },
+            {
+              "centre": "0",
+              "terms": [
+                {
+                  "noise": "n2",
+                  "coefficient": "1"
+                }
+              ]
+            },
+            {
+              "centre": "1/0",
+              "terms": []
+            }
+          ]
+        }
+      },
+      "result": {
+        "refused": true,
+        "code": "E_DOMAIN",
+        "authority": false
+      },
+      "subject_passed": false,
+      "subject_credit": 0,
+      "refusal_passed": true
+    },
+    {
+      "name": "four support noises",
+      "subject": {
+        "op": "affine_corner_images",
+        "input": {
+          "case_label": "synthetic-targeted-x2",
+          "forms": [
+            {
+              "centre": "0",
+              "terms": [
+                {
+                  "noise": "n1",
+                  "coefficient": "1"
+                },
+                {
+                  "noise": "n2",
+                  "coefficient": "1"
+                }
+              ]
+            },
+            {
+              "centre": "0",
+              "terms": [
+                {
+                  "noise": "n3",
+                  "coefficient": "1"
+                }
+              ]
+            },
+            {
+              "centre": "0",
+              "terms": [
+                {
+                  "noise": "m1",
+                  "coefficient": "1"
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "result": {
+        "refused": true,
+        "code": "E_DOMAIN",
+        "authority": false
+      },
+      "subject_passed": false,
+      "subject_credit": 0,
+      "refusal_passed": true
+    },
+    {
+      "name": "malformed form centre",
+      "subject": {
+        "op": "affine_square_enclosure",
+        "input": {
+          "case_label": "synthetic-targeted-x2",
+          "form": {
+            "centre": "bad",
+            "terms": []
+          }
+        }
+      },
+      "result": {
+        "refused": true,
+        "code": "E_DOMAIN",
+        "authority": false
+      },
+      "subject_passed": false,
+      "subject_credit": 0,
+      "refusal_passed": true
+    },
+    {
+      "name": "real unit row",
+      "subject": {
+        "op": "affine_unit_reservation",
+        "input": {
+          "case_label": "synthetic-targeted-x2",
+          "label": "synthetic-unit-targeted",
+          "real_rows": 1
+        }
+      },
+      "result": {
+        "refused": true,
+        "code": "E_DOMAIN",
+        "authority": false
+      },
+      "subject_passed": false,
+      "subject_credit": 0,
+      "refusal_passed": true
+    },
+    {
+      "name": "real observation row",
+      "subject": {
+        "op": "affine_observation_gap",
+        "input": {
+          "case_label": "synthetic-targeted-x2",
+          "form": {
+            "centre": "0",
+            "terms": [
+              {
+                "noise": "n1",
+                "coefficient": "1"
+              }
+            ]
+          },
+          "real_rows": 1
+        }
+      },
+      "result": {
+        "refused": true,
+        "code": "E_DOMAIN",
+        "authority": false
+      },
+      "subject_passed": false,
+      "subject_credit": 0,
+      "refusal_passed": true
+    },
+    {
+      "name": "authority true",
+      "subject": {
+        "op": "affine_authority_gate",
+        "input": {
+          "case_label": "synthetic-targeted-x2",
+          "form": {
+            "centre": "0",
+            "terms": [
+              {
+                "noise": "n1",
+                "coefficient": "1"
+              }
+            ]
+          },
+          "authority": true,
+          "release": false
+        }
+      },
+      "result": {
+        "refused": true,
+        "code": "E_DOMAIN",
+        "authority": false
+      },
+      "subject_passed": false,
+      "subject_credit": 0,
+      "refusal_passed": true
+    },
+    {
+      "name": "release true",
+      "subject": {
+        "op": "affine_authority_gate",
+        "input": {
+          "case_label": "synthetic-targeted-x2",
+          "form": {
+            "centre": "0",
+            "terms": [
+              {
+                "noise": "n1",
+                "coefficient": "1"
+              }
+            ]
+          },
+          "authority": false,
+          "release": true
+        }
+      },
+      "result": {
+        "refused": true,
+        "code": "E_DOMAIN",
+        "authority": false
+      },
+      "subject_passed": false,
+      "subject_credit": 0,
+      "refusal_passed": true
+    },
+    {
+      "name": "unknown gate field",
+      "subject": {
+        "op": "affine_authority_gate",
+        "input": {
+          "case_label": "synthetic-targeted-x2",
+          "form": {
+            "centre": "0",
+            "terms": [
+              {
+                "noise": "n1",
+                "coefficient": "1"
+              }
+            ]
+          },
+          "authority": false,
+          "release": false,
+          "unknown": true
+        }
+      },
+      "result": {
+        "refused": true,
+        "code": "E_SCHEMA",
+        "authority": false
+      },
+      "subject_passed": false,
+      "subject_credit": 0,
+      "refusal_passed": true
+    },
+    {
+      "name": "duplicate raw JSON key",
+      "subject": "{\"op\":\"affine_constant\",\"op\":\"affine_constant\",\"input\":{\"case_label\":\"synthetic-targeted\",\"value\":\"0\"}}",
+      "result": {
+        "refused": true,
+        "code": "E_PARSE",
+        "authority": false
+      },
+      "subject_passed": false,
+      "subject_credit": 0,
+      "refusal_passed": true
+    },
+    {
+      "name": "nonfinite raw JSON number",
+      "subject": "{\"op\":\"affine_unit_reservation\",\"input\":{\"case_label\":\"synthetic-targeted\",\"label\":\"synthetic-unit-targeted\",\"real_rows\":1e9999}}",
+      "result": {
+        "refused": true,
+        "code": "E_PARSE",
+        "authority": false
+      },
+      "subject_passed": false,
+      "subject_credit": 0,
+      "refusal_passed": true
+    },
+    {
+      "name": "trailing raw JSON",
+      "subject": "{\"op\":\"affine_square_enclosure\",\"input\":{\"case_label\":\"synthetic-targeted-x2\",\"form\":{\"centre\":\"0\",\"terms\":[{\"noise\":\"n1\",\"coefficient\":\"1\"}]}}} true",
+      "result": {
+        "refused": true,
+        "code": "E_PARSE",
+        "authority": false
+      },
+      "subject_passed": false,
+      "subject_credit": 0,
+      "refusal_passed": true
+    },
+    {
+      "name": "excess raw JSON depth",
+      "subject": "[[[[[[[[[[[[[[[[[[[[[[[[[[0]]]]]]]]]]]]]]]]]]]]]]]]]]",
+      "result": {
+        "refused": true,
+        "code": "E_PARSE",
+        "authority": false
+      },
+      "subject_passed": false,
+      "subject_credit": 0,
+      "refusal_passed": true
+    }
+  ],
+  "test_predicates": 32,
+  "passing_predicates": 32,
+  "failed_subjects": 14,
+  "valid": true
+}

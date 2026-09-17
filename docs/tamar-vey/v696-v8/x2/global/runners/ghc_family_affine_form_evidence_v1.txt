@@ -1,0 +1,5 @@
+"use strict";
+const k=require("../support/affine-x2.txt"),allowed=["affine_corner_images","affine_unit_reservation","affine_observation_gap","affine_authority_gate"];
+function run(request){return k.refusal(()=>{if(!request||!allowed.includes(request.op))k.core.fail("E_OPERATION");return k.execute(request);});}
+module.exports={run,allowed};
+if(require.main===module){const r=k.refusal(()=>run(k.readRequest(process.argv[2])));console.log(JSON.stringify(r));if(r.refused)process.exitCode=2;}

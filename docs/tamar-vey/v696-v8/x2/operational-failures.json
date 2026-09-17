@@ -1,0 +1,36 @@
+{
+  "owner": "Tamar Vey",
+  "phase": "v696-v8",
+  "session": "x2",
+  "failures": [
+    {
+      "negative_id": "TV6968-X2-N001",
+      "passed": false,
+      "initial_success_credit": 0,
+      "failure": "The first catalogue query used an underscored operation selector and returned zero matches despite a valid forty-card catalogue.",
+      "retained_receipt": "x2/catalogue-query.json",
+      "recovery": "Inspect the installed query normalization and use a supported exact lexical selector; retain the zero-match receipt and do not change the catalogue or repeat its successful validation.",
+      "recovery_passed": true,
+      "corrected_catalogue": "x2/meta-tool-catalogue-normalized.json",
+      "recovery_receipt": "x2/catalogue-query-recovery.json",
+      "recovery_exact_results": 4,
+      "recurrence_guard": "Verify actual query tokenization before choosing a selector; schema validity is not retrieval success.",
+      "rollback": "Stop this query and retain all receipts; no caller or catalogue deletion."
+    },
+    {
+      "negative_id": "TV6968-X2-N002",
+      "passed": false,
+      "initial_success_credit": 0,
+      "failure": "A combined read assumed that two advertised legacy structural preflight helper basenames existed in each skill's scripts directory; both paths were absent.",
+      "recovery": "Discover each exact skill inventory before reading or invoking a helper. Preserve missing legacy availability if no installed callable exists and use the current owner-local preregistered structural guard without claiming the legacy helper was exercised.",
+      "recovery_passed": true,
+      "legacy_availability": "open_gap",
+      "legacy_execution_credit": 0,
+      "owner_local_structural_recovery": "x2/canonical-preflight-results.json",
+      "recovery_passing_predicates": 6,
+      "recurrence_guard": "An advertised basename is not an installed path or callable; distinguish availability, selection and execution.",
+      "rollback": "Stop unavailable helper selection; retain existing skills and all phase receipts."
+    }
+  ],
+  "boundary": "Read-only query and discovery failures remain false after recovery. No successful tranche, predecessor canonical, or full repository suite is replayed. Same-owner metadata only; NOT_READY_FOR_STAGE_20."
+}

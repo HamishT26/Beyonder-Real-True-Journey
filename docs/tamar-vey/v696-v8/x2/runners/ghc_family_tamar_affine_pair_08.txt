@@ -1,0 +1,5 @@
+"use strict";
+const k=require("../affine-x2.txt"),allowed=["affine_multiply_enclosure","affine_square_enclosure"];
+function run(request){return k.refusal(()=>{if(!request||!allowed.includes(request.op))k.core.fail("E_OPERATION");return k.execute(request);});}
+module.exports={run,allowed};
+if(require.main===module){const out=k.refusal(()=>run(k.readRequest(process.argv[2])));console.log(JSON.stringify(out));if(out.refused)process.exitCode=2;}

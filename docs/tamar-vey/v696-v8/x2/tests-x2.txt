@@ -1,0 +1,37 @@
+"use strict";
+const k=require("./affine-x2.txt"),c=k.core,F=(centre,terms)=>({centre,terms:terms.map(([noise,coefficient])=>({noise,coefficient}))}),x=F("0",[["n1","1"]]),y=F("0",[["n2","1"]]),z=F("0",[["n1","1"],["n2","1"]]),q=(op,input)=>({op,input:{case_label:"synthetic-targeted-x2",...input}}),out=(op,input)=>k.execute(q(op,input)),same=(a,b)=>JSON.stringify(a)===JSON.stringify(b);
+function run(){const valid=[],invalid=[];function t(name,p){try{valid.push({name,passed:p()===true});}catch{valid.push({name,passed:false});}}function r(name,subject,raw=false){const result=raw?k.refusal(()=>k.execute(k.parseStrict(subject))):k.execute(subject);invalid.push({name,subject,result,subject_passed:false,subject_credit:0,refusal_passed:result.refused===true&&result.authority===false});}
+t("shared difference preserves zero",()=>same(out("affine_shared_difference",{form:z}).value.range,{lo:"0",hi:"0"}));
+t("support union sorted",()=>same(out("affine_support_signature",{a:x,b:y}).value.union,["n1","n2"]));
+t("relabel is bijective",()=>same(out("affine_relabel_preview",{form:z,mapping:{n1:"m2",n2:"m1"}}).value.renamed,F("0",[["m1","1"],["m2","1"]])));
+t("relabel range unchanged",()=>out("affine_relabel_preview",{form:z,mapping:{n1:"m1",n2:"m2"}}).value.range_preserved===true);
+t("projection validates all forms",()=>out("affine_projection_bundle",{forms:[x,y,z]}).value.ranges.length===3);
+t("product linear term expansion",()=>same(out("affine_multiply_enclosure",{a:F("2",[["n1","1"]]),b:F("3",[["n1","-2"]])}).value.linear_part,F("6",[["n1","-1"]])));
+t("product diagonal residual sign",()=>same(out("affine_multiply_enclosure",{a:x,b:F("0",[["n1","-1"]])}).value.residual,{lo:"-1",hi:"0"}));
+t("product cross residual magnitude",()=>same(out("affine_multiply_enclosure",{a:x,b:y}).value.residual,{lo:"-1",hi:"1"}));
+t("square shared-variable flag",()=>out("affine_square_enclosure",{form:x}).value.shared_variable===true);
+t("square one-noise nonnegative remainder",()=>same(out("affine_square_enclosure",{form:x}).value.enclosure,{lo:"0",hi:"1"}));
+t("zero product enclosure",()=>same(out("affine_multiply_enclosure",{a:F("0",[]),b:z}).value.enclosure,{lo:"0",hi:"0"}));
+t("constant product exact",()=>same(out("affine_multiply_enclosure",{a:F("2/3",[]),b:F("-3/4",[])}).value.enclosure,{lo:"-1/2",hi:"-1/2"}));
+t("corner image count",()=>out("affine_corner_images",{forms:[x,y,z]}).value.corner_images.length===4);
+t("corner hull agrees with affine range",()=>same(out("affine_corner_images",{forms:[x,y,z]}).value.axis_hull,[{lo:"-1",hi:"1"},{lo:"-1",hi:"1"},{lo:"-2",hi:"2"}]));
+t("three-axis output count",()=>out("affine_corner_images",{forms:[x,y,z]}).value.corner_images.every(r=>r.coordinates.length===3));
+t("unit label unconverted",()=>out("affine_unit_reservation",{label:"synthetic-unit-targeted",real_rows:0}).value.conversion_performed===false);
+t("observation gap zero rows",()=>out("affine_observation_gap",{form:x,real_rows:0}).outcome==="open_gap");
+t("authority gate no release",()=>out("affine_authority_gate",{form:x,authority:false,release:false}).value.release===false);
+r("nonbijective relabel",q("affine_relabel_preview",{form:z,mapping:{n1:"m1",n2:"m1"}}));
+r("missing relabel key",q("affine_relabel_preview",{form:z,mapping:{n1:"m1"}}));
+r("invalid unselected projection form",q("affine_projection_bundle",{forms:[x,y,F("1/0",[])]}));
+r("four support noises",q("affine_corner_images",{forms:[z,F("0",[["n3","1"]]),F("0",[["m1","1"]])]}));
+r("malformed form centre",q("affine_square_enclosure",{form:F("bad",[])}));
+r("real unit row",q("affine_unit_reservation",{label:"synthetic-unit-targeted",real_rows:1}));
+r("real observation row",q("affine_observation_gap",{form:x,real_rows:1}));
+r("authority true",q("affine_authority_gate",{form:x,authority:true,release:false}));
+r("release true",q("affine_authority_gate",{form:x,authority:false,release:true}));
+r("unknown gate field",q("affine_authority_gate",{form:x,authority:false,release:false,unknown:true}));
+r("duplicate raw JSON key",'{"op":"affine_constant","op":"affine_constant","input":{"case_label":"synthetic-targeted","value":"0"}}',true);
+r("nonfinite raw JSON number",'{"op":"affine_unit_reservation","input":{"case_label":"synthetic-targeted","label":"synthetic-unit-targeted","real_rows":1e9999}}',true);
+r("trailing raw JSON",JSON.stringify(q("affine_square_enclosure",{form:x}))+" true",true);
+r("excess raw JSON depth","[".repeat(26)+"0"+"]".repeat(26),true);
+return{valid_predicates:valid,invalid_subjects:invalid,test_predicates:valid.length+invalid.length,passing_predicates:valid.filter(t=>t.passed).length+invalid.filter(t=>t.refusal_passed).length,failed_subjects:invalid.length,valid:valid.every(t=>t.passed)&&invalid.every(t=>t.refusal_passed)};}
+module.exports={run};if(require.main===module){const r=run();console.log(JSON.stringify(r));if(!r.valid)process.exitCode=2;}
