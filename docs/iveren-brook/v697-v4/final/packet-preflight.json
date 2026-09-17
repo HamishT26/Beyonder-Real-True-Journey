@@ -1,0 +1,99 @@
+{
+  "positive": {
+    "valid": true,
+    "issues": []
+  },
+  "negatives": [
+    {
+      "id": "IB6974-PACKET-NEG-1",
+      "fixture": {
+        "name": "source claimed as owner parent",
+        "field": "source_is_git_parent",
+        "value": true,
+        "issue": "ancestry"
+      },
+      "observed": {
+        "valid": false,
+        "issues": [
+          "ancestry"
+        ]
+      },
+      "subject_success_credit": 0
+    },
+    {
+      "id": "IB6974-PACKET-NEG-2",
+      "fixture": {
+        "name": "conditional stale incoming baseline",
+        "field": "incoming",
+        "value": {
+          "methods": 385,
+          "witnesses": 29370,
+          "pass": 23515,
+          "fail": 5855,
+          "negatives": 9292,
+          "core_open_gaps": 225,
+          "core_exact_gates": 225
+        },
+        "issue": "incoming"
+      },
+      "observed": {
+        "valid": false,
+        "issues": [
+          "incoming"
+        ]
+      },
+      "subject_success_credit": 0
+    },
+    {
+      "id": "IB6974-PACKET-NEG-3",
+      "fixture": {
+        "name": "blocked work silently credited",
+        "field": "blocked_nonexecuted",
+        "value": 0,
+        "issue": "outside_prerequisites"
+      },
+      "observed": {
+        "valid": false,
+        "issues": [
+          "outside_prerequisites"
+        ]
+      },
+      "subject_success_credit": 0
+    },
+    {
+      "id": "IB6974-PACKET-NEG-4",
+      "fixture": {
+        "name": "early delivery promotion",
+        "field": "send_count",
+        "value": 1,
+        "issue": "route"
+      },
+      "observed": {
+        "valid": false,
+        "issues": [
+          "route"
+        ]
+      },
+      "subject_success_credit": 0
+    },
+    {
+      "id": "IB6974-PACKET-NEG-5",
+      "fixture": {
+        "name": "stage twenty promotion",
+        "field": "stage20",
+        "value": true,
+        "issue": "claim_ceiling"
+      },
+      "observed": {
+        "valid": false,
+        "issues": [
+          "claim_ceiling"
+        ]
+      },
+      "subject_success_credit": 0
+    }
+  ],
+  "live_head_validation": false,
+  "canonical_invocations": 0,
+  "domain_replays": 0
+}
