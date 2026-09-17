@@ -1,0 +1,8 @@
+"use strict";
+// Bind saved targeted observations without replaying the successful x1 tranche.
+const p=require('../plan/build-plan.txt');
+const tests=p.read('x1/test-results.json').tests;
+const names=['zero-spanning reciprocal refused','unordered interval refused','input rational limit','raw duplicate key refused','raw trailing refused','raw nonfinite refused','raw deep nesting refused','x2 unsupported during x1'];
+const f=names.map((name,i)=>({id:`LV6967-X1-TN${i+1}`,expected:'valid typed subject',observed:`Rejected invalid subject: ${name}`,procedure:name}));
+p.write('x1/method-flow/targeted-inputs.json',p.mf('x1-targeted-inputs',f,tests.map(t=>({procedure:t.name,expected:'named bounded predicate',observed:t.pass?'pass':'fail'}))));
+const r=p.read('x1/receipt.json');r.targeted_failed_subjects=8;r.method_flow={methods:11,pass:1212,fail:308,witnesses:1520};r.capability_smoke_accounting='Repeated frozen fixtures alias their contract evidence; not additional independent witnesses';p.write('x1/receipt.json',r);p.write('x1/manifest.json',p.manifest('x1',['x1/manifest.json']));console.log(JSON.stringify({retained_from_saved_tests:8,x1_tranche_replay:false}));
