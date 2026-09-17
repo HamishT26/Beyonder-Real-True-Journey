@@ -1,0 +1,26 @@
+"use strict";
+const kernel=require("./affine-x1.txt"),{core:c}=kernel;
+const form=(centre,terms)=>({centre,terms:terms.map(([noise,coefficient])=>({noise,coefficient}))}),f=form("2",[["n1","1"],["n2","-2"]]),g=form("-1",[["n1","3"],["n3","1/2"]]),label="synthetic-targeted",req=(op,input)=>({op,input:{case_label:label,...input}}),same=(a,b)=>JSON.stringify(a)===JSON.stringify(b);
+function run(){const valid=[],invalid=[];function test(name,predicate){try{valid.push({name,passed:predicate()===true});}catch{valid.push({name,passed:false});}}function reject(name,subject){const result=kernel.execute(subject);invalid.push({name,subject,result,subject_passed:false,subject_credit:0,refusal_passed:result.refused===true&&result.authority===false});}
+test("shared subtraction zero",()=>same(kernel.execute(req("affine_subtract",{a:f,b:f})).value,{centre:"0",terms:[]}));
+test("independent support does not cancel",()=>kernel.execute(req("affine_subtract",{a:form("0",[["n1","1"]]),b:form("0",[["n2","1"]])})).value.terms.length===2);
+test("zero scale collapses",()=>same(kernel.execute(req("affine_scale",{form:f,factor:"0"})).value,{centre:"0",terms:[]}));
+test("negative scale coefficient signs",()=>same(kernel.execute(req("affine_scale",{form:f,factor:"-2"})).value,form("-4",[["n1","-2"],["n2","4"]])));
+test("duplicate coefficients combine",()=>same(kernel.execute(req("affine_normalize",{form:form("0",[["n1","1/3"],["n1","2/3"]])})).value,form("0",[["n1","1"]])));
+test("unreduced fractions normalize",()=>same(kernel.execute(req("affine_normalize",{form:form("2/6",[["n1","4/8"]])})).value,form("1/3",[["n1","1/2"]])));
+test("range contains centre",()=>{const r=kernel.execute(req("affine_range",{form:f})).value;return c.cmp(c.rational(r.lo),c.rational(f.centre))<=0&&c.cmp(c.rational(r.hi),c.rational(f.centre))>=0;});
+test("range contains corner assignments",()=>{const r=kernel.execute(req("affine_range",{form:f})).value;for(const n1 of ["-1","1"])for(const n2 of ["-1","1"]){const x=kernel.execute(req("affine_evaluate",{form:f,assignment:{n1,n2}})).value.value;if(c.cmp(c.rational(x),c.rational(r.lo))<0||c.cmp(c.rational(x),c.rational(r.hi))>0)return false;}return true;});
+test("linear-map distributivity",()=>{const observed=kernel.execute(req("affine_linear_map",{a:f,b:g,alpha:"2",beta:"-1/2",offset:"3"})).value;return same(observed,form("15/2",[["n1","1/2"],["n2","-4"],["n3","-1/4"]]));});
+test("assignment evaluation exact",()=>kernel.execute(req("affine_evaluate",{form:f,assignment:{n1:"1/2",n2:"-1/4"}})).value.value==="3");
+test("constant has empty support",()=>same(kernel.execute(req("affine_constant",{value:"-6/8"})).value,{centre:"-3/4",terms:[]}));
+test("zero coefficients removed",()=>kernel.execute(req("affine_normalize",{form:form("0",[["n1","0"],["n2","2"],["n2","-2"]])})).value.terms.length===0);
+reject("unknown top field",{...req("affine_range",{form:f}),extra:1});
+reject("unknown input field",req("affine_range",{form:f,extra:1}));
+reject("zero denominator",req("affine_constant",{value:"1/0"}));
+reject("boolean rational",req("affine_constant",{value:true}));
+reject("overlong rational digits",req("affine_constant",{value:"1".repeat(31)}));
+reject("unknown noise syntax",req("affine_range",{form:form("0",[["x1","1"]])}));
+reject("missing noise assignment",req("affine_evaluate",{form:f,assignment:{n1:"0"}}));
+reject("assignment outside [-1,1]",req("affine_evaluate",{form:f,assignment:{n1:"2",n2:"0"}}));
+return{valid_predicates:valid,invalid_subjects:invalid,test_predicates:valid.length+invalid.length,passing_predicates:valid.filter(x=>x.passed).length+invalid.filter(x=>x.refusal_passed).length,failed_subjects:invalid.length,valid:valid.every(x=>x.passed)&&invalid.every(x=>x.refusal_passed)};}
+module.exports={run};if(require.main===module){const r=run();console.log(JSON.stringify(r));if(!r.valid)process.exitCode=2;}

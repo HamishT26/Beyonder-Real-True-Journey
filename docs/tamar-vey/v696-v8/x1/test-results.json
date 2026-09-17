@@ -1,0 +1,267 @@
+{
+  "valid_predicates": [
+    {
+      "name": "shared subtraction zero",
+      "passed": true
+    },
+    {
+      "name": "independent support does not cancel",
+      "passed": true
+    },
+    {
+      "name": "zero scale collapses",
+      "passed": true
+    },
+    {
+      "name": "negative scale coefficient signs",
+      "passed": true
+    },
+    {
+      "name": "duplicate coefficients combine",
+      "passed": true
+    },
+    {
+      "name": "unreduced fractions normalize",
+      "passed": true
+    },
+    {
+      "name": "range contains centre",
+      "passed": true
+    },
+    {
+      "name": "range contains corner assignments",
+      "passed": true
+    },
+    {
+      "name": "linear-map distributivity",
+      "passed": true
+    },
+    {
+      "name": "assignment evaluation exact",
+      "passed": true
+    },
+    {
+      "name": "constant has empty support",
+      "passed": true
+    },
+    {
+      "name": "zero coefficients removed",
+      "passed": true
+    }
+  ],
+  "invalid_subjects": [
+    {
+      "name": "unknown top field",
+      "subject": {
+        "op": "affine_range",
+        "input": {
+          "case_label": "synthetic-targeted",
+          "form": {
+            "centre": "2",
+            "terms": [
+              {
+                "noise": "n1",
+                "coefficient": "1"
+              },
+              {
+                "noise": "n2",
+                "coefficient": "-2"
+              }
+            ]
+          }
+        },
+        "extra": 1
+      },
+      "result": {
+        "refused": true,
+        "code": "E_SCHEMA",
+        "authority": false
+      },
+      "subject_passed": false,
+      "subject_credit": 0,
+      "refusal_passed": true
+    },
+    {
+      "name": "unknown input field",
+      "subject": {
+        "op": "affine_range",
+        "input": {
+          "case_label": "synthetic-targeted",
+          "form": {
+            "centre": "2",
+            "terms": [
+              {
+                "noise": "n1",
+                "coefficient": "1"
+              },
+              {
+                "noise": "n2",
+                "coefficient": "-2"
+              }
+            ]
+          },
+          "extra": 1
+        }
+      },
+      "result": {
+        "refused": true,
+        "code": "E_SCHEMA",
+        "authority": false
+      },
+      "subject_passed": false,
+      "subject_credit": 0,
+      "refusal_passed": true
+    },
+    {
+      "name": "zero denominator",
+      "subject": {
+        "op": "affine_constant",
+        "input": {
+          "case_label": "synthetic-targeted",
+          "value": "1/0"
+        }
+      },
+      "result": {
+        "refused": true,
+        "code": "E_DOMAIN",
+        "authority": false
+      },
+      "subject_passed": false,
+      "subject_credit": 0,
+      "refusal_passed": true
+    },
+    {
+      "name": "boolean rational",
+      "subject": {
+        "op": "affine_constant",
+        "input": {
+          "case_label": "synthetic-targeted",
+          "value": true
+        }
+      },
+      "result": {
+        "refused": true,
+        "code": "E_DOMAIN",
+        "authority": false
+      },
+      "subject_passed": false,
+      "subject_credit": 0,
+      "refusal_passed": true
+    },
+    {
+      "name": "overlong rational digits",
+      "subject": {
+        "op": "affine_constant",
+        "input": {
+          "case_label": "synthetic-targeted",
+          "value": "1111111111111111111111111111111"
+        }
+      },
+      "result": {
+        "refused": true,
+        "code": "E_DOMAIN",
+        "authority": false
+      },
+      "subject_passed": false,
+      "subject_credit": 0,
+      "refusal_passed": true
+    },
+    {
+      "name": "unknown noise syntax",
+      "subject": {
+        "op": "affine_range",
+        "input": {
+          "case_label": "synthetic-targeted",
+          "form": {
+            "centre": "0",
+            "terms": [
+              {
+                "noise": "x1",
+                "coefficient": "1"
+              }
+            ]
+          }
+        }
+      },
+      "result": {
+        "refused": true,
+        "code": "E_DOMAIN",
+        "authority": false
+      },
+      "subject_passed": false,
+      "subject_credit": 0,
+      "refusal_passed": true
+    },
+    {
+      "name": "missing noise assignment",
+      "subject": {
+        "op": "affine_evaluate",
+        "input": {
+          "case_label": "synthetic-targeted",
+          "form": {
+            "centre": "2",
+            "terms": [
+              {
+                "noise": "n1",
+                "coefficient": "1"
+              },
+              {
+                "noise": "n2",
+                "coefficient": "-2"
+              }
+            ]
+          },
+          "assignment": {
+            "n1": "0"
+          }
+        }
+      },
+      "result": {
+        "refused": true,
+        "code": "E_SCHEMA",
+        "authority": false
+      },
+      "subject_passed": false,
+      "subject_credit": 0,
+      "refusal_passed": true
+    },
+    {
+      "name": "assignment outside [-1,1]",
+      "subject": {
+        "op": "affine_evaluate",
+        "input": {
+          "case_label": "synthetic-targeted",
+          "form": {
+            "centre": "2",
+            "terms": [
+              {
+                "noise": "n1",
+                "coefficient": "1"
+              },
+              {
+                "noise": "n2",
+                "coefficient": "-2"
+              }
+            ]
+          },
+          "assignment": {
+            "n1": "2",
+            "n2": "0"
+          }
+        }
+      },
+      "result": {
+        "refused": true,
+        "code": "E_DOMAIN",
+        "authority": false
+      },
+      "subject_passed": false,
+      "subject_credit": 0,
+      "refusal_passed": true
+    }
+  ],
+  "test_predicates": 20,
+  "passing_predicates": 20,
+  "failed_subjects": 8,
+  "valid": true
+}
