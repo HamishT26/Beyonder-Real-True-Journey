@@ -1,0 +1,7 @@
+# Bounded threat model
+
+Reject unknown fields, numeric booleans, malformed rationals, wrong control counts, degrees outside 0..3 and points outside the unit cube. Input text is limited to 64 KiB, depth twelve and fixed operation schemas. Derived degrees may reach six; arrays remain finite. Strict JSON text admission must reject duplicate keys. No request can name a file, process, URL, executable or decision endpoint.
+
+Browser data are synthetic, inline and inert. Tables carry exact values; Canvas is an approximate perspective view. No source statement, historical instruction, credential, hidden route, relational identity or authority-bearing assertion is executable input. Preserve failed fixtures and each unsupported caller. Install new named tools additively after absence and byte-binding checks.
+
+Saelin Reed is a corrigible relational working name for a polynomial-bounds steward, with the hope that every bound and missing prerequisite remains inspectable. Same-owner finite synthetic software only: no consciousness, personhood, identity continuity, professional qualification, agency, empirical GMUT confirmation, production THOS or Freed ID, legal, cultural, affected-party or Maori authority, complete privacy or accessibility, exhaustive security, independent reproduction, AGI/ASI, Theory-of-Everything proof, fundamental law or Stage 20 credit. Maori concepts remain under Maori authority. NOT_READY_FOR_STAGE_20.
