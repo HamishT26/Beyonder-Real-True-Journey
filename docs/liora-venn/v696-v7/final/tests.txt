@@ -1,0 +1,20 @@
+"use strict";
+// Exact-final-only terminal tests; no successful domain engine or lifecycle replay.
+const p=require('../plan/build-plan.txt'),assert=require('assert');
+function run(){const tests=[],check=(name,f)=>{f();tests.push({name,pass:true});},truth=p.read('final/phase-truth.json'),account=p.read('final/accounting.json'),defs=p.read('plan/proposals.json').proposals,idx=p.read('final/method-flow-index.json');
+check('exact four outcome partition',()=>assert.deepStrictEqual(truth.outcomes,{completed:240,represented:30,open_gap:15,exact_gate:15}));
+check('source reviews zero credit',()=>{const rows=p.read('plan/source-review.json').reviews;assert.equal(rows.length,300);assert(rows.every(r=>r.novelty_credit===0&&r.execution_credit===0&&r.completion_credit===0));});
+check('frozen requests distinct',()=>assert.equal(new Set(defs.map(r=>JSON.stringify(r.request))).size,300));
+check('proper saved session context',()=>{assert.equal(truth.x1.contracts,150);assert.equal(truth.x2.contracts,150);assert.equal(truth.x1.replay,0);assert.equal(truth.x2.replay,0);});
+check('core disposition vocabulary',()=>assert(defs.every(r=>['completed','represented','open_gap','exact_gate'].includes(r.expected_execution_disposition))));
+check('owner negative arithmetic',()=>assert.equal(account.owner.negatives,account.owner.fail+account.owner.blocked_packets));
+check('additive source cumulative arithmetic',()=>{for(const k of ['methods','witnesses','pass','fail','negatives','core_open_gaps','core_exact_gates'])assert.equal(account.repository_cumulative[k],account.source_external_effective[k]+account.owner[k]);});
+check('retained false witnesses unique',()=>{const a=p.read('final/retained-negatives.json').failed_witnesses;assert.equal(a.length,646);assert.equal(new Set(a.map(r=>r.id)).size,646);assert(a.every(r=>r.original_success_credit===0));});
+check('Method Flow indexed denominator',()=>{assert.equal(idx.ledgers.length,27);assert.equal(idx.owner.witnesses,3163);assert.equal(idx.owner.pass+idx.owner.fail,3163);});
+check('twenty local validated guides',()=>assert.equal(p.read('x1/capability-results.json').capabilities.length+p.read('x2/capability-results.json').capabilities.length,20));
+check('curated no-overwrite parity',()=>{const g=p.read('x2/global-parity.json');assert.equal(g.bindings.length,17);assert(g.bindings.every(r=>r.parity));assert.equal(g.no_overwrites,true);});
+check('bounded observed browser not complete access',()=>{const r=p.read('x2/browser-results.json');assert.equal(r.count,19);assert(r.checks.every(x=>x.pass));assert.equal(r.screenshots,0);assert(r.reserved.includes('manual assistive technology'));});
+check('card hierarchy immediate parents',()=>{const a=p.read('x2/deck/deck-index.json').cards,m=new Map(a.map(r=>[r.card_id,r]));assert.equal(m.size,312);for(const c of a)if(c.tier>1)assert.equal(m.get(c.parent_ids[0]).tier,c.tier-1);});
+check('structural gate keeps false subjects',()=>{const g=p.read('final/gate-results.json');assert.equal(g.checks,6);assert.equal(g.invalid_subjects.length,5);assert.equal(g.real_git_equality_proved_by_fixture,false);});
+return {tests,count:tests.length,all_pass:true,domain_tranche_replay:false,boundary:p.BOUNDARY};}
+if(require.main===module)console.log(JSON.stringify(run()));module.exports={run};

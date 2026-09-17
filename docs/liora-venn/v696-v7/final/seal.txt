@@ -1,0 +1,5 @@
+"use strict";
+const p=require('../plan/build-plan.txt'),fs=require('fs'),path=require('path');
+const targets=['plan/proposals.json','plan/incoming-accounting.json','plan/startup-method-flow.json','x1/receipt.json','x2/receipt.json','x2/pillar-analysis.md','x2/meta-tool-catalogue.json','x2/global-parity.json','x2/browser-results.json','final/accounting.json','final/phase-truth.json','final/gates.json','final/overview.md','final/hand-off-baton.md','final/terminal-route-state.json'];
+p.write('final/content-seal.json',{targets:targets.map(rel=>{const b=fs.readFileSync(path.join(p.ROOT,rel));return {path:rel,bytes:b.length,sha256:p.hash(b)};}),domain:'normalized LF Git blobs',boundary:p.BOUNDARY});
+const exclusions=['final/manifest.json','final/owner-manifest.json'];p.write('final/manifest.json',p.manifest('final',exclusions));p.write('final/owner-manifest.json',p.manifest('',exclusions));console.log(JSON.stringify({owner_entries:p.read('final/owner-manifest.json').entries.length,final_delta_entries:p.read('final/manifest.json').entries.length,declared_lifecycle_mutual_exclusions:2,content_targets:15,phase_files:p.files(p.ROOT).length}));

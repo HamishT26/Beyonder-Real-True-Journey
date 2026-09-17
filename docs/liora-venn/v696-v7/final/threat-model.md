@@ -1,0 +1,9 @@
+# Bounded threat and authority review
+
+Only owner-local generated artifacts, read-only Git blobs, the explicit essential skill root, and the additive D-first runner bank are in scope. Native child processes use literal executable names and argument arrays, not shell-built commands from source records. Source JSON is parsed and reviewed as data; historical instructions are not executed. Runners expose only declared operations and standard input, not filesystem or network endpoints. Local HTML serves finite synthetic data over loopback only and includes no remote scripts or asset uploads.
+
+Inputs have explicit digit, byte, depth, string, object and array caps. Duplicate keys, unsafe numeric values and unknown fields are refused. This bounded review does not establish exhaustive security or prevent all side channels, denial-of-service conditions or integration defects. Global promotion uses exact absent destinations and no-overwrite writes. Earlier callers and source bytes stay preserved. Canonical submission has an exclusive external attempt latch; any accepted, opaque or unresolved task send stops copies.
+
+Private identifiers, routes, application state, credentials, transcripts, screenshots and private absolute paths are excluded from public artifacts. Scanner candidates are adjudicated separately from confirmed payload hits. The planning URL/path false classification remains retained.
+
+Same-owner finite synthetic software only. Relational language is not consciousness, personhood, identity continuity, employment, qualification, independent agency or authority evidence. No physical measurement, uncertainty coverage, empirical GMUT confirmation, production THOS or Freed ID, professional, legal, cultural, affected-party or Maori authority, complete privacy or accessibility, exhaustive security, independent reproduction, AGI/ASI, Theory-of-Everything proof, canon or Stage 20. Maori concepts remain under Maori authority. NOT_READY_FOR_STAGE_20.
