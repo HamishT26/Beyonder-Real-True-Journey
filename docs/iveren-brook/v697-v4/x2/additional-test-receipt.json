@@ -1,0 +1,273 @@
+{
+  "tests": [
+    {
+      "name": "quadratic polarization",
+      "result": "pass",
+      "instances": 5
+    },
+    {
+      "name": "gradient difference equals H times displacement",
+      "result": "pass",
+      "instances": 5
+    },
+    {
+      "name": "line polynomial evaluation",
+      "result": "pass",
+      "instances": 5
+    },
+    {
+      "name": "stationary equation readback",
+      "result": "pass",
+      "instances": 5
+    },
+    {
+      "name": "nullspace annihilation",
+      "result": "pass",
+      "instances": 5
+    },
+    {
+      "name": "completed-square identity",
+      "result": "pass",
+      "instances": 5
+    },
+    {
+      "name": "convex optimum KKT signs",
+      "result": "pass",
+      "instances": 3
+    },
+    {
+      "name": "every corner admitted as candidate",
+      "result": "pass",
+      "instances": 5
+    },
+    {
+      "name": "candidate box membership",
+      "result": "pass",
+      "instances": 5
+    },
+    {
+      "name": "minimum bounded by dense exact grid",
+      "result": "pass",
+      "instances": 5
+    },
+    {
+      "name": "affine value pullback",
+      "result": "pass",
+      "instances": 5
+    },
+    {
+      "name": "affine box round trip",
+      "result": "pass",
+      "instances": 5
+    },
+    {
+      "name": "parameter value difference",
+      "result": "pass",
+      "instances": 5
+    },
+    {
+      "name": "optimal value concavity in linear parameter",
+      "result": "pass",
+      "instances": 5
+    },
+    {
+      "name": "flat minimizer-set reservation",
+      "result": "pass",
+      "instances": 1
+    },
+    {
+      "name": "semidefinite stationary freedom",
+      "result": "pass",
+      "instances": 1
+    },
+    {
+      "name": "nonconvex certificate refusal",
+      "result": "pass",
+      "instances": 2
+    },
+    {
+      "name": "fixed-coordinate first-order semantics",
+      "result": "pass",
+      "instances": 1
+    },
+    {
+      "name": "decoded duplicate key and strict JSON refusal",
+      "result": "pass",
+      "instances": 5
+    },
+    {
+      "name": "wire depth size and unknown-field refusal",
+      "result": "pass",
+      "instances": 6
+    }
+  ],
+  "predicate_count": 20,
+  "instances": 84,
+  "adverse": [
+    {
+      "name": "duplicate raw",
+      "wire": "{\"op\":\"qp_shape\",\"op\":\"qp_shape\",\"input\":{\"case_id\":\"T-property\",\"model\":{\"matrix\":[[\"6/1\",\"1/1\"],[\"1/1\",\"4/1\"]],\"linear\":[\"-2/1\",\"7/1\"],\"constant\":\"105/1\",\"lower\":[\"-2/1\",\"-2/1\"],\"upper\":[\"2/1\",\"2/1\"]}}}",
+      "expected_reason": "duplicate_key",
+      "observed": {
+        "ok": false,
+        "outcome": "open_gap",
+        "error": "ADMISSION_REFUSED",
+        "reason": "duplicate_key",
+        "subject_success_credit": 0,
+        "authority": false
+      },
+      "subject_result": "fail",
+      "original_success_credit": 0,
+      "refusal_check": "pass"
+    },
+    {
+      "name": "duplicate decoded",
+      "wire": "{\"op\":\"qp_shape\",\"o\\u0070\":\"qp_shape\",\"input\":{\"case_id\":\"T-property\",\"model\":{\"matrix\":[[\"6/1\",\"1/1\"],[\"1/1\",\"4/1\"]],\"linear\":[\"-2/1\",\"7/1\"],\"constant\":\"105/1\",\"lower\":[\"-2/1\",\"-2/1\"],\"upper\":[\"2/1\",\"2/1\"]}}}",
+      "expected_reason": "duplicate_key",
+      "observed": {
+        "ok": false,
+        "outcome": "open_gap",
+        "error": "ADMISSION_REFUSED",
+        "reason": "duplicate_key",
+        "subject_success_credit": 0,
+        "authority": false
+      },
+      "subject_result": "fail",
+      "original_success_credit": 0,
+      "refusal_check": "pass"
+    },
+    {
+      "name": "invalid whitespace",
+      "wire": "{\"op\":\"qp_shape\",\u000b\"input\":{\"case_id\":\"T-property\",\"model\":{\"matrix\":[[\"6/1\",\"1/1\"],[\"1/1\",\"4/1\"]],\"linear\":[\"-2/1\",\"7/1\"],\"constant\":\"105/1\",\"lower\":[\"-2/1\",\"-2/1\"],\"upper\":[\"2/1\",\"2/1\"]}}}",
+      "expected_reason": "wire_json",
+      "observed": {
+        "ok": false,
+        "outcome": "open_gap",
+        "error": "ADMISSION_REFUSED",
+        "reason": "wire_json",
+        "subject_success_credit": 0,
+        "authority": false
+      },
+      "subject_result": "fail",
+      "original_success_credit": 0,
+      "refusal_check": "pass"
+    },
+    {
+      "name": "trailing value",
+      "wire": "{\"op\":\"qp_shape\",\"input\":{\"case_id\":\"T-property\",\"model\":{\"matrix\":[[\"6/1\",\"1/1\"],[\"1/1\",\"4/1\"]],\"linear\":[\"-2/1\",\"7/1\"],\"constant\":\"105/1\",\"lower\":[\"-2/1\",\"-2/1\"],\"upper\":[\"2/1\",\"2/1\"]}}} true",
+      "expected_reason": "wire_json",
+      "observed": {
+        "ok": false,
+        "outcome": "open_gap",
+        "error": "ADMISSION_REFUSED",
+        "reason": "wire_json",
+        "subject_success_credit": 0,
+        "authority": false
+      },
+      "subject_result": "fail",
+      "original_success_credit": 0,
+      "refusal_check": "pass"
+    },
+    {
+      "name": "oversize",
+      "wire": "                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 ",
+      "expected_reason": "wire_size",
+      "observed": {
+        "ok": false,
+        "outcome": "open_gap",
+        "error": "ADMISSION_REFUSED",
+        "reason": "wire_size",
+        "subject_success_credit": 0,
+        "authority": false
+      },
+      "subject_result": "fail",
+      "original_success_credit": 0,
+      "refusal_check": "pass"
+    },
+    {
+      "name": "overdepth",
+      "wire": "[[[[[[[[[[[[[[[[[[[[[[[[[[0]]]]]]]]]]]]]]]]]]]]]]]]]]",
+      "expected_reason": "wire_depth",
+      "observed": {
+        "ok": false,
+        "outcome": "open_gap",
+        "error": "ADMISSION_REFUSED",
+        "reason": "wire_depth",
+        "subject_success_credit": 0,
+        "authority": false
+      },
+      "subject_result": "fail",
+      "original_success_credit": 0,
+      "refusal_check": "pass"
+    },
+    {
+      "name": "nonfinite",
+      "wire": "1e309",
+      "expected_reason": "wire_number",
+      "observed": {
+        "ok": false,
+        "outcome": "open_gap",
+        "error": "ADMISSION_REFUSED",
+        "reason": "wire_number",
+        "subject_success_credit": 0,
+        "authority": false
+      },
+      "subject_result": "fail",
+      "original_success_credit": 0,
+      "refusal_check": "pass"
+    },
+    {
+      "name": "unknown field",
+      "wire": "{\"op\":\"qp_shape\",\"input\":{\"case_id\":\"T-property\",\"model\":{\"matrix\":[[\"6/1\",\"1/1\"],[\"1/1\",\"4/1\"]],\"linear\":[\"-2/1\",\"7/1\"],\"constant\":\"105/1\",\"lower\":[\"-2/1\",\"-2/1\"],\"upper\":[\"2/1\",\"2/1\"]}},\"unexpected\":true}",
+      "expected_reason": "request_fields",
+      "observed": {
+        "ok": false,
+        "outcome": "open_gap",
+        "error": "ADMISSION_REFUSED",
+        "reason": "request_fields",
+        "subject_success_credit": 0,
+        "authority": false
+      },
+      "subject_result": "fail",
+      "original_success_credit": 0,
+      "refusal_check": "pass"
+    },
+    {
+      "name": "zero denominator",
+      "wire": "{\"op\":\"qp_shape\",\"input\":{\"case_id\":\"T-property\",\"model\":{\"matrix\":[[\"6/1\",\"1/1\"],[\"1/1\",\"4/1\"]],\"linear\":[\"-2/1\",\"7/1\"],\"constant\":\"1/0\",\"lower\":[\"-2/1\",\"-2/1\"],\"upper\":[\"2/1\",\"2/1\"]}}}",
+      "expected_reason": "rational",
+      "observed": {
+        "ok": false,
+        "outcome": "open_gap",
+        "error": "ADMISSION_REFUSED",
+        "reason": "rational",
+        "subject_success_credit": 0,
+        "authority": false
+      },
+      "subject_result": "fail",
+      "original_success_credit": 0,
+      "refusal_check": "pass"
+    },
+    {
+      "name": "reserved execution",
+      "wire": "{\"op\":\"qp_authority_gate\",\"input\":{\"case_id\":\"T-property\",\"model\":{\"matrix\":[[\"6/1\",\"1/1\"],[\"1/1\",\"4/1\"]],\"linear\":[\"-2/1\",\"7/1\"],\"constant\":\"105/1\",\"lower\":[\"-2/1\",\"-2/1\"],\"upper\":[\"2/1\",\"2/1\"]},\"action\":\"real_resource_allocation\",\"required_role\":\"professional\",\"verified_roles\":[],\"execute\":true}}",
+      "expected_reason": "claim_reserved",
+      "observed": {
+        "ok": false,
+        "outcome": "open_gap",
+        "error": "ADMISSION_REFUSED",
+        "reason": "claim_reserved",
+        "subject_success_credit": 0,
+        "authority": false
+      },
+      "subject_result": "fail",
+      "original_success_credit": 0,
+      "refusal_check": "pass"
+    }
+  ],
+  "core_tranches_replayed": 0,
+  "source_tests_replayed": 0,
+  "independent_reproduction": false,
+  "flat_curvature_note": "The fresh zero-Hessian model has a nonzero linear term; flat curvature is not a constant objective.",
+  "semidefinite_note": "The fresh shifted ridge has a homogeneous nullspace but inconsistent stationary equations; no stationary family is invented."
+}
