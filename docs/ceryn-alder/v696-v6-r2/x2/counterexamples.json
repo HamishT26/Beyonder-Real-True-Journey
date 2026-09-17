@@ -1,0 +1,57 @@
+{
+  "kind": "preregistered boundary targets with separately persisted exact refuters",
+  "rows": [
+    {
+      "id": "CE1",
+      "claim": "A timeout proves rejection and permits a resend.",
+      "observed": {
+        "disposition": "completed",
+        "op": "retry_decision",
+        "result": {
+          "state": "unknown",
+          "attempts": 1,
+          "recoveries": 5,
+          "allowSend": false,
+          "action": "reconcile_status",
+          "minimumRecoveryChecks": 5
+        },
+        "boundary": "bounded_same_owner_software_not_external_evidence"
+      },
+      "refuted": true
+    },
+    {
+      "id": "CE2",
+      "claim": "Matching digests establish a verified signature.",
+      "observed": {
+        "disposition": "completed",
+        "op": "receipt_binding",
+        "result": {
+          "digestMatch": true,
+          "bytesMatch": true,
+          "bound": true,
+          "signatureVerified": false
+        },
+        "boundary": "bounded_same_owner_software_not_external_evidence"
+      },
+      "refuted": true
+    },
+    {
+      "id": "CE3",
+      "claim": "One active exact title proves uniqueness even when an archived duplicate exists.",
+      "observed": {
+        "disposition": "completed",
+        "op": "exact_title_resolution",
+        "result": {
+          "matches": 2,
+          "active": 1,
+          "eligible": false,
+          "reason": "not_unique",
+          "synthetic": true
+        },
+        "boundary": "bounded_same_owner_software_not_external_evidence"
+      },
+      "refuted": true
+    }
+  ],
+  "extra_core_credit": 0
+}

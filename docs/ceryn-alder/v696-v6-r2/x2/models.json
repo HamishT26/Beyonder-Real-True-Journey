@@ -1,0 +1,554 @@
+{
+  "models": [
+    {
+      "id": "rejection",
+      "title": "Confirmed rejection and corrected retry",
+      "events": [
+        "submit",
+        "reject",
+        "submit",
+        "accept"
+      ],
+      "expected": [
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          1,
+          1,
+          1
+        ],
+        [
+          2,
+          1,
+          -1
+        ],
+        [
+          3,
+          2,
+          1
+        ],
+        [
+          4,
+          2,
+          3
+        ]
+      ],
+      "explanation": "A definitive rejection resolves the first attempt. A corrected second attempt may be considered after fresh guards. Acceptance ends resends.",
+      "points": [
+        {
+          "x": 0,
+          "y": 0,
+          "z": 0
+        },
+        {
+          "x": 1,
+          "y": 1,
+          "z": 1
+        },
+        {
+          "x": 2,
+          "y": 1,
+          "z": -1
+        },
+        {
+          "x": 3,
+          "y": 2,
+          "z": 1
+        },
+        {
+          "x": 4,
+          "y": 2,
+          "z": 3
+        }
+      ],
+      "state": {
+        "state": "accepted",
+        "attempts": 2,
+        "accepted": 1,
+        "complete": false,
+        "blocked": false,
+        "trace": [
+          {
+            "event": "submit",
+            "state": "pending",
+            "attempts": 1
+          },
+          {
+            "event": "reject",
+            "state": "rejected",
+            "attempts": 1
+          },
+          {
+            "event": "submit",
+            "state": "pending",
+            "attempts": 2
+          },
+          {
+            "event": "accept",
+            "state": "accepted",
+            "attempts": 2
+          }
+        ]
+      },
+      "retry": {
+        "state": "accepted",
+        "attempts": 2,
+        "recoveries": 5,
+        "allowSend": false,
+        "action": "stop_duplicates",
+        "minimumRecoveryChecks": 5
+      }
+    },
+    {
+      "id": "uncertain",
+      "title": "Timeout with unresolved status",
+      "events": [
+        "submit",
+        "timeout",
+        "query_unknown"
+      ],
+      "expected": [
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          1,
+          1,
+          1
+        ],
+        [
+          2,
+          1,
+          2
+        ],
+        [
+          3,
+          1,
+          2
+        ]
+      ],
+      "explanation": "A timeout leaves the delivery state unknown. Another uncertain observation adds no permission to send a duplicate.",
+      "points": [
+        {
+          "x": 0,
+          "y": 0,
+          "z": 0
+        },
+        {
+          "x": 1,
+          "y": 1,
+          "z": 1
+        },
+        {
+          "x": 2,
+          "y": 1,
+          "z": 2
+        },
+        {
+          "x": 3,
+          "y": 1,
+          "z": 2
+        }
+      ],
+      "state": {
+        "state": "unknown",
+        "attempts": 1,
+        "accepted": 0,
+        "complete": false,
+        "blocked": false,
+        "trace": [
+          {
+            "event": "submit",
+            "state": "pending",
+            "attempts": 1
+          },
+          {
+            "event": "timeout",
+            "state": "unknown",
+            "attempts": 1
+          },
+          {
+            "event": "query_unknown",
+            "state": "unknown",
+            "attempts": 1
+          }
+        ]
+      },
+      "retry": {
+        "state": "unknown",
+        "attempts": 1,
+        "recoveries": 5,
+        "allowSend": false,
+        "action": "reconcile_status",
+        "minimumRecoveryChecks": 5
+      }
+    },
+    {
+      "id": "reconciled",
+      "title": "Timeout reconciled to acceptance",
+      "events": [
+        "submit",
+        "timeout",
+        "query_accepted",
+        "complete"
+      ],
+      "expected": [
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          1,
+          1,
+          1
+        ],
+        [
+          2,
+          1,
+          2
+        ],
+        [
+          3,
+          1,
+          3
+        ],
+        [
+          4,
+          1,
+          4
+        ]
+      ],
+      "explanation": "A later reliable acceptance observation resolves ambiguity. Completion is a separate event and is never inferred from acceptance alone.",
+      "points": [
+        {
+          "x": 0,
+          "y": 0,
+          "z": 0
+        },
+        {
+          "x": 1,
+          "y": 1,
+          "z": 1
+        },
+        {
+          "x": 2,
+          "y": 1,
+          "z": 2
+        },
+        {
+          "x": 3,
+          "y": 1,
+          "z": 3
+        },
+        {
+          "x": 4,
+          "y": 1,
+          "z": 4
+        }
+      ],
+      "state": {
+        "state": "complete",
+        "attempts": 1,
+        "accepted": 1,
+        "complete": true,
+        "blocked": false,
+        "trace": [
+          {
+            "event": "submit",
+            "state": "pending",
+            "attempts": 1
+          },
+          {
+            "event": "timeout",
+            "state": "unknown",
+            "attempts": 1
+          },
+          {
+            "event": "query_accepted",
+            "state": "accepted",
+            "attempts": 1
+          },
+          {
+            "event": "complete",
+            "state": "complete",
+            "attempts": 1
+          }
+        ]
+      },
+      "retry": {
+        "state": "complete",
+        "attempts": 1,
+        "recoveries": 5,
+        "allowSend": false,
+        "action": "stop_duplicates",
+        "minimumRecoveryChecks": 5
+      }
+    },
+    {
+      "id": "queue",
+      "title": "Pending queue with later acceptance",
+      "events": [
+        "submit",
+        "pending",
+        "query_accepted"
+      ],
+      "expected": [
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          1,
+          1,
+          1
+        ],
+        [
+          2,
+          1,
+          1
+        ],
+        [
+          3,
+          1,
+          3
+        ]
+      ],
+      "explanation": "A pending queue is not a failed send. Keep the submission latch while obtaining an authoritative status.",
+      "points": [
+        {
+          "x": 0,
+          "y": 0,
+          "z": 0
+        },
+        {
+          "x": 1,
+          "y": 1,
+          "z": 1
+        },
+        {
+          "x": 2,
+          "y": 1,
+          "z": 1
+        },
+        {
+          "x": 3,
+          "y": 1,
+          "z": 3
+        }
+      ],
+      "state": {
+        "state": "accepted",
+        "attempts": 1,
+        "accepted": 1,
+        "complete": false,
+        "blocked": false,
+        "trace": [
+          {
+            "event": "submit",
+            "state": "pending",
+            "attempts": 1
+          },
+          {
+            "event": "pending",
+            "state": "pending",
+            "attempts": 1
+          },
+          {
+            "event": "query_accepted",
+            "state": "accepted",
+            "attempts": 1
+          }
+        ]
+      },
+      "retry": {
+        "state": "accepted",
+        "attempts": 1,
+        "recoveries": 5,
+        "allowSend": false,
+        "action": "stop_duplicates",
+        "minimumRecoveryChecks": 5
+      }
+    },
+    {
+      "id": "ceiling",
+      "title": "Initial attempt plus three confirmed resends",
+      "events": [
+        "submit",
+        "reject",
+        "submit",
+        "reject",
+        "submit",
+        "reject",
+        "submit",
+        "reject"
+      ],
+      "expected": [
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          1,
+          1,
+          1
+        ],
+        [
+          2,
+          1,
+          -1
+        ],
+        [
+          3,
+          2,
+          1
+        ],
+        [
+          4,
+          2,
+          -1
+        ],
+        [
+          5,
+          3,
+          1
+        ],
+        [
+          6,
+          3,
+          -1
+        ],
+        [
+          7,
+          4,
+          1
+        ],
+        [
+          8,
+          4,
+          -1
+        ]
+      ],
+      "explanation": "Four rejected attempts consume the initial attempt and three permitted resends. A budget hold follows; a quota cannot create delivery.",
+      "points": [
+        {
+          "x": 0,
+          "y": 0,
+          "z": 0
+        },
+        {
+          "x": 1,
+          "y": 1,
+          "z": 1
+        },
+        {
+          "x": 2,
+          "y": 1,
+          "z": -1
+        },
+        {
+          "x": 3,
+          "y": 2,
+          "z": 1
+        },
+        {
+          "x": 4,
+          "y": 2,
+          "z": -1
+        },
+        {
+          "x": 5,
+          "y": 3,
+          "z": 1
+        },
+        {
+          "x": 6,
+          "y": 3,
+          "z": -1
+        },
+        {
+          "x": 7,
+          "y": 4,
+          "z": 1
+        },
+        {
+          "x": 8,
+          "y": 4,
+          "z": -1
+        }
+      ],
+      "state": {
+        "state": "rejected",
+        "attempts": 4,
+        "accepted": 0,
+        "complete": false,
+        "blocked": false,
+        "trace": [
+          {
+            "event": "submit",
+            "state": "pending",
+            "attempts": 1
+          },
+          {
+            "event": "reject",
+            "state": "rejected",
+            "attempts": 1
+          },
+          {
+            "event": "submit",
+            "state": "pending",
+            "attempts": 2
+          },
+          {
+            "event": "reject",
+            "state": "rejected",
+            "attempts": 2
+          },
+          {
+            "event": "submit",
+            "state": "pending",
+            "attempts": 3
+          },
+          {
+            "event": "reject",
+            "state": "rejected",
+            "attempts": 3
+          },
+          {
+            "event": "submit",
+            "state": "pending",
+            "attempts": 4
+          },
+          {
+            "event": "reject",
+            "state": "rejected",
+            "attempts": 4
+          }
+        ]
+      },
+      "retry": {
+        "state": "rejected",
+        "attempts": 4,
+        "recoveries": 5,
+        "allowSend": false,
+        "action": "hold_retry_budget",
+        "minimumRecoveryChecks": 5
+      }
+    }
+  ],
+  "coordinate_rows": 27,
+  "dimensions": [
+    "event index",
+    "submission count",
+    "categorical state level"
+  ],
+  "physical_model": false,
+  "actual_task_actions": 0
+}

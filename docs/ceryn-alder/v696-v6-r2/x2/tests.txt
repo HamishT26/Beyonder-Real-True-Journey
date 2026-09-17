@@ -1,0 +1,43 @@
+'use strict';
+const assert=require('assert/strict'),fs=require('fs'),path=require('path'),E=require('./engine.txt');
+const run=(op,input)=>E.run({op,input}),fold=events=>run('outbox_reduce',{events}).result,retry=(events,maxResends=3,recoveries=5)=>run('retry_decision',{events,maxResends,recoveries}).result;
+const base={title:'Fixture Owner',archived:false,status:'idle',history:true,duplicate:false,paused:false};const resolve=(records,archiveComplete=true)=>run('exact_title_resolution',{records,target:'Fixture Owner',archiveComplete}).result;
+const cases=[
+ ['prepared is not submitted',()=>assert.deepEqual(fold([]),{state:'prepared',attempts:0,accepted:0,complete:false,blocked:false,trace:[]})],
+ ['acceptance is not completion',()=>{const r=fold(['submit','accept']);assert.equal(r.state,'accepted');assert.equal(r.complete,false);}],
+ ['timeout remains unknown',()=>assert.equal(fold(['submit','timeout']).state,'unknown')],
+ ['unknown forbids resend',()=>assert.equal(retry(['submit','timeout']).allowSend,false)],
+ ['pending forbids resend',()=>assert.equal(retry(['submit']).allowSend,false)],
+ ['accepted forbids resend',()=>assert.equal(retry(['submit','accept']).allowSend,false)],
+ ['complete forbids resend',()=>assert.equal(retry(['submit','accept','complete']).allowSend,false)],
+ ['definitive rejection allows corrected retry',()=>assert.equal(retry(['submit','reject']).allowSend,true)],
+ ['three resends after initial rejected attempt',()=>{const e=Array.from({length:3},()=>['submit','reject']).flat();assert.equal(retry(e).allowSend,true);assert.equal(retry([...e,'submit','reject']).allowSend,false);}],
+ ['status absent after timeout can resolve non-delivery',()=>assert.equal(retry(['submit','timeout','query_absent']).allowSend,true)],
+ ['status accepted after timeout stops duplicates',()=>assert.equal(retry(['submit','timeout','query_accepted']).allowSend,false)],
+ ['invalid initial acceptance blocked',()=>assert.equal(fold(['accept']).blocked,true)],
+ ['invalid second submission blocked',()=>assert.equal(fold(['submit','submit']).blocked,true)],
+ ['incomplete discovery stays explicit',()=>assert.equal(retry([],3,4).action,'continue_supported_recovery')],
+ ['version rolls after eighth bundle',()=>assert.deepEqual(run('weighted_roster',{cycle:['A','B'],start:0,version:696,bundle:8,length:2}).result.rows,[{owner:'A',version:696,bundle:8},{owner:'B',version:697,bundle:1}])],
+ ['projection does not activate',()=>assert.equal(run('weighted_roster',{cycle:['A'],start:0,version:1,bundle:1,length:1}).result.activation,false)],
+ ['unique exact idle record admitted',()=>assert.equal(resolve([base]).eligible,true)],
+ ['archived duplicate blocks uniqueness',()=>assert.equal(resolve([base,{...base,archived:true}]).eligible,false)],
+ ['near title does not match',()=>assert.equal(resolve([{...base,title:'fixture owner'}]).matches,0)],
+ ['incomplete archive blocks resolution',()=>assert.equal(resolve([base],false).reason,'incomplete_archive')],
+ ['pause blocks route',()=>assert.equal(resolve([{...base,paused:true}]).reason,'paused')],
+ ['missing history blocks route',()=>assert.equal(resolve([{...base,history:false}]).reason,'missing_history')],
+ ['stale observation fails',()=>assert.equal(run('freshness_gate',{observedAt:10,currentTime:16,maxAge:5}).result.fresh,false)],
+ ['negative age signals clock anomaly',()=>assert.equal(run('freshness_gate',{observedAt:10,currentTime:9,maxAge:5}).result.clockAnomaly,true)],
+ ['exact freshness endpoint admitted',()=>assert.equal(run('freshness_gate',{observedAt:10,currentTime:15,maxAge:5}).result.fresh,true)],
+ ['digest equality without bytes is insufficient',()=>assert.equal(run('receipt_binding',{expected:'a'.repeat(64),actual:'a'.repeat(64),sourceBytes:4,observedBytes:5}).result.bound,false)],
+ ['budget equality permitted',()=>assert.equal(run('budget_admission',{limit:{files:2,words:2,usdCents:2},used:{files:1,words:1,usdCents:1},requested:{files:1,words:1,usdCents:1}}).result.admitted,true)],
+ ['one exceeded dimension refuses',()=>assert.deepEqual(run('budget_admission',{limit:{files:2,words:2,usdCents:2},used:{files:1,words:1,usdCents:1},requested:{files:2,words:1,usdCents:1}}).result.exceeded,['files'])],
+ ['trajectory levels are categorical',()=>assert.deepEqual(run('trajectory3d',{events:['submit','reject']}).result.points,[{x:0,y:0,z:0},{x:1,y:1,z:1},{x:2,y:1,z:-1}])],
+ ['observations remain null',()=>assert.equal(run('observation_gap',{hypothesis:'H',measurements:null,required:['data']}).result.measurements,null)],
+ ['authorization does not execute gated action',()=>assert.equal(run('authority_gate',{action:'A',userAuthorized:true,prerequisites:{evidence:true,competentReview:true,affectedConsent:true}}).result.execute,false)],
+ ['unknown event refused',()=>assert.equal(run('outbox_reduce',{events:['invented']}).code,'schema_event')],
+ ['input trace preserved',()=>{const q={op:'outbox_reduce',input:{events:['submit','reject']}};const before=JSON.stringify(q);E.run(q);assert.equal(JSON.stringify(q),before);}]
+];
+const alphabet=['submit','reject','accept','timeout','complete'];let seq=[[]],frontier=[[]];for(let depth=1;depth<=3;depth++){frontier=frontier.flatMap(a=>alphabet.map(b=>[...a,b]));seq.push(...frontier);}
+for(const events of seq)cases.push(['bounded state invariant '+(events.join('/')||'empty'),()=>{const f=fold(events);assert.ok(f.accepted<=1);assert.equal(f.complete,f.state==='complete');if(f.complete)assert.equal(f.accepted,1);assert.equal(f.attempts,f.trace.filter(t=>t.event==='submit').length);if(['accepted','complete','unknown','pending'].includes(f.state))assert.equal(retry(events).allowSend,false);}]);
+function executeTests(){return cases.map(([name,test])=>{try{test();return {name,pass:true};}catch(e){return {name,pass:false,message:e.message};}});}
+module.exports={cases,run:executeTests};if(require.main===module){const results=executeTests();fs.writeFileSync(path.join(__dirname,'test-results.json'),JSON.stringify({total:results.length,passed:results.filter(r=>r.pass).length,targeted_tests:33,bounded_trace_cases:156,tests:results,same_owner:true},null,2)+'\n',{flag:'wx'});console.log(JSON.stringify({total:results.length,passed:results.filter(r=>r.pass).length,failed:results.filter(r=>!r.pass)}));if(results.some(r=>!r.pass))process.exitCode=1;}

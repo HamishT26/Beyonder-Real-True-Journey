@@ -1,0 +1,5 @@
+'use strict';
+const S=require('../x1/shared.txt'),A=require('../x1/engine.txt'),B=require('../x2/engine.txt');
+const allowed=["weighted_roster","exact_title_resolution","freshness_gate","authority_gate"];
+function run(req){if(!req||!allowed.includes(req.op))return {refused:true,code:'unsupported_operation'};return S.OPS.indexOf(req.op)<10?A.run(req):B.run(req);}
+module.exports={run,allowed};if(require.main===module)S.cli(run,allowed);

@@ -1,0 +1,34 @@
+'use strict';
+const S=require('../x1/shared.txt');
+function reduceEvents(events){let state='prepared',attempts=0,accepted=0,complete=false,blocked=false;const trace=[];
+ for(const event of events){let next=null;
+  if(event==='submit'&&(state==='prepared'||state==='rejected')){next='pending';attempts++;}
+  else if(state==='pending'){
+   if(event==='pending')next='pending';
+   else if(event==='reject'||event==='query_absent')next='rejected';
+   else if(event==='accept'||event==='query_accepted')next='accepted';
+   else if(['timeout','opaque','query_unknown'].includes(event))next='unknown';
+  }else if(state==='unknown'){
+   if(event==='query_absent')next='rejected';else if(event==='query_accepted')next='accepted';else if(event==='query_unknown')next='unknown';
+  }else if(state==='accepted'&&event==='complete')next='complete';
+  if(next===null){blocked=true;break;}if(next==='accepted')accepted++;state=next;complete=state==='complete';trace.push({event,state,attempts});
+ }
+ return {state,attempts,accepted,complete,blocked,trace};
+}
+function execute(req){S.validate(req);const {op,input:x}=req;if(S.OPS.indexOf(op)<10)S.failure('unsupported_operation');let result,disposition='completed';
+ switch(op){
+ case 'outbox_reduce':result=reduceEvents(x.events);break;
+ case 'retry_decision':{const f=reduceEvents(x.events),waiting=f.state==='pending'||f.state==='unknown',delivered=f.state==='accepted'||f.state==='complete',under=f.attempts<=x.maxResends;result={state:f.state,attempts:f.attempts,recoveries:x.recoveries,allowSend:!f.blocked&&!waiting&&!delivered&&under,action:waiting?'reconcile_status':delivered?'stop_duplicates':!under?'hold_retry_budget':x.recoveries<5?'continue_supported_recovery':'eligible_if_fresh_guards',minimumRecoveryChecks:5};break;}
+ case 'weighted_roster':{const rows=[];let version=x.version,bundle=x.bundle,cursor=x.start%x.cycle.length;for(let i=0;i<x.length;i++){rows.push({owner:x.cycle[cursor],version,bundle});cursor=(cursor+1)%x.cycle.length;bundle++;if(bundle>8){bundle=1;version++;}}result={rows,activation:false};break;}
+ case 'exact_title_resolution':{let matches=0,active=0,chosen=null;for(const r of x.records){if(r.title!==x.target)continue;matches++;if(!r.archived){active++;chosen=r;}}let reason='eligible';if(!x.archiveComplete)reason='incomplete_archive';else if(matches!==1)reason='not_unique';else if(active!==1)reason='archived_only';else if(chosen.paused)reason='paused';else if(chosen.duplicate)reason='duplicate';else if(!chosen.history)reason='missing_history';else if(chosen.status!=='idle'&&chosen.status!=='notLoaded')reason='not_idle';result={matches,active,eligible:reason==='eligible',reason,synthetic:true};break;}
+ case 'freshness_gate':{const age=x.currentTime-x.observedAt;result={age,fresh:x.observedAt<=x.currentTime&&x.currentTime<=x.observedAt+x.maxAge,clockAnomaly:x.currentTime<x.observedAt};break;}
+ case 'receipt_binding':{const digestMatch=x.expected===x.actual,bytesMatch=x.sourceBytes===x.observedBytes;result={digestMatch,bytesMatch,bound:digestMatch&&bytesMatch,signatureVerified:false};break;}
+ case 'budget_admission':{const totals={files:x.used.files+x.requested.files,words:x.used.words+x.requested.words,usdCents:x.used.usdCents+x.requested.usdCents};const exceeded=Object.keys(totals).filter(k=>totals[k]>x.limit[k]);result={totals,exceeded,admitted:exceeded.length===0};break;}
+ case 'trajectory3d':{disposition='represented';const f=reduceEvents(x.events),levels=new Map([['prepared',0],['pending',1],['rejected',-1],['unknown',2],['accepted',3],['complete',4]]),points=[{x:0,y:0,z:0}];for(const t of f.trace)points.push({x:points.length,y:t.attempts,z:levels.get(t.state)});result={points,physicalDynamics:false};break;}
+ case 'observation_gap':disposition='open_gap';result={hypothesis:x.hypothesis,measurements:null,missing:[...x.required],empirical_confirmation:false};break;
+ case 'authority_gate':disposition='exact_gate';result={action:x.action,userAuthorized:x.userAuthorized,unmet:Object.entries(x.prerequisites).filter(([,v])=>v===false).map(([k])=>k).sort(),execute:false};break;
+ default:S.failure('unsupported_operation');
+ }
+ return S.wrap(op,result,disposition);
+}
+const run=req=>S.runSafely(execute,req);module.exports={run,execute,reduceEvents};if(require.main===module)S.cli(run);
