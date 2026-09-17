@@ -1,0 +1,71 @@
+{
+  "predicates": [
+    {
+      "name": "ordinary complete record",
+      "passed": true
+    },
+    {
+      "name": "decoded escaped key",
+      "passed": true
+    },
+    {
+      "name": "artifact-sized array beyond operator profile",
+      "passed": true
+    }
+  ],
+  "invalid_subjects": [
+    {
+      "negative_id": "TV6968-FINAL-JSON-N1",
+      "name": "duplicate decoded key",
+      "raw_subject": "{\"a\":1,\"a\":2}",
+      "subject_passed": false,
+      "subject_success_credit": 0,
+      "refusal_passed": true
+    },
+    {
+      "negative_id": "TV6968-FINAL-JSON-N2",
+      "name": "nonfinite numeric conversion",
+      "raw_subject": "{\"n\":1e9999}",
+      "subject_passed": false,
+      "subject_success_credit": 0,
+      "refusal_passed": true
+    },
+    {
+      "negative_id": "TV6968-FINAL-JSON-N3",
+      "name": "trailing payload",
+      "raw_subject": "{} true",
+      "subject_passed": false,
+      "subject_success_credit": 0,
+      "refusal_passed": true
+    },
+    {
+      "negative_id": "TV6968-FINAL-JSON-N4",
+      "name": "excessive artifact depth",
+      "raw_subject": "[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[0]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]",
+      "subject_passed": false,
+      "subject_success_credit": 0,
+      "refusal_passed": true
+    },
+    {
+      "negative_id": "TV6968-FINAL-JSON-N5",
+      "name": "invalid UTF-8",
+      "raw_subject": {
+        "type": "Buffer",
+        "data": [
+          255
+        ]
+      },
+      "subject_passed": false,
+      "subject_success_credit": 0,
+      "refusal_passed": true
+    }
+  ],
+  "passing_predicates": 8,
+  "failed_subjects": 5,
+  "tests": 8,
+  "valid": true,
+  "invocation": 1,
+  "replay": 0,
+  "canonical_invoked": false,
+  "boundary": "Artifact documentary parser profile only; same-owner software, not observations, independent reproduction, complete privacy/security/accessibility or authority. NOT_READY_FOR_STAGE_20."
+}
