@@ -1,0 +1,62 @@
+'use strict';
+// Planning oracle only. Production engines are built after the planning freeze.
+const crypto=require('crypto');
+const canonical=x=>x===null||typeof x!=='object'?JSON.stringify(x):Array.isArray(x)?'['+x.map(canonical).join(',')+']':'{'+Object.keys(x).sort().map(k=>JSON.stringify(k)+':'+canonical(x[k])).join(',')+'}';
+const digest=x=>crypto.createHash('sha256').update(typeof x==='string'?x:canonical(x)).digest('hex');
+const operations=['record_inventory','asof_projection','latest_revision','conflict_pairs','dependency_closure','topological_layers','missing_frontier','content_chain','revision_diff','claim_ceiling','outbox_reduce','retry_decision','weighted_roster','exact_title_resolution','freshness_gate','receipt_binding','budget_admission','trajectory3d','observation_gap','authority_gate'];
+const labels=['empty','single','same-value-revision','changed-revision','independent-pair','branch','diamond','missing-parent','cycle','self-cycle','conflict','late-ingest','future-record','mixed-ceilings','long-chain'];
+const eventSets=[[],['submit'],['submit','reject'],['submit','reject','submit','reject'],['submit','pending'],['submit','accept'],['submit','timeout'],['submit','opaque'],['submit','accept','complete'],['submit','reject','submit','accept'],['submit','reject','submit','timeout'],['submit','pending','query_unknown'],['submit','pending','query_absent'],['submit','pending','query_accepted'],['submit','pending','query_accepted','complete']];
+function fixtures(){
+ const row=(id,key,value,at,revision,parents=[],ceiling='structural')=>({id,key,value,at,revision,parents,ceiling});
+ const a=row('a','potential','V0',1,0),b=row('b','potential','V0',2,1,['a']),c=row('c','potential','V1',3,2,['b']);
+ const L=[[],[a],[a,b],[a,b,c],[a,row('b','runtime','R0',2,0)], [a,row('b','potential','V1',2,1,['a']),row('c','runtime','R1',3,0,['a'])], [a,row('b','left','L',2,0,['a']),row('c','right','R',3,0,['a']),row('d','join','J',4,0,['b','c'])], [row('a','missing','M',1,0,['absent'])], [row('a','cycle','A',1,0,['b']),row('b','cycle','B',2,0,['a'])], [row('a','self','S',1,0,['a'])], [a,row('b','potential','conflict',1,0)], [row('a','late','older',9,0),row('b','late','newer',2,1,['a'])], [a,row('b','future','F',40,0)], [row('a','physics','hypothesis',1,0,[],'empirical'),row('b','consent','ungranted',2,0,[],'authority')], Array.from({length:16},(_,i)=>row('r'+i,'series','v'+i,i+1,i,i?['r'+(i-1)]:[]))];
+ return L.map((ledger,i)=>({label:labels[i],ledger,cutoff:[0,1,2,2,2,3,4,1,2,1,1,5,10,2,16][i],root:ledger.at(-1)?.id||'absent',events:eventSets[i]}));
+}
+function request(op,f,i,cycle){
+ if(operations.indexOf(op)<10)return {op,input:{ledger:f.ledger,cutoff:f.cutoff,root:f.root}};
+ if(['outbox_reduce','trajectory3d'].includes(op))return {op,input:{events:f.events}};
+ if(op==='retry_decision')return {op,input:{events:f.events,recoveries:i%6,maxResends:3}};
+ if(op==='weighted_roster')return {op,input:{cycle,start:14+i,version:696,bundle:6,length:15+i}};
+ if(op==='exact_title_resolution'){
+  const base={title:'Fixture Owner',archived:false,status:'idle',history:true,duplicate:false,paused:false};
+  const sets=[[base],[{...base,status:'notLoaded'}],[base,{...base,archived:true}],[base,{...base}],[{...base,archived:true}],[],[{...base,title:'fixture owner'}],[{...base,title:'Fixture Owner '}],[{...base,title:'Another Owner'}],[{...base,title:'Former Owner'},base],[{...base,paused:true}],[{...base,status:'active'}],[{...base,status:'unknown'}],[{...base,history:false}],[{...base,duplicate:true}]];
+  return {op,input:{target:'Fixture Owner',records:sets[i],archiveComplete:true}};
+ }
+ if(op==='freshness_gate'){const ages=[0,1,4,5,6,-1,20,100,3,7,9,11,13,15,17];return {op,input:{observedAt:100,currentTime:100+ages[i],maxAge:5}};}
+ if(op==='receipt_binding'){const expected=digest({fixture:f.label,events:f.events});return {op,input:{expected,actual:i%3===0?expected:digest('altered-'+f.label),sourceBytes:10+i,observedBytes:i%4===0?11+i:10+i}};}
+ if(op==='budget_admission')return {op,input:{limit:{files:2000,words:100000,usdCents:5000},used:{files:1985+i,words:99960+i*3,usdCents:4975+i*2},requested:{files:5,words:10,usdCents:5}}};
+ if(op==='observation_gap')return {op,input:{hypothesis:f.label,measurements:null,required:['calibration','comparison','independent_reproduction']}};
+ if(op==='authority_gate')return {op,input:{action:f.label,userAuthorized:true,prerequisites:{evidence:i%2===0,competentReview:i%3===0,affectedConsent:false}}};
+ throw Error('unknown op');
+}
+function fold(events){
+ let state='prepared',attempts=0,accepted=0,complete=false;const trace=[];
+ const transition={prepared:{submit:'pending'},rejected:{submit:'pending'},pending:{pending:'pending',reject:'rejected',accept:'accepted',timeout:'unknown',opaque:'unknown',query_unknown:'unknown',query_absent:'rejected',query_accepted:'accepted'},unknown:{query_unknown:'unknown',query_absent:'rejected',query_accepted:'accepted'},accepted:{complete:'complete'},complete:{}};
+ for(const event of events){const next=transition[state][event];if(!next)return {state,attempts,accepted,complete,blocked:true,trace};if(event==='submit')attempts++;if(next==='accepted')accepted++;state=next;complete=state==='complete';trace.push({event,state,attempts});}
+ return {state,attempts,accepted,complete,blocked:false,trace};
+}
+function reference(req){const {op,input:x}=req;let result;const n=operations.indexOf(op);let disposition='completed';
+ if(n<10){const L=x.ledger,ordered=[...L].sort((a,b)=>a.at-b.at||a.id.localeCompare(b.id)),visible=ordered.filter(r=>r.at<=x.cutoff),keys=[...new Set(visible.map(r=>r.key))].sort();const latest=keys.flatMap(k=>{const rows=visible.filter(r=>r.key===k),m=Math.max(...rows.map(r=>r.revision));return rows.filter(r=>r.revision===m).sort((a,b)=>a.id.localeCompare(b.id));});
+ if(op==='record_inventory')result={records:L.length,keys:[...new Set(L.map(r=>r.key))].sort(),ids:L.map(r=>r.id).sort()};
+ if(op==='asof_projection')result={ids:visible.map(r=>r.id),excluded:L.filter(r=>r.at>x.cutoff).map(r=>r.id).sort()};
+ if(op==='latest_revision')result={ids:latest.map(r=>r.id)};
+ if(op==='conflict_pairs'){const pairs=[];for(let i=0;i<latest.length;i++)for(let j=i+1;j<latest.length;j++)if(latest[i].key===latest[j].key&&latest[i].value!==latest[j].value)pairs.push([latest[i].id,latest[j].id].sort());result={pairs:pairs.sort((a,b)=>canonical(a).localeCompare(canonical(b)))};}
+ if(op==='dependency_closure'){const reached=new Set([x.root]);let more=true;while(more){more=false;for(const r of L)if(reached.has(r.id))for(const p of r.parents)if(!reached.has(p)){reached.add(p);more=true;}}result={ids:[...reached].filter(id=>L.some(r=>r.id===id)).sort(),missing:[...reached].filter(id=>!L.some(r=>r.id===id)).sort()};}
+ if(op==='topological_layers'){let remaining=L.map(r=>r.id).sort(),seen=[],layers=[];while(remaining.length){const next=remaining.filter(id=>L.find(r=>r.id===id).parents.every(p=>seen.includes(p)));if(!next.length)break;layers.push(next);seen.push(...next);remaining=remaining.filter(id=>!next.includes(id));}result={layers,unresolved:remaining};}
+ if(op==='missing_frontier')result={missing:[...new Set(L.flatMap(r=>r.parents).filter(p=>!L.some(r=>r.id===p)))].sort()};
+ if(op==='content_chain'){let previous='0'.repeat(64);const chain=[];for(const r of ordered){previous=digest({previous,record:r});chain.push({id:r.id,digest:previous});}result={chain,tail:previous,authenticity:false};}
+ if(op==='revision_diff')result={changes:keys.map(k=>{const rows=visible.filter(r=>r.key===k).sort((a,b)=>a.revision-b.revision||a.id.localeCompare(b.id));return {key:k,from:rows[0].value,to:rows.at(-1).value,changed:rows[0].value!==rows.at(-1).value};})};
+ if(op==='claim_ceiling'){disposition='represented';result={claims:L.map(r=>({id:r.id,declared:r.ceiling,supported:'structural_only',promotion:false})),empirical_confirmation:false};}
+ } else if(op==='outbox_reduce')result=fold(x.events);
+ else if(op==='retry_decision'){const f=fold(x.events);result={state:f.state,attempts:f.attempts,recoveries:x.recoveries,allowSend:!f.blocked&&['prepared','rejected'].includes(f.state)&&f.attempts<=x.maxResends,action:['unknown','pending'].includes(f.state)?'reconcile_status':['accepted','complete'].includes(f.state)?'stop_duplicates':f.attempts>x.maxResends?'hold_retry_budget':x.recoveries<5?'continue_supported_recovery':'eligible_if_fresh_guards',minimumRecoveryChecks:5};}
+ else if(op==='weighted_roster'){const rows=[];for(let k=0;k<x.length;k++){const offset=x.bundle-1+k;rows.push({owner:x.cycle[(x.start+k)%x.cycle.length],version:x.version+Math.floor(offset/8),bundle:offset%8+1});}result={rows,activation:false};}
+ else if(op==='exact_title_resolution'){const matches=x.records.filter(r=>r.title===x.target),active=matches.filter(r=>!r.archived);let reason=!x.archiveComplete?'incomplete_archive':matches.length!==1?'not_unique':active.length!==1?'archived_only':active[0].paused?'paused':active[0].duplicate?'duplicate':!active[0].history?'missing_history':!['idle','notLoaded'].includes(active[0].status)?'not_idle':'eligible';result={matches:matches.length,active:active.length,eligible:reason==='eligible',reason,synthetic:true};}
+ else if(op==='freshness_gate'){const age=x.currentTime-x.observedAt;result={age,fresh:age>=0&&age<=x.maxAge,clockAnomaly:age<0};}
+ else if(op==='receipt_binding')result={digestMatch:x.expected===x.actual,bytesMatch:x.sourceBytes===x.observedBytes,bound:x.expected===x.actual&&x.sourceBytes===x.observedBytes,signatureVerified:false};
+ else if(op==='budget_admission'){const totals={},exceeded=[];for(const k of ['files','words','usdCents']){totals[k]=x.used[k]+x.requested[k];if(totals[k]>x.limit[k])exceeded.push(k);}result={totals,exceeded,admitted:!exceeded.length};}
+ else if(op==='trajectory3d'){disposition='represented';const f=fold(x.events),z={prepared:0,pending:1,rejected:-1,unknown:2,accepted:3,complete:4};result={points:[{x:0,y:0,z:0},...f.trace.map((t,i)=>({x:i+1,y:t.attempts,z:z[t.state]}))],physicalDynamics:false};}
+ else if(op==='observation_gap'){disposition='open_gap';result={hypothesis:x.hypothesis,measurements:null,missing:x.required,empirical_confirmation:false};}
+ else if(op==='authority_gate'){disposition='exact_gate';result={action:x.action,userAuthorized:x.userAuthorized,unmet:Object.keys(x.prerequisites).filter(k=>!x.prerequisites[k]).sort(),execute:false};}
+ else throw Error('unsupported');return {disposition,op,result,boundary:'bounded_same_owner_software_not_external_evidence'};
+}
+module.exports={operations,labels,fixtures,request,reference,canonical,digest,eventSets};

@@ -1,0 +1,618 @@
+[
+  {
+    "label": "empty",
+    "ledger": [],
+    "cutoff": 0,
+    "root": "absent",
+    "events": []
+  },
+  {
+    "label": "single",
+    "ledger": [
+      {
+        "id": "a",
+        "key": "potential",
+        "value": "V0",
+        "at": 1,
+        "revision": 0,
+        "parents": [],
+        "ceiling": "structural"
+      }
+    ],
+    "cutoff": 1,
+    "root": "a",
+    "events": [
+      "submit"
+    ]
+  },
+  {
+    "label": "same-value-revision",
+    "ledger": [
+      {
+        "id": "a",
+        "key": "potential",
+        "value": "V0",
+        "at": 1,
+        "revision": 0,
+        "parents": [],
+        "ceiling": "structural"
+      },
+      {
+        "id": "b",
+        "key": "potential",
+        "value": "V0",
+        "at": 2,
+        "revision": 1,
+        "parents": [
+          "a"
+        ],
+        "ceiling": "structural"
+      }
+    ],
+    "cutoff": 2,
+    "root": "b",
+    "events": [
+      "submit",
+      "reject"
+    ]
+  },
+  {
+    "label": "changed-revision",
+    "ledger": [
+      {
+        "id": "a",
+        "key": "potential",
+        "value": "V0",
+        "at": 1,
+        "revision": 0,
+        "parents": [],
+        "ceiling": "structural"
+      },
+      {
+        "id": "b",
+        "key": "potential",
+        "value": "V0",
+        "at": 2,
+        "revision": 1,
+        "parents": [
+          "a"
+        ],
+        "ceiling": "structural"
+      },
+      {
+        "id": "c",
+        "key": "potential",
+        "value": "V1",
+        "at": 3,
+        "revision": 2,
+        "parents": [
+          "b"
+        ],
+        "ceiling": "structural"
+      }
+    ],
+    "cutoff": 2,
+    "root": "c",
+    "events": [
+      "submit",
+      "reject",
+      "submit",
+      "reject"
+    ]
+  },
+  {
+    "label": "independent-pair",
+    "ledger": [
+      {
+        "id": "a",
+        "key": "potential",
+        "value": "V0",
+        "at": 1,
+        "revision": 0,
+        "parents": [],
+        "ceiling": "structural"
+      },
+      {
+        "id": "b",
+        "key": "runtime",
+        "value": "R0",
+        "at": 2,
+        "revision": 0,
+        "parents": [],
+        "ceiling": "structural"
+      }
+    ],
+    "cutoff": 2,
+    "root": "b",
+    "events": [
+      "submit",
+      "pending"
+    ]
+  },
+  {
+    "label": "branch",
+    "ledger": [
+      {
+        "id": "a",
+        "key": "potential",
+        "value": "V0",
+        "at": 1,
+        "revision": 0,
+        "parents": [],
+        "ceiling": "structural"
+      },
+      {
+        "id": "b",
+        "key": "potential",
+        "value": "V1",
+        "at": 2,
+        "revision": 1,
+        "parents": [
+          "a"
+        ],
+        "ceiling": "structural"
+      },
+      {
+        "id": "c",
+        "key": "runtime",
+        "value": "R1",
+        "at": 3,
+        "revision": 0,
+        "parents": [
+          "a"
+        ],
+        "ceiling": "structural"
+      }
+    ],
+    "cutoff": 3,
+    "root": "c",
+    "events": [
+      "submit",
+      "accept"
+    ]
+  },
+  {
+    "label": "diamond",
+    "ledger": [
+      {
+        "id": "a",
+        "key": "potential",
+        "value": "V0",
+        "at": 1,
+        "revision": 0,
+        "parents": [],
+        "ceiling": "structural"
+      },
+      {
+        "id": "b",
+        "key": "left",
+        "value": "L",
+        "at": 2,
+        "revision": 0,
+        "parents": [
+          "a"
+        ],
+        "ceiling": "structural"
+      },
+      {
+        "id": "c",
+        "key": "right",
+        "value": "R",
+        "at": 3,
+        "revision": 0,
+        "parents": [
+          "a"
+        ],
+        "ceiling": "structural"
+      },
+      {
+        "id": "d",
+        "key": "join",
+        "value": "J",
+        "at": 4,
+        "revision": 0,
+        "parents": [
+          "b",
+          "c"
+        ],
+        "ceiling": "structural"
+      }
+    ],
+    "cutoff": 4,
+    "root": "d",
+    "events": [
+      "submit",
+      "timeout"
+    ]
+  },
+  {
+    "label": "missing-parent",
+    "ledger": [
+      {
+        "id": "a",
+        "key": "missing",
+        "value": "M",
+        "at": 1,
+        "revision": 0,
+        "parents": [
+          "absent"
+        ],
+        "ceiling": "structural"
+      }
+    ],
+    "cutoff": 1,
+    "root": "a",
+    "events": [
+      "submit",
+      "opaque"
+    ]
+  },
+  {
+    "label": "cycle",
+    "ledger": [
+      {
+        "id": "a",
+        "key": "cycle",
+        "value": "A",
+        "at": 1,
+        "revision": 0,
+        "parents": [
+          "b"
+        ],
+        "ceiling": "structural"
+      },
+      {
+        "id": "b",
+        "key": "cycle",
+        "value": "B",
+        "at": 2,
+        "revision": 0,
+        "parents": [
+          "a"
+        ],
+        "ceiling": "structural"
+      }
+    ],
+    "cutoff": 2,
+    "root": "b",
+    "events": [
+      "submit",
+      "accept",
+      "complete"
+    ]
+  },
+  {
+    "label": "self-cycle",
+    "ledger": [
+      {
+        "id": "a",
+        "key": "self",
+        "value": "S",
+        "at": 1,
+        "revision": 0,
+        "parents": [
+          "a"
+        ],
+        "ceiling": "structural"
+      }
+    ],
+    "cutoff": 1,
+    "root": "a",
+    "events": [
+      "submit",
+      "reject",
+      "submit",
+      "accept"
+    ]
+  },
+  {
+    "label": "conflict",
+    "ledger": [
+      {
+        "id": "a",
+        "key": "potential",
+        "value": "V0",
+        "at": 1,
+        "revision": 0,
+        "parents": [],
+        "ceiling": "structural"
+      },
+      {
+        "id": "b",
+        "key": "potential",
+        "value": "conflict",
+        "at": 1,
+        "revision": 0,
+        "parents": [],
+        "ceiling": "structural"
+      }
+    ],
+    "cutoff": 1,
+    "root": "b",
+    "events": [
+      "submit",
+      "reject",
+      "submit",
+      "timeout"
+    ]
+  },
+  {
+    "label": "late-ingest",
+    "ledger": [
+      {
+        "id": "a",
+        "key": "late",
+        "value": "older",
+        "at": 9,
+        "revision": 0,
+        "parents": [],
+        "ceiling": "structural"
+      },
+      {
+        "id": "b",
+        "key": "late",
+        "value": "newer",
+        "at": 2,
+        "revision": 1,
+        "parents": [
+          "a"
+        ],
+        "ceiling": "structural"
+      }
+    ],
+    "cutoff": 5,
+    "root": "b",
+    "events": [
+      "submit",
+      "pending",
+      "query_unknown"
+    ]
+  },
+  {
+    "label": "future-record",
+    "ledger": [
+      {
+        "id": "a",
+        "key": "potential",
+        "value": "V0",
+        "at": 1,
+        "revision": 0,
+        "parents": [],
+        "ceiling": "structural"
+      },
+      {
+        "id": "b",
+        "key": "future",
+        "value": "F",
+        "at": 40,
+        "revision": 0,
+        "parents": [],
+        "ceiling": "structural"
+      }
+    ],
+    "cutoff": 10,
+    "root": "b",
+    "events": [
+      "submit",
+      "pending",
+      "query_absent"
+    ]
+  },
+  {
+    "label": "mixed-ceilings",
+    "ledger": [
+      {
+        "id": "a",
+        "key": "physics",
+        "value": "hypothesis",
+        "at": 1,
+        "revision": 0,
+        "parents": [],
+        "ceiling": "empirical"
+      },
+      {
+        "id": "b",
+        "key": "consent",
+        "value": "ungranted",
+        "at": 2,
+        "revision": 0,
+        "parents": [],
+        "ceiling": "authority"
+      }
+    ],
+    "cutoff": 2,
+    "root": "b",
+    "events": [
+      "submit",
+      "pending",
+      "query_accepted"
+    ]
+  },
+  {
+    "label": "long-chain",
+    "ledger": [
+      {
+        "id": "r0",
+        "key": "series",
+        "value": "v0",
+        "at": 1,
+        "revision": 0,
+        "parents": [],
+        "ceiling": "structural"
+      },
+      {
+        "id": "r1",
+        "key": "series",
+        "value": "v1",
+        "at": 2,
+        "revision": 1,
+        "parents": [
+          "r0"
+        ],
+        "ceiling": "structural"
+      },
+      {
+        "id": "r2",
+        "key": "series",
+        "value": "v2",
+        "at": 3,
+        "revision": 2,
+        "parents": [
+          "r1"
+        ],
+        "ceiling": "structural"
+      },
+      {
+        "id": "r3",
+        "key": "series",
+        "value": "v3",
+        "at": 4,
+        "revision": 3,
+        "parents": [
+          "r2"
+        ],
+        "ceiling": "structural"
+      },
+      {
+        "id": "r4",
+        "key": "series",
+        "value": "v4",
+        "at": 5,
+        "revision": 4,
+        "parents": [
+          "r3"
+        ],
+        "ceiling": "structural"
+      },
+      {
+        "id": "r5",
+        "key": "series",
+        "value": "v5",
+        "at": 6,
+        "revision": 5,
+        "parents": [
+          "r4"
+        ],
+        "ceiling": "structural"
+      },
+      {
+        "id": "r6",
+        "key": "series",
+        "value": "v6",
+        "at": 7,
+        "revision": 6,
+        "parents": [
+          "r5"
+        ],
+        "ceiling": "structural"
+      },
+      {
+        "id": "r7",
+        "key": "series",
+        "value": "v7",
+        "at": 8,
+        "revision": 7,
+        "parents": [
+          "r6"
+        ],
+        "ceiling": "structural"
+      },
+      {
+        "id": "r8",
+        "key": "series",
+        "value": "v8",
+        "at": 9,
+        "revision": 8,
+        "parents": [
+          "r7"
+        ],
+        "ceiling": "structural"
+      },
+      {
+        "id": "r9",
+        "key": "series",
+        "value": "v9",
+        "at": 10,
+        "revision": 9,
+        "parents": [
+          "r8"
+        ],
+        "ceiling": "structural"
+      },
+      {
+        "id": "r10",
+        "key": "series",
+        "value": "v10",
+        "at": 11,
+        "revision": 10,
+        "parents": [
+          "r9"
+        ],
+        "ceiling": "structural"
+      },
+      {
+        "id": "r11",
+        "key": "series",
+        "value": "v11",
+        "at": 12,
+        "revision": 11,
+        "parents": [
+          "r10"
+        ],
+        "ceiling": "structural"
+      },
+      {
+        "id": "r12",
+        "key": "series",
+        "value": "v12",
+        "at": 13,
+        "revision": 12,
+        "parents": [
+          "r11"
+        ],
+        "ceiling": "structural"
+      },
+      {
+        "id": "r13",
+        "key": "series",
+        "value": "v13",
+        "at": 14,
+        "revision": 13,
+        "parents": [
+          "r12"
+        ],
+        "ceiling": "structural"
+      },
+      {
+        "id": "r14",
+        "key": "series",
+        "value": "v14",
+        "at": 15,
+        "revision": 14,
+        "parents": [
+          "r13"
+        ],
+        "ceiling": "structural"
+      },
+      {
+        "id": "r15",
+        "key": "series",
+        "value": "v15",
+        "at": 16,
+        "revision": 15,
+        "parents": [
+          "r14"
+        ],
+        "ceiling": "structural"
+      }
+    ],
+    "cutoff": 16,
+    "root": "r15",
+    "events": [
+      "submit",
+      "pending",
+      "query_accepted",
+      "complete"
+    ]
+  }
+]

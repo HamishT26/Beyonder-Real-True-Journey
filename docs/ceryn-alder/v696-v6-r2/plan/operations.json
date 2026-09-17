@@ -1,0 +1,182 @@
+[
+  {
+    "op": "record_inventory",
+    "mechanism": "Count bounded source records and distinct claim keys without merging evidence.",
+    "pillar": "THOS",
+    "stage": "x1",
+    "input_schema": "strict per-operation closed object",
+    "oracle": "plan/tools/reference.txt",
+    "implementation": "x1/engine.txt"
+  },
+  {
+    "op": "asof_projection",
+    "mechanism": "Select records visible by a declared observation cutoff; later records remain retained.",
+    "pillar": "THOS",
+    "stage": "x1",
+    "input_schema": "strict per-operation closed object",
+    "oracle": "plan/tools/reference.txt",
+    "implementation": "x1/engine.txt"
+  },
+  {
+    "op": "latest_revision",
+    "mechanism": "Keep every tied maximal revision per key rather than silently choose a winner.",
+    "pillar": "Freed ID",
+    "stage": "x1",
+    "input_schema": "strict per-operation closed object",
+    "oracle": "plan/tools/reference.txt",
+    "implementation": "x1/engine.txt"
+  },
+  {
+    "op": "conflict_pairs",
+    "mechanism": "Expose disagreeing maximal revisions as explicit pairs.",
+    "pillar": "Freed ID",
+    "stage": "x1",
+    "input_schema": "strict per-operation closed object",
+    "oracle": "plan/tools/reference.txt",
+    "implementation": "x1/engine.txt"
+  },
+  {
+    "op": "dependency_closure",
+    "mechanism": "Traverse declared provenance ancestors and separately name missing references.",
+    "pillar": "THOS",
+    "stage": "x1",
+    "input_schema": "strict per-operation closed object",
+    "oracle": "plan/tools/reference.txt",
+    "implementation": "x1/engine.txt"
+  },
+  {
+    "op": "topological_layers",
+    "mechanism": "Layer resolvable dependencies; retain cyclic or dangling nodes as unresolved.",
+    "pillar": "THOS",
+    "stage": "x1",
+    "input_schema": "strict per-operation closed object",
+    "oracle": "plan/tools/reference.txt",
+    "implementation": "x1/engine.txt"
+  },
+  {
+    "op": "missing_frontier",
+    "mechanism": "Compute exactly the absent parent identifiers, deduplicated.",
+    "pillar": "GMUT",
+    "stage": "x1",
+    "input_schema": "strict per-operation closed object",
+    "oracle": "plan/tools/reference.txt",
+    "implementation": "x1/engine.txt"
+  },
+  {
+    "op": "content_chain",
+    "mechanism": "Bind ordered content bytes by an inspectable hash chain without claiming authentication.",
+    "pillar": "THOS",
+    "stage": "x1",
+    "input_schema": "strict per-operation closed object",
+    "oracle": "plan/tools/reference.txt",
+    "implementation": "x1/engine.txt"
+  },
+  {
+    "op": "revision_diff",
+    "mechanism": "Report first-to-last visible value changes under an explicit ordering.",
+    "pillar": "Freed ID",
+    "stage": "x1",
+    "input_schema": "strict per-operation closed object",
+    "oracle": "plan/tools/reference.txt",
+    "implementation": "x1/engine.txt"
+  },
+  {
+    "op": "claim_ceiling",
+    "mechanism": "Keep declared empirical or authority claims below an unsupported promotion boundary.",
+    "pillar": "GMUT",
+    "stage": "x1",
+    "input_schema": "strict per-operation closed object",
+    "oracle": "plan/tools/reference.txt",
+    "implementation": "x1/engine.txt"
+  },
+  {
+    "op": "outbox_reduce",
+    "mechanism": "Reduce finite delivery events while preserving accepted, uncertain, rejected and complete states.",
+    "pillar": "THOS",
+    "stage": "x2",
+    "input_schema": "strict per-operation closed object",
+    "oracle": "plan/tools/reference.txt",
+    "implementation": "x2/engine.txt"
+  },
+  {
+    "op": "retry_decision",
+    "mechanism": "Permit reattempts only after definitive rejection or before submission, within an explicit budget.",
+    "pillar": "THOS",
+    "stage": "x2",
+    "input_schema": "strict per-operation closed object",
+    "oracle": "plan/tools/reference.txt",
+    "implementation": "x2/engine.txt"
+  },
+  {
+    "op": "weighted_roster",
+    "mechanism": "Project the user-specified 45-position cycle through eight-bundle versions.",
+    "pillar": "THOS",
+    "stage": "x2",
+    "input_schema": "strict per-operation closed object",
+    "oracle": "plan/tools/reference.txt",
+    "implementation": "x2/engine.txt"
+  },
+  {
+    "op": "exact_title_resolution",
+    "mechanism": "Require exact-title uniqueness across active and archived synthetic records.",
+    "pillar": "THOS",
+    "stage": "x2",
+    "input_schema": "strict per-operation closed object",
+    "oracle": "plan/tools/reference.txt",
+    "implementation": "x2/engine.txt"
+  },
+  {
+    "op": "freshness_gate",
+    "mechanism": "Distinguish current observations, expired observations and negative clock ages.",
+    "pillar": "THOS",
+    "stage": "x2",
+    "input_schema": "strict per-operation closed object",
+    "oracle": "plan/tools/reference.txt",
+    "implementation": "x2/engine.txt"
+  },
+  {
+    "op": "receipt_binding",
+    "mechanism": "Check both digest and byte-count parity without equating hashes with signatures.",
+    "pillar": "Freed ID",
+    "stage": "x2",
+    "input_schema": "strict per-operation closed object",
+    "oracle": "plan/tools/reference.txt",
+    "implementation": "x2/engine.txt"
+  },
+  {
+    "op": "budget_admission",
+    "mechanism": "Admit file, word and spending requests only within declared integer ceilings.",
+    "pillar": "THOS",
+    "stage": "x2",
+    "input_schema": "strict per-operation closed object",
+    "oracle": "plan/tools/reference.txt",
+    "implementation": "x2/engine.txt"
+  },
+  {
+    "op": "trajectory3d",
+    "mechanism": "Represent event index, attempt count and categorical state as finite three-dimensional points.",
+    "pillar": "THOS",
+    "stage": "x2",
+    "input_schema": "strict per-operation closed object",
+    "oracle": "plan/tools/reference.txt",
+    "implementation": "x2/engine.txt"
+  },
+  {
+    "op": "observation_gap",
+    "mechanism": "Keep absent measurements null and list named prerequisites.",
+    "pillar": "GMUT",
+    "stage": "x2",
+    "input_schema": "strict per-operation closed object",
+    "oracle": "plan/tools/reference.txt",
+    "implementation": "x2/engine.txt"
+  },
+  {
+    "op": "authority_gate",
+    "mechanism": "Keep user authorization separate from evidence, competent review and affected consent.",
+    "pillar": "Freed ID",
+    "stage": "x2",
+    "input_schema": "strict per-operation closed object",
+    "oracle": "plan/tools/reference.txt",
+    "implementation": "x2/engine.txt"
+  }
+]

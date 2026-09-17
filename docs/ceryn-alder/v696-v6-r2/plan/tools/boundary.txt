@@ -1,0 +1,18 @@
+'use strict';
+const fs=require('fs'),path=require('path'),cp=require('child_process'),crypto=require('crypto'),vm=require('vm');
+const [root,stage,parent,receiptRoot]=process.argv.slice(2),prefix='docs/ceryn-alder/v696-v6-r2/';
+const g=a=>cp.execFileSync('git',['-C',root,...a],{encoding:'utf8',maxBuffer:64*1024*1024}).trim();
+const hash=b=>crypto.createHash('sha256').update(b).digest('hex');
+if(g(['branch','--show-current'])!=='codex/GHC-Family/ceryn-alder-main'||g(['rev-parse','HEAD'])!==parent)throw Error('owner parent mismatch');
+const status=g(['status','--porcelain','--untracked-files=all']);const dirty=status.split('\n').filter(Boolean);for(const row of dirty){const name=row.slice(3).replace(/^"|"$/g,'');if(!name.startsWith(prefix))throw Error('outside-owner change');}
+const files=[];function visit(p){for(const e of fs.readdirSync(p,{withFileTypes:true})){const f=path.join(p,e.name);if(e.isDirectory())visit(f);else files.push(f);}}visit(path.join(root,prefix));
+let maxWords=0;for(const f of files){if(!/\.(json|md|txt|html)$/.test(f))throw Error('extension');const b=fs.readFileSync(f),text=b.toString('utf8');maxWords=Math.max(maxWords,text.trim().split(/\s+/).length);if(f.endsWith('.json'))JSON.parse(text);if(f.endsWith('.txt')&&/^['"]use strict['"]/.test(text))new vm.Script(text,{filename:path.basename(f)});}
+if(maxWords>100000||files.length+188>2000)throw Error('budget');
+const manifest=path.join(root,prefix,stage==='planning'?'plan/manifest.json':stage+'/manifest.json');if(!fs.existsSync(manifest))throw Error('stage manifest absent');
+for(const b of JSON.parse(fs.readFileSync(manifest)).bindings){const f=path.join(root,prefix,b.path);if(hash(fs.readFileSync(f))!==b.sha256)throw Error('manifest '+b.path);}
+g(['add','--',prefix]);const staged=g(['diff','--cached','--name-only']).split('\n').filter(Boolean);if(!staged.length||staged.some(p=>!p.startsWith(prefix)))throw Error('staging scope');
+g(['commit','-q','-m','Ceryn v696-v6 (2): '+stage]);const final=g(['rev-parse','HEAD']);g(['push','origin','HEAD:refs/heads/codex/GHC-Family/ceryn-alder-main']);
+const heads={local:g(['rev-parse','HEAD']),upstream:g(['rev-parse','@{upstream}']),tracking:g(['rev-parse','refs/remotes/origin/codex/GHC-Family/ceryn-alder-main']),remote:g(['ls-remote','--heads','origin','refs/heads/codex/GHC-Family/ceryn-alder-main']).split(/\s/)[0]};
+const div=g(['rev-list','--left-right','--count','HEAD...@{upstream}']).split(/\s+/).map(Number);if(Object.values(heads).some(x=>x!==final)||g(['status','--porcelain'])||div.some(Boolean))throw Error('boundary not clean equal');
+const receipt={stage,parent,final,heads,clean:true,divergence:div,changed_files:staged,phase_files:files.length,tracked_files:g(['ls-files']).split('\n').length,max_words:maxWords,canonical_invoked:false};
+fs.writeFileSync(path.join(receiptRoot,stage+'-boundary.json'),JSON.stringify(receipt,null,2)+'\n',{flag:'wx'});console.log(JSON.stringify({stage,parent,final,clean:true,divergence:div,changed:staged.length,phase_files:files.length,max_words:maxWords}));
