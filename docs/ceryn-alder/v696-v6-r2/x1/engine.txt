@@ -1,0 +1,21 @@
+'use strict';
+const S=require('./shared.txt');
+function execute(req){S.validate(req);const {op,input:x}=req;if(S.OPS.indexOf(op)>9)S.failure('unsupported_operation');const L=x.ledger,byId=new Map(L.map(r=>[r.id,r])),order=[...L].sort((a,b)=>a.at-b.at||a.id.localeCompare(b.id));let result;
+ const visible=order.filter(r=>r.at<=x.cutoff),groups=new Map();for(const r of visible){if(!groups.has(r.key))groups.set(r.key,[]);groups.get(r.key).push(r);}
+ const latest=[];for(const key of [...groups.keys()].sort()){let max=-1,items=[];for(const row of groups.get(key)){if(row.revision>max){max=row.revision;items=[row];}else if(row.revision===max)items.push(row);}latest.push(...items.sort((a,b)=>a.id.localeCompare(b.id)));}
+ switch(op){
+ case 'record_inventory':result={records:L.length,keys:[...new Set(L.map(r=>r.key))].sort(),ids:[...byId.keys()].sort()};break;
+ case 'asof_projection':result={ids:visible.map(r=>r.id),excluded:L.filter(r=>r.at>x.cutoff).map(r=>r.id).sort()};break;
+ case 'latest_revision':result={ids:latest.map(r=>r.id)};break;
+ case 'conflict_pairs':{const pairs=[];for(const row of latest)for(const other of latest)if(row.id<other.id&&row.key===other.key&&row.value!==other.value)pairs.push([row.id,other.id]);pairs.sort((a,b)=>S.canonical(a).localeCompare(S.canonical(b)));result={pairs};break;}
+ case 'dependency_closure':{const stack=[x.root],seen=new Set(),ids=[],missing=[];while(stack.length){const id=stack.pop();if(seen.has(id))continue;seen.add(id);const row=byId.get(id);if(row){ids.push(id);stack.push(...row.parents);}else missing.push(id);}result={ids:ids.sort(),missing:missing.sort()};break;}
+ case 'topological_layers':{const indegree=new Map(),children=new Map();for(const row of L){indegree.set(row.id,row.parents.length);for(const p of row.parents){if(!children.has(p))children.set(p,[]);children.get(p).push(row.id);}}let ready=L.filter(r=>r.parents.length===0).map(r=>r.id).sort();const layers=[],done=new Set();while(ready.length){layers.push(ready);const next=[];for(const id of ready){done.add(id);for(const child of children.get(id)||[]){const d=indegree.get(child)-1;indegree.set(child,d);if(d===0)next.push(child);}}ready=next.sort();}result={layers,unresolved:L.map(r=>r.id).filter(id=>!done.has(id)).sort()};break;}
+ case 'missing_frontier':{const missing=new Set();for(const row of L)for(const id of row.parents)if(!byId.has(id))missing.add(id);result={missing:[...missing].sort()};break;}
+ case 'content_chain':{let tail='0'.repeat(64);const chain=order.map(record=>{tail=S.hash({previous:tail,record});return {id:record.id,digest:tail};});result={chain,tail,authenticity:false};break;}
+ case 'revision_diff':{const changes=[];for(const key of [...groups.keys()].sort()){const rows=groups.get(key),min=rows.reduce((a,b)=>b.revision<a.revision||(b.revision===a.revision&&b.id<a.id)?b:a),max=rows.reduce((a,b)=>b.revision>a.revision||(b.revision===a.revision&&b.id>a.id)?b:a);changes.push({key,from:min.value,to:max.value,changed:min.value!==max.value});}result={changes};break;}
+ case 'claim_ceiling':result={claims:L.map(r=>({id:r.id,declared:r.ceiling,supported:'structural_only',promotion:false})),empirical_confirmation:false};break;
+ default:S.failure('unsupported_operation');
+ }
+ return S.wrap(op,result,op==='claim_ceiling'?'represented':'completed');
+}
+const run=req=>S.runSafely(execute,req);module.exports={run,execute};if(require.main===module)S.cli(run);

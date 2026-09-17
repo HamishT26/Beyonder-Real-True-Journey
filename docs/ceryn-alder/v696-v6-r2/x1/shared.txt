@@ -1,0 +1,38 @@
+'use strict';
+const crypto=require('crypto');
+const OPS=['record_inventory','asof_projection','latest_revision','conflict_pairs','dependency_closure','topological_layers','missing_frontier','content_chain','revision_diff','claim_ceiling','outbox_reduce','retry_decision','weighted_roster','exact_title_resolution','freshness_gate','receipt_binding','budget_admission','trajectory3d','observation_gap','authority_gate'];
+const EVENTS=['submit','pending','reject','accept','timeout','opaque','complete','query_unknown','query_absent','query_accepted'];
+function failure(code){const e=new Error(code);e.code=code;throw e;}
+function record(v,keys){if(v===null||typeof v!=='object'||Array.isArray(v))failure('schema_type');if(Object.keys(v).some(k=>!keys.includes(k)))failure('schema_unknown_field');if(keys.some(k=>!Object.hasOwn(v,k)))failure('schema_missing_field');}
+function integer(v,min=0,max=1e9){if(!Number.isSafeInteger(v))failure('schema_type');if(v<min||v>max)failure('schema_limit');}
+function string(v,max=256){if(typeof v!=='string')failure('schema_type');if(!v.length||v.length>max)failure('schema_limit');}
+function bool(v){if(typeof v!=='boolean')failure('schema_type');}
+function list(v,max=64){if(!Array.isArray(v))failure('schema_type');if(v.length>max)failure('schema_limit');}
+function validate(req){record(req,['op','input']);string(req.op,64);if(!OPS.includes(req.op))failure('unsupported_operation');const x=req.input,n=OPS.indexOf(req.op);
+ if(n<10){record(x,['ledger','cutoff','root']);list(x.ledger);integer(x.cutoff);string(x.root,48);const ids=new Set();for(const r of x.ledger){record(r,['id','key','value','at','revision','parents','ceiling']);for(const k of ['id','key']){string(r[k],48);if(!/^[A-Za-z0-9_-]+$/.test(r[k]))failure('schema_identifier');}string(r.value);integer(r.at);integer(r.revision);list(r.parents);r.parents.forEach(p=>string(p,48));if(new Set(r.parents).size!==r.parents.length)failure('schema_duplicate_parent');if(ids.has(r.id))failure('schema_duplicate_id');ids.add(r.id);if(!['structural','empirical','authority'].includes(r.ceiling))failure('schema_ceiling');}}
+ else if(['outbox_reduce','retry_decision','trajectory3d'].includes(req.op)){record(x,req.op==='retry_decision'?['events','recoveries','maxResends']:['events']);list(x.events,128);for(const e of x.events)if(!EVENTS.includes(e))failure('schema_event');if(req.op==='retry_decision'){integer(x.recoveries,0,20);integer(x.maxResends,0,3);}}
+ else if(req.op==='weighted_roster'){record(x,['cycle','start','version','bundle','length']);list(x.cycle,45);if(!x.cycle.length)failure('schema_limit');x.cycle.forEach(n=>string(n,64));integer(x.start,0,10000);integer(x.version,1,10000);integer(x.bundle,1,8);integer(x.length,0,256);}
+ else if(req.op==='exact_title_resolution'){record(x,['target','records','archiveComplete']);string(x.target,64);bool(x.archiveComplete);list(x.records,128);for(const r of x.records){record(r,['title','archived','status','history','duplicate','paused']);string(r.title,64);string(r.status,32);for(const k of ['archived','history','duplicate','paused'])bool(r[k]);}}
+ else if(req.op==='freshness_gate'){record(x,['observedAt','currentTime','maxAge']);integer(x.observedAt);integer(x.currentTime);integer(x.maxAge);}
+ else if(req.op==='receipt_binding'){record(x,['expected','actual','sourceBytes','observedBytes']);for(const k of ['expected','actual'])if(typeof x[k]!=='string'||!/^[a-f0-9]{64}$/.test(x[k]))failure('schema_digest');integer(x.sourceBytes);integer(x.observedBytes);}
+ else if(req.op==='budget_admission'){record(x,['limit','used','requested']);for(const group of Object.values(x)){record(group,['files','words','usdCents']);Object.values(group).forEach(v=>integer(v));}}
+ else if(req.op==='observation_gap'){record(x,['hypothesis','measurements','required']);string(x.hypothesis);if(x.measurements!==null)failure('schema_measurement');list(x.required);x.required.forEach(v=>string(v));if(new Set(x.required).size!==x.required.length)failure('schema_duplicate_requirement');}
+ else if(req.op==='authority_gate'){record(x,['action','userAuthorized','prerequisites']);string(x.action);bool(x.userAuthorized);record(x.prerequisites,['evidence','competentReview','affectedConsent']);Object.values(x.prerequisites).forEach(bool);}
+ return req;
+}
+function canonical(v){if(v===null||typeof v!=='object')return JSON.stringify(v);if(Array.isArray(v))return '['+v.map(canonical).join(',')+']';return '{'+Object.keys(v).sort().map(k=>JSON.stringify(k)+':'+canonical(v[k])).join(',')+'}';}
+function hash(v){return crypto.createHash('sha256').update(typeof v==='string'||Buffer.isBuffer(v)?v:canonical(v)).digest('hex');}
+function strictParse(text,{bytes=262144,depth=32}={}){
+ if(typeof text!=='string'||Buffer.byteLength(text,'utf8')>bytes)failure('json_byte_limit');let i=0;
+ function ws(){while(i<text.length&&/[\x20\t\r\n]/.test(text[i]))i++;}
+ function str(){const start=i++;while(i<text.length){const ch=text[i++];if(ch==='"'){try{return JSON.parse(text.slice(start,i));}catch{failure('json_syntax');}}if(ch==='\\')i++;}failure('json_syntax');}
+ function value(level){if(level>depth)failure('json_depth_limit');ws();const ch=text[i];if(ch==='"')return str();if(ch==='{'||ch==='['){i++;ws();const object=ch==='{',end=object?'}':']',out=object?{}:[],seen=new Set();if(text[i]===end){i++;return out;}for(;;){ws();let key;if(object){if(text[i]!=='"')failure('json_syntax');key=str();if(seen.has(key))failure('json_duplicate_key');seen.add(key);ws();if(text[i++]!==':')failure('json_syntax');}const v=value(level+1);if(object)Object.defineProperty(out,key,{value:v,writable:true,enumerable:true,configurable:true});else out.push(v);ws();const c=text[i++];if(c===end)break;if(c!==',')failure('json_syntax');}return out;}
+ for(const [word,v]of [['true',true],['false',false],['null',null]])if(text.startsWith(word,i)){i+=word.length;return v;}
+ const m=/-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?/.exec(text.slice(i));if(!m||m.index!==0)failure('json_syntax');i+=m[0].length;const n=Number(m[0]);if(!Number.isFinite(n))failure('json_nonfinite');return n;
+ }
+ const result=value(0);ws();if(i!==text.length)failure('json_syntax');return result;
+}
+function wrap(op,result,disposition='completed'){return {disposition,op,result,boundary:'bounded_same_owner_software_not_external_evidence'};}
+function runSafely(fn,req){try{return fn(req);}catch(e){if(e.code)return {refused:true,code:e.code};throw e;}}
+function cli(fn,allowed){let total=0,chunks=[];process.stdin.on('data',b=>{total+=b.length;if(total>262144){process.stdout.write(JSON.stringify({refused:true,code:'json_byte_limit'})+'\n');process.exit(2);}chunks.push(b);});process.stdin.on('end',()=>{try{const req=strictParse(Buffer.concat(chunks).toString('utf8'));const result=allowed&&!allowed.includes(req.op)?{refused:true,code:'unsupported_operation'}:fn(req);process.stdout.write(JSON.stringify(result)+'\n');if(result.refused)process.exitCode=2;}catch(e){process.stdout.write(JSON.stringify({refused:true,code:e.code||'json_syntax'})+'\n');process.exitCode=2;}});}
+module.exports={OPS,EVENTS,validate,canonical,hash,strictParse,wrap,runSafely,cli,failure};

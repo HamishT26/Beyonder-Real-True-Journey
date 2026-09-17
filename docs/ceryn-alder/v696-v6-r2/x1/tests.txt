@@ -1,0 +1,36 @@
+'use strict';
+const assert=require('assert/strict'),fs=require('fs'),path=require('path'),E=require('./engine.txt'),S=require('./shared.txt');
+const row=(id,key='k',value='v',at=1,revision=0,parents=[])=>({id,key,value,at,revision,parents,ceiling:'structural'});
+const req=(op,ledger=[],cutoff=100,root=ledger.at(-1)?.id||'absent')=>({op,input:{ledger,cutoff,root}});
+const value=(op,l,c,r)=>E.run(req(op,l,c,r)).result;
+const cases=[
+ ['empty inventory',()=>assert.deepEqual(value('record_inventory',[]),{records:0,keys:[],ids:[]})],
+ ['as-of excludes future',()=>assert.deepEqual(value('asof_projection',[row('a'),row('b','k','new',2)],1).ids,['a'])],
+ ['late lower revision cannot replace higher',()=>assert.deepEqual(value('latest_revision',[row('a','k','old',9,0),row('b','k','new',2,1)]).ids,['b'])],
+ ['tied latest revisions remain',()=>assert.deepEqual(value('latest_revision',[row('a'),row('b')]).ids,['a','b'])],
+ ['same-value ties are not value conflicts',()=>assert.deepEqual(value('conflict_pairs',[row('a'),row('b')]).pairs,[])],
+ ['different-value ties expose conflict',()=>assert.deepEqual(value('conflict_pairs',[row('a'),row('b','k','different')]).pairs,[['a','b']])],
+ ['missing ancestor remains explicit',()=>assert.deepEqual(value('dependency_closure',[row('a','k','v',1,0,['missing'])]),{ids:['a'],missing:['missing']})],
+ ['cycle closure terminates',()=>assert.deepEqual(value('dependency_closure',[row('a','k','v',1,0,['b']),row('b','k','v',1,0,['a'])]).ids,['a','b'])],
+ ['diamond layering',()=>assert.deepEqual(value('topological_layers',[row('a'),row('b','b','v',2,0,['a']),row('c','c','v',2,0,['a']),row('d','d','v',3,0,['b','c'])]).layers,[['a'],['b','c'],['d']])],
+ ['cycle unresolved',()=>assert.deepEqual(value('topological_layers',[row('a','k','v',1,0,['a'])]).unresolved,['a'])],
+ ['dangling dependency unresolved',()=>assert.deepEqual(value('topological_layers',[row('a','k','v',1,0,['missing'])]).unresolved,['a'])],
+ ['frontier deduplicates references',()=>assert.deepEqual(value('missing_frontier',[row('a','a','v',1,0,['missing']),row('b','b','v',1,0,['missing'])]).missing,['missing'])],
+ ['chain changes under value corruption',()=>assert.notEqual(value('content_chain',[row('a')]).tail,value('content_chain',[row('a','k','corrupt')]).tail)],
+ ['content hash is not authentication',()=>assert.equal(value('content_chain',[row('a')]).authenticity,false)],
+ ['revision diff respects revision order',()=>assert.deepEqual(value('revision_diff',[row('a','k','later',1,2),row('b','k','earlier',3,0)]).changes,[{key:'k',from:'earlier',to:'later',changed:true}])],
+ ['claim ceiling refuses promotion',()=>assert.equal(value('claim_ceiling',[{...row('a'),ceiling:'empirical'}]).claims[0].promotion,false)],
+ ['duplicate record rejected',()=>assert.equal(E.run(req('record_inventory',[row('a'),row('a')])).code,'schema_duplicate_id')],
+ ['duplicate parent rejected',()=>assert.equal(E.run(req('record_inventory',[row('a','k','v',1,0,['b','b'])])).code,'schema_duplicate_parent')],
+ ['boolean timestamp rejected',()=>assert.equal(E.run(req('record_inventory',[row('a','k','v',true)])).code,'schema_type')],
+ ['raw duplicate keys rejected',()=>assert.throws(()=>S.strictParse('{"op":"a","op":"b"}'),/json_duplicate_key/)],
+ ['nested duplicate keys rejected',()=>assert.throws(()=>S.strictParse('{"a":{"b":1,"b":2}}'),/json_duplicate_key/)],
+ ['nonfinite number rejected',()=>assert.throws(()=>S.strictParse('{"a":1e999}'),/json_nonfinite/)],
+ ['depth bound enforced',()=>assert.throws(()=>S.strictParse('['.repeat(34)+'0'+']'.repeat(34)),/json_depth_limit/)],
+ ['byte bound enforced',()=>assert.throws(()=>S.strictParse(' '.repeat(262145)),/json_byte_limit/)],
+ ['escaped equal key rejected',()=>assert.throws(()=>S.strictParse('{"a":1,"\\u0061":2}'),/json_duplicate_key/)],
+ ['trailing JSON refused',()=>assert.throws(()=>S.strictParse('{}{}'),/json_syntax/)],
+ ['input preserved',()=>{const q=req('topological_layers',[row('a'),row('b','b','v',2,0,['a'])]),before=JSON.stringify(q);E.run(q);assert.equal(JSON.stringify(q),before);}]
+];
+function run(){return cases.map(([name,test])=>{try{test();return {name,pass:true};}catch(e){return {name,pass:false,message:e.message};}});}
+module.exports={cases,run};if(require.main===module){const result=run();fs.writeFileSync(path.join(__dirname,'test-results.json'),JSON.stringify({tests:result,passed:result.filter(r=>r.pass).length,total:result.length,scope:'targeted synthetic invariants',same_owner:true},null,2)+'\n',{flag:'wx'});console.log(JSON.stringify({passed:result.filter(r=>r.pass).length,total:result.length,failed:result.filter(r=>!r.pass)}));if(result.some(r=>!r.pass))process.exitCode=1;}

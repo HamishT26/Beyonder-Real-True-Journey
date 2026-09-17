@@ -1,0 +1,5 @@
+'use strict';
+const E=require('../engine.txt'),S=require('../shared.txt');
+const allowed=["record_inventory","asof_projection"];
+const run=req=>!req||!allowed.includes(req.op)?{refused:true,code:'unsupported_operation'}:E.run(req);
+module.exports={run,allowed};if(require.main===module)S.cli(run,allowed);
