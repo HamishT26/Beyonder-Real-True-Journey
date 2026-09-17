@@ -1,0 +1,5 @@
+'use strict';
+const E=require('../bernstein-core.txt');
+const allowed=["bernstein_evaluate","bernstein_hull"];
+const run=req=>allowed.includes(req?.op)?E.run(req):{refused:true,code:'E_SCHEMA',authority:false};
+module.exports={run,main:()=>E.main(allowed,run)};
