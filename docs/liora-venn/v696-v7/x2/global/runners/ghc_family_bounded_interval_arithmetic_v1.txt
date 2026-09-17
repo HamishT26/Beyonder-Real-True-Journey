@@ -1,0 +1,3 @@
+"use strict";
+const fs=require('fs'),a=require('../x1/engine.txt'),b=require('../x2/engine.txt'),allowed=["interval_hull","interval_add","interval_subtract","interval_multiply"];
+try{const r=a.parseRaw(fs.readFileSync(0,'utf8'));if(!allowed.includes(r.op))a.refuse('runner_operation');const out=(a.OPS.includes(r.op)?a:b).execute(r);console.log(JSON.stringify(out));if(out.refused)process.exitCode=2;}catch(e){if(e instanceof a.Refusal){console.log(JSON.stringify({refused:true,code:e.code}));process.exitCode=2;}else throw e;}

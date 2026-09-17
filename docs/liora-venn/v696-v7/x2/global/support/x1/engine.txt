@@ -1,0 +1,53 @@
+"use strict";
+const fs=require('fs');
+class Refusal extends Error{constructor(code){super(code);this.code=code;}}
+const refuse=c=>{throw new Refusal(c);};
+function keys(x,wanted){if(!x||typeof x!=='object'||Array.isArray(x))refuse('object_required');const ks=Object.keys(x);if(ks.length!==wanted.length||ks.some(k=>!wanted.includes(k)))refuse('unknown_or_missing_field');}
+class Rat{
+ constructor(n,d=1n){if(d===0n)refuse('zero_denominator');if(d<0n){n=-n;d=-d;}let a=n<0n?-n:n,b=d;while(b){const t=a%b;a=b;b=t;}this.n=n/a;this.d=d/a;}
+ static parse(s){if(typeof s!=='string'||s.length>64||!/^(?:0|-?[1-9][0-9]{0,29})(?:\/[1-9][0-9]{0,29})?$/.test(s))refuse('rational_syntax');const [n,d]=s.split('/');return new Rat(BigInt(n),BigInt(d||'1'));}
+ add(b){return new Rat(this.n*b.d+b.n*this.d,this.d*b.d);}
+ neg(){return new Rat(-this.n,this.d);}
+ sub(b){return this.add(b.neg());}
+ mul(b){return new Rat(this.n*b.n,this.d*b.d);}
+ div(b){if(b.n===0n)refuse('zero_divisor');return new Rat(this.n*b.d,this.d*b.n);}
+ cmp(b){const a=this.n*b.d,c=b.n*this.d;return a<c?-1:a>c?1:0;}
+ toString(){return this.d===1n?this.n.toString():`${this.n}/${this.d}`;}
+}
+const ZERO=new Rat(0n),ONE=new Rat(1n),TWO=new Rat(2n);
+class I{
+ constructor(lo,hi){if(lo.cmp(hi)>0)refuse('unordered_interval');this.lo=lo;this.hi=hi;}
+ static parse(x){keys(x,['lo','hi']);return new I(Rat.parse(x.lo),Rat.parse(x.hi));}
+ out(){return {lo:this.lo.toString(),hi:this.hi.toString()};}
+ add(b){return new I(this.lo.add(b.lo),this.hi.add(b.hi));}
+ sub(b){return new I(this.lo.sub(b.hi),this.hi.sub(b.lo));}
+ mul(b){const four=[this.lo.mul(b.lo),this.lo.mul(b.hi),this.hi.mul(b.lo),this.hi.mul(b.hi)];let lo=four[0],hi=four[0];for(const v of four){if(v.cmp(lo)<0)lo=v;if(v.cmp(hi)>0)hi=v;}return new I(lo,hi);}
+ crossesZero(){return this.lo.cmp(ZERO)<=0&&this.hi.cmp(ZERO)>=0;}
+ reciprocal(){if(this.crossesZero())refuse('zero_spanning_reciprocal');return new I(ONE.div(this.hi),ONE.div(this.lo));}
+}
+const OPS=['interval_shape','interval_normalize','interval_contains','interval_intersection','interval_hull','interval_add','interval_subtract','interval_multiply','interval_square','interval_reciprocal'];
+function core(req){keys(req,['op','input']);if(!OPS.includes(req.op))refuse('unsupported_operation');const x=req.input;keys(x,['interval_intersection','interval_hull','interval_add','interval_subtract','interval_multiply'].includes(req.op)?['a','b']:req.op==='interval_contains'?['a','point']:['a']);const a=I.parse(x.a),b=x.b?I.parse(x.b):null;let value;
+ switch(req.op){
+ case 'interval_shape':value={valid:true,endpoint_count:2};break;
+ case 'interval_normalize':value=a.out();break;
+ case 'interval_contains':{const t=Rat.parse(x.point);value=a.lo.cmp(t)<=0&&a.hi.cmp(t)>=0;break;}
+ case 'interval_intersection':{const l=a.lo.cmp(b.lo)>0?a.lo:b.lo,h=a.hi.cmp(b.hi)<0?a.hi:b.hi;value=l.cmp(h)>0?null:new I(l,h).out();break;}
+ case 'interval_hull':value=new I(a.lo.cmp(b.lo)<0?a.lo:b.lo,a.hi.cmp(b.hi)>0?a.hi:b.hi).out();break;
+ case 'interval_add':value=a.add(b).out();break;
+ case 'interval_subtract':value=a.sub(b).out();break;
+ case 'interval_multiply':value=a.mul(b).out();break;
+ case 'interval_square':{const l=a.lo.mul(a.lo),h=a.hi.mul(a.hi);value=new I(a.crossesZero()?ZERO:l.cmp(h)<0?l:h,l.cmp(h)>0?l:h).out();break;}
+ case 'interval_reciprocal':value=a.reciprocal().out();break;
+ }return {outcome:'completed',value};
+}
+function execute(req){try{return core(req);}catch(e){if(e instanceof Refusal)return {refused:true,code:e.code};throw e;}}
+// Bounded JSON parser rejects duplicate keys before the native object parser loses them.
+function parseRaw(text){if(typeof text!=='string'||Buffer.byteLength(text)>262144)refuse('request_size');let at=0;const ws=()=>{while(/\s/.test(text[at]||'')&&at<text.length)at++;};
+ function value(depth){if(depth>16)refuse('nesting_limit');ws();const c=text[at];if(c==='"'){const start=at++;let escaped=false;while(at<text.length){const x=text[at++];if(!escaped&&x==='"'){try{const s=JSON.parse(text.slice(start,at));if(s.length>128)refuse('string_limit');return s;}catch(e){if(e instanceof Refusal)throw e;refuse('json_syntax');}}if(!escaped&&x==='\\')escaped=true;else escaped=false;}refuse('json_syntax');}
+ if(c==='{'){at++;ws();const obj={},seen=new Set();if(text[at]==='}'){at++;return obj;}for(let count=0;;count++){if(count>=64)refuse('object_limit');if(text[at]!=='"')refuse('json_syntax');const k=value(depth+1);if(seen.has(k))refuse('duplicate_key');seen.add(k);ws();if(text[at++]!==':')refuse('json_syntax');Object.defineProperty(obj,k,{value:value(depth+1),enumerable:true,writable:true,configurable:true});ws();if(text[at]==='}'){at++;return obj;}if(text[at++]!==',')refuse('json_syntax');ws();}}
+ if(c==='['){at++;ws();const arr=[];if(text[at]===']'){at++;return arr;}for(;;){if(arr.length>=32)refuse('array_limit');arr.push(value(depth+1));ws();if(text[at]===']'){at++;return arr;}if(text[at++]!==',')refuse('json_syntax');ws();}}
+ const tail=text.slice(at),lit=/^(true|false|null)(?![A-Za-z0-9_])/.exec(tail);if(lit){at+=lit[0].length;return JSON.parse(lit[0]);}const num=/^-?(?:0|[1-9][0-9]*)(?:\.[0-9]+)?(?:[eE][+-]?[0-9]+)?/.exec(tail);if(num){at+=num[0].length;const n=Number(num[0]);if(!Number.isSafeInteger(n)||Math.abs(n)>1000000)refuse('numeric_limit');return n;}refuse('json_syntax');}
+ const obj=value(0);ws();if(at!==text.length)refuse('json_trailing');return obj;
+}
+function cli(allowed=OPS){try{const text=fs.readFileSync(0,'utf8'),req=parseRaw(text);if(!allowed.includes(req.op))refuse('runner_operation');const r=execute(req);console.log(JSON.stringify(r));if(r.refused)process.exitCode=2;}catch(e){if(e instanceof Refusal){console.log(JSON.stringify({refused:true,code:e.code}));process.exitCode=2;}else throw e;}}
+if(require.main===module)cli();module.exports={Rat,I,ZERO,ONE,TWO,Refusal,refuse,keys,OPS,core,execute,parseRaw,cli};

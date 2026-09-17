@@ -1,0 +1,89 @@
+{
+  "operations": [
+    "interval_shape",
+    "interval_normalize",
+    "interval_contains",
+    "interval_intersection"
+  ],
+  "fixtures": [
+    {
+      "request": {
+        "op": "interval_shape",
+        "input": {
+          "a": {
+            "lo": "0",
+            "hi": "0"
+          }
+        }
+      },
+      "expected": {
+        "outcome": "completed",
+        "value": {
+          "valid": true,
+          "endpoint_count": 2
+        }
+      }
+    },
+    {
+      "request": {
+        "op": "interval_normalize",
+        "input": {
+          "a": {
+            "lo": "0",
+            "hi": "0"
+          }
+        }
+      },
+      "expected": {
+        "outcome": "completed",
+        "value": {
+          "lo": "0",
+          "hi": "0"
+        }
+      }
+    },
+    {
+      "request": {
+        "op": "interval_contains",
+        "input": {
+          "a": {
+            "lo": "0",
+            "hi": "0"
+          },
+          "point": "-3/2"
+        }
+      },
+      "expected": {
+        "outcome": "completed",
+        "value": false
+      }
+    },
+    {
+      "request": {
+        "op": "interval_intersection",
+        "input": {
+          "a": {
+            "lo": "0",
+            "hi": "0"
+          },
+          "b": {
+            "lo": "-2",
+            "hi": "2"
+          }
+        }
+      },
+      "expected": {
+        "outcome": "completed",
+        "value": {
+          "lo": "0",
+          "hi": "0"
+        }
+      }
+    }
+  ],
+  "unsupported": {
+    "op": "not-an-interval-operation",
+    "input": {}
+  },
+  "boundary": "Same-owner finite synthetic software only. Relational language is not consciousness, personhood, identity continuity, employment, qualification, independent agency or authority evidence. No physical measurement, uncertainty coverage, empirical GMUT confirmation, production THOS or Freed ID, professional, legal, cultural, affected-party or Maori authority, complete privacy or accessibility, exhaustive security, independent reproduction, AGI/ASI, Theory-of-Everything proof, canon or Stage 20. Maori concepts remain under Maori authority. NOT_READY_FOR_STAGE_20."
+}

@@ -1,0 +1,21 @@
+"use strict";
+const fs=require('fs'),u=require('../x1/engine.txt');const {Rat,I,ZERO,ONE,TWO,Refusal,refuse,keys}=u;
+const OPS=['interval_divide','affine_interval_map','absolute_interval','interval_width_midpoint','interval_linear_combination','interval_box_projection','measurement_record_lineage','unit_label_reservation','uncertainty_observation_gap','metrology_authority_gate'];
+const label=s=>{if(typeof s!=='string'||s.length>64||!/^[a-z0-9-]+$/.test(s))refuse('synthetic_label');};
+function core(req){keys(req,['op','input']);if(!OPS.includes(req.op))refuse('unsupported_operation');const x=req.input;let value,outcome='completed';
+ switch(req.op){
+ case 'interval_divide':keys(x,['a','b']);value=I.parse(x.a).mul(I.parse(x.b).reciprocal()).out();break;
+ case 'affine_interval_map':{keys(x,['a','scale','offset']);const a=I.parse(x.a),s=Rat.parse(x.scale),o=Rat.parse(x.offset),l=a.lo.mul(s).add(o),h=a.hi.mul(s).add(o);value=new I(l.cmp(h)<0?l:h,l.cmp(h)>0?l:h).out();break;}
+ case 'absolute_interval':{keys(x,['a']);const a=I.parse(x.a),l=a.lo.n<0n?a.lo.neg():a.lo,h=a.hi.n<0n?a.hi.neg():a.hi;value=new I(a.crossesZero()?ZERO:l.cmp(h)<0?l:h,l.cmp(h)>0?l:h).out();break;}
+ case 'interval_width_midpoint':{keys(x,['a']);const a=I.parse(x.a);value={width:a.hi.sub(a.lo).toString(),midpoint:a.lo.add(a.hi).div(TWO).toString()};break;}
+ case 'interval_linear_combination':{keys(x,['terms']);if(!Array.isArray(x.terms)||x.terms.length<1||x.terms.length>16)refuse('term_count');let sum=new I(ZERO,ZERO);for(const t of x.terms){keys(t,['coefficient','interval']);const a=I.parse(t.interval),c=Rat.parse(t.coefficient);sum=sum.add(a.mul(new I(c,c)));}value=sum.out();break;}
+ case 'interval_box_projection':{keys(x,['box','axis']);if(!Array.isArray(x.box)||x.box.length!==3||!Number.isInteger(x.axis)||x.axis<0||x.axis>2)refuse('box_axis');const box=x.box.map(I.parse);value=box[x.axis].out();break;}
+ case 'measurement_record_lineage':{keys(x,['revision','previous','real_rows']);label(x.revision);label(x.previous);if(x.real_rows!==0||!/^synthetic-r[0-9]{1,3}$/.test(x.revision)||!/^synthetic-r[0-9]{1,3}$/.test(x.previous)||Number(x.revision.slice(11))!==Number(x.previous.slice(11))+1)refuse('lineage_vacancy');outcome='represented';value={revision:x.revision,previous:x.previous,synthetic:true,measurement_rows:0,correction_preserved:true};break;}
+ case 'unit_label_reservation':keys(x,['label','real_rows']);label(x.label);if(x.real_rows!==0||!/^synthetic-(length|time|mass)-[a-z-]+$/.test(x.label))refuse('unit_reservation');outcome='represented';value={label:x.label,conversion_performed:false,dimensional_conformance:false};break;
+ case 'uncertainty_observation_gap':keys(x,['case_family','real_rows']);label(x.case_family);if(x.real_rows!==0)refuse('real_rows_forbidden');outcome='open_gap';value={real_rows:0,coverage_probability:null,confidence_claim:false,missing:['governed measurements','probability model','covariance','independent review']};break;
+ case 'metrology_authority_gate':keys(x,['case_family','real_rows','authority']);label(x.case_family);if(x.real_rows!==0||x.authority!==false)refuse('authority_promotion');outcome='exact_gate';value={authority:false,release:false,approval:null,missing:['competent authority','affected-party mandate','action-specific evidence']};break;
+ }return {outcome,value};
+}
+function execute(req){try{return core(req);}catch(e){if(e instanceof Refusal)return {refused:true,code:e.code};throw e;}}
+function cli(allowed=OPS){try{const req=u.parseRaw(fs.readFileSync(0,'utf8'));if(!allowed.includes(req.op))refuse('runner_operation');const r=execute(req);console.log(JSON.stringify(r));if(r.refused)process.exitCode=2;}catch(e){if(e instanceof Refusal){console.log(JSON.stringify({refused:true,code:e.code}));process.exitCode=2;}else throw e;}}
+if(require.main===module)cli();module.exports={OPS,core,execute,cli};
