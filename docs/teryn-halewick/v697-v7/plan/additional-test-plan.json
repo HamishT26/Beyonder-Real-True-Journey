@@ -1,0 +1,1088 @@
+{
+  "defined_before_production": true,
+  "count": 20,
+  "rows": [
+    {
+      "id": "TH6977-EXTRA-01",
+      "name": "Zero discount retains immediate rewards",
+      "kind": "accepting_property",
+      "request": {
+        "op": "mrp_discounted_value",
+        "input": {
+          "P": [
+            [
+              "5/7",
+              "2/7"
+            ],
+            [
+              "3/11",
+              "8/11"
+            ]
+          ],
+          "r": [
+            "7/13",
+            "-5/17"
+          ],
+          "mu": [
+            "2/5",
+            "3/5"
+          ],
+          "gamma": "0",
+          "n": 12,
+          "phi": [
+            "1/7",
+            "-2/9"
+          ],
+          "shift": "-2/7",
+          "probe": [
+            "0",
+            "0"
+          ],
+          "evidence": "synthetic_only",
+          "authorization": "none"
+        }
+      },
+      "expected": {
+        "ok": true,
+        "op": "mrp_discounted_value",
+        "data": {
+          "state_value": [
+            "7/13",
+            "-5/17"
+          ],
+          "initial_value": "43/1105",
+          "bellman_residual": [
+            "0",
+            "0"
+          ]
+        },
+        "core_disposition": "completed",
+        "scope": "finite_synthetic_two_state_markov_rewards"
+      },
+      "expected_exit_status": 0,
+      "property": "zero_discount"
+    },
+    {
+      "id": "TH6977-EXTRA-02",
+      "name": "Periodic flip does not converge from every initial distribution",
+      "kind": "accepting_property",
+      "request": {
+        "op": "mrp_contraction",
+        "input": {
+          "P": [
+            [
+              "0",
+              "1"
+            ],
+            [
+              "1",
+              "0"
+            ]
+          ],
+          "r": [
+            "7/13",
+            "-5/17"
+          ],
+          "mu": [
+            "2/5",
+            "3/5"
+          ],
+          "gamma": "2/3",
+          "n": 12,
+          "phi": [
+            "1/7",
+            "-2/9"
+          ],
+          "shift": "-2/7",
+          "probe": [
+            "0",
+            "0"
+          ],
+          "evidence": "synthetic_only",
+          "authorization": "none"
+        }
+      },
+      "expected": {
+        "ok": true,
+        "op": "mrp_contraction",
+        "data": {
+          "second_eigenvalue": "-1",
+          "absolute_coefficient": "1",
+          "unique_stationary": true,
+          "all_initial_convergence_to_unique": false,
+          "periodic_flip": true
+        },
+        "core_disposition": "completed",
+        "scope": "finite_synthetic_two_state_markov_rewards"
+      },
+      "expected_exit_status": 0,
+      "property": "periodic_flip"
+    },
+    {
+      "id": "TH6977-EXTRA-03",
+      "name": "Identity chain retains the whole stationary family",
+      "kind": "accepting_property",
+      "request": {
+        "op": "mrp_stationary",
+        "input": {
+          "P": [
+            [
+              "1",
+              "0"
+            ],
+            [
+              "0",
+              "1"
+            ]
+          ],
+          "r": [
+            "7/13",
+            "-5/17"
+          ],
+          "mu": [
+            "2/5",
+            "3/5"
+          ],
+          "gamma": "2/3",
+          "n": 12,
+          "phi": [
+            "1/7",
+            "-2/9"
+          ],
+          "shift": "-2/7",
+          "probe": [
+            "0",
+            "0"
+          ],
+          "evidence": "synthetic_only",
+          "authorization": "none"
+        }
+      },
+      "expected": {
+        "ok": true,
+        "op": "mrp_stationary",
+        "data": {
+          "unique": false,
+          "probability_of_state0_interval": [
+            "0",
+            "1"
+          ],
+          "representative": [
+            "1/2",
+            "1/2"
+          ],
+          "stationary_residual": [
+            "0",
+            "0"
+          ],
+          "all_initial_stationary": true
+        },
+        "core_disposition": "completed",
+        "scope": "finite_synthetic_two_state_markov_rewards"
+      },
+      "expected_exit_status": 0,
+      "property": "stationary_family"
+    },
+    {
+      "id": "TH6977-EXTRA-04",
+      "name": "Zero horizon has no reward terms",
+      "kind": "accepting_property",
+      "request": {
+        "op": "mrp_finite_discounted",
+        "input": {
+          "P": [
+            [
+              "5/7",
+              "2/7"
+            ],
+            [
+              "3/11",
+              "8/11"
+            ]
+          ],
+          "r": [
+            "7/13",
+            "-5/17"
+          ],
+          "mu": [
+            "2/5",
+            "3/5"
+          ],
+          "gamma": "2/3",
+          "n": 0,
+          "phi": [
+            "1/7",
+            "-2/9"
+          ],
+          "shift": "-2/7",
+          "probe": [
+            "0",
+            "0"
+          ],
+          "evidence": "synthetic_only",
+          "authorization": "none"
+        }
+      },
+      "expected": {
+        "ok": true,
+        "op": "mrp_finite_discounted",
+        "data": {
+          "horizon": 0,
+          "return": "0",
+          "terms": [],
+          "next_distribution": [
+            "2/5",
+            "3/5"
+          ]
+        },
+        "core_disposition": "completed",
+        "scope": "finite_synthetic_two_state_markov_rewards"
+      },
+      "expected_exit_status": 0,
+      "property": "zero_horizon"
+    },
+    {
+      "id": "TH6977-EXTRA-05",
+      "name": "Zero rewards have zero discounted value",
+      "kind": "accepting_property",
+      "request": {
+        "op": "mrp_discounted_value",
+        "input": {
+          "P": [
+            [
+              "5/7",
+              "2/7"
+            ],
+            [
+              "3/11",
+              "8/11"
+            ]
+          ],
+          "r": [
+            "0",
+            "0"
+          ],
+          "mu": [
+            "2/5",
+            "3/5"
+          ],
+          "gamma": "2/3",
+          "n": 12,
+          "phi": [
+            "1/7",
+            "-2/9"
+          ],
+          "shift": "-2/7",
+          "probe": [
+            "0",
+            "0"
+          ],
+          "evidence": "synthetic_only",
+          "authorization": "none"
+        }
+      },
+      "expected": {
+        "ok": true,
+        "op": "mrp_discounted_value",
+        "data": {
+          "state_value": [
+            "0",
+            "0"
+          ],
+          "initial_value": "0",
+          "bellman_residual": [
+            "0",
+            "0"
+          ]
+        },
+        "core_disposition": "completed",
+        "scope": "finite_synthetic_two_state_markov_rewards"
+      },
+      "expected_exit_status": 0,
+      "property": "zero_rewards"
+    },
+    {
+      "id": "TH6977-EXTRA-06",
+      "name": "State permutation reverses state values and preserves the initial value",
+      "kind": "accepting_property",
+      "request": {
+        "op": "mrp_discounted_value",
+        "input": {
+          "P": [
+            [
+              "5/7",
+              "2/7"
+            ],
+            [
+              "3/11",
+              "8/11"
+            ]
+          ],
+          "r": [
+            "7/13",
+            "-5/17"
+          ],
+          "mu": [
+            "2/5",
+            "3/5"
+          ],
+          "gamma": "2/3",
+          "n": 12,
+          "phi": [
+            "1/7",
+            "-2/9"
+          ],
+          "shift": "-2/7",
+          "probe": [
+            "0",
+            "0"
+          ],
+          "evidence": "synthetic_only",
+          "authorization": "none"
+        }
+      },
+      "expected": {
+        "ok": true,
+        "op": "mrp_discounted_value",
+        "data": {
+          "state_value": [
+            "33903/36023",
+            "-8601/36023"
+          ],
+          "initial_value": "3231/13855",
+          "bellman_residual": [
+            "0",
+            "0"
+          ]
+        },
+        "core_disposition": "completed",
+        "scope": "finite_synthetic_two_state_markov_rewards"
+      },
+      "expected_exit_status": 0,
+      "property": "state_permutation",
+      "second_request": {
+        "op": "mrp_discounted_value",
+        "input": {
+          "P": [
+            [
+              "8/11",
+              "3/11"
+            ],
+            [
+              "2/7",
+              "5/7"
+            ]
+          ],
+          "r": [
+            "-5/17",
+            "7/13"
+          ],
+          "mu": [
+            "3/5",
+            "2/5"
+          ],
+          "gamma": "2/3",
+          "n": 12,
+          "phi": [
+            "-2/9",
+            "1/7"
+          ],
+          "shift": "-2/7",
+          "probe": [
+            "0",
+            "0"
+          ],
+          "evidence": "synthetic_only",
+          "authorization": "none"
+        }
+      },
+      "second_expected": {
+        "ok": true,
+        "op": "mrp_discounted_value",
+        "data": {
+          "state_value": [
+            "-8601/36023",
+            "33903/36023"
+          ],
+          "initial_value": "3231/13855",
+          "bellman_residual": [
+            "0",
+            "0"
+          ]
+        },
+        "core_disposition": "completed",
+        "scope": "finite_synthetic_two_state_markov_rewards"
+      }
+    },
+    {
+      "id": "TH6977-EXTRA-07",
+      "name": "Value as potential makes the transformed reward zero",
+      "kind": "accepting_property",
+      "request": {
+        "op": "mrp_potential_shape",
+        "input": {
+          "P": [
+            [
+              "5/7",
+              "2/7"
+            ],
+            [
+              "3/11",
+              "8/11"
+            ]
+          ],
+          "r": [
+            "7/13",
+            "-5/17"
+          ],
+          "mu": [
+            "2/5",
+            "3/5"
+          ],
+          "gamma": "2/3",
+          "n": 12,
+          "phi": [
+            "33903/36023",
+            "-8601/36023"
+          ],
+          "shift": "-2/7",
+          "probe": [
+            "0",
+            "0"
+          ],
+          "evidence": "synthetic_only",
+          "authorization": "none"
+        }
+      },
+      "expected": {
+        "ok": true,
+        "op": "mrp_potential_shape",
+        "data": {
+          "potential": [
+            "33903/36023",
+            "-8601/36023"
+          ],
+          "transformed_reward": [
+            "0",
+            "0"
+          ],
+          "transformed_value": [
+            "0",
+            "0"
+          ],
+          "value_minus_potential": [
+            "0",
+            "0"
+          ],
+          "fixed_chain_identity": true,
+          "general_policy_invariance_claim": false
+        },
+        "core_disposition": "completed",
+        "scope": "finite_synthetic_two_state_markov_rewards"
+      },
+      "expected_exit_status": 0,
+      "property": "zero_shaped_reward"
+    },
+    {
+      "id": "TH6977-EXTRA-08",
+      "name": "Discounted occupancy obeys mass and flow identities",
+      "kind": "accepting_property",
+      "request": {
+        "op": "mrp_occupancy",
+        "input": {
+          "P": [
+            [
+              "5/7",
+              "2/7"
+            ],
+            [
+              "3/11",
+              "8/11"
+            ]
+          ],
+          "r": [
+            "7/13",
+            "-5/17"
+          ],
+          "mu": [
+            "2/5",
+            "3/5"
+          ],
+          "gamma": "2/3",
+          "n": 12,
+          "phi": [
+            "1/7",
+            "-2/9"
+          ],
+          "shift": "-2/7",
+          "probe": [
+            "0",
+            "0"
+          ],
+          "evidence": "synthetic_only",
+          "authorization": "none"
+        }
+      },
+      "expected": {
+        "ok": true,
+        "op": "mrp_occupancy",
+        "data": {
+          "normalizing_factor": "1/3",
+          "occupancy": [
+            "364/815",
+            "451/815"
+          ],
+          "mass": "1",
+          "flow_residual": [
+            "0",
+            "0"
+          ]
+        },
+        "core_disposition": "completed",
+        "scope": "finite_synthetic_two_state_markov_rewards"
+      },
+      "expected_exit_status": 0,
+      "property": "occupancy_flow"
+    },
+    {
+      "id": "TH6977-EXTRA-09",
+      "name": "Identity chain attains the residual bound",
+      "kind": "accepting_property",
+      "request": {
+        "op": "mrp_residual_bound",
+        "input": {
+          "P": [
+            [
+              "1",
+              "0"
+            ],
+            [
+              "0",
+              "1"
+            ]
+          ],
+          "r": [
+            "3",
+            "1"
+          ],
+          "mu": [
+            "2/5",
+            "3/5"
+          ],
+          "gamma": "2/3",
+          "n": 12,
+          "phi": [
+            "1/7",
+            "-2/9"
+          ],
+          "shift": "-2/7",
+          "probe": [
+            "0",
+            "0"
+          ],
+          "evidence": "synthetic_only",
+          "authorization": "none"
+        }
+      },
+      "expected": {
+        "ok": true,
+        "op": "mrp_residual_bound",
+        "data": {
+          "probe": [
+            "0",
+            "0"
+          ],
+          "residual": [
+            "3",
+            "1"
+          ],
+          "max_residual": "3",
+          "bound": "9",
+          "actual_max_error": "9",
+          "bound_holds": true
+        },
+        "core_disposition": "completed",
+        "scope": "finite_synthetic_two_state_markov_rewards"
+      },
+      "expected_exit_status": 0,
+      "property": "tight_residual"
+    },
+    {
+      "id": "TH6977-EXTRA-10",
+      "name": "Constant rewards attain the geometric tail bound",
+      "kind": "accepting_property",
+      "request": {
+        "op": "mrp_truncation_bound",
+        "input": {
+          "P": [
+            [
+              "5/7",
+              "2/7"
+            ],
+            [
+              "3/11",
+              "8/11"
+            ]
+          ],
+          "r": [
+            "7/11",
+            "7/11"
+          ],
+          "mu": [
+            "2/5",
+            "3/5"
+          ],
+          "gamma": "2/3",
+          "n": 5,
+          "phi": [
+            "1/7",
+            "-2/9"
+          ],
+          "shift": "-2/7",
+          "probe": [
+            "0",
+            "0"
+          ],
+          "evidence": "synthetic_only",
+          "authorization": "none"
+        }
+      },
+      "expected": {
+        "ok": true,
+        "op": "mrp_truncation_bound",
+        "data": {
+          "horizon": 5,
+          "finite_return": "1477/891",
+          "infinite_return": "21/11",
+          "absolute_tail": "224/891",
+          "uniform_reward_bound": "7/11",
+          "tail_bound": "224/891",
+          "bound_holds": true
+        },
+        "core_disposition": "completed",
+        "scope": "finite_synthetic_two_state_markov_rewards"
+      },
+      "expected_exit_status": 0,
+      "property": "tight_tail"
+    },
+    {
+      "id": "TH6977-EXTRA-11",
+      "name": "Negative rewards refute an automatic positive discount sensitivity",
+      "kind": "accepting_property",
+      "request": {
+        "op": "mrp_discount_derivative",
+        "input": {
+          "P": [
+            [
+              "5/7",
+              "2/7"
+            ],
+            [
+              "3/11",
+              "8/11"
+            ]
+          ],
+          "r": [
+            "-1",
+            "-1"
+          ],
+          "mu": [
+            "2/5",
+            "3/5"
+          ],
+          "gamma": "1/3",
+          "n": 12,
+          "phi": [
+            "1/7",
+            "-2/9"
+          ],
+          "shift": "-2/7",
+          "probe": [
+            "0",
+            "0"
+          ],
+          "evidence": "synthetic_only",
+          "authorization": "none"
+        }
+      },
+      "expected": {
+        "ok": true,
+        "op": "mrp_discount_derivative",
+        "data": {
+          "state_derivative": [
+            "-9/4",
+            "-9/4"
+          ],
+          "initial_derivative": "-9/4",
+          "held_fixed": [
+            "P",
+            "r",
+            "mu"
+          ],
+          "empirical_responsiveness": false
+        },
+        "core_disposition": "completed",
+        "scope": "finite_synthetic_two_state_markov_rewards"
+      },
+      "expected_exit_status": 0,
+      "property": "negative_derivative"
+    },
+    {
+      "id": "TH6977-EXTRA-12",
+      "name": "Negative reward translation keeps the signed geometric increment",
+      "kind": "accepting_property",
+      "request": {
+        "op": "mrp_reward_translate",
+        "input": {
+          "P": [
+            [
+              "5/7",
+              "2/7"
+            ],
+            [
+              "3/11",
+              "8/11"
+            ]
+          ],
+          "r": [
+            "7/13",
+            "-5/17"
+          ],
+          "mu": [
+            "2/5",
+            "3/5"
+          ],
+          "gamma": "2/3",
+          "n": 12,
+          "phi": [
+            "1/7",
+            "-2/9"
+          ],
+          "shift": "-5/7",
+          "probe": [
+            "0",
+            "0"
+          ],
+          "evidence": "synthetic_only",
+          "authorization": "none"
+        }
+      },
+      "expected": {
+        "ok": true,
+        "op": "mrp_reward_translate",
+        "data": {
+          "shift": "-5/7",
+          "translated_reward": [
+            "-16/91",
+            "-120/119"
+          ],
+          "translated_value": [
+            "-303024/252161",
+            "-600552/252161"
+          ],
+          "value_increment": [
+            "-15/7",
+            "-15/7"
+          ],
+          "identity_holds": true
+        },
+        "core_disposition": "completed",
+        "scope": "finite_synthetic_two_state_markov_rewards"
+      },
+      "expected_exit_status": 0,
+      "property": "negative_translation"
+    },
+    {
+      "id": "TH6977-EXTRA-13",
+      "name": "Unknown root fields fail closed",
+      "kind": "refusal_property",
+      "request": {
+        "op": "mrp_profile",
+        "input": {
+          "P": [
+            [
+              "5/7",
+              "2/7"
+            ],
+            [
+              "3/11",
+              "8/11"
+            ]
+          ],
+          "r": [
+            "7/13",
+            "-5/17"
+          ],
+          "mu": [
+            "2/5",
+            "3/5"
+          ],
+          "gamma": "2/3",
+          "n": 12,
+          "phi": [
+            "1/7",
+            "-2/9"
+          ],
+          "shift": "-2/7",
+          "probe": [
+            "0",
+            "0"
+          ],
+          "evidence": "synthetic_only",
+          "authorization": "none"
+        },
+        "extra": "not admitted"
+      },
+      "expected": {
+        "ok": false,
+        "error": "closed_fields"
+      },
+      "expected_exit_status": 2,
+      "failed_subject_original_success_credit": 0
+    },
+    {
+      "id": "TH6977-EXTRA-14",
+      "name": "Decoded duplicate keys are refused",
+      "kind": "refusal_property",
+      "request": null,
+      "expected": {
+        "ok": false,
+        "error": "duplicate_key"
+      },
+      "expected_exit_status": 2,
+      "failed_subject_original_success_credit": 0,
+      "stdin_text": "{\"op\":\"mrp_profile\",\"\\u006fp\":\"mrp_support\",\"input\":{\"P\":[[\"5/7\",\"2/7\"],[\"3/11\",\"8/11\"]],\"r\":[\"7/13\",\"-5/17\"],\"mu\":[\"2/5\",\"3/5\"],\"gamma\":\"2/3\",\"n\":12,\"phi\":[\"1/7\",\"-2/9\"],\"shift\":\"-2/7\",\"probe\":[\"0\",\"0\"],\"evidence\":\"synthetic_only\",\"authorization\":\"none\"}}"
+    },
+    {
+      "id": "TH6977-EXTRA-15",
+      "name": "Invalid UTF-8 is refused before JSON parsing",
+      "kind": "refusal_property",
+      "request": null,
+      "expected": {
+        "ok": false,
+        "error": "utf8"
+      },
+      "expected_exit_status": 2,
+      "failed_subject_original_success_credit": 0,
+      "stdin_hex": "ff"
+    },
+    {
+      "id": "TH6977-EXTRA-16",
+      "name": "Nonfinite decoded numbers are refused",
+      "kind": "refusal_property",
+      "request": null,
+      "expected": {
+        "ok": false,
+        "error": "nonfinite_number"
+      },
+      "expected_exit_status": 2,
+      "failed_subject_original_success_credit": 0,
+      "stdin_text": "{\"op\":\"mrp_profile\",\"input\":{\"P\":[[\"5/7\",\"2/7\"],[\"3/11\",\"8/11\"]],\"r\":[\"7/13\",\"-5/17\"],\"mu\":[\"2/5\",\"3/5\"],\"gamma\":1e400,\"n\":12,\"phi\":[\"1/7\",\"-2/9\"],\"shift\":\"-2/7\",\"probe\":[\"0\",\"0\"],\"evidence\":\"synthetic_only\",\"authorization\":\"none\"}}"
+    },
+    {
+      "id": "TH6977-EXTRA-17",
+      "name": "A boolean is not an integer horizon",
+      "kind": "refusal_property",
+      "request": {
+        "op": "mrp_profile",
+        "input": {
+          "P": [
+            [
+              "5/7",
+              "2/7"
+            ],
+            [
+              "3/11",
+              "8/11"
+            ]
+          ],
+          "r": [
+            "7/13",
+            "-5/17"
+          ],
+          "mu": [
+            "2/5",
+            "3/5"
+          ],
+          "gamma": "2/3",
+          "n": true,
+          "phi": [
+            "1/7",
+            "-2/9"
+          ],
+          "shift": "-2/7",
+          "probe": [
+            "0",
+            "0"
+          ],
+          "evidence": "synthetic_only",
+          "authorization": "none"
+        }
+      },
+      "expected": {
+        "ok": false,
+        "error": "horizon_bounds"
+      },
+      "expected_exit_status": 2,
+      "failed_subject_original_success_credit": 0
+    },
+    {
+      "id": "TH6977-EXTRA-18",
+      "name": "Zero-denominator rational syntax is refused",
+      "kind": "refusal_property",
+      "request": {
+        "op": "mrp_profile",
+        "input": {
+          "P": [
+            [
+              "5/7",
+              "2/7"
+            ],
+            [
+              "3/11",
+              "8/11"
+            ]
+          ],
+          "r": [
+            "1/0",
+            "-5/17"
+          ],
+          "mu": [
+            "2/5",
+            "3/5"
+          ],
+          "gamma": "2/3",
+          "n": 12,
+          "phi": [
+            "1/7",
+            "-2/9"
+          ],
+          "shift": "-2/7",
+          "probe": [
+            "0",
+            "0"
+          ],
+          "evidence": "synthetic_only",
+          "authorization": "none"
+        }
+      },
+      "expected": {
+        "ok": false,
+        "error": "rational_format"
+      },
+      "expected_exit_status": 2,
+      "failed_subject_original_success_credit": 0
+    },
+    {
+      "id": "TH6977-EXTRA-19",
+      "name": "A known operation outside the paired caller is refused at that boundary",
+      "kind": "refusal_property",
+      "request": {
+        "op": "mrp_discounted_value",
+        "input": {
+          "P": [
+            [
+              "5/7",
+              "2/7"
+            ],
+            [
+              "3/11",
+              "8/11"
+            ]
+          ],
+          "r": [
+            "7/13",
+            "-5/17"
+          ],
+          "mu": [
+            "2/5",
+            "3/5"
+          ],
+          "gamma": "2/3",
+          "n": 12,
+          "phi": [
+            "1/7",
+            "-2/9"
+          ],
+          "shift": "-2/7",
+          "probe": [
+            "0",
+            "0"
+          ],
+          "evidence": "synthetic_only",
+          "authorization": "none"
+        }
+      },
+      "expected": {
+        "ok": false,
+        "error": "caller_scope"
+      },
+      "expected_exit_status": 2,
+      "failed_subject_original_success_credit": 0,
+      "caller_override": "x1-01"
+    },
+    {
+      "id": "TH6977-EXTRA-20",
+      "name": "A metadata assertion cannot manufacture observations",
+      "kind": "refusal_property",
+      "request": {
+        "op": "mrp_observation_gap",
+        "input": {
+          "P": [
+            [
+              "5/7",
+              "2/7"
+            ],
+            [
+              "3/11",
+              "8/11"
+            ]
+          ],
+          "r": [
+            "7/13",
+            "-5/17"
+          ],
+          "mu": [
+            "2/5",
+            "3/5"
+          ],
+          "gamma": "2/3",
+          "n": 12,
+          "phi": [
+            "1/7",
+            "-2/9"
+          ],
+          "shift": "-2/7",
+          "probe": [
+            "0",
+            "0"
+          ],
+          "evidence": "measured",
+          "authorization": "none"
+        }
+      },
+      "expected": {
+        "ok": false,
+        "error": "evidence_scope"
+      },
+      "expected_exit_status": 2,
+      "failed_subject_original_success_credit": 0
+    }
+  ],
+  "same_owner_only": true,
+  "independent_reproduction": false,
+  "parser_precedence": [
+    "byte cap",
+    "UTF-8",
+    "JSON syntax and decoded keys",
+    "finite numbers",
+    "root closed fields",
+    "paired caller scope",
+    "input closed fields",
+    "rational profile",
+    "horizon",
+    "evidence and authorization scope"
+  ],
+  "successful_predicates_not_replayed": true,
+  "boundary": "Names, roles, hopes and pronouns are relational working language only. These are bounded same-owner synthetic computations, not consciousness/personhood, identity continuity, qualification, independent reproduction, empirical GMUT confirmation, production THOS/Freed ID, complete privacy/accessibility/security, professional, legal, cultural, affected-party or Maori authority, Theory-of-Everything proof, canon or Stage 20 readiness. Maori concepts remain under Maori authority. NOT_READY_FOR_STAGE_20."
+}
