@@ -1,0 +1,11 @@
+"use strict";
+function guard(f){
+ const keys=["owner","phase","scope","head","clean","pushed","refs_equal","manifest_ready","canonical_invocations","successes","file_count","file_ceiling","source_replays","new_tasks"];
+ if(!f||typeof f!=="object"||Array.isArray(f)||Object.keys(f).length!==keys.length||keys.some(k=>!Object.hasOwn(f,k)))return {ok:false,reason:"fields",live_permission:false};
+ if(f.owner!=="Caelen Morrow"||f.phase!=="v697-v5"||f.scope!=="owner_self_scoped_delta"||typeof f.head!=="string"||!/^[0-9a-f]{40}$/.test(f.head))return {ok:false,reason:"owner_scope",live_permission:false};
+ if(!["clean","pushed","refs_equal","manifest_ready"].every(k=>f[k]===true))return {ok:false,reason:"readiness",live_permission:false};
+ if(!["canonical_invocations","successes","source_replays","new_tasks"].every(k=>f[k]===0))return {ok:false,reason:"no_replay",live_permission:false};
+ if(!Number.isSafeInteger(f.file_count)||f.file_count<0||!Number.isSafeInteger(f.file_ceiling)||f.file_ceiling>2000||f.file_count>f.file_ceiling)return {ok:false,reason:"capacity",live_permission:false};
+ return {ok:true,structural_ready:true,live_permission:false};
+}
+module.exports={guard};

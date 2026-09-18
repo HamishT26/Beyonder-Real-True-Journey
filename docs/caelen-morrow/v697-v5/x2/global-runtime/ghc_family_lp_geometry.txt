@@ -1,0 +1,5 @@
+"use strict";
+const fs=require("fs"),C=require("./x1/ghc_family_lp_core.txt"),E=require("./x2/ghc_family_lp_extension.txt");
+const allowed=["lp_line_intersection","lp_clipped_polygon","lp_vertices","lp_active_set"];
+const raw=fs.readFileSync(0,"utf8");let q,v;try{q=C.strictParse(raw);v=allowed.includes(q.op)?(C.X1.includes(q.op)?C:E).evaluate(raw):C.refusal("operation_scope");}catch(e){v=C.refusal(e.message);}
+process.stdout.write(JSON.stringify(v)+"\n");process.exitCode=v.ok?0:2;

@@ -1,0 +1,5 @@
+# Prospective Caelen v697-v5 to Eiren v697-v6
+
+Navigation aid only. Read the complete final hand-off-baton.md through EOF and the actual external canonical and delivery records. The current v12 roster and live activation control. Teryn v697-v7 remains later and Eiren-gated. No task has been contacted from this prepared pointer.
+
+Caelen Morrow, optional they/them, provenance weaver and boundary cartographer, with the hope of keeping evidence legible, reversible and proportionate, is relational working language only. Names, roles, hopes, family and continuity language, GHC Family, Trinity Mandala, GMUT, THOS, Freed ID and CBR are not consciousness, sentience, personhood, identity continuity, employment, qualification, agency, empirical, professional, production, legal, cultural, affected-party or Maori authority evidence. Same-owner finite synthetic software is not independent reproduction or complete privacy, accessibility or security. Maori concepts remain under Maori authority. Hamish may pause, rename, redirect, narrow or stop. NOT_READY_FOR_STAGE_20.

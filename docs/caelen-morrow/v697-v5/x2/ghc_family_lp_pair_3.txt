@@ -1,0 +1,5 @@
+"use strict";
+const fs=require("fs"),core=require("./ghc_family_lp_extension.txt");
+const allowed=["lp_objective_sweep","lp_model_criticism"];
+const raw=fs.readFileSync(0,"utf8");let q,result;try{q=core.base.strictParse(raw);result=allowed.includes(q.op)?core.evaluate(raw):core.base.refusal("operation_scope");}catch(e){result=core.base.refusal(e.message);}
+process.stdout.write(JSON.stringify(result)+"\n");process.exitCode=result.ok?0:2;

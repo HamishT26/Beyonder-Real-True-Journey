@@ -1,0 +1,26 @@
+"use strict";
+const base=require("../x1/ghc_family_lp_core.txt");
+const X2=["lp_minimum","lp_optimal_face","lp_normal_cone","lp_dual_certificate","lp_weak_duality","lp_complementarity","lp_objective_sweep","lp_model_criticism","lp_observation_gap","lp_authority_gate"];
+const {Z,R,add,sub,mul,cmp,zero,dot,slack,feasible,objectiveValue,clipping,dimension,envelope,refusal,strictParse,prepare}=base;
+function sum(xs){return xs.reduce(add,Z);}
+function minimum(p,objective=p.objective){const vs=clipping(p);if(!vs.length)return {status:"infeasible",minimum:null,extreme_optimizers:[]};const vals=vs.map(x=>objectiveValue(objective,p.constant,x)),low=vals.reduce((a,b)=>cmp(a,b)<0?a:b);return {status:"optimal",minimum:low,extreme_optimizers:vs.filter((x,i)=>cmp(vals[i],low)===0)};}
+function evaluate(q){
+ try{
+  if(typeof q==="string")q=strictParse(q);
+  const p=prepare(q,X2),{planes,point,objective,constant,multipliers:lam}=p,ss=slack(planes,point),primal=feasible(planes,point),nonneg=lam.every(x=>cmp(x,Z)>=0),station=objective.map((c,k)=>add(c,sum(planes.map((r,i)=>mul(lam[i],r[k]))))),dual=nonneg&&station.every(zero),products=lam.map((l,i)=>mul(l,ss[i])),bound=dual?sub(constant,sum(planes.map((r,i)=>mul(lam[i],r[2])))):null;let v,outcome="completed";
+  switch(q.op){
+  case "lp_minimum":v=minimum(p);break;
+  case "lp_optimal_face":{const z=minimum(p);v={status:z.status,extreme_points:z.extreme_optimizers,dimension:dimension(z.extreme_optimizers),representation:z.status==="optimal"?"convex_hull_of_listed_extreme_points":"empty"};break;}
+  case "lp_normal_cone":v={point_feasible:primal,stationarity:station,multipliers_nonnegative:nonneg,inactive_multipliers_zero:lam.every((l,i)=>zero(ss[i])||zero(l)),certifies_objective_normal:primal&&dual&&products.every(zero)};break;
+  case "lp_dual_certificate":v={primal_feasible:primal,dual_feasible:dual,stationarity:station,complementarity:products,primal_value:objectiveValue(objective,constant,point),dual_lower_bound:bound,valid:primal&&dual&&products.every(zero)};break;
+  case "lp_weak_duality":{const value=objectiveValue(objective,constant,point);v={primal_feasible:primal,dual_feasible:dual,dual_lower_bound:bound,primal_value:value,bound_applies:primal&&dual,gap:primal&&dual?sub(value,bound):null};break;}
+  case "lp_complementarity":v={products,all_zero:products.every(zero),certificate_requires_separate_feasibility_and_stationarity:true};break;
+  case "lp_objective_sweep":outcome="represented";v={rows:p.sweep.map(obj=>({objective:obj,result:minimum(p,obj)})),real_parameter_estimation:false};break;
+  case "lp_model_criticism":outcome="represented";v={declared_constraints:planes.length,real_rows:0,physical_model_error:"unknown",exact_for_declared_rationals_only:true,allocation_authority:false};break;
+  case "lp_observation_gap":outcome="open_gap";v={rows:0,transport_enabled:false,empirical_coefficients:false,outside_prerequisites:["governed observations","measurement uncertainty","independent model review"]};break;
+  case "lp_authority_gate":outcome="exact_gate";v={authority:false,real_allocation:false,outside_prerequisites:["affected-party governance","competent professional review","legal cultural and Maori authority where applicable","safety privacy accessibility and remedy"]};break;
+  }
+  return envelope(v,outcome);
+ }catch(e){return refusal(e.message);}
+}
+module.exports={base,X2,minimum,evaluate};
