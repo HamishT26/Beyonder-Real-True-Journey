@@ -1,0 +1,74 @@
+"use strict";
+// Pure exact half-plane support. No request selects a path, command, account or real record.
+const X1=["lp_shape","lp_normalize","lp_slacks","lp_line_intersection","lp_feasible_point","lp_clipped_polygon","lp_vertices","lp_objective_table","lp_support","lp_active_set"];
+const gcd=(a,b)=>{a=a<0n?-a:a;b=b<0n?-b:b;while(b){const t=a%b;a=b;b=t;}return a;};
+function R(n,d=1n){n=BigInt(n);d=BigInt(d);if(!d)throw Error("rational_invalid");if(d<0n){n=-n;d=-d;}const g=gcd(n,d);return [n/g,d/g];}
+const add=(a,b)=>R(a[0]*b[1]+b[0]*a[1],a[1]*b[1]),neg=a=>[-a[0],a[1]],sub=(a,b)=>add(a,neg(b)),mul=(a,b)=>R(a[0]*b[0],a[1]*b[1]),div=(a,b)=>R(a[0]*b[1],a[1]*b[0]),cmp=(a,b)=>{const t=a[0]*b[1]-b[0]*a[1];return t<0n?-1:t>0n?1:0;},zero=a=>a[0]===0n;
+const Z=R(0),ONE=R(1),MINUS=R(-1),str=a=>a[0]+"/"+a[1],pointKey=p=>p.map(str).join(",");
+function rational(s){if(typeof s!=="string"||s.length>32||!/^[-+]?\d+\/[-+]?\d+$/.test(s))throw Error("rational_invalid");const [n,d]=s.split("/").map(BigInt);if(n>1000000000n||n< -1000000000n||d>1000000n||d< -1000000n||d===0n)throw Error("rational_invalid");return R(n,d);}
+function fields(o,keys,reason){if(!o||typeof o!=="object"||Array.isArray(o)||Object.keys(o).length!==keys.length||keys.some(k=>!Object.hasOwn(o,k)))throw Error(reason);}
+function vector(v,n){if(!Array.isArray(v)||v.length!==n)throw Error("vector_dimensions");return v.map(rational);}
+function strictParse(text){
+ if(typeof text!=="string"||Buffer.byteLength(text,"utf8")>1048576)throw Error("wire_size");let at=0;
+ function space(){while(/\s/.test(text[at]||"")&&at<text.length)at++;}
+ function string(){if(text[at]!=='"')throw Error("json_syntax");const start=at++;let escaped=false;while(at<text.length){const c=text[at++];if(!escaped&&c==='"')return JSON.parse(text.slice(start,at));if(!escaped&&c==="\\")escaped=true;else escaped=false;}throw Error("json_syntax");}
+ function value(depth){if(depth>32)throw Error("wire_depth");space();const c=text[at];if(c==='"')return string();if(c==="{"){at++;const o={},keys=new Set();space();if(text[at]==="}"){at++;return o;}while(true){space();const k=string();if(keys.has(k))throw Error("duplicate_decoded_key");keys.add(k);if(["__proto__","prototype","constructor"].includes(k))throw Error("json_key");space();if(text[at++]!==":")throw Error("json_syntax");o[k]=value(depth+1);space();const sep=text[at++];if(sep==="}")return o;if(sep!==",")throw Error("json_syntax");}}
+ if(c==="["){at++;const a=[];space();if(text[at]==="]"){at++;return a;}while(true){if(a.length>2048)throw Error("wire_collection");a.push(value(depth+1));space();const sep=text[at++];if(sep==="]")return a;if(sep!==",")throw Error("json_syntax");}}
+ for(const [token,v]of [["true",true],["false",false],["null",null]])if(text.slice(at,at+token.length)===token){at+=token.length;return v;}
+ const match=text.slice(at).match(/^-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?/);if(!match)throw Error("json_syntax");at+=match[0].length;const n=Number(match[0]);if(!Number.isFinite(n))throw Error("json_nonfinite");return n;
+ }const out=value(0);space();if(at!==text.length)throw Error("json_trailing_data");return out;
+}
+function prepare(q,allowed=X1){
+ fields(q,["op","input"],"request_fields");if(typeof q.op!=="string"||!allowed.includes(q.op))throw Error("operation_scope");
+ const a=q.input;fields(a,["case_id","model","point","direction","pair","multipliers","sweep"],"input_fields");
+ if(typeof a.case_id!=="string"||a.case_id.length>80||!/^[a-zA-Z0-9-]+$/.test(a.case_id))throw Error("case_label");
+ const m=a.model;fields(m,["constraints","lower","upper","objective","constant"],"model_fields");
+ const lower=vector(m.lower,2),upper=vector(m.upper,2),objective=vector(m.objective,2),constant=rational(m.constant);
+ if(lower.some((x,k)=>cmp(x,upper[k])>0))throw Error("bounds_reversed");
+ if(!Array.isArray(m.constraints)||m.constraints.length>8)throw Error("constraint_dimensions");
+ const explicit=m.constraints.map(r=>vector(r,3)),planes=[...explicit,[MINUS,Z,neg(lower[0])],[ONE,Z,upper[0]],[Z,MINUS,neg(lower[1])],[Z,ONE,upper[1]]];
+ const point=vector(a.point,2),direction=vector(a.direction,2),multipliers=vector(a.multipliers,planes.length);
+ if(!Array.isArray(a.pair)||a.pair.length!==2||a.pair.some(i=>!Number.isSafeInteger(i)||i<0||i>=planes.length)||a.pair[0]===a.pair[1])throw Error("pair_dimensions");
+ if(!Array.isArray(a.sweep)||a.sweep.length<1||a.sweep.length>8)throw Error("sweep_dimensions");const sweep=a.sweep.map(x=>vector(x,2));
+ return {q,a,explicit,planes,lower,upper,objective,constant,point,direction,multipliers,sweep};
+}
+const dot=(a,p)=>add(mul(a[0],p[0]),mul(a[1],p[1]));
+const slack=(planes,p)=>planes.map(r=>sub(r[2],dot(r,p)));
+const feasible=(planes,p)=>slack(planes,p).every(s=>cmp(s,Z)>=0);
+const objectiveValue=(objective,constant,p)=>add(dot(objective,p),constant);
+function intersection(planes,i,j){const [u,v,b]=planes[i],[r,s,t]=planes[j],det=sub(mul(u,s),mul(v,r));if(!zero(det))return {class:"unique",point:[div(sub(mul(b,s),mul(v,t)),det),div(sub(mul(u,t),mul(b,r)),det)]};const same=zero(sub(mul(u,t),mul(r,b)))&&zero(sub(mul(v,t),mul(s,b)));return {class:same?"coincident":"parallel",point:null};}
+function sortedUnique(ps){const map=new Map(ps.map(p=>[pointKey(p),p]));return [...map.values()].sort((a,b)=>cmp(a[0],b[0])||cmp(a[1],b[1]));}
+function dimension(ps){if(!ps.length)return -1;if(ps.length===1)return 0;const a=[sub(ps[1][0],ps[0][0]),sub(ps[1][1],ps[0][1])];return ps.slice(2).some(p=>!zero(sub(mul(a[0],sub(p[1],ps[0][1])),mul(a[1],sub(p[0],ps[0][0])))))?2:1;}
+function clipping(p){
+ const {lower:l,upper:u,planes}=p;let poly=[[l[0],l[1]],[u[0],l[1]],[u[0],u[1]],[l[0],u[1]]];
+ // Preserve cyclic order while removing duplicates, including degenerate boxes.
+ const uniqueOrder=ps=>{const seen=new Set();return ps.filter(x=>{const k=pointKey(x);if(seen.has(k))return false;seen.add(k);return true;});};
+ poly=uniqueOrder(poly);
+ for(const plane of planes){if(!poly.length)break;const next=[];
+  for(let i=0;i<poly.length;i++){const a=poly[i],b=poly[(i+1)%poly.length],sa=sub(plane[2],dot(plane,a)),sb=sub(plane[2],dot(plane,b)),ia=cmp(sa,Z)>=0,ib=cmp(sb,Z)>=0;
+   if(ia)next.push(a);
+   if(ia!==ib){const t=div(sa,sub(sa,sb));next.push([add(a[0],mul(t,sub(b[0],a[0]))),add(a[1],mul(t,sub(b[1],a[1])))]);}
+  }poly=uniqueOrder(next);
+ }return sortedUnique(poly);
+}
+function enumeration(p){const ps=[];for(let i=0;i<p.planes.length;i++)for(let j=i+1;j<p.planes.length;j++){const z=intersection(p.planes,i,j);if(z.point&&feasible(p.planes,z.point))ps.push(z.point);}return sortedUnique(ps);}
+function wire(v){if(Array.isArray(v)){if(v.length===2&&typeof v[0]==="bigint")return str(v);return v.map(wire);}if(v&&typeof v==="object")return Object.fromEntries(Object.entries(v).map(([k,x])=>[k,wire(x)]));return v;}
+const envelope=(value,outcome="completed")=>({ok:true,outcome,value:wire(value),evidence_class:"same_owner_finite_synthetic",authority:false});
+const refusal=reason=>({ok:false,outcome:"open_gap",error:"ADMISSION_REFUSED",reason,subject_success_credit:0,authority:false});
+function evaluate(q){
+ try{if(typeof q==="string")q=strictParse(q);const p=prepare(q),{a,planes,point,direction,objective,constant}=p,ss=slack(planes,point),vs=clipping(p);let v;
+ switch(q.op){
+ case "lp_shape":v={explicit_constraints:p.explicit.length,total_constraints:planes.length,fixed_coordinates:p.lower.map((x,k)=>cmp(x,p.upper[k])===0)};break;
+ case "lp_normalize":v={constraints:p.explicit,lower:p.lower,upper:p.upper,objective,constant};break;
+ case "lp_slacks":v={slacks:ss,feasible:feasible(planes,point)};break;
+ case "lp_line_intersection":v=intersection(planes,...a.pair);break;
+ case "lp_feasible_point":v={feasible:feasible(planes,point),violated:ss.flatMap((x,i)=>cmp(x,Z)<0?[i]:[])};break;
+ case "lp_clipped_polygon":v={extreme_points:vs,dimension:dimension(vs),empty:!vs.length};break;
+ case "lp_vertices":v={vertices:enumeration(p).map(x=>({point:x,active:slack(planes,x).flatMap((s,i)=>zero(s)?[i]:[])}))};break;
+ case "lp_objective_table":v={rows:vs.map(x=>({point:x,value:objectiveValue(objective,constant,x)}))};break;
+ case "lp_support":{const rows=vs.map(x=>dot(direction,x)),high=rows.length?rows.reduce((a,b)=>cmp(a,b)>0?a:b):null;v={status:vs.length?"bounded":"infeasible",support:high,extreme_maximizers:vs.filter((x,i)=>cmp(rows[i],high)===0)};break;}
+ case "lp_active_set":v={active:ss.flatMap((s,i)=>zero(s)?[i]:[]),feasible:feasible(planes,point)};break;
+ }return envelope(v);
+ }catch(e){return refusal(e.message);}
+}
+module.exports={X1,R,Z,add,neg,sub,mul,div,cmp,zero,str,dot,slack,feasible,objectiveValue,intersection,sortedUnique,dimension,clipping,enumeration,wire,envelope,refusal,strictParse,prepare,evaluate};
