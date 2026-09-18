@@ -1,0 +1,51 @@
+'use strict';
+const D=require('./ghc_family_strict_json.txt');
+const OPS=['sg_profile','sg_action_post','sg_cpre','sg_universal_pre','sg_safe_fixpoint','sg_horizon_layers','sg_permissive_actions','sg_losing_ranks','sg_strategy_certificate','sg_spoiling_choices'];
+const FIELDS=['profile_id','states','actions','successors','safe','belief','observation','horizon','choice','evidence','authorization'];
+const need=(c,code)=>{if(!c)throw new Error(code);};
+const exact=(o,keys,code)=>need(o!==null&&typeof o==='object'&&!Array.isArray(o)&&JSON.stringify(Object.keys(o).sort())===JSON.stringify(keys.slice().sort()),code);
+const indexList=(a,n,nonempty=false)=>Array.isArray(a)&&(!nonempty||a.length>0)&&a.every(x=>Number.isSafeInteger(x)&&x>=0&&x<n)&&a.every((x,i)=>i===0||a[i-1]<x);
+const name=x=>typeof x==='string'&&/^[a-z][a-z0-9_-]{0,23}$/.test(x);
+function validate(r,allowed=OPS){
+  exact(r,['op','input'],'request_fields');need(allowed.includes(r.op),'operation');const x=r.input;exact(x,FIELDS,'closed_fields');
+  need(typeof x.profile_id==='string'&&/^[a-z][a-z0-9_-]{0,39}$/.test(x.profile_id),'profile_id');
+  need(Array.isArray(x.states)&&x.states.length>=1&&x.states.length<=6&&x.states.every(name)&&new Set(x.states).size===x.states.length,'states');
+  need(Array.isArray(x.actions)&&x.actions.length>=1&&x.actions.length<=3&&x.actions.every(name)&&new Set(x.actions).size===x.actions.length,'actions');
+  const n=x.states.length,a=x.actions.length;
+  need(Array.isArray(x.successors)&&x.successors.length===n&&x.successors.every(row=>Array.isArray(row)&&row.length===a&&row.every(post=>indexList(post,n,true))),'successors');
+  need(indexList(x.safe,n),'safe_set');need(Array.isArray(x.observation)&&x.observation.length===n&&x.observation.every(o=>Number.isSafeInteger(o)&&o>=0&&o<n),'observation');
+  need(indexList(x.belief,n,true)&&new Set(x.belief.map(s=>x.observation[s])).size===1,'belief');
+  need(Number.isSafeInteger(x.horizon)&&x.horizon>=0&&x.horizon<=8,'horizon_bounds');need(Number.isSafeInteger(x.choice)&&x.choice>=0&&x.choice<a,'choice');
+  need(x.evidence==='synthetic_only'&&x.authorization==='none','evidence_authority');return x;
+}
+const sorted=s=>[...s].sort((a,b)=>a-b);
+const subset=(a,b)=>a.every(x=>b.has(x));
+const actionChoices=(x,s,target)=>x.successors[s].map((post,a)=>subset(post,target)?a:null).filter(a=>a!==null);
+const cpre=(x,target)=>new Set(x.states.map((_,s)=>s).filter(s=>actionChoices(x,s,target).length>0));
+const equalSets=(a,b)=>a.size===b.size&&[...a].every(x=>b.has(x));
+function fixpoint(x){
+  const safe=new Set(x.safe);let current=new Set(x.safe);const layers=[sorted(current)];
+  while(true){const predecessors=cpre(x,current),next=new Set([...safe].filter(s=>predecessors.has(s)));if(equalSets(next,current))return{winning:current,layers};current=next;layers.push(sorted(current));need(layers.length<=x.states.length+1,'fixedpoint_budget');}
+}
+function horizonLayers(x){const safe=new Set(x.safe);let current=new Set(x.safe);const layers=[sorted(current)];for(let i=0;i<x.horizon;i++){const predecessors=cpre(x,current);current=new Set([...safe].filter(s=>predecessors.has(s)));layers.push(sorted(current));}return layers;}
+function ranks(x){const layers=fixpoint(x).layers,result=new Map();for(let s=0;s<x.states.length;s++)if(!x.safe.includes(s))result.set(s,0);for(let i=1;i<layers.length;i++)for(const s of layers[i-1])if(!layers[i].includes(s))result.set(s,i);return result;}
+function execute(r){
+  const x=validate(r),op=r.op,win=fixpoint(x).winning;let data;
+  if(op==='sg_profile')data=JSON.parse(JSON.stringify(x));
+  else if(op==='sg_action_post')data={action:x.choice,post:sorted(new Set(x.belief.flatMap(s=>x.successors[s][x.choice])))};
+  else if(op==='sg_cpre')data={target:x.safe.slice(),predecessors:sorted(cpre(x,new Set(x.safe)))};
+  else if(op==='sg_universal_pre')data={predecessors:x.states.map((_,s)=>s).filter(s=>x.successors[s].every(post=>subset(post,new Set(x.safe)))),controller_choice_used:false};
+  else if(op==='sg_safe_fixpoint')data={winning:sorted(win),fixed:equalSets(new Set([...cpre(x,win)].filter(s=>x.safe.includes(s))),win),real_safety_claimed:false};
+  else if(op==='sg_horizon_layers')data={horizon:x.horizon,layers:horizonLayers(x)};
+  else if(op==='sg_permissive_actions')data={winning:sorted(win),actions:sorted(win).map(s=>({state:s,actions:actionChoices(x,s,win)}))};
+  else if(op==='sg_losing_ranks'){const rank=ranks(x);data={ranks:x.states.map((_,s)=>({state:s,rank:rank.has(s)?rank.get(s):null})),winning:sorted(win)};}
+  else if(op==='sg_strategy_certificate')data={winning:sorted(win),strategy:sorted(win).map(s=>({state:s,action:actionChoices(x,s,win)[0]})),closed:true,real_controller_claimed:false};
+  else{const rank=ranks(x);data={losing:sorted(new Set(rank.keys())).map(s=>({state:s,rank:rank.get(s),choices:rank.get(s)===0?[]:x.successors[s].map((post,action)=>{const candidates=post.filter(t=>rank.has(t)&&rank.get(t)<rank.get(s)).sort((a,b)=>rank.get(a)-rank.get(b)||a-b);need(candidates.length>0,'spoiling_certificate');return{action,successor:candidates[0]};})}))};}
+  return{ok:true,op,core_disposition:'completed',scope:'finite_synthetic_safety_game',data};
+}
+function one(r,executor=execute,allowed=OPS){try{exact(r,['op','input'],'request_fields');need(allowed.includes(r.op),'operation');return{status:0,envelope:executor(r)};}catch(e){return{status:2,envelope:{ok:false,error:e.message}};}}
+function runCLI(executor=execute,allowed=OPS){
+  try{const fs=require('fs'),raw=fs.readFileSync(0);need(raw.length<=2*1024*1024,'input_bytes');const request=D.decode(raw);if(request&&Object.prototype.hasOwnProperty.call(request,'batch')){exact(request,['batch'],'batch_fields');need(Array.isArray(request.batch)&&request.batch.length<=1000,'batch_count');console.log(JSON.stringify({batch_results:request.batch.map(r=>one(r,executor,allowed)),production:'iterative_fixedpoint'}));}else{const out=one(request,executor,allowed);console.log(JSON.stringify(out.envelope));process.exitCode=out.status;}}catch(e){console.log(JSON.stringify({ok:false,error:e.message}));process.exitCode=2;}
+}
+module.exports={OPS,FIELDS,need,exact,indexList,validate,sorted,subset,actionChoices,cpre,equalSets,fixpoint,horizonLayers,ranks,execute,one,runCLI};
+if(require.main===module)runCLI();
