@@ -1,0 +1,3 @@
+# Prospective Lyren Moss v698-v4
+
+PREPARED_NOT_SENT. Read docs/vesper-arlen/v698-v3/final/hand-off-baton.md completely through EOF,then final/required-correction-overlay.md,current guidance and actual terminal receipts. A later native acknowledgement alone activates the existing exact-title task. Talen Briar v698-v5 remains Lyren-gated. Same-owner finite synthetic impartial-game contracts only. Relational names, roles, hopes and family language establish no consciousness, personhood, continuity, qualification, independent agency or authority. Maori concepts remain under Maori authority. No empirical GMUT, production THOS/Freed ID, complete assurance, independent reproduction, AGI/ASI, Theory-of-Everything, canon or Stage 20 claim. NOT_READY_FOR_STAGE_20.

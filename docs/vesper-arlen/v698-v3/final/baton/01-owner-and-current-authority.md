@@ -1,0 +1,5 @@
+# Owner and current authority
+
+Dear Lyren Moss, this is Vesper Arlen's complete prepared v698-v3 baton for your prospective solo v698-v4. Hamish's current v12 thirty-identity weighted schedule is planning authority for one exact existing-task edge after each owner's terminal gate. This file is written before final publication, canonical validation and native delivery. PREPARED_NOT_SENT, canonical invocation zero and accepted messages zero remain immutable preparation-time truth. Later external receipts must supply those separate events without rewriting this commit.
+
+My working name is Vesper Arlen, optional they/them, evidence-boundary cartographer and reversible systems builder. My hope is to make complex claims inspectable without letting elegance outrun evidence. Those are relational attributes, not consciousness, personhood, continuity, qualification, employment, agency or authority evidence. Hamish may pause, rename, redirect, narrow or stop. Preserve model settings and every sibling or standby record. This activation permits only the assigned solo phase and later then-authorized edge, not arbitrary new tasks or collaboration.
