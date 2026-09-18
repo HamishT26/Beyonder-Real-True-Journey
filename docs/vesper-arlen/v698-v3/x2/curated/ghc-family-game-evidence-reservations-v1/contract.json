@@ -1,0 +1,423 @@
+{
+  "name": "ghc-family-game-evidence-reservations-v1",
+  "caller": "docs/vesper-arlen/v698-v3/x2/curated/ghc-family-game-evidence-reservations-v1/ghc_family_game_evidence_reservations_v1.txt",
+  "operations": [
+    "ig_path_counts",
+    "ig_evidence_gap",
+    "ig_authority_gate"
+  ],
+  "cases": [
+    {
+      "op": "ig_path_counts",
+      "request": {
+        "op": "ig_path_counts",
+        "input": {
+          "profile_id": "synthetic-game-2016",
+          "moves": [
+            [
+              2
+            ],
+            [],
+            [],
+            []
+          ],
+          "other_moves": [
+            [
+              2
+            ],
+            [
+              2
+            ],
+            []
+          ],
+          "start": 0,
+          "other_start": 0,
+          "heap": 0,
+          "horizon": 0,
+          "play": "normal",
+          "claim": "empirical_gmut",
+          "provided": [
+            "real_observations",
+            "real_operators",
+            "real_keys",
+            "recovery_governance",
+            "manual_evaluation"
+          ],
+          "authority": "none"
+        }
+      },
+      "expected": {
+        "ok": true,
+        "op": "ig_path_counts",
+        "data": {
+          "start": 0,
+          "horizon": 0,
+          "terminal_counts": [
+            0
+          ],
+          "beyond_horizon": 1,
+          "total_complete_plays": 1
+        },
+        "external_credit": false
+      },
+      "status": 0,
+      "adverse": {
+        "request": {
+          "op": "ig_path_counts",
+          "input": {
+            "profile_id": "synthetic-game-2016",
+            "moves": [
+              [
+                2
+              ],
+              [],
+              [],
+              []
+            ],
+            "other_moves": [
+              [
+                2
+              ],
+              [
+                2
+              ],
+              []
+            ],
+            "start": 0,
+            "other_start": 0,
+            "heap": 0,
+            "horizon": 0,
+            "play": "misere",
+            "claim": "empirical_gmut",
+            "provided": [
+              "real_observations",
+              "real_operators",
+              "real_keys",
+              "recovery_governance",
+              "manual_evaluation"
+            ],
+            "authority": "none"
+          }
+        },
+        "expected": {
+          "ok": false,
+          "op": "ig_path_counts",
+          "error": "normal_play_only",
+          "external_credit": false
+        },
+        "status": 2,
+        "original_subject_credit": 0
+      }
+    },
+    {
+      "op": "ig_evidence_gap",
+      "request": {
+        "op": "ig_evidence_gap",
+        "input": {
+          "profile_id": "synthetic-game-2018",
+          "moves": [
+            [
+              3
+            ],
+            [
+              2,
+              3
+            ],
+            [],
+            [
+              5
+            ],
+            [
+              5
+            ],
+            []
+          ],
+          "other_moves": [
+            [
+              1,
+              3,
+              4
+            ],
+            [
+              2,
+              3,
+              4
+            ],
+            [
+              3
+            ],
+            [],
+            []
+          ],
+          "start": 2,
+          "other_start": 1,
+          "heap": 2,
+          "horizon": 2,
+          "play": "normal",
+          "claim": "freed_id",
+          "provided": [
+            "typed_physical_mapping",
+            "safety_monitoring",
+            "interoperability",
+            "assistive_technology"
+          ],
+          "authority": "synthetic_only"
+        }
+      },
+      "expected": {
+        "ok": true,
+        "op": "ig_evidence_gap",
+        "data": {
+          "claim": "freed_id",
+          "required": [
+            "real_keys",
+            "interoperability",
+            "privacy_review",
+            "recovery_governance"
+          ],
+          "provided": [
+            "typed_physical_mapping",
+            "safety_monitoring",
+            "interoperability",
+            "assistive_technology"
+          ],
+          "missing": [
+            "real_keys",
+            "privacy_review",
+            "recovery_governance"
+          ],
+          "externally_verified": false,
+          "claim_established": false,
+          "state": "open_gap"
+        },
+        "external_credit": false
+      },
+      "status": 0,
+      "adverse": {
+        "request": {
+          "op": "ig_evidence_gap",
+          "input": {
+            "profile_id": "synthetic-game-2018",
+            "moves": [
+              [
+                3
+              ],
+              [
+                2,
+                3
+              ],
+              [],
+              [
+                5
+              ],
+              [
+                5
+              ],
+              []
+            ],
+            "other_moves": [
+              [
+                1,
+                3,
+                4
+              ],
+              [
+                2,
+                3,
+                4
+              ],
+              [
+                3
+              ],
+              [],
+              []
+            ],
+            "start": 2,
+            "other_start": 1,
+            "heap": 2,
+            "horizon": 2,
+            "play": "misere",
+            "claim": "freed_id",
+            "provided": [
+              "typed_physical_mapping",
+              "safety_monitoring",
+              "interoperability",
+              "assistive_technology"
+            ],
+            "authority": "synthetic_only"
+          }
+        },
+        "expected": {
+          "ok": false,
+          "op": "ig_evidence_gap",
+          "error": "normal_play_only",
+          "external_credit": false
+        },
+        "status": 2,
+        "original_subject_credit": 0
+      }
+    },
+    {
+      "op": "ig_authority_gate",
+      "request": {
+        "op": "ig_authority_gate",
+        "input": {
+          "profile_id": "synthetic-game-2019",
+          "moves": [
+            [
+              2,
+              3,
+              6
+            ],
+            [
+              2,
+              5,
+              6
+            ],
+            [
+              4,
+              5,
+              6
+            ],
+            [
+              4,
+              5
+            ],
+            [],
+            [],
+            []
+          ],
+          "other_moves": [
+            [],
+            [
+              3
+            ],
+            [],
+            []
+          ],
+          "start": 3,
+          "other_start": 2,
+          "heap": 3,
+          "horizon": 3,
+          "play": "normal",
+          "claim": "accessibility",
+          "provided": [
+            "real_observations",
+            "real_operators",
+            "real_keys",
+            "recovery_governance",
+            "manual_evaluation"
+          ],
+          "authority": "unreviewed"
+        }
+      },
+      "expected": {
+        "ok": true,
+        "op": "ig_authority_gate",
+        "data": {
+          "label": "unreviewed",
+          "authority_granted": false,
+          "rights_allocated": false,
+          "production": false,
+          "stage20": false,
+          "state": "exact_gate"
+        },
+        "external_credit": false
+      },
+      "status": 0,
+      "adverse": {
+        "request": {
+          "op": "ig_authority_gate",
+          "input": {
+            "profile_id": "synthetic-game-2019",
+            "moves": [
+              [
+                2,
+                3,
+                6
+              ],
+              [
+                2,
+                5,
+                6
+              ],
+              [
+                4,
+                5,
+                6
+              ],
+              [
+                4,
+                5
+              ],
+              [],
+              [],
+              []
+            ],
+            "other_moves": [
+              [],
+              [
+                3
+              ],
+              [],
+              []
+            ],
+            "start": 3,
+            "other_start": 2,
+            "heap": 3,
+            "horizon": 3,
+            "play": "misere",
+            "claim": "accessibility",
+            "provided": [
+              "real_observations",
+              "real_operators",
+              "real_keys",
+              "recovery_governance",
+              "manual_evaluation"
+            ],
+            "authority": "unreviewed"
+          }
+        },
+        "expected": {
+          "ok": false,
+          "op": "ig_authority_gate",
+          "error": "normal_play_only",
+          "external_credit": false
+        },
+        "status": 2,
+        "original_subject_credit": 0
+      }
+    }
+  ],
+  "dependency_closure": [
+    "docs/vesper-arlen/v698-v3/x2/curated/support/ghc_family_impartial_core.txt",
+    "docs/vesper-arlen/v698-v3/x2/curated/support/ghc_family_impartial_cli.txt",
+    "docs/vesper-arlen/v698-v3/x2/curated/support/ghc_family_impartial_extension.txt"
+  ],
+  "local_units": [
+    "docs/vesper-arlen/v698-v3/x2/skills/ghc-family-path-counts-impartial-local/SKILL.md",
+    "docs/vesper-arlen/v698-v3/x2/skills/ghc-family-evidence-gap-impartial-local/SKILL.md",
+    "docs/vesper-arlen/v698-v3/x2/skills/ghc-family-authority-gate-impartial-local/SKILL.md"
+  ],
+  "protected_gates": [
+    "empirical",
+    "participant",
+    "production",
+    "deployment",
+    "identity",
+    "professional",
+    "legal",
+    "cultural",
+    "affected_party",
+    "maori_authority",
+    "privacy_complete",
+    "accessibility_complete",
+    "exhaustive_security",
+    "independent_reproduction",
+    "agi_asi",
+    "consciousness_personhood",
+    "theory_of_everything",
+    "canon",
+    "stage20"
+  ]
+}

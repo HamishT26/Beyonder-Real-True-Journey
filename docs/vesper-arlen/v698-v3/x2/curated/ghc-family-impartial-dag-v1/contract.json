@@ -1,0 +1,644 @@
+{
+  "name": "ghc-family-impartial-dag-v1",
+  "caller": "docs/vesper-arlen/v698-v3/x2/curated/ghc-family-impartial-dag-v1/ghc_family_impartial_dag_v1.txt",
+  "operations": [
+    "ig_profile",
+    "ig_reachable",
+    "ig_terminals",
+    "ig_topology",
+    "ig_rank"
+  ],
+  "cases": [
+    {
+      "op": "ig_profile",
+      "request": {
+        "op": "ig_profile",
+        "input": {
+          "profile_id": "synthetic-game-2000",
+          "moves": [
+            [
+              1
+            ],
+            [],
+            [
+              3
+            ],
+            []
+          ],
+          "other_moves": [
+            [
+              1,
+              2
+            ],
+            [],
+            []
+          ],
+          "start": 0,
+          "other_start": 1,
+          "heap": 0,
+          "horizon": 5,
+          "play": "normal",
+          "claim": "empirical_gmut",
+          "provided": [
+            "typed_physical_mapping",
+            "safety_monitoring",
+            "interoperability",
+            "assistive_technology"
+          ],
+          "authority": "none"
+        }
+      },
+      "expected": {
+        "ok": true,
+        "op": "ig_profile",
+        "data": {
+          "positions": 4,
+          "other_positions": 3,
+          "move_edges": 2,
+          "play": "normal",
+          "start": 0,
+          "finite_acyclic": true
+        },
+        "external_credit": false
+      },
+      "status": 0,
+      "adverse": {
+        "request": {
+          "op": "ig_profile",
+          "input": {
+            "profile_id": "synthetic-game-2000",
+            "moves": [
+              [
+                1
+              ],
+              [],
+              [
+                3
+              ],
+              []
+            ],
+            "other_moves": [
+              [
+                1,
+                2
+              ],
+              [],
+              []
+            ],
+            "start": 0,
+            "other_start": 1,
+            "heap": 0,
+            "horizon": 5,
+            "play": "misere",
+            "claim": "empirical_gmut",
+            "provided": [
+              "typed_physical_mapping",
+              "safety_monitoring",
+              "interoperability",
+              "assistive_technology"
+            ],
+            "authority": "none"
+          }
+        },
+        "expected": {
+          "ok": false,
+          "op": "ig_profile",
+          "error": "normal_play_only",
+          "external_credit": false
+        },
+        "status": 2,
+        "original_subject_credit": 0
+      }
+    },
+    {
+      "op": "ig_reachable",
+      "request": {
+        "op": "ig_reachable",
+        "input": {
+          "profile_id": "synthetic-game-2001",
+          "moves": [
+            [
+              3
+            ],
+            [
+              2,
+              3
+            ],
+            [],
+            [],
+            []
+          ],
+          "other_moves": [
+            [
+              1,
+              3,
+              4
+            ],
+            [
+              2,
+              3,
+              4
+            ],
+            [
+              3
+            ],
+            [],
+            [
+              5
+            ],
+            []
+          ],
+          "start": 1,
+          "other_start": 0,
+          "heap": 1,
+          "horizon": 6,
+          "play": "normal",
+          "claim": "production_thos",
+          "provided": [
+            "real_observations",
+            "real_operators",
+            "real_keys",
+            "recovery_governance",
+            "manual_evaluation"
+          ],
+          "authority": "claimed_reviewed"
+        }
+      },
+      "expected": {
+        "ok": true,
+        "op": "ig_reachable",
+        "data": {
+          "start": 1,
+          "positions": [
+            1,
+            2,
+            3
+          ]
+        },
+        "external_credit": false
+      },
+      "status": 0,
+      "adverse": {
+        "request": {
+          "op": "ig_reachable",
+          "input": {
+            "profile_id": "synthetic-game-2001",
+            "moves": [
+              [
+                3
+              ],
+              [
+                2,
+                3
+              ],
+              [],
+              [],
+              []
+            ],
+            "other_moves": [
+              [
+                1,
+                3,
+                4
+              ],
+              [
+                2,
+                3,
+                4
+              ],
+              [
+                3
+              ],
+              [],
+              [
+                5
+              ],
+              []
+            ],
+            "start": 1,
+            "other_start": 0,
+            "heap": 1,
+            "horizon": 6,
+            "play": "misere",
+            "claim": "production_thos",
+            "provided": [
+              "real_observations",
+              "real_operators",
+              "real_keys",
+              "recovery_governance",
+              "manual_evaluation"
+            ],
+            "authority": "claimed_reviewed"
+          }
+        },
+        "expected": {
+          "ok": false,
+          "op": "ig_reachable",
+          "error": "normal_play_only",
+          "external_credit": false
+        },
+        "status": 2,
+        "original_subject_credit": 0
+      }
+    },
+    {
+      "op": "ig_terminals",
+      "request": {
+        "op": "ig_terminals",
+        "input": {
+          "profile_id": "synthetic-game-2002",
+          "moves": [
+            [
+              2,
+              3
+            ],
+            [
+              2,
+              5
+            ],
+            [
+              5
+            ],
+            [
+              4,
+              5
+            ],
+            [],
+            []
+          ],
+          "other_moves": [
+            [
+              2,
+              3,
+              4
+            ],
+            [
+              2,
+              3
+            ],
+            [],
+            [
+              4
+            ],
+            []
+          ],
+          "start": 4,
+          "other_start": 4,
+          "heap": 2,
+          "horizon": 0,
+          "play": "normal",
+          "claim": "freed_id",
+          "provided": [
+            "independent_review",
+            "governed_trial",
+            "privacy_review",
+            "affected_user_review"
+          ],
+          "authority": "synthetic_only"
+        }
+      },
+      "expected": {
+        "ok": true,
+        "op": "ig_terminals",
+        "data": {
+          "positions": [
+            4,
+            5
+          ],
+          "terminal_mover_wins": false
+        },
+        "external_credit": false
+      },
+      "status": 0,
+      "adverse": {
+        "request": {
+          "op": "ig_terminals",
+          "input": {
+            "profile_id": "synthetic-game-2002",
+            "moves": [
+              [
+                2,
+                3
+              ],
+              [
+                2,
+                5
+              ],
+              [
+                5
+              ],
+              [
+                4,
+                5
+              ],
+              [],
+              []
+            ],
+            "other_moves": [
+              [
+                2,
+                3,
+                4
+              ],
+              [
+                2,
+                3
+              ],
+              [],
+              [
+                4
+              ],
+              []
+            ],
+            "start": 4,
+            "other_start": 4,
+            "heap": 2,
+            "horizon": 0,
+            "play": "misere",
+            "claim": "freed_id",
+            "provided": [
+              "independent_review",
+              "governed_trial",
+              "privacy_review",
+              "affected_user_review"
+            ],
+            "authority": "synthetic_only"
+          }
+        },
+        "expected": {
+          "ok": false,
+          "op": "ig_terminals",
+          "error": "normal_play_only",
+          "external_credit": false
+        },
+        "status": 2,
+        "original_subject_credit": 0
+      }
+    },
+    {
+      "op": "ig_topology",
+      "request": {
+        "op": "ig_topology",
+        "input": {
+          "profile_id": "synthetic-game-2003",
+          "moves": [
+            [
+              1,
+              2,
+              5
+            ],
+            [
+              4,
+              5
+            ],
+            [
+              3,
+              4
+            ],
+            [],
+            [],
+            [],
+            []
+          ],
+          "other_moves": [
+            [
+              3
+            ],
+            [
+              2
+            ],
+            [],
+            []
+          ],
+          "start": 1,
+          "other_start": 2,
+          "heap": 3,
+          "horizon": 1,
+          "play": "normal",
+          "claim": "accessibility",
+          "provided": [
+            "typed_physical_mapping",
+            "safety_monitoring",
+            "interoperability",
+            "assistive_technology"
+          ],
+          "authority": "unreviewed"
+        }
+      },
+      "expected": {
+        "ok": true,
+        "op": "ig_topology",
+        "data": {
+          "order": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6
+          ]
+        },
+        "external_credit": false
+      },
+      "status": 0,
+      "adverse": {
+        "request": {
+          "op": "ig_topology",
+          "input": {
+            "profile_id": "synthetic-game-2003",
+            "moves": [
+              [
+                1,
+                2,
+                5
+              ],
+              [
+                4,
+                5
+              ],
+              [
+                3,
+                4
+              ],
+              [],
+              [],
+              [],
+              []
+            ],
+            "other_moves": [
+              [
+                3
+              ],
+              [
+                2
+              ],
+              [],
+              []
+            ],
+            "start": 1,
+            "other_start": 2,
+            "heap": 3,
+            "horizon": 1,
+            "play": "misere",
+            "claim": "accessibility",
+            "provided": [
+              "typed_physical_mapping",
+              "safety_monitoring",
+              "interoperability",
+              "assistive_technology"
+            ],
+            "authority": "unreviewed"
+          }
+        },
+        "expected": {
+          "ok": false,
+          "op": "ig_topology",
+          "error": "normal_play_only",
+          "external_credit": false
+        },
+        "status": 2,
+        "original_subject_credit": 0
+      }
+    },
+    {
+      "op": "ig_rank",
+      "request": {
+        "op": "ig_rank",
+        "input": {
+          "profile_id": "synthetic-game-2004",
+          "moves": [
+            [
+              1
+            ],
+            [
+              3
+            ],
+            [
+              3
+            ],
+            []
+          ],
+          "other_moves": [
+            [
+              2
+            ],
+            [],
+            []
+          ],
+          "start": 0,
+          "other_start": 0,
+          "heap": 4,
+          "horizon": 2,
+          "play": "normal",
+          "claim": "empirical_gmut",
+          "provided": [
+            "real_observations",
+            "real_operators",
+            "real_keys",
+            "recovery_governance",
+            "manual_evaluation"
+          ],
+          "authority": "none"
+        }
+      },
+      "expected": {
+        "ok": true,
+        "op": "ig_rank",
+        "data": {
+          "rank": [
+            2,
+            1,
+            1,
+            0
+          ],
+          "strict_on_all_moves": true
+        },
+        "external_credit": false
+      },
+      "status": 0,
+      "adverse": {
+        "request": {
+          "op": "ig_rank",
+          "input": {
+            "profile_id": "synthetic-game-2004",
+            "moves": [
+              [
+                1
+              ],
+              [
+                3
+              ],
+              [
+                3
+              ],
+              []
+            ],
+            "other_moves": [
+              [
+                2
+              ],
+              [],
+              []
+            ],
+            "start": 0,
+            "other_start": 0,
+            "heap": 4,
+            "horizon": 2,
+            "play": "misere",
+            "claim": "empirical_gmut",
+            "provided": [
+              "real_observations",
+              "real_operators",
+              "real_keys",
+              "recovery_governance",
+              "manual_evaluation"
+            ],
+            "authority": "none"
+          }
+        },
+        "expected": {
+          "ok": false,
+          "op": "ig_rank",
+          "error": "normal_play_only",
+          "external_credit": false
+        },
+        "status": 2,
+        "original_subject_credit": 0
+      }
+    }
+  ],
+  "dependency_closure": [
+    "docs/vesper-arlen/v698-v3/x2/curated/support/ghc_family_impartial_core.txt",
+    "docs/vesper-arlen/v698-v3/x2/curated/support/ghc_family_impartial_cli.txt",
+    "docs/vesper-arlen/v698-v3/x2/curated/support/ghc_family_impartial_extension.txt"
+  ],
+  "local_units": [
+    "docs/vesper-arlen/v698-v3/x1/skills/ghc-family-profile-impartial-local/SKILL.md",
+    "docs/vesper-arlen/v698-v3/x1/skills/ghc-family-reachable-impartial-local/SKILL.md",
+    "docs/vesper-arlen/v698-v3/x1/skills/ghc-family-terminals-impartial-local/SKILL.md",
+    "docs/vesper-arlen/v698-v3/x1/skills/ghc-family-topology-impartial-local/SKILL.md",
+    "docs/vesper-arlen/v698-v3/x1/skills/ghc-family-rank-impartial-local/SKILL.md"
+  ],
+  "protected_gates": [
+    "empirical",
+    "participant",
+    "production",
+    "deployment",
+    "identity",
+    "professional",
+    "legal",
+    "cultural",
+    "affected_party",
+    "maori_authority",
+    "privacy_complete",
+    "accessibility_complete",
+    "exhaustive_security",
+    "independent_reproduction",
+    "agi_asi",
+    "consciousness_personhood",
+    "theory_of_everything",
+    "canon",
+    "stage20"
+  ]
+}

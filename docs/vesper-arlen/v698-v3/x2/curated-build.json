@@ -1,0 +1,3574 @@
+{
+  "utc": "2026-09-18T13:52:19.076Z",
+  "nz": "Saturday, 19 September 2026 at 1:52:19 am NZST",
+  "pairs": 5,
+  "D_expected_bindings": 18,
+  "C_expected_stubs": 5,
+  "definitions": [
+    {
+      "name": "ghc-family-impartial-dag-v1",
+      "guide": "docs/vesper-arlen/v698-v3/x2/curated/ghc-family-impartial-dag-v1/SKILL.md",
+      "caller": "docs/vesper-arlen/v698-v3/x2/curated/ghc-family-impartial-dag-v1/ghc_family_impartial_dag_v1.txt",
+      "contract": "docs/vesper-arlen/v698-v3/x2/curated/ghc-family-impartial-dag-v1/contract.json",
+      "operations": [
+        "ig_profile",
+        "ig_reachable",
+        "ig_terminals",
+        "ig_topology",
+        "ig_rank"
+      ],
+      "guide_sha256": "77a85f2beb26f13570e82751b4be6ba9015487633569df7d13573f19d7986421",
+      "caller_sha256": "98b084feed9bc7a96670381a944398634081805b4f04929c2866f95dd341e303",
+      "cases": [
+        {
+          "op": "ig_profile",
+          "request": {
+            "op": "ig_profile",
+            "input": {
+              "profile_id": "synthetic-game-2000",
+              "moves": [
+                [
+                  1
+                ],
+                [],
+                [
+                  3
+                ],
+                []
+              ],
+              "other_moves": [
+                [
+                  1,
+                  2
+                ],
+                [],
+                []
+              ],
+              "start": 0,
+              "other_start": 1,
+              "heap": 0,
+              "horizon": 5,
+              "play": "normal",
+              "claim": "empirical_gmut",
+              "provided": [
+                "typed_physical_mapping",
+                "safety_monitoring",
+                "interoperability",
+                "assistive_technology"
+              ],
+              "authority": "none"
+            }
+          },
+          "expected": {
+            "ok": true,
+            "op": "ig_profile",
+            "data": {
+              "positions": 4,
+              "other_positions": 3,
+              "move_edges": 2,
+              "play": "normal",
+              "start": 0,
+              "finite_acyclic": true
+            },
+            "external_credit": false
+          },
+          "status": 0,
+          "adverse": {
+            "request": {
+              "op": "ig_profile",
+              "input": {
+                "profile_id": "synthetic-game-2000",
+                "moves": [
+                  [
+                    1
+                  ],
+                  [],
+                  [
+                    3
+                  ],
+                  []
+                ],
+                "other_moves": [
+                  [
+                    1,
+                    2
+                  ],
+                  [],
+                  []
+                ],
+                "start": 0,
+                "other_start": 1,
+                "heap": 0,
+                "horizon": 5,
+                "play": "misere",
+                "claim": "empirical_gmut",
+                "provided": [
+                  "typed_physical_mapping",
+                  "safety_monitoring",
+                  "interoperability",
+                  "assistive_technology"
+                ],
+                "authority": "none"
+              }
+            },
+            "expected": {
+              "ok": false,
+              "op": "ig_profile",
+              "error": "normal_play_only",
+              "external_credit": false
+            },
+            "status": 2,
+            "original_subject_credit": 0
+          }
+        },
+        {
+          "op": "ig_reachable",
+          "request": {
+            "op": "ig_reachable",
+            "input": {
+              "profile_id": "synthetic-game-2001",
+              "moves": [
+                [
+                  3
+                ],
+                [
+                  2,
+                  3
+                ],
+                [],
+                [],
+                []
+              ],
+              "other_moves": [
+                [
+                  1,
+                  3,
+                  4
+                ],
+                [
+                  2,
+                  3,
+                  4
+                ],
+                [
+                  3
+                ],
+                [],
+                [
+                  5
+                ],
+                []
+              ],
+              "start": 1,
+              "other_start": 0,
+              "heap": 1,
+              "horizon": 6,
+              "play": "normal",
+              "claim": "production_thos",
+              "provided": [
+                "real_observations",
+                "real_operators",
+                "real_keys",
+                "recovery_governance",
+                "manual_evaluation"
+              ],
+              "authority": "claimed_reviewed"
+            }
+          },
+          "expected": {
+            "ok": true,
+            "op": "ig_reachable",
+            "data": {
+              "start": 1,
+              "positions": [
+                1,
+                2,
+                3
+              ]
+            },
+            "external_credit": false
+          },
+          "status": 0,
+          "adverse": {
+            "request": {
+              "op": "ig_reachable",
+              "input": {
+                "profile_id": "synthetic-game-2001",
+                "moves": [
+                  [
+                    3
+                  ],
+                  [
+                    2,
+                    3
+                  ],
+                  [],
+                  [],
+                  []
+                ],
+                "other_moves": [
+                  [
+                    1,
+                    3,
+                    4
+                  ],
+                  [
+                    2,
+                    3,
+                    4
+                  ],
+                  [
+                    3
+                  ],
+                  [],
+                  [
+                    5
+                  ],
+                  []
+                ],
+                "start": 1,
+                "other_start": 0,
+                "heap": 1,
+                "horizon": 6,
+                "play": "misere",
+                "claim": "production_thos",
+                "provided": [
+                  "real_observations",
+                  "real_operators",
+                  "real_keys",
+                  "recovery_governance",
+                  "manual_evaluation"
+                ],
+                "authority": "claimed_reviewed"
+              }
+            },
+            "expected": {
+              "ok": false,
+              "op": "ig_reachable",
+              "error": "normal_play_only",
+              "external_credit": false
+            },
+            "status": 2,
+            "original_subject_credit": 0
+          }
+        },
+        {
+          "op": "ig_terminals",
+          "request": {
+            "op": "ig_terminals",
+            "input": {
+              "profile_id": "synthetic-game-2002",
+              "moves": [
+                [
+                  2,
+                  3
+                ],
+                [
+                  2,
+                  5
+                ],
+                [
+                  5
+                ],
+                [
+                  4,
+                  5
+                ],
+                [],
+                []
+              ],
+              "other_moves": [
+                [
+                  2,
+                  3,
+                  4
+                ],
+                [
+                  2,
+                  3
+                ],
+                [],
+                [
+                  4
+                ],
+                []
+              ],
+              "start": 4,
+              "other_start": 4,
+              "heap": 2,
+              "horizon": 0,
+              "play": "normal",
+              "claim": "freed_id",
+              "provided": [
+                "independent_review",
+                "governed_trial",
+                "privacy_review",
+                "affected_user_review"
+              ],
+              "authority": "synthetic_only"
+            }
+          },
+          "expected": {
+            "ok": true,
+            "op": "ig_terminals",
+            "data": {
+              "positions": [
+                4,
+                5
+              ],
+              "terminal_mover_wins": false
+            },
+            "external_credit": false
+          },
+          "status": 0,
+          "adverse": {
+            "request": {
+              "op": "ig_terminals",
+              "input": {
+                "profile_id": "synthetic-game-2002",
+                "moves": [
+                  [
+                    2,
+                    3
+                  ],
+                  [
+                    2,
+                    5
+                  ],
+                  [
+                    5
+                  ],
+                  [
+                    4,
+                    5
+                  ],
+                  [],
+                  []
+                ],
+                "other_moves": [
+                  [
+                    2,
+                    3,
+                    4
+                  ],
+                  [
+                    2,
+                    3
+                  ],
+                  [],
+                  [
+                    4
+                  ],
+                  []
+                ],
+                "start": 4,
+                "other_start": 4,
+                "heap": 2,
+                "horizon": 0,
+                "play": "misere",
+                "claim": "freed_id",
+                "provided": [
+                  "independent_review",
+                  "governed_trial",
+                  "privacy_review",
+                  "affected_user_review"
+                ],
+                "authority": "synthetic_only"
+              }
+            },
+            "expected": {
+              "ok": false,
+              "op": "ig_terminals",
+              "error": "normal_play_only",
+              "external_credit": false
+            },
+            "status": 2,
+            "original_subject_credit": 0
+          }
+        },
+        {
+          "op": "ig_topology",
+          "request": {
+            "op": "ig_topology",
+            "input": {
+              "profile_id": "synthetic-game-2003",
+              "moves": [
+                [
+                  1,
+                  2,
+                  5
+                ],
+                [
+                  4,
+                  5
+                ],
+                [
+                  3,
+                  4
+                ],
+                [],
+                [],
+                [],
+                []
+              ],
+              "other_moves": [
+                [
+                  3
+                ],
+                [
+                  2
+                ],
+                [],
+                []
+              ],
+              "start": 1,
+              "other_start": 2,
+              "heap": 3,
+              "horizon": 1,
+              "play": "normal",
+              "claim": "accessibility",
+              "provided": [
+                "typed_physical_mapping",
+                "safety_monitoring",
+                "interoperability",
+                "assistive_technology"
+              ],
+              "authority": "unreviewed"
+            }
+          },
+          "expected": {
+            "ok": true,
+            "op": "ig_topology",
+            "data": {
+              "order": [
+                0,
+                1,
+                2,
+                3,
+                4,
+                5,
+                6
+              ]
+            },
+            "external_credit": false
+          },
+          "status": 0,
+          "adverse": {
+            "request": {
+              "op": "ig_topology",
+              "input": {
+                "profile_id": "synthetic-game-2003",
+                "moves": [
+                  [
+                    1,
+                    2,
+                    5
+                  ],
+                  [
+                    4,
+                    5
+                  ],
+                  [
+                    3,
+                    4
+                  ],
+                  [],
+                  [],
+                  [],
+                  []
+                ],
+                "other_moves": [
+                  [
+                    3
+                  ],
+                  [
+                    2
+                  ],
+                  [],
+                  []
+                ],
+                "start": 1,
+                "other_start": 2,
+                "heap": 3,
+                "horizon": 1,
+                "play": "misere",
+                "claim": "accessibility",
+                "provided": [
+                  "typed_physical_mapping",
+                  "safety_monitoring",
+                  "interoperability",
+                  "assistive_technology"
+                ],
+                "authority": "unreviewed"
+              }
+            },
+            "expected": {
+              "ok": false,
+              "op": "ig_topology",
+              "error": "normal_play_only",
+              "external_credit": false
+            },
+            "status": 2,
+            "original_subject_credit": 0
+          }
+        },
+        {
+          "op": "ig_rank",
+          "request": {
+            "op": "ig_rank",
+            "input": {
+              "profile_id": "synthetic-game-2004",
+              "moves": [
+                [
+                  1
+                ],
+                [
+                  3
+                ],
+                [
+                  3
+                ],
+                []
+              ],
+              "other_moves": [
+                [
+                  2
+                ],
+                [],
+                []
+              ],
+              "start": 0,
+              "other_start": 0,
+              "heap": 4,
+              "horizon": 2,
+              "play": "normal",
+              "claim": "empirical_gmut",
+              "provided": [
+                "real_observations",
+                "real_operators",
+                "real_keys",
+                "recovery_governance",
+                "manual_evaluation"
+              ],
+              "authority": "none"
+            }
+          },
+          "expected": {
+            "ok": true,
+            "op": "ig_rank",
+            "data": {
+              "rank": [
+                2,
+                1,
+                1,
+                0
+              ],
+              "strict_on_all_moves": true
+            },
+            "external_credit": false
+          },
+          "status": 0,
+          "adverse": {
+            "request": {
+              "op": "ig_rank",
+              "input": {
+                "profile_id": "synthetic-game-2004",
+                "moves": [
+                  [
+                    1
+                  ],
+                  [
+                    3
+                  ],
+                  [
+                    3
+                  ],
+                  []
+                ],
+                "other_moves": [
+                  [
+                    2
+                  ],
+                  [],
+                  []
+                ],
+                "start": 0,
+                "other_start": 0,
+                "heap": 4,
+                "horizon": 2,
+                "play": "misere",
+                "claim": "empirical_gmut",
+                "provided": [
+                  "real_observations",
+                  "real_operators",
+                  "real_keys",
+                  "recovery_governance",
+                  "manual_evaluation"
+                ],
+                "authority": "none"
+              }
+            },
+            "expected": {
+              "ok": false,
+              "op": "ig_rank",
+              "error": "normal_play_only",
+              "external_credit": false
+            },
+            "status": 2,
+            "original_subject_credit": 0
+          }
+        }
+      ]
+    },
+    {
+      "name": "ghc-family-nimber-mex-v1",
+      "guide": "docs/vesper-arlen/v698-v3/x2/curated/ghc-family-nimber-mex-v1/SKILL.md",
+      "caller": "docs/vesper-arlen/v698-v3/x2/curated/ghc-family-nimber-mex-v1/ghc_family_nimber_mex_v1.txt",
+      "contract": "docs/vesper-arlen/v698-v3/x2/curated/ghc-family-nimber-mex-v1/contract.json",
+      "operations": [
+        "ig_nimbers",
+        "ig_options",
+        "ig_outcomes"
+      ],
+      "guide_sha256": "1684a32c497247b4fcea3f0af65c3340c19e80b4d4d18d9eef0c24bc77204784",
+      "caller_sha256": "9ae78b77521c102558397872fa4228dba4c7a3f79bcac16cd82ba1f95feb03b2",
+      "cases": [
+        {
+          "op": "ig_nimbers",
+          "request": {
+            "op": "ig_nimbers",
+            "input": {
+              "profile_id": "synthetic-game-2005",
+              "moves": [
+                [
+                  3,
+                  4
+                ],
+                [
+                  2,
+                  3
+                ],
+                [],
+                [
+                  4
+                ],
+                []
+              ],
+              "other_moves": [
+                [
+                  1,
+                  4,
+                  5
+                ],
+                [
+                  4
+                ],
+                [
+                  3
+                ],
+                [],
+                [],
+                []
+              ],
+              "start": 0,
+              "other_start": 2,
+              "heap": 5,
+              "horizon": 3,
+              "play": "normal",
+              "claim": "production_thos",
+              "provided": [
+                "independent_review",
+                "governed_trial",
+                "privacy_review",
+                "affected_user_review"
+              ],
+              "authority": "claimed_reviewed"
+            }
+          },
+          "expected": {
+            "ok": true,
+            "op": "ig_nimbers",
+            "data": {
+              "values": [
+                2,
+                2,
+                0,
+                1,
+                0
+              ],
+              "start_value": 2
+            },
+            "external_credit": false
+          },
+          "status": 0,
+          "adverse": {
+            "request": {
+              "op": "ig_nimbers",
+              "input": {
+                "profile_id": "synthetic-game-2005",
+                "moves": [
+                  [
+                    3,
+                    4
+                  ],
+                  [
+                    2,
+                    3
+                  ],
+                  [],
+                  [
+                    4
+                  ],
+                  []
+                ],
+                "other_moves": [
+                  [
+                    1,
+                    4,
+                    5
+                  ],
+                  [
+                    4
+                  ],
+                  [
+                    3
+                  ],
+                  [],
+                  [],
+                  []
+                ],
+                "start": 0,
+                "other_start": 2,
+                "heap": 5,
+                "horizon": 3,
+                "play": "misere",
+                "claim": "production_thos",
+                "provided": [
+                  "independent_review",
+                  "governed_trial",
+                  "privacy_review",
+                  "affected_user_review"
+                ],
+                "authority": "claimed_reviewed"
+              }
+            },
+            "expected": {
+              "ok": false,
+              "op": "ig_nimbers",
+              "error": "normal_play_only",
+              "external_credit": false
+            },
+            "status": 2,
+            "original_subject_credit": 0
+          }
+        },
+        {
+          "op": "ig_options",
+          "request": {
+            "op": "ig_options",
+            "input": {
+              "profile_id": "synthetic-game-2006",
+              "moves": [
+                [
+                  2,
+                  3,
+                  5
+                ],
+                [
+                  2,
+                  5
+                ],
+                [
+                  4,
+                  5
+                ],
+                [
+                  4,
+                  5
+                ],
+                [
+                  5
+                ],
+                []
+              ],
+              "other_moves": [
+                [
+                  3,
+                  4
+                ],
+                [
+                  2,
+                  3
+                ],
+                [],
+                [],
+                []
+              ],
+              "start": 2,
+              "other_start": 2,
+              "heap": 6,
+              "horizon": 4,
+              "play": "normal",
+              "claim": "freed_id",
+              "provided": [
+                "typed_physical_mapping",
+                "safety_monitoring",
+                "interoperability",
+                "assistive_technology"
+              ],
+              "authority": "synthetic_only"
+            }
+          },
+          "expected": {
+            "ok": true,
+            "op": "ig_options",
+            "data": {
+              "positions": [
+                {
+                  "position": 0,
+                  "option_positions": [
+                    2,
+                    3,
+                    5
+                  ],
+                  "option_values": [
+                    2,
+                    2,
+                    0
+                  ],
+                  "distinct_values": [
+                    0,
+                    2
+                  ],
+                  "mex": 1,
+                  "lower_values": [
+                    0
+                  ],
+                  "same_value_option": false
+                },
+                {
+                  "position": 1,
+                  "option_positions": [
+                    2,
+                    5
+                  ],
+                  "option_values": [
+                    2,
+                    0
+                  ],
+                  "distinct_values": [
+                    0,
+                    2
+                  ],
+                  "mex": 1,
+                  "lower_values": [
+                    0
+                  ],
+                  "same_value_option": false
+                },
+                {
+                  "position": 2,
+                  "option_positions": [
+                    4,
+                    5
+                  ],
+                  "option_values": [
+                    1,
+                    0
+                  ],
+                  "distinct_values": [
+                    0,
+                    1
+                  ],
+                  "mex": 2,
+                  "lower_values": [
+                    0,
+                    1
+                  ],
+                  "same_value_option": false
+                },
+                {
+                  "position": 3,
+                  "option_positions": [
+                    4,
+                    5
+                  ],
+                  "option_values": [
+                    1,
+                    0
+                  ],
+                  "distinct_values": [
+                    0,
+                    1
+                  ],
+                  "mex": 2,
+                  "lower_values": [
+                    0,
+                    1
+                  ],
+                  "same_value_option": false
+                },
+                {
+                  "position": 4,
+                  "option_positions": [
+                    5
+                  ],
+                  "option_values": [
+                    0
+                  ],
+                  "distinct_values": [
+                    0
+                  ],
+                  "mex": 1,
+                  "lower_values": [
+                    0
+                  ],
+                  "same_value_option": false
+                },
+                {
+                  "position": 5,
+                  "option_positions": [],
+                  "option_values": [],
+                  "distinct_values": [],
+                  "mex": 0,
+                  "lower_values": [],
+                  "same_value_option": false
+                }
+              ]
+            },
+            "external_credit": false
+          },
+          "status": 0,
+          "adverse": {
+            "request": {
+              "op": "ig_options",
+              "input": {
+                "profile_id": "synthetic-game-2006",
+                "moves": [
+                  [
+                    2,
+                    3,
+                    5
+                  ],
+                  [
+                    2,
+                    5
+                  ],
+                  [
+                    4,
+                    5
+                  ],
+                  [
+                    4,
+                    5
+                  ],
+                  [
+                    5
+                  ],
+                  []
+                ],
+                "other_moves": [
+                  [
+                    3,
+                    4
+                  ],
+                  [
+                    2,
+                    3
+                  ],
+                  [],
+                  [],
+                  []
+                ],
+                "start": 2,
+                "other_start": 2,
+                "heap": 6,
+                "horizon": 4,
+                "play": "misere",
+                "claim": "freed_id",
+                "provided": [
+                  "typed_physical_mapping",
+                  "safety_monitoring",
+                  "interoperability",
+                  "assistive_technology"
+                ],
+                "authority": "synthetic_only"
+              }
+            },
+            "expected": {
+              "ok": false,
+              "op": "ig_options",
+              "error": "normal_play_only",
+              "external_credit": false
+            },
+            "status": 2,
+            "original_subject_credit": 0
+          }
+        },
+        {
+          "op": "ig_outcomes",
+          "request": {
+            "op": "ig_outcomes",
+            "input": {
+              "profile_id": "synthetic-game-2007",
+              "moves": [
+                [
+                  1,
+                  2,
+                  4,
+                  5
+                ],
+                [
+                  3,
+                  4,
+                  5
+                ],
+                [
+                  3,
+                  4,
+                  5
+                ],
+                [
+                  4
+                ],
+                [],
+                [],
+                []
+              ],
+              "other_moves": [
+                [
+                  2,
+                  3
+                ],
+                [
+                  2
+                ],
+                [],
+                []
+              ],
+              "start": 5,
+              "other_start": 2,
+              "heap": 7,
+              "horizon": 5,
+              "play": "normal",
+              "claim": "accessibility",
+              "provided": [
+                "real_observations",
+                "real_operators",
+                "real_keys",
+                "recovery_governance",
+                "manual_evaluation"
+              ],
+              "authority": "unreviewed"
+            }
+          },
+          "expected": {
+            "ok": true,
+            "op": "ig_outcomes",
+            "data": {
+              "outcomes": [
+                "N",
+                "N",
+                "N",
+                "N",
+                "P",
+                "P",
+                "P"
+              ],
+              "start_outcome": "P"
+            },
+            "external_credit": false
+          },
+          "status": 0,
+          "adverse": {
+            "request": {
+              "op": "ig_outcomes",
+              "input": {
+                "profile_id": "synthetic-game-2007",
+                "moves": [
+                  [
+                    1,
+                    2,
+                    4,
+                    5
+                  ],
+                  [
+                    3,
+                    4,
+                    5
+                  ],
+                  [
+                    3,
+                    4,
+                    5
+                  ],
+                  [
+                    4
+                  ],
+                  [],
+                  [],
+                  []
+                ],
+                "other_moves": [
+                  [
+                    2,
+                    3
+                  ],
+                  [
+                    2
+                  ],
+                  [],
+                  []
+                ],
+                "start": 5,
+                "other_start": 2,
+                "heap": 7,
+                "horizon": 5,
+                "play": "misere",
+                "claim": "accessibility",
+                "provided": [
+                  "real_observations",
+                  "real_operators",
+                  "real_keys",
+                  "recovery_governance",
+                  "manual_evaluation"
+                ],
+                "authority": "unreviewed"
+              }
+            },
+            "expected": {
+              "ok": false,
+              "op": "ig_outcomes",
+              "error": "normal_play_only",
+              "external_credit": false
+            },
+            "status": 2,
+            "original_subject_credit": 0
+          }
+        }
+      ]
+    },
+    {
+      "name": "ghc-family-normal-play-strategy-v1",
+      "guide": "docs/vesper-arlen/v698-v3/x2/curated/ghc-family-normal-play-strategy-v1/SKILL.md",
+      "caller": "docs/vesper-arlen/v698-v3/x2/curated/ghc-family-normal-play-strategy-v1/ghc_family_normal_play_strategy_v1.txt",
+      "contract": "docs/vesper-arlen/v698-v3/x2/curated/ghc-family-normal-play-strategy-v1/contract.json",
+      "operations": [
+        "ig_winning_moves",
+        "ig_policy",
+        "ig_trace"
+      ],
+      "guide_sha256": "289f28989ebf323282ce39a1e2b6f849694b82bc52ec164731dc6b2af18a9f15",
+      "caller_sha256": "8f9da424b092b1b9a2d55bcac3be0b2451d58077fcc3fc0eda8b6fd627ac19f8",
+      "cases": [
+        {
+          "op": "ig_winning_moves",
+          "request": {
+            "op": "ig_winning_moves",
+            "input": {
+              "profile_id": "synthetic-game-2008",
+              "moves": [
+                [
+                  1
+                ],
+                [],
+                [
+                  3
+                ],
+                []
+              ],
+              "other_moves": [
+                [
+                  1,
+                  2
+                ],
+                [],
+                []
+              ],
+              "start": 0,
+              "other_start": 2,
+              "heap": 0,
+              "horizon": 6,
+              "play": "normal",
+              "claim": "empirical_gmut",
+              "provided": [
+                "independent_review",
+                "governed_trial",
+                "privacy_review",
+                "affected_user_review"
+              ],
+              "authority": "none"
+            }
+          },
+          "expected": {
+            "ok": true,
+            "op": "ig_winning_moves",
+            "data": {
+              "start": 0,
+              "moves": [
+                1
+              ],
+              "mover_wins": true
+            },
+            "external_credit": false
+          },
+          "status": 0,
+          "adverse": {
+            "request": {
+              "op": "ig_winning_moves",
+              "input": {
+                "profile_id": "synthetic-game-2008",
+                "moves": [
+                  [
+                    1
+                  ],
+                  [],
+                  [
+                    3
+                  ],
+                  []
+                ],
+                "other_moves": [
+                  [
+                    1,
+                    2
+                  ],
+                  [],
+                  []
+                ],
+                "start": 0,
+                "other_start": 2,
+                "heap": 0,
+                "horizon": 6,
+                "play": "misere",
+                "claim": "empirical_gmut",
+                "provided": [
+                  "independent_review",
+                  "governed_trial",
+                  "privacy_review",
+                  "affected_user_review"
+                ],
+                "authority": "none"
+              }
+            },
+            "expected": {
+              "ok": false,
+              "op": "ig_winning_moves",
+              "error": "normal_play_only",
+              "external_credit": false
+            },
+            "status": 2,
+            "original_subject_credit": 0
+          }
+        },
+        {
+          "op": "ig_policy",
+          "request": {
+            "op": "ig_policy",
+            "input": {
+              "profile_id": "synthetic-game-2009",
+              "moves": [
+                [
+                  4
+                ],
+                [
+                  3
+                ],
+                [],
+                [],
+                []
+              ],
+              "other_moves": [
+                [
+                  1,
+                  4,
+                  5
+                ],
+                [
+                  3,
+                  4
+                ],
+                [
+                  3,
+                  4
+                ],
+                [],
+                [],
+                []
+              ],
+              "start": 4,
+              "other_start": 4,
+              "heap": 1,
+              "horizon": 0,
+              "play": "normal",
+              "claim": "production_thos",
+              "provided": [
+                "typed_physical_mapping",
+                "safety_monitoring",
+                "interoperability",
+                "assistive_technology"
+              ],
+              "authority": "claimed_reviewed"
+            }
+          },
+          "expected": {
+            "ok": true,
+            "op": "ig_policy",
+            "data": {
+              "positions": [
+                {
+                  "position": 0,
+                  "winning_options": [
+                    4
+                  ],
+                  "chosen": 4,
+                  "state": "winning"
+                },
+                {
+                  "position": 1,
+                  "winning_options": [
+                    3
+                  ],
+                  "chosen": 3,
+                  "state": "winning"
+                },
+                {
+                  "position": 2,
+                  "winning_options": [],
+                  "chosen": null,
+                  "state": "terminal"
+                },
+                {
+                  "position": 3,
+                  "winning_options": [],
+                  "chosen": null,
+                  "state": "terminal"
+                },
+                {
+                  "position": 4,
+                  "winning_options": [],
+                  "chosen": null,
+                  "state": "terminal"
+                }
+              ]
+            },
+            "external_credit": false
+          },
+          "status": 0,
+          "adverse": {
+            "request": {
+              "op": "ig_policy",
+              "input": {
+                "profile_id": "synthetic-game-2009",
+                "moves": [
+                  [
+                    4
+                  ],
+                  [
+                    3
+                  ],
+                  [],
+                  [],
+                  []
+                ],
+                "other_moves": [
+                  [
+                    1,
+                    4,
+                    5
+                  ],
+                  [
+                    3,
+                    4
+                  ],
+                  [
+                    3,
+                    4
+                  ],
+                  [],
+                  [],
+                  []
+                ],
+                "start": 4,
+                "other_start": 4,
+                "heap": 1,
+                "horizon": 0,
+                "play": "misere",
+                "claim": "production_thos",
+                "provided": [
+                  "typed_physical_mapping",
+                  "safety_monitoring",
+                  "interoperability",
+                  "assistive_technology"
+                ],
+                "authority": "claimed_reviewed"
+              }
+            },
+            "expected": {
+              "ok": false,
+              "op": "ig_policy",
+              "error": "normal_play_only",
+              "external_credit": false
+            },
+            "status": 2,
+            "original_subject_credit": 0
+          }
+        },
+        {
+          "op": "ig_trace",
+          "request": {
+            "op": "ig_trace",
+            "input": {
+              "profile_id": "synthetic-game-2017",
+              "moves": [
+                [
+                  1,
+                  4
+                ],
+                [
+                  3,
+                  4
+                ],
+                [
+                  3
+                ],
+                [],
+                []
+              ],
+              "other_moves": [
+                [
+                  1,
+                  2,
+                  4,
+                  5
+                ],
+                [
+                  3,
+                  4,
+                  5
+                ],
+                [
+                  3,
+                  4
+                ],
+                [],
+                [],
+                []
+              ],
+              "start": 2,
+              "other_start": 2,
+              "heap": 1,
+              "horizon": 1,
+              "play": "normal",
+              "claim": "production_thos",
+              "provided": [
+                "independent_review",
+                "governed_trial",
+                "privacy_review",
+                "affected_user_review"
+              ],
+              "authority": "claimed_reviewed"
+            }
+          },
+          "expected": {
+            "ok": true,
+            "op": "ig_trace",
+            "data": {
+              "trace": [
+                2,
+                3
+              ],
+              "moves": 1,
+              "winner": "first",
+              "model_agents_only": true,
+              "real_agency": false
+            },
+            "external_credit": false
+          },
+          "status": 0,
+          "adverse": {
+            "request": {
+              "op": "ig_trace",
+              "input": {
+                "profile_id": "synthetic-game-2017",
+                "moves": [
+                  [
+                    1,
+                    4
+                  ],
+                  [
+                    3,
+                    4
+                  ],
+                  [
+                    3
+                  ],
+                  [],
+                  []
+                ],
+                "other_moves": [
+                  [
+                    1,
+                    2,
+                    4,
+                    5
+                  ],
+                  [
+                    3,
+                    4,
+                    5
+                  ],
+                  [
+                    3,
+                    4
+                  ],
+                  [],
+                  [],
+                  []
+                ],
+                "start": 2,
+                "other_start": 2,
+                "heap": 1,
+                "horizon": 1,
+                "play": "misere",
+                "claim": "production_thos",
+                "provided": [
+                  "independent_review",
+                  "governed_trial",
+                  "privacy_review",
+                  "affected_user_review"
+                ],
+                "authority": "claimed_reviewed"
+              }
+            },
+            "expected": {
+              "ok": false,
+              "op": "ig_trace",
+              "error": "normal_play_only",
+              "external_credit": false
+            },
+            "status": 2,
+            "original_subject_credit": 0
+          }
+        }
+      ]
+    },
+    {
+      "name": "ghc-family-disjunctive-sum-v1",
+      "guide": "docs/vesper-arlen/v698-v3/x2/curated/ghc-family-disjunctive-sum-v1/SKILL.md",
+      "caller": "docs/vesper-arlen/v698-v3/x2/curated/ghc-family-disjunctive-sum-v1/ghc_family_disjunctive_sum_v1.txt",
+      "contract": "docs/vesper-arlen/v698-v3/x2/curated/ghc-family-disjunctive-sum-v1/contract.json",
+      "operations": [
+        "ig_sum_nimber",
+        "ig_product",
+        "ig_sum_outcome",
+        "ig_sum_moves",
+        "ig_sum_certificate",
+        "ig_nim_equivalence"
+      ],
+      "guide_sha256": "8e26e305dd77e3bb5c1f97cf10f46c72dc58115039ecdc7c029f5eb74acfc8b5",
+      "caller_sha256": "3fa8c47fc20517572b8e9c4e0f406ceaae02c4faf2c7f055a7432caafd995d93",
+      "cases": [
+        {
+          "op": "ig_sum_nimber",
+          "request": {
+            "op": "ig_sum_nimber",
+            "input": {
+              "profile_id": "synthetic-game-2010",
+              "moves": [
+                [
+                  3
+                ],
+                [
+                  2
+                ],
+                [
+                  5
+                ],
+                [
+                  4,
+                  5
+                ],
+                [
+                  5
+                ],
+                []
+              ],
+              "other_moves": [
+                [
+                  1,
+                  3,
+                  4
+                ],
+                [
+                  2,
+                  3
+                ],
+                [],
+                [
+                  4
+                ],
+                []
+              ],
+              "start": 0,
+              "other_start": 0,
+              "heap": 2,
+              "horizon": 1,
+              "play": "normal",
+              "claim": "freed_id",
+              "provided": [
+                "real_observations",
+                "real_operators",
+                "real_keys",
+                "recovery_governance",
+                "manual_evaluation"
+              ],
+              "authority": "synthetic_only"
+            }
+          },
+          "expected": {
+            "ok": true,
+            "op": "ig_sum_nimber",
+            "data": {
+              "left_value": 0,
+              "right_value": 3,
+              "product_value": 3,
+              "xor_value": 3,
+              "equal": true
+            },
+            "external_credit": false
+          },
+          "status": 0,
+          "adverse": {
+            "request": {
+              "op": "ig_sum_nimber",
+              "input": {
+                "profile_id": "synthetic-game-2010",
+                "moves": [
+                  [
+                    3
+                  ],
+                  [
+                    2
+                  ],
+                  [
+                    5
+                  ],
+                  [
+                    4,
+                    5
+                  ],
+                  [
+                    5
+                  ],
+                  []
+                ],
+                "other_moves": [
+                  [
+                    1,
+                    3,
+                    4
+                  ],
+                  [
+                    2,
+                    3
+                  ],
+                  [],
+                  [
+                    4
+                  ],
+                  []
+                ],
+                "start": 0,
+                "other_start": 0,
+                "heap": 2,
+                "horizon": 1,
+                "play": "misere",
+                "claim": "freed_id",
+                "provided": [
+                  "real_observations",
+                  "real_operators",
+                  "real_keys",
+                  "recovery_governance",
+                  "manual_evaluation"
+                ],
+                "authority": "synthetic_only"
+              }
+            },
+            "expected": {
+              "ok": false,
+              "op": "ig_sum_nimber",
+              "error": "normal_play_only",
+              "external_credit": false
+            },
+            "status": 2,
+            "original_subject_credit": 0
+          }
+        },
+        {
+          "op": "ig_product",
+          "request": {
+            "op": "ig_product",
+            "input": {
+              "profile_id": "synthetic-game-2011",
+              "moves": [
+                [
+                  2,
+                  5,
+                  6
+                ],
+                [
+                  5
+                ],
+                [
+                  4,
+                  5
+                ],
+                [
+                  4
+                ],
+                [],
+                [],
+                []
+              ],
+              "other_moves": [
+                [
+                  3
+                ],
+                [
+                  2
+                ],
+                [],
+                []
+              ],
+              "start": 2,
+              "other_start": 2,
+              "heap": 3,
+              "horizon": 2,
+              "play": "normal",
+              "claim": "accessibility",
+              "provided": [
+                "independent_review",
+                "governed_trial",
+                "privacy_review",
+                "affected_user_review"
+              ],
+              "authority": "unreviewed"
+            }
+          },
+          "expected": {
+            "ok": true,
+            "op": "ig_product",
+            "data": {
+              "nodes": [
+                {
+                  "left": 0,
+                  "right": 0
+                },
+                {
+                  "left": 0,
+                  "right": 1
+                },
+                {
+                  "left": 0,
+                  "right": 2
+                },
+                {
+                  "left": 0,
+                  "right": 3
+                },
+                {
+                  "left": 1,
+                  "right": 0
+                },
+                {
+                  "left": 1,
+                  "right": 1
+                },
+                {
+                  "left": 1,
+                  "right": 2
+                },
+                {
+                  "left": 1,
+                  "right": 3
+                },
+                {
+                  "left": 2,
+                  "right": 0
+                },
+                {
+                  "left": 2,
+                  "right": 1
+                },
+                {
+                  "left": 2,
+                  "right": 2
+                },
+                {
+                  "left": 2,
+                  "right": 3
+                },
+                {
+                  "left": 3,
+                  "right": 0
+                },
+                {
+                  "left": 3,
+                  "right": 1
+                },
+                {
+                  "left": 3,
+                  "right": 2
+                },
+                {
+                  "left": 3,
+                  "right": 3
+                },
+                {
+                  "left": 4,
+                  "right": 0
+                },
+                {
+                  "left": 4,
+                  "right": 1
+                },
+                {
+                  "left": 4,
+                  "right": 2
+                },
+                {
+                  "left": 4,
+                  "right": 3
+                },
+                {
+                  "left": 5,
+                  "right": 0
+                },
+                {
+                  "left": 5,
+                  "right": 1
+                },
+                {
+                  "left": 5,
+                  "right": 2
+                },
+                {
+                  "left": 5,
+                  "right": 3
+                },
+                {
+                  "left": 6,
+                  "right": 0
+                },
+                {
+                  "left": 6,
+                  "right": 1
+                },
+                {
+                  "left": 6,
+                  "right": 2
+                },
+                {
+                  "left": 6,
+                  "right": 3
+                }
+              ],
+              "moves": [
+                {
+                  "position": 0,
+                  "options": [
+                    {
+                      "component": 0,
+                      "target": 8
+                    },
+                    {
+                      "component": 0,
+                      "target": 20
+                    },
+                    {
+                      "component": 0,
+                      "target": 24
+                    },
+                    {
+                      "component": 1,
+                      "target": 3
+                    }
+                  ]
+                },
+                {
+                  "position": 1,
+                  "options": [
+                    {
+                      "component": 0,
+                      "target": 9
+                    },
+                    {
+                      "component": 0,
+                      "target": 21
+                    },
+                    {
+                      "component": 0,
+                      "target": 25
+                    },
+                    {
+                      "component": 1,
+                      "target": 2
+                    }
+                  ]
+                },
+                {
+                  "position": 2,
+                  "options": [
+                    {
+                      "component": 0,
+                      "target": 10
+                    },
+                    {
+                      "component": 0,
+                      "target": 22
+                    },
+                    {
+                      "component": 0,
+                      "target": 26
+                    }
+                  ]
+                },
+                {
+                  "position": 3,
+                  "options": [
+                    {
+                      "component": 0,
+                      "target": 11
+                    },
+                    {
+                      "component": 0,
+                      "target": 23
+                    },
+                    {
+                      "component": 0,
+                      "target": 27
+                    }
+                  ]
+                },
+                {
+                  "position": 4,
+                  "options": [
+                    {
+                      "component": 0,
+                      "target": 20
+                    },
+                    {
+                      "component": 1,
+                      "target": 7
+                    }
+                  ]
+                },
+                {
+                  "position": 5,
+                  "options": [
+                    {
+                      "component": 0,
+                      "target": 21
+                    },
+                    {
+                      "component": 1,
+                      "target": 6
+                    }
+                  ]
+                },
+                {
+                  "position": 6,
+                  "options": [
+                    {
+                      "component": 0,
+                      "target": 22
+                    }
+                  ]
+                },
+                {
+                  "position": 7,
+                  "options": [
+                    {
+                      "component": 0,
+                      "target": 23
+                    }
+                  ]
+                },
+                {
+                  "position": 8,
+                  "options": [
+                    {
+                      "component": 0,
+                      "target": 16
+                    },
+                    {
+                      "component": 0,
+                      "target": 20
+                    },
+                    {
+                      "component": 1,
+                      "target": 11
+                    }
+                  ]
+                },
+                {
+                  "position": 9,
+                  "options": [
+                    {
+                      "component": 0,
+                      "target": 17
+                    },
+                    {
+                      "component": 0,
+                      "target": 21
+                    },
+                    {
+                      "component": 1,
+                      "target": 10
+                    }
+                  ]
+                },
+                {
+                  "position": 10,
+                  "options": [
+                    {
+                      "component": 0,
+                      "target": 18
+                    },
+                    {
+                      "component": 0,
+                      "target": 22
+                    }
+                  ]
+                },
+                {
+                  "position": 11,
+                  "options": [
+                    {
+                      "component": 0,
+                      "target": 19
+                    },
+                    {
+                      "component": 0,
+                      "target": 23
+                    }
+                  ]
+                },
+                {
+                  "position": 12,
+                  "options": [
+                    {
+                      "component": 0,
+                      "target": 16
+                    },
+                    {
+                      "component": 1,
+                      "target": 15
+                    }
+                  ]
+                },
+                {
+                  "position": 13,
+                  "options": [
+                    {
+                      "component": 0,
+                      "target": 17
+                    },
+                    {
+                      "component": 1,
+                      "target": 14
+                    }
+                  ]
+                },
+                {
+                  "position": 14,
+                  "options": [
+                    {
+                      "component": 0,
+                      "target": 18
+                    }
+                  ]
+                },
+                {
+                  "position": 15,
+                  "options": [
+                    {
+                      "component": 0,
+                      "target": 19
+                    }
+                  ]
+                },
+                {
+                  "position": 16,
+                  "options": [
+                    {
+                      "component": 1,
+                      "target": 19
+                    }
+                  ]
+                },
+                {
+                  "position": 17,
+                  "options": [
+                    {
+                      "component": 1,
+                      "target": 18
+                    }
+                  ]
+                },
+                {
+                  "position": 18,
+                  "options": []
+                },
+                {
+                  "position": 19,
+                  "options": []
+                },
+                {
+                  "position": 20,
+                  "options": [
+                    {
+                      "component": 1,
+                      "target": 23
+                    }
+                  ]
+                },
+                {
+                  "position": 21,
+                  "options": [
+                    {
+                      "component": 1,
+                      "target": 22
+                    }
+                  ]
+                },
+                {
+                  "position": 22,
+                  "options": []
+                },
+                {
+                  "position": 23,
+                  "options": []
+                },
+                {
+                  "position": 24,
+                  "options": [
+                    {
+                      "component": 1,
+                      "target": 27
+                    }
+                  ]
+                },
+                {
+                  "position": 25,
+                  "options": [
+                    {
+                      "component": 1,
+                      "target": 26
+                    }
+                  ]
+                },
+                {
+                  "position": 26,
+                  "options": []
+                },
+                {
+                  "position": 27,
+                  "options": []
+                }
+              ],
+              "start": 10
+            },
+            "external_credit": false
+          },
+          "status": 0,
+          "adverse": {
+            "request": {
+              "op": "ig_product",
+              "input": {
+                "profile_id": "synthetic-game-2011",
+                "moves": [
+                  [
+                    2,
+                    5,
+                    6
+                  ],
+                  [
+                    5
+                  ],
+                  [
+                    4,
+                    5
+                  ],
+                  [
+                    4
+                  ],
+                  [],
+                  [],
+                  []
+                ],
+                "other_moves": [
+                  [
+                    3
+                  ],
+                  [
+                    2
+                  ],
+                  [],
+                  []
+                ],
+                "start": 2,
+                "other_start": 2,
+                "heap": 3,
+                "horizon": 2,
+                "play": "misere",
+                "claim": "accessibility",
+                "provided": [
+                  "independent_review",
+                  "governed_trial",
+                  "privacy_review",
+                  "affected_user_review"
+                ],
+                "authority": "unreviewed"
+              }
+            },
+            "expected": {
+              "ok": false,
+              "op": "ig_product",
+              "error": "normal_play_only",
+              "external_credit": false
+            },
+            "status": 2,
+            "original_subject_credit": 0
+          }
+        },
+        {
+          "op": "ig_sum_outcome",
+          "request": {
+            "op": "ig_sum_outcome",
+            "input": {
+              "profile_id": "synthetic-game-2012",
+              "moves": [
+                [
+                  1
+                ],
+                [
+                  3
+                ],
+                [
+                  3
+                ],
+                []
+              ],
+              "other_moves": [
+                [
+                  2
+                ],
+                [],
+                []
+              ],
+              "start": 0,
+              "other_start": 1,
+              "heap": 4,
+              "horizon": 3,
+              "play": "normal",
+              "claim": "empirical_gmut",
+              "provided": [
+                "typed_physical_mapping",
+                "safety_monitoring",
+                "interoperability",
+                "assistive_technology"
+              ],
+              "authority": "none"
+            }
+          },
+          "expected": {
+            "ok": true,
+            "op": "ig_sum_outcome",
+            "data": {
+              "start": [
+                0,
+                1
+              ],
+              "outcome": "P",
+              "mover_wins": false
+            },
+            "external_credit": false
+          },
+          "status": 0,
+          "adverse": {
+            "request": {
+              "op": "ig_sum_outcome",
+              "input": {
+                "profile_id": "synthetic-game-2012",
+                "moves": [
+                  [
+                    1
+                  ],
+                  [
+                    3
+                  ],
+                  [
+                    3
+                  ],
+                  []
+                ],
+                "other_moves": [
+                  [
+                    2
+                  ],
+                  [],
+                  []
+                ],
+                "start": 0,
+                "other_start": 1,
+                "heap": 4,
+                "horizon": 3,
+                "play": "misere",
+                "claim": "empirical_gmut",
+                "provided": [
+                  "typed_physical_mapping",
+                  "safety_monitoring",
+                  "interoperability",
+                  "assistive_technology"
+                ],
+                "authority": "none"
+              }
+            },
+            "expected": {
+              "ok": false,
+              "op": "ig_sum_outcome",
+              "error": "normal_play_only",
+              "external_credit": false
+            },
+            "status": 2,
+            "original_subject_credit": 0
+          }
+        },
+        {
+          "op": "ig_sum_moves",
+          "request": {
+            "op": "ig_sum_moves",
+            "input": {
+              "profile_id": "synthetic-game-2013",
+              "moves": [
+                [
+                  1,
+                  3,
+                  4
+                ],
+                [
+                  2,
+                  3
+                ],
+                [],
+                [],
+                []
+              ],
+              "other_moves": [
+                [
+                  1,
+                  2,
+                  5
+                ],
+                [
+                  4,
+                  5
+                ],
+                [
+                  3,
+                  4
+                ],
+                [],
+                [],
+                []
+              ],
+              "start": 3,
+              "other_start": 0,
+              "heap": 5,
+              "horizon": 4,
+              "play": "normal",
+              "claim": "production_thos",
+              "provided": [
+                "real_observations",
+                "real_operators",
+                "real_keys",
+                "recovery_governance",
+                "manual_evaluation"
+              ],
+              "authority": "claimed_reviewed"
+            }
+          },
+          "expected": {
+            "ok": true,
+            "op": "ig_sum_moves",
+            "data": {
+              "start": [
+                3,
+                0
+              ],
+              "moves": [
+                {
+                  "component": 1,
+                  "target": 23,
+                  "target_coordinates": [
+                    3,
+                    5
+                  ]
+                }
+              ]
+            },
+            "external_credit": false
+          },
+          "status": 0,
+          "adverse": {
+            "request": {
+              "op": "ig_sum_moves",
+              "input": {
+                "profile_id": "synthetic-game-2013",
+                "moves": [
+                  [
+                    1,
+                    3,
+                    4
+                  ],
+                  [
+                    2,
+                    3
+                  ],
+                  [],
+                  [],
+                  []
+                ],
+                "other_moves": [
+                  [
+                    1,
+                    2,
+                    5
+                  ],
+                  [
+                    4,
+                    5
+                  ],
+                  [
+                    3,
+                    4
+                  ],
+                  [],
+                  [],
+                  []
+                ],
+                "start": 3,
+                "other_start": 0,
+                "heap": 5,
+                "horizon": 4,
+                "play": "misere",
+                "claim": "production_thos",
+                "provided": [
+                  "real_observations",
+                  "real_operators",
+                  "real_keys",
+                  "recovery_governance",
+                  "manual_evaluation"
+                ],
+                "authority": "claimed_reviewed"
+              }
+            },
+            "expected": {
+              "ok": false,
+              "op": "ig_sum_moves",
+              "error": "normal_play_only",
+              "external_credit": false
+            },
+            "status": 2,
+            "original_subject_credit": 0
+          }
+        },
+        {
+          "op": "ig_sum_certificate",
+          "request": {
+            "op": "ig_sum_certificate",
+            "input": {
+              "profile_id": "synthetic-game-2014",
+              "moves": [
+                [
+                  2,
+                  3
+                ],
+                [
+                  2,
+                  5
+                ],
+                [
+                  4,
+                  5
+                ],
+                [
+                  4,
+                  5
+                ],
+                [
+                  5
+                ],
+                []
+              ],
+              "other_moves": [
+                [
+                  1,
+                  4
+                ],
+                [
+                  3,
+                  4
+                ],
+                [
+                  3
+                ],
+                [],
+                []
+              ],
+              "start": 4,
+              "other_start": 3,
+              "heap": 6,
+              "horizon": 5,
+              "play": "normal",
+              "claim": "freed_id",
+              "provided": [
+                "independent_review",
+                "governed_trial",
+                "privacy_review",
+                "affected_user_review"
+              ],
+              "authority": "synthetic_only"
+            }
+          },
+          "expected": {
+            "ok": true,
+            "op": "ig_sum_certificate",
+            "data": {
+              "positions": [
+                {
+                  "left": 0,
+                  "right": 0,
+                  "grundy": 2,
+                  "component_xor": 2,
+                  "equal": true,
+                  "option_values": [
+                    0,
+                    0,
+                    1,
+                    0
+                  ],
+                  "mex": 2
+                },
+                {
+                  "left": 0,
+                  "right": 1,
+                  "grundy": 1,
+                  "component_xor": 1,
+                  "equal": true,
+                  "option_values": [
+                    3,
+                    3,
+                    0,
+                    0
+                  ],
+                  "mex": 1
+                },
+                {
+                  "left": 0,
+                  "right": 2,
+                  "grundy": 1,
+                  "component_xor": 1,
+                  "equal": true,
+                  "option_values": [
+                    3,
+                    3,
+                    0
+                  ],
+                  "mex": 1
+                },
+                {
+                  "left": 0,
+                  "right": 3,
+                  "grundy": 0,
+                  "component_xor": 0,
+                  "equal": true,
+                  "option_values": [
+                    2,
+                    2
+                  ],
+                  "mex": 0
+                },
+                {
+                  "left": 0,
+                  "right": 4,
+                  "grundy": 0,
+                  "component_xor": 0,
+                  "equal": true,
+                  "option_values": [
+                    2,
+                    2
+                  ],
+                  "mex": 0
+                },
+                {
+                  "left": 1,
+                  "right": 0,
+                  "grundy": 3,
+                  "component_xor": 3,
+                  "equal": true,
+                  "option_values": [
+                    0,
+                    2,
+                    0,
+                    1
+                  ],
+                  "mex": 3
+                },
+                {
+                  "left": 1,
+                  "right": 1,
+                  "grundy": 0,
+                  "component_xor": 0,
+                  "equal": true,
+                  "option_values": [
+                    3,
+                    1,
+                    1,
+                    1
+                  ],
+                  "mex": 0
+                },
+                {
+                  "left": 1,
+                  "right": 2,
+                  "grundy": 0,
+                  "component_xor": 0,
+                  "equal": true,
+                  "option_values": [
+                    3,
+                    1,
+                    1
+                  ],
+                  "mex": 0
+                },
+                {
+                  "left": 1,
+                  "right": 3,
+                  "grundy": 1,
+                  "component_xor": 1,
+                  "equal": true,
+                  "option_values": [
+                    2,
+                    0
+                  ],
+                  "mex": 1
+                },
+                {
+                  "left": 1,
+                  "right": 4,
+                  "grundy": 1,
+                  "component_xor": 1,
+                  "equal": true,
+                  "option_values": [
+                    2,
+                    0
+                  ],
+                  "mex": 1
+                },
+                {
+                  "left": 2,
+                  "right": 0,
+                  "grundy": 0,
+                  "component_xor": 0,
+                  "equal": true,
+                  "option_values": [
+                    3,
+                    2,
+                    3,
+                    2
+                  ],
+                  "mex": 0
+                },
+                {
+                  "left": 2,
+                  "right": 1,
+                  "grundy": 3,
+                  "component_xor": 3,
+                  "equal": true,
+                  "option_values": [
+                    0,
+                    1,
+                    2,
+                    2
+                  ],
+                  "mex": 3
+                },
+                {
+                  "left": 2,
+                  "right": 2,
+                  "grundy": 3,
+                  "component_xor": 3,
+                  "equal": true,
+                  "option_values": [
+                    0,
+                    1,
+                    2
+                  ],
+                  "mex": 3
+                },
+                {
+                  "left": 2,
+                  "right": 3,
+                  "grundy": 2,
+                  "component_xor": 2,
+                  "equal": true,
+                  "option_values": [
+                    1,
+                    0
+                  ],
+                  "mex": 2
+                },
+                {
+                  "left": 2,
+                  "right": 4,
+                  "grundy": 2,
+                  "component_xor": 2,
+                  "equal": true,
+                  "option_values": [
+                    1,
+                    0
+                  ],
+                  "mex": 2
+                },
+                {
+                  "left": 3,
+                  "right": 0,
+                  "grundy": 0,
+                  "component_xor": 0,
+                  "equal": true,
+                  "option_values": [
+                    3,
+                    2,
+                    3,
+                    2
+                  ],
+                  "mex": 0
+                },
+                {
+                  "left": 3,
+                  "right": 1,
+                  "grundy": 3,
+                  "component_xor": 3,
+                  "equal": true,
+                  "option_values": [
+                    0,
+                    1,
+                    2,
+                    2
+                  ],
+                  "mex": 3
+                },
+                {
+                  "left": 3,
+                  "right": 2,
+                  "grundy": 3,
+                  "component_xor": 3,
+                  "equal": true,
+                  "option_values": [
+                    0,
+                    1,
+                    2
+                  ],
+                  "mex": 3
+                },
+                {
+                  "left": 3,
+                  "right": 3,
+                  "grundy": 2,
+                  "component_xor": 2,
+                  "equal": true,
+                  "option_values": [
+                    1,
+                    0
+                  ],
+                  "mex": 2
+                },
+                {
+                  "left": 3,
+                  "right": 4,
+                  "grundy": 2,
+                  "component_xor": 2,
+                  "equal": true,
+                  "option_values": [
+                    1,
+                    0
+                  ],
+                  "mex": 2
+                },
+                {
+                  "left": 4,
+                  "right": 0,
+                  "grundy": 3,
+                  "component_xor": 3,
+                  "equal": true,
+                  "option_values": [
+                    2,
+                    0,
+                    1
+                  ],
+                  "mex": 3
+                },
+                {
+                  "left": 4,
+                  "right": 1,
+                  "grundy": 0,
+                  "component_xor": 0,
+                  "equal": true,
+                  "option_values": [
+                    1,
+                    1,
+                    1
+                  ],
+                  "mex": 0
+                },
+                {
+                  "left": 4,
+                  "right": 2,
+                  "grundy": 0,
+                  "component_xor": 0,
+                  "equal": true,
+                  "option_values": [
+                    1,
+                    1
+                  ],
+                  "mex": 0
+                },
+                {
+                  "left": 4,
+                  "right": 3,
+                  "grundy": 1,
+                  "component_xor": 1,
+                  "equal": true,
+                  "option_values": [
+                    0
+                  ],
+                  "mex": 1
+                },
+                {
+                  "left": 4,
+                  "right": 4,
+                  "grundy": 1,
+                  "component_xor": 1,
+                  "equal": true,
+                  "option_values": [
+                    0
+                  ],
+                  "mex": 1
+                },
+                {
+                  "left": 5,
+                  "right": 0,
+                  "grundy": 2,
+                  "component_xor": 2,
+                  "equal": true,
+                  "option_values": [
+                    1,
+                    0
+                  ],
+                  "mex": 2
+                },
+                {
+                  "left": 5,
+                  "right": 1,
+                  "grundy": 1,
+                  "component_xor": 1,
+                  "equal": true,
+                  "option_values": [
+                    0,
+                    0
+                  ],
+                  "mex": 1
+                },
+                {
+                  "left": 5,
+                  "right": 2,
+                  "grundy": 1,
+                  "component_xor": 1,
+                  "equal": true,
+                  "option_values": [
+                    0
+                  ],
+                  "mex": 1
+                },
+                {
+                  "left": 5,
+                  "right": 3,
+                  "grundy": 0,
+                  "component_xor": 0,
+                  "equal": true,
+                  "option_values": [],
+                  "mex": 0
+                },
+                {
+                  "left": 5,
+                  "right": 4,
+                  "grundy": 0,
+                  "component_xor": 0,
+                  "equal": true,
+                  "option_values": [],
+                  "mex": 0
+                }
+              ],
+              "all_equal": true
+            },
+            "external_credit": false
+          },
+          "status": 0,
+          "adverse": {
+            "request": {
+              "op": "ig_sum_certificate",
+              "input": {
+                "profile_id": "synthetic-game-2014",
+                "moves": [
+                  [
+                    2,
+                    3
+                  ],
+                  [
+                    2,
+                    5
+                  ],
+                  [
+                    4,
+                    5
+                  ],
+                  [
+                    4,
+                    5
+                  ],
+                  [
+                    5
+                  ],
+                  []
+                ],
+                "other_moves": [
+                  [
+                    1,
+                    4
+                  ],
+                  [
+                    3,
+                    4
+                  ],
+                  [
+                    3
+                  ],
+                  [],
+                  []
+                ],
+                "start": 4,
+                "other_start": 3,
+                "heap": 6,
+                "horizon": 5,
+                "play": "misere",
+                "claim": "freed_id",
+                "provided": [
+                  "independent_review",
+                  "governed_trial",
+                  "privacy_review",
+                  "affected_user_review"
+                ],
+                "authority": "synthetic_only"
+              }
+            },
+            "expected": {
+              "ok": false,
+              "op": "ig_sum_certificate",
+              "error": "normal_play_only",
+              "external_credit": false
+            },
+            "status": 2,
+            "original_subject_credit": 0
+          }
+        },
+        {
+          "op": "ig_nim_equivalence",
+          "request": {
+            "op": "ig_nim_equivalence",
+            "input": {
+              "profile_id": "synthetic-game-2015",
+              "moves": [
+                [
+                  1,
+                  2,
+                  5,
+                  6
+                ],
+                [
+                  4,
+                  5,
+                  6
+                ],
+                [
+                  3,
+                  4,
+                  5
+                ],
+                [
+                  4,
+                  5
+                ],
+                [],
+                [],
+                []
+              ],
+              "other_moves": [
+                [
+                  3
+                ],
+                [
+                  2,
+                  3
+                ],
+                [],
+                []
+              ],
+              "start": 6,
+              "other_start": 2,
+              "heap": 7,
+              "horizon": 6,
+              "play": "normal",
+              "claim": "accessibility",
+              "provided": [
+                "typed_physical_mapping",
+                "safety_monitoring",
+                "interoperability",
+                "assistive_technology"
+              ],
+              "authority": "unreviewed"
+            }
+          },
+          "expected": {
+            "ok": true,
+            "op": "ig_nim_equivalence",
+            "data": {
+              "start": 6,
+              "grundy": 0,
+              "contexts": [
+                {
+                  "heap": 0,
+                  "mover_wins": false,
+                  "losing_iff_equal": true
+                },
+                {
+                  "heap": 1,
+                  "mover_wins": true,
+                  "losing_iff_equal": true
+                },
+                {
+                  "heap": 2,
+                  "mover_wins": true,
+                  "losing_iff_equal": true
+                },
+                {
+                  "heap": 3,
+                  "mover_wins": true,
+                  "losing_iff_equal": true
+                },
+                {
+                  "heap": 4,
+                  "mover_wins": true,
+                  "losing_iff_equal": true
+                },
+                {
+                  "heap": 5,
+                  "mover_wins": true,
+                  "losing_iff_equal": true
+                },
+                {
+                  "heap": 6,
+                  "mover_wins": true,
+                  "losing_iff_equal": true
+                },
+                {
+                  "heap": 7,
+                  "mover_wins": true,
+                  "losing_iff_equal": true
+                }
+              ],
+              "bounded_context_only": true
+            },
+            "external_credit": false
+          },
+          "status": 0,
+          "adverse": {
+            "request": {
+              "op": "ig_nim_equivalence",
+              "input": {
+                "profile_id": "synthetic-game-2015",
+                "moves": [
+                  [
+                    1,
+                    2,
+                    5,
+                    6
+                  ],
+                  [
+                    4,
+                    5,
+                    6
+                  ],
+                  [
+                    3,
+                    4,
+                    5
+                  ],
+                  [
+                    4,
+                    5
+                  ],
+                  [],
+                  [],
+                  []
+                ],
+                "other_moves": [
+                  [
+                    3
+                  ],
+                  [
+                    2,
+                    3
+                  ],
+                  [],
+                  []
+                ],
+                "start": 6,
+                "other_start": 2,
+                "heap": 7,
+                "horizon": 6,
+                "play": "misere",
+                "claim": "accessibility",
+                "provided": [
+                  "typed_physical_mapping",
+                  "safety_monitoring",
+                  "interoperability",
+                  "assistive_technology"
+                ],
+                "authority": "unreviewed"
+              }
+            },
+            "expected": {
+              "ok": false,
+              "op": "ig_nim_equivalence",
+              "error": "normal_play_only",
+              "external_credit": false
+            },
+            "status": 2,
+            "original_subject_credit": 0
+          }
+        }
+      ]
+    },
+    {
+      "name": "ghc-family-game-evidence-reservations-v1",
+      "guide": "docs/vesper-arlen/v698-v3/x2/curated/ghc-family-game-evidence-reservations-v1/SKILL.md",
+      "caller": "docs/vesper-arlen/v698-v3/x2/curated/ghc-family-game-evidence-reservations-v1/ghc_family_game_evidence_reservations_v1.txt",
+      "contract": "docs/vesper-arlen/v698-v3/x2/curated/ghc-family-game-evidence-reservations-v1/contract.json",
+      "operations": [
+        "ig_path_counts",
+        "ig_evidence_gap",
+        "ig_authority_gate"
+      ],
+      "guide_sha256": "4f532b1780cb859b1b76879d087e431b84e69ca6aae1f65ed23c6d50cbf61195",
+      "caller_sha256": "4ac5df33169f57a626a4ec5d936ac3ef0b0bf91ffd392227eb667c67efda8d4e",
+      "cases": [
+        {
+          "op": "ig_path_counts",
+          "request": {
+            "op": "ig_path_counts",
+            "input": {
+              "profile_id": "synthetic-game-2016",
+              "moves": [
+                [
+                  2
+                ],
+                [],
+                [],
+                []
+              ],
+              "other_moves": [
+                [
+                  2
+                ],
+                [
+                  2
+                ],
+                []
+              ],
+              "start": 0,
+              "other_start": 0,
+              "heap": 0,
+              "horizon": 0,
+              "play": "normal",
+              "claim": "empirical_gmut",
+              "provided": [
+                "real_observations",
+                "real_operators",
+                "real_keys",
+                "recovery_governance",
+                "manual_evaluation"
+              ],
+              "authority": "none"
+            }
+          },
+          "expected": {
+            "ok": true,
+            "op": "ig_path_counts",
+            "data": {
+              "start": 0,
+              "horizon": 0,
+              "terminal_counts": [
+                0
+              ],
+              "beyond_horizon": 1,
+              "total_complete_plays": 1
+            },
+            "external_credit": false
+          },
+          "status": 0,
+          "adverse": {
+            "request": {
+              "op": "ig_path_counts",
+              "input": {
+                "profile_id": "synthetic-game-2016",
+                "moves": [
+                  [
+                    2
+                  ],
+                  [],
+                  [],
+                  []
+                ],
+                "other_moves": [
+                  [
+                    2
+                  ],
+                  [
+                    2
+                  ],
+                  []
+                ],
+                "start": 0,
+                "other_start": 0,
+                "heap": 0,
+                "horizon": 0,
+                "play": "misere",
+                "claim": "empirical_gmut",
+                "provided": [
+                  "real_observations",
+                  "real_operators",
+                  "real_keys",
+                  "recovery_governance",
+                  "manual_evaluation"
+                ],
+                "authority": "none"
+              }
+            },
+            "expected": {
+              "ok": false,
+              "op": "ig_path_counts",
+              "error": "normal_play_only",
+              "external_credit": false
+            },
+            "status": 2,
+            "original_subject_credit": 0
+          }
+        },
+        {
+          "op": "ig_evidence_gap",
+          "request": {
+            "op": "ig_evidence_gap",
+            "input": {
+              "profile_id": "synthetic-game-2018",
+              "moves": [
+                [
+                  3
+                ],
+                [
+                  2,
+                  3
+                ],
+                [],
+                [
+                  5
+                ],
+                [
+                  5
+                ],
+                []
+              ],
+              "other_moves": [
+                [
+                  1,
+                  3,
+                  4
+                ],
+                [
+                  2,
+                  3,
+                  4
+                ],
+                [
+                  3
+                ],
+                [],
+                []
+              ],
+              "start": 2,
+              "other_start": 1,
+              "heap": 2,
+              "horizon": 2,
+              "play": "normal",
+              "claim": "freed_id",
+              "provided": [
+                "typed_physical_mapping",
+                "safety_monitoring",
+                "interoperability",
+                "assistive_technology"
+              ],
+              "authority": "synthetic_only"
+            }
+          },
+          "expected": {
+            "ok": true,
+            "op": "ig_evidence_gap",
+            "data": {
+              "claim": "freed_id",
+              "required": [
+                "real_keys",
+                "interoperability",
+                "privacy_review",
+                "recovery_governance"
+              ],
+              "provided": [
+                "typed_physical_mapping",
+                "safety_monitoring",
+                "interoperability",
+                "assistive_technology"
+              ],
+              "missing": [
+                "real_keys",
+                "privacy_review",
+                "recovery_governance"
+              ],
+              "externally_verified": false,
+              "claim_established": false,
+              "state": "open_gap"
+            },
+            "external_credit": false
+          },
+          "status": 0,
+          "adverse": {
+            "request": {
+              "op": "ig_evidence_gap",
+              "input": {
+                "profile_id": "synthetic-game-2018",
+                "moves": [
+                  [
+                    3
+                  ],
+                  [
+                    2,
+                    3
+                  ],
+                  [],
+                  [
+                    5
+                  ],
+                  [
+                    5
+                  ],
+                  []
+                ],
+                "other_moves": [
+                  [
+                    1,
+                    3,
+                    4
+                  ],
+                  [
+                    2,
+                    3,
+                    4
+                  ],
+                  [
+                    3
+                  ],
+                  [],
+                  []
+                ],
+                "start": 2,
+                "other_start": 1,
+                "heap": 2,
+                "horizon": 2,
+                "play": "misere",
+                "claim": "freed_id",
+                "provided": [
+                  "typed_physical_mapping",
+                  "safety_monitoring",
+                  "interoperability",
+                  "assistive_technology"
+                ],
+                "authority": "synthetic_only"
+              }
+            },
+            "expected": {
+              "ok": false,
+              "op": "ig_evidence_gap",
+              "error": "normal_play_only",
+              "external_credit": false
+            },
+            "status": 2,
+            "original_subject_credit": 0
+          }
+        },
+        {
+          "op": "ig_authority_gate",
+          "request": {
+            "op": "ig_authority_gate",
+            "input": {
+              "profile_id": "synthetic-game-2019",
+              "moves": [
+                [
+                  2,
+                  3,
+                  6
+                ],
+                [
+                  2,
+                  5,
+                  6
+                ],
+                [
+                  4,
+                  5,
+                  6
+                ],
+                [
+                  4,
+                  5
+                ],
+                [],
+                [],
+                []
+              ],
+              "other_moves": [
+                [],
+                [
+                  3
+                ],
+                [],
+                []
+              ],
+              "start": 3,
+              "other_start": 2,
+              "heap": 3,
+              "horizon": 3,
+              "play": "normal",
+              "claim": "accessibility",
+              "provided": [
+                "real_observations",
+                "real_operators",
+                "real_keys",
+                "recovery_governance",
+                "manual_evaluation"
+              ],
+              "authority": "unreviewed"
+            }
+          },
+          "expected": {
+            "ok": true,
+            "op": "ig_authority_gate",
+            "data": {
+              "label": "unreviewed",
+              "authority_granted": false,
+              "rights_allocated": false,
+              "production": false,
+              "stage20": false,
+              "state": "exact_gate"
+            },
+            "external_credit": false
+          },
+          "status": 0,
+          "adverse": {
+            "request": {
+              "op": "ig_authority_gate",
+              "input": {
+                "profile_id": "synthetic-game-2019",
+                "moves": [
+                  [
+                    2,
+                    3,
+                    6
+                  ],
+                  [
+                    2,
+                    5,
+                    6
+                  ],
+                  [
+                    4,
+                    5,
+                    6
+                  ],
+                  [
+                    4,
+                    5
+                  ],
+                  [],
+                  [],
+                  []
+                ],
+                "other_moves": [
+                  [],
+                  [
+                    3
+                  ],
+                  [],
+                  []
+                ],
+                "start": 3,
+                "other_start": 2,
+                "heap": 3,
+                "horizon": 3,
+                "play": "misere",
+                "claim": "accessibility",
+                "provided": [
+                  "real_observations",
+                  "real_operators",
+                  "real_keys",
+                  "recovery_governance",
+                  "manual_evaluation"
+                ],
+                "authority": "unreviewed"
+              }
+            },
+            "expected": {
+              "ok": false,
+              "op": "ig_authority_gate",
+              "error": "normal_play_only",
+              "external_credit": false
+            },
+            "status": 2,
+            "original_subject_credit": 0
+          }
+        }
+      ]
+    }
+  ],
+  "existing_files_overwritten": 0,
+  "smokes_executed": 0
+}

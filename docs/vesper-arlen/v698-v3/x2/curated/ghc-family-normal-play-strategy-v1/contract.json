@@ -1,0 +1,432 @@
+{
+  "name": "ghc-family-normal-play-strategy-v1",
+  "caller": "docs/vesper-arlen/v698-v3/x2/curated/ghc-family-normal-play-strategy-v1/ghc_family_normal_play_strategy_v1.txt",
+  "operations": [
+    "ig_winning_moves",
+    "ig_policy",
+    "ig_trace"
+  ],
+  "cases": [
+    {
+      "op": "ig_winning_moves",
+      "request": {
+        "op": "ig_winning_moves",
+        "input": {
+          "profile_id": "synthetic-game-2008",
+          "moves": [
+            [
+              1
+            ],
+            [],
+            [
+              3
+            ],
+            []
+          ],
+          "other_moves": [
+            [
+              1,
+              2
+            ],
+            [],
+            []
+          ],
+          "start": 0,
+          "other_start": 2,
+          "heap": 0,
+          "horizon": 6,
+          "play": "normal",
+          "claim": "empirical_gmut",
+          "provided": [
+            "independent_review",
+            "governed_trial",
+            "privacy_review",
+            "affected_user_review"
+          ],
+          "authority": "none"
+        }
+      },
+      "expected": {
+        "ok": true,
+        "op": "ig_winning_moves",
+        "data": {
+          "start": 0,
+          "moves": [
+            1
+          ],
+          "mover_wins": true
+        },
+        "external_credit": false
+      },
+      "status": 0,
+      "adverse": {
+        "request": {
+          "op": "ig_winning_moves",
+          "input": {
+            "profile_id": "synthetic-game-2008",
+            "moves": [
+              [
+                1
+              ],
+              [],
+              [
+                3
+              ],
+              []
+            ],
+            "other_moves": [
+              [
+                1,
+                2
+              ],
+              [],
+              []
+            ],
+            "start": 0,
+            "other_start": 2,
+            "heap": 0,
+            "horizon": 6,
+            "play": "misere",
+            "claim": "empirical_gmut",
+            "provided": [
+              "independent_review",
+              "governed_trial",
+              "privacy_review",
+              "affected_user_review"
+            ],
+            "authority": "none"
+          }
+        },
+        "expected": {
+          "ok": false,
+          "op": "ig_winning_moves",
+          "error": "normal_play_only",
+          "external_credit": false
+        },
+        "status": 2,
+        "original_subject_credit": 0
+      }
+    },
+    {
+      "op": "ig_policy",
+      "request": {
+        "op": "ig_policy",
+        "input": {
+          "profile_id": "synthetic-game-2009",
+          "moves": [
+            [
+              4
+            ],
+            [
+              3
+            ],
+            [],
+            [],
+            []
+          ],
+          "other_moves": [
+            [
+              1,
+              4,
+              5
+            ],
+            [
+              3,
+              4
+            ],
+            [
+              3,
+              4
+            ],
+            [],
+            [],
+            []
+          ],
+          "start": 4,
+          "other_start": 4,
+          "heap": 1,
+          "horizon": 0,
+          "play": "normal",
+          "claim": "production_thos",
+          "provided": [
+            "typed_physical_mapping",
+            "safety_monitoring",
+            "interoperability",
+            "assistive_technology"
+          ],
+          "authority": "claimed_reviewed"
+        }
+      },
+      "expected": {
+        "ok": true,
+        "op": "ig_policy",
+        "data": {
+          "positions": [
+            {
+              "position": 0,
+              "winning_options": [
+                4
+              ],
+              "chosen": 4,
+              "state": "winning"
+            },
+            {
+              "position": 1,
+              "winning_options": [
+                3
+              ],
+              "chosen": 3,
+              "state": "winning"
+            },
+            {
+              "position": 2,
+              "winning_options": [],
+              "chosen": null,
+              "state": "terminal"
+            },
+            {
+              "position": 3,
+              "winning_options": [],
+              "chosen": null,
+              "state": "terminal"
+            },
+            {
+              "position": 4,
+              "winning_options": [],
+              "chosen": null,
+              "state": "terminal"
+            }
+          ]
+        },
+        "external_credit": false
+      },
+      "status": 0,
+      "adverse": {
+        "request": {
+          "op": "ig_policy",
+          "input": {
+            "profile_id": "synthetic-game-2009",
+            "moves": [
+              [
+                4
+              ],
+              [
+                3
+              ],
+              [],
+              [],
+              []
+            ],
+            "other_moves": [
+              [
+                1,
+                4,
+                5
+              ],
+              [
+                3,
+                4
+              ],
+              [
+                3,
+                4
+              ],
+              [],
+              [],
+              []
+            ],
+            "start": 4,
+            "other_start": 4,
+            "heap": 1,
+            "horizon": 0,
+            "play": "misere",
+            "claim": "production_thos",
+            "provided": [
+              "typed_physical_mapping",
+              "safety_monitoring",
+              "interoperability",
+              "assistive_technology"
+            ],
+            "authority": "claimed_reviewed"
+          }
+        },
+        "expected": {
+          "ok": false,
+          "op": "ig_policy",
+          "error": "normal_play_only",
+          "external_credit": false
+        },
+        "status": 2,
+        "original_subject_credit": 0
+      }
+    },
+    {
+      "op": "ig_trace",
+      "request": {
+        "op": "ig_trace",
+        "input": {
+          "profile_id": "synthetic-game-2017",
+          "moves": [
+            [
+              1,
+              4
+            ],
+            [
+              3,
+              4
+            ],
+            [
+              3
+            ],
+            [],
+            []
+          ],
+          "other_moves": [
+            [
+              1,
+              2,
+              4,
+              5
+            ],
+            [
+              3,
+              4,
+              5
+            ],
+            [
+              3,
+              4
+            ],
+            [],
+            [],
+            []
+          ],
+          "start": 2,
+          "other_start": 2,
+          "heap": 1,
+          "horizon": 1,
+          "play": "normal",
+          "claim": "production_thos",
+          "provided": [
+            "independent_review",
+            "governed_trial",
+            "privacy_review",
+            "affected_user_review"
+          ],
+          "authority": "claimed_reviewed"
+        }
+      },
+      "expected": {
+        "ok": true,
+        "op": "ig_trace",
+        "data": {
+          "trace": [
+            2,
+            3
+          ],
+          "moves": 1,
+          "winner": "first",
+          "model_agents_only": true,
+          "real_agency": false
+        },
+        "external_credit": false
+      },
+      "status": 0,
+      "adverse": {
+        "request": {
+          "op": "ig_trace",
+          "input": {
+            "profile_id": "synthetic-game-2017",
+            "moves": [
+              [
+                1,
+                4
+              ],
+              [
+                3,
+                4
+              ],
+              [
+                3
+              ],
+              [],
+              []
+            ],
+            "other_moves": [
+              [
+                1,
+                2,
+                4,
+                5
+              ],
+              [
+                3,
+                4,
+                5
+              ],
+              [
+                3,
+                4
+              ],
+              [],
+              [],
+              []
+            ],
+            "start": 2,
+            "other_start": 2,
+            "heap": 1,
+            "horizon": 1,
+            "play": "misere",
+            "claim": "production_thos",
+            "provided": [
+              "independent_review",
+              "governed_trial",
+              "privacy_review",
+              "affected_user_review"
+            ],
+            "authority": "claimed_reviewed"
+          }
+        },
+        "expected": {
+          "ok": false,
+          "op": "ig_trace",
+          "error": "normal_play_only",
+          "external_credit": false
+        },
+        "status": 2,
+        "original_subject_credit": 0
+      }
+    }
+  ],
+  "dependency_closure": [
+    "docs/vesper-arlen/v698-v3/x2/curated/support/ghc_family_impartial_core.txt",
+    "docs/vesper-arlen/v698-v3/x2/curated/support/ghc_family_impartial_cli.txt",
+    "docs/vesper-arlen/v698-v3/x2/curated/support/ghc_family_impartial_extension.txt"
+  ],
+  "local_units": [
+    "docs/vesper-arlen/v698-v3/x1/skills/ghc-family-winning-moves-impartial-local/SKILL.md",
+    "docs/vesper-arlen/v698-v3/x1/skills/ghc-family-policy-impartial-local/SKILL.md",
+    "docs/vesper-arlen/v698-v3/x2/skills/ghc-family-trace-impartial-local/SKILL.md"
+  ],
+  "protected_gates": [
+    "empirical",
+    "participant",
+    "production",
+    "deployment",
+    "identity",
+    "professional",
+    "legal",
+    "cultural",
+    "affected_party",
+    "maori_authority",
+    "privacy_complete",
+    "accessibility_complete",
+    "exhaustive_security",
+    "independent_reproduction",
+    "agi_asi",
+    "consciousness_personhood",
+    "theory_of_everything",
+    "canon",
+    "stage20"
+  ]
+}

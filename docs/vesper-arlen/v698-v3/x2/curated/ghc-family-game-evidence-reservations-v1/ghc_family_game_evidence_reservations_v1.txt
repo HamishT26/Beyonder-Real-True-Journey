@@ -1,0 +1,5 @@
+'use strict';
+require.extensions['.txt']=require.extensions['.js'];
+const core=require('../support/ghc_family_impartial_core.txt'),ext=require('../support/ghc_family_impartial_extension.txt')(core),cli=require('../support/ghc_family_impartial_cli.txt');
+const api={evaluate:r=>core.operations.includes(r.op)?core.evaluate(r):ext.evaluate(r)};
+cli.run(api,["ig_path_counts","ig_evidence_gap","ig_authority_gate"]);
