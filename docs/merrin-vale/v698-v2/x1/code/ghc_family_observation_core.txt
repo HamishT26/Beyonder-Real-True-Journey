@@ -1,0 +1,40 @@
+'use strict';
+class Refusal extends Error{constructor(code){super(code);this.code=code;}}
+const fail=code=>{throw new Refusal(code);};
+const ops=['or_profile','or_refines','or_common_refinement','or_common_coarsening','or_block_map','or_lower','or_upper','or_boundary','or_discernibility','or_uniform_choices'];
+const fields=['profile_id','states','left','right','transitions','target','choices','features','costs','horizon','path','goals','budget','claim','provided','request','authority','evidence'];
+const claimNames=['real_sensor_identification','empirical_gmut','production_thos','production_identity','affected_accessibility'],gateNames=['deployment','maori_wording','personhood','rights_allocation','stage20'];
+function object(x){if(!x||typeof x!=='object'||Array.isArray(x)||![Object.prototype,null].includes(Object.getPrototypeOf(x)))fail('object_shape');}
+function closed(x,keys){object(x);if(Object.keys(x).some(k=>!keys.includes(k)))fail('closed_fields');if(keys.some(k=>!Object.hasOwn(x,k)))fail('missing_fields');}
+const integer=(v,lo,hi)=>Number.isInteger(v)&&v>=lo&&v<=hi;
+const label=s=>typeof s==='string'&&/^[a-z][a-z0-9_-]{0,63}$/.test(s);
+function orderedSet(a,limit,empty=true){return Array.isArray(a)&&(empty||a.length>0)&&a.length<=limit&&a.every((v,i)=>integer(v,0,limit-1)&&(i===0||a[i-1]<v));}
+function normalized(a){const m=new Map();return a.map(v=>{if(!m.has(v))m.set(v,m.size);return m.get(v);});}
+function cells(a){const p=normalized(a),out=[];for(let i=0;i<p.length;i++){out[p[i]]??=[];out[p[i]].push(i);}return out;}
+function validate(x){closed(x,fields);if(!label(x.profile_id))fail('profile_label');if(!Array.isArray(x.states)||x.states.length<2||x.states.length>6||x.states.some(s=>!label(s))||new Set(x.states).size!==x.states.length)fail('state_shape');const n=x.states.length;
+for(const p of [x.left,x.right])if(!Array.isArray(p)||p.length!==n||p.some(v=>!integer(v,0,n-1)))fail('partition_shape');
+if(!Array.isArray(x.transitions)||x.transitions.length!==n||x.transitions.some(r=>!orderedSet(r,n,false)))fail('transition_shape');if(!orderedSet(x.target,n))fail('target_shape');if(!Array.isArray(x.choices)||x.choices.length!==n||x.choices.some(r=>!orderedSet(r,3)))fail('choice_shape');
+if(!Array.isArray(x.features)||x.features.length<1||x.features.length>6||x.features.some(r=>!Array.isArray(r)||r.length!==n||r.some(v=>!integer(v,0,n-1))))fail('feature_shape');if(!Array.isArray(x.costs)||x.costs.length!==x.features.length||x.costs.some(v=>!integer(v,1,9)))fail('cost_shape');
+if(!integer(x.horizon,0,4))fail('horizon_bounds');if(!Array.isArray(x.path)||x.path.length<1||x.path.length>5||x.path.some(v=>!integer(v,0,cells(x.left).length-1)))fail('path_bounds');
+if(!Array.isArray(x.goals)||x.goals.length>15||x.goals.some(p=>!Array.isArray(p)||p.length!==2||!integer(p[0],0,n-1)||!integer(p[1],0,n-1)||p[0]>=p[1]))fail('goal_shape');const goalKeys=x.goals.map(p=>p[0]*n+p[1]);if(goalKeys.some((v,i)=>i&&goalKeys[i-1]>=v))fail('goal_shape');
+if(!integer(x.budget,0,20))fail('budget_bounds');if(!claimNames.includes(x.claim))fail('unknown_claim');if(!gateNames.includes(x.request))fail('unknown_request');if(!Array.isArray(x.provided)||x.provided.length>32||x.provided.some(s=>!label(s))||new Set(x.provided).size!==x.provided.length)fail('provided_shape');if(!label(x.authority)||x.evidence!=='synthetic_only')fail('evidence_scope');return x;}
+const mask=a=>a.reduce((m,v)=>m|(1<<v),0),members=(m,n)=>Array.from({length:n},(_,i)=>i).filter(i=>m&(1<<i));
+function splitting(p,q){for(let i=0;i<p.length;i++)for(let j=i+1;j<p.length;j++)if(p[i]===p[j]&&q[i]!==q[j])return[i,j];return null;}
+function commonRefinement(p,q){return normalized(p.map((v,i)=>v+':'+q[i]));}
+function commonCoarsening(p,q){const parent=p.map((_,i)=>i);function find(i){while(parent[i]!==i){parent[i]=parent[parent[i]];i=parent[i];}return i;}for(let i=0;i<p.length;i++)for(let j=i+1;j<p.length;j++)if(p[i]===p[j]||q[i]===q[j])parent[find(j)]=find(i);return normalized(p.map((_,i)=>find(i)));}
+function rough(p,target){const t=mask(target);let lower=0,upper=0;for(const c of cells(p)){const m=mask(c);if((m&t)===m)lower|=m;if(m&t)upper|=m;}return{lower:members(lower,p.length),upper:members(upper,p.length),boundary:members(upper&~lower,p.length)};}
+function distinguished(p){const out=[];for(let i=0;i<p.length;i++)for(let j=i+1;j<p.length;j++)if(p[i]!==p[j])out.push([i,j]);return out;}
+function calculate(op,x){const p=normalized(x.left),q=normalized(x.right),b=cells(p);switch(op){
+case'or_profile':return{states:[...x.states],left_cells:b,right_cells:cells(q),transition_count:x.transitions.reduce((s,r)=>s+r.length,0),features:x.features.length,horizon:x.horizon,synthetic_only:true};
+case'or_refines':{const pair=splitting(p,q);return{refines:pair===null,splitting_pair:pair};}
+case'or_common_refinement':{const labels=commonRefinement(p,q);return{labels,cells:cells(labels)};}
+case'or_common_coarsening':{const labels=commonCoarsening(p,q);return{labels,cells:cells(labels)};}
+case'or_block_map':{const pair=splitting(p,q);return{refines:pair===null,mapping:b.map((c,i)=>({left_cell:i,right_cell:c.every(s=>q[s]===q[c[0]])?q[c[0]]:null})),splitting_pair:pair};}
+case'or_lower':return{states:rough(p,x.target).lower};
+case'or_upper':return{states:rough(p,x.target).upper};
+case'or_boundary':{const r=rough(p,x.target);return{...r,definable:r.boundary.length===0};}
+case'or_discernibility':{const pairs=distinguished(p);return{pairs,count:pairs.length};}
+case'or_uniform_choices':return{cells:b.map((c,i)=>{let common=7;for(const s of c)common&=mask(x.choices[s]);return{cell:i,states:c,common_choices:members(common,3)};}),real_controller_authority:false};
+default:fail('unknown_operation');}}
+function route(request,allowed,compute,disposition=()=> 'completed'){let op=typeof request?.op==='string'?request.op:null;try{closed(request,['op','input']);if(!allowed.includes(op))fail('unknown_operation');const x=validate(request.input);return{ok:true,op,scope:'finite_declared_observation_model',disposition:disposition(op),data:compute(op,x),external_credit:false};}catch(e){if(!(e instanceof Refusal))throw e;return{ok:false,op,error:e.code,external_credit:false};}}
+module.exports={operations:ops,evaluate:r=>route(r,ops,calculate),route,validate,normalized,cells,mask,members,splitting,commonRefinement,rough,distinguished,fail};
