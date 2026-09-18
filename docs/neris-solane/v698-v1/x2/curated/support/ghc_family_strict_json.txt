@@ -1,0 +1,9 @@
+'use strict';
+function parseStrict(text){
+  let i=0;const fail=()=>{throw new Error('json_syntax');};const ws=()=>{while(i<text.length&&/[\x20\x09\x0a\x0d]/.test(text[i]))i++;};
+  const str=()=>{const start=i;if(text[i++]!=='"')fail();let escaped=false;while(i<text.length){const c=text[i++];if(!escaped&&c==='"'){try{return JSON.parse(text.slice(start,i));}catch{fail();}}if(!escaped&&c.charCodeAt(0)<32)fail();if(escaped)escaped=false;else if(c==='\\')escaped=true;}fail();};
+  const value=()=>{ws();const c=text[i];if(c==='"')return str();if(c==='{'){i++;ws();const o=Object.create(null),seen=new Set();if(text[i]==='}'){i++;return o;}while(true){ws();if(text[i]!=='"')fail();const k=str();if(seen.has(k))throw new Error('duplicate_key');seen.add(k);ws();if(text[i++]!==':')fail();o[k]=value();ws();if(text[i]==='}'){i++;return o;}if(text[i++]!==',')fail();}}if(c==='['){i++;ws();const a=[];if(text[i]===']'){i++;return a;}while(true){a.push(value());ws();if(text[i]===']'){i++;return a;}if(text[i++]!==',')fail();}}for(const [word,v]of[['true',true],['false',false],['null',null]])if(text.slice(i,i+word.length)===word){i+=word.length;return v;}const m=text.slice(i).match(/^-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?/);if(!m)fail();i+=m[0].length;const n=Number(m[0]);if(!Number.isFinite(n))throw new Error('nonfinite');return n;};
+  const out=value();ws();if(i!==text.length)fail();return out;
+}
+const decode=buffer=>parseStrict(new TextDecoder('utf-8',{fatal:true}).decode(buffer));
+module.exports={parseStrict,decode};

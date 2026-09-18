@@ -1,0 +1,26 @@
+'use strict';
+const E=require('./ghc_family_safety_core.txt');
+const OPS=[...E.OPS,'sg_observation_cells','sg_belief_updates','sg_belief_universe','sg_belief_cpre','sg_knowledge_fixpoint','sg_knowledge_strategy','sg_information_loss','sg_accessible_coordinates','sg_observation_gap','sg_authority_gate'];
+const key=b=>b.join(',');
+const lex=(a,b)=>{for(let i=0;i<Math.min(a.length,b.length);i++)if(a[i]!==b[i])return a[i]-b[i];return a.length-b.length;};
+function universe(x){const out=[];for(let mask=1;mask<(1<<x.states.length);mask++){const b=x.states.map((_,s)=>s).filter(s=>mask&(1<<s));if(new Set(b.map(s=>x.observation[s])).size===1)out.push(b);}return out.sort(lex);}
+function updates(x,b,a){const post=E.sorted(new Set(b.flatMap(s=>x.successors[s][a])));return E.sorted(new Set(post.map(s=>x.observation[s]))).map(label=>post.filter(s=>x.observation[s]===label)).sort(lex);}
+const safeBeliefs=(x,u)=>u.filter(b=>b.every(s=>x.safe.includes(s)));
+const choices=(x,b,target)=>x.actions.map((_,a)=>a).filter(a=>updates(x,b,a).every(t=>target.has(key(t))));
+function knowledge(x){const u=universe(x),safe=safeBeliefs(x,u);let win=new Set(safe.map(key));let steps=0;while(true){const next=new Set(safe.filter(b=>choices(x,b,win).length>0).map(key));if(E.equalSets(win,next))return{universe:u,winning:u.filter(b=>win.has(key(b))),keys:win};win=next;E.need(++steps<=u.length,'knowledge_budget');}}
+function execute(r){const x=E.validate(r,OPS),op=r.op;if(E.OPS.includes(op))return E.execute(r);let data,disposition='completed';
+  if(op==='sg_observation_cells')data={cells:E.sorted(new Set(x.observation)).map(label=>({label,states:x.states.map((_,s)=>s).filter(s=>x.observation[s]===label)}))};
+  else if(op==='sg_belief_updates')data={belief:x.belief.slice(),action:x.choice,successor_beliefs:updates(x,x.belief,x.choice)};
+  else if(op==='sg_belief_universe')data={beliefs:universe(x),nonempty_homogeneous_only:true};
+  else if(op==='sg_belief_cpre'){const u=universe(x),safe=safeBeliefs(x,u),target=new Set(safe.map(key));data={safe_beliefs:safe,predecessors:u.filter(b=>choices(x,b,target).length>0)};}
+  else if(op==='sg_knowledge_fixpoint'){const kw=knowledge(x);data={winning_beliefs:kw.winning,initial_winning:kw.keys.has(key(x.belief)),objective:'sure_safety_in_declared_belief_game',stochastic_reachability_claimed:false};}
+  else if(op==='sg_knowledge_strategy'){const kw=knowledge(x);data={strategy:kw.winning.map(b=>({belief:b,action:choices(x,b,kw.keys)[0]})),belief_memory_explicit:true,observation_memoryless_claimed:false};}
+  else if(op==='sg_information_loss'){const kw=knowledge(x),win=E.fixpoint(x).winning,lost=kw.universe.filter(b=>b.every(s=>win.has(s))&&!kw.keys.has(key(b)));data={perfect_winning:E.sorted(win),information_loss_beliefs:lost,count:lost.length};}
+  else if(op==='sg_accessible_coordinates'){disposition='represented';data={coordinate_names:['safe_state_count','observation_cell_count','winning_belief_count'],coordinates:[x.safe.length,new Set(x.observation).size,knowledge(x).winning.length],exact_values_available:true,complete_accessibility_claimed:false};}
+  else if(op==='sg_observation_gap'){disposition='open_gap';data={observations:0,missing:['measured transition and observation relation','governed adversarial assumptions','preregistered external comparison','independent model and safety review'],empirical_safety_claimed:false};}
+  else{disposition='exact_gate';data={actions_executed:0,authorization:'none',missing:['specific real target and scope','competent safety and professional review','affected-party authorization and remedy','privacy security legal cultural and Maori authority where applicable']};}
+  return{ok:true,op,core_disposition:disposition,scope:'finite_synthetic_safety_game',data};
+}
+function runCLI(executor=execute,allowed=OPS){return E.runCLI(executor,allowed);}
+module.exports={OPS,key,lex,universe,updates,safeBeliefs,choices,knowledge,execute,runCLI};
+if(require.main===module)runCLI();
