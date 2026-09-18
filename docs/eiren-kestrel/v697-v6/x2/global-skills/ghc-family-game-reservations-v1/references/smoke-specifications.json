@@ -1,0 +1,288 @@
+{
+  "specifications": [
+    {
+      "operation": "affine_payoff_transform",
+      "request": {
+        "op": "affine_payoff_transform",
+        "input": {
+          "case_id": "EK6976-G5-O1",
+          "matrix": [
+            [
+              "7/3",
+              "-11/5"
+            ],
+            [
+              "-13/7",
+              "17/9"
+            ]
+          ],
+          "p": "5/13",
+          "q": "7/17",
+          "scale": "2/3",
+          "shift": "19/23",
+          "perturbation": "1/37",
+          "evidence": "synthetic_only",
+          "authorization": "none"
+        }
+      },
+      "expected": {
+        "ok": true,
+        "op": "affine_payoff_transform",
+        "data": {
+          "transformed_matrix": [
+            [
+              "493/207",
+              "-221/345"
+            ],
+            [
+              "-199/483",
+              "1295/621"
+            ]
+          ],
+          "original": {
+            "value": "19/489",
+            "row_interval": [
+              "295/652",
+              "295/652"
+            ],
+            "column_interval": [
+              "161/326",
+              "161/326"
+            ],
+            "row_probability": "295/652",
+            "column_probability": "161/326"
+          },
+          "transformed": {
+            "value": "28747/33741",
+            "row_interval": [
+              "295/652",
+              "295/652"
+            ],
+            "column_interval": [
+              "161/326",
+              "161/326"
+            ],
+            "row_probability": "295/652",
+            "column_probability": "161/326"
+          },
+          "positive_scale": true,
+          "value_relation": true
+        },
+        "core_disposition": "completed",
+        "scope": "finite_synthetic_2x2_zero_sum"
+      },
+      "expected_exit_status": 0,
+      "refusal": {
+        "field": "authorization",
+        "replacement": "live",
+        "expected": {
+          "ok": false,
+          "error": "authority_boundary"
+        },
+        "expected_exit_status": 2
+      },
+      "inherited_completion_credit": 0
+    },
+    {
+      "operation": "rational_sensitivity_grid",
+      "request": {
+        "op": "rational_sensitivity_grid",
+        "input": {
+          "case_id": "EK6976-G5-O2",
+          "matrix": [
+            [
+              "7/3",
+              "-11/5"
+            ],
+            [
+              "-13/7",
+              "17/9"
+            ]
+          ],
+          "p": "5/13",
+          "q": "7/17",
+          "scale": "2/3",
+          "shift": "19/23",
+          "perturbation": "1/37",
+          "evidence": "synthetic_only",
+          "authorization": "none"
+        }
+      },
+      "expected": {
+        "ok": true,
+        "op": "rational_sensitivity_grid",
+        "data": {
+          "declared_perturbation": "1/37",
+          "rows": [
+            {
+              "entry": 0,
+              "delta": "-1/37",
+              "value": "9463/288543"
+            },
+            {
+              "entry": 0,
+              "delta": "1/37",
+              "value": "13033/290433"
+            },
+            {
+              "entry": 1,
+              "delta": "-1/37",
+              "value": "863/26403"
+            },
+            {
+              "entry": 1,
+              "delta": "1/37",
+              "value": "13003/288543"
+            },
+            {
+              "entry": 2,
+              "delta": "-1/37",
+              "value": "9169/290433"
+            },
+            {
+              "entry": 2,
+              "delta": "1/37",
+              "value": "13327/288543"
+            },
+            {
+              "entry": 3,
+              "delta": "-1/37",
+              "value": "9043/288543"
+            },
+            {
+              "entry": 3,
+              "delta": "1/37",
+              "value": "1223/26403"
+            }
+          ],
+          "measurement_evidence": false
+        },
+        "core_disposition": "completed",
+        "scope": "finite_synthetic_2x2_zero_sum"
+      },
+      "expected_exit_status": 0,
+      "refusal": {
+        "field": "authorization",
+        "replacement": "live",
+        "expected": {
+          "ok": false,
+          "error": "authority_boundary"
+        },
+        "expected_exit_status": 2
+      },
+      "inherited_completion_credit": 0
+    },
+    {
+      "operation": "empirical_gap",
+      "request": {
+        "op": "empirical_gap",
+        "input": {
+          "case_id": "EK6976-G5-O3",
+          "matrix": [
+            [
+              "7/3",
+              "-11/5"
+            ],
+            [
+              "-13/7",
+              "17/9"
+            ]
+          ],
+          "p": "5/13",
+          "q": "7/17",
+          "scale": "2/3",
+          "shift": "19/23",
+          "perturbation": "1/37",
+          "evidence": "synthetic_only",
+          "authorization": "none"
+        }
+      },
+      "expected": {
+        "ok": true,
+        "op": "empirical_gap",
+        "data": {
+          "real_observations": 0,
+          "governed_participants": 0,
+          "evidence": "synthetic_only",
+          "required": [
+            "preregistered real study",
+            "governance and consent",
+            "measurement and statistics",
+            "independent review"
+          ]
+        },
+        "core_disposition": "open_gap",
+        "scope": "finite_synthetic_2x2_zero_sum"
+      },
+      "expected_exit_status": 0,
+      "refusal": {
+        "field": "authorization",
+        "replacement": "live",
+        "expected": {
+          "ok": false,
+          "error": "authority_boundary"
+        },
+        "expected_exit_status": 2
+      },
+      "inherited_completion_credit": 0
+    },
+    {
+      "operation": "authority_gate",
+      "request": {
+        "op": "authority_gate",
+        "input": {
+          "case_id": "EK6976-G5-O4",
+          "matrix": [
+            [
+              "7/3",
+              "-11/5"
+            ],
+            [
+              "-13/7",
+              "17/9"
+            ]
+          ],
+          "p": "5/13",
+          "q": "7/17",
+          "scale": "2/3",
+          "shift": "19/23",
+          "perturbation": "1/37",
+          "evidence": "synthetic_only",
+          "authorization": "none"
+        }
+      },
+      "expected": {
+        "ok": true,
+        "op": "authority_gate",
+        "data": {
+          "authorization": "none",
+          "real_action_permitted": false,
+          "reserved": [
+            "professional",
+            "privacy",
+            "accessibility completeness",
+            "legal",
+            "cultural",
+            "affected-party",
+            "Maori authority",
+            "Stage 20"
+          ]
+        },
+        "core_disposition": "exact_gate",
+        "scope": "finite_synthetic_2x2_zero_sum"
+      },
+      "expected_exit_status": 0,
+      "refusal": {
+        "field": "authorization",
+        "replacement": "live",
+        "expected": {
+          "ok": false,
+          "error": "authority_boundary"
+        },
+        "expected_exit_status": 2
+      },
+      "inherited_completion_credit": 0
+    }
+  ],
+  "scope": "same-owner fresh synthetic full-envelope accepting/rejecting smoke"
+}

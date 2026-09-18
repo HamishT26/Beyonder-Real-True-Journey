@@ -1,0 +1,219 @@
+{
+  "specifications": [
+    {
+      "operation": "minimax_equilibrium",
+      "request": {
+        "op": "minimax_equilibrium",
+        "input": {
+          "case_id": "EK6976-G4-O1",
+          "matrix": [
+            [
+              "7/3",
+              "-11/5"
+            ],
+            [
+              "-13/7",
+              "17/9"
+            ]
+          ],
+          "p": "5/13",
+          "q": "7/17",
+          "scale": "2/3",
+          "shift": "19/23",
+          "perturbation": "1/37",
+          "evidence": "synthetic_only",
+          "authorization": "none"
+        }
+      },
+      "expected": {
+        "ok": true,
+        "op": "minimax_equilibrium",
+        "data": {
+          "value": "19/489",
+          "row_interval": [
+            "295/652",
+            "295/652"
+          ],
+          "column_interval": [
+            "161/326",
+            "161/326"
+          ],
+          "row_probability": "295/652",
+          "column_probability": "161/326"
+        },
+        "core_disposition": "completed",
+        "scope": "finite_synthetic_2x2_zero_sum"
+      },
+      "expected_exit_status": 0,
+      "refusal": {
+        "field": "authorization",
+        "replacement": "live",
+        "expected": {
+          "ok": false,
+          "error": "authority_boundary"
+        },
+        "expected_exit_status": 2
+      },
+      "inherited_completion_credit": 0
+    },
+    {
+      "operation": "strategy_optimality_certificate",
+      "request": {
+        "op": "strategy_optimality_certificate",
+        "input": {
+          "case_id": "EK6976-G4-O2",
+          "matrix": [
+            [
+              "7/3",
+              "-11/5"
+            ],
+            [
+              "-13/7",
+              "17/9"
+            ]
+          ],
+          "p": "5/13",
+          "q": "7/17",
+          "scale": "2/3",
+          "shift": "19/23",
+          "perturbation": "1/37",
+          "evidence": "synthetic_only",
+          "authorization": "none"
+        }
+      },
+      "expected": {
+        "ok": true,
+        "op": "strategy_optimality_certificate",
+        "data": {
+          "candidate_row_lower": "-67/273",
+          "candidate_column_upper": "53/153",
+          "value": "19/489",
+          "row_optimal": false,
+          "column_optimal": false,
+          "pair_equilibrium": false,
+          "expected_payoff": "13/153"
+        },
+        "core_disposition": "completed",
+        "scope": "finite_synthetic_2x2_zero_sum"
+      },
+      "expected_exit_status": 0,
+      "refusal": {
+        "field": "authorization",
+        "replacement": "live",
+        "expected": {
+          "ok": false,
+          "error": "authority_boundary"
+        },
+        "expected_exit_status": 2
+      },
+      "inherited_completion_credit": 0
+    },
+    {
+      "operation": "exploitability_regret",
+      "request": {
+        "op": "exploitability_regret",
+        "input": {
+          "case_id": "EK6976-G4-O3",
+          "matrix": [
+            [
+              "7/3",
+              "-11/5"
+            ],
+            [
+              "-13/7",
+              "17/9"
+            ]
+          ],
+          "p": "5/13",
+          "q": "7/17",
+          "scale": "2/3",
+          "shift": "19/23",
+          "perturbation": "1/37",
+          "evidence": "synthetic_only",
+          "authorization": "none"
+        }
+      },
+      "expected": {
+        "ok": true,
+        "op": "exploitability_regret",
+        "data": {
+          "expected_payoff": "13/153",
+          "row_regret": "40/153",
+          "column_regret": "4600/13923",
+          "exploitability": "8240/13923"
+        },
+        "core_disposition": "completed",
+        "scope": "finite_synthetic_2x2_zero_sum"
+      },
+      "expected_exit_status": 0,
+      "refusal": {
+        "field": "authorization",
+        "replacement": "live",
+        "expected": {
+          "ok": false,
+          "error": "authority_boundary"
+        },
+        "expected_exit_status": 2
+      },
+      "inherited_completion_credit": 0
+    },
+    {
+      "operation": "support_complementarity",
+      "request": {
+        "op": "support_complementarity",
+        "input": {
+          "case_id": "EK6976-G4-O4",
+          "matrix": [
+            [
+              "7/3",
+              "-11/5"
+            ],
+            [
+              "-13/7",
+              "17/9"
+            ]
+          ],
+          "p": "5/13",
+          "q": "7/17",
+          "scale": "2/3",
+          "shift": "19/23",
+          "perturbation": "1/37",
+          "evidence": "synthetic_only",
+          "authorization": "none"
+        }
+      },
+      "expected": {
+        "ok": true,
+        "op": "support_complementarity",
+        "data": {
+          "row_probability": "295/652",
+          "column_probability": "161/326",
+          "value": "19/489",
+          "row_slack_products": [
+            "0",
+            "0"
+          ],
+          "column_slack_products": [
+            "0",
+            "0"
+          ],
+          "certificate_alone_is_sufficient": false
+        },
+        "core_disposition": "completed",
+        "scope": "finite_synthetic_2x2_zero_sum"
+      },
+      "expected_exit_status": 0,
+      "refusal": {
+        "field": "authorization",
+        "replacement": "live",
+        "expected": {
+          "ok": false,
+          "error": "authority_boundary"
+        },
+        "expected_exit_status": 2
+      },
+      "inherited_completion_credit": 0
+    }
+  ],
+  "scope": "same-owner fresh synthetic full-envelope accepting/rejecting smoke"
+}

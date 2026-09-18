@@ -1,0 +1,249 @@
+{
+  "specifications": [
+    {
+      "operation": "payoff_shape",
+      "request": {
+        "op": "payoff_shape",
+        "input": {
+          "case_id": "EK6976-G1-O1",
+          "matrix": [
+            [
+              "7/3",
+              "-11/5"
+            ],
+            [
+              "-13/7",
+              "17/9"
+            ]
+          ],
+          "p": "5/13",
+          "q": "7/17",
+          "scale": "2/3",
+          "shift": "19/23",
+          "perturbation": "1/37",
+          "evidence": "synthetic_only",
+          "authorization": "none"
+        }
+      },
+      "expected": {
+        "ok": true,
+        "op": "payoff_shape",
+        "data": {
+          "rows": 2,
+          "columns": 2,
+          "row_player": "maximizes",
+          "column_player": "minimizes",
+          "zero_sum_assumption": true
+        },
+        "core_disposition": "completed",
+        "scope": "finite_synthetic_2x2_zero_sum"
+      },
+      "expected_exit_status": 0,
+      "refusal": {
+        "field": "authorization",
+        "replacement": "live",
+        "expected": {
+          "ok": false,
+          "error": "authority_boundary"
+        },
+        "expected_exit_status": 2
+      },
+      "inherited_completion_credit": 0
+    },
+    {
+      "operation": "rational_normalize",
+      "request": {
+        "op": "rational_normalize",
+        "input": {
+          "case_id": "EK6976-G1-O2",
+          "matrix": [
+            [
+              "7/3",
+              "-11/5"
+            ],
+            [
+              "-13/7",
+              "17/9"
+            ]
+          ],
+          "p": "5/13",
+          "q": "7/17",
+          "scale": "2/3",
+          "shift": "19/23",
+          "perturbation": "1/37",
+          "evidence": "synthetic_only",
+          "authorization": "none"
+        }
+      },
+      "expected": {
+        "ok": true,
+        "op": "rational_normalize",
+        "data": {
+          "matrix": [
+            [
+              "7/3",
+              "-11/5"
+            ],
+            [
+              "-13/7",
+              "17/9"
+            ]
+          ],
+          "p": "5/13",
+          "q": "7/17"
+        },
+        "core_disposition": "completed",
+        "scope": "finite_synthetic_2x2_zero_sum"
+      },
+      "expected_exit_status": 0,
+      "refusal": {
+        "field": "authorization",
+        "replacement": "live",
+        "expected": {
+          "ok": false,
+          "error": "authority_boundary"
+        },
+        "expected_exit_status": 2
+      },
+      "inherited_completion_credit": 0
+    },
+    {
+      "operation": "accessible_matrix_table",
+      "request": {
+        "op": "accessible_matrix_table",
+        "input": {
+          "case_id": "EK6976-G1-O3",
+          "matrix": [
+            [
+              "7/3",
+              "-11/5"
+            ],
+            [
+              "-13/7",
+              "17/9"
+            ]
+          ],
+          "p": "5/13",
+          "q": "7/17",
+          "scale": "2/3",
+          "shift": "19/23",
+          "perturbation": "1/37",
+          "evidence": "synthetic_only",
+          "authorization": "none"
+        }
+      },
+      "expected": {
+        "ok": true,
+        "op": "accessible_matrix_table",
+        "data": {
+          "caption": "Synthetic two by two zero-sum payoff matrix",
+          "headers": [
+            "row",
+            "column zero",
+            "column one"
+          ],
+          "rows": [
+            [
+              "row zero",
+              "7/3",
+              "-11/5"
+            ],
+            [
+              "row one",
+              "-13/7",
+              "17/9"
+            ]
+          ],
+          "manual_and_assistive_review": "reserved"
+        },
+        "core_disposition": "represented",
+        "scope": "finite_synthetic_2x2_zero_sum"
+      },
+      "expected_exit_status": 0,
+      "refusal": {
+        "field": "authorization",
+        "replacement": "live",
+        "expected": {
+          "ok": false,
+          "error": "authority_boundary"
+        },
+        "expected_exit_status": 2
+      },
+      "inherited_completion_credit": 0
+    },
+    {
+      "operation": "model_criticism",
+      "request": {
+        "op": "model_criticism",
+        "input": {
+          "case_id": "EK6976-G1-O4",
+          "matrix": [
+            [
+              "7/3",
+              "-11/5"
+            ],
+            [
+              "-13/7",
+              "17/9"
+            ]
+          ],
+          "p": "5/13",
+          "q": "7/17",
+          "scale": "2/3",
+          "shift": "19/23",
+          "perturbation": "1/37",
+          "evidence": "synthetic_only",
+          "authorization": "none"
+        }
+      },
+      "expected": {
+        "ok": true,
+        "op": "model_criticism",
+        "data": {
+          "assumptions": [
+            "two actions per player",
+            "zero-sum utility",
+            "exact declared rational payoffs",
+            "independent mixed choices",
+            "no real participants"
+          ],
+          "not_established": [
+            "observed utility",
+            "strategic behavior",
+            "ethical legitimacy",
+            "GMUT confirmation",
+            "production THOS",
+            "live Freed ID"
+          ],
+          "synthetic_equilibrium": {
+            "value": "19/489",
+            "row_interval": [
+              "295/652",
+              "295/652"
+            ],
+            "column_interval": [
+              "161/326",
+              "161/326"
+            ],
+            "row_probability": "295/652",
+            "column_probability": "161/326"
+          }
+        },
+        "core_disposition": "represented",
+        "scope": "finite_synthetic_2x2_zero_sum"
+      },
+      "expected_exit_status": 0,
+      "refusal": {
+        "field": "authorization",
+        "replacement": "live",
+        "expected": {
+          "ok": false,
+          "error": "authority_boundary"
+        },
+        "expected_exit_status": 2
+      },
+      "inherited_completion_credit": 0
+    }
+  ],
+  "scope": "same-owner fresh synthetic full-envelope accepting/rejecting smoke"
+}
