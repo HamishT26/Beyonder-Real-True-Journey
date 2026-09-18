@@ -1,0 +1,127 @@
+'use strict';
+// Exact finite 2x2 zero-sum arithmetic. No real evidence or authority adapter.
+const OPS = ['payoff_shape','rational_normalize','pure_saddle','row_minima','column_maxima','maximin_minimax_bounds','expected_payoff','row_best_response','column_best_response','dominance_relations','minimax_equilibrium','strategy_optimality_certificate','exploitability_regret','support_complementarity','affine_payoff_transform','rational_sensitivity_grid','accessible_matrix_table','model_criticism','empirical_gap','authority_gate'];
+const fail = code => { const e = new Error(code); e.code = code; throw e; };
+function strictJSON(text) {
+  if (Buffer.byteLength(text,'utf8') > 65536) fail('wire_size');
+  let at = 0;
+  const ws = () => { while (at < text.length && /[\x20\x09\x0a\x0d]/.test(text[at])) at++; };
+  function str() {
+    const start = at++; let escaped = false;
+    while (at < text.length) {
+      const ch = text[at++];
+      if (!escaped && ch === '"') { try { return JSON.parse(text.slice(start,at)); } catch { fail('wire_json'); } }
+      if (!escaped && ch === '\\') escaped = true; else escaped = false;
+    }
+    fail('wire_json');
+  }
+  function value(depth) {
+    if (depth > 16) fail('wire_depth');
+    ws(); const ch = text[at];
+    if (ch === '"') return str();
+    if (ch === '{') {
+      at++; ws(); const out = Object.create(null), keys = new Set();
+      if (text[at] === '}') { at++; return out; }
+      for (;;) {
+        ws(); if (text[at] !== '"') fail('wire_json');
+        const key = str();
+        if (keys.has(key)) fail('wire_duplicate_key');
+        if (['__proto__','prototype','constructor'].includes(key)) fail('wire_prototype_key');
+        keys.add(key); ws(); if (text[at++] !== ':') fail('wire_json');
+        out[key] = value(depth+1); ws();
+        const sep = text[at++]; if (sep === '}') return out; if (sep !== ',') fail('wire_json');
+      }
+    }
+    if (ch === '[') {
+      at++; ws(); const out=[];
+      if (text[at] === ']') { at++; return out; }
+      for (;;) { out.push(value(depth+1)); if (out.length>128) fail('wire_array_size'); ws(); const sep=text[at++]; if(sep===']')return out;if(sep!==',')fail('wire_json'); }
+    }
+    for (const [word,v] of [['true',true],['false',false],['null',null]]) if (text.slice(at,at+word.length)===word) { at+=word.length; return v; }
+    const match = text.slice(at).match(/^-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?/);
+    if (match) { at+=match[0].length; const n=Number(match[0]); if(!Number.isFinite(n))fail('wire_number');return n; }
+    fail('wire_json');
+  }
+  const out=value(0); ws(); if(at!==text.length)fail('wire_trailing');return out;
+}
+const abs=x=>x<0n?-x:x;
+function gcd(a,b){a=abs(a);b=abs(b);while(b){const t=a%b;a=b;b=t;}return a||1n;}
+function R(n,d=1n){if(d===0n)fail('rational_zero_denominator');if(d<0n){n=-n;d=-d;}const g=gcd(n,d);return {n:n/g,d:d/g};}
+const add=(a,b)=>R(a.n*b.d+b.n*a.d,a.d*b.d), neg=a=>R(-a.n,a.d), sub=(a,b)=>add(a,neg(b)), mul=(a,b)=>R(a.n*b.n,a.d*b.d), div=(a,b)=>R(a.n*b.d,a.d*b.n);
+const cmp=(a,b)=>{const z=a.n*b.d-b.n*a.d;return z<0n?-1:z>0n?1:0;};
+const equal=(a,b)=>cmp(a,b)===0, min=xs=>xs.reduce((a,b)=>cmp(a,b)<=0?a:b), max=xs=>xs.reduce((a,b)=>cmp(a,b)>=0?a:b);
+const ZERO=R(0n),ONE=R(1n),TWO=R(2n), fmt=a=>a.d===1n?String(a.n):`${a.n}/${a.d}`;
+const internalRational=x=>{const[n,d='1']=x.split('/');return R(BigInt(n),BigInt(d));};
+function rational(x){
+  if(typeof x!=='string'||!/^[-+]?\d+(?:\/\d+)?$/.test(x)||x.length>48)fail('rational_format');
+  const parts=x.split('/'),n=BigInt(parts[0]),d=parts.length===1?1n:BigInt(parts[1]);
+  if(d===0n)fail('rational_zero_denominator');
+  if(abs(n)>1000000000n||d>1000000n)fail('rational_bound');return R(n,d);
+}
+function closed(o,fields){if(!o||typeof o!=='object'||Array.isArray(o)||Object.keys(o).sort().join('|')!==fields.slice().sort().join('|'))fail('closed_fields');}
+function validate(req){
+  closed(req,['op','input']); if(!OPS.includes(req.op))fail('unknown_operation');
+  const i=req.input;closed(i,['case_id','matrix','p','q','scale','shift','perturbation','evidence','authorization']);
+  if(typeof i.case_id!=='string'||!/^[A-Z0-9-]{1,48}$/.test(i.case_id))fail('case_label');
+  if(!Array.isArray(i.matrix)||i.matrix.length!==2||i.matrix.some(r=>!Array.isArray(r)||r.length!==2))fail('matrix_shape');
+  const m=i.matrix.map(r=>r.map(rational)),p=rational(i.p),q=rational(i.q),t=rational(i.scale),h=rational(i.shift),e=rational(i.perturbation);
+  if([p,q].some(x=>cmp(x,ZERO)<0||cmp(x,ONE)>0))fail('probability_bounds');
+  if(cmp(t,ZERO)<=0)fail('positive_scale');if(cmp(e,ZERO)<=0||cmp(e,ONE)>0)fail('perturbation_bounds');
+  if(i.evidence!=='synthetic_only')fail('evidence_boundary');if(i.authorization!=='none')fail('authority_boundary');return {m,p,q,t,h,e};
+}
+function interval(lines,v,greater){
+  let lo=ZERO,hi=ONE;
+  for(const[base,slope]of lines){
+    if(slope.n===0n){if(greater?cmp(base,v)<0:cmp(base,v)>0)fail('internal_empty_interval');continue;}
+    const bound=div(sub(v,base),slope), lower=(slope.n>0n)===greater;
+    if(lower)lo=max([lo,bound]);else hi=min([hi,bound]);
+  }
+  if(cmp(lo,hi)>0)fail('internal_empty_interval');return[lo,hi];
+}
+function equilibrium(m){
+  const[[a,b],[c,d]]=m,den=add(sub(sub(a,b),c),d),ps=[ZERO,ONE],qs=[ZERO,ONE];
+  if(den.n!==0n){const p=div(sub(d,c),den),q=div(sub(d,b),den);if(cmp(p,ZERO)>=0&&cmp(p,ONE)<=0)ps.push(p);if(cmp(q,ZERO)>=0&&cmp(q,ONE)<=0)qs.push(q);}
+  const v=max(ps.map(p=>min([add(c,mul(sub(a,c),p)),add(d,mul(sub(b,d),p))]))),u=min(qs.map(q=>max([add(b,mul(sub(a,b),q)),add(d,mul(sub(c,d),q))])));
+  if(!equal(v,u))fail('internal_minimax_mismatch');
+  const pi=interval([[c,sub(a,c)],[d,sub(b,d)]],v,true),qi=interval([[b,sub(a,b)],[d,sub(c,d)]],v,false);
+  return {value:fmt(v),row_interval:pi.map(fmt),column_interval:qi.map(fmt),row_probability:fmt(div(add(...pi),TWO)),column_probability:fmt(div(add(...qi),TWO))};
+}
+function payoff(m,p,q){const[[a,b],[c,d]]=m;return add(add(mul(mul(p,q),a),mul(mul(p,sub(ONE,q)),b)),add(mul(mul(sub(ONE,p),q),c),mul(mul(sub(ONE,p),sub(ONE,q)),d)));}
+function compute(req){
+  const{m,p,q,t,h,e}=validate(req),op=req.op,[[a,b],[c,d]]=m;
+  const rowmins=m.map(min),colmax=[max([a,c]),max([b,d])],rowv=[add(b,mul(sub(a,b),q)),add(d,mul(sub(c,d),q))],colv=[add(c,mul(sub(a,c),p)),add(d,mul(sub(b,d),p))],E=payoff(m,p,q),bestrow=max(rowv),bestcol=min(colv);
+  let data;
+  switch(op){
+  case'payoff_shape':data={rows:2,columns:2,row_player:'maximizes',column_player:'minimizes',zero_sum_assumption:true};break;
+  case'rational_normalize':data={matrix:m.map(r=>r.map(fmt)),p:fmt(p),q:fmt(q)};break;
+  case'pure_saddle':{const saddles=[];for(let r=0;r<2;r++)for(let k=0;k<2;k++)if(equal(m[r][k],rowmins[r])&&equal(m[r][k],colmax[k]))saddles.push({row:r,column:k,value:fmt(m[r][k])});data={saddles,pure_equilibrium_exists:saddles.length>0};break;}
+  case'row_minima':data={row_minima:rowmins.map(fmt)};break;
+  case'column_maxima':data={column_maxima:colmax.map(fmt)};break;
+  case'maximin_minimax_bounds':data={pure_lower:fmt(max(rowmins)),pure_upper:fmt(min(colmax)),pure_gap:fmt(sub(min(colmax),max(rowmins)))};break;
+  case'expected_payoff':data={expected_payoff:fmt(E),row_masses:[fmt(p),fmt(sub(ONE,p))],column_masses:[fmt(q),fmt(sub(ONE,q))]};break;
+  case'row_best_response':data={row_values:rowv.map(fmt),best_rows:rowv.map((x,r)=>equal(x,bestrow)?r:null).filter(x=>x!==null),best_value:fmt(bestrow)};break;
+  case'column_best_response':data={column_values:colv.map(fmt),best_columns:colv.map((x,k)=>equal(x,bestcol)?k:null).filter(x=>x!==null),best_value:fmt(bestcol)};break;
+  case'dominance_relations':{const rows=[],cols=[];for(const[x,y]of[[0,1],[1,0]]){let diffs=[0,1].map(k=>sub(m[x][k],m[y][k]));if(diffs.every(z=>cmp(z,ZERO)>=0))rows.push({dominant:x,dominated:y,strict:diffs.every(z=>cmp(z,ZERO)>0),some_strict:diffs.some(z=>cmp(z,ZERO)>0)});diffs=[0,1].map(r=>sub(m[r][y],m[r][x]));if(diffs.every(z=>cmp(z,ZERO)>=0))cols.push({dominant:x,dominated:y,strict:diffs.every(z=>cmp(z,ZERO)>0),some_strict:diffs.some(z=>cmp(z,ZERO)>0)});}data={row_relations:rows,column_relations:cols};break;}
+  case'minimax_equilibrium':data=equilibrium(m);break;
+  case'strategy_optimality_certificate':{const z=equilibrium(m),v=internalRational(z.value);data={candidate_row_lower:fmt(min(colv)),candidate_column_upper:fmt(max(rowv)),value:z.value,row_optimal:equal(min(colv),v),column_optimal:equal(max(rowv),v),pair_equilibrium:equal(min(colv),v)&&equal(max(rowv),v),expected_payoff:fmt(E)};break;}
+  case'exploitability_regret':data={expected_payoff:fmt(E),row_regret:fmt(sub(bestrow,E)),column_regret:fmt(sub(E,bestcol)),exploitability:fmt(sub(bestrow,bestcol))};break;
+  case'support_complementarity':{const z=equilibrium(m),pp=internalRational(z.row_probability),qq=internalRational(z.column_probability),v=internalRational(z.value),rv=[add(b,mul(sub(a,b),qq)),add(d,mul(sub(c,d),qq))],cv=[add(c,mul(sub(a,c),pp)),add(d,mul(sub(b,d),pp))];data={row_probability:z.row_probability,column_probability:z.column_probability,value:z.value,row_slack_products:[fmt(mul(pp,sub(v,rv[0]))),fmt(mul(sub(ONE,pp),sub(v,rv[1])))],column_slack_products:[fmt(mul(qq,sub(cv[0],v))),fmt(mul(sub(ONE,qq),sub(cv[1],v)))],certificate_alone_is_sufficient:false};break;}
+  case'affine_payoff_transform':{const mm=m.map(r=>r.map(x=>add(mul(t,x),h))),z=equilibrium(m),zz=equilibrium(mm);data={transformed_matrix:mm.map(r=>r.map(fmt)),original:z,transformed:zz,positive_scale:true,value_relation:zz.value===fmt(add(mul(t,internalRational(z.value)),h))};break;}
+  case'rational_sensitivity_grid':{const rows=[];for(let r=0;r<2;r++)for(let k=0;k<2;k++)for(const delta of[neg(e),e])rows.push({entry:r*2+k,delta:fmt(delta),value:equilibrium(m.map((rr,x)=>rr.map((v,y)=>(x===r&&y===k)?add(v,delta):v))).value});data={declared_perturbation:fmt(e),rows,measurement_evidence:false};break;}
+  case'accessible_matrix_table':data={caption:'Synthetic two by two zero-sum payoff matrix',headers:['row','column zero','column one'],rows:[['row zero',fmt(a),fmt(b)],['row one',fmt(c),fmt(d)]],manual_and_assistive_review:'reserved'};break;
+  case'model_criticism':data={assumptions:['two actions per player','zero-sum utility','exact declared rational payoffs','independent mixed choices','no real participants'],not_established:['observed utility','strategic behavior','ethical legitimacy','GMUT confirmation','production THOS','live Freed ID'],synthetic_equilibrium:equilibrium(m)};break;
+  case'empirical_gap':data={real_observations:0,governed_participants:0,evidence:'synthetic_only',required:['preregistered real study','governance and consent','measurement and statistics','independent review']};break;
+  case'authority_gate':data={authorization:'none',real_action_permitted:false,reserved:['professional','privacy','accessibility completeness','legal','cultural','affected-party','Maori authority','Stage 20']};break;
+  default:fail('unknown_operation');
+  }
+  const disposition=['accessible_matrix_table','model_criticism'].includes(op)?'represented':op==='empirical_gap'?'open_gap':op==='authority_gate'?'exact_gate':'completed';
+  return{ok:true,op,data,core_disposition:disposition,scope:'finite_synthetic_2x2_zero_sum'};
+}
+function cli(allowed=OPS){
+  if(process.argv.length!==2){process.stdout.write(JSON.stringify({ok:false,error:'wire_arguments'})+'\n');process.exitCode=2;return;}
+  const chunks=[];let size=0;
+  process.stdin.on('data',chunk=>{size+=chunk.length;if(size>65536){process.stdout.write(JSON.stringify({ok:false,error:'wire_size'})+'\n');process.exit(2);}chunks.push(chunk);});
+  process.stdin.on('end',()=>{try{const bytes=Buffer.concat(chunks),decoder=new TextDecoder('utf-8',{fatal:true}),req=strictJSON(decoder.decode(bytes));if(!allowed.includes(req.op))fail('caller_operation');process.stdout.write(JSON.stringify(compute(req))+'\n');}catch(e){process.stdout.write(JSON.stringify({ok:false,error:e.code||'wire_json'})+'\n');process.exitCode=2;}});
+}
+module.exports={OPS,strictJSON,compute,equilibrium,payoff,rational,fmt,cli};
+if(require.main===module)cli();
