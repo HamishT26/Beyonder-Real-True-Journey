@@ -1,0 +1,73 @@
+'use strict';
+const fs=require('fs');
+class Refusal extends Error{constructor(code){super(code);this.code=code;}}
+const refuse=code=>{throw new Refusal(code);};
+const absInt=x=>x<0n?-x:x;
+function gcd(a,b){a=absInt(a);b=absInt(b);while(b){const r=a%b;a=b;b=r;}return a;}
+class R{
+ constructor(n,d=1n){n=BigInt(n);d=BigInt(d);if(!d)throw Error('Internal zero denominator');if(d<0n){n=-n;d=-d;}const g=gcd(n,d);this.n=n/g;this.d=d/g;}
+ add(b){return new R(this.n*b.d+b.n*this.d,this.d*b.d);}
+ sub(b){return new R(this.n*b.d-b.n*this.d,this.d*b.d);}
+ mul(b){return new R(this.n*b.n,this.d*b.d);}
+ div(b){return new R(this.n*b.d,this.d*b.n);}
+ neg(){return new R(-this.n,this.d);}
+ abs(){return this.n<0n?this.neg():this;}
+ cmp(b){const x=this.n*b.d-b.n*this.d;return x<0n?-1:x>0n?1:0;}
+ eq(b){return this.n===b.n&&this.d===b.d;}
+ pow(n){let value=ONE,factor=this,k=n;while(k>0){if(k%2)value=value.mul(factor);k=Math.floor(k/2);if(k)factor=factor.mul(factor);}return value;}
+ toString(){return this.d===1n?this.n.toString():this.n.toString()+'/'+this.d.toString();}
+ toJSON(){return this.toString();}
+}
+const ZERO=new R(0n),ONE=new R(1n),HALF=new R(1n,2n);
+function fraction(text){if(typeof text!=='string'||text.length>64||!/^\-?(?:0|[1-9]\d*)(?:\/[1-9]\d*)?$/.test(text))refuse('rational_format');const [n,d]=text.split('/');return new R(BigInt(n),d===undefined?1n:BigInt(d));}
+const sum=xs=>xs.reduce((s,x)=>s.add(x),ZERO);
+const dot=(a,b)=>sum(a.map((x,i)=>x.mul(b[i])));
+const mv=(a,v)=>a.map(row=>dot(row,v));
+const vm=(v,a)=>[0,1].map(j=>sum(v.map((x,i)=>x.mul(a[i][j]))));
+const mm=(a,b)=>[0,1].map(i=>[0,1].map(j=>sum([0,1].map(k=>a[i][k].mul(b[k][j])))));
+function matrixPower(a,n){let result=[[ONE,ZERO],[ZERO,ONE]],factor=a,k=n;while(k>0){if(k%2)result=mm(result,factor);k=Math.floor(k/2);if(k)factor=mm(factor,factor);}return result;}
+const maxAbs=xs=>xs.map(x=>x.abs()).reduce((a,b)=>a.cmp(b)>=0?a:b,ZERO);
+function closed(value,names){if(!value||typeof value!=='object'||Array.isArray(value))refuse('closed_fields');const keys=Object.keys(value);if(keys.length!==names.length||keys.some(k=>!names.includes(k)))refuse('closed_fields');}
+function vector(value){if(!Array.isArray(value)||value.length!==2)refuse('shape');return value.map(fraction);}
+function profile(input){
+ closed(input,['P','r','mu','gamma','n','phi','shift','probe','evidence','authorization']);
+ if(!Array.isArray(input.P)||input.P.length!==2)refuse('shape');const P=input.P.map(vector);
+ const r=vector(input.r),mu=vector(input.mu),gamma=fraction(input.gamma),phi=vector(input.phi),shift=fraction(input.shift),probe=vector(input.probe);
+ if(P.some(row=>row.some(x=>x.cmp(ZERO)<0||x.cmp(ONE)>0)||!sum(row).eq(ONE)))refuse('probability_bounds');
+ if(mu.some(x=>x.cmp(ZERO)<0||x.cmp(ONE)>0)||!sum(mu).eq(ONE))refuse('probability_bounds');
+ if(gamma.cmp(ZERO)<0||gamma.cmp(ONE)>=0)refuse('discount_bounds');
+ if(!Number.isSafeInteger(input.n)||input.n<0||input.n>32)refuse('horizon_bounds');
+ if(input.evidence!=='synthetic_only')refuse('evidence_scope');if(input.authorization!=='none')refuse('authority_scope');
+ return{P,r,mu,gamma,n:input.n,phi,shift,probe};
+}
+function parse(bytes){
+ if(bytes.length>1048576)refuse('input_budget');const text=bytes.toString('utf8');if(!Buffer.from(text,'utf8').equals(bytes))refuse('utf8');
+ let value;try{value=JSON.parse(text);}catch{refuse('json_syntax');}
+ let index=0,depth=0;const ws=()=>{while(/\s/.test(text[index]||'!'))index++;};
+ function string(){const start=index++;while(index<text.length){if(text[index]==='\\'){index+=2;continue;}if(text[index++]==='"')return JSON.parse(text.slice(start,index));}refuse('json_syntax');}
+ function item(){ws();if(++depth>64)refuse('json_depth');if(text[index]==='{'){index++;ws();const keys=new Set();if(text[index]!=='}')while(true){const key=string();if(keys.has(key))refuse('duplicate_key');keys.add(key);ws();index++;item();ws();if(text[index]!==',')break;index++;ws();}index++;}
+ else if(text[index]==='['){index++;ws();if(text[index]!==']')while(true){item();ws();if(text[index]!==',')break;index++;}index++;}
+ else if(text[index]==='"')string();else while(index<text.length&&!/[\s,}\]]/.test(text[index]))index++;depth--;}
+ item();function finite(v){if(typeof v==='number'&&!Number.isFinite(v))refuse('nonfinite_number');if(v&&typeof v==='object')Object.values(v).forEach(finite);}finite(value);return value;
+}
+function trace(c){let distribution=c.mu,undiscounted=ZERO;const rows=[],terms=[];for(let time=0;time<c.n;time++){const reward=dot(distribution,c.r);rows.push({time,distribution,reward});undiscounted=undiscounted.add(reward);terms.push(c.gamma.pow(time).mul(reward));distribution=vm(distribution,c.P);}return{rows,terms,distribution,undiscounted,finite:sum(terms)};}
+const operations={
+ mrp_profile:c=>({states:2,P:c.P,r:c.r,mu:c.mu,gamma:c.gamma,horizon:c.n,potential:c.phi,shift:c.shift,probe:c.probe,probability_rows:c.P.map(sum),initial_mass:sum(c.mu)}),
+ mrp_support:c=>({edges:[0,1].flatMap(i=>[0,1].filter(j=>c.P[i][j].cmp(ZERO)>0).map(j=>({from:i,to:j,probability:c.P[i][j]}))),absorbing_states:[0,1].filter(i=>c.P[i][i].eq(ONE))}),
+ mrp_one_step:c=>{const distribution=vm(c.mu,c.P);return{distribution,mass:sum(distribution)};},
+ mrp_transition_power:c=>{const transition=matrixPower(c.P,c.n);return{horizon:c.n,transition,row_sums:transition.map(sum)};},
+ mrp_distribution_power:c=>{const distribution=vm(c.mu,matrixPower(c.P,c.n));return{horizon:c.n,distribution,mass:sum(distribution)};},
+ mrp_reward_trace:c=>{const t=trace(c);return{rows:t.rows,undiscounted_return:t.undiscounted};},
+ mrp_finite_discounted:c=>{const t=trace(c);return{horizon:c.n,return:t.finite,terms:t.terms,next_distribution:t.distribution};},
+ mrp_stationary:c=>{const total=c.P[0][1].add(c.P[1][0]),unique=total.cmp(ZERO)>0,pi0=unique?c.P[1][0].div(total):HALF,representative=[pi0,ONE.sub(pi0)],next=vm(representative,c.P);return{unique,probability_of_state0_interval:unique?[pi0,pi0]:[ZERO,ONE],representative,stationary_residual:next.map((x,i)=>x.sub(representative[i])),all_initial_stationary:!unique};},
+ mrp_recurrent_classes:c=>{
+  const reachable=[0,1].map(start=>{const reached=new Set([start]),todo=[start];while(todo.length){const here=todo.pop();for(const there of [0,1])if(c.P[here][there].cmp(ZERO)>0&&!reached.has(there)){reached.add(there);todo.push(there);}}return reached;});
+  const assigned=new Set(),communicating_classes=[];for(const i of [0,1])if(!assigned.has(i)){const group=[0,1].filter(j=>reachable[i].has(j)&&reachable[j].has(i));communicating_classes.push(group);group.forEach(j=>assigned.add(j));}
+  const closed_classes=communicating_classes.filter(group=>group.every(i=>[0,1].filter(j=>!group.includes(j)).every(j=>c.P[i][j].eq(ZERO)))),recurrent=new Set(closed_classes.flat());
+  return{communicating_classes,closed_classes,transient_states:[0,1].filter(i=>!recurrent.has(i)),closed_class_periods:closed_classes.map(states=>({states,period:states.length===2&&c.P[0][1].eq(ONE)&&c.P[1][0].eq(ONE)?2:1}))};
+ },
+ mrp_contraction:c=>{const total=c.P[0][1].add(c.P[1][0]),second_eigenvalue=ONE.sub(total),absolute_coefficient=second_eigenvalue.abs(),unique_stationary=total.cmp(ZERO)>0;return{second_eigenvalue,absolute_coefficient,unique_stationary,all_initial_convergence_to_unique:unique_stationary&&absolute_coefficient.cmp(ONE)<0,periodic_flip:c.P[0][1].eq(ONE)&&c.P[1][0].eq(ONE)};}
+};
+function execute(request,available,allowed){closed(request,['op','input']);if(typeof request.op!=='string'||!allowed.includes(request.op))refuse('caller_scope');if(typeof available[request.op]!=='function')refuse('caller_scope');const c=profile(request.input),data=available[request.op](c);const core_disposition=request.op==='mrp_accessible_projection'?'represented':request.op==='mrp_observation_gap'?'open_gap':request.op==='mrp_authority_gate'?'exact_gate':'completed';return{ok:true,op:request.op,data,core_disposition,scope:'finite_synthetic_two_state_markov_rewards'};}
+function cli(available,allowed){try{const request=parse(fs.readFileSync(0));const result=execute(request,available,allowed);process.stdout.write(JSON.stringify(result)+'\n');}catch(error){if(error instanceof Refusal){process.stdout.write(JSON.stringify({ok:false,error:error.code})+'\n');process.exitCode=2;}else{process.stdout.write(JSON.stringify({ok:false,error:'internal_error'})+'\n');process.stderr.write(error.name+': '+error.message+'\n');process.exitCode=1;}}}
+module.exports={R,ZERO,ONE,HALF,fraction,sum,dot,mv,vm,mm,matrixPower,maxAbs,trace,operations,execute,cli};
