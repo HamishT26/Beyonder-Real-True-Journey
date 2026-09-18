@@ -1,0 +1,6 @@
+'use strict';
+require.extensions['.txt']=require.extensions['.js'];
+const core=require('../support/ghc_family_observation_core.txt');
+const extension=require('../support/ghc_family_observation_extension.txt')(core);
+const api={evaluate:r=>core.operations.includes(r.op)?core.evaluate(r):extension.evaluate(r)};
+require('../support/ghc_family_observation_cli.txt').run(api,["or_minimum_sensor_sets","or_minimum_sensor_cost","or_observation_gap","or_authority_gate"]);

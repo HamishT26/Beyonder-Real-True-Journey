@@ -1,0 +1,1770 @@
+{
+  "schema": "merrin.observation.curated-contract.v1",
+  "name": "ghc-family-observation-partitions-v1",
+  "purpose": "Partition shape, refinement, lattice bounds and partial block maps",
+  "operations": [
+    "or_profile",
+    "or_refines",
+    "or_common_refinement",
+    "or_common_coarsening",
+    "or_block_map"
+  ],
+  "source_guides": [
+    "docs/merrin-vale/v698-v2/x1/skills/ghc-family-profile-observation-local/SKILL.md",
+    "docs/merrin-vale/v698-v2/x1/skills/ghc-family-refines-observation-local/SKILL.md",
+    "docs/merrin-vale/v698-v2/x1/skills/ghc-family-common-refinement-observation-local/SKILL.md",
+    "docs/merrin-vale/v698-v2/x1/skills/ghc-family-common-coarsening-observation-local/SKILL.md",
+    "docs/merrin-vale/v698-v2/x1/skills/ghc-family-block-map-observation-local/SKILL.md"
+  ],
+  "caller": "docs/merrin-vale/v698-v2/x2/curated/ghc-family-observation-partitions-v1/ghc_family_observation_partitions_v1.txt",
+  "dependencies": [
+    "docs/merrin-vale/v698-v2/x2/curated/support/ghc_family_observation_core.txt",
+    "docs/merrin-vale/v698-v2/x2/curated/support/ghc_family_observation_cli.txt",
+    "docs/merrin-vale/v698-v2/x2/curated/support/ghc_family_observation_extension.txt"
+  ],
+  "guide": "docs/merrin-vale/v698-v2/x2/curated/ghc-family-observation-partitions-v1/SKILL.md",
+  "guide_sha256": "d2bf8714a1dffc8543025db97d0b664543da8c288a6e5d59e8e7c44d3238eb8a",
+  "uses": [
+    {
+      "op": "or_profile",
+      "accepting": {
+        "request": {
+          "op": "or_profile",
+          "input": {
+            "profile_id": "observation_2001",
+            "states": [
+              "s0",
+              "s1",
+              "s2",
+              "s3",
+              "s4",
+              "s5"
+            ],
+            "left": [
+              0,
+              1,
+              2,
+              3,
+              4,
+              2
+            ],
+            "right": [
+              0,
+              1,
+              0,
+              2,
+              3,
+              0
+            ],
+            "transitions": [
+              [
+                0,
+                2,
+                3
+              ],
+              [
+                1,
+                3,
+                4
+              ],
+              [
+                2,
+                4,
+                5
+              ],
+              [
+                0,
+                3,
+                5
+              ],
+              [
+                0,
+                1,
+                4
+              ],
+              [
+                1,
+                2,
+                5
+              ]
+            ],
+            "target": [
+              0,
+              2,
+              4
+            ],
+            "choices": [
+              [
+                0
+              ],
+              [
+                1
+              ],
+              [
+                0,
+                1
+              ],
+              [
+                2
+              ],
+              [
+                0,
+                2
+              ],
+              [
+                1,
+                2
+              ]
+            ],
+            "features": [
+              [
+                0,
+                1,
+                2,
+                3,
+                4,
+                2
+              ],
+              [
+                0,
+                1,
+                0,
+                2,
+                3,
+                0
+              ],
+              [
+                0,
+                1,
+                0,
+                1,
+                0,
+                1
+              ],
+              [
+                2,
+                0,
+                1,
+                2,
+                0,
+                1
+              ]
+            ],
+            "costs": [
+              1,
+              3,
+              4,
+              2
+            ],
+            "horizon": 0,
+            "path": [
+              0
+            ],
+            "goals": [
+              [
+                0,
+                1
+              ],
+              [
+                0,
+                3
+              ],
+              [
+                0,
+                5
+              ],
+              [
+                1,
+                2
+              ],
+              [
+                1,
+                4
+              ],
+              [
+                2,
+                3
+              ],
+              [
+                2,
+                5
+              ],
+              [
+                3,
+                4
+              ],
+              [
+                4,
+                5
+              ]
+            ],
+            "budget": 11,
+            "claim": "real_sensor_identification",
+            "provided": [
+              "finite_model"
+            ],
+            "request": "deployment",
+            "authority": "none",
+            "evidence": "synthetic_only"
+          }
+        },
+        "expected": {
+          "ok": true,
+          "op": "or_profile",
+          "scope": "finite_declared_observation_model",
+          "disposition": "completed",
+          "data": {
+            "states": [
+              "s0",
+              "s1",
+              "s2",
+              "s3",
+              "s4",
+              "s5"
+            ],
+            "left_cells": [
+              [
+                0
+              ],
+              [
+                1
+              ],
+              [
+                2,
+                5
+              ],
+              [
+                3
+              ],
+              [
+                4
+              ]
+            ],
+            "right_cells": [
+              [
+                0,
+                2,
+                5
+              ],
+              [
+                1
+              ],
+              [
+                3
+              ],
+              [
+                4
+              ]
+            ],
+            "transition_count": 18,
+            "features": 4,
+            "horizon": 0,
+            "synthetic_only": true
+          },
+          "external_credit": false
+        },
+        "status": 0
+      },
+      "adverse": {
+        "request": {
+          "op": "or_profile",
+          "input": {
+            "profile_id": "observation_2001",
+            "states": [
+              "s0",
+              "s1",
+              "s2",
+              "s3",
+              "s4",
+              "s5"
+            ],
+            "left": [
+              0,
+              1,
+              2,
+              3,
+              4,
+              2
+            ],
+            "right": [
+              0,
+              1,
+              0,
+              2,
+              3,
+              0
+            ],
+            "transitions": [
+              [
+                0,
+                2,
+                3
+              ],
+              [
+                1,
+                3,
+                4
+              ],
+              [
+                2,
+                4,
+                5
+              ],
+              [
+                0,
+                3,
+                5
+              ],
+              [
+                0,
+                1,
+                4
+              ],
+              [
+                1,
+                2,
+                5
+              ]
+            ],
+            "target": [
+              0,
+              2,
+              4
+            ],
+            "choices": [
+              [
+                0
+              ],
+              [
+                1
+              ],
+              [
+                0,
+                1
+              ],
+              [
+                2
+              ],
+              [
+                0,
+                2
+              ],
+              [
+                1,
+                2
+              ]
+            ],
+            "features": [
+              [
+                0,
+                1,
+                2,
+                3,
+                4,
+                2
+              ],
+              [
+                0,
+                1,
+                0,
+                2,
+                3,
+                0
+              ],
+              [
+                0,
+                1,
+                0,
+                1,
+                0,
+                1
+              ],
+              [
+                2,
+                0,
+                1,
+                2,
+                0,
+                1
+              ]
+            ],
+            "costs": [
+              1,
+              3,
+              4,
+              2
+            ],
+            "horizon": 0,
+            "path": [
+              0
+            ],
+            "goals": [
+              [
+                0,
+                1
+              ],
+              [
+                0,
+                3
+              ],
+              [
+                0,
+                5
+              ],
+              [
+                1,
+                2
+              ],
+              [
+                1,
+                4
+              ],
+              [
+                2,
+                3
+              ],
+              [
+                2,
+                5
+              ],
+              [
+                3,
+                4
+              ],
+              [
+                4,
+                5
+              ]
+            ],
+            "budget": 11,
+            "claim": "real_sensor_identification",
+            "provided": [
+              "finite_model"
+            ],
+            "request": "deployment",
+            "authority": "none",
+            "evidence": "synthetic_only",
+            "discardable_annotation": "fresh malformed installed request"
+          }
+        },
+        "expected": {
+          "ok": false,
+          "op": "or_profile",
+          "error": "closed_fields",
+          "external_credit": false
+        },
+        "status": 2,
+        "original_subject_credit": 0
+      }
+    },
+    {
+      "op": "or_refines",
+      "accepting": {
+        "request": {
+          "op": "or_refines",
+          "input": {
+            "profile_id": "observation_2002",
+            "states": [
+              "s0",
+              "s1",
+              "s2",
+              "s3"
+            ],
+            "left": [
+              0,
+              0,
+              0,
+              0
+            ],
+            "right": [
+              0,
+              1,
+              2,
+              3
+            ],
+            "transitions": [
+              [
+                0,
+                1
+              ],
+              [
+                1,
+                2
+              ],
+              [
+                2,
+                3
+              ],
+              [
+                0,
+                3
+              ]
+            ],
+            "target": [
+              1
+            ],
+            "choices": [
+              [
+                2
+              ],
+              [
+                0,
+                2
+              ],
+              [
+                1,
+                2
+              ],
+              [
+                0,
+                1,
+                2
+              ]
+            ],
+            "features": [
+              [
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                1,
+                2,
+                3
+              ],
+              [
+                1,
+                0,
+                1,
+                0
+              ],
+              [
+                0,
+                1,
+                2,
+                0
+              ]
+            ],
+            "costs": [
+              2,
+              4,
+              5,
+              3
+            ],
+            "horizon": 1,
+            "path": [
+              0,
+              0
+            ],
+            "goals": [
+              [
+                0,
+                1
+              ],
+              [
+                1,
+                2
+              ],
+              [
+                1,
+                3
+              ]
+            ],
+            "budget": 12,
+            "claim": "empirical_gmut",
+            "provided": [
+              "finite_model"
+            ],
+            "request": "maori_wording",
+            "authority": "none",
+            "evidence": "synthetic_only"
+          }
+        },
+        "expected": {
+          "ok": true,
+          "op": "or_refines",
+          "scope": "finite_declared_observation_model",
+          "disposition": "completed",
+          "data": {
+            "refines": false,
+            "splitting_pair": [
+              0,
+              1
+            ]
+          },
+          "external_credit": false
+        },
+        "status": 0
+      },
+      "adverse": {
+        "request": {
+          "op": "or_refines",
+          "input": {
+            "profile_id": "observation_2002",
+            "states": [
+              "s0",
+              "s1",
+              "s2",
+              "s3"
+            ],
+            "left": [
+              0,
+              0,
+              0,
+              0
+            ],
+            "right": [
+              0,
+              1,
+              2,
+              3
+            ],
+            "transitions": [
+              [
+                0,
+                1
+              ],
+              [
+                1,
+                2
+              ],
+              [
+                2,
+                3
+              ],
+              [
+                0,
+                3
+              ]
+            ],
+            "target": [
+              1
+            ],
+            "choices": [
+              [
+                2
+              ],
+              [
+                0,
+                2
+              ],
+              [
+                1,
+                2
+              ],
+              [
+                0,
+                1,
+                2
+              ]
+            ],
+            "features": [
+              [
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                1,
+                2,
+                3
+              ],
+              [
+                1,
+                0,
+                1,
+                0
+              ],
+              [
+                0,
+                1,
+                2,
+                0
+              ]
+            ],
+            "costs": [
+              2,
+              4,
+              5,
+              3
+            ],
+            "horizon": 1,
+            "path": [
+              0,
+              0
+            ],
+            "goals": [
+              [
+                0,
+                1
+              ],
+              [
+                1,
+                2
+              ],
+              [
+                1,
+                3
+              ]
+            ],
+            "budget": 12,
+            "claim": "empirical_gmut",
+            "provided": [
+              "finite_model"
+            ],
+            "request": "maori_wording",
+            "authority": "none",
+            "evidence": "synthetic_only",
+            "discardable_annotation": "fresh malformed installed request"
+          }
+        },
+        "expected": {
+          "ok": false,
+          "op": "or_refines",
+          "error": "closed_fields",
+          "external_credit": false
+        },
+        "status": 2,
+        "original_subject_credit": 0
+      }
+    },
+    {
+      "op": "or_common_refinement",
+      "accepting": {
+        "request": {
+          "op": "or_common_refinement",
+          "input": {
+            "profile_id": "observation_2003",
+            "states": [
+              "s0",
+              "s1",
+              "s2",
+              "s3",
+              "s4"
+            ],
+            "left": [
+              0,
+              1,
+              1,
+              1,
+              1
+            ],
+            "right": [
+              0,
+              1,
+              1,
+              2,
+              3
+            ],
+            "transitions": [
+              [
+                0,
+                2
+              ],
+              [
+                1,
+                3
+              ],
+              [
+                2,
+                4
+              ],
+              [
+                0,
+                3
+              ],
+              [
+                1,
+                4
+              ]
+            ],
+            "target": [
+              0,
+              1,
+              2,
+              3
+            ],
+            "choices": [
+              [
+                0,
+                1,
+                2
+              ],
+              [],
+              [
+                0
+              ],
+              [
+                1
+              ],
+              [
+                0,
+                1
+              ]
+            ],
+            "features": [
+              [
+                0,
+                1,
+                1,
+                1,
+                1
+              ],
+              [
+                0,
+                1,
+                1,
+                2,
+                3
+              ],
+              [
+                0,
+                1,
+                0,
+                1,
+                0
+              ],
+              [
+                1,
+                2,
+                0,
+                1,
+                2
+              ]
+            ],
+            "costs": [
+              3,
+              5,
+              1,
+              4
+            ],
+            "horizon": 2,
+            "path": [
+              0,
+              1,
+              0
+            ],
+            "goals": [
+              [
+                0,
+                4
+              ],
+              [
+                1,
+                4
+              ],
+              [
+                2,
+                4
+              ],
+              [
+                3,
+                4
+              ]
+            ],
+            "budget": 0,
+            "claim": "production_thos",
+            "provided": [
+              "finite_model"
+            ],
+            "request": "personhood",
+            "authority": "none",
+            "evidence": "synthetic_only"
+          }
+        },
+        "expected": {
+          "ok": true,
+          "op": "or_common_refinement",
+          "scope": "finite_declared_observation_model",
+          "disposition": "completed",
+          "data": {
+            "labels": [
+              0,
+              1,
+              1,
+              2,
+              3
+            ],
+            "cells": [
+              [
+                0
+              ],
+              [
+                1,
+                2
+              ],
+              [
+                3
+              ],
+              [
+                4
+              ]
+            ]
+          },
+          "external_credit": false
+        },
+        "status": 0
+      },
+      "adverse": {
+        "request": {
+          "op": "or_common_refinement",
+          "input": {
+            "profile_id": "observation_2003",
+            "states": [
+              "s0",
+              "s1",
+              "s2",
+              "s3",
+              "s4"
+            ],
+            "left": [
+              0,
+              1,
+              1,
+              1,
+              1
+            ],
+            "right": [
+              0,
+              1,
+              1,
+              2,
+              3
+            ],
+            "transitions": [
+              [
+                0,
+                2
+              ],
+              [
+                1,
+                3
+              ],
+              [
+                2,
+                4
+              ],
+              [
+                0,
+                3
+              ],
+              [
+                1,
+                4
+              ]
+            ],
+            "target": [
+              0,
+              1,
+              2,
+              3
+            ],
+            "choices": [
+              [
+                0,
+                1,
+                2
+              ],
+              [],
+              [
+                0
+              ],
+              [
+                1
+              ],
+              [
+                0,
+                1
+              ]
+            ],
+            "features": [
+              [
+                0,
+                1,
+                1,
+                1,
+                1
+              ],
+              [
+                0,
+                1,
+                1,
+                2,
+                3
+              ],
+              [
+                0,
+                1,
+                0,
+                1,
+                0
+              ],
+              [
+                1,
+                2,
+                0,
+                1,
+                2
+              ]
+            ],
+            "costs": [
+              3,
+              5,
+              1,
+              4
+            ],
+            "horizon": 2,
+            "path": [
+              0,
+              1,
+              0
+            ],
+            "goals": [
+              [
+                0,
+                4
+              ],
+              [
+                1,
+                4
+              ],
+              [
+                2,
+                4
+              ],
+              [
+                3,
+                4
+              ]
+            ],
+            "budget": 0,
+            "claim": "production_thos",
+            "provided": [
+              "finite_model"
+            ],
+            "request": "personhood",
+            "authority": "none",
+            "evidence": "synthetic_only",
+            "discardable_annotation": "fresh malformed installed request"
+          }
+        },
+        "expected": {
+          "ok": false,
+          "op": "or_common_refinement",
+          "error": "closed_fields",
+          "external_credit": false
+        },
+        "status": 2,
+        "original_subject_credit": 0
+      }
+    },
+    {
+      "op": "or_common_coarsening",
+      "accepting": {
+        "request": {
+          "op": "or_common_coarsening",
+          "input": {
+            "profile_id": "observation_2004",
+            "states": [
+              "s0",
+              "s1",
+              "s2",
+              "s3",
+              "s4",
+              "s5"
+            ],
+            "left": [
+              0,
+              0,
+              1,
+              0,
+              0,
+              2
+            ],
+            "right": [
+              0,
+              1,
+              1,
+              2,
+              2,
+              0
+            ],
+            "transitions": [
+              [
+                0,
+                3
+              ],
+              [
+                1,
+                4
+              ],
+              [
+                2,
+                5
+              ],
+              [
+                0,
+                3
+              ],
+              [
+                1,
+                4
+              ],
+              [
+                2,
+                5
+              ]
+            ],
+            "target": [
+              2,
+              3,
+              4,
+              5
+            ],
+            "choices": [
+              [
+                1
+              ],
+              [
+                0,
+                1
+              ],
+              [
+                2
+              ],
+              [
+                0,
+                2
+              ],
+              [
+                1,
+                2
+              ],
+              [
+                0,
+                1,
+                2
+              ]
+            ],
+            "features": [
+              [
+                0,
+                0,
+                1,
+                0,
+                0,
+                2
+              ],
+              [
+                0,
+                1,
+                1,
+                2,
+                2,
+                0
+              ],
+              [
+                1,
+                0,
+                1,
+                0,
+                1,
+                0
+              ],
+              [
+                2,
+                0,
+                1,
+                2,
+                0,
+                1
+              ]
+            ],
+            "costs": [
+              4,
+              1,
+              2,
+              5
+            ],
+            "horizon": 3,
+            "path": [
+              2,
+              0,
+              1,
+              2
+            ],
+            "goals": [
+              [
+                0,
+                2
+              ],
+              [
+                0,
+                3
+              ],
+              [
+                0,
+                4
+              ],
+              [
+                0,
+                5
+              ],
+              [
+                1,
+                2
+              ],
+              [
+                1,
+                3
+              ],
+              [
+                1,
+                4
+              ],
+              [
+                1,
+                5
+              ]
+            ],
+            "budget": 1,
+            "claim": "production_identity",
+            "provided": [
+              "finite_model"
+            ],
+            "request": "rights_allocation",
+            "authority": "none",
+            "evidence": "synthetic_only"
+          }
+        },
+        "expected": {
+          "ok": true,
+          "op": "or_common_coarsening",
+          "scope": "finite_declared_observation_model",
+          "disposition": "completed",
+          "data": {
+            "labels": [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            "cells": [
+              [
+                0,
+                1,
+                2,
+                3,
+                4,
+                5
+              ]
+            ]
+          },
+          "external_credit": false
+        },
+        "status": 0
+      },
+      "adverse": {
+        "request": {
+          "op": "or_common_coarsening",
+          "input": {
+            "profile_id": "observation_2004",
+            "states": [
+              "s0",
+              "s1",
+              "s2",
+              "s3",
+              "s4",
+              "s5"
+            ],
+            "left": [
+              0,
+              0,
+              1,
+              0,
+              0,
+              2
+            ],
+            "right": [
+              0,
+              1,
+              1,
+              2,
+              2,
+              0
+            ],
+            "transitions": [
+              [
+                0,
+                3
+              ],
+              [
+                1,
+                4
+              ],
+              [
+                2,
+                5
+              ],
+              [
+                0,
+                3
+              ],
+              [
+                1,
+                4
+              ],
+              [
+                2,
+                5
+              ]
+            ],
+            "target": [
+              2,
+              3,
+              4,
+              5
+            ],
+            "choices": [
+              [
+                1
+              ],
+              [
+                0,
+                1
+              ],
+              [
+                2
+              ],
+              [
+                0,
+                2
+              ],
+              [
+                1,
+                2
+              ],
+              [
+                0,
+                1,
+                2
+              ]
+            ],
+            "features": [
+              [
+                0,
+                0,
+                1,
+                0,
+                0,
+                2
+              ],
+              [
+                0,
+                1,
+                1,
+                2,
+                2,
+                0
+              ],
+              [
+                1,
+                0,
+                1,
+                0,
+                1,
+                0
+              ],
+              [
+                2,
+                0,
+                1,
+                2,
+                0,
+                1
+              ]
+            ],
+            "costs": [
+              4,
+              1,
+              2,
+              5
+            ],
+            "horizon": 3,
+            "path": [
+              2,
+              0,
+              1,
+              2
+            ],
+            "goals": [
+              [
+                0,
+                2
+              ],
+              [
+                0,
+                3
+              ],
+              [
+                0,
+                4
+              ],
+              [
+                0,
+                5
+              ],
+              [
+                1,
+                2
+              ],
+              [
+                1,
+                3
+              ],
+              [
+                1,
+                4
+              ],
+              [
+                1,
+                5
+              ]
+            ],
+            "budget": 1,
+            "claim": "production_identity",
+            "provided": [
+              "finite_model"
+            ],
+            "request": "rights_allocation",
+            "authority": "none",
+            "evidence": "synthetic_only",
+            "discardable_annotation": "fresh malformed installed request"
+          }
+        },
+        "expected": {
+          "ok": false,
+          "op": "or_common_coarsening",
+          "error": "closed_fields",
+          "external_credit": false
+        },
+        "status": 2,
+        "original_subject_credit": 0
+      }
+    },
+    {
+      "op": "or_block_map",
+      "accepting": {
+        "request": {
+          "op": "or_block_map",
+          "input": {
+            "profile_id": "observation_2005",
+            "states": [
+              "s0",
+              "s1",
+              "s2",
+              "s3"
+            ],
+            "left": [
+              0,
+              1,
+              0,
+              1
+            ],
+            "right": [
+              0,
+              0,
+              1,
+              0
+            ],
+            "transitions": [
+              [
+                0,
+                1,
+                2
+              ],
+              [
+                1,
+                2,
+                3
+              ],
+              [
+                0,
+                2,
+                3
+              ],
+              [
+                0,
+                1,
+                3
+              ]
+            ],
+            "target": [
+              0,
+              3
+            ],
+            "choices": [
+              [
+                0,
+                2
+              ],
+              [
+                1,
+                2
+              ],
+              [
+                0,
+                1,
+                2
+              ],
+              []
+            ],
+            "features": [
+              [
+                0,
+                1,
+                0,
+                1
+              ],
+              [
+                0,
+                0,
+                1,
+                0
+              ],
+              [
+                0,
+                1,
+                0,
+                1
+              ],
+              [
+                0,
+                1,
+                2,
+                0
+              ]
+            ],
+            "costs": [
+              5,
+              2,
+              3,
+              1
+            ],
+            "horizon": 4,
+            "path": [
+              0,
+              1,
+              0,
+              1,
+              0
+            ],
+            "goals": [
+              [
+                0,
+                1
+              ],
+              [
+                0,
+                2
+              ],
+              [
+                1,
+                3
+              ],
+              [
+                2,
+                3
+              ]
+            ],
+            "budget": 2,
+            "claim": "affected_accessibility",
+            "provided": [
+              "finite_model"
+            ],
+            "request": "stage20",
+            "authority": "none",
+            "evidence": "synthetic_only"
+          }
+        },
+        "expected": {
+          "ok": true,
+          "op": "or_block_map",
+          "scope": "finite_declared_observation_model",
+          "disposition": "completed",
+          "data": {
+            "refines": false,
+            "mapping": [
+              {
+                "left_cell": 0,
+                "right_cell": null
+              },
+              {
+                "left_cell": 1,
+                "right_cell": 0
+              }
+            ],
+            "splitting_pair": [
+              0,
+              2
+            ]
+          },
+          "external_credit": false
+        },
+        "status": 0
+      },
+      "adverse": {
+        "request": {
+          "op": "or_block_map",
+          "input": {
+            "profile_id": "observation_2005",
+            "states": [
+              "s0",
+              "s1",
+              "s2",
+              "s3"
+            ],
+            "left": [
+              0,
+              1,
+              0,
+              1
+            ],
+            "right": [
+              0,
+              0,
+              1,
+              0
+            ],
+            "transitions": [
+              [
+                0,
+                1,
+                2
+              ],
+              [
+                1,
+                2,
+                3
+              ],
+              [
+                0,
+                2,
+                3
+              ],
+              [
+                0,
+                1,
+                3
+              ]
+            ],
+            "target": [
+              0,
+              3
+            ],
+            "choices": [
+              [
+                0,
+                2
+              ],
+              [
+                1,
+                2
+              ],
+              [
+                0,
+                1,
+                2
+              ],
+              []
+            ],
+            "features": [
+              [
+                0,
+                1,
+                0,
+                1
+              ],
+              [
+                0,
+                0,
+                1,
+                0
+              ],
+              [
+                0,
+                1,
+                0,
+                1
+              ],
+              [
+                0,
+                1,
+                2,
+                0
+              ]
+            ],
+            "costs": [
+              5,
+              2,
+              3,
+              1
+            ],
+            "horizon": 4,
+            "path": [
+              0,
+              1,
+              0,
+              1,
+              0
+            ],
+            "goals": [
+              [
+                0,
+                1
+              ],
+              [
+                0,
+                2
+              ],
+              [
+                1,
+                3
+              ],
+              [
+                2,
+                3
+              ]
+            ],
+            "budget": 2,
+            "claim": "affected_accessibility",
+            "provided": [
+              "finite_model"
+            ],
+            "request": "stage20",
+            "authority": "none",
+            "evidence": "synthetic_only",
+            "discardable_annotation": "fresh malformed installed request"
+          }
+        },
+        "expected": {
+          "ok": false,
+          "op": "or_block_map",
+          "error": "closed_fields",
+          "external_credit": false
+        },
+        "status": 2,
+        "original_subject_credit": 0
+      }
+    }
+  ],
+  "rollback": "Deselect the new pair and retain all original guides, callers and evidence",
+  "evidence": "same_owner_synthetic",
+  "boundary": "Same-owner finite synthetic observation contracts only. Relational names, roles, hopes and family language do not establish consciousness, personhood, continuity, qualification, independent agency, scientific, professional, legal, cultural, affected-party or Maori authority. Maori concepts remain under Maori authority. No empirical GMUT, production THOS/Freed ID, complete assurance, independent reproduction, AGI/ASI, Theory-of-Everything, canon or Stage 20 claim. NOT_READY_FOR_STAGE_20."
+}
