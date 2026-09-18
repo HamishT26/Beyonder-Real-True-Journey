@@ -1,0 +1,49 @@
+'use strict';
+const fs=require('fs');
+const SCOPE='finite_synthetic_scalar_control';
+class F{
+ constructor(n,d=1n){n=BigInt(n);d=BigInt(d);if(d===0n)throw new Error('fraction_domain');if(d<0n){n=-n;d=-d;}let a=n<0n?-n:n,b=d;while(b){const t=a%b;a=b;b=t;}const g=a||1n;this.n=n/g;this.d=d/g;}
+ static parse(s){if(typeof s!=='string'||s.length>64||!/^[-+]?\d+(?:\/\d+)?$/.test(s))throw new Error('fraction_grammar');const p=s.split('/');return new F(p[0],p[1]||1n);}
+ add(b){return new F(this.n*b.d+b.n*this.d,this.d*b.d);}
+ sub(b){return new F(this.n*b.d-b.n*this.d,this.d*b.d);}
+ mul(b){return new F(this.n*b.n,this.d*b.d);}
+ div(b){return new F(this.n*b.d,this.d*b.n);}
+ abs(){return new F(this.n<0n?-this.n:this.n,this.d);}
+ neg(){return new F(-this.n,this.d);}
+ cmp(b){const v=this.n*b.d-b.n*this.d;return v<0n?-1:v>0n?1:0;}
+ pow(n){let base=this,out=new F(1n),k=n;while(k>0){if(k%2)out=out.mul(base);base=base.mul(base);k=Math.floor(k/2);}return out;}
+ toString(){return this.d===1n?String(this.n):String(this.n)+'/'+String(this.d);}
+}
+const ZERO=new F(0n),ONE=new F(1n),TWO=new F(2n),FIELDS=['a','b','k','d','lo','hi','n','p','radius','limit','evidence','authorization'],OPS=['rc_profile','rc_closed_loop','rc_one_step','rc_horizon','rc_center_radius','rc_impulse_weights','rc_disturbance_radius','rc_support_vertices','rc_gain_grid','rc_state_norm'];
+const fail=error=>({ok:false,error});
+function parseInput(x){if(!x||typeof x!=='object'||Array.isArray(x)||Object.keys(x).length!==FIELDS.length||FIELDS.some(k=>!Object.prototype.hasOwnProperty.call(x,k)))throw new Error('closed_fields');if(x.evidence!=='synthetic_only'||x.authorization!=='none')throw new Error('evidence_authorization');const z={};for(const k of ['a','b','k','d','lo','hi','p','radius','limit'])z[k]=F.parse(x[k]);if(z.d.cmp(ZERO)<0)throw new Error('disturbance_bounds');if(z.lo.cmp(z.hi)>0)throw new Error('interval_bounds');if(!Number.isInteger(x.n)||x.n<0||x.n>8)throw new Error('horizon_bounds');if(z.p.cmp(ZERO)<=0)throw new Error('lyapunov_weight_bounds');if(z.radius.cmp(ZERO)<0)throw new Error('radius_bounds');if(z.limit.cmp(ZERO)<0)throw new Error('effort_limit_bounds');z.n=x.n;z.c=z.a.sub(z.b.mul(z.k));z.rho=z.c.abs();return z;}
+function geom(rho,n){if(n===0)return ZERO;if(rho.cmp(ONE)===0)return new F(BigInt(n));return rho.pow(n).sub(ONE).div(rho.sub(ONE));}
+function intervalAt(z,n=z.n){const center0=z.lo.add(z.hi).div(TWO),radius0=z.hi.sub(z.lo).div(TWO),center=z.c.pow(n).mul(center0),radius=z.rho.pow(n).mul(radius0).add(z.d.mul(geom(z.rho,n)));return {lo:center.sub(radius),hi:center.add(radius),center,radius};}
+function oneStep(z){const a=z.c.mul(z.lo),b=z.c.mul(z.hi);return [a.cmp(b)<=0?a.sub(z.d):b.sub(z.d),a.cmp(b)>=0?a.add(z.d):b.add(z.d)];}
+function norm(v){return v.lo.abs().cmp(v.hi.abs())>=0?v.lo.abs():v.hi.abs();}
+function ok(op,data,disposition='completed'){return {ok:true,op,data,core_disposition:disposition,scope:SCOPE};}
+function runCore(op,input){const z=parseInput(input),v=intervalAt(z),n=z.n;let data;
+ if(op==='rc_profile'){const normalized={};for(const k of FIELDS)normalized[k]=z[k]instanceof F?z[k].toString():input[k];data={normalized,closed_loop:z.c.toString()};}
+ else if(op==='rc_closed_loop')data={a:z.a.toString(),b:z.b.toString(),k:z.k.toString(),c:z.c.toString(),rho:z.rho.toString(),strict_undisturbed_stability:z.rho.cmp(ONE)<0};
+ else if(op==='rc_one_step')data={interval:oneStep(z).map(String),horizon:1};
+ else if(op==='rc_horizon')data={interval:[String(v.lo),String(v.hi)],horizon:n,center:String(v.center),radius:String(v.radius)};
+ else if(op==='rc_center_radius')data={initial_center:String(z.lo.add(z.hi).div(TWO)),initial_radius:String(z.hi.sub(z.lo).div(TWO)),center:String(v.center),radius:String(v.radius),reconstructs_interval:[String(v.center.sub(v.radius)),String(v.center.add(v.radius))]};
+ else if(op==='rc_impulse_weights')data={weights:Array.from({length:n},(_,j)=>String(z.c.pow(j))),horizon:n};
+ else if(op==='rc_disturbance_radius')data={terms:Array.from({length:n},(_,j)=>String(z.d.mul(z.rho.pow(j)))),radius:String(z.d.mul(geom(z.rho,n))),horizon:n};
+ else if(op==='rc_support_vertices'){let values=new Map([[String(z.lo),z.lo],[String(z.hi),z.hi]]);for(let j=0;j<n;j++){const next=new Map();for(const x of values.values())for(const sign of [-1,1]){const value=z.c.mul(x).add(sign<0?z.d.neg():z.d);next.set(String(value),value);}values=next;}const sorted=[...values.values()].sort((a,b)=>a.cmp(b));data={minimum:String(sorted[0]),maximum:String(sorted[sorted.length-1]),unique_endpoint_values:sorted.length,enumerated_words:2**(n+1),continuous_interval_hull:[String(v.lo),String(v.hi)]};}
+ else if(op==='rc_gain_grid')data={rows:['-1/2','-1/4','0','1/4','1/2'].map(delta=>{const k=z.k.add(F.parse(delta)),c=z.a.sub(z.b.mul(k));return {k:String(k),c:String(c),strict_stability:c.abs().cmp(ONE)<0};}),declared_grid_only:true};
+ else if(op==='rc_state_norm')data={interval:[String(v.lo),String(v.hi)],worst_absolute_state:String(norm(v)),horizon:n};
+ else throw new Error('operation');
+ return ok(op,data);
+}
+function dispatch(request,allowed,extension){try{if(!request||typeof request!=='object'||Array.isArray(request)||Object.keys(request).length!==2||!Object.prototype.hasOwnProperty.call(request,'op')||!Object.prototype.hasOwnProperty.call(request,'input'))throw new Error('request_fields');if(!allowed.includes(request.op))throw new Error('operation_allowlist');const envelope=OPS.includes(request.op)?runCore(request.op,request.input):extension?extension.runExtension(request.op,request.input):fail('operation');return {status:envelope.ok?0:2,envelope};}catch(e){return {status:2,envelope:fail(e.message||'admission')};}}
+function strictParse(text){let i=0;const ws=()=>{while(i<text.length&&/[ \t\r\n]/.test(text[i]))i++;};function str(){const start=i++;let escaped=false;for(;i<text.length;i++){const ch=text[i];if(!escaped&&ch==='"'){i++;return JSON.parse(text.slice(start,i));}if(!escaped&&ch==='\\')escaped=true;else escaped=false;}throw new Error('json_parse');}
+ function value(depth){if(depth>12)throw new Error('json_depth');ws();const ch=text[i];if(ch==='"')return str();if(ch==='{'){i++;const out={},keys=new Set();ws();if(text[i]==='}'){i++;return out;}for(;;){ws();if(text[i]!=='"')throw new Error('json_parse');const key=str();if(keys.has(key))throw new Error('json_duplicate_key');keys.add(key);ws();if(text[i++]!==':')throw new Error('json_parse');Object.defineProperty(out,key,{value:value(depth+1),enumerable:true,writable:true,configurable:true});ws();if(text[i]==='}'){i++;return out;}if(text[i++]!==',')throw new Error('json_parse');}}
+ if(ch==='['){i++;const out=[];ws();if(text[i]===']'){i++;return out;}for(;;){out.push(value(depth+1));ws();if(text[i]===']'){i++;return out;}if(text[i++]!==',')throw new Error('json_parse');}}
+ for(const [token,val]of [['true',true],['false',false],['null',null]])if(text.slice(i,i+token.length)===token){i+=token.length;return val;}
+ const match=text.slice(i).match(/^-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?/);if(!match)throw new Error('json_parse');i+=match[0].length;const n=Number(match[0]);if(!Number.isFinite(n))throw new Error('json_nonfinite');return n;}
+ const out=value(0);ws();if(i!==text.length)throw new Error('json_parse');return out;
+}
+function runCli(allowed=OPS,extension=null){try{const bytes=fs.readFileSync(0);if(bytes.length>1048576)throw new Error('input_size');let text;try{text=new TextDecoder('utf-8',{fatal:true}).decode(bytes);}catch(e){throw new Error('utf8_invalid');}const request=strictParse(text);if(Array.isArray(request)){if(request.length>1000)throw new Error('batch_bounds');const rows=request.map(r=>dispatch(r,allowed,extension));process.stdout.write(JSON.stringify({schema:'ghc.family.scalar-control.batch.v1',request_count:rows.length,rows})+'\n');process.exitCode=0;}else{const result=dispatch(request,allowed,extension);process.stdout.write(JSON.stringify(result.envelope)+'\n');process.exitCode=result.status;}}catch(e){process.stdout.write(JSON.stringify(fail(e.message||'admission'))+'\n');process.exitCode=2;}}
+if(require.main===module)runCli();
+module.exports={F,ZERO,ONE,TWO,FIELDS,OPS,SCOPE,parseInput,geom,intervalAt,oneStep,norm,ok,fail,runCore,dispatch,strictParse,runCli};
