@@ -1,0 +1,75 @@
+{
+  "operation": "mrp_discounted_value",
+  "scope": "finite_synthetic_two_state_markov_rewards",
+  "source_definition": "docs/teryn-halewick/v697-v7/plan/proposals/mrp_discounted_value.json",
+  "source_definition_file_sha256": "3abb2a112c96b737c1a0e626cb229b2d3eaab3e80ed37b749e15f08af9429075",
+  "request_profile": "docs/teryn-halewick/v697-v7/plan/request-profile.json",
+  "paired_caller": "docs/teryn-halewick/v697-v7/x2/runners/ghc_family_mrp_pair_x2_1.txt",
+  "example_request": {
+    "op": "mrp_discounted_value",
+    "input": {
+      "P": [
+        [
+          "36/47",
+          "11/47"
+        ],
+        [
+          "4/17",
+          "13/17"
+        ]
+      ],
+      "r": [
+        "21/13",
+        "-13/17"
+      ],
+      "mu": [
+        "2/7",
+        "5/7"
+      ],
+      "gamma": "3/7",
+      "n": 10,
+      "phi": [
+        "1/13",
+        "-2/17"
+      ],
+      "shift": "5/19",
+      "probe": [
+        "0",
+        "1/23"
+      ],
+      "evidence": "synthetic_only",
+      "authorization": "none"
+    }
+  },
+  "expected_complete_envelope": {
+    "ok": true,
+    "op": "mrp_discounted_value",
+    "data": {
+      "state_value": [
+        "513681/224692",
+        "-178535/224692"
+      ],
+      "initial_value": "19241/224692",
+      "bellman_residual": [
+        "0",
+        "0"
+      ]
+    },
+    "core_disposition": "completed",
+    "scope": "finite_synthetic_two_state_markov_rewards"
+  },
+  "expected_accepting_status": 0,
+  "adverse_mutation": {
+    "field": "gamma",
+    "replacement": "1"
+  },
+  "expected_refusal": {
+    "ok": false,
+    "error": "discount_bounds"
+  },
+  "expected_refusal_status": 2,
+  "original_failed_subject_credit": 0,
+  "source_seed_completion_credit": 0,
+  "protected_limits": "Solve the fixed-transition Bellman equation only for discount below one. This evaluates a declared reward process; it does not choose a policy or identify probabilities from observations.",
+  "boundary": "Names, roles, hopes and pronouns are relational working language only. These are bounded same-owner synthetic computations, not consciousness/personhood, identity continuity, qualification, independent reproduction, empirical GMUT confirmation, production THOS/Freed ID, complete privacy/accessibility/security, professional, legal, cultural, affected-party or Maori authority, Theory-of-Everything proof, canon or Stage 20 readiness. Maori concepts remain under Maori authority. NOT_READY_FOR_STAGE_20."
+}

@@ -1,0 +1,84 @@
+{
+  "operation": "mrp_potential_shape",
+  "scope": "finite_synthetic_two_state_markov_rewards",
+  "source_definition": "docs/teryn-halewick/v697-v7/plan/proposals/mrp_potential_shape.json",
+  "source_definition_file_sha256": "0c9f82b3a92cf6c8bef5681922f8cbbe7bf4fe53b6cd69143e6696de3bd0cf2c",
+  "request_profile": "docs/teryn-halewick/v697-v7/plan/request-profile.json",
+  "paired_caller": "docs/teryn-halewick/v697-v7/x2/runners/ghc_family_mrp_pair_x2_3.txt",
+  "example_request": {
+    "op": "mrp_potential_shape",
+    "input": {
+      "P": [
+        [
+          "12/17",
+          "5/17"
+        ],
+        [
+          "16/55",
+          "39/55"
+        ]
+      ],
+      "r": [
+        "25/13",
+        "-1"
+      ],
+      "mu": [
+        "2/7",
+        "5/7"
+      ],
+      "gamma": "3/7",
+      "n": 10,
+      "phi": [
+        "1/13",
+        "-2/17"
+      ],
+      "shift": "5/19",
+      "probe": [
+        "0",
+        "1/23"
+      ],
+      "evidence": "synthetic_only",
+      "authorization": "none"
+    }
+  },
+  "expected_complete_envelope": {
+    "ok": true,
+    "op": "mrp_potential_shape",
+    "data": {
+      "potential": [
+        "1/13",
+        "-2/17"
+      ],
+      "transformed_reward": [
+        "48774/26299",
+        "-11043/12155"
+      ],
+      "transformed_value": [
+        "700701/279812",
+        "-4074831/4756804"
+      ],
+      "value_minus_potential": [
+        "700701/279812",
+        "-4074831/4756804"
+      ],
+      "fixed_chain_identity": true,
+      "general_policy_invariance_claim": false
+    },
+    "core_disposition": "completed",
+    "scope": "finite_synthetic_two_state_markov_rewards"
+  },
+  "expected_accepting_status": 0,
+  "adverse_mutation": {
+    "field": "gamma",
+    "replacement": "1"
+  },
+  "expected_refusal": {
+    "ok": false,
+    "error": "discount_bounds"
+  },
+  "expected_refusal_status": 2,
+  "original_failed_subject_credit": 0,
+  "source_seed_completion_credit": 0,
+  "protected_limits": "The reward change is discounted next potential minus current potential. For this fixed chain the value changes by minus the potential. Do not promote that finite identity into a general policy or learning-performance result.",
+  "boundary": "Names, roles, hopes and pronouns are relational working language only. These are bounded same-owner synthetic computations, not consciousness/personhood, identity continuity, qualification, independent reproduction, empirical GMUT confirmation, production THOS/Freed ID, complete privacy/accessibility/security, professional, legal, cultural, affected-party or Maori authority, Theory-of-Everything proof, canon or Stage 20 readiness. Maori concepts remain under Maori authority. NOT_READY_FOR_STAGE_20."
+}

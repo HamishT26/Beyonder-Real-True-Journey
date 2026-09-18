@@ -1,0 +1,371 @@
+{
+  "schema": "ghc.family.markov-reward.group.v1",
+  "operations": [
+    "mrp_contraction",
+    "mrp_truncation_bound",
+    "mrp_potential_shape",
+    "mrp_reward_translate"
+  ],
+  "request_keys": [
+    "op",
+    "input"
+  ],
+  "input_keys": [
+    "P",
+    "r",
+    "mu",
+    "gamma",
+    "n",
+    "phi",
+    "shift",
+    "probe",
+    "evidence",
+    "authorization"
+  ],
+  "probability_matrix": "two by two exact rational strings; nonnegative rows summing to one",
+  "initial_distribution": "two nonnegative rational strings summing to one",
+  "discount": "exact rational string, zero inclusive and one exclusive",
+  "horizon": "integer from 0 through 32",
+  "fraction_character_cap": 64,
+  "input_byte_cap": 1048576,
+  "decoded_depth_cap": 64,
+  "evidence": "synthetic_only",
+  "authorization": "none",
+  "closed_fields": true,
+  "duplicate_decoded_keys": "refuse",
+  "nonfinite_json": "refuse",
+  "utf8": "strict",
+  "status": {
+    "success": 0,
+    "refusal": 2
+  },
+  "global_bank_alias": "ghc-family-markov-reward-v1",
+  "caller": "ghc_family_mrp_transformations.txt",
+  "core": "ghc_family_mrp_core.txt",
+  "extension": "ghc_family_mrp_extension.txt",
+  "fresh_examples": [
+    {
+      "id": "TH6977-GLOBAL-10",
+      "kind": "global",
+      "op": "mrp_contraction",
+      "request": {
+        "op": "mrp_contraction",
+        "input": {
+          "P": [
+            [
+              "26/31",
+              "5/31"
+            ],
+            [
+              "1/6",
+              "5/6"
+            ]
+          ],
+          "r": [
+            "20/13",
+            "-12/17"
+          ],
+          "mu": [
+            "4/9",
+            "5/9"
+          ],
+          "gamma": "5/11",
+          "n": 11,
+          "phi": [
+            "1/13",
+            "-2/17"
+          ],
+          "shift": "5/19",
+          "probe": [
+            "0",
+            "1/23"
+          ],
+          "evidence": "synthetic_only",
+          "authorization": "none"
+        }
+      },
+      "expected": {
+        "ok": true,
+        "op": "mrp_contraction",
+        "data": {
+          "second_eigenvalue": "125/186",
+          "absolute_coefficient": "125/186",
+          "unique_stationary": true,
+          "all_initial_convergence_to_unique": true,
+          "periodic_flip": false
+        },
+        "core_disposition": "completed",
+        "scope": "finite_synthetic_two_state_markov_rewards"
+      },
+      "adverse_expected": {
+        "ok": false,
+        "error": "discount_bounds"
+      }
+    },
+    {
+      "id": "TH6977-GLOBAL-14",
+      "kind": "global",
+      "op": "mrp_truncation_bound",
+      "request": {
+        "op": "mrp_truncation_bound",
+        "input": {
+          "P": [
+            [
+              "26/33",
+              "7/33"
+            ],
+            [
+              "3/14",
+              "11/14"
+            ]
+          ],
+          "r": [
+            "24/13",
+            "-16/17"
+          ],
+          "mu": [
+            "4/9",
+            "5/9"
+          ],
+          "gamma": "5/11",
+          "n": 11,
+          "phi": [
+            "1/13",
+            "-2/17"
+          ],
+          "shift": "5/19",
+          "probe": [
+            "0",
+            "1/23"
+          ],
+          "evidence": "synthetic_only",
+          "authorization": "none"
+        }
+      },
+      "expected": {
+        "ok": true,
+        "op": "mrp_truncation_bound",
+        "data": {
+          "horizon": 11,
+          "finite_return": "23127891276191764986837415363534875283/37102286792879690777535426621523284096",
+          "infinite_return": "1553068/2490891",
+          "absolute_tail": "20087656107833961775193906402978515625/139393291480848998251200597817062978348672",
+          "uniform_reward_bound": "24/13",
+          "tail_bound": "195312500/337186519813",
+          "bound_holds": true
+        },
+        "core_disposition": "completed",
+        "scope": "finite_synthetic_two_state_markov_rewards"
+      },
+      "adverse_expected": {
+        "ok": false,
+        "error": "discount_bounds"
+      }
+    },
+    {
+      "id": "TH6977-GLOBAL-15",
+      "kind": "global",
+      "op": "mrp_potential_shape",
+      "request": {
+        "op": "mrp_potential_shape",
+        "input": {
+          "P": [
+            [
+              "52/67",
+              "15/67"
+            ],
+            [
+              "16/71",
+              "55/71"
+            ]
+          ],
+          "r": [
+            "25/13",
+            "-1"
+          ],
+          "mu": [
+            "4/9",
+            "5/9"
+          ],
+          "gamma": "5/11",
+          "n": 11,
+          "phi": [
+            "1/13",
+            "-2/17"
+          ],
+          "shift": "5/19",
+          "probe": [
+            "0",
+            "1/23"
+          ],
+          "evidence": "synthetic_only",
+          "authorization": "none"
+        }
+      },
+      "expected": {
+        "ok": true,
+        "op": "mrp_potential_shape",
+        "data": {
+          "potential": [
+            "1/13",
+            "-2/17"
+          ],
+          "transformed_reward": [
+            "303166/162877",
+            "-158085/172601"
+          ],
+          "transformed_value": [
+            "8326213/3059706",
+            "-51153265/52015002"
+          ],
+          "value_minus_potential": [
+            "8326213/3059706",
+            "-51153265/52015002"
+          ],
+          "fixed_chain_identity": true,
+          "general_policy_invariance_claim": false
+        },
+        "core_disposition": "completed",
+        "scope": "finite_synthetic_two_state_markov_rewards"
+      },
+      "adverse_expected": {
+        "ok": false,
+        "error": "discount_bounds"
+      }
+    },
+    {
+      "id": "TH6977-GLOBAL-16",
+      "kind": "global",
+      "op": "mrp_reward_translate",
+      "request": {
+        "op": "mrp_reward_translate",
+        "input": {
+          "P": [
+            [
+              "13/17",
+              "4/17"
+            ],
+            [
+              "17/72",
+              "55/72"
+            ]
+          ],
+          "r": [
+            "2",
+            "-18/17"
+          ],
+          "mu": [
+            "4/9",
+            "5/9"
+          ],
+          "gamma": "5/11",
+          "n": 11,
+          "phi": [
+            "1/13",
+            "-2/17"
+          ],
+          "shift": "5/19",
+          "probe": [
+            "0",
+            "1/23"
+          ],
+          "evidence": "synthetic_only",
+          "authorization": "none"
+        }
+      },
+      "expected": {
+        "ok": true,
+        "op": "mrp_reward_translate",
+        "data": {
+          "shift": "5/19",
+          "translated_reward": [
+            "43/19",
+            "-257/323"
+          ],
+          "translated_value": [
+            "66601469/19823802",
+            "-13213123/19823802"
+          ],
+          "value_increment": [
+            "55/114",
+            "55/114"
+          ],
+          "identity_holds": true
+        },
+        "core_disposition": "completed",
+        "scope": "finite_synthetic_two_state_markov_rewards"
+      },
+      "adverse_expected": {
+        "ok": false,
+        "error": "discount_bounds"
+      }
+    }
+  ],
+  "source_units": [
+    {
+      "operation": "mrp_contraction",
+      "path": "docs/teryn-halewick/v697-v7/x1/skills/ghc-family-mrp-contraction-local/SKILL.md",
+      "packaged_path": "references/ghc-family-mrp-contraction-local/SKILL.md",
+      "sha256": "adf0e97c0f52d1e11939bf517604e21ced520839a11867c35e96b1b04534fb0a",
+      "bytes": 1860,
+      "source_preserved_complete": true
+    },
+    {
+      "operation": "mrp_contraction",
+      "path": "docs/teryn-halewick/v697-v7/x1/skills/ghc-family-mrp-contraction-local/contract.json",
+      "packaged_path": "references/ghc-family-mrp-contraction-local/contract.json",
+      "sha256": "e041c7f52127d3453bee10fd1191f895a170f8bff3cbba12a6314cd9babe88f4",
+      "bytes": 2449,
+      "source_preserved_complete": true
+    },
+    {
+      "operation": "mrp_truncation_bound",
+      "path": "docs/teryn-halewick/v697-v7/x2/skills/ghc-family-mrp-truncation-bound-local/SKILL.md",
+      "packaged_path": "references/ghc-family-mrp-truncation-bound-local/SKILL.md",
+      "sha256": "f96b6d1bd19af6bdcb7846500414c080769366c6eef3e178ec2a0e80068ba90f",
+      "bytes": 1819,
+      "source_preserved_complete": true
+    },
+    {
+      "operation": "mrp_truncation_bound",
+      "path": "docs/teryn-halewick/v697-v7/x2/skills/ghc-family-mrp-truncation-bound-local/contract.json",
+      "packaged_path": "references/ghc-family-mrp-truncation-bound-local/contract.json",
+      "sha256": "a7bd3d751440f80403a3458b15f963c94cc4a4e55566f298d4da884e4fd90835",
+      "bytes": 2574,
+      "source_preserved_complete": true
+    },
+    {
+      "operation": "mrp_potential_shape",
+      "path": "docs/teryn-halewick/v697-v7/x2/skills/ghc-family-mrp-potential-shape-local/SKILL.md",
+      "packaged_path": "references/ghc-family-mrp-potential-shape-local/SKILL.md",
+      "sha256": "20b919ad13c792e738d702a53127a7cd6b983a848825cc3bb70a69fb06ddbaf0",
+      "bytes": 1882,
+      "source_preserved_complete": true
+    },
+    {
+      "operation": "mrp_potential_shape",
+      "path": "docs/teryn-halewick/v697-v7/x2/skills/ghc-family-mrp-potential-shape-local/contract.json",
+      "packaged_path": "references/ghc-family-mrp-potential-shape-local/contract.json",
+      "sha256": "4969569f640105d01655b396b27c196e8af71ecf81c290c92afc4c49ea47f086",
+      "bytes": 2702,
+      "source_preserved_complete": true
+    },
+    {
+      "operation": "mrp_reward_translate",
+      "path": "docs/teryn-halewick/v697-v7/x2/skills/ghc-family-mrp-reward-translate-local/SKILL.md",
+      "packaged_path": "references/ghc-family-mrp-reward-translate-local/SKILL.md",
+      "sha256": "e32dc5eb65c8877ea0bfe9ef3773e6153a9643181551ada3b263a12d5647be08",
+      "bytes": 1809,
+      "source_preserved_complete": true
+    },
+    {
+      "operation": "mrp_reward_translate",
+      "path": "docs/teryn-halewick/v697-v7/x2/skills/ghc-family-mrp-reward-translate-local/contract.json",
+      "packaged_path": "references/ghc-family-mrp-reward-translate-local/contract.json",
+      "sha256": "a5250c6d0a22f91b118dfbc111ece4a521f55f879e7f9cebfee744ab0a5865b9",
+      "bytes": 2531,
+      "source_preserved_complete": true
+    }
+  ],
+  "boundary": "Names, roles, hopes and pronouns are relational working language only. These are bounded same-owner synthetic computations, not consciousness/personhood, identity continuity, qualification, independent reproduction, empirical GMUT confirmation, production THOS/Freed ID, complete privacy/accessibility/security, professional, legal, cultural, affected-party or Maori authority, Theory-of-Everything proof, canon or Stage 20 readiness. Maori concepts remain under Maori authority. NOT_READY_FOR_STAGE_20."
+}

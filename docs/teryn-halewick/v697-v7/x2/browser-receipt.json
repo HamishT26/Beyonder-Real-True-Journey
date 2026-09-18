@@ -1,0 +1,196 @@
+{
+  "schema": "ghc.family.teryn.browser-observation.v1",
+  "utc": "2026-09-18T08:25:15.159Z",
+  "new_zealand": "Friday, 18 September 2026 at 8:25:15 pm NZST",
+  "report_sha256": "117d933a746cc6feb5336d9d660e40226b0d4ed0993a484e9bee94b48593f972",
+  "plan_sha256": "f6217ea0980c8c7c7370291c200ab0dda9d473f38e01886bbb8f75b812b3a2a3",
+  "surface": "owned temporary loopback report",
+  "scope": "DOM structure and supported browser controls only",
+  "checks": [
+    {
+      "id": "B01",
+      "observed": {
+        "models": 5,
+        "points": 125,
+        "table_rows": 125,
+        "contracts": 600
+      },
+      "pass": true
+    },
+    {
+      "id": "B02",
+      "observed": {
+        "selected_model": "TH6977-MODEL-1",
+        "models": 1,
+        "points": 25,
+        "table_rows": 25
+      },
+      "pass": true
+    },
+    {
+      "id": "B03",
+      "observed": {
+        "discount": "2/5",
+        "points": 5,
+        "table_rows": 5
+      },
+      "pass": true
+    },
+    {
+      "id": "B04",
+      "observed": {
+        "angle_before": 0,
+        "angle_after": 5,
+        "exact_table_text_unchanged": true
+      },
+      "pass": true
+    },
+    {
+      "id": "B05",
+      "observed": {
+        "models": 5,
+        "points": 125,
+        "table_rows": 125,
+        "angle": 0
+      },
+      "pass": true
+    },
+    {
+      "id": "B06",
+      "observed": {
+        "session": "x2",
+        "outcome": "exact_gate",
+        "matching": 30,
+        "shown": 20
+      },
+      "pass": true
+    },
+    {
+      "id": "B07-CORRECTION",
+      "observed": {
+        "query": "TH6977-P600",
+        "count_text": "1 matching contract; 1 shown on this page."
+      },
+      "pass": true
+    },
+    {
+      "id": "B08-CORRECTION",
+      "observed": {
+        "open": true,
+        "json_blocks": 1,
+        "keys": [
+          "request",
+          "expected",
+          "observed",
+          "exit_statuses",
+          "invalid_subject_original_success_credit",
+          "source_record"
+        ],
+        "operation": "mrp_authority_gate",
+        "expected_equals_observed": true,
+        "statuses": {
+          "accepting": 0,
+          "candidate": 2,
+          "clone": 2
+        },
+        "invalid_original_credit": 0
+      },
+      "pass": true
+    },
+    {
+      "id": "B09",
+      "observed": {
+        "page": "Page 2 of 30",
+        "first_contract": "TH6977-P021",
+        "shown": 20
+      },
+      "pass": true
+    },
+    {
+      "id": "B10",
+      "observed": {
+        "label_targets": [
+          "model",
+          "discount",
+          "angle",
+          "query",
+          "session",
+          "outcome"
+        ],
+        "all_targets_exist": true,
+        "live_regions": {
+          "model-count": "polite",
+          "contract-count": "polite"
+        },
+        "svg_titles": 125
+      },
+      "pass": true
+    },
+    {
+      "id": "B11",
+      "observed": {
+        "innerWidth": 1280,
+        "clientWidth": 1265,
+        "scrollWidth": 1265,
+        "innerHeight": 720,
+        "viewport_override": false
+      },
+      "pass": true
+    },
+    {
+      "id": "B12",
+      "observed": {
+        "owned_tab_closed": true,
+        "preview_server_closed": true,
+        "server_exit_status": 0,
+        "viewport_override_set": false
+      },
+      "pass": true
+    }
+  ],
+  "retained_failures": [
+    {
+      "id": "TH6977-BROWSER-SELECTOR",
+      "expected": "Exact label Model resolves a select.",
+      "observed": "The exact label locator returned no matches before any selection; the DOM label includes all option text while the AX name is Model.",
+      "correction": "Used observed unique select#model and equivalent select IDs. B02 through B06 retain their successful observations.",
+      "subject_status": "failed",
+      "original_success_credit": 0,
+      "application_functional_failure": false
+    },
+    {
+      "id": "TH6977-BROWSER-PLURAL",
+      "expected": "1 matching contracts; 1 shown on this page.",
+      "observed": "1 matching contract; 1 shown on this page.",
+      "correction": "Corrected the harness plural expectation; the frozen requirement was one P600 record.",
+      "subject_status": "failed",
+      "original_success_credit": 0,
+      "application_functional_failure": false
+    },
+    {
+      "id": "TH6977-BROWSER-BLOCKS",
+      "expected": "At least two code blocks in an expanded record.",
+      "observed": "One complete JSON block contains request, expected, observed, all statuses, zero invalid credit and source record.",
+      "correction": "Parsed the displayed JSON and checked complete fields, equality and statuses against the frozen requirement.",
+      "subject_status": "failed",
+      "original_success_credit": 0,
+      "application_functional_failure": false
+    },
+    {
+      "id": "TH6977-BROWSER-CLEAR",
+      "expected": "An empty-string fill clears the current search before pagination.",
+      "observed": "The DOM retained TH6977-P600 and Next page was disabled; the attempted click failed.",
+      "correction": "Selected the current input with ControlOrMeta+A and pressed Backspace; observed an empty query and 600 matches before the one successful pagination.",
+      "subject_status": "failed",
+      "original_success_credit": 0,
+      "application_functional_failure": false
+    }
+  ],
+  "passing_requirements": 12,
+  "original_failed_checks": 4,
+  "all_frozen_requirements_observed": true,
+  "screenshots": 0,
+  "manual_visual_touch_assistive_cognitive_language_and_affected_user_review": "reserved",
+  "independent_reproduction": false,
+  "boundary": "Names, roles, hopes and pronouns are relational working language only. These are bounded same-owner synthetic computations, not consciousness/personhood, identity continuity, qualification, independent reproduction, empirical GMUT confirmation, production THOS/Freed ID, complete privacy/accessibility/security, professional, legal, cultural, affected-party or Maori authority, Theory-of-Everything proof, canon or Stage 20 readiness. Maori concepts remain under Maori authority. NOT_READY_FOR_STAGE_20."
+}

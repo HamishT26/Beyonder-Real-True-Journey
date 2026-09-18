@@ -1,0 +1,48 @@
+{
+  "id": "TH6977-ADMISSION-07",
+  "name": "Excessive JSON nesting is refused at the decoder boundary",
+  "definition": {
+    "id": "TH6977-ADMISSION-07",
+    "name": "Excessive JSON nesting is refused at the decoder boundary",
+    "kind": "refusal_property",
+    "request": null,
+    "stdin_recipe": {
+      "kind": "nested_arrays",
+      "depth": 65,
+      "leaf": 0
+    },
+    "expected": {
+      "ok": false,
+      "error": "json_depth"
+    },
+    "expected_exit_status": 2,
+    "failed_subject_original_success_credit": 0,
+    "source_plan": "docs/teryn-halewick/v697-v7/x2/additional-admission-plan.json"
+  },
+  "definition_sha256": "22874a93e59b1eddc1deda18e376dba1e01b45d68a198bf63ad62fea18f59c97",
+  "caller": "docs/teryn-halewick/v697-v7/x1/runners/ghc_family_mrp_pair_x1_1.txt",
+  "core_sha256": "a6694f7b2ff116f33ed1ea6f3cc1030e9134da803709671d337e921345d2ebd2",
+  "extension_sha256": "cf98b3df631b8cdce7b910723f800ed11dce475dd83613acaf32785ea84a16c3",
+  "process": {
+    "exit_status": 2,
+    "signal": null,
+    "stdout": "{\"ok\":false,\"error\":\"json_depth\"}\n",
+    "stderr": "",
+    "envelope": {
+      "ok": false,
+      "error": "json_depth"
+    },
+    "parse_error": null,
+    "process_error": null,
+    "stdin_bytes": 131,
+    "stdin_sha256": "2574b71c86249bc36bf15157b4883f41da049924b6ddd4477f68af56d73d76b2",
+    "stdout_sha256": "5e42b37b4d8c9459deef4fa9f4e7cc37d0597c4b2e150aa7eda61f7d1ba91c6c",
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "second_process": null,
+  "full_envelope_match": true,
+  "specific_property_pass": true,
+  "original_request_preserved": true,
+  "predicate_pass": true,
+  "independent_reproduction": false
+}

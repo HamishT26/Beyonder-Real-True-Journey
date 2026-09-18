@@ -1,0 +1,79 @@
+{
+  "id": "TH6977-EXTRA-19",
+  "name": "A known operation outside the paired caller is refused at that boundary",
+  "definition": {
+    "id": "TH6977-EXTRA-19",
+    "name": "A known operation outside the paired caller is refused at that boundary",
+    "kind": "refusal_property",
+    "request": {
+      "op": "mrp_discounted_value",
+      "input": {
+        "P": [
+          [
+            "5/7",
+            "2/7"
+          ],
+          [
+            "3/11",
+            "8/11"
+          ]
+        ],
+        "r": [
+          "7/13",
+          "-5/17"
+        ],
+        "mu": [
+          "2/5",
+          "3/5"
+        ],
+        "gamma": "2/3",
+        "n": 12,
+        "phi": [
+          "1/7",
+          "-2/9"
+        ],
+        "shift": "-2/7",
+        "probe": [
+          "0",
+          "0"
+        ],
+        "evidence": "synthetic_only",
+        "authorization": "none"
+      }
+    },
+    "expected": {
+      "ok": false,
+      "error": "caller_scope"
+    },
+    "expected_exit_status": 2,
+    "failed_subject_original_success_credit": 0,
+    "caller_override": "x1-01",
+    "source_plan": "docs/teryn-halewick/v697-v7/plan/additional-test-plan.json"
+  },
+  "definition_sha256": "f0b5780f7f2faa5d8d0b5609dd6762b4d3a308e74679b4270b5e476d3a6818d0",
+  "caller": "docs/teryn-halewick/v697-v7/x1/runners/ghc_family_mrp_pair_x1_1.txt",
+  "core_sha256": "a6694f7b2ff116f33ed1ea6f3cc1030e9134da803709671d337e921345d2ebd2",
+  "extension_sha256": "cf98b3df631b8cdce7b910723f800ed11dce475dd83613acaf32785ea84a16c3",
+  "process": {
+    "exit_status": 2,
+    "signal": null,
+    "stdout": "{\"ok\":false,\"error\":\"caller_scope\"}\n",
+    "stderr": "",
+    "envelope": {
+      "ok": false,
+      "error": "caller_scope"
+    },
+    "parse_error": null,
+    "process_error": null,
+    "stdin_bytes": 242,
+    "stdin_sha256": "3895e42a95938d7ac731df67d92649081a8dac4b4e803ae0468c694bcbd82c89",
+    "stdout_sha256": "6315e31dbf2bebaf58ce9dddcd8fa8ad4185f466bde8edaf11be46daa973b40d",
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "second_process": null,
+  "full_envelope_match": true,
+  "specific_property_pass": true,
+  "original_request_preserved": true,
+  "predicate_pass": true,
+  "independent_reproduction": false
+}

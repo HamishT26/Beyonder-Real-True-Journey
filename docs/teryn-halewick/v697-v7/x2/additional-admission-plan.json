@@ -1,0 +1,316 @@
+{
+  "schema": "ghc.family.teryn-v697-v7.extra-admission-plan.v1",
+  "utc": "2026-09-18T07:55:26.734Z",
+  "new_zealand": "Friday, 18 September 2026 at 7:55:26 pm NZST",
+  "defined_before_execution": true,
+  "count": 7,
+  "reason": "The x1 implementation made the frozen probability, horizon, token, byte and nesting limits concrete. These new adverse subjects explicitly exercise those boundaries without replaying a successful contract.",
+  "rows": [
+    {
+      "id": "TH6977-ADMISSION-01",
+      "name": "Negative transition probability is outside the model profile",
+      "kind": "refusal_property",
+      "request": {
+        "op": "mrp_profile",
+        "input": {
+          "P": [
+            [
+              "2",
+              "-1"
+            ],
+            [
+              "3/11",
+              "8/11"
+            ]
+          ],
+          "r": [
+            "7/13",
+            "-5/17"
+          ],
+          "mu": [
+            "2/5",
+            "3/5"
+          ],
+          "gamma": "0",
+          "n": 12,
+          "phi": [
+            "1/7",
+            "-2/9"
+          ],
+          "shift": "-2/7",
+          "probe": [
+            "0",
+            "0"
+          ],
+          "evidence": "synthetic_only",
+          "authorization": "none"
+        }
+      },
+      "expected": {
+        "ok": false,
+        "error": "probability_bounds"
+      },
+      "expected_exit_status": 2,
+      "failed_subject_original_success_credit": 0
+    },
+    {
+      "id": "TH6977-ADMISSION-02",
+      "name": "A transition row with missing mass is refused",
+      "kind": "refusal_property",
+      "request": {
+        "op": "mrp_profile",
+        "input": {
+          "P": [
+            [
+              "1/4",
+              "1/4"
+            ],
+            [
+              "3/11",
+              "8/11"
+            ]
+          ],
+          "r": [
+            "7/13",
+            "-5/17"
+          ],
+          "mu": [
+            "2/5",
+            "3/5"
+          ],
+          "gamma": "0",
+          "n": 12,
+          "phi": [
+            "1/7",
+            "-2/9"
+          ],
+          "shift": "-2/7",
+          "probe": [
+            "0",
+            "0"
+          ],
+          "evidence": "synthetic_only",
+          "authorization": "none"
+        }
+      },
+      "expected": {
+        "ok": false,
+        "error": "probability_bounds"
+      },
+      "expected_exit_status": 2,
+      "failed_subject_original_success_credit": 0
+    },
+    {
+      "id": "TH6977-ADMISSION-03",
+      "name": "An initial vector with missing mass is refused",
+      "kind": "refusal_property",
+      "request": {
+        "op": "mrp_profile",
+        "input": {
+          "P": [
+            [
+              "5/7",
+              "2/7"
+            ],
+            [
+              "3/11",
+              "8/11"
+            ]
+          ],
+          "r": [
+            "7/13",
+            "-5/17"
+          ],
+          "mu": [
+            "1/4",
+            "1/4"
+          ],
+          "gamma": "0",
+          "n": 12,
+          "phi": [
+            "1/7",
+            "-2/9"
+          ],
+          "shift": "-2/7",
+          "probe": [
+            "0",
+            "0"
+          ],
+          "evidence": "synthetic_only",
+          "authorization": "none"
+        }
+      },
+      "expected": {
+        "ok": false,
+        "error": "probability_bounds"
+      },
+      "expected_exit_status": 2,
+      "failed_subject_original_success_credit": 0
+    },
+    {
+      "id": "TH6977-ADMISSION-04",
+      "name": "A horizon beyond the declared budget is refused",
+      "kind": "refusal_property",
+      "request": {
+        "op": "mrp_profile",
+        "input": {
+          "P": [
+            [
+              "5/7",
+              "2/7"
+            ],
+            [
+              "3/11",
+              "8/11"
+            ]
+          ],
+          "r": [
+            "7/13",
+            "-5/17"
+          ],
+          "mu": [
+            "2/5",
+            "3/5"
+          ],
+          "gamma": "0",
+          "n": 33,
+          "phi": [
+            "1/7",
+            "-2/9"
+          ],
+          "shift": "-2/7",
+          "probe": [
+            "0",
+            "0"
+          ],
+          "evidence": "synthetic_only",
+          "authorization": "none"
+        }
+      },
+      "expected": {
+        "ok": false,
+        "error": "horizon_bounds"
+      },
+      "expected_exit_status": 2,
+      "failed_subject_original_success_credit": 0
+    },
+    {
+      "id": "TH6977-ADMISSION-05",
+      "name": "An overlong integer fraction token is refused without arithmetic evaluation",
+      "kind": "refusal_property",
+      "request": {
+        "op": "mrp_profile",
+        "input": {
+          "P": [
+            [
+              "5/7",
+              "2/7"
+            ],
+            [
+              "3/11",
+              "8/11"
+            ]
+          ],
+          "r": [
+            "11111111111111111111111111111111111111111111111111111111111111111",
+            "-5/17"
+          ],
+          "mu": [
+            "2/5",
+            "3/5"
+          ],
+          "gamma": "0",
+          "n": 12,
+          "phi": [
+            "1/7",
+            "-2/9"
+          ],
+          "shift": "-2/7",
+          "probe": [
+            "0",
+            "0"
+          ],
+          "evidence": "synthetic_only",
+          "authorization": "none"
+        }
+      },
+      "expected": {
+        "ok": false,
+        "error": "rational_format"
+      },
+      "expected_exit_status": 2,
+      "failed_subject_original_success_credit": 0
+    },
+    {
+      "id": "TH6977-ADMISSION-06",
+      "name": "An oversized UTF-8 request is refused before parsing",
+      "kind": "refusal_property",
+      "request": {
+        "op": "mrp_profile",
+        "input": {
+          "P": [
+            [
+              "5/7",
+              "2/7"
+            ],
+            [
+              "3/11",
+              "8/11"
+            ]
+          ],
+          "r": [
+            "7/13",
+            "-5/17"
+          ],
+          "mu": [
+            "2/5",
+            "3/5"
+          ],
+          "gamma": "0",
+          "n": 12,
+          "phi": [
+            "1/7",
+            "-2/9"
+          ],
+          "shift": "-2/7",
+          "probe": [
+            "0",
+            "0"
+          ],
+          "evidence": "synthetic_only",
+          "authorization": "none"
+        }
+      },
+      "stdin_recipe": {
+        "kind": "json_plus_spaces",
+        "space_bytes": 1048577
+      },
+      "expected": {
+        "ok": false,
+        "error": "input_budget"
+      },
+      "expected_exit_status": 2,
+      "failed_subject_original_success_credit": 0
+    },
+    {
+      "id": "TH6977-ADMISSION-07",
+      "name": "Excessive JSON nesting is refused at the decoder boundary",
+      "kind": "refusal_property",
+      "request": null,
+      "stdin_recipe": {
+        "kind": "nested_arrays",
+        "depth": 65,
+        "leaf": 0
+      },
+      "expected": {
+        "ok": false,
+        "error": "json_depth"
+      },
+      "expected_exit_status": 2,
+      "failed_subject_original_success_credit": 0
+    }
+  ],
+  "original_planning_file_unchanged": true,
+  "source_or_successful_tranche_replay": false,
+  "boundary": "Names, roles, hopes and pronouns are relational working language only. These are bounded same-owner synthetic computations, not consciousness/personhood, identity continuity, qualification, independent reproduction, empirical GMUT confirmation, production THOS/Freed ID, complete privacy/accessibility/security, professional, legal, cultural, affected-party or Maori authority, Theory-of-Everything proof, canon or Stage 20 readiness. Maori concepts remain under Maori authority. NOT_READY_FOR_STAGE_20."
+}

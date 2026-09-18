@@ -1,0 +1,5 @@
+'use strict';
+const core=require(process.argv[2]);
+const extensionPath=process.argv[3];
+const extra=extensionPath&&extensionPath!=='-'?require(extensionPath)(core):{};
+core.cli({...core.operations,...extra},["mrp_discounted_value","mrp_residual_bound"]);

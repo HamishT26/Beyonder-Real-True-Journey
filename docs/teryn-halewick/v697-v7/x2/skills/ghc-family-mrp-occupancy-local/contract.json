@@ -1,0 +1,76 @@
+{
+  "operation": "mrp_occupancy",
+  "scope": "finite_synthetic_two_state_markov_rewards",
+  "source_definition": "docs/teryn-halewick/v697-v7/plan/proposals/mrp_occupancy.json",
+  "source_definition_file_sha256": "4585469d26d04a28831cea8616a937a3f271e0844aed64ac6fa09d090db1e066",
+  "request_profile": "docs/teryn-halewick/v697-v7/plan/request-profile.json",
+  "paired_caller": "docs/teryn-halewick/v697-v7/x2/runners/ghc_family_mrp_pair_x2_2.txt",
+  "example_request": {
+    "op": "mrp_occupancy",
+    "input": {
+      "P": [
+        [
+          "36/49",
+          "13/49"
+        ],
+        [
+          "14/53",
+          "39/53"
+        ]
+      ],
+      "r": [
+        "23/13",
+        "-15/17"
+      ],
+      "mu": [
+        "2/7",
+        "5/7"
+      ],
+      "gamma": "3/7",
+      "n": 10,
+      "phi": [
+        "1/13",
+        "-2/17"
+      ],
+      "shift": "5/19",
+      "probe": [
+        "0",
+        "1/23"
+      ],
+      "evidence": "synthetic_only",
+      "authorization": "none"
+    }
+  },
+  "expected_complete_envelope": {
+    "ok": true,
+    "op": "mrp_occupancy",
+    "data": {
+      "normalizing_factor": "4/7",
+      "occupancy": [
+        "5026/14513",
+        "9487/14513"
+      ],
+      "mass": "1",
+      "flow_residual": [
+        "0",
+        "0"
+      ]
+    },
+    "core_disposition": "completed",
+    "scope": "finite_synthetic_two_state_markov_rewards"
+  },
+  "expected_accepting_status": 0,
+  "adverse_mutation": {
+    "field": "gamma",
+    "replacement": "1"
+  },
+  "expected_refusal": {
+    "ok": false,
+    "error": "discount_bounds"
+  },
+  "expected_refusal_status": 2,
+  "original_failed_subject_credit": 0,
+  "source_seed_completion_credit": 0,
+  "protected_limits": "Include the factor one minus discount so occupancy has total mass one. This vector depends on the initial law and discount and is not generally a stationary distribution.",
+  "boundary": "Names, roles, hopes and pronouns are relational working language only. These are bounded same-owner synthetic computations, not consciousness/personhood, identity continuity, qualification, independent reproduction, empirical GMUT confirmation, production THOS/Freed ID, complete privacy/accessibility/security, professional, legal, cultural, affected-party or Maori authority, Theory-of-Everything proof, canon or Stage 20 readiness. Maori concepts remain under Maori authority. NOT_READY_FOR_STAGE_20."
+}

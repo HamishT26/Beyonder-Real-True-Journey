@@ -1,0 +1,80 @@
+{
+  "operation": "mrp_reward_translate",
+  "scope": "finite_synthetic_two_state_markov_rewards",
+  "source_definition": "docs/teryn-halewick/v697-v7/plan/proposals/mrp_reward_translate.json",
+  "source_definition_file_sha256": "49d3233b9c03bfd29bd7b69acfda30e111f9184b2c3245ec92cd04e255a0b8b0",
+  "request_profile": "docs/teryn-halewick/v697-v7/plan/request-profile.json",
+  "paired_caller": "docs/teryn-halewick/v697-v7/x2/runners/ghc_family_mrp_pair_x2_3.txt",
+  "example_request": {
+    "op": "mrp_reward_translate",
+    "input": {
+      "P": [
+        [
+          "9/13",
+          "4/13"
+        ],
+        [
+          "17/56",
+          "39/56"
+        ]
+      ],
+      "r": [
+        "2",
+        "-18/17"
+      ],
+      "mu": [
+        "2/7",
+        "5/7"
+      ],
+      "gamma": "3/7",
+      "n": 10,
+      "phi": [
+        "1/13",
+        "-2/17"
+      ],
+      "shift": "5/19",
+      "probe": [
+        "0",
+        "1/23"
+      ],
+      "evidence": "synthetic_only",
+      "authorization": "none"
+    }
+  },
+  "expected_complete_envelope": {
+    "ok": true,
+    "op": "mrp_reward_translate",
+    "data": {
+      "shift": "5/19",
+      "translated_reward": [
+        "43/19",
+        "-257/323"
+      ],
+      "translated_value": [
+        "17084347/5487124",
+        "-3055045/5487124"
+      ],
+      "value_increment": [
+        "35/76",
+        "35/76"
+      ],
+      "identity_holds": true
+    },
+    "core_disposition": "completed",
+    "scope": "finite_synthetic_two_state_markov_rewards"
+  },
+  "expected_accepting_status": 0,
+  "adverse_mutation": {
+    "field": "gamma",
+    "replacement": "1"
+  },
+  "expected_refusal": {
+    "ok": false,
+    "error": "discount_bounds"
+  },
+  "expected_refusal_status": 2,
+  "original_failed_subject_credit": 0,
+  "source_seed_completion_credit": 0,
+  "protected_limits": "A constant reward shift is multiplied by the reciprocal of one minus discount in every state. Preserve its sign and distinguish a change of representation from measured utility.",
+  "boundary": "Names, roles, hopes and pronouns are relational working language only. These are bounded same-owner synthetic computations, not consciousness/personhood, identity continuity, qualification, independent reproduction, empirical GMUT confirmation, production THOS/Freed ID, complete privacy/accessibility/security, professional, legal, cultural, affected-party or Maori authority, Theory-of-Everything proof, canon or Stage 20 readiness. Maori concepts remain under Maori authority. NOT_READY_FOR_STAGE_20."
+}

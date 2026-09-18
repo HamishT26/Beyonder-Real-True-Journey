@@ -1,0 +1,114 @@
+{
+  "id": "TH6977-EXTRA-12",
+  "name": "Negative reward translation keeps the signed geometric increment",
+  "definition": {
+    "id": "TH6977-EXTRA-12",
+    "name": "Negative reward translation keeps the signed geometric increment",
+    "kind": "accepting_property",
+    "request": {
+      "op": "mrp_reward_translate",
+      "input": {
+        "P": [
+          [
+            "5/7",
+            "2/7"
+          ],
+          [
+            "3/11",
+            "8/11"
+          ]
+        ],
+        "r": [
+          "7/13",
+          "-5/17"
+        ],
+        "mu": [
+          "2/5",
+          "3/5"
+        ],
+        "gamma": "2/3",
+        "n": 12,
+        "phi": [
+          "1/7",
+          "-2/9"
+        ],
+        "shift": "-5/7",
+        "probe": [
+          "0",
+          "0"
+        ],
+        "evidence": "synthetic_only",
+        "authorization": "none"
+      }
+    },
+    "expected": {
+      "ok": true,
+      "op": "mrp_reward_translate",
+      "data": {
+        "shift": "-5/7",
+        "translated_reward": [
+          "-16/91",
+          "-120/119"
+        ],
+        "translated_value": [
+          "-303024/252161",
+          "-600552/252161"
+        ],
+        "value_increment": [
+          "-15/7",
+          "-15/7"
+        ],
+        "identity_holds": true
+      },
+      "core_disposition": "completed",
+      "scope": "finite_synthetic_two_state_markov_rewards"
+    },
+    "expected_exit_status": 0,
+    "property": "negative_translation",
+    "source_plan": "docs/teryn-halewick/v697-v7/plan/additional-test-plan.json"
+  },
+  "definition_sha256": "42ec18c79f294b84933dd97078f2a148ad5cebd7280df4e7ec7c08530e7cfd82",
+  "caller": "docs/teryn-halewick/v697-v7/x2/runners/ghc_family_mrp_pair_x2_3.txt",
+  "core_sha256": "a6694f7b2ff116f33ed1ea6f3cc1030e9134da803709671d337e921345d2ebd2",
+  "extension_sha256": "cf98b3df631b8cdce7b910723f800ed11dce475dd83613acaf32785ea84a16c3",
+  "process": {
+    "exit_status": 0,
+    "signal": null,
+    "stdout": "{\"ok\":true,\"op\":\"mrp_reward_translate\",\"data\":{\"shift\":\"-5/7\",\"translated_reward\":[\"-16/91\",\"-120/119\"],\"translated_value\":[\"-303024/252161\",\"-600552/252161\"],\"value_increment\":[\"-15/7\",\"-15/7\"],\"identity_holds\":true},\"core_disposition\":\"completed\",\"scope\":\"finite_synthetic_two_state_markov_rewards\"}\n",
+    "stderr": "",
+    "envelope": {
+      "ok": true,
+      "op": "mrp_reward_translate",
+      "data": {
+        "shift": "-5/7",
+        "translated_reward": [
+          "-16/91",
+          "-120/119"
+        ],
+        "translated_value": [
+          "-303024/252161",
+          "-600552/252161"
+        ],
+        "value_increment": [
+          "-15/7",
+          "-15/7"
+        ],
+        "identity_holds": true
+      },
+      "core_disposition": "completed",
+      "scope": "finite_synthetic_two_state_markov_rewards"
+    },
+    "parse_error": null,
+    "process_error": null,
+    "stdin_bytes": 242,
+    "stdin_sha256": "1913c99933e29f5d55d3ebd5f584509d8570cb453928740377850bd641bf882a",
+    "stdout_sha256": "45a3e7dce1ba110f7c92100d86f8f38313f819d1810b2a320505c419a075d604",
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "second_process": null,
+  "full_envelope_match": true,
+  "specific_property_pass": true,
+  "original_request_preserved": true,
+  "predicate_pass": true,
+  "independent_reproduction": false
+}

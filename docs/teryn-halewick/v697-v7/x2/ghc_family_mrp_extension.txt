@@ -1,0 +1,22 @@
+'use strict';
+module.exports=function(core){
+ const {ZERO,ONE,sum,dot,mv,vm,maxAbs,trace}=core;
+ function inverse(c){
+  const a00=ONE.sub(c.gamma.mul(c.P[0][0])),a01=c.gamma.mul(c.P[0][1]).neg(),a10=c.gamma.mul(c.P[1][0]).neg(),a11=ONE.sub(c.gamma.mul(c.P[1][1])),det=a00.mul(a11).sub(a01.mul(a10));
+  if(det.cmp(ZERO)<=0)throw Error('Discounted stochastic operator lost its positive determinant');
+  return[[a11.div(det),a01.neg().div(det)],[a10.neg().div(det),a00.div(det)]];
+ }
+ const value=c=>mv(inverse(c),c.r);
+ return{
+  mrp_discounted_value:c=>{const state_value=value(c),next=mv(c.P,state_value);return{state_value,initial_value:dot(c.mu,state_value),bellman_residual:c.r.map((r,i)=>r.add(c.gamma.mul(next[i])).sub(state_value[i]))};},
+  mrp_residual_bound:c=>{const v=value(c),next=mv(c.P,c.probe),residual=c.r.map((r,i)=>r.add(c.gamma.mul(next[i])).sub(c.probe[i])),max_residual=maxAbs(residual),bound=max_residual.div(ONE.sub(c.gamma)),actual_max_error=maxAbs(v.map((x,i)=>x.sub(c.probe[i])));return{probe:c.probe,residual,max_residual,bound,actual_max_error,bound_holds:actual_max_error.cmp(bound)<=0};},
+  mrp_occupancy:c=>{const normalizing_factor=ONE.sub(c.gamma),occupancy=vm(c.mu,inverse(c)).map(x=>normalizing_factor.mul(x)),next=vm(occupancy,c.P);return{normalizing_factor,occupancy,mass:sum(occupancy),flow_residual:occupancy.map((x,i)=>x.sub(normalizing_factor.mul(c.mu[i])).sub(c.gamma.mul(next[i])))};},
+  mrp_truncation_bound:c=>{const t=trace(c),infinite_return=dot(c.mu,value(c)),absolute_tail=infinite_return.sub(t.finite).abs(),uniform_reward_bound=maxAbs(c.r),tail_bound=uniform_reward_bound.mul(c.gamma.pow(c.n)).div(ONE.sub(c.gamma));return{horizon:c.n,finite_return:t.finite,infinite_return,absolute_tail,uniform_reward_bound,tail_bound,bound_holds:absolute_tail.cmp(tail_bound)<=0};},
+  mrp_potential_shape:c=>{const inv=inverse(c),v=mv(inv,c.r),next=mv(c.P,c.phi),transformed_reward=c.r.map((r,i)=>r.add(c.gamma.mul(next[i])).sub(c.phi[i])),transformed_value=mv(inv,transformed_reward),value_minus_potential=v.map((x,i)=>x.sub(c.phi[i]));return{potential:c.phi,transformed_reward,transformed_value,value_minus_potential,fixed_chain_identity:transformed_value.every((x,i)=>x.eq(value_minus_potential[i])),general_policy_invariance_claim:false};},
+  mrp_reward_translate:c=>{const inv=inverse(c),v=mv(inv,c.r),translated_reward=c.r.map(x=>x.add(c.shift)),translated_value=mv(inv,translated_reward),increment=c.shift.div(ONE.sub(c.gamma)),value_increment=[increment,increment];return{shift:c.shift,translated_reward,translated_value,value_increment,identity_holds:translated_value.every((x,i)=>x.eq(v[i].add(increment)))};},
+  mrp_discount_derivative:c=>{const inv=inverse(c),v=mv(inv,c.r),state_derivative=mv(inv,mv(c.P,v));return{state_derivative,initial_derivative:dot(c.mu,state_derivative),held_fixed:['P','r','mu'],empirical_responsiveness:false};},
+  mrp_accessible_projection:c=>{const v=value(c);return{columns:['state','discount','value'],rows:[0,1].map(i=>[i,c.gamma,v[i]]),complete_accessibility:false,real_observations:0};},
+  mrp_observation_gap:c=>({missing:['transition_count_observations','reward_measurements','sampling_protocol','identifiability_review','independent_validation'],declared_only:true,empirical_confirmation:false,real_observations:0}),
+  mrp_authority_gate:c=>({permitted_scope:'finite_synthetic_record_computation',reserved:['production_control','identity_or_rights_decisions','professional_intervention','affected_party_and_cultural_authority','maori_authority'],executed:false,authority_established:false})
+ };
+};

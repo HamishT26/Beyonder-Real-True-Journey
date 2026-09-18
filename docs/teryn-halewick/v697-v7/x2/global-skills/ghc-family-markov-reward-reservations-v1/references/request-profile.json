@@ -1,0 +1,377 @@
+{
+  "schema": "ghc.family.markov-reward.group.v1",
+  "operations": [
+    "mrp_discount_derivative",
+    "mrp_accessible_projection",
+    "mrp_observation_gap",
+    "mrp_authority_gate"
+  ],
+  "request_keys": [
+    "op",
+    "input"
+  ],
+  "input_keys": [
+    "P",
+    "r",
+    "mu",
+    "gamma",
+    "n",
+    "phi",
+    "shift",
+    "probe",
+    "evidence",
+    "authorization"
+  ],
+  "probability_matrix": "two by two exact rational strings; nonnegative rows summing to one",
+  "initial_distribution": "two nonnegative rational strings summing to one",
+  "discount": "exact rational string, zero inclusive and one exclusive",
+  "horizon": "integer from 0 through 32",
+  "fraction_character_cap": 64,
+  "input_byte_cap": 1048576,
+  "decoded_depth_cap": 64,
+  "evidence": "synthetic_only",
+  "authorization": "none",
+  "closed_fields": true,
+  "duplicate_decoded_keys": "refuse",
+  "nonfinite_json": "refuse",
+  "utf8": "strict",
+  "status": {
+    "success": 0,
+    "refusal": 2
+  },
+  "global_bank_alias": "ghc-family-markov-reward-v1",
+  "caller": "ghc_family_mrp_reservations.txt",
+  "core": "ghc_family_mrp_core.txt",
+  "extension": "ghc_family_mrp_extension.txt",
+  "fresh_examples": [
+    {
+      "id": "TH6977-GLOBAL-17",
+      "kind": "global",
+      "op": "mrp_discount_derivative",
+      "request": {
+        "op": "mrp_discount_derivative",
+        "input": {
+          "P": [
+            [
+              "52/69",
+              "17/69"
+            ],
+            [
+              "18/73",
+              "55/73"
+            ]
+          ],
+          "r": [
+            "27/13",
+            "-19/17"
+          ],
+          "mu": [
+            "4/9",
+            "5/9"
+          ],
+          "gamma": "5/11",
+          "n": 11,
+          "phi": [
+            "1/13",
+            "-2/17"
+          ],
+          "shift": "5/19",
+          "probe": [
+            "0",
+            "1/23"
+          ],
+          "evidence": "synthetic_only",
+          "authorization": "none"
+        }
+      },
+      "expected": {
+        "ok": true,
+        "op": "mrp_discount_derivative",
+        "data": {
+          "state_derivative": [
+            "2536540839877/850783643892",
+            "3558540456581/14463321946164"
+          ],
+          "initial_derivative": "3020277450707/2066188849452",
+          "held_fixed": [
+            "P",
+            "r",
+            "mu"
+          ],
+          "empirical_responsiveness": false
+        },
+        "core_disposition": "completed",
+        "scope": "finite_synthetic_two_state_markov_rewards"
+      },
+      "adverse_expected": {
+        "ok": false,
+        "error": "discount_bounds"
+      }
+    },
+    {
+      "id": "TH6977-GLOBAL-18",
+      "kind": "global",
+      "op": "mrp_accessible_projection",
+      "request": {
+        "op": "mrp_accessible_projection",
+        "input": {
+          "P": [
+            [
+              "26/35",
+              "9/35"
+            ],
+            [
+              "19/74",
+              "55/74"
+            ]
+          ],
+          "r": [
+            "28/13",
+            "-20/17"
+          ],
+          "mu": [
+            "4/9",
+            "5/9"
+          ],
+          "gamma": "5/11",
+          "n": 11,
+          "phi": [
+            "1/13",
+            "-2/17"
+          ],
+          "shift": "5/19",
+          "probe": [
+            "0",
+            "1/23"
+          ],
+          "evidence": "synthetic_only",
+          "authorization": "none"
+        }
+      },
+      "expected": {
+        "ok": true,
+        "op": "mrp_accessible_projection",
+        "data": {
+          "columns": [
+            "state",
+            "discount",
+            "value"
+          ],
+          "rows": [
+            [
+              0,
+              "5/11",
+              "388058/127959"
+            ],
+            [
+              1,
+              "5/11",
+              "-9350/7527"
+            ]
+          ],
+          "complete_accessibility": false,
+          "real_observations": 0
+        },
+        "core_disposition": "represented",
+        "scope": "finite_synthetic_two_state_markov_rewards"
+      },
+      "adverse_expected": {
+        "ok": false,
+        "error": "discount_bounds"
+      }
+    },
+    {
+      "id": "TH6977-GLOBAL-19",
+      "kind": "global",
+      "op": "mrp_observation_gap",
+      "request": {
+        "op": "mrp_observation_gap",
+        "input": {
+          "P": [
+            [
+              "52/71",
+              "19/71"
+            ],
+            [
+              "4/15",
+              "11/15"
+            ]
+          ],
+          "r": [
+            "29/13",
+            "-21/17"
+          ],
+          "mu": [
+            "4/9",
+            "5/9"
+          ],
+          "gamma": "5/11",
+          "n": 11,
+          "phi": [
+            "1/13",
+            "-2/17"
+          ],
+          "shift": "5/19",
+          "probe": [
+            "0",
+            "1/23"
+          ],
+          "evidence": "synthetic_only",
+          "authorization": "none"
+        }
+      },
+      "expected": {
+        "ok": true,
+        "op": "mrp_observation_gap",
+        "data": {
+          "missing": [
+            "transition_count_observations",
+            "reward_measurements",
+            "sampling_protocol",
+            "identifiability_review",
+            "independent_validation"
+          ],
+          "declared_only": true,
+          "empirical_confirmation": false,
+          "real_observations": 0
+        },
+        "core_disposition": "open_gap",
+        "scope": "finite_synthetic_two_state_markov_rewards"
+      },
+      "adverse_expected": {
+        "ok": false,
+        "error": "discount_bounds"
+      }
+    },
+    {
+      "id": "TH6977-GLOBAL-20",
+      "kind": "global",
+      "op": "mrp_authority_gate",
+      "request": {
+        "op": "mrp_authority_gate",
+        "input": {
+          "P": [
+            [
+              "13/18",
+              "5/18"
+            ],
+            [
+              "21/76",
+              "55/76"
+            ]
+          ],
+          "r": [
+            "30/13",
+            "-22/17"
+          ],
+          "mu": [
+            "4/9",
+            "5/9"
+          ],
+          "gamma": "5/11",
+          "n": 11,
+          "phi": [
+            "1/13",
+            "-2/17"
+          ],
+          "shift": "5/19",
+          "probe": [
+            "0",
+            "1/23"
+          ],
+          "evidence": "synthetic_only",
+          "authorization": "none"
+        }
+      },
+      "expected": {
+        "ok": true,
+        "op": "mrp_authority_gate",
+        "data": {
+          "permitted_scope": "finite_synthetic_record_computation",
+          "reserved": [
+            "production_control",
+            "identity_or_rights_decisions",
+            "professional_intervention",
+            "affected_party_and_cultural_authority",
+            "maori_authority"
+          ],
+          "executed": false,
+          "authority_established": false
+        },
+        "core_disposition": "exact_gate",
+        "scope": "finite_synthetic_two_state_markov_rewards"
+      },
+      "adverse_expected": {
+        "ok": false,
+        "error": "discount_bounds"
+      }
+    }
+  ],
+  "source_units": [
+    {
+      "operation": "mrp_discount_derivative",
+      "path": "docs/teryn-halewick/v697-v7/x2/skills/ghc-family-mrp-discount-derivative-local/SKILL.md",
+      "packaged_path": "references/ghc-family-mrp-discount-derivative-local/SKILL.md",
+      "sha256": "e28ed0020ec3220b7f154a7a3b9af2aa5c245677d3b7692ac198568d1af2efd3",
+      "bytes": 1864,
+      "source_preserved_complete": true
+    },
+    {
+      "operation": "mrp_discount_derivative",
+      "path": "docs/teryn-halewick/v697-v7/x2/skills/ghc-family-mrp-discount-derivative-local/contract.json",
+      "packaged_path": "references/ghc-family-mrp-discount-derivative-local/contract.json",
+      "sha256": "d109ff37e311a14ea623d364fb17e3a0cbaca396b597f14830258ba6fd3ee404",
+      "bytes": 2540,
+      "source_preserved_complete": true
+    },
+    {
+      "operation": "mrp_accessible_projection",
+      "path": "docs/teryn-halewick/v697-v7/x2/skills/ghc-family-mrp-accessible-projection-local/SKILL.md",
+      "packaged_path": "references/ghc-family-mrp-accessible-projection-local/SKILL.md",
+      "sha256": "adcdcb6ac2688686890143cf7fac509bf23e8ce6f705f255264ddfb9498bfb31",
+      "bytes": 1872,
+      "source_preserved_complete": true
+    },
+    {
+      "operation": "mrp_accessible_projection",
+      "path": "docs/teryn-halewick/v697-v7/x2/skills/ghc-family-mrp-accessible-projection-local/contract.json",
+      "packaged_path": "references/ghc-family-mrp-accessible-projection-local/contract.json",
+      "sha256": "ad8814bb2720f7653147e2da993e265aefba36468cd3bc5321f6bb3db6245098",
+      "bytes": 2600,
+      "source_preserved_complete": true
+    },
+    {
+      "operation": "mrp_observation_gap",
+      "path": "docs/teryn-halewick/v697-v7/x2/skills/ghc-family-mrp-observation-gap-local/SKILL.md",
+      "packaged_path": "references/ghc-family-mrp-observation-gap-local/SKILL.md",
+      "sha256": "c55f79c9fc1c300d96b3677b7aa0b72d96c5f06d9f599b91ce8cfd6427c24c4d",
+      "bytes": 1870,
+      "source_preserved_complete": true
+    },
+    {
+      "operation": "mrp_observation_gap",
+      "path": "docs/teryn-halewick/v697-v7/x2/skills/ghc-family-mrp-observation-gap-local/contract.json",
+      "packaged_path": "references/ghc-family-mrp-observation-gap-local/contract.json",
+      "sha256": "5831a38f25dd8747f2b6a21cda7490062df2c42325ad2b812f6360e6c587b021",
+      "bytes": 2536,
+      "source_preserved_complete": true
+    },
+    {
+      "operation": "mrp_authority_gate",
+      "path": "docs/teryn-halewick/v697-v7/x2/skills/ghc-family-mrp-authority-gate-local/SKILL.md",
+      "packaged_path": "references/ghc-family-mrp-authority-gate-local/SKILL.md",
+      "sha256": "303598fb8ada41c5723e40483fd1763e42c253c4d09c7ebfcff3337d2fe3330c",
+      "bytes": 1842,
+      "source_preserved_complete": true
+    },
+    {
+      "operation": "mrp_authority_gate",
+      "path": "docs/teryn-halewick/v697-v7/x2/skills/ghc-family-mrp-authority-gate-local/contract.json",
+      "packaged_path": "references/ghc-family-mrp-authority-gate-local/contract.json",
+      "sha256": "7b63420827f0f34fa4238d3bcacac060259e94dbdcae00d47d908edf81247f7d",
+      "bytes": 2594,
+      "source_preserved_complete": true
+    }
+  ],
+  "boundary": "Names, roles, hopes and pronouns are relational working language only. These are bounded same-owner synthetic computations, not consciousness/personhood, identity continuity, qualification, independent reproduction, empirical GMUT confirmation, production THOS/Freed ID, complete privacy/accessibility/security, professional, legal, cultural, affected-party or Maori authority, Theory-of-Everything proof, canon or Stage 20 readiness. Maori concepts remain under Maori authority. NOT_READY_FOR_STAGE_20."
+}

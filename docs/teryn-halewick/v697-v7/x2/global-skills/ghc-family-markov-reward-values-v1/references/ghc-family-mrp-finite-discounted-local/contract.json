@@ -1,0 +1,84 @@
+{
+  "operation": "mrp_finite_discounted",
+  "scope": "finite_synthetic_two_state_markov_rewards",
+  "source_definition": "docs/teryn-halewick/v697-v7/plan/proposals/mrp_finite_discounted.json",
+  "source_definition_file_sha256": "86b465b9a24cc8c85a7b702efbd9286932151aa19179b0599f88079693f5f0be",
+  "request_profile": "docs/teryn-halewick/v697-v7/plan/request-profile.json",
+  "paired_caller": "docs/teryn-halewick/v697-v7/x1/runners/ghc_family_mrp_pair_x1_4.txt",
+  "example_request": {
+    "op": "mrp_finite_discounted",
+    "input": {
+      "P": [
+        [
+          "36/43",
+          "7/43"
+        ],
+        [
+          "8/47",
+          "39/47"
+        ]
+      ],
+      "r": [
+        "17/13",
+        "-9/17"
+      ],
+      "mu": [
+        "2/7",
+        "5/7"
+      ],
+      "gamma": "3/7",
+      "n": 10,
+      "phi": [
+        "1/13",
+        "-2/17"
+      ],
+      "shift": "5/19",
+      "probe": [
+        "0",
+        "1/23"
+      ],
+      "evidence": "synthetic_only",
+      "authorization": "none"
+    }
+  },
+  "expected_complete_envelope": {
+    "ok": true,
+    "op": "mrp_finite_discounted",
+    "data": {
+      "horizon": 10,
+      "return": "686046620777036479412365784318444350618/5016160863440993475190482224642335460407",
+      "terms": [
+        "-1/221",
+        "178725/3126487",
+        "1830892347/44230411589",
+        "14122711425429/625727632749583",
+        "97847012364173019/8852168820508350701",
+        "91809744643258292835/17890233186247376766721",
+        "4096359036727541738370747/1771651902200891473831613909",
+        "25644465410201364415798949589/25063559460436011680295841970623",
+        "9338289332308409890993175666667/20857304452164015131832075079906093",
+        "975724734333284950860668807058872565/5016160863440993475190482224642335460407"
+      ],
+      "next_distribution": [
+        "4036023120829191088993745312531240/7957216512061183497034280548187407",
+        "3921193391231992408040535235656167/7957216512061183497034280548187407"
+      ]
+    },
+    "core_disposition": "completed",
+    "scope": "finite_synthetic_two_state_markov_rewards"
+  },
+  "expected_accepting_status": 0,
+  "adverse_mutation": {
+    "field": "gamma",
+    "replacement": "1"
+  },
+  "expected_refusal": {
+    "ok": false,
+    "error": "discount_bounds"
+  },
+  "expected_refusal_status": 2,
+  "original_failed_subject_credit": 0,
+  "source_seed_completion_credit": 0,
+  "protected_limits": "A zero horizon has no terms. At zero discount the time-zero term still has weight one. The result is a finite sum, distinct from an infinite discounted value.",
+  "boundary": "Names, roles, hopes and pronouns are relational working language only. These are bounded same-owner synthetic computations, not consciousness/personhood, identity continuity, qualification, independent reproduction, empirical GMUT confirmation, production THOS/Freed ID, complete privacy/accessibility/security, professional, legal, cultural, affected-party or Maori authority, Theory-of-Everything proof, canon or Stage 20 readiness. Maori concepts remain under Maori authority. NOT_READY_FOR_STAGE_20."
+}

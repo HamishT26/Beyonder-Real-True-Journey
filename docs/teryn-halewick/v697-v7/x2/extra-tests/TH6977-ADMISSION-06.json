@@ -1,0 +1,82 @@
+{
+  "id": "TH6977-ADMISSION-06",
+  "name": "An oversized UTF-8 request is refused before parsing",
+  "definition": {
+    "id": "TH6977-ADMISSION-06",
+    "name": "An oversized UTF-8 request is refused before parsing",
+    "kind": "refusal_property",
+    "request": {
+      "op": "mrp_profile",
+      "input": {
+        "P": [
+          [
+            "5/7",
+            "2/7"
+          ],
+          [
+            "3/11",
+            "8/11"
+          ]
+        ],
+        "r": [
+          "7/13",
+          "-5/17"
+        ],
+        "mu": [
+          "2/5",
+          "3/5"
+        ],
+        "gamma": "0",
+        "n": 12,
+        "phi": [
+          "1/7",
+          "-2/9"
+        ],
+        "shift": "-2/7",
+        "probe": [
+          "0",
+          "0"
+        ],
+        "evidence": "synthetic_only",
+        "authorization": "none"
+      }
+    },
+    "stdin_recipe": {
+      "kind": "json_plus_spaces",
+      "space_bytes": 1048577
+    },
+    "expected": {
+      "ok": false,
+      "error": "input_budget"
+    },
+    "expected_exit_status": 2,
+    "failed_subject_original_success_credit": 0,
+    "source_plan": "docs/teryn-halewick/v697-v7/x2/additional-admission-plan.json"
+  },
+  "definition_sha256": "7aaacddbd4f58d11a416a50826fb471bbb0dc0736da057a52a46edfa3b05d71f",
+  "caller": "docs/teryn-halewick/v697-v7/x1/runners/ghc_family_mrp_pair_x1_1.txt",
+  "core_sha256": "a6694f7b2ff116f33ed1ea6f3cc1030e9134da803709671d337e921345d2ebd2",
+  "extension_sha256": "cf98b3df631b8cdce7b910723f800ed11dce475dd83613acaf32785ea84a16c3",
+  "process": {
+    "exit_status": 2,
+    "signal": null,
+    "stdout": "{\"ok\":false,\"error\":\"input_budget\"}\n",
+    "stderr": "",
+    "envelope": {
+      "ok": false,
+      "error": "input_budget"
+    },
+    "parse_error": null,
+    "process_error": null,
+    "stdin_bytes": 1048808,
+    "stdin_sha256": "b73ea30fb9ac73f311a2121517cb4fd751f8f26b8a8d4c1721605dbf9f9b1fab",
+    "stdout_sha256": "87e5c7fd25b5a338bbcef80bcdce95d88a23099fae2edeed65b57187e5636027",
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "second_process": null,
+  "full_envelope_match": true,
+  "specific_property_pass": true,
+  "original_request_preserved": true,
+  "predicate_pass": true,
+  "independent_reproduction": false
+}

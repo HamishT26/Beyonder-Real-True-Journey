@@ -1,0 +1,444 @@
+{
+  "schema": "ghc.family.markov-reward.group.v1",
+  "operations": [
+    "mrp_one_step",
+    "mrp_transition_power",
+    "mrp_distribution_power",
+    "mrp_reward_trace"
+  ],
+  "request_keys": [
+    "op",
+    "input"
+  ],
+  "input_keys": [
+    "P",
+    "r",
+    "mu",
+    "gamma",
+    "n",
+    "phi",
+    "shift",
+    "probe",
+    "evidence",
+    "authorization"
+  ],
+  "probability_matrix": "two by two exact rational strings; nonnegative rows summing to one",
+  "initial_distribution": "two nonnegative rational strings summing to one",
+  "discount": "exact rational string, zero inclusive and one exclusive",
+  "horizon": "integer from 0 through 32",
+  "fraction_character_cap": 64,
+  "input_byte_cap": 1048576,
+  "decoded_depth_cap": 64,
+  "evidence": "synthetic_only",
+  "authorization": "none",
+  "closed_fields": true,
+  "duplicate_decoded_keys": "refuse",
+  "nonfinite_json": "refuse",
+  "utf8": "strict",
+  "status": {
+    "success": 0,
+    "refusal": 2
+  },
+  "global_bank_alias": "ghc-family-markov-reward-v1",
+  "caller": "ghc_family_mrp_transients.txt",
+  "core": "ghc_family_mrp_core.txt",
+  "extension": "ghc_family_mrp_extension.txt",
+  "fresh_examples": [
+    {
+      "id": "TH6977-GLOBAL-03",
+      "kind": "global",
+      "op": "mrp_one_step",
+      "request": {
+        "op": "mrp_one_step",
+        "input": {
+          "P": [
+            [
+              "52/55",
+              "3/55"
+            ],
+            [
+              "4/59",
+              "55/59"
+            ]
+          ],
+          "r": [
+            "1",
+            "-5/17"
+          ],
+          "mu": [
+            "4/9",
+            "5/9"
+          ],
+          "gamma": "5/11",
+          "n": 11,
+          "phi": [
+            "1/13",
+            "-2/17"
+          ],
+          "shift": "5/19",
+          "probe": [
+            "0",
+            "1/23"
+          ],
+          "evidence": "synthetic_only",
+          "authorization": "none"
+        }
+      },
+      "expected": {
+        "ok": true,
+        "op": "mrp_one_step",
+        "data": {
+          "distribution": [
+            "13372/29205",
+            "15833/29205"
+          ],
+          "mass": "1"
+        },
+        "core_disposition": "completed",
+        "scope": "finite_synthetic_two_state_markov_rewards"
+      },
+      "adverse_expected": {
+        "ok": false,
+        "error": "discount_bounds"
+      }
+    },
+    {
+      "id": "TH6977-GLOBAL-04",
+      "kind": "global",
+      "op": "mrp_transition_power",
+      "request": {
+        "op": "mrp_transition_power",
+        "input": {
+          "P": [
+            [
+              "13/14",
+              "1/14"
+            ],
+            [
+              "1/12",
+              "11/12"
+            ]
+          ],
+          "r": [
+            "14/13",
+            "-6/17"
+          ],
+          "mu": [
+            "4/9",
+            "5/9"
+          ],
+          "gamma": "5/11",
+          "n": 11,
+          "phi": [
+            "1/13",
+            "-2/17"
+          ],
+          "shift": "5/19",
+          "probe": [
+            "0",
+            "1/23"
+          ],
+          "evidence": "synthetic_only",
+          "authorization": "none"
+        }
+      },
+      "expected": {
+        "ok": true,
+        "op": "mrp_transition_power",
+        "data": {
+          "horizon": 11,
+          "transition": [
+            [
+              "149627256463716504563/244861720272373284864",
+              "95234463808656780301/244861720272373284864"
+            ],
+            [
+              "95234463808656780301/209881474519177101312",
+              "114647010710520321011/209881474519177101312"
+            ]
+          ],
+          "row_sums": [
+            "1",
+            "1"
+          ]
+        },
+        "core_disposition": "completed",
+        "scope": "finite_synthetic_two_state_markov_rewards"
+      },
+      "adverse_expected": {
+        "ok": false,
+        "error": "discount_bounds"
+      }
+    },
+    {
+      "id": "TH6977-GLOBAL-05",
+      "kind": "global",
+      "op": "mrp_distribution_power",
+      "request": {
+        "op": "mrp_distribution_power",
+        "input": {
+          "P": [
+            [
+              "52/57",
+              "5/57"
+            ],
+            [
+              "6/61",
+              "55/61"
+            ]
+          ],
+          "r": [
+            "15/13",
+            "-7/17"
+          ],
+          "mu": [
+            "4/9",
+            "5/9"
+          ],
+          "gamma": "5/11",
+          "n": 11,
+          "phi": [
+            "1/13",
+            "-2/17"
+          ],
+          "shift": "5/19",
+          "probe": [
+            "0",
+            "1/23"
+          ],
+          "evidence": "synthetic_only",
+          "authorization": "none"
+        }
+      },
+      "expected": {
+        "ok": true,
+        "op": "mrp_distribution_power",
+        "data": {
+          "horizon": 11,
+          "distribution": [
+            "4201226967985223427070079958427464267202/8081539630053318775680914948495816903157",
+            "3880312662068095348610834990068352635955/8081539630053318775680914948495816903157"
+          ],
+          "mass": "1"
+        },
+        "core_disposition": "completed",
+        "scope": "finite_synthetic_two_state_markov_rewards"
+      },
+      "adverse_expected": {
+        "ok": false,
+        "error": "discount_bounds"
+      }
+    },
+    {
+      "id": "TH6977-GLOBAL-06",
+      "kind": "global",
+      "op": "mrp_reward_trace",
+      "request": {
+        "op": "mrp_reward_trace",
+        "input": {
+          "P": [
+            [
+              "26/29",
+              "3/29"
+            ],
+            [
+              "7/62",
+              "55/62"
+            ]
+          ],
+          "r": [
+            "16/13",
+            "-8/17"
+          ],
+          "mu": [
+            "4/9",
+            "5/9"
+          ],
+          "gamma": "5/11",
+          "n": 11,
+          "phi": [
+            "1/13",
+            "-2/17"
+          ],
+          "shift": "5/19",
+          "probe": [
+            "0",
+            "1/23"
+          ],
+          "evidence": "synthetic_only",
+          "authorization": "none"
+        }
+      },
+      "expected": {
+        "ok": true,
+        "op": "mrp_reward_trace",
+        "data": {
+          "rows": [
+            {
+              "time": 0,
+              "distribution": [
+                "4/9",
+                "5/9"
+              ],
+              "reward": "568/1989"
+            },
+            {
+              "time": 1,
+              "distribution": [
+                "7463/16182",
+                "8719/16182"
+              ],
+              "reward": "561580/1788111"
+            },
+            {
+              "time": 2,
+              "distribution": [
+                "13800313/29095236",
+                "15294923/29095236"
+              ],
+              "reward": "540753286/1607511789"
+            },
+            {
+              "time": 3,
+              "distribution": [
+                "25350973925/52313234328",
+                "26962260403/52313234328"
+              ],
+              "reward": "511423728211/1445153098311"
+            },
+            {
+              "time": 4,
+              "distribution": [
+                "46339108828909/94059195321744",
+                "47720086492835/94059195321744"
+              ],
+              "reward": "73474505828927/199875790058706"
+            },
+            {
+              "time": 5,
+              "distribution": [
+                "84385820990246813/169118433188495712",
+                "84732612198248899/169118433188495712"
+              ],
+              "reward": "103976115005362115/274817453931305532"
+            },
+            {
+              "time": 6,
+              "distribution": [
+                "153230663712522389053/304074942872915290176",
+                "150844279160392901123/304074942872915290176"
+              ],
+              "reward": "3248866937140653513203/8400070296864284891112"
+            },
+            {
+              "time": 7,
+              "distribution": [
+                "277629218574145850081405/546726747285501691736448",
+                "269097528711355841655043/546726747285501691736448"
+              ],
+              "reward": "5941125558273332961252211/15103326393761984234219376"
+            },
+            {
+              "time": 8,
+              "distribution": [
+                "502165098669928346187198589/983014691619332041742133504",
+                "480849592949403695554934915/983014691619332041742133504"
+              ],
+              "reward": "10822568646435315728150598131/27155780855984047653126438048"
+            },
+            {
+              "time": 9,
+              "distribution": [
+                "907102606424653444251415913213/1767460415531559011052356040192",
+                "860357809106905566800940126979/1767460415531559011052356040192"
+              ],
+              "reward": "19656837100048444736135919398515/48826093979059317680321335610304"
+            },
+            {
+              "time": 10,
+              "distribution": [
+                "1636902036805243182193873297876093/3177893827125743101872136160265216",
+                "1540991790320499919678262862389123/3177893827125743101872136160265216"
+              ],
+              "reward": "35621775977211769238774274916728563/87789316974348653189217761427326592"
+            }
+          ],
+          "undiscounted_return": "27166626280206985990231710644535245/6753024382642204091478289340563584"
+        },
+        "core_disposition": "completed",
+        "scope": "finite_synthetic_two_state_markov_rewards"
+      },
+      "adverse_expected": {
+        "ok": false,
+        "error": "discount_bounds"
+      }
+    }
+  ],
+  "source_units": [
+    {
+      "operation": "mrp_one_step",
+      "path": "docs/teryn-halewick/v697-v7/x1/skills/ghc-family-mrp-one-step-local/SKILL.md",
+      "packaged_path": "references/ghc-family-mrp-one-step-local/SKILL.md",
+      "sha256": "35c5c90ff27ba845226f676edc7212cf6e007d5dde8d34b2b46460041ba3c915",
+      "bytes": 1755,
+      "source_preserved_complete": true
+    },
+    {
+      "operation": "mrp_one_step",
+      "path": "docs/teryn-halewick/v697-v7/x1/skills/ghc-family-mrp-one-step-local/contract.json",
+      "packaged_path": "references/ghc-family-mrp-one-step-local/contract.json",
+      "sha256": "33902746fd08bd316766d4d092d46a9ebf525e576f93e24128baa8088fcbdd66",
+      "bytes": 2264,
+      "source_preserved_complete": true
+    },
+    {
+      "operation": "mrp_transition_power",
+      "path": "docs/teryn-halewick/v697-v7/x1/skills/ghc-family-mrp-transition-power-local/SKILL.md",
+      "packaged_path": "references/ghc-family-mrp-transition-power-local/SKILL.md",
+      "sha256": "47e96974cea6aedcbf2d8c223b96d18e6911b86299ef2c014162432a6e29e9d4",
+      "bytes": 1737,
+      "source_preserved_complete": true
+    },
+    {
+      "operation": "mrp_transition_power",
+      "path": "docs/teryn-halewick/v697-v7/x1/skills/ghc-family-mrp-transition-power-local/contract.json",
+      "packaged_path": "references/ghc-family-mrp-transition-power-local/contract.json",
+      "sha256": "02a45b8ff03dc1bb29070370c537960400300afce1e30f123c09135b3e8c25cc",
+      "bytes": 2573,
+      "source_preserved_complete": true
+    },
+    {
+      "operation": "mrp_distribution_power",
+      "path": "docs/teryn-halewick/v697-v7/x1/skills/ghc-family-mrp-distribution-power-local/SKILL.md",
+      "packaged_path": "references/ghc-family-mrp-distribution-power-local/SKILL.md",
+      "sha256": "d6e2e0cd813191e62bcd069b228e18ff0fd24b2f50c49495580c3fdca4a817a8",
+      "bytes": 1808,
+      "source_preserved_complete": true
+    },
+    {
+      "operation": "mrp_distribution_power",
+      "path": "docs/teryn-halewick/v697-v7/x1/skills/ghc-family-mrp-distribution-power-local/contract.json",
+      "packaged_path": "references/ghc-family-mrp-distribution-power-local/contract.json",
+      "sha256": "865967dd4b651e49c45bf810d515e81323d22c478235392c424551f654bcde19",
+      "bytes": 2453,
+      "source_preserved_complete": true
+    },
+    {
+      "operation": "mrp_reward_trace",
+      "path": "docs/teryn-halewick/v697-v7/x1/skills/ghc-family-mrp-reward-trace-local/SKILL.md",
+      "packaged_path": "references/ghc-family-mrp-reward-trace-local/SKILL.md",
+      "sha256": "bd1a822b7d555aebc35557ccad873fbba5b2d88245e3c3d8a3b5a7f78f1cd328",
+      "bytes": 1762,
+      "source_preserved_complete": true
+    },
+    {
+      "operation": "mrp_reward_trace",
+      "path": "docs/teryn-halewick/v697-v7/x1/skills/ghc-family-mrp-reward-trace-local/contract.json",
+      "packaged_path": "references/ghc-family-mrp-reward-trace-local/contract.json",
+      "sha256": "883b4e8ef1d2444f959bf2b3516368d7a9a20088eff5e36e3011319d18736449",
+      "bytes": 4479,
+      "source_preserved_complete": true
+    }
+  ],
+  "boundary": "Names, roles, hopes and pronouns are relational working language only. These are bounded same-owner synthetic computations, not consciousness/personhood, identity continuity, qualification, independent reproduction, empirical GMUT confirmation, production THOS/Freed ID, complete privacy/accessibility/security, professional, legal, cultural, affected-party or Maori authority, Theory-of-Everything proof, canon or Stage 20 readiness. Maori concepts remain under Maori authority. NOT_READY_FOR_STAGE_20."
+}
