@@ -1,0 +1,359 @@
+{
+  "caller_sha256": "f42ee4dd991e8172ed9438e26eea57d60a6e8bd38c497d8d99989dab27cebca7",
+  "compatibility": "additive collision-free; all earlier source callers unchanged",
+  "contract_sha256": "ae00bbce3895d573ead61577f6dd5c6e9465c40e65256dd5b2104ed95bdbc413",
+  "core_sha256": "3955c3bfc173c542fbf76e7aafef04b37dcaede6a808ecb6375ecd58d13e91d6",
+  "existing_caller_changes": 0,
+  "extension_sha256": "5cd33ed5337813d80d6d18799fd3670d78c37dd5772e4581e926465e4ee48a96",
+  "full_guide_relative_label": "ghc-family-scalar-control-interval-certificate-v1/SKILL.md",
+  "full_guide_sha256": "ce5051a8fbfdc90b02f83d5c45d44b0ac6d9f2772cac5f5373215595d916e618",
+  "full_guides_read": true,
+  "independent_reproduction": false,
+  "installed_entry_sha256": "aca997e0b567679b338305dc4407b9856ccf8cadcc1c4578b3fc8d21f882fcb9",
+  "metadata": [
+    {
+      "exit_status": 0,
+      "replays": 0,
+      "stderr": "",
+      "stdout": "Skill is valid!\r\n"
+    },
+    {
+      "exit_status": 0,
+      "replays": 0,
+      "stderr": "",
+      "stdout": "Skill is valid!\r\n"
+    }
+  ],
+  "name": "ghc-family-scalar-control-interval-certificate-v1",
+  "observations": [
+    {
+      "candidate": {
+        "input": {
+          "a": "2/3",
+          "authorization": "none",
+          "b": "3/2",
+          "d": "-1",
+          "evidence": "synthetic_only",
+          "hi": "5/6",
+          "k": "1/5",
+          "limit": "8/5",
+          "lo": "-7/9",
+          "n": 4,
+          "p": "7/5",
+          "radius": "9/5"
+        },
+        "op": "rc_one_step"
+      },
+      "candidate_expected": {
+        "error": "disturbance_bounds",
+        "ok": false
+      },
+      "expected": {
+        "core_disposition": "completed",
+        "data": {
+          "horizon": 1,
+          "interval": [
+            "-1579/4590",
+            "223/612"
+          ]
+        },
+        "ok": true,
+        "op": "rc_one_step",
+        "scope": "finite_synthetic_scalar_control"
+      },
+      "failed_subject": {
+        "envelope": {
+          "error": "disturbance_bounds",
+          "ok": false
+        },
+        "exit_status": 2,
+        "parse_error": null,
+        "process_error": null,
+        "signal": null,
+        "stderr": "",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stdin_bytes": 188,
+        "stdin_sha256": "7667b708201cef6a4d90fada1ef034fe474cdf1219cb7ae28de64f17cc8854ec",
+        "stdout": "{\"ok\":false,\"error\":\"disturbance_bounds\"}\n",
+        "stdout_sha256": "bbb713967fbccba6bf948f000fe7ef5704dd198d9012213e39004ba0472b601c"
+      },
+      "original_failed_subject_credit": 0,
+      "positive": {
+        "envelope": {
+          "core_disposition": "completed",
+          "data": {
+            "horizon": 1,
+            "interval": [
+              "-1579/4590",
+              "223/612"
+            ]
+          },
+          "ok": true,
+          "op": "rc_one_step",
+          "scope": "finite_synthetic_scalar_control"
+        },
+        "exit_status": 0,
+        "parse_error": null,
+        "process_error": null,
+        "signal": null,
+        "stderr": "",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stdin_bytes": 190,
+        "stdin_sha256": "c6c2d04ce1fe186f1e7a59021e25cb874d7872b9732822cd417e985fa0afb080",
+        "stdout": "{\"ok\":true,\"op\":\"rc_one_step\",\"data\":{\"interval\":[\"-1579/4590\",\"223/612\"],\"horizon\":1},\"core_disposition\":\"completed\",\"scope\":\"finite_synthetic_scalar_control\"}\n",
+        "stdout_sha256": "48287d10d6c72b317f6009d246bb178f1fce6a2d873792cb5b1ab586730c85d3"
+      },
+      "positive_match": true,
+      "request": {
+        "input": {
+          "a": "2/3",
+          "authorization": "none",
+          "b": "3/2",
+          "d": "1/17",
+          "evidence": "synthetic_only",
+          "hi": "5/6",
+          "k": "1/5",
+          "limit": "8/5",
+          "lo": "-7/9",
+          "n": 4,
+          "p": "7/5",
+          "radius": "9/5"
+        },
+        "op": "rc_one_step"
+      },
+      "separate_refusal": true
+    },
+    {
+      "candidate": {
+        "input": {
+          "a": "2/3",
+          "authorization": "none",
+          "b": "3/2",
+          "d": "-1",
+          "evidence": "synthetic_only",
+          "hi": "5/6",
+          "k": "1/5",
+          "limit": "8/5",
+          "lo": "-7/9",
+          "n": 4,
+          "p": "7/5",
+          "radius": "9/5"
+        },
+        "op": "rc_horizon"
+      },
+      "candidate_expected": {
+        "error": "disturbance_bounds",
+        "ok": false
+      },
+      "expected": {
+        "core_disposition": "completed",
+        "data": {
+          "center": "14641/29160000",
+          "horizon": 4,
+          "interval": [
+            "-13044749/123930000",
+            "1755893/16524000"
+          ],
+          "radius": "52427893/495720000"
+        },
+        "ok": true,
+        "op": "rc_horizon",
+        "scope": "finite_synthetic_scalar_control"
+      },
+      "failed_subject": {
+        "envelope": {
+          "error": "disturbance_bounds",
+          "ok": false
+        },
+        "exit_status": 2,
+        "parse_error": null,
+        "process_error": null,
+        "signal": null,
+        "stderr": "",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stdin_bytes": 187,
+        "stdin_sha256": "71bb58e2a359f15613bb70b9592b6692a2ac13aa3e1488f7be2381c3d0edab7a",
+        "stdout": "{\"ok\":false,\"error\":\"disturbance_bounds\"}\n",
+        "stdout_sha256": "bbb713967fbccba6bf948f000fe7ef5704dd198d9012213e39004ba0472b601c"
+      },
+      "original_failed_subject_credit": 0,
+      "positive": {
+        "envelope": {
+          "core_disposition": "completed",
+          "data": {
+            "center": "14641/29160000",
+            "horizon": 4,
+            "interval": [
+              "-13044749/123930000",
+              "1755893/16524000"
+            ],
+            "radius": "52427893/495720000"
+          },
+          "ok": true,
+          "op": "rc_horizon",
+          "scope": "finite_synthetic_scalar_control"
+        },
+        "exit_status": 0,
+        "parse_error": null,
+        "process_error": null,
+        "signal": null,
+        "stderr": "",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stdin_bytes": 189,
+        "stdin_sha256": "9975d2b0328bf51ac262a2da5f668b49e0c0161c8f51dfedde2648844edd804d",
+        "stdout": "{\"ok\":true,\"op\":\"rc_horizon\",\"data\":{\"interval\":[\"-13044749/123930000\",\"1755893/16524000\"],\"horizon\":4,\"center\":\"14641/29160000\",\"radius\":\"52427893/495720000\"},\"core_disposition\":\"completed\",\"scope\":\"finite_synthetic_scalar_control\"}\n",
+        "stdout_sha256": "4aea0d287e3165558669a750734ed55e6dd8fa8f0b74ff8cea462a549275c12e"
+      },
+      "positive_match": true,
+      "request": {
+        "input": {
+          "a": "2/3",
+          "authorization": "none",
+          "b": "3/2",
+          "d": "1/17",
+          "evidence": "synthetic_only",
+          "hi": "5/6",
+          "k": "1/5",
+          "limit": "8/5",
+          "lo": "-7/9",
+          "n": 4,
+          "p": "7/5",
+          "radius": "9/5"
+        },
+        "op": "rc_horizon"
+      },
+      "separate_refusal": true
+    },
+    {
+      "candidate": {
+        "input": {
+          "a": "2/3",
+          "authorization": "none",
+          "b": "3/2",
+          "d": "-1",
+          "evidence": "synthetic_only",
+          "hi": "5/6",
+          "k": "1/5",
+          "limit": "8/5",
+          "lo": "-7/9",
+          "n": 4,
+          "p": "7/5",
+          "radius": "9/5"
+        },
+        "op": "rc_center_radius"
+      },
+      "candidate_expected": {
+        "error": "disturbance_bounds",
+        "ok": false
+      },
+      "expected": {
+        "core_disposition": "completed",
+        "data": {
+          "center": "14641/29160000",
+          "initial_center": "1/36",
+          "initial_radius": "29/36",
+          "radius": "52427893/495720000",
+          "reconstructs_interval": [
+            "-13044749/123930000",
+            "1755893/16524000"
+          ]
+        },
+        "ok": true,
+        "op": "rc_center_radius",
+        "scope": "finite_synthetic_scalar_control"
+      },
+      "failed_subject": {
+        "envelope": {
+          "error": "disturbance_bounds",
+          "ok": false
+        },
+        "exit_status": 2,
+        "parse_error": null,
+        "process_error": null,
+        "signal": null,
+        "stderr": "",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stdin_bytes": 193,
+        "stdin_sha256": "b3afb71593ff6244c7ad843b8ebe50c914861fcbee0772cea6879b5735addd69",
+        "stdout": "{\"ok\":false,\"error\":\"disturbance_bounds\"}\n",
+        "stdout_sha256": "bbb713967fbccba6bf948f000fe7ef5704dd198d9012213e39004ba0472b601c"
+      },
+      "original_failed_subject_credit": 0,
+      "positive": {
+        "envelope": {
+          "core_disposition": "completed",
+          "data": {
+            "center": "14641/29160000",
+            "initial_center": "1/36",
+            "initial_radius": "29/36",
+            "radius": "52427893/495720000",
+            "reconstructs_interval": [
+              "-13044749/123930000",
+              "1755893/16524000"
+            ]
+          },
+          "ok": true,
+          "op": "rc_center_radius",
+          "scope": "finite_synthetic_scalar_control"
+        },
+        "exit_status": 0,
+        "parse_error": null,
+        "process_error": null,
+        "signal": null,
+        "stderr": "",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stdin_bytes": 195,
+        "stdin_sha256": "7aac2658c42860db81c5a4d280a0a0eb0da002c0fd667b68d924ca0e8898e621",
+        "stdout": "{\"ok\":true,\"op\":\"rc_center_radius\",\"data\":{\"initial_center\":\"1/36\",\"initial_radius\":\"29/36\",\"center\":\"14641/29160000\",\"radius\":\"52427893/495720000\",\"reconstructs_interval\":[\"-13044749/123930000\",\"1755893/16524000\"]},\"core_disposition\":\"completed\",\"scope\":\"finite_synthetic_scalar_control\"}\n",
+        "stdout_sha256": "448c14516939f2170a49f00e45cdb2ff892371b48c665ddd4e4d1aa76a1d5d13"
+      },
+      "positive_match": true,
+      "request": {
+        "input": {
+          "a": "2/3",
+          "authorization": "none",
+          "b": "3/2",
+          "d": "1/17",
+          "evidence": "synthetic_only",
+          "hi": "5/6",
+          "k": "1/5",
+          "limit": "8/5",
+          "lo": "-7/9",
+          "n": 4,
+          "p": "7/5",
+          "radius": "9/5"
+        },
+        "op": "rc_center_radius"
+      },
+      "separate_refusal": true
+    }
+  ],
+  "operations": [
+    "rc_one_step",
+    "rc_horizon",
+    "rc_center_radius"
+  ],
+  "package_updates": 0,
+  "prepared": true,
+  "smoke_success": true,
+  "source_provenance": [
+    {
+      "contract_sha256": "0250bcdb0314cc16198da91d440523c06d935b3609b5ae5f95c9f6ce2f64a17c",
+      "guide_sha256": "e80c9d110561c4563da1a2ea30c0a0e4499122013fc9df3ce4723f0729bf9833",
+      "mechanism": "rc_one_step",
+      "source": "docs/elaren-kestrel/v697-v8/x1/skills/ghc-family-rc-one-step-local"
+    },
+    {
+      "contract_sha256": "a5411092682806dec5432ff2bc3be061fd909c840d55c44686a3c412f1effe2e",
+      "guide_sha256": "519d949f3791b0235f4f75f4ecaaaac46e841538f46a0dcf80e8600a6a99adc8",
+      "mechanism": "rc_horizon",
+      "source": "docs/elaren-kestrel/v697-v8/x1/skills/ghc-family-rc-horizon-local"
+    },
+    {
+      "contract_sha256": "27b155435ec24feb414fa8b4e3791f6f9aba3bf5369d9ca08c96c6da4c918f9e",
+      "guide_sha256": "52d7351ab73eebff1cb650c0d355649484c12003cefb2f360acaa9d9028f7e1c",
+      "mechanism": "rc_center_radius",
+      "source": "docs/elaren-kestrel/v697-v8/x1/skills/ghc-family-rc-center-radius-local"
+    }
+  ]
+}

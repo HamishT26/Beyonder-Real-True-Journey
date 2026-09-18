@@ -1,0 +1,19 @@
+'use strict';
+const core=require('./ghc_family_rc_core.txt'),{F,ZERO,ONE,TWO,parseInput,intervalAt,norm,ok}=core;
+const OPS=['rc_invariant_radius','rc_invariance_margin','rc_lyapunov_margin','rc_energy_bound','rc_effort_bound','rc_contraction_tail','rc_reflection','rc_accessible_coordinates','rc_observation_gap','rc_authority_gate'];
+function runExtension(op,input){const z=parseInput(input),v=intervalAt(z),contractive=z.rho.cmp(ONE)<0,rinf=contractive?z.d.div(ONE.sub(z.rho)):null;let data;
+ if(op==='rc_invariant_radius')data={contractive,uniform_disturbance_radius:rinf===null?null:String(rinf),zero_singleton_invariant:z.d.cmp(ZERO)===0,general_invariant_set_search:false};
+ else if(op==='rc_invariance_margin'){const next=z.rho.mul(z.radius).add(z.d),margin=z.radius.sub(next);data={radius:String(z.radius),one_step_radius:String(next),margin:String(margin),declared_symmetric_interval_invariant:margin.cmp(ZERO)>=0};}
+ else if(op==='rc_lyapunov_margin'){const q=z.p.mul(ONE.sub(z.c.mul(z.c)));data={p:String(z.p),q:String(q),strict_undisturbed_certificate:q.cmp(ZERO)>0,disturbed_asymptotic_convergence_claimed:false};}
+ else if(op==='rc_energy_bound'){const terms=Array.from({length:z.n+1},(_,j)=>z.p.mul(norm(intervalAt(z,j)).pow(2))),sum=terms.reduce((s,x)=>s.add(x),ZERO);data={terms:terms.map(String),upper_bound:String(sum),terms_are_pointwise_suprema:true,joint_trajectory_supremum_claimed:false};}
+ else if(op==='rc_effort_bound'){const bound=z.k.abs().mul(norm(v)),margin=z.limit.sub(bound);data={feedback_magnitude_bound:String(bound),declared_limit:String(z.limit),margin:String(margin),within_declared_limit:margin.cmp(ZERO)>=0,saturation_model_present:false};}
+ else if(op==='rc_contraction_tail'){const r0=z.hi.sub(z.lo).div(TWO);data={contractive,radius_at_horizon:String(v.radius),asymptotic_radius:rinf===null?null:String(rinf),radius_gap_bound:rinf===null?null:String(z.rho.pow(z.n).mul(r0.sub(rinf).abs()))};}
+ else if(op==='rc_reflection'){const reflected=intervalAt(Object.assign({},z,{lo:z.hi.neg(),hi:z.lo.neg()})),mapped=[String(v.hi.neg()),String(v.lo.neg())];data={original:[String(v.lo),String(v.hi)],reflected:[String(reflected.lo),String(reflected.hi)],mapped_original:mapped,identity:String(reflected.lo)===mapped[0]&&String(reflected.hi)===mapped[1]};}
+ else if(op==='rc_accessible_coordinates')data={coordinates:[String(z.c),String(z.d),String(norm(v))],coordinate_names:['closed_loop_gain','disturbance_radius','finite_horizon_state_bound'],exact_values_available:true,complete_accessibility_claimed:false};
+ else if(op==='rc_observation_gap')data={observations:0,missing:['measured plant and disturbance bounds','identification and calibration','governed comparison','independent model review'],empirical_controller_claimed:false};
+ else if(op==='rc_authority_gate')data={authorization:'none',actions_executed:0,missing:['declared real deployment scope','competent safety and professional review','affected-party authorization','privacy security legal cultural and Maori authority where applicable']};
+ else throw new Error('operation');
+ return ok(op,data,{rc_accessible_coordinates:'represented',rc_observation_gap:'open_gap',rc_authority_gate:'exact_gate'}[op]||'completed');
+}
+module.exports={OPS,runExtension};
+if(require.main===module)core.runCli(core.OPS.concat(OPS),module.exports);
