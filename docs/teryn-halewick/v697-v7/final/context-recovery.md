@@ -1,0 +1,3 @@
+# Current recovery pointer
+
+Read this phase hand-off-baton.md through EOF and evidence-accounting.json. The current repository subtotal includes the selected corrected x2 record and final guide-lookup correction; old subtotals remain retained. Check the external canonical invocation and success latches before any validation. Use only the v697-v7 receipt bank and transient v697 keys; old v692 routing latches are historical. Read actual terminal-effective-baseline.json only if it exists and its outcome is bound; a prepared route is not a send. No successful source, tranche, metadata or canonical replay. No early successor lookup, duplicate native send or post-send monitoring.
