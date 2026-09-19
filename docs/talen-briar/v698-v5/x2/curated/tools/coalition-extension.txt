@@ -1,0 +1,16 @@
+'use strict';
+const OPS=['cg_dual','cg_properness','cg_strongness','cg_minimal_blocking','cg_cheapest_winning','cg_budget_frontier','cg_desirability','cg_scene','cg_evidence_gap','cg_authority_gate'];
+function evaluate(req){base.keys(req,['op','input']);if(!OPS.includes(req.op))throw Error('operation');const n=base.validate(req.input),v=base.values(req.input),N=v.length-1,op=req.op;let value,outcome='completed';const cost=s=>req.input.costs.reduce((sum,x,i)=>sum+((s>>i&1)?x:0),0);
+ if(op==='cg_dual')value=v.map((_,s)=>1-v[N^s]);
+ else if(op==='cg_properness'||op==='cg_strongness'){let bad=null;for(let s=0;s<=N;s++)if(op==='cg_properness'?(v[s]&&v[N^s]):(!v[s]&&!v[N^s])){bad=s;break;}value={holds:bad===null,counterexample:bad===null?null:{coalition:bad,complement:N^bad}};}
+ else if(op==='cg_minimal_blocking'){value=[];for(let s=0;s<=N;s++)if(!v[N^s]&&Array.from({length:n},(_,i)=>i).every(i=>!(s>>i&1)||v[N^(s^(1<<i))]))value.push(s);}
+ else if(op==='cg_cheapest_winning'){const winning=v.flatMap((x,s)=>x?[s]:[]),min=Math.min(...winning.map(cost));value={cost:min,coalitions:winning.filter(s=>cost(s)===min)};}
+ else if(op==='cg_budget_frontier'){const winners=v.flatMap((x,s)=>x?[s]:[]),pairs=[...new Set(winners.map(s=>base.bits(s)+','+cost(s)))].map(x=>x.split(',').map(Number)).sort((a,b)=>a[0]-b[0]||a[1]-b[1]);value=pairs.filter(([k,c])=>!pairs.some(([k2,c2])=>k2<=k&&c2<=c&&(k2!==k||c2!==c))).map(([size,costValue])=>({size,cost:costValue,coalitions:winners.filter(s=>base.bits(s)===size&&cost(s)===costValue)}));}
+ else if(op==='cg_desirability'){const rel=[],counter=[];for(let i=0;i<n;i++){let row=[];for(let j=0;j<n;j++){let bad=null;for(let s=0;s<=N;s++)if(!(s&((1<<i)|(1<<j)))&&v[s|(1<<j)]&&!v[s|(1<<i)]){bad=s;break;}row.push(bad===null);if(bad!==null)counter.push({at_least:i,compared:j,coalition:bad});}rel.push(row);}value={at_least_as_desirable:rel,counterexamples:counter};}
+ else if(op==='cg_scene'){const r=base.raw(v,n);value={points:req.input.players.map((component,i)=>({component,xyz:[i,req.input.weights[i],r[i]]})),axes:['declared component index','synthetic weight','finite swing count'],physical:false};outcome='represented';}
+ else if(op==='cg_evidence_gap'){value={missing:['empirical','participant','independent-reproduction'],weights_are_observations:false};outcome='open_gap';}
+ else {value={closed:['consent','legal','cultural','affected-party','Maori-authority'],release:false,indices_confer_authority:false};outcome='exact_gate';}
+ return base.envelope(value,outcome);
+}
+function dispatch(req){try{return evaluate(req);}catch(e){return base.rejected(e.message);}}
+module.exports={OPS,dispatch};

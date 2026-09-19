@@ -1,0 +1,42 @@
+'use strict';
+const OPS=['cg_values','cg_minimal_winning','cg_maximal_losing','cg_rank_counts','cg_swing_witnesses','cg_banzhaf_raw','cg_banzhaf_normalized','cg_shapley_shubik','cg_veto_players','cg_null_players'];
+function bad(code){throw new Error(code);}
+function keys(x,allowed){if(!x||typeof x!=='object'||Array.isArray(x)||Object.keys(x).sort().join('|')!==allowed.slice().sort().join('|'))bad('field_set');}
+function parseStrict(text){if(typeof text!=='string'||text.length>1048576)bad('input_budget');let p=0;const ws=()=>{while(/[\x20\t\r\n]/.test(text[p]||'!'))p++;};
+ function string(){let start=p++;while(p<text.length){let c=text[p++];if(c==='"'){try{return JSON.parse(text.slice(start,p));}catch{bad('json_syntax');}}if(c==='\\')p++;}bad('json_syntax');}
+ function value(depth){if(depth>32)bad('depth_budget');ws();let c=text[p];if(c==='"')return string();
+  if(c==='{'){p++;let o=Object.create(null);ws();if(text[p]==='}'){p++;return o;}while(true){ws();if(text[p]!=='"')bad('json_syntax');const k=string();if(Object.hasOwn(o,k))bad('duplicate_key');ws();if(text[p++]!==':')bad('json_syntax');o[k]=value(depth+1);ws();c=text[p++];if(c==='}')return o;if(c!==',')bad('json_syntax');}}
+  if(c==='['){p++;let a=[];ws();if(text[p]===']'){p++;return a;}while(true){a.push(value(depth+1));ws();c=text[p++];if(c===']')return a;if(c!==',')bad('json_syntax');}}
+  for(const [word,v] of [['true',true],['false',false],['null',null]])if(text.slice(p,p+word.length)===word){p+=word.length;return v;}
+  const match=text.slice(p).match(/^-?(?:0|[1-9][0-9]*)(?:\.[0-9]+)?(?:[eE][+-]?[0-9]+)?/);if(!match)bad('json_syntax');p+=match[0].length;const number=Number(match[0]);if(!Number.isSafeInteger(number))bad('integer_range');return number;
+ }let out=value(0);ws();if(p!==text.length)bad('json_syntax');return out;
+}
+function validate(input){keys(input,['players','weights','quota','costs']);if(!Array.isArray(input.players)||input.players.length<1||input.players.length>6)bad('component_budget');let n=input.players.length;
+ if(input.players.some(x=>typeof x!=='string'||!/^[a-z][a-z0-9_-]{0,15}$/.test(x))||new Set(input.players).size!==n)bad('players');
+ for(const k of ['weights','costs'])if(!Array.isArray(input[k])||input[k].length!==n||input[k].some(x=>!Number.isSafeInteger(x)||x<0||x>1000000))bad('integer_vector');
+ if(!Number.isSafeInteger(input.quota)||input.quota<1||input.quota>input.weights.reduce((a,b)=>a+b,0))bad('quota');return n;
+}
+function values(input){const n=input.players.length;return Array.from({length:2**n},(_,s)=>+(input.weights.reduce((sum,w,i)=>sum+((s>>i&1)?w:0),0)>=input.quota));}
+function bits(s){let n=0;while(s){n+=s&1;s>>=1;}return n;}
+function swings(v,n){const out=[];for(let s=0;s<v.length;s++)if(v[s])for(let i=0;i<n;i++)if((s>>i&1)&&!v[s^(1<<i)])out.push({coalition:s,component:i});return out;}
+function raw(v,n){const out=Array(n).fill(0);for(const r of swings(v,n))out[r.component]++;return out;}
+function frac(a,b){if(!b)bad('zero_denominator');let x=a,y=b;while(y){const t=x%y;x=y;y=t;}return {numerator:a/x,denominator:b/x};}
+function factorial(n){let r=1;for(let i=2;i<=n;i++)r*=i;return r;}
+function envelope(value,outcome='completed'){return {ok:true,error:null,outcome,value,external_credit:false};}
+function rejected(error){return {ok:false,error,outcome:'exact_gate',value:null,external_credit:false};}
+function evaluate(req){keys(req,['op','input']);if(!OPS.includes(req.op))bad('operation');let n=validate(req.input),v=values(req.input),N=v.length-1,value;const op=req.op;
+ if(op==='cg_values')value={values:v,mask_order:'ascending little-endian component bits'};
+ else if(op==='cg_minimal_winning')value=v.flatMap((win,s)=>win&&Array.from({length:n},(_,i)=>i).every(i=>!(s>>i&1)||!v[s^(1<<i)])?[s]:[]);
+ else if(op==='cg_maximal_losing')value=v.flatMap((win,s)=>!win&&Array.from({length:n},(_,i)=>i).every(i=>(s>>i&1)||v[s|(1<<i)])?[s]:[]);
+ else if(op==='cg_rank_counts'){const winning=Array(n+1).fill(0),losing=Array(n+1).fill(0);v.forEach((win,s)=>(win?winning:losing)[bits(s)]++);value={winning,losing};}
+ else if(op==='cg_swing_witnesses')value=swings(v,n);
+ else if(op==='cg_banzhaf_raw')value=raw(v,n);
+ else if(op==='cg_banzhaf_normalized'){const r=raw(v,n),sum=r.reduce((a,b)=>a+b,0);value=r.map(x=>frac(x,sum));}
+ else if(op==='cg_shapley_shubik'){const den=factorial(n);value=Array.from({length:n},(_,i)=>{let numerator=0;for(let s=0;s<=N;s++)if(!(s>>i&1)&&!v[s]&&v[s|(1<<i)]){const k=bits(s);numerator+=factorial(k)*factorial(n-k-1);}return frac(numerator,den);});}
+ else if(op==='cg_veto_players')value=Array.from({length:n},(_,i)=>i).filter(i=>!v[N^(1<<i)]);
+ else value=raw(v,n).flatMap((x,i)=>x===0?[i]:[]);
+ return envelope(value);
+}
+function dispatch(req){try{return evaluate(req);}catch(e){return rejected(e.message);}}
+function fromText(t){try{return dispatch(parseStrict(t));}catch(e){return rejected(e.message);}}
+module.exports={OPS,keys,parseStrict,validate,values,bits,swings,raw,frac,factorial,envelope,rejected,dispatch,fromText};

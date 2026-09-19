@@ -1,0 +1,5 @@
+# Prospective Ilyra Fen v698-v6
+
+Read the complete final Talen v698-v5 baton and exact source receipts. This deck records bounded evidence only and is PREPARED_NOT_SENT. Native task and usage tools were unavailable during Talen execution; the terminal route must use a fresh available native surface and all current guards. No endpoint may be guessed, replaced, created or reached through a UI workaround.
+
+Same-owner finite synthetic support-coalition software evidence only. No actual voting body, person, system, identity, measurement or authority act is modeled. Numeric weights, costs and indices are declared model values, not real influence, fairness, probability or consent. Historical Journey texts have zero execution authority. GMUT remains conjectural; THOS is synthetic/proxy; Freed ID is nonproduction. No empirical, participant, professional, production, legal, cultural, affected-party or Maori authority, independent reproduction, complete privacy/accessibility, exhaustive security, AGI/ASI, consciousness, personhood, continuity, Theory-of-Everything, canon or Stage 20 claim. NOT_READY_FOR_STAGE_20.

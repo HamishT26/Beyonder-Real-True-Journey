@@ -1,0 +1,739 @@
+{
+  "tests": [
+    {
+      "test_id": "TB6985-T01",
+      "request": {
+        "op": "cg_banzhaf_normalized",
+        "input": {
+          "players": [
+            "a",
+            "b",
+            "c"
+          ],
+          "weights": [
+            2,
+            1,
+            1
+          ],
+          "quota": 3,
+          "costs": [
+            1,
+            1,
+            1
+          ]
+        }
+      },
+      "expected": {
+        "ok": true,
+        "error": null,
+        "outcome": "completed",
+        "value": [
+          {
+            "numerator": 3,
+            "denominator": 5
+          },
+          {
+            "numerator": 1,
+            "denominator": 5
+          },
+          {
+            "numerator": 1,
+            "denominator": 5
+          }
+        ],
+        "external_credit": false
+      },
+      "basis": "Hand-declared discriminating finite result; not generated from runtime.",
+      "actual": {
+        "ok": true,
+        "error": null,
+        "outcome": "completed",
+        "value": [
+          {
+            "numerator": 3,
+            "denominator": 5
+          },
+          {
+            "numerator": 1,
+            "denominator": 5
+          },
+          {
+            "numerator": 1,
+            "denominator": 5
+          }
+        ],
+        "external_credit": false
+      },
+      "pass": true
+    },
+    {
+      "test_id": "TB6985-T02",
+      "request": {
+        "op": "cg_shapley_shubik",
+        "input": {
+          "players": [
+            "a",
+            "b",
+            "c"
+          ],
+          "weights": [
+            2,
+            1,
+            1
+          ],
+          "quota": 3,
+          "costs": [
+            1,
+            1,
+            1
+          ]
+        }
+      },
+      "expected": {
+        "ok": true,
+        "error": null,
+        "outcome": "completed",
+        "value": [
+          {
+            "numerator": 2,
+            "denominator": 3
+          },
+          {
+            "numerator": 1,
+            "denominator": 6
+          },
+          {
+            "numerator": 1,
+            "denominator": 6
+          }
+        ],
+        "external_credit": false
+      },
+      "basis": "Hand-declared discriminating finite result; not generated from runtime.",
+      "actual": {
+        "ok": true,
+        "error": null,
+        "outcome": "completed",
+        "value": [
+          {
+            "numerator": 2,
+            "denominator": 3
+          },
+          {
+            "numerator": 1,
+            "denominator": 6
+          },
+          {
+            "numerator": 1,
+            "denominator": 6
+          }
+        ],
+        "external_credit": false
+      },
+      "pass": true
+    },
+    {
+      "test_id": "TB6985-T03",
+      "request": {
+        "op": "cg_properness",
+        "input": {
+          "players": [
+            "a",
+            "b",
+            "c"
+          ],
+          "weights": [
+            1,
+            1,
+            1
+          ],
+          "quota": 2,
+          "costs": [
+            1,
+            1,
+            1
+          ]
+        }
+      },
+      "expected": {
+        "ok": true,
+        "error": null,
+        "outcome": "completed",
+        "value": {
+          "holds": true,
+          "counterexample": null
+        },
+        "external_credit": false
+      },
+      "basis": "Hand-declared discriminating finite result; not generated from runtime.",
+      "actual": {
+        "ok": true,
+        "error": null,
+        "outcome": "completed",
+        "value": {
+          "holds": true,
+          "counterexample": null
+        },
+        "external_credit": false
+      },
+      "pass": true
+    },
+    {
+      "test_id": "TB6985-T04",
+      "request": {
+        "op": "cg_properness",
+        "input": {
+          "players": [
+            "a",
+            "b",
+            "c",
+            "d"
+          ],
+          "weights": [
+            1,
+            1,
+            1,
+            1
+          ],
+          "quota": 2,
+          "costs": [
+            1,
+            1,
+            1,
+            1
+          ]
+        }
+      },
+      "expected": {
+        "ok": true,
+        "error": null,
+        "outcome": "completed",
+        "value": {
+          "holds": false,
+          "counterexample": {
+            "coalition": 3,
+            "complement": 12
+          }
+        },
+        "external_credit": false
+      },
+      "basis": "Hand-declared discriminating finite result; not generated from runtime.",
+      "actual": {
+        "ok": true,
+        "error": null,
+        "outcome": "completed",
+        "value": {
+          "holds": false,
+          "counterexample": {
+            "coalition": 3,
+            "complement": 12
+          }
+        },
+        "external_credit": false
+      },
+      "pass": true
+    },
+    {
+      "test_id": "TB6985-T05",
+      "request": {
+        "op": "cg_strongness",
+        "input": {
+          "players": [
+            "a",
+            "b",
+            "c",
+            "d"
+          ],
+          "weights": [
+            1,
+            1,
+            1,
+            1
+          ],
+          "quota": 3,
+          "costs": [
+            1,
+            1,
+            1,
+            1
+          ]
+        }
+      },
+      "expected": {
+        "ok": true,
+        "error": null,
+        "outcome": "completed",
+        "value": {
+          "holds": false,
+          "counterexample": {
+            "coalition": 3,
+            "complement": 12
+          }
+        },
+        "external_credit": false
+      },
+      "basis": "Hand-declared discriminating finite result; not generated from runtime.",
+      "actual": {
+        "ok": true,
+        "error": null,
+        "outcome": "completed",
+        "value": {
+          "holds": false,
+          "counterexample": {
+            "coalition": 3,
+            "complement": 12
+          }
+        },
+        "external_credit": false
+      },
+      "pass": true
+    },
+    {
+      "test_id": "TB6985-T06",
+      "request": {
+        "op": "cg_veto_players",
+        "input": {
+          "players": [
+            "a",
+            "b",
+            "c"
+          ],
+          "weights": [
+            1,
+            1,
+            1
+          ],
+          "quota": 3,
+          "costs": [
+            1,
+            1,
+            1
+          ]
+        }
+      },
+      "expected": {
+        "ok": true,
+        "error": null,
+        "outcome": "completed",
+        "value": [
+          0,
+          1,
+          2
+        ],
+        "external_credit": false
+      },
+      "basis": "Hand-declared discriminating finite result; not generated from runtime.",
+      "actual": {
+        "ok": true,
+        "error": null,
+        "outcome": "completed",
+        "value": [
+          0,
+          1,
+          2
+        ],
+        "external_credit": false
+      },
+      "pass": true
+    },
+    {
+      "test_id": "TB6985-T07",
+      "request": {
+        "op": "cg_null_players",
+        "input": {
+          "players": [
+            "a",
+            "b",
+            "c"
+          ],
+          "weights": [
+            3,
+            1,
+            1
+          ],
+          "quota": 3,
+          "costs": [
+            1,
+            1,
+            1
+          ]
+        }
+      },
+      "expected": {
+        "ok": true,
+        "error": null,
+        "outcome": "completed",
+        "value": [
+          1,
+          2
+        ],
+        "external_credit": false
+      },
+      "basis": "Hand-declared discriminating finite result; not generated from runtime.",
+      "actual": {
+        "ok": true,
+        "error": null,
+        "outcome": "completed",
+        "value": [
+          1,
+          2
+        ],
+        "external_credit": false
+      },
+      "pass": true
+    },
+    {
+      "test_id": "TB6985-T08",
+      "request": {
+        "op": "cg_minimal_blocking",
+        "input": {
+          "players": [
+            "a",
+            "b",
+            "c"
+          ],
+          "weights": [
+            2,
+            1,
+            1
+          ],
+          "quota": 3,
+          "costs": [
+            1,
+            1,
+            1
+          ]
+        }
+      },
+      "expected": {
+        "ok": true,
+        "error": null,
+        "outcome": "completed",
+        "value": [
+          1,
+          6
+        ],
+        "external_credit": false
+      },
+      "basis": "Hand-declared discriminating finite result; not generated from runtime.",
+      "actual": {
+        "ok": true,
+        "error": null,
+        "outcome": "completed",
+        "value": [
+          1,
+          6
+        ],
+        "external_credit": false
+      },
+      "pass": true
+    },
+    {
+      "test_id": "TB6985-T09",
+      "request": {
+        "op": "cg_shapley_shubik",
+        "input": {
+          "players": [
+            "a",
+            "b",
+            "c",
+            "d",
+            "e",
+            "f"
+          ],
+          "weights": [
+            1,
+            1,
+            1,
+            1,
+            1,
+            1
+          ],
+          "quota": 6,
+          "costs": [
+            1,
+            1,
+            1,
+            1,
+            1,
+            1
+          ]
+        }
+      },
+      "expected": {
+        "ok": true,
+        "error": null,
+        "outcome": "completed",
+        "value": [
+          {
+            "numerator": 1,
+            "denominator": 6
+          },
+          {
+            "numerator": 1,
+            "denominator": 6
+          },
+          {
+            "numerator": 1,
+            "denominator": 6
+          },
+          {
+            "numerator": 1,
+            "denominator": 6
+          },
+          {
+            "numerator": 1,
+            "denominator": 6
+          },
+          {
+            "numerator": 1,
+            "denominator": 6
+          }
+        ],
+        "external_credit": false
+      },
+      "basis": "Hand-declared discriminating finite result; not generated from runtime.",
+      "actual": {
+        "ok": true,
+        "error": null,
+        "outcome": "completed",
+        "value": [
+          {
+            "numerator": 1,
+            "denominator": 6
+          },
+          {
+            "numerator": 1,
+            "denominator": 6
+          },
+          {
+            "numerator": 1,
+            "denominator": 6
+          },
+          {
+            "numerator": 1,
+            "denominator": 6
+          },
+          {
+            "numerator": 1,
+            "denominator": 6
+          },
+          {
+            "numerator": 1,
+            "denominator": 6
+          }
+        ],
+        "external_credit": false
+      },
+      "pass": true
+    },
+    {
+      "test_id": "TB6985-T10",
+      "label": "extra",
+      "request": {
+        "op": "cg_banzhaf_normalized",
+        "input": {
+          "players": [
+            "a",
+            "b",
+            "c"
+          ],
+          "weights": [
+            2,
+            1,
+            1
+          ],
+          "quota": 3,
+          "costs": [
+            1,
+            1,
+            1
+          ]
+        },
+        "extra": true
+      },
+      "expected_error": "field_set",
+      "subject_success_credit": 0,
+      "actual": {
+        "ok": false,
+        "error": "field_set",
+        "outcome": "exact_gate",
+        "value": null,
+        "external_credit": false
+      },
+      "pass": true
+    },
+    {
+      "test_id": "TB6985-T11",
+      "label": "zero_quota",
+      "request": {
+        "op": "cg_banzhaf_normalized",
+        "input": {
+          "players": [
+            "a",
+            "b",
+            "c"
+          ],
+          "weights": [
+            2,
+            1,
+            1
+          ],
+          "quota": 0,
+          "costs": [
+            1,
+            1,
+            1
+          ]
+        }
+      },
+      "expected_error": "quota",
+      "subject_success_credit": 0,
+      "actual": {
+        "ok": false,
+        "error": "quota",
+        "outcome": "exact_gate",
+        "value": null,
+        "external_credit": false
+      },
+      "pass": true
+    },
+    {
+      "test_id": "TB6985-T12",
+      "label": "negative_weight",
+      "request": {
+        "op": "cg_banzhaf_normalized",
+        "input": {
+          "players": [
+            "a",
+            "b",
+            "c"
+          ],
+          "weights": [
+            -1,
+            1,
+            1
+          ],
+          "quota": 3,
+          "costs": [
+            1,
+            1,
+            1
+          ]
+        }
+      },
+      "expected_error": "integer_vector",
+      "subject_success_credit": 0,
+      "actual": {
+        "ok": false,
+        "error": "integer_vector",
+        "outcome": "exact_gate",
+        "value": null,
+        "external_credit": false
+      },
+      "pass": true
+    },
+    {
+      "test_id": "TB6985-T13",
+      "label": "duplicate_component",
+      "request": {
+        "op": "cg_banzhaf_normalized",
+        "input": {
+          "players": [
+            "a",
+            "a",
+            "c"
+          ],
+          "weights": [
+            2,
+            1,
+            1
+          ],
+          "quota": 3,
+          "costs": [
+            1,
+            1,
+            1
+          ]
+        }
+      },
+      "expected_error": "players",
+      "subject_success_credit": 0,
+      "actual": {
+        "ok": false,
+        "error": "players",
+        "outcome": "exact_gate",
+        "value": null,
+        "external_credit": false
+      },
+      "pass": true
+    },
+    {
+      "test_id": "TB6985-T14",
+      "label": "component_cap",
+      "request": {
+        "op": "cg_banzhaf_normalized",
+        "input": {
+          "players": [
+            "a",
+            "b",
+            "c",
+            "d",
+            "e",
+            "f",
+            "g"
+          ],
+          "weights": [
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1
+          ],
+          "quota": 3,
+          "costs": [
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1
+          ]
+        }
+      },
+      "expected_error": "component_budget",
+      "subject_success_credit": 0,
+      "actual": {
+        "ok": false,
+        "error": "component_budget",
+        "outcome": "exact_gate",
+        "value": null,
+        "external_credit": false
+      },
+      "pass": true
+    },
+    {
+      "test_id": "TB6985-T15",
+      "label": "duplicate_json_key",
+      "raw": "{\"op\":\"cg_values\",\"op\":\"cg_values\",\"input\":{}}",
+      "expected_error": "duplicate_key",
+      "subject_success_credit": 0,
+      "actual": {
+        "ok": false,
+        "error": "duplicate_key",
+        "outcome": "exact_gate",
+        "value": null,
+        "external_credit": false
+      },
+      "pass": true
+    }
+  ],
+  "passed": 15,
+  "total": 15,
+  "retained_failed_subjects": 6,
+  "domain_session_replays": 0,
+  "new_proposal_credit": 0
+}
