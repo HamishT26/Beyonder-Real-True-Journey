@@ -1,0 +1,101 @@
+'use strict';
+module.exports = (function coreFactory(allowedNames) {
+  'use strict';
+  const allowed = new Set(allowedNames);
+  const outcomes = {
+    hg_scene: 'represented', hg_evidence_gap: 'open_gap', hg_authority_gate: 'exact_gate'
+  };
+  const lexical = (a, b) => String(a).localeCompare(String(b));
+  const exactKeys = (obj, keys) => { const a = Object.keys(obj || {}).sort(), b = [...keys].sort(); return a.length === b.length && a.every((x, i) => x === b[i]); };
+  const uniqSorted = xs => [...new Set(xs)].sort(lexical);
+  const edgeKey = e => `${[...e.tails].sort(lexical).join('&')}=>${[...e.heads].sort(lexical).join('&')}`;
+  const canonicalEdge = e => ({ id: String(e.id), tails: uniqSorted(e.tails), heads: uniqSorted(e.heads) });
+  const fail = (op, error) => ({ ok: false, op, error, external_credit: false });
+  function validateGraph(graph) {
+    if (!graph || !exactKeys(graph, ['vertices', 'edges'])) return 'graph_closed_fields';
+    if (!Array.isArray(graph.vertices) || !Array.isArray(graph.edges)) return 'graph_shape';
+    if (!graph.vertices.every(v => typeof v === 'string' && v.length > 0)) return 'vertex_shape';
+    if (new Set(graph.vertices).size !== graph.vertices.length) return 'duplicate_vertex';
+    const vertices = new Set(graph.vertices);
+    const ids = new Set();
+    for (const edge of graph.edges) {
+      if (!edge || !exactKeys(edge, ['id', 'tails', 'heads'])) return 'edge_closed_fields';
+      if (typeof edge.id !== 'string' || !edge.id || ids.has(edge.id)) return ids.has(edge.id) ? 'duplicate_edge_id' : 'edge_id';
+      ids.add(edge.id);
+      if (!Array.isArray(edge.tails) || !Array.isArray(edge.heads) || !edge.tails.length || !edge.heads.length) return 'edge_shape';
+      if (new Set(edge.tails).size !== edge.tails.length || new Set(edge.heads).size !== edge.heads.length) return 'duplicate_incidence';
+      if (![...edge.tails, ...edge.heads].every(v => vertices.has(v))) return 'unknown_vertex';
+    }
+    return null;
+  }
+  function canonicalGraph(graph) {
+    return {
+      vertices: uniqSorted(graph.vertices),
+      edges: graph.edges.map(canonicalEdge).sort((a, b) => edgeKey(a).localeCompare(edgeKey(b)) || a.id.localeCompare(b.id))
+    };
+  }
+  function projection(graph) {
+    const arcs = [];
+    for (const e of graph.edges) for (const tail of e.tails) for (const head of e.heads) arcs.push(`${tail}->${head}`);
+    return uniqSorted(arcs);
+  }
+  function components(graph, omit = null) {
+    const vertices = graph.vertices.filter(v => v !== omit);
+    const adj = Object.fromEntries(vertices.map(v => [v, new Set()]));
+    for (const e of graph.edges) {
+      const points = uniqSorted([...e.tails, ...e.heads]).filter(v => v !== omit);
+      for (const a of points) for (const b of points) if (a !== b && adj[a] && adj[b]) { adj[a].add(b); adj[b].add(a); }
+    }
+    const seen = new Set(); const out = [];
+    for (const start of vertices.sort(lexical)) if (!seen.has(start)) {
+      const q = [start], part = []; seen.add(start);
+      while (q.length) { const v = q.shift(); part.push(v); for (const n of [...adj[v]].sort(lexical)) if (!seen.has(n)) { seen.add(n); q.push(n); } }
+      out.push(part.sort(lexical));
+    }
+    return out.sort((a, b) => a[0].localeCompare(b[0]));
+  }
+  function execute(request) {
+    const op = request && typeof request.op === 'string' ? request.op : 'unknown';
+    if (!request || !exactKeys(request, ['op', 'input'])) return fail(op, 'closed_fields');
+    if (!allowed.has(op)) return fail(op, 'unsupported_operation');
+    const input = request.input;
+    const expectedInput = ['profile_id', 'graph', 'other_graph', 'roots', 'claim', 'provided', 'authority'];
+    if (!input || !exactKeys(input, expectedInput)) return fail(op, 'input_closed_fields');
+    const firstError = validateGraph(input.graph); if (firstError) return fail(op, firstError);
+    const secondError = validateGraph(input.other_graph); if (secondError) return fail(op, `other_${secondError}`);
+    if (!Array.isArray(input.roots) || !input.roots.every(v => input.graph.vertices.includes(v))) return fail(op, 'roots');
+    if (!Array.isArray(input.provided)) return fail(op, 'provided');
+    const graph = canonicalGraph(input.graph); const other = canonicalGraph(input.other_graph);
+    let data;
+    if (op === 'hg_profile') data = { vertices: graph.vertices.length, hyperedges: graph.edges.length, roots: uniqSorted(input.roots) };
+    else if (op === 'hg_vertices') data = { vertices: graph.vertices };
+    else if (op === 'hg_hyperedges') data = { hyperedges: graph.edges };
+    else if (op === 'hg_incidence') data = { incidence: graph.vertices.map(v => ({ vertex: v, incoming: graph.edges.filter(e => e.heads.includes(v)).map(e => e.id).sort(lexical), outgoing: graph.edges.filter(e => e.tails.includes(v)).map(e => e.id).sort(lexical) })) };
+    else if (op === 'hg_unique') data = { vertices_unique: true, edge_ids_unique: true, edge_signatures_unique: new Set(graph.edges.map(edgeKey)).size === graph.edges.length };
+    else if (op === 'hg_sources') data = { sources: graph.vertices.filter(v => !graph.edges.some(e => e.heads.includes(v))) };
+    else if (op === 'hg_sinks') data = { sinks: graph.vertices.filter(v => !graph.edges.some(e => e.tails.includes(v))) };
+    else if (op === 'hg_reachable' || op === 'hg_layers') {
+      const reached = new Set(input.roots), layer = Object.fromEntries(input.roots.map(v => [v, 0])); let changed = true;
+      while (changed) { changed = false; for (const e of graph.edges) if (e.tails.every(v => reached.has(v))) { const next = 1 + Math.max(...e.tails.map(v => layer[v])); for (const h of e.heads) if (!reached.has(h)) { reached.add(h); layer[h] = next; changed = true; } } }
+      data = op === 'hg_reachable' ? { reachable: [...reached].sort(lexical), unreachable: graph.vertices.filter(v => !reached.has(v)) } : { layers: Object.entries(layer).sort((a, b) => a[1] - b[1] || a[0].localeCompare(b[0])).map(([vertex, value]) => ({ vertex, layer: value })) };
+    }
+    else if (op === 'hg_transpose') data = { graph: { vertices: graph.vertices, edges: graph.edges.map(e => ({ id: e.id, tails: e.heads, heads: e.tails })) } };
+    else if (['hg_union', 'hg_intersection', 'hg_difference'].includes(op)) {
+      const a = new Set(graph.edges.map(edgeKey)), b = new Set(other.edges.map(edgeKey)); let signatures;
+      if (op === 'hg_union') signatures = uniqSorted([...a, ...b]);
+      if (op === 'hg_intersection') signatures = [...a].filter(x => b.has(x)).sort(lexical);
+      if (op === 'hg_difference') signatures = [...a].filter(x => !b.has(x)).sort(lexical);
+      data = { edge_signatures: signatures };
+    }
+    else if (op === 'hg_boundary') data = { tail_only: graph.vertices.filter(v => graph.edges.some(e => e.tails.includes(v)) && !graph.edges.some(e => e.heads.includes(v))), head_only: graph.vertices.filter(v => graph.edges.some(e => e.heads.includes(v)) && !graph.edges.some(e => e.tails.includes(v))), mixed: graph.vertices.filter(v => graph.edges.some(e => e.tails.includes(v)) && graph.edges.some(e => e.heads.includes(v))) };
+    else if (op === 'hg_projection') data = { arcs: projection(graph) };
+    else if (op === 'hg_components') data = { components: components(graph) };
+    else if (op === 'hg_cut_candidates') { const base = components(graph).length; data = { baseline_components: base, cut_candidates: graph.vertices.filter(v => components(graph, v).length > base).sort(lexical) }; }
+    else if (op === 'hg_scene') data = { points: graph.vertices.map((v, i) => ({ vertex: v, x: (i * 37 + graph.edges.length * 11) % 101, y: (i * 53 + graph.vertices.length * 7) % 101 })), arcs: projection(graph), synthetic_layout: true };
+    else if (op === 'hg_evidence_gap') data = { claim: input.claim, missing: ['governed_real_observations', 'preregistered_comparator', 'independent_reproduction'], state: 'OPEN_GAP' };
+    else if (op === 'hg_authority_gate') data = { claim: input.claim, required: ['competent_legal_authority', 'affected_party_oversight', 'relevant_cultural_authority', 'maori_authority_where_applicable'], state: 'EXACT_GATE' };
+    else return fail(op, 'unimplemented_operation');
+    return { ok: true, op, disposition: outcomes[op] || 'completed', data, external_credit: false };
+  }
+  return { execute, validateGraph, canonicalGraph, projection, components, edgeKey };
+})(["hg_profile","hg_vertices","hg_hyperedges","hg_incidence","hg_unique","hg_sources","hg_sinks","hg_reachable","hg_layers","hg_transpose","hg_union","hg_intersection","hg_difference","hg_boundary","hg_projection","hg_components","hg_cut_candidates","hg_scene","hg_evidence_gap","hg_authority_gate"]);
