@@ -1,0 +1,3 @@
+# Gaps, gates and protected claims
+
+The thirty evidence-gap contracts remain open_gap and the thirty authority-dependent contracts remain exact_gate. Together with the source folded once, the seal preserves 556 open gaps and 555 exact gates. Empirical GMUT, participant outcomes, professional judgments, production THOS, live Freed ID, legal and cultural decisions, affected-party approval, Maori authority, complete privacy or accessibility, exhaustive security, independent reproduction, AGI/ASI, consciousness/personhood, Theory-of-Everything proof, canon and Stage 20 remain unclaimed. The terminal verdict is NOT_READY_FOR_STAGE_20.

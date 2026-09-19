@@ -1,0 +1,123 @@
+const fs = require('fs');
+const path = require('path');
+const crypto = require('crypto');
+
+const finalDir = path.resolve(__dirname, '..');
+const phaseDir = path.resolve(finalDir, '..');
+const repoRoot = path.resolve(phaseDir, '../../..');
+const rel = (absolutePath) => path.relative(repoRoot, absolutePath).replace(/\\/g, '/');
+const sha256 = (buffer) => crypto.createHash('sha256').update(buffer).digest('hex');
+const writeJson = (target, value) => fs.writeFileSync(target, `${JSON.stringify(value, null, 2)}\n`, 'utf8');
+
+function listFiles(root) {
+  const found = [];
+  for (const entry of fs.readdirSync(root, { withFileTypes: true })) {
+    const absolute = path.join(root, entry.name);
+    if (entry.isDirectory()) found.push(...listFiles(absolute));
+    else if (entry.isFile()) found.push(absolute);
+  }
+  return found.sort((a, b) => rel(a).localeCompare(rel(b)));
+}
+
+function entryFor(absolutePath) {
+  const data = fs.readFileSync(absolutePath);
+  return { path: rel(absolutePath), bytes: data.length, sha256: sha256(data) };
+}
+
+const phaseTruth = JSON.parse(fs.readFileSync(path.join(finalDir, 'phase-truth.json'), 'utf8'));
+const boundary = phaseTruth.boundary;
+const moduleDir = path.join(finalDir, 'baton');
+const modules = fs.readdirSync(moduleDir)
+  .filter((name) => /^\d{2}-.*\.md$/u.test(name))
+  .sort();
+
+if (modules.length !== 13) throw new Error(`expected 13 baton modules, found ${modules.length}`);
+const batonText = modules
+  .map((name) => fs.readFileSync(path.join(moduleDir, name), 'utf8').trimEnd())
+  .join('\n\n---\n\n') + '\n';
+const batonWords = (batonText.match(/\S+/gu) || []).length;
+if (batonWords < 2000 || batonWords > 100000) {
+  throw new Error(`baton word count outside declared range: ${batonWords}`);
+}
+const batonPath = path.join(finalDir, 'hand-off-baton.md');
+fs.writeFileSync(batonPath, batonText, 'utf8');
+const batonData = fs.readFileSync(batonPath);
+writeJson(path.join(finalDir, 'baton-receipt.json'), {
+  schema: 'ghc.family.handoff-baton-receipt.v1',
+  owner: 'Lyren Moss',
+  phase: 'v698-v4-r2',
+  words: batonWords,
+  bytes: batonData.length,
+  sha256: sha256(batonData),
+  modules: modules.length,
+  state: 'PREPARED_NOT_SENT',
+  boundary
+});
+
+const finalExcluded = new Set([
+  path.join(finalDir, 'manifest.json'),
+  path.join(finalDir, 'owner-manifest.json'),
+  path.join(finalDir, 'content-seal.json')
+].map((value) => path.resolve(value).toLowerCase()));
+const finalEntries = listFiles(finalDir)
+  .filter((value) => !finalExcluded.has(path.resolve(value).toLowerCase()))
+  .map(entryFor);
+writeJson(path.join(finalDir, 'manifest.json'), {
+  schema: 'ghc.family.owner-stage-manifest.v14',
+  owner: 'Lyren Moss',
+  phase: 'v698-v4-r2',
+  stage: 'final',
+  byte_domain: 'utf8_lf_worktree_bytes_expected_to_equal_git_blob_bytes_after_staging',
+  entries: finalEntries,
+  self_exclusions: ['manifest.json', 'owner-manifest.json', 'content-seal.json'],
+  boundary
+});
+
+const ownerExcluded = new Set([
+  path.join(finalDir, 'owner-manifest.json'),
+  path.join(finalDir, 'content-seal.json')
+].map((value) => path.resolve(value).toLowerCase()));
+const ownerEntries = listFiles(phaseDir)
+  .filter((value) => !ownerExcluded.has(path.resolve(value).toLowerCase()))
+  .map(entryFor);
+writeJson(path.join(finalDir, 'owner-manifest.json'), {
+  schema: 'ghc.family.owner-manifest.v13',
+  owner: 'Lyren Moss',
+  phase: 'v698-v4-r2',
+  byte_domain: 'utf8_lf_worktree_bytes_expected_to_equal_git_blob_bytes_after_staging',
+  entries: ownerEntries,
+  self_exclusions: ['final/owner-manifest.json', 'final/content-seal.json'],
+  boundary
+});
+
+const sealNames = [
+  'phase-truth.json',
+  'proposal-outcomes.json',
+  'gate-register.json',
+  'retained-negatives.json',
+  'method-flow-index.json',
+  'lifecycle.json',
+  'checklist.json',
+  'route-candidate.json',
+  'hand-off-baton.md',
+  'owner-manifest.json'
+];
+writeJson(path.join(finalDir, 'content-seal.json'), {
+  schema: 'ghc.family.content-seal.v13',
+  owner: 'Lyren Moss',
+  phase: 'v698-v4-r2',
+  state: 'REPOSITORY_SEALED_CANONICAL_PENDING',
+  entries: sealNames.map((name) => entryFor(path.join(finalDir, name))),
+  exact_final: null,
+  canonical_receipt: 'external_after_exact_final',
+  repository_seal_immutable_after_commit: true,
+  boundary
+});
+
+process.stdout.write(`${JSON.stringify({
+  state: 'FINAL_METADATA_REFRESHED_WITHOUT_DOMAIN_REPLAY',
+  baton_words: batonWords,
+  final_manifest_entries: finalEntries.length,
+  owner_manifest_entries: ownerEntries.length,
+  content_seal_entries: sealNames.length
+})}\n`);
