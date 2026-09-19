@@ -1,0 +1,689 @@
+{
+  "defined_before_execution": true,
+  "tests": [
+    {
+      "test_id": "IF6986-T01",
+      "request": {
+        "op": "cg_weight_sums",
+        "input": {
+          "players": [
+            "a",
+            "b",
+            "c"
+          ],
+          "weights": [
+            2,
+            1,
+            1
+          ],
+          "quota": 3,
+          "costs": [
+            3,
+            1,
+            2
+          ]
+        }
+      },
+      "expected": {
+        "ok": true,
+        "error": null,
+        "outcome": "completed",
+        "value": {
+          "sums": [
+            0,
+            2,
+            1,
+            3,
+            1,
+            3,
+            2,
+            4
+          ],
+          "mask_order": "ascending little-endian component bits"
+        },
+        "external_credit": false
+      },
+      "basis": "Predeclared finite planning-oracle result; later Node parity remains same-owner evidence."
+    },
+    {
+      "test_id": "IF6986-T02",
+      "request": {
+        "op": "cg_margin_table",
+        "input": {
+          "players": [
+            "a",
+            "b",
+            "c"
+          ],
+          "weights": [
+            2,
+            1,
+            1
+          ],
+          "quota": 3,
+          "costs": [
+            3,
+            1,
+            2
+          ]
+        }
+      },
+      "expected": {
+        "ok": true,
+        "error": null,
+        "outcome": "completed",
+        "value": [
+          -3,
+          -1,
+          -2,
+          0,
+          -2,
+          0,
+          -1,
+          1
+        ],
+        "external_credit": false
+      },
+      "basis": "Predeclared finite planning-oracle result; later Node parity remains same-owner evidence."
+    },
+    {
+      "test_id": "IF6986-T03",
+      "request": {
+        "op": "cg_size_weight_histogram",
+        "input": {
+          "players": [
+            "a",
+            "b",
+            "c"
+          ],
+          "weights": [
+            2,
+            1,
+            1
+          ],
+          "quota": 3,
+          "costs": [
+            3,
+            1,
+            2
+          ]
+        }
+      },
+      "expected": {
+        "ok": true,
+        "error": null,
+        "outcome": "completed",
+        "value": [
+          {
+            "size": 0,
+            "weight": 0,
+            "coalitions": [
+              0
+            ]
+          },
+          {
+            "size": 1,
+            "weight": 1,
+            "coalitions": [
+              2,
+              4
+            ]
+          },
+          {
+            "size": 1,
+            "weight": 2,
+            "coalitions": [
+              1
+            ]
+          },
+          {
+            "size": 2,
+            "weight": 2,
+            "coalitions": [
+              6
+            ]
+          },
+          {
+            "size": 2,
+            "weight": 3,
+            "coalitions": [
+              3,
+              5
+            ]
+          },
+          {
+            "size": 3,
+            "weight": 4,
+            "coalitions": [
+              7
+            ]
+          }
+        ],
+        "external_credit": false
+      },
+      "basis": "Predeclared finite planning-oracle result; later Node parity remains same-owner evidence."
+    },
+    {
+      "test_id": "IF6986-T04",
+      "request": {
+        "op": "cg_quota_critical_edges",
+        "input": {
+          "players": [
+            "a",
+            "b",
+            "c"
+          ],
+          "weights": [
+            2,
+            1,
+            1
+          ],
+          "quota": 3,
+          "costs": [
+            3,
+            1,
+            2
+          ]
+        }
+      },
+      "expected": {
+        "ok": true,
+        "error": null,
+        "outcome": "completed",
+        "value": [
+          {
+            "coalition": 1,
+            "component": 1,
+            "after": 3
+          },
+          {
+            "coalition": 1,
+            "component": 2,
+            "after": 5
+          },
+          {
+            "coalition": 2,
+            "component": 0,
+            "after": 3
+          },
+          {
+            "coalition": 4,
+            "component": 0,
+            "after": 5
+          },
+          {
+            "coalition": 6,
+            "component": 0,
+            "after": 7
+          }
+        ],
+        "external_credit": false
+      },
+      "basis": "Predeclared finite planning-oracle result; later Node parity remains same-owner evidence."
+    },
+    {
+      "test_id": "IF6986-T05",
+      "request": {
+        "op": "cg_component_deletion",
+        "input": {
+          "players": [
+            "a",
+            "b",
+            "c"
+          ],
+          "weights": [
+            2,
+            1,
+            1
+          ],
+          "quota": 3,
+          "costs": [
+            3,
+            1,
+            2
+          ]
+        }
+      },
+      "expected": {
+        "ok": true,
+        "error": null,
+        "outcome": "completed",
+        "value": [
+          {
+            "component": 0,
+            "players": [
+              "b",
+              "c"
+            ],
+            "weights": [
+              1,
+              1
+            ],
+            "costs": [
+              1,
+              2
+            ],
+            "quota": 3,
+            "feasible": false,
+            "values": []
+          },
+          {
+            "component": 1,
+            "players": [
+              "a",
+              "c"
+            ],
+            "weights": [
+              2,
+              1
+            ],
+            "costs": [
+              3,
+              2
+            ],
+            "quota": 3,
+            "feasible": true,
+            "values": [
+              0,
+              0,
+              0,
+              1
+            ]
+          },
+          {
+            "component": 2,
+            "players": [
+              "a",
+              "b"
+            ],
+            "weights": [
+              2,
+              1
+            ],
+            "costs": [
+              3,
+              1
+            ],
+            "quota": 3,
+            "feasible": true,
+            "values": [
+              0,
+              0,
+              0,
+              1
+            ]
+          }
+        ],
+        "external_credit": false
+      },
+      "basis": "Predeclared finite planning-oracle result; later Node parity remains same-owner evidence."
+    },
+    {
+      "test_id": "IF6986-T06",
+      "request": {
+        "op": "cg_component_contraction",
+        "input": {
+          "players": [
+            "a",
+            "b",
+            "c"
+          ],
+          "weights": [
+            2,
+            1,
+            1
+          ],
+          "quota": 3,
+          "costs": [
+            3,
+            1,
+            2
+          ]
+        }
+      },
+      "expected": {
+        "ok": true,
+        "error": null,
+        "outcome": "completed",
+        "value": [
+          {
+            "component": 0,
+            "residual_quota": 1,
+            "values": [
+              0,
+              1,
+              1,
+              1
+            ]
+          },
+          {
+            "component": 1,
+            "residual_quota": 2,
+            "values": [
+              0,
+              1,
+              0,
+              1
+            ]
+          },
+          {
+            "component": 2,
+            "residual_quota": 2,
+            "values": [
+              0,
+              1,
+              0,
+              1
+            ]
+          }
+        ],
+        "external_credit": false
+      },
+      "basis": "Predeclared finite planning-oracle result; later Node parity remains same-owner evidence."
+    },
+    {
+      "test_id": "IF6986-T07",
+      "request": {
+        "op": "cg_scale_reduction",
+        "input": {
+          "players": [
+            "a",
+            "b",
+            "c"
+          ],
+          "weights": [
+            2,
+            1,
+            1
+          ],
+          "quota": 3,
+          "costs": [
+            3,
+            1,
+            2
+          ]
+        }
+      },
+      "expected": {
+        "ok": true,
+        "error": null,
+        "outcome": "completed",
+        "value": {
+          "divisor": 1,
+          "weights": [
+            2,
+            1,
+            1
+          ],
+          "quota": 3,
+          "table_preserved": true
+        },
+        "external_credit": false
+      },
+      "basis": "Predeclared finite planning-oracle result; later Node parity remains same-owner evidence."
+    },
+    {
+      "test_id": "IF6986-T08",
+      "request": {
+        "op": "cg_quota_perturbation",
+        "input": {
+          "players": [
+            "a",
+            "b",
+            "c"
+          ],
+          "weights": [
+            2,
+            1,
+            1
+          ],
+          "quota": 3,
+          "costs": [
+            3,
+            1,
+            2
+          ]
+        }
+      },
+      "expected": {
+        "ok": true,
+        "error": null,
+        "outcome": "completed",
+        "value": [
+          {
+            "label": "lower",
+            "available": true,
+            "quota": 2,
+            "winning": 5,
+            "changed_from_current": [
+              1,
+              6
+            ]
+          },
+          {
+            "label": "current",
+            "available": true,
+            "quota": 3,
+            "winning": 3,
+            "changed_from_current": []
+          },
+          {
+            "label": "upper",
+            "available": true,
+            "quota": 4,
+            "winning": 1,
+            "changed_from_current": [
+              3,
+              5
+            ]
+          }
+        ],
+        "external_credit": false
+      },
+      "basis": "Predeclared finite planning-oracle result; later Node parity remains same-owner evidence."
+    },
+    {
+      "test_id": "IF6986-T09",
+      "request": {
+        "op": "cg_dual_disagreement",
+        "input": {
+          "players": [
+            "a",
+            "b",
+            "c"
+          ],
+          "weights": [
+            2,
+            1,
+            1
+          ],
+          "quota": 3,
+          "costs": [
+            3,
+            1,
+            2
+          ]
+        }
+      },
+      "expected": {
+        "ok": true,
+        "error": null,
+        "outcome": "completed",
+        "value": {
+          "dual": [
+            0,
+            1,
+            0,
+            1,
+            0,
+            1,
+            1,
+            1
+          ],
+          "disagreements": [
+            1,
+            6
+          ]
+        },
+        "external_credit": false
+      },
+      "basis": "Predeclared finite planning-oracle result; later Node parity remains same-owner evidence."
+    },
+    {
+      "test_id": "IF6986-T10",
+      "label": "extra",
+      "request": {
+        "op": "cg_weight_sums",
+        "input": {
+          "players": [
+            "a",
+            "b",
+            "c"
+          ],
+          "weights": [
+            2,
+            1,
+            1
+          ],
+          "quota": 3,
+          "costs": [
+            3,
+            1,
+            2
+          ]
+        },
+        "extra": true
+      },
+      "expected_error": "field_set",
+      "subject_success_credit": 0
+    },
+    {
+      "test_id": "IF6986-T11",
+      "label": "zero_quota",
+      "request": {
+        "op": "cg_weight_sums",
+        "input": {
+          "players": [
+            "a",
+            "b",
+            "c"
+          ],
+          "weights": [
+            2,
+            1,
+            1
+          ],
+          "quota": 0,
+          "costs": [
+            3,
+            1,
+            2
+          ]
+        }
+      },
+      "expected_error": "quota",
+      "subject_success_credit": 0
+    },
+    {
+      "test_id": "IF6986-T12",
+      "label": "negative_weight",
+      "request": {
+        "op": "cg_weight_sums",
+        "input": {
+          "players": [
+            "a",
+            "b",
+            "c"
+          ],
+          "weights": [
+            -1,
+            1,
+            1
+          ],
+          "quota": 3,
+          "costs": [
+            3,
+            1,
+            2
+          ]
+        }
+      },
+      "expected_error": "integer_vector",
+      "subject_success_credit": 0
+    },
+    {
+      "test_id": "IF6986-T13",
+      "label": "duplicate_component",
+      "request": {
+        "op": "cg_weight_sums",
+        "input": {
+          "players": [
+            "a",
+            "a",
+            "c"
+          ],
+          "weights": [
+            2,
+            1,
+            1
+          ],
+          "quota": 3,
+          "costs": [
+            3,
+            1,
+            2
+          ]
+        }
+      },
+      "expected_error": "players",
+      "subject_success_credit": 0
+    },
+    {
+      "test_id": "IF6986-T14",
+      "label": "component_cap",
+      "request": {
+        "op": "cg_weight_sums",
+        "input": {
+          "players": [
+            "a",
+            "b",
+            "c",
+            "d",
+            "e",
+            "f",
+            "g"
+          ],
+          "weights": [
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1
+          ],
+          "quota": 3,
+          "costs": [
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1
+          ]
+        }
+      },
+      "expected_error": "component_budget",
+      "subject_success_credit": 0
+    },
+    {
+      "test_id": "IF6986-T15",
+      "label": "duplicate_json_key",
+      "raw": "{\"op\":\"cg_weight_sums\",\"op\":\"cg_weight_sums\",\"input\":{}}",
+      "expected_error": "duplicate_key",
+      "subject_success_credit": 0
+    }
+  ],
+  "new_proposal_credit": 0
+}
