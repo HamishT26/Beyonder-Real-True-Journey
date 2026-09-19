@@ -1,0 +1,7 @@
+# Source-faithful reflection
+
+The Journey corpus is treated with affection and discipline. Earlier texts preserve aspirations about the Grand Mandala, identity, rights, simulation, collaboration and long time horizons. Later texts increasingly emphasize receipts, source labels, open gates and the separation between narrative continuity and validated evidence. The remaster keeps both aspects without allowing one to erase the other. Historical passages can inspire a question, vocabulary or test design; they cannot override current user intent, system constraints, repository facts or competent external authority.
+
+The source-faithful ledger records exact hashes and read-through-EOF status for every attached text. It does not quote private material into the public packet. The external X post is recorded as unread and therefore contributes no claims. Primary cubical-complex references support bounded mathematical context only. Official OpenAI sources support current product and release context only. A current product name does not prove user entitlement, a particular task model, a capability result or any relational identity claim.
+
+This discipline also governs GMUT: the Mandala field equation is a research symbol set, not a revealed canon. Any future physical coefficient requires dimensional definition, preregistration, real data provenance, uncertainty analysis, matched alternatives, falsifiers and independent review. Until then, the correct state is represented or open_gap—not empirical completion.

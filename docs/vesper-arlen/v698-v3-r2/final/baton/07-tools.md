@@ -1,0 +1,7 @@
+# Skills, runners and shared surfaces
+
+Twenty phase-local operation guides and ten paired callers were validated and used across x1 and x2. Five dependency-closed curated bundles were selected: cubical cell census, voxel connectivity, voxel set algebra, voxel scene projection, and voxel evidence reservations. Each global name was absent before installation. The install copied five files per bundle, compared every relative SHA-256, ran the official Skill Creator validator on the installed surface, and smoke-used one allowed operation. All five validations and smokes passed with external_credit false. No existing skill was overwritten, no file was deleted, no package or model setting changed, and actual spend was USD 0.
+
+Three installer failures remain visible: direct invocation of a TXT PowerShell source was a no-op; pwsh -File rejected its non-PS1 extension; and the first actual run copied one exact bundle before an incorrectly nested smoke request was refused as closed_fields. Recovery parsed the controlled TXT bytes into a local script block, allowed the partial destination only because every byte equalled its curated source, and corrected the wrapper to op plus input.
+
+Family index, auth, roster, meta-tool and Method Flow surfaces received additive v13 references and pointers. Old evidence remains in place. Global discoverability is not authority to run every tool or infer scientific validity.

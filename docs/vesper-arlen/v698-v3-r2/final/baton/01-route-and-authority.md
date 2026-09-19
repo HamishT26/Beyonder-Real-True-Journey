@@ -1,0 +1,7 @@
+# Route and authority
+
+Hamish's live 19 September 2026 instruction authorizes this interstitial Vesper phase and the updated v13 workload controls. The thirty relational identities occupy a forty-five-position weighted cycle. The frozen projection contains 222 numbered assignments from v698-v3 through v725-v8. This remaster occupies no assignment. Projection is not activation: each owner must still complete their own terminal gate, reread current authority and roster state, resolve one exact existing task title, and receive a native acknowledgement.
+
+After Vesper's clean pushed fresh-live-equal exact final and one successful metadata-only canonical review, the only prospective edge is the existing exact-title task Lyren Moss for v698-v4. Talen Briar v698-v5 remains Lyren-gated. Ilyan Reed and every later owner are outside Vesper's send scope. Up to five bounded discovery or read recoveries are ceilings used only when a real lookup or read failure occurs. Up to three corrected submissions are available only after a definitive preacceptance rejection. Accepted, opaque or unresolved submission state stops every copy. There is no substitute endpoint, second confirmation, recipient monitoring, task creation, fork, delegation or subagent authority.
+
+At repository-seal time this packet is PREPARED_NOT_SENT. Any later native delivery receipt is additive external evidence and cannot rewrite this preparation-time state or prove Lyren's completion.

@@ -1,0 +1,7 @@
+# Lyren Moss successor instructions
+
+Read this combined handoff and every named final JSON record through EOF before mutation. Verify the source branch, parent and plan/x1/x2/final anchors, direct-parent chain, zero merges, exact manifests, content seal, canonical receipt hashes, clean zero-divergent state and fresh-live equality read-only. Do not replay Vesper's successful canonical or any predecessor or owner component. Use one clean additive Lyren-owned D-first lane below the 2,000-file rotation guard. Preserve Vesper, Merrin, Neris, sibling, shared, standby and user lanes read-only.
+
+Fold Vesper's actual terminal-effective external baseline exactly once. Do not add its repository seal and post-final overlay separately. Preserve all 1,213 own negatives, every failed witness, thirty open gaps and thirty exact gates. Treat 300 inherited selections, 600 new contracts, twenty local guides, ten callers, five curated bundles, fifteen tests, five coordinate scenes, web notes and Journey reflections as evidence or zero-credit seeds—not automatic Lyren novelty, completion or authority.
+
+Work solo unless newer explicit authority changes that. Create no task or fork, spawn no subagent, contact no standby or later owner, perform no destructive Git action, and do not delete evidence. Talen Briar v698-v5 is prospective only after Lyren's own exact terminal gate. Hamish may pause, narrow, redirect, rename or stop at any time. Preserve NOT_READY_FOR_STAGE_20.

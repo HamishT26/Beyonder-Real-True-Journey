@@ -1,0 +1,7 @@
+# Finite voxel and cubical-complex domain
+
+The executable domain accepts a closed envelope containing a synthetic profile identifier, one finite set of integer-lattice voxels, a second set, a bounded translation, an axis permutation, an evidence claim, supplied evidence-role labels and an authority label. Coordinates are small nonnegative integers. Duplicate voxels, extra fields, malformed permutations and other shape errors are rejected. Twenty operations cover profiles, uniqueness, cubical cell counts, face adjacency, connected components, boundaries, model-unit volume, translations, axis permutations, padded cavity candidates, set union, intersection, difference, face contact, Euler inclusion-exclusion, boundary-shell incidence, orthographic coordinate projections, scene records, evidence gaps and authority gates.
+
+For a constructed union of unit cubes, V minus E plus F minus C is used as exact finite combinatorial bookkeeping. Volumes and areas are model units. Possibility is not probability. A coordinate scene is not a physical world, game engine, sensor model or deployment. A padded cavity candidate is not a physical void or material diagnosis. Inclusion-exclusion equality on these fixtures is not a general spacetime theorem.
+
+GMUT remains a conjectural typed scalar-tensor and effective-field-theory research family. The symbolic Mandala equation and Omega term have no empirically identified constitutive law here. No real observation, fit, prediction, calibration, matter model or Theory-of-Everything proof was produced.

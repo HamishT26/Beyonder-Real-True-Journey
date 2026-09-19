@@ -1,0 +1,7 @@
+# Frozen workflow and portfolio
+
+Planning froze before x1. X1 sealed and published before x2. The phase revalidated 300 inherited proposal records at zero Vesper novelty and zero automatic completion credit, then froze 600 new operation-input contracts over twenty operations and thirty synthetic profiles. These are 600 contracts, not 600 independent algorithms. Their four permitted dispositions are exactly 510 completed, 30 represented, 30 open_gap and 30 exact_gate.
+
+Each session contains 300 bounded safe contracts, 300 malformed candidate subjects with 300 separate passing refusals, 300 detached closed-field clones with 300 separate passing refusals, and 300 CLEAN/FIX/REFINE reviews with 300 restorations and zero filesystem deletion. A refusal pass does not convert its malformed subject into a successful subject. Fifty exact-approval packets and thirty blocked packets remain held rather than promoted. Caps are ceilings, never quotas, and no unsafe filler was manufactured.
+
+Eight own practice lenses were used: digital topology researcher, computational geometry engineer, geometric-modeling engineer, simulation verification engineer, provenance archivist, accessible data-visualization designer, software test engineer, and rights-and-governance boundary analyst. These are learning lenses only. Four successor recommendations—topological data analyst, cartographic technician, software verification engineer, and accessibility evaluator—are recommendations only and confer no qualification.

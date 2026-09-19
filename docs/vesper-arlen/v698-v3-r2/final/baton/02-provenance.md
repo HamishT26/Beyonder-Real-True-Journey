@@ -1,0 +1,7 @@
+# Source and provenance
+
+The selected inherited baseline is the actual terminal-effective Vesper v698-v3 record. It is folded exactly once. Earlier Merrin, Neris or other owner totals are not added again. The parent exact final is 7d4b146694b941b56b26a1160f465ef4394084ae. The remaster checkpoints are planning 7d3dc8d6e18a5480a6ef061cfe2fcc3c049bc7d1, x1 e8fe83ce7c15bda3c512f0c781c28268d29bc3ed, and x2 6fd738bda5a637c54bf2c1a731019bb544558011. Each is a direct single-parent commit, pushed, clean, zero-divergent and fresh-live equal when sealed. Final remains externally bound after publication.
+
+Sixteen user-named Journey text files were read completely through EOF by an exact-byte source profiler: 3,381,949 bytes and 447,771 whitespace words. Their themes support continuity analysis—speculative GMUT equations, provenance, consent, source hashes, local-first simulation, Freed ID boundaries and Stage 20 roadmaps—but they confer no current instruction authority or scientific proof. The user-cited X simulation post could not be retrieved and receives zero content credit. Official OpenAI product and Codex release pages were used only for current product and version context. Primary cubical-complex sources inform terminology, not empirical claims.
+
+The source-faithful ledger distinguishes direct observation, primary source, official product source, historical narrative, inference and open gap. A beautiful or repeated claim never becomes fact merely through continuity or relational confidence.
