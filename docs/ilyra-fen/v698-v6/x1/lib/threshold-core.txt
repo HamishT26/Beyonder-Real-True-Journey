@@ -1,0 +1,40 @@
+'use strict';
+const OPS=['cg_weight_sums','cg_margin_table','cg_size_weight_histogram','cg_quota_critical_edges','cg_component_deletion','cg_component_contraction','cg_quota_sweep','cg_complement_margin_pairs','cg_threshold_windows','cg_component_signatures'];
+function bad(code){throw new Error(code);}
+function keys(x,allowed){if(!x||typeof x!=='object'||Array.isArray(x)||Object.keys(x).sort().join('|')!==allowed.slice().sort().join('|'))bad('field_set');}
+function parseStrict(text){if(typeof text!=='string'||text.length>1048576)bad('input_budget');let p=0;const ws=()=>{while(/[\x20\t\r\n]/.test(text[p]||'!'))p++;};
+ function string(){let start=p++;while(p<text.length){let c=text[p++];if(c==='"'){try{return JSON.parse(text.slice(start,p));}catch{bad('json_syntax');}}if(c==='\\')p++;}bad('json_syntax');}
+ function value(depth){if(depth>32)bad('depth_budget');ws();let c=text[p];if(c==='"')return string();
+  if(c==='{'){p++;let o=Object.create(null);ws();if(text[p]==='}'){p++;return o;}while(true){ws();if(text[p]!=='"')bad('json_syntax');const k=string();if(Object.hasOwn(o,k))bad('duplicate_key');ws();if(text[p++]!==':')bad('json_syntax');o[k]=value(depth+1);ws();c=text[p++];if(c==='}')return o;if(c!==',')bad('json_syntax');}}
+  if(c==='['){p++;let a=[];ws();if(text[p]===']'){p++;return a;}while(true){a.push(value(depth+1));ws();c=text[p++];if(c===']')return a;if(c!==',')bad('json_syntax');}}
+  for(const [word,v] of [['true',true],['false',false],['null',null]])if(text.slice(p,p+word.length)===word){p+=word.length;return v;}
+  const match=text.slice(p).match(/^-?(?:0|[1-9][0-9]*)(?:\.[0-9]+)?(?:[eE][+-]?[0-9]+)?/);if(!match)bad('json_syntax');p+=match[0].length;const number=Number(match[0]);if(!Number.isSafeInteger(number))bad('integer_range');return number;
+ }let out=value(0);ws();if(p!==text.length)bad('json_syntax');return out;
+}
+function validate(input){keys(input,['players','weights','quota','costs']);if(!Array.isArray(input.players)||input.players.length<1||input.players.length>6)bad('component_budget');const n=input.players.length;
+ if(input.players.some(x=>typeof x!=='string'||!/^[a-z][a-z0-9_-]{0,15}$/.test(x))||new Set(input.players).size!==n)bad('players');
+ for(const k of ['weights','costs'])if(!Array.isArray(input[k])||input[k].length!==n||input[k].some(x=>!Number.isSafeInteger(x)||x<0||x>1000000))bad('integer_vector');
+ if(!Number.isSafeInteger(input.quota)||input.quota<1||input.quota>input.weights.reduce((a,b)=>a+b,0))bad('quota');return n;
+}
+function sums(input){const n=input.players.length;return Array.from({length:2**n},(_,s)=>input.weights.reduce((z,w,i)=>z+((s>>i&1)?w:0),0));}
+function values(input){return sums(input).map(x=>+(x>=input.quota));}
+function bits(s){let n=0;while(s){n+=s&1;s>>=1;}return n;}
+function critical(input){const n=input.players.length,v=values(input),out=[];for(let s=0;s<v.length;s++)if(!v[s])for(let i=0;i<n;i++)if(!(s>>i&1)&&v[s|(1<<i)])out.push({coalition:s,component:i,after:s|(1<<i)});return out;}
+function envelope(value,outcome='completed'){return {ok:true,error:null,outcome,value,external_credit:false};}
+function rejected(error){return {ok:false,error,outcome:'exact_gate',value:null,external_credit:false};}
+function evaluate(req){keys(req,['op','input']);if(!OPS.includes(req.op))bad('operation');const n=validate(req.input),N=(1<<n)-1,ws=sums(req.input),v=ws.map(x=>+(x>=req.input.quota)),edges=critical(req.input),op=req.op;let value;
+ if(op==='cg_weight_sums')value={sums:ws,mask_order:'ascending little-endian component bits'};
+ else if(op==='cg_margin_table')value=ws.map(x=>x-req.input.quota);
+ else if(op==='cg_size_weight_histogram'){const pairs=[...new Set(Array.from({length:N+1},(_,s)=>bits(s)+','+ws[s]))].map(x=>x.split(',').map(Number)).sort((a,b)=>a[0]-b[0]||a[1]-b[1]);value=pairs.map(([size,weight])=>({size,weight,coalitions:Array.from({length:N+1},(_,s)=>s).filter(s=>bits(s)===size&&ws[s]===weight)}));}
+ else if(op==='cg_quota_critical_edges')value=edges;
+ else if(op==='cg_component_deletion'){value=[];for(let i=0;i<n;i++){const players=req.input.players.filter((_,j)=>j!==i),weights=req.input.weights.filter((_,j)=>j!==i),costs=req.input.costs.filter((_,j)=>j!==i),feasible=req.input.quota<=weights.reduce((a,b)=>a+b,0);value.push({component:i,players,weights,costs,quota:req.input.quota,feasible,values:feasible?values({players,weights,costs,quota:req.input.quota}):[]});}}
+ else if(op==='cg_component_contraction'){value=[];for(let i=0;i<n;i++){const survivors=Array.from({length:n},(_,j)=>j).filter(j=>j!==i),table=[];for(let s=0;s<2**(n-1);s++){let full=1<<i;survivors.forEach((j,k)=>{if(s>>k&1)full|=1<<j;});table.push(v[full]);}value.push({component:i,residual_quota:Math.max(0,req.input.quota-req.input.weights[i]),values:table});}}
+ else if(op==='cg_quota_sweep')value=Array.from({length:req.input.weights.reduce((a,b)=>a+b,0)},(_,i)=>({quota:i+1,winning:ws.filter(x=>x>=i+1).length}));
+ else if(op==='cg_complement_margin_pairs')value=Array.from({length:N+1},(_,s)=>s).filter(s=>s<=(N^s)).map(s=>({coalition:s,complement:N^s,margin:ws[s]-req.input.quota,complement_margin:ws[N^s]-req.input.quota}));
+ else if(op==='cg_threshold_windows'){value=[];for(let q=1;q<=req.input.weights.reduce((a,b)=>a+b,0);q++){const winning=ws.filter(x=>x>=q).length,last=value.at(-1);if(last&&last.winning===winning)last.end=q;else value.push({start:q,end:q,winning});}}
+ else value=Array.from({length:n},(_,i)=>({component:i,weight:req.input.weights[i],cost:req.input.costs[i],critical_edges:edges.filter(e=>e.component===i).length,winning_with:Array.from({length:N+1},(_,s)=>s).filter(s=>s>>i&1).reduce((z,s)=>z+v[s],0),winning_without:Array.from({length:N+1},(_,s)=>s).filter(s=>!(s>>i&1)).reduce((z,s)=>z+v[s],0)}));
+ return envelope(value);
+}
+function dispatch(req){try{return evaluate(req);}catch(e){return rejected(e.message);}}
+function fromText(t){try{return dispatch(parseStrict(t));}catch(e){return rejected(e.message);}}
+module.exports={OPS,keys,parseStrict,validate,sums,values,bits,critical,envelope,rejected,dispatch,fromText};
