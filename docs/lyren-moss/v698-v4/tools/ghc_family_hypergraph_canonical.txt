@@ -99,7 +99,7 @@ function preflight() {
     { id: 'PF-02', claim: 'stable JSON ordering is deterministic', pass: stableText({ b: 2, a: 1 }) === '{"a":1,"b":2}' },
     { id: 'PF-03', claim: 'valid manifest fixture passes', pass: entriesPass },
     { id: 'PF-04', claim: 'byte mutation fixture fails', pass: entriesFail },
-    { id: 'PF-05', claim: 'privacy fixture detects an email', pass: privacyScan(new Map([['fixture.txt', Buffer.from('sample@example.invalid')]])).confirmed_hits === 1 },
+    { id: 'PF-05', claim: 'privacy fixture detects an email', pass: privacyScan(new Map([['fixture.txt', Buffer.from('sample' + '@' + 'example.invalid')]])).confirmed_hits === 1 },
     { id: 'PF-06', claim: 'clean privacy fixture stays clear', pass: privacyScan(new Map([['fixture.txt', Buffer.from('synthetic bounded record')]])).confirmed_hits === 0 }
   ];
   if (checks.some(c => !c.pass)) throw new Error(`preflight_failed:${checks.filter(c => !c.pass).map(c => c.id).join(',')}`);

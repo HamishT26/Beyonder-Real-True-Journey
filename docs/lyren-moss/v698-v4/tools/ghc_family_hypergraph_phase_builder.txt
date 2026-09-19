@@ -137,6 +137,7 @@ function coreFactory(allowedNames) {
     hg_scene: 'represented', hg_evidence_gap: 'open_gap', hg_authority_gate: 'exact_gate'
   };
   const lexical = (a, b) => String(a).localeCompare(String(b));
+  const exactKeys = (obj, keys) => { const a = Object.keys(obj || {}).sort(), b = [...keys].sort(); return a.length === b.length && a.every((x, i) => x === b[i]); };
   const uniqSorted = xs => [...new Set(xs)].sort(lexical);
   const edgeKey = e => `${[...e.tails].sort(lexical).join('&')}=>${[...e.heads].sort(lexical).join('&')}`;
   const canonicalEdge = e => ({ id: String(e.id), tails: uniqSorted(e.tails), heads: uniqSorted(e.heads) });
