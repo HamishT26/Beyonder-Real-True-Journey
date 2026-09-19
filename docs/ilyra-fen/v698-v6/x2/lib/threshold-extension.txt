@@ -1,0 +1,55 @@
+'use strict';
+const OPS=['cg_scale_reduction','cg_quota_perturbation','cg_weight_perturbation','cg_cost_weight_frontier','cg_minimum_winning_size','cg_lexicographic_certificates','cg_dual_disagreement','cg_scene','cg_evidence_gap','cg_authority_gate'];
+function gcd(a,b){while(b){const t=a%b;a=b;b=t;}return a;}
+function evaluate(req){
+ base.keys(req,['op','input']);
+ if(!OPS.includes(req.op))throw new Error('operation');
+ const n=base.validate(req.input),N=(1<<n)-1,ws=base.sums(req.input),v=ws.map(x=>+(x>=req.input.quota));
+ const winning=Array.from({length:N+1},(_,s)=>s).filter(s=>v[s]);
+ const losing=Array.from({length:N+1},(_,s)=>s).filter(s=>!v[s]);
+ const edges=base.critical(req.input),op=req.op;
+ let value,outcome='completed';
+ if(op==='cg_scale_reduction'){
+  const d=req.input.weights.reduce((z,w)=>gcd(z,w),req.input.quota);
+  const reduced={players:req.input.players,weights:req.input.weights.map(x=>x/d),quota:req.input.quota/d,costs:req.input.costs};
+  value={divisor:d,weights:reduced.weights,quota:reduced.quota,table_preserved:JSON.stringify(base.values(reduced))===JSON.stringify(v)};
+ } else if(op==='cg_quota_perturbation'){
+  value=[];
+  for(const [label,q] of [['lower',req.input.quota-1],['current',req.input.quota],['upper',req.input.quota+1]]){
+   if(q<1||q>req.input.weights.reduce((a,b)=>a+b,0))value.push({label,available:false});
+   else {const vv=ws.map(x=>+(x>=q));value.push({label,available:true,quota:q,winning:vv.reduce((a,b)=>a+b,0),changed_from_current:Array.from({length:N+1},(_,s)=>s).filter(s=>vv[s]!==v[s])});}
+  }
+ } else if(op==='cg_weight_perturbation'){
+  value=[];
+  for(let i=0;i<n;i++){
+   const changed={players:[...req.input.players],weights:[...req.input.weights],quota:req.input.quota,costs:[...req.input.costs]};
+   changed.weights[i]++;
+   const vv=base.values(changed);
+   value.push({component:i,changed_masks:Array.from({length:N+1},(_,s)=>s).filter(s=>vv[s]!==v[s])});
+  }
+ } else if(op==='cg_cost_weight_frontier'){
+  const rows=winning.map(s=>({coalition:s,weight:ws[s],cost:req.input.costs.reduce((z,c,i)=>z+((s>>i&1)?c:0),0),size:base.bits(s)}));
+  value=rows.filter(r=>!rows.some(q=>q.weight>=r.weight&&q.cost<=r.cost&&(q.weight>r.weight||q.cost<r.cost)));
+ } else if(op==='cg_minimum_winning_size'){
+  const size=Math.min(...winning.map(base.bits));
+  value={size,coalitions:winning.filter(s=>base.bits(s)===size)};
+ } else if(op==='cg_lexicographic_certificates'){
+  value={first_winning:winning[0],last_losing:losing.length?losing.at(-1):null,first_winning_margin:ws[winning[0]]-req.input.quota,last_losing_margin:losing.length?ws[losing.at(-1)]-req.input.quota:null};
+ } else if(op==='cg_dual_disagreement'){
+  const dual=Array.from({length:N+1},(_,s)=>1-v[N^s]);
+  value={dual,disagreements:Array.from({length:N+1},(_,s)=>s).filter(s=>dual[s]!==v[s])};
+ } else if(op==='cg_scene'){
+  value={points:req.input.players.map((component,i)=>({component,xyz:[i,req.input.weights[i],edges.filter(e=>e.component===i).length]})),axes:['declared component index','synthetic weight','finite boundary-edge count'],physical:false};
+  outcome='represented';
+ } else if(op==='cg_evidence_gap'){
+  value={missing:['empirical','participant','independent-reproduction'],synthetic_margins_are_measurements:false};
+  outcome='open_gap';
+ } else {
+  value={closed:['consent','legal','cultural','affected-party','Maori-authority'],release:false,finite_indices_confer_authority:false};
+  outcome='exact_gate';
+ }
+ return base.envelope(value,outcome);
+}
+function dispatch(req){try{return evaluate(req);}catch(e){return base.rejected(e.message);}}
+function fromText(t){try{return dispatch(base.parseStrict(t));}catch(e){return base.rejected(e.message);}}
+module.exports={OPS,dispatch,fromText};
