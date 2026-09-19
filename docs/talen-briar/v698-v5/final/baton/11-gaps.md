@@ -1,0 +1,7 @@
+# Gaps and future work
+
+The owner Method Flow consists of 43 methods and 3699 witnesses, with 1229 failed and 2470 bounded passing witnesses. There are 1229 unique owner retained negatives. Forty-two methods are validated in their bounded scope; the unavailable native task/usage method remains observed. The 21,957-negative source baseline is folded once to produce 23186 effective negatives. Effective totals are 1026 methods, 16209 failed witnesses, 51607 passing witnesses and 67816 total witnesses.
+
+The thirty new core evidence gaps and thirty new exact gates remain distinct from the operational native-tool gap. With the source folded once, the result is 587 open gaps and 585 exact gates. No cumulative proposal count is invented. Historical witness granularities are preserved, not treated as equally strong observations merely because their counts can be added.
+
+Useful next work includes antichain-based support inputs, quota-interval uncertainty, exact threshold-equivalence witnesses, cost perturbation frontiers and counterexample minimization. The four suggested practice lenses are uncertainty-dependence review, multi-criteria decision review, proof-certificate engineering and adversarial fixture design. These are prospective ideas requiring new frozen contracts. They do not close empirical, participant, production, consent, professional, legal, cultural, affected-party, Maori-authority, independent-reproduction, privacy-complete, accessibility-complete, exhaustive-security or Stage 20 gates.

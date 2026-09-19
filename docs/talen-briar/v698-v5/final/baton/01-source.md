@@ -1,0 +1,7 @@
+# Source and immutable history
+
+The exact source is Lyren's additive v698-v4-r2 final. Its baton has 2,377 whitespace words, 17,811 UTF-8 bytes and SHA-256 239d83a837e9a7718b63189f4a1173adee49e5fc137c557777739018da1cd72b. Talen verified all 183 owner files through bounded exact-blob reading, strictly parsed 114 JSON documents and replayed 220 final manifest, owner manifest and content-seal entries with no mismatch. The owner manifest binds 181 entries and excludes itself and the content seal explicitly.
+
+Lyren's canonical receipt SHA-256 is 766b349ebceeded43fb35d2cebdcecaa909967cf60ac3b36b0a3f4e498a72794. Its payload SHA-256 is be83d4f5c150a826d45806843aba621eaf6d587bda492cd9b7cc9b60f1b3c634. Those exact receipt bytes were verified. The source canonical was invoked once, succeeded once and was not replayed by Talen. No predecessor engine, test, smoke, installer or model was run.
+
+The source repository seal and its later native-read correction remain distinct. The external route overlay digest f8779eb4695cb4d18839dedc884afdc202340c1d4f2d67ea3048c837453bdefd supplies the effective activation baseline: 21,957 negatives, 983 methods, 14,980 failed witnesses, 49,137 bounded passing witnesses, 64,117 total witnesses, 556 open gaps and 555 exact gates. That baseline is folded exactly once. Lyren's report about twenty-two Journey variants remains source provenance; Talen did not reread or copy those raw historical documents and gives them no new execution credit.

@@ -1,0 +1,7 @@
+# Manifests and metadata canonical
+
+Each manifest entry declares a repository-relative path, byte count and SHA-256 digest in the raw Git-blob UTF-8 LF domain. The final stage manifest excludes the three manifest/seal files to avoid circular binding. The owner manifest then binds every owner artifact except itself and the final content seal. The seal binds the owner manifest, lifecycle manifests and key final records. Exclusion arithmetic is verified against the complete owner inventory.
+
+The exact-final canonical is metadata-only. It reads committed owner blobs, strictly parses JSON, replays hashes, checks ancestry, confirms clean pushed four-way equality, validates identifiers and arithmetic, and inspects already-recorded result metadata. It runs no engine, test, model, smoke, installer, browser check or domain compiler. Fifteen minimal checks are projections of the same detailed observation, not an additional independent test run.
+
+Only one successful canonical is allowed. A successful receipt closes its latch and must not be replayed for a clearer display, timestamp or assurance claim. Failure receipts must be retained and any correction must be narrow and additive. The final commit cannot truthfully contain its own hash; the separate external canonical receipt binds that exact commit. The repository-sealed canonical fields therefore remain prepared even after a later successful receipt exists. Repository, canonical, route and delivery states must never be collapsed.

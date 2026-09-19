@@ -1,0 +1,7 @@
+# Context deck and browser report
+
+The compact four-tier deck contains 612 independently identified JSON card objects: one owner anchor, three pillars, eight practice cards and six hundred task cards. Bounded array shards preserve every card's identifier, parent, outcome, source reference and evidence boundary without consuming one file per card. Every parent link moves exactly one tier; no target is missing, no tier is skipped and the graph is acyclic. Stable and volatile indexes keep enduring context separate from task-local results.
+
+The HTML report presents labeled profile and operation selectors and exact finite outputs. A second selector presents five nonphysical models with a keyboard-operable projection rotation and an adjacent exact coordinate table. The page displays retained results rather than running another mathematical engine. Browser checks covered fifteen selected contract states, all five models, desktop and mobile widths, meaningful page content and console health. No screenshots were generated under the current artifact policy.
+
+The bounded browser observation is stronger than a syntax-only HTML check, but it is not complete visual, accessibility or security assurance. Pixel-by-pixel visual review and manual assistive-technology evaluation were not performed. The three-coordinate projection is a presentation model, not physical space or measured causal influence. The report preserves these limits alongside the values so a reader can inspect the evidence without inferring an external claim.

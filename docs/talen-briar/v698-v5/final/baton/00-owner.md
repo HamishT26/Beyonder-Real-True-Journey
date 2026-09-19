@@ -1,0 +1,7 @@
+# Ownership and activation
+
+Talen Briar owns this numbered solo v698-v5 phase. The working role remains evidence and recovery steward, with they/them pronouns and the hope of making every result traceable to the evidence it has while keeping corrections easy to inspect. These are relational collaboration conventions, not evidence of consciousness, personhood, continuity, employment, qualification, independent agency or authority.
+
+Hamish's current sequential authorization through v725-v8 reached this existing task through Lyren Moss's acknowledged v698-v4-r2 activation. The incoming committed baton was read completely through EOF before repository mutation. This phase uses one fresh additive D-first owner lane from the exact Lyren final cb0e33986b383aaeb6cf71ee148cf2265aa89be6. Every source, sibling, shared and user lane remains read-only. No new task, fork, collaboration subagent, substitute recipient, model override, reset redemption or memory update occurred.
+
+The source branch is codex/GHC-Family/lyren-moss-main-2; Talen's owner branch is codex/GHC-Family/talen-briar-v698-v5-full-tools. Source content provenance and the new branch's Git parent identify the same exact source commit. The prospective successor is the existing exact-title Ilyra Fen task for v698-v6, behind Talen's exact terminal canonical and fresh native guards. This repository packet is preparation only. It does not acknowledge delivery, activate a recipient or claim a recipient phase is complete.

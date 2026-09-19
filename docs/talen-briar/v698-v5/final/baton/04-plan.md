@@ -1,0 +1,7 @@
+# Planning and inherited contracts
+
+The plan retains 300 source proposal records as exact provenance and revalidation seeds. Each carries a source blob digest, record index, canonical record digest, and explicit zero novelty and completion credit. These inherited contracts were inspected and bound, not executed as new work. Twenty new operation families are each paired with thirty distinct finite profiles, producing 600 unique new contracts.
+
+Every contract freezes its complete request and expected response envelope, its expected evidence outcome, a malformed candidate, a detached clone with a required field omitted, a restoration rule and a falsifier. Accepted malformed input, a full-envelope mismatch, input mutation or any evidence promotion would fail the contract. Candidate failures and detached-clone failures retain zero original success credit even when their refusal comparisons pass.
+
+The first four-component fixture search could not produce thirty distinct outcome tables within its declared sorted-weight range. Its exact failed builder was retained externally, no contract files had been written, and the corrected plan used five components under the unchanged cap of six. Fifty exact-approval packets and thirty blocked packets remain held. Eight analytical practice lenses support the phase, and four successor practice suggestions remain suggestions rather than qualifications. The plan also freezes fifteen additional edge cases and five three-coordinate representation contracts before their execution.

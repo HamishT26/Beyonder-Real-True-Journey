@@ -1,0 +1,7 @@
+# Current controls
+
+The controlling v14 overlay preserves the existing forty-five-position cycle of thirty named identities through v725-v8. Its 222 numbered rows were read completely with a lossless column-dictionary projection. Talen v698-v5 and Ilyra v698-v6 are adjacent declared assignments; a projection is not an activation. The copied workflow and roster retain Lyren's publication-time issuer fields as source context, while this owner authorization names Talen's actual phase.
+
+The lifecycle is a planning-only checkpoint, x1 execution, x2 execution, final repository seal, one metadata canonical and a separately gated route. Planning was pushed and clean before x1; x1 was pushed and clean before x2. Each phase checkpoint has one direct parent and zero merges. The declared ceiling is eight new phase commits, with four planned. Both tracked and materialized file ceilings are 2,000. Compact JSON shards preserve the large contract and card inventories below those ceilings.
+
+New artifacts are JSON, Markdown, TXT and HTML. PDF, raster image, screenshot, DOCX, TeX, Python-suffix source and package-lock artifacts are not produced. Python support programs are trusted TXT files outside the repository; Node domain sources and public runners are TXT. No package update or shared/global installation is selected. The spending ceiling is USD 50 and actual incremental spend is zero. At most five route lookup/read recoveries are allowed after failures; this is a ceiling, not a requirement to issue useless repeated requests.

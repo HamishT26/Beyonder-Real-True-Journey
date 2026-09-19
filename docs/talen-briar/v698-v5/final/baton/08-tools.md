@@ -1,0 +1,7 @@
+# Skills and curated local tools
+
+The phase contains twenty original local skills and ten paired local public runners, split evenly between the two sessions. Five curated local packages each collect four related operation contracts. All twenty-five skill entrypoints passed official Skill Creator validation. The curated package wrappers passed twenty positive operation checks and five rejecting allowlist checks on a separate four-component synthetic rule.
+
+The curated tool directory contains five public wrappers and two implementation libraries. Those libraries receive no extra runner or novelty credit. Their bytes match the original x1 core and x2 extension exactly. The forty-card capability catalogue binds real source paths, content hashes, triggers, observed caller receipts, rollback statements and protected gates. These capabilities operate on finite JSON contracts and have no task-routing function.
+
+Every curated package remains inside Talen's owner lane. No shared skill pointer, global registry, sibling worktree, user file or installed package was mutated. Existing Node, Python, Playwright and browser resources were reused. The prior Lyren CLI update remains historical source evidence and is not repeated here. Rollback means selecting a retained local capability and appending a correction; it does not mean deleting evidence or overwriting another package. Source, compiler, test and browser observations remain distinguishable from professional or production validation.
