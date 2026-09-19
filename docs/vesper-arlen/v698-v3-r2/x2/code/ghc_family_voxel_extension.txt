@@ -1,0 +1,22 @@
+'use strict';
+const core=require('./ghc_family_voxel_core.txt');
+const allowed=['vx_union','vx_intersection','vx_difference','vx_contact','vx_inclusion_exclusion','vx_shell','vx_projection','vx_scene','vx_evidence_gap','vx_authority_gate'];
+const claims={empirical_gmut:['real_observations','typed_physical_mapping','independent_review'],production_thos:['real_operators','safety_monitoring','governed_trial','independent_review'],freed_id:['real_keys','interoperability','privacy_review','recovery_governance'],accessibility:['assistive_technology','affected_user_review','manual_evaluation']};
+const key=p=>p.join(','),cmp=(a,b)=>a[0]-b[0]||a[1]-b[1]||a[2]-b[2],canon=a=>a.map(p=>p.slice()).sort(cmp),dirs=[[1,0,0],[-1,0,0],[0,1,0],[0,-1,0],[0,0,1],[0,0,-1]],add=(p,q)=>[p[0]+q[0],p[1]+q[1],p[2]+q[2]],edgeKey=ps=>ps.map(key).sort().join('|');
+function shell(a){const census=core.census(a),map=new Map();for(const face of census.boundary){const points=face.split('|').map(s=>s.split(',').map(Number));for(let i=0;i<points.length;i++)for(let j=i+1;j<points.length;j++){const distance=points[i].reduce((n,v,k)=>n+Math.abs(v-points[j][k]),0);if(distance===1){const edge=edgeKey([points[i],points[j]]);map.set(edge,(map.get(edge)||0)+1);}}}const histogram={};for(const n of map.values())histogram[n]=(histogram[n]||0)+1;return{boundary_edges:map.size,incidence_histogram:histogram,closed_two_incidence:[...map.values()].every(n=>n===2),non_two_incidence_edges:[...map].filter(x=>x[1]!==2).map(([edge,incidence])=>({edge,incidence}))};}
+function run(op,input){const error=core.reject(input);if(error)return{ok:false,op,error,external_credit:false};if(!allowed.includes(op))return{ok:false,op,error:'unknown_operation',external_credit:false};const a=canon(input.voxels),b=canon(input.other_voxels),left=new Set(a.map(key)),right=new Set(b.map(key));const union=canon([...a,...b].filter((p,i,z)=>z.findIndex(q=>key(q)===key(p))===i)),intersection=canon(a.filter(p=>right.has(key(p)))),difference=canon(a.filter(p=>!right.has(key(p))));let data;
+switch(op){
+case'vx_union':data={coordinates:union,summary:core.summary(union)};break;
+case'vx_intersection':data={coordinates:intersection,summary:core.summary(intersection)};break;
+case'vx_difference':data={coordinates:difference,summary:core.summary(difference)};break;
+case'vx_contact':{const pairs=[];for(const p of a)if(!right.has(key(p)))for(const d of dirs){const q=add(p,d);if(right.has(key(q))&&!left.has(key(q)))pairs.push({left:p,right:q});}data={overlap_voxels:intersection.length,face_contact_pairs:pairs.sort((u,v)=>cmp(u.left,v.left)||cmp(u.right,v.right)),face_contacts:pairs.length};break;}
+case'vx_inclusion_exclusion':{const A=core.summary(a),B=core.summary(b),I=core.summary(intersection),U=core.summary(union),rhs=A.euler+B.euler-I.euler;data={chi_a:A.euler,chi_b:B.euler,chi_intersection:I.euler,chi_union:U.euler,rhs,equal:U.euler===rhs};break;}
+case'vx_shell':data=shell(a);break;
+case'vx_projection':{const project=(i,j)=>[...new Set(a.map(p=>p[i]+','+p[j]))].map(s=>s.split(',').map(Number)).sort((u,v)=>u[0]-v[0]||u[1]-v[1]);data={xy:project(0,1),xz:project(0,2),yz:project(1,2),exact_occupancy_only:true};break;}
+case'vx_scene':data={scene_id:input.profile_id,cubes:a.map((coordinate,i)=>({cube_id:'cube-'+i,coordinate,unit:1})),views:['isometric','front','side','top','exploded'],physical_simulation:false,engine_integration:false,state:'represented'};break;
+case'vx_evidence_gap':data={claim:input.claim,required:claims[input.claim],provided:input.provided,missing:claims[input.claim].filter(v=>!input.provided.includes(v)),externally_verified:false,claim_established:false,state:'open_gap'};break;
+case'vx_authority_gate':data={label:input.authority,authority_granted:false,rights_allocated:false,production:false,stage20:false,state:'exact_gate'};break;
+}
+return{ok:true,op,data,external_credit:false};
+}
+module.exports={run,shell};

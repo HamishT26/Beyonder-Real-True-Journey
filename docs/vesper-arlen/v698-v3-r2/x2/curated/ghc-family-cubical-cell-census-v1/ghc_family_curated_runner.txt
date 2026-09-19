@@ -1,0 +1,5 @@
+'use strict';
+require.extensions['.txt']=require.extensions['.js'];
+const core=require('./support/ghc_family_voxel_core.txt'),extension=require('./support/ghc_family_voxel_extension.txt');
+const allowed=["vx_profile","vx_cells","vx_boundary","vx_volume"];
+module.exports.run=q=>!allowed.includes(q.op)?{ok:false,op:q.op,error:'curated_scope',external_credit:false}:(q.op.startsWith('vx_')&&['vx_profile','vx_unique','vx_cells','vx_adjacency','vx_components','vx_boundary','vx_volume','vx_translate','vx_permute','vx_cavities'].includes(q.op)?core.run(q.op,q.input):extension.run(q.op,q.input));

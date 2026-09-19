@@ -1,0 +1,5 @@
+'use strict';
+require.extensions['.txt']=require.extensions['.js'];
+const extension=require('../code/ghc_family_voxel_extension.txt');
+const allowed=["vx_projection","vx_scene"];
+module.exports.run=q=>allowed.includes(q.op)?extension.run(q.op,q.input):{ok:false,op:q.op,error:'caller_scope',external_credit:false};

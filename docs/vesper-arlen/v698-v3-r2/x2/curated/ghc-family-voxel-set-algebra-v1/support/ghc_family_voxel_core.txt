@@ -1,0 +1,31 @@
+'use strict';
+const allowed=['vx_profile','vx_unique','vx_cells','vx_adjacency','vx_components','vx_boundary','vx_volume','vx_translate','vx_permute','vx_cavities'];
+const required=['profile_id','voxels','other_voxels','translation','axis_order','claim','provided','authority'];
+const evidence={empirical_gmut:['real_observations','typed_physical_mapping','independent_review'],production_thos:['real_operators','safety_monitoring','governed_trial','independent_review'],freed_id:['real_keys','interoperability','privacy_review','recovery_governance'],accessibility:['assistive_technology','affected_user_review','manual_evaluation']};
+const roles=[...new Set(Object.values(evidence).flat())],dirs=[[1,0,0],[-1,0,0],[0,1,0],[0,-1,0],[0,0,1],[0,0,-1]];
+const vOff=[[0,0,0],[1,0,0],[0,1,0],[1,1,0],[0,0,1],[1,0,1],[0,1,1],[1,1,1]];
+const eOff=[[[0,0,0],[1,0,0]],[[0,1,0],[1,1,0]],[[0,0,1],[1,0,1]],[[0,1,1],[1,1,1]],[[0,0,0],[0,1,0]],[[1,0,0],[1,1,0]],[[0,0,1],[0,1,1]],[[1,0,1],[1,1,1]],[[0,0,0],[0,0,1]],[[1,0,0],[1,0,1]],[[0,1,0],[0,1,1]],[[1,1,0],[1,1,1]]];
+const fOff=[[[0,0,0],[0,1,0],[0,0,1],[0,1,1]],[[1,0,0],[1,1,0],[1,0,1],[1,1,1]],[[0,0,0],[1,0,0],[0,0,1],[1,0,1]],[[0,1,0],[1,1,0],[0,1,1],[1,1,1]],[[0,0,0],[1,0,0],[0,1,0],[1,1,0]],[[0,0,1],[1,0,1],[0,1,1],[1,1,1]]];
+const point=p=>p.join(','),order=(a,b)=>a[0]-b[0]||a[1]-b[1]||a[2]-b[2],sorted=a=>a.map(p=>p.slice()).sort(order),plus=(p,q)=>[p[0]+q[0],p[1]+q[1],p[2]+q[2]],cellKey=ps=>ps.map(point).sort().join('|');
+function reject(x){if(!x||typeof x!=='object'||Array.isArray(x)||Object.keys(x).sort().join('|')!==required.slice().sort().join('|'))return'closed_fields';if(typeof x.profile_id!=='string'||!/^synthetic-voxel-\d+$/.test(x.profile_id))return'profile_id';for(const name of ['voxels','other_voxels']){const a=x[name];if(!Array.isArray(a)||a.length<1||a.length>20)return'voxel_bounds';if(a.some(p=>!Array.isArray(p)||p.length!==3||p.some(v=>!Number.isInteger(v)||v<0||v>5)))return'voxel_shape';if(new Set(a.map(point)).size!==a.length)return'duplicate_voxel';}if(!Array.isArray(x.translation)||x.translation.length!==3||x.translation.some(v=>!Number.isInteger(v)||v<-3||v>3))return'translation_shape';if(!Array.isArray(x.axis_order)||x.axis_order.length!==3||x.axis_order.slice().sort().join(',')!=='0,1,2')return'axis_permutation';if(!Object.hasOwn(evidence,x.claim)||!Array.isArray(x.provided)||new Set(x.provided).size!==x.provided.length||x.provided.some(v=>!roles.includes(v)))return'evidence_shape';if(!['none','claimed_reviewed','synthetic_only','unreviewed'].includes(x.authority))return'authority_shape';return null;}
+function census(a){const vertices=new Set(),edges=new Set(),faces=new Map();for(const cube of a){for(const o of vOff)vertices.add(point(plus(cube,o)));for(const pair of eOff)edges.add(cellKey(pair.map(o=>plus(cube,o))));for(const face of fOff){const k=cellKey(face.map(o=>plus(cube,o)));faces.set(k,(faces.get(k)||0)+1);}}const boundary=[...faces].filter(x=>x[1]===1).map(x=>x[0]).sort();return{vertices:vertices.size,edges:edges.size,faces:faces.size,cubes:a.length,euler:vertices.size-edges.size+faces.size-a.length,boundary};}
+function links(a){const set=new Set(a.map(point));return sorted(a).map(voxel=>({voxel,neighbors:dirs.map(d=>plus(voxel,d)).filter(q=>set.has(point(q))).sort(order)}));}
+function parts(a){const set=new Set(a.map(point)),seen=new Set(),out=[];for(const p of sorted(a)){if(seen.has(point(p)))continue;const queue=[p],one=[];seen.add(point(p));while(queue.length){const u=queue.shift();one.push(u);for(const d of dirs){const v=plus(u,d),k=point(v);if(set.has(k)&&!seen.has(k)){seen.add(k);queue.push(v);}}}out.push(sorted(one));}return out.sort((a,b)=>order(a[0],b[0]));}
+function summary(a){const c=census(a);return{voxels:a.length,components:parts(a).length,vertices:c.vertices,edges:c.edges,faces:c.faces,cubes:c.cubes,euler:c.euler,boundary_faces:c.boundary.length};}
+function voids(a){const min=[0,1,2].map(i=>Math.min(...a.map(p=>p[i]))-1),max=[0,1,2].map(i=>Math.max(...a.map(p=>p[i]))+1),solid=new Set(a.map(point)),empty=[];for(let x=min[0];x<=max[0];x++)for(let y=min[1];y<=max[1];y++)for(let z=min[2];z<=max[2];z++)if(!solid.has(point([x,y,z])))empty.push([x,y,z]);const groups=parts(empty),border=g=>g.some(p=>p.some((v,i)=>v===min[i]||v===max[i])),inside=groups.filter(g=>!border(g));return{padded_bounds:{lo:min,hi:max},exterior_cells:groups.filter(border).reduce((n,g)=>n+g.length,0),cavity_count:inside.length,cavity_cells:inside.map(g=>g.length).sort((a,b)=>a-b)};}
+function run(op,input){const error=reject(input);if(error)return{ok:false,op,error,external_credit:false};if(!allowed.includes(op))return{ok:false,op,error:'unknown_operation',external_credit:false};const a=sorted(input.voxels);let data;
+switch(op){
+case'vx_profile':data={profile_id:input.profile_id,bounds:{min:[0,1,2].map(i=>Math.min(...a.map(p=>p[i]))),max:[0,1,2].map(i=>Math.max(...a.map(p=>p[i])))},voxels:a.length,other_voxels:input.other_voxels.length,synthetic:true};break;
+case'vx_unique':data={coordinates:a,unique:new Set(a.map(point)).size===a.length};break;
+case'vx_cells':data=summary(a);break;
+case'vx_adjacency':{const adjacency=links(a);data={adjacency,undirected_edges:adjacency.reduce((n,r)=>n+r.neighbors.length,0)/2};break;}
+case'vx_components':{const components=parts(a);data={components,count:components.length};break;}
+case'vx_boundary':{const c=census(a);data={faces:c.boundary,count:c.boundary.length,surface_area_model_units:c.boundary.length};break;}
+case'vx_volume':data={occupied_unit_cubes:a.length,volume_model_units:a.length,physical_units:false};break;
+case'vx_translate':{const moved=sorted(a.map(p=>plus(p,input.translation)));data={translation:input.translation,coordinates:moved,before:summary(a),after:summary(moved),invariant:JSON.stringify(summary(a))===JSON.stringify(summary(moved))};break;}
+case'vx_permute':{const moved=sorted(a.map(p=>input.axis_order.map(i=>p[i])));data={axis_order:input.axis_order,coordinates:moved,before:summary(a),after:summary(moved),invariant:JSON.stringify(summary(a))===JSON.stringify(summary(moved))};break;}
+case'vx_cavities':data=voids(a);break;
+}
+return{ok:true,op,data,external_credit:false};
+}
+module.exports={run,reject,summary,parts,links,census,voids};
