@@ -1,0 +1,5 @@
+'use strict';
+require.extensions['.txt']=require.extensions['.js'];
+const readline=require('readline'),core=require('./ghc_family_voxel_core.txt');
+const rl=readline.createInterface({input:process.stdin,crlfDelay:Infinity});
+rl.on('line',line=>{try{const q=JSON.parse(line),r=core.run(q.op,q.input);process.stdout.write(JSON.stringify(r)+'\n');if(!r.ok)process.exitCode=2;}catch(e){process.stdout.write(JSON.stringify({ok:false,error:'invalid_json_or_runtime'})+'\n');process.exitCode=2;}});

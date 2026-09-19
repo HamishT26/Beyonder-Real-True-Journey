@@ -1,0 +1,5 @@
+'use strict';
+require.extensions['.txt']=require.extensions['.js'];
+const core=require('../code/ghc_family_voxel_core.txt');
+const allowed=["vx_profile","vx_unique"];
+module.exports.run=q=>allowed.includes(q.op)?core.run(q.op,q.input):{ok:false,op:q.op,error:'caller_scope',external_credit:false};
