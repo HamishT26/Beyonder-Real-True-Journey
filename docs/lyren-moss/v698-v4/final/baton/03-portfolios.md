@@ -1,0 +1,3 @@
+# Proposal and portfolio truth
+
+Three hundred inherited Vesper proposal records were selected as evidence and revalidation seeds with zero Lyren novelty and completion credit. Lyren froze and executed 600 genuinely new operation/profile contracts. Each session contains 300 pristine safe requests, 300 malformed candidate subjects, 300 detached clone subjects and 300 CFR reviews. The invalid subjects remain failures at zero completion credit even though their separate refusal checks passed. Outcomes are exactly 510 completed, 30 represented, 30 open_gap and 30 exact_gate. Fifty exact-approval and thirty blocked packets remain held rather than executed. Counts are floors bounded by ceilings, never reasons to manufacture unsafe work.

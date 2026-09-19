@@ -1,0 +1,3 @@
+# Terminal route policy
+
+This repository packet does not contact Talen Briar. After and only after Lyren's exact final is pushed, clean, fresh-live equal and canonically validated once, Lyren must reread Hamish's newest instruction, current v12-or-newer roster and authority, usage, pause, rename, privacy, safety and duplicate state. The existing exact-title Talen Briar task for prospective v698-v5 must be uniquely resolved and immediately reread. One sanitized submission is permitted only if every gate passes. No task creation, fork, standby contact, substitute endpoint, resend or monitoring after accepted, opaque or unresolved submission is allowed. The missing local induction criteria reference remains a route-preflight gap, never an invitation to invent policy.
