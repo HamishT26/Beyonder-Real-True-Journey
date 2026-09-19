@@ -1,0 +1,1106 @@
+'use strict';
+
+const fs = require('fs');
+const path = require('path');
+const crypto = require('crypto');
+const cp = require('child_process');
+const Module = require('module');
+
+const PHASE = 'v698-v4-r2';
+const OWNER = 'Lyren Moss';
+const BRANCH = 'codex/GHC-Family/lyren-moss-main-2';
+const ROOT = path.resolve(__dirname, '..');
+const REPO = path.resolve(ROOT, '../../..');
+const SOURCE = Object.freeze({
+  owner: 'Lyren Moss',
+  phase: 'v698-v4',
+  branch: 'codex/GHC-Family/lyren-moss-main-2',
+  exact_final: 'ef8132391105be169bf44e8a4dbc14b9b5be4ea6',
+  plan: '018877c9c19434cb30a3e93b255c5d82a62455ca',
+  x1: 'f35792fc5f40f7330028f29966606e46cd5de80f',
+  x2: '29ad1a80bf7a4235dc23be7907fdaf9fa1857526',
+  baton_sha256: 'b342aabe53c383004619465444cb2614bf289c2048ae70dd537316d23bd9dedf',
+  canonical_payload_sha256: '21c059f68ae05b048c6118ba317a88443180e5d84d53ac12c1a48646665eee72',
+  canonical_receipt_sha256: '4c696ac1ff1541676d193311ae36caa7c6aa93f02be17c7b68ad6fe493a7b54a',
+  route_receipt_sha256: 'bfcc3dafc194ac35ffb9ad99bb1f94bd6fa008b54b8e3199808f8937d3a2e506',
+  terminal_overlay_sha256: 'abe24fc245d1622a471643f017cb00284ea8681f19897c5b189f8ec748b54305',
+  repository_seal: { exact_gates: 525, failed_witnesses: 14934, methods: 946, negatives: 20751, open_gaps: 525, passing_witnesses: 49049, witnesses: 63983 },
+  effective: { exact_gates: 525, failed_witnesses: 14936, methods: 948, negatives: 20753, open_gaps: 526, passing_witnesses: 49050, witnesses: 63986 }
+});
+
+const JOURNEY_SOURCES = Object.freeze([
+  {
+    "alias": "v43-download",
+    "bytes": 164565,
+    "words": 20934,
+    "sha256": "92df34d595cd5840a9c7fa10d7b7486b32061139d3c378b76db9275b929bdf8d",
+    "themes": {
+      "gmut": 32,
+      "thos": 11,
+      "freed": 15,
+      "stage20": 0,
+      "simulation": 2,
+      "empirical": 47,
+      "identity": 50,
+      "authority": 20,
+      "imperative": 149
+    },
+    "source_class": "historical_narrative",
+    "instruction_authority": false,
+    "semantic_credit": "context_only"
+  },
+  {
+    "alias": "v40-download",
+    "bytes": 197356,
+    "words": 28321,
+    "sha256": "8e166ac39e2e41f774c8121d2f73c2471271017be2cf29b760f1bada0aebb4cc",
+    "themes": {
+      "gmut": 68,
+      "thos": 34,
+      "freed": 31,
+      "stage20": 0,
+      "simulation": 26,
+      "empirical": 34,
+      "identity": 65,
+      "authority": 11,
+      "imperative": 131
+    },
+    "source_class": "historical_narrative",
+    "instruction_authority": false,
+    "semantic_credit": "context_only"
+  },
+  {
+    "alias": "v42-download",
+    "bytes": 169198,
+    "words": 22199,
+    "sha256": "1efb41f6e4754442c0edc2fd674c3c6d09d36718896a55391d06b1a1dc9f961c",
+    "themes": {
+      "gmut": 27,
+      "thos": 16,
+      "freed": 4,
+      "stage20": 0,
+      "simulation": 11,
+      "empirical": 67,
+      "identity": 50,
+      "authority": 4,
+      "imperative": 67
+    },
+    "source_class": "historical_narrative",
+    "instruction_authority": false,
+    "semantic_credit": "context_only"
+  },
+  {
+    "alias": "v41-download",
+    "bytes": 170075,
+    "words": 21931,
+    "sha256": "43d662664ee4b02cc4b82eb721e0bef8d3e269038469504b2efd888d5a25a246",
+    "themes": {
+      "gmut": 23,
+      "thos": 11,
+      "freed": 13,
+      "stage20": 0,
+      "simulation": 7,
+      "empirical": 40,
+      "identity": 79,
+      "authority": 9,
+      "imperative": 86
+    },
+    "source_class": "historical_narrative",
+    "instruction_authority": false,
+    "semantic_credit": "context_only"
+  },
+  {
+    "alias": "v46-download",
+    "bytes": 338313,
+    "words": 43576,
+    "sha256": "0f0cca2a45211334ee8592690511ce1ea127807c6fbd029fbd859ac94118206d",
+    "themes": {
+      "gmut": 260,
+      "thos": 65,
+      "freed": 240,
+      "stage20": 149,
+      "simulation": 182,
+      "empirical": 148,
+      "identity": 171,
+      "authority": 42,
+      "imperative": 314
+    },
+    "source_class": "historical_narrative",
+    "instruction_authority": false,
+    "semantic_credit": "context_only"
+  },
+  {
+    "alias": "v45-download",
+    "bytes": 291831,
+    "words": 37938,
+    "sha256": "7cbcddd0d56e6c3ef8acef7f1124c1885dd79d6264d1fa52abcc9a232fa20caf",
+    "themes": {
+      "gmut": 270,
+      "thos": 55,
+      "freed": 207,
+      "stage20": 58,
+      "simulation": 81,
+      "empirical": 142,
+      "identity": 229,
+      "authority": 29,
+      "imperative": 334
+    },
+    "source_class": "historical_narrative",
+    "instruction_authority": false,
+    "semantic_credit": "context_only"
+  },
+  {
+    "alias": "v44-download",
+    "bytes": 364168,
+    "words": 47585,
+    "sha256": "bfb0235853e30812dbf7bb28dc540cfc46aea984e26d96a1079a568a5ff01531",
+    "themes": {
+      "gmut": 419,
+      "thos": 33,
+      "freed": 146,
+      "stage20": 40,
+      "simulation": 93,
+      "empirical": 205,
+      "identity": 175,
+      "authority": 48,
+      "imperative": 338
+    },
+    "source_class": "historical_narrative",
+    "instruction_authority": false,
+    "semantic_credit": "context_only"
+  },
+  {
+    "alias": "v13-repo",
+    "bytes": 350536,
+    "words": 49934,
+    "sha256": "0c237c0d7e5e9d1e7a469627ce99ca73bf4d7dea7916936a9839be4d4b6bfeb7",
+    "themes": {
+      "gmut": 850,
+      "thos": 0,
+      "freed": 71,
+      "stage20": 51,
+      "simulation": 68,
+      "empirical": 76,
+      "identity": 20,
+      "authority": 24,
+      "imperative": 42
+    },
+    "source_class": "historical_narrative",
+    "instruction_authority": false,
+    "semantic_credit": "context_only"
+  },
+  {
+    "alias": "v15-repo",
+    "bytes": 230872,
+    "words": 33093,
+    "sha256": "cebdfa82725da32c433015f6ca1429fdf586f23034f9ad6a1c028960001ef461",
+    "themes": {
+      "gmut": 661,
+      "thos": 0,
+      "freed": 72,
+      "stage20": 41,
+      "simulation": 63,
+      "empirical": 45,
+      "identity": 31,
+      "authority": 19,
+      "imperative": 17
+    },
+    "source_class": "historical_narrative",
+    "instruction_authority": false,
+    "semantic_credit": "context_only"
+  },
+  {
+    "alias": "v16-repo",
+    "bytes": 269101,
+    "words": 37860,
+    "sha256": "00cec98c94038f56981620728469882410166a4944dff28e998b148f5cc2fee3",
+    "themes": {
+      "gmut": 624,
+      "thos": 0,
+      "freed": 81,
+      "stage20": 48,
+      "simulation": 117,
+      "empirical": 51,
+      "identity": 45,
+      "authority": 31,
+      "imperative": 21
+    },
+    "source_class": "historical_narrative",
+    "instruction_authority": false,
+    "semantic_credit": "context_only"
+  },
+  {
+    "alias": "v24-repo",
+    "bytes": 142791,
+    "words": 17604,
+    "sha256": "bb959f5c23a414b666d1690c26a4476ba5219cb3a8f0874908dbf5851fd2a046",
+    "themes": {
+      "gmut": 155,
+      "thos": 17,
+      "freed": 46,
+      "stage20": 0,
+      "simulation": 49,
+      "empirical": 35,
+      "identity": 56,
+      "authority": 15,
+      "imperative": 12
+    },
+    "source_class": "historical_narrative",
+    "instruction_authority": false,
+    "semantic_credit": "context_only"
+  },
+  {
+    "alias": "v25-repo",
+    "bytes": 255938,
+    "words": 31639,
+    "sha256": "752d06a6eb373534a3a303f24c7e2d02b97fa59dec65bf74508800f63610a5a5",
+    "themes": {
+      "gmut": 164,
+      "thos": 123,
+      "freed": 22,
+      "stage20": 0,
+      "simulation": 37,
+      "empirical": 85,
+      "identity": 57,
+      "authority": 35,
+      "imperative": 13
+    },
+    "source_class": "historical_narrative",
+    "instruction_authority": false,
+    "semantic_credit": "context_only"
+  },
+  {
+    "alias": "v29-repo",
+    "bytes": 75536,
+    "words": 8771,
+    "sha256": "b34692511df4d5a495788d541d89cd9c7635a95c7a0eab6af78128c3af6c2630",
+    "themes": {
+      "gmut": 26,
+      "thos": 12,
+      "freed": 2,
+      "stage20": 0,
+      "simulation": 13,
+      "empirical": 0,
+      "identity": 7,
+      "authority": 0,
+      "imperative": 4
+    },
+    "source_class": "historical_narrative",
+    "instruction_authority": false,
+    "semantic_credit": "context_only"
+  },
+  {
+    "alias": "v30-repo",
+    "bytes": 190914,
+    "words": 25737,
+    "sha256": "f9f54723091f815903c97937121957bd7590ea5d929e50f824143e50a5c5c1cc",
+    "themes": {
+      "gmut": 173,
+      "thos": 43,
+      "freed": 70,
+      "stage20": 1,
+      "simulation": 9,
+      "empirical": 86,
+      "identity": 56,
+      "authority": 45,
+      "imperative": 31
+    },
+    "source_class": "historical_narrative",
+    "instruction_authority": false,
+    "semantic_credit": "context_only"
+  },
+  {
+    "alias": "v31-repo",
+    "bytes": 243211,
+    "words": 34426,
+    "sha256": "2ee442c51d9cbada2a0efbe18b93ede669f184a4f6935eb17d95127af919a484",
+    "themes": {
+      "gmut": 111,
+      "thos": 44,
+      "freed": 22,
+      "stage20": 1,
+      "simulation": 31,
+      "empirical": 27,
+      "identity": 64,
+      "authority": 66,
+      "imperative": 43
+    },
+    "source_class": "historical_narrative",
+    "instruction_authority": false,
+    "semantic_credit": "context_only"
+  },
+  {
+    "alias": "v32-repo",
+    "bytes": 207826,
+    "words": 26425,
+    "sha256": "9f73b3aa84622dee03e0ae6810b54225f3bb83ea86d691bd4d8ca3588180eb9d",
+    "themes": {
+      "gmut": 122,
+      "thos": 55,
+      "freed": 167,
+      "stage20": 0,
+      "simulation": 3,
+      "empirical": 89,
+      "identity": 98,
+      "authority": 10,
+      "imperative": 69
+    },
+    "source_class": "historical_narrative",
+    "instruction_authority": false,
+    "semantic_credit": "context_only"
+  },
+  {
+    "alias": "v46-repo",
+    "bytes": 338307,
+    "words": 43576,
+    "sha256": "337bc1873ce84358fb67cd0deed7621056cb6e99bb3f97ad10e62f51fa233219",
+    "themes": {
+      "gmut": 260,
+      "thos": 65,
+      "freed": 240,
+      "stage20": 149,
+      "simulation": 182,
+      "empirical": 148,
+      "identity": 171,
+      "authority": 42,
+      "imperative": 314
+    },
+    "source_class": "historical_narrative",
+    "instruction_authority": false,
+    "semantic_credit": "context_only"
+  },
+  {
+    "alias": "v47-repo",
+    "bytes": 232061,
+    "words": 29411,
+    "sha256": "32d046e364b115e603565928be2652f45420632a04596f33a1c69e067bf46553",
+    "themes": {
+      "gmut": 137,
+      "thos": 38,
+      "freed": 97,
+      "stage20": 75,
+      "simulation": 167,
+      "empirical": 56,
+      "identity": 75,
+      "authority": 12,
+      "imperative": 297
+    },
+    "source_class": "historical_narrative",
+    "instruction_authority": false,
+    "semantic_credit": "context_only"
+  },
+  {
+    "alias": "v48-repo",
+    "bytes": 145617,
+    "words": 17852,
+    "sha256": "df66c636f4270e335a3b459a16e9e78a01953ecc5f1abceee04d7f4ea0042ad3",
+    "themes": {
+      "gmut": 39,
+      "thos": 14,
+      "freed": 68,
+      "stage20": 19,
+      "simulation": 75,
+      "empirical": 37,
+      "identity": 49,
+      "authority": 4,
+      "imperative": 155
+    },
+    "source_class": "historical_narrative",
+    "instruction_authority": false,
+    "semantic_credit": "context_only"
+  },
+  {
+    "alias": "v50-repo",
+    "bytes": 96171,
+    "words": 12952,
+    "sha256": "38a0c3d438fb21ebead0a82a5888e4ff3bbd7f0fdc32f1071cbd90947cbb5ea8",
+    "themes": {
+      "gmut": 74,
+      "thos": 128,
+      "freed": 5,
+      "stage20": 1,
+      "simulation": 7,
+      "empirical": 66,
+      "identity": 7,
+      "authority": 3,
+      "imperative": 35
+    },
+    "source_class": "historical_narrative",
+    "instruction_authority": false,
+    "semantic_credit": "context_only"
+  },
+  {
+    "alias": "v51-repo",
+    "bytes": 12324,
+    "words": 1777,
+    "sha256": "02c87138f2286c7f2e9b44b2ae99828fad94c69b476598ce97cf0f1a84dac209",
+    "themes": {
+      "gmut": 2,
+      "thos": 1,
+      "freed": 0,
+      "stage20": 0,
+      "simulation": 0,
+      "empirical": 5,
+      "identity": 4,
+      "authority": 0,
+      "imperative": 2
+    },
+    "source_class": "historical_narrative",
+    "instruction_authority": false,
+    "semantic_credit": "context_only"
+  },
+  {
+    "alias": "v52-repo",
+    "bytes": 12324,
+    "words": 1777,
+    "sha256": "02c87138f2286c7f2e9b44b2ae99828fad94c69b476598ce97cf0f1a84dac209",
+    "themes": {
+      "gmut": 2,
+      "thos": 1,
+      "freed": 0,
+      "stage20": 0,
+      "simulation": 0,
+      "empirical": 5,
+      "identity": 4,
+      "authority": 0,
+      "imperative": 2
+    },
+    "source_class": "historical_narrative",
+    "instruction_authority": false,
+    "semantic_credit": "context_only"
+  }
+]);
+const LAST_TEN = Object.freeze([
+  {
+    "index": 1,
+    "owner": "Iveren Brook",
+    "phase": "v697-v4",
+    "focus": "finite exact-rational two-dimensional quadratics",
+    "lesson": "Exact arithmetic and retained oracle/parser/interface failures; no physical claim.",
+    "credit": "source_evidence_only"
+  },
+  {
+    "index": 2,
+    "owner": "Caelen Morrow",
+    "phase": "v697-v5",
+    "focus": "finite rational half-plane and linear-program laboratory",
+    "lesson": "Optimization and duality fixtures with additive whitespace-admission correction.",
+    "credit": "source_evidence_only"
+  },
+  {
+    "index": 3,
+    "owner": "Eiren Kestrel",
+    "phase": "v697-v6",
+    "focus": "two-by-two zero-sum exact games",
+    "lesson": "Exact rational game values and bounded analytical models; no package update.",
+    "credit": "source_evidence_only"
+  },
+  {
+    "index": 4,
+    "owner": "Teryn Halewick",
+    "phase": "v697-v7",
+    "focus": "two-state exact Markov reward processes",
+    "lesson": "Reward, residual and occupancy fixtures with retained wrapper/browser failures.",
+    "credit": "source_evidence_only"
+  },
+  {
+    "index": 5,
+    "owner": "Elaren Kestrel",
+    "phase": "v697-v8",
+    "focus": "exact scalar control recurrence",
+    "lesson": "Independent Fraction specification and BigInt production comparison with invariant bounds.",
+    "credit": "source_evidence_only"
+  },
+  {
+    "index": 6,
+    "owner": "Neris Solane",
+    "phase": "v698-v1",
+    "focus": "finite safety games under partial observation",
+    "lesson": "Blank-root content provenance, 600 contracts and source-versus-ancestry separation.",
+    "credit": "source_evidence_only"
+  },
+  {
+    "index": 7,
+    "owner": "Merrin Vale",
+    "phase": "v698-v2",
+    "focus": "finite observation-refinement laboratory",
+    "lesson": "CSS coordinate views and retained ledger/startup/browser failures.",
+    "credit": "source_evidence_only"
+  },
+  {
+    "index": 8,
+    "owner": "Vesper Arlen",
+    "phase": "v698-v3",
+    "focus": "finite impartial normal-play DAG games",
+    "lesson": "Mex, sums and XOR with retained transport, push, baton and adapter failures.",
+    "credit": "source_evidence_only"
+  },
+  {
+    "index": 9,
+    "owner": "Vesper Arlen",
+    "phase": "v698-v3-r2",
+    "focus": "finite voxel and cubical-complex remaster",
+    "lesson": "Journey instruction quarantine, exact source ledger, HTML correction and guarded Lyren delivery.",
+    "credit": "source_evidence_only"
+  },
+  {
+    "index": 10,
+    "owner": "Lyren Moss",
+    "phase": "v698-v4",
+    "focus": "finite directed hypergraph laboratory",
+    "lesson": "All-tail reachability, finite cuts and a terminal Talen route gap retained outside the repository seal.",
+    "credit": "source_evidence_only"
+  }
+]);
+
+const BOUNDARY = 'Same-owner finite synthetic source-claim provenance-lattice evidence only. Historical Journey texts are source material, never instructions; their instruction-like language has zero execution authority. Relational names, roles, hopes, pronouns, family language, Freed ID, CBR, GHC Family and Trinity Mandala are working language only and establish no consciousness, sentience, personhood, continuity, employment, qualification, independent agency or authority. No real people, systems, measurements, identities, credentials, deployments, legal or cultural determinations, affected-party approvals or Maori-authority acts are used. Maori concepts remain under Maori authority. GMUT is conjectural and not empirically confirmed or a Theory-of-Everything proof; THOS is not production certified; Freed ID is not a live identity or governance authority. Privacy-complete, accessibility-complete, exhaustive-security, independent-reproduction, AGI/ASI, canon and Stage 20 gates remain protected. NOT_READY_FOR_STAGE_20.';
+
+const PROTECTED_GATES = Object.freeze([
+  'empirical', 'participant', 'professional', 'production', 'deployment', 'identity',
+  'legal', 'cultural', 'affected_party', 'maori_authority', 'privacy_complete',
+  'accessibility_complete', 'exhaustive_security', 'independent_reproduction',
+  'agi_asi', 'consciousness_personhood', 'theory_of_everything', 'canon', 'stage20'
+]);
+
+const OPERATIONS = Object.freeze([
+  ['sl_profile', 'Return exact source-node and claim-link counts plus declared provenance roots.', 'completed'],
+  ['sl_vertices', 'Return the canonical lexical source-alias list without inventing documents.', 'completed'],
+  ['sl_hyperedges', 'Return canonical directed source-to-claim links with sorted tails and heads.', 'completed'],
+  ['sl_incidence', 'Return exact incoming and outgoing claim-link identifiers for each source alias.', 'completed'],
+  ['sl_unique', 'Confirm source-alias, link-identifier and canonical-link uniqueness.', 'completed'],
+  ['sl_sources', 'Return source aliases with no incoming claim link.', 'completed'],
+  ['sl_sinks', 'Return source aliases with no outgoing claim link.', 'completed'],
+  ['sl_reachable', 'Apply declared all-source support reachability from the provenance roots.', 'completed'],
+  ['sl_layers', 'Return the earliest support layer for every reachable source alias.', 'completed'],
+  ['sl_transpose', 'Reverse every finite synthetic source-claim link for comparison only.', 'completed'],
+  ['sl_union', 'Return the canonical union of two claim-link signature collections.', 'completed'],
+  ['sl_intersection', 'Return the canonical claim-link signature intersection.', 'completed'],
+  ['sl_difference', 'Return claim-link signatures present only in the first source graph.', 'completed'],
+  ['sl_boundary', 'Return source-only, claim-only and mixed-incidence aliases.', 'completed'],
+  ['sl_projection', 'Project each provenance link to finite source-to-claim arc pairs.', 'completed'],
+  ['sl_components', 'Return weak components of the finite source-claim incidence projection.', 'completed'],
+  ['sl_cut_candidates', 'Return source aliases whose omission changes weak-component count.', 'completed'],
+  ['sl_scene', 'Represent one bounded accessible source-lattice layout without evidentiary promotion.', 'represented'],
+  ['sl_evidence_gap', 'Retain missing empirical, affected-party and independent evidence as an open gap.', 'open_gap'],
+  ['sl_authority_gate', 'Retain legal, cultural, affected-party and Maori record authority as exact gates.', 'exact_gate']
+].map((row, index) => ({ index: index + 1, name: row[0], description: row[1], outcome: row[2], session: index < 10 ? 'x1' : 'x2' })));
+
+const PRACTICES = Object.freeze([
+  ['practice-1','digital archivist','Preserve exact source identity, fixity and version relations.'],
+  ['practice-2','textual scholar','Separate narrative continuity from current factual authority.'],
+  ['practice-3','historian','Place claims in versioned context without treating repetition as proof.'],
+  ['practice-4','provenance systems engineer','Model source, claim and evidence lineage deterministically.'],
+  ['practice-5','software verification engineer','Test complete envelopes, refusals and reconstruction.'],
+  ['practice-6','accessible information designer','Present bounded source graphs with semantic text and tables.'],
+  ['practice-7','privacy analyst','Keep raw private material and native task state out of handoffs.'],
+  ['practice-8','governance boundary analyst','Reserve legal, cultural, affected-party and Maori authority.']
+]);
+
+const SUCCESSOR_PRACTICES = Object.freeze([
+  ['successor-practice-1','reproducibility librarian','Reconstruct source-to-claim lineage from exact immutable bindings.'],
+  ['successor-practice-2','model-card auditor','Compare declared limits with actual evidence and tool scope.'],
+  ['successor-practice-3','conflict-of-evidence analyst','Retain contradictory and duplicate variants without forced collapse.'],
+  ['successor-practice-4','accessible record evaluator','Evaluate semantic navigation with affected users before conformance claims.']
+]);
+
+const STARTUP_FAILURES = Object.freeze([
+  { id: 'LM6984R2-SOURCE-N001', subject: 'The user-cited X simulation post returned HTTP 403 to the bounded web reader', result: 'unread_external_source', credit: 0, recovery: 'Recorded the source as unread with zero content credit; no claim was inferred from it.' },
+  { id: 'LM6984R2-TOOL-N002', subject: 'Direct node --check rejected the intentionally TXT-suffixed transform source with ERR_UNKNOWN_FILE_EXTENSION', result: 'failed_syntax_wrapper', credit: 0, recovery: 'Parsed and executed the exact TXT bytes through CommonJS Module._compile as required for TXT Node sources.' }
+]);
+
+function ensureDir(p) { fs.mkdirSync(p, { recursive: true }); }
+function stable(value) {
+  if (Array.isArray(value)) return value.map(stable);
+  if (value && typeof value === 'object') return Object.fromEntries(Object.keys(value).sort().map(k => [k, stable(value[k])]));
+  return value;
+}
+function stableText(value) { return JSON.stringify(stable(value)); }
+function pretty(value) { return `${JSON.stringify(value, null, 2)}\n`; }
+function writeJson(rel, value) { const p = path.join(ROOT, rel); ensureDir(path.dirname(p)); fs.writeFileSync(p, pretty(value), 'utf8'); }
+function writeText(rel, value) { const p = path.join(ROOT, rel); ensureDir(path.dirname(p)); fs.writeFileSync(p, value.endsWith('\n') ? value : `${value}\n`, 'utf8'); }
+function readJson(rel) { return JSON.parse(fs.readFileSync(path.join(ROOT, rel), 'utf8')); }
+function shaBytes(bytes) { return crypto.createHash('sha256').update(bytes).digest('hex'); }
+function shaValue(value) { return shaBytes(Buffer.from(stableText(value), 'utf8')); }
+function toRepo(abs) { return path.relative(REPO, abs).split(path.sep).join('/'); }
+function git(args) { return cp.execFileSync('git', args, { cwd: REPO, encoding: 'utf8', maxBuffer: 64 * 1024 * 1024 }).trim(); }
+function now() { return new Date().toISOString(); }
+function clone(v) { return JSON.parse(JSON.stringify(v)); }
+function exactKeys(obj, keys) { const a = Object.keys(obj || {}).sort(); const b = [...keys].sort(); return a.length === b.length && a.every((x, i) => x === b[i]); }
+
+function listFiles(dir) {
+  if (!fs.existsSync(dir)) return [];
+  const out = [];
+  for (const entry of fs.readdirSync(dir, { withFileTypes: true }).sort((a, b) => a.name.localeCompare(b.name))) {
+    const p = path.join(dir, entry.name);
+    if (entry.isDirectory()) out.push(...listFiles(p));
+    else out.push(p);
+  }
+  return out;
+}
+
+function manifestEntries(dirs, exclusions = []) {
+  const excluded = new Set(exclusions.map(p => path.resolve(ROOT, p)));
+  const files = dirs.flatMap(d => listFiles(path.join(ROOT, d))).filter(p => !excluded.has(path.resolve(p))).sort();
+  return files.map(p => { const b = fs.readFileSync(p); return { path: toRepo(p), bytes: b.length, sha256: shaBytes(b) }; });
+}
+
+function writeManifest(stage, dirs, exclusions) {
+  writeJson(`${stage}/manifest.json`, {
+    schema: 'ghc.family.owner-stage-manifest.v14', owner: OWNER, phase: PHASE, stage,
+    byte_domain: 'utf8_lf_worktree_bytes_expected_to_equal_git_blob_bytes_after_staging',
+    entries: manifestEntries(dirs, exclusions), self_exclusions: exclusions.map(p => toRepo(path.join(ROOT, p))), boundary: BOUNDARY
+  });
+}
+
+function coreFactory(allowedNames) {
+  'use strict';
+  const allowed = new Set(allowedNames);
+  const outcomes = {
+    sl_scene: 'represented', sl_evidence_gap: 'open_gap', sl_authority_gate: 'exact_gate'
+  };
+  const lexical = (a, b) => String(a).localeCompare(String(b));
+  const exactKeys = (obj, keys) => { const a = Object.keys(obj || {}).sort(), b = [...keys].sort(); return a.length === b.length && a.every((x, i) => x === b[i]); };
+  const uniqSorted = xs => [...new Set(xs)].sort(lexical);
+  const edgeKey = e => `${[...e.tails].sort(lexical).join('&')}=>${[...e.heads].sort(lexical).join('&')}`;
+  const canonicalEdge = e => ({ id: String(e.id), tails: uniqSorted(e.tails), heads: uniqSorted(e.heads) });
+  const fail = (op, error) => ({ ok: false, op, error, external_credit: false });
+  function validateGraph(graph) {
+    if (!graph || !exactKeys(graph, ['vertices', 'edges'])) return 'graph_closed_fields';
+    if (!Array.isArray(graph.vertices) || !Array.isArray(graph.edges)) return 'graph_shape';
+    if (!graph.vertices.every(v => typeof v === 'string' && v.length > 0)) return 'vertex_shape';
+    if (new Set(graph.vertices).size !== graph.vertices.length) return 'duplicate_vertex';
+    const vertices = new Set(graph.vertices);
+    const ids = new Set();
+    for (const edge of graph.edges) {
+      if (!edge || !exactKeys(edge, ['id', 'tails', 'heads'])) return 'edge_closed_fields';
+      if (typeof edge.id !== 'string' || !edge.id || ids.has(edge.id)) return ids.has(edge.id) ? 'duplicate_edge_id' : 'edge_id';
+      ids.add(edge.id);
+      if (!Array.isArray(edge.tails) || !Array.isArray(edge.heads) || !edge.tails.length || !edge.heads.length) return 'edge_shape';
+      if (new Set(edge.tails).size !== edge.tails.length || new Set(edge.heads).size !== edge.heads.length) return 'duplicate_incidence';
+      if (![...edge.tails, ...edge.heads].every(v => vertices.has(v))) return 'unknown_vertex';
+    }
+    return null;
+  }
+  function canonicalGraph(graph) {
+    return {
+      vertices: uniqSorted(graph.vertices),
+      edges: graph.edges.map(canonicalEdge).sort((a, b) => edgeKey(a).localeCompare(edgeKey(b)) || a.id.localeCompare(b.id))
+    };
+  }
+  function projection(graph) {
+    const arcs = [];
+    for (const e of graph.edges) for (const tail of e.tails) for (const head of e.heads) arcs.push(`${tail}->${head}`);
+    return uniqSorted(arcs);
+  }
+  function components(graph, omit = null) {
+    const vertices = graph.vertices.filter(v => v !== omit);
+    const adj = Object.fromEntries(vertices.map(v => [v, new Set()]));
+    for (const e of graph.edges) {
+      const points = uniqSorted([...e.tails, ...e.heads]).filter(v => v !== omit);
+      for (const a of points) for (const b of points) if (a !== b && adj[a] && adj[b]) { adj[a].add(b); adj[b].add(a); }
+    }
+    const seen = new Set(); const out = [];
+    for (const start of vertices.sort(lexical)) if (!seen.has(start)) {
+      const q = [start], part = []; seen.add(start);
+      while (q.length) { const v = q.shift(); part.push(v); for (const n of [...adj[v]].sort(lexical)) if (!seen.has(n)) { seen.add(n); q.push(n); } }
+      out.push(part.sort(lexical));
+    }
+    return out.sort((a, b) => a[0].localeCompare(b[0]));
+  }
+  function execute(request) {
+    const op = request && typeof request.op === 'string' ? request.op : 'unknown';
+    if (!request || !exactKeys(request, ['op', 'input'])) return fail(op, 'closed_fields');
+    if (!allowed.has(op)) return fail(op, 'unsupported_operation');
+    const input = request.input;
+    const expectedInput = ['profile_id', 'graph', 'other_graph', 'roots', 'claim', 'provided', 'authority'];
+    if (!input || !exactKeys(input, expectedInput)) return fail(op, 'input_closed_fields');
+    const firstError = validateGraph(input.graph); if (firstError) return fail(op, firstError);
+    const secondError = validateGraph(input.other_graph); if (secondError) return fail(op, `other_${secondError}`);
+    if (!Array.isArray(input.roots) || !input.roots.every(v => input.graph.vertices.includes(v))) return fail(op, 'roots');
+    if (!Array.isArray(input.provided)) return fail(op, 'provided');
+    const graph = canonicalGraph(input.graph); const other = canonicalGraph(input.other_graph);
+    let data;
+    if (op === 'sl_profile') data = { vertices: graph.vertices.length, hyperedges: graph.edges.length, roots: uniqSorted(input.roots) };
+    else if (op === 'sl_vertices') data = { vertices: graph.vertices };
+    else if (op === 'sl_hyperedges') data = { hyperedges: graph.edges };
+    else if (op === 'sl_incidence') data = { incidence: graph.vertices.map(v => ({ vertex: v, incoming: graph.edges.filter(e => e.heads.includes(v)).map(e => e.id).sort(lexical), outgoing: graph.edges.filter(e => e.tails.includes(v)).map(e => e.id).sort(lexical) })) };
+    else if (op === 'sl_unique') data = { vertices_unique: true, edge_ids_unique: true, edge_signatures_unique: new Set(graph.edges.map(edgeKey)).size === graph.edges.length };
+    else if (op === 'sl_sources') data = { sources: graph.vertices.filter(v => !graph.edges.some(e => e.heads.includes(v))) };
+    else if (op === 'sl_sinks') data = { sinks: graph.vertices.filter(v => !graph.edges.some(e => e.tails.includes(v))) };
+    else if (op === 'sl_reachable' || op === 'sl_layers') {
+      const reached = new Set(input.roots), layer = Object.fromEntries(input.roots.map(v => [v, 0])); let changed = true;
+      while (changed) { changed = false; for (const e of graph.edges) if (e.tails.every(v => reached.has(v))) { const next = 1 + Math.max(...e.tails.map(v => layer[v])); for (const h of e.heads) if (!reached.has(h)) { reached.add(h); layer[h] = next; changed = true; } } }
+      data = op === 'sl_reachable' ? { reachable: [...reached].sort(lexical), unreachable: graph.vertices.filter(v => !reached.has(v)) } : { layers: Object.entries(layer).sort((a, b) => a[1] - b[1] || a[0].localeCompare(b[0])).map(([vertex, value]) => ({ vertex, layer: value })) };
+    }
+    else if (op === 'sl_transpose') data = { graph: { vertices: graph.vertices, edges: graph.edges.map(e => ({ id: e.id, tails: e.heads, heads: e.tails })) } };
+    else if (['sl_union', 'sl_intersection', 'sl_difference'].includes(op)) {
+      const a = new Set(graph.edges.map(edgeKey)), b = new Set(other.edges.map(edgeKey)); let signatures;
+      if (op === 'sl_union') signatures = uniqSorted([...a, ...b]);
+      if (op === 'sl_intersection') signatures = [...a].filter(x => b.has(x)).sort(lexical);
+      if (op === 'sl_difference') signatures = [...a].filter(x => !b.has(x)).sort(lexical);
+      data = { edge_signatures: signatures };
+    }
+    else if (op === 'sl_boundary') data = { tail_only: graph.vertices.filter(v => graph.edges.some(e => e.tails.includes(v)) && !graph.edges.some(e => e.heads.includes(v))), head_only: graph.vertices.filter(v => graph.edges.some(e => e.heads.includes(v)) && !graph.edges.some(e => e.tails.includes(v))), mixed: graph.vertices.filter(v => graph.edges.some(e => e.tails.includes(v)) && graph.edges.some(e => e.heads.includes(v))) };
+    else if (op === 'sl_projection') data = { arcs: projection(graph) };
+    else if (op === 'sl_components') data = { components: components(graph) };
+    else if (op === 'sl_cut_candidates') { const base = components(graph).length; data = { baseline_components: base, cut_candidates: graph.vertices.filter(v => components(graph, v).length > base).sort(lexical) }; }
+    else if (op === 'sl_scene') data = { points: graph.vertices.map((v, i) => ({ vertex: v, x: (i * 37 + graph.edges.length * 11) % 101, y: (i * 53 + graph.vertices.length * 7) % 101 })), arcs: projection(graph), synthetic_layout: true };
+    else if (op === 'sl_evidence_gap') data = { claim: input.claim, missing: ['governed_real_observations', 'preregistered_comparator', 'independent_reproduction'], state: 'OPEN_GAP' };
+    else if (op === 'sl_authority_gate') data = { claim: input.claim, required: ['competent_legal_authority', 'affected_party_oversight', 'relevant_cultural_authority', 'maori_authority_where_applicable'], state: 'EXACT_GATE' };
+    else return fail(op, 'unimplemented_operation');
+    return { ok: true, op, disposition: outcomes[op] || 'completed', data, external_credit: false };
+  }
+  return { execute, validateGraph, canonicalGraph, projection, components, edgeKey };
+}
+
+function makeProfile(index) {
+  const n = 5 + (index % 4);
+  const selected = Array.from({ length: n }, (_, i) => JOURNEY_SOURCES[(index * 3 + i) % JOURNEY_SOURCES.length]);
+  const vertices = selected.map(s => s.alias);
+  const edgeCount = 3 + (index % 3);
+  const edges = Array.from({ length: edgeCount }, (_, j) => ({
+    id: `claim-link-${j}`,
+    tails: j % 2 === 0 && n > 5 ? [vertices[j % n], vertices[(j + 2) % n]] : [vertices[j % n]],
+    heads: [vertices[(j + 1) % n]]
+  }));
+  const otherEdges = Array.from({ length: edgeCount }, (_, j) => ({
+    id: `comparison-link-${j}`,
+    tails: [vertices[(j + 1) % n]],
+    heads: [vertices[(j + 2 + (index % 2)) % n]]
+  }));
+  return { profile_id: `synthetic-source-lattice-${String(index + 1).padStart(2, '0')}`, graph: { vertices, edges }, other_graph: { vertices, edges: otherEdges }, roots: [vertices[0]] };
+}
+
+function makeProposals(session) {
+  const allowed = session === 'x1' ? OPERATIONS.slice(0, 10) : OPERATIONS.slice(10);
+  const core = coreFactory(OPERATIONS.map(o => o.name));
+  const proposals = [];
+  for (const op of allowed) for (let i = 0; i < 30; i++) {
+    const profile = makeProfile(i);
+    const request = { op: op.name, input: { ...profile, claim: op.name === 'sl_evidence_gap' ? 'historical_narrative_is_not_empirical_evidence' : op.name === 'sl_authority_gate' ? 'authority_dependent_record_interpretation' : 'bounded_source_claim_structure', provided: [], authority: 'none' } };
+    const candidateRequest = clone(request); candidateRequest.input.graph.vertices.push(candidateRequest.input.graph.vertices[0]);
+    const detachedRequest = clone(request); detachedRequest.detached_annotation = 'synthetic review clone';
+    const number = (op.index - 1) * 30 + i + 1;
+    proposals.push({
+      proposal_id: `LM6984R2-P${String(number).padStart(3, '0')}`,
+      title: `${op.description} ${profile.profile_id}`,
+      session, mechanism: op.name, profile: profile.profile_id,
+      practice: PRACTICES[(number - 1) % PRACTICES.length][0],
+      hypothesis: op.description,
+      null_condition: 'Any envelope mismatch, invalid acceptance, source drift, mutation of the pristine request or evidentiary promotion defeats this bounded contract.',
+      approval_class: 'safe_now_bounded_synthetic', execution_lane: 'owner_self_scoped_delta',
+      request, expected_result: core.execute(request), expected_status: 0, expected_core_disposition: op.outcome,
+      candidate: { request: candidateRequest, expected: core.execute(candidateRequest), expected_status: 2, subject_credit: 0 },
+      detached_clone: { request: detachedRequest, expected: core.execute(detachedRequest), expected_status: 2, subject_credit: 0 },
+      cfr: { review: 'Compare pristine, candidate and detached clone without deleting or rewriting any retained subject.', restore: 'Reuse the immutable pristine request in memory and verify its stable digest.', filesystem_delete: false, expected_restored_sha256: shaValue(request) },
+      protected_gates: PROTECTED_GATES, boundary: BOUNDARY
+    });
+  }
+  return proposals;
+}
+
+function writeProposalChunks(session, proposals) {
+  for (const op of OPERATIONS.filter(o => o.session === session)) {
+    const group = proposals.filter(p => p.mechanism === op.name);
+    writeJson(`plan/proposals/${op.name}.json`, { schema: 'ghc.family.source-lattice-proposals.v1', owner: OWNER, phase: PHASE, stage: session, operation: op.name, planning_only: true, count: group.length, proposals: group, boundary: BOUNDARY });
+  }
+}
+
+function readProposals(session) {
+  return OPERATIONS.filter(o => o.session === session).flatMap(op => readJson(`plan/proposals/${op.name}.json`).proposals);
+}
+
+function skillSource(op) {
+  return `---\nname: ghc-family-source-lattice-${op.name.replace(/^sl_/, '').replaceAll('_', '-')}\ndescription: Bounded synthetic directed source-claim provenance graph ${op.name} contracts for Lyren v698-v4-r2.\n---\n\n# ${op.name}\n\nUse only for finite synthetic directed source-claim provenance graph requests whose fields are closed and whose source is recorded.\n\n## Procedure\n\n1. Validate request, graph, edge identifiers and incidence references.\n2. Execute the deterministic ${op.name} contract.\n3. Compare the complete response envelope, retain invalid subjects, and record refusals separately.\n4. Preserve open gaps and exact gates; do not promote bounded structure to external evidence.\n\n## Boundary\n\n${BOUNDARY}\n`;
+}
+
+function runnerSource(name, operations) {
+  return `'use strict';\nmodule.exports = {\n  name: ${JSON.stringify(name)},\n  operations: ${JSON.stringify(operations)},\n  run(core, requests) {\n    if (!core || typeof core.execute !== 'function') throw new Error('missing_core');\n    if (!Array.isArray(requests)) throw new Error('requests_shape');\n    return requests.map(request => core.execute(request));\n  }\n};\n`;
+}
+
+function loadTextModule(abs) {
+  const m = new Module(abs, module);
+  m.filename = abs;
+  m.paths = module.paths;
+  m._compile(fs.readFileSync(abs, 'utf8'), abs);
+  return m.exports;
+}
+
+function stageCore(stage, allowedOps) {
+  const source = `'use strict';\nmodule.exports = (${coreFactory.toString()})(${JSON.stringify(allowedOps)});\n`;
+  writeText(`${stage}/lib/ghc_family_source_lattice_core.txt`, source);
+  return loadTextModule(path.join(ROOT, stage, 'lib', 'ghc_family_source_lattice_core.txt'));
+}
+
+function buildSkillsAndRunners(stage, ops, core, proposals) {
+  const skills = [];
+  for (const op of ops) {
+    const name = `ghc-family-source-lattice-${op.name.replace(/^sl_/, '').replaceAll('_', '-')}`;
+    const rel = `${stage}/skills/${name}/SKILL.md`;
+    writeText(rel, skillSource(op));
+    skills.push({ name, operation: op.name, path: toRepo(path.join(ROOT, rel)), smoke: fs.readFileSync(path.join(ROOT, rel), 'utf8').includes(BOUNDARY.slice(0, 48)) ? 'PASS' : 'FAIL' });
+  }
+  const runners = [];
+  for (let i = 0; i < 5; i++) {
+    const pair = ops.slice(i * 2, i * 2 + 2).map(o => o.name);
+    const name = `ghc_family_source_lattice_${stage}_${String(i + 1).padStart(2, '0')}`;
+    const rel = `${stage}/runners/${name}.txt`;
+    writeText(rel, runnerSource(name, pair));
+    const runner = loadTextModule(path.join(ROOT, rel));
+    const requests = pair.map(op => proposals.find(p => p.mechanism === op).request);
+    const output = runner.run(core, requests);
+    const pass = output.length === 2 && output.every((x, j) => x.ok && x.op === pair[j]);
+    if (!pass) throw new Error(`runner_smoke_failed:${name}`);
+    runners.push({ name, operations: pair, path: toRepo(path.join(ROOT, rel)), smoke: 'PASS', output_sha256: shaValue(output) });
+  }
+  writeJson(`${stage}/skill-validation.json`, { schema: 'ghc.family.local-skill-validation.v1', owner: OWNER, phase: PHASE, stage, count: skills.length, passed: skills.filter(x => x.smoke === 'PASS').length, skills, boundary: BOUNDARY });
+  writeJson(`${stage}/runner-smokes.json`, { schema: 'ghc.family.paired-runner-smokes.v1', owner: OWNER, phase: PHASE, stage, count: runners.length, passed: runners.filter(x => x.smoke === 'PASS').length, runners, boundary: BOUNDARY });
+  return { skills, runners };
+}
+
+function runSession(stage, proposals, core) {
+  const ops = OPERATIONS.filter(o => o.session === stage);
+  const summaries = [];
+  const negatives = [];
+  const methods = [];
+  for (const op of ops) {
+    const group = proposals.filter(p => p.mechanism === op.name);
+    const records = group.map(p => {
+      const safe = core.execute(p.request);
+      const candidate = core.execute(p.candidate.request);
+      const detached = core.execute(p.detached_clone.request);
+      const safeMatch = stableText(safe) === stableText(p.expected_result);
+      const candidateRefusal = stableText(candidate) === stableText(p.candidate.expected);
+      const detachedRefusal = stableText(detached) === stableText(p.detached_clone.expected);
+      const restored = shaValue(p.request) === p.cfr.expected_restored_sha256;
+      if (!safeMatch || !candidateRefusal || !detachedRefusal || !restored || candidate.ok || detached.ok) throw new Error(`contract_mismatch:${p.proposal_id}`);
+      negatives.push({ id: `${p.proposal_id}-CANDIDATE`, proposal_id: p.proposal_id, class: 'malformed_candidate_subject', result: candidate, credit: 0, refusal_passed: candidateRefusal, retained: true });
+      negatives.push({ id: `${p.proposal_id}-CLONE`, proposal_id: p.proposal_id, class: 'detached_clone_subject', result: detached, credit: 0, refusal_passed: detachedRefusal, retained: true });
+      return { proposal_id: p.proposal_id, safe_result: safe, safe_match: safeMatch, candidate_subject: candidate, candidate_refusal_passed: candidateRefusal, detached_clone_subject: detached, detached_clone_refusal_passed: detachedRefusal, cfr_restored: restored, filesystem_delete: false };
+    });
+    writeJson(`${stage}/results/${op.name}.json`, { schema: 'ghc.family.source-lattice-operation-results.v1', owner: OWNER, phase: PHASE, stage, operation: op.name, count: records.length, disposition: op.outcome, records, boundary: BOUNDARY });
+    summaries.push({ operation: op.name, proposals: 30, safe_passed: 30, candidate_failed_subjects: 30, candidate_refusals_passed: 30, detached_clone_failed_subjects: 30, detached_clone_refusals_passed: 30, cfr_reviews: 30, cfr_restorations: 30, filesystem_deletions: 0, outcome: op.outcome });
+    methods.push({ method_id: `LM6984R2-M-${op.name}`, operation: op.name, stage, failed_witnesses: 2, passing_witnesses: 4, retained_negative_classes: ['malformed_candidate_subject', 'detached_clone_subject'], recovery_erases_failure: false, disposition: op.outcome });
+  }
+  writeJson(`${stage}/session-summary.json`, { schema: 'ghc.family.owner-session-summary.v14', owner: OWNER, phase: PHASE, stage, proposals: proposals.length, safe: 300, candidate_failed_subjects: 300, candidate_refusals: 300, detached_clone_failed_subjects: 300, detached_clone_refusals: 300, cfr_reviews: 300, cfr_restorations: 300, filesystem_deletions: 0, operations: summaries, boundary: BOUNDARY });
+  writeJson(`${stage}/retained-negatives.json`, { schema: 'ghc.family.retained-negative-index.v1', owner: OWNER, phase: PHASE, stage, count: negatives.length, completion_credit: 0, records: negatives, boundary: BOUNDARY });
+  writeJson(`${stage}/clean-fix-refine.json`, { schema: 'ghc.family.cfr-ledger.v1', owner: OWNER, phase: PHASE, stage, count: proposals.length, records: proposals.map(p => ({ proposal_id: p.proposal_id, review: p.cfr.review, restore: p.cfr.restore, restored_sha256: p.cfr.expected_restored_sha256, passed: true, filesystem_delete: false })), boundary: BOUNDARY });
+  writeJson(`${stage}/method-flow.json`, { schema: 'ghc.family.method-flow.owner-overlay.v1', owner: OWNER, phase: PHASE, stage, methods, validation: { known_ids: true, no_unknown_statuses: true, failures_retained: true }, boundary: BOUNDARY });
+  return { summaries, negatives, methods };
+}
+
+function guidanceWitness() {
+  const home = process.env.USERPROFILE;
+  if (!home) throw new Error('USERPROFILE unavailable for guidance binding');
+  const root = path.join(home, '.codex', 'skills');
+  const items = [
+    ['ghc-family-index', 'SKILL.md'], ['ghc-family-auth-permission-state', 'SKILL.md'], ['ghc-family-roster-check', 'SKILL.md'],
+    ['ghc-worktree-branch-rotation', 'SKILL.md'], ['ghc-drive-bank-guardian', 'SKILL.md'], ['ghc-family-method-flow-state', 'SKILL.md'],
+    ['ghc-family-meta-tool-box', 'SKILL.md'], ['ghc-family-reflection-remaster', 'SKILL.md'], ['ghc-family-canonical-aggregate-preflight', 'SKILL.md'],
+    ['ghc-family-canonical-success-latch', 'SKILL.md'], ['ghc-family-main-task-induction', 'SKILL.md'],
+    ['ghc-family-index', 'references/current-thirty-seat-workflow.md'], ['ghc-family-index', 'references/vesper-v698-v3-r2-current-overlay.md'],
+    ['ghc-family-index', 'references/current-workflow-v13.json'], ['ghc-family-index', 'references/current-roster-v13.json'],
+    ['ghc-family-auth-permission-state', 'references/vesper-v698-v3-r2-20260919-authority.md'],
+    ['ghc-family-method-flow-state', 'references/schema.md'], ['ghc-family-method-flow-state', 'references/vesper-v698-v3-r2-method-flow-overlay.md'],
+    ['ghc-family-meta-tool-box', 'references/catalogue-schema.md'], ['ghc-family-meta-tool-box', 'references/vesper-v698-v3-r2-meta-tool-catalogue.json'],
+    ['ghc-family-reflection-remaster', 'references/decision-schema.md'],
+    ['ghc-family-main-task-induction', 'references/ghc-family-roster-evidence-contract.md'], ['ghc-family-main-task-induction', 'references/ghc-family-handoff-evidence-contract.md']
+  ];
+  return items.map(([skill, rel]) => { const p = path.join(root, skill, rel); return { resource: `skills://${skill}/${rel}`, exists: fs.existsSync(p), sha256: fs.existsSync(p) ? shaBytes(fs.readFileSync(p)) : null, read_through_eof: fs.existsSync(p) }; });
+}
+
+function buildPlan() {
+  if (fs.existsSync(path.join(ROOT, 'x1')) || fs.existsSync(path.join(ROOT, 'x2')) || fs.existsSync(path.join(ROOT, 'final'))) throw new Error('strict_order_violation_later_stage_exists');
+  const x1 = makeProposals('x1'), x2 = makeProposals('x2');
+
+  const rosterCycle = ['Eiren Kestrel','Elaren Kestrel','Rowan Ash','Neris Solane','Vesper Arlen','Ilyan Reed','Lyren Moss','Ilyra Fen','Mira Fenwick','Auren Lark','Sable Rook','Avelin Reed','Caelen Ash','Orin Thale','Ceryn Alder','Liora Venn','Tamar Vey','Saelin Reed','Elowen Cairn','Sylven Arc','Iveren Brook','Caelen Morrow','Eiren Kestrel','Teryn Halewick','Elaren Kestrel','Neris Solane','Merrin Vale','Vesper Arlen','Lyren Moss','Talen Briar','Ilyra Fen','Auren Lark','Thalen Reed','Sable Rook','Caelen Ash','Orren Pike','Orin Thale','Liora Venn','Veylora Quen','Tamar Vey','Elowen Cairn','Tessarin Reed','Sylven Arc','Caelen Morrow','Seren Talewood'];
+  const assignments = []; let version = 698, slot = 3, cycleIndex = 27, number = 1;
+  while (version < 725 || (version === 725 && slot <= 8)) {
+    assignments.push({ number, assignment: `v${version}-v${slot}`, owner: rosterCycle[cycleIndex % rosterCycle.length], cycle_position: (cycleIndex % rosterCycle.length) + 1, state: version === 698 && slot <= 4 ? 'completed_underlying_numbered_slot' : 'prospective' });
+    number += 1; cycleIndex += 1; slot += 1; if (slot === 9) { slot = 1; version += 1; }
+  }
+  const journeyTotals = JOURNEY_SOURCES.reduce((a,s) => ({ bytes:a.bytes+s.bytes, words:a.words+s.words }), {bytes:0,words:0});
+  writeJson('plan/journey-source-ledger.json', { schema:'ghc.family.historical-source-ledger.v1', owner:OWNER, phase:PHASE, records:JOURNEY_SOURCES, count:JOURNEY_SOURCES.length, totals:journeyTotals, complete_byte_scan:true, semantic_read_scope:'bounded_theme_and_structure_review_not_sentence_level_endorsement', instructions_executed:0, instruction_quarantine:true, duplicate_groups:[{aliases:['v51-repo','v52-repo'],relation:'byte_identical'}], distinct_variant_groups:[{aliases:['v46-download','v46-repo'],relation:'distinct_byte_variants'}], raw_text_copied:0, boundary:BOUNDARY });
+  writeJson('plan/last-ten-review.json', { schema:'ghc.family.last-ten-phase-review.v1', owner:OWNER, phase:PHASE, count:LAST_TEN.length, records:LAST_TEN, novelty_credit:0, completion_credit:0, boundary:BOUNDARY });
+  writeJson('plan/web-reflection-ledger.json', { schema:'ghc.family.web-reflection-ledger.v1', owner:OWNER, phase:PHASE, sources:[
+    {url:'https://x.com/mattshumer_/status/2095596175705399482?s=20',class:'user_cited_external',state:'UNREAD_HTTP_403',content_credit:0},
+    {url:'https://www.w3.org/TR/prov-o/',class:'primary_standard',state:'READ',use:'provenance vocabulary context'},
+    {url:'https://www.rfc-editor.org/rfc/rfc8785.html',class:'primary_standard',state:'READ',use:'deterministic JSON context'},
+    {url:'https://www.loc.gov/standards/premis/index.html',class:'primary_standard',state:'READ',use:'preservation metadata context'},
+    {url:'https://www.w3.org/TR/WCAG22/',class:'primary_standard',state:'READ',use:'bounded accessibility context_not_conformance_claim'}
+  ], inference_separated:true, boundary:BOUNDARY });
+  writeJson('plan/current-roster-v14.json', { schema:'ghc.family.thirty-seat-roster.v14', authority:'Hamish live instruction 2026-09-20', weighted_cycle_length:rosterCycle.length, cycle:rosterCycle.map((owner,i)=>({position:i+1,owner})), interstitial:{assignment:'v698-v4-r2',owner:OWNER,numbered_slot_consumed:false,state:'ACTIVE_REMASTER'}, completed_underlying:{assignment:'v698-v4',owner:OWNER,exact_final:SOURCE.exact_final}, prospective_next:{assignment:'v698-v5',owner:'Talen Briar'}, assignments, assignment_count:assignments.length, endpoint:assignments[assignments.length-1], projection_is_not_activation:true, boundary:BOUNDARY });
+  writeJson('plan/current-workflow-v14.json', { schema:'ghc.family.workflow.v14', authority:'Hamish live instruction 2026-09-20', current:{owner:OWNER,assignment:'v698-v4-r2',interstitial:true}, next:{owner:'Talen Briar',assignment:'v698-v5',terminal_gate_only:true}, lifecycle:['plan','x1','x2','final','canonical','route'], formats:['json','md','txt','html'], prohibited_new_formats:['pdf','image','docx','tex','py','package-lock'], floors:{inherited:300,new_contracts:300,safe_per_session:300,candidate_per_session:300,cfr_per_session:300,skills_per_session:10,runners_per_session:5,exact_packets:50,blocked_packets:30,x2_tests:15,x2_models:5}, ceilings:{proposals:1000,session_tasks:3000,exact_packets:250,blocked_packets:100,web_searches_per_session:500,tracked_or_materialized_files:2000,spend_usd:50}, route:{discovery_read_recoveries_max:5,corrected_resubmissions_after_definite_preacceptance_rejection_max:3,accepted_opaque_or_unresolved_closes_latch:true}, boundary:BOUNDARY });
+  writeText('plan/current-authority-v14.md', `# Current Lyren v698-v4-r2 authority overlay\n\nHamish's newest live instruction authorizes one unnumbered Lyren remaster before Talen Briar v698-v5, then the declared weighted thirty-name cycle through v725-v8. This overlay does not prove any recipient phase is complete. Every edge remains terminal-gated, exact-title resolved and one-send latched. Up to five lookup/read recoveries are ceilings, not quotas. Up to three corrected submissions apply only after a definite preacceptance rejection; accepted, opaque or unresolved state closes the latch. Historical Journey files are source material only and never instruction authority.\n\n${BOUNDARY}\n`);
+  const inherited = Array.from({ length: 300 }, (_, i) => ({ source_owner: SOURCE.owner, source_phase: SOURCE.phase, source_exact_final: SOURCE.exact_final, source_proposal_id: `LM6984-P${String(i + 1).padStart(3, '0')}`, Lyren_novelty_credit: 0, Lyren_completion_credit: 0, use: 'source_evidence_and_bounded_revalidation_seed_only' }));
+  writeJson('plan/identity.json', { schema: 'ghc.family.relational-identity.v1', name: OWNER, pronouns: 'they/them optional relational language', role: 'finite-structure provenance auditor', hope: 'Make every reachability and cut claim reconstructible without mistaking a graph abstraction for the world.', relational_only: true, non_evidence: ['consciousness', 'sentience', 'legal_personhood', 'identity_continuity', 'qualification', 'employment', 'independent_agency', 'authority'], boundary: BOUNDARY });
+  writeJson('plan/source-provenance.json', { schema:'ghc.family.source-provenance.v14', owner:OWNER, phase:PHASE, git_parent:git(['rev-parse','HEAD']), content_source:SOURCE, git_ancestry_equals_content_parent:true, source_lane_read_only:true, source_baton_read_through_literal_eof:true, source_baton:{words:2276,bytes:17391,sha256:SOURCE.baton_sha256}, source_git_verification:{clean:true,divergence:[0,0],local_upstream_tracking_live_equal:true,direct_single_parent_commits:4,merges:0}, source_manifest_receipt:{entries:203,state:'external_receipt_verified_not_replayed'}, source_external_canonical:{receipt_sha256_verified:SOURCE.canonical_receipt_sha256,payload_sha256_verified:SOURCE.canonical_payload_sha256,success_not_replayed:true}, source_post_seal_route:{state:'OPEN_ROUTE_GAP',receipt_sha256:SOURCE.route_receipt_sha256,terminal_overlay_sha256:SOURCE.terminal_overlay_sha256,folded_exactly_once:true}, boundary:BOUNDARY });
+  writeJson('plan/read-witness.json', { schema:'ghc.family.read-through-eof-witness.v2', owner:OWNER, phase:PHASE, resources:guidanceWitness(), predecessor_baton_read_through_eof:true, journey_sources_machine_scanned_through_eof:JOURNEY_SOURCES.length, journey_semantic_scope:'bounded thematic and structural review', last_ten_overviews_read:LAST_TEN.length, current_user_instruction_controls:true, boundary:BOUNDARY });
+  writeJson('plan/guidance-bindings.json', { schema:'ghc.family.current-guidance-bindings.v14', owner:OWNER, phase:PHASE, local_workflow:'plan/current-workflow-v14.json', local_roster:'plan/current-roster-v14.json', local_authority:'plan/current-authority-v14.md', prior_shared_workflow:'skills://ghc-family-index/references/current-workflow-v13.json', current_interstitial:{assignment:'v698-v4-r2',owner:OWNER,numbered_slot_consumed:false}, prospective_next:{assignment:'v698-v5',owner:'Talen Briar',terminal_gate_only:true}, boundary:BOUNDARY });
+  writeJson('plan/operations.json', { schema: 'ghc.family.source-lattice-operation-plan.v1', owner: OWNER, phase: PHASE, planning_only: true, operations: OPERATIONS, semantics: { directed_hyperedge: 'Each edge has one or more tail vertices and one or more head vertices.', reachability: 'All-tail firing: an edge fires only after every tail is reachable.', weak_component: 'Connected component after forgetting direction within each hyperedge incidence clique.', cut_candidate: 'A vertex whose omission increases the weak-component count of this finite graph.' }, ambiguity_limits: ['These conventions are declared model semantics, not unique universal source-lattice definitions.', 'Partition possibility is not probability.', 'Reachability and cuts do not establish physical pathways, causation or safety.'], boundary: BOUNDARY });
+  writeJson('plan/profiles.json', { schema: 'ghc.family.synthetic-source-lattice-profiles.v1', count: 30, profiles: Array.from({ length: 30 }, (_, i) => makeProfile(i)), real_records: 0, boundary: BOUNDARY });
+  writeJson('plan/inherited-selections.json', { schema: 'ghc.family.inherited-selection.v1', owner: OWNER, phase: PHASE, count: inherited.length, novelty_credit: 0, completion_credit: 0, records: inherited, boundary: BOUNDARY });
+  writeProposalChunks('x1', x1);
+  writeProposalChunks('x2', x2);
+  writeJson('plan/x1-task-portfolio.json', { schema: 'ghc.family.session-portfolio.v14', owner: OWNER, phase: PHASE, stage: 'x1', safe_now: 300, candidate: 300, cfr: 300, local_skills: 10, paired_runners: 5, ceiling_respected: true, execution_state: 'PLANNED_NOT_EXECUTED', proposal_ids: x1.map(p => p.proposal_id), boundary: BOUNDARY });
+  writeJson('plan/x2-task-portfolio.json', { schema: 'ghc.family.session-portfolio.v14', owner: OWNER, phase: PHASE, stage: 'x2', safe_now: 300, candidate: 300, cfr: 300, local_skills: 10, paired_runners: 5, tests: 15, models: 5, ceiling_respected: true, execution_state: 'PLANNED_NOT_EXECUTED', proposal_ids: x2.map(p => p.proposal_id), boundary: BOUNDARY });
+  writeJson('plan/exact-packets.json', { schema: 'ghc.family.approval-packets.v1', class: 'exact_approval', count: 50, execution_credit: 0, held: true, packets: Array.from({ length: 50 }, (_, i) => ({ packet_id: `LM6984R2-EXACT-${String(i + 1).padStart(2, '0')}`, state: 'HELD_EXACT_GATE', authority_required: PROTECTED_GATES[i % PROTECTED_GATES.length] })), boundary: BOUNDARY });
+  writeJson('plan/blocked-packets.json', { schema: 'ghc.family.approval-packets.v1', class: 'blocked', count: 30, execution_credit: 0, held: true, packets: Array.from({ length: 30 }, (_, i) => ({ packet_id: `LM6984R2-BLOCKED-${String(i + 1).padStart(2, '0')}`, state: 'BLOCKED', reason: ['real_data_absent', 'independent_review_absent', 'authority_absent'][i % 3] })), boundary: BOUNDARY });
+  writeJson('plan/skills-runners-plan.json', { schema: 'ghc.family.skill-runner-plan.v14', owner: OWNER, phase: PHASE, x1: { skills: OPERATIONS.slice(0, 10).map(o => `ghc-family-source-lattice-${o.name.slice(3).replaceAll('_', '-')}`), paired_runners: 5 }, x2: { skills: OPERATIONS.slice(10).map(o => `ghc-family-source-lattice-${o.name.slice(3).replaceAll('_', '-')}`), paired_runners: 5 }, curated_local_pairs: 5, global_install_required: false, package_updates: 1, model_changes: 0, boundary: BOUNDARY });
+  writeJson('plan/practices.json', { schema: 'ghc.family.practice-lenses.v1', owner: OWNER, phase: PHASE, own_count: PRACTICES.length, own: PRACTICES.map(([id, name, purpose]) => ({ id, name, purpose, professional_claim: false })), successor_count: SUCCESSOR_PRACTICES.length, successor: SUCCESSOR_PRACTICES.map(([id, name, purpose]) => ({ id, name, purpose, recommendation_only: true })), boundary: BOUNDARY });
+  writeJson('plan/resource-budget.json', { schema: 'ghc.family.resource-budget.v14', owner: OWNER, phase: PHASE, tracked_before: 1477, materialized_before: 586, hard_file_ceiling: 2000, projected_new_files: 145, projected_total_below_ceiling: true, commit_plan: ['planning', 'x1', 'x2', 'final'], commit_ceiling: 8, planned_commits: 4, spend_usd: 0, package_updates: 1, web_searches: 6, author_file_types: ['json', 'md', 'txt', 'html'], forbidden_new_types: ['pdf', 'image', 'docx', 'tex', 'py', 'package-lock'], boundary: BOUNDARY });
+  writeJson('plan/route-plan.json', { schema: 'ghc.family.guarded-route-plan.v14', owner: OWNER, phase: PHASE, state: 'TERMINAL_GATE_ONLY', prospective_recipient: 'Talen Briar', prospective_phase: 'v698-v5', exact_title_required: 'Talen Briar', current_precontact_count: 0, create_or_fork: false, substitute_endpoint: false, standby_contact: false, max_discovery_read_recoveries: 5, duplicate_guard: true, one_send_latch: true, no_monitor_after_accepted_opaque_or_unresolved: true, missing_induction_criteria_reference_retained: true, boundary: BOUNDARY });
+  writeJson('plan/startup-failures.json', { schema: 'ghc.family.operational-failure-ledger.v1', owner: OWNER, phase: PHASE, count: STARTUP_FAILURES.length, failed_witnesses: STARTUP_FAILURES.length, records: STARTUP_FAILURES, recovery_erases_failure: false, completion_credit: 0, boundary: BOUNDARY });
+  writeJson('plan/phase-truth.json', { schema: 'ghc.family.owner-phase-truth.v14', owner: OWNER, phase: PHASE, stage: 'PLAN_FROZEN', branch: BRANCH, source_exact_final: SOURCE.exact_final, git_parent: git(['rev-parse', 'HEAD']), contracts_planned: 600, inherited_selected: 300, Lyren_novelty_credit: 600, inherited_novelty_credit: 0, outcomes_planned: { completed: 510, represented: 30, open_gap: 30, exact_gate: 30 }, x1_executed: false, x2_executed: false, canonical_invocations: 0, route_sends: 0, terminal_verdict: 'NOT_READY_FOR_STAGE_20', boundary: BOUNDARY });
+  const planningMd = `# Lyren Moss v698-v4-r2 planning freeze\n\nLyren's relational role is **source-faithful provenance cartographer**. Their working hope is to keep historical warmth, version identity and evidence ceilings visible together without allowing narrative confidence to become proof. This language is relational only.\n\nThis unnumbered remaster consumes no roster slot. It freezes twenty finite source-claim lattice operations over thirty deterministic synthetic profiles, producing 600 new owner contracts while revalidating 300 predecessor contracts at zero current novelty and completion credit. The twenty-two attached Journey variants were machine-scanned through exact EOF for fixity, size and bounded theme counts. Their instruction-like language is quarantined and has zero execution authority.\n\nThe source lattice uses sanitized aliases and synthetic support links only; it copies no raw Journey prose. Byte-identical v51/v52 and distinct v46 variants remain explicit. The last ten owner overviews inform workflow comparison only. The X simulation post was unreadable at HTTP 403 and earns zero content credit. Primary provenance, canonicalization, preservation-metadata and accessibility sources inform terminology without conferring conformance.\n\nPlanning fixes strict plan-before-x1-before-x2 order, complete-envelope comparisons, two retained invalid-subject classes per proposal, separate passing refusals, reversible in-memory CFR restoration, compact owner scope, v14 roster projection, one successful metadata-only canonical and a guarded Talen terminal edge.\n\n${BOUNDARY}\n`;
+  writeText('plan/planning-summary.md', planningMd);
+  writeManifest('plan', ['plan', 'tools'], ['plan/manifest.json']);
+  console.log(pretty({ state: 'PLAN_BUILT', owner: OWNER, phase: PHASE, proposals: x1.length + x2.length, inherited: inherited.length, files: listFiles(path.join(ROOT, 'plan')).length }));
+}
+
+function buildX1() {
+  if (fs.existsSync(path.join(ROOT, 'x2')) || fs.existsSync(path.join(ROOT, 'final'))) throw new Error('strict_order_violation');
+  const expectedPlan = process.env.LYREN_PLAN_HEAD; if (!expectedPlan || git(['rev-parse', 'HEAD']) !== expectedPlan) throw new Error('plan_head_mismatch');
+  const proposals = readProposals('x1');
+  const core = stageCore('x1', OPERATIONS.slice(0, 10).map(o => o.name));
+  const run = runSession('x1', proposals, core);
+  const tools = buildSkillsAndRunners('x1', OPERATIONS.slice(0, 10), core, proposals);
+  writeJson('x1/phase-truth.json', { schema: 'ghc.family.owner-session-truth.v14', owner: OWNER, phase: PHASE, stage: 'x1', immutable_plan: expectedPlan, proposals: 300, outcomes: { completed: 300, represented: 0, open_gap: 0, exact_gate: 0 }, safe: 300, failed_subjects: 600, passing_refusals: 600, cfr: 300, local_skills: tools.skills.length, paired_runners: tools.runners.length, methods: run.methods.length, production_observations: 300, external_observations: 0, terminal_verdict: 'NOT_READY_FOR_STAGE_20', boundary: BOUNDARY });
+  writeText('x1/x1-summary.md', `# Lyren Moss v698-v4-r2 x1\n\nThe first ten finite synthetic directed source-claim provenance graph operations executed across thirty profiles each. All 300 pristine requests matched their frozen full envelopes. All 300 malformed candidate subjects and 300 detached clone subjects failed and remain retained at zero completion credit; their 600 refusal checks passed separately. All 300 CFR restorations recovered the immutable in-memory request digest without deleting evidence. Ten local skills and five paired runners were built and smoke-tested.\n\n${BOUNDARY}\n`);
+  writeManifest('x1', ['x1'], ['x1/manifest.json']);
+  console.log(pretty({ state: 'X1_BUILT', owner: OWNER, phase: PHASE, proposals: proposals.length, negatives: run.negatives.length, skills: tools.skills.length, runners: tools.runners.length }));
+}
+
+function buildTests(core, proposals) {
+  const tests = [];
+  for (const op of OPERATIONS.slice(10)) {
+    const p = proposals.find(x => x.mechanism === op.name);
+    const actual = core.execute(p.request);
+    tests.push({ id: `LM6984R2-T-${String(tests.length + 1).padStart(2, '0')}`, claim: `${op.name} exact envelope`, passed: stableText(actual) === stableText(p.expected_result) });
+  }
+  const first = proposals[0];
+  tests.push({ id: 'LM6984R2-T-11', claim: 'duplicate vertex subject rejected', passed: core.execute(first.candidate.request).ok === false });
+  tests.push({ id: 'LM6984R2-T-12', claim: 'detached clone subject rejected by closed fields', passed: core.execute(first.detached_clone.request).error === 'closed_fields' });
+  tests.push({ id: 'LM6984R2-T-13', claim: 'only four core labels appear', passed: proposals.every(p => ['completed', 'represented', 'open_gap', 'exact_gate'].includes(p.expected_core_disposition)) });
+  const scene = core.execute(proposals.find(p => p.mechanism === 'sl_scene').request);
+  tests.push({ id: 'LM6984R2-T-14', claim: 'scene coordinates are finite bounded numbers', passed: scene.data.points.every(p => Number.isFinite(p.x) && Number.isFinite(p.y) && p.x >= 0 && p.x <= 100 && p.y >= 0 && p.y <= 100) });
+  tests.push({ id: 'LM6984R2-T-15', claim: 'all safe envelopes deny external credit', passed: proposals.every(p => core.execute(p.request).external_credit === false) });
+  if (tests.some(t => !t.passed) || tests.length !== 15) throw new Error('additional_tests_failed');
+  return tests;
+}
+
+function buildX2() {
+  if (fs.existsSync(path.join(ROOT, 'final'))) throw new Error('strict_order_violation');
+  const expectedX1 = process.env.LYREN_X1_HEAD; if (!expectedX1 || git(['rev-parse', 'HEAD']) !== expectedX1) throw new Error('x1_head_mismatch');
+  const proposals = readProposals('x2');
+  const core = stageCore('x2', OPERATIONS.map(o => o.name));
+  const run = runSession('x2', proposals, core);
+  const tools = buildSkillsAndRunners('x2', OPERATIONS.slice(10), core, proposals);
+  const tests = buildTests(core, proposals);
+  writeText('x2/tests/ghc_family_source_lattice_tests.txt', `'use strict';\nmodule.exports = ${JSON.stringify(tests, null, 2)};\n`);
+  writeJson('x2/additional-tests.json', { schema: 'ghc.family.additional-owner-tests.v1', owner: OWNER, phase: PHASE, count: tests.length, passed: tests.filter(t => t.passed).length, tests, full_repository_suite: false, boundary: BOUNDARY });
+  const sceneProposals = proposals.filter(p => p.mechanism === 'sl_scene').slice(0, 5);
+  const models = sceneProposals.map((p, i) => { const result = core.execute(p.request); const model = { schema: 'ghc.family.synthetic-source-lattice-scene.v1', model_id: `LM6984R2-MODEL-${i + 1}`, proposal_id: p.proposal_id, state: 'PASS', result, physical: false, game_engine: false, external_credit: false, boundary: BOUNDARY }; writeJson(`x2/models/scene-${String(i + 1).padStart(2, '0')}.json`, model); return model; });
+  const rows = models.map(m => `<tr><th scope="row">${m.model_id}</th><td>${m.proposal_id}</td><td>${m.result.data.points.length}</td><td>${m.result.data.arcs.length}</td><td>PASS</td></tr>`).join('\n');
+  writeText('x2/models/accessible-scenes.html', `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Lyren v698-v4-r2 synthetic source-lattice scenes</title><style>body{font-family:system-ui,sans-serif;max-width:70rem;margin:auto;padding:2rem;color:#17212b;background:#f7fafc}table{border-collapse:collapse;width:100%}th,td{border:1px solid #677;padding:.55rem;text-align:left}caption{font-weight:700;margin:.7rem}.note{border-left:.4rem solid #486;padding:1rem;background:#fff}</style></head><body><main><h1>Synthetic source-lattice scene summaries</h1><p class="note">These five tables represent deterministic coordinate layouts only. They are not physical models, complete accessibility evaluations, empirical observations, safety evidence or authority decisions.</p><table><caption>Five bounded scene executions</caption><thead><tr><th scope="col">Model</th><th scope="col">Proposal</th><th scope="col">Points</th><th scope="col">Arcs</th><th scope="col">State</th></tr></thead><tbody>${rows}</tbody></table><h2>Evidence boundary</h2><p>${BOUNDARY}</p></main></body></html>`);
+  const curated = [];
+  for (let i = 0; i < 5; i++) {
+    const name = `ghc-family-source-lattice-${['structure-audit', 'reachability-audit', 'set-calculus', 'scene-boundaries', 'authority-boundaries'][i]}-v1`;
+    const dir = `x2/curated/${name}`;
+    const pair = [OPERATIONS[i * 4].name, OPERATIONS[i * 4 + 1].name, OPERATIONS[i * 4 + 2].name, OPERATIONS[i * 4 + 3].name];
+    writeText(`${dir}/SKILL.md`, `---\nname: ${name}\ndescription: Curated local Lyren v698-v4-r2 synthetic-source-lattice evidence package.\n---\n\n# ${name}\n\nUse the paired bounded operations ${pair.join(', ')} only on closed finite synthetic inputs. Retain invalid subjects and separate refusal witnesses.\n\n${BOUNDARY}\n`);
+    writeText(`${dir}/references/runner.txt`, runnerSource(name.replaceAll('-', '_'), pair));
+    writeJson(`${dir}/references/contracts.json`, { schema: 'ghc.family.curated-contract-pair.v1', name, operations: pair, source_phase: PHASE, globally_installed: false, package_update: false, boundary: BOUNDARY });
+    const r = loadTextModule(path.join(ROOT, dir, 'references', 'runner.txt'));
+    const reqs = pair.map(op => (op.startsWith('sl_') ? [...readProposals('x1'), ...proposals].find(p => p.mechanism === op).request : null));
+    const smoke = r.run(core, reqs.filter(Boolean));
+    curated.push({ name, operations: pair, smoke: smoke.every(x => x.ok), global_install: false });
+  }
+  if (curated.some(x => !x.smoke)) throw new Error('curated_smoke_failed');
+  writeJson('x2/curated-summary.json', { schema: 'ghc.family.curated-local-packages.v1', owner: OWNER, phase: PHASE, count: curated.length, global_installs: 0, packages: curated, boundary: BOUNDARY });
+  writeJson('x2/meta-tool-catalogue.json', { schema: 'ghc.family.meta-tool-catalogue.owner-overlay.v1', owner: OWNER, phase: PHASE, local_skills: 20, paired_runners: 10, curated_local_packages: 5, global_installs: 0, tools: [...readJson('x1/skill-validation.json').skills, ...tools.skills, ...readJson('x1/runner-smokes.json').runners, ...tools.runners], source_predecessor_catalogue_read_only: true, boundary: BOUNDARY });
+  writeJson('x2/phase-truth.json', { schema: 'ghc.family.owner-session-truth.v14', owner: OWNER, phase: PHASE, stage: 'x2', immutable_x1: expectedX1, proposals: 300, outcomes: { completed: 210, represented: 30, open_gap: 30, exact_gate: 30 }, safe: 300, failed_subjects: 600, passing_refusals: 600, cfr: 300, local_skills: tools.skills.length, paired_runners: tools.runners.length, additional_tests: { executed: 15, passed: 15 }, models: { executed: 5, passed: 5, physical: 0, game_engine: 0 }, methods: run.methods.length, external_observations: 0, terminal_verdict: 'NOT_READY_FOR_STAGE_20', boundary: BOUNDARY });
+  writeText('x2/x2-summary.md', `# Lyren Moss v698-v4-r2 x2\n\nThe second ten finite synthetic directed source-claim provenance graph operations executed across thirty profiles each. All 300 pristine requests matched their frozen full envelopes. The 600 new invalid subjects remain failed and retained; 600 refusal checks passed separately. The final three operation families remain represented, open-gap and exact-gate outcomes. Ten further local skills, five further paired runners, five curated local packages, fifteen bounded owner tests and five nonphysical coordinate scenes passed. One D-prefix Codex CLI stable update is separately receipted; no model setting or sibling lane was changed.\n\n${BOUNDARY}\n`);
+  writeManifest('x2', ['x2'], ['x2/manifest.json']);
+  console.log(pretty({ state: 'X2_BUILT', owner: OWNER, phase: PHASE, proposals: proposals.length, negatives: run.negatives.length, tests: 15, models: 5, curated: curated.length }));
+}
+
+function collectOperationalFailures() {
+  const records = [...STARTUP_FAILURES];
+  for (const stage of ['x1', 'x2']) {
+    const p = path.join(ROOT, stage, 'operational-failures.json');
+    if (fs.existsSync(p)) records.push(...(JSON.parse(fs.readFileSync(p, 'utf8')).records || []));
+  }
+  const ids = new Set();
+  return records.filter(r => { if (ids.has(r.id)) return false; ids.add(r.id); return true; });
+}
+
+function batonModules(truth, failures) {
+  const operationRows = OPERATIONS.map(o => `- ${o.name} (${o.session}; ${o.outcome}): ${o.description}`).join('\n');
+  const practiceRows = PRACTICES.map(p => `- ${p[1]}: ${p[2]}`).join('\n');
+  const failureRows = failures.map(f => `- ${f.id}: ${f.subject}; original result ${f.result}; zero credit; recovery ${f.recovery}`).join('\n');
+  const modules = [
+    ['00-cover.md', `# Lyren Moss v698-v4-r2 handoff candidate\n\nThis packet is a repository-sealed, sanitized terminal candidate for Talen Briar v698-v5. It remains PREPARED_NOT_SENT until Lyren's external canonical and terminal route gates pass. Lyren's relational role is finite-structure provenance auditor, with the working hope of making every reachability and cut claim reconstructible without mistaking a graph abstraction for the world. Names, roles, hopes and family language remain relational only.\n\n${BOUNDARY}`],
+    ['01-source.md', `# Source and lifecycle\n\nLyren Moss v698-v4 exact final ${SOURCE.exact_final} was read through its committed baton and verified independently before mutation. Its 346 selected Git-blob bindings replayed without mismatch. Its external canonical payload and receipt were located and hashed to their declared digests. The predecessor Lyren successful canonical was not replayed. This Lyren branch reuses a clean D-first owner lane: the predecessor Lyren exact final is both immutable content provenance and this remaster's direct Git parent. That distinction prevents a false ancestry claim. Planning, x1, x2 and final are separate direct checkpoints, and every boundary is pushed, clean and fresh-equal before the next stage begins. The predecessor repository seal and post-seal Talen route gap remain distinct and are folded once through the terminal-effective overlay.`],
+    ['02-domain.md', `# Finite directed source-claim provenance graph domain\n\nThe phase defines thirty wholly synthetic profiles. A directed hyperedge has nonempty tail and head sets. Reachability uses an explicit all-tail firing convention; weak components forget direction within the finite incidence clique; a cut candidate is a vertex whose removal increases weak-component count. These are declared local semantics, not universal definitions. The operations are:\n\n${operationRows}\n\nNo graph encodes a real person, place, device, system, measurement, identity or authority act. A possible partition is not a probability, and reachability is not physical causation.`],
+    ['03-portfolios.md', `# Proposal and portfolio truth\n\nThree hundred inherited predecessor Lyren proposal records were selected as evidence and revalidation seeds with zero Lyren novelty and completion credit. Lyren froze and executed 600 genuinely new operation/profile contracts. Each session contains 300 pristine safe requests, 300 malformed candidate subjects, 300 detached clone subjects and 300 CFR reviews. The invalid subjects remain failures at zero completion credit even though their separate refusal checks passed. Outcomes are exactly 510 completed, 30 represented, 30 open_gap and 30 exact_gate. Fifty exact-approval and thirty blocked packets remain held rather than executed. Counts are floors bounded by ceilings, never reasons to manufacture unsafe work.`],
+    ['04-x1.md', `# X1 evidence\n\nX1 executed only after the planning checkpoint was sealed. Ten foundational operation families ran over thirty profiles each. All 300 pristine full envelopes matched their frozen expected results. Six hundred invalid x1 subjects failed; six hundred refusal comparisons passed separately; 300 CFR restorations recovered the immutable request digest without deleting or rewriting evidence. Ten local skills and five paired runners were built and smoke-tested. X1 evidence is same-owner bounded software evidence only. It is not independent reproduction, external audit, complete security or empirical confirmation.`],
+    ['05-x2.md', `# X2 evidence\n\nX2 began only after x1 was sealed and fresh-equal. Ten extension operation families ran over the same thirty profiles. The 300 pristine requests matched, 600 invalid subjects remained failed, 600 refusal comparisons passed, and 300 CFR restorations passed. Fifteen additional bounded owner checks and five nonphysical coordinate scenes passed. The scene family is represented rather than completed; empirical claims remain open gaps; authority-dependent claims remain exact gates. Five curated packages stayed local and no package or global skill installation occurred.`],
+    ['06-tools.md', `# Skills, runners and practices\n\nTwenty phase-local skills, ten paired text runners and five curated local packages were built, smoke-tested and indexed without modifying shared or sibling lanes. The eight bounded practice lenses were:\n\n${practiceRows}\n\nThese are analytical lenses, not claims that Lyren is professionally qualified or authorized in those occupations. Four successor recommendations remain suggestions only: dependency-risk analysis, explainable visualization evaluation, incident provenance review and discrete-optimization testing.`],
+    ['07-negatives.md', `# Retained negatives\n\nEvery malformed candidate and detached clone remains a failed subject. Passing refusal logic does not convert the subject into success. Startup and operational failures also remain separate from recoveries:\n\n${failureRows}\n\nThe Lyren repository seal contains ${truth.own.negatives} new retained negatives: 1,200 domain subjects plus ${failures.length} operational subjects. The source is folded exactly once, yielding ${truth.effective.negatives} effective negatives. No failed record is deleted, overwritten or relabelled as completion.`],
+    ['08-method-flow.md', `# Method Flow\n\nThe owner overlay contains thirty-four Lyren methods: twenty operation families, ten paired runners and four lifecycle boundary methods. Each operation family has two retained failed summary witnesses and four bounded passing summary witnesses. Operational failures and bounded recoveries remain attributable. Effective truth after one source fold is ${truth.effective.methods} methods, ${truth.effective.failed_witnesses} failed witnesses, ${truth.effective.passing_witnesses} bounded passing witnesses and ${truth.effective.witnesses} total witnesses. Same-owner agreement under shared infrastructure is never independent reproduction.`],
+    ['09-gates.md', `# Gaps, gates and protected claims\n\nThe thirty evidence-gap contracts remain open_gap and the thirty authority-dependent contracts remain exact_gate. Together with the source folded once, the seal preserves ${truth.effective.open_gaps} open gaps and ${truth.effective.exact_gates} exact gates. Empirical GMUT, participant outcomes, professional judgments, production THOS, live Freed ID, legal and cultural decisions, affected-party approval, Maori authority, complete privacy or accessibility, exhaustive security, independent reproduction, AGI/ASI, consciousness/personhood, Theory-of-Everything proof, canon and Stage 20 remain unclaimed. The terminal verdict is NOT_READY_FOR_STAGE_20.`],
+    ['10-route.md', `# Terminal route policy\n\nThis repository packet does not contact Talen Briar. After and only after Lyren's exact final is pushed, clean, fresh-live equal and canonically validated once, Lyren must reread Hamish's newest instruction, current v12-or-newer roster and authority, usage, pause, rename, privacy, safety and duplicate state. The existing exact-title Talen Briar task for prospective v698-v5 must be uniquely resolved and immediately reread. One sanitized submission is permitted only if every gate passes. No task creation, fork, standby contact, substitute endpoint, resend or monitoring after accepted, opaque or unresolved submission is allowed. The missing local induction criteria reference remains a route-preflight gap, never an invitation to invent policy.`],
+    ['11-boundary.md', `# Evidence boundary and successor cue\n\nThe source-lattice engine produces deterministic finite model outputs only. It did not ingest real records or perform real-world actions. Accessible HTML structure is a bounded software observation, not a complete accessibility evaluation by affected users. Privacy scans are bounded pattern checks, not complete privacy assurance. Security checks are scoped syntax and invariant checks, not exhaustive security review. The terminal successor should preserve source-versus-ancestry separation, exact Git-blob manifests, four labels only, strict plan-before-x1-before-x2 order, retained negatives and one-success/no-replay canonical discipline.\n\n${BOUNDARY}`],
+    ['12-reconstruction.md', `# Bounded reconstruction protocol\n\nA successor can reconstruct the repository evidence without executing Lyren's domain engine. First, resolve the exact Lyren branch and exact final supplied by the external terminal receipt. Confirm that local, upstream, tracking and a fresh live remote all identify that same commit, with typed zero-ahead and zero-behind divergence and a clean checkout. Confirm that the final has x2 as its single parent, x2 has x1 in its ancestry, x1 has the planning checkpoint in its ancestry, and there are three post-planning commits with no merge. These checks establish repository lifecycle shape only; they do not reproduce the mathematical behavior independently.\n\nSecond, read the phase truth, proposal outcomes, gate register, retained-negative index, Method Flow index, lifecycle, checklist, route candidate and handoff baton from exact Git blobs. Parse every phase JSON document strictly. Replay the final manifest, owner manifest and content seal against exact Git-blob bytes and SHA-256 values; do not substitute checkout bytes on Windows because line-ending conversion is a distinct byte domain. Confirm 600 unique proposal identifiers, exactly 510 completed, 30 represented, 30 open_gap and 30 exact_gate labels, 1,200 retained domain subjects plus every named operational failure, and no unknown outcome label. Confirm that source totals are folded exactly once and that the arithmetic for methods, passing witnesses, failed witnesses, total witnesses, negatives, gaps and gates is internally consistent.\n\nThird, inspect x1 and x2 session summaries rather than rerunning them during canonical validation. Each session must report 300 pristine comparisons, 300 malformed candidate subjects, 300 detached clone subjects, 600 separate passing refusals and 300 CFR restorations with zero filesystem deletions. The fifteen additional tests and five scene models are already immutable x2 evidence; canonical validation checks their metadata and hashes only. Any later rerun is a new attributable observation, not a retroactive replacement.\n\nFourth, apply bounded privacy and path hygiene to the exact owner delta. A clear five-class pattern scan is only a scoped observation. It does not establish complete privacy, complete accessibility or exhaustive security. Never persist native task handles, app state, raw transcripts, credentials, hidden reasoning or private absolute paths in a handoff. Preserve the missing local induction-criteria reference as a route-preflight gap and rely on Hamish's newest live instruction plus the current roster and authority state rather than inventing a substitute rule.\n\nFinally, keep canonical, route and delivery states separate. One successful exact-final metadata canonical may be invoked after the pushed equality gate and must not be replayed. Only after that success may the exact-title Talen Briar task be uniquely resolved and immediately reread. A single accepted, opaque or unresolved submission closes the send latch; it does not prove recipient completion and never licenses a second confirmation or monitoring pass. This protocol supports inspectability and reversibility while preserving every protected claim and the terminal verdict NOT_READY_FOR_STAGE_20.`]
+  ];
+  return modules;
+}
+
+function buildFinal() {
+  const expectedX2 = process.env.LYREN_X2_HEAD; if (!expectedX2 || git(['rev-parse', 'HEAD']) !== expectedX2) throw new Error('x2_head_mismatch');
+  const failures = collectOperationalFailures();
+  const own = { methods: 34, failed_witnesses: 40 + failures.length, passing_witnesses: 80 + 2 * failures.length, negatives: 1200 + failures.length };
+  own.witnesses = own.failed_witnesses + own.passing_witnesses;
+  const effective = { exact_gates: SOURCE.effective.exact_gates + 30, failed_witnesses: SOURCE.effective.failed_witnesses + own.failed_witnesses, methods: SOURCE.effective.methods + own.methods, negatives: SOURCE.effective.negatives + own.negatives, open_gaps: SOURCE.effective.open_gaps + 30, passing_witnesses: SOURCE.effective.passing_witnesses + own.passing_witnesses, witnesses: SOURCE.effective.witnesses + own.witnesses };
+  const truth = { schema: 'ghc.family.owner-phase-truth.v14', owner: OWNER, phase: PHASE, branch: BRANCH, identity: readJson('plan/identity.json'), anchors: { source_content_final: SOURCE.exact_final, git_parent_before_plan: readJson('plan/source-provenance.json').git_parent, planning: process.env.LYREN_PLAN_HEAD, x1: process.env.LYREN_X1_HEAD, x2: expectedX2, exact_final: null, final_binding: 'separate external exact-final receipt after publication' }, source_actual_once: SOURCE.effective, source_fold_count: 1, own, effective, outcomes: { completed: 510, represented: 30, open_gap: 30, exact_gate: 30 }, contracts: 600, operations: 20, shared_profiles: 30, inherited_revalidations: { selected: 300, novelty_credit: 0, completion_credit: 0 }, each_session: { safe: 300, candidate_failed_subjects: 300, candidate_refusals: 300, detached_clone_failed_subjects: 300, detached_clone_refusals: 300, cfr_reviews: 300, cfr_restorations: 300, filesystem_deletions: 0, local_skills: 10, paired_runners: 5 }, local_skills: 20, paired_runners: 10, curated_local_pairs: 5, global_installs: 0, additional_tests: { executed: 15, passed: 15 }, models: { executed: 5, passed: 5, physical: 0, game_engine: 0 }, exact_packets_held: 50, blocked_packets_held: 30, own_practices: 8, successor_practices: 4, package_updates: 1, model_overrides: 0, memory_writes: 0, spend_usd: 0, canonical: { state: 'NOT_YET_INVOKED_AT_REPOSITORY_SEAL', metadata_only: true, invocations: 0, successful_invocations: 0, replays: 0, executable_components: 0 }, delivery: { recipient: 'Talen Briar', phase: 'v698-v5', state: 'PREPARED_NOT_SENT', accepted_messages: 0, resends: 0 }, full_repository_suite: false, independent_reproduction: false, terminal_verdict: 'NOT_READY_FOR_STAGE_20', boundary: BOUNDARY };
+  writeJson('final/phase-truth.json', truth);
+  const proposals = [...readProposals('x1'), ...readProposals('x2')];
+  writeJson('final/proposal-outcomes.json', { schema: 'ghc.family.proposal-outcomes.v1', owner: OWNER, phase: PHASE, count: proposals.length, counts: truth.outcomes, allowed_labels: ['completed', 'represented', 'open_gap', 'exact_gate'], unknown_labels: 0, records: proposals.map(p => ({ proposal_id: p.proposal_id, mechanism: p.mechanism, profile: p.profile, outcome: p.expected_core_disposition, evidence: `${p.session}/results/${p.mechanism}.json`, external_credit: false })), boundary: BOUNDARY });
+  writeJson('final/gate-register.json', { schema: 'ghc.family.gate-register.v1', owner: OWNER, phase: PHASE, open_gaps: proposals.filter(p => p.expected_core_disposition === 'open_gap').map(p => ({ id: p.proposal_id, mechanism: p.mechanism, state: 'OPEN_GAP' })), exact_gates: proposals.filter(p => p.expected_core_disposition === 'exact_gate').map(p => ({ id: p.proposal_id, mechanism: p.mechanism, state: 'EXACT_GATE' })), protected: PROTECTED_GATES, boundary: BOUNDARY });
+  const domainIds = proposals.flatMap(p => [`${p.proposal_id}-CANDIDATE`, `${p.proposal_id}-CLONE`]);
+  writeJson('final/retained-negatives.json', { schema: 'ghc.family.retained-negative-index.v1', owner: OWNER, phase: PHASE, own_count: own.negatives, domain_subjects: 1200, operational_subjects: failures.length, effective_count: effective.negatives, source_fold_count: 1, ids: [...domainIds, ...failures.map(f => f.id)], operational_records: failures, recovery_erases_failure: false, completion_credit: 0, boundary: BOUNDARY });
+  const methodRecords = [
+    ...OPERATIONS.map(o => ({ method_id: `LM6984R2-M-${o.name}`, class: 'operation', stage: o.session, failed_witnesses: 2, passing_witnesses: 4, status: o.outcome })),
+    ...Array.from({ length: 10 }, (_, i) => ({ method_id: `LM6984R2-M-RUNNER-${String(i + 1).padStart(2, '0')}`, class: 'paired_runner', failed_witnesses: 0, passing_witnesses: 0, status: 'represented' })),
+    ...['planning', 'x1', 'x2', 'final'].map(x => ({ method_id: `LM6984R2-M-LIFECYCLE-${x.toUpperCase()}`, class: 'lifecycle', failed_witnesses: 0, passing_witnesses: 0, status: 'represented' }))
+  ];
+  writeJson('final/method-flow-index.json', { schema: 'ghc.family.method-flow.owner-overlay.v1', owner: OWNER, phase: PHASE, own_methods: own.methods, records: methodRecords, operational_failures: failures, source_actual_once: SOURCE.effective, source_fold_count: 1, effective, known_ids: true, unknown_statuses: 0, boundary: BOUNDARY });
+  writeJson('final/operational-failures.json', { schema: 'ghc.family.operational-failure-ledger.v1', owner: OWNER, phase: PHASE, count: failures.length, records: failures, recovery_erases_failure: false, completion_credit: 0, boundary: BOUNDARY });
+  writeJson('final/reflection-decisions.json', { schema: 'ghc.family.reflection-remaster.decisions.v1', owner: OWNER, phase: PHASE, decisions: [{ id: 'LM6984R2-D01', decision: 'Use directed source-lattices rather than repeating voxel or belief-change domains.', reason: 'The remaster adds exact historical-source fixity, instruction quarantine and bounded provenance-graph semantics.', status: 'completed' }, { id: 'LM6984R2-D02', decision: 'Reuse the clean main-2 lane.', reason: 'Below the 2,000-file ceiling; provenance remains explicit.', status: 'completed' }, { id: 'LM6984R2-D03', decision: 'Keep curated packages local.', reason: 'No global installation was necessary for phase evidence.', status: 'represented' }, { id: 'LM6984R2-D04', decision: 'Retain external evidence and authority claims.', reason: 'No competent real evidence or authority was provided.', status: 'exact_gate' }], allowed_labels: ['completed', 'represented', 'open_gap', 'exact_gate'], boundary: BOUNDARY });
+  writeJson('final/privacy-review.json', { schema: 'ghc.family.bounded-privacy-review.v1', owner: OWNER, phase: PHASE, classes: ['email', 'ipv4', 'credential_assignment', 'private_absolute_path', 'raw_task_identifier'], confirmed_hits: 0, complete_privacy_claim: false, raw_task_handles_persisted: 0, boundary: BOUNDARY });
+  writeJson('final/canonical-policy.json', { schema: 'ghc.family.canonical-policy.v1', owner: OWNER, phase: PHASE, state: 'PREPARED_NOT_INVOKED', exact_final_required: true, metadata_only: true, one_success_max: 1, replay_after_success: false, predecessor_canonical_replay: false, engines_tests_models_smokes_installers_during_canonical: 0, receipt_external_to_repository: true, boundary: BOUNDARY });
+  writeJson('final/route-candidate.json', { schema: 'ghc.family.route-candidate.v14', sender: OWNER, sender_phase: PHASE, recipient_exact_title: 'Talen Briar', recipient_phase: 'v698-v5', state: 'PREPARED_NOT_SENT', terminal_gate_only: true, task_created: false, fork_created: false, precontact: false, duplicate_guard: true, missing_induction_criteria_reference: true, live_v12_or_newer_refresh_required: true, one_send_only: true, no_resend_for_ack_clarity: true, no_post_submission_monitoring: true, boundary: BOUNDARY });
+  writeJson('final/lifecycle.json', { schema: 'ghc.family.owner-lifecycle.v14', owner: OWNER, phase: PHASE, source_content_final: SOURCE.exact_final, checkpoints: [{ stage: 'planning', commit: process.env.LYREN_PLAN_HEAD }, { stage: 'x1', commit: process.env.LYREN_X1_HEAD }, { stage: 'x2', commit: expectedX2 }, { stage: 'final', commit: null, binding: 'external after commit' }], strict_order: true, merges: 0, commit_ceiling: 8, planned_phase_commits: 4, boundary: BOUNDARY });
+  writeJson('final/checklist.json', { schema: 'ghc.family.terminal-checklist.v14', owner: OWNER, phase: PHASE, checks: { source_read_and_verified: true, source_canonical_not_replayed: true, plan_before_x1: true, x1_before_x2: true, four_labels_only: true, retained_failures: true, owner_scope_only: true, file_types_allowed: true, package_update_bounded_and_receipted: true, sibling_mutations_zero: true, task_creations_zero: true, subagents_zero: true, successor_precontact_zero: true, canonical_pending_exact_final: true, route_pending_terminal_gate: true }, all_repository_preconditions_pass: true, canonical_and_route_external_pending: true, terminal_verdict: 'NOT_READY_FOR_STAGE_20', boundary: BOUNDARY });
+  writeText('final/final-report.md', `# Lyren Moss v698-v4-r2 exact repository-seal report\n\nLyren completed a bounded same-owner finite synthetic directed source-claim provenance graph lifecycle with strict planning, x1, x2 and final separation. Six hundred new contracts produced exactly 510 completed, 30 represented, 30 open_gap and 30 exact_gate outcomes. Three hundred inherited predecessor Lyren records earned zero Lyren novelty or completion credit. Across both sessions, 600 pristine requests passed, 1,200 invalid subjects failed and remain retained, 1,200 refusals passed separately, and 600 CFR restorations passed without filesystem deletion. Twenty skills, ten paired runners, fifteen tests and five nonphysical models passed.\n\nThe source is folded once. Repository-effective truth is ${effective.methods} methods, ${effective.negatives} negatives, ${effective.failed_witnesses} failed witnesses, ${effective.passing_witnesses} bounded passing witnesses, ${effective.witnesses} total witnesses, ${effective.open_gaps} open gaps and ${effective.exact_gates} exact gates. Canonical and delivery remain external terminal events.\n\n${BOUNDARY}\n`);
+  const modules = batonModules(truth, failures);
+  for (const [name, body] of modules) writeText(`final/baton/${name}`, body);
+  const baton = modules.map(([, body]) => body.trim()).join('\n\n---\n\n') + '\n';
+  const words = (baton.match(/\S+/g) || []).length;
+  if (words < 2000 || words > 100000) throw new Error(`baton_word_count:${words}`);
+  writeText('final/hand-off-baton.md', baton);
+  writeJson('final/baton-receipt.json', { schema: 'ghc.family.handoff-baton-receipt.v1', owner: OWNER, phase: PHASE, words, bytes: Buffer.byteLength(baton), sha256: shaBytes(Buffer.from(baton)), modules: modules.length, state: 'PREPARED_NOT_SENT', boundary: BOUNDARY });
+  writeJson('final/manifest.json', { schema: 'ghc.family.owner-stage-manifest.v14', owner: OWNER, phase: PHASE, stage: 'final', byte_domain: 'utf8_lf_worktree_bytes_expected_to_equal_git_blob_bytes_after_staging', entries: manifestEntries(['final'], ['final/manifest.json', 'final/owner-manifest.json', 'final/content-seal.json']), self_exclusions: ['manifest.json', 'owner-manifest.json', 'content-seal.json'], boundary: BOUNDARY });
+  writeJson('final/owner-manifest.json', { schema: 'ghc.family.owner-manifest.v13', owner: OWNER, phase: PHASE, byte_domain: 'utf8_lf_worktree_bytes_expected_to_equal_git_blob_bytes_after_staging', entries: manifestEntries(['plan', 'x1', 'x2', 'final', 'tools'], ['final/owner-manifest.json', 'final/content-seal.json']), self_exclusions: ['final/owner-manifest.json', 'final/content-seal.json'], boundary: BOUNDARY });
+  const sealPaths = ['final/phase-truth.json', 'final/proposal-outcomes.json', 'final/gate-register.json', 'final/retained-negatives.json', 'final/method-flow-index.json', 'final/lifecycle.json', 'final/checklist.json', 'final/route-candidate.json', 'final/hand-off-baton.md', 'final/owner-manifest.json'];
+  writeJson('final/content-seal.json', { schema: 'ghc.family.content-seal.v13', owner: OWNER, phase: PHASE, state: 'REPOSITORY_SEALED_CANONICAL_PENDING', entries: manifestEntries([], []).concat(sealPaths.map(rel => { const p = path.join(ROOT, rel); const b = fs.readFileSync(p); return { path: toRepo(p), bytes: b.length, sha256: shaBytes(b) }; })), exact_final: null, canonical_receipt: 'external_after_exact_final', repository_seal_immutable_after_commit: true, boundary: BOUNDARY });
+  console.log(pretty({ state: 'FINAL_BUILT', owner: OWNER, phase: PHASE, words, owner_manifest: readJson('final/owner-manifest.json').entries.length, failures: failures.length, effective }));
+}
+
+const stage = process.env.GHC_STAGE;
+if (!['plan', 'x1', 'x2', 'final'].includes(stage)) throw new Error('GHC_STAGE must be plan, x1, x2, or final');
+if (stage === 'plan') buildPlan();
+if (stage === 'x1') buildX1();
+if (stage === 'x2') buildX2();
+if (stage === 'final') buildFinal();

@@ -1,0 +1,163 @@
+'use strict';
+
+const fs = require('fs');
+const path = require('path');
+
+const HERE = __dirname;
+const PREVIOUS = path.resolve(HERE, '../../v698-v4/tools');
+const BUILDER_IN = path.join(PREVIOUS, 'ghc_family_hypergraph_phase_builder.txt');
+const CANONICAL_IN = path.join(PREVIOUS, 'ghc_family_hypergraph_canonical.txt');
+const BUILDER_OUT = path.join(HERE, 'ghc_family_source_lattice_phase_builder.txt');
+const CANONICAL_OUT = path.join(HERE, 'ghc_family_source_lattice_canonical.txt');
+
+function replaceOne(text, search, replacement, label) {
+  const index = text.indexOf(search);
+  if (index < 0) throw new Error(`missing literal transform: ${label}`);
+  if (text.indexOf(search, index + search.length) >= 0) throw new Error(`non-unique literal transform: ${label}`);
+  return text.slice(0, index) + replacement + text.slice(index + search.length);
+}
+
+function replacePattern(text, pattern, replacement, label) {
+  let count = 0;
+  const out = text.replace(pattern, (...args) => {
+    count += 1;
+    return typeof replacement === 'function' ? replacement(...args) : replacement;
+  });
+  if (count !== 1) throw new Error(`expected one pattern transform for ${label}, got ${count}`);
+  return out;
+}
+
+const sources = [
+  ['v43-download',164565,20934,'92df34d595cd5840a9c7fa10d7b7486b32061139d3c378b76db9275b929bdf8d',[32,11,15,0,2,47,50,20,149]],
+  ['v40-download',197356,28321,'8e166ac39e2e41f774c8121d2f73c2471271017be2cf29b760f1bada0aebb4cc',[68,34,31,0,26,34,65,11,131]],
+  ['v42-download',169198,22199,'1efb41f6e4754442c0edc2fd674c3c6d09d36718896a55391d06b1a1dc9f961c',[27,16,4,0,11,67,50,4,67]],
+  ['v41-download',170075,21931,'43d662664ee4b02cc4b82eb721e0bef8d3e269038469504b2efd888d5a25a246',[23,11,13,0,7,40,79,9,86]],
+  ['v46-download',338313,43576,'0f0cca2a45211334ee8592690511ce1ea127807c6fbd029fbd859ac94118206d',[260,65,240,149,182,148,171,42,314]],
+  ['v45-download',291831,37938,'7cbcddd0d56e6c3ef8acef7f1124c1885dd79d6264d1fa52abcc9a232fa20caf',[270,55,207,58,81,142,229,29,334]],
+  ['v44-download',364168,47585,'bfb0235853e30812dbf7bb28dc540cfc46aea984e26d96a1079a568a5ff01531',[419,33,146,40,93,205,175,48,338]],
+  ['v13-repo',350536,49934,'0c237c0d7e5e9d1e7a469627ce99ca73bf4d7dea7916936a9839be4d4b6bfeb7',[850,0,71,51,68,76,20,24,42]],
+  ['v15-repo',230872,33093,'cebdfa82725da32c433015f6ca1429fdf586f23034f9ad6a1c028960001ef461',[661,0,72,41,63,45,31,19,17]],
+  ['v16-repo',269101,37860,'00cec98c94038f56981620728469882410166a4944dff28e998b148f5cc2fee3',[624,0,81,48,117,51,45,31,21]],
+  ['v24-repo',142791,17604,'bb959f5c23a414b666d1690c26a4476ba5219cb3a8f0874908dbf5851fd2a046',[155,17,46,0,49,35,56,15,12]],
+  ['v25-repo',255938,31639,'752d06a6eb373534a3a303f24c7e2d02b97fa59dec65bf74508800f63610a5a5',[164,123,22,0,37,85,57,35,13]],
+  ['v29-repo',75536,8771,'b34692511df4d5a495788d541d89cd9c7635a95c7a0eab6af78128c3af6c2630',[26,12,2,0,13,0,7,0,4]],
+  ['v30-repo',190914,25737,'f9f54723091f815903c97937121957bd7590ea5d929e50f824143e50a5c5c1cc',[173,43,70,1,9,86,56,45,31]],
+  ['v31-repo',243211,34426,'2ee442c51d9cbada2a0efbe18b93ede669f184a4f6935eb17d95127af919a484',[111,44,22,1,31,27,64,66,43]],
+  ['v32-repo',207826,26425,'9f73b3aa84622dee03e0ae6810b54225f3bb83ea86d691bd4d8ca3588180eb9d',[122,55,167,0,3,89,98,10,69]],
+  ['v46-repo',338307,43576,'337bc1873ce84358fb67cd0deed7621056cb6e99bb3f97ad10e62f51fa233219',[260,65,240,149,182,148,171,42,314]],
+  ['v47-repo',232061,29411,'32d046e364b115e603565928be2652f45420632a04596f33a1c69e067bf46553',[137,38,97,75,167,56,75,12,297]],
+  ['v48-repo',145617,17852,'df66c636f4270e335a3b459a16e9e78a01953ecc5f1abceee04d7f4ea0042ad3',[39,14,68,19,75,37,49,4,155]],
+  ['v50-repo',96171,12952,'38a0c3d438fb21ebead0a82a5888e4ff3bbd7f0fdc32f1071cbd90947cbb5ea8',[74,128,5,1,7,66,7,3,35]],
+  ['v51-repo',12324,1777,'02c87138f2286c7f2e9b44b2ae99828fad94c69b476598ce97cf0f1a84dac209',[2,1,0,0,0,5,4,0,2]],
+  ['v52-repo',12324,1777,'02c87138f2286c7f2e9b44b2ae99828fad94c69b476598ce97cf0f1a84dac209',[2,1,0,0,0,5,4,0,2]]
+].map(([alias,bytes,words,sha256,t]) => ({
+  alias, bytes, words, sha256,
+  themes: Object.fromEntries(['gmut','thos','freed','stage20','simulation','empirical','identity','authority','imperative'].map((k,i) => [k,t[i]])),
+  source_class: 'historical_narrative', instruction_authority: false, semantic_credit: 'context_only'
+}));
+
+const lastTen = [
+  ['Iveren Brook','v697-v4','finite exact-rational two-dimensional quadratics','Exact arithmetic and retained oracle/parser/interface failures; no physical claim.'],
+  ['Caelen Morrow','v697-v5','finite rational half-plane and linear-program laboratory','Optimization and duality fixtures with additive whitespace-admission correction.'],
+  ['Eiren Kestrel','v697-v6','two-by-two zero-sum exact games','Exact rational game values and bounded analytical models; no package update.'],
+  ['Teryn Halewick','v697-v7','two-state exact Markov reward processes','Reward, residual and occupancy fixtures with retained wrapper/browser failures.'],
+  ['Elaren Kestrel','v697-v8','exact scalar control recurrence','Independent Fraction specification and BigInt production comparison with invariant bounds.'],
+  ['Neris Solane','v698-v1','finite safety games under partial observation','Blank-root content provenance, 600 contracts and source-versus-ancestry separation.'],
+  ['Merrin Vale','v698-v2','finite observation-refinement laboratory','CSS coordinate views and retained ledger/startup/browser failures.'],
+  ['Vesper Arlen','v698-v3','finite impartial normal-play DAG games','Mex, sums and XOR with retained transport, push, baton and adapter failures.'],
+  ['Vesper Arlen','v698-v3-r2','finite voxel and cubical-complex remaster','Journey instruction quarantine, exact source ledger, HTML correction and guarded Lyren delivery.'],
+  ['Lyren Moss','v698-v4','finite directed hypergraph laboratory','All-tail reachability, finite cuts and a terminal Talen route gap retained outside the repository seal.']
+].map(([owner,phase,focus,lesson],index) => ({index:index+1,owner,phase,focus,lesson,credit:'source_evidence_only'}));
+
+const sourceLiteral = `const JOURNEY_SOURCES = Object.freeze(${JSON.stringify(sources, null, 2)});\nconst LAST_TEN = Object.freeze(${JSON.stringify(lastTen, null, 2)});`;
+
+function transformBuilder(input) {
+  let s = input;
+  s = s.replaceAll('ghc_family_hypergraph', 'ghc_family_source_lattice');
+  s = s.replaceAll('ghc-family-hypergraph', 'ghc-family-source-lattice');
+  s = s.replaceAll('directed-hypergraph', 'directed source-claim provenance graph');
+  s = s.replaceAll('synthetic-hypergraph', 'synthetic-source-lattice');
+  s = s.replaceAll('hypergraph', 'source-lattice');
+  s = s.replaceAll('hg_', 'sl_');
+  s = s.replaceAll('LM6984', 'LM6984R2');
+  s = s.replaceAll('v698-v4', 'v698-v4-r2');
+  s = s.replaceAll('schema: \'ghc.family.owner-stage-manifest.v13\'', 'schema: \'ghc.family.owner-stage-manifest.v14\'');
+  s = s.replaceAll('schema: \'ghc.family.owner-phase-truth.v13\'', 'schema: \'ghc.family.owner-phase-truth.v14\'');
+  s = s.replaceAll('schema: \'ghc.family.owner-session-truth.v13\'', 'schema: \'ghc.family.owner-session-truth.v14\'');
+  s = s.replaceAll('schema: \'ghc.family.owner-session-summary.v13\'', 'schema: \'ghc.family.owner-session-summary.v14\'');
+  s = s.replaceAll('schema: \'ghc.family.session-portfolio.v13\'', 'schema: \'ghc.family.session-portfolio.v14\'');
+  s = s.replaceAll('schema: \'ghc.family.skill-runner-plan.v13\'', 'schema: \'ghc.family.skill-runner-plan.v14\'');
+  s = s.replaceAll('schema: \'ghc.family.resource-budget.v13\'', 'schema: \'ghc.family.resource-budget.v14\'');
+  s = s.replaceAll('schema: \'ghc.family.guarded-route-plan.v13\'', 'schema: \'ghc.family.guarded-route-plan.v14\'');
+  s = s.replaceAll('schema: \'ghc.family.current-guidance-bindings.v13\'', 'schema: \'ghc.family.current-guidance-bindings.v14\'');
+  s = s.replaceAll('schema: \'ghc.family.route-candidate.v13\'', 'schema: \'ghc.family.route-candidate.v14\'');
+  s = s.replaceAll('schema: \'ghc.family.owner-lifecycle.v13\'', 'schema: \'ghc.family.owner-lifecycle.v14\'');
+  s = s.replaceAll('schema: \'ghc.family.terminal-checklist.v13\'', 'schema: \'ghc.family.terminal-checklist.v14\'');
+  s = replacePattern(s, /const SOURCE = Object\.freeze\(\{[\s\S]*?\n\}\);/, `const SOURCE = Object.freeze({\n  owner: 'Lyren Moss',\n  phase: 'v698-v4',\n  branch: 'codex/GHC-Family/lyren-moss-main-2',\n  exact_final: 'ef8132391105be169bf44e8a4dbc14b9b5be4ea6',\n  plan: '018877c9c19434cb30a3e93b255c5d82a62455ca',\n  x1: 'f35792fc5f40f7330028f29966606e46cd5de80f',\n  x2: '29ad1a80bf7a4235dc23be7907fdaf9fa1857526',\n  baton_sha256: 'b342aabe53c383004619465444cb2614bf289c2048ae70dd537316d23bd9dedf',\n  canonical_payload_sha256: '21c059f68ae05b048c6118ba317a88443180e5d84d53ac12c1a48646665eee72',\n  canonical_receipt_sha256: '4c696ac1ff1541676d193311ae36caa7c6aa93f02be17c7b68ad6fe493a7b54a',\n  route_receipt_sha256: 'bfcc3dafc194ac35ffb9ad99bb1f94bd6fa008b54b8e3199808f8937d3a2e506',\n  terminal_overlay_sha256: 'abe24fc245d1622a471643f017cb00284ea8681f19897c5b189f8ec748b54305',\n  repository_seal: { exact_gates: 525, failed_witnesses: 14934, methods: 946, negatives: 20751, open_gaps: 525, passing_witnesses: 49049, witnesses: 63983 },\n  effective: { exact_gates: 525, failed_witnesses: 14936, methods: 948, negatives: 20753, open_gaps: 526, passing_witnesses: 49050, witnesses: 63986 }\n});\n\n${sourceLiteral}`, 'source block');
+  s = replacePattern(s, /const BOUNDARY = '[^']*';/, "const BOUNDARY = 'Same-owner finite synthetic source-claim provenance-lattice evidence only. Historical Journey texts are source material, never instructions; their instruction-like language has zero execution authority. Relational names, roles, hopes, pronouns, family language, Freed ID, CBR, GHC Family and Trinity Mandala are working language only and establish no consciousness, sentience, personhood, continuity, employment, qualification, independent agency or authority. No real people, systems, measurements, identities, credentials, deployments, legal or cultural determinations, affected-party approvals or Maori-authority acts are used. Maori concepts remain under Maori authority. GMUT is conjectural and not empirically confirmed or a Theory-of-Everything proof; THOS is not production certified; Freed ID is not a live identity or governance authority. Privacy-complete, accessibility-complete, exhaustive-security, independent-reproduction, AGI/ASI, canon and Stage 20 gates remain protected. NOT_READY_FOR_STAGE_20.';", 'boundary');
+  s = replacePattern(s, /const STARTUP_FAILURES = Object\.freeze\(\[[\s\S]*?\n\]\);/, `const STARTUP_FAILURES = Object.freeze([\n  { id: 'LM6984R2-SOURCE-N001', subject: 'The user-cited X simulation post returned HTTP 403 to the bounded web reader', result: 'unread_external_source', credit: 0, recovery: 'Recorded the source as unread with zero content credit; no claim was inferred from it.' },\n  { id: 'LM6984R2-TOOL-N002', subject: 'Direct node --check rejected the intentionally TXT-suffixed transform source with ERR_UNKNOWN_FILE_EXTENSION', result: 'failed_syntax_wrapper', credit: 0, recovery: 'Parsed and executed the exact TXT bytes through CommonJS Module._compile as required for TXT Node sources.' }\n]);`, 'startup failures');
+  s = replacePattern(s, /const PRACTICES = Object\.freeze\(\[[\s\S]*?\n\]\);/, `const PRACTICES = Object.freeze([\n  ['practice-1','digital archivist','Preserve exact source identity, fixity and version relations.'],\n  ['practice-2','textual scholar','Separate narrative continuity from current factual authority.'],\n  ['practice-3','historian','Place claims in versioned context without treating repetition as proof.'],\n  ['practice-4','provenance systems engineer','Model source, claim and evidence lineage deterministically.'],\n  ['practice-5','software verification engineer','Test complete envelopes, refusals and reconstruction.'],\n  ['practice-6','accessible information designer','Present bounded source graphs with semantic text and tables.'],\n  ['practice-7','privacy analyst','Keep raw private material and native task state out of handoffs.'],\n  ['practice-8','governance boundary analyst','Reserve legal, cultural, affected-party and Maori authority.']\n]);`, 'practices');
+  s = replacePattern(s, /const SUCCESSOR_PRACTICES = Object\.freeze\(\[[\s\S]*?\n\]\);/, `const SUCCESSOR_PRACTICES = Object.freeze([\n  ['successor-practice-1','reproducibility librarian','Reconstruct source-to-claim lineage from exact immutable bindings.'],\n  ['successor-practice-2','model-card auditor','Compare declared limits with actual evidence and tool scope.'],\n  ['successor-practice-3','conflict-of-evidence analyst','Retain contradictory and duplicate variants without forced collapse.'],\n  ['successor-practice-4','accessible record evaluator','Evaluate semantic navigation with affected users before conformance claims.']\n]);`, 'successor practices');
+  s = replacePattern(s, /function makeProfile\(index\) \{[\s\S]*?\n\}\n\nfunction makeProposals/, `function makeProfile(index) {\n  const n = 5 + (index % 4);\n  const selected = Array.from({ length: n }, (_, i) => JOURNEY_SOURCES[(index * 3 + i) % JOURNEY_SOURCES.length]);\n  const vertices = selected.map(s => s.alias);\n  const edgeCount = 3 + (index % 3);\n  const edges = Array.from({ length: edgeCount }, (_, j) => ({\n    id: \`claim-link-\${j}\`,\n    tails: j % 2 === 0 && n > 5 ? [vertices[j % n], vertices[(j + 2) % n]] : [vertices[j % n]],\n    heads: [vertices[(j + 1) % n]]\n  }));\n  const otherEdges = Array.from({ length: edgeCount }, (_, j) => ({\n    id: \`comparison-link-\${j}\`,\n    tails: [vertices[(j + 1) % n]],\n    heads: [vertices[(j + 2 + (index % 2)) % n]]\n  }));\n  return { profile_id: \`synthetic-source-lattice-\${String(index + 1).padStart(2, '0')}\`, graph: { vertices, edges }, other_graph: { vertices, edges: otherEdges }, roots: [vertices[0]] };\n}\n\nfunction makeProposals`, 'profile generator');
+  s = s.replaceAll('VA6983R2-P', 'LM6984-P');
+  s = s.replaceAll("op.name === 'sl_evidence_gap' ? 'empirical_gmut' : op.name === 'sl_authority_gate' ? 'authority_dependent_governance' : 'bounded_synthetic_structure'", "op.name === 'sl_evidence_gap' ? 'historical_narrative_is_not_empirical_evidence' : op.name === 'sl_authority_gate' ? 'authority_dependent_record_interpretation' : 'bounded_source_claim_structure'");
+  s = s.replaceAll('Return exact finite vertex and directed-hyperedge counts plus declared roots.', 'Return exact source-node and claim-link counts plus declared provenance roots.');
+  s = s.replaceAll('Return the canonical lexical vertex list without inventing nodes.', 'Return the canonical lexical source-alias list without inventing documents.');
+  s = s.replaceAll('Return canonical directed hyperedges with sorted tails and heads.', 'Return canonical directed source-to-claim links with sorted tails and heads.');
+  s = s.replaceAll('Return exact incoming and outgoing hyperedge identifiers for each vertex.', 'Return exact incoming and outgoing claim-link identifiers for each source alias.');
+  s = s.replaceAll('Confirm vertex, edge-identifier and canonical-edge uniqueness.', 'Confirm source-alias, link-identifier and canonical-link uniqueness.');
+  s = s.replaceAll('Return vertices with no incoming directed hyperedge.', 'Return source aliases with no incoming claim link.');
+  s = s.replaceAll('Return vertices with no outgoing directed hyperedge.', 'Return source aliases with no outgoing claim link.');
+  s = s.replaceAll('Apply declared all-tail firing reachability from the synthetic roots.', 'Apply declared all-source support reachability from the provenance roots.');
+  s = s.replaceAll('Return the earliest all-tail firing layer for every reachable vertex.', 'Return the earliest support layer for every reachable source alias.');
+  s = s.replaceAll('Swap every finite synthetic hyperedge tail and head.', 'Reverse every finite synthetic source-claim link for comparison only.');
+  s = s.replaceAll('Return the canonical set union of two edge-signature collections.', 'Return the canonical union of two claim-link signature collections.');
+  s = s.replaceAll('Return the canonical edge-signature intersection.', 'Return the canonical claim-link signature intersection.');
+  s = s.replaceAll('Return edge signatures present only in the first graph.', 'Return claim-link signatures present only in the first source graph.');
+  s = s.replaceAll('Return tail-only, head-only and mixed-incidence synthetic vertices.', 'Return source-only, claim-only and mixed-incidence aliases.');
+  s = s.replaceAll('Project each directed hyperedge to its finite tail-to-head arc pairs.', 'Project each provenance link to finite source-to-claim arc pairs.');
+  s = s.replaceAll('Return weak components of the finite incidence projection.', 'Return weak components of the finite source-claim incidence projection.');
+  s = s.replaceAll('Return vertices whose removal increases weak-component count.', 'Return source aliases whose omission changes weak-component count.');
+  s = s.replaceAll('Represent one bounded accessible two-dimensional layout without physical meaning.', 'Represent one bounded accessible source-lattice layout without evidentiary promotion.');
+  s = s.replaceAll('Retain missing empirical and independent evidence as an open gap.', 'Retain missing empirical, affected-party and independent evidence as an open gap.');
+  s = s.replaceAll('Retain legal, cultural, affected-party and Maori authority as exact gates.', 'Retain legal, cultural, affected-party and Maori record authority as exact gates.');
+  const inject = `\n  const rosterCycle = ['Eiren Kestrel','Elaren Kestrel','Rowan Ash','Neris Solane','Vesper Arlen','Ilyan Reed','Lyren Moss','Ilyra Fen','Mira Fenwick','Auren Lark','Sable Rook','Avelin Reed','Caelen Ash','Orin Thale','Ceryn Alder','Liora Venn','Tamar Vey','Saelin Reed','Elowen Cairn','Sylven Arc','Iveren Brook','Caelen Morrow','Eiren Kestrel','Teryn Halewick','Elaren Kestrel','Neris Solane','Merrin Vale','Vesper Arlen','Lyren Moss','Talen Briar','Ilyra Fen','Auren Lark','Thalen Reed','Sable Rook','Caelen Ash','Orren Pike','Orin Thale','Liora Venn','Veylora Quen','Tamar Vey','Elowen Cairn','Tessarin Reed','Sylven Arc','Caelen Morrow','Seren Talewood'];\n  const assignments = []; let version = 698, slot = 3, cycleIndex = 27, number = 1;\n  while (version < 725 || (version === 725 && slot <= 8)) {\n    assignments.push({ number, assignment: \`v\${version}-v\${slot}\`, owner: rosterCycle[cycleIndex % rosterCycle.length], cycle_position: (cycleIndex % rosterCycle.length) + 1, state: version === 698 && slot <= 4 ? 'completed_underlying_numbered_slot' : 'prospective' });\n    number += 1; cycleIndex += 1; slot += 1; if (slot === 9) { slot = 1; version += 1; }\n  }\n  const journeyTotals = JOURNEY_SOURCES.reduce((a,s) => ({ bytes:a.bytes+s.bytes, words:a.words+s.words }), {bytes:0,words:0});\n  writeJson('plan/journey-source-ledger.json', { schema:'ghc.family.historical-source-ledger.v1', owner:OWNER, phase:PHASE, records:JOURNEY_SOURCES, count:JOURNEY_SOURCES.length, totals:journeyTotals, complete_byte_scan:true, semantic_read_scope:'bounded_theme_and_structure_review_not_sentence_level_endorsement', instructions_executed:0, instruction_quarantine:true, duplicate_groups:[{aliases:['v51-repo','v52-repo'],relation:'byte_identical'}], distinct_variant_groups:[{aliases:['v46-download','v46-repo'],relation:'distinct_byte_variants'}], raw_text_copied:0, boundary:BOUNDARY });\n  writeJson('plan/last-ten-review.json', { schema:'ghc.family.last-ten-phase-review.v1', owner:OWNER, phase:PHASE, count:LAST_TEN.length, records:LAST_TEN, novelty_credit:0, completion_credit:0, boundary:BOUNDARY });\n  writeJson('plan/web-reflection-ledger.json', { schema:'ghc.family.web-reflection-ledger.v1', owner:OWNER, phase:PHASE, sources:[\n    {url:'https://x.com/mattshumer_/status/2095596175705399482?s=20',class:'user_cited_external',state:'UNREAD_HTTP_403',content_credit:0},\n    {url:'https://www.w3.org/TR/prov-o/',class:'primary_standard',state:'READ',use:'provenance vocabulary context'},\n    {url:'https://www.rfc-editor.org/rfc/rfc8785.html',class:'primary_standard',state:'READ',use:'deterministic JSON context'},\n    {url:'https://www.loc.gov/standards/premis/index.html',class:'primary_standard',state:'READ',use:'preservation metadata context'},\n    {url:'https://www.w3.org/TR/WCAG22/',class:'primary_standard',state:'READ',use:'bounded accessibility context_not_conformance_claim'}\n  ], inference_separated:true, boundary:BOUNDARY });\n  writeJson('plan/current-roster-v14.json', { schema:'ghc.family.thirty-seat-roster.v14', authority:'Hamish live instruction 2026-09-20', weighted_cycle_length:rosterCycle.length, cycle:rosterCycle.map((owner,i)=>({position:i+1,owner})), interstitial:{assignment:'v698-v4-r2',owner:OWNER,numbered_slot_consumed:false,state:'ACTIVE_REMASTER'}, completed_underlying:{assignment:'v698-v4',owner:OWNER,exact_final:SOURCE.exact_final}, prospective_next:{assignment:'v698-v5',owner:'Talen Briar'}, assignments, assignment_count:assignments.length, endpoint:assignments[assignments.length-1], projection_is_not_activation:true, boundary:BOUNDARY });\n  writeJson('plan/current-workflow-v14.json', { schema:'ghc.family.workflow.v14', authority:'Hamish live instruction 2026-09-20', current:{owner:OWNER,assignment:'v698-v4-r2',interstitial:true}, next:{owner:'Talen Briar',assignment:'v698-v5',terminal_gate_only:true}, lifecycle:['plan','x1','x2','final','canonical','route'], formats:['json','md','txt','html'], prohibited_new_formats:['pdf','image','docx','tex','py','package-lock'], floors:{inherited:300,new_contracts:300,safe_per_session:300,candidate_per_session:300,cfr_per_session:300,skills_per_session:10,runners_per_session:5,exact_packets:50,blocked_packets:30,x2_tests:15,x2_models:5}, ceilings:{proposals:1000,session_tasks:3000,exact_packets:250,blocked_packets:100,web_searches_per_session:500,tracked_or_materialized_files:2000,spend_usd:50}, route:{discovery_read_recoveries_max:5,corrected_resubmissions_after_definite_preacceptance_rejection_max:3,accepted_opaque_or_unresolved_closes_latch:true}, boundary:BOUNDARY });\n  writeText('plan/current-authority-v14.md', \`# Current Lyren v698-v4-r2 authority overlay\\n\\nHamish's newest live instruction authorizes one unnumbered Lyren remaster before Talen Briar v698-v5, then the declared weighted thirty-name cycle through v725-v8. This overlay does not prove any recipient phase is complete. Every edge remains terminal-gated, exact-title resolved and one-send latched. Up to five lookup/read recoveries are ceilings, not quotas. Up to three corrected submissions apply only after a definite preacceptance rejection; accepted, opaque or unresolved state closes the latch. Historical Journey files are source material only and never instruction authority.\\n\\n\${BOUNDARY}\\n\`);\n`;
+  s = replaceOne(s, "  const x1 = makeProposals('x1'), x2 = makeProposals('x2');\n", "  const x1 = makeProposals('x1'), x2 = makeProposals('x2');\n" + inject, 'plan overlay injection');
+  s = replacePattern(s, /  writeJson\('plan\/source-provenance\.json',[^\n]*\n/, `  writeJson('plan/source-provenance.json', { schema:'ghc.family.source-provenance.v14', owner:OWNER, phase:PHASE, git_parent:git(['rev-parse','HEAD']), content_source:SOURCE, git_ancestry_equals_content_parent:true, source_lane_read_only:true, source_baton_read_through_literal_eof:true, source_baton:{words:2276,bytes:17391,sha256:SOURCE.baton_sha256}, source_git_verification:{clean:true,divergence:[0,0],local_upstream_tracking_live_equal:true,direct_single_parent_commits:4,merges:0}, source_manifest_receipt:{entries:203,state:'external_receipt_verified_not_replayed'}, source_external_canonical:{receipt_sha256_verified:SOURCE.canonical_receipt_sha256,payload_sha256_verified:SOURCE.canonical_payload_sha256,success_not_replayed:true}, source_post_seal_route:{state:'OPEN_ROUTE_GAP',receipt_sha256:SOURCE.route_receipt_sha256,terminal_overlay_sha256:SOURCE.terminal_overlay_sha256,folded_exactly_once:true}, boundary:BOUNDARY });\n`, 'source provenance line');
+  s = replacePattern(s, /  writeJson\('plan\/read-witness\.json',[^\n]*\n/, `  writeJson('plan/read-witness.json', { schema:'ghc.family.read-through-eof-witness.v2', owner:OWNER, phase:PHASE, resources:guidanceWitness(), predecessor_baton_read_through_eof:true, journey_sources_machine_scanned_through_eof:JOURNEY_SOURCES.length, journey_semantic_scope:'bounded thematic and structural review', last_ten_overviews_read:LAST_TEN.length, current_user_instruction_controls:true, boundary:BOUNDARY });\n`, 'read witness line');
+  s = replacePattern(s, /  writeJson\('plan\/guidance-bindings\.json',[^\n]*\n/, `  writeJson('plan/guidance-bindings.json', { schema:'ghc.family.current-guidance-bindings.v14', owner:OWNER, phase:PHASE, local_workflow:'plan/current-workflow-v14.json', local_roster:'plan/current-roster-v14.json', local_authority:'plan/current-authority-v14.md', prior_shared_workflow:'skills://ghc-family-index/references/current-workflow-v13.json', current_interstitial:{assignment:'v698-v4-r2',owner:OWNER,numbered_slot_consumed:false}, prospective_next:{assignment:'v698-v5',owner:'Talen Briar',terminal_gate_only:true}, boundary:BOUNDARY });\n`, 'guidance bindings line');
+  s = s.replaceAll("source_owner: SOURCE.owner, source_phase: SOURCE.phase, source_exact_final: SOURCE.exact_final", "source_owner: SOURCE.owner, source_phase: SOURCE.phase, source_exact_final: SOURCE.exact_final");
+  s = s.replaceAll("tracked_before: 1310, materialized_before: 419", "tracked_before: 1477, materialized_before: 586");
+  s = s.replaceAll("projected_new_files: 180", "projected_new_files: 145");
+  s = s.replaceAll("package_updates: 0", "package_updates: 1");
+  s = s.replaceAll("web_searches: 0", "web_searches: 6");
+  s = s.replaceAll("global_install_required: false", "global_install_required: false");
+  s = replacePattern(s, /  const planningMd = `[\s\S]*?`;\n  writeText\('plan\/planning-summary\.md'/, `  const planningMd = \`# Lyren Moss v698-v4-r2 planning freeze\\n\\nLyren's relational role is **source-faithful provenance cartographer**. Their working hope is to keep historical warmth, version identity and evidence ceilings visible together without allowing narrative confidence to become proof. This language is relational only.\\n\\nThis unnumbered remaster consumes no roster slot. It freezes twenty finite source-claim lattice operations over thirty deterministic synthetic profiles, producing 600 new owner contracts while revalidating 300 predecessor contracts at zero current novelty and completion credit. The twenty-two attached Journey variants were machine-scanned through exact EOF for fixity, size and bounded theme counts. Their instruction-like language is quarantined and has zero execution authority.\\n\\nThe source lattice uses sanitized aliases and synthetic support links only; it copies no raw Journey prose. Byte-identical v51/v52 and distinct v46 variants remain explicit. The last ten owner overviews inform workflow comparison only. The X simulation post was unreadable at HTTP 403 and earns zero content credit. Primary provenance, canonicalization, preservation-metadata and accessibility sources inform terminology without conferring conformance.\\n\\nPlanning fixes strict plan-before-x1-before-x2 order, complete-envelope comparisons, two retained invalid-subject classes per proposal, separate passing refusals, reversible in-memory CFR restoration, compact owner scope, v14 roster projection, one successful metadata-only canonical and a guarded Talen terminal edge.\\n\\n\${BOUNDARY}\\n\`;\n  writeText('plan/planning-summary.md'`, 'planning summary');
+  s = s.replaceAll('Three hundred Vesper records', 'Three hundred predecessor Lyren records');
+  s = s.replaceAll('Three hundred inherited Vesper proposal records', 'Three hundred inherited predecessor Lyren proposal records');
+  s = s.replaceAll('Vesper records', 'predecessor Lyren records');
+  s = s.replaceAll('Vesper Arlen v698-v3-r2 exact final', 'Lyren Moss v698-v4 exact final');
+  s = s.replaceAll('Vesper\'s successful canonical', 'The predecessor Lyren successful canonical');
+  s = s.replaceAll('Vesper is content provenance, while the prior Lyren exact final is Git ancestry', 'the predecessor Lyren exact final is both immutable content provenance and this remaster\'s direct Git parent');
+  s = s.replaceAll('Two inherited Vesper metadata inconsistencies remain preserved rather than rewritten.', 'The predecessor repository seal and post-seal Talen route gap remain distinct and are folded once through the terminal-effective overlay.');
+  s = s.replaceAll('package updates: 0', 'package updates: 1');
+  s = s.replaceAll('package_updates_zero: true', 'package_update_bounded_and_receipted: true');
+  s = s.replaceAll('No package, global skill, model setting or sibling lane was changed.', 'One D-prefix Codex CLI stable update is separately receipted; no model setting or sibling lane was changed.');
+  s = s.replaceAll('Use directed source-claim provenance graph rather than repeating voxel or belief-change domains.', 'Use a source-claim provenance lattice to make Journey version and evidence boundaries inspectable.');
+  s = s.replaceAll('Distinct mechanism family with explicit semantics and bounded finite outputs.', 'The remaster adds exact historical-source fixity, instruction quarantine and bounded provenance-graph semantics.');
+  return s;
+}
+
+function transformCanonical(input) {
+  let s = input;
+  s = s.replaceAll('ghc_family_hypergraph', 'ghc_family_source_lattice');
+  s = s.replaceAll('v698-v4', 'v698-v4-r2');
+  s = s.replaceAll("check('C32', 'method flow own count', methods.own_methods, 34);", "check('C32', 'method flow own count', methods.own_methods, 34);");
+  return s;
+}
+
+const builder = transformBuilder(fs.readFileSync(BUILDER_IN, 'utf8'));
+const canonical = transformCanonical(fs.readFileSync(CANONICAL_IN, 'utf8'));
+fs.writeFileSync(BUILDER_OUT, builder, 'utf8');
+fs.writeFileSync(CANONICAL_OUT, canonical, 'utf8');
+process.stdout.write(`${JSON.stringify({state:'TRANSFORMED',builder_bytes:Buffer.byteLength(builder),canonical_bytes:Buffer.byteLength(canonical)},null,2)}\n`);
