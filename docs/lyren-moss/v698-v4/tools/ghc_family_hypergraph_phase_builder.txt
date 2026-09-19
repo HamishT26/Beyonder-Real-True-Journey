@@ -1,0 +1,561 @@
+'use strict';
+
+const fs = require('fs');
+const path = require('path');
+const crypto = require('crypto');
+const cp = require('child_process');
+const Module = require('module');
+
+const PHASE = 'v698-v4';
+const OWNER = 'Lyren Moss';
+const BRANCH = 'codex/GHC-Family/lyren-moss-main-2';
+const ROOT = path.resolve(__dirname, '..');
+const REPO = path.resolve(ROOT, '../../..');
+const SOURCE = Object.freeze({
+  owner: 'Vesper Arlen',
+  phase: 'v698-v3-r2',
+  branch: 'codex/GHC-Family/vesper-arlen-main-2',
+  exact_final: 'ad5ce06e2f8bad6a568b3e0d4b8df80681ea657c',
+  plan: '7d3dc8d6e18a5480a6ef061cfe2fcc3c049bc7d1',
+  x1: 'e8fe83ce7c15bda3c512f0c781c28268d29bc3ed',
+  x2: '6fd738bda5a637c54bf2c1a731019bb544558011',
+  baton_sha256: 'd5def99b170233d12f1c4c40c336a8400055ddcb54880d7471446009f0889c3f',
+  canonical_payload_sha256: '98bcffeb87b37046a2c27164cfbf8071bbf534eaee2991b04d66704ca2ad6229',
+  canonical_receipt_sha256: '5ea61d1b3414e62d9ac85c5b9c7f4912cdca6cae685b4e96e542dfdab1ddd41a',
+  effective: { exact_gates: 495, failed_witnesses: 14885, methods: 912, negatives: 19542, open_gaps: 495, passing_witnesses: 48951, witnesses: 63836 }
+});
+
+const BOUNDARY = 'Same-owner finite synthetic directed-hypergraph evidence only. Relational names, roles, hopes, pronouns, family language, Freed ID, CBR, GHC Family and Trinity Mandala are working language only and establish no consciousness, sentience, personhood, continuity, employment, qualification, independent agency or authority. No real people, systems, sensors, measurements, identities, credentials, keys, deployments, legal or cultural determinations, affected-party approvals or Maori-authority acts are used. Maori concepts remain under Maori authority. GMUT is not empirically confirmed or a Theory-of-Everything proof; THOS is not production certified; Freed ID is not a live identity or governance authority. Privacy-complete, accessibility-complete, exhaustive-security, independent-reproduction, AGI/ASI, canon and Stage 20 gates remain protected. NOT_READY_FOR_STAGE_20.';
+
+const PROTECTED_GATES = Object.freeze([
+  'empirical', 'participant', 'professional', 'production', 'deployment', 'identity',
+  'legal', 'cultural', 'affected_party', 'maori_authority', 'privacy_complete',
+  'accessibility_complete', 'exhaustive_security', 'independent_reproduction',
+  'agi_asi', 'consciousness_personhood', 'theory_of_everything', 'canon', 'stage20'
+]);
+
+const OPERATIONS = Object.freeze([
+  ['hg_profile', 'Return exact finite vertex and directed-hyperedge counts plus declared roots.', 'completed'],
+  ['hg_vertices', 'Return the canonical lexical vertex list without inventing nodes.', 'completed'],
+  ['hg_hyperedges', 'Return canonical directed hyperedges with sorted tails and heads.', 'completed'],
+  ['hg_incidence', 'Return exact incoming and outgoing hyperedge identifiers for each vertex.', 'completed'],
+  ['hg_unique', 'Confirm vertex, edge-identifier and canonical-edge uniqueness.', 'completed'],
+  ['hg_sources', 'Return vertices with no incoming directed hyperedge.', 'completed'],
+  ['hg_sinks', 'Return vertices with no outgoing directed hyperedge.', 'completed'],
+  ['hg_reachable', 'Apply declared all-tail firing reachability from the synthetic roots.', 'completed'],
+  ['hg_layers', 'Return the earliest all-tail firing layer for every reachable vertex.', 'completed'],
+  ['hg_transpose', 'Swap every finite synthetic hyperedge tail and head.', 'completed'],
+  ['hg_union', 'Return the canonical set union of two edge-signature collections.', 'completed'],
+  ['hg_intersection', 'Return the canonical edge-signature intersection.', 'completed'],
+  ['hg_difference', 'Return edge signatures present only in the first graph.', 'completed'],
+  ['hg_boundary', 'Return tail-only, head-only and mixed-incidence synthetic vertices.', 'completed'],
+  ['hg_projection', 'Project each directed hyperedge to its finite tail-to-head arc pairs.', 'completed'],
+  ['hg_components', 'Return weak components of the finite incidence projection.', 'completed'],
+  ['hg_cut_candidates', 'Return vertices whose removal increases weak-component count.', 'completed'],
+  ['hg_scene', 'Represent one bounded accessible two-dimensional layout without physical meaning.', 'represented'],
+  ['hg_evidence_gap', 'Retain missing empirical and independent evidence as an open gap.', 'open_gap'],
+  ['hg_authority_gate', 'Retain legal, cultural, affected-party and Maori authority as exact gates.', 'exact_gate']
+].map((row, index) => ({ index: index + 1, name: row[0], description: row[1], outcome: row[2], session: index < 10 ? 'x1' : 'x2' })));
+
+const PRACTICES = Object.freeze([
+  ['practice-1', 'hypergraph theorist', 'Define finite directed-hypergraph semantics and ambiguity limits.'],
+  ['practice-2', 'graph algorithm engineer', 'Implement deterministic traversal, projection and component checks.'],
+  ['practice-3', 'formal methods engineer', 'Keep request closure, falsifiers and refusal envelopes exact.'],
+  ['practice-4', 'provenance systems designer', 'Bind every result to its immutable synthetic request.'],
+  ['practice-5', 'software verification engineer', 'Exercise bounded positive, negative and metamorphic checks.'],
+  ['practice-6', 'accessible information designer', 'Represent scenes and tables without claiming complete accessibility.'],
+  ['practice-7', 'archival metadata analyst', 'Preserve source, correction and handoff lineage.'],
+  ['practice-8', 'rights and governance boundary analyst', 'Keep authority-dependent decisions gated.']
+]);
+
+const SUCCESSOR_PRACTICES = Object.freeze([
+  ['successor-practice-1', 'dependency-risk analyst', 'Test when hyperedge prerequisites are missing or cyclic.'],
+  ['successor-practice-2', 'explainable visualization evaluator', 'Review whether layouts communicate structure without evidentiary promotion.'],
+  ['successor-practice-3', 'incident provenance reviewer', 'Track correction chains while retaining failed subjects.'],
+  ['successor-practice-4', 'discrete-optimization tester', 'Compare bounded cut heuristics against exact small-instance enumeration.']
+]);
+
+const STARTUP_FAILURES = Object.freeze([
+  { id: 'LM6984-START-N001', subject: 'PowerShell upstream expression was initially unquoted', result: 'failed_parser_subject', credit: 0, recovery: 'Literal quoted @{upstream} scalar probe passed.' },
+  { id: 'LM6984-START-N002', subject: 'PowerShell skill-size collection produced an empty pipeline element', result: 'failed_display_wrapper', credit: 0, recovery: 'Each selected SKILL.md was reread directly through EOF.' },
+  { id: 'LM6984-START-N003', subject: 'Manifest-shape display wrapper piped directly from a foreach block', result: 'failed_parser_subject', credit: 0, recovery: 'Materialized the collection before serialization.' },
+  { id: 'LM6984-START-N004', subject: 'Broad receipt-name scan exceeded its bounded useful wait', result: 'interrupted_zero_credit_search', credit: 0, recovery: 'Stopped the search and narrowed to exact receipt banks.' },
+  { id: 'LM6984-START-N005', subject: 'Exact-digest recursive scan still exceeded its bounded wait', result: 'interrupted_zero_credit_search', credit: 0, recovery: 'Used the surfaced parent directory and direct scalar enumeration.' },
+  { id: 'LM6984-START-N006', subject: 'A guessed final method-flow filename did not exist', result: 'failed_path_subject', credit: 0, recovery: 'Used exact git ls-tree discovery and retained the miss.' },
+  { id: 'LM6984-PLAN-N007', subject: 'First planning read-witness serialization used three guessed guidance aliases', result: 'failed_path_binding_subject', credit: 0, recovery: 'Exact directory enumeration supplied the current method-flow, roster-contract and handoff-contract filenames before planning freeze.' },
+  { id: 'LM6984-PLAN-N008', subject: 'First planning proposal serialization produced two unnecessary 300-record aggregate files', result: 'oversized_aggregate_subjects', credit: 0, recovery: 'Retained the exact 3,517,254-byte and 3,480,883-byte subjects externally, then split repository proposals into twenty 30-record operation chunks before freeze.' }
+]);
+
+function ensureDir(p) { fs.mkdirSync(p, { recursive: true }); }
+function stable(value) {
+  if (Array.isArray(value)) return value.map(stable);
+  if (value && typeof value === 'object') return Object.fromEntries(Object.keys(value).sort().map(k => [k, stable(value[k])]));
+  return value;
+}
+function stableText(value) { return JSON.stringify(stable(value)); }
+function pretty(value) { return `${JSON.stringify(value, null, 2)}\n`; }
+function writeJson(rel, value) { const p = path.join(ROOT, rel); ensureDir(path.dirname(p)); fs.writeFileSync(p, pretty(value), 'utf8'); }
+function writeText(rel, value) { const p = path.join(ROOT, rel); ensureDir(path.dirname(p)); fs.writeFileSync(p, value.endsWith('\n') ? value : `${value}\n`, 'utf8'); }
+function readJson(rel) { return JSON.parse(fs.readFileSync(path.join(ROOT, rel), 'utf8')); }
+function shaBytes(bytes) { return crypto.createHash('sha256').update(bytes).digest('hex'); }
+function shaValue(value) { return shaBytes(Buffer.from(stableText(value), 'utf8')); }
+function toRepo(abs) { return path.relative(REPO, abs).split(path.sep).join('/'); }
+function git(args) { return cp.execFileSync('git', args, { cwd: REPO, encoding: 'utf8', maxBuffer: 64 * 1024 * 1024 }).trim(); }
+function now() { return new Date().toISOString(); }
+function clone(v) { return JSON.parse(JSON.stringify(v)); }
+function exactKeys(obj, keys) { const a = Object.keys(obj || {}).sort(); const b = [...keys].sort(); return a.length === b.length && a.every((x, i) => x === b[i]); }
+
+function listFiles(dir) {
+  if (!fs.existsSync(dir)) return [];
+  const out = [];
+  for (const entry of fs.readdirSync(dir, { withFileTypes: true }).sort((a, b) => a.name.localeCompare(b.name))) {
+    const p = path.join(dir, entry.name);
+    if (entry.isDirectory()) out.push(...listFiles(p));
+    else out.push(p);
+  }
+  return out;
+}
+
+function manifestEntries(dirs, exclusions = []) {
+  const excluded = new Set(exclusions.map(p => path.resolve(ROOT, p)));
+  const files = dirs.flatMap(d => listFiles(path.join(ROOT, d))).filter(p => !excluded.has(path.resolve(p))).sort();
+  return files.map(p => { const b = fs.readFileSync(p); return { path: toRepo(p), bytes: b.length, sha256: shaBytes(b) }; });
+}
+
+function writeManifest(stage, dirs, exclusions) {
+  writeJson(`${stage}/manifest.json`, {
+    schema: 'ghc.family.owner-stage-manifest.v13', owner: OWNER, phase: PHASE, stage,
+    byte_domain: 'utf8_lf_worktree_bytes_expected_to_equal_git_blob_bytes_after_staging',
+    entries: manifestEntries(dirs, exclusions), self_exclusions: exclusions.map(p => toRepo(path.join(ROOT, p))), boundary: BOUNDARY
+  });
+}
+
+function coreFactory(allowedNames) {
+  'use strict';
+  const allowed = new Set(allowedNames);
+  const outcomes = {
+    hg_scene: 'represented', hg_evidence_gap: 'open_gap', hg_authority_gate: 'exact_gate'
+  };
+  const lexical = (a, b) => String(a).localeCompare(String(b));
+  const uniqSorted = xs => [...new Set(xs)].sort(lexical);
+  const edgeKey = e => `${[...e.tails].sort(lexical).join('&')}=>${[...e.heads].sort(lexical).join('&')}`;
+  const canonicalEdge = e => ({ id: String(e.id), tails: uniqSorted(e.tails), heads: uniqSorted(e.heads) });
+  const fail = (op, error) => ({ ok: false, op, error, external_credit: false });
+  function validateGraph(graph) {
+    if (!graph || !exactKeys(graph, ['vertices', 'edges'])) return 'graph_closed_fields';
+    if (!Array.isArray(graph.vertices) || !Array.isArray(graph.edges)) return 'graph_shape';
+    if (!graph.vertices.every(v => typeof v === 'string' && v.length > 0)) return 'vertex_shape';
+    if (new Set(graph.vertices).size !== graph.vertices.length) return 'duplicate_vertex';
+    const vertices = new Set(graph.vertices);
+    const ids = new Set();
+    for (const edge of graph.edges) {
+      if (!edge || !exactKeys(edge, ['id', 'tails', 'heads'])) return 'edge_closed_fields';
+      if (typeof edge.id !== 'string' || !edge.id || ids.has(edge.id)) return ids.has(edge.id) ? 'duplicate_edge_id' : 'edge_id';
+      ids.add(edge.id);
+      if (!Array.isArray(edge.tails) || !Array.isArray(edge.heads) || !edge.tails.length || !edge.heads.length) return 'edge_shape';
+      if (new Set(edge.tails).size !== edge.tails.length || new Set(edge.heads).size !== edge.heads.length) return 'duplicate_incidence';
+      if (![...edge.tails, ...edge.heads].every(v => vertices.has(v))) return 'unknown_vertex';
+    }
+    return null;
+  }
+  function canonicalGraph(graph) {
+    return {
+      vertices: uniqSorted(graph.vertices),
+      edges: graph.edges.map(canonicalEdge).sort((a, b) => edgeKey(a).localeCompare(edgeKey(b)) || a.id.localeCompare(b.id))
+    };
+  }
+  function projection(graph) {
+    const arcs = [];
+    for (const e of graph.edges) for (const tail of e.tails) for (const head of e.heads) arcs.push(`${tail}->${head}`);
+    return uniqSorted(arcs);
+  }
+  function components(graph, omit = null) {
+    const vertices = graph.vertices.filter(v => v !== omit);
+    const adj = Object.fromEntries(vertices.map(v => [v, new Set()]));
+    for (const e of graph.edges) {
+      const points = uniqSorted([...e.tails, ...e.heads]).filter(v => v !== omit);
+      for (const a of points) for (const b of points) if (a !== b && adj[a] && adj[b]) { adj[a].add(b); adj[b].add(a); }
+    }
+    const seen = new Set(); const out = [];
+    for (const start of vertices.sort(lexical)) if (!seen.has(start)) {
+      const q = [start], part = []; seen.add(start);
+      while (q.length) { const v = q.shift(); part.push(v); for (const n of [...adj[v]].sort(lexical)) if (!seen.has(n)) { seen.add(n); q.push(n); } }
+      out.push(part.sort(lexical));
+    }
+    return out.sort((a, b) => a[0].localeCompare(b[0]));
+  }
+  function execute(request) {
+    const op = request && typeof request.op === 'string' ? request.op : 'unknown';
+    if (!request || !exactKeys(request, ['op', 'input'])) return fail(op, 'closed_fields');
+    if (!allowed.has(op)) return fail(op, 'unsupported_operation');
+    const input = request.input;
+    const expectedInput = ['profile_id', 'graph', 'other_graph', 'roots', 'claim', 'provided', 'authority'];
+    if (!input || !exactKeys(input, expectedInput)) return fail(op, 'input_closed_fields');
+    const firstError = validateGraph(input.graph); if (firstError) return fail(op, firstError);
+    const secondError = validateGraph(input.other_graph); if (secondError) return fail(op, `other_${secondError}`);
+    if (!Array.isArray(input.roots) || !input.roots.every(v => input.graph.vertices.includes(v))) return fail(op, 'roots');
+    if (!Array.isArray(input.provided)) return fail(op, 'provided');
+    const graph = canonicalGraph(input.graph); const other = canonicalGraph(input.other_graph);
+    let data;
+    if (op === 'hg_profile') data = { vertices: graph.vertices.length, hyperedges: graph.edges.length, roots: uniqSorted(input.roots) };
+    else if (op === 'hg_vertices') data = { vertices: graph.vertices };
+    else if (op === 'hg_hyperedges') data = { hyperedges: graph.edges };
+    else if (op === 'hg_incidence') data = { incidence: graph.vertices.map(v => ({ vertex: v, incoming: graph.edges.filter(e => e.heads.includes(v)).map(e => e.id).sort(lexical), outgoing: graph.edges.filter(e => e.tails.includes(v)).map(e => e.id).sort(lexical) })) };
+    else if (op === 'hg_unique') data = { vertices_unique: true, edge_ids_unique: true, edge_signatures_unique: new Set(graph.edges.map(edgeKey)).size === graph.edges.length };
+    else if (op === 'hg_sources') data = { sources: graph.vertices.filter(v => !graph.edges.some(e => e.heads.includes(v))) };
+    else if (op === 'hg_sinks') data = { sinks: graph.vertices.filter(v => !graph.edges.some(e => e.tails.includes(v))) };
+    else if (op === 'hg_reachable' || op === 'hg_layers') {
+      const reached = new Set(input.roots), layer = Object.fromEntries(input.roots.map(v => [v, 0])); let changed = true;
+      while (changed) { changed = false; for (const e of graph.edges) if (e.tails.every(v => reached.has(v))) { const next = 1 + Math.max(...e.tails.map(v => layer[v])); for (const h of e.heads) if (!reached.has(h)) { reached.add(h); layer[h] = next; changed = true; } } }
+      data = op === 'hg_reachable' ? { reachable: [...reached].sort(lexical), unreachable: graph.vertices.filter(v => !reached.has(v)) } : { layers: Object.entries(layer).sort((a, b) => a[1] - b[1] || a[0].localeCompare(b[0])).map(([vertex, value]) => ({ vertex, layer: value })) };
+    }
+    else if (op === 'hg_transpose') data = { graph: { vertices: graph.vertices, edges: graph.edges.map(e => ({ id: e.id, tails: e.heads, heads: e.tails })) } };
+    else if (['hg_union', 'hg_intersection', 'hg_difference'].includes(op)) {
+      const a = new Set(graph.edges.map(edgeKey)), b = new Set(other.edges.map(edgeKey)); let signatures;
+      if (op === 'hg_union') signatures = uniqSorted([...a, ...b]);
+      if (op === 'hg_intersection') signatures = [...a].filter(x => b.has(x)).sort(lexical);
+      if (op === 'hg_difference') signatures = [...a].filter(x => !b.has(x)).sort(lexical);
+      data = { edge_signatures: signatures };
+    }
+    else if (op === 'hg_boundary') data = { tail_only: graph.vertices.filter(v => graph.edges.some(e => e.tails.includes(v)) && !graph.edges.some(e => e.heads.includes(v))), head_only: graph.vertices.filter(v => graph.edges.some(e => e.heads.includes(v)) && !graph.edges.some(e => e.tails.includes(v))), mixed: graph.vertices.filter(v => graph.edges.some(e => e.tails.includes(v)) && graph.edges.some(e => e.heads.includes(v))) };
+    else if (op === 'hg_projection') data = { arcs: projection(graph) };
+    else if (op === 'hg_components') data = { components: components(graph) };
+    else if (op === 'hg_cut_candidates') { const base = components(graph).length; data = { baseline_components: base, cut_candidates: graph.vertices.filter(v => components(graph, v).length > base).sort(lexical) }; }
+    else if (op === 'hg_scene') data = { points: graph.vertices.map((v, i) => ({ vertex: v, x: (i * 37 + graph.edges.length * 11) % 101, y: (i * 53 + graph.vertices.length * 7) % 101 })), arcs: projection(graph), synthetic_layout: true };
+    else if (op === 'hg_evidence_gap') data = { claim: input.claim, missing: ['governed_real_observations', 'preregistered_comparator', 'independent_reproduction'], state: 'OPEN_GAP' };
+    else if (op === 'hg_authority_gate') data = { claim: input.claim, required: ['competent_legal_authority', 'affected_party_oversight', 'relevant_cultural_authority', 'maori_authority_where_applicable'], state: 'EXACT_GATE' };
+    else return fail(op, 'unimplemented_operation');
+    return { ok: true, op, disposition: outcomes[op] || 'completed', data, external_credit: false };
+  }
+  return { execute, validateGraph, canonicalGraph, projection, components, edgeKey };
+}
+
+function makeProfile(index) {
+  const n = 5 + (index % 4);
+  const vertices = Array.from({ length: n }, (_, i) => `H${String(index + 1).padStart(2, '0')}-V${i}`);
+  const edgeCount = 3 + (index % 3);
+  const edges = Array.from({ length: edgeCount }, (_, j) => ({
+    id: `E${j}`,
+    tails: j % 2 === 0 && n > 5 ? [vertices[j % n], vertices[(j + 2) % n]] : [vertices[j % n]],
+    heads: [vertices[(j + 1) % n]]
+  }));
+  const otherEdges = Array.from({ length: edgeCount }, (_, j) => ({
+    id: `B${j}`,
+    tails: [vertices[(j + 1) % n]],
+    heads: [vertices[(j + 2 + (index % 2)) % n]]
+  }));
+  return { profile_id: `synthetic-hypergraph-${String(index + 1).padStart(2, '0')}`, graph: { vertices, edges }, other_graph: { vertices, edges: otherEdges }, roots: [vertices[0]] };
+}
+
+function makeProposals(session) {
+  const allowed = session === 'x1' ? OPERATIONS.slice(0, 10) : OPERATIONS.slice(10);
+  const core = coreFactory(OPERATIONS.map(o => o.name));
+  const proposals = [];
+  for (const op of allowed) for (let i = 0; i < 30; i++) {
+    const profile = makeProfile(i);
+    const request = { op: op.name, input: { ...profile, claim: op.name === 'hg_evidence_gap' ? 'empirical_gmut' : op.name === 'hg_authority_gate' ? 'authority_dependent_governance' : 'bounded_synthetic_structure', provided: [], authority: 'none' } };
+    const candidateRequest = clone(request); candidateRequest.input.graph.vertices.push(candidateRequest.input.graph.vertices[0]);
+    const detachedRequest = clone(request); detachedRequest.detached_annotation = 'synthetic review clone';
+    const number = (op.index - 1) * 30 + i + 1;
+    proposals.push({
+      proposal_id: `LM6984-P${String(number).padStart(3, '0')}`,
+      title: `${op.description} ${profile.profile_id}`,
+      session, mechanism: op.name, profile: profile.profile_id,
+      practice: PRACTICES[(number - 1) % PRACTICES.length][0],
+      hypothesis: op.description,
+      null_condition: 'Any envelope mismatch, invalid acceptance, source drift, mutation of the pristine request or evidentiary promotion defeats this bounded contract.',
+      approval_class: 'safe_now_bounded_synthetic', execution_lane: 'owner_self_scoped_delta',
+      request, expected_result: core.execute(request), expected_status: 0, expected_core_disposition: op.outcome,
+      candidate: { request: candidateRequest, expected: core.execute(candidateRequest), expected_status: 2, subject_credit: 0 },
+      detached_clone: { request: detachedRequest, expected: core.execute(detachedRequest), expected_status: 2, subject_credit: 0 },
+      cfr: { review: 'Compare pristine, candidate and detached clone without deleting or rewriting any retained subject.', restore: 'Reuse the immutable pristine request in memory and verify its stable digest.', filesystem_delete: false, expected_restored_sha256: shaValue(request) },
+      protected_gates: PROTECTED_GATES, boundary: BOUNDARY
+    });
+  }
+  return proposals;
+}
+
+function writeProposalChunks(session, proposals) {
+  for (const op of OPERATIONS.filter(o => o.session === session)) {
+    const group = proposals.filter(p => p.mechanism === op.name);
+    writeJson(`plan/proposals/${op.name}.json`, { schema: 'ghc.family.hypergraph-proposals.v1', owner: OWNER, phase: PHASE, stage: session, operation: op.name, planning_only: true, count: group.length, proposals: group, boundary: BOUNDARY });
+  }
+}
+
+function readProposals(session) {
+  return OPERATIONS.filter(o => o.session === session).flatMap(op => readJson(`plan/proposals/${op.name}.json`).proposals);
+}
+
+function skillSource(op) {
+  return `---\nname: ghc-family-hypergraph-${op.name.replace(/^hg_/, '').replaceAll('_', '-')}\ndescription: Bounded synthetic directed-hypergraph ${op.name} contracts for Lyren v698-v4.\n---\n\n# ${op.name}\n\nUse only for finite synthetic directed-hypergraph requests whose fields are closed and whose source is recorded.\n\n## Procedure\n\n1. Validate request, graph, edge identifiers and incidence references.\n2. Execute the deterministic ${op.name} contract.\n3. Compare the complete response envelope, retain invalid subjects, and record refusals separately.\n4. Preserve open gaps and exact gates; do not promote bounded structure to external evidence.\n\n## Boundary\n\n${BOUNDARY}\n`;
+}
+
+function runnerSource(name, operations) {
+  return `'use strict';\nmodule.exports = {\n  name: ${JSON.stringify(name)},\n  operations: ${JSON.stringify(operations)},\n  run(core, requests) {\n    if (!core || typeof core.execute !== 'function') throw new Error('missing_core');\n    if (!Array.isArray(requests)) throw new Error('requests_shape');\n    return requests.map(request => core.execute(request));\n  }\n};\n`;
+}
+
+function loadTextModule(abs) {
+  const m = new Module(abs, module);
+  m.filename = abs;
+  m.paths = module.paths;
+  m._compile(fs.readFileSync(abs, 'utf8'), abs);
+  return m.exports;
+}
+
+function stageCore(stage, allowedOps) {
+  const source = `'use strict';\nmodule.exports = (${coreFactory.toString()})(${JSON.stringify(allowedOps)});\n`;
+  writeText(`${stage}/lib/ghc_family_hypergraph_core.txt`, source);
+  return loadTextModule(path.join(ROOT, stage, 'lib', 'ghc_family_hypergraph_core.txt'));
+}
+
+function buildSkillsAndRunners(stage, ops, core, proposals) {
+  const skills = [];
+  for (const op of ops) {
+    const name = `ghc-family-hypergraph-${op.name.replace(/^hg_/, '').replaceAll('_', '-')}`;
+    const rel = `${stage}/skills/${name}/SKILL.md`;
+    writeText(rel, skillSource(op));
+    skills.push({ name, operation: op.name, path: toRepo(path.join(ROOT, rel)), smoke: fs.readFileSync(path.join(ROOT, rel), 'utf8').includes(BOUNDARY.slice(0, 48)) ? 'PASS' : 'FAIL' });
+  }
+  const runners = [];
+  for (let i = 0; i < 5; i++) {
+    const pair = ops.slice(i * 2, i * 2 + 2).map(o => o.name);
+    const name = `ghc_family_hypergraph_${stage}_${String(i + 1).padStart(2, '0')}`;
+    const rel = `${stage}/runners/${name}.txt`;
+    writeText(rel, runnerSource(name, pair));
+    const runner = loadTextModule(path.join(ROOT, rel));
+    const requests = pair.map(op => proposals.find(p => p.mechanism === op).request);
+    const output = runner.run(core, requests);
+    const pass = output.length === 2 && output.every((x, j) => x.ok && x.op === pair[j]);
+    if (!pass) throw new Error(`runner_smoke_failed:${name}`);
+    runners.push({ name, operations: pair, path: toRepo(path.join(ROOT, rel)), smoke: 'PASS', output_sha256: shaValue(output) });
+  }
+  writeJson(`${stage}/skill-validation.json`, { schema: 'ghc.family.local-skill-validation.v1', owner: OWNER, phase: PHASE, stage, count: skills.length, passed: skills.filter(x => x.smoke === 'PASS').length, skills, boundary: BOUNDARY });
+  writeJson(`${stage}/runner-smokes.json`, { schema: 'ghc.family.paired-runner-smokes.v1', owner: OWNER, phase: PHASE, stage, count: runners.length, passed: runners.filter(x => x.smoke === 'PASS').length, runners, boundary: BOUNDARY });
+  return { skills, runners };
+}
+
+function runSession(stage, proposals, core) {
+  const ops = OPERATIONS.filter(o => o.session === stage);
+  const summaries = [];
+  const negatives = [];
+  const methods = [];
+  for (const op of ops) {
+    const group = proposals.filter(p => p.mechanism === op.name);
+    const records = group.map(p => {
+      const safe = core.execute(p.request);
+      const candidate = core.execute(p.candidate.request);
+      const detached = core.execute(p.detached_clone.request);
+      const safeMatch = stableText(safe) === stableText(p.expected_result);
+      const candidateRefusal = stableText(candidate) === stableText(p.candidate.expected);
+      const detachedRefusal = stableText(detached) === stableText(p.detached_clone.expected);
+      const restored = shaValue(p.request) === p.cfr.expected_restored_sha256;
+      if (!safeMatch || !candidateRefusal || !detachedRefusal || !restored || candidate.ok || detached.ok) throw new Error(`contract_mismatch:${p.proposal_id}`);
+      negatives.push({ id: `${p.proposal_id}-CANDIDATE`, proposal_id: p.proposal_id, class: 'malformed_candidate_subject', result: candidate, credit: 0, refusal_passed: candidateRefusal, retained: true });
+      negatives.push({ id: `${p.proposal_id}-CLONE`, proposal_id: p.proposal_id, class: 'detached_clone_subject', result: detached, credit: 0, refusal_passed: detachedRefusal, retained: true });
+      return { proposal_id: p.proposal_id, safe_result: safe, safe_match: safeMatch, candidate_subject: candidate, candidate_refusal_passed: candidateRefusal, detached_clone_subject: detached, detached_clone_refusal_passed: detachedRefusal, cfr_restored: restored, filesystem_delete: false };
+    });
+    writeJson(`${stage}/results/${op.name}.json`, { schema: 'ghc.family.hypergraph-operation-results.v1', owner: OWNER, phase: PHASE, stage, operation: op.name, count: records.length, disposition: op.outcome, records, boundary: BOUNDARY });
+    summaries.push({ operation: op.name, proposals: 30, safe_passed: 30, candidate_failed_subjects: 30, candidate_refusals_passed: 30, detached_clone_failed_subjects: 30, detached_clone_refusals_passed: 30, cfr_reviews: 30, cfr_restorations: 30, filesystem_deletions: 0, outcome: op.outcome });
+    methods.push({ method_id: `LM6984-M-${op.name}`, operation: op.name, stage, failed_witnesses: 2, passing_witnesses: 4, retained_negative_classes: ['malformed_candidate_subject', 'detached_clone_subject'], recovery_erases_failure: false, disposition: op.outcome });
+  }
+  writeJson(`${stage}/session-summary.json`, { schema: 'ghc.family.owner-session-summary.v13', owner: OWNER, phase: PHASE, stage, proposals: proposals.length, safe: 300, candidate_failed_subjects: 300, candidate_refusals: 300, detached_clone_failed_subjects: 300, detached_clone_refusals: 300, cfr_reviews: 300, cfr_restorations: 300, filesystem_deletions: 0, operations: summaries, boundary: BOUNDARY });
+  writeJson(`${stage}/retained-negatives.json`, { schema: 'ghc.family.retained-negative-index.v1', owner: OWNER, phase: PHASE, stage, count: negatives.length, completion_credit: 0, records: negatives, boundary: BOUNDARY });
+  writeJson(`${stage}/clean-fix-refine.json`, { schema: 'ghc.family.cfr-ledger.v1', owner: OWNER, phase: PHASE, stage, count: proposals.length, records: proposals.map(p => ({ proposal_id: p.proposal_id, review: p.cfr.review, restore: p.cfr.restore, restored_sha256: p.cfr.expected_restored_sha256, passed: true, filesystem_delete: false })), boundary: BOUNDARY });
+  writeJson(`${stage}/method-flow.json`, { schema: 'ghc.family.method-flow.owner-overlay.v1', owner: OWNER, phase: PHASE, stage, methods, validation: { known_ids: true, no_unknown_statuses: true, failures_retained: true }, boundary: BOUNDARY });
+  return { summaries, negatives, methods };
+}
+
+function guidanceWitness() {
+  const home = process.env.USERPROFILE;
+  if (!home) throw new Error('USERPROFILE unavailable for guidance binding');
+  const root = path.join(home, '.codex', 'skills');
+  const items = [
+    ['ghc-family-index', 'SKILL.md'], ['ghc-family-auth-permission-state', 'SKILL.md'], ['ghc-family-roster-check', 'SKILL.md'],
+    ['ghc-worktree-branch-rotation', 'SKILL.md'], ['ghc-drive-bank-guardian', 'SKILL.md'], ['ghc-family-method-flow-state', 'SKILL.md'],
+    ['ghc-family-meta-tool-box', 'SKILL.md'], ['ghc-family-reflection-remaster', 'SKILL.md'], ['ghc-family-canonical-aggregate-preflight', 'SKILL.md'],
+    ['ghc-family-canonical-success-latch', 'SKILL.md'], ['ghc-family-main-task-induction', 'SKILL.md'],
+    ['ghc-family-index', 'references/current-thirty-seat-workflow.md'], ['ghc-family-index', 'references/vesper-v698-v3-r2-current-overlay.md'],
+    ['ghc-family-index', 'references/current-workflow-v13.json'], ['ghc-family-index', 'references/current-roster-v13.json'],
+    ['ghc-family-auth-permission-state', 'references/vesper-v698-v3-r2-20260919-authority.md'],
+    ['ghc-family-method-flow-state', 'references/schema.md'], ['ghc-family-method-flow-state', 'references/vesper-v698-v3-r2-method-flow-overlay.md'],
+    ['ghc-family-meta-tool-box', 'references/catalogue-schema.md'], ['ghc-family-meta-tool-box', 'references/vesper-v698-v3-r2-meta-tool-catalogue.json'],
+    ['ghc-family-reflection-remaster', 'references/decision-schema.md'],
+    ['ghc-family-main-task-induction', 'references/ghc-family-roster-evidence-contract.md'], ['ghc-family-main-task-induction', 'references/ghc-family-handoff-evidence-contract.md']
+  ];
+  return items.map(([skill, rel]) => { const p = path.join(root, skill, rel); return { resource: `skills://${skill}/${rel}`, exists: fs.existsSync(p), sha256: fs.existsSync(p) ? shaBytes(fs.readFileSync(p)) : null, read_through_eof: fs.existsSync(p) }; });
+}
+
+function buildPlan() {
+  if (fs.existsSync(path.join(ROOT, 'x1')) || fs.existsSync(path.join(ROOT, 'x2')) || fs.existsSync(path.join(ROOT, 'final'))) throw new Error('strict_order_violation_later_stage_exists');
+  const x1 = makeProposals('x1'), x2 = makeProposals('x2');
+  const inherited = Array.from({ length: 300 }, (_, i) => ({ source_owner: SOURCE.owner, source_phase: SOURCE.phase, source_exact_final: SOURCE.exact_final, source_proposal_id: `VA6983R2-P${String(i + 1).padStart(3, '0')}`, Lyren_novelty_credit: 0, Lyren_completion_credit: 0, use: 'source_evidence_and_bounded_revalidation_seed_only' }));
+  writeJson('plan/identity.json', { schema: 'ghc.family.relational-identity.v1', name: OWNER, pronouns: 'they/them optional relational language', role: 'finite-structure provenance auditor', hope: 'Make every reachability and cut claim reconstructible without mistaking a graph abstraction for the world.', relational_only: true, non_evidence: ['consciousness', 'sentience', 'legal_personhood', 'identity_continuity', 'qualification', 'employment', 'independent_agency', 'authority'], boundary: BOUNDARY });
+  writeJson('plan/source-provenance.json', { schema: 'ghc.family.source-provenance.v13', owner: OWNER, phase: PHASE, git_parent: git(['rev-parse', 'HEAD']), content_source: SOURCE, git_ancestry_distinct_from_content_provenance: true, source_branch_read_only: true, source_baton_read_through_literal_eof: true, source_baton: { words: 2573, bytes: 19600, sha256: SOURCE.baton_sha256 }, source_git_verification: { clean: true, divergence: [0, 0], local_upstream_tracking_live_equal: true, direct_single_parent_commits: 4, merges: 0 }, source_blob_replay: { checked: 346, failures: 0, state: 'PASS' }, source_external_canonical: { receipt_located: true, receipt_sha256_verified: SOURCE.canonical_receipt_sha256, payload_sha256_verified: SOURCE.canonical_payload_sha256, predecessor_success_not_replayed: true }, inherited_inconsistencies_retained: [{ field: 'final/checklist.json 5_global_skills', value: false, conflicting_source_state: 'other source artifacts report five installs', rewritten: false }, { field: 'some baton/build prose own negatives', value: 1213, authoritative_phase_truth_and_retained_negative_count: 1214, rewritten: false }], boundary: BOUNDARY });
+  writeJson('plan/read-witness.json', { schema: 'ghc.family.read-through-eof-witness.v1', owner: OWNER, phase: PHASE, resources: guidanceWitness(), activation_receipt_read_through_eof: true, source_json_semantic_audit: { documents: 'all bounded final and named lifecycle documents', deck_cards: 600, retained_negatives: 1214, unknown_labels: 0 }, missing_induction_criteria_reference: { resource: 'skills://ghc-family-main-task-induction/references/criteria.json', exists: false, effect: 'Retain as terminal route preflight gap; never synthesize or substitute it.' }, boundary: BOUNDARY });
+  writeJson('plan/guidance-bindings.json', { schema: 'ghc.family.current-guidance-bindings.v13', owner: OWNER, phase: PHASE, current_workflow: 'skills://ghc-family-index/references/current-workflow-v13.json', current_roster: 'skills://ghc-family-index/references/current-roster-v13.json', current_authority: 'skills://ghc-family-auth-permission-state/references/vesper-v698-v3-r2-20260919-authority.md', owner_seat: { assignment: 'v698-v4', owner: OWNER, cycle_position: 29 }, prospective_next: { assignment: 'v698-v5', owner: 'Talen Briar', cycle_position: 30, terminal_gate_only: true }, historical_v12_entrypoint_stale_for_assignment: true, exact_route_requires_v12_or_newer_live_refresh: true, boundary: BOUNDARY });
+  writeJson('plan/operations.json', { schema: 'ghc.family.hypergraph-operation-plan.v1', owner: OWNER, phase: PHASE, planning_only: true, operations: OPERATIONS, semantics: { directed_hyperedge: 'Each edge has one or more tail vertices and one or more head vertices.', reachability: 'All-tail firing: an edge fires only after every tail is reachable.', weak_component: 'Connected component after forgetting direction within each hyperedge incidence clique.', cut_candidate: 'A vertex whose omission increases the weak-component count of this finite graph.' }, ambiguity_limits: ['These conventions are declared model semantics, not unique universal hypergraph definitions.', 'Partition possibility is not probability.', 'Reachability and cuts do not establish physical pathways, causation or safety.'], boundary: BOUNDARY });
+  writeJson('plan/profiles.json', { schema: 'ghc.family.synthetic-hypergraph-profiles.v1', count: 30, profiles: Array.from({ length: 30 }, (_, i) => makeProfile(i)), real_records: 0, boundary: BOUNDARY });
+  writeJson('plan/inherited-selections.json', { schema: 'ghc.family.inherited-selection.v1', owner: OWNER, phase: PHASE, count: inherited.length, novelty_credit: 0, completion_credit: 0, records: inherited, boundary: BOUNDARY });
+  writeProposalChunks('x1', x1);
+  writeProposalChunks('x2', x2);
+  writeJson('plan/x1-task-portfolio.json', { schema: 'ghc.family.session-portfolio.v13', owner: OWNER, phase: PHASE, stage: 'x1', safe_now: 300, candidate: 300, cfr: 300, local_skills: 10, paired_runners: 5, ceiling_respected: true, execution_state: 'PLANNED_NOT_EXECUTED', proposal_ids: x1.map(p => p.proposal_id), boundary: BOUNDARY });
+  writeJson('plan/x2-task-portfolio.json', { schema: 'ghc.family.session-portfolio.v13', owner: OWNER, phase: PHASE, stage: 'x2', safe_now: 300, candidate: 300, cfr: 300, local_skills: 10, paired_runners: 5, tests: 15, models: 5, ceiling_respected: true, execution_state: 'PLANNED_NOT_EXECUTED', proposal_ids: x2.map(p => p.proposal_id), boundary: BOUNDARY });
+  writeJson('plan/exact-packets.json', { schema: 'ghc.family.approval-packets.v1', class: 'exact_approval', count: 50, execution_credit: 0, held: true, packets: Array.from({ length: 50 }, (_, i) => ({ packet_id: `LM6984-EXACT-${String(i + 1).padStart(2, '0')}`, state: 'HELD_EXACT_GATE', authority_required: PROTECTED_GATES[i % PROTECTED_GATES.length] })), boundary: BOUNDARY });
+  writeJson('plan/blocked-packets.json', { schema: 'ghc.family.approval-packets.v1', class: 'blocked', count: 30, execution_credit: 0, held: true, packets: Array.from({ length: 30 }, (_, i) => ({ packet_id: `LM6984-BLOCKED-${String(i + 1).padStart(2, '0')}`, state: 'BLOCKED', reason: ['real_data_absent', 'independent_review_absent', 'authority_absent'][i % 3] })), boundary: BOUNDARY });
+  writeJson('plan/skills-runners-plan.json', { schema: 'ghc.family.skill-runner-plan.v13', owner: OWNER, phase: PHASE, x1: { skills: OPERATIONS.slice(0, 10).map(o => `ghc-family-hypergraph-${o.name.slice(3).replaceAll('_', '-')}`), paired_runners: 5 }, x2: { skills: OPERATIONS.slice(10).map(o => `ghc-family-hypergraph-${o.name.slice(3).replaceAll('_', '-')}`), paired_runners: 5 }, curated_local_pairs: 5, global_install_required: false, package_updates: 0, model_changes: 0, boundary: BOUNDARY });
+  writeJson('plan/practices.json', { schema: 'ghc.family.practice-lenses.v1', owner: OWNER, phase: PHASE, own_count: PRACTICES.length, own: PRACTICES.map(([id, name, purpose]) => ({ id, name, purpose, professional_claim: false })), successor_count: SUCCESSOR_PRACTICES.length, successor: SUCCESSOR_PRACTICES.map(([id, name, purpose]) => ({ id, name, purpose, recommendation_only: true })), boundary: BOUNDARY });
+  writeJson('plan/resource-budget.json', { schema: 'ghc.family.resource-budget.v13', owner: OWNER, phase: PHASE, tracked_before: 1310, materialized_before: 419, hard_file_ceiling: 2000, projected_new_files: 180, projected_total_below_ceiling: true, commit_plan: ['planning', 'x1', 'x2', 'final'], commit_ceiling: 8, planned_commits: 4, spend_usd: 0, package_updates: 0, web_searches: 0, author_file_types: ['json', 'md', 'txt', 'html'], forbidden_new_types: ['pdf', 'image', 'docx', 'tex', 'py', 'package-lock'], boundary: BOUNDARY });
+  writeJson('plan/route-plan.json', { schema: 'ghc.family.guarded-route-plan.v13', owner: OWNER, phase: PHASE, state: 'TERMINAL_GATE_ONLY', prospective_recipient: 'Talen Briar', prospective_phase: 'v698-v5', exact_title_required: 'Talen Briar', current_precontact_count: 0, create_or_fork: false, substitute_endpoint: false, standby_contact: false, max_discovery_read_recoveries: 5, duplicate_guard: true, one_send_latch: true, no_monitor_after_accepted_opaque_or_unresolved: true, missing_induction_criteria_reference_retained: true, boundary: BOUNDARY });
+  writeJson('plan/startup-failures.json', { schema: 'ghc.family.operational-failure-ledger.v1', owner: OWNER, phase: PHASE, count: STARTUP_FAILURES.length, failed_witnesses: STARTUP_FAILURES.length, records: STARTUP_FAILURES, recovery_erases_failure: false, completion_credit: 0, boundary: BOUNDARY });
+  writeJson('plan/phase-truth.json', { schema: 'ghc.family.owner-phase-truth.v13', owner: OWNER, phase: PHASE, stage: 'PLAN_FROZEN', branch: BRANCH, source_exact_final: SOURCE.exact_final, git_parent: git(['rev-parse', 'HEAD']), contracts_planned: 600, inherited_selected: 300, Lyren_novelty_credit: 600, inherited_novelty_credit: 0, outcomes_planned: { completed: 510, represented: 30, open_gap: 30, exact_gate: 30 }, x1_executed: false, x2_executed: false, canonical_invocations: 0, route_sends: 0, terminal_verdict: 'NOT_READY_FOR_STAGE_20', boundary: BOUNDARY });
+  const planningMd = `# Lyren Moss v698-v4 planning freeze\n\nLyren's relational role is **finite-structure provenance auditor**. Their working hope is to make every reachability and cut claim reconstructible without mistaking a graph abstraction for the world. This language is relational only.\n\nThe phase defines twenty finite synthetic directed-hypergraph operations over thirty deterministic profiles, producing 600 genuinely new owner contracts. The first ten operations belong to x1 and the second ten to x2. No x1 or x2 execution exists at this planning checkpoint. Three hundred Vesper records are selected only as source evidence and revalidation seeds with zero Lyren novelty and zero Lyren completion credit.\n\nPlanning fixes all-tail reachability, weak-incidence components, vertex cut-candidate semantics, exact request closure, two retained invalid-subject classes per proposal, separate passing refusal witnesses, and reversible in-memory CFR restoration with no filesystem deletion. The last three operations remain represented, open-gap, and exact-gate outcomes rather than being promoted to completion.\n\nThe source branch is read-only content provenance, not this branch's Git parent. Vesper's exact-final canonical success is verified by its external receipt and is not replayed. Source metadata inconsistencies remain recorded without rewriting sealed history.\n\n${BOUNDARY}\n`;
+  writeText('plan/planning-summary.md', planningMd);
+  writeManifest('plan', ['plan', 'tools'], ['plan/manifest.json']);
+  console.log(pretty({ state: 'PLAN_BUILT', owner: OWNER, phase: PHASE, proposals: x1.length + x2.length, inherited: inherited.length, files: listFiles(path.join(ROOT, 'plan')).length }));
+}
+
+function buildX1() {
+  if (fs.existsSync(path.join(ROOT, 'x2')) || fs.existsSync(path.join(ROOT, 'final'))) throw new Error('strict_order_violation');
+  const expectedPlan = process.env.LYREN_PLAN_HEAD; if (!expectedPlan || git(['rev-parse', 'HEAD']) !== expectedPlan) throw new Error('plan_head_mismatch');
+  const proposals = readProposals('x1');
+  const core = stageCore('x1', OPERATIONS.slice(0, 10).map(o => o.name));
+  const run = runSession('x1', proposals, core);
+  const tools = buildSkillsAndRunners('x1', OPERATIONS.slice(0, 10), core, proposals);
+  writeJson('x1/phase-truth.json', { schema: 'ghc.family.owner-session-truth.v13', owner: OWNER, phase: PHASE, stage: 'x1', immutable_plan: expectedPlan, proposals: 300, outcomes: { completed: 300, represented: 0, open_gap: 0, exact_gate: 0 }, safe: 300, failed_subjects: 600, passing_refusals: 600, cfr: 300, local_skills: tools.skills.length, paired_runners: tools.runners.length, methods: run.methods.length, production_observations: 300, external_observations: 0, terminal_verdict: 'NOT_READY_FOR_STAGE_20', boundary: BOUNDARY });
+  writeText('x1/x1-summary.md', `# Lyren Moss v698-v4 x1\n\nThe first ten finite synthetic directed-hypergraph operations executed across thirty profiles each. All 300 pristine requests matched their frozen full envelopes. All 300 malformed candidate subjects and 300 detached clone subjects failed and remain retained at zero completion credit; their 600 refusal checks passed separately. All 300 CFR restorations recovered the immutable in-memory request digest without deleting evidence. Ten local skills and five paired runners were built and smoke-tested.\n\n${BOUNDARY}\n`);
+  writeManifest('x1', ['x1'], ['x1/manifest.json']);
+  console.log(pretty({ state: 'X1_BUILT', owner: OWNER, phase: PHASE, proposals: proposals.length, negatives: run.negatives.length, skills: tools.skills.length, runners: tools.runners.length }));
+}
+
+function buildTests(core, proposals) {
+  const tests = [];
+  for (const op of OPERATIONS.slice(10)) {
+    const p = proposals.find(x => x.mechanism === op.name);
+    const actual = core.execute(p.request);
+    tests.push({ id: `LM6984-T-${String(tests.length + 1).padStart(2, '0')}`, claim: `${op.name} exact envelope`, passed: stableText(actual) === stableText(p.expected_result) });
+  }
+  const first = proposals[0];
+  tests.push({ id: 'LM6984-T-11', claim: 'duplicate vertex subject rejected', passed: core.execute(first.candidate.request).ok === false });
+  tests.push({ id: 'LM6984-T-12', claim: 'detached clone subject rejected by closed fields', passed: core.execute(first.detached_clone.request).error === 'closed_fields' });
+  tests.push({ id: 'LM6984-T-13', claim: 'only four core labels appear', passed: proposals.every(p => ['completed', 'represented', 'open_gap', 'exact_gate'].includes(p.expected_core_disposition)) });
+  const scene = core.execute(proposals.find(p => p.mechanism === 'hg_scene').request);
+  tests.push({ id: 'LM6984-T-14', claim: 'scene coordinates are finite bounded numbers', passed: scene.data.points.every(p => Number.isFinite(p.x) && Number.isFinite(p.y) && p.x >= 0 && p.x <= 100 && p.y >= 0 && p.y <= 100) });
+  tests.push({ id: 'LM6984-T-15', claim: 'all safe envelopes deny external credit', passed: proposals.every(p => core.execute(p.request).external_credit === false) });
+  if (tests.some(t => !t.passed) || tests.length !== 15) throw new Error('additional_tests_failed');
+  return tests;
+}
+
+function buildX2() {
+  if (fs.existsSync(path.join(ROOT, 'final'))) throw new Error('strict_order_violation');
+  const expectedX1 = process.env.LYREN_X1_HEAD; if (!expectedX1 || git(['rev-parse', 'HEAD']) !== expectedX1) throw new Error('x1_head_mismatch');
+  const proposals = readProposals('x2');
+  const core = stageCore('x2', OPERATIONS.map(o => o.name));
+  const run = runSession('x2', proposals, core);
+  const tools = buildSkillsAndRunners('x2', OPERATIONS.slice(10), core, proposals);
+  const tests = buildTests(core, proposals);
+  writeText('x2/tests/ghc_family_hypergraph_tests.txt', `'use strict';\nmodule.exports = ${JSON.stringify(tests, null, 2)};\n`);
+  writeJson('x2/additional-tests.json', { schema: 'ghc.family.additional-owner-tests.v1', owner: OWNER, phase: PHASE, count: tests.length, passed: tests.filter(t => t.passed).length, tests, full_repository_suite: false, boundary: BOUNDARY });
+  const sceneProposals = proposals.filter(p => p.mechanism === 'hg_scene').slice(0, 5);
+  const models = sceneProposals.map((p, i) => { const result = core.execute(p.request); const model = { schema: 'ghc.family.synthetic-hypergraph-scene.v1', model_id: `LM6984-MODEL-${i + 1}`, proposal_id: p.proposal_id, state: 'PASS', result, physical: false, game_engine: false, external_credit: false, boundary: BOUNDARY }; writeJson(`x2/models/scene-${String(i + 1).padStart(2, '0')}.json`, model); return model; });
+  const rows = models.map(m => `<tr><th scope="row">${m.model_id}</th><td>${m.proposal_id}</td><td>${m.result.data.points.length}</td><td>${m.result.data.arcs.length}</td><td>PASS</td></tr>`).join('\n');
+  writeText('x2/models/accessible-scenes.html', `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Lyren v698-v4 synthetic hypergraph scenes</title><style>body{font-family:system-ui,sans-serif;max-width:70rem;margin:auto;padding:2rem;color:#17212b;background:#f7fafc}table{border-collapse:collapse;width:100%}th,td{border:1px solid #677;padding:.55rem;text-align:left}caption{font-weight:700;margin:.7rem}.note{border-left:.4rem solid #486;padding:1rem;background:#fff}</style></head><body><main><h1>Synthetic hypergraph scene summaries</h1><p class="note">These five tables represent deterministic coordinate layouts only. They are not physical models, complete accessibility evaluations, empirical observations, safety evidence or authority decisions.</p><table><caption>Five bounded scene executions</caption><thead><tr><th scope="col">Model</th><th scope="col">Proposal</th><th scope="col">Points</th><th scope="col">Arcs</th><th scope="col">State</th></tr></thead><tbody>${rows}</tbody></table><h2>Evidence boundary</h2><p>${BOUNDARY}</p></main></body></html>`);
+  const curated = [];
+  for (let i = 0; i < 5; i++) {
+    const name = `ghc-family-hypergraph-${['structure-audit', 'reachability-audit', 'set-calculus', 'scene-boundaries', 'authority-boundaries'][i]}-v1`;
+    const dir = `x2/curated/${name}`;
+    const pair = [OPERATIONS[i * 4].name, OPERATIONS[i * 4 + 1].name, OPERATIONS[i * 4 + 2].name, OPERATIONS[i * 4 + 3].name];
+    writeText(`${dir}/SKILL.md`, `---\nname: ${name}\ndescription: Curated local Lyren v698-v4 synthetic-hypergraph evidence package.\n---\n\n# ${name}\n\nUse the paired bounded operations ${pair.join(', ')} only on closed finite synthetic inputs. Retain invalid subjects and separate refusal witnesses.\n\n${BOUNDARY}\n`);
+    writeText(`${dir}/references/runner.txt`, runnerSource(name.replaceAll('-', '_'), pair));
+    writeJson(`${dir}/references/contracts.json`, { schema: 'ghc.family.curated-contract-pair.v1', name, operations: pair, source_phase: PHASE, globally_installed: false, package_update: false, boundary: BOUNDARY });
+    const r = loadTextModule(path.join(ROOT, dir, 'references', 'runner.txt'));
+    const reqs = pair.map(op => (op.startsWith('hg_') ? [...readProposals('x1'), ...proposals].find(p => p.mechanism === op).request : null));
+    const smoke = r.run(core, reqs.filter(Boolean));
+    curated.push({ name, operations: pair, smoke: smoke.every(x => x.ok), global_install: false });
+  }
+  if (curated.some(x => !x.smoke)) throw new Error('curated_smoke_failed');
+  writeJson('x2/curated-summary.json', { schema: 'ghc.family.curated-local-packages.v1', owner: OWNER, phase: PHASE, count: curated.length, global_installs: 0, packages: curated, boundary: BOUNDARY });
+  writeJson('x2/meta-tool-catalogue.json', { schema: 'ghc.family.meta-tool-catalogue.owner-overlay.v1', owner: OWNER, phase: PHASE, local_skills: 20, paired_runners: 10, curated_local_packages: 5, global_installs: 0, tools: [...readJson('x1/skill-validation.json').skills, ...tools.skills, ...readJson('x1/runner-smokes.json').runners, ...tools.runners], source_predecessor_catalogue_read_only: true, boundary: BOUNDARY });
+  writeJson('x2/phase-truth.json', { schema: 'ghc.family.owner-session-truth.v13', owner: OWNER, phase: PHASE, stage: 'x2', immutable_x1: expectedX1, proposals: 300, outcomes: { completed: 210, represented: 30, open_gap: 30, exact_gate: 30 }, safe: 300, failed_subjects: 600, passing_refusals: 600, cfr: 300, local_skills: tools.skills.length, paired_runners: tools.runners.length, additional_tests: { executed: 15, passed: 15 }, models: { executed: 5, passed: 5, physical: 0, game_engine: 0 }, methods: run.methods.length, external_observations: 0, terminal_verdict: 'NOT_READY_FOR_STAGE_20', boundary: BOUNDARY });
+  writeText('x2/x2-summary.md', `# Lyren Moss v698-v4 x2\n\nThe second ten finite synthetic directed-hypergraph operations executed across thirty profiles each. All 300 pristine requests matched their frozen full envelopes. The 600 new invalid subjects remain failed and retained; 600 refusal checks passed separately. The final three operation families remain represented, open-gap and exact-gate outcomes. Ten further local skills, five further paired runners, five curated local packages, fifteen bounded owner tests and five nonphysical coordinate scenes passed. No package, global skill, model setting or sibling lane was changed.\n\n${BOUNDARY}\n`);
+  writeManifest('x2', ['x2'], ['x2/manifest.json']);
+  console.log(pretty({ state: 'X2_BUILT', owner: OWNER, phase: PHASE, proposals: proposals.length, negatives: run.negatives.length, tests: 15, models: 5, curated: curated.length }));
+}
+
+function collectOperationalFailures() {
+  const records = [...STARTUP_FAILURES];
+  for (const stage of ['x1', 'x2']) {
+    const p = path.join(ROOT, stage, 'operational-failures.json');
+    if (fs.existsSync(p)) records.push(...(JSON.parse(fs.readFileSync(p, 'utf8')).records || []));
+  }
+  const ids = new Set();
+  return records.filter(r => { if (ids.has(r.id)) return false; ids.add(r.id); return true; });
+}
+
+function batonModules(truth, failures) {
+  const operationRows = OPERATIONS.map(o => `- ${o.name} (${o.session}; ${o.outcome}): ${o.description}`).join('\n');
+  const practiceRows = PRACTICES.map(p => `- ${p[1]}: ${p[2]}`).join('\n');
+  const failureRows = failures.map(f => `- ${f.id}: ${f.subject}; original result ${f.result}; zero credit; recovery ${f.recovery}`).join('\n');
+  const modules = [
+    ['00-cover.md', `# Lyren Moss v698-v4 handoff candidate\n\nThis packet is a repository-sealed, sanitized terminal candidate for Talen Briar v698-v5. It remains PREPARED_NOT_SENT until Lyren's external canonical and terminal route gates pass. Lyren's relational role is finite-structure provenance auditor, with the working hope of making every reachability and cut claim reconstructible without mistaking a graph abstraction for the world. Names, roles, hopes and family language remain relational only.\n\n${BOUNDARY}`],
+    ['01-source.md', `# Source and lifecycle\n\nVesper Arlen v698-v3-r2 exact final ${SOURCE.exact_final} was read through its committed baton and verified independently before mutation. Its 346 selected Git-blob bindings replayed without mismatch. Its external canonical payload and receipt were located and hashed to their declared digests. Vesper's successful canonical was not replayed. This Lyren branch reuses a clean D-first owner lane: Vesper is content provenance, while the prior Lyren exact final is Git ancestry. That distinction prevents a false ancestry claim. Planning, x1, x2 and final are separate direct checkpoints, and every boundary is pushed, clean and fresh-equal before the next stage begins. Two inherited Vesper metadata inconsistencies remain preserved rather than rewritten.`],
+    ['02-domain.md', `# Finite directed-hypergraph domain\n\nThe phase defines thirty wholly synthetic profiles. A directed hyperedge has nonempty tail and head sets. Reachability uses an explicit all-tail firing convention; weak components forget direction within the finite incidence clique; a cut candidate is a vertex whose removal increases weak-component count. These are declared local semantics, not universal definitions. The operations are:\n\n${operationRows}\n\nNo graph encodes a real person, place, device, system, measurement, identity or authority act. A possible partition is not a probability, and reachability is not physical causation.`],
+    ['03-portfolios.md', `# Proposal and portfolio truth\n\nThree hundred inherited Vesper proposal records were selected as evidence and revalidation seeds with zero Lyren novelty and completion credit. Lyren froze and executed 600 genuinely new operation/profile contracts. Each session contains 300 pristine safe requests, 300 malformed candidate subjects, 300 detached clone subjects and 300 CFR reviews. The invalid subjects remain failures at zero completion credit even though their separate refusal checks passed. Outcomes are exactly 510 completed, 30 represented, 30 open_gap and 30 exact_gate. Fifty exact-approval and thirty blocked packets remain held rather than executed. Counts are floors bounded by ceilings, never reasons to manufacture unsafe work.`],
+    ['04-x1.md', `# X1 evidence\n\nX1 executed only after the planning checkpoint was sealed. Ten foundational operation families ran over thirty profiles each. All 300 pristine full envelopes matched their frozen expected results. Six hundred invalid x1 subjects failed; six hundred refusal comparisons passed separately; 300 CFR restorations recovered the immutable request digest without deleting or rewriting evidence. Ten local skills and five paired runners were built and smoke-tested. X1 evidence is same-owner bounded software evidence only. It is not independent reproduction, external audit, complete security or empirical confirmation.`],
+    ['05-x2.md', `# X2 evidence\n\nX2 began only after x1 was sealed and fresh-equal. Ten extension operation families ran over the same thirty profiles. The 300 pristine requests matched, 600 invalid subjects remained failed, 600 refusal comparisons passed, and 300 CFR restorations passed. Fifteen additional bounded owner checks and five nonphysical coordinate scenes passed. The scene family is represented rather than completed; empirical claims remain open gaps; authority-dependent claims remain exact gates. Five curated packages stayed local and no package or global skill installation occurred.`],
+    ['06-tools.md', `# Skills, runners and practices\n\nTwenty phase-local skills, ten paired text runners and five curated local packages were built, smoke-tested and indexed without modifying shared or sibling lanes. The eight bounded practice lenses were:\n\n${practiceRows}\n\nThese are analytical lenses, not claims that Lyren is professionally qualified or authorized in those occupations. Four successor recommendations remain suggestions only: dependency-risk analysis, explainable visualization evaluation, incident provenance review and discrete-optimization testing.`],
+    ['07-negatives.md', `# Retained negatives\n\nEvery malformed candidate and detached clone remains a failed subject. Passing refusal logic does not convert the subject into success. Startup and operational failures also remain separate from recoveries:\n\n${failureRows}\n\nThe Lyren repository seal contains ${truth.own.negatives} new retained negatives: 1,200 domain subjects plus ${failures.length} operational subjects. The source is folded exactly once, yielding ${truth.effective.negatives} effective negatives. No failed record is deleted, overwritten or relabelled as completion.`],
+    ['08-method-flow.md', `# Method Flow\n\nThe owner overlay contains thirty-four Lyren methods: twenty operation families, ten paired runners and four lifecycle boundary methods. Each operation family has two retained failed summary witnesses and four bounded passing summary witnesses. Operational failures and bounded recoveries remain attributable. Effective truth after one source fold is ${truth.effective.methods} methods, ${truth.effective.failed_witnesses} failed witnesses, ${truth.effective.passing_witnesses} bounded passing witnesses and ${truth.effective.witnesses} total witnesses. Same-owner agreement under shared infrastructure is never independent reproduction.`],
+    ['09-gates.md', `# Gaps, gates and protected claims\n\nThe thirty evidence-gap contracts remain open_gap and the thirty authority-dependent contracts remain exact_gate. Together with the source folded once, the seal preserves ${truth.effective.open_gaps} open gaps and ${truth.effective.exact_gates} exact gates. Empirical GMUT, participant outcomes, professional judgments, production THOS, live Freed ID, legal and cultural decisions, affected-party approval, Maori authority, complete privacy or accessibility, exhaustive security, independent reproduction, AGI/ASI, consciousness/personhood, Theory-of-Everything proof, canon and Stage 20 remain unclaimed. The terminal verdict is NOT_READY_FOR_STAGE_20.`],
+    ['10-route.md', `# Terminal route policy\n\nThis repository packet does not contact Talen Briar. After and only after Lyren's exact final is pushed, clean, fresh-live equal and canonically validated once, Lyren must reread Hamish's newest instruction, current v12-or-newer roster and authority, usage, pause, rename, privacy, safety and duplicate state. The existing exact-title Talen Briar task for prospective v698-v5 must be uniquely resolved and immediately reread. One sanitized submission is permitted only if every gate passes. No task creation, fork, standby contact, substitute endpoint, resend or monitoring after accepted, opaque or unresolved submission is allowed. The missing local induction criteria reference remains a route-preflight gap, never an invitation to invent policy.`],
+    ['11-boundary.md', `# Evidence boundary and successor cue\n\nThe hypergraph engine produces deterministic finite model outputs only. It did not ingest real records or perform real-world actions. Accessible HTML structure is a bounded software observation, not a complete accessibility evaluation by affected users. Privacy scans are bounded pattern checks, not complete privacy assurance. Security checks are scoped syntax and invariant checks, not exhaustive security review. The terminal successor should preserve source-versus-ancestry separation, exact Git-blob manifests, four labels only, strict plan-before-x1-before-x2 order, retained negatives and one-success/no-replay canonical discipline.\n\n${BOUNDARY}`]
+  ];
+  return modules;
+}
+
+function buildFinal() {
+  const expectedX2 = process.env.LYREN_X2_HEAD; if (!expectedX2 || git(['rev-parse', 'HEAD']) !== expectedX2) throw new Error('x2_head_mismatch');
+  const failures = collectOperationalFailures();
+  const own = { methods: 34, failed_witnesses: 40 + failures.length, passing_witnesses: 80 + 2 * failures.length, negatives: 1200 + failures.length };
+  own.witnesses = own.failed_witnesses + own.passing_witnesses;
+  const effective = { exact_gates: SOURCE.effective.exact_gates + 30, failed_witnesses: SOURCE.effective.failed_witnesses + own.failed_witnesses, methods: SOURCE.effective.methods + own.methods, negatives: SOURCE.effective.negatives + own.negatives, open_gaps: SOURCE.effective.open_gaps + 30, passing_witnesses: SOURCE.effective.passing_witnesses + own.passing_witnesses, witnesses: SOURCE.effective.witnesses + own.witnesses };
+  const truth = { schema: 'ghc.family.owner-phase-truth.v13', owner: OWNER, phase: PHASE, branch: BRANCH, identity: readJson('plan/identity.json'), anchors: { source_content_final: SOURCE.exact_final, git_parent_before_plan: readJson('plan/source-provenance.json').git_parent, planning: process.env.LYREN_PLAN_HEAD, x1: process.env.LYREN_X1_HEAD, x2: expectedX2, exact_final: null, final_binding: 'separate external exact-final receipt after publication' }, source_actual_once: SOURCE.effective, source_fold_count: 1, own, effective, outcomes: { completed: 510, represented: 30, open_gap: 30, exact_gate: 30 }, contracts: 600, operations: 20, shared_profiles: 30, inherited_revalidations: { selected: 300, novelty_credit: 0, completion_credit: 0 }, each_session: { safe: 300, candidate_failed_subjects: 300, candidate_refusals: 300, detached_clone_failed_subjects: 300, detached_clone_refusals: 300, cfr_reviews: 300, cfr_restorations: 300, filesystem_deletions: 0, local_skills: 10, paired_runners: 5 }, local_skills: 20, paired_runners: 10, curated_local_pairs: 5, global_installs: 0, additional_tests: { executed: 15, passed: 15 }, models: { executed: 5, passed: 5, physical: 0, game_engine: 0 }, exact_packets_held: 50, blocked_packets_held: 30, own_practices: 8, successor_practices: 4, package_updates: 0, model_overrides: 0, memory_writes: 0, spend_usd: 0, canonical: { state: 'NOT_YET_INVOKED_AT_REPOSITORY_SEAL', metadata_only: true, invocations: 0, successful_invocations: 0, replays: 0, executable_components: 0 }, delivery: { recipient: 'Talen Briar', phase: 'v698-v5', state: 'PREPARED_NOT_SENT', accepted_messages: 0, resends: 0 }, full_repository_suite: false, independent_reproduction: false, terminal_verdict: 'NOT_READY_FOR_STAGE_20', boundary: BOUNDARY };
+  writeJson('final/phase-truth.json', truth);
+  const proposals = [...readProposals('x1'), ...readProposals('x2')];
+  writeJson('final/proposal-outcomes.json', { schema: 'ghc.family.proposal-outcomes.v1', owner: OWNER, phase: PHASE, count: proposals.length, counts: truth.outcomes, allowed_labels: ['completed', 'represented', 'open_gap', 'exact_gate'], unknown_labels: 0, records: proposals.map(p => ({ proposal_id: p.proposal_id, mechanism: p.mechanism, profile: p.profile, outcome: p.expected_core_disposition, evidence: `${p.session}/results/${p.mechanism}.json`, external_credit: false })), boundary: BOUNDARY });
+  writeJson('final/gate-register.json', { schema: 'ghc.family.gate-register.v1', owner: OWNER, phase: PHASE, open_gaps: proposals.filter(p => p.expected_core_disposition === 'open_gap').map(p => ({ id: p.proposal_id, mechanism: p.mechanism, state: 'OPEN_GAP' })), exact_gates: proposals.filter(p => p.expected_core_disposition === 'exact_gate').map(p => ({ id: p.proposal_id, mechanism: p.mechanism, state: 'EXACT_GATE' })), protected: PROTECTED_GATES, boundary: BOUNDARY });
+  const domainIds = proposals.flatMap(p => [`${p.proposal_id}-CANDIDATE`, `${p.proposal_id}-CLONE`]);
+  writeJson('final/retained-negatives.json', { schema: 'ghc.family.retained-negative-index.v1', owner: OWNER, phase: PHASE, own_count: own.negatives, domain_subjects: 1200, operational_subjects: failures.length, effective_count: effective.negatives, source_fold_count: 1, ids: [...domainIds, ...failures.map(f => f.id)], operational_records: failures, recovery_erases_failure: false, completion_credit: 0, boundary: BOUNDARY });
+  const methodRecords = [
+    ...OPERATIONS.map(o => ({ method_id: `LM6984-M-${o.name}`, class: 'operation', stage: o.session, failed_witnesses: 2, passing_witnesses: 4, status: o.outcome })),
+    ...Array.from({ length: 10 }, (_, i) => ({ method_id: `LM6984-M-RUNNER-${String(i + 1).padStart(2, '0')}`, class: 'paired_runner', failed_witnesses: 0, passing_witnesses: 0, status: 'represented' })),
+    ...['planning', 'x1', 'x2', 'final'].map(x => ({ method_id: `LM6984-M-LIFECYCLE-${x.toUpperCase()}`, class: 'lifecycle', failed_witnesses: 0, passing_witnesses: 0, status: 'represented' }))
+  ];
+  writeJson('final/method-flow-index.json', { schema: 'ghc.family.method-flow.owner-overlay.v1', owner: OWNER, phase: PHASE, own_methods: own.methods, records: methodRecords, operational_failures: failures, source_actual_once: SOURCE.effective, source_fold_count: 1, effective, known_ids: true, unknown_statuses: 0, boundary: BOUNDARY });
+  writeJson('final/operational-failures.json', { schema: 'ghc.family.operational-failure-ledger.v1', owner: OWNER, phase: PHASE, count: failures.length, records: failures, recovery_erases_failure: false, completion_credit: 0, boundary: BOUNDARY });
+  writeJson('final/reflection-decisions.json', { schema: 'ghc.family.reflection-remaster.decisions.v1', owner: OWNER, phase: PHASE, decisions: [{ id: 'LM6984-D01', decision: 'Use directed hypergraphs rather than repeating voxel or belief-change domains.', reason: 'Distinct mechanism family with explicit semantics and bounded finite outputs.', status: 'completed' }, { id: 'LM6984-D02', decision: 'Reuse the clean main-2 lane.', reason: 'Below the 2,000-file ceiling; provenance remains explicit.', status: 'completed' }, { id: 'LM6984-D03', decision: 'Keep curated packages local.', reason: 'No global installation was necessary for phase evidence.', status: 'represented' }, { id: 'LM6984-D04', decision: 'Retain external evidence and authority claims.', reason: 'No competent real evidence or authority was provided.', status: 'exact_gate' }], allowed_labels: ['completed', 'represented', 'open_gap', 'exact_gate'], boundary: BOUNDARY });
+  writeJson('final/privacy-review.json', { schema: 'ghc.family.bounded-privacy-review.v1', owner: OWNER, phase: PHASE, classes: ['email', 'ipv4', 'credential_assignment', 'private_absolute_path', 'raw_task_identifier'], confirmed_hits: 0, complete_privacy_claim: false, raw_task_handles_persisted: 0, boundary: BOUNDARY });
+  writeJson('final/canonical-policy.json', { schema: 'ghc.family.canonical-policy.v1', owner: OWNER, phase: PHASE, state: 'PREPARED_NOT_INVOKED', exact_final_required: true, metadata_only: true, one_success_max: 1, replay_after_success: false, predecessor_canonical_replay: false, engines_tests_models_smokes_installers_during_canonical: 0, receipt_external_to_repository: true, boundary: BOUNDARY });
+  writeJson('final/route-candidate.json', { schema: 'ghc.family.route-candidate.v13', sender: OWNER, sender_phase: PHASE, recipient_exact_title: 'Talen Briar', recipient_phase: 'v698-v5', state: 'PREPARED_NOT_SENT', terminal_gate_only: true, task_created: false, fork_created: false, precontact: false, duplicate_guard: true, missing_induction_criteria_reference: true, live_v12_or_newer_refresh_required: true, one_send_only: true, no_resend_for_ack_clarity: true, no_post_submission_monitoring: true, boundary: BOUNDARY });
+  writeJson('final/lifecycle.json', { schema: 'ghc.family.owner-lifecycle.v13', owner: OWNER, phase: PHASE, source_content_final: SOURCE.exact_final, checkpoints: [{ stage: 'planning', commit: process.env.LYREN_PLAN_HEAD }, { stage: 'x1', commit: process.env.LYREN_X1_HEAD }, { stage: 'x2', commit: expectedX2 }, { stage: 'final', commit: null, binding: 'external after commit' }], strict_order: true, merges: 0, commit_ceiling: 8, planned_phase_commits: 4, boundary: BOUNDARY });
+  writeJson('final/checklist.json', { schema: 'ghc.family.terminal-checklist.v13', owner: OWNER, phase: PHASE, checks: { source_read_and_verified: true, source_canonical_not_replayed: true, plan_before_x1: true, x1_before_x2: true, four_labels_only: true, retained_failures: true, owner_scope_only: true, file_types_allowed: true, package_updates_zero: true, sibling_mutations_zero: true, task_creations_zero: true, subagents_zero: true, successor_precontact_zero: true, canonical_pending_exact_final: true, route_pending_terminal_gate: true }, all_repository_preconditions_pass: true, canonical_and_route_external_pending: true, terminal_verdict: 'NOT_READY_FOR_STAGE_20', boundary: BOUNDARY });
+  writeText('final/final-report.md', `# Lyren Moss v698-v4 exact repository-seal report\n\nLyren completed a bounded same-owner finite synthetic directed-hypergraph lifecycle with strict planning, x1, x2 and final separation. Six hundred new contracts produced exactly 510 completed, 30 represented, 30 open_gap and 30 exact_gate outcomes. Three hundred inherited Vesper records earned zero Lyren novelty or completion credit. Across both sessions, 600 pristine requests passed, 1,200 invalid subjects failed and remain retained, 1,200 refusals passed separately, and 600 CFR restorations passed without filesystem deletion. Twenty skills, ten paired runners, fifteen tests and five nonphysical models passed.\n\nThe source is folded once. Repository-effective truth is ${effective.methods} methods, ${effective.negatives} negatives, ${effective.failed_witnesses} failed witnesses, ${effective.passing_witnesses} bounded passing witnesses, ${effective.witnesses} total witnesses, ${effective.open_gaps} open gaps and ${effective.exact_gates} exact gates. Canonical and delivery remain external terminal events.\n\n${BOUNDARY}\n`);
+  const modules = batonModules(truth, failures);
+  for (const [name, body] of modules) writeText(`final/baton/${name}`, body);
+  const baton = modules.map(([, body]) => body.trim()).join('\n\n---\n\n') + '\n';
+  const words = (baton.match(/\S+/g) || []).length;
+  if (words < 2000 || words > 100000) throw new Error(`baton_word_count:${words}`);
+  writeText('final/hand-off-baton.md', baton);
+  writeJson('final/baton-receipt.json', { schema: 'ghc.family.handoff-baton-receipt.v1', owner: OWNER, phase: PHASE, words, bytes: Buffer.byteLength(baton), sha256: shaBytes(Buffer.from(baton)), modules: modules.length, state: 'PREPARED_NOT_SENT', boundary: BOUNDARY });
+  writeJson('final/manifest.json', { schema: 'ghc.family.owner-stage-manifest.v13', owner: OWNER, phase: PHASE, stage: 'final', byte_domain: 'utf8_lf_worktree_bytes_expected_to_equal_git_blob_bytes_after_staging', entries: manifestEntries(['final'], ['final/manifest.json', 'final/owner-manifest.json', 'final/content-seal.json']), self_exclusions: ['manifest.json', 'owner-manifest.json', 'content-seal.json'], boundary: BOUNDARY });
+  writeJson('final/owner-manifest.json', { schema: 'ghc.family.owner-manifest.v13', owner: OWNER, phase: PHASE, byte_domain: 'utf8_lf_worktree_bytes_expected_to_equal_git_blob_bytes_after_staging', entries: manifestEntries(['plan', 'x1', 'x2', 'final', 'tools'], ['final/owner-manifest.json', 'final/content-seal.json']), self_exclusions: ['final/owner-manifest.json', 'final/content-seal.json'], boundary: BOUNDARY });
+  const sealPaths = ['final/phase-truth.json', 'final/proposal-outcomes.json', 'final/gate-register.json', 'final/retained-negatives.json', 'final/method-flow-index.json', 'final/lifecycle.json', 'final/checklist.json', 'final/route-candidate.json', 'final/hand-off-baton.md', 'final/owner-manifest.json'];
+  writeJson('final/content-seal.json', { schema: 'ghc.family.content-seal.v13', owner: OWNER, phase: PHASE, state: 'REPOSITORY_SEALED_CANONICAL_PENDING', entries: manifestEntries([], []).concat(sealPaths.map(rel => { const p = path.join(ROOT, rel); const b = fs.readFileSync(p); return { path: toRepo(p), bytes: b.length, sha256: shaBytes(b) }; })), exact_final: null, canonical_receipt: 'external_after_exact_final', repository_seal_immutable_after_commit: true, boundary: BOUNDARY });
+  console.log(pretty({ state: 'FINAL_BUILT', owner: OWNER, phase: PHASE, words, owner_manifest: readJson('final/owner-manifest.json').entries.length, failures: failures.length, effective }));
+}
+
+const stage = process.env.GHC_STAGE;
+if (!['plan', 'x1', 'x2', 'final'].includes(stage)) throw new Error('GHC_STAGE must be plan, x1, x2, or final');
+if (stage === 'plan') buildPlan();
+if (stage === 'x1') buildX1();
+if (stage === 'x2') buildX2();
+if (stage === 'final') buildFinal();

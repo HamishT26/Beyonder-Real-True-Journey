@@ -1,0 +1,244 @@
+'use strict';
+
+const fs = require('fs');
+const path = require('path');
+const crypto = require('crypto');
+const cp = require('child_process');
+
+const OWNER = 'Lyren Moss';
+const PHASE = 'v698-v4';
+const BRANCH = 'codex/GHC-Family/lyren-moss-main-2';
+const PHASE_PREFIX = 'docs/lyren-moss/v698-v4/';
+const ROOT = path.resolve(__dirname, '../../../..');
+const BOUNDARY = 'Bounded exact-final owner-scoped metadata validation under shared infrastructure. It executes no domain engine, test, model, runner, smoke or installer and is not a full-repository suite, external audit, independent reproduction, empirical confirmation, professional certification, complete privacy/accessibility assurance, exhaustive security, authority act, Theory-of-Everything proof, canon or Stage 20 proof. NOT_READY_FOR_STAGE_20.';
+
+function git(args, encoding = 'utf8') {
+  const r = cp.spawnSync('git', args, { cwd: ROOT, encoding, maxBuffer: 128 * 1024 * 1024 });
+  if (r.status !== 0) throw new Error(`git ${args.join(' ')} failed: ${(r.stderr || '').toString().trim()}`);
+  return encoding === null ? r.stdout : r.stdout.trim();
+}
+function sha(bytes) { return crypto.createHash('sha256').update(bytes).digest('hex'); }
+function stable(v) {
+  if (Array.isArray(v)) return v.map(stable);
+  if (v && typeof v === 'object') return Object.fromEntries(Object.keys(v).sort().map(k => [k, stable(v[k])]));
+  return v;
+}
+function stableText(v) { return JSON.stringify(stable(v)); }
+function words(text) { return (text.match(/\S+/g) || []).length; }
+function exactKeys(obj, keys) { const a = Object.keys(obj || {}).sort(), b = [...keys].sort(); return a.length === b.length && a.every((x, i) => x === b[i]); }
+
+function batchBlobs(head, specs) {
+  const input = specs.map(p => `${head}:${p}\n`).join('');
+  const out = git(['cat-file', '--batch'], null, input);
+  let offset = 0; const result = new Map();
+  for (const spec of specs) {
+    const nl = out.indexOf(10, offset); if (nl < 0) throw new Error(`batch_header_missing:${spec}`);
+    const header = out.subarray(offset, nl).toString('utf8'); offset = nl + 1;
+    const parts = header.split(' '); if (parts[1] === 'missing') throw new Error(`blob_missing:${spec}`);
+    const size = Number(parts[2]); if (!Number.isInteger(size)) throw new Error(`blob_size:${spec}`);
+    const bytes = out.subarray(offset, offset + size); offset += size;
+    if (out[offset] !== 10) throw new Error(`blob_separator:${spec}`); offset += 1;
+    result.set(spec, bytes);
+  }
+  return result;
+}
+
+function batchBlobInput(head, specs) {
+  const input = specs.map(p => `${head}:${p}\n`).join('');
+  const r = cp.spawnSync('git', ['cat-file', '--batch'], { cwd: ROOT, input, encoding: null, maxBuffer: 128 * 1024 * 1024 });
+  if (r.status !== 0) throw new Error(`git cat-file batch failed: ${(r.stderr || '').toString().trim()}`);
+  let offset = 0; const result = new Map();
+  for (const spec of specs) {
+    const nl = r.stdout.indexOf(10, offset); if (nl < 0) throw new Error(`batch_header_missing:${spec}`);
+    const header = r.stdout.subarray(offset, nl).toString('utf8'); offset = nl + 1;
+    const parts = header.split(' '); if (parts[1] === 'missing') throw new Error(`blob_missing:${spec}`);
+    const size = Number(parts[2]); if (!Number.isInteger(size)) throw new Error(`blob_size:${spec}`);
+    const bytes = r.stdout.subarray(offset, offset + size); offset += size;
+    if (r.stdout[offset] !== 10) throw new Error(`blob_separator:${spec}`); offset += 1;
+    result.set(spec, bytes);
+  }
+  return result;
+}
+
+function verifyEntries(head, entries) {
+  const unique = [...new Set(entries.map(e => e.path))];
+  const blobs = batchBlobInput(head, unique);
+  const failures = [];
+  for (const e of entries) {
+    const b = blobs.get(e.path);
+    if (!b || b.length !== e.bytes || sha(b) !== e.sha256) failures.push({ path: e.path, expected_bytes: e.bytes, actual_bytes: b ? b.length : null, expected_sha256: e.sha256, actual_sha256: b ? sha(b) : null });
+  }
+  return { checked: entries.length, unique: unique.length, failures };
+}
+
+function privacyScan(files) {
+  const patterns = [
+    ['email', /[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}/ig],
+    ['ipv4', /\b(?:\d{1,3}\.){3}\d{1,3}\b/g],
+    ['credential_assignment', /\b(?:api[_-]?key|token|password|secret)\s*[:=]\s*['\"][^'\"]+/ig],
+    ['private_absolute_path', new RegExp('[A-Za-z]' + ':' + '[\\\\/]' + '(?:Users|GHC-Archives)', 'g')],
+    ['raw_task_identifier', /\b[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\b/ig]
+  ];
+  const hits = [];
+  for (const [p, bytes] of files) {
+    const text = bytes.toString('utf8');
+    for (const [kind, re] of patterns) { re.lastIndex = 0; if (re.test(text)) hits.push({ path: p, kind }); }
+  }
+  return { classes: patterns.map(x => x[0]), confirmed_hits: hits.length, hits };
+}
+
+function preflight() {
+  const head = git(['rev-parse', 'HEAD']);
+  const self = `${PHASE_PREFIX}tools/ghc_family_hypergraph_canonical.txt`;
+  const blob = batchBlobInput(head, [self]).get(self);
+  const fixture = Buffer.from('{"a":1}\n');
+  const entriesPass = verifyFixture([{ path: 'fixture.json', bytes: fixture.length, sha256: sha(fixture) }], new Map([['fixture.json', fixture]])).length === 0;
+  const entriesFail = verifyFixture([{ path: 'fixture.json', bytes: fixture.length + 1, sha256: sha(fixture) }], new Map([['fixture.json', fixture]])).length === 1;
+  const checks = [
+    { id: 'PF-01', claim: 'current canonical source is committed', pass: !!blob && blob.length > 100 },
+    { id: 'PF-02', claim: 'stable JSON ordering is deterministic', pass: stableText({ b: 2, a: 1 }) === '{"a":1,"b":2}' },
+    { id: 'PF-03', claim: 'valid manifest fixture passes', pass: entriesPass },
+    { id: 'PF-04', claim: 'byte mutation fixture fails', pass: entriesFail },
+    { id: 'PF-05', claim: 'privacy fixture detects an email', pass: privacyScan(new Map([['fixture.txt', Buffer.from('sample@example.invalid')]])).confirmed_hits === 1 },
+    { id: 'PF-06', claim: 'clean privacy fixture stays clear', pass: privacyScan(new Map([['fixture.txt', Buffer.from('synthetic bounded record')]])).confirmed_hits === 0 }
+  ];
+  if (checks.some(c => !c.pass)) throw new Error(`preflight_failed:${checks.filter(c => !c.pass).map(c => c.id).join(',')}`);
+  process.stdout.write(`${JSON.stringify({ state: 'VALID_CANONICAL_PREFLIGHT_FIXTURE_ONLY', owner: OWNER, phase: PHASE, exact_final_validation: false, checks, passed: checks.length, total: checks.length, writes: 0, boundary: BOUNDARY }, null, 2)}\n`);
+}
+
+function verifyFixture(entries, blobs) {
+  const failures = [];
+  for (const e of entries) { const b = blobs.get(e.path); if (!b || b.length !== e.bytes || sha(b) !== e.sha256) failures.push(e.path); }
+  return failures;
+}
+
+function canonical() {
+  const expectedFinal = process.env.LYREN_EXACT_FINAL;
+  const planHead = process.env.LYREN_PLAN_HEAD;
+  const x1Head = process.env.LYREN_X1_HEAD;
+  const x2Head = process.env.LYREN_X2_HEAD;
+  const receiptDir = process.env.LYREN_RECEIPT_DIR;
+  if (![expectedFinal, planHead, x1Head, x2Head, receiptDir].every(Boolean)) throw new Error('missing canonical environment');
+  fs.mkdirSync(receiptDir, { recursive: true });
+  const latchPath = path.join(receiptDir, 'canonical-invocation-latch.json');
+  const latch = { schema: 'ghc.family.canonical-invocation-latch.v1', owner: OWNER, phase: PHASE, exact_final: expectedFinal, invocations: 1, successful_invocations: 0, replays: 0, metadata_only: true, executable_components: 0, utc: new Date().toISOString() };
+  fs.writeFileSync(latchPath, `${JSON.stringify(latch, null, 2)}\n`, { encoding: 'utf8', flag: 'wx' });
+  const checks = [];
+  const check = (id, claim, actual, expected = true) => checks.push({ id, claim, actual, expected, pass: stableText(actual) === stableText(expected) });
+  try {
+    const head = git(['rev-parse', 'HEAD']);
+    const branch = git(['branch', '--show-current']);
+    const status = git(['status', '--porcelain=v1']);
+    const upstream = git(['rev-parse', '@{upstream}']);
+    const divergence = git(['rev-list', '--left-right', '--count', 'HEAD...@{upstream}']).split(/\s+/).map(Number);
+    const remote = git(['config', '--get', `branch.${branch}.remote`]) || 'origin';
+    const mergeRef = git(['config', '--get', `branch.${branch}.merge`]);
+    const liveLines = git(['ls-remote', remote, mergeRef]).split(/\r?\n/).filter(Boolean);
+    const live = liveLines.length === 1 ? liveLines[0].split(/\s+/)[0] : null;
+    const parent = git(['rev-parse', 'HEAD^']);
+    const phaseFiles = git(['ls-tree', '-r', '--name-only', head, '--', PHASE_PREFIX]).split(/\r?\n/).filter(Boolean);
+    const phaseCommits = Number(git(['rev-list', '--count', `${planHead}..${head}`]));
+    const merges = Number(git(['rev-list', '--count', '--merges', `${planHead}..${head}`]));
+    const tracked = Number(git(['ls-files']).split(/\r?\n/).filter(Boolean).length);
+    const materialized = countMaterialized(ROOT);
+    const phaseBlobs = batchBlobInput(head, phaseFiles);
+    const jsonPaths = phaseFiles.filter(p => p.endsWith('.json'));
+    const parsed = new Map(); const jsonErrors = [];
+    for (const p of jsonPaths) { try { parsed.set(p, JSON.parse(phaseBlobs.get(p).toString('utf8'))); } catch (e) { jsonErrors.push({ path: p, error: e.message }); } }
+    const ownerManifestPath = `${PHASE_PREFIX}final/owner-manifest.json`;
+    const finalManifestPath = `${PHASE_PREFIX}final/manifest.json`;
+    const sealPath = `${PHASE_PREFIX}final/content-seal.json`;
+    const ownerManifest = parsed.get(ownerManifestPath), finalManifest = parsed.get(finalManifestPath), seal = parsed.get(sealPath);
+    const ownerReplay = verifyEntries(head, ownerManifest.entries);
+    const finalReplay = verifyEntries(head, finalManifest.entries);
+    const sealReplay = verifyEntries(head, seal.entries);
+    const phaseTruth = parsed.get(`${PHASE_PREFIX}final/phase-truth.json`);
+    const outcomes = parsed.get(`${PHASE_PREFIX}final/proposal-outcomes.json`);
+    const gates = parsed.get(`${PHASE_PREFIX}final/gate-register.json`);
+    const negatives = parsed.get(`${PHASE_PREFIX}final/retained-negatives.json`);
+    const methods = parsed.get(`${PHASE_PREFIX}final/method-flow-index.json`);
+    const checklist = parsed.get(`${PHASE_PREFIX}final/checklist.json`);
+    const route = parsed.get(`${PHASE_PREFIX}final/route-candidate.json`);
+    const policy = parsed.get(`${PHASE_PREFIX}final/canonical-policy.json`);
+    const baton = phaseBlobs.get(`${PHASE_PREFIX}final/hand-off-baton.md`).toString('utf8');
+    const privacy = privacyScan(phaseBlobs);
+    const forbidden = phaseFiles.filter(p => !['.json', '.md', '.txt', '.html'].includes(path.extname(p).toLowerCase()));
+    check('C01', 'exact final head', head, expectedFinal);
+    check('C02', 'exact owner branch', branch, BRANCH);
+    check('C03', 'clean worktree', status, '');
+    check('C04', 'upstream equality', upstream, expectedFinal);
+    check('C05', 'typed divergence', divergence, [0, 0]);
+    check('C06', 'fresh live remote equality', live, expectedFinal);
+    check('C07', 'fresh live remote unique row', liveLines.length, 1);
+    check('C08', 'final direct parent is x2', parent, x2Head);
+    check('C09', 'three commits after planning', phaseCommits, 3);
+    check('C10', 'zero merges after planning', merges, 0);
+    check('C11', 'x1 descends from planning', git(['merge-base', '--is-ancestor', planHead, x1Head]) === '', true);
+    check('C12', 'x2 descends from x1', git(['merge-base', '--is-ancestor', x1Head, x2Head]) === '', true);
+    check('C13', 'final descends from x2', git(['merge-base', '--is-ancestor', x2Head, head]) === '', true);
+    check('C14', 'allowed owner file types', forbidden, []);
+    check('C15', 'tracked ceiling', tracked < 2000, true);
+    check('C16', 'materialized ceiling', materialized < 2000, true);
+    check('C17', 'strict JSON parsing', jsonErrors, []);
+    check('C18', 'owner manifest replay', ownerReplay.failures, []);
+    check('C19', 'final manifest replay', finalReplay.failures, []);
+    check('C20', 'content seal replay', sealReplay.failures, []);
+    check('C21', 'owner manifest nonempty', ownerReplay.checked > 100, true);
+    check('C22', 'proposal count', outcomes.count, 600);
+    check('C23', 'completed outcomes', outcomes.counts.completed, 510);
+    check('C24', 'represented outcomes', outcomes.counts.represented, 30);
+    check('C25', 'open-gap outcomes', outcomes.counts.open_gap, 30);
+    check('C26', 'exact-gate outcomes', outcomes.counts.exact_gate, 30);
+    check('C27', 'four labels only', outcomes.unknown_labels, 0);
+    check('C28', 'open gate register count', gates.open_gaps.length, 30);
+    check('C29', 'exact gate register count', gates.exact_gates.length, 30);
+    check('C30', 'own retained negatives', negatives.own_count, phaseTruth.own.negatives);
+    check('C31', 'effective retained negatives', negatives.effective_count, phaseTruth.effective.negatives);
+    check('C32', 'method flow own count', methods.own_methods, 34);
+    check('C33', 'baton minimum words', words(baton) >= 2000, true);
+    check('C34', 'baton maximum words', words(baton) <= 100000, true);
+    check('C35', 'five-class privacy scan clear', privacy.confirmed_hits, 0);
+    check('C36', 'terminal checklist repository preconditions', checklist.all_repository_preconditions_pass, true);
+    check('C37', 'canonical was pending at seal', policy.state, 'PREPARED_NOT_INVOKED');
+    check('C38', 'route remains prepared not sent', route.state, 'PREPARED_NOT_SENT');
+    check('C39', 'terminal verdict protected', phaseTruth.terminal_verdict, 'NOT_READY_FOR_STAGE_20');
+    check('C40', 'no external credit in proposal records', outcomes.records.every(r => r.external_credit === false), true);
+    const failed = checks.filter(c => !c.pass);
+    if (failed.length) throw new Error(`canonical_checks_failed:${failed.map(c => c.id).join(',')}`);
+    const minimal = [
+      ['M01', head === expectedFinal], ['M02', status === ''], ['M03', upstream === head], ['M04', live === head], ['M05', divergence[0] === 0 && divergence[1] === 0],
+      ['M06', parent === x2Head], ['M07', phaseCommits === 3], ['M08', merges === 0], ['M09', jsonErrors.length === 0], ['M10', ownerReplay.failures.length === 0],
+      ['M11', sealReplay.failures.length === 0], ['M12', outcomes.count === 600], ['M13', privacy.confirmed_hits === 0], ['M14', route.state === 'PREPARED_NOT_SENT'], ['M15', phaseTruth.terminal_verdict === 'NOT_READY_FOR_STAGE_20']
+    ].map(([id, pass]) => ({ id, pass }));
+    const payload = { schema: 'ghc.family.exact-final-owner-scoped-metadata-canonical.v1', utc: new Date().toISOString(), owner: OWNER, phase: PHASE, exact_final: head, status: 'VALID_EXACT_FINAL_OWNER_SCOPED_METADATA_CANONICAL', metadata_only: true, checks, passed: checks.length, total: checks.length, minimal, minimal_passed: minimal.filter(x => x.pass).length, minimal_total: minimal.length, owner_files: phaseFiles.length, tracked_files: tracked, materialized_files: materialized, json_documents: jsonPaths.length, manifest_entries: ownerReplay.checked + finalReplay.checked + sealReplay.checked, maximum_words: words(baton), privacy, invocations: 1, successful_invocations: 1, replays: 0, executable_components: 0, full_repository_suite: false, independent_reproduction: false, boundary: BOUNDARY };
+    const payloadText = `${JSON.stringify(payload, null, 2)}\n`;
+    const payloadPath = path.join(receiptDir, 'canonical-payload.json'); fs.writeFileSync(payloadPath, payloadText, 'utf8');
+    const receipt = { schema: 'ghc.family.canonical-receipt.v1', owner: OWNER, phase: PHASE, exact_final: head, status: payload.status, passed: payload.passed, total: payload.total, minimal_passed: payload.minimal_passed, minimal_total: payload.minimal_total, metadata_only: true, invocations: 1, successful_invocations: 1, replays: 0, canonical_payload_sha256: sha(Buffer.from(payloadText)), canonical_payload_bytes: Buffer.byteLength(payloadText), owner_files: phaseFiles.length, json_documents: jsonPaths.length, manifest_entries: payload.manifest_entries, terminal_verdict: 'NOT_READY_FOR_STAGE_20' };
+    const receiptText = `${JSON.stringify(receipt, null, 2)}\n`; fs.writeFileSync(path.join(receiptDir, 'canonical-receipt.json'), receiptText, 'utf8');
+    latch.successful_invocations = 1; latch.status = payload.status; fs.writeFileSync(latchPath, `${JSON.stringify(latch, null, 2)}\n`, 'utf8');
+    process.stdout.write(`${JSON.stringify({ ...receipt, canonical_receipt_sha256: sha(Buffer.from(receiptText)) }, null, 2)}\n`);
+  } catch (error) {
+    const failure = { schema: 'ghc.family.canonical-failure-receipt.v1', owner: OWNER, phase: PHASE, exact_final: expectedFinal, status: 'INVALID_ZERO_SUCCESS_CREDIT', error: error.message, invocations: 1, successful_invocations: 0, replays: 0, metadata_only: true, executable_components: 0, utc: new Date().toISOString() };
+    fs.writeFileSync(path.join(receiptDir, 'canonical-failure.json'), `${JSON.stringify(failure, null, 2)}\n`, 'utf8');
+    throw error;
+  }
+}
+
+function countMaterialized(root) {
+  let count = 0;
+  const stack = [root];
+  while (stack.length) {
+    const dir = stack.pop();
+    for (const e of fs.readdirSync(dir, { withFileTypes: true })) {
+      if (e.name === '.git') continue;
+      const p = path.join(dir, e.name);
+      if (e.isDirectory()) stack.push(p); else count++;
+    }
+  }
+  return count;
+}
+
+const mode = process.env.GHC_CANONICAL_MODE;
+if (mode === 'preflight') preflight();
+else if (mode === 'canonical') canonical();
+else throw new Error('GHC_CANONICAL_MODE must be preflight or canonical');

@@ -1,0 +1,11 @@
+# Lyren Moss v698-v4 planning freeze
+
+Lyren's relational role is **finite-structure provenance auditor**. Their working hope is to make every reachability and cut claim reconstructible without mistaking a graph abstraction for the world. This language is relational only.
+
+The phase defines twenty finite synthetic directed-hypergraph operations over thirty deterministic profiles, producing 600 genuinely new owner contracts. The first ten operations belong to x1 and the second ten to x2. No x1 or x2 execution exists at this planning checkpoint. Three hundred Vesper records are selected only as source evidence and revalidation seeds with zero Lyren novelty and zero Lyren completion credit.
+
+Planning fixes all-tail reachability, weak-incidence components, vertex cut-candidate semantics, exact request closure, two retained invalid-subject classes per proposal, separate passing refusal witnesses, and reversible in-memory CFR restoration with no filesystem deletion. The last three operations remain represented, open-gap, and exact-gate outcomes rather than being promoted to completion.
+
+The source branch is read-only content provenance, not this branch's Git parent. Vesper's exact-final canonical success is verified by its external receipt and is not replayed. Source metadata inconsistencies remain recorded without rewriting sealed history.
+
+Same-owner finite synthetic directed-hypergraph evidence only. Relational names, roles, hopes, pronouns, family language, Freed ID, CBR, GHC Family and Trinity Mandala are working language only and establish no consciousness, sentience, personhood, continuity, employment, qualification, independent agency or authority. No real people, systems, sensors, measurements, identities, credentials, keys, deployments, legal or cultural determinations, affected-party approvals or Maori-authority acts are used. Maori concepts remain under Maori authority. GMUT is not empirically confirmed or a Theory-of-Everything proof; THOS is not production certified; Freed ID is not a live identity or governance authority. Privacy-complete, accessibility-complete, exhaustive-security, independent-reproduction, AGI/ASI, canon and Stage 20 gates remain protected. NOT_READY_FOR_STAGE_20.
