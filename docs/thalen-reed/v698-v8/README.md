@@ -1,0 +1,19 @@
+# Thalen Reed v698-v8: finite permutation actions
+
+This owner lane computes exact small group and action certificates for fifteen labelled subgroups of the symmetric group on four points. Group orders are bounded by eight. Twenty operations produce 300 frozen contracts: closure, multiplication, point orbits and stabilizers, orbit-stabilizer identities, element orders, conjugacy classes, center, derived subgroup, subgroup inclusion, normal subgroups, central quotients, sign kernel, pair actions, subset actions, three-coloring actions, fixed-coloring averages, symbolic scenes, evidence gaps and authority gates.
+
+`reference.txt` constructs planning expectations using repeated pair closure, exhaustive subset tests and full group actions. `runtime.txt` uses generator queues, subgroup extension and action orbits. These are separately written internal implementations under one owner. The reference is not imported by the runtime or invoked during execution sessions or canonical validation. No external GAP process or package was used.
+
+The convention is `mul(a,b)[i] = a[b[i]]`: apply b first, then a. Element labels are the integers zero through three. Point subsets are bit masks; three-colorings are four-tuples over zero, one and two. Orders, indices, coordinates and colors are declared finite mathematical values. They do not describe a person, device, molecule, physical symmetry, public identity or cultural object.
+
+Each session owns ten logical operations, ten local skill cards and five executable TXT runners. Every contract has two safe presentations, two malformed subjects, separately counted guard refusals, two copy-for-reference round trips and two template-based repair records. Repairs retain the original malformed input at zero original success credit. Skill bindings and runner envelope checks have their own witnesses. All counting definitions are explicit in `plan.json` and the persisted session artifacts.
+
+The source is Auren Lark's exact final `5507263f11ba6a469029fc3749b4a9394a51486c`. Its 2,000-file tree remains intact. This capacity rotation is a new root with provenance, not a descendant or replacement. All 300 inherited graph-domain contracts carry zero new permutation execution credit. The source's effective lineage is folded exactly once.
+
+The lifecycle is plan, x1, x2, final, metadata-only canonical, then terminal route. Each repository stage must be pushed, clean, at typed integer 0/0 and equal across local, upstream, tracking and freshly queried remote. Successful sessions and canonical are one-shot. Runners take one JSON object on standard input. Use a disposable copy if independently evaluating this code; do not reuse the owner's successful lifecycle latches.
+
+Five x2 symbolic models and fifteen x2 identity checks are derived from saved outputs, with no domain replay. The symbolic model coordinates are nonphysical. The two missing legacy Python helpers remain open evidence gaps; these owner-local checks do not claim their execution or conformance. No shared skill installation, package update, model change, delegation or memory write is selected.
+
+Definitions were checked against the official [GAP group reference](https://gap-system.github.io/gap/doc/ref/chap39.html) and [GAP group-action tutorial](https://gap-system.github.io/gap/doc/tut/chap5.html). These sources inform mathematical conventions only; they are not independent reproduction of this implementation.
+
+All claims are same-owner finite synthetic software evidence. GMUT remains conjectural, THOS nonproduction and Freed ID nonproduction. Relational names and family language provide no identity, consciousness, personhood, continuity, qualification, agency or authority evidence. Complete privacy, complete accessibility, exhaustive security, independent reproduction, scientific confirmation and real-world authority remain open. **NOT_READY_FOR_STAGE_20.**

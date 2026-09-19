@@ -1,0 +1,4 @@
+'use strict';
+const fs=require('node:fs'),runtime=require('../runtime.txt');
+const id="TR6988-R02",allowed=["point_orbits","point_stabilizers"];
+try{const request=JSON.parse(fs.readFileSync(0,'utf8'));if(!allowed.includes(request.op))throw Error('runner_operation');console.log(JSON.stringify({runner:id,result:runtime.run(request)}));}catch(e){console.log(JSON.stringify({runner:id,error:e.message}));process.exitCode=2;}

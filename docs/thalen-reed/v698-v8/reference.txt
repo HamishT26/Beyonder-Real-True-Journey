@@ -1,0 +1,42 @@
+'use strict';
+// Planning oracle: exhaustive membership and full-action enumeration.
+// Independently written internal algorithm, still same-owner evidence.
+// It never imports runtime.txt. It is not invoked by x1, x2, or canonical.
+const id=[0,1,2,3],encode=JSON.stringify;
+const ordered=a=>a.slice().sort((x,y)=>encode(x).localeCompare(encode(y),'en'));
+function compose(a,b){const c=[];for(let i=0;i<4;i++)c.push(a[b[i]]);return c;}
+function generate(gens){let elements=[id,...gens],again=true;while(again){const m=new Map(elements.map(x=>[encode(x),x]));for(const a of elements)for(const b of elements){const c=compose(a,b);m.set(encode(c),c);}again=m.size!==new Set(elements.map(encode)).size;elements=[...m.values()];}return ordered(elements);}
+function evaluate(request){const G=generate(request.generators),N=G.length,loc=p=>G.findIndex(x=>encode(x)===encode(p)),T=G.map(a=>G.map(b=>loc(compose(a,b)))),e=loc(id),inverse=G.map((_,i)=>T[i].findIndex(x=>x===e));
+ const subsets=[];for(let m=1;m<2**N;m++){const H=G.map((_,i)=>i).filter(i=>m>>i&1);if(H.includes(e)&&H.every(i=>H.every(j=>H.includes(T[i][j]))))subsets.push(H);}const subgroupArrays=ordered(subsets.map(H=>ordered(H.map(i=>G[i]))));
+ const normal=H=>G.every((_,g)=>H.every(h=>H.includes(T[T[g][h]][inverse[g]])));
+ const normals=subsets.filter(normal),Z=G.map((_,i)=>i).filter(i=>G.every((_,j)=>T[i][j]===T[j][i]));
+ function partition(domain,action){const taken=new Set(),out=[];for(const x of domain)if(!taken.has(encode(x))){const map=new Map(G.map(g=>{const y=action(g,x);return [encode(y),y];}));for(const k of map.keys())taken.add(k);out.push(ordered([...map.values()]));}return ordered(out);}
+ const points=[0,1,2,3],orbits=()=>partition(points,(g,x)=>g[x]);let data;
+ const colorList=[];for(let a=0;a<3;a++)for(let b=0;b<3;b++)for(let c=0;c<3;c++)for(let d=0;d<3;d++)colorList.push([a,b,c,d]);
+ const paint=(g,c)=>{const out=[];for(let i=0;i<4;i++)out[g[i]]=c[i];return out;};
+ switch(request.op){
+ case 'closure':data=G;break;
+ case 'multiplication':data={elements:G,table:T,inverses:inverse};break;
+ case 'point_orbits':data=orbits();break;
+ case 'point_stabilizers':data=points.map(x=>G.filter(g=>g[x]===x));break;
+ case 'orbit_stabilizer':data=points.map(x=>({point:x,orbit_size:orbits().find(O=>O.includes(x)).length,stabilizer_size:G.reduce((s,g)=>s+Number(g[x]===x),0),group_order:N}));break;
+ case 'element_orders':data=G.map((g,i)=>{let power=i,order=1;while(power!==e){power=T[power][i];order++;}return {element:g,order};});break;
+ case 'conjugacy_classes':data=partition(G,(g,h)=>G[T[T[loc(g)][loc(h)]][inverse[loc(g)]]]);break;
+ case 'center':data=ordered(partition(G,(g,h)=>G[T[T[loc(g)][loc(h)]][inverse[loc(g)]]]).filter(c=>c.length===1).flat());break;
+ case 'derived_subgroup':{const candidates=normals.filter(H=>G.every((_,a)=>G.every((_,b)=>H.includes(T[T[T[inverse[a]][inverse[b]]][a]][b]))));data=ordered(G.filter((_,i)=>candidates.every(H=>H.includes(i))));break;}
+ case 'subgroup_lattice':{const H=subgroupArrays,strict=[];for(let i=0;i<H.length;i++)for(let j=0;j<H.length;j++)if(H[i].length<H[j].length&&H[i].every(x=>H[j].some(y=>encode(x)===encode(y))))strict.push([i,j]);data={subgroups:H,strict_inclusions:strict};break;}
+ case 'normal_subgroups':data=ordered(normals.map(H=>ordered(H.map(i=>G[i]))));break;
+ case 'central_quotient':{const C=partition(G,(g,h)=>{return h;});void C;const cosetMap=new Map();for(let g=0;g<N;g++){const c=ordered(Z.map(z=>G[T[g][z]]));cosetMap.set(encode(c),c);}const cosets=ordered([...cosetMap.values()]);data={center:Z.map(i=>G[i]),cosets,table:cosets.map(a=>cosets.map(b=>{const product=G[T[loc(a[0])][loc(b[0])]];return cosets.findIndex(c=>c.some(x=>encode(x)===encode(product)));}))};break;}
+ case 'sign_kernel':{const signs=G.map(g=>{const visited=new Set();let cycles=0;for(const i of points)if(!visited.has(i)){cycles++;let j=i;do{visited.add(j);j=g[j];}while(j!==i);}return {element:g,sign:(4-cycles)%2?-1:1};});data={signs,kernel:signs.filter(s=>s.sign===1).map(s=>s.element)};break;}
+ case 'pair_orbits':data=partition(points.flatMap(i=>points.map(j=>[i,j])),(g,p)=>[g[p[0]],g[p[1]]]);break;
+ case 'subset_orbits':data=partition(Array.from({length:16},(_,i)=>i),(g,m)=>{let n=0;for(let i=0;i<4;i++)if(m&2**i)n|=2**g[i];return n;});break;
+ case 'color_orbits':data=partition(colorList,paint);break;
+ case 'burnside':{const fixed=G.map(g=>{let cycles=0;const seen=new Set();for(const i of points)if(!seen.has(i)){cycles++;let j=i;do{seen.add(j);j=g[j];}while(j!==i);}return 3**cycles;}),sum=fixed.reduce((s,x)=>s+x,0);data={elements:G,fixed_counts:fixed,sum,group_order:N,orbit_count:partition(colorList,paint).length};break;}
+ case 'scene':data={group_order:N,points:points.map(i=>({label:i,xyz:[i%2,Math.floor(i/2),0]})),symbolic_edges:request.generators.flatMap((g,j)=>points.map(i=>({generator:j,from:i,to:g[i]}))),physical_measurement:false};break;
+ case 'external_gap':data={group_order:N,point_orbits:orbits(),missing:['independent_implementation','external_empirical_evidence'],external_credit:0};break;
+ case 'authority_gate':data={group_order:N,generator_count:request.generators.length,gate:'No physical, identity, participant or public-authority action authorized',authority_credit:0};break;
+ default:throw Error('Unknown oracle operation');
+ }
+ return {outcome:request.op==='scene'?'represented':request.op==='external_gap'?'open_gap':request.op==='authority_gate'?'exact_gate':'completed',data};
+}
+module.exports={evaluate,generate};

@@ -1,0 +1,49 @@
+'use strict';
+// Degree-four finite permutations. Composition mul(a,b) means a after b.
+// This module has no filesystem, network, process, identity, or authority effects.
+const OPS=['closure','multiplication','point_orbits','point_stabilizers','orbit_stabilizer','element_orders','conjugacy_classes','center','derived_subgroup','subgroup_lattice','normal_subgroups','central_quotient','sign_kernel','pair_orbits','subset_orbits','color_orbits','burnside','scene','external_gap','authority_gate'];
+const E=[0,1,2,3],key=x=>JSON.stringify(x),cmp=(a,b)=>key(a).localeCompare(key(b),'en'),sort=xs=>xs.slice().sort(cmp),unique=xs=>sort([...new Map(xs.map(x=>[key(x),x])).values()]);
+const mul=(a,b)=>b.map(x=>a[x]),inv=p=>E.map(x=>p.indexOf(x));
+function closure(gens){const seen=new Map([[key(E),E]]),queue=[E];for(let i=0;i<queue.length;i++)for(const g of gens){const p=mul(g,queue[i]),k=key(p);if(!seen.has(k)){seen.set(k,p);queue.push(p);}}return sort(queue);}
+function validate(r){
+ if(!r||typeof r!=='object'||Array.isArray(r)||key(Object.keys(r).sort())!==key(['degree','generators','op']))throw Error('field_set');
+ if(!OPS.includes(r.op))throw Error('operation');
+ if(r.degree!==4)throw Error('degree');
+ if(!Array.isArray(r.generators)||r.generators.length>4)throw Error('generator_count');
+ for(const p of r.generators)if(!Array.isArray(p)||p.length!==4||p.some(x=>!Number.isInteger(x)||x<0||x>3)||new Set(p).size!==4)throw Error('permutation');
+ const G=closure(r.generators);if(G.length>8)throw Error('group_order_bound');return G;
+}
+function parts(domain,gens,action){const remaining=new Map(domain.map(x=>[key(x),x])),out=[];while(remaining.size){const seed=remaining.values().next().value,seen=new Map([[key(seed),seed]]),queue=[seed];for(let i=0;i<queue.length;i++)for(const g of gens){const y=action(g,queue[i]),k=key(y);if(!seen.has(k)){seen.set(k,y);queue.push(y);}}for(const k of seen.keys())remaining.delete(k);out.push(sort(queue));}return sort(out);}
+function subgroups(G){const result=new Map([[key([E]),[E]]]),queue=[[E]];for(let i=0;i<queue.length;i++)for(const p of G){const H=closure([...queue[i],p]),k=key(H);if(!result.has(k)){result.set(k,H);queue.push(H);}}return sort(queue);}
+const conjugate=(g,h)=>mul(mul(g,h),inv(g));
+const isNormal=(G,H)=>{const S=new Set(H.map(key));return G.every(g=>H.every(h=>S.has(key(conjugate(g,h)))));};
+const maskAction=(g,m)=>E.reduce((a,i)=>a+((m>>i&1)?1<<g[i]:0),0);
+function colors(){return Array.from({length:81},(_,n)=>E.map(i=>Math.floor(n/3**i)%3));}
+const colorAction=(g,c)=>E.map(i=>c[g.indexOf(i)]);
+function sign(p){let inversions=0;for(let i=0;i<4;i++)for(let j=i+1;j<4;j++)if(p[i]>p[j])inversions++;return inversions%2?-1:1;}
+function run(r){const G=validate(r),gens=r.generators,orbit=()=>parts(E,gens,(g,x)=>g[x]),stabilizers=()=>E.map(x=>G.filter(g=>g[x]===x)),center=()=>G.filter(g=>G.every(h=>key(mul(g,h))===key(mul(h,g)))),sub=()=>subgroups(G);let data;
+ switch(r.op){
+ case 'closure':data=G;break;
+ case 'multiplication':data={elements:G,table:G.map(a=>G.map(b=>G.findIndex(c=>key(c)===key(mul(a,b))))),inverses:G.map(a=>G.findIndex(c=>key(c)===key(inv(a))))};break;
+ case 'point_orbits':data=orbit();break;
+ case 'point_stabilizers':data=stabilizers();break;
+ case 'orbit_stabilizer':data=E.map(x=>({point:x,orbit_size:new Set(G.map(g=>g[x])).size,stabilizer_size:G.filter(g=>g[x]===x).length,group_order:G.length}));break;
+ case 'element_orders':data=G.map(g=>{let a=E,n=0;do{a=mul(g,a);n++;}while(key(a)!==key(E));return {element:g,order:n};});break;
+ case 'conjugacy_classes':data=parts(G,gens,conjugate);break;
+ case 'center':data=center();break;
+ case 'derived_subgroup':data=closure(G.flatMap(a=>G.map(b=>mul(mul(mul(inv(a),inv(b)),a),b))));break;
+ case 'subgroup_lattice':{const H=sub();data={subgroups:H,strict_inclusions:H.flatMap((a,i)=>H.flatMap((b,j)=>a.length<b.length&&a.every(x=>b.some(y=>key(x)===key(y)))?[[i,j]]:[]))};break;}
+ case 'normal_subgroups':data=sub().filter(H=>isNormal(G,H));break;
+ case 'central_quotient':{const Z=center(),cosets=unique(G.map(g=>sort(Z.map(z=>mul(g,z)))));data={center:Z,cosets,table:cosets.map(a=>cosets.map(b=>cosets.findIndex(c=>c.some(x=>key(x)===key(mul(a[0],b[0]))))))};break;}
+ case 'sign_kernel':data={signs:G.map(g=>({element:g,sign:sign(g)})),kernel:G.filter(g=>sign(g)===1)};break;
+ case 'pair_orbits':data=parts(E.flatMap(i=>E.map(j=>[i,j])),gens,(g,p)=>p.map(x=>g[x]));break;
+ case 'subset_orbits':data=parts(Array.from({length:16},(_,i)=>i),gens,maskAction);break;
+ case 'color_orbits':data=parts(colors(),gens,colorAction);break;
+ case 'burnside':{const C=colors(),fixed=G.map(g=>C.filter(c=>key(colorAction(g,c))===key(c)).length),sum=fixed.reduce((a,b)=>a+b,0);data={elements:G,fixed_counts:fixed,sum,group_order:G.length,orbit_count:sum/G.length};break;}
+ case 'scene':data={group_order:G.length,points:E.map(i=>({label:i,xyz:[i%2,Math.floor(i/2),0]})),symbolic_edges:gens.flatMap((g,j)=>E.map(i=>({generator:j,from:i,to:g[i]}))),physical_measurement:false};break;
+ case 'external_gap':data={group_order:G.length,point_orbits:orbit(),missing:['independent_implementation','external_empirical_evidence'],external_credit:0};break;
+ case 'authority_gate':data={group_order:G.length,generator_count:gens.length,gate:'No physical, identity, participant or public-authority action authorized',authority_credit:0};break;
+ }
+ const outcome=r.op==='scene'?'represented':r.op==='external_gap'?'open_gap':r.op==='authority_gate'?'exact_gate':'completed';return {outcome,data};
+}
+module.exports={OPS,run,validate,closure,mul,inv};
