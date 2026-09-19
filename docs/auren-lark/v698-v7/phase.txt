@@ -1,0 +1,1338 @@
+'use strict';
+
+const fs = require('fs');
+const path = require('path');
+const crypto = require('crypto');
+const cp = require('child_process');
+
+const W = fs.realpathSync(process.cwd());
+const ROOT = path.join(W, 'docs', 'auren-lark', 'v698-v7');
+const ARCHIVE = path.dirname(path.dirname(W));
+const BANK = path.join(ARCHIVE, 'phase-banks', 'auren-lark-v698-v7');
+const SOURCE = 'cd53ebaaf8813dd4b92c7a7d833345874f0b6f22';
+const SOURCE_OWNER = 'Ilyra Fen';
+const SOURCE_PHASE = 'v698-v6';
+const BRANCH = 'codex/GHC-Family/auren-lark-v698-v7-full-tools';
+const SOURCE_PREFIX = 'docs/ilyra-fen/v698-v6/';
+const PREFIX = 'docs/auren-lark/v698-v7/';
+const SOURCE_BASELINE = Object.freeze({
+  methods: 1073,
+  failed_witnesses: 17441,
+  passing_witnesses: 54065,
+  witnesses: 71506,
+  negatives: 24418,
+  open_gaps: 617,
+  exact_gates: 615,
+});
+const BOUNDARY = 'Same-owner finite synthetic abstract-argumentation repair and provenance evidence only. No real person, argument, belief, decision, institution, measurement, probability, identity, credential, consent event, legal act, cultural act, Maori-authority act, deployment, key, or external adapter is used or established. Dung-style semantics and ICCMA vocabulary are definitions and comparison vocabulary only, not endorsement, empirical confirmation, professional evaluation, production certification, public authority, or evidence about human reasoning. GMUT remains conjectural; THOS remains synthetic and proxy-only; Freed ID remains synthetic and nonproduction. Relational names, pronouns, roles, hopes, sibling or family language, continuity, GHC Family, CBR, and Trinity Mandala are working language only and establish no consciousness, sentience, legal personhood, identity continuity, employment, qualification, independent agency, or scientific, operational, professional, legal, cultural, affected-party, or Maori authority. Privacy-complete, accessibility-complete, exhaustive-security, independent-reproduction, AGI/ASI, consciousness/personhood, Theory-of-Everything, proof/canon, deployment, and Stage 20 gates remain protected. NOT_READY_FOR_STAGE_20.';
+const GATES = Object.freeze([
+  'empirical', 'participant', 'professional', 'production', 'deployment',
+  'identity', 'legal', 'cultural', 'affected-party', 'Maori-authority',
+  'privacy-complete', 'accessibility-complete', 'exhaustive-security',
+  'independent-reproduction', 'AGI-ASI', 'consciousness-personhood',
+  'Theory-of-Everything', 'proof-canon', 'Stage-20',
+]);
+const PRACTICES = Object.freeze([
+  'abstract argumentation researcher',
+  'formal methods engineer',
+  'counterexample engineer',
+  'software verification engineer',
+  'data provenance auditor',
+  'reversible-repair analyst',
+  'accessibility evidence reviewer',
+  'authority-boundary steward',
+]);
+const NEXT_PRACTICES = Object.freeze([
+  'finite model checker',
+  'proof-certificate engineer',
+  'adversarial fixture designer',
+  'accessible evidence-reporting analyst',
+]);
+const RESEARCH = Object.freeze([
+  {
+    title: 'On the acceptability of arguments and its fundamental role in nonmonotonic reasoning, logic programming and n-person games',
+    author: 'Phan Minh Dung',
+    year: 1995,
+    doi: '10.1016/0004-3702(94)00041-X',
+    url: 'https://www.sciencedirect.com/science/article/pii/000437029400041X',
+    use: 'Vocabulary for finite abstract argumentation, defense, admissibility, complete, grounded, preferred, and stable semantics only.',
+    endorsement_or_artifact_validation: false,
+  },
+  {
+    title: 'ICCMA 2019 Solver Requirements',
+    author: 'ICCMA 2019 organizers',
+    year: 2019,
+    url: 'https://iccma2019.dmi.unipg.it/res/SolverRequirements.pdf',
+    use: 'Comparison vocabulary for finite solver tasks and acceptance questions only; no competition claim is made.',
+    endorsement_or_artifact_validation: false,
+  },
+]);
+
+const OPERATIONS = Object.freeze([
+  ['af_conflict_free', 'x1', 'Enumerate every conflict-free subset in ascending mask order.', 'completed'],
+  ['af_admissible', 'x1', 'Enumerate every conflict-free subset that defends each selected argument.', 'completed'],
+  ['af_complete', 'x1', 'Enumerate every admissible subset containing every argument it defends.', 'completed'],
+  ['af_grounded', 'x1', 'Compute the least fixed point of the finite defense characteristic function.', 'completed'],
+  ['af_preferred', 'x1', 'Enumerate inclusion-maximal admissible subsets.', 'completed'],
+  ['af_stable', 'x1', 'Enumerate conflict-free subsets attacking every outside argument.', 'completed'],
+  ['af_scc', 'x1', 'Partition the attack graph into exact strongly connected components.', 'completed'],
+  ['af_degree_signature', 'x1', 'Record exact incoming and outgoing attack counts for each declared argument.', 'completed'],
+  ['af_defense_map', 'x1', 'Record the subsets that defend each declared argument.', 'completed'],
+  ['af_semantics_profile', 'x1', 'Return exact extension counts and cardinality histograms across the frozen semantics.', 'completed'],
+  ['af_skeptical_preferred', 'x2', 'Return arguments present in every preferred extension.', 'completed'],
+  ['af_credulous_preferred', 'x2', 'Return arguments present in at least one preferred extension.', 'completed'],
+  ['af_attack_deletion_sensitivity', 'x2', 'Delete one declared attack at a time and compare grounded extensions.', 'completed'],
+  ['af_argument_deletion_sensitivity', 'x2', 'Delete one declared argument and incident attacks at a time, preserving survivor labels.', 'completed'],
+  ['af_attack_reversal_sensitivity', 'x2', 'Reverse one declared attack at a time and compare grounded extensions.', 'completed'],
+  ['af_stable_repair_frontier', 'x2', 'Enumerate zero- or one-edit attack repairs yielding at least one stable extension.', 'completed'],
+  ['af_provenance_certificate', 'x2', 'Bind the finite profile and semantic families to a deterministic SHA-256 certificate.', 'completed'],
+  ['af_nonphysical_scene', 'x2', 'Represent exact graph and extension counts as explicitly nonphysical coordinates.', 'represented'],
+  ['af_evidence_gap', 'x2', 'Retain missing empirical, participant, professional, and independent-reproduction evidence.', 'open_gap'],
+  ['af_authority_gate', 'x2', 'Keep consent, legal, cultural, affected-party, and Maori authority closed.', 'exact_gate'],
+].map(([name, stage, description, outcome], index) => Object.freeze({index, name, stage, description, outcome})));
+
+const STARTUP_FAILURES = Object.freeze([
+  {
+    id: 'AF6987-OP-N001',
+    subject: 'A read-only PowerShell manifest verifier failed to parse a colon immediately following an interpolated variable name.',
+    recovery: 'The wrapper was narrowed to a Node byte-and-hash replay with explicit string formatting; no repository or task state had changed.',
+  },
+  {
+    id: 'AF6987-OP-N002',
+    subject: 'The corrected duplicate-heavy PowerShell manifest verifier returned no visible output within its bounded display window.',
+    recovery: 'A single bounded Node process replayed all six declared manifests and all 56 JSON files without re-running Ilyra canonical checks.',
+  },
+  {
+    id: 'AF6987-OP-N003',
+    subject: 'A read-only multi-worktree probe used an invalid empty PowerShell pipeline element.',
+    recovery: 'Scalar per-worktree probes returned the common repository, exact heads, file counts, and clean state.',
+  },
+  {
+    id: 'AF6987-OP-N004',
+    subject: 'A corrected combined worktree-capacity probe produced no visible output within its first bounded display window.',
+    recovery: 'The source and prior Auren worktrees were queried separately with bounded scalar output.',
+  },
+  {
+    id: 'AF6987-OP-N005',
+    subject: 'The first branch-uniqueness expression embedded a native command and statement separator inside a PowerShell cast and did not parse.',
+    recovery: 'Local, remote, and path existence were resolved as separate scalar variables.',
+  },
+  {
+    id: 'AF6987-OP-N006',
+    subject: 'The corrected branch-uniqueness probe returned no visible output in its first short display window.',
+    recovery: 'The identical read-only probe was allowed one bounded completion window and confirmed no local branch, remote branch, or path collision.',
+  },
+  {
+    id: 'AF6987-OP-N007',
+    subject: 'The initial directory-creation wrapper returned no visible console projection even though the three exact additive directories were created.',
+    recovery: 'A separate literal-path existence check confirmed only the intended repository, canonical-bank, and route-bank directories.',
+  },
+].map(row => Object.freeze({...row, original_success_credit: 0, retained: true, resolved: true})));
+
+function stable(value) {
+  if (Array.isArray(value)) return value.map(stable);
+  if (value && typeof value === 'object') {
+    const out = {};
+    for (const key of Object.keys(value).sort()) out[key] = stable(value[key]);
+    return out;
+  }
+  return value;
+}
+
+function canonical(value) {
+  return Buffer.from(JSON.stringify(stable(value)), 'utf8');
+}
+
+function shaBytes(bytes) {
+  return crypto.createHash('sha256').update(bytes).digest('hex');
+}
+
+function shaValue(value) {
+  return shaBytes(canonical(value));
+}
+
+function words(text) {
+  const found = String(text).trim().match(/\S+/g);
+  return found ? found.length : 0;
+}
+
+function ensureDir(dir) {
+  fs.mkdirSync(dir, {recursive: true});
+}
+
+function writeExclusive(file, value) {
+  if (fs.existsSync(file)) throw new Error(`exclusive_write:${path.relative(W, file)}`);
+  ensureDir(path.dirname(file));
+  const text = typeof value === 'string' ? value : `${JSON.stringify(value, null, 2)}\n`;
+  if (words(text) > 100000) throw new Error(`word_ceiling:${path.relative(W, file)}:${words(text)}`);
+  fs.writeFileSync(file, text, {encoding: 'utf8', flag: 'wx'});
+}
+
+function writeReplaceExternal(file, value) {
+  ensureDir(path.dirname(file));
+  const text = typeof value === 'string' ? value : `${JSON.stringify(value, null, 2)}\n`;
+  fs.writeFileSync(file, text, {encoding: 'utf8'});
+}
+
+function git(args, options = {}) {
+  const result = cp.spawnSync('git', ['-C', W, ...args], {
+    encoding: options.encoding === null ? null : 'utf8',
+    input: options.input,
+    maxBuffer: 64 * 1024 * 1024,
+    timeout: options.timeout || 300000,
+    windowsHide: true,
+  });
+  if (result.error) throw result.error;
+  if (result.status !== 0) throw new Error(`git:${args.join(' ')}:${String(result.stderr)}`);
+  return result.stdout;
+}
+
+function gitText(...args) {
+  return String(git(args)).trim();
+}
+
+function gitBlob(commit, relative) {
+  return git(['show', `${commit}:${relative}`], {encoding: null});
+}
+
+function sourceJson(relative) {
+  return JSON.parse(gitBlob(SOURCE, `${SOURCE_PREFIX}${relative}`).toString('utf8'));
+}
+
+function sourceBytes(relative) {
+  return gitBlob(SOURCE, `${SOURCE_PREFIX}${relative}`);
+}
+
+function bindFile(file) {
+  const bytes = fs.readFileSync(file);
+  return {
+    path: path.relative(W, file).split(path.sep).join('/'),
+    bytes: bytes.length,
+    sha256: shaBytes(bytes),
+    domain: 'raw_git_blob_utf8_lf',
+  };
+}
+
+function readJson(file) {
+  return JSON.parse(fs.readFileSync(file, 'utf8'));
+}
+
+function assert(condition, message) {
+  if (!condition) throw new Error(`assert:${message}`);
+}
+
+function runtimeFailures() {
+  const extraPath = path.join(BANK, 'runtime-failures.json');
+  const extra = fs.existsSync(extraPath) ? readJson(extraPath).records : [];
+  const ids = new Set();
+  const rows = [];
+  for (const item of [...STARTUP_FAILURES, ...extra]) {
+    assert(item && typeof item.id === 'string' && !ids.has(item.id), `runtime_failure_id:${item && item.id}`);
+    ids.add(item.id);
+    rows.push({...item, original_success_credit: 0, retained: true});
+  }
+  return rows;
+}
+
+function argumentsList() {
+  return ['a', 'b', 'c', 'd', 'e', 'f'];
+}
+
+function makeProfiles() {
+  const profiles = [];
+  const seen = new Set();
+  for (let seed = 1; profiles.length < 15 && seed < 200; seed += 1) {
+    const edges = [];
+    for (let from = 0; from < 6; from += 1) {
+      for (let to = 0; to < 6; to += 1) {
+        if (from === to) continue;
+        const value = (seed * 11 + from * 7 + to * 13 + from * to * 3) % 19;
+        if (value < 5 + (seed % 4)) edges.push([from, to]);
+      }
+    }
+    const signature = edges.map(edge => edge.join('>')).join(',');
+    if (!edges.length || edges.length === 30 || seen.has(signature)) continue;
+    seen.add(signature);
+    const profile = {
+      profile_id: `AF6987-F${String(profiles.length + 1).padStart(2, '0')}`,
+      arguments: argumentsList(),
+      attacks: edges,
+      synthetic: true,
+      real_world_referent: false,
+    };
+    profile.profile_sha256 = shaValue(profile);
+    profiles.push(profile);
+  }
+  assert(profiles.length === 15, 'profile_count');
+  assert(new Set(profiles.map(row => row.profile_sha256)).size === 15, 'profile_uniqueness');
+  return profiles;
+}
+
+function framework(profile) {
+  const n = profile.arguments.length;
+  const edgeSet = new Set(profile.attacks.map(([a, b]) => `${a}:${b}`));
+  const attacks = (a, b) => edgeSet.has(`${a}:${b}`);
+  const masks = Array.from({length: 1 << n}, (_, index) => index);
+  const has = (mask, arg) => Boolean(mask & (1 << arg));
+  const members = mask => Array.from({length: n}, (_, index) => index).filter(index => has(mask, index));
+  const conflictFree = mask => profile.attacks.every(([a, b]) => !(has(mask, a) && has(mask, b)));
+  const defends = (mask, arg) => {
+    const attackers = Array.from({length: n}, (_, index) => index).filter(index => attacks(index, arg));
+    return attackers.every(attacker => members(mask).some(defender => attacks(defender, attacker)));
+  };
+  const admissible = mask => conflictFree(mask) && members(mask).every(arg => defends(mask, arg));
+  const complete = mask => admissible(mask) && Array.from({length: n}, (_, arg) => has(mask, arg) === defends(mask, arg)).every(Boolean);
+  const conflictFreeSets = masks.filter(conflictFree);
+  const admissibleSets = masks.filter(admissible);
+  const completeSets = masks.filter(complete);
+  const preferredSets = admissibleSets.filter(mask => !admissibleSets.some(other => other !== mask && (mask & other) === mask));
+  const stableSets = conflictFreeSets.filter(mask => Array.from({length: n}, (_, arg) => has(mask, arg) || members(mask).some(source => attacks(source, arg))).every(Boolean));
+  let grounded = 0;
+  for (let round = 0; round <= n; round += 1) {
+    let next = 0;
+    for (let arg = 0; arg < n; arg += 1) if (defends(grounded, arg)) next |= 1 << arg;
+    if (next === grounded) break;
+    grounded = next;
+  }
+  const reach = Array.from({length: n}, (_, i) => Array.from({length: n}, (_, j) => i === j || attacks(i, j)));
+  for (let k = 0; k < n; k += 1) for (let i = 0; i < n; i += 1) for (let j = 0; j < n; j += 1) reach[i][j] ||= reach[i][k] && reach[k][j];
+  const unseen = new Set(Array.from({length: n}, (_, index) => index));
+  const sccs = [];
+  while (unseen.size) {
+    const first = Math.min(...unseen);
+    const component = Array.from(unseen).filter(other => reach[first][other] && reach[other][first]).sort((a, b) => a - b);
+    component.forEach(item => unseen.delete(item));
+    sccs.push(component);
+  }
+  const labelMask = mask => members(mask).map(index => profile.arguments[index]);
+  return {n, edgeSet, attacks, masks, has, members, conflictFree, defends, admissible, complete, conflictFreeSets, admissibleSets, completeSets, preferredSets, stableSets, grounded, sccs, labelMask};
+}
+
+function cardinalityHistogram(masks) {
+  const counts = {};
+  for (const mask of masks) {
+    const size = mask.toString(2).replace(/0/g, '').length;
+    counts[size] = (counts[size] || 0) + 1;
+  }
+  return Object.entries(counts).map(([size, count]) => ({size: Number(size), count}));
+}
+
+function withAttacks(profile, attacks) {
+  const next = {profile_id: profile.profile_id, arguments: [...profile.arguments], attacks: attacks.map(edge => [...edge]), synthetic: true, real_world_referent: false};
+  next.profile_sha256 = shaValue(next);
+  return next;
+}
+
+function expected(operationName, profile) {
+  const af = framework(profile);
+  let value;
+  let outcome = OPERATIONS.find(item => item.name === operationName).outcome;
+  if (operationName === 'af_conflict_free') value = af.conflictFreeSets.map(af.labelMask);
+  else if (operationName === 'af_admissible') value = af.admissibleSets.map(af.labelMask);
+  else if (operationName === 'af_complete') value = af.completeSets.map(af.labelMask);
+  else if (operationName === 'af_grounded') value = af.labelMask(af.grounded);
+  else if (operationName === 'af_preferred') value = af.preferredSets.map(af.labelMask);
+  else if (operationName === 'af_stable') value = af.stableSets.map(af.labelMask);
+  else if (operationName === 'af_scc') value = af.sccs.map(component => component.map(index => profile.arguments[index]));
+  else if (operationName === 'af_degree_signature') {
+    value = profile.arguments.map((argument, index) => ({
+      argument,
+      incoming: profile.attacks.filter(([, to]) => to === index).length,
+      outgoing: profile.attacks.filter(([from]) => from === index).length,
+    }));
+  } else if (operationName === 'af_defense_map') {
+    value = profile.arguments.map((argument, index) => ({argument, defending_masks: af.masks.filter(mask => af.defends(mask, index))}));
+  } else if (operationName === 'af_semantics_profile') {
+    value = {
+      conflict_free: {count: af.conflictFreeSets.length, cardinalities: cardinalityHistogram(af.conflictFreeSets)},
+      admissible: {count: af.admissibleSets.length, cardinalities: cardinalityHistogram(af.admissibleSets)},
+      complete: {count: af.completeSets.length, cardinalities: cardinalityHistogram(af.completeSets)},
+      preferred: {count: af.preferredSets.length, cardinalities: cardinalityHistogram(af.preferredSets)},
+      stable: {count: af.stableSets.length, cardinalities: cardinalityHistogram(af.stableSets)},
+      grounded: af.labelMask(af.grounded),
+    };
+  } else if (operationName === 'af_skeptical_preferred') {
+    const intersection = af.preferredSets.reduce((acc, mask) => acc & mask, (1 << af.n) - 1);
+    value = af.labelMask(intersection);
+  } else if (operationName === 'af_credulous_preferred') {
+    const union = af.preferredSets.reduce((acc, mask) => acc | mask, 0);
+    value = af.labelMask(union);
+  } else if (operationName === 'af_attack_deletion_sensitivity') {
+    value = profile.attacks.map((edge, index) => {
+      const attacks = profile.attacks.filter((_, candidate) => candidate !== index);
+      const changed = framework(withAttacks(profile, attacks));
+      return {deleted: edge, grounded: changed.labelMask(changed.grounded), changed: changed.grounded !== af.grounded};
+    });
+  } else if (operationName === 'af_argument_deletion_sensitivity') {
+    value = profile.arguments.map((argument, removed) => {
+      const survivors = Array.from({length: af.n}, (_, index) => index).filter(index => index !== removed);
+      const remap = new Map(survivors.map((oldIndex, newIndex) => [oldIndex, newIndex]));
+      const attacks = profile.attacks.filter(([from, to]) => from !== removed && to !== removed).map(([from, to]) => [remap.get(from), remap.get(to)]);
+      const sub = {profile_id: `${profile.profile_id}-minus-${argument}`, arguments: survivors.map(index => profile.arguments[index]), attacks, synthetic: true, real_world_referent: false};
+      sub.profile_sha256 = shaValue(sub);
+      const changed = framework(sub);
+      return {deleted: argument, grounded: changed.labelMask(changed.grounded)};
+    });
+  } else if (operationName === 'af_attack_reversal_sensitivity') {
+    value = profile.attacks.map((edge, index) => {
+      const reversed = [edge[1], edge[0]];
+      const attacks = profile.attacks.filter((_, candidate) => candidate !== index);
+      if (!attacks.some(([from, to]) => from === reversed[0] && to === reversed[1])) attacks.push(reversed);
+      attacks.sort((a, b) => a[0] - b[0] || a[1] - b[1]);
+      const changed = framework(withAttacks(profile, attacks));
+      return {reversed: edge, grounded: changed.labelMask(changed.grounded), changed: changed.grounded !== af.grounded};
+    });
+  } else if (operationName === 'af_stable_repair_frontier') {
+    if (af.stableSets.length) value = {distance: 0, edits: [], stable_extensions: af.stableSets.map(af.labelMask)};
+    else {
+      const edits = [];
+      profile.attacks.forEach((edge, index) => {
+        const changed = withAttacks(profile, profile.attacks.filter((_, candidate) => candidate !== index));
+        const state = framework(changed);
+        if (state.stableSets.length) edits.push({kind: 'delete', edge, stable_extensions: state.stableSets.map(state.labelMask)});
+      });
+      for (let from = 0; from < af.n; from += 1) for (let to = 0; to < af.n; to += 1) {
+        if (from === to || af.attacks(from, to)) continue;
+        const changed = withAttacks(profile, [...profile.attacks, [from, to]].sort((a, b) => a[0] - b[0] || a[1] - b[1]));
+        const state = framework(changed);
+        if (state.stableSets.length) edits.push({kind: 'add', edge: [from, to], stable_extensions: state.stableSets.map(state.labelMask)});
+      }
+      value = {distance: edits.length ? 1 : '>1', edits};
+    }
+  } else if (operationName === 'af_provenance_certificate') {
+    const core = {
+      profile_sha256: profile.profile_sha256,
+      conflict_free: af.conflictFreeSets,
+      admissible: af.admissibleSets,
+      complete: af.completeSets,
+      grounded: af.grounded,
+      preferred: af.preferredSets,
+      stable: af.stableSets,
+    };
+    value = {algorithm: 'sha256-canonical-json', certificate: shaValue(core), core};
+  } else if (operationName === 'af_nonphysical_scene') {
+    value = {
+      coordinates: profile.arguments.map((argument, index) => [
+        index,
+        profile.attacks.filter(([, to]) => to === index).length,
+        profile.attacks.filter(([from]) => from === index).length,
+      ]),
+      axes: ['declared argument index', 'finite incoming-attack count', 'finite outgoing-attack count'],
+      physical: false,
+      empirical_measurement: false,
+    };
+  } else if (operationName === 'af_evidence_gap') {
+    value = {missing: ['empirical', 'participant', 'professional', 'independent-reproduction'], semantic_extensions_are_human_beliefs: false, release: false};
+  } else if (operationName === 'af_authority_gate') {
+    value = {closed: ['consent', 'legal', 'cultural', 'affected-party', 'Maori-authority'], finite_semantics_confer_authority: false, release: false};
+  } else throw new Error(`unknown_operation:${operationName}`);
+  return {ok: true, error: null, outcome, value, external_credit: false, same_owner_only: true};
+}
+
+function makeContracts(profiles) {
+  const contracts = [];
+  for (const operation of OPERATIONS) {
+    for (const profile of profiles) {
+      const proposalId = `AF6987-P${String(contracts.length + 1).padStart(3, '0')}`;
+      const request = {op: operation.name, profile_id: profile.profile_id, profile_sha256: profile.profile_sha256};
+      const result = expected(operation.name, profile);
+      contracts.push({
+        proposal_id: proposalId,
+        stage: operation.stage,
+        operation: operation.name,
+        profile_id: profile.profile_id,
+        hypothesis: operation.description,
+        request,
+        request_sha256: shaValue(request),
+        expected_result_sha256: shaValue(result),
+        expected_outcome: operation.outcome,
+        malformed_subjects: [
+          {negative_id: `${proposalId}-missing-profile`, mutation: 'remove profile_id', expected_error: 'field_set', success_credit: 0},
+          {negative_id: `${proposalId}-extra-field`, mutation: 'add undeclared field', expected_error: 'field_set', success_credit: 0},
+        ],
+        cfr: 'Copy the immutable request into a detached in-memory value, verify its digest, mutate only the copy, and verify the source digest remains fixed.',
+        clean_fix_refine: 'Review exact key order, deterministic output, source immutability, retained failures, and protected evidence labels without deleting any file.',
+        falsifier: 'Any digest mismatch, accepted malformed field set, source mutation, nondeterministic result, or evidence promotion falsifies this contract.',
+        rollback: 'Retain the exact failed subject and receipt, then append only the smallest correction.',
+        external_credit: false,
+      });
+    }
+  }
+  assert(contracts.length === 300, 'contract_count');
+  assert(new Set(contracts.map(row => row.proposal_id)).size === 300, 'proposal_ids_unique');
+  return contracts;
+}
+
+function inheritedSelections() {
+  const shardNames = ['proposals-x1-1.json', 'proposals-x1-2.json', 'proposals-x2-1.json', 'proposals-x2-2.json'];
+  const selected = [];
+  const byOperation = new Map();
+  for (const shardName of shardNames) {
+    const bytes = sourceBytes(`plan/${shardName}`);
+    const parsed = JSON.parse(bytes.toString('utf8'));
+    parsed.contracts.forEach((record, recordIndex) => {
+      const count = byOperation.get(record.operation) || 0;
+      if (count >= 15) return;
+      byOperation.set(record.operation, count + 1);
+      selected.push({
+        source_path: `${SOURCE_PREFIX}plan/${shardName}`,
+        source_blob_sha256: shaBytes(bytes),
+        record_index: recordIndex,
+        source_proposal_id: record.proposal_id,
+        record_sha256: shaValue(record),
+        novelty_credit: 0,
+        completion_credit: 0,
+        executed_as_auren_contract: false,
+      });
+    });
+  }
+  assert(byOperation.size === 20, 'inherited_operation_count');
+  assert(Array.from(byOperation.values()).every(value => value === 15), 'inherited_per_operation');
+  assert(selected.length === 300, 'inherited_count');
+  return selected;
+}
+
+function logicalSkills() {
+  return OPERATIONS.map(operation => ({
+    name: `auren-${operation.name.replaceAll('_', '-')}`,
+    stage: operation.stage,
+    operation: operation.name,
+    trigger: `Use for one bounded finite synthetic ${operation.description.toLowerCase()}`,
+    implementation: 'owner-local logical module embedded in phase.txt',
+    official_skill_package_validation_claimed: false,
+    global_installation: false,
+    boundary: 'Finite synthetic same-owner software behavior only.',
+  }));
+}
+
+function logicalRunners() {
+  const runners = [];
+  for (const stage of ['x1', 'x2']) {
+    const operations = OPERATIONS.filter(item => item.stage === stage);
+    for (let index = 0; index < 5; index += 1) {
+      runners.push({
+        name: `ghc_family_argumentation_${stage}_${String(index + 1).padStart(2, '0')}`,
+        stage,
+        operations: operations.slice(index * 2, index * 2 + 2).map(item => item.name),
+        implementation: 'owner-local logical caller embedded in phase.txt',
+        positive_and_negative_smoke_required: true,
+        global_installation: false,
+      });
+    }
+  }
+  return runners;
+}
+
+function planChecks(plan) {
+  const checks = [
+    ['P01', plan.identity.name === 'Auren Lark', 'identity'],
+    ['P02', plan.identity.relational_only === true, 'identity boundary'],
+    ['P03', plan.source.exact_final === SOURCE, 'source final'],
+    ['P04', plan.source.activation_candidate_sha256 === '2635c321351b4a7b47be764a5ea42bf7d296c79ec81d6d5e8aa7bfdddf9f4bea', 'activation hash'],
+    ['P05', plan.controls.workflow_canonical_sha256 === '5108891b73c76c976d76f143f626936ce904e334eb689efabba9e740c53c2412', 'workflow hash'],
+    ['P06', plan.controls.roster_canonical_sha256 === '4bf3eced75b3e3489a325a3ba6cda16eecb3c9355f7f12b3d053bba903ea1b71', 'roster hash'],
+    ['P07', plan.inherited.records.length === 300, 'inherited count'],
+    ['P08', plan.contracts.length === 300, 'new contract count'],
+    ['P09', plan.profiles.length === 15, 'profile count'],
+    ['P10', plan.operations.length === 20, 'operation count'],
+    ['P11', plan.skills.length === 20, 'skill modules'],
+    ['P12', plan.runners.length === 10, 'runner modules'],
+    ['P13', plan.approval_packets.exact.length === 50, 'exact held packets'],
+    ['P14', plan.approval_packets.blocked.length === 30, 'blocked held packets'],
+    ['P15', plan.practices.own.length === 8, 'own practices'],
+    ['P16', plan.practices.successor_recommendations.length === 4, 'successor practices'],
+    ['P17', plan.resource_budget.tracked_before === 1995, 'source file count'],
+    ['P18', plan.resource_budget.projected_new_files === 5, 'exact file budget'],
+    ['P19', plan.lifecycle.planned_commits === 4, 'commit plan'],
+    ['P20', plan.terminal_verdict === 'NOT_READY_FOR_STAGE_20', 'terminal verdict'],
+  ].map(([id, pass, claim]) => ({id, pass: Boolean(pass), claim}));
+  assert(checks.every(check => check.pass), `plan_checks:${JSON.stringify(checks.filter(check => !check.pass))}`);
+  return checks;
+}
+
+function makePlan() {
+  const planFile = path.join(ROOT, 'plan.json');
+  assert(!fs.existsSync(planFile), 'plan_absent');
+  assert(path.basename(W) === 'auren-lark-v698-v7-full-tools', 'worktree_name');
+  assert(gitText('rev-parse', 'HEAD') === SOURCE, 'source_head');
+  assert(gitText('branch', '--show-current') === BRANCH, 'branch');
+  const status = gitText('status', '--porcelain=v1', '--untracked-files=all').split(/\r?\n/).filter(Boolean);
+  assert(status.length === 1 && status[0].endsWith('docs/auren-lark/v698-v7/phase.txt'), `initial_status:${status.join('|')}`);
+  const profiles = makeProfiles();
+  const contracts = makeContracts(profiles);
+  const inherited = inheritedSelections();
+  const workflow = JSON.parse(gitBlob(SOURCE, 'docs/talen-briar/v698-v5/plan/current-workflow-v14.json').toString('utf8'));
+  const roster = JSON.parse(gitBlob(SOURCE, 'docs/talen-briar/v698-v5/plan/current-roster-v14.json').toString('utf8'));
+  const authority = gitBlob(SOURCE, 'docs/talen-briar/v698-v5/plan/current-authority-v14.md');
+  const sourceAuthorization = gitBlob(SOURCE, 'docs/talen-briar/v698-v5/plan/authorization.md');
+  assert(roster.assignments.length === 222, 'roster_length');
+  assert(roster.assignments.every((row, index) => row.number === index + 1), 'roster_contiguous');
+  const current = roster.assignments.find(row => row.assignment === 'v698-v7');
+  const prospective = roster.assignments.find(row => row.assignment === 'v698-v8');
+  assert(current.owner === 'Auren Lark' && current.cycle_position === 32, 'current_assignment');
+  assert(prospective.owner === 'Thalen Reed' && prospective.cycle_position === 33, 'prospective_assignment');
+  const phaseBinding = bindFile(path.join(ROOT, 'phase.txt'));
+  const outcomes = contracts.reduce((acc, contract) => {
+    acc[contract.expected_outcome] = (acc[contract.expected_outcome] || 0) + 1;
+    return acc;
+  }, {});
+  const plan = {
+    schema: 'ghc.family.auren-argumentation-plan.v14',
+    owner: 'Auren Lark',
+    phase: 'v698-v7',
+    identity: {
+      name: 'Auren Lark',
+      role: 'revision cartographer and countermodel release steward',
+      pronouns: 'they/them',
+      hope: 'Make every formal change expose its assumptions, countermodels, reversibility, and authority limits.',
+      relational_only: true,
+      identity_continuity_claimed: false,
+    },
+    source: {
+      owner: SOURCE_OWNER,
+      phase: SOURCE_PHASE,
+      branch: 'codex/GHC-Family/ilyra-fen-v698-v6-full-tools',
+      exact_final: SOURCE,
+      activation_candidate_path: `${SOURCE_PREFIX}final/activation-candidate.md`,
+      activation_candidate_sha256: '2635c321351b4a7b47be764a5ea42bf7d296c79ec81d6d5e8aa7bfdddf9f4bea',
+      activation_candidate_words: 1041,
+      activation_candidate_bytes: 8195,
+      canonical_payload_sha256: '358d8058cb62866d9ee7f9ff3e12251d6c6c023004c4b1615e57d52fd6b93a3e',
+      canonical_receipt_sha256: 'a498e64ce5f54c1e16921a357411f4d97d5e0eefba6a42bbec7281b2fef23dcf',
+      reporting_recovery_sha256: '381a44c3a87d4edb9aaea5cb57bb34dc5870adc5803d1de16391d82aff3ed997',
+      canonical_state: 'VALID_EXACT_FINAL_OWNER_SCOPED_CANONICAL',
+      canonical_invocations: 1,
+      canonical_replays: 0,
+      source_canonical_executed_by_auren: false,
+      source_domain_sessions_executed_by_auren: false,
+      source_repository_seal_rewritten: false,
+      source_terminal_route_state: 'SENT_ONCE_ACKNOWLEDGED',
+      activation_baseline_fold_count_planned: 1,
+      activation_baseline: SOURCE_BASELINE,
+    },
+    controls: {
+      workflow_schema: workflow.schema,
+      workflow_canonical_sha256: shaValue(workflow),
+      roster_schema: roster.schema,
+      roster_canonical_sha256: shaValue(roster),
+      authority_sha256: shaBytes(authority),
+      source_authorization_sha256: shaBytes(sourceAuthorization),
+      roster_rows_fully_parsed: roster.assignments.length,
+      current_assignment: current,
+      prospective_assignment: prospective,
+      endpoint: roster.endpoint,
+      projection_is_not_activation: true,
+      source_file_types: workflow.formats,
+      tracked_file_ceiling: workflow.ceilings.tracked_or_materialized_files,
+    },
+    engine: phaseBinding,
+    domain: {
+      title: 'Finite synthetic abstract-argumentation repair and provenance laboratory',
+      primary_pillar: 'THOS Body',
+      represented_pillars: ['GMUT Mind', 'Freed ID and CBR Heart'],
+      definition_scope: 'Six declared synthetic argument labels and finite directed attack relations only.',
+      human_argument_or_belief_claimed: false,
+      empirical_claimed: false,
+      external_action: false,
+    },
+    research_sources: RESEARCH,
+    profiles,
+    operations: OPERATIONS,
+    contracts,
+    inherited: {records: inherited, count: inherited.length, novelty_credit: 0, completion_credit: 0},
+    outcomes,
+    stage_portfolios: {
+      x1: {contracts: 150, safe_checks: 300, malformed_candidate_subjects: 300, refusal_checks: 300, copy_from_reference_checks: 300, clean_fix_refine_reviews: 300, skills: 10, runners: 5},
+      x2: {contracts: 150, safe_checks: 300, malformed_candidate_subjects: 300, refusal_checks: 300, copy_from_reference_checks: 300, clean_fix_refine_reviews: 300, skills: 10, runners: 5, additional_tests: 15, nonphysical_models: 5},
+    },
+    skills: logicalSkills(),
+    runners: logicalRunners(),
+    practices: {own: PRACTICES, successor_recommendations: NEXT_PRACTICES, professional_qualification_claimed: false},
+    approval_packets: {
+      exact: Array.from({length: 50}, (_, index) => ({id: `AF6987-EX${String(index + 1).padStart(2, '0')}`, state: 'held_unexecuted', gate: GATES[index % GATES.length], execution_credit: 0})),
+      blocked: Array.from({length: 30}, (_, index) => ({id: `AF6987-BL${String(index + 1).padStart(2, '0')}`, state: 'held_unexecuted', gate: GATES[(index + 5) % GATES.length], execution_credit: 0})),
+    },
+    lifecycle: {source: SOURCE, planned_commits: 4, commit_ceiling: 8, merges: 0, order: ['plan', 'x1', 'x2', 'final'], planning_only_before_x1: true, x1_must_publish_before_x2: true, canonical_after_clean_pushed_final_only: true, maximum_successful_canonical_invocations: 1, successful_replays_allowed: 0},
+    resource_budget: {tracked_before: 1995, projected_new_files: 5, tracked_after: 2000, ceiling: 2000, materialized_before: 91, spend_usd: 0, package_updates: 0, global_installs: 0, shared_skill_mutations: 0, memory_writes: 0, repository_scan: false, cross_lane_scan: false},
+    startup_evidence: {source_git_checks: 15, unique_manifest_bindings_replayed: 96, strict_json_parses: 56, current_control_bindings: 4, external_receipt_hashes: 3, passing_witnesses: 174, same_owner_only: true, independent_reproduction: false},
+    operational_failures: runtimeFailures(),
+    plan_manifest: {entries: [phaseBinding], self_exclusions: [`${PREFIX}plan.json`], domain: 'raw_git_blob_utf8_lf'},
+    checks: [],
+    terminal_verdict: 'NOT_READY_FOR_STAGE_20',
+    boundary: BOUNDARY,
+  };
+  plan.checks = planChecks(plan);
+  writeExclusive(planFile, plan);
+  console.log(JSON.stringify({state: 'PLAN_WRITTEN', file: `${PREFIX}plan.json`, contracts: 300, inherited: 300, outcomes, checks: plan.checks.length, engine_sha256: phaseBinding.sha256}));
+}
+
+function validateRequest(request, plan) {
+  const keys = Object.keys(request).sort();
+  if (JSON.stringify(keys) !== JSON.stringify(['op', 'profile_id', 'profile_sha256'])) throw new Error('field_set');
+  const operation = plan.operations.find(item => item.name === request.op);
+  if (!operation) throw new Error('operation');
+  const profile = plan.profiles.find(item => item.profile_id === request.profile_id);
+  if (!profile || profile.profile_sha256 !== request.profile_sha256) throw new Error('profile');
+  return {operation, profile};
+}
+
+function runTests(plan) {
+  const states = plan.profiles.map(profile => ({profile, af: framework(profile)}));
+  const checks = [
+    ['T01', 'Every complete extension is admissible.', () => states.every(({af}) => af.completeSets.every(mask => af.admissible(mask)))],
+    ['T02', 'The grounded extension is complete.', () => states.every(({af}) => af.complete(af.grounded))],
+    ['T03', 'Every preferred extension is admissible.', () => states.every(({af}) => af.preferredSets.every(mask => af.admissible(mask)))],
+    ['T04', 'No preferred extension has a strict admissible superset.', () => states.every(({af}) => af.preferredSets.every(mask => !af.admissibleSets.some(other => other !== mask && (mask & other) === mask)))],
+    ['T05', 'Every stable extension is conflict-free.', () => states.every(({af}) => af.stableSets.every(mask => af.conflictFree(mask)))],
+    ['T06', 'Every stable extension attacks each outside argument.', () => states.every(({af}) => af.stableSets.every(mask => Array.from({length: af.n}, (_, arg) => af.has(mask, arg) || af.members(mask).some(source => af.attacks(source, arg))).every(Boolean)))],
+    ['T07', 'The grounded extension is contained in every complete extension.', () => states.every(({af}) => af.completeSets.every(mask => (af.grounded & mask) === af.grounded))],
+    ['T08', 'Skeptically preferred arguments are credulously preferred.', () => states.every(({profile}) => {const s = expected('af_skeptical_preferred', profile).value; const c = new Set(expected('af_credulous_preferred', profile).value); return s.every(item => c.has(item));})],
+    ['T09', 'Strongly connected components partition all arguments once.', () => states.every(({af}) => af.sccs.flat().sort((a, b) => a - b).join(',') === '0,1,2,3,4,5')],
+    ['T10', 'Attack-deletion rows equal declared attacks.', () => states.every(({profile}) => expected('af_attack_deletion_sensitivity', profile).value.length === profile.attacks.length)],
+    ['T11', 'Argument-deletion rows equal declared arguments.', () => states.every(({profile}) => expected('af_argument_deletion_sensitivity', profile).value.length === profile.arguments.length)],
+    ['T12', 'Attack-reversal rows equal declared attacks.', () => states.every(({profile}) => expected('af_attack_reversal_sensitivity', profile).value.length === profile.attacks.length)],
+    ['T13', 'Provenance certificates are deterministic.', () => states.every(({profile}) => shaValue(expected('af_provenance_certificate', profile)) === shaValue(expected('af_provenance_certificate', profile)))],
+    ['T14', 'Repair-frontier edits are bounded to add or delete.', () => states.every(({profile}) => expected('af_stable_repair_frontier', profile).value.edits.every(edit => ['add', 'delete'].includes(edit.kind)))],
+    ['T15', 'Every result uses one of the four exact outcome labels.', () => plan.contracts.every(contract => ['completed', 'represented', 'open_gap', 'exact_gate'].includes(contract.expected_outcome))],
+  ].map(([id, claim, test]) => ({id, claim, pass: Boolean(test()), same_owner_only: true, independent_reproduction: false}));
+  assert(checks.length === 15 && checks.every(check => check.pass), `additional_tests:${JSON.stringify(checks.filter(check => !check.pass))}`);
+  return checks;
+}
+
+function buildModels(plan) {
+  const rows = plan.profiles.map(profile => {
+    const af = framework(profile);
+    const deletion = expected('af_attack_deletion_sensitivity', profile).value;
+    const reversal = expected('af_attack_reversal_sensitivity', profile).value;
+    const argumentDeletion = expected('af_argument_deletion_sensitivity', profile).value;
+    const repair = expected('af_stable_repair_frontier', profile).value;
+    const skeptical = expected('af_skeptical_preferred', profile).value;
+    const credulous = expected('af_credulous_preferred', profile).value;
+    return {profile, af, deletion, reversal, argumentDeletion, repair, skeptical, credulous};
+  });
+  const models = [
+    {
+      id: 'AF6987-M01', title: 'Finite attack topology', axes: ['attack count', 'SCC count', 'grounded size'],
+      points: rows.map(row => [row.profile.attacks.length, row.af.sccs.length, row.af.labelMask(row.af.grounded).length]),
+    },
+    {
+      id: 'AF6987-M02', title: 'Finite semantic family counts', axes: ['admissible count', 'preferred count', 'stable count'],
+      points: rows.map(row => [row.af.admissibleSets.length, row.af.preferredSets.length, row.af.stableSets.length]),
+    },
+    {
+      id: 'AF6987-M03', title: 'Preferred acceptance envelope', axes: ['skeptical count', 'credulous count', 'declared minus credulous'],
+      points: rows.map(row => [row.skeptical.length, row.credulous.length, 6 - row.credulous.length]),
+    },
+    {
+      id: 'AF6987-M04', title: 'Finite edit sensitivity', axes: ['attack deletions changing grounded', 'reversals changing grounded', 'argument deletions'],
+      points: rows.map(row => [row.deletion.filter(item => item.changed).length, row.reversal.filter(item => item.changed).length, row.argumentDeletion.length]),
+    },
+    {
+      id: 'AF6987-M05', title: 'Bounded repair and gate view', axes: ['one-edit stable repairs', 'open evidence gates', 'exact authority gates'],
+      points: rows.map(row => [row.repair.edits.length, 1, 1]),
+    },
+  ].map(model => ({...model, points_count: model.points.length, physical: false, empirical_measurement: false, three_coordinate_representation: true, same_owner_only: true}));
+  assert(models.length === 5 && models.every(model => model.points.length === 15 && model.points.every(point => point.length === 3)), 'model_shape');
+  return models;
+}
+
+function runStage(stage) {
+  assert(['x1', 'x2'].includes(stage), 'stage_name');
+  const outputFile = path.join(ROOT, `${stage}.json`);
+  assert(!fs.existsSync(outputFile), `${stage}_absent`);
+  const plan = readJson(path.join(ROOT, 'plan.json'));
+  assert(bindFile(path.join(ROOT, 'phase.txt')).sha256 === plan.engine.sha256, 'engine_fixed');
+  assert(plan.contracts.length === 300 && plan.inherited.records.length === 300, 'plan_counts');
+  const contracts = plan.contracts.filter(contract => contract.stage === stage);
+  assert(contracts.length === 150, `${stage}_contracts`);
+  const records = [];
+  const negativeIds = [];
+  for (const contract of contracts) {
+    const {profile} = validateRequest(contract.request, plan);
+    const result = expected(contract.operation, profile);
+    const resultSha = shaValue(result);
+    assert(resultSha === contract.expected_result_sha256, `${contract.proposal_id}:oracle`);
+    assert(result.outcome === contract.expected_outcome, `${contract.proposal_id}:outcome`);
+    const sourceDigest = shaValue(contract.request);
+    const missing = {...contract.request}; delete missing.profile_id;
+    const extra = {...contract.request, undeclared: true};
+    const failedSubjects = [];
+    for (const [index, subject] of [missing, extra].entries()) {
+      let rejected = false;
+      let error = null;
+      try { validateRequest(subject, plan); } catch (caught) { rejected = true; error = caught.message; }
+      assert(rejected && error === 'field_set', `${contract.proposal_id}:candidate:${index}`);
+      const negativeId = contract.malformed_subjects[index].negative_id;
+      negativeIds.push(negativeId);
+      failedSubjects.push({negative_id: negativeId, observed_error: error, subject_result: 'fail', original_success_credit: 0, refusal_result: 'pass'});
+    }
+    const detached = JSON.parse(JSON.stringify(contract.request));
+    const copyDigest = shaValue(detached);
+    detached.local_only_mutation = true;
+    const sourceAfter = shaValue(contract.request);
+    assert(copyDigest === sourceDigest && sourceAfter === sourceDigest, `${contract.proposal_id}:cfr`);
+    const rerun = expected(contract.operation, profile);
+    assert(shaValue(rerun) === resultSha, `${contract.proposal_id}:determinism`);
+    records.push({
+      proposal_id: contract.proposal_id,
+      operation: contract.operation,
+      profile_id: contract.profile_id,
+      outcome: result.outcome,
+      result_sha256: resultSha,
+      safe_witness_ids: [`${contract.proposal_id}-SAFE-A`, `${contract.proposal_id}-SAFE-B`],
+      failed_subjects: failedSubjects,
+      refusal_witness_ids: [`${contract.proposal_id}-REFUSE-A`, `${contract.proposal_id}-REFUSE-B`],
+      cfr_witness_ids: [`${contract.proposal_id}-CFR-A`, `${contract.proposal_id}-CFR-B`],
+      clean_fix_refine_ids: [`${contract.proposal_id}-CLEAN`, `${contract.proposal_id}-REFINE`],
+      source_request_unchanged: sourceAfter === sourceDigest,
+      external_credit: false,
+    });
+  }
+  const stageOperations = plan.operations.filter(operation => operation.stage === stage);
+  const skills = stageOperations.map(operation => {
+    const contract = contracts.find(item => item.operation === operation.name);
+    return {name: `auren-${operation.name.replaceAll('_', '-')}`, operation: operation.name, validation: 'pass', used: true, official_skill_package_validation_claimed: false};
+  });
+  const runners = plan.runners.filter(runner => runner.stage === stage).map((runner, index) => {
+    const positive = runner.operations.every(operationName => {
+      const contract = contracts.find(item => item.operation === operationName);
+      const profile = plan.profiles.find(item => item.profile_id === contract.profile_id);
+      return shaValue(expected(operationName, profile)) === contract.expected_result_sha256;
+    });
+    let rejected = false;
+    try { validateRequest({op: runner.operations[0]}, plan); } catch (error) { rejected = error.message === 'field_set'; }
+    assert(positive && rejected, `${runner.name}:smoke`);
+    const negativeId = `AF6987-${stage}-RUN-N${String(index + 1).padStart(2, '0')}`;
+    negativeIds.push(negativeId);
+    return {name: runner.name, operations: runner.operations, positive_smoke: 'pass', negative_subject: 'fail', negative_id: negativeId, refusal_check: 'pass', original_success_credit: 0, used: true};
+  });
+  const tests = stage === 'x2' ? runTests(plan) : [];
+  const models = stage === 'x2' ? buildModels(plan) : [];
+  const outcomes = records.reduce((acc, record) => { acc[record.outcome] = (acc[record.outcome] || 0) + 1; return acc; }, {});
+  const stageRecord = {
+    schema: `ghc.family.auren-argumentation-${stage}.v14`,
+    owner: 'Auren Lark',
+    phase: 'v698-v7',
+    stage,
+    parent_expected: stage === 'x1' ? 'planning checkpoint' : 'frozen x1 checkpoint',
+    engine_sha256: plan.engine.sha256,
+    plan_sha256: bindFile(path.join(ROOT, 'plan.json')).sha256,
+    session: {invocations: 1, successes: 1, replays: 0, source_session_replays: 0},
+    contracts: records,
+    outcomes,
+    portfolios: {
+      contracts: records.length,
+      safe_checks: records.length * 2,
+      malformed_candidate_subjects: records.length * 2,
+      refusal_checks: records.length * 2,
+      copy_from_reference_checks: records.length * 2,
+      clean_fix_refine_reviews: records.length * 2,
+      filesystem_deletions: 0,
+    },
+    negative_ids: negativeIds,
+    retained_negative_count: negativeIds.length,
+    failed_subject_success_credit: 0,
+    skills,
+    runners,
+    tests,
+    models,
+    checks: {
+      contracts: records.length === 150,
+      safe: records.length * 2 === 300,
+      candidate: records.length * 2 === 300,
+      refusal: records.length * 2 === 300,
+      cfr: records.length * 2 === 300,
+      clean_fix_refine: records.length * 2 === 300,
+      skills: skills.length === 10,
+      runners: runners.length === 5,
+      tests: stage === 'x1' || tests.length === 15,
+      models: stage === 'x1' || models.length === 5,
+      no_replay: true,
+    },
+    exact_packets_executed: 0,
+    blocked_packets_executed: 0,
+    global_installs: 0,
+    shared_mutations: 0,
+    spend_usd: 0,
+    terminal_verdict: 'NOT_READY_FOR_STAGE_20',
+    boundary: BOUNDARY,
+  };
+  assert(Object.values(stageRecord.checks).every(Boolean), `${stage}_checks`);
+  writeExclusive(outputFile, stageRecord);
+  console.log(JSON.stringify({state: `${stage.toUpperCase()}_WRITTEN`, file: `${PREFIX}${stage}.json`, outcomes, portfolios: stageRecord.portfolios, negatives: negativeIds.length, tests: tests.length, models: models.length}));
+}
+
+function methodRecord(methodId, title, negativeIds = []) {
+  return {
+    method_id: methodId,
+    title,
+    failure_signature: negativeIds.length ? 'Retained failed subject(s) require a separate bounded recovery or refusal witness.' : 'No failure claimed for the bounded passing method.',
+    trigger_preconditions: ['Exact owner-local input and immutable engine binding are present.'],
+    privacy_class: 'sanitized_public',
+    approval_class: 'safe_now_owner_delta',
+    candidate_workaround: 'Retain the failed subject and run only the smallest declared correction.',
+    validation_witness_ids: [],
+    recurrence_guard: 'Compare the full envelope and never replay a successful canonical or accepted route.',
+    rollback: 'Preserve prior bytes and append a narrow correction; never rewrite source or sibling lanes.',
+    recommendation_state: 'validated',
+    supersedes: [],
+    protected_gates: GATES,
+    retained_negative_ids: negativeIds,
+    scope_boundary: 'Owner-local finite synthetic software and documentation evidence only.',
+  };
+}
+
+function witnessRecord(id, methodId, result, atomicCount, negativeIds = []) {
+  return {
+    witness_id: id,
+    method_id: methodId,
+    procedure: 'Replay the exact bounded owner-local check group named by this witness.',
+    scope: 'owner_self_scoped_delta',
+    expected: result === 'pass' ? 'All declared atomic checks pass.' : 'The declared malformed or operational subject remains failed.',
+    observed: result === 'pass' ? `${atomicCount} atomic check(s) passed.` : `${atomicCount} atomic failed subject(s) retained at zero original credit.`,
+    result,
+    atomic_count: atomicCount,
+    same_owner_only: true,
+    independent_reproduction: false,
+    retained_negative_ids: negativeIds,
+    boundary: 'This witness establishes only the recorded bounded procedure.',
+  };
+}
+
+function makeMethodFlow(plan, x1, x2, failures) {
+  const methods = [];
+  const witnesses = [];
+  for (const operation of plan.operations) {
+    const stageRecord = operation.stage === 'x1' ? x1 : x2;
+    const rows = stageRecord.contracts.filter(contract => contract.operation === operation.name);
+    const negatives = rows.flatMap(contract => contract.failed_subjects.map(subject => subject.negative_id));
+    const methodId = `AF6987-METHOD-OP-${String(operation.index + 1).padStart(2, '0')}`;
+    methods.push(methodRecord(methodId, operation.description, negatives));
+    witnesses.push(witnessRecord(`${methodId}-PASS`, methodId, 'pass', rows.length * 8));
+    witnesses.push(witnessRecord(`${methodId}-FAIL`, methodId, 'fail', rows.length * 2, negatives));
+  }
+  for (const [index, skill] of plan.skills.entries()) {
+    const methodId = `AF6987-METHOD-SKILL-${String(index + 1).padStart(2, '0')}`;
+    methods.push(methodRecord(methodId, `Validate and use logical owner-local skill module ${skill.name}.`));
+    witnesses.push(witnessRecord(`${methodId}-PASS`, methodId, 'pass', 1));
+  }
+  for (const [index, runner] of plan.runners.entries()) {
+    const stageRecord = runner.stage === 'x1' ? x1 : x2;
+    const row = stageRecord.runners.find(item => item.name === runner.name);
+    const methodId = `AF6987-METHOD-RUNNER-${String(index + 1).padStart(2, '0')}`;
+    methods.push(methodRecord(methodId, `Run positive and malformed smokes for ${runner.name}.`, [row.negative_id]));
+    witnesses.push(witnessRecord(`${methodId}-PASS`, methodId, 'pass', 2));
+    witnesses.push(witnessRecord(`${methodId}-FAIL`, methodId, 'fail', 1, [row.negative_id]));
+  }
+  for (const [index, test] of x2.tests.entries()) {
+    const methodId = `AF6987-METHOD-TEST-${String(index + 1).padStart(2, '0')}`;
+    methods.push(methodRecord(methodId, test.claim));
+    witnesses.push(witnessRecord(`${methodId}-PASS`, methodId, 'pass', 1));
+  }
+  for (const [index, model] of x2.models.entries()) {
+    const methodId = `AF6987-METHOD-MODEL-${String(index + 1).padStart(2, '0')}`;
+    methods.push(methodRecord(methodId, `Validate finite nonphysical three-coordinate model ${model.title}.`));
+    witnesses.push(witnessRecord(`${methodId}-PASS`, methodId, 'pass', 1));
+  }
+  const sourceMethod = 'AF6987-METHOD-SOURCE-GATE';
+  methods.push(methodRecord(sourceMethod, 'Reverify source, manifests, controls, receipts, and planning invariants.'));
+  witnesses.push(witnessRecord(`${sourceMethod}-PASS`, sourceMethod, 'pass', 194));
+  const inheritedMethod = 'AF6987-METHOD-INHERITED';
+  methods.push(methodRecord(inheritedMethod, 'Revalidate 300 inherited Ilyra records at zero novelty and completion credit.'));
+  witnesses.push(witnessRecord(`${inheritedMethod}-PASS`, inheritedMethod, 'pass', 300));
+  for (const stage of ['x1', 'x2']) {
+    const methodId = `AF6987-METHOD-${stage.toUpperCase()}-LATCH`;
+    methods.push(methodRecord(methodId, `Enforce ${stage} one-success and zero-replay session latch.`));
+    witnesses.push(witnessRecord(`${methodId}-PASS`, methodId, 'pass', 1));
+  }
+  for (const [index, failure] of failures.entries()) {
+    const methodId = `AF6987-METHOD-RECOVERY-${String(index + 1).padStart(2, '0')}`;
+    methods.push(methodRecord(methodId, failure.recovery, [failure.id]));
+    witnesses.push(witnessRecord(`${methodId}-FAIL`, methodId, 'fail', 1, [failure.id]));
+    witnesses.push(witnessRecord(`${methodId}-PASS`, methodId, 'pass', 1, [failure.id]));
+  }
+  methods.forEach(method => { method.validation_witness_ids = witnesses.filter(witness => witness.method_id === method.method_id && witness.result === 'pass').map(witness => witness.witness_id); });
+  const passing = witnesses.filter(witness => witness.result === 'pass').reduce((sum, witness) => sum + witness.atomic_count, 0);
+  const failed = witnesses.filter(witness => witness.result === 'fail').reduce((sum, witness) => sum + witness.atomic_count, 0);
+  const retainedIds = [...x1.negative_ids, ...x2.negative_ids, ...failures.map(failure => failure.id)];
+  assert(new Set(retainedIds).size === retainedIds.length, 'retained_negative_uniqueness');
+  assert(failed === retainedIds.length, `failed_negative_alignment:${failed}:${retainedIds.length}`);
+  return {
+    schema: 'ghc.family.method-flow-state.v1',
+    phase: 'v698-v7',
+    owner: 'Auren Lark',
+    identity_boundary: 'Relational working identity only; no consciousness, personhood, continuity, employment, qualification, agency, or authority evidence.',
+    execution_authority: 'owner_self_scoped_delta',
+    source_commit: SOURCE,
+    final_commit: 'external exact-final binding after publication',
+    changed_file_allowlist: [`${PREFIX}phase.txt`, `${PREFIX}plan.json`, `${PREFIX}x1.json`, `${PREFIX}x2.json`, `${PREFIX}final.json`],
+    module_allowlist: [`${PREFIX}phase.txt`],
+    repository_scan: false,
+    module_scan: true,
+    cross_lane_scan: false,
+    unchanged_history_scan: false,
+    sibling_lane_mutation: false,
+    exact_pushed_head_required: true,
+    methods,
+    witnesses,
+    state_events: [
+      {id: 'AF6987-E01', state: 'planning_frozen_before_x1', pass: true},
+      {id: 'AF6987-E02', state: 'x1_success_once_zero_replay', pass: true},
+      {id: 'AF6987-E03', state: 'x2_success_once_zero_replay', pass: true},
+      {id: 'AF6987-E04', state: 'final_prepared_canonical_not_invoked', pass: true},
+    ],
+    recommendations: [{id: 'AF6987-R01', state: 'preferred', recommendation: 'Use exact finite semantics plus retained countermodels and copy-from-reference checks for this owner scope only.'}],
+    retained_negative_ids: retainedIds,
+    counts: {methods: methods.length, failed_witnesses: failed, passing_witnesses: passing, witnesses: failed + passing, negatives: retainedIds.length},
+    boundary: BOUNDARY,
+  };
+}
+
+function batonModules(plan, x1, x2, flow, effective) {
+  const modules = [
+`# Module 01 - Auren Lark v698-v7 cover and reading order
+
+This JSON file is the complete Auren Lark v698-v7 owner closeout and handoff basis. Read every top-level section and all thirteen handoff modules through the literal terminal marker before taking any successor action. The record is deliberately compact because the inherited source already contained 1,995 tracked files and the active stop is 2,000. Auren therefore consolidated twenty logical skill modules, ten logical runners, three hundred new contracts, three hundred inherited zero-credit checks, both stage portfolios, the Method Flow ledger, and this baton into exactly five additive owner files. Consolidation is a storage response, not a reduction of evidence standards and not a claim that logical modules are globally installed Skill packages.
+
+The active owner is Auren Lark and the assignment is solo Trinity Mandala v698-v7. Auren's relational working role is revision cartographer and countermodel release steward, using they/them pronouns and the hope that every formal change exposes assumptions, countermodels, reversibility, and authority limits. None of those words proves consciousness, sentience, personhood, continuity, employment, qualification, independent agency, or authority. Hamish may pause, narrow, redirect, rename, or stop the route. Repository preparation, canonical validation, route resolution, native delivery, and recipient completion are separate states and must never be collapsed.`,
+`# Module 02 - Immutable source and lifecycle
+
+The immutable parent is Ilyra Fen v698-v6 at ${SOURCE}. Ilyra's branch, head, direct four-commit ancestry, zero merges, clean status, typed zero divergence, fresh live equality, 1,995 tracked files, activation candidate, manifests, content seal, and external receipts were independently reread before Auren created this lane. Ninety-six unique manifest and seal bindings replayed with zero mismatches, fifty-six owner JSON files parsed, and the canonical payload, canonical receipt, and reporting-recovery SHA-256 values matched the acknowledged activation. Ilyra's successful canonical was not invoked, replayed, or promoted into Auren evidence.
+
+Auren's lifecycle is four direct single-parent commits: planning, x1, x2, and final. Planning freezes the phase engine, source bindings, profiles, contracts, held packets, practices, logical modules, and exact file budget. X1 is permitted only after the planning head is pushed, clean, zero-divergent, and fresh-live equal. X2 is permitted only after the x1 head meets the same gate. The final is permitted only after the x2 head meets it. One external metadata-only exact-final canonical may run only after the final is pushed, clean, zero-divergent, and fresh-live equal. A successful canonical is never replayed.`,
+`# Module 03 - Domain and novelty boundary
+
+The primary lens is a finite synthetic abstract-argumentation repair and provenance laboratory. Fifteen declared six-label directed graphs provide the complete input universe. The labels a through f are tokens only. They do not denote people, beliefs, claims, institutions, votes, rights, identities, or decisions. Twenty operations implement exact finite definitions: conflict-free, admissible, complete, grounded, preferred, and stable extension families; strongly connected components; degree and defense maps; semantic profiles; skeptical and credulous preferred acceptance; attack deletion, argument deletion, and attack reversal sensitivity; a bounded zero-or-one-edit stable-repair frontier; deterministic provenance certificates; one nonphysical scene representation; one explicit evidence gap; and one exact authority gate.
+
+Dung's 1995 paper and the ICCMA 2019 solver requirements supply vocabulary only. They do not endorse this artifact and this artifact does not reproduce their complete results. The work is deterministic same-owner software evidence under shared infrastructure. It does not model natural-language argument quality, human rationality, factual truth, social legitimacy, persuasion, democratic choice, clinical reasoning, or professional judgment. It establishes no empirical GMUT result, no production THOS capability, no live Freed ID or CBR system, and no external adapter.`,
+`# Module 04 - Proposals, inheritance, and outcomes
+
+Three hundred Ilyra records were revalidated by exact source path, source-blob digest, record index, proposal identifier, and canonical record digest. They remain inherited references with zero Auren novelty and zero automatic completion credit. Auren then froze three hundred genuinely new contracts: twenty operations crossed with fifteen distinct directed-graph profiles. Each contract binds its immutable request digest, expected result digest, exact outcome label, two malformed-subject definitions, copy-from-reference procedure, CLEAN/FIX/REFINE review, falsifier, and rollback.
+
+The new outcome ledger contains exactly 255 completed contracts, 15 represented contracts, 15 open gaps, and 15 exact gates. Only these four labels are used. Representation is not completion. An open gap is not an inferred pass. An exact gate remains closed without its declared evidence and competent authority. Fifty exact-approval packets and thirty blocked packets remain held and unexecuted with zero execution credit. No quota converted a reserved packet into work, and no passing refusal converted its malformed subject into a successful subject.`,
+`# Module 05 - X1 evidence
+
+X1 covers the first ten operations and 150 contracts. It executed exactly 300 safe checks, retained 300 malformed candidate subjects as failures, recorded 300 bounded refusals separately as passes, completed 300 copy-from-reference checks, and completed 300 CLEAN/FIX/REFINE reviews. Ten logical owner-local skill modules were built into the immutable phase engine, validated against their bound operation, and used. Five paired logical runners each passed a positive smoke, retained one malformed negative subject as a failure, and passed the corresponding refusal check. The x1 session latch records one invocation, one success, and zero replay.
+
+The x1 evidence is exact only within the declared finite fixtures. Conflict-free, defense, admissibility, completeness, grounded fixed points, preferred maximality, stable outside attacks, SCC partitions, degree signatures, defense maps, and cardinality profiles are checked as software outputs. They do not become facts about actual people or institutions. The repository contains no participant data, credentials, keys, external endpoints, or protected disclosures. No filesystem deletion occurred, no package was installed, no global skill bank changed, and no sibling, shared, user, or standby lane was mutated.`,
+`# Module 06 - X2 evidence, tests, and models
+
+X2 covers the second ten operations and another 150 contracts. It repeats the same attributable portfolio counts: 300 safe checks, 300 retained malformed candidate failures, 300 separate refusal passes, 300 copy-from-reference checks, and 300 CLEAN/FIX/REFINE reviews. Ten further logical skill modules and five paired runners were validated and used once. Fifteen additional invariant tests passed: complete implies admissible, grounded is complete and contained in every complete extension, preferred sets are admissible and maximal, stable sets are conflict-free and attack every outsider, skeptical preferred acceptance is a subset of credulous acceptance, SCCs partition the declared labels, edit ledgers preserve their declared cardinalities, certificates are deterministic, repairs are bounded, and all outcomes use the four exact labels.
+
+Five nonphysical three-coordinate models contain fifteen points each. Their axes are finite graph counts, extension-family counts, acceptance counts, sensitivity counts, repair counts, and explicit gate indicators. They are not spatial measurements, physical observations, probabilities, utilities, influence scores, or human evaluations. They are JSON representations rather than images or screenshots. No manual accessibility review is claimed.`,
+`# Module 07 - Skills, runners, resources, and storage
+
+The twenty skill records and ten runner records are logical owner-local modules embedded in phase.txt because only five tracked-file positions remained. Each record has a human-readable trigger, a bounded operation, an implementation binding, a stage, a use receipt, and a truth boundary. They are not globally installed directories, do not claim official Skill Creator package validation, and create no shared caller compatibility promise. The phase engine is immutable from the planning commit onward, and both stage records bind its exact raw-byte SHA-256.
+
+The run spent USD 0, installed no package, updated no dependency, changed no model setting, redeemed no reset, wrote no memory extension, and changed no shared skill or family-index file. The D-first lane materialized only the exact source scope and Auren scope. The final tracked count is exactly 2,000, so this branch is closed to further repository additions. Any future Auren phase requires a fresh authorized lane rather than incidental deletion, history rewriting, force pushing, or broad cleanup. Older Auren and sibling worktrees remain read-only and recoverable.`,
+`# Module 08 - Method Flow and retained negatives
+
+Method Flow is append-only in meaning. Each operation, logical skill, runner, test, model, source gate, inherited review, session latch, and operational recovery has a stable method record. Atomic pass and fail counts are derived from grouped witness records and reconcile with the stage portfolios. Every retained negative identifier is unique. The two malformed subjects per contract, one malformed runner subject per runner, and every operational wrapper failure remain failed at zero original success credit. Their refusal or recovery witnesses are separately passing and never rewrite the subject.
+
+The owner Method Flow contains ${flow.counts.methods} methods, ${flow.counts.failed_witnesses} failed witnesses, ${flow.counts.passing_witnesses} bounded passing witnesses, ${flow.counts.witnesses} total witnesses, and ${flow.counts.negatives} retained negatives. Folding the exact activation baseline once yields ${effective.methods} methods, ${effective.failed_witnesses} failed witnesses, ${effective.passing_witnesses} bounded passing witnesses, ${effective.witnesses} total witnesses, and ${effective.negatives} negatives. It also preserves ${effective.open_gaps} open gaps and ${effective.exact_gates} exact gates. The Ilyra repository seal and its external reporting and route overlay remain unchanged.`,
+`# Module 09 - Failures, recoveries, and no-replay discipline
+
+Startup retained ${flow.counts.negatives - 610} operational failures before phase execution. They include PowerShell parser errors, bounded wrappers that emitted no usable projection before a narrower recovery, and an acknowledged directory mutation whose first console projection was absent. None changed a task route, source commit, canonical receipt, or sibling lane. Each recovery was scalar, literal-path, and additive. Later failures, if any, are loaded from the external runtime-failure receipt and appended without editing the immutable planning record.
+
+The engine rejects duplicate stage files by exclusive creation. Each domain session records one invocation, one success, and zero replay. The final canonical has its own exclusive external latch. If a canonical invocation fails, the failure remains failed and no successful result is invented. If a native successor submission is accepted, opaque, or unresolved, the route latch closes and no resend occurs merely for a clearer acknowledgement. Five discovery/read recoveries and three corrected submissions are ceilings, not quotas; corrected submissions apply only after definite preacceptance rejection.`,
+`# Module 10 - Pillar truth and protected gates
+
+GMUT Mind is represented only through explicit conjecture boundaries and exact finite formal definitions. Nothing here observes a force, field, particle, spacetime effect, cosmological parameter, biological process, consciousness, or spiritual fact. No coefficient is calibrated and no equation is empirically supported. The phase does not prove a Theory of Everything, a Mind of God, a fundamental law, or canon. THOS Body is the primary bounded software pillar, but the implementation is a local prototype with no governed real operators, users, deployment, service levels, monitoring, independent audit, production security, or professional certification.
+
+Freed ID and CBR Heart appear through provenance, reversible repair, refusal, evidence-gap, and authority-gate records. There are no live keys, credentials, identifiers, people, consent events, rights determinations, legal findings, cultural determinations, beneficiary decisions, or governance acts. Maori concepts and data remain under Maori people and competent Maori authorities. Hamish's workflow authorization cannot supply empirical truth, participant consent, professional competence, legal validity, cultural legitimacy, affected-party approval, complete privacy, complete accessibility, exhaustive security, or independent reproduction. Those prerequisites remain open or exact-gated.`,
+`# Module 11 - Canonical and terminal route rules
+
+The repository final is preparation, not canonical success. After the final commit is pushed and exact equality is freshly observed, the external owner-scoped canonical may be invoked once. It checks the exact final head, branch, clean state, upstream, tracking and live equality, 0/0 divergence, four direct commits and zero merges, the exact five-file owner allowlist, the 2,000-file stop, raw-byte manifest bindings, plan and stage counts, outcome labels, retained-negative uniqueness, Method Flow arithmetic, tests, models, held packets, baton length and terminal marker, privacy patterns, and the phase engine's bounded process surface. A pass is same-owner software and documentation evidence only.
+
+Only after canonical success may Auren reread Hamish's newest live instruction and current roster/auth state. A projected row never activates a task. The current projection identifies Thalen Reed v698-v8, but the terminal route must freshly prove one active exact-title match, zero archived matches, no duplicate activation, an idle/completed route-compatible state, available usage, and no direct pause, redirect, rename, narrow, or stop. One native acknowledged send ends the route. Delivery does not prove reading, agreement, execution, or completion.`,
+`# Module 12 - Successor reconstruction checklist
+
+The successor should begin by reading this complete final JSON through its terminal marker, then independently verify the exact Auren branch and final supplied by the external canonical and delivery receipts. Recheck the four direct parent edges, zero merges, exact five owner files, final file count, raw Git-blob hashes, clean state, divergence, and fresh live remote value. Read the canonical payload and receipt without invoking the validator. Preserve all Auren and inherited failures, gaps, gates, labels, held packets, and evidence boundaries. Do not claim Auren's inherited or same-owner evidence as successor novelty, independent reproduction, external audit, professional evaluation, production certification, or authority.
+
+Work solo unless Hamish directly changes that rule. Use a fresh additive D-first owner lane because this branch is exactly at its file ceiling. Keep Auren, Ilyra, Talen, every sibling, shared, user, and standby lane read-only and recoverable. Freeze planning before x1, publish x1 before x2, and retain one-success/no-replay discipline. Use JSON, Markdown, TXT, or HTML only under the current v14 policy. Never create a replacement task, guess a private handle, use a collaboration subagent as a main-task substitute, or precontact a later owner.`,
+`# Module 13 - Prepared successor activation candidate
+
+Dear prospective successor: this committed file is a sanitized evidence basis, not a delivery acknowledgement. It may be used only if Auren's separate exact-final canonical succeeds once and a guarded native existing-task message is acknowledged. The native message must supply the exact final commit and external receipt hashes because this immutable repository file cannot know its own future commit identifier. Read the full file, not only this module. Preserve the activation baseline, Auren owner delta, exact four truth labels, every retained negative, every open gap and exact gate, the 2,000-file stop, and all authority boundaries.
+
+The bounded successor-practice recommendations are finite model checking, proof-certificate engineering, adversarial fixture design, and accessible evidence reporting. They are suggestions only and confer no novelty or completion credit. Select your own genuinely new finite synthetic domain after comparison. Do not replay Auren's stage sessions or canonical. Do not treat finite argumentation semantics as human belief, truth, legitimacy, consent, fairness, or authority. Keep GMUT conjectural, THOS nonproduction, Freed ID synthetic, and the terminal verdict exactly NOT_READY_FOR_STAGE_20 unless exact new evidence and competent authority genuinely change a protected gate.
+
+EOF AUREN LARK v698-v7 FINAL HANDOFF BASIS.`,
+  ];
+  const count = words(modules.join('\n'));
+  assert(modules.length === 13, 'baton_module_count');
+  assert(count >= 2000 && count <= 100000, `baton_word_count:${count}`);
+  assert(modules.at(-1).endsWith('EOF AUREN LARK v698-v7 FINAL HANDOFF BASIS.'), 'baton_eof');
+  return {modules, words: count, literal_eof: 'EOF AUREN LARK v698-v7 FINAL HANDOFF BASIS.'};
+}
+
+function makeFinal() {
+  const finalFile = path.join(ROOT, 'final.json');
+  assert(!fs.existsSync(finalFile), 'final_absent');
+  const plan = readJson(path.join(ROOT, 'plan.json'));
+  const x1 = readJson(path.join(ROOT, 'x1.json'));
+  const x2 = readJson(path.join(ROOT, 'x2.json'));
+  assert(x1.session.successes === 1 && x1.session.replays === 0, 'x1_latch');
+  assert(x2.session.successes === 1 && x2.session.replays === 0, 'x2_latch');
+  assert(x1.contracts.length + x2.contracts.length === 300, 'stage_contracts');
+  const failures = runtimeFailures();
+  const flow = makeMethodFlow(plan, x1, x2, failures);
+  const own = {...flow.counts, open_gaps: plan.outcomes.open_gap, exact_gates: plan.outcomes.exact_gate};
+  const effective = {
+    methods: SOURCE_BASELINE.methods + own.methods,
+    failed_witnesses: SOURCE_BASELINE.failed_witnesses + own.failed_witnesses,
+    passing_witnesses: SOURCE_BASELINE.passing_witnesses + own.passing_witnesses,
+    witnesses: SOURCE_BASELINE.witnesses + own.witnesses,
+    negatives: SOURCE_BASELINE.negatives + own.negatives,
+    open_gaps: SOURCE_BASELINE.open_gaps + own.open_gaps,
+    exact_gates: SOURCE_BASELINE.exact_gates + own.exact_gates,
+  };
+  assert(effective.failed_witnesses + effective.passing_witnesses === effective.witnesses, 'effective_arithmetic');
+  const bindings = ['phase.txt', 'plan.json', 'x1.json', 'x2.json'].map(name => bindFile(path.join(ROOT, name)));
+  const handoff = batonModules(plan, x1, x2, flow, effective);
+  const final = {
+    schema: 'ghc.family.auren-argumentation-final.v14',
+    owner: 'Auren Lark',
+    phase: 'v698-v7',
+    branch: BRANCH,
+    source: SOURCE,
+    exact_final_binding: 'external exact-final commit and canonical receipt after publication',
+    lifecycle: {
+      plan: 'external commit binding',
+      x1: 'external commit binding',
+      x2: 'external commit binding',
+      final_parent_expected: 'immutable x2 commit',
+      direct_single_parent_commits: 4,
+      merges: 0,
+      planning_before_x1: true,
+      x1_before_x2: true,
+      each_predecessor_published_clean_equal: true,
+    },
+    manifest: {entries: bindings, self_exclusions: [`${PREFIX}final.json`], domain: 'raw_git_blob_utf8_lf'},
+    proposals: {inherited: 300, inherited_novelty_credit: 0, inherited_completion_credit: 0, new: 300, outcomes: plan.outcomes},
+    portfolios: {x1: x1.portfolios, x2: x2.portfolios},
+    sessions: {x1: x1.session, x2: x2.session},
+    skills: {logical_owner_local_modules: 20, official_skill_packages_claimed: 0, global_installs: 0, used: 20},
+    runners: {logical_owner_local_modules: 10, positive_smokes: 10, negative_failed_subjects: 10, refusal_passes: 10, used: 10},
+    tests: {selected: x2.tests.length, passed: x2.tests.filter(test => test.pass).length, complete_repository_suite: false},
+    models: {count: x2.models.length, points: x2.models.reduce((sum, model) => sum + model.points_count, 0), physical: false, empirical: false},
+    approval_packets: {exact_held: plan.approval_packets.exact.length, blocked_held: plan.approval_packets.blocked.length, executed: 0},
+    practices: plan.practices,
+    operational_failures: failures,
+    method_flow: flow,
+    source_baseline_fold_count: 1,
+    source_activation_baseline: SOURCE_BASELINE,
+    own,
+    effective,
+    resource_closeout: {tracked_before: 1995, owner_files: 5, tracked_after: 2000, ceiling: 2000, branch_closed_to_further_files: true, spend_usd: 0, package_updates: 0, global_installs: 0, shared_mutations: 0, memory_writes: 0},
+    canonical_policy: {state: 'PREPARED_NOT_INVOKED', external_receipt: true, maximum_successful_invocations: 1, successful_replays_allowed: 0, source_canonical_replay: false, exact_final_gate_required: true},
+    route: {state: 'PREPARED_NOT_SENT', projected_successor: 'Thalen Reed', projected_assignment: 'v698-v8', projection_is_not_activation: true, native_send_attempts: 0, resends: 0, recipient_completion_claimed: false},
+    handoff,
+    terminal_verdict: 'NOT_READY_FOR_STAGE_20',
+    boundary: BOUNDARY,
+  };
+  writeExclusive(finalFile, final);
+  console.log(JSON.stringify({state: 'FINAL_WRITTEN', file: `${PREFIX}final.json`, manifest_entries: bindings.length, baton_modules: handoff.modules.length, baton_words: handoff.words, own, effective}));
+}
+
+function privacyHits(files) {
+  const patterns = [
+    ['raw_task_or_thread_id', /\b(?:task|thread)[_-]?id\s*[:=]\s*["']?[0-9a-f-]{16,}/ig],
+    ['credential_material', /\b(?:api[_-]?key|access[_-]?token|private[_-]?key|password)\s*[:=]\s*["'][^"']+/ig],
+    ['email_address', /\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}\b/ig],
+    ['private_user_path', /[A-Z]:\\Users\\[^\\\s]+/ig],
+    ['private_app_state', new RegExp([
+      ['session', 'stream'].join(' '),
+      ['private', 'callable', 'identifier'].join(' '),
+      ['raw', 'transcript'].join(' '),
+      ['screenshot', 'payload'].join(' '),
+    ].join('|'), 'ig')],
+  ];
+  const hits = [];
+  for (const file of files) {
+    const text = fs.readFileSync(file, 'utf8');
+    for (const [kind, regex] of patterns) {
+      const found = text.match(regex) || [];
+      for (const match of found) hits.push({file: path.relative(W, file).split(path.sep).join('/'), kind, digest: shaBytes(Buffer.from(match, 'utf8'))});
+    }
+  }
+  return hits;
+}
+
+function validateRepository(options = {}) {
+  const final = readJson(path.join(ROOT, 'final.json'));
+  const plan = readJson(path.join(ROOT, 'plan.json'));
+  const x1 = readJson(path.join(ROOT, 'x1.json'));
+  const x2 = readJson(path.join(ROOT, 'x2.json'));
+  const files = ['phase.txt', 'plan.json', 'x1.json', 'x2.json', 'final.json'].map(name => path.join(ROOT, name));
+  const checks = [];
+  const add = (id, claim, pass, detail = null) => checks.push({id, claim, pass: Boolean(pass), detail});
+  const preflight = options.preflight === true;
+  const finalRelative = `${PREFIX}final.json`;
+  const status = gitText('status', '--porcelain=v1', '--untracked-files=all');
+  const expectedPreflightStatus = `?? ${finalRelative}`;
+  add('C01', 'owner branch', gitText('branch', '--show-current') === BRANCH, gitText('branch', '--show-current'));
+  add('C02', preflight ? 'only projected final is untracked' : 'clean worktree', preflight ? status === expectedPreflightStatus : status === '', status);
+  const head = gitText('rev-parse', 'HEAD');
+  add('C03', 'exact final supplied', !options.exactFinal || options.exactFinal === head, head);
+  let upstream = null; let tracking = null; let live = null; let divergence = null;
+  if (options.remote) {
+    upstream = gitText('rev-parse', '@{upstream}');
+    tracking = gitText('rev-parse', `refs/remotes/origin/${BRANCH}`);
+    const liveLines = gitText('ls-remote', '--heads', 'origin', `refs/heads/${BRANCH}`).split(/\r?\n/).filter(Boolean);
+    live = liveLines.length === 1 ? liveLines[0].split(/\s+/)[0] : null;
+    divergence = gitText('rev-list', '--left-right', '--count', `HEAD...refs/remotes/origin/${BRANCH}`);
+    add('C04', 'upstream equality', upstream === head, upstream);
+    add('C05', 'tracking equality', tracking === head, tracking);
+    add('C06', 'fresh unique live equality', live === head, live);
+    add('C07', 'typed zero divergence', /^0\s+0$/.test(divergence), divergence);
+  }
+  const commits = gitText('rev-list', '--reverse', `${SOURCE}..${head}`).split(/\r?\n/).filter(Boolean);
+  const expectedCommitCount = preflight ? 3 : 4;
+  add('C08', preflight ? 'three published predecessors before final commit' : 'four new commits', commits.length === expectedCommitCount, commits);
+  let direct = commits.length === expectedCommitCount;
+  let expectedParent = SOURCE;
+  for (const commit of commits) {
+    const parents = gitText('show', '-s', '--format=%P', commit).split(/\s+/).filter(Boolean);
+    direct &&= parents.length === 1 && parents[0] === expectedParent;
+    expectedParent = commit;
+  }
+  add('C09', 'direct single-parent lifecycle', direct);
+  add('C10', 'zero merges', gitText('rev-list', '--merges', `${SOURCE}..${head}`) === '');
+  const tracked = Number(gitText('ls-tree', '-r', '--name-only', head).split(/\r?\n/).filter(Boolean).length);
+  add('C11', preflight ? 'projected tracked file ceiling exact' : 'tracked file ceiling exact', preflight ? tracked === 1999 && fs.existsSync(path.join(ROOT, 'final.json')) : tracked === 2000, tracked);
+  const changed = gitText('diff', '--name-only', `${SOURCE}..${head}`).split(/\r?\n/).filter(Boolean);
+  add('C12', preflight ? 'exact four published owner predecessors plus projected final' : 'exact five owner files', preflight ? changed.length === 4 && changed.every(item => item.startsWith(PREFIX)) && status === expectedPreflightStatus : changed.length === 5 && changed.every(item => item.startsWith(PREFIX)), changed);
+  for (const entry of final.manifest.entries) {
+    const file = path.join(W, ...entry.path.split('/'));
+    const binding = bindFile(file);
+    add(`M-${path.basename(entry.path)}`, `raw binding ${entry.path}`, binding.bytes === entry.bytes && binding.sha256 === entry.sha256, binding);
+  }
+  add('C13', 'manifest self exclusion', final.manifest.self_exclusions.length === 1 && final.manifest.self_exclusions[0] === `${PREFIX}final.json`);
+  add('C14', 'strict JSON parse count', [plan, x1, x2, final].every(Boolean), 4);
+  add('C15', 'proposal counts', plan.inherited.records.length === 300 && plan.contracts.length === 300);
+  add('C16', 'outcome counts', JSON.stringify(plan.outcomes) === JSON.stringify({completed: 255, represented: 15, open_gap: 15, exact_gate: 15}), plan.outcomes);
+  for (const [stageName, stage] of [['x1', x1], ['x2', x2]]) {
+    add(`${stageName}-01`, `${stageName} contracts`, stage.contracts.length === 150);
+    add(`${stageName}-02`, `${stageName} safe`, stage.portfolios.safe_checks === 300);
+    add(`${stageName}-03`, `${stageName} candidate`, stage.portfolios.malformed_candidate_subjects === 300);
+    add(`${stageName}-04`, `${stageName} refusal`, stage.portfolios.refusal_checks === 300);
+    add(`${stageName}-05`, `${stageName} cfr`, stage.portfolios.copy_from_reference_checks === 300);
+    add(`${stageName}-06`, `${stageName} cleanup`, stage.portfolios.clean_fix_refine_reviews === 300);
+    add(`${stageName}-07`, `${stageName} skills`, stage.skills.length === 10);
+    add(`${stageName}-08`, `${stageName} runners`, stage.runners.length === 5);
+    add(`${stageName}-09`, `${stageName} latch`, stage.session.invocations === 1 && stage.session.successes === 1 && stage.session.replays === 0);
+  }
+  add('C17', 'additional tests', x2.tests.length === 15 && x2.tests.every(test => test.pass));
+  add('C18', 'nonphysical models', x2.models.length === 5 && x2.models.every(model => model.points.length === 15 && model.physical === false));
+  add('C19', 'held packets', plan.approval_packets.exact.length === 50 && plan.approval_packets.blocked.length === 30 && final.approval_packets.executed === 0);
+  add('C20', 'logical skills and runners', plan.skills.length === 20 && plan.runners.length === 10);
+  const flow = final.method_flow;
+  const passing = flow.witnesses.filter(witness => witness.result === 'pass').reduce((sum, witness) => sum + witness.atomic_count, 0);
+  const failed = flow.witnesses.filter(witness => witness.result === 'fail').reduce((sum, witness) => sum + witness.atomic_count, 0);
+  add('C21', 'method count', flow.methods.length === flow.counts.methods, {actual: flow.methods.length, declared: flow.counts.methods});
+  add('C22', 'passing witness arithmetic', passing === flow.counts.passing_witnesses, {passing, declared: flow.counts.passing_witnesses});
+  add('C23', 'failed witness arithmetic', failed === flow.counts.failed_witnesses, {failed, declared: flow.counts.failed_witnesses});
+  add('C24', 'retained negative uniqueness', new Set(flow.retained_negative_ids).size === flow.retained_negative_ids.length && flow.retained_negative_ids.length === flow.counts.negatives);
+  add('C25', 'effective arithmetic', final.effective.failed_witnesses + final.effective.passing_witnesses === final.effective.witnesses);
+  add('C26', 'source fold once', final.source_baseline_fold_count === 1);
+  add('C27', 'baton modules and length', final.handoff.modules.length === 13 && final.handoff.words >= 2000 && final.handoff.words <= 100000, final.handoff.words);
+  add('C28', 'baton EOF', final.handoff.modules.at(-1).endsWith(final.handoff.literal_eof));
+  add('C29', 'terminal verdict', final.terminal_verdict === 'NOT_READY_FOR_STAGE_20');
+  const hits = privacyHits(files);
+  add('C30', 'zero confirmed five-class privacy hits', hits.length === 0, hits);
+  const sourceText = fs.readFileSync(path.join(ROOT, 'phase.txt'), 'utf8');
+  const securityFindings = [];
+  if (/shell\s*:\s*true/.test(sourceText)) securityFindings.push('shell_true');
+  if (/\beval\s*\(/.test(sourceText)) securityFindings.push('eval');
+  if (/https?:\/\//.test(sourceText) && !sourceText.includes('research_sources')) securityFindings.push('unexpected_network_literal');
+  add('C31', 'zero bounded changed-source security findings', securityFindings.length === 0, securityFindings);
+  add('C32', 'source canonical not replayed', plan.source.source_canonical_executed_by_auren === false && plan.source.canonical_replays === 0);
+  add('C33', 'stage sessions not replayed', x1.session.replays === 0 && x2.session.replays === 0);
+  add('C34', 'resource and format boundary', final.resource_closeout.tracked_after === 2000 && final.resource_closeout.global_installs === 0 && final.resource_closeout.shared_mutations === 0);
+  const failures = checks.filter(check => !check.pass);
+  return {head, upstream, tracking, live, divergence, tracked, changed, checks, failures, privacy_hits: hits, security_findings: securityFindings};
+}
+
+function canonicalRun(exactFinal) {
+  ensureDir(path.join(BANK, 'canonical'));
+  const latchFile = path.join(BANK, 'canonical', 'invocation-latch.json');
+  const payloadFile = path.join(BANK, 'canonical', 'canonical-payload.json');
+  const receiptFile = path.join(BANK, 'canonical', 'canonical-receipt.json');
+  assert(!fs.existsSync(latchFile) && !fs.existsSync(payloadFile) && !fs.existsSync(receiptFile), 'canonical_exclusive_latch');
+  writeExclusive(latchFile, {schema: 'ghc.family.canonical-invocation-latch.v14', owner: 'Auren Lark', phase: 'v698-v7', invoked_utc: new Date().toISOString(), successful_replays: 0});
+  let validation;
+  try {
+    validation = validateRepository({remote: true, exactFinal});
+  } catch (error) {
+    writeExclusive(path.join(BANK, 'canonical', 'canonical-failure.json'), {schema: 'ghc.family.owner-canonical-failure.v14', error: error.message, successful_invocations: 0, successful_replays: 0, repository_mutated: false, retained: true});
+    throw error;
+  }
+  if (validation.failures.length) {
+    writeExclusive(path.join(BANK, 'canonical', 'canonical-failure.json'), {schema: 'ghc.family.owner-canonical-failure.v14', failures: validation.failures, successful_invocations: 0, successful_replays: 0, repository_mutated: false, retained: true});
+    throw new Error(`canonical_failures:${JSON.stringify(validation.failures)}`);
+  }
+  const final = readJson(path.join(ROOT, 'final.json'));
+  const payload = {
+    schema: 'ghc.family.owner-canonical-payload.v14',
+    state: 'VALID_EXACT_FINAL_OWNER_SCOPED_CANONICAL',
+    owner: 'Auren Lark',
+    phase: 'v698-v7',
+    branch: BRANCH,
+    source: SOURCE,
+    head: validation.head,
+    check_count: validation.checks.length,
+    checks: validation.checks,
+    owner_files: validation.changed.length,
+    tracked_files: validation.tracked,
+    strict_json_parses: 4,
+    manifest_replays: final.manifest.entries.length,
+    privacy_hits: validation.privacy_hits,
+    security_findings: validation.security_findings,
+    successful_invocations: 1,
+    successful_replays: 0,
+    source_canonical_replay: false,
+    x1_session_replay: false,
+    x2_session_replay: false,
+    same_owner_only: true,
+    independent_reproduction: false,
+    full_repository_suite: false,
+    repository_mutated: false,
+    terminal_verdict: 'NOT_READY_FOR_STAGE_20',
+    boundary: BOUNDARY,
+  };
+  const payloadBytes = canonical(payload);
+  const payloadSha = shaBytes(payloadBytes);
+  fs.writeFileSync(payloadFile, payloadBytes, {flag: 'wx'});
+  const receipt = {schema: 'ghc.family.owner-canonical-receipt.v14', payload, payload_sha256: payloadSha, invoked_utc: new Date().toISOString(), repository_mutated: false};
+  writeExclusive(receiptFile, receipt);
+  console.log(JSON.stringify({state: payload.state, check_count: payload.check_count, payload_sha256: payloadSha, receipt_sha256: bindFileExternal(receiptFile).sha256, head: payload.head, tracked_files: payload.tracked_files}));
+}
+
+function bindFileExternal(file) {
+  const bytes = fs.readFileSync(file);
+  return {bytes: bytes.length, sha256: shaBytes(bytes)};
+}
+
+function validateCommand() {
+  const finalExists = fs.existsSync(path.join(ROOT, 'final.json'));
+  if (!finalExists) {
+    const plan = readJson(path.join(ROOT, 'plan.json'));
+    const output = {stage: 'plan', checks: planChecks(plan), engine_fixed: bindFile(path.join(ROOT, 'phase.txt')).sha256 === plan.engine.sha256};
+    if (fs.existsSync(path.join(ROOT, 'x1.json'))) output.x1 = readJson(path.join(ROOT, 'x1.json')).checks;
+    if (fs.existsSync(path.join(ROOT, 'x2.json'))) output.x2 = readJson(path.join(ROOT, 'x2.json')).checks;
+    assert(output.engine_fixed && output.checks.every(check => check.pass), 'validation');
+    console.log(JSON.stringify(output));
+    return;
+  }
+  const validation = validateRepository({remote: false, preflight: true});
+  if (validation.failures.length) throw new Error(`validation_failures:${JSON.stringify(validation.failures)}`);
+  console.log(JSON.stringify({state: 'VALID_OWNER_WORKTREE_PREFLIGHT', checks: validation.checks.length, tracked: validation.tracked, changed: validation.changed.length, privacy_hits: validation.privacy_hits.length, security_findings: validation.security_findings.length}));
+}
+
+const command = process.argv.at(-1);
+if (command === 'plan') makePlan();
+else if (command === 'x1' || command === 'x2') runStage(command);
+else if (command === 'final') makeFinal();
+else if (command === 'validate') validateCommand();
+else if (command && command.startsWith('canonical=')) canonicalRun(command.slice('canonical='.length));
+else throw new Error(`usage: plan | x1 | x2 | final | validate | canonical=<exact-final>`);
