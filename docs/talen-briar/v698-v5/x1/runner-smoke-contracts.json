@@ -1,0 +1,327 @@
+{
+  "declared_before_execution": true,
+  "cases": [
+    {
+      "runner": "talen-x1-1.txt",
+      "request": {
+        "op": "cg_values",
+        "input": {
+          "players": [
+            "u",
+            "v",
+            "w"
+          ],
+          "weights": [
+            2,
+            1,
+            1
+          ],
+          "quota": 3,
+          "costs": [
+            1,
+            2,
+            3
+          ]
+        }
+      },
+      "expected": {
+        "ok": true,
+        "error": null,
+        "outcome": "completed",
+        "value": {
+          "values": [
+            0,
+            0,
+            0,
+            1,
+            0,
+            1,
+            0,
+            1
+          ],
+          "mask_order": "ascending little-endian component bits"
+        },
+        "external_credit": false
+      },
+      "bad_request": {
+        "op": "unregistered",
+        "input": {
+          "players": [
+            "u",
+            "v",
+            "w"
+          ],
+          "weights": [
+            2,
+            1,
+            1
+          ],
+          "quota": 3,
+          "costs": [
+            1,
+            2,
+            3
+          ]
+        }
+      },
+      "negative_id": "TB6985-x1-RUN-N01",
+      "expected_error": "runner_operation"
+    },
+    {
+      "runner": "talen-x1-2.txt",
+      "request": {
+        "op": "cg_maximal_losing",
+        "input": {
+          "players": [
+            "u",
+            "v",
+            "w"
+          ],
+          "weights": [
+            2,
+            1,
+            1
+          ],
+          "quota": 3,
+          "costs": [
+            1,
+            2,
+            3
+          ]
+        }
+      },
+      "expected": {
+        "ok": true,
+        "error": null,
+        "outcome": "completed",
+        "value": [
+          1,
+          6
+        ],
+        "external_credit": false
+      },
+      "bad_request": {
+        "op": "unregistered",
+        "input": {
+          "players": [
+            "u",
+            "v",
+            "w"
+          ],
+          "weights": [
+            2,
+            1,
+            1
+          ],
+          "quota": 3,
+          "costs": [
+            1,
+            2,
+            3
+          ]
+        }
+      },
+      "negative_id": "TB6985-x1-RUN-N02",
+      "expected_error": "runner_operation"
+    },
+    {
+      "runner": "talen-x1-3.txt",
+      "request": {
+        "op": "cg_swing_witnesses",
+        "input": {
+          "players": [
+            "u",
+            "v",
+            "w"
+          ],
+          "weights": [
+            2,
+            1,
+            1
+          ],
+          "quota": 3,
+          "costs": [
+            1,
+            2,
+            3
+          ]
+        }
+      },
+      "expected": {
+        "ok": true,
+        "error": null,
+        "outcome": "completed",
+        "value": [
+          {
+            "coalition": 3,
+            "component": 0
+          },
+          {
+            "coalition": 3,
+            "component": 1
+          },
+          {
+            "coalition": 5,
+            "component": 0
+          },
+          {
+            "coalition": 5,
+            "component": 2
+          },
+          {
+            "coalition": 7,
+            "component": 0
+          }
+        ],
+        "external_credit": false
+      },
+      "bad_request": {
+        "op": "unregistered",
+        "input": {
+          "players": [
+            "u",
+            "v",
+            "w"
+          ],
+          "weights": [
+            2,
+            1,
+            1
+          ],
+          "quota": 3,
+          "costs": [
+            1,
+            2,
+            3
+          ]
+        }
+      },
+      "negative_id": "TB6985-x1-RUN-N03",
+      "expected_error": "runner_operation"
+    },
+    {
+      "runner": "talen-x1-4.txt",
+      "request": {
+        "op": "cg_banzhaf_normalized",
+        "input": {
+          "players": [
+            "u",
+            "v",
+            "w"
+          ],
+          "weights": [
+            2,
+            1,
+            1
+          ],
+          "quota": 3,
+          "costs": [
+            1,
+            2,
+            3
+          ]
+        }
+      },
+      "expected": {
+        "ok": true,
+        "error": null,
+        "outcome": "completed",
+        "value": [
+          {
+            "numerator": 3,
+            "denominator": 5
+          },
+          {
+            "numerator": 1,
+            "denominator": 5
+          },
+          {
+            "numerator": 1,
+            "denominator": 5
+          }
+        ],
+        "external_credit": false
+      },
+      "bad_request": {
+        "op": "unregistered",
+        "input": {
+          "players": [
+            "u",
+            "v",
+            "w"
+          ],
+          "weights": [
+            2,
+            1,
+            1
+          ],
+          "quota": 3,
+          "costs": [
+            1,
+            2,
+            3
+          ]
+        }
+      },
+      "negative_id": "TB6985-x1-RUN-N04",
+      "expected_error": "runner_operation"
+    },
+    {
+      "runner": "talen-x1-5.txt",
+      "request": {
+        "op": "cg_veto_players",
+        "input": {
+          "players": [
+            "u",
+            "v",
+            "w"
+          ],
+          "weights": [
+            2,
+            1,
+            1
+          ],
+          "quota": 3,
+          "costs": [
+            1,
+            2,
+            3
+          ]
+        }
+      },
+      "expected": {
+        "ok": true,
+        "error": null,
+        "outcome": "completed",
+        "value": [
+          0
+        ],
+        "external_credit": false
+      },
+      "bad_request": {
+        "op": "unregistered",
+        "input": {
+          "players": [
+            "u",
+            "v",
+            "w"
+          ],
+          "weights": [
+            2,
+            1,
+            1
+          ],
+          "quota": 3,
+          "costs": [
+            1,
+            2,
+            3
+          ]
+        }
+      },
+      "negative_id": "TB6985-x1-RUN-N05",
+      "expected_error": "runner_operation"
+    }
+  ],
+  "domain_session_replays": 0
+}
