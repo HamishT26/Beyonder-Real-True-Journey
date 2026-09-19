@@ -1,0 +1,10 @@
+'use strict';
+module.exports = {
+  name: "ghc_family_source_lattice_x1_05",
+  operations: ["sl_layers","sl_transpose"],
+  run(core, requests) {
+    if (!core || typeof core.execute !== 'function') throw new Error('missing_core');
+    if (!Array.isArray(requests)) throw new Error('requests_shape');
+    return requests.map(request => core.execute(request));
+  }
+};
