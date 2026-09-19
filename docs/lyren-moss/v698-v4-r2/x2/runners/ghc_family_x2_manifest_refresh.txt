@@ -1,0 +1,42 @@
+'use strict';
+
+const fs = require('fs');
+const path = require('path');
+const crypto = require('crypto');
+
+const X2 = path.resolve(__dirname, '..');
+const PHASE = path.resolve(X2, '..');
+const REPO = path.resolve(PHASE, '../../..');
+const manifestPath = path.join(X2, 'manifest.json');
+const previous = JSON.parse(fs.readFileSync(manifestPath, 'utf8'));
+const files = [];
+const stack = [X2];
+while (stack.length) {
+  const dir = stack.pop();
+  for (const entry of fs.readdirSync(dir, { withFileTypes: true }).sort((a, b) => a.name.localeCompare(b.name))) {
+    const full = path.join(dir, entry.name);
+    if (entry.isDirectory()) stack.push(full);
+    else if (full !== manifestPath) files.push(full);
+  }
+}
+const entries = files.sort().map(file => {
+  const bytes = fs.readFileSync(file);
+  return {
+    path: path.relative(REPO, file).split(path.sep).join('/'),
+    bytes: bytes.length,
+    sha256: crypto.createHash('sha256').update(bytes).digest('hex')
+  };
+});
+const next = {
+  schema: previous.schema,
+  owner: previous.owner,
+  phase: previous.phase,
+  stage: previous.stage,
+  byte_domain: previous.byte_domain,
+  entries,
+  self_exclusions: previous.self_exclusions,
+  refresh_reason: 'Additive three-coordinate model augmentation and shared-pointer receipts; no domain, test, model-source, skill, runner-smoke, or session replay.',
+  boundary: previous.boundary
+};
+fs.writeFileSync(manifestPath, `${JSON.stringify(next, null, 2)}\n`, 'utf8');
+process.stdout.write(`${JSON.stringify({ state: 'X2_MANIFEST_REFRESHED_METADATA_ONLY', entries: entries.length, component_replays: 0 }, null, 2)}\n`);

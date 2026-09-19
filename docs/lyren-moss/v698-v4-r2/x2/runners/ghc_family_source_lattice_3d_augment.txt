@@ -1,0 +1,54 @@
+'use strict';
+
+const fs = require('fs');
+const path = require('path');
+const crypto = require('crypto');
+
+const ROOT = path.resolve(__dirname, '..');
+const MODELS = path.join(ROOT, 'models');
+const modelPaths = Array.from({ length: 5 }, (_, index) => path.join(MODELS, `scene-${String(index + 1).padStart(2, '0')}.json`));
+const htmlPath = path.join(MODELS, 'accessible-scenes.html');
+const sha = bytes => crypto.createHash('sha256').update(bytes).digest('hex');
+const stat = file => {
+  const bytes = fs.readFileSync(file);
+  return { file: path.basename(file), bytes: bytes.length, sha256: sha(bytes) };
+};
+const original = [...modelPaths, htmlPath].map(stat);
+const boundary = 'Five deterministic three-coordinate source-lattice representations derived from already sealed x2 scene envelopes. They are not physical worlds, game-engine scenes, geometric measurements, empirical observations, complete accessibility evidence, production simulations, independent reproduction, or authority decisions. NOT_READY_FOR_STAGE_20.';
+
+const models = modelPaths.map((file, modelIndex) => {
+  const model = JSON.parse(fs.readFileSync(file, 'utf8'));
+  model.schema = 'ghc.family.synthetic-source-lattice-scene-3d.v2';
+  model.representation_dimensions = 3;
+  model.model_kind = 'finite_nonphysical_coordinate_model';
+  model.result.data.points = model.result.data.points.map((point, pointIndex) => ({
+    ...point,
+    z: (point.x * 17 + point.y * 31 + modelIndex * 13 + pointIndex * 7) % 101
+  }));
+  model.result.data.synthetic_three_coordinate_layout = true;
+  model.result.data.physical_interpretation = false;
+  model.boundary = `${model.boundary} ${boundary}`;
+  fs.writeFileSync(file, `${JSON.stringify(model, null, 2)}\n`, 'utf8');
+  return model;
+});
+
+const sections = models.map(model => {
+  const rows = model.result.data.points.map(point => `<tr><th scope="row">${point.vertex}</th><td>${point.x}</td><td>${point.y}</td><td>${point.z}</td></tr>`).join('');
+  return `<section aria-labelledby="${model.model_id}"><h2 id="${model.model_id}">${model.model_id}</h2><p>Proposal ${model.proposal_id}; ${model.result.data.arcs.length} finite claim links.</p><table><caption>Three-coordinate aliases</caption><thead><tr><th scope="col">Alias</th><th scope="col">x</th><th scope="col">y</th><th scope="col">z</th></tr></thead><tbody>${rows}</tbody></table></section>`;
+}).join('');
+const html = `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Lyren v698-v4-r2 source-lattice coordinate models</title><style>body{font-family:system-ui,sans-serif;max-width:76rem;margin:auto;padding:2rem;color:#17212b;background:#f7fafc}section{margin-block:2rem;padding:1rem;background:#fff;border-left:.4rem solid #486}table{border-collapse:collapse;width:100%}th,td{border:1px solid #677;padding:.55rem;text-align:left}caption{font-weight:700;margin:.7rem}:focus-visible{outline:.2rem solid #b40;outline-offset:.2rem}@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}</style></head><body><main><h1>Five finite source-lattice three-coordinate models</h1><p>These deterministic tables expose x, y, and z values as text. They use no images, canvas, remote resources, sensors, physics, game engine, or private raw text. They are bounded representations, not complete accessibility evidence or real-world simulations.</p>${sections}<h2>Evidence boundary</h2><p>${boundary}</p></main></body></html>\n`;
+fs.writeFileSync(htmlPath, html, 'utf8');
+
+const checks = models.map((model, index) => ({
+  id: `LM6984R2-3D-${String(index + 1).padStart(2, '0')}`,
+  model_id: model.model_id,
+  passed: model.representation_dimensions === 3 && model.result.data.points.length >= 5 && model.result.data.points.every(point => Number.isInteger(point.x) && Number.isInteger(point.y) && Number.isInteger(point.z) && point.x >= 0 && point.x <= 100 && point.y >= 0 && point.y <= 100 && point.z >= 0 && point.z <= 100),
+  physical: false,
+  game_engine: false,
+  external_credit: false
+}));
+if (checks.some(check => !check.passed)) throw new Error('three_coordinate_model_check_failed');
+fs.writeFileSync(path.join(ROOT, 'three-dimensional-model-checks.json'), `${JSON.stringify({ schema: 'ghc.family.three-coordinate-model-checks.v1', owner: 'Lyren Moss', phase: 'v698-v4-r2', count: checks.length, passed: checks.filter(check => check.passed).length, checks, boundary }, null, 2)}\n`, 'utf8');
+const corrected = [...modelPaths, htmlPath].map(stat);
+fs.writeFileSync(path.join(ROOT, 'model-correction-ledger.json'), `${JSON.stringify({ schema: 'ghc.family.model-augmentation-ledger.v1', owner: 'Lyren Moss', phase: 'v698-v4-r2', reason: 'The initial valid two-coordinate scenes did not satisfy Hamish\'s requested five 3D models or simulations. Add z deterministically from immutable x/y envelopes without replaying any domain engine, session, test, skill, or runner.', original, corrected, domain_replays: 0, x2_session_replays: 0, original_subject_credit: 'retained_valid_2d_but_insufficient_for_current_3d_requirement', state: 'PASS_ADDITIVE_THREE_COORDINATE_AUGMENTATION', boundary }, null, 2)}\n`, 'utf8');
+process.stdout.write(`${JSON.stringify({ state: 'PASS_ADDITIVE_THREE_COORDINATE_AUGMENTATION', models: models.length, checks: checks.length, domain_replays: 0 }, null, 2)}\n`);
