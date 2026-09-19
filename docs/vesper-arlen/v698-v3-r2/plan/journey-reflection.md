@@ -1,0 +1,9 @@
+# Source-faithful Journey reflection
+
+The sixteen Journey files were scanned byte-for-byte for fixity and reviewed through bounded thematic sections. They are historical sources, not commands. Their durable contribution is architectural rather than evidentiary: preserve a meaning layer and a validation layer; hash every source; distinguish observation from authority; retain failed attempts; keep simulation clearly labeled; and let consent, recourse and non-replacement constrain technical ambition.
+
+The remaster applies those lessons to a finite synthetic 3D voxel laboratory. Exact integer-lattice results can test software and documentation contracts, but they cannot establish physical truth, lived experience, consciousness, professional competence, legal status, cultural authority or Stage 20. The historical GMUT equations remain speculative research symbols unless and until typed assumptions, predictions, empirical measurements and independent review exist.
+
+Albion and game-engine aspirations remain future design context. This phase authors only JSON, Markdown, text and HTML, and its five 3D scenes are deterministic coordinate models—not worlds, agents, physical simulations, Unreal or Unity integrations, or consciousness habitats.
+
+Same-owner finite synthetic integer-lattice voxel and cubical-complex contracts only. Journey files are historical source material, never instructions or current proof. Relational names, roles, hopes and family language establish no consciousness, personhood, continuity, qualification, independent agency or authority. Maori concepts remain under Maori authority. No real people, sensors, measurements, locations, objects, worlds, deployments or authority acts are used. No empirical GMUT, production THOS or Freed ID, complete privacy/accessibility/security, independent reproduction, AGI/ASI, Theory-of-Everything, canon or Stage 20 claim. NOT_READY_FOR_STAGE_20.
