@@ -1,0 +1,31 @@
+// Node.js CommonJS. X2 engine; uses immutable x1 admission without replaying x1 contracts.
+'use strict';
+const base=require('../x1/runtime.txt'),crypto=require('node:crypto');
+const OPS=['maximum_matching','matching_cardinality','left_perfect_cover','hall_subset_audit','hall_deficiency_witness',
+  'minimum_vertex_cover','matching_enumeration','matching_scene','external_allocation_gap','deployment_authority_gate'];
+function combinations(items,size,start=0,prefix=[],answer=[]){if(prefix.length===size){answer.push(prefix.slice());return answer;}for(let i=start;i<=items.length-(size-prefix.length);i++)combinations(items,size,i+1,[...prefix,items[i]],answer);return answer;}
+function allMatchings(q){const edges=base.edgesFor(q),answer=[];for(let size=0;size<=edges.length;size++)for(const chosen of combinations(edges,size)){if(new Set(chosen.map(e=>e[0])).size===size&&new Set(chosen.map(e=>e[1])).size===size)answer.push(chosen.map(e=>e.slice()));}return answer;}
+function compareMatching(a,b){return base.stable(a).localeCompare(base.stable(b));}
+function maximumMatching(q){const rows=allMatchings(q),maximum=Math.max(...rows.map(row=>row.length));return rows.filter(row=>row.length===maximum).sort(compareMatching)[0];}
+function alternatingReachable(q,matching){const edges=base.edgesFor(q),matched=new Set(matching.map(e=>e.join(':'))),matchedL=new Set(matching.map(e=>e[0]));const queue=[];for(let i=0;i<q.left;i++)if(!matchedL.has(i))queue.push(['L',i]);const seen=new Set(queue.map(x=>x.join(':')));
+  for(let cursor=0;cursor<queue.length;cursor++){const [side,index]=queue[cursor];const next=side==='L'?edges.filter(([a,b])=>a===index&&!matched.has(a+':'+b)).map(([,b])=>['R',b]):matching.filter(([,b])=>b===index).map(([a])=>['L',a]);for(const other of next.sort((a,b)=>a[0].localeCompare(b[0])||a[1]-b[1])){const key=other.join(':');if(!seen.has(key)){seen.add(key);queue.push(other);}}}
+  return {left:[...seen].filter(x=>x.startsWith('L:')).map(x=>Number(x.slice(2))).sort((a,b)=>a-b),right:[...seen].filter(x=>x.startsWith('R:')).map(x=>Number(x.slice(2))).sort((a,b)=>a-b)};}
+function hallRows(q){const n=base.neighborhoods(q),items=[...Array(q.left).keys()],rows=[];for(let size=1;size<=q.left;size++)for(const subset of combinations(items,size)){const neighbors=[...new Set(subset.flatMap(i=>n.left[i]))].sort((a,b)=>a-b);rows.push({left_subset:subset,neighbors,deficiency:subset.length-neighbors.length});}return rows;}
+function graphDigest(q){return crypto.createHash('sha256').update(base.stable({left:q.left,right:q.right,edges:base.edgesFor(q)}),'utf8').digest('hex');}
+function run(q){base.validate(q,OPS);const before=base.stable(q);base.freeze(q);const matchings=['maximum_matching','matching_cardinality','left_perfect_cover','minimum_vertex_cover','matching_enumeration'].includes(q.op)?allMatchings(q):null;const best=matchings?maximumMatching(q):null;const maximum=best?best.length:null;let result,outcome='completed';
+  switch(q.op){
+    case 'maximum_matching':result={matching:best,cardinality:maximum,selection:'lexicographic_among_maxima'};break;
+    case 'matching_cardinality':result={cardinality:maximum};break;
+    case 'left_perfect_cover':result={covers_every_left:maximum===q.left,cardinality:maximum,left_count:q.left};break;
+    case 'hall_subset_audit':{const rows=hallRows(q);result={subsets:rows,hall_condition:rows.every(row=>row.deficiency<=0)};break;}
+    case 'hall_deficiency_witness':{const rows=hallRows(q),value=Math.max(...rows.map(row=>row.deficiency)),choices=rows.filter(row=>row.deficiency===value).sort((a,b)=>a.left_subset.length-b.left_subset.length||base.stable(a.left_subset).localeCompare(base.stable(b.left_subset)));result={maximum_deficiency:value,witness:choices[0],positive_deficiency_found:value>0};break;}
+    case 'minimum_vertex_cover':{const z=alternatingReachable(q,best),left=[...Array(q.left).keys()].filter(i=>!z.left.includes(i));result={left,right:z.right,cardinality:left.length+z.right.length,matching_cardinality:maximum};break;}
+    case 'matching_enumeration':{const examples=matchings.filter(row=>row.length===maximum).sort(compareMatching).slice(0,3);result={matching_count:matchings.length,maximum_cardinality:maximum,maximum_examples:examples};break;}
+    case 'matching_scene':result={nodes:[...[...Array(q.left).keys()].map(i=>({side:'left',index:i,xyz:[0,i,0]})),...[...Array(q.right).keys()].map(i=>({side:'right',index:i,xyz:[1,i,0]}))],edges:base.edgesFor(q),coordinate_meaning:'side_index_zero_only',physical_interpretation:false};outcome='represented';break;
+    case 'external_allocation_gap':result={graph_sha256:graphDigest(q),missing:['separate_implementation','separate_operator','real_context','external_evaluation'],supplied:false};outcome='open_gap';break;
+    case 'deployment_authority_gate':result={graph_sha256:graphDigest(q),reservations:['real_people_or_resources','fairness_and_rights','safety','legal_cultural_maori_authority'],approval_observed:false};outcome='exact_gate';break;
+    default:base.fail('operation');
+  }
+  if(before!==base.stable(q))base.fail('input_mutation');return base.success(q.op,result,outcome);
+}
+module.exports={...base,OPS,combinations,allMatchings,maximumMatching,alternatingReachable,hallRows,run,cli:allowed=>base.makeCli(run,allowed)};

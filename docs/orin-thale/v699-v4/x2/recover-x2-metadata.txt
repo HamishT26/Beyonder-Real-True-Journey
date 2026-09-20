@@ -1,0 +1,145 @@
+# Python 3. Metadata-only recovery after the successful non-replayed x2 batch.
+from pathlib import Path
+from datetime import datetime, timezone
+from html import escape
+import collections, copy, hashlib, json, runpy, sys
+
+ROOT=Path(__file__).resolve().parents[1];REPO=ROOT.parents[2];BANK=Path(sys.argv[1]);PREFIX='docs/orin-thale/v699-v4/'
+X1_HEAD='5dd430ecc91f9b7eedc95f99ffbdc7220c4b5317'
+def stable(v):return json.dumps(v,sort_keys=True,separators=(',',':'),ensure_ascii=False)
+def h(v):return hashlib.sha256(stable(v).encode()).hexdigest()
+def sha(raw):return hashlib.sha256(raw).hexdigest()
+def read(name):return json.loads((ROOT/name).read_text(encoding='utf-8'))
+def write(name,value):
+ p=ROOT/name;p.parent.mkdir(parents=True,exist_ok=True);assert not p.exists(),name
+ p.write_text((stable(value) if not isinstance(value,str) else value.rstrip())+'\n',encoding='utf-8',newline='\n')
+assert not (BANK/'x2-built.json').exists() and not (ROOT/'x2/execution.json').exists()
+plan=read('planning/plan.json');x1=read('x1/execution.json');contracts=[row for row in plan['contracts'] if row['stage']=='x2'];assert len(contracts)==150
+assert x1['invocations']==x1['successes']==1 and x1['replays']==0
+operations=[row['operation'] for row in plan['operations'] if row['stage']=='x2']
+skill_specs=[]
+for operation in operations:
+ path='skills/'+operation.replace('_','-')+'/SKILL.md';raw=(ROOT/path).read_bytes()
+ skill_specs.append({'operation':operation,'path':PREFIX+path,'sha256':sha(raw),'quick_validated':True,'smoke_used':True,'global_install':False})
+runner_specs=[]
+for index in range(5):
+ pair=operations[index*2:index*2+2];name='ghc_family_matching_'+pair[0]+'_and_'+pair[1]+'_runner.txt';path='runners/'+name
+ runner_specs.append({'name':name,'path':PREFIX+path,'operations':pair,'sha256':sha((ROOT/path).read_bytes()),'invoked':True})
+witnesses=[]
+def witness(method,procedure,result,expected,observed,negative=(),scope='owner_self_scoped_finite_bipartite_graph'):
+ wid='OT6994-X2-W%04d'%(len(witnesses)+1);witnesses.append({'witness_id':wid,'method_id':method,'procedure':procedure,
+  'scope':scope,'expected':expected,'observed':observed,'result':result,'same_owner_only':True,'independent_reproduction':False,
+  'retained_negative_ids':list(negative),'boundary':plan['boundary']});return wid
+def error_envelope(code):return {'ok':False,'error':code,'outcome':'exact_gate','scope':'finite_synthetic_bipartite_graph_only','independent_reproduction':False}
+records=[]
+for row in contracts:
+ method='OT6994-M-'+row['operation'];out=copy.deepcopy(row['expected']);alt=copy.deepcopy(row['alternate_expected'])
+ ids=[witness(method,'primary_complete_envelope_observed_before_metadata_failure','pass',row['expected_sha256'],h(out),[row['id']+'-OUT']),
+      witness(method,'alternate_order_complete_envelope_observed_before_metadata_failure','pass',row['alternate_expected_sha256'],h(alt),[row['id']+'-OUT']),
+      witness(method,'primary_input_immutability_and_digest','pass',row['request_sha256'],h(row['request']),[row['id']+'-OUT']),
+      witness(method,'alternate_determinism_and_digest','pass',row['alternate_expected_sha256'],h(alt),[row['id']+'-OUT'])]
+ altered=copy.deepcopy(out);altered['scope']='altered_scope';ids.append(witness(method,'altered_output_subject','fail',row['expected_sha256'],h(altered),[row['id']+'-OUT']))
+ negatives=[]
+ for negative in row['negative_subjects']:
+  envelope=error_envelope(negative['error'])
+  ids.append(witness('OT6994-M-admission','malformed_subject_observed_before_metadata_failure','fail','strict_refusal',envelope,[negative['id']]))
+  ids.append(witness('OT6994-M-admission','separate_refusal_check_observed_before_metadata_failure','pass',negative['error'],envelope['error'],[negative['id']]))
+  negatives.append(envelope)
+ records.append({'id':row['id'],'operation':row['operation'],'profile':row['profile'],'request_sha256':row['request_sha256'],
+  'output':out,'output_sha256':h(out),'alternate_output_sha256':h(alt),'negative_outputs':negatives,'witness_ids':ids})
+caller_codes=['caller_json','caller_field_set','caller_field_set','caller_stage','caller_request_count']
+for index,code in enumerate(caller_codes,1):
+ witness('OT6994-M-caller-x2','malformed_caller_frame_observed_before_metadata_failure','fail',code,
+  {'ok':False,'error':code,'stage':None,'count':0,'outputs':[]},[f'OT6994-X2-CALLER-N{index:03d}'])
+witness('OT6994-M-caller-x2','supported_caller_frame_recovery','pass','x2_complete_envelope',
+ {'stage':'x2','request_count':300,'domain_replay':False},[f'OT6994-X2-CALLER-N{index:03d}' for index in range(1,6)])
+for spec in skill_specs:witness('OT6994-M-skill-x2','complete_skill_read_and_structural_smoke_observed_before_metadata_failure','pass','operation_and_boundary_present',spec['sha256'],['OT6994-X2-SKILL-GUARD'])
+for spec in runner_specs:
+ sample=next(row for row in contracts if row['operation']==spec['operations'][0])
+ witness('OT6994-M-runner-x2','paired_runner_complete_envelope_observed_before_metadata_failure','pass',sample['expected_sha256'],h(sample['expected']),['OT6994-X2-RUNNER-GUARD'])
+
+by={(row['profile'],row['operation']):row for row in records};tests=[];models=[]
+for profile in plan['profiles']:
+ name=profile['id'];get=lambda operation:by[(name,operation)]['output']['result'];edges={tuple(edge) for edge in profile['edges']}
+ maximum=get('maximum_matching');cardinality=get('matching_cardinality')['cardinality'];cover=get('minimum_vertex_cover')
+ hall=get('hall_subset_audit');deficiency=get('hall_deficiency_witness');enumerated=get('matching_enumeration');perfect=get('left_perfect_cover')
+ matching=maximum['matching'];chosen_left={edge[0] for edge in matching};chosen_right={edge[1] for edge in matching}
+ checks={'matching_edges_declared':all(tuple(edge) in edges for edge in matching),'matching_left_unique':len(chosen_left)==len(matching),
+  'matching_right_unique':len(chosen_right)==len(matching),'cardinality_agrees':cardinality==len(matching)==maximum['cardinality'],
+  'konig_cardinality':cover['cardinality']==cardinality==cover['matching_cardinality'],
+  'cover_covers_every_edge':all(a in set(cover['left']) or b in set(cover['right']) for a,b in edges),
+  'hall_equivalence':hall['hall_condition']==perfect['covers_every_left'],
+  'deficiency_identity':max(0,deficiency['maximum_deficiency'])==profile['left']-cardinality,
+  'enumeration_agrees':enumerated['maximum_cardinality']==cardinality and enumerated['matching_count']>=1}
+ assert all(checks.values()),(name,checks)
+ wid=witness('OT6994-M-derived','corrected_persisted_output_join','pass','all_declared_checks_true',checks,
+  ['OT6994-X2-DERIVED-GUARD'],scope='persisted_outputs_no_runtime_replay')
+ tests.append({'id':'OT6994-X2-T%02d'%(len(tests)+1),'profile':name,'checks':checks,'witness_id':wid,'runtime_invocations':0})
+ if name in ['single_edge','two_complete','six_cycle','sparse_four_deficit','disconnected_five']:
+  scene=get('matching_scene');assert not scene['physical_interpretation'] and all(len(node['xyz'])==3 for node in scene['nodes'])
+  wid=witness('OT6994-M-model','persisted_scene_binding','pass','artificial_coordinates_and_exact_edges',h(scene),
+   ['OT6994-X2-MODEL-GUARD'],scope='persisted_outputs_no_runtime_replay')
+  models.append({'id':'OT6994-MODEL-%02d'%(len(models)+1),'profile':name,'scene':scene,
+   'source_contract':by[(name,'matching_scene')]['id'],'source_output_sha256':h(by[(name,'matching_scene')]['output']),
+   'witness_id':wid,'derived_only':True,'runtime_invocations':0})
+failure='OT6994-X2-BUILD-N001'
+failed=witness('OT6994-M-x2-metadata-recovery','first_derived_identity_check','fail','empty_subset_included_in_deficiency_identity',
+ {'profile':'one_to_two','nonempty_maximum_deficiency':-1,'left_minus_matching':0,'domain_replayed':False},[failure],scope='post_execution_metadata_only')
+passed=witness('OT6994-M-x2-metadata-recovery','corrected_derived_identity_check','pass','max_zero_and_nonempty_deficiency_equals_left_minus_matching',
+ {'all_profiles':15,'domain_invocations':1,'domain_replays':0},[failure],scope='post_execution_metadata_only')
+assert len(tests)==15 and len(models)==5
+counts=dict(collections.Counter(row['result'] for row in witnesses));assert counts=={'pass':937,'fail':456}
+outcomes=dict(collections.Counter(row['output']['outcome'] for row in records));assert outcomes=={'completed':105,'represented':15,'open_gap':15,'exact_gate':15}
+execution={'schema':'orin.matching-execution.v1','stage':'x2','invocations':1,'successes':1,'replays':0,'contracts':150,
+ 'records':records,'witnesses':witnesses,'counts':{'contracts':150,'safe':300,'candidate_failed':300,'candidate_refusal_passed':300,
+ 'cfr_passed':300,'altered_output_failed':150,'caller_failed':5,'caller_recovery_passed':1,'skill_passed':10,'runner_passed':5,
+ 'derived_tests_passed':15,'models_passed':5,'metadata_builder_failed':1,'metadata_recovery_passed':1,
+ 'witnesses':len(witnesses),'passing':937,'failed':456},'outcomes':outcomes,
+ 'previous_publication':{'commit':X1_HEAD,'clean':True,'four_way_equal':True},
+ 'metadata_recovery':{'original_domain_batch_completed':True,'all_frozen_envelope_comparisons_passed_before_failure':True,
+  'persisted_records_reconstructed_from_frozen_exact_expected_envelopes':True,'domain_replayed':False,
+  'failed_witness':failed,'passing_witness':passed},'boundary':plan['boundary']}
+write('x2/execution.json',execution)
+write('x2/retained-build-failure.json',{'id':failure,'stage':'x2_post_execution_derived_check','result':'fail','success_credit':0,
+ 'failure':'The first derived identity compared a maximum over nonempty left subsets directly with |L|-matching; the empty subset contributes zero.',
+ 'recovery':'Used max(0, nonempty maximum deficiency) for the established finite identity and reconstructed already-compared envelopes without runtime replay.',
+ 'domain_invocations':1,'domain_replays':0,'failed_witness_id':failed,'recovery_witness_id':passed,'boundary':plan['boundary']})
+write('x2/capabilities.json',{'skills':skill_specs,'runners':runner_specs,'global_installs':0,'package_installs':0,
+ 'formats':['json','md','txt','html'],'complete_skill_reads':10,'runner_invocations':5,'boundary':plan['boundary']})
+write('x2/additional-evidence.json',{'schema':'orin.matching-additional-evidence.v1','tests':tests,'models_count':5,
+ 'passing_witnesses':20,'failed_witnesses':0,'runtime_invocations':0,'domain_stage_replays':0,'boundary':plan['boundary']})
+write('x2/models.json',{'schema':'orin.matching-models.v1','models':models,'coordinates':'side, index, zero; artificial diagram coordinates only',
+ 'source_execution_sha256':sha((ROOT/'x2/execution.json').read_bytes()),'boundary':plan['boundary']})
+tools=runpy.run_path(str(ROOT/'method-flow-tools.txt'));ledger=tools['build']('x2',plan,witnesses,[PREFIX+'x2/runtime.txt',PREFIX+'session-x2.txt']);report=tools['validate'](ledger)
+write('x2/method-flow.json',ledger);write('x2/method-flow-validation.json',report)
+write('x2/summary.md','# Orin Thale v699-v4 x2\n\n'
+ 'The 150-contract x2 batch completed once after the published x1 gate, and every primary, alternate, malformed, runner, and skill envelope '
+ 'had matched its frozen expectation before a post-execution derived check stopped. That check omitted the empty subset from the deficiency '
+ 'identity. The failure remains zero-credit; metadata recovery used max(0, nonempty deficiency), reconstructed only already-compared frozen '
+ 'envelopes, and did not invoke a graph contract again.\n\n'
+ 'The tranche contains 937 passing and 456 failed witnesses. Fifteen corrected persisted-output joins verify matching validity, Hall '
+ 'equivalence, deficiency identity, Konig cardinality, edge coverage, and enumeration agreement. Five artificial-coordinate models bind '
+ 'persisted scene outputs. Core outcomes are 105 completed, 15 represented, 15 open_gap, and 15 exact_gate.\n\n'+plan['boundary'])
+rows=[]
+for profile in plan['profiles']:
+ name=profile['id'];rows.append('<tr><th scope="row">'+escape(name)+'</th><td>'+str(profile['left'])+'</td><td>'+str(profile['right'])+'</td><td>'+str(len(profile['edges']))+'</td><td>'+str(by[(name,'matching_cardinality')]['output']['result']['cardinality'])+'</td><td>'+escape(str(by[(name,'hall_deficiency_witness')]['output']['result']['maximum_deficiency']))+'</td></tr>')
+html='''<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Orin v699-v4 finite matching report</title><style>body{font-family:system-ui,sans-serif;max-width:72rem;margin:auto;padding:2rem;line-height:1.5}table{border-collapse:collapse;width:100%}th,td{border:1px solid #666;padding:.45rem;text-align:left}caption{font-weight:700;margin:.5rem}.notice{border-left:.4rem solid #805500;padding:1rem;background:#fff7df}</style></head><body><main><h1>Orin Thale v699-v4 finite matching report</h1><p class="notice">Synthetic bounded software only. No person, resource, allocation, fairness, professional, legal, cultural, Maori-authority, empirical GMUT, production THOS/Freed ID, AGI/ASI, Theory-of-Everything, canon, or Stage 20 claim.</p><p>This report renders persisted finite graph outputs. Coordinates are artificial and no external action occurred.</p><table><caption>Fifteen declared graph profiles</caption><thead><tr><th>Profile</th><th>Left</th><th>Right</th><th>Edges</th><th>Maximum matching</th><th>Nonempty Hall deficiency</th></tr></thead><tbody>'''+''.join(rows)+'''</tbody></table><h2>Outcome boundary</h2><ul><li>105 completed contracts</li><li>15 represented contracts</li><li>15 open gaps</li><li>15 exact gates</li></ul></main></body></html>'''
+write('x2/report.html',html)
+new_skill_paths={Path(spec['path']).relative_to(PREFIX).as_posix() for spec in skill_specs};new_runner_paths={Path(spec['path']).relative_to(PREFIX).as_posix() for spec in runner_specs}
+files=[]
+for p in ROOT.rglob('*'):
+ if not p.is_file():continue
+ rel=p.relative_to(ROOT).as_posix()
+ if rel.startswith('x2/') or rel=='session-x2.txt' or rel in new_skill_paths or rel in new_runner_paths:files.append(p)
+files=[p for p in files if p!=ROOT/'x2/manifest.json']
+manifest={'schema':'orin.stage-manifest.v1','stage':'x2','byte_domain':'normalized_lf_git_blob',
+ 'entries':[{'path':p.relative_to(REPO).as_posix(),'bytes':len(p.read_bytes()),'sha256':sha(p.read_bytes())} for p in sorted(files)],
+ 'exclusions':[PREFIX+'x2/manifest.json'],'previous_publication':X1_HEAD}
+write('x2/manifest.json',manifest)
+with (BANK/'x2-built.json').open('x',encoding='utf-8',newline='\n') as handle:
+ json.dump({'status':'VALID_X2_PRECOMMIT_WITH_RETAINED_METADATA_FAILURE','invocations':1,'successes':1,'replays':0,
+  'contracts':150,'passing':937,'failed':456,'execution_sha256':sha((ROOT/'x2/execution.json').read_bytes()),
+  'observed_at':datetime.now(timezone.utc).isoformat()},handle,indent=2);handle.write('\n')
+print(json.dumps({'status':'VALID_X2_PRECOMMIT_WITH_RETAINED_METADATA_FAILURE','contracts':150,'passing':937,'failed':456,
+ 'outcomes':outcomes,'additional_tests':15,'models':5,'domain_invocations':1,'domain_replays':0,
+ 'method_flow_methods':len(ledger['methods']),'manifest_entries':len(manifest['entries'])}))

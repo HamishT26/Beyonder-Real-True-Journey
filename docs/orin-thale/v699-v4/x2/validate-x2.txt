@@ -1,0 +1,90 @@
+# Python 3. Bounded x2 persisted-output validation only; never invokes a domain runtime.
+from pathlib import Path
+from datetime import datetime, timezone
+import ast, hashlib, json, re, subprocess
+
+ROOT=Path(__file__).resolve().parents[1];REPO=ROOT.parents[2];PREFIX='docs/orin-thale/v699-v4/';X1='5dd430ecc91f9b7eedc95f99ffbdc7220c4b5317'
+def stable(v):return json.dumps(v,sort_keys=True,separators=(',',':'),ensure_ascii=False)
+def sha(raw):return hashlib.sha256(raw).hexdigest()
+def read(name):return json.loads((ROOT/name).read_text(encoding='utf-8'))
+def write(name,value):
+ p=ROOT/name;p.parent.mkdir(parents=True,exist_ok=True);assert not p.exists(),name
+ p.write_text(stable(value)+'\n',encoding='utf-8',newline='\n')
+plan=read('planning/plan.json');execution=read('x2/execution.json');method=read('x2/method-flow.json');report=read('x2/method-flow-validation.json');additional=read('x2/additional-evidence.json')
+assert execution['invocations']==execution['successes']==1 and execution['replays']==0 and execution['metadata_recovery']['domain_replayed'] is False
+assert execution['counts']['passing']==937 and execution['counts']['failed']==456 and len(execution['records'])==150
+contracts={row['id']:row for row in plan['contracts'] if row['stage']=='x2'}
+assert all(row['output']==contracts[row['id']]['expected'] for row in execution['records'])
+assert execution['outcomes']=={'completed':105,'represented':15,'open_gap':15,'exact_gate':15}
+assert report['valid'] and report['passing']==937 and report['failed']==456
+assert len(additional['tests'])==15 and additional['models_count']==5 and additional['runtime_invocations']==0
+assert all(all(test['checks'].values()) for test in additional['tests'])
+
+x1_manifest=json.loads(subprocess.check_output(['git','show',X1+':'+PREFIX+'x1/manifest.json']).decode())
+x1_bad=[]
+for entry in x1_manifest['entries']:
+ raw=subprocess.check_output(['git','show',X1+':'+entry['path']])
+ if sha(raw)!=entry['sha256']:x1_bad.append(entry['path'])
+assert not x1_bad,x1_bad
+assert subprocess.check_output(['git','rev-parse',X1+'^']).decode().strip()=='35f4b43a67efd3e701db4c3581a4e8fb866c4461'
+
+json_files=sorted(ROOT.rglob('*.json'));parsed=0
+for path in json_files:json.loads(path.read_text(encoding='utf-8'));parsed+=1
+python_files=[ROOT/'x2/build-x2.txt',ROOT/'x2/recover-x2-metadata.txt',ROOT/'x2/validate-x2.txt']
+for path in python_files:ast.parse(path.read_text(encoding='utf-8'))
+x2_runner_names=['ghc_family_matching_'+operations[0]+'_and_'+operations[1]+'_runner.txt' for operations in [
+ ['maximum_matching','matching_cardinality'],['left_perfect_cover','hall_subset_audit'],['hall_deficiency_witness','minimum_vertex_cover'],
+ ['matching_enumeration','matching_scene'],['external_allocation_gap','deployment_authority_gate']]]
+js_files=[ROOT/'x2/runtime.txt',ROOT/'session-x2.txt']+[ROOT/'runners'/name for name in x2_runner_names]
+for path in js_files:
+ proc=subprocess.run(['node','-e',"new (require('node:vm').Script)(require('node:fs').readFileSync(process.argv[1],'utf8'))",str(path)],capture_output=True,text=True)
+ assert proc.returncode==0,(path,proc.stderr)
+html=(ROOT/'x2/report.html').read_text(encoding='utf-8')
+html_checks={'doctype':html.startswith('<!doctype html>'),'lang':'<html lang="en">' in html,'main':'<main>' in html and '</main>' in html,
+ 'caption':'<caption>' in html,'table_rows':html.count('<tr>')==16,'no_script':'<script' not in html.lower(),
+ 'no_external_asset':'http://' not in html.lower() and 'https://' not in html.lower(),'boundary':'NOT_READY_FOR_STAGE_20' not in html or 'Stage 20 claim' in html}
+assert all(html_checks.values()),html_checks
+write('x2/browser-review.json',{'schema':'orin.static-html-review.v1','checks':html_checks,'browser_runtime_invocations':0,
+ 'reason':'Static deterministic report has no script, network dependency, image, PDF, or external asset.','boundary':plan['boundary']})
+
+patterns={'credential':re.compile(r'(?:sk-[A-Za-z0-9]{16,}|ghp_[A-Za-z0-9]{16,}|api[_-]?key\s*[:=]\s*[A-Za-z0-9_-]{12,})',re.I),
+ 'raw_task_or_thread_id':re.compile(r'019[a-f0-9]{5}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}',re.I),
+ 'private_absolute_path':re.compile(r'[A-Za-z]:\\(?:Users|GHC-Archives)\\',re.I),
+ 'email_address':re.compile(r'[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}',re.I),
+ 'international_phone':re.compile(r'(?<![A-Za-z0-9])\+[0-9]{9,15}(?![A-Za-z0-9])')}
+candidates=[]
+for path in sorted(ROOT.rglob('*')):
+ if not path.is_file() or path.suffix.lower() not in {'.json','.md','.txt','.html'}:continue
+ text=path.read_text(encoding='utf-8')
+ for category,pattern in patterns.items():
+  for match in pattern.finditer(text):
+   classification='scanner_definition' if path in {ROOT/'x1/validate-x1.txt',ROOT/'x2/validate-x2.txt'} else 'payload_candidate'
+   candidates.append({'path':path.relative_to(REPO).as_posix(),'class':category,'classification':classification,
+    'start':match.start(),'length':match.end()-match.start()})
+confirmed=[row for row in candidates if row['classification']=='payload_candidate'];assert not confirmed,confirmed
+write('x2/scanner-adjudication.json',{'schema':'orin.five-class-scanner-adjudication.v1','classes':list(patterns),
+ 'candidates':candidates,'confirmed_hits':confirmed,'confirmed_count':0,'raw_candidate_values_persisted':False,'boundary':plan['boundary']})
+word_counts={p.relative_to(REPO).as_posix():len(p.read_text(encoding='utf-8').split()) for p in ROOT.rglob('*') if p.is_file() and p.suffix.lower() in {'.json','.md','.txt','.html'}}
+validation={'schema':'orin.x2-persisted-validation.v1','status':'VALID_X2_PERSISTED_OUTPUTS_WITH_RETAINED_METADATA_FAILURE',
+ 'domain_invocations':1,'domain_replays':0,'contracts_exact':150,'passing_witnesses':937,'failed_witnesses':456,
+ 'retained_metadata_failures':1,'additional_tests':15,'models':5,'json_parses':parsed,'python_ast_checks':len(python_files),
+ 'javascript_syntax_checks':len(js_files),'skills_read_through_eof':10,'runner_invocations_observed_before_metadata_failure':5,
+ 'immutable_x1_manifest_entries':len(x1_manifest['entries']),'immutable_x1_manifest_mismatches':0,'confirmed_privacy_hits':0,
+ 'html_checks':html_checks,'maximum_document_words':max(word_counts.values()),'documents_under_100000_words':all(v<=100000 for v in word_counts.values()),
+ 'method_flow_valid':True,'scope':'owner_self_scoped_persisted_output','observed_at':datetime.now(timezone.utc).isoformat(),'boundary':plan['boundary']}
+write('x2/validation.json',validation)
+skill_paths={Path(spec['path']).relative_to(PREFIX).as_posix() for spec in read('x2/capabilities.json')['skills']}
+runner_paths={Path(spec['path']).relative_to(PREFIX).as_posix() for spec in read('x2/capabilities.json')['runners']}
+files=[]
+for p in ROOT.rglob('*'):
+ if not p.is_file():continue
+ rel=p.relative_to(ROOT).as_posix()
+ if rel.startswith('x2/') or rel=='session-x2.txt' or rel in skill_paths or rel in runner_paths:files.append(p)
+files=[p for p in files if p!=ROOT/'x2/manifest.json']
+manifest={'schema':'orin.stage-manifest.v1','stage':'x2','byte_domain':'normalized_lf_git_blob',
+ 'entries':[{'path':p.relative_to(REPO).as_posix(),'bytes':len(p.read_bytes()),'sha256':sha(p.read_bytes())} for p in sorted(files)],
+ 'exclusions':[PREFIX+'x2/manifest.json'],'previous_publication':X1}
+(ROOT/'x2/manifest.json').write_text(stable(manifest)+'\n',encoding='utf-8',newline='\n')
+print(json.dumps({'status':validation['status'],'contracts_exact':150,'passing':937,'failed':456,'retained_metadata_failures':1,
+ 'additional_tests':15,'models':5,'json_parses':parsed,'immutable_x1_entries':len(x1_manifest['entries']),
+ 'scanner_candidates':len(candidates),'confirmed_privacy_hits':0,'html_checks':len(html_checks),'manifest_entries':len(manifest['entries'])}))

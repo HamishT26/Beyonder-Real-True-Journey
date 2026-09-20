@@ -1,0 +1,7 @@
+# Orin Thale v699-v4 x2
+
+The 150-contract x2 batch completed once after the published x1 gate, and every primary, alternate, malformed, runner, and skill envelope had matched its frozen expectation before a post-execution derived check stopped. That check omitted the empty subset from the deficiency identity. The failure remains zero-credit; metadata recovery used max(0, nonempty deficiency), reconstructed only already-compared frozen envelopes, and did not invoke a graph contract again.
+
+The tranche contains 937 passing and 456 failed witnesses. Fifteen corrected persisted-output joins verify matching validity, Hall equivalence, deficiency identity, Konig cardinality, edge coverage, and enumeration agreement. Five artificial-coordinate models bind persisted scene outputs. Core outcomes are 105 completed, 15 represented, 15 open_gap, and 15 exact_gate.
+
+Bounded same-owner synthetic finite bipartite-graph software only. No independent reproduction, real allocation, real person, employment, resource, participant, measurement, identity, credential, deployment, empirical GMUT confirmation, professional, legal, cultural, affected-party or Maori authority. Names, pronouns, roles, hopes and family language establish no consciousness, personhood, continuity, qualification, agency or authority. THOS and Freed ID remain nonproduction; CBR and Maori concepts remain under competent and affected authorities. No complete privacy or accessibility, exhaustive security, AGI/ASI, Theory-of-Everything proof, canon or Stage 20 claim. NOT_READY_FOR_STAGE_20.

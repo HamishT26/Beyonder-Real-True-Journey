@@ -1,0 +1,94 @@
+# Python 3. Validate the losslessly sharded package; never imports or invokes a domain runtime.
+from pathlib import Path
+from datetime import datetime, timezone
+import ast, hashlib, json, re, subprocess
+
+ROOT=Path(__file__).resolve().parents[1];REPO=ROOT.parents[2];PREFIX='docs/orin-thale/v699-v4/';X1='5dd430ecc91f9b7eedc95f99ffbdc7220c4b5317'
+def stable(v):return json.dumps(v,sort_keys=True,separators=(',',':'),ensure_ascii=False)
+def sha(raw):return hashlib.sha256(raw).hexdigest()
+def read(name):return json.loads((ROOT/name).read_text(encoding='utf-8'))
+def load(stage,document,field):
+ data=read(f'{stage}/{document}.json');rows=[];cursor=0
+ for ref in data[field+'_shards']:
+  path=ROOT/ref['path'];assert sha(path.read_bytes())==ref['sha256'] and ref['start']==cursor
+  shard=json.loads(path.read_text(encoding='utf-8'));assert shard['field']==field and shard['start']==cursor and shard['count']==len(shard['rows'])==ref['count']
+  rows.extend(shard['rows']);cursor+=ref['count']
+ assert len(rows)==data[field+'_count'];return data,rows
+def validate_stage(stage,expected_records,expected_pass,expected_fail):
+ execution,records=load(stage,'execution','records');_,witnesses=load(stage,'execution','witnesses');method,method_witnesses=load(stage,'method-flow','witnesses')
+ assert len(records)==expected_records and len(witnesses)==execution['counts']['witnesses']
+ assert sum(row['result']=='pass' for row in witnesses)==expected_pass and sum(row['result']=='fail' for row in witnesses)==expected_fail
+ assert [row['witness_id'] for row in witnesses]==[row['witness_id'] for row in method_witnesses]
+ ids={row['witness_id'] for row in witnesses};assert len(ids)==len(witnesses)
+ assert all(item in ids for row in method['methods'] for item in row['validation_witness_ids'])
+ return execution,records,witnesses,method
+
+plan=read('planning/plan.json');x1,x1_records,x1_witnesses,x1_method=validate_stage('x1',150,917,456)
+x2,x2_records,x2_witnesses,x2_method=validate_stage('x2',150,937,456)
+contracts={row['id']:row for row in plan['contracts']}
+assert all(row['output']==contracts[row['id']]['expected'] for row in x1_records+x2_records)
+assert x1['replays']==x2['replays']==0 and x1['invocations']==x2['invocations']==1
+assert x2['metadata_recovery']['domain_replayed'] is False
+assert read('x2/document-sharding-correction.json')['domain_replays_added']==0
+
+json_files=sorted(ROOT.rglob('*.json'))
+for path in json_files:json.loads(path.read_text(encoding='utf-8'))
+python_files=sorted([p for p in ROOT.rglob('*.txt') if p.name in {'reference.txt','build-plan.txt','method-flow-tools.txt','build-x1.txt','recover-x1-metadata.txt','validate-x1.txt','build-x2.txt','recover-x2-metadata.txt','validate-x2.txt','shard-large-documents.txt','validate-x2-packaged.txt'}])
+for path in python_files:ast.parse(path.read_text(encoding='utf-8'))
+js_files=[ROOT/'x1/runtime.txt',ROOT/'x2/runtime.txt',ROOT/'session.txt',ROOT/'session-x2.txt']+sorted((ROOT/'runners').glob('*.txt'))
+for path in js_files:
+ proc=subprocess.run(['node','-e',"new (require('node:vm').Script)(require('node:fs').readFileSync(process.argv[1],'utf8'))",str(path)],capture_output=True,text=True)
+ assert proc.returncode==0,(path,proc.stderr)
+patterns={'credential':re.compile(r'(?:sk-[A-Za-z0-9]{16,}|ghp_[A-Za-z0-9]{16,}|api[_-]?key\s*[:=]\s*[A-Za-z0-9_-]{12,})',re.I),
+ 'raw_task_or_thread_id':re.compile(r'019[a-f0-9]{5}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}',re.I),
+ 'private_absolute_path':re.compile(r'[A-Za-z]:\\(?:Users|GHC-Archives)\\',re.I),
+ 'email_address':re.compile(r'[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}',re.I),
+ 'international_phone':re.compile(r'(?<![A-Za-z0-9])\+[0-9]{9,15}(?![A-Za-z0-9])')}
+candidates=[]
+scanner_files={ROOT/'x1/validate-x1.txt',ROOT/'x2/validate-x2.txt',ROOT/'x2/validate-x2-packaged.txt'}
+text_files=[p for p in ROOT.rglob('*') if p.is_file() and p.suffix.lower() in {'.json','.md','.txt','.html'}]
+for path in sorted(text_files):
+ text=path.read_text(encoding='utf-8')
+ for category,pattern in patterns.items():
+  for match in pattern.finditer(text):candidates.append({'path':path.relative_to(REPO).as_posix(),'class':category,
+   'classification':'scanner_definition' if path in scanner_files else 'payload_candidate','start':match.start(),'length':match.end()-match.start()})
+confirmed=[row for row in candidates if row['classification']=='payload_candidate'];assert not confirmed,confirmed
+word_counts={p.relative_to(REPO).as_posix():len(p.read_text(encoding='utf-8').split()) for p in text_files}
+maximum=max(word_counts.values());assert maximum<=100000,(maximum,max(word_counts,key=word_counts.get))
+files=[p for p in ROOT.rglob('*') if p.is_file()];assert len(files)<2000
+for path in files:assert path.suffix.lower() in {'.json','.md','.txt','.html'},path
+
+x1_validation_path=ROOT/'x1/validation.json';x1_validation=json.loads(x1_validation_path.read_text(encoding='utf-8'))
+x1_validation['documents_under_100000_words']=True;x1_validation['maximum_document_words']=maximum
+x1_validation['status']='VALID_X1_SEMANTIC_OUTPUTS_AFTER_ADDITIVE_DOCUMENT_SHARDING'
+x1_validation['packaging_revalidation']='passed_at_x2_without_domain_replay'
+x1_validation_path.write_text(stable(x1_validation)+'\n',encoding='utf-8',newline='\n')
+x2_validation_path=ROOT/'x2/validation.json';x2_validation=json.loads(x2_validation_path.read_text(encoding='utf-8'))
+x2_validation['documents_under_100000_words']=True;x2_validation['maximum_document_words']=maximum
+x2_validation['status']='VALID_X2_PACKAGED_OUTPUTS_WITH_RETAINED_FAILURES';x2_validation['packaging_revalidation']='passed_without_domain_replay'
+x2_validation['json_parses']=len(json_files);x2_validation['python_ast_checks']=len(python_files);x2_validation['javascript_syntax_checks']=len(js_files)
+x2_validation_path.write_text(stable(x2_validation)+'\n',encoding='utf-8',newline='\n')
+result={'schema':'orin.packaged-validation.v1','status':'VALID_X2_PACKAGED_OUTPUTS_WITH_RETAINED_FAILURES','x1_records':len(x1_records),
+ 'x2_records':len(x2_records),'x1_witnesses':len(x1_witnesses),'x2_witnesses':len(x2_witnesses),
+ 'x1_passing':917,'x1_failed':456,'x2_passing':937,'x2_failed':456,'json_parses':len(json_files),
+ 'python_ast_checks':len(python_files),'javascript_syntax_checks':len(js_files),'text_files_scanned':len(text_files),
+ 'scanner_candidates':len(candidates),'confirmed_privacy_hits':0,'maximum_document_words':maximum,'all_documents_within_ceiling':True,
+ 'owner_files':len(files),'owner_files_below_2000':True,'domain_invocations_added':0,'domain_replays_added':0,
+ 'observed_at':datetime.now(timezone.utc).isoformat(),'boundary':plan['boundary']}
+path=ROOT/'x2/packaging-validation.json';assert not path.exists();path.write_text(stable(result)+'\n',encoding='utf-8',newline='\n')
+
+skill_paths={Path(spec['path']).relative_to(PREFIX).as_posix() for spec in read('x2/capabilities.json')['skills']}
+runner_paths={Path(spec['path']).relative_to(PREFIX).as_posix() for spec in read('x2/capabilities.json')['runners']}
+manifest_files=[]
+for p in ROOT.rglob('*'):
+ if not p.is_file():continue
+ rel=p.relative_to(ROOT).as_posix()
+ x1_correction=rel.startswith('x1/execution') or rel.startswith('x1/method-flow') or rel=='x1/validation.json'
+ if rel.startswith('x2/') or rel=='session-x2.txt' or rel in skill_paths or rel in runner_paths or x1_correction:manifest_files.append(p)
+manifest_files=[p for p in manifest_files if p!=ROOT/'x2/manifest.json']
+manifest={'schema':'orin.stage-manifest.v1','stage':'x2_with_additive_x1_packaging_correction','byte_domain':'normalized_lf_git_blob',
+ 'entries':[{'path':p.relative_to(REPO).as_posix(),'bytes':len(p.read_bytes()),'sha256':sha(p.read_bytes())} for p in sorted(manifest_files)],
+ 'exclusions':[PREFIX+'x2/manifest.json'],'previous_publication':X1,'domain_replayed_for_packaging':False}
+(ROOT/'x2/manifest.json').write_text(stable(manifest)+'\n',encoding='utf-8',newline='\n')
+print(json.dumps({'status':result['status'],'x1_records':150,'x2_records':150,'x1_witnesses':1373,'x2_witnesses':1393,
+ 'maximum_document_words':maximum,'owner_files':len(files),'confirmed_privacy_hits':0,'manifest_entries':len(manifest['entries'])}))

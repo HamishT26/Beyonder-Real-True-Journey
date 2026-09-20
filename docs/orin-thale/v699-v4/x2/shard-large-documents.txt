@@ -1,0 +1,59 @@
+# Python 3. Additive packaging correction only; preserves every row and original digest without domain execution.
+from pathlib import Path
+from datetime import datetime, timezone
+import hashlib, json
+
+ROOT=Path(__file__).resolve().parents[1]
+def stable(v):return json.dumps(v,sort_keys=True,separators=(',',':'),ensure_ascii=False)
+def sha(raw):return hashlib.sha256(raw).hexdigest()
+def read(name):return json.loads((ROOT/name).read_text(encoding='utf-8'))
+def write(name,value):
+ p=ROOT/name;p.parent.mkdir(parents=True,exist_ok=True);assert not p.exists(),name
+ p.write_text(stable(value)+'\n',encoding='utf-8',newline='\n')
+def shard_rows(stage,document,key,size):
+ path=ROOT/stage/(document+'.json');raw=path.read_bytes();data=json.loads(raw);rows=data.pop(key)
+ refs=[]
+ for index,start in enumerate(range(0,len(rows),size),1):
+  body={'schema':'orin.document-shard.v1','stage':stage,'document':document,'field':key,'index':index,
+        'start':start,'count':len(rows[start:start+size]),'rows':rows[start:start+size]}
+  name=f'{stage}/{document}-{key}-{index:02d}.json';write(name,body)
+  refs.append({'path':name,'index':index,'start':start,'count':body['count'],'sha256':sha((ROOT/name).read_bytes())})
+ data[key+'_count']=len(rows);data[key+'_shards']=refs
+ data.setdefault('document_packaging',{})['pre_shard_sha256']=sha(raw)
+ data['document_packaging']['lossless_row_sharding']=True
+ data['document_packaging']['domain_replayed']=False
+ path.write_text(stable(data)+'\n',encoding='utf-8',newline='\n')
+ return {'path':f'{stage}/{document}.json','field':key,'pre_shard_sha256':sha(raw),'post_shard_sha256':sha(path.read_bytes()),
+         'row_count':len(rows),'shards':refs}
+
+assert not (ROOT/'x2/document-sharding-correction.json').exists()
+corrections=[]
+for stage in ['x1','x2']:
+ corrections.append(shard_rows(stage,'execution','records',75))
+ corrections.append(shard_rows(stage,'execution','witnesses',500))
+ corrections.append(shard_rows(stage,'method-flow','witnesses',500))
+
+x1_validation_path=ROOT/'x1/validation.json';x1_raw=x1_validation_path.read_bytes();x1=json.loads(x1_raw)
+assert x1['documents_under_100000_words'] is False and x1['maximum_document_words']>100000
+x1['pre_packaging_status']=x1['status'];x1['pre_packaging_validation_sha256']=sha(x1_raw)
+x1['status']='VALID_X1_SEMANTIC_OUTPUTS_AFTER_ADDITIVE_DOCUMENT_SHARDING'
+x1['retained_validation_failures']=x1.get('retained_validation_failures',0)+1
+x1['document_packaging_corrected_in']='x2';x1['domain_replayed_for_correction']=False
+x1_validation_path.write_text(stable(x1)+'\n',encoding='utf-8',newline='\n')
+x2_validation_path=ROOT/'x2/validation.json';x2_raw=x2_validation_path.read_bytes();x2=json.loads(x2_raw)
+assert x2['documents_under_100000_words'] is False and x2['maximum_document_words']>100000
+x2['pre_packaging_status']=x2['status'];x2['pre_packaging_validation_sha256']=sha(x2_raw)
+x2['status']='PENDING_ADDITIVE_DOCUMENT_SHARDING_REVALIDATION';x2['retained_validation_failures']=x2.get('retained_validation_failures',0)+1
+x2['domain_replayed_for_correction']=False
+x2_validation_path.write_text(stable(x2)+'\n',encoding='utf-8',newline='\n')
+write('x2/document-sharding-correction.json',{'schema':'orin.additive-document-sharding.v1','corrections':corrections,
+ 'retained_failures':[{'id':'OT6994-X1-VAL-N002','success_credit':0,
+  'failure':'The x1 validator observed a document above 100000 words but incorrectly retained a VALID status because it did not assert the ceiling.',
+  'recovery':'At x2, preserve the exact x1-commit blobs and their digests while sharding current-tree records and witnesses additively.'},
+ {'id':'OT6994-X2-VAL-N001','success_credit':0,
+  'failure':'The first x2 package validation found four current-tree JSON documents above the 100000-word ceiling.',
+  'recovery':'Shard records and witnesses into bounded JSON documents, keep lossless counts and digests, and revalidate without domain execution.'}],
+ 'original_git_history_preserved':True,'domain_invocations_added':0,'domain_replays_added':0,
+ 'observed_at':datetime.now(timezone.utc).isoformat()})
+print(json.dumps({'status':'DOCUMENTS_SHARDED_PENDING_REVALIDATION','corrected_documents':4,
+ 'shard_operations':len(corrections),'domain_invocations_added':0,'domain_replays_added':0}))
