@@ -1,0 +1,37 @@
+# Python 3. Metadata-only final validator; no domain or canonical replay.
+from pathlib import Path
+import json
+
+ROOT = Path(__file__).resolve().parents[1]
+
+def read(name):
+    return json.loads((ROOT / name).read_text(encoding='utf-8'))
+
+truth = read('final/phase-truth.json')
+assert truth['outcomes'] == {
+    'completed': 255, 'represented': 15, 'open_gap': 15, 'exact_gate': 15}
+assert truth['local_method_flow'] == {
+    'methods': 33, 'witnesses': 3117, 'passing_witnesses': 2182,
+    'failed_witnesses': 935, 'negatives': 935,
+    'open_gaps': 15, 'exact_gates': 15}
+assert truth['effective_counts'] == {
+    'methods': 1480, 'witnesses': 93048, 'passing_witnesses': 70342,
+    'failed_witnesses': 22706, 'negatives': 29683,
+    'open_gaps': 884, 'exact_gates': 970}
+assert truth['domain_aggregates']['replays'] == 0
+assert truth['canonical'] == {
+    'state': 'PREPARED_NOT_INVOKED', 'invocation_count': 0,
+    'success_count': 0, 'replay_count': 0}
+assert truth['verdict'] == 'NOT_READY_FOR_STAGE_20'
+assert read('final/retained-negative-register.json')['local_count'] == 935
+assert read('final/open-gap-register.json')['effective_count'] == 884
+assert read('final/exact-gate-register.json')['effective_count'] == 970
+assert read('final/method-flow-summary.json')['distinct_method_count'] == 33
+assert read('closeout/content-seal.json')['target_count'] == 10
+print(json.dumps({
+    'status': 'VALID_FINAL_METADATA_PRECANONICAL',
+    'outcomes': truth['outcomes'],
+    'effective_counts': truth['effective_counts'],
+    'canonical_invocations': 0,
+    'verdict': truth['verdict'],
+    'domain_replayed': False}))

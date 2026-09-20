@@ -1,0 +1,476 @@
+# Python 3. Build the metadata-only v699-v5 closeout and exact-final manifests.
+from pathlib import Path
+import collections, hashlib, json, re, subprocess, sys
+
+ROOT = Path(__file__).resolve().parents[1]
+REPO = ROOT.parents[2]
+BANK = Path(sys.argv[1])
+SOURCE = 'bea81cbb05f608f57e7ee2c6f41d0f2104be27dc'
+PLANNING = 'dd4f3b41ca2f8b3fa41c1ee7575f7dbf024c718b'
+PLANNING_CORRECTION = '9017231fa28aa2d33cfa2e4c61bf3262ab02b6d0'
+X1 = 'eba0cd5fed030fe6f1c090c95b68434e11564a5d'
+X2 = 'e9c8b0756c0f42bf9d5d999952f543d39d064c58'
+BRANCH = 'codex/GHC-Family/liora-venn-v699-v5-full-tools'
+PREFIX = 'docs/liora-venn/v699-v5/'
+
+def stable(value):
+    return json.dumps(value, sort_keys=True, separators=(',', ':'), ensure_ascii=False)
+
+def sha(raw):
+    return hashlib.sha256(raw).hexdigest()
+
+def read(name):
+    return json.loads((ROOT / name).read_text(encoding='utf-8'))
+
+def write(name, value):
+    target = ROOT / name
+    target.parent.mkdir(parents=True, exist_ok=True)
+    assert not target.exists(), name
+    target.write_text(
+        (stable(value) if not isinstance(value, str) else value.rstrip()) + '\n',
+        encoding='utf-8', newline='\n')
+
+def git(*args):
+    return subprocess.check_output(
+        ['git', '-C', str(REPO), *args], stderr=subprocess.PIPE
+    ).decode().strip()
+
+def source_json(path):
+    return json.loads(git('show', SOURCE + ':' + path))
+
+def load_witnesses(stage):
+    execution = read(stage + '/execution.json')
+    answer = []
+    for shard in execution['witnesses_shards']:
+        data = read(shard['path'])
+        assert data['count'] == shard['count']
+        assert sha((ROOT / shard['path']).read_bytes()) == shard['sha256']
+        answer.extend(data['witnesses'])
+    assert len(answer) == execution['witnesses_count']
+    return answer
+
+assert len(sys.argv) == 2
+assert git('rev-parse', 'HEAD') == X2
+assert git('branch', '--show-current') == BRANCH
+expected_untracked = {
+    PREFIX + 'final/build-final.txt',
+    PREFIX + 'final/run-canonical.txt',
+    PREFIX + 'final/validate-final.txt',
+    PREFIX + 'handoffs/tamar-vey-v699-v6-activation-candidate.md'}
+actual_untracked = set(git('ls-files', '--others', '--exclude-standard').splitlines())
+assert actual_untracked == expected_untracked, (
+    sorted(expected_untracked), sorted(actual_untracked))
+assert git('diff', '--name-only') == ''
+assert git('diff', '--cached', '--name-only') == ''
+
+source_truth = source_json('docs/orin-thale/v699-v4/final/phase-truth.json')
+plan = read('planning/plan.json')
+startup_failures = read('planning/startup-failures.json')['failures']
+correction = read('planning/correction-01/correction.json')
+x1_execution = read('x1/execution.json')
+x2_execution = read('x2/execution.json')
+stage_ledgers = [
+    read('planning/startup-method-flow.json'),
+    read('planning/correction-01/method-flow.json'),
+    read('x1/method-flow.json'),
+    read('x2/method-flow.json')]
+
+method_ids = sorted(set(
+    method['method_id'] for ledger in stage_ledgers for method in ledger['methods']))
+base_witnesses = sum(ledger['counts']['witnesses'] for ledger in stage_ledgers)
+base_passes = sum(
+    ledger['counts']['witness_results']['pass'] for ledger in stage_ledgers)
+base_failures = sum(
+    ledger['counts']['witness_results']['fail'] for ledger in stage_ledgers)
+assert len(method_ids) == 28
+assert (base_witnesses, base_passes, base_failures) == (3107, 2177, 930)
+
+final_method_id = 'LV6995-M-final-build'
+final_failure_id = 'LV6995-FINAL-N001'
+method_ids = sorted(method_ids + [final_method_id])
+local_witnesses = base_witnesses + 2
+local_passes = base_passes + 1
+local_failures = base_failures + 1
+assert (len(method_ids), local_witnesses, local_passes, local_failures) == (
+    29, 3109, 2178, 931)
+
+negative_entries = []
+for row in startup_failures:
+    negative_entries.append({
+        'id': row['id'], 'stage': 'planning',
+        'status': 'retained_zero_credit',
+        'evidence': 'planning/startup-failures.json'})
+negative_entries.append({
+    'id': correction['correction_id'], 'stage': 'planning_correction',
+    'status': 'retained_zero_credit',
+    'evidence': 'planning/correction-01/correction.json'})
+for stage in ['x1', 'x2']:
+    for witness in load_witnesses(stage):
+        if witness['result'] != 'fail':
+            continue
+        for negative_id in witness['retained_negative_ids']:
+            negative_entries.append({
+                'id': negative_id, 'stage': stage,
+                'status': 'retained_zero_credit',
+                'evidence': stage + '/execution-witnesses-*.json'})
+negative_entries.append({
+    'id': final_failure_id, 'stage': 'final',
+    'status': 'retained_zero_credit',
+    'evidence': 'final/method-flow-summary.json'})
+negative_by_id = {row['id']: row for row in negative_entries}
+assert len(negative_by_id) == local_failures == 931
+negative_entries = [negative_by_id[key] for key in sorted(negative_by_id)]
+
+new_gaps = [{
+    'id': row['id'], 'operation': row['operation'],
+    'profile': row['profile'], 'status': 'open_gap',
+    'authority_closed': False}
+    for row in plan['contracts']
+    if row['expected_disposition'] == 'open_gap']
+new_gates = [{
+    'id': row['id'], 'operation': row['operation'],
+    'profile': row['profile'], 'status': 'exact_gate',
+    'authority_closed': False}
+    for row in plan['contracts']
+    if row['expected_disposition'] == 'exact_gate']
+assert len(new_gaps) == len(new_gates) == 15
+
+inherited = source_truth['effective_counts']
+effective = {
+    'methods': inherited['methods'] + len(method_ids),
+    'witnesses': inherited['witnesses'] + local_witnesses,
+    'passing_witnesses': inherited['passing_witnesses'] + local_passes,
+    'failed_witnesses': inherited['failed_witnesses'] + local_failures,
+    'negatives': inherited['negatives'] + local_failures,
+    'open_gaps': inherited['open_gaps'] + len(new_gaps),
+    'exact_gates': inherited['exact_gates'] + len(new_gates)}
+assert effective == {
+    'methods': 1476, 'witnesses': 93040,
+    'passing_witnesses': 70338, 'failed_witnesses': 22702,
+    'negatives': 29679, 'open_gaps': 884, 'exact_gates': 970}
+
+outcomes = collections.Counter(
+    row['expected_disposition'] for row in plan['contracts'])
+assert dict(outcomes) == {
+    'completed': 255, 'represented': 15,
+    'open_gap': 15, 'exact_gate': 15}
+
+receipt_bindings = []
+for path in sorted(path for path in BANK.rglob('*') if path.is_file()):
+    receipt_bindings.append({
+        'path': path.relative_to(BANK).as_posix(),
+        'bytes': len(path.read_bytes()), 'sha256': sha(path.read_bytes())})
+assert len(receipt_bindings) == 14
+write('final/external-receipt-bindings.json', {
+    'schema': 'liora.external-receipt-bindings.v1',
+    'count': len(receipt_bindings), 'receipts': receipt_bindings,
+    'canonical_receipt': 'external_after_exact_final',
+    'private_paths_in_repository': False,
+    'boundary': plan['boundary']})
+
+phase_truth = {
+    'schema': 'liora.phase-truth.v1', 'phase': 'v699-v5',
+    'owner': 'Liora Venn',
+    'identity': {
+        'name': 'Liora Venn', 'pronouns': 'she/they optional',
+        'role': 'finite-order and incidence-evidence cartographer',
+        'hope': 'Make every bounded ordering claim traceable to exact finite inputs, and every missing observation or authority explicit and reversible.',
+        'relational_only': True,
+        'consciousness_or_personhood_evidence': False,
+        'employment_qualification_agency_or_authority_evidence': False},
+    'source_commit': SOURCE, 'planning_commit': PLANNING,
+    'planning_correction_commit': PLANNING_CORRECTION,
+    'x1_commit': X1, 'x2_commit': X2,
+    'exact_final_binding': 'external canonical receipt after final commit',
+    'lifecycle_commits_before_final': 4,
+    'planned_source_to_final_commits': 5,
+    'commit_ceiling': 6, 'outcomes': dict(outcomes),
+    'proposals': {
+        'new': 300, 'inherited_reviews': 300,
+        'inherited_new_credit': 0},
+    'local_method_flow': {
+        'methods': len(method_ids), 'witnesses': local_witnesses,
+        'passing_witnesses': local_passes,
+        'failed_witnesses': local_failures,
+        'negatives': local_failures, 'open_gaps': len(new_gaps),
+        'exact_gates': len(new_gates)},
+    'effective_counts': effective,
+    'domain_aggregates': {
+        'invocations': x1_execution['invocations'] +
+                       x2_execution['aggregate_invocations'],
+        'successes': x1_execution['successes'] +
+                     x2_execution['aggregate_successes'],
+        'failed_invocations': x1_execution['failed_invocations'] +
+                              x2_execution['aggregate_failed_invocations'],
+        'replays': x1_execution['replays'] +
+                   x2_execution['aggregate_replays'],
+        'x2_postprocess_failures': x2_execution['postprocess_failures'],
+        'x2_postprocess_continuations':
+            x2_execution['postprocess_continuations']},
+    'component_diagnostics': {
+        'x1': 2,
+        'x2': x2_execution['component_preflight_invocations'],
+        'completion_credit': 0},
+    'tests': {
+        'x2_exact_algebra': 15, 'x2_synthetic_3d_models': 5},
+    'skills': 20, 'runners': 10, 'curated_global_pairs': 5,
+    'mismatched_uncredited_global_pairs': 3,
+    'global_installs': 0, 'packages_installed': 0,
+    'held_packets': {'exact': 50, 'blocked': 30, 'executed': 0},
+    'synthetic_practices': 8, 'successor_recommendations': 4,
+    'files': 116, 'file_ceiling': 2000,
+    'maximum_document_words': 64305,
+    'complete_repository_suite': False,
+    'independent_reproduction': False,
+    'canonical': {
+        'state': 'PREPARED_NOT_INVOKED',
+        'invocation_count': 0, 'success_count': 0,
+        'replay_count': 0},
+    'verdict': 'NOT_READY_FOR_STAGE_20',
+    'boundary': plan['boundary']}
+assert phase_truth['domain_aggregates'] == {
+    'invocations': 3, 'successes': 2, 'failed_invocations': 1,
+    'replays': 0, 'x2_postprocess_failures': 1,
+    'x2_postprocess_continuations': 1}
+write('final/phase-truth.json', phase_truth)
+
+write('final/method-flow-summary.json', {
+    'schema': 'liora.method-flow-summary.v1',
+    'owner': 'Liora Venn', 'phase': 'v699-v5',
+    'distinct_method_count': len(method_ids),
+    'method_ids': method_ids,
+    'stage_ledgers': [{
+        'stage': ledger['stage'],
+        'methods': ledger['counts']['methods'],
+        'witnesses': ledger['counts']['witnesses'],
+        'passing': ledger['counts']['witness_results']['pass'],
+        'failed': ledger['counts']['witness_results']['fail']}
+        for ledger in stage_ledgers] + [{
+            'stage': 'final', 'methods': 1, 'witnesses': 2,
+            'passing': 1, 'failed': 1}],
+    'final_method': {
+        'method_id': final_method_id,
+        'failure_signature': 'Patch transport interpreted Markdown backticks as JavaScript and stopped before the patch engine.',
+        'failed_witness': {
+            'id': 'LV6995-FINAL-W001', 'result': 'fail',
+            'retained_negative_ids': [final_failure_id]},
+        'recovery_witness': {
+            'id': 'LV6995-FINAL-W002', 'result': 'pass',
+            'procedure': 'Transported exact patches in literal block comments so repository text could not be reinterpreted.',
+            'retained_negative_ids': [final_failure_id]},
+        'recommendation_state': 'preferred',
+        'recovery_erases_failure': False},
+    'local_totals': phase_truth['local_method_flow'],
+    'effective_totals': effective,
+    'recoveries_erase_failures': False,
+    'boundary': plan['boundary']})
+
+write('final/retained-negative-register.json', {
+    'schema': 'liora.retained-negative-register.v1',
+    'local_count': len(negative_entries),
+    'entries': negative_entries,
+    'inherited_count': inherited['negatives'],
+    'effective_count': effective['negatives'],
+    'failures_converted_to_passes': 0,
+    'boundary': plan['boundary']})
+write('final/open-gap-register.json', {
+    'schema': 'liora.open-gap-register.v1',
+    'inherited_count': inherited['open_gaps'],
+    'new_count': len(new_gaps),
+    'effective_count': effective['open_gaps'],
+    'new_gaps': new_gaps, 'all_remain_open': True,
+    'boundary': plan['boundary']})
+write('final/exact-gate-register.json', {
+    'schema': 'liora.exact-gate-register.v1',
+    'inherited_count': inherited['exact_gates'],
+    'new_count': len(new_gates),
+    'effective_count': effective['exact_gates'],
+    'new_gates': new_gates, 'all_remain_exact_gated': True,
+    'boundary': plan['boundary']})
+write('final/complete-incomplete-ledger.json', {
+    'schema': 'liora.complete-incomplete-ledger.v1',
+    'complete': [
+        'planning-only freeze and additive per-session floor correction',
+        'pushed clean fresh-four-way-equal x1 boundary',
+        'single-success x2 aggregate with retained postprocess failure and no aggregate replay',
+        'pushed clean fresh-four-way-equal x2 boundary',
+        'fifteen exact finite zeta-Mobius tests',
+        'five bounded synthetic three-axis Hasse representations',
+        'twenty owner-local skills and ten family-current runners',
+        'five exact planned curated D-first skill and runner pairs'],
+    'represented': [
+        'fifteen finite synthetic Hasse scenes and five three-axis representations'],
+    'incomplete': [
+        'all 884 effective open gaps', 'all 970 effective exact gates',
+        'full repository suite', 'independent reproduction',
+        'external audit', 'real observations and participants',
+        'production or deployment',
+        'professional safety legal cultural affected-party and Maori authority',
+        'complete privacy accessibility or exhaustive security',
+        'AGI or ASI evidence', 'consciousness or personhood evidence',
+        'Theory-of-Everything proof or canon', 'Stage 20'],
+    'terminal_verdict': 'NOT_READY_FOR_STAGE_20',
+    'boundary': plan['boundary']})
+write('final/lifecycle.json', {
+    'schema': 'liora.lifecycle.v1', 'branch': BRANCH,
+    'source': SOURCE, 'planning': PLANNING,
+    'planning_correction': PLANNING_CORRECTION,
+    'x1': X1, 'x2': X2,
+    'final': 'external_exact_head_after_commit',
+    'direct_parent_edges': [
+        [SOURCE, PLANNING], [PLANNING, PLANNING_CORRECTION],
+        [PLANNING_CORRECTION, X1], [X1, X2],
+        [X2, 'external_exact_head_after_commit']],
+    'source_to_final_commit_count': 5, 'merge_count': 0,
+    'strict_x1_before_x2': True, 'final_parent_required': X2,
+    'canonical_after_clean_pushed_final_only': True,
+    'boundary': plan['boundary']})
+write('final/canonical-contract.json', {
+    'schema': 'liora.exact-final-canonical-contract.v1',
+    'status': 'PREPARED_NOT_INVOKED',
+    'invocation_ceiling': 1, 'success_ceiling': 1,
+    'replay_after_success': False,
+    'expected_branch': BRANCH, 'expected_parent': X2,
+    'expected_source': SOURCE, 'expected_phase_commits': 5,
+    'expected_merges': 0, 'owner_scope': PREFIX,
+    'full_repository_suite': False,
+    'required': [
+        'exact head', 'exact ancestry',
+        'five direct single-parent phase commits', 'zero merges',
+        'one final parent', 'metadata-only x1 x2 and final validators',
+        'twenty local skill validations',
+        'ten family-current runner syntax checks',
+        'strict owner JSON parsing',
+        'five-class privacy adjudication',
+        'normalized-LF Git-blob final delta and owner manifests',
+        'content seal', 'file and document ceilings',
+        'clean before and after', 'typed zero divergence',
+        'local upstream tracking and fresh-live equality before and after'],
+    'same_owner_only': True, 'independent_reproduction': False,
+    'terminal_verdict': 'NOT_READY_FOR_STAGE_20',
+    'boundary': plan['boundary']})
+
+write('final/overview.md',
+    '# Liora Venn v699-v5 exact finite-order closeout\n\n'
+    'Liora Venn, optionally she/they, is relational working language for a finite-order and incidence-evidence cartographer, '
+    'with the hope of making every bounded ordering claim traceable to exact finite inputs and every missing observation or authority explicit and reversible. '
+    'This language is not consciousness, sentience, personhood, continuity, employment, qualification, agency, or authority evidence.\n\n'
+    'The phase froze 300 genuinely new finite-poset and incidence-algebra contracts and reviewed 300 inherited Orin contracts at zero new credit. '
+    'Strict planning-only x1 before x2 was preserved through the planning freeze, an additive per-session floor correction, a pushed clean x1 boundary, '
+    'a pushed clean x2 boundary, and this metadata-only final closeout. Outcomes are exactly 255 completed, 15 represented, 15 open_gap, and 15 exact_gate.\n\n'
+    'X1 retains one failed aggregate and one successful aggregate, with no replay. X2 has one successful 600-subject aggregate; a later skill-text assertion '
+    'failed before output persistence, so an external latch and postprocess-only continuation preserved the success without replay. All four x2 setup or '
+    'postprocess failures remain visible. Fifteen exact zeta-Mobius tests and five bounded synthetic three-axis Hasse records pass within the declared finite scope.\n\n'
+    'Local Method Flow contains 29 distinct methods, 3,109 witnesses, 2,178 bounded passes, and 931 retained failures. Effective totals are 1,476 methods, '
+    '93,040 witnesses, 70,338 passes, 22,702 failures, 29,679 negatives, 884 open gaps, and 970 exact gates. No failed witness was converted into a pass.\n\n'
+    'GMUT remains a typed scalar-tensor and effective-field-theory research-model family without real data, likelihood, posterior, force, prediction, '
+    'parameter constraint, empirical confirmation, ultraviolet or quantum completion, final physics, or Theory-of-Everything proof. THOS remains synthetic '
+    'or proxy-only. Freed ID remains synthetic and nonproduction. Professional, safety, legal, cultural, affected-party, privacy-remedy, accessibility-remedy, '
+    'Maori wording, Maori data governance, and Maori authority remain exact-gated to competent and affected authorities. Maori concepts remain under Maori authority.\n\n'
+    'The full repository suite was not run. Same-owner validation is not independent reproduction, external audit, production certification, complete privacy '
+    'or accessibility assurance, exhaustive security, professional validation, legal or cultural ratification, Maori-authority review, AGI/ASI evidence, '
+    'consciousness or personhood evidence, proof, canon, or Stage 20 authority. Terminal verdict: NOT_READY_FOR_STAGE_20.\n\n' +
+    plan['boundary'])
+
+seal_targets = [
+    'planning/plan.json',
+    'planning/correction-01/correction.json',
+    'x1/execution.json', 'x1/validation.json',
+    'x2/execution.json', 'x2/validation.json',
+    'x2/postprocess-recovery.json',
+    'final/phase-truth.json',
+    'final/method-flow-summary.json',
+    'final/retained-negative-register.json']
+write('closeout/content-seal.json', {
+    'schema': 'liora.content-seal.v1',
+    'target_count': len(seal_targets),
+    'targets': [{
+        'path': PREFIX + name,
+        'bytes': len((ROOT / name).read_bytes()),
+        'sha256': sha((ROOT / name).read_bytes())}
+        for name in seal_targets],
+    'byte_domain': 'normalized_lf_git_blob',
+    'boundary': plan['boundary']})
+
+final_new_files = sorted(
+    [path for path in (ROOT / 'final').rglob('*') if path.is_file()] +
+    [path for path in (ROOT / 'closeout').rglob('*') if path.is_file()] +
+    [path for path in (ROOT / 'handoffs').rglob('*') if path.is_file()])
+delta_exclusions = [
+    PREFIX + 'validation/final-delta-manifest.json',
+    PREFIX + 'validation/final-owner-manifest.json',
+    PREFIX + 'validation/final-staged-review.json']
+write('validation/final-delta-manifest.json', {
+    'schema': 'liora.final-delta-manifest.v1',
+    'byte_domain': 'normalized_lf_git_blob',
+    'entries': [{
+        'path': path.relative_to(REPO).as_posix(),
+        'bytes': len(path.read_bytes()),
+        'sha256': sha(path.read_bytes())}
+        for path in final_new_files],
+    'exclusions': delta_exclusions,
+    'expected_parent': X2,
+    'expected_final': 'external_exact_head_after_commit',
+    'boundary': plan['boundary']})
+
+owner_exclusions = {
+    'validation/final-owner-manifest.json',
+    'validation/final-staged-review.json'}
+owner_files = sorted(
+    path for path in ROOT.rglob('*') if path.is_file() and
+    path.relative_to(ROOT).as_posix() not in owner_exclusions)
+write('validation/final-owner-manifest.json', {
+    'schema': 'liora.final-owner-manifest.v1',
+    'byte_domain': 'normalized_lf_git_blob',
+    'entries': [{
+        'path': path.relative_to(REPO).as_posix(),
+        'bytes': len(path.read_bytes()),
+        'sha256': sha(path.read_bytes())}
+        for path in owner_files],
+    'exclusions': [
+        PREFIX + 'validation/final-owner-manifest.json',
+        PREFIX + 'validation/final-staged-review.json'],
+    'source': SOURCE,
+    'expected_final': 'external_exact_head_after_commit',
+    'boundary': plan['boundary']})
+
+delta = read('validation/final-delta-manifest.json')
+owner = read('validation/final-owner-manifest.json')
+write('validation/final-staged-review.json', {
+    'schema': 'liora.final-staged-review.v1',
+    'status': 'PREPARED_EXACT_STAGE',
+    'expected_parent': X2,
+    'expected_final': 'external_exact_head_after_commit',
+    'expected_staged_paths': sorted(
+        [entry['path'] for entry in delta['entries']] +
+        delta['exclusions']),
+    'expected_staged_count':
+        len(delta['entries']) + len(delta['exclusions']),
+    'delta_manifest_sha256': sha(
+        (ROOT / 'validation/final-delta-manifest.json').read_bytes()),
+    'owner_manifest_sha256': sha(
+        (ROOT / 'validation/final-owner-manifest.json').read_bytes()),
+    'external_index_blob_review_required': True,
+    'domain_replay': False,
+    'boundary': plan['boundary']})
+
+all_files = sorted(path for path in ROOT.rglob('*') if path.is_file())
+assert len(all_files) == 116, len(all_files)
+maximum = max((
+    len(re.findall(r'\S+', path.read_text(encoding='utf-8'))),
+    path.relative_to(ROOT).as_posix()) for path in all_files)
+assert maximum[0] == 64305 and maximum[0] <= 100000, maximum
+assert len(final_new_files) == 15, len(final_new_files)
+print(json.dumps({
+    'status': 'VALID_FINAL_PRECOMMIT',
+    'owner_files': len(all_files),
+    'delta_entries': len(delta['entries']),
+    'delta_exclusions': len(delta['exclusions']),
+    'owner_manifest_entries': len(owner['entries']),
+    'owner_exclusions': len(owner['exclusions']),
+    'seal_targets': len(seal_targets),
+    'negative_ids': len(negative_entries),
+    'methods': len(method_ids),
+    'maximum_document_words': maximum[0],
+    'canonical_invocations': 0,
+    'verdict': 'NOT_READY_FOR_STAGE_20'}))

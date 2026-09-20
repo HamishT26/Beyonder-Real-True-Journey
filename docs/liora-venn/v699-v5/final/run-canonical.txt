@@ -1,0 +1,346 @@
+# Python 3. One-shot exact-final owner-scoped canonical aggregate; no domain replay.
+from pathlib import Path
+import argparse, ast, hashlib, json, re, subprocess, sys
+
+ROOT = Path(__file__).resolve().parents[1]
+REPO = ROOT.parents[2]
+SOURCE = 'bea81cbb05f608f57e7ee2c6f41d0f2104be27dc'
+PLANNING = 'dd4f3b41ca2f8b3fa41c1ee7575f7dbf024c718b'
+CORRECTION = '9017231fa28aa2d33cfa2e4c61bf3262ab02b6d0'
+X1 = 'eba0cd5fed030fe6f1c090c95b68434e11564a5d'
+X2 = 'e9c8b0756c0f42bf9d5d999952f543d39d064c58'
+BRANCH = 'codex/GHC-Family/liora-venn-v699-v5-full-tools'
+PREFIX = 'docs/liora-venn/v699-v5/'
+
+def sha(raw):
+    return hashlib.sha256(raw).hexdigest()
+
+def command(*args, check=True):
+    process = subprocess.run(list(args), text=False, capture_output=True, check=False)
+    if check and process.returncode:
+        raise RuntimeError((args, process.returncode,
+                            process.stdout.decode(errors='replace'),
+                            process.stderr.decode(errors='replace')))
+    return process
+
+def git(*args, check=True):
+    return command('git', '-C', str(REPO), *args, check=check)
+
+def output(process):
+    return process.stdout.decode('utf-8').strip()
+
+def blob(head, path):
+    return git('show', head + ':' + path).stdout
+
+parser = argparse.ArgumentParser()
+parser.add_argument('--expected-head', required=True)
+parser.add_argument('--receipt', required=True)
+parser.add_argument('--skill-validator', required=True)
+args = parser.parse_args()
+receipt = Path(args.receipt)
+if receipt.exists():
+    raise SystemExit('canonical receipt already exists')
+receipt.parent.mkdir(parents=True, exist_ok=True)
+checks = []
+metrics = {}
+
+def record(name, passed, observed=None, expected=None):
+    checks.append({'name': name, 'passed': bool(passed),
+                   'observed': observed, 'expected': expected})
+    return bool(passed)
+
+try:
+    head = output(git('rev-parse', 'HEAD'))
+    branch = output(git('branch', '--show-current'))
+    parent = output(git('rev-parse', 'HEAD^'))
+    record('exact_head', head == args.expected_head, head, args.expected_head)
+    record('exact_branch', branch == BRANCH, branch, BRANCH)
+    record('final_parent', parent == X2, parent, X2)
+    for anchor in [SOURCE, PLANNING, CORRECTION, X1, X2]:
+        record('ancestor_' + anchor[:12],
+               git('merge-base', '--is-ancestor', anchor, head, check=False).returncode == 0)
+    commits = output(git('rev-list', '--reverse', SOURCE + '..' + head)).splitlines()
+    merges = [row for row in output(
+        git('rev-list', '--min-parents=2', SOURCE + '..' + head)).splitlines() if row]
+    record('phase_commit_count', len(commits) == 5, len(commits), 5)
+    record('zero_merges', len(merges) == 0, len(merges), 0)
+    status_before = [row for row in output(
+        git('status', '--porcelain=v1', '--untracked-files=all')).splitlines() if row]
+    record('clean_before', not status_before, len(status_before), 0)
+    upstream = output(git('rev-parse', '@{upstream}'))
+    tracking = output(git('rev-parse', 'refs/remotes/origin/' + BRANCH))
+    live_line = output(git('ls-remote', 'origin', 'refs/heads/' + BRANCH))
+    live = live_line.split('\t')[0] if live_line else ''
+    divergence = [int(value) for value in output(
+        git('rev-list', '--left-right', '--count', 'HEAD...@{upstream}')).split()]
+    record('zero_divergence_before', divergence == [0, 0], divergence, [0, 0])
+    record('four_way_equal_before', len({head, upstream, tracking, live}) == 1,
+           {'local': head, 'upstream': upstream, 'tracking': tracking,
+            'fresh_live': live}, 'all equal')
+
+    validators = ['x1/validate-x1.txt', 'x2/validate-x2.txt', 'final/validate-final.txt']
+    validator_results = []
+    for relative in validators:
+        process = command(sys.executable, str(ROOT / relative), check=False)
+        validator_results.append({
+            'path': relative, 'returncode': process.returncode,
+            'output': process.stdout.decode('utf-8', errors='replace').strip()[-500:]})
+    record('metadata_validators',
+           all(row['returncode'] == 0 for row in validator_results),
+           validator_results, 'all zero')
+
+    skill_dirs = sorted({path.parent for path in (ROOT / 'skills').rglob('SKILL.md')})
+    skill_results = []
+    for directory in skill_dirs:
+        process = command(sys.executable, args.skill_validator, str(directory), check=False)
+        skill_results.append({
+            'name': directory.name, 'returncode': process.returncode,
+            'valid': 'valid' in process.stdout.decode(
+                'utf-8', errors='replace').lower()})
+    record('twenty_local_skills',
+           len(skill_results) == 20 and
+           all(row['returncode'] == 0 and row['valid'] for row in skill_results),
+           {'count': len(skill_results),
+            'failed': [row['name'] for row in skill_results
+                       if row['returncode'] or not row['valid']]},
+           {'count': 20, 'failed': []})
+
+    runners = sorted((ROOT / 'runners').glob('*.txt'))
+    node_check = ('const fs=require("fs"),vm=require("vm");'
+                  'new vm.Script(fs.readFileSync(process.argv[1],"utf8"),'
+                  '{filename:process.argv[1]});')
+    runner_results = []
+    for path in runners:
+        process = command('node', '-e', node_check, str(path), check=False)
+        runner_results.append({'name': path.name, 'returncode': process.returncode})
+    record('ten_runner_syntax',
+           len(runner_results) == 10 and
+           all(row['returncode'] == 0 for row in runner_results),
+           {'count': len(runner_results),
+            'failed': [row['name'] for row in runner_results if row['returncode']]},
+           {'count': 10, 'failed': []})
+
+    node_files = [ROOT / 'x1/runtime.txt', ROOT / 'x1/session.txt',
+                  ROOT / 'x2/runtime.txt', ROOT / 'x2/session.txt']
+    node_source_results = []
+    for path in node_files:
+        process = command('node', '-e', node_check, str(path), check=False)
+        node_source_results.append({
+            'path': path.relative_to(ROOT).as_posix(),
+            'returncode': process.returncode})
+    record('node_source_syntax',
+           all(row['returncode'] == 0 for row in node_source_results),
+           node_source_results, 'all zero')
+
+    python_files = [
+        ROOT / 'planning/build-plan.txt',
+        ROOT / 'planning/correction-01/build-correction.txt',
+        ROOT / 'x1/build-x1.txt', ROOT / 'x1/validate-x1.txt',
+        ROOT / 'x2/build-x2.txt', ROOT / 'x2/continue-x2.txt',
+        ROOT / 'x2/validate-x2.txt',
+        ROOT / 'final/build-final.txt', ROOT / 'final/run-canonical.txt',
+        ROOT / 'final/validate-final.txt']
+    python_issues = []
+    for path in python_files:
+        try:
+            ast.parse(path.read_text(encoding='utf-8'))
+        except Exception as error:
+            python_issues.append({
+                'path': path.relative_to(ROOT).as_posix(), 'error': str(error)})
+    record('python_source_syntax', not python_issues, python_issues, [])
+
+    files = sorted(path for path in ROOT.rglob('*') if path.is_file())
+    allowed = {'.json', '.md', '.txt', '.html'}
+    disallowed = [path.relative_to(ROOT).as_posix() for path in files
+                  if path.suffix.lower() not in allowed]
+    record('allowed_formats', not disallowed, disallowed, [])
+    json_issues = []
+    json_count = 0
+    for path in files:
+        if path.suffix.lower() != '.json':
+            continue
+        try:
+            json.loads(path.read_text(encoding='utf-8'))
+            json_count += 1
+        except Exception as error:
+            json_issues.append({
+                'path': path.relative_to(ROOT).as_posix(), 'error': str(error)})
+    record('strict_json', not json_issues,
+           {'parsed': json_count, 'issues': json_issues}, 'zero issues')
+    markdown_issues = []
+    markdown_count = 0
+    for path in files:
+        if path.suffix.lower() != '.md':
+            continue
+        markdown_count += 1
+        value = path.read_text(encoding='utf-8')
+        if not value.endswith('\n') or not re.search(r'(?m)^# ', value):
+            markdown_issues.append(path.relative_to(ROOT).as_posix())
+    record('markdown_structure', not markdown_issues,
+           {'checked': markdown_count, 'issues': markdown_issues}, 'zero issues')
+
+    patterns = {
+        'credential_assignment': re.compile(
+            r'''(?i)(?:api[_-]?key|access[_-]?token|password|secret)\s*[:=]\s*["'](?!pending|none|false|true)[^"']{4,}["']'''),
+        'delegation_markup': re.compile(r'(?i)</?codex_delegation\b'),
+        'private_local_path': re.compile(
+            r'(?i)(?:[A-Z]:\\Users\\|[A-Z]:\\GHC-Archives\\|/Users/|/home/)'),
+        'private_uri': re.compile(r'(?i)(?:plugin|codex|app)://'),
+        'raw_uuid': re.compile(
+            r'(?i)\b[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}\b')}
+    candidates = []
+    confirmed = []
+    for path in files:
+        value = path.read_text(encoding='utf-8')
+        for name, pattern in patterns.items():
+            for _ in pattern.finditer(value):
+                row = {'class': name, 'path': path.relative_to(ROOT).as_posix()}
+                candidates.append(row)
+                if path.name != 'run-canonical.txt':
+                    confirmed.append(row)
+    record('five_class_privacy', not confirmed,
+           {'candidates': len(candidates), 'confirmed': confirmed},
+           'zero confirmed')
+    words = [(len(re.findall(r'\S+', path.read_text(encoding='utf-8'))),
+              path.relative_to(ROOT).as_posix()) for path in files]
+    maximum = max(words)
+    record('file_ceiling', len(files) < 2000, len(files), '<2000')
+    record('document_ceiling', maximum[0] <= 100000,
+           {'words': maximum[0], 'path': maximum[1]}, '<=100000')
+
+    def verify_manifest(relative, actual_paths):
+        manifest = json.loads(blob(head, PREFIX + relative))
+        issues = []
+        for entry in manifest['entries']:
+            data = blob(head, entry['path'])
+            if len(data) != entry['bytes'] or sha(data) != entry['sha256']:
+                issues.append(entry['path'])
+        expected = sorted(
+            [entry['path'] for entry in manifest['entries']] +
+            manifest['exclusions'])
+        return manifest, issues, expected == sorted(actual_paths)
+
+    delta_actual = [row for row in output(
+        git('diff-tree', '--no-commit-id', '--name-only', '-r', head)
+    ).splitlines() if row]
+    delta, delta_issues, delta_paths_ok = verify_manifest(
+        'validation/final-delta-manifest.json', delta_actual)
+    record('final_delta_manifest', not delta_issues and delta_paths_ok,
+           {'entries': len(delta['entries']),
+            'exclusions': len(delta['exclusions']),
+            'blob_issues': delta_issues, 'path_match': delta_paths_ok},
+           {'blob_issues': [], 'path_match': True})
+
+    owner_actual = [row for row in output(
+        git('diff', '--name-only', SOURCE + '..' + head, '--', PREFIX)
+    ).splitlines() if row]
+    owner, owner_issues, owner_paths_ok = verify_manifest(
+        'validation/final-owner-manifest.json', owner_actual)
+    record('final_owner_manifest', not owner_issues and owner_paths_ok,
+           {'entries': len(owner['entries']),
+            'exclusions': len(owner['exclusions']),
+            'blob_issues': owner_issues, 'path_match': owner_paths_ok},
+           {'blob_issues': [], 'path_match': True})
+
+    seal = json.loads(blob(head, PREFIX + 'closeout/content-seal.json'))
+    seal_issues = []
+    for entry in seal['targets']:
+        data = blob(head, entry['path'])
+        if len(data) != entry['bytes'] or sha(data) != entry['sha256']:
+            seal_issues.append(entry['path'])
+    record('content_seal', not seal_issues,
+           {'targets': len(seal['targets']), 'issues': seal_issues},
+           {'targets': 10, 'issues': []})
+
+    truth = json.loads(blob(head, PREFIX + 'final/phase-truth.json'))
+    record('outcomes',
+           truth['outcomes'] ==
+           {'completed': 255, 'represented': 15,
+            'open_gap': 15, 'exact_gate': 15},
+           truth['outcomes'],
+           {'completed': 255, 'represented': 15,
+            'open_gap': 15, 'exact_gate': 15})
+    record('effective_counts',
+           truth['effective_counts'] ==
+           {'methods': 1480, 'witnesses': 93048,
+            'passing_witnesses': 70342, 'failed_witnesses': 22706,
+            'negatives': 29683, 'open_gaps': 884, 'exact_gates': 970},
+           truth['effective_counts'], 'exact sealed counts')
+    record('terminal_verdict',
+           truth['verdict'] == 'NOT_READY_FOR_STAGE_20',
+           truth['verdict'], 'NOT_READY_FOR_STAGE_20')
+    record('full_suite_not_run',
+           truth['complete_repository_suite'] is False,
+           truth['complete_repository_suite'], False)
+    route = blob(
+        head, PREFIX + 'handoffs/tamar-vey-v699-v6-activation-candidate.md'
+    ).decode('utf-8')
+    record('prepared_route_unsent',
+           'PREPARED_NOT_SENT' in route and
+           'SENT_BY_LIORA_VENN = false' in route and
+           'Tamar Vey' in route)
+
+    status_after = [row for row in output(
+        git('status', '--porcelain=v1', '--untracked-files=all')).splitlines()
+                    if row]
+    record('clean_after', not status_after, len(status_after), 0)
+    upstream_after = output(git('rev-parse', '@{upstream}'))
+    tracking_after = output(git(
+        'rev-parse', 'refs/remotes/origin/' + BRANCH))
+    live_line_after = output(git(
+        'ls-remote', 'origin', 'refs/heads/' + BRANCH))
+    live_after = live_line_after.split('\t')[0] if live_line_after else ''
+    divergence_after = [int(value) for value in output(
+        git('rev-list', '--left-right', '--count',
+            'HEAD...@{upstream}')).split()]
+    record('zero_divergence_after',
+           divergence_after == [0, 0], divergence_after, [0, 0])
+    record('four_way_equal_after',
+           len({head, upstream_after, tracking_after, live_after}) == 1,
+           {'local': head, 'upstream': upstream_after,
+            'tracking': tracking_after, 'fresh_live': live_after},
+           'all equal')
+    metrics = {
+        'owner_metadata_validators': len(validators),
+        'local_skills': len(skill_results),
+        'family_current_runners': len(runner_results),
+        'json_documents': json_count,
+        'markdown_documents': markdown_count,
+        'owner_files': len(files),
+        'privacy_candidates': len(candidates),
+        'privacy_confirmed': len(confirmed),
+        'delta_entries': len(delta['entries']),
+        'owner_manifest_entries': len(owner['entries']),
+        'seal_targets': len(seal['targets']),
+        'maximum_document_words': maximum[0]}
+except Exception as error:
+    record('internal_exception', False,
+           {'type': type(error).__name__, 'message': str(error)}, 'none')
+
+passed = sum(1 for row in checks if row['passed'])
+status = ('VALID_EXACT_FINAL_OWNER_SCOPED_CANONICAL'
+          if passed == len(checks)
+          else 'INVALID_EXACT_FINAL_OWNER_SCOPED_CANONICAL')
+payload = {
+    'schema': 'liora.exact-final-canonical-receipt.v1',
+    'status': status, 'invocation_count': 1,
+    'success_count': int(status.startswith('VALID_')),
+    'replay_count': 0, 'expected_head': args.expected_head,
+    'checks': checks, 'check_count': len(checks),
+    'passed_checks': passed, 'failed_checks': len(checks) - passed,
+    'metrics': metrics, 'full_repository_suite': False,
+    'same_owner_only': True, 'independent_reproduction': False,
+    'terminal_verdict': 'NOT_READY_FOR_STAGE_20',
+    'boundary': 'Bounded same-owner metadata and software validation only; not empirical confirmation, independent reproduction, production certification, external audit, authority, proof, canon, or Stage 20 evidence.'}
+payload['payload_sha256'] = sha(json.dumps(
+    payload, sort_keys=True, separators=(',', ':'),
+    ensure_ascii=False).encode())
+with receipt.open('x', encoding='utf-8', newline='\n') as handle:
+    json.dump(payload, handle, ensure_ascii=False, indent=2)
+    handle.write('\n')
+print(json.dumps({
+    'status': status, 'checks': len(checks), 'passed': passed,
+    'failed': len(checks) - passed,
+    'payload_sha256': payload['payload_sha256'],
+    'metrics': metrics}))
+raise SystemExit(0 if status.startswith('VALID_') else 1)
