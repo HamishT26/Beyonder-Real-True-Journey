@@ -112,11 +112,33 @@ const lifecycleFailures = [
     failure: 'The first read-only x1 summary wrapper used an invalid inline function expression and stopped at JavaScript parse time before reading evidence.',
     recovery: 'A bounded named walker parsed all four current owner JSON documents and reported exact x1 counts without rerunning x1.',
     original_success_credit: 0, retained: true
+  },
+  {
+    negative_id: 'CA6992-X2-N001', method_id: 'CA6992-M-LIFECYCLE-03',
+    failure: 'The first x2 invocation stopped at the first singleton malformed-subject expectation mismatch and produced no x2 artifact.',
+    recovery: 'Kept the failed latch and receipt, isolated all 300 x2 candidate subjects once, and used one separately latched additive correction invocation.',
+    original_success_credit: 0, retained: true
+  },
+  {
+    negative_id: 'CA6992-X2-N002', method_id: 'CA6992-M-LIFECYCLE-03',
+    failure: 'CA6992-P151-N2 changed the sole singleton cell to its existing value, so the preregistered latin_row subject was not malformed.',
+    recovery: 'The correction subject assigns the out-of-range symbol one and requires the exact symbol_range refusal.',
+    original_success_credit: 0, retained: true
+  },
+  {
+    negative_id: 'CA6992-X2-N003', method_id: 'CA6992-M-LIFECYCLE-03',
+    failure: 'CA6992-P256-N1 changed the sole singleton cell to its existing value, so the preregistered latin_row subject was not malformed.',
+    recovery: 'The correction subject assigns the out-of-range symbol one and requires the exact symbol_range refusal.',
+    original_success_credit: 0, retained: true
   }
 ];
 const x1MutationCorrections = new Map([
   ['CA6992-P001-N2', { correction_id: 'CA6992-X1-C001', expected_error: 'symbol_range' }],
   ['CA6992-P106-N1', { correction_id: 'CA6992-X1-C002', expected_error: 'symbol_range' }]
+]);
+const x2MutationCorrections = new Map([
+  ['CA6992-P151-N2', { correction_id: 'CA6992-X2-C001', expected_error: 'symbol_range' }],
+  ['CA6992-P256-N1', { correction_id: 'CA6992-X2-C002', expected_error: 'symbol_range' }]
 ]);
 
 function stable(value) {
@@ -619,8 +641,9 @@ function compactPlan() {
 
 function runStage(stage, correctionAttempt = 0) {
   const correction = correctionAttempt > 0;
-  assert.equal(correction ? stage === 'x1' : true, true);
-  const done = latch(correction ? 'x1-correction-' + correctionAttempt : stage);
+  assert.equal(correction ? ['x1', 'x2'].includes(stage) : true, true);
+  const correctionMap = stage === 'x1' ? x1MutationCorrections : x2MutationCorrections;
+  const done = latch(correction ? stage + '-correction-' + correctionAttempt : stage);
   const previous = published(stage === 'x1' ? 'plan' : 'x1');
   const plan = readJson('plan.json');
   assert.equal(previous.artifact_sha256, stage === 'x1' ? sha(readBytes('plan.json')) : sha(readBytes('x1.json')));
@@ -639,7 +662,7 @@ function runStage(stage, correctionAttempt = 0) {
     witnesses.push(makeWitness(contract.id + '-SAFE-A', 'CA6992-M-OP-' + contract.operation, 'pass', null, 'runtime versus frozen oracle', 'exact direct agreement'));
     witnesses.push(makeWitness(contract.id + '-SAFE-B', 'CA6992-M-OP-' + contract.operation, 'pass', null, 'transformed runtime versus frozen oracle', 'exact transformed agreement'));
     for (const negative of contract.negative_subjects) {
-      const correctionRecord = correction ? x1MutationCorrections.get(negative.negative_id) : null;
+      const correctionRecord = correction ? correctionMap.get(negative.negative_id) : null;
       const negativeRequest = structuredClone(negative.request);
       if (correctionRecord) negativeRequest.table[0][0] = negativeRequest.n;
       const expectedError = correctionRecord ? correctionRecord.expected_error : negative.expected_error;
@@ -741,7 +764,7 @@ function runStage(stage, correctionAttempt = 0) {
     records, runner_results: stageRunners.map(runner => runner.id),
     tests, models, witnesses, retained_negatives: retained,
     lifecycle_failures: stage === 'x1' ? lifecycleFailures : [],
-    mutation_corrections: correction ? [...x1MutationCorrections.entries()].map(([negative_id, value]) => ({ negative_id, ...value, original_success_credit: 0 })) : [],
+    mutation_corrections: correction ? [...correctionMap.entries()].map(([negative_id, value]) => ({ negative_id, ...value, original_success_credit: 0 })) : [],
     outcomes: outcomeCounts,
     counts: {
       contracts: 150, safe: 300, candidate_failed: 300, candidate_success: 0,
@@ -751,7 +774,7 @@ function runStage(stage, correctionAttempt = 0) {
       tests: tests.length, models: models.length
     },
     invocations: correction ? correctionAttempt + 1 : 1, successes: 1, replays: 0,
-    failed_invocation_negative_ids: correction ? ['CA6992-X1-N001', ...(correctionAttempt > 1 ? ['CA6992-X1-N004'] : [])] : [],
+    failed_invocation_negative_ids: correction ? (stage === 'x1' ? ['CA6992-X1-N001', ...(correctionAttempt > 1 ? ['CA6992-X1-N004'] : [])] : ['CA6992-X2-N001']) : [],
     correction_mode: correction, correction_attempt: correctionAttempt, boundary
   };
   writeJson(stage + '.json', payload);
@@ -842,11 +865,11 @@ function buildMethodFlow(plan, x1, x2) {
   assert.equal(methods.length, 60);
   const pass = allWitnesses.filter(item => item.result === 'pass').length;
   const fail = allWitnesses.filter(item => item.result === 'fail').length;
-  assert.equal(pass, 2458);
-  assert.equal(fail, 618);
+  assert.equal(pass, 2461);
+  assert.equal(fail, 621);
   const ownCounts = {
     methods: 60, witnesses: allWitnesses.length, passing_witnesses: pass,
-    failed_witnesses: fail, negatives: 618, open_gaps: 49, exact_gates: 65
+    failed_witnesses: fail, negatives: 621, open_gaps: 49, exact_gates: 65
   };
   const sourceSealed = plan.source_baseline.repository_sealed;
   const overlayFailures = plan.source_baseline.external_zero_credit_failures;
@@ -1213,8 +1236,8 @@ function canonical(expectedHead) {
   check('bounded_security_patterns', security.length === 0, security);
   check('handoff_word_floor', truth.handoff.words >= 10000 && truth.handoff.words <= 100000, truth.handoff.words);
   check('deck_card_count', readJson('final/context-deck.json').card_count === 612, 612);
-  check('method_flow_counts', flow.counts.methods === 60 && flow.counts.witnesses === 3076 && flow.counts.witness_results.pass === 2458 && flow.counts.witness_results.fail === 618, flow.counts);
-  check('negative_overlay', flow.effective_counts.negatives === 26902, flow.effective_counts.negatives);
+  check('method_flow_counts', flow.counts.methods === 60 && flow.counts.witnesses === 3082 && flow.counts.witness_results.pass === 2461 && flow.counts.witness_results.fail === 621, flow.counts);
+  check('negative_overlay', flow.effective_counts.negatives === 26905, flow.effective_counts.negatives);
   check('gap_gate_overlay', flow.effective_counts.open_gaps === 777 && flow.effective_counts.exact_gates === 825, flow.effective_counts);
   check('global_installs_zero', plan.global_installs === 0, 0);
   check('domain_not_replayed', true, 'canonical read metadata and persisted artifacts only');
@@ -1258,11 +1281,12 @@ try {
   else if (command === 'x1' || command === 'x2') runStage(command);
   else if (command === 'x1-correction') runStage('x1', 1);
   else if (command === 'x1-correction-2') runStage('x1', 2);
+  else if (command === 'x2-correction') runStage('x2', 1);
   else if (command === 'publish') publication(process.argv[4], process.argv[5]);
   else if (command === 'final') buildFinal();
   else if (command === 'staged-review') buildStagedReview();
   else if (command === 'canonical') canonical(process.argv[4]);
-  else throw Error('usage: plan|x1|x1-correction|x1-correction-2|x2|publish <stage> <commit>|final|staged-review|canonical <head>');
+  else throw Error('usage: plan|x1|x1-correction|x1-correction-2|x2|x2-correction|publish <stage> <commit>|final|staged-review|canonical <head>');
 } catch (error) {
   console.error(JSON.stringify({ state: 'failed', command, error: error.message, stack: error.stack }));
   process.exitCode = 2;
