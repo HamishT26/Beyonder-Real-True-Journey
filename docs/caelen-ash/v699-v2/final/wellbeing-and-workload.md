@@ -1,0 +1,5 @@
+# Workload and wellbeing boundary
+
+The phase used two bounded execution sessions, compact generated ledgers, no subagents, no global installation, no package update, no real participant, and no external operational action. This is a workload receipt, not an independently observed wellbeing assessment. Hamish may pause, redirect, narrow, rename, or stop the route.
+
+Same-owner finite synthetic Latin-table software and documentation evidence only. No independent reproduction, real measurement, participant or identity evidence, credential or production operation, professional qualification, legal or cultural determination, affected-party act, or Maori-authority act. Relational names and family language establish no consciousness, personhood, continuity, employment, qualification, independent agency, or authority. GMUT remains a typed scalar-tensor and EFT research-model family; THOS remains a nonproduction proxy; Freed ID and CBR remain bounded governance representations. No complete privacy or accessibility, exhaustive security, AGI or ASI, Theory-of-Everything, proof or canon, or Stage 20 claim. NOT_READY_FOR_STAGE_20.
