@@ -1,0 +1,79 @@
+# Python 3. Additional preregistered checks and models from persisted outputs only.
+from pathlib import Path
+from fractions import Fraction
+import collections, hashlib, json
+ROOT=Path(__file__).resolve().parents[1]
+def read(name):return json.loads((ROOT/name).read_text(encoding='utf-8'))
+def stable(v):return json.dumps(v,sort_keys=True,separators=(',',':'),ensure_ascii=False)
+def h(v):return hashlib.sha256(stable(v).encode()).hexdigest()
+def write(name,v):
+ with (ROOT/name).open('x',encoding='utf-8',newline='\n') as f:f.write(stable(v)+'\n')
+assert not (ROOT/'x2/additional-evidence.json').exists()
+plan=read('planning/plan.json');x1=read('x1/execution.json');x2=read('x2/execution.json')
+assert x1['successes']==x2['successes']==1 and x1['replays']==x2['replays']==0
+records={(r['profile'],r['operation']):r for r in x1['records']+x2['records']}
+tests=[];witnesses=[];profiles=[];models=[]
+def witness(method,procedure,result,expected,observed,negative=()):
+ wid='OP6993-X2-DERIVED-W%03d'%(len(witnesses)+1)
+ witnesses.append({'witness_id':wid,'method_id':method,'procedure':procedure,'scope':'new_declared_finite_check_of_persisted_outputs',
+  'expected':expected,'observed':observed,'result':result,'same_owner_only':True,'independent_reproduction':False,
+  'retained_negative_ids':list(negative),'boundary':'Same-owner synthetic only; protected gates remain closed.'})
+ return wid
+for p in plan['profiles']:
+ name,words=p['id'],p['codewords'];get=lambda op:records[(name,op)]['output']['result']
+ # Direct message enumeration differs from both frozen length recurrence and runtime convolution.
+ length_count=[0]*9;encodings=collections.Counter();stack=[('',[])]
+ while stack:
+  bits,message=stack.pop();length_count[len(bits)]+=1;encodings[bits]+=1
+  for index,word in enumerate(words):
+   if len(bits)+len(word)<=8:stack.append((bits+word,message+[index]))
+ stored=get('length_counts');graph=get('residual_closure');ud=get('unique_decodability');degree=get('trie_degrees')
+ mass=get('kraft_measure');rational=Fraction(int(mass['numerator']),int(mass['denominator']))
+ prefix=get('prefix_conflicts')['prefix_free'];ambiguity=get('shortest_ambiguity')
+ checks={'enumerated_message_counts':list(map(str,length_count))==stored['counts'],
+  'trie_edge_identity':degree['edges']==degree['vertices']-1,
+  'residual_certificate_consistency':graph['unique']==ud['unique'] and graph['epsilon_reachable']==ud['epsilon_reachable'],
+  'unique_implies_bounded_injectivity':not ud['unique'] or max(encodings.values())==1,
+  'unique_implies_kraft_bound':not ud['unique'] or rational<=1,
+  'prefix_implies_unique':not prefix or ud['unique']}
+ if ambiguity['found']:
+  a,b=ambiguity['first_two'];checks['ambiguity_reconstructs']=a!=b and ''.join(words[i] for i in a)==''.join(words[i] for i in b)==ambiguity['bits']
+  checks['shortest_in_declared_bound']=not any(count>1 and (len(bits),bits)<(ambiguity['length'],ambiguity['bits']) for bits,count in encodings.items())
+ else:checks['no_bounded_ambiguity']=max(encodings.values())==1
+ assert all(checks.values()),{'profile':name,'checks':checks}
+ wid=witness('OP6993-M-length_counts','finite_message_enumeration_and_certificate_join','pass','all_declared_checks_true',checks)
+ tests.append({'id':'OP6993-X2-T%02d'%(len(tests)+1),'profile':name,'message_enumeration_bound':8,
+  'messages_enumerated':sum(length_count),'distinct_bitstrings':len(encodings),'checks':checks,'witness_id':wid,
+  'runtime_invocations':0,'same_owner_only':True})
+ profiles.append({'id':name,'codewords':words,'prefix_free':prefix,'suffix_free':get('suffix_conflicts')['suffix_free'],
+  'kraft':mass['numerator']+'/'+mass['denominator'],'unique':ud['unique'],'residuals':graph['residuals'],
+  'ambiguity':ambiguity,'message_counts':stored['counts'],'probe':get('decode_probe')})
+ if name in ['single_zero','binary_complete','prefix_comb','overlap_ambiguity','cross_ambiguity']:
+  scene=get('trie_scene');node_labels={n['bits'] for n in scene['nodes']}
+  assert all(len(n['xyz'])==3 and all(isinstance(x,int) for x in n['xyz']) for n in scene['nodes'])
+  assert all(a in node_labels and c in node_labels and a+b==c for a,b,c in scene['edges'])
+  assert scene['physical_interpretation'] is False
+  wid=witness('OP6993-M-trie_scene','persisted_three_coordinate_model_binding','pass','three_declared_coordinates_and_exact_edges',h(scene))
+  models.append({'id':'OP6993-MODEL-%02d'%(len(models)+1),'profile':name,'scene':scene,
+    'source_contract':records[(name,'trie_scene')]['id'],'source_output_sha256':h(records[(name,'trie_scene')]['output']),
+    'witness_id':wid,'derived_only':True,'runtime_invocations':0})
+assert len(tests)==15 and len(models)==5
+words=['01','10','011','110'];left=[0,3];right=[2,1];bits='01110'
+assert left!=right and ''.join(words[i] for i in left)==''.join(words[i] for i in right)==bits
+negative='OP6993-X2-SOURCE-N001';method='OP6993-M-source-example-review'
+fail=witness(method,'published_example_unique_claim','fail','no_two_distinct_messages_encode_identically',
+  {'codewords':words,'left':left,'right':right,'bits':bits},[negative])
+passed=witness(method,'direct_concatenation_counterexample','pass',bits,
+  {'left_bits':''.join(words[i] for i in left),'right_bits':''.join(words[i] for i in right),'messages_distinct':True},[negative])
+challenge={'id':negative,'kind':'published_example_claim','url':'https://algs4.cs.princeton.edu/55compression/index.php',
+ 'source_description':'Exercise 3 presents this codebook as uniquely decodable without either prefix or suffix freedom.',
+ 'codewords':words,'left_message':left,'right_message':right,'encoded_bits':bits,'failed_claim_witness':fail,'counterexample_witness':passed,
+ 'original_claim_success_credit':0,'mathematical_novelty_claimed':False,'external_source_not_modified':True}
+write('x2/additional-evidence.json',{'schema':'orren.additional-evidence.v1','tests':tests,'models_count':5,'witnesses':witnesses,
+ 'source_challenge':challenge,'passing_witnesses':21,'failed_witnesses':1,'runtime_invocations':0,'domain_stage_replays':0,'boundary':plan['boundary']})
+write('x2/models.json',{'schema':'orren.persisted-trie-models.v1','models':models,'profiles':profiles,
+ 'source_execution_sha256':hashlib.sha256((ROOT/'x2/execution.json').read_bytes()).hexdigest(),
+ 'coordinates':'lexical index, prefix depth, outdegree; declared diagram coordinates only','boundary':plan['boundary']})
+print(json.dumps({'additional_tests':15,'clause_checks':sum(len(t['checks']) for t in tests),'models':5,
+ 'unique_codebooks':sum(p['unique'] for p in profiles),'ambiguous_codebooks':sum(not p['unique'] for p in profiles),
+ 'new_passing_witnesses':21,'retained_source_claim_failure':1,'domain_runtime_replays':0}))

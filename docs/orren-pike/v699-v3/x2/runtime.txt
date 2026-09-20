@@ -1,0 +1,86 @@
+// Node.js CommonJS. X2 engine; uses frozen X1 admission without replaying X1 contracts.
+'use strict';
+const base=require('../x1/runtime.txt'),crypto=require('node:crypto');
+const OPS=['residual_closure','unique_decodability','decode_probe','encode_probe','length_counts',
+  'shortest_ambiguity','kraft_completion','trie_scene','external_decoder_gap','deployment_authority_gate'];
+function graphFor(words){
+  const initial=[...new Set(base.prefixPairs(words).map(x=>x.residual))].sort();
+  const reached=new Set(initial),queue=[...initial],edges=new Map();
+  for(let cursor=0;cursor<queue.length;cursor++){
+    const s=queue[cursor],next=new Set();
+    if(s!=='')for(const word of words){
+      if(s.startsWith(word))next.add(s.slice(word.length));
+      if(word.startsWith(s))next.add(word.slice(s.length));
+    }
+    const sorted=[...next].sort();edges.set(s,sorted);
+    for(const t of sorted)if(!reached.has(t)){reached.add(t);queue.push(t);}
+  }
+  const residuals=[...reached].sort(),epsilon_reachable=reached.has('');
+  return {initial,residuals,graph:residuals.map(residual=>({residual,next:edges.get(residual)})),epsilon_reachable,unique:!epsilon_reachable};
+}
+function compareMessages(a,b){for(let i=0;i<Math.min(a.length,b.length);i++)if(a[i]!==b[i])return a[i]-b[i];return a.length-b.length;}
+function decode(words,bits){
+  const count=Array(bits.length+1).fill(0n),examples=Array.from({length:bits.length+1},()=>[]);
+  count[0]=1n;examples[0]=[[]];
+  for(let pos=0;pos<bits.length;pos++)for(let i=0;i<words.length;i++)if(bits.startsWith(words[i],pos)){
+    const end=pos+words[i].length;count[end]+=count[pos];
+    for(const head of examples[pos])examples[end].push([...head,i]);
+    examples[end].sort(compareMessages);examples[end]=examples[end].slice(0,2);
+  }
+  return {probe:bits,count:String(count[bits.length]),first_two:examples[bits.length],unique_for_probe:count[bits.length]===1n};
+}
+function allBits(length){return Array.from({length:2**length},(_,i)=>i.toString(2).padStart(length,'0'));}
+function run(q){
+  base.validate(q,OPS);const before=base.stable(q);base.freeze(q);
+  const words=q.codewords,lengths=words.map(w=>w.length);let result,outcome='completed';
+  switch(q.op){
+    case 'residual_closure':result=graphFor(words);break;
+    case 'unique_decodability':{
+      const g=graphFor(words);result={unique:g.unique,epsilon_reachable:g.epsilon_reachable,residual_count:g.residuals.length,
+        criterion:'finite_sardinas_patterson_closure'};break;
+    }
+    case 'decode_probe':result=decode(words,q.probe);break;
+    case 'encode_probe':{
+      const pieces=q.sequence.map(i=>words[i]),boundaries=[0];for(const p of pieces)boundaries.push(boundaries.at(-1)+p.length);
+      result={bits:pieces.join(''),sequence:q.sequence.slice(),boundaries};break;
+    }
+    case 'length_counts':{
+      const totals=Array(q.limit+1).fill(0n);totals[0]=1n;
+      let polynomial=Array(q.limit+1).fill(0n);polynomial[0]=1n;
+      for(let symbols=1;symbols<=q.limit;symbols++){
+        const next=Array(q.limit+1).fill(0n);
+        for(let n=0;n<=q.limit;n++)for(const length of lengths)if(n+length<=q.limit)next[n+length]+=polynomial[n];
+        for(let n=0;n<=q.limit;n++)totals[n]+=next[n];polynomial=next;
+      }
+      result={limit:q.limit,counts:totals.map(String),counts_are_messages_not_distinct_bitstrings:true};break;
+    }
+    case 'shortest_ambiguity':{
+      result={found:false,search_bound:q.limit,global_claim:false};
+      outer:for(let n=1;n<=q.limit;n++)for(const bits of allBits(n)){
+        const parsed=decode(words,bits);if(BigInt(parsed.count)>1n){result={found:true,search_bound:q.limit,global_claim:false,bits,length:n,first_two:parsed.first_two};break outer;}
+      }
+      break;
+    }
+    case 'kraft_completion':{
+      const conflicts=base.prefixPairs(words);
+      if(conflicts.length)result={applicable:false,reason:'input_not_prefix_free',conflicts};
+      else{const depth=Math.max(...lengths),added_words=allBits(depth).filter(s=>words.every(w=>!s.startsWith(w)));
+        result={applicable:true,depth,added_words,resulting_kraft_numerator:'1',resulting_kraft_denominator:'1'};}
+      break;
+    }
+    case 'trie_scene':{
+      const nodes=base.nodesFor(words);result={nodes:nodes.map((bits,i)=>({bits,xyz:[i,bits.length,Number(nodes.includes(bits+'0'))+Number(nodes.includes(bits+'1'))],
+        terminal:words.includes(bits)?words.indexOf(bits):null})),edges:nodes.filter(Boolean).map(s=>[s.slice(0,-1),s.slice(-1),s]),
+        coordinate_meaning:'lexical_index_depth_outdegree_only',physical_interpretation:false};outcome='represented';break;
+    }
+    case 'external_decoder_gap':
+      result={codebook_sha256:crypto.createHash('sha256').update(base.stable(words),'utf8').digest('hex'),
+        missing:['separate_implementation','separate_operator','external_evaluation'],supplied:false};outcome='open_gap';break;
+    case 'deployment_authority_gate':
+      result={codebook_sha256:crypto.createHash('sha256').update(base.stable(words),'utf8').digest('hex'),
+        reservations:['production_safety','privacy_security_review','affected_party_rights','competent_legal_cultural_maori_authority'],approval_observed:false};outcome='exact_gate';break;
+    default:base.fail('operation');
+  }
+  if(before!==base.stable(q))base.fail('input_mutation');return base.success(q.op,result,outcome);
+}
+module.exports={...base,OPS,run,cli:allowed=>base.makeCli(run,allowed)};
