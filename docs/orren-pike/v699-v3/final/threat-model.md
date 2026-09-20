@@ -1,0 +1,9 @@
+# Bounded threat review
+
+Inputs are finite synthetic binary codebooks. Public runners admit only exact request fields, reject duplicate JSON keys, limit input bytes and nesting, and reject invalid words, indices and operation routes. The planning oracle, runtime and message enumeration share an owner and mathematical criterion. Their agreement is not independent reproduction. The batch probe accepts only the frozen plan under a hash binding and is not a public arbitrary-input service.
+
+Report data comes from saved synthetic outputs. UI text uses textContent and SVG attributes; no remote script, font, image or network computation is loaded. The temporary local test server was bound to loopback and stopped. A missing optional icon request is retained as a failure, and independent accessibility review remains open. The browser checks establish only observed local controls and exact table readback.
+
+Bounded security review checks authored code and explicit owner paths. It is not exhaustive security, penetration testing, real traffic evaluation or production certification. No credential, participant record, real identity, external publication, package installation or host security setting was introduced.
+
+Bounded same-owner synthetic codebook software only. No independent reproduction, real participant, identity, credential, deployment, empirical GMUT confirmation, professional, legal, cultural, affected-party or Maori authority. Names, pronouns, roles, hopes and family language establish no consciousness, personhood, continuity, qualification, agency or authority. THOS and Freed ID remain nonproduction; CBR and Maori concepts remain under competent and affected authorities. No complete privacy or accessibility, exhaustive security, AGI/ASI, Theory-of-Everything proof, canon or Stage 20 claim. NOT_READY_FOR_STAGE_20.

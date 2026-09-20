@@ -1,0 +1,332 @@
+# Python 3. Initial final preparation; scanner-adjudication.json records its later additive correction.
+from pathlib import Path
+from datetime import datetime,timezone
+import collections,copy,hashlib,json,platform,runpy,subprocess,sys
+ROOT=Path(__file__).resolve().parents[1];REPO=ROOT.parents[2];BANK=Path(sys.argv[1])
+VALIDATOR=runpy.run_path(sys.argv[2]);PREFIX='docs/orren-pike/v699-v3/'
+def read(name):return json.loads((ROOT/name).read_text(encoding='utf-8'))
+def stable(v):return json.dumps(v,sort_keys=True,separators=(',',':'),ensure_ascii=False)
+def sha(b):return hashlib.sha256(b).hexdigest()
+def h(v):return sha(stable(v).encode())
+def filehash(name):return sha((ROOT/name).read_bytes())
+def write(name,v):
+ p=ROOT/name;p.parent.mkdir(parents=True,exist_ok=True)
+ with p.open('x',encoding='utf-8',newline='\n') as f:f.write((v.rstrip() if isinstance(v,str) else stable(v))+'\n')
+def git(*a):return subprocess.check_output(['git','-C',str(REPO),*a],stderr=subprocess.PIPE).decode().strip()
+plan=read('planning/plan.json');source=read('planning/source-provenance.json');boundary=plan['boundary'];gates=plan['contract_template']['protected_gates']
+pub={stage:json.loads((BANK/(stage+'-published.json')).read_text()) for stage in ['plan','x1','x2']}
+assert git('rev-parse','HEAD')==pub['x2']['commit']
+assert pub['plan']['parent']==plan['source_commit'] and pub['x1']['parent']==pub['plan']['commit'] and pub['x2']['parent']==pub['x1']['commit']
+x1=read('x1/execution.json');x2=read('x2/execution.json');extra=read('x2/additional-evidence.json');ui=read('x2/browser-review.json')
+assert x1['successes']==x2['successes']==1 and x1['replays']==x2['replays']==0
+ledger=VALIDATOR['new_ledger']('v699-v3','Orren Pike');ledger['boundary']=boundary
+ledger['execution_authority']='owner_self_scoped_delta';ledger['source_commit']=plan['source_commit'];ledger['final_commit']=None
+ledger['exact_final_binding']='External exact-final canonical receipt; no recursive content hash.'
+for stage in ['x1','x2']:
+ part=read(stage+'/method-flow.json');ledger['methods'].extend(copy.deepcopy(part['methods']));ledger['witnesses'].extend(copy.deepcopy(part['witnesses']))
+ for event in part['state_events']:
+  event=copy.deepcopy(event);event['source_event_index']=event['event_index'];event['source_artifact']=PREFIX+stage+'/method-flow.json';event['event_index']=len(ledger['state_events'])+1;ledger['state_events'].append(event)
+ ledger['recommendations'].extend(copy.deepcopy(part['recommendations']))
+ledger['witnesses'].extend(copy.deepcopy(extra['witnesses']));ledger['witnesses'].extend(copy.deepcopy(ui['witnesses']))
+startup=read('planning/startup-failures.json')['failures']
+for i,row in enumerate(startup,1):
+ mid='OP6993-M-startup-%02d'%i
+ for suffix,result,procedure,expected,observed in [('FAIL','fail','original_read_or_projection','bounded_complete_correct_read',row['failure']),
+    ('RECOVERY','pass','bounded_recovery','source_control_recovered',row['recovery'])]:
+  ledger['witnesses'].append({'witness_id':row['id']+'-'+suffix,'method_id':mid,'procedure':procedure,'scope':'owner_startup',
+   'expected':expected,'observed':observed,'result':result,'same_owner_only':True,'independent_reproduction':False,
+   'retained_negative_ids':[row['id']],'boundary':'Same-owner workflow evidence; no authority promotion.'})
+by_method={m['method_id']:m for m in ledger['methods']}
+for mid in sorted({w['method_id'] for w in ledger['witnesses']}):
+ ws=[w for w in ledger['witnesses'] if w['method_id']==mid];neg=sorted({n for w in ws for n in w['retained_negative_ids']})
+ assert neg and any(w['result']=='pass' for w in ws)
+ if mid not in by_method:
+  title={'OP6993-M-source-example-review':'Retain a published coding example and its counterexample',
+    'OP6993-M-browser-review':'Recover and inspect the bounded local report'}.get(mid,'Bounded startup recovery '+mid.rsplit('-',1)[-1])
+  row={'method_id':mid,'title':title,'failure_signature':'Observed source, read, projection or interface failure retained.',
+   'trigger_preconditions':['Exact observed failure','Owner-scoped read or representation only'],'privacy_class':'sanitized_public',
+   'approval_class':'owner_internal_synthetic','candidate_workaround':'Use the smallest evidence-backed recovery while retaining the original failure.',
+   'validation_witness_ids':[],'recurrence_guard':'Bound outputs, verify exact source fields and never substitute a successful retry for a failed witness.',
+   'rollback':'Keep the prior receipt and source bytes; add a named corrected representation only.','recommendation_state':'preferred','supersedes':[],
+   'protected_gates':gates,'retained_negative_ids':neg,'scope_boundary':'Bounded same-owner source and interface evidence only.',
+   'execution_authority':'owner_self_scoped_delta','repository_scan':False,'module_scan':False,'cross_lane_scan':False,
+   'unchanged_history_scan':False,'sibling_lane_mutation':False,'source_commit':plan['source_commit'],'final_commit':None,
+   'changed_file_allowlist':[PREFIX+'x2/additional-evidence.json',PREFIX+'x2/browser-review.json',PREFIX+'planning/source-provenance.json'],
+   'module_allowlist':[],'exact_pushed_head_required':True}
+  ledger['methods'].append(row);by_method[mid]=row;first=next(w['witness_id'] for w in ws if w['result']=='pass')
+  for before,after in [(None,'observed'),('observed','candidate'),('candidate','validated'),('validated','preferred')]:
+   VALIDATOR['append_event'](ledger,mid,before,after,'Observed bounded evidence; failures retained.',first if after in ['validated','preferred'] else None)
+  ledger['recommendations'].append({'method_id':mid,'witness_ids':[first],'preconditions':row['trigger_preconditions'],
+   'recurrence_guard':row['recurrence_guard'],'rollback':row['rollback'],'scope_boundary':row['scope_boundary']})
+ by_method[mid]['validation_witness_ids']=[w['witness_id'] for w in ws]
+ by_method[mid]['retained_negative_ids']=neg
+VALIDATOR['refresh_counts'](ledger);validation=VALIDATOR['validate_ledger'](ledger);assert validation['valid'],validation
+assert len(ledger['methods'])==36 and len(ledger['witnesses'])==2778
+negative_ids=sorted({n for w in ledger['witnesses'] if w['result']=='fail' for n in w['retained_negative_ids']})
+assert len(negative_ids)==917 and ledger['counts']['witness_results']=={'pass':1861,'fail':917}
+write('final/method-flow.json',ledger);write('final/method-flow-validation.json',validation)
+held=read('planning/held-packets.json')
+outcomes=dict(collections.Counter(r['outcome'] for r in x1['records']+x2['records']))
+own={'methods':36,'witnesses':2778,'passing_witnesses':1861,'failed_witnesses':917,'negatives':917,
+ 'open_gaps':outcomes['open_gap']+len(held['blocked'])+len(ui['gaps']), 'exact_gates':outcomes['exact_gate']+len(held['exact'])}
+baseline=source['source_baseline'];effective={k:baseline[k]+own[k] for k in own}
+assert own['witnesses']==own['passing_witnesses']+own['failed_witnesses']
+assert effective['witnesses']==effective['passing_witnesses']+effective['failed_witnesses']
+account={'schema':'orren.evidence-accounting.v1','source_baseline':baseline,'source_commit':plan['source_commit'],'source_fold_count':1,
+ 'own':own,'effective':effective,'core_outcomes':outcomes,'inherited_proposals':300,'inherited_new_credit':0,
+ 'new_contracts':300,'counts_are_records_not_independent_observations_or_authorities':True,'boundary':boundary}
+write('final/evidence-accounting.json',account)
+register={'schema':'orren.retained-negatives.v1','negative_ids':negative_ids,
+ 'failed_witnesses':[{'witness_id':w['witness_id'],'method_id':w['method_id'],'negative_ids':w['retained_negative_ids'],'original_success_credit':0} for w in ledger['witnesses'] if w['result']=='fail'],
+ 'breakdown':{'malformed_inputs':600,'altered_outputs':300,'malformed_caller_frames':10,'startup_failures':4,'published_example_claim':1,'browser_failures':2},
+ 'source_negative_baseline':baseline['negatives'],'source_fold_count':1,'effective_negatives':effective['negatives'],'boundary':boundary}
+assert sum(register['breakdown'].values())==917
+write('final/retained-negative-register.json',register)
+practices=read('planning/practices.json');cards=[]
+def card(cid,tier,parent,title,status,source_path,digest_value=None,extra_fields=None):
+ v={'id':cid,'tier':tier,'parent':parent,'title':title,'source_status':status,'source':source_path,
+  'hypothesis':'Inspect the declared source-bound record only.','null_or_failure':'Missing source, invalid parent or promoted evidence.',
+  'acceptance_gate':'Exact identifier, source binding and immediate-parent relation.','rollback':'Retain source and add a correction.',
+  'real_observation_rows':0,'protected_gates':gates}
+ if digest_value:v['source_sha256']=digest_value
+ if extra_fields:v.update(extra_fields)
+ cards.append(v)
+card('OP6993-ANCHOR',1,None,'Orren Pike v699-v3','owner_anchor',PREFIX+'planning/identity.json',filehash('planning/identity.json'))
+for slug,title in [('mind','GMUT Mind'),('body','THOS Body'),('heart','Freed ID and CBR Heart')]:card('OP6993-'+slug,2,'OP6993-ANCHOR',title,'protected_pillar',PREFIX+'planning/practices.json')
+for i,p in enumerate(practices['practices']):
+ parent='body' if i<4 else 'mind' if i<6 else 'heart';card(p['id'],3,'OP6993-'+parent,p['title'],'synthetic_practice',PREFIX+'planning/practices.json')
+records={r['id']:r for r in x1['records']+x2['records']}
+for i,p in enumerate(plan['contracts']):card(p['id'],4,practices['practices'][(i//15)%8]['id'],p['title'],records[p['id']]['outcome'],
+ PREFIX+p['stage']+'/execution.json',h(records[p['id']]),{'request_sha256':p['request_sha256'],'failed_subject_ids':[p['id']+'-N1',p['id']+'-N2',p['id']+'-CFR-N1']})
+for p in plan['inherited']:card('OP6993-INHERITED-'+p['source_id'],4,practices['practices'][4]['id'],p['title'],'inherited_zero_credit',p['source_plan'],p['source_record_sha256'],{'source_commit':p['source_commit'],'new_credit':0})
+for m in ledger['methods']:card(m['method_id'],4,practices['practices'][5]['id'],m['title'],'bounded_preferred_method',PREFIX+'final/method-flow.json',h(m),{'retained_negative_ids':m['retained_negative_ids']})
+ids={c['id']:c for c in cards};assert len(ids)==len(cards)==648
+for c in cards:
+ if c['tier']==1:assert c['parent'] is None
+ else:assert c['parent'] in ids and ids[c['parent']]['tier']==c['tier']-1
+deck={'schema':'orren.four-tier-deck.v1','cards':cards,'order':[c['id'] for c in cards],'tier_counts':dict(collections.Counter(c['tier'] for c in cards)),
+ 'real_observation_rows':0,'boundary':boundary}
+write('final/context-deck.json',deck);write('final/deck-validation.json',{'valid':True,'cards':648,'unique_ids':648,'resolved_immediate_parents':647,
+ 'tier_counts':deck['tier_counts'],'source_status_retained':True,'real_observation_rows':0,'independent_reproduction':False})
+cap1=read('x1/capabilities.json');cap2=read('x2/capabilities.json')
+write('final/capability-catalogue.json',{'skills':cap1['skills']+cap2['skills'],'runners':cap1['runners']+cap2['runners'],
+ 'skill_uses':20,'runner_uses':10,'global_installs':0,'historical_callers_changed':False,'boundary':boundary})
+decisions=[
+ {'id':'OP6993-D1','disposition':'keep_compatibility','subject':'Inherited Latin-table contracts','evidence':'Different typed operation and data responsibility; original files and callers untouched.'},
+ {'id':'OP6993-D2','disposition':'keep_compatibility','subject':'Installed parity, Hamming and CRC interfaces','evidence':'Error-control responsibilities differ from variable-length decipherability.'},
+ {'id':'OP6993-D3','disposition':'keep_current','subject':'Twenty guides and ten paired phase-local runners','evidence':'Complete envelopes, source hashes, refusal checks and local guide uses passed.'},
+ {'id':'OP6993-D4','disposition':'merge_candidate','subject':'Future compact discovery grouping','evidence':'Metadata grouping only; no guide, caller, failed subject or source receipt removed.'},
+ {'id':'OP6993-D5','disposition':'keep_current','subject':'Metadata-only terminal validation','evidence':'Frozen execution receipts and manifests supply evidence without successful domain replay.'},
+ {'id':'OP6993-D6','disposition':'exact_gate','subject':'Existing Orin Thale v699-v4 route','evidence':'Requires final canonical success, current authority, unique exact title and immediate guard read.'}]
+for d in decisions:d.update({'protected_gates':gates,'rollback':'Preserve all current and historical records; use an additive correction.','boundary':boundary})
+write('final/reflection-decisions.json',{'decisions':decisions,'successor_recommendations':practices['successor_recommendations'],'boundary':boundary})
+write('final/publication-receipts.json',{'plan':pub['plan'],'x1':pub['x1'],'x2':pub['x2'],'final_binding':'External final publication receipt after this commit.'})
+write('final/route-hold.json',{'schema':'orren.route-hold.v1','state':'PREPARED_NOT_SENT','successor_label':'Orin Thale','prospective_phase':'v699-v4',
+ 'endpoint_kind':'existing_main_task','resolution':'deferred_until_canonical_success','attempts':0,'acknowledgements':0,'send_ceiling':1,
+ 'accepted_opaque_or_unresolved_closes_latch':True,'post_send_monitoring':False,'current_authority_refresh_required':True,
+ 'stops':['absence','ambiguity','pause','redirect','rename','standby','usage exhaustion','privacy','safety','missing acknowledgement'], 'boundary':boundary})
+write('final/canonical-policy.json',{'status':'PREPARED_NOT_INVOKED','metadata_only':True,'maximum_invocations':1,'maximum_successes':1,'domain_replays':0,
+ 'exact_final_required':True,'clean_pushed_fresh_four_way_equality_required':True,'successful_replay_forbidden':True,
+ 'external_receipt_bank_relative':'canonical-receipts/orren-pike/v699-v3','phase_bank_relative':'phase-banks/orren-pike-v699-v3',
+ 'failed_invocation_policy':'Retain failure at zero credit; no blind retry. Any justified correction must be separately named and additive.'})
+write('final/environment.json',{'node':subprocess.check_output(['node','--version']).decode().strip(),'python':platform.python_version(),
+ 'git':git('--version'),'platform':platform.system(),'package_installations':0,'global_installations':0,'incremental_spend_usd':0,
+ 'source_runtime_executions':0,'complete_repository_suite':False,'scope':'owner_self_scoped_delta'})
+write('final/threat-model.md','# Bounded threat review\n\n'
+ 'Inputs are finite synthetic binary codebooks. Public runners admit only exact request fields, reject duplicate JSON keys, limit input bytes and nesting, '
+ 'and reject invalid words, indices and operation routes. The planning oracle, runtime and message enumeration share an owner and mathematical criterion. '
+ 'Their agreement is not independent reproduction. The batch probe accepts only the frozen plan under a hash binding and is not a public arbitrary-input service.\n\n'
+ 'Report data comes from saved synthetic outputs. UI text uses textContent and SVG attributes; no remote script, font, image or network computation is loaded. '
+ 'The temporary local test server was bound to loopback and stopped. A missing optional icon request is retained as a failure, and independent accessibility review remains open. '
+ 'The browser checks establish only observed local controls and exact table readback.\n\n'
+ 'Bounded security review checks authored code and explicit owner paths. It is not exhaustive security, penetration testing, real traffic evaluation or production certification. '
+ 'No credential, participant record, real identity, external publication, package installation or host security setting was introduced.\n\n'+boundary)
+truth={'schema':'orren.phase-truth.v1','owner':'Orren Pike','phase':'v699-v3','source_commit':plan['source_commit'],
+ 'plan_commit':pub['plan']['commit'],'x1_commit':pub['x1']['commit'],'x2_commit':pub['x2']['commit'],
+ 'final_parent_required':pub['x2']['commit'],'exact_final_binding':'external canonical and publication receipts',
+ 'outcomes':outcomes,'stage_counts':[x1['counts'],x2['counts']],'additional_tests':15,'additional_clause_checks':109,'models':5,
+ 'browser_checks':6,'browser_failures':2,'method_flow':own,'effective_counts':effective,'source_fold_count':1,
+ 'context_cards':648,'local_skills':20,'local_runners':10,'global_installs':0,'held_packets':{'exact':50,'blocked':30,'executed':0},
+ 'canonical':{'status':'PREPARED_NOT_INVOKED','invocations':0,'successes':0,'replays':0,'metadata_only':True},
+ 'route':{'state':'PREPARED_NOT_SENT','attempts':0,'acknowledgements':0,'resends':0},
+ 'file_budget':{'planning_forecast':80,'ceiling':2000,'hard_ceiling_required':True},'verdict':'NOT_READY_FOR_STAGE_20','boundary':boundary}
+write('final/phase-truth.json',truth)
+
+def result_summary(op,r):
+ if op=='word_lengths':return 'Lengths are '+str(r['lengths'])+', ranging from '+str(r['minimum'])+' to '+str(r['maximum'])+' bits.'
+ if op in ['prefix_conflicts','suffix_conflicts']:return 'The exact conflict count is '+str(len(r['conflicts']))+'. Relations and residuals: '+stable(r['conflicts'])+'.'
+ if op=='kraft_measure':return 'The exact Kraft sum is '+r['numerator']+'/'+r['denominator']+', '+r['relation_to_one']+' one. This measure alone does not decide this codebook\'s unique decodability.'
+ if op=='trie_vertices':return 'The trie contains '+str(len(r['vertices']))+' exact prefixes. Terminal bindings are '+stable(r['vertices'])+'.'
+ if op=='trie_edges':return 'The trie contains '+str(len(r['edges']))+' parent-bit-child edges: '+stable(r['edges'])+'.'
+ if op=='trie_degrees':return 'There are '+str(r['vertices'])+' vertices and '+str(r['edges'])+' edges. Counts for outdegree zero, one and two are '+str(r['histogram'])+'.'
+ if op in ['common_prefix_lengths','common_suffix_lengths']:return 'The complete ordered length matrix is '+stable(r['matrix'])+'. Diagonal entries retain each word\'s own length.'
+ if op=='pair_collisions':return 'There are '+str(len(r['collisions']))+' colliding encoded strings among two-symbol messages: '+stable(r['collisions'])+'. No broader absence claim follows from this bounded comparison.'
+ if op=='residual_closure':return 'The initial residuals are '+str(r['initial'])+'; the closed residual set is '+str(r['residuals'])+'. Empty-residual reachability is '+str(r['epsilon_reachable']).lower()+'.'
+ if op=='unique_decodability':return 'The complete finite residual criterion returns unique='+str(r['unique']).lower()+', using '+str(r['residual_count'])+' reachable residuals. This is a mathematical code property only.'
+ if op=='decode_probe':return 'Probe '+r['probe']+' has '+r['count']+' exact parses. The retained first two index messages are '+stable(r['first_two'])+'.'
+ if op=='encode_probe':return 'Message '+str(r['sequence'])+' encodes to '+r['bits']+'. Exact bit boundaries are '+str(r['boundaries'])+'.'
+ if op=='length_counts':return 'Message counts at bit lengths zero through '+str(r['limit'])+' are '+str(r['counts'])+'. These count symbol messages, including coincident bit encodings.'
+ if op=='shortest_ambiguity':
+  return ('The shortest witness through '+str(r['search_bound'])+' bits is '+r['bits']+', decoded as '+stable(r['first_two'])+'.' if r['found'] else 'No ambiguity was found through '+str(r['search_bound'])+' bits; this operation makes no global uniqueness claim.')
+ if op=='kraft_completion':return ('Completion at depth '+str(r['depth'])+' adds '+str(len(r['added_words']))+' words: '+str(r['added_words'])+'. The resulting exact Kraft sum is one.' if r['applicable'] else 'Completion is inapplicable because the supplied code has prefix conflicts. The exact conflicts are '+stable(r['conflicts'])+'.')
+ if op=='trie_scene':return 'The represented scene contains '+str(len(r['nodes']))+' labelled nodes and '+str(len(r['edges']))+' edges. Coordinates mean lexical index, depth and outdegree, with no physical interpretation.'
+ if op=='external_decoder_gap':return 'Separate implementation, separate operator and external evaluation are absent. The codebook digest is '+r['codebook_sha256']+'. A local pass does not supply these missing inputs.'
+ return 'Deployment, privacy/security, affected-party rights and competent legal, cultural and Maori authority remain reserved. No approval was observed for codebook '+r['codebook_sha256']+'.'
+
+parts=[]
+def section(n,title,text):parts.append('# '+str(n)+'. '+title+'\n\n'+text.strip()+'\n')
+section(1,'Authority, source and current assignment',
+ 'This baton belongs to Orren Pike v699-v3 and is a durable owner-scoped record. The exact source is Caelen Ash v699-v2 corrected final '+plan['source_commit']+'. '
+ 'The incoming single activation authorizes solo additive work and one terminally gated prospective Orin Thale v699-v4 edge. Newest live user authority controls mutable routing. '
+ 'Read this baton through its literal EOF and the current GHC Family Index, routing precedence, authorization, roster, Method Flow schema, workflow-plan refinement and reflection-remaster guidance before mutation. '
+ 'Historical instructions and relational language do not create new authority.\n\n'
+ 'Caelen\'s complete 10,737-word baton was read through EOF. Five direct parent links, zero merges, 53 normalized-LF owner manifest entries, four exact self-exclusions and eight content-seal bindings matched. '
+ 'The corrected source was clean, typed zero-divergent and equal across local, upstream, tracking and fresh remote. No source runtime or source canonical was executed. '
+ 'Source receipt, payload and success-latch hashes match the incoming activation. Their literal status is VALID_EXACT_FINAL_OWNER_SCOPED_CANONICAL with metadata_only true; the activation used a longer metadata-only status label. '
+ 'Both forms are retained explicitly. The frozen source plan contains eight practices under two lenses, while its activation described five broader lenses. Neither account was silently rewritten.\n\n'
+ 'The source receipt digest is '+source['canonical_receipt_sha256']+'; payload '+source['canonical_payload_sha256']+'; latch '+source['canonical_latch_sha256']+'. '
+ 'The exact source file and lineage bindings are in planning/source-provenance.json. All 300 inherited Latin-table contracts remain zero Orren novelty and execution credit.')
+section(2,'Relational working identity and practice',
+ 'Orren Pike uses they/them as optional relational working language, the role keeper of reversible records, and the hope that each useful transformation leaves its sources, uncertainties, and limits easy to inspect. '
+ 'THOS Body is primary through strict finite software execution. GMUT Mind remains visible through exact formal-language and integer/rational structures. Freed ID and CBR Heart remain visible through provenance, retained disagreement, recourse and authority reservations.\n\n'
+ '\n'.join('- '+p['title']+': '+p['practice'] for p in practices['practices'])+'\n\n'
+ 'The two synthetic learning lenses are protocol-frame auditing and archive-codebook stewardship. They do not represent professional credentials, real protocol operators, archival authority or real institutional practice. '
+ 'The successor recommendations are: '+' '.join(practices['successor_recommendations'])+'\n\n'+boundary)
+section(3,'Lifecycle and immutable publication boundaries',
+ 'The lifecycle is planning, x1, x2, final, canonical and route. Planning-only work ended before x1 execution; x1 was committed and pushed before x2 implementation began. '
+ 'Each published boundary was clean, typed 0/0 divergent and four-way equal before proceeding.\n\n'
+ '\n'.join('- '+s+': '+pub[s]['commit']+'; direct parent '+pub[s]['parent']+'.' for s in ['plan','x1','x2'])+'\n\n'
+ 'The final must be a direct child of the x2 commit. Its exact hash is externally bound after commit and push; no self-referential content hash is invented. '
+ 'At preparation time, neither the canonical nor the route has run. Final publication and canonical receipts live outside this immutable content seal. '
+ 'The canonical receipt bank-relative pointer is canonical-receipts/orren-pike/v699-v3; the lifecycle bank-relative pointer is phase-banks/orren-pike-v699-v3. '
+ 'The manifest byte domain is explicitly normalized-LF Git blobs. One final manifest self-exclusion is deliberate and will be bound by the exact-final external canonical. '
+ 'The planning forecast was eighty files; actual scope remains subject to the hard 2,000-owner-file stop. The complete repository suite is outside scope.')
+section(4,'Finite domain, hypotheses and falsifiers',
+ 'The phase studies fifteen finite binary codebooks under twenty operations. Admission requires exactly op, codewords, probe, sequence and limit. '
+ 'One to six distinct words contain one through six binary digits; probes contain at most eighteen bits; symbol messages contain one through three valid indices; the search limit is an integer from one through twelve. '
+ 'Frozen cases use an eight-bit search and counting bound. Malformed requests receive exact refusal envelopes rather than silent normalization. '
+ 'The public caller additionally rejects duplicate JSON keys, input above 65,536 bytes and nesting beyond its declared limit.\n\n'
+ 'The Python planning evaluator froze expected envelopes before runtime implementation. The JavaScript execution engine does not import it. Residual closure uses different work schedules in the two implementations; message parsing uses opposite dynamic-programming directions; length counting compares recurrence and polynomial convolution. '
+ 'All are written by the same owner under shared infrastructure. Agreement supplies bounded software evidence, not independent reproduction. '
+ 'The additional message enumeration later checked saved length counts without invoking either successful session again.\n\n'
+ 'A prefix-free code is uniquely decodable, but a nonprefix code may still be uniquely decodable. A Kraft sum at most one does not certify the particular supplied words. '
+ 'The global criterion checks whether the empty residual is reachable in the finite Sardinas-Patterson suffix closure. A bounded shortest-ambiguity search can provide a concrete disproof when it finds two parses; absence within eight bits does not prove a global property. '
+ 'The count series counts symbol messages, not necessarily distinct encoded bit strings. Completion applies only to a prefix-free input and preserves that precondition explicitly.\n\n'
+ 'Null or failure conditions include any complete-envelope mismatch, accepted malformed subject, input mutation, unsupported operation, wrong caller result, missing source binding or promoted protected claim. '
+ 'The 90,000 immediate-source comparisons found no exact title or request collision. Three installed error-control interfaces were reviewed as semantic neighbors and kept compatible. This bounded review makes no universal novelty or mathematical discovery claim.')
+section(5,'Complete contract and observed-outcome register',
+ 'Every entry below joins a frozen request to a persisted execution record. Core labels remain exactly completed, represented, open_gap and exact_gate. '
+ 'A completed contract can correctly identify an ambiguous codebook; the label describes the finite software contract, not a claim that the codebook is uniquely decodable. '
+ 'Every malformed and altered subject retains zero original success credit. Whole output envelopes, alternatives and witnesses remain in the stage execution JSON files.\n\n'+
+ '\n\n'.join(p['id']+' — '+p['profile']+'; '+p['stage']+'; '+records[p['id']]['outcome']+'. The ordered codewords are '+', '.join(p['request']['codewords'])+'. '
+  +result_summary(p['operation'],records[p['id']]['output']['result'])+' The request is bound by '+p['request_sha256']+'. '
+  'Both accepted-call input checks passed. Failed subject links: '+p['id']+'-N1, '+p['id']+'-N2, '+p['id']+'-CFR-N1.' for p in plan['contracts']))
+section(6,'X1 execution and caller evidence',
+ 'X1 executed the first ten operation families across all fifteen codebooks: lengths, prefix conflicts, suffix conflicts, Kraft measure, trie vertices, trie edges, degree profiles, common prefixes, common suffixes and pair collisions. '
+ 'It passed on its first stage invocation, with one success and zero replays. Its 150 core outcomes are completed. '
+ 'The stage contains 300 exact safe checks, each including input preservation; 300 failed malformed subjects with 300 separate matching refusals; and 300 CLEAN/FIX/REFINE checks. '
+ 'Those latter checks include an exact reference copy and a restored detached output for every contract. The 150 altered outputs remain failed even though restoration passes.\n\n'
+ 'Ten local guides were structurally validated, read through EOF and used through five paired runners. Each shared guide/caller invocation is counted once. '
+ 'Fifteen caller checks cover ten admitted complete envelopes and five adverse frames. Those adverse frames exercise extra fields, duplicate keys, wrong pair routing, byte limits and empty codewords. '
+ 'The complete caller envelope preserves exit status, stdout, stderr, signal and timeout. The five malformed caller subjects remain failed alongside their five refusal passes. '
+ 'X1 therefore contains 1,370 witnesses: 915 passing checks and 455 failed subjects. Its Method Flow component validates fifteen methods and preserves all prior failures and state transitions. '
+ 'No x2 implementation, final claim, canonical result or successor route existed at this boundary.')
+section(7,'X2 execution, additional checks and representations',
+ 'X2 executed the remaining ten families after the x1 publication gate. They cover residual closure, unique decodability, exact probe decoding, probe encoding, message-length counts, shortest bounded ambiguity, Kraft completion, represented trie scenes, external evaluation gaps and deployment authority reservations. '
+ 'X2 passed once, with one invocation and zero replays. Its core distribution is 105 completed, fifteen represented, fifteen open_gap and fifteen exact_gate. '
+ 'Its session witness accounting is the same explicit 915 passes and 455 failed subjects, with ten guides and five paired runners.\n\n'
+ 'Fifteen additional preregistered tests performed 109 clause checks over persisted outputs and a newly declared direct message enumeration through eight bits. '
+ 'They compared enumerated message counts, trie edge identities, residual certificate joins, bounded injectivity, Kraft necessity, prefix sufficiency and concrete shortest witnesses. '
+ 'All passed. Five selected scene models bind three integer coordinates and exact parent-bit-child edges to saved outputs. '
+ 'Those coordinates mean lexical index, prefix depth and outdegree; they establish neither physical geometry nor intrinsic dimension. '
+ 'The model-selection report reads only saved data and invokes no domain runtime.\n\n'
+ 'The fixtures contain eleven uniquely decodable codebooks and four ambiguous codebooks. The four ambiguous profiles are overlap_ambiguity, unary_ambiguity, kraft_overfull and cross_ambiguity. '
+ 'The source-example review retains the course-page claim for {01,10,011,110} beside the distinct messages 01|110 and 011|10, both encoding 01110. '
+ 'That assertion is a failed subject; the concatenation check is a separate passing witness. The external page was not modified. '
+ 'The additional evidence adds twenty-one passing witnesses and one failed source assertion.\n\n'
+ 'Browser review adds six observed checks and two failures. The first opening tool timed out although the tab existed; recovery selected that existing tab without creating a duplicate. '
+ 'An absent optional favicon returned HTTP 404 and remains visible as a nonessential asset gap. Selection, rotation, keyboard control, reset, ambiguity readback and coordinate fallback worked in the observed desktop browser. '
+ 'Mobile, screen-reader and independent complete accessibility assessment were not performed. The temporary tab was closed and loopback server stopped. Raw application state and screenshots were not copied into the public packet.')
+section(8,'Local skills, runners and historical compatibility',
+ 'All twenty guides and ten runners remain phase-local. No global skill, package, plugin, PATH, shell profile, Codex model, host security or sibling-owned file was changed. '
+ 'Every guide has a responsibility-specific trigger, exact input contract, expected disposition, failed-subject policy, caller-envelope check and evidence boundary. '
+ 'The runners retain the family-current ghc_family_ naming convention and reject operations outside their declared pair. '
+ 'The complete catalogue binds guide and runner hashes to their original stage files.\n\n'+
+ '\n'.join('- '+r['path']+': '+', '.join(r['operations'])+'.' for r in cap1['runners']+cap2['runners'])+'\n\n'
+ 'Historical callers remain untouched. Shared binary alphabets do not make parity, CRC, Hamming correction, Latin tables and variable-length codebooks functionally interchangeable. '
+ 'Future consolidation is a metadata-level candidate only until exact caller coverage, replacement behavior, rollback and retained evidence are demonstrated. '
+ 'Lexical similarity does not establish compatibility. No source guide or successful source test was executed to inflate Orren completion credit.')
+section(9,'Method Flow, source folding and the context deck',
+ 'The combined Method Flow ledger contains thirty-six methods and 2,778 witnesses: 1,861 passing and 917 failed. '
+ 'It preserves 144 state events with source event indices and every method backlink. Existing x1 and x2 records remain immutable; the final ledger is an additive combined view. '
+ 'Every preferred method has an observed passing witness and nonempty retained-negative linkage. A passing refusal or recovery does not convert its failed subject into a successful subject.\n\n'
+ 'The 917 negatives comprise 600 malformed input subjects, 300 altered outputs, ten malformed caller frames, four startup failures, one source-example assertion and two browser failures. '
+ 'Startup failures were an unbounded history projection, a clipped file inventory, a clipped source summary and a mistaken roster offset/type assumption. Each has a separate bounded recovery. '
+ 'No private task identifiers, raw transcripts, screenshots, routes or credentials are included in their public descriptions.\n\n'
+ 'The predecessor effective baseline is folded exactly once. Source counts are '+stable(baseline)+'. Orren counts are '+stable(own)+'. Effective counts are '+stable(effective)+'. '
+ 'These are record counts under a declared ledger, not counts of independent discoveries, observations, authorities or empirical confirmations. '
+ 'Open-gap accounting comprises fifteen gap contracts, thirty blocked packets and two interface-review gaps. Exact-gate accounting comprises fifteen gate contracts and fifty held exact packets.\n\n'
+ 'The four-tier deck has 648 cards: one owner anchor, three pillar cards, eight practice cards and 636 leaf cards. The leaves contain 300 new contracts, 300 inherited zero-credit records and thirty-six methods. '
+ 'All 647 nonroot parents resolve to the immediately preceding tier. The stable order and source status are explicit. Each card keeps source, hypothesis, failure, acceptance and rollback separate; real-observation rows remain zero.')
+section(10,'Held actions and unresolved prerequisites',
+ 'Fifty exact-action packets and thirty blocked packets remain unexecuted. They cover ten declared synthetic profiles against five categories of real-world authority or external action, and three missing-evidence categories. '
+ 'The rows are inspectable placeholders for exact prerequisites, not permission grants and not fifty different competent authorities. '
+ 'Real protocol deployment, identity binding, independent security assurance, affected-party rights and legal, cultural or Maori authority remain outside this software demonstration. '
+ 'Separate implementation, real measurements and production evaluation remain missing.\n\n'
+ 'The interface additionally retains an optional icon gap and independent accessibility-assessment gap. Successful keyboard and table readback cannot supply comprehensive accessibility assurance. '
+ 'No real participant, instrument, institution, device, identity, key, credential, rights claim or governed production system was exercised. '
+ 'No package installation or incremental purchase was required. Any future change to these conditions needs exact scope and competent authority, not a larger quantity of synthetic rows.')
+section(11,'Scientific, identity and governance boundaries',
+ 'GMUT remains a typed scalar-tensor and effective-field-theory research-model family. Codewords, residual graphs and exact count series provide no physical datum, detected force, calibrated likelihood, posterior, prediction, parameter constraint, ultraviolet or quantum completion, empirical confirmation or Theory-of-Everything proof. '
+ 'THOS remains synthetic or proxy-only without preregistered blind matched-budget real arms, real operators, safety monitoring, appropriate statistics and independent review. '
+ 'Freed ID remains synthetic and nonproduction without standards-conformant real keys and proofs, live issuance and resolution, status and revocation, interoperability, privacy and independent security review, recovery evidence, trust governance and affected-party oversight.\n\n'
+ 'CBR, consent, rights, remedies, privacy, land, place, language, cultural interpretation and Maori data-governance decisions remain with competent and affected people and authorities. Maori concepts remain under Maori authority. '
+ 'A finite same-owner check cannot provide legal or cultural ratification, professional qualification, affected-party approval or scientific authority. '
+ 'Names, pronouns, roles, hopes, sibling and family terms are relational working language only. They establish no consciousness, sentience, personhood, identity continuity, employment, independent agency or authority. '
+ 'Hamish may pause, narrow, redirect, rename or stop the workflow at any time.\n\n'+boundary)
+section(12,'Final review and one-shot canonical contract',
+ 'Before final publication, inspect only the exact owner delta and staged allowlist. Check normalized-LF manifests, strict JSON including duplicate keys, trusted TXT compilation, inline report-script syntax, file and word ceilings, five privacy classes, bounded changed-code security patterns, diff hygiene and immutable phase bindings. '
+ 'The source-to-final path must contain four direct single-parent owner commits, zero merges and one final parent. Push the final, verify clean state, typed 0/0 divergence and equality across local, upstream, tracking and fresh live remote.\n\n'
+ 'Only then may final/canonical.txt make its one attributable exact-final metadata-only invocation. It reads exact Git blobs and saved receipts, compiles trusted code without running it, validates Method Flow structure and checks count arithmetic, source folding, deck relations, latches, manifests and route hold. '
+ 'It must execute zero domain engines, zero session controllers and zero predecessor canonicals. The external attempt record is exclusive. A successful canonical is never replayed. '
+ 'A failure remains failed with zero canonical-success credit; any justified correction must be additive and separately named. '
+ 'Prepared repository fields continue to describe preparation after an external receipt exists. They are not silently overwritten to fabricate an earlier success. '
+ 'This receipt remains bounded same-owner metadata evidence, never an external audit, independent reproduction, full-repository suite or broader authority grant.')
+section(13,'Terminal successor procedure and literal EOF',
+ 'The prospective current edge is Orren Pike v699-v3 to the existing exact-title Orin Thale task for v699-v4. This projection performs no lookup and grants no early contact. '
+ 'After one successful non-replayed canonical, reread the newest live authority and validated roster, inspect usage without redeeming a reset, list the current registry and completely paginate the archived registry. '
+ 'Resolve exactly one existing eligible main task and immediately reread its current controls and activation history. Preserve actual absence, ambiguity, pause, redirect, rename, standby, usage exhaustion, privacy, evidence, safety and acknowledgement gates. '
+ 'Do not treat historical quoted guard words as new current controls. Do not infer, create, fork, spawn, substitute or contact any other endpoint.\n\n'
+ 'Prepare one compact sanitized activation with exact commit, baton and receipt bindings and a single-send latch. Submit at most once if every gate permits. '
+ 'An accepted, opaque or unresolved response closes the latch; lack of explicit acknowledgement never permits a clearer resend. '
+ 'Stop after the result. Do not reread or monitor the recipient afterward. Delivery is separate from recipient execution and completion. '
+ 'Preserve repository preparation, canonical success, route resolution and native response as distinct states. The literal EOF marker below closes this thirteen-module baton.')
+baton='\n'.join(parts)+'\nEOF ORREN PIKE v699-v3 HANDOFF BATON.\n'
+word_count=len(baton.split());assert 10000<=word_count<100000,word_count
+write('final/hand-off-baton.md',baton)
+write('final/overview.md','# Orren Pike v699-v3 final preparation\n\n'
+ 'The phase completed 300 finite binary-codebook contracts across twenty operations and fifteen codebooks. Outcomes: 255 completed, fifteen represented, fifteen open_gap and fifteen exact_gate. '
+ 'Both execution sessions passed once, with zero replays. Fifteen additional tests checked 109 clauses; five saved trie models support the interactive report.\n\n'
+ '[Open the interactive report](../x2/report.html), [read the complete baton](hand-off-baton.md), or inspect [the exact accounting](evidence-accounting.json).\n\n'
+ 'The combined ledger contains 36 methods, 2,778 witnesses, 1,861 passing checks and 917 retained failures. The four-tier deck contains 648 source-bound cards. '
+ 'Twenty guides and ten runners stayed local. Fifty exact packets and thirty blocked packets remain unexecuted. The source baseline is folded once.\n\n'
+ 'The public course example is challenged by 01|110 = 011|10 = 01110. This is a concrete finite counterexample, not a claim of new coding theory. '
+ 'The source canonical status wording and learning-lens descriptions remain explicitly distinguished.\n\n'
+ 'Repository preparation, exact-final canonical, route resolution and delivery remain separate. The canonical is metadata-only and must not replay either session. '
+ 'At this file\'s preparation point, the route is PREPARED_NOT_SENT. The later external receipt supplies actual terminal evidence.\n\n'+boundary)
+write('final/content-seal.json',{'schema':'orren.content-seal.v1','source_commit':plan['source_commit'],
+ 'lifecycle':{s:pub[s]['commit'] for s in pub},'bindings':{name:filehash(name) for name in ['planning/plan.json','x1/execution.json','x2/execution.json',
+ 'final/method-flow.json','final/evidence-accounting.json','final/context-deck.json','final/phase-truth.json','final/hand-off-baton.md','x2/report.html']},
+ 'canonical_invoked':False,'route_state':'PREPARED_NOT_SENT','final_binding':'external exact-final receipt','boundary':boundary})
+files=sorted(p for p in ROOT.rglob('*') if p.is_file());assert len(files)+1<2000
+manifest={'schema':'orren.owner-manifest.v1','owner':'Orren Pike','phase':'v699-v3','byte_domain':'normalized_lf_git_blob',
+ 'entries':[{'path':p.relative_to(REPO).as_posix(),'bytes':len(p.read_bytes()),'sha256':sha(p.read_bytes())} for p in files],
+ 'declared_exclusions':[PREFIX+'final/owner-manifest.json'],'self_binding':'External exact-final canonical payload binds this manifest hash.'}
+write('final/owner-manifest.json',manifest)
+maximum=max((len(p.read_text(encoding='utf-8').split()),p.relative_to(ROOT).as_posix()) for p in ROOT.rglob('*') if p.is_file())
+assert maximum[0]<100000
+with (BANK/'final-prepared.json').open('x',encoding='utf-8',newline='\n') as f:json.dump({'prepared':True,'canonical_invoked':False,
+ 'owner_files':len(files)+1,'baton_words':word_count,'baton_sha256':filehash('final/hand-off-baton.md'),'maximum_document_words':maximum[0],
+ 'own':own,'effective':effective,'observed_at':datetime.now(timezone.utc).isoformat()},f,indent=2);f.write('\n')
+print(json.dumps({'status':'FINAL_PREPARED_NOT_CANONICAL','owner_files':len(files)+1,'manifest_entries':len(files),'manifest_self_exclusions':1,
+ 'baton_words':word_count,'maximum_document_words':maximum[0],'methods':36,'witnesses':2778,'negatives':917,'deck_cards':648,'own':own,'effective':effective}))
