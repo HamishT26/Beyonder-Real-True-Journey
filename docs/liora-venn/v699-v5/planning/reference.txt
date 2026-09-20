@@ -1,0 +1,254 @@
+# Python 3. Planning oracle only. It is never imported by either execution runtime.
+from hashlib import sha256
+from fractions import Fraction
+import json
+
+OPERATIONS = [
+    ('carrier_inventory', 'Report the exact declared finite carrier without importing an external object or identity.'),
+    ('relation_normalization', 'Normalize declared cover pairs deterministically while preserving the named carrier.'),
+    ('reflexive_closure', 'Construct the exact reflexive reachability relation over the declared finite carrier.'),
+    ('transitive_closure', 'Construct exact finite reachability without promoting it to a physical or causal relation.'),
+    ('antisymmetry_audit', 'Check the finite antisymmetry obligation and expose any distinct mutual-reachability pair.'),
+    ('comparability_matrix', 'Emit an exact Boolean comparability matrix in declared element order.'),
+    ('cover_relation_reduction', 'Recover the transitive reduction of the finite order without claiming uniqueness beyond the valid poset input.'),
+    ('minimal_elements', 'Identify exact finite minimal elements without interpreting priority, status or value.'),
+    ('maximal_elements', 'Identify exact finite maximal elements without interpreting authority, rank or merit.'),
+    ('principal_ideal', 'Compute the principal ideal of one declared focus element as a finite synthetic set.'),
+    ('principal_filter', 'Compute the principal filter of one declared focus element as a finite synthetic set.'),
+    ('zeta_matrix', 'Construct the exact integer zeta matrix of the declared finite order.'),
+    ('mobius_matrix', 'Construct the exact integer Mobius matrix as the inverse of the finite zeta matrix.'),
+    ('zeta_transform', 'Apply the finite zeta transform to declared exact integer weights.'),
+    ('mobius_inversion', 'Recover declared exact integer weights through finite Mobius inversion.'),
+    ('order_ideal_enumeration', 'Enumerate every finite order ideal within the bounded carrier.'),
+    ('linear_extension_enumeration', 'Enumerate every exact finite linear extension within the bounded carrier.'),
+    ('hasse_scene', 'Represent the declared finite cover graph with exact synthetic coordinates and a text equivalent.'),
+    ('external_observation_gap', 'Keep real observations, likelihoods, measurements and empirical GMUT constraints visibly absent.'),
+    ('governance_authority_gate', 'Reserve professional, legal, cultural, affected-party and Maori-authority decisions to competent authorities.'),
+]
+
+PROFILES = [
+    ('singleton', ['a'], [], 'a'),
+    ('two_chain', ['a', 'b'], [['a', 'b']], 'b'),
+    ('two_antichain', ['a', 'b'], [], 'a'),
+    ('three_chain', ['a', 'b', 'c'], [['a', 'b'], ['b', 'c']], 'b'),
+    ('three_antichain', ['a', 'b', 'c'], [], 'b'),
+    ('vee_three', ['a', 'b', 'c'], [['a', 'b'], ['a', 'c']], 'a'),
+    ('lambda_three', ['a', 'b', 'c'], [['a', 'c'], ['b', 'c']], 'c'),
+    ('diamond_four', ['zero', 'a', 'b', 'one'],
+        [['zero', 'a'], ['zero', 'b'], ['a', 'one'], ['b', 'one']], 'one'),
+    ('fence_four', ['a', 'b', 'c', 'd'], [['a', 'b'], ['c', 'b'], ['c', 'd']], 'c'),
+    ('chain_plus_isolate', ['a', 'b', 'c', 'd'], [['a', 'b'], ['b', 'c']], 'd'),
+    ('two_disjoint_chains', ['a', 'b', 'c', 'd'], [['a', 'b'], ['c', 'd']], 'b'),
+    ('divisor_six', ['1', '2', '3', '6'], [['1', '2'], ['1', '3'], ['2', '6'], ['3', '6']], '6'),
+    ('divisor_twelve', ['1', '2', '3', '4', '6', '12'],
+        [['1', '2'], ['1', '3'], ['2', '4'], ['2', '6'], ['3', '6'], ['4', '12'], ['6', '12']], '6'),
+    ('boolean_three', ['000', '001', '010', '100', '011', '101', '110', '111'],
+        [['000', '001'], ['000', '010'], ['000', '100'], ['001', '011'], ['001', '101'],
+         ['010', '011'], ['010', '110'], ['100', '101'], ['100', '110'], ['011', '111'],
+         ['101', '111'], ['110', '111']], '111'),
+    ('pentagon_n5', ['zero', 'a', 'b', 'c', 'one'],
+        [['zero', 'a'], ['a', 'one'], ['zero', 'b'], ['b', 'c'], ['c', 'one']], 'c'),
+]
+
+OUTCOMES = {
+    'hasse_scene': 'represented',
+    'external_observation_gap': 'open_gap',
+    'governance_authority_gate': 'exact_gate',
+}
+SCOPE = 'finite_synthetic_poset_only'
+RESERVATIONS = [
+    'empirical_confirmation', 'real_participants_or_observations',
+    'professional_and_safety_authority', 'production_and_deployment',
+    'legal_and_cultural_authority', 'affected_party_rights_and_remedy',
+    'privacy_and_accessibility_completeness', 'Maori_wording_data_governance_and_authority',
+    'independent_reproduction', 'consciousness_personhood_AGI_ASI',
+    'Theory_of_Everything_proof_or_canon', 'Stage_20',
+]
+
+def stable(value):
+    return json.dumps(value, sort_keys=True, separators=(',', ':'), ensure_ascii=False)
+
+def digest(value):
+    return sha256(stable(value).encode()).hexdigest()
+
+def closure(request):
+    elements = request['elements']
+    index = {element: position for position, element in enumerate(elements)}
+    size = len(elements)
+    matrix = [[row == column for column in range(size)] for row in range(size)]
+    for lower, upper in request['covers']:
+        matrix[index[lower]][index[upper]] = True
+    for middle in range(size):
+        for lower in range(size):
+            for upper in range(size):
+                matrix[lower][upper] = matrix[lower][upper] or (
+                    matrix[lower][middle] and matrix[middle][upper])
+    return matrix
+
+def reduced_covers(request, relation):
+    elements = request['elements']
+    answer = []
+    for lower in range(len(elements)):
+        for upper in range(len(elements)):
+            if lower == upper or not relation[lower][upper]:
+                continue
+            mediated = any(
+                middle not in (lower, upper)
+                and relation[lower][middle]
+                and relation[middle][upper]
+                for middle in range(len(elements)))
+            if not mediated:
+                answer.append([elements[lower], elements[upper]])
+    return answer
+
+def mobius(relation):
+    size = len(relation)
+    augmented = [
+        [Fraction(int(relation[row][column])) for column in range(size)] +
+        [Fraction(int(row == column)) for column in range(size)]
+        for row in range(size)]
+    for column in range(size):
+        pivot = next(row for row in range(column, size) if augmented[row][column])
+        augmented[column], augmented[pivot] = augmented[pivot], augmented[column]
+        scale = augmented[column][column]
+        augmented[column] = [value / scale for value in augmented[column]]
+        for row in range(size):
+            if row == column:
+                continue
+            factor = augmented[row][column]
+            augmented[row] = [
+                value - factor * pivot_value
+                for value, pivot_value in zip(augmented[row], augmented[column])]
+    inverse = [row[size:] for row in augmented]
+    assert all(value.denominator == 1 for row in inverse for value in row)
+    return [[int(value) for value in row] for row in inverse]
+
+def order_ideals(request, relation):
+    elements = request['elements']
+    answer = []
+    for mask in range(1 << len(elements)):
+        valid = True
+        for upper in range(len(elements)):
+            if not mask & (1 << upper):
+                continue
+            for lower in range(len(elements)):
+                if relation[lower][upper] and not mask & (1 << lower):
+                    valid = False
+        if valid:
+            answer.append([element for index, element in enumerate(elements) if mask & (1 << index)])
+    return answer
+
+def linear_extensions(request, relation):
+    elements = request['elements']
+    answer = []
+    def visit(prefix, remaining):
+        if not remaining:
+            answer.append(prefix)
+            return
+        for candidate in remaining:
+            upper = elements.index(candidate)
+            blocked = any(
+                other != candidate and relation[elements.index(other)][upper]
+                for other in remaining)
+            if not blocked:
+                visit(prefix + [candidate], [other for other in remaining if other != candidate])
+    visit([], elements[:])
+    assert len(answer) <= request['limit']
+    return answer
+
+def coordinates(request, relation):
+    answer = []
+    for column, element in enumerate(request['elements']):
+        rank = sum(
+            other != column and relation[other][column]
+            for other in range(len(request['elements'])))
+        answer.append({'element': element, 'x': column * 2, 'y': rank * 2})
+    return answer
+
+def evaluate(request):
+    operation = request['operation']
+    elements = request['elements']
+    relation = closure(request)
+    index = {element: position for position, element in enumerate(elements)}
+    zeta = [[int(value) for value in row] for row in relation]
+    mu = mobius(relation)
+    weights = [request['weights'][element] for element in elements]
+    transformed = [
+        sum(weights[lower] for lower in range(len(elements)) if relation[lower][upper])
+        for upper in range(len(elements))]
+    if operation == 'carrier_inventory':
+        result = {'elements': elements, 'count': len(elements)}
+    elif operation == 'relation_normalization':
+        result = {'covers': sorted(request['covers'])}
+    elif operation == 'reflexive_closure':
+        result = {'relation': [[elements[lower], elements[upper]]
+            for lower in range(len(elements)) for upper in range(len(elements))
+            if relation[lower][upper]]}
+    elif operation == 'transitive_closure':
+        result = {'relation': [[elements[lower], elements[upper]]
+            for lower in range(len(elements)) for upper in range(len(elements))
+            if lower != upper and relation[lower][upper]]}
+    elif operation == 'antisymmetry_audit':
+        violations = [[elements[lower], elements[upper]]
+            for lower in range(len(elements)) for upper in range(lower + 1, len(elements))
+            if relation[lower][upper] and relation[upper][lower]]
+        result = {'antisymmetric': not violations, 'violations': violations}
+    elif operation == 'comparability_matrix':
+        result = {'elements': elements, 'matrix': [[
+            relation[lower][upper] or relation[upper][lower]
+            for upper in range(len(elements))] for lower in range(len(elements))]}
+    elif operation == 'cover_relation_reduction':
+        result = {'covers': reduced_covers(request, relation)}
+    elif operation == 'minimal_elements':
+        result = {'elements': [elements[upper] for upper in range(len(elements))
+            if not any(lower != upper and relation[lower][upper] for lower in range(len(elements)))]}
+    elif operation == 'maximal_elements':
+        result = {'elements': [elements[lower] for lower in range(len(elements))
+            if not any(lower != upper and relation[lower][upper] for upper in range(len(elements)))]}
+    elif operation == 'principal_ideal':
+        focus = index[request['focus']]
+        result = {'focus': request['focus'], 'elements': [
+            elements[lower] for lower in range(len(elements)) if relation[lower][focus]]}
+    elif operation == 'principal_filter':
+        focus = index[request['focus']]
+        result = {'focus': request['focus'], 'elements': [
+            elements[upper] for upper in range(len(elements)) if relation[focus][upper]]}
+    elif operation == 'zeta_matrix':
+        result = {'elements': elements, 'matrix': zeta}
+    elif operation == 'mobius_matrix':
+        result = {'elements': elements, 'matrix': mu}
+    elif operation == 'zeta_transform':
+        result = {'elements': elements, 'values': dict(zip(elements, transformed))}
+    elif operation == 'mobius_inversion':
+        recovered = [
+            sum(transformed[lower] * mu[lower][upper] for lower in range(len(elements)))
+            for upper in range(len(elements))]
+        result = {'elements': elements, 'values': dict(zip(elements, recovered))}
+    elif operation == 'order_ideal_enumeration':
+        ideals = order_ideals(request, relation)
+        result = {'count': len(ideals), 'ideals': ideals}
+    elif operation == 'linear_extension_enumeration':
+        extensions = linear_extensions(request, relation)
+        result = {'count': len(extensions), 'extensions': extensions}
+    elif operation == 'hasse_scene':
+        result = {'nodes': request['coordinates'], 'covers': reduced_covers(request, relation),
+                  'text_equivalent': 'Finite synthetic cover graph for ' + request['profile']}
+    elif operation == 'external_observation_gap':
+        result = {'observation_rows': 0, 'likelihood_present': False,
+                  'parameter_constraint_present': False,
+                  'reason': 'No governed external observation is in scope.'}
+    elif operation == 'governance_authority_gate':
+        result = {'authority_observed': False, 'reservations': RESERVATIONS}
+    else:
+        raise ValueError(operation)
+    return {'ok': True, 'operation': operation, 'outcome': OUTCOMES.get(operation, 'completed'),
+            'result': result, 'scope': SCOPE, 'same_owner_only': True,
+            'independent_reproduction': False, 'planning_oracle_only': True}
+
+def request_for(operation, profile, elements, covers, focus):
+    provisional = {'operation': operation, 'profile': profile, 'elements': elements[:],
+        'covers': [edge[:] for edge in covers], 'focus': focus,
+        'weights': {element: index + 1 for index, element in enumerate(elements)},
+        'limit': 50000, 'seed': 'liora-v699-v5'}
+    provisional['coordinates'] = coordinates(provisional, closure(provisional))
+    return provisional

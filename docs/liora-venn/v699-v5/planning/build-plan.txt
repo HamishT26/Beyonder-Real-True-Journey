@@ -1,0 +1,398 @@
+# Python 3. Planning preparation only; no execution-runtime import or phase execution.
+from pathlib import Path
+from datetime import datetime, timezone
+import collections, copy, hashlib, json, re, runpy, subprocess, sys
+
+ROOT = Path(__file__).resolve().parents[1]
+REPO = ROOT.parents[2]
+SKILLS = Path(sys.argv[1])
+BANK = Path(sys.argv[2])
+SOURCE = 'bea81cbb05f608f57e7ee2c6f41d0f2104be27dc'
+SOURCE_BRANCH = 'codex/GHC-Family/orin-thale-v699-v4-full-tools'
+BRANCH = 'codex/GHC-Family/liora-venn-v699-v5-full-tools'
+PREFIX = 'docs/liora-venn/v699-v5/'
+BOUNDARY = ('Bounded same-owner synthetic finite-poset and incidence-algebra software only. No real person, participant, object, workplace, '
+    'measurement, observation, allocation, identity event, credential, deployment or authority act is used. Relational names, pronouns, '
+    'roles, hopes, sibling and family language establish no consciousness, sentience, personhood, continuity, employment, qualification, '
+    'independent agency or authority. GMUT remains a typed scalar-tensor and effective-field-theory research-model family without empirical '
+    'confirmation, prediction, parameter constraint, ultraviolet completion, quantum completion, final physics or Theory-of-Everything proof. '
+    'THOS remains synthetic or proxy-only and Freed ID remains synthetic and nonproduction. Professional, safety, legal, cultural, '
+    'affected-party, privacy-remedy, accessibility-remedy, data-governance, Maori-wording, Maori-data-governance and Maori-authority decisions '
+    'remain exact-gated to competent and affected authorities. Maori concepts remain under Maori authority. No complete privacy or accessibility, '
+    'exhaustive security, independent reproduction, AGI/ASI, proof, canon or Stage 20 claim. NOT_READY_FOR_STAGE_20.')
+GATES = ['empirical confirmation', 'real participants or observations', 'professional and safety authority',
+         'production and deployment', 'legal and cultural authority', 'affected-party rights and remedy',
+         'privacy and accessibility completeness', 'Maori wording data governance and authority',
+         'independent reproduction', 'consciousness personhood AGI ASI', 'Theory-of-Everything proof or canon', 'Stage 20']
+
+def sha(raw): return hashlib.sha256(raw).hexdigest()
+def stable(value): return json.dumps(value, sort_keys=True, separators=(',', ':'), ensure_ascii=False)
+def h(value): return sha(stable(value).encode())
+def write(name, value):
+    p = ROOT / name; p.parent.mkdir(parents=True, exist_ok=True)
+    assert not p.exists(), name
+    p.write_text((stable(value) if not isinstance(value, str) else value.rstrip()) + '\n', encoding='utf-8', newline='\n')
+def g(*args): return subprocess.check_output(['git', '-C', str(REPO), *args], stderr=subprocess.PIPE).decode().strip()
+def source_json(path): return json.loads(g('show', SOURCE + ':' + path))
+
+assert len(sys.argv) == 4
+assert g('rev-parse', 'HEAD') == SOURCE and g('branch', '--show-current') == BRANCH
+assert not (BANK / 'planning-built.json').exists()
+oracle = runpy.run_path(str(ROOT / 'planning/reference.txt'))
+source_plan = source_json('docs/orin-thale/v699-v4/planning/plan.json')
+source_truth = source_json('docs/orin-thale/v699-v4/final/phase-truth.json')
+
+inherited = []
+for row in source_plan['contracts']:
+    inherited.append({'source_id': row['id'], 'title': row['title'], 'operation': row['operation'],
+        'source_commit': SOURCE, 'source_record_sha256': h(row), 'source_request_sha256': row['request_sha256'],
+        'source_expected_disposition': row['expected_disposition'], 'source_status': 'persisted_source_contract',
+        'review': 'Finite bipartite-matching responsibility retained as source evidence only; no Liora novelty, execution, completion or independent-reproduction credit.',
+        'new_credit': 0, 'source_plan': 'docs/orin-thale/v699-v4/planning/plan.json'})
+
+contracts, operations = [], []
+for index, (operation, description) in enumerate(oracle['OPERATIONS']):
+    stage = 'x1' if index < 10 else 'x2'; outcome = oracle['OUTCOMES'].get(operation, 'completed')
+    operations.append({'index': index + 1, 'operation': operation, 'hypothesis': description, 'stage': stage, 'outcome': outcome})
+    for profile, elements, covers, focus in oracle['PROFILES']:
+        request = oracle['request_for'](operation, profile, elements, covers, focus)
+        alternate = oracle['request_for'](operation, profile, elements, list(reversed(covers)), focus)
+        expected, alternate_expected = oracle['evaluate'](request), oracle['evaluate'](alternate)
+        pid = 'LV6995-P%03d' % (len(contracts) + 1)
+        negative1 = copy.deepcopy(request); negative1['undeclared'] = True
+        negative2 = copy.deepcopy(request); negative2['covers'] = negative2['covers'] + [[elements[0], elements[0]]]
+        contracts.append({'id': pid, 'title': 'Finite-poset %s for %s' % (operation, profile),
+            'stage': stage, 'operation': operation, 'profile': profile, 'hypothesis': description,
+            'template': 'LV6995-CONTRACT', 'expected_disposition': outcome,
+            'null_or_failure_condition': 'Any non-exact complete-envelope result, accepted malformed subject, frozen-request mutation, undeclared side effect or promoted protected claim.',
+            'approval_class': 'owner_internal_synthetic_safe_now',
+            'execution_lane': 'Liora-owned D-first additive sparse lane; %s only' % stage,
+            'primary_source_need': 'No external observation is needed for the exact finite definition; later primary sources may supply vocabulary only.',
+            'concrete_artifacts': ['frozen request and digest', 'planning-only expected envelope and digest',
+                'two malformed-subject rejection fixtures', 'one altered-expected failure fixture reserved for execution',
+                'separate bounded pass and failure witnesses'],
+            'falsifier_or_acceptance_gate': 'Exact JSON equality, strict source preservation, rejection of declared malformed subjects and no protected-claim promotion.',
+            'rollback_or_recovery': 'Preserve the failed witness and frozen input; stop the affected tranche; add only a corrected bounded subject.',
+            'protected_gates': GATES,
+            'request': request, 'request_sha256': h(request), 'alternate': alternate, 'alternate_sha256': h(alternate),
+            'expected': expected, 'expected_sha256': h(expected), 'alternate_expected': alternate_expected,
+            'alternate_expected_sha256': h(alternate_expected),
+            'negative_subjects': [{'id': pid + '-N1', 'request': negative1, 'error': 'field_set', 'original_success_credit': 0},
+                                  {'id': pid + '-N2', 'request': negative2, 'error': 'self_cover', 'original_success_credit': 0}],
+            'altered_expected_subject': {'id': pid + '-N3', 'kind': 'altered_expected', 'execution_deferred': True,
+                                         'original_success_credit': 0},
+            'execution_credit_at_freeze': 0})
+assert len(contracts) == len(inherited) == 300
+assert len(set(row['request_sha256'] for row in contracts)) == 300
+
+def tokens(title): return set(re.findall(r'[a-z]+', title.lower()))
+comparisons = []
+for row in contracts:
+    matches = []
+    for old in inherited:
+        a, b = tokens(row['title']), tokens(old['title'])
+        matches.append((len(a & b) / len(a | b), old['source_id']))
+    nearest = max(matches)
+    comparisons.append({'proposal': row['id'], 'nearest_source': nearest[1], 'token_jaccard': round(nearest[0], 6),
+        'exact_title_collision': any(row['title'] == old['title'] for old in inherited),
+        'exact_request_collision': any(row['request_sha256'] == old['source_request_sha256'] for old in inherited),
+        'semantic_review': 'Finite partial orders, reachability, incidence matrices, Mobius inversion, ideals and linear extensions differ from bipartite matching, Hall deficits and Konig covers.'})
+assert not any(row['exact_title_collision'] or row['exact_request_collision'] for row in comparisons)
+
+startup = [
+    {'id': 'LV6995-START-N001',
+     'failure': 'The first PowerShell file-stat projection piped directly after an inline foreach and the parser rejected an empty pipe element before repository mutation.',
+     'recovery': 'Materialized the bounded rows before piping and obtained attributable exact sizes, line counts, word counts and SHA-256 digests.',
+     'recovery_witness_id': 'LV6995-START-P001', 'success_credit': 0},
+    {'id': 'LV6995-START-N002',
+     'failure': 'The first broad raw Git-blob verification wrapper returned no attributable output after the bounded wait.',
+     'recovery': 'Confirmed no owned verifier survived, then used normalized-LF checkout bytes in the exact clean fresh-four-way-equal source to verify 121 manifest and 10 seal bindings.',
+     'recovery_witness_id': 'LV6995-START-P002', 'success_credit': 0},
+    {'id': 'LV6995-PLAN-N001',
+     'failure': 'The first apply-patch wrapper embedded Markdown backticks inside its JavaScript template and failed with a syntax error before the patch call.',
+     'recovery': 'Removed backticks from the wrapper domain and split the planning edit into bounded patches.',
+     'recovery_witness_id': 'LV6995-PLAN-P001', 'success_credit': 0},
+    {'id': 'LV6995-PLAN-N002',
+     'failure': 'The next patch combined delete and add operations for the same path and the patch engine rejected the invalid patch before file mutation.',
+     'recovery': 'Used an update-file patch and then bounded reviewable transformations of the inherited validated builder.',
+     'recovery_witness_id': 'LV6995-PLAN-P002', 'success_credit': 0},
+    {'id': 'LV6995-PLAN-N003',
+     'failure': 'The first planning materialization referenced the inherited v12 authority overlay under the authorization skill instead of its exact index-reference path and stopped before generating artifacts.',
+     'recovery': 'Resolved the exact installed file with a bounded filename search, verified no planning receipt or generated artifact existed, and corrected only the guidance binding.',
+     'recovery_witness_id': 'LV6995-PLAN-P003', 'success_credit': 0},
+    {'id': 'LV6995-PLAN-N004',
+     'failure': 'The first Method Flow validation call used the historical positional ledger form after the current help required an explicit --ledger option.',
+     'recovery': 'Invoked the exact documented --ledger form; the bounded startup ledger passed with zero schema or privacy issues.',
+     'recovery_witness_id': 'LV6995-PLAN-P004', 'success_credit': 0},
+    {'id': 'LV6995-PLAN-N005',
+     'failure': 'The first independent zeta-times-Mobius identity check found that the planning recurrence assumed profile order was topological and failed for fence_four.',
+     'recovery': 'Replaced the order-dependent recurrence with exact rational Gauss-Jordan inversion and rebuilt unpublished planning expectations and hashes.',
+     'recovery_witness_id': 'LV6995-PLAN-P005', 'success_credit': 0},
+    {'id': 'LV6995-PLAN-N006',
+     'failure': 'A broad stale-label search matched the one-line frozen plan and current roster and overflowed its bounded display projection.',
+     'recovery': 'Used structured owner, phase, route, source-attribution and inherited-zero-credit checks with compact output; every scoped check passed.',
+     'recovery_witness_id': 'LV6995-PLAN-P006', 'success_credit': 0},
+]
+
+workflow_path = SKILLS / 'ghc-family-index/references/current-workflow-v13.json'
+roster_path = SKILLS / 'ghc-family-index/references/current-roster-v13.json'
+workflow = json.loads(workflow_path.read_text(encoding='utf-8'))
+roster = json.loads(roster_path.read_text(encoding='utf-8'))
+assignment = next(row for row in roster['numbered_assignments'] if row['phase'] == 'v699-v5')
+assert assignment['owner'] == 'Liora Venn'
+
+guidance_paths = [
+    'ghc-family-index/SKILL.md', 'ghc-family-index/references/routing-precedence.md',
+    'ghc-family-index/references/current-thirty-seat-workflow.md', 'ghc-family-index/references/lyren-v698-v4-r2-current-overlay.md',
+    'ghc-family-index/references/current-workflow-v13.json', 'ghc-family-index/references/current-roster-v13.json',
+    'ghc-family-index/references/current-workflow-v12.json', 'ghc-family-index/references/current-roster-v12.json',
+    'ghc-family-auth-permission-state/SKILL.md', 'ghc-family-auth-permission-state/references/lyren-v698-v4-r2-20260920-authority.md',
+    'ghc-family-index/references/ceryn-v696-v6-r2-20260917-authority.md',
+    'ghc-family-method-flow-state/SKILL.md', 'ghc-family-method-flow-state/references/schema.md',
+    'ghc-family-workflow-plan-refinement/SKILL.md', 'ghc-family-workflow-plan-refinement/references/workflow-plan-schema.md',
+    'ghc-family-reflection-remaster/SKILL.md', 'ghc-family-reflection-remaster/references/decision-schema.md',
+    '.system/skill-creator/SKILL.md']
+guidance = [{'skill_relative_path': name, 'sha256': sha((SKILLS / name).read_bytes()), 'complete_read': True} for name in guidance_paths]
+
+receipt_bank = Path(sys.argv[3])
+receipt = json.loads((receipt_bank / 'receipt.json').read_text(encoding='utf-8'))
+payload = json.loads((receipt_bank / 'payload.json').read_text(encoding='utf-8'))
+assert receipt['exact_final'] == SOURCE and payload['metadata_only']
+assert payload['domain_stage_replays'] == 0 and payload['predecessor_canonical_replays'] == 0
+assert receipt['invocation_count'] == receipt['success_count'] == 1 and receipt['replay_count'] == 0
+source = {'owner': 'Orin Thale', 'phase': 'v699-v4', 'exact_final': SOURCE, 'source_branch': SOURCE_BRANCH,
+    'source_is_git_parent': True, 'verified_parent_edges': 4, 'merges': 0, 'normalized_lf_manifest_bindings': 121,
+    'content_seal_bindings': 10, 'canonical_receipt_sha256': sha((receipt_bank / 'receipt.json').read_bytes()),
+    'canonical_payload_sha256': sha((receipt_bank / 'payload.json').read_bytes()),
+    'canonical_latch_sha256': sha((receipt_bank / 'success-latch.json').read_bytes()),
+    'literal_canonical_status': receipt['status'], 'metadata_only': True, 'domain_replayed': False,
+    'source_canonical_replayed_by_liora': False, 'source_baseline': source_truth['effective_counts'],
+    'source_outcomes': source_truth['outcomes'], 'source_fold_count': 1,
+    'baton_sha256': '9e158149d245b04940329b2cb87720c28d3b1bc982dc49332cc50371729d7df5',
+    'baton_literal_eof': 'EOF ORIN THALE v699-v4 HANDOFF BATON.',
+    'read_boundary': 'Complete baton through literal EOF; exact source records, receipts and current guidance read without source runtime or canonical execution.',
+    'boundary': BOUNDARY}
+
+write('planning/source-provenance.json', source)
+write('planning/current-workflow-v13.json', workflow)
+write('planning/current-roster-v13.json', roster)
+write('planning/guidance-bindings.json', {'bindings': guidance, 'boundary': BOUNDARY})
+write('planning/startup-failures.json', {'failures': startup, 'original_success_credit': 0, 'recoveries_separate': True})
+write('planning/identity.json', {'owner': 'Liora Venn', 'optional_pronouns': 'she/they',
+    'role': 'finite-order and incidence-evidence cartographer',
+    'hope': 'to make every bounded ordering claim traceable to exact finite inputs, and every missing observation or authority explicit and reversible',
+    'relational_only': True, 'boundary': BOUNDARY})
+
+startup_witnesses = []
+for row in startup:
+    startup_witnesses.extend([
+        {'witness_id': row['id'], 'method_id': 'LV6995-M-startup',
+         'procedure': 'Retained failed bounded startup or planning attempt.', 'scope': 'startup and planning',
+         'expected': 'Attributable exact bounded evidence.', 'observed': row['failure'], 'result': 'fail',
+         'same_owner_only': True, 'independent_reproduction': False,
+         'retained_negative_ids': [row['id']], 'boundary': BOUNDARY},
+        {'witness_id': row['recovery_witness_id'], 'method_id': 'LV6995-M-startup',
+         'procedure': row['recovery'], 'scope': 'startup and planning recovery',
+         'expected': 'Attributable exact bounded evidence without rewriting the failed witness.',
+         'observed': 'The separately named bounded recovery passed.', 'result': 'pass',
+         'same_owner_only': True, 'independent_reproduction': False,
+         'retained_negative_ids': [row['id']], 'boundary': BOUNDARY},
+    ])
+startup_method_flow = {
+    'schema': 'ghc.family.method-flow-state.v1', 'phase': 'v699-v5', 'owner': 'Liora Venn',
+    'identity_boundary': BOUNDARY, 'execution_authority': 'owner_self_scoped_delta',
+    'source_commit': SOURCE, 'final_commit': 'pending_exact_pushed_head',
+    'changed_file_allowlist': [PREFIX + 'planning'], 'module_allowlist': [],
+    'sparse_file_budget_state': 'planning forecast remains below the 2000 owner-file stop',
+    'methods': [{
+        'method_id': 'LV6995-M-startup', 'title': 'Bounded startup and exact-source verification',
+        'failure_signature': ' | '.join(row['failure'] for row in startup),
+        'trigger_preconditions': ['exact Liora owner scope', 'read-only source or planning input', 'bounded projection'],
+        'privacy_class': 'sanitized_public', 'approval_class': 'safe_now',
+        'candidate_workaround': 'Materialize PowerShell collections before piping; use an exact normalized-LF recovery only after clean fresh-four-way source proof.',
+        'validation_witness_ids': [identifier for row in startup for identifier in [row['id'], row['recovery_witness_id']]],
+        'recurrence_guard': 'Require attributable scalar output, explicit byte domain, bounded literal paths and process-state inspection before retry.',
+        'rollback': 'Preserve the failed witness, stop the affected probe and add only a separately named bounded recovery.',
+        'recommendation_state': 'preferred', 'supersedes': [], 'protected_gates': GATES,
+        'retained_negative_ids': [row['id'] for row in startup], 'scope_boundary': BOUNDARY,
+        'execution_authority': 'owner_self_scoped_delta', 'repository_scan': False, 'module_scan': False,
+        'cross_lane_scan': False, 'unchanged_history_scan': False, 'sibling_lane_mutation': False,
+        'source_commit': SOURCE, 'final_commit': 'pending_exact_pushed_head',
+        'changed_file_allowlist': [PREFIX + 'planning'], 'module_allowlist': [],
+        'exact_pushed_head_required': False,
+    }],
+    'witnesses': startup_witnesses,
+    'state_events': [
+        {'event_id': 'LV6995-M-startup-E001', 'method_id': 'LV6995-M-startup',
+         'from': 'observed', 'to': 'candidate', 'witness_id': startup[0]['recovery_witness_id']},
+        {'event_id': 'LV6995-M-startup-E002', 'method_id': 'LV6995-M-startup',
+         'from': 'candidate', 'to': 'validated', 'witness_id': startup[1]['recovery_witness_id']},
+        {'event_id': 'LV6995-M-startup-E003', 'method_id': 'LV6995-M-startup',
+         'from': 'validated', 'to': 'preferred', 'witness_id': startup[-1]['recovery_witness_id']},
+    ],
+    'recommendations': [],
+    'counts': {'methods': 1, 'witnesses': len(startup_witnesses), 'state_events': 3, 'recommendations': 0,
+        'states': {'observed': 0, 'candidate': 0, 'validated': 0, 'preferred': 1, 'superseded': 0, 'deprecated': 0},
+        'witness_results': {'pass': len(startup), 'fail': len(startup)}},
+    'boundary': BOUNDARY,
+}
+write('planning/startup-method-flow.json', startup_method_flow)
+
+practices = [
+    ('synthetic stage-management cue dependency map', 'Use partial-order precedence only; no real performance, worker, venue, safety or release decision.'),
+    ('synthetic kitchen-preparation dependency sheet', 'Use zero-food fixtures only; no allergen, hygiene, timing, competence or service-release decision.'),
+    ('synthetic bicycle-repair checklist dependency map', 'Use abstract steps only; no real component, measurement, inspection, competence or roadworthiness release.'),
+    ('synthetic community-garden task precedence map', 'Use fictional beds and tasks only; no land, plant, chemical, environmental, tikanga or access decision.'),
+    ('synthetic accessible-publishing workflow dependency map', 'Use artificial records only; no complete accessibility claim or affected-reader acceptance.'),
+    ('synthetic textile-assembly sequence', 'Use artificial components only; no real material, equipment, quality, employment or product-safety decision.'),
+    ('synthetic language-learning prerequisite map', 'Use invented lesson labels only; no learner, assessment, cultural meaning, Maori wording or education authority.'),
+    ('synthetic emergency-supply packing order', 'Use fictional items only; no emergency, hazard, medical, logistics, professional or public-safety authority.'),
+]
+write('planning/practices.json', {'primary_pillar': 'GMUT Mind', 'protected_pillars': ['THOS Body', 'Freed ID and CBR Heart'],
+    'practices': [{'id': 'LV6995-PR%02d' % (i + 1), 'title': title, 'practice': practice, 'synthetic_only': True}
+                  for i, (title, practice) in enumerate(practices)],
+    'successor_recommendations': [
+        {'practice': 'synthetic route-map legend dependency audit', 'reason': 'Tests dependency notation without a real route, traveler, accessibility decision or transport authority.', 'completion_credit': 0},
+        {'practice': 'synthetic instrument-maintenance checklist topology', 'reason': 'Tests precedence and vacancy fields without real equipment, measurement, competence or release authority.', 'completion_credit': 0},
+        {'practice': 'synthetic volunteer-event setup precedence', 'reason': 'Tests coordination structure without real volunteers, venue, safeguarding, employment or event authority.', 'completion_credit': 0},
+        {'practice': 'synthetic book-index cross-reference dependency', 'reason': 'Tests finite reference structure without collection rights, copyright, cultural meaning or publication authority.', 'completion_credit': 0}],
+    'boundary': BOUNDARY})
+
+exact = []
+for category in ['real_allocation', 'real_identity_binding', 'independent_security_assurance', 'affected_party_rights', 'legal_cultural_maori_authority']:
+    for profile, *_ in oracle['PROFILES'][:10]:
+        exact.append({'id': 'LV6995-E%03d' % (len(exact) + 1), 'category': category, 'synthetic_profile': profile,
+            'required': 'Exact scoped action, competent authority, affected-party prerequisites, and admissible external evidence.',
+            'outcome': 'exact_gate', 'executed': False})
+blocked = []
+for category in ['separate_implementation', 'real_observation', 'production_evaluation']:
+    for profile, *_ in oracle['PROFILES'][:10]:
+        blocked.append({'id': 'LV6995-B%03d' % (len(blocked) + 1), 'category': category, 'synthetic_profile': profile,
+            'missing': 'External admissible evidence is absent.', 'outcome': 'open_gap', 'executed': False})
+write('planning/held-packets.json', {'exact': exact, 'blocked': blocked, 'executed': 0, 'boundary': BOUNDARY})
+
+write('planning/semantic-review.json', {'inherited_count': 300, 'new_contracts': 300, 'direct_comparisons': 90000,
+    'comparisons': comparisons, 'mathematical_novelty_claimed': False, 'universal_novelty_claimed': False,
+    'boundary': '300 bounded software contracts across 20 responsibilities and 15 declared posets; related cases are not independent discoveries.'})
+write('planning/references.json', {'external_sources_required_at_planning': 0,
+    'reason': 'The bounded exact finite definitions are self-contained. Any later current official or primary source is used only where materially needed and cannot become an observation, empirical result, professional approval, legal interpretation, cultural ratification or authority grant.',
+    'no_authority_promotion': True, 'no_external_runtime_dependency': True, 'boundary': BOUNDARY})
+
+local_skills = []
+for index, row in enumerate(operations):
+    local_skills.append({'id': 'LV6995-SK%02d' % (index + 1),
+        'name': 'liora-v699-v5-' + row['operation'].replace('_', '-'), 'operation': row['operation'],
+        'stage': row['stage'],
+        'lifecycle': ['initialize_with_official_skill_creator', 'customize', 'complete_read',
+                      'quick_validate', 'accepting_smoke', 'rejecting_smoke'],
+        'installed_globally': False, 'execution_credit_at_plan': 0})
+runners = []
+for index in range(10):
+    pair = operations[index * 2:index * 2 + 2]
+    runners.append({'id': 'LV6995-R%02d' % (index + 1),
+        'name': 'ghc_family_liora_v699_v5_%02d' % (index + 1),
+        'operations': [row['operation'] for row in pair],
+        'compatibility': ['ghc_family_*', 'build_ghc_family_*'],
+        'accepting_and_rejecting_smoke_required': True, 'execution_credit_at_plan': 0})
+global_pair_specs = [
+    ('ghc-family-finite-poset-structure-v1', ['carrier_inventory', 'relation_normalization', 'reflexive_closure', 'transitive_closure']),
+    ('ghc-family-finite-poset-order-boundaries-v1', ['antisymmetry_audit', 'comparability_matrix', 'cover_relation_reduction', 'minimal_elements', 'maximal_elements']),
+    ('ghc-family-finite-poset-ideals-filters-v1', ['principal_ideal', 'principal_filter', 'order_ideal_enumeration']),
+    ('ghc-family-finite-poset-incidence-transforms-v1', ['zeta_matrix', 'mobius_matrix', 'zeta_transform', 'mobius_inversion', 'linear_extension_enumeration']),
+    ('ghc-family-finite-poset-evidence-gates-v1', ['hasse_scene', 'external_observation_gap', 'governance_authority_gate']),
+]
+global_pairs = [{'id': 'LV6995-G%02d' % (index + 1), 'skill_name': name,
+    'runner_name': 'build_' + name.replace('-', '_'), 'operations': pair_operations,
+    'additive_only': True, 'overwrite_existing': False, 'skill_creator_required': True,
+    'validation_required': True, 'execution_credit_at_plan': 0}
+    for index, (name, pair_operations) in enumerate(global_pair_specs)]
+write('planning/capability-plan.json', {
+    'official_skill_creator': '.system/skill-creator/SKILL.md',
+    'local_skills': local_skills, 'family_current_runners': runners, 'curated_global_pairs': global_pairs,
+    'global_installations_at_plan': 0, 'additive_only': True, 'overwrite_existing': False,
+    'no_subagent_forward_testing_due_to_solo_authority': True, 'boundary': BOUNDARY})
+
+def portfolio(stage):
+    subset = [row for row in contracts if row['stage'] == stage]
+    return {'stage': stage,
+        'safe_now': [{'id': row['id'] + '-SAFE', 'contract_id': row['id'],
+            'task': 'Execute the exact positive finite subject and preserve its complete envelope.',
+            'state': 'planned', 'completion_credit': 0} for row in subset],
+        'bounded_candidates': [{'id': row['id'] + '-CAND', 'contract_id': row['id'],
+            'task': 'Compare the separately serialized expected envelope without promoting it to independent reproduction.',
+            'state': 'planned', 'completion_credit': 0} for row in subset],
+        'clean_fix_refine': [{'id': row['id'] + '-CFR', 'contract_id': row['id'],
+            'task': 'Execute altered-expected and malformed-subject guards; retain every failure before the smallest recovery.',
+            'state': 'planned', 'completion_credit': 0} for row in subset],
+        'boundary': BOUNDARY}
+x1_portfolio, x2_portfolio = portfolio('x1'), portfolio('x2')
+assert len(x1_portfolio['safe_now']) + len(x2_portfolio['safe_now']) == 300
+assert len(x1_portfolio['bounded_candidates']) + len(x2_portfolio['bounded_candidates']) == 300
+assert len(x1_portfolio['clean_fix_refine']) + len(x2_portfolio['clean_fix_refine']) == 300
+write('planning/x1-portfolios.json', x1_portfolio)
+write('planning/x2-portfolios.json', x2_portfolio)
+
+plan = {'schema': 'liora.finite-poset-incidence-plan.v1', 'owner': 'Liora Venn', 'phase': 'v699-v5', 'source_commit': SOURCE,
+    'branch': BRANCH, 'primary_pillar': 'GMUT Mind',
+    'protected_pillars': ['THOS Body', 'Freed ID and CBR Heart'],
+    'responsibility': 'Exact finite-poset structure and incidence-algebra obligations with explicit observation and authority vacancies.',
+    'lifecycle': ['planning', 'x1', 'x2', 'final', 'canonical', 'route'],
+    'formats': ['json', 'md', 'txt', 'html'], 'inherited': inherited, 'operations': operations,
+    'profiles': [{'id': name, 'elements': elements, 'covers': covers, 'focus': focus}
+                 for name, elements, covers, focus in oracle['PROFILES']],
+    'contracts': contracts, 'contract_template': {'id': 'LV6995-CONTRACT', 'approval_class': 'owner_internal_synthetic_safe_now',
+        'null_or_failure': 'Any complete-envelope mismatch, accepted malformed subject, input mutation, undeclared side effect, or promoted protected claim.',
+        'source_needs': 'Exact finite definitions are self-contained; no external observation, physical interpretation or theorem novelty claimed.',
+        'artifacts': ['frozen request and expected envelope', 'two malformed-subject failures',
+                      'one altered-expected failure', 'separate refusal checks', 'exact output and repair witnesses'],
+        'acceptance': 'Exact JSON equality, source preservation, and declared strict refusal error.',
+        'rollback': 'Keep frozen input and failed evidence; add a corrected copy without rewriting or replaying successful tranches.',
+        'protected_gates': GATES},
+    'frozen_expected_outcomes': dict(collections.Counter(row['expected_disposition'] for row in contracts)),
+    'execution_credit_at_plan': 0, 'oracle': 'planning/reference.txt', 'same_owner_oracle': True,
+    'independent_reproduction': False,
+    'planned_counts': {'inherited': 300, 'new_contracts': 300, 'safe_per_session': 300, 'candidate_per_session': 300,
+        'cfr_per_session': 300, 'skills_per_session': 20, 'runners_per_session': 10,
+        'curated_global_pairs': 5, 'x2_additional_tests': 15,
+        'x2_models': 5, 'own_practices': 8, 'successor_practice_recommendations': 4,
+        'exact_packets': 50, 'blocked_packets': 30, 'negative_subjects_per_contract': 3},
+    'commit_ceiling': {'planning': 1, 'x1': 1, 'x2': 1, 'final': 1, 'total': 4},
+    'file_ceiling': 2000, 'forecast_files': 180, 'document_word_ceiling': 100000, 'baton_word_range': [2000, 100000],
+    'spend_usd': 0, 'spend_ceiling_usd': 50, 'spend_is_not_target': True,
+    'package_policy': 'versions_only_no_install', 'global_installations': 0,
+    'scope': 'owner_self_scoped_delta', 'complete_repository_suite': False, 'source_runtime_executions': 0,
+    'canonical_policy': 'at_most_one_metadata_only_invocation_after_clean_pushed_final_never_replay_success',
+    'route': {'state': 'NOT_LOOKED_UP_PLANNING_ONLY', 'current_roster_assignment': assignment,
+              'historical_successor_inference_forbidden': True, 'lookup_deferred_until_terminal_gate': True,
+              'send_ceiling': 1, 'no_accepted_opaque_unresolved_resend': True,
+              'no_post_send_monitoring': True}, 'boundary': BOUNDARY}
+
+write('planning/plan.json', plan)
+write('planning/summary.md', '# Liora Venn v699-v5 planning freeze\n\n'
+    'This planning-only tranche freezes 300 finite-poset and incidence-algebra contracts: twenty responsibilities across fifteen explicit finite profiles. '
+    'Three hundred Orin bipartite-matching rows are reviewed as zero-credit inherited evidence. The separate planning oracle contributes expected '
+    'envelopes but no execution, completion, canonical or independent-reproduction credit. X1 may implement operations 1-10 only; x2 may begin only after x1 is committed, pushed, '
+    'clean, and fresh four-way equal.\n\n'
+    'The responsibility includes carrier and relation handling, exact closure, antisymmetry, comparability, transitive reduction, extrema, '
+    'principal ideals and filters, zeta and Mobius matrices, exact transforms, order ideals, linear extensions, artificial Hasse representation, '
+    'and explicit observation and authority vacancies. None of these finite structures is a physical causal model, empirical GMUT result, '
+    'professional decision, production identity result, legal or cultural determination, or Maori authority.\n\n'
+    'Eight synthetic practice lenses, twenty prospective local skills, ten prospective family-current runners, five curated global pairs, fifty held exact packets, '
+    'and thirty blocked packets are declared. No execution, canonical success, recipient lookup, or delivery is claimed at planning.\n\n' + BOUNDARY)
+write('README.md', '# Liora Venn v699-v5\n\nExact finite-poset and incidence-algebra responsibility with source-faithful failures, evidence boundaries, and protected observation and authority gates.\n\nStart with planning/summary.md.\n\n' + BOUNDARY)
+
+files = sorted(p for p in ROOT.rglob('*') if p.is_file())
+manifest = {'schema': 'liora.planning-manifest.v1', 'byte_domain': 'normalized_lf_git_blob',
+    'entries': [{'path': p.relative_to(REPO).as_posix(), 'bytes': len(p.read_bytes()), 'sha256': sha(p.read_bytes())} for p in files],
+    'exclusions': [PREFIX + 'planning/manifest.json'], 'planning_execution_credit': 0}
+write('planning/manifest.json', manifest)
+max_words = max(len(p.read_text(encoding='utf-8').split()) for p in ROOT.rglob('*') if p.is_file())
+assert max_words < 100000
+with (BANK / 'planning-built.json').open('x', encoding='utf-8', newline='\n') as handle:
+    json.dump({'status': 'PLANNING_PREPARED_NOT_PUBLISHED', 'contracts': 300, 'execution_credit': 0,
+        'source': SOURCE, 'plan_sha256': sha((ROOT / 'planning/plan.json').read_bytes()),
+        'maximum_document_words': max_words, 'startup_failures': startup,
+        'observed_at': datetime.now(timezone.utc).isoformat()}, handle, indent=2); handle.write('\n')
+print(json.dumps({'status': 'PLANNING_PREPARED_NOT_PUBLISHED', 'contracts': len(contracts), 'inherited': len(inherited),
+    'comparisons': 90000, 'outcomes': plan['frozen_expected_outcomes'], 'files': len(files) + 1,
+    'maximum_document_words': max_words, 'runtime_execution_credit': 0, 'startup_failures_retained': len(startup)}))
