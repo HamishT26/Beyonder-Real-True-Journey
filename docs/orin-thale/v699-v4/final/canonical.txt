@@ -1,0 +1,129 @@
+# Python 3. Exact-final metadata-only canonical. It never imports or invokes either domain runtime.
+from pathlib import Path
+from datetime import datetime, timezone
+import ast, hashlib, json, re, subprocess, sys
+
+REPO=Path(sys.argv[1]);BANK=Path(sys.argv[2]);FINAL=sys.argv[3]
+BRANCH='codex/GHC-Family/orin-thale-v699-v4-full-tools';PREFIX='docs/orin-thale/v699-v4/'
+SOURCE='cd76d7b53b3c472aa74e78c9e545874c2e3cf775';PLAN='35f4b43a67efd3e701db4c3581a4e8fb866c4461'
+X1='5dd430ecc91f9b7eedc95f99ffbdc7220c4b5317';X2='5c7ff79a8c6f9a9f54530a63960eab5cd607e5c3'
+def stable(v):return json.dumps(v,sort_keys=True,separators=(',',':'),ensure_ascii=False)
+def sha(raw):return hashlib.sha256(raw).hexdigest()
+def git_bytes(*args):return subprocess.check_output(['git','-C',str(REPO),*args],stderr=subprocess.PIPE)
+def git(*args):return git_bytes(*args).decode().strip()
+def blob(path):return git_bytes('show',FINAL+':'+path)
+def jblob(path):return json.loads(blob(path))
+def check(name,condition,observed):
+ checks.append({'name':name,'status':'pass' if condition else 'fail','observed':observed});
+ if not condition:raise AssertionError((name,observed))
+
+BANK.mkdir(parents=True,exist_ok=True);attempt=BANK/'attempt.json'
+with attempt.open('x',encoding='utf-8',newline='\n') as handle:
+ json.dump({'schema':'orin.canonical-attempt.v1','owner':'Orin Thale','phase':'v699-v4','exact_final':FINAL,
+  'invocation_count':1,'metadata_only':True,'domain_replayed':False,'started_at':datetime.now(timezone.utc).isoformat()},handle,indent=2);handle.write('\n')
+checks=[]
+try:
+ check('exact_head',git('rev-parse','HEAD')==FINAL,git('rev-parse','HEAD'))
+ check('exact_branch',git('branch','--show-current')==BRANCH,git('branch','--show-current'))
+ check('clean_before',git('status','--porcelain')=='',git('status','--porcelain'))
+ check('final_parent',git('rev-parse',FINAL+'^')==X2,git('rev-parse',FINAL+'^'))
+ check('x2_parent',git('rev-parse',X2+'^')==X1,git('rev-parse',X2+'^'))
+ check('x1_parent',git('rev-parse',X1+'^')==PLAN,git('rev-parse',X1+'^'))
+ check('plan_parent',git('rev-parse',PLAN+'^')==SOURCE,git('rev-parse',PLAN+'^'))
+ phase_commits=int(git('rev-list','--count',SOURCE+'..'+FINAL));merges=int(git('rev-list','--merges','--count',SOURCE+'..'+FINAL))
+ check('four_phase_commits',phase_commits==4,phase_commits);check('zero_merges',merges==0,merges)
+ check('one_final_parent',len(git('rev-list','--parents','-n','1',FINAL).split())==2,git('rev-list','--parents','-n','1',FINAL))
+ local=git('rev-parse','HEAD');upstream=git('rev-parse','@{u}');tracking=git('rev-parse','refs/remotes/origin/'+BRANCH)
+ fresh=git('ls-remote','--heads','origin','refs/heads/'+BRANCH).split()[0];div=git('rev-list','--left-right','--count','HEAD...@{u}')
+ check('zero_divergence',div.replace('\t',' ')=='0 0',div);check('four_way_before',len({local,upstream,tracking,fresh})==1==int(local==FINAL),[local,upstream,tracking,fresh])
+ owner=jblob(PREFIX+'final/owner-manifest.json');bad=[]
+ for entry in owner['entries']:
+  raw=blob(entry['path']);
+  if sha(raw)!=entry['sha256'] or len(raw)!=entry['bytes']:bad.append(entry['path'])
+ check('owner_manifest',not bad,{'entries':len(owner['entries']),'mismatches':bad})
+ seal=jblob(PREFIX+'final/content-seal.json');seal_bad=[]
+ for entry in seal['bindings']:
+  if sha(blob(entry['path']))!=entry['sha256']:seal_bad.append(entry['path'])
+ check('content_seal',not seal_bad,{'bindings':len(seal['bindings']),'mismatches':seal_bad})
+ paths=git('ls-tree','-r','--name-only',FINAL,PREFIX).splitlines();check('owner_file_ceiling',len(paths)<2000,len(paths))
+ allowed={'.json','.md','.txt','.html'};bad_ext=[p for p in paths if Path(p).suffix.lower() not in allowed]
+ check('allowed_formats',not bad_ext,bad_ext)
+ json_paths=[p for p in paths if p.endswith('.json')]
+ for path in json_paths:json.loads(blob(path).decode())
+ check('strict_json_parse',True,len(json_paths))
+ max_words=0;max_path=None
+ for path in paths:
+  if Path(path).suffix.lower() in allowed:
+   words=len(blob(path).decode('utf-8').split())
+   if words>max_words:max_words,max_path=words,path
+ check('document_ceiling',max_words<=100000,{'maximum_words':max_words,'path':max_path})
+ baton=blob(PREFIX+'final/hand-off-baton.md');baton_words=len(baton.decode().split())
+ check('baton_word_range',10000<=baton_words<=100000,baton_words)
+ check('baton_eof',baton.decode().rstrip().endswith('EOF ORIN THALE v699-v4 HANDOFF BATON.'),baton.decode().rstrip().splitlines()[-1])
+ truth=jblob(PREFIX+'final/phase-truth.json')
+ check('core_outcomes',truth['outcomes']=={'completed':255,'represented':15,'open_gap':15,'exact_gate':15},truth['outcomes'])
+ check('stage_verdict',truth['verdict']=='NOT_READY_FOR_STAGE_20',truth['verdict'])
+ check('source_fold_once',truth['source_fold_count']==1,truth['source_fold_count'])
+ check('domain_replays',truth['domain_replays']==0,truth['domain_replays'])
+ check('canonical_policy_prepared',truth['canonical']['invocation_count']==0 and truth['canonical']['success_count']==0,truth['canonical'])
+ package=jblob(PREFIX+'x2/packaging-validation.json')
+ check('package_status',package['status']=='VALID_X2_PACKAGED_OUTPUTS_WITH_RETAINED_FAILURES',package['status'])
+ check('package_counts',package['x1_records']==package['x2_records']==150 and package['x1_witnesses']==1373 and package['x2_witnesses']==1393,package)
+ check('package_document_cap',package['all_documents_within_ceiling'],package['maximum_document_words'])
+ check('package_privacy',package['confirmed_privacy_hits']==0,package['confirmed_privacy_hits'])
+ route=jblob(PREFIX+'final/route-hold.json');check('route_hold',route['state']=='PREPARED_NOT_SENT' and route['lookup_deferred'],route['state'])
+ cap=jblob(PREFIX+'final/capability-catalogue.json')
+ check('skills_and_runners',cap['skills']==20 and cap['runners']==10 and cap['global_installs']==0,cap)
+ deck=jblob(PREFIX+'final/context-deck.json');deck_validation=jblob(PREFIX+'final/deck-validation.json')
+ check('context_deck',deck_validation['valid'] and deck_validation['card_count']==len(deck['cards']),deck_validation)
+ patterns={'credential':re.compile(r'(?:sk-[A-Za-z0-9]{16,}|ghp_[A-Za-z0-9]{16,}|api[_-]?key\s*[:=]\s*[A-Za-z0-9_-]{12,})',re.I),
+  'raw_task_or_thread_id':re.compile(r'019[a-f0-9]{5}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}',re.I),
+  'private_absolute_path':re.compile(r'[A-Za-z]:\\(?:Users|GHC-Archives)\\',re.I),
+  'email_address':re.compile(r'[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}',re.I),
+  'international_phone':re.compile(r'(?<![A-Za-z0-9])\+[0-9]{9,15}(?![A-Za-z0-9])')}
+ scanner_paths={PREFIX+'x1/validate-x1.txt',PREFIX+'x2/validate-x2.txt',PREFIX+'x2/validate-x2-packaged.txt',PREFIX+'final/canonical.txt',PREFIX+'final/build-final.txt'}
+ candidates=[];confirmed=[]
+ for path in paths:
+  if Path(path).suffix.lower() not in allowed:continue
+  text=blob(path).decode('utf-8')
+  for category,pattern in patterns.items():
+   for match in pattern.finditer(text):
+    item={'path':path,'class':category,'start':match.start(),'length':match.end()-match.start(),'classification':'scanner_definition' if path in scanner_paths else 'payload_candidate'};candidates.append(item)
+    if item['classification']=='payload_candidate':confirmed.append(item)
+ check('five_class_privacy',not confirmed,{'candidates':len(candidates),'confirmed':len(confirmed)})
+ python_names={'reference.txt','build-plan.txt','method-flow-tools.txt','build-x1.txt','recover-x1-metadata.txt','validate-x1.txt','build-x2.txt','recover-x2-metadata.txt','validate-x2.txt','shard-large-documents.txt','validate-x2-packaged.txt','build-final.txt','canonical.txt'}
+ python_paths=[p for p in paths if Path(p).name in python_names]
+ for path in python_paths:ast.parse(blob(path).decode())
+ check('python_ast',True,len(python_paths))
+ js_paths=[p for p in paths if p.endswith('runtime.txt') or p.endswith('session.txt') or p.endswith('session-x2.txt') or '/runners/' in p]
+ for path in js_paths:
+  proc=subprocess.run(['node','-e',"new (require('node:vm').Script)(require('node:fs').readFileSync(0,'utf8'))"],input=blob(path),capture_output=True)
+  if proc.returncode!=0:raise AssertionError(('javascript_syntax',path,proc.stderr.decode()))
+ check('javascript_syntax',True,len(js_paths))
+ check('clean_after',git('status','--porcelain')=='',git('status','--porcelain'))
+ fresh_after=git('ls-remote','--heads','origin','refs/heads/'+BRANCH).split()[0]
+ check('fresh_remote_after',fresh_after==FINAL,fresh_after)
+ check('four_way_after',len({git('rev-parse','HEAD'),git('rev-parse','@{u}'),git('rev-parse','refs/remotes/origin/'+BRANCH),fresh_after})==1,True)
+ payload={'schema':'orin.exact-final-canonical-payload.v1','owner':'Orin Thale','phase':'v699-v4','status':'VALID_EXACT_FINAL_METADATA_ONLY_CANONICAL',
+  'exact_final':FINAL,'source':SOURCE,'chain':{'planning':PLAN,'x1':X1,'x2':X2,'final':FINAL},
+  'invocation_count':1,'success_count':1,'replay_count':0,'metadata_only':True,'domain_invocations':2,'domain_stage_replays':0,
+  'predecessor_canonical_replays':0,'checks':checks,'counts':{'checks':len(checks),'owner_files':len(paths),'owner_manifest_entries':len(owner['entries']),
+  'content_seal_bindings':len(seal['bindings']),'json_parses':len(json_paths),'python_ast':len(python_paths),'javascript_syntax':len(js_paths),
+  'privacy_candidates':len(candidates),'confirmed_privacy_hits':0,'maximum_document_words':max_words,'baton_words':baton_words},
+  'own_counts':truth['method_flow'],'effective_counts':truth['effective_counts'],'same_owner_only':True,'independent_reproduction':False,
+  'verdict':'NOT_READY_FOR_STAGE_20','boundary':truth['boundary']}
+ payload_raw=(stable(payload)+'\n').encode();(BANK/'payload.json').write_bytes(payload_raw)
+ receipt={'schema':'orin.canonical-receipt.v1','owner':'Orin Thale','phase':'v699-v4','status':payload['status'],'exact_final':FINAL,
+  'invocation_count':1,'success_count':1,'replay_count':0,'metadata_only':True,'domain_replayed':False,'check_count':len(checks),
+  'payload_sha256':sha(payload_raw),'observed_at':datetime.now(timezone.utc).isoformat()}
+ receipt_raw=(stable(receipt)+'\n').encode();(BANK/'receipt.json').write_bytes(receipt_raw)
+ latch={'schema':'orin.canonical-success-latch.v1','status':'CLOSED_AFTER_ONE_SUCCESS','exact_final':FINAL,
+  'receipt_sha256':sha(receipt_raw),'payload_sha256':sha(payload_raw),'replay_permitted':False}
+ (BANK/'success-latch.json').write_text(stable(latch)+'\n',encoding='utf-8',newline='\n')
+ print(json.dumps({'status':payload['status'],'checks':len(checks),'owner_files':len(paths),'manifest_entries':len(owner['entries']),
+  'json_parses':len(json_paths),'privacy_candidates':len(candidates),'confirmed_privacy_hits':0,'maximum_document_words':max_words,
+  'baton_words':baton_words,'domain_replays':0,'receipt_sha256':sha(receipt_raw),'payload_sha256':sha(payload_raw)}))
+except Exception as error:
+ failure={'schema':'orin.canonical-failure.v1','exact_final':FINAL,'status':'FAILED_ZERO_SUCCESS_CREDIT','error':repr(error),
+  'checks':checks,'invocation_count':1,'success_count':0,'replay_count':0,'domain_replayed':False,'observed_at':datetime.now(timezone.utc).isoformat()}
+ (BANK/'failure.json').write_text(stable(failure)+'\n',encoding='utf-8',newline='\n');raise

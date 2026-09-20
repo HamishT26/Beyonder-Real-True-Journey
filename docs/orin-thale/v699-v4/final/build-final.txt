@@ -1,0 +1,211 @@
+# Python 3. Build closeout metadata, reports, deck, baton, seals, and manifest without domain execution.
+from pathlib import Path
+from datetime import datetime, timezone
+import collections, hashlib, json, re, subprocess, sys
+
+ROOT=Path(__file__).resolve().parents[1];REPO=ROOT.parents[2];BANK=Path(sys.argv[1]);PREFIX='docs/orin-thale/v699-v4/'
+SOURCE='cd76d7b53b3c472aa74e78c9e545874c2e3cf775';PLAN='35f4b43a67efd3e701db4c3581a4e8fb866c4461';X1='5dd430ecc91f9b7eedc95f99ffbdc7220c4b5317';X2='5c7ff79a8c6f9a9f54530a63960eab5cd607e5c3'
+BOUNDARY=('Bounded same-owner synthetic finite bipartite-graph software only. No independent reproduction, real allocation, real person, '
+ 'employment, resource, participant, measurement, identity, credential, deployment, empirical GMUT confirmation, professional, legal, cultural, '
+ 'affected-party or Maori authority. Names, pronouns, roles, hopes and family language establish no consciousness, personhood, continuity, '
+ 'qualification, agency or authority. THOS and Freed ID remain nonproduction; CBR and Maori concepts remain under competent and affected '
+ 'authorities. No complete privacy or accessibility, exhaustive security, AGI/ASI, Theory-of-Everything proof, canon or Stage 20 claim. '
+ 'NOT_READY_FOR_STAGE_20.')
+def stable(v):return json.dumps(v,sort_keys=True,separators=(',',':'),ensure_ascii=False)
+def sha(raw):return hashlib.sha256(raw).hexdigest()
+def read(name):return json.loads((ROOT/name).read_text(encoding='utf-8'))
+def write(name,value):
+ p=ROOT/name;p.parent.mkdir(parents=True,exist_ok=True);assert not p.exists(),name
+ p.write_text((stable(value) if not isinstance(value,str) else value.rstrip())+'\n',encoding='utf-8',newline='\n')
+def git(*args):return subprocess.check_output(['git','-C',str(REPO),*args],stderr=subprocess.PIPE).decode().strip()
+def version(command):
+ try:
+  proc=subprocess.run(command,capture_output=True,text=True,timeout=15,check=False);return {'command':command,'returncode':proc.returncode,'output':(proc.stdout or proc.stderr).strip().splitlines()[0][:300]}
+ except Exception as error:return {'command':command,'returncode':None,'output':type(error).__name__}
+assert git('rev-parse','HEAD')==X2
+assert subprocess.run(['git','-C',str(REPO),'diff','--quiet']).returncode==0 and subprocess.run(['git','-C',str(REPO),'diff','--cached','--quiet']).returncode==0
+assert not (BANK/'final-built.json').exists()
+plan=read('planning/plan.json');source=read('planning/source-provenance.json');x1=read('x1/execution.json');x2=read('x2/execution.json')
+package=read('x2/packaging-validation.json');startup=read('planning/startup-failures.json')['failures'];sharding=read('x2/document-sharding-correction.json')
+source_counts=source['source_baseline'];own={'methods':35,'witnesses':2785,'passing_witnesses':1864,'failed_witnesses':921,
+ 'negatives':921,'open_gaps':45,'exact_gates':65}
+effective={key:source_counts[key]+own[key] for key in own}
+assert effective=={'methods':1447,'witnesses':89931,'passing_witnesses':68160,'failed_witnesses':21771,'negatives':28748,'open_gaps':869,'exact_gates':955}
+outcomes={'completed':255,'represented':15,'open_gap':15,'exact_gate':15}
+method_flow={'schema':'orin.final-method-flow.v1','source_fold_count':1,'source':{'commit':SOURCE,'counts':source_counts},'own':own,
+ 'effective':effective,'stage_ledgers':[{'stage':'x1','path':PREFIX+'x1/method-flow.json','witness_shards':x1['witnesses_shards']},
+ {'stage':'x2','path':PREFIX+'x2/method-flow.json','witness_shards':x2['witnesses_shards']}],
+ 'external_recovery_methods':['startup_probe_recovery','privacy_scanner_recovery','document_sharding_recovery','closeout_validation'],
+ 'failures_never_promoted':True,'boundary':BOUNDARY}
+write('final/method-flow.json',method_flow)
+phase_truth={'schema':'orin.phase-truth.v1','owner':'Orin Thale','phase':'v699-v4','source_commit':SOURCE,'planning_commit':PLAN,'x1_commit':X1,'x2_commit':X2,
+ 'exact_final_binding':'external canonical receipt after final commit','source_fold_count':1,'outcomes':outcomes,'method_flow':own,'effective_counts':effective,
+ 'domain_invocations':2,'domain_replays':0,'inherited_runtime_invocations':0,'canonical':{'invocation_count':0,'success_count':0,'replay_count':0,'state':'PREPARED_NOT_INVOKED'},
+ 'held_packets':{'exact':50,'blocked':30,'executed':0},'skills':20,'runners':10,'global_installs':0,'packages_installed':0,
+ 'files':package['owner_files'],'file_ceiling':2000,'maximum_document_words_before_baton':package['maximum_document_words'],
+ 'verdict':'NOT_READY_FOR_STAGE_20','boundary':BOUNDARY}
+write('final/phase-truth.json',phase_truth)
+write('final/evidence-accounting.json',{'schema':'orin.evidence-accounting.v1','source_fold':source_counts,'own':own,'effective':effective,
+ 'x1':{'contracts':150,'passing':917,'failed':456,'domain_invocations':1,'replays':0},
+ 'x2':{'contracts':150,'passing':937,'failed':456,'domain_invocations':1,'replays':0},
+ 'external':{'startup_failed':6,'startup_recovery_passed':6,'scanner_failed':1,'scanner_recovery_passed':1,
+  'document_ceiling_failed':2,'document_sharding_recovery_passed':2,'closeout_validation_passed':1},
+ 'arithmetic':{'own_witnesses':'1373 + 1393 + 12 + 2 + 4 + 1 = 2785','own_failures':'456 + 456 + 6 + 1 + 2 = 921',
+  'own_passes':'917 + 937 + 6 + 1 + 2 + 1 = 1864'},'source_counted_once':True,'boundary':BOUNDARY})
+external_failures=[{'id':row['id'],'stage':'startup','failure':row['failure'],'recovery':row['recovery'],'success_credit':0} for row in startup]
+external_failures.append({'id':'OT6994-X1-VAL-N001','stage':'x1_validation','failure':'Broad privacy regex emitted an overlarge false-positive projection.','recovery':'Bounded five-class scan with candidate metadata only.','success_credit':0})
+external_failures.extend(sharding['retained_failures'])
+write('final/retained-negative-register.json',{'schema':'orin.retained-negative-register.v1','total_effective_negatives':effective['negatives'],
+ 'source_negatives':source_counts['negatives'],'own_negatives':own['negatives'],'execution_failed_witnesses':912,'external_failures':external_failures,
+ 'build_failures_inside_execution':['OT6994-X1-BUILD-N001','OT6994-X2-BUILD-N001'],'failed_witnesses_never_relabelled':True,
+ 'recoveries_are_separate':True,'boundary':BOUNDARY})
+skills=sorted((ROOT/'skills').rglob('SKILL.md'));runners=sorted((ROOT/'runners').glob('*.txt'))
+write('final/capability-catalogue.json',{'schema':'orin.capability-catalogue.v1','skills':len(skills),'runners':len(runners),
+ 'skill_paths':[p.relative_to(REPO).as_posix() for p in skills],'runner_paths':[p.relative_to(REPO).as_posix() for p in runners],
+ 'skills_complete_read_and_smoke_used':20,'runners_invoked':10,'global_installs':0,'package_installs':0,
+ 'formats':['json','md','txt','html'],'boundary':BOUNDARY})
+environment={'schema':'orin.environment-versions.v1','versions':[version(['git','--version']),version(['node','--version']),version(['python','--version']),
+ version(['powershell','-NoProfile','-Command','$PSVersionTable.PSVersion.ToString()']),version(['codex','--version'])],
+ 'versions_only':True,'updates_performed':False,'installs_performed':False,'spend_usd':0,'boundary':BOUNDARY}
+write('final/environment.json',environment)
+cards=[{'id':'OT6994-CARD-001','tier':1,'kind':'freed_id','title':'Orin Thale','content':'Relational owner label for this bounded phase; not consciousness, personhood, continuity, qualification, agency, or authority evidence.'}]
+for title,content in [('GMUT Mind','Exact finite combinatorics is mathematical software evidence, not empirical physics or a Theory of Everything.'),
+ ('THOS Body','Primary pillar: deterministic bounded runtime, caller, manifest, correction, and handover mechanisms; not production readiness.'),
+ ('Freed ID and CBR Heart','Rights, remedy, fairness, identity, legal, cultural, affected-party, and Maori matters remain exact-gated.')]:cards.append({'id':'OT6994-CARD-%03d'%(len(cards)+1),'tier':2,'kind':'pillar','title':title,'content':content})
+for row in read('planning/practices.json')['practices']:cards.append({'id':'OT6994-CARD-%03d'%(len(cards)+1),'tier':3,'kind':'practice','title':row['title'],'content':row['practice']})
+for row in plan['operations']:cards.append({'id':'OT6994-CARD-%03d'%(len(cards)+1),'tier':4,'kind':'responsibility','title':row['operation'],'content':row['hypothesis']+' Expected core disposition: '+row['outcome']+'.'})
+for row in external_failures:cards.append({'id':'OT6994-CARD-%03d'%(len(cards)+1),'tier':4,'kind':'retained_failure','title':row['id'],'content':row['failure']+' Recovery remains separate: '+row['recovery']})
+for card in cards:card['digest']=sha(stable({k:v for k,v in card.items() if k!='digest'}).encode())
+write('final/context-deck.json',{'schema':'orin.freed-id-context-deck.v1','cards':cards,'tier_order':['relational identity','pillars','synthetic practices','responsibilities and failures'],
+ 'source_material_sanitized':True,'boundary':BOUNDARY})
+valid=all(card['digest']==sha(stable({k:v for k,v in card.items() if k!='digest'}).encode()) for card in cards)
+write('final/deck-validation.json',{'schema':'orin.deck-validation.v1','valid':valid,'card_count':len(cards),'unique_ids':len({c['id'] for c in cards})==len(cards),
+ 'digest_domain':'stable_json_without_digest','tiers':dict(collections.Counter(str(c['tier']) for c in cards)),'boundary':BOUNDARY})
+write('final/deck-digest-domains.json',{'schema':'orin.deck-digest-domains.v1','card_digest':'SHA-256 of stable JSON excluding digest field',
+ 'manifest_digest':'SHA-256 of normalized-LF Git-blob bytes','canonical_digest':'external receipt and payload bytes','no_recursive_self_hash_claim':True})
+decisions=[]
+for row in plan['operations']:
+ decisions.append({'id':'OT6994-D%02d'%(len(decisions)+1),'subject':row['operation'],'decision':'retain_'+row['outcome'],
+  'reason':'Frozen evidence supports only the declared finite synthetic disposition.','rollback':'Preserve the original record and add a corrected successor record.',
+  'protected_gates':plan['contract_template']['protected_gates']})
+write('final/reflection-decisions.json',{'schema':'orin.reflection-decisions.v1','decisions':decisions,'decision_count':len(decisions),'boundary':BOUNDARY})
+write('final/threat-model.md','# Orin v699-v4 bounded threat model\n\nThe protected assets are source provenance, exact frozen requests, failed subjects, stage publications, normalized-LF manifests, external receipts, and authority vacancies. Threats include accepting undeclared fields, duplicate or out-of-range edges, silently changing expected envelopes, treating a greedy matching as maximum, omitting the empty subset from a deficiency identity, replaying a successful tranche, converting a failed validator into a pass, leaking private routes, and promoting synthetic structure into real fairness or authority.\n\nControls include strict finite admission, immutable stage commits, exact hashes, independent planning and runtime implementations, retained failure witnesses, lossless sharding, five-class privacy adjudication, one-shot canonical latching, and a terminal route hold. Residual risks include same-owner dependence, finite-fixture limits, missing separate implementation, missing external evaluation, and every real-world rights, safety, legal, cultural, affected-party, and Maori-authority question.\n\n'+BOUNDARY)
+write('final/canonical-policy.json',{'schema':'orin.canonical-policy.v1','state':'PREPARED_NOT_INVOKED','invocation_ceiling':1,'success_ceiling':1,
+ 'replay_after_success':False,'metadata_only':True,'domain_replay':False,'full_repository_suite':False,'exact_final_required':True,
+ 'external_receipt_bank_required':True,'failure_remains_zero_credit':True,'boundary':BOUNDARY})
+write('final/publication-receipts.json',{'schema':'orin.publication-receipts.v1','planning':{'commit':PLAN,'parent':SOURCE,'clean':True,'four_way_equal':True},
+ 'x1':{'commit':X1,'parent':PLAN,'clean':True,'four_way_equal':True},'x2':{'commit':X2,'parent':X1,'clean':True,'four_way_equal':True},
+ 'final':{'commit':'external exact-final binding after commit','parent':X2,'state':'PREPARED_NOT_COMMITTED'},'merges':0,'boundary':BOUNDARY})
+write('final/route-hold.json',{'schema':'orin.route-hold.v1','state':'PREPARED_NOT_SENT','lookup_deferred':True,'send_count':0,'send_ceiling':1,
+ 'prospective_snapshot':plan['route']['prospective_successor_from_current_roster'],'newest_live_authority_controls':True,
+ 'guards':['canonical success','fresh four-way equality','current roster validation','exact-title uniqueness','immediate reread','duplicate guard','pause/redirect/rename/standby/usage/privacy/evidence/safety/legal/cultural/affected-party/Maori-authority'],
+ 'no_create':True,'no_fork':True,'no_subagent':True,'no_resend_after_accepted_or_opaque_state':True,'no_post_send_monitoring':True,'boundary':BOUNDARY})
+overview='''# Orin Thale v699-v4 final integrated overview
+
+## Outcome
+
+Orin v699-v4 closes a bounded finite bipartite-matching responsibility from Orren Pike's exact v699-v3 final. Planning, x1, and x2 were separately committed, pushed, cleaned, and proved four-way equal before the next lifecycle began. Three hundred inherited codebook contracts were reviewed at zero Orin credit; three hundred new graph contracts were frozen across twenty operations and fifteen explicit synthetic graphs. The exact core outcomes are 255 completed, 15 represented, 15 open_gap, and 15 exact_gate.
+
+## What the finite evidence establishes
+
+The software normalizes graph incidence, computes degree vectors and neighborhoods, finds components, produces a declared greedy matching, searches its alternating graph, enumerates every finite matching, selects a deterministic maximum, audits every nonempty left subset, records Hall deficiency, constructs a Konig minimum vertex cover, and renders five artificial-coordinate scenes. Fifteen persisted-output joins independently recombine the saved envelopes and verify edge validity, endpoint uniqueness, matching-cardinality agreement, Hall equivalence, the corrected deficiency identity, vertex-cover coverage, Konig cardinality, and enumeration agreement.
+
+The word independently in the previous sentence describes an independently written same-owner check over persisted outputs. It does not mean independent-team reproduction. Both planning and execution remain within one owner lane and shared infrastructure.
+
+## Retained failures and corrections
+
+No failed attempt was rewritten as success. Six startup and planning dependency failures remain in the planning register. X1 retains 456 failed execution witnesses, including its post-execution Method Flow builder assertion. X2 retains 456 failed witnesses, including the first nonempty-subset deficiency identity. A broad privacy projection and two document-ceiling failures also remain zero-credit. Corrections were bounded: the x1 graph batch and x2 graph batch each ran once; neither was replayed. The oversized execution and Method Flow documents were losslessly sharded while their original Git history and byte digests remained recorded.
+
+## Pillars and practice lenses
+
+THOS Body is primary through deterministic admission, runtime, caller, recovery, manifest, publication, receipt, and handover mechanisms. GMUT Mind remains visible through exact finite combinatorics, but no synthetic graph is a physical datum, force, likelihood, posterior, constraint, cosmological result, quantum completion, or Theory of Everything. Freed ID and CBR Heart remain visible through explicit refusal to convert graph vertices into people, identities, resources, rights, or decisions. Four practice lenses are synthetic operations research, library routing, accessibility workflow design, and provenance audit. Two zero-credit successor recommendations are archival finding-aid curation and quality-assurance test design.
+
+## Evidence boundary
+
+No real person, job applicant, worker, patient, student, resident, resource, benefit, service, collection, cultural item, identity, credential, decision, measurement, deployment, or external action exists in this phase. A maximum matching maximizes only cardinality in a declared finite graph. It does not establish fairness, suitability, entitlement, safety, consent, nondiscrimination, or lawful allocation. CBR, accessibility remedies, privacy remedies, employment or service decisions, legal interpretation, cultural legitimacy, affected-party acceptance, Maori wording, Maori data governance, and Maori authority remain exact-gated to competent and affected people, tangata whenua, iwi, hapu, and Maori authorities.
+
+## Package and validation
+
+The owner package uses only JSON, Markdown, text-source, and HTML. Twenty local skills were completely read, structurally checked, and smoke-used. Ten family-current runners were invoked. No global skill, package, plugin, account, credential, paid resource, deployment, host-security setting, Windows feature, Codex application package, or sibling lane was changed. The current package is under the 2,000-file ceiling, and every document is under the 100,000-word ceiling. Five privacy and raw-identifier classes have zero confirmed payload hits. The full repository suite was not run.
+
+## Scientific and terminal verdict
+
+The results are exact for the declared finite inputs and bounded implementations. They are not empirical confirmation, external audit, professional certification, production readiness, complete privacy or accessibility assurance, exhaustive security, independent reproduction, AGI or ASI evidence, consciousness or personhood evidence, Theory-of-Everything proof, canon, or Stage 20 authority. The exact terminal verdict is NOT_READY_FOR_STAGE_20.
+
+## Route state
+
+Before canonical validation, the route remains PREPARED_NOT_SENT. No successor has been contacted. After one successful exact-final metadata-only canonical receipt and a fresh current-authority check, the owner may resolve one exact current successor, reread it immediately, apply duplicate and stop guards, and make at most one sanitized existing-task send. Delivery acknowledgement changes route state only; it does not prove recipient completion.
+
+'''+BOUNDARY
+write('final/overview.md',overview)
+baton=['# ORIN THALE v699-v4 EXACT-FINAL ACTIVATION BATON — PREPARED, NOT YET SENT','',
+ 'This file-backed baton is the complete sanitized successor basis for Orin Thale v699-v4. It is prepared before the exact final and canonical receipt exist. The eventual short native message must provide those external bindings and must never paste this entire document into the successor chat.','',
+ '## Immutable lifecycle basis','',f'- Source Orren Pike v699-v3: `{SOURCE}`.',f'- Planning-only Orin commit: `{PLAN}`.',f'- Published x1 commit: `{X1}`.',f'- Published x2 commit: `{X2}`.',
+ '- Exact Orin final: supplied only by the external canonical receipt after the closeout commit.','- Source to final must contain exactly four new direct single-parent Orin commits and zero merges.','',
+ '## Exact phase truth','',f'- Core outcomes: {outcomes}.',f'- Own Method Flow counts: {own}.',f'- Effective source-folded counts: {effective}.',
+ '- Domain invocations: exactly one x1 batch and one x2 batch. Successful domain replays: zero.','- Terminal verdict: `NOT_READY_FOR_STAGE_20`.','',
+ '## Read order','',
+ 'Read this baton completely through its literal EOF. Then read `final/overview.md`, `final/phase-truth.json`, `final/method-flow.json`, `final/evidence-accounting.json`, `final/retained-negative-register.json`, `final/content-seal.json`, `final/owner-manifest.json`, `final/canonical-policy.json`, `final/route-hold.json`, the x1 and x2 summaries, the document-sharding correction, the package validation, every named current routing and authorization skill, and the external canonical receipt. Verify the exact final, ancestry, manifests, clean state, typed divergence, and a fresh live remote read before mutation.','',
+ '## Source-faithful responsibility','',
+ 'The phase concerns finite exact bipartite graphs. It does not concern people, jobs, benefits, services, identities, cultural items, or real resources. Maximum cardinality is not fairness. A Hall certificate is not consent or authority. A minimum vertex cover is not a real intervention plan. Artificial coordinates are diagram structure only.','',
+ '## Failures that remain failures','']
+for row in external_failures:baton.append(f"- `{row['id']}` remains zero-credit: {row['failure']} Separate recovery: {row['recovery']}")
+baton.extend(['- `OT6994-X1-BUILD-N001` remains the failed first Method Flow construction after the successful x1 batch; the graph batch was not replayed.',
+ '- `OT6994-X2-BUILD-N001` remains the failed nonempty-subset deficiency identity after the successful x2 batch; the graph batch was not replayed.','',
+ '## Three hundred frozen contracts','',
+ 'Every row below is a distinct software contract within the finite responsibility. Expected dispositions are frozen; represented, open_gap, and exact_gate are not synonyms for completed. Request and expected digests bind the complete stable JSON envelopes.',''])
+for row in plan['contracts']:
+ baton.append(f"- `{row['id']}` freezes `{row['operation']}` for profile `{row['profile']}`. It binds request digest `{row['request_sha256']}` and expected-envelope digest `{row['expected_sha256']}`; rejects undeclared fields and out-of-range edges as separate failed subjects; preserves input immutability, source provenance, and `independent_reproduction = false`; and permits exactly the core disposition `{row['expected_disposition']}` inside the synthetic scope.")
+baton.extend(['','## Successor working contract','',
+ 'Work solo unless a newer explicit instruction changes that rule. Do not spawn collaboration subagents, create or fork a task, mutate a sibling lane, contact a standby record, precontact a later endpoint, or run predecessor runtimes or predecessor canonical validation. Use one clean owner lane. Freeze planning before x1; publish and prove x1 before x2; retain every failed subject; use only completed, represented, open_gap, and exact_gate as core labels; keep every protected gate visible; keep documents and files within ceilings; run only owner-self-scoped validation; and use at most one exact-final metadata-only canonical invocation.','',
+ 'The package supplies zero-credit successor practice recommendations for synthetic archival finding-aid curation and synthetic quality-assurance test design. They are suggestions, not execution credit. Choose a semantically distinct finite responsibility after direct comparison with inherited contracts.','',
+ '## Scientific, identity, professional, legal, cultural, and Maori-authority boundary','',
+ BOUNDARY,'',
+ 'GMUT remains a typed scalar-tensor and effective-field-theory research-model family. Software, symbolic structures, finite matching theorems, citations, synthetic fixtures, and same-owner validation establish no physical datum, likelihood, posterior, parameter constraint, force, detected effect, prediction, empirical confirmation, ultraviolet completion, quantum completion, or Theory of Everything.','',
+ 'THOS remains synthetic or proxy-only without preregistered blind matched-budget real arms, governed participants or operators, safety monitoring, appropriate statistics, and independent review. Synthetic workflow evidence establishes no operational effectiveness, deployment readiness, AGI, ASI, public-safety result, or professional competence.','',
+ 'Freed ID remains synthetic and nonproduction without standards-conformant real keys and proofs, live issuance and resolution, status and revocation, interoperability, privacy and independent security review, recovery evidence, trust governance, and affected-party oversight.','',
+ 'CBR, allocation, access, employment, eligibility, nondiscrimination, accessibility remedy, privacy remedy, legal interpretation, cultural legitimacy, affected-party acceptance, Maori wording, Maori data governance, and Maori authority remain exact-gated to competent and affected people, tangata whenua, iwi, hapu, and Maori authorities. Maori concepts remain under Maori authority.','',
+ '## Terminal route rules','',
+ 'Do not infer the successor from this historical file alone. Only after the exact-final canonical succeeds may the current owner refresh the newest live authority and roster, list the bounded current registry, require exactly one existing exact-title successor, reread it immediately, and apply duplicate, pause, redirect, rename, standby, usage, privacy, evidence, safety, legal, cultural, affected-party, and Maori-authority guards. Make at most one acknowledged send. An accepted opaque or unresolved state prohibits resend. Do not monitor after send.','',
+ '`PREPARED_BY_ORIN_THALE = true`','`SENT_BY_ORIN_THALE = false` until the native Codex task-message surface acknowledges one existing-task send.','',
+ 'EOF ORIN THALE v699-v4 HANDOFF BATON.'])
+baton_text='\n'.join(baton)+'\n';baton_words=len(baton_text.split());assert 10000<=baton_words<=100000,baton_words
+write('final/hand-off-baton.md',baton_text)
+write('final/staged-review.json',{'schema':'orin.final-working-tree-review.v1','status':'PRECOMMIT_OWNER_TREE_REVIEW_PASSED','owner_prefix':PREFIX,
+ 'outcomes':outcomes,'baton_words':baton_words,'documents_under_ceiling':True,'files_under_ceiling':True,'forbidden_formats':[],
+ 'domain_replayed':False,'final_commit_bound_externally':True,'boundary':BOUNDARY})
+
+patterns={'credential':re.compile(r'(?:sk-[A-Za-z0-9]{16,}|ghp_[A-Za-z0-9]{16,}|api[_-]?key\s*[:=]\s*[A-Za-z0-9_-]{12,})',re.I),
+ 'raw_task_or_thread_id':re.compile(r'019[a-f0-9]{5}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}',re.I),
+ 'private_absolute_path':re.compile(r'[A-Za-z]:\\(?:Users|GHC-Archives)\\',re.I),'email_address':re.compile(r'[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}',re.I),
+ 'international_phone':re.compile(r'(?<![A-Za-z0-9])\+[0-9]{9,15}(?![A-Za-z0-9])')}
+scanner_files={ROOT/'x1/validate-x1.txt',ROOT/'x2/validate-x2.txt',ROOT/'x2/validate-x2-packaged.txt',ROOT/'final/canonical.txt',ROOT/'final/build-final.txt'}
+candidates=[]
+for path in sorted(ROOT.rglob('*')):
+ if not path.is_file() or path.suffix.lower() not in {'.json','.md','.txt','.html'}:continue
+ text=path.read_text(encoding='utf-8')
+ for category,pattern in patterns.items():
+  for match in pattern.finditer(text):candidates.append({'path':path.relative_to(REPO).as_posix(),'class':category,
+   'classification':'scanner_definition' if path in scanner_files else 'payload_candidate','start':match.start(),'length':match.end()-match.start()})
+confirmed=[row for row in candidates if row['classification']=='payload_candidate'];assert not confirmed,confirmed
+write('final/scanner-adjudication.json',{'schema':'orin.final-five-class-scan.v1','classes':list(patterns),'candidates':candidates,
+ 'confirmed_hits':confirmed,'confirmed_count':0,'raw_candidate_values_persisted':False,'boundary':BOUNDARY})
+
+seal_targets=['planning/plan.json','x1/validation.json','x2/packaging-validation.json','final/overview.md','final/phase-truth.json','final/method-flow.json',
+ 'final/evidence-accounting.json','final/context-deck.json','final/hand-off-baton.md','final/route-hold.json']
+bindings=[{'path':PREFIX+name,'sha256':sha((ROOT/name).read_bytes()),'bytes':len((ROOT/name).read_bytes())} for name in seal_targets]
+write('final/content-seal.json',{'schema':'orin.content-seal.v1','byte_domain':'normalized_lf_git_blob','bindings':bindings,
+ 'exact_final_binding':'external canonical receipt','no_recursive_self_hash_claim':True})
+files=sorted(p for p in ROOT.rglob('*') if p.is_file() and p!=ROOT/'final/owner-manifest.json')
+entries=[{'path':p.relative_to(REPO).as_posix(),'bytes':len(p.read_bytes()),'sha256':sha(p.read_bytes())} for p in files]
+write('final/owner-manifest.json',{'schema':'orin.owner-manifest.v1','byte_domain':'normalized_lf_git_blob','entries':entries,
+ 'exclusions':[PREFIX+'final/owner-manifest.json'],'owner_files_with_manifest':len(entries)+1,'file_ceiling':2000})
+all_files=[p for p in ROOT.rglob('*') if p.is_file()];word_counts={p.relative_to(REPO).as_posix():len(p.read_text(encoding='utf-8').split()) for p in all_files}
+assert len(all_files)<2000 and max(word_counts.values())<=100000 and all(p.suffix.lower() in {'.json','.md','.txt','.html'} for p in all_files)
+with (BANK/'final-built.json').open('x',encoding='utf-8',newline='\n') as handle:
+ json.dump({'status':'FINAL_PREPARED_NOT_COMMITTED','source':SOURCE,'x2':X2,'outcomes':outcomes,'own_counts':own,'effective_counts':effective,
+  'files':len(all_files),'manifest_entries':len(entries),'baton_words':baton_words,'maximum_document_words':max(word_counts.values()),
+  'confirmed_privacy_hits':0,'domain_replays':0,'observed_at':datetime.now(timezone.utc).isoformat()},handle,indent=2);handle.write('\n')
+print(json.dumps({'status':'FINAL_PREPARED_NOT_COMMITTED','outcomes':outcomes,'own_counts':own,'effective_counts':effective,
+ 'files':len(all_files),'manifest_entries':len(entries),'baton_words':baton_words,'maximum_document_words':max(word_counts.values()),
+ 'privacy_candidates':len(candidates),'confirmed_privacy_hits':0,'domain_replays':0}))
