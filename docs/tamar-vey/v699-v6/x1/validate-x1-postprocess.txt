@@ -1,0 +1,57 @@
+"use strict";
+
+const fs = require("fs");
+const path = require("path");
+
+const ROOT = process.cwd();
+const X1 = path.join(ROOT, "docs", "tamar-vey", "v699-v6", "x1");
+const first = JSON.parse(fs.readFileSync(path.join(X1, "validation.json"), "utf8"));
+const correction = JSON.parse(fs.readFileSync(path.join(X1, "postprocess-correction.json"), "utf8"));
+const flow = JSON.parse(fs.readFileSync(path.join(X1, "method-flow.json"), "utf8"));
+const correctionFlow = JSON.parse(fs.readFileSync(path.join(X1, "method-flow-postprocess.json"), "utf8"));
+const issues = [];
+
+function words(text) {
+  return text.trim().length ? text.trim().split(/\s+/).length : 0;
+}
+
+const currentText = fs.readFileSync(path.join(X1, "method-flow.json"), "utf8");
+const currentWords = words(currentText);
+if (first.status !== "INVALID_X1" || JSON.stringify(first.issues) !== JSON.stringify(["document_word_ceiling"])) issues.push("first_validation_not_isolated");
+if (first.domain_aggregate.invocations !== 1 || first.domain_aggregate.successes !== 1 || first.domain_aggregate.replays !== 0) issues.push("domain_latch");
+if (currentWords > 100000 || correction.corrected_method_flow_words !== currentWords) issues.push("document_word_ceiling");
+if (flow.methods.length !== correction.method_count_unchanged || flow.witnesses.length !== correction.witness_count_unchanged) issues.push("method_or_witness_count_changed");
+if (flow.counts.passing_witnesses !== correction.passing_count_unchanged || flow.counts.failed_witnesses !== correction.failed_count_unchanged || flow.counts.retained_negatives !== correction.retained_negative_count_unchanged) issues.push("evidence_counts_changed");
+if (correction.domain_aggregate_replayed || correction.successful_skill_checks_replayed || correction.successful_runner_smokes_replayed) issues.push("successful_component_replay");
+if (correction.failure_converted_to_pass || correctionFlow.counts.failed_witnesses !== 1 || correctionFlow.counts.passing_witnesses !== 1) issues.push("failure_retention");
+
+const receipt = {
+  schema: "tamar.x1-validation-correction.v1",
+  status: issues.length ? "INVALID_X1_POSTPROCESS_CORRECTION" : "VALID_X1_WITH_ISOLATED_POSTPROCESS_CORRECTION",
+  issues,
+  first_validation_status: first.status,
+  first_validation_issues: first.issues,
+  domain_aggregate: first.domain_aggregate,
+  domain_checks_replayed: false,
+  skill_checks_replayed: false,
+  runner_smokes_replayed: false,
+  privacy_scan_replayed: false,
+  json_parse_sweep_replayed: false,
+  failed_check_retested: "document_word_ceiling",
+  original_method_flow_words: correction.original_method_flow_words,
+  corrected_method_flow_words: currentWords,
+  methods: flow.methods.length,
+  witnesses: flow.witnesses.length,
+  passing_witnesses: flow.counts.passing_witnesses,
+  failed_witnesses: flow.counts.failed_witnesses,
+  retained_negatives: flow.counts.retained_negatives,
+  retained_failure_id: "TV6996-X1-N001",
+  failure_converted_to_pass: false,
+  full_repository_suite: false,
+  independent_reproduction: false,
+  terminal_verdict: "NOT_READY_FOR_STAGE_20",
+  boundary: "Same-owner x1 metadata correction only; no aggregate replay, independent reproduction, authority, proof, canon, or Stage 20 claim."
+};
+fs.writeFileSync(path.join(X1, "validation-correction.json"), `${JSON.stringify(receipt, null, 2)}\n`, "utf8");
+process.stdout.write(`${JSON.stringify({ status: receipt.status, issues, original_words: receipt.original_method_flow_words, corrected_words: receipt.corrected_method_flow_words, successful_components_replayed: false, retained_failure_id: receipt.retained_failure_id })}\n`);
+process.exitCode = issues.length ? 2 : 0;

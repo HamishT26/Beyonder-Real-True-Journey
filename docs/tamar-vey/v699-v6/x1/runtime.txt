@@ -1,0 +1,194 @@
+"use strict";
+
+const ALLOWED_FIELDS = new Set(["schema", "phase", "seed", "operation", "profile", "vertices", "edges", "focus", "limit"]);
+const OPERATIONS = new Set([
+  "vertex_inventory",
+  "edge_normalization",
+  "incidence_matrix",
+  "vertex_degrees",
+  "pair_codegrees",
+  "induced_vertex_subhypergraph",
+  "edge_restriction",
+  "primal_graph",
+  "line_graph",
+  "berge_components"
+]);
+
+class ContractError extends Error {
+  constructor(code, message) {
+    super(message);
+    this.name = "ContractError";
+    this.code = code;
+  }
+}
+
+function compareArrays(left, right) {
+  const a = left.join("\u0000");
+  const b = right.join("\u0000");
+  return a < b ? -1 : a > b ? 1 : 0;
+}
+
+function normalizeEdge(edge, vertexSet) {
+  if (!Array.isArray(edge) || edge.length === 0) throw new ContractError("edge_shape", "every edge must be a nonempty array");
+  const values = [];
+  const seen = new Set();
+  for (const vertex of edge) {
+    if (typeof vertex !== "string" || !vertexSet.has(vertex)) throw new ContractError("edge_vertex", "edge vertices must belong to the carrier");
+    if (seen.has(vertex)) throw new ContractError("duplicate_edge_vertex", "an edge cannot repeat a vertex");
+    seen.add(vertex);
+    values.push(vertex);
+  }
+  return values.sort();
+}
+
+function normalize(request) {
+  if (!request || typeof request !== "object" || Array.isArray(request)) throw new ContractError("request_shape", "request must be an object");
+  const keys = Object.keys(request);
+  if (keys.some((key) => !ALLOWED_FIELDS.has(key)) || [...ALLOWED_FIELDS].some((key) => !(key in request))) {
+    throw new ContractError("field_set", "request fields must match the declared envelope exactly");
+  }
+  if (request.schema !== "tamar.hypergraph-request.v1" || request.phase !== "v699-v6" || request.seed !== "tamar-v699-v6") {
+    throw new ContractError("envelope_identity", "schema, phase, and seed must match the frozen contract");
+  }
+  if (!OPERATIONS.has(request.operation)) throw new ContractError("operation", "operation is not available in x1");
+  if (typeof request.profile !== "string" || request.profile.length === 0) throw new ContractError("profile", "profile must be a nonempty string");
+  if (!Array.isArray(request.vertices) || request.vertices.length === 0 || request.vertices.length > 8) throw new ContractError("vertices_shape", "vertices must contain one through eight labels");
+  const vertices = [];
+  const vertexSet = new Set();
+  for (const vertex of request.vertices) {
+    if (typeof vertex !== "string" || !/^[a-z][a-z0-9_-]{0,15}$/.test(vertex)) throw new ContractError("vertex_label", "vertex labels use the bounded lowercase profile");
+    if (vertexSet.has(vertex)) throw new ContractError("duplicate_vertex", "vertex labels must be unique");
+    vertexSet.add(vertex);
+    vertices.push(vertex);
+  }
+  vertices.sort();
+  if (!Array.isArray(request.edges) || request.edges.length > 16) throw new ContractError("edges_shape", "edges must be a bounded array");
+  const edgeMap = new Map();
+  for (const edge of request.edges) {
+    const normalized = normalizeEdge(edge, vertexSet);
+    edgeMap.set(normalized.join("\u0000"), normalized);
+  }
+  const edges = [...edgeMap.values()].sort(compareArrays);
+  if (!Array.isArray(request.focus)) throw new ContractError("focus_shape", "focus must be an array");
+  const focusSet = new Set();
+  for (const vertex of request.focus) {
+    if (typeof vertex !== "string" || !vertexSet.has(vertex)) throw new ContractError("focus_vertex", "focus vertices must belong to the carrier");
+    if (focusSet.has(vertex)) throw new ContractError("duplicate_focus_vertex", "focus vertices must be unique");
+    focusSet.add(vertex);
+  }
+  const focus = [...focusSet].sort();
+  if (!Number.isInteger(request.limit) || request.limit < 1 || request.limit > 4096) throw new ContractError("limit", "limit must be an integer from one through 4096");
+  return { operation: request.operation, profile: request.profile, vertices, vertexSet: new Set(vertices), edges, focus, focusSet: new Set(focus), limit: request.limit };
+}
+
+function pairs(values) {
+  const result = [];
+  for (let i = 0; i < values.length; i += 1) for (let j = i + 1; j < values.length; j += 1) result.push([values[i], values[j]]);
+  return result;
+}
+
+function edgeKey(edge) {
+  return edge.join("\u0000");
+}
+
+function normalizeEdgeList(edges) {
+  const map = new Map();
+  for (const edge of edges) if (edge.length) map.set(edgeKey([...edge].sort()), [...edge].sort());
+  return [...map.values()].sort(compareArrays);
+}
+
+function primalEdges(vertices, edges) {
+  return pairs(vertices).filter(([left, right]) => edges.some((edge) => edge.includes(left) && edge.includes(right)));
+}
+
+function execute(rawRequest) {
+  const request = normalize(rawRequest);
+  const { operation, vertices, edges, focus, focusSet } = request;
+  let result;
+
+  if (operation === "vertex_inventory") {
+    result = { count: vertices.length, vertices };
+  } else if (operation === "edge_normalization") {
+    const used = new Set(edges.flat());
+    result = { edge_count: edges.length, edges, isolated_vertices: vertices.filter((vertex) => !used.has(vertex)) };
+  } else if (operation === "incidence_matrix") {
+    result = {
+      vertices,
+      edge_ids: edges.map((_, index) => `e${index + 1}`),
+      matrix: vertices.map((vertex) => edges.map((edge) => edge.includes(vertex) ? 1 : 0))
+    };
+  } else if (operation === "vertex_degrees") {
+    result = { degrees: vertices.map((vertex) => ({ vertex, degree: edges.filter((edge) => edge.includes(vertex)).length })) };
+  } else if (operation === "pair_codegrees") {
+    result = { pairs: pairs(vertices).map(([left, right]) => ({ left, right, codegree: edges.filter((edge) => edge.includes(left) && edge.includes(right)).length })) };
+  } else if (operation === "induced_vertex_subhypergraph") {
+    result = { vertices: focus, edges: normalizeEdgeList(edges.map((edge) => edge.filter((vertex) => focusSet.has(vertex)))) };
+  } else if (operation === "edge_restriction") {
+    result = { vertices: focus, edges: edges.filter((edge) => edge.every((vertex) => focusSet.has(vertex))) };
+  } else if (operation === "primal_graph") {
+    result = { vertices, edges: primalEdges(vertices, edges) };
+  } else if (operation === "line_graph") {
+    const edgeIds = edges.map((_, index) => `e${index + 1}`);
+    const lineEdges = [];
+    for (let i = 0; i < edges.length; i += 1) {
+      for (let j = i + 1; j < edges.length; j += 1) {
+        if (edges[i].some((vertex) => edges[j].includes(vertex))) lineEdges.push([edgeIds[i], edgeIds[j]]);
+      }
+    }
+    result = { vertices: edgeIds, edges: lineEdges };
+  } else if (operation === "berge_components") {
+    const adjacency = new Map(vertices.map((vertex) => [vertex, new Set()]));
+    for (const [left, right] of primalEdges(vertices, edges)) {
+      adjacency.get(left).add(right);
+      adjacency.get(right).add(left);
+    }
+    const unseen = new Set(vertices);
+    const components = [];
+    while (unseen.size) {
+      const start = [...unseen].sort()[0];
+      const queue = [start];
+      unseen.delete(start);
+      const component = [];
+      while (queue.length) {
+        const vertex = queue.shift();
+        component.push(vertex);
+        for (const neighbor of [...adjacency.get(vertex)].sort()) {
+          if (unseen.delete(neighbor)) queue.push(neighbor);
+        }
+      }
+      components.push(component.sort());
+    }
+    result = { components };
+  } else {
+    throw new ContractError("operation", "operation is not implemented in x1");
+  }
+
+  return {
+    ok: true,
+    operation,
+    outcome: "completed",
+    result,
+    scope: "finite_synthetic_hypergraph_only",
+    same_owner_only: true,
+    independent_reproduction: false
+  };
+}
+
+function runCli() {
+  let input = "";
+  process.stdin.setEncoding("utf8");
+  process.stdin.on("data", (chunk) => { input += chunk; });
+  process.stdin.on("end", () => {
+    try {
+      const response = execute(JSON.parse(input));
+      process.stdout.write(`${JSON.stringify(response)}\n`);
+    } catch (error) {
+      const code = error instanceof ContractError ? error.code : "internal";
+      process.stdout.write(`${JSON.stringify({ ok: false, error: code, message: error.message })}\n`);
+      process.exitCode = 2;
+    }
+  });
+}
+
+module.exports = { ContractError, execute, normalize };
+if (require.main === module) runCli();

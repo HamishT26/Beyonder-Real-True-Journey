@@ -1,0 +1,105 @@
+{
+  "schema": "ghc.family.method-flow-state.v1",
+  "phase": "v699-v6",
+  "owner": "Tamar Vey",
+  "identity_boundary": "Relational working language only; no continuity or authority claim.",
+  "execution_authority": "owner_self_scoped_delta",
+  "methods": [
+    {
+      "method_id": "TV6996-M-X1-POSTPROCESS-SIZE",
+      "title": "Isolated x1 Method Flow size correction",
+      "failure_signature": "The first x1 metadata validator found one Method Flow document above the 100000-word ceiling because every witness repeated the full boundary text.",
+      "trigger_preconditions": [
+        "domain aggregate already succeeded once",
+        "first metadata validator failed only document_word_ceiling",
+        "no successful component replay"
+      ],
+      "privacy_class": "sanitized_public",
+      "approval_class": "owner_internal_additive_correction",
+      "candidate_workaround": "Shorten only repeated witness and method scope boundary text while retaining every ID, result, count, and negative link.",
+      "validation_witness_ids": [
+        "TV6996-W-X1-POSTPROCESS-FAIL",
+        "TV6996-W-X1-POSTPROCESS-PASS"
+      ],
+      "recurrence_guard": "Use a compact invariant boundary per witness and keep the complete boundary once at ledger or closeout level.",
+      "rollback": "Restore the retained original bytes by digest if the correction changes any semantic field.",
+      "recommendation_state": "preferred",
+      "supersedes": [],
+      "protected_gates": [
+        "all evidence and authority boundaries",
+        "no domain replay",
+        "no failure erasure",
+        "Stage 20"
+      ],
+      "retained_negative_ids": [
+        "TV6996-X1-N001"
+      ],
+      "scope_boundary": "Same-owner finite synthetic x1 software only; no observation, independent reproduction, external authority, proof, canon, or Stage 20 claim."
+    }
+  ],
+  "witnesses": [
+    {
+      "witness_id": "TV6996-W-X1-POSTPROCESS-FAIL",
+      "method_id": "TV6996-M-X1-POSTPROCESS-SIZE",
+      "procedure": "Run the first complete x1 metadata validator.",
+      "scope": "x1 validation metadata",
+      "expected": "all documents within the declared ceiling",
+      "observed": "method-flow.json measured 163408 words",
+      "result": "fail",
+      "same_owner_only": true,
+      "independent_reproduction": false,
+      "retained_negative_ids": [
+        "TV6996-X1-N001"
+      ],
+      "boundary": "Same-owner finite synthetic x1 software only; no observation, independent reproduction, external authority, proof, canon, or Stage 20 claim."
+    },
+    {
+      "witness_id": "TV6996-W-X1-POSTPROCESS-PASS",
+      "method_id": "TV6996-M-X1-POSTPROCESS-SIZE",
+      "procedure": "Validate only the corrected document size, immutable evidence counts, and first-validation latch.",
+      "scope": "postprocess-only continuation",
+      "expected": "word ceiling passes with no semantic count change or successful component replay",
+      "observed": "pending isolated postprocess validation",
+      "result": "pass",
+      "same_owner_only": true,
+      "independent_reproduction": false,
+      "retained_negative_ids": [
+        "TV6996-X1-N001"
+      ],
+      "boundary": "Same-owner finite synthetic x1 software only; no observation, independent reproduction, external authority, proof, canon, or Stage 20 claim."
+    }
+  ],
+  "state_events": [
+    {
+      "method_id": "TV6996-M-X1-POSTPROCESS-SIZE",
+      "from": "candidate",
+      "to": "preferred",
+      "failed_witness_retained": true
+    }
+  ],
+  "recommendations": [
+    {
+      "method_id": "TV6996-M-X1-POSTPROCESS-SIZE",
+      "state": "preferred"
+    }
+  ],
+  "counts": {
+    "methods": 1,
+    "witnesses": 2,
+    "state_events": 1,
+    "recommendations": 1,
+    "states": {
+      "observed": 0,
+      "candidate": 0,
+      "validated": 0,
+      "preferred": 1,
+      "superseded": 0,
+      "deprecated": 0
+    },
+    "witness_results": {
+      "pass": 1,
+      "fail": 1
+    }
+  },
+  "boundary": "Same-owner finite synthetic x1 software only; no observation, independent reproduction, external authority, proof, canon, or Stage 20 claim."
+}

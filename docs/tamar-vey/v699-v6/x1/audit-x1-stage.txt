@@ -1,0 +1,103 @@
+"use strict";
+
+const crypto = require("crypto");
+const fs = require("fs");
+const path = require("path");
+const vm = require("vm");
+const { spawnSync } = require("child_process");
+
+const ROOT = process.cwd();
+const REL = "docs/tamar-vey/v699-v6/x1";
+const MANIFEST_PATH = `${REL}/x1-index-manifest.json`;
+const RECEIPT_PATH = `${REL}/x1-stage-audit.json`;
+const BOUNDARY = "Exact staged same-owner x1 software and documentation audit only; not independent reproduction, empirical confirmation, complete privacy/accessibility/security, authority, proof, canon, or Stage 20 evidence.";
+
+function git(args, encoding = null) {
+  const result = spawnSync("git", args, { cwd: ROOT, encoding, maxBuffer: 64 * 1024 * 1024 });
+  if (result.status !== 0) throw new Error(result.stderr?.toString() || `git ${args.join(" ")} failed`);
+  return result.stdout;
+}
+
+function sha(bytes) {
+  return crypto.createHash("sha256").update(bytes).digest("hex");
+}
+
+const manifest = JSON.parse(git(["show", `:${MANIFEST_PATH}`], "utf8"));
+const staged = git(["diff", "--cached", "--name-only", "--diff-filter=ACMR"], "utf8").trim().split(/\r?\n/).filter(Boolean).sort();
+const expectedBeforeReceipt = [...manifest.entries.map((entry) => entry.path), ...manifest.exclusions.filter((name) => name !== RECEIPT_PATH)].sort();
+const issues = [];
+if (JSON.stringify(staged) !== JSON.stringify(expectedBeforeReceipt)) issues.push("staged_path_parity_before_receipt");
+const manifestIssues = [];
+for (const entry of manifest.entries) {
+  const bytes = git(["show", `:${entry.path}`]);
+  const digest = sha(bytes);
+  if (bytes.length !== entry.bytes || digest !== entry.sha256) manifestIssues.push({ path: entry.path, bytes: bytes.length, sha256: digest });
+}
+if (manifestIssues.length) issues.push("manifest_parity");
+
+let jsonParsed = 0;
+let txtSyntax = 0;
+let markdownChecked = 0;
+let max = { path: "", words: 0, bytes: 0 };
+const privacyCandidates = [];
+const patterns = [
+  ["raw_task_or_thread_identifier", /\b(?:threadId|thread_id|task_id)\b|\b[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}\b/gi],
+  ["private_absolute_path", /\b[A-Za-z]:\\/g],
+  ["credential_or_private_key", /\b(?:sk-[A-Za-z0-9_-]{20,}|ghp_[A-Za-z0-9]{20,}|BEGIN (?:RSA |EC )?PRIVATE KEY)\b/g],
+  ["private_conversation_or_session_stream", /\b(?:raw transcript|session stream|private screenshot)\b/gi],
+  ["private_callable_or_application_state", /\b(?:callable_identifier|private application state|private app state)\b/gi]
+];
+
+for (const name of staged) {
+  const ext = path.extname(name).toLowerCase();
+  if (![".json", ".md", ".txt", ".html"].includes(ext)) issues.push(`forbidden_extension:${name}`);
+  const bytes = git(["show", `:${name}`]);
+  const text = bytes.toString("utf8");
+  const words = text.trim().length ? text.trim().split(/\s+/).length : 0;
+  if (words > max.words) max = { path: name, words, bytes: bytes.length };
+  if (words > 100000) issues.push(`document_word_ceiling:${name}`);
+  if (ext === ".json") { JSON.parse(text); jsonParsed += 1; }
+  if (ext === ".txt") { new vm.Script(text, { filename: name }); txtSyntax += 1; }
+  if (ext === ".md") { if (!text.includes("#")) issues.push(`markdown_structure:${name}`); markdownChecked += 1; }
+  for (const [kind, pattern] of patterns) {
+    const count = (text.match(pattern) || []).length;
+    if (count) {
+      const scannerDefinition = /(?:audit|validate|terminal-composite|terminal-seal)/.test(name) && ext === ".txt";
+      privacyCandidates.push({ path: name, kind, count, adjudication: scannerDefinition ? "scanner_definition" : "unresolved" });
+    }
+  }
+}
+const confirmedPrivacy = privacyCandidates.filter((candidate) => candidate.adjudication !== "scanner_definition");
+if (confirmedPrivacy.length) issues.push("privacy_confirmed_hits");
+const deletionCount = git(["diff", "--cached", "--name-only", "--diff-filter=D"], "utf8").trim().split(/\r?\n/).filter(Boolean).length;
+if (deletionCount) issues.push("deletions");
+const diffCheck = spawnSync("git", ["diff", "--cached", "--check"], { cwd: ROOT, encoding: "utf8" });
+if (diffCheck.status !== 0) issues.push("diff_check");
+
+const receipt = {
+  schema: "tamar.x1-stage-audit.v1",
+  status: issues.length ? "INVALID_X1_STAGE" : "VALID_X1_STAGE",
+  issues,
+  expected_parent: "ead7018c661745bfcc380aa6b91e18c1b8ba0bb7",
+  staged_before_receipt: staged.length,
+  expected_final_staged_count: staged.length + 1,
+  manifest_entries: manifest.entries.length,
+  manifest_exclusions: manifest.exclusions.length,
+  manifest_issues: manifestIssues,
+  json_parsed: jsonParsed,
+  txt_syntax_checked: txtSyntax,
+  markdown_checked: markdownChecked,
+  privacy_candidates: privacyCandidates,
+  privacy_confirmed_hits: confirmedPrivacy,
+  maximum_document: max,
+  deletion_count: deletionCount,
+  diff_check: diffCheck.status === 0,
+  domain_aggregate_replayed: false,
+  x2_implemented_or_executed: false,
+  full_repository_suite: false,
+  terminal_verdict: "NOT_READY_FOR_STAGE_20",
+  boundary: BOUNDARY
+};
+fs.writeFileSync(path.join(ROOT, ...RECEIPT_PATH.split("/")), `${JSON.stringify(receipt, null, 2)}\n`, "utf8");
+process.stdout.write(`${JSON.stringify({ status: receipt.status, issues, staged_before_receipt: staged.length, manifest_entries: manifest.entries.length, json_parsed: jsonParsed, txt_syntax_checked: txtSyntax, markdown_checked: markdownChecked, privacy_candidates: privacyCandidates.length, privacy_confirmed: confirmedPrivacy.length, maximum_document_words: max.words })}\n`);
+process.exitCode = issues.length ? 2 : 0;

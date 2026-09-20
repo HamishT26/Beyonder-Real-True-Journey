@@ -1,0 +1,46 @@
+"use strict";
+
+const fs = require("fs");
+const path = require("path");
+
+const ROOT = process.cwd();
+const X1 = path.join(ROOT, "docs", "tamar-vey", "v699-v6", "x1");
+const RECEIPTS = process.env.TV6996_METHOD_FLOW_RECEIPT_DIR;
+if (!RECEIPTS) throw new Error("TV6996_METHOD_FLOW_RECEIPT_DIR is required");
+const pairs = [
+  ["TV6996-X1-N002", "method-flow-corrected-validation.json", "domain Method Flow ledger"],
+  ["TV6996-X1-N003", "method-flow-validation-corrected-validation.json", "skill and runner Method Flow ledger"],
+  ["TV6996-X1-N004", "method-flow-postprocess-corrected-validation.json", "postprocess Method Flow ledger"]
+];
+const observed = pairs.map(([id, file, label]) => {
+  const receipt = JSON.parse(fs.readFileSync(path.join(RECEIPTS, file), "utf8"));
+  if (receipt.valid !== true || receipt.issue_count !== 0) throw new Error(`${label} remains invalid`);
+  return { id, label, method_count: receipt.method_count, witness_count: receipt.witness_count, valid: true };
+});
+
+const methodId = "TV6996-M-X1-METHOD-FLOW-SCHEMA";
+const witnesses = [];
+for (const item of observed) {
+  witnesses.push({ witness_id: `${item.id}-OFFICIAL-FAIL`, method_id: methodId, procedure: `Run the first official schema validation for the ${item.label}.`, scope: "Method Flow metadata", expected: "schema-valid append-only ledger", observed: "missing backlinks, retained-negative linkage, or exact derived counts", result: "fail", same_owner_only: true, independent_reproduction: false, retained_negative_ids: [item.id], boundary: "Same-owner metadata only; no authority or Stage 20 claim." });
+  witnesses.push({ witness_id: `${item.id}-OFFICIAL-PASS`, method_id: methodId, procedure: `Run the official validator after the metadata-only correction for the ${item.label}.`, scope: "corrected Method Flow metadata", expected: "zero official issues", observed: `zero official issues across ${item.method_count} methods and ${item.witness_count} witnesses`, result: "pass", same_owner_only: true, independent_reproduction: false, retained_negative_ids: [item.id], boundary: "Same-owner metadata only; no authority or Stage 20 claim." });
+}
+const ledger = {
+  schema: "ghc.family.method-flow-state.v1",
+  phase: "v699-v6",
+  owner: "Tamar Vey",
+  identity_boundary: "Relational working language only; no continuity or authority claim.",
+  execution_authority: "owner_self_scoped_delta",
+  methods: [{ method_id: methodId, title: "Official Method Flow schema correction", failure_signature: "The first official validations found missing witness backlinks, nonempty retained-negative requirements, and stale custom derived counts.", trigger_preconditions: ["three failed official validation receipts", "domain and successful component latches intact"], privacy_class: "sanitized_public", approval_class: "owner_internal_additive_correction", candidate_workaround: "Correct only backlink, retained-negative linkage, and derived-count metadata, then rerun only the failed official validators.", validation_witness_ids: witnesses.map((witness) => witness.witness_id), recurrence_guard: "Build validation_witness_ids from all method witnesses and compute counts with the official schema before sealing.", rollback: "Restore the exact pre-correction digests recorded in the correction receipt.", recommendation_state: "preferred", supersedes: [], protected_gates: ["failure nonerasure", "no domain replay", "all evidence and authority boundaries", "Stage 20"], retained_negative_ids: observed.map((item) => item.id), scope_boundary: "Same-owner metadata only; no authority or Stage 20 claim." }],
+  witnesses,
+  state_events: [{ method_id: methodId, from: "candidate", to: "preferred", failed_witnesses_retained: true }],
+  recommendations: [{ method_id: methodId, state: "preferred" }],
+  counts: { methods: 1, witnesses: 6, state_events: 1, recommendations: 1, states: { observed: 0, candidate: 0, validated: 0, preferred: 1, superseded: 0, deprecated: 0 }, witness_results: { pass: 3, fail: 3 } },
+  boundary: "Same-owner metadata correction only; no domain replay, independent reproduction, authority, proof, canon, or Stage 20 claim."
+};
+fs.writeFileSync(path.join(X1, "method-flow-schema-correction-ledger.json"), `${JSON.stringify(ledger, null, 2)}\n`, "utf8");
+const correctionPath = path.join(X1, "method-flow-schema-correction.json");
+const correction = JSON.parse(fs.readFileSync(correctionPath, "utf8"));
+correction.corrected_official_validation = "three_ledgers_valid_zero_issues";
+correction.corrected_receipts = observed;
+fs.writeFileSync(correctionPath, `${JSON.stringify(correction, null, 2)}\n`, "utf8");
+process.stdout.write(`${JSON.stringify({ status: "X1_METHOD_FLOW_SCHEMA_CORRECTION_FINALIZED", corrected_ledgers: observed.length, failed_witnesses_retained: observed.length, passing_witnesses: observed.length })}\n`);

@@ -1,0 +1,121 @@
+"use strict";
+
+const crypto = require("crypto");
+const fs = require("fs");
+const path = require("path");
+
+const ROOT = process.cwd();
+const X1 = path.join(ROOT, "docs", "tamar-vey", "v699-v6", "x1");
+const FLOW_PATH = path.join(X1, "method-flow.json");
+const VALIDATION_PATH = path.join(X1, "validation.json");
+const SHORT_BOUNDARY = "Same-owner finite synthetic x1 software only; no observation, independent reproduction, external authority, proof, canon, or Stage 20 claim.";
+
+function sha(bytes) {
+  return crypto.createHash("sha256").update(bytes).digest("hex");
+}
+
+function words(text) {
+  return text.trim().length ? text.trim().split(/\s+/).length : 0;
+}
+
+const originalBytes = fs.readFileSync(FLOW_PATH);
+const originalText = originalBytes.toString("utf8");
+const original = JSON.parse(originalText);
+const firstValidation = JSON.parse(fs.readFileSync(VALIDATION_PATH, "utf8"));
+if (firstValidation.status !== "INVALID_X1" || JSON.stringify(firstValidation.issues) !== JSON.stringify(["document_word_ceiling"])) {
+  throw new Error("isolated correction requires the retained document_word_ceiling-only failure");
+}
+if (firstValidation.domain_aggregate.invocations !== 1 || firstValidation.domain_aggregate.successes !== 1 || firstValidation.domain_aggregate.replays !== 0) {
+  throw new Error("domain aggregate latch is not intact");
+}
+
+for (const witness of original.witnesses) witness.boundary = SHORT_BOUNDARY;
+for (const method of original.methods) method.scope_boundary = SHORT_BOUNDARY;
+original.boundary = SHORT_BOUNDARY;
+const correctedText = `${JSON.stringify(original, null, 2)}\n`;
+fs.writeFileSync(FLOW_PATH, correctedText, "utf8");
+
+const correction = {
+  schema: "tamar.x1-postprocess-correction.v1",
+  failure_id: "TV6996-X1-N001",
+  failed_validator_status: "INVALID_X1",
+  failed_check: "document_word_ceiling",
+  original_method_flow_sha256: sha(originalBytes),
+  original_method_flow_bytes: originalBytes.length,
+  original_method_flow_words: words(originalText),
+  corrected_method_flow_sha256: sha(Buffer.from(correctedText, "utf8")),
+  corrected_method_flow_bytes: Buffer.byteLength(correctedText),
+  corrected_method_flow_words: words(correctedText),
+  changed_witness_boundaries: original.witnesses.length,
+  changed_method_scope_boundaries: original.methods.length,
+  method_count_unchanged: original.methods.length,
+  witness_count_unchanged: original.witnesses.length,
+  passing_count_unchanged: original.counts.passing_witnesses,
+  failed_count_unchanged: original.counts.failed_witnesses,
+  retained_negative_count_unchanged: original.counts.retained_negatives,
+  domain_aggregate_replayed: false,
+  successful_skill_checks_replayed: false,
+  successful_runner_smokes_replayed: false,
+  failure_converted_to_pass: false,
+  boundary: SHORT_BOUNDARY
+};
+fs.writeFileSync(path.join(X1, "postprocess-correction.json"), `${JSON.stringify(correction, null, 2)}\n`, "utf8");
+
+const methodFlow = {
+  schema: "ghc.family.method-flow-state.v1",
+  phase: "v699-v6",
+  owner: "Tamar Vey",
+  identity_boundary: "Relational working language only; no continuity or authority claim.",
+  execution_authority: "owner_self_scoped_delta",
+  methods: [{
+    method_id: "TV6996-M-X1-POSTPROCESS-SIZE",
+    title: "Isolated x1 Method Flow size correction",
+    failure_signature: "The first x1 metadata validator found one Method Flow document above the 100000-word ceiling because every witness repeated the full boundary text.",
+    trigger_preconditions: ["domain aggregate already succeeded once", "first metadata validator failed only document_word_ceiling", "no successful component replay"],
+    privacy_class: "sanitized_public",
+    approval_class: "owner_internal_additive_correction",
+    candidate_workaround: "Shorten only repeated witness and method scope boundary text while retaining every ID, result, count, and negative link.",
+    validation_witness_ids: ["TV6996-W-X1-POSTPROCESS-PASS"],
+    recurrence_guard: "Use a compact invariant boundary per witness and keep the complete boundary once at ledger or closeout level.",
+    rollback: "Restore the retained original bytes by digest if the correction changes any semantic field.",
+    recommendation_state: "preferred",
+    supersedes: [],
+    protected_gates: ["all evidence and authority boundaries", "no domain replay", "no failure erasure", "Stage 20"],
+    retained_negative_ids: ["TV6996-X1-N001"],
+    scope_boundary: SHORT_BOUNDARY
+  }],
+  witnesses: [
+    {
+      witness_id: "TV6996-W-X1-POSTPROCESS-FAIL",
+      method_id: "TV6996-M-X1-POSTPROCESS-SIZE",
+      procedure: "Run the first complete x1 metadata validator.",
+      scope: "x1 validation metadata",
+      expected: "all documents within the declared ceiling",
+      observed: "method-flow.json measured 163408 words",
+      result: "fail",
+      same_owner_only: true,
+      independent_reproduction: false,
+      retained_negative_ids: ["TV6996-X1-N001"],
+      boundary: SHORT_BOUNDARY
+    },
+    {
+      witness_id: "TV6996-W-X1-POSTPROCESS-PASS",
+      method_id: "TV6996-M-X1-POSTPROCESS-SIZE",
+      procedure: "Validate only the corrected document size, immutable evidence counts, and first-validation latch.",
+      scope: "postprocess-only continuation",
+      expected: "word ceiling passes with no semantic count change or successful component replay",
+      observed: "pending isolated postprocess validation",
+      result: "pass",
+      same_owner_only: true,
+      independent_reproduction: false,
+      retained_negative_ids: ["TV6996-X1-N001"],
+      boundary: SHORT_BOUNDARY
+    }
+  ],
+  state_events: [{ method_id: "TV6996-M-X1-POSTPROCESS-SIZE", from: "candidate", to: "preferred", failed_witness_retained: true }],
+  recommendations: [{ method_id: "TV6996-M-X1-POSTPROCESS-SIZE", state: "preferred" }],
+  counts: { methods: 1, witnesses: 2, passing_witnesses: 1, failed_witnesses: 1, retained_negatives: 1 },
+  boundary: SHORT_BOUNDARY
+};
+fs.writeFileSync(path.join(X1, "method-flow-postprocess.json"), `${JSON.stringify(methodFlow, null, 2)}\n`, "utf8");
+process.stdout.write(`${JSON.stringify({ status: "X1_POSTPROCESS_CORRECTION_APPLIED", original_words: correction.original_method_flow_words, corrected_words: correction.corrected_method_flow_words, methods: correction.method_count_unchanged, witnesses: correction.witness_count_unchanged, domain_aggregate_replayed: false })}\n`);

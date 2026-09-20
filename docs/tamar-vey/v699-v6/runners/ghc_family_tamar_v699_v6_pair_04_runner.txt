@@ -1,0 +1,6 @@
+"use strict";
+const fs=require("fs");const path=require("path");const vm=require("vm");
+const allowed=new Set(["edge_restriction","primal_graph"]);
+const runtimePath=path.join(__dirname,"..","x1","runtime.txt");
+const code=fs.readFileSync(runtimePath,"utf8");const moduleBox={exports:{}};new vm.Script(`(function(exports,module,require,__filename,__dirname){${code}\n})`,{filename:runtimePath}).runInThisContext()(moduleBox.exports,moduleBox,require,runtimePath,path.dirname(runtimePath));
+let input="";process.stdin.setEncoding("utf8");process.stdin.on("data",chunk=>input+=chunk);process.stdin.on("end",()=>{try{const request=JSON.parse(input);if(!allowed.has(request.operation))throw Object.assign(new Error("operation not admitted by this runner"),{code:"runner_operation"});process.stdout.write(JSON.stringify(moduleBox.exports.execute(request))+"\n");}catch(error){process.stdout.write(JSON.stringify({ok:false,error:error.code||"internal",message:error.message})+"\n");process.exitCode=2;}});

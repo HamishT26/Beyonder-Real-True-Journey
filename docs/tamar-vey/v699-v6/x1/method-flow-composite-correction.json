@@ -1,0 +1,105 @@
+{
+  "schema": "ghc.family.method-flow-state.v1",
+  "phase": "v699-v6",
+  "owner": "Tamar Vey",
+  "identity_boundary": "Relational working language only; no continuity or authority claim.",
+  "execution_authority": "owner_self_scoped_delta",
+  "methods": [
+    {
+      "method_id": "TV6996-M-X1-COMPOSITE-NEGATIVE-UNION",
+      "title": "Terminal composite negative-ID union",
+      "failure_signature": "The first composite summed per-ledger negative sets and double-counted ten cross-ledger references.",
+      "trigger_preconditions": [
+        "retained first composite with 469 projected negatives",
+        "exact ledger set union available",
+        "no domain or successful component replay"
+      ],
+      "privacy_class": "sanitized_public",
+      "approval_class": "owner_internal_additive_correction",
+      "candidate_workaround": "Take one set union across every method retained_negative_ids field before counting.",
+      "validation_witness_ids": [
+        "TV6996-W-X1-COMPOSITE-FAIL",
+        "TV6996-W-X1-COMPOSITE-PASS"
+      ],
+      "recurrence_guard": "Compute cumulative IDs globally rather than summing per-ledger cardinalities.",
+      "rollback": "Restore the retained first composite bytes by digest.",
+      "recommendation_state": "preferred",
+      "supersedes": [],
+      "protected_gates": [
+        "failure nonerasure",
+        "no domain replay",
+        "all evidence and authority boundaries",
+        "Stage 20"
+      ],
+      "retained_negative_ids": [
+        "TV6996-X1-N005"
+      ],
+      "scope_boundary": "Same-owner metadata only; no authority or Stage 20 claim."
+    }
+  ],
+  "witnesses": [
+    {
+      "witness_id": "TV6996-W-X1-COMPOSITE-FAIL",
+      "method_id": "TV6996-M-X1-COMPOSITE-NEGATIVE-UNION",
+      "procedure": "Sum per-ledger unique negative counts.",
+      "scope": "first terminal composite projection",
+      "expected": "one global distinct-ID count",
+      "observed": "469 with ten duplicate cross-ledger references",
+      "result": "fail",
+      "same_owner_only": true,
+      "independent_reproduction": false,
+      "retained_negative_ids": [
+        "TV6996-X1-N005"
+      ],
+      "boundary": "Same-owner metadata only; no authority or Stage 20 claim."
+    },
+    {
+      "witness_id": "TV6996-W-X1-COMPOSITE-PASS",
+      "method_id": "TV6996-M-X1-COMPOSITE-NEGATIVE-UNION",
+      "procedure": "Take one global set union across all four x1 Method Flow ledgers.",
+      "scope": "corrected terminal composite projection",
+      "expected": "459 distinct retained negative IDs",
+      "observed": "459 distinct retained negative IDs",
+      "result": "pass",
+      "same_owner_only": true,
+      "independent_reproduction": false,
+      "retained_negative_ids": [
+        "TV6996-X1-N005"
+      ],
+      "boundary": "Same-owner metadata only; no authority or Stage 20 claim."
+    }
+  ],
+  "state_events": [
+    {
+      "method_id": "TV6996-M-X1-COMPOSITE-NEGATIVE-UNION",
+      "from": "candidate",
+      "to": "preferred",
+      "failed_witness_retained": true
+    }
+  ],
+  "recommendations": [
+    {
+      "method_id": "TV6996-M-X1-COMPOSITE-NEGATIVE-UNION",
+      "state": "preferred"
+    }
+  ],
+  "counts": {
+    "methods": 1,
+    "witnesses": 2,
+    "state_events": 1,
+    "recommendations": 1,
+    "states": {
+      "observed": 0,
+      "candidate": 0,
+      "validated": 0,
+      "preferred": 1,
+      "superseded": 0,
+      "deprecated": 0
+    },
+    "witness_results": {
+      "pass": 1,
+      "fail": 1
+    }
+  },
+  "boundary": "Same-owner metadata correction only; no domain replay, authority, proof, canon, or Stage 20 claim."
+}

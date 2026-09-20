@@ -1,0 +1,170 @@
+{
+  "schema": "ghc.family.method-flow-state.v1",
+  "phase": "v699-v6",
+  "owner": "Tamar Vey",
+  "identity_boundary": "Relational working language only; no continuity or authority claim.",
+  "execution_authority": "owner_self_scoped_delta",
+  "methods": [
+    {
+      "method_id": "TV6996-M-X1-METHOD-FLOW-SCHEMA",
+      "title": "Official Method Flow schema correction",
+      "failure_signature": "The first official validations found missing witness backlinks, nonempty retained-negative requirements, and stale custom derived counts.",
+      "trigger_preconditions": [
+        "three failed official validation receipts",
+        "domain and successful component latches intact"
+      ],
+      "privacy_class": "sanitized_public",
+      "approval_class": "owner_internal_additive_correction",
+      "candidate_workaround": "Correct only backlink, retained-negative linkage, and derived-count metadata, then rerun only the failed official validators.",
+      "validation_witness_ids": [
+        "TV6996-X1-N002-OFFICIAL-FAIL",
+        "TV6996-X1-N002-OFFICIAL-PASS",
+        "TV6996-X1-N003-OFFICIAL-FAIL",
+        "TV6996-X1-N003-OFFICIAL-PASS",
+        "TV6996-X1-N004-OFFICIAL-FAIL",
+        "TV6996-X1-N004-OFFICIAL-PASS"
+      ],
+      "recurrence_guard": "Build validation_witness_ids from all method witnesses and compute counts with the official schema before sealing.",
+      "rollback": "Restore the exact pre-correction digests recorded in the correction receipt.",
+      "recommendation_state": "preferred",
+      "supersedes": [],
+      "protected_gates": [
+        "failure nonerasure",
+        "no domain replay",
+        "all evidence and authority boundaries",
+        "Stage 20"
+      ],
+      "retained_negative_ids": [
+        "TV6996-X1-N002",
+        "TV6996-X1-N003",
+        "TV6996-X1-N004"
+      ],
+      "scope_boundary": "Same-owner metadata only; no authority or Stage 20 claim."
+    }
+  ],
+  "witnesses": [
+    {
+      "witness_id": "TV6996-X1-N002-OFFICIAL-FAIL",
+      "method_id": "TV6996-M-X1-METHOD-FLOW-SCHEMA",
+      "procedure": "Run the first official schema validation for the domain Method Flow ledger.",
+      "scope": "Method Flow metadata",
+      "expected": "schema-valid append-only ledger",
+      "observed": "missing backlinks, retained-negative linkage, or exact derived counts",
+      "result": "fail",
+      "same_owner_only": true,
+      "independent_reproduction": false,
+      "retained_negative_ids": [
+        "TV6996-X1-N002"
+      ],
+      "boundary": "Same-owner metadata only; no authority or Stage 20 claim."
+    },
+    {
+      "witness_id": "TV6996-X1-N002-OFFICIAL-PASS",
+      "method_id": "TV6996-M-X1-METHOD-FLOW-SCHEMA",
+      "procedure": "Run the official validator after the metadata-only correction for the domain Method Flow ledger.",
+      "scope": "corrected Method Flow metadata",
+      "expected": "zero official issues",
+      "observed": "zero official issues across 10 methods and 1350 witnesses",
+      "result": "pass",
+      "same_owner_only": true,
+      "independent_reproduction": false,
+      "retained_negative_ids": [
+        "TV6996-X1-N002"
+      ],
+      "boundary": "Same-owner metadata only; no authority or Stage 20 claim."
+    },
+    {
+      "witness_id": "TV6996-X1-N003-OFFICIAL-FAIL",
+      "method_id": "TV6996-M-X1-METHOD-FLOW-SCHEMA",
+      "procedure": "Run the first official schema validation for the skill and runner Method Flow ledger.",
+      "scope": "Method Flow metadata",
+      "expected": "schema-valid append-only ledger",
+      "observed": "missing backlinks, retained-negative linkage, or exact derived counts",
+      "result": "fail",
+      "same_owner_only": true,
+      "independent_reproduction": false,
+      "retained_negative_ids": [
+        "TV6996-X1-N003"
+      ],
+      "boundary": "Same-owner metadata only; no authority or Stage 20 claim."
+    },
+    {
+      "witness_id": "TV6996-X1-N003-OFFICIAL-PASS",
+      "method_id": "TV6996-M-X1-METHOD-FLOW-SCHEMA",
+      "procedure": "Run the official validator after the metadata-only correction for the skill and runner Method Flow ledger.",
+      "scope": "corrected Method Flow metadata",
+      "expected": "zero official issues",
+      "observed": "zero official issues across 15 methods and 40 witnesses",
+      "result": "pass",
+      "same_owner_only": true,
+      "independent_reproduction": false,
+      "retained_negative_ids": [
+        "TV6996-X1-N003"
+      ],
+      "boundary": "Same-owner metadata only; no authority or Stage 20 claim."
+    },
+    {
+      "witness_id": "TV6996-X1-N004-OFFICIAL-FAIL",
+      "method_id": "TV6996-M-X1-METHOD-FLOW-SCHEMA",
+      "procedure": "Run the first official schema validation for the postprocess Method Flow ledger.",
+      "scope": "Method Flow metadata",
+      "expected": "schema-valid append-only ledger",
+      "observed": "missing backlinks, retained-negative linkage, or exact derived counts",
+      "result": "fail",
+      "same_owner_only": true,
+      "independent_reproduction": false,
+      "retained_negative_ids": [
+        "TV6996-X1-N004"
+      ],
+      "boundary": "Same-owner metadata only; no authority or Stage 20 claim."
+    },
+    {
+      "witness_id": "TV6996-X1-N004-OFFICIAL-PASS",
+      "method_id": "TV6996-M-X1-METHOD-FLOW-SCHEMA",
+      "procedure": "Run the official validator after the metadata-only correction for the postprocess Method Flow ledger.",
+      "scope": "corrected Method Flow metadata",
+      "expected": "zero official issues",
+      "observed": "zero official issues across 1 methods and 2 witnesses",
+      "result": "pass",
+      "same_owner_only": true,
+      "independent_reproduction": false,
+      "retained_negative_ids": [
+        "TV6996-X1-N004"
+      ],
+      "boundary": "Same-owner metadata only; no authority or Stage 20 claim."
+    }
+  ],
+  "state_events": [
+    {
+      "method_id": "TV6996-M-X1-METHOD-FLOW-SCHEMA",
+      "from": "candidate",
+      "to": "preferred",
+      "failed_witnesses_retained": true
+    }
+  ],
+  "recommendations": [
+    {
+      "method_id": "TV6996-M-X1-METHOD-FLOW-SCHEMA",
+      "state": "preferred"
+    }
+  ],
+  "counts": {
+    "methods": 1,
+    "witnesses": 6,
+    "state_events": 1,
+    "recommendations": 1,
+    "states": {
+      "observed": 0,
+      "candidate": 0,
+      "validated": 0,
+      "preferred": 1,
+      "superseded": 0,
+      "deprecated": 0
+    },
+    "witness_results": {
+      "pass": 3,
+      "fail": 3
+    }
+  },
+  "boundary": "Same-owner metadata correction only; no domain replay, independent reproduction, authority, proof, canon, or Stage 20 claim."
+}

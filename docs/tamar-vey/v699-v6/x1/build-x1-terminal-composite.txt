@@ -1,0 +1,149 @@
+"use strict";
+
+const fs = require("fs");
+const path = require("path");
+const vm = require("vm");
+
+const ROOT = process.cwd();
+const BASE = path.join(ROOT, "docs", "tamar-vey", "v699-v6");
+const X1 = path.join(BASE, "x1");
+const SKILLS = path.join(BASE, "skills");
+const RUNNERS = path.join(BASE, "runners");
+const BOUNDARY = "Bounded same-owner x1 finite synthetic hypergraph evidence only. It is not observation, independent reproduction, external audit, professional or production validation, complete privacy or accessibility assurance, exhaustive security, legal or cultural authority, Maori authority, proof, canon, or Stage 20 evidence.";
+
+function read(name) {
+  return JSON.parse(fs.readFileSync(path.join(X1, name), "utf8"));
+}
+
+function files(directory) {
+  const result = [];
+  for (const entry of fs.readdirSync(directory, { withFileTypes: true })) {
+    const full = path.join(directory, entry.name);
+    if (entry.isDirectory()) result.push(...files(full));
+    else result.push(full);
+  }
+  return result;
+}
+
+const execution = read("execution.json");
+const firstValidation = read("validation.json");
+const isolated = read("validation-correction.json");
+const domainFlow = read("method-flow.json");
+const validationFlow = read("method-flow-validation.json");
+const postprocessFlow = read("method-flow-postprocess.json");
+const schemaCorrection = read("method-flow-schema-correction.json");
+const schemaFlow = read("method-flow-schema-correction-ledger.json");
+const capabilities = read("capabilities.json");
+const issues = [];
+
+if (execution.domain_aggregate_invocations !== 1 || execution.domain_aggregate_successes !== 1 || execution.domain_aggregate_replays !== 0) issues.push("domain_latch");
+if (firstValidation.status !== "INVALID_X1" || JSON.stringify(firstValidation.issues) !== JSON.stringify(["document_word_ceiling"])) issues.push("first_validation_truth");
+if (isolated.status !== "VALID_X1_WITH_ISOLATED_POSTPROCESS_CORRECTION" || isolated.domain_checks_replayed || isolated.skill_checks_replayed || isolated.runner_smokes_replayed) issues.push("isolated_recovery_truth");
+if (schemaCorrection.corrected_official_validation !== "three_ledgers_valid_zero_issues") issues.push("official_method_flow_correction");
+if (capabilities.skills.some((skill) => skill.quick_validation !== "pass" || skill.smoke_use !== "read_through_eof_and_contract_selected")) issues.push("skill_status");
+if (capabilities.runners.some((runner) => runner.syntax !== "pass" || runner.accepting_smoke !== "pass" || runner.rejecting_smoke !== "pass")) issues.push("runner_status");
+
+const correctionFiles = [
+  "correct-method-flow-size.txt",
+  "validate-x1-postprocess.txt",
+  "postprocess-correction.json",
+  "method-flow-postprocess.json",
+  "validation-correction.json",
+  "correct-method-flow-schema.txt",
+  "finalize-method-flow-schema-correction.txt",
+  "method-flow-schema-correction.json",
+  "method-flow-schema-correction-ledger.json",
+  "build-x1-terminal-composite.txt"
+];
+let correctionJsonParsed = 0;
+let correctionTxtSyntax = 0;
+for (const name of correctionFiles) {
+  const full = path.join(X1, name);
+  if (!fs.existsSync(full)) issues.push(`missing_correction_file:${name}`);
+  else if (name.endsWith(".json")) {
+    JSON.parse(fs.readFileSync(full, "utf8"));
+    correctionJsonParsed += 1;
+  } else if (name.endsWith(".txt")) {
+    new vm.Script(fs.readFileSync(full, "utf8"), { filename: name });
+    correctionTxtSyntax += 1;
+  }
+}
+
+const patterns = [
+  ["raw_task_or_thread_identifier", /\b(?:threadId|thread_id|task_id)\b|\b[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}\b/gi],
+  ["private_absolute_path", /\b[A-Za-z]:\\/g],
+  ["credential_or_private_key", /\b(?:sk-[A-Za-z0-9_-]{20,}|ghp_[A-Za-z0-9]{20,}|BEGIN (?:RSA |EC )?PRIVATE KEY)\b/g],
+  ["private_conversation_or_session_stream", /\b(?:raw transcript|session stream|private screenshot)\b/gi],
+  ["private_callable_or_application_state", /\b(?:callable_identifier|private application state|private app state)\b/gi]
+];
+const privacyCandidates = [];
+for (const name of correctionFiles) {
+  const full = path.join(X1, name);
+  if (!fs.existsSync(full)) continue;
+  const text = fs.readFileSync(full, "utf8");
+  for (const [kind, pattern] of patterns) {
+    const count = (text.match(pattern) || []).length;
+    if (count) privacyCandidates.push({ path: `docs/tamar-vey/v699-v6/x1/${name}`, kind, count, adjudication: name === "build-x1-terminal-composite.txt" ? "scanner_definition" : "unresolved" });
+  }
+}
+const confirmedPrivacy = privacyCandidates.filter((candidate) => candidate.adjudication !== "scanner_definition");
+if (confirmedPrivacy.length) issues.push("incremental_privacy_confirmed");
+
+const ownerFiles = [...files(X1), ...files(SKILLS), ...files(RUNNERS)];
+let maximumDocument = { path: "", words: 0, bytes: 0 };
+for (const file of ownerFiles) {
+  const raw = fs.readFileSync(file, "utf8");
+  const wordCount = raw.trim().length ? raw.trim().split(/\s+/).length : 0;
+  if (wordCount > maximumDocument.words) maximumDocument = { path: path.relative(ROOT, file).replaceAll("\\", "/"), words: wordCount, bytes: Buffer.byteLength(raw) };
+}
+if (maximumDocument.words > 100000) issues.push("document_word_ceiling");
+if (fs.readdirSync(path.join(BASE, "x2")).length !== 0) issues.push("premature_x2_materialization");
+
+const flows = [domainFlow, validationFlow, postprocessFlow, schemaFlow];
+const retainedNegativeUnion = new Set();
+const methodTotals = flows.reduce((acc, flow) => {
+  acc.methods += flow.methods.length;
+  acc.witnesses += flow.witnesses.length;
+  acc.passing_witnesses += flow.witnesses.filter((witness) => witness.result === "pass").length;
+  acc.failed_witnesses += flow.witnesses.filter((witness) => witness.result === "fail").length;
+  for (const negativeId of flow.methods.flatMap((method) => method.retained_negative_ids)) retainedNegativeUnion.add(negativeId);
+  return acc;
+}, { methods: 0, witnesses: 0, passing_witnesses: 0, failed_witnesses: 0, negatives: 0 });
+methodTotals.negatives = retainedNegativeUnion.size;
+
+const receipt = {
+  schema: "tamar.x1-terminal-composite.v1",
+  status: issues.length ? "INVALID_X1_TERMINAL_COMPOSITE" : "VALID_X1_TERMINAL_COMPOSITE_WITH_RETAINED_FAILURES",
+  issues,
+  planning_parent: "ead7018c661745bfcc380aa6b91e18c1b8ba0bb7",
+  domain_aggregate: { invocations: 1, successes: 1, replays: 0 },
+  contracts: 150,
+  exact_matches: 150,
+  outcomes: { completed: 150, represented: 0, open_gap: 0, exact_gate: 0 },
+  contract_invalid_subjects_retained: 450,
+  passing_contract_refusals: 450,
+  first_metadata_validation: { status: firstValidation.status, issues: firstValidation.issues, success_credit: 0 },
+  isolated_postprocess_recovery: isolated.status,
+  first_official_method_flow_validations: { failed_invocations: 3, success_credit: 0, issue_counts: [1201, 16, 2] },
+  corrected_official_method_flow_validations: { invocations: 3, successes: 3, issues: 0 },
+  correction_ledger_official_validation: { invocations: 1, successes: 1, issues: 0 },
+  successful_domain_or_component_replay: false,
+  skills_read_and_validated: capabilities.skills.length,
+  runners_accepting_and_rejecting_smoke_used: capabilities.runners.length,
+  local_method_flow: methodTotals,
+  incremental_correction_json_parsed: correctionJsonParsed,
+  incremental_correction_txt_syntax_checked: correctionTxtSyntax,
+  incremental_privacy_candidates: privacyCandidates,
+  incremental_privacy_confirmed_hits: confirmedPrivacy,
+  owner_files: ownerFiles.length + 1,
+  maximum_document: maximumDocument,
+  x2_implemented_or_executed: false,
+  full_repository_suite: false,
+  same_owner_only: true,
+  independent_reproduction: false,
+  terminal_verdict: "NOT_READY_FOR_STAGE_20",
+  boundary: BOUNDARY
+};
+fs.writeFileSync(path.join(X1, "terminal-composite.json"), `${JSON.stringify(receipt, null, 2)}\n`, "utf8");
+process.stdout.write(`${JSON.stringify({ status: receipt.status, issues, contracts: receipt.contracts, skills: receipt.skills_read_and_validated, runners: receipt.runners_accepting_and_rejecting_smoke_used, method_flow: methodTotals, maximum_document_words: maximumDocument.words, incremental_privacy_confirmed: confirmedPrivacy.length, terminal_verdict: receipt.terminal_verdict })}\n`);
+process.exitCode = issues.length ? 2 : 0;

@@ -1,0 +1,110 @@
+"use strict";
+
+const fs = require("fs");
+const path = require("path");
+const vm = require("vm");
+
+const ROOT = process.cwd();
+const BASE = path.join(ROOT, "docs", "tamar-vey", "v699-v6");
+const X1 = path.join(BASE, "x1");
+const SKILLS = path.join(BASE, "skills");
+const RUNNERS = path.join(BASE, "runners");
+const composite = JSON.parse(fs.readFileSync(path.join(X1, "terminal-composite.json"), "utf8"));
+const correctionFlow = JSON.parse(fs.readFileSync(path.join(X1, "method-flow-composite-correction.json"), "utf8"));
+const issues = [];
+if (composite.status !== "VALID_X1_TERMINAL_COMPOSITE_WITH_RETAINED_FAILURES" || composite.local_method_flow.negatives !== 459) issues.push("corrected_composite");
+if (correctionFlow.counts.witness_results.pass !== 1 || correctionFlow.counts.witness_results.fail !== 1) issues.push("composite_correction_flow");
+
+function files(directory) {
+  const result = [];
+  for (const entry of fs.readdirSync(directory, { withFileTypes: true })) {
+    const full = path.join(directory, entry.name);
+    if (entry.isDirectory()) result.push(...files(full)); else result.push(full);
+  }
+  return result;
+}
+
+const all = [...files(X1), ...files(SKILLS), ...files(RUNNERS)];
+let max = { path: "", words: 0, bytes: 0 };
+for (const file of all) {
+  const raw = fs.readFileSync(file, "utf8");
+  const wordCount = raw.trim().length ? raw.trim().split(/\s+/).length : 0;
+  if (wordCount > max.words) max = { path: path.relative(ROOT, file).replaceAll("\\", "/"), words: wordCount, bytes: Buffer.byteLength(raw) };
+  if (![".json", ".md", ".txt", ".html"].includes(path.extname(file).toLowerCase())) issues.push(`forbidden_extension:${path.relative(ROOT, file)}`);
+}
+if (max.words > 100000) issues.push("document_word_ceiling");
+
+const incremental = ["correct-x1-composite-count.txt", "terminal-composite-first-invalid.json", "method-flow-composite-correction.json", "build-x1-terminal-seal.txt"];
+let jsonParsed = 0;
+let txtSyntax = 0;
+for (const name of incremental) {
+  const file = path.join(X1, name);
+  if (!fs.existsSync(file)) issues.push(`missing:${name}`);
+  else if (name.endsWith(".json")) { JSON.parse(fs.readFileSync(file, "utf8")); jsonParsed += 1; }
+  else { new vm.Script(fs.readFileSync(file, "utf8"), { filename: name }); txtSyntax += 1; }
+}
+
+const patterns = [
+  ["raw_task_or_thread_identifier", /\b(?:threadId|thread_id|task_id)\b|\b[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}\b/gi],
+  ["private_absolute_path", /\b[A-Za-z]:\\/g],
+  ["credential_or_private_key", /\b(?:sk-[A-Za-z0-9_-]{20,}|ghp_[A-Za-z0-9]{20,}|BEGIN (?:RSA |EC )?PRIVATE KEY)\b/g],
+  ["private_conversation_or_session_stream", /\b(?:raw transcript|session stream|private screenshot)\b/gi],
+  ["private_callable_or_application_state", /\b(?:callable_identifier|private application state|private app state)\b/gi]
+];
+const candidates = [];
+for (const name of incremental) {
+  const file = path.join(X1, name);
+  if (!fs.existsSync(file)) continue;
+  const text = fs.readFileSync(file, "utf8");
+  for (const [kind, pattern] of patterns) {
+    const count = (text.match(pattern) || []).length;
+    if (count) candidates.push({ path: `docs/tamar-vey/v699-v6/x1/${name}`, kind, count, adjudication: name === "build-x1-terminal-seal.txt" ? "scanner_definition" : "unresolved" });
+  }
+}
+const confirmed = candidates.filter((candidate) => candidate.adjudication !== "scanner_definition");
+if (confirmed.length) issues.push("privacy_confirmed_hits");
+if (fs.readdirSync(path.join(BASE, "x2")).length !== 0) issues.push("premature_x2_materialization");
+
+const local = {
+  methods: composite.local_method_flow.methods + correctionFlow.counts.methods,
+  witnesses: composite.local_method_flow.witnesses + correctionFlow.counts.witnesses,
+  passing_witnesses: composite.local_method_flow.passing_witnesses + correctionFlow.counts.witness_results.pass,
+  failed_witnesses: composite.local_method_flow.failed_witnesses + correctionFlow.counts.witness_results.fail,
+  negatives: composite.local_method_flow.negatives + 1
+};
+const seal = {
+  schema: "tamar.x1-terminal-seal.v1",
+  status: issues.length ? "INVALID_X1_TERMINAL_SEAL" : "VALID_X1_TERMINAL_SEAL_WITH_RETAINED_FAILURES",
+  issues,
+  planning_parent: "ead7018c661745bfcc380aa6b91e18c1b8ba0bb7",
+  domain_aggregate: { invocations: 1, successes: 1, replays: 0 },
+  contracts: 150,
+  exact_matches: 150,
+  outcomes: { completed: 150, represented: 0, open_gap: 0, exact_gate: 0 },
+  retained_contract_invalid_subjects: 450,
+  first_metadata_validator: "INVALID_X1_document_word_ceiling_zero_credit",
+  isolated_metadata_recovery: "VALID_X1_WITH_ISOLATED_POSTPROCESS_CORRECTION",
+  first_official_method_flow_validations: { failed_invocations: 3, success_credit: 0 },
+  corrected_official_method_flow_validations: { successful_invocations: 4, issues: 0 },
+  first_composite_projection: "INVALID_X1_TERMINAL_COMPOSITE_NEGATIVE_DOUBLE_COUNT",
+  corrected_composite_projection: "VALID_X1_TERMINAL_COMPOSITE_WITH_RETAINED_FAILURES",
+  domain_skill_runner_or_successful_component_replay: false,
+  skills_read_and_validated: 10,
+  paired_runners_accepting_and_rejecting_smoke_used: 5,
+  local_method_flow: local,
+  incremental_json_parsed: jsonParsed,
+  incremental_txt_syntax_checked: txtSyntax,
+  privacy_candidates: candidates,
+  privacy_confirmed_hits: confirmed,
+  owner_files_before_seal: all.length,
+  maximum_document: max,
+  x2_implemented_or_executed: false,
+  full_repository_suite: false,
+  same_owner_only: true,
+  independent_reproduction: false,
+  terminal_verdict: "NOT_READY_FOR_STAGE_20",
+  boundary: "Bounded same-owner x1 finite synthetic hypergraph evidence only; no empirical, participant, professional, production, legal, cultural, affected-party, Maori-authority, complete privacy/accessibility/security, independent-reproduction, identity, Theory-of-Everything, proof, canon, or Stage 20 claim."
+};
+fs.writeFileSync(path.join(X1, "terminal-seal.json"), `${JSON.stringify(seal, null, 2)}\n`, "utf8");
+process.stdout.write(`${JSON.stringify({ status: seal.status, issues, local_method_flow: local, maximum_document_words: max.words, privacy_confirmed: confirmed.length, terminal_verdict: seal.terminal_verdict })}\n`);
+process.exitCode = issues.length ? 2 : 0;

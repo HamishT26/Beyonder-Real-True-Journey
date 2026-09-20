@@ -1,0 +1,64 @@
+"use strict";
+
+const crypto = require("crypto");
+const fs = require("fs");
+const path = require("path");
+
+const ROOT = process.cwd();
+const X1 = path.join(ROOT, "docs", "tamar-vey", "v699-v6", "x1");
+const PLAN = JSON.parse(fs.readFileSync(path.join(ROOT, "docs", "tamar-vey", "v699-v6", "planning", "plan.json"), "utf8"));
+const TARGETS = ["method-flow.json", "method-flow-validation.json", "method-flow-postprocess.json"];
+const SHORT_BOUNDARY = "Same-owner finite synthetic x1 software only; no observation, independent reproduction, external authority, proof, canon, or Stage 20 claim.";
+
+function sha(bytes) {
+  return crypto.createHash("sha256").update(bytes).digest("hex");
+}
+
+function officialCounts(ledger) {
+  const states = { observed: 0, candidate: 0, validated: 0, preferred: 0, superseded: 0, deprecated: 0 };
+  const witnessResults = { pass: 0, fail: 0 };
+  for (const method of ledger.methods) states[method.recommendation_state] += 1;
+  for (const witness of ledger.witnesses) witnessResults[witness.result] += 1;
+  return { methods: ledger.methods.length, witnesses: ledger.witnesses.length, state_events: ledger.state_events.length, recommendations: ledger.recommendations.length, states, witness_results: witnessResults };
+}
+
+const corrections = [];
+for (const name of TARGETS) {
+  const filePath = path.join(X1, name);
+  const originalBytes = fs.readFileSync(filePath);
+  const ledger = JSON.parse(originalBytes.toString("utf8"));
+  for (const method of ledger.methods) {
+    method.validation_witness_ids = ledger.witnesses.filter((witness) => witness.method_id === method.method_id).map((witness) => witness.witness_id);
+    if (!Array.isArray(method.retained_negative_ids) || method.retained_negative_ids.length === 0) {
+      const operation = method.method_id.split("SKILL-")[1];
+      const sourceContract = PLAN.contracts.find((contract) => contract.stage === "x1" && contract.operation === operation);
+      if (!sourceContract) throw new Error(`cannot bind retained negative for ${method.method_id}`);
+      method.retained_negative_ids = [sourceContract.mutations[0].id];
+    }
+    method.scope_boundary = method.scope_boundary || SHORT_BOUNDARY;
+  }
+  ledger.counts = officialCounts(ledger);
+  ledger.boundary = ledger.boundary || SHORT_BOUNDARY;
+  const corrected = `${JSON.stringify(ledger, null, 2)}\n`;
+  fs.writeFileSync(filePath, corrected, "utf8");
+  corrections.push({ file: name, original_sha256: sha(originalBytes), corrected_sha256: sha(Buffer.from(corrected, "utf8")), methods: ledger.methods.length, witnesses: ledger.witnesses.length, counts: ledger.counts });
+}
+
+const receipt = {
+  schema: "tamar.x1-method-flow-schema-correction.v1",
+  failures: [
+    { id: "TV6996-X1-N002", ledger: "method-flow.json", official_issue_count: 1201, status: "retained_zero_credit" },
+    { id: "TV6996-X1-N003", ledger: "method-flow-validation.json", official_issue_count: 16, status: "retained_zero_credit" },
+    { id: "TV6996-X1-N004", ledger: "method-flow-postprocess.json", official_issue_count: 2, status: "retained_zero_credit" }
+  ],
+  correction: "Add every witness backlink, bind each method to an existing retained negative, and replace custom derived counts with the exact official schema.",
+  corrections,
+  domain_aggregate_replayed: false,
+  successful_skill_checks_replayed: false,
+  successful_runner_smokes_replayed: false,
+  failure_converted_to_pass: false,
+  corrected_official_validation: "pending",
+  boundary: SHORT_BOUNDARY
+};
+fs.writeFileSync(path.join(X1, "method-flow-schema-correction.json"), `${JSON.stringify(receipt, null, 2)}\n`, "utf8");
+process.stdout.write(`${JSON.stringify({ status: "X1_METHOD_FLOW_SCHEMA_CORRECTED", ledgers: corrections.length, retained_failures: receipt.failures.length, domain_aggregate_replayed: false })}\n`);
