@@ -1,0 +1,14 @@
+// Node.js CommonJS. One bounded stage probe; no planning-oracle import.
+'use strict';
+const fs=require('node:fs'),path=require('node:path');
+const stage=process.argv[2];if(!['x1','x2'].includes(stage))throw new Error('stage');
+const engine=require(path.join(__dirname,stage,'runtime.txt'));
+const requests=JSON.parse(fs.readFileSync(0,'utf8'));
+if(!Array.isArray(requests)||requests.length!==600)throw new Error('request_count');
+const results=[];
+for(const q of requests){
+  const before=JSON.stringify(q);let output;
+  try{output=engine.run(q);}catch(e){output=engine.errorEnvelope(e);}
+  results.push({output,input_preserved:JSON.stringify(q)===before});
+}
+process.stdout.write(JSON.stringify({results,domain_stage:stage,independent_reproduction:false})+'\n');

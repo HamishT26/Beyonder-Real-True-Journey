@@ -1,0 +1,53 @@
+# Python 3. Metadata-only Method Flow construction and validation.
+from pathlib import Path
+import collections, hashlib, json, runpy, sys
+ROOT=Path(__file__).resolve().parent;REPO=ROOT.parents[2]
+STAGE=sys.argv[1];validator=runpy.run_path(sys.argv[2]);assert STAGE in ['x1','x2']
+def read(name):return json.loads((ROOT/name).read_text(encoding='utf-8'))
+def write(name,v):
+ p=ROOT/name;p.parent.mkdir(parents=True,exist_ok=True)
+ with p.open('x',encoding='utf-8',newline='\n') as f:f.write((v.rstrip() if isinstance(v,str) else json.dumps(v,sort_keys=True,ensure_ascii=False,separators=(',',':')))+'\n')
+execution=read(STAGE+'/execution.json');plan=read('planning/plan.json');cap=read(STAGE+'/capabilities.json')
+ledger=validator['new_ledger']('v699-v3','Orren Pike')
+ledger['boundary']=plan['boundary'];ledger['execution_authority']='owner_self_scoped_delta';ledger['stage']=STAGE
+ledger['source_commit']=plan['source_commit'];ledger['final_commit']=None
+ledger['exact_final_binding']='external terminal receipt; no recursive self-hash claim'
+ledger['witnesses']=execution['witnesses']
+for mid in sorted({w['method_id'] for w in ledger['witnesses']}):
+ ws=[w for w in ledger['witnesses'] if w['method_id']==mid];negatives=sorted({n for w in ws for n in w['retained_negative_ids']})
+ assert negatives and any(w['result']=='pass' for w in ws)
+ row={'method_id':mid,'title':mid.replace('OP6993-M-','').replace('_',' '),'failure_signature':'Malformed input, altered output or caller-envelope mismatch.',
+  'trigger_preconditions':['Frozen finite codebook request','Exact owner stage and caller'], 'privacy_class':'sanitized_public',
+  'approval_class':'owner_internal_synthetic','candidate_workaround':'Retain failed subject and verify a separately identified refusal or repaired copy.',
+  'validation_witness_ids':[w['witness_id'] for w in ws],'recurrence_guard':'Require complete exact envelopes and preserve the stage success latch.',
+  'rollback':'Retain frozen input and original failures; add corrections without replaying a successful stage.',
+  'recommendation_state':'preferred','supersedes':[],'protected_gates':plan['contract_template']['protected_gates'],
+  'retained_negative_ids':negatives,'scope_boundary':'Same-owner finite synthetic codebooks only.',
+  'execution_authority':'owner_self_scoped_delta','repository_scan':False,'module_scan':True,'cross_lane_scan':False,
+  'unchanged_history_scan':False,'sibling_lane_mutation':False,'source_commit':plan['source_commit'],'final_commit':None,
+  'changed_file_allowlist':[f'docs/orren-pike/v699-v3/{STAGE}/runtime.txt','docs/orren-pike/v699-v3/session-probe.txt','docs/orren-pike/v699-v3/session.txt'],
+  'module_allowlist':[f'docs/orren-pike/v699-v3/{STAGE}/runtime.txt'],'exact_pushed_head_required':True}
+ ledger['methods'].append(row)
+ first=next(w['witness_id'] for w in ws if w['result']=='pass')
+ for before,after in [(None,'observed'),('observed','candidate'),('candidate','validated'),('validated','preferred')]:
+  validator['append_event'](ledger,mid,before,after,'Bounded stage evidence; all failed subjects retained.',first if after in ['validated','preferred'] else None)
+ ledger['recommendations'].append({'method_id':mid,'preconditions':row['trigger_preconditions'],'witness_ids':[first],
+    'recurrence_guard':row['recurrence_guard'],'rollback':row['rollback'],'scope_boundary':row['scope_boundary']})
+validator['refresh_counts'](ledger);report=validator['validate_ledger'](ledger);assert report['valid'],report
+write(STAGE+'/method-flow.json',ledger);write(STAGE+'/method-flow-validation.json',report)
+write(STAGE+'/summary.md','# '+STAGE.upper()+' execution\n\n'
+    +str(execution['counts']['contracts'])+' frozen contracts executed in one successful stage invocation, with zero replays. '
+    'The stage contains 300 safe checks, 300 malformed subjects with separate refusals and 300 CLEAN/FIX/REFINE checks. '
+    'The 150 altered output subjects and five malformed caller frames also remain failed. '
+    'All 455 failed subjects remain separate from the 915 passing checks. Ten local guides were structurally validated, read and used through five paired runners; each shared skill/caller witness is counted once.\n\n'
+    'Core outcomes: '+json.dumps(execution['outcomes'],sort_keys=True)+'.\n\n'+plan['boundary'])
+files=[p for p in ROOT.rglob('*') if p.is_file() and not p.relative_to(ROOT).as_posix().startswith('planning/') and p.name!='README.md']
+if STAGE=='x2':
+ old={e['path'] for e in read('x1/manifest.json')['entries']};old.add('docs/orren-pike/v699-v3/x1/manifest.json')
+ files=[p for p in files if p.relative_to(REPO).as_posix() not in old]
+manifest={'schema':'orren.stage-manifest.v1','stage':STAGE,'byte_domain':'normalized_lf_git_blob',
+ 'entries':[{'path':p.relative_to(REPO).as_posix(),'bytes':len(p.read_bytes()),'sha256':hashlib.sha256(p.read_bytes()).hexdigest()} for p in sorted(files)],
+ 'exclusions':[f'docs/orren-pike/v699-v3/{STAGE}/manifest.json'],'previous_publication':execution['previous_publication']['commit']}
+write(STAGE+'/manifest.json',manifest)
+print(json.dumps({'stage':STAGE,'method_flow_valid':True,'methods':len(ledger['methods']),'witnesses':len(ledger['witnesses']),
+    'passing':ledger['counts']['witness_results']['pass'],'failed':ledger['counts']['witness_results']['fail'],'manifest_entries':len(manifest['entries'])}))

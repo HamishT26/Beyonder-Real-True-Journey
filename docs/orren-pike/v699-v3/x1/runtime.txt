@@ -1,0 +1,118 @@
+// Node.js CommonJS. X1 execution engine; never imports the planning oracle.
+'use strict';
+const fs = require('node:fs');
+const OPS = ['word_lengths','prefix_conflicts','suffix_conflicts','kraft_measure','trie_vertices','trie_edges',
+  'trie_degrees','common_prefix_lengths','common_suffix_lengths','pair_collisions'];
+const SCOPE = 'finite_binary_codebook_only';
+function fail(code) { const e = new Error(code); e.code = code; throw e; }
+function strictParse(text) {
+  if (Buffer.byteLength(text,'utf8') > 65536) fail('json_bytes');
+  let at=0;
+  function ws(){while(at<text.length && /[\x20\t\r\n]/.test(text[at])) at++;}
+  function string(){
+    const start=at++;
+    while(at<text.length){
+      const c=text[at++];
+      if(c==='"'){try{return JSON.parse(text.slice(start,at));}catch{fail('json_syntax');}}
+      if(c==='\\') at++;
+    }
+    fail('json_syntax');
+  }
+  function value(depth){
+    if(depth>20) fail('json_depth');ws();
+    const c=text[at];
+    if(c==='"')return string();
+    if(c==='{'){
+      at++;ws();const obj=Object.create(null),keys=new Set();
+      if(text[at]==='}'){at++;return obj;}
+      while(at<text.length){
+        ws();if(text[at]!=='"')fail('json_syntax');const k=string();
+        if(keys.has(k))fail('duplicate_key');keys.add(k);ws();if(text[at++]!==':')fail('json_syntax');obj[k]=value(depth+1);ws();
+        if(text[at]==='}'){at++;return obj;}if(text[at++]!==',')fail('json_syntax');
+      }
+      fail('json_syntax');
+    }
+    if(c==='['){
+      at++;ws();const arr=[];if(text[at]===']'){at++;return arr;}
+      while(at<text.length){arr.push(value(depth+1));ws();if(text[at]===']'){at++;return arr;}if(text[at++]!==',')fail('json_syntax');}
+      fail('json_syntax');
+    }
+    for(const [token,result] of [['true',true],['false',false],['null',null]])if(text.startsWith(token,at)){at+=token.length;return result;}
+    const m=/^-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?/.exec(text.slice(at));
+    if(m){at+=m[0].length;const n=Number(m[0]);if(!Number.isFinite(n))fail('json_number');return n;}
+    fail('json_syntax');
+  }
+  const result=value(0);ws();if(at!==text.length)fail('json_syntax');return result;
+}
+function validate(q,ops=OPS){
+  if(!q || typeof q!=='object' || Array.isArray(q))fail('field_set');
+  if(Object.keys(q).sort().join(',')!=='codewords,limit,op,probe,sequence')fail('field_set');
+  if(typeof q.op!=='string'||!ops.includes(q.op))fail('operation');
+  if(!Array.isArray(q.codewords)||q.codewords.length<1||q.codewords.length>6)fail('codeword_shape');
+  if(q.codewords.some(w=>typeof w!=='string'||!/^[01]{1,6}$/.test(w)))fail('codeword_value');
+  if(new Set(q.codewords).size!==q.codewords.length)fail('duplicate_codeword');
+  if(typeof q.probe!=='string'||!/^[01]{0,18}$/.test(q.probe))fail('probe');
+  if(!Array.isArray(q.sequence)||q.sequence.length<1||q.sequence.length>3||q.sequence.some(i=>!Number.isInteger(i)||i<0||i>=q.codewords.length))fail('sequence');
+  if(!Number.isInteger(q.limit)||q.limit<1||q.limit>12)fail('limit');
+}
+function stable(v){
+  if(Array.isArray(v))return '['+v.map(stable).join(',')+']';
+  if(v&&typeof v==='object')return '{'+Object.keys(v).sort().map(k=>JSON.stringify(k)+':'+stable(v[k])).join(',')+'}';
+  return JSON.stringify(v);
+}
+function freeze(v){if(v&&typeof v==='object'){Object.values(v).forEach(freeze);Object.freeze(v);}return v;}
+function nodesFor(words){
+  const trie=new Set(['']);
+  for(const word of words){let s='';for(const bit of word){s+=bit;trie.add(s);}}
+  return [...trie].sort();
+}
+function prefixPairs(words,suffix=false){
+  const out=[];
+  for(let i=0;i<words.length;i++)for(let j=0;j<words.length;j++){
+    const a=words[i],b=words[j];
+    if(i!==j&&a.length<b.length&&(suffix?b.endsWith(a):b.startsWith(a)))out.push({short:i,long:j,residual:suffix?b.slice(0,b.length-a.length):b.slice(a.length)});
+  }
+  return out;
+}
+function common(a,b){let i=0;while(i<a.length&&i<b.length&&a[i]===b[i])i++;return i;}
+function success(op,result,outcome='completed'){return {ok:true,operation:op,outcome,result,scope:SCOPE,independent_reproduction:false};}
+function errorEnvelope(e){return {ok:false,error:e.code||'internal_error',outcome:'exact_gate',scope:SCOPE,independent_reproduction:false};}
+function run(q){
+  validate(q);const before=stable(q);freeze(q);
+  const w=q.codewords,ls=w.map(x=>x.length),nodes=nodesFor(w);let result;
+  switch(q.op){
+    case 'word_lengths':result={lengths:ls,minimum:Math.min(...ls),maximum:Math.max(...ls)};break;
+    case 'prefix_conflicts':{const conflicts=prefixPairs(w);result={conflicts,prefix_free:conflicts.length===0};break;}
+    case 'suffix_conflicts':{const conflicts=prefixPairs(w,true);result={conflicts,suffix_free:conflicts.length===0};break;}
+    case 'kraft_measure':{
+      let den=1n<<BigInt(Math.max(...ls)),num=ls.reduce((a,n)=>a+(den>>BigInt(n)),0n);
+      const relation_to_one=num===den?'equal':num<den?'below':'above';
+      let a=num,b=den;while(b){const t=a%b;a=b;b=t;}num/=a;den/=a;
+      result={numerator:String(num),denominator:String(den),relation_to_one,unique_decodability_not_inferred_from_sum:true};break;
+    }
+    case 'trie_vertices':result={vertices:nodes.map(bits=>({bits,terminal:w.includes(bits)?w.indexOf(bits):null}))};break;
+    case 'trie_edges':result={edges:nodes.filter(Boolean).map(s=>[s.slice(0,-1),s.slice(-1),s])};break;
+    case 'trie_degrees':{
+      const histogram=[0,0,0];let edges=0;
+      for(const s of nodes){const degree=Number(nodes.includes(s+'0'))+Number(nodes.includes(s+'1'));histogram[degree]++;edges+=degree;}
+      result={histogram,vertices:nodes.length,edges};break;
+    }
+    case 'common_prefix_lengths':result={matrix:w.map(a=>w.map(b=>common(a,b)))};break;
+    case 'common_suffix_lengths':{const v=w.map(s=>s.split('').reverse().join(''));result={matrix:v.map(a=>v.map(b=>common(a,b)))};break;}
+    case 'pair_collisions':{
+      const groups=new Map();for(let i=0;i<w.length;i++)for(let j=0;j<w.length;j++){const bits=w[i]+w[j];if(!groups.has(bits))groups.set(bits,[]);groups.get(bits).push([i,j]);}
+      result={collisions:[...groups.keys()].sort().filter(s=>groups.get(s).length>1).map(bits=>({bits,messages:groups.get(bits)})),scope:'two_codewords_each_side_only'};break;
+    }
+    default:fail('operation');
+  }
+  if(before!==stable(q))fail('input_mutation');return success(q.op,result);
+}
+function makeCli(engine,allowed){
+  try{
+    const q=strictParse(fs.readFileSync(0,'utf8'));
+    if(allowed&&(!q||!allowed.includes(q.op)))fail('runner_operation');
+    process.stdout.write(JSON.stringify(engine(q))+'\n');
+  }catch(e){process.stdout.write(JSON.stringify(errorEnvelope(e))+'\n');process.exitCode=2;}
+}
+module.exports={OPS,SCOPE,fail,strictParse,validate,stable,freeze,nodesFor,prefixPairs,success,errorEnvelope,run,makeCli,
+  cli:allowed=>makeCli(run,allowed)};
