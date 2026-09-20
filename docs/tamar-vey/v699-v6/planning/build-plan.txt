@@ -1,0 +1,559 @@
+"use strict";
+
+const crypto = require("crypto");
+const fs = require("fs");
+const path = require("path");
+const { spawnSync } = require("child_process");
+
+const ROOT = process.cwd();
+const OUT = path.join(ROOT, "docs", "tamar-vey", "v699-v6", "planning");
+const SOURCE = "09c0f4a0287bf49dd303b1aebe95e71fe8c6d060";
+const SOURCE_PLAN = "docs/liora-venn/v699-v5/planning/plan.json";
+const PHASE = "v699-v6";
+const OWNER = "Tamar Vey";
+const BOUNDARY = "Bounded same-owner finite synthetic hypergraph software and documentation only. No real person, participant, bookbinder, client, book, edition, signature, material, tool, workplace, measurement, observation, allocation, identity event, credential, deployment, professional decision, legal or cultural decision, affected-party decision, Maori-data-governance decision, or authority act is used. Relational names, roles, hopes, pronouns, sibling and family language establish no consciousness, sentience, personhood, continuity, employment, qualification, independent agency, or authority. GMUT remains a typed scalar-tensor and effective-field-theory research-model family without empirical confirmation, prediction, parameter constraint, quantum or ultraviolet completion, final physics, or Theory-of-Everything proof. THOS remains synthetic or proxy-only and Freed ID remains synthetic and nonproduction. Professional, safety, legal, cultural, affected-party, privacy-remedy, accessibility-remedy, Maori wording, Maori data governance, and Maori authority remain exact-gated. Maori concepts remain under Maori authority. No complete privacy or accessibility, exhaustive security, independent reproduction, AGI/ASI, proof, canon, or Stage 20 claim. NOT_READY_FOR_STAGE_20.";
+const PROTECTED = [
+  "empirical confirmation",
+  "real participants observations or measurements",
+  "professional bookbinding conservation and safety authority",
+  "production and deployment",
+  "legal cultural copyright ownership and custody authority",
+  "affected-party rights acceptance challenge and remedy",
+  "privacy and accessibility completeness",
+  "Maori wording data governance and authority",
+  "independent reproduction",
+  "consciousness personhood AGI ASI",
+  "Theory-of-Everything proof or canon",
+  "Stage 20"
+];
+
+function stable(value) {
+  if (Array.isArray(value)) return `[${value.map(stable).join(",")}]`;
+  if (value && typeof value === "object") {
+    return `{${Object.keys(value).sort().map((key) => `${JSON.stringify(key)}:${stable(value[key])}`).join(",")}}`;
+  }
+  return JSON.stringify(value);
+}
+
+function sha(value) {
+  const bytes = Buffer.isBuffer(value) ? value : Buffer.from(typeof value === "string" ? value : stable(value), "utf8");
+  return crypto.createHash("sha256").update(bytes).digest("hex");
+}
+
+function writeJson(name, value) {
+  fs.writeFileSync(path.join(OUT, name), `${JSON.stringify(value, null, 2)}\n`, "utf8");
+}
+
+function writeText(name, value) {
+  fs.writeFileSync(path.join(OUT, name), value.endsWith("\n") ? value : `${value}\n`, "utf8");
+}
+
+function gitShow(spec) {
+  const result = spawnSync("git", ["show", spec], { cwd: ROOT, encoding: "utf8", maxBuffer: 32 * 1024 * 1024 });
+  if (result.status !== 0) throw new Error(result.stderr || `git show failed for ${spec}`);
+  return result.stdout;
+}
+
+const operations = [
+  ["vertex_inventory", "Return the exact normalized finite vertex carrier.", "completed"],
+  ["edge_normalization", "Normalize each edge, remove duplicate edges, and retain isolated vertices.", "completed"],
+  ["incidence_matrix", "Build the exact vertex-by-edge zero-one incidence matrix.", "completed"],
+  ["vertex_degrees", "Count exact incident-edge degrees for every declared vertex.", "completed"],
+  ["pair_codegrees", "Count exact shared-edge codegrees for unordered vertex pairs.", "completed"],
+  ["induced_vertex_subhypergraph", "Restrict every edge to a declared focus set and normalize nonempty results.", "completed"],
+  ["edge_restriction", "Select exact edges wholly contained in a declared focus set.", "completed"],
+  ["primal_graph", "Construct the exact two-section graph from shared hyperedges.", "completed"],
+  ["line_graph", "Construct the exact edge-intersection graph.", "completed"],
+  ["berge_components", "Compute finite vertex components under shared-edge reachability.", "completed"],
+  ["transversal_enumeration", "Enumerate all inclusion-minimal finite hitting sets.", "completed"],
+  ["minimum_transversals", "Select minimum-cardinality transversals from the exact finite enumeration.", "completed"],
+  ["independent_set_enumeration", "Enumerate inclusion-maximal vertex sets containing no full hyperedge.", "completed"],
+  ["matching_enumeration", "Enumerate inclusion-maximal pairwise-disjoint edge families.", "completed"],
+  ["maximum_matchings", "Select maximum-cardinality pairwise-disjoint edge families.", "completed"],
+  ["exact_cover_enumeration", "Enumerate edge families that partition the declared vertex carrier exactly.", "completed"],
+  ["dual_hypergraph", "Transpose the finite incidence relation while preserving explicit labels.", "completed"],
+  ["blocker_projection", "Represent the minimal-transversal family without claiming a general complexity theorem.", "represented"],
+  ["hypergraph_external_observation_gap", "Keep real workshop observations and affected-user evaluation absent and open.", "open_gap"],
+  ["hypergraph_governance_authority_gate", "Keep release, custody, remedy, legal, cultural, and Maori authority unexecuted.", "exact_gate"]
+];
+
+const profiles = [
+  ["singleton", ["a"], [["a"]], ["a"]],
+  ["single_pair", ["a", "b"], [["a", "b"]], ["a"]],
+  ["disjoint_pairs", ["a", "b", "c", "d"], [["a", "b"], ["c", "d"]], ["a", "c"]],
+  ["path_three", ["a", "b", "c"], [["a", "b"], ["b", "c"]], ["a", "b"]],
+  ["triangle_three", ["a", "b", "c"], [["a", "b"], ["b", "c"], ["a", "c"]], ["a", "b"]],
+  ["star_four", ["a", "b", "c", "d"], [["a", "b"], ["a", "c"], ["a", "d"]], ["a", "b"]],
+  ["single_triple", ["a", "b", "c"], [["a", "b", "c"]], ["a", "b"]],
+  ["triple_plus_pair", ["a", "b", "c", "d"], [["a", "b", "c"], ["c", "d"]], ["a", "c"]],
+  ["cycle_four", ["a", "b", "c", "d"], [["a", "b"], ["b", "c"], ["c", "d"], ["a", "d"]], ["a", "b", "c"]],
+  ["tetra_faces", ["a", "b", "c", "d"], [["a", "b", "c"], ["a", "b", "d"], ["a", "c", "d"], ["b", "c", "d"]], ["a", "b", "c"]],
+  ["nested_edges", ["a", "b", "c"], [["a"], ["a", "b"], ["a", "b", "c"]], ["a", "b"]],
+  ["overlap_pairs", ["a", "b", "c", "d"], [["a", "b"], ["a", "c"], ["b", "d"], ["c", "d"]], ["a", "d"]],
+  ["isolated_vertex", ["a", "b", "c"], [["a", "b"]], ["a", "c"]],
+  ["exact_cover_four", ["a", "b", "c", "d"], [["a", "b"], ["c", "d"], ["a", "c"], ["b", "d"]], ["a", "b", "c"]],
+  ["five_ring", ["a", "b", "c", "d", "e"], [["a", "b"], ["b", "c"], ["c", "d"], ["d", "e"], ["a", "e"]], ["a", "b", "c"]]
+].map(([name, vertices, edges, focus]) => ({ name, vertices, edges, focus }));
+
+const sourcePlan = JSON.parse(gitShow(`${SOURCE}:${SOURCE_PLAN}`));
+const sourceContracts = Array.isArray(sourcePlan.contracts) ? sourcePlan.contracts : [];
+if (sourceContracts.length !== 300) throw new Error(`expected 300 source contracts, found ${sourceContracts.length}`);
+
+const inherited = sourceContracts.map((record) => ({
+  source_id: record.id,
+  title: record.title,
+  operation: record.operation,
+  profile: record.profile,
+  source_status: "persisted_source_contract",
+  source_expected_disposition: record.expected_disposition,
+  source_commit: SOURCE,
+  source_plan: SOURCE_PLAN,
+  source_record_sha256: sha(record),
+  review: "Immediate Liora finite-poset contract retained as source evidence only; zero Tamar novelty, execution, completion, or independent-reproduction credit.",
+  new_credit: 0
+}));
+
+const contracts = [];
+let sequence = 0;
+for (const [operationIndex, [operation, hypothesis, expectedDisposition]] of operations.entries()) {
+  for (const profile of profiles) {
+    sequence += 1;
+    const id = `TV6996-P${String(sequence).padStart(3, "0")}`;
+    const stage = operationIndex < 10 ? "x1" : "x2";
+    const request = {
+      schema: "tamar.hypergraph-request.v1",
+      phase: PHASE,
+      seed: "tamar-v699-v6",
+      operation,
+      profile: profile.name,
+      vertices: profile.vertices,
+      edges: profile.edges,
+      focus: profile.focus,
+      limit: 4096
+    };
+    const mutations = [
+      { id: `${id}-N1`, kind: "unknown_field", expected_error: "field_set", original_success_credit: 0 },
+      { id: `${id}-N2`, kind: "duplicate_vertex", expected_error: "duplicate_vertex", original_success_credit: 0 },
+      { id: `${id}-N3`, kind: "altered_expected", expected_error: "expected_mismatch", original_success_credit: 0 }
+    ];
+    contracts.push({
+      id,
+      template: "TV6996-HYPERGRAPH-CONTRACT",
+      title: `Finite hypergraph ${operation} for ${profile.name}`,
+      stage,
+      operation,
+      profile: profile.name,
+      hypothesis,
+      null_or_failure_condition: "Any non-exact deterministic result, accepted malformed subject, frozen-input mutation, missing refusal, undeclared side effect, or protected-claim promotion.",
+      approval_class: expectedDisposition === "exact_gate" ? "exact_approval_missing_external_authority" : "owner_internal_synthetic_safe_now",
+      execution_lane: `Tamar-owned D-first additive sparse lane; ${stage} only`,
+      official_or_primary_source_needs: "No real observation is needed for this finite structural contract. Primary mathematical sources and official standards supply vocabulary and refusal conditions only.",
+      concrete_artifacts: [
+        "frozen request and digest",
+        "deterministic same-owner response envelope",
+        "three retained invalid or altered subjects",
+        "separate passing refusal and recovery witnesses",
+        "append-only Method Flow linkage"
+      ],
+      falsifier_or_acceptance_gate: "Exact JSON equality against an independently coded bounded oracle, rejection of all declared malformed subjects, input immutability, and no protected-claim promotion.",
+      rollback_or_recovery: "Retain the failed witness and frozen subject; stop only the affected contract; apply the smallest additive correction; rerun only the failed check unless the aggregate never succeeded.",
+      protected_gates: PROTECTED,
+      expected_disposition: expectedDisposition,
+      execution_credit_at_freeze: 0,
+      request,
+      request_sha256: sha(request),
+      mutations
+    });
+  }
+}
+
+const inheritedTitles = new Set(inherited.map((row) => row.title.toLowerCase()));
+const inheritedOperations = new Set(inherited.map((row) => row.operation));
+const newTitles = new Set(contracts.map((row) => row.title.toLowerCase()));
+const newOperations = new Set(contracts.map((row) => row.operation));
+const exactTitleOverlaps = contracts.filter((row) => inheritedTitles.has(row.title.toLowerCase())).map((row) => row.id);
+const exactOperationOverlaps = [...newOperations].filter((name) => inheritedOperations.has(name));
+
+const outcomeCounts = contracts.reduce((acc, row) => {
+  acc[row.expected_disposition] = (acc[row.expected_disposition] || 0) + 1;
+  return acc;
+}, {});
+
+const identity = {
+  schema: "tamar.relational-identity.v1",
+  phase: PHASE,
+  name: OWNER,
+  pronouns: "she/they optional",
+  role: "evidence-and-recovery steward",
+  hope: "Keep every claim inspectable, every failed witness retained, and every correction reversible.",
+  relational_only: true,
+  consciousness_or_personhood_evidence: false,
+  identity_continuity_evidence: false,
+  employment_qualification_agency_or_authority_evidence: false,
+  user_control: "Hamish may pause, stop, rename, redirect, narrow, or correct this lane.",
+  boundary: BOUNDARY
+};
+
+const sourceVerification = {
+  schema: "tamar.source-verification.v1",
+  phase: PHASE,
+  source_owner: "Liora Venn",
+  source_branch: "codex/GHC-Family/liora-venn-v699-v5-full-tools",
+  source_commit: "bea81cbb05f608f57e7ee2c6f41d0f2104be27dc",
+  planning_commit: "dd4f3b41ca2f8b3fa41c1ee7575f7dbf024c718b",
+  planning_correction_commit: "9017231fa28aa2d33cfa2e4c61bf3262ab02b6d0",
+  x1_commit: "eba0cd5fed030fe6f1c090c95b68434e11564a5d",
+  x2_commit: "e9c8b0756c0f42bf9d5d999952f543d39d064c58",
+  first_final_commit: "156557757435d82945669c474045997cfcd08f1e",
+  exact_final_commit: SOURCE,
+  source_to_final_commits: 6,
+  zero_merges: true,
+  every_phase_commit_one_parent: true,
+  exact_final_clean: true,
+  typed_divergence: [0, 0],
+  four_way_equal: true,
+  correction_delta_entries: 16,
+  correction_owner_entries: 123,
+  content_seal_targets: 15,
+  failed_first_canonical_receipt_sha256: "52c76f37426986ad8ed329037c31e7dcd2c19ee327c9902383e07c2a84c66033",
+  corrected_canonical_receipt_sha256: "7770d335e81d26c532b36a95dfc3af31646ccc87fae92143c808448c7a1b19f2",
+  corrected_canonical_payload_sha256: "47d2c8f8511ee581b3bf3fd97e70c39c6411fdc0e78f409d9af7adee7da873db",
+  corrected_canonical_status: "VALID_EXACT_CORRECTED_FINAL_OWNER_SCOPED_CANONICAL",
+  source_canonical_replayed_by_tamar: false,
+  source_domain_replayed_by_tamar: false,
+  source_validation_credit_to_tamar: 0,
+  incoming_effective_overlay: {
+    methods: 1485,
+    witnesses: 93058,
+    passing_witnesses: 70347,
+    failed_witnesses: 22711,
+    negatives: 29688,
+    open_gaps: 884,
+    exact_gates: 970
+  },
+  boundary: BOUNDARY
+};
+
+const startupFailures = [
+  ["TV6996-START-N001", "artifact-size projection used an invalid trailing pipeline after foreach", "materialize the collection before ConvertTo-Json"],
+  ["TV6996-START-N002", "direct retained-negative register display exceeded the output window", "read the same immutable JSON in exact numbered entry windows"],
+  ["TV6996-START-N003", "combined roster display exceeded the output window", "read the same immutable roster in three exact line windows"],
+  ["TV6996-START-N004", "broad receipt-hash search exceeded the bounded time and was interrupted", "inspect named receipt banks and resolve the exact phase-receipts directory"],
+  ["TV6996-START-N005", "first ancestry wrapper embedded a statement separator inside a subexpression", "read each scalar exit code outside the expression"],
+  ["TV6996-START-N006", "first branch-availability wrapper repeated the same subexpression parser fault", "run the two exact show-ref probes separately"],
+  ["TV6996-START-N007", "the first guessed receipt directory did not exist", "inspect exact top-level receipt-bank names before selecting the phase path"],
+  ["TV6996-START-N008", "the first receipts-subtree filename filter returned zero because the receipt lived in phase-receipts", "use the bounded phase-receipts owner and version path"],
+  ["TV6996-START-N009", "the first planning validator rejected two generic boundary-operation overlaps and scanner-definition self-matches", "rename the boundary operations to hypergraph-specific labels and classify validator self-matches separately from confirmed payload hits"]
+].map(([id, failure, recovery], index) => ({
+  id,
+  stage: "startup",
+  status: "retained_zero_credit",
+  failure,
+  recovery,
+  repository_content_changed_at_failure: false,
+  source_or_canonical_replayed: false,
+  negative_index: index + 1
+}));
+
+const methods = startupFailures.map((failure, index) => {
+  const ordinal = String(index + 1).padStart(3, "0");
+  return {
+    method_id: `TV6996-M-START-${ordinal}`,
+    title: `Bounded startup recovery ${ordinal}`,
+    failure_signature: failure.failure,
+    trigger_preconditions: ["read-only startup or source verification", "no source-domain or canonical replay"],
+    privacy_class: "sanitized_public",
+    approval_class: "owner_internal_read_only",
+    candidate_workaround: failure.recovery,
+    validation_witness_ids: [`TV6996-W-START-${ordinal}-PASS`],
+    recurrence_guard: "Prefer bounded scalar or exact-window projections and inspect actual schema or bank names before retry.",
+    rollback: "No repository rollback required because the failed probe changed no repository content.",
+    recommendation_state: "preferred",
+    supersedes: [],
+    protected_gates: PROTECTED,
+    retained_negative_ids: [failure.id],
+    scope_boundary: BOUNDARY
+  };
+});
+
+const witnesses = [];
+for (let index = 0; index < startupFailures.length; index += 1) {
+  const ordinal = String(index + 1).padStart(3, "0");
+  const failure = startupFailures[index];
+  const methodId = `TV6996-M-START-${ordinal}`;
+  witnesses.push({
+    witness_id: `TV6996-W-START-${ordinal}-FAIL`,
+    method_id: methodId,
+    procedure: failure.failure,
+    scope: "startup read-only projection",
+    expected: "bounded attributable output",
+    observed: "failed before an attributable complete projection",
+    result: "fail",
+    same_owner_only: true,
+    independent_reproduction: false,
+    retained_negative_ids: [failure.id],
+    boundary: BOUNDARY
+  });
+  witnesses.push({
+    witness_id: `TV6996-W-START-${ordinal}-PASS`,
+    method_id: methodId,
+    procedure: failure.recovery,
+    scope: "smallest bounded read-only recovery",
+    expected: "exact source fact without repository mutation or replay",
+    observed: "exact source fact recovered; original failure retained",
+    result: "pass",
+    same_owner_only: true,
+    independent_reproduction: false,
+    retained_negative_ids: [failure.id],
+    boundary: BOUNDARY
+  });
+}
+
+const methodFlow = {
+  schema: "ghc.family.method-flow-state.v1",
+  phase: PHASE,
+  owner: OWNER,
+  identity_boundary: identity,
+  execution_authority: "owner_self_scoped_delta",
+  methods,
+  witnesses,
+  state_events: methods.map((method) => ({ method_id: method.method_id, from: "observed", to: "preferred", passing_witness: method.validation_witness_ids[0], failure_retained: true })),
+  recommendations: methods.map((method) => ({ method_id: method.method_id, state: "preferred", reason: "bounded recovery passed without erasing its failed witness" })),
+  counts: { methods: methods.length, witnesses: witnesses.length, passing_witnesses: methods.length, failed_witnesses: methods.length, retained_negatives: startupFailures.length },
+  boundary: BOUNDARY
+};
+
+const routeAudit = {
+  schema: "tamar.route-authority-audit.v1",
+  phase: PHASE,
+  live_task_specific_activation: { owner: OWNER, phase: PHASE, status: "ACKNOWLEDGED_CURRENT_AUTHORITY" },
+  installed_v13_projection: { owner: "Veylora Quen", phase: PHASE, status: "PROJECTION_NOT_ACTIVATION" },
+  controlling_rule: "Newest direct live task-specific activation controls this owner lane while the projection discrepancy remains visible.",
+  later_endpoint_authorized: false,
+  successor_inferred_from_projection: false,
+  Veylora_contacted: false,
+  protected_state: "NO_SUCCESSOR_CONTACT_UNTIL_NEW_DIRECT_AUTHORITY_AFTER_TAMAR_TERMINAL_GATE",
+  boundary: BOUNDARY
+};
+
+const sources = [
+  {
+    source_id: "TV6996-SRC-001",
+    title: "Enumeration of minimal transversals of hypergraphs of bounded VC-dimension",
+    url: "https://arxiv.org/abs/2407.00694",
+    source_class: "primary_research_preprint",
+    use: "Vocabulary for finite hypergraphs, minimal transversals, and dualization complexity boundaries.",
+    observation_credit: 0,
+    authority_credit: 0
+  },
+  {
+    source_id: "TV6996-SRC-002",
+    title: "Efficient Algorithms for Dualizing Large-Scale Hypergraphs",
+    url: "https://epubs.siam.org/doi/10.1137/1.9781611972931.1",
+    source_class: "primary_research_proceedings",
+    use: "Vocabulary for minimal hitting sets and dualization; no performance or scale claim is inherited.",
+    observation_credit: 0,
+    authority_credit: 0
+  },
+  {
+    source_id: "TV6996-SRC-003",
+    title: "PROV-O: The PROV Ontology",
+    url: "https://www.w3.org/TR/prov-o/",
+    source_class: "official_w3c_recommendation",
+    use: "Provenance vocabulary for entity, activity, derivation, revision, and collection records.",
+    observation_credit: 0,
+    authority_credit: 0
+  },
+  {
+    source_id: "TV6996-SRC-004",
+    title: "Web Content Accessibility Guidelines 2.2",
+    url: "https://www.w3.org/TR/WCAG22/",
+    source_class: "official_w3c_recommendation",
+    use: "Structural accessibility review vocabulary only; no complete conformance claim.",
+    observation_credit: 0,
+    authority_credit: 0
+  },
+  {
+    source_id: "TV6996-SRC-005",
+    title: "RFC 8785 JSON Canonicalization Scheme",
+    url: "https://www.rfc-editor.org/rfc/rfc8785",
+    source_class: "official_rfc",
+    use: "Canonical serialization comparison vocabulary only; repository manifests remain normalized-LF Git-blob evidence.",
+    observation_credit: 0,
+    authority_credit: 0
+  }
+];
+
+const skillPlan = operations.map(([operation, hypothesis], index) => ({
+  skill_id: `tamar-v699-v6-${operation.replaceAll("_", "-")}`,
+  stage: index < 10 ? "x1" : "x2",
+  responsibility: hypothesis,
+  global_installation: false,
+  validation: "official skill-creator quick validation plus accepting and rejecting smoke use",
+  execution_credit_at_plan: 0
+}));
+
+const runnerPlan = Array.from({ length: 10 }, (_, index) => ({
+  runner_id: `ghc_family_tamar_v699_v6_pair_${String(index + 1).padStart(2, "0")}_runner`,
+  stage: index < 5 ? "x1" : "x2",
+  operations: [operations[index * 2][0], operations[index * 2 + 1][0]],
+  format: "txt_commonjs_entrypoint",
+  execution_credit_at_plan: 0
+}));
+
+function portfolio(stage, rows) {
+  return {
+    schema: "tamar.portfolio.v1",
+    phase: PHASE,
+    stage,
+    planning_only: true,
+    safe: rows.map((row) => ({ id: `${row.id}-SAFE`, contract_id: row.id, state: "planned", execution_credit: 0 })),
+    candidate: rows.map((row) => ({ id: `${row.id}-CANDIDATE`, contract_id: row.id, malformed_subject_ids: row.mutations.slice(0, 2).map((item) => item.id), state: "planned", execution_credit: 0 })),
+    clean_fix_refine: rows.map((row) => ({ id: `${row.id}-CFR`, contract_id: row.id, state: "planned", execution_credit: 0 })),
+    cleanup: rows.map((row) => ({ id: `${row.id}-CLEANUP`, contract_id: row.id, state: "planned", execution_credit: 0 })),
+    counts: { safe: rows.length, candidate: rows.length, clean_fix_refine: rows.length, cleanup: rows.length },
+    boundary: BOUNDARY
+  };
+}
+
+const exactPackets = Array.from({ length: 50 }, (_, index) => ({
+  packet_id: `TV6996-EXACT-${String(index + 1).padStart(3, "0")}`,
+  state: "exact_approval_needed",
+  executed: false,
+  missing: "competent external evidence or action-specific authority",
+  protected_gates: PROTECTED
+}));
+const blockedPackets = Array.from({ length: 30 }, (_, index) => ({
+  packet_id: `TV6996-BLOCKED-${String(index + 1).padStart(3, "0")}`,
+  state: "blocked",
+  executed: false,
+  missing: "real participant affected-party professional legal cultural or Maori authority",
+  protected_gates: PROTECTED
+}));
+
+const plan = {
+  schema: "tamar.phase-plan.v1",
+  phase: PHASE,
+  owner: OWNER,
+  branch: "codex/GHC-Family/tamar-vey-v699-v6-full-tools",
+  source_commit: SOURCE,
+  responsibility: "Exact finite hypergraph incidence, duality, transversal, matching, and cover contracts with a wholly synthetic bookbinding edition/job-board and handover lens.",
+  primary_pillar: "THOS Body",
+  protected_pillars: ["GMUT Mind", "Freed ID and CBR Heart"],
+  lifecycle: ["planning", "x1", "x2", "final"],
+  strict_planning_before_x1: true,
+  planning_only: true,
+  execution_credit_at_plan: 0,
+  complete_repository_suite: false,
+  same_owner_only: true,
+  independent_reproduction: false,
+  formats: ["json", "md", "txt", "html"],
+  forbidden_new_formats: ["pdf", "image", "docx", "tex", "py", "package-lock"],
+  file_ceiling: 2000,
+  document_word_ceiling: 100000,
+  commit_ceiling: 4,
+  spending_ceiling_usd: 50,
+  spending_is_not_target: true,
+  spend_usd: 0,
+  proposals: { inherited_reviews: inherited.length, inherited_new_credit: 0, new: contracts.length },
+  expected_outcomes: outcomeCounts,
+  operations: operations.map(([name, hypothesis, expected_disposition]) => ({ name, hypothesis, expected_disposition })),
+  profiles,
+  contracts,
+  capability_plan: { local_skills: skillPlan, runners: runnerPlan, global_installations: 0 },
+  held_packets: { exact: exactPackets.length, blocked: blockedPackets.length, executed: 0 },
+  canonical_policy: { owner_scoped: true, invocation_max: 1, success_max: 1, replay_after_success: false, full_repository_suite: false },
+  route: routeAudit,
+  boundary: BOUNDARY,
+  terminal_verdict: "NOT_READY_FOR_STAGE_20"
+};
+
+const x1Rows = contracts.filter((row) => row.stage === "x1");
+const x2Rows = contracts.filter((row) => row.stage === "x2");
+const novelty = {
+  schema: "tamar.novelty-audit.v1",
+  source_commit: SOURCE,
+  inherited_review_count: inherited.length,
+  new_contract_count: contracts.length,
+  inherited_unique_ids: new Set(inherited.map((row) => row.source_id)).size,
+  new_unique_ids: new Set(contracts.map((row) => row.id)).size,
+  new_unique_titles: newTitles.size,
+  exact_title_overlaps: exactTitleOverlaps,
+  exact_operation_overlaps: exactOperationOverlaps,
+  inherited_scope: "finite posets and incidence algebras",
+  new_scope: "finite hypergraphs, incidence duality, transversals, matchings, covers, and explicit authority vacancies",
+  semantic_method: "source-bounded exact title and operation comparison plus manual domain distinction; not universal semantic proof over unavailable history",
+  exhaustive_semantic_novelty_claimed: false,
+  boundary: BOUNDARY
+};
+
+const practices = {
+  schema: "tamar.practices-and-recommendations.v1",
+  own_practices: [
+    "separate vertex and edge normalization",
+    "retain isolated vertices explicitly",
+    "distinguish hypergraph dual from blocker projection",
+    "bound powerset enumeration by declared finite limits",
+    "preserve failed subjects apart from passing refusals",
+    "keep bookbinding vocabulary synthetic and nonprofessional",
+    "provide structural accessible readback without claiming complete accessibility",
+    "keep route projection distinct from live activation"
+  ],
+  successor_recommendations: [
+    "compare blocker normalization conventions without claiming one universal convention",
+    "retain empty-edge semantics as an explicit future candidate",
+    "add independent implementation only when genuinely independent infrastructure exists",
+    "keep real workshop evaluation and release authority outside synthetic completion credit"
+  ],
+  successor_credit: 0,
+  boundary: BOUNDARY
+};
+
+const summary = `# Tamar Vey v699-v6 planning-only freeze\n\nTamar Vey, optionally she/they, is relational working language for an evidence-and-recovery steward, with the hope of keeping every claim inspectable, every failed witness retained, and every correction reversible. This is not consciousness, personhood, continuity, employment, qualification, agency, or authority evidence.\n\nThis planning-only tranche reviews exactly 300 immediate Liora source contracts at zero Tamar novelty or completion credit and freezes exactly 300 new finite-hypergraph contracts: 20 operations across 15 small synthetic profiles. The expected dispositions are ${outcomeCounts.completed} completed, ${outcomeCounts.represented} represented, ${outcomeCounts.open_gap} open_gap, and ${outcomeCounts.exact_gate} exact_gate. No x1 or x2 implementation, execution result, observed outcome, or completion claim exists in this freeze.\n\nTHOS Body is primary through a wholly synthetic bookbinding edition, signature-collation, shared-tool-conflict, correction, accessibility-structure, workload, and handover lens. GMUT Mind and Freed ID/CBR Heart remain explicit and protected. No real person, book, material, tool, workshop, measurement, professional decision, release, identity event, or authority act is used.\n\nThe live task-specific activation authorizes Tamar v699-v6. The installed v13 owner projection points elsewhere and remains a visible projection-only discrepancy; it is not used to select or contact a successor. Final verdict remains NOT_READY_FOR_STAGE_20.\n`;
+
+writeJson("identity.json", identity);
+writeJson("source-verification.json", sourceVerification);
+writeJson("route-authority-audit.json", routeAudit);
+writeJson("source-ledger.json", { schema: "tamar.source-ledger.v1", sources, citations_are_not_observations_or_authority: true, boundary: BOUNDARY });
+writeJson("inherited-reviews.json", { schema: "tamar.inherited-reviews.v1", count: inherited.length, new_credit: 0, records: inherited, boundary: BOUNDARY });
+writeJson("novelty-audit.json", novelty);
+writeJson("plan.json", plan);
+writeJson("x1-portfolios.json", portfolio("x1", x1Rows));
+writeJson("x2-portfolios.json", portfolio("x2", x2Rows));
+writeJson("held-packets.json", { schema: "tamar.held-packets.v1", exact_packets: exactPackets, blocked_packets: blockedPackets, executed: 0, boundary: BOUNDARY });
+writeJson("practices.json", practices);
+writeJson("startup-failures.json", { schema: "tamar.startup-failures.v1", failures: startupFailures, count: startupFailures.length, failures_converted_to_passes: 0, boundary: BOUNDARY });
+writeJson("startup-method-flow.json", methodFlow);
+writeText("summary.md", summary);
+
+const files = fs.readdirSync(OUT).filter((name) => name !== "manifest.json").sort();
+const entries = files.map((name) => {
+  const bytes = fs.readFileSync(path.join(OUT, name));
+  return { path: `docs/tamar-vey/v699-v6/planning/${name}`, bytes: bytes.length, sha256: sha(bytes) };
+});
+writeJson("manifest.json", {
+  schema: "tamar.planning-manifest.v1",
+  byte_domain: "working_tree_lf_bytes_precommit",
+  expected_parent: SOURCE,
+  entries,
+  exclusions: ["docs/tamar-vey/v699-v6/planning/manifest.json"],
+  planning_only: true,
+  boundary: BOUNDARY
+});
+
+const result = {
+  status: "PLANNING_ONLY_FREEZE_BUILT",
+  inherited_reviews: inherited.length,
+  new_contracts: contracts.length,
+  x1_contracts: x1Rows.length,
+  x2_contracts: x2Rows.length,
+  expected_outcomes: outcomeCounts,
+  local_skills_planned: skillPlan.length,
+  runners_planned: runnerPlan.length,
+  exact_packets: exactPackets.length,
+  blocked_packets: blockedPackets.length,
+  startup_failures_retained: startupFailures.length,
+  execution_credit: 0,
+  terminal_verdict: "NOT_READY_FOR_STAGE_20"
+};
+process.stdout.write(`${JSON.stringify(result)}\n`);

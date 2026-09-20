@@ -1,0 +1,61 @@
+"use strict";
+
+const crypto = require("crypto");
+const fs = require("fs");
+const path = require("path");
+const { spawnSync } = require("child_process");
+
+const ROOT = process.cwd();
+const REL = "docs/tamar-vey/v699-v6/planning";
+const DIR = path.join(ROOT, ...REL.split("/"));
+const MANIFEST = `${REL}/planning-index-manifest.json`;
+const REVIEW = `${REL}/planning-staged-review.json`;
+const BOUNDARY = "Planning-only same-owner synthetic hypergraph evidence; no domain execution, independent reproduction, external authority, empirical confirmation, production readiness, proof, canon, or Stage 20 claim.";
+
+function git(args, encoding = null) {
+  const result = spawnSync("git", args, { cwd: ROOT, encoding, maxBuffer: 32 * 1024 * 1024 });
+  if (result.status !== 0) throw new Error(result.stderr?.toString() || `git ${args.join(" ")} failed`);
+  return result.stdout;
+}
+
+function sha(bytes) {
+  return crypto.createHash("sha256").update(bytes).digest("hex");
+}
+
+const staged = git(["diff", "--cached", "--name-only", "--diff-filter=ACMR"], "utf8").trim().split(/\r?\n/).filter(Boolean).sort();
+const scoped = staged.filter((name) => name.startsWith(`${REL}/`) && name !== MANIFEST && name !== REVIEW);
+if (scoped.length !== staged.length) throw new Error("staged scope contains a non-planning path");
+
+const entries = scoped.map((name) => {
+  const bytes = git(["show", `:${name}`]);
+  return { path: name, bytes: bytes.length, sha256: sha(bytes) };
+});
+const exclusions = [MANIFEST, REVIEW];
+const manifest = {
+  schema: "tamar.planning-index-manifest.v1",
+  byte_domain: "git_index_blob",
+  expected_parent: "09c0f4a0287bf49dd303b1aebe95e71fe8c6d060",
+  entries,
+  exclusions,
+  planning_only: true,
+  boundary: BOUNDARY
+};
+fs.writeFileSync(path.join(DIR, "planning-index-manifest.json"), `${JSON.stringify(manifest, null, 2)}\n`, "utf8");
+
+const review = {
+  schema: "tamar.planning-staged-review.v1",
+  expected_parent: "09c0f4a0287bf49dd303b1aebe95e71fe8c6d060",
+  staged_before_receipts: scoped.length,
+  expected_final_staged_count: scoped.length + exclusions.length,
+  expected_final_paths: [...scoped, ...exclusions].sort(),
+  manifest_entries: entries.length,
+  manifest_exclusions: exclusions.length,
+  scope_issues: [],
+  deletion_issues: [],
+  privacy_confirmed_hits: [],
+  x1_or_x2_implementation_present: false,
+  planning_only: true,
+  boundary: BOUNDARY
+};
+fs.writeFileSync(path.join(DIR, "planning-staged-review.json"), `${JSON.stringify(review, null, 2)}\n`, "utf8");
+process.stdout.write(`${JSON.stringify({ status: "PLANNING_INDEX_SEALED", entries: entries.length, exclusions: exclusions.length, expected_final_staged_count: scoped.length + exclusions.length })}\n`);

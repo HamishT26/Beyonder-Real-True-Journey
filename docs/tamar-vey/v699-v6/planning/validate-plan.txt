@@ -1,0 +1,151 @@
+"use strict";
+
+const fs = require("fs");
+const path = require("path");
+const vm = require("vm");
+const { spawnSync } = require("child_process");
+
+const ROOT = process.cwd();
+const DIR = path.join(ROOT, "docs", "tamar-vey", "v699-v6", "planning");
+const REL = "docs/tamar-vey/v699-v6/planning";
+const ALLOWED = new Set([".json", ".md", ".txt", ".html"]);
+const REQUIRED_CONTRACT_FIELDS = [
+  "id", "title", "stage", "operation", "profile", "hypothesis",
+  "null_or_failure_condition", "approval_class", "execution_lane",
+  "official_or_primary_source_needs", "concrete_artifacts",
+  "falsifier_or_acceptance_gate", "rollback_or_recovery", "protected_gates",
+  "expected_disposition", "execution_credit_at_freeze", "request",
+  "request_sha256", "mutations"
+];
+const OUTCOMES = new Set(["completed", "represented", "open_gap", "exact_gate"]);
+
+function readJson(name) {
+  return JSON.parse(fs.readFileSync(path.join(DIR, name), "utf8"));
+}
+
+function git(args, encoding = "utf8") {
+  const result = spawnSync("git", args, { cwd: ROOT, encoding, maxBuffer: 32 * 1024 * 1024 });
+  if (result.status !== 0) throw new Error(result.stderr || `git ${args.join(" ")} failed`);
+  return result.stdout;
+}
+
+const issues = [];
+const files = fs.readdirSync(DIR).sort();
+for (const name of files) {
+  if (!ALLOWED.has(path.extname(name).toLowerCase())) issues.push(`forbidden_extension:${name}`);
+  const bytes = fs.readFileSync(path.join(DIR, name));
+  if (bytes.includes(0)) issues.push(`nul_byte:${name}`);
+  if (bytes.length > 4 * 1024 * 1024) issues.push(`file_over_4mib:${name}`);
+}
+
+let jsonParsed = 0;
+for (const name of files.filter((name) => name.endsWith(".json"))) {
+  readJson(name);
+  jsonParsed += 1;
+}
+
+for (const name of files.filter((name) => name.endsWith(".txt"))) {
+  try {
+    new vm.Script(fs.readFileSync(path.join(DIR, name), "utf8"), { filename: name });
+  } catch (error) {
+    issues.push(`txt_syntax:${name}:${error.message}`);
+  }
+}
+
+const plan = readJson("plan.json");
+const inherited = readJson("inherited-reviews.json");
+const novelty = readJson("novelty-audit.json");
+const x1 = readJson("x1-portfolios.json");
+const x2 = readJson("x2-portfolios.json");
+const held = readJson("held-packets.json");
+const failures = readJson("startup-failures.json");
+const flow = readJson("startup-method-flow.json");
+const route = readJson("route-authority-audit.json");
+
+if (plan.planning_only !== true || plan.execution_credit_at_plan !== 0) issues.push("planning_credit_or_state");
+if (plan.source_commit !== "09c0f4a0287bf49dd303b1aebe95e71fe8c6d060") issues.push("source_commit");
+if (!Array.isArray(plan.contracts) || plan.contracts.length !== 300) issues.push("contract_count");
+if (!Array.isArray(inherited.records) || inherited.records.length !== 300 || inherited.new_credit !== 0) issues.push("inherited_reviews");
+
+const ids = new Set();
+const titles = new Set();
+const counts = { completed: 0, represented: 0, open_gap: 0, exact_gate: 0 };
+for (const record of plan.contracts || []) {
+  for (const field of REQUIRED_CONTRACT_FIELDS) if (!(field in record)) issues.push(`missing_contract_field:${record.id || "unknown"}:${field}`);
+  if (ids.has(record.id)) issues.push(`duplicate_contract_id:${record.id}`);
+  if (titles.has(record.title)) issues.push(`duplicate_contract_title:${record.title}`);
+  ids.add(record.id);
+  titles.add(record.title);
+  if (!OUTCOMES.has(record.expected_disposition)) issues.push(`unknown_outcome:${record.id}`);
+  else counts[record.expected_disposition] += 1;
+  if (record.execution_credit_at_freeze !== 0) issues.push(`premature_credit:${record.id}`);
+  if (!Array.isArray(record.mutations) || record.mutations.length !== 3) issues.push(`mutation_count:${record.id}`);
+  if (!Array.isArray(record.protected_gates) || record.protected_gates.length < 10) issues.push(`protected_gates:${record.id}`);
+}
+
+if (JSON.stringify(counts) !== JSON.stringify({ completed: 255, represented: 15, open_gap: 15, exact_gate: 15 })) issues.push("expected_outcome_counts");
+if (novelty.inherited_review_count !== 300 || novelty.new_contract_count !== 300 || novelty.new_unique_ids !== 300 || novelty.new_unique_titles !== 300) issues.push("novelty_counts");
+if ((novelty.exact_title_overlaps || []).length !== 0 || (novelty.exact_operation_overlaps || []).length !== 0) issues.push("novelty_overlap");
+
+for (const [stage, portfolio] of [["x1", x1], ["x2", x2]]) {
+  if (portfolio.planning_only !== true) issues.push(`${stage}_portfolio_not_planning`);
+  for (const key of ["safe", "candidate", "clean_fix_refine", "cleanup"]) {
+    if (!Array.isArray(portfolio[key]) || portfolio[key].length !== 150) issues.push(`${stage}_${key}_count`);
+    if ((portfolio[key] || []).some((row) => row.execution_credit !== 0)) issues.push(`${stage}_${key}_credit`);
+  }
+}
+
+if (!Array.isArray(plan.capability_plan.local_skills) || plan.capability_plan.local_skills.length !== 20) issues.push("skill_plan_count");
+if (!Array.isArray(plan.capability_plan.runners) || plan.capability_plan.runners.length !== 10) issues.push("runner_plan_count");
+if (!Array.isArray(held.exact_packets) || held.exact_packets.length !== 50 || held.exact_packets.some((row) => row.executed)) issues.push("exact_packet_count_or_execution");
+if (!Array.isArray(held.blocked_packets) || held.blocked_packets.length !== 30 || held.blocked_packets.some((row) => row.executed)) issues.push("blocked_packet_count_or_execution");
+if (!Array.isArray(failures.failures) || failures.failures.length !== 9 || failures.failures_converted_to_passes !== 0) issues.push("startup_failures");
+if (flow.schema !== "ghc.family.method-flow-state.v1" || flow.counts.methods !== 9 || flow.counts.witnesses !== 18 || flow.counts.failed_witnesses !== 9 || flow.counts.passing_witnesses !== 9) issues.push("startup_method_flow_counts");
+if (route.live_task_specific_activation.owner !== "Tamar Vey" || route.installed_v13_projection.owner !== "Veylora Quen" || route.later_endpoint_authorized !== false) issues.push("route_authority_boundary");
+
+const x1Files = fs.readdirSync(path.join(ROOT, "docs", "tamar-vey", "v699-v6", "x1"));
+const x2Files = fs.readdirSync(path.join(ROOT, "docs", "tamar-vey", "v699-v6", "x2"));
+if (x1Files.length !== 0 || x2Files.length !== 0) issues.push("premature_x1_or_x2_materialization");
+
+const rawPatterns = [
+  ["windows_absolute_path", /\b[A-Za-z]:\\/g],
+  ["raw_uuid", /\b[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}\b/gi],
+  ["raw_private_id_key", /\b(?:threadId|thread_id|task_id|session_id|callable_identifier)\b/g],
+  ["credential_shape", /\b(?:sk-[A-Za-z0-9_-]{20,}|ghp_[A-Za-z0-9]{20,})\b/g]
+];
+const privacyCandidates = [];
+for (const name of files) {
+  const text = fs.readFileSync(path.join(DIR, name), "utf8");
+  for (const [kind, pattern] of rawPatterns) {
+    const hits = text.match(pattern) || [];
+    if (hits.length) privacyCandidates.push({ file: name, kind, count: hits.length });
+  }
+}
+const privacyConfirmed = privacyCandidates.filter((item) => item.file !== "validate-plan.txt");
+if (privacyConfirmed.length) issues.push("privacy_confirmed_hits");
+
+if (fs.existsSync(path.join(DIR, "planning-index-manifest.json"))) {
+  const manifest = readJson("planning-index-manifest.json");
+  const staged = git(["diff", "--cached", "--name-only", "--diff-filter=ACMR"]).trim().split(/\r?\n/).filter(Boolean).sort();
+  const expected = [...manifest.entries.map((entry) => entry.path), ...manifest.exclusions].sort();
+  if (JSON.stringify(staged) !== JSON.stringify(expected)) issues.push("staged_path_parity");
+}
+
+const result = {
+  status: issues.length ? "INVALID_PLANNING_FREEZE" : "VALID_PLANNING_ONLY_FREEZE",
+  issues,
+  contracts: (plan.contracts || []).length,
+  inherited_reviews: (inherited.records || []).length,
+  expected_outcomes: counts,
+  json_parsed: jsonParsed,
+  txt_syntax_checked: files.filter((name) => name.endsWith(".txt")).length,
+  privacy_candidates: privacyCandidates,
+  privacy_confirmed_hits: privacyConfirmed,
+  startup_failures_retained: failures.failures.length,
+  x1_files: x1Files.length,
+  x2_files: x2Files.length,
+  execution_credit: 0,
+  terminal_verdict: "NOT_READY_FOR_STAGE_20"
+};
+process.stdout.write(`${JSON.stringify(result)}\n`);
+process.exitCode = issues.length ? 2 : 0;
