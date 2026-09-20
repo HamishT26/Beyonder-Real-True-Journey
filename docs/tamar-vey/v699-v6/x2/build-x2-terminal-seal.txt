@@ -1,0 +1,54 @@
+"use strict";
+
+const fs = require("fs");
+const path = require("path");
+
+const ROOT = process.cwd();
+const X2 = path.join(ROOT, "docs", "tamar-vey", "v699-v6", "x2");
+const read = (name) => JSON.parse(fs.readFileSync(path.join(X2, name), "utf8"));
+const execution = read("execution.json");
+const validation = read("validation.json");
+const domain = read("method-flow.json");
+const capability = read("method-flow-validation.json");
+const domainReceipt = read("domain-method-flow-validation.json");
+const capabilityReceipt = read("capability-method-flow-validation.json");
+
+const negativeIds = new Set();
+for (const method of [...domain.methods, ...capability.methods]) for (const id of method.retained_negative_ids) negativeIds.add(id);
+const methods = domain.counts.methods + capability.counts.methods;
+const witnesses = domain.counts.witnesses + capability.counts.witnesses;
+const passes = domain.counts.witness_results.pass + capability.counts.witness_results.pass;
+const failures = domain.counts.witness_results.fail + capability.counts.witness_results.fail;
+const issues = [];
+if (validation.status !== "VALID_X2" || validation.issues.length !== 0) issues.push("x2_validation");
+if (domainReceipt.valid !== true || domainReceipt.issues.length !== 0) issues.push("domain_method_flow");
+if (capabilityReceipt.valid !== true || capabilityReceipt.issues.length !== 0) issues.push("capability_method_flow");
+if (execution.domain_aggregate_invocations !== 1 || execution.domain_aggregate_successes !== 1 || execution.domain_aggregate_replays !== 0) issues.push("domain_latch");
+if (methods !== 25 || witnesses !== 1390 || passes !== 935 || failures !== 455 || negativeIds.size !== 455) issues.push("terminal_counts");
+
+const receipt = {
+  schema: "tamar.x2-terminal-seal.v1",
+  status: issues.length ? "INVALID_X2_TERMINAL" : "VALID_X2_TERMINAL",
+  issues,
+  source_x1_commit: "7f0caeb7625d6bf582caee2f9545ec61f03efb24",
+  aggregate: { invocations: 1, successes: 1, replays: 0 },
+  contracts: 150,
+  outcomes: execution.outcomes,
+  exact_matches: execution.exact_matches,
+  invariant_tests: execution.tests,
+  synthetic_models_3d: execution.models_3d,
+  skills: { validated: execution.skill_validations, global_installations: 0 },
+  runners: { accepting: execution.runner_accepting_smokes, rejecting: execution.runner_rejecting_smokes },
+  method_flow: { methods, witnesses, bounded_passing_witnesses: passes, retained_failed_witnesses: failures, distinct_retained_negatives: negativeIds.size },
+  privacy_confirmed_hits: validation.privacy_confirmed_hits,
+  maximum_document: validation.maximum_document,
+  full_repository_suite: false,
+  same_owner_only: true,
+  independent_reproduction: false,
+  final_or_closeout_materialized: false,
+  terminal_verdict: "NOT_READY_FOR_STAGE_20",
+  boundary: "Bounded same-owner x2 synthetic software evidence only; not empirical confirmation, professional authority, production readiness, independent reproduction, proof, canon, or Stage 20 evidence."
+};
+fs.writeFileSync(path.join(X2, "terminal-seal.json"), `${JSON.stringify(receipt, null, 2)}\n`, "utf8");
+process.stdout.write(`${JSON.stringify({ status: receipt.status, issues, method_flow: receipt.method_flow, outcomes: receipt.outcomes, terminal_verdict: receipt.terminal_verdict })}\n`);
+process.exitCode = issues.length ? 2 : 0;

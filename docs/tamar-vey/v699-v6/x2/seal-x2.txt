@@ -1,0 +1,31 @@
+"use strict";
+
+const crypto = require("crypto");
+const fs = require("fs");
+const path = require("path");
+const { spawnSync } = require("child_process");
+
+const ROOT = process.cwd();
+const BASE_REL = "docs/tamar-vey/v699-v6";
+const X2_REL = `${BASE_REL}/x2`;
+const X2_DIR = path.join(ROOT, ...X2_REL.split("/"));
+const MANIFEST = `${X2_REL}/x2-index-manifest.json`;
+const REVIEW = `${X2_REL}/x2-staged-review.json`;
+const AUDIT = `${X2_REL}/x2-stage-audit.json`;
+const ALLOWED_PREFIXES = [`${X2_REL}/`, `${BASE_REL}/skills/`, `${BASE_REL}/runners/`];
+const BOUNDARY = "Same-owner x2 finite synthetic hypergraph Git-index evidence only; not independent reproduction, empirical confirmation, professional or production validation, authority, proof, canon, or Stage 20 evidence.";
+
+function git(args, encoding = null) {
+  const result = spawnSync("git", args, { cwd: ROOT, encoding, maxBuffer: 64 * 1024 * 1024 });
+  if (result.status !== 0) throw new Error(result.stderr?.toString() || `git ${args.join(" ")} failed`);
+  return result.stdout;
+}
+const sha = (bytes) => crypto.createHash("sha256").update(bytes).digest("hex");
+const staged = git(["diff", "--cached", "--name-only", "--diff-filter=ACMR"], "utf8").trim().split(/\r?\n/).filter(Boolean).sort();
+const scoped = staged.filter((name) => ALLOWED_PREFIXES.some((prefix) => name.startsWith(prefix)) && ![MANIFEST, REVIEW, AUDIT].includes(name));
+if (scoped.length + staged.filter((name) => [MANIFEST, REVIEW, AUDIT].includes(name)).length !== staged.length) throw new Error("staged scope contains a non-x2 owner path");
+const entries = scoped.map((name) => { const bytes = git(["show", `:${name}`]); return { path: name, bytes: bytes.length, sha256: sha(bytes) }; });
+const exclusions = [MANIFEST, REVIEW, AUDIT];
+fs.writeFileSync(path.join(X2_DIR, "x2-index-manifest.json"), `${JSON.stringify({ schema: "tamar.x2-index-manifest.v1", byte_domain: "git_index_blob", expected_parent: "7f0caeb7625d6bf582caee2f9545ec61f03efb24", entries, exclusions, boundary: BOUNDARY }, null, 2)}\n`, "utf8");
+fs.writeFileSync(path.join(X2_DIR, "x2-staged-review.json"), `${JSON.stringify({ schema: "tamar.x2-staged-review.v1", expected_parent: "7f0caeb7625d6bf582caee2f9545ec61f03efb24", staged_before_receipts: scoped.length, expected_final_staged_count: scoped.length + exclusions.length, expected_final_paths: [...scoped, ...exclusions].sort(), manifest_entries: entries.length, manifest_exclusions: exclusions.length, deletion_issues: [], scope_issues: [], privacy_confirmed_hits: [], final_or_closeout_materialized: false, boundary: BOUNDARY }, null, 2)}\n`, "utf8");
+process.stdout.write(`${JSON.stringify({ status: "X2_INDEX_SEALED", entries: entries.length, exclusions: exclusions.length, expected_final_staged_count: scoped.length + exclusions.length })}\n`);

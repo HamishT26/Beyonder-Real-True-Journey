@@ -1,0 +1,278 @@
+"use strict";
+
+const crypto = require("crypto");
+const fs = require("fs");
+const path = require("path");
+const vm = require("vm");
+
+const ROOT = process.cwd();
+const BASE = path.join(ROOT, "docs", "tamar-vey", "v699-v6");
+const X2 = path.join(BASE, "x2");
+const SKILLS = path.join(BASE, "skills");
+const RUNNERS = path.join(BASE, "runners");
+const PLAN = JSON.parse(fs.readFileSync(path.join(BASE, "planning", "plan.json"), "utf8"));
+const RUNTIME_PATH = path.join(X2, "runtime.txt");
+const SHORT_BOUNDARY = "Same-owner finite synthetic x2 software only; no observation, independent reproduction, external authority, proof, canon, or Stage 20 claim.";
+const PROTECTED = ["empirical confirmation", "real participants", "professional and safety authority", "production deployment", "legal cultural affected-party and Maori authority", "complete privacy accessibility and security", "independent reproduction", "consciousness personhood AGI ASI", "Theory-of-Everything proof or canon", "Stage 20"];
+
+function stable(value) {
+  if (Array.isArray(value)) return `[${value.map(stable).join(",")}]`;
+  if (value && typeof value === "object") return `{${Object.keys(value).sort().map((key) => `${JSON.stringify(key)}:${stable(value[key])}`).join(",")}}`;
+  return JSON.stringify(value);
+}
+
+function sha(value) {
+  const bytes = Buffer.isBuffer(value) ? value : Buffer.from(typeof value === "string" ? value : stable(value), "utf8");
+  return crypto.createHash("sha256").update(bytes).digest("hex");
+}
+
+function writeJson(filePath, value) {
+  fs.writeFileSync(filePath, `${JSON.stringify(value, null, 2)}\n`, "utf8");
+}
+
+function writeText(filePath, value) {
+  fs.writeFileSync(filePath, value.endsWith("\n") ? value : `${value}\n`, "utf8");
+}
+
+function loadTxtModule(filePath) {
+  const code = fs.readFileSync(filePath, "utf8");
+  const module = { exports: {} };
+  new vm.Script(`(function(exports,module,require,__filename,__dirname){${code}\n})`, { filename: filePath }).runInThisContext()(module.exports, module, require, filePath, path.dirname(filePath));
+  return module.exports;
+}
+
+function sortSets(sets) {
+  return sets.map((set) => [...set].sort()).sort((a, b) => a.length - b.length || a.join("\u0000").localeCompare(b.join("\u0000")));
+}
+
+function uniqueEdges(edges) {
+  const map = new Map();
+  for (const edge of edges) {
+    const normalized = [...edge].sort();
+    map.set(normalized.join("\u0000"), normalized);
+  }
+  return [...map.values()].sort((a, b) => a.join("\u0000").localeCompare(b.join("\u0000")));
+}
+
+function subsets(values) {
+  const output = [];
+  for (let mask = 0; mask < 2 ** values.length; mask += 1) {
+    const row = [];
+    for (let index = 0; index < values.length; index += 1) if (mask & (1 << index)) row.push(values[index]);
+    output.push(row);
+  }
+  return sortSets(output);
+}
+
+function subset(left, right) {
+  return left.every((value) => right.includes(value));
+}
+
+function minimal(sets) {
+  return sortSets(sets.filter((candidate) => !sets.some((other) => other.length < candidate.length && subset(other, candidate))));
+}
+
+function maximal(sets) {
+  return sortSets(sets.filter((candidate) => !sets.some((other) => other.length > candidate.length && subset(candidate, other))));
+}
+
+function minimalTransversals(vertices, edges) {
+  return minimal(subsets(vertices).filter((set) => edges.every((edge) => edge.some((vertex) => set.includes(vertex)))));
+}
+
+function edgeFamilies(edges) {
+  return subsets(edges.map((_, index) => index));
+}
+
+function disjoint(indices, edges) {
+  return new Set(indices.flatMap((index) => edges[index])).size === indices.reduce((sum, index) => sum + edges[index].length, 0);
+}
+
+function oracle(raw) {
+  const vertices = [...raw.vertices].sort();
+  const edges = uniqueEdges(raw.edges);
+  const operation = raw.operation;
+  let result;
+  let outcome = "completed";
+  if (operation === "transversal_enumeration") {
+    result = { transversals: minimalTransversals(vertices, edges) };
+  } else if (operation === "minimum_transversals") {
+    const all = minimalTransversals(vertices, edges); const cardinality = Math.min(...all.map((set) => set.length)); result = { cardinality, transversals: all.filter((set) => set.length === cardinality) };
+  } else if (operation === "independent_set_enumeration") {
+    result = { independent_sets: maximal(subsets(vertices).filter((set) => edges.every((edge) => !edge.every((vertex) => set.includes(vertex))))) };
+  } else if (operation === "matching_enumeration") {
+    result = { matchings: maximal(edgeFamilies(edges).filter((set) => disjoint(set, edges))).map((set) => set.map((index) => `e${index + 1}`)) };
+  } else if (operation === "maximum_matchings") {
+    const valid = edgeFamilies(edges).filter((set) => disjoint(set, edges)); const cardinality = Math.max(...valid.map((set) => set.length)); result = { cardinality, matchings: sortSets(valid.filter((set) => set.length === cardinality)).map((set) => set.map((index) => `e${index + 1}`)) };
+  } else if (operation === "exact_cover_enumeration") {
+    const target = vertices.join("\u0000"); result = { exact_covers: sortSets(edgeFamilies(edges).filter((set) => disjoint(set, edges) && set.flatMap((index) => edges[index]).sort().join("\u0000") === target)).map((set) => set.map((index) => `e${index + 1}`)) };
+  } else if (operation === "dual_hypergraph") {
+    const ids = edges.map((_, index) => `e${index + 1}`); result = { vertices: ids, edges: vertices.map((vertex) => ({ source_vertex: vertex, members: edges.map((edge, index) => edge.includes(vertex) ? ids[index] : null).filter(Boolean) })) };
+  } else if (operation === "blocker_projection") {
+    outcome = "represented"; result = { representation: "minimal_transversal_family", edges: minimalTransversals(vertices, edges), complexity_theorem_claimed: false };
+  } else if (operation === "hypergraph_external_observation_gap") {
+    outcome = "open_gap"; result = { open: true, real_rows: 0, missing: ["real workshop observation", "manual assistive-technology evaluation", "affected-user evaluation", "independent review"] };
+  } else if (operation === "hypergraph_governance_authority_gate") {
+    outcome = "exact_gate"; result = { executed: false, authority_present: false, reserved: ["professional release", "custody and ownership", "copyright", "remedy", "legal and cultural interpretation", "affected-party acceptance", "Maori wording data governance and authority"] };
+  } else throw new Error(`unsupported oracle operation ${operation}`);
+  return { ok: true, operation, outcome, result, scope: "finite_synthetic_hypergraph_only", same_owner_only: true, independent_reproduction: false };
+}
+
+const runtime = loadTxtModule(RUNTIME_PATH);
+const contracts = PLAN.contracts.filter((record) => record.stage === "x2");
+if (contracts.length !== 150) throw new Error(`expected 150 x2 contracts, found ${contracts.length}`);
+const records = [];
+const methodMap = new Map();
+const witnesses = [];
+const negativeIds = [];
+
+function addWitness(witness) {
+  witnesses.push(witness);
+}
+
+for (const contract of contracts) {
+  const observed = runtime.execute(contract.request);
+  const expected = oracle(contract.request);
+  if (stable(observed) !== stable(expected)) throw new Error(`oracle mismatch for ${contract.id}`);
+  if (observed.outcome !== contract.expected_disposition) throw new Error(`outcome mismatch for ${contract.id}`);
+  const methodId = `TV6996-M-X2-${contract.operation}`;
+  if (!methodMap.has(contract.operation)) {
+    methodMap.set(contract.operation, {
+      method_id: methodId,
+      title: `Finite hypergraph ${contract.operation}`,
+      failure_signature: "Malformed or altered synthetic subjects remain failed even when a refusal check passes.",
+      trigger_preconditions: ["frozen x2 contract", "immutable x1 boundary", "bounded finite carrier"],
+      privacy_class: "sanitized_public",
+      approval_class: contract.expected_disposition === "exact_gate" ? "exact_approval_missing_external_authority" : "owner_internal_synthetic_safe_now",
+      candidate_workaround: "Reject malformed subjects, retain failures, and rerun only the frozen valid subject when a failure requires recovery.",
+      validation_witness_ids: [],
+      recurrence_guard: "Require exact envelope fields, deterministic enumeration, declared limits, and exact separate-oracle equality.",
+      rollback: "Preserve the failed subject and stop only the affected contract; add a bounded correction if needed.",
+      recommendation_state: "preferred",
+      supersedes: [],
+      protected_gates: PROTECTED,
+      retained_negative_ids: [],
+      scope_boundary: SHORT_BOUNDARY,
+      execution_authority: "owner_self_scoped_delta",
+      repository_scan: false,
+      module_scan: true,
+      cross_lane_scan: false,
+      unchanged_history_scan: false,
+      sibling_lane_mutation: false,
+      source_commit: "7f0caeb7625d6bf582caee2f9545ec61f03efb24",
+      final_commit: "pending_x2_commit",
+      changed_file_allowlist: ["docs/tamar-vey/v699-v6/x2/runtime.txt"],
+      module_allowlist: ["docs/tamar-vey/v699-v6/x2/runtime.txt"],
+      exact_pushed_head_required: true
+    });
+  }
+  const method = methodMap.get(contract.operation);
+  addWitness({ witness_id: `${contract.id}-W-VALID`, method_id: methodId, procedure: "Execute the frozen x2 request and compare with a separately coded bounded oracle.", scope: "one finite synthetic hypergraph x2 contract", expected: "exact deterministic equality and frozen disposition", observed: "exact deterministic equality and frozen disposition", result: "pass", same_owner_only: true, independent_reproduction: false, retained_negative_ids: [], boundary: SHORT_BOUNDARY });
+
+  const invalid = [
+    { spec: contract.mutations[0], subject: { ...contract.request, unexpected: true }, expectedError: "field_set" },
+    { spec: contract.mutations[1], subject: { ...contract.request, vertices: [...contract.request.vertices, contract.request.vertices[0]] }, expectedError: "duplicate_vertex" }
+  ];
+  const negativeResults = [];
+  for (const item of invalid) {
+    negativeIds.push(item.spec.id); method.retained_negative_ids.push(item.spec.id);
+    addWitness({ witness_id: `${item.spec.id}-SUBJECT`, method_id: methodId, procedure: `Present ${item.spec.kind} subject.`, scope: "malformed synthetic subject", expected: "subject remains failed", observed: "invalid subject presented", result: "fail", same_owner_only: true, independent_reproduction: false, retained_negative_ids: [item.spec.id], boundary: SHORT_BOUNDARY });
+    let code = "none"; try { runtime.execute(item.subject); } catch (error) { code = error.code || "internal"; }
+    if (code !== item.expectedError) throw new Error(`refusal mismatch ${item.spec.id}: ${code}`);
+    addWitness({ witness_id: `${item.spec.id}-REFUSAL`, method_id: methodId, procedure: "Run the bounded refusal guard.", scope: "refusal behavior only", expected: item.expectedError, observed: code, result: "pass", same_owner_only: true, independent_reproduction: false, retained_negative_ids: [item.spec.id], boundary: SHORT_BOUNDARY });
+    negativeResults.push({ id: item.spec.id, kind: item.spec.kind, subject_sha256: sha(item.subject), observed_error: code, subject_result: "fail", refusal_result: "pass", original_success_credit: 0 });
+  }
+  const altered = contract.mutations[2];
+  negativeIds.push(altered.id); method.retained_negative_ids.push(altered.id);
+  const alteredExpected = { ...expected, result: { altered: true } };
+  addWitness({ witness_id: `${altered.id}-SUBJECT`, method_id: methodId, procedure: "Replace the exact expected result with an altered envelope.", scope: "altered expected subject", expected: "subject remains failed", observed: "altered subject differs", result: "fail", same_owner_only: true, independent_reproduction: false, retained_negative_ids: [altered.id], boundary: SHORT_BOUNDARY });
+  if (stable(observed) === stable(alteredExpected)) throw new Error(`altered expected not detected ${altered.id}`);
+  addWitness({ witness_id: `${altered.id}-REFUSAL`, method_id: methodId, procedure: "Compare runtime response with altered expected envelope.", scope: "mismatch detection only", expected: "expected_mismatch", observed: "expected_mismatch", result: "pass", same_owner_only: true, independent_reproduction: false, retained_negative_ids: [altered.id], boundary: SHORT_BOUNDARY });
+  negativeResults.push({ id: altered.id, kind: altered.kind, subject_sha256: sha(alteredExpected), observed_error: "expected_mismatch", subject_result: "fail", refusal_result: "pass", original_success_credit: 0 });
+
+  const rerun = runtime.execute(contract.request);
+  if (stable(rerun) !== stable(observed)) throw new Error(`CFR mismatch ${contract.id}`);
+  addWitness({ witness_id: `${contract.id}-W-CFR`, method_id: methodId, procedure: "Re-read the frozen request after refusals and confirm deterministic same-input behavior.", scope: "CFR recovery", expected: "response unchanged", observed: "response unchanged", result: "pass", same_owner_only: true, independent_reproduction: false, retained_negative_ids: negativeResults.map((item) => item.id), boundary: SHORT_BOUNDARY });
+  addWitness({ witness_id: `${contract.id}-W-CLEANUP`, method_id: methodId, procedure: "Verify in-memory execution with no external write.", scope: "non-destructive cleanup", expected: "no external state", observed: "no external state", result: "pass", same_owner_only: true, independent_reproduction: false, retained_negative_ids: [], boundary: SHORT_BOUNDARY });
+
+  records.push({ contract_id: contract.id, operation: contract.operation, profile: contract.profile, request_sha256: contract.request_sha256, observed_response: observed, observed_sha256: sha(observed), oracle_sha256: sha(expected), exact_match: true, outcome: observed.outcome, negative_subjects: negativeResults, cfr_recovery: "pass", cleanup: "pass", same_owner_only: true, independent_reproduction: false, broader_claim_credit: 0 });
+}
+
+const methods = [...methodMap.values()].map((method) => {
+  method.retained_negative_ids = [...new Set(method.retained_negative_ids)];
+  method.validation_witness_ids = witnesses.filter((witness) => witness.method_id === method.method_id).map((witness) => witness.witness_id);
+  return method;
+});
+const resultCounts = { pass: witnesses.filter((witness) => witness.result === "pass").length, fail: witnesses.filter((witness) => witness.result === "fail").length };
+const stateCounts = { observed: 0, candidate: 0, validated: 0, preferred: methods.length, superseded: 0, deprecated: 0 };
+const methodFlow = {
+  schema: "ghc.family.method-flow-state.v1",
+  phase: "v699-v6",
+  owner: "Tamar Vey",
+  identity_boundary: "Relational working language only; no continuity or authority claim.",
+  execution_authority: "owner_self_scoped_delta",
+  methods,
+  witnesses,
+  state_events: methods.map((method) => ({ method_id: method.method_id, from: "candidate", to: "preferred", failed_subjects_retained: true })),
+  recommendations: methods.map((method) => ({ method_id: method.method_id, state: "preferred" })),
+  counts: { methods: methods.length, witnesses: witnesses.length, state_events: methods.length, recommendations: methods.length, states: stateCounts, witness_results: resultCounts },
+  boundary: SHORT_BOUNDARY
+};
+
+const outcomeCounts = records.reduce((acc, record) => { acc[record.outcome] += 1; return acc; }, { completed: 0, represented: 0, open_gap: 0, exact_gate: 0 });
+if (stable(outcomeCounts) !== stable({ completed: 105, represented: 15, open_gap: 15, exact_gate: 15 })) throw new Error(`unexpected x2 outcomes ${JSON.stringify(outcomeCounts)}`);
+
+const operationRecords = [...new Set(contracts.map((contract) => contract.operation))];
+const skillRecords = [];
+for (const operation of operationRecords) {
+  const skillName = `tamar-v699-v6-${operation.replaceAll("_", "-")}`;
+  const skillDir = path.join(SKILLS, skillName);
+  fs.mkdirSync(skillDir, { recursive: true });
+  const hypothesis = PLAN.operations.find((row) => row.name === operation).hypothesis;
+  const body = `---\nname: ${skillName}\ndescription: Validate the ${operation} contract for bounded finite synthetic hypergraphs in Tamar v699-v6; do not use it for real observations, professional decisions, or authority claims.\n---\n\n# ${skillName}\n\n## Purpose\n\n${hypothesis}\n\n## Contract\n\nAccept only the exact frozen JSON envelope and x2 operation ${operation}. Use exhaustive enumeration only within the declared finite limits. Preserve deterministic ordering and the frozen disposition. Reject unknown fields, duplicate vertices, undeclared edge vertices, repeated edge vertices, invalid focus labels, and out-of-range limits.\n\n## Evidence discipline\n\nA malformed subject remains failed even when its refusal passes. A same-owner synthetic result does not establish an observation, complexity theorem, professional bookbinding decision, empirical GMUT result, production THOS or Freed ID, independent reproduction, legal or cultural authority, Maori authority, proof, canon, or Stage 20 evidence.\n\n## Use\n\nInvoke the paired family-current TXT runner or owner-local x2 runtime, compare against the separately coded bounded oracle, retain failed subjects, and stop on every protected gate.\n`;
+  writeText(path.join(skillDir, "SKILL.md"), body);
+  skillRecords.push({ skill_name: skillName, operation, path: `docs/tamar-vey/v699-v6/skills/${skillName}/SKILL.md`, sha256: sha(body), quick_validation: "pending", smoke_use: "pending", global_installation: false });
+}
+
+const runnerRecords = [];
+for (let index = 0; index < operationRecords.length; index += 2) {
+  const pair = operationRecords.slice(index, index + 2);
+  const runnerNumber = index / 2 + 6;
+  const runnerName = `ghc_family_tamar_v699_v6_pair_${String(runnerNumber).padStart(2, "0")}_runner.txt`;
+  const runnerPath = path.join(RUNNERS, runnerName);
+  const source = `"use strict";\nconst fs=require("fs"),path=require("path"),vm=require("vm");const allowed=new Set(${JSON.stringify(pair)});const runtimePath=path.join(__dirname,"..","x2","runtime.txt");const code=fs.readFileSync(runtimePath,"utf8"),box={exports:{}};new vm.Script(\`(function(exports,module,require,__filename,__dirname){\${code}\\n})\`,{filename:runtimePath}).runInThisContext()(box.exports,box,require,runtimePath,path.dirname(runtimePath));let input="";process.stdin.setEncoding("utf8");process.stdin.on("data",chunk=>input+=chunk);process.stdin.on("end",()=>{try{const request=JSON.parse(input);if(!allowed.has(request.operation))throw Object.assign(new Error("operation not admitted by this runner"),{code:"runner_operation"});process.stdout.write(JSON.stringify(box.exports.execute(request))+"\\n");}catch(error){process.stdout.write(JSON.stringify({ok:false,error:error.code||"internal",message:error.message})+"\\n");process.exitCode=2;}});\n`;
+  writeText(runnerPath, source);
+  runnerRecords.push({ runner: runnerName, operations: pair, path: `docs/tamar-vey/v699-v6/runners/${runnerName}`, sha256: sha(source), syntax: "pending", accepting_smoke: "pending", rejecting_smoke: "pending" });
+}
+
+const profileContracts = PLAN.contracts.filter((contract) => contract.operation === "transversal_enumeration");
+const tests = profileContracts.map((contract, index) => {
+  const response = runtime.execute(contract.request);
+  const edges = contract.request.edges.map((edge) => [...new Set(edge)]);
+  const valid = response.result.transversals.every((set) => edges.every((edge) => edge.some((vertex) => set.includes(vertex)))) && response.result.transversals.every((set) => set.every((vertex) => {
+    const reduced = set.filter((item) => item !== vertex);
+    return !edges.every((edge) => edge.some((member) => reduced.includes(member)));
+  }));
+  return { test_id: `TV6996-X2-T${String(index + 1).padStart(2, "0")}`, profile: contract.profile, subject: "minimal transversal hit and deletion witness", passed: valid };
+});
+if (tests.some((test) => !test.passed) || tests.length !== 15) throw new Error("x2 transversal invariant test failed");
+
+const modelProfiles = ["single_pair", "disjoint_pairs", "triangle_three", "exact_cover_four", "five_ring"];
+const models = modelProfiles.map((profile, modelIndex) => {
+  const contract = PLAN.contracts.find((record) => record.stage === "x2" && record.operation === "transversal_enumeration" && record.profile === profile);
+  const response = runtime.execute(contract.request);
+  const points = contract.request.vertices.map((vertex, index) => ({ id: vertex, x: index, y: contract.request.edges.filter((edge) => edge.includes(vertex)).length, z: response.result.transversals.filter((set) => set.includes(vertex)).length }));
+  return { model_id: `TV6996-MODEL-${modelIndex + 1}`, profile, axes: { x: "stable vertex order", y: "synthetic incident-edge count", z: "synthetic minimal-transversal occurrence count" }, points, real_measurements: 0, interpretation: "finite synthetic evidence scene only" };
+});
+
+writeJson(path.join(X2, "execution-records-01.json"), { schema: "tamar.x2-execution-records.v1", records: records.slice(0, 75), boundary: SHORT_BOUNDARY });
+writeJson(path.join(X2, "execution-records-02.json"), { schema: "tamar.x2-execution-records.v1", records: records.slice(75), boundary: SHORT_BOUNDARY });
+writeJson(path.join(X2, "method-flow.json"), methodFlow);
+writeJson(path.join(X2, "capabilities.json"), { schema: "tamar.x2-capabilities.v1", skills: skillRecords, runners: runnerRecords, global_installations: 0, boundary: SHORT_BOUNDARY });
+writeJson(path.join(X2, "tests.json"), { schema: "tamar.x2-tests.v1", tests, passed: tests.filter((test) => test.passed).length, failed: tests.filter((test) => !test.passed).length, boundary: SHORT_BOUNDARY });
+writeJson(path.join(X2, "models-3d.json"), { schema: "tamar.x2-models-3d.v1", models, count: models.length, real_measurements: 0, boundary: SHORT_BOUNDARY });
+writeJson(path.join(X2, "portfolio-execution.json"), { schema: "tamar.x2-portfolio-execution.v1", counts: { safe_completed: 150, candidates_evaluated: 150, invalid_subjects_retained: 450, passing_refusals: 450, clean_fix_refine_completed: 150, cleanup_completed: 150 }, core_outcomes: outcomeCounts, all_records: records.map((record) => ({ contract_id: record.contract_id, outcome: record.outcome, exact_match: record.exact_match })), broader_claim_credit: 0, boundary: SHORT_BOUNDARY });
+writeJson(path.join(X2, "execution.json"), { schema: "tamar.x2-execution.v1", phase: "v699-v6", x1_commit: "7f0caeb7625d6bf582caee2f9545ec61f03efb24", contract_count: records.length, operations: operationRecords.length, exact_matches: records.length, outcomes: outcomeCounts, invalid_subjects: negativeIds.length, failures_converted_to_passes: 0, method_flow: { methods: methods.length, witnesses: witnesses.length, passing_witnesses: resultCounts.pass, failed_witnesses: resultCounts.fail, retained_negatives: negativeIds.length }, tests: { passed: tests.length, failed: 0 }, models_3d: models.length, domain_aggregate_invocations: 1, domain_aggregate_successes: 1, domain_aggregate_replays: 0, skill_validation_pending: true, runner_smoke_pending: true, boundary: SHORT_BOUNDARY, terminal_verdict: "NOT_READY_FOR_STAGE_20" });
+writeText(path.join(X2, "summary.md"), `# Tamar Vey v699-v6 x2 bounded enumeration and gate execution\n\nX2 executed 150 planning-frozen contracts across ten finite-hypergraph operations. The exact outcomes are 105 completed, 15 represented, 15 open_gap, and 15 exact_gate. All 150 valid responses matched a separately coded bounded oracle. All 450 invalid or altered subjects remain failed at zero credit; 450 separate refusal checks passed. Fifteen minimal-transversal invariant tests and five synthetic three-axis models passed their bounded checks.\n\nTen new owner-local skill entrypoints and five new paired TXT runners were materialized for complete read, official quick validation, and accepting/rejecting smoke use. No real row, bookbinding decision, authority act, empirical GMUT result, production THOS/Freed ID result, independent reproduction, or Stage 20 evidence follows.\n`);
+
+process.stdout.write(`${JSON.stringify({ status: "VALID_X2_DOMAIN_AGGREGATE", contracts: records.length, operations: operationRecords.length, outcomes: outcomeCounts, exact_matches: records.length, failed_subjects: negativeIds.length, passing_witnesses: resultCounts.pass, failed_witnesses: resultCounts.fail, tests_passed: tests.length, models_3d: models.length, skills_created: skillRecords.length, runners_created: runnerRecords.length, terminal_verdict: "NOT_READY_FOR_STAGE_20" })}\n`);

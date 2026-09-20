@@ -1,0 +1,183 @@
+"use strict";
+
+const fs = require("fs");
+const path = require("path");
+const vm = require("vm");
+
+const OPERATIONS = new Set([
+  "transversal_enumeration",
+  "minimum_transversals",
+  "independent_set_enumeration",
+  "matching_enumeration",
+  "maximum_matchings",
+  "exact_cover_enumeration",
+  "dual_hypergraph",
+  "blocker_projection",
+  "hypergraph_external_observation_gap",
+  "hypergraph_governance_authority_gate"
+]);
+
+class ContractError extends Error {
+  constructor(code, message) {
+    super(message);
+    this.name = "ContractError";
+    this.code = code;
+  }
+}
+
+function loadX1() {
+  const runtimePath = path.join(__dirname, "..", "x1", "runtime.txt");
+  const code = fs.readFileSync(runtimePath, "utf8");
+  const moduleBox = { exports: {} };
+  const wrapper = new vm.Script(`(function(exports,module,require,__filename,__dirname){${code}\n})`, { filename: runtimePath });
+  wrapper.runInThisContext()(moduleBox.exports, moduleBox, require, runtimePath, path.dirname(runtimePath));
+  return moduleBox.exports;
+}
+
+const x1 = loadX1();
+
+function normalize(request) {
+  if (!request || typeof request !== "object" || Array.isArray(request)) throw new ContractError("request_shape", "request must be an object");
+  if (!OPERATIONS.has(request.operation)) throw new ContractError("operation", "operation is not available in x2");
+  try {
+    const base = x1.normalize({ ...request, operation: "vertex_inventory" });
+    return { ...base, operation: request.operation };
+  } catch (error) {
+    throw new ContractError(error.code || "x1_normalization", error.message);
+  }
+}
+
+function compareArrays(left, right) {
+  if (left.length !== right.length) return left.length - right.length;
+  const a = left.join("\u0000");
+  const b = right.join("\u0000");
+  return a < b ? -1 : a > b ? 1 : 0;
+}
+
+function powerSet(values, limit) {
+  const result = [];
+  const total = 2 ** values.length;
+  if (total > limit) throw new ContractError("enumeration_limit", "declared limit is smaller than the bounded powerset");
+  for (let mask = 0; mask < total; mask += 1) {
+    const subset = [];
+    for (let index = 0; index < values.length; index += 1) if (mask & (1 << index)) subset.push(values[index]);
+    result.push(subset);
+  }
+  return result.sort(compareArrays);
+}
+
+function isSubset(left, right) {
+  const set = new Set(right);
+  return left.every((value) => set.has(value));
+}
+
+function inclusionMinimal(sets) {
+  return sets.filter((candidate) => !sets.some((other) => other.length < candidate.length && isSubset(other, candidate))).sort(compareArrays);
+}
+
+function inclusionMaximal(sets) {
+  return sets.filter((candidate) => !sets.some((other) => other.length > candidate.length && isSubset(candidate, other))).sort(compareArrays);
+}
+
+function transversals(vertices, edges, limit) {
+  const hits = powerSet(vertices, limit).filter((subset) => edges.every((edge) => edge.some((vertex) => subset.includes(vertex))));
+  return inclusionMinimal(hits);
+}
+
+function independentSets(vertices, edges, limit) {
+  const valid = powerSet(vertices, limit).filter((subset) => edges.every((edge) => !edge.every((vertex) => subset.includes(vertex))));
+  return inclusionMaximal(valid);
+}
+
+function edgeSubsets(edges, limit) {
+  const ids = edges.map((_, index) => index);
+  return powerSet(ids, limit);
+}
+
+function pairwiseDisjoint(indices, edges) {
+  const seen = new Set();
+  for (const index of indices) {
+    for (const vertex of edges[index]) {
+      if (seen.has(vertex)) return false;
+      seen.add(vertex);
+    }
+  }
+  return true;
+}
+
+function maximalMatchings(edges, limit) {
+  const valid = edgeSubsets(edges, limit).filter((indices) => pairwiseDisjoint(indices, edges));
+  return inclusionMaximal(valid).map((indices) => indices.map((index) => `e${index + 1}`));
+}
+
+function maximumMatchings(edges, limit) {
+  const all = edgeSubsets(edges, limit).filter((indices) => pairwiseDisjoint(indices, edges));
+  const maximum = Math.max(...all.map((indices) => indices.length));
+  return all.filter((indices) => indices.length === maximum).sort(compareArrays).map((indices) => indices.map((index) => `e${index + 1}`));
+}
+
+function exactCovers(vertices, edges, limit) {
+  const target = [...vertices].sort().join("\u0000");
+  return edgeSubsets(edges, limit)
+    .filter((indices) => pairwiseDisjoint(indices, edges))
+    .filter((indices) => indices.flatMap((index) => edges[index]).sort().join("\u0000") === target)
+    .sort(compareArrays)
+    .map((indices) => indices.map((index) => `e${index + 1}`));
+}
+
+function execute(rawRequest) {
+  const request = normalize(rawRequest);
+  const { operation, vertices, edges, limit } = request;
+  let result;
+  let outcome = "completed";
+
+  if (operation === "transversal_enumeration") {
+    result = { transversals: transversals(vertices, edges, limit) };
+  } else if (operation === "minimum_transversals") {
+    const all = transversals(vertices, edges, limit);
+    const minimum = Math.min(...all.map((set) => set.length));
+    result = { cardinality: minimum, transversals: all.filter((set) => set.length === minimum) };
+  } else if (operation === "independent_set_enumeration") {
+    result = { independent_sets: independentSets(vertices, edges, limit) };
+  } else if (operation === "matching_enumeration") {
+    result = { matchings: maximalMatchings(edges, limit) };
+  } else if (operation === "maximum_matchings") {
+    const matchings = maximumMatchings(edges, limit);
+    result = { cardinality: matchings[0]?.length || 0, matchings };
+  } else if (operation === "exact_cover_enumeration") {
+    result = { exact_covers: exactCovers(vertices, edges, limit) };
+  } else if (operation === "dual_hypergraph") {
+    const edgeIds = edges.map((_, index) => `e${index + 1}`);
+    result = { vertices: edgeIds, edges: vertices.map((vertex) => ({ source_vertex: vertex, members: edges.map((edge, index) => edge.includes(vertex) ? edgeIds[index] : null).filter(Boolean) })) };
+  } else if (operation === "blocker_projection") {
+    outcome = "represented";
+    result = { representation: "minimal_transversal_family", edges: transversals(vertices, edges, limit), complexity_theorem_claimed: false };
+  } else if (operation === "hypergraph_external_observation_gap") {
+    outcome = "open_gap";
+    result = { open: true, real_rows: 0, missing: ["real workshop observation", "manual assistive-technology evaluation", "affected-user evaluation", "independent review"] };
+  } else if (operation === "hypergraph_governance_authority_gate") {
+    outcome = "exact_gate";
+    result = { executed: false, authority_present: false, reserved: ["professional release", "custody and ownership", "copyright", "remedy", "legal and cultural interpretation", "affected-party acceptance", "Maori wording data governance and authority"] };
+  } else {
+    throw new ContractError("operation", "operation is not implemented in x2");
+  }
+
+  return { ok: true, operation, outcome, result, scope: "finite_synthetic_hypergraph_only", same_owner_only: true, independent_reproduction: false };
+}
+
+function runCli() {
+  let input = "";
+  process.stdin.setEncoding("utf8");
+  process.stdin.on("data", (chunk) => { input += chunk; });
+  process.stdin.on("end", () => {
+    try {
+      process.stdout.write(`${JSON.stringify(execute(JSON.parse(input)))}\n`);
+    } catch (error) {
+      process.stdout.write(`${JSON.stringify({ ok: false, error: error.code || "internal", message: error.message })}\n`);
+      process.exitCode = 2;
+    }
+  });
+}
+
+module.exports = { ContractError, execute, normalize };
+if (require.main === module) runCli();

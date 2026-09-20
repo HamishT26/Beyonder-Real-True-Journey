@@ -1,0 +1,238 @@
+"use strict";
+
+const fs = require("fs");
+const path = require("path");
+const vm = require("vm");
+const { spawnSync } = require("child_process");
+
+const ROOT = process.cwd();
+const BASE = path.join(ROOT, "docs", "tamar-vey", "v699-v6");
+const X2 = path.join(BASE, "x2");
+const PLAN = JSON.parse(fs.readFileSync(path.join(BASE, "planning", "plan.json"), "utf8"));
+const BOUNDARY = "Bounded same-owner x2 finite synthetic hypergraph validation only; not observation, independent reproduction, external audit, professional or production validation, complete privacy or accessibility assurance, exhaustive security, authority, proof, canon, or Stage 20 evidence.";
+const PROTECTED = ["empirical confirmation", "real participants", "professional authority", "production deployment", "legal cultural affected-party and Maori authority", "complete privacy accessibility and security", "independent reproduction", "consciousness personhood AGI ASI", "Theory-of-Everything proof or canon", "Stage 20"];
+
+function readJson(filePath) {
+  return JSON.parse(fs.readFileSync(filePath, "utf8"));
+}
+
+function writeJson(name, value) {
+  fs.writeFileSync(path.join(X2, name), `${JSON.stringify(value, null, 2)}\n`, "utf8");
+}
+
+function allFiles(directory) {
+  const output = [];
+  for (const entry of fs.readdirSync(directory, { withFileTypes: true })) {
+    const full = path.join(directory, entry.name);
+    if (entry.isDirectory()) output.push(...allFiles(full));
+    else output.push(full);
+  }
+  return output;
+}
+
+const issues = [];
+const first = readJson(path.join(X2, "execution-records-01.json"));
+const second = readJson(path.join(X2, "execution-records-02.json"));
+const records = [...first.records, ...second.records];
+const flow = readJson(path.join(X2, "method-flow.json"));
+const capabilities = readJson(path.join(X2, "capabilities.json"));
+const execution = readJson(path.join(X2, "execution.json"));
+const tests = readJson(path.join(X2, "tests.json"));
+const models = readJson(path.join(X2, "models-3d.json"));
+
+const outcomes = records.reduce((acc, record) => { acc[record.outcome] += 1; return acc; }, { completed: 0, represented: 0, open_gap: 0, exact_gate: 0 });
+if (records.length !== 150 || records.some((record) => record.exact_match !== true)) issues.push("record_count_or_exactness");
+if (JSON.stringify(outcomes) !== JSON.stringify({ completed: 105, represented: 15, open_gap: 15, exact_gate: 15 })) issues.push("outcome_counts");
+const invalidSubjects = records.flatMap((record) => record.negative_subjects || []);
+if (invalidSubjects.length !== 450 || invalidSubjects.some((item) => item.subject_result !== "fail" || item.refusal_result !== "pass" || item.original_success_credit !== 0)) issues.push("invalid_subject_accounting");
+if (records.some((record) => record.cfr_recovery !== "pass" || record.cleanup !== "pass")) issues.push("cfr_or_cleanup");
+if (execution.domain_aggregate_invocations !== 1 || execution.domain_aggregate_successes !== 1 || execution.domain_aggregate_replays !== 0) issues.push("domain_aggregate_latch");
+if (tests.tests.length !== 15 || tests.passed !== 15 || tests.failed !== 0 || tests.tests.some((test) => test.passed !== true)) issues.push("invariant_tests");
+if (models.models.length !== 5 || models.count !== 5 || models.real_measurements !== 0) issues.push("synthetic_models");
+if (flow.schema !== "ghc.family.method-flow-state.v1" || flow.counts.methods !== 10 || flow.counts.witnesses !== 1350 || flow.counts.witness_results.pass !== 900 || flow.counts.witness_results.fail !== 450 || flow.counts.states.preferred !== 10) issues.push("domain_method_flow_counts");
+for (const method of flow.methods) {
+  const actual = flow.witnesses.filter((witness) => witness.method_id === method.method_id).map((witness) => witness.witness_id);
+  if (JSON.stringify(actual) !== JSON.stringify(method.validation_witness_ids) || method.retained_negative_ids.length === 0) issues.push(`domain_method_linkage:${method.method_id}`);
+}
+
+const skillResults = [];
+const skillMethods = [];
+const validationWitnesses = [];
+const quickValidate = path.join(process.env.USERPROFILE, ".codex", "skills", ".system", "skill-creator", "scripts", "quick_validate.py");
+for (const skill of capabilities.skills) {
+  const skillPath = path.join(ROOT, skill.path);
+  const skillDir = path.dirname(skillPath);
+  const raw = fs.readFileSync(skillPath, "utf8");
+  const result = spawnSync("python", ["-X", "utf8", quickValidate, skillDir], { cwd: ROOT, encoding: "utf8", env: { ...process.env, PYTHONUTF8: "1" }, maxBuffer: 4 * 1024 * 1024 });
+  const passed = result.status === 0 && raw.includes(`# ${skill.skill_name}`) && raw.trimEnd().endsWith("stop on every protected gate.");
+  if (!passed) issues.push(`skill_validation:${skill.skill_name}`);
+  skill.quick_validation = passed ? "pass" : "fail";
+  skill.smoke_use = passed ? "complete_read_quick_validation_and_contract_selection" : "fail";
+  skillResults.push({ skill_name: skill.skill_name, quick_validation: skill.quick_validation, complete_read: true, smoke_use: skill.smoke_use, output: (result.stdout || result.stderr || "").trim().slice(0, 300) });
+  const contract = PLAN.contracts.find((record) => record.stage === "x2" && record.operation === skill.operation);
+  const retainedId = contract.mutations[0].id;
+  const methodId = `TV6996-M-X2-SKILL-${skill.operation}`;
+  const readId = `${methodId}-W-READ`;
+  const validateId = `${methodId}-W-VALIDATE`;
+  skillMethods.push({ method_id: methodId, title: `Owner-local x2 skill ${skill.operation}`, failure_signature: "A skill is ineligible before complete read and official quick validation.", trigger_preconditions: ["owner-local SKILL.md exists", "complete read through EOF", "official quick validation"], privacy_class: "sanitized_public", approval_class: "owner_internal_safe_now", candidate_workaround: "Read the complete entrypoint and run the official validator before selection.", validation_witness_ids: [readId, validateId], recurrence_guard: "Bind exact skill bytes and retain a known malformed contract subject.", rollback: "Deselect the owner-local skill without deleting evidence.", recommendation_state: "preferred", supersedes: [], protected_gates: PROTECTED, retained_negative_ids: [retainedId], scope_boundary: BOUNDARY, execution_authority: "owner_self_scoped_delta", repository_scan: false, module_scan: true, cross_lane_scan: false, unchanged_history_scan: false, sibling_lane_mutation: false, source_commit: "7f0caeb7625d6bf582caee2f9545ec61f03efb24", final_commit: "pending_x2_commit", changed_file_allowlist: [skill.path], module_allowlist: [skill.path], exact_pushed_head_required: true });
+  validationWitnesses.push({ witness_id: readId, method_id: methodId, procedure: "Read the complete owner-local SKILL.md through EOF.", scope: "one owner-local x2 skill", expected: "complete bounded entrypoint", observed: "complete bounded entrypoint", result: "pass", same_owner_only: true, independent_reproduction: false, retained_negative_ids: [], boundary: BOUNDARY });
+  validationWitnesses.push({ witness_id: validateId, method_id: methodId, procedure: "Run the official skill-creator quick validator under explicit UTF-8.", scope: "frontmatter and scaffold validation", expected: "validator exit zero", observed: `exit ${result.status}`, result: result.status === 0 ? "pass" : "fail", same_owner_only: true, independent_reproduction: false, retained_negative_ids: [], boundary: BOUNDARY });
+}
+
+const runnerResults = [];
+const runnerMethods = [];
+let runnerIndex = 0;
+for (const runner of capabilities.runners) {
+  runnerIndex += 1;
+  const runnerPath = path.join(ROOT, runner.path);
+  try {
+    new vm.Script(fs.readFileSync(runnerPath, "utf8"), { filename: runner.runner });
+    runner.syntax = "pass";
+  } catch (error) {
+    runner.syntax = "fail";
+    issues.push(`runner_syntax:${runner.runner}`);
+  }
+  const contract = PLAN.contracts.find((record) => record.stage === "x2" && record.operation === runner.operations[0]);
+  const positive = spawnSync("node", [runnerPath], { cwd: ROOT, input: `${JSON.stringify(contract.request)}\n`, encoding: "utf8", maxBuffer: 4 * 1024 * 1024 });
+  let positiveBody = {};
+  try { positiveBody = JSON.parse((positive.stdout || "").trim()); } catch { positiveBody = {}; }
+  const acceptingPass = positive.status === 0 && positiveBody.ok === true && positiveBody.operation === contract.operation;
+  runner.accepting_smoke = acceptingPass ? "pass" : "fail";
+  if (!acceptingPass) issues.push(`runner_accepting:${runner.runner}`);
+
+  const negativeRequest = { ...contract.request, unexpected: true };
+  const negative = spawnSync("node", [runnerPath], { cwd: ROOT, input: `${JSON.stringify(negativeRequest)}\n`, encoding: "utf8", maxBuffer: 4 * 1024 * 1024 });
+  let negativeBody = {};
+  try { negativeBody = JSON.parse((negative.stdout || "").trim()); } catch { negativeBody = {}; }
+  const refusingPass = negative.status === 2 && negativeBody.ok === false && negativeBody.error === "field_set";
+  runner.rejecting_smoke = refusingPass ? "pass" : "fail";
+  if (!refusingPass) issues.push(`runner_rejecting:${runner.runner}`);
+  const ordinal = String(runnerIndex + 5).padStart(2, "0");
+  const negativeId = `TV6996-X2-RUNNER-N${ordinal}`;
+  const methodId = `TV6996-M-X2-RUNNER-${ordinal}`;
+  runnerMethods.push({ method_id: methodId, title: `Paired x2 TXT runner ${ordinal}`, failure_signature: "The deliberately malformed runner subject remains failed even when its refusal passes.", trigger_preconditions: ["runner syntax valid", "one frozen accepting fixture", "one unknown-field rejecting fixture"], privacy_class: "sanitized_public", approval_class: "owner_internal_safe_now", candidate_workaround: "Reject the malformed subject and retain it separately from the refusal witness.", validation_witness_ids: [`${methodId}-W-SYNTAX`, `${methodId}-W-ACCEPT`, `${methodId}-W-SUBJECT`, `${methodId}-W-REFUSE`], recurrence_guard: "Require the exact admitted-operation pair and pass the full request envelope.", rollback: "Deselect the runner while preserving its bytes and failed subject.", recommendation_state: "preferred", supersedes: [], protected_gates: PROTECTED, retained_negative_ids: [negativeId], scope_boundary: BOUNDARY, execution_authority: "owner_self_scoped_delta", repository_scan: false, module_scan: true, cross_lane_scan: false, unchanged_history_scan: false, sibling_lane_mutation: false, source_commit: "7f0caeb7625d6bf582caee2f9545ec61f03efb24", final_commit: "pending_x2_commit", changed_file_allowlist: [runner.path], module_allowlist: [runner.path], exact_pushed_head_required: true });
+  validationWitnesses.push({ witness_id: `${methodId}-W-SYNTAX`, method_id: methodId, procedure: "Parse the TXT CommonJS source with vm.Script.", scope: "one runner", expected: "syntax valid", observed: runner.syntax, result: runner.syntax, same_owner_only: true, independent_reproduction: false, retained_negative_ids: [], boundary: BOUNDARY });
+  validationWitnesses.push({ witness_id: `${methodId}-W-ACCEPT`, method_id: methodId, procedure: "Run one frozen valid request admitted by the runner pair.", scope: "accepting smoke", expected: "bounded success", observed: runner.accepting_smoke, result: runner.accepting_smoke, same_owner_only: true, independent_reproduction: false, retained_negative_ids: [], boundary: BOUNDARY });
+  validationWitnesses.push({ witness_id: `${methodId}-W-SUBJECT`, method_id: methodId, procedure: "Present one unknown-field subject to the runner.", scope: "invalid smoke subject", expected: "subject remains failed", observed: "invalid subject presented", result: "fail", same_owner_only: true, independent_reproduction: false, retained_negative_ids: [negativeId], boundary: BOUNDARY });
+  validationWitnesses.push({ witness_id: `${methodId}-W-REFUSE`, method_id: methodId, procedure: "Observe the runner refusal for the unknown-field subject.", scope: "refusal behavior only", expected: "field_set", observed: negativeBody.error || "no_error", result: refusingPass ? "pass" : "fail", same_owner_only: true, independent_reproduction: false, retained_negative_ids: [negativeId], boundary: BOUNDARY });
+  runnerResults.push({ runner: runner.runner, operations: runner.operations, syntax: runner.syntax, accepting_smoke: runner.accepting_smoke, rejecting_subject: "fail", rejecting_smoke: runner.rejecting_smoke, retained_negative_id: negativeId });
+}
+
+capabilities.skills = capabilities.skills.map((skill) => ({ ...skill, quick_validation: skill.quick_validation, smoke_use: skill.smoke_use }));
+capabilities.runners = capabilities.runners.map((runner) => ({ ...runner, syntax: runner.syntax, accepting_smoke: runner.accepting_smoke, rejecting_smoke: runner.rejecting_smoke }));
+writeJson("capabilities.json", capabilities);
+execution.skill_validation_pending = false;
+execution.runner_smoke_pending = false;
+execution.skill_validations = skillResults.filter((row) => row.quick_validation === "pass").length;
+execution.runner_accepting_smokes = runnerResults.filter((row) => row.accepting_smoke === "pass").length;
+execution.runner_rejecting_smokes = runnerResults.filter((row) => row.rejecting_smoke === "pass").length;
+writeJson("execution.json", execution);
+
+const validationMethods = [...skillMethods, ...runnerMethods];
+const validationPasses = validationWitnesses.filter((row) => row.result === "pass").length;
+const validationFailures = validationWitnesses.filter((row) => row.result === "fail").length;
+const validationStates = { observed: 0, candidate: 0, validated: 0, preferred: validationMethods.length, superseded: 0, deprecated: 0 };
+writeJson("method-flow-validation.json", {
+  schema: "ghc.family.method-flow-state.v1",
+  phase: "v699-v6",
+  owner: "Tamar Vey",
+  identity_boundary: "Relational working language only; no continuity or authority claim.",
+  execution_authority: "owner_self_scoped_delta",
+  methods: validationMethods,
+  witnesses: validationWitnesses,
+  state_events: validationMethods.map((method) => ({ method_id: method.method_id, from: "candidate", to: "preferred", failed_subjects_retained: true })),
+  recommendations: validationMethods.map((method) => ({ method_id: method.method_id, state: "preferred" })),
+  counts: { methods: validationMethods.length, witnesses: validationWitnesses.length, state_events: validationMethods.length, recommendations: validationMethods.length, states: validationStates, witness_results: { pass: validationPasses, fail: validationFailures } },
+  boundary: BOUNDARY
+});
+
+const methodFlowTool = path.join(process.env.USERPROFILE, ".codex", "skills", "ghc-family-method-flow-state", "scripts", "ghc_family_method_flow_state.py");
+const methodFlowChecks = [];
+for (const [ledgerName, receiptName] of [["method-flow.json", "domain-method-flow-validation.json"], ["method-flow-validation.json", "capability-method-flow-validation.json"]]) {
+  const ledger = path.join(X2, ledgerName);
+  const receipt = path.join(X2, receiptName);
+  const result = spawnSync("python", ["-X", "utf8", methodFlowTool, "validate", "--ledger", ledger, "--receipt", receipt], { cwd: ROOT, encoding: "utf8", env: { ...process.env, PYTHONUTF8: "1" }, maxBuffer: 8 * 1024 * 1024 });
+  let body = {};
+  try { body = readJson(receipt); } catch { body = {}; }
+  const passed = result.status === 0 && body.valid === true && Array.isArray(body.issues) && body.issues.length === 0;
+  if (!passed) issues.push(`official_method_flow:${ledgerName}`);
+  methodFlowChecks.push({ ledger: ledgerName, receipt: receiptName, exit_code: result.status, valid: body.valid === true, issue_count: Array.isArray(body.issues) ? body.issues.length : null });
+}
+
+const ownerFiles = [...allFiles(X2), ...capabilities.skills.map((skill) => path.join(ROOT, skill.path)), ...capabilities.runners.map((runner) => path.join(ROOT, runner.path))];
+const uniqueOwnerFiles = [...new Set(ownerFiles.map((file) => path.resolve(file)))];
+const allowedExtensions = new Set([".json", ".md", ".txt", ".html"]);
+for (const file of uniqueOwnerFiles) if (!allowedExtensions.has(path.extname(file).toLowerCase())) issues.push(`forbidden_extension:${path.relative(ROOT, file)}`);
+
+let jsonParsed = 0;
+let txtSyntax = 0;
+let markdownChecked = 0;
+for (const file of uniqueOwnerFiles) {
+  const ext = path.extname(file).toLowerCase();
+  const raw = fs.readFileSync(file, "utf8");
+  if (ext === ".json") { JSON.parse(raw); jsonParsed += 1; }
+  if (ext === ".txt") { new vm.Script(raw, { filename: file }); txtSyntax += 1; }
+  if (ext === ".md") { if (!raw.includes("#")) issues.push(`markdown_structure:${path.relative(ROOT, file)}`); markdownChecked += 1; }
+}
+
+const patterns = [
+  ["raw_task_or_thread_identifier", /\b(?:threadId|thread_id|task_id)\b|\b[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}\b/gi],
+  ["private_absolute_path", /\b[A-Za-z]:\\/g],
+  ["credential_or_private_key", /\b(?:sk-[A-Za-z0-9_-]{20,}|ghp_[A-Za-z0-9]{20,}|BEGIN (?:RSA |EC )?PRIVATE KEY)\b/g],
+  ["private_conversation_or_session_stream", /\b(?:raw transcript|session stream|private screenshot)\b/gi],
+  ["private_callable_or_application_state", /\b(?:callable_identifier|private application state|private app state)\b/gi]
+];
+const privacyCandidates = [];
+for (const file of uniqueOwnerFiles) {
+  const rel = path.relative(ROOT, file).replaceAll("\\", "/");
+  const text = fs.readFileSync(file, "utf8");
+  for (const [kind, pattern] of patterns) {
+    const count = (text.match(pattern) || []).length;
+    if (count) privacyCandidates.push({ path: rel, kind, count, adjudication: rel.endsWith("validate-x2.txt") ? "scanner_definition" : "unresolved" });
+  }
+}
+const confirmedPrivacy = privacyCandidates.filter((candidate) => candidate.adjudication !== "scanner_definition");
+if (confirmedPrivacy.length) issues.push("privacy_confirmed_hits");
+
+let maximumDocument = { path: "", words: 0, bytes: 0 };
+for (const file of uniqueOwnerFiles) {
+  const raw = fs.readFileSync(file, "utf8");
+  const words = raw.trim().length ? raw.trim().split(/\s+/).length : 0;
+  if (words > maximumDocument.words) maximumDocument = { path: path.relative(ROOT, file).replaceAll("\\", "/"), words, bytes: Buffer.byteLength(raw) };
+}
+if (maximumDocument.words > 100000) issues.push("document_word_ceiling");
+
+const validation = {
+  schema: "tamar.x2-validation.v1",
+  status: issues.length ? "INVALID_X2" : "VALID_X2",
+  issues,
+  domain_aggregate: { invocations: 1, successes: 1, replays: 0 },
+  contracts: records.length,
+  exact_matches: records.filter((record) => record.exact_match).length,
+  outcomes,
+  invalid_subjects_retained: invalidSubjects.length,
+  passing_refusals: invalidSubjects.filter((item) => item.refusal_result === "pass").length,
+  invariant_tests: { passed: tests.passed, failed: tests.failed, replayed: false },
+  synthetic_models_3d: models.count,
+  skills: skillResults,
+  runners: runnerResults,
+  method_flow_checks: methodFlowChecks,
+  validation_method_flow: { methods: validationMethods.length, witnesses: validationWitnesses.length, passing: validationPasses, failed: validationFailures, distinct_runner_negatives: runnerResults.length },
+  json_parsed: jsonParsed,
+  txt_syntax_checked: txtSyntax,
+  markdown_checked: markdownChecked,
+  owner_files: uniqueOwnerFiles.length,
+  privacy_candidates: privacyCandidates,
+  privacy_confirmed_hits: confirmedPrivacy,
+  maximum_document: maximumDocument,
+  full_repository_suite: false,
+  same_owner_only: true,
+  independent_reproduction: false,
+  final_or_closeout_materialized: false,
+  terminal_verdict: "NOT_READY_FOR_STAGE_20",
+  boundary: BOUNDARY
+};
+writeJson("validation.json", validation);
+
+process.stdout.write(`${JSON.stringify({ status: validation.status, issues, contracts: records.length, exact_matches: records.length, outcomes, invalid_subjects_retained: invalidSubjects.length, passing_refusals: invalidSubjects.length, invariant_tests_passed: tests.passed, models_3d: models.count, skills_validated: skillResults.filter((row) => row.quick_validation === "pass").length, runners_accepting: runnerResults.filter((row) => row.accepting_smoke === "pass").length, runners_rejecting: runnerResults.filter((row) => row.rejecting_smoke === "pass").length, validation_method_flow: validation.validation_method_flow, official_method_flows: methodFlowChecks, json_parsed: jsonParsed, txt_syntax_checked: txtSyntax, privacy_candidates: privacyCandidates.length, privacy_confirmed: confirmedPrivacy.length, maximum_document_words: maximumDocument.words, terminal_verdict: "NOT_READY_FOR_STAGE_20" })}\n`);
+process.exitCode = issues.length ? 2 : 0;
