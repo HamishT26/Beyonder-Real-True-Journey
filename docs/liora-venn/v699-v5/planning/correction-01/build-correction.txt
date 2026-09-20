@@ -1,0 +1,180 @@
+# Python 3. Additive planning correction only; no x1 or x2 execution.
+from pathlib import Path
+from datetime import datetime, timezone
+import hashlib, json, subprocess, sys
+
+HERE = Path(__file__).resolve().parent
+ROOT = Path(__file__).resolve().parents[2]
+REPO = ROOT.parents[2]
+SOURCE = 'bea81cbb05f608f57e7ee2c6f41d0f2104be27dc'
+PLANNING = 'dd4f3b41ca2f8b3fa41c1ee7575f7dbf024c718b'
+BRANCH = 'codex/GHC-Family/liora-venn-v699-v5-full-tools'
+PREFIX = 'docs/liora-venn/v699-v5/planning/correction-01/'
+BOUNDARY = ('Planning-only same-owner finite synthetic evidence. The immutable first planning freeze remains retained. '
+    'This additive overlay corrects per-session task floors without x1 or x2 execution, canonical invocation, route lookup, '
+    'independent reproduction, empirical GMUT confirmation, production readiness, professional authority, legal or cultural '
+    'ratification, Maori authority, proof, canon or Stage 20 authority. NOT_READY_FOR_STAGE_20.')
+
+def sha(raw): return hashlib.sha256(raw).hexdigest()
+def stable(value): return json.dumps(value, sort_keys=True, separators=(',', ':'), ensure_ascii=False)
+def write(name, value):
+    target = HERE / name
+    assert not target.exists(), name
+    target.write_text((stable(value) if not isinstance(value, str) else value.rstrip()) + '\n',
+                      encoding='utf-8', newline='\n')
+def git(*args):
+    return subprocess.check_output(['git', '-C', str(REPO), *args], stderr=subprocess.PIPE).decode().strip()
+
+assert len(sys.argv) == 2
+receipt_bank = Path(sys.argv[1])
+assert git('rev-parse', 'HEAD') == PLANNING
+assert git('branch', '--show-current') == BRANCH
+assert git('status', '--short') == '?? docs/liora-venn/v699-v5/planning/correction-01/'
+assert not (receipt_bank / 'planning-correction-01-built.json').exists()
+
+plan = json.loads((ROOT / 'planning/plan.json').read_text(encoding='utf-8'))
+workflow = json.loads((ROOT / 'planning/current-workflow-v13.json').read_text(encoding='utf-8'))
+assert len(plan['contracts']) == 300
+assert workflow['source_v12']['sha256'] == 'a932954467cd139460a276eef584a18ba920c084b64b70874a927c2067382637'
+source_x1 = json.loads(git('show', SOURCE + ':docs/orin-thale/v699-v4/x1/execution.json'))
+assert source_x1['counts']['safe'] == 300
+assert source_x1['counts']['candidate_failed'] == 300
+assert source_x1['counts']['cfr_passed'] == 300
+
+def corrected_portfolio(stage):
+    contracts = [row for row in plan['contracts'] if row['stage'] == stage]
+    assert len(contracts) == 150
+    safe, candidates, cfr = [], [], []
+    for row in contracts:
+        safe.extend([
+            {'id': row['id'] + '-SAFE-A', 'contract_id': row['id'],
+             'task': 'Execute the exact positive finite subject and preserve its complete envelope.',
+             'state': 'planned', 'completion_credit': 0},
+            {'id': row['id'] + '-SAFE-B', 'contract_id': row['id'],
+             'task': 'Verify frozen-request immutability and exact full-envelope equality within the same attributable aggregate.',
+             'state': 'planned', 'completion_credit': 0},
+        ])
+        candidates.extend([
+            {'id': row['id'] + '-CAND-N1', 'contract_id': row['id'],
+             'task': 'Execute and retain the undeclared-field failed subject plus its separate refusal witness.',
+             'state': 'planned', 'completion_credit': 0},
+            {'id': row['id'] + '-CAND-N2', 'contract_id': row['id'],
+             'task': 'Execute and retain the self-cover failed subject plus its separate refusal witness.',
+             'state': 'planned', 'completion_credit': 0},
+        ])
+        cfr.extend([
+            {'id': row['id'] + '-CFR-A', 'contract_id': row['id'],
+             'task': 'Execute the altered-expected comparison as a retained zero-credit failure.',
+             'state': 'planned', 'completion_credit': 0},
+            {'id': row['id'] + '-CFR-B', 'contract_id': row['id'],
+             'task': 'Bind the unchanged exact output as the smallest recovery without rewriting the altered-expected failure.',
+             'state': 'planned', 'completion_credit': 0},
+        ])
+    assert len(safe) == len(candidates) == len(cfr) == 300
+    return {'schema': 'liora.corrected-session-portfolio.v1', 'stage': stage,
+        'safe_now': safe, 'bounded_candidates': candidates, 'clean_fix_refine': cfr,
+        'original_portfolio_retained': 'planning/%s-portfolios.json' % stage,
+        'original_count_per_category': 150, 'corrected_count_per_category': 300,
+        'execution_credit_at_correction': 0, 'boundary': BOUNDARY}
+
+x1, x2 = corrected_portfolio('x1'), corrected_portfolio('x2')
+write('x1-portfolios.json', x1)
+write('x2-portfolios.json', x2)
+correction = {
+    'schema': 'liora.planning-correction.v1', 'owner': 'Liora Venn', 'phase': 'v699-v5',
+    'source_commit': SOURCE, 'planning_commit': PLANNING, 'correction_id': 'LV6995-PLAN-N007',
+    'failure': 'The first planning validator aggregated the per-session portfolio floors across x1 and x2, accepting 300 combined while the v12 conflict rule requires 300 in each session.',
+    'original_success_credit': 0, 'original_files_retained': [
+        'planning/x1-portfolios.json', 'planning/x2-portfolios.json', 'planning/plan.json'],
+    'recovery': 'Add two distinct bounded task records per stage contract in each category, yielding 300 safe, 300 candidate and 300 CLEAN/FIX/REFINE records separately in x1 and x2.',
+    'recovery_witness_id': 'LV6995-PLAN-P007',
+    'guidance_basis': {'v13_source_v12_sha256': workflow['source_v12']['sha256'],
+        'source_x1_execution_sha256': sha(git('show', SOURCE + ':docs/orin-thale/v699-v4/x1/execution.json').encode()),
+        'source_x1_counts': {'safe': 300, 'candidate_failed': 300, 'cfr_passed': 300}},
+    'corrected_floors': {'x1': {'safe': 300, 'candidate': 300, 'clean_fix_refine': 300},
+                         'x2': {'safe': 300, 'candidate': 300, 'clean_fix_refine': 300}},
+    'lifecycle': {'planning_freeze_commits': 1, 'planning_correction_commits': 1,
+                  'planned_x1_commits': 1, 'planned_x2_commits': 1, 'planned_final_commits': 1,
+                  'corrected_total_ceiling': 5, 'inherited_outer_ceiling': 6},
+    'x1_present': False, 'x2_present': False, 'canonical_invocations': 0, 'route_lookups': 0,
+    'boundary': BOUNDARY,
+}
+write('correction.json', correction)
+method_flow = {
+    'schema': 'ghc.family.method-flow-state.v1', 'phase': 'v699-v5', 'owner': 'Liora Venn',
+    'identity_boundary': BOUNDARY, 'execution_authority': 'owner_self_scoped_delta',
+    'source_commit': PLANNING, 'final_commit': 'pending_exact_pushed_head',
+    'changed_file_allowlist': [PREFIX], 'module_allowlist': [],
+    'sparse_file_budget_state': 'additive correction remains below the 2000 owner-file stop',
+    'methods': [{
+        'method_id': 'LV6995-M-plan-floor-correction', 'title': 'Per-session portfolio floor correction',
+        'failure_signature': correction['failure'],
+        'trigger_preconditions': ['exact current workflow overlay', 'planning-only owner scope'],
+        'privacy_class': 'sanitized_public', 'approval_class': 'safe_now',
+        'candidate_workaround': correction['recovery'],
+        'validation_witness_ids': ['LV6995-PLAN-N007', 'LV6995-PLAN-P007'],
+        'recurrence_guard': 'Validate every minimum against x1 and x2 separately before aggregating totals.',
+        'rollback': 'Retain the immutable first freeze and this failed interpretation; stop before x1 until the additive correction is pushed and equal.',
+        'recommendation_state': 'preferred', 'supersedes': [],
+        'protected_gates': ['empirical_confirmation', 'professional_authority', 'production',
+                            'legal_cultural_affected_party_authority', 'Maori_authority',
+                            'independent_reproduction', 'Stage_20'],
+        'retained_negative_ids': ['LV6995-PLAN-N007'], 'scope_boundary': BOUNDARY,
+        'execution_authority': 'owner_self_scoped_delta', 'repository_scan': False,
+        'module_scan': False, 'cross_lane_scan': False, 'unchanged_history_scan': False,
+        'sibling_lane_mutation': False, 'source_commit': PLANNING,
+        'final_commit': 'pending_exact_pushed_head', 'changed_file_allowlist': [PREFIX],
+        'module_allowlist': [], 'exact_pushed_head_required': False,
+    }],
+    'witnesses': [
+        {'witness_id': 'LV6995-PLAN-N007', 'method_id': 'LV6995-M-plan-floor-correction',
+         'procedure': 'Retained first aggregate-floor interpretation.', 'scope': 'planning correction',
+         'expected': 'Three 300-record portfolio floors independently in x1 and x2.',
+         'observed': 'The first freeze held 150 records per category in each session and only 300 combined.',
+         'result': 'fail', 'same_owner_only': True, 'independent_reproduction': False,
+         'retained_negative_ids': ['LV6995-PLAN-N007'], 'boundary': BOUNDARY},
+        {'witness_id': 'LV6995-PLAN-P007', 'method_id': 'LV6995-M-plan-floor-correction',
+         'procedure': 'Count the additive stage-specific overlays and bind the exact v12 source digest.',
+         'scope': 'planning correction', 'expected': '300 safe, 300 candidate and 300 CFR rows per session.',
+         'observed': 'x1 and x2 each contain 300 distinct rows in all three categories.',
+         'result': 'pass', 'same_owner_only': True, 'independent_reproduction': False,
+         'retained_negative_ids': ['LV6995-PLAN-N007'], 'boundary': BOUNDARY},
+    ],
+    'state_events': [
+        {'event_id': 'LV6995-M-plan-floor-correction-E1', 'method_id': 'LV6995-M-plan-floor-correction',
+         'from': 'observed', 'to': 'candidate', 'witness_id': 'LV6995-PLAN-N007'},
+        {'event_id': 'LV6995-M-plan-floor-correction-E2', 'method_id': 'LV6995-M-plan-floor-correction',
+         'from': 'candidate', 'to': 'validated', 'witness_id': 'LV6995-PLAN-P007'},
+        {'event_id': 'LV6995-M-plan-floor-correction-E3', 'method_id': 'LV6995-M-plan-floor-correction',
+         'from': 'validated', 'to': 'preferred', 'witness_id': 'LV6995-PLAN-P007'},
+    ],
+    'recommendations': [],
+    'counts': {'methods': 1, 'witnesses': 2, 'state_events': 3, 'recommendations': 0,
+        'states': {'observed': 0, 'candidate': 0, 'validated': 0, 'preferred': 1,
+                   'superseded': 0, 'deprecated': 0},
+        'witness_results': {'pass': 1, 'fail': 1}},
+    'boundary': BOUNDARY,
+}
+write('method-flow.json', method_flow)
+write('summary.md', '# Liora Venn v699-v5 planning correction 01\n\n'
+    'The pushed first freeze remains immutable and records the failed aggregate interpretation. '
+    'Current v12-over-v13 guidance requires 300 safe, 300 candidate, and 300 CLEAN/FIX/REFINE tasks independently in x1 and x2. '
+    'This overlay supplies those six exact 300-row sets without x1 or x2 execution. The correction uses two distinct tasks per '
+    'stage contract and does not duplicate a domain invocation or promote a failed witness.\n\n' + BOUNDARY)
+files = sorted(path for path in HERE.rglob('*') if path.is_file())
+manifest = {'schema': 'liora.planning-correction-manifest.v1', 'byte_domain': 'normalized_lf_git_blob',
+    'entries': [{'path': path.relative_to(REPO).as_posix(), 'bytes': len(path.read_bytes()),
+                 'sha256': sha(path.read_bytes())} for path in files],
+    'exclusions': [PREFIX + 'manifest.json'], 'execution_credit': 0, 'boundary': BOUNDARY}
+write('manifest.json', manifest)
+with (receipt_bank / 'planning-correction-01-built.json').open('x', encoding='utf-8', newline='\n') as handle:
+    json.dump({'status': 'PLANNING_CORRECTION_PREPARED_NOT_PUBLISHED',
+        'source': PLANNING, 'failure_retained': 'LV6995-PLAN-N007',
+        'x1_floors': [300, 300, 300], 'x2_floors': [300, 300, 300],
+        'manifest_sha256': sha((HERE / 'manifest.json').read_bytes()),
+        'observed_at': datetime.now(timezone.utc).isoformat()}, handle, indent=2)
+    handle.write('\n')
+print(json.dumps({'status': 'PLANNING_CORRECTION_PREPARED_NOT_PUBLISHED',
+    'x1': [len(x1['safe_now']), len(x1['bounded_candidates']), len(x1['clean_fix_refine'])],
+    'x2': [len(x2['safe_now']), len(x2['bounded_candidates']), len(x2['clean_fix_refine'])],
+    'files': len(files) + 1, 'failure_retained': 'LV6995-PLAN-N007'}))
