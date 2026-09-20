@@ -349,11 +349,11 @@ Historical callers remain untouched. Local capability does not establish product
 
 # 9. Method Flow and retained negatives
 
-The final ledger contains 60 own methods and 3088 own witnesses: 2464 passing and 624 failed. Every failed subject remains linked after a refusal or repaired copy passes.
+The final ledger contains 60 own methods and 3090 own witnesses: 2465 passing and 625 failed. Every failed subject remains linked after a refusal or repaired copy passes.
 
-Source folding occurs once. Effective truth is methods 1375, witnesses 84364, passing 64433, failed 19931, negatives 26908, open gaps 777, and exact gates 825.
+Source folding occurs once. Effective truth is methods 1375, witnesses 84366, passing 64434, failed 19932, negatives 26909, open gaps 777, and exact gates 825.
 
-Owner lifecycle failures remain separately named at zero original success credit: CA6992-PLAN-N001, CA6992-PLAN-N002, CA6992-PLAN-N003, CA6992-X1-N001, CA6992-X1-N002, CA6992-X1-N003, CA6992-X1-N004, CA6992-X1-N005, CA6992-X2-N001, CA6992-X2-N002, CA6992-X2-N003, CA6992-FINAL-N001, CA6992-FINAL-N002, CA6992-FINAL-N003. Each recovery is a different passing witness and never rewrites its failed predecessor.
+Owner lifecycle failures remain separately named at zero original success credit: CA6992-PLAN-N001, CA6992-PLAN-N002, CA6992-PLAN-N003, CA6992-X1-N001, CA6992-X1-N002, CA6992-X1-N003, CA6992-X1-N004, CA6992-X1-N005, CA6992-X2-N001, CA6992-X2-N002, CA6992-X2-N003, CA6992-FINAL-N001, CA6992-FINAL-N002, CA6992-FINAL-N003, CA6992-FINAL-N004. Each recovery is a different passing witness and never rewrites its failed predecessor.
 
 # 10. Exact and blocked packets
 
@@ -372,6 +372,8 @@ CBR and all access, consent, rights, remedy, legal, cultural, privacy, language,
 # 12. Final validation contract
 
 The owner-scoped exact-final canonical is metadata-only. It may run once only after the final commit is pushed, clean, typed zero-divergent, and fresh-four-way equal. It checks exact owner blobs, manifests, JSON, trusted text syntax, word ceilings, privacy candidates, bounded security patterns, ancestry, zero merges, one final parent, and the PREPARED_NOT_SENT route hold without rerunning the domain sessions.
+
+The retained first final is 9ad606def96b2efbe9685af2fca1a395ce755707. The exact terminal-correction final must be its direct child and must preserve the exact three x1 attempts, two x2 attempts, one success per stage, and zero replays.
 
 A successful canonical is same-owner software and documentation evidence under shared infrastructure, never independent reproduction, external audit, empirical validation, professional evaluation, production certification, exhaustive security, complete privacy, or complete accessibility assurance.
 

@@ -19,6 +19,7 @@ const owner = 'Caelen Ash';
 const phase = 'v699-v2';
 const branch = 'codex/GHC-Family/caelen-ash-v699-v2-full-tools';
 const source = '053a43dcf70b386198e9ab72b5878fa5eb8829bf';
+const firstFinal = '9ad606def96b2efbe9685af2fca1a395ce755707';
 const sourcePlanPath = 'docs/sable-rook/v699-v1/plan.json';
 const sourceFinalPath = 'docs/sable-rook/v699-v1/final.json';
 const command = process.argv[2];
@@ -147,6 +148,12 @@ const lifecycleFailures = [
     negative_id: 'CA6992-FINAL-N003', method_id: 'CA6992-M-LIFECYCLE-07',
     failure: 'The first bounded changed-code zero-finding assertion conservatively surfaced the phase controller security scanner definition itself.',
     recovery: 'The additive scanner correction removes only the exact detector-definition line from the probe copy, retains one visible scanner-definition candidate, and keeps confirmed findings at zero.',
+    original_success_credit: 0, retained: true
+  },
+  {
+    negative_id: 'CA6992-FINAL-N004', method_id: 'CA6992-M-LIFECYCLE-09',
+    failure: 'The read-only canonical metadata preflight found a stale one-invocation assertion even though x1 and x2 correctly retained their failed attempts and correction invocations.',
+    recovery: 'A direct additive terminal-correction commit requires exact x1 three-attempt and x2 two-attempt truth, preserves one success and zero replays per stage, and updates lifecycle ancestry without invoking canonical.',
     original_success_credit: 0, retained: true
   }
 ];
@@ -884,11 +891,11 @@ function buildMethodFlow(plan, x1, x2) {
   assert.equal(methods.length, 60);
   const pass = allWitnesses.filter(item => item.result === 'pass').length;
   const fail = allWitnesses.filter(item => item.result === 'fail').length;
-  assert.equal(pass, 2464);
-  assert.equal(fail, 624);
+  assert.equal(pass, 2465);
+  assert.equal(fail, 625);
   const ownCounts = {
     methods: 60, witnesses: allWitnesses.length, passing_witnesses: pass,
-    failed_witnesses: fail, negatives: 624, open_gaps: 49, exact_gates: 65
+    failed_witnesses: fail, negatives: 625, open_gaps: 49, exact_gates: 65
   };
   const sourceSealed = plan.source_baseline.repository_sealed;
   const overlayFailures = plan.source_baseline.external_zero_credit_failures;
@@ -1009,6 +1016,7 @@ function handoffText(plan, x1, x2, methodFlow) {
   ]);
   section('12. Final validation contract', [
     'The owner-scoped exact-final canonical is metadata-only. It may run once only after the final commit is pushed, clean, typed zero-divergent, and fresh-four-way equal. It checks exact owner blobs, manifests, JSON, trusted text syntax, word ceilings, privacy candidates, bounded security patterns, ancestry, zero merges, one final parent, and the PREPARED_NOT_SENT route hold without rerunning the domain sessions.',
+    'The retained first final is ' + firstFinal + '. The exact terminal-correction final must be its direct child and must preserve the exact three x1 attempts, two x2 attempts, one success per stage, and zero replays.',
     'A successful canonical is same-owner software and documentation evidence under shared infrastructure, never independent reproduction, external audit, empirical validation, professional evaluation, production certification, exhaustive security, complete privacy, or complete accessibility assurance.'
   ]);
   section('13. Terminal route', [
@@ -1364,26 +1372,98 @@ function correctFinalSecurityScannerCandidate() {
   console.log(JSON.stringify({ state: 'final_security_scanner_corrected', negative_id: 'CA6992-FINAL-N003', scanner_definition_candidates: 1, confirmed_security_findings: 0, method_flow_words: methodWords, handoff_words: handoff.words, files: relativeFiles().length, canonical_invoked: false }));
 }
 
-function refreshStagedReview() {
-  const done = latch('final-staged-review-refresh');
+function correctCanonicalSessionLatchPreflight() {
+  const done = latch('canonical-session-latch-preflight-correction');
+  const gate = equalityGate({ allowDirty: [prefix + 'phase.txt'], allowDirtyPrefixes: [prefix + 'final/'] });
+  assert.equal(gate.local, firstFinal);
+  const priorMethodBytes = readBytes('final/method-flow-final.json');
+  fs.writeFileSync(path.join(bank, 'final-pre-session-latch-correction-method-flow.json'), priorMethodBytes, { flag: 'wx' });
+  const plan = readJson('plan.json'), x1 = readJson('x1.json'), x2 = readJson('x2.json');
+  assert.equal(x1.invocations, 3); assert.equal(x1.successes, 1); assert.equal(x1.replays, 0);
+  assert.equal(x2.invocations, 2); assert.equal(x2.successes, 1); assert.equal(x2.replays, 0);
+  const expanded = buildMethodFlow(plan, x1, x2);
+  const compact = {
+    ...expanded,
+    witness_representation: 'compact_with_shared_defaults',
+    witness_defaults: {
+      scope: 'owner_self_scoped_delta', same_owner_only: true, independent_reproduction: false,
+      boundary: 'Same-owner finite synthetic evidence only; protected external gates remain open.',
+      expected_by_result: { pass: 'declared bounded check passes', fail: 'subject remains invalid with zero original success credit' }
+    },
+    witnesses: expanded.witnesses.map(item => ({ witness_id: item.witness_id, method_id: item.method_id, procedure: item.procedure, observed: item.observed, result: item.result, retained_negative_ids: item.retained_negative_ids }))
+  };
+  fs.writeFileSync(path.join(dir, 'final', 'method-flow-final.json'), JSON.stringify(compact, null, 2) + '\n');
+  const methodBytes = readBytes('final/method-flow-final.json');
+  const methodWords = methodBytes.toString('utf8').trim().split(/\s+/).filter(Boolean).length;
+  assert.ok(methodWords <= 100000);
+  const handoff = handoffText(plan, x1, x2, compact);
+  assert.equal(handoff.text.endsWith('\n\n'), false);
+  fs.writeFileSync(path.join(dir, 'final', 'hand-off-baton.md'), handoff.text);
+  fs.writeFileSync(path.join(dir, 'final', 'overview.md'),
+    '# Caelen Ash v699-v2 final integrated overview\n\n' +
+    'This phase preserves 300 inherited Sable proposal records at zero Caelen credit and executes 300 new finite Latin-table contracts across fifteen profiles and twenty operations. Exact semantic comparisons: 90000; observed exact title, operation-profile, request, and bounded term collisions: zero.\n\n' +
+    'Outcomes are exactly 255 completed, 15 represented, 15 open_gap, and 15 exact_gate. Each session recorded 300 safe checks, 300 failed malformed subjects, 300 refusal passes, 300 copy-for-reference checks, 300 CLEAN/FIX/REFINE checks, ten skills, and five family-current runners. X2 adds fifteen persisted-output tests and five declared-index models.\n\n' +
+    'The effective source-folded Method Flow preserves ' + compact.effective_counts.negatives + ' negatives, ' + compact.effective_counts.open_gaps + ' open gaps, and ' + compact.effective_counts.exact_gates + ' exact gates. All ' + lifecycleFailures.length + ' owner lifecycle failures remain separately named at zero original success credit. The sole bounded security candidate is the controller scanner-definition line; confirmed findings remain zero. The retained first final is ' + firstFinal + '; the corrected exact final is its direct child and is bound externally after push. Canonical and route remain external, terminally gated, and unreplayed.\n\n' + boundary + '\n');
+  fs.writeFileSync(path.join(dir, 'final', 'report.html'), htmlReport(plan, x2, compact));
+  const correction = readJson('final/terminal-correction.json');
+  correction.canonical_session_latch_preflight_correction = {
+    negative_id: 'CA6992-FINAL-N004', canonical_invoked: false, original_success_credit: 0,
+    failed_assertion: 'x1 and x2 each have one total invocation',
+    exact_stage_truth: { x1_invocations: 3, x1_successes: 1, x1_replays: 0, x2_invocations: 2, x2_successes: 1, x2_replays: 0 },
+    first_final: firstFinal, corrected_final_binding: 'external direct child after commit and push',
+    prior_method_flow_sha256: sha(priorMethodBytes), corrected_method_flow_sha256: sha(methodBytes),
+    corrected_method_flow_words: methodWords, corrected_handoff_words: handoff.words,
+    pre_correction_gate: gate
+  };
+  fs.writeFileSync(path.join(dir, 'final', 'terminal-correction.json'), JSON.stringify(correction, null, 2) + '\n');
+  const manifestExclusions = [prefix + 'final/owner-manifest.json', prefix + 'final/phase-truth.json', prefix + 'final/content-seal.json', prefix + 'final/final-staged-review.json'];
+  const manifestNames = relativeFiles().filter(name => !manifestExclusions.includes(prefix + name));
+  fs.writeFileSync(path.join(dir, 'final', 'owner-manifest.json'), JSON.stringify({ schema: 'caelen.owner-manifest.v1', owner, phase, entries: bindings(manifestNames), declared_exclusions: manifestExclusions, byte_domain: 'checkout_utf8_lf_before_terminal_correction_commit; canonical replays exact Git blobs', boundary }, null, 2) + '\n');
+  const truth = readJson('final/phase-truth.json');
+  truth.method_flow = { path: prefix + 'final/method-flow-final.json', sha256: sha(methodBytes), own_counts: compact.own_counts, effective_counts: compact.effective_counts };
+  truth.handoff = { path: prefix + 'final/hand-off-baton.md', words: handoff.words, sha256: sha(readBytes('final/hand-off-baton.md')) };
+  truth.owner_manifest_sha256 = sha(readBytes('final/owner-manifest.json'));
+  truth.first_final_commit = firstFinal;
+  truth.terminal_correction = { parent_required: firstFinal, exact_final_binding: 'external after commit and push', canonical_invoked: false };
+  truth.final_preparation = { invocations: 5, successes: 4, replays: 0, failed_invocation_negative_ids: ['CA6992-FINAL-N001'], failed_staged_check_negative_ids: ['CA6992-FINAL-N002'], failed_validation_negative_ids: ['CA6992-FINAL-N003', 'CA6992-FINAL-N004'], corrections: [prefix + 'final/terminal-correction.json'] };
+  fs.writeFileSync(path.join(dir, 'final', 'phase-truth.json'), JSON.stringify(truth, null, 2) + '\n');
+  const seal = readJson('final/content-seal.json');
+  seal.first_final_commit = firstFinal;
+  seal.exact_corrected_final_binding = 'external direct child after commit and push';
+  seal.phase_truth_sha256 = sha(readBytes('final/phase-truth.json'));
+  seal.owner_manifest_sha256 = sha(readBytes('final/owner-manifest.json'));
+  seal.method_flow_sha256 = sha(methodBytes);
+  seal.handoff_sha256 = sha(readBytes('final/hand-off-baton.md'));
+  seal.terminal_correction_sha256 = sha(readBytes('final/terminal-correction.json'));
+  fs.writeFileSync(path.join(dir, 'final', 'content-seal.json'), JSON.stringify(seal, null, 2) + '\n');
+  const wordRows = relativeFiles().filter(name => /\.(json|md|txt|html)$/i.test(name)).map(name => ({ name, words: readBytes(name).toString('utf8').trim().split(/\s+/).filter(Boolean).length }));
+  assert.deepEqual(wordRows.filter(item => item.words > 100000), []);
+  done({ negative_id: 'CA6992-FINAL-N004', first_final: firstFinal, canonical_invoked: false, x1_invocations: 3, x2_invocations: 2, method_flow_sha256: sha(methodBytes), method_flow_words: methodWords, handoff_words: handoff.words, phase_truth_sha256: sha(readBytes('final/phase-truth.json')), files: relativeFiles().length });
+  console.log(JSON.stringify({ state: 'canonical_session_latch_preflight_corrected', negative_id: 'CA6992-FINAL-N004', first_final: firstFinal, x1_invocations: 3, x2_invocations: 2, method_flow_words: methodWords, handoff_words: handoff.words, files: relativeFiles().length, canonical_invoked: false }));
+}
+
+function refreshStagedReview(attempt = 1) {
+  const suffix = attempt === 1 ? '' : '-' + attempt;
+  const reason = attempt === 1 ? 'CA6992-FINAL-N003 additive scanner-definition adjudication' : 'CA6992-FINAL-N004 additive canonical-session-latch correction';
+  const done = latch('final-staged-review-refresh' + suffix);
   const self = prefix + 'final/final-staged-review.json';
   const staged = git('diff', '--cached', '--name-only', '--diff-filter=ACMR').split(/\r?\n/).filter(Boolean).filter(name => name !== self);
   assert.ok(staged.length > 0);
   assert.ok(staged.every(name => name.startsWith(prefix)));
   const prior = readBytes('final/final-staged-review.json');
-  fs.writeFileSync(path.join(bank, 'final-staged-review-before-security-refresh.json'), prior, { flag: 'wx' });
+  fs.writeFileSync(path.join(bank, 'final-staged-review-before-refresh' + suffix + '.json'), prior, { flag: 'wx' });
   const payload = {
     schema: 'caelen.final-staged-review.v1', owner, phase,
     staged_paths_before_self: staged,
     entries: staged.map(name => { const bytes = readBytes(name.slice(prefix.length)); return { path: name, bytes: bytes.length, sha256: sha(bytes), byte_domain: 'staged_checkout_bytes_expected_utf8_lf' }; }),
     declared_self_exclusion: self,
-    refresh_reason: 'CA6992-FINAL-N003 additive scanner-definition adjudication',
+    refresh_reason: reason,
     prior_review_sha256: sha(prior), exact_owner_prefix_only: true, sibling_mutation: false,
     boundary
   };
   fs.writeFileSync(path.join(dir, 'final', 'final-staged-review.json'), JSON.stringify(payload, null, 2) + '\n');
   done({ prior_review_sha256: sha(prior), refreshed_review_sha256: sha(readBytes('final/final-staged-review.json')), staged_paths: staged.length, self_exclusion: 1 });
-  console.log(JSON.stringify({ state: 'staged_review_refreshed', staged_paths: staged.length, self_exclusion: 1, reason: 'CA6992-FINAL-N003' }));
+  console.log(JSON.stringify({ state: 'staged_review_refreshed', staged_paths: staged.length, self_exclusion: 1, reason }));
 }
 
 function buildStagedReview() {
@@ -1428,14 +1508,15 @@ function canonical(expectedHead) {
   check('source_parentage', git('merge-base', '--is-ancestor', source, expectedHead) === '', source);
   const commits = Number(git('rev-list', '--count', source + '..' + expectedHead));
   const merges = Number(git('rev-list', '--merges', '--count', source + '..' + expectedHead));
-  check('four_owner_commits', commits === 4, commits);
+  check('five_owner_commits', commits === 5, commits);
   check('zero_merges', merges === 0, merges);
   check('one_final_parent', git('rev-list', '--parents', '-n', '1', expectedHead).split(/\s+/).length === 2, 'one parent');
   check('direct_chain_plan', git('rev-parse', published('plan').commit + '^') === source, published('plan').commit);
   check('direct_chain_x1', git('rev-parse', published('x1').commit + '^') === published('plan').commit, published('x1').commit);
   check('direct_chain_x2', git('rev-parse', published('x2').commit + '^') === published('x1').commit, published('x2').commit);
-  check('direct_chain_final', git('rev-parse', expectedHead + '^') === published('x2').commit, expectedHead);
-  check('session_latches', x1.invocations === 1 && x1.successes === 1 && x1.replays === 0 && x2.invocations === 1 && x2.successes === 1 && x2.replays === 0, 'x1 and x2 one success each');
+  check('direct_chain_first_final', git('rev-parse', firstFinal + '^') === published('x2').commit, firstFinal);
+  check('direct_chain_terminal_correction', git('rev-parse', expectedHead + '^') === firstFinal, expectedHead);
+  check('session_latches', x1.invocations === 3 && x1.successes === 1 && x1.replays === 0 && x1.failed_invocation_negative_ids.length === 2 && x2.invocations === 2 && x2.successes === 1 && x2.replays === 0 && x2.failed_invocation_negative_ids.length === 1, { x1_invocations: x1.invocations, x1_successes: x1.successes, x2_invocations: x2.invocations, x2_successes: x2.successes });
   check('outcomes', stableText(truth.outcomes) === stableText({ completed: 255, represented: 15, open_gap: 15, exact_gate: 15 }), truth.outcomes);
   check('retained_arithmetic', flow.own_counts.failed_witnesses === flow.own_counts.negatives && flow.effective_counts.witnesses === flow.effective_counts.passing_witnesses + flow.effective_counts.failed_witnesses, flow.effective_counts);
   check('route_hold', truth.route.state === 'PREPARED_NOT_SENT' && truth.route.send_attempts === 0 && truth.canonical.invoked === false, truth.route);
@@ -1488,8 +1569,8 @@ function canonical(expectedHead) {
   check('scanner_definition_candidates', securityDefinitionCandidates.length === 1 && securityDefinitionCandidates[0] === prefix + 'phase.txt', securityDefinitionCandidates);
   check('handoff_word_floor', truth.handoff.words >= 10000 && truth.handoff.words <= 100000, truth.handoff.words);
   check('deck_card_count', readJson('final/context-deck.json').card_count === 612, 612);
-  check('method_flow_counts', flow.counts.methods === 60 && flow.counts.witnesses === 3088 && flow.counts.witness_results.pass === 2464 && flow.counts.witness_results.fail === 624, flow.counts);
-  check('negative_overlay', flow.effective_counts.negatives === 26908, flow.effective_counts.negatives);
+  check('method_flow_counts', flow.counts.methods === 60 && flow.counts.witnesses === 3090 && flow.counts.witness_results.pass === 2465 && flow.counts.witness_results.fail === 625, flow.counts);
+  check('negative_overlay', flow.effective_counts.negatives === 26909, flow.effective_counts.negatives);
   check('gap_gate_overlay', flow.effective_counts.open_gaps === 777 && flow.effective_counts.exact_gates === 825, flow.effective_counts);
   check('global_installs_zero', plan.global_installs === 0, 0);
   check('domain_not_replayed', true, 'canonical read metadata and persisted artifacts only');
@@ -1539,10 +1620,12 @@ try {
   else if (command === 'final-correction') correctFinalWordCeiling();
   else if (command === 'final-staged-whitespace-correction') correctFinalStagedWhitespace();
   else if (command === 'final-security-scanner-correction') correctFinalSecurityScannerCandidate();
+  else if (command === 'canonical-session-latch-preflight-correction') correctCanonicalSessionLatchPreflight();
   else if (command === 'staged-review') buildStagedReview();
-  else if (command === 'refresh-staged-review') refreshStagedReview();
+  else if (command === 'refresh-staged-review') refreshStagedReview(1);
+  else if (command === 'refresh-staged-review-2') refreshStagedReview(2);
   else if (command === 'canonical') canonical(process.argv[4]);
-  else throw Error('usage: plan|x1|x1-correction|x1-correction-2|x2|x2-correction|publish <stage> <commit>|final|final-correction|final-staged-whitespace-correction|final-security-scanner-correction|staged-review|refresh-staged-review|canonical <head>');
+  else throw Error('usage: plan|x1|x1-correction|x1-correction-2|x2|x2-correction|publish <stage> <commit>|final|final-correction|final-staged-whitespace-correction|final-security-scanner-correction|canonical-session-latch-preflight-correction|staged-review|refresh-staged-review|refresh-staged-review-2|canonical <head>');
 } catch (error) {
   console.error(JSON.stringify({ state: 'failed', command, error: error.message, stack: error.stack }));
   process.exitCode = 2;
