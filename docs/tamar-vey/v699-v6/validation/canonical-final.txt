@@ -1,0 +1,152 @@
+"use strict";
+
+const crypto = require("crypto");
+const fs = require("fs");
+const path = require("path");
+const vm = require("vm");
+const { spawnSync } = require("child_process");
+
+const ROOT = process.cwd();
+const BASE_REL = "docs/tamar-vey/v699-v6";
+const SOURCE = "09c0f4a0287bf49dd303b1aebe95e71fe8c6d060";
+const PLANNING = "ead7018c661745bfcc380aa6b91e18c1b8ba0bb7";
+const X1 = "7f0caeb7625d6bf582caee2f9545ec61f03efb24";
+const X2 = "3f7e28068491646fc93289457ca8cdaaa883927d";
+const BRANCH = "codex/GHC-Family/tamar-vey-v699-v6-full-tools";
+const BOUNDARY = "One attributable exact-final owner-scoped canonical aggregate under an exclusive external latch; same-owner evidence only, with no domain replay, full repository suite, independent reproduction, empirical validation, authority, proof, canon, or Stage 20 claim.";
+
+function arg(name) { const index = process.argv.indexOf(name); return index >= 0 ? process.argv[index + 1] : null; }
+const expectedHead = arg("--expected-head");
+const receiptDir = arg("--receipt-dir");
+if (!expectedHead || !/^[0-9a-f]{40}$/.test(expectedHead)) throw new Error("exact expected head required");
+if (!receiptDir) throw new Error("external receipt directory required");
+fs.mkdirSync(receiptDir, { recursive: true });
+const short = expectedHead.slice(0, 12);
+const latchPath = path.join(receiptDir, `canonical-${short}.latch`);
+const receiptPath = path.join(receiptDir, `canonical-${short}.json`);
+const latch = fs.openSync(latchPath, "wx");
+fs.writeFileSync(latch, `${JSON.stringify({ phase: "v699-v6", owner: "Tamar Vey", expected_head: expectedHead, invocation: 1, replay_prohibited: true })}\n`, "utf8");
+fs.closeSync(latch);
+
+function git(args, encoding = null) { const result = spawnSync("git", args, { cwd: ROOT, encoding, maxBuffer: 256 * 1024 * 1024 }); if (result.status !== 0) throw new Error(result.stderr?.toString() || `git ${args.join(" ")} failed`); return result.stdout; }
+const sha = (bytes) => crypto.createHash("sha256").update(bytes).digest("hex");
+const stable = (value) => Array.isArray(value) ? `[${value.map(stable).join(",")}]` : value && typeof value === "object" ? `{${Object.keys(value).sort().map((key) => `${JSON.stringify(key)}:${stable(value[key])}`).join(",")}}` : JSON.stringify(value);
+const readCommitJson = (commit, name) => JSON.parse(git(["show", `${commit}:${name}`], "utf8"));
+const checks = [];
+const failures = [];
+const add = (name, passed, detail) => { checks.push({ name, passed: Boolean(passed), detail }); if (!passed) failures.push(name); };
+function replayManifest(commit, manifestPath) {
+  const manifest = readCommitJson(commit, manifestPath); const mismatches = [];
+  for (const item of manifest.entries) { const bytes = git(["show", `${commit}:${item.path}`]); const digest = sha(bytes); let mode = item.mode; if (Object.prototype.hasOwnProperty.call(item, "mode")) { const tree = git(["ls-tree", commit, "--", item.path], "utf8").trim(); mode = tree.split(/\s+/)[0]; } if (bytes.length !== item.bytes || digest !== item.sha256 || (Object.prototype.hasOwnProperty.call(item, "mode") && mode !== item.mode)) mismatches.push({ path: item.path, bytes: bytes.length, sha256: digest, mode }); }
+  return { manifest_path: manifestPath, entries: manifest.entries.length, exclusions: manifest.exclusions?.length || 0, mismatches };
+}
+
+let receipt;
+try {
+  const head = git(["rev-parse", "HEAD"], "utf8").trim();
+  const branch = git(["branch", "--show-current"], "utf8").trim();
+  add("exact_head", head === expectedHead, head);
+  add("exact_branch", branch === BRANCH, branch);
+  const worktreeStatus = git(["status", "--porcelain"], "utf8").trim();
+  add("clean_state_before", worktreeStatus === "", worktreeStatus || "clean");
+  const divergence = git(["rev-list", "--left-right", "--count", "HEAD...@{upstream}"], "utf8").trim();
+  add("typed_zero_divergence_before", divergence === "0\t0", divergence);
+  const upstream = git(["rev-parse", "@{upstream}"], "utf8").trim();
+  const tracking = git(["rev-parse", `refs/remotes/origin/${BRANCH}`], "utf8").trim();
+  const fresh = git(["ls-remote", "--heads", "origin", `refs/heads/${BRANCH}`], "utf8").trim().split(/\s+/)[0];
+  add("four_way_equality_before", [head, upstream, tracking, fresh].every((value) => value === expectedHead), { local: head, upstream, tracking, fresh });
+
+  const edges = [[SOURCE, PLANNING], [PLANNING, X1], [X1, X2], [X2, expectedHead]];
+  for (const [parent, child] of edges) add(`direct_parent_${child.slice(0, 8)}`, git(["rev-parse", `${child}^`], "utf8").trim() === parent, { parent, child });
+  const commitCount = Number(git(["rev-list", `${SOURCE}..${expectedHead}`, "--count"], "utf8").trim());
+  const mergeCount = Number(git(["rev-list", "--merges", `${SOURCE}..${expectedHead}`, "--count"], "utf8").trim());
+  const finalParents = git(["show", "-s", "--format=%P", expectedHead], "utf8").trim().split(/\s+/).filter(Boolean).length;
+  add("four_phase_commits", commitCount === 4, commitCount);
+  add("zero_merges", mergeCount === 0, mergeCount);
+  add("one_final_parent", finalParents === 1, finalParents);
+
+  const manifestSpecs = [
+    [PLANNING, `${BASE_REL}/planning/planning-index-manifest.json`, "planning_manifest"],
+    [X1, `${BASE_REL}/x1/x1-index-manifest.json`, "x1_manifest"],
+    [X2, `${BASE_REL}/x2/x2-index-manifest.json`, "x2_manifest"],
+    [expectedHead, `${BASE_REL}/validation/final-delta-manifest.json`, "final_delta_manifest"],
+    [expectedHead, `${BASE_REL}/validation/final-owner-manifest.json`, "final_owner_manifest"]
+  ];
+  const manifestResults = [];
+  for (const [commit, manifestPath, name] of manifestSpecs) { const result = replayManifest(commit, manifestPath); manifestResults.push({ name, commit, ...result }); add(name, result.mismatches.length === 0, { entries: result.entries, exclusions: result.exclusions, mismatches: result.mismatches.length }); }
+  const seal = readCommitJson(expectedHead, `${BASE_REL}/closeout/content-seal.json`);
+  const sealMismatches = [];
+  for (const item of seal.targets) { const bytes = git(["show", `${expectedHead}:${item.path}`]); const tree = git(["ls-tree", expectedHead, "--", item.path], "utf8").trim(); const mode = tree.split(/\s+/)[0]; if (bytes.length !== item.bytes || sha(bytes) !== item.sha256 || mode !== item.mode) sealMismatches.push(item.path); }
+  add("content_seal", sealMismatches.length === 0, { targets: seal.targets.length, mismatches: sealMismatches.length });
+
+  const ownerNames = git(["ls-tree", "-r", "--name-only", expectedHead, "--", BASE_REL], "utf8").trim().split(/\r?\n/).filter(Boolean).sort();
+  add("owner_file_ceiling", ownerNames.length < 2000, ownerNames.length);
+  let jsonParsed = 0, txtSyntax = 0, markdownChecked = 0, htmlChecked = 0;
+  let maximumDocument = { path: "", words: 0, bytes: 0 };
+  const privacyCandidates = [], securityCandidates = [];
+  const privacyPatterns = [
+    ["raw_task_or_thread_identifier", /\b(?:threadId|thread_id|task_id)\b|\b[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}\b/gi],
+    ["private_absolute_path", /\b[A-Za-z]:\\/g],
+    ["credential_or_private_key", /\b(?:sk-[A-Za-z0-9_-]{20,}|ghp_[A-Za-z0-9]{20,}|BEGIN (?:RSA |EC )?PRIVATE KEY)\b/g],
+    ["private_conversation_or_session_stream", /\b(?:raw transcript|session stream|private screenshot)\b/gi],
+    ["private_callable_or_application_state", /\b(?:callable_identifier|private application state|private app state)\b/gi]
+  ];
+  const securityPatterns = [["dynamic_eval", /\beval\s*\(/g], ["dynamic_function", /\bnew\s+Function\s*\(/g], ["shell_exec", /child_process\.exec\s*\(/g]];
+  for (const name of ownerNames) {
+    const ext = path.extname(name).toLowerCase(); const bytes = git(["show", `${expectedHead}:${name}`]); const text = bytes.toString("utf8"); const words = text.trim().length ? text.trim().split(/\s+/).length : 0;
+    if (![".json", ".md", ".txt", ".html"].includes(ext)) failures.push(`forbidden_extension:${name}`);
+    if (words > maximumDocument.words) maximumDocument = { path: name, words, bytes: bytes.length };
+    if (words > 100000) failures.push(`document_ceiling:${name}`);
+    if (ext === ".json") { JSON.parse(text); jsonParsed += 1; }
+    if (ext === ".txt") { new vm.Script(text, { filename: name }); txtSyntax += 1; }
+    if (ext === ".md") { if (!text.includes("#")) failures.push(`markdown_structure:${name}`); markdownChecked += 1; }
+    if (ext === ".html") { if (!text.includes("<html lang=\"en\">") || !text.includes("<main id=\"main\">") || !text.includes("<caption>")) failures.push(`html_structure:${name}`); htmlChecked += 1; }
+    for (const [kind, pattern] of privacyPatterns) { const count = (text.match(pattern) || []).length; if (count) { const scannerDefinition = ext === ".txt" && /(?:validate|audit|canonical|terminal)/.test(name); privacyCandidates.push({ path: name, kind, count, adjudication: scannerDefinition ? "scanner_definition" : "unresolved" }); } }
+    if (ext === ".txt") for (const [kind, pattern] of securityPatterns) { const count = (text.match(pattern) || []).length; if (count) { const scannerDefinition = /(?:validate|audit|canonical)/.test(name); securityCandidates.push({ path: name, kind, count, adjudication: scannerDefinition ? "scanner_definition" : "unresolved" }); } }
+  }
+  const confirmedPrivacy = privacyCandidates.filter((row) => row.adjudication !== "scanner_definition");
+  const confirmedSecurity = securityCandidates.filter((row) => row.adjudication !== "scanner_definition");
+  add("strict_json_parsing", true, jsonParsed);
+  add("txt_vm_script_syntax", true, txtSyntax);
+  add("markdown_structure", !failures.some((name) => name.startsWith("markdown_structure:")), markdownChecked);
+  add("accessible_html_structure", !failures.some((name) => name.startsWith("html_structure:")), htmlChecked);
+  add("document_ceiling", maximumDocument.words <= 100000, maximumDocument);
+  add("five_class_privacy_scan", confirmedPrivacy.length === 0, { owner_files: ownerNames.length, candidates: privacyCandidates.length, confirmed: confirmedPrivacy.length });
+  add("bounded_owner_code_security", confirmedSecurity.length === 0, { candidates: securityCandidates.length, findings: confirmedSecurity.length });
+
+  const phaseTruth = readCommitJson(expectedHead, `${BASE_REL}/final/phase-truth.json`);
+  const precommit = readCommitJson(expectedHead, `${BASE_REL}/validation/precommit-validation.json`);
+  const finalFlow = readCommitJson(expectedHead, `${BASE_REL}/validation/final-method-flow-validation.json`);
+  const route = readCommitJson(expectedHead, `${BASE_REL}/final/route-state.json`);
+  const x1Seal = readCommitJson(expectedHead, `${BASE_REL}/x1/terminal-seal.json`);
+  const x2Seal = readCommitJson(expectedHead, `${BASE_REL}/x2/terminal-seal.json`);
+  add("phase_outcomes", stable(phaseTruth.outcomes) === stable({ completed: 255, represented: 15, open_gap: 15, exact_gate: 15 }), phaseTruth.outcomes);
+  add("effective_counts", stable(phaseTruth.effective_counts) === stable({ methods: 1560, witnesses: 95892, passing_witnesses: 72256, failed_witnesses: 23636, negatives: 30613, open_gaps: 899, exact_gates: 985 }), phaseTruth.effective_counts);
+  add("precommit_validation", precommit.status === "VALID_FINAL_PRECOMMIT" && precommit.issues.length === 0, precommit.status);
+  add("final_method_flow", finalFlow.valid === true && finalFlow.issues.length === 0, { valid: finalFlow.valid, issues: finalFlow.issues.length });
+  add("retained_x1_lifecycle", x1Seal.domain_aggregate.successes === 1 && x1Seal.domain_aggregate.replays === 0, x1Seal.domain_aggregate);
+  add("retained_x2_lifecycle", x2Seal.aggregate.successes === 1 && x2Seal.aggregate.replays === 0, x2Seal.aggregate);
+  add("route_hold", route.later_endpoint_authorized === false && route.successor_contacted === false && route.delivery_attempts === 0, route.state);
+  add("terminal_verdict", phaseTruth.verdict === "NOT_READY_FOR_STAGE_20", phaseTruth.verdict);
+
+  const cleanAfter = git(["status", "--porcelain"], "utf8").trim();
+  const divergenceAfter = git(["rev-list", "--left-right", "--count", "HEAD...@{upstream}"], "utf8").trim();
+  const upstreamAfter = git(["rev-parse", "@{upstream}"], "utf8").trim();
+  const trackingAfter = git(["rev-parse", `refs/remotes/origin/${BRANCH}`], "utf8").trim();
+  const freshAfter = git(["ls-remote", "--heads", "origin", `refs/heads/${BRANCH}`], "utf8").trim().split(/\s+/)[0];
+  add("clean_state_after", cleanAfter === "", cleanAfter || "clean");
+  add("typed_zero_divergence_after", divergenceAfter === "0\t0", divergenceAfter);
+  add("four_way_equality_after", [expectedHead, upstreamAfter, trackingAfter, freshAfter].every((value) => value === expectedHead), { local: expectedHead, upstream: upstreamAfter, tracking: trackingAfter, fresh: freshAfter });
+
+  const status = failures.length === 0 && checks.every((check) => check.passed) ? "VALID_EXACT_FINAL_OWNER_SCOPED_CANONICAL" : "INVALID_EXACT_FINAL_OWNER_SCOPED_CANONICAL";
+  const payload = { schema: "tamar.exact-final-canonical.v1", status, owner: "Tamar Vey", phase: "v699-v6", exact_head: expectedHead, exact_branch: BRANCH, invocation_count: 1, success_count: status.startsWith("VALID_") ? 1 : 0, replay_count: 0, replay_prohibited: true, checks_total: checks.length, checks_passed: checks.filter((check) => check.passed).length, checks_failed: checks.filter((check) => !check.passed).length + failures.length, checks, additional_failures: failures, manifest_results: manifestResults, content_seal: { targets: seal.targets.length, mismatches: sealMismatches }, owner_files: ownerNames.length, json_parsed: jsonParsed, txt_syntax_checked: txtSyntax, markdown_checked: markdownChecked, html_checked: htmlChecked, privacy_candidates: privacyCandidates, privacy_confirmed_hits: confirmedPrivacy, security_candidates: securityCandidates, security_findings: confirmedSecurity, maximum_document: maximumDocument, x1_or_x2_domain_replayed: false, full_repository_suite: false, same_owner_only: true, independent_reproduction: false, route_delivery_attempts: 0, terminal_verdict: "NOT_READY_FOR_STAGE_20", boundary: BOUNDARY };
+  receipt = { ...payload, payload_sha256: sha(Buffer.from(stable(payload), "utf8")) };
+  fs.writeFileSync(receiptPath, `${JSON.stringify(receipt, null, 2)}\n`, "utf8");
+  process.stdout.write(`${JSON.stringify({ status: receipt.status, exact_head: expectedHead, checks_total: receipt.checks_total, checks_passed: receipt.checks_passed, checks_failed: receipt.checks_failed, owner_files: receipt.owner_files, json_parsed: receipt.json_parsed, txt_syntax_checked: receipt.txt_syntax_checked, privacy_candidates: receipt.privacy_candidates.length, privacy_confirmed: receipt.privacy_confirmed_hits.length, security_findings: receipt.security_findings.length, manifest_entries: receipt.manifest_results.reduce((sum, item) => sum + item.entries, 0), content_seal_targets: receipt.content_seal.targets, payload_sha256: receipt.payload_sha256, terminal_verdict: receipt.terminal_verdict })}\n`);
+  process.exitCode = receipt.status.startsWith("VALID_") ? 0 : 2;
+} catch (error) {
+  receipt = { schema: "tamar.exact-final-canonical.v1", status: "INVALID_EXACT_FINAL_OWNER_SCOPED_CANONICAL", owner: "Tamar Vey", phase: "v699-v6", exact_head: expectedHead, invocation_count: 1, success_count: 0, replay_count: 0, replay_prohibited: true, error: error.message, checks, failures, x1_or_x2_domain_replayed: false, full_repository_suite: false, route_delivery_attempts: 0, terminal_verdict: "NOT_READY_FOR_STAGE_20", boundary: BOUNDARY };
+  fs.writeFileSync(receiptPath, `${JSON.stringify(receipt, null, 2)}\n`, "utf8");
+  process.stderr.write(`${JSON.stringify({ status: receipt.status, error: error.message })}\n`);
+  process.exitCode = 2;
+}

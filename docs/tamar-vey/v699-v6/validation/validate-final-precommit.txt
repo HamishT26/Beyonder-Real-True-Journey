@@ -1,0 +1,101 @@
+"use strict";
+
+const fs = require("fs");
+const path = require("path");
+const vm = require("vm");
+const { spawnSync } = require("child_process");
+
+const ROOT = process.cwd();
+const BASE = path.join(ROOT, "docs", "tamar-vey", "v699-v6");
+const VALIDATION = path.join(BASE, "validation");
+const BOUNDARY = "Bounded same-owner precommit closeout validation only; no domain aggregate replay, complete repository suite, independent reproduction, empirical confirmation, authority, proof, canon, or Stage 20 claim.";
+const readJson = (relative) => JSON.parse(fs.readFileSync(path.join(BASE, ...relative.split("/")), "utf8"));
+const writeJson = (name, value) => fs.writeFileSync(path.join(VALIDATION, name), `${JSON.stringify(value, null, 2)}\n`, "utf8");
+function allFiles(directory) { const output = []; for (const entry of fs.readdirSync(directory, { withFileTypes: true })) { const full = path.join(directory, entry.name); if (entry.isDirectory()) output.push(...allFiles(full)); else output.push(full); } return output; }
+function git(args, encoding = "utf8") { const result = spawnSync("git", args, { cwd: ROOT, encoding, maxBuffer: 64 * 1024 * 1024 }); if (result.status !== 0) throw new Error(result.stderr?.toString() || `git ${args.join(" ")} failed`); return result.stdout; }
+
+const issues = [];
+const phaseTruth = readJson("final/phase-truth.json");
+const finalFlow = readJson("final/method-flow-final.json");
+const x1 = readJson("x1/terminal-seal.json");
+const x2 = readJson("x2/terminal-seal.json");
+const route = readJson("final/route-state.json");
+const checklist = readJson("final/complete-incomplete-checklist.json");
+const baton = fs.readFileSync(path.join(BASE, "handoffs", "hand-off-baton.md"), "utf8");
+const overview = fs.readFileSync(path.join(BASE, "final", "final-integrated-overview.md"), "utf8");
+const html = fs.readFileSync(path.join(BASE, "final", "static-report.html"), "utf8");
+
+if (JSON.stringify(phaseTruth.outcomes) !== JSON.stringify({ completed: 255, represented: 15, open_gap: 15, exact_gate: 15 })) issues.push("phase_outcomes");
+if (JSON.stringify(phaseTruth.effective_counts) !== JSON.stringify({ methods: 1560, witnesses: 95892, passing_witnesses: 72256, failed_witnesses: 23636, negatives: 30613, open_gaps: 899, exact_gates: 985 })) issues.push("effective_counts");
+if (phaseTruth.effective_counts.witnesses !== phaseTruth.effective_counts.passing_witnesses + phaseTruth.effective_counts.failed_witnesses) issues.push("witness_arithmetic");
+if (phaseTruth.verdict !== "NOT_READY_FOR_STAGE_20") issues.push("terminal_verdict");
+if (phaseTruth.canonical.state !== "PREPARED_NOT_INVOKED" || phaseTruth.canonical.invocation_count !== 0) issues.push("canonical_precommit_state");
+if (route.later_endpoint_authorized !== false || route.successor_exact_title !== null || route.successor_contacted !== false || route.delivery_attempts !== 0) issues.push("route_hold");
+if (!baton.includes("PREPARED NOT SENT") || !baton.trimEnd().endsWith("Preparation is not delivery.")) issues.push("baton_structure");
+const batonWords = baton.trim().split(/\s+/).length;
+if (batonWords < 2000 || batonWords > 100000) issues.push("baton_word_floor_or_ceiling");
+const overviewWords = overview.trim().split(/\s+/).length;
+if (overviewWords < 1500 || overviewWords > 100000) issues.push("overview_word_floor_or_ceiling");
+if (checklist.incomplete.length < 10 || !checklist.incomplete.includes("exclusive exact-final canonical invocation")) issues.push("incomplete_checklist");
+if (x1.domain_aggregate.replays !== 0 || x2.aggregate.replays !== 0) issues.push("domain_replay_state");
+
+const exactHtmlChecks = ["<!doctype html>", "<html lang=\"en\">", "href=\"#main\"", "<main id=\"main\">", "<caption>", "scope=\"col\"", "scope=\"row\"", ":focus", "Route hold", "NOT_READY_FOR_STAGE_20"];
+for (const token of exactHtmlChecks) if (!html.includes(token)) issues.push(`html_structure:${token}`);
+
+const methodFlowTool = path.join(process.env.USERPROFILE, ".codex", "skills", "ghc-family-method-flow-state", "scripts", "ghc_family_method_flow_state.py");
+const methodReceipt = path.join(VALIDATION, "final-method-flow-validation.json");
+const methodResult = spawnSync("python", ["-X", "utf8", methodFlowTool, "validate", "--ledger", path.join(BASE, "final", "method-flow-final.json"), "--receipt", methodReceipt], { cwd: ROOT, encoding: "utf8", env: { ...process.env, PYTHONUTF8: "1" }, maxBuffer: 8 * 1024 * 1024 });
+let methodBody = {};
+try { methodBody = JSON.parse(fs.readFileSync(methodReceipt, "utf8")); } catch { methodBody = {}; }
+if (methodResult.status !== 0 || methodBody.valid !== true || methodBody.issues?.length !== 0) issues.push("official_final_method_flow");
+if (finalFlow.counts.methods !== 13 || finalFlow.counts.witnesses !== 26 || finalFlow.counts.witness_results.pass !== 25 || finalFlow.counts.witness_results.fail !== 1) issues.push("final_method_flow_counts");
+
+const ownerFiles = allFiles(BASE);
+const allowed = new Set([".json", ".md", ".txt", ".html"]);
+let jsonParsed = 0, txtSyntax = 0, markdownChecked = 0, htmlChecked = 0;
+let maximumDocument = { path: "", words: 0, bytes: 0 };
+const privacyCandidates = [];
+const securityCandidates = [];
+const privacyPatterns = [
+  ["raw_task_or_thread_identifier", /\b(?:threadId|thread_id|task_id)\b|\b[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}\b/gi],
+  ["private_absolute_path", /\b[A-Za-z]:\\/g],
+  ["credential_or_private_key", /\b(?:sk-[A-Za-z0-9_-]{20,}|ghp_[A-Za-z0-9]{20,}|BEGIN (?:RSA |EC )?PRIVATE KEY)\b/g],
+  ["private_conversation_or_session_stream", /\b(?:raw transcript|session stream|private screenshot)\b/gi],
+  ["private_callable_or_application_state", /\b(?:callable_identifier|private application state|private app state)\b/gi]
+];
+const securityPatterns = [["dynamic_eval", /\beval\s*\(/g], ["dynamic_function", /\bnew\s+Function\s*\(/g], ["shell_exec", /child_process\.exec\s*\(/g]];
+for (const file of ownerFiles) {
+  const rel = path.relative(ROOT, file).replaceAll("\\", "/");
+  const ext = path.extname(file).toLowerCase();
+  if (!allowed.has(ext)) issues.push(`forbidden_extension:${rel}`);
+  const text = fs.readFileSync(file, "utf8");
+  const words = text.trim().length ? text.trim().split(/\s+/).length : 0;
+  if (words > maximumDocument.words) maximumDocument = { path: rel, words, bytes: Buffer.byteLength(text) };
+  if (words > 100000) issues.push(`document_ceiling:${rel}`);
+  if (ext === ".json") { JSON.parse(text); jsonParsed += 1; }
+  if (ext === ".txt") { new vm.Script(text, { filename: rel }); txtSyntax += 1; }
+  if (ext === ".md") { if (!text.includes("#")) issues.push(`markdown_structure:${rel}`); markdownChecked += 1; }
+  if (ext === ".html") { if (!text.toLowerCase().includes("<html")) issues.push(`html_structure:${rel}`); htmlChecked += 1; }
+  for (const [kind, pattern] of privacyPatterns) { const count = (text.match(pattern) || []).length; if (count) { const scannerDefinition = ext === ".txt" && /(?:validate|audit|canonical|terminal)/.test(rel); privacyCandidates.push({ path: rel, kind, count, adjudication: scannerDefinition ? "scanner_definition" : "unresolved" }); } }
+  if (ext === ".txt") for (const [kind, pattern] of securityPatterns) { const count = (text.match(pattern) || []).length; if (count) { const scannerDefinition = rel.endsWith("validate-final-precommit.txt"); securityCandidates.push({ path: rel, kind, count, adjudication: scannerDefinition ? "scanner_definition" : "unresolved" }); } }
+}
+const confirmedPrivacy = privacyCandidates.filter((candidate) => candidate.adjudication !== "scanner_definition");
+const confirmedSecurity = securityCandidates.filter((candidate) => candidate.adjudication !== "scanner_definition");
+if (confirmedPrivacy.length) issues.push("privacy_confirmed_hits");
+if (confirmedSecurity.length) issues.push("security_findings");
+if (ownerFiles.length >= 2000) issues.push("file_ceiling");
+
+const head = git(["rev-parse", "HEAD"]).trim();
+const branch = git(["branch", "--show-current"]).trim();
+const directParentChecks = [["09c0f4a0287bf49dd303b1aebe95e71fe8c6d060", "ead7018c661745bfcc380aa6b91e18c1b8ba0bb7"], ["ead7018c661745bfcc380aa6b91e18c1b8ba0bb7", "7f0caeb7625d6bf582caee2f9545ec61f03efb24"], ["7f0caeb7625d6bf582caee2f9545ec61f03efb24", "3f7e28068491646fc93289457ca8cdaaa883927d"]];
+for (const [parent, child] of directParentChecks) if (git(["rev-parse", `${child}^`]).trim() !== parent) issues.push(`direct_parent:${child}`);
+if (head !== "3f7e28068491646fc93289457ca8cdaaa883927d") issues.push("unexpected_precommit_head");
+if (branch !== "codex/GHC-Family/tamar-vey-v699-v6-full-tools") issues.push("branch");
+const mergeCount = Number(git(["rev-list", "--merges", "09c0f4a0287bf49dd303b1aebe95e71fe8c6d060..HEAD", "--count"]).trim());
+const phaseCommitCount = Number(git(["rev-list", "09c0f4a0287bf49dd303b1aebe95e71fe8c6d060..HEAD", "--count"]).trim());
+if (mergeCount !== 0 || phaseCommitCount !== 3) issues.push("precommit_history");
+
+const receipt = { schema: "tamar.final-precommit-validation.v1", status: issues.length ? "INVALID_FINAL_PRECOMMIT" : "VALID_FINAL_PRECOMMIT", issues, head, branch, phase_commit_count_before_final: phaseCommitCount, merge_count: mergeCount, outcomes: phaseTruth.outcomes, effective_counts: phaseTruth.effective_counts, baton_words: batonWords, overview_words: overviewWords, official_method_flow: { exit_code: methodResult.status, valid: methodBody.valid === true, issue_count: methodBody.issues?.length ?? null }, owner_files: ownerFiles.length, json_parsed: jsonParsed, txt_syntax_checked: txtSyntax, markdown_checked: markdownChecked, html_checked: htmlChecked, privacy_candidates: privacyCandidates, privacy_confirmed_hits: confirmedPrivacy, security_candidates: securityCandidates, security_findings: confirmedSecurity, maximum_document: maximumDocument, exact_html_checks: exactHtmlChecks.length, x1_or_x2_domain_replayed: false, full_repository_suite: false, route_state: route.state, terminal_verdict: "NOT_READY_FOR_STAGE_20", boundary: BOUNDARY };
+writeJson("precommit-validation.json", receipt);
+process.stdout.write(`${JSON.stringify({ status: receipt.status, issues, owner_files: ownerFiles.length, json_parsed: jsonParsed, txt_syntax_checked: txtSyntax, markdown_checked: markdownChecked, html_checked: htmlChecked, privacy_candidates: privacyCandidates.length, privacy_confirmed: confirmedPrivacy.length, security_candidates: securityCandidates.length, security_findings: confirmedSecurity.length, maximum_document_words: maximumDocument.words, baton_words: batonWords, overview_words: overviewWords, official_method_flow: receipt.official_method_flow, terminal_verdict: receipt.terminal_verdict })}\n`);
+process.exitCode = issues.length ? 2 : 0;

@@ -1,0 +1,81 @@
+"use strict";
+
+const crypto = require("crypto");
+const fs = require("fs");
+const path = require("path");
+const vm = require("vm");
+const { spawnSync } = require("child_process");
+
+const ROOT = process.cwd();
+const BASE_REL = "docs/tamar-vey/v699-v6";
+const DELTA = `${BASE_REL}/validation/final-delta-manifest.json`;
+const OWNER = `${BASE_REL}/validation/final-owner-manifest.json`;
+const REVIEW = `${BASE_REL}/validation/final-staged-review.json`;
+const AUDIT = `${BASE_REL}/validation/final-stage-audit.json`;
+const SEAL = `${BASE_REL}/closeout/content-seal.json`;
+const BOUNDARY = "Exact staged final-owner audit only; not canonical success, independent reproduction, delivery, empirical validation, authority, proof, canon, or Stage 20 evidence.";
+function git(args, encoding = null) { const result = spawnSync("git", args, { cwd: ROOT, encoding, maxBuffer: 128 * 1024 * 1024 }); if (result.status !== 0) throw new Error(result.stderr?.toString() || `git ${args.join(" ")} failed`); return result.stdout; }
+const sha = (bytes) => crypto.createHash("sha256").update(bytes).digest("hex");
+const readIndexJson = (name) => JSON.parse(git(["show", `:${name}`], "utf8"));
+const issues = [];
+const delta = readIndexJson(DELTA);
+const owner = readIndexJson(OWNER);
+const review = readIndexJson(REVIEW);
+const seal = readIndexJson(SEAL);
+const staged = git(["diff", "--cached", "--name-only", "--diff-filter=ACMR"], "utf8").trim().split(/\r?\n/).filter(Boolean).sort();
+const expectedBeforeAudit = review.expected_final_paths.filter((name) => name !== AUDIT).sort();
+if (JSON.stringify(staged) !== JSON.stringify(expectedBeforeAudit)) issues.push("staged_path_parity_before_audit");
+
+function replay(entries, domain) {
+  const failures = [];
+  for (const item of entries) { const bytes = git(["show", `:${item.path}`]); const mode = git(["ls-files", "--stage", "--", item.path], "utf8").trim().split(/\s+/)[0]; const digest = sha(bytes); if (bytes.length !== item.bytes || digest !== item.sha256 || mode !== item.mode) failures.push({ path: item.path, domain, bytes: bytes.length, sha256: digest, mode }); }
+  return failures;
+}
+const deltaFailures = replay(delta.entries, "final_delta");
+const ownerFailures = replay(owner.entries, "final_owner");
+const sealFailures = replay(seal.targets, "content_seal");
+if (deltaFailures.length) issues.push("final_delta_manifest");
+if (ownerFailures.length) issues.push("final_owner_manifest");
+if (sealFailures.length) issues.push("content_seal");
+
+let jsonParsed = 0, txtSyntax = 0, markdownChecked = 0, htmlChecked = 0;
+let maximumDocument = { path: "", words: 0, bytes: 0 };
+const privacyCandidates = [];
+const securityCandidates = [];
+const privacyPatterns = [
+  ["raw_task_or_thread_identifier", /\b(?:threadId|thread_id|task_id)\b|\b[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}\b/gi],
+  ["private_absolute_path", /\b[A-Za-z]:\\/g],
+  ["credential_or_private_key", /\b(?:sk-[A-Za-z0-9_-]{20,}|ghp_[A-Za-z0-9]{20,}|BEGIN (?:RSA |EC )?PRIVATE KEY)\b/g],
+  ["private_conversation_or_session_stream", /\b(?:raw transcript|session stream|private screenshot)\b/gi],
+  ["private_callable_or_application_state", /\b(?:callable_identifier|private application state|private app state)\b/gi]
+];
+const securityPatterns = [["dynamic_eval", /\beval\s*\(/g], ["dynamic_function", /\bnew\s+Function\s*\(/g], ["shell_exec", /child_process\.exec\s*\(/g]];
+for (const name of staged) {
+  const ext = path.extname(name).toLowerCase(); const bytes = git(["show", `:${name}`]); const text = bytes.toString("utf8"); const words = text.trim().length ? text.trim().split(/\s+/).length : 0;
+  if (![".json", ".md", ".txt", ".html"].includes(ext)) issues.push(`forbidden_extension:${name}`);
+  if (words > maximumDocument.words) maximumDocument = { path: name, words, bytes: bytes.length };
+  if (words > 100000) issues.push(`document_ceiling:${name}`);
+  if (ext === ".json") { JSON.parse(text); jsonParsed += 1; }
+  if (ext === ".txt") { new vm.Script(text, { filename: name }); txtSyntax += 1; }
+  if (ext === ".md") { if (!text.includes("#")) issues.push(`markdown_structure:${name}`); markdownChecked += 1; }
+  if (ext === ".html") { if (!text.includes("<html lang=\"en\">") || !text.includes("<main id=\"main\">") || !text.includes("<caption>")) issues.push(`html_structure:${name}`); htmlChecked += 1; }
+  for (const [kind, pattern] of privacyPatterns) { const count = (text.match(pattern) || []).length; if (count) { const scannerDefinition = ext === ".txt" && /(?:validate|audit|canonical|terminal)/.test(name); privacyCandidates.push({ path: name, kind, count, adjudication: scannerDefinition ? "scanner_definition" : "unresolved" }); } }
+  if (ext === ".txt") for (const [kind, pattern] of securityPatterns) { const count = (text.match(pattern) || []).length; if (count) { const scannerDefinition = /(?:validate|audit|canonical)/.test(name); securityCandidates.push({ path: name, kind, count, adjudication: scannerDefinition ? "scanner_definition" : "unresolved" }); } }
+}
+const confirmedPrivacy = privacyCandidates.filter((row) => row.adjudication !== "scanner_definition");
+const confirmedSecurity = securityCandidates.filter((row) => row.adjudication !== "scanner_definition");
+if (confirmedPrivacy.length) issues.push("privacy_confirmed_hits");
+if (confirmedSecurity.length) issues.push("security_findings");
+const deletions = git(["diff", "--cached", "--name-only", "--diff-filter=D"], "utf8").trim().split(/\r?\n/).filter(Boolean);
+if (deletions.length) issues.push("deletions");
+const diffCheck = spawnSync("git", ["diff", "--cached", "--check"], { cwd: ROOT, encoding: "utf8" });
+if (diffCheck.status !== 0) issues.push("diff_check");
+const head = git(["rev-parse", "HEAD"], "utf8").trim();
+if (head !== "3f7e28068491646fc93289457ca8cdaaa883927d") issues.push("expected_x2_parent");
+const route = readIndexJson(`${BASE_REL}/final/route-state.json`);
+if (route.later_endpoint_authorized !== false || route.delivery_attempts !== 0) issues.push("route_hold");
+
+const receipt = { schema: "tamar.final-stage-audit.v1", status: issues.length ? "INVALID_FINAL_STAGE" : "VALID_FINAL_STAGE", issues, expected_parent: head, staged_before_audit: staged.length, expected_final_staged_count: staged.length + 1, final_delta_entries: delta.entries.length, final_owner_entries: owner.entries.length, content_seal_targets: seal.targets.length, delta_failures: deltaFailures, owner_failures: ownerFailures, seal_failures: sealFailures, json_parsed: jsonParsed, txt_syntax_checked: txtSyntax, markdown_checked: markdownChecked, html_checked: htmlChecked, privacy_candidates: privacyCandidates, privacy_confirmed_hits: confirmedPrivacy, security_candidates: securityCandidates, security_findings: confirmedSecurity, maximum_document: maximumDocument, deletion_count: deletions.length, diff_check: diffCheck.status === 0, x1_or_x2_domain_replayed: false, canonical_invocations: 0, route_delivery_attempts: 0, full_repository_suite: false, terminal_verdict: "NOT_READY_FOR_STAGE_20", boundary: BOUNDARY };
+fs.writeFileSync(path.join(ROOT, ...AUDIT.split("/")), `${JSON.stringify(receipt, null, 2)}\n`, "utf8");
+process.stdout.write(`${JSON.stringify({ status: receipt.status, issues, staged_before_audit: staged.length, delta_entries: delta.entries.length, owner_entries: owner.entries.length, content_seal_targets: seal.targets.length, json_parsed: jsonParsed, txt_syntax_checked: txtSyntax, markdown_checked: markdownChecked, html_checked: htmlChecked, privacy_candidates: privacyCandidates.length, privacy_confirmed: confirmedPrivacy.length, security_findings: confirmedSecurity.length, maximum_document_words: maximumDocument.words })}\n`);
+process.exitCode = issues.length ? 2 : 0;

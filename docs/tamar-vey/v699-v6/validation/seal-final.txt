@@ -1,0 +1,41 @@
+"use strict";
+
+const crypto = require("crypto");
+const fs = require("fs");
+const path = require("path");
+const { spawnSync } = require("child_process");
+
+const ROOT = process.cwd();
+const BASE_REL = "docs/tamar-vey/v699-v6";
+const VALIDATION_REL = `${BASE_REL}/validation`;
+const DELTA = `${VALIDATION_REL}/final-delta-manifest.json`;
+const OWNER = `${VALIDATION_REL}/final-owner-manifest.json`;
+const REVIEW = `${VALIDATION_REL}/final-staged-review.json`;
+const AUDIT = `${VALIDATION_REL}/final-stage-audit.json`;
+const SEAL = `${BASE_REL}/closeout/content-seal.json`;
+const SELF = [DELTA, OWNER, REVIEW, AUDIT, SEAL];
+const BOUNDARY = "Exact final Git-index and owner-manifest evidence only; repository preparation is not canonical success or delivery.";
+function git(args, encoding = null) { const result = spawnSync("git", args, { cwd: ROOT, encoding, maxBuffer: 128 * 1024 * 1024 }); if (result.status !== 0) throw new Error(result.stderr?.toString() || `git ${args.join(" ")} failed`); return result.stdout; }
+const sha = (bytes) => crypto.createHash("sha256").update(bytes).digest("hex");
+const entry = (name) => { const bytes = git(["show", `:${name}`]); return { path: name, mode: git(["ls-files", "--stage", "--", name], "utf8").trim().split(/\s+/)[0], bytes: bytes.length, sha256: sha(bytes) }; };
+
+const staged = git(["diff", "--cached", "--name-only", "--diff-filter=ACMR"], "utf8").trim().split(/\r?\n/).filter(Boolean).sort();
+const deltaNames = staged.filter((name) => name.startsWith(`${BASE_REL}/`) && !SELF.includes(name));
+if (deltaNames.length !== staged.filter((name) => !SELF.includes(name)).length) throw new Error("staged path outside Tamar final owner scope");
+const deltaEntries = deltaNames.map(entry);
+
+const ownerNames = git(["ls-files", "--cached", "--", BASE_REL], "utf8").trim().split(/\r?\n/).filter(Boolean).filter((name) => !SELF.includes(name)).sort();
+const ownerEntries = ownerNames.map(entry);
+const deltaManifest = { schema: "tamar.final-delta-manifest.v1", byte_domain: "git_index_blob", expected_parent: "3f7e28068491646fc93289457ca8cdaaa883927d", entries: deltaEntries, exclusions: SELF, boundary: BOUNDARY };
+const ownerManifest = { schema: "tamar.final-owner-manifest.v1", byte_domain: "git_index_blob", expected_parent: "3f7e28068491646fc93289457ca8cdaaa883927d", entries: ownerEntries, exclusions: SELF, boundary: BOUNDARY };
+fs.writeFileSync(path.join(ROOT, ...DELTA.split("/")), `${JSON.stringify(deltaManifest, null, 2)}\n`, "utf8");
+fs.writeFileSync(path.join(ROOT, ...OWNER.split("/")), `${JSON.stringify(ownerManifest, null, 2)}\n`, "utf8");
+
+const targets = [
+  `${BASE_REL}/final/phase-truth.json`, `${BASE_REL}/final/method-flow-final.json`, `${BASE_REL}/final/retained-negative-register.json`, `${BASE_REL}/final/open-gap-register.json`, `${BASE_REL}/final/exact-gate-register.json`, `${BASE_REL}/final/final-integrated-overview.md`, `${BASE_REL}/final/static-report.html`, `${BASE_REL}/handoffs/hand-off-baton.md`, `${BASE_REL}/validation/precommit-validation.json`, `${BASE_REL}/validation/validation-plan.json`
+].map(entry);
+fs.writeFileSync(path.join(ROOT, ...SEAL.split("/")), `${JSON.stringify({ schema: "tamar.content-seal.v1", byte_domain: "git_index_blob", expected_parent: "3f7e28068491646fc93289457ca8cdaaa883927d", targets, exclusions: [SEAL], status: "SEALED_PRECOMMIT_CANONICAL_PENDING", boundary: BOUNDARY }, null, 2)}\n`, "utf8");
+
+const expectedFinalPaths = [...deltaNames, ...SELF].sort();
+fs.writeFileSync(path.join(ROOT, ...REVIEW.split("/")), `${JSON.stringify({ schema: "tamar.final-staged-review.v1", expected_parent: "3f7e28068491646fc93289457ca8cdaaa883927d", staged_before_self_receipts: deltaNames.length, expected_final_staged_count: expectedFinalPaths.length, expected_final_paths: expectedFinalPaths, final_delta_entries: deltaEntries.length, final_owner_entries: ownerEntries.length, self_exclusions: SELF, deletion_issues: [], scope_issues: [], privacy_confirmed_hits: [], route_delivery_attempts: 0, canonical_invocations: 0, boundary: BOUNDARY }, null, 2)}\n`, "utf8");
+process.stdout.write(`${JSON.stringify({ status: "FINAL_INDEX_SEALED", delta_entries: deltaEntries.length, owner_entries: ownerEntries.length, self_exclusions: SELF.length, content_seal_targets: targets.length, expected_final_staged_count: expectedFinalPaths.length })}\n`);

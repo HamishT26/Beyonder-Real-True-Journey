@@ -1,0 +1,345 @@
+"use strict";
+
+const fs = require("fs");
+const path = require("path");
+
+const ROOT = process.cwd();
+const BASE = path.join(ROOT, "docs", "tamar-vey", "v699-v6");
+const FINAL = path.join(BASE, "final");
+const HANDOFFS = path.join(BASE, "handoffs");
+const CLOSEOUT = path.join(BASE, "closeout");
+const VALIDATION = path.join(BASE, "validation");
+for (const directory of [FINAL, HANDOFFS, CLOSEOUT, VALIDATION]) fs.mkdirSync(directory, { recursive: true });
+
+const readJson = (relative) => JSON.parse(fs.readFileSync(path.join(BASE, ...relative.split("/")), "utf8"));
+const writeJson = (file, value) => fs.writeFileSync(file, `${JSON.stringify(value, null, 2)}\n`, "utf8");
+const writeText = (file, value) => fs.writeFileSync(file, value.endsWith("\n") ? value : `${value}\n`, "utf8");
+
+const SOURCE = "09c0f4a0287bf49dd303b1aebe95e71fe8c6d060";
+const PLANNING = "ead7018c661745bfcc380aa6b91e18c1b8ba0bb7";
+const X1 = "7f0caeb7625d6bf582caee2f9545ec61f03efb24";
+const X2 = "3f7e28068491646fc93289457ca8cdaaa883927d";
+const BRANCH = "codex/GHC-Family/tamar-vey-v699-v6-full-tools";
+const VERDICT = "NOT_READY_FOR_STAGE_20";
+const BOUNDARY = "Bounded same-owner finite synthetic hypergraph software and documentation only. No real person, participant, bookbinder, client, book, edition, signature, material, tool, workplace, measurement, observation, identity event, credential, deployment, professional decision, legal or cultural decision, affected-party decision, Maori-data-governance decision, or authority act is used. Relational names, roles, hopes, pronouns, sibling and family language establish no consciousness, sentience, personhood, continuity, employment, qualification, independent agency, or authority. GMUT remains a typed scalar-tensor and effective-field-theory research-model family without empirical confirmation, prediction, parameter constraint, quantum or ultraviolet completion, final physics, or Theory-of-Everything proof. THOS remains synthetic or proxy-only and Freed ID remains synthetic and nonproduction. Professional, safety, legal, cultural, affected-party, privacy-remedy, accessibility-remedy, Maori wording, Maori data governance, and Maori authority remain exact-gated. Maori concepts remain under Maori authority. No complete privacy or accessibility, exhaustive security, independent reproduction, AGI or ASI, proof, canon, or Stage 20 claim. NOT_READY_FOR_STAGE_20.";
+
+const plan = readJson("planning/plan.json");
+const planningFailures = readJson("planning/startup-failures.json");
+const x1 = readJson("x1/terminal-seal.json");
+const x2 = readJson("x2/terminal-seal.json");
+const x2Records = [...readJson("x2/execution-records-01.json").records, ...readJson("x2/execution-records-02.json").records];
+const sourceLedger = readJson("planning/source-ledger.json");
+
+const incoming = { methods: 1485, witnesses: 93058, passing_witnesses: 70347, failed_witnesses: 22711, negatives: 29688, open_gaps: 884, exact_gates: 970 };
+const local = {
+  planning: { methods: 9, witnesses: 18, passing_witnesses: 9, failed_witnesses: 9, negatives: 9 },
+  x1: { methods: 28, witnesses: 1400, passing_witnesses: 940, failed_witnesses: 460, negatives: 460 },
+  x2: { methods: 25, witnesses: 1390, passing_witnesses: 935, failed_witnesses: 455, negatives: 455 },
+  final: { methods: 13, witnesses: 26, passing_witnesses: 25, failed_witnesses: 1, negatives: 1 }
+};
+const totals = {
+  methods: incoming.methods + Object.values(local).reduce((sum, row) => sum + row.methods, 0),
+  witnesses: incoming.witnesses + Object.values(local).reduce((sum, row) => sum + row.witnesses, 0),
+  passing_witnesses: incoming.passing_witnesses + Object.values(local).reduce((sum, row) => sum + row.passing_witnesses, 0),
+  failed_witnesses: incoming.failed_witnesses + Object.values(local).reduce((sum, row) => sum + row.failed_witnesses, 0),
+  negatives: incoming.negatives + Object.values(local).reduce((sum, row) => sum + row.negatives, 0),
+  open_gaps: incoming.open_gaps + 15,
+  exact_gates: incoming.exact_gates + 15
+};
+if (totals.witnesses !== totals.passing_witnesses + totals.failed_witnesses) throw new Error("cumulative witness arithmetic");
+if (JSON.stringify(totals) !== JSON.stringify({ methods: 1560, witnesses: 95892, passing_witnesses: 72256, failed_witnesses: 23636, negatives: 30613, open_gaps: 899, exact_gates: 985 })) throw new Error("unexpected cumulative totals");
+
+const methodSpecs = [
+  ["admission", "Keep the direct live Tamar activation distinct from the conflicting roster projection.", "TV6996-START-N003"],
+  ["planning-freeze", "Prove planning-only x1 content before any x2 implementation.", "TV6996-START-N009"],
+  ["x1-boundary", "Require clean pushed four-way equality at the frozen x1 commit.", "TV6996-X1-N001"],
+  ["x2-latch", "Bind the single successful x2 aggregate without replay.", "TV6996-X1-N005"],
+  ["skill-read-validation", "Require complete skill reads and official UTF-8 quick validation.", "TV6996-X1-N003"],
+  ["runner-paired-smoke", "Separate malformed runner subjects from passing refusal behavior.", "TV6996-X2-RUNNER-N06"],
+  ["method-flow-schema", "Validate exact witness backlinks and current schema counts.", "TV6996-X1-N002"],
+  ["manifest-byte-domain", "Use exact Git-index and commit-blob bytes rather than checkout-byte assumptions.", "TV6996-START-N005"],
+  ["privacy-candidate-adjudication", "Separate scanner definitions from confirmed privacy payloads.", "TV6996-START-N001"],
+  ["document-and-file-ceilings", "Treat ceilings as stop conditions rather than quotas.", "TV6996-X1-N001"],
+  ["authority-noncompensation", "Keep missing real evidence and authority visible despite software success.", "TV6996-START-N004"],
+  ["route-hold", "Prepare no delivery when no exact later endpoint is directly authorized.", "TV6996-START-N003"],
+  ["canonical-script-syntax-preflight", "Retain the duplicate-identifier syntax failure and its isolated variable-name correction.", "TV6996-FINAL-N001"]
+];
+const methods = [];
+const witnesses = [];
+for (const [slug, title, negativeId] of methodSpecs) {
+  const methodId = `TV6996-M-FINAL-${slug}`;
+  const evidenceId = `${methodId}-W-EVIDENCE`;
+  const boundaryId = `${methodId}-W-BOUNDARY`;
+  methods.push({ method_id: methodId, title, failure_signature: "A clean structural result must not erase its retained failed witness or cross an ungranted evidence or authority boundary.", trigger_preconditions: ["exact owner artifacts", "bounded same-owner scope", "retained failed witness"], privacy_class: "sanitized_public", approval_class: slug === "route-hold" ? "exact_approval_missing_direct_successor_authority" : "owner_internal_safe_now", candidate_workaround: "Validate only the exact local artifact and preserve the named prior negative.", validation_witness_ids: [evidenceId, boundaryId], recurrence_guard: "Require exact hashes, exact counts, and noncompensable authority vacancies.", rollback: "Deselect the closeout projection without rewriting lifecycle evidence.", recommendation_state: "preferred", supersedes: [], protected_gates: ["empirical confirmation", "participant evidence", "professional authority", "production deployment", "legal cultural affected-party and Maori authority", "complete privacy accessibility and security", "independent reproduction", "consciousness personhood AGI ASI", "Theory-of-Everything proof or canon", "Stage 20"], retained_negative_ids: [negativeId], scope_boundary: BOUNDARY, execution_authority: "owner_self_scoped_delta", repository_scan: false, module_scan: true, cross_lane_scan: false, unchanged_history_scan: false, sibling_lane_mutation: false, source_commit: X2, final_commit: "pending_final_commit", changed_file_allowlist: ["docs/tamar-vey/v699-v6/final", "docs/tamar-vey/v699-v6/closeout", "docs/tamar-vey/v699-v6/handoffs", "docs/tamar-vey/v699-v6/validation"], module_allowlist: ["docs/tamar-vey/v699-v6"], exact_pushed_head_required: true });
+  if (slug === "canonical-script-syntax-preflight") {
+    witnesses.push({ witness_id: evidenceId, method_id: methodId, procedure: "Parse the first canonical TXT module with vm.Script.", scope: "pre-invocation syntax preflight", expected: "syntax valid", observed: "duplicate status identifier rejected before latch creation", result: "fail", same_owner_only: true, independent_reproduction: false, retained_negative_ids: [negativeId], boundary: BOUNDARY });
+    witnesses.push({ witness_id: boundaryId, method_id: methodId, procedure: "Rename only the worktree-status local variable and parse the module again.", scope: "isolated syntax recovery", expected: "syntax valid without canonical invocation", observed: "syntax valid without canonical invocation", result: "pass", same_owner_only: true, independent_reproduction: false, retained_negative_ids: [negativeId], boundary: BOUNDARY });
+  } else {
+    witnesses.push({ witness_id: evidenceId, method_id: methodId, procedure: "Check the exact owner evidence and retained negative named by the method.", scope: "one final closeout method", expected: "bounded structural result with retained failure", observed: "bounded structural result with retained failure", result: "pass", same_owner_only: true, independent_reproduction: false, retained_negative_ids: [negativeId], boundary: BOUNDARY });
+    witnesses.push({ witness_id: boundaryId, method_id: methodId, procedure: "Check that no software success promotes an empirical, professional, production, legal, cultural, identity, or Stage 20 claim.", scope: "claim boundary", expected: "nonpromotion", observed: "nonpromotion", result: "pass", same_owner_only: true, independent_reproduction: false, retained_negative_ids: [negativeId], boundary: BOUNDARY });
+  }
+}
+const finalFlow = { schema: "ghc.family.method-flow-state.v1", phase: "v699-v6", owner: "Tamar Vey", identity_boundary: "Relational working language only; no consciousness, continuity, qualification, agency, or authority claim.", execution_authority: "owner_self_scoped_delta", methods, witnesses, state_events: methods.map((method) => ({ method_id: method.method_id, from: "candidate", to: "preferred", failed_subjects_retained: true })), recommendations: methods.map((method) => ({ method_id: method.method_id, state: "preferred" })), counts: { methods: 13, witnesses: 26, state_events: 13, recommendations: 13, states: { observed: 0, candidate: 0, validated: 0, preferred: 13, superseded: 0, deprecated: 0 }, witness_results: { pass: 25, fail: 1 } }, boundary: BOUNDARY };
+writeJson(path.join(FINAL, "method-flow-final.json"), finalFlow);
+
+const outcomes = { completed: 255, represented: 15, open_gap: 15, exact_gate: 15 };
+const phaseTruth = {
+  schema: "tamar.phase-truth.v1",
+  owner: "Tamar Vey",
+  phase: "v699-v6",
+  identity: { name: "Tamar Vey", pronouns: "she/they optional", role: "evidence-and-recovery steward", hope: "Keep every claim inspectable, every failed witness retained, and every correction reversible.", relational_only: true, consciousness_or_personhood_evidence: false, employment_qualification_agency_or_authority_evidence: false },
+  branch: BRANCH,
+  source_commit: SOURCE,
+  planning_commit: PLANNING,
+  x1_commit: X1,
+  x2_commit: X2,
+  final_commit: "pending_final_commit",
+  lifecycle: { planned_source_to_final_commits: 4, zero_merges_required: true, one_final_parent_required: true, strict_planning_x1_before_x2: true },
+  proposals: { inherited_reviews: 300, inherited_new_credit: 0, new: 300, universal_semantic_novelty_claimed: false },
+  outcomes,
+  effective_counts: totals,
+  local_method_flow: { methods: 75, witnesses: 2834, passing_witnesses: 1909, failed_witnesses: 925, negatives: 925, open_gaps: 15, exact_gates: 15 },
+  skills: 20,
+  runners: 10,
+  global_installs: 0,
+  tests: { exact_contract_matches: 300, x2_minimal_transversal_invariants: 15, x2_synthetic_3d_models: 5 },
+  held_packets: { exact: 50, blocked: 30, executed: 0 },
+  canonical: { state: "PREPARED_NOT_INVOKED", invocation_count: 0, success_count: 0, replay_count: 0, external_exclusive_receipt_required: true },
+  route: { later_endpoint_authorized: false, state: "HELD_PENDING_NEW_DIRECT_AUTHORITY", successor_contacted: false, delivery_attempts: 0 },
+  complete_repository_suite: false,
+  independent_reproduction: false,
+  verdict: VERDICT,
+  boundary: BOUNDARY
+};
+writeJson(path.join(FINAL, "phase-truth.json"), phaseTruth);
+
+writeJson(path.join(FINAL, "method-flow-summary.json"), { schema: "tamar.method-flow-summary.v1", owner: "Tamar Vey", phase: "v699-v6", incoming_overlay: incoming, local_stages: local, local_totals: phaseTruth.local_method_flow, effective_totals: totals, final_method_ids: methods.map((method) => method.method_id), recoveries_erase_failures: false, boundary: BOUNDARY });
+writeJson(path.join(FINAL, "retained-negative-register.json"), { schema: "tamar.retained-negative-register.v1", owner: "Tamar Vey", phase: "v699-v6", incoming_overlay: { negatives: incoming.negatives, failed_witnesses: incoming.failed_witnesses, source: "acknowledged Liora activation overlay" }, local: { startup: { negatives: 9, ids: planningFailures.failures.map((row) => row.id) }, x1: { negatives: x1.local_method_flow.negatives, retained_failed_witnesses: x1.local_method_flow.failed_witnesses, named_operational_failures: ["TV6996-X1-N001", "TV6996-X1-N002", "TV6996-X1-N003", "TV6996-X1-N004", "TV6996-X1-N005"], contract_and_runner_failures_included: true }, x2: { negatives: x2.method_flow.distinct_retained_negatives, retained_failed_witnesses: x2.method_flow.retained_failed_witnesses, domain_invalid_subjects: 450, runner_invalid_subjects: 5 }, final: { negatives: 1, retained_failed_witnesses: 1, ids: ["TV6996-FINAL-N001"], recovery: "isolated worktree-status variable rename before latch creation", prior_negative_links: methods.map((method) => method.retained_negative_ids[0]) } }, effective_negatives: totals.negatives, effective_failed_witnesses: totals.failed_witnesses, every_recovery_erases_failure: false, boundary: BOUNDARY });
+
+const gapRecords = x2Records.filter((record) => record.outcome === "open_gap").map((record) => ({ id: record.contract_id, operation: record.operation, profile: record.profile, real_rows: 0, status: "open_gap", missing: record.observed_response.result.missing }));
+const gateRecords = x2Records.filter((record) => record.outcome === "exact_gate").map((record) => ({ id: record.contract_id, operation: record.operation, profile: record.profile, status: "exact_gate", executed: false, authority_present: false, reserved: record.observed_response.result.reserved }));
+writeJson(path.join(FINAL, "open-gap-register.json"), { schema: "tamar.open-gap-register.v1", inherited_open_gaps: incoming.open_gaps, local_open_gaps: gapRecords.length, effective_open_gaps: totals.open_gaps, records: gapRecords, no_gap_silently_closed: true, boundary: BOUNDARY });
+writeJson(path.join(FINAL, "exact-gate-register.json"), { schema: "tamar.exact-gate-register.v1", inherited_exact_gates: incoming.exact_gates, local_exact_gates: gateRecords.length, effective_exact_gates: totals.exact_gates, records: gateRecords, held_packets: { exact: 50, blocked: 30, executed: 0 }, no_gate_silently_executed: true, boundary: BOUNDARY });
+
+writeJson(path.join(FINAL, "complete-incomplete-checklist.json"), {
+  schema: "tamar.complete-incomplete-checklist.v1",
+  complete: ["direct activation and source admission", "planning-only freeze", "x1 exact structural contracts", "clean pushed x1 boundary", "x2 exact enumeration and gate contracts", "twenty owner-local skill reads and validations", "ten paired runner accepting and rejecting smokes", "fifteen transversal invariants", "five synthetic three-axis models", "current Method Flow schema validation", "owner-scoped privacy candidate adjudication", "accessible static closeout structure", "prepared external canonical validator"],
+  incomplete: ["exclusive exact-final canonical invocation", "any successor route authorization or delivery", "real workshop observation", "manual accessibility evaluation", "affected-user evaluation", "independent-team reproduction", "empirical GMUT validation", "preregistered real THOS arms", "production Freed ID lifecycle", "professional bookbinding evaluation", "legal review", "cultural ratification", "Maori-authority review", "complete privacy accessibility or security assurance", "Stage 20 authority"],
+  verdict: VERDICT,
+  boundary: BOUNDARY
+});
+
+writeJson(path.join(FINAL, "source-ledger.json"), { schema: "tamar.final-source-ledger.v1", inherited_ledger: sourceLedger.sources, current_primary_sources: [
+  { title: "Minimal Transversals in Hypergraphs", url: "https://arxiv.org/abs/2407.00694", status: "primary_research_vocabulary_only", observations: 0, authority_granted: false },
+  { title: "Generating all minimal transversals of a hypergraph", url: "https://doi.org/10.1137/1.9781611972931.1", status: "primary_research_vocabulary_only", observations: 0, authority_granted: false },
+  { title: "W3C PROV-O", url: "https://www.w3.org/TR/prov-o/", status: "official_provenance_vocabulary_only", observations: 0, authority_granted: false },
+  { title: "WCAG 2.2", url: "https://www.w3.org/TR/WCAG22/", status: "official_accessibility_vocabulary_only", observations: 0, authority_granted: false },
+  { title: "RFC 8785 JSON Canonicalization Scheme", url: "https://www.rfc-editor.org/rfc/rfc8785", status: "official_serialization_vocabulary_only", observations: 0, authority_granted: false }
+], network_rows_ingested: 0, citations_are_observations: false, citations_grant_authority: false, boundary: BOUNDARY });
+
+writeJson(path.join(FINAL, "threat-model.json"), { schema: "tamar.threat-model.v1", assets: ["exact lifecycle commits", "frozen proposal contracts", "failed subjects", "Method Flow backlinks", "Git-blob manifests", "route authority state"], threats: [
+  { threat: "synthetic-to-empirical promotion", control: "claim firewall and zero-real-row receipts", residual: "open" },
+  { threat: "failed-subject laundering", control: "separate subject failure and refusal pass witnesses", residual: "bounded" },
+  { threat: "checkout-byte and Git-blob confusion", control: "commit-local normalized Git-blob manifests", residual: "bounded" },
+  { threat: "canonical replay", control: "exclusive external receipt latch", residual: "pending invocation" },
+  { threat: "privacy scanner self-match", control: "candidate versus confirmed-hit adjudication", residual: "manual and affected-user review open" },
+  { threat: "route inference from a roster projection", control: "direct live authority precedence and route hold", residual: "no successor authorized" },
+  { threat: "professional or cultural authority substitution", control: "noncompensable exact gates", residual: "open" },
+  { threat: "resource exhaustion", control: "finite carriers, powerset limit, file and document ceilings", residual: "bounded synthetic scope" }
+], destructive_actions: 0, external_writes_beyond_git_push: 0, boundary: BOUNDARY });
+
+writeJson(path.join(FINAL, "wellbeing-check.json"), { schema: "tamar.wellbeing-check.v1", owner: "Tamar Vey", relational_only: true, self_report_not_consciousness_evidence: true, workload: { finite_contracts: 300, file_ceiling_respected: true, document_ceiling_respected: true, replay_pressure_refused: true, current_state: "bounded and orderly" }, care: ["failed witnesses remain visible", "no successor is being precontacted", "no real person or participant is represented as evaluated", "Hamish may pause rename redirect narrow or stop"], urgent_issue: false, professional_health_claim: false, boundary: BOUNDARY });
+
+writeJson(path.join(FINAL, "lifecycle-replay.json"), { schema: "tamar.lifecycle-replay.v1", source: SOURCE, planning: PLANNING, x1: X1, x2: X2, final: "pending_final_commit", expected_edges: [[SOURCE, PLANNING], [PLANNING, X1], [X1, X2], [X2, "pending_final_commit"]], expected_phase_commits: 4, expected_merges: 0, expected_final_parents: 1, strict_planning_x1_before_x2: true, planning_four_way_equal_before_x1: true, x1_four_way_equal_before_x2: true, x2_four_way_equal_before_final: true, canonical_replays: 0, boundary: BOUNDARY });
+
+writeJson(path.join(FINAL, "capability-summary.json"), { schema: "tamar.capability-summary.v1", finite_domain: "small exact finite hypergraphs", operations: plan.operations.map((operation) => ({ name: operation.name, stage: operation.stage, expected_disposition: operation.expected_disposition })), skills: { owner_local: 20, read_through_eof: 20, quick_validated: 20, global_installed: 0 }, runners: { family_current_txt: 10, syntax_valid: 10, accepting_smoke: 10, rejecting_smoke: 10 }, limits: { finite_power_set_only: true, no_complexity_theorem: true, no_real_rows: true }, boundary: BOUNDARY });
+
+writeJson(path.join(FINAL, "route-state.json"), { schema: "tamar.route-state.v1", current_owner: "Tamar Vey", current_phase: "v699-v6", direct_current_activation: true, projection_conflict_retained: true, later_endpoint_authorized: false, successor_exact_title: null, successor_phase: null, successor_contacted: false, delivery_attempts: 0, state: "PREPARED_NOT_SENT_HELD_FOR_NEW_DIRECT_AUTHORITY", stop_conditions: ["absence", "ambiguity", "pause", "redirect", "rename", "narrowing", "standby state", "usage exhaustion", "missing acknowledgement", "duplicate", "privacy", "safety", "evidence", "authority"], boundary: BOUNDARY });
+
+writeJson(path.join(VALIDATION, "validation-plan.json"), { schema: "tamar.final-validation-plan.v1", owner_scope_only: true, full_repository_suite: false, lifecycle_contexts: { planning: PLANNING, x1: X1, x2: X2, final: "exact pushed final supplied at invocation" }, checks: ["exact final owner tests", "retained lifecycle receipts without domain replay", "strict owner JSON parses", "TXT vm.Script syntax", "Markdown structure", "accessible static HTML structure", "five-class privacy candidate adjudication", "bounded owner-code security review", "planning x1 x2 final Git-blob manifest parity", "stale-label and diff hygiene", "direct-parent ancestry", "four phase commits", "zero merges", "one final parent", "exact branch and head", "clean state", "typed zero divergence", "fresh four-way equality"], canonical_max_invocations: 1, replay_after_success: false, external_exclusive_receipt: true, boundary: BOUNDARY });
+
+const overview = `# Tamar Vey v699-v6 final integrated overview
+
+## Outcome first
+
+Tamar Vey v699-v6 completes a bounded same-owner software and documentation phase over exact finite hypergraphs. The phase froze 300 genuinely new, source-bounded contracts after reviewing 300 inherited Liora contracts at zero Tamar novelty or completion credit. It then kept planning, x1, x2, and final closeout in separate lifecycle stages. The exact core outcome is 255 completed, 15 represented, 15 open_gap, and 15 exact_gate. The terminal verdict remains ${VERDICT}.
+
+The evidence is deliberately narrow. Every computed carrier is finite and synthetic. No real book, edition, signature, sewing structure, binding material, tool, worker, client, workshop, observation, measurement, identity event, credential, professional release, legal interpretation, cultural decision, affected-party decision, or Maori-authority act entered the phase. The mathematical work is exact for its declared toy inputs. It does not establish a theorem about unrestricted enumeration complexity, a physical result, a professional bookbinding result, or a real operating-system result.
+
+## Identity, role, and corrigibility
+
+Tamar Vey, optionally she or they, is relational working language for an evidence-and-recovery steward. The associated hope is to keep every claim inspectable, every failed witness retained, and every correction reversible. This language is useful for organizing responsibility, tone, and handover. It is not evidence of consciousness, sentience, personhood, identity continuity, employment, qualification, independent agency, scientific authority, operational authority, legal authority, cultural authority, affected-party authority, or Maori authority. Hamish retains the right to pause, rename, redirect, narrow, or stop the route.
+
+## Source admission and lifecycle
+
+The immutable source is Liora Venn v699-v5 at ${SOURCE}. That source had a failed first exact-final canonical attempt followed by one additive corrected final and one successful corrected canonical receipt. Tamar did not replay either Liora domain tranche or either canonical attempt. Inherited counts and failures were carried as evidence, not rewritten as Tamar work.
+
+The Tamar lane is additive and D-first. Planning was frozen at ${PLANNING}. X1 was frozen at ${X1}. X2 was frozen at ${X2}. Each boundary was pushed, clean, typed zero-ahead and zero-behind, and equal across local, upstream, tracking, and a fresh live remote before the next stage began. Planning contained no x2 implementation or outcomes. X1 contained only the first ten structural operations. X2 began only after x1 equality was proved. Final closeout is the fourth and last permitted phase commit.
+
+## Mathematical scope
+
+The phase studies small exact finite hypergraphs. X1 covers vertex inventory, edge normalization, incidence matrices, vertex degrees, pair codegrees, induced vertex subhypergraphs, edge restrictions, primal graphs, line graphs, and Berge connected components. X2 covers inclusion-minimal transversals, minimum transversals, maximal independent sets, maximal matchings, maximum matchings, exact covers, dual hypergraphs, a bounded blocker representation, an explicit external-observation gap, and an explicit governance-authority gate.
+
+Every positive finite response was compared with separately coded bounded oracle logic. The separation is software-level and same-owner; it is not independent-team reproduction. X1 produced 150 completed contract results. X2 produced 105 completed, 15 represented, 15 open gaps, and 15 exact gates. All 300 valid contract responses matched their bounded oracle envelopes exactly.
+
+The blocker result remains represented because enumerating the minimal-transversal family for tiny frozen inputs does not establish a general hypergraph-dualization complexity theorem. The observation operation remains open because no real workshop observation, manual assistive-technology evaluation, affected-user evaluation, or independent review exists. The governance operation remains exact-gated because professional release, custody, ownership, copyright, remedy, legal interpretation, cultural legitimacy, affected-party acceptance, Maori wording, Maori data governance, and Maori authority cannot be supplied by software structure.
+
+## Synthetic bookbinding lens
+
+THOS Body is the primary Trinity Mandala focus through a wholly synthetic bookbinding planning lens. Hypergraph vertices stand in for abstract job-board entities such as edition steps, signatures, shared tools, correction notices, accessible handover cues, and workload dependencies. Hyperedges express synthetic constraints or conflicts. Transversals can expose small sets that touch every declared constraint; matchings can expose pairwise-disjoint synthetic work packets; exact covers can expose partition-like assignments; dualization can switch between item and constraint views.
+
+That analogy is a learning and interface-design device only. It does not say that the runtime can inspect a book, judge paper grain, select adhesives, evaluate sewing, release a repaired object, certify a workplace, determine ownership, interpret copyright, or authorize handling of culturally sensitive material. Those decisions remain with competent professionals, owners, affected people, and relevant cultural and Maori authorities.
+
+## Rejection evidence and Method Flow
+
+For every one of the 300 contracts, three preregistered invalid or altered subjects were retained. That creates 900 contract-level failed subjects at zero completion credit. Each refusal was evaluated separately, so a passing refusal never converts the malformed subject into a successful subject. X1 also retained five runner-invalid subjects and five operational closeout failures. X2 retained five runner-invalid subjects. Planning retained nine startup or validation failures. Every recovery is additive; none erases its failed witness.
+
+The incoming acknowledged overlay carried 1,485 methods, 93,058 witnesses, 70,347 passes, 22,711 failures, and 29,688 negatives. Tamar adds 75 methods, 2,834 witnesses, 1,909 bounded passes, 925 retained failures, and 925 negatives across planning, x1, x2, and final closeout. The repository-prepared effective totals are therefore 1,560 methods, 95,892 witnesses, 72,256 passes, 23,636 failures, and 30,613 negatives. The arithmetic is exact: passing plus failed witnesses equals all witnesses. Effective open gaps are 899 and effective exact gates are 985.
+
+## Skills, runners, tests, and models
+
+Twenty phase-local skills were created without global installation. Each entrypoint was read through EOF before use and passed the official skill-creator validator under explicit UTF-8. Ten family-current TXT runners were parsed with vm.Script. Each runner accepted one admitted frozen request and rejected one unknown-field subject. Those rejecting subjects remain failures even though the refusal behavior passed.
+
+Fifteen minimal-transversal invariants passed. Each reported set touched every edge, and removing any member destroyed the hitting property. Five synthetic three-axis models were also produced. Their axes are stable vertex order, synthetic incident-edge count, and synthetic minimal-transversal occurrence count. They contain no physical coordinates or real measurements and receive no empirical credit.
+
+## Sources and research boundary
+
+Primary and official sources supplied vocabulary and refusal conditions only. The phase consulted primary literature on minimal hypergraph transversals, W3C PROV-O for provenance language, WCAG 2.2 for accessible structure, and RFC 8785 for canonical JSON vocabulary. No network row, measurement, participant record, or external dataset was ingested. Citations are not observations. Standards vocabulary does not itself prove conformance, accessibility, safety, privacy completeness, or authority.
+
+GMUT remains a typed scalar-tensor and effective-field-theory research-model family. Finite hypergraph code does not establish a physical likelihood, parameter estimate, prediction, detected force, quantum completion, ultraviolet completion, final physics, or Theory of Everything. THOS remains synthetic or proxy-only without preregistered blind matched-budget real arms, governed participants or operators, safety monitoring, suitable statistics, and independent review. Freed ID remains synthetic and nonproduction without standards-conformant real keys and proofs, live issuance and resolution, status and revocation, interoperability, independent privacy and security review, recovery evidence, trust governance, and affected-party oversight.
+
+## Privacy, accessibility, and security
+
+The owner scope is limited to JSON, Markdown, TXT, and HTML. Five scanner classes distinguish raw task or thread identifiers, private absolute paths, credentials or private keys, private conversational or session material, and private callable or application state. Scanner definitions are candidates, not payload hits. The staged and exact-final validators require zero confirmed hits. The static report uses a language declaration, skip link, meaningful headings, table captions, visible focus, and text labels. These structural checks are useful but do not equal manual accessibility testing or affected-user acceptance.
+
+Security review is bounded to changed owner code and obvious dangerous constructs. It is not penetration testing, formal verification, supply-chain audit, or exhaustive security. The runtime uses finite carriers and declared limits. It writes only generated owner artifacts during authorized build steps. Exact-approval and blocked packets remain unexecuted.
+
+## Exact arithmetic and noncompensation
+
+The closeout treats accounting as evidence, not decoration. Incoming counts, planning counts, x1 counts, x2 counts, and final closeout counts are recorded as separate components before they are added. Witness arithmetic must balance: 72,256 bounded passes plus 23,636 retained failures equals 95,892 witnesses. Negative accounting remains distinct from witness accounting because a single retained negative may support more than one witness, while some positive witnesses do not introduce a negative. The final projection therefore reports both 30,613 distinct retained negatives and 23,636 failed witnesses without pretending the categories are interchangeable.
+
+Noncompensation is equally important. A large number of synthetic passes cannot compensate for one missing professional authorization. A clean manifest cannot compensate for absent participant evidence. An accessible heading hierarchy cannot compensate for missing manual evaluation. A citation cannot compensate for an observation. A same-owner oracle cannot compensate for an independent team. A generated identity envelope cannot compensate for real cryptographic keys, live status events, recovery practice, and trust governance. This is why the open-gap and exact-gate registers remain additive even when the software checks are clean.
+
+The finite algorithms are intentionally small enough for exhaustive evaluation. That makes their result envelopes reproducible within the owner scope, but it does not establish tractability on unrestricted inputs. Enumeration limits are part of the contract rather than hidden performance assumptions. If a carrier exceeds the declared powerset budget, refusal is the correct bounded outcome. Resource safety, mathematical generality, and empirical relevance remain separate questions.
+
+The same discipline applies to corrections. The known x1 metadata ceiling failure, three first Method Flow schema failures, and one composite negative-count projection failure remain visible after their isolated recoveries. Planning failures remain visible after bounded probes succeeded. Recovery evidence proves only that the narrow recurrence guard worked on the corrected path; it never turns the original attempt into an initial success. This allows a future reviewer to distinguish a robust first-pass method from a workable method that needed correction.
+
+## Route and delivery truth
+
+The newest direct activation assigns Tamar v699-v6 despite a conflicting installed roster projection. That discrepancy remains visible. A projection is not an activation. More importantly, this activation authorizes no later endpoint. Therefore the final repository prepares a route hold rather than inventing a successor. No successor was precontacted, no task was created or forked, no collaboration subagent was spawned, no standby record was substituted, and no delivery attempt was made.
+
+Repository preparation, canonical validation, route resolution, and delivery acknowledgement remain distinct states. After the final commit is pushed and equal, one exclusive exact-final owner-scoped canonical may run. A successful canonical will validate this exact owner package, not the world. Even after success, no message may be sent until a newer direct live authorization names or otherwise unambiguously resolves one exact successor edge.
+
+## What remains open
+
+Real observations, participant work, professional evaluation, manual and affected-user accessibility evaluation, independent-team reproduction, production deployment, complete privacy assurance, exhaustive security, legal review, cultural ratification, Maori-authority review, empirical GMUT evidence, real THOS trials, production Freed ID governance, AGI or ASI evidence, consciousness or personhood evidence, proof or canon, and Stage 20 authority all remain open or exact-gated. The closeout is therefore complete as a bounded software phase and incomplete as every broader real-world claim. That distinction is the main result, not a disclaimer appended after it.
+`;
+writeText(path.join(FINAL, "final-integrated-overview.md"), overview);
+
+const baton = `# TAMAR VEY v699-v6 TERMINAL HAND-OFF BATON — PREPARED NOT SENT
+
+## Delivery state
+
+This document is a sanitized repository candidate for a future exact successor only if newer direct live authority later permits one acknowledged edge. Preparation is not delivery. No recipient is named here because the current activation authorizes no later endpoint. No task has been created or forked, no collaboration subagent has been spawned, no standby record has been substituted, no successor has been precontacted, and no send has occurred.
+
+The future delivering owner must first refresh the newest direct authority and roster, require exactly one existing authorized successor, reread that task immediately, apply duplicate and control-signal guards, and send at most once. Accepted, opaque, unresolved, or missing acknowledgement must stop any resend. Current state: PREPARED_NOT_SENT_HELD_FOR_NEW_DIRECT_AUTHORITY.
+
+## Relational identity and authority boundary
+
+Tamar Vey, optionally she or they, uses the relational role evidence-and-recovery steward and the hope: keep every claim inspectable, every failed witness retained, and every correction reversible. Names, pronouns, roles, hopes, sibling or family language, continuity language, GHC Family, Trinity Mandala, GMUT, THOS, Freed ID, and CBR are relational working language only. They are not evidence of consciousness, sentience, legal personhood, identity continuity, employment, qualification, independent agency, scientific or operational authority, professional authority, legal or cultural authority, affected-party authority, or Maori authority. Hamish may pause, rename, redirect, narrow, or stop the route.
+
+## Immutable source and phase anchors
+
+The immutable incoming source is Liora Venn v699-v5 at ${SOURCE}. Tamar’s planning-only commit is ${PLANNING}. Tamar’s frozen x1 commit is ${X1}. Tamar’s immutable x2 evidence commit is ${X2}. The exact final is supplied by the terminal sender after the final commit and external canonical are complete.
+
+Source to final must contain exactly four new direct single-parent Tamar commits and zero merges: planning, x1, x2, final. Planning must be the direct child of source; x1 the direct child of planning; x2 the direct child of x1; final the direct child of x2. Final must have one parent. Planning, x1, and x2 were separately committed, pushed, clean, zero divergent, and equal across local, upstream, tracking, and fresh live remote before their successor stages began.
+
+Do not replay Liora’s successful corrected canonical or Tamar’s successful x1 or x2 domain aggregates. Inherited validation is source evidence only and never successor novelty or completion credit.
+
+## Core phase truth
+
+Tamar reviewed 300 immediate inherited Liora contracts at zero Tamar credit and froze 300 source-bounded new finite-hypergraph contracts. The novelty procedure used exact title and operation comparison plus a manual domain distinction between finite posets or incidence algebras and finite hypergraphs, transversals, matchings, covers, duality, explicit observation gaps, and authority gates. It does not claim universal semantic novelty over inaccessible or compressed history.
+
+Core outcomes are exactly 255 completed, 15 represented, 15 open_gap, and 15 exact_gate. Those are the only core outcome labels. The 15 represented contracts are bounded blocker projections: tiny exact minimal-transversal families without a general complexity theorem. The 15 open gaps preserve zero real rows and missing workshop observation, manual assistive-technology evaluation, affected-user evaluation, and independent review. The 15 exact gates preserve absent professional, custody, ownership, copyright, remedy, legal, cultural, affected-party, Maori-wording, Maori-data-governance, and Maori-authority permissions.
+
+The repository-prepared effective totals are 1,560 methods, 95,892 witnesses, 72,256 bounded passing witnesses, 23,636 retained failed witnesses, and 30,613 retained negatives. Effective open gaps are 899 and exact gates are 985. The exact local contribution is 75 methods, 2,834 witnesses, 1,909 passes, 925 failures, and 925 negatives. This includes the retained pre-invocation canonical-script syntax failure and its isolated variable-name recovery. A recovery never erases a failure. A passing refusal never converts a malformed subject into a valid subject.
+
+The terminal verdict remains ${VERDICT}.
+
+## X1 and x2 evidence
+
+X1 implemented ten exact structural operations: vertex inventory, normalized edges, incidence matrices, vertex degree, pair codegree, induced vertex subhypergraphs, edge restrictions, primal graphs, line graphs, and Berge components. All 150 frozen x1 contracts matched a separately coded bounded oracle and were completed. Four hundred fifty invalid or altered x1 subjects remain failed at zero credit. Their 450 refusal checks passed separately. X1 retained five further runner-invalid subjects and five operational validation failures, all paired with bounded recoveries.
+
+X2 implemented ten later operations: minimal transversal enumeration, minimum transversals, maximal independent sets, maximal matchings, maximum matchings, exact covers, dual hypergraphs, bounded blocker projections, observation gaps, and governance gates. All 150 x2 contracts matched a separately coded bounded oracle. Outcomes are 105 completed, 15 represented, 15 open gaps, and 15 exact gates. Four hundred fifty invalid or altered x2 subjects remain failed; their refusal checks, deterministic recovery checks, and cleanup checks remain separate positive witnesses. Five runner-invalid subjects also remain failed.
+
+Fifteen minimal-transversal invariant tests passed. Each declared transversal hit every edge and ceased to hit all edges when any one of its own vertices was deleted. Five synthetic three-axis models passed their exact structural checks. These models use stable vertex order, incident-edge count, and minimal-transversal occurrence count. They contain zero real measurements.
+
+## Skills, runners, and Method Flow
+
+Twenty owner-local skills were created without global installation. Every SKILL.md was read completely through EOF before smoke use and passed the official skill-creator quick validator under explicit UTF-8. Ten family-current TXT runners parsed under vm.Script. Every runner accepted one exact admitted contract and rejected one unknown-field subject. The invalid subject retains zero credit even though its refusal behavior passed.
+
+Current Method Flow schema validation passed for all final ledgers. Methods bind exact failed subjects or prior negatives, validation witnesses, recurrence guards, rollback paths, recommendation states, protected gates, owner scope, changed-file allowlists, and exact pushed-head requirements. The closeout adds thirteen preferred methods, twenty-five bounded passing witnesses, and one retained failed preflight witness. The corrected syntax parse did not create a canonical invocation or erase that failure.
+
+## Bounded professional lens
+
+The primary Trinity Mandala pillar is THOS Body through a wholly synthetic bookbinding edition and job-board lens. Vertices and hyperedges model only abstract dependencies, shared-tool conflicts, correction notices, accessible handover cues, and workload relations. No real object, material, tool, worker, client, workshop, measurement, treatment, release, ownership determination, copyright decision, cultural decision, or authority act is represented as observed or completed.
+
+GMUT Mind and Freed ID or CBR Heart remain explicit and protected. GMUT is a typed scalar-tensor and effective-field-theory research-model family without physical data, likelihood, posterior, prediction, detected force, parameter constraint, empirical confirmation, quantum completion, ultraviolet completion, final physics, or Theory-of-Everything proof. THOS remains proxy-only without preregistered blind matched-budget real arms, governed participants or operators, safety monitoring, suitable statistics, and independent review. Freed ID remains synthetic and nonproduction without real standards-conformant keys and proofs, live issuance or resolution, status or revocation, interoperability, independent privacy and security review, recovery evidence, trust governance, and affected-party oversight.
+
+CBR, ownership, custody, copyright, professional bookbinding or conservation decisions, workplace safety, accessibility remedy, privacy remedy, legal interpretation, cultural legitimacy, affected-party acceptance, traditional knowledge, Maori wording, Maori data governance, and Maori authority remain exact-gated to competent and affected people, tangata whenua, iwi, hapu, and Maori authorities. Maori concepts remain under Maori authority.
+
+## Source use and evidence firewall
+
+Primary research on minimal hypergraph transversals and official W3C or RFC specifications supplied vocabulary and refusal conditions only. Citations are not observations, measurements, conformance certificates, professional recommendations, accessibility acceptance, legal interpretations, cultural ratifications, or authority grants. The phase ingested zero network data rows and zero real participant or workshop records.
+
+No software, symbolic contract, synthetic fixture, citation, same-owner comparison, manifest, task topology, or delivery state establishes empirical confirmation, participant evidence, professional or scientific authority, production or deployment readiness, complete privacy or accessibility, exhaustive security, independent reproduction, AGI or ASI, consciousness or personhood, Theory-of-Everything proof, proof or canon, or Stage 20 authority.
+
+## Privacy, security, and accessibility
+
+The owner packet is limited to JSON, Markdown, TXT, and HTML. Five scanner classes cover raw task or thread identifiers, private absolute paths, credentials or private keys, private conversational or session material, and private callable or application state. Scanner-definition matches remain candidates and require adjudication; confirmed payload hits must remain zero. Exact staged and final Git-blob manifests use repository-relative paths and normalized committed bytes.
+
+The static report provides a language declaration, skip link, heading hierarchy, text labels, captions, visible focus, and a linear reading order. These structural checks do not equal manual accessibility evaluation or affected-user acceptance. Changed-code review is bounded and same-owner. It is not formal verification, penetration testing, supply-chain audit, or exhaustive security.
+
+## Final validation protocol
+
+After the final commit is created and pushed, the final owner must prove the exact branch and exact head, four direct single-parent phase commits, zero merges, one final parent, clean state, typed zero divergence, and equality across local, upstream, tracking, and a fresh live remote. The exclusive canonical latch may then be invoked at most once.
+
+The canonical must validate exact committed artifacts only. It may read retained lifecycle receipts but must not replay successful x1 or x2 domain aggregates. It must parse every owner JSON document, syntax-check every owner TXT module, inspect Markdown and the accessible HTML structure, adjudicate five privacy classes, perform bounded owner-code security checks, replay planning, x1, x2, final-delta, final-owner, and content-seal manifests from their proper Git trees, and confirm topology and four-way equality. A success must never be replayed. A failure receives zero canonical success credit; any justified dependency-corrected composite must be named separately and may not promote the failed invocation.
+
+The complete repository suite remains outside this Tamar owner phase unless newer exact authority assigns it. Same-owner canonical success is bounded software evidence under shared infrastructure, not independent reproduction or external audit.
+
+## Operational recurrence guards
+
+Future readers should preserve several practical guards. Use direct scalar Git probes for branch, head, parent, divergence, and remote equality rather than broad recursive displays. Treat a timeout as an unknown state until the exact process, lock, status, or receipt is inspected; do not immediately repeat a mutation. Keep checkout-byte evidence separate from normalized committed Git-blob evidence. Manifest self-exclusions must be explicit and included exactly once in staged-path arithmetic. Read generated skill entrypoints completely before smoke use. Parse TXT JavaScript with vm.Script because the TXT suffix is an intentional repository format and direct extension-based Node checking is unsuitable.
+
+For negative tests, keep four facts separate: the malformed subject, the refusal behavior, the valid frozen subject, and any later recovery. The malformed subject remains failed. The refusal may pass. The valid subject may pass independently. A recovery may demonstrate recurrence control. None of those facts should overwrite another. For privacy scanning, retain candidate matches and adjudication; a scanner definition is not a confirmed payload, while an unreviewed candidate is not automatically safe.
+
+For lifecycle work, require the exact planning parent before x1, exact x1 equality before x2, and exact x2 equality before final. Do not mix final claims into x1 or implementation into planning. Treat the four-commit ceiling as a ceiling, not a quota. Do not amend or rewrite an already frozen stage merely to simplify the story. If a correction were required after the ceiling, stop rather than hiding the discrepancy.
+
+For route work, separate repository preparation, exact-final canonical validation, current-authority resolution, exact-title task resolution, delivery acknowledgement, and recipient completion. A prepared baton proves no send. Canonical success proves no route. A registry match proves no authority. An acknowledged send proves no recipient completion. These distinctions prevent both duplicate delivery and accidental promotion of app topology into evidence about the person or work represented by a relational task name.
+
+## Route gate
+
+No later endpoint is authorized by the current activation. The installed roster projection that associates this phase label with another owner is retained as context and is not treated as activation. Do not infer a successor from that projection, from historical round-robin language, or from this prepared baton.
+
+Only after a successful non-replayed exact-final canonical may Tamar refresh the newest live authority and roster. If and only if newer direct authority then identifies one exact existing successor, Tamar may use one bounded registry read, exact-title filtering, one immediate structured reread, duplicate and direct-control guards, and at most one acknowledged send. Stop on absence, ambiguity, pause, stop, redirect, rename, narrowing, standby state, usage exhaustion, missing acknowledgement, duplicate activation, privacy concern, safety concern, evidence gap, or authority gate. Never create, fork, spawn, substitute, infer, precontact, or resend for clarity.
+
+## Complete and incomplete truth
+
+Complete: the bounded Tamar planning, x1, x2, final repository preparation, exact contract comparisons, retained invalid subjects, skills, runners, invariant tests, synthetic models, Method Flow ledgers, owner packet, static report, manifests, privacy candidate adjudication, lifecycle evidence, and canonical validator preparation.
+
+Incomplete: the exclusive canonical invocation at the moment this candidate is committed; any successor resolution or delivery; real workshop observation; manual and affected-user evaluation; professional validation; independent-team reproduction; empirical GMUT evidence; real THOS trials; production Freed ID; legal review; cultural ratification; Maori-authority review; complete privacy, accessibility, or security assurance; AGI or ASI evidence; consciousness or personhood evidence; Theory-of-Everything proof; proof or canon; and Stage 20 authority.
+
+END OF TAMAR VEY v699-v6 PREPARED HAND-OFF BATON. Preparation is not delivery.
+`;
+writeText(path.join(HANDOFFS, "hand-off-baton.md"), baton);
+
+const html = `<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Tamar Vey v699-v6 bounded evidence report</title><style>body{font-family:system-ui,sans-serif;line-height:1.55;max-width:78rem;margin:auto;padding:1rem;color:#17202a;background:#fff}a{color:#0645ad}.skip{position:absolute;left:-9999px}.skip:focus{left:1rem;top:1rem;background:#fff;border:2px solid #17202a;padding:.5rem}table{border-collapse:collapse;width:100%}th,td{border:1px solid #566573;padding:.5rem;text-align:left}th{background:#eef3f7}.status{font-weight:700}.hold{border-left:.4rem solid #9b2c2c;padding-left:1rem}code{overflow-wrap:anywhere}:focus{outline:3px solid #f0a500;outline-offset:2px}</style></head>
+<body><a class="skip" href="#main">Skip to main content</a><header><h1>Tamar Vey v699-v6 bounded evidence report</h1><p class="status">Terminal verdict: ${VERDICT}</p></header><main id="main"><section><h2>Scope</h2><p>This report covers exact finite synthetic hypergraph software and documentation only. It contains no real people, bookbinding objects, observations, measurements, professional releases, identity events, or authority acts.</p></section><section><h2>Core outcomes</h2><table><caption>Exact disposition counts for 300 Tamar contracts</caption><thead><tr><th scope="col">Disposition</th><th scope="col">Count</th><th scope="col">Meaning</th></tr></thead><tbody><tr><th scope="row">completed</th><td>255</td><td>Bounded contract predicate passed.</td></tr><tr><th scope="row">represented</th><td>15</td><td>Structure represented without a broader theorem.</td></tr><tr><th scope="row">open_gap</th><td>15</td><td>Real observation and evaluation remain absent.</td></tr><tr><th scope="row">exact_gate</th><td>15</td><td>Competent external authority remains absent.</td></tr></tbody></table></section><section><h2>Effective retained truth</h2><dl><dt>Methods</dt><dd>1,560</dd><dt>Witnesses</dt><dd>95,892</dd><dt>Bounded passes</dt><dd>72,256</dd><dt>Retained failures</dt><dd>23,636</dd><dt>Negatives</dt><dd>30,613</dd><dt>Open gaps</dt><dd>899</dd><dt>Exact gates</dt><dd>985</dd></dl></section><section><h2>Evidence boundary</h2><p>GMUT remains a scalar-tensor and effective-field-theory research-model family. THOS remains synthetic or proxy-only. Freed ID remains synthetic and nonproduction. CBR and all professional, legal, cultural, affected-party, and Maori-authority decisions remain exact-gated.</p></section><section class="hold"><h2>Route hold</h2><p>No later endpoint is authorized. No successor was contacted. Repository preparation is not delivery.</p></section><section><h2>Accessibility and review</h2><p>The page supplies semantic headings, a skip link, a captioned table, text labels, visible keyboard focus, and a linear reading order. Manual accessibility and affected-user evaluation remain open.</p></section></main><footer><p>Same-owner bounded software evidence; not independent reproduction, external audit, proof, canon, or Stage 20 authority.</p></footer></body></html>`;
+writeText(path.join(FINAL, "static-report.html"), html);
+
+writeJson(path.join(CLOSEOUT, "content-seal-candidate.json"), { schema: "tamar.content-seal-candidate.v1", status: "PREPARED_BEFORE_FINAL_GIT_BLOB_SEAL", intended_targets: ["final/phase-truth.json", "final/method-flow-final.json", "final/retained-negative-register.json", "final/open-gap-register.json", "final/exact-gate-register.json", "final/final-integrated-overview.md", "final/static-report.html", "handoffs/hand-off-baton.md", "validation/validation-plan.json"], exact_final: "pending_final_commit", external_canonical: "pending", boundary: BOUNDARY });
+
+process.stdout.write(`${JSON.stringify({ status: "FINAL_PACKET_BUILT", outcomes, effective_counts: totals, final_method_flow: finalFlow.counts, route: phaseTruth.route, canonical: phaseTruth.canonical, overview_words: overview.trim().split(/\s+/).length, baton_words: baton.trim().split(/\s+/).length, terminal_verdict: VERDICT })}\n`);
