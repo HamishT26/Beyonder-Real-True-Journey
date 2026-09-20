@@ -1,0 +1,230 @@
+# Python 3. Planning preparation only; no execution-runtime import or phase execution.
+from pathlib import Path
+from datetime import datetime, timezone
+import collections, copy, hashlib, json, re, runpy, subprocess, sys
+
+ROOT = Path(__file__).resolve().parents[1]
+REPO = ROOT.parents[2]
+SKILLS = Path(sys.argv[1])
+BANK = Path(sys.argv[2])
+SOURCE = 'cd76d7b53b3c472aa74e78c9e545874c2e3cf775'
+SOURCE_BRANCH = 'codex/GHC-Family/orren-pike-v699-v3-full-tools'
+BRANCH = 'codex/GHC-Family/orin-thale-v699-v4-full-tools'
+PREFIX = 'docs/orin-thale/v699-v4/'
+BOUNDARY = ('Bounded same-owner synthetic finite bipartite-graph software only. No independent reproduction, real allocation, real person, '
+    'employment, resource, participant, measurement, identity, credential, deployment, empirical GMUT confirmation, professional, legal, '
+    'cultural, affected-party or Maori authority. Names, pronouns, roles, hopes and family language establish no consciousness, personhood, '
+    'continuity, qualification, agency or authority. THOS and Freed ID remain nonproduction; CBR and Maori concepts remain under competent '
+    'and affected authorities. No complete privacy or accessibility, exhaustive security, AGI/ASI, Theory-of-Everything proof, canon or '
+    'Stage 20 claim. NOT_READY_FOR_STAGE_20.')
+GATES = ['independent reproduction', 'empirical confirmation', 'production', 'professional authority',
+         'legal and cultural authority', 'affected-party rights', 'Maori authority', 'Stage 20']
+
+def sha(raw): return hashlib.sha256(raw).hexdigest()
+def stable(value): return json.dumps(value, sort_keys=True, separators=(',', ':'), ensure_ascii=False)
+def h(value): return sha(stable(value).encode())
+def write(name, value):
+    p = ROOT / name; p.parent.mkdir(parents=True, exist_ok=True)
+    assert not p.exists(), name
+    p.write_text((stable(value) if not isinstance(value, str) else value.rstrip()) + '\n', encoding='utf-8', newline='\n')
+def g(*args): return subprocess.check_output(['git', '-C', str(REPO), *args], stderr=subprocess.PIPE).decode().strip()
+def source_json(path): return json.loads(g('show', SOURCE + ':' + path))
+
+assert g('rev-parse', 'HEAD') == SOURCE and g('branch', '--show-current') == BRANCH
+assert not (BANK / 'planning-built.json').exists()
+oracle = runpy.run_path(str(ROOT / 'planning/reference.txt'))
+source_plan = source_json('docs/orren-pike/v699-v3/planning/plan.json')
+source_truth = source_json('docs/orren-pike/v699-v3/final/phase-truth.json')
+
+inherited = []
+for row in source_plan['contracts']:
+    inherited.append({'source_id': row['id'], 'title': row['title'], 'operation': row['operation'],
+        'source_commit': SOURCE, 'source_record_sha256': h(row), 'source_request_sha256': row['request_sha256'],
+        'source_expected_disposition': row['expected_disposition'], 'source_status': 'persisted_source_contract',
+        'review': 'Distinct codebook responsibility retained as source evidence; no matching execution or Orin novelty credit.',
+        'new_credit': 0, 'source_plan': 'docs/orren-pike/v699-v3/planning/plan.json'})
+
+contracts, operations = [], []
+for index, (operation, description) in enumerate(oracle['OPERATIONS']):
+    stage = 'x1' if index < 10 else 'x2'; outcome = oracle['OUTCOMES'].get(operation, 'completed')
+    operations.append({'index': index + 1, 'operation': operation, 'hypothesis': description, 'stage': stage, 'outcome': outcome})
+    for profile, left, right, edges in oracle['PROFILES']:
+        request = oracle['request_for'](operation, left, right, edges)
+        alternate = oracle['request_for'](operation, left, right, list(reversed(edges)))
+        expected, alternate_expected = oracle['evaluate'](request), oracle['evaluate'](alternate)
+        pid = 'OT6994-P%03d' % (len(contracts) + 1)
+        negative1 = copy.deepcopy(request); negative1['undeclared'] = True
+        negative2 = copy.deepcopy(request); negative2['edges'] = negative2['edges'] + [[left, 0]]
+        contracts.append({'id': pid, 'title': 'Finite bipartite matching %s for %s' % (operation, profile),
+            'stage': stage, 'operation': operation, 'profile': profile, 'hypothesis': description,
+            'template': 'OT6994-CONTRACT', 'expected_disposition': outcome,
+            'request': request, 'request_sha256': h(request), 'alternate': alternate, 'alternate_sha256': h(alternate),
+            'expected': expected, 'expected_sha256': h(expected), 'alternate_expected': alternate_expected,
+            'alternate_expected_sha256': h(alternate_expected),
+            'negative_subjects': [{'id': pid + '-N1', 'request': negative1, 'error': 'field_set', 'original_success_credit': 0},
+                                  {'id': pid + '-N2', 'request': negative2, 'error': 'edge_bounds', 'original_success_credit': 0}],
+            'execution_credit_at_freeze': 0})
+assert len(contracts) == len(inherited) == 300
+
+def tokens(title): return set(re.findall(r'[a-z]+', title.lower()))
+comparisons = []
+for row in contracts:
+    matches = []
+    for old in inherited:
+        a, b = tokens(row['title']), tokens(old['title'])
+        matches.append((len(a & b) / len(a | b), old['source_id']))
+    nearest = max(matches)
+    comparisons.append({'proposal': row['id'], 'nearest_source': nearest[1], 'token_jaccard': round(nearest[0], 6),
+        'exact_title_collision': any(row['title'] == old['title'] for old in inherited),
+        'exact_request_collision': any(row['request_sha256'] == old['source_request_sha256'] for old in inherited),
+        'semantic_review': 'Finite bipartite matchings, Hall deficits, and Konig covers differ from variable-length codebook decipherability.'})
+assert not any(row['exact_title_collision'] or row['exact_request_collision'] for row in comparisons)
+
+startup = [
+    {'id': 'OT6994-START-N001', 'failure': 'The first connector-side digest projection assumed TextEncoder and crypto in the constrained V8 wrapper.',
+     'recovery': 'Fetched exact bytes through bounded Git and connector reads and hashed them with installed PowerShell tooling.', 'success_credit': 0},
+    {'id': 'OT6994-START-N002', 'failure': 'One combined shell projection returned an empty envelope while checking local source state.',
+     'recovery': 'Split the read-only source checks into literal scalar commands and obtained attributable results.', 'success_credit': 0},
+    {'id': 'OT6994-START-N003', 'failure': 'The first combined target path and branch probe had an unmatched PowerShell parenthesis.',
+     'recovery': 'Used separate literal path and exact-ref probes; both proved the target absent before worktree creation.', 'success_credit': 0},
+    {'id': 'OT6994-START-N004', 'failure': 'The first planning build expected canonical-payload.json while the exact Orren receipt bank names the file payload.json.',
+     'recovery': 'Inspected only the exact receipt directory and corrected the dependency filename before any planning output was written.', 'success_credit': 0},
+    {'id': 'OT6994-START-N005', 'failure': 'The second planning build expected a domain_replayed scalar that is represented by Orren as domain_stage_replays and predecessor_canonical_replays.',
+     'recovery': 'Inspected exact payload keys and validated both replay counters directly before any planning output was written.', 'success_credit': 0},
+    {'id': 'OT6994-START-N006', 'failure': 'The third planning build looked for effective_counts under method_flow although Orren seals effective_counts at the phase-truth root.',
+     'recovery': 'Inspected the exact phase-truth shape and bound the source baseline to its root effective_counts object before output creation.', 'success_credit': 0},
+]
+
+workflow_path = SKILLS / 'ghc-family-index/references/current-workflow-v13.json'
+roster_path = SKILLS / 'ghc-family-index/references/current-roster-v13.json'
+workflow = json.loads(workflow_path.read_text(encoding='utf-8'))
+roster = json.loads(roster_path.read_text(encoding='utf-8'))
+assignment = next(row for row in roster['numbered_assignments'] if row['phase'] == 'v699-v4')
+successor = next(row for row in roster['numbered_assignments'] if row['phase'] == 'v699-v5')
+assert assignment['owner'] == 'Orin Thale' and successor['owner'] == 'Liora Venn'
+
+guidance_paths = [
+    'ghc-family-index/SKILL.md', 'ghc-family-index/references/routing-precedence.md',
+    'ghc-family-index/references/current-thirty-seat-workflow.md', 'ghc-family-index/references/lyren-v698-v4-r2-current-overlay.md',
+    'ghc-family-index/references/current-workflow-v13.json', 'ghc-family-index/references/current-roster-v13.json',
+    'ghc-family-auth-permission-state/SKILL.md', 'ghc-family-auth-permission-state/references/lyren-v698-v4-r2-20260920-authority.md',
+    'ghc-family-method-flow-state/SKILL.md', 'ghc-family-method-flow-state/references/schema.md',
+    'ghc-family-workflow-plan-refinement/SKILL.md', 'ghc-family-workflow-plan-refinement/references/workflow-plan-schema.md',
+    'ghc-family-reflection-remaster/SKILL.md', 'ghc-family-reflection-remaster/references/decision-schema.md']
+guidance = [{'skill_relative_path': name, 'sha256': sha((SKILLS / name).read_bytes()), 'complete_read': True} for name in guidance_paths]
+
+receipt_bank = Path(sys.argv[3])
+receipt = json.loads((receipt_bank / 'receipt.json').read_text(encoding='utf-8'))
+payload = json.loads((receipt_bank / 'payload.json').read_text(encoding='utf-8'))
+assert receipt['exact_final'] == SOURCE and payload['metadata_only']
+assert payload['domain_stage_replays'] == 0 and payload['predecessor_canonical_replays'] == 0
+assert receipt['invocation_count'] == receipt['success_count'] == 1 and receipt['replay_count'] == 0
+source = {'owner': 'Orren Pike', 'phase': 'v699-v3', 'exact_final': SOURCE, 'source_branch': SOURCE_BRANCH,
+    'source_is_git_parent': True, 'verified_parent_edges': 4, 'merges': 0, 'normalized_lf_manifest_bindings': 90,
+    'content_seal_bindings': 10, 'canonical_receipt_sha256': sha((receipt_bank / 'receipt.json').read_bytes()),
+    'canonical_payload_sha256': sha((receipt_bank / 'payload.json').read_bytes()),
+    'canonical_latch_sha256': sha((receipt_bank / 'success-latch.json').read_bytes()),
+    'literal_canonical_status': receipt['status'], 'metadata_only': True, 'domain_replayed': False,
+    'source_canonical_replayed_by_orin': False, 'source_baseline': source_truth['effective_counts'],
+    'source_fold_count': 1, 'baton_sha256': '0f32dc05498dc32559b966f250f10d9c248cec5408d7dfd3db8089aa8c061683',
+    'read_boundary': 'Complete baton through literal EOF; exact source records and receipts read without source runtime or canonical execution.',
+    'boundary': BOUNDARY}
+
+write('planning/source-provenance.json', source)
+write('planning/current-workflow-v13.json', workflow)
+write('planning/current-roster-v13.json', roster)
+write('planning/guidance-bindings.json', {'bindings': guidance, 'boundary': BOUNDARY})
+write('planning/startup-failures.json', {'failures': startup, 'original_success_credit': 0, 'recoveries_separate': True})
+write('planning/identity.json', {'owner': 'Orin Thale', 'optional_pronouns': 'they/them',
+    'role': 'finite responsibility and counterexample cartographer',
+    'hope': 'to make each bounded matching claim, counterexample, and authority vacancy inspectable and reversible',
+    'relational_only': True, 'boundary': BOUNDARY})
+
+practices = [
+    ('synthetic operations-research analyst', 'Separate maximum-cardinality computation from real allocation objectives and fairness.'),
+    ('synthetic library routing planner', 'Use graph incidence as a documentation lens without assigning people, collections, or access.'),
+    ('synthetic accessibility workflow designer', 'Keep keyboard-readable tables and text equivalents alongside artificial diagrams.'),
+    ('synthetic provenance auditor', 'Bind every request, output, failure, correction, publication, and receipt to an exact digest.'),
+]
+write('planning/practices.json', {'primary_pillar': 'THOS Body', 'protected_pillars': ['GMUT Mind', 'Freed ID and CBR Heart'],
+    'practices': [{'id': 'OT6994-PR%02d' % (i + 1), 'title': title, 'practice': practice, 'synthetic_only': True}
+                  for i, (title, practice) in enumerate(practices)],
+    'successor_recommendations': [
+        {'practice': 'synthetic archival finding-aid curator', 'reason': 'Supports source-faithful indexing without asserting collection authority.'},
+        {'practice': 'synthetic quality-assurance test designer', 'reason': 'Supports falsifier-first fixtures without professional certification.'}],
+    'boundary': BOUNDARY})
+
+exact = []
+for category in ['real_allocation', 'real_identity_binding', 'independent_security_assurance', 'affected_party_rights', 'legal_cultural_maori_authority']:
+    for profile, *_ in oracle['PROFILES'][:10]:
+        exact.append({'id': 'OT6994-E%03d' % (len(exact) + 1), 'category': category, 'synthetic_profile': profile,
+            'required': 'Exact scoped action, competent authority, affected-party prerequisites, and admissible external evidence.',
+            'outcome': 'exact_gate', 'executed': False})
+blocked = []
+for category in ['separate_implementation', 'real_observation', 'production_evaluation']:
+    for profile, *_ in oracle['PROFILES'][:10]:
+        blocked.append({'id': 'OT6994-B%03d' % (len(blocked) + 1), 'category': category, 'synthetic_profile': profile,
+            'missing': 'External admissible evidence is absent.', 'outcome': 'open_gap', 'executed': False})
+write('planning/held-packets.json', {'exact': exact, 'blocked': blocked, 'executed': 0, 'boundary': BOUNDARY})
+
+write('planning/semantic-review.json', {'inherited_count': 300, 'new_contracts': 300, 'direct_comparisons': 90000,
+    'comparisons': comparisons, 'mathematical_novelty_claimed': False, 'universal_novelty_claimed': False,
+    'boundary': '300 bounded software contracts across 20 responsibilities and 15 declared graphs; related cases are not independent discoveries.'})
+write('planning/references.json', {'sources': [
+    {'url': 'https://mathworld.wolfram.com/HallsMarriageTheorem.html', 'role': 'Reference vocabulary for Hall deficiency only.', 'observations_imported': 0},
+    {'url': 'https://networkx.org/documentation/stable/reference/algorithms/bipartite.html', 'role': 'Software comparison vocabulary only; no runtime dependency used.', 'observations_imported': 0}],
+    'no_authority_promotion': True, 'no_external_runtime_dependency': True})
+
+plan = {'schema': 'orin.bipartite-matching-plan.v1', 'owner': 'Orin Thale', 'phase': 'v699-v4', 'source_commit': SOURCE,
+    'branch': BRANCH, 'lifecycle': ['plan', 'x1', 'x2', 'final', 'canonical', 'route'],
+    'formats': ['json', 'md', 'txt', 'html'], 'inherited': inherited, 'operations': operations,
+    'profiles': [{'id': name, 'left': left, 'right': right, 'edges': edges} for name, left, right, edges in oracle['PROFILES']],
+    'contracts': contracts, 'contract_template': {'id': 'OT6994-CONTRACT', 'approval_class': 'owner_internal_synthetic',
+        'null_or_failure': 'Any complete-envelope mismatch, accepted malformed subject, input mutation, undeclared side effect, or promoted protected claim.',
+        'source_needs': 'Finite graph vocabulary only; no external observation, allocation, or theorem novelty claimed.',
+        'artifacts': ['frozen request and expected envelope', 'two failed malformed subjects', 'separate refusal checks', 'exact output and repair witnesses'],
+        'acceptance': 'Exact JSON equality, source preservation, and declared strict refusal error.',
+        'rollback': 'Keep frozen input and failed evidence; add a corrected copy without rewriting or replaying successful tranches.',
+        'protected_gates': GATES},
+    'frozen_expected_outcomes': dict(collections.Counter(row['expected_disposition'] for row in contracts)),
+    'execution_credit_at_plan': 0, 'oracle': 'planning/reference.txt', 'same_owner_oracle': True,
+    'planned_counts': {'inherited': 300, 'new_contracts': 300, 'safe_per_session': 300, 'candidate_per_session': 300,
+        'cfr_per_session': 300, 'skills_per_session': 10, 'runners_per_session': 5, 'x2_additional_tests': 15,
+        'x2_models': 5, 'own_practices': 4, 'successor_practice_recommendations': 2, 'exact_packets': 50, 'blocked_packets': 30},
+    'commit_ceiling': {'plan': 1, 'x1': 2, 'x2': 2, 'final': 2, 'total': 7},
+    'file_ceiling': 2000, 'forecast_files': 82, 'document_word_ceiling': 100000, 'baton_word_range': [10000, 100000],
+    'spend_usd': 0, 'spend_ceiling_usd': 50, 'package_policy': 'versions_only_no_install', 'global_installations': 0,
+    'scope': 'owner_self_scoped_delta', 'complete_repository_suite': False, 'source_runtime_executions': 0,
+    'canonical_policy': 'one_metadata_only_invocation_after_clean_pushed_final_never_replay_success',
+    'route': {'state': 'PREPARED_NOT_SENT', 'prospective_successor_from_current_roster': successor,
+              'lookup_deferred': True, 'send_ceiling': 1, 'no_accepted_opaque_unresolved_resend': True,
+              'no_post_send_monitoring': True}, 'boundary': BOUNDARY}
+
+write('planning/plan.json', plan)
+write('planning/summary.md', '# Orin Thale v699-v4 planning freeze\n\n'
+    'This planning-only tranche freezes 300 finite bipartite-matching contracts: twenty responsibilities across fifteen explicit graphs. '
+    'Three hundred Orren codebook rows are reviewed as zero-credit inherited evidence. The separate planning oracle contributes expected '
+    'envelopes but no runtime or completion credit. X1 may implement operations 1-10 only; x2 may begin only after x1 is committed, pushed, '
+    'clean, and fresh four-way equal.\n\n'
+    'The responsibility includes exact incidence, deterministic greedy probes, exhaustive maximum matching, Hall-subset deficiency, Konig '
+    'minimum-cover construction, finite enumeration, and artificial-coordinate representation. None of these synthetic graphs identifies '
+    'people, allocates resources, proves fairness, or confers operational authority.\n\n'
+    'Four synthetic practice lenses, twenty prospective local guides, ten prospective family-current callers, fifty held exact packets, '
+    'and thirty blocked packets are declared. No execution, canonical success, recipient lookup, or delivery is claimed at planning.\n\n' + BOUNDARY)
+write('README.md', '# Orin Thale v699-v4\n\nFinite exact bipartite-matching and Hall-certificate inspection with explicit failures, protected authority gates, and source-faithful handover.\n\nStart with planning/summary.md.\n\n' + BOUNDARY)
+
+files = sorted(p for p in ROOT.rglob('*') if p.is_file())
+manifest = {'schema': 'orin.planning-manifest.v1', 'byte_domain': 'normalized_lf_git_blob',
+    'entries': [{'path': p.relative_to(REPO).as_posix(), 'bytes': len(p.read_bytes()), 'sha256': sha(p.read_bytes())} for p in files],
+    'exclusions': [PREFIX + 'planning/manifest.json'], 'planning_execution_credit': 0}
+write('planning/manifest.json', manifest)
+max_words = max(len(p.read_text(encoding='utf-8').split()) for p in ROOT.rglob('*') if p.is_file())
+assert max_words < 100000
+with (BANK / 'planning-built.json').open('x', encoding='utf-8', newline='\n') as handle:
+    json.dump({'status': 'PLANNING_PREPARED_NOT_PUBLISHED', 'contracts': 300, 'execution_credit': 0,
+        'source': SOURCE, 'plan_sha256': sha((ROOT / 'planning/plan.json').read_bytes()),
+        'maximum_document_words': max_words, 'startup_failures': startup,
+        'observed_at': datetime.now(timezone.utc).isoformat()}, handle, indent=2); handle.write('\n')
+print(json.dumps({'status': 'PLANNING_PREPARED_NOT_PUBLISHED', 'contracts': len(contracts), 'inherited': len(inherited),
+    'comparisons': 90000, 'outcomes': plan['frozen_expected_outcomes'], 'files': len(files) + 1,
+    'maximum_document_words': max_words, 'runtime_execution_credit': 0, 'startup_failures_retained': len(startup)}))

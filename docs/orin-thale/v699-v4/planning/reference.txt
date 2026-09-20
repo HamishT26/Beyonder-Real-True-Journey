@@ -1,0 +1,213 @@
+# Python 3. Planning oracle only. It is never imported by either execution runtime.
+from itertools import combinations
+from hashlib import sha256
+import json
+
+OPERATIONS = [
+    ('partition_inventory', 'Report the two declared finite vertex partitions without assigning people or resources.'),
+    ('edge_inventory', 'Normalize and enumerate every declared bipartite edge.'),
+    ('degree_profiles', 'Compute exact left and right degree vectors.'),
+    ('isolated_vertices', 'Identify declared vertices incident to no edge.'),
+    ('adjacency_matrix', 'Render the exact zero-one left-by-right adjacency matrix.'),
+    ('neighborhood_sets', 'Enumerate every left and right open neighborhood.'),
+    ('connected_components', 'Partition the finite bipartite graph into exact connected components.'),
+    ('edge_coverage', 'Report which vertices are covered by at least one declared edge.'),
+    ('greedy_matching', 'Run one declared lexicographic greedy matching without claiming optimality.'),
+    ('greedy_augmenting_probe', 'Search for one augmenting path relative to the declared greedy matching.'),
+    ('maximum_matching', 'Compute one lexicographically selected maximum matching by exhaustive finite search.'),
+    ('matching_cardinality', 'Report the exact maximum-matching cardinality.'),
+    ('left_perfect_cover', 'Decide whether one matching covers every declared left vertex.'),
+    ('hall_subset_audit', 'Enumerate all nonempty left subsets and their neighborhood deficits.'),
+    ('hall_deficiency_witness', 'Select one maximum Hall-deficiency witness with deterministic tie breaking.'),
+    ('minimum_vertex_cover', 'Construct a minimum vertex cover from a maximum matching by Konig alternation.'),
+    ('matching_enumeration', 'Count every matching and retain deterministic maximum examples.'),
+    ('matching_scene', 'Represent the exact graph with artificial finite coordinates only.'),
+    ('external_allocation_gap', 'Keep independent real-world allocation evaluation explicitly missing.'),
+    ('deployment_authority_gate', 'Reserve real allocation, rights, safety, and authority decisions to exact gates.'),
+]
+
+PROFILES = [
+    ('single_edge', 1, 1, [[0, 0]]),
+    ('single_gap', 1, 1, []),
+    ('two_diagonal', 2, 2, [[0, 0], [1, 1]]),
+    ('two_complete', 2, 2, [[0, 0], [0, 1], [1, 0], [1, 1]]),
+    ('one_to_two', 1, 2, [[0, 0], [0, 1]]),
+    ('two_to_one', 2, 1, [[0, 0], [1, 0]]),
+    ('staircase_two', 2, 2, [[0, 0], [1, 0], [1, 1]]),
+    ('six_cycle', 3, 3, [[0, 0], [0, 1], [1, 1], [1, 2], [2, 2], [2, 0]]),
+    ('left_star', 1, 3, [[0, 0], [0, 1], [0, 2]]),
+    ('right_star', 3, 1, [[0, 0], [1, 0], [2, 0]]),
+    ('three_into_two', 3, 2, [[0, 0], [0, 1], [1, 0], [1, 1], [2, 0], [2, 1]]),
+    ('sparse_four_cover', 4, 4, [[0, 0], [0, 1], [1, 1], [2, 2], [2, 3], [3, 3]]),
+    ('sparse_four_deficit', 4, 4, [[0, 0], [1, 0], [2, 1], [3, 1], [3, 3]]),
+    ('rectangular_cover', 3, 4, [[0, 0], [0, 3], [1, 1], [1, 3], [2, 2]]),
+    ('disconnected_five', 5, 5, [[0, 0], [1, 0], [1, 1], [2, 2], [3, 3], [3, 4], [4, 4]]),
+]
+
+OUTCOMES = {'matching_scene': 'represented', 'external_allocation_gap': 'open_gap', 'deployment_authority_gate': 'exact_gate'}
+SCOPE = 'finite_synthetic_bipartite_graph_only'
+
+def stable(value):
+    return json.dumps(value, sort_keys=True, separators=(',', ':'), ensure_ascii=False)
+
+def digest(value):
+    return sha256(stable(value).encode()).hexdigest()
+
+def normalized_edges(request):
+    return sorted(tuple(edge) for edge in request['edges'])
+
+def degrees(request):
+    edges = normalized_edges(request)
+    return ([sum(a == i for a, _ in edges) for i in range(request['left'])],
+            [sum(b == j for _, b in edges) for j in range(request['right'])])
+
+def neighborhoods(request):
+    edges = normalized_edges(request)
+    left = [[j for j in range(request['right']) if (i, j) in edges] for i in range(request['left'])]
+    right = [[i for i in range(request['left']) if (i, j) in edges] for j in range(request['right'])]
+    return left, right
+
+def components(request):
+    left_n, right_n = neighborhoods(request)
+    unseen = {('L', i) for i in range(request['left'])} | {('R', j) for j in range(request['right'])}
+    answer = []
+    while unseen:
+        start = min(unseen)
+        queue, seen = [start], {start}
+        for vertex in queue:
+            side, index = vertex
+            nxt = [('R', j) for j in left_n[index]] if side == 'L' else [('L', i) for i in right_n[index]]
+            for other in nxt:
+                if other not in seen:
+                    seen.add(other); queue.append(other)
+        unseen -= seen
+        answer.append({'left': sorted(i for s, i in seen if s == 'L'),
+                       'right': sorted(i for s, i in seen if s == 'R')})
+    return answer
+
+def greedy(request):
+    used_l, used_r, answer = set(), set(), []
+    for edge in normalized_edges(request):
+        if edge[0] not in used_l and edge[1] not in used_r:
+            answer.append(list(edge)); used_l.add(edge[0]); used_r.add(edge[1])
+    return answer
+
+def all_matchings(request):
+    edges = normalized_edges(request)
+    answer = []
+    for size in range(len(edges) + 1):
+        for chosen in combinations(edges, size):
+            if len({a for a, _ in chosen}) == size and len({b for _, b in chosen}) == size:
+                answer.append([list(edge) for edge in chosen])
+    return answer
+
+def maximum_matching(request):
+    rows = all_matchings(request)
+    size = max(map(len, rows))
+    candidates = [row for row in rows if len(row) == size]
+    return min(candidates)
+
+def alternating_reachable(request, matching):
+    edges = set(normalized_edges(request)); matched = {tuple(edge) for edge in matching}
+    matched_left = {a for a, _ in matched}
+    queue = [('L', i) for i in range(request['left']) if i not in matched_left]
+    seen = set(queue)
+    for side, index in queue:
+        if side == 'L':
+            nxt = [('R', j) for a, j in edges - matched if a == index]
+        else:
+            nxt = [('L', a) for a, j in matched if j == index]
+        for other in sorted(nxt):
+            if other not in seen:
+                seen.add(other); queue.append(other)
+    return sorted(i for s, i in seen if s == 'L'), sorted(j for s, j in seen if s == 'R')
+
+def augmenting_path(request, matching):
+    edges = set(normalized_edges(request)); matched = {tuple(edge) for edge in matching}
+    matched_left = {a for a, _ in matched}; matched_right = {b for _, b in matched}
+    queue = [[('L', i)] for i in range(request['left']) if i not in matched_left]
+    seen = {path[0] for path in queue}
+    for path in queue:
+        side, index = path[-1]
+        if side == 'R' and index not in matched_right:
+            return [[s, i] for s, i in path]
+        nxt = ([('R', j) for a, j in edges - matched if a == index] if side == 'L'
+               else [('L', a) for a, j in matched if j == index])
+        for other in sorted(nxt):
+            if other not in seen:
+                seen.add(other); queue.append(path + [other])
+    return None
+
+def hall_rows(request):
+    left_n, _ = neighborhoods(request); rows = []
+    for size in range(1, request['left'] + 1):
+        for subset in combinations(range(request['left']), size):
+            ns = sorted({j for i in subset for j in left_n[i]})
+            rows.append({'left_subset': list(subset), 'neighbors': ns, 'deficiency': len(subset) - len(ns)})
+    return rows
+
+def evaluate(request):
+    op = request['op']; left = request['left']; right = request['right']; edges = normalized_edges(request)
+    left_n, right_n = neighborhoods(request); left_d, right_d = degrees(request); matchings = None
+    if op == 'partition_inventory':
+        result = {'left': list(range(left)), 'right': list(range(right)), 'left_count': left, 'right_count': right}
+    elif op == 'edge_inventory':
+        result = {'edges': [list(e) for e in edges], 'count': len(edges)}
+    elif op == 'degree_profiles':
+        result = {'left_degrees': left_d, 'right_degrees': right_d}
+    elif op == 'isolated_vertices':
+        result = {'left': [i for i, d in enumerate(left_d) if d == 0], 'right': [j for j, d in enumerate(right_d) if d == 0]}
+    elif op == 'adjacency_matrix':
+        result = {'matrix': [[int((i, j) in edges) for j in range(right)] for i in range(left)]}
+    elif op == 'neighborhood_sets':
+        result = {'left': left_n, 'right': right_n}
+    elif op == 'connected_components':
+        result = {'components': components(request)}
+    elif op == 'edge_coverage':
+        result = {'covered_left': [i for i, d in enumerate(left_d) if d], 'covered_right': [j for j, d in enumerate(right_d) if d]}
+    elif op == 'greedy_matching':
+        chosen = greedy(request); result = {'matching': chosen, 'cardinality': len(chosen), 'optimality_claimed': False}
+    elif op == 'greedy_augmenting_probe':
+        chosen = greedy(request); path = augmenting_path(request, chosen)
+        result = {'greedy_matching': chosen, 'augmenting_path': path, 'found': path is not None}
+    elif op in ('maximum_matching', 'matching_cardinality', 'left_perfect_cover', 'minimum_vertex_cover', 'matching_enumeration'):
+        matchings = all_matchings(request); best = maximum_matching(request); maximum = len(best)
+        if op == 'maximum_matching':
+            result = {'matching': best, 'cardinality': maximum, 'selection': 'lexicographic_among_maxima'}
+        elif op == 'matching_cardinality':
+            result = {'cardinality': maximum}
+        elif op == 'left_perfect_cover':
+            result = {'covers_every_left': maximum == left, 'cardinality': maximum, 'left_count': left}
+        elif op == 'minimum_vertex_cover':
+            zl, zr = alternating_reachable(request, best)
+            result = {'left': [i for i in range(left) if i not in zl], 'right': zr,
+                      'cardinality': (left - len(zl)) + len(zr), 'matching_cardinality': maximum}
+        else:
+            examples = sorted((row for row in matchings if len(row) == maximum))[:3]
+            result = {'matching_count': len(matchings), 'maximum_cardinality': maximum, 'maximum_examples': examples}
+    elif op in ('hall_subset_audit', 'hall_deficiency_witness'):
+        rows = hall_rows(request)
+        if op == 'hall_subset_audit':
+            result = {'subsets': rows, 'hall_condition': all(row['deficiency'] <= 0 for row in rows)}
+        else:
+            maximum = max(row['deficiency'] for row in rows)
+            witness = min((row for row in rows if row['deficiency'] == maximum), key=lambda r: (len(r['left_subset']), r['left_subset']))
+            result = {'maximum_deficiency': maximum, 'witness': witness, 'positive_deficiency_found': maximum > 0}
+    elif op == 'matching_scene':
+        nodes = ([{'side': 'left', 'index': i, 'xyz': [0, i, 0]} for i in range(left)] +
+                 [{'side': 'right', 'index': j, 'xyz': [1, j, 0]} for j in range(right)])
+        result = {'nodes': nodes, 'edges': [list(e) for e in edges], 'coordinate_meaning': 'side_index_zero_only', 'physical_interpretation': False}
+    elif op == 'external_allocation_gap':
+        result = {'graph_sha256': digest({'left': left, 'right': right, 'edges': [list(e) for e in edges]}),
+                  'missing': ['separate_implementation', 'separate_operator', 'real_context', 'external_evaluation'], 'supplied': False}
+    elif op == 'deployment_authority_gate':
+        result = {'graph_sha256': digest({'left': left, 'right': right, 'edges': [list(e) for e in edges]}),
+                  'reservations': ['real_people_or_resources', 'fairness_and_rights', 'safety', 'legal_cultural_maori_authority'], 'approval_observed': False}
+    else:
+        raise ValueError(op)
+    return {'ok': True, 'operation': op, 'outcome': OUTCOMES.get(op, 'completed'), 'result': result,
+            'scope': SCOPE, 'independent_reproduction': False}
+
+def request_for(op, left, right, edges):
+    return {'op': op, 'left': left, 'right': right, 'edges': [edge[:] for edge in edges], 'limit': 12,
+            'seed': 'orin-v699-v4'}
