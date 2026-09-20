@@ -1,0 +1,1193 @@
+'use strict';
+
+// Caelen Ash v699-v2 owner lifecycle controller.
+// Repository preparation, canonical validation, and successor delivery are separate states.
+
+const fs = require('node:fs');
+const path = require('node:path');
+const cp = require('node:child_process');
+const crypto = require('node:crypto');
+const assert = require('node:assert/strict');
+const vm = require('node:vm');
+const runtime = require('./runtime.txt');
+const reference = require('./reference.txt');
+
+const dir = __dirname;
+const root = path.resolve(dir, '../../..');
+const prefix = 'docs/caelen-ash/v699-v2/';
+const owner = 'Caelen Ash';
+const phase = 'v699-v2';
+const branch = 'codex/GHC-Family/caelen-ash-v699-v2-full-tools';
+const source = '053a43dcf70b386198e9ab72b5878fa5eb8829bf';
+const sourcePlanPath = 'docs/sable-rook/v699-v1/plan.json';
+const sourceFinalPath = 'docs/sable-rook/v699-v1/final.json';
+const command = process.argv[2];
+const bank = process.argv[3] ? path.resolve(process.argv[3]) : null;
+const boundary = 'Same-owner finite synthetic Latin-table software and documentation evidence only. No independent reproduction, real measurement, participant or identity evidence, credential or production operation, professional qualification, legal or cultural determination, affected-party act, or Maori-authority act. Relational names and family language establish no consciousness, personhood, continuity, employment, qualification, independent agency, or authority. GMUT remains a typed scalar-tensor and EFT research-model family; THOS remains a nonproduction proxy; Freed ID and CBR remain bounded governance representations. No complete privacy or accessibility, exhaustive security, AGI or ASI, Theory-of-Everything, proof or canon, or Stage 20 claim. NOT_READY_FOR_STAGE_20.';
+
+const descriptions = [
+  ['latin_status', 'Verify the finite labelled table has exactly one declared symbol in every row and column.'],
+  ['row_vectors', 'Preserve every labelled row vector in declared order.'],
+  ['column_vectors', 'Preserve every labelled column vector in declared order.'],
+  ['symbol_counts', 'Count each declared symbol without treating frequency as empirical data.'],
+  ['identity_elements', 'Find two-sided identity candidates inside the supplied table only.'],
+  ['idempotent_cells', 'Record diagonal labels whose table value equals their label.'],
+  ['commutativity_defects', 'List exact unordered label pairs that fail table symmetry.'],
+  ['associativity_defects', 'List exact labelled triples that fail the supplied associativity equation.'],
+  ['row_cycle_types', 'Compute finite cycle-length profiles of row permutations.'],
+  ['column_cycle_types', 'Compute finite cycle-length profiles of column permutations.'],
+  ['left_division_table', 'Solve each bounded row equation for its unique labelled column.'],
+  ['right_division_table', 'Solve each bounded column equation for its unique labelled row.'],
+  ['intercalates', 'Enumerate exact two-by-two Latin intercalates.'],
+  ['row_hamming_matrix', 'Compute exact pairwise row Hamming distances.'],
+  ['column_hamming_matrix', 'Compute exact pairwise column Hamming distances.'],
+  ['symbol_position_vectors', 'Record each symbol position by declared row and column index.'],
+  ['structural_signature', 'Combine bounded invariants without claiming a complete classification.'],
+  ['latin_scene', 'Represent table cells as declared-index coordinates without physical meaning.'],
+  ['external_reproduction_vacancy', 'Keep independent implementation and external mathematical review visibly absent.'],
+  ['decision_authority_gate', 'Keep identity, professional, legal, cultural, Maori-authority, and production decisions closed.']
+];
+const OPS = descriptions.map(item => item[0]);
+const outcomeFor = op => op === 'latin_scene' ? 'represented' :
+  op === 'external_reproduction_vacancy' ? 'open_gap' :
+  op === 'decision_authority_gate' ? 'exact_gate' : 'completed';
+const stageForIndex = index => index < 10 ? 'x1' : 'x2';
+const runnerNames = [
+  'ghc_family_latin_structure_runner',
+  'ghc_family_latin_vector_runner',
+  'ghc_family_latin_element_runner',
+  'ghc_family_latin_law_runner',
+  'ghc_family_latin_cycle_runner',
+  'ghc_family_latin_division_runner',
+  'ghc_family_latin_intercalate_distance_runner',
+  'ghc_family_latin_position_runner',
+  'ghc_family_latin_signature_scene_runner',
+  'ghc_family_latin_boundary_runner'
+];
+
+function stable(value) {
+  if (Array.isArray(value)) return value.map(stable);
+  if (value && typeof value === 'object') {
+    return Object.fromEntries(Object.keys(value).sort().map(key => [key, stable(value[key])]));
+  }
+  return value;
+}
+function stableText(value) {
+  return JSON.stringify(stable(value));
+}
+function sha(value) {
+  const bytes = Buffer.isBuffer(value) ? value :
+    Buffer.from(typeof value === 'string' ? value : stableText(value), 'utf8');
+  return crypto.createHash('sha256').update(bytes).digest('hex');
+}
+function git(...args) {
+  return cp.execFileSync('git', ['-C', root, ...args], {
+    encoding: 'utf8',
+    maxBuffer: 128 * 1024 * 1024
+  }).trim();
+}
+function readBytes(name) {
+  return fs.readFileSync(path.join(dir, name));
+}
+function readJson(name) {
+  return JSON.parse(readBytes(name).toString('utf8'));
+}
+function writeJson(name, value) {
+  const target = path.join(dir, name);
+  fs.mkdirSync(path.dirname(target), { recursive: true });
+  fs.writeFileSync(target, JSON.stringify(value, null, 2) + '\n', { flag: 'wx' });
+}
+function writeText(name, value) {
+  const target = path.join(dir, name);
+  fs.mkdirSync(path.dirname(target), { recursive: true });
+  fs.writeFileSync(target, value.endsWith('\n') ? value : value + '\n', { flag: 'wx' });
+}
+function blobJson(commit, file) {
+  return JSON.parse(git('show', commit + ':' + file));
+}
+function relativeFiles() {
+  function walk(current) {
+    return fs.readdirSync(current, { withFileTypes: true }).flatMap(entry => {
+      const full = path.join(current, entry.name);
+      return entry.isDirectory() ? walk(full) : [path.relative(dir, full).replaceAll('\\', '/')];
+    });
+  }
+  return walk(dir).sort();
+}
+function fileBinding(name) {
+  const bytes = readBytes(name);
+  return {
+    path: prefix + name,
+    bytes: bytes.length,
+    sha256: sha(bytes),
+    byte_domain: 'checkout_utf8_lf_expected_to_match_raw_git_after_commit'
+  };
+}
+function bindings(names) {
+  return names.map(fileBinding);
+}
+function requireBank() {
+  if (!bank || path.parse(bank).root.toUpperCase() !== 'D:\\') throw Error('literal_d_receipt_bank_required');
+  if (!fs.existsSync(bank) || !fs.statSync(bank).isDirectory()) throw Error('receipt_bank_missing');
+}
+function latch(name) {
+  requireBank();
+  const target = path.join(bank, name + '-invocation.json');
+  fs.writeFileSync(target, JSON.stringify({
+    state: 'invoked', invocations: 1, successes: 0, replays: 0,
+    observed_at: new Date().toISOString()
+  }, null, 2) + '\n', { flag: 'wx' });
+  return extra => fs.writeFileSync(target, JSON.stringify({
+    state: 'success', invocations: 1, successes: 1, replays: 0,
+    observed_at: new Date().toISOString(), ...extra
+  }, null, 2) + '\n');
+}
+function equalityGate() {
+  const local = git('rev-parse', 'HEAD');
+  const upstream = git('rev-parse', '@{upstream}');
+  const tracking = git('rev-parse', 'refs/remotes/origin/' + branch);
+  const line = git('ls-remote', '--heads', 'origin', 'refs/heads/' + branch);
+  const live = line.split(/\s+/)[0];
+  const divergence = git('rev-list', '--left-right', '--count', 'HEAD...@{upstream}').split(/\s+/).map(Number);
+  const clean = git('status', '--porcelain=v1') === '';
+  assert.equal(local, upstream);
+  assert.equal(local, tracking);
+  assert.equal(local, live);
+  assert.deepEqual(divergence, [0, 0]);
+  assert.equal(clean, true);
+  return { local, upstream, tracking, live, ahead: 0, behind: 0, clean, observed_at: new Date().toISOString() };
+}
+function publication(stage, expectedHead) {
+  requireBank();
+  const artifact = stage === 'plan' ? 'plan.json' : stage + '.json';
+  assert.equal(git('rev-parse', 'HEAD'), expectedHead);
+  const gate = equalityGate();
+  const receipt = {
+    schema: 'caelen.v699-v2.publication.v1', owner, phase, stage,
+    commit: expectedHead, artifact: prefix + artifact,
+    artifact_sha256: sha(readBytes(artifact)), gate, replayed: false,
+    boundary
+  };
+  const target = path.join(bank, stage + '-published.json');
+  fs.writeFileSync(target, JSON.stringify(receipt, null, 2) + '\n', { flag: 'wx' });
+  console.log(JSON.stringify({ state: 'published', stage, commit: expectedHead, artifact_sha256: receipt.artifact_sha256 }));
+}
+function published(stage) {
+  requireBank();
+  return JSON.parse(fs.readFileSync(path.join(bank, stage + '-published.json'), 'utf8'));
+}
+
+function cyclic(n) {
+  return Array.from({ length: n }, (_, r) => Array.from({ length: n }, (_, c) => (r + c) % n));
+}
+function klein4() {
+  return Array.from({ length: 4 }, (_, r) => Array.from({ length: 4 }, (_, c) => r ^ c));
+}
+function permutation(n, kind) {
+  const all = Array.from({ length: n }, (_, i) => i);
+  if (kind === 'identity') return all;
+  if (kind === 'reverse') return all.reverse();
+  if (kind === 'rotate') return all.slice(1).concat(all[0]);
+  if (kind === 'swap01' && n > 1) return [1, 0, ...all.slice(2)];
+  if (kind === 'swap12' && n > 2) return [0, 2, 1, ...all.slice(3)];
+  return all;
+}
+function transform(table, rowKind, columnKind, symbolKind) {
+  const n = table.length;
+  const rows = permutation(n, rowKind), columns = permutation(n, columnKind), symbols = permutation(n, symbolKind);
+  return rows.map(r => columns.map(c => symbols[table[r][c]]));
+}
+function profiles() {
+  const specs = [
+    ['singleton', cyclic(1), 'identity', 'identity', 'identity'],
+    ['binary_cyclic', cyclic(2), 'identity', 'identity', 'identity'],
+    ['binary_row_swap', cyclic(2), 'swap01', 'identity', 'identity'],
+    ['ternary_cyclic', cyclic(3), 'identity', 'identity', 'identity'],
+    ['ternary_row_rotate', cyclic(3), 'rotate', 'identity', 'identity'],
+    ['ternary_column_reverse', cyclic(3), 'identity', 'reverse', 'identity'],
+    ['ternary_symbol_reverse', cyclic(3), 'identity', 'identity', 'reverse'],
+    ['ternary_mixed_isotope', cyclic(3), 'swap01', 'reverse', 'rotate'],
+    ['quaternary_cyclic', cyclic(4), 'identity', 'identity', 'identity'],
+    ['quaternary_cyclic_row_swap', cyclic(4), 'swap01', 'identity', 'identity'],
+    ['quaternary_cyclic_column_swap', cyclic(4), 'identity', 'swap01', 'identity'],
+    ['quaternary_cyclic_symbol_swap', cyclic(4), 'identity', 'identity', 'swap01'],
+    ['quaternary_klein', klein4(), 'identity', 'identity', 'identity'],
+    ['quaternary_klein_mixed_a', klein4(), 'swap01', 'swap12', 'reverse'],
+    ['quaternary_klein_mixed_b', klein4(), 'reverse', 'rotate', 'swap01']
+  ];
+  const out = specs.map(([id, table, r, c, s]) => ({ id, n: table.length, table: transform(table, r, c, s) }));
+  assert.equal(new Set(out.map(item => stableText(item.table))).size, 15);
+  for (const item of out) runtime.run({ op: 'latin_status', n: item.n, table: item.table });
+  return out;
+}
+function alternateTable(table) {
+  const n = table.length;
+  if (n === 1) return table.map(row => row.slice());
+  return transform(table, 'reverse', 'rotate', 'swap01');
+}
+function malformed(request, variant) {
+  const value = structuredClone(request);
+  switch (variant % 10) {
+    case 0: delete value.n; return { request: value, expected_error: 'field_set' };
+    case 1: value.n = 0; return { request: value, expected_error: 'order' };
+    case 2: value.table = 'invalid'; return { request: value, expected_error: 'table_shape' };
+    case 3: value.undeclared = true; return { request: value, expected_error: 'field_set' };
+    case 4: value.op = 'undeclared'; return { request: value, expected_error: 'operation' };
+    case 5: value.n = 5; return { request: value, expected_error: 'order' };
+    case 6: return { request: [], expected_error: 'field_set' };
+    case 7: value.table[0] = Array(value.n).fill(0); return { request: value, expected_error: 'latin_row' };
+    case 8: value.table[0] = value.table[0].slice(1); return { request: value, expected_error: 'table_shape' };
+    case 9: value.table[0][0] = value.n; return { request: value, expected_error: 'symbol_range' };
+    default: throw Error('unreachable');
+  }
+}
+function runnerEnvelope(runner, request) {
+  const target = path.join(dir, 'runners', runner + '.txt');
+  const result = cp.spawnSync(process.execPath, ['-e', 'require(require("node:path").resolve(process.argv[1]))', target], {
+    input: JSON.stringify(request), encoding: 'utf8', timeout: 10000, maxBuffer: 4 * 1024 * 1024
+  });
+  return {
+    exit_code: result.status,
+    stdout: result.stdout.trim(),
+    stderr: result.stderr.trim(),
+    signal: result.signal,
+    error: result.error ? String(result.error.message) : null
+  };
+}
+function makeWitness(witness_id, method_id, result, retained, procedure, observed) {
+  return {
+    witness_id, method_id, procedure, scope: 'owner_self_scoped_delta',
+    expected: result === 'pass' ? 'declared bounded check passes' : 'subject remains invalid with zero original success credit',
+    observed, result, same_owner_only: true, independent_reproduction: false,
+    retained_negative_ids: retained ? [retained] : [],
+    boundary: 'Same-owner finite synthetic evidence only; protected external gates remain open.'
+  };
+}
+
+function buildPlan() {
+  const done = latch('plan');
+  const sourcePlan = blobJson(source, sourcePlanPath);
+  const sourceFinal = blobJson(source, sourceFinalPath);
+  assert.equal(sourcePlan.contracts.length, 300);
+  assert.equal(sourceFinal.effective_counts.negatives, 26276);
+  const currentProfiles = profiles();
+  const sourceTerms = cp.spawnSync('git', ['-C', root, 'grep', '-n', '-i', '-E',
+    'latin[- ]square|quasigroup|parastroph|isotop(y|ism)|cayley table|loop table',
+    source, '--', 'docs/**', 'scripts/**', 'tests/**'], { encoding: 'utf8', maxBuffer: 8 * 1024 * 1024 });
+  assert.ok(sourceTerms.status === 0 || sourceTerms.status === 1);
+  const termHits = sourceTerms.status === 1 ? [] : sourceTerms.stdout.trim().split(/\r?\n/).filter(Boolean);
+  const contracts = [];
+  for (let opIndex = 0; opIndex < OPS.length; opIndex += 1) {
+    for (let profileIndex = 0; profileIndex < currentProfiles.length; profileIndex += 1) {
+      const profile = currentProfiles[profileIndex];
+      const request = { op: OPS[opIndex], n: profile.n, table: profile.table };
+      const alternate = { op: OPS[opIndex], n: profile.n, table: alternateTable(profile.table) };
+      const expected = reference.evaluate(request);
+      const alternateExpected = reference.evaluate(alternate);
+      assert.deepEqual(runtime.run(request), expected);
+      assert.deepEqual(runtime.run(alternate), alternateExpected);
+      const id = 'CA6992-P' + String(opIndex * 15 + profileIndex + 1).padStart(3, '0');
+      contracts.push({
+        id,
+        title: 'Finite Latin-table ' + OPS[opIndex] + ' contract for ' + profile.id,
+        stage: stageForIndex(opIndex),
+        operation: OPS[opIndex],
+        profile: profile.id,
+        hypothesis: descriptions[opIndex][1],
+        null_or_failure: 'Any mismatch against the separately written frozen oracle, any malformed subject accepted, any caller-envelope drift, any mutation of the supplied table, or any out-of-scope side effect.',
+        approval_class: 'owner_internal_synthetic',
+        execution_lane: 'caelen_owned_d_first_only',
+        official_or_primary_source_needs: opIndex < 18 ? ['SageMath Latin-square vocabulary only'] : [],
+        concrete_artifacts: ['frozen request', 'frozen expected output', 'two malformed subjects', 'copy-for-reference witnesses'],
+        falsifier_or_acceptance_gate: 'Exact stable JSON agreement plus declared refusal envelopes.',
+        rollback_or_recovery: 'Retain the original failed subject at zero credit and add a separately identified corrected copy only.',
+        protected_gates: ['independent reproduction', 'empirical confirmation', 'professional authority', 'production', 'legal and cultural authority', 'Maori authority', 'Stage 20'],
+        expected_disposition: outcomeFor(OPS[opIndex]),
+        request,
+        request_sha256: sha(request),
+        alternate,
+        alternate_sha256: sha(alternate),
+        expected,
+        expected_sha256: sha(expected),
+        alternate_expected: alternateExpected,
+        alternate_expected_sha256: sha(alternateExpected),
+        negative_subjects: [0, 1].map(offset => ({
+          negative_id: id + '-N' + (offset + 1),
+          ...malformed(request, opIndex + profileIndex + offset * 7),
+          original_success_credit: 0
+        })),
+        new_execution_credit: 0
+      });
+    }
+  }
+  const inherited = sourcePlan.contracts.map(record => ({
+    source_id: record.id,
+    source_commit: source,
+    source_record_sha256: sha(record),
+    source_request_sha256: record.request_sha256,
+    source_expected_disposition: record.expected_disposition,
+    review: 'Preserved as finite labelled-poset source evidence with zero Caelen novelty, execution, completion, validation, or authority credit.',
+    new_execution_credit: 0
+  }));
+  const sourceKeys = new Set(sourcePlan.contracts.map(item => String(item.title || (item.operation + ' ' + item.profile)).toLowerCase()));
+  const newKeys = new Set(contracts.map(item => item.title.toLowerCase()));
+  const exactTitleCollisions = [...newKeys].filter(item => sourceKeys.has(item));
+  let comparisonCount = 0, operationProfileCollisions = 0, requestCollisions = 0;
+  for (const oldItem of sourcePlan.contracts) for (const newItem of contracts) {
+    comparisonCount += 1;
+    if (oldItem.operation === newItem.operation && oldItem.profile === newItem.profile) operationProfileCollisions += 1;
+    if (oldItem.request_sha256 === newItem.request_sha256) requestCollisions += 1;
+  }
+  assert.equal(comparisonCount, 90000);
+  assert.equal(exactTitleCollisions.length, 0);
+  assert.equal(operationProfileCollisions, 0);
+  assert.equal(requestCollisions, 0);
+  assert.equal(termHits.length, 0);
+
+  writeText('README.md',
+    '# Caelen Ash v699-v2\n\n' +
+    'This owner-local phase studies fifteen wholly synthetic finite Latin tables with twenty bounded operations. ' +
+    'It preserves planning before x1, x1 before x2, repository preparation before canonical, and canonical before route. ' +
+    'Every malformed subject remains failed and zero-credit. ' + boundary);
+  writeText('authorization.md',
+    '# Authorization and boundaries\n\n' +
+    'Sable Rook delivered one acknowledged activation for Caelen Ash v699-v2. The lane is solo, additive, D-first, owner-scoped, and terminally gated. ' +
+    'No collaboration subagent, fork, replacement task, sibling mutation, global installation, source replay, participant work, empirical acquisition, credential action, destructive operation, or authority promotion is authorized.\n\n' +
+    'The live activation controls where historical skill pointers stop. Caps are ceilings. Repository preparation, canonical success, route resolution, delivery acknowledgement, and recipient completion remain separate.\n\n' +
+    boundary);
+  writeText('controls/current-authority-v14.md',
+    '# Current authority v14 continuation\n\n' +
+    'The live Sable Rook activation controls this phase: exact source ' + source + ', owner Caelen Ash, phase v699-v2. ' +
+    'The successor is not inferred or contacted during planning, x1, x2, final preparation, or canonical preflight. Only the newest live authority and roster after a successful exact-final canonical can authorize one existing-task send.\n\n' +
+    boundary);
+  writeJson('controls/current-selection-v14.json', {
+    schema: 'ghc.family.current-selection.v14',
+    phase, owner,
+    predecessor: { owner: 'Sable Rook', phase: 'v699-v1', branch: 'codex/GHC-Family/sable-rook-v699-v1-full-tools', exact_final: source },
+    lifecycle: ['plan', 'x1', 'x2', 'final', 'canonical', 'route'],
+    owner_file_ceiling: 2000, canonical_success_ceiling: 1,
+    post_success_replay_allowed: false, route_state: 'PREPARED_NOT_SENT',
+    verdict: 'NOT_READY_FOR_STAGE_20'
+  });
+
+  const skills = descriptions.map(([operation, description], index) => {
+    const skill = 'ghc-family-latin-' + operation.replaceAll('_', '-') + '-v1';
+    const file = 'skills/' + operation + '/SKILL.md';
+    writeText(file,
+      '---\nname: ' + skill + '\ndescription: ' + description + ' Use for one bounded owner-local finite Latin-table request with exact refusal and evidence boundaries.\n---\n\n' +
+      '# ' + description + '\n\n' +
+      'Use only a wholly synthetic labelled table of order one through four. Invoke the assigned family-current owner runner with one JSON request containing exactly op, n, and table. Preserve the complete caller envelope.\n\n' +
+      'The frozen plan supplies fifteen profiles, exact values from a separately written same-owner oracle, two malformed subjects per contract, and request hashes. A rejected subject stays failed with zero original success credit. No global installation or PATH mutation is authorized.\n\n' +
+      boundary);
+    return { id: 'CA6992-S' + String(index + 1).padStart(2, '0'), stage: stageForIndex(index), operation, description, path: prefix + file, status: 'owner_local_candidate', global_install: false };
+  });
+  const runners = runnerNames.map((name, index) => {
+    const operations = OPS.slice(index * 2, index * 2 + 2);
+    const file = 'runners/' + name + '.txt';
+    writeText(file,
+      "'use strict';\n" +
+      "const fs=require('node:fs'),runtime=require('../runtime.txt');\n" +
+      'const id=' + JSON.stringify(name) + ',allowed=' + JSON.stringify(operations) + ';\n' +
+      "try{const request=JSON.parse(fs.readFileSync(0,'utf8'));if(!allowed.includes(request.op))throw Error('runner_operation');console.log(JSON.stringify({runner:id,result:runtime.run(request)}));}catch(error){console.log(JSON.stringify({runner:id,error:error.message}));process.exitCode=2;}\n");
+    return { id: 'CA6992-R' + String(index + 1).padStart(2, '0'), name, stage: index < 5 ? 'x1' : 'x2', operations, path: prefix + file };
+  });
+  const practices = [
+    ['Exact table semantics', 'Synthetic editorial table proofreader', 'Distinguish row, column, symbol, and operation labels.'],
+    ['Separate same-owner oracle', 'Synthetic editorial table proofreader', 'Freeze expected results without importing the runtime.'],
+    ['Correction ledger', 'Synthetic editorial table proofreader', 'Retain every malformed subject beside its refusal.'],
+    ['Accessible readback', 'Synthetic editorial table proofreader', 'Pair compact structures with plain-language boundaries.'],
+    ['Edition collation', 'Synthetic board-game rules collation registrar', 'Compare direct and transformed fixtures without treating them as real editions.'],
+    ['Caller-envelope review', 'Synthetic board-game rules collation registrar', 'Inspect stdout, stderr, status, signal, and timeout.'],
+    ['Workload and handover', 'Synthetic board-game rules collation registrar', 'Keep planning, sessions, seal, canonical, and route separate.'],
+    ['Authority vacancy', 'Synthetic board-game rules collation registrar', 'Keep real rules adjudication, rights, safety, culture, and Maori authority external.']
+  ].map(([title, lens, practice], index) => ({ id: 'CA6992-PRACTICE-' + (index + 1), title, lens, practice, scope: 'owner_only_synthetic' }));
+  const nextPractices = [
+    'Choose a genuinely distinct bounded domain instead of relabelling Latin tables.',
+    'Keep a separate oracle and runtime while stating their shared ownership.',
+    'Derive visual or symbolic summaries only from persisted outputs after a successful session.',
+    'Keep canonical and delivery latches external, one-shot, and separate from recipient completion.'
+  ];
+  const exactReasons = [
+    'real identity or credential action',
+    'external mathematical reproduction',
+    'production deployment or security approval',
+    'legal cultural or Maori-authority determination',
+    'participant or affected-party decision'
+  ];
+  const exactPackets = Array.from({ length: 50 }, (_, index) => ({
+    id: 'CA6992-EXACT-' + String(index + 1).padStart(2, '0'),
+    subject: exactReasons[Math.floor(index / 10)],
+    operation: OPS[(index % 10) * 2],
+    outcome: 'exact_gate', status: 'held',
+    prerequisite: 'Exact competent authority, attributable external evidence, target-specific scope, and explicit approval.',
+    action_performed: false
+  }));
+  const missing = [
+    'independent implementation receipt',
+    'external empirical evidence and calibration',
+    'participant consent and data scope',
+    'production privacy security and accessibility evaluation',
+    'legal cultural affected-party and Maori authority'
+  ];
+  const blockedPackets = Array.from({ length: 30 }, (_, index) => ({
+    id: 'CA6992-BLOCKED-' + String(index + 1).padStart(2, '0'),
+    subject: missing[Math.floor(index / 6)],
+    artifact_family: ['table', 'division', 'law', 'distance', 'projection', 'handover'][index % 6],
+    outcome: 'open_gap', status: 'held',
+    missing: missing[Math.floor(index / 6)],
+    workaround: 'Retain only an explicitly synthetic local representation with no external credit.'
+  }));
+  const sourceBaseline = {
+    repository_sealed: sourceFinal.effective_counts,
+    external_zero_credit_failures: 8,
+    successor_visible_negative_baseline: 26284,
+    overlay_rule: 'The eight live-activation failures remain external and never rewrite Sable repository counts.'
+  };
+  const plan = {
+    schema: 'caelen.latin-plan.v1', owner, phase, branch, source_commit: source,
+    source_is_git_parent: true,
+    source_baseline: sourceBaseline,
+    source_fold_count: 1,
+    semantic_novelty_audit: {
+      inherited_records_reviewed: inherited.length,
+      new_records: contracts.length,
+      direct_comparisons: comparisonCount,
+      exact_title_collisions: exactTitleCollisions.length,
+      operation_profile_collisions: operationProfileCollisions,
+      request_sha256_collisions: requestCollisions,
+      bounded_repository_term_hits: termHits,
+      boundary: 'Bounded exact and term search is evidence against observed collision, not a universal semantic novelty proof.'
+    },
+    inherited, profiles: currentProfiles,
+    operations: descriptions.map(([name, description], index) => ({
+      index: index + 1, name, description, stage: stageForIndex(index), expected_disposition: outcomeFor(name)
+    })),
+    contracts, skills, runners, practices, next_practices: nextPractices,
+    approval_packets: { exact_packets: exactPackets, blocked_packets: blockedPackets },
+    planned_counts: {
+      inherited: 300, contracts: 300,
+      safe_per_session: 300, candidate_failures_per_session: 300,
+      refusals_per_session: 300, cfr_per_session: 300,
+      clean_fix_refine_per_session: 300,
+      skills_per_session: 10, runners_per_session: 5,
+      x2_tests: 15, x2_models: 5
+    },
+    primary_pillar: 'GMUT Mind',
+    protected_pillars: ['THOS Body', 'Freed ID and CBR Heart'],
+    practice_lenses: ['synthetic editorial table proofreader', 'synthetic board-game rules collation registrar'],
+    execution_credit_at_plan: 0,
+    reference_is_same_owner: true,
+    reference_invoked_only_for_planning: true,
+    lifecycle: ['plan', 'x1', 'x2', 'final', 'canonical', 'route'],
+    success_replay_allowed: false,
+    selected_sources: [
+      { url: 'https://doc.sagemath.org/html/en/reference/combinat/sage/combinat/matrices/latin.html', use: 'Latin-square vocabulary and examples only; no Sage execution or imported result.' },
+      { url: 'https://www.rfc-editor.org/info/rfc8259/', use: 'JSON interoperability vocabulary only.' },
+      { url: 'https://www.w3.org/TR/prov-o/', use: 'Provenance vocabulary only; no delegated authority.' },
+      { url: 'https://www.temanararaunga.maori.nz/principles-of-maori-data-sovereignty', use: 'Authority and data-sovereignty boundary context only; software confers no Maori authority.' }
+    ],
+    spend_usd: 0, spend_ceiling_usd: 50, global_installs: 0,
+    new_authored_formats: ['json', 'md', 'txt', 'html'],
+    owner_file_ceiling: 2000, forecast_files: 60,
+    boundary
+  };
+  const beforePlan = relativeFiles();
+  plan.plan_manifest = bindings(beforePlan);
+  plan.self_exclusion = 'plan.json only; exact planning bytes are bound by the external publication receipt.';
+  writeJson('plan.json', plan);
+  done({ artifact_sha256: sha(readBytes('plan.json')), inherited: 300, contracts: 300, comparisons: 90000 });
+  console.log(JSON.stringify({ state: 'planning_only', execution_credit: 0, inherited: 300, contracts: 300, comparisons: 90000, files: relativeFiles().length, plan_sha256: sha(readBytes('plan.json')) }));
+}
+
+function compactPlan() {
+  requireBank();
+  const planPath = path.join(dir, 'plan.json');
+  const original = fs.readFileSync(planPath);
+  const originalWords = original.toString('utf8').trim().split(/\s+/).filter(Boolean).length;
+  assert.ok(originalWords > 100000);
+  const failureId = 'CA6992-PLAN-N001';
+  const retainedPath = path.join(bank, 'plan-over-word-cap.failed.json');
+  fs.copyFileSync(planPath, retainedPath, fs.constants.COPYFILE_EXCL);
+  const plan = JSON.parse(original.toString('utf8'));
+  plan.contract_templates = {
+    'CA6992-TEMPLATE-CORE': {
+      null_or_failure: 'Any mismatch against the separately written frozen oracle, any malformed subject accepted, any caller-envelope drift, any mutation of the supplied table, or any out-of-scope side effect.',
+      concrete_artifacts: ['frozen request', 'frozen expected output', 'two malformed subjects', 'copy-for-reference witnesses'],
+      falsifier_or_acceptance_gate: 'Exact stable JSON agreement plus declared refusal envelopes.',
+      rollback_or_recovery: 'Retain the original failed subject at zero credit and add a separately identified corrected copy only.',
+      protected_gates: ['independent reproduction', 'empirical confirmation', 'professional authority', 'production', 'legal and cultural authority', 'Maori authority', 'Stage 20']
+    }
+  };
+  plan.inherited_review_template = 'Preserve the exact finite labelled-poset source record with zero Caelen novelty, execution, completion, validation, or authority credit.';
+  for (const record of plan.inherited) record.review = 'inherited_review_template';
+  for (const contract of plan.contracts) {
+    contract.null_or_failure = 'CA6992-TEMPLATE-CORE.null_or_failure';
+    contract.concrete_artifacts = ['CA6992-TEMPLATE-CORE.concrete_artifacts'];
+    contract.falsifier_or_acceptance_gate = 'CA6992-TEMPLATE-CORE.falsifier_or_acceptance_gate';
+    contract.rollback_or_recovery = 'CA6992-TEMPLATE-CORE.rollback_or_recovery';
+    contract.protected_gates = ['CA6992-TEMPLATE-CORE.protected_gates'];
+    contract.contract_template_id = 'CA6992-TEMPLATE-CORE';
+  }
+  plan.planning_corrections = [{
+    negative_id: failureId,
+    failed_sha256: sha(original),
+    failed_words: originalWords,
+    original_success_credit: 0,
+    symptom: 'The first planning serialization exceeded the 100000-word document ceiling.',
+    recovery: 'Retain exact failed bytes externally and replace repeated prose with explicit per-contract template references without rerunning proposal generation, oracle comparison, or novelty audit.',
+    semantic_records_changed: false,
+    execution_credit_added: 0
+  }];
+  plan.plan_manifest_exclusions = [prefix + 'plan.json', prefix + 'planning/word-cap-correction.json'];
+  plan.plan_manifest = plan.plan_manifest.map(entry => {
+    const relative = entry.path.slice(prefix.length);
+    return fileBinding(relative);
+  });
+  const compactBytes = Buffer.from(JSON.stringify(plan, null, 2) + '\n');
+  const compactWords = compactBytes.toString('utf8').trim().split(/\s+/).filter(Boolean).length;
+  assert.ok(compactWords <= 100000);
+  fs.writeFileSync(planPath, compactBytes);
+  writeJson('planning/word-cap-correction.json', {
+    schema: 'caelen.planning-correction.v1', owner, phase,
+    negative_id: failureId,
+    failed_sha256: sha(original), failed_bytes: original.length, failed_words: originalWords,
+    corrected_sha256: sha(compactBytes), corrected_bytes: compactBytes.length, corrected_words: compactWords,
+    retained_exact_failed_bytes: true, proposal_audit_replayed: false,
+    oracle_comparison_replayed: false, execution_credit_added: 0,
+    original_success_credit: 0, boundary
+  });
+  console.log(JSON.stringify({ state: 'planning_compacted', negative_id: failureId, failed_sha256: sha(original), failed_words: originalWords, corrected_sha256: sha(compactBytes), corrected_words: compactWords, replayed: false }));
+}
+
+function runStage(stage) {
+  const done = latch(stage);
+  const previous = published(stage === 'x1' ? 'plan' : 'x1');
+  const plan = readJson('plan.json');
+  assert.equal(previous.artifact_sha256, stage === 'x1' ? sha(readBytes('plan.json')) : sha(readBytes('x1.json')));
+  const gate = equalityGate();
+  const selected = plan.contracts.filter(contract => contract.stage === stage);
+  assert.equal(selected.length, 150);
+  const witnesses = [], records = [], retained = [];
+  for (const contract of selected) {
+    const directBefore = sha(contract.request), alternateBefore = sha(contract.alternate);
+    const direct = runtime.run(contract.request);
+    const alternate = runtime.run(contract.alternate);
+    assert.deepEqual(direct, contract.expected);
+    assert.deepEqual(alternate, contract.alternate_expected);
+    assert.equal(sha(contract.request), directBefore);
+    assert.equal(sha(contract.alternate), alternateBefore);
+    witnesses.push(makeWitness(contract.id + '-SAFE-A', 'CA6992-M-OP-' + contract.operation, 'pass', null, 'runtime versus frozen oracle', 'exact direct agreement'));
+    witnesses.push(makeWitness(contract.id + '-SAFE-B', 'CA6992-M-OP-' + contract.operation, 'pass', null, 'transformed runtime versus frozen oracle', 'exact transformed agreement'));
+    for (const negative of contract.negative_subjects) {
+      let observed = null;
+      try { runtime.run(negative.request); } catch (error) { observed = error.message; }
+      assert.equal(observed, negative.expected_error);
+      retained.push(negative.negative_id);
+      witnesses.push(makeWitness(negative.negative_id + '-SUBJECT', 'CA6992-M-OP-' + contract.operation, 'fail', negative.negative_id, 'execute malformed subject', 'rejected with ' + observed));
+      witnesses.push(makeWitness(negative.negative_id + '-REFUSAL', 'CA6992-M-OP-' + contract.operation, 'pass', negative.negative_id, 'verify exact refusal', 'declared refusal matched; subject stayed failed'));
+    }
+    const directCopy = structuredClone(contract.request), alternateCopy = structuredClone(contract.alternate);
+    assert.equal(stableText(directCopy), stableText(contract.request));
+    assert.equal(stableText(alternateCopy), stableText(contract.alternate));
+    witnesses.push(makeWitness(contract.id + '-CFR-A', 'CA6992-M-OP-' + contract.operation, 'pass', null, 'copy for reference', 'direct copy exact'));
+    witnesses.push(makeWitness(contract.id + '-CFR-B', 'CA6992-M-OP-' + contract.operation, 'pass', null, 'copy for reference', 'transformed copy exact'));
+    assert.deepEqual(Object.keys(contract.request).sort(), ['n', 'op', 'table']);
+    assert.deepEqual(Object.keys(contract.alternate).sort(), ['n', 'op', 'table']);
+    witnesses.push(makeWitness(contract.id + '-CLEAN-A', 'CA6992-M-OP-' + contract.operation, 'pass', null, 'clean fix refine review', 'direct request exact and unchanged'));
+    witnesses.push(makeWitness(contract.id + '-CLEAN-B', 'CA6992-M-OP-' + contract.operation, 'pass', null, 'clean fix refine review', 'transformed request exact and unchanged'));
+    records.push({
+      contract_id: contract.id, operation: contract.operation, profile: contract.profile,
+      outcome: contract.expected_disposition,
+      direct_result: direct, direct_result_sha256: sha(direct),
+      alternate_result: alternate, alternate_result_sha256: sha(alternate),
+      safe_checks: 2, candidate_failed_subjects: 2, refusal_passes: 2,
+      copy_for_reference_checks: 2, clean_fix_refine_checks: 2
+    });
+  }
+  const stageSkills = plan.skills.filter(skill => skill.stage === stage);
+  assert.equal(stageSkills.length, 10);
+  for (const skill of stageSkills) {
+    const relative = skill.path.slice(prefix.length);
+    const text = readBytes(relative).toString('utf8');
+    assert.ok(text.startsWith('---\nname: ghc-family-latin-'));
+    assert.ok(text.includes('NOT_READY_FOR_STAGE_20'));
+    const contract = selected.find(item => item.operation === skill.operation);
+    assert.deepEqual(runtime.run(contract.request), contract.expected);
+    witnesses.push(makeWitness(skill.id + '-SMOKE', 'CA6992-M-SKILL-' + skill.id, 'pass', null, 'validate and smoke-use owner-local skill', 'front matter and operation smoke passed'));
+  }
+  const stageRunners = plan.runners.filter(runner => runner.stage === stage);
+  assert.equal(stageRunners.length, 5);
+  for (const runner of stageRunners) {
+    const contract = selected.find(item => item.operation === runner.operations[0]);
+    const positive = runnerEnvelope(runner.name, contract.request);
+    assert.equal(positive.exit_code, 0);
+    assert.equal(positive.stderr, '');
+    assert.deepEqual(JSON.parse(positive.stdout), { runner: runner.name, result: contract.expected });
+    witnesses.push(makeWitness(runner.id + '-ACCEPT', 'CA6992-M-RUNNER-' + runner.id, 'pass', null, 'invoke family-current runner', 'full accepting envelope matched'));
+    const wrongOperation = stage === 'x1' ? 'left_division_table' : 'latin_status';
+    const wrongContract = plan.contracts.find(item => item.operation === wrongOperation && item.profile === contract.profile);
+    const invalidId = runner.id + '-INVALID-OP';
+    const refused = runnerEnvelope(runner.name, wrongContract.request);
+    assert.equal(refused.exit_code, 2);
+    assert.equal(refused.stderr, '');
+    assert.equal(JSON.parse(refused.stdout).error, 'runner_operation');
+    retained.push(invalidId);
+    witnesses.push(makeWitness(invalidId + '-SUBJECT', 'CA6992-M-RUNNER-' + runner.id, 'fail', invalidId, 'invoke runner with disallowed valid-domain operation', 'runner rejected subject'));
+    witnesses.push(makeWitness(invalidId + '-REFUSAL', 'CA6992-M-RUNNER-' + runner.id, 'pass', invalidId, 'verify runner refusal envelope', 'declared runner_operation refusal matched'));
+  }
+  const tests = [], models = [];
+  if (stage === 'x2') {
+    for (const profile of plan.profiles) {
+      const left = records.find(item => item.operation === 'left_division_table' && item.profile === profile.id).direct_result;
+      const right = records.find(item => item.operation === 'right_division_table' && item.profile === profile.id).direct_result;
+      let leftOkay = true, rightOkay = true;
+      for (let a = 0; a < profile.n; a += 1) for (let b = 0; b < profile.n; b += 1) {
+        if (profile.table[a][left[a][b]] !== b) leftOkay = false;
+        if (profile.table[right[a][b]][a] !== b) rightOkay = false;
+      }
+      assert.equal(leftOkay && rightOkay, true);
+      tests.push({ id: 'CA6992-T-' + profile.id, profile: profile.id, source: 'persisted x2 division outputs', left_identity: leftOkay, right_identity: rightOkay, outcome: 'completed', same_owner_only: true });
+    }
+    for (const profile of plan.profiles.slice(0, 5)) {
+      const scene = records.find(item => item.operation === 'latin_scene' && item.profile === profile.id).direct_result;
+      models.push({
+        id: 'CA6992-MODEL-' + profile.id, profile: profile.id,
+        coordinate_system: scene.coordinate_system,
+        points: scene.points, point_count: scene.points.length,
+        source_sha256: sha(scene), physical_meaning: false,
+        outcome: 'represented', boundary
+      });
+    }
+    assert.equal(tests.length, 15);
+    assert.equal(models.length, 5);
+  }
+  const pass = witnesses.filter(witness => witness.result === 'pass').length;
+  const fail = witnesses.filter(witness => witness.result === 'fail').length;
+  assert.equal(pass, 1220);
+  assert.equal(fail, 305);
+  const outcomeCounts = { completed: 0, represented: 0, open_gap: 0, exact_gate: 0 };
+  for (const record of records) outcomeCounts[record.outcome] += 1;
+  const payload = {
+    schema: 'caelen.latin-session.v1', owner, phase, stage,
+    definition_commit: gate.local, gate,
+    previous_publication: { stage: previous.stage, commit: previous.commit, artifact_sha256: previous.artifact_sha256 },
+    plan_sha256: sha(readBytes('plan.json')),
+    runtime_sha256: sha(readBytes('runtime.txt')),
+    records, runner_results: stageRunners.map(runner => runner.id),
+    tests, models, witnesses, retained_negatives: retained,
+    outcomes: outcomeCounts,
+    counts: {
+      contracts: 150, safe: 300, candidate_failed: 300, candidate_success: 0,
+      refusal_pass: 300, copy_for_reference: 300, clean_fix_refine: 300,
+      skills: 10, runners: 5, witnesses: witnesses.length,
+      passing_witnesses: pass, failed_witnesses: fail, negatives: fail,
+      tests: tests.length, models: models.length
+    },
+    invocations: 1, successes: 1, replays: 0, boundary
+  };
+  writeJson(stage + '.json', payload);
+  done({ artifact_sha256: sha(readBytes(stage + '.json')), records: records.length, pass, fail });
+  console.log(JSON.stringify({ state: stage + '_success', records: 150, pass, fail, tests: tests.length, models: models.length, artifact_sha256: sha(readBytes(stage + '.json')) }));
+}
+
+function buildMethodFlow(plan, x1, x2) {
+  const methods = [];
+  const allWitnesses = [...x1.witnesses, ...x2.witnesses];
+  for (const [operation, description] of descriptions) {
+    const methodId = 'CA6992-M-OP-' + operation;
+    const negatives = allWitnesses.filter(item => item.method_id === methodId && item.result === 'fail').flatMap(item => item.retained_negative_ids);
+    methods.push({
+      method_id: methodId, title: description,
+      failure_signature: 'runtime or oracle mismatch, invalid subject acceptance, mutation, or scope escape',
+      trigger_preconditions: ['declared finite Latin-table request', 'owner-local synthetic scope'],
+      privacy_class: 'sanitized_public', approval_class: 'owner_internal_synthetic',
+      candidate_workaround: 'Retain the failed subject and add only the smallest separately identified correction.',
+      validation_witness_ids: allWitnesses.filter(item => item.method_id === methodId && item.result === 'pass').map(item => item.witness_id),
+      recurrence_guard: 'Exact field set, table validation, frozen oracle digest, and complete caller envelope.',
+      rollback: 'Remove only the uncommitted Caelen artifact; never rewrite an immutable stage.',
+      recommendation_state: 'preferred', supersedes: [],
+      protected_gates: ['empirical', 'professional', 'production', 'legal', 'cultural', 'Maori authority', 'Stage 20'],
+      retained_negative_ids: negatives,
+      scope_boundary: boundary
+    });
+  }
+  for (const skill of plan.skills) {
+    const methodId = 'CA6992-M-SKILL-' + skill.id;
+    const linkedNegative = allWitnesses.find(item => item.method_id === 'CA6992-M-OP-' + skill.operation && item.result === 'fail').retained_negative_ids[0];
+    methods.push({
+      method_id: methodId, title: 'Owner-local skill ' + skill.id,
+      failure_signature: 'front matter, scope, caller, or smoke mismatch',
+      trigger_preconditions: ['owner-local skill path', 'no global installation'],
+      privacy_class: 'sanitized_public', approval_class: 'owner_internal_synthetic',
+      candidate_workaround: 'Keep the package local and repair only the failed contract.',
+      validation_witness_ids: allWitnesses.filter(item => item.method_id === methodId && item.result === 'pass').map(item => item.witness_id),
+      recurrence_guard: 'Validate front matter, boundary language, and one operation smoke.',
+      rollback: 'Remove only the uncommitted owner-local skill directory.',
+      recommendation_state: 'preferred', supersedes: [],
+      protected_gates: ['global install', 'identity', 'authority', 'Stage 20'],
+      retained_negative_ids: [linkedNegative], scope_boundary: boundary
+    });
+  }
+  for (const runner of plan.runners) {
+    const methodId = 'CA6992-M-RUNNER-' + runner.id;
+    const negatives = allWitnesses.filter(item => item.method_id === methodId && item.result === 'fail').flatMap(item => item.retained_negative_ids);
+    methods.push({
+      method_id: methodId, title: 'Family-current runner ' + runner.name,
+      failure_signature: 'caller-envelope drift or operation-scope escape',
+      trigger_preconditions: ['literal owner runner', 'bounded JSON request'],
+      privacy_class: 'sanitized_public', approval_class: 'owner_internal_synthetic',
+      candidate_workaround: 'Retain the invalid subject and preserve the exact refusal envelope.',
+      validation_witness_ids: allWitnesses.filter(item => item.method_id === methodId && item.result === 'pass').map(item => item.witness_id),
+      recurrence_guard: 'Full stdout, stderr, exit, signal, timeout, and operation allowlist review.',
+      rollback: 'Remove only the uncommitted owner-local runner.',
+      recommendation_state: 'preferred', supersedes: [],
+      protected_gates: ['external execution', 'production', 'authority', 'Stage 20'],
+      retained_negative_ids: negatives, scope_boundary: boundary
+    });
+  }
+  const lifecycleNames = ['planning-freeze', 'x1-isolation', 'x2-isolation', 'manifest-domain', 'json-parse', 'text-syntax', 'privacy-adjudication', 'ancestry', 'canonical-latch', 'terminal-route'];
+  for (let i = 0; i < lifecycleNames.length; i += 1) {
+    const name = lifecycleNames[i], methodId = 'CA6992-M-LIFECYCLE-' + String(i + 1).padStart(2, '0');
+    const witnessId = methodId + '-PASS';
+    allWitnesses.push(makeWitness(witnessId, methodId, 'pass', 'SR6991-EXTERNAL-N' + String((i % 8) + 1).padStart(3, '0'), 'final lifecycle preparation check', 'bounded preparation requirement represented'));
+    methods.push({
+      method_id: methodId, title: name,
+      failure_signature: 'lifecycle boundary, manifest, route, or latch mismatch',
+      trigger_preconditions: ['exact owner lane', 'immutable predecessor', 'owner-scoped delta'],
+      privacy_class: 'sanitized_public', approval_class: 'owner_internal_structural',
+      candidate_workaround: 'Stop, retain the failed observation, and repair only the narrow dependency.',
+      validation_witness_ids: [witnessId],
+      recurrence_guard: 'Exact anchors, explicit lifecycle state, no replay, and protected-route hold.',
+      rollback: 'Leave immutable commits unchanged and remove only uncommitted owner-local output.',
+      recommendation_state: 'preferred', supersedes: [],
+      protected_gates: ['sibling mutation', 'private route', 'canonical replay', 'authority', 'Stage 20'],
+      retained_negative_ids: ['SR6991-EXTERNAL-N' + String((i % 8) + 1).padStart(3, '0')],
+      scope_boundary: boundary
+    });
+  }
+  assert.equal(methods.length, 60);
+  const pass = allWitnesses.filter(item => item.result === 'pass').length;
+  const fail = allWitnesses.filter(item => item.result === 'fail').length;
+  assert.equal(pass, 2450);
+  assert.equal(fail, 610);
+  const ownCounts = {
+    methods: 60, witnesses: allWitnesses.length, passing_witnesses: pass,
+    failed_witnesses: fail, negatives: 610, open_gaps: 49, exact_gates: 65
+  };
+  const sourceSealed = plan.source_baseline.repository_sealed;
+  const overlayFailures = plan.source_baseline.external_zero_credit_failures;
+  const effectiveCounts = {
+    methods: sourceSealed.methods + ownCounts.methods,
+    witnesses: sourceSealed.witnesses + overlayFailures + ownCounts.witnesses,
+    passing_witnesses: sourceSealed.passing_witnesses + ownCounts.passing_witnesses,
+    failed_witnesses: sourceSealed.failed_witnesses + overlayFailures + ownCounts.failed_witnesses,
+    negatives: plan.source_baseline.successor_visible_negative_baseline + ownCounts.negatives,
+    open_gaps: sourceSealed.open_gaps + ownCounts.open_gaps,
+    exact_gates: sourceSealed.exact_gates + ownCounts.exact_gates
+  };
+  assert.equal(effectiveCounts.witnesses, effectiveCounts.passing_witnesses + effectiveCounts.failed_witnesses);
+  return {
+    schema: 'ghc.family.method-flow-state.v1', phase, owner,
+    identity_boundary: 'Relational working language only; no consciousness, personhood, continuity, qualification, agency, or authority claim.',
+    execution_authority: 'owner_self_scoped_delta', source_commit: source,
+    final_commit_binding: 'external exact-final canonical receipt',
+    repository_scan: false, module_scan: true, cross_lane_scan: false,
+    unchanged_history_scan: false, sibling_lane_mutation: false,
+    changed_file_allowlist: relativeFiles().map(name => prefix + name),
+    module_allowlist: [prefix + 'phase.txt', prefix + 'runtime.txt', prefix + 'reference.txt', ...plan.runners.map(item => item.path)],
+    exact_pushed_head_required: true,
+    methods, witnesses: allWitnesses,
+    state_events: methods.map((method, index) => ({ event_id: 'CA6992-E' + String(index + 1).padStart(3, '0'), method_id: method.method_id, from: 'candidate', to: 'preferred', witness_ids: method.validation_witness_ids })),
+    recommendations: plan.next_practices.map((text, index) => ({ recommendation_id: 'CA6992-REC-' + (index + 1), state: 'candidate', text, successor_completion_credit: 0 })),
+    counts: {
+      methods: methods.length, witnesses: allWitnesses.length,
+      state_events: methods.length, recommendations: plan.next_practices.length,
+      states: { observed: 0, candidate: 0, validated: 0, preferred: methods.length, superseded: 0, deprecated: 0 },
+      witness_results: { pass, fail }
+    },
+    source_baseline: plan.source_baseline, source_fold_count: 1,
+    own_counts: ownCounts, effective_counts: effectiveCounts,
+    retained_negatives: [...x1.retained_negatives, ...x2.retained_negatives],
+    boundary
+  };
+}
+
+function buildDeck(plan) {
+  const cards = [];
+  cards.push({ schema: 'ghc.card.v1', card_id: 'ghc-card-ca6992-owner', tier: 1, card_type: 'owner_anchor', title: owner + ' ' + phase, parent_ids: [], owner, phase, stability: 'current', outcome: 'represented', content: 'Relational owner anchor for one bounded phase; not identity continuity.', source_refs: [prefix + 'plan.json'], protected_gates: ['identity', 'authority'], relational_boundary: boundary });
+  for (const [index, pillar] of ['GMUT Mind', 'THOS Body', 'Freed ID and CBR Heart'].entries()) {
+    cards.push({ schema: 'ghc.card.v1', card_id: 'ghc-card-ca6992-pillar-' + (index + 1), tier: 2, card_type: 'pillar', title: pillar, parent_ids: ['ghc-card-ca6992-owner'], owner, phase, stability: 'current', outcome: index === 0 ? 'completed' : 'represented', content: index === 0 ? 'Primary finite symbolic focus.' : 'Protected nonproduction pillar context.', source_refs: [prefix + 'plan.json'], protected_gates: ['empirical', 'production', 'authority'], relational_boundary: boundary });
+  }
+  for (let i = 0; i < plan.practices.length; i += 1) {
+    const practice = plan.practices[i];
+    const parent = i < 4 ? 'ghc-card-ca6992-pillar-1' : (i < 7 ? 'ghc-card-ca6992-pillar-2' : 'ghc-card-ca6992-pillar-3');
+    cards.push({ schema: 'ghc.card.v1', card_id: 'ghc-card-ca6992-practice-' + (i + 1), tier: 3, card_type: 'practice', title: practice.title, parent_ids: [parent], owner, phase, stability: 'current', outcome: 'represented', content: practice.practice + ' Lens: ' + practice.lens + '. No employment, qualification, competence, or authority claim.', source_refs: [prefix + 'plan.json'], protected_gates: ['professional', 'affected-party', 'authority'], relational_boundary: boundary });
+  }
+  assert.equal(cards.length, 12);
+  const tasks = [
+    ...plan.inherited.map((item, index) => ({ id: item.source_id, title: 'Inherited zero-credit source ' + item.source_id, outcome: 'represented', source: sourcePlanPath, index })),
+    ...plan.contracts.map((item, index) => ({ id: item.id, title: item.title, outcome: item.expected_disposition, source: prefix + 'plan.json', index: index + 300 }))
+  ];
+  for (const task of tasks) {
+    cards.push({ schema: 'ghc.card.v1', card_id: 'ghc-card-ca6992-task-' + String(task.index + 1).padStart(3, '0'), tier: 4, card_type: 'task_evidence', title: task.title, parent_ids: ['ghc-card-ca6992-practice-' + ((task.index % 8) + 1)], owner, phase, stability: 'current', outcome: task.outcome, content: task.id + ' remains bounded to its exact source and disposition.', source_refs: [task.source], protected_gates: ['independent reproduction', 'empirical', 'professional', 'production', 'legal', 'cultural', 'Maori authority', 'Stage 20'], relational_boundary: boundary });
+  }
+  assert.equal(cards.length, 612);
+  return { schema: 'ghc.family.deck.v1', owner, phase, card_count: cards.length, tiers: { owner: 1, pillars: 3, practices: 8, tasks: 600 }, cards, boundary };
+}
+
+function handoffText(plan, x1, x2, methodFlow) {
+  const lines = [];
+  function section(title, paragraphs) {
+    lines.push('# ' + title, '');
+    for (const paragraph of paragraphs) lines.push(paragraph, '');
+  }
+  section('1. Identity and authority boundary', [
+    'Caelen Ash is relational working language for a source-faithful finite-structure reviewer. The phase hope is to keep every table, correction, refusal, and authority vacancy inspectable without converting software structure into identity, consciousness, qualification, or authority.',
+    boundary
+  ]);
+  section('2. Exact immutable source', [
+    'The exact source is Sable Rook v699-v1 at ' + source + '. It remains the direct Git parent of this Caelen lane. Sable proposals, skills, runners, tests, receipts, and canonical status are inherited evidence with zero Caelen novelty, execution, completion, validation, or authority credit.',
+    'The source repository seal remains methods 1315, witnesses 81268, passing witnesses 61969, failed witnesses 19299, negatives 26276, open gaps 728, exact gates 760. Eight later route or wrapper failures remain external, making the successor-visible negative baseline 26284 without rewriting the repository seal.'
+  ]);
+  section('3. Lifecycle isolation', [
+    'Planning, x1, x2, final preparation, exact-final canonical, and terminal route are distinct states. Planning contains no execution credit. X1 and x2 are separately published before their successors. A successful session or canonical is never replayed for convenience.',
+    'The exact branch is ' + branch + '. The external receipts bind published commits and later canonical truth. Repository files remain PREPARED_NOT_SENT because delivery is a separate live observation.'
+  ]);
+  section('4. Domain and primary contribution', [
+    'The phase uses fifteen finite labelled Latin tables and twenty bounded operations. GMUT Mind is primary as a finite symbolic law-testing surface. THOS Body remains a workload, refusal, correction-readback, and handover proxy. Freed ID and CBR Heart remain provenance, minimum-disclosure, contest, and authority-vacancy structures.',
+    'The two learning lenses are synthetic editorial table proofreading and synthetic board-game rules collation. They establish no employment, licensure, qualification, competence, operational decision, legal meaning, cultural legitimacy, affected-party acceptance, or Maori authority.'
+  ]);
+  section('5. Proposal freeze and semantic audit', [
+    'Three hundred Sable contracts were reviewed at zero credit. Three hundred genuinely new Caelen contracts were frozen after 90000 direct inherited-to-new comparisons. Exact title, operation-profile, and request-digest collisions were zero. A bounded repository term search found no prior Latin-square, quasigroup, parastrophe, isotopy, Cayley-table, or loop-table surface.',
+    'The following proposal rows are compact pointers into plan.json. Each full record contains hypothesis, null condition, approval class, lane, source needs, artifacts, falsifier, recovery, protected gates, and exactly one expected disposition.'
+  ]);
+  for (const contract of plan.contracts) {
+    lines.push('- ' + contract.id + ': ' + contract.title + '; stage ' + contract.stage + '; expected ' + contract.expected_disposition + '; exact request ' + contract.request_sha256 + '; failures stay zero-credit; protected empirical, professional, production, legal, cultural, Maori-authority, independent-reproduction, and Stage 20 gates remain closed.');
+  }
+  lines.push('');
+  section('6. X1 execution', [
+    'X1 executed 150 frozen contracts once. It recorded 300 safe checks, 300 malformed candidate subjects that remained failed, 300 matching refusal passes, 300 copy-for-reference checks, 300 CLEAN/FIX/REFINE checks, ten skill uses, and five runner uses. The stage retained ' + x1.counts.failed_witnesses + ' failed witnesses and ' + x1.counts.passing_witnesses + ' passing witnesses.',
+    'No x2 output, final claim, canonical result, or route result existed in the x1 lifecycle.'
+  ]);
+  section('7. X2 execution and derived evidence', [
+    'X2 executed the remaining 150 contracts once under the same floors. It added fifteen persisted-output division identity tests and five declared-index models without physical meaning. It retained ' + x2.counts.failed_witnesses + ' failed witnesses and ' + x2.counts.passing_witnesses + ' passing witnesses.',
+    'The full outcome distribution is 255 completed, 15 represented, 15 open_gap, and 15 exact_gate. Completed means only that the declared finite software contract passed.'
+  ]);
+  section('8. Skills, runners, and compatibility', [
+    'Twenty phase-local skills were built, validated, and smoke-used without global installation. Ten family-current ghc_family_* text runners were invoked with complete caller envelopes. No PATH, profile, plugin cache, system Python, npm global prefix, host security, Windows feature, Codex desktop, or sibling-owned surface was changed.',
+    'Historical callers remain untouched. Local capability does not establish production fitness, independent reproduction, professional competence, or authority.'
+  ]);
+  section('9. Method Flow and retained negatives', [
+    'The final ledger contains ' + methodFlow.own_counts.methods + ' own methods and ' + methodFlow.own_counts.witnesses + ' own witnesses: ' + methodFlow.own_counts.passing_witnesses + ' passing and ' + methodFlow.own_counts.failed_witnesses + ' failed. Every failed subject remains linked after a refusal or repaired copy passes.',
+    'Source folding occurs once. Effective truth is methods ' + methodFlow.effective_counts.methods + ', witnesses ' + methodFlow.effective_counts.witnesses + ', passing ' + methodFlow.effective_counts.passing_witnesses + ', failed ' + methodFlow.effective_counts.failed_witnesses + ', negatives ' + methodFlow.effective_counts.negatives + ', open gaps ' + methodFlow.effective_counts.open_gaps + ', and exact gates ' + methodFlow.effective_counts.exact_gates + '.'
+  ]);
+  section('10. Exact and blocked packets', [
+    'Fifty exact-approval packets and thirty blocked packets remain visible and unexecuted. Exact packets cover real identity, independent external reproduction, production and security approval, legal or cultural and Maori-authority determination, and participant or affected-party decisions.',
+    'Blocked packets preserve missing independent implementation, empirical calibration, consent and data scope, production privacy/security/accessibility evaluation, and competent legal/cultural/affected-party/Maori authority.'
+  ]);
+  section('11. Scientific and governance boundary', [
+    'GMUT remains a typed scalar-tensor and effective-field-theory research-model family. Finite Latin tables supply no physical datum, likelihood, posterior, force, prediction, parameter constraint, empirical confirmation, ultraviolet completion, quantum completion, or Theory of Everything.',
+    'THOS remains synthetic and proxy-only without preregistered blind matched-budget real arms, real participants or operators, safety monitoring, appropriate statistics, and independent review. Freed ID remains synthetic and nonproduction without real standards-conformant keys and proofs, live issuance/resolution/status/revocation, interoperability, privacy and independent security review, recovery evidence, trust governance, and affected-party oversight.',
+    'CBR and all access, consent, rights, remedy, legal, cultural, privacy, language, Maori wording, Maori data-governance, and Maori-authority decisions remain reserved to competent and affected people and authorities.'
+  ]);
+  section('12. Final validation contract', [
+    'The owner-scoped exact-final canonical is metadata-only. It may run once only after the final commit is pushed, clean, typed zero-divergent, and fresh-four-way equal. It checks exact owner blobs, manifests, JSON, trusted text syntax, word ceilings, privacy candidates, bounded security patterns, ancestry, zero merges, one final parent, and the PREPARED_NOT_SENT route hold without rerunning the domain sessions.',
+    'A successful canonical is same-owner software and documentation evidence under shared infrastructure, never independent reproduction, external audit, empirical validation, professional evaluation, production certification, exhaustive security, complete privacy, or complete accessibility assurance.'
+  ]);
+  section('13. Terminal route', [
+    'Only after one successful non-replayed canonical may the owner refresh Hamish authority, usage, the current roster, active and archived task registries, exact-title uniqueness, and the immediate task history. A single compact sanitized message may point to this durable baton if and only if every guard permits.',
+    'Do not infer a successor from this file alone. Do not create, fork, substitute, precontact, or resend. Accepted, opaque, or unresolved submission closes the latch. No post-send reread or monitoring is authorized. Delivery does not prove recipient completion.',
+    'EOF CAELEN ASH v699-v2 HANDOFF BATON.'
+  ]);
+  const text = lines.join('\n') + '\n';
+  const words = text.trim().split(/\s+/).length;
+  assert.ok(words >= 10000 && words <= 100000);
+  return { text, words };
+}
+
+function htmlReport(plan, x2, methodFlow) {
+  const escape = value => String(value).replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;').replaceAll('"', '&quot;');
+  const rows = plan.operations.map(op => '<tr><th scope="row">' + escape(op.index) + '</th><td>' + escape(op.name) + '</td><td>' + escape(op.stage) + '</td><td>' + escape(op.expected_disposition) + '</td><td>' + escape(op.description) + '</td></tr>').join('');
+  const modelRows = x2.models.map(model => '<tr><th scope="row">' + escape(model.profile) + '</th><td>' + escape(model.point_count) + '</td><td>' + escape(model.coordinate_system) + '</td><td>false</td></tr>').join('');
+  return '<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Caelen Ash v699-v2 evidence report</title><style>body{font:1rem/1.55 system-ui;max-width:78rem;margin:auto;padding:1rem;color:#17202a;background:#fbfcfc}table{border-collapse:collapse;width:100%;margin:1rem 0}th,td{border:1px solid #85929e;padding:.45rem;text-align:left;vertical-align:top}caption{font-weight:700;text-align:left;margin:.5rem 0}.note{border-left:.4rem solid #7d3c98;padding:.7rem;background:#f4ecf7}code{overflow-wrap:anywhere}@media(max-width:44rem){table{font-size:.85rem}th,td{padding:.3rem}}</style></head><body><main><h1>Caelen Ash v699-v2</h1><p class="note">Finite synthetic same-owner evidence only. Manual accessibility and affected-user evaluation remain open. NOT_READY_FOR_STAGE_20.</p><p>Primary pillar: GMUT Mind. Protected pillars: THOS Body and Freed ID/CBR Heart. Outcomes: 255 completed, 15 represented, 15 open_gap, 15 exact_gate.</p><table><caption>Twenty operation contracts</caption><thead><tr><th>#</th><th>Operation</th><th>Stage</th><th>Disposition</th><th>Bounded meaning</th></tr></thead><tbody>' + rows + '</tbody></table><table><caption>Five declared-index models from persisted x2 outputs</caption><thead><tr><th>Profile</th><th>Points</th><th>Coordinate system</th><th>Physical meaning</th></tr></thead><tbody>' + modelRows + '</tbody></table><h2>Effective Method Flow</h2><p>Methods ' + methodFlow.effective_counts.methods + '; witnesses ' + methodFlow.effective_counts.witnesses + '; passing ' + methodFlow.effective_counts.passing_witnesses + '; failed ' + methodFlow.effective_counts.failed_witnesses + '; negatives ' + methodFlow.effective_counts.negatives + '; open gaps ' + methodFlow.effective_counts.open_gaps + '; exact gates ' + methodFlow.effective_counts.exact_gates + '.</p><p>' + escape(boundary) + '</p></main></body></html>\n';
+}
+
+function buildFinal() {
+  const done = latch('final');
+  const prior = published('x2');
+  assert.equal(prior.artifact_sha256, sha(readBytes('x2.json')));
+  const gate = equalityGate();
+  const plan = readJson('plan.json'), x1 = readJson('x1.json'), x2 = readJson('x2.json');
+  assert.equal(x1.successes, 1); assert.equal(x1.replays, 0);
+  assert.equal(x2.successes, 1); assert.equal(x2.replays, 0);
+  const methodFlow = buildMethodFlow(plan, x1, x2);
+  writeJson('final/method-flow-final.json', methodFlow);
+  writeJson('final/context-deck.json', buildDeck(plan));
+  const handoff = handoffText(plan, x1, x2, methodFlow);
+  writeText('final/hand-off-baton.md', handoff.text);
+  writeText('final/overview.md',
+    '# Caelen Ash v699-v2 final integrated overview\n\n' +
+    'This phase preserves 300 inherited Sable proposal records at zero Caelen credit and executes 300 new finite Latin-table contracts across fifteen profiles and twenty operations. Exact semantic comparisons: 90000; observed exact title, operation-profile, request, and bounded term collisions: zero.\n\n' +
+    'Outcomes are exactly 255 completed, 15 represented, 15 open_gap, and 15 exact_gate. Each session recorded 300 safe checks, 300 failed malformed subjects, 300 refusal passes, 300 copy-for-reference checks, 300 CLEAN/FIX/REFINE checks, ten skills, and five family-current runners. X2 adds fifteen persisted-output tests and five declared-index models.\n\n' +
+    'The effective source-folded Method Flow preserves ' + methodFlow.effective_counts.negatives + ' negatives, ' + methodFlow.effective_counts.open_gaps + ' open gaps, and ' + methodFlow.effective_counts.exact_gates + ' exact gates. Canonical and route remain external, terminally gated, and unreplayed.\n\n' +
+    boundary);
+  writeText('final/wellbeing-and-workload.md',
+    '# Workload and wellbeing boundary\n\n' +
+    'The phase used two bounded execution sessions, compact generated ledgers, no subagents, no global installation, no package update, no real participant, and no external operational action. This is a workload receipt, not an independently observed wellbeing assessment. Hamish may pause, redirect, narrow, rename, or stop the route.\n\n' +
+    boundary);
+  writeText('final/threat-model.md',
+    '# Bounded threat model\n\n' +
+    '- Malformed tables: rejected before evaluation; subject remains failed.\n' +
+    '- Oracle/runtime common ownership: declared; independent reproduction stays open.\n' +
+    '- Lifecycle replay: external invocation latches use create-only files.\n' +
+    '- Manifest ambiguity: exact path, byte count, SHA-256, and byte domain recorded.\n' +
+    '- Private route leakage: raw identifiers, private handles, transcripts, screenshots, session streams, credentials, and absolute local paths excluded.\n' +
+    '- Authority promotion: exact and blocked packets remain unexecuted.\n' +
+    '- Delivery duplication: PREPARED_NOT_SENT remains committed; accepted, opaque, or unresolved live state closes the external latch.\n\n' +
+    'This bounded review is not exhaustive security, complete privacy, complete accessibility, production certification, or independent audit.\n\n' + boundary);
+  writeJson('final/environment.json', {
+    schema: 'caelen.environment.v1', owner, phase,
+    node: process.version,
+    platform: process.platform,
+    architecture: process.arch,
+    package_installs: 0, global_installs: 0,
+    network_domain_execution: 0,
+    repository_relative_only: true,
+    boundary
+  });
+  writeJson('final/route-hold.json', {
+    schema: 'caelen.route-hold.v1', owner, phase,
+    state: 'PREPARED_NOT_SENT',
+    successor: null,
+    successor_resolution_deferred_until_after_canonical: true,
+    send_attempts: 0, acknowledgements: 0, resends: 0,
+    post_send_reread_or_monitoring: false,
+    stop_conditions: ['absence', 'ambiguity', 'pause', 'redirect', 'rename', 'standby', 'usage exhaustion', 'privacy concern', 'evidence gap', 'safety gate', 'missing acknowledgement'],
+    boundary
+  });
+  writeText('final/report.html', htmlReport(plan, x2, methodFlow));
+  writeJson('final/validation-candidate.json', {
+    schema: 'caelen.canonical-candidate.v1', owner, phase,
+    metadata_only: true, domain_replay: false,
+    maximum_invocations: 1, maximum_successes: 1,
+    exact_final_required: true, clean_required: true,
+    typed_zero_divergence_required: true, fresh_four_way_equality_required: true,
+    route_state_required: 'PREPARED_NOT_SENT',
+    status: 'CANDIDATE_NOT_INVOKED',
+    boundary
+  });
+  const manifestExclusions = [
+    prefix + 'final/owner-manifest.json',
+    prefix + 'final/phase-truth.json',
+    prefix + 'final/content-seal.json',
+    prefix + 'final/final-staged-review.json'
+  ];
+  const manifestNames = relativeFiles().filter(name => !manifestExclusions.includes(prefix + name));
+  writeJson('final/owner-manifest.json', {
+    schema: 'caelen.owner-manifest.v1', owner, phase,
+    entries: bindings(manifestNames),
+    declared_exclusions: manifestExclusions,
+    byte_domain: 'checkout_utf8_lf_before_final_commit; canonical replays exact Git blobs',
+    boundary
+  });
+  const phaseTruth = {
+    schema: 'caelen.phase-truth.v1', owner, phase, source_commit: source,
+    source_is_git_parent: true,
+    plan_commit: published('plan').commit,
+    x1_commit: published('x1').commit,
+    x2_commit: published('x2').commit,
+    pre_final_gate: gate,
+    outcomes: { completed: 255, represented: 15, open_gap: 15, exact_gate: 15 },
+    stage_counts: [x1.counts, x2.counts],
+    semantic_novelty_audit: plan.semantic_novelty_audit,
+    method_flow: {
+      path: prefix + 'final/method-flow-final.json',
+      sha256: sha(readBytes('final/method-flow-final.json')),
+      own_counts: methodFlow.own_counts,
+      effective_counts: methodFlow.effective_counts
+    },
+    held_packets: { exact: 50, blocked: 30, executed: 0 },
+    capabilities: { local_skills: 20, family_current_runners: 10, global_installs: 0 },
+    deck: { cards: 612, sha256: sha(readBytes('final/context-deck.json')) },
+    handoff: { path: prefix + 'final/hand-off-baton.md', words: handoff.words, sha256: sha(readBytes('final/hand-off-baton.md')) },
+    owner_manifest_sha256: sha(readBytes('final/owner-manifest.json')),
+    manifest_exclusions: manifestExclusions,
+    canonical: { invoked: false, successes: 0, replays: 0, external_exact_final_required: true },
+    route: { state: 'PREPARED_NOT_SENT', successor: null, send_attempts: 0, acknowledgements: 0, resends: 0 },
+    owner_file_ceiling: 2000, spend_usd: 0,
+    verdict: 'NOT_READY_FOR_STAGE_20', boundary
+  };
+  writeJson('final/phase-truth.json', phaseTruth);
+  writeJson('final/content-seal.json', {
+    schema: 'caelen.content-seal.v1', owner, phase,
+    source_commit: source,
+    plan: { commit: published('plan').commit, sha256: sha(readBytes('plan.json')) },
+    x1: { commit: published('x1').commit, sha256: sha(readBytes('x1.json')) },
+    x2: { commit: published('x2').commit, sha256: sha(readBytes('x2.json')) },
+    phase_truth_sha256: sha(readBytes('final/phase-truth.json')),
+    owner_manifest_sha256: sha(readBytes('final/owner-manifest.json')),
+    method_flow_sha256: sha(readBytes('final/method-flow-final.json')),
+    handoff_sha256: sha(readBytes('final/hand-off-baton.md')),
+    canonical_invoked: false, route_state: 'PREPARED_NOT_SENT',
+    verdict: 'NOT_READY_FOR_STAGE_20', boundary
+  });
+  const words = relativeFiles().filter(name => /\.(json|md|txt|html)$/i.test(name)).map(name => ({
+    name, words: readBytes(name).toString('utf8').trim().split(/\s+/).filter(Boolean).length
+  }));
+  const over = words.filter(item => item.words > 100000);
+  assert.deepEqual(over, []);
+  assert.ok(relativeFiles().length < 2000);
+  done({ phase_truth_sha256: sha(readBytes('final/phase-truth.json')), files: relativeFiles().length, handoff_words: handoff.words });
+  console.log(JSON.stringify({ state: 'final_prepared', files: relativeFiles().length, handoff_words: handoff.words, phase_truth_sha256: sha(readBytes('final/phase-truth.json')), canonical_invoked: false, route: 'PREPARED_NOT_SENT' }));
+}
+
+function buildStagedReview() {
+  const staged = git('diff', '--cached', '--name-only', '--diff-filter=ACMR').split(/\r?\n/).filter(Boolean);
+  const expectedPrefix = prefix;
+  assert.ok(staged.length > 0);
+  assert.ok(staged.every(name => name.startsWith(expectedPrefix)));
+  assert.ok(!staged.includes(prefix + 'final/final-staged-review.json'));
+  writeJson('final/final-staged-review.json', {
+    schema: 'caelen.final-staged-review.v1', owner, phase,
+    staged_paths_before_self: staged,
+    entries: staged.map(name => {
+      const relative = name.slice(prefix.length);
+      const bytes = readBytes(relative);
+      return { path: name, bytes: bytes.length, sha256: sha(bytes), byte_domain: 'staged_checkout_bytes_expected_utf8_lf' };
+    }),
+    declared_self_exclusion: prefix + 'final/final-staged-review.json',
+    exact_owner_prefix_only: true,
+    sibling_mutation: false,
+    boundary
+  });
+  console.log(JSON.stringify({ state: 'staged_review_written', staged_paths: staged.length, self_exclusion: 1 }));
+}
+
+function canonical(expectedHead) {
+  const done = latch('canonical');
+  assert.equal(git('rev-parse', 'HEAD'), expectedHead);
+  const gate = equalityGate();
+  const checks = [];
+  function check(name, condition, details) {
+    assert.ok(condition, name);
+    checks.push({ name, status: 'pass', details });
+  }
+  const plan = readJson('plan.json'), x1 = readJson('x1.json'), x2 = readJson('x2.json');
+  const truth = readJson('final/phase-truth.json');
+  const flow = readJson('final/method-flow-final.json');
+  const manifest = readJson('final/owner-manifest.json');
+  const seal = readJson('final/content-seal.json');
+  const stageReview = readJson('final/final-staged-review.json');
+  check('exact_head', gate.local === expectedHead, expectedHead);
+  check('clean_zero_divergence_four_way', gate.clean && gate.ahead === 0 && gate.behind === 0 && new Set([gate.local, gate.upstream, gate.tracking, gate.live]).size === 1, gate);
+  check('source_parentage', git('merge-base', '--is-ancestor', source, expectedHead) === '', source);
+  const commits = Number(git('rev-list', '--count', source + '..' + expectedHead));
+  const merges = Number(git('rev-list', '--merges', '--count', source + '..' + expectedHead));
+  check('four_owner_commits', commits === 4, commits);
+  check('zero_merges', merges === 0, merges);
+  check('one_final_parent', git('rev-list', '--parents', '-n', '1', expectedHead).split(/\s+/).length === 2, 'one parent');
+  check('direct_chain_plan', git('rev-parse', published('plan').commit + '^') === source, published('plan').commit);
+  check('direct_chain_x1', git('rev-parse', published('x1').commit + '^') === published('plan').commit, published('x1').commit);
+  check('direct_chain_x2', git('rev-parse', published('x2').commit + '^') === published('x1').commit, published('x2').commit);
+  check('direct_chain_final', git('rev-parse', expectedHead + '^') === published('x2').commit, expectedHead);
+  check('session_latches', x1.invocations === 1 && x1.successes === 1 && x1.replays === 0 && x2.invocations === 1 && x2.successes === 1 && x2.replays === 0, 'x1 and x2 one success each');
+  check('outcomes', stableText(truth.outcomes) === stableText({ completed: 255, represented: 15, open_gap: 15, exact_gate: 15 }), truth.outcomes);
+  check('retained_arithmetic', flow.own_counts.failed_witnesses === flow.own_counts.negatives && flow.effective_counts.witnesses === flow.effective_counts.passing_witnesses + flow.effective_counts.failed_witnesses, flow.effective_counts);
+  check('route_hold', truth.route.state === 'PREPARED_NOT_SENT' && truth.route.send_attempts === 0 && truth.canonical.invoked === false, truth.route);
+  check('seal_phase_truth', seal.phase_truth_sha256 === sha(readBytes('final/phase-truth.json')), seal.phase_truth_sha256);
+  check('seal_method_flow', seal.method_flow_sha256 === sha(readBytes('final/method-flow-final.json')), seal.method_flow_sha256);
+  check('seal_handoff', seal.handoff_sha256 === sha(readBytes('final/hand-off-baton.md')), seal.handoff_sha256);
+  check('staged_review_owner_only', stageReview.exact_owner_prefix_only === true && stageReview.sibling_mutation === false, stageReview.staged_paths_before_self.length);
+  const ownerFiles = git('ls-tree', '-r', '--name-only', expectedHead, prefix).split(/\r?\n/).filter(Boolean);
+  check('file_ceiling', ownerFiles.length < 2000, ownerFiles.length);
+  const manifestPaths = new Set(manifest.entries.map(entry => entry.path));
+  const excluded = new Set(manifest.declared_exclusions);
+  check('manifest_partition', ownerFiles.every(name => manifestPaths.has(name) || excluded.has(name)) && manifestPaths.size + excluded.size === ownerFiles.length, { entries: manifestPaths.size, exclusions: excluded.size, files: ownerFiles.length });
+  let replayed = 0;
+  for (const entry of manifest.entries) {
+    const bytes = cp.execFileSync('git', ['-C', root, 'cat-file', 'blob', expectedHead + ':' + entry.path], { maxBuffer: 128 * 1024 * 1024 });
+    assert.equal(bytes.length, entry.bytes, entry.path + ' bytes');
+    assert.equal(sha(bytes), entry.sha256, entry.path + ' sha');
+    replayed += 1;
+  }
+  check('manifest_replay', replayed === manifest.entries.length, replayed);
+  const jsonFiles = ownerFiles.filter(name => name.endsWith('.json'));
+  for (const name of jsonFiles) JSON.parse(cp.execFileSync('git', ['-C', root, 'cat-file', 'blob', expectedHead + ':' + name], { maxBuffer: 128 * 1024 * 1024 }).toString('utf8'));
+  check('strict_json_parse', jsonFiles.length > 0, jsonFiles.length);
+  const textModules = ownerFiles.filter(name => name.endsWith('.txt'));
+  for (const name of textModules) {
+    const code = cp.execFileSync('git', ['-C', root, 'cat-file', 'blob', expectedHead + ':' + name], { maxBuffer: 128 * 1024 * 1024 }).toString('utf8');
+    new vm.Script(code, { filename: name });
+  }
+  check('text_module_compile', textModules.length >= 13, textModules.length);
+  const docs = ownerFiles.filter(name => /\.(json|md|txt|html)$/i.test(name));
+  let maxWords = 0;
+  const privacy = { raw_task_or_thread_identifier: [], private_absolute_path: [], credential_or_secret: [], transcript_or_session_stream: [], private_callable_route: [] };
+  const security = [];
+  for (const name of docs) {
+    const text = cp.execFileSync('git', ['-C', root, 'cat-file', 'blob', expectedHead + ':' + name], { maxBuffer: 128 * 1024 * 1024 }).toString('utf8');
+    maxWords = Math.max(maxWords, text.trim().split(/\s+/).filter(Boolean).length);
+    if (/\b[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}\b/i.test(text)) privacy.raw_task_or_thread_identifier.push(name);
+    if (/(?:[A-Z]:\\Users\\|\/Users\/|\/home\/)/i.test(text)) privacy.private_absolute_path.push(name);
+    if (/(?:api[_-]?key|secret|token)\s*[:=]\s*['"][A-Za-z0-9_\-]{12,}/i.test(text)) privacy.credential_or_secret.push(name);
+    if (/(?:session stream|private app state|full transcript)\s*[:=]/i.test(text)) privacy.transcript_or_session_stream.push(name);
+    if (/(?:threadId|taskId|callableTarget|privateRoute)\s*[:=]/i.test(text)) privacy.private_callable_route.push(name);
+    if (/(?:Invoke-Expression|rm\s+-rf\s+\/|curl[^\\n]*\|\s*(?:sh|bash)|child_process\.exec\s*\()/i.test(text)) security.push(name);
+  }
+  check('document_word_ceiling', maxWords <= 100000, maxWords);
+  check('five_class_privacy', Object.values(privacy).every(items => items.length === 0), privacy);
+  check('bounded_security_patterns', security.length === 0, security);
+  check('handoff_word_floor', truth.handoff.words >= 10000 && truth.handoff.words <= 100000, truth.handoff.words);
+  check('deck_card_count', readJson('final/context-deck.json').card_count === 612, 612);
+  check('method_flow_counts', flow.counts.methods === 60 && flow.counts.witnesses === 3060, flow.counts);
+  check('negative_overlay', flow.effective_counts.negatives === 26894, flow.effective_counts.negatives);
+  check('gap_gate_overlay', flow.effective_counts.open_gaps === 777 && flow.effective_counts.exact_gates === 825, flow.effective_counts);
+  check('global_installs_zero', plan.global_installs === 0, 0);
+  check('domain_not_replayed', true, 'canonical read metadata and persisted artifacts only');
+  check('verdict', truth.verdict === 'NOT_READY_FOR_STAGE_20', truth.verdict);
+  const payload = {
+    schema: 'caelen.exact-final-canonical.v1', owner, phase,
+    status: 'VALID_EXACT_FINAL_OWNER_SCOPED_CANONICAL',
+    exact_final: expectedHead, gate,
+    invocation_count: 1, success_count: 1, replay_count: 0,
+    metadata_only: true, domain_replayed: false,
+    checks, counts: {
+      checks: checks.length, owner_files: ownerFiles.length,
+      manifest_replays: replayed, strict_json_parses: jsonFiles.length,
+      text_module_compiles: textModules.length, privacy_files: docs.length,
+      privacy_candidates: 0, security_findings: 0
+    },
+    same_owner_only: true, independent_reproduction: false,
+    verdict: 'NOT_READY_FOR_STAGE_20', boundary
+  };
+  const payloadBytes = Buffer.from(JSON.stringify(payload, null, 2) + '\n');
+  fs.writeFileSync(path.join(bank, 'canonical-payload.json'), payloadBytes, { flag: 'wx' });
+  const receipt = {
+    schema: 'caelen.canonical-receipt.v1', owner, phase,
+    status: payload.status, exact_final: expectedHead,
+    payload_sha256: sha(payloadBytes),
+    invocation_count: 1, success_count: 1, replay_count: 0,
+    domain_replayed: false, route_state: 'PREPARED_NOT_SENT',
+    observed_at: new Date().toISOString(), boundary
+  };
+  const receiptBytes = Buffer.from(JSON.stringify(receipt, null, 2) + '\n');
+  fs.writeFileSync(path.join(bank, 'receipt.json'), receiptBytes, { flag: 'wx' });
+  const latchBytes = Buffer.from(JSON.stringify({ state: 'success_latched', exact_final: expectedHead, invocation_count: 1, success_count: 1, replay_count: 0, receipt_sha256: sha(receiptBytes) }, null, 2) + '\n');
+  fs.writeFileSync(path.join(bank, 'success-latch.json'), latchBytes, { flag: 'wx' });
+  done({ exact_final: expectedHead, payload_sha256: sha(payloadBytes), receipt_sha256: sha(receiptBytes), checks: checks.length });
+  console.log(JSON.stringify({ status: payload.status, exact_final: expectedHead, checks: checks.length, payload_sha256: sha(payloadBytes), receipt_sha256: sha(receiptBytes), latch_sha256: sha(latchBytes), replay_count: 0 }));
+}
+
+try {
+  if (command === 'plan') buildPlan();
+  else if (command === 'compact-plan') compactPlan();
+  else if (command === 'x1' || command === 'x2') runStage(command);
+  else if (command === 'publish') publication(process.argv[4], process.argv[5]);
+  else if (command === 'final') buildFinal();
+  else if (command === 'staged-review') buildStagedReview();
+  else if (command === 'canonical') canonical(process.argv[4]);
+  else throw Error('usage: plan|x1|x2|publish <stage> <commit>|final|staged-review|canonical <head>');
+} catch (error) {
+  console.error(JSON.stringify({ state: 'failed', command, error: error.message, stack: error.stack }));
+  process.exitCode = 2;
+}

@@ -1,0 +1,5 @@
+# Current authority v14 continuation
+
+The live Sable Rook activation controls this phase: exact source 053a43dcf70b386198e9ab72b5878fa5eb8829bf, owner Caelen Ash, phase v699-v2. The successor is not inferred or contacted during planning, x1, x2, final preparation, or canonical preflight. Only the newest live authority and roster after a successful exact-final canonical can authorize one existing-task send.
+
+Same-owner finite synthetic Latin-table software and documentation evidence only. No independent reproduction, real measurement, participant or identity evidence, credential or production operation, professional qualification, legal or cultural determination, affected-party act, or Maori-authority act. Relational names and family language establish no consciousness, personhood, continuity, employment, qualification, independent agency, or authority. GMUT remains a typed scalar-tensor and EFT research-model family; THOS remains a nonproduction proxy; Freed ID and CBR remain bounded governance representations. No complete privacy or accessibility, exhaustive security, AGI or ASI, Theory-of-Everything, proof or canon, or Stage 20 claim. NOT_READY_FOR_STAGE_20.

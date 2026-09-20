@@ -1,0 +1,251 @@
+'use strict';
+
+// Caelen Ash v699-v2 finite Latin-table runtime.
+// This module accepts only wholly synthetic labelled tables of order 1..4.
+
+const OPERATIONS = Object.freeze([
+  'latin_status',
+  'row_vectors',
+  'column_vectors',
+  'symbol_counts',
+  'identity_elements',
+  'idempotent_cells',
+  'commutativity_defects',
+  'associativity_defects',
+  'row_cycle_types',
+  'column_cycle_types',
+  'left_division_table',
+  'right_division_table',
+  'intercalates',
+  'row_hamming_matrix',
+  'column_hamming_matrix',
+  'symbol_position_vectors',
+  'structural_signature',
+  'latin_scene',
+  'external_reproduction_vacancy',
+  'decision_authority_gate'
+]);
+
+function exactKeys(value, keys) {
+  if (!value || Array.isArray(value) || typeof value !== 'object') {
+    throw new Error('field_set');
+  }
+  const actual = Object.keys(value).sort();
+  const expected = [...keys].sort();
+  if (JSON.stringify(actual) !== JSON.stringify(expected)) {
+    throw new Error('field_set');
+  }
+}
+
+function validate(request) {
+  exactKeys(request, ['op', 'n', 'table']);
+  if (!OPERATIONS.includes(request.op)) throw new Error('operation');
+  if (!Number.isInteger(request.n) || request.n < 1 || request.n > 4) {
+    throw new Error('order');
+  }
+  const { n, table } = request;
+  if (!Array.isArray(table) || table.length !== n) throw new Error('table_shape');
+  const target = Array.from({ length: n }, (_, i) => i).join(',');
+  for (const row of table) {
+    if (!Array.isArray(row) || row.length !== n) throw new Error('table_shape');
+    if (row.some(x => !Number.isInteger(x) || x < 0 || x >= n)) {
+      throw new Error('symbol_range');
+    }
+    if ([...row].sort((a, b) => a - b).join(',') !== target) {
+      throw new Error('latin_row');
+    }
+  }
+  for (let c = 0; c < n; c += 1) {
+    const column = table.map(row => row[c]).sort((a, b) => a - b);
+    if (column.join(',') !== target) throw new Error('latin_column');
+  }
+  return { op: request.op, n, table: table.map(row => [...row]) };
+}
+
+function columns(table) {
+  return table.map((_, c) => table.map(row => row[c]));
+}
+
+function cycleType(permutation) {
+  const seen = Array(permutation.length).fill(false);
+  const lengths = [];
+  for (let start = 0; start < permutation.length; start += 1) {
+    if (seen[start]) continue;
+    let cursor = start;
+    let length = 0;
+    while (!seen[cursor]) {
+      seen[cursor] = true;
+      length += 1;
+      cursor = permutation[cursor];
+    }
+    lengths.push(length);
+  }
+  return lengths.sort((a, b) => a - b);
+}
+
+function identityElements(table) {
+  const n = table.length;
+  return Array.from({ length: n }, (_, e) => e).filter(e =>
+    Array.from({ length: n }, (_, a) => a).every(a => table[e][a] === a && table[a][e] === a)
+  );
+}
+
+function commutativityDefects(table) {
+  const defects = [];
+  for (let a = 0; a < table.length; a += 1) {
+    for (let b = a + 1; b < table.length; b += 1) {
+      if (table[a][b] !== table[b][a]) defects.push([a, b, table[a][b], table[b][a]]);
+    }
+  }
+  return defects;
+}
+
+function associativityDefects(table) {
+  const defects = [];
+  const n = table.length;
+  for (let a = 0; a < n; a += 1) {
+    for (let b = 0; b < n; b += 1) {
+      for (let c = 0; c < n; c += 1) {
+        const left = table[table[a][b]][c];
+        const right = table[a][table[b][c]];
+        if (left !== right) defects.push([a, b, c, left, right]);
+      }
+    }
+  }
+  return defects;
+}
+
+function leftDivision(table) {
+  const n = table.length;
+  return Array.from({ length: n }, (_, a) =>
+    Array.from({ length: n }, (_, b) => table[a].indexOf(b))
+  );
+}
+
+function rightDivision(table) {
+  const n = table.length;
+  return Array.from({ length: n }, (_, a) =>
+    Array.from({ length: n }, (_, b) => table.findIndex(row => row[a] === b))
+  );
+}
+
+function intercalates(table) {
+  const n = table.length;
+  const found = [];
+  for (let r1 = 0; r1 < n; r1 += 1) {
+    for (let r2 = r1 + 1; r2 < n; r2 += 1) {
+      for (let c1 = 0; c1 < n; c1 += 1) {
+        for (let c2 = c1 + 1; c2 < n; c2 += 1) {
+          const a = table[r1][c1];
+          const b = table[r1][c2];
+          if (a !== b && table[r2][c1] === b && table[r2][c2] === a) {
+            found.push([r1, r2, c1, c2, a, b]);
+          }
+        }
+      }
+    }
+  }
+  return found;
+}
+
+function hammingMatrix(vectors) {
+  return vectors.map(left => vectors.map(right =>
+    left.reduce((count, value, i) => count + Number(value !== right[i]), 0)
+  ));
+}
+
+function symbolPositions(table) {
+  const n = table.length;
+  return Array.from({ length: n }, (_, symbol) => {
+    const positions = [];
+    for (let r = 0; r < n; r += 1) {
+      for (let c = 0; c < n; c += 1) {
+        if (table[r][c] === symbol) positions.push([r, c]);
+      }
+    }
+    return positions;
+  });
+}
+
+function evaluate(validated) {
+  const { op, n, table } = validated;
+  const cols = columns(table);
+  switch (op) {
+    case 'latin_status':
+      return { n, latin: true, rows: n, columns: n, cells: n * n };
+    case 'row_vectors':
+      return table.map(row => [...row]);
+    case 'column_vectors':
+      return cols;
+    case 'symbol_counts':
+      return Array.from({ length: n }, (_, symbol) => ({
+        symbol,
+        count: table.flat().filter(value => value === symbol).length
+      }));
+    case 'identity_elements':
+      return identityElements(table);
+    case 'idempotent_cells':
+      return Array.from({ length: n }, (_, i) => i).filter(i => table[i][i] === i);
+    case 'commutativity_defects':
+      return commutativityDefects(table);
+    case 'associativity_defects':
+      return associativityDefects(table);
+    case 'row_cycle_types':
+      return table.map(cycleType);
+    case 'column_cycle_types':
+      return cols.map(cycleType);
+    case 'left_division_table':
+      return leftDivision(table);
+    case 'right_division_table':
+      return rightDivision(table);
+    case 'intercalates':
+      return intercalates(table);
+    case 'row_hamming_matrix':
+      return hammingMatrix(table);
+    case 'column_hamming_matrix':
+      return hammingMatrix(cols);
+    case 'symbol_position_vectors':
+      return symbolPositions(table);
+    case 'structural_signature': {
+      const comm = commutativityDefects(table);
+      const assoc = associativityDefects(table);
+      const inter = intercalates(table);
+      return {
+        n,
+        identity_elements: identityElements(table),
+        idempotent_count: Array.from({ length: n }, (_, i) => i).filter(i => table[i][i] === i).length,
+        commutativity_defect_count: comm.length,
+        associativity_defect_count: assoc.length,
+        intercalate_count: inter.length,
+        row_cycle_types: table.map(cycleType),
+        column_cycle_types: cols.map(cycleType)
+      };
+    }
+    case 'latin_scene':
+      return {
+        coordinate_system: 'declared_table_indices_only',
+        points: table.flatMap((row, r) => row.map((symbol, c) => [c, r, symbol])),
+        physical_meaning: false
+      };
+    case 'external_reproduction_vacancy':
+      return {
+        outcome: 'open_gap',
+        missing: ['independent implementation', 'external mathematical review', 'real-world evidence'],
+        local_result_promoted: false
+      };
+    case 'decision_authority_gate':
+      return {
+        outcome: 'exact_gate',
+        closed: ['identity action', 'professional decision', 'legal or cultural decision', 'Maori-authority decision', 'production deployment'],
+        local_result_promoted: false
+      };
+    default:
+      throw new Error('operation');
+  }
+}
+
+function run(request) {
+  return evaluate(validate(request));
+}
+
+module.exports = { OPERATIONS, run };
