@@ -1,0 +1,183 @@
+# Python 3. Planning oracle only; never imported by the execution runtime.
+from fractions import Fraction
+from itertools import product
+from hashlib import sha256
+import json
+
+OPERATIONS = [
+    ('word_lengths', 'List each declared codeword length without assigning a probability.'),
+    ('prefix_conflicts', 'Enumerate every strict codeword prefix relation and its residual.'),
+    ('suffix_conflicts', 'Enumerate every strict codeword suffix relation and its residual.'),
+    ('kraft_measure', 'Compute the exact binary Kraft sum and its relation to one.'),
+    ('trie_vertices', 'Enumerate the prefix-closed trie vertices and terminal labels.'),
+    ('trie_edges', 'Enumerate parent-bit-child edges of the finite prefix trie.'),
+    ('trie_degrees', 'Count zero-, one-, and two-child trie vertices.'),
+    ('common_prefix_lengths', 'Compute the complete pairwise common-prefix length matrix.'),
+    ('common_suffix_lengths', 'Compute the complete pairwise common-suffix length matrix.'),
+    ('pair_collisions', 'Find distinct two-symbol messages with the same encoded bits.'),
+    ('residual_closure', 'Close the Sardinas-Patterson residual graph over finite suffixes.'),
+    ('unique_decodability', 'Decide unique decodability by empty-residual reachability.'),
+    ('decode_probe', 'Count exact parses of a declared bit string and retain two examples.'),
+    ('encode_probe', 'Encode a declared symbol-index message and retain exact boundaries.'),
+    ('length_counts', 'Count messages by encoded bit length through a declared bound.'),
+    ('shortest_ambiguity', 'Find the shortest ambiguous bit string within the declared bound.'),
+    ('kraft_completion', 'Complete a prefix-free code at its current maximum depth.'),
+    ('trie_scene', 'Represent the exact finite trie with declared artificial coordinates.'),
+    ('external_decoder_gap', 'Keep a separately owned decoder evaluation explicitly missing.'),
+    ('deployment_authority_gate', 'Reserve real deployment and rights decisions to exact authority.')
+]
+PROFILES = [
+    ('single_zero', ['0']),
+    ('single_pair', ['01']),
+    ('binary_complete', ['0', '1']),
+    ('fixed_pairs', ['00', '01', '10', '11']),
+    ('fixed_triples_slack', ['000', '001', '010', '011']),
+    ('prefix_comb', ['0', '10', '110', '111']),
+    ('suffix_comb', ['0', '01', '011', '111']),
+    ('nonprefix_unique', ['0', '01']),
+    ('residual_cycle', ['0', '01', '11']),
+    ('overlap_ambiguity', ['0', '01', '10']),
+    ('unary_ambiguity', ['0', '00']),
+    ('kraft_overfull', ['0', '1', '00']),
+    ('sparse_mixed', ['00', '010', '0110', '111']),
+    ('cross_ambiguity', ['01', '10', '011', '110']),
+    ('long_residual_unique', ['1', '100000', '00'])
+]
+OUTCOMES = {'trie_scene': 'represented', 'external_decoder_gap': 'open_gap', 'deployment_authority_gate': 'exact_gate'}
+SCOPE = 'finite_binary_codebook_only'
+
+def digest(value):
+    return sha256(json.dumps(value, sort_keys=True, separators=(',', ':'), ensure_ascii=False).encode()).hexdigest()
+
+def conflicts(words, suffix=False):
+    answer = []
+    for i, a in enumerate(words):
+        for j, b in enumerate(words):
+            if i != j and len(a) < len(b) and (b.endswith(a) if suffix else b.startswith(a)):
+                answer.append({'short': i, 'long': j, 'residual': b[:-len(a)] if suffix else b[len(a):]})
+    return answer
+
+def vertices(words):
+    return sorted({w[:i] for w in words for i in range(len(w) + 1)})
+
+def residual_graph(words):
+    initial = {b[len(a):] for a in words for b in words if a != b and b.startswith(a)}
+    reached = set(initial)
+    def follow(s):
+        if s == '':
+            return set()
+        return {s[len(w):] for w in words if s.startswith(w)} | {w[len(s):] for w in words if w.startswith(s)}
+    while True:
+        extended = reached | set().union(*(follow(s) for s in reached)) if reached else set()
+        if extended == reached:
+            break
+        reached = extended
+    return {'initial': sorted(initial), 'residuals': sorted(reached),
+            'graph': [{'residual': s, 'next': sorted(follow(s))} for s in sorted(reached)],
+            'epsilon_reachable': '' in reached, 'unique': '' not in reached}
+
+def decode(words, bits):
+    counts = [0] * (len(bits) + 1)
+    examples = [[] for _ in counts]
+    counts[-1] = 1
+    examples[-1] = [[]]
+    for pos in range(len(bits) - 1, -1, -1):
+        for i, word in enumerate(words):
+            if bits.startswith(word, pos):
+                end = pos + len(word)
+                counts[pos] += counts[end]
+                examples[pos].extend([i] + tail for tail in examples[end])
+        examples[pos] = sorted(examples[pos])[:2]
+    return {'probe': bits, 'count': str(counts[0]), 'first_two': examples[0], 'unique_for_probe': counts[0] == 1}
+
+def common(a, b):
+    for i, (x, y) in enumerate(zip(a, b)):
+        if x != y:
+            return i
+    return min(len(a), len(b))
+
+def evaluate(request):
+    op, words = request['op'], request['codewords']
+    lengths = [len(w) for w in words]
+    nodes = vertices(words)
+    if op == 'word_lengths':
+        result = {'lengths': lengths, 'minimum': min(lengths), 'maximum': max(lengths)}
+    elif op == 'prefix_conflicts':
+        rows = conflicts(words); result = {'conflicts': rows, 'prefix_free': not rows}
+    elif op == 'suffix_conflicts':
+        rows = conflicts(words, True); result = {'conflicts': rows, 'suffix_free': not rows}
+    elif op == 'kraft_measure':
+        mass = sum((Fraction(1, 2 ** n) for n in lengths), Fraction())
+        result = {'numerator': str(mass.numerator), 'denominator': str(mass.denominator),
+                  'relation_to_one': 'equal' if mass == 1 else 'below' if mass < 1 else 'above',
+                  'unique_decodability_not_inferred_from_sum': True}
+    elif op == 'trie_vertices':
+        result = {'vertices': [{'bits': s, 'terminal': words.index(s) if s in words else None} for s in nodes]}
+    elif op == 'trie_edges':
+        result = {'edges': [[s[:-1], s[-1], s] for s in nodes if s]}
+    elif op == 'trie_degrees':
+        degrees = [sum(s + b in nodes for b in '01') for s in nodes]
+        result = {'histogram': [degrees.count(i) for i in range(3)], 'vertices': len(nodes), 'edges': sum(degrees)}
+    elif op in ('common_prefix_lengths', 'common_suffix_lengths'):
+        xs = [s[::-1] if op == 'common_suffix_lengths' else s for s in words]
+        result = {'matrix': [[common(a, b) for b in xs] for a in xs]}
+    elif op == 'pair_collisions':
+        groups = {}
+        for i, a in enumerate(words):
+            for j, b in enumerate(words):
+                groups.setdefault(a + b, []).append([i, j])
+        result = {'collisions': [{'bits': s, 'messages': groups[s]} for s in sorted(groups) if len(groups[s]) > 1],
+                  'scope': 'two_codewords_each_side_only'}
+    elif op in ('residual_closure', 'unique_decodability'):
+        graph = residual_graph(words)
+        result = graph if op == 'residual_closure' else {'unique': graph['unique'], 'epsilon_reachable': graph['epsilon_reachable'],
+                   'residual_count': len(graph['residuals']), 'criterion': 'finite_sardinas_patterson_closure'}
+    elif op == 'decode_probe':
+        result = decode(words, request['probe'])
+    elif op == 'encode_probe':
+        pieces = [words[i] for i in request['sequence']]
+        boundaries = [0]
+        for piece in pieces:
+            boundaries.append(boundaries[-1] + len(piece))
+        result = {'bits': ''.join(pieces), 'sequence': request['sequence'][:], 'boundaries': boundaries}
+    elif op == 'length_counts':
+        counts = [1] + [0] * request['limit']
+        for n in range(1, len(counts)):
+            counts[n] = sum(counts[n - length] for length in lengths if length <= n)
+        result = {'limit': request['limit'], 'counts': list(map(str, counts)), 'counts_are_messages_not_distinct_bitstrings': True}
+    elif op == 'shortest_ambiguity':
+        result = {'found': False, 'search_bound': request['limit'], 'global_claim': False}
+        for n in range(1, request['limit'] + 1):
+            for bits in map(''.join, product('01', repeat=n)):
+                d = decode(words, bits)
+                if int(d['count']) > 1:
+                    result = {'found': True, 'search_bound': request['limit'], 'global_claim': False,
+                              'bits': bits, 'length': n, 'first_two': d['first_two']}
+                    break
+            if result['found']:
+                break
+    elif op == 'kraft_completion':
+        bad = conflicts(words)
+        if bad:
+            result = {'applicable': False, 'reason': 'input_not_prefix_free', 'conflicts': bad}
+        else:
+            depth = max(lengths)
+            extra = [s for s in map(''.join, product('01', repeat=depth)) if not any(s.startswith(w) for w in words)]
+            result = {'applicable': True, 'depth': depth, 'added_words': extra, 'resulting_kraft_numerator': '1', 'resulting_kraft_denominator': '1'}
+    elif op == 'trie_scene':
+        result = {'nodes': [{'bits': s, 'xyz': [i, len(s), sum(s + b in nodes for b in '01')],
+                              'terminal': words.index(s) if s in words else None} for i, s in enumerate(nodes)],
+                  'edges': [[s[:-1], s[-1], s] for s in nodes if s], 'coordinate_meaning': 'lexical_index_depth_outdegree_only',
+                  'physical_interpretation': False}
+    elif op == 'external_decoder_gap':
+        result = {'codebook_sha256': digest(words), 'missing': ['separate_implementation', 'separate_operator', 'external_evaluation'], 'supplied': False}
+    elif op == 'deployment_authority_gate':
+        result = {'codebook_sha256': digest(words), 'reservations': ['production_safety', 'privacy_security_review', 'affected_party_rights', 'competent_legal_cultural_maori_authority'], 'approval_observed': False}
+    else:
+        raise ValueError(op)
+    return {'ok': True, 'operation': op, 'outcome': OUTCOMES.get(op, 'completed'), 'result': result,
+            'scope': SCOPE, 'independent_reproduction': False}
+
+def request_for(op, words):
+    sequence = [0, len(words) - 1, 0]
+    return {'op': op, 'codewords': words[:], 'probe': ''.join(words[i] for i in sequence), 'sequence': sequence, 'limit': 8}

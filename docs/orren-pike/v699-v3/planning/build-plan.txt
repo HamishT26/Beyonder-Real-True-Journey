@@ -1,0 +1,230 @@
+# Python 3. Planning preparation; no execution-runtime import or phase execution.
+from pathlib import Path
+from datetime import datetime, timezone
+import collections, copy, hashlib, json, re, runpy, subprocess, sys
+
+ROOT = Path(__file__).resolve().parents[1]
+REPO = ROOT.parents[2]
+SOURCE = Path(sys.argv[1])
+BANK = Path(sys.argv[2])
+SKILLS = Path(sys.argv[3])
+CURRENT = Path(sys.argv[4])
+FINAL = 'd38412b90c3b00c57f0d616e16ef9bb82277ed06'
+BRANCH = 'codex/GHC-Family/orren-pike-v699-v3-full-tools'
+PREFIX = 'docs/orren-pike/v699-v3/'
+BOUNDARY = ('Bounded same-owner synthetic codebook software only. No independent reproduction, real participant, '
+    'identity, credential, deployment, empirical GMUT confirmation, professional, legal, cultural, affected-party or Maori authority. '
+    'Names, pronouns, roles, hopes and family language establish no consciousness, personhood, continuity, qualification, agency or authority. '
+    'THOS and Freed ID remain nonproduction; CBR and Maori concepts remain under competent and affected authorities. '
+    'No complete privacy or accessibility, exhaustive security, AGI/ASI, Theory-of-Everything proof, canon or Stage 20 claim. NOT_READY_FOR_STAGE_20.')
+GATES = ['independent reproduction', 'empirical confirmation', 'production', 'professional authority',
+         'legal and cultural authority', 'affected-party rights', 'Maori authority', 'Stage 20']
+def sha(raw): return hashlib.sha256(raw).hexdigest()
+def stable(value): return json.dumps(value, sort_keys=True, separators=(',', ':'), ensure_ascii=False)
+def h(value): return sha(stable(value).encode())
+def write(name, value):
+    p = ROOT / name; p.parent.mkdir(parents=True, exist_ok=True)
+    assert not p.exists(), name
+    p.write_text((stable(value) if not isinstance(value, str) else value.rstrip()) + '\n', encoding='utf-8', newline='\n')
+def g(*args): return subprocess.check_output(['git', '-C', str(REPO), *args], stderr=subprocess.PIPE).decode().strip()
+assert g('rev-parse', 'HEAD') == FINAL and g('branch', '--show-current') == BRANCH
+assert not (BANK / 'plan-built.json').exists()
+oracle = runpy.run_path(str(ROOT / 'planning/reference.txt'))
+source_root = SOURCE / 'docs/caelen-ash/v699-v2'
+source_plan = json.loads((source_root / 'plan.json').read_text())
+source_truth = json.loads((source_root / 'final/phase-truth.json').read_text())
+inherited = []
+for row in source_plan['contracts']:
+    inherited.append({'source_id': row['id'], 'title': row['title'], 'operation': row['operation'],
+        'source_commit': FINAL, 'source_record_sha256': h(row), 'source_request_sha256': row['request_sha256'],
+        'source_expected_disposition': row['expected_disposition'], 'source_status': 'persisted_source_contract',
+        'review': 'Distinct Latin-table algebra retained; no codebook execution or Orren novelty credit.',
+        'new_credit': 0, 'source_plan': 'docs/caelen-ash/v699-v2/plan.json'})
+contracts = []
+operations = []
+for index, (operation, description) in enumerate(oracle['OPERATIONS']):
+    stage = 'x1' if index < 10 else 'x2'
+    outcome = oracle['OUTCOMES'].get(operation, 'completed')
+    operations.append({'index': index + 1, 'operation': operation, 'hypothesis': description, 'stage': stage, 'outcome': outcome})
+    for profile, words in oracle['PROFILES']:
+        request = oracle['request_for'](operation, words)
+        alternate = oracle['request_for'](operation, list(reversed(words)))
+        expected, alternate_expected = oracle['evaluate'](request), oracle['evaluate'](alternate)
+        pid = 'OP6993-P%03d' % (len(contracts) + 1)
+        negative1 = copy.deepcopy(request); negative1['undeclared'] = True
+        negative2 = copy.deepcopy(request); negative2['codewords'][0] = ''
+        contracts.append({'id': pid, 'title': 'Finite binary codebook %s for %s' % (operation, profile),
+            'stage': stage, 'operation': operation, 'profile': profile, 'hypothesis': description,
+            'template': 'OP6993-CONTRACT', 'expected_disposition': outcome,
+            'request': request, 'request_sha256': h(request), 'alternate': alternate, 'alternate_sha256': h(alternate),
+            'expected': expected, 'expected_sha256': h(expected), 'alternate_expected': alternate_expected,
+            'alternate_expected_sha256': h(alternate_expected),
+            'negative_subjects': [{'id': pid + '-N1', 'request': negative1, 'error': 'field_set', 'original_success_credit': 0},
+                                  {'id': pid + '-N2', 'request': negative2, 'error': 'codeword_value', 'original_success_credit': 0}],
+            'execution_credit_at_freeze': 0})
+assert len(contracts) == 300 and len(inherited) == 300
+def tokens(title): return set(re.findall(r'[a-z]+', title.lower()))
+comparisons = []
+for row in contracts:
+    matches = []
+    for old in inherited:
+        a, b = tokens(row['title']), tokens(old['title'])
+        matches.append((len(a & b) / len(a | b), old['source_id']))
+    nearest = max(matches)
+    comparisons.append({'proposal': row['id'], 'nearest_source': nearest[1], 'token_jaccard': round(nearest[0], 6),
+        'exact_title_collision': any(row['title'] == o['title'] for o in inherited),
+        'exact_request_collision': any(row['request_sha256'] == o['source_request_sha256'] for o in inherited),
+        'semantic_review': 'Codeword concatenation, trie and residual-language responsibility differs from labelled Latin-table algebra.'})
+assert not any(r['exact_title_collision'] or r['exact_request_collision'] for r in comparisons)
+practices = [
+    ('Strict frame admission', 'Reject extra fields, empty codewords and undeclared symbol indices.'),
+    ('Residual certificate review', 'Distinguish finite suffix closure from a bounded ambiguity search.'),
+    ('Exact arithmetic', 'Use integer counts and reduced rational Kraft sums without floating-point thresholds.'),
+    ('Caller contract preservation', 'Inspect complete success and refusal process envelopes.'),
+    ('Codebook accession', 'Bind exact word order, source digests, expected results and declared limits.'),
+    ('Counterexample curation', 'Retain two distinct parses and every malformed or altered subject.'),
+    ('Accessible readback', 'Pair finite models with keyboard controls and exact text tables.'),
+    ('Authority reservation', 'Keep real communication, privacy, rights and deployment decisions exact-gated.')]
+startup = [
+    {'id': 'OP6993-START-N001', 'failure': 'Unbounded native-history projection exceeded the output budget.',
+     'recovery': 'Projected only public control text and final messages; recovered the exact current activation from the current task record.', 'success_credit': 0},
+    {'id': 'OP6993-START-N002', 'failure': 'Combined file inventory exceeded its display budget.',
+     'recovery': 'Read only required owner-relative filenames and exact current profile paths.', 'success_credit': 0},
+    {'id': 'OP6993-START-N003', 'failure': 'Source-record summary projection exceeded its display budget.',
+     'recovery': 'Read bounded exact truth, seal, canonical and selected schema fields separately.', 'success_credit': 0},
+    {'id': 'OP6993-START-N004', 'failure': 'Roster verifier assumed the wrong first slot and a string cycle representation.',
+     'recovery': 'Validated all 222 rows using the actual v698-v3 start and position-owner records.', 'success_credit': 0}]
+workflow = json.loads((CURRENT / 'current-workflow-v14.json').read_text())
+roster = json.loads((CURRENT / 'current-roster-v14.json').read_text())
+cycle = {r['position']: r['owner'] for r in roster['cycle']}
+for i, row in enumerate(roster['assignments']):
+    version, slot = map(int, row['assignment'].replace('v', '').split('-'))
+    assert version * 8 + slot - 1 == 698 * 8 + 2 + i
+    assert row['number'] == i + 1 and row['owner'] == cycle[row['cycle_position']]
+assert len(roster['assignments']) == 222
+guidance_paths = [
+    'ghc-family-index/SKILL.md', 'ghc-family-index/references/routing-precedence.md',
+    'ghc-family-index/references/current-thirty-seat-workflow.md', 'ghc-family-index/references/lyren-v698-v4-r2-current-overlay.md',
+    'ghc-family-auth-permission-state/SKILL.md', 'ghc-family-auth-permission-state/references/lyren-v698-v4-r2-20260920-authority.md',
+    'ghc-family-method-flow-state/SKILL.md', 'ghc-family-method-flow-state/references/schema.md',
+    'ghc-family-method-flow-state/references/lyren-v698-v4-r2-method-flow-overlay.md',
+    'ghc-family-method-flow-state/scripts/ghc_family_method_flow_state.py',
+    'ghc-family-workflow-plan-refinement/SKILL.md', 'ghc-family-workflow-plan-refinement/references/workflow-plan-schema.md',
+    'ghc-family-reflection-remaster/SKILL.md', 'ghc-family-reflection-remaster/references/decision-schema.md',
+    'ghc-family-reflection-remaster/references/lyren-v698-v4-r2-decision-overlay.md']
+guidance = [{'skill_relative_path': name, 'sha256': sha((SKILLS / name).read_bytes()), 'complete_read': True} for name in guidance_paths]
+source_files = []
+for p in sorted(source_root.rglob('*')):
+    if p.is_file():
+        raw = p.read_bytes(); source_files.append({'path': p.relative_to(SOURCE).as_posix(), 'bytes': len(raw.replace(b'\r\n', b'\n')), 'sha256': sha(raw.replace(b'\r\n', b'\n'))})
+source_receipt_bank = Path(sys.argv[5])
+receipt = json.loads((source_receipt_bank / 'receipt.json').read_text())
+payload = json.loads((source_receipt_bank / 'canonical-payload.json').read_text())
+assert receipt['exact_final'] == FINAL and payload['metadata_only'] and not payload['domain_replayed']
+assert receipt['invocation_count'] == receipt['success_count'] == 1 and receipt['replay_count'] == 0
+assert all(c['status'] == 'pass' for c in payload['checks']) and len(payload['checks']) == 36
+source = {'owner': 'Caelen Ash', 'phase': 'v699-v2', 'exact_final': FINAL, 'source_is_git_parent': True,
+    'verified_parent_edges': 5, 'merges': 0, 'normalized_lf_manifest_bindings': 53, 'content_seal_bindings': 8,
+    'manifest_exclusions': source_truth['manifest_exclusions'], 'owner_files': source_files,
+    'canonical_receipt_sha256': sha((source_receipt_bank / 'receipt.json').read_bytes()),
+    'canonical_payload_sha256': sha((source_receipt_bank / 'canonical-payload.json').read_bytes()),
+    'canonical_latch_sha256': sha((source_receipt_bank / 'success-latch.json').read_bytes()),
+    'literal_canonical_status': receipt['status'], 'metadata_only': payload['metadata_only'],
+    'domain_replayed': False, 'source_canonical_replayed_by_orren': False,
+    'source_baseline': source_truth['method_flow']['effective_counts'], 'source_fold_count': 1,
+    'discrepancies': [
+        {'field': 'canonical_status', 'activation': 'VALID_EXACT_FINAL_METADATA_ONLY_CANONICAL',
+         'hashed_receipt_and_payload': receipt['status'], 'resolution': 'Preserve literal status and separate metadata_only true flag.'},
+        {'field': 'learning_lenses', 'activation_description_count': 5, 'frozen_plan_lens_count': 2,
+         'resolution': 'Retain the eight source practices under two frozen lenses; do not silently rewrite either account.'}],
+    'read_boundary': 'Complete baton through literal EOF; source records and receipts read without source runtime or canonical execution.',
+    'boundary': BOUNDARY}
+write('planning/source-provenance.json', source)
+write('planning/current-workflow-v14.json', workflow)
+write('planning/current-roster-v14.json', roster)
+write('planning/guidance-bindings.json', {'bindings': guidance, 'boundary': BOUNDARY})
+write('planning/startup-failures.json', {'failures': startup, 'original_success_credit': 0, 'recoveries_separate': True})
+write('planning/identity.json', {'owner': 'Orren Pike', 'optional_pronouns': 'they/them', 'role': 'keeper of reversible records',
+    'hope': 'that each useful transformation leaves its sources, uncertainties, and limits easy to inspect', 'boundary': BOUNDARY})
+write('planning/practices.json', {'primary_pillar': 'THOS Body', 'protected_pillars': ['GMUT Mind', 'Freed ID and CBR Heart'],
+    'lenses': ['synthetic protocol-frame auditor', 'accessible archive-codebook steward'],
+    'practices': [{'id': 'OP6993-PR%02d' % (i + 1), 'title': t, 'practice': p, 'lens': 0 if i < 4 else 1, 'synthetic_only': True} for i, (t, p) in enumerate(practices)],
+    'successor_recommendations': ['Select a different finite responsibility after semantic comparison.',
+        'Keep global unique-decoding criteria separate from bounded search witnesses.',
+        'Preserve explicit source narrative and receipt discrepancies without changing sealed history.',
+        'Derive presentations from frozen output and keep canonical and delivery latches separate.'], 'boundary': BOUNDARY})
+packets = []
+for category in ['live_protocol_deployment', 'real_identity_binding', 'independent_security_assurance', 'affected_party_rights', 'legal_cultural_maori_authority']:
+    for profile, words in oracle['PROFILES'][:10]:
+        packets.append({'id': 'OP6993-E%03d' % (len(packets) + 1), 'category': category, 'synthetic_profile': profile,
+            'required': 'Exact scoped action, competent authority, affected-party prerequisites and external evidence.', 'outcome': 'exact_gate', 'executed': False})
+blocked = []
+for category in ['separate_implementation', 'real_measurement', 'production_evaluation']:
+    for profile, words in oracle['PROFILES'][:10]:
+        blocked.append({'id': 'OP6993-B%03d' % (len(blocked) + 1), 'category': category, 'synthetic_profile': profile,
+            'missing': 'External admissible evidence is absent.', 'outcome': 'open_gap', 'executed': False})
+write('planning/held-packets.json', {'exact': packets, 'blocked': blocked, 'executed': 0, 'boundary': BOUNDARY})
+neighbors = []
+for group in ['parity', 'hamming', 'crc']:
+    name = 'ghc-family-error-code-' + group + '-contracts/SKILL.md'
+    neighbors.append({'skill': name, 'sha256': sha((SKILLS / name).read_bytes()), 'decision': 'keep_compatibility',
+        'reason': 'Fixed error detection/correction responsibility differs from variable-length source-code decipherability.',
+        'caller_change': False, 'new_execution_credit': 0})
+write('planning/semantic-review.json', {'inherited_count': 300, 'new_contracts': 300, 'direct_comparisons': 90000,
+    'comparisons': comparisons, 'installed_neighbors': neighbors,
+    'mathematical_novelty_claimed': False, 'universal_novelty_claimed': False,
+    'boundary': '300 bounded software contracts across 20 responsibilities and 15 declared codebooks; related cases are not independent discoveries.'})
+write('planning/references.json', {'sources': [
+    {'url': 'https://algs4.cs.princeton.edu/55compression/index.php', 'role': 'Primary course-author definitions of prefix codes, Kraft inequality and residual testing.', 'observations_imported': 0},
+    {'url': 'https://ocw.mit.edu/courses/6-441-information-theory-spring-2010/resources/mit6_441s10_lec05/', 'role': 'Official course context for code lengths and Kraft inequality.', 'observations_imported': 0}],
+    'source_discrepancy': 'The Princeton nonprefix/nonsuffix example {01,10,011,110} is treated as a challenge fixture, not accepted as unique: 01|110 and 011|10 both encode 01110.',
+    'no_authority_promotion': True})
+plan = {'schema': 'orren.binary-codebook-plan.v1', 'owner': 'Orren Pike', 'phase': 'v699-v3', 'source_commit': FINAL,
+    'branch': BRANCH, 'lifecycle': ['plan', 'x1', 'x2', 'final', 'canonical', 'route'],
+    'formats': ['json', 'md', 'txt', 'html'], 'inherited': inherited, 'operations': operations,
+    'profiles': [{'id': name, 'codewords': words} for name, words in oracle['PROFILES']], 'contracts': contracts,
+    'contract_template': {'id': 'OP6993-CONTRACT', 'approval_class': 'owner_internal_synthetic',
+        'null_or_failure': 'Any complete-envelope mismatch, accepted malformed subject, input mutation, undeclared side effect or promoted protected claim.',
+        'source_needs': 'Primary coding-theory vocabulary only; no external observation or theorem novelty claimed.',
+        'artifacts': ['frozen request and expected envelope', 'two failed malformed subjects', 'separate refusal checks', 'exact output and repair witnesses'],
+        'acceptance': 'Exact JSON equality, source preservation and declared strict refusal error.',
+        'rollback': 'Keep frozen input and failed evidence; add a corrected copy without rewriting or replaying successful tranches.', 'protected_gates': GATES},
+    'frozen_expected_outcomes': dict(collections.Counter(row['expected_disposition'] for row in contracts)),
+    'execution_credit_at_plan': 0, 'oracle': 'planning/reference.txt', 'same_owner_oracle': True,
+    'planned_counts': {'inherited': 300, 'new_contracts': 300, 'safe_per_session': 300, 'candidate_per_session': 300,
+        'cfr_per_session': 300, 'skills_per_session': 10, 'runners_per_session': 5, 'x2_additional_tests': 15, 'x2_models': 5,
+        'own_practices': 8, 'successor_recommendations': 4, 'exact_packets': 50, 'blocked_packets': 30},
+    'commit_ceiling': {'plan': 1, 'x1': 2, 'x2': 2, 'final': 2, 'total': 7},
+    'file_ceiling': 2000, 'forecast_files': 80, 'document_word_ceiling': 100000, 'baton_word_range': [10000, 100000],
+    'spend_usd': 0, 'spend_ceiling_usd': 50, 'package_policy': 'versions_only_no_install', 'global_installations': 0,
+    'scope': 'owner_self_scoped_delta', 'complete_repository_suite': False, 'source_runtime_executions': 0,
+    'canonical_policy': 'one_metadata_only_invocation_after_clean_pushed_final_never_replay_success',
+    'route': {'state': 'PREPARED_NOT_SENT', 'successor_label': 'Orin Thale', 'prospective_phase': 'v699-v4', 'lookup_deferred': True,
+              'send_ceiling': 1, 'no_accepted_opaque_unresolved_resend': True, 'no_post_send_monitoring': True},
+    'boundary': BOUNDARY}
+write('planning/plan.json', plan)
+write('planning/summary.md', '# Orren Pike v699-v3 planning freeze\n\n'
+    'This plan freezes 300 finite binary-codebook contracts: twenty responsibilities across fifteen explicit codebooks. '
+    'The planning oracle is a separately written same-owner Python evaluator. Expected envelopes are planning artifacts with zero execution credit. '
+    'X1 will implement and execute operations 1-10 only; x2 will add and execute operations 11-20 after the x1 publication gate.\n\n'
+    'The scope covers trie structure, exact Kraft arithmetic, prefix and suffix conflicts, residual-language certificates, message counts and ambiguity witnesses. '
+    'A bounded ambiguity search cannot certify global unique decodability. A Kraft sum at most one cannot certify that the supplied codebook is uniquely decodable. '
+    'The residual criterion is established mathematics and the codebooks are synthetic.\n\n'
+    'Eight synthetic practices, twenty prospective local skills, ten prospective callers, fifty held exact packets and thirty blocked packets are declared. '
+    'No runtime success, canonical success, recipient lookup or delivery is claimed at planning.\n\n' + BOUNDARY)
+write('README.md', '# Orren Pike v699-v3\n\nFinite binary codebook inspection with explicit ambiguity, exact arithmetic, retained failures and source-faithful handover.\n\n'
+    'Start with planning/summary.md. Session and final artifacts appear only after their lifecycle gates.\n\n' + BOUNDARY)
+files = sorted(p for p in ROOT.rglob('*') if p.is_file())
+manifest = {'schema': 'orren.planning-manifest.v1', 'byte_domain': 'normalized_lf_git_blob',
+    'entries': [{'path': p.relative_to(REPO).as_posix(), 'bytes': len(p.read_bytes()), 'sha256': sha(p.read_bytes())} for p in files],
+    'exclusions': [PREFIX + 'planning/manifest.json'], 'planning_execution_credit': 0}
+write('planning/manifest.json', manifest)
+max_words = max(len(p.read_text(encoding='utf-8').split()) for p in ROOT.rglob('*') if p.is_file())
+assert max_words < 100000
+with (BANK / 'plan-built.json').open('x', encoding='utf-8', newline='\n') as f:
+    json.dump({'status': 'PLANNING_PREPARED_NOT_PUBLISHED', 'contracts': 300, 'execution_credit': 0,
+        'source': FINAL, 'plan_sha256': sha((ROOT / 'planning/plan.json').read_bytes()), 'max_document_words': max_words,
+        'startup_failures': startup, 'observed_at': datetime.now(timezone.utc).isoformat()}, f, indent=2); f.write('\n')
+print(json.dumps({'status': 'PLANNING_PREPARED_NOT_PUBLISHED', 'contracts': len(contracts), 'inherited': len(inherited),
+    'comparisons': 90000, 'outcomes': plan['frozen_expected_outcomes'], 'files': len(files) + 1, 'maximum_document_words': max_words,
+    'runtime_execution_credit': 0, 'startup_failures_retained': len(startup)}))
