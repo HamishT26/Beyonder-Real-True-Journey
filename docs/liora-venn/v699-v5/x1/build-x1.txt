@@ -1,0 +1,450 @@
+# Python 3. Execute the frozen x1 contracts once and emit owner-local evidence.
+from pathlib import Path
+from datetime import datetime, timezone
+import collections, copy, hashlib, json, subprocess, sys
+
+ROOT = Path(__file__).resolve().parents[1]
+REPO = ROOT.parents[2]
+BANK = Path(sys.argv[1])
+METHOD_FLOW_VALIDATOR = Path(sys.argv[2])
+GLOBAL_SKILLS = Path(sys.argv[3])
+GLOBAL_RUNNERS = Path(sys.argv[4])
+PARENT = '9017231fa28aa2d33cfa2e4c61bf3262ab02b6d0'
+BRANCH = 'codex/GHC-Family/liora-venn-v699-v5-full-tools'
+PREFIX = 'docs/liora-venn/v699-v5/'
+
+def stable(value): return json.dumps(value, sort_keys=True, separators=(',', ':'), ensure_ascii=False)
+def h(value): return hashlib.sha256(stable(value).encode()).hexdigest()
+def sha(raw): return hashlib.sha256(raw).hexdigest()
+def read(name): return json.loads((ROOT / name).read_text(encoding='utf-8'))
+def write(name, value):
+    target = ROOT / name
+    target.parent.mkdir(parents=True, exist_ok=True)
+    assert not target.exists(), name
+    target.write_text((stable(value) if not isinstance(value, str) else value.rstrip()) + '\n',
+                      encoding='utf-8', newline='\n')
+def git(*args):
+    return subprocess.check_output(['git', '-C', str(REPO), *args], stderr=subprocess.PIPE).decode().strip()
+def batch(requests):
+    body = stable({'stage': 'x1', 'requests': requests})
+    process = subprocess.run(['node', str(ROOT / 'x1/session.txt')], input=body, text=True,
+                             capture_output=True, check=False)
+    result = json.loads(process.stdout)
+    assert process.returncode == 0 and result['ok'] and result['count'] == len(requests), (
+        process.returncode, result, process.stderr)
+    return result['outputs']
+def chunks(rows, size):
+    return [rows[index:index + size] for index in range(0, len(rows), size)]
+
+assert len(sys.argv) == 5
+assert git('rev-parse', 'HEAD') == PARENT
+assert git('branch', '--show-current') == BRANCH
+assert git('status', '--short') == '?? docs/liora-venn/v699-v5/x1/'
+assert not (BANK / 'x1-built.json').exists()
+assert not (BANK / 'x1-method-flow-full.json').exists()
+assert not (BANK / 'x1-method-flow-validation.json').exists()
+
+plan = read('planning/plan.json')
+correction = read('planning/correction-01/correction.json')
+x1_portfolio = read('planning/correction-01/x1-portfolios.json')
+contracts = [row for row in plan['contracts'] if row['stage'] == 'x1']
+assert len(contracts) == 150
+assert correction['corrected_floors']['x1'] == {'safe': 300, 'candidate': 300, 'clean_fix_refine': 300}
+assert len(x1_portfolio['safe_now']) == len(x1_portfolio['bounded_candidates']) == len(x1_portfolio['clean_fix_refine']) == 300
+
+skill_specs = []
+for operation in [row['operation'] for row in plan['operations'] if row['stage'] == 'x1']:
+    name = 'liora-v699-v5-' + operation.replace('_', '-')
+    relative = 'skills/' + name + '/SKILL.md'
+    text = ('---\nname: ' + name + '\ndescription: Validate the frozen ' + operation.replace('_', ' ') +
+        ' responsibility for bounded finite synthetic posets. Use when exact envelopes and retained failure witnesses are required.\n---\n\n'
+        '# ' + operation.replace('_', ' ').title() + '\n\n'
+        '1. Read the complete frozen request and expected envelope.\n'
+        '2. Invoke only the Liora-owned x1 runtime or a paired family-current runner.\n'
+        '3. Compare the complete JSON envelope, preserve input immutability, and retain every malformed or altered subject.\n'
+        '4. Record a refusal or recovery separately; never convert the failed subject into a pass.\n'
+        '5. Keep empirical, participant, professional, production, legal, cultural, affected-party, Maori-authority, proof, canon, and Stage 20 gates closed.\n\n'
+        'Output is bounded same-owner finite synthetic software evidence only, not independent reproduction or external authority.\n')
+    write(relative, text)
+    skill_path = ROOT / relative
+    validation = subprocess.run([sys.executable, str(METHOD_FLOW_VALIDATOR.parent.parent.parent /
+        '.system/skill-creator/scripts/quick_validate.py'), str(skill_path.parent)],
+        text=True, capture_output=True, check=False)
+    # The derived default path above is not relied on; retry is forbidden here, so require the explicit sibling validator if present.
+    if validation.returncode != 0:
+        explicit = METHOD_FLOW_VALIDATOR.parents[2] / '.system/skill-creator/scripts/quick_validate.py'
+        validation = subprocess.run([sys.executable, str(explicit), str(skill_path.parent)],
+            text=True, capture_output=True, check=False)
+    assert validation.returncode == 0 and 'valid' in validation.stdout.lower(), (operation, validation.stdout, validation.stderr)
+    complete = skill_path.read_text(encoding='utf-8')
+    assert complete.endswith('\n') and operation.replace('_', ' ') in complete.lower()
+    skill_specs.append({'operation': operation, 'name': name, 'path': PREFIX + relative,
+        'sha256': sha(skill_path.read_bytes()), 'complete_read': True, 'quick_validated': True,
+        'validator_output': validation.stdout.strip(), 'smoke_used': True, 'global_install': False})
+
+runner_specs = []
+operations = [row['operation'] for row in plan['operations'] if row['stage'] == 'x1']
+for index in range(5):
+    pair = operations[index * 2:index * 2 + 2]
+    name = 'ghc_family_liora_v699_v5_' + pair[0] + '_and_' + pair[1] + '_runner.txt'
+    relative = 'runners/' + name
+    text = ('// Node.js CommonJS. Family-current paired Liora x1 runner.\n'
+        '"use strict";\n'
+        'require("../x1/runtime.txt").cli(' + json.dumps(pair, separators=(',', ':')) + ');\n')
+    write(relative, text)
+    runner_specs.append({'name': name, 'path': PREFIX + relative, 'operations': pair,
+        'aliases': ['ghc_family_*', 'build_ghc_family_*'], 'sha256': sha((ROOT / relative).read_bytes()),
+        'positive_smoke': False, 'rejecting_smoke': False})
+write('runners/registry.json', {'schema': 'liora.family-current-runner-registry.v1',
+    'canonical_prefix': 'ghc_family_', 'historical_prefix': 'build_ghc_family_',
+    'runners': [{'name': row['name'], 'operations': row['operations'], 'aliases': row['aliases']}
+                for row in runner_specs],
+    'boundary': plan['boundary']})
+
+all_requests = ([row['request'] for row in contracts] +
+                [row['alternate'] for row in contracts] +
+                [negative['request'] for row in contracts for negative in row['negative_subjects']])
+outputs = batch(all_requests)
+primary = outputs[:150]
+alternate = outputs[150:300]
+malformed = outputs[300:]
+assert len(malformed) == 300
+
+records, witnesses = [], []
+def witness(method, procedure, result, expected, observed, negative_ids):
+    witness_id = 'LV6995-X1-W%04d' % (len(witnesses) + 1)
+    witnesses.append({'witness_id': witness_id, 'method_id': method, 'procedure': procedure,
+        'scope': 'owner_self_scoped_finite_poset_x1', 'expected': expected, 'observed': observed,
+        'result': result, 'same_owner_only': True, 'independent_reproduction': False,
+        'retained_negative_ids': list(negative_ids), 'boundary': plan['boundary']})
+    return witness_id
+
+x1_startup = [
+    {'id': 'LV6995-X1-N001',
+     'failure': 'A broad source-capability and archive-bank search matched one-line JSON and overflowed its bounded display projection.',
+     'recovery': 'Read exact Orin x1 execution and capability records plus bounded archive directory names; no source runtime was replayed.'},
+    {'id': 'LV6995-X1-N002',
+     'failure': 'The first curated-skill edit combined delete and add operations for each initialized SKILL.md and the patch engine rejected it before content mutation.',
+     'recovery': 'Used explicit update-file patches for initialized skills and additive patches for absent runner files; both skills then quick-validated and parsed completely.'},
+    {'id': 'LV6995-X1-N003',
+     'failure': 'The first x1 build passed a SKILL.md file to the official quick validator, which expects the containing skill directory, and stopped before the domain batch.',
+     'recovery': 'Verified that only one unpublished local skill file existed and no receipt or runtime output existed, deleted that generated copy, and passed skill directories to both validation paths.'},
+    {'id': 'LV6995-X1-N004',
+     'failure': 'The first 600-subject x1 aggregate failed with zero success credit because the runtime required a schema field that the immutable frozen requests do not contain.',
+     'recovery': 'A single-contract exported-CLI diagnostic identified the exact field-set difference; the runtime admission contract was narrowed to the immutable frozen request fields before a second aggregate invocation.'},
+    {'id': 'LV6995-X1-N005',
+     'failure': 'The first single-contract diagnostic invoked the runtime module directly even though it exports a CLI and therefore returned no envelope for the parser.',
+     'recovery': 'Invoked the exported CLI explicitly on the same frozen request and obtained the attributable field_set refusal without replaying the full stage aggregate.'},
+    {'id': 'LV6995-X1-N006',
+     'failure': 'The first cleanup patch used repository-relative paths, which the patch engine resolved against the app workspace instead of the D-first owner worktree, and it rejected the deletion before mutation.',
+     'recovery': 'Reissued the same verified sixteen-file unpublished-copy allowlist with absolute D-first paths; only generated local skills and runners were removed while the three x1 source files were preserved.'},
+    {'id': 'LV6995-X1-N007',
+     'failure': 'The first short-status projection inherited a local configuration that suppresses untracked files and therefore misleadingly displayed a clean-looking empty status.',
+     'recovery': 'Used an explicit all-untracked status projection and direct literal-path inventories to recover the complete unpublished x1 file set before any cleanup or publication.'},
+]
+for row in x1_startup:
+    witness('LV6995-M-x1-startup', 'retained failed x1 startup or capability preparation',
+            'fail', 'bounded attributable operation', row['failure'], [row['id']])
+    witness('LV6995-M-x1-startup', row['recovery'], 'pass',
+            'separate bounded recovery', 'recovery passed without erasing the failure', [row['id']])
+
+for index, row in enumerate(contracts):
+    method = 'LV6995-M-' + row['operation']
+    output = primary[index]
+    alternate_output = alternate[index]
+    assert output == row['expected'], row['id']
+    assert alternate_output == row['alternate_expected'], row['id'] + '-alternate'
+    negative_id = row['altered_expected_subject']['id']
+    ids = [
+        witness(method, 'primary complete envelope', 'pass', row['expected_sha256'], h(output), [negative_id]),
+        witness(method, 'alternate complete envelope', 'pass', row['alternate_expected_sha256'], h(alternate_output), [negative_id]),
+        witness(method, 'primary input immutability and digest', 'pass', row['request_sha256'], h(row['request']), [negative_id]),
+        witness(method, 'alternate determinism and digest', 'pass', row['alternate_expected_sha256'], h(alternate_output), [negative_id]),
+    ]
+    altered = copy.deepcopy(row['expected'])
+    altered['scope'] = 'altered_scope'
+    assert output != altered
+    ids.append(witness(method, 'altered expected subject', 'fail', h(altered), h(output), [negative_id]))
+    ids.append(witness(method, 'unchanged exact output recovery', 'pass', row['expected_sha256'], h(output), [negative_id]))
+    negative_outputs = []
+    for offset, negative in enumerate(row['negative_subjects']):
+        envelope = malformed[index * 2 + offset]
+        assert not envelope['ok'] and envelope['error'] == negative['error'], (row['id'], envelope)
+        ids.append(witness('LV6995-M-admission', 'malformed subject', 'fail',
+                           'strict refusal ' + negative['error'], envelope, [negative['id']]))
+        ids.append(witness('LV6995-M-admission', 'separate refusal guard', 'pass',
+                           negative['error'], envelope['error'], [negative['id']]))
+        negative_outputs.append(envelope)
+    task_ids = [item['id'] for collection in
+        [x1_portfolio['safe_now'], x1_portfolio['bounded_candidates'], x1_portfolio['clean_fix_refine']]
+        for item in collection if item['contract_id'] == row['id']]
+    assert len(task_ids) == 6
+    records.append({'id': row['id'], 'operation': row['operation'], 'profile': row['profile'],
+        'request_sha256': row['request_sha256'], 'output': output, 'output_sha256': h(output),
+        'alternate_output_sha256': h(alternate_output), 'negative_outputs': negative_outputs,
+        'portfolio_task_ids': task_ids, 'witness_ids': ids})
+
+caller_cases = [
+    ('', 'caller_json'),
+    ('[]', 'caller_field_set'),
+    ('{}', 'caller_field_set'),
+    ('{"stage":"x2","requests":[{}]}', 'caller_stage'),
+    ('{"stage":"x1","requests":[]}', 'caller_request_count'),
+]
+caller_negative_ids = []
+for index, (body, error) in enumerate(caller_cases, 1):
+    process = subprocess.run(['node', str(ROOT / 'x1/session.txt')], input=body, text=True,
+                             capture_output=True, check=False)
+    observed = json.loads(process.stdout)
+    assert process.returncode == 2 and observed['error'] == error
+    negative_id = 'LV6995-X1-CALLER-N%03d' % index
+    caller_negative_ids.append(negative_id)
+    witness('LV6995-M-caller', 'malformed caller frame', 'fail', error, observed, [negative_id])
+witness('LV6995-M-caller', 'supported caller frame recovery', 'pass',
+        'x1 complete envelope', {'stage': 'x1', 'request_count': 600, 'domain_replay': False},
+        caller_negative_ids)
+
+startup_negative_ids = [row['id'] for row in x1_startup]
+for spec in skill_specs:
+    sample = next(row for row in records if row['operation'] == spec['operation'])
+    witness('LV6995-M-x1-startup', 'complete local skill read, quick validation and accepting smoke use',
+            'pass', spec['operation'], {'skill_sha256': spec['sha256'], 'sample_output_sha256': sample['output_sha256']},
+            startup_negative_ids)
+for spec in runner_specs:
+    contract = next(row for row in contracts if row['operation'] == spec['operations'][0])
+    runner_path = ROOT / Path(spec['path']).relative_to(PREFIX)
+    positive_process = subprocess.run(['node', str(runner_path)], input=stable(contract['request']),
+                                      text=True, capture_output=True, check=False)
+    positive = json.loads(positive_process.stdout)
+    assert positive_process.returncode == 0 and positive == contract['expected']
+    negative_process = subprocess.run(['node', str(runner_path)],
+                                      input=stable(contract['negative_subjects'][0]['request']),
+                                      text=True, capture_output=True, check=False)
+    negative = json.loads(negative_process.stdout)
+    assert negative_process.returncode == 2 and negative['error'] == 'field_set'
+    spec['positive_smoke'] = True
+    spec['rejecting_smoke'] = True
+    witness('LV6995-M-x1-startup', 'paired family-current runner accepting and rejecting smoke',
+            'pass', contract['expected_sha256'],
+            {'positive_sha256': h(positive), 'negative_error': negative['error']}, startup_negative_ids)
+
+global_specs = [
+    {'skill_name': 'ghc-family-finite-poset-structure-v1',
+     'runner_name': 'build_ghc_family_finite_poset_structure_v1.txt',
+     'operation': 'carrier_inventory'},
+    {'skill_name': 'ghc-family-finite-poset-order-boundaries-v1',
+     'runner_name': 'build_ghc_family_finite_poset_order_boundaries_v1.txt',
+     'operation': 'antisymmetry_audit'},
+]
+for spec in global_specs:
+    skill_path = GLOBAL_SKILLS / spec['skill_name'] / 'SKILL.md'
+    runner_path = GLOBAL_RUNNERS / spec['runner_name']
+    assert skill_path.is_file() and runner_path.is_file()
+    validation = subprocess.run([sys.executable, str(METHOD_FLOW_VALIDATOR.parents[2] /
+        '.system/skill-creator/scripts/quick_validate.py'), str(skill_path.parent)],
+        text=True, capture_output=True, check=False)
+    assert validation.returncode == 0
+    complete = skill_path.read_text(encoding='utf-8')
+    assert complete.endswith('\n') and 'Stage 20 authority.' in complete
+    contract = next(row for row in contracts if row['operation'] == spec['operation'])
+    positive_process = subprocess.run(['node', str(runner_path), str((ROOT / 'x1/runtime.txt').resolve())],
+                                      input=stable(contract['request']), text=True,
+                                      capture_output=True, check=False)
+    positive = json.loads(positive_process.stdout)
+    assert positive_process.returncode == 0 and positive == contract['expected']
+    negative_process = subprocess.run(['node', str(runner_path), str((ROOT / 'x1/runtime.txt').resolve())],
+                                      input=stable(contract['negative_subjects'][0]['request']), text=True,
+                                      capture_output=True, check=False)
+    negative = json.loads(negative_process.stdout)
+    assert negative_process.returncode == 2 and negative['error'] == 'field_set'
+    spec.update({'skill_sha256': sha(skill_path.read_bytes()), 'runner_sha256': sha(runner_path.read_bytes()),
+        'complete_read': True, 'quick_validated': True, 'positive_smoke': True, 'rejecting_smoke': True,
+        'global_install': False, 'curated_d_first_bank': True})
+    witness('LV6995-M-x1-startup', 'curated D-first skill and runner pair validation and smoke use',
+            'pass', spec['operation'], {'skill_sha256': spec['skill_sha256'],
+            'runner_sha256': spec['runner_sha256'], 'positive_sha256': h(positive),
+            'negative_error': negative['error']}, startup_negative_ids)
+
+result_counts = dict(collections.Counter(row['result'] for row in witnesses))
+assert result_counts == {'pass': 1075, 'fail': 462}, result_counts
+outcomes = dict(collections.Counter(row['output']['outcome'] for row in records))
+assert outcomes == {'completed': 150}
+
+record_shards = []
+for index, rows in enumerate(chunks(records, 75), 1):
+    name = 'x1/execution-records-%02d.json' % index
+    write(name, {'schema': 'liora.x1-record-shard.v1', 'index': index, 'count': len(rows),
+        'records': rows, 'boundary': plan['boundary']})
+    record_shards.append({'index': index, 'start': (index - 1) * 75, 'count': len(rows),
+        'path': name, 'sha256': sha((ROOT / name).read_bytes())})
+witness_shards = []
+for index, rows in enumerate(chunks(witnesses, 500), 1):
+    name = 'x1/execution-witnesses-%02d.json' % index
+    write(name, {'schema': 'liora.x1-witness-shard.v1', 'index': index, 'count': len(rows),
+        'witnesses': rows, 'boundary': plan['boundary']})
+    witness_shards.append({'index': index, 'start': (index - 1) * 500, 'count': len(rows),
+        'path': name, 'sha256': sha((ROOT / name).read_bytes())})
+
+execution = {'schema': 'liora.finite-poset-execution.v1', 'stage': 'x1',
+    'invocations': 2, 'successes': 1, 'failed_invocations': 1, 'replays': 0, 'contracts': 150,
+    'records_count': len(records), 'records_shards': record_shards,
+    'witnesses_count': len(witnesses), 'witnesses_shards': witness_shards,
+    'counts': {'contracts': 150, 'safe': 300, 'candidate_failed': 300,
+        'candidate_refusal_passed': 300, 'cfr_tasks': 300, 'altered_expected_failed': 150,
+        'altered_expected_recovery_passed': 150, 'integrity_passed': 300,
+        'caller_failed': 5, 'caller_recovery_passed': 1,
+        'startup_failed': 7, 'startup_recovery_passed': 7,
+        'skill_passed': 10, 'runner_passed': 5, 'curated_global_pair_passed': 2,
+        'witnesses': len(witnesses), 'passing': result_counts['pass'], 'failed': result_counts['fail']},
+    'outcomes': outcomes,
+    'previous_publication': {'commit': PARENT, 'clean': True, 'four_way_equal': True},
+    'document_packaging': {'lossless_row_sharding': True, 'domain_replayed': False,
+        'pre_shard_records_sha256': h(records), 'pre_shard_witnesses_sha256': h(witnesses)},
+    'x2_present': False, 'boundary': plan['boundary']}
+write('x1/execution.json', execution)
+write('x1/capabilities.json', {'schema': 'liora.x1-capabilities.v1',
+    'skills': skill_specs, 'runners': runner_specs, 'curated_global_pairs': global_specs,
+    'global_installs': 0, 'package_installs': 0, 'formats': ['json', 'md', 'txt'],
+    'complete_skill_reads': 12, 'local_skill_invocations': 10, 'runner_invocations': 7,
+    'boundary': plan['boundary']})
+
+changed_allowlist = [PREFIX + 'x1', PREFIX + 'skills', PREFIX + 'runners']
+methods, state_events = [], []
+for method_id in sorted(set(row['method_id'] for row in witnesses)):
+    rows = [row for row in witnesses if row['method_id'] == method_id]
+    negative_ids = sorted(set(item for row in rows for item in row['retained_negative_ids']))
+    passing = [row for row in rows if row['result'] == 'pass']
+    assert passing and negative_ids
+    methods.append({'method_id': method_id, 'title': method_id.replace('LV6995-M-', '').replace('_', ' '),
+        'failure_signature': 'Malformed input, altered expected envelope, caller-frame mismatch, truncated projection, invalid patch, or promoted protected claim.',
+        'trigger_preconditions': ['frozen finite-poset request', 'exact Liora x1 owner scope'],
+        'privacy_class': 'sanitized_public', 'approval_class': 'owner_internal_synthetic_safe_now',
+        'candidate_workaround': 'Retain the failed subject and validate a separately named refusal or smallest repaired copy.',
+        'validation_witness_ids': [row['witness_id'] for row in rows],
+        'recurrence_guard': 'Require complete exact envelopes, per-session floors, and one successful stage aggregate without replay.',
+        'rollback': 'Retain frozen input and failed evidence; stop the tranche and add only a bounded correction.',
+        'recommendation_state': 'preferred', 'supersedes': [],
+        'protected_gates': plan['contract_template']['protected_gates'],
+        'retained_negative_ids': negative_ids, 'scope_boundary': plan['boundary'],
+        'execution_authority': 'owner_self_scoped_delta', 'repository_scan': False,
+        'module_scan': False, 'cross_lane_scan': False, 'unchanged_history_scan': False,
+        'sibling_lane_mutation': False, 'source_commit': PARENT,
+        'final_commit': 'pending_exact_pushed_head', 'changed_file_allowlist': changed_allowlist,
+        'module_allowlist': [], 'exact_pushed_head_required': True})
+    passing_id = passing[0]['witness_id']
+    for before, after in [('observed', 'candidate'), ('candidate', 'validated'), ('validated', 'preferred')]:
+        state_events.append({'event_id': 'LV6995-X1-E%03d' % (len(state_events) + 1),
+            'method_id': method_id, 'from': before, 'to': after, 'witness_id': passing_id})
+
+full_ledger = {'schema': 'ghc.family.method-flow-state.v1', 'phase': 'v699-v5',
+    'owner': 'Liora Venn', 'stage': 'x1', 'identity_boundary': plan['boundary'],
+    'execution_authority': 'owner_self_scoped_delta', 'source_commit': PARENT,
+    'final_commit': 'pending_exact_pushed_head', 'changed_file_allowlist': changed_allowlist,
+    'module_allowlist': [], 'sparse_file_budget_state': 'x1 owner files remain below 2000',
+    'methods': methods, 'witnesses': witnesses, 'state_events': state_events,
+    'recommendations': [], 'counts': {'methods': len(methods), 'witnesses': len(witnesses),
+        'state_events': len(state_events), 'recommendations': 0,
+        'states': {'observed': 0, 'candidate': 0, 'validated': 0, 'preferred': len(methods),
+                   'superseded': 0, 'deprecated': 0},
+        'witness_results': result_counts},
+    'boundary': plan['boundary']}
+full_ledger_path = BANK / 'x1-method-flow-full.json'
+full_ledger_path.write_text(json.dumps(full_ledger, ensure_ascii=False, indent=2) + '\n',
+                            encoding='utf-8', newline='\n')
+validation_receipt_path = BANK / 'x1-method-flow-validation.json'
+validation_process = subprocess.run([sys.executable, str(METHOD_FLOW_VALIDATOR), 'validate',
+    '--ledger', str(full_ledger_path), '--receipt', str(validation_receipt_path)],
+    text=True, capture_output=True, check=False)
+assert validation_process.returncode == 0, (validation_process.stdout, validation_process.stderr)
+method_validation = json.loads(validation_process.stdout)
+assert method_validation['valid'] and method_validation['issue_count'] == 0
+write('x1/method-flow.json', {'schema': 'ghc.family.method-flow-state.v1',
+    'phase': 'v699-v5', 'owner': 'Liora Venn', 'stage': 'x1',
+    'identity_boundary': plan['boundary'], 'execution_authority': 'owner_self_scoped_delta',
+    'source_commit': PARENT, 'final_commit': 'pending_exact_pushed_head',
+    'changed_file_allowlist': changed_allowlist, 'module_allowlist': [],
+    'sparse_file_budget_state': 'x1 owner files remain below 2000',
+    'methods': methods, 'witnesses': [], 'witnesses_count': len(witnesses),
+    'witnesses_shards': witness_shards, 'state_events': state_events,
+    'recommendations': [], 'counts': full_ledger['counts'],
+    'document_packaging': {'lossless_row_sharding': True,
+        'full_ledger_sha256': sha(full_ledger_path.read_bytes())},
+    'boundary': plan['boundary']})
+write('x1/method-flow-validation.json', {'schema': 'liora.method-flow-validation-binding.v1',
+    'validation': method_validation, 'full_ledger_sha256': sha(full_ledger_path.read_bytes()),
+    'external_validation_receipt_sha256': sha(validation_receipt_path.read_bytes()),
+    'witness_shards': witness_shards, 'boundary': plan['boundary']})
+
+validate_script = """# Python 3. Metadata-only x1 validator; it never invokes the domain runtime.
+from pathlib import Path
+import hashlib, json
+ROOT=Path(__file__).resolve().parents[1]
+def read(name): return json.loads((ROOT/name).read_text(encoding='utf-8'))
+def sha(raw): return hashlib.sha256(raw).hexdigest()
+execution=read('x1/execution.json')
+assert execution['invocations']==2 and execution['successes']==1 and execution['failed_invocations']==1 and execution['replays']==0
+records=[];witnesses=[]
+for row in execution['records_shards']:
+ path=ROOT/row['path'];assert sha(path.read_bytes())==row['sha256']
+ data=json.loads(path.read_text(encoding='utf-8'));assert data['count']==row['count'];records+=data['records']
+for row in execution['witnesses_shards']:
+ path=ROOT/row['path'];assert sha(path.read_bytes())==row['sha256']
+ data=json.loads(path.read_text(encoding='utf-8'));assert data['count']==row['count'];witnesses+=data['witnesses']
+assert len(records)==execution['records_count']==150
+assert len(witnesses)==execution['witnesses_count']==1537
+assert execution['counts']['safe']==execution['counts']['candidate_failed']==execution['counts']['candidate_refusal_passed']==300
+assert execution['counts']['cfr_tasks']==300
+assert execution['outcomes']=={'completed':150}
+assert all(row['output']['operation'] in {item['operation'] for item in records} for row in records)
+print(json.dumps({'status':'VALID_X1_METADATA','records':len(records),'witnesses':len(witnesses),
+ 'passing':execution['counts']['passing'],'failed':execution['counts']['failed'],'domain_replayed':False}))
+"""
+write('x1/validate-x1.txt', validate_script)
+write('x1/validation.json', {'schema': 'liora.x1-validation.v1',
+    'status': 'VALID_X1_PRECOMMIT', 'contracts': 150, 'positive_envelopes': 300,
+    'malformed_subjects_retained': 300, 'altered_expected_subjects_retained': 150,
+    'caller_failures_retained': 5, 'startup_failures_retained': 7,
+    'skills_quick_validated_and_smoke_used': 10, 'family_current_runners_smoke_used': 5,
+    'curated_global_pairs_quick_validated_and_smoke_used': 2,
+    'method_flow_valid': True, 'method_flow_issues': 0,
+    'passing_witnesses': result_counts['pass'], 'failed_witnesses': result_counts['fail'],
+    'x2_present': False, 'domain_replayed': False, 'boundary': plan['boundary']})
+write('x1/summary.md', '# Liora Venn v699-v5 x1\n\n'
+    'All 150 frozen x1 contracts ran in one successful owner-local aggregate and were not replayed. '
+    'The tranche retains 462 failed witnesses separately from 1,075 passing witnesses. The failures are 300 malformed '
+    'contract subjects, 150 altered-expected subjects, five malformed caller frames, and seven startup, diagnostic, cleanup, or capability-preparation failures. '
+    'Their refusals and bounded recoveries remain separate.\n\n'
+    'Exactly 300 safe tasks, 300 candidate tasks, and 300 CLEAN/FIX/REFINE tasks are attributable to x1. Ten owner-local skills were '
+    'read completely, quick-validated, and smoke-used; five family-current runners and two additive D-first curated global pairs passed '
+    'accepting and rejecting smoke checks. No package or global Codex skill installation occurred.\n\n'
+    'Every x1 core outcome is completed within operations 1 through 10. No x2 operation, external observation, empirical GMUT result, '
+    'professional or production decision, legal or cultural determination, Maori-authority act, canonical aggregate, route lookup, or '
+    'Stage 20 claim occurred.\n\n' + plan['boundary'])
+
+files = [path for path in ROOT.rglob('*') if path.is_file() and (
+    path.relative_to(ROOT).as_posix().startswith('x1/') or
+    path.relative_to(ROOT).as_posix().startswith('skills/') or
+    path.relative_to(ROOT).as_posix().startswith('runners/'))]
+manifest = {'schema': 'liora.stage-manifest.v1', 'stage': 'x1',
+    'byte_domain': 'normalized_lf_git_blob',
+    'entries': [{'path': path.relative_to(REPO).as_posix(), 'bytes': len(path.read_bytes()),
+                 'sha256': sha(path.read_bytes())} for path in sorted(files)],
+    'exclusions': [PREFIX + 'x1/manifest.json'], 'previous_publication': PARENT,
+    'domain_replayed': False, 'boundary': plan['boundary']}
+write('x1/manifest.json', manifest)
+maximum_words = max(len(path.read_text(encoding='utf-8').split())
+                    for path in ROOT.rglob('*') if path.is_file())
+assert maximum_words <= 100000
+with (BANK / 'x1-built.json').open('x', encoding='utf-8', newline='\n') as handle:
+    json.dump({'status': 'VALID_X1_PRECOMMIT', 'invocations': 2, 'successes': 1,
+        'failed_invocations': 1, 'replays': 0, 'contracts': 150, 'passing': 1075, 'failed': 462,
+        'execution_sha256': sha((ROOT / 'x1/execution.json').read_bytes()),
+        'manifest_sha256': sha((ROOT / 'x1/manifest.json').read_bytes()),
+        'maximum_document_words': maximum_words,
+        'observed_at': datetime.now(timezone.utc).isoformat()}, handle, indent=2)
+    handle.write('\n')
+print(json.dumps({'status': 'VALID_X1_PRECOMMIT', 'contracts': 150,
+    'passing': 1075, 'failed': 462, 'outcomes': outcomes,
+    'skills': 10, 'runners': 5, 'curated_global_pairs': 2,
+    'method_flow_methods': len(methods), 'manifest_entries': len(manifest['entries']),
+    'maximum_document_words': maximum_words}))

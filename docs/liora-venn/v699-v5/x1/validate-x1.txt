@@ -1,0 +1,23 @@
+# Python 3. Metadata-only x1 validator; it never invokes the domain runtime.
+from pathlib import Path
+import hashlib, json
+ROOT=Path(__file__).resolve().parents[1]
+def read(name): return json.loads((ROOT/name).read_text(encoding='utf-8'))
+def sha(raw): return hashlib.sha256(raw).hexdigest()
+execution=read('x1/execution.json')
+assert execution['invocations']==2 and execution['successes']==1 and execution['failed_invocations']==1 and execution['replays']==0
+records=[];witnesses=[]
+for row in execution['records_shards']:
+ path=ROOT/row['path'];assert sha(path.read_bytes())==row['sha256']
+ data=json.loads(path.read_text(encoding='utf-8'));assert data['count']==row['count'];records+=data['records']
+for row in execution['witnesses_shards']:
+ path=ROOT/row['path'];assert sha(path.read_bytes())==row['sha256']
+ data=json.loads(path.read_text(encoding='utf-8'));assert data['count']==row['count'];witnesses+=data['witnesses']
+assert len(records)==execution['records_count']==150
+assert len(witnesses)==execution['witnesses_count']==1537
+assert execution['counts']['safe']==execution['counts']['candidate_failed']==execution['counts']['candidate_refusal_passed']==300
+assert execution['counts']['cfr_tasks']==300
+assert execution['outcomes']=={'completed':150}
+assert all(row['output']['operation'] in {item['operation'] for item in records} for row in records)
+print(json.dumps({'status':'VALID_X1_METADATA','records':len(records),'witnesses':len(witnesses),
+ 'passing':execution['counts']['passing'],'failed':execution['counts']['failed'],'domain_replayed':False}))

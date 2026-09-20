@@ -1,0 +1,293 @@
+// Node.js CommonJS. X1 finite-poset engine; it never imports the planning oracle.
+"use strict";
+const fs = require("node:fs");
+const OPS = [
+  "carrier_inventory",
+  "relation_normalization",
+  "reflexive_closure",
+  "transitive_closure",
+  "antisymmetry_audit",
+  "comparability_matrix",
+  "cover_relation_reduction",
+  "minimal_elements",
+  "maximal_elements",
+  "principal_ideal"
+];
+const SCOPE = "finite_synthetic_poset_only";
+
+function fail(code) {
+  const error = new Error(code);
+  error.code = code;
+  throw error;
+}
+function strictParse(text) {
+  if (Buffer.byteLength(text, "utf8") > 1048576) fail("json_bytes");
+  let at = 0;
+  function ws() { while (at < text.length && /[\x20\t\r\n]/.test(text[at])) at += 1; }
+  function string() {
+    const start = at++;
+    while (at < text.length) {
+      const character = text[at++];
+      if (character === "\"") {
+        try { return JSON.parse(text.slice(start, at)); } catch (_) { fail("json_syntax"); }
+      }
+      if (character === "\\") at += 1;
+    }
+    fail("json_syntax");
+  }
+  function value(depth) {
+    if (depth > 32) fail("json_depth");
+    ws();
+    const character = text[at];
+    if (character === "\"") return string();
+    if (character === "{") {
+      at += 1;
+      ws();
+      const object = Object.create(null);
+      const keys = new Set();
+      if (text[at] === "}") { at += 1; return object; }
+      while (at < text.length) {
+        ws();
+        if (text[at] !== "\"") fail("json_syntax");
+        const key = string();
+        if (keys.has(key)) fail("duplicate_key");
+        keys.add(key);
+        ws();
+        if (text[at++] !== ":") fail("json_syntax");
+        object[key] = value(depth + 1);
+        ws();
+        if (text[at] === "}") { at += 1; return object; }
+        if (text[at++] !== ",") fail("json_syntax");
+      }
+      fail("json_syntax");
+    }
+    if (character === "[") {
+      at += 1;
+      ws();
+      const array = [];
+      if (text[at] === "]") { at += 1; return array; }
+      while (at < text.length) {
+        array.push(value(depth + 1));
+        ws();
+        if (text[at] === "]") { at += 1; return array; }
+        if (text[at++] !== ",") fail("json_syntax");
+      }
+      fail("json_syntax");
+    }
+    for (const pair of [["true", true], ["false", false], ["null", null]]) {
+      if (text.startsWith(pair[0], at)) { at += pair[0].length; return pair[1]; }
+    }
+    const match = /^-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?/.exec(text.slice(at));
+    if (match) {
+      at += match[0].length;
+      const number = Number(match[0]);
+      if (!Number.isFinite(number)) fail("json_number");
+      return number;
+    }
+    fail("json_syntax");
+  }
+  const result = value(0);
+  ws();
+  if (at !== text.length) fail("json_syntax");
+  return result;
+}
+function stable(value) {
+  if (Array.isArray(value)) return "[" + value.map(stable).join(",") + "]";
+  if (value && typeof value === "object") {
+    return "{" + Object.keys(value).sort().map(key => JSON.stringify(key) + ":" + stable(value[key])).join(",") + "}";
+  }
+  return JSON.stringify(value);
+}
+function freeze(value) {
+  if (value && typeof value === "object") {
+    Object.values(value).forEach(freeze);
+    Object.freeze(value);
+  }
+  return value;
+}
+function relationFor(request) {
+  const size = request.elements.length;
+  const index = new Map(request.elements.map((element, position) => [element, position]));
+  const relation = Array.from({ length: size }, (_, row) =>
+    Array.from({ length: size }, (_, column) => row === column));
+  for (const [lower, upper] of request.covers) relation[index.get(lower)][index.get(upper)] = true;
+  for (let middle = 0; middle < size; middle += 1) {
+    for (let lower = 0; lower < size; lower += 1) {
+      for (let upper = 0; upper < size; upper += 1) {
+        relation[lower][upper] = relation[lower][upper] ||
+          (relation[lower][middle] && relation[middle][upper]);
+      }
+    }
+  }
+  return relation;
+}
+function validate(request, allowed = OPS) {
+  if (!request || typeof request !== "object" || Array.isArray(request)) fail("field_set");
+  const expectedFields = "coordinates,covers,elements,focus,limit,operation,profile,seed,weights";
+  if (Object.keys(request).sort().join(",") !== expectedFields) fail("field_set");
+  if (typeof request.operation !== "string" || !allowed.includes(request.operation)) fail("operation");
+  if (typeof request.profile !== "string" || !/^[a-z0-9_]{1,64}$/.test(request.profile)) fail("profile");
+  if (!Array.isArray(request.elements) || request.elements.length < 1 || request.elements.length > 8) fail("elements");
+  if (!request.elements.every(element => typeof element === "string" && /^[A-Za-z0-9_]{1,32}$/.test(element))) fail("elements");
+  if (new Set(request.elements).size !== request.elements.length) fail("duplicate_element");
+  const elementSet = new Set(request.elements);
+  if (!Array.isArray(request.covers) || request.covers.length > 64) fail("cover_shape");
+  const coverKeys = new Set();
+  for (const cover of request.covers) {
+    if (!Array.isArray(cover) || cover.length !== 2 || !cover.every(item => typeof item === "string")) fail("cover_shape");
+    if (!elementSet.has(cover[0]) || !elementSet.has(cover[1])) fail("cover_element");
+    if (cover[0] === cover[1]) fail("self_cover");
+    const key = cover[0] + "\u0000" + cover[1];
+    if (coverKeys.has(key)) fail("duplicate_cover");
+    coverKeys.add(key);
+  }
+  if (!elementSet.has(request.focus)) fail("focus");
+  if (!request.weights || typeof request.weights !== "object" || Array.isArray(request.weights)) fail("weights");
+  if (Object.keys(request.weights).sort().join(",") !== request.elements.slice().sort().join(",")) fail("weights");
+  if (!Object.values(request.weights).every(value => Number.isSafeInteger(value) && Math.abs(value) <= 1000000)) fail("weights");
+  if (!Array.isArray(request.coordinates) || request.coordinates.length !== request.elements.length) fail("coordinates");
+  const coordinateElements = new Set();
+  for (const coordinate of request.coordinates) {
+    if (!coordinate || typeof coordinate !== "object" || Array.isArray(coordinate)) fail("coordinates");
+    if (Object.keys(coordinate).sort().join(",") !== "element,x,y") fail("coordinates");
+    if (!elementSet.has(coordinate.element) || coordinateElements.has(coordinate.element)) fail("coordinates");
+    if (!Number.isSafeInteger(coordinate.x) || !Number.isSafeInteger(coordinate.y)) fail("coordinates");
+    coordinateElements.add(coordinate.element);
+  }
+  if (!Number.isSafeInteger(request.limit) || request.limit < 1 || request.limit > 50000) fail("limit");
+  if (request.seed !== "liora-v699-v5") fail("seed");
+  const relation = relationFor(request);
+  for (let left = 0; left < relation.length; left += 1) {
+    for (let right = 0; right < relation.length; right += 1) {
+      if (left !== right && relation[left][right] && relation[right][left]) fail("cycle");
+    }
+  }
+}
+function normalizedCovers(request) {
+  return request.covers.map(edge => [edge[0], edge[1]])
+    .sort((left, right) => left[0].localeCompare(right[0]) || left[1].localeCompare(right[1]));
+}
+function reducedCovers(request, relation) {
+  const result = [];
+  const size = request.elements.length;
+  for (let lower = 0; lower < size; lower += 1) {
+    for (let upper = 0; upper < size; upper += 1) {
+      if (lower === upper || !relation[lower][upper]) continue;
+      let mediated = false;
+      for (let middle = 0; middle < size; middle += 1) {
+        if (middle !== lower && middle !== upper &&
+            relation[lower][middle] && relation[middle][upper]) mediated = true;
+      }
+      if (!mediated) result.push([request.elements[lower], request.elements[upper]]);
+    }
+  }
+  return result;
+}
+function success(operation, result) {
+  return {
+    ok: true,
+    operation,
+    outcome: "completed",
+    result,
+    scope: SCOPE,
+    same_owner_only: true,
+    independent_reproduction: false,
+    planning_oracle_only: true
+  };
+}
+function errorEnvelope(error) {
+  return {
+    ok: false,
+    error: error.code || "internal_error",
+    outcome: "exact_gate",
+    scope: SCOPE,
+    same_owner_only: true,
+    independent_reproduction: false
+  };
+}
+function run(request, allowed = OPS) {
+  validate(request, allowed);
+  const before = stable(request);
+  freeze(request);
+  const relation = relationFor(request);
+  const elements = request.elements;
+  const index = new Map(elements.map((element, position) => [element, position]));
+  let result;
+  switch (request.operation) {
+    case "carrier_inventory":
+      result = { elements: elements.slice(), count: elements.length };
+      break;
+    case "relation_normalization":
+      result = { covers: normalizedCovers(request) };
+      break;
+    case "reflexive_closure":
+      result = { relation: relation.flatMap((row, lower) =>
+        row.map((value, upper) => value ? [elements[lower], elements[upper]] : null).filter(Boolean)) };
+      break;
+    case "transitive_closure":
+      result = { relation: relation.flatMap((row, lower) =>
+        row.map((value, upper) => value && lower !== upper ? [elements[lower], elements[upper]] : null).filter(Boolean)) };
+      break;
+    case "antisymmetry_audit": {
+      const violations = [];
+      for (let lower = 0; lower < elements.length; lower += 1) {
+        for (let upper = lower + 1; upper < elements.length; upper += 1) {
+          if (relation[lower][upper] && relation[upper][lower]) violations.push([elements[lower], elements[upper]]);
+        }
+      }
+      result = { antisymmetric: violations.length === 0, violations };
+      break;
+    }
+    case "comparability_matrix":
+      result = { elements: elements.slice(), matrix: relation.map((row, lower) =>
+        row.map((value, upper) => Boolean(value || relation[upper][lower]))) };
+      break;
+    case "cover_relation_reduction":
+      result = { covers: reducedCovers(request, relation) };
+      break;
+    case "minimal_elements":
+      result = { elements: elements.filter((_, upper) =>
+        !elements.some((__, lower) => lower !== upper && relation[lower][upper])) };
+      break;
+    case "maximal_elements":
+      result = { elements: elements.filter((_, lower) =>
+        !elements.some((__, upper) => lower !== upper && relation[lower][upper])) };
+      break;
+    case "principal_ideal": {
+      const focus = index.get(request.focus);
+      result = { focus: request.focus, elements: elements.filter((_, lower) => relation[lower][focus]) };
+      break;
+    }
+    default:
+      fail("operation");
+  }
+  if (before !== stable(request)) fail("input_mutation");
+  return success(request.operation, result);
+}
+function makeCli(allowed = OPS) {
+  try {
+    const request = strictParse(fs.readFileSync(0, "utf8"));
+    if (!allowed.includes(request.operation)) fail("runner_operation");
+    process.stdout.write(JSON.stringify(run(request, allowed)) + "\n");
+  } catch (error) {
+    process.stdout.write(JSON.stringify(errorEnvelope(error)) + "\n");
+    process.exitCode = 2;
+  }
+}
+module.exports = {
+  OPS,
+  SCOPE,
+  fail,
+  strictParse,
+  stable,
+  freeze,
+  validate,
+  relationFor,
+  normalizedCovers,
+  reducedCovers,
+  success,
+  errorEnvelope,
+  run,
+  makeCli,
+  cli: allowed => makeCli(allowed)
+};
