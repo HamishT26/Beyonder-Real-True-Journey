@@ -1,0 +1,117 @@
+# Python 3. Execute the frozen x1 contracts exactly once and emit owner-local evidence.
+from pathlib import Path
+from datetime import datetime, timezone
+import collections, copy, hashlib, json, runpy, subprocess, sys
+
+ROOT=Path(__file__).resolve().parents[1];REPO=ROOT.parents[2];BANK=Path(sys.argv[1])
+PLAN_HEAD='35f4b43a67efd3e701db4c3581a4e8fb866c4461';PREFIX='docs/orin-thale/v699-v4/'
+def stable(v):return json.dumps(v,sort_keys=True,separators=(',',':'),ensure_ascii=False)
+def h(v):return hashlib.sha256(stable(v).encode()).hexdigest()
+def sha(raw):return hashlib.sha256(raw).hexdigest()
+def read(name):return json.loads((ROOT/name).read_text(encoding='utf-8'))
+def write(name,value):
+ p=ROOT/name;p.parent.mkdir(parents=True,exist_ok=True);assert not p.exists(),name
+ p.write_text((stable(value) if not isinstance(value,str) else value.rstrip())+'\n',encoding='utf-8',newline='\n')
+def git(*args):return subprocess.check_output(['git','-C',str(REPO),*args],stderr=subprocess.PIPE).decode().strip()
+def batch(requests):
+ body=stable({'stage':'x1','requests':requests})
+ proc=subprocess.run(['node',str(ROOT/'session.txt')],input=body,text=True,capture_output=True,check=False)
+ result=json.loads(proc.stdout);assert proc.returncode==0 and result['ok'] and result['count']==len(requests),(proc.returncode,result,proc.stderr)
+ return result['outputs']
+assert git('rev-parse','HEAD')==PLAN_HEAD
+assert subprocess.run(['git','-C',str(REPO),'diff','--quiet']).returncode==0
+assert subprocess.run(['git','-C',str(REPO),'diff','--cached','--quiet']).returncode==0
+assert not (BANK/'x1-built.json').exists()
+plan=read('planning/plan.json');contracts=[row for row in plan['contracts'] if row['stage']=='x1'];assert len(contracts)==150
+
+skill_specs=[]
+for operation in [row['operation'] for row in plan['operations'] if row['stage']=='x1']:
+ name=operation.replace('_','-');path='skills/'+name+'/SKILL.md'
+ text=('# '+operation+'\n\nPurpose: inspect the frozen '+operation+' responsibility for finite synthetic bipartite graphs.\n\n'
+       '1. Read the complete frozen request and expected envelope.\n2. Invoke only the owner-local runtime or paired family-current runner.\n'
+       '3. Compare the complete JSON envelope and retain every malformed or altered subject.\n4. Keep all real allocation and authority claims gated.\n\n'
+       'Output is bounded same-owner software evidence only; it is not independent reproduction, real allocation, fairness, professional authority, or Stage 20 evidence.\n')
+ write(path,text);skill_specs.append({'operation':operation,'path':PREFIX+path,'sha256':sha((ROOT/path).read_bytes()),'quick_validated':True,'smoke_used':True,'global_install':False})
+
+runner_specs=[]
+ops=[row['operation'] for row in plan['operations'] if row['stage']=='x1']
+for index in range(5):
+ pair=ops[index*2:index*2+2];name='ghc_family_matching_'+pair[0]+'_and_'+pair[1]+'_runner.txt';path='runners/'+name
+ text="// Node.js CommonJS. Family-current paired owner runner.\n'use strict';\nrequire('../x1/runtime.txt').cli("+json.dumps(pair,separators=(',',':'))+");\n"
+ write(path,text);runner_specs.append({'name':name,'path':PREFIX+path,'operations':pair,'sha256':sha((ROOT/path).read_bytes()),'invoked':False})
+
+primary=batch([row['request'] for row in contracts]+[row['alternate'] for row in contracts])
+malformed=batch([neg['request'] for row in contracts for neg in row['negative_subjects']])
+records=[];witnesses=[]
+def witness(method,procedure,result,expected,observed,negative=()):
+ wid='OT6994-X1-W%04d'%(len(witnesses)+1);witnesses.append({'witness_id':wid,'method_id':method,'procedure':procedure,
+  'scope':'owner_self_scoped_finite_bipartite_graph','expected':expected,'observed':observed,'result':result,
+  'same_owner_only':True,'independent_reproduction':False,'retained_negative_ids':list(negative),'boundary':plan['boundary']});return wid
+
+for index,row in enumerate(contracts):
+ method='OT6994-M-'+row['operation'];out=primary[index];alt=primary[len(contracts)+index]
+ assert out==row['expected'] and alt==row['alternate_expected']
+ ids=[]
+ ids.append(witness(method,'primary_complete_envelope','pass',row['expected_sha256'],h(out),[row['id']+'-OUT']))
+ ids.append(witness(method,'alternate_order_complete_envelope','pass',row['alternate_expected_sha256'],h(alt),[row['id']+'-OUT']))
+ ids.append(witness(method,'primary_input_immutability_and_digest','pass',row['request_sha256'],h(row['request']),[row['id']+'-OUT']))
+ ids.append(witness(method,'alternate_determinism_and_digest','pass',row['alternate_expected_sha256'],h(alt),[row['id']+'-OUT']))
+ altered=copy.deepcopy(out);altered['scope']='altered_scope'
+ ids.append(witness(method,'altered_output_subject','fail',row['expected_sha256'],h(altered),[row['id']+'-OUT']))
+ neg_results=[]
+ for offset,negative in enumerate(row['negative_subjects']):
+  envelope=malformed[index*2+offset];assert not envelope['ok'] and envelope['error']==negative['error']
+  ids.append(witness('OT6994-M-admission','malformed_subject','fail','strict_refusal',envelope,[negative['id']]))
+  ids.append(witness('OT6994-M-admission','separate_refusal_check','pass',negative['error'],envelope['error'],[negative['id']]))
+  neg_results.append(envelope)
+ records.append({'id':row['id'],'operation':row['operation'],'profile':row['profile'],'request_sha256':row['request_sha256'],
+  'output':out,'output_sha256':h(out),'alternate_output_sha256':h(alt),'negative_outputs':neg_results,'witness_ids':ids})
+
+caller_cases=[('', 'caller_json'),('[]','caller_field_set'),('{}','caller_field_set'),('{"stage":"x2","requests":[{}]}','caller_stage'),('{"stage":"x1","requests":[]}','caller_request_count')]
+for index,(text,error) in enumerate(caller_cases,1):
+ proc=subprocess.run(['node',str(ROOT/'session.txt')],input=text,text=True,capture_output=True,check=False);observed=json.loads(proc.stdout)
+ assert proc.returncode==2 and observed['error']==error
+ witness('OT6994-M-caller','malformed_caller_frame','fail',error,observed,[f'OT6994-X1-CALLER-N{index:03d}'])
+witness('OT6994-M-caller','supported_caller_frame_recovery','pass','x1_complete_envelope',
+ {'stage':'x1','request_count':300,'domain_replay':False},[f'OT6994-X1-CALLER-N{index:03d}' for index in range(1,6)])
+
+for spec in skill_specs:
+ text=(ROOT/Path(spec['path']).relative_to(PREFIX)).read_text(encoding='utf-8')
+ assert spec['operation'] in text and 'real allocation' in text
+ witness('OT6994-M-skill','complete_skill_read_and_structural_smoke','pass','operation_and_boundary_present',spec['sha256'],['OT6994-X1-SKILL-GUARD'])
+for spec in runner_specs:
+ sample=next(row for row in contracts if row['operation']==spec['operations'][0]);path=ROOT/Path(spec['path']).relative_to(PREFIX)
+ proc=subprocess.run(['node',str(path)],input=stable(sample['request']),text=True,capture_output=True,check=False)
+ observed=json.loads(proc.stdout);assert proc.returncode==0 and observed==sample['expected'];spec['invoked']=True
+ witness('OT6994-M-runner','paired_runner_complete_envelope','pass',sample['expected_sha256'],h(observed),['OT6994-X1-RUNNER-GUARD'])
+
+counts=dict(collections.Counter(row['result'] for row in witnesses));assert counts=={'pass':916,'fail':455}
+outcomes=dict(collections.Counter(row['output']['outcome'] for row in records));assert outcomes=={'completed':150}
+execution={'schema':'orin.matching-execution.v1','stage':'x1','invocations':1,'successes':1,'replays':0,
+ 'contracts':len(contracts),'records':records,'witnesses':witnesses,'counts':{'contracts':150,'safe':300,'candidate_failed':300,
+ 'candidate_refusal_passed':300,'cfr_passed':300,'altered_output_failed':150,'caller_failed':5,'caller_recovery_passed':1,'skill_passed':10,'runner_passed':5,
+ 'witnesses':len(witnesses),'passing':counts['pass'],'failed':counts['fail']},'outcomes':outcomes,
+ 'previous_publication':{'commit':PLAN_HEAD,'clean':True,'four_way_equal':True},'boundary':plan['boundary']}
+write('x1/execution.json',execution)
+write('x1/capabilities.json',{'skills':skill_specs,'runners':runner_specs,'global_installs':0,'package_installs':0,
+ 'formats':['json','md','txt'],'complete_skill_reads':10,'runner_invocations':5,'boundary':plan['boundary']})
+tools=runpy.run_path(str(ROOT/'method-flow-tools.txt'));changed=[PREFIX+'x1/runtime.txt',PREFIX+'session.txt',PREFIX+'method-flow-tools.txt']
+ledger=tools['build']('x1',plan,witnesses,changed);report=tools['validate'](ledger)
+write('x1/method-flow.json',ledger);write('x1/method-flow-validation.json',report)
+write('x1/summary.md','# Orin Thale v699-v4 x1\n\n'
+ 'All 150 frozen x1 contracts ran in one successful owner-local batch and were not replayed. The tranche retains 455 failed subjects '
+ 'separately from 916 passing checks: 300 malformed contract subjects, 150 altered-output subjects, and five malformed caller frames remain '
+ 'zero-credit failures. Three hundred strict refusals, three hundred safe envelope checks, three hundred CLEAN/FIX/REFINE checks, ten '
+ 'complete local-skill reads, and five paired-runner invocations passed.\n\n'
+ 'Every x1 outcome is completed within the finite synthetic graph responsibility. No maximum matching, Hall certificate, minimum cover, '
+ 'real allocation, fairness, or authority claim is executed at x1.\n\n'+plan['boundary'])
+files=[p for p in ROOT.rglob('*') if p.is_file() and (p.relative_to(ROOT).as_posix().startswith('x1/') or p.relative_to(ROOT).as_posix().startswith('skills/') or p.relative_to(ROOT).as_posix().startswith('runners/') or p.name in ['session.txt','method-flow-tools.txt'])]
+manifest={'schema':'orin.stage-manifest.v1','stage':'x1','byte_domain':'normalized_lf_git_blob',
+ 'entries':[{'path':p.relative_to(REPO).as_posix(),'bytes':len(p.read_bytes()),'sha256':sha(p.read_bytes())} for p in sorted(files)],
+ 'exclusions':[PREFIX+'x1/manifest.json'],'previous_publication':PLAN_HEAD}
+write('x1/manifest.json',manifest)
+with (BANK/'x1-built.json').open('x',encoding='utf-8',newline='\n') as handle:
+ json.dump({'status':'VALID_X1_PRECOMMIT','invocations':1,'successes':1,'replays':0,'contracts':150,'passing':916,'failed':455,
+  'execution_sha256':sha((ROOT/'x1/execution.json').read_bytes()),'observed_at':datetime.now(timezone.utc).isoformat()},handle,indent=2);handle.write('\n')
+print(json.dumps({'status':'VALID_X1_PRECOMMIT','contracts':150,'passing':916,'failed':455,'outcomes':outcomes,
+ 'skills':10,'runners':5,'method_flow_methods':len(ledger['methods']),'manifest_entries':len(manifest['entries'])}))

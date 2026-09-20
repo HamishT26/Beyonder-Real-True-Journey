@@ -1,0 +1,16 @@
+// Node.js CommonJS. Bounded stage batch caller with complete JSON envelopes.
+'use strict';
+const fs=require('node:fs');
+function fail(code){const e=new Error(code);e.code=code;throw e;}
+function main(){
+  try{
+    const raw=fs.readFileSync(0,'utf8');let body;
+    try{body=JSON.parse(raw);}catch{fail('caller_json');}
+    if(!body||typeof body!=='object'||Array.isArray(body)||Object.keys(body).sort().join(',')!=='requests,stage')fail('caller_field_set');
+    if(body.stage!=='x1')fail('caller_stage');if(!Array.isArray(body.requests)||body.requests.length<1||body.requests.length>1000)fail('caller_request_count');
+    const engine=require('./x1/runtime.txt');const outputs=[];
+    for(const request of body.requests){try{outputs.push(engine.run(request));}catch(error){outputs.push(engine.errorEnvelope(error));}}
+    process.stdout.write(JSON.stringify({ok:true,stage:'x1',count:outputs.length,outputs})+'\n');
+  }catch(error){process.stdout.write(JSON.stringify({ok:false,error:error.code||'caller_internal',stage:null,count:0,outputs:[]})+'\n');process.exitCode=2;}
+}
+main();

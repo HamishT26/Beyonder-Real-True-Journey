@@ -1,0 +1,51 @@
+# Python 3. Owner-local metadata-only Method Flow construction helpers.
+import collections
+
+def build(stage, plan, witnesses, changed_files):
+    methods=[]; events=[]; recommendations=[]
+    for method_id in sorted({row['method_id'] for row in witnesses}):
+        rows=[row for row in witnesses if row['method_id']==method_id]
+        negative_ids=sorted({item for row in rows for item in row['retained_negative_ids']})
+        passing=[row for row in rows if row['result']=='pass']
+        assert passing and negative_ids
+        method={'method_id':method_id,'title':method_id.replace('OT6994-M-','').replace('_',' '),
+            'failure_signature':'Malformed input, altered output, caller-envelope mismatch, or promoted protected claim.',
+            'trigger_preconditions':['Frozen finite bipartite request','Exact owner stage and caller'],
+            'privacy_class':'sanitized_public','approval_class':'owner_internal_synthetic',
+            'candidate_workaround':'Retain failed subject and validate a separately identified refusal or repaired copy.',
+            'validation_witness_ids':[row['witness_id'] for row in rows],
+            'recurrence_guard':'Require complete exact envelopes and preserve the stage success latch.',
+            'rollback':'Retain frozen input and failures; add corrections without replaying a successful stage.',
+            'recommendation_state':'preferred','supersedes':[],'protected_gates':plan['contract_template']['protected_gates'],
+            'retained_negative_ids':negative_ids,'scope_boundary':'Same-owner finite synthetic bipartite graphs only.',
+            'execution_authority':'owner_self_scoped_delta','repository_scan':False,'module_scan':True,
+            'cross_lane_scan':False,'unchanged_history_scan':False,'sibling_lane_mutation':False,
+            'source_commit':plan['source_commit'],'final_commit':None,'changed_file_allowlist':changed_files,
+            'module_allowlist':changed_files,'exact_pushed_head_required':True}
+        methods.append(method); first=passing[0]['witness_id']; before=None
+        for after in ['observed','candidate','validated','preferred']:
+            events.append({'event_id':'OT6994-%s-E%03d'%(stage.upper(),len(events)+1),'method_id':method_id,
+                'before':before,'after':after,'reason':'Bounded stage evidence; all failed subjects retained.',
+                'witness_id':first if after in ['validated','preferred'] else None})
+            before=after
+        recommendations.append({'method_id':method_id,'preconditions':method['trigger_preconditions'],'witness_ids':[first],
+            'recurrence_guard':method['recurrence_guard'],'rollback':method['rollback'],'scope_boundary':method['scope_boundary']})
+    result_counts=dict(collections.Counter(row['result'] for row in witnesses))
+    ledger={'schema':'ghc.family.method-flow-state.v1','phase':'v699-v4','owner':'Orin Thale','stage':stage,
+        'source_commit':plan['source_commit'],'final_commit':None,'exact_final_binding':'external terminal receipt; no recursive self-hash claim',
+        'execution_authority':'owner_self_scoped_delta','methods':methods,'witnesses':witnesses,'events':events,
+        'recommendations':recommendations,'counts':{'methods':len(methods),'witnesses':len(witnesses),'witness_results':result_counts,
+        'events':len(events),'recommendations':len(recommendations)},'boundary':plan['boundary']}
+    validate(ledger);return ledger
+
+def validate(ledger):
+    method_ids=[row['method_id'] for row in ledger['methods']]; witness_ids=[row['witness_id'] for row in ledger['witnesses']]
+    assert len(method_ids)==len(set(method_ids)) and len(witness_ids)==len(set(witness_ids))
+    methods=set(method_ids); witnesses=set(witness_ids)
+    assert all(row['method_id'] in methods for row in ledger['witnesses'])
+    assert all(item in witnesses for row in ledger['methods'] for item in row['validation_witness_ids'])
+    assert all(row['retained_negative_ids'] for row in ledger['methods'])
+    assert set(ledger['counts']['witness_results']) <= {'pass','fail'}
+    return {'valid':True,'method_count':len(method_ids),'witness_count':len(witness_ids),
+        'passing':ledger['counts']['witness_results'].get('pass',0),'failed':ledger['counts']['witness_results'].get('fail',0),
+        'unknown_labels':[],'duplicate_method_ids':[],'duplicate_witness_ids':[]}

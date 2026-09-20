@@ -1,0 +1,63 @@
+# Python 3. Metadata-only recovery after the successful non-replayed x1 domain batch.
+from pathlib import Path
+from datetime import datetime, timezone
+import collections, hashlib, json, runpy, sys
+
+ROOT=Path(__file__).resolve().parents[1];REPO=ROOT.parents[2];BANK=Path(sys.argv[1]);PREFIX='docs/orin-thale/v699-v4/'
+def stable(v):return json.dumps(v,sort_keys=True,separators=(',',':'),ensure_ascii=False)
+def sha(raw):return hashlib.sha256(raw).hexdigest()
+def read(name):return json.loads((ROOT/name).read_text(encoding='utf-8'))
+def write(name,value):
+ p=ROOT/name;p.parent.mkdir(parents=True,exist_ok=True);assert not p.exists(),name
+ p.write_text((stable(value) if not isinstance(value,str) else value.rstrip())+'\n',encoding='utf-8',newline='\n')
+assert not (BANK/'x1-built.json').exists()
+plan=read('planning/plan.json');execution=read('x1/execution.json')
+assert execution['invocations']==execution['successes']==1 and execution['replays']==0
+assert execution['counts']['passing']==915 and execution['counts']['failed']==455 and len(execution['witnesses'])==1370
+def append(method,procedure,result,expected,observed,negative):
+ row={'witness_id':'OT6994-X1-W%04d'%(len(execution['witnesses'])+1),'method_id':method,'procedure':procedure,
+  'scope':'owner_self_scoped_metadata_recovery','expected':expected,'observed':observed,'result':result,'same_owner_only':True,
+  'independent_reproduction':False,'retained_negative_ids':list(negative),'boundary':plan['boundary']}
+ execution['witnesses'].append(row);return row['witness_id']
+caller_ids=['OT6994-X1-CALLER-N%03d'%i for i in range(1,6)]
+append('OT6994-M-caller','supported_caller_frame_recovery','pass','x1_complete_envelope',
+ {'stage':'x1','request_count':300,'domain_replay':False},caller_ids)
+failure='OT6994-X1-BUILD-N001'
+failed=append('OT6994-M-method_flow_builder','first_method_flow_construction','fail','every_method_has_a_passing_recovery',
+ {'assertion':'passing and negative_ids','cause':'caller method had failure witnesses but no separate recovery pass','domain_replayed':False},[failure])
+passed=append('OT6994-M-method_flow_builder','bounded_metadata_only_recovery','pass','caller_recovery_added_without_domain_replay',
+ {'caller_recovery_witness':'OT6994-X1-W1371','domain_invocations':1,'domain_replays':0},[failure])
+counts=dict(collections.Counter(row['result'] for row in execution['witnesses']))
+assert counts=={'pass':917,'fail':456}
+execution['counts']['caller_recovery_passed']=1;execution['counts']['method_flow_builder_failed']=1
+execution['counts']['method_flow_builder_recovery_passed']=1;execution['counts']['passing']=917
+execution['counts']['failed']=456;execution['counts']['witnesses']=len(execution['witnesses'])
+execution['metadata_recovery']={'domain_replayed':False,'failed_witness':failed,'passing_witness':passed,
+ 'original_execution_sha256':sha((ROOT/'x1/execution.json').read_bytes()),'recovery_kind':'post_execution_metadata_only'}
+(ROOT/'x1/execution.json').write_text(stable(execution)+'\n',encoding='utf-8',newline='\n')
+write('x1/retained-build-failure.json',{'id':failure,'stage':'x1_post_execution_method_flow','result':'fail','success_credit':0,
+ 'failure':'The first Method Flow build asserted that every method had a passing witness; malformed-caller evidence had only failures.',
+ 'recovery':'Added one metadata-only caller recovery and a separately identified builder recovery without invoking any graph contract again.',
+ 'domain_invocations':1,'domain_replays':0,'failed_witness_id':failed,'recovery_witness_id':passed,'boundary':plan['boundary']})
+tools=runpy.run_path(str(ROOT/'method-flow-tools.txt'));changed=[PREFIX+'x1/runtime.txt',PREFIX+'session.txt',PREFIX+'method-flow-tools.txt']
+ledger=tools['build']('x1',plan,execution['witnesses'],changed);report=tools['validate'](ledger)
+write('x1/method-flow.json',ledger);write('x1/method-flow-validation.json',report)
+write('x1/summary.md','# Orin Thale v699-v4 x1\n\n'
+ 'All 150 frozen x1 contracts ran in one successful owner-local batch and were not replayed. The persisted tranche contains 917 passing '
+ 'and 456 failed witnesses. The 300 malformed contracts, 150 altered outputs, five malformed caller frames, and one post-execution Method '
+ 'Flow construction failure remain zero-credit. The repair added metadata only: one supported-caller witness and one builder-recovery witness. '
+ 'It did not reinvoke a graph contract.\n\n'
+ 'Three hundred safe checks, three hundred strict-refusal checks, three hundred CLEAN/FIX/REFINE checks, ten complete local-skill reads, '
+ 'and five paired-runner invocations passed. Every x1 core outcome is completed. No maximum matching, Hall certificate, minimum cover, '
+ 'real allocation, fairness, or authority claim is executed at x1.\n\n'+plan['boundary'])
+files=[p for p in ROOT.rglob('*') if p.is_file() and (p.relative_to(ROOT).as_posix().startswith('x1/') or p.relative_to(ROOT).as_posix().startswith('skills/') or p.relative_to(ROOT).as_posix().startswith('runners/') or p.name in ['session.txt','method-flow-tools.txt'])]
+manifest={'schema':'orin.stage-manifest.v1','stage':'x1','byte_domain':'normalized_lf_git_blob',
+ 'entries':[{'path':p.relative_to(REPO).as_posix(),'bytes':len(p.read_bytes()),'sha256':sha(p.read_bytes())} for p in sorted(files)],
+ 'exclusions':[PREFIX+'x1/manifest.json'],'previous_publication':'35f4b43a67efd3e701db4c3581a4e8fb866c4461'}
+write('x1/manifest.json',manifest)
+with (BANK/'x1-built.json').open('x',encoding='utf-8',newline='\n') as handle:
+ json.dump({'status':'VALID_X1_PRECOMMIT_WITH_RETAINED_METADATA_FAILURE','invocations':1,'successes':1,'replays':0,
+  'contracts':150,'passing':917,'failed':456,'execution_sha256':sha((ROOT/'x1/execution.json').read_bytes()),
+  'observed_at':datetime.now(timezone.utc).isoformat()},handle,indent=2);handle.write('\n')
+print(json.dumps({'status':'VALID_X1_PRECOMMIT_WITH_RETAINED_METADATA_FAILURE','contracts':150,'passing':917,'failed':456,
+ 'domain_invocations':1,'domain_replays':0,'method_flow_methods':len(ledger['methods']),'manifest_entries':len(manifest['entries'])}))

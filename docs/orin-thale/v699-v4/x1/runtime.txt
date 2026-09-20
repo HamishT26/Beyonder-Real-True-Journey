@@ -1,0 +1,59 @@
+// Node.js CommonJS. X1 execution engine; it never imports the planning oracle.
+'use strict';
+const fs = require('node:fs');
+const OPS = ['partition_inventory','edge_inventory','degree_profiles','isolated_vertices','adjacency_matrix',
+  'neighborhood_sets','connected_components','edge_coverage','greedy_matching','greedy_augmenting_probe'];
+const SCOPE = 'finite_synthetic_bipartite_graph_only';
+function fail(code){const error=new Error(code);error.code=code;throw error;}
+function strictParse(text){
+  if(Buffer.byteLength(text,'utf8')>1048576)fail('json_bytes');let at=0;
+  function ws(){while(at<text.length&&/[\x20\t\r\n]/.test(text[at]))at++;}
+  function string(){const start=at++;while(at<text.length){const c=text[at++];if(c==='"'){try{return JSON.parse(text.slice(start,at));}catch{fail('json_syntax');}}if(c==='\\')at++;}fail('json_syntax');}
+  function value(depth){if(depth>24)fail('json_depth');ws();const c=text[at];
+    if(c==='"')return string();
+    if(c==='{'){at++;ws();const obj=Object.create(null),keys=new Set();if(text[at]==='}'){at++;return obj;}while(at<text.length){ws();if(text[at]!=='"')fail('json_syntax');const k=string();if(keys.has(k))fail('duplicate_key');keys.add(k);ws();if(text[at++]!==':')fail('json_syntax');obj[k]=value(depth+1);ws();if(text[at]==='}'){at++;return obj;}if(text[at++]!==',')fail('json_syntax');}fail('json_syntax');}
+    if(c==='['){at++;ws();const arr=[];if(text[at]===']'){at++;return arr;}while(at<text.length){arr.push(value(depth+1));ws();if(text[at]===']'){at++;return arr;}if(text[at++]!==',')fail('json_syntax');}fail('json_syntax');}
+    for(const [token,result] of [['true',true],['false',false],['null',null]])if(text.startsWith(token,at)){at+=token.length;return result;}
+    const m=/^-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?/.exec(text.slice(at));if(m){at+=m[0].length;const n=Number(m[0]);if(!Number.isFinite(n))fail('json_number');return n;}fail('json_syntax');}
+  const result=value(0);ws();if(at!==text.length)fail('json_syntax');return result;
+}
+function stable(v){if(Array.isArray(v))return '['+v.map(stable).join(',')+']';if(v&&typeof v==='object')return '{'+Object.keys(v).sort().map(k=>JSON.stringify(k)+':'+stable(v[k])).join(',')+'}';return JSON.stringify(v);}
+function freeze(v){if(v&&typeof v==='object'){Object.values(v).forEach(freeze);Object.freeze(v);}return v;}
+function validate(q,ops=OPS){
+  if(!q||typeof q!=='object'||Array.isArray(q))fail('field_set');
+  if(Object.keys(q).sort().join(',')!=='edges,left,limit,op,right,seed')fail('field_set');
+  if(typeof q.op!=='string'||!ops.includes(q.op))fail('operation');
+  if(!Number.isInteger(q.left)||q.left<1||q.left>6||!Number.isInteger(q.right)||q.right<1||q.right>6)fail('partition_size');
+  if(!Array.isArray(q.edges)||q.edges.length>36)fail('edge_shape');
+  const keys=new Set();
+  for(const edge of q.edges){if(!Array.isArray(edge)||edge.length!==2||!edge.every(Number.isInteger))fail('edge_shape');if(edge[0]<0||edge[0]>=q.left||edge[1]<0||edge[1]>=q.right)fail('edge_bounds');const key=edge.join(':');if(keys.has(key))fail('duplicate_edge');keys.add(key);}
+  if(!Number.isInteger(q.limit)||q.limit<1||q.limit>20)fail('limit');if(q.seed!=='orin-v699-v4')fail('seed');
+}
+function edgesFor(q){return q.edges.map(e=>[e[0],e[1]]).sort((a,b)=>a[0]-b[0]||a[1]-b[1]);}
+function neighborhoods(q){const edges=edgesFor(q),left=Array.from({length:q.left},()=>[]),right=Array.from({length:q.right},()=>[]);for(const [a,b] of edges){left[a].push(b);right[b].push(a);}return {left,right};}
+function degrees(q){const n=neighborhoods(q);return {left:n.left.map(x=>x.length),right:n.right.map(x=>x.length)};}
+function components(q){const n=neighborhoods(q),unseen=new Set([...Array(q.left)].map((_,i)=>'L'+i).concat([...Array(q.right)].map((_,i)=>'R'+i))),answer=[];
+  while(unseen.size){const start=[...unseen].sort()[0],queue=[start],seen=new Set([start]);for(let cursor=0;cursor<queue.length;cursor++){const v=queue[cursor],side=v[0],index=Number(v.slice(1));const next=(side==='L'?n.left[index].map(j=>'R'+j):n.right[index].map(i=>'L'+i)).sort();for(const other of next)if(!seen.has(other)){seen.add(other);queue.push(other);}}for(const v of seen)unseen.delete(v);answer.push({left:[...seen].filter(v=>v[0]==='L').map(v=>Number(v.slice(1))).sort((a,b)=>a-b),right:[...seen].filter(v=>v[0]==='R').map(v=>Number(v.slice(1))).sort((a,b)=>a-b)});}return answer;}
+function greedy(q){const usedL=new Set(),usedR=new Set(),answer=[];for(const [a,b] of edgesFor(q))if(!usedL.has(a)&&!usedR.has(b)){answer.push([a,b]);usedL.add(a);usedR.add(b);}return answer;}
+function augmentingPath(q,matching){const edges=edgesFor(q),matched=new Set(matching.map(e=>e.join(':'))),matchedL=new Set(matching.map(e=>e[0])),matchedR=new Set(matching.map(e=>e[1]));const queue=[];for(let i=0;i<q.left;i++)if(!matchedL.has(i))queue.push([['L',i]]);const seen=new Set(queue.map(p=>p[0].join(':')));
+  for(let cursor=0;cursor<queue.length;cursor++){const path=queue[cursor],[side,index]=path.at(-1);if(side==='R'&&!matchedR.has(index))return path;const next=side==='L'?edges.filter(([a,b])=>a===index&&!matched.has(a+':'+b)).map(([,b])=>['R',b]):matching.filter(([,b])=>b===index).map(([a])=>['L',a]);for(const other of next.sort((a,b)=>a[0].localeCompare(b[0])||a[1]-b[1])){const key=other.join(':');if(!seen.has(key)){seen.add(key);queue.push([...path,other]);}}}return null;}
+function success(op,result,outcome='completed'){return {ok:true,operation:op,outcome,result,scope:SCOPE,independent_reproduction:false};}
+function errorEnvelope(error){return {ok:false,error:error.code||'internal_error',outcome:'exact_gate',scope:SCOPE,independent_reproduction:false};}
+function run(q){validate(q);const before=stable(q);freeze(q);const edges=edgesFor(q),n=neighborhoods(q),d=degrees(q);let result;
+  switch(q.op){
+    case 'partition_inventory':result={left:[...Array(q.left).keys()],right:[...Array(q.right).keys()],left_count:q.left,right_count:q.right};break;
+    case 'edge_inventory':result={edges,count:edges.length};break;
+    case 'degree_profiles':result={left_degrees:d.left,right_degrees:d.right};break;
+    case 'isolated_vertices':result={left:d.left.map((x,i)=>[x,i]).filter(x=>x[0]===0).map(x=>x[1]),right:d.right.map((x,i)=>[x,i]).filter(x=>x[0]===0).map(x=>x[1])};break;
+    case 'adjacency_matrix':result={matrix:Array.from({length:q.left},(_,i)=>Array.from({length:q.right},(_,j)=>Number(edges.some(e=>e[0]===i&&e[1]===j))))};break;
+    case 'neighborhood_sets':result=n;break;
+    case 'connected_components':result={components:components(q)};break;
+    case 'edge_coverage':result={covered_left:d.left.map((x,i)=>[x,i]).filter(x=>x[0]>0).map(x=>x[1]),covered_right:d.right.map((x,i)=>[x,i]).filter(x=>x[0]>0).map(x=>x[1])};break;
+    case 'greedy_matching':{const m=greedy(q);result={matching:m,cardinality:m.length,optimality_claimed:false};break;}
+    case 'greedy_augmenting_probe':{const m=greedy(q),path=augmentingPath(q,m);result={greedy_matching:m,augmenting_path:path,found:path!==null};break;}
+    default:fail('operation');
+  }
+  if(before!==stable(q))fail('input_mutation');return success(q.op,result);
+}
+function makeCli(engine=run,allowed=OPS){try{const q=strictParse(fs.readFileSync(0,'utf8'));if(!allowed.includes(q.op))fail('runner_operation');process.stdout.write(JSON.stringify(engine(q))+'\n');}catch(error){process.stdout.write(JSON.stringify(errorEnvelope(error))+'\n');process.exitCode=2;}}
+module.exports={OPS,SCOPE,fail,strictParse,stable,freeze,validate,edgesFor,neighborhoods,degrees,components,greedy,augmentingPath,success,errorEnvelope,run,makeCli,cli:allowed=>makeCli(run,allowed)};

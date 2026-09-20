@@ -1,0 +1,73 @@
+# Python 3. Bounded persisted-output validation only; never imports or invokes a domain runtime.
+from pathlib import Path
+from datetime import datetime, timezone
+import ast, hashlib, json, re, subprocess
+
+ROOT=Path(__file__).resolve().parents[1];REPO=ROOT.parents[2];PREFIX='docs/orin-thale/v699-v4/'
+def stable(v):return json.dumps(v,sort_keys=True,separators=(',',':'),ensure_ascii=False)
+def sha(raw):return hashlib.sha256(raw).hexdigest()
+def read(name):return json.loads((ROOT/name).read_text(encoding='utf-8'))
+def write(name,value):
+ p=ROOT/name;p.parent.mkdir(parents=True,exist_ok=True);assert not p.exists(),name
+ p.write_text(stable(value)+'\n',encoding='utf-8',newline='\n')
+
+plan=read('planning/plan.json');execution=read('x1/execution.json');method=read('x1/method-flow.json');report=read('x1/method-flow-validation.json')
+assert execution['invocations']==execution['successes']==1 and execution['replays']==0
+assert execution['counts']['passing']==917 and execution['counts']['failed']==456 and len(execution['records'])==150
+contracts={row['id']:row for row in plan['contracts'] if row['stage']=='x1'}
+assert all(row['output']==contracts[row['id']]['expected'] for row in execution['records'])
+assert report['valid'] and report['passing']==917 and report['failed']==456
+
+json_files=sorted(ROOT.rglob('*.json'));parsed=0
+for path in json_files: json.loads(path.read_text(encoding='utf-8'));parsed+=1
+python_files=[ROOT/'planning/reference.txt',ROOT/'planning/build-plan.txt',ROOT/'method-flow-tools.txt',ROOT/'x1/build-x1.txt',ROOT/'x1/recover-x1-metadata.txt',ROOT/'x1/validate-x1.txt']
+for path in python_files: ast.parse(path.read_text(encoding='utf-8'))
+js_files=[ROOT/'x1/runtime.txt',ROOT/'session.txt']+sorted((ROOT/'runners').glob('*.txt'))
+for path in js_files:
+ proc=subprocess.run(['node','-e',"new (require('node:vm').Script)(require('node:fs').readFileSync(process.argv[1],'utf8'))",str(path)],capture_output=True,text=True)
+ assert proc.returncode==0,(path,proc.stderr)
+
+patterns={
+ 'credential':re.compile(r'(?:sk-[A-Za-z0-9]{16,}|ghp_[A-Za-z0-9]{16,}|api[_-]?key\s*[:=]\s*[A-Za-z0-9_-]{12,})',re.I),
+ 'raw_task_or_thread_id':re.compile(r'019[a-f0-9]{5}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}',re.I),
+ 'private_absolute_path':re.compile(r'[A-Za-z]:\\(?:Users|GHC-Archives)\\',re.I),
+ 'email_address':re.compile(r'[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}',re.I),
+ 'international_phone':re.compile(r'(?<![A-Za-z0-9])\+[0-9]{9,15}(?![A-Za-z0-9])'),
+}
+candidates=[]
+for path in sorted(ROOT.rglob('*')):
+ if not path.is_file() or path.suffix.lower() not in {'.json','.md','.txt','.html'}:continue
+ text=path.read_text(encoding='utf-8')
+ for category,pattern in patterns.items():
+  for match in pattern.finditer(text):
+   classification='scanner_definition' if path==ROOT/'x1/validate-x1.txt' else 'payload_candidate'
+   candidates.append({'path':path.relative_to(REPO).as_posix(),'class':category,'classification':classification,
+    'start':match.start(),'length':match.end()-match.start()})
+confirmed=[row for row in candidates if row['classification']=='payload_candidate']
+assert not confirmed,confirmed
+write('x1/scanner-adjudication.json',{'schema':'orin.five-class-scanner-adjudication.v1','files_scanned':sum(1 for p in ROOT.rglob('*') if p.is_file()),
+ 'classes':list(patterns),'candidates':candidates,'confirmed_hits':confirmed,'confirmed_count':0,
+ 'raw_candidate_values_persisted':False,'boundary':plan['boundary']})
+write('x1/validation-failures.json',{'failures':[{'id':'OT6994-X1-VAL-N001','result':'fail','success_credit':0,
+ 'failure':'The first broad regex projection treated long digit runs inside hashes as phone-like candidates and emitted an overlarge false-positive stream.',
+ 'recovery':'Used five bounded class-specific expressions, retained only path/class/offset/length metadata, and adjudicated scanner definitions separately.',
+ 'domain_replayed':False}],'recoveries_separate':True,'boundary':plan['boundary']})
+word_counts={}
+for path in ROOT.rglob('*'):
+ if path.is_file() and path.suffix.lower() in {'.json','.md','.txt','.html'}:word_counts[path.relative_to(REPO).as_posix()]=len(path.read_text(encoding='utf-8').split())
+validation={'schema':'orin.x1-persisted-validation.v1','status':'VALID_X1_PERSISTED_OUTPUTS','domain_replayed':False,
+ 'contracts_exact':150,'passing_witnesses':917,'failed_witnesses':456,'additional_validation_failures':1,
+ 'json_parses':parsed,'python_ast_checks':len(python_files),'javascript_syntax_checks':len(js_files),
+ 'skills_read_through_eof':10,'runner_invocations_in_execution':5,'confirmed_privacy_hits':0,
+ 'maximum_document_words':max(word_counts.values()),'documents_under_100000_words':all(v<=100000 for v in word_counts.values()),
+ 'method_flow_valid':True,'scope':'owner_self_scoped_persisted_output','observed_at':datetime.now(timezone.utc).isoformat(),
+ 'boundary':plan['boundary']}
+write('x1/validation.json',validation)
+files=[p for p in ROOT.rglob('*') if p.is_file() and (p.relative_to(ROOT).as_posix().startswith('x1/') or p.relative_to(ROOT).as_posix().startswith('skills/') or p.relative_to(ROOT).as_posix().startswith('runners/') or p.name in ['session.txt','method-flow-tools.txt']) and p!=ROOT/'x1/manifest.json']
+manifest={'schema':'orin.stage-manifest.v1','stage':'x1','byte_domain':'normalized_lf_git_blob',
+ 'entries':[{'path':p.relative_to(REPO).as_posix(),'bytes':len(p.read_bytes()),'sha256':sha(p.read_bytes())} for p in sorted(files)],
+ 'exclusions':[PREFIX+'x1/manifest.json'],'previous_publication':'35f4b43a67efd3e701db4c3581a4e8fb866c4461'}
+(ROOT/'x1/manifest.json').write_text(stable(manifest)+'\n',encoding='utf-8',newline='\n')
+print(json.dumps({'status':validation['status'],'contracts_exact':150,'passing':917,'failed':456,'retained_validator_failures':1,
+ 'json_parses':parsed,'python_ast':len(python_files),'javascript_syntax':len(js_files),'scanner_candidates':len(candidates),
+ 'confirmed_privacy_hits':0,'manifest_entries':len(manifest['entries'])}))
