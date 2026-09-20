@@ -9,6 +9,7 @@ PLANNING = 'dd4f3b41ca2f8b3fa41c1ee7575f7dbf024c718b'
 CORRECTION = '9017231fa28aa2d33cfa2e4c61bf3262ab02b6d0'
 X1 = 'eba0cd5fed030fe6f1c090c95b68434e11564a5d'
 X2 = 'e9c8b0756c0f42bf9d5d999952f543d39d064c58'
+FIRST_FINAL = '156557757435d82945669c474045997cfcd08f1e'
 BRANCH = 'codex/GHC-Family/liora-venn-v699-v5-full-tools'
 PREFIX = 'docs/liora-venn/v699-v5/'
 
@@ -55,14 +56,14 @@ try:
     parent = output(git('rev-parse', 'HEAD^'))
     record('exact_head', head == args.expected_head, head, args.expected_head)
     record('exact_branch', branch == BRANCH, branch, BRANCH)
-    record('final_parent', parent == X2, parent, X2)
-    for anchor in [SOURCE, PLANNING, CORRECTION, X1, X2]:
+    record('final_parent', parent == FIRST_FINAL, parent, FIRST_FINAL)
+    for anchor in [SOURCE, PLANNING, CORRECTION, X1, X2, FIRST_FINAL]:
         record('ancestor_' + anchor[:12],
                git('merge-base', '--is-ancestor', anchor, head, check=False).returncode == 0)
     commits = output(git('rev-list', '--reverse', SOURCE + '..' + head)).splitlines()
     merges = [row for row in output(
         git('rev-list', '--min-parents=2', SOURCE + '..' + head)).splitlines() if row]
-    record('phase_commit_count', len(commits) == 5, len(commits), 5)
+    record('phase_commit_count', len(commits) == 6, len(commits), 6)
     record('zero_merges', len(merges) == 0, len(merges), 0)
     status_before = [row for row in output(
         git('status', '--porcelain=v1', '--untracked-files=all')).splitlines() if row]
@@ -138,7 +139,9 @@ try:
         ROOT / 'x1/build-x1.txt', ROOT / 'x1/validate-x1.txt',
         ROOT / 'x2/build-x2.txt', ROOT / 'x2/continue-x2.txt',
         ROOT / 'x2/validate-x2.txt',
-        ROOT / 'final/build-final.txt', ROOT / 'final/run-canonical.txt',
+        ROOT / 'final/build-final.txt', ROOT / 'final/build-canonical-correction.txt',
+        ROOT / 'final/continue-canonical-correction.txt',
+        ROOT / 'final/run-canonical.txt',
         ROOT / 'final/validate-final.txt']
     python_issues = []
     for path in python_files:
@@ -224,8 +227,8 @@ try:
         git('diff-tree', '--no-commit-id', '--name-only', '-r', head)
     ).splitlines() if row]
     delta, delta_issues, delta_paths_ok = verify_manifest(
-        'validation/final-delta-manifest.json', delta_actual)
-    record('final_delta_manifest', not delta_issues and delta_paths_ok,
+        'validation/correction-delta-manifest.json', delta_actual)
+    record('correction_delta_manifest', not delta_issues and delta_paths_ok,
            {'entries': len(delta['entries']),
             'exclusions': len(delta['exclusions']),
             'blob_issues': delta_issues, 'path_match': delta_paths_ok},
@@ -235,8 +238,8 @@ try:
         git('diff', '--name-only', SOURCE + '..' + head, '--', PREFIX)
     ).splitlines() if row]
     owner, owner_issues, owner_paths_ok = verify_manifest(
-        'validation/final-owner-manifest.json', owner_actual)
-    record('final_owner_manifest', not owner_issues and owner_paths_ok,
+        'validation/correction-owner-manifest.json', owner_actual)
+    record('correction_owner_manifest', not owner_issues and owner_paths_ok,
            {'entries': len(owner['entries']),
             'exclusions': len(owner['exclusions']),
             'blob_issues': owner_issues, 'path_match': owner_paths_ok},
@@ -250,7 +253,7 @@ try:
             seal_issues.append(entry['path'])
     record('content_seal', not seal_issues,
            {'targets': len(seal['targets']), 'issues': seal_issues},
-           {'targets': 10, 'issues': []})
+           {'targets': 15, 'issues': []})
 
     truth = json.loads(blob(head, PREFIX + 'final/phase-truth.json'))
     record('outcomes',
@@ -262,9 +265,9 @@ try:
             'open_gap': 15, 'exact_gate': 15})
     record('effective_counts',
            truth['effective_counts'] ==
-           {'methods': 1480, 'witnesses': 93048,
-            'passing_witnesses': 70342, 'failed_witnesses': 22706,
-            'negatives': 29683, 'open_gaps': 884, 'exact_gates': 970},
+           {'methods': 1482, 'witnesses': 93052,
+            'passing_witnesses': 70344, 'failed_witnesses': 22708,
+            'negatives': 29685, 'open_gaps': 884, 'exact_gates': 970},
            truth['effective_counts'], 'exact sealed counts')
     record('terminal_verdict',
            truth['verdict'] == 'NOT_READY_FOR_STAGE_20',
@@ -272,6 +275,14 @@ try:
     record('full_suite_not_run',
            truth['complete_repository_suite'] is False,
            truth['complete_repository_suite'], False)
+    first_failure = json.loads(blob(
+        head, PREFIX + 'final/canonical-failure-receipt.json'))
+    record('retained_first_canonical_failure',
+           first_failure['receipt_sha256'] ==
+           '52c76f37426986ad8ed329037c31e7dcd2c19ee327c9902383e07c2a84c66033' and
+           first_failure['status'] == 'INVALID_EXACT_FINAL_OWNER_SCOPED_CANONICAL' and
+           first_failure['success_count'] == 0 and
+           first_failure['replay_count'] == 0)
     route = blob(
         head, PREFIX + 'handoffs/tamar-vey-v699-v6-activation-candidate.md'
     ).decode('utf-8')
@@ -318,11 +329,11 @@ except Exception as error:
            {'type': type(error).__name__, 'message': str(error)}, 'none')
 
 passed = sum(1 for row in checks if row['passed'])
-status = ('VALID_EXACT_FINAL_OWNER_SCOPED_CANONICAL'
+status = ('VALID_EXACT_CORRECTED_FINAL_OWNER_SCOPED_CANONICAL'
           if passed == len(checks)
-          else 'INVALID_EXACT_FINAL_OWNER_SCOPED_CANONICAL')
+          else 'INVALID_EXACT_CORRECTED_FINAL_OWNER_SCOPED_CANONICAL')
 payload = {
-    'schema': 'liora.exact-final-canonical-receipt.v1',
+    'schema': 'liora.exact-corrected-final-canonical-receipt.v1',
     'status': status, 'invocation_count': 1,
     'success_count': int(status.startswith('VALID_')),
     'replay_count': 0, 'expected_head': args.expected_head,

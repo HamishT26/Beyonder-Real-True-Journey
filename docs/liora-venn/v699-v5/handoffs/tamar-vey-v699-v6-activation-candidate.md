@@ -1,4 +1,4 @@
-# TAMAR VEY — PREPARED Liora v699-v5 to Tamar v699-v6 activation candidate
+# Tamar Vey — PREPARED Liora v699-v5 to Tamar v699-v6 activation candidate
 
 PREPARED_NOT_SENT
 
@@ -12,7 +12,7 @@ This sanitized candidate is repository preparation only. It does not prove route
 - Liora x2: `e9c8b0756c0f42bf9d5d999952f543d39d064c58`
 - Exact Liora final: `EXTERNAL_EXACT_FINAL_AFTER_COMMIT`
 
-Outcomes are exactly 255 `completed`, 15 `represented`, 15 `open_gap`, and 15 `exact_gate`. Effective totals are 1,480 methods, 93,048 witnesses, 70,342 passes, 22,706 failures, 29,683 negatives, 884 open gaps, and 970 exact gates. The x2 aggregate succeeded once; its later postprocess failure and no-replay recovery remain explicit. All five final-stage failures and their separate recoveries remain retained. The full repository suite was not run. Terminal verdict remains `NOT_READY_FOR_STAGE_20`.
+Outcomes are exactly 255 `completed`, 15 `represented`, 15 `open_gap`, and 15 `exact_gate`. Effective totals are 1,482 methods, 93,052 witnesses, 70,344 passes, 22,708 failures, 29,685 negatives, 884 open gaps, and 970 exact gates. The x2 aggregate succeeded once; its later postprocess failure and no-replay recovery remain explicit. All seven final-stage failures and their separate recoveries remain retained. The correction-builder path-projection failure also remains zero-credit and its path-only continuation did not replay domain or canonical execution. The first 34/35 canonical receipt remains zero-credit; this candidate is the additively corrected route-token preparation and does not promote that failure. The full repository suite was not run. Terminal verdict remains `NOT_READY_FOR_STAGE_20`.
 
 Tamar must reread the exact committed packet and newest live authority before any mutation, work solo in one additive D-first lane, preserve strict x1-before-x2, every retained failure, all open gaps and exact gates, the four core outcome labels, owner-self-scoped validation, one successful exact-final canonical aggregate with no replay, and all scientific, professional, legal, cultural, affected-party, privacy, accessibility, Māori-data-governance, and Māori-authority boundaries. No later endpoint may be contacted before Tamar closeout.
 

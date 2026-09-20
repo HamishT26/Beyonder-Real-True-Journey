@@ -1,4 +1,4 @@
-# Python 3. Metadata-only final validator; no domain or canonical replay.
+# Python 3. Metadata-only corrected-final validator; no domain or canonical replay.
 from pathlib import Path
 import json
 
@@ -11,27 +11,38 @@ truth = read('final/phase-truth.json')
 assert truth['outcomes'] == {
     'completed': 255, 'represented': 15, 'open_gap': 15, 'exact_gate': 15}
 assert truth['local_method_flow'] == {
-    'methods': 33, 'witnesses': 3117, 'passing_witnesses': 2182,
-    'failed_witnesses': 935, 'negatives': 935,
+    'methods': 35, 'witnesses': 3121, 'passing_witnesses': 2184,
+    'failed_witnesses': 937, 'negatives': 937,
     'open_gaps': 15, 'exact_gates': 15}
 assert truth['effective_counts'] == {
-    'methods': 1480, 'witnesses': 93048, 'passing_witnesses': 70342,
-    'failed_witnesses': 22706, 'negatives': 29683,
+    'methods': 1482, 'witnesses': 93052, 'passing_witnesses': 70344,
+    'failed_witnesses': 22708, 'negatives': 29685,
     'open_gaps': 884, 'exact_gates': 970}
 assert truth['domain_aggregates']['replays'] == 0
 assert truth['canonical'] == {
-    'state': 'PREPARED_NOT_INVOKED', 'invocation_count': 0,
-    'success_count': 0, 'replay_count': 0}
+    'state': 'CORRECTED_FINAL_PREPARED_NOT_INVOKED',
+    'first_invocation_count': 1, 'first_success_count': 0,
+    'first_replay_count': 0,
+    'first_failed_receipt_sha256': '52c76f37426986ad8ed329037c31e7dcd2c19ee327c9902383e07c2a84c66033',
+    'first_failed_payload_sha256': 'ecca3e12ca4aa4580ccd2ad8a6a57ee7d1030d0d717ac7def385068c6be96a74',
+    'corrected_invocation_count': 0, 'corrected_success_count': 0,
+    'corrected_replay_count': 0,
+    'correction_builder_failures': 1,
+    'correction_builder_recoveries': 1}
 assert truth['verdict'] == 'NOT_READY_FOR_STAGE_20'
-assert read('final/retained-negative-register.json')['local_count'] == 935
+assert read('final/retained-negative-register.json')['local_count'] == 937
 assert read('final/open-gap-register.json')['effective_count'] == 884
 assert read('final/exact-gate-register.json')['effective_count'] == 970
-assert read('final/method-flow-summary.json')['distinct_method_count'] == 33
-assert read('closeout/content-seal.json')['target_count'] == 10
+assert read('final/method-flow-summary.json')['distinct_method_count'] == 35
+assert read('closeout/content-seal.json')['target_count'] == 15
+failure = read('final/canonical-failure-receipt.json')
+assert failure['status'] == 'INVALID_EXACT_FINAL_OWNER_SCOPED_CANONICAL'
+assert failure['success_count'] == 0 and failure['replay_count'] == 0
 print(json.dumps({
-    'status': 'VALID_FINAL_METADATA_PRECANONICAL',
+    'status': 'VALID_CORRECTED_FINAL_METADATA_PRECANONICAL',
     'outcomes': truth['outcomes'],
     'effective_counts': truth['effective_counts'],
-    'canonical_invocations': 0,
+    'first_canonical_success_credit': 0,
+    'corrected_canonical_invocations': 0,
     'verdict': truth['verdict'],
     'domain_replayed': False}))

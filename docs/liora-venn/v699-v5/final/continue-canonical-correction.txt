@@ -1,0 +1,378 @@
+# Python 3. Continue the additive canonical correction after the retained path-projection failure.
+from pathlib import Path
+import hashlib, json, re, subprocess, sys
+
+ROOT = Path(__file__).resolve().parents[1]
+REPO = ROOT.parents[2]
+SOURCE = 'bea81cbb05f608f57e7ee2c6f41d0f2104be27dc'
+FIRST_FINAL = '156557757435d82945669c474045997cfcd08f1e'
+BRANCH = 'codex/GHC-Family/liora-venn-v699-v5-full-tools'
+PREFIX = 'docs/liora-venn/v699-v5/'
+FAILURE_ID = 'LV6995-CORRECTION-N001'
+
+def stable(value):
+    return json.dumps(value, sort_keys=True, separators=(',', ':'), ensure_ascii=False)
+
+def sha(raw):
+    return hashlib.sha256(raw).hexdigest()
+
+def read(name):
+    return json.loads((ROOT / name).read_text(encoding='utf-8'))
+
+def write_json(name, value):
+    target = ROOT / name
+    target.parent.mkdir(parents=True, exist_ok=True)
+    target.write_text(stable(value) + '\n', encoding='utf-8', newline='\n')
+
+def write_text(name, value):
+    target = ROOT / name
+    target.parent.mkdir(parents=True, exist_ok=True)
+    target.write_text(value.rstrip() + '\n', encoding='utf-8', newline='\n')
+
+def git(*args):
+    return subprocess.check_output(
+        ['git', '-C', str(REPO), *args], stderr=subprocess.PIPE
+    ).decode().strip()
+
+def replace_once(value, old, new, label):
+    count = value.count(old)
+    assert count == 1, (label, count)
+    return value.replace(old, new, 1)
+
+assert len(sys.argv) == 1
+assert git('rev-parse', 'HEAD') == FIRST_FINAL
+assert git('branch', '--show-current') == BRANCH
+assert git('diff', '--cached', '--name-only') == ''
+
+delta_entries = {
+    'closeout/content-seal.json',
+    'final/build-canonical-correction.txt',
+    'final/canonical-contract.json',
+    'final/canonical-correction-overlay.json',
+    'final/canonical-failure-receipt.json',
+    'final/complete-incomplete-ledger.json',
+    'final/continue-canonical-correction.txt',
+    'final/external-receipt-bindings.json',
+    'final/lifecycle.json',
+    'final/method-flow-summary.json',
+    'final/overview.md',
+    'final/phase-truth.json',
+    'final/retained-negative-register.json',
+    'final/run-canonical.txt',
+    'final/validate-final.txt',
+    'handoffs/tamar-vey-v699-v6-activation-candidate.md'}
+delta_exclusions = {
+    'validation/correction-delta-manifest.json',
+    'validation/correction-owner-manifest.json',
+    'validation/correction-staged-review.json'}
+expected_delta = {PREFIX + name for name in delta_entries | delta_exclusions}
+tracked_delta = set(git('diff', '--name-only').splitlines())
+untracked_delta = set(git('ls-files', '--others', '--exclude-standard').splitlines())
+actual_delta = tracked_delta | untracked_delta
+assert actual_delta == expected_delta, (sorted(expected_delta), sorted(actual_delta))
+
+truth = read('final/phase-truth.json')
+assert truth['local_method_flow'] == {
+    'methods': 34, 'witnesses': 3119, 'passing_witnesses': 2183,
+    'failed_witnesses': 936, 'negatives': 936,
+    'open_gaps': 15, 'exact_gates': 15}
+assert truth['effective_counts'] == {
+    'methods': 1481, 'witnesses': 93050, 'passing_witnesses': 70343,
+    'failed_witnesses': 22707, 'negatives': 29684,
+    'open_gaps': 884, 'exact_gates': 970}
+truth['local_method_flow'] = {
+    'methods': 35, 'witnesses': 3121, 'passing_witnesses': 2184,
+    'failed_witnesses': 937, 'negatives': 937,
+    'open_gaps': 15, 'exact_gates': 15}
+truth['effective_counts'] = {
+    'methods': 1482, 'witnesses': 93052, 'passing_witnesses': 70344,
+    'failed_witnesses': 22708, 'negatives': 29685,
+    'open_gaps': 884, 'exact_gates': 970}
+truth['files'] = 125
+truth['canonical']['correction_builder_failures'] = 1
+truth['canonical']['correction_builder_recoveries'] = 1
+write_json('final/phase-truth.json', truth)
+
+method_flow = read('final/method-flow-summary.json')
+assert method_flow['distinct_method_count'] == 34
+assert len(method_flow['final_methods']) == 6
+new_method = {
+    'method_id': 'LV6995-M-correction-status-path-enumeration',
+    'failure_signature': ('The first additive correction builder stripped leading whitespace from '
+                          'porcelain status output and misparsed the first closeout path as ocs/... '
+                          'after writing deterministic artifacts but before staging.'),
+    'failed_witness': {
+        'id': 'LV6995-CORRECTION-W001', 'result': 'fail',
+        'retained_negative_ids': [FAILURE_ID]},
+    'recovery_witness': {
+        'id': 'LV6995-CORRECTION-W002', 'result': 'pass',
+        'procedure': ('Derived exact tracked and untracked path sets from git diff --name-only and '
+                      'git ls-files --others, then regenerated the correction seal and manifests '
+                      'without domain or canonical replay.'),
+        'retained_negative_ids': [FAILURE_ID]},
+    'recommendation_state': 'preferred',
+    'recovery_erases_failure': False}
+method_flow['method_ids'] = sorted(
+    method_flow['method_ids'] + [new_method['method_id']])
+method_flow['distinct_method_count'] = 35
+method_flow['final_methods'].append(new_method)
+final_stage = [row for row in method_flow['stage_ledgers'] if row['stage'] == 'final']
+assert len(final_stage) == 1 and final_stage[0] == {
+    'stage': 'final', 'methods': 6, 'witnesses': 12,
+    'passing': 6, 'failed': 6}
+final_stage[0].update({'methods': 7, 'witnesses': 14, 'passing': 7, 'failed': 7})
+method_flow['local_totals'] = truth['local_method_flow']
+method_flow['effective_totals'] = truth['effective_counts']
+write_json('final/method-flow-summary.json', method_flow)
+
+negative = read('final/retained-negative-register.json')
+assert negative['local_count'] == 936
+assert all(row['id'] != FAILURE_ID for row in negative['entries'])
+negative['entries'].append({
+    'id': FAILURE_ID, 'stage': 'final_correction',
+    'status': 'retained_zero_credit',
+    'evidence': 'final/canonical-correction-overlay.json'})
+negative['entries'] = sorted(negative['entries'], key=lambda row: row['id'])
+negative['local_count'] = 937
+negative['effective_count'] = 29685
+write_json('final/retained-negative-register.json', negative)
+
+overlay = read('final/canonical-correction-overlay.json')
+overlay['builder_failures'] = [{
+    'id': FAILURE_ID,
+    'status': 'retained_zero_credit',
+    'failure': ('porcelain status output lost its first leading status byte during stripped '
+                'text projection'),
+    'recovery': ('exact tracked and untracked path sets were derived from unambiguous Git '
+                 'path-only commands'),
+    'repository_staged': False,
+    'canonical_invoked': False,
+    'domain_replayed': False}]
+write_json('final/canonical-correction-overlay.json', overlay)
+
+complete = read('final/complete-incomplete-ledger.json')
+complete['complete'].append(
+    'retained correction-builder path-projection failure and exact-set continuation')
+write_json('final/complete-incomplete-ledger.json', complete)
+
+lifecycle = read('final/lifecycle.json')
+lifecycle['correction_operational_failures'] = [{
+    'id': FAILURE_ID, 'retained': True,
+    'recovery_erases_failure': False}]
+write_json('final/lifecycle.json', lifecycle)
+
+contract = read('final/canonical-contract.json')
+contract['retained_correction_failures'] = [{
+    'id': FAILURE_ID, 'success_credit': 0,
+    'recovery_erases_failure': False}]
+write_json('final/canonical-contract.json', contract)
+
+candidate_path = ROOT / 'handoffs/tamar-vey-v699-v6-activation-candidate.md'
+candidate = candidate_path.read_text(encoding='utf-8')
+candidate = replace_once(
+    candidate,
+    'Effective totals are 1,481 methods, 93,050 witnesses, 70,343 passes, 22,707 failures, 29,684 negatives, 884 open gaps, and 970 exact gates.',
+    'Effective totals are 1,482 methods, 93,052 witnesses, 70,344 passes, 22,708 failures, 29,685 negatives, 884 open gaps, and 970 exact gates.',
+    'candidate counts')
+candidate = replace_once(
+    candidate,
+    'All six final-stage failures and their separate recoveries remain retained.',
+    ('All seven final-stage failures and their separate recoveries remain retained. '
+     'The correction-builder path-projection failure also remains zero-credit and its '
+     'path-only continuation did not replay domain or canonical execution.'),
+    'candidate retained failures')
+write_text('handoffs/tamar-vey-v699-v6-activation-candidate.md', candidate)
+
+overview_path = ROOT / 'final/overview.md'
+overview = overview_path.read_text(encoding='utf-8')
+overview = replace_once(
+    overview,
+    'All six final-stage failures and their separate recoveries also remain visible.',
+    ('All seven final-stage failures and their separate recoveries also remain visible. '
+     'The additive correction builder path-projection failure remains zero-credit; its '
+     'continuation used exact path-only Git projections and replayed neither domain work '
+     'nor canonical validation.'),
+    'overview retained failures')
+overview = replace_once(
+    overview,
+    'Local Method Flow contains 34 distinct methods, 3,119 witnesses, 2,183 bounded passes, and 936 retained failures. Effective totals are 1,481 methods, 93,050 witnesses, 70,343 passes, 22,707 failures, 29,684 negatives, 884 open gaps, and 970 exact gates.',
+    'Local Method Flow contains 35 distinct methods, 3,121 witnesses, 2,184 bounded passes, and 937 retained failures. Effective totals are 1,482 methods, 93,052 witnesses, 70,344 passes, 22,708 failures, 29,685 negatives, 884 open gaps, and 970 exact gates.',
+    'overview counts')
+write_text('final/overview.md', overview)
+
+validator = '''# Python 3. Metadata-only corrected-final validator; no domain or canonical replay.
+from pathlib import Path
+import json
+
+ROOT = Path(__file__).resolve().parents[1]
+
+def read(name):
+    return json.loads((ROOT / name).read_text(encoding='utf-8'))
+
+truth = read('final/phase-truth.json')
+assert truth['outcomes'] == {
+    'completed': 255, 'represented': 15, 'open_gap': 15, 'exact_gate': 15}
+assert truth['local_method_flow'] == {
+    'methods': 35, 'witnesses': 3121, 'passing_witnesses': 2184,
+    'failed_witnesses': 937, 'negatives': 937,
+    'open_gaps': 15, 'exact_gates': 15}
+assert truth['effective_counts'] == {
+    'methods': 1482, 'witnesses': 93052, 'passing_witnesses': 70344,
+    'failed_witnesses': 22708, 'negatives': 29685,
+    'open_gaps': 884, 'exact_gates': 970}
+assert truth['domain_aggregates']['replays'] == 0
+assert truth['canonical'] == {
+    'state': 'CORRECTED_FINAL_PREPARED_NOT_INVOKED',
+    'first_invocation_count': 1, 'first_success_count': 0,
+    'first_replay_count': 0,
+    'first_failed_receipt_sha256': '52c76f37426986ad8ed329037c31e7dcd2c19ee327c9902383e07c2a84c66033',
+    'first_failed_payload_sha256': 'ecca3e12ca4aa4580ccd2ad8a6a57ee7d1030d0d717ac7def385068c6be96a74',
+    'corrected_invocation_count': 0, 'corrected_success_count': 0,
+    'corrected_replay_count': 0,
+    'correction_builder_failures': 1,
+    'correction_builder_recoveries': 1}
+assert truth['verdict'] == 'NOT_READY_FOR_STAGE_20'
+assert read('final/retained-negative-register.json')['local_count'] == 937
+assert read('final/open-gap-register.json')['effective_count'] == 884
+assert read('final/exact-gate-register.json')['effective_count'] == 970
+assert read('final/method-flow-summary.json')['distinct_method_count'] == 35
+assert read('closeout/content-seal.json')['target_count'] == 15
+failure = read('final/canonical-failure-receipt.json')
+assert failure['status'] == 'INVALID_EXACT_FINAL_OWNER_SCOPED_CANONICAL'
+assert failure['success_count'] == 0 and failure['replay_count'] == 0
+print(json.dumps({
+    'status': 'VALID_CORRECTED_FINAL_METADATA_PRECANONICAL',
+    'outcomes': truth['outcomes'],
+    'effective_counts': truth['effective_counts'],
+    'first_canonical_success_credit': 0,
+    'corrected_canonical_invocations': 0,
+    'verdict': truth['verdict'],
+    'domain_replayed': False}))
+'''
+write_text('final/validate-final.txt', validator)
+
+canonical_path = ROOT / 'final/run-canonical.txt'
+canonical = canonical_path.read_text(encoding='utf-8')
+canonical = replace_once(
+    canonical,
+    "ROOT / 'final/build-final.txt', ROOT / 'final/build-canonical-correction.txt',\n        ROOT / 'final/run-canonical.txt',",
+    "ROOT / 'final/build-final.txt', ROOT / 'final/build-canonical-correction.txt',\n        ROOT / 'final/continue-canonical-correction.txt',\n        ROOT / 'final/run-canonical.txt',",
+    'canonical continuation syntax input')
+canonical = replace_once(
+    canonical,
+    "{'targets': 14, 'issues': []})",
+    "{'targets': 15, 'issues': []})",
+    'canonical seal targets')
+canonical = replace_once(
+    canonical,
+    "{'methods': 1481, 'witnesses': 93050,\n            'passing_witnesses': 70343, 'failed_witnesses': 22707,\n            'negatives': 29684, 'open_gaps': 884, 'exact_gates': 970}",
+    "{'methods': 1482, 'witnesses': 93052,\n            'passing_witnesses': 70344, 'failed_witnesses': 22708,\n            'negatives': 29685, 'open_gaps': 884, 'exact_gates': 970}",
+    'canonical effective counts')
+write_text('final/run-canonical.txt', canonical)
+
+seal_targets = [
+    'planning/plan.json',
+    'planning/correction-01/correction.json',
+    'x1/execution.json', 'x1/validation.json',
+    'x2/execution.json', 'x2/validation.json',
+    'x2/postprocess-recovery.json',
+    'final/phase-truth.json',
+    'final/method-flow-summary.json',
+    'final/retained-negative-register.json',
+    'final/external-receipt-bindings.json',
+    'final/canonical-failure-receipt.json',
+    'final/canonical-correction-overlay.json',
+    'final/continue-canonical-correction.txt',
+    'handoffs/tamar-vey-v699-v6-activation-candidate.md']
+write_json('closeout/content-seal.json', {
+    'schema': 'liora.content-seal.v2',
+    'target_count': len(seal_targets),
+    'targets': [{
+        'path': PREFIX + name,
+        'bytes': len((ROOT / name).read_bytes()),
+        'sha256': sha((ROOT / name).read_bytes())}
+        for name in seal_targets],
+    'first_final': FIRST_FINAL,
+    'first_canonical_receipt_sha256':
+        '52c76f37426986ad8ed329037c31e7dcd2c19ee327c9902383e07c2a84c66033',
+    'byte_domain': 'normalized_lf_git_blob',
+    'boundary': truth['boundary']})
+
+write_json('validation/correction-delta-manifest.json', {
+    'schema': 'liora.correction-delta-manifest.v1',
+    'entries': [{
+        'path': PREFIX + name,
+        'bytes': len((ROOT / name).read_bytes()),
+        'sha256': sha((ROOT / name).read_bytes())}
+        for name in sorted(delta_entries)],
+    'exclusions': [PREFIX + name for name in sorted(delta_exclusions)],
+    'expected_parent': FIRST_FINAL,
+    'expected_final': 'external_exact_head_after_correction_commit',
+    'byte_domain': 'normalized_lf_git_blob',
+    'boundary': truth['boundary']})
+
+owner_exclusions = {
+    'validation/correction-owner-manifest.json',
+    'validation/correction-staged-review.json'}
+owner_files = sorted(
+    path for path in ROOT.rglob('*') if path.is_file() and
+    path.relative_to(ROOT).as_posix() not in owner_exclusions)
+write_json('validation/correction-owner-manifest.json', {
+    'schema': 'liora.correction-owner-manifest.v1',
+    'entries': [{
+        'path': path.relative_to(REPO).as_posix(),
+        'bytes': len(path.read_bytes()),
+        'sha256': sha(path.read_bytes())}
+        for path in owner_files],
+    'exclusions': [PREFIX + name for name in sorted(owner_exclusions)],
+    'source': SOURCE,
+    'first_final': FIRST_FINAL,
+    'expected_final': 'external_exact_head_after_correction_commit',
+    'byte_domain': 'normalized_lf_git_blob',
+    'boundary': truth['boundary']})
+
+expected_staged = sorted(PREFIX + name for name in delta_entries | delta_exclusions)
+write_json('validation/correction-staged-review.json', {
+    'schema': 'liora.correction-staged-review.v1',
+    'status': 'PREPARED_EXACT_CORRECTION_STAGE',
+    'expected_parent': FIRST_FINAL,
+    'expected_final': 'external_exact_head_after_correction_commit',
+    'expected_staged_count': len(expected_staged),
+    'expected_staged_paths': expected_staged,
+    'delta_manifest_sha256': sha(
+        (ROOT / 'validation/correction-delta-manifest.json').read_bytes()),
+    'owner_manifest_sha256': sha(
+        (ROOT / 'validation/correction-owner-manifest.json').read_bytes()),
+    'external_index_blob_review_required': True,
+    'first_canonical_success_credit': 0,
+    'first_canonical_replayed': False,
+    'domain_replay': False,
+    'boundary': truth['boundary']})
+
+tracked_after = set(git('diff', '--name-only').splitlines())
+untracked_after = set(git('ls-files', '--others', '--exclude-standard').splitlines())
+actual_after = tracked_after | untracked_after
+assert actual_after == expected_delta, (sorted(expected_delta), sorted(actual_after))
+all_files = sorted(path for path in ROOT.rglob('*') if path.is_file())
+maximum = max((
+    len(re.findall(r'\S+', path.read_text(encoding='utf-8'))),
+    path.relative_to(ROOT).as_posix()) for path in all_files)
+assert len(all_files) == 125, len(all_files)
+assert maximum[0] == 64305 and maximum[0] <= 100000, maximum
+assert len(delta_entries) == 16 and len(delta_exclusions) == 3
+assert len(owner_files) == 123
+print(json.dumps({
+    'status': 'VALID_ADDITIVE_CANONICAL_CORRECTION_CONTINUATION_PRECOMMIT',
+    'first_final': FIRST_FINAL,
+    'first_canonical_success_credit': 0,
+    'first_canonical_replays': 0,
+    'owner_files': len(all_files),
+    'delta_entries': len(delta_entries),
+    'delta_exclusions': len(delta_exclusions),
+    'owner_manifest_entries': len(owner_files),
+    'owner_exclusions': len(owner_exclusions),
+    'negative_ids': negative['local_count'],
+    'methods': method_flow['distinct_method_count'],
+    'maximum_document_words': maximum[0],
+    'corrected_canonical_invocations': 0,
+    'verdict': truth['verdict']}))
