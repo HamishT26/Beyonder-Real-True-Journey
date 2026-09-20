@@ -1,0 +1,442 @@
+// Node.js CommonJS. X2 incidence-algebra engine; it never imports the planning oracle.
+"use strict";
+const fs = require("node:fs");
+const OPS = [
+  "principal_filter",
+  "zeta_matrix",
+  "mobius_matrix",
+  "zeta_transform",
+  "mobius_inversion",
+  "order_ideal_enumeration",
+  "linear_extension_enumeration",
+  "hasse_scene",
+  "external_observation_gap",
+  "governance_authority_gate"
+];
+const SCOPE = "finite_synthetic_poset_only";
+const RESERVATIONS = [
+  "empirical_confirmation",
+  "real_participants_or_observations",
+  "professional_and_safety_authority",
+  "production_and_deployment",
+  "legal_and_cultural_authority",
+  "affected_party_rights_and_remedy",
+  "privacy_and_accessibility_completeness",
+  "Maori_wording_data_governance_and_authority",
+  "independent_reproduction",
+  "consciousness_personhood_AGI_ASI",
+  "Theory_of_Everything_proof_or_canon",
+  "Stage_20"
+];
+
+function fail(code) {
+  const error = new Error(code);
+  error.code = code;
+  throw error;
+}
+function strictParse(text) {
+  if (Buffer.byteLength(text, "utf8") > 1048576) fail("json_bytes");
+  let at = 0;
+  function ws() { while (at < text.length && /[\x20\t\r\n]/.test(text[at])) at += 1; }
+  function string() {
+    const start = at++;
+    while (at < text.length) {
+      const character = text[at++];
+      if (character === "\"") {
+        try { return JSON.parse(text.slice(start, at)); } catch (_) { fail("json_syntax"); }
+      }
+      if (character === "\\") at += 1;
+    }
+    fail("json_syntax");
+  }
+  function value(depth) {
+    if (depth > 32) fail("json_depth");
+    ws();
+    const character = text[at];
+    if (character === "\"") return string();
+    if (character === "{") {
+      at += 1;
+      ws();
+      const object = Object.create(null);
+      const keys = new Set();
+      if (text[at] === "}") { at += 1; return object; }
+      while (at < text.length) {
+        ws();
+        if (text[at] !== "\"") fail("json_syntax");
+        const key = string();
+        if (keys.has(key)) fail("duplicate_key");
+        keys.add(key);
+        ws();
+        if (text[at++] !== ":") fail("json_syntax");
+        object[key] = value(depth + 1);
+        ws();
+        if (text[at] === "}") { at += 1; return object; }
+        if (text[at++] !== ",") fail("json_syntax");
+      }
+      fail("json_syntax");
+    }
+    if (character === "[") {
+      at += 1;
+      ws();
+      const array = [];
+      if (text[at] === "]") { at += 1; return array; }
+      while (at < text.length) {
+        array.push(value(depth + 1));
+        ws();
+        if (text[at] === "]") { at += 1; return array; }
+        if (text[at++] !== ",") fail("json_syntax");
+      }
+      fail("json_syntax");
+    }
+    for (const pair of [["true", true], ["false", false], ["null", null]]) {
+      if (text.startsWith(pair[0], at)) { at += pair[0].length; return pair[1]; }
+    }
+    const match = /^-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?/.exec(text.slice(at));
+    if (match) {
+      at += match[0].length;
+      const number = Number(match[0]);
+      if (!Number.isFinite(number)) fail("json_number");
+      return number;
+    }
+    fail("json_syntax");
+  }
+  const result = value(0);
+  ws();
+  if (at !== text.length) fail("json_syntax");
+  return result;
+}
+function stable(value) {
+  if (Array.isArray(value)) return "[" + value.map(stable).join(",") + "]";
+  if (value && typeof value === "object") {
+    return "{" + Object.keys(value).sort().map(key => JSON.stringify(key) + ":" + stable(value[key])).join(",") + "}";
+  }
+  return JSON.stringify(value);
+}
+function freeze(value) {
+  if (value && typeof value === "object") {
+    Object.values(value).forEach(freeze);
+    Object.freeze(value);
+  }
+  return value;
+}
+function relationFor(request) {
+  const size = request.elements.length;
+  const index = new Map(request.elements.map((element, position) => [element, position]));
+  const relation = Array.from({ length: size }, (_, row) =>
+    Array.from({ length: size }, (_, column) => row === column));
+  for (const [lower, upper] of request.covers) relation[index.get(lower)][index.get(upper)] = true;
+  for (let middle = 0; middle < size; middle += 1) {
+    for (let lower = 0; lower < size; lower += 1) {
+      for (let upper = 0; upper < size; upper += 1) {
+        relation[lower][upper] = relation[lower][upper] ||
+          (relation[lower][middle] && relation[middle][upper]);
+      }
+    }
+  }
+  return relation;
+}
+function validate(request, allowed = OPS) {
+  if (!request || typeof request !== "object" || Array.isArray(request)) fail("field_set");
+  const expectedFields = "coordinates,covers,elements,focus,limit,operation,profile,seed,weights";
+  if (Object.keys(request).sort().join(",") !== expectedFields) fail("field_set");
+  if (typeof request.operation !== "string" || !allowed.includes(request.operation)) fail("operation");
+  if (typeof request.profile !== "string" || !/^[a-z0-9_]{1,64}$/.test(request.profile)) fail("profile");
+  if (!Array.isArray(request.elements) || request.elements.length < 1 || request.elements.length > 8) fail("elements");
+  if (!request.elements.every(element => typeof element === "string" && /^[A-Za-z0-9_]{1,32}$/.test(element))) fail("elements");
+  if (new Set(request.elements).size !== request.elements.length) fail("duplicate_element");
+  const elementSet = new Set(request.elements);
+  if (!Array.isArray(request.covers) || request.covers.length > 64) fail("cover_shape");
+  const coverKeys = new Set();
+  for (const cover of request.covers) {
+    if (!Array.isArray(cover) || cover.length !== 2 || !cover.every(item => typeof item === "string")) fail("cover_shape");
+    if (!elementSet.has(cover[0]) || !elementSet.has(cover[1])) fail("cover_element");
+    if (cover[0] === cover[1]) fail("self_cover");
+    const key = cover[0] + "\u0000" + cover[1];
+    if (coverKeys.has(key)) fail("duplicate_cover");
+    coverKeys.add(key);
+  }
+  if (!elementSet.has(request.focus)) fail("focus");
+  if (!request.weights || typeof request.weights !== "object" || Array.isArray(request.weights)) fail("weights");
+  if (Object.keys(request.weights).sort().join(",") !== request.elements.slice().sort().join(",")) fail("weights");
+  if (!Object.values(request.weights).every(value => Number.isSafeInteger(value) && Math.abs(value) <= 1000000)) fail("weights");
+  if (!Array.isArray(request.coordinates) || request.coordinates.length !== request.elements.length) fail("coordinates");
+  const coordinateElements = new Set();
+  for (const coordinate of request.coordinates) {
+    if (!coordinate || typeof coordinate !== "object" || Array.isArray(coordinate)) fail("coordinates");
+    if (Object.keys(coordinate).sort().join(",") !== "element,x,y") fail("coordinates");
+    if (!elementSet.has(coordinate.element) || coordinateElements.has(coordinate.element)) fail("coordinates");
+    if (!Number.isSafeInteger(coordinate.x) || !Number.isSafeInteger(coordinate.y)) fail("coordinates");
+    coordinateElements.add(coordinate.element);
+  }
+  if (!Number.isSafeInteger(request.limit) || request.limit < 1 || request.limit > 50000) fail("limit");
+  if (request.seed !== "liora-v699-v5") fail("seed");
+  const relation = relationFor(request);
+  for (let left = 0; left < relation.length; left += 1) {
+    for (let right = 0; right < relation.length; right += 1) {
+      if (left !== right && relation[left][right] && relation[right][left]) fail("cycle");
+    }
+  }
+}
+function normalizedCovers(request) {
+  return request.covers.map(edge => [edge[0], edge[1]])
+    .sort((left, right) => left[0].localeCompare(right[0]) || left[1].localeCompare(right[1]));
+}
+function reducedCovers(request, relation) {
+  const result = [];
+  const size = request.elements.length;
+  for (let lower = 0; lower < size; lower += 1) {
+    for (let upper = 0; upper < size; upper += 1) {
+      if (lower === upper || !relation[lower][upper]) continue;
+      let mediated = false;
+      for (let middle = 0; middle < size; middle += 1) {
+        if (middle !== lower && middle !== upper &&
+            relation[lower][middle] && relation[middle][upper]) mediated = true;
+      }
+      if (!mediated) result.push([request.elements[lower], request.elements[upper]]);
+    }
+  }
+  return result;
+}
+function zetaFor(relation) {
+  return relation.map(row => row.map(value => value ? 1 : 0));
+}
+function gcd(left, right) {
+  let a = left < 0n ? -left : left;
+  let b = right < 0n ? -right : right;
+  while (b !== 0n) { const remainder = a % b; a = b; b = remainder; }
+  return a;
+}
+function fraction(numerator, denominator = 1n) {
+  if (denominator === 0n) fail("singular_zeta");
+  let n = numerator;
+  let d = denominator;
+  if (d < 0n) { n = -n; d = -d; }
+  const divisor = gcd(n, d);
+  return { n: n / divisor, d: d / divisor };
+}
+function add(left, right) {
+  return fraction(left.n * right.d + right.n * left.d, left.d * right.d);
+}
+function subtract(left, right) {
+  return fraction(left.n * right.d - right.n * left.d, left.d * right.d);
+}
+function multiply(left, right) {
+  return fraction(left.n * right.n, left.d * right.d);
+}
+function divide(left, right) {
+  return fraction(left.n * right.d, left.d * right.n);
+}
+function invertIntegerMatrix(matrix) {
+  const size = matrix.length;
+  const augmented = matrix.map((row, index) =>
+    row.map(value => fraction(BigInt(value))).concat(
+      Array.from({ length: size }, (_, column) => fraction(index === column ? 1n : 0n))));
+  for (let column = 0; column < size; column += 1) {
+    let pivot = column;
+    while (pivot < size && augmented[pivot][column].n === 0n) pivot += 1;
+    if (pivot === size) fail("singular_zeta");
+    if (pivot !== column) [augmented[pivot], augmented[column]] = [augmented[column], augmented[pivot]];
+    const scale = augmented[column][column];
+    augmented[column] = augmented[column].map(value => divide(value, scale));
+    for (let row = 0; row < size; row += 1) {
+      if (row === column || augmented[row][column].n === 0n) continue;
+      const factor = augmented[row][column];
+      augmented[row] = augmented[row].map((value, index) =>
+        subtract(value, multiply(factor, augmented[column][index])));
+    }
+  }
+  return augmented.map(row => row.slice(size).map(value => {
+    if (value.d !== 1n) fail("non_integer_mobius");
+    const number = Number(value.n);
+    if (!Number.isSafeInteger(number)) fail("integer_range");
+    return number;
+  }));
+}
+function zetaValues(request, relation) {
+  const values = Object.create(null);
+  for (let upper = 0; upper < request.elements.length; upper += 1) {
+    let total = 0;
+    for (let lower = 0; lower < request.elements.length; lower += 1) {
+      if (relation[lower][upper]) total += request.weights[request.elements[lower]];
+    }
+    if (!Number.isSafeInteger(total)) fail("integer_range");
+    values[request.elements[upper]] = total;
+  }
+  return values;
+}
+function orderIdeals(request, relation) {
+  const ideals = [];
+  const size = request.elements.length;
+  for (let mask = 0; mask < (1 << size); mask += 1) {
+    let valid = true;
+    for (let upper = 0; upper < size && valid; upper += 1) {
+      if ((mask & (1 << upper)) === 0) continue;
+      for (let lower = 0; lower < size; lower += 1) {
+        if (relation[lower][upper] && (mask & (1 << lower)) === 0) valid = false;
+      }
+    }
+    if (valid) {
+      if (ideals.length >= request.limit) fail("limit_exceeded");
+      ideals.push(request.elements.filter((_, index) => (mask & (1 << index)) !== 0));
+    }
+  }
+  return ideals;
+}
+function linearExtensions(request, relation) {
+  const result = [];
+  const size = request.elements.length;
+  function visit(prefix, used) {
+    if (prefix.length === size) {
+      if (result.length >= request.limit) fail("limit_exceeded");
+      result.push(prefix.map(index => request.elements[index]));
+      return;
+    }
+    for (let candidate = 0; candidate < size; candidate += 1) {
+      if (used.has(candidate)) continue;
+      let available = true;
+      for (let lower = 0; lower < size; lower += 1) {
+        if (lower !== candidate && relation[lower][candidate] && !used.has(lower)) available = false;
+      }
+      if (!available) continue;
+      used.add(candidate);
+      prefix.push(candidate);
+      visit(prefix, used);
+      prefix.pop();
+      used.delete(candidate);
+    }
+  }
+  visit([], new Set());
+  return result;
+}
+function success(operation, outcome, result) {
+  return {
+    ok: true,
+    operation,
+    outcome,
+    result,
+    scope: SCOPE,
+    same_owner_only: true,
+    independent_reproduction: false,
+    planning_oracle_only: true
+  };
+}
+function errorEnvelope(error) {
+  return {
+    ok: false,
+    error: error.code || "internal_error",
+    outcome: "exact_gate",
+    scope: SCOPE,
+    same_owner_only: true,
+    independent_reproduction: false
+  };
+}
+function run(request, allowed = OPS) {
+  validate(request, allowed);
+  const before = stable(request);
+  freeze(request);
+  const relation = relationFor(request);
+  const elements = request.elements;
+  const index = new Map(elements.map((element, position) => [element, position]));
+  let outcome = "completed";
+  let result;
+  switch (request.operation) {
+    case "principal_filter": {
+      const focus = index.get(request.focus);
+      result = { focus: request.focus, elements: elements.filter((_, upper) => relation[focus][upper]) };
+      break;
+    }
+    case "zeta_matrix":
+      result = { elements: elements.slice(), matrix: zetaFor(relation) };
+      break;
+    case "mobius_matrix":
+      result = { elements: elements.slice(), matrix: invertIntegerMatrix(zetaFor(relation)) };
+      break;
+    case "zeta_transform":
+      result = { elements: elements.slice(), values: zetaValues(request, relation) };
+      break;
+    case "mobius_inversion": {
+      const zeta = zetaFor(relation);
+      const mobius = invertIntegerMatrix(zeta);
+      const transformed = zetaValues(request, relation);
+      const values = Object.create(null);
+      for (let upper = 0; upper < elements.length; upper += 1) {
+        let total = 0;
+        for (let lower = 0; lower < elements.length; lower += 1) {
+          total += mobius[lower][upper] * transformed[elements[lower]];
+        }
+        if (!Number.isSafeInteger(total)) fail("integer_range");
+        values[elements[upper]] = total;
+      }
+      result = { elements: elements.slice(), values };
+      break;
+    }
+    case "order_ideal_enumeration": {
+      const ideals = orderIdeals(request, relation);
+      result = { ideals, count: ideals.length };
+      break;
+    }
+    case "linear_extension_enumeration": {
+      const extensions = linearExtensions(request, relation);
+      result = { extensions, count: extensions.length };
+      break;
+    }
+    case "hasse_scene":
+      outcome = "represented";
+      result = {
+        nodes: request.coordinates.map(row => ({ element: row.element, x: row.x, y: row.y })),
+        covers: reducedCovers(request, relation),
+        text_equivalent: "Finite synthetic cover graph for " + request.profile
+      };
+      break;
+    case "external_observation_gap":
+      outcome = "open_gap";
+      result = {
+        observation_rows: 0,
+        likelihood_present: false,
+        parameter_constraint_present: false,
+        reason: "No governed external observation is in scope."
+      };
+      break;
+    case "governance_authority_gate":
+      outcome = "exact_gate";
+      result = { authority_observed: false, reservations: RESERVATIONS.slice() };
+      break;
+    default:
+      fail("operation");
+  }
+  if (before !== stable(request)) fail("input_mutation");
+  return success(request.operation, outcome, result);
+}
+function makeCli(allowed = OPS) {
+  try {
+    const request = strictParse(fs.readFileSync(0, "utf8"));
+    if (!allowed.includes(request.operation)) fail("runner_operation");
+    process.stdout.write(JSON.stringify(run(request, allowed)) + "\n");
+  } catch (error) {
+    process.stdout.write(JSON.stringify(errorEnvelope(error)) + "\n");
+    process.exitCode = 2;
+  }
+}
+module.exports = {
+  OPS,
+  SCOPE,
+  RESERVATIONS,
+  fail,
+  strictParse,
+  stable,
+  freeze,
+  relationFor,
+  validate,
+  normalizedCovers,
+  reducedCovers,
+  zetaFor,
+  invertIntegerMatrix,
+  zetaValues,
+  orderIdeals,
+  linearExtensions,
+  success,
+  errorEnvelope,
+  run,
+  makeCli,
+  cli: allowed => makeCli(allowed)
+};

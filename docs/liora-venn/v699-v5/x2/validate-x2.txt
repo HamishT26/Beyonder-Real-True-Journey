@@ -1,0 +1,28 @@
+# Python 3. Metadata-only x2 validator; it does not replay domain execution.
+from pathlib import Path
+import hashlib,json
+ROOT=Path(__file__).resolve().parents[1]
+def read(name): return json.loads((ROOT/name).read_text(encoding='utf-8'))
+def sha(raw): return hashlib.sha256(raw).hexdigest()
+execution=read('x2/execution.json')
+assert execution['aggregate_invocations']==1 and execution['aggregate_successes']==1
+assert execution['aggregate_failed_invocations']==0 and execution['aggregate_replays']==0
+assert execution['postprocess_failures']==1 and execution['postprocess_continuations']==1
+records=[];witnesses=[]
+for row in execution['records_shards']:
+ path=ROOT/row['path'];assert sha(path.read_bytes())==row['sha256']
+ data=json.loads(path.read_text(encoding='utf-8'));assert data['count']==row['count'];records+=data['records']
+for row in execution['witnesses_shards']:
+ path=ROOT/row['path'];assert sha(path.read_bytes())==row['sha256']
+ data=json.loads(path.read_text(encoding='utf-8'));assert data['count']==row['count'];witnesses+=data['witnesses']
+assert len(records)==execution['records_count']==150
+assert len(witnesses)==execution['witnesses_count']==1552
+assert execution['counts']['safe']==execution['counts']['candidate_failed']==execution['counts']['candidate_refusal_passed']==300
+assert execution['counts']['cfr_tasks']==300
+assert execution['outcomes']=={'completed':105,'represented':15,'open_gap':15,'exact_gate':15}
+assert read('x2/tests.json')['count']==15 and read('x2/tests.json')['all_passed']
+assert read('x2/models-3d.json')['count']==5 and read('x2/models-3d.json')['all_represented']
+assert read('x2/postprocess-recovery.json')['status']=='VALID_POSTPROCESS_RECOVERY_WITHOUT_AGGREGATE_REPLAY'
+print(json.dumps({'status':'VALID_X2_METADATA_WITH_POSTPROCESS_RECOVERY','records':len(records),
+ 'witnesses':len(witnesses),'passing':execution['counts']['passing'],'failed':execution['counts']['failed'],
+ 'tests':15,'models_3d':5,'aggregate_replayed':False,'domain_replayed':False}))
