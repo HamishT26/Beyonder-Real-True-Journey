@@ -1,0 +1,331 @@
+"use strict";
+
+const fs = require("fs");
+const path = require("path");
+const cp = require("child_process");
+const crypto = require("crypto");
+
+const [sourceWorktree, ownerWorktree, mode] = process.argv.slice(2);
+const refresh = mode === "--refresh";
+if (!sourceWorktree || !ownerWorktree) {
+  throw new Error("usage: node build_plan.txt <source-worktree> <owner-worktree>");
+}
+
+const phase = "v700-v1";
+const owner = "Elowen Cairn";
+const sourceHead = "a57cd4c51b4b108067efb107881eda94ec7e7b0d";
+const ownerParent = "647ec57ba05b6f506d2312773d05b4d3d6dd7e42";
+const root = path.join(ownerWorktree, "docs", "elowen-cairn", phase, "plan");
+const allowedExisting = new Set([path.join(root, "tools", "build_plan.txt")]);
+const protectedGates = [
+  "empirical_confirmation", "real_participants_or_operators",
+  "professional_or_scientific_authority", "production_or_deployment",
+  "legal_cultural_affected_party_authority", "Maori_authority",
+  "complete_privacy_accessibility_security", "independent_reproduction",
+  "consciousness_personhood", "AGI_ASI", "Theory_of_Everything",
+  "proof_canon", "Stage_20"
+];
+
+function ensureDir(p) { fs.mkdirSync(p, { recursive: true }); }
+function writeJson(rel, value) {
+  const p = path.join(root, rel);
+  ensureDir(path.dirname(p));
+  fs.writeFileSync(p, JSON.stringify(value, null, 2) + "\n", "utf8");
+}
+function writeText(rel, value) {
+  const p = path.join(root, rel);
+  ensureDir(path.dirname(p));
+  fs.writeFileSync(p, value.replace(/\r\n/g, "\n"), "utf8");
+}
+function sha256Text(text) { return crypto.createHash("sha256").update(text, "utf8").digest("hex"); }
+function gitShow(repo, commit, rel) {
+  return cp.execFileSync("git", ["-C", repo, "show", `${commit}:${rel}`], { encoding: "utf8", maxBuffer: 64 * 1024 * 1024 });
+}
+function walk(dir) {
+  if (!fs.existsSync(dir)) return [];
+  const out = [];
+  for (const ent of fs.readdirSync(dir, { withFileTypes: true })) {
+    const p = path.join(dir, ent.name);
+    if (ent.isDirectory()) out.push(...walk(p)); else out.push(p);
+  }
+  return out;
+}
+
+for (const p of walk(root)) {
+  if (!refresh && !allowedExisting.has(p)) throw new Error(`planning root is not clean: ${p}`);
+}
+
+const operationSpecs = [
+  ["binary-matroid-shape", "Binary matroid profile structure", "x1", "completed", "matroid-record-design"],
+  ["rank-oracle", "Exact GF(2) rank oracle", "x1", "completed", "exact-rank-auditing"],
+  ["independence-census", "Finite independence census", "x1", "completed", "independence-system-review"],
+  ["basis-census", "Maximal independent basis census", "x1", "completed", "basis-custody"],
+  ["circuit-census", "Minimal dependent circuit census", "x1", "completed", "dependency-analysis"],
+  ["closure-query", "Rank-closure query", "x1", "completed", "closure-interpretation"],
+  ["flat-census", "Closed-set flat census", "x1", "completed", "flat-lattice-review"],
+  ["rank-submodularity", "Rank submodularity audit", "x1", "completed", "axiom-verification"],
+  ["greedy-basis", "Deterministic weighted greedy basis", "x1", "completed", "bounded-optimization"],
+  ["single-element-minor", "Deletion and contraction rank tables", "x1", "completed", "minor-provenance"],
+  ["dual-rank-table", "Exact dual rank table", "x2", "completed", "duality-auditing"],
+  ["dual-involution", "Dual involution equality", "x2", "completed", "duality-auditing"],
+  ["basis-exchange", "Basis exchange witness census", "x2", "completed", "exchange-axiom-review"],
+  ["fundamental-circuit", "Fundamental circuit derivation", "x2", "completed", "dependency-analysis"],
+  ["rank-generating-polynomial", "Exact corank-nullity polynomial", "x2", "completed", "polynomial-bookkeeping"],
+  ["tutte-recurrence", "Deletion-contraction polynomial recurrence", "x2", "completed", "polynomial-bookkeeping"],
+  ["activity-signature", "Internal and external basis activity", "x2", "completed", "basis-order-analysis"],
+  ["trinity-bridge", "Typed Trinity Mandala analogy bridge", "x2", "represented", "public-interest-modeling"],
+  ["external-observation-gap", "External observation and calibration vacancy", "x2", "open_gap", "scientific-software-assurance"],
+  ["authority-reservation", "Professional and cultural authority reservation", "x2", "exact_gate", "public-interest-policy-analysis"]
+].map(([operation_id, title, stage, expected_disposition, practice_id], index) => ({
+  operation_id, title, stage, expected_disposition, practice_id, operation_ordinal: index + 1
+}));
+
+function makeModel(i) {
+  const r = 2 + (i % 3);
+  const n = 4 + (i % 3);
+  const columns = [];
+  for (let j = 0; j < n; j++) {
+    if (j < r) columns.push(1 << j);
+    else {
+      const mod = 1 << r;
+      const raw = ((i + 3) * (j + 5) + j * j + 7) % mod;
+      columns.push((i % 7 === 0 && j === n - 1) ? 0 : raw);
+    }
+  }
+  const labels = Array.from({ length: n }, (_, j) => `e${j + 1}`);
+  const weights = Array.from({ length: n }, (_, j) => 1 + ((i * 5 + j * 3) % 13));
+  return {
+    profile_id: `MAT-${String(i + 1).padStart(2, "0")}`,
+    ground_labels: labels,
+    row_dimension: r,
+    columns_gf2: columns,
+    weights,
+    query_subset_mask: ((i + 1) * 5 + 3) % (1 << n),
+    minor_element_index: i % n,
+    declared_scope: "finite synthetic binary matroid represented by a frozen GF(2) column matrix"
+  };
+}
+const models = Array.from({ length: 30 }, (_, i) => makeModel(i));
+
+function proposalFor(op, model, ordinal) {
+  const proposalId = `EC7001-P${String(ordinal).padStart(3, "0")}`;
+  return {
+    proposal_id: proposalId,
+    owner, phase, stage: op.stage, operation_id: op.operation_id,
+    title: `${op.title} / ${model.profile_id}`,
+    profile_id: model.profile_id, practice_id: op.practice_id,
+    hypothesis: `${op.title} is exactly decidable for the declared finite synthetic ${model.profile_id} fixture.`,
+    null_or_failure_condition: `Reject or hold when ${op.operation_id} violates frozen shape, exact GF(2) arithmetic, complete output, provenance, or an authority boundary.`,
+    approval_class: "safe_now", execution_lane: op.stage,
+    source_needs: ["finite synthetic fixture", "established finite-matroid vocabulary only"],
+    concrete_artifacts: [`${op.stage}/results/${op.operation_id}.json`, `${op.stage}/portfolios/${op.stage}-safe.json`],
+    falsifier_or_acceptance_gate: "The committed evaluator must match the operation contract and reject its paired operation-specific malformed subject.",
+    rollback_or_recovery: "Retain the failed witness, correct only the smallest attributable dependency, and rerun only the bounded affected selection.",
+    protected_gates: protectedGates,
+    expected_disposition: op.expected_disposition,
+    planning_status: "preregistered_not_executed",
+    request: { operation_id: op.operation_id, ordinal: model.profile_id, profile_id: model.profile_id }
+  };
+}
+
+const proposals = [];
+let proposalOrdinal = 1;
+for (const op of operationSpecs) {
+  const rows = models.map(model => proposalFor(op, model, proposalOrdinal++));
+  proposals.push(...rows);
+  writeJson(path.join("proposals", `${op.operation_id}.json`), {
+    owner, phase, stage: op.stage, operation_id: op.operation_id, count: rows.length, records: rows
+  });
+}
+
+const sourceProposalPath = "docs/tamar-vey/v699-v8/planning/proposals-x1.json";
+const sourceProposalRaw = gitShow(sourceWorktree, sourceHead, sourceProposalPath);
+const sourceProposals = JSON.parse(sourceProposalRaw);
+if (sourceProposals.count !== 300 || sourceProposals.records.length !== 300) {
+  throw new Error("incoming inherited proposal tranche is not exactly 300 rows");
+}
+const inherited = sourceProposals.records.map((record) => ({
+  source_record: {
+    proposal_id: record.proposal_id,
+    stage: record.stage,
+    operation_id: record.operation_id,
+    profile_id: record.profile_id,
+    practice_id: record.practice_id,
+    source_path: sourceProposalPath,
+    source_final: sourceHead,
+    expected_disposition: record.expected_disposition
+  },
+  source_record_sha256: sha256Text(JSON.stringify(record)),
+  review_disposition: "inherited_zero_credit",
+  domain_reuse: false,
+  execution_credit: 0,
+  novelty_credit: 0,
+  completion_credit: 0
+}));
+
+function portfolio(stage, kind) {
+  const stageRows = proposals.filter(p => p.stage === stage);
+  return stageRows.map((p) => ({
+    task_id: `${p.proposal_id}-${kind.toUpperCase()}`,
+    proposal_id: p.proposal_id,
+    operation_id: p.operation_id,
+    profile_id: p.profile_id,
+    expected: kind === "safe" ? "frozen exact contract matches"
+      : kind === "candidate" ? "malformed operation-specific subject is refused and remains zero credit"
+      : kind === "cfr" ? "request and result provenance remain reversible, source-faithful, and non-promotional"
+      : "no private material, destructive mutation, hidden replay, or authority overclaim"
+  }));
+}
+
+for (const stage of ["x1", "x2"]) {
+  for (const kind of ["safe", "candidate", "cfr", "clean"]) {
+    const records = portfolio(stage, kind);
+    writeJson(path.join("portfolios", `${stage}-${kind}.json`), {
+      owner, phase, stage, kind, count: records.length, status: "planned_not_executed", records
+    });
+  }
+}
+
+const localSkills = operationSpecs.map(op => ({
+  name: `ghc-family-${op.operation_id}-local-v1`,
+  stage: op.stage,
+  operation_id: op.operation_id,
+  status: "planned_not_built",
+  boundary: "finite same-owner synthetic software only"
+}));
+const localRunners = Array.from({ length: 10 }, (_, i) => ({
+  name: `ghc_family_binary_matroid_pair_${i + 1}.txt`,
+  stage: i < 5 ? "x1" : "x2",
+  operations: [operationSpecs[i * 2].operation_id, operationSpecs[i * 2 + 1].operation_id],
+  status: "planned_not_built"
+}));
+const globalGroups = [
+  ["ghc-family-binary-matroid-structure-v1", operationSpecs.slice(0, 4)],
+  ["ghc-family-binary-matroid-minors-v1", operationSpecs.slice(4, 8)],
+  ["ghc-family-binary-matroid-duality-v1", operationSpecs.slice(8, 12)],
+  ["ghc-family-binary-matroid-polynomials-v1", operationSpecs.slice(12, 16)],
+  ["ghc-family-binary-matroid-evidence-v1", operationSpecs.slice(16, 20)]
+].map(([name, ops]) => ({ name, operation_ids: ops.map(x => x.operation_id), status: "candidate_not_installed" }));
+
+const startupFailures = [
+  ["EC7001-START-N001", "A combined read of four current skill entrypoints exceeded the bounded display and was truncated.", "Reread each selected skill separately through EOF and mechanically validated the full v15 workflow."],
+  ["EC7001-START-N002", "The first Tamar authority overlay lookup used the family-index reference directory and returned path-not-found.", "A bounded exact filename search located the authority under ghc-family-auth-permission-state and it was read completely."],
+  ["EC7001-START-N003", "The canonical-preflight skill named a helper script that is absent from its installed package.", "Prepared a phase-local metadata-only valid fixture and five rejecting mutations without claiming the missing helper ran."],
+  ["EC7001-START-N004", "The canonical-success-latch skill named a privacy tribunal helper that is absent from its installed package.", "Prepared a phase-local exclusive receipt latch and retained the missing-helper discovery at zero credit."],
+  ["EC7001-START-N005", "quick_validate.py --help interpreted --help as a skill path and returned SKILL.md not found.", "Reserved the validator for concrete skill directories after creation and retained this invocation at zero credit."],
+  ["EC7001-START-N006", "The first broad recursive global-runner collision projection returned no bounded attributable output.", "Switched to exact expected-path and exact-name checks before any installation."],
+  ["EC7001-START-N007", "The live activation described five overlay failures and 4,076 methods, while the referenced immutable overlay contains six failures and 4,077 methods.", "Preserved both assertions, selected the mechanically parsed file overlay for the one-time inherited baseline, and did not rewrite Tamar evidence."],
+  ["EC7001-START-N008", "The first parallel Elowen equality wrapper emitted no attributable row.", "An isolated scalar fetch and equality probe confirmed clean four-way equality at the exact owner parent."],
+  ["EC7001-START-N009", "The first apply_patch payload used fragile string concatenation and failed verification before creating any file.", "Reissued the same additive file through a literal block-comment patch envelope; no repository byte existed at the failed attempt."],
+  ["EC7001-START-N010", "The first planning-stage git add was refused because the new phase path was outside the owner lane sparse definition.", "Added only docs/elowen-cairn/v700-v1 to the existing sparse set, regenerated planning metadata before commit, and retained zero staged files at the failed attempt."]
+].map(([negative_id, failure, recovery], i) => ({
+  negative_id,
+  failed_witness_id: `${negative_id}-FAILED`,
+  recovery_witness_id: `${negative_id}-RECOVERED`,
+  method_id: `EC7001-plan-M${String(i + 1).padStart(3, "0")}`,
+  failure, recovery, initial_credit: 0, recovery_erases_failure: false
+}));
+
+writeJson("workflow-profile.json", {
+  schema_version: "v15", owner, phase, roster_position: 41,
+  predecessor: { owner: "Tamar Vey", phase: "v699-v8", content_source: sourceHead, git_parent: false },
+  owner_lane_parent: ownerParent,
+  successor: { owner: "Tessarin Reed", phase: "v700-v2", prospective_only: true },
+  route_end: "v725-v8", lifecycle: ["planning", "x1", "x2", "final"],
+  one_edge_at_a_time: true, file_types: ["json", "md", "txt", "html"],
+  maximum_owner_files: 2000, canonical_invocation_limit: 1,
+  successful_canonical_replay_prohibited: true, terminal_verdict: "NOT_READY_FOR_STAGE_20"
+});
+writeJson("source-intake.json", {
+  owner, phase,
+  tamar_source: { branch: "codex/GHC-Family/tamar-vey-main-2", final: sourceHead, role: "content_provenance_not_git_parent", canonical_status: "VALID_EXACT_FINAL_OWNER_SCOPED_METADATA_CANONICAL", canonical_checks: "57/57", canonical_invocation_success_replay: "1/1/0" },
+  baton: { relative_external_path: "handoffs/tamar-vey/v699-v8/elowen-cairn-v700-v1-hand-off-baton.md", sha256: "8d49b8cc65233a3ea129633e5dd6715c3e5a42e3da3c1fd5d5e87719bd62cfda", words: 2118 },
+  canonical_receipt_sha256: "530b1deb0dd08f16ed3b0ef83b47cdb39bedc4666378195b3777d681489ee942",
+  live_activation_declared_overlay: { methods: 4076, witnesses: 103516, passing: 79831, failed: 23685, negatives: 32519, open_gaps: 989, exact_gates: 1075, failures_described: 5 },
+  parsed_file_overlay: { methods: 4077, witnesses: 103518, passing: 79832, failed: 23686, negatives: 32520, open_gaps: 989, exact_gates: 1075, failures_recorded: 6 },
+  incoming_baseline_selected: "parsed_file_overlay_with_live_discrepancy_retained",
+  predecessor_canonical_replay: false
+});
+writeJson("phase-contract.json", {
+  owner, phase, primary_pillar: "GMUT Mind", secondary_pillars: ["THOS Body", "Freed ID and CBR Heart"],
+  domain: "finite binary matroid rank-oracle calculus, exact duality, minors, basis activity, and polynomial invariants",
+  synthetic_only: true, profiles: 30, new_proposals: 600, inherited_reviews: 300,
+  stage_portfolios: { x1: { safe: 300, candidate: 300, cfr: 300, clean: 300 }, x2: { safe: 300, candidate: 300, cfr: 300, clean: 300 } },
+  local_skills: 20, local_runners: 10, curated_global_pairs: 5,
+  additional_tests: 25, html_models: 5, exact_packets: 50, blocked_packets: 30,
+  protected_actions_executed: 0, formats: ["json", "md", "txt", "html"],
+  file_ceiling: 2000, document_word_ceiling: 100000, owner_files_before_phase: 545,
+  forecast_new_files: 320, forecast_total: 865, rotation_required: false,
+  canonical_invocation_limit: 1, successful_canonical_replay_prohibited: true,
+  terminal_verdict: "NOT_READY_FOR_STAGE_20"
+});
+writeJson("models.json", { owner, phase, count: models.length, status: "frozen_not_executed", records: models });
+writeJson("operations.json", { owner, phase, count: operationSpecs.length, records: operationSpecs });
+writeJson("proposal-index.json", {
+  owner, phase, count: proposals.length,
+  x1_count: proposals.filter(x => x.stage === "x1").length,
+  x2_count: proposals.filter(x => x.stage === "x2").length,
+  operation_files: operationSpecs.map(x => `proposals/${x.operation_id}.json`),
+  status: "planning_frozen_not_executed"
+});
+writeJson("inherited-review.json", {
+  owner, phase, count: inherited.length, selection: "all Tamar v699-v8 x1 proposals",
+  source_final: sourceHead, source_path: sourceProposalPath,
+  source_register_sha256: sha256Text(sourceProposalRaw), records: inherited,
+  new_credit: { novelty: 0, execution: 0, completion: 0 }
+});
+writeJson("practices.json", {
+  own_count: 8,
+  own: ["applied combinatorics", "coding-theory curation", "network reliability analysis", "algorithm verification", "scientific software assurance", "digital preservation", "accessibility research", "public-interest decision support"],
+  successor_recommendation_count: 4,
+  successor_recommendations: ["discrete geometry", "graph theory", "formal methods", "data provenance"],
+  boundary: "synthetic learning lenses only, never qualifications, employment, participant evidence, or authority"
+});
+writeJson("skill-plan.json", { owner, phase, count: localSkills.length, records: localSkills });
+writeJson("runner-plan.json", { owner, phase, count: localRunners.length, records: localRunners });
+writeJson("global-capability-plan.json", { owner, phase, count: globalGroups.length, records: globalGroups, installation_rule: "absent-name only, exact byte parity, valid and adverse smoke, rollback retained" });
+writeJson("test-plan.json", {
+  owner, phase, count: 25, status: "planned_not_executed",
+  tests: [
+    "profile shape", "rank bounds", "empty rank", "full rank", "independence equivalence",
+    "basis cardinality", "circuit minimality", "closure extensivity", "closure idempotence", "flat closure",
+    "submodularity", "greedy basis", "deletion rank", "contraction rank", "dual rank",
+    "dual involution", "basis exchange", "fundamental circuit", "rank generating census", "Tutte recurrence",
+    "activity signature", "authorized outcome labels", "malformed refusal separation", "five HTML models", "authority boundary"
+  ]
+});
+writeJson("simulation-plan.json", { owner, phase, html_models: 5, screenshot_artifacts: 0, image_artifacts: 0, pdf_artifacts: 0, browser_checks_planned: ["DOM", "tables", "selection", "keyboard", "reset", "console"] });
+writeJson("deck-plan.json", { owner, phase, total_cards: 612, tiers: { owner: 1, pillars: 3, practices: 8, tasks: 600 }, adjacent_parent_links_only: true, cycle_count_expected: 0 });
+writeJson("held-packets.json", {
+  exact_approval: Array.from({ length: 50 }, (_, i) => ({ packet_id: `EC7001-EXACT-${String(i + 1).padStart(2, "0")}`, status: "exact_gate", executed: false, missing: "action-specific evidence, target, rollback, affected-party participation, or competent authority" })),
+  blocked: Array.from({ length: 30 }, (_, i) => ({ packet_id: `EC7001-BLOCKED-${String(i + 1).padStart(2, "0")}`, status: "blocked_visible_unexecuted", executed: false, reason: "protected real-world or authority prerequisite absent" }))
+});
+writeJson("startup-failures.json", { owner, phase, count: startupFailures.length, failed_witnesses: startupFailures, recovery_does_not_erase_failure: true });
+writeText("threat-model.md", `# Elowen v700-v1 threat model
+
+The owner lane is finite, synthetic, additive, and owner-self-scoped. Primary risks are malformed matrix records, silent GF(2) arithmetic drift, incomplete subset enumeration, wrong lifecycle byte domains, inherited-credit leakage, source-overlay disagreement, private route or path disclosure, unacknowledged delivery duplication, destructive cross-lane mutation, and promotion of finite software evidence into empirical or authority claims.
+
+Controls are exact frozen profile shapes, exhaustive finite subset checks within declared caps, operation-specific rejecting subjects, separate refusal and failure credit, normalized Git-blob manifests, exact staged review, absent-name-only installation, rollback, a one-shot canonical latch, and a one-send terminal route latch. Real participants, observations, professional decisions, legal or cultural interpretation, affected-party authority, and Maori authority remain outside scope.
+`);
+writeText("overview.md", `# Elowen Cairn v700-v1 planning freeze
+
+This planning-only layer freezes 600 new finite binary-matroid contracts over thirty explicit GF(2) fixtures and reviews 300 Tamar v699-v8 contracts at zero Elowen novelty, execution, or completion credit. Ten x1 operations cover record structure, exact rank, independence, bases, circuits, closure, flats, rank submodularity, deterministic greedy selection, and single-element minors. Ten x2 operations cover duality, basis exchange, fundamental circuits, corank-nullity and Tutte-style polynomial bookkeeping, one represented Trinity analogy, one external-observation gap, and one exact authority reservation.
+
+No x1 or x2 evaluator, result, observed outcome, completion claim, skill, runner, global installation, simulation, browser claim, or canonical result exists in this planning commit. Caps are ceilings. The phase remains bounded same-owner synthetic software work and cannot establish empirical GMUT confirmation, production THOS or Freed ID, identity continuity, consciousness or personhood, professional standing, legal or cultural authority, Maori authority, independent reproduction, a Theory of Everything, canon, or Stage 20 readiness.
+`);
+
+const generated = walk(root).filter(p => p !== path.join(root, "manifest.json"));
+const manifest = generated.map(p => ({
+  path: path.relative(ownerWorktree, p).replace(/\\/g, "/"),
+  bytes: fs.statSync(p).size,
+  sha256_checkout_bytes: crypto.createHash("sha256").update(fs.readFileSync(p)).digest("hex")
+}));
+writeJson("manifest.json", { owner, phase, stage: "planning", byte_domain: "checkout_bytes_precommit", self_exclusions: ["docs/elowen-cairn/v700-v1/plan/manifest.json"], count: manifest.length, records: manifest });
+
+const summary = {
+  phase, stage: "planning", files: walk(root).length, proposals: proposals.length,
+  inherited: inherited.length, models: models.length, startup_failures: startupFailures.length,
+  x1_portfolio_records: 1200, x2_portfolio_records: 1200,
+  status: "PLANNING_FROZEN_NOT_EXECUTED"
+};
+process.stdout.write(JSON.stringify(summary));
