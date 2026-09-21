@@ -1,0 +1,97 @@
+const fs = require('fs');
+const path = require('path');
+const crypto = require('crypto');
+const { spawnSync } = require('child_process');
+
+const phaseRoot = path.resolve(process.argv[2]);
+const validator = path.resolve(process.argv[3]);
+const externalReceiptRoot = path.resolve(process.argv[4]);
+const boundary = 'Finite synthetic same-owner software and documentation evidence only; no physical observation, empirical GMUT confirmation, human participation, printmaking competence, professional or production authority, identity status, legal or cultural legitimacy, Maori authority, complete privacy or accessibility, exhaustive security, independent reproduction, consciousness, personhood, Theory-of-Everything, canon, or Stage 20 claim.';
+const compactBoundary = 'See top-level boundary.';
+const protectedGates = ['empirical_confirmation','physical_model_validation','real_participants_operators','professional_scientific_authority','production_deployment','identity_status','legal_cultural_affected_authority','Maori_authority','complete_privacy_accessibility','exhaustive_security','independent_reproduction','consciousness_personhood_identity','AGI_ASI','Theory_of_Everything','proof_canon','Stage_20'];
+
+function readJson(rel){return JSON.parse(fs.readFileSync(path.join(phaseRoot,rel),'utf8'));}
+function writeJson(rel,value){const file=path.join(phaseRoot,rel);fs.mkdirSync(path.dirname(file),{recursive:true});fs.writeFileSync(file,JSON.stringify(value,null,2)+'\n','utf8');}
+function sha256(buffer){return crypto.createHash('sha256').update(buffer).digest('hex');}
+function walk(dir){const out=[];for(const entry of fs.readdirSync(dir,{withFileTypes:true}).sort((a,b)=>a.name.localeCompare(b.name))){const p=path.join(dir,entry.name);if(entry.isDirectory())out.push(...walk(p));else out.push(p);}return out;}
+
+const flow=readJson('x2/method-flow-index.json');
+const negatives=readJson('x2/retained-negative-register.json');
+const install=readJson('x2/global-install-receipt.json');
+const addedMethodIds=['CM7004-X2-GLOBAL-INSTALL','CM7004-X2-INSTALL-RECOVERY','CM7004-X2-ACTUAL-BROWSER'];
+if(flow.methods.some(row=>addedMethodIds.includes(row.method_id)))throw new Error('postgate methods already integrated');
+if(install.status!=='VALID_GLOBAL_INSTALL'||install.counts.byte_bindings!==12||install.counts.source_skill_validations!==5||install.counts.installed_skill_validations!==5||install.counts.valid_smokes!==5)throw new Error('global install receipt incomplete');
+
+function addNegative(negative_id,method_id,witness_id){negatives.records.push({negative_id,stage:'x2',method_id,witness_id,status:'retained_zero_credit',erased:false,promoted:false,recovery_never_erases_failure:true});}
+function addWitness(witness_id,method_id,procedure,result,retained_negative_ids=[]){flow.witnesses.push({witness_id,method_id,procedure,scope:'Caelen v700-v4 x2 postgate evidence',expected:result==='pass'?'bounded check passes':'subject remains failed at zero credit',observed:result,result,same_owner_only:true,independent_reproduction:false,retained_negative_ids,boundary:compactBoundary});}
+function addMethod(method_id,title,ids,negativeIds,failureSignature){flow.methods.push({method_id,title,failure_signature:failureSignature,trigger_preconditions:['immutable x1 checkpoint','complete owner-local x2 execution'],privacy_class:'sanitized_public',approval_class:'safe_now',candidate_workaround:'Retain the failed subject and correct only its narrow owner-local dependency.',validation_witness_ids:ids,recurrence_guard:'No failed subject becomes completion credit and no successful postgate is replayed.',rollback:'Preserve planning and x1; remove only uncommitted postgate bytes when recovery is required.',recommendation_state:'validated',supersedes:[],protected_gates:protectedGates,retained_negative_ids:negativeIds,scope_boundary:boundary});}
+
+const installIds=[];
+for(let i=0;i<install.source_skill_validations.length;i++){const id=`CM7004-X2-INSTALL-SOURCE-P${String(i+1).padStart(2,'0')}`;installIds.push(id);addWitness(id,addedMethodIds[0],`Quick-validate source guide ${install.source_skill_validations[i].skill_name}`,'pass');}
+for(let i=0;i<install.installed_skill_validations.length;i++){const id=`CM7004-X2-INSTALL-DEST-P${String(i+1).padStart(2,'0')}`;installIds.push(id);addWitness(id,addedMethodIds[0],`Quick-validate installed guide ${install.installed_skill_validations[i].skill_name}`,'pass');}
+for(let i=0;i<install.bindings.length;i++){if(!install.bindings[i].byte_equal)throw new Error('installation byte mismatch');const id=`CM7004-X2-INSTALL-BIND-P${String(i+1).padStart(2,'0')}`;installIds.push(id);addWitness(id,addedMethodIds[0],`Verify source/install byte parity for ${install.bindings[i].name}`,'pass');}
+const installNegatives=[];
+for(let i=0;i<install.smokes.length;i++){
+ const validId=`CM7004-X2-INSTALL-SMOKE-P${String(i+1).padStart(2,'0')}`,failId=`CM7004-X2-INSTALL-SMOKE-F${String(i+1).padStart(2,'0')}`,guardId=`CM7004-X2-INSTALL-SMOKE-G${String(i+1).padStart(2,'0')}`,negativeId=`CM7004-X2-INSTALL-N${String(i+1).padStart(2,'0')}`;
+ if(!install.smokes[i].valid_pass||!install.smokes[i].invalid_subject_failed||!install.smokes[i].refusal_guard_passed)throw new Error('installation smoke incomplete');
+ installIds.push(validId,failId,guardId);installNegatives.push(negativeId);addNegative(negativeId,addedMethodIds[0],failId);
+ addWitness(validId,addedMethodIds[0],`Execute installed ${install.smokes[i].group} caller valid smoke`,'pass');
+ addWitness(failId,addedMethodIds[0],`Submit installed ${install.smokes[i].group} caller adverse subject`,'fail',[negativeId]);
+ addWitness(guardId,addedMethodIds[0],`Verify installed ${install.smokes[i].group} caller refusal guard`,'pass',[negativeId]);
+}
+if(installIds.length!==37)throw new Error(`install witness count ${installIds.length}`);
+addMethod(addedMethodIds[0],'five curated global tropical guide/caller pairs',installIds,installNegatives,'Missing guide validation, byte parity, bounded smoke, or malformed-subject refusal');
+
+const recoveryRows=[
+ ['CM7004-X2-INSTALL-REC-F01','The first installer treated a SKILL.md source file as a directory binding and stopped after one exact-byte partial leaf','fail','CM7004-X2-INSTALL-REC-N01'],
+ ['CM7004-X2-INSTALL-REC-F02','The first rollback handler used an unsupported reverse-selection form and masked the underlying stop','fail','CM7004-X2-INSTALL-REC-N02'],
+ ['CM7004-X2-INSTALL-REC-P01','Inspect all twelve destinations and verify one byte-equal partial leaf, eleven absences, and an empty tool root','pass',null],
+ ['CM7004-X2-INSTALL-REC-F03','The direct shell removal attempt was rejected before filesystem mutation','fail','CM7004-X2-INSTALL-REC-N03'],
+ ['CM7004-X2-INSTALL-REC-P02','Remove only the exact current-phase partial leaf through an exact patch and restore destination absence','pass',null],
+ ['CM7004-X2-INSTALL-REC-P03','Correct only the source-directory binding and rollback iteration','pass',null],
+ ['CM7004-X2-INSTALL-REC-P04','Complete the corrected installer once with twelve byte-equal bindings and bounded smokes','pass',null]
+];
+const recoveryIds=[],recoveryNegatives=[];
+for(const [id,procedure,result,negativeId] of recoveryRows){recoveryIds.push(id);if(negativeId){recoveryNegatives.push(negativeId);addNegative(negativeId,addedMethodIds[1],id);}addWitness(id,addedMethodIds[1],procedure,result,negativeId?[negativeId]:[]);}
+addMethod(addedMethodIds[1],'global installer narrow recovery',recoveryIds,recoveryNegatives,'Wrong source/destination binding, failed rollback presentation, or disallowed cleanup route');
+
+const browserChecks=[
+ {check_id:'CM7004-X2-BROWSER-P01',name:'title',observed:'Caelen v700-v4 tropical laboratory'},
+ {check_id:'CM7004-X2-BROWSER-P02',name:'language',observed:'en'},
+ {check_id:'CM7004-X2-BROWSER-P03',name:'skip_and_main',observed:'skip link targets #main and one main landmark is present'},
+ {check_id:'CM7004-X2-BROWSER-P04',name:'model_options',observed:'five options with model 1 selected initially'},
+ {check_id:'CM7004-X2-BROWSER-P05',name:'initial_rows',observed:'25 exact rows'},
+ {check_id:'CM7004-X2-BROWSER-P06',name:'accessible_structure',observed:'live status, caption, and three labelled sections present'},
+ {check_id:'CM7004-X2-BROWSER-P07',name:'model_change',observed:'model 4 updates status and caption while retaining 25 rows'},
+ {check_id:'CM7004-X2-BROWSER-P08',name:'scale_change',observed:'scale 3 updates plot text and 12px border'},
+ {check_id:'CM7004-X2-BROWSER-P09',name:'reset_values',observed:'reset restores model 1 and scale 1'},
+ {check_id:'CM7004-X2-BROWSER-P10',name:'reset_rows_status',observed:'reset restores model 1 status and 25 rows'},
+ {check_id:'CM7004-X2-BROWSER-P11',name:'reset_focus',observed:'focus moves to model selector'},
+ {check_id:'CM7004-X2-BROWSER-P12',name:'containment',observed:'no horizontal overflow, external resource, console warning, or console error'}
+];
+const browserReceipt={schema:'ghc.family.actual-browser-receipt.v1',owner:'Caelen Morrow',phase:'v700-v4',status:'VALID_ACTUAL_BROWSER_CHECKS',origin_class:'ephemeral_loopback',browser_class:'Codex in-app browser',self_contained:true,external_resources:0,console_warnings_or_errors:0,checks:browserChecks.map(row=>({...row,result:'pass'})),counts:{checks:12,pass:12,fail:0},cleanup:{tab_closed:true,loopback_server_stopped:true},reservations:['manual affected-user evaluation','assistive-technology evaluation','cognitive-accessibility evaluation','Maori-language evaluation'],boundary};
+writeJson('x2/actual-browser-receipt.json',browserReceipt);
+fs.mkdirSync(externalReceiptRoot,{recursive:true});fs.writeFileSync(path.join(externalReceiptRoot,'actual-browser-receipt.json'),JSON.stringify(browserReceipt,null,2)+'\n','utf8');
+const browserIds=[];for(const row of browserChecks){browserIds.push(row.check_id);addWitness(row.check_id,addedMethodIds[2],`Actual browser check: ${row.name} — ${row.observed}`,'pass');}
+addMethod(addedMethodIds[2],'actual self-contained tropical laboratory browser pass',browserIds,[],'Missing accessible structure, broken interaction, overflow, external resource, or console error');
+
+flow.state_events=flow.methods.flatMap((method,index)=>[{event_index:index*2+1,method_id:method.method_id,before:null,after:'candidate',reason:'Method recorded',witness_id:null},{event_index:index*2+2,method_id:method.method_id,before:'candidate',after:'validated',reason:'Bounded passing witness retained without erasing failed subjects',witness_id:method.validation_witness_ids.find(id=>flow.witnesses.some(w=>w.witness_id===id&&w.result==='pass'))}]);
+const pass=flow.witnesses.filter(row=>row.result==='pass').length,fail=flow.witnesses.filter(row=>row.result==='fail').length;
+flow.counts={methods:flow.methods.length,witnesses:flow.witnesses.length,state_events:flow.state_events.length,recommendations:flow.recommendations.length,states:{observed:0,candidate:0,validated:flow.methods.length,preferred:0,superseded:0,deprecated:0},witness_results:{pass,fail}};
+flow.selected_counts={methods:flow.methods.length,witnesses:flow.witnesses.length,pass,fail};
+writeJson('x2/method-flow-index.json',flow);
+negatives.count=negatives.records.length;negatives.erased=0;negatives.promoted=0;writeJson('x2/retained-negative-register.json',negatives);
+
+const truth=readJson('x2/phase-truth.json');truth.global_install_state='VALID_GLOBAL_INSTALL';truth.browser_state='VALID_ACTUAL_BROWSER_CHECKS';truth.method_flow={methods:flow.methods.length,witnesses:flow.witnesses.length,pass,fail};writeJson('x2/phase-truth.json',truth);
+const execution=readJson('x2/execution-summary.json');execution.status='VALID_X2_OWNER_SCOPED_EXECUTION';execution.global_install_state='VALID_GLOBAL_INSTALL';execution.browser_state='VALID_ACTUAL_BROWSER_CHECKS';execution.method_flow=truth.method_flow;writeJson('x2/execution-summary.json',execution);
+const candidates=readJson('x2/global-candidates/candidates.json');candidates.installation_state='VALID_GLOBAL_INSTALL';candidates.installation_receipt='x2/global-install-receipt.json';writeJson('x2/global-candidates/candidates.json',candidates);
+
+const validation=spawnSync('python',['-X','utf8',validator,'validate','--ledger',path.join(phaseRoot,'x2/method-flow-index.json'),'--receipt',path.join(phaseRoot,'x2/method-flow-validation.json')],{encoding:'utf8',maxBuffer:8*1024*1024});
+if(validation.status!==0)throw new Error(`updated Method Flow validation failed: ${validation.stdout} ${validation.stderr}`);
+const x2Root=path.join(phaseRoot,'x2');const files=walk(x2Root).filter(file=>path.basename(file)!=='manifest.json').sort();
+const entries=files.map(file=>{const bytes=fs.readFileSync(file);return{path:path.relative(phaseRoot,file).split(path.sep).join('/'),bytes:bytes.length,sha256:sha256(bytes)};});
+writeJson('x2/manifest.json',{schema:'ghc.family.stage-manifest.v15',stage:'x2',entries,self_exclusions:['x2/manifest.json'],normalized_lf:true});
+const integration={schema:'ghc.family.x2-postgate-integration.v1',owner:'Caelen Morrow',phase:'v700-v4',status:'VALID_X2_POSTGATE_INTEGRATION',methods:flow.methods.length,witnesses:flow.witnesses.length,pass,fail,negatives:negatives.count,global_install_state:truth.global_install_state,browser_state:truth.browser_state,manifest_entries:entries.length,boundary};
+writeJson('x2/postgate-integration-receipt.json',integration);fs.writeFileSync(path.join(externalReceiptRoot,'postgate-integration-receipt.json'),JSON.stringify(integration,null,2)+'\n','utf8');
+const finalFiles=walk(x2Root).filter(file=>path.basename(file)!=='manifest.json').sort();const finalEntries=finalFiles.map(file=>{const bytes=fs.readFileSync(file);return{path:path.relative(phaseRoot,file).split(path.sep).join('/'),bytes:bytes.length,sha256:sha256(bytes)};});writeJson('x2/manifest.json',{schema:'ghc.family.stage-manifest.v15',stage:'x2',entries:finalEntries,self_exclusions:['x2/manifest.json'],normalized_lf:true});
+process.stdout.write(JSON.stringify({...integration,manifest_entries:finalEntries.length}));

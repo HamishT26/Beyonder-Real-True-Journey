@@ -1,0 +1,29 @@
+'use strict';
+const fs=require('fs'),path=require('path'),Module=require('module');
+function load(p){const m=new Module(p);m.filename=p;m.paths=Module._nodeModulePaths(path.dirname(p));m._compile(fs.readFileSync(p,'utf8'),p);return m.exports;}
+const core=load(path.join(__dirname,'tropical-core.txt'));
+function qmul(q,k){return new core.Q(q.n*BigInt(k),q.d);}
+function finite(x){const s=core.scalar(x);if(s.kind!=='finite')throw new Error('finite exact scalar required');return s;}
+function combine(generators,scalars){if(!Array.isArray(generators)||!generators.length||generators.length!==scalars.length)throw new Error('invalid generator family');const G=generators.map(core.vector),S=scalars.map(finite);const n=G[0].length;if(!G.every(g=>g.length===n))throw new Error('generator size mismatch');return Array.from({length:n},(_,k)=>G.reduce((acc,g,j)=>core.max(acc,core.sum(g[k],S[j],'max')),{kind:'negInf'})).map(core.text);}
+function polynomial(terms,x){if(!Array.isArray(terms)||!terms.length||terms.length>12)throw new Error('invalid tropical polynomial');const X=finite(x);const values=terms.map((t,i)=>{if(!Number.isInteger(t.exponent)||t.exponent<0||t.exponent>12)throw new Error('invalid exponent');const c=finite(t.coefficient);return{index:i,value:{kind:'finite',q:c.q.add(qmul(X.q,t.exponent))}};});const best=values.reduce((a,b)=>core.order(a.value,b.value)>=0?a:b).value;const maximizers=values.filter(v=>core.order(v.value,best)===0).map(v=>v.index);return{value:core.text(best),term_values:values.map(v=>core.text(v.value)),maximizers};}
+function residuate(A,b){const M=core.matrix(A),B=core.vector(b);if(M.length!==B.length)throw new Error('residuation size mismatch');return M[0].map((_,j)=>{let best={kind:'posInf'};for(let i=0;i<M.length;i++){if(M[i][j].kind==='negInf')continue;if(M[i][j].kind!=='finite'||B[i].kind!=='finite')throw new Error('unsupported residuation infinity');const candidate={kind:'finite',q:B[i].q.sub(M[i][j].q)};best=core.min(best,candidate);}return core.text(best);});}
+function cycles(vertices,edges){if(!Number.isInteger(vertices)||vertices<1||vertices>6||!Array.isArray(edges))throw new Error('invalid graph');const map=new Map(edges.map(e=>[e.from+','+e.to,e]));const found=new Map();function canon(nodes){const body=nodes.slice(0,-1);const rots=body.map((_,i)=>body.slice(i).concat(body.slice(0,i)));rots.sort((a,b)=>a.join(',').localeCompare(b.join(',')));return rots[0].join('-');}function dfs(start,node,seen,pathNodes,pathEdges){for(let next=0;next<vertices;next++){const e=map.get(node+','+next);if(!e)continue;if(next===start&&pathEdges.length>=1){const ns=pathNodes.concat(start),es=pathEdges.concat(e),key=canon(ns);if(!found.has(key))found.set(key,{nodes:ns,edges:es});}else if(!seen.has(next)&&pathNodes.length<vertices){const ns=new Set(seen);ns.add(next);dfs(start,next,ns,pathNodes.concat(next),pathEdges.concat(e));}}}for(let s=0;s<vertices;s++)dfs(s,s,new Set([s]),[s],[]);return[...found.values()];}
+function cycleMean(req){const rows=cycles(req.vertices,req.edges).map(c=>{let total=finite('0');for(const e of c.edges)total=core.sum(total,finite(e.weight),'max');const mean={kind:'finite',q:new core.Q(total.q.n,total.q.d*BigInt(c.edges.length))};return{nodes:c.nodes,total:core.text(total),length:c.edges.length,mean:core.text(mean),_mean:mean};});if(!rows.length)throw new Error('no directed cycle');const best=rows.reduce((a,b)=>core.order(a._mean,b._mean)>=0?a:b)._mean;return{maximum_mean:core.text(best),cycles:rows.map(({_mean,...r})=>r),critical_cycles:rows.filter(r=>core.order(r._mean,best)===0).map(r=>r.nodes)};}
+function run(req){
+ if(!req||typeof req!=='object'||req.invalid_marker===true)throw new Error('malformed candidate subject');
+ if(['carrier-boundary','max-plus-add','max-plus-multiply','min-plus-add','min-plus-multiply','projective-normalize','max-plus-matvec','max-plus-matmul','path-weight','kleene-truncate'].includes(req.op))return core.run(req);
+ switch(req.op){
+  case'tropical-polynomial-evaluate':return polynomial(req.terms,req.x);
+  case'bend-locus-candidate':{const p=polynomial(req.terms,req.x);return{...p,is_bend_candidate:p.maximizers.length>=2};}
+  case'residuation':return{value:residuate(req.matrix,req.bound)};
+  case'tropical-combination':return{value:combine(req.generators,req.scalars)};
+  case'generator-membership-certificate':{const value=combine(req.generators,req.scalars);if(!Array.isArray(req.point)||req.point.length!==value.length)throw new Error('point size mismatch');return{value,point:req.point,certificate_matches:value.every((x,i)=>x===core.text(core.scalar(req.point[i]))),supplied_scalars:req.scalars};}
+  case'cycle-mean':return cycleMean(req);
+  case'eigenpair-candidate-check':{const left=core.matvec(core.matrix(req.matrix),core.vector(req.vector)).map(core.text);const lam=finite(req.lambda);const right=core.vector(req.vector).map(v=>core.text(core.sum(lam,v,'max')));return{left,right,is_eigenpair:left.every((x,i)=>x===right[i])};}
+  case'letterpress-analogy-boundary':return{status:'represented',synthetic_ticket:req.ticket,real_people:0,real_materials:0,authority_actions:0,competence_claim:false};
+  case'observation-gap':if(req.real_rows!==0)throw new Error('real rows outside scope');return{status:'open_gap',real_rows:0,missing:['real observation','calibration','independent review','affected-user evaluation']};
+  case'authority-reservation':if(req.execute!==false)throw new Error('authority execution refused');return{status:'exact_gate',execute:false,missing:['specific target','competent authority','affected-party participation','rollback evidence']};
+  default:throw new Error('unsupported operation');
+ }
+}
+module.exports={...core,run,polynomial,residuate,combine,cycleMean};

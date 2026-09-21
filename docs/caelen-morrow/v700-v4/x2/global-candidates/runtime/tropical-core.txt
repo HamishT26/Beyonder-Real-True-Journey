@@ -1,0 +1,54 @@
+'use strict';
+class Q {
+  constructor(n, d = 1n) {
+    if (d === 0n) throw new Error('zero denominator');
+    if (d < 0n) { n = -n; d = -d; }
+    const g = Q.gcd(n < 0n ? -n : n, d); this.n = n / g; this.d = d / g;
+  }
+  static gcd(a, b) { while (b) { const t = a % b; a = b; b = t; } return a || 1n; }
+  add(o) { return new Q(this.n * o.d + o.n * this.d, this.d * o.d); }
+  sub(o) { return new Q(this.n * o.d - o.n * this.d, this.d * o.d); }
+  cmp(o) { const z = this.n * o.d - o.n * this.d; return z < 0n ? -1 : z > 0n ? 1 : 0; }
+  toString() { return this.d === 1n ? String(this.n) : String(this.n) + '/' + String(this.d); }
+}
+function scalar(x) {
+  if (x === '-inf') return { kind: 'negInf' };
+  if (x === 'inf') return { kind: 'posInf' };
+  if (typeof x !== 'string' || !/^-?\d+(?:\/-?\d+)?$/.test(x)) throw new Error('invalid exact scalar');
+  const p = x.split('/'); return { kind: 'finite', q: new Q(BigInt(p[0]), p.length === 1 ? 1n : BigInt(p[1])) };
+}
+function text(x) { return x.kind === 'finite' ? x.q.toString() : x.kind === 'negInf' ? '-inf' : 'inf'; }
+function order(a, b) { if (a.kind === b.kind && a.kind !== 'finite') return 0; if (a.kind === 'negInf' || b.kind === 'posInf') return -1; if (a.kind === 'posInf' || b.kind === 'negInf') return 1; return a.q.cmp(b.q); }
+function max(a, b) { return order(a, b) >= 0 ? a : b; }
+function min(a, b) { return order(a, b) <= 0 ? a : b; }
+function sum(a, b, mode) {
+  if (mode === 'max') { if (a.kind === 'negInf' || b.kind === 'negInf') return { kind: 'negInf' }; if (a.kind !== 'finite' || b.kind !== 'finite') throw new Error('positive infinity outside max-plus carrier'); }
+  if (mode === 'min') { if (a.kind === 'posInf' || b.kind === 'posInf') return { kind: 'posInf' }; if (a.kind !== 'finite' || b.kind !== 'finite') throw new Error('negative infinity outside min-plus carrier'); }
+  return { kind: 'finite', q: a.q.add(b.q) };
+}
+function vector(v) { if (!Array.isArray(v) || !v.length || v.length > 6) throw new Error('invalid vector'); return v.map(scalar); }
+function matrix(m) { if (!Array.isArray(m) || !m.length || m.length > 6 || !m.every(r => Array.isArray(r) && r.length === m[0].length && r.length <= 6)) throw new Error('invalid matrix'); return m.map(r => r.map(scalar)); }
+function maxVector(a, b) { if (a.length !== b.length) throw new Error('vector size mismatch'); return a.map((x, i) => max(x, b[i])); }
+function minVector(a, b) { if (a.length !== b.length) throw new Error('vector size mismatch'); return a.map((x, i) => min(x, b[i])); }
+function matmul(A, B) { if (A[0].length !== B.length) throw new Error('matrix size mismatch'); return A.map(row => B[0].map((_, j) => row.reduce((acc, a, k) => max(acc, sum(a, B[k][j], 'max')), { kind: 'negInf' }))); }
+function matvec(A, v) { if (A[0].length !== v.length) throw new Error('matrix vector mismatch'); return A.map(row => row.reduce((acc, a, k) => max(acc, sum(a, v[k], 'max')), { kind: 'negInf' })); }
+function showVector(v) { return v.map(text); }
+function showMatrix(m) { return m.map(showVector); }
+function identity(n) { return Array.from({ length: n }, (_, i) => Array.from({ length: n }, (_, j) => i === j ? scalar('0') : scalar('-inf'))); }
+function run(req) {
+  if (!req || typeof req !== 'object' || req.invalid_marker === true) throw new Error('malformed candidate subject');
+  switch (req.op) {
+    case 'carrier-boundary': return { carrier: req.carrier, values: showVector(vector(req.values)), finite_only: false };
+    case 'max-plus-add': return { value: showVector(maxVector(vector(req.left), vector(req.right))) };
+    case 'max-plus-multiply': return { value: text(sum(scalar(req.left), scalar(req.right), 'max')) };
+    case 'min-plus-add': return { value: showVector(minVector(vector(req.left), vector(req.right))) };
+    case 'min-plus-multiply': return { value: text(sum(scalar(req.left), scalar(req.right), 'min')) };
+    case 'projective-normalize': { const v = vector(req.vector); const top = v.reduce(max); if (top.kind !== 'finite') throw new Error('normalization requires finite maximum'); return { value: showVector(v.map(x => x.kind === 'negInf' ? x : { kind: 'finite', q: x.q.sub(top.q) })), shift: text(top) }; }
+    case 'max-plus-matvec': return { value: showVector(matvec(matrix(req.matrix), vector(req.vector))) };
+    case 'max-plus-matmul': return { value: showMatrix(matmul(matrix(req.left), matrix(req.right))) };
+    case 'path-weight': { if (!Array.isArray(req.path) || req.path.length < 2) throw new Error('invalid path'); let total = scalar('0'); for (let i = 0; i < req.path.length - 1; i++) { const e = req.edges.find(x => x.from === req.path[i] && x.to === req.path[i + 1]); if (!e) throw new Error('missing path edge'); total = sum(total, scalar(e.weight), 'max'); } return { value: text(total), steps: req.path.length - 1 }; }
+    case 'kleene-truncate': { const A = matrix(req.matrix); if (A.length !== A[0].length || !Number.isInteger(req.power_limit) || req.power_limit < 0 || req.power_limit > 8) throw new Error('invalid Kleene bound'); let closure = identity(A.length); let power = identity(A.length); for (let k = 1; k <= req.power_limit; k++) { power = matmul(power, A); closure = closure.map((r, i) => r.map((x, j) => max(x, power[i][j]))); } return { value: showMatrix(closure), power_limit: req.power_limit }; }
+    default: throw new Error('unsupported operation');
+  }
+}
+module.exports = { Q, scalar, text, order, max, min, sum, vector, matrix, matmul, matvec, run };
