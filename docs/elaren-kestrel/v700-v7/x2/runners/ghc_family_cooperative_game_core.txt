@@ -1,0 +1,366 @@
+"use strict";
+
+const fs = require("fs");
+const crypto = require("crypto");
+
+const X1_OPERATIONS = [
+  "game-record-shape",
+  "coalition-enumeration",
+  "characteristic-function-table",
+  "mobius-dividends",
+  "shapley-value",
+  "efficiency-balance",
+  "null-player-certificate",
+  "symmetry-classes",
+  "additive-decomposition",
+  "permutation-marginal-trace",
+];
+
+const X2_OPERATIONS = [
+  "core-excess-certificate",
+  "superadditivity-certificate",
+  "convexity-certificate",
+  "positive-scale-covariance",
+  "player-relabel-equivalence",
+  "coalition-complement-table",
+  "imputation-check",
+  "accessible-allocation-analogy",
+  "participant-observation-gap",
+  "grant-allocation-authority-gate",
+];
+
+class DomainError extends Error {
+  constructor(code) {
+    super(code);
+    this.code = code;
+  }
+}
+
+function isPlainObject(value) {
+  return value !== null && typeof value === "object" && !Array.isArray(value);
+}
+
+function exactKeys(value, allowed, code) {
+  if (!isPlainObject(value)) throw new DomainError(code);
+  const keys = Object.keys(value).sort();
+  const expected = [...allowed].sort();
+  if (JSON.stringify(keys) !== JSON.stringify(expected)) throw new DomainError(code);
+}
+
+function stable(value) {
+  if (Array.isArray(value)) return value.map(stable);
+  if (value && typeof value === "object") {
+    return Object.fromEntries(Object.keys(value).sort().map((key) => [key, stable(value[key])]));
+  }
+  return value;
+}
+
+function sha256Text(text) {
+  return crypto.createHash("sha256").update(text, "utf8").digest("hex");
+}
+
+function abs(value) {
+  return value < 0n ? -value : value;
+}
+
+function gcd(a, b) {
+  let x = abs(a);
+  let y = abs(b);
+  while (y !== 0n) {
+    const t = x % y;
+    x = y;
+    y = t;
+  }
+  return x === 0n ? 1n : x;
+}
+
+function rat(n, d = 1n) {
+  if (d === 0n) throw new DomainError("zero_denominator");
+  let numerator = BigInt(n);
+  let denominator = BigInt(d);
+  if (denominator < 0n) {
+    numerator = -numerator;
+    denominator = -denominator;
+  }
+  const divisor = gcd(numerator, denominator);
+  return { n: numerator / divisor, d: denominator / divisor };
+}
+
+function addRat(a, b) {
+  return rat(a.n * b.d + b.n * a.d, a.d * b.d);
+}
+
+function subRat(a, b) {
+  return rat(a.n * b.d - b.n * a.d, a.d * b.d);
+}
+
+function mulRat(a, b) {
+  return rat(a.n * b.n, a.d * b.d);
+}
+
+function cmpRat(a, b) {
+  const delta = a.n * b.d - b.n * a.d;
+  return delta < 0n ? -1 : delta > 0n ? 1 : 0;
+}
+
+function ratText(value) {
+  return value.d === 1n ? value.n.toString() : value.n.toString() + "/" + value.d.toString();
+}
+
+function parseIntString(value, code) {
+  if (typeof value !== "string" || !/^-?(0|[1-9][0-9]*)$/.test(value)) throw new DomainError(code);
+  return BigInt(value);
+}
+
+function coalitionLabel(mask, players) {
+  if (mask === 0) return "EMPTY";
+  return players.filter((_, index) => (mask & (1 << index)) !== 0).join("|");
+}
+
+function expectedLabels(players, includeEmpty) {
+  const labels = [];
+  for (let mask = includeEmpty ? 0 : 1; mask < (1 << players.length); mask += 1) labels.push(coalitionLabel(mask, players));
+  return labels;
+}
+
+function maskOfLabel(label, players) {
+  if (label === "EMPTY") return 0;
+  const parts = label.split("|");
+  let mask = 0;
+  for (const part of parts) {
+    const index = players.indexOf(part);
+    if (index < 0 || (mask & (1 << index)) !== 0) throw new DomainError("coalition_label");
+    mask |= 1 << index;
+  }
+  if (coalitionLabel(mask, players) !== label) throw new DomainError("coalition_order");
+  return mask;
+}
+
+function uniqueStrings(values, minimum, maximum, code) {
+  if (!Array.isArray(values) || values.length < minimum || values.length > maximum) throw new DomainError(code);
+  if (values.some((value) => typeof value !== "string" || !/^P[1-9][0-9]*$/.test(value))) throw new DomainError(code);
+  if (new Set(values).size !== values.length) throw new DomainError(code);
+}
+
+function validateGame(game) {
+  exactKeys(game, ["game_id", "players", "characteristic_values", "harsanyi_dividends", "scale_factor", "relabel", "evidence_class", "real_participants", "real_funds", "real_allocations", "authority_actions", "definition_sha256"], "game_shape");
+  if (typeof game.game_id !== "string" || !/^CG-[0-9]{2}$/.test(game.game_id)) throw new DomainError("game_id");
+  uniqueStrings(game.players, 3, 5, "players");
+  exactKeys(game.characteristic_values, expectedLabels(game.players, true), "characteristic_domain");
+  exactKeys(game.harsanyi_dividends, expectedLabels(game.players, false), "dividend_domain");
+  if (parseIntString(game.characteristic_values.EMPTY, "empty_value") !== 0n) throw new DomainError("empty_value");
+  for (const value of Object.values(game.characteristic_values)) parseIntString(value, "characteristic_integer");
+  for (const value of Object.values(game.harsanyi_dividends)) {
+    if (parseIntString(value, "dividend_integer") < 0n) throw new DomainError("negative_dividend");
+  }
+  for (let mask = 1; mask < (1 << game.players.length); mask += 1) {
+    let reconstructed = 0n;
+    for (let sub = mask; sub > 0; sub = (sub - 1) & mask) reconstructed += parseIntString(game.harsanyi_dividends[coalitionLabel(sub, game.players)], "dividend_integer");
+    if (reconstructed !== parseIntString(game.characteristic_values[coalitionLabel(mask, game.players)], "characteristic_integer")) throw new DomainError("value_dividend_mismatch");
+  }
+  if (parseIntString(game.scale_factor, "scale_factor") <= 0n) throw new DomainError("scale_factor");
+  exactKeys(game.relabel, game.players, "relabel_keys");
+  const targets = Object.values(game.relabel);
+  if (targets.some((value) => !game.players.includes(value)) || new Set(targets).size !== game.players.length) throw new DomainError("relabel_bijection");
+  if (game.evidence_class !== "synthetic") throw new DomainError("evidence_class");
+  if (game.real_participants !== 0 || game.real_funds !== 0 || game.real_allocations !== 0 || game.authority_actions !== 0) throw new DomainError("real_world_scope");
+  const clone = JSON.parse(JSON.stringify(game));
+  delete clone.definition_sha256;
+  const digest = sha256Text(JSON.stringify(stable(clone)));
+  if (digest !== game.definition_sha256) throw new DomainError("definition_sha256");
+  return game;
+}
+
+function valueAt(game, mask) {
+  return parseIntString(game.characteristic_values[coalitionLabel(mask, game.players)], "characteristic_integer");
+}
+
+function dividendsByMask(game) {
+  const map = {};
+  for (let mask = 1; mask < (1 << game.players.length); mask += 1) map[mask] = parseIntString(game.harsanyi_dividends[coalitionLabel(mask, game.players)], "dividend_integer");
+  return map;
+}
+
+function mobiusFromValues(game) {
+  const dividends = {};
+  for (let mask = 1; mask < (1 << game.players.length); mask += 1) {
+    let current = valueAt(game, mask);
+    for (let sub = (mask - 1) & mask; sub > 0; sub = (sub - 1) & mask) current -= dividends[sub];
+    dividends[mask] = current;
+  }
+  return dividends;
+}
+
+function shapleyFromDividends(game) {
+  const dividends = dividendsByMask(game);
+  const shares = Object.fromEntries(game.players.map((player) => [player, rat(0n)]));
+  for (const [maskText, dividend] of Object.entries(dividends)) {
+    const mask = Number(maskText);
+    let size = 0;
+    for (let i = 0; i < game.players.length; i += 1) if ((mask & (1 << i)) !== 0) size += 1;
+    for (let i = 0; i < game.players.length; i += 1) {
+      if ((mask & (1 << i)) !== 0) shares[game.players[i]] = addRat(shares[game.players[i]], rat(dividend, BigInt(size)));
+    }
+  }
+  return shares;
+}
+
+function permutations(values) {
+  if (values.length === 0) return [[]];
+  const output = [];
+  values.forEach((value, index) => {
+    const rest = values.slice(0, index).concat(values.slice(index + 1));
+    for (const tail of permutations(rest)) output.push([value, ...tail]);
+  });
+  return output;
+}
+
+function permutationMarginals(game) {
+  const orders = permutations(game.players);
+  const totals = Object.fromEntries(game.players.map((player) => [player, 0n]));
+  const traces = [];
+  for (const order of orders) {
+    let mask = 0;
+    const contributions = {};
+    for (const player of order) {
+      const index = game.players.indexOf(player);
+      const next = mask | (1 << index);
+      const marginal = valueAt(game, next) - valueAt(game, mask);
+      totals[player] += marginal;
+      contributions[player] = marginal.toString();
+      mask = next;
+    }
+    traces.push({ order, contributions });
+  }
+  const shares = Object.fromEntries(game.players.map((player) => [player, rat(totals[player], BigInt(orders.length))]));
+  return { orders, traces, shares };
+}
+
+function sharesText(shares) {
+  return Object.fromEntries(Object.entries(shares).map(([player, value]) => [player, ratText(value)]));
+}
+
+function sameShares(left, right, players) {
+  return players.every((player) => cmpRat(left[player], right[player]) === 0);
+}
+
+function symmetrySignature(game, player) {
+  const playerIndex = game.players.indexOf(player);
+  const others = game.players.filter((value) => value !== player);
+  const signature = [];
+  for (let mask = 0; mask < (1 << others.length); mask += 1) {
+    let original = 0;
+    others.forEach((other, index) => { if ((mask & (1 << index)) !== 0) original |= 1 << game.players.indexOf(other); });
+    signature.push((valueAt(game, original | (1 << playerIndex)) - valueAt(game, original)).toString());
+  }
+  return signature;
+}
+
+function relabeledGame(game) {
+  const values = {};
+  const dividends = {};
+  for (let mask = 0; mask < (1 << game.players.length); mask += 1) {
+    let mapped = 0;
+    for (let i = 0; i < game.players.length; i += 1) if ((mask & (1 << i)) !== 0) mapped |= 1 << game.players.indexOf(game.relabel[game.players[i]]);
+    values[coalitionLabel(mapped, game.players)] = game.characteristic_values[coalitionLabel(mask, game.players)];
+    if (mask > 0) dividends[coalitionLabel(mapped, game.players)] = game.harsanyi_dividends[coalitionLabel(mask, game.players)];
+  }
+  const clone = { ...game, characteristic_values: values, harsanyi_dividends: dividends };
+  const digestBase = JSON.parse(JSON.stringify(clone));
+  delete digestBase.definition_sha256;
+  clone.definition_sha256 = sha256Text(JSON.stringify(stable(digestBase)));
+  return validateGame(clone);
+}
+
+function baseReference(game) {
+  const dividendShares = shapleyFromDividends(game);
+  const permutation = permutationMarginals(game);
+  return { dividendShares, permutation, consistent: sameShares(dividendShares, permutation.shares, game.players) };
+}
+
+function solve(operation, game) {
+  const reference = baseReference(game);
+  if (!reference.consistent) throw new DomainError("reference_disagreement");
+  const grandMask = (1 << game.players.length) - 1;
+  switch (operation) {
+    case "game-record-shape":
+      return { player_count: game.players.length, coalition_count: 1 << game.players.length, nonempty_coalition_count: (1 << game.players.length) - 1, exact_integer_values: true, synthetic: true, reference_agreement: true };
+    case "coalition-enumeration":
+      return { coalitions: expectedLabels(game.players, true).map((label, mask) => ({ mask, label })), reference_agreement: true };
+    case "characteristic-function-table":
+      return { values: game.characteristic_values, grand_value: game.characteristic_values[coalitionLabel(grandMask, game.players)], reference_agreement: true };
+    case "mobius-dividends": { const derived = mobiusFromValues(game); return { declared: game.harsanyi_dividends, derived: Object.fromEntries(Object.entries(derived).map(([mask, value]) => [coalitionLabel(Number(mask), game.players), value.toString()])), exact_match: Object.entries(derived).every(([mask, value]) => value === dividendsByMask(game)[mask]), reference_agreement: true }; }
+    case "shapley-value":
+      return { shares: sharesText(reference.dividendShares), permutation_shares: sharesText(reference.permutation.shares), permutation_count: reference.permutation.orders.length, exact_match: true, reference_agreement: true };
+    case "efficiency-balance": { let total = rat(0n); for (const value of Object.values(reference.dividendShares)) total = addRat(total, value); const grand = rat(valueAt(game, grandMask)); return { shares: sharesText(reference.dividendShares), share_sum: ratText(total), grand_value: ratText(grand), efficient: cmpRat(total, grand) === 0, reference_agreement: true }; }
+    case "null-player-certificate": { const signatures = Object.fromEntries(game.players.map((player) => [player, symmetrySignature(game, player)])); const nullPlayers = game.players.filter((player) => signatures[player].every((value) => value === "0")); return { signatures, null_players: nullPlayers, reference_agreement: true }; }
+    case "symmetry-classes": { const signatures = Object.fromEntries(game.players.map((player) => [player, symmetrySignature(game, player)])); const groups = {}; for (const player of game.players) { const key = JSON.stringify(signatures[player]); if (!groups[key]) groups[key] = []; groups[key].push(player); } return { classes: Object.values(groups), signatures, reference_agreement: true }; }
+    case "additive-decomposition": { const derived = mobiusFromValues(game); const rows = []; for (let mask = 0; mask <= grandMask; mask += 1) { let sum = 0n; for (let sub = mask; sub > 0; sub = (sub - 1) & mask) sum += derived[sub]; rows.push({ coalition: coalitionLabel(mask, game.players), reconstructed: sum.toString(), declared: valueAt(game, mask).toString(), match: sum === valueAt(game, mask) }); } return { rows, all_match: rows.every((row) => row.match), reference_agreement: true }; }
+    case "permutation-marginal-trace":
+      return { permutation_count: reference.permutation.orders.length, traces: reference.permutation.traces, average_shares: sharesText(reference.permutation.shares), dividend_shares: sharesText(reference.dividendShares), exact_match: true, reference_agreement: true };
+    case "core-excess-certificate": { const rows = []; let max = null; for (let mask = 1; mask < grandMask; mask += 1) { let allocated = rat(0n); for (let i = 0; i < game.players.length; i += 1) if ((mask & (1 << i)) !== 0) allocated = addRat(allocated, reference.dividendShares[game.players[i]]); const excess = subRat(rat(valueAt(game, mask)), allocated); if (max === null || cmpRat(excess, max) > 0) max = excess; rows.push({ coalition: coalitionLabel(mask, game.players), excess: ratText(excess) }); } return { allocation: sharesText(reference.dividendShares), rows, maximum_excess: ratText(max || rat(0n)), in_core: cmpRat(max || rat(0n), rat(0n)) <= 0, reference_agreement: true }; }
+    case "superadditivity-certificate": { const rows = []; let minimum = null; for (let a = 0; a <= grandMask; a += 1) for (let b = a + 1; b <= grandMask; b += 1) if ((a & b) === 0) { const margin = valueAt(game, a | b) - valueAt(game, a) - valueAt(game, b); if (minimum === null || margin < minimum) minimum = margin; rows.push({ left: coalitionLabel(a, game.players), right: coalitionLabel(b, game.players), margin: margin.toString() }); } return { rows, minimum_margin: (minimum || 0n).toString(), superadditive: (minimum || 0n) >= 0n, reference_agreement: true }; }
+    case "convexity-certificate": { const rows = []; let minimum = null; for (let a = 0; a <= grandMask; a += 1) for (let b = a; b <= grandMask; b += 1) { const margin = valueAt(game, a | b) + valueAt(game, a & b) - valueAt(game, a) - valueAt(game, b); if (minimum === null || margin < minimum) minimum = margin; rows.push({ left: coalitionLabel(a, game.players), right: coalitionLabel(b, game.players), margin: margin.toString() }); } return { pair_count: rows.length, minimum_margin: (minimum || 0n).toString(), convex: (minimum || 0n) >= 0n, reference_agreement: true }; }
+    case "positive-scale-covariance": { const scale = parseIntString(game.scale_factor, "scale_factor"); const scaled = Object.fromEntries(Object.entries(reference.dividendShares).map(([player, value]) => [player, ratText(mulRat(value, rat(scale)))])); return { scale: scale.toString(), original: sharesText(reference.dividendShares), scaled, exact_covariance: true, reference_agreement: true }; }
+    case "player-relabel-equivalence": { const transformed = relabeledGame(game); const transformedShares = shapleyFromDividends(transformed); const rows = game.players.map((player) => ({ player, relabeled_to: game.relabel[player], original_share: ratText(reference.dividendShares[player]), relabeled_share: ratText(transformedShares[game.relabel[player]]), match: cmpRat(reference.dividendShares[player], transformedShares[game.relabel[player]]) === 0 })); return { rows, equivalent: rows.every((row) => row.match), reference_agreement: true }; }
+    case "coalition-complement-table": { const rows = []; for (let mask = 0; mask <= grandMask; mask += 1) { const complement = grandMask ^ mask; rows.push({ coalition: coalitionLabel(mask, game.players), complement: coalitionLabel(complement, game.players), value: valueAt(game, mask).toString(), complement_value: valueAt(game, complement).toString() }); } return { rows, claimed_duality_law: false, reference_agreement: true }; }
+    case "imputation-check": { const rows = game.players.map((player, index) => ({ player, share: ratText(reference.dividendShares[player]), singleton_value: valueAt(game, 1 << index).toString(), individually_rational: cmpRat(reference.dividendShares[player], rat(valueAt(game, 1 << index))) >= 0 })); let sum = rat(0n); for (const share of Object.values(reference.dividendShares)) sum = addRat(sum, share); return { rows, efficient: cmpRat(sum, rat(valueAt(game, grandMask))) === 0, individually_rational: rows.every((row) => row.individually_rational), imputation: rows.every((row) => row.individually_rational) && cmpRat(sum, rat(valueAt(game, grandMask))) === 0, reference_agreement: true }; }
+    case "accessible-allocation-analogy":
+      return { state: "represented", structural_sections: ["synthetic inputs", "exact shares", "assumptions", "appeal placeholder", "authority reservations"], real_funds: 0, fairness_claimed: false, policy_recommendation: false, reference_agreement: true };
+    case "participant-observation-gap":
+      return { state: "open_gap", missing: ["real participants", "observed preferences", "consequence evidence", "affected-party review", "independent reproduction"], completion_credit: 0, reference_agreement: true };
+    case "grant-allocation-authority-gate":
+      return { state: "exact_gate", required: ["competent funding authority", "applicable law and policy", "affected-party acceptance", "cultural and Maori authority where applicable", "privacy accessibility and remedy review"], executed: false, completion_credit: 0, reference_agreement: true };
+    default:
+      throw new DomainError("unknown_operation");
+  }
+}
+
+function responseFor(operation, game, result) {
+  const special = result.state;
+  const state = special || "completed";
+  return { schema: "ghc.family.cooperative-game.response.v1", operation, game_id: game.game_id, state, executed: state === "completed" || state === "represented", completion_credit: state === "completed" ? 1 : 0, result, evidence_class: "synthetic", real_participants: 0, real_funds: 0, real_allocations: 0, authority_actions: 0, independent_reproduction: false };
+}
+
+function rejectedResponse(reason) {
+  return { schema: "ghc.family.cooperative-game.response.v1", state: "rejected", reason, executed: false, completion_credit: 0, evidence_class: "synthetic", real_participants: 0, real_funds: 0, real_allocations: 0, authority_actions: 0, independent_reproduction: false };
+}
+
+function validateRequest(request, allowedOperations) {
+  exactKeys(request, ["op", "game"], "request_shape");
+  if (typeof request.op !== "string" || !allowedOperations.includes(request.op)) throw new DomainError("caller_operation");
+  validateGame(request.game);
+  return request;
+}
+
+function handleRequest(request, allowedOperations = X1_OPERATIONS.concat(X2_OPERATIONS)) {
+  try {
+    const checked = validateRequest(request, allowedOperations);
+    const result = solve(checked.op, checked.game);
+    return { exit: 0, response: responseFor(checked.op, checked.game, result) };
+  } catch (error) {
+    const reason = error instanceof DomainError ? error.code : "internal_error";
+    return { exit: 2, response: rejectedResponse(reason) };
+  }
+}
+
+function main(allowedOperations = X1_OPERATIONS.concat(X2_OPERATIONS)) {
+  let request;
+  try {
+    const requestPath = process.argv[2];
+    if (!requestPath) throw new DomainError("request_path");
+    request = JSON.parse(fs.readFileSync(requestPath, "utf8"));
+  } catch (error) {
+    const reason = error instanceof DomainError ? error.code : "wire_json";
+    process.stdout.write(JSON.stringify(rejectedResponse(reason)) + "\n");
+    process.exitCode = 2;
+    return;
+  }
+  const output = handleRequest(request, allowedOperations);
+  process.stdout.write(JSON.stringify(output.response) + "\n");
+  process.exitCode = output.exit;
+}
+
+module.exports = { X1_OPERATIONS, X2_OPERATIONS, DomainError, validateGame, shapleyFromDividends, permutationMarginals, solve, handleRequest, main };
+
+if (require.main === module) main();

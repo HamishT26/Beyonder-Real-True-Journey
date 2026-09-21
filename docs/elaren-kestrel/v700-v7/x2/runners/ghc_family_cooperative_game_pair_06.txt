@@ -1,0 +1,17 @@
+"use strict";
+
+const core = require("./ghc_family_cooperative_game_core.txt");
+const ALLOWED = [
+  "core-excess-certificate",
+  "superadditivity-certificate"
+];
+
+function handleRequest(request) {
+  return core.handleRequest(request, ALLOWED);
+}
+
+function main() {
+  return core.main(ALLOWED);
+}
+
+module.exports = { ALLOWED, handleRequest, main };

@@ -1,0 +1,18 @@
+"use strict";
+
+const core = require("./ghc_family_cooperative_game_core.txt");
+const ALLOWED = [
+  "accessible-allocation-analogy",
+  "participant-observation-gap",
+  "grant-allocation-authority-gate"
+];
+
+function handleRequest(request) {
+  return core.handleRequest(request, ALLOWED);
+}
+
+function main() {
+  return core.main(ALLOWED);
+}
+
+module.exports = { ALLOWED, handleRequest, main };
