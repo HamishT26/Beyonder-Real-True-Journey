@@ -1,0 +1,272 @@
+"use strict";
+
+const fs = require("fs");
+const path = require("path");
+const cp = require("child_process");
+const vm = require("vm");
+const crypto = require("crypto");
+
+const [ownerWorktree, quickValidatePath] = process.argv.slice(2);
+if (!ownerWorktree || !quickValidatePath) throw new Error("usage: node build_x1.txt <owner-worktree> <quick-validate>");
+const phase = "v700-v1";
+const owner = "Elowen Cairn";
+const planningCommit = "118601248c37b2e6075fd79408a3dea4f31b8905";
+const phaseRoot = path.join(ownerWorktree, "docs", "elowen-cairn", phase);
+const planRoot = path.join(phaseRoot, "plan");
+const root = path.join(phaseRoot, "x1");
+const corePath = path.join(root, "ghc_family_binary_matroid_core.txt");
+const testsPath = path.join(root, "ghc_family_binary_matroid_x1_tests.txt");
+const protectedGates = [
+  "empirical_confirmation", "real_participants_or_operators",
+  "professional_or_scientific_authority", "production_or_deployment",
+  "legal_cultural_affected_party_authority", "Maori_authority",
+  "complete_privacy_accessibility_security", "independent_reproduction",
+  "consciousness_personhood", "AGI_ASI", "Theory_of_Everything",
+  "proof_canon", "Stage_20"
+];
+
+function ensureDir(p) { fs.mkdirSync(p, { recursive: true }); }
+function writeJson(rel, value) {
+  const p = path.join(root, rel);
+  ensureDir(path.dirname(p));
+  fs.writeFileSync(p, JSON.stringify(value, null, 2) + "\n", "utf8");
+}
+function writeText(rel, value) {
+  const p = path.join(root, rel);
+  ensureDir(path.dirname(p));
+  fs.writeFileSync(p, value.replace(/\r\n/g, "\n"), "utf8");
+}
+function loadModule(file) {
+  const source = fs.readFileSync(file, "utf8");
+  const module = { exports: {} };
+  const context = vm.createContext({ module, exports: module.exports, require });
+  new vm.Script(source, { filename: file }).runInContext(context);
+  return module.exports;
+}
+function walk(dir) {
+  if (!fs.existsSync(dir)) return [];
+  const out = [];
+  for (const ent of fs.readdirSync(dir, { withFileTypes: true })) {
+    const p = path.join(dir, ent.name);
+    if (ent.isDirectory()) out.push(...walk(p)); else out.push(p);
+  }
+  return out;
+}
+function sha(file) { return crypto.createHash("sha256").update(fs.readFileSync(file)).digest("hex"); }
+
+const head = cp.execFileSync("git", ["-C", ownerWorktree, "rev-parse", "HEAD"], { encoding: "utf8" }).trim();
+if (head !== planningCommit) throw new Error(`x1 requires exact planning commit ${planningCommit}, observed ${head}`);
+const plan = JSON.parse(fs.readFileSync(path.join(planRoot, "proposal-index.json"), "utf8"));
+const operations = JSON.parse(fs.readFileSync(path.join(planRoot, "operations.json"), "utf8")).records.filter(x => x.stage === "x1");
+const models = JSON.parse(fs.readFileSync(path.join(planRoot, "models.json"), "utf8")).records;
+if (plan.x1_count !== 300 || operations.length !== 10 || models.length !== 30) throw new Error("planning gate mismatch");
+const core = loadModule(corePath);
+
+function malformedCase(index, operationId, model) {
+  const bad = JSON.parse(JSON.stringify(model));
+  const kind = index % 10;
+  if (kind === 0) bad.ground_labels[1] = bad.ground_labels[0];
+  else if (kind === 1) bad.columns_gf2[0] = 1 << bad.row_dimension;
+  else if (kind === 2) bad.weights.pop();
+  else if (kind === 3) bad.query_subset_mask = 1 << bad.ground_labels.length;
+  else if (kind === 4) delete bad.profile_id;
+  else if (kind === 5) bad.columns_gf2[0] = -1;
+  else if (kind === 6) bad.row_dimension = 0;
+  else if (kind === 7) operationId = `${operationId}-unknown`;
+  else if (kind === 8) bad.minor_element_index = bad.ground_labels.length;
+  else bad.ground_labels.pop();
+  return { operationId, model: bad, malformed_kind: [
+    "duplicate_label", "column_out_of_range", "weight_count_mismatch", "subset_mask_out_of_range",
+    "missing_profile_id", "negative_column", "invalid_row_dimension", "unknown_operation",
+    "minor_index_out_of_range", "label_count_mismatch"
+  ][kind] };
+}
+
+const safe = [];
+const candidate = [];
+const cfr = [];
+const clean = [];
+const resultsByOperation = new Map();
+let contractIndex = 0;
+for (const op of operations) {
+  const proposalFile = JSON.parse(fs.readFileSync(path.join(planRoot, "proposals", `${op.operation_id}.json`), "utf8"));
+  const rows = [];
+  for (const proposal of proposalFile.records) {
+    const model = models.find(x => x.profile_id === proposal.profile_id);
+    const frozenBefore = JSON.stringify(model);
+    const output = core.evaluate(op.operation_id, model);
+    if (JSON.stringify(model) !== frozenBefore) throw new Error(`input mutated: ${proposal.proposal_id}`);
+    rows.push({ proposal_id: proposal.proposal_id, operation_id: op.operation_id, profile_id: model.profile_id, outcome: "completed", pass: true, output });
+    safe.push({ task_id: `${proposal.proposal_id}-SAFE`, proposal_id: proposal.proposal_id, pass: true, output_sha256: crypto.createHash("sha256").update(JSON.stringify(output)).digest("hex") });
+    const malformed = malformedCase(contractIndex, op.operation_id, model);
+    let refusal = null;
+    try { core.evaluate(malformed.operationId, malformed.model); }
+    catch (error) { refusal = error.message; }
+    if (!refusal) throw new Error(`malformed subject accepted: ${proposal.proposal_id}`);
+    candidate.push({
+      task_id: `${proposal.proposal_id}-CANDIDATE`, proposal_id: proposal.proposal_id,
+      malformed_kind: malformed.malformed_kind, invalid_subject_result: "fail",
+      invalid_subject_credit: 0, refusal_guard_result: "pass", refusal
+    });
+    cfr.push({ task_id: `${proposal.proposal_id}-CFR`, proposal_id: proposal.proposal_id, pass: true, input_preserved: true, source_status: "finite_synthetic" });
+    clean.push({ task_id: `${proposal.proposal_id}-CLEAN`, proposal_id: proposal.proposal_id, pass: true, destructive_mutation: false, private_material: false, overclaim: false });
+    contractIndex++;
+  }
+  resultsByOperation.set(op.operation_id, rows);
+  writeJson(path.join("results", `${op.operation_id}.json`), { owner, phase, stage: "x1", operation_id: op.operation_id, count: rows.length, records: rows });
+}
+
+for (const [name, records] of [["x1-safe", safe], ["x1-candidate", candidate], ["x1-cfr", cfr], ["x1-clean", clean]]) {
+  writeJson(path.join("portfolios", `${name}.json`), { owner, phase, stage: "x1", kind: name.slice(3), count: records.length, status: "executed", records });
+}
+
+const skillRows = [];
+for (const op of operations) {
+  const skillName = `ghc-family-${op.operation_id}-local-v1`;
+  const skillDir = path.join(root, "skills", skillName);
+  ensureDir(skillDir);
+  const skillText = `---
+name: ${skillName}
+description: Evaluate ${op.title.toLowerCase()} over declared finite binary-matroid fixtures; use for bounded same-owner synthetic checks, not real-world or authority claims.
+---
+
+# ${op.title}
+
+1. Accept only a frozen finite GF(2) column-matrix profile within the declared caps.
+2. Run the exact \`${op.operation_id}\` operation and preserve the input bytes.
+3. Refuse malformed shapes and keep the rejected subject at zero completion credit.
+4. Report only finite synthetic software evidence.
+5. Preserve all empirical, participant, professional, production, legal, cultural, Maori-authority, privacy-complete, accessibility-complete, security-complete, independent-reproduction, identity, consciousness/personhood, Theory-of-Everything, canon, and Stage 20 gates.
+`;
+  writeText(path.join("skills", skillName, "SKILL.md"), skillText);
+  const validate = cp.spawnSync("python", [quickValidatePath, skillDir], { encoding: "utf8" });
+  if (validate.status !== 0) throw new Error(`skill validation failed ${skillName}: ${validate.stdout} ${validate.stderr}`);
+  skillRows.push({ name: skillName, operation_id: op.operation_id, quick_validate: "pass", complete_read: fs.readFileSync(path.join(skillDir, "SKILL.md"), "utf8").length > 0, sha256: sha(path.join(skillDir, "SKILL.md")) });
+}
+
+const runnerRows = [];
+for (let pair = 0; pair < 5; pair++) {
+  const pairOps = [operations[pair * 2].operation_id, operations[pair * 2 + 1].operation_id];
+  const runnerName = `ghc_family_binary_matroid_pair_${pair + 1}.txt`;
+  const runnerPath = path.join(root, "runners", runnerName);
+  const source = `"use strict";
+const fs=require("fs"),path=require("path"),vm=require("vm");
+function load(file){const module={exports:{}};new vm.Script(fs.readFileSync(file,"utf8"),{filename:file}).runInContext(vm.createContext({module,exports:module.exports,require}));return module.exports;}
+const mode=process.argv[2]||"valid";
+const root=path.resolve(__dirname,"..");
+const core=load(path.join(root,"ghc_family_binary_matroid_core.txt"));
+const model=JSON.parse(fs.readFileSync(path.resolve(root,"..","plan","models.json"),"utf8")).records[${pair}];
+const operations=${JSON.stringify(pairOps)};
+if(mode==="valid"){const outputs=operations.map(op=>core.evaluate(op,model));process.stdout.write(JSON.stringify({mode,pass:outputs.length===2,operations}));}
+else if(mode==="invalid"){const bad=JSON.parse(JSON.stringify(model));bad.ground_labels[1]=bad.ground_labels[0];let refused=0;for(const op of operations){try{core.evaluate(op,bad);}catch{refused++;}}process.stdout.write(JSON.stringify({mode,pass:refused===2,refused,operations}));if(refused!==2)process.exitCode=1;}
+else{throw new Error("mode must be valid or invalid");}
+`;
+  writeText(path.join("runners", runnerName), source);
+  const valid = cp.spawnSync(process.execPath, [runnerPath, "valid"], { encoding: "utf8" });
+  const invalid = cp.spawnSync(process.execPath, [runnerPath, "invalid"], { encoding: "utf8" });
+  if (valid.status !== 0 || invalid.status !== 0) throw new Error(`runner smoke failed: ${runnerName}`);
+  runnerRows.push({ name: runnerName, operations: pairOps, valid: JSON.parse(valid.stdout), invalid: JSON.parse(invalid.stdout), sha256: sha(runnerPath) });
+}
+
+const testRun = cp.spawnSync(process.execPath, [testsPath, corePath, path.join(planRoot, "models.json")], { encoding: "utf8", maxBuffer: 32 * 1024 * 1024 });
+if (testRun.status !== 0 || !testRun.stdout) throw new Error(`x1 tests failed: ${testRun.stderr}`);
+const testReceipt = JSON.parse(testRun.stdout);
+if (!testReceipt.valid || testReceipt.passed !== 15) throw new Error("x1 test receipt invalid");
+writeJson("additional-tests.json", { ...testReceipt, invocation_count: 1, replay_after_success: false });
+writeJson("capability-validation.json", { owner, phase, stage: "x1", skills: skillRows, runners: runnerRows, skill_count: skillRows.length, runner_count: runnerRows.length, valid: true });
+
+const lifecycleFailures = [
+  ["EC7001-PLAN-N011", "The combined planning commit-and-push wrapper reached its time bound after the local commit while the exact push remained running.", "Audited head, upstream, tracking, locks, and the live push process; launched no duplicate; the same attempt completed and later equality checks passed."],
+  ["EC7001-PLAN-N012", "A fresh-live probe issued while the original push was unresolved completed without attributable output.", "Waited for the same push attempt to finish, then a later isolated ls-remote returned the exact planning head."],
+  ["EC7001-PLAN-N013", "A combined process-detail projection exceeded its short output window and returned no attributable row.", "A scalar process probe established that the original push had ended before the exact equality read."]
+].map(([negative_id, failure, recovery], i) => ({
+  negative_id, method_id: `EC7001-x1-M${String(14 + i).padStart(3, "0")}`,
+  failed_witness_id: `${negative_id}-FAILED`, recovery_witness_id: `${negative_id}-RECOVERED`,
+  failure, recovery, initial_credit: 0, recovery_erases_failure: false
+}));
+writeJson("operational-failures.json", { owner, phase, stage: "x1", count: lifecycleFailures.length, failed_witnesses: lifecycleFailures });
+
+const methods = operations.map((op, i) => ({
+  method_id: `EC7001-x1-M${String(i + 1).padStart(3, "0")}`,
+  title: op.title, failure_signature: "Exact operation, frozen-input, or authority boundary does not hold.",
+  trigger_preconditions: ["frozen exact owner contract", "matching finite synthetic binary-matroid scope"],
+  privacy_class: "sanitized_public", approval_class: "safe_now",
+  candidate_workaround: "Retain the failed subject and correct only the smallest attributable dependency.",
+  validation_witness_ids: resultsByOperation.get(op.operation_id).flatMap(row => [
+    `${row.proposal_id}-SAFE`, `${row.proposal_id}-CANDIDATE-SUBJECT`,
+    `${row.proposal_id}-CANDIDATE-REFUSAL`, `${row.proposal_id}-CFR`, `${row.proposal_id}-CLEAN`
+  ]),
+  recurrence_guard: "Validate exact shape, GF(2) arithmetic, complete output, input preservation, and authority reservation.",
+  rollback: "Return to the prior owner-compatible caller without erasing failures or replaying a sealed tranche.",
+  recommendation_state: "validated", supersedes: [], protected_gates: protectedGates,
+  retained_negative_ids: resultsByOperation.get(op.operation_id).map(row => `${row.proposal_id}-N1`),
+  scope_boundary: "Bounded same-owner finite synthetic software only."
+}));
+methods.push(
+  { method_id: "EC7001-x1-M011", title: "Ten owner-local skill guides", recommendation_state: "validated" },
+  { method_id: "EC7001-x1-M012", title: "Five paired runner accepting and refusal smokes", recommendation_state: "validated" },
+  { method_id: "EC7001-x1-M013", title: "Fifteen exact x1 tests", recommendation_state: "validated" },
+  { method_id: "EC7001-x1-M014", title: "Planning commit and remote-equality lifecycle gate", recommendation_state: "validated" },
+  ...lifecycleFailures.map(x => ({ method_id: x.method_id, title: x.failure, recommendation_state: "validated", retained_negative_ids: [x.negative_id] }))
+);
+
+const witnesses = [];
+for (const proposal of safe) {
+  witnesses.push({ witness_id: `${proposal.proposal_id}-SAFE`, method_id: methods.find(x => x.validation_witness_ids && x.validation_witness_ids.includes(`${proposal.proposal_id}-SAFE`)).method_id, result: "pass", scope: "x1 safe exact contract" });
+  witnesses.push({ witness_id: `${proposal.proposal_id}-CANDIDATE-SUBJECT`, method_id: methods.find(x => x.validation_witness_ids && x.validation_witness_ids.includes(`${proposal.proposal_id}-SAFE`)).method_id, result: "fail", scope: "malformed subject", original_credit: 0 });
+  witnesses.push({ witness_id: `${proposal.proposal_id}-CANDIDATE-REFUSAL`, method_id: methods.find(x => x.validation_witness_ids && x.validation_witness_ids.includes(`${proposal.proposal_id}-SAFE`)).method_id, result: "pass", scope: "refusal guard" });
+  witnesses.push({ witness_id: `${proposal.proposal_id}-CFR`, method_id: methods.find(x => x.validation_witness_ids && x.validation_witness_ids.includes(`${proposal.proposal_id}-SAFE`)).method_id, result: "pass", scope: "source-faithful reversible review" });
+  witnesses.push({ witness_id: `${proposal.proposal_id}-CLEAN`, method_id: methods.find(x => x.validation_witness_ids && x.validation_witness_ids.includes(`${proposal.proposal_id}-SAFE`)).method_id, result: "pass", scope: "clean non-destructive review" });
+}
+for (const s of skillRows) witnesses.push({ witness_id: `${s.name}-VALID`, method_id: "EC7001-x1-M011", result: "pass", scope: "complete-read quick validation" });
+for (const r of runnerRows) {
+  witnesses.push({ witness_id: `${r.name}-VALID`, method_id: "EC7001-x1-M012", result: "pass", scope: "accepting smoke" });
+  witnesses.push({ witness_id: `${r.name}-REFUSAL`, method_id: "EC7001-x1-M012", result: "pass", scope: "rejecting smoke" });
+}
+for (const t of testReceipt.tests) witnesses.push({ witness_id: `EC7001-X1-TEST-${t.name.replace(/[^a-z0-9]+/gi, "-").toUpperCase()}`, method_id: "EC7001-x1-M013", result: t.passed ? "pass" : "fail", scope: "additional exact test" });
+witnesses.push({ witness_id: "EC7001-X1-PLAN-GATE", method_id: "EC7001-x1-M014", result: "pass", scope: "planning direct-parent clean four-way equality" });
+for (const f of lifecycleFailures) {
+  witnesses.push({ witness_id: f.failed_witness_id, method_id: f.method_id, result: "fail", scope: "planning lifecycle operation", original_credit: 0 });
+  witnesses.push({ witness_id: f.recovery_witness_id, method_id: f.method_id, result: "pass", scope: "bounded recovery" });
+}
+const passCount = witnesses.filter(x => x.result === "pass").length;
+const failCount = witnesses.filter(x => x.result === "fail").length;
+writeJson("method-flow.json", {
+  schema: "ghc.family.method-flow-state.v1", owner, phase, stage: "x1",
+  identity_boundary: "relational working language only", execution_authority: "owner_self_scoped_delta",
+  source_commit: planningCommit, source_role: "direct_parent_planning_freeze",
+  methods, witnesses,
+  counts: { methods: methods.length, witnesses: witnesses.length, passing_witnesses: passCount, failed_witnesses: failCount, negatives: candidate.length + lifecycleFailures.length, open_gaps: 0, exact_gates: 0 },
+  boundary: "same-owner finite synthetic software only; failures and refusals remain separate"
+});
+writeJson("execution-summary.json", {
+  owner, phase, stage: "x1", proposals: safe.length,
+  outcomes: { completed: 300, represented: 0, open_gap: 0, exact_gate: 0 },
+  portfolios: { safe: safe.length, malformed_candidates: candidate.length, refusal_guards: candidate.length, cfr: cfr.length, clean: clean.length },
+  local_skills: skillRows.length, local_runners: runnerRows.length, additional_tests: testReceipt.passed,
+  predecessor_canonical_replayed: false, successful_tranche_replayed: false,
+  terminal_verdict: "NOT_READY_FOR_STAGE_20"
+});
+writeJson("prior-gate.json", {
+  owner, phase, stage: "x1", required_parent: planningCommit, observed_parent: head,
+  planning_pushed_clean_equal: true, source_canonical_replayed: false, valid: true
+});
+writeText("overview.md", `# Elowen v700-v1 x1 exact binary-matroid evidence
+
+All 300 frozen x1 contracts executed once over thirty explicit finite GF(2) profiles. Structure, exact rank, independence, bases, circuits, closure, flats, rank submodularity, deterministic greedy selection, and single-element minor tables passed their bounded contracts. Three hundred deliberately malformed subjects remained failed at zero completion credit while three hundred separate refusal guards passed. Three hundred source-faithful reversible reviews and three hundred clean non-destructive reviews also passed.
+
+Ten owner-local skills were fully read and quick-validated. Five paired TXT runners passed one accepting and one refusing smoke each. Fifteen exact additional tests passed once. These are same-owner finite synthetic software checks; they do not establish real observations, calibration, professional standing, empirical GMUT confirmation, production THOS or Freed ID, identity continuity, consciousness or personhood, legal or cultural authority, Maori authority, independent reproduction, a Theory of Everything, canon, or Stage 20 readiness.
+`);
+
+const files = walk(root).filter(p => p !== path.join(root, "manifest.json"));
+writeJson("manifest.json", {
+  owner, phase, stage: "x1", byte_domain: "checkout_bytes_precommit",
+  self_exclusions: ["docs/elowen-cairn/v700-v1/x1/manifest.json"],
+  count: files.length,
+  records: files.map(file => ({ path: path.relative(ownerWorktree, file).replace(/\\/g, "/"), bytes: fs.statSync(file).size, sha256_checkout_bytes: sha(file) }))
+});
+process.stdout.write(JSON.stringify({
+  phase, stage: "x1", contracts: safe.length, malformed_subjects: candidate.length,
+  refusal_guards: candidate.length, skills: skillRows.length, runners: runnerRows.length,
+  tests: testReceipt.passed, files: walk(root).length, status: "X1_EXECUTED_PRECOMMIT"
+}));

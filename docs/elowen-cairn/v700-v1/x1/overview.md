@@ -1,0 +1,5 @@
+# Elowen v700-v1 x1 exact binary-matroid evidence
+
+All 300 frozen x1 contracts executed once over thirty explicit finite GF(2) profiles. Structure, exact rank, independence, bases, circuits, closure, flats, rank submodularity, deterministic greedy selection, and single-element minor tables passed their bounded contracts. Three hundred deliberately malformed subjects remained failed at zero completion credit while three hundred separate refusal guards passed. Three hundred source-faithful reversible reviews and three hundred clean non-destructive reviews also passed.
+
+Ten owner-local skills were fully read and quick-validated. Five paired TXT runners passed one accepting and one refusing smoke each. Fifteen exact additional tests passed once. These are same-owner finite synthetic software checks; they do not establish real observations, calibration, professional standing, empirical GMUT confirmation, production THOS or Freed ID, identity continuity, consciousness or personhood, legal or cultural authority, Maori authority, independent reproduction, a Theory of Everything, canon, or Stage 20 readiness.

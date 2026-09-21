@@ -1,0 +1,247 @@
+"use strict";
+
+function assert(condition, message) {
+  if (!condition) throw new Error(message);
+}
+
+function bitCount(mask) {
+  let value = mask >>> 0;
+  let count = 0;
+  while (value) {
+    value &= value - 1;
+    count++;
+  }
+  return count;
+}
+
+function selectedIndices(mask, n) {
+  const out = [];
+  for (let i = 0; i < n; i++) if (mask & (1 << i)) out.push(i);
+  return out;
+}
+
+function validateModel(model) {
+  assert(model && typeof model === "object", "model must be an object");
+  assert(typeof model.profile_id === "string" && /^MAT-\d{2}$/.test(model.profile_id), "invalid profile_id");
+  assert(Number.isInteger(model.row_dimension) && model.row_dimension >= 1 && model.row_dimension <= 6, "invalid row_dimension");
+  assert(Array.isArray(model.ground_labels), "ground_labels must be an array");
+  const n = model.ground_labels.length;
+  assert(n >= 1 && n <= 8, "ground size outside finite cap");
+  assert(new Set(model.ground_labels).size === n, "ground labels must be unique");
+  assert(model.ground_labels.every(x => typeof x === "string" && x.length > 0), "invalid ground label");
+  assert(Array.isArray(model.columns_gf2) && model.columns_gf2.length === n, "column count mismatch");
+  const maxColumn = 1 << model.row_dimension;
+  assert(model.columns_gf2.every(x => Number.isInteger(x) && x >= 0 && x < maxColumn), "invalid GF(2) column");
+  assert(Array.isArray(model.weights) && model.weights.length === n, "weight count mismatch");
+  assert(model.weights.every(Number.isInteger), "weights must be integers");
+  assert(Number.isInteger(model.query_subset_mask) && model.query_subset_mask >= 0 && model.query_subset_mask < (1 << n), "invalid query subset mask");
+  assert(Number.isInteger(model.minor_element_index) && model.minor_element_index >= 0 && model.minor_element_index < n, "invalid minor element");
+  return { n, full_mask: (1 << n) - 1 };
+}
+
+function gf2Rank(columns, rowDimension) {
+  const pivots = Array(rowDimension).fill(0);
+  let rank = 0;
+  for (const original of columns) {
+    let value = original;
+    for (let bit = rowDimension - 1; bit >= 0; bit--) {
+      if ((value & (1 << bit)) === 0) continue;
+      if (pivots[bit]) value ^= pivots[bit];
+      else {
+        pivots[bit] = value;
+        rank++;
+        break;
+      }
+    }
+  }
+  return rank;
+}
+
+function rankOf(model, mask) {
+  const { n } = validateModel(model);
+  assert(Number.isInteger(mask) && mask >= 0 && mask < (1 << n), "subset mask outside ground set");
+  const columns = selectedIndices(mask, n).map(i => model.columns_gf2[i]);
+  return gf2Rank(columns, model.row_dimension);
+}
+
+function rankTable(model) {
+  const { n } = validateModel(model);
+  return Array.from({ length: 1 << n }, (_, mask) => rankOf(model, mask));
+}
+
+function independentMasks(model) {
+  const table = rankTable(model);
+  return table.map((r, mask) => ({ mask, rank: r })).filter(x => x.rank === bitCount(x.mask)).map(x => x.mask);
+}
+
+function basisMasks(model) {
+  const { full_mask } = validateModel(model);
+  const fullRank = rankOf(model, full_mask);
+  return independentMasks(model).filter(mask => bitCount(mask) === fullRank);
+}
+
+function circuitMasks(model) {
+  const { n } = validateModel(model);
+  const out = [];
+  for (let mask = 1; mask < (1 << n); mask++) {
+    if (rankOf(model, mask) === bitCount(mask)) continue;
+    let minimal = true;
+    for (const i of selectedIndices(mask, n)) {
+      const sub = mask & ~(1 << i);
+      if (rankOf(model, sub) < bitCount(sub)) {
+        minimal = false;
+        break;
+      }
+    }
+    if (minimal) out.push(mask);
+  }
+  return out;
+}
+
+function closureMask(model, mask) {
+  const { n } = validateModel(model);
+  const baseRank = rankOf(model, mask);
+  let closure = mask;
+  for (let i = 0; i < n; i++) {
+    if ((mask & (1 << i)) === 0 && rankOf(model, mask | (1 << i)) === baseRank) closure |= (1 << i);
+  }
+  return closure;
+}
+
+function flatMasks(model) {
+  const { n } = validateModel(model);
+  const out = [];
+  for (let mask = 0; mask < (1 << n); mask++) if (closureMask(model, mask) === mask) out.push(mask);
+  return out;
+}
+
+function submodularityAudit(model) {
+  const { n } = validateModel(model);
+  const table = rankTable(model);
+  let pairCount = 0;
+  let minimumSlack = Number.POSITIVE_INFINITY;
+  const violations = [];
+  for (let a = 0; a < (1 << n); a++) {
+    for (let b = 0; b < (1 << n); b++) {
+      const slack = table[a] + table[b] - table[a | b] - table[a & b];
+      pairCount++;
+      minimumSlack = Math.min(minimumSlack, slack);
+      if (slack < 0) violations.push({ a, b, slack });
+    }
+  }
+  return { pair_count: pairCount, minimum_slack: minimumSlack, violations };
+}
+
+function greedyBasis(model) {
+  const { n } = validateModel(model);
+  const order = Array.from({ length: n }, (_, i) => i).sort((a, b) => model.weights[b] - model.weights[a] || a - b);
+  let mask = 0;
+  let rank = 0;
+  for (const i of order) {
+    const next = mask | (1 << i);
+    const nextRank = rankOf(model, next);
+    if (nextRank > rank) {
+      mask = next;
+      rank = nextRank;
+    }
+  }
+  return {
+    selected_mask: mask,
+    selected_labels: selectedIndices(mask, n).map(i => model.ground_labels[i]),
+    rank,
+    total_weight: selectedIndices(mask, n).reduce((sum, i) => sum + model.weights[i], 0),
+    order
+  };
+}
+
+function remapMask(mask, removed, n) {
+  let out = 0;
+  let target = 0;
+  for (let source = 0; source < n; source++) {
+    if (source === removed) continue;
+    if (mask & (1 << target)) out |= (1 << source);
+    target++;
+  }
+  return out;
+}
+
+function minorTables(model) {
+  const { n } = validateModel(model);
+  const e = model.minor_element_index;
+  const eMask = 1 << e;
+  const smallSize = 1 << (n - 1);
+  const deletion = [];
+  const contraction = [];
+  const eRank = rankOf(model, eMask);
+  for (let small = 0; small < smallSize; small++) {
+    const mapped = remapMask(small, e, n);
+    deletion.push(rankOf(model, mapped));
+    contraction.push(rankOf(model, mapped | eMask) - eRank);
+  }
+  const full = (1 << n) - 1;
+  const without = full & ~eMask;
+  return {
+    element_index: e,
+    element_label: model.ground_labels[e],
+    deletion_rank_table: deletion,
+    contraction_rank_table: contraction,
+    is_loop: eRank === 0,
+    is_coloop: rankOf(model, full) > rankOf(model, without)
+  };
+}
+
+function evaluate(operationId, model) {
+  const { n, full_mask } = validateModel(model);
+  if (operationId === "binary-matroid-shape") {
+    const parallelPairs = [];
+    for (let i = 0; i < n; i++) for (let j = i + 1; j < n; j++) {
+      if (model.columns_gf2[i] !== 0 && model.columns_gf2[i] === model.columns_gf2[j]) parallelPairs.push([i, j]);
+    }
+    return {
+      profile_id: model.profile_id, n, row_dimension: model.row_dimension,
+      subset_count: 1 << n, full_rank: rankOf(model, full_mask),
+      loop_count: model.columns_gf2.filter(x => x === 0).length,
+      parallel_pairs: parallelPairs
+    };
+  }
+  if (operationId === "rank-oracle") {
+    return { profile_id: model.profile_id, query_mask: model.query_subset_mask, query_rank: rankOf(model, model.query_subset_mask), full_rank: rankOf(model, full_mask) };
+  }
+  if (operationId === "independence-census") {
+    const independent = independentMasks(model);
+    return { profile_id: model.profile_id, independent_count: independent.length, dependent_count: (1 << n) - independent.length, independent_masks: independent };
+  }
+  if (operationId === "basis-census") {
+    const bases = basisMasks(model);
+    return { profile_id: model.profile_id, rank: rankOf(model, full_mask), basis_count: bases.length, basis_masks: bases };
+  }
+  if (operationId === "circuit-census") {
+    const circuits = circuitMasks(model);
+    return { profile_id: model.profile_id, circuit_count: circuits.length, circuit_masks: circuits };
+  }
+  if (operationId === "closure-query") {
+    const closure = closureMask(model, model.query_subset_mask);
+    return { profile_id: model.profile_id, query_mask: model.query_subset_mask, closure_mask: closure, added_labels: selectedIndices(closure & ~model.query_subset_mask, n).map(i => model.ground_labels[i]) };
+  }
+  if (operationId === "flat-census") {
+    const flats = flatMasks(model);
+    return { profile_id: model.profile_id, flat_count: flats.length, flat_masks: flats };
+  }
+  if (operationId === "rank-submodularity") {
+    const audit = submodularityAudit(model);
+    return { profile_id: model.profile_id, pair_count: audit.pair_count, minimum_slack: audit.minimum_slack, violation_count: audit.violations.length, violations: audit.violations };
+  }
+  if (operationId === "greedy-basis") {
+    return { profile_id: model.profile_id, ...greedyBasis(model) };
+  }
+  if (operationId === "single-element-minor") {
+    return { profile_id: model.profile_id, ...minorTables(model) };
+  }
+  throw new Error(`unknown operation: ${operationId}`);
+}
+
+module.exports = {
+  assert, bitCount, selectedIndices, validateModel, gf2Rank, rankOf, rankTable,
+  independentMasks, basisMasks, circuitMasks, closureMask, flatMasks,
+  submodularityAudit, greedyBasis, minorTables, evaluate
+};

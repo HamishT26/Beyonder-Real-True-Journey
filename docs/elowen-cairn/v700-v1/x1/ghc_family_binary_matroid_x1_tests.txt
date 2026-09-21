@@ -1,0 +1,73 @@
+"use strict";
+
+const fs = require("fs");
+const vm = require("vm");
+
+const [corePath, modelsPath] = process.argv.slice(2);
+if (!corePath || !modelsPath) throw new Error("usage: node x1_tests.txt <core> <models>");
+
+function loadModule(file) {
+  const source = fs.readFileSync(file, "utf8");
+  const module = { exports: {} };
+  const context = vm.createContext({ module, exports: module.exports, require });
+  new vm.Script(source, { filename: file }).runInContext(context);
+  return module.exports;
+}
+
+const core = loadModule(corePath);
+const models = JSON.parse(fs.readFileSync(modelsPath, "utf8")).records;
+const tests = [];
+function test(name, fn) {
+  try { fn(); tests.push({ name, passed: true }); }
+  catch (error) { tests.push({ name, passed: false, error: error.message }); }
+}
+function ok(value, message) { if (!value) throw new Error(message); }
+
+test("all profile shapes", () => models.forEach(m => core.validateModel(m)));
+test("empty set rank zero", () => models.forEach(m => ok(core.rankOf(m, 0) === 0, m.profile_id)));
+test("full rank equals row dimension", () => models.forEach(m => ok(core.rankOf(m, (1 << m.ground_labels.length) - 1) === m.row_dimension, m.profile_id)));
+test("independence partitions powerset", () => models.forEach(m => {
+  const out = core.evaluate("independence-census", m);
+  ok(out.independent_count + out.dependent_count === (1 << m.ground_labels.length), m.profile_id);
+}));
+test("bases have full rank cardinality", () => models.forEach(m => {
+  const r = core.rankOf(m, (1 << m.ground_labels.length) - 1);
+  core.basisMasks(m).forEach(mask => ok(core.bitCount(mask) === r && core.rankOf(m, mask) === r, m.profile_id));
+}));
+test("circuits are minimally dependent", () => models.forEach(m => core.circuitMasks(m).forEach(mask => {
+  ok(core.rankOf(m, mask) < core.bitCount(mask), m.profile_id);
+  core.selectedIndices(mask, m.ground_labels.length).forEach(i => {
+    const sub = mask & ~(1 << i);
+    ok(core.rankOf(m, sub) === core.bitCount(sub), m.profile_id);
+  });
+})));
+test("closure is extensive", () => models.forEach(m => ok((core.closureMask(m, m.query_subset_mask) & m.query_subset_mask) === m.query_subset_mask, m.profile_id)));
+test("closure is idempotent", () => models.forEach(m => {
+  const c = core.closureMask(m, m.query_subset_mask);
+  ok(core.closureMask(m, c) === c, m.profile_id);
+}));
+test("flats are fixed closures", () => models.forEach(m => core.flatMasks(m).forEach(mask => ok(core.closureMask(m, mask) === mask, m.profile_id))));
+test("rank is submodular", () => models.forEach(m => ok(core.submodularityAudit(m).violations.length === 0, m.profile_id)));
+test("greedy output is a basis", () => models.forEach(m => {
+  const g = core.greedyBasis(m);
+  ok(core.rankOf(m, g.selected_mask) === m.row_dimension && core.bitCount(g.selected_mask) === m.row_dimension, m.profile_id);
+}));
+test("deletion table has exact finite size", () => models.forEach(m => ok(core.minorTables(m).deletion_rank_table.length === (1 << (m.ground_labels.length - 1)), m.profile_id)));
+test("contraction table has exact finite size", () => models.forEach(m => ok(core.minorTables(m).contraction_rank_table.length === (1 << (m.ground_labels.length - 1)), m.profile_id)));
+test("duplicate labels are refused", () => {
+  const bad = JSON.parse(JSON.stringify(models[0]));
+  bad.ground_labels[1] = bad.ground_labels[0];
+  let refused = false;
+  try { core.validateModel(bad); } catch { refused = true; }
+  ok(refused, "duplicate labels accepted");
+});
+test("unknown operation is refused", () => {
+  let refused = false;
+  try { core.evaluate("not-an-operation", models[0]); } catch { refused = true; }
+  ok(refused, "unknown operation accepted");
+});
+
+const passed = tests.filter(x => x.passed).length;
+const receipt = { count: tests.length, passed, failed: tests.length - passed, tests, valid: passed === tests.length };
+process.stdout.write(JSON.stringify(receipt));
+if (!receipt.valid) process.exitCode = 1;
