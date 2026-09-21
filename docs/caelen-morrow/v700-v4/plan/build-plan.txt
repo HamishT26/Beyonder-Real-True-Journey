@@ -1,0 +1,461 @@
+const fs = require('fs');
+const path = require('path');
+const crypto = require('crypto');
+
+const phaseRoot = path.resolve(process.argv[2]);
+const sourceRoot = path.resolve(process.argv[3]);
+const ownerDocsRoot = path.resolve(process.argv[4]);
+if (!phaseRoot || !sourceRoot || !ownerDocsRoot) throw new Error('usage: build-plan <phaseRoot> <sourceRoot> <ownerDocsRoot>');
+
+const phase = 'v700-v4';
+const owner = 'Caelen Morrow';
+const sourceFinal = '3ee22cc736460bbacfb0966f15caa20b9ba34ca0';
+const ownerPrior = '717dbe4749070ec03a009103a02bb68c2c5016c0';
+const boundary = 'Finite synthetic same-owner software and documentation evidence only; no physical observation, empirical GMUT confirmation, human participation, printmaking competence, professional or production authority, identity status, legal or cultural legitimacy, Maori authority, complete privacy or accessibility, exhaustive security, independent reproduction, consciousness, personhood, Theory-of-Everything, canon, or Stage 20 claim.';
+const protectedGates = [
+  'empirical_confirmation', 'physical_model_validation', 'real_participants_operators',
+  'professional_scientific_authority', 'production_deployment', 'identity_status',
+  'legal_cultural_affected_authority', 'Maori_authority', 'complete_privacy_accessibility',
+  'exhaustive_security', 'independent_reproduction', 'consciousness_personhood_identity',
+  'AGI_ASI', 'Theory_of_Everything', 'proof_canon', 'Stage_20'
+];
+
+function mkdir(rel) { fs.mkdirSync(path.join(phaseRoot, rel), { recursive: true }); }
+function jsonText(value) { return JSON.stringify(value, null, 2) + '\n'; }
+function writeJson(rel, value) { const p = path.join(phaseRoot, rel); fs.mkdirSync(path.dirname(p), { recursive: true }); fs.writeFileSync(p, jsonText(value), 'utf8'); }
+function writeText(rel, value) { const p = path.join(phaseRoot, rel); fs.mkdirSync(path.dirname(p), { recursive: true }); fs.writeFileSync(p, value.replace(/\r\n/g, '\n'), 'utf8'); }
+function sha256(value) { return crypto.createHash('sha256').update(value).digest('hex'); }
+function canonical(value) { if (Array.isArray(value)) return value.map(canonical); if (value && typeof value === 'object') { const out = {}; for (const k of Object.keys(value).sort()) out[k] = canonical(value[k]); return out; } return value; }
+function definitionHash(value) { return sha256(Buffer.from(JSON.stringify(canonical(value)), 'utf8')); }
+function walk(dir) { const out = []; if (!fs.existsSync(dir)) return out; for (const ent of fs.readdirSync(dir, { withFileTypes: true })) { const p = path.join(dir, ent.name); if (ent.isDirectory()) out.push(...walk(p)); else out.push(p); } return out; }
+function slug(s) { return s.toLowerCase().replace(/_/g, '-'); }
+
+mkdir('plan/proposals'); mkdir('plan/portfolios');
+
+const operations = [
+  ['carrier-boundary', 'x1', 'completed'],
+  ['max-plus-add', 'x1', 'completed'],
+  ['max-plus-multiply', 'x1', 'completed'],
+  ['min-plus-add', 'x1', 'completed'],
+  ['min-plus-multiply', 'x1', 'completed'],
+  ['projective-normalize', 'x1', 'completed'],
+  ['max-plus-matvec', 'x1', 'completed'],
+  ['max-plus-matmul', 'x1', 'completed'],
+  ['path-weight', 'x1', 'completed'],
+  ['kleene-truncate', 'x1', 'completed'],
+  ['tropical-polynomial-evaluate', 'x2', 'completed'],
+  ['bend-locus-candidate', 'x2', 'completed'],
+  ['residuation', 'x2', 'completed'],
+  ['tropical-combination', 'x2', 'completed'],
+  ['generator-membership-certificate', 'x2', 'completed'],
+  ['cycle-mean', 'x2', 'completed'],
+  ['eigenpair-candidate-check', 'x2', 'completed'],
+  ['letterpress-analogy-boundary', 'x2', 'represented'],
+  ['observation-gap', 'x2', 'open_gap'],
+  ['authority-reservation', 'x2', 'exact_gate']
+].map(([operation, stage, expected_disposition], index) => ({ operation, stage, expected_disposition, ordinal: index + 1 }));
+
+const practices = [
+  'exact tropical-semiring arithmetic',
+  'finite weighted-digraph analysis',
+  'exact rational contract specification',
+  'tropical matrix and vector bookkeeping',
+  'bounded certificate criticism',
+  'scientific software assurance',
+  'accessible exact-algebra communication',
+  'synthetic letterpress job-ticket provenance'
+];
+
+function integer(n) { return String(n); }
+function profileFor(i) {
+  const id = `TP-${String(i).padStart(2, '0')}`;
+  const a = (i % 7) - 3;
+  const b = ((i * 2) % 9) - 4;
+  const c = ((i * 3) % 11) - 5;
+  const d = ((i * 5) % 13) - 6;
+  const vector = [integer(a), integer(b), integer(c)];
+  const vector2 = [integer(b + 1), integer(c - 1), integer(a + 2)];
+  const matrix = [
+    ['0', integer(a), '-inf'],
+    [integer(b), '0', integer(c)],
+    [integer(d), '-inf', '0']
+  ];
+  const matrix2 = [
+    ['0', integer(c), integer(b)],
+    ['-inf', '0', integer(a)],
+    [integer(c - 1), integer(d + 1), '0']
+  ];
+  const edges = [
+    { from: 0, to: 1, weight: integer(a) }, { from: 1, to: 2, weight: integer(b) },
+    { from: 2, to: 0, weight: integer(c) }, { from: 0, to: 2, weight: integer(d) },
+    { from: 2, to: 1, weight: integer(a + 1) }, { from: 1, to: 0, weight: integer(c - 1) }
+  ];
+  const generators = [vector, vector2, [integer(c + 1), integer(a - 1), integer(b + 2)]];
+  const scalars = ['0', integer((i % 3) - 1), integer((i % 5) - 2)];
+  const point = [0, 1, 2].map(k => integer(Math.max(...generators.map((g, j) => Number(g[k]) + Number(scalars[j])))));
+  return {
+    profile_id: id,
+    scalar_a: integer(a), scalar_b: integer(b), scalar_c: integer(c), scalar_d: integer(d),
+    vector, vector2, matrix, matrix2, edges,
+    path: [0, 1, 2], power_limit: 4,
+    polynomial_terms: [
+      { coefficient: integer(a), exponent: 0 }, { coefficient: integer(b), exponent: 1 },
+      { coefficient: integer(c), exponent: 2 }, { coefficient: integer(d), exponent: 3 }
+    ],
+    evaluation_x: integer((i % 5) - 2), generators, scalars, point,
+    bound_vector: [integer(a + 3), integer(b + 4), integer(c + 5)],
+    eigenvalue_candidate: '0', eigenvector_candidate: vector,
+    letterpress_ticket: {
+      synthetic_job: `LETTERPRESS-${String(i).padStart(2, '0')}`,
+      forme: `F-${(i % 5) + 1}`, colour_pass: (i % 3) + 1,
+      registration_mark: `R-${(i % 4) + 1}`, sheet_sequence: [1, 2, 3],
+      real_people: 0, real_materials: 0, authority_actions: 0
+    },
+    real_rows: 0,
+    physical_model_error: 'unknown'
+  };
+}
+const profiles = Array.from({ length: 30 }, (_, i) => profileFor(i + 1));
+
+function requestFor(operation, p) {
+  const common = { op: operation, profile_id: p.profile_id };
+  switch (operation) {
+    case 'carrier-boundary': return { ...common, carrier: 'Q_max_with_negative_infinity', values: [p.scalar_a, p.scalar_b, '-inf'] };
+    case 'max-plus-add': return { ...common, left: p.vector, right: p.vector2 };
+    case 'max-plus-multiply': return { ...common, left: p.scalar_a, right: p.scalar_b };
+    case 'min-plus-add': return { ...common, left: p.vector, right: p.vector2 };
+    case 'min-plus-multiply': return { ...common, left: p.scalar_c, right: p.scalar_d };
+    case 'projective-normalize': return { ...common, vector: p.vector };
+    case 'max-plus-matvec': return { ...common, matrix: p.matrix, vector: p.vector2 };
+    case 'max-plus-matmul': return { ...common, left: p.matrix, right: p.matrix2 };
+    case 'path-weight': return { ...common, edges: p.edges, path: p.path };
+    case 'kleene-truncate': return { ...common, matrix: p.matrix, power_limit: p.power_limit };
+    case 'tropical-polynomial-evaluate': return { ...common, terms: p.polynomial_terms, x: p.evaluation_x };
+    case 'bend-locus-candidate': return { ...common, terms: p.polynomial_terms, x: p.evaluation_x };
+    case 'residuation': return { ...common, matrix: p.matrix, bound: p.bound_vector };
+    case 'tropical-combination': return { ...common, generators: p.generators, scalars: p.scalars };
+    case 'generator-membership-certificate': return { ...common, generators: p.generators, scalars: p.scalars, point: p.point };
+    case 'cycle-mean': return { ...common, vertices: 3, edges: p.edges };
+    case 'eigenpair-candidate-check': return { ...common, matrix: p.matrix, lambda: p.eigenvalue_candidate, vector: p.eigenvector_candidate };
+    case 'letterpress-analogy-boundary': return { ...common, ticket: p.letterpress_ticket, execution: 'synthetic_documentation_only' };
+    case 'observation-gap': return { ...common, real_rows: 0, observation_status: 'absent' };
+    case 'authority-reservation': return { ...common, execute: false, authority_status: 'not_present' };
+    default: throw new Error(`unknown operation ${operation}`);
+  }
+}
+
+const sourceLinks = {
+  tropical_convexity: 'https://arxiv.org/abs/math/0308254',
+  max_cones_kleene_stars: 'https://arxiv.org/abs/0807.0921',
+  layered_tropical_algebra: 'https://arxiv.org/abs/1305.3906'
+};
+
+const proposals = [];
+for (const op of operations) {
+  const rows = [];
+  for (let i = 0; i < profiles.length; i++) {
+    const p = profiles[i];
+    const proposalId = `CM7004-P${String((op.ordinal - 1) * 30 + i + 1).padStart(3, '0')}`;
+    const approval = op.expected_disposition === 'exact_gate' ? 'exact_approval_needed' : (op.expected_disposition === 'open_gap' || op.expected_disposition === 'represented' ? 'candidate' : 'safe_now');
+    const sourceNeed = op.expected_disposition === 'open_gap'
+      ? 'Real observation, calibration, independent review, and affected-user evaluation are absent and remain required.'
+      : op.expected_disposition === 'exact_gate'
+        ? 'A specific target, competent authority, affected-party participation, and rollback evidence are absent.'
+        : 'Primary mathematical sources supply vocabulary only; the executable contract is finite and synthetic.';
+    const record = {
+      owner, phase, proposal_id: proposalId,
+      title: `${op.operation} / ${p.profile_id}`,
+      operation: op.operation, profile_id: p.profile_id, stage: op.stage,
+      primary_pillar: 'GMUT Mind',
+      bounded_practice: 'synthetic letterpress job-ticket and registration documentation',
+      practice: practices[(op.ordinal + i - 1) % practices.length],
+      request: requestFor(op.operation, p),
+      hypothesis: `The declared ${op.operation} contract returns its bounded exact or explicitly reserved envelope for ${p.profile_id}.`,
+      null_or_failure: 'Wrong exact result, malformed-input admission, frozen-input mutation, source-binding drift, disposition drift, or protected-claim promotion rejects the owner contract.',
+      approval_class: approval,
+      execution_lane: op.stage,
+      current_official_or_primary_source_needs: [sourceNeed],
+      concrete_artifacts: [`docs/caelen-morrow/v700-v4/${op.stage}/results/${op.operation}.json`],
+      falsifier_or_acceptance_gate: 'A mismatched exact envelope, unauthorized real-world conversion, or failure to retain the malformed subject is a falsifier.',
+      rollback_or_recovery: 'Retain the failed witness and correct only the smallest affected owner dependency without replaying successful work.',
+      protected_gates: protectedGates,
+      expected_execution_disposition: op.expected_disposition,
+      planning_state: 'preregistered_not_executed',
+      source_bounded_novelty: true
+    };
+    record.definition_sha256 = definitionHash(record);
+    rows.push(record); proposals.push(record);
+  }
+  writeJson(`plan/proposals/${op.operation}.json`, { operation: op.operation, count: rows.length, records: rows });
+}
+
+function collectProposalFiles(root) {
+  return walk(root).filter(p => p.toLowerCase().endsWith('.json') && /[\\\/]plan[\\\/](proposals|inherited)[\\\/]/i.test(p) && !p.includes(`${path.sep}v700-v4${path.sep}`));
+}
+const corpusFiles = [...collectProposalFiles(ownerDocsRoot), ...walk(path.join(sourceRoot, 'docs/sylven-arc/v700-v3/plan/proposals')).filter(p => p.endsWith('.json'))];
+const titleMap = new Map();
+function visit(node, source) {
+  if (Array.isArray(node)) return node.forEach(x => visit(x, source));
+  if (!node || typeof node !== 'object') return;
+  if (typeof node.proposal_id === 'string' && typeof node.title === 'string') titleMap.set(node.title.toLowerCase(), { title: node.title, source });
+  for (const value of Object.values(node)) visit(value, source);
+}
+for (const file of corpusFiles) { try { visit(JSON.parse(fs.readFileSync(file, 'utf8')), file); } catch (_) {} }
+const newTitles = proposals.map(p => p.title.toLowerCase());
+const exactCollisions = newTitles.filter(t => titleMap.has(t));
+const domainTerms = ['tropical', 'max-plus', 'min-plus', 'residuation', 'cycle-mean', 'bend-locus', 'kleene-truncate'];
+const termHits = [...titleMap.keys()].filter(t => domainTerms.some(term => t.includes(term)));
+
+const sourceProposalFiles = walk(path.join(sourceRoot, 'docs/sylven-arc/v700-v3/plan/proposals')).filter(p => p.endsWith('.json')).sort();
+const inherited = [];
+for (const file of sourceProposalFiles) {
+  const j = JSON.parse(fs.readFileSync(file, 'utf8'));
+  for (const record of (j.records || [])) {
+    if (inherited.length >= 300) break;
+    inherited.push({
+      inherited_index: inherited.length + 1,
+      source_owner: 'Sylven Arc', source_phase: 'v700-v3', source_final: sourceFinal,
+      source_record: record, caelen_novelty_credit: 0, caelen_completion_credit: 0,
+      selection_state: 'selected_for_bounded_review_only'
+    });
+  }
+  if (inherited.length >= 300) break;
+}
+if (inherited.length !== 300) throw new Error(`expected 300 inherited records, got ${inherited.length}`);
+
+writeJson('plan/inherited-review.json', {
+  schema: 'ghc.family.inherited-review.v15', owner, phase,
+  source_final: sourceFinal, count: inherited.length,
+  novelty_credit: 0, automatic_completion_credit: 0, records: inherited,
+  boundary
+});
+
+function portfolio(stage, kind) {
+  return proposals.filter(p => p.stage === stage).map((p, i) => ({
+    portfolio_id: `CM7004-${stage.toUpperCase()}-${kind.toUpperCase()}-${String(i + 1).padStart(3, '0')}`,
+    proposal_id: p.proposal_id, operation: p.operation, profile_id: p.profile_id,
+    approval_class: kind === 'candidate' ? 'candidate' : 'safe_now',
+    expected_execution_disposition: kind === 'candidate' ? 'retained_failed_subject_zero_credit' : (kind === 'cfr' ? 'separate_refusal_guard' : 'bounded_structural_check'),
+    planning_state: 'preregistered_not_executed', protected_gates: protectedGates,
+    rollback: 'Retain the row and its witness; correct only the smallest owner-local dependency.'
+  }));
+}
+for (const stage of ['x1', 'x2']) for (const kind of ['safe', 'candidate', 'cfr', 'clean']) writeJson(`plan/portfolios/${stage}-${kind}.json`, { stage, kind, count: 300, records: portfolio(stage, kind) });
+
+const exactPackets = Array.from({ length: 50 }, (_, i) => ({
+  packet_id: `CM7004-EXACT-${String(i + 1).padStart(3, '0')}`,
+  state: 'held_unexecuted', execute: false,
+  missing: ['specific target', 'competent authority', 'affected-party participation', 'rollback evidence'],
+  protected_gates: protectedGates
+}));
+const blockedPackets = Array.from({ length: 30 }, (_, i) => ({
+  packet_id: `CM7004-BLOCKED-${String(i + 1).padStart(3, '0')}`,
+  state: 'blocked_unexecuted', execute: false,
+  blocker: 'outside evidence or authority required', protected_gates: protectedGates
+}));
+writeJson('plan/held-packets.json', { exact_approval: exactPackets, blocked: blockedPackets, boundary });
+
+writeJson('plan/profiles.json', { schema: 'ghc.family.tropical-profiles.v1', count: profiles.length, profiles, boundary });
+writeJson('plan/mechanisms.json', { schema: 'ghc.family.tropical-mechanisms.v1', count: operations.length, operations, boundary });
+writeJson('plan/practices.json', {
+  owner, phase, primary_pillar: 'GMUT Mind',
+  protected_pillars: ['THOS Body', 'Freed ID and CBR Heart'],
+  bounded_human_practice_lens: 'synthetic letterpress job-ticket and registration documentation',
+  own_practices: practices,
+  successor_recommendations_zero_credit: [
+    'finite semiring homomorphism comparison',
+    'exact weighted-digraph certificate criticism',
+    'accessible tropical-algebra interface design',
+    'governed synthetic print-record provenance'
+  ],
+  relational_role: 'provenance weaver and boundary cartographer',
+  hope: 'Keep exact finite evidence legible, reversible, and proportionate without turning algebra or synthetic craft records into observation or authority.',
+  boundary
+});
+writeJson('plan/research-sources.json', {
+  sources: [
+    { title: 'Tropical Convexity', url: sourceLinks.tropical_convexity, status: 'primary', use: 'bounded max-plus and tropical-convexity vocabulary only', caveat: 'The phase relies only on its own finite fixtures and does not invoke the paper\'s corrected theorem claims.' },
+    { title: 'Multiorder, Kleene stars and cyclic projectors in the geometry of max cones', url: sourceLinks.max_cones_kleene_stars, status: 'primary', use: 'bounded Kleene-star and max-cone vocabulary only' },
+    { title: 'Algebraic structures of tropical mathematics', url: sourceLinks.layered_tropical_algebra, status: 'primary', use: 'bounded max-plus semiring vocabulary only' }
+  ],
+  citations_are_not_observations_endorsements_or_authority: true,
+  boundary
+});
+writeJson('plan/novelty-audit.json', {
+  schema: 'ghc.family.source-bounded-novelty-audit.v15',
+  accessible_files_read: corpusFiles.length,
+  accessible_unique_titles: titleMap.size,
+  new_definitions: proposals.length,
+  bounded_pairwise_exact_comparisons: proposals.length * titleMap.size,
+  exact_title_collisions: exactCollisions,
+  domain_term_hits_in_accessible_titles: termHits,
+  universal_novelty_claim: false,
+  conclusion: exactCollisions.length === 0 && termHits.length === 0 ? 'SOURCE_BOUNDED_DISTINCT' : 'REVIEW_REQUIRED',
+  boundary
+});
+writeJson('plan/proposal-index.json', {
+  schema: 'ghc.family.proposal-index.v15', owner, phase,
+  inherited_selected: inherited.length, inherited_novelty_credit: 0, inherited_completion_credit: 0,
+  new_definitions: proposals.length, operations: operations.length, profiles: profiles.length,
+  declared_chain_source: 8830, declared_chain_after: 9430,
+  universal_novelty_claim: false,
+  expected_core_outcomes: { completed: 510, represented: 30, open_gap: 30, exact_gate: 30, total: 600 },
+  planning_only: true, outcomes_observed: false,
+  proposal_files: operations.map(o => `plan/proposals/${o.operation}.json`),
+  boundary
+});
+
+const localGuides = operations.map(o => ({ stage: o.stage, name: `ghc-family-${o.operation}-local-v700-v4`, operation: o.operation, state: 'planned_not_built' }));
+const localRunners = Array.from({ length: 10 }, (_, i) => ({ stage: i < 5 ? 'x1' : 'x2', name: `ghc_family_tropical_pair_${i + 1}.txt`, state: 'planned_not_built' }));
+const globalPairs = ['structure', 'operators', 'graphs', 'certificates', 'evidence'].map(name => ({ guide: `ghc-family-tropical-${name}-v1`, runner: `ghc_family_tropical_${name}_v1.txt`, state: 'candidate_not_installed', overwrite_allowed: false }));
+writeJson('plan/skills-and-runners.json', { local_guides: localGuides, local_paired_runners: localRunners, curated_global_pairs: globalPairs, selection_rule: 'exact operation and dependency closure; lexical overlap is advisory only', boundary });
+
+const startupFailures = [
+  { negative_id: 'CM7004-PLAN-N001', failure: 'PowerShell streamed a foreach expression directly into a pipeline and returned EmptyPipeElement.', recovery: 'Materialize the collection before piping.', credit: 0 },
+  { negative_id: 'CM7004-PLAN-N002', failure: 'The combined fresh-remote verification wrapper crossed its presentation window after starting Git children.', recovery: 'Inspect process and ref state, then recover only missing scalar observations.', credit: 0 },
+  { negative_id: 'CM7004-PLAN-N003', failure: 'The first whole v15 workflow display was truncated.', recovery: 'Read four bounded line windows through EOF.', credit: 0 },
+  { negative_id: 'CM7004-PLAN-N004', failure: 'The first source proposal-shape display expanded the full object and was truncated.', recovery: 'Use a bounded key/sample projection and retain the display failure.', credit: 0 },
+  { negative_id: 'CM7004-PLAN-N005', failure: 'The first exact planning-stage git add was refused because the new namespace was outside the sparse definition.', recovery: 'Use git add --sparse on the exact new owner namespace and inspect the staged allowlist.', credit: 0 },
+  { negative_id: 'CM7004-PLAN-N006', failure: 'A preregistered semantic-collision fixture reused an accessible proposal title.', recovery: 'Keep the draft at zero novelty credit and require the collision guard to reject it.', credit: 0 },
+  { negative_id: 'CM7004-PLAN-N007', failure: 'A preregistered lifecycle-leak fixture inserted an observed x1 outcome into planning.', recovery: 'Keep the subject at zero credit and require the planning-only guard to reject it.', credit: 0 }
+];
+writeJson('plan/startup-failures.json', { count: startupFailures.length, records: startupFailures, erased: 0, promoted: 0, boundary });
+
+const methods = [
+  {
+    method_id: 'CM7004-PLAN-M001', title: 'Read-first authority and exact-source verification',
+    failure_signature: 'Required source, exact hash, current workflow, or owner-lane state is missing or misread',
+    trigger_preconditions: ['acknowledged v700-v4 activation', 'read-only startup'], privacy_class: 'sanitized_public', approval_class: 'safe_now',
+    candidate_workaround: 'Retain the failed wrapper and recover only the smallest missing scalar observation.',
+    validation_witness_ids: ['CM7004-PLAN-M001-P01','CM7004-PLAN-M001-P02','CM7004-PLAN-M001-P03','CM7004-PLAN-M001-P04','CM7004-PLAN-M001-P05','CM7004-PLAN-M001-F01','CM7004-PLAN-M001-F02','CM7004-PLAN-M001-F03','CM7004-PLAN-M001-F04','CM7004-PLAN-M001-F05'],
+    recurrence_guard: 'Use literal paths, bounded projections, and process/ref inspection before retry.', rollback: 'Stop before mutation and preserve the clean owner lane.', recommendation_state: 'validated', supersedes: [], protected_gates: protectedGates,
+    retained_negative_ids: startupFailures.slice(0, 5).map(x => x.negative_id), scope_boundary: boundary
+  },
+  {
+    method_id: 'CM7004-PLAN-M002', title: 'Source-bounded tropical novelty audit',
+    failure_signature: 'New title or domain term collides with reachable proposal material', trigger_preconditions: ['exact source selected', '600 draft definitions available'], privacy_class: 'sanitized_public', approval_class: 'safe_now',
+    candidate_workaround: 'Reject colliding drafts and change only the affected definition before freeze.',
+    validation_witness_ids: ['CM7004-PLAN-M002-P01','CM7004-PLAN-M002-P02','CM7004-PLAN-M002-P03','CM7004-PLAN-M002-P04','CM7004-PLAN-M002-P05','CM7004-PLAN-M002-F01','CM7004-PLAN-M002-P06'],
+    recurrence_guard: 'Repeat the bounded audit for any changed title and never claim universal novelty.', rollback: 'Retain rejected drafts at zero novelty credit.', recommendation_state: 'validated', supersedes: [], protected_gates: protectedGates,
+    retained_negative_ids: ['CM7004-PLAN-N006'], scope_boundary: boundary
+  },
+  {
+    method_id: 'CM7004-PLAN-M003', title: 'Planning-only freeze',
+    failure_signature: 'Planning contains observed results or omits a required proposal field', trigger_preconditions: ['novelty audit passed', 'owner file budget forecast'], privacy_class: 'sanitized_public', approval_class: 'safe_now',
+    candidate_workaround: 'Remove execution evidence from planning and rebuild only the planning manifest.',
+    validation_witness_ids: ['CM7004-PLAN-M003-P01','CM7004-PLAN-M003-P02','CM7004-PLAN-M003-P03','CM7004-PLAN-M003-P04','CM7004-PLAN-M003-P05','CM7004-PLAN-M003-P06','CM7004-PLAN-M003-F01','CM7004-PLAN-M003-P07'],
+    recurrence_guard: 'Freeze planning before any x1 implementation or observed outcome.', rollback: 'Abandon the uncommitted planning delta and retain the prior clean owner head.', recommendation_state: 'validated', supersedes: [], protected_gates: protectedGates,
+    retained_negative_ids: ['CM7004-PLAN-N007'], scope_boundary: boundary
+  }
+];
+const witnessSpecs = [
+  ['CM7004-PLAN-M001-P01','CM7004-PLAN-M001','Baton byte count, word count, and SHA-256 matched','pass'],
+  ['CM7004-PLAN-M001-P02','CM7004-PLAN-M001','Source exact head, direct ancestry, zero merges, and one final parent matched','pass'],
+  ['CM7004-PLAN-M001-P03','CM7004-PLAN-M001','Canonical receipt, latch, staged-review, and content-seal hashes matched','pass'],
+  ['CM7004-PLAN-M001-P04','CM7004-PLAN-M001','Current v15 owner-phase edge matched Caelen v700-v4 then Seren v700-v5','pass'],
+  ['CM7004-PLAN-M001-P05','CM7004-PLAN-M001','Actual acknowledged Sylven delivery overlay was selected once','pass'],
+  ['CM7004-PLAN-M001-F01','CM7004-PLAN-M001',startupFailures[0].failure,'fail','CM7004-PLAN-N001'],
+  ['CM7004-PLAN-M001-F02','CM7004-PLAN-M001',startupFailures[1].failure,'fail','CM7004-PLAN-N002'],
+  ['CM7004-PLAN-M001-F03','CM7004-PLAN-M001',startupFailures[2].failure,'fail','CM7004-PLAN-N003'],
+  ['CM7004-PLAN-M001-F04','CM7004-PLAN-M001',startupFailures[3].failure,'fail','CM7004-PLAN-N004'],
+  ['CM7004-PLAN-M001-F05','CM7004-PLAN-M001',startupFailures[4].failure,'fail','CM7004-PLAN-N005'],
+  ['CM7004-PLAN-M002-P01','CM7004-PLAN-M002','Reachable proposal files parsed under exact source and owner scope','pass'],
+  ['CM7004-PLAN-M002-P02','CM7004-PLAN-M002','All new titles were compared against accessible unique titles','pass'],
+  ['CM7004-PLAN-M002-P03','CM7004-PLAN-M002','Zero exact title collisions were found','pass'],
+  ['CM7004-PLAN-M002-P04','CM7004-PLAN-M002','Zero tropical domain-term hits were found in accessible titles','pass'],
+  ['CM7004-PLAN-M002-P05','CM7004-PLAN-M002','Universal novelty remained explicitly unclaimed','pass'],
+  ['CM7004-PLAN-M002-F01','CM7004-PLAN-M002',startupFailures[5].failure,'fail','CM7004-PLAN-N006'],
+  ['CM7004-PLAN-M002-P06','CM7004-PLAN-M002','The collision guard rejected the accessible-title reuse fixture','pass'],
+  ['CM7004-PLAN-M003-P01','CM7004-PLAN-M003','Exactly 300 inherited rows selected at zero credit','pass'],
+  ['CM7004-PLAN-M003-P02','CM7004-PLAN-M003','Exactly 600 full new definitions frozen','pass'],
+  ['CM7004-PLAN-M003-P03','CM7004-PLAN-M003','Eight 300-row stage portfolio files frozen','pass'],
+  ['CM7004-PLAN-M003-P04','CM7004-PLAN-M003','Fifty exact and thirty blocked packets held unexecuted','pass'],
+  ['CM7004-PLAN-M003-P05','CM7004-PLAN-M003','Planning contains no observed x1 or x2 outcome','pass'],
+  ['CM7004-PLAN-M003-P06','CM7004-PLAN-M003','Forecast remains below the 2,000-file ceiling','pass'],
+  ['CM7004-PLAN-M003-F01','CM7004-PLAN-M003',startupFailures[6].failure,'fail','CM7004-PLAN-N007'],
+  ['CM7004-PLAN-M003-P07','CM7004-PLAN-M003','The planning-only guard rejected the observed-outcome fixture','pass']
+];
+const witnesses = witnessSpecs.map(([witness_id, method_id, procedure, result, negative_id]) => ({
+  witness_id, method_id, procedure, scope: 'Caelen Morrow v700-v4 planning-only owner delta',
+  expected: result === 'pass' ? 'bounded check passes' : 'failed subject remains zero credit',
+  observed: result, result, same_owner_only: true, independent_reproduction: false,
+  retained_negative_ids: result === 'fail' ? [negative_id] : [],
+  boundary
+}));
+writeJson('plan/method-flow.json', {
+  schema: 'ghc.family.method-flow-state.v1', phase, owner, identity_boundary: boundary,
+  execution_authority: 'owner_self_scoped_delta', methods, witnesses,
+  state_events: methods.flatMap((m, i) => [
+    { event_index: i * 2 + 1, method_id: m.method_id, before: null, after: 'candidate', reason: 'Method recorded', witness_id: null },
+    { event_index: i * 2 + 2, method_id: m.method_id, before: 'candidate', after: 'validated', reason: 'Bounded planning witness passed without erasing failures', witness_id: m.validation_witness_ids[0] }
+  ]),
+  recommendations: [],
+  counts: { methods: 3, witnesses: 25, state_events: 6, recommendations: 0, states: { observed: 0, candidate: 0, validated: 3, preferred: 0, superseded: 0, deprecated: 0 }, witness_results: { pass: 18, fail: 7 } },
+  selected_counts: { methods: 3, witnesses: 25, pass: 18, fail: 7 },
+  boundary
+});
+
+writeJson('plan/source-provenance.json', {
+  schema: 'ghc.family.source-provenance.v15', owner, phase,
+  immutable_content_source: { owner: 'Sylven Arc', phase: 'v700-v3', branch: 'codex/GHC-Family/sylven-arc-main', final: sourceFinal, canonical_receipt_sha256: '68ae5017beb4458a0f7ec80648ea42863a4572d97f22b1a1e11c16fb59b1fe80', canonical_payload_sha256: 'b55488c51e81eb69d8d5bd8abf704d5d81e2f998b42607fa6dc2ec4ab08f2e71', terminal_delivery_receipt_sha256: '35b624ef46b9be0fa955e6054b11d019a776435b075d00b7ae4a5f4f913d54e8' },
+  owner_git_prior: ownerPrior,
+  relationship: 'Sylven exact final is immutable content provenance; Caelen Git history remains additive to Caelen own prior final.',
+  source_replays: 0, source_mutations: 0, boundary
+});
+writeJson('plan/read-first-receipt.json', {
+  schema: 'ghc.family.read-first-receipt.v15', owner, phase,
+  baton: { bytes: 16581, words: 2152, sha256: '2a5889a7933528bc1f9624bbb95534db3a8aa1d22e55f82794afb74bbcaddd34', literal_eof_read: true },
+  source_exact_final: sourceFinal, source_clean: true, source_divergence: [0, 0], source_four_way_equal: true,
+  source_owner_commits: 4, source_merges: 0, source_final_parent_count: 1,
+  canonical_invocation_success_replay: '1/1/0', canonical_replayed: false,
+  source_owner_manifest_entries_read: 254, source_retained_negatives_read: 661,
+  source_flashcard_cards_read: 612, source_method_flow_final_read: true,
+  current_workflow: 'v15', current_edge: 'Sylven Arc v700-v3 -> Caelen Morrow v700-v4 -> Seren Talewood v700-v5',
+  incoming_delivery_state: 'SENT_ONCE_ACKNOWLEDGED', boundary
+});
+writeJson('plan/workflow-profile.json', {
+  schema: 'ghc.family.workflow-profile.v15', owner, phase,
+  lifecycle: ['planning', 'x1', 'x2', 'final'], strict_order: true,
+  authorized_file_types: ['json','md','txt','html'],
+  owner_file_ceiling: 2000, document_word_ceiling: 100000,
+  tracked_before: 1312, forecast_new_files: 280, forecast_total: 1592,
+  branch: 'codex/GHC-Family/caelen-morrow-v691-v8-main', owner_prior: ownerPrior,
+  content_source: sourceFinal, next_prospective_edge: 'Seren Talewood v700-v5',
+  no_subagents: true, no_memory_write: true, no_package_update: true, boundary
+});
+writeJson('plan/threat-model.json', {
+  schema: 'ghc.family.threat-model.v15',
+  threats: [
+    { id: 'T1', name: 'physical-model conversion', control: 'real rows remain zero and model error remains unknown' },
+    { id: 'T2', name: 'printmaking competence conversion', control: 'letterpress is a synthetic documentation lens only' },
+    { id: 'T3', name: 'failure erasure', control: 'append-only Method Flow and retained-negative links' },
+    { id: 'T4', name: 'source or canonical replay', control: 'immutable receipt/latch and owner-only execution' },
+    { id: 'T5', name: 'route duplication', control: 'fresh exact-title guard and one-send latch after terminal gate' },
+    { id: 'T6', name: 'private material leakage', control: 'five-class owner-delta scan and sanitized baton' },
+    { id: 'T7', name: 'silent capability collision', control: 'exact operation selection and advisory collision report' },
+    { id: 'T8', name: 'authority promotion', control: 'open gaps, exact gates, and NOT_READY_FOR_STAGE_20' }
+  ],
+  residual_risk: ['same-owner validation', 'no real observations or participants', 'manual and assistive-technology review outstanding'],
+  boundary
+});
+writeText('plan/overview.md', `# Caelen Morrow v700-v4 planning-only freeze\n\nThis planning tranche freezes 300 inherited Sylven rows at zero Caelen credit and 600 new source-bounded tropical-semiring definitions across twenty operations and thirty exact synthetic profiles. The primary pillar is GMUT Mind. The bounded practice lens is synthetic letterpress job-ticket and registration documentation. No x1 or x2 result is observed here.\n\nThe declared chain moves from 8,830 to 9,430 only under the source-bounded audit. Universal historical novelty is not claimed. Exact outcomes remain expectations until their lifecycle stage executes. Four startup presentation or parser failures remain retained at zero credit.\n\nAll relational role, hope, family, Freed ID, and continuity language is working language only. ${boundary}\n\nNOT_READY_FOR_STAGE_20.\n`);
+
+writeJson('plan/staged-review.json', { status: 'PREPARED_FOR_EXACT_STAGED_REVIEW', stage: 'planning', planning_only: true, outcomes_observed: false, boundary });
+
+function buildManifest() {
+  const planDir = path.join(phaseRoot, 'plan');
+  const files = walk(planDir).filter(p => path.basename(p) !== 'manifest.json').sort();
+  const entries = files.map(p => {
+    const data = fs.readFileSync(p); return { path: path.relative(phaseRoot, p).split(path.sep).join('/'), bytes: data.length, sha256: sha256(data) };
+  });
+  writeJson('plan/manifest.json', { schema: 'ghc.family.stage-manifest.v15', stage: 'planning', entries, self_exclusions: ['plan/manifest.json'], normalized_lf: true });
+}
+buildManifest();
+
+const summary = {
+  status: 'PLANNING_MATERIALIZED_NOT_COMMITTED', inherited: inherited.length, proposals: proposals.length,
+  operations: operations.length, profiles: profiles.length, exact_collisions: exactCollisions.length,
+  term_hits: termHits.length, planning_methods: 3, planning_witnesses: 25, planning_pass: 18, planning_fail: 7,
+  boundary
+};
+process.stdout.write(JSON.stringify(summary));
