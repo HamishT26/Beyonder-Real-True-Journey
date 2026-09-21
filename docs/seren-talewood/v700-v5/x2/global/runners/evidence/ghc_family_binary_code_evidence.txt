@@ -1,0 +1,10 @@
+#!/usr/bin/env python3
+from pathlib import Path
+import runpy,sys
+sys.dont_write_bytecode=True
+N=runpy.run_path(str(Path(__file__).with_name('ghc_family_binary_code_extension.txt')))
+ALLOWED=['transcription-analogy', 'channel-observation-gap', 'governance-authority-gate']
+def handle(q):
+    if not isinstance(q,dict) or q.get('op') not in ALLOWED:return N['rejected']('operation')
+    return N['handle'](q)
+if __name__=='__main__':raise SystemExit(N['cli'](handle))

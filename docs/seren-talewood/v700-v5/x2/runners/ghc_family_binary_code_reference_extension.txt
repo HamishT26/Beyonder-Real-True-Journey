@@ -1,0 +1,57 @@
+#!/usr/bin/env python3
+import itertools,runpy
+from pathlib import Path
+R=runpy.run_path(str(Path(__file__).parents[2]/'x1/runners/ghc_family_binary_code_reference.txt'))
+BASE=Path(__file__).parents[2]
+def read(p):
+    import json
+    return json.loads(p.read_text())
+
+def ambient(n):return [list(v) for v in itertools.product((0,1),repeat=n)]
+
+def refdual(code,n):return R['ordered']([v for v in ambient(n) if all(R['dot'](v,w)==0 for w in code)])
+
+def distribution(code,n):return [sum(sum(w)==j for w in code) for j in range(n+1)]
+
+def polynomial_transform(counts,n,size):
+ result=[0]*(n+1)
+ for weight,multiplicity in enumerate(counts):
+  poly=[1]
+  for sign in [1]*(n-weight)+[-1]*weight:
+   expanded=[0]*(len(poly)+1)
+   for j,c in enumerate(poly):expanded[j]+=c;expanded[j+1]+=sign*c
+   poly=expanded
+  for j,c in enumerate(poly):result[j]+=multiplicity*c
+ assert all(x%size==0 for x in result)
+ return [x//size for x in result]
+
+def reference2(q):
+ op,p=q['op'],q['profile']
+ if op not in [x['op'] for x in read(BASE/'plan/operations.json')['operations'] if x['session']=='x2']:return R['reference'](q)
+ g=p['matrix'];n,k=p['n'],p['k'];code=R['refspan'](g);h=R['refparity'](p);state='completed'
+ if op=='coset-leaders':
+  groups={}
+  for w in ambient(n):groups.setdefault(tuple(R['dot'](w,r) for r in h),[]).append(w)
+  classes=[]
+  for syndrome in sorted(groups,key=lambda x:x[::-1]):
+   weight=min(sum(w) for w in groups[syndrome]);leaders=R['ordered']([w for w in groups[syndrome] if sum(w)==weight]);classes.append({'syndrome':list(syndrome),'weight':weight,'leaders':leaders})
+  v={'classes':classes,'class_count':len(classes)}
+ elif op=='nearest-codewords':
+  distances=[sum(a!=b for a,b in zip(p['received'],w)) for w in code];best=min(distances);matches=[w for w,d in zip(code,distances) if d==best]
+  v={'distance':best,'nearest':R['ordered'](matches),'count':len(matches),'ambiguous':len(matches)>1}
+ elif op=='erasure-completions':
+  matches=[w for w in code if all(w[j]==p['received'][j] for j in range(n) if j not in p['erased'])]
+  v={'matches':R['ordered'](matches),'count':len(matches),'status':'none' if not matches else ('unique' if len(matches)==1 else 'ambiguous')}
+ elif op in ['punctured-code','shortened-code']:
+  c=p['coordinate'];selected=code if op=='punctured-code' else [w for w in code if not w[c]];image=R['ordered']([w[:c]+w[c+1:] for w in selected]);v={'length':n-1,'words':image,'cardinality':len(image),'dimension':next(i for i in range(n) if 2**i==len(image))}
+ elif op=='dual-weight-distribution':
+  d=refdual(code,n);v={'counts':distribution(d,n),'cardinality':len(d),'dimension':next(i for i in range(n+1) if 2**i==len(d))}
+ elif op=='macwilliams-transform':
+  counts=polynomial_transform(distribution(code,n),n,len(code));v={'counts':counts,'denominator':len(code),'integral':True,'dual_agrees':counts==distribution(refdual(code,n),n)}
+ elif op=='transcription-analogy':
+  state='represented';v={'example':'synthetic collection bit transcription','analogy_only':True,'real_records_recovered':0,'professional_conclusion':False}
+ elif op=='channel-observation-gap':
+  state='open_gap';v={'missing':['channel measurements','calibration','sampling protocol','independent replication'],'physical_model_validated':False,'gap_closed':False}
+ elif op=='governance-authority-gate':
+  state='exact_gate';v={'missing':['concrete target','competent authority','affected-party participation','real evidence','rollback'],'production_action_executed':False,'identity_action_executed':False,'authority_inferred':False}
+ return R['refresponse'](op,p,v,state)

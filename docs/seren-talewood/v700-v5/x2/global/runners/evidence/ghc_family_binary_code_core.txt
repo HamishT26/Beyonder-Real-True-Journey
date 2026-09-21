@@ -1,0 +1,164 @@
+#!/usr/bin/env python3
+"""Exact bounded systematic binary-code contracts; no external I/O beyond CLI JSON."""
+import json
+import sys
+from pathlib import Path
+
+SCHEMA = 'ghc.family.binary-code.response.v1'
+OPS = ['generator-shape', 'row-reduction', 'codeword-span', 'code-dimension',
+       'minimum-distance', 'weight-distribution', 'systematic-encode',
+       'parity-check', 'received-syndrome', 'kernel-membership']
+FIELDS = {'profile_id','n','k','matrix','message','received','erased',
+          'coordinate','evidence_class','physical_observations'}
+
+def integer(x, low, high):
+    return type(x) is int and low <= x <= high
+
+def bits(xs, n):
+    return type(xs) is list and len(xs) == n and all(type(x) is int and x in (0, 1) for x in xs)
+
+def pack(xs):
+    return sum(x << i for i, x in enumerate(xs))
+
+def unpack(x, n):
+    return [(x >> i) & 1 for i in range(n)]
+
+def validate(request, allowed=OPS):
+    if type(request) is not dict or set(request) != {'op', 'profile'}:
+        raise ValueError('request_fields')
+    if request['op'] not in allowed:
+        raise ValueError('operation')
+    p = request['profile']
+    if type(p) is not dict or set(p) != FIELDS:
+        raise ValueError('profile_fields')
+    if not isinstance(p['profile_id'], str) or not 1 <= len(p['profile_id']) <= 64:
+        raise ValueError('profile_id')
+    n, k = p['n'], p['k']
+    if not integer(n, 2, 8) or not integer(k, 1, min(n, 5)):
+        raise ValueError('dimensions')
+    g = p['matrix']
+    if type(g) is not list or len(g) != k or any(type(row) is not list or len(row) != n for row in g):
+        raise ValueError('matrix_shape')
+    if any(type(x) is not int or x not in (0, 1) for row in g for x in row):
+        raise ValueError('binary_bit')
+    if any(g[r][c] != int(r == c) for r in range(k) for c in range(k)):
+        raise ValueError('systematic_generator')
+    if not bits(p['message'], k) or not bits(p['received'], n):
+        raise ValueError('word_shape')
+    erased = p['erased']
+    if type(erased) is not list or any(not integer(x, 0, n-1) for x in erased) or len(set(erased)) != len(erased):
+        raise ValueError('erased_coordinates')
+    if not integer(p['coordinate'], 0, n-1):
+        raise ValueError('coordinate')
+    if p['evidence_class'] != 'synthetic' or type(p['physical_observations']) is not int or p['physical_observations'] != 0:
+        raise ValueError('evidence_class')
+    return p
+
+def rref(rows, n):
+    work = rows[:]
+    pivot = 0
+    for col in range(n):
+        hit = next((i for i in range(pivot, len(work)) if (work[i] >> col) & 1), None)
+        if hit is None:
+            continue
+        work[pivot], work[hit] = work[hit], work[pivot]
+        for i in range(len(work)):
+            if i != pivot and ((work[i] >> col) & 1):
+                work[i] ^= work[pivot]
+        pivot += 1
+    return work[:pivot]
+
+def span(rows):
+    words = {0}
+    for row in rows:
+        words |= {x ^ row for x in list(words)}
+    return sorted(words)
+
+def checks(p):
+    n, k, g = p['n'], p['k'], p['matrix']
+    return [pack([g[r][k+c] for r in range(k)] + [int(c==j) for j in range(n-k)]) for c in range(n-k)]
+
+def syndrome(word, parity):
+    return [(word & row).bit_count() % 2 for row in parity]
+
+def weights(words, n):
+    return [sum(w.bit_count() == j for w in words) for j in range(n+1)]
+
+def vectors(words, n):
+    return [unpack(w, n) for w in sorted(words)]
+
+def response(op, p, result, state='completed'):
+    return {'schema':SCHEMA,'operation':op,'profile_id':p['profile_id'],
+            'state':state,'result':result,'evidence_class':'synthetic',
+            'physical_observations':0,'independent_reproduction':False}
+
+def evaluate(request):
+    p = validate(request)
+    op = request['op']
+    n, k = p['n'], p['k']
+    rows = [pack(r) for r in p['matrix']]
+    code = span(rows)
+    parity = checks(p)
+    received = pack(p['received'])
+    if op == 'generator-shape':
+        result = {'n':n,'k':k,'systematic':True,'ambient_words':2**n}
+    elif op == 'row-reduction':
+        reduced = rref(rows, n)
+        result = {'rank':len(reduced),'matrix':[unpack(x,n) for x in reduced]}
+    elif op == 'codeword-span':
+        result = {'words':vectors(code,n),'cardinality':len(code)}
+    elif op == 'code-dimension':
+        result = {'rank':len(rref(rows,n)),'cardinality':len(code),'log2_cardinality':len(code).bit_length()-1}
+    elif op == 'minimum-distance':
+        result = {'distance':min(w.bit_count() for w in code if w),'codeword_count':len(code)}
+    elif op == 'weight-distribution':
+        result = {'counts':weights(code,n),'total':len(code)}
+    elif op == 'systematic-encode':
+        word = 0
+        for bit, row in zip(p['message'], rows):
+            if bit:
+                word ^= row
+        result = {'word':unpack(word,n),'message':p['message'][:]}
+    elif op == 'parity-check':
+        result = {'matrix':[unpack(x,n) for x in parity],'rank':len(rref(parity,n)),
+                  'orthogonal':all((a&b).bit_count()%2==0 for a in rows for b in parity)}
+    elif op == 'received-syndrome':
+        result = {'syndrome':syndrome(received,parity),'received':p['received'][:]}
+    elif op == 'kernel-membership':
+        result = {'member':received in code,'zero_syndrome':not any(syndrome(received,parity))}
+    else:
+        raise ValueError('operation')
+    return response(op,p,result)
+
+def rejected(reason):
+    return {'schema':SCHEMA,'state':'rejected','reason':reason,'executed':False,
+            'evidence_class':'synthetic','physical_observations':0,'independent_reproduction':False}
+
+def handle(request):
+    try:
+        return evaluate(request)
+    except (ValueError, TypeError, KeyError) as error:
+        return rejected(str(error))
+
+def unique_pairs(pairs):
+    result = {}
+    for key,value in pairs:
+        if key in result:
+            raise ValueError('duplicate_json_field')
+        result[key] = value
+    return result
+
+def cli(handler=handle):
+    try:
+        if len(sys.argv) != 2:
+            raise ValueError('one_json_path_required')
+        request=json.loads(Path(sys.argv[1]).read_text(encoding='utf-8'),object_pairs_hook=unique_pairs,
+                           parse_constant=lambda _: (_ for _ in ()).throw(ValueError('nonfinite_json')))
+        result=handler(request)
+    except (OSError,ValueError) as error:
+        result=rejected(str(error) if isinstance(error,ValueError) else 'input_io')
+    print(json.dumps(result,sort_keys=True,separators=(',',':')))
+    return 2 if result['state']=='rejected' else 0
+
+if __name__ == '__main__':
+    raise SystemExit(cli())

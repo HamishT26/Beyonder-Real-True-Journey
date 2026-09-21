@@ -1,0 +1,99 @@
+#!/usr/bin/env python3
+"""Exact finite decoding, code transformations and evidence reservations."""
+from pathlib import Path
+import runpy
+import sys
+import math
+sys.dont_write_bytecode=True
+core_path=Path(__file__).with_name('ghc_family_binary_code_core.txt')
+if not core_path.exists():
+    core_path=Path(__file__).parents[2]/'x1/runners/ghc_family_binary_code_core.txt'
+C=runpy.run_path(str(core_path))
+pack,unpack,span,checks,syndrome,weights,vectors=[C[x] for x in ['pack','unpack','span','checks','syndrome','weights','vectors']]
+EXTRA=['coset-leaders','nearest-codewords','erasure-completions','punctured-code','shortened-code',
+       'dual-weight-distribution','macwilliams-transform','transcription-analogy',
+       'channel-observation-gap','governance-authority-gate']
+OPS=C['OPS']+EXTRA
+rejected=C['rejected']
+cli=C['cli']
+
+def choose(n,j):
+    return math.comb(n,j) if 0<=j<=n else 0
+
+def puncture(word,coordinate):
+    return (word & ((1<<coordinate)-1)) | ((word>>(coordinate+1))<<coordinate)
+
+def dual(rows,n):
+    return [x for x in range(1<<n) if all((x&r).bit_count()%2==0 for r in rows)]
+
+def transform(counts,n,cardinality):
+    numerators=[sum(counts[i]*sum((-1)**j*choose(i,j)*choose(n-i,l-j)
+                               for j in range(l+1)) for i in range(n+1)) for l in range(n+1)]
+    if any(x%cardinality for x in numerators):
+        raise ValueError('nonintegral_transform')
+    return [x//cardinality for x in numerators]
+
+def evaluate(q):
+    p=C['validate'](q,OPS);op=q['op']
+    if op in C['OPS']:
+        return C['evaluate'](q)
+    n,k=p['n'],p['k'];rows=[pack(r) for r in p['matrix']]
+    code=span(rows);h=checks(p);received=pack(p['received']);state='completed'
+    if op=='coset-leaders':
+        classes={}
+        for w in range(1<<n):
+            s=pack(syndrome(w,h));weight=w.bit_count()
+            if s not in classes or weight<classes[s][0]:
+                classes[s]=(weight,[w])
+            elif weight==classes[s][0]:
+                classes[s][1].append(w)
+        result={'classes':[{'syndrome':unpack(s,n-k),'weight':classes[s][0],
+                            'leaders':vectors(classes[s][1],n)} for s in sorted(classes)],
+                'class_count':len(classes)}
+    elif op=='nearest-codewords':
+        distance=min((received^w).bit_count() for w in code)
+        matches=[w for w in code if (received^w).bit_count()==distance]
+        result={'distance':distance,'nearest':vectors(matches,n),'count':len(matches),
+                'ambiguous':len(matches)>1}
+    elif op=='erasure-completions':
+        erased=sum(1<<i for i in p['erased']);known=((1<<n)-1)^erased
+        matches=[w for w in code if (w&known)==(received&known)]
+        result={'matches':vectors(matches,n),'count':len(matches),
+                'status':'none' if not matches else ('unique' if len(matches)==1 else 'ambiguous')}
+    elif op in ['punctured-code','shortened-code']:
+        coordinate=p['coordinate']
+        selected=code if op=='punctured-code' else [w for w in code if ((w>>coordinate)&1)==0]
+        image=sorted(set(puncture(w,coordinate) for w in selected))
+        result={'length':n-1,'words':vectors(image,n-1),'cardinality':len(image),
+                'dimension':len(image).bit_length()-1}
+    elif op=='dual-weight-distribution':
+        d=dual(rows,n)
+        result={'counts':weights(d,n),'cardinality':len(d),'dimension':n-k}
+    elif op=='macwilliams-transform':
+        result_counts=transform(weights(code,n),n,len(code))
+        result={'counts':result_counts,'denominator':len(code),'integral':True,
+                'dual_agrees':result_counts==weights(dual(rows,n),n)}
+    elif op=='transcription-analogy':
+        state='represented'
+        result={'example':'synthetic collection bit transcription','analogy_only':True,
+                'real_records_recovered':0,'professional_conclusion':False}
+    elif op=='channel-observation-gap':
+        state='open_gap'
+        result={'missing':['channel measurements','calibration','sampling protocol','independent replication'],
+                'physical_model_validated':False,'gap_closed':False}
+    elif op=='governance-authority-gate':
+        state='exact_gate'
+        result={'missing':['concrete target','competent authority','affected-party participation','real evidence','rollback'],
+                'production_action_executed':False,'identity_action_executed':False,'authority_inferred':False}
+    else:
+        raise ValueError('operation')
+    return C['response'](op,p,result,state)
+
+def handle(q):
+    try:
+        return evaluate(q)
+    except (ValueError,TypeError,KeyError) as e:
+        return rejected(str(e))
+
+if __name__=='__main__':
+    raise SystemExit(cli(handle))
