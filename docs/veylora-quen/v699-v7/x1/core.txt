@@ -1,0 +1,55 @@
+"use strict";
+const fs=require("fs"),crypto=require("crypto");
+const operations=["bba_frame_shape","bba_focal_support","bba_mass_normal_form","bba_event_bounds","bba_belief_table","bba_plausibility_table","bba_commonality_table","bba_mobius_recovery","bba_conjunctive_combination","bba_conflict_mass"];
+const fields=["operation","n","mass","other","event","reliability"];
+const protectedGates=["empirical_confirmation","real_participants","production_deployment","professional_authority","legal_cultural_affected_party_authority","Maori_authority","complete_privacy_accessibility_security","independent_reproduction","consciousness_personhood","AGI_ASI","Theory_of_Everything","proof_canon","Stage_20"];
+class Refusal extends Error{constructor(code){super(code);this.code=code;}}
+function requireThat(test,code){if(!test)throw new Refusal(code);}
+const record=v=>v!==null&&typeof v==="object"&&!Array.isArray(v)&&(Object.getPrototypeOf(v)===Object.prototype||Object.getPrototypeOf(v)===null);
+const stable=v=>Array.isArray(v)?v.map(stable):v&&typeof v==="object"?Object.fromEntries(Object.keys(v).sort().map(k=>[k,stable(v[k])])):v;
+const canon=v=>JSON.stringify(stable(v)),clone=v=>JSON.parse(canon(v)),sha=v=>crypto.createHash("sha256").update(v).digest("hex");
+function gcd(a,b){while(b){[a,b]=[b,a%b];}return a<0n?-a:a;}
+function rational(n,d=100n){n=BigInt(n);d=BigInt(d);requireThat(d!==0n,"E_DENOMINATOR");if(d<0n){n=-n;d=-d;}const g=gcd(n,d);return [n/g,d/g];}
+const render=q=>q[1]===1n?String(q[0]):q[0]+"/"+q[1];
+const fraction=(n,d=100n)=>render(rational(n,d));
+const addQ=(a,b)=>rational(a[0]*b[1]+b[0]*a[1],a[1]*b[1]);
+function validate(r,allowed=operations){
+ requireThat(record(r),"E_RECORD");requireThat(typeof r.operation==="string"&&allowed.includes(r.operation),"E_OPERATION");
+ requireThat(canon(Object.keys(r).sort())===canon(fields.slice().sort()),"E_FIELDS");
+ requireThat(Number.isSafeInteger(r.n)&&r.n>=3&&r.n<=5,"E_FRAME");
+ const N=2**r.n;
+ for(const a of [r.mass,r.other]){requireThat(Array.isArray(a)&&a.length===N,"E_MASS_SHAPE");requireThat(a.every(x=>Number.isSafeInteger(x)&&x>=0&&x<=100),"E_MASS_VALUE");requireThat(a[0]===0,"E_EMPTY_MASS");requireThat(a.reduce((s,x)=>s+x,0)===100,"E_MASS_SUM");}
+ requireThat(Number.isSafeInteger(r.event)&&r.event>=0&&r.event<N,"E_EVENT");requireThat(Number.isSafeInteger(r.reliability)&&r.reliability>=0&&r.reliability<=100,"E_RELIABILITY");return N;
+}
+function subsetTransform(m,n,inverse=false){const b=m.map(BigInt);for(let bit=0;bit<n;bit++)for(let mask=0;mask<b.length;mask++)if(mask&(1<<bit))b[mask]+=inverse?-b[mask^(1<<bit)]:b[mask^(1<<bit)];return b;}
+function commonality(m,n){const b=m.map(BigInt);for(let bit=0;bit<n;bit++)for(let mask=0;mask<b.length;mask++)if(!(mask&(1<<bit)))b[mask]+=b[mask|(1<<bit)];return b;}
+function conjunction(a,b){const v=Array(a.length).fill(0n);const left=a.flatMap((x,i)=>x?[[i,BigInt(x)]]:[]),right=b.flatMap((x,i)=>x?[[i,BigInt(x)]]:[]);for(const [i,x] of left)for(const [j,y] of right)v[i&j]+=x*y;return v;}
+const vector=(a,d=100n)=>a.map(x=>fraction(x,d));
+function envelope(operation,value,outcome="completed"){return {ok:true,operation,outcome,evidence_class:"finite_synthetic_belief_function",value,authority:false,protected_gates:protectedGates.slice()};}
+function reject(e){if(!(e instanceof Refusal))throw e;return {ok:false,error:e.code,authority:false};}
+function evaluate(r){try{
+ const N=validate(r),F=N-1,{n,mass:m,event:A}=r;let value;
+ switch(r.operation){
+ case "bba_frame_shape":value={frame_size:n,subset_count:N,normalized:true,source_count:2};break;
+ case "bba_focal_support":{const focal=m.flatMap((v,i)=>v?[i]:[]);value={focal_masks:focal,union:focal.reduce((a,b)=>a|b,0),intersection:focal.reduce((a,b)=>a&b,F)};break;}
+ case "bba_mass_normal_form":value={mass:vector(m)};break;
+ case "bba_event_bounds":{const b=subsetTransform(m,n),p=100n-b[F^A];value={event:A,belief:fraction(b[A]),plausibility:fraction(p),width:fraction(p-b[A])};break;}
+ case "bba_belief_table":value={belief:vector(subsetTransform(m,n))};break;
+ case "bba_plausibility_table":{const b=subsetTransform(m,n);value={plausibility:vector(b.map((_,a)=>100n-b[F^a]))};break;}
+ case "bba_commonality_table":value={commonality:vector(commonality(m,n))};break;
+ case "bba_mobius_recovery":{const v=subsetTransform(subsetTransform(m,n),n,true);value={recovered_mass:vector(v),exact_match:v.every((x,i)=>x===BigInt(m[i]))};break;}
+ case "bba_conjunctive_combination":{const v=conjunction(m,r.other);value={mass:vector(v,10000n),conflict:fraction(v[0],10000n),normalization:"unnormalized_conjunctive"};break;}
+ case "bba_conflict_mass":{const v=conjunction(m,r.other);value={conflict:fraction(v[0],10000n),nonconflicting:fraction(10000n-v[0],10000n)};break;}
+ }
+ return envelope(r.operation,value);
+}catch(e){return reject(e);}}
+function parseJSON(text){
+ requireThat(typeof text==="string"&&Buffer.byteLength(text,"utf8")<=1048576,"E_JSON_SIZE");let at=0;
+ const ws=()=>{while(at<text.length&&" \t\r\n".includes(text[at]))at++;};
+ function string(){requireThat(text[at]==='"',"E_JSON_STRING");const start=at++;while(at<text.length){const ch=text[at++];if(ch==='"'){try{return JSON.parse(text.slice(start,at));}catch{throw new Refusal("E_JSON_STRING");}}if(ch==="\\"){requireThat(at<text.length,"E_JSON_STRING");at++;}}throw new Refusal("E_JSON_STRING");}
+ function value(depth){requireThat(depth<=32,"E_JSON_DEPTH");ws();const ch=text[at];if(ch==='"')return string();if(ch==="{"){at++;ws();const obj=Object.create(null),seen=new Set();if(text[at]==="}"){at++;return obj;}while(at<text.length){ws();const key=string();requireThat(!seen.has(key),"E_JSON_DUPLICATE");seen.add(key);ws();requireThat(text[at++]===":","E_JSON_SYNTAX");obj[key]=value(depth+1);ws();const sep=text[at++];if(sep==="}")return obj;requireThat(sep===",","E_JSON_SYNTAX");}throw new Refusal("E_JSON_SYNTAX");}if(ch==="["){at++;ws();const out=[];if(text[at]==="]"){at++;return out;}while(at<text.length){out.push(value(depth+1));ws();const sep=text[at++];if(sep==="]")return out;requireThat(sep===",","E_JSON_SYNTAX");}throw new Refusal("E_JSON_SYNTAX");}for(const [token,v] of [["true",true],["false",false],["null",null]])if(text.startsWith(token,at)){at+=token.length;return v;}const match=/-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?/.exec(text.slice(at));requireThat(match&&match.index===0,"E_JSON_SYNTAX");at+=match[0].length;const number=Number(match[0]);requireThat(Number.isFinite(number),"E_JSON_NUMBER");return number;}
+ const out=value(0);ws();requireThat(at===text.length,"E_JSON_TRAILING");return out;
+}
+function cli(runtime,allowed){let result;try{const file=process.argv[2];requireThat(typeof file==="string","E_INPUT_FILE");requireThat(fs.statSync(file).size<=1048576,"E_JSON_SIZE");const text=new TextDecoder("utf-8",{fatal:true}).decode(fs.readFileSync(file)),r=parseJSON(text);if(allowed)requireThat(record(r)&&allowed.includes(r.operation),"E_SCOPE");result=runtime.evaluate(r);}catch(e){result=e instanceof Refusal?reject(e):{ok:false,error:"E_INPUT_IO",authority:false};}process.stdout.write(canon(result)+"\n");process.exitCode=result.ok?0:2;}
+module.exports={operations,fields,protectedGates,Refusal,requireThat,record,stable,canon,clone,sha,gcd,rational,render,fraction,addQ,validate,subsetTransform,commonality,conjunction,vector,envelope,reject,evaluate,parseJSON,cli};
+if(require.main===module)cli(module.exports);

@@ -1,0 +1,36 @@
+"use strict";
+const fs=require("fs"),path=require("path"),cp=require("child_process"),vm=require("vm"),BASE="docs/veylora-quen/v699-v7";
+const walk=d=>fs.readdirSync(d,{withFileTypes:true}).flatMap(x=>x.isDirectory()?walk(d+"/"+x.name):[d+"/"+x.name]);
+function review(stage,parent,extraExecutables=[]){
+ const dir=BASE+"/"+stage,c=require(path.resolve(BASE,"x1/core.txt")),load=f=>JSON.parse(fs.readFileSync(dir+"/"+f)),p=JSON.parse(fs.readFileSync(BASE+"/planning/proposals-"+stage+".json")).records,checks=[],check=(name,pass,detail=null)=>checks.push({name,pass:!!pass,detail});
+ const rows=load("results/proposals.json").rows;
+ check("300 complete frozen output matches",rows.length===300&&rows.every((r,i)=>r.pass&&r.input_unchanged&&c.canon(r.output)===c.canon(p[i].expected_output)));
+ check("300 retained candidate subjects with passing guards",load("results/candidates.json").rows.length===300&&load("results/candidates.json").rows.every(r=>r.refusal_pass&&r.subject_success_credit===0));
+ for(const k of ["safe","cfr","clean"])check("300 "+k+" records",load("results/"+k+".json").rows.length===300&&load("results/"+k+".json").rows.every(r=>r.pass));
+ const caps=load("evidence/local-capabilities.json");check("10 locally validated and used guides",caps.skills.length===10&&caps.skills.every(s=>s.official_valid&&s.accepting_pass&&s.adverse_pass&&s.guide_read_to_eof));check("5 scoped paired runners",caps.runners.length===5&&caps.runners.every(r=>r.refusal_pass));
+ const l=load("method-flow.json"),n=load("negative-register.json"),schema=load("evidence/method-schema-validation.json");
+ check("official method schema",schema.valid&&schema.method_count===l.methods.length&&schema.witness_count===l.witnesses.length);
+ check("witness counts and identity uniqueness",l.counts.witnesses===l.witnesses.length&&new Set(l.witnesses.map(w=>w.witness_id)).size===l.witnesses.length&&l.counts.witness_results.pass===l.witnesses.filter(w=>w.result==="pass").length&&l.counts.witness_results.fail===l.witnesses.filter(w=>w.result==="fail").length);
+ check("negative subjects remain separate from method failures",n.invalid_subjects_are_method_failures===false&&n.count===n.records.length&&new Set(n.records.map(x=>x.negative_id)).size===n.count&&n.records.every(x=>x.subject_success_credit===0));
+ check("preferred methods have passing evidence and negative links",l.methods.every(m=>m.recommendation_state==="preferred"&&m.retained_negative_ids.length&&l.witnesses.some(w=>w.method_id===m.method_id&&w.result==="pass")));
+ check("expected parent and immutable earlier owner content",cp.execFileSync("git",["rev-parse","HEAD"],{encoding:"utf8"}).trim()===parent&&cp.execFileSync("git",["diff","--name-only","HEAD"],{encoding:"utf8"}).trim()==="");
+ if(stage==="x1")check("x2 remains absent",!fs.existsSync(BASE+"/x2"));
+ const executablePaths=stage==="x1"?[dir+"/core.txt",dir+"/run-session.txt",dir+"/review-stage.txt",...caps.runners.map(r=>dir+"/runners/"+r.name)]:extraExecutables;
+ const dataPaths=[dir+"/validation-report.txt"];
+ for(const f of executablePaths)new vm.Script(fs.readFileSync(f,"utf8"),{filename:f});check("exact executable TXT allowlist parses",executablePaths.length>0,executablePaths.length);
+ const files=walk(BASE),privacy=[],formats=[];let maximumWords=0,jsons=0;
+ const patterns=[/\b[A-Za-z]:[\\/]/g,/\b[0-9a-f]{8}(?:-[0-9a-f]{4}){3}-[0-9a-f]{12}\b/ig,/(?:sk-[A-Za-z0-9_-]{20,}|gh[pousr]_[A-Za-z0-9]{20,})/g,/chatgpt\.com\/c\/[A-Za-z0-9-]+/g,/"(?:raw_transcript|raw_screenshot|private_execution_stream)"\s*:/g];
+ for(const f of files){const text=fs.readFileSync(f,"utf8");maximumWords=Math.max(maximumWords,text.split(/\s+/).filter(Boolean).length);if(![".json",".md",".txt",".html"].includes(path.extname(f)))formats.push(f);if(f.endsWith(".json")){JSON.parse(text);jsons++;}for(const re of patterns){re.lastIndex=0;if(re.test(text))privacy.push(f);}}
+ check("owner format and file ceilings",formats.length===0&&388+files.length<2000,{phase_files:files.length,total_owner_files:388+files.length});check("document word ceiling",maximumWords<100000,maximumWords);check("all current phase JSON parsed",jsons>0,jsons);check("five-class privacy candidates",privacy.length===0,privacy);
+ const truth=load("phase-truth.json");check("no spend canonical or early contact",truth.spend_usd===0&&truth.canonical_invocations===0&&truth.successor_contacts===0);check("terminal boundary",truth.terminal_verdict==="NOT_READY_FOR_STAGE_20");
+ const receipt={schema:"ghc.family.stage-review.v15",stage,checks,checks_total:checks.length,checks_passed:checks.filter(x=>x.pass).length,valid:checks.every(x=>x.pass),maximum_document_words:maximumWords,domain_tranche_replayed:false};
+ fs.writeFileSync(dir+"/validation.json",JSON.stringify(receipt,null,2)+"\n",{flag:"wx"});if(!receipt.valid){console.log(JSON.stringify(receipt));process.exitCode=2;return false;}
+ fs.writeFileSync(dir+"/validation-report.txt","Human-readable stage receipt.\nStage "+stage+" passed "+checks.length+" of "+checks.length+" metadata checks.\nThis TXT file is data and must not be parsed or executed as JavaScript.\nDomain tranches were not replayed by this metadata review.\n",{flag:"wx"});
+ fs.writeFileSync(dir+"/execution-allowlist.json",JSON.stringify({executables:executablePaths,text_data:dataPaths,all_txt_paths_classified:true,rule:"Exact declaration, never extension-based inference."},null,2)+"\n",{flag:"wx"});
+ const all=walk(dir),exclusions=[dir+"/manifest.json",dir+"/staged-review.json"];
+ fs.writeFileSync(dir+"/manifest.json",JSON.stringify({domain:"raw_git_blob",bindings:all.map(f=>({path:f,bytes:fs.statSync(f).size,sha256:c.sha(fs.readFileSync(f))})),exclusions},null,2)+"\n",{flag:"wx"});
+ fs.writeFileSync(dir+"/staged-review.json",JSON.stringify({parent,only_additions:true,earlier_phases_unchanged:true,paths:[...walk(dir),dir+"/staged-review.json"].sort()},null,2)+"\n",{flag:"wx"});
+ console.log(JSON.stringify({stage,valid:true,checks:checks.length,passed:checks.length,phase_files:walk(BASE).length,maximum_document_words:maximumWords,domain_replayed:false}));return true;
+}
+module.exports={review,walk};
+if(require.main===module)review("x1","80fa476768886536c1ac82b8796fe521dd3994a0");
