@@ -1,0 +1,5 @@
+# Journey context and limits
+
+The inherited source synthesis and its complete 23-record Journey ledger were read. Original whole Journey texts were not all reread or independently rehashed by this owner. Ten recent phase records were also read as source context. See planning/source for the preserved source ledgers and source-reading receipt. Historical text does not supply current execution authority. No source achievement is recounted as new completion.
+
+Veylora Quen, she/her, evidence steward, and the hope to make each handoff clearer, more faithful and easier for Hamish to review are relational working language only. Finite same-owner synthetic software under shared infrastructure establishes no consciousness, personhood, identity continuity, qualification, independent agency, empirical GMUT confirmation, production THOS or Freed ID, professional, legal, cultural, affected-party or Maori authority, complete privacy or accessibility, exhaustive security, independent reproduction, AGI/ASI, Theory-of-Everything proof, canon or Stage 20 readiness. Maori concepts remain under Maori authority. NOT_READY_FOR_STAGE_20.

@@ -1,0 +1,1 @@
+Existing Tamar Vey v699-v8 only, after exact-final canonical and current route guards. Read the complete hand-off-baton.md and its separately indexed Method Flow and failures. Bind the exact source commit and receipt from the external activation. Delivery acceptance is not recipient completion. No duplicate send or early Elowen contact.
