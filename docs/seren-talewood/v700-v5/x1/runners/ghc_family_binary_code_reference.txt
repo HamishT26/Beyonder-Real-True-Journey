@@ -1,0 +1,53 @@
+#!/usr/bin/env python3
+"""Independent explicit-vector reference for bounded owner inputs."""
+import itertools,copy,json,sys
+from pathlib import Path
+
+def ordered(words):return [list(w) for w in sorted(set(tuple(x) for x in words),key=lambda x:x[::-1])]
+
+def refspan(g):
+ return ordered([[sum(m[r]*g[r][j] for r in range(len(g)))%2 for j in range(len(g[0]))] for m in itertools.product((0,1),repeat=len(g))])
+
+def refreduce(g):
+ a=copy.deepcopy(g);i=0
+ for j in range(len(g[0])):
+  hits=[t for t in range(i,len(a)) if a[t][j]==1]
+  if not hits:continue
+  a[i],a[hits[0]]=a[hits[0]],a[i]
+  for t in range(len(a)):
+   if t!=i and a[t][j]:a[t]=[(x+y)%2 for x,y in zip(a[t],a[i])]
+  i+=1
+ return a[:i]
+
+def refparity(p):
+ n,k,g=p['n'],p['k'],p['matrix']
+ return [[g[j][k+i] for j in range(k)]+[int(j==i) for j in range(n-k)] for i in range(n-k)]
+
+def dot(a,b):return sum(x*y for x,y in zip(a,b))%2
+
+def refresponse(op,p,result,state='completed'):
+ return {'schema':'ghc.family.binary-code.response.v1','operation':op,'profile_id':p['profile_id'],'state':state,'result':result,'evidence_class':'synthetic','physical_observations':0,'independent_reproduction':False}
+
+def reference(q):
+ op,p=q['op'],q['profile'];g=p['matrix'];n,k=p['n'],p['k'];code=refspan(g);h=refparity(p)
+ if op=='generator-shape':v={'n':n,'k':k,'systematic':all(g[r][c]==int(r==c) for r in range(k) for c in range(k)),'ambient_words':len(list(itertools.product((0,1),repeat=n)))}
+ elif op=='row-reduction':v={'rank':len(refreduce(g)),'matrix':refreduce(g)}
+ elif op=='codeword-span':v={'words':code,'cardinality':len(code)}
+ elif op=='code-dimension':v={'rank':len(refreduce(g)),'cardinality':len(code),'log2_cardinality':next(i for i in range(n+1) if 2**i==len(code))}
+ elif op=='minimum-distance':v={'distance':min(sum(x!=y for x,y in zip(a,b)) for ai,a in enumerate(code) for b in code[ai+1:]),'codeword_count':len(code)}
+ elif op=='weight-distribution':v={'counts':[sum(sum(w)==j for w in code) for j in range(n+1)],'total':len(code)}
+ elif op=='systematic-encode':v={'word':[sum(p['message'][i]*g[i][j] for i in range(k))%2 for j in range(n)],'message':p['message'][:]}
+ elif op=='parity-check':v={'matrix':h,'rank':len(refreduce(h)) if h else 0,'orthogonal':all(dot(a,b)==0 for a in g for b in h)}
+ elif op=='received-syndrome':v={'syndrome':[dot(p['received'],row) for row in h],'received':p['received'][:]}
+ elif op=='kernel-membership':v={'member':p['received'] in code,'zero_syndrome':all(dot(p['received'],row)==0 for row in h)}
+ else:raise ValueError(op)
+ return refresponse(op,p,v)
+
+def malformed(q,index):
+ bad=copy.deepcopy(q)
+ if index%3==0:bad['profile']['matrix'][0].pop();reason='matrix_shape'
+ elif index%3==1:bad['profile']['matrix'][0][-1]=True;reason='binary_bit'
+ else:bad['profile']['matrix'][0][-1]='1';reason='binary_bit'
+ return bad,reason
+
+def rejection(reason):return {'schema':'ghc.family.binary-code.response.v1','state':'rejected','reason':reason,'executed':False,'evidence_class':'synthetic','physical_observations':0,'independent_reproduction':False}
