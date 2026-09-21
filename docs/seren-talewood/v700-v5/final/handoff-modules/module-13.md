@@ -1,0 +1,9 @@
+## 13. Terminal gate and prospective activation
+
+This repository packet is PREPARED_NOT_SENT. Its own text cannot assert that a future final commit, canonical run or native send has occurred. After the exact final is committed, pushed, clean and freshly equal to its upstream, tracking and live remote refs, run the owner-scoped metadata canonical at most once. It checks exact Git blobs, lifecycle, manifests, syntax, schema, counts, privacy patterns, file and word ceilings, retained failures, gates and preparation state. It does not execute the domain, replay source tests or run a full historical repository suite. A successful canonical is never replayed for a clearer presentation.
+
+Only then refresh current user controls, v15 or any newer authoritative profile, roster, authorization and usage. Resolve the exact existing Eiren Kestrel task, check active and complete archived-title uniqueness, and perform the immediate supported bounded reread. Guard against duplicates, an already completed phase, pause, stop, rename, redirect, narrowing, standby, usage exhaustion, privacy, safety, missing evidence and missing authority. Discovery recovery is bounded; a corrected resend is available only after a definite preacceptance rejection. Accepted, opaque or unresolved delivery stops duplicates.
+
+If all terminal conditions pass, send one short native message identifying the exact final, this D-drive packet and its digest, and the authorized Eiren v700-v6 scope. Preserve the recipient's current model and reasoning settings. The next prospective numbered edge for Eiren is Elaren Kestrel v700-v7, subject to Eiren's own final gate and newest controls. Stop after an acknowledged send. Do not monitor Eiren, send a second confirmation, contact later recipients or claim recipient completion. The detailed files carry the evidence; the message should carry only the context needed to find and assess them.
+
+END OF SEREN v700-v5 PREPARED HANDOFF

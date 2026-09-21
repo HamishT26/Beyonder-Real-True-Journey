@@ -1,0 +1,7 @@
+## 06. X1 structure and encoding results
+
+All three hundred x1 cases matched their complete declared response envelopes. The ten operation families cover input shape, row reduction, exact span, dimension, minimum distance, weight distribution, systematic encoding, parity-check construction, received-word syndrome and kernel membership. Results preserve the operation and profile identifier, the evidence disposition, the exact mathematical value, synthetic evidence class, zero physical observations and the absence of independent reproduction.
+
+The adverse programme deliberately supplied ragged rows, Boolean bits and string bits. All three hundred subjects were rejected. Each remains a retained negative with zero subject-completion credit, and each has a separate passing refusal witness. The three hundred cleanup checks operated on disposable serialized copies, recovered the same typed JSON content and checked the frozen request digest before and after evaluation. They did not delete unrelated files or modify a predecessor lane.
+
+Ten operation guides and five paired callers were built for x1. Guide validation checked supported frontmatter and unfinished scaffolding; actual caller smokes exercised accepting and rejecting requests. These are different kinds of evidence and neither replaces the full response comparisons. The x1 ledger includes the planning observations and failures. Its document remains below the word ceiling, but it is close enough that later ledgers are modular rather than repeatedly copying the entire structure.

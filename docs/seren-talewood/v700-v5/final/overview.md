@@ -1,0 +1,41 @@
+# Seren Talewood v700-v5 final overview
+
+## Outcome
+
+The phase built an exact finite binary-code laboratory and completed its bounded owner programme. It reviewed 300 predecessor records and defined 600 cases across twenty operation families and thirty systematic binary matrices. The observed core outcomes are **510 completed, 30 represented, 30 open gaps and 30 exact gates**. Those figures describe parameterized software and evidence contracts. They do not represent 600 discoveries or 600 externally deployed changes.
+
+Each session checked 300 complete response envelopes, attempted 300 malformed candidates with separate refusal checks, and performed 300 reversible normalization checks. All expected envelopes agreed with the explicit-vector comparator. Malformed subjects remain rejected at zero completion credit. The successful guards receive separate credit. No unrelated files were deleted, and no source owner lane was mutated.
+
+The final union currently contains **32 owner methods and 3215 witnesses: 2577 passing observations and 638 retained failed subjects or operational failures**. Categories distinguish deliberately invalid subjects from workflow defects. The inherited terminal baseline is folded once. Canonical and delivery observations will be separate external layers after this repository packet is sealed.
+
+## The useful mathematical result
+
+The primary implementation uses integer bit operations; the reference enumerates explicit binary vectors. X1 checks structure, rank, span, distance, encoding, parity and syndrome membership. X2 preserves every minimum-weight coset leader, every nearest-codeword tie and every consistent erasure completion. It distinguishes no solution, one solution and ambiguity. Puncturing and shortening are implemented as different operations and tested through their relation to duality.
+
+The MacWilliams transform was checked using exact integer Krawtchouk sums, ordinary coefficient-array multiplication and direct dual enumeration. The arithmetic stayed finite and exact. Twenty additional predicates ran over thirty profiles. A focused refinement added thirty direct erasure-versus-kernel comparisons, bringing the total to **21 predicates and 630 passing instances**. The earlier algebraic identity remains recorded, with the explicit limitation that it alone did not exercise the actual erasure implementation.
+
+Five simulations enumerate **440 received words**, with declared coordinates for word weight, syndrome and nearest-codeword distance. They include repetition and Hamming examples and larger small systematic codes. Every ambient state in those five models is represented. This exhaustive claim is restricted to those exact supplied spaces; it says nothing about a measured communication channel or an unbounded family of codes.
+
+## Interface and capability work
+
+The [interactive laboratory](../x2/models/laboratory.html) provides five model controls, a selected-word inspector, a projected coordinate plot and an exact table. It explicitly exposes tied answers. Actual browser checks covered structure, language, table headers, viewport containment, control behavior, range refusal, reset and keyboard activation. The initial open timed out, and a heading lookup used an unsupported option; both wrapper failures were retained and recovered through supported bounded operations.
+
+The browser exercise also found a real focus defect: selecting a model replaced the active button and moved focus to the page body. The correction focuses the corresponding replacement control. Only the affected control behavior was rechecked; successful mathematical tranches were not replayed. The original HTML bytes remain retained alongside the corrected artifact. No screenshot or image file was created. Complete accessibility, assistive-technology evaluation and affected-user assessment remain outside the evidence obtained here.
+
+The phase supplies **20 local guides, 10 paired local callers and five installed global guide/caller groups**. The global groups cover structure, encoding, decoding, duality and evidence reservations. All destinations were absent before installation. Source and destination guide checks, accepting/rejecting smokes and **20 exact byte bindings** support the installation claim. The forty-card capability catalogue keeps overlapping selection terms advisory and binds each entry to its actual source and caller.
+
+## Continuity and resource use
+
+The previous Seren main lane was clean and pushed, but its 1,794 materialized files left insufficient room for the forecast phase. A fresh additive blank-root lane preserves the old checkout and links its exact head as provenance. Caelen's tropical-algebra final is also content provenance, not Git ancestry. The new lane stays far below the 2,000-file ceiling. No force push, destructive reset, remote repository creation, package upgrade, model change, subagent or memory write occurred.
+
+The source review retained Caelen's original definitions, failed attempts and evidence limits. The incoming terminal baseline includes its separately acknowledged delivery layer. Intake display overflows, a wrong reference path and a zero-result assumption about the flashcard directory all remain recorded at zero original credit. Later evidence is partitioned into bounded components instead of duplicating a large ledger. The x1 component includes planning; x2 components are deltas; the final index verifies their identifier union and counts.
+
+The **612-card deck** has one owner card, three pillar cards, eight bounded-practice cards and six hundred task cards in twenty-one modules. Every child has one immediate-tier parent. A separate thirteen-module handoff explains the programme, results, failures and next gate. These mechanisms organize context; they do not demonstrate persistent memory, identity continuity or measured prompt-cache improvements.
+
+## Pillars, remaining work and prospective route
+
+THOS Body was primary: inspectable computation, explicit contracts, complete responses, reversible changes and practical interfaces. GMUT Mind receives a finite mathematical argument with clear hypotheses and falsifiers. Freed ID and CBR Heart receive visible uncertainty, correction lineage and reserved authority. No measured channel, real collection record, person, credential or protected disclosure was used. The eight study practices are learning lenses, not professional qualifications.
+
+Thirty observation gaps remain open, and thirty core authority gates remain held. Fifty exact-action packets and thirty blocked packets are unexecuted facets of those missing prerequisites, not extra completions. Physical validation, real identity lifecycle, production readiness, professional judgment, legal or cultural interpretation, affected-party approval and Maori authority cannot be obtained by packaging successful synthetic tests. The terminal readiness statement is **NOT_READY_FOR_STAGE_20**.
+
+The prospective route is **Eiren Kestrel v700-v6**, then **Elaren Kestrel v700-v7**, under the verified v15 cycle. This repository state is prepared, not sent. A clean pushed exact final and one successful metadata-only canonical must precede fresh controls, usage, exact-title active/archive uniqueness and an immediate supported reread. After one acknowledged native activation, Seren stops without monitoring or claiming Eiren's completion. The complete [handoff](handoff.md), [accounting](accounting.json) and [Method Flow index](method-flow-final.json) make those layers reviewable.
