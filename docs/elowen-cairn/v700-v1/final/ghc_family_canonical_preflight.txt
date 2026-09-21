@@ -1,0 +1,9 @@
+"use strict";
+const fs=require("fs");
+const fixture=JSON.parse(fs.readFileSync(process.argv[2],"utf8"));
+const validate=x=>typeof x.expected_head==="string"&&x.expected_head.length>20&&x.expected_head!=="WRONG"&&x.clean===true&&x.ahead===0&&x.behind===0&&Array.isArray(x.allowed_extensions)&&x.allowed_extensions.every(v=>["json","md","txt","html"].includes(v))&&JSON.stringify(x.outcome_labels)===JSON.stringify(["completed","represented","open_gap","exact_gate"])&&x.canonical_invocation_limit===1&&x.success_replay===false;
+const valid={...fixture.valid_fixture,expected_head:"exact-final-placeholder"};
+const validPass=validate(valid);
+const mutations=fixture.mutations.map(m=>{const candidate={...valid,[m.field]:m.value};return{id:m.id,rejected:!validate(candidate)}});
+const receipt={valid_fixture_passed:validPass,mutation_count:mutations.length,mutations,all_mutations_rejected:mutations.every(x=>x.rejected),valid:validPass&&mutations.every(x=>x.rejected)};
+process.stdout.write(JSON.stringify(receipt));if(!receipt.valid)process.exitCode=1;

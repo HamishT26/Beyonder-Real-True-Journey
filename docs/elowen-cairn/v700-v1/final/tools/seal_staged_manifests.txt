@@ -1,0 +1,16 @@
+"use strict";
+const fs=require("fs"),path=require("path"),cp=require("child_process"),crypto=require("crypto");
+const wt=process.argv[2];if(!wt)throw new Error("usage: node seal_staged_manifests.txt <worktree>");
+const git=(args,enc="utf8")=>cp.execFileSync("git",["-C",wt,...args],{encoding:enc,maxBuffer:256*1024*1024});
+const phasePrefix="docs/elowen-cairn/v700-v1/",finalPrefix=phasePrefix+"final/";
+const exclusions=[finalPrefix+"final-staged-manifest.json",finalPrefix+"final-owner-manifest.json",finalPrefix+"content-seal.json",finalPrefix+"staged-review.json"];
+const indexEntry=rel=>{const line=git(["ls-files","-s","--",rel]).trim();if(!line)throw new Error("missing index entry "+rel);const parts=line.split(/\s+/);const oid=parts[1];const bytes=git(["cat-file","blob",oid],"buffer");return{path:rel,git_oid:oid,bytes:bytes.length,sha256_raw_git_blob:crypto.createHash("sha256").update(bytes).digest("hex")}};
+const staged=git(["diff","--cached","--name-only"]).trim().split(/\r?\n/).filter(Boolean).filter(x=>x.startsWith(finalPrefix)&&!exclusions.includes(x));
+const owner=git(["ls-files",phasePrefix]).trim().split(/\r?\n/).filter(Boolean).filter(x=>!exclusions.includes(x));
+const finalManifest={owner:"Elowen Cairn",phase:"v700-v1",stage:"final",byte_domain:"raw_index_git_blob",self_exclusions:exclusions,count:staged.length,records:staged.map(indexEntry)};
+const ownerManifest={owner:"Elowen Cairn",phase:"v700-v1",byte_domain:"raw_index_git_blob",self_exclusions:exclusions,count:owner.length,records:owner.map(indexEntry)};
+const sealPaths=[finalPrefix+"overview.md",finalPrefix+"phase-truth.json",finalPrefix+"accounting.json",finalPrefix+"method-flow-summary.json",finalPrefix+"retained-negative-register.json",finalPrefix+"open-exact-gate-register.json",finalPrefix+"route-packet.json",finalPrefix+"hand-off-baton.md",finalPrefix+"canonical-policy.json",finalPrefix+"closeout-receipt.json",finalPrefix+"seal-receipt.json"];
+const seal={owner:"Elowen Cairn",phase:"v700-v1",byte_domain:"raw_index_git_blob",count:sealPaths.length,records:sealPaths.map(indexEntry)};
+const check=git(["diff","--cached","--check"]).trim();
+const review={owner:"Elowen Cairn",phase:"v700-v1",parent:git(["rev-parse","HEAD"]).trim(),staged_files:git(["diff","--cached","--name-only"]).trim().split(/\r?\n/).filter(Boolean).length,covered_final_entries:finalManifest.count,owner_entries:ownerManifest.count,self_exclusions:exclusions,diff_check_clean:check==="",allowed_extensions:owner.every(x=>[".json",".md",".txt",".html"].includes(path.extname(x).toLowerCase())),only_final_delta:staged.every(x=>x.startsWith(finalPrefix)),valid:check===""};
+const out=rel=>path.join(wt,rel);fs.writeFileSync(out(exclusions[0]),JSON.stringify(finalManifest,null,2)+"\n");fs.writeFileSync(out(exclusions[1]),JSON.stringify(ownerManifest,null,2)+"\n");fs.writeFileSync(out(exclusions[2]),JSON.stringify(seal,null,2)+"\n");fs.writeFileSync(out(exclusions[3]),JSON.stringify(review,null,2)+"\n");process.stdout.write(JSON.stringify({final_entries:finalManifest.count,owner_entries:ownerManifest.count,seal_entries:seal.count,staged_files:review.staged_files,valid:review.valid}));

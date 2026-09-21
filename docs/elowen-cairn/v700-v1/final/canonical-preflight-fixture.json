@@ -1,0 +1,54 @@
+{
+  "schema": "ghc.family.canonical-preflight.v1",
+  "valid_fixture": {
+    "expected_head": "FINAL_HEAD_REQUIRED",
+    "clean": true,
+    "ahead": 0,
+    "behind": 0,
+    "allowed_extensions": [
+      "json",
+      "md",
+      "txt",
+      "html"
+    ],
+    "outcome_labels": [
+      "completed",
+      "represented",
+      "open_gap",
+      "exact_gate"
+    ],
+    "canonical_invocation_limit": 1,
+    "success_replay": false
+  },
+  "mutations": [
+    {
+      "id": "wrong-head",
+      "field": "expected_head",
+      "value": "WRONG"
+    },
+    {
+      "id": "dirty",
+      "field": "clean",
+      "value": false
+    },
+    {
+      "id": "divergent",
+      "field": "ahead",
+      "value": 1
+    },
+    {
+      "id": "forbidden-extension",
+      "field": "allowed_extensions",
+      "value": [
+        "json",
+        "exe"
+      ]
+    },
+    {
+      "id": "replay",
+      "field": "success_replay",
+      "value": true
+    }
+  ],
+  "status": "prepared_not_executed"
+}

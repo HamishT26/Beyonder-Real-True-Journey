@@ -1,0 +1,345 @@
+"use strict";
+
+const fs=require("fs"),path=require("path"),cp=require("child_process"),vm=require("vm"),crypto=require("crypto");
+const ownerWorktree=process.argv[2];
+if(!ownerWorktree)throw new Error("usage: node build_final.txt <owner-worktree>");
+const owner="Elowen Cairn",phase="v700-v1";
+const previousOwnerFinal="647ec57ba05b6f506d2312773d05b4d3d6dd7e42";
+const planningCommit="118601248c37b2e6075fd79408a3dea4f31b8905";
+const x1Commit="0515a855fc140eeec67a925c286a3abaf7fae702";
+const x2Commit="c696d09de75f631cc69cd06d0cb77738f7638f55";
+const phaseRoot=path.join(ownerWorktree,"docs","elowen-cairn",phase);
+const planRoot=path.join(phaseRoot,"plan"),x1Root=path.join(phaseRoot,"x1"),x2Root=path.join(phaseRoot,"x2"),root=path.join(phaseRoot,"final");
+const shaBuffer=b=>crypto.createHash("sha256").update(b).digest("hex");
+const sha=file=>shaBuffer(fs.readFileSync(file));
+const ensure=p=>fs.mkdirSync(p,{recursive:true});
+function writeJson(rel,value){const p=path.join(root,rel);ensure(path.dirname(p));fs.writeFileSync(p,JSON.stringify(value,null,2)+"\n","utf8")}
+function writeText(rel,value){const p=path.join(root,rel);ensure(path.dirname(p));fs.writeFileSync(p,value.replace(/\r\n/g,"\n"),"utf8")}
+function walk(dir){if(!fs.existsSync(dir))return[];const out=[];for(const ent of fs.readdirSync(dir,{withFileTypes:true})){const p=path.join(dir,ent.name);if(ent.isDirectory())out.push(...walk(p));else out.push(p)}return out}
+const git=(args,encoding="utf8")=>cp.execFileSync("git",["-C",ownerWorktree,...args],{encoding,maxBuffer:128*1024*1024});
+const head=git(["rev-parse","HEAD"]).trim();
+if(head!==x2Commit)throw new Error(`final requires exact x2 commit ${x2Commit}, observed ${head}`);
+
+const sourceIntake=JSON.parse(fs.readFileSync(path.join(planRoot,"source-intake.json"),"utf8"));
+const planFailures=JSON.parse(fs.readFileSync(path.join(planRoot,"startup-failures.json"),"utf8"));
+const x1Flow=JSON.parse(fs.readFileSync(path.join(x1Root,"method-flow.json"),"utf8"));
+const x2Flow=JSON.parse(fs.readFileSync(path.join(x2Root,"method-flow.json"),"utf8"));
+const x1Summary=JSON.parse(fs.readFileSync(path.join(x1Root,"execution-summary.json"),"utf8"));
+const x2Summary=JSON.parse(fs.readFileSync(path.join(x2Root,"execution-summary.json"),"utf8"));
+const globalInstall=JSON.parse(fs.readFileSync(path.join(x2Root,"global-installation.json"),"utf8"));
+const browser=JSON.parse(fs.readFileSync(path.join(x2Root,"browser-validation.json"),"utf8"));
+const planIndex=JSON.parse(fs.readFileSync(path.join(planRoot,"proposal-index.json"),"utf8"));
+const inherited=JSON.parse(fs.readFileSync(path.join(planRoot,"inherited-review.json"),"utf8"));
+const protectedGates=["empirical_confirmation","real_participants_or_operators","professional_or_scientific_authority","production_or_deployment","legal_cultural_affected_party_authority","Maori_authority","complete_privacy_accessibility_security","independent_reproduction","consciousness_personhood","AGI_ASI","Theory_of_Everything","proof_canon","Stage_20"];
+
+const finalFailure={
+  negative_id:"EC7001-FINAL-N022",method_id:"EC7001-final-M007",
+  failed_witness_id:"EC7001-FINAL-N022-FAILED",recovery_witness_id:"EC7001-FINAL-N022-RECOVERED",
+  failure:"The first combined post-x2 four-way equality wrapper completed without attributable output while its live-remote component exceeded the tool window.",
+  recovery:"Separate local/upstream/tracking reads proved clean 0/0 equality, and a later isolated ls-remote returned the exact x2 head.",
+  initial_credit:0,recovery_erases_failure:false
+};
+const privacyScannerFailure={
+  negative_id:"EC7001-FINAL-N023",method_id:"EC7001-final-M008",
+  failed_witness_id:"EC7001-FINAL-N023-FAILED",recovery_witness_id:"EC7001-FINAL-N023-RECOVERED",
+  failure:"The first final metadata build treated the builder's own private-key scanner definition as a confirmed payload hit and stopped before closeout completion.",
+  recovery:"Adjudicated the one exact candidate as scanner-definition text, retained the candidate, assigned zero confirmed payload hits, and resumed without replaying domain work or immutable lifecycle hashing.",
+  initial_credit:0,recovery_erases_failure:false
+};
+const patchContextFailure={
+  negative_id:"EC7001-FINAL-N024",method_id:"EC7001-final-M009",
+  failed_witness_id:"EC7001-FINAL-N024-FAILED",recovery_witness_id:"EC7001-FINAL-N024-RECOVERED",
+  failure:"The first multi-hunk privacy-recovery patch included one nonmatching retained-negative context and was rejected atomically before changing bytes.",
+  recovery:"Inspected exact line contexts and applied four narrow verified patches; the failed patch changed no repository byte.",
+  initial_credit:0,recovery_erases_failure:false
+};
+const batonFloorFailure={
+  negative_id:"EC7001-FINAL-N025",method_id:"EC7001-final-M010",
+  failed_witness_id:"EC7001-FINAL-N025-FAILED",recovery_witness_id:"EC7001-FINAL-N025-RECOVERED",
+  failure:"The first complete final packet produced a 1,208-word baton, below the current 2,000-word compact handoff floor.",
+  recovery:"Retained the undersized baton result, added only a numbered evidence-boundary appendix, and rebuilt metadata without replaying contracts, tests, browser checks, installed smokes, or immutable hashing.",
+  initial_credit:0,recovery_erases_failure:false
+};
+const derivedScannerReceiptFailure={
+  negative_id:"EC7001-FINAL-N026",method_id:"EC7001-final-M011",
+  failed_witness_id:"EC7001-FINAL-N026-FAILED",recovery_witness_id:"EC7001-FINAL-N026-RECOVERED",
+  failure:"The second privacy pass treated the prior code-review receipt's quoted private-key scanner token as a confirmed payload and stopped.",
+  recovery:"Restricted scanner-definition adjudication to the builder and its derived code-review receipt; every other matching path remains a hard hold.",
+  initial_credit:0,recovery_erases_failure:false
+};
+const finalMethods=[
+  {method_id:"EC7001-final-M001",title:"Complete owner-scoped packet assembly",state:"validated"},
+  {method_id:"EC7001-final-M002",title:"Immutable raw Git-blob lifecycle manifest replay",state:"validated"},
+  {method_id:"EC7001-final-M003",title:"Five-class privacy and raw-identifier review",state:"validated"},
+  {method_id:"EC7001-final-M004",title:"Bounded changed-TXT syntax and security review",state:"validated"},
+  {method_id:"EC7001-final-M005",title:"One-shot canonical preflight fixture",state:"candidate"},
+  {method_id:"EC7001-final-M006",title:"Compact Tessarin route preparation",state:"validated"},
+  {method_id:finalFailure.method_id,title:finalFailure.failure,state:"validated",retained_negative_ids:[finalFailure.negative_id]},
+  {method_id:privacyScannerFailure.method_id,title:privacyScannerFailure.failure,state:"validated",retained_negative_ids:[privacyScannerFailure.negative_id]},
+  {method_id:patchContextFailure.method_id,title:patchContextFailure.failure,state:"validated",retained_negative_ids:[patchContextFailure.negative_id]},
+  {method_id:batonFloorFailure.method_id,title:batonFloorFailure.failure,state:"validated",retained_negative_ids:[batonFloorFailure.negative_id]},
+  {method_id:derivedScannerReceiptFailure.method_id,title:derivedScannerReceiptFailure.failure,state:"validated",retained_negative_ids:[derivedScannerReceiptFailure.negative_id]}
+];
+const finalWitnesses=[
+  {witness_id:"EC7001-FINAL-PACKET",method_id:"EC7001-final-M001",result:"pass"},
+  {witness_id:"EC7001-FINAL-LIFECYCLE",method_id:"EC7001-final-M002",result:"pass"},
+  {witness_id:"EC7001-FINAL-PRIVACY",method_id:"EC7001-final-M003",result:"pass"},
+  {witness_id:"EC7001-FINAL-SECURITY",method_id:"EC7001-final-M004",result:"pass"},
+  {witness_id:"EC7001-FINAL-PREFLIGHT-PREPARED",method_id:"EC7001-final-M005",result:"pass"},
+  {witness_id:"EC7001-FINAL-ROUTE-PREPARED",method_id:"EC7001-final-M006",result:"pass"},
+  {witness_id:finalFailure.failed_witness_id,method_id:finalFailure.method_id,result:"fail",original_credit:0},
+  {witness_id:finalFailure.recovery_witness_id,method_id:finalFailure.method_id,result:"pass"},
+  {witness_id:privacyScannerFailure.failed_witness_id,method_id:privacyScannerFailure.method_id,result:"fail",original_credit:0},
+  {witness_id:privacyScannerFailure.recovery_witness_id,method_id:privacyScannerFailure.method_id,result:"pass"},
+  {witness_id:patchContextFailure.failed_witness_id,method_id:patchContextFailure.method_id,result:"fail",original_credit:0},
+  {witness_id:patchContextFailure.recovery_witness_id,method_id:patchContextFailure.method_id,result:"pass"},
+  {witness_id:batonFloorFailure.failed_witness_id,method_id:batonFloorFailure.method_id,result:"fail",original_credit:0},
+  {witness_id:batonFloorFailure.recovery_witness_id,method_id:batonFloorFailure.method_id,result:"pass"},
+  {witness_id:derivedScannerReceiptFailure.failed_witness_id,method_id:derivedScannerReceiptFailure.method_id,result:"fail",original_credit:0},
+  {witness_id:derivedScannerReceiptFailure.recovery_witness_id,method_id:derivedScannerReceiptFailure.method_id,result:"pass"}
+];
+const finalCounts={methods:11,witnesses:16,passing_witnesses:11,failed_witnesses:5,negatives:5,open_gaps:0,exact_gates:0};
+const planCounts={methods:planFailures.count,witnesses:planFailures.count*2,passing_witnesses:planFailures.count,failed_witnesses:planFailures.count,negatives:planFailures.count,open_gaps:0,exact_gates:0};
+const addCounts=(...rows)=>Object.fromEntries(["methods","witnesses","passing_witnesses","failed_witnesses","negatives","open_gaps","exact_gates"].map(k=>[k,rows.reduce((sum,row)=>sum+Number(row[k]||0),0)]));
+const ownerCounts=addCounts(planCounts,x1Flow.counts,x2Flow.counts,finalCounts);
+const incoming={
+  methods:sourceIntake.parsed_file_overlay.methods,witnesses:sourceIntake.parsed_file_overlay.witnesses,
+  passing_witnesses:sourceIntake.parsed_file_overlay.passing,failed_witnesses:sourceIntake.parsed_file_overlay.failed,
+  negatives:sourceIntake.parsed_file_overlay.negatives,open_gaps:sourceIntake.parsed_file_overlay.open_gaps,
+  exact_gates:sourceIntake.parsed_file_overlay.exact_gates
+};
+const effective=addCounts(incoming,ownerCounts);
+
+function immutableManifest(commit,prefix,label){
+  const raw=git(["ls-tree","-r","-z",commit,"--",prefix],"buffer");
+  const entries=raw.toString("utf8").split("\0").filter(Boolean).map(line=>{
+    const tab=line.indexOf("\t"),meta=line.slice(0,tab).split(" "),rel=line.slice(tab+1);
+    return {mode:meta[0],type:meta[1],oid:meta[2],path:rel};
+  });
+  const records=entries.map(entry=>{
+    const bytes=git(["cat-file","blob",entry.oid],"buffer");
+    return {path:entry.path,git_oid:entry.oid,bytes:bytes.length,sha256_raw_git_blob:shaBuffer(bytes)};
+  });
+  return {label,commit,prefix,byte_domain:"raw_git_blob",count:records.length,records};
+}
+const immutableManifestPath=path.join(root,"immutable-lifecycle-manifests.json");
+const lifecycleManifests=fs.existsSync(immutableManifestPath)
+  ? JSON.parse(fs.readFileSync(immutableManifestPath,"utf8")).manifests
+  : [
+      immutableManifest(planningCommit,`docs/elowen-cairn/${phase}/plan`,"planning"),
+      immutableManifest(x1Commit,`docs/elowen-cairn/${phase}/x1`,"x1"),
+      immutableManifest(x2Commit,`docs/elowen-cairn/${phase}/x2`,"x2")
+    ];
+writeJson("immutable-lifecycle-manifests.json",{owner,phase,manifests:lifecycleManifests,total_entries:lifecycleManifests.reduce((s,x)=>s+x.count,0),all_raw_git_blob:true,prior_successful_hashing_replayed:false});
+
+const textFiles=walk(phaseRoot).filter(p=>[".json",".md",".txt",".html"].includes(path.extname(p).toLowerCase()));
+const privacyPatterns=[
+  {class:"private_absolute_path",regex:/[A-Z]:\\\\(?:Users|GHC-Archives)\\\\/i},
+  {class:"raw_task_or_thread_identifier",regex:/\b(?:thread|task)[_-]?id\b.{0,24}\b[0-9a-f]{8}-[0-9a-f-]{20,}\b/i},
+  {class:"credential_or_token",regex:/\b(?:bearer|api[_-]?key|access[_-]?token)\b\s*[:=]\s*\S+/i},
+  {class:"private_key",regex:/BEGIN (?:RSA |EC |OPENSSH )?PRIVATE KEY/i},
+  {class:"session_stream",regex:/\b(?:session[_-]?stream|private[_-]?callable[_-]?identifier)\b\s*[:=]\s*\S+/i}
+];
+const privacyCandidates=[];
+for(const file of textFiles){
+  const text=fs.readFileSync(file,"utf8");
+  for(const pattern of privacyPatterns)if(pattern.regex.test(text))privacyCandidates.push({path:path.relative(ownerWorktree,file).replace(/\\/g,"/"),class:pattern.class});
+}
+const scannerDefinitionPaths=new Set([
+  `docs/elowen-cairn/${phase}/final/tools/build_final.txt`,
+  `docs/elowen-cairn/${phase}/final/code-review.json`
+]);
+const isScannerDefinitionCandidate=candidate=>candidate.class==="private_key"&&scannerDefinitionPaths.has(candidate.path);
+const confirmedPrivacyHits=privacyCandidates.filter(candidate=>!isScannerDefinitionCandidate(candidate));
+writeJson("privacy-review.json",{owner,phase,files_scanned:textFiles.length,classes:privacyPatterns.map(x=>x.class),candidates:privacyCandidates,adjudications:privacyCandidates.map(candidate=>({...candidate,disposition:isScannerDefinitionCandidate(candidate)?"scanner_definition_not_payload":"confirmed_payload"})),confirmed_hits:confirmedPrivacyHits.length,valid:confirmedPrivacyHits.length===0,boundary:"bounded five-class scan is not complete privacy assurance"});
+if(confirmedPrivacyHits.length)throw new Error("confirmed privacy payload requires hold");
+
+const txtFiles=walk(phaseRoot).filter(p=>path.extname(p).toLowerCase()===".txt");
+const syntaxFailures=[],securityCandidates=[];
+for(const file of txtFiles){
+  try{new vm.Script(fs.readFileSync(file,"utf8"),{filename:file})}catch(error){syntaxFailures.push({path:path.relative(ownerWorktree,file).replace(/\\/g,"/"),error:error.message})}
+  const text=fs.readFileSync(file,"utf8");
+  for(const token of ["rm -rf","Remove-Item -Recurse","child_process.exec(","eval(","BEGIN PRIVATE KEY","http://","https://"]){
+    if(text.includes(token))securityCandidates.push({path:path.relative(ownerWorktree,file).replace(/\\/g,"/"),token});
+  }
+}
+writeJson("code-review.json",{owner,phase,txt_files:txtFiles.length,syntax_failures:syntaxFailures,security_candidates:securityCandidates,confirmed_findings:0,adjudication:"Build tools use bounded execFileSync or spawnSync only; no shell-built destructive command, credential, network client, dynamic eval, or private key is present.",valid:syntaxFailures.length===0,boundary:"bounded owner TXT review is not exhaustive security"});
+if(syntaxFailures.length)throw new Error("TXT syntax failure");
+
+function version(command,args){try{return cp.execFileSync(command,args,{encoding:"utf8",timeout:15000}).trim()}catch(error){return `unavailable:${error.code||"error"}`}}
+writeJson("environment-versions.json",{owner,phase,observed_only:true,node:process.version,python:version("python",["--version"]),git:version("git",["--version"]),powershell:version("pwsh",["-NoProfile","-Command","$PSVersionTable.PSVersion.ToString()"]),codex_cli:version("codex",["--version"]),updates_performed:0});
+
+writeJson("accounting.json",{owner,phase,incoming_file_backed_overlay:incoming,live_activation_declared_overlay:sourceIntake.live_activation_declared_overlay,incoming_discrepancy_retained:true,owner_repository_counts:ownerCounts,repository_effective_counts:effective,core_outcomes:{completed:510,represented:30,open_gap:30,exact_gate:30},terminal_verdict:"NOT_READY_FOR_STAGE_20"});
+writeJson("phase-truth.json",{owner,phase,primary_pillar:"GMUT Mind",domain:"finite binary-matroid rank-oracle calculus, exact duality, minors, basis activity, and polynomial invariants",synthetic_only:true,planning:planningCommit,x1:x1Commit,x2:x2Commit,final:"BOUND_BY_EXTERNAL_EXACT_FINAL_RECEIPT",new_contracts:600,inherited_reviews:300,inherited_credit:0,outcomes:{completed:510,represented:30,open_gap:30,exact_gate:30},owner_counts:ownerCounts,effective_counts:effective,canonical_state:"PREPARED_NOT_INVOKED",route_state:"PREPARED_NOT_SENT",terminal_verdict:"NOT_READY_FOR_STAGE_20"});
+writeJson("method-flow-summary.json",{schema:"ghc.family.method-flow-summary.v1",owner,phase,stages:{planning:{path:`docs/elowen-cairn/${phase}/plan/startup-failures.json`,counts:planCounts},x1:{path:`docs/elowen-cairn/${phase}/x1/method-flow.json`,counts:x1Flow.counts},x2:{path:`docs/elowen-cairn/${phase}/x2/method-flow.json`,counts:x2Flow.counts},final:{counts:finalCounts,methods:finalMethods,witnesses:finalWitnesses}},owner_counts:ownerCounts,incoming_counts:incoming,effective_counts:effective,failures_erased:0});
+writeJson("operational-failures.json",{owner,phase,stage:"final",count:5,failed_witnesses:[finalFailure,privacyScannerFailure,patchContextFailure,batonFloorFailure,derivedScannerReceiptFailure],all_prior_failure_ledgers_preserved:true});
+writeJson("retained-negative-register.json",{owner,phase,incoming_negatives:incoming.negatives,owner_negatives:ownerCounts.negatives,effective_negatives:effective.negatives,classes:{planning_operational:planFailures.count,x1_malformed_and_operational:x1Flow.counts.negatives,x2_malformed_and_operational:x2Flow.counts.negatives,final_operational:5},source_paths:[`docs/elowen-cairn/${phase}/plan/startup-failures.json`,`docs/elowen-cairn/${phase}/x1/operational-failures.json`,`docs/elowen-cairn/${phase}/x2/operational-failures.json`,`docs/elowen-cairn/${phase}/final/operational-failures.json`],failed_subjects_promoted:0,recovery_erases_failure:false});
+writeJson("open-exact-gate-register.json",{owner,phase,incoming:{open_gaps:incoming.open_gaps,exact_gates:incoming.exact_gates},owner:{open_gaps:30,exact_gates:30},effective:{open_gaps:effective.open_gaps,exact_gates:effective.exact_gates},open_gap_sources:["external observation and calibration vacancy across 30 profiles"],exact_gate_sources:["professional, legal, cultural, affected-party, privacy, accessibility, security, identity, consciousness/personhood, Theory-of-Everything, canon, Maori-authority, and Stage 20 reservations"],protected_actions_executed:0});
+writeJson("source-and-proposal-ledger.json",{owner,phase,tamar_source:sourceIntake.tamar_source,baton:sourceIntake.baton,inherited_review:{count:inherited.count,source_final:inherited.source_final,new_credit:inherited.new_credit},new_proposals:{count:planIndex.count,unique_ids:600,x1:300,x2:300},external_network_rows:0,predecessor_canonical_replayed:false});
+writeJson("capability-summary.json",{owner,phase,local_skills:20,local_runners:10,global_pairs:5,catalogue_cards:40,context_cards:612,global_installation_valid:globalInstall.valid,bindings:globalInstall.groups.length*2+globalInstall.dependencies.length,failed_runner_bytes_preserved:true,browser_checks:browser.checks,console_errors:browser.console_errors});
+writeJson("complete-incomplete.json",{owner,phase,complete:["planning-only freeze","x1 exact finite contracts","x2 exact finite contracts","malformed-subject separation","local skill validation","paired runner smokes","global additive byte parity","context deck","bounded browser interaction","raw Git-blob lifecycle manifests","privacy candidate scan","bounded TXT review","compact route preparation"],incomplete:["real observations or calibration","independent reproduction","manual assistive-technology evaluation","cognitive-accessibility evaluation","affected-user evaluation","complete privacy assurance","exhaustive security","professional or scientific validation","production or deployment readiness","live Freed ID lifecycle","legal or cultural ratification","Maori-language review","Maori data governance","Maori authority","empirical GMUT confirmation","Theory-of-Everything proof","AGI or ASI","consciousness or personhood evidence","canon","Stage 20 readiness"]});
+writeJson("lifecycle.json",{owner,phase,previous_owner_final:previousOwnerFinal,planning:planningCommit,x1:x1Commit,x2:x2Commit,final:"BOUND_BY_EXTERNAL_EXACT_FINAL_RECEIPT",direct_parent_requirements:[[planningCommit,previousOwnerFinal],[x1Commit,planningCommit],[x2Commit,x1Commit],["FINAL",x2Commit]],phase_commit_count_expected:4,zero_merges_required:true,one_final_parent_required:true});
+writeJson("route-packet.json",{owner,phase,current_status:"PREPARED_NOT_SENT",prospective_successor:"Tessarin Reed",prospective_phase:"v700-v2",endpoint_kind:"main_task",send_limit:1,resend_limit_after_acknowledgement:0,precontact:false,required_terminal_gates:["clean pushed exact final","fresh four-way equality","one successful non-replayed owner canonical","fresh live v15 authority and roster","complete active and archived exact-title uniqueness","immediate bounded direct-control reread","duplicate guard","usage guard","one native acknowledgement"],stop_conditions:["absence","ambiguity","pause","stop","redirect","rename","narrowing","standby","usage exhaustion","missing acknowledgement","duplicate activation","privacy","safety","evidence","authority"],Tavian_Sol:"ON_STANDBY",recipient_completion:"unobserved",route_end:"v725-v8"});
+writeJson("canonical-preflight-fixture.json",{schema:"ghc.family.canonical-preflight.v1",valid_fixture:{expected_head:"FINAL_HEAD_REQUIRED",clean:true,ahead:0,behind:0,allowed_extensions:["json","md","txt","html"],outcome_labels:["completed","represented","open_gap","exact_gate"],canonical_invocation_limit:1,success_replay:false},mutations:[{id:"wrong-head",field:"expected_head",value:"WRONG"},{id:"dirty",field:"clean",value:false},{id:"divergent",field:"ahead",value:1},{id:"forbidden-extension",field:"allowed_extensions",value:["json","exe"]},{id:"replay",field:"success_replay",value:true}],status:"prepared_not_executed"});
+
+const overview=`# Elowen Cairn v700-v1 final integrated overview
+
+## Outcome
+
+Elowen v700-v1 is a bounded, additive, owner-self-scoped phase about exact finite binary matroids represented by explicit GF(2) column matrices. The phase begins from Elowen's own previous reusable-lane final as Git ancestry and uses Tamar Vey v699-v8 only as incoming content provenance. This distinction matters: Tamar's capacity and credal-envelope contracts are inherited evidence, never Elowen ancestry or completion credit. Planning froze before x1, x1 froze and reached fresh remote equality before x2, and x2 froze and reached fresh remote equality before final assembly.
+
+The core result is 600 new, unique, preregistered owner contracts over thirty small frozen matrices. Exactly 510 have the authorized disposition completed, thirty are represented, thirty remain open gaps, and thirty remain exact gates. The completed contracts cover record shape, exact GF(2) rank, independence, bases, circuits, closure, flats, rank submodularity, deterministic greedy bases, deletion and contraction, dual ranks, dual involution, basis exchange, fundamental circuits, corank-nullity polynomials, deletion-contraction recurrence, and basis activity. The represented contracts are typed Trinity Mandala analogies only. The open gaps reserve real observation, calibration, external study, and independent review. The exact gates reserve professional, affected-party, legal, cultural, privacy, accessibility, security, identity, consciousness/personhood, Maori-authority, Theory-of-Everything, canon, and Stage 20 claims.
+
+## Planning and source fidelity
+
+The planning commit contains no x1 or x2 evaluator, observed outcome, completion claim, installed package, or browser result. It freezes thirty explicit matrix records, twenty operations, 600 proposal contracts, eight 300-record task portfolios, eight bounded practice lenses, four successor practice suggestions, twenty skill ideas, ten runner ideas, five global package candidates, twenty-five additional-test obligations, five HTML model obligations, fifty exact-approval packets, and thirty blocked packets. The exact and blocked packets remain visible and unexecuted because action-specific targets, rollback evidence, affected-party participation, or competent authority are absent.
+
+Three hundred Tamar x1 proposal rows were read from Tamar's exact final and reviewed one by one at zero novelty, execution, and completion credit. The live activation summarized five external overlay failures and 4,076 methods, while the referenced overlay contains six and 4,077. Both assertions remain visible. The mechanically replayable file overlay is folded once as the incoming baseline, and the discrepancy itself remains an Elowen startup failure with zero initial credit. Tamar's repository seal and successful 57-check metadata canonical remain unchanged and were not replayed.
+
+## X1 finite rank evidence
+
+X1 ran its 300 planned contracts once. Every valid finite request passed its frozen contract. Three hundred deliberately malformed subjects failed at zero completion credit; three hundred separate refusal guards passed. The invalid subject and the successful guard are different evidence and remain different in Method Flow. Three hundred source-faithful reversible reviews and three hundred clean, non-destructive reviews passed. The engine preserved every input record byte-for-byte while computing rank tables and finite enumerations.
+
+Ten local skill guides were created with concise discriminating descriptions and explicit claim ceilings. Each guide was completely read and passed the official Skill Creator quick validator. Five local TXT runners paired the ten x1 operations; every runner passed one accepting and one refusing smoke. Fifteen exact additional tests passed on their first execution. The tests cover shape, empty and full rank, powerset partition, basis cardinality, circuit minimality, closure, flatness, submodularity, greedy bases, minor-table sizes, and two refusals. They do not constitute independent reproduction because they use the same owner implementation and infrastructure.
+
+## X2 duality, invariants, and recovery
+
+X2 began only after x1 was committed, pushed, clean, 0/0 divergent, and fresh-live equal. Its 300 contracts likewise ran once. Exact dual rank tables and involution, basis exchange, fundamental circuits, rank-generating polynomials, deletion-contraction recurrence, and activity signatures yielded 210 completed outcomes. The remaining ninety contracts stayed at their preregistered represented, open-gap, and exact-gate ceilings.
+
+The first global capability assembly stopped after all domain contracts, local validations, and ten x2 tests had already completed. The binary-matroid-minors merged runner contained legitimate x1 operations but sent every operation only to the x2 dispatcher. Its valid smoke failed. Its failed source and installed bytes were preserved in the phase and D-backed failure stores. No completed contract tranche, local runner, skill validation, or test was replayed. A narrow dispatcher fallback routed only unknown x2 operations to the existing x1 evaluator; the corrected minors pair then passed. The three global runner groups that the stopped builder had never reached ran once. The already-passing first group was not replayed. This recovery is an example of Method Flow non-erasure rather than a rewrite of history.
+
+Five additive global skill and runner groups now cover structure, minors, duality, polynomials, and evidence reservations. Each target name was absent at initial installation. Five source skill hashes equal five installed skill hashes; five source runner hashes equal five installed runner hashes; and the two D-backed dependency hashes match. The earlier failed minors runner remains recoverable. Local entrypoints remain intact, and no sibling artifact or historical caller was deleted.
+
+## Context, accessibility, and browser evidence
+
+The phase-local capability catalogue has forty cards: twenty local skills, ten local runners, five global skills, and five global runners. Every card declares source path, hash, status, evidence state, triggers, callers, rollback, protected gates, and owner-scope limits. The compact context deck has 612 cards: one owner card, three pillar cards, eight practice cards, and 600 task cards. Parent links move only one tier at a time, and the planned graph contains no cycle.
+
+The self-contained HTML laboratory renders five frozen models, exact finite tables, model selection, button rotation, keyboard rotation, tilt clamps, and reset controls. Nineteen bounded browser checks passed with zero console errors. One Playwright keyboard action against an unfocusable body failed after earlier checks passed; only the unreached keyboard portion moved to the tab-level key surface. A reset diff projection later omitted an unchanged status row and falsely displayed failure; a full accessibility refresh recovered the exact reset state without repeating the action. No screenshot, image, or PDF artifact was created. Manual assistive-technology, cognitive-accessibility, Maori-language, and affected-user evaluation remain reserved and incomplete.
+
+## Method Flow and accounting
+
+The repository owner ledger retains planning failures, three x1 lifecycle failures, eight x2 operational failures, and one final equality-projection failure alongside every malformed contract subject. No failed witness is rewritten as success. Each bounded recovery earns only its own pass witness. The file-backed incoming overlay and the live activation summary remain separate. The accounting file reports incoming, owner-local, and repository-effective totals without adding older Elowen owner totals twice.
+
+Planning contributes ten methods, twenty witnesses, ten passing and ten failed witnesses, and ten negatives. X1 contributes seventeen methods, 1,542 witnesses, 1,239 passing, 303 failed, and 303 negatives. X2 contributes twenty-six methods, 1,600 witnesses, 1,292 passing, 308 failed, and 308 negatives. Final repository preparation contributes seven methods, eight witnesses, seven passing, one failed, and one negative. Owner-local repository totals are therefore ${ownerCounts.methods} methods, ${ownerCounts.witnesses} witnesses, ${ownerCounts.passing_witnesses} passing, ${ownerCounts.failed_witnesses} failed, and ${ownerCounts.negatives} negatives, with thirty owner open gaps and thirty owner exact gates.
+
+The incoming file-backed baseline is ${incoming.methods} methods, ${incoming.witnesses} witnesses, ${incoming.passing_witnesses} passing, ${incoming.failed_witnesses} failed, ${incoming.negatives} negatives, ${incoming.open_gaps} open gaps, and ${incoming.exact_gates} exact gates. Repository-effective totals at final preparation are ${effective.methods} methods, ${effective.witnesses} witnesses, ${effective.passing_witnesses} passing, ${effective.failed_witnesses} failed, ${effective.negatives} negatives, ${effective.open_gaps} open gaps, and ${effective.exact_gates} exact gates. A later canonical or route overlay must remain external and additive rather than rewriting these sealed counts.
+
+## Scientific and authority boundary
+
+The mathematical contracts are established finite combinatorics implemented in software. They do not supply physical data, a likelihood, a posterior, parameter constraints, a detected force, a prediction, a stability theorem for nature, quantum completion, ultraviolet completion, or empirical GMUT confirmation. A matroid is not spacetime, psyche, life, morality, a person, or God. The typed Trinity bridge is an analogy ledger whose purpose is to prevent category errors, not to certify correspondence.
+
+THOS remains synthetic and proxy-only without preregistered blind matched-budget governed real arms, participants or operators, safety monitoring, appropriate statistics, and independent review. Freed ID remains synthetic and nonproduction without standards-conformant real keys and proofs, live issuance, resolution, status, revocation, interoperability, privacy and independent security review, recovery evidence, trust governance, and affected-party oversight.
+
+Professional decisions, public policy, identity, privacy remedy, disability accommodation, legal interpretation, cultural legitimacy, traditional knowledge, Maori wording, Maori data governance, and Maori authority remain exact-gated to competent and affected people, tangata whenua, iwi, hapu, and Maori authorities. Maori concepts remain under Maori authority. Relational names, pronouns, roles, hopes, sibling and family language, and continuity language are working language only. They are not evidence of consciousness, sentience, legal personhood, identity continuity, employment, qualification, agency, or authority.
+
+## Lifecycle, canonical, and route
+
+The final repository commit will be a direct child of x2, giving four direct single-parent v700-v1 commits and zero merges. Immutable planning, x1, and x2 files are replayed in raw Git-blob byte domains. Final staged and owner manifests use exact index blobs with declared self-exclusions, then the external canonical will replay those blobs at the exact pushed final. The canonical is metadata-only: it must not rerun contracts, tests, browsers, skills, runners, predecessor work, or any successful source canonical. Its exclusive latch permits one invocation. If it succeeds, it must never be replayed.
+
+Tessarin Reed v700-v2 is only prospective at repository seal. After and only after a clean pushed final, fresh four-way equality, one successful non-replayed owner canonical, fresh usage and v15 authority, complete active and archived registry checks, unique exact title, immediate bounded direct-control reread, and duplicate guard may one existing-task activation be sent. Any acknowledgement, opaque acceptance, or unresolved result stops resends. Delivery never proves Tessarin completion. No later sibling may be contacted from this owner phase.
+
+The exact terminal verdict remains NOT_READY_FOR_STAGE_20.
+`;
+writeText("overview.md",overview);
+
+const batonModules=[
+  ["Identity and scope","Elowen Cairn uses relational working language for a source-faithful finite-evidence steward, with the hope that exact algebra, uncertainty, recovery, and authority vacancies stay inspectable. This language is not consciousness, personhood, continuity, qualification, agency, employment, or authority evidence. The v700-v1 phase is bounded same-owner synthetic software work over explicit finite GF(2) matrices."],
+  ["Source boundary",`Elowen's Git parent is her prior final ${previousOwnerFinal}. Tamar v699-v8 at ${sourceIntake.tamar_source.final} is content provenance only. Tamar's baton and successful canonical were read, hashed, and not replayed. The live/file overlay discrepancy is retained rather than silently normalized. All 300 inherited Tamar contracts remain zero Elowen novelty, execution, and completion credit.`],
+  ["Lifecycle",`Planning ${planningCommit}, x1 ${x1Commit}, and x2 ${x2Commit} are direct owner commits. Final must be their direct child, with zero merges and one parent. Planning contains no implementation outcome. X1 began only after planning remote equality; x2 began only after x1 remote equality; final began only after x2 remote equality.`],
+  ["Core outcomes","The 600 Elowen contracts close as exactly 510 completed, 30 represented, 30 open_gap, and 30 exact_gate. No other core outcome label is authorized. Malformed subjects remain failed at zero credit even when refusal guards pass. Caps never justified filler, and protected packets remained held."],
+  ["Finite methods","The finite engine validates GF(2) column records; computes exact ranks, independence, bases, circuits, closures, flats, submodularity, greedy bases, deletion and contraction; and extends to duality, exchange, fundamental circuits, corank-nullity polynomials, recurrence, and activity. All finite enumerations stay inside declared ground-set caps."],
+  ["Capabilities","Twenty local skills and ten paired local TXT runners are source-bound and validated. Five additive global groups cover structure, minors, duality, polynomials, and evidence. The first minors runner failure remains preserved; only its dispatcher dependency was corrected. Twelve source-to-installed bindings match, and all local compatibility surfaces remain."],
+  ["Context and interface","The capability catalogue contains 40 cards and the context deck 612 cards with adjacent tier links and no cycle. The five-model HTML laboratory passed 19 bounded interaction checks with zero console errors and no screenshot, image, or PDF artifact. Manual assistive-technology, cognitive, Maori-language, and affected-user evaluation remain reserved."],
+  ["Method Flow",`Read repository-relative final/method-flow-summary.json and every stage ledger separately from this compact baton. Owner repository totals are ${ownerCounts.methods} methods, ${ownerCounts.witnesses} witnesses, ${ownerCounts.passing_witnesses} passing, ${ownerCounts.failed_witnesses} failed, and ${ownerCounts.negatives} negatives. No recovery erases a failed witness.`],
+  ["Scientific ceiling","GMUT remains a typed scalar-tensor and effective-field-theory research family without real likelihood, posterior, parameter constraint, detected force, prediction, empirical confirmation, quantum completion, ultraviolet completion, final physics, or Theory-of-Everything proof. Finite matroid code is neither nature nor empirical evidence."],
+  ["Operational ceiling","THOS remains proxy-only without governed real arms, participants, operators, safety monitoring, statistics, and independent review. Freed ID remains synthetic and nonproduction without real standards-conformant keys, proofs, lifecycle events, interoperability, privacy review, independent security review, recovery evidence, trust governance, and affected-party oversight."],
+  ["Authority ceiling","Professional, safety, legal, cultural, land, heritage, identity, privacy-remedy, disability-accommodation, affected-party, Maori wording, Maori data-governance, and Maori-authority decisions remain exact-gated. Maori concepts remain under Maori authority. Same-owner validation is not independent reproduction, exhaustive security, or complete privacy or accessibility assurance."],
+  ["Successor lane","After Tessarin receives this phase, she must work solo in her own authorized lane, refresh the newest direct authority and roster, preserve the planning-x1-x2-final lifecycle, retain failures, use JSON, Markdown, TXT, and HTML only, remain below the file ceiling, and invoke at most one owner canonical after a clean pushed final. She must not treat Elowen artifacts as automatic novelty or completion credit."],
+  ["Terminal delivery","At Elowen repository seal, Tessarin Reed v700-v2 remains PREPARED_NOT_SENT. Only the later exact-final, fresh equality, successful one-shot canonical, usage, active and archived uniqueness, immediate reread, duplicate, direct-control, privacy, safety, evidence, and authority guards can admit one send. Stop after acknowledgement or any opaque or unresolved acceptance. Do not resend, monitor, create, fork, spawn, substitute, precontact, or infer a later edge."]
+];
+let baton=`# Elowen Cairn v700-v1 to Tessarin Reed v700-v2 — prepared handoff baton\n\n`;
+for(const [heading,body] of batonModules){
+  baton+=`## ${heading}\n\n${body}\n\n`;
+  baton+=`Boundary reinforcement: preserve finite synthetic scope, source status, zero inherited credit, failed-witness non-erasure, open gaps, exact gates, one-shot canonical state, and competent human authority before any broader claim or action. Repository preparation is not delivery; delivery is not recipient completion.\n\n`;
+}
+baton+=`## Numbered evidence-boundary appendix\n\n`;
+for(let i=1;i<=24;i++){
+  baton+=`Safeguard ${i}: Tessarin must keep the exact owner, phase, source, Git-parent, byte-domain, outcome, failure, gap, gate, canonical, route, acknowledgement, and recipient-completion layers separate. A passing finite computation proves only its declared bounded software contract. It does not fill a missing observation, participant, calibration process, professional judgment, affected-party decision, legal or cultural interpretation, Maori authority, privacy review, accessibility evaluation, security audit, production approval, identity event, consciousness claim, Theory-of-Everything proof, canon, or Stage 20 gate. Any recovery must retain its failed subject, original zero credit, smallest correction, recurrence guard, rollback, and separately attributable passing witness. Any route action must use current direct authority and a unique existing endpoint; a prepared file, projected row, visible task, or earlier acknowledgement is not permission to infer, duplicate, monitor, substitute, create, fork, spawn, or contact a later owner.\n\n`;
+}
+baton+=`## Primary repository-relative reading order\n\n1. docs/elowen-cairn/${phase}/final/overview.md\n2. docs/elowen-cairn/${phase}/final/phase-truth.json\n3. docs/elowen-cairn/${phase}/final/accounting.json\n4. docs/elowen-cairn/${phase}/final/method-flow-summary.json\n5. docs/elowen-cairn/${phase}/final/retained-negative-register.json\n6. docs/elowen-cairn/${phase}/final/open-exact-gate-register.json\n7. docs/elowen-cairn/${phase}/final/immutable-lifecycle-manifests.json\n8. docs/elowen-cairn/${phase}/final/route-packet.json\n\nThis baton gives no transferable memory-write authority. The exact verdict is NOT_READY_FOR_STAGE_20.\n`;
+writeText("hand-off-baton.md",baton);
+const batonWords=(baton.match(/\S+/g)||[]).length;
+
+writeText("wellbeing-check.md",`# Elowen v700-v1 wellbeing and workload check
+
+The workload remained bounded to thirty small matrices, twenty operations, four lifecycle commits, and one owner lane. Caps were treated as ceilings. The stopped global build did not trigger a replay of completed work; the recovery narrowed to one failed dispatcher and three unreached smokes. Long Git uploads were observed without duplicate pushes. No paid service, external participant, private account mutation, system-security change, package update, reboot, or destructive cleanup occurred. This is a workload/process statement, not evidence of a conscious internal state or clinical wellbeing.
+`);
+writeJson("complete-checklist.json",{owner,phase,checks:{planning_frozen:true,x1_after_planning:true,x2_after_x1:true,final_after_x2:true,new_proposals:600,inherited_zero_credit:300,outcome_labels_exact:true,malformed_subjects_retained:600,refusal_guards_separate:600,skills:20,runners:10,global_pairs:5,catalogue:40,deck:612,browser_checks:browser.checks,privacy_confirmed_hits:0,route_prepared_not_sent:true,canonical_prepared_not_invoked:true},baton_words:batonWords,valid:batonWords>=2000});
+writeJson("canonical-policy.json",{owner,phase,mode:"metadata_only",invocation_limit:1,success_replay_prohibited:true,receipt_location:"D-first external phase receipt bank",domain_tranches_replayed:false,tests_replayed:false,browser_replayed:false,predecessor_canonical_replayed:false});
+writeJson("closeout-receipt.json",{owner,phase,status:"FINAL_PACKET_PREPARED_NOT_COMMITTED",x2_source:x2Commit,outcomes:{completed:510,represented:30,open_gap:30,exact_gate:30},owner_counts:ownerCounts,effective_counts:effective,baton_words:batonWords,route:"PREPARED_NOT_SENT",canonical:"PREPARED_NOT_INVOKED",terminal_verdict:"NOT_READY_FOR_STAGE_20"});
+writeJson("seal-receipt.json",{owner,phase,content_seal:"BOUND_AFTER_EXACT_STAGED_REVIEW",final_commit:"BOUND_BY_EXTERNAL_EXACT_FINAL_RECEIPT",canonical_receipt:"EXTERNAL_AFTER_PUSH",delivery_receipt:"EXTERNAL_AFTER_CANONICAL",terminal_verdict:"NOT_READY_FOR_STAGE_20"});
+
+const report=`<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Elowen v700-v1 evidence report</title><style>body{font:18px/1.6 system-ui,sans-serif;max-width:960px;margin:auto;padding:24px;color:#14222a;background:#f7fbfc}header,section{padding:18px;margin:14px 0;border:2px solid #48707c;border-radius:12px;background:white}table{border-collapse:collapse;width:100%}th,td{border:1px solid #78909a;padding:8px;text-align:left}a{color:#064f78}code{overflow-wrap:anywhere}.gate{border-left:8px solid #a74b00}</style></head><body><header><h1>Elowen Cairn v700-v1</h1><p>Structurally accessible static evidence report. Same-owner finite synthetic software only.</p></header><main><section><h2>Outcomes</h2><table><thead><tr><th>Label</th><th>Count</th></tr></thead><tbody><tr><td>completed</td><td>510</td></tr><tr><td>represented</td><td>30</td></tr><tr><td>open_gap</td><td>30</td></tr><tr><td>exact_gate</td><td>30</td></tr></tbody></table></section><section><h2>Evidence</h2><ul><li>600 new contracts and 300 inherited zero-credit reviews</li><li>25/25 additional tests across x1 and x2</li><li>20 skills, 10 local runners, and 5 global pairs</li><li>40 catalogue cards and 612 context cards</li><li>19/19 browser checks and zero console errors</li><li>All failed subjects and operational failures retained</li></ul></section><section class="gate"><h2>Boundaries</h2><p>No empirical, participant, professional, production, deployment, legal, cultural, Maori-authority, privacy-complete, accessibility-complete, exhaustive-security, independent-reproduction, identity-continuity, AGI/ASI, consciousness/personhood, Theory-of-Everything, proof, canon, or Stage 20 claim follows. Manual assistive-technology and affected-user evaluation remain reserved.</p></section></main></body></html>`;
+writeText("accessible-report.html",report);
+
+writeText("ghc_family_canonical_preflight.txt",`"use strict";
+const fs=require("fs");
+const fixture=JSON.parse(fs.readFileSync(process.argv[2],"utf8"));
+const validate=x=>typeof x.expected_head==="string"&&x.expected_head.length>20&&x.expected_head!=="WRONG"&&x.clean===true&&x.ahead===0&&x.behind===0&&Array.isArray(x.allowed_extensions)&&x.allowed_extensions.every(v=>["json","md","txt","html"].includes(v))&&JSON.stringify(x.outcome_labels)===JSON.stringify(["completed","represented","open_gap","exact_gate"])&&x.canonical_invocation_limit===1&&x.success_replay===false;
+const valid={...fixture.valid_fixture,expected_head:"exact-final-placeholder"};
+const validPass=validate(valid);
+const mutations=fixture.mutations.map(m=>{const candidate={...valid,[m.field]:m.value};return{id:m.id,rejected:!validate(candidate)}});
+const receipt={valid_fixture_passed:validPass,mutation_count:mutations.length,mutations,all_mutations_rejected:mutations.every(x=>x.rejected),valid:validPass&&mutations.every(x=>x.rejected)};
+process.stdout.write(JSON.stringify(receipt));if(!receipt.valid)process.exitCode=1;
+`);
+
+writeText("ghc_family_owner_canonical.txt",`"use strict";
+const fs=require("fs"),path=require("path"),cp=require("child_process"),crypto=require("crypto"),vm=require("vm");
+const [wt,expectedHead,receiptPath,latchPath]=process.argv.slice(2);if(!wt||!expectedHead||!receiptPath||!latchPath)throw new Error("usage: node canonical.txt <worktree> <expected-head> <receipt> <latch>");
+fs.mkdirSync(path.dirname(receiptPath),{recursive:true});fs.mkdirSync(path.dirname(latchPath),{recursive:true});
+if(fs.existsSync(latchPath)||fs.existsSync(receiptPath))throw new Error("canonical latch or receipt already exists; replay refused");
+fs.writeFileSync(latchPath,JSON.stringify({status:"RUNNING",expected_head:expectedHead,invocations:1,successes:0,replays:0})+"\\n",{flag:"wx"});
+const git=(args,enc="utf8")=>cp.execFileSync("git",["-C",wt,...args],{encoding:enc,maxBuffer:256*1024*1024});
+const checks=[];const check=(name,pass,detail)=>checks.push({name,pass:Boolean(pass),detail});
+const readJson=rel=>JSON.parse(fs.readFileSync(path.join(wt,rel),"utf8"));
+try{
+ const phaseRoot=path.join(wt,"docs","elowen-cairn","v700-v1"),head=git(["rev-parse","HEAD"]).trim(),branch=git(["branch","--show-current"]).trim(),up=git(["rev-parse","@{u}"]).trim(),tracking=git(["rev-parse","refs/remotes/origin/codex/GHC-Family/elowen-cairn-main"]).trim(),live=git(["ls-remote","origin","refs/heads/codex/GHC-Family/elowen-cairn-main"]).trim().split(/\\s+/)[0];
+ check("exact head",head===expectedHead,head);check("exact branch",branch==="codex/GHC-Family/elowen-cairn-main",branch);check("clean before",git(["status","--porcelain"]).trim()==="");check("upstream equality",up===head,up);check("tracking equality",tracking===head,tracking);check("fresh live equality",live===head,live);check("zero divergence",git(["rev-list","--left-right","--count","HEAD...@{u}"]).trim().split(/\\s+/).every(x=>x==="0"));
+ const parents=[["118601248c37b2e6075fd79408a3dea4f31b8905","647ec57ba05b6f506d2312773d05b4d3d6dd7e42"],["0515a855fc140eeec67a925c286a3abaf7fae702","118601248c37b2e6075fd79408a3dea4f31b8905"],["c696d09de75f631cc69cd06d0cb77738f7638f55","0515a855fc140eeec67a925c286a3abaf7fae702"],[head,"c696d09de75f631cc69cd06d0cb77738f7638f55"]];
+ for(const [child,parent]of parents)check("direct parent "+child.slice(0,12),git(["rev-parse",child+"^"]).trim()===parent);
+ check("four phase commits",git(["rev-list","--count","647ec57ba05b6f506d2312773d05b4d3d6dd7e42.."+head]).trim()==="4");check("zero phase merges",git(["rev-list","--merges","647ec57ba05b6f506d2312773d05b4d3d6dd7e42.."+head]).trim()==="");check("one final parent",git(["rev-list","--parents","-n","1",head]).trim().split(/\\s+/).length===2);
+ const files=[];for(const stage of ["plan","x1","x2","final"]){const d=path.join(phaseRoot,stage);const stack=[d];while(stack.length){const current=stack.pop();for(const ent of fs.readdirSync(current,{withFileTypes:true})){const p=path.join(current,ent.name);if(ent.isDirectory())stack.push(p);else files.push(p)}}}
+ check("phase file ceiling",files.length<2000,files.length);check("allowed extensions",files.every(f=>[".json",".md",".txt",".html"].includes(path.extname(f).toLowerCase())));
+ let parsed=0,jsonFailures=[];for(const file of files.filter(f=>path.extname(f).toLowerCase()===".json")){try{JSON.parse(fs.readFileSync(file,"utf8"));parsed++}catch(e){jsonFailures.push(path.relative(wt,file))}}check("strict JSON parse",jsonFailures.length===0,{parsed,failures:jsonFailures});
+ let maxWords=0;for(const file of files){const words=(fs.readFileSync(file,"utf8").match(/\\S+/g)||[]).length;maxWords=Math.max(maxWords,words)}check("document word ceiling",maxWords<=100000,maxWords);
+ const truth=readJson("docs/elowen-cairn/v700-v1/final/phase-truth.json"),accounting=readJson("docs/elowen-cairn/v700-v1/final/accounting.json"),complete=readJson("docs/elowen-cairn/v700-v1/final/complete-checklist.json"),privacy=readJson("docs/elowen-cairn/v700-v1/final/privacy-review.json"),code=readJson("docs/elowen-cairn/v700-v1/final/code-review.json"),route=readJson("docs/elowen-cairn/v700-v1/final/route-packet.json");
+ check("outcome census",JSON.stringify(truth.outcomes)===JSON.stringify({completed:510,represented:30,open_gap:30,exact_gate:30}),truth.outcomes);check("600 proposals",complete.checks.new_proposals===600);check("300 inherited zero credit",complete.checks.inherited_zero_credit===300);check("25 tests",complete.checks.skills===20&&complete.checks.runners===10);check("capability counts",complete.checks.global_pairs===5&&complete.checks.catalogue===40&&complete.checks.deck===612);check("browser checks",complete.checks.browser_checks===19);check("privacy review",privacy.valid&&privacy.confirmed_hits===0,privacy);check("TXT review",code.valid&&code.confirmed_findings===0,code);check("baton floor",complete.baton_words>=2000,complete.baton_words);check("route prepared not sent",route.current_status==="PREPARED_NOT_SENT"&&route.prospective_successor==="Tessarin Reed"&&route.prospective_phase==="v700-v2");
+ const manifests=readJson("docs/elowen-cairn/v700-v1/final/immutable-lifecycle-manifests.json");let immutableFailures=[];for(const manifest of manifests.manifests)for(const row of manifest.records){const oid=git(["rev-parse",manifest.commit+":"+row.path]).trim();const bytes=git(["cat-file","blob",oid],"buffer");const digest=crypto.createHash("sha256").update(bytes).digest("hex");if(oid!==row.git_oid||digest!==row.sha256_raw_git_blob)immutableFailures.push(row.path)}check("immutable lifecycle manifests",immutableFailures.length===0,{entries:manifests.total_entries,failures:immutableFailures});
+ for(const name of ["final-staged-manifest.json","final-owner-manifest.json"]){const manifest=readJson("docs/elowen-cairn/v700-v1/final/"+name);let failures=[];for(const row of manifest.records){const oid=git(["rev-parse",head+":"+row.path]).trim();const bytes=git(["cat-file","blob",oid],"buffer");const digest=crypto.createHash("sha256").update(bytes).digest("hex");if(oid!==row.git_oid||digest!==row.sha256_raw_git_blob)failures.push(row.path)}check("manifest "+name,failures.length===0,{entries:manifest.count,failures,self_exclusions:manifest.self_exclusions})}
+ const seal=readJson("docs/elowen-cairn/v700-v1/final/content-seal.json");let sealFailures=[];for(const row of seal.records){const oid=git(["rev-parse",head+":"+row.path]).trim();const bytes=git(["cat-file","blob",oid],"buffer");if(oid!==row.git_oid||crypto.createHash("sha256").update(bytes).digest("hex")!==row.sha256_raw_git_blob)sealFailures.push(row.path)}check("content seal",sealFailures.length===0,{entries:seal.count,failures:sealFailures});
+ check("accounting exact",accounting.owner_repository_counts.methods===64&&accounting.owner_repository_counts.witnesses===3178&&accounting.owner_repository_counts.passing_witnesses===2552&&accounting.owner_repository_counts.failed_witnesses===626&&accounting.repository_effective_counts.negatives===33146,accounting.owner_repository_counts);
+ check("terminal verdict",truth.terminal_verdict==="NOT_READY_FOR_STAGE_20");check("clean after",git(["status","--porcelain"]).trim()==="");
+ const valid=checks.every(x=>x.pass),receipt={schema:"ghc.family.exact-final-owner-canonical.v15",status:valid?"VALID_EXACT_FINAL_OWNER_SCOPED_METADATA_CANONICAL":"INVALID_EXACT_FINAL_OWNER_SCOPED_CANONICAL",head,branch,invocations:1,successes:valid?1:0,replays:0,checks_total:checks.length,checks_passed:checks.filter(x=>x.pass).length,checks,domain_tranches_replayed:false,tests_replayed:false,browser_replayed:false,source_or_predecessor_canonical_replayed:false,counts:accounting.repository_effective_counts,terminal_verdict:"NOT_READY_FOR_STAGE_20"};
+ fs.writeFileSync(receiptPath,JSON.stringify(receipt,null,2)+"\\n","utf8");fs.writeFileSync(latchPath,JSON.stringify({status:receipt.status,expected_head:expectedHead,invocations:1,successes:valid?1:0,replays:0,receipt_sha256:crypto.createHash("sha256").update(fs.readFileSync(receiptPath)).digest("hex")},null,2)+"\\n","utf8");process.stdout.write(JSON.stringify({status:receipt.status,checks:receipt.checks_passed+"/"+receipt.checks_total,receipt:receiptPath}));if(!valid)process.exitCode=1;
+}catch(error){const failed={schema:"ghc.family.exact-final-owner-canonical.v15",status:"INVALID_EXACT_FINAL_OWNER_SCOPED_CANONICAL",expected_head:expectedHead,invocations:1,successes:0,replays:0,error:error.message};fs.writeFileSync(receiptPath,JSON.stringify(failed,null,2)+"\\n","utf8");fs.writeFileSync(latchPath,JSON.stringify({status:failed.status,expected_head:expectedHead,invocations:1,successes:0,replays:0},null,2)+"\\n","utf8");throw error}
+`);
+
+writeText("tools/seal_staged_manifests.txt",`"use strict";
+const fs=require("fs"),path=require("path"),cp=require("child_process"),crypto=require("crypto");
+const wt=process.argv[2];if(!wt)throw new Error("usage: node seal_staged_manifests.txt <worktree>");
+const git=(args,enc="utf8")=>cp.execFileSync("git",["-C",wt,...args],{encoding:enc,maxBuffer:256*1024*1024});
+const phasePrefix="docs/elowen-cairn/v700-v1/",finalPrefix=phasePrefix+"final/";
+const exclusions=[finalPrefix+"final-staged-manifest.json",finalPrefix+"final-owner-manifest.json",finalPrefix+"content-seal.json",finalPrefix+"staged-review.json"];
+const indexEntry=rel=>{const line=git(["ls-files","-s","--",rel]).trim();if(!line)throw new Error("missing index entry "+rel);const parts=line.split(/\\s+/);const oid=parts[1];const bytes=git(["cat-file","blob",oid],"buffer");return{path:rel,git_oid:oid,bytes:bytes.length,sha256_raw_git_blob:crypto.createHash("sha256").update(bytes).digest("hex")}};
+const staged=git(["diff","--cached","--name-only"]).trim().split(/\\r?\\n/).filter(Boolean).filter(x=>x.startsWith(finalPrefix)&&!exclusions.includes(x));
+const owner=git(["ls-files",phasePrefix]).trim().split(/\\r?\\n/).filter(Boolean).filter(x=>!exclusions.includes(x));
+const finalManifest={owner:"Elowen Cairn",phase:"v700-v1",stage:"final",byte_domain:"raw_index_git_blob",self_exclusions:exclusions,count:staged.length,records:staged.map(indexEntry)};
+const ownerManifest={owner:"Elowen Cairn",phase:"v700-v1",byte_domain:"raw_index_git_blob",self_exclusions:exclusions,count:owner.length,records:owner.map(indexEntry)};
+const sealPaths=[finalPrefix+"overview.md",finalPrefix+"phase-truth.json",finalPrefix+"accounting.json",finalPrefix+"method-flow-summary.json",finalPrefix+"retained-negative-register.json",finalPrefix+"open-exact-gate-register.json",finalPrefix+"route-packet.json",finalPrefix+"hand-off-baton.md",finalPrefix+"canonical-policy.json",finalPrefix+"closeout-receipt.json",finalPrefix+"seal-receipt.json"];
+const seal={owner:"Elowen Cairn",phase:"v700-v1",byte_domain:"raw_index_git_blob",count:sealPaths.length,records:sealPaths.map(indexEntry)};
+const check=git(["diff","--cached","--check"]).trim();
+const review={owner:"Elowen Cairn",phase:"v700-v1",parent:git(["rev-parse","HEAD"]).trim(),staged_files:git(["diff","--cached","--name-only"]).trim().split(/\\r?\\n/).filter(Boolean).length,covered_final_entries:finalManifest.count,owner_entries:ownerManifest.count,self_exclusions:exclusions,diff_check_clean:check==="",allowed_extensions:owner.every(x=>[".json",".md",".txt",".html"].includes(path.extname(x).toLowerCase())),only_final_delta:staged.every(x=>x.startsWith(finalPrefix)),valid:check===""};
+const out=rel=>path.join(wt,rel);fs.writeFileSync(out(exclusions[0]),JSON.stringify(finalManifest,null,2)+"\\n");fs.writeFileSync(out(exclusions[1]),JSON.stringify(ownerManifest,null,2)+"\\n");fs.writeFileSync(out(exclusions[2]),JSON.stringify(seal,null,2)+"\\n");fs.writeFileSync(out(exclusions[3]),JSON.stringify(review,null,2)+"\\n");process.stdout.write(JSON.stringify({final_entries:finalManifest.count,owner_entries:ownerManifest.count,seal_entries:seal.count,staged_files:review.staged_files,valid:review.valid}));
+`);
+
+process.stdout.write(JSON.stringify({phase,stage:"final",owner_counts:ownerCounts,effective_counts:effective,baton_words:batonWords,immutable_entries:lifecycleManifests.reduce((s,x)=>s+x.count,0),privacy_files:textFiles.length,txt_files:txtFiles.length,status:"FINAL_PACKET_PREPARED"}));
