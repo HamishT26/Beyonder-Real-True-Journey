@@ -1,0 +1,156 @@
+{
+  "count": 600,
+  "definition_files": [
+    "planning/proposals-x1.json",
+    "planning/proposals-x2.json"
+  ],
+  "operations": [
+    {
+      "ordinal": 1,
+      "name": "bba_frame_shape",
+      "meaning": "Validate the finite frame and two normalized mass assignments",
+      "stage": "x1",
+      "contracts": 30
+    },
+    {
+      "ordinal": 2,
+      "name": "bba_focal_support",
+      "meaning": "Inventory focal sets and their union and intersection",
+      "stage": "x1",
+      "contracts": 30
+    },
+    {
+      "ordinal": 3,
+      "name": "bba_mass_normal_form",
+      "meaning": "Represent mass percentages as reduced exact rationals",
+      "stage": "x1",
+      "contracts": 30
+    },
+    {
+      "ordinal": 4,
+      "name": "bba_event_bounds",
+      "meaning": "Compute event belief, plausibility and interval width",
+      "stage": "x1",
+      "contracts": 30
+    },
+    {
+      "ordinal": 5,
+      "name": "bba_belief_table",
+      "meaning": "Enumerate subset-sum belief values on the full frame",
+      "stage": "x1",
+      "contracts": 30
+    },
+    {
+      "ordinal": 6,
+      "name": "bba_plausibility_table",
+      "meaning": "Enumerate nonempty-intersection plausibility values",
+      "stage": "x1",
+      "contracts": 30
+    },
+    {
+      "ordinal": 7,
+      "name": "bba_commonality_table",
+      "meaning": "Enumerate superset-sum commonality values",
+      "stage": "x1",
+      "contracts": 30
+    },
+    {
+      "ordinal": 8,
+      "name": "bba_mobius_recovery",
+      "meaning": "Recover masses by inverse subset transform",
+      "stage": "x1",
+      "contracts": 30
+    },
+    {
+      "ordinal": 9,
+      "name": "bba_conjunctive_combination",
+      "meaning": "Combine declared masses while retaining empty-set conflict",
+      "stage": "x1",
+      "contracts": 30
+    },
+    {
+      "ordinal": 10,
+      "name": "bba_conflict_mass",
+      "meaning": "Partition conflict and nonconflicting product mass",
+      "stage": "x1",
+      "contracts": 30
+    },
+    {
+      "ordinal": 11,
+      "name": "bba_dempster_normalization",
+      "meaning": "Normalize nonconflicting mass with a total-conflict refusal",
+      "stage": "x2",
+      "contracts": 30
+    },
+    {
+      "ordinal": 12,
+      "name": "bba_discount_mass",
+      "meaning": "Discount reliability into the full-frame focal set",
+      "stage": "x2",
+      "contracts": 30
+    },
+    {
+      "ordinal": 13,
+      "name": "bba_vacuous_extension",
+      "meaning": "Extend each atom into two unobserved subatoms",
+      "stage": "x2",
+      "contracts": 30
+    },
+    {
+      "ordinal": 14,
+      "name": "bba_coarsen_partition",
+      "meaning": "Push mass through a declared parity partition",
+      "stage": "x2",
+      "contracts": 30
+    },
+    {
+      "ordinal": 15,
+      "name": "bba_conditioning",
+      "meaning": "Condition on a nonempty event by normalized intersection",
+      "stage": "x2",
+      "contracts": 30
+    },
+    {
+      "ordinal": 16,
+      "name": "bba_random_set_coverage",
+      "meaning": "Compare hit and containment mass in a synthetic random-set model",
+      "stage": "x2",
+      "contracts": 30
+    },
+    {
+      "ordinal": 17,
+      "name": "bba_nonadditivity_witness",
+      "meaning": "Record an exact nonadditive belief gap across a partition",
+      "stage": "x2",
+      "contracts": 30
+    },
+    {
+      "ordinal": 18,
+      "name": "bba_pignistic_projection",
+      "meaning": "Represent an equal-share probability projection without calibration",
+      "stage": "x2",
+      "contracts": 30
+    },
+    {
+      "ordinal": 19,
+      "name": "bba_calibration_gap",
+      "meaning": "Keep missing observations and calibration as an open gap",
+      "stage": "x2",
+      "contracts": 30
+    },
+    {
+      "ordinal": 20,
+      "name": "bba_authority_reservation",
+      "meaning": "Keep authority for real-world use held behind its exact gate",
+      "stage": "x2",
+      "contracts": 30
+    }
+  ],
+  "outcomes": {
+    "completed": 510,
+    "represented": 30,
+    "open_gap": 30,
+    "exact_gate": 30
+  },
+  "oracle_scope": "Frozen expected-value generator uses direct percentage sums and integer fraction reduction; execution uses a separately authored BigInt rational kernel and independent transform algorithms. Both are same-owner, not independent reproduction."
+}

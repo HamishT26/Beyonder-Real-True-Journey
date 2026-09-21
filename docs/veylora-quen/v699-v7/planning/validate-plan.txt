@@ -1,0 +1,35 @@
+"use strict";
+const fs=require("fs"),path=require("path"),cp=require("child_process"),crypto=require("crypto"),vm=require("vm"),BASE="docs/veylora-quen/v699-v7",P=BASE+"/planning",parent="baffbfa96666917eb0f8a4255d96b1b078f47948";
+const load=f=>JSON.parse(fs.readFileSync(P+"/"+f)),sha=b=>crypto.createHash("sha256").update(b).digest("hex"),checks=[],check=(name,pass,detail=null)=>checks.push({name,pass:!!pass,detail}),walk=d=>fs.readdirSync(d,{withFileTypes:true}).flatMap(x=>x.isDirectory()?walk(d+"/"+x.name):[d+"/"+x.name]);
+const all=[...load("proposals-x1.json").records,...load("proposals-x2.json").records],canonical=v=>JSON.stringify(v,(_k,x)=>x&&typeof x==="object"&&!Array.isArray(x)?Object.fromEntries(Object.entries(x).sort(([a],[b])=>a.localeCompare(b))):x);
+check("600 distinct preregistered requests",all.length===600&&new Set(all.map(x=>canonical(x.request))).size===600);
+check("sequential proposal identifiers",all.every((x,i)=>x.proposal_id==="VQ6997-P"+String(i+1).padStart(3,"0")));
+check("frozen definition hashes",all.every(x=>{const y={...x};delete y.definition_sha256;return sha(Buffer.from(canonical(y)))===x.definition_sha256;}));
+check("complete proposal fields",all.every(x=>x.hypothesis&&x.null_or_failure_condition&&x.approval_class&&x.execution_lane&&x.source_needs.length&&x.concrete_artifacts.length&&x.falsifier_or_acceptance_gate&&x.rollback_or_recovery&&x.protected_gates.length&&x.expected_disposition));
+check("typed no-authority expected envelopes",all.every(x=>x.expected_output.ok&&x.expected_output.authority===false&&x.expected_output.outcome===x.expected_disposition&&x.expected_output.operation===x.operation));
+check("planned four-way outcome counts",["completed","represented","open_gap","exact_gate"].every((s,i)=>all.filter(x=>x.expected_disposition===s).length===[510,30,30,30][i]));
+check("300 definitions per stage",["x1","x2"].every(s=>all.filter(x=>x.stage===s).length===300));
+check("eight separate 300-row portfolio definitions",["x1","x2"].every(s=>["safe","candidate","cfr","clean"].every(k=>{const p=load("portfolios/"+s+"-"+k+".json");return p.count===300&&p.rows.length===300&&new Set(p.rows.map(x=>x.task_id)).size===300&&p.defined_before_execution;})));
+check("300 selected inherited records remain zero credit",load("source/inherited-review.json").records.length===300&&load("source/inherited-review.json").new_credit===0);
+const inherited=load("source/inherited-review.json").records;
+check("operation namespace distinct from selected source",all.every(p=>!inherited.some(i=>i.source_record.operation_id===p.operation)));
+check("eight own and four successor practices",load("practices.json").own.length===8&&load("practices.json").next.length===4);
+const caps=load("capabilities.json");check("20 skills 10 paired runners 5 curated groups",caps.local_skills.length===20&&caps.local_runners.length===10&&caps.groups.length===5&&caps.groups.every(g=>g.source_count===4&&g.operations.length===4));
+check("15 tests and 5 local models defined",load("test-plan.json").tests.length===15&&load("simulation-plan.json").count===5);
+check("50 exact and 30 blocked packets held",load("held-packets.json").exact_approval.length===50&&load("held-packets.json").blocked.length===30&&load("held-packets.json").protected_actions_executed===0);
+check("source failed canonical and composite remain distinct",load("source/intake.json").source_canonical.successes===0&&load("source/intake.json").source_composite.aggregate_credit===0&&load("source/intake.json").source_canonical_or_composite_replayed===false);
+const wf=load("workflow-profile.json");check("v15 exact prospective route",wf.phase==="v699-v7"&&wf.route[0].owner==="Veylora Quen"&&wf.route[1].owner==="Tamar Vey"&&wf.route[1].phase==="v699-v8"&&wf.final_assignment.owner==="Eiren Kestrel"&&wf.final_assignment.phase==="v725-v8");
+check("latest delivery recovery ceiling",wf.delivery_policy.discovery_or_read_recoveries_max===5&&wf.delivery_policy.corrected_resubmissions_max===3&&wf.delivery_policy.accepted_opaque_or_unresolved==="stop; do not duplicate");
+check("planning has no execution-stage materialization",!fs.existsSync(BASE+"/x1")&&!fs.existsSync(BASE+"/x2"));
+check("exact clean owner baseline preserved",cp.execFileSync("git",["rev-parse","HEAD"],{encoding:"utf8"}).trim()===parent&&cp.execFileSync("git",["diff","--name-only",parent],{encoding:"utf8"}).trim()==="");
+check("four retained startup failures",load("source/startup-failures.json").failures.length===4);
+let maxWords=0,jsons=0;const privacy=[],paths=walk(BASE),patterns=[/\b[A-Za-z]:[\\/]/g,/\b[0-9a-f]{8}(?:-[0-9a-f]{4}){3}-[0-9a-f]{12}\b/ig,/(?:sk-[A-Za-z0-9_-]{20,}|gh[pousr]_[A-Za-z0-9]{20,})/g,/chatgpt\.com\/c\/[A-Za-z0-9-]+/g,/"(?:raw_transcript|raw_screenshot|private_execution_stream)"\s*:/g];
+for(const f of paths){const text=fs.readFileSync(f,"utf8");maxWords=Math.max(maxWords,text.split(/\s+/).filter(Boolean).length);if(f.endsWith(".json")){JSON.parse(text);jsons++;}for(const re of patterns){re.lastIndex=0;if(re.test(text))privacy.push(f);}}
+for(const f of [P+"/build-plan.txt",P+"/validate-plan.txt"])new vm.Script(fs.readFileSync(f,"utf8"));
+check("declared executable TXT sources parse",true);check("strict planning JSON",jsons>20,jsons);check("five-class privacy",privacy.length===0,privacy);check("word and owner file ceilings",maxWords<100000&&388+paths.length<2000,{maximum_words:maxWords,phase_files:paths.length,owner_files:388+paths.length});
+const receipt={schema:"ghc.family.planning-validation.v15",checks,checks_total:checks.length,checks_passed:checks.filter(x=>x.pass).length,valid:checks.every(x=>x.pass),domain_execution:false,canonical_invoked:false,maximum_document_words:maxWords};
+fs.writeFileSync(P+"/validation.json",JSON.stringify(receipt,null,2)+"\n",{flag:"wx"});if(!receipt.valid){console.log(JSON.stringify(receipt));process.exit(2);}
+const exclusions=[P+"/manifest.json",P+"/staged-review.json"],files=walk(P);
+fs.writeFileSync(P+"/manifest.json",JSON.stringify({domain:"raw_git_blob",bindings:files.map(f=>({path:f,bytes:fs.statSync(f).size,sha256:sha(fs.readFileSync(f))})),exclusions},null,2)+"\n",{flag:"wx"});
+fs.writeFileSync(P+"/staged-review.json",JSON.stringify({parent,paths:[...walk(P),P+"/staged-review.json"].sort(),only_additions:true,previous_owner_phase_unchanged:true,domain_execution:false},null,2)+"\n",{flag:"wx"});
+console.log(JSON.stringify({valid:true,checks:checks.length,passed:checks.length,phase_files:walk(P).length,maximum_document_words:maxWords,planning_only:true}));
