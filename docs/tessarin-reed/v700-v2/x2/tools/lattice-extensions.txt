@@ -1,0 +1,86 @@
+"""Exact finite lattice transformations and evidence reservations."""
+import json
+import pathlib
+import runpy
+import sys
+from fractions import Fraction
+
+HERE=pathlib.Path(__file__).resolve().parent
+BASE=HERE/'lattice-core.txt'
+if not BASE.exists():BASE=HERE.parent.parent/'x1'/'tools'/'lattice-core.txt'
+K1=runpy.run_path(str(BASE))
+Refusal=K1['Refusal'];require=K1['require']
+OPERATIONS=['lattice-dilation','ehrhart-polynomial','reciprocity-check','minkowski-sum','mixed-area','unimodular-transport','translation-transport','trinity-geometry-bridge','lattice-observation-gap','lattice-authority-reservation']
+FIELDS={op:{'op','polygon'} for op in OPERATIONS}
+for op in OPERATIONS[:3]:FIELDS[op].add('max_scale')
+for op in ['minkowski-sum','mixed-area']:FIELDS[op].add('other')
+FIELDS['unimodular-transport'].add('matrix');FIELDS['translation-transport'].add('offset')
+FIELDS['trinity-geometry-bridge'].add('register');FIELDS['lattice-observation-gap'].add('claim')
+FIELDS['lattice-authority-reservation'].update({'action','execute'})
+
+def disposition(op):
+    return {'trinity-geometry-bridge':'represented','lattice-observation-gap':'open_gap','lattice-authority-reservation':'exact_gate'}.get(op,'completed')
+
+def counts(poly):
+    c=K1['census'](poly)
+    return {'area':str(Fraction(K1['area2'](poly),2)) if len(poly)>1 else '0','boundary_count':c['boundary_count'],'interior_count':c['interior_count'],'closed_count':c['closed_count'],'dimension':c['dimension']}
+
+def dilated(poly,n):
+    return [(0,0)] if n==0 else [(n*x,n*y) for x,y in poly]
+
+def evaluate(request,allowed=None):
+    disp='completed'
+    try:
+        require(type(request) is dict and type(request.get('op')) is str,'request_shape')
+        op=request['op'];require(op in OPERATIONS,'unknown_operation');disp=disposition(op)
+        require(allowed is None or op in allowed,'runner_scope');require(set(request)==FIELDS[op],'request_fields')
+        p=K1['polygon'](request['polygon']);a=Fraction(K1['area2'](p),2);b=sum(e['multiplicity'] for e in K1['edges'](p))
+        if op in OPERATIONS[:3]:
+            n=request['max_scale'];require(type(n) is int and 0<=n<=4,'scale_budget')
+        if op=='lattice-dilation':
+            value={'scales':[{'scale':t,**counts(dilated(p,t))} for t in range(n+1)],'zero_scale_convention':'single_origin_point','physical_scaling_claim':False}
+        elif op=='ehrhart-polynomial':
+            coefficients=[Fraction(1),Fraction(b,2),a];rows=[]
+            for t in range(n+1):
+                predicted=sum(c*t**i for i,c in enumerate(coefficients));actual=counts(dilated(p,t))['closed_count']
+                rows.append({'scale':t,'predicted':str(predicted),'direct_count':actual,'equal':predicted==actual})
+            value={'coefficients_ascending':list(map(str,coefficients)),'degree':2,'bounded_comparisons':rows,'all_equal':all(r['equal'] for r in rows),'domain':'integral_convex_polygon'}
+        elif op=='reciprocity-check':
+            rows=[]
+            for t in range(1,n+1):
+                predicted=a*t*t-Fraction(b*t,2)+1;actual=counts(dilated(p,t))['interior_count']
+                rows.append({'positive_scale':t,'polynomial_at_negative_scale':str(predicted),'direct_interior_count':actual,'equal':predicted==actual})
+            value={'dimension_sign':1,'bounded_comparisons':rows,'all_equal':all(r['equal'] for r in rows),'zero_scale_excluded':True}
+        elif op in ['minkowski-sum','mixed-area']:
+            q=K1['polygon'](request['other']);cloud=[(x+u,y+v) for x,y in p for u,v in q];h=K1['hull'](cloud);asum=Fraction(K1['area2'](h),2);aq=Fraction(K1['area2'](q),2)
+            if op=='minkowski-sum':value={'vertices':list(map(list,h)),'pairwise_sum_count':len(cloud),'unique_sum_points':len(set(cloud)),'area':str(asum)}
+            else:value={'area_first':str(a),'area_second':str(aq),'area_sum':str(asum),'twice_mixed_area':str(asum-a-aq),'mixed_area':str((asum-a-aq)/2),'convention':'A(P+Q)-A(P)-A(Q)=2V(P,Q)'}
+        elif op=='unimodular-transport':
+            raw=request['matrix'];require(type(raw) is list and len(raw)==2 and all(type(row) is list and len(row)==2 for row in raw),'matrix_shape');m=[[K1['integer'](x,3) for x in row] for row in raw]
+            det=m[0][0]*m[1][1]-m[0][1]*m[1][0];require(abs(det)==1,'unimodular_required')
+            transformed=[(m[0][0]*x+m[0][1]*y,m[1][0]*x+m[1][1]*y) for x,y in p]
+            if det<0:transformed.reverse()
+            transformed=K1['canonical'](transformed);before,after=counts(p),counts(transformed)
+            value={'determinant':det,'transformed_vertices':list(map(list,transformed)),'before':before,'after':after,'invariants_equal':before==after,'orientation_normalized':True}
+        elif op=='translation-transport':
+            offset=K1['point'](request['offset']);q=[(x+offset[0],y+offset[1]) for x,y in p];before,after=counts(p),counts(q)
+            value={'offset':list(offset),'translated_vertices':list(map(list,K1['canonical'](q))),'before':before,'after':after,'invariants_equal':before==after,'centroid_before':K1['centroid'](p),'centroid_after':K1['centroid'](q)}
+        elif op=='trinity-geometry-bridge':
+            require(request['register']=='structural_analogy_only','analogy_register')
+            value={'register':'structural_analogy_only','finite_area':str(a),'finite_boundary_points':b,'mapping':{'Mind':'declared geometric consistency','Body':'bounded calculation workflow','Heart':'evidence and authority reservation'},'physical_correspondence':False,'identity_claim':False}
+        elif op=='lattice-observation-gap':
+            claim=request['claim'];require(type(claim) is str and claim in {'physical_geometry','calibrated_uncertainty','independent_reproduction'},'claim')
+            value={'claim':claim,'available':'synthetic_lattice_polygon','missing':['claim-specific external observations','calibration or explicit model assumptions','independent review'],'promoted':False}
+        else:
+            action=request['action'];require(type(action) is str and action in {'approve_deployment','approve_cultural_interpretation','promote_stage20'},'action');require(request['execute'] is False,'execution_reserved')
+            value={'action':action,'executed':False,'authority_granted':False,'required':'Fresh action-specific competent and affected authority; Maori concepts remain under Maori authority.'}
+        return K1['envelope'](True,value,disposition=disp)
+    except (Refusal,ValueError,TypeError,KeyError,ZeroDivisionError,OverflowError) as exc:
+        return K1['envelope'](False,error=str(exc) if isinstance(exc,Refusal) else 'invalid_type',disposition=disp)
+
+def main(allowed=None):
+    try:out=evaluate(K1['strict'](sys.stdin.read(262145)),allowed)
+    except (Refusal,ValueError,RecursionError) as exc:out=K1['envelope'](False,error=str(exc) if isinstance(exc,Refusal) else 'invalid_json')
+    print(json.dumps(out,sort_keys=True,allow_nan=False));return 0 if out['ok'] else 2
+
+if __name__=='__main__':raise SystemExit(main())
