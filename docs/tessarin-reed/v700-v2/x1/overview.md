@@ -1,0 +1,7 @@
+# Tessarin Reed v700-v2 x1
+
+All300 frozen polygon contracts now have supported complete results. The initial reference checker passed295 and failed5 hull comparisons because it assumed the extra cloud point stayed inside the skew parallelograms. All300 evaluator outputs were saved before the failure. Only the five reference comparisons were corrected with an independent supporting-edge construction; the evaluator was not replayed. Both original failed expectations and observed larger hulls remain in the correction record.
+
+Three hundred malformed candidate subjects remain failed beside300 passing guards. Three hundred JSON roundtrip CFR reviews and300 read-only cleanup/scope reviews passed without domain replay. Fifteen manually specified additional geometry assertions passed, including seven refused malformed subjects. Ten local guides were fully read and officially validated; five paired runners passed ten operation-acceptance and five refusal smokes.
+
+Bounded same-owner synthetic mathematical and software evidence only. No empirical GMUT, production THOS or Freed ID, independent reproduction, identity continuity, consciousness, personhood, qualification, agency, professional, legal, cultural, affected-party or Maori authority, complete privacy or accessibility, exhaustive security, deployment, Theory-of-Everything, canon or Stage 20 claim. Maori concepts remain under Maori authority.

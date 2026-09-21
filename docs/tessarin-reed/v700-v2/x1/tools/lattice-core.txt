@@ -1,0 +1,133 @@
+"""Exact bounded convex lattice-polygon contracts. No external actions."""
+import json
+import math
+import sys
+from fractions import Fraction
+
+OPERATIONS = ["polygon-shape","signed-area","boundary-count","lattice-point-census","pick-balance","centroid","primitive-edge-directions","support-width","point-membership","convex-hull-recovery"]
+FIELDS = {op:{"op","polygon"} for op in OPERATIONS}
+FIELDS.update({"support-width":{"op","polygon","directions"},"point-membership":{"op","polygon","point"},"convex-hull-recovery":{"op","polygon","cloud"}})
+BOUNDARY = {"synthetic":True,"empirical_evidence":False,"independent_reproduction":False,"authority_granted":False,"external_actions":0,"physical_correspondence":False}
+
+class Refusal(ValueError):
+    pass
+
+def require(condition, error):
+    if not condition:
+        raise Refusal(error)
+
+def integer(x, limit=16):
+    require(type(x) is int and abs(x)<=limit,"integer_coordinate")
+    return x
+
+def point(x, limit=16):
+    require(type(x) is list and len(x)==2,"point_shape")
+    return tuple(integer(a,limit) for a in x)
+
+def cross(a,b,c):
+    return (b[0]-a[0])*(c[1]-a[1])-(b[1]-a[1])*(c[0]-a[0])
+
+def area2(poly):
+    return sum(a[0]*b[1]-a[1]*b[0] for a,b in zip(poly,poly[1:]+poly[:1]))
+
+def canonical(poly):
+    p=list(poly);i=min(range(len(p)),key=lambda i:p[i]);return p[i:]+p[:i]
+
+def polygon(raw):
+    require(type(raw) is list and 3<=len(raw)<=10,"polygon_size")
+    p=[point(x) for x in raw]
+    require(len(set(p))==len(p),"duplicate_vertex")
+    require(area2(p)>0,"counterclockwise_required")
+    n=len(p)
+    require(all(cross(p[i],p[(i+1)%n],p[(i+2)%n])>0 for i in range(n)),"strict_convexity")
+    require(all(cross(p[i],p[(i+1)%n],p[j])>=0 for i in range(n) for j in range(n)),"convex_boundary_order")
+    return p
+
+def classify(poly,q):
+    signs=[cross(a,b,q) for a,b in zip(poly,poly[1:]+poly[:1])]
+    return "outside" if min(signs)<0 else ("boundary" if 0 in signs else "interior")
+
+def edges(poly):
+    result=[]
+    for a,b in zip(poly,poly[1:]+poly[:1]):
+        dx,dy=b[0]-a[0],b[1]-a[1];g=math.gcd(abs(dx),abs(dy))
+        result.append({"from":list(a),"to":list(b),"multiplicity":g,"primitive":[dx//g,dy//g]})
+    return result
+
+def census(poly):
+    if len(poly)==1:
+        return {"interior":[],"boundary":[list(poly[0])],"closed":[list(poly[0])],"interior_count":0,"boundary_count":1,"closed_count":1,"dimension":0}
+    xmin,xmax=min(p[0] for p in poly),max(p[0] for p in poly);ymin,ymax=min(p[1] for p in poly),max(p[1] for p in poly)
+    require((xmax-xmin+1)*(ymax-ymin+1)<=20000,"enumeration_budget")
+    inside=[];boundary=[]
+    for x in range(xmin,xmax+1):
+        for y in range(ymin,ymax+1):
+            kind=classify(poly,(x,y))
+            if kind=="interior":inside.append([x,y])
+            elif kind=="boundary":boundary.append([x,y])
+    closed=sorted(inside+boundary)
+    return {"interior":inside,"boundary":boundary,"closed":closed,"interior_count":len(inside),"boundary_count":len(boundary),"closed_count":len(closed),"dimension":2}
+
+def centroid(poly):
+    denom=3*area2(poly)
+    return [str(Fraction(sum((a[k]+b[k])*(a[0]*b[1]-a[1]*b[0]) for a,b in zip(poly,poly[1:]+poly[:1])),denom)) for k in [0,1]]
+
+def hull(cloud):
+    pts=sorted(set(tuple(p) for p in cloud));require(len(pts)>=3,"cloud_dimension")
+    lower=[]
+    for p in pts:
+        while len(lower)>=2 and cross(lower[-2],lower[-1],p)<=0:lower.pop()
+        lower.append(p)
+    upper=[]
+    for p in reversed(pts):
+        while len(upper)>=2 and cross(upper[-2],upper[-1],p)<=0:upper.pop()
+        upper.append(p)
+    out=lower[:-1]+upper[:-1];require(len(out)>=3,"cloud_dimension");return out
+
+def envelope(ok, value=None, error=None, disposition="completed"):
+    return {"ok":ok,"value":value,"error":error,"disposition":disposition,"boundary":dict(BOUNDARY)}
+
+def evaluate(request, allowed=None):
+    try:
+        require(type(request) is dict and type(request.get("op")) is str,"request_shape")
+        op=request["op"];require(op in OPERATIONS,"unknown_operation");require(allowed is None or op in allowed,"runner_scope")
+        require(set(request)==FIELDS[op],"request_fields");p=polygon(request["polygon"]);a2=area2(p)
+        if op=="polygon-shape":value={"vertices":[list(x) for x in canonical(p)],"vertex_count":len(p),"dimension":2,"strictly_convex":True}
+        elif op=="signed-area":value={"twice_signed_area":a2,"area":str(Fraction(a2,2)),"orientation":"counterclockwise"}
+        elif op=="boundary-count":value={"boundary_count":sum(e["multiplicity"] for e in edges(p)),"edge_gcds":[e["multiplicity"] for e in edges(p)]}
+        elif op=="lattice-point-census":value=census(p)
+        elif op=="pick-balance":
+            c=census(p);right=2*c["interior_count"]+c["boundary_count"]-2
+            value={"twice_area":a2,"twice_pick_expression":right,"residual":a2-right,"identity_holds":a2==right}
+        elif op=="centroid":value={"centroid":centroid(p),"area_weighted":True}
+        elif op=="primitive-edge-directions":value={"edges":edges(p),"reconstructed_edge_sum":[sum(e["multiplicity"]*e["primitive"][k] for e in edges(p)) for k in [0,1]]}
+        elif op=="support-width":
+            require(type(request["directions"]) is list and 1<=len(request["directions"])<=8,"direction_count");rows=[]
+            for raw in request["directions"]:
+                d=point(raw);require(d!=(0,0),"zero_direction");values=[d[0]*q[0]+d[1]*q[1] for q in p]
+                rows.append({"direction":list(d),"minimum":min(values),"maximum":max(values),"width":max(values)-min(values)})
+            value={"directions":rows,"euclidean_normalization":False}
+        elif op=="point-membership":
+            q=point(request["point"]);kind=classify(p,q);value={"point":list(q),"classification":kind,"in_closed_polygon":kind!="outside"}
+        else:
+            raw=request["cloud"];require(type(raw) is list and 3<=len(raw)<=64,"cloud_size");cloud=[point(q) for q in raw];h=hull(cloud)
+            value={"hull":[list(q) for q in h],"unique_input_points":len(set(cloud)),"recovers_declared_polygon":h==canonical(p)}
+        return envelope(True,value)
+    except (Refusal,ValueError,TypeError,KeyError,ZeroDivisionError,OverflowError) as exc:
+        return envelope(False,error=str(exc) if isinstance(exc,Refusal) else "invalid_type")
+
+def strict(text):
+    require(len(text.encode('utf-8'))<=262144,"input_budget")
+    def unique(rows):
+        d={}
+        for k,v in rows:
+            require(k not in d,"duplicate_key");d[k]=v
+        return d
+    return json.loads(text,object_pairs_hook=unique,parse_constant=lambda _:(_ for _ in ()).throw(Refusal("nonfinite")))
+
+def main(allowed=None):
+    try:out=evaluate(strict(sys.stdin.read(262145)),allowed)
+    except (Refusal,ValueError,RecursionError) as exc:out=envelope(False,error=str(exc) if isinstance(exc,Refusal) else "invalid_json")
+    print(json.dumps(out,sort_keys=True,allow_nan=False));return 0 if out["ok"] else 2
+
+if __name__=="__main__":raise SystemExit(main())
