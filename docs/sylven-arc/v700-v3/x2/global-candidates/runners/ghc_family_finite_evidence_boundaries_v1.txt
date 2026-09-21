@@ -1,0 +1,2 @@
+'use strict';
+function validate(x){const allowed=['formal_only','represented','open_gap','exact_gate'];if(!x||!allowed.includes(x.disposition))return{ok:false,error:'invalid_disposition'};if(x.realWorldAuthority!==false)return{ok:false,error:'authority_nonconversion_required'};if(!Array.isArray(x.nonclaims)||!x.nonclaims.length)return{ok:false,error:'missing_nonclaims'};return{ok:true,disposition:x.disposition,realWorldAuthority:false}}module.exports={validate};

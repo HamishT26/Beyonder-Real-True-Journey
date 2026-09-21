@@ -1,0 +1,5 @@
+'use strict';
+require.extensions['.txt']=require.extensions['.js'];
+const core=require('../tools/evidence-extended.txt'),allowed=["choquet-sum","evidence-analogy"];
+function run(request){if(!request||!allowed.includes(request.op))return {ok:false,value:null,error:'unsupported_pair_operation',disposition:'rejected',boundary:core.BOUNDARY};return core.evaluate(request)}
+module.exports={allowed,run};

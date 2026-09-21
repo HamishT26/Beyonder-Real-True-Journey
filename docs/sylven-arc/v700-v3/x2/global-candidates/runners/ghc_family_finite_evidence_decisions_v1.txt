@@ -1,0 +1,2 @@
+'use strict';
+function validate(x){if(!x||!['pignistic','choquet-finite'].includes(x.convention))return{ok:false,error:'unsupported_convention'};if(x.authorizedDecision!==false)return{ok:false,error:'decision_authority_not_reserved'};if(!Array.isArray(x.values)||!x.values.length)return{ok:false,error:'missing_values'};return{ok:true,convention:x.convention,decisionAuthority:false}}module.exports={validate};

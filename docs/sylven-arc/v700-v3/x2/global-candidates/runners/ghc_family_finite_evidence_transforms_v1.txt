@@ -1,0 +1,2 @@
+'use strict';
+function validate(x){if(!x||!['belief','plausibility','commonality','mobius-recover'].includes(x.transform))return{ok:false,error:'unsupported_transform'};if(!Array.isArray(x.values)||!x.values.length||x.values.some(r=>!Number.isInteger(r.mask)||typeof r.value!=='string'))return{ok:false,error:'invalid_values'};return{ok:true,transform:x.transform,rows:x.values.length,formalOnly:true}}module.exports={validate};

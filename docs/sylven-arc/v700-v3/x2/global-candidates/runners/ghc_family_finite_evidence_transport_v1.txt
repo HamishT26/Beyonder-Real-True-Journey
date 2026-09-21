@@ -1,0 +1,2 @@
+'use strict';
+function validate(x){if(!x||!['combine','condition','extend','marginalize'].includes(x.operator))return{ok:false,error:'unsupported_operator'};if(!x.sourceFrame||!x.targetFrame||!Array.isArray(x.map))return{ok:false,error:'missing_transport_contract'};if(x.map.some(v=>!Number.isInteger(v)||v<0))return{ok:false,error:'invalid_map'};return{ok:true,operator:x.operator,reversible:x.rollbackAvailable===true}}module.exports={validate};
