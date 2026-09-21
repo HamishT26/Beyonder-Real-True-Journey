@@ -1,0 +1,204 @@
+"""Exact three-player core and proper-coalition least-core certificates.
+
+The epsilon convention permits negative epsilon. Efficiency is exact; every
+nonempty proper coalition, including singletons, receives the same relaxation.
+This is a finite mathematical model, not a real allocation decision.
+"""
+from fractions import Fraction as F
+from itertools import combinations, permutations, product
+from functools import lru_cache
+import hashlib, json, re, sys
+
+OPS=('tu-envelope','proper-coalition-incidence','balanced-support-enumeration',
+ 'balanced-weight-certificates','balanced-worth-obstructions','core-vertex-enumeration',
+ 'core-nonemptiness-equivalence','shapley-blocking-coalitions','core-coordinate-ranges',
+ 'least-core-primal-vertices','least-core-dual-certificate','least-core-zero-gap',
+ 'epsilon-threshold-slices','additive-translation-covariance','positive-scale-covariance',
+ 'player-permutation-covariance','shapley-core-distinction','accessible-feasibility-explanation',
+ 'observation-and-remedy-gap','allocation-authority-reservation')
+BOUNDARY='Finite synthetic same-owner certificate only; no real allocation, authority, independent reproduction, empirical GMUT, production, identity, consciousness or Stage 20 claim.'
+CONVENTION='Efficiency equality; all nonempty proper coalitions relaxed by free epsilon, including singletons; negative optimum allowed.'
+def q(x):
+ if not isinstance(x,str) or len(x)>32 or not re.fullmatch(r'-?(?:0|[1-9][0-9]*)(?:/[1-9][0-9]*)?',x):raise ValueError('fraction grammar')
+ v=F(x)
+ if str(v)!=x or abs(v.numerator)>1000000 or v.denominator>1000000:raise ValueError('fraction canonicality or bound')
+ return v
+def encode(x):
+ if isinstance(x,F):return str(x)
+ if isinstance(x,dict):return {k:encode(v) for k,v in x.items()}
+ if isinstance(x,(list,tuple)):return [encode(v) for v in x]
+ return x
+def canonical(d):return (json.dumps(d,sort_keys=True,ensure_ascii=True,indent=2)+'\n').encode()
+def solve(a,b):
+ """Exact full-column-rank solve; rejects inconsistent or deficient systems."""
+ if not a:return None
+ m=len(a);n=len(a[0]);t=[[F(z) for z in row]+[F(rhs)] for row,rhs in zip(a,b)];row=0
+ for col in range(n):
+  pivot=next((i for i in range(row,m) if t[i][col]),None)
+  if pivot is None:return None
+  t[row],t[pivot]=t[pivot],t[row];v=t[row][col];t[row]=[z/v for z in t[row]]
+  for i in range(m):
+   if i!=row:
+    v=t[i][col];t[i]=[x-v*y for x,y in zip(t[i],t[row])]
+  row+=1
+ if any(all(z==0 for z in r[:n]) and r[n]!=0 for r in t):return None
+ return tuple(t[i][n] for i in range(n))
+def inc(s):return tuple(int(bool(s&(1<<i))) for i in range(3))
+@lru_cache(None)
+def balanced():
+ out=[]
+ for k in (1,2,3):
+  for support in combinations(range(1,7),k):
+   w=solve([[inc(s)[i] for s in support] for i in range(3)],[1,1,1])
+   if w is not None and all(z>0 for z in w):out.append((support,w))
+ return tuple(out)
+def bounds(v,e=F(0)):
+ return tuple(v[1<<i]-e for i in range(3)),tuple(v[7]-v[7^(1<<i)]+e for i in range(3))
+def feasible_box(v,e=F(0)):
+ lo,hi=bounds(v,e);return all(a<=b for a,b in zip(lo,hi)) and sum(lo)<=v[7]<=sum(hi)
+def plane_rows(v,e=F(0)):
+ return [(F(inc(s)[0]-inc(s)[2]),F(inc(s)[1]-inc(s)[2]),v[s]-inc(s)[2]*v[7]-e) for s in range(1,7)]
+@lru_cache(None)
+def vertices(v,e=F(0)):
+ rows=plane_rows(v,e);out=set()
+ for pair in combinations(rows,2):
+  z=solve([r[:2] for r in pair],[r[2] for r in pair])
+  if z is not None and all(a*z[0]+b*z[1]>=c for a,b,c in rows):out.add((z[0],z[1],v[7]-sum(z)))
+ result=tuple(sorted(out));assert bool(result)==feasible_box(v,e),'box-plane feasibility disagreement'
+ # A second enumeration uses coordinate bounds rather than coalition rows.
+ lo,hi=bounds(v,e);other=set()
+ for i,j in combinations(range(3),2):
+  k=3-i-j
+  for a,b in product((lo[i],hi[i]),(lo[j],hi[j])):
+   x=[F(0)]*3;x[i]=a;x[j]=b;x[k]=v[7]-a-b
+   if all(lo[t]<=x[t]<=hi[t] for t in range(3)):other.add(tuple(x))
+ assert set(result)==other,'vertex enumeration disagreement'
+ return result
+@lru_cache(None)
+def balanced_rows(v):
+ return tuple((s,w,sum(v[c]*z for c,z in zip(s,w))-v[7]) for s,w in balanced())
+def reference_epsilon(v):
+ lo,hi=bounds(v)
+ return max([(lo[i]-hi[i])/2 for i in range(3)]+[(sum(lo)-v[7])/3,(v[7]-sum(hi))/3])
+@lru_cache(None)
+def primal(v):
+ rows=plane_rows(v);out=set()
+ for triple in combinations(rows,3):
+  z=solve([[r[0],r[1],1] for r in triple],[r[2] for r in triple])
+  if z is not None and all(a*z[0]+b*z[1]+z[2]>=c for a,b,c in rows):out.add(z)
+ if not out:raise ArithmeticError('no finite least-core basis')
+ epsilon=min(z[2] for z in out)
+ assert epsilon==reference_epsilon(v),'closed-form epsilon disagreement'
+ pts=tuple(sorted((z[0],z[1],v[7]-z[0]-z[1]) for z in out if z[2]==epsilon))
+ assert pts==vertices(v,epsilon),'optimal face vertices disagree'
+ return epsilon,pts,len(out)
+@lru_cache(None)
+def dual(v):
+ records=[dict(support=s,weights=w,excess=e,total_weight=sum(w),epsilon_bound=e/sum(w)) for s,w,e in balanced_rows(v)]
+ opt=max(r['epsilon_bound'] for r in records)
+ assert opt==reference_epsilon(v),'dual normalization disagreement'
+ return opt,[r for r in records if r['epsilon_bound']==opt],records
+@lru_cache(None)
+def shapley(v):
+ total=[F(0)]*3
+ for order in permutations(range(3)):
+  s=0
+  for i in order:
+   t=s|(1<<i);total[i]+=v[t]-v[s];s=t
+ return tuple(x/6 for x in total)
+def blockers(v,x):return tuple(dict(coalition=s,excess=v[s]-sum(x[i] for i in range(3) if s&(1<<i))) for s in range(1,7) if v[s]>sum(x[i] for i in range(3) if s&(1<<i)))
+def validate(p):
+ keys={'profile_id','family','n','values','real_participants','real_funds','authority_actions','scale','translation','permutation','question','definition_sha256'}
+ if not isinstance(p,dict) or set(p)!=keys:raise ValueError('profile keys')
+ if type(p['n']) is not int or p['n']!=3:raise ValueError('exactly three players required')
+ for k in ['real_participants','real_funds','authority_actions']:
+  if type(p[k]) is not int or p[k]!=0:raise ValueError('protected real-world field')
+ if not isinstance(p['values'],list) or len(p['values'])!=8:raise ValueError('coalition table length')
+ v=tuple(q(x) for x in p['values'])
+ if v[0]!=0:raise ValueError('empty coalition must be zero')
+ if q(p['scale'])<=0:raise ValueError('positive scale required')
+ if not isinstance(p['translation'],list) or len(p['translation'])!=3:raise ValueError('translation length')
+ for x in p['translation']:q(x)
+ if not isinstance(p['permutation'],list) or any(type(x) is not int for x in p['permutation']) or sorted(p['permutation'])!=[0,1,2]:raise ValueError('permutation')
+ if not re.fullmatch(r'BC-[0-9]{2}',p['profile_id']) or not isinstance(p['family'],str) or not isinstance(p['question'],str):raise ValueError('metadata')
+ if len(p['family'])>80 or len(p['question'])>500:raise ValueError('metadata bounds')
+ d={k:v for k,v in p.items() if k!='definition_sha256'}
+ if hashlib.sha256(canonical(d)).hexdigest()!=p['definition_sha256']:raise ValueError('definition hash mismatch')
+ return v
+def evaluate(op,p):
+ v=validate(p)
+ if op not in OPS:raise ValueError('unknown operation')
+ state='completed';i=OPS.index(op)
+ if i==0:result=dict(n=3,coalitions=8,exact_rationals=True)
+ elif i==1:result=dict(incidence=[dict(coalition=s,column=inc(s)) for s in range(1,7)],efficiency=v[7],plane_rows=plane_rows(v))
+ elif i==2:result=dict(supports=[s for s,w in balanced()],count=len(balanced()))
+ elif i==3:
+  result=dict(certificates=[dict(support=s,weights=w,coverage=[sum(w[j]*inc(c)[k] for j,c in enumerate(s)) for k in range(3)]) for s,w in balanced()])
+  assert all(r['coverage']==[1,1,1] for r in result['certificates'])
+ elif i==4:result=dict(certificates=[dict(support=s,weights=w,excess=e) for s,w,e in balanced_rows(v)],obstructions=[dict(support=s,weights=w,excess=e) for s,w,e in balanced_rows(v) if e>0])
+ elif i==5:result=dict(vertices=vertices(v),count=len(vertices(v)))
+ elif i==6:
+  balanced_ok=all(e<=0 for s,w,e in balanced_rows(v));assert balanced_ok==bool(vertices(v))
+  result=dict(core_nonempty=bool(vertices(v)),balanced=balanced_ok,box_plane=feasible_box(v))
+ elif i==7:result=dict(shapley=shapley(v),blockers=blockers(v,shapley(v)))
+ elif i==8:
+  pts=vertices(v);result=dict(core_nonempty=bool(pts),ranges=[(min(x[j] for x in pts),max(x[j] for x in pts)) for j in range(3)] if pts else [])
+ elif i==9:
+  e,pts,count=primal(v);result=dict(epsilon=e,optimal_vertices=pts,feasible_basis_vertices=count)
+ elif i==10:
+  e,cert,allrows=dual(v);result=dict(epsilon=e,optimal_certificates=cert,all_bounds=allrows)
+ elif i==11:
+  pe,pts,_=primal(v);de,cert,_=dual(v);assert pe==de
+  result=dict(primal_epsilon=pe,dual_epsilon=de,gap=pe-de,primal_vertices=pts,dual_certificate=cert[0])
+ elif i==12:
+  e=primal(v)[0];slices=[dict(epsilon=z,vertices=vertices(v,z),feasible=feasible_box(v,z)) for z in (e-1,e,e+1)]
+  assert [r['feasible'] for r in slices]==[False,True,True];result=dict(slices=slices)
+ elif i==13:
+  shift=tuple(q(z) for z in p['translation']);w=tuple(v[s]+sum((shift[j] for j in range(3) if s&(1<<j)),F()) for s in range(8))
+  expected=tuple(sorted(tuple(x[j]+shift[j] for j in range(3)) for x in vertices(v)));assert vertices(w)==expected and primal(w)[0]==primal(v)[0]
+  result=dict(translation=shift,transformed_values=w,transformed_vertices=vertices(w),epsilon=primal(w)[0],covariant=True)
+ elif i==14:
+  a=q(p['scale']);w=tuple(a*x for x in v);assert vertices(w)==tuple(sorted(tuple(a*z for z in x) for x in vertices(v))) and primal(w)[0]==a*primal(v)[0]
+  result=dict(scale=a,transformed_vertices=vertices(w),epsilon=primal(w)[0],covariant=True)
+ elif i==15:
+  perm=p['permutation'];w=[F(0)]*8
+  for s in range(8):w[sum(1<<perm[j] for j in range(3) if s&(1<<j))]=v[s]
+  expected=[]
+  for x in vertices(v):
+   y=[F(0)]*3
+   for j in range(3):y[perm[j]]=x[j]
+   expected.append(tuple(y))
+  w=tuple(w);assert vertices(w)==tuple(sorted(expected)) and primal(w)[0]==primal(v)[0]
+  result=dict(permutation=perm,transformed_values=w,transformed_vertices=vertices(w),epsilon=primal(w)[0],covariant=True)
+ elif i==16:
+  nonempty=bool(vertices(v));blocking=blockers(v,shapley(v));result=dict(core_nonempty=nonempty,shapley_in_core=not bool(blocking),classification='empty_core' if not nonempty else ('shapley_in_core' if not blocking else 'shapley_outside_nonempty_core'),shapley=shapley(v),blocking=blocking)
+ elif i==17:
+  state='represented';result=dict(core_nonempty=bool(vertices(v)),least_core_epsilon=primal(v)[0],explanation='A positive balanced excess proves infeasibility in this declared game; a feasible efficient vector proves only finite mathematical membership. Neither establishes social fairness or authority.',convention=CONVENTION)
+ elif i==18:state='open_gap';result=dict(observations=0,participants=0,affected_party_review=0,remedy_evidence=0,missing=['observed preferences','observed consequences','legitimate criteria','appeal and remedy evaluation'])
+ else:state='exact_gate';result=dict(real_actions=0,allocation_authority=False,required=['competent decision maker','action-specific authorization','affected-party process','evidence and review'])
+ return dict(operation=op,profile_id=p['profile_id'],profile_definition_sha256=p['definition_sha256'],outcome=state,execution_credit=int(state=='completed'),operation_executed=True,certificate_checked=True,result=encode(result),convention=CONVENTION,boundary=BOUNDARY)
+def dispatch(request,allowed=OPS):
+ try:
+  if not isinstance(request,dict) or set(request)!={'operation','profile'}:raise ValueError('request keys')
+  op=request['operation']
+  if not isinstance(op,str) or op not in allowed:raise ValueError('caller operation scope')
+  return evaluate(op,request['profile'])
+ except (ValueError,TypeError,KeyError,ZeroDivisionError) as e:
+  return dict(outcome='rejected',operation_executed=False,execution_credit=0,error=str(e),boundary=BOUNDARY)
+def strict_load(s):
+ def unique(pairs):
+  d={}
+  for k,v in pairs:
+   if k in d:raise ValueError('duplicate JSON key')
+   d[k]=v
+  return d
+ return json.loads(s,object_pairs_hook=unique,parse_constant=lambda x:(_ for _ in ()).throw(ValueError('nonfinite JSON')))
+def cli(allowed=OPS):
+ try:
+  s=sys.stdin.read(65537)
+  if len(s)>65536:raise ValueError('request exceeds byte budget')
+  out=dispatch(strict_load(s),allowed)
+ except (ValueError,TypeError) as e:out=dict(outcome='rejected',operation_executed=False,execution_credit=0,error=str(e),boundary=BOUNDARY)
+ print(json.dumps(out,sort_keys=True,ensure_ascii=True))
+ return 2 if out['outcome']=='rejected' else 0
+if __name__=='__main__':sys.exit(cli())
