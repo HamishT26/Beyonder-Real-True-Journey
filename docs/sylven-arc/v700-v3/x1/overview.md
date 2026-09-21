@@ -1,0 +1,3 @@
+# Sylven v700-v3 x1 finite evidence-function transforms
+
+X1 executes300frozen valid contracts across ten operations exactly once. It retains300malformed subjects beside300separate passing refusal guards and marks300safe, candidate, CFR and clean packets without deleting evidence or history. Ten local guides and five paired callers remain to be read, validated and smoke-used before this stage can close. The outputs are finite synthetic set-function algebra, not human-belief measurement, real observation, identity, professional authority, production, legal/cultural/Māori authority, independent reproduction or Stage20 evidence.
