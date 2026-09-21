@@ -1,0 +1,334 @@
+{
+  "guide_receipts": [
+    {
+      "operation": "profile-shape",
+      "skill_path": "docs/eiren-kestrel/v700-v6/x1/skills/ghc-family-stable-matching-profile-shape-v1",
+      "exit": 0,
+      "stdout": "Skill is valid!",
+      "stderr": "",
+      "pass": true
+    },
+    {
+      "operation": "proposer-ranks",
+      "skill_path": "docs/eiren-kestrel/v700-v6/x1/skills/ghc-family-stable-matching-proposer-ranks-v1",
+      "exit": 0,
+      "stdout": "Skill is valid!",
+      "stderr": "",
+      "pass": true
+    },
+    {
+      "operation": "receiver-ranks",
+      "skill_path": "docs/eiren-kestrel/v700-v6/x1/skills/ghc-family-stable-matching-receiver-ranks-v1",
+      "exit": 0,
+      "stdout": "Skill is valid!",
+      "stderr": "",
+      "pass": true
+    },
+    {
+      "operation": "deferred-acceptance-trace",
+      "skill_path": "docs/eiren-kestrel/v700-v6/x1/skills/ghc-family-stable-matching-deferred-acceptance-trace-v1",
+      "exit": 0,
+      "stdout": "Skill is valid!",
+      "stderr": "",
+      "pass": true
+    },
+    {
+      "operation": "proposer-optimal-matching",
+      "skill_path": "docs/eiren-kestrel/v700-v6/x1/skills/ghc-family-stable-matching-proposer-optimal-matching-v1",
+      "exit": 0,
+      "stdout": "Skill is valid!",
+      "stderr": "",
+      "pass": true
+    },
+    {
+      "operation": "receiver-optimal-matching",
+      "skill_path": "docs/eiren-kestrel/v700-v6/x1/skills/ghc-family-stable-matching-receiver-optimal-matching-v1",
+      "exit": 0,
+      "stdout": "Skill is valid!",
+      "stderr": "",
+      "pass": true
+    },
+    {
+      "operation": "blocking-pairs",
+      "skill_path": "docs/eiren-kestrel/v700-v6/x1/skills/ghc-family-stable-matching-blocking-pairs-v1",
+      "exit": 0,
+      "stdout": "Skill is valid!",
+      "stderr": "",
+      "pass": true
+    },
+    {
+      "operation": "stability-certificate",
+      "skill_path": "docs/eiren-kestrel/v700-v6/x1/skills/ghc-family-stable-matching-stability-certificate-v1",
+      "exit": 0,
+      "stdout": "Skill is valid!",
+      "stderr": "",
+      "pass": true
+    },
+    {
+      "operation": "pair-rank-profile",
+      "skill_path": "docs/eiren-kestrel/v700-v6/x1/skills/ghc-family-stable-matching-pair-rank-profile-v1",
+      "exit": 0,
+      "stdout": "Skill is valid!",
+      "stderr": "",
+      "pass": true
+    },
+    {
+      "operation": "stable-matchings-enumeration",
+      "skill_path": "docs/eiren-kestrel/v700-v6/x1/skills/ghc-family-stable-matching-stable-matchings-enumeration-v1",
+      "exit": 0,
+      "stdout": "Skill is valid!",
+      "stderr": "",
+      "pass": true
+    }
+  ],
+  "caller_receipts": [
+    {
+      "pair": 1,
+      "operations": [
+        "profile-shape",
+        "proposer-ranks"
+      ],
+      "caller": "docs/eiren-kestrel/v700-v6/x1/runners/ghc_family_stable_matching_pair_01.txt",
+      "accept": {
+        "exit": 0,
+        "response": {
+          "schema": "ghc.family.stable-matching.response.v1",
+          "operation": "profile-shape",
+          "profile_id": "SM-01",
+          "state": "completed",
+          "result": {
+            "n": 2,
+            "proposer_count": 2,
+            "receiver_count": 2,
+            "strict_complete": true,
+            "bijection_count": 2
+          },
+          "evidence_class": "synthetic",
+          "real_participants": 0,
+          "real_allocations": 0,
+          "independent_reproduction": false
+        }
+      },
+      "reject": {
+        "exit": 2,
+        "response": {
+          "schema": "ghc.family.stable-matching.response.v1",
+          "state": "rejected",
+          "reason": "preference_permutation",
+          "executed": false,
+          "evidence_class": "synthetic",
+          "real_participants": 0,
+          "real_allocations": 0,
+          "independent_reproduction": false
+        },
+        "negative_id": "E7006-X1-CALLER-01-BAD"
+      }
+    },
+    {
+      "pair": 2,
+      "operations": [
+        "receiver-ranks",
+        "deferred-acceptance-trace"
+      ],
+      "caller": "docs/eiren-kestrel/v700-v6/x1/runners/ghc_family_stable_matching_pair_02.txt",
+      "accept": {
+        "exit": 0,
+        "response": {
+          "schema": "ghc.family.stable-matching.response.v1",
+          "operation": "receiver-ranks",
+          "profile_id": "SM-01",
+          "state": "completed",
+          "result": {
+            "ranks": {
+              "R1": {
+                "P2": 0,
+                "P1": 1
+              },
+              "R2": {
+                "P2": 0,
+                "P1": 1
+              }
+            }
+          },
+          "evidence_class": "synthetic",
+          "real_participants": 0,
+          "real_allocations": 0,
+          "independent_reproduction": false
+        }
+      },
+      "reject": {
+        "exit": 2,
+        "response": {
+          "schema": "ghc.family.stable-matching.response.v1",
+          "state": "rejected",
+          "reason": "preference_permutation",
+          "executed": false,
+          "evidence_class": "synthetic",
+          "real_participants": 0,
+          "real_allocations": 0,
+          "independent_reproduction": false
+        },
+        "negative_id": "E7006-X1-CALLER-02-BAD"
+      }
+    },
+    {
+      "pair": 3,
+      "operations": [
+        "proposer-optimal-matching",
+        "receiver-optimal-matching"
+      ],
+      "caller": "docs/eiren-kestrel/v700-v6/x1/runners/ghc_family_stable_matching_pair_03.txt",
+      "accept": {
+        "exit": 0,
+        "response": {
+          "schema": "ghc.family.stable-matching.response.v1",
+          "operation": "proposer-optimal-matching",
+          "profile_id": "SM-01",
+          "state": "completed",
+          "result": {
+            "matching": [
+              {
+                "proposer": "P1",
+                "receiver": "R1"
+              },
+              {
+                "proposer": "P2",
+                "receiver": "R2"
+              }
+            ]
+          },
+          "evidence_class": "synthetic",
+          "real_participants": 0,
+          "real_allocations": 0,
+          "independent_reproduction": false
+        }
+      },
+      "reject": {
+        "exit": 2,
+        "response": {
+          "schema": "ghc.family.stable-matching.response.v1",
+          "state": "rejected",
+          "reason": "preference_permutation",
+          "executed": false,
+          "evidence_class": "synthetic",
+          "real_participants": 0,
+          "real_allocations": 0,
+          "independent_reproduction": false
+        },
+        "negative_id": "E7006-X1-CALLER-03-BAD"
+      }
+    },
+    {
+      "pair": 4,
+      "operations": [
+        "blocking-pairs",
+        "stability-certificate"
+      ],
+      "caller": "docs/eiren-kestrel/v700-v6/x1/runners/ghc_family_stable_matching_pair_04.txt",
+      "accept": {
+        "exit": 0,
+        "response": {
+          "schema": "ghc.family.stable-matching.response.v1",
+          "operation": "blocking-pairs",
+          "profile_id": "SM-01",
+          "state": "completed",
+          "result": {
+            "matching": [
+              {
+                "proposer": "P1",
+                "receiver": "R1"
+              },
+              {
+                "proposer": "P2",
+                "receiver": "R2"
+              }
+            ],
+            "blocking_pairs": []
+          },
+          "evidence_class": "synthetic",
+          "real_participants": 0,
+          "real_allocations": 0,
+          "independent_reproduction": false
+        }
+      },
+      "reject": {
+        "exit": 2,
+        "response": {
+          "schema": "ghc.family.stable-matching.response.v1",
+          "state": "rejected",
+          "reason": "preference_permutation",
+          "executed": false,
+          "evidence_class": "synthetic",
+          "real_participants": 0,
+          "real_allocations": 0,
+          "independent_reproduction": false
+        },
+        "negative_id": "E7006-X1-CALLER-04-BAD"
+      }
+    },
+    {
+      "pair": 5,
+      "operations": [
+        "pair-rank-profile",
+        "stable-matchings-enumeration"
+      ],
+      "caller": "docs/eiren-kestrel/v700-v6/x1/runners/ghc_family_stable_matching_pair_05.txt",
+      "accept": {
+        "exit": 0,
+        "response": {
+          "schema": "ghc.family.stable-matching.response.v1",
+          "operation": "pair-rank-profile",
+          "profile_id": "SM-01",
+          "state": "completed",
+          "result": {
+            "matching": [
+              {
+                "proposer": "P1",
+                "receiver": "R1"
+              },
+              {
+                "proposer": "P2",
+                "receiver": "R2"
+              }
+            ],
+            "ranks": [
+              {
+                "proposer": "P1",
+                "receiver": "R1",
+                "proposer_rank": 0,
+                "receiver_rank": 1
+              },
+              {
+                "proposer": "P2",
+                "receiver": "R2",
+                "proposer_rank": 0,
+                "receiver_rank": 0
+              }
+            ]
+          },
+          "evidence_class": "synthetic",
+          "real_participants": 0,
+          "real_allocations": 0,
+          "independent_reproduction": false
+        }
+      },
+      "reject": {
+        "exit": 2,
+        "response": {
+          "schema": "ghc.family.stable-matching.response.v1",
+          "state": "rejected",
+          "reason": "preference_permutation",
+          "executed": false,
+          "evidence_class": "synthetic",
+          "real_participants": 0,
+          "real_allocations": 0,
+          "independent_reproduction": false
+        },
+        "negative_id": "E7006-X1-CALLER-05-BAD"
+      }
+    }
+  ],
+  "guides": 10,
+  "paired_callers": 5,
+  "boundary": "Finite synthetic same-owner software and documentation evidence only; no independent reproduction, empirical GMUT confirmation, production THOS or Freed ID, professional, legal, cultural, affected-party or Maori authority, consciousness, personhood, Theory-of-Everything proof or Stage 20 readiness."
+}
