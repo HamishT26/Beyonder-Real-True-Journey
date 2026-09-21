@@ -1,0 +1,6 @@
+const path=require('path');
+const kernel=require(path.join(__dirname,'..','engine','ghc_family_finite_sheaf_x2_kernel.txt'));
+const operations=["global-section-enumeration","consistency-radius"];
+const rows=[];for(const op of operations){const positive=kernel.evaluate(op,1,false);const negative=kernel.evaluate(op,1,true);rows.push({op,positive,negative,valid:positive.valid&&negative.valid&&!negative.accepted});}
+const receipt={runner_id:'ghc_family_tamar_v699_v6_r2_pair_06_runner',stage:'x2',rows,valid:rows.every(x=>x.valid)};
+console.log(JSON.stringify(receipt));process.exit(receipt.valid?0:1);
