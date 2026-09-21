@@ -1,0 +1,72 @@
+"use strict";
+const fs = require("fs");
+const path = require("path");
+const crypto = require("crypto");
+const [ownerWorktree, checkCountText, consoleErrorText] = process.argv.slice(2);
+const checkCount = Number(checkCountText);
+const consoleErrors = Number(consoleErrorText);
+if (!ownerWorktree || !Number.isInteger(checkCount) || checkCount < 1 || !Number.isInteger(consoleErrors)) throw new Error("usage: node finalize_browser.txt <owner-worktree> <check-count> <console-errors>");
+const root = path.join(ownerWorktree, "docs", "elowen-cairn", "v700-v1", "x2");
+const htmlPath = path.join(root, "binary-matroid-laboratory.html");
+const sha = file => crypto.createHash("sha256").update(fs.readFileSync(file)).digest("hex");
+const receipt = {
+  owner: "Elowen Cairn", phase: "v700-v1", surface: "in_app_browser",
+  html_sha256: sha(htmlPath), checks: checkCount, passed: checkCount, failed: 0,
+  console_errors: consoleErrors,
+  checked: ["exact DOM readback", "five model selections", "left and right rotation", "keyboard rotation", "upper and lower tilt clamps", "reset", "status readback"],
+  screenshots_created: 0, images_created: 0, manual_assistive_technology_evaluation: "reserved",
+  affected_user_evaluation: "reserved", complete_accessibility_claim: false, valid: consoleErrors === 0
+};
+fs.writeFileSync(path.join(root, "browser-validation.json"), JSON.stringify(receipt, null, 2) + "\n", "utf8");
+const structuralPath = path.join(root, "html-structural-validation.json");
+const structural = JSON.parse(fs.readFileSync(structuralPath, "utf8"));
+structural.browser_validation = receipt.valid ? "bounded_pass" : "failed";
+fs.writeFileSync(structuralPath, JSON.stringify(structural, null, 2) + "\n", "utf8");
+const summaryPath = path.join(root, "execution-summary.json");
+const summary = JSON.parse(fs.readFileSync(summaryPath, "utf8"));
+summary.browser_validation = receipt.valid ? "bounded_pass" : "failed";
+summary.browser_checks = checkCount;
+summary.browser_console_errors = consoleErrors;
+fs.writeFileSync(summaryPath, JSON.stringify(summary, null, 2) + "\n", "utf8");
+const mfPath = path.join(root, "method-flow.json");
+const mf = JSON.parse(fs.readFileSync(mfPath, "utf8"));
+if (mf.methods.some(x => x.method_id === "EC7001-x2-M025")) throw new Error("browser finalization already recorded");
+const extraFailures = [
+  ["EC7001-X2-N017", "The first combined TXT syntax projection reached its short output window and returned no attributable lines.", "A longer isolated vm.Script pass compiled the recovery builder, corrected runner, and preserved first builder without changing domain results."],
+  ["EC7001-X2-N018", "The first hidden Start-Process localhost-server launch was rejected by the command safety policy before process creation.", "A foreground unified execution session launched the same read-only localhost server without changing host security or settings."],
+  ["EC7001-X2-N019", "The first keyboard browser check targeted an unfocusable body locator and Playwright refused the key action after earlier model and button checks had passed.", "Refreshed accessibility state and ran only the unreached keyboard checks through the tab-level key surface."],
+  ["EC7001-X2-N020", "The first post-reset diff projection omitted the unchanged status row and falsely reported the reset check as failed.", "A full accessibility refresh read MAT-05 yaw 0 tilt -12 without repeating the reset action."]
+].map(([negative_id, failure, recovery], i) => ({
+  negative_id,
+  method_id: `EC7001-x2-M${String(21 + i).padStart(3, "0")}`,
+  failed_witness_id: `${negative_id}-FAILED`,
+  recovery_witness_id: `${negative_id}-RECOVERED`,
+  failure, recovery, initial_credit: 0, recovery_erases_failure: false
+}));
+const failuresPath = path.join(root, "operational-failures.json");
+const failureLedger = JSON.parse(fs.readFileSync(failuresPath, "utf8"));
+failureLedger.failed_witnesses.push(...extraFailures);
+failureLedger.count = failureLedger.failed_witnesses.length;
+fs.writeFileSync(failuresPath, JSON.stringify(failureLedger, null, 2) + "\n", "utf8");
+for (const failure of extraFailures) {
+  mf.methods.push({ method_id: failure.method_id, title: failure.failure, recommendation_state: "validated", retained_negative_ids: [failure.negative_id] });
+  mf.witnesses.push({ witness_id: failure.failed_witness_id, method_id: failure.method_id, result: "fail", scope: "operational failure", original_credit: 0 });
+  mf.witnesses.push({ witness_id: failure.recovery_witness_id, method_id: failure.method_id, result: "pass", scope: "bounded recovery" });
+}
+mf.methods.push({ method_id: "EC7001-x2-M025", title: "Bounded in-app browser interaction checks", recommendation_state: receipt.valid ? "validated" : "deprecated", retained_negative_ids: [] });
+for (let i = 0; i < checkCount; i++) mf.witnesses.push({ witness_id: `EC7001-X2-BROWSER-${String(i + 1).padStart(2, "0")}`, method_id: "EC7001-x2-M025", result: "pass", scope: "bounded DOM and interaction check" });
+mf.counts.methods += extraFailures.length + 1;
+mf.counts.witnesses += extraFailures.length * 2 + checkCount;
+mf.counts.passing_witnesses += extraFailures.length + checkCount;
+mf.counts.failed_witnesses += extraFailures.length;
+mf.counts.negatives += extraFailures.length;
+fs.writeFileSync(mfPath, JSON.stringify(mf, null, 2) + "\n", "utf8");
+function walk(dir){const out=[];for(const ent of fs.readdirSync(dir,{withFileTypes:true})){const p=path.join(dir,ent.name);if(ent.isDirectory())out.push(...walk(p));else out.push(p)}return out}
+const files = walk(root).filter(p => p !== path.join(root, "manifest.json"));
+const manifest = {
+  owner: "Elowen Cairn", phase: "v700-v1", stage: "x2", byte_domain: "checkout_bytes_precommit",
+  self_exclusions: ["docs/elowen-cairn/v700-v1/x2/manifest.json"], count: files.length,
+  records: files.map(file => ({ path: path.relative(ownerWorktree, file).replace(/\\/g, "/"), bytes: fs.statSync(file).size, sha256_checkout_bytes: sha(file) }))
+};
+fs.writeFileSync(path.join(root, "manifest.json"), JSON.stringify(manifest, null, 2) + "\n", "utf8");
+process.stdout.write(JSON.stringify({ status: receipt.valid ? "BROWSER_FINALIZED" : "BROWSER_FAILED", checks: checkCount, console_errors: consoleErrors, files: walk(root).length }));

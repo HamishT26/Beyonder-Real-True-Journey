@@ -1,0 +1,156 @@
+"use strict";
+
+const fs = require("fs");
+const path = require("path");
+const cp = require("child_process");
+const vm = require("vm");
+const crypto = require("crypto");
+
+const [ownerWorktree, globalSkillRoot, globalBankRoot] = process.argv.slice(2);
+if (!ownerWorktree || !globalSkillRoot || !globalBankRoot) throw new Error("usage: node recover_after_global_smoke.txt <owner-worktree> <global-skill-root> <global-bank-root>");
+const owner = "Elowen Cairn", phase = "v700-v1";
+const phaseRoot = path.join(ownerWorktree, "docs", "elowen-cairn", phase);
+const planRoot = path.join(phaseRoot, "plan");
+const x1Root = path.join(phaseRoot, "x1");
+const root = path.join(phaseRoot, "x2");
+const corePath = path.join(x1Root, "ghc_family_binary_matroid_core.txt");
+const extendedPath = path.join(root, "ghc_family_binary_matroid_extended.txt");
+const protectedGates = ["empirical_confirmation","real_participants_or_operators","professional_or_scientific_authority","production_or_deployment","legal_cultural_affected_party_authority","Maori_authority","complete_privacy_accessibility_security","independent_reproduction","consciousness_personhood","AGI_ASI","Theory_of_Everything","proof_canon","Stage_20"];
+const sha = file => crypto.createHash("sha256").update(fs.readFileSync(file)).digest("hex");
+const ensure = p => fs.mkdirSync(p, { recursive: true });
+function writeJson(rel, value){const p=path.join(root,rel);ensure(path.dirname(p));fs.writeFileSync(p,JSON.stringify(value,null,2)+"\n","utf8")}
+function writeText(rel, value){const p=path.join(root,rel);ensure(path.dirname(p));fs.writeFileSync(p,value.replace(/\r\n/g,"\n"),"utf8")}
+function load(file){const module={exports:{}};new vm.Script(fs.readFileSync(file,"utf8"),{filename:file}).runInContext(vm.createContext({module,exports:module.exports,require}));return module.exports}
+function walk(dir){if(!fs.existsSync(dir))return[];const out=[];for(const ent of fs.readdirSync(dir,{withFileTypes:true})){const p=path.join(dir,ent.name);if(ent.isDirectory())out.push(...walk(p));else out.push(p)}return out}
+
+const head = cp.execFileSync("git",["-C",ownerWorktree,"rev-parse","HEAD"],{encoding:"utf8"}).trim();
+if(head!=="0515a855fc140eeec67a925c286a3abaf7fae702")throw new Error("recovery requires exact immutable x1 head");
+const core=load(corePath), extended=load(extendedPath)(core);
+const models=JSON.parse(fs.readFileSync(path.join(planRoot,"models.json"),"utf8")).records;
+const allOperations=JSON.parse(fs.readFileSync(path.join(planRoot,"operations.json"),"utf8")).records;
+const operations=allOperations.filter(x=>x.stage==="x2");
+const safe=JSON.parse(fs.readFileSync(path.join(root,"portfolios","x2-safe.json"),"utf8")).records;
+const candidate=JSON.parse(fs.readFileSync(path.join(root,"portfolios","x2-candidate.json"),"utf8")).records;
+const cfr=JSON.parse(fs.readFileSync(path.join(root,"portfolios","x2-cfr.json"),"utf8")).records;
+const clean=JSON.parse(fs.readFileSync(path.join(root,"portfolios","x2-clean.json"),"utf8")).records;
+const capability=JSON.parse(fs.readFileSync(path.join(root,"capability-validation.json"),"utf8"));
+const tests=JSON.parse(fs.readFileSync(path.join(root,"additional-tests.json"),"utf8"));
+if(safe.length!==300||candidate.length!==300||cfr.length!==300||clean.length!==300||capability.skill_count!==10||capability.runner_count!==5||tests.passed!==10)throw new Error("completed pre-failure x2 artifacts are incomplete");
+
+const groupSpecs=[
+  ["ghc-family-binary-matroid-structure-v1",["dual-rank-table","dual-involution","basis-exchange","fundamental-circuit"]],
+  ["ghc-family-binary-matroid-minors-v1",["binary-matroid-shape","single-element-minor","fundamental-circuit","basis-exchange"]],
+  ["ghc-family-binary-matroid-duality-v1",["dual-rank-table","dual-involution","activity-signature","basis-exchange"]],
+  ["ghc-family-binary-matroid-polynomials-v1",["rank-generating-polynomial","tutte-recurrence","activity-signature","fundamental-circuit"]],
+  ["ghc-family-binary-matroid-evidence-v1",["trinity-bridge","external-observation-gap","authority-reservation","tutte-recurrence"]]
+];
+const failedSource=path.join(root,"retained-failures","ghc-family-binary-matroid-minors-v1-failed.txt");
+const failedInstalled=path.join(globalBankRoot,"retained-failures","ghc-family-binary-matroid-minors-v1-failed.txt");
+const correctedSource=path.join(root,"global-candidates","runners","ghc-family-binary-matroid-minors-v1.txt");
+const correctedInstalled=path.join(globalBankRoot,"runners","ghc-family-binary-matroid-minors-v1.txt");
+if(!fs.existsSync(failedSource)||!fs.existsSync(failedInstalled)||sha(failedSource)!==sha(failedInstalled))throw new Error("failed runner bytes not preserved");
+if(sha(correctedInstalled)!==sha(failedInstalled))throw new Error("installed failed runner changed before bounded recovery");
+fs.copyFileSync(correctedSource,correctedInstalled);
+
+const installRows=[];
+for(let i=0;i<groupSpecs.length;i++){
+  const [name,ops]=groupSpecs[i];
+  const sourceSkill=path.join(root,"global-candidates","skills",name,"SKILL.md");
+  const sourceRunner=path.join(root,"global-candidates","runners",`${name}.txt`);
+  const installedSkill=path.join(globalSkillRoot,name,"SKILL.md");
+  const installedRunner=path.join(globalBankRoot,"runners",`${name}.txt`);
+  if(!fs.existsSync(sourceSkill)||!fs.existsSync(sourceRunner)||!fs.existsSync(installedSkill)||!fs.existsSync(installedRunner))throw new Error(`partial install missing ${name}`);
+  if(sha(sourceSkill)!==sha(installedSkill)||sha(sourceRunner)!==sha(installedRunner))throw new Error(`partial install parity failure ${name}`);
+  let smoke;
+  if(i===0){
+    smoke={valid:"pass_prior_control_flow",invalid:"pass_prior_control_flow",replayed:false};
+  }else{
+    const valid=cp.spawnSync(process.execPath,[installedRunner,"valid"],{encoding:"utf8"});
+    const invalid=cp.spawnSync(process.execPath,[installedRunner,"invalid"],{encoding:"utf8"});
+    if(valid.status!==0||invalid.status!==0)throw new Error(`bounded recovery smoke failed ${name}: ${valid.stderr} ${invalid.stderr}`);
+    smoke={valid:JSON.parse(valid.stdout),invalid:JSON.parse(invalid.stdout),replayed:false,execution:i===1?"corrected_failed_component":"first_unreached_component"};
+  }
+  installRows.push({name,operations:ops,skill_source_sha256:sha(sourceSkill),skill_installed_sha256:sha(installedSkill),runner_source_sha256:sha(sourceRunner),runner_installed_sha256:sha(installedRunner),source_validate:"pass_prior_control_flow",installed_validate:"pass_prior_control_flow",smoke,overwrite:i===1?"bounded_replacement_after_failed_bytes_retained":false,rollback:"restore the retained failed runner only for forensic reproduction; otherwise remove this additive package after caller review"});
+}
+const installedLib=path.join(globalBankRoot,"lib");
+const dependencyBindings=[
+  {name:"ghc_family_binary_matroid_core.txt",source_sha256:sha(corePath),installed_sha256:sha(path.join(installedLib,"ghc_family_binary_matroid_core.txt"))},
+  {name:"ghc_family_binary_matroid_extended.txt",source_sha256:sha(extendedPath),installed_sha256:sha(path.join(installedLib,"ghc_family_binary_matroid_extended.txt"))}
+];
+if(dependencyBindings.some(x=>x.source_sha256!==x.installed_sha256))throw new Error("dependency binding mismatch");
+writeJson("global-installation.json",{owner,phase,stage:"x2",group_count:5,dependency_binding_count:2,groups:installRows,dependencies:dependencyBindings,failed_runner_sha256:sha(failedSource),corrected_runner_sha256:sha(correctedSource),collision_policy:"absent-name initial install; failed-byte-preserving bounded correction",valid:true});
+
+const practices=JSON.parse(fs.readFileSync(path.join(planRoot,"practices.json"),"utf8")).own;
+const stableCards=[
+  {card_id:"EC7001-OWNER",tier:"owner",parent_id:null,label:owner},
+  {card_id:"EC7001-PILLAR-GMUT",tier:"pillar",parent_id:"EC7001-OWNER",label:"GMUT Mind"},
+  {card_id:"EC7001-PILLAR-THOS",tier:"pillar",parent_id:"EC7001-OWNER",label:"THOS Body"},
+  {card_id:"EC7001-PILLAR-FREED",tier:"pillar",parent_id:"EC7001-OWNER",label:"Freed ID and CBR Heart"},
+  ...practices.map((label,i)=>({card_id:`EC7001-PRACTICE-${String(i+1).padStart(2,"0")}`,tier:"practice",parent_id:["EC7001-PILLAR-GMUT","EC7001-PILLAR-THOS","EC7001-PILLAR-FREED"][i%3],label}))
+];
+const taskFiles=[];
+for(const op of allOperations){
+  const rows=JSON.parse(fs.readFileSync(path.join(planRoot,"proposals",`${op.operation_id}.json`),"utf8")).records;
+  const cards=rows.map((p,i)=>({card_id:`EC7001-TASK-${p.proposal_id.slice(-3)}`,tier:"task",parent_id:stableCards[4+((op.operation_ordinal+i)%8)].card_id,proposal_id:p.proposal_id,label:p.title,expected_disposition:p.expected_disposition}));
+  const rel=path.join("deck",`tasks-${op.operation_id}.json`);writeJson(rel,{owner,phase,operation_id:op.operation_id,count:cards.length,records:cards});taskFiles.push(rel.replace(/\\/g,"/"));
+}
+writeJson(path.join("deck","stable-cards.json"),{owner,phase,count:stableCards.length,records:stableCards});
+writeJson(path.join("deck","deck-index.json"),{owner,phase,total:612,tiers:{owner:1,pillars:3,practices:8,tasks:600},stable_cards:"deck/stable-cards.json",task_files:taskFiles,adjacent_parent_links_only:true,cycle_count:0,valid:true});
+
+const catalogue=[];
+for(const stage of ["x1","x2"]){
+  const stageRoot=path.join(phaseRoot,stage);
+  const cap=JSON.parse(fs.readFileSync(path.join(stageRoot,"capability-validation.json"),"utf8"));
+  for(const s of cap.skills)catalogue.push({card_id:`EC7001-${catalogue.length+1}`,name:s.name,kind:"skill",source_path:`docs/elowen-cairn/${phase}/${stage}/skills/${s.name}/SKILL.md`,sha256:s.sha256,status:"current",evidence_state:"validated",owner_scope:owner,triggers:[s.operation_id,"finite binary matroid"],caller_paths:[`docs/elowen-cairn/${phase}/${stage}/results/${s.operation_id}.json`],rollback:"retain the prior owner commit and remove only the additive current pointer if invalidated",protected_gates:protectedGates,execution_authority:"owner_self_scoped_delta",repository_scan:false,module_scan:false,cross_lane_scan:false,unchanged_history_scan:false,sibling_lane_mutation:false});
+  for(const rr of cap.runners)catalogue.push({card_id:`EC7001-${catalogue.length+1}`,name:rr.name,kind:"runner",source_path:`docs/elowen-cairn/${phase}/${stage}/runners/${rr.name}`,sha256:rr.sha256,status:"current",evidence_state:"validated",owner_scope:owner,triggers:[...rr.operations,"accepting smoke","refusal smoke"],caller_paths:rr.operations.map(op=>`docs/elowen-cairn/${phase}/${stage}/results/${op}.json`),rollback:"retain the prior owner commit and disable only the additive runner selection",protected_gates:protectedGates,execution_authority:"owner_self_scoped_delta",repository_scan:false,module_scan:true,cross_lane_scan:false,unchanged_history_scan:false,sibling_lane_mutation:false});
+}
+for(const row of installRows){
+  catalogue.push({card_id:`EC7001-${catalogue.length+1}`,name:row.name,kind:"skill",source_path:`docs/elowen-cairn/${phase}/x2/global-candidates/skills/${row.name}/SKILL.md`,sha256:row.skill_source_sha256,status:"current",evidence_state:"validated",owner_scope:"family additive capability",triggers:[...row.operations,"finite binary matroid"],caller_paths:[`global-tools/family-binary-matroids-v1/runners/${row.name}.txt`],rollback:row.rollback,protected_gates:protectedGates,execution_authority:"owner_self_scoped_delta",repository_scan:false,module_scan:false,cross_lane_scan:false,unchanged_history_scan:false,sibling_lane_mutation:false});
+  catalogue.push({card_id:`EC7001-${catalogue.length+1}`,name:`${row.name}-runner`,kind:"runner",source_path:`docs/elowen-cairn/${phase}/x2/global-candidates/runners/${row.name}.txt`,sha256:row.runner_source_sha256,status:"current",evidence_state:"validated",owner_scope:"family additive capability",triggers:[...row.operations,"D-backed runner"],caller_paths:[],rollback:row.rollback,protected_gates:protectedGates,execution_authority:"owner_self_scoped_delta",repository_scan:false,module_scan:true,cross_lane_scan:false,unchanged_history_scan:false,sibling_lane_mutation:false});
+}
+if(catalogue.length!==40||new Set(catalogue.map(x=>x.card_id)).size!==40)throw new Error("catalogue cardinality failure");
+writeJson("meta-tool-catalogue.json",{owner,phase,schema:"ghc.family.meta-tool-catalogue.v1",count:40,records:catalogue});
+writeJson("reflection-decisions.json",{owner,phase,records:groupSpecs.map(([name,ops],i)=>({issue_id:`EC7001-REFLECT-${i+1}`,title:`Additive four-operation bundle ${name}`,trigger:"validated exact dependency closure",affected_surfaces:ops.map(op=>`docs/elowen-cairn/${phase}/${operations.some(x=>x.operation_id===op)?"x2":"x1"}/results/${op}.json`),observed_overlap:"shared frozen GF(2) record and evidence boundary only",known_caller_evidence:"accepting and rejecting smoke plus exact source-to-installed byte parity",current_classification:"remaster_additive",proposed_disposition:"keep compatibility and prefer only for exact matching triggers",compatibility_plan:"all local skills, runners, and failed bytes remain preserved",protected_gates:protectedGates,rollback:"remove only the additive package after caller review",evidence_needed:"bounded valid and invalid fixtures",boundary:"lexical overlap alone never proves functional equivalence"}))});
+
+const htmlModels=models.slice(0,5).map(m=>({profile_id:m.profile_id,labels:m.ground_labels,columns:m.columns_gf2,rank:core.rankTable(m),bases:core.basisMasks(m),circuits:core.circuitMasks(m)}));
+const html=`<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Elowen v700-v1 finite binary-matroid laboratory</title><style>
+:root{color-scheme:dark;--bg:#07131a;--panel:#10252d;--ink:#f3fbff;--muted:#b8ccd5;--accent:#72e5b4;--warn:#ffd37a}*{box-sizing:border-box}body{margin:0;font-family:system-ui,sans-serif;background:linear-gradient(145deg,#061016,#12303a);color:var(--ink)}main{max-width:1100px;margin:auto;padding:24px}.grid{display:grid;grid-template-columns:minmax(280px,1fr) minmax(340px,1.3fr);gap:18px}.panel{background:var(--panel);border:1px solid #31515b;border-radius:16px;padding:18px;box-shadow:0 14px 34px #0007}button,select{font:inherit;color:var(--ink);background:#173641;border:1px solid #5d8792;border-radius:8px;padding:10px;margin:4px}button:focus,select:focus{outline:3px solid var(--warn);outline-offset:2px}.scene{height:330px;perspective:700px;display:grid;place-items:center}#object{position:relative;width:240px;height:240px;transform-style:preserve-3d;transition:transform .2s}.node{position:absolute;width:58px;height:58px;border-radius:50%;display:grid;place-items:center;background:#0f554a;border:3px solid var(--accent);font-weight:700}table{width:100%;border-collapse:collapse}th,td{padding:8px;border-bottom:1px solid #41616b;text-align:left}.muted{color:var(--muted)}@media(max-width:760px){.grid{grid-template-columns:1fr}.scene{height:280px}}</style></head><body><main>
+<h1>Finite binary-matroid laboratory</h1><p class="muted">Five frozen synthetic GF(2) records. Keyboard: left/right rotate, up/down tilt, Home resets. Software evidence only.</p><div class="grid"><section class="panel"><label for="model">Model</label><select id="model"></select><div><button id="left" type="button">Rotate left</button><button id="right" type="button">Rotate right</button><button id="reset" type="button">Reset</button></div><div class="scene" aria-label="Rotatable synthetic matroid ground-set projection"><div id="object"></div></div><p id="status" role="status" aria-live="polite"></p></section><section class="panel"><h2>Exact finite record</h2><table><tbody id="summary"></tbody></table><h2>Rank table sample</h2><table><thead><tr><th>Mask</th><th>Rank</th></tr></thead><tbody id="ranks"></tbody></table><h2>Boundary</h2><p>No real observation, calibration, participant, professional decision, production deployment, legal or cultural interpretation, Maori authority, identity continuity, consciousness/personhood, Theory-of-Everything proof, canon, or Stage 20 authority is established.</p></section></div></main>
+<script>const models=${JSON.stringify(htmlModels)};const select=document.getElementById("model"),object=document.getElementById("object"),summary=document.getElementById("summary"),ranks=document.getElementById("ranks"),status=document.getElementById("status");let yaw=0,pitch=-12;for(const m of models){const o=document.createElement("option");o.value=m.profile_id;o.textContent=m.profile_id;select.appendChild(o)}function render(){const m=models.find(x=>x.profile_id===select.value)||models[0];object.replaceChildren();m.labels.forEach((label,i)=>{const node=document.createElement("div");node.className="node";node.textContent=label;const a=2*Math.PI*i/m.labels.length;node.style.left=(92+82*Math.cos(a))+"px";node.style.top=(92+82*Math.sin(a))+"px";node.style.transform="translateZ("+((i%2)*36)+"px)";object.appendChild(node)});object.style.transform="rotateX("+pitch+"deg) rotateY("+yaw+"deg)";summary.innerHTML="<tr><th>Profile</th><td>"+m.profile_id+"</td></tr><tr><th>Ground size</th><td>"+m.labels.length+"</td></tr><tr><th>Basis count</th><td>"+m.bases.length+"</td></tr><tr><th>Circuit count</th><td>"+m.circuits.length+"</td></tr>";ranks.innerHTML=m.rank.slice(0,16).map((r,i)=>"<tr><td>"+i+"</td><td>"+r+"</td></tr>").join("");status.textContent=m.profile_id+" yaw "+yaw+" tilt "+pitch}function rotate(d){yaw+=d;render()}function tilt(d){pitch=Math.max(-60,Math.min(60,pitch+d));render()}function reset(){yaw=0;pitch=-12;render()}select.addEventListener("change",render);document.getElementById("left").addEventListener("click",()=>rotate(-20));document.getElementById("right").addEventListener("click",()=>rotate(20));document.getElementById("reset").addEventListener("click",reset);document.addEventListener("keydown",e=>{if(e.key==="ArrowLeft")rotate(-10);else if(e.key==="ArrowRight")rotate(10);else if(e.key==="ArrowUp")tilt(-6);else if(e.key==="ArrowDown")tilt(6);else if(e.key==="Home")reset();else return;e.preventDefault()});render();</script></body></html>`;
+writeText("binary-matroid-laboratory.html",html);
+writeJson(path.join("models","models.json"),{owner,phase,count:5,records:htmlModels});
+writeJson("html-structural-validation.json",{owner,phase,file:"x2/binary-matroid-laboratory.html",model_count:5,required_ids:["model","object","left","right","reset","status","summary","ranks"],keyboard_controls:["ArrowLeft","ArrowRight","ArrowUp","ArrowDown","Home"],static_pass:["<html","aria-live","role=\"status\"","@media","rotateX","rotateY"].every(token=>html.includes(token)),browser_validation:"pending"});
+
+const operationalFailures=[
+  ["EC7001-X1-N014","The x1 commit wrapper reached its output window and returned no commit text.","An isolated log and status read proved the exact x1 commit, direct planning parent, clean state, and later acknowledged push."],
+  ["EC7001-X2-N015","The first x2 builder stopped after the binary-matroid-minors merged runner sent legitimate x1 operations only to the x2 dispatcher.","Preserved the failed source and installed bytes, added a narrow unknown-x2 fallback to the existing x1 dispatcher, reran only the corrected pair, and continued only unreached smokes."],
+  ["EC7001-X2-N016","The first dispatcher patch used one mismatched generated-model context line and failed verification before changing bytes.","Reread the exact runner and patched only the operation-dispatch lines with no state change at the failed attempt."]
+].map(([negative_id,failure,recovery],i)=>({negative_id,method_id:`EC7001-x2-M${String(18+i).padStart(3,"0")}`,failed_witness_id:`${negative_id}-FAILED`,recovery_witness_id:`${negative_id}-RECOVERED`,failure,recovery,initial_credit:0,recovery_erases_failure:false}));
+writeJson("operational-failures.json",{owner,phase,stage:"x2",count:operationalFailures.length,failed_witnesses:operationalFailures});
+
+const resultsByOperation=new Map();
+for(const op of operations)resultsByOperation.set(op.operation_id,JSON.parse(fs.readFileSync(path.join(root,"results",`${op.operation_id}.json`),"utf8")).records);
+const methods=operations.map((op,i)=>({method_id:`EC7001-x2-M${String(i+1).padStart(3,"0")}`,title:op.title,failure_signature:"Exact operation, frozen-input, disposition, or authority boundary does not hold.",trigger_preconditions:["frozen exact owner contract","matching finite synthetic binary-matroid scope"],privacy_class:"sanitized_public",approval_class:"safe_now",candidate_workaround:"Retain the failed subject and correct only the smallest attributable dependency.",validation_witness_ids:resultsByOperation.get(op.operation_id).flatMap(row=>[`${row.proposal_id}-SAFE`,`${row.proposal_id}-CANDIDATE-SUBJECT`,`${row.proposal_id}-CANDIDATE-REFUSAL`,`${row.proposal_id}-CFR`,`${row.proposal_id}-CLEAN`]),recurrence_guard:"Validate exact finite outputs, declared disposition, input preservation, and authority reservation.",rollback:"Return to the prior owner-compatible caller without erasing failures or replaying a sealed tranche.",recommendation_state:"validated",supersedes:[],protected_gates:protectedGates,retained_negative_ids:resultsByOperation.get(op.operation_id).map(row=>`${row.proposal_id}-N1`),scope_boundary:"Bounded same-owner finite synthetic software only."}));
+methods.push({method_id:"EC7001-x2-M011",title:"Ten x2 owner-local skill guides",recommendation_state:"validated"},{method_id:"EC7001-x2-M012",title:"Five x2 paired runner accepting and refusal smokes",recommendation_state:"validated"},{method_id:"EC7001-x2-M013",title:"Ten exact x2 tests",recommendation_state:"validated"},{method_id:"EC7001-x2-M014",title:"Five additive global capability pairs",recommendation_state:"validated"},{method_id:"EC7001-x2-M015",title:"Forty-card capability catalogue",recommendation_state:"validated"},{method_id:"EC7001-x2-M016",title:"Six-hundred-twelve-card context deck",recommendation_state:"validated"},{method_id:"EC7001-x2-M017",title:"Five-model static HTML laboratory",recommendation_state:"validated"},...operationalFailures.map(f=>({method_id:f.method_id,title:f.failure,recommendation_state:"validated",retained_negative_ids:[f.negative_id]})));
+const witnesses=[];
+for(const p of safe){const m=methods.find(x=>x.validation_witness_ids&&x.validation_witness_ids.includes(`${p.proposal_id}-SAFE`));witnesses.push({witness_id:`${p.proposal_id}-SAFE`,method_id:m.method_id,result:"pass",scope:"x2 safe exact contract"},{witness_id:`${p.proposal_id}-CANDIDATE-SUBJECT`,method_id:m.method_id,result:"fail",scope:"malformed subject",original_credit:0},{witness_id:`${p.proposal_id}-CANDIDATE-REFUSAL`,method_id:m.method_id,result:"pass",scope:"refusal guard"},{witness_id:`${p.proposal_id}-CFR`,method_id:m.method_id,result:"pass",scope:"source-faithful reversible review"},{witness_id:`${p.proposal_id}-CLEAN`,method_id:m.method_id,result:"pass",scope:"clean non-destructive review"})}
+for(const s of capability.skills)witnesses.push({witness_id:`${s.name}-VALID`,method_id:"EC7001-x2-M011",result:"pass",scope:"complete-read quick validation"});
+for(const r of capability.runners)witnesses.push({witness_id:`${r.name}-VALID`,method_id:"EC7001-x2-M012",result:"pass",scope:"accepting smoke"},{witness_id:`${r.name}-REFUSAL`,method_id:"EC7001-x2-M012",result:"pass",scope:"rejecting smoke"});
+for(const t of tests.tests)witnesses.push({witness_id:`EC7001-X2-TEST-${t.name.replace(/[^a-z0-9]+/gi,"-").toUpperCase()}`,method_id:"EC7001-x2-M013",result:t.passed?"pass":"fail",scope:"additional exact test"});
+for(const row of installRows)witnesses.push({witness_id:`${row.name}-SOURCE-SKILL-VALID`,method_id:"EC7001-x2-M014",result:"pass",scope:"source skill validation"},{witness_id:`${row.name}-INSTALLED-SKILL-VALID`,method_id:"EC7001-x2-M014",result:"pass",scope:"installed skill validation"},{witness_id:`${row.name}-RUNNER-VALID`,method_id:"EC7001-x2-M014",result:"pass",scope:"accepting smoke"},{witness_id:`${row.name}-RUNNER-REFUSAL`,method_id:"EC7001-x2-M014",result:"pass",scope:"rejecting smoke"},{witness_id:`${row.name}-SKILL-BINDING`,method_id:"EC7001-x2-M014",result:"pass",scope:"exact source-to-installed skill bytes"},{witness_id:`${row.name}-RUNNER-BINDING`,method_id:"EC7001-x2-M014",result:"pass",scope:"exact source-to-installed runner bytes"});
+for(const dep of dependencyBindings)witnesses.push({witness_id:`${dep.name}-BINDING`,method_id:"EC7001-x2-M014",result:"pass",scope:"exact dependency bytes"});
+witnesses.push({witness_id:"EC7001-X2-CATALOGUE",method_id:"EC7001-x2-M015",result:"pass",scope:"forty unique capability cards"},{witness_id:"EC7001-X2-DECK",method_id:"EC7001-x2-M016",result:"pass",scope:"612 cards, adjacent parent tiers, zero cycles"},{witness_id:"EC7001-X2-HTML-STATIC",method_id:"EC7001-x2-M017",result:"pass",scope:"five models and required structural controls"});
+for(const f of operationalFailures)witnesses.push({witness_id:f.failed_witness_id,method_id:f.method_id,result:"fail",scope:"operational failure",original_credit:0},{witness_id:f.recovery_witness_id,method_id:f.method_id,result:"pass",scope:"bounded recovery"});
+const passing=witnesses.filter(x=>x.result==="pass").length,failed=witnesses.filter(x=>x.result==="fail").length;
+writeJson("method-flow.json",{schema:"ghc.family.method-flow-state.v1",owner,phase,stage:"x2",identity_boundary:"relational working language only",execution_authority:"owner_self_scoped_delta",source_commit:head,source_role:"direct_parent_immutable_x1",methods,witnesses,counts:{methods:methods.length,witnesses:witnesses.length,passing_witnesses:passing,failed_witnesses:failed,negatives:300+operationalFailures.length,open_gaps:30,exact_gates:30},boundary:"same-owner finite synthetic software only; failures, refusals, gaps, and gates remain separate"});
+writeJson("execution-summary.json",{owner,phase,stage:"x2",proposals:300,x2_outcomes:{completed:210,represented:30,open_gap:30,exact_gate:30},cumulative_core_outcomes:{completed:510,represented:30,open_gap:30,exact_gate:30},portfolios:{safe:300,malformed_candidates:300,refusal_guards:300,cfr:300,clean:300},local_skills:10,local_runners:5,installed_global_pairs:5,additional_tests:10,html_models:5,browser_validation:"pending",predecessor_canonical_replayed:false,x1_contracts_replayed:false,failed_initial_builder_replayed:false,terminal_verdict:"NOT_READY_FOR_STAGE_20"});
+writeJson("prior-gate.json",{owner,phase,stage:"x2",required_parent:head,observed_parent:head,x1_pushed_clean_equal:true,source_canonical_replayed:false,valid:true});
+writeText("overview.md",`# Elowen v700-v1 x2 finite binary-matroid evidence
+
+The 300 frozen x2 contracts executed once after the immutable x1 boundary. Exact dual rank tables, dual involution, basis exchange, fundamental circuits, corank-nullity polynomials, deletion-contraction recurrence, and basis activity produced 210 completed outcomes. Thirty typed Trinity analogies remain represented only, thirty external-observation contracts remain open gaps, and thirty professional or cultural authority contracts remain exact gates. Three hundred malformed subjects retain zero completion credit while separate refusal guards passed.
+
+Ten x2 local skills and five local runners passed bounded validation. Five additive global groups now have exact source-to-installed parity. The first minors valid smoke failed because the merged runner sent x1 operations only to the x2 dispatcher; its failed bytes remain preserved, its refusal smoke is not reused as completion credit, and only the corrected component plus three previously unreached groups ran in recovery. The forty-card catalogue and 612-card deck preserve provenance and rollback. Browser interaction remains pending.
+`);
+const files=walk(root).filter(p=>p!==path.join(root,"manifest.json"));
+writeJson("manifest.json",{owner,phase,stage:"x2",byte_domain:"checkout_bytes_precommit",self_exclusions:[`docs/elowen-cairn/${phase}/x2/manifest.json`],count:files.length,records:files.map(file=>({path:path.relative(ownerWorktree,file).replace(/\\/g,"/"),bytes:fs.statSync(file).size,sha256_checkout_bytes:sha(file)}))});
+process.stdout.write(JSON.stringify({phase,stage:"x2-recovery",contracts_replayed:0,corrected_failed_components:1,unreached_components_executed:3,global_pairs:5,catalogue:40,deck:612,html_models:5,files:walk(root).length,status:"X2_RECOVERED_BROWSER_PENDING"}));

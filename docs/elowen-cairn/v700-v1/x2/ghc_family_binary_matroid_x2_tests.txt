@@ -1,0 +1,43 @@
+"use strict";
+
+const fs = require("fs");
+const vm = require("vm");
+const [corePath, extendedPath, modelsPath] = process.argv.slice(2);
+if (!corePath || !extendedPath || !modelsPath) throw new Error("usage: node x2_tests.txt <core> <extended> <models>");
+function load(file) {
+  const module = { exports: {} };
+  new vm.Script(fs.readFileSync(file, "utf8"), { filename: file }).runInContext(vm.createContext({ module, exports: module.exports, require }));
+  return module.exports;
+}
+const core = load(corePath);
+const extended = load(extendedPath)(core);
+const models = JSON.parse(fs.readFileSync(modelsPath, "utf8")).records;
+const tests = [];
+function test(name, fn) { try { fn(); tests.push({ name, passed: true }); } catch (error) { tests.push({ name, passed: false, error: error.message }); } }
+function ok(value, message) { if (!value) throw new Error(message); }
+
+test("dual ranks bounded", () => models.forEach(m => extended.dualRankTable(m).forEach((r, mask) => ok(r >= 0 && r <= core.bitCount(mask), m.profile_id))));
+test("dual involution exact", () => models.forEach(m => ok(extended.dualInvolutionAudit(m).mismatch_count === 0, m.profile_id)));
+test("basis exchange exact", () => models.forEach(m => ok(extended.basisExchangeAudit(m).violation_count === 0, m.profile_id)));
+test("fundamental circuit is minimal dependent", () => models.forEach(m => {
+  const f = extended.fundamentalCircuit(m);
+  ok((f.circuit_mask & (1 << f.outside_element_index)) !== 0, m.profile_id);
+  ok(core.circuitMasks(m).includes(f.circuit_mask), m.profile_id);
+}));
+test("rank generating coefficients cover powerset", () => models.forEach(m => ok(extended.rankGeneratingPolynomial(m).coefficient_sum === (1 << m.ground_labels.length), m.profile_id)));
+test("deletion contraction recurrence exact", () => models.forEach(m => ok(extended.tutteRecurrenceAudit(m).valid, m.profile_id)));
+test("activity coefficients cover bases", () => models.forEach(m => {
+  const a = extended.activitySignature(m);
+  ok(a.coefficient_sum === a.basis_count, m.profile_id);
+}));
+test("Trinity bridge stays represented", () => models.forEach(m => ok(extended.evaluate("trinity-bridge", m).outcome === "represented", m.profile_id)));
+test("external observation remains open gap", () => models.forEach(m => ok(extended.evaluate("external-observation-gap", m).outcome === "open_gap", m.profile_id)));
+test("authority remains exact gate", () => models.forEach(m => {
+  const result = extended.evaluate("authority-reservation", m);
+  ok(result.outcome === "exact_gate" && result.protected_actions_executed === 0, m.profile_id);
+}));
+
+const passed = tests.filter(x => x.passed).length;
+const receipt = { count: tests.length, passed, failed: tests.length - passed, tests, valid: passed === tests.length };
+process.stdout.write(JSON.stringify(receipt));
+if (!receipt.valid) process.exitCode = 1;

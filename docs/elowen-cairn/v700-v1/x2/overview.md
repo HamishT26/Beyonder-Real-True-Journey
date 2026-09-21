@@ -1,0 +1,5 @@
+# Elowen v700-v1 x2 finite binary-matroid evidence
+
+The 300 frozen x2 contracts executed once after the immutable x1 boundary. Exact dual rank tables, dual involution, basis exchange, fundamental circuits, corank-nullity polynomials, deletion-contraction recurrence, and basis activity produced 210 completed outcomes. Thirty typed Trinity analogies remain represented only, thirty external-observation contracts remain open gaps, and thirty professional or cultural authority contracts remain exact gates. Three hundred malformed subjects retain zero completion credit while separate refusal guards passed.
+
+Ten x2 local skills and five local runners passed bounded validation. Five additive global groups now have exact source-to-installed parity. The first minors valid smoke failed because the merged runner sent x1 operations only to the x2 dispatcher; its failed bytes remain preserved, its refusal smoke is not reused as completion credit, and only the corrected component plus three previously unreached groups ran in recovery. The forty-card catalogue and 612-card deck preserve provenance and rollback. Browser interaction remains pending.

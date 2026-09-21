@@ -1,0 +1,33 @@
+"use strict";
+const fs=require("fs"),path=require("path"),crypto=require("crypto");
+const ownerWorktree=process.argv[2];
+if(!ownerWorktree)throw new Error("usage: node record_precommit_failure.txt <owner-worktree>");
+const root=path.join(ownerWorktree,"docs","elowen-cairn","v700-v1","x2");
+const failure={
+  negative_id:"EC7001-X2-N021",
+  method_id:"EC7001-x2-M026",
+  failed_witness_id:"EC7001-X2-N021-FAILED",
+  recovery_witness_id:"EC7001-X2-N021-RECOVERED",
+  failure:"The first combined x2 staged-review wrapper reached its output window and returned no attributable review row.",
+  recovery:"A second bounded exact-index read proved all 83 files were x2-only, diff-clean, allowed-format, and had zero unstaged paths.",
+  initial_credit:0,
+  recovery_erases_failure:false
+};
+const failuresPath=path.join(root,"operational-failures.json");
+const ledger=JSON.parse(fs.readFileSync(failuresPath,"utf8"));
+if(ledger.failed_witnesses.some(x=>x.negative_id===failure.negative_id))throw new Error("precommit failure already recorded");
+ledger.failed_witnesses.push(failure);ledger.count=ledger.failed_witnesses.length;
+fs.writeFileSync(failuresPath,JSON.stringify(ledger,null,2)+"\n","utf8");
+const mfPath=path.join(root,"method-flow.json");
+const mf=JSON.parse(fs.readFileSync(mfPath,"utf8"));
+mf.methods.push({method_id:failure.method_id,title:failure.failure,recommendation_state:"validated",retained_negative_ids:[failure.negative_id]});
+mf.witnesses.push({witness_id:failure.failed_witness_id,method_id:failure.method_id,result:"fail",scope:"staged-review projection",original_credit:0});
+mf.witnesses.push({witness_id:failure.recovery_witness_id,method_id:failure.method_id,result:"pass",scope:"bounded exact-index recovery"});
+mf.counts.methods+=1;mf.counts.witnesses+=2;mf.counts.passing_witnesses+=1;mf.counts.failed_witnesses+=1;mf.counts.negatives+=1;
+fs.writeFileSync(mfPath,JSON.stringify(mf,null,2)+"\n","utf8");
+const sha=file=>crypto.createHash("sha256").update(fs.readFileSync(file)).digest("hex");
+function walk(dir){const out=[];for(const ent of fs.readdirSync(dir,{withFileTypes:true})){const p=path.join(dir,ent.name);if(ent.isDirectory())out.push(...walk(p));else out.push(p)}return out}
+const files=walk(root).filter(p=>p!==path.join(root,"manifest.json"));
+const manifest={owner:"Elowen Cairn",phase:"v700-v1",stage:"x2",byte_domain:"checkout_bytes_precommit",self_exclusions:["docs/elowen-cairn/v700-v1/x2/manifest.json"],count:files.length,records:files.map(file=>({path:path.relative(ownerWorktree,file).replace(/\\/g,"/"),bytes:fs.statSync(file).size,sha256_checkout_bytes:sha(file)}))};
+fs.writeFileSync(path.join(root,"manifest.json"),JSON.stringify(manifest,null,2)+"\n","utf8");
+process.stdout.write(JSON.stringify({status:"PRECOMMIT_FAILURE_RETAINED",failure:failure.negative_id,files:walk(root).length}));

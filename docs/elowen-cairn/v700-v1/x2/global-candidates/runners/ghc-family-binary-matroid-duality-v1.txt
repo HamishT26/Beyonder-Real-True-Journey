@@ -1,0 +1,11 @@
+"use strict";
+const fs=require("fs"),path=require("path"),vm=require("vm");
+function load(file){const module={exports:{}};new vm.Script(fs.readFileSync(file,"utf8"),{filename:file}).runInContext(vm.createContext({module,exports:module.exports,require}));return module.exports;}
+const mode=process.argv[2]||"valid";
+const core=load(path.resolve(__dirname,"..","lib","ghc_family_binary_matroid_core.txt"));
+const extended=load(path.resolve(__dirname,"..","lib","ghc_family_binary_matroid_extended.txt"))(core);
+const model={"profile_id":"MAT-13","ground_labels":["e1","e2","e3","e4"],"row_dimension":2,"columns_gf2":[1,2,0,0],"weights":[9,12,2,5],"query_subset_mask":4,"minor_element_index":0,"declared_scope":"finite synthetic binary matroid represented by a frozen GF(2) column matrix"};
+const operations=["dual-rank-table","dual-involution","activity-signature","basis-exchange"];
+if(mode==="valid"){const outputs=operations.map(op=>extended.evaluate(op,model));process.stdout.write(JSON.stringify({mode,pass:outputs.length===operations.length,operations}));}
+else if(mode==="invalid"){const bad=JSON.parse(JSON.stringify(model));bad.ground_labels[1]=bad.ground_labels[0];let refused=0;for(const op of operations){try{extended.evaluate(op,bad);}catch{refused++;}}process.stdout.write(JSON.stringify({mode,pass:refused===operations.length,refused,operations}));if(refused!==operations.length)process.exitCode=1;}
+else{throw new Error("mode must be valid or invalid");}

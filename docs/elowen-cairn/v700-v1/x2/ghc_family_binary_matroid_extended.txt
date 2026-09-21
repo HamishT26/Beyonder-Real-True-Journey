@@ -1,0 +1,207 @@
+"use strict";
+
+module.exports = function attachBinaryMatroidExtensions(core) {
+  function canonicalObject(value) {
+    if (Array.isArray(value)) return value.map(canonicalObject);
+    if (value && typeof value === "object") {
+      return Object.fromEntries(Object.keys(value).sort().map(key => [key, canonicalObject(value[key])]));
+    }
+    return value;
+  }
+
+  function dualRankTable(model) {
+    const { n, full_mask } = core.validateModel(model);
+    const primal = core.rankTable(model);
+    const fullRank = primal[full_mask];
+    return Array.from({ length: 1 << n }, (_, mask) =>
+      core.bitCount(mask) + primal[full_mask ^ mask] - fullRank
+    );
+  }
+
+  function dualInvolutionAudit(model) {
+    const { n, full_mask } = core.validateModel(model);
+    const primal = core.rankTable(model);
+    const dual = dualRankTable(model);
+    const dualFullRank = dual[full_mask];
+    const twice = Array.from({ length: 1 << n }, (_, mask) =>
+      core.bitCount(mask) + dual[full_mask ^ mask] - dualFullRank
+    );
+    const mismatches = [];
+    for (let mask = 0; mask < (1 << n); mask++) {
+      if (primal[mask] !== twice[mask]) mismatches.push({ mask, primal: primal[mask], twice: twice[mask] });
+    }
+    return { subset_count: 1 << n, mismatch_count: mismatches.length, mismatches, dual_full_rank: dualFullRank };
+  }
+
+  function basisExchangeAudit(model) {
+    const { n } = core.validateModel(model);
+    const bases = core.basisMasks(model);
+    const baseSet = new Set(bases);
+    let obligations = 0;
+    const violations = [];
+    for (const left of bases) for (const right of bases) {
+      const leftOnly = left & ~right;
+      const rightOnly = right & ~left;
+      for (const e of core.selectedIndices(leftOnly, n)) {
+        obligations++;
+        const witnesses = core.selectedIndices(rightOnly, n).filter(f => baseSet.has((left & ~(1 << e)) | (1 << f)));
+        if (witnesses.length === 0) violations.push({ left, right, e });
+      }
+    }
+    return { basis_count: bases.length, obligation_count: obligations, violation_count: violations.length, violations };
+  }
+
+  function fundamentalCircuit(model) {
+    const { n } = core.validateModel(model);
+    const bases = core.basisMasks(model).sort((a, b) => a - b);
+    core.assert(bases.length > 0, "no basis available");
+    const basis = bases[0];
+    const outside = Array.from({ length: n }, (_, i) => i).find(i => (basis & (1 << i)) === 0);
+    core.assert(Number.isInteger(outside), "no outside element for fundamental circuit");
+    const support = basis | (1 << outside);
+    const candidates = core.circuitMasks(model).filter(mask => (mask & (1 << outside)) !== 0 && (mask & ~support) === 0);
+    core.assert(candidates.length === 1, "fundamental circuit is not unique");
+    return {
+      basis_mask: basis,
+      outside_element_index: outside,
+      outside_element_label: model.ground_labels[outside],
+      circuit_mask: candidates[0],
+      circuit_labels: core.selectedIndices(candidates[0], n).map(i => model.ground_labels[i])
+    };
+  }
+
+  function polynomialFromTable(table, n, fullRank) {
+    const terms = {};
+    for (let mask = 0; mask < (1 << n); mask++) {
+      const corank = fullRank - table[mask];
+      const nullity = core.bitCount(mask) - table[mask];
+      const key = `${corank},${nullity}`;
+      terms[key] = (terms[key] || 0) + 1;
+    }
+    return Object.fromEntries(Object.entries(terms).sort(([a], [b]) => a.localeCompare(b, "en", { numeric: true })));
+  }
+
+  function rankGeneratingPolynomial(model) {
+    const { n, full_mask } = core.validateModel(model);
+    const table = core.rankTable(model);
+    const terms = polynomialFromTable(table, n, table[full_mask]);
+    return { variable_basis: ["u", "v"], terms, coefficient_sum: Object.values(terms).reduce((a, b) => a + b, 0) };
+  }
+
+  function addPoly(left, right) {
+    const out = { ...left };
+    for (const [key, value] of Object.entries(right)) out[key] = (out[key] || 0) + value;
+    return Object.fromEntries(Object.entries(out).filter(([, value]) => value !== 0).sort(([a], [b]) => a.localeCompare(b, "en", { numeric: true })));
+  }
+
+  function shiftPoly(poly, du, dv) {
+    const out = {};
+    for (const [key, value] of Object.entries(poly)) {
+      const [u, v] = key.split(",").map(Number);
+      out[`${u + du},${v + dv}`] = value;
+    }
+    return out;
+  }
+
+  function tutteRecurrenceAudit(model) {
+    const { n, full_mask } = core.validateModel(model);
+    const table = core.rankTable(model);
+    const actual = polynomialFromTable(table, n, table[full_mask]);
+    const minors = core.minorTables(model);
+    const smallN = n - 1;
+    const smallFull = (1 << smallN) - 1;
+    const deletion = polynomialFromTable(minors.deletion_rank_table, smallN, minors.deletion_rank_table[smallFull]);
+    const contraction = polynomialFromTable(minors.contraction_rank_table, smallN, minors.contraction_rank_table[smallFull]);
+    let predicted;
+    let caseName;
+    if (minors.is_loop) {
+      predicted = addPoly(deletion, shiftPoly(deletion, 0, 1));
+      caseName = "loop";
+    } else if (minors.is_coloop) {
+      predicted = addPoly(contraction, shiftPoly(contraction, 1, 0));
+      caseName = "coloop";
+    } else {
+      predicted = addPoly(deletion, contraction);
+      caseName = "ordinary";
+    }
+    const equal = JSON.stringify(canonicalObject(actual)) === JSON.stringify(canonicalObject(predicted));
+    return { case: caseName, element_index: model.minor_element_index, valid: equal, actual_terms: actual, predicted_terms: predicted };
+  }
+
+  function activitySignature(model) {
+    const { n } = core.validateModel(model);
+    const bases = core.basisMasks(model).sort((a, b) => a - b);
+    const baseSet = new Set(bases);
+    const distribution = {};
+    const records = [];
+    for (const basis of bases) {
+      const inBasis = core.selectedIndices(basis, n);
+      const outside = Array.from({ length: n }, (_, i) => i).filter(i => (basis & (1 << i)) === 0);
+      let internal = 0;
+      let external = 0;
+      for (const b of inBasis) {
+        const smallerExchange = outside.some(e => e < b && baseSet.has((basis & ~(1 << b)) | (1 << e)));
+        if (!smallerExchange) internal++;
+      }
+      for (const e of outside) {
+        const smallerExchange = inBasis.some(b => b < e && baseSet.has((basis & ~(1 << b)) | (1 << e)));
+        if (!smallerExchange) external++;
+      }
+      const key = `${internal},${external}`;
+      distribution[key] = (distribution[key] || 0) + 1;
+      records.push({ basis_mask: basis, internal_activity: internal, external_activity: external });
+    }
+    return {
+      basis_count: bases.length,
+      coefficient_sum: Object.values(distribution).reduce((a, b) => a + b, 0),
+      activity_terms: Object.fromEntries(Object.entries(distribution).sort(([a], [b]) => a.localeCompare(b, "en", { numeric: true }))),
+      records
+    };
+  }
+
+  function evaluate(operationId, model) {
+    core.validateModel(model);
+    if (operationId === "dual-rank-table") {
+      const table = dualRankTable(model);
+      return { profile_id: model.profile_id, subset_count: table.length, dual_rank_table: table, dual_full_rank: table[table.length - 1] };
+    }
+    if (operationId === "dual-involution") return { profile_id: model.profile_id, ...dualInvolutionAudit(model) };
+    if (operationId === "basis-exchange") return { profile_id: model.profile_id, ...basisExchangeAudit(model) };
+    if (operationId === "fundamental-circuit") return { profile_id: model.profile_id, ...fundamentalCircuit(model) };
+    if (operationId === "rank-generating-polynomial") return { profile_id: model.profile_id, ...rankGeneratingPolynomial(model) };
+    if (operationId === "tutte-recurrence") return { profile_id: model.profile_id, ...tutteRecurrenceAudit(model) };
+    if (operationId === "activity-signature") return { profile_id: model.profile_id, ...activitySignature(model) };
+    if (operationId === "trinity-bridge") {
+      return {
+        profile_id: model.profile_id, outcome: "represented",
+        mappings: {
+          GMUT_Mind: "finite rank and duality bookkeeping only",
+          THOS_Body: "bounded executable dependency graph only",
+          Freed_ID_CBR_Heart: "provenance, refusal, and authority-reservation pattern only"
+        },
+        nonpromotion: "analogy is not observation, physical law, identity evidence, governance authority, or deployment"
+      };
+    }
+    if (operationId === "external-observation-gap") {
+      return {
+        profile_id: model.profile_id, outcome: "open_gap",
+        missing: ["real observations", "calibrated measurement process", "preregistered external study", "independent review"],
+        requests_made: 0, rows_ingested: 0
+      };
+    }
+    if (operationId === "authority-reservation") {
+      return {
+        profile_id: model.profile_id, outcome: "exact_gate",
+        held: true,
+        required: ["competent professional authority", "affected-party participation", "legal and cultural review", "Maori authority where Maori concepts or data are involved"],
+        protected_actions_executed: 0
+      };
+    }
+    throw new Error(`unknown x2 operation: ${operationId}`);
+  }
+
+  return {
+    dualRankTable, dualInvolutionAudit, basisExchangeAudit, fundamentalCircuit,
+    rankGeneratingPolynomial, tutteRecurrenceAudit, activitySignature, evaluate
+  };
+};

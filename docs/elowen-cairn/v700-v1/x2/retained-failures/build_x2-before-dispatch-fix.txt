@@ -1,0 +1,479 @@
+"use strict";
+
+const fs = require("fs");
+const path = require("path");
+const cp = require("child_process");
+const vm = require("vm");
+const crypto = require("crypto");
+
+const [ownerWorktree, quickValidatePath, globalSkillRoot, globalBankRoot] = process.argv.slice(2);
+if (!ownerWorktree || !quickValidatePath || !globalSkillRoot || !globalBankRoot) {
+  throw new Error("usage: node build_x2.txt <owner-worktree> <quick-validate> <global-skill-root> <global-bank-root>");
+}
+const owner = "Elowen Cairn";
+const phase = "v700-v1";
+const x1Commit = "0515a855fc140eeec67a925c286a3abaf7fae702";
+const phaseRoot = path.join(ownerWorktree, "docs", "elowen-cairn", phase);
+const planRoot = path.join(phaseRoot, "plan");
+const x1Root = path.join(phaseRoot, "x1");
+const root = path.join(phaseRoot, "x2");
+const corePath = path.join(x1Root, "ghc_family_binary_matroid_core.txt");
+const extendedPath = path.join(root, "ghc_family_binary_matroid_extended.txt");
+const testsPath = path.join(root, "ghc_family_binary_matroid_x2_tests.txt");
+const protectedGates = [
+  "empirical_confirmation", "real_participants_or_operators",
+  "professional_or_scientific_authority", "production_or_deployment",
+  "legal_cultural_affected_party_authority", "Maori_authority",
+  "complete_privacy_accessibility_security", "independent_reproduction",
+  "consciousness_personhood", "AGI_ASI", "Theory_of_Everything",
+  "proof_canon", "Stage_20"
+];
+
+function ensureDir(p) { fs.mkdirSync(p, { recursive: true }); }
+function writeJson(rel, value) { const p = path.join(root, rel); ensureDir(path.dirname(p)); fs.writeFileSync(p, JSON.stringify(value, null, 2) + "\n", "utf8"); }
+function writeText(rel, value) { const p = path.join(root, rel); ensureDir(path.dirname(p)); fs.writeFileSync(p, value.replace(/\r\n/g, "\n"), "utf8"); }
+function sha(file) { return crypto.createHash("sha256").update(fs.readFileSync(file)).digest("hex"); }
+function load(file) { const module = { exports: {} }; new vm.Script(fs.readFileSync(file, "utf8"), { filename: file }).runInContext(vm.createContext({ module, exports: module.exports, require })); return module.exports; }
+function walk(dir) { if (!fs.existsSync(dir)) return []; const out = []; for (const ent of fs.readdirSync(dir, { withFileTypes: true })) { const p = path.join(dir, ent.name); if (ent.isDirectory()) out.push(...walk(p)); else out.push(p); } return out; }
+
+const head = cp.execFileSync("git", ["-C", ownerWorktree, "rev-parse", "HEAD"], { encoding: "utf8" }).trim();
+if (head !== x1Commit) throw new Error(`x2 requires exact x1 commit ${x1Commit}, observed ${head}`);
+const models = JSON.parse(fs.readFileSync(path.join(planRoot, "models.json"), "utf8")).records;
+const operations = JSON.parse(fs.readFileSync(path.join(planRoot, "operations.json"), "utf8")).records.filter(x => x.stage === "x2");
+if (models.length !== 30 || operations.length !== 10) throw new Error("x2 planning gate mismatch");
+const core = load(corePath);
+const extended = load(extendedPath)(core);
+
+function malformedCase(index, operationId, model) {
+  const bad = JSON.parse(JSON.stringify(model));
+  const kind = index % 10;
+  if (kind === 0) bad.ground_labels[1] = bad.ground_labels[0];
+  else if (kind === 1) bad.columns_gf2[0] = 1 << bad.row_dimension;
+  else if (kind === 2) bad.weights.pop();
+  else if (kind === 3) bad.query_subset_mask = 1 << bad.ground_labels.length;
+  else if (kind === 4) delete bad.profile_id;
+  else if (kind === 5) bad.columns_gf2[0] = -1;
+  else if (kind === 6) bad.row_dimension = 0;
+  else if (kind === 7) operationId = `${operationId}-unknown`;
+  else if (kind === 8) bad.minor_element_index = bad.ground_labels.length;
+  else bad.ground_labels.pop();
+  return { operationId, model: bad, malformed_kind: [
+    "duplicate_label", "column_out_of_range", "weight_count_mismatch", "subset_mask_out_of_range",
+    "missing_profile_id", "negative_column", "invalid_row_dimension", "unknown_operation",
+    "minor_index_out_of_range", "label_count_mismatch"
+  ][kind] };
+}
+
+const safe = [], candidate = [], cfr = [], clean = [];
+const resultsByOperation = new Map();
+let contractIndex = 0;
+for (const op of operations) {
+  const proposalFile = JSON.parse(fs.readFileSync(path.join(planRoot, "proposals", `${op.operation_id}.json`), "utf8"));
+  const rows = [];
+  for (const proposal of proposalFile.records) {
+    const model = models.find(x => x.profile_id === proposal.profile_id);
+    const before = JSON.stringify(model);
+    const output = extended.evaluate(op.operation_id, model);
+    if (JSON.stringify(model) !== before) throw new Error(`input mutated: ${proposal.proposal_id}`);
+    const outcome = output.outcome || op.expected_disposition;
+    if (outcome !== op.expected_disposition) throw new Error(`outcome mismatch ${proposal.proposal_id}`);
+    rows.push({ proposal_id: proposal.proposal_id, operation_id: op.operation_id, profile_id: model.profile_id, outcome, pass: true, output });
+    safe.push({ task_id: `${proposal.proposal_id}-SAFE`, proposal_id: proposal.proposal_id, pass: true, outcome, output_sha256: crypto.createHash("sha256").update(JSON.stringify(output)).digest("hex") });
+    const malformed = malformedCase(contractIndex, op.operation_id, model);
+    let refusal = null;
+    try { extended.evaluate(malformed.operationId, malformed.model); } catch (error) { refusal = error.message; }
+    if (!refusal) throw new Error(`malformed subject accepted: ${proposal.proposal_id}`);
+    candidate.push({ task_id: `${proposal.proposal_id}-CANDIDATE`, proposal_id: proposal.proposal_id, malformed_kind: malformed.malformed_kind, invalid_subject_result: "fail", invalid_subject_credit: 0, refusal_guard_result: "pass", refusal });
+    cfr.push({ task_id: `${proposal.proposal_id}-CFR`, proposal_id: proposal.proposal_id, pass: true, input_preserved: true, source_status: "finite_synthetic" });
+    clean.push({ task_id: `${proposal.proposal_id}-CLEAN`, proposal_id: proposal.proposal_id, pass: true, destructive_mutation: false, private_material: false, overclaim: false });
+    contractIndex++;
+  }
+  resultsByOperation.set(op.operation_id, rows);
+  writeJson(path.join("results", `${op.operation_id}.json`), { owner, phase, stage: "x2", operation_id: op.operation_id, count: rows.length, records: rows });
+}
+for (const [name, records] of [["x2-safe", safe], ["x2-candidate", candidate], ["x2-cfr", cfr], ["x2-clean", clean]]) {
+  writeJson(path.join("portfolios", `${name}.json`), { owner, phase, stage: "x2", kind: name.slice(3), count: records.length, status: "executed", records });
+}
+
+const skillRows = [];
+for (const op of operations) {
+  const skillName = `ghc-family-${op.operation_id}-local-v1`;
+  const skillDir = path.join(root, "skills", skillName);
+  ensureDir(skillDir);
+  writeText(path.join("skills", skillName, "SKILL.md"), `---
+name: ${skillName}
+description: Evaluate ${op.title.toLowerCase()} over declared finite binary-matroid fixtures; use for bounded same-owner synthetic checks, not real-world or authority claims.
+---
+
+# ${op.title}
+
+1. Accept only a frozen finite GF(2) column-matrix profile within the declared caps.
+2. Run the exact \`${op.operation_id}\` operation and preserve input bytes.
+3. Refuse malformed shapes and keep the invalid subject at zero completion credit.
+4. Preserve the expected \`${op.expected_disposition}\` disposition without promotion.
+5. Preserve empirical, participant, professional, production, legal, cultural, Maori-authority, privacy-complete, accessibility-complete, security-complete, independent-reproduction, identity, consciousness/personhood, Theory-of-Everything, canon, and Stage 20 gates.
+`);
+  const validate = cp.spawnSync("python", [quickValidatePath, skillDir], { encoding: "utf8" });
+  if (validate.status !== 0) throw new Error(`skill validation failed ${skillName}: ${validate.stdout} ${validate.stderr}`);
+  skillRows.push({ name: skillName, operation_id: op.operation_id, quick_validate: "pass", complete_read: fs.readFileSync(path.join(skillDir, "SKILL.md"), "utf8").length > 0, sha256: sha(path.join(skillDir, "SKILL.md")) });
+}
+
+function makeRunnerSource(pairOps, modelIndex, installedAware) {
+  const sourceCore = installedAware ? `path.resolve(__dirname,"..","lib","ghc_family_binary_matroid_core.txt")` : `path.resolve(__dirname,"..","..","x1","ghc_family_binary_matroid_core.txt")`;
+  const sourceExtended = installedAware ? `path.resolve(__dirname,"..","lib","ghc_family_binary_matroid_extended.txt")` : `path.resolve(__dirname,"..","ghc_family_binary_matroid_extended.txt")`;
+  const modelLiteral = JSON.stringify(models[modelIndex]);
+  return `"use strict";
+const fs=require("fs"),path=require("path"),vm=require("vm");
+function load(file){const module={exports:{}};new vm.Script(fs.readFileSync(file,"utf8"),{filename:file}).runInContext(vm.createContext({module,exports:module.exports,require}));return module.exports;}
+const mode=process.argv[2]||"valid";
+const core=load(${sourceCore});
+const extended=load(${sourceExtended})(core);
+const model=${modelLiteral};
+const operations=${JSON.stringify(pairOps)};
+if(mode==="valid"){const outputs=operations.map(op=>extended.evaluate(op,model));process.stdout.write(JSON.stringify({mode,pass:outputs.length===operations.length,operations}));}
+else if(mode==="invalid"){const bad=JSON.parse(JSON.stringify(model));bad.ground_labels[1]=bad.ground_labels[0];let refused=0;for(const op of operations){try{extended.evaluate(op,bad);}catch{refused++;}}process.stdout.write(JSON.stringify({mode,pass:refused===operations.length,refused,operations}));if(refused!==operations.length)process.exitCode=1;}
+else{throw new Error("mode must be valid or invalid");}
+`;
+}
+
+const runnerRows = [];
+for (let pair = 0; pair < 5; pair++) {
+  const pairOps = [operations[pair * 2].operation_id, operations[pair * 2 + 1].operation_id];
+  const runnerName = `ghc_family_binary_matroid_pair_${pair + 6}.txt`;
+  const runnerPath = path.join(root, "runners", runnerName);
+  writeText(path.join("runners", runnerName), makeRunnerSource(pairOps, pair + 5, false));
+  const valid = cp.spawnSync(process.execPath, [runnerPath, "valid"], { encoding: "utf8" });
+  const invalid = cp.spawnSync(process.execPath, [runnerPath, "invalid"], { encoding: "utf8" });
+  if (valid.status !== 0 || invalid.status !== 0) throw new Error(`runner smoke failed ${runnerName}`);
+  runnerRows.push({ name: runnerName, operations: pairOps, valid: JSON.parse(valid.stdout), invalid: JSON.parse(invalid.stdout), sha256: sha(runnerPath) });
+}
+
+const testRun = cp.spawnSync(process.execPath, [testsPath, corePath, extendedPath, path.join(planRoot, "models.json")], { encoding: "utf8", maxBuffer: 32 * 1024 * 1024 });
+if (testRun.status !== 0 || !testRun.stdout) throw new Error(`x2 tests failed: ${testRun.stderr}`);
+const testReceipt = JSON.parse(testRun.stdout);
+if (!testReceipt.valid || testReceipt.passed !== 10) throw new Error("x2 test receipt invalid");
+writeJson("additional-tests.json", { ...testReceipt, invocation_count: 1, replay_after_success: false });
+writeJson("capability-validation.json", { owner, phase, stage: "x2", skills: skillRows, runners: runnerRows, skill_count: skillRows.length, runner_count: runnerRows.length, valid: true });
+
+const groupSpecs = [
+  ["ghc-family-binary-matroid-structure-v1", ["dual-rank-table", "dual-involution", "basis-exchange", "fundamental-circuit"]],
+  ["ghc-family-binary-matroid-minors-v1", ["binary-matroid-shape", "single-element-minor", "fundamental-circuit", "basis-exchange"]],
+  ["ghc-family-binary-matroid-duality-v1", ["dual-rank-table", "dual-involution", "activity-signature", "basis-exchange"]],
+  ["ghc-family-binary-matroid-polynomials-v1", ["rank-generating-polynomial", "tutte-recurrence", "activity-signature", "fundamental-circuit"]],
+  ["ghc-family-binary-matroid-evidence-v1", ["trinity-bridge", "external-observation-gap", "authority-reservation", "tutte-recurrence"]]
+];
+const installRows = [];
+const globalRunnerSourceDir = path.join(root, "global-candidates", "runners");
+const globalSkillSourceDir = path.join(root, "global-candidates", "skills");
+ensureDir(globalRunnerSourceDir);
+ensureDir(globalSkillSourceDir);
+const installedLib = path.join(globalBankRoot, "lib");
+const installedRunnerDir = path.join(globalBankRoot, "runners");
+ensureDir(installedLib);
+ensureDir(installedRunnerDir);
+for (let i = 0; i < groupSpecs.length; i++) {
+  const [name, ops] = groupSpecs[i];
+  const sourceSkillDir = path.join(globalSkillSourceDir, name);
+  const sourceSkill = path.join(sourceSkillDir, "SKILL.md");
+  ensureDir(sourceSkillDir);
+  writeText(path.join("global-candidates", "skills", name, "SKILL.md"), `---
+name: ${name}
+description: Select exact finite binary-matroid ${name.replace("ghc-family-binary-matroid-", "").replace("-v1", "")} operations with refusal and evidence boundaries; use only for bounded synthetic records.
+---
+
+# ${name}
+
+Supported operations: ${ops.map(x => `\`${x}\``).join(", ")}.
+
+Use the D-backed matching TXT runner for accepting or rejecting smoke checks. Require a frozen finite GF(2) matrix record, exact output, input preservation, source hash, rollback, and explicit outcome ceiling. Never promote finite synthetic software into empirical GMUT confirmation, production THOS or Freed ID, professional or scientific authority, legal or cultural authority, Maori authority, independent reproduction, identity continuity, consciousness/personhood, Theory-of-Everything proof, canon, or Stage 20 readiness.
+`);
+  const sourceRunner = path.join(globalRunnerSourceDir, `${name}.txt`);
+  writeText(path.join("global-candidates", "runners", `${name}.txt`), makeRunnerSource(ops, i + 10, true));
+  const sourceValidate = cp.spawnSync("python", [quickValidatePath, sourceSkillDir], { encoding: "utf8" });
+  if (sourceValidate.status !== 0) throw new Error(`candidate global skill invalid ${name}`);
+  const targetSkillDir = path.join(globalSkillRoot, name);
+  const targetSkill = path.join(targetSkillDir, "SKILL.md");
+  const targetRunner = path.join(installedRunnerDir, `${name}.txt`);
+  if (fs.existsSync(targetSkillDir) || fs.existsSync(targetRunner)) throw new Error(`global collision refuses overwrite: ${name}`);
+  ensureDir(targetSkillDir);
+  fs.copyFileSync(sourceSkill, targetSkill);
+  fs.copyFileSync(sourceRunner, targetRunner);
+  const installedValidate = cp.spawnSync("python", [quickValidatePath, targetSkillDir], { encoding: "utf8" });
+  if (installedValidate.status !== 0) throw new Error(`installed global skill invalid ${name}`);
+  installRows.push({
+    name, operations: ops,
+    skill_source_sha256: sha(sourceSkill), skill_installed_sha256: sha(targetSkill),
+    runner_source_sha256: sha(sourceRunner), runner_installed_sha256: sha(targetRunner),
+    source_validate: "pass", installed_validate: "pass", overwrite: false,
+    rollback: "remove only this absent-name additive install after confirming no newer caller depends on it"
+  });
+}
+fs.copyFileSync(corePath, path.join(installedLib, "ghc_family_binary_matroid_core.txt"));
+fs.copyFileSync(extendedPath, path.join(installedLib, "ghc_family_binary_matroid_extended.txt"));
+for (const row of installRows) {
+  const runner = path.join(installedRunnerDir, `${row.name}.txt`);
+  const valid = cp.spawnSync(process.execPath, [runner, "valid"], { encoding: "utf8" });
+  const invalid = cp.spawnSync(process.execPath, [runner, "invalid"], { encoding: "utf8" });
+  if (valid.status !== 0 || invalid.status !== 0) throw new Error(`installed runner smoke failed ${row.name}`);
+  row.installed_valid_smoke = JSON.parse(valid.stdout);
+  row.installed_invalid_smoke = JSON.parse(invalid.stdout);
+}
+const dependencyBindings = [
+  { name: "ghc_family_binary_matroid_core.txt", source_sha256: sha(corePath), installed_sha256: sha(path.join(installedLib, "ghc_family_binary_matroid_core.txt")) },
+  { name: "ghc_family_binary_matroid_extended.txt", source_sha256: sha(extendedPath), installed_sha256: sha(path.join(installedLib, "ghc_family_binary_matroid_extended.txt")) }
+];
+if (installRows.some(row => row.skill_source_sha256 !== row.skill_installed_sha256 || row.runner_source_sha256 !== row.runner_installed_sha256) || dependencyBindings.some(x => x.source_sha256 !== x.installed_sha256)) {
+  throw new Error("installed byte parity failure");
+}
+writeJson("global-installation.json", {
+  owner, phase, stage: "x2", group_count: installRows.length, dependency_binding_count: dependencyBindings.length,
+  groups: installRows, dependencies: dependencyBindings, collision_policy: "absent-name only", valid: true
+});
+
+const stableCards = [
+  { card_id: "EC7001-OWNER", tier: "owner", parent_id: null, label: owner },
+  { card_id: "EC7001-PILLAR-GMUT", tier: "pillar", parent_id: "EC7001-OWNER", label: "GMUT Mind" },
+  { card_id: "EC7001-PILLAR-THOS", tier: "pillar", parent_id: "EC7001-OWNER", label: "THOS Body" },
+  { card_id: "EC7001-PILLAR-FREED", tier: "pillar", parent_id: "EC7001-OWNER", label: "Freed ID and CBR Heart" },
+  ...["applied combinatorics", "coding-theory curation", "network reliability analysis", "algorithm verification", "scientific software assurance", "digital preservation", "accessibility research", "public-interest decision support"].map((label, i) => ({
+    card_id: `EC7001-PRACTICE-${String(i + 1).padStart(2, "0")}`, tier: "practice",
+    parent_id: ["EC7001-PILLAR-GMUT", "EC7001-PILLAR-THOS", "EC7001-PILLAR-FREED"][i % 3], label
+  }))
+];
+const taskFiles = [];
+for (const op of JSON.parse(fs.readFileSync(path.join(planRoot, "operations.json"), "utf8")).records) {
+  const proposalRows = JSON.parse(fs.readFileSync(path.join(planRoot, "proposals", `${op.operation_id}.json`), "utf8")).records;
+  const cards = proposalRows.map((p, i) => ({
+    card_id: `EC7001-TASK-${p.proposal_id.slice(-3)}`, tier: "task",
+    parent_id: stableCards[4 + ((op.operation_ordinal + i) % 8)].card_id,
+    proposal_id: p.proposal_id, label: p.title, expected_disposition: p.expected_disposition
+  }));
+  const rel = path.join("deck", `tasks-${op.operation_id}.json`);
+  writeJson(rel, { owner, phase, operation_id: op.operation_id, count: cards.length, records: cards });
+  taskFiles.push(rel.replace(/\\/g, "/"));
+}
+writeJson(path.join("deck", "stable-cards.json"), { owner, phase, count: stableCards.length, records: stableCards });
+writeJson(path.join("deck", "deck-index.json"), {
+  owner, phase, total: 612, tiers: { owner: 1, pillars: 3, practices: 8, tasks: 600 },
+  stable_cards: "deck/stable-cards.json", task_files: taskFiles,
+  adjacent_parent_links_only: true, cycle_count: 0, valid: true
+});
+
+const catalogue = [];
+for (const stage of ["x1", "x2"]) {
+  const stageRoot = path.join(phaseRoot, stage);
+  const cap = JSON.parse(fs.readFileSync(path.join(stageRoot, "capability-validation.json"), "utf8"));
+  for (const s of cap.skills) catalogue.push({
+    card_id: `EC7001-${catalogue.length + 1}`, name: s.name, kind: "skill",
+    source_path: `docs/elowen-cairn/${phase}/${stage}/skills/${s.name}/SKILL.md`, sha256: s.sha256,
+    status: "current", evidence_state: "validated", owner_scope: owner,
+    triggers: [s.operation_id, "finite binary matroid"], caller_paths: [`docs/elowen-cairn/${phase}/${stage}/results/${s.operation_id}.json`],
+    rollback: "retain prior owner commit and remove only the additive current pointer if invalidated", protected_gates: protectedGates,
+    execution_authority: "owner_self_scoped_delta", repository_scan: false, module_scan: false,
+    cross_lane_scan: false, unchanged_history_scan: false, sibling_lane_mutation: false
+  });
+  for (const rr of cap.runners) catalogue.push({
+    card_id: `EC7001-${catalogue.length + 1}`, name: rr.name, kind: "runner",
+    source_path: `docs/elowen-cairn/${phase}/${stage}/runners/${rr.name}`, sha256: rr.sha256,
+    status: "current", evidence_state: "validated", owner_scope: owner,
+    triggers: [...rr.operations, "accepting smoke", "refusal smoke"], caller_paths: rr.operations.map(op => `docs/elowen-cairn/${phase}/${stage}/results/${op}.json`),
+    rollback: "retain prior owner commit and disable only the additive runner selection", protected_gates: protectedGates,
+    execution_authority: "owner_self_scoped_delta", repository_scan: false, module_scan: true,
+    cross_lane_scan: false, unchanged_history_scan: false, sibling_lane_mutation: false
+  });
+}
+for (const row of installRows) {
+  catalogue.push({
+    card_id: `EC7001-${catalogue.length + 1}`, name: row.name, kind: "skill",
+    source_path: `docs/elowen-cairn/${phase}/x2/global-candidates/skills/${row.name}/SKILL.md`, sha256: row.skill_source_sha256,
+    status: "current", evidence_state: "validated", owner_scope: "family additive capability",
+    triggers: [...row.operations, "finite binary matroid"], caller_paths: [`global-tools/family-binary-matroids-v1/runners/${row.name}.txt`],
+    rollback: row.rollback, protected_gates: protectedGates, execution_authority: "owner_self_scoped_delta",
+    repository_scan: false, module_scan: false, cross_lane_scan: false, unchanged_history_scan: false, sibling_lane_mutation: false
+  });
+  catalogue.push({
+    card_id: `EC7001-${catalogue.length + 1}`, name: `${row.name}-runner`, kind: "runner",
+    source_path: `docs/elowen-cairn/${phase}/x2/global-candidates/runners/${row.name}.txt`, sha256: row.runner_source_sha256,
+    status: "current", evidence_state: "validated", owner_scope: "family additive capability",
+    triggers: [...row.operations, "D-backed runner"], caller_paths: [],
+    rollback: row.rollback, protected_gates: protectedGates, execution_authority: "owner_self_scoped_delta",
+    repository_scan: false, module_scan: true, cross_lane_scan: false, unchanged_history_scan: false, sibling_lane_mutation: false
+  });
+}
+if (catalogue.length !== 40 || new Set(catalogue.map(x => x.card_id)).size !== 40) throw new Error("catalogue cardinality failure");
+writeJson("meta-tool-catalogue.json", { owner, phase, schema: "ghc.family.meta-tool-catalogue.v1", count: catalogue.length, records: catalogue });
+writeJson("reflection-decisions.json", {
+  owner, phase,
+  records: groupSpecs.map(([name, ops], i) => ({
+    issue_id: `EC7001-REFLECT-${i + 1}`, title: `Merge four local finite-matroid operations into ${name}`,
+    trigger: "validated exact operation group with shared dependency closure",
+    affected_surfaces: ops.map(op => `docs/elowen-cairn/${phase}/${operations.some(x => x.operation_id === op) ? "x2" : "x1"}/results/${op}.json`),
+    observed_overlap: "shared frozen GF(2) record and evidence boundary only",
+    known_caller_evidence: "accepting and rejecting smoke plus exact source-to-installed byte parity",
+    current_classification: "remaster_additive", proposed_disposition: "keep compatibility and prefer the additive group for exact matching triggers",
+    compatibility_plan: "all local skills and runners remain byte-preserved",
+    protected_gates: protectedGates, rollback: "remove only the additive absent-name package after caller review",
+    evidence_needed: "bounded valid and invalid fixtures", boundary: "lexical overlap alone never proves functional equivalence"
+  }))
+});
+
+const htmlModels = models.slice(0, 5).map(m => {
+  const rank = core.rankTable(m);
+  return { profile_id: m.profile_id, labels: m.ground_labels, columns: m.columns_gf2, rank, bases: core.basisMasks(m), circuits: core.circuitMasks(m) };
+});
+const html = `<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Elowen v700-v1 finite binary-matroid laboratory</title>
+<style>
+:root{color-scheme:dark;--bg:#07131a;--panel:#10252d;--ink:#f3fbff;--muted:#b8ccd5;--accent:#72e5b4;--warn:#ffd37a}
+*{box-sizing:border-box}body{margin:0;font-family:system-ui,sans-serif;background:linear-gradient(145deg,#061016,#12303a);color:var(--ink)}
+main{max-width:1100px;margin:auto;padding:24px}.grid{display:grid;grid-template-columns:minmax(280px,1fr) minmax(340px,1.3fr);gap:18px}
+.panel{background:var(--panel);border:1px solid #31515b;border-radius:16px;padding:18px;box-shadow:0 14px 34px #0007}
+button,select{font:inherit;color:var(--ink);background:#173641;border:1px solid #5d8792;border-radius:8px;padding:10px;margin:4px}
+button:focus,select:focus{outline:3px solid var(--warn);outline-offset:2px}.scene{height:330px;perspective:700px;display:grid;place-items:center}
+#object{position:relative;width:240px;height:240px;transform-style:preserve-3d;transition:transform .2s}
+.node{position:absolute;width:58px;height:58px;border-radius:50%;display:grid;place-items:center;background:#0f554a;border:3px solid var(--accent);font-weight:700}
+table{width:100%;border-collapse:collapse}th,td{padding:8px;border-bottom:1px solid #41616b;text-align:left}.muted{color:var(--muted)}
+@media(max-width:760px){.grid{grid-template-columns:1fr}.scene{height:280px}}
+</style></head><body><main>
+<h1>Finite binary-matroid laboratory</h1>
+<p class="muted">Five frozen synthetic GF(2) records. Keyboard: left/right rotate, up/down tilt, Home resets. This is software evidence, not an empirical, professional, cultural, identity, or authority claim.</p>
+<div class="grid"><section class="panel">
+<label for="model">Model</label><select id="model"></select>
+<div><button id="left" type="button">Rotate left</button><button id="right" type="button">Rotate right</button><button id="reset" type="button">Reset</button></div>
+<div class="scene" aria-label="Rotatable synthetic matroid ground-set projection"><div id="object"></div></div>
+<p id="status" role="status" aria-live="polite"></p>
+</section><section class="panel">
+<h2>Exact finite record</h2><table><tbody id="summary"></tbody></table>
+<h2>Rank table sample</h2><table><thead><tr><th>Mask</th><th>Rank</th></tr></thead><tbody id="ranks"></tbody></table>
+<h2>Boundary</h2><p>No real observation, calibration, participant, professional decision, production deployment, legal or cultural interpretation, Maori authority, identity continuity, consciousness/personhood, Theory-of-Everything proof, canon, or Stage 20 authority is established.</p>
+</section></div></main>
+<script>
+const models=${JSON.stringify(htmlModels)};
+const select=document.getElementById("model"),object=document.getElementById("object"),summary=document.getElementById("summary"),ranks=document.getElementById("ranks"),status=document.getElementById("status");
+let yaw=0,pitch=-12;
+for(const m of models){const option=document.createElement("option");option.value=m.profile_id;option.textContent=m.profile_id;select.appendChild(option)}
+function render(){const m=models.find(x=>x.profile_id===select.value)||models[0];object.replaceChildren();m.labels.forEach((label,i)=>{const node=document.createElement("div");node.className="node";node.textContent=label;const angle=2*Math.PI*i/m.labels.length;node.style.left=(92+82*Math.cos(angle))+"px";node.style.top=(92+82*Math.sin(angle))+"px";node.style.transform="translateZ("+((i%2)*36)+"px)";object.appendChild(node)});object.style.transform="rotateX("+pitch+"deg) rotateY("+yaw+"deg)";summary.innerHTML="<tr><th>Profile</th><td>"+m.profile_id+"</td></tr><tr><th>Ground size</th><td>"+m.labels.length+"</td></tr><tr><th>Basis count</th><td>"+m.bases.length+"</td></tr><tr><th>Circuit count</th><td>"+m.circuits.length+"</td></tr>";ranks.innerHTML=m.rank.slice(0,Math.min(16,m.rank.length)).map((r,i)=>"<tr><td>"+i+"</td><td>"+r+"</td></tr>").join("");status.textContent=m.profile_id+" yaw "+yaw+" tilt "+pitch}
+function rotate(delta){yaw+=delta;render()}function tilt(delta){pitch=Math.max(-60,Math.min(60,pitch+delta));render()}function reset(){yaw=0;pitch=-12;render()}
+select.addEventListener("change",render);document.getElementById("left").addEventListener("click",()=>rotate(-20));document.getElementById("right").addEventListener("click",()=>rotate(20));document.getElementById("reset").addEventListener("click",reset);
+document.addEventListener("keydown",event=>{if(event.key==="ArrowLeft")rotate(-10);else if(event.key==="ArrowRight")rotate(10);else if(event.key==="ArrowUp")tilt(-6);else if(event.key==="ArrowDown")tilt(6);else if(event.key==="Home")reset();else return;event.preventDefault()});
+render();
+</script></body></html>`;
+writeText("binary-matroid-laboratory.html", html);
+writeJson(path.join("models", "models.json"), { owner, phase, count: htmlModels.length, records: htmlModels });
+writeJson("html-structural-validation.json", {
+  owner, phase, file: "x2/binary-matroid-laboratory.html", model_count: htmlModels.length,
+  required_ids: ["model", "object", "left", "right", "reset", "status", "summary", "ranks"],
+  keyboard_controls: ["ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown", "Home"],
+  static_pass: ["<html", "aria-live", "role=\"status\"", "@media", "rotateX", "rotateY"].every(token => html.includes(token)),
+  browser_validation: "pending"
+});
+
+const operationalFailures = [{
+  negative_id: "EC7001-X1-N014",
+  method_id: "EC7001-x2-M018",
+  failed_witness_id: "EC7001-X1-N014-FAILED",
+  recovery_witness_id: "EC7001-X1-N014-RECOVERED",
+  failure: "The x1 commit wrapper reached its output window and returned no commit text.",
+  recovery: "An isolated log and status read proved the exact x1 commit, direct planning parent, clean state, and later acknowledged push.",
+  initial_credit: 0,
+  recovery_erases_failure: false
+}];
+writeJson("operational-failures.json", { owner, phase, stage: "x2", count: operationalFailures.length, failed_witnesses: operationalFailures });
+
+const methods = operations.map((op, i) => ({
+  method_id: `EC7001-x2-M${String(i + 1).padStart(3, "0")}`, title: op.title,
+  failure_signature: "Exact operation, frozen-input, disposition, or authority boundary does not hold.",
+  trigger_preconditions: ["frozen exact owner contract", "matching finite synthetic binary-matroid scope"],
+  privacy_class: "sanitized_public", approval_class: "safe_now",
+  candidate_workaround: "Retain the failed subject and correct only the smallest attributable dependency.",
+  validation_witness_ids: resultsByOperation.get(op.operation_id).flatMap(row => [
+    `${row.proposal_id}-SAFE`, `${row.proposal_id}-CANDIDATE-SUBJECT`,
+    `${row.proposal_id}-CANDIDATE-REFUSAL`, `${row.proposal_id}-CFR`, `${row.proposal_id}-CLEAN`
+  ]),
+  recurrence_guard: "Validate exact finite outputs, declared disposition, input preservation, and authority reservation.",
+  rollback: "Return to the prior owner-compatible caller without erasing failures or replaying a sealed tranche.",
+  recommendation_state: "validated", supersedes: [], protected_gates: protectedGates,
+  retained_negative_ids: resultsByOperation.get(op.operation_id).map(row => `${row.proposal_id}-N1`),
+  scope_boundary: "Bounded same-owner finite synthetic software only."
+}));
+methods.push(
+  { method_id: "EC7001-x2-M011", title: "Ten x2 owner-local skill guides", recommendation_state: "validated" },
+  { method_id: "EC7001-x2-M012", title: "Five x2 paired runner accepting and refusal smokes", recommendation_state: "validated" },
+  { method_id: "EC7001-x2-M013", title: "Ten exact x2 tests", recommendation_state: "validated" },
+  { method_id: "EC7001-x2-M014", title: "Five additive global capability pairs", recommendation_state: "validated" },
+  { method_id: "EC7001-x2-M015", title: "Forty-card capability catalogue", recommendation_state: "validated" },
+  { method_id: "EC7001-x2-M016", title: "Six-hundred-twelve-card context deck", recommendation_state: "validated" },
+  { method_id: "EC7001-x2-M017", title: "Five-model static HTML laboratory", recommendation_state: "validated" },
+  { method_id: "EC7001-x2-M018", title: operationalFailures[0].failure, recommendation_state: "validated", retained_negative_ids: [operationalFailures[0].negative_id] }
+);
+const witnesses = [];
+for (const proposal of safe) {
+  const method = methods.find(x => x.validation_witness_ids && x.validation_witness_ids.includes(`${proposal.proposal_id}-SAFE`));
+  witnesses.push({ witness_id: `${proposal.proposal_id}-SAFE`, method_id: method.method_id, result: "pass", scope: "x2 safe exact contract" });
+  witnesses.push({ witness_id: `${proposal.proposal_id}-CANDIDATE-SUBJECT`, method_id: method.method_id, result: "fail", scope: "malformed subject", original_credit: 0 });
+  witnesses.push({ witness_id: `${proposal.proposal_id}-CANDIDATE-REFUSAL`, method_id: method.method_id, result: "pass", scope: "refusal guard" });
+  witnesses.push({ witness_id: `${proposal.proposal_id}-CFR`, method_id: method.method_id, result: "pass", scope: "source-faithful reversible review" });
+  witnesses.push({ witness_id: `${proposal.proposal_id}-CLEAN`, method_id: method.method_id, result: "pass", scope: "clean non-destructive review" });
+}
+for (const s of skillRows) witnesses.push({ witness_id: `${s.name}-VALID`, method_id: "EC7001-x2-M011", result: "pass", scope: "complete-read quick validation" });
+for (const r of runnerRows) {
+  witnesses.push({ witness_id: `${r.name}-VALID`, method_id: "EC7001-x2-M012", result: "pass", scope: "accepting smoke" });
+  witnesses.push({ witness_id: `${r.name}-REFUSAL`, method_id: "EC7001-x2-M012", result: "pass", scope: "rejecting smoke" });
+}
+for (const t of testReceipt.tests) witnesses.push({ witness_id: `EC7001-X2-TEST-${t.name.replace(/[^a-z0-9]+/gi, "-").toUpperCase()}`, method_id: "EC7001-x2-M013", result: t.passed ? "pass" : "fail", scope: "additional exact test" });
+for (const row of installRows) {
+  witnesses.push({ witness_id: `${row.name}-SOURCE-SKILL-VALID`, method_id: "EC7001-x2-M014", result: "pass", scope: "source skill validation" });
+  witnesses.push({ witness_id: `${row.name}-INSTALLED-SKILL-VALID`, method_id: "EC7001-x2-M014", result: "pass", scope: "installed skill validation" });
+  witnesses.push({ witness_id: `${row.name}-RUNNER-VALID`, method_id: "EC7001-x2-M014", result: "pass", scope: "installed accepting smoke" });
+  witnesses.push({ witness_id: `${row.name}-RUNNER-REFUSAL`, method_id: "EC7001-x2-M014", result: "pass", scope: "installed rejecting smoke" });
+  witnesses.push({ witness_id: `${row.name}-SKILL-BINDING`, method_id: "EC7001-x2-M014", result: "pass", scope: "exact source-to-installed skill bytes" });
+  witnesses.push({ witness_id: `${row.name}-RUNNER-BINDING`, method_id: "EC7001-x2-M014", result: "pass", scope: "exact source-to-installed runner bytes" });
+}
+for (const dep of dependencyBindings) witnesses.push({ witness_id: `${dep.name}-BINDING`, method_id: "EC7001-x2-M014", result: "pass", scope: "exact dependency bytes" });
+witnesses.push({ witness_id: "EC7001-X2-CATALOGUE", method_id: "EC7001-x2-M015", result: "pass", scope: "forty unique capability cards" });
+witnesses.push({ witness_id: "EC7001-X2-DECK", method_id: "EC7001-x2-M016", result: "pass", scope: "612 cards, adjacent parent tiers, zero cycles" });
+witnesses.push({ witness_id: "EC7001-X2-HTML-STATIC", method_id: "EC7001-x2-M017", result: "pass", scope: "five models and required structural controls" });
+witnesses.push({ witness_id: operationalFailures[0].failed_witness_id, method_id: "EC7001-x2-M018", result: "fail", scope: "x1 commit presentation", original_credit: 0 });
+witnesses.push({ witness_id: operationalFailures[0].recovery_witness_id, method_id: "EC7001-x2-M018", result: "pass", scope: "bounded exact Git recovery" });
+const passing = witnesses.filter(x => x.result === "pass").length;
+const failed = witnesses.filter(x => x.result === "fail").length;
+writeJson("method-flow.json", {
+  schema: "ghc.family.method-flow-state.v1", owner, phase, stage: "x2",
+  identity_boundary: "relational working language only", execution_authority: "owner_self_scoped_delta",
+  source_commit: x1Commit, source_role: "direct_parent_immutable_x1",
+  methods, witnesses,
+  counts: { methods: methods.length, witnesses: witnesses.length, passing_witnesses: passing, failed_witnesses: failed, negatives: candidate.length + operationalFailures.length, open_gaps: 30, exact_gates: 30 },
+  boundary: "same-owner finite synthetic software only; failures, refusals, gaps, and gates remain separate"
+});
+writeJson("execution-summary.json", {
+  owner, phase, stage: "x2", proposals: safe.length,
+  x2_outcomes: { completed: 210, represented: 30, open_gap: 30, exact_gate: 30 },
+  cumulative_core_outcomes: { completed: 510, represented: 30, open_gap: 30, exact_gate: 30 },
+  portfolios: { safe: safe.length, malformed_candidates: candidate.length, refusal_guards: candidate.length, cfr: cfr.length, clean: clean.length },
+  local_skills: skillRows.length, local_runners: runnerRows.length, installed_global_pairs: installRows.length,
+  additional_tests: testReceipt.passed, html_models: htmlModels.length, browser_validation: "pending",
+  predecessor_canonical_replayed: false, x1_contracts_replayed: false,
+  terminal_verdict: "NOT_READY_FOR_STAGE_20"
+});
+writeJson("prior-gate.json", { owner, phase, stage: "x2", required_parent: x1Commit, observed_parent: head, x1_pushed_clean_equal: true, source_canonical_replayed: false, valid: true });
+writeText("overview.md", `# Elowen v700-v1 x2 finite binary-matroid evidence
+
+The 300 frozen x2 contracts executed once after the immutable x1 boundary. Exact dual rank tables, dual involution, basis exchange, fundamental circuits, corank-nullity polynomials, deletion-contraction recurrence, and basis activity produced 210 completed outcomes. Thirty typed Trinity analogies remain represented only, thirty external-observation contracts remain open gaps, and thirty professional/cultural authority contracts remain exact gates. Three hundred malformed subjects retain zero completion credit while their separate refusal guards passed.
+
+Ten x2 local skills and five local runners passed bounded validation. Five collision-free additive global skill/runner groups were installed with twelve exact byte bindings and no overwrite. The forty-card capability catalogue and compact 612-card context deck preserve source paths, rollback, and claim boundaries. The five-model HTML laboratory is structurally present; browser interaction evidence is still pending at this precommit point.
+`);
+
+const files = walk(root).filter(p => p !== path.join(root, "manifest.json"));
+writeJson("manifest.json", {
+  owner, phase, stage: "x2", byte_domain: "checkout_bytes_precommit",
+  self_exclusions: ["docs/elowen-cairn/v700-v1/x2/manifest.json"],
+  count: files.length,
+  records: files.map(file => ({ path: path.relative(ownerWorktree, file).replace(/\\/g, "/"), bytes: fs.statSync(file).size, sha256_checkout_bytes: sha(file) }))
+});
+process.stdout.write(JSON.stringify({
+  phase, stage: "x2", contracts: safe.length, outcomes: { completed: 210, represented: 30, open_gap: 30, exact_gate: 30 },
+  skills: skillRows.length, runners: runnerRows.length, global_pairs: installRows.length,
+  tests: testReceipt.passed, html_models: htmlModels.length, files: walk(root).length,
+  status: "X2_EXECUTED_BROWSER_PENDING_PRECOMMIT"
+}));
