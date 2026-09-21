@@ -1,0 +1,25 @@
+"use strict";
+function createRuntime(c){
+ const added=["bba_dempster_normalization","bba_discount_mass","bba_vacuous_extension","bba_coarsen_partition","bba_conditioning","bba_random_set_coverage","bba_nonadditivity_witness","bba_pignistic_projection","bba_calibration_gap","bba_authority_reservation"],operations=[...c.operations,...added];
+ function normalized(v,total,error){const denominator=total-v[0];c.requireThat(denominator>0n,error);return v.map((x,i)=>i?c.fraction(x,denominator):"0");}
+ function bits(mask,n){const result=[];for(let i=0;i<n;i++)if(mask&(1<<i))result.push(i);return result;}
+ function evaluate(r){if(c.record(r)&&c.operations.includes(r.operation))return c.evaluate(r);try{
+  const N=c.validate(r,operations),F=N-1,{n,mass:m,other,event:A,reliability}=r;let value,outcome="completed";
+  switch(r.operation){
+  case "bba_dempster_normalization":{const v=c.conjunction(m,other);value={mass:normalized(v,10000n,"E_TOTAL_CONFLICT"),discarded_conflict:c.fraction(v[0],10000n)};break;}
+  case "bba_discount_mass":{const alpha=BigInt(reliability),v=m.map(x=>BigInt(x)*alpha);v[F]+=100n*(100n-alpha);value={reliability:c.fraction(alpha),mass:c.vector(v,10000n)};break;}
+  case "bba_vacuous_extension":{const focal=[];for(let mask=1;mask<N;mask++)if(m[mask]){const refined=bits(mask,n).reduce((v,i)=>v|(3<<(2*i)),0);focal.push({mask:refined,mass:c.fraction(m[mask])});}value={original_frame_size:n,refined_frame_size:2*n,focal};break;}
+  case "bba_coarsen_partition":{const v=[0n,0n,0n,0n];for(let mask=1;mask<N;mask++){const coarse=bits(mask,n).reduce((v,i)=>v|(1<<(i%2)),0);v[coarse]+=BigInt(m[mask]);}value={coarse_frame_size:2,partition:Array.from({length:n},(_,i)=>i%2),mass:c.vector(v)};break;}
+  case "bba_conditioning":{const v=Array(N).fill(0n);for(let mask=0;mask<N;mask++)v[mask&A]+=BigInt(m[mask]);value={event:A,mass:normalized(v,100n,"E_IMPOSSIBLE_EVENT"),conditioning:"normalized_intersection"};break;}
+  case "bba_random_set_coverage":{const b=c.subsetTransform(m,n);value={event:A,hit_mass:c.fraction(100n-b[F^A]),contained_mass:c.fraction(b[A]),latent_outcomes:100,calibrated:false};break;}
+  case "bba_nonadditivity_witness":{const b=c.subsetTransform(m,n),part=b[1]+b[F^1];value={left:1,right:F^1,belief_union:"1",belief_parts:c.fraction(part),gap:c.fraction(100n-part)};break;}
+  case "bba_pignistic_projection":{const v=Array.from({length:n},()=>[0n,1n]);for(let mask=1;mask<N;mask++)if(m[mask]){const members=bits(mask,n),share=c.rational(m[mask],100*members.length);for(const i of members)v[i]=c.addQ(v[i],share);}value={probabilities:v.map(c.render),projection_only:true,calibrated:false};outcome="represented";break;}
+  case "bba_calibration_gap":value={records:0,calibrated:false,required:["observations","prespecified_sampling","heldout_evaluation","independent_review"]};outcome="open_gap";break;
+  case "bba_authority_reservation":value={authorized:false,actions_executed:0,status:"held",required:["competent_authority","affected_parties","Maori_authority_when_applicable"]};outcome="exact_gate";break;
+  }
+  return c.envelope(r.operation,value,outcome);
+ }catch(e){return c.reject(e);}}
+ return {...c,operations,evaluate,normalized,bits};
+}
+module.exports={createRuntime};
+if(require.main===module){const c=require("../x1/core.txt");c.cli(createRuntime(c));}

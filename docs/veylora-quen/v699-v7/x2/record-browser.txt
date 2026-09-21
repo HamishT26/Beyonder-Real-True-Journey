@@ -1,0 +1,19 @@
+"use strict";
+const fs=require("fs"),path=require("path"),D="docs/veylora-quen/v699-v7/x2",c=require(path.resolve(D,"../x1/core.txt")),e=require("./evidence-ledger.txt").open(c);
+const names=["belief-plausibility","combination-conflict","reliability-discount","focal-transport","pignistic-projection"],titles=["Belief, plausibility and interval width","Conflict retained during combination","Reliability discount and full-frame mass","Mass transported through a coarse partition","Probability projection with calibration reserved"];
+const records=names.map((n,i)=>({file:n+".html",title:titles[i],sha256:c.sha(fs.readFileSync(D+"/simulations/"+n+".html")),exact_table_rows:30,canvas_count:1,pause_pressed:"true",reset_status:"View reset.",reset_yaw:"34",reset_pitch:"-20",terminal_boundary_visible:true,passed:true}));
+const observed=JSON.parse(fs.readFileSync(D+"/evidence/browser-smoke.json"));if(c.canon(observed.records)!==c.canon(records))throw Error("browser receipt drift");
+const m=e.ledger.methods.find(x=>x.method_id==="VQ6997-x2-M013");if(!m)throw Error("presentation method absent");
+for(let i=0;i<records.length;i++)e.witness(m,"VQ6997-BROWSER-"+(i+1),"pass","CUA DOM table, pause and reset checks",records[i]);
+e.negative(m,"VQ6997-BROWSER-N001",{request:"optional favicon",status:404},"No favicon asset authored; no effect on the five requested models.",D+"/evidence/browser-smoke.json");
+e.witness(m,"VQ6997-BROWSER-OPTIONAL","pass","Classify optional asset miss without concealing it",{required_html_status:200,optional_icon_status:404},["VQ6997-BROWSER-N001"]);
+const recovery=e.method("Recover an exact local guide path after a failed lookup");
+e.negative(recovery,"VQ6997-READ-N001",{attempted_directory:"x2/local-skills"},"The actual owner directory is x2/skills; the literal lookup failed.",D+"/evidence/read-recovery.json");
+e.witness(recovery,"VQ6997-READ-FAIL","fail","Read guessed guide location","Path did not exist",["VQ6997-READ-N001"]);
+e.witness(recovery,"VQ6997-READ-RECOVERY","pass","Resolve through bounded rg file inventory and read exact guide","Full normalized-combination guide read from x2/skills");
+for(const [id,subject,reason,correction] of [["VQ6997-READ-N002","Validator interface search projection","Search output was clipped at its output budget.","Read exact bounded validator and CLI sections; no missing definition was assumed."],["VQ6997-READ-N003","Browser receipt ledger wrapper","Title substring failed to identify the presentation method after the browser receipt was written.","Inspect ledger IDs, bind the exact method ID, and reuse the unchanged observed browser receipt without rerunning UI checks."]]){e.negative(recovery,id,subject,reason,D+"/evidence/read-recovery.json");e.witness(recovery,id+"-FAILED","fail","Retained failed metadata wrapper",reason,[id]);e.witness(recovery,id+"-RECOVERED","pass","Bounded dependency correction",correction);}
+fs.writeFileSync(D+"/evidence/read-recovery.json",JSON.stringify({failed_path:"x2/local-skills/veylora-mass-dempster-normalization/SKILL.md",resolved_path:"x2/skills/veylora-mass-dempster-normalization/SKILL.md",failure_retained:true,failed_attempt_credit:0,domain_replay:false},null,2)+"\n",{flag:"wx"});
+for(const m of e.ledger.methods)if(m.title==="Independent finite invariant and refusal cases")m.title="Additional finite invariant and refusal cases";
+const tests=fs.readFileSync(D+"/run-tests.txt","utf8");fs.writeFileSync(D+"/run-tests.txt",tests.replace("Independent finite invariant and refusal cases","Additional finite invariant and refusal cases"));
+const sim=JSON.parse(fs.readFileSync(D+"/evidence/simulation-validation.json"));sim.browser_smoke="passed_5_of_5_DOM_and_controls";sim.browser_receipt=D+"/evidence/browser-smoke.json";fs.writeFileSync(D+"/evidence/simulation-validation.json",JSON.stringify(sim,null,2)+"\n");
+console.log(JSON.stringify(e.save()));

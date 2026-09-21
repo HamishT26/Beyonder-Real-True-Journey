@@ -1,0 +1,28 @@
+"use strict";
+const fs=require("fs"),c=require("../x1/core.txt"),r=require("./extension.txt").createRuntime(c),D="docs/veylora-quen/v699-v7/x2",e=require("./evidence-ledger.txt").open(c);
+if(fs.existsSync(D+"/evidence/additional-tests.json"))throw Error("additional test tranche already executed");
+const base={n:3,mass:[0,20,30,0,0,0,0,50],other:[0,0,60,0,0,0,0,40],event:1,reliability:50},vacuous=[0,0,0,0,0,0,0,100],single1=[0,100,0,0,0,0,0,0],single2=[0,0,100,0,0,0,0,0],bayes=[0,40,60,0,0,0,0,0],names=JSON.parse(fs.readFileSync("docs/veylora-quen/v699-v7/planning/test-plan.json")).tests;
+const definitions={names,hand_fixture:base,vacuous,single1,single2,bayes,explicit_expected:{event_bounds:{event:1,belief:"1/5",plausibility:"7/10",width:"1/2"},normalized_mass:["0","1/11","15/22","0","0","0","0","5/22"],pignistic:["11/30","7/15","1/6"]},malformed:[{id:"VQ6997-TEST-N001",kind:"total conflict",expected:"E_TOTAL_CONFLICT"},{id:"VQ6997-TEST-N002",kind:"impossible conditioning event",expected:"E_IMPOSSIBLE_EVENT"},{id:"VQ6997-TEST-N003",kind:"null request",expected:"E_RECORD"},{id:"VQ6997-TEST-N004",text:'{"n":3,"n":4}',expected:"E_JSON_DUPLICATE"},{id:"VQ6997-TEST-N005",text:'\u00a0{}',expected:"E_JSON_SYNTAX"}],defined_before_execution:true};
+fs.writeFileSync(D+"/evidence/additional-test-definitions.json",JSON.stringify(definitions,null,2)+"\n",{flag:"wx"});
+const call=(op,delta={})=>r.evaluate({operation:op,...c.clone(base),...delta}),eq=(a,b)=>c.canon(a)===c.canon(b),asQ=s=>{const [a,b="1"]=s.split("/");return c.rational(BigInt(a),BigInt(b));},sum=v=>v.reduce((a,x)=>c.addQ(a,asQ(x)),[0n,1n]);
+const checks=[
+ ()=>eq(call("bba_event_bounds").value,definitions.explicit_expected.event_bounds),
+ ()=>{const z=call("bba_event_bounds",{mass:vacuous,event:0}).value,p=call("bba_event_bounds",{mass:vacuous,event:3}).value,f=call("bba_event_bounds",{mass:vacuous,event:7}).value;return z.belief==="0"&&z.plausibility==="0"&&p.belief==="0"&&p.plausibility==="1"&&f.belief==="1"&&f.plausibility==="1";},
+ ()=>call("bba_nonadditivity_witness",{mass:bayes}).value.gap==="0",
+ ()=>call("bba_dempster_normalization",{mass:single1,other:single2}).error==="E_TOTAL_CONFLICT",
+ ()=>call("bba_conditioning",{mass:single2,event:1}).error==="E_IMPOSSIBLE_EVENT",
+ ()=>eq(call("bba_discount_mass",{reliability:0}).value.mass,vacuous.map(x=>c.fraction(x))),
+ ()=>eq(call("bba_discount_mass",{reliability:100}).value.mass,base.mass.map(x=>c.fraction(x))),
+ ()=>eq(call("bba_conjunctive_combination").value,call("bba_conjunctive_combination",{mass:base.other,other:base.mass}).value),
+ ()=>c.render(sum(call("bba_conjunctive_combination").value.mass))==="1",
+ ()=>eq(call("bba_dempster_normalization").value.mass,definitions.explicit_expected.normalized_mass),
+ ()=>{const a=call("bba_mobius_recovery").value;return a.exact_match&&eq(a.recovered_mass,base.mass.map(x=>c.fraction(x)));},
+ ()=>{const q=call("bba_commonality_table").value.commonality;return q[0]==="1"&&q[7]==="1/2";},
+ ()=>{const a=call("bba_vacuous_extension").value,b=call("bba_coarsen_partition").value;return eq(a.focal,[{mask:3,mass:"1/5"},{mask:12,mass:"3/10"},{mask:63,mass:"1/2"}])&&c.render(sum(b.mass))==="1";},
+ ()=>{const o=call("bba_pignistic_projection");return eq(o.value.probabilities,definitions.explicit_expected.pignistic)&&c.render(sum(o.value.probabilities))==="1"&&o.outcome==="represented"&&o.value.calibrated===false;},
+ ()=>{const errs=definitions.malformed.slice(3).map(d=>{try{c.parseJSON(d.text);return null;}catch(err){return err.code;}});return r.evaluate(null).error==="E_RECORD"&&eq(errs,["E_JSON_DUPLICATE","E_JSON_SYNTAX"]);}
+];
+const m=e.method("Additional finite invariant and refusal cases"),rows=[];
+for(const d of definitions.malformed)e.negative(m,d.id,{kind:d.kind||"malformed JSON",text:d.text||null},"Synthetic malformed subject remains failed; its refusal check is separate.",D+"/evidence/additional-test-definitions.json");
+for(let i=0;i<checks.length;i++){let pass=false,error=null;try{pass=checks[i]()===true;}catch(err){error={name:err.name,message:err.message};}const id="VQ6997-TEST-"+String(i+1).padStart(2,"0");rows.push({id,name:names[i],pass,error});e.witness(m,id,pass?"pass":"fail","additional_invariant_test",{name:names[i],pass,error},m.retained_negative_ids);}
+const valid=rows.every(x=>x.pass);fs.writeFileSync(D+"/evidence/additional-tests.json",JSON.stringify({total:15,passed:rows.filter(x=>x.pass).length,valid,rows,primary_tranches_replayed:false},null,2)+"\n",{flag:"wx"});const counts=e.save();console.log(JSON.stringify({tests:15,passed:rows.filter(x=>x.pass).length,failed:rows.filter(x=>!x.pass),counts}));process.exitCode=valid?0:2;
