@@ -1,0 +1,14 @@
+"""Preregistered structural metadata admission; never proves live Git state."""
+import json,re,sys
+FIELDS={'expected_head','actual_head','clean','inventory_complete','scratch_ready','attempt_consumed'}
+def evaluate(f):
+ issues=[]
+ if type(f) is not dict or set(f)!=FIELDS:return {'admitted':False,'issues':['fixture_shape'],'proves_live_git_state':False}
+ if not all(type(f[k]) is str and re.fullmatch('[0-9a-f]{40}',f[k]) for k in ['expected_head','actual_head']):issues.append('head_shape')
+ if f['actual_head']!=f['expected_head']:issues.append('wrong_head')
+ for k in ['clean','inventory_complete','scratch_ready']:
+  if f[k] is not True:issues.append(k)
+ if f['attempt_consumed'] is not False:issues.append('attempt_consumed')
+ return {'admitted':not issues,'issues':issues,'proves_live_git_state':False}
+if __name__=='__main__':
+ out=evaluate(json.load(sys.stdin));print(json.dumps(out,sort_keys=True));raise SystemExit(0 if out['admitted'] else 2)
