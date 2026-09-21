@@ -1,0 +1,155 @@
+{
+  "positive_tests": [
+    {
+      "name": "max_plus_add_idempotent",
+      "pass": true,
+      "observed": true
+    },
+    {
+      "name": "max_plus_add_commutative",
+      "pass": true,
+      "observed": true
+    },
+    {
+      "name": "max_plus_multiply_zero_identity",
+      "pass": true,
+      "observed": true
+    },
+    {
+      "name": "min_plus_add_commutative",
+      "pass": true,
+      "observed": true
+    },
+    {
+      "name": "min_plus_multiply_zero_identity",
+      "pass": true,
+      "observed": true
+    },
+    {
+      "name": "projective_max_zero",
+      "pass": true,
+      "observed": true
+    },
+    {
+      "name": "matvec_dimension",
+      "pass": true,
+      "observed": true
+    },
+    {
+      "name": "matmul_dimension",
+      "pass": true,
+      "observed": true
+    },
+    {
+      "name": "path_weight_steps",
+      "pass": true,
+      "observed": true
+    },
+    {
+      "name": "kleene_diagonal_nonnegative",
+      "pass": true,
+      "observed": true
+    },
+    {
+      "name": "carrier_negative_infinity",
+      "pass": true,
+      "observed": true
+    },
+    {
+      "name": "rational_reduction",
+      "pass": true,
+      "observed": true
+    },
+    {
+      "name": "max_plus_negative_infinity_absorption",
+      "pass": true,
+      "observed": true
+    },
+    {
+      "name": "projective_translation_invariance",
+      "pass": true,
+      "observed": true
+    },
+    {
+      "name": "all_negative_infinity_matvec_row",
+      "pass": true,
+      "observed": true
+    }
+  ],
+  "pass_count": 15,
+  "malformed_subjects": [
+    {
+      "id": "unknown_operation",
+      "request": {
+        "op": "unknown"
+      },
+      "subject_accepted": false,
+      "error": "unsupported operation",
+      "completion_credit": 0,
+      "guard_passed": true
+    },
+    {
+      "id": "zero_denominator",
+      "request": {
+        "op": "max-plus-multiply",
+        "left": "1/0",
+        "right": "1"
+      },
+      "subject_accepted": false,
+      "error": "zero denominator",
+      "completion_credit": 0,
+      "guard_passed": true
+    },
+    {
+      "id": "vector_size_mismatch",
+      "request": {
+        "op": "max-plus-add",
+        "left": [
+          "0"
+        ],
+        "right": [
+          "0",
+          "1"
+        ]
+      },
+      "subject_accepted": false,
+      "error": "vector size mismatch",
+      "completion_credit": 0,
+      "guard_passed": true
+    },
+    {
+      "id": "negative_kleene_bound",
+      "request": {
+        "op": "kleene-truncate",
+        "matrix": [
+          [
+            "0"
+          ]
+        ],
+        "power_limit": -1
+      },
+      "subject_accepted": false,
+      "error": "invalid Kleene bound",
+      "completion_credit": 0,
+      "guard_passed": true
+    },
+    {
+      "id": "missing_path_edge",
+      "request": {
+        "op": "path-weight",
+        "edges": [],
+        "path": [
+          0,
+          1
+        ]
+      },
+      "subject_accepted": false,
+      "error": "missing path edge",
+      "completion_credit": 0,
+      "guard_passed": true
+    }
+  ],
+  "malformed_count": 5,
+  "refusal_guard_count": 5,
+  "boundary": "Finite synthetic same-owner software and documentation evidence only; no physical observation, empirical GMUT confirmation, human participation, printmaking competence, professional or production authority, identity status, legal or cultural legitimacy, Maori authority, complete privacy or accessibility, exhaustive security, independent reproduction, consciousness, personhood, Theory-of-Everything, canon, or Stage 20 claim."
+}

@@ -1,0 +1,6 @@
+'use strict';
+const fs=require('fs'),path=require('path'),Module=require('module');
+function load(p){const m=new Module(p);m.filename=p;m.paths=Module._nodeModulePaths(path.dirname(p));m._compile(fs.readFileSync(p,'utf8'),p);return m.exports;}
+const core=load(path.join(__dirname,'..','tools','tropical-core.txt'));
+const allowed=["max-plus-multiply","min-plus-add"];
+try{const req=JSON.parse(fs.readFileSync(0,'utf8'));if(!allowed.includes(req.op))throw new Error('operation outside paired caller');const out=core.run(req);process.stdout.write(JSON.stringify({ok:true,operation:req.op,result:out}));}catch(e){process.stderr.write(String(e.message||e));process.exitCode=2;}

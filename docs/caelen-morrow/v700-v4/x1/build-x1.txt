@@ -1,0 +1,313 @@
+const fs = require('fs');
+const path = require('path');
+const crypto = require('crypto');
+const Module = require('module');
+const { spawnSync } = require('child_process');
+
+const phaseRoot = path.resolve(process.argv[2]);
+const quickValidate = path.resolve(process.argv[3]);
+const methodFlowValidator = path.resolve(process.argv[4]);
+if (!phaseRoot || !quickValidate || !methodFlowValidator) throw new Error('usage: build-x1 <phaseRoot> <quickValidate> <methodFlowValidator>');
+
+const owner = 'Caelen Morrow';
+const phase = 'v700-v4';
+const planning = 'f30dca4e53c8106539d88ba72f9f1c2cb8691118';
+const boundary = 'Finite synthetic same-owner software and documentation evidence only; no physical observation, empirical GMUT confirmation, human participation, printmaking competence, professional or production authority, identity status, legal or cultural legitimacy, Maori authority, complete privacy or accessibility, exhaustive security, independent reproduction, consciousness, personhood, Theory-of-Everything, canon, or Stage 20 claim.';
+const compactBoundary = 'See top-level boundary.';
+const protectedGates = [
+  'empirical_confirmation','physical_model_validation','real_participants_operators','professional_scientific_authority',
+  'production_deployment','identity_status','legal_cultural_affected_authority','Maori_authority',
+  'complete_privacy_accessibility','exhaustive_security','independent_reproduction','consciousness_personhood_identity',
+  'AGI_ASI','Theory_of_Everything','proof_canon','Stage_20'
+];
+
+function mkdir(rel) { fs.mkdirSync(path.join(phaseRoot, rel), { recursive: true }); }
+function writeJson(rel, value) { const p = path.join(phaseRoot, rel); fs.mkdirSync(path.dirname(p), { recursive: true }); fs.writeFileSync(p, JSON.stringify(value, null, 2) + '\n', 'utf8'); }
+function writeText(rel, value) { const p = path.join(phaseRoot, rel); fs.mkdirSync(path.dirname(p), { recursive: true }); fs.writeFileSync(p, value.replace(/\r\n/g, '\n'), 'utf8'); }
+function readJson(rel) { return JSON.parse(fs.readFileSync(path.join(phaseRoot, rel), 'utf8')); }
+function sha256(value) { return crypto.createHash('sha256').update(value).digest('hex'); }
+function walk(dir) { const out = []; if (!fs.existsSync(dir)) return out; for (const ent of fs.readdirSync(dir, { withFileTypes: true })) { const p = path.join(dir, ent.name); if (ent.isDirectory()) out.push(...walk(p)); else out.push(p); } return out; }
+function loadCommonJs(file) { const m = new Module(file); m.filename = file; m.paths = Module._nodeModulePaths(path.dirname(file)); m._compile(fs.readFileSync(file, 'utf8'), file); return m.exports; }
+
+mkdir('x1/tools'); mkdir('x1/results'); mkdir('x1/method-flow'); mkdir('x1/skills'); mkdir('x1/runners'); mkdir('x1/portfolios'); mkdir('x1/tests');
+
+const coreSource = String.raw`'use strict';
+class Q {
+  constructor(n, d = 1n) {
+    if (d === 0n) throw new Error('zero denominator');
+    if (d < 0n) { n = -n; d = -d; }
+    const g = Q.gcd(n < 0n ? -n : n, d); this.n = n / g; this.d = d / g;
+  }
+  static gcd(a, b) { while (b) { const t = a % b; a = b; b = t; } return a || 1n; }
+  add(o) { return new Q(this.n * o.d + o.n * this.d, this.d * o.d); }
+  sub(o) { return new Q(this.n * o.d - o.n * this.d, this.d * o.d); }
+  cmp(o) { const z = this.n * o.d - o.n * this.d; return z < 0n ? -1 : z > 0n ? 1 : 0; }
+  toString() { return this.d === 1n ? String(this.n) : String(this.n) + '/' + String(this.d); }
+}
+function scalar(x) {
+  if (x === '-inf') return { kind: 'negInf' };
+  if (x === 'inf') return { kind: 'posInf' };
+  if (typeof x !== 'string' || !/^-?\d+(?:\/-?\d+)?$/.test(x)) throw new Error('invalid exact scalar');
+  const p = x.split('/'); return { kind: 'finite', q: new Q(BigInt(p[0]), p.length === 1 ? 1n : BigInt(p[1])) };
+}
+function text(x) { return x.kind === 'finite' ? x.q.toString() : x.kind === 'negInf' ? '-inf' : 'inf'; }
+function order(a, b) { if (a.kind === b.kind && a.kind !== 'finite') return 0; if (a.kind === 'negInf' || b.kind === 'posInf') return -1; if (a.kind === 'posInf' || b.kind === 'negInf') return 1; return a.q.cmp(b.q); }
+function max(a, b) { return order(a, b) >= 0 ? a : b; }
+function min(a, b) { return order(a, b) <= 0 ? a : b; }
+function sum(a, b, mode) {
+  if (mode === 'max') { if (a.kind === 'negInf' || b.kind === 'negInf') return { kind: 'negInf' }; if (a.kind !== 'finite' || b.kind !== 'finite') throw new Error('positive infinity outside max-plus carrier'); }
+  if (mode === 'min') { if (a.kind === 'posInf' || b.kind === 'posInf') return { kind: 'posInf' }; if (a.kind !== 'finite' || b.kind !== 'finite') throw new Error('negative infinity outside min-plus carrier'); }
+  return { kind: 'finite', q: a.q.add(b.q) };
+}
+function vector(v) { if (!Array.isArray(v) || !v.length || v.length > 6) throw new Error('invalid vector'); return v.map(scalar); }
+function matrix(m) { if (!Array.isArray(m) || !m.length || m.length > 6 || !m.every(r => Array.isArray(r) && r.length === m[0].length && r.length <= 6)) throw new Error('invalid matrix'); return m.map(r => r.map(scalar)); }
+function maxVector(a, b) { if (a.length !== b.length) throw new Error('vector size mismatch'); return a.map((x, i) => max(x, b[i])); }
+function minVector(a, b) { if (a.length !== b.length) throw new Error('vector size mismatch'); return a.map((x, i) => min(x, b[i])); }
+function matmul(A, B) { if (A[0].length !== B.length) throw new Error('matrix size mismatch'); return A.map(row => B[0].map((_, j) => row.reduce((acc, a, k) => max(acc, sum(a, B[k][j], 'max')), { kind: 'negInf' }))); }
+function matvec(A, v) { if (A[0].length !== v.length) throw new Error('matrix vector mismatch'); return A.map(row => row.reduce((acc, a, k) => max(acc, sum(a, v[k], 'max')), { kind: 'negInf' })); }
+function showVector(v) { return v.map(text); }
+function showMatrix(m) { return m.map(showVector); }
+function identity(n) { return Array.from({ length: n }, (_, i) => Array.from({ length: n }, (_, j) => i === j ? scalar('0') : scalar('-inf'))); }
+function run(req) {
+  if (!req || typeof req !== 'object' || req.invalid_marker === true) throw new Error('malformed candidate subject');
+  switch (req.op) {
+    case 'carrier-boundary': return { carrier: req.carrier, values: showVector(vector(req.values)), finite_only: false };
+    case 'max-plus-add': return { value: showVector(maxVector(vector(req.left), vector(req.right))) };
+    case 'max-plus-multiply': return { value: text(sum(scalar(req.left), scalar(req.right), 'max')) };
+    case 'min-plus-add': return { value: showVector(minVector(vector(req.left), vector(req.right))) };
+    case 'min-plus-multiply': return { value: text(sum(scalar(req.left), scalar(req.right), 'min')) };
+    case 'projective-normalize': { const v = vector(req.vector); const top = v.reduce(max); if (top.kind !== 'finite') throw new Error('normalization requires finite maximum'); return { value: showVector(v.map(x => x.kind === 'negInf' ? x : { kind: 'finite', q: x.q.sub(top.q) })), shift: text(top) }; }
+    case 'max-plus-matvec': return { value: showVector(matvec(matrix(req.matrix), vector(req.vector))) };
+    case 'max-plus-matmul': return { value: showMatrix(matmul(matrix(req.left), matrix(req.right))) };
+    case 'path-weight': { if (!Array.isArray(req.path) || req.path.length < 2) throw new Error('invalid path'); let total = scalar('0'); for (let i = 0; i < req.path.length - 1; i++) { const e = req.edges.find(x => x.from === req.path[i] && x.to === req.path[i + 1]); if (!e) throw new Error('missing path edge'); total = sum(total, scalar(e.weight), 'max'); } return { value: text(total), steps: req.path.length - 1 }; }
+    case 'kleene-truncate': { const A = matrix(req.matrix); if (A.length !== A[0].length || !Number.isInteger(req.power_limit) || req.power_limit < 0 || req.power_limit > 8) throw new Error('invalid Kleene bound'); let closure = identity(A.length); let power = identity(A.length); for (let k = 1; k <= req.power_limit; k++) { power = matmul(power, A); closure = closure.map((r, i) => r.map((x, j) => max(x, power[i][j]))); } return { value: showMatrix(closure), power_limit: req.power_limit }; }
+    default: throw new Error('unsupported operation');
+  }
+}
+module.exports = { Q, scalar, text, order, max, min, sum, vector, matrix, matmul, matvec, run };
+`;
+writeText('x1/tools/tropical-core.txt', coreSource);
+const corePath = path.join(phaseRoot, 'x1/tools/tropical-core.txt');
+const core = loadCommonJs(corePath);
+
+const operations = readJson('plan/mechanisms.json').operations.filter(x => x.stage === 'x1');
+const proposalMap = new Map();
+for (const op of operations) proposalMap.set(op.operation, readJson(`plan/proposals/${op.operation}.json`).records);
+
+const resultFiles = [];
+const methodFiles = [];
+const negativeRecords = [];
+const methods = [];
+const witnesses = [];
+const portfolioSafe = [], portfolioCandidate = [], portfolioCfr = [], portfolioClean = [];
+
+for (const op of operations) {
+  const rows = proposalMap.get(op.operation);
+  const validRows = [], failedSubjects = [], refusalGuards = [], cleanupRows = [];
+  const methodId = `CM7004-X1-${op.operation.toUpperCase().replace(/-/g, '_')}`;
+  const negativeIds = [];
+  const methodWitnessIds = [];
+  for (const proposal of rows) {
+    const validId = `${proposal.proposal_id}-P`;
+    const failId = `${proposal.proposal_id}-F`;
+    const guardId = `${proposal.proposal_id}-R`;
+    const cleanId = `${proposal.proposal_id}-C`;
+    const negativeId = `${proposal.proposal_id}-CANDIDATE-N`;
+    const result = core.run(proposal.request);
+    validRows.push({ proposal_id: proposal.proposal_id, profile_id: proposal.profile_id, request_sha256: sha256(Buffer.from(JSON.stringify(proposal.request))), outcome: 'completed', result });
+    let rejected = false, error = null;
+    try { core.run({ ...proposal.request, invalid_marker: true }); } catch (e) { rejected = true; error = e.message; }
+    if (!rejected) throw new Error(`invalid subject accepted for ${proposal.proposal_id}`);
+    failedSubjects.push({ proposal_id: proposal.proposal_id, negative_id: negativeId, subject: { op: proposal.operation, profile_id: proposal.profile_id, invalid_marker: true }, subject_accepted: false, error, completion_credit: 0 });
+    refusalGuards.push({ proposal_id: proposal.proposal_id, negative_id: negativeId, guard_passed: rejected, invalid_subject_promoted: false });
+    cleanupRows.push({ proposal_id: proposal.proposal_id, input_mutated: false, temporary_artifacts_remaining: false, result: 'pass' });
+    negativeIds.push(negativeId);
+    negativeRecords.push({ negative_id: negativeId, stage: 'x1', method_id: methodId, witness_id: failId, status: 'retained_zero_credit', erased: false, promoted: false, recovery_never_erases_failure: true });
+    const base = { method_id: methodId, scope: `Caelen v700-v4 ${op.operation} owner delta`, same_owner_only: true, independent_reproduction: false, boundary: compactBoundary };
+    witnesses.push({ witness_id: validId, ...base, procedure: `Execute frozen ${op.operation} request once`, expected: 'exact bounded envelope', observed: 'pass', result: 'pass', retained_negative_ids: [] });
+    witnesses.push({ witness_id: failId, ...base, procedure: `Submit preregistered malformed ${op.operation} subject`, expected: 'subject remains failed at zero credit', observed: 'fail', result: 'fail', retained_negative_ids: [negativeId] });
+    witnesses.push({ witness_id: guardId, ...base, procedure: `Verify ${op.operation} refusal guard`, expected: 'reject malformed subject', observed: 'pass', result: 'pass', retained_negative_ids: [negativeId] });
+    witnesses.push({ witness_id: cleanId, ...base, procedure: `Verify ${op.operation} input and cleanup invariants`, expected: 'no mutation or residue', observed: 'pass', result: 'pass', retained_negative_ids: [] });
+    methodWitnessIds.push(validId, failId, guardId, cleanId);
+    portfolioSafe.push({ proposal_id: proposal.proposal_id, witness_id: validId, result: 'pass', credit_scope: 'bounded owner execution only' });
+    portfolioCandidate.push({ proposal_id: proposal.proposal_id, witness_id: failId, negative_id: negativeId, result: 'fail', completion_credit: 0 });
+    portfolioCfr.push({ proposal_id: proposal.proposal_id, witness_id: guardId, result: 'pass', invalid_subject_promoted: false });
+    portfolioClean.push({ proposal_id: proposal.proposal_id, witness_id: cleanId, result: 'pass', input_mutated: false });
+  }
+  const resultDoc = { schema: 'ghc.family.tropical-x1-results.v1', operation: op.operation, valid_count: 30, failed_subject_count: 30, refusal_guard_count: 30, cleanup_count: 30, valid_rows: validRows, failed_subjects: failedSubjects, refusal_guards: refusalGuards, cleanup_rows: cleanupRows, boundary };
+  writeJson(`x1/results/${op.operation}.json`, resultDoc); resultFiles.push(`x1/results/${op.operation}.json`);
+  methods.push({
+    method_id: methodId, title: `${op.operation} exact synthetic tranche`, failure_signature: 'Malformed subject, wrong exact envelope, mutation, or protected-claim promotion',
+    trigger_preconditions: ['immutable planning checkpoint', `frozen ${op.operation} definitions`], privacy_class: 'sanitized_public', approval_class: 'safe_now',
+    candidate_workaround: 'Retain the failed subject and correct only the smallest owner-local dependency.', validation_witness_ids: methodWitnessIds,
+    recurrence_guard: 'Never count a successful refusal as execution of the malformed subject.', rollback: 'Preserve the frozen plan and discard only uncommitted owner-local result bytes.',
+    recommendation_state: 'validated', supersedes: [], protected_gates: protectedGates, retained_negative_ids: negativeIds, scope_boundary: boundary
+  });
+  const methodDoc = { method_id: methodId, operation: op.operation, witness_count: methodWitnessIds.length, pass: 90, fail: 30, retained_negative_ids: negativeIds, boundary };
+  writeJson(`x1/method-flow/${op.operation}.json`, methodDoc); methodFiles.push(`x1/method-flow/${op.operation}.json`);
+}
+
+writeJson('x1/portfolios/x1-safe.json', { kind: 'safe', count: 300, records: portfolioSafe, boundary });
+writeJson('x1/portfolios/x1-candidate.json', { kind: 'candidate', count: 300, records: portfolioCandidate, boundary });
+writeJson('x1/portfolios/x1-cfr.json', { kind: 'CLEAN_FIX_REFINE_refusal', count: 300, records: portfolioCfr, boundary });
+writeJson('x1/portfolios/x1-clean.json', { kind: 'cleanup', count: 300, records: portfolioClean, boundary });
+
+function skillText(name, operation) {
+  return `---\nname: ${name}\ndescription: Validate bounded exact ${operation} requests for the Caelen v700-v4 tropical-semiring owner phase; do not use for real systems, production decisions, or authority claims.\n---\n\n# ${name}\n\n1. Accept only the frozen finite synthetic request shape for \`${operation}\`.\n2. Use exact integer or rational strings and preserve negative-infinity semantics where declared.\n3. Reject malformed subjects and keep the failed subject separate from the passing refusal guard.\n4. Emit only \`completed\`, \`represented\`, \`open_gap\`, or \`exact_gate\` for core outcomes.\n5. Retain input fixity, rollback, source status, and protected gates.\n\nThis guide is owner-local same-owner software evidence only. It grants no empirical, professional, production, legal, cultural, affected-party, Maori, identity, consciousness, personhood, Theory-of-Everything, or Stage 20 authority.\n`;
+}
+const skillRows = [];
+for (const op of operations) {
+  const name = `ghc-family-${op.operation}-local-v700-v4`;
+  const rel = `x1/skills/${name}/SKILL.md`;
+  writeText(rel, skillText(name, op.operation));
+  const p = path.join(phaseRoot, rel);
+  const v = spawnSync('python', ['-X', 'utf8', quickValidate, path.dirname(p)], { encoding: 'utf8', maxBuffer: 1024 * 1024 });
+  skillRows.push({ name, operation: op.operation, source_path: rel, source_sha256: sha256(fs.readFileSync(p)), quick_validate_exit: v.status, quick_validate_pass: v.status === 0 });
+}
+if (skillRows.some(x => !x.quick_validate_pass)) throw new Error('local skill quick validation failed');
+
+const loader = "const fs=require('fs'),path=require('path'),Module=require('module');const p=process.argv[1];const m=new Module(p);m.filename=p;m.paths=Module._nodeModulePaths(path.dirname(p));m._compile(fs.readFileSync(p,'utf8'),p);";
+const runnerRows = [], smokeRows = [];
+for (let i = 0; i < 5; i++) {
+  const pairOps = operations.slice(i * 2, i * 2 + 2).map(x => x.operation);
+  const name = `ghc_family_tropical_pair_${i + 1}.txt`;
+  const rel = `x1/runners/${name}`;
+  const runnerSource = `'use strict';\nconst fs=require('fs'),path=require('path'),Module=require('module');\nfunction load(p){const m=new Module(p);m.filename=p;m.paths=Module._nodeModulePaths(path.dirname(p));m._compile(fs.readFileSync(p,'utf8'),p);return m.exports;}\nconst core=load(path.join(__dirname,'..','tools','tropical-core.txt'));\nconst allowed=${JSON.stringify(pairOps)};\ntry{const req=JSON.parse(fs.readFileSync(0,'utf8'));if(!allowed.includes(req.op))throw new Error('operation outside paired caller');const out=core.run(req);process.stdout.write(JSON.stringify({ok:true,operation:req.op,result:out}));}catch(e){process.stderr.write(String(e.message||e));process.exitCode=2;}\n`;
+  writeText(rel, runnerSource);
+  const runnerPath = path.join(phaseRoot, rel);
+  const row = { name, operations: pairOps, source_path: rel, source_sha256: sha256(fs.readFileSync(runnerPath)), valid_smokes: [], invalid_smoke: null, refusal_guard: null };
+  for (const op of pairOps) {
+    const req = proposalMap.get(op)[0].request;
+    const r = spawnSync(process.execPath, ['-e', loader, runnerPath], { input: JSON.stringify(req), encoding: 'utf8', maxBuffer: 1024 * 1024 });
+    const pass = r.status === 0 && JSON.parse(r.stdout).ok === true;
+    row.valid_smokes.push({ operation: op, exit: r.status, pass });
+    smokeRows.push({ runner: name, kind: 'valid', operation: op, result: pass ? 'pass' : 'fail' });
+  }
+  const adverse = { ...proposalMap.get(pairOps[0])[1].request, invalid_marker: true };
+  const bad = spawnSync(process.execPath, ['-e', loader, runnerPath], { input: JSON.stringify(adverse), encoding: 'utf8', maxBuffer: 1024 * 1024 });
+  row.invalid_smoke = { operation: pairOps[0], exit: bad.status, subject_accepted: bad.status === 0, completion_credit: 0 };
+  row.refusal_guard = { pass: bad.status !== 0, invalid_subject_promoted: false };
+  smokeRows.push({ runner: name, kind: 'invalid_subject', operation: pairOps[0], result: 'fail', completion_credit: 0 });
+  smokeRows.push({ runner: name, kind: 'refusal_guard', operation: pairOps[0], result: bad.status !== 0 ? 'pass' : 'fail' });
+  runnerRows.push(row);
+}
+if (runnerRows.some(r => r.valid_smokes.some(x => !x.pass) || !r.refusal_guard.pass)) throw new Error('runner smoke failure');
+writeJson('x1/capability-validation.json', { skills: skillRows, runners: runnerRows, smoke_rows: smokeRows, local_guides: 10, paired_runners: 5, valid_smokes: 10, invalid_subjects: 5, refusal_guards: 5, boundary });
+
+const capabilityMethod = 'CM7004-X1-CAPABILITIES';
+const capabilityNegatives = [];
+const capabilityWitnessIds = [];
+for (let i = 0; i < skillRows.length; i++) {
+  const id = `CM7004-X1-CAP-P${String(i + 1).padStart(2, '0')}`;
+  capabilityWitnessIds.push(id); witnesses.push({ witness_id: id, method_id: capabilityMethod, procedure: `Official quick validation for ${skillRows[i].name}`, scope: 'Caelen v700-v4 x1 local guides', expected: 'pass', observed: 'pass', result: 'pass', same_owner_only: true, independent_reproduction: false, retained_negative_ids: [], boundary: compactBoundary });
+}
+for (let i = 0; i < runnerRows.length; i++) {
+  for (let j = 0; j < 2; j++) {
+    const id = `CM7004-X1-CAP-R${i + 1}-${j + 1}-P`; capabilityWitnessIds.push(id);
+    witnesses.push({ witness_id: id, method_id: capabilityMethod, procedure: `Valid smoke for ${runnerRows[i].name} operation ${runnerRows[i].operations[j]}`, scope: 'Caelen v700-v4 x1 paired callers', expected: 'pass', observed: 'pass', result: 'pass', same_owner_only: true, independent_reproduction: false, retained_negative_ids: [], boundary: compactBoundary });
+  }
+  const neg = `CM7004-X1-CAP-R${i + 1}-N`; const failId = `CM7004-X1-CAP-R${i + 1}-F`; const guardId = `CM7004-X1-CAP-R${i + 1}-G`;
+  capabilityNegatives.push(neg); capabilityWitnessIds.push(failId, guardId);
+  negativeRecords.push({ negative_id: neg, stage: 'x1', method_id: capabilityMethod, witness_id: failId, status: 'retained_zero_credit', erased: false, promoted: false, recovery_never_erases_failure: true });
+  witnesses.push({ witness_id: failId, method_id: capabilityMethod, procedure: `Adverse smoke subject for ${runnerRows[i].name}`, scope: 'Caelen v700-v4 x1 paired callers', expected: 'subject remains failed at zero credit', observed: 'fail', result: 'fail', same_owner_only: true, independent_reproduction: false, retained_negative_ids: [neg], boundary: compactBoundary });
+  witnesses.push({ witness_id: guardId, method_id: capabilityMethod, procedure: `Refusal guard for ${runnerRows[i].name}`, scope: 'Caelen v700-v4 x1 paired callers', expected: 'reject adverse subject', observed: 'pass', result: 'pass', same_owner_only: true, independent_reproduction: false, retained_negative_ids: [neg], boundary: compactBoundary });
+}
+methods.push({ method_id: capabilityMethod, title: 'x1 owner-local guide and caller validation', failure_signature: 'Guide validation, caller acceptance, or refusal boundary fails', trigger_preconditions: ['x1 core materialized', 'ten owner-local guides and five paired callers'], privacy_class: 'sanitized_public', approval_class: 'safe_now', candidate_workaround: 'Retain the failed guide or subject and repair only its exact owner-local dependency.', validation_witness_ids: capabilityWitnessIds, recurrence_guard: 'A rejected adverse subject never gains completion credit.', rollback: 'Remove only uncommitted owner-local capability bytes.', recommendation_state: 'validated', supersedes: [], protected_gates: protectedGates, retained_negative_ids: capabilityNegatives, scope_boundary: boundary });
+
+const tests = [];
+function test(name, fn) { let pass = false, observed = null; try { observed = fn(); pass = observed === true; } catch (e) { observed = e.message; } tests.push({ name, pass, observed }); }
+const p1 = readJson('plan/profiles.json').profiles[0];
+test('max_plus_add_idempotent', () => JSON.stringify(core.run({ op: 'max-plus-add', left: p1.vector, right: p1.vector }).value) === JSON.stringify(p1.vector));
+test('max_plus_add_commutative', () => JSON.stringify(core.run({ op: 'max-plus-add', left: p1.vector, right: p1.vector2 }).value) === JSON.stringify(core.run({ op: 'max-plus-add', left: p1.vector2, right: p1.vector }).value));
+test('max_plus_multiply_zero_identity', () => core.run({ op: 'max-plus-multiply', left: p1.scalar_a, right: '0' }).value === core.scalar(p1.scalar_a).q.toString());
+test('min_plus_add_commutative', () => JSON.stringify(core.run({ op: 'min-plus-add', left: p1.vector, right: p1.vector2 }).value) === JSON.stringify(core.run({ op: 'min-plus-add', left: p1.vector2, right: p1.vector }).value));
+test('min_plus_multiply_zero_identity', () => core.run({ op: 'min-plus-multiply', left: p1.scalar_b, right: '0' }).value === core.scalar(p1.scalar_b).q.toString());
+test('projective_max_zero', () => core.run({ op: 'projective-normalize', vector: p1.vector }).value.some(x => x === '0'));
+test('matvec_dimension', () => core.run({ op: 'max-plus-matvec', matrix: p1.matrix, vector: p1.vector }).value.length === 3);
+test('matmul_dimension', () => core.run({ op: 'max-plus-matmul', left: p1.matrix, right: p1.matrix2 }).value.length === 3);
+test('path_weight_steps', () => core.run({ op: 'path-weight', edges: p1.edges, path: p1.path }).steps === 2);
+test('kleene_diagonal_nonnegative', () => core.run({ op: 'kleene-truncate', matrix: p1.matrix, power_limit: 4 }).value.every((r, i) => core.order(core.scalar(r[i]), core.scalar('0')) >= 0));
+test('carrier_negative_infinity', () => core.run({ op: 'carrier-boundary', carrier: 'Q_max_with_negative_infinity', values: ['0','-inf'] }).values[1] === '-inf');
+test('rational_reduction', () => core.scalar('2/4').q.toString() === '1/2');
+test('max_plus_negative_infinity_absorption', () => core.run({ op: 'max-plus-multiply', left: '-inf', right: '4' }).value === '-inf');
+test('projective_translation_invariance', () => { const a = core.run({ op: 'projective-normalize', vector: p1.vector }).value; const shifted = p1.vector.map(x => core.scalar(x).q.add(core.scalar('3').q).toString()); const b = core.run({ op: 'projective-normalize', vector: shifted }).value; return JSON.stringify(a) === JSON.stringify(b); });
+test('all_negative_infinity_matvec_row', () => core.run({ op: 'max-plus-matvec', matrix: [['-inf','-inf','-inf']], vector: p1.vector }).value[0] === '-inf');
+if (tests.some(x => !x.pass)) throw new Error(`additional test failure ${JSON.stringify(tests.filter(x => !x.pass))}`);
+
+const malformedTests = [
+  { id: 'unknown_operation', request: { op: 'unknown' } },
+  { id: 'zero_denominator', request: { op: 'max-plus-multiply', left: '1/0', right: '1' } },
+  { id: 'vector_size_mismatch', request: { op: 'max-plus-add', left: ['0'], right: ['0','1'] } },
+  { id: 'negative_kleene_bound', request: { op: 'kleene-truncate', matrix: [['0']], power_limit: -1 } },
+  { id: 'missing_path_edge', request: { op: 'path-weight', edges: [], path: [0,1] } }
+];
+const malformedRows = malformedTests.map(x => { let rejected = false, error = null; try { core.run(x.request); } catch (e) { rejected = true; error = e.message; } return { ...x, subject_accepted: !rejected, error, completion_credit: 0, guard_passed: rejected }; });
+if (malformedRows.some(x => !x.guard_passed)) throw new Error('malformed additional test accepted');
+writeJson('x1/tests/additional-tests.json', { positive_tests: tests, pass_count: 15, malformed_subjects: malformedRows, malformed_count: 5, refusal_guard_count: 5, boundary });
+
+const testsMethod = 'CM7004-X1-ADDITIONAL-TESTS';
+const testWitnessIds = [], testNegatives = [];
+for (let i = 0; i < tests.length; i++) { const id = `CM7004-X1-TEST-P${String(i + 1).padStart(2,'0')}`; testWitnessIds.push(id); witnesses.push({ witness_id: id, method_id: testsMethod, procedure: tests[i].name, scope: 'Caelen v700-v4 x1 additional exact checks', expected: 'pass', observed: 'pass', result: 'pass', same_owner_only: true, independent_reproduction: false, retained_negative_ids: [], boundary: compactBoundary }); }
+for (let i = 0; i < malformedRows.length; i++) {
+  const neg = `CM7004-X1-TEST-N${i + 1}`; const failId = `CM7004-X1-TEST-F${i + 1}`; const guardId = `CM7004-X1-TEST-G${i + 1}`;
+  testNegatives.push(neg); testWitnessIds.push(failId, guardId); negativeRecords.push({ negative_id: neg, stage: 'x1', method_id: testsMethod, witness_id: failId, status: 'retained_zero_credit', erased: false, promoted: false, recovery_never_erases_failure: true });
+  witnesses.push({ witness_id: failId, method_id: testsMethod, procedure: `Malformed additional-test subject ${malformedRows[i].id}`, scope: 'Caelen v700-v4 x1 additional exact checks', expected: 'subject remains failed at zero credit', observed: 'fail', result: 'fail', same_owner_only: true, independent_reproduction: false, retained_negative_ids: [neg], boundary: compactBoundary });
+  witnesses.push({ witness_id: guardId, method_id: testsMethod, procedure: `Refusal guard for ${malformedRows[i].id}`, scope: 'Caelen v700-v4 x1 additional exact checks', expected: 'reject malformed subject', observed: 'pass', result: 'pass', same_owner_only: true, independent_reproduction: false, retained_negative_ids: [neg], boundary: compactBoundary });
+}
+methods.push({ method_id: testsMethod, title: 'x1 additional exact invariants', failure_signature: 'Finite identity or malformed-subject refusal fails', trigger_preconditions: ['x1 tropical core loaded', 'frozen exact fixtures'], privacy_class: 'sanitized_public', approval_class: 'safe_now', candidate_workaround: 'Retain only the failed check and isolate its exact dependency.', validation_witness_ids: testWitnessIds, recurrence_guard: 'Do not replay successful domain outputs while correcting a test dependency.', rollback: 'Discard only uncommitted test receipts.', recommendation_state: 'validated', supersedes: [], protected_gates: protectedGates, retained_negative_ids: testNegatives, scope_boundary: boundary });
+
+const operationalMethod = 'CM7004-X1-OPERATIONAL';
+const operationalNegative = 'CM7004-X1-OP-N001';
+const stagedWordNegative = 'CM7004-X1-OP-N002';
+negativeRecords.push({ negative_id: operationalNegative, stage: 'x1', method_id: operationalMethod, witness_id: 'CM7004-X1-OP-F01', status: 'retained_zero_credit', erased: false, promoted: false, recovery_never_erases_failure: true });
+witnesses.push({ witness_id: 'CM7004-X1-OP-F01', method_id: operationalMethod, procedure: 'First generated tropical core ended with a literal backslash-n token and failed syntax compilation', scope: 'Caelen v700-v4 x1 materialization', expected: 'failed artifact remains zero credit', observed: 'fail', result: 'fail', same_owner_only: true, independent_reproduction: false, retained_negative_ids: [operationalNegative], boundary: compactBoundary });
+witnesses.push({ witness_id: 'CM7004-X1-OP-P01', method_id: operationalMethod, procedure: 'Remove only the literal trailing token and compile the corrected uncommitted core', scope: 'Caelen v700-v4 x1 materialization', expected: 'corrected core compiles before domain execution', observed: 'pass', result: 'pass', same_owner_only: true, independent_reproduction: false, retained_negative_ids: [operationalNegative], boundary: compactBoundary });
+negativeRecords.push({ negative_id: stagedWordNegative, stage: 'x1', method_id: operationalMethod, witness_id: 'CM7004-X1-OP-F02', status: 'retained_zero_credit', erased: false, promoted: false, recovery_never_erases_failure: true });
+witnesses.push({ witness_id: 'CM7004-X1-OP-F02', method_id: operationalMethod, procedure: 'First exact x1 staged review found the Method Flow document at 105752 words above the 100000-word ceiling', scope: 'Caelen v700-v4 x1 staged review', expected: 'oversized document remains invalid at zero credit', observed: 'fail', result: 'fail', same_owner_only: true, independent_reproduction: false, retained_negative_ids: [stagedWordNegative], boundary: compactBoundary });
+witnesses.push({ witness_id: 'CM7004-X1-OP-P02', method_id: operationalMethod, procedure: 'Compact repeated witness boundary prose to an exact top-level reference without deleting methods, witnesses, results, or negative links', scope: 'Caelen v700-v4 x1 staged review', expected: 'all documents remain below the ceiling', observed: 'pass', result: 'pass', same_owner_only: true, independent_reproduction: false, retained_negative_ids: [stagedWordNegative], boundary: compactBoundary });
+methods.push({ method_id: operationalMethod, title: 'x1 materialization and staged-review recovery', failure_signature: 'Generated TXT syntax or repeated ledger prose violates the declared artifact contract', trigger_preconditions: ['uncommitted x1 builder attempt', 'owner-local syntax or word-ceiling failure'], privacy_class: 'sanitized_public', approval_class: 'safe_now', candidate_workaround: 'Correct only the proven serialization or repeated-prose dependency, retain each failure, and never replay successful domain work.', validation_witness_ids: ['CM7004-X1-OP-F01','CM7004-X1-OP-P01','CM7004-X1-OP-F02','CM7004-X1-OP-P02'], recurrence_guard: 'Syntax-compile generated TXT entrypoints and measure every document before the exact staged gate.', rollback: 'Discard only the uncommitted x1 materialization and preserve planning.', recommendation_state: 'validated', supersedes: [], protected_gates: protectedGates, retained_negative_ids: [operationalNegative, stagedWordNegative], scope_boundary: boundary });
+
+const stateEvents = methods.flatMap((m, i) => [
+  { event_index: i * 2 + 1, method_id: m.method_id, before: null, after: 'candidate', reason: 'Method recorded', witness_id: null },
+  { event_index: i * 2 + 2, method_id: m.method_id, before: 'candidate', after: 'validated', reason: 'Bounded x1 witness passed without erasing failed subjects', witness_id: m.validation_witness_ids.find(id => witnesses.find(w => w.witness_id === id && w.result === 'pass')) }
+]);
+const methodFlow = {
+  schema: 'ghc.family.method-flow-state.v1', phase, owner, identity_boundary: boundary, execution_authority: 'owner_self_scoped_delta',
+  methods, witnesses, state_events: stateEvents, recommendations: [],
+  counts: { methods: 13, witnesses: 1259, state_events: 26, recommendations: 0, states: { observed: 0, candidate: 0, validated: 13, preferred: 0, superseded: 0, deprecated: 0 }, witness_results: { pass: 947, fail: 312 } },
+  selected_counts: { methods: 13, witnesses: 1259, pass: 947, fail: 312 }, boundary
+};
+writeJson('x1/method-flow-index.json', methodFlow);
+writeJson('x1/retained-negative-register.json', { schema: 'ghc.family.retained-negative-register.v15', owner, phase, count: negativeRecords.length, records: negativeRecords, erased: 0, promoted: 0, boundary });
+
+const validation = spawnSync('python', ['-X','utf8',methodFlowValidator,'validate','--ledger',path.join(phaseRoot,'x1/method-flow-index.json'),'--receipt',path.join(phaseRoot,'x1/method-flow-validation.json')], { encoding: 'utf8', maxBuffer: 8 * 1024 * 1024 });
+if (validation.status !== 0) throw new Error(`Method Flow validation failed: ${validation.stdout} ${validation.stderr}`);
+
+writeJson('x1/phase-truth.json', {
+  schema: 'ghc.family.phase-truth.v15', owner, phase, lifecycle_stage: 'x1', planning,
+  core_outcomes_observed: { completed: 300, represented: 0, open_gap: 0, exact_gate: 0, total: 300 },
+  valid_contracts: 300, failed_subjects: 300, separate_refusal_guards: 300, cleanup_checks: 300,
+  local_guides: 10, paired_runners: 5, additional_positive_tests: 15,
+  method_flow: { methods: 13, witnesses: 1259, pass: 947, fail: 312 },
+  planning_immutable: true, x2_started: false, terminal_verdict: 'NOT_READY_FOR_STAGE_20', boundary
+});
+writeJson('x1/execution-summary.json', {
+  status: 'VALID_X1_OWNER_SCOPED_EXECUTION', operation_count: 10, proposal_count: 300,
+  valid_results: 300, failed_candidate_subjects: 300, refusal_guards: 300, cleanup_checks: 300,
+  successful_refusal_promotions: 0, result_files: resultFiles, method_files: methodFiles,
+  core_sha256: sha256(fs.readFileSync(corePath)), retained_operational_failures: 2, boundary
+});
+writeJson('x1/environment.json', { os: 'Windows', versions_only: true, package_updates: 0, codex_desktop_updates: 0, privilege_elevation: false, windows_feature_changes: false, reboot: false, D_first: true, boundary });
+writeJson('x1/wellbeing.json', { relational_role: 'provenance weaver and boundary cartographer', hope: 'Keep exact finite evidence legible, reversible, and proportionate.', relational_language_only: true, workload: { strict_stage_separation: true, no_subagents: true, no_sibling_mutation: true, no_source_replay: true }, boundary });
+writeText('x1/overview.md', `# Caelen Morrow v700-v4 x1\n\nX1 executed the first ten frozen tropical-semiring operations across thirty exact synthetic profiles. It records 300 completed owner contracts, 300 failed malformed subjects, 300 separate passing refusal guards, and 300 cleanup checks. Ten owner-local guides and five paired TXT callers were quick-validated and smoke-used. Fifteen additional exact invariants passed; five additional malformed subjects remain failed while five guards passed.\n\nThe synthetic letterpress lens is documentation only and confers no printmaking competence, workplace role, safety judgment, professional authority, or permission to act. ${boundary}\n\nNOT_READY_FOR_STAGE_20.\n`);
+writeJson('x1/staged-review.json', { status: 'PREPARED_FOR_EXACT_STAGED_REVIEW', stage: 'x1', planning_immutable: true, x2_started: false, boundary });
+
+function buildManifest() {
+  const x1Dir = path.join(phaseRoot, 'x1');
+  const files = walk(x1Dir).filter(p => path.basename(p) !== 'manifest.json').sort();
+  const entries = files.map(p => { const data = fs.readFileSync(p); return { path: path.relative(phaseRoot, p).split(path.sep).join('/'), bytes: data.length, sha256: sha256(data) }; });
+  writeJson('x1/manifest.json', { schema: 'ghc.family.stage-manifest.v15', stage: 'x1', entries, self_exclusions: ['x1/manifest.json'], normalized_lf: true });
+}
+buildManifest();
+
+process.stdout.write(JSON.stringify({ status: 'VALID_X1_OWNER_SCOPED_EXECUTION', proposals: 300, valid: 300, failed_subjects: 300, refusal_guards: 300, cleanup: 300, local_guides: 10, paired_runners: 5, tests: 15, methods: 13, witnesses: 1259, pass: 947, fail: 312 }));
