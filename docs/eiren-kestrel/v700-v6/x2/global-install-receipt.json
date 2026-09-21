@@ -1,0 +1,243 @@
+{
+  "schema": "ghc.family.curated-global-guide-caller-install.v1",
+  "owner": "Eiren Kestrel",
+  "phase": "v700-v6",
+  "bank": "D-first stable-matching-v1",
+  "preflight": {
+    "five_skill_destinations_absent": true,
+    "runner_bank_absent": true,
+    "package_updates": 0,
+    "codex_desktop_updates": 0
+  },
+  "stage_validations": [
+    {
+      "group": "profile",
+      "exit": 0,
+      "stdout": "Skill is valid!",
+      "stderr": ""
+    },
+    {
+      "group": "deferred-acceptance",
+      "exit": 0,
+      "stdout": "Skill is valid!",
+      "stderr": ""
+    },
+    {
+      "group": "stability",
+      "exit": 0,
+      "stdout": "Skill is valid!",
+      "stderr": ""
+    },
+    {
+      "group": "sensitivity",
+      "exit": 0,
+      "stdout": "Skill is valid!",
+      "stderr": ""
+    },
+    {
+      "group": "evidence",
+      "exit": 0,
+      "stdout": "Skill is valid!",
+      "stderr": ""
+    }
+  ],
+  "smokes": [
+    {
+      "group": "profile",
+      "operation": "profile-shape",
+      "runner": "ghc_family_stable_matching_profile_v1.txt",
+      "positive": {
+        "exit": 0,
+        "state": "completed"
+      },
+      "rejecting": {
+        "exit": 2,
+        "state": "rejected",
+        "reason": "preference_permutation",
+        "completion_credit": 0
+      }
+    },
+    {
+      "group": "deferred-acceptance",
+      "operation": "deferred-acceptance-trace",
+      "runner": "ghc_family_stable_matching_deferred_acceptance_v1.txt",
+      "positive": {
+        "exit": 0,
+        "state": "completed"
+      },
+      "rejecting": {
+        "exit": 2,
+        "state": "rejected",
+        "reason": "preference_permutation",
+        "completion_credit": 0
+      }
+    },
+    {
+      "group": "stability",
+      "operation": "blocking-pairs",
+      "runner": "ghc_family_stable_matching_stability_v1.txt",
+      "positive": {
+        "exit": 0,
+        "state": "completed"
+      },
+      "rejecting": {
+        "exit": 2,
+        "state": "rejected",
+        "reason": "preference_permutation",
+        "completion_credit": 0
+      }
+    },
+    {
+      "group": "sensitivity",
+      "operation": "extreme-rank-comparison",
+      "runner": "ghc_family_stable_matching_sensitivity_v1.txt",
+      "positive": {
+        "exit": 0,
+        "state": "completed"
+      },
+      "rejecting": {
+        "exit": 2,
+        "state": "rejected",
+        "reason": "preference_permutation",
+        "completion_credit": 0
+      }
+    },
+    {
+      "group": "evidence",
+      "operation": "side-swap-symmetry",
+      "runner": "ghc_family_stable_matching_evidence_v1.txt",
+      "positive": {
+        "exit": 0,
+        "state": "completed"
+      },
+      "rejecting": {
+        "exit": 2,
+        "state": "rejected",
+        "reason": "preference_permutation",
+        "completion_credit": 0
+      }
+    }
+  ],
+  "installed": [
+    {
+      "group": "profile",
+      "skill": "ghc-family-stable-matching-profile-v1",
+      "skill_path": "skills/ghc-family-stable-matching-profile-v1/SKILL.md",
+      "skill_sha256": "d0d66327f3334a442b8aca32339d83c58dd001b35f3e270885a9d71995aa00d9",
+      "runner": "stable-matching-v1/runners/ghc_family_stable_matching_profile_v1.txt",
+      "runner_sha256": "02e4c5404b1b8d410e4f942b3fce6ed1905ddb0a32d29cd34e4bd5133265f128",
+      "operations": [
+        "profile-shape",
+        "proposer-ranks",
+        "receiver-ranks",
+        "pair-rank-profile"
+      ],
+      "destination_previously_absent": true,
+      "exact_skill_byte_parity": true,
+      "quick_validation_exit": 0,
+      "quick_validation_stdout": "Skill is valid!",
+      "rollback": {
+        "remove_only_skill": "skills/ghc-family-stable-matching-profile-v1",
+        "remove_only_runner_bank_after_all_callers_retire": "stable-matching-v1"
+      }
+    },
+    {
+      "group": "deferred-acceptance",
+      "skill": "ghc-family-stable-matching-deferred-acceptance-v1",
+      "skill_path": "skills/ghc-family-stable-matching-deferred-acceptance-v1/SKILL.md",
+      "skill_sha256": "530c1a0e8d38b907be8985066cfa4b03a3105f3b228d0e27cdb1a4777176c12b",
+      "runner": "stable-matching-v1/runners/ghc_family_stable_matching_deferred_acceptance_v1.txt",
+      "runner_sha256": "2d32aef86234bdd6a8c2c20444dcea6c177ca42c93367bec197b298bd27b8ec0",
+      "operations": [
+        "deferred-acceptance-trace",
+        "proposer-optimal-matching",
+        "receiver-optimal-matching",
+        "stable-set-size"
+      ],
+      "destination_previously_absent": true,
+      "exact_skill_byte_parity": true,
+      "quick_validation_exit": 0,
+      "quick_validation_stdout": "Skill is valid!",
+      "rollback": {
+        "remove_only_skill": "skills/ghc-family-stable-matching-deferred-acceptance-v1",
+        "remove_only_runner_bank_after_all_callers_retire": "stable-matching-v1"
+      }
+    },
+    {
+      "group": "stability",
+      "skill": "ghc-family-stable-matching-stability-v1",
+      "skill_path": "skills/ghc-family-stable-matching-stability-v1/SKILL.md",
+      "skill_sha256": "f3588e1ca2c547ec77f8733b41d7514f099ad87c5ca2cbf68add7c3378415d6b",
+      "runner": "stable-matching-v1/runners/ghc_family_stable_matching_stability_v1.txt",
+      "runner_sha256": "ef0413942cb2ebeb8ce1a492f4de8c6a2fa39433f80367da1d5d87825b656da4",
+      "operations": [
+        "blocking-pairs",
+        "stability-certificate",
+        "stable-matchings-enumeration",
+        "unique-stability"
+      ],
+      "destination_previously_absent": true,
+      "exact_skill_byte_parity": true,
+      "quick_validation_exit": 0,
+      "quick_validation_stdout": "Skill is valid!",
+      "rollback": {
+        "remove_only_skill": "skills/ghc-family-stable-matching-stability-v1",
+        "remove_only_runner_bank_after_all_callers_retire": "stable-matching-v1"
+      }
+    },
+    {
+      "group": "sensitivity",
+      "skill": "ghc-family-stable-matching-sensitivity-v1",
+      "skill_path": "skills/ghc-family-stable-matching-sensitivity-v1/SKILL.md",
+      "skill_sha256": "c73b23b79451aff2719ed85c59e14d32bffbc335488f96aef075b8c66cc0a8aa",
+      "runner": "stable-matching-v1/runners/ghc_family_stable_matching_sensitivity_v1.txt",
+      "runner_sha256": "c775f78a71aa17800d05ecdf6dfeab02493eaa841443b212be806adafd10d644",
+      "operations": [
+        "extreme-rank-comparison",
+        "partner-range",
+        "adjacent-swap-sensitivity",
+        "matching-distance-spectrum"
+      ],
+      "destination_previously_absent": true,
+      "exact_skill_byte_parity": true,
+      "quick_validation_exit": 0,
+      "quick_validation_stdout": "Skill is valid!",
+      "rollback": {
+        "remove_only_skill": "skills/ghc-family-stable-matching-sensitivity-v1",
+        "remove_only_runner_bank_after_all_callers_retire": "stable-matching-v1"
+      }
+    },
+    {
+      "group": "evidence",
+      "skill": "ghc-family-stable-matching-evidence-v1",
+      "skill_path": "skills/ghc-family-stable-matching-evidence-v1/SKILL.md",
+      "skill_sha256": "96794fc1e072b6160992b454a301c8867b8a45987f370c7fc5afa89d13b079ba",
+      "runner": "stable-matching-v1/runners/ghc_family_stable_matching_evidence_v1.txt",
+      "runner_sha256": "43df7ad6714b11e4048e5117abf54967d1cc85b9133d8d4724bdba85e7946e8e",
+      "operations": [
+        "side-swap-symmetry",
+        "synthetic-placement-analogy",
+        "participant-observation-gap",
+        "allocation-authority-gate"
+      ],
+      "destination_previously_absent": true,
+      "exact_skill_byte_parity": true,
+      "quick_validation_exit": 0,
+      "quick_validation_stdout": "Skill is valid!",
+      "rollback": {
+        "remove_only_skill": "skills/ghc-family-stable-matching-evidence-v1",
+        "remove_only_runner_bank_after_all_callers_retire": "stable-matching-v1"
+      }
+    }
+  ],
+  "counts": {
+    "global_guides": 5,
+    "family_current_callers": 5,
+    "positive_smokes": 5,
+    "rejecting_subjects": 5,
+    "rejecting_subject_completion_credit": 0,
+    "refusal_guards": 5,
+    "parity_checks": 5
+  },
+  "boundary": "Finite synthetic same-owner software and documentation evidence only; no independent reproduction, empirical GMUT confirmation, production THOS or Freed ID, professional, legal, cultural, affected-party or Maori authority, consciousness, personhood, Theory-of-Everything proof or Stage 20 readiness."
+}

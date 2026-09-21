@@ -1,0 +1,195 @@
+"use strict";
+
+const fs = require("fs");
+const path = require("path");
+const Module = require("module");
+
+function loadTextModule(p) {
+  const child = new Module(p, module);
+  child.filename = p;
+  child.paths = module.paths;
+  child._compile(fs.readFileSync(p, "utf8"), p);
+  return child.exports;
+}
+
+const core = loadTextModule(path.join(__dirname, "ghc_family_stable_matching_core.txt"));
+
+const X2_OPERATIONS = [
+  "stable-set-size",
+  "extreme-rank-comparison",
+  "partner-range",
+  "unique-stability",
+  "side-swap-symmetry",
+  "adjacent-swap-sensitivity",
+  "matching-distance-spectrum",
+  "synthetic-placement-analogy",
+  "participant-observation-gap",
+  "allocation-authority-gate",
+];
+
+const COMPLETED = new Set([
+  "stable-set-size",
+  "extreme-rank-comparison",
+  "partner-range",
+  "unique-stability",
+  "side-swap-symmetry",
+  "adjacent-swap-sensitivity",
+  "matching-distance-spectrum",
+]);
+
+function isPlainObject(value) {
+  return value !== null && typeof value === "object" && !Array.isArray(value);
+}
+
+function exactRequest(request) {
+  if (!isPlainObject(request)) throw new core.DomainError("request_shape");
+  const keys = Object.keys(request).sort();
+  if (JSON.stringify(keys) !== JSON.stringify(["op", "profile"])) throw new core.DomainError("request_shape");
+  if (typeof request.op !== "string" || !X2_OPERATIONS.includes(request.op)) throw new core.DomainError("caller_operation");
+  core.validateProfile(request.profile);
+  return request;
+}
+
+function rankSum(profile, matching) {
+  const rows = core.pairRankProfile(profile, matching);
+  return {
+    proposer_rank_sum: rows.reduce((sum, row) => sum + row.proposer_rank, 0),
+    receiver_rank_sum: rows.reduce((sum, row) => sum + row.receiver_rank, 0),
+  };
+}
+
+function matchingDistance(left, right) {
+  const rightMap = Object.fromEntries(right.map((row) => [row.proposer, row.receiver]));
+  return left.reduce((count, row) => count + Number(rightMap[row.proposer] !== row.receiver), 0);
+}
+
+function swappedProfile(profile) {
+  return {
+    profile_id: profile.profile_id,
+    n: profile.n,
+    proposers: [...profile.receivers],
+    receivers: [...profile.proposers],
+    proposer_preferences: JSON.parse(JSON.stringify(profile.receiver_preferences)),
+    receiver_preferences: JSON.parse(JSON.stringify(profile.proposer_preferences)),
+    sensitivity_mutation: {
+      side: "proposer",
+      participant: profile.receivers[0],
+      swap_positions: [...profile.sensitivity_mutation.swap_positions],
+    },
+    evidence_class: "synthetic",
+    real_participants: 0,
+    real_allocations: 0,
+  };
+}
+
+function normalizedSwappedKey(matching, profile) {
+  const normalized = matching.map((row) => ({ proposer: row.receiver, receiver: row.proposer }));
+  normalized.sort((a, b) => profile.proposers.indexOf(a.proposer) - profile.proposers.indexOf(b.proposer));
+  return core.matchingKey(normalized);
+}
+
+function mutateAdjacent(profile) {
+  const mutated = JSON.parse(JSON.stringify(profile));
+  const participant = mutated.sensitivity_mutation.participant;
+  const [left, right] = mutated.sensitivity_mutation.swap_positions;
+  const order = mutated.proposer_preferences[participant];
+  [order[left], order[right]] = [order[right], order[left]];
+  return mutated;
+}
+
+function solve(operation, profile) {
+  const stable = core.stableMatchings(profile);
+  const proposer = core.proposerDeferred(profile).matching;
+  const receiver = core.receiverDeferred(profile).matching;
+  switch (operation) {
+    case "stable-set-size":
+      return { result: { count: stable.length }, state: "completed" };
+    case "extreme-rank-comparison":
+      return {
+        result: {
+          proposer_optimal: { matching: proposer, ...rankSum(profile, proposer) },
+          receiver_optimal: { matching: receiver, ...rankSum(profile, receiver) },
+        },
+        state: "completed",
+      };
+    case "partner-range": {
+      const proposerRanks = core.rankMaps(profile.proposer_preferences);
+      const receiverRanks = core.rankMaps(profile.receiver_preferences);
+      const proposerRange = {};
+      const receiverRange = {};
+      for (const participant of profile.proposers) {
+        const partners = [...new Set(stable.map((matching) => matching.find((row) => row.proposer === participant).receiver))];
+        partners.sort((a, b) => proposerRanks[participant][a] - proposerRanks[participant][b]);
+        proposerRange[participant] = { partners, best_rank: proposerRanks[participant][partners[0]], worst_rank: proposerRanks[participant][partners[partners.length - 1]] };
+      }
+      for (const participant of profile.receivers) {
+        const partners = [...new Set(stable.map((matching) => matching.find((row) => row.receiver === participant).proposer))];
+        partners.sort((a, b) => receiverRanks[participant][a] - receiverRanks[participant][b]);
+        receiverRange[participant] = { partners, best_rank: receiverRanks[participant][partners[0]], worst_rank: receiverRanks[participant][partners[partners.length - 1]] };
+      }
+      return { result: { stable_count: stable.length, proposer_range: proposerRange, receiver_range: receiverRange }, state: "completed" };
+    }
+    case "unique-stability":
+      return { result: { stable_count: stable.length, unique: stable.length === 1 }, state: "completed" };
+    case "side-swap-symmetry": {
+      const swapped = swappedProfile(profile);
+      const originalKeys = stable.map(core.matchingKey).sort();
+      const swappedKeys = core.stableMatchings(swapped).map((matching) => normalizedSwappedKey(matching, profile)).sort();
+      return { result: { original_keys: originalKeys, swapped_normalized_keys: swappedKeys, symmetric: JSON.stringify(originalKeys) === JSON.stringify(swappedKeys) }, state: "completed" };
+    }
+    case "adjacent-swap-sensitivity": {
+      const mutated = mutateAdjacent(profile);
+      const after = core.proposerDeferred(mutated).matching;
+      return { result: { participant: profile.sensitivity_mutation.participant, swap_positions: profile.sensitivity_mutation.swap_positions, before_matching: proposer, after_matching: after, changed_pairs: matchingDistance(proposer, after), before_stable_count: stable.length, after_stable_count: core.stableMatchings(mutated).length }, state: "completed" };
+    }
+    case "matching-distance-spectrum": {
+      const distances = [];
+      for (let left = 0; left < stable.length; left += 1) {
+        for (let right = left + 1; right < stable.length; right += 1) distances.push(matchingDistance(stable[left], stable[right]));
+      }
+      distances.sort((a, b) => a - b);
+      return { result: { stable_count: stable.length, pair_count: distances.length, distances, minimum: distances.length ? distances[0] : 0, maximum: distances.length ? distances[distances.length - 1] : 0 }, state: "completed" };
+    }
+    case "synthetic-placement-analogy":
+      return { result: { analogy: ["profile", "proposal", "provisional hold", "stable finite assignment"], mathematical_correspondence_only: true, real_placement_claim: false, affected_party_acceptance: false }, state: "represented" };
+    case "participant-observation-gap":
+      return { result: { gap: "No real participant preferences, outcomes, burdens, consent, wellbeing or longitudinal observations were collected.", requirements: ["governed participant protocol", "consent and withdrawal", "safety monitoring", "appropriate statistics", "independent review"], execution_credit: 0 }, state: "open_gap" };
+    case "allocation-authority-gate":
+      return { result: { gate: "No authority to allocate real people, opportunities, services, resources, credentials or rights.", required_authority: ["affected-party legitimacy", "domain governance", "legal and cultural review", "appeal and remedy"], execution_credit: 0 }, state: "exact_gate" };
+    default:
+      throw new core.DomainError("unknown_operation");
+  }
+}
+
+function handleRequest(request, allowedOperations = X2_OPERATIONS) {
+  try {
+    const checked = exactRequest(request);
+    if (!allowedOperations.includes(checked.op)) throw new core.DomainError("caller_operation");
+    const solved = solve(checked.op, checked.profile);
+    return { exit: 0, response: core.completedResponse(checked.op, checked.profile, solved.result, solved.state) };
+  } catch (error) {
+    const reason = error instanceof core.DomainError ? error.code : "internal_error";
+    return { exit: 2, response: core.rejectedResponse(reason) };
+  }
+}
+
+function main(allowedOperations = X2_OPERATIONS) {
+  let request;
+  try {
+    const inputPath = process.argv[2];
+    if (!inputPath) throw new core.DomainError("request_path");
+    request = JSON.parse(fs.readFileSync(inputPath, "utf8"));
+  } catch (error) {
+    const reason = error instanceof core.DomainError ? error.code : "wire_json";
+    process.stdout.write(JSON.stringify(core.rejectedResponse(reason)) + "\n");
+    process.exitCode = 2;
+    return;
+  }
+  const output = handleRequest(request, allowedOperations);
+  process.stdout.write(JSON.stringify(output.response) + "\n");
+  process.exitCode = output.exit;
+}
+
+module.exports = { X2_OPERATIONS, COMPLETED, solve, handleRequest, main, matchingDistance, mutateAdjacent, swappedProfile };
+
+if (require.main === module) main();

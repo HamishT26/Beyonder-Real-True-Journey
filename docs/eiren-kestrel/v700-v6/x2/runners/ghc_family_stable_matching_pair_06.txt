@@ -1,0 +1,6 @@
+"use strict";
+const fs = require("fs");
+const path = require("path");
+const Module = require("module");
+function loadTextModule(p) { const m = new Module(p, module); m.filename = p; m.paths = module.paths; m._compile(fs.readFileSync(p, "utf8"), p); return m.exports; }
+loadTextModule(path.join(__dirname, "ghc_family_stable_matching_x2.txt")).main(["stable-set-size", "extreme-rank-comparison"]);

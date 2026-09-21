@@ -1,0 +1,362 @@
+"use strict";
+
+const fs = require("fs");
+
+const X1_OPERATIONS = [
+  "profile-shape",
+  "proposer-ranks",
+  "receiver-ranks",
+  "deferred-acceptance-trace",
+  "proposer-optimal-matching",
+  "receiver-optimal-matching",
+  "blocking-pairs",
+  "stability-certificate",
+  "pair-rank-profile",
+  "stable-matchings-enumeration",
+];
+
+class DomainError extends Error {
+  constructor(code) {
+    super(code);
+    this.code = code;
+  }
+}
+
+function isPlainObject(value) {
+  return value !== null && typeof value === "object" && !Array.isArray(value);
+}
+
+function exactKeys(value, allowed, code) {
+  if (!isPlainObject(value)) throw new DomainError(code);
+  const keys = Object.keys(value).sort();
+  const expected = [...allowed].sort();
+  if (JSON.stringify(keys) !== JSON.stringify(expected)) throw new DomainError(code);
+}
+
+function uniqueStrings(values, count, code) {
+  if (!Array.isArray(values) || values.length !== count) throw new DomainError(code);
+  if (values.some((value) => typeof value !== "string" || value.length === 0)) throw new DomainError(code);
+  if (new Set(values).size !== values.length) throw new DomainError(code);
+}
+
+function sameSet(values, expected) {
+  return values.length === expected.length && values.every((value) => expected.includes(value));
+}
+
+function validatePreferences(prefObject, participants, partners) {
+  exactKeys(prefObject, participants, "preference_keys");
+  for (const participant of participants) {
+    const order = prefObject[participant];
+    if (!Array.isArray(order) || !sameSet(order, partners) || new Set(order).size !== partners.length) {
+      throw new DomainError("preference_permutation");
+    }
+  }
+}
+
+function validateProfile(profile) {
+  exactKeys(
+    profile,
+    [
+      "profile_id",
+      "n",
+      "proposers",
+      "receivers",
+      "proposer_preferences",
+      "receiver_preferences",
+      "sensitivity_mutation",
+      "evidence_class",
+      "real_participants",
+      "real_allocations",
+    ],
+    "profile_shape",
+  );
+  if (typeof profile.profile_id !== "string" || !/^SM-[0-9]{2}$/.test(profile.profile_id)) {
+    throw new DomainError("profile_id");
+  }
+  if (!Number.isInteger(profile.n) || profile.n < 2 || profile.n > 5) throw new DomainError("profile_n");
+  uniqueStrings(profile.proposers, profile.n, "proposer_set");
+  uniqueStrings(profile.receivers, profile.n, "receiver_set");
+  if (profile.proposers.some((value) => profile.receivers.includes(value))) throw new DomainError("side_overlap");
+  validatePreferences(profile.proposer_preferences, profile.proposers, profile.receivers);
+  validatePreferences(profile.receiver_preferences, profile.receivers, profile.proposers);
+  exactKeys(profile.sensitivity_mutation, ["side", "participant", "swap_positions"], "mutation_shape");
+  if (profile.sensitivity_mutation.side !== "proposer") throw new DomainError("mutation_side");
+  if (!profile.proposers.includes(profile.sensitivity_mutation.participant)) throw new DomainError("mutation_participant");
+  const positions = profile.sensitivity_mutation.swap_positions;
+  if (
+    !Array.isArray(positions) ||
+    positions.length !== 2 ||
+    !positions.every(Number.isInteger) ||
+    positions[0] === positions[1] ||
+    positions.some((value) => value < 0 || value >= profile.n)
+  ) {
+    throw new DomainError("mutation_positions");
+  }
+  if (profile.evidence_class !== "synthetic") throw new DomainError("evidence_class");
+  if (profile.real_participants !== 0 || profile.real_allocations !== 0) throw new DomainError("real_world_scope");
+  return profile;
+}
+
+function rankMaps(preferences) {
+  const result = {};
+  for (const [participant, order] of Object.entries(preferences)) {
+    result[participant] = {};
+    order.forEach((partner, index) => {
+      result[participant][partner] = index;
+    });
+  }
+  return result;
+}
+
+function deferred(sideA, sideB, preferencesA, preferencesB) {
+  const ranksB = rankMaps(preferencesB);
+  const next = Object.fromEntries(sideA.map((participant) => [participant, 0]));
+  const free = [...sideA];
+  const held = {};
+  const trace = [];
+  while (free.length > 0) {
+    const proposer = free.shift();
+    const receiver = preferencesA[proposer][next[proposer]];
+    next[proposer] += 1;
+    trace.push({ event: "proposal", proposer, receiver });
+    const incumbent = held[receiver];
+    if (incumbent === undefined) {
+      held[receiver] = proposer;
+      trace.push({ event: "hold", proposer, receiver });
+    } else if (ranksB[receiver][proposer] < ranksB[receiver][incumbent]) {
+      held[receiver] = proposer;
+      free.push(incumbent);
+      trace.push({ event: "replace", receiver, accepted: proposer, rejected: incumbent });
+    } else {
+      free.push(proposer);
+      trace.push({ event: "reject", proposer, receiver, incumbent });
+    }
+  }
+  return { held, trace };
+}
+
+function pairsFromProposerMap(profile, proposerMap) {
+  return profile.proposers.map((proposer) => ({ proposer, receiver: proposerMap[proposer] }));
+}
+
+function proposerDeferred(profile) {
+  const result = deferred(
+    profile.proposers,
+    profile.receivers,
+    profile.proposer_preferences,
+    profile.receiver_preferences,
+  );
+  const proposerMap = {};
+  for (const [receiver, proposer] of Object.entries(result.held)) proposerMap[proposer] = receiver;
+  return { matching: pairsFromProposerMap(profile, proposerMap), trace: result.trace };
+}
+
+function receiverDeferred(profile) {
+  const result = deferred(
+    profile.receivers,
+    profile.proposers,
+    profile.receiver_preferences,
+    profile.proposer_preferences,
+  );
+  const proposerMap = {};
+  for (const [proposer, receiver] of Object.entries(result.held)) proposerMap[proposer] = receiver;
+  return { matching: pairsFromProposerMap(profile, proposerMap), trace: result.trace };
+}
+
+function matchingMaps(matching) {
+  const pToR = {};
+  const rToP = {};
+  for (const pair of matching) {
+    pToR[pair.proposer] = pair.receiver;
+    rToP[pair.receiver] = pair.proposer;
+  }
+  return { pToR, rToP };
+}
+
+function blockingPairs(profile, matching) {
+  const proposerRanks = rankMaps(profile.proposer_preferences);
+  const receiverRanks = rankMaps(profile.receiver_preferences);
+  const { pToR, rToP } = matchingMaps(matching);
+  const result = [];
+  for (const proposer of profile.proposers) {
+    for (const receiver of profile.receivers) {
+      if (pToR[proposer] === receiver) continue;
+      if (
+        proposerRanks[proposer][receiver] < proposerRanks[proposer][pToR[proposer]] &&
+        receiverRanks[receiver][proposer] < receiverRanks[receiver][rToP[receiver]]
+      ) {
+        result.push({ proposer, receiver });
+      }
+    }
+  }
+  return result;
+}
+
+function permutations(values) {
+  if (values.length === 0) return [[]];
+  const output = [];
+  values.forEach((value, index) => {
+    const rest = values.slice(0, index).concat(values.slice(index + 1));
+    for (const tail of permutations(rest)) output.push([value, ...tail]);
+  });
+  return output;
+}
+
+function stableMatchings(profile) {
+  const result = [];
+  for (const permutation of permutations(profile.receivers)) {
+    const matching = profile.proposers.map((proposer, index) => ({ proposer, receiver: permutation[index] }));
+    if (blockingPairs(profile, matching).length === 0) result.push(matching);
+  }
+  result.sort((a, b) => matchingKey(a).localeCompare(matchingKey(b)));
+  return result;
+}
+
+function matchingKey(matching) {
+  return matching.map((pair) => `${pair.proposer}:${pair.receiver}`).join("|");
+}
+
+function pairRankProfile(profile, matching) {
+  const proposerRanks = rankMaps(profile.proposer_preferences);
+  const receiverRanks = rankMaps(profile.receiver_preferences);
+  return matching.map((pair) => ({
+    proposer: pair.proposer,
+    receiver: pair.receiver,
+    proposer_rank: proposerRanks[pair.proposer][pair.receiver],
+    receiver_rank: receiverRanks[pair.receiver][pair.proposer],
+  }));
+}
+
+function factorial(n) {
+  let value = 1;
+  for (let i = 2; i <= n; i += 1) value *= i;
+  return value;
+}
+
+function solveX1(operation, profile) {
+  const proposerRanks = rankMaps(profile.proposer_preferences);
+  const receiverRanks = rankMaps(profile.receiver_preferences);
+  const proposer = proposerDeferred(profile);
+  const receiver = receiverDeferred(profile);
+  switch (operation) {
+    case "profile-shape":
+      return {
+        n: profile.n,
+        proposer_count: profile.proposers.length,
+        receiver_count: profile.receivers.length,
+        strict_complete: true,
+        bijection_count: factorial(profile.n),
+      };
+    case "proposer-ranks":
+      return { ranks: proposerRanks };
+    case "receiver-ranks":
+      return { ranks: receiverRanks };
+    case "deferred-acceptance-trace":
+      return {
+        matching: proposer.matching,
+        events: proposer.trace,
+        proposal_count: proposer.trace.filter((event) => event.event === "proposal").length,
+        terminated: true,
+      };
+    case "proposer-optimal-matching":
+      return { matching: proposer.matching };
+    case "receiver-optimal-matching":
+      return { matching: receiver.matching };
+    case "blocking-pairs":
+      return { matching: proposer.matching, blocking_pairs: blockingPairs(profile, proposer.matching) };
+    case "stability-certificate": {
+      const blocks = blockingPairs(profile, proposer.matching);
+      return { matching: proposer.matching, complete: proposer.matching.length === profile.n, stable: blocks.length === 0, blocking_pair_count: blocks.length };
+    }
+    case "pair-rank-profile":
+      return { matching: proposer.matching, ranks: pairRankProfile(profile, proposer.matching) };
+    case "stable-matchings-enumeration": {
+      const matchings = stableMatchings(profile);
+      return { count: matchings.length, matchings };
+    }
+    default:
+      throw new DomainError("unknown_operation");
+  }
+}
+
+function completedResponse(operation, profile, result, state = "completed") {
+  return {
+    schema: "ghc.family.stable-matching.response.v1",
+    operation,
+    profile_id: profile.profile_id,
+    state,
+    result,
+    evidence_class: "synthetic",
+    real_participants: 0,
+    real_allocations: 0,
+    independent_reproduction: false,
+  };
+}
+
+function rejectedResponse(reason) {
+  return {
+    schema: "ghc.family.stable-matching.response.v1",
+    state: "rejected",
+    reason,
+    executed: false,
+    evidence_class: "synthetic",
+    real_participants: 0,
+    real_allocations: 0,
+    independent_reproduction: false,
+  };
+}
+
+function validateRequest(request, allowedOperations) {
+  exactKeys(request, ["op", "profile"], "request_shape");
+  if (typeof request.op !== "string" || !allowedOperations.includes(request.op)) throw new DomainError("caller_operation");
+  validateProfile(request.profile);
+  return request;
+}
+
+function handleRequest(request, allowedOperations = X1_OPERATIONS) {
+  try {
+    const checked = validateRequest(request, allowedOperations);
+    const result = solveX1(checked.op, checked.profile);
+    return { exit: 0, response: completedResponse(checked.op, checked.profile, result) };
+  } catch (error) {
+    const reason = error instanceof DomainError ? error.code : "internal_error";
+    return { exit: 2, response: rejectedResponse(reason) };
+  }
+}
+
+function main(allowedOperations = X1_OPERATIONS) {
+  let request;
+  try {
+    const path = process.argv[2];
+    if (!path) throw new DomainError("request_path");
+    request = JSON.parse(fs.readFileSync(path, "utf8"));
+  } catch (error) {
+    const reason = error instanceof DomainError ? error.code : "wire_json";
+    process.stdout.write(JSON.stringify(rejectedResponse(reason)) + "\n");
+    process.exitCode = 2;
+    return;
+  }
+  const output = handleRequest(request, allowedOperations);
+  process.stdout.write(JSON.stringify(output.response) + "\n");
+  process.exitCode = output.exit;
+}
+
+module.exports = {
+  X1_OPERATIONS,
+  DomainError,
+  validateProfile,
+  rankMaps,
+  deferred,
+  proposerDeferred,
+  receiverDeferred,
+  blockingPairs,
+  stableMatchings,
+  matchingKey,
+  pairRankProfile,
+  completedResponse,
+  rejectedResponse,
+  handleRequest,
+  main,
+};
+
+if (require.main === module) main();
