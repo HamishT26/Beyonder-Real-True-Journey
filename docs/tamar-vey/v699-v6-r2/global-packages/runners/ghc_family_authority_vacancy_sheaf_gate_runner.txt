@@ -1,0 +1,1 @@
+const gate=x=>x.authority_present===true?'completed':'exact_gate';const receipt={operation:'authority-vacancy-sheaf-gate',positive:gate({authority_present:true})==='completed',negative_rejected:gate({authority_present:false})==='exact_gate'};receipt.valid=receipt.positive&&receipt.negative_rejected;console.log(JSON.stringify(receipt));process.exit(receipt.valid?0:1);
