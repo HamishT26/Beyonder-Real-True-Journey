@@ -1,0 +1,32 @@
+'use strict';
+const fs=require('fs'),path=require('path'),E=require('../engine/argumentation-core.txt');
+const same=(a,b)=>JSON.stringify(a)===JSON.stringify(b),checks=[],falseChecks=[];
+function test(name,actual,expected){const pass=same(actual,expected);checks.push({name,pass,actual,expected});if(!pass)throw Error(name)}
+function rejects(name,subject){let code=null;try{E.validateFramework(subject)}catch(e){code=e.message}const pass=!!code;falseChecks.push({name,pass,code});if(!pass)throw Error(name)}
+const f=(argumentsList,attacks)=>({arguments:argumentsList,attacks});
+test('mutual naive',E.analyze(f(['A','B'],[['A','B'],['B','A']])).naive,[['A'],['B']]);
+test('odd cycle stage',E.analyze(f(['A','B','C'],[['A','B'],['B','C'],['C','A']])).stage,[['A'],['B'],['C']]);
+test('chain semistable',E.analyze(f(['A','B','C'],[['A','B'],['B','C']])).semi_stable,[['A','C']]);
+test('mutual ideal empty',E.analyze(f(['A','B'],[['A','B'],['B','A']])).ideal,[]);
+test('mutual credulous',E.operationResult('credulous_acceptance',f(['A','B'],[['A','B'],['B','A']])),{A:true,B:true});
+test('mutual skeptical',E.operationResult('skeptical_acceptance',f(['A','B'],[['A','B'],['B','A']])),{A:false,B:false});
+test('single attack labelling',E.analyze(f(['A','B'],[['A','B']])).labellings,[{in:['A'],out:['B'],undecided:[]}]);
+test('pair chain scc',E.analyze(f(['A','B','C'],[['A','B'],['B','A'],['B','C']])).sccs,[['A','B'],['C']]);
+test('zero row status',E.operationResult('empirical_calibration',f(['A'],[])).status,'open_gap');
+test('zero row count',E.operationResult('empirical_calibration',f(['A'],[])).rows,0);
+test('authority exact gate',E.operationResult('authority_release',f(['A'],[])).status,'exact_gate');
+test('authority unexecuted',E.operationResult('authority_release',f(['A'],[])).executed,false);
+test('complete three stable',E.analyze(f(['A','B','C'],[['A','B'],['B','A'],['A','C'],['C','A'],['B','C'],['C','B']])).stable,[['A'],['B'],['C']]);
+test('odd cycle semistable empty',E.analyze(f(['A','B','C'],[['A','B'],['B','C'],['C','A']])).semi_stable,[[]]);
+test('self attack labelling undecided',E.analyze(f(['A'],[['A','A']])).labellings,[{in:[],out:[],undecided:['A']}]);
+rejects('duplicate arguments',{arguments:['A','A'],attacks:[]});
+rejects('unknown endpoint',{arguments:['A'],attacks:[['A','B']]});
+rejects('duplicate edge',{arguments:['A','B'],attacks:[['A','B'],['A','B']]});
+rejects('too many arguments',{arguments:['A','B','C','D','E','F','G','H','I'],attacks:[]});
+rejects('edge arity',{arguments:['A'],attacks:[['A']]});
+rejects('missing arguments',{attacks:[]});
+rejects('attacks not array',{arguments:['A'],attacks:{}});
+rejects('null framework',null);
+const modelRoot=path.join(__dirname,'..','x2','models'),models=fs.readdirSync(modelRoot).filter(x=>x.endsWith('.html')).sort(),htmlChecks=[];
+for(const file of models){const t=fs.readFileSync(path.join(modelRoot,file),'utf8');const predicates=[['doctype',/^<!doctype html>/i.test(t)],['lang',/<html lang="en">/.test(t)],['charset',/<meta charset="utf-8">/.test(t)],['viewport',/name="viewport"/.test(t)],['title',/<title>/.test(t)],['h1',/<h1>/.test(t)],['boundary',/class="boundary"/.test(t)],['table',/<table>/.test(t)],['caption',/<caption>/.test(t)],['th scope',/<th scope="col">/.test(t)],['model data',/id="model-data"/.test(t)]];for(const [name,pass] of predicates){htmlChecks.push({file,name,pass});if(!pass)throw Error(file+' '+name)}}
+process.stdout.write(JSON.stringify({schema:'ghc.tamar.v702-v6.x2-tests.v1',total:checks.length,passed:checks.filter(x=>x.pass).length,failed:0,targeted_false:falseChecks.length,targeted_false_rejected:falseChecks.filter(x=>x.pass).length,models:models.length,static_html_checks:htmlChecks.length,static_html_passed:htmlChecks.filter(x=>x.pass).length,native_browser_session:false,domain_replays:0,checks,false_checks:falseChecks})+'\n');

@@ -1,0 +1,6 @@
+'use strict';
+const fs=require('fs'),path=require('path'),E=require('../engine/argumentation-core.txt');
+const allowed=["naive_extensions","stage_extensions"];
+let input;try{input=JSON.parse(fs.readFileSync(0,'utf8'));}catch(e){process.stdout.write(JSON.stringify({refused:true,code:'JSON'})+'\n');process.exit(2);}
+if(!input||!allowed.includes(input.op)){process.stdout.write(JSON.stringify({refused:true,code:'OP',allowed})+'\n');process.exit(2);}
+try{const result=E.operationResult(input.op,input.framework);const disposition=result&&typeof result==='object'&&['open_gap','exact_gate'].includes(result.status)?result.status:'completed';process.stdout.write(JSON.stringify({disposition,op:input.op,result,boundary:"Finite same-owner synthetic software and documentation only. No empirical GMUT confirmation, physical-model validation, participant evidence, professional or production validation, legal or cultural legitimacy, affected-party acceptance, Maori authority, complete privacy or accessibility assurance, exhaustive security, independent reproduction, AGI/ASI, consciousness, personhood, Theory-of-Everything proof, canon, deployment, or Stage 20 authority. NOT_READY_FOR_STAGE_20."})+'\n');}catch(e){process.stdout.write(JSON.stringify({refused:true,code:e.message})+'\n');process.exit(2);}
