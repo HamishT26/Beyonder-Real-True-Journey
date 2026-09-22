@@ -1,0 +1,39 @@
+'use strict';
+const Q=require('./q.txt');
+const {q,add,sub,mul,vec,out,str}=Q;
+const ops=['vector_shape','sum','difference','scalar_multiply','cyclic_shift','reverse','even_samples','odd_samples','interleave','zero_insert','hold_repeat','alias_fold','alternating_fold','polyphase_reconstruction','circular_convolution','boxcar2','first_difference','accessibility_reservation','measurement_vacancy','authority_gate'];
+const shift=(a,k)=>a.map((_,n)=>a[(n-k+8)%8]);
+const reverse=a=>a.map((_,n)=>a[(8-n)%8]);
+const even=a=>[a[0],a[2],a[4],a[6]],odd=a=>[a[1],a[3],a[5],a[7]];
+const interleave=(a,b)=>[a[0],b[0],a[1],b[1],a[2],b[2],a[3],b[3]];
+const zeroInsert=a=>[a[0],q(0),a[1],q(0),a[2],q(0),a[3],q(0)];
+const holdRepeat=a=>[a[0],a[0],a[1],a[1],a[2],a[2],a[3],a[3]];
+const fold=a=>[0,1,2,3].map(i=>add(a[i],a[i+4]));
+const altFold=a=>[0,1,2,3].map(i=>sub(a[i],a[i+4]));
+const conv=(a,b)=>a.map((_,n)=>a.reduce((s,z,j)=>add(s,mul(z,b[(n-j+8)%8])),q(0)));
+const boxcar=a=>a.map((z,n)=>Q.div(add(z,a[(n+7)%8]),q(2)));
+const diff=a=>a.map((z,n)=>sub(z,a[(n+7)%8]));
+function reference(r){const a=vec(r.a),b=vec(r.b),s=Q.parse(r.scalar),k=r.shift;let value;switch(r.operation){
+case'vector_shape':value={length:8,field:'Q',a:out(a),b:out(b)};break;
+case'sum':value=out(a.map((z,i)=>add(z,b[i])));break;
+case'difference':value=out(a.map((z,i)=>sub(z,b[i])));break;
+case'scalar_multiply':value=out(a.map(z=>mul(z,s)));break;
+case'cyclic_shift':value=out(shift(a,k));break;
+case'reverse':value=out(reverse(a));break;
+case'even_samples':value=out(even(a));break;
+case'odd_samples':value=out(odd(a));break;
+case'interleave':value=out(interleave(a,b));break;
+case'zero_insert':value=out(zeroInsert(a));break;
+case'hold_repeat':value=out(holdRepeat(a));break;
+case'alias_fold':value=out(fold(a));break;
+case'alternating_fold':value=out(altFold(a));break;
+case'polyphase_reconstruction':value={even:out(even(a)),odd:out(odd(a)),reconstructed:out(interleave(even(a),odd(a)))};break;
+case'circular_convolution':value=out(conv(a,b));break;
+case'boxcar2':value=out(boxcar(a));break;
+case'first_difference':value=out(diff(a));break;
+case'accessibility_reservation':value={exact_vector:out(a),text_table:true,sonification:null,assistive_technology_review:false,participant_evidence:false,complete_accessibility:false};break;
+case'measurement_vacancy':value={synthetic_alias_projection:out(fold(a)),sample_clock:null,apparatus:null,calibration:null,measured:false,physical_likelihood:null};break;
+case'authority_gate':value={operation:'withheld',consequential_sampling_decision:false,competent_authority_evidence:false,production_identity:false,public_action:false};break;
+default:throw Error('UNKNOWN_OPERATION');}
+return{operation:r.operation,value,evidence_scope:'finite exact synthetic dyadic-sampling witness',broader_authority_credit:0};}
+module.exports={ops,reference,shift,reverse,even,odd,interleave,zeroInsert,holdRepeat,fold,altFold,conv,boxcar,diff};

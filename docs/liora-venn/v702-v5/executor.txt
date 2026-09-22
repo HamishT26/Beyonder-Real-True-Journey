@@ -1,0 +1,33 @@
+'use strict';
+const Q=require('./q.txt');
+const {q,add,sub,mul,vec,out}=Q;
+const operations=['vector_shape','sum','difference','scalar_multiply','cyclic_shift','reverse','even_samples','odd_samples','interleave','zero_insert','hold_repeat','alias_fold','alternating_fold','polyphase_reconstruction','circular_convolution','boxcar2','first_difference','accessibility_reservation','measurement_vacancy','authority_gate'];
+function validate(r){if(!r||typeof r!=='object'||Array.isArray(r)||Object.getPrototypeOf(r)!==Object.prototype)throw Error('INVALID_REQUEST');if(Object.keys(r).sort().join(',')!=='a,b,operation,scalar,shift')throw Error('CLOSED_FIELDS');if(!operations.includes(r.operation))throw Error('UNKNOWN_OPERATION');if(Buffer.byteLength(JSON.stringify(r))>4096)throw Error('RESOURCE_BOUND');for(const v of[r.a,r.b]){if(!Array.isArray(v)||v.length!==8)throw Error('VECTOR_LENGTH');for(const s of v)Q.parse(s);}Q.parse(r.scalar);if(!Number.isInteger(r.shift)||r.shift<0||r.shift>7)throw Error('SHIFT_BOUND');return r;}
+const rotate=(a,k)=>Array.from({length:8},(_,i)=>a[(i-k+8)%8]);
+const split=a=>({even:a.filter((_,i)=>i%2===0),odd:a.filter((_,i)=>i%2===1)});
+const weave=(a,b)=>a.flatMap((z,i)=>[z,b[i]]);
+const convolve=(a,b)=>Array.from({length:8},(_,n)=>Array.from({length:8},(_,j)=>j).reduce((s,j)=>add(s,mul(a[j],b[(n-j+8)%8])),q(0)));
+function run(r){validate(r);const a=vec(r.a),b=vec(r.b),s=Q.parse(r.scalar),k=r.shift,p=split(a);let value;switch(r.operation){
+case'vector_shape':value={length:8,field:'Q',a:out(a),b:out(b)};break;
+case'sum':value=out(a.map((z,i)=>add(z,b[i])));break;
+case'difference':value=out(a.map((z,i)=>sub(z,b[i])));break;
+case'scalar_multiply':value=out(a.map(z=>mul(z,s)));break;
+case'cyclic_shift':value=out(rotate(a,k));break;
+case'reverse':value=out([a[0],a[7],a[6],a[5],a[4],a[3],a[2],a[1]]);break;
+case'even_samples':value=out(p.even);break;
+case'odd_samples':value=out(p.odd);break;
+case'interleave':value=out(weave(a.slice(0,4),b.slice(0,4)));break;
+case'zero_insert':value=out(weave(a.slice(0,4),Array(4).fill(q(0))));break;
+case'hold_repeat':value=out(a.slice(0,4).flatMap(z=>[z,z]));break;
+case'alias_fold':value=out(a.slice(0,4).map((z,i)=>add(z,a[i+4])));break;
+case'alternating_fold':value=out(a.slice(0,4).map((z,i)=>sub(z,a[i+4])));break;
+case'polyphase_reconstruction':value={even:out(p.even),odd:out(p.odd),reconstructed:out(weave(p.even,p.odd))};break;
+case'circular_convolution':value=out(convolve(a,b));break;
+case'boxcar2':value=out(a.map((z,n)=>Q.div(add(z,a[(n+7)%8]),q(2))));break;
+case'first_difference':value=out(a.map((z,n)=>sub(z,a[(n+7)%8])));break;
+case'accessibility_reservation':value={exact_vector:out(a),text_table:true,sonification:null,assistive_technology_review:false,participant_evidence:false,complete_accessibility:false};break;
+case'measurement_vacancy':value={synthetic_alias_projection:out(a.slice(0,4).map((z,i)=>add(z,a[i+4]))),sample_clock:null,apparatus:null,calibration:null,measured:false,physical_likelihood:null};break;
+case'authority_gate':value={operation:'withheld',consequential_sampling_decision:false,competent_authority_evidence:false,production_identity:false,public_action:false};break;
+default:throw Error('UNKNOWN_OPERATION');}
+return{operation:r.operation,value,evidence_scope:'finite exact synthetic dyadic-sampling witness',broader_authority_credit:0};}
+module.exports={run,validate,operations};

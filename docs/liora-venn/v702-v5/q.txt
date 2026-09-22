@@ -1,0 +1,16 @@
+'use strict';
+// Exact rational primitive shared by the owner-local oracle and executor.
+const crypto=require('crypto');
+const abs=x=>x<0n?-x:x;
+function gcd(a,b){a=abs(a);b=abs(b);while(b){[a,b]=[b,a%b];}return a;}
+function q(n,d=1n){n=BigInt(n);d=BigInt(d);if(!d)throw Error('ZERO_DENOMINATOR');if(d<0n){n=-n;d=-d;}const g=gcd(n,d);return[n/g,d/g];}
+const add=(a,b)=>q(a[0]*b[1]+b[0]*a[1],a[1]*b[1]);
+const neg=a=>[-a[0],a[1]],sub=(a,b)=>add(a,neg(b));
+const mul=(a,b)=>q(a[0]*b[0],a[1]*b[1]);
+const div=(a,b)=>q(a[0]*b[1],a[1]*b[0]);
+const str=a=>a[1]===1n?String(a[0]):String(a[0])+'/'+String(a[1]);
+function parse(s,bounded=true){if(typeof s!=='string'||s.length>40||!/^(-?(?:0|[1-9]\d*))(?:\/([1-9]\d*))?$/.test(s))throw Error('INVALID_RATIONAL');const [n,d='1']=s.split('/');const r=q(n,d);if(str(r)!==s)throw Error('NONCANONICAL_RATIONAL');if(bounded&&(abs(r[0])>1000000n||r[1]>1000000n))throw Error('RATIONAL_BOUND');return r;}
+const vec=v=>v.map(parse),out=v=>v.map(str),zero=()=>q(0),sum=v=>v.reduce((a,b)=>add(a,b),q(0));
+function canonical(x){if(Array.isArray(x))return'['+x.map(canonical).join(',')+']';if(x&&typeof x==='object')return'{'+Object.keys(x).sort().map(k=>JSON.stringify(k)+':'+canonical(x[k])).join(',')+'}';return JSON.stringify(x);}
+const sha=x=>crypto.createHash('sha256').update(typeof x==='string'||Buffer.isBuffer(x)?x:canonical(x)).digest('hex');
+module.exports={q,add,neg,sub,mul,div,str,parse,vec,out,zero,sum,canonical,sha};
