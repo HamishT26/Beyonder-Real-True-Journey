@@ -1,0 +1,16 @@
+'use strict';
+const E=require('../engine/argumentation-core.txt');
+const same=(a,b)=>JSON.stringify(a)===JSON.stringify(b),checks=[];
+function test(name,actual,expected){const pass=same(actual,expected);checks.push({name,pass,actual,expected});if(!pass)throw Error(name)}
+const f=(argumentsList,attacks)=>({arguments:argumentsList,attacks});
+test('empty grounded',E.analyze(f([],[])).grounded,[]);
+test('single grounded',E.analyze(f(['A'],[])).grounded,['A']);
+test('self attack no stable',E.analyze(f(['A'],[['A','A']])).stable,[]);
+test('mutual preferred',E.analyze(f(['A','B'],[['A','B'],['B','A']])).preferred,[['A'],['B']]);
+test('chain grounded',E.analyze(f(['A','B','C'],[['A','B'],['B','C']])).grounded,['A','C']);
+test('odd cycle grounded empty',E.analyze(f(['A','B','C'],[['A','B'],['B','C'],['C','A']])).grounded,[]);
+test('odd cycle no stable',E.analyze(f(['A','B','C'],[['A','B'],['B','C'],['C','A']])).stable,[]);
+test('even cycle stable',E.analyze(f(['A','B','C','D'],[['A','B'],['B','C'],['C','D'],['D','A']])).stable,[['A','C'],['B','D']]);
+test('out star grounded',E.analyze(f(['A','B','C'],[['A','B'],['A','C']])).grounded,['A']);
+test('defense chain grounded',E.analyze(f(['A','B','C'],[['B','A'],['C','B']])).grounded,['A','C']);
+process.stdout.write(JSON.stringify({schema:'ghc.tamar.v702-v6.x1-tests.v1',total:checks.length,passed:checks.filter(x=>x.pass).length,failed:0,domain_replays:0,checks})+'\n');

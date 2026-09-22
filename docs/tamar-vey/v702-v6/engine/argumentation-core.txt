@@ -1,0 +1,83 @@
+'use strict';
+function validateFramework(fw) {
+  if (!fw || !Array.isArray(fw.arguments) || !Array.isArray(fw.attacks)) throw new Error('FRAMEWORK_SHAPE');
+  if (fw.arguments.length > 8 || new Set(fw.arguments).size !== fw.arguments.length) throw new Error('ARGUMENTS');
+  const allowed = new Set(fw.arguments);
+  const edges = new Set();
+  for (const edge of fw.attacks) {
+    if (!Array.isArray(edge) || edge.length !== 2 || !allowed.has(edge[0]) || !allowed.has(edge[1])) throw new Error('ATTACK');
+    const key = edge.join('>'); if (edges.has(key)) throw new Error('DUPLICATE_ATTACK'); edges.add(key);
+  }
+  return { arguments: [...fw.arguments], attacks: fw.attacks.map((x) => [...x]) };
+}
+function powerset(xs) {
+  const out = [];
+  for (let mask = 0; mask < 2 ** xs.length; mask += 1) out.push(xs.filter((_, i) => mask & (1 << i)));
+  return out;
+}
+function stable(value) {
+  if (Array.isArray(value)) return value.map(stable);
+  if (value && typeof value === 'object') return Object.fromEntries(Object.keys(value).sort().map((k) => [k, stable(value[k])]));
+  return value;
+}
+function same(a, b) { return JSON.stringify(stable(a)) === JSON.stringify(stable(b)); }
+function subset(a, b) { const bs = new Set(b); return a.every((x) => bs.has(x)); }
+function maximal(sets) { return sets.filter((a) => !sets.some((b) => a !== b && subset(a, b) && a.length < b.length)); }
+function setKey(xs) { return [...xs].sort().join('|'); }
+function analyze(raw) {
+  const fw = validateFramework(raw), args = fw.arguments, attacks = new Set(fw.attacks.map((e) => e.join('>'))), sets = powerset(args);
+  const hits = (a, b) => attacks.has(a + '>' + b);
+  const conflictFree = (s) => !s.some((a) => s.some((b) => hits(a, b)));
+  const attackedBy = (s) => args.filter((b) => s.some((a) => hits(a, b)));
+  const defends = (s, a) => args.filter((b) => hits(b, a)).every((b) => s.some((c) => hits(c, b)));
+  const characteristic = (s) => args.filter((a) => defends(s, a));
+  const admissible = sets.filter((s) => conflictFree(s) && s.every((a) => defends(s, a)));
+  const complete = admissible.filter((s) => same([...s].sort(), characteristic(s).sort()));
+  let grounded = [], sequence = [[]];
+  for (let i = 0; i <= args.length; i += 1) { const next = characteristic(grounded).sort(); if (same(next, grounded)) break; grounded = next; sequence.push([...grounded]); }
+  const preferred = maximal(admissible);
+  const stable = sets.filter((s) => conflictFree(s) && args.filter((a) => !s.includes(a)).every((a) => attackedBy(s).includes(a)));
+  const naive = maximal(sets.filter(conflictFree));
+  const range = (s) => [...new Set([...s, ...attackedBy(s)])].sort();
+  const maxRange = (candidates) => candidates.filter((s) => !candidates.some((t) => s !== t && subset(range(s), range(t)) && range(s).length < range(t).length));
+  const stage = maxRange(sets.filter(conflictFree));
+  const semiStable = maxRange(complete);
+  const preferredIntersection = preferred.length ? preferred.reduce((a, b) => a.filter((x) => b.includes(x))) : [];
+  const idealCandidates = admissible.filter((s) => subset(s, preferredIntersection));
+  const ideal = maximal(idealCandidates).sort((a, b) => b.length - a.length || setKey(a).localeCompare(setKey(b)))[0] || [];
+  const labellings = complete.map((s) => ({ in: [...s].sort(), out: attackedBy(s).sort(), undecided: args.filter((a) => !s.includes(a) && !attackedBy(s).includes(a)).sort() }));
+  const sccs = (() => {
+    let index = 0; const stack = [], on = new Set(), idx = new Map(), low = new Map(), out = [];
+    function visit(v) { idx.set(v, index); low.set(v, index); index += 1; stack.push(v); on.add(v); for (const w of args.filter((x) => hits(v, x))) { if (!idx.has(w)) { visit(w); low.set(v, Math.min(low.get(v), low.get(w))); } else if (on.has(w)) low.set(v, Math.min(low.get(v), idx.get(w))); } if (low.get(v) === idx.get(v)) { const c = []; let w; do { w = stack.pop(); on.delete(w); c.push(w); } while (w !== v); out.push(c.sort()); } }
+    for (const a of args) if (!idx.has(a)) visit(a); return out.sort((a, b) => setKey(a).localeCompare(setKey(b)));
+  })();
+  const sortSets = (xs) => xs.map((s) => [...s].sort()).sort((a, b) => a.length - b.length || setKey(a).localeCompare(setKey(b)));
+  return { framework: fw, conflict_free: sortSets(sets.filter(conflictFree)), attacked_ranges: sortSets(sets).map((s) => ({ set: s, range: range(s) })), defended: sortSets(sets).map((s) => ({ set: s, arguments: characteristic(s).sort() })), admissible: sortSets(admissible), complete: sortSets(complete), grounded: [...grounded].sort(), grounded_sequence: sequence, preferred: sortSets(preferred), stable: sortSets(stable), naive: sortSets(naive), stage: sortSets(stage), semi_stable: sortSets(semiStable), ideal: [...ideal].sort(), labellings, sccs };
+}
+function operationResult(name, fw) {
+  const a = analyze(fw), args = a.framework.arguments;
+  const table = {
+    structure: { arguments: args, attacks: a.framework.attacks, argument_count: args.length, attack_count: a.framework.attacks.length },
+    conflict_free_sets: a.conflict_free,
+    attacked_ranges: a.attacked_ranges,
+    defended_arguments: a.defended,
+    admissible_sets: a.admissible,
+    characteristic_operator: a.defended,
+    complete_extensions: a.complete,
+    grounded_extension: a.grounded,
+    preferred_extensions: a.preferred,
+    stable_extensions: a.stable,
+    naive_extensions: a.naive,
+    stage_extensions: a.stage,
+    semistable_extensions: a.semi_stable,
+    ideal_extension: a.ideal,
+    credulous_acceptance: Object.fromEntries(args.map((x) => [x, a.preferred.some((s) => s.includes(x))])),
+    skeptical_acceptance: Object.fromEntries(args.map((x) => [x, a.preferred.length > 0 && a.preferred.every((s) => s.includes(x))])),
+    complete_labellings: a.labellings,
+    scc_decomposition: a.sccs,
+    empirical_calibration: { rows: 0, status: 'open_gap', reason: 'No governed real observations or validated mapping from natural-language claims to abstract arguments.' },
+    authority_release: { executed: false, status: 'exact_gate', reason: 'A finite extension cannot authorize a real decision, remedy, entitlement, professional act, or Maori-authority act.' },
+  };
+  return table[name];
+}
+module.exports={validateFramework,analyze,operationResult};
