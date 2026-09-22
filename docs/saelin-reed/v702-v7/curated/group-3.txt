@@ -1,0 +1,4 @@
+'use strict';
+const engine=require('../runtime/transport.txt');
+const allowed=["transport_mixture","transport_independent","transport_northwest","transport_support_components"];
+module.exports=request=>{if(!request||!allowed.includes(request.op))throw Error('curated group boundary');return engine.run(request)};
