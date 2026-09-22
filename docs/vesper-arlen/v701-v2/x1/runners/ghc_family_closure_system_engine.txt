@@ -1,0 +1,284 @@
+from pathlib import Path
+import hashlib, itertools, json, sys
+
+BOUNDARY = 'Finite synthetic same-owner closure-system mathematics and software only; no real classification, prioritization, allocation, empirical GMUT confirmation, production THOS or Freed ID, independent reproduction, identity continuity, consciousness, personhood, professional, legal, cultural, affected-party or Maori authority, complete assurance, Theory-of-Everything proof or Stage 20 readiness.'
+OPS = [('closure-envelope', 'Validate the exact five-element implication envelope and canonical finite bounds.'), ('closed-set-census', 'Enumerate every fixed point of the implication closure operator.'), ('closure-operator-laws', 'Verify extensivity, monotonicity and idempotence on all subsets.'), ('intersection-moore-family', 'Verify that the ground set is closed and every pairwise intersection remains closed.'), ('generator-equivalence-classes', 'Partition all subsets by equal closure and retain exact class sizes.'), ('minimal-generator-census', 'Enumerate inclusion-minimal generators for every closed set.'), ('implication-soundness', 'Verify every declared implication against the generated closure operator.'), ('armstrong-entailment-audit', 'Check reflexive, augmentation and transitive implication consequences by closure.'), ('closure-lattice-meet-join', 'Verify intersection meets and closure-of-union joins for all closed-set pairs.'), ('lattice-bounds-rank', 'Return exact bottom, top and longest strict closed-set chain length.'), ('join-irreducible-census', 'Count non-bottom closed sets with exactly one lower cover.'), ('meet-irreducible-census', 'Count non-top closed sets with exactly one upper cover.'), ('redundant-implication-audit', 'Detect declarations entailed by the remaining implication set.'), ('dual-interior-operator', 'Construct the closure-dual interior and verify anti-extensivity, monotonicity and idempotence.'), ('relabel-covariance', 'Transport implications through a fixed bijection and compare closure-system invariants.'), ('induced-ground-restriction', 'Restrict closure to four declared labels and reverify its finite laws.'), ('closure-quotient-projection', 'Project subset-equivalence classes ordered by inclusion of their closures.'), ('accessible-closure-explanation', 'Represent the finite certificate with explicit definitions and accessibility reservations.'), ('observation-and-remedy-gap', 'Retain missing observation, affected-party review, consequence and remedy evidence.'), ('classification-authority-reservation', 'Hold real classification, priority or governance actions behind competent authority.')]
+
+def raw(value):
+    return (json.dumps(value, sort_keys=True, ensure_ascii=True, indent=2) + "\n").encode()
+
+
+def sha(data):
+    return hashlib.sha256(data).hexdigest()
+
+
+def write(path, value):
+    path.parent.mkdir(parents=True, exist_ok=True)
+    data = value.encode() if isinstance(value, str) else raw(value)
+    if path.exists():
+        assert path.read_bytes() == data, ("existing differs", str(path))
+    else:
+        path.write_bytes(data)
+
+
+def git(*args):
+    return subprocess.check_output([GIT, "-C", str(ROOT), *args]).decode().strip()
+
+
+def profile_without_hash(profile):
+    return {key: value for key, value in profile.items() if key != "definition_sha256"}
+
+
+def profile_hash(profile):
+    return sha(raw(profile_without_hash(profile)))
+
+
+def subsets(items):
+    items = sorted(items)
+    return [set(items[i] for i in range(len(items)) if mask & (1 << i)) for mask in range(1 << len(items))]
+
+
+def close_set(seed, implications, ground=None):
+    current = set(seed)
+    if ground is not None:
+        assert current <= set(ground)
+    changed = True
+    while changed:
+        changed = False
+        for item in implications:
+            if set(item["premise"]) <= current and item["conclusion"] not in current:
+                current.add(item["conclusion"])
+                changed = True
+    return frozenset(current)
+
+
+def canonical_implications(implications):
+    return sorted(
+        [{"premise": sorted(premise), "conclusion": conclusion} for premise, conclusion in implications],
+        key=lambda item: (item["premise"], item["conclusion"]),
+    )
+
+
+def make_profiles():
+    profiles = []
+    for family, implications, question in FAMILIES:
+        for permutation in PERMUTATIONS:
+            transported = canonical_implications(
+                [([permutation[x] for x in premise], permutation[conclusion]) for premise, conclusion in implications]
+            )
+            profile = {
+                "profile_id": f"CL-{len(profiles) + 1:02d}",
+                "family": family,
+                "n": 5,
+                "implications": transported,
+                "label_permutation": permutation,
+                "restriction": sorted(permutation[:4]),
+                "real_observations": 0,
+                "real_people": 0,
+                "authority_actions": 0,
+                "question": question,
+            }
+            profile["definition_sha256"] = profile_hash(profile)
+            profiles.append(profile)
+    assert len(profiles) == 30
+    return profiles
+
+
+def validate_profile(profile):
+    expected = {
+        "profile_id", "family", "n", "implications", "label_permutation", "restriction",
+        "real_observations", "real_people", "authority_actions", "question", "definition_sha256",
+    }
+    assert set(profile) == expected
+    assert profile["n"] == 5
+    ground = set(range(5))
+    assert profile["real_observations"] == profile["real_people"] == profile["authority_actions"] == 0
+    assert sorted(profile["label_permutation"]) == list(range(5))
+    assert len(profile["restriction"]) == 4 and len(set(profile["restriction"])) == 4 and set(profile["restriction"]) <= ground
+    normalized = []
+    for item in profile["implications"]:
+        assert set(item) == {"premise", "conclusion"}
+        assert item["premise"] == sorted(set(item["premise"]))
+        assert set(item["premise"]) <= ground
+        assert item["conclusion"] in ground
+        assert item["conclusion"] not in item["premise"]
+        normalized.append({"premise": item["premise"], "conclusion": item["conclusion"]})
+    assert normalized == sorted(normalized, key=lambda item: (item["premise"], item["conclusion"]))
+    assert len({json.dumps(item, sort_keys=True) for item in normalized}) == len(normalized)
+    assert profile["definition_sha256"] == profile_hash(profile)
+    return ground, normalized
+
+
+def closure_data(profile, implications=None):
+    ground, declared = validate_profile(profile)
+    implications = declared if implications is None else implications
+    all_subsets = subsets(ground)
+    closures = {tuple(sorted(s)): close_set(s, implications, ground) for s in all_subsets}
+    closed = sorted({value for value in closures.values()}, key=lambda value: (len(value), tuple(sorted(value))))
+    return ground, implications, all_subsets, closures, closed
+
+
+def covers_in_lattice(closed):
+    lower = {value: [] for value in closed}
+    upper = {value: [] for value in closed}
+    for a in closed:
+        for b in closed:
+            if a < b and not any(a < c < b for c in closed):
+                upper[a].append(b)
+                lower[b].append(a)
+    return lower, upper
+
+
+def dispatch(request):
+    operation = request.get("operation") if isinstance(request, dict) else None
+    try:
+        assert isinstance(request, dict) and set(request) == {"operation", "profile"}
+        assert operation in [row[0] for row in OPS]
+        profile = request["profile"]
+        ground, implications, all_subsets, closures, closed = closure_data(profile)
+        closed_set = set(closed)
+        result = {"operation": operation, "profile_id": profile["profile_id"], "profile_definition_sha256": profile["definition_sha256"], "certificate_checked": True, "operation_executed": True}
+        if operation == "closure-envelope":
+            result["certificate"] = {"ground_size": 5, "implication_count": len(implications), "subset_count": 32}
+        elif operation == "closed-set-census":
+            result["certificate"] = {"closed_count": len(closed), "closed_sets": [sorted(x) for x in closed]}
+        elif operation == "closure-operator-laws":
+            extensive = all(set(s) <= set(closures[tuple(sorted(s))]) for s in all_subsets)
+            idempotent = all(close_set(value, implications, ground) == value for value in closures.values())
+            monotone = all(not (a <= b) or closures[tuple(sorted(a))] <= closures[tuple(sorted(b))] for a in all_subsets for b in all_subsets)
+            assert extensive and idempotent and monotone
+            result["certificate"] = {"extensive": extensive, "monotone": monotone, "idempotent": idempotent}
+        elif operation == "intersection-moore-family":
+            pair_checks = len(closed) ** 2
+            assert frozenset(ground) in closed_set
+            assert all((a & b) in closed_set for a in closed for b in closed)
+            result["certificate"] = {"ground_closed": True, "pair_intersections_checked": pair_checks}
+        elif operation == "generator-equivalence-classes":
+            classes = {}
+            for subset in all_subsets:
+                key = tuple(sorted(closures[tuple(sorted(subset))]))
+                classes.setdefault(key, []).append(sorted(subset))
+            result["certificate"] = {"class_count": len(classes), "class_sizes": sorted(len(v) for v in classes.values())}
+        elif operation == "minimal-generator-census":
+            generators = {}
+            for target in closed:
+                candidates = [s for s in all_subsets if closures[tuple(sorted(s))] == target]
+                minimal = [s for s in candidates if not any(t < s and closures[tuple(sorted(t))] == target for t in candidates)]
+                generators[",".join(map(str, sorted(target)))] = [sorted(x) for x in minimal]
+            result["certificate"] = {"closed_targets": len(generators), "minimal_generator_count": sum(len(v) for v in generators.values()), "generators": generators}
+        elif operation == "implication-soundness":
+            checks = [item["conclusion"] in close_set(item["premise"], implications, ground) for item in implications]
+            assert all(checks)
+            result["certificate"] = {"implications_checked": len(checks), "all_sound": True}
+        elif operation == "armstrong-entailment-audit":
+            reflexive = all(close_set(s, implications, ground) >= s for s in all_subsets)
+            augmentation = all(close_set(set(s) | {x}, implications, ground) >= (set(closures[tuple(sorted(s))]) | {x}) for s in all_subsets for x in ground)
+            transitive = all(close_set(closures[tuple(sorted(s))], implications, ground) == closures[tuple(sorted(s))] for s in all_subsets)
+            assert reflexive and augmentation and transitive
+            result["certificate"] = {"reflexive": reflexive, "augmentation": augmentation, "transitive": transitive, "finite_checks": 32 + 160 + 32}
+        elif operation == "closure-lattice-meet-join":
+            for a in closed:
+                for b in closed:
+                    assert (a & b) in closed_set
+                    assert close_set(a | b, implications, ground) in closed_set
+            result["certificate"] = {"closed_elements": len(closed), "pair_checks": len(closed) ** 2}
+        elif operation == "lattice-bounds-rank":
+            bottom = close_set(set(), implications, ground)
+            top = frozenset(ground)
+            ranks = {}
+            for value in closed:
+                ranks[value] = 1 + max([ranks[x] for x in closed if x < value] or [0])
+            result["certificate"] = {"bottom": sorted(bottom), "top": sorted(top), "longest_chain_length": max(ranks.values())}
+        elif operation == "join-irreducible-census":
+            lower, _ = covers_in_lattice(closed)
+            bottom = close_set(set(), implications, ground)
+            values = [x for x in closed if x != bottom and len(lower[x]) == 1]
+            result["certificate"] = {"count": len(values), "sets": [sorted(x) for x in values]}
+        elif operation == "meet-irreducible-census":
+            _, upper = covers_in_lattice(closed)
+            top = frozenset(ground)
+            values = [x for x in closed if x != top and len(upper[x]) == 1]
+            result["certificate"] = {"count": len(values), "sets": [sorted(x) for x in values]}
+        elif operation == "redundant-implication-audit":
+            redundant = []
+            for index, item in enumerate(implications):
+                remainder = implications[:index] + implications[index + 1 :]
+                if item["conclusion"] in close_set(item["premise"], remainder, ground):
+                    redundant.append(index)
+            result["certificate"] = {"implication_count": len(implications), "redundant_indices": redundant, "redundant_count": len(redundant)}
+        elif operation == "dual-interior-operator":
+            def interior(s):
+                return frozenset(ground - set(close_set(ground - set(s), implications, ground)))
+            anti = all(interior(s) <= set(s) for s in all_subsets)
+            idem = all(interior(interior(s)) == interior(s) for s in all_subsets)
+            mono = all(not (a <= b) or interior(a) <= interior(b) for a in all_subsets for b in all_subsets)
+            assert anti and idem and mono
+            result["certificate"] = {"anti_extensive": anti, "monotone": mono, "idempotent": idem}
+        elif operation == "relabel-covariance":
+            perm = {0: 1, 1: 2, 2: 3, 3: 4, 4: 0}
+            moved = canonical_implications([([perm[x] for x in item["premise"]], perm[item["conclusion"]]) for item in implications])
+            moved_closed = {close_set(s, moved, ground) for s in all_subsets}
+            transported = {frozenset(perm[x] for x in s) for s in closed}
+            assert moved_closed == transported
+            result["certificate"] = {"closed_count": len(closed), "transport_equal": True}
+        elif operation == "induced-ground-restriction":
+            restricted = set(profile["restriction"])
+            restricted_subsets = subsets(restricted)
+            def rclose(s):
+                return frozenset(set(close_set(s, implications, ground)) & restricted)
+            extensive = all(set(s) <= rclose(s) for s in restricted_subsets)
+            idempotent = all(rclose(rclose(s)) == rclose(s) for s in restricted_subsets)
+            monotone = all(not (a <= b) or rclose(a) <= rclose(b) for a in restricted_subsets for b in restricted_subsets)
+            assert extensive and idempotent and monotone
+            result["certificate"] = {"restriction": sorted(restricted), "closed_count": len({rclose(s) for s in restricted_subsets}), "laws": True}
+        elif operation == "closure-quotient-projection":
+            class_keys = sorted({closures[tuple(sorted(s))] for s in all_subsets}, key=lambda x: (len(x), tuple(sorted(x))))
+            comparable = sum(1 for a in class_keys for b in class_keys if a <= b)
+            result["certificate"] = {"equivalence_classes": len(class_keys), "ordered_pairs": comparable, "possibility_not_probability": True}
+        elif operation == "accessible-closure-explanation":
+            result["certificate"] = {"closed_count": len(closed), "definitions_explicit": True, "manual_accessibility_review_reserved": True}
+            result["outcome"] = "represented"
+            result["execution_credit"] = 0
+        elif operation == "observation-and-remedy-gap":
+            result["certificate"] = {"real_observations": 0, "affected_party_reviews": 0, "consequence_measurements": 0, "remedy_evidence": 0}
+            result["outcome"] = "open_gap"
+            result["execution_credit"] = 0
+        elif operation == "classification-authority-reservation":
+            result["certificate"] = {"real_actions": 0, "missing": ["competent decision maker", "action-specific authority", "affected-party process", "evidence", "review", "remedy"]}
+            result["outcome"] = "exact_gate"
+            result["execution_credit"] = 0
+        else:
+            raise AssertionError(operation)
+        result.setdefault("outcome", "completed")
+        result.setdefault("execution_credit", 1)
+        result["boundary"] = BOUNDARY
+        return result
+    except Exception as exc:
+        return {"operation": operation, "outcome": "rejected", "operation_executed": False, "execution_credit": 0, "certificate_checked": False, "error_class": type(exc).__name__, "boundary": BOUNDARY}
+
+
+def strict_json(text):
+    def hook(pairs):
+        result = {}
+        for key, value in pairs:
+            if key in result:
+                raise ValueError("duplicate key")
+            result[key] = value
+        return result
+    return json.loads(text, object_pairs_hook=hook, parse_constant=lambda value: (_ for _ in ()).throw(ValueError(value)))
+
+
+def cli(allowed=None):
+    try:
+        request = strict_json(sys.stdin.read())
+        if allowed is not None and request.get("operation") not in allowed:
+            raise ValueError("operation outside paired caller")
+        result = dispatch(request)
+        print(json.dumps(result, sort_keys=True))
+        return 0 if result.get("outcome") != "rejected" else 2
+    except Exception as exc:
+        print(json.dumps({"outcome":"rejected","operation_executed":False,"execution_credit":0,"error_class":type(exc).__name__,"boundary":BOUNDARY}, sort_keys=True))
+        return 2
+
+if __name__ == "__main__":
+    raise SystemExit(cli())
