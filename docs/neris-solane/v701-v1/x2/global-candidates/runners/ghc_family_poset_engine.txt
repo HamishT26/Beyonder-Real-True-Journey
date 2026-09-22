@@ -1,0 +1,441 @@
+"""Exact finite-poset certificates for five anonymous elements.
+
+Every result is a bounded synthetic mathematical statement. A partial order is
+not a social ranking, eligibility rule, real priority decision, or authority.
+"""
+from functools import lru_cache
+from itertools import combinations, permutations, product
+import hashlib
+import json
+import re
+import sys
+
+OPS = (
+    "poset-envelope",
+    "order-closure-certificate",
+    "hasse-cover-reduction",
+    "minimal-maximal-elements",
+    "rank-layer-certificate",
+    "order-ideal-enumeration",
+    "antichain-enumeration",
+    "ideal-antichain-bijection",
+    "maximal-chain-enumeration",
+    "width-chain-cover-duality",
+    "linear-extension-enumeration",
+    "mobius-interval-function",
+    "zeta-mobius-inversion",
+    "dual-poset-covariance",
+    "relabel-covariance",
+    "induced-subposet-restriction",
+    "order-polynomial-census",
+    "accessible-order-explanation",
+    "observation-and-remedy-gap",
+    "classification-authority-reservation",
+)
+BOUNDARY = (
+    "Finite synthetic same-owner order certificate only; no real classification, "
+    "priority, authority, independent reproduction, empirical GMUT, production, "
+    "identity, consciousness, personhood or Stage 20 claim."
+)
+
+
+def canonical(value):
+    return (json.dumps(value, sort_keys=True, ensure_ascii=True, indent=2) + "\n").encode()
+
+
+def encode(value):
+    if isinstance(value, dict):
+        return {key: encode(item) for key, item in value.items()}
+    if isinstance(value, (list, tuple, set)):
+        return [encode(item) for item in value]
+    return value
+
+
+def closure_from_covers(n, covers):
+    relation = [[False] * n for _ in range(n)]
+    for index in range(n):
+        relation[index][index] = True
+    for lower, upper in covers:
+        relation[lower][upper] = True
+    for middle in range(n):
+        for lower in range(n):
+            if relation[lower][middle]:
+                for upper in range(n):
+                    relation[lower][upper] = relation[lower][upper] or relation[middle][upper]
+    if any(relation[a][b] and relation[b][a] for a in range(n) for b in range(n) if a != b):
+        raise ValueError("cover relation contains a directed cycle")
+    return tuple(tuple(row) for row in relation)
+
+
+def cover_reduction(relation):
+    n = len(relation)
+    return tuple(
+        (lower, upper)
+        for lower in range(n)
+        for upper in range(n)
+        if lower != upper
+        and relation[lower][upper]
+        and not any(
+            middle not in (lower, upper)
+            and relation[lower][middle]
+            and relation[middle][upper]
+            for middle in range(n)
+        )
+    )
+
+
+@lru_cache(None)
+def structure(covers):
+    relation = closure_from_covers(5, covers)
+    reduced = cover_reduction(relation)
+    if reduced != tuple(sorted(covers)):
+        raise ValueError("declared covers are not the exact transitive reduction")
+    return relation
+
+
+def comparable(relation, a, b):
+    return relation[a][b] or relation[b][a]
+
+
+@lru_cache(None)
+def ideals(covers):
+    relation = structure(covers)
+    values = []
+    for mask in range(1 << 5):
+        valid = all(
+            not (mask & (1 << upper)) or bool(mask & (1 << lower))
+            for upper in range(5)
+            for lower in range(5)
+            if relation[lower][upper]
+        )
+        if valid:
+            values.append(mask)
+    return tuple(values)
+
+
+@lru_cache(None)
+def antichains(covers):
+    relation = structure(covers)
+    values = []
+    for mask in range(1 << 5):
+        members = [index for index in range(5) if mask & (1 << index)]
+        if all(not comparable(relation, a, b) for a, b in combinations(members, 2)):
+            values.append(mask)
+    return tuple(values)
+
+
+def maximal_elements(relation, mask):
+    return tuple(
+        element
+        for element in range(5)
+        if mask & (1 << element)
+        and not any(
+            mask & (1 << other) and element != other and relation[element][other]
+            for other in range(5)
+        )
+    )
+
+
+def generated_ideal(relation, antichain_mask):
+    return sum(
+        1 << lower
+        for lower in range(5)
+        if any(antichain_mask & (1 << upper) and relation[lower][upper] for upper in range(5))
+    )
+
+
+@lru_cache(None)
+def chains(covers):
+    relation = structure(covers)
+    candidates = []
+    for mask in range(1, 1 << 5):
+        members = tuple(index for index in range(5) if mask & (1 << index))
+        if all(comparable(relation, a, b) for a, b in combinations(members, 2)):
+            candidates.append(mask)
+    maximal = tuple(
+        mask
+        for mask in candidates
+        if not any(mask != other and mask & other == mask for other in candidates)
+    )
+    return tuple(sorted(maximal))
+
+
+def chain_partitions(covers):
+    relation = structure(covers)
+    best = []
+
+    def visit(element, blocks):
+        nonlocal best
+        if best and len(blocks) > len(best[0]):
+            return
+        if element == 5:
+            normalized = tuple(sorted(tuple(sorted(block)) for block in blocks))
+            if not best or len(normalized) < len(best[0]):
+                best = [normalized]
+            elif len(normalized) == len(best[0]) and normalized not in best:
+                best.append(normalized)
+            return
+        for index, block in enumerate(blocks):
+            if all(comparable(relation, element, member) for member in block):
+                visit(element + 1, blocks[:index] + [block + (element,)] + blocks[index + 1 :])
+        visit(element + 1, blocks + [(element,)])
+
+    visit(0, [])
+    return tuple(sorted(best))
+
+
+@lru_cache(None)
+def linear_extensions(covers):
+    relation = structure(covers)
+    values = []
+    for order in permutations(range(5)):
+        position = {element: index for index, element in enumerate(order)}
+        if all(position[lower] < position[upper] for lower in range(5) for upper in range(5) if lower != upper and relation[lower][upper]):
+            values.append(order)
+    return tuple(values)
+
+
+@lru_cache(None)
+def mobius(covers):
+    relation = structure(covers)
+
+    @lru_cache(None)
+    def mu(lower, upper):
+        if not relation[lower][upper]:
+            return 0
+        if lower == upper:
+            return 1
+        return -sum(mu(lower, middle) for middle in range(5) if middle != upper and relation[lower][middle] and relation[middle][upper])
+
+    return tuple(tuple(mu(lower, upper) for upper in range(5)) for lower in range(5))
+
+
+def transformed_covers(covers, permutation):
+    return tuple(sorted((permutation[lower], permutation[upper]) for lower, upper in covers))
+
+
+def induced_covers(covers, subset):
+    relation = structure(covers)
+    subset = tuple(sorted(subset))
+    local = tuple(tuple(relation[a][b] for b in subset) for a in subset)
+    reduced_local = cover_reduction(local)
+    return tuple(sorted((subset[a], subset[b]) for a, b in reduced_local))
+
+
+def isotone_maps(covers, chain_size):
+    relation = structure(covers)
+    values = []
+    for assignment in product(range(chain_size), repeat=5):
+        if all(assignment[a] <= assignment[b] for a in range(5) for b in range(5) if relation[a][b]):
+            values.append(assignment)
+    return tuple(values)
+
+
+def validate(profile):
+    keys = {
+        "profile_id",
+        "family",
+        "n",
+        "covers",
+        "label_permutation",
+        "restriction",
+        "isotone_chain_size",
+        "probe_values",
+        "real_observations",
+        "real_people",
+        "authority_actions",
+        "question",
+        "definition_sha256",
+    }
+    if not isinstance(profile, dict) or set(profile) != keys:
+        raise ValueError("profile keys")
+    if type(profile["n"]) is not int or profile["n"] != 5:
+        raise ValueError("exactly five elements required")
+    for key in ("real_observations", "real_people", "authority_actions"):
+        if type(profile[key]) is not int or profile[key] != 0:
+            raise ValueError("protected real-world field")
+    covers = profile["covers"]
+    if not isinstance(covers, list) or len(covers) > 10:
+        raise ValueError("cover list")
+    if any(not isinstance(edge, list) or len(edge) != 2 or any(type(value) is not int or not 0 <= value < 5 for value in edge) or edge[0] == edge[1] for edge in covers):
+        raise ValueError("cover edge")
+    cover_tuple = tuple(tuple(edge) for edge in covers)
+    if cover_tuple != tuple(sorted(set(cover_tuple))):
+        raise ValueError("canonical unique cover order")
+    structure(cover_tuple)
+    permutation = profile["label_permutation"]
+    if not isinstance(permutation, list) or any(type(value) is not int for value in permutation) or sorted(permutation) != list(range(5)):
+        raise ValueError("label permutation")
+    restriction = profile["restriction"]
+    if not isinstance(restriction, list) or len(restriction) != 4 or sorted(set(restriction)) != sorted(restriction) or any(type(value) is not int or not 0 <= value < 5 for value in restriction):
+        raise ValueError("restriction")
+    if type(profile["isotone_chain_size"]) is not int or profile["isotone_chain_size"] != 3:
+        raise ValueError("isotone chain size")
+    if not isinstance(profile["probe_values"], list) or len(profile["probe_values"]) != 5 or any(type(value) is not int or abs(value) > 1000 for value in profile["probe_values"]):
+        raise ValueError("probe values")
+    if not re.fullmatch(r"PO-[0-9]{2}", profile["profile_id"]) or not isinstance(profile["family"], str) or not isinstance(profile["question"], str):
+        raise ValueError("metadata")
+    if len(profile["family"]) > 80 or len(profile["question"]) > 500:
+        raise ValueError("metadata bounds")
+    definition = {key: value for key, value in profile.items() if key != "definition_sha256"}
+    if hashlib.sha256(canonical(definition)).hexdigest() != profile["definition_sha256"]:
+        raise ValueError("definition hash mismatch")
+    return cover_tuple
+
+
+def evaluate(operation, profile):
+    covers = validate(profile)
+    if operation not in OPS:
+        raise ValueError("unknown operation")
+    relation = structure(covers)
+    index = OPS.index(operation)
+    outcome = "completed"
+    if index == 0:
+        result = {"elements": 5, "covers": covers, "acyclic": True, "exact_transitive_reduction": True}
+    elif index == 1:
+        result = {"closure": relation, "relation_count": sum(sum(row) for row in relation), "reflexive": True, "antisymmetric": True, "transitive": True}
+    elif index == 2:
+        result = {"input_covers": covers, "reduced_covers": cover_reduction(relation), "equal": covers == cover_reduction(relation)}
+    elif index == 3:
+        minima = tuple(element for element in range(5) if not any(other != element and relation[other][element] for other in range(5)))
+        maxima = tuple(element for element in range(5) if not any(other != element and relation[element][other] for other in range(5)))
+        result = {"minimal": minima, "maximal": maxima}
+    elif index == 4:
+        ranks = []
+        remaining = set(range(5))
+        while remaining:
+            layer = tuple(sorted(element for element in remaining if not any(other in remaining and other != element and relation[other][element] for other in remaining)))
+            if not layer:
+                raise ArithmeticError("rank layering stalled")
+            ranks.append(layer)
+            remaining -= set(layer)
+        result = {"layers": ranks, "height": max(bin(mask).count("1") for mask in chains(covers))}
+    elif index == 5:
+        result = {"ideals": ideals(covers), "count": len(ideals(covers))}
+    elif index == 6:
+        result = {"antichains": antichains(covers), "count": len(antichains(covers))}
+    elif index == 7:
+        ideal_to_antichain = {ideal: sum(1 << value for value in maximal_elements(relation, ideal)) for ideal in ideals(covers)}
+        antichain_to_ideal = {antichain: generated_ideal(relation, antichain) for antichain in antichains(covers)}
+        assert set(ideal_to_antichain.values()) == set(antichains(covers))
+        assert set(antichain_to_ideal.values()) == set(ideals(covers))
+        assert all(antichain_to_ideal[antichain] == ideal for ideal, antichain in ideal_to_antichain.items())
+        result = {"ideal_to_antichain": ideal_to_antichain, "antichain_to_ideal": antichain_to_ideal, "bijective": True}
+    elif index == 8:
+        result = {"maximal_chains": chains(covers), "count": len(chains(covers))}
+    elif index == 9:
+        width = max(bin(mask).count("1") for mask in antichains(covers))
+        partitions = chain_partitions(covers)
+        assert len(partitions[0]) == width
+        result = {"width": width, "minimum_chain_partition_size": len(partitions[0]), "minimum_chain_partitions": partitions, "duality_checked": True}
+    elif index == 10:
+        result = {"extensions": linear_extensions(covers), "count": len(linear_extensions(covers))}
+    elif index == 11:
+        matrix = mobius(covers)
+        assert all(sum(matrix[a][middle] for middle in range(5) if relation[a][middle] and relation[middle][b]) == int(a == b) for a in range(5) for b in range(5) if relation[a][b])
+        result = {"mobius": matrix, "convolution_identity_checked": True}
+    elif index == 12:
+        source = tuple(profile["probe_values"])
+        zeta = tuple(sum(source[a] for a in range(5) if relation[a][b]) for b in range(5))
+        matrix = mobius(covers)
+        recovered = tuple(sum(matrix[a][b] * zeta[a] for a in range(5) if relation[a][b]) for b in range(5))
+        assert recovered == source
+        result = {"source": source, "zeta": zeta, "recovered": recovered, "exact": True}
+    elif index == 13:
+        dual = tuple(sorted((upper, lower) for lower, upper in covers))
+        filters = tuple(mask for mask in range(1 << 5) if ((1 << 5) - 1) ^ mask in ideals(covers))
+        assert len(ideals(dual)) == len(filters) == len(ideals(covers))
+        assert len(antichains(dual)) == len(antichains(covers))
+        assert len(linear_extensions(dual)) == len(linear_extensions(covers))
+        result = {"dual_covers": dual, "ideal_filter_count": len(filters), "antichain_count": len(antichains(dual)), "extension_count": len(linear_extensions(dual)), "covariant": True}
+    elif index == 14:
+        permutation = (1, 2, 3, 4, 0)
+        transported = transformed_covers(covers, permutation)
+        transported_relation = structure(transported)
+        assert all(relation[a][b] == transported_relation[permutation[a]][permutation[b]] for a in range(5) for b in range(5))
+        assert len(ideals(transported)) == len(ideals(covers)) and len(linear_extensions(transported)) == len(linear_extensions(covers))
+        result = {"permutation": permutation, "transported_covers": transported, "ideal_count": len(ideals(transported)), "extension_count": len(linear_extensions(transported)), "covariant": True}
+    elif index == 15:
+        subset = tuple(profile["restriction"])
+        induced = induced_covers(covers, subset)
+        subset_relation = closure_from_covers(5, induced)
+        assert all(subset_relation[a][b] == relation[a][b] for a in subset for b in subset)
+        result = {"subset": subset, "induced_covers": induced, "closure_matches_restriction": True}
+    elif index == 16:
+        values = isotone_maps(covers, profile["isotone_chain_size"])
+        result = {"target_chain_size": profile["isotone_chain_size"], "count": len(values), "sample": values[: min(20, len(values))], "exhaustive": True}
+    elif index == 17:
+        outcome = "represented"
+        result = {
+            "explanation": "The cover relation generates a finite reflexive, antisymmetric and transitive order. Ideals and antichains encode equivalent finite boundary descriptions. Width equals the smallest chain-partition size in this enumerated model.",
+            "ideal_count": len(ideals(covers)),
+            "antichain_count": len(antichains(covers)),
+            "no_real_ranking_credit": True,
+        }
+    elif index == 18:
+        outcome = "open_gap"
+        result = {
+            "observations": 0,
+            "people": 0,
+            "affected_party_review": 0,
+            "remedy_evidence": 0,
+            "missing": ["observed preferences", "observed consequences", "legitimate criteria", "appeal and remedy evaluation"],
+        }
+    else:
+        outcome = "exact_gate"
+        result = {
+            "real_actions": 0,
+            "classification_authority": False,
+            "required": ["competent decision maker", "action-specific authorization", "affected-party process", "evidence, review and remedy"],
+        }
+    return {
+        "operation": operation,
+        "profile_id": profile["profile_id"],
+        "profile_definition_sha256": profile["definition_sha256"],
+        "outcome": outcome,
+        "execution_credit": int(outcome == "completed"),
+        "operation_executed": True,
+        "certificate_checked": True,
+        "result": encode(result),
+        "boundary": BOUNDARY,
+    }
+
+
+def dispatch(request, allowed=OPS):
+    try:
+        if not isinstance(request, dict) or set(request) != {"operation", "profile"}:
+            raise ValueError("request keys")
+        operation = request["operation"]
+        if not isinstance(operation, str) or operation not in allowed:
+            raise ValueError("caller operation scope")
+        return evaluate(operation, request["profile"])
+    except (ArithmeticError, KeyError, TypeError, ValueError) as error:
+        return {"outcome": "rejected", "operation_executed": False, "execution_credit": 0, "error": str(error), "boundary": BOUNDARY}
+
+
+def strict_load(text):
+    def unique(pairs):
+        result = {}
+        for key, value in pairs:
+            if key in result:
+                raise ValueError("duplicate JSON key")
+            result[key] = value
+        return result
+
+    return json.loads(text, object_pairs_hook=unique, parse_constant=lambda value: (_ for _ in ()).throw(ValueError("nonfinite JSON")))
+
+
+def cli(allowed=OPS):
+    try:
+        text = sys.stdin.read(65537)
+        if len(text) > 65536:
+            raise ValueError("request exceeds byte budget")
+        result = dispatch(strict_load(text), allowed)
+    except (TypeError, ValueError) as error:
+        result = {"outcome": "rejected", "operation_executed": False, "execution_credit": 0, "error": str(error), "boundary": BOUNDARY}
+    print(json.dumps(result, sort_keys=True, ensure_ascii=True))
+    return 2 if result["outcome"] == "rejected" else 0
+
+
+if __name__ == "__main__":
+    sys.exit(cli())
