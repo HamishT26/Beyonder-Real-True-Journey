@@ -1,0 +1,7 @@
+import runpy
+from pathlib import Path
+ROOT=Path(__file__).resolve().parents[3]
+engine=runpy.run_path(str(ROOT/"x1/rough-engine.txt"))
+OPS=['partition-shape', 'lower-table', 'upper-table', 'three-region-partition']
+def run_group(profile):
+ return [engine["run"](profile,op) for op in OPS]

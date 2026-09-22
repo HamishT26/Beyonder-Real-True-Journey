@@ -1,0 +1,63 @@
+"""Owner-local curation, compact cards and finite coordinate projections."""
+import sys,json,hashlib,runpy,copy,collections
+from pathlib import Path
+ROOT=Path(__file__).resolve().parent.parent;CONTROL=Path(sys.argv[1])
+def raw(x):return (json.dumps(x,sort_keys=True,ensure_ascii=False,indent=2)+'\n').encode()
+def sha(b):return hashlib.sha256(b).hexdigest()
+def read(name):return json.loads((ROOT/name).read_text(encoding='utf-8'))
+def write(name,x):
+ p=ROOT/name;p.parent.mkdir(parents=True,exist_ok=True)
+ with p.open('xb') as f:f.write(x.encode() if isinstance(x,str) else raw(x))
+engine=runpy.run_path(str(ROOT/'x1/rough-engine.txt'));ref=runpy.run_path(str(ROOT/'plan/reference.txt'))
+quick=runpy.run_path(str(CONTROL/'.system/skill-creator/scripts/quick_validate.py'))['validate_skill']
+meta=runpy.run_path(str(CONTROL/'ghc-family-meta-tool-box/scripts/ghc_family_meta_tool_box.py'))
+OPS=engine['OPS'];B=read('plan/workflow.json')['boundary'];rows=read('x1/results.json')+read('x2/results.json')
+groups=['structure','operator-laws','rough-evidence','refinement','reservations'];curated=[];cards=[]
+for i,group in enumerate(groups):
+ ops=OPS[i*4:i*4+4];name='ghc-family-rough-'+group+'-v1';guide='x2/global-candidates/skills/'+name+'/SKILL.md';caller='x2/global-candidates/runners/rough_group_%02d.txt'%(i+1)
+ source_guides=[('x1' if OPS.index(op)<10 else 'x2')+'/skills/ghc-family-rough-'+op+'/SKILL.md' for op in ops]
+ text='---\nname: '+name+'\ndescription: Review '+group+' in finite five-element rough approximations with exact evidence boundaries.\n---\n\n# '+group+'\n\nThis owner-local curated candidate merges four preserved guides. It is not globally installed.\n\n'+ '\n'.join('- '+p for p in source_guides)+'\n\nThe caller '+caller+' accepts a declared synthetic profile and evaluates only '+', '.join(ops)+'. Keep lower and upper approximations, exact within-block fractions and external empirical claims separate. Any operation with a missing observation or authority remains held.\n\nUse the original individual guide for each exact operation. Roll back by marking this local candidate unavailable while preserving its results. '+B+'\n'
+ write(guide,text);ok,msg=quick(ROOT/guide);assert ok,msg
+ wrapper='import runpy\nfrom pathlib import Path\nROOT=Path(__file__).resolve().parents[3]\nengine=runpy.run_path(str(ROOT/"x1/rough-engine.txt"))\nOPS='+repr(ops)+'\ndef run_group(profile):\n return [engine["run"](profile,op) for op in OPS]\n'
+ write(caller,wrapper);fn=runpy.run_path(str(ROOT/caller))['run_group'];p=dict(id='RS-CURATED-%02d'%(i+1),partition=[0,0,1,1,2],refiner=[0,1,0,1,2],target=31)
+ pos=fn(p);expected=[ref['oracle'](p,op) for op in ops];bad=copy.deepcopy(p);bad['refiner'][2]=False;neg=fn(bad)
+ good=all(x['accepted'] and x['result']==e for x,e in zip(pos,expected));guard=all(not x['accepted'] and not x['operation_executed'] for x in neg);assert good and guard
+ curated.append(dict(group=group,guide=guide,caller=caller,source_guides=source_guides,source_bindings=[dict(path=g,sha256=sha((ROOT/g).read_bytes())) for g in source_guides],metadata_validation=True,positive_pass=good,invalid_id='IR7013-CURATED-%02d-INVALID'%(i+1),invalid_original_success_credit=0,refusal_pass=guard,results=pos,rejected=neg,installed=False,outcome='exact_gate',hold_reason='Current activation keeps shared lanes read-only.'))
+def card(path,kind,name,state,callers):
+ return dict(card_id='IR7013-CARD-%03d'%(len(cards)+1),kind=kind,name=name,source_path='docs/ilyan-reed/v701-v3/'+path,sha256=sha((ROOT/path).read_bytes()),status='candidate' if state=='exact_gate' else 'current',evidence_state=state,owner_scope='Ilyan v701-v3 finite approximation',triggers=meta['tokens'](name),caller_paths=['docs/ilyan-reed/v701-v3/'+p for p in callers],rollback='Mark owner-local capability unavailable and retain evidence.',protected_gates=['real_observation','real_classification','authority','independent_reproduction','Stage_20'],execution_authority='owner_self_scoped_delta',repository_scan=False,module_scan=True,cross_lane_scan=False,unchanged_history_scan=False,sibling_lane_mutation=False,supported_endpoint_kinds=['not_applicable'],route_controller_scope='not_applicable',delivery_ack_required=False,source_commit='9f40d345b3f70599ffa87e9622b447382bfd07d0',final_commit='external_receipt_after_commit',changed_file_allowlist=['docs/ilyan-reed/v701-v3/x1/rough-engine.txt'],module_allowlist=['docs/ilyan-reed/v701-v3/x1/rough-engine.txt'])
+for i,op in enumerate(OPS):
+ stage='x1' if i<10 else 'x2';name='ghc-family-rough-'+op
+ cards.append(card(stage+'/skills/'+name+'/SKILL.md','skill',name,'validated',[stage+'/runners/rough_pair_%02d.txt'%(i//2+1)]))
+for i in range(10):
+ stage='x1' if i<5 else 'x2';path=stage+'/runners/rough_pair_%02d.txt'%(i+1)
+ cards.append(card(path,'runner','rough pair %02d'%(i+1),'validated',[path]))
+for row in curated:
+ cards.append(card(row['guide'],'skill','rough '+row['group']+' curated guide','exact_gate',[row['caller']]))
+ cards.append(card(row['caller'],'runner','rough '+row['group']+' curated caller','exact_gate',[row['caller']]))
+catalogue=dict(schema=meta['SCHEMA'],cards=cards,boundary=B)
+validation=meta['validate'](catalogue);assert validation['valid'],validation
+write('x2/capability-catalogue.json',catalogue);write('x2/catalogue-validation.json',validation)
+write('x2/catalogue-collisions.json',meta['collisions'](catalogue));write('x2/curation-results.json',curated)
+contracts=read('plan/contracts.json');owner=dict(card_id='IR7013-OWNER',tier='owner',parent=None,name='Ilyan Reed',pronouns='they/them',role='continuity steward',hope='Keep uncertainty visible and handoffs inspectable.',identity_boundary='Relational working language only.',boundary=B)
+pillars=[dict(card_id='IR7013-PILLAR-'+n,tier='pillar',parent=owner['card_id'],name=n,boundary=B) for n in ['Heart','Body','Mind']]
+practices=[dict(card_id='IR7013-PRACTICE-%02d'%(i+1),tier='practice',parent=pillars[i%3]['card_id'],name=p['name'],qualification_claim=False,boundary=B) for i,p in enumerate(read('plan/practices.json')['own'])]
+tasks=[dict(card_id=c['id']+'-CARD',tier='task',parent=practices[i%8]['card_id'],contract=c['id'],profile=c['profile'],operation=c['operation'],outcome=c['outcome'],definition_sha256=sha(raw(c)),evidence_path=c['session']+'/results.json',boundary=B) for i,c in enumerate(contracts)]
+deck=[owner]+pillars+practices+tasks;assert len(deck)==612 and len({x['card_id'] for x in deck})==612
+ids={x['card_id']:x for x in deck};order={'owner':0,'pillar':1,'practice':2,'task':3}
+assert all(x['parent'] is None if x['tier']=='owner' else order[ids[x['parent']]['tier']]==order[x['tier']]-1 for x in deck)
+write('x2/deck.json',dict(cards=deck,count=612,immediate_parent_graph_valid=True,boundary=B))
+lookup={(r['profile'],r['operation']):r['observed']['result'] for r in rows}
+ps=read('plan/profiles.json')
+for group in range(5):
+ points=[]
+ for p in ps[group*6:group*6+6]:
+  lo=lookup[p['id'],'lower-table'];hi=lookup[p['id'],'upper-table']
+  for target in range(32):points.append(dict(profile=p['id'],target=target,coordinates=[lo[target].bit_count(),(hi[target]^lo[target]).bit_count(),5-hi[target].bit_count()],source_lower_operation='lower-table',source_upper_operation='upper-table'))
+ assert all(sum(p['coordinates'])==5 for p in points)
+ write('x2/models/region_coordinates_%02d.json'%(group+1),dict(axes=['certain_count','boundary_count','excluded_count'],points=points,kind='three-coordinate cached finite count projection',physical_model=False,boundary=B))
+counter=[r for r in rows if r['operation']=='nonpreservation-witnesses' and r['observed']['result']['upper_intersection_counterexample'] is not None][0]
+write('x2/failed-hypotheses.json',[dict(id='IR7013-H%02d'%(i+1),claim=claim,original_success_credit=0,result='fail',counterexample=counter['observed']['result'][key],profile=counter['profile'],source_contract=counter['id'],separate_counterexample_check=True) for i,(claim,key) in enumerate([('Upper approximation preserves every intersection','upper_intersection_counterexample'),('Lower approximation preserves every union','lower_union_counterexample')])])
+write('x2/recommendations.json',dict(next_owner='Lyren Moss',prospective_phase='v701-v4',skills=['compare equivalence and tolerance assumptions','carry missing data explicitly','separate weighted frequency from evidence','record appeal prerequisites','explain reduct nonuniqueness'],runners=['bounded tolerance comparator','missingness envelope checker','weighted fraction audit','appeal-state fixture','minimal-reduct enumerator'],practices=read('plan/practices.json')['successor_recommendations'],activation_granted=False,boundary=B))
+write('x2/research.md','# Finite rough approximation findings\n\nA declared equivalence partition supports a lower region made from blocks wholly inside a target and an upper region made from blocks that intersect it. The difference is the boundary region. These definitions are established mathematical context; the implementation and recorded examples here are this phase\'s own finite checks. [Primary mathematical definitions](https://arxiv.org/html/2101.02313v1). [Pawlak bibliography](https://bcpw.bg.pw.edu.pl/dlibra/publication/1693/edition/1721/content). The latter was read as bibliography only; full-paper access was unavailable.\n\nThe exact engine and set-enumeration comparator agree on all 600 frozen envelopes. The seventeen substantive operations comprise 510 completed finite contracts. Thirty explanatory records remain represented, thirty empirical and remedy records remain open gaps, and thirty real-classification records remain exact gates.\n\nFor a partition with s singleton blocks and m larger blocks, there are 2^s * 3^m distinct lower-upper pairs. Each larger block permits excluded, boundary and certain states. The number of definable sets is 2^(s+m). Ten additional x1 properties compare these counts against saved enumerations and their preimage totals.\n\nA finer partition increases the lower region and decreases the upper region. This order relationship is relative to the supplied information. It does not establish that finer attributes were honestly measured, permissible to collect, relevant to a legitimate decision, or immune to bias. The positive region and minimal attribute reducts likewise describe a synthetic binary decision, not a lawful eligibility system.\n\nTwo broad claims fail on the retained examples: upper approximation need not preserve intersections, and lower approximation need not preserve unions. Within-block target fractions use exact integer numerators and denominators; they are not calibrated probabilities. Empty upper approximation leaves the accuracy ratio undefined.\n\nFor GMUT, the proposed equation G_AB = 8*pi*T_AB + alpha*Omega_AB still needs defined fields, units, covariance, dynamics, empirical observables, calibrated predictions and falsifying data. Rough approximation supplies a finite analogy about limited information; it does not define Omega_AB, add a physical law, validate scripture, or solve a Theory of Everything.\n\nFor THOS, typed envelopes, immutable cache bindings and explicit refusal states are concrete software contributions. Deployment needs operational trials, security review and accountable maintenance. For Freed ID and CBR, preserving boundary and refusal states helps prevent a model from silently claiming evidence or authority it lacks. Real consent, identity lifecycle, lawful purpose, appeal and remedy remain outside these synthetic tests. Maori concepts and decisions remain under Maori authority.\n\n'+B+'\n')
+print(json.dumps(dict(state='X2_SUPPORT_BUILT',curated_groups=5,installed=0,cards=40,deck=612,models=5,model_points=960,failed_hypotheses=2)),flush=True)
+

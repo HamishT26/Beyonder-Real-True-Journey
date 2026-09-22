@@ -1,0 +1,7 @@
+import runpy
+from pathlib import Path
+ROOT=Path(__file__).resolve().parents[2]
+engine=runpy.run_path(str(ROOT/"x1/rough-engine.txt"))
+ALLOWED=['rough-membership-ratios', 'accuracy-boundary-ratios']
+def run_pair(profile):
+ return [engine["run"](profile,op) for op in ALLOWED]
