@@ -1,0 +1,6 @@
+'use strict';
+const fs=require('fs'),E=require('../../executor.txt');
+const allowed=["first_difference","accessibility_reservation"];
+function run(request){if(!allowed.includes(request.operation))throw Error('CALLER_OPERATION_SCOPE');return E.run(request);}
+function cli(){const input=fs.readFileSync(0,'utf8');if(Buffer.byteLength(input)>4096)throw Error('RESOURCE_BOUND');process.stdout.write(JSON.stringify(run(JSON.parse(input)))+'\n');}
+module.exports={run,cli};
