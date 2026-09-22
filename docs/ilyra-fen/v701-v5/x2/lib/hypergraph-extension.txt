@@ -1,0 +1,17 @@
+'use strict';
+const OPS=['hg_edge_deletion','hg_vertex_deletion','hg_cover_number','hg_transversal_frequency','hg_transversal_intersection_graph','hg_relabel_covariance','hg_scene_coordinates','hg_accessible_explanation','hg_real_classification_gap','hg_authority_gate'];
+function evaluate(req){base.exactKeys(req,['op','input']);if(!OPS.includes(req.op))throw new Error('operation');base.validate(req.input);const input=req.input,n=input.vertices.length,em=base.edgeMasks(input),mt=base.minimalTransversals(input),deg=Array.from({length:n},(_,i)=>em.filter(e=>e&(1<<i)).length);let value,outcome='completed';
+ if(req.op==='hg_edge_deletion')value=em.map((_,j)=>{const reduced={vertices:input.vertices,edges:input.edges.filter((_,i)=>i!==j),probe:input.probe};return {edge:j,minimal_transversal_count:base.minimalTransversals(reduced).length};});
+ else if(req.op==='hg_vertex_deletion')value=Array.from({length:n},(_,i)=>{const kept=em.filter(e=>!(e&(1<<i)));return {vertex:i,retained_edges:kept,components:base.components(input,[i],kept)};});
+ else if(req.op==='hg_cover_number'){const size=Math.min(...mt.map(base.bits));value={size,witnesses:mt.filter(m=>base.bits(m)===size)};}
+ else if(req.op==='hg_transversal_frequency')value=Array.from({length:n},(_,i)=>mt.filter(m=>m&(1<<i)).length);
+ else if(req.op==='hg_transversal_intersection_graph'){value=[];for(let i=0;i<mt.length;i++)for(let j=i+1;j<mt.length;j++)if(mt[i]&mt[j])value.push([i,j]);}
+ else if(req.op==='hg_relabel_covariance'){const permutation=Array.from({length:n},(_,i)=>n-1-i),edges=input.edges.map(e=>e.map(x=>permutation[x]).sort((a,b)=>a-b)).sort((a,b)=>{for(let i=0;i<Math.min(a.length,b.length);i++)if(a[i]!==b[i])return a[i]-b[i];return a.length-b.length;}),rev={vertices:Array.from({length:n},(_,i)=>input.vertices[n-1-i]),edges,probe:input.probe.map(x=>permutation[x]).sort((a,b)=>a-b)},rmt=base.minimalTransversals(rev),mapped=rmt.map(m=>Array.from({length:n},(_,i)=>i).reduce((z,i)=>z+((m>>i&1)?1<<permutation[i]:0),0)).sort((a,b)=>a-b);value={permutation,preserved:JSON.stringify(mapped)===JSON.stringify([...mt].sort((a,b)=>a-b))};}
+ else if(req.op==='hg_scene_coordinates')value={points:input.vertices.map((vertex,i)=>({vertex,xyz:[i,deg[i],mt.filter(m=>m&(1<<i)).length]})),axes:['declared vertex index','finite incident-edge count','minimal-transversal occurrence count'],physical:false};
+ else if(req.op==='hg_accessible_explanation'){value={summary:`${n} declared vertices, ${em.length} declared edges, ${mt.length} minimal transversals.`,facts:input.vertices.map((v,i)=>`Vertex ${v} has degree ${deg[i]}.`),authority:false};outcome='represented';}
+ else if(req.op==='hg_real_classification_gap'){value={missing:['real records','participant or affected-party review','independent reproduction'],finite_hypergraph_is_real_classification:false};outcome='open_gap';}
+ else {value={closed:['classification','allocation','legal','cultural','affected-party','Maori-authority'],release:false,finite_certificate_confers_authority:false};outcome='exact_gate';}
+ return base.envelope(value,outcome);
+}
+function dispatch(req){try{return evaluate(req);}catch(e){return base.rejected(e.message);}}
+module.exports={OPS,dispatch};

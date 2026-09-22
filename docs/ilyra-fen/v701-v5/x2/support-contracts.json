@@ -1,0 +1,1524 @@
+{
+  "declared_before_support_execution": true,
+  "tests": [
+    {
+      "test_id": "IF7015-T01",
+      "request": {
+        "op": "hg_validate",
+        "input": {
+          "vertices": [
+            "w",
+            "x",
+            "y",
+            "z"
+          ],
+          "edges": [
+            [
+              0,
+              1
+            ],
+            [
+              0,
+              3
+            ],
+            [
+              1,
+              2
+            ],
+            [
+              1,
+              3
+            ],
+            [
+              2,
+              3
+            ]
+          ],
+          "probe": [
+            0,
+            2
+          ]
+        }
+      },
+      "expected": {
+        "ok": true,
+        "error": null,
+        "outcome": "completed",
+        "value": {
+          "vertex_count": 4,
+          "edge_count": 5,
+          "covered_vertices": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "probe_valid": true
+        },
+        "external_credit": false
+      }
+    },
+    {
+      "test_id": "IF7015-T02",
+      "request": {
+        "op": "hg_incidence",
+        "input": {
+          "vertices": [
+            "w",
+            "x",
+            "y",
+            "z"
+          ],
+          "edges": [
+            [
+              0,
+              1
+            ],
+            [
+              0,
+              3
+            ],
+            [
+              1,
+              2
+            ],
+            [
+              1,
+              3
+            ],
+            [
+              2,
+              3
+            ]
+          ],
+          "probe": [
+            0,
+            2
+          ]
+        }
+      },
+      "expected": {
+        "ok": true,
+        "error": null,
+        "outcome": "completed",
+        "value": [
+          [
+            1,
+            1,
+            0,
+            0,
+            0
+          ],
+          [
+            1,
+            0,
+            1,
+            1,
+            0
+          ],
+          [
+            0,
+            0,
+            1,
+            0,
+            1
+          ],
+          [
+            0,
+            1,
+            0,
+            1,
+            1
+          ]
+        ],
+        "external_credit": false
+      }
+    },
+    {
+      "test_id": "IF7015-T03",
+      "request": {
+        "op": "hg_vertex_degrees",
+        "input": {
+          "vertices": [
+            "w",
+            "x",
+            "y",
+            "z"
+          ],
+          "edges": [
+            [
+              0,
+              1
+            ],
+            [
+              0,
+              3
+            ],
+            [
+              1,
+              2
+            ],
+            [
+              1,
+              3
+            ],
+            [
+              2,
+              3
+            ]
+          ],
+          "probe": [
+            0,
+            2
+          ]
+        }
+      },
+      "expected": {
+        "ok": true,
+        "error": null,
+        "outcome": "completed",
+        "value": [
+          2,
+          3,
+          2,
+          3
+        ],
+        "external_credit": false
+      }
+    },
+    {
+      "test_id": "IF7015-T04",
+      "request": {
+        "op": "hg_edge_size_histogram",
+        "input": {
+          "vertices": [
+            "w",
+            "x",
+            "y",
+            "z"
+          ],
+          "edges": [
+            [
+              0,
+              1
+            ],
+            [
+              0,
+              3
+            ],
+            [
+              1,
+              2
+            ],
+            [
+              1,
+              3
+            ],
+            [
+              2,
+              3
+            ]
+          ],
+          "probe": [
+            0,
+            2
+          ]
+        }
+      },
+      "expected": {
+        "ok": true,
+        "error": null,
+        "outcome": "completed",
+        "value": [
+          {
+            "size": 2,
+            "count": 5
+          }
+        ],
+        "external_credit": false
+      }
+    },
+    {
+      "test_id": "IF7015-T05",
+      "request": {
+        "op": "hg_primal_adjacency",
+        "input": {
+          "vertices": [
+            "w",
+            "x",
+            "y",
+            "z"
+          ],
+          "edges": [
+            [
+              0,
+              1
+            ],
+            [
+              0,
+              3
+            ],
+            [
+              1,
+              2
+            ],
+            [
+              1,
+              3
+            ],
+            [
+              2,
+              3
+            ]
+          ],
+          "probe": [
+            0,
+            2
+          ]
+        }
+      },
+      "expected": {
+        "ok": true,
+        "error": null,
+        "outcome": "completed",
+        "value": [
+          [
+            0,
+            1
+          ],
+          [
+            0,
+            3
+          ],
+          [
+            1,
+            2
+          ],
+          [
+            1,
+            3
+          ],
+          [
+            2,
+            3
+          ]
+        ],
+        "external_credit": false
+      }
+    },
+    {
+      "test_id": "IF7015-T06",
+      "request": {
+        "op": "hg_dual_incidence",
+        "input": {
+          "vertices": [
+            "w",
+            "x",
+            "y",
+            "z"
+          ],
+          "edges": [
+            [
+              0,
+              1
+            ],
+            [
+              0,
+              3
+            ],
+            [
+              1,
+              2
+            ],
+            [
+              1,
+              3
+            ],
+            [
+              2,
+              3
+            ]
+          ],
+          "probe": [
+            0,
+            2
+          ]
+        }
+      },
+      "expected": {
+        "ok": true,
+        "error": null,
+        "outcome": "completed",
+        "value": [
+          {
+            "vertex": 0,
+            "incident_edges": [
+              0,
+              1
+            ]
+          },
+          {
+            "vertex": 1,
+            "incident_edges": [
+              0,
+              2,
+              3
+            ]
+          },
+          {
+            "vertex": 2,
+            "incident_edges": [
+              2,
+              4
+            ]
+          },
+          {
+            "vertex": 3,
+            "incident_edges": [
+              1,
+              3,
+              4
+            ]
+          }
+        ],
+        "external_credit": false
+      }
+    },
+    {
+      "test_id": "IF7015-T07",
+      "request": {
+        "op": "hg_transversal_check",
+        "input": {
+          "vertices": [
+            "w",
+            "x",
+            "y",
+            "z"
+          ],
+          "edges": [
+            [
+              0,
+              1
+            ],
+            [
+              0,
+              3
+            ],
+            [
+              1,
+              2
+            ],
+            [
+              1,
+              3
+            ],
+            [
+              2,
+              3
+            ]
+          ],
+          "probe": [
+            0,
+            2
+          ]
+        }
+      },
+      "expected": {
+        "ok": true,
+        "error": null,
+        "outcome": "completed",
+        "value": {
+          "probe_mask": 5,
+          "hits_all": false,
+          "missed_edges": [
+            3
+          ]
+        },
+        "external_credit": false
+      }
+    },
+    {
+      "test_id": "IF7015-T08",
+      "request": {
+        "op": "hg_minimal_transversals",
+        "input": {
+          "vertices": [
+            "w",
+            "x",
+            "y",
+            "z"
+          ],
+          "edges": [
+            [
+              0,
+              1
+            ],
+            [
+              0,
+              3
+            ],
+            [
+              1,
+              2
+            ],
+            [
+              1,
+              3
+            ],
+            [
+              2,
+              3
+            ]
+          ],
+          "probe": [
+            0,
+            2
+          ]
+        }
+      },
+      "expected": {
+        "ok": true,
+        "error": null,
+        "outcome": "completed",
+        "value": [
+          7,
+          10,
+          13
+        ],
+        "external_credit": false
+      }
+    },
+    {
+      "test_id": "IF7015-T09",
+      "request": {
+        "op": "hg_independent_sets",
+        "input": {
+          "vertices": [
+            "w",
+            "x",
+            "y",
+            "z"
+          ],
+          "edges": [
+            [
+              0,
+              1
+            ],
+            [
+              0,
+              3
+            ],
+            [
+              1,
+              2
+            ],
+            [
+              1,
+              3
+            ],
+            [
+              2,
+              3
+            ]
+          ],
+          "probe": [
+            0,
+            2
+          ]
+        }
+      },
+      "expected": {
+        "ok": true,
+        "error": null,
+        "outcome": "completed",
+        "value": [
+          0,
+          1,
+          2,
+          4,
+          5,
+          8
+        ],
+        "external_credit": false
+      }
+    },
+    {
+      "test_id": "IF7015-T10",
+      "request": {
+        "op": "hg_components",
+        "input": {
+          "vertices": [
+            "w",
+            "x",
+            "y",
+            "z"
+          ],
+          "edges": [
+            [
+              0,
+              1
+            ],
+            [
+              0,
+              3
+            ],
+            [
+              1,
+              2
+            ],
+            [
+              1,
+              3
+            ],
+            [
+              2,
+              3
+            ]
+          ],
+          "probe": [
+            0,
+            2
+          ]
+        }
+      },
+      "expected": {
+        "ok": true,
+        "error": null,
+        "outcome": "completed",
+        "value": [
+          [
+            0,
+            1,
+            2,
+            3
+          ]
+        ],
+        "external_credit": false
+      }
+    },
+    {
+      "test_id": "IF7015-T11",
+      "request": {
+        "op": "hg_edge_deletion",
+        "input": {
+          "vertices": [
+            "w",
+            "x",
+            "y",
+            "z"
+          ],
+          "edges": [
+            [
+              0,
+              1
+            ],
+            [
+              0,
+              3
+            ],
+            [
+              1,
+              2
+            ],
+            [
+              1,
+              3
+            ],
+            [
+              2,
+              3
+            ]
+          ],
+          "probe": [
+            0,
+            2
+          ]
+        }
+      },
+      "expected": {
+        "ok": true,
+        "error": null,
+        "outcome": "completed",
+        "value": [
+          {
+            "edge": 0,
+            "minimal_transversal_count": 3
+          },
+          {
+            "edge": 1,
+            "minimal_transversal_count": 3
+          },
+          {
+            "edge": 2,
+            "minimal_transversal_count": 3
+          },
+          {
+            "edge": 3,
+            "minimal_transversal_count": 2
+          },
+          {
+            "edge": 4,
+            "minimal_transversal_count": 3
+          }
+        ],
+        "external_credit": false
+      }
+    },
+    {
+      "test_id": "IF7015-T12",
+      "request": {
+        "op": "hg_vertex_deletion",
+        "input": {
+          "vertices": [
+            "w",
+            "x",
+            "y",
+            "z"
+          ],
+          "edges": [
+            [
+              0,
+              1
+            ],
+            [
+              0,
+              3
+            ],
+            [
+              1,
+              2
+            ],
+            [
+              1,
+              3
+            ],
+            [
+              2,
+              3
+            ]
+          ],
+          "probe": [
+            0,
+            2
+          ]
+        }
+      },
+      "expected": {
+        "ok": true,
+        "error": null,
+        "outcome": "completed",
+        "value": [
+          {
+            "vertex": 0,
+            "retained_edges": [
+              6,
+              10,
+              12
+            ],
+            "components": [
+              [
+                1,
+                2,
+                3
+              ]
+            ]
+          },
+          {
+            "vertex": 1,
+            "retained_edges": [
+              9,
+              12
+            ],
+            "components": [
+              [
+                0,
+                2,
+                3
+              ]
+            ]
+          },
+          {
+            "vertex": 2,
+            "retained_edges": [
+              3,
+              9,
+              10
+            ],
+            "components": [
+              [
+                0,
+                1,
+                3
+              ]
+            ]
+          },
+          {
+            "vertex": 3,
+            "retained_edges": [
+              3,
+              6
+            ],
+            "components": [
+              [
+                0,
+                1,
+                2
+              ]
+            ]
+          }
+        ],
+        "external_credit": false
+      }
+    },
+    {
+      "test_id": "IF7015-T13",
+      "request": {
+        "op": "hg_cover_number",
+        "input": {
+          "vertices": [
+            "w",
+            "x",
+            "y",
+            "z"
+          ],
+          "edges": [
+            [
+              0,
+              1
+            ],
+            [
+              0,
+              3
+            ],
+            [
+              1,
+              2
+            ],
+            [
+              1,
+              3
+            ],
+            [
+              2,
+              3
+            ]
+          ],
+          "probe": [
+            0,
+            2
+          ]
+        }
+      },
+      "expected": {
+        "ok": true,
+        "error": null,
+        "outcome": "completed",
+        "value": {
+          "size": 2,
+          "witnesses": [
+            10
+          ]
+        },
+        "external_credit": false
+      }
+    },
+    {
+      "test_id": "IF7015-T14",
+      "request": {
+        "op": "hg_transversal_frequency",
+        "input": {
+          "vertices": [
+            "w",
+            "x",
+            "y",
+            "z"
+          ],
+          "edges": [
+            [
+              0,
+              1
+            ],
+            [
+              0,
+              3
+            ],
+            [
+              1,
+              2
+            ],
+            [
+              1,
+              3
+            ],
+            [
+              2,
+              3
+            ]
+          ],
+          "probe": [
+            0,
+            2
+          ]
+        }
+      },
+      "expected": {
+        "ok": true,
+        "error": null,
+        "outcome": "completed",
+        "value": [
+          2,
+          2,
+          2,
+          2
+        ],
+        "external_credit": false
+      }
+    },
+    {
+      "test_id": "IF7015-T15",
+      "request": {
+        "op": "hg_transversal_intersection_graph",
+        "input": {
+          "vertices": [
+            "w",
+            "x",
+            "y",
+            "z"
+          ],
+          "edges": [
+            [
+              0,
+              1
+            ],
+            [
+              0,
+              3
+            ],
+            [
+              1,
+              2
+            ],
+            [
+              1,
+              3
+            ],
+            [
+              2,
+              3
+            ]
+          ],
+          "probe": [
+            0,
+            2
+          ]
+        }
+      },
+      "expected": {
+        "ok": true,
+        "error": null,
+        "outcome": "completed",
+        "value": [
+          [
+            0,
+            1
+          ],
+          [
+            0,
+            2
+          ],
+          [
+            1,
+            2
+          ]
+        ],
+        "external_credit": false
+      }
+    },
+    {
+      "test_id": "IF7015-T16",
+      "request": {
+        "op": "hg_relabel_covariance",
+        "input": {
+          "vertices": [
+            "w",
+            "x",
+            "y",
+            "z"
+          ],
+          "edges": [
+            [
+              0,
+              1
+            ],
+            [
+              0,
+              3
+            ],
+            [
+              1,
+              2
+            ],
+            [
+              1,
+              3
+            ],
+            [
+              2,
+              3
+            ]
+          ],
+          "probe": [
+            0,
+            2
+          ]
+        }
+      },
+      "expected": {
+        "ok": true,
+        "error": null,
+        "outcome": "completed",
+        "value": {
+          "permutation": [
+            3,
+            2,
+            1,
+            0
+          ],
+          "preserved": true
+        },
+        "external_credit": false
+      }
+    },
+    {
+      "test_id": "IF7015-T17",
+      "request": {
+        "op": "hg_scene_coordinates",
+        "input": {
+          "vertices": [
+            "w",
+            "x",
+            "y",
+            "z"
+          ],
+          "edges": [
+            [
+              0,
+              1
+            ],
+            [
+              0,
+              3
+            ],
+            [
+              1,
+              2
+            ],
+            [
+              1,
+              3
+            ],
+            [
+              2,
+              3
+            ]
+          ],
+          "probe": [
+            0,
+            2
+          ]
+        }
+      },
+      "expected": {
+        "ok": true,
+        "error": null,
+        "outcome": "completed",
+        "value": {
+          "points": [
+            {
+              "vertex": "w",
+              "xyz": [
+                0,
+                2,
+                2
+              ]
+            },
+            {
+              "vertex": "x",
+              "xyz": [
+                1,
+                3,
+                2
+              ]
+            },
+            {
+              "vertex": "y",
+              "xyz": [
+                2,
+                2,
+                2
+              ]
+            },
+            {
+              "vertex": "z",
+              "xyz": [
+                3,
+                3,
+                2
+              ]
+            }
+          ],
+          "axes": [
+            "declared vertex index",
+            "finite incident-edge count",
+            "minimal-transversal occurrence count"
+          ],
+          "physical": false
+        },
+        "external_credit": false
+      }
+    },
+    {
+      "test_id": "IF7015-T18",
+      "request": {
+        "op": "hg_accessible_explanation",
+        "input": {
+          "vertices": [
+            "w",
+            "x",
+            "y",
+            "z"
+          ],
+          "edges": [
+            [
+              0,
+              1
+            ],
+            [
+              0,
+              3
+            ],
+            [
+              1,
+              2
+            ],
+            [
+              1,
+              3
+            ],
+            [
+              2,
+              3
+            ]
+          ],
+          "probe": [
+            0,
+            2
+          ]
+        }
+      },
+      "expected": {
+        "ok": true,
+        "error": null,
+        "outcome": "represented",
+        "value": {
+          "summary": "4 declared vertices, 5 declared edges, 3 minimal transversals.",
+          "facts": [
+            "Vertex w has degree 2.",
+            "Vertex x has degree 3.",
+            "Vertex y has degree 2.",
+            "Vertex z has degree 3."
+          ],
+          "authority": false
+        },
+        "external_credit": false
+      }
+    },
+    {
+      "test_id": "IF7015-T19",
+      "request": {
+        "op": "hg_real_classification_gap",
+        "input": {
+          "vertices": [
+            "w",
+            "x",
+            "y",
+            "z"
+          ],
+          "edges": [
+            [
+              0,
+              1
+            ],
+            [
+              0,
+              3
+            ],
+            [
+              1,
+              2
+            ],
+            [
+              1,
+              3
+            ],
+            [
+              2,
+              3
+            ]
+          ],
+          "probe": [
+            0,
+            2
+          ]
+        }
+      },
+      "expected": {
+        "ok": true,
+        "error": null,
+        "outcome": "open_gap",
+        "value": {
+          "missing": [
+            "real records",
+            "participant or affected-party review",
+            "independent reproduction"
+          ],
+          "finite_hypergraph_is_real_classification": false
+        },
+        "external_credit": false
+      }
+    },
+    {
+      "test_id": "IF7015-T20",
+      "request": {
+        "op": "hg_authority_gate",
+        "input": {
+          "vertices": [
+            "w",
+            "x",
+            "y",
+            "z"
+          ],
+          "edges": [
+            [
+              0,
+              1
+            ],
+            [
+              0,
+              3
+            ],
+            [
+              1,
+              2
+            ],
+            [
+              1,
+              3
+            ],
+            [
+              2,
+              3
+            ]
+          ],
+          "probe": [
+            0,
+            2
+          ]
+        }
+      },
+      "expected": {
+        "ok": true,
+        "error": null,
+        "outcome": "exact_gate",
+        "value": {
+          "closed": [
+            "classification",
+            "allocation",
+            "legal",
+            "cultural",
+            "affected-party",
+            "Maori-authority"
+          ],
+          "release": false,
+          "finite_certificate_confers_authority": false
+        },
+        "external_credit": false
+      }
+    }
+  ],
+  "test_count": 20,
+  "privacy_invalid_subjects": [
+    {
+      "id": "IF7015-PRIV-N01",
+      "label": "unknown_field",
+      "request": {
+        "op": "hg_validate",
+        "input": {
+          "vertices": [
+            "w",
+            "x",
+            "y",
+            "z"
+          ],
+          "edges": [
+            [
+              0,
+              1
+            ],
+            [
+              0,
+              3
+            ],
+            [
+              1,
+              2
+            ],
+            [
+              1,
+              3
+            ],
+            [
+              2,
+              3
+            ]
+          ],
+          "probe": [
+            0,
+            2
+          ],
+          "unexpected": true
+        }
+      },
+      "expected_error": "field_set"
+    },
+    {
+      "id": "IF7015-PRIV-N02",
+      "label": "duplicate_edge",
+      "request": {
+        "op": "hg_validate",
+        "input": {
+          "vertices": [
+            "w",
+            "x",
+            "y",
+            "z"
+          ],
+          "edges": [
+            [
+              0,
+              1
+            ],
+            [
+              0,
+              3
+            ],
+            [
+              1,
+              2
+            ],
+            [
+              1,
+              3
+            ],
+            [
+              2,
+              3
+            ],
+            [
+              0,
+              1
+            ]
+          ],
+          "probe": [
+            0,
+            2
+          ]
+        }
+      },
+      "expected_error": "duplicate_edge"
+    },
+    {
+      "id": "IF7015-PRIV-N03",
+      "label": "out_of_range_vertex",
+      "request": {
+        "op": "hg_validate",
+        "input": {
+          "vertices": [
+            "w",
+            "x",
+            "y",
+            "z"
+          ],
+          "edges": [
+            [
+              0,
+              1
+            ],
+            [
+              0,
+              3
+            ],
+            [
+              1,
+              2
+            ],
+            [
+              1,
+              3
+            ],
+            [
+              2,
+              3
+            ],
+            [
+              4
+            ]
+          ],
+          "probe": [
+            0,
+            2
+          ]
+        }
+      },
+      "expected_error": "edge"
+    },
+    {
+      "id": "IF7015-PRIV-N04",
+      "label": "unsorted_edge",
+      "request": {
+        "op": "hg_validate",
+        "input": {
+          "vertices": [
+            "w",
+            "x",
+            "y",
+            "z"
+          ],
+          "edges": [
+            [
+              1,
+              0
+            ],
+            [
+              0,
+              3
+            ],
+            [
+              1,
+              2
+            ],
+            [
+              1,
+              3
+            ],
+            [
+              2,
+              3
+            ]
+          ],
+          "probe": [
+            0,
+            2
+          ]
+        }
+      },
+      "expected_error": "edge"
+    },
+    {
+      "id": "IF7015-PRIV-N05",
+      "label": "invalid_probe",
+      "request": {
+        "op": "hg_validate",
+        "input": {
+          "vertices": [
+            "w",
+            "x",
+            "y",
+            "z"
+          ],
+          "edges": [
+            [
+              0,
+              1
+            ],
+            [
+              0,
+              3
+            ],
+            [
+              1,
+              2
+            ],
+            [
+              1,
+              3
+            ],
+            [
+              2,
+              3
+            ]
+          ],
+          "probe": [
+            2,
+            0
+          ]
+        }
+      },
+      "expected_error": "probe"
+    }
+  ],
+  "privacy_count": 5,
+  "model_contracts": [
+    {
+      "model_id": "IF7015-MODEL-01",
+      "profile_id": "IF7015-HG-01",
+      "source_operation": "hg_scene_coordinates",
+      "required_dimensions": 3,
+      "physical": false,
+      "derive_without_domain_replay": true
+    },
+    {
+      "model_id": "IF7015-MODEL-02",
+      "profile_id": "IF7015-HG-07",
+      "source_operation": "hg_scene_coordinates",
+      "required_dimensions": 3,
+      "physical": false,
+      "derive_without_domain_replay": true
+    },
+    {
+      "model_id": "IF7015-MODEL-03",
+      "profile_id": "IF7015-HG-13",
+      "source_operation": "hg_scene_coordinates",
+      "required_dimensions": 3,
+      "physical": false,
+      "derive_without_domain_replay": true
+    },
+    {
+      "model_id": "IF7015-MODEL-04",
+      "profile_id": "IF7015-HG-19",
+      "source_operation": "hg_scene_coordinates",
+      "required_dimensions": 3,
+      "physical": false,
+      "derive_without_domain_replay": true
+    },
+    {
+      "model_id": "IF7015-MODEL-05",
+      "profile_id": "IF7015-HG-25",
+      "source_operation": "hg_scene_coordinates",
+      "required_dimensions": 3,
+      "physical": false,
+      "derive_without_domain_replay": true
+    }
+  ],
+  "model_count": 5,
+  "operational_failures": [
+    {
+      "id": "IF7015-OP-N003",
+      "subject": "The first support-contract script failed static Python parsing because an abandoned draft dictionary expression contained an unterminated key string.",
+      "recovery": "The unused draft block was removed before support-contract creation; no repository artifact or support result existed and neither successful domain session was replayed.",
+      "success_credit": 0,
+      "resolved": true
+    }
+  ],
+  "boundary": "Finite synthetic same-owner directed-hypergraph mathematics, software, and documentation evidence only. No real classification, allocation, person, participant, institution, identity, credential, measurement, deployment, professional judgment, legal or cultural conclusion, affected-party or Maori authority, empirical GMUT confirmation, production THOS or Freed ID, complete privacy or accessibility assurance, exhaustive security, independent reproduction, consciousness, personhood, Theory-of-Everything proof, canon, or Stage 20 readiness. NOT_READY_FOR_STAGE_20."
+}

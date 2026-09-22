@@ -1,0 +1,6 @@
+'use strict';
+const fs=require('node:fs'),path=require('node:path'),vm=require('node:vm');
+function load(rel,base){const c={module:{exports:{}},base};vm.createContext(c);new vm.Script(fs.readFileSync(path.resolve(__dirname,rel),'utf8'),{filename:rel}).runInContext(c,{timeout:3000});return c.module.exports;}
+const core=load("../../x1/lib/hypergraph-core.txt"),extension="../lib/hypergraph-extension.txt"?load("../lib/hypergraph-extension.txt",core):null,allowed=["hg_transversal_intersection_graph", "hg_relabel_covariance"],args=process.argv.slice(2);if(args.length!==4||args[0]!=='--input'||args[2]!=='--output')throw Error('Use --input JSON_PATH --output NEW_JSON_PATH');let result;
+try{const req=JSON.parse(fs.readFileSync(args[1],'utf8'));result=allowed.includes(req.op)?(core.OPS.includes(req.op)?core:extension).dispatch(req):core.rejected('runner_operation');}catch(e){result=core.rejected(e.message);}
+fs.writeFileSync(args[3],JSON.stringify(result,null,2)+'\n',{encoding:'utf8',flag:'wx'});

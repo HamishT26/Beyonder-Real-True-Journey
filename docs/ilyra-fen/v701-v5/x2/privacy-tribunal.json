@@ -1,0 +1,281 @@
+{
+  "rows": [
+    {
+      "id": "IF7015-PRIV-N01",
+      "label": "unknown_field",
+      "request": {
+        "op": "hg_validate",
+        "input": {
+          "vertices": [
+            "w",
+            "x",
+            "y",
+            "z"
+          ],
+          "edges": [
+            [
+              0,
+              1
+            ],
+            [
+              0,
+              3
+            ],
+            [
+              1,
+              2
+            ],
+            [
+              1,
+              3
+            ],
+            [
+              2,
+              3
+            ]
+          ],
+          "probe": [
+            0,
+            2
+          ],
+          "unexpected": true
+        }
+      },
+      "expected_error": "field_set",
+      "actual": {
+        "ok": false,
+        "error": "field_set",
+        "outcome": "exact_gate",
+        "value": null,
+        "external_credit": false
+      },
+      "subject_result": "fail",
+      "refusal_result": "pass",
+      "pass": true,
+      "original_success_credit": 0
+    },
+    {
+      "id": "IF7015-PRIV-N02",
+      "label": "duplicate_edge",
+      "request": {
+        "op": "hg_validate",
+        "input": {
+          "vertices": [
+            "w",
+            "x",
+            "y",
+            "z"
+          ],
+          "edges": [
+            [
+              0,
+              1
+            ],
+            [
+              0,
+              3
+            ],
+            [
+              1,
+              2
+            ],
+            [
+              1,
+              3
+            ],
+            [
+              2,
+              3
+            ],
+            [
+              0,
+              1
+            ]
+          ],
+          "probe": [
+            0,
+            2
+          ]
+        }
+      },
+      "expected_error": "duplicate_edge",
+      "actual": {
+        "ok": false,
+        "error": "duplicate_edge",
+        "outcome": "exact_gate",
+        "value": null,
+        "external_credit": false
+      },
+      "subject_result": "fail",
+      "refusal_result": "pass",
+      "pass": true,
+      "original_success_credit": 0
+    },
+    {
+      "id": "IF7015-PRIV-N03",
+      "label": "out_of_range_vertex",
+      "request": {
+        "op": "hg_validate",
+        "input": {
+          "vertices": [
+            "w",
+            "x",
+            "y",
+            "z"
+          ],
+          "edges": [
+            [
+              0,
+              1
+            ],
+            [
+              0,
+              3
+            ],
+            [
+              1,
+              2
+            ],
+            [
+              1,
+              3
+            ],
+            [
+              2,
+              3
+            ],
+            [
+              4
+            ]
+          ],
+          "probe": [
+            0,
+            2
+          ]
+        }
+      },
+      "expected_error": "edge",
+      "actual": {
+        "ok": false,
+        "error": "edge",
+        "outcome": "exact_gate",
+        "value": null,
+        "external_credit": false
+      },
+      "subject_result": "fail",
+      "refusal_result": "pass",
+      "pass": true,
+      "original_success_credit": 0
+    },
+    {
+      "id": "IF7015-PRIV-N04",
+      "label": "unsorted_edge",
+      "request": {
+        "op": "hg_validate",
+        "input": {
+          "vertices": [
+            "w",
+            "x",
+            "y",
+            "z"
+          ],
+          "edges": [
+            [
+              1,
+              0
+            ],
+            [
+              0,
+              3
+            ],
+            [
+              1,
+              2
+            ],
+            [
+              1,
+              3
+            ],
+            [
+              2,
+              3
+            ]
+          ],
+          "probe": [
+            0,
+            2
+          ]
+        }
+      },
+      "expected_error": "edge",
+      "actual": {
+        "ok": false,
+        "error": "edge",
+        "outcome": "exact_gate",
+        "value": null,
+        "external_credit": false
+      },
+      "subject_result": "fail",
+      "refusal_result": "pass",
+      "pass": true,
+      "original_success_credit": 0
+    },
+    {
+      "id": "IF7015-PRIV-N05",
+      "label": "invalid_probe",
+      "request": {
+        "op": "hg_validate",
+        "input": {
+          "vertices": [
+            "w",
+            "x",
+            "y",
+            "z"
+          ],
+          "edges": [
+            [
+              0,
+              1
+            ],
+            [
+              0,
+              3
+            ],
+            [
+              1,
+              2
+            ],
+            [
+              1,
+              3
+            ],
+            [
+              2,
+              3
+            ]
+          ],
+          "probe": [
+            2,
+            0
+          ]
+        }
+      },
+      "expected_error": "probe",
+      "actual": {
+        "ok": false,
+        "error": "probe",
+        "outcome": "exact_gate",
+        "value": null,
+        "external_credit": false
+      },
+      "subject_result": "fail",
+      "refusal_result": "pass",
+      "pass": true,
+      "original_success_credit": 0
+    }
+  ],
+  "count": 5,
+  "failed_subjects": 5,
+  "passing_refusals": 5,
+  "boundary": "Finite synthetic same-owner evidence only; no independent reproduction, external audit, production certification, complete privacy/accessibility, exhaustive security, authority, Theory-of-Everything proof, canon, or Stage 20 evidence."
+}
