@@ -1,0 +1,6 @@
+'use strict';
+const runtime=require('../runtime/evidence-extended.txt');
+const allowed=["evidence_observation_gap","evidence_authority_gate"];
+const request=JSON.parse(process.argv[2]||'{}');
+if(!allowed.includes(request.operation))throw Error('operation outside paired runner');
+process.stdout.write(JSON.stringify(runtime.execute(request)));

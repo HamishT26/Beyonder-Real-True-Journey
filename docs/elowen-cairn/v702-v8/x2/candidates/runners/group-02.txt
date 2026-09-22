@@ -1,0 +1,8 @@
+'use strict';
+const core=require('../../../x1/runtime/evidence-core.txt');
+const extended=require('../../runtime/evidence-extended.txt');
+const allowed=["evidence_commonality","evidence_mobius_roundtrip","evidence_vacuous","evidence_discount"];
+const request=JSON.parse(process.argv[2]||'{}');
+if(!allowed.includes(request.operation))throw Error('operation outside candidate group');
+const runtime=["evidence_frame","evidence_focal_sets","evidence_belief","evidence_plausibility","evidence_commonality","evidence_mobius_roundtrip","evidence_vacuous","evidence_discount","evidence_condition","evidence_conjunctive"].includes(request.operation)?core:extended;
+process.stdout.write(JSON.stringify(runtime.execute(request)));
