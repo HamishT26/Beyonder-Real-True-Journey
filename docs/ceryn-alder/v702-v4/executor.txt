@@ -1,0 +1,33 @@
+'use strict';
+const Q=require('./q.txt');const {q,ca,cs,cm,cj,scale,zero,ipow,vec,out,energy,str}=Q;
+const operations=['vector_shape','sum','difference','hadamard','conjugate','reverse','shift','dft','inverse','convolution','correlation','parseval','convolution_theorem','shift_theorem','modulation','circulant_action','filter_projection','accessibility_reservation','observation_vacancy','authority_gate'];
+function validate(r){if(!r||typeof r!=='object'||Array.isArray(r)||Object.getPrototypeOf(r)!==Object.prototype)throw Error('INVALID_REQUEST');if(Object.keys(r).sort().join(',')!=='a,b,mask,operation,shift')throw Error('CLOSED_FIELDS');if(!operations.includes(r.operation))throw Error('UNKNOWN_OPERATION');if(Buffer.byteLength(JSON.stringify(r))>4096)throw Error('RESOURCE_BOUND');for(const v of[r.a,r.b]){if(!Array.isArray(v)||v.length!==4)throw Error('VECTOR_LENGTH');for(const c of v){if(!Array.isArray(c)||c.length!==2)throw Error('COMPLEX_SHAPE');for(const s of c)Q.parse(s);}}if(!Number.isInteger(r.shift)||r.shift<0||r.shift>3)throw Error('SHIFT_BOUND');if(!Array.isArray(r.mask)||r.mask.length!==4||r.mask.some(x=>typeof x!=='boolean'))throw Error('MASK_SHAPE');return r;}
+function butterfly(a){const u=ca(a[0],a[2]),v=ca(a[1],a[3]),w=cs(a[0],a[2]),t=cm(cs(a[1],a[3]),ipow(1));return[ca(u,v),cs(w,t),cs(u,v),ca(w,t)];}
+const inverse=a=>butterfly(a.map(cj)).map(z=>scale(cj(z),q(1,4)));
+const product=(a,b)=>a.map((z,j)=>cm(z,b[j]));
+const convolution=(a,b)=>inverse(product(butterfly(a),butterfly(b)));
+const shift=(a,k)=>a.map((_,n)=>a[(n-k+4)%4]);
+function run(r){validate(r);const a=vec(r.a),b=vec(r.b),k=r.shift;let value;switch(r.operation){
+case'vector_shape':value={length:4,field:'Q(i)',a:out(a),b:out(b)};break;
+case'sum':value=out(a.map((z,j)=>ca(z,b[j])));break;
+case'difference':value=out(a.map((z,j)=>cs(z,b[j])));break;
+case'hadamard':value=out(product(a,b));break;
+case'conjugate':value=out(a.map(cj));break;
+case'reverse':value=out([a[0],a[3],a[2],a[1]]);break;
+case'shift':value=out(shift(a,k));break;
+case'dft':value=out(butterfly(a));break;
+case'inverse':value=out(inverse(a));break;
+case'convolution':value=out(convolution(a,b));break;
+case'correlation':value=out(inverse(product(butterfly(a).map(cj),butterfly(b))));break;
+case'parseval':{const te=energy(a),fe=energy(butterfly(a));value={time_energy:str(te),frequency_energy:str(fe),scale:'4',equal:str(fe)===str(Q.mul(q(4),te))};break;}
+case'convolution_theorem':{const direct=a.map((_,n)=>a.reduce((s,z,j)=>ca(s,cm(z,b[(n-j+4)%4])),zero()));value={direct_spectrum:out(butterfly(direct)),spectral_product:out(product(butterfly(a),butterfly(b)))};break;}
+case'shift_theorem':value={shifted_spectrum:out(butterfly(shift(a,k))),phase_product:out(butterfly(a).map((z,j)=>cm(z,ipow(-j*k))))};break;
+case'modulation':{const v=a.map((z,j)=>cm(z,ipow(j*k)));value={modulated:out(v),spectrum:out(butterfly(v))};break;}
+case'circulant_action':{const matrix=Array.from({length:4},(_,row)=>Array.from({length:4},(_,col)=>a[(row-col+4)%4]));value={matrix:matrix.map(out),action:out(convolution(a,b))};break;}
+case'filter_projection':{const p=inverse(butterfly(a).map((z,j)=>r.mask[j]?z:zero()));value={projected:out(p),before_energy:str(energy(a)),after_energy:str(energy(p)),mask:[...r.mask]};break;}
+case'accessibility_reservation':value={vector:out(a),text_coordinates_available:true,screen_reader_review:'not_performed',participant_evidence:false,complete_accessibility:false};break;
+case'observation_vacancy':value={synthetic_spectrum:out(butterfly(a)),measured:false,calibration:null,physical_likelihood:null};break;
+case'authority_gate':value={operation:'withheld',competent_authority_evidence:false,production_identity:false,public_allocation:false};break;
+default:throw Error('UNKNOWN_OPERATION');}
+return{operation:r.operation,value,evidence_scope:'finite exact synthetic software witness',broader_authority_credit:0};}
+module.exports={run,validate,butterfly,inverse,convolution,operations};
