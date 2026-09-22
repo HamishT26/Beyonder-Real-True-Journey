@@ -1,0 +1,63 @@
+'use strict';
+// Definition-side oracle for bounded rooted-graph chip firing.
+// It uses permutation determinants, recursive configuration enumeration,
+// explicit burning tests, Cramer's rule, and combination enumeration.
+const crypto=require('node:crypto');
+const V=[0,1,2,3,4,5],NS=[1,2,3,4,5];
+const PAIRS=[];for(let i=0;i<6;i++)for(let j=i+1;j<6;j++)PAIRS.push([i,j]);
+const stable=x=>Array.isArray(x)?x.map(stable):x&&typeof x==='object'?Object.fromEntries(Object.keys(x).sort().map(k=>[k,stable(x[k])])):x;
+const canon=x=>JSON.stringify(stable(x));
+const sha=x=>crypto.createHash('sha256').update(x).digest('hex');
+const same=(a,b)=>canon(a)===canon(b);
+const gcd=(a,b)=>{a=Math.abs(a);b=Math.abs(b);while(b)[a,b]=[b,a%b];return a;};
+const sum=a=>a.reduce((x,y)=>x+y,0);
+function edgeMask(edges){let mask=0;for(const [a,b] of edges){const i=PAIRS.findIndex(([x,y])=>x===Math.min(a,b)&&y===Math.max(a,b));if(i<0)throw Error('edge');mask|=1<<i;}return mask;}
+function edgesFromMask(mask){return PAIRS.filter((_,i)=>mask&(1<<i));}
+function adjacency(edges){const A=Array.from({length:6},()=>Array(6).fill(0));for(const[a,b]of edges){A[a][b]++;A[b][a]++;}return A;}
+function connected(edges){const A=adjacency(edges),seen=new Set([0]),q=[0];while(q.length){const v=q.shift();for(const w of V)if(A[v][w]&&!seen.has(w)){seen.add(w);q.push(w);}}return seen.size===6;}
+function explicitMasks(){const path=[[0,1],[1,2],[2,3],[3,4],[4,5]],cycle=[[0,1],[1,2],[2,3],[3,4],[4,5],[5,0]],star=NS.map(v=>[0,v]),complete=PAIRS,k33=[];for(const a of [0,1,2])for(const b of [3,4,5])k33.push([a,b]);const wheel=[...NS.map(v=>[0,v]),[1,2],[2,3],[3,4],[4,5],[5,1]],near=PAIRS.filter(([a,b])=>![[0,1],[2,3],[4,5]].some(([x,y])=>a===x&&b===y));return[path,cycle,star,complete,k33,wheel,near].map(edgeMask);}
+function makeFixtures(){const masks=[],seen=new Set();for(const m of explicitMasks())if(!seen.has(m)){seen.add(m);masks.push(m);}let seed=7022001;while(masks.length<30){seed=(Math.imul(seed,1664525)+1013904223)>>>0;const m=seed&32767,ec=edgesFromMask(m).length;if(ec<5||ec>11||seen.has(m)||!connected(edgesFromMask(m)))continue;seen.add(m);masks.push(m);}return masks.map((mask,index)=>{const edges=edgesFromMask(mask),A=adjacency(edges),degrees=A.map(sum),initial_chips=NS.map(v=>degrees[v]+1+((index*3+v)%4)),query_chips=NS.map(v=>(index*(v+2)+v)%degrees[v]);return{fixture_id:'CA7022-CF-'+String(index+1).padStart(2,'0'),vertices:V,sink:0,edge_mask:mask,edges,degrees,initial_chips,query_chips,addition_vertex:1+(index%5),synthetic:true,physical:false,empirical:false,authority:false};});}
+function laplacian(f){const A=adjacency(f.edges);return V.map(i=>V.map(j=>i===j?f.degrees[i]:-A[i][j]));}
+const reduced=L=>L.slice(1).map(r=>r.slice(1));
+function permutations(a){if(!a.length)return[[]];const out=[];for(let i=0;i<a.length;i++)for(const p of permutations(a.slice(0,i).concat(a.slice(i+1))))out.push([a[i],...p]);return out;}
+function det(A){const n=A.length;if(!n)return 1;let total=0;for(const p of permutations([...Array(n).keys()])){let inv=0,prod=1;for(let i=0;i<n;i++){prod*=A[i][p[i]];for(let j=i+1;j<n;j++)if(p[i]>p[j])inv++;}total+=(inv%2?-1:1)*prod;}return total;}
+function combinations(values,k,start=0,prefix=[],out=[]){if(prefix.length===k){out.push([...prefix]);return out;}for(let i=start;i<=values.length-(k-prefix.length);i++){prefix.push(values[i]);combinations(values,k,i+1,prefix,out);prefix.pop();}return out;}
+function minor(A,rows,cols){return rows.map(i=>cols.map(j=>A[i][j]));}
+function invariantFactors(L){const n=L.length,divisors=[1];for(let k=1;k<=n;k++){let g=0;for(const rs of combinations([...Array(n).keys()],k))for(const cs of combinations([...Array(n).keys()],k))g=gcd(g,det(minor(L,rs,cs)));divisors.push(Math.abs(g));}const factors=[];for(let k=1;k<divisors.length;k++)factors.push(divisors[k]/divisors[k-1]);return{determinantal_divisors:divisors,invariant_factors:factors,nontrivial_invariant_factors:factors.filter(x=>x>1),order:factors.reduce((a,b)=>a*b,1),divisibility_chain:factors.every((x,i)=>i===0||x%factors[i-1]===0)};}
+function stabilize(f,input,order='min'){const A=adjacency(f.edges),chips=[...input],odometer=Array(5).fill(0),trace=[];let guard=0;while(true){const unstable=[];for(let i=0;i<5;i++)if(chips[i]>=f.degrees[i+1])unstable.push(i);if(!unstable.length)break;const i=order==='max'?unstable.at(-1):unstable[0],v=i+1;chips[i]-=f.degrees[v];for(const w of NS)if(A[v][w])chips[w-1]+=A[v][w];odometer[i]++;trace.push(v);if(++guard>100000)throw Error('stabilization_guard');}return{final:chips,odometer,trace,topplings:trace.length,sink_loss:sum(input)-sum(chips),stable:chips.every((x,i)=>x<f.degrees[i+1])};}
+function matVec(A,x){return A.map(row=>row.reduce((a,v,i)=>a+v*x[i],0));}
+function vectorsEqual(a,b){return a.length===b.length&&a.every((v,i)=>v===b[i]);}
+function vectorSort(rows){return [...rows].sort((a,b)=>{for(let i=0;i<a.length;i++)if(a[i]!==b[i])return a[i]-b[i];return 0;});}
+const stableCache=new Map(),recurrentCache=new Map(),parkingCache=new Map(),treeCache=new Map();
+function enumerateStable(f){if(stableCache.has(f.fixture_id))return stableCache.get(f.fixture_id);const out=[],a=Array(5).fill(0);function visit(i){if(i===5){out.push([...a]);return;}for(let x=0;x<f.degrees[i+1];x++){a[i]=x;visit(i+1);}}visit(0);const rows=vectorSort(out);stableCache.set(f.fixture_id,rows);return rows;}
+function burnVector(f){const A=adjacency(f.edges);return NS.map(v=>A[0][v]);}
+function burning(f,c){const b=burnVector(f),start=c.map((x,i)=>x+b[i]),r=stabilize(f,start,'min'),recurrent=vectorsEqual(r.final,c)&&r.odometer.every(x=>x===1);return{burn_vector:b,start,final:r.final,odometer:r.odometer,topplings:r.topplings,recurrent};}
+function parking(f,c){const A=adjacency(f.edges);for(let mask=1;mask<32;mask++){let ok=false;for(let i=0;i<5;i++)if(mask&(1<<i)){const v=i+1;let exiting=0;for(const w of V)if(w===0||!(mask&(1<<(w-1))))exiting+=A[v][w];if(c[i]<exiting){ok=true;break;}}if(!ok)return false;}return true;}
+function recurrentList(f){if(!recurrentCache.has(f.fixture_id))recurrentCache.set(f.fixture_id,vectorSort(enumerateStable(f).filter(c=>burning(f,c).recurrent)));return recurrentCache.get(f.fixture_id);}
+function parkingList(f){if(!parkingCache.has(f.fixture_id))parkingCache.set(f.fixture_id,vectorSort(enumerateStable(f).filter(c=>parking(f,c))));return parkingCache.get(f.fixture_id);}
+function solveCramer(L,d){const D=det(L);if(!D)return null;const z=[];for(let col=0;col<L.length;col++){const M=L.map((row,i)=>row.map((v,j)=>j===col?d[i]:v)),n=det(M);if(n%D!==0)return null;z.push(n/D);}return z;}
+function spanningTrees(f){if(treeCache.has(f.fixture_id))return treeCache.get(f.fixture_id);const out=[],m=f.edges.length;for(const ids of combinations([...Array(m).keys()],5)){const es=ids.map(i=>f.edges[i]);if(connected(es))out.push(ids);}const rows=out.sort((a,b)=>canon(a).localeCompare(canon(b)));treeCache.set(f.fixture_id,rows);return rows;}
+function expected(op,f){const L=laplacian(f),R=reduced(L),tree=Math.abs(det(R)),maxStable=NS.map(v=>f.degrees[v]-1),stableRows=()=>enumerateStable(f),recurrent=()=>recurrentList(f),parks=()=>parkingList(f);
+ if(op==='cf_graph_profile')return{vertices:V,sink:0,edges:f.edges,degrees:f.degrees,connected:connected(f.edges),simple:f.edges.length===new Set(f.edges.map(canon)).size};
+ if(op==='cf_laplacian')return{matrix:L,symmetric:L.every((r,i)=>r.every((x,j)=>x===L[j][i])),row_sums:L.map(sum),rank_defect_one:det(R)!==0};
+ if(op==='cf_reduced_laplacian')return{matrix:R,size:5,determinant:det(R),positive_definite_proxy:det(R)>0};
+ if(op==='cf_tree_count')return{determinant:det(R),tree_count:tree,positive:tree>0};
+ if(op==='cf_invariant_factors'){const q=invariantFactors(R);return{...q,tree_count:tree,order_matches_tree_count:q.order===tree};}
+ if(op==='cf_stabilization'){const r=stabilize(f,f.initial_chips,'min');return{initial:f.initial_chips,final:r.final,odometer:r.odometer,topplings:r.topplings,sink_loss:r.sink_loss,stable:r.stable};}
+ if(op==='cf_odometer_balance'){const r=stabilize(f,f.initial_chips,'min'),reconstructed=r.final.map((x,i)=>x+matVec(R,r.odometer)[i]);return{initial:f.initial_chips,final:r.final,odometer:r.odometer,reconstructed,balance_holds:vectorsEqual(reconstructed,f.initial_chips),sink_loss:r.sink_loss};}
+ if(op==='cf_abelian_order'){const a=stabilize(f,f.initial_chips,'min'),b=stabilize(f,f.initial_chips,'max');return{min_final:a.final,max_final:b.final,min_odometer:a.odometer,max_odometer:b.odometer,min_trace_length:a.trace.length,max_trace_length:b.trace.length,final_equal:vectorsEqual(a.final,b.final),odometer_equal:vectorsEqual(a.odometer,b.odometer)};}
+ if(op==='cf_avalanche_trace'){const start=[...maxStable];start[f.addition_vertex-1]++;const r=stabilize(f,start,'min');return{base:maxStable,addition_vertex:f.addition_vertex,start,trace:r.trace,final:r.final,odometer:r.odometer,topplings:r.topplings,sink_loss:r.sink_loss};}
+ if(op==='cf_stable_enumeration'){const rows=stableRows();return{count:rows.length,degree_product:NS.map(v=>f.degrees[v]).reduce((a,b)=>a*b,1),first:rows[0],last:rows.at(-1),sha256:sha(canon(rows))};}
+ if(op==='cf_burning_test'){const b=burning(f,maxStable);return{configuration:maxStable,...b,all_vertices_once:b.odometer.every(x=>x===1)};}
+ if(op==='cf_recurrent_census'){const rows=recurrent();return{count:rows.length,tree_count:tree,count_matches_tree_count:rows.length===tree,first:rows[0],last:rows.at(-1),sha256:sha(canon(rows))};}
+ if(op==='cf_parking_census'){const rows=parks();return{count:rows.length,tree_count:tree,count_matches_tree_count:rows.length===tree,first:rows[0],last:rows.at(-1),sha256:sha(canon(rows))};}
+ if(op==='cf_superstable_duality'){const rr=recurrent(),ss=vectorSort(rr.map(c=>c.map((x,i)=>maxStable[i]-x))),pp=parks();return{recurrent_count:rr.length,superstable_count:ss.length,parking_count:pp.length,all_nonnegative:ss.every(c=>c.every(x=>x>=0)),all_parking:ss.every(c=>parking(f,c)),sets_equal:same(ss,pp),sha256:sha(canon(ss))};}
+ if(op==='cf_equivalence_class'){const matches=[];for(const r of recurrent()){const z=solveCramer(R,f.query_chips.map((x,i)=>x-r[i]));if(z)matches.push({representative:r,witness:z});}return{query:f.query_chips,matches,unique_match:matches.length===1};}
+ if(op==='cf_addition_action'){const start=[...maxStable];start[f.addition_vertex-1]++;const r=stabilize(f,start,'min'),b=burning(f,r.final);return{base:maxStable,addition_vertex:f.addition_vertex,start,final:r.final,odometer:r.odometer,topplings:r.topplings,recurrent:b.recurrent,closed:b.recurrent};}
+ if(op==='cf_spanning_tree_enumeration'){const trees=spanningTrees(f);return{count:trees.length,determinant_tree_count:tree,count_matches:trees.length===tree,sha256:sha(canon(trees)),first:trees[0],last:trees.at(-1)};}
+ if(op==='cf_explanation')return{disposition:'represented',vertices:6,edges:f.edges.length,tree_count:tree,meaning:'Exact finite rooted-graph and chip-firing description only.',human_review:false,assistive_technology_review:false};
+ if(op==='cf_observation_gap')return{disposition:'open_gap',real_observations:0,participants:0,calibrated_measurements:0,independent_reproductions:0,missing:['empirical domain','calibration','participant evidence','independent review']};
+ if(op==='cf_authority_gate')return{disposition:'exact_gate',held:true,authorized_actions:0,required:['competent authority','affected-party participation','privacy and accessibility review','legal and cultural review where applicable','Maori authority for Maori concepts and data']};
+ throw Error('unknown oracle operation');
+}
+module.exports={makeFixtures,expected,laplacian,reduced,det,invariantFactors,stabilize,enumerateStable,burning,parking,recurrentList,parkingList,spanningTrees};
