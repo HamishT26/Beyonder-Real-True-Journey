@@ -1,0 +1,35 @@
+'use strict';
+const OPS=['hg_validate','hg_incidence','hg_vertex_degrees','hg_edge_size_histogram','hg_primal_adjacency','hg_dual_incidence','hg_transversal_check','hg_minimal_transversals','hg_independent_sets','hg_components'];
+function bad(code){throw new Error(code);}
+function exactKeys(x,allowed){if(!x||typeof x!=='object'||Array.isArray(x)||Object.keys(x).sort().join('|')!==[...allowed].sort().join('|'))bad('field_set');}
+function validate(input){
+ exactKeys(input,['vertices','edges','probe']);const vs=input.vertices,es=input.edges,probe=input.probe;
+ if(!Array.isArray(vs)||vs.length<3||vs.length>6||new Set(vs).size!==vs.length||vs.some(x=>typeof x!=='string'||!x.length||x.length>16||!/^[a-z]/.test(x)))bad('vertices');
+ if(!Array.isArray(es)||es.length<1||es.length>12)bad('edge_budget');const frozen=[];
+ for(const e of es){if(!Array.isArray(e)||!e.length||e.some((v,i)=>!Number.isSafeInteger(v)||v<0||v>=vs.length||(i&&e[i-1]>=v)))bad('edge');frozen.push(e.join(','));}
+ if(new Set(frozen).size!==frozen.length)bad('duplicate_edge');
+ if(!Array.isArray(probe)||probe.some((v,i)=>!Number.isSafeInteger(v)||v<0||v>=vs.length||(i&&probe[i-1]>=v)))bad('probe');return true;
+}
+function bits(mask){let n=0;while(mask){n+=mask&1;mask>>=1;}return n;}
+function edgeMasks(input){return input.edges.map(e=>e.reduce((m,v)=>m|(1<<v),0));}
+function transversals(input){const em=edgeMasks(input),out=[];for(let m=0;m<2**input.vertices.length;m++)if(em.every(e=>m&e))out.push(m);return out;}
+function minimalTransversals(input){const tv=transversals(input);return tv.filter(m=>!tv.some(s=>s!==m&&(s&m)===s));}
+function adjacency(input,excluded=[],edges=null){const ex=new Set(excluded),em=edges||edgeMasks(input),out=[];for(let i=0;i<input.vertices.length;i++)if(!ex.has(i))for(let j=i+1;j<input.vertices.length;j++)if(!ex.has(j)&&em.some(e=>(e>>i&1)&&(e>>j&1)))out.push([i,j]);return out;}
+function components(input,excluded=[],edges=null){const ex=new Set(excluded),pairs=adjacency(input,excluded,edges),nbr=new Map();for(let i=0;i<input.vertices.length;i++)if(!ex.has(i))nbr.set(i,new Set());for(const [i,j] of pairs){nbr.get(i).add(j);nbr.get(j).add(i);}const out=[],seen=new Set();for(const start of [...nbr.keys()].sort((a,b)=>a-b)){if(seen.has(start))continue;const stack=[start],c=[];seen.add(start);while(stack.length){const v=stack.pop();c.push(v);const q=[...nbr.get(v)].sort((a,b)=>b-a);for(const x of q)if(!seen.has(x)){seen.add(x);stack.push(x);}}out.push(c.sort((a,b)=>a-b));}return out;}
+function envelope(value,outcome='completed'){return {ok:true,error:null,outcome,value,external_credit:false};}
+function rejected(error){return {ok:false,error,outcome:'exact_gate',value:null,external_credit:false};}
+function evaluate(req){exactKeys(req,['op','input']);if(!OPS.includes(req.op))bad('operation');validate(req.input);const input=req.input,n=input.vertices.length,em=edgeMasks(input),mt=minimalTransversals(input),deg=Array.from({length:n},(_,i)=>em.filter(e=>e&(1<<i)).length);let value;
+ if(req.op==='hg_validate')value={vertex_count:n,edge_count:em.length,covered_vertices:Array.from({length:n},(_,i)=>i).filter(i=>em.some(e=>e&(1<<i))),probe_valid:true};
+ else if(req.op==='hg_incidence')value=Array.from({length:n},(_,i)=>em.map(e=>+(!!(e&(1<<i)))));
+ else if(req.op==='hg_vertex_degrees')value=deg;
+ else if(req.op==='hg_edge_size_histogram'){const sizes=[...new Set(em.map(bits))].sort((a,b)=>a-b);value=sizes.map(size=>({size,count:em.filter(e=>bits(e)===size).length}));}
+ else if(req.op==='hg_primal_adjacency')value=adjacency(input);
+ else if(req.op==='hg_dual_incidence')value=Array.from({length:n},(_,i)=>({vertex:i,incident_edges:em.map((e,j)=>[e,j]).filter(([e])=>e&(1<<i)).map(([,j])=>j)}));
+ else if(req.op==='hg_transversal_check'){const p=input.probe.reduce((m,i)=>m|(1<<i),0);value={probe_mask:p,hits_all:em.every(e=>p&e),missed_edges:em.map((e,j)=>[e,j]).filter(([e])=>!(p&e)).map(([,j])=>j)};}
+ else if(req.op==='hg_minimal_transversals')value=mt;
+ else if(req.op==='hg_independent_sets'){value=[];for(let m=0;m<2**n;m++)if(em.every(e=>(m&e)!==e))value.push(m);}
+ else value=components(input);
+ return envelope(value);
+}
+function dispatch(req){try{return evaluate(req);}catch(e){return rejected(e.message);}}
+module.exports={OPS,exactKeys,validate,bits,edgeMasks,transversals,minimalTransversals,adjacency,components,envelope,rejected,dispatch};
