@@ -1,0 +1,61 @@
+"""Owner planning builder. All locations supplied by caller; exclusive output creation."""
+import json,hashlib,sys,runpy,re,subprocess
+from pathlib import Path
+ROOT=Path(__file__).resolve().parent.parent
+REF=runpy.run_path(str(ROOT/'plan/reference.txt'))
+SOURCE=Path(sys.argv[1]);BANK=Path(sys.argv[2]);CONTROL=Path(sys.argv[3])
+BASE='380f8e5875639362319565a49faabd88a8e8cd22'
+SOURCE_HEAD='9f40d345b3f70599ffa87e9622b447382bfd07d0'
+BOUNDARY='Finite synthetic same-owner software only. No real classification, empirical GMUT confirmation, production THOS or Freed ID, independent reproduction, identity continuity, consciousness, personhood, professional, legal, cultural, affected-party or Maori authority, complete assurance, Theory-of-Everything proof or Stage 20 readiness.'
+def raw(x):return (json.dumps(x,sort_keys=True,ensure_ascii=False,indent=2)+'\n').encode()
+def sha(x):return hashlib.sha256(x).hexdigest()
+def write(name,x):
+ p=ROOT/name;p.parent.mkdir(parents=True,exist_ok=True)
+ with p.open('xb') as f:f.write(raw(x) if not isinstance(x,str) else x.encode())
+def read(p):return json.loads(p.read_text(encoding='utf-8'))
+profiles=REF['profiles']();ops=REF['OPS'];descs=REF['DESCRIPTIONS']
+write('plan/profiles.json',profiles)
+write('plan/operations.json',[dict(operation=op,description=descs[i],session='x1' if i<10 else 'x2',outcome='completed' if i<17 else ['represented','open_gap','exact_gate'][i-17]) for i,op in enumerate(ops)])
+contracts=[]
+for i,op in enumerate(ops):
+ for j,p in enumerate(profiles):
+  expected=REF['oracle'](p,op)
+  contracts.append(dict(id='IR7013-P%03d'%(i*30+j+1),profile=p['id'],operation=op,session='x1' if i<10 else 'x2',outcome='completed' if i<17 else ['represented','open_gap','exact_gate'][i-17],input_sha256=sha(raw(p)),expected=expected,expected_sha256=sha(raw(expected)),description=descs[i]))
+write('plan/contracts.json',contracts)
+src=SOURCE/'docs/vesper-arlen/v701-v2'
+baton=(src/'final/handoffs/ilyan-reed-v701-v3-activation-candidate.md').read_bytes()
+assert sha(baton)=='4ef6a1ccba221cff5a2f16f6ad3f7928937d01653175877aee6e9a04378814a9'
+pattern=re.compile(r'^- (VA7012-P\d+) / (CL-\d+) / ([\w-]+): observed `([\w]+)` with execution credit (\d). Frozen definition SHA-256 `([0-9a-f]{64})` and cached output SHA-256 `([0-9a-f]{64})`\.',re.M)
+rows=pattern.findall(baton.decode());assert len(rows)==600
+write('plan/inherited.json',[dict(source_id=r[0],profile=r[1],operation=r[2],source_outcome=r[3],source_definition_sha256=r[5],source_output_sha256=r[6],owner_novelty_credit=0,owner_execution_credit=0,review='Approximation study keeps the source closure result and tests a distinct equivalence-partition question.') for r in rows[::2]])
+baseline=read(BANK/'terminal-effective-baseline.json')
+write('plan/source-baseline.json',baseline)
+receipts={name:dict(bytes=len((BANK/name).read_bytes()),sha256=sha((BANK/name).read_bytes())) for name in ['canonical-payload.json','canonical-receipt.json','delivery-receipt.json','terminal-effective-baseline.json']}
+write('plan/source-provenance.json',dict(source_owner='Vesper Arlen',source_phase='v701-v2',source_final=SOURCE_HEAD,owner_git_parent=BASE,source_is_git_ancestor=False,source_receipts=receipts,source_manifest_bindings=420,source_manifest_counts=[54,43,61,44,206,12],baton_bytes=len(baton),baton_words=len(baton.decode().split()),baton_sha256=sha(baton),baton_read='All prose through literal EOF plus exact 600-row template parsing and complete field traversal; hashes verified as data, no source execution.',source_replay=False,canonical_replay=False,boundary=BOUNDARY))
+for name in ['current-workflow-v15.json','current-roster-v15.json']:
+ write('plan/controls/'+name,read(CONTROL/'ghc-family-index/references'/name))
+write('plan/controls/current-authorization-v15.json',read(CONTROL/'ghc-family-auth-permission-state/references/current-authorization-v15.json'))
+write('plan/workflow.json',dict(owner='Ilyan Reed',phase='v701-v3',next_owner='Lyren Moss',next_phase='v701-v4',following_owner='Ilyra Fen',following_phase='v701-v5',primary_pillar='Freed ID and CBR Heart: finite approximation and abstention',supporting_pillars=['THOS Body: exact typed evaluators and reproducible records','GMUT Mind: model-relative inference and empirical falsifiers'],selected=dict(inherited=300,new=600,safe_per_session=300,candidate_per_session=300,refusal_per_session=300,CFR_per_session=300,skills_per_session=10,runners_per_session=5,exact_packets=50,blocked_packets=30,global_candidates_held=5,additional_tests=20,finite_models=5,own_practices=8,next_practices=4),formats=['json','md','txt','html'],shared_lanes_read_only=True,versions_only=True,spend_usd=0,source_fold_count=1,boundary=BOUNDARY))
+practices=['rough-set mathematical analysis','knowledge representation engineering','data quality auditing','formal verification','technical writing','human-computer interaction study','research librarianship','governance and remedy analysis']
+write('plan/practices.json',dict(own=[dict(name=n,qualification_claim=False) for n in practices],successor_recommendations=['evidence-centered interface design','relational database dependency analysis','counterexample-guided testing','consent and appeal workflow study'],boundary=BOUNDARY))
+write('plan/held-packets.json',[dict(id='IR7013-%s%03d'%(kind,i),packet_class=kind,task=task,profile=profiles[(i-1)%30]['id'],outcome='exact_gate',executed=False,release_requires=['concrete_target','competent_authority','affected_party_participation','evidence','rollback']) for kind,count,task in [('EXACT',50,'Review a concrete proposed classification with its accountable decision owner'),('BLOCKED',30,'Prevent unconsented identity or eligibility action from synthetic group membership')] for i in range(1,count+1)])
+failures=[
+ ('I01','Combined skill read exceeded display budget','Bounded skill sections and current overlays read'),
+ ('I02','Read wrapper omitted running-session identifier','Verified read-only process completion; recovered the exact note and skill range'),
+ ('I03','Broad process inventory exceeded display budget','Used only task-owned PID command-line metadata'),
+ ('I04','Full workflow projection exceeded display budget','Parsed all 210 assignments and displayed compact complete rows'),
+ ('I05','Delayed duplicate workflow output was clipped','Earlier exact compact projection supplies the full control content'),
+ ('I06','Combined method and catalogue skill read exceeded display budget','Read operative sections and exact schemas separately'),
+ ('I07','Full retained-negative projection exceeded display budget','Traversed all 625 records and emitted all distinct operational records plus kind counts'),
+ ('I08','Mistyped guardian skill name absent','Did not claim skill use; owner scope and current activation provide constraints'),
+ ('I09','Publisher DOI opener inaccessible','Used primary bibliographic record and an accessible primary mathematical preprint'),
+ ('I10','Historical paper content unavailable in library viewer','Kept bibliography-only status; no full-paper reading claimed'),
+ ('I11','Incoming canonical receipt digest differed from actual receipt','Read actual bound receipt and matching payload; retain both strings and corrected source binding')]
+write('plan/intake-negatives.json',[dict(id='IR7013-'+i,failure=f,recovery=r,original_success_credit=0,source_replay=False) for i,f,r in failures])
+write('plan/source-hash-correction.json',dict(incoming_receipt_sha256='1c67f71b7c103f62c5ca6fe8ade8ee8f430774a86069b3fd698d8815e86c6a',observed_receipt_sha256=receipts['canonical-receipt.json']['sha256'],payload_sha256=receipts['canonical-payload.json']['sha256'],state='CORRECTED_BY_EXACT_SOURCE_READ',original_match_credit=0,history_erased=False))
+write('plan/research-sources.json',dict(sources=[dict(title='Rough sets',author='Zdzislaw Pawlak',year=1982,doi='10.1007/BF01001956',url='https://bcpw.bg.pw.edu.pl/dlibra/publication/1693/edition/1721/content',read_scope='institutional bibliography; full paper unavailable'),dict(title='A Note on Rough Set Algebra and Core Regular Double Stone Algebras',author='Daniel J. Clouse',year=2021,url='https://arxiv.org/html/2101.02313v1',read_scope='primary introduction and section 2 definitions, lines 25 through 130')],search_queries=2,latest_news_claim=False,boundary=BOUNDARY))
+write('plan/planning-freeze.md','# Ilyan v701-v3 planning freeze\n\nThe finite target is partition-relative lower and upper approximation over five anonymous elements. Thirty deterministic profiles and twenty operation contracts are frozen here. The set-enumeration oracle supplies expected data; a separately written bit-mask runtime will be exercised only after this planning commit is pushed and clean.\n\nAll 600 contracts are correlated finite checks, not independent experiments. Each session executes 300 valid envelopes, retains 300 malformed subjects at zero success credit, observes 300 separate refusal guards, and reviews 300 cached results. Fifty exact descriptions and thirty blocked descriptions remain unexecuted. Five curated skill and caller groups remain owner-local candidates because shared lanes are read-only.\n\nThe actual Vesper terminal baseline includes a later two-method route overlay: it is folded once, without adding prior Ilyan phases. Its incoming digest transcription mismatch is retained and corrected from the actual receipt.\n\n'+BOUNDARY+'\n')
+write('plan/threat-plan.json',dict(threats=['boolean accepted as integer','overlapping or missing partition membership','unbounded enumeration','untrusted callable or file path','cached output drift','real-world interpretation inflation','duplicate canonical or route'],controls=['closed typed envelope','fixed five-element ceiling','literal operation allowlist','saved exact input/output digests','separate held outcomes','exclusive terminal latches'],boundary=BOUNDARY))
+paths=sorted(x for x in (ROOT/'plan').rglob('*') if x.is_file())
+write('plan/manifest.json',dict(byte_domain='exact_git_blob_utf8_lf',self_excluded=True,entries=[dict(path=x.relative_to(ROOT.parents[2]).as_posix(),bytes=len(x.read_bytes()),sha256=sha(x.read_bytes())) for x in paths]))
+print(json.dumps(dict(state='PLANNING_BUILT',profiles=len(profiles),contracts=len(contracts),inherited=300,files=len(paths)+1,expected_outcomes={'completed':510,'represented':30,'open_gap':30,'exact_gate':30},boundary=BOUNDARY)))

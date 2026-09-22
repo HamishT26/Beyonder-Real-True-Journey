@@ -1,0 +1,107 @@
+"""Finite set-enumeration oracle. Planning computation, no runtime execution credit."""
+from itertools import combinations
+from fractions import Fraction
+
+OPS = [
+ 'partition-shape','lower-table','upper-table','three-region-partition',
+ 'complement-duality','monotone-inclusions','idempotent-fixed-points',
+ 'lower-meet-upper-join','definable-boolean-algebra','rough-pair-census',
+ 'rough-membership-ratios','accuracy-boundary-ratios','refinement-sandwich',
+ 'attribute-positive-region','minimal-attribute-reducts','relabel-covariance',
+ 'nonpreservation-witnesses','accessible-explanation','observation-remedy-gap',
+ 'classification-authority-reservation']
+
+DESCRIPTIONS = [
+ 'Validate a complete disjoint partition of five anonymous elements.',
+ 'Enumerate the lower approximation of every one of the 32 target subsets.',
+ 'Enumerate the upper approximation of every one of the 32 target subsets.',
+ 'Separate certain, boundary and excluded regions for each target subset.',
+ 'Compare lower and upper approximations under set complementation.',
+ 'Check approximation inclusion for every ordered pair of nested subsets.',
+ 'Check idempotence and list the fixed sets of both approximation operators.',
+ 'Check lower preservation of intersection and upper preservation of union.',
+ 'List definable sets and test their complement, intersection and union closure.',
+ 'Enumerate distinct lower-upper pairs and count original subsets per pair.',
+ 'Compute exact within-block target proportions with explicit denominators.',
+ 'Compute exact target accuracy and boundary ratios, with empty upper handling.',
+ 'Refine blocks using a second declared attribute and compare all approximations.',
+ 'Compute the positive region of a declared synthetic binary decision.',
+ 'Enumerate inclusion-minimal attribute sets preserving the joint positive region.',
+ 'Verify covariance under a fixed bijective relabeling of the finite universe.',
+ 'Find first counterexamples to upper intersection and lower union preservation.',
+ 'Represent the three regions in plain language without accessibility certification.',
+ 'Record missing observations, provenance, affected-party review and remedy trials.',
+ 'Hold real classification until concrete consent, authority and lifecycle evidence.']
+
+def partitions(n=5):
+ def walk(v):
+  if len(v)==n:
+   yield list(v);return
+  for x in range(max(v,default=-1)+2): yield from walk(v+[x])
+ return list(walk([0]))
+
+def profiles():
+ ps=partitions(); assert len(ps)==52
+ return [dict(id='RS-%02d'%(i+1),partition=ps[(i*51)//29],
+              refiner=[(j+i)%2 for j in range(5)], target=(i%30)+1)
+         for i in range(30)]
+
+def oracle(p,op):
+ u=frozenset(range(5)); subsets=[frozenset(i for i in u if m&(1<<i)) for m in range(32)]
+ def enc(s):return sum(1<<i for i in s)
+ def partition(v):return [frozenset(i for i,x in enumerate(v) if x==z) for z in sorted(set(v))]
+ blocks=partition(p['partition'])
+ def table(bs):
+  low=[frozenset().union(*(b for b in bs if b<=s)) for s in subsets]
+  up=[frozenset().union(*(b for b in bs if b&s)) for s in subsets]
+  return low,up
+ low,up=table(blocks); a=subsets[p['target']]; t=p['target']
+ if op==OPS[0]:return {'block_masks':sorted(map(enc,blocks)), 'universe':31,'size':5}
+ if op==OPS[1]:return list(map(enc,low))
+ if op==OPS[2]:return list(map(enc,up))
+ if op==OPS[3]:return [[enc(l),enc(h-l),enc(u-h)] for l,h in zip(low,up)]
+ if op==OPS[4]:return {'holds':all(low[m]==u-up[31-m] and up[m]==u-low[31-m] for m in range(32)), 'subsets':32}
+ if op==OPS[5]:
+  pairs=[(i,j) for i,s in enumerate(subsets) for j,v in enumerate(subsets) if s<=v]
+  return {'holds':all(low[i]<=low[j] and up[i]<=up[j] for i,j in pairs),'nested_pairs':len(pairs)}
+ if op==OPS[6]:return {'holds':all(low[enc(low[m])]==low[m] and up[enc(up[m])]==up[m] for m in range(32)), 'lower_fixed':[i for i,s in enumerate(subsets) if low[i]==s], 'upper_fixed':[i for i,s in enumerate(subsets) if up[i]==s]}
+ if op==OPS[7]:return {'holds':all(low[enc(s&v)]==low[i]&low[j] and up[enc(s|v)]==up[i]|up[j] for i,s in enumerate(subsets) for j,v in enumerate(subsets)), 'ordered_pairs':1024}
+ if op==OPS[8]:
+  ds=[s for i,s in enumerate(subsets) if low[i]==up[i]]
+  return {'definable_masks':list(map(enc,ds)), 'boolean_closed':all(u-s in ds for s in ds) and all(s&v in ds and s|v in ds for s in ds for v in ds), 'count':len(ds)}
+ if op==OPS[9]:
+  pairs={}
+  for l,h in zip(low,up):pairs[(enc(l),enc(h))]=pairs.get((enc(l),enc(h)),0)+1
+  return [[l,h,c] for (l,h),c in sorted(pairs.items())]
+ if op==OPS[10]:
+  return [[Fraction(len(a&next(b for b in blocks if i in b)),len(next(b for b in blocks if i in b))).numerator, Fraction(len(a&next(b for b in blocks if i in b)),len(next(b for b in blocks if i in b))).denominator] for i in range(5)]
+ if op==OPS[11]:
+  f=Fraction(len(low[t]),len(up[t])) if up[t] else None
+  return {'accuracy':None if f is None else [f.numerator,f.denominator],'boundary_fraction':[Fraction(len(up[t]-low[t]),5).numerator,Fraction(len(up[t]-low[t]),5).denominator], 'empty_upper':'undefined'}
+ if op==OPS[12]:
+  refined=[b&c for b in blocks for c in partition(p['refiner']) if b&c];l2,h2=table(refined)
+  return {'refined_blocks':sorted(map(enc,refined)),'holds':all(low[m]<=l2[m]<=subsets[m]<=h2[m]<=up[m] for m in range(32)),'lower':list(map(enc,l2)),'upper':list(map(enc,h2))}
+ def pos(bs):return frozenset().union(*(b for b in bs if b<=a or not b&a))
+ if op==OPS[13]:return {'positive_region':enc(pos(blocks)),'dependency':[Fraction(len(pos(blocks)),5).numerator,Fraction(len(pos(blocks)),5).denominator]}
+ if op==OPS[14]:
+  opts=[]
+  for selected in [(),(0,),(1,),(0,1)]:
+   values=[tuple(p['partition' if k==0 else 'refiner'][i] for k in selected) for i in range(5)]
+   opts.append((selected,pos(partition(values))))
+  full=opts[-1][1];good=[s for s,v in opts if v==full]
+  return {'joint_positive_region':enc(full),'reducts':[list(s) for s in good if not any(set(v)<set(s) for v in good)],'positive_regions':[enc(v) for _,v in opts]}
+ if op==OPS[15]:
+  perm=[2,4,1,0,3]; rename=lambda s:frozenset(perm[i] for i in s)
+  bs=[rename(b) for b in blocks];l2,h2=table(bs)
+  return {'permutation':perm,'holds':all(l2[enc(rename(s))]==rename(low[m]) and h2[enc(rename(s))]==rename(up[m]) for m,s in enumerate(subsets))}
+ if op==OPS[16]:
+  x=y=None
+  for i,s in enumerate(subsets):
+   for j,v in enumerate(subsets):
+    if x is None and up[enc(s&v)]!=up[i]&up[j]:x=[i,j,enc(up[enc(s&v)]),enc(up[i]&up[j])]
+    if y is None and low[enc(s|v)]!=low[i]|low[j]:y=[i,j,enc(low[enc(s|v)]),enc(low[i]|low[j])]
+  return {'upper_intersection_counterexample':x,'lower_union_counterexample':y}
+ if op==OPS[17]:return {'certain':sorted(low[t]),'boundary':sorted(up[t]-low[t]),'excluded':sorted(u-up[t]),'interpretation':'synthetic partition-relative description'}
+ if op==OPS[18]:return {'missing':['real_observation','measurement_provenance','affected_party_review','remedy_trial'],'empirical_credit':0}
+ if op==OPS[19]:return {'held':['real_classification','identity_or_eligibility_decision'],'authority_credit':0,'release_requires':['concrete_target','consent','competent_authority','appeal_and_rollback']}
+ raise ValueError('unknown operation')
