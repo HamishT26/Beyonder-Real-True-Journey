@@ -1,0 +1,177 @@
+"""Assemble inspectable closeout from frozen evidence; no domain replay."""
+import sys,json,hashlib,runpy,re,copy,collections,subprocess
+from pathlib import Path
+ROOT=Path(__file__).resolve().parent.parent;CONTROL=Path(sys.argv[1]);BANK=Path(sys.argv[2])
+def raw(x):return (json.dumps(x,sort_keys=True,ensure_ascii=False,indent=2)+'\n').encode()
+def sha(b):return hashlib.sha256(b).hexdigest()
+def read(n):return json.loads((ROOT/n).read_text(encoding='utf-8'))
+def put(n,x):
+ p=ROOT/n;p.parent.mkdir(parents=True,exist_ok=True)
+ b=x.encode() if isinstance(x,str) else raw(x)
+ if p.exists():
+  assert p.read_bytes()==b,'Existing artifact differs; preserve and recover only the dependency'
+  return
+ with p.open('xb') as f:f.write(b)
+findings=json.loads((BANK/'cached-findings.json').read_text(encoding='utf-8'));put('final/cached-findings.json',findings)
+B=read('plan/workflow.json')['boundary'];rows=read('x1/results.json')+read('x2/results.json');cs=read('plan/contracts.json');profiles=read('plan/profiles.json');lookup={(r['profile'],r['operation']):r['observed']['result'] for r in rows}
+edge_input=dict(id='RS-EMPTY',partition=[0,0,1,1,2],refiner=[0,1,0,1,2],target=0)
+if (ROOT/'final/empty-upper-boundary-check.json').exists():
+ saved=read('final/empty-upper-boundary-check.json');assert saved['engine_sha256']==sha((ROOT/'x1/rough-engine.txt').read_bytes())
+ edge_observed=saved['observed']
+else:
+ edge_engine=runpy.run_path(str(ROOT/'x1/rough-engine.txt'))['run']
+ edge_observed=edge_engine(edge_input,'accuracy-boundary-ratios')
+edge_expected=dict(accuracy=None,boundary_fraction=[0,1],empty_upper='undefined')
+edge_pass=edge_observed['accepted'] and edge_observed['result']==edge_expected
+assert edge_pass
+put('final/empty-upper-boundary-check.json',dict(id='IR7013-FINAL-EDGE01',input=edge_input,operation='accuracy-boundary-ratios',observed=edge_observed,expected=edge_expected,passed=edge_pass,new_uncovered_branch_case=True,core_contract_replay=False,engine_sha256=sha((ROOT/'x1/rough-engine.txt').read_bytes()),boundary=B))
+mod=runpy.run_path(str(CONTROL/'ghc-family-method-flow-state/scripts/ghc_family_method_flow_state.py'))
+ledger=mod['new_ledger']('v701-v3','Ilyan Reed');ledger['boundary']=B;ledger['identity_boundary']='Names, family and continuity language are relational working language only.';ledger['execution_authority']='owner_self_scoped_delta'
+for stage in ['x1','x2']:
+ d=read(stage+'/method-flow.json');ledger['methods']+=d['methods'];ledger['witnesses']+=d['witnesses']
+negatives=read('x1/retained-negatives.json')+read('x2/retained-negatives.json')
+def extension(mid,title,observations,negative_records):
+ negative_ids=[x['negative_id'] for x in negative_records];negatives.extend(negative_records)
+ ws=[]
+ for i,(passed,procedure,observed,links) in enumerate(observations):
+  ws.append(dict(witness_id=mid+'-W%03d'%(i+1),method_id=mid,procedure=procedure,scope='Ilyan v701-v3 owner-local evidence',expected='declared bounded predicate or valid subject',observed=observed,result='pass' if passed else 'fail',same_owner_only=True,independent_reproduction=False,retained_negative_ids=links,boundary=B))
+ ledger['witnesses']+=ws
+ ledger['methods'].append(dict(method_id=mid,title=title,failure_signature='See retained subjects and operational observations',trigger_preconditions=['declared owner scope','immutable prior evidence'],privacy_class='sanitized_public',approval_class='safe_now_synthetic',candidate_workaround='Use only the bounded corrected dependency and preserve earlier failure',validation_witness_ids=[w['witness_id'] for w in ws],recurrence_guard='Retain exact scope, typed checks and separate evidence states',rollback='Mark current capability unavailable without erasing records',recommendation_state='validated' if any(w['result']=='pass' for w in ws) else 'observed',supersedes=[],protected_gates=['real_observation','authority','independent_reproduction','Stage_20'],retained_negative_ids=negative_ids,scope_boundary=B))
+def neg(n,kind,detail):return dict(negative_id=n,kind=kind,original_success_credit=0,detail=detail)
+obs=[];ns=[]
+for s in ['x1','x2']:
+ for g in read(s+'/guide-validation.json')['guides']:obs.append((g['valid'],'Official skill metadata validation',g['name'],[]))
+ for c in read(s+'/caller-smokes.json'):
+  n=c['negative_id'];ns.append(neg(n,'malformed_caller_subject',c['caller']))
+  obs.extend([(c['positive_pass'],'Positive local caller comparison',c['caller'],[]),(False,'Malformed caller subject',c['caller'],[n]),(c['refusal_pass'],'Separate local caller refusal guard',c['caller'],[n])])
+ for t in read(s+'/additional-tests.json'):obs.append((t['passed'],'Additional cached cross-contract property',t['id'],[]))
+extension('IR7013-M-LOCAL','Local guides, callers and additional properties',obs,ns)
+obs=[];ns=[]
+for c in read('x2/curation-results.json'):
+ n=c['invalid_id'];ns.append(neg(n,'malformed_curated_subject',c['group']))
+ obs.extend([(c['metadata_validation'],'Curated guide metadata',c['group'],[]),(c['positive_pass'],'Curated caller comparison',c['group'],[]),(False,'Malformed curated subject',c['group'],[n]),(c['refusal_pass'],'Separate curated refusal guard',c['group'],[n])])
+extension('IR7013-M-CURATION','Five local curated groups held uninstalled',obs,ns)
+obs=[];ns=[]
+for r in read('plan/intake-negatives.json'):
+ n=r['id'];ns.append(neg(n,'intake_failure',r['failure']));obs.extend([(False,'Original intake observation',r['failure'],[n]),(True,'Bounded recovery observation',r['recovery'],[n])])
+extension('IR7013-M-INTAKE','Retained intake faults and narrow recoveries',obs,ns)
+support=read('x2/support-failures.json')['records'];obs=[];ns=[]
+for r in support:
+ n=r['id'];ns.append(neg(n,'support_validator_failure',r['failure']));obs.extend([(False,'Original support builder failure',r['failure'],[n]),(True,'Narrow validator dependency correction',r['recovery'],[n])])
+extension('IR7013-M-SUPPORT','Curation validator correction without domain replay',obs,ns)
+r=read('x1/operational-notes.json')['records'][0];n=r['id']
+extension('IR7013-M-LIFECYCLE','Task-owned Git housekeeping recovery',[(False,'Original lifecycle delay',r['failure'],[n]),(True,'Original operation completed after narrow recovery',r['recovery'],[n])],[neg(n,'housekeeping_delay',r['failure'])])
+helper_records=[neg('IR7013-HELPER-%02d'%i,'missing_named_helper',name) for i,name in enumerate(['canonical-success-latch named companion','canonical-aggregate-preflight named companion'],1)]
+extension('IR7013-M-HELPERS','Two installed-package companion gaps',[(False,'Exact package discovery found no named Python helper',r['detail'],[r['negative_id']]) for r in helper_records],helper_records)
+put('final/helper-discovery.json',dict(scope='two named installed skill packages only',named_helpers_present=False,global_absence_claimed=False,open_gaps=2,fallback='final/metadata-guard.txt',source_helpers_executed=False,boundary=B))
+guard_source='''"""Structural admission predicate for fixtures, not execution authority."""
+def admissible(x):
+ return (type(x) is dict and set(x)=={'head','live','clean','divergence','inventory','privacy_candidates','success_latch'}
+  and type(x['head']) is str and len(x['head'])==40 and set(x['head'])<=set('0123456789abcdef')
+  and x['head']==x['live'] and x['clean'] is True and type(x['divergence']) is list and len(x['divergence'])==2 and all(type(v) is int and v==0 for v in x['divergence'])
+  and type(x['inventory']) is list and bool(x['inventory'])
+  and all(type(p) is str and p.startswith('docs/ilyan-reed/v701-v3/') and '..' not in p for p in x['inventory']) and len(set(x['inventory']))==len(x['inventory'])
+  and type(x['privacy_candidates']) is int and x['privacy_candidates']==0 and x['success_latch'] is False)
+'''
+put('final/metadata-guard.txt',guard_source)
+good=dict(head='a'*40,live='a'*40,clean=True,divergence=[0,0],inventory=['docs/ilyan-reed/v701-v3/final/example.json'],privacy_candidates=0,success_latch=False)
+fixtures=[dict(id='IR7013-GUARD-VALID',input=good,expected=True)]
+for i,(field,value) in enumerate([('live','b'*40),('clean',False),('privacy_candidates',1),('success_latch',True),('inventory',good['inventory']*2)],1):
+ bad=copy.deepcopy(good);bad[field]=value;fixtures.append(dict(id='IR7013-GUARD-INVALID-%02d'%i,input=bad,expected=False))
+put('final/guard-fixtures.json',fixtures)
+if (ROOT/'final/guard-results.json').exists():gr=read('final/guard-results.json')['cases']
+else:
+ guard=runpy.run_path(str(ROOT/'final/metadata-guard.txt'))['admissible'];gr=[]
+ for f in fixtures:
+  observed=guard(f['input']);assert observed==f['expected'];gr.append(dict(id=f['id'],invalid_subject=not f['expected'],observed_admission=observed,passed=observed==f['expected'],original_success_credit=0 if not f['expected'] else 1))
+put('final/guard-results.json',dict(cases=gr,domain_execution=False,source_replay=False,boundary=B))
+# Cached interface data. Rendering performs no domain calculation.
+data=[dict(id=p['id'],partition=p['partition'],target=p['target'],regions=lookup[p['id'],'three-region-partition']) for p in profiles]
+script='''const DATA=__DATA__;
+function view(profileIndex,target){const p=DATA[profileIndex];if(!p||!Number.isInteger(target)||target<0||target>31)throw Error("bounded selection");const masks=p.regions[target];return {id:p.id,target,masks,counts:masks.map(m=>m.toString(2).split("1").length-1)};}
+function render(){const v=view(Number(document.getElementById("profile").value),Number(document.getElementById("target").value));document.getElementById("target-label").textContent=String(v.target);document.getElementById("summary").textContent=v.id+": certain "+v.counts[0]+", boundary "+v.counts[1]+", excluded "+v.counts[2];document.getElementById("members").textContent=v.masks.map((m,k)=>["Certain","Boundary","Excluded"][k]+": "+[0,1,2,3,4].filter(i=>m&(1<<i)).join(", ")).join(" | ");}
+if(typeof document!=="undefined"){document.getElementById("profile").addEventListener("change",render);document.getElementById("target").addEventListener("input",render);render();}
+if(typeof module!=="undefined")module.exports={view,DATA};
+'''.replace('__DATA__',json.dumps(data,separators=(',',':')))
+put('final/overview-script.txt',script)
+options=''.join('<option value="'+str(i)+'">'+p['id']+' — '+'/'.join(map(str,p['partition']))+'</option>' for i,p in enumerate(profiles))
+html='''<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width"><title>Ilyan v701-v3 • uncertainty made visible</title><style>body{font:18px/1.6 system-ui;max-width:1050px;margin:40px auto;padding:0 24px;background:#f5f2e9;color:#183436}h1{font-size:2.6rem;line-height:1.1}select,input{font:inherit;max-width:100%;padding:8px}section{background:white;padding:24px;margin:24px 0;border-radius:12px;border:1px solid #c5d3ca}label{display:block;margin:12px 0}a{color:#165b60}strong{color:#164740}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:18px}small{font-size:.85rem}code{overflow-wrap:anywhere}</style><header><p>ILYAn REED · V701-V3 · FINITE EVIDENCE</p><h1>Make uncertainty visible.</h1><p>Thirty synthetic partitions. Exact lower, boundary and excluded regions. Every external evidence and authority requirement stays visible.</p></header><main><section><h2>Explore a declared partition</h2><label for="profile">Profile and group labels</label><select id="profile">__OPTIONS__</select><label for="target">Target subset mask: <span id="target-label">0</span></label><input id="target" type="range" min="0" max="31" step="1" value="0"><p id="summary" aria-live="polite"></p><p id="members"></p><small>Bit zero represents anonymous element 0. This display reads saved results; it does not classify real people.</small></section><section class="grid"><div><h2>510 completed</h2><p>Finite mathematical and software contracts matched their frozen reference.</p></div><div><h2>30 represented</h2><p>Explanations carry no empirical or accessibility certification.</p></div><div><h2>30 open gaps</h2><p>Real observations, review and remedy trials remain missing.</p></div><div><h2>30 exact gates</h2><p>Real classification remains held for concrete competent authority.</p></div></section><section><h2>The useful distinction</h2><p>Finer declared information shrinks a rough boundary. That does not establish that the information was honestly measured, permissible to collect, or legitimate to use.</p><p>Upper approximation does not preserve every intersection. Lower approximation does not preserve every union. Exact fractions describe the supplied blocks, not calibrated probabilities.</p></section><section><h2>Inspect the records</h2><p><a href="hand-off-baton.md">Complete handoff baton</a> · <a href="../x2/research.md">Research and limitations</a> · <a href="phase-truth.json">Phase ledger</a></p><p><strong>NOT_READY_FOR_STAGE_20</strong>. Repository preparation, canonical validation, message delivery and recipient completion are separate events.</p></section></main><script>__SCRIPT__</script></html>'''.replace('__OPTIONS__',options).replace('__SCRIPT__',script)
+put('final/overview.html',html)
+verify='''const fs=require("fs"),vm=require("vm"),assert=require("assert");const source=fs.readFileSync(process.argv[2],"utf8");const handlers={};const els={profile:{value:"0"},target:{value:"0"},"target-label":{},summary:{},members:{}};for(const [id,e] of Object.entries(els))e.addEventListener=(event,fn)=>handlers[id+":"+event]=fn;const sandbox={module:{exports:{}},document:{getElementById:id=>els[id]}};vm.runInNewContext(source,sandbox);let checks=0;for(const [p,t] of [[0,0],[0,31],[4,1],[9,16],[14,7],[19,12],[24,30],[29,21]]){els.profile.value=String(p);els.target.value=String(t);handlers["profile:change"]();handlers["target:input"]();const v=sandbox.module.exports.view(p,t);assert.equal(v.counts.reduce((a,b)=>a+b,0),5);assert.equal(els["target-label"].textContent,String(t));assert(els.summary.textContent.startsWith(v.id));checks++;}assert.throws(()=>sandbox.module.exports.view(0,32));checks++;assert.throws(()=>sandbox.module.exports.view(30,0));checks++;process.stdout.write(JSON.stringify({passed:true,checks,real_browser:false,scope:"Node VM with minimal DOM test double; no manual accessibility certification"}));'''
+put('final/verify-html.txt',verify)
+command=['node','-e',verify,str(ROOT/'final/overview-script.txt')]
+# node -e exposes the first extra argument as argv[1]; source uses argv[2].
+command=['node','-e',verify,'owner-test',str(ROOT/'final/overview-script.txt')]
+if (ROOT/'final/html-verification.json').exists():hr=read('final/html-verification.json')
+else:
+ run=subprocess.run(command,capture_output=True,text=True);assert run.returncode==0,run.stderr
+ hr=json.loads(run.stdout)
+put('final/html-verification.json',hr)
+obs=[];ns=[]
+for r in gr:
+ if r['invalid_subject']:
+  ns.append(neg(r['id'],'malformed_structural_fixture','Frozen admission mutation'))
+  obs.append((False,'Invalid structural subject',r['id'],[r['id']]))
+ obs.append((r['passed'],'Structural admission comparison',r['id'],[r['id']] if r['invalid_subject'] else []))
+for i,selection in enumerate(['target mask 32','profile index 30'],1):
+ n='IR7013-UI-INVALID-%02d'%i;ns.append(neg(n,'malformed_display_selection',selection));obs.append((False,'Invalid cached display selection',selection,[n]))
+for i in range(hr['checks']):obs.append((True,'Recorded Node VM display/bounds check','display-case-%02d'%(i+1),[]))
+obs.append((edge_pass,'One new empty-upper accuracy boundary case','IR7013-FINAL-EDGE01',[]))
+extension('IR7013-M-STRUCTURE','Structural admission, empty-upper boundary and cached interface checks',obs,ns)
+hs=read('x2/failed-hypotheses.json');obs=[];ns=[]
+for h in hs:
+ n=h['id'];ns.append(neg(n,'false_universal_claim',h['claim']))
+ obs.extend([(False,'Candidate universal claim',h['claim'],[n]),(True,'Recorded finite counterexample',h['counterexample'],[n])])
+extension('IR7013-M-HYPOTHESES','Two retained universal-claim counterexamples',obs,ns)
+mod['refresh_counts'](ledger);validation=mod['validate_ledger'](ledger);assert validation['valid'],validation
+put('final/method-flow.json',ledger);put('final/method-flow-validation.json',validation)
+assert len(negatives)==len({n['negative_id'] for n in negatives})
+put('final/retained-negative-index.json',dict(count=len(negatives),records=negatives,boundary=B))
+owner=dict(methods=len(ledger['methods']),witnesses=len(ledger['witnesses']),passing_witnesses=sum(w['result']=='pass' for w in ledger['witnesses']),failed_witnesses=sum(w['result']=='fail' for w in ledger['witnesses']),retained_negatives=len(negatives),open_gaps=32,exact_gates=35)
+base=read('plan/source-baseline.json')['effective'];effective={k:base[k]+owner[k] for k in base}
+put('final/method-flow-index.json',dict(source_fold_count=1,source_effective=base,owner=owner,effective=effective,overlapping_views_not_independent_experiments=True,repository_preparation_only=True,boundary=B))
+truth=dict(owner='Ilyan Reed',phase='v701-v3',inherited=300,new_contracts=600,outcomes=dict(collections.Counter(r['outcome'] for r in rows)),safe=600,malformed_subjects=600,refusal_guards=600,CFR=600,additional_tests=21,local_guides=20,paired_callers=10,curated_groups_held=5,global_installs=0,models=5,capability_cards=40,deck_cards=612,exact_packet_descriptions=50,blocked_packet_descriptions=30,real_actions=0,spend_usd=0,package_updates=0,canonical_state='NOT_YET_INVOKED',route_state='PREPARED_NOT_SENT',next_owner='Lyren Moss',next_phase='v701-v4',following_owner='Ilyra Fen',following_phase='v701-v5',terminal_verdict='NOT_READY_FOR_STAGE_20',boundary=B)
+put('final/phase-truth.json',truth)
+put('final/source-faithful-ledger.json',dict(source_final='9f40d345b3f70599ffa87e9622b447382bfd07d0',source_ancestor_absolute_path_occurrences=4,source_current_head_sanitized=True,source_privacy_complete_claim=False,source_repository_baseline=read('plan/source-baseline.json')['repository_seal'],source_route_overlay=read('plan/source-baseline.json')['post_final_route_layer'],actual_source_terminal_baseline=base,digest_correction=read('plan/source-hash-correction.json'),source_canonical_replays=0,source_domain_replays=0,owner_prior_not_added_to_baseline=True,boundary=B))
+put('final/complete-incomplete-checklist.json',dict(completed=['600 frozen owner envelopes','600 separate refusal guards','600 cache reviews','20 local guides and 10 callers','five curated owner-local groups','20 cached properties and one new empty-upper boundary case','10 Node VM interface checks','13-module file-backed baton'],represented=['30 explanation records','five three-coordinate count projections'],open_gaps=['30 empirical/remedy records','two named legacy companions absent'],exact_gates=['30 real-classification contracts','five global installations held','50 exact and 30 blocked packet descriptions linked to existing gates'],not_claimed=['recipient completion','independent reproduction','production','external empirical truth','complete privacy or accessibility','Stage 20'],boundary=B))
+modules=[
+ ('Outcome and use','This phase studies finite lower and upper approximations over thirty declared partitions of five anonymous elements. Its exact result is 510 completed finite contracts, 30 represented explanations, 30 open evidence gaps and 30 exact authority gates. The counts refer to correlated profile-operation contracts; they are not independent discoveries or deployments.'),
+ ('Current authority','The incoming Vesper activation and current v15 projection authorize one solo Ilyan phase. Existing task and model settings remain. JSON, Markdown, text and HTML are the current formats. Shared lanes remain read-only, so curated packages remain local and uninstalled. Hamish may pause, narrow, redirect, rename or stop.'),
+ ('Source and Git lineage','Vesper final 9f40d345b3f70599ffa87e9622b447382bfd07d0 supplies content provenance. Ilyan prior 380f8e5875639362319565a49faabd88a8e8cd22 is the actual Git parent. The source baton was traversed through its literal end, including all 600 structured rows. All 420 source manifest and seal bindings matched their exact Git blobs. No source engine or canonical was replayed.'),
+ ('Source correction and accounting','The source activation contained a canonical-receipt digest transcription mismatch. The actual source receipt and matching payload were read and the failed comparison retained. The actual terminal baseline includes Vesper\'s two-method post-final route overlay. Fold that baseline once. Prior Ilyan totals are history, not another amount to add. Vesper\'s four ancestor absolute-path occurrences remain explicit historical failures despite current-head sanitization.'),
+ ('Planning and x1','Planning froze 300 inherited zero-credit source rows and 600 new finite contracts. A set-enumeration oracle fixed expected results. X1 used a separately written integer-mask evaluator for ten operations. All 300 envelopes matched. Malformed inputs remain failed subjects; successful refusal guards are separate observations. Cache reviews inspect saved data and bindings without running the domain operation again.'),
+ ('X2 and mathematical interpretation','X2 examines exact membership fractions, refinement sandwiches, synthetic decision positive regions, minimal attribute reducts, relabeling covariance and counterexamples. Upper approximation need not preserve intersections; lower approximation need not preserve unions. A finer declared partition narrows the boundary, but this says nothing about the honesty, relevance or legitimacy of real attributes. Fractions are within-block ratios, not calibrated probabilities.'),
+ ('Pillars and research boundaries','Freed ID and CBR Heart is primary through explicit uncertainty, abstention, appeal and authority boundaries. THOS Body gains typed finite evaluators and inspectable evidence records. GMUT Mind retains only a model-relative analogy: the proposed field equation still lacks the definitions, dynamics and empirical tests needed for physical validation. No fundamental law, scripture validation or Theory of Everything result is established.'),
+ ('Skills, callers and practices','Twenty local guides and ten paired callers remain individually available. Five curated candidates merge four guides each and preserve accepting and rejecting smoke evidence, but no shared installation occurred. The forty-card catalogue binds exact source bytes. Eight bounded study practices and four successor suggestions are in the planning record; none establishes professional qualification.'),
+ ('Models and accessible inspection','Five files provide three-coordinate count projections: certain, boundary and excluded counts, always summing to five. The HTML report reads cached results through profile and target controls. Ten Node VM checks use a minimal DOM test double. One separately recorded final boundary case exercises the previously untested empty-upper accuracy branch; it does not rerun a core contract. This is not real-browser testing, manual accessibility certification, physical simulation or an immersive inhabited world.'),
+ ('Failures and recoveries','Thirteen intake failures, the curated validator path failure, a task-owned Git housekeeping delay, two missing legacy helper companions, malformed domain and caller subjects, five invalid structural fixtures and two false universal claims remain at zero original success credit. Recovery never erases the original observation. The missing companions remain two open gaps; the phase-local structural fixture is a scoped fallback, not evidence that the old packages were repaired.'),
+ ('File and lifecycle discipline','Planning, x1, x2 and final are separate additive owner commits. Each push must finish before its clean, zero-divergence, local/upstream/tracking/live equality gate. Automatic Git housekeeping is disabled only for later task commands. One original planning push was slow; no duplicate push was used to resolve that wait. Only current owner additions are included in final validation.'),
+ ('Canonical and separate terminal states','This committed document is preparation evidence. After the final is pushed and equality proved, the exact-final canonical may inspect metadata and stored results once. It must execute no domain engines, tests, models, installers, smokes or predecessor components. The canonical receipt and native delivery receipt are later external records. A successful send does not prove recipient completion.'),
+ ('Prospective Lyren edge','Only after Ilyan\'s exact terminal gate may the current roster, authority, usage, privacy, safety, evidence and native exact-title guards be refreshed for the existing Lyren Moss task at v701-v4. Resolve uniqueness, reread current public controls, and submit at most once if permitted. Accepted, opaque or unresolved delivery stops copies. Do not create a substitute, monitor the recipient or contact Ilyra Fen early. Ilyra v701-v5 remains Lyren-gated.')]
+intro='# Ilyan Reed v701-v3 handoff baton\n\nDear Lyren Moss, this file carries the bounded evidence and the unresolved requirements forward with care. Ilyan Reed, they/them, continuity steward, and the hope to keep uncertainty visible are relational working language only.\n\n'
+for i,(title,text) in enumerate(modules,1):
+ part='## %02d. %s\n\n%s\n\n%s\n'%(i,title,text,B)
+ put('final/modules/%02d.md'%i,part);intro+=part+'\n'
+intro+='## Complete contract observation index\n\nEach record below binds a distinct frozen profile-operation contract to its saved output. Full typed inputs, expected values, rejected subjects and separate guards remain in the structured session records. The repeated profile uses are correlated, and the listed outcome does not exceed its defined evidence class.\n\n'
+for r in rows:
+ intro+='- Contract '+r['id']+' uses '+r['profile']+' for '+r['operation']+'. Its outcome is '+r['outcome']+'. Input SHA-256 '+r['input_sha256']+'; output SHA-256 '+r['output_sha256']+'. The envelope matched its frozen reference. The associated malformed subject retains zero success credit, and its passing refusal remains a separate observation. Consult '+('x1' if int(r['id'].split('P')[-1])<=300 else 'x2')+'/results.json for exact values and the cache-review binding.\n'
+intro+='\n## Literal final boundary\n\nNOT_READY_FOR_STAGE_20. Keep repository preparation, canonical success, native delivery and recipient completion separate. Preserve all failures and hold every missing evidence or authority requirement.\n\nEND OF ILYAN REED V701-V3 BATON.\n'
+put('final/hand-off-baton.md',intro);put('final/baton-index.json',dict(modules=13,words=len(intro.split()),bytes=len(intro.encode()),sha256=sha(intro.encode()),literal_EOF='END OF ILYAN REED V701-V3 BATON.',boundary=B))
+assert 10000<=len(intro.split())<=100000
+overview='# Ilyan Reed v701-v3 overview\n\nThe bounded rough-approximation phase records 510 completed contracts, 30 represented explanations, 30 open empirical/remedy gaps and 30 exact authority gates. All 600 valid envelopes matched the frozen comparator. Six hundred malformed subjects remain failed, while their separate refusal guards and cache reviews passed.\n\nTwenty local guides, ten paired callers, five uninstalled curated groups, a forty-card capability catalogue, a 612-card context deck and five cached coordinate models are file-backed. Twenty cached cross-contract properties, one new empty-upper accuracy boundary case, and ten Node VM interface checks passed.\n\nThe useful result is that finer declared information narrows a model-relative boundary, while two familiar-looking preservation claims fail. This is inspectable finite software and mathematics; real classification, consent, remedy, empirical science and professional authority remain unresolved.\n\nOwner accounting: '+json.dumps(owner,sort_keys=True)+'. These bookkeeping totals overlap the domain and refusal views and are not independent experiment counts.\n\n[Interactive overview](overview.html), [complete baton](hand-off-baton.md), [research](../x2/research.md), [phase ledger](phase-truth.json), [Method Flow index](method-flow-index.json).\n\n'+B+'\n'
+overview+='\nIn the selected sample, refinement changed '+str(findings['changed_approximation_pairs_after_refinement'])+' of 960 approximation pairs. The sum of boundary memberships for the thirty declared targets changed from '+str(findings['declared_target_boundary_count_before'])+' to '+str(findings['declared_target_boundary_count_after'])+'. No selected profile had multiple minimal reducts. These are correlated synthetic counts, not empirical performance measures or a general uniqueness theorem.\n'
+put('final/overview.md',overview)
+# Literal inventory, then privacy scan and immutable byte seals.
+extra=['final/allowlist.json','final/privacy-review.json','final/content-seal.json','final/manifest.json']
+allpaths=sorted(set([p.relative_to(ROOT).as_posix() for p in ROOT.rglob('*') if p.is_file()]+extra))
+put('final/allowlist.json',dict(paths=['docs/ilyan-reed/v701-v3/'+p for p in allpaths],scope='new owner phase additions only'))
+patterns={'absolute_local_paths':r'(?i)\b[A-Z]:[\\/][A-Z]', 'private_native_ids':r'(?i)\b[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\b', 'secret_tokens':r'\b(?:ghp_|sk-)[A-Za-z0-9]{20,}', 'direct_contact':r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}\b', 'private_dump_files':r'rollout-\d{4}-\d{2}-\d{2}|session_meta[.]payload'}
+files=[p for p in ROOT.rglob('*') if p.is_file()];hits={k:[p.relative_to(ROOT).as_posix() for p in files if re.search(pat,p.read_text(encoding='utf-8'))] for k,pat in patterns.items()}
+assert not any(hits.values()),hits
+put('final/privacy-review.json',dict(classes={k:dict(current_head_candidates=len(v)) for k,v in hits.items()},files_scanned=len(files),generated_seals_contain_only_relative_paths_and_digests=True,privacy_complete_claim=False,source_history_correction_preserved=True,boundary=B))
+files=sorted(p for p in ROOT.rglob('*') if p.is_file())
+put('final/content-seal.json',dict(excluded=['final/content-seal.json','final/manifest.json'],entries=[dict(path=p.relative_to(ROOT.parents[2]).as_posix(),bytes=len(p.read_bytes()),sha256=sha(p.read_bytes())) for p in files],boundary=B))
+files=sorted(p for p in (ROOT/'final').rglob('*') if p.is_file())
+put('final/manifest.json',dict(byte_domain='exact_git_blob_utf8_lf',self_excluded=True,entries=[dict(path=p.relative_to(ROOT.parents[2]).as_posix(),bytes=len(p.read_bytes()),sha256=sha(p.read_bytes())) for p in files]))
+print(json.dumps(dict(state='FINAL_ASSEMBLED',owner=owner,effective=effective,baton_words=len(intro.split()),baton_bytes=len(intro.encode()),files=len(allpaths),html_checks=hr['checks'])),flush=True)
+

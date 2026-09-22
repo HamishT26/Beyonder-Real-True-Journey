@@ -1,0 +1,8 @@
+"""Structural admission predicate for fixtures, not execution authority."""
+def admissible(x):
+ return (type(x) is dict and set(x)=={'head','live','clean','divergence','inventory','privacy_candidates','success_latch'}
+  and type(x['head']) is str and len(x['head'])==40 and set(x['head'])<=set('0123456789abcdef')
+  and x['head']==x['live'] and x['clean'] is True and type(x['divergence']) is list and len(x['divergence'])==2 and all(type(v) is int and v==0 for v in x['divergence'])
+  and type(x['inventory']) is list and bool(x['inventory'])
+  and all(type(p) is str and p.startswith('docs/ilyan-reed/v701-v3/') and '..' not in p for p in x['inventory']) and len(set(x['inventory']))==len(x['inventory'])
+  and type(x['privacy_candidates']) is int and x['privacy_candidates']==0 and x['success_latch'] is False)

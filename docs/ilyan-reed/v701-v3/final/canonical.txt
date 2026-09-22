@@ -1,0 +1,108 @@
+"""Metadata-only exact-final owner canonical. Exclusive invocation; never runs domain code."""
+import sys,json,hashlib,subprocess,os,re,datetime,collections
+from pathlib import Path
+REPO=Path(sys.argv[1]);BANK=Path(sys.argv[2]);HEAD=sys.argv[3];ROOT='docs/ilyan-reed/v701-v3/'
+def raw(x):return (json.dumps(x,sort_keys=True,ensure_ascii=False,indent=2)+'\n').encode()
+def sha(b):return hashlib.sha256(b).hexdigest()
+def external(name):return json.loads((BANK/name).read_text(encoding='utf-8'))
+def put(name,x):
+ with (BANK/name).open('xb') as f:f.write(raw(x))
+def git(*a):return subprocess.check_output(['git','-C',str(REPO),'-c','maintenance.auto=false','-c','gc.auto=0',*a],stderr=subprocess.PIPE).decode().strip()
+assert not (BANK/'canonical-success.json').exists(),'successful canonical already latched'
+put('canonical-invocation.json',dict(head=HEAD,invocations=1,replays=0,domain_execution=False,started_utc=datetime.datetime.now(datetime.timezone.utc).isoformat()))
+cp=subprocess.Popen(['git','-C',str(REPO),'cat-file','--batch'],stdin=subprocess.PIPE,stdout=subprocess.PIPE)
+cache={}
+def blob(path,rev=HEAD):
+ key=rev+':'+path
+ if key not in cache:
+  cp.stdin.write((key+'\n').encode());cp.stdin.flush();h=cp.stdout.readline().split();assert len(h)==3 and h[1]==b'blob',key
+  b=cp.stdout.read(int(h[2]));assert cp.stdout.read(1)==b'\n';cache[key]=b
+ return cache[key]
+def doc(name,rev=HEAD):return json.loads(blob(ROOT+name,rev),parse_constant=lambda s:(_ for _ in ()).throw(ValueError(s)))
+checks=[]
+def check(name,ok,detail=None):checks.append(dict(name=name,passed=bool(ok),detail=detail))
+try:
+ check('exact_head',git('rev-parse','HEAD')==HEAD)
+ check('owner_branch',git('branch','--show-current')=='codex/GHC-Family/ilyan-reed-main')
+ check('clean_owner_checkout',git('status','--porcelain')=='')
+ check('zero_divergence',[int(x) for x in git('rev-list','--left-right','--count','HEAD...@{upstream}').split()]==[0,0])
+ heads=[git('rev-parse','HEAD'),git('rev-parse','@{upstream}'),git('rev-parse','refs/remotes/origin/codex/GHC-Family/ilyan-reed-main'),git('ls-remote','origin','refs/heads/codex/GHC-Family/ilyan-reed-main').split()[0]]
+ check('fresh_four_way_equality',all(x==HEAD for x in heads))
+ base='380f8e5875639362319565a49faabd88a8e8cd22';stages=['plan','x1','x2','final'];commits=[external(s+'-commit.json')['head'] for s in stages]
+ check('four_lifecycle_receipts',commits[-1]==HEAD and len(set(commits))==4)
+ graph=[line.split() for line in git('rev-list','--parents',base+'..'+HEAD).splitlines()]
+ check('four_direct_single_parent_commits',len(graph)==4 and all(len(x)==2 for x in graph) and [x[0] for x in graph]==list(reversed(commits)) and graph[-1][1]==base)
+ check('four_successful_push_receipts',all(external(s+'-push.json')['exit_code']==0 for s in stages))
+ check('four_frozen_equality_receipts',all(external(s+'-equality.json')['clean'] and external(s+'-equality.json')['head']==h and external(s+'-equality.json')['divergence']==[0,0] for s,h in zip(stages,commits)))
+ delta=git('diff','--name-status',base,HEAD).splitlines();paths=[x.split('\t')[-1] for x in delta]
+ check('additive_owner_delta_only',all(x.startswith('A\t'+ROOT) for x in delta))
+ check('new_artifact_formats',all(Path(p).suffix in {'.json','.md','.txt','.html'} for p in paths))
+ tracked=len(git('ls-files').splitlines());materialized=sum(len(fs) for _,ds,fs in os.walk(REPO))-int((REPO/'.git').is_file())
+ check('both_file_ceilings',tracked<2000 and materialized<2000,dict(tracked=tracked,materialized=materialized))
+ allow=doc('final/allowlist.json')['paths'];check('exact_changed_file_inventory',sorted(paths)==sorted(allow))
+ strict=0
+ for p in paths:
+  if p.endswith('.json'):json.loads(blob(p),parse_constant=lambda s:(_ for _ in ()).throw(ValueError(s)));strict+=1
+ check('strict_json_documents',strict>0,strict)
+ bindings=0
+ for stage,rev in zip(stages,commits):
+  manifest=doc(stage+'/manifest.json',rev);es=manifest['entries'];ok=True
+  for e in es:
+   b=blob(e['path'],rev);ok=ok and len(b)==e['bytes'] and sha(b)==e['sha256'];bindings+=1
+  check(stage+'_exact_git_blob_manifest',ok,len(es))
+ seal=doc('final/content-seal.json');ok=True
+ for e in seal['entries']:
+  b=blob(e['path']);ok=ok and len(b)==e['bytes'] and sha(b)==e['sha256'];bindings+=1
+ check('exact_git_blob_content_seal',ok,len(seal['entries']))
+ contracts=doc('plan/contracts.json');inherited=doc('plan/inherited.json')
+ check('six_hundred_unique_frozen_contracts',len(contracts)==600 and len({c['id'] for c in contracts})==600)
+ check('three_hundred_zero_credit_inherited_records',len(inherited)==300 and all(c['owner_novelty_credit']==c['owner_execution_credit']==0 for c in inherited))
+ rows=doc('x1/results.json')+doc('x2/results.json')
+ check('exact_four_outcome_counts',dict(collections.Counter(r['outcome'] for r in rows))==dict(completed=510,represented=30,open_gap=30,exact_gate=30))
+ check('six_hundred_safe_matches',len(rows)==600 and all(r['safe_match'] for r in rows))
+ check('six_hundred_failed_malformed_subjects',all(r['invalid_original_success_credit']==0 and r['invalid_result']['accepted'] is False for r in rows))
+ check('six_hundred_separate_refusal_guards',all(r['refusal_pass'] and not r['invalid_result']['operation_executed'] for r in rows))
+ check('six_hundred_cache_reviews',all(r['cache_review_pass'] for r in rows))
+ cmap={c['id']:c for c in contracts}
+ check('frozen_definition_and_output_bindings',all(sha(raw(cmap[r['id']]))==r['definition_sha256'] and sha(raw(r['observed']['result']))==r['output_sha256']==cmap[r['id']]['expected_sha256'] for r in rows))
+ check('twenty_local_guides_validated',sum(doc(s+'/guide-validation.json')['passed'] for s in ['x1','x2'])==20)
+ smokes=doc('x1/caller-smokes.json')+doc('x2/caller-smokes.json')
+ check('ten_paired_callers_with_retained_negatives',len(smokes)==10 and all(x['positive_pass'] and x['refusal_pass'] and x['invalid_original_success_credit']==0 for x in smokes))
+ curated=doc('x2/curation-results.json')
+ check('five_curated_groups_held_uninstalled',len(curated)==5 and all(x['positive_pass'] and x['refusal_pass'] and x['installed'] is False and x['outcome']=='exact_gate' for x in curated))
+ catalog=doc('x2/capability-catalogue.json');check('forty_catalogue_cards_validated',len(catalog['cards'])==40 and doc('x2/catalogue-validation.json')['valid'])
+ check('catalogue_source_byte_bindings',all(sha(blob(x['source_path']))==x['sha256'] for x in catalog['cards']))
+ deck=doc('x2/deck.json')['cards'];d={x['card_id']:x for x in deck};levels={'owner':0,'pillar':1,'practice':2,'task':3}
+ check('six_hundred_twelve_immediate_parent_cards',len(deck)==len(d)==612 and all(x['parent'] is None if x['tier']=='owner' else levels[d[x['parent']]['tier']]==levels[x['tier']]-1 for x in deck))
+ models=[doc('x2/models/region_coordinates_%02d.json'%i) for i in range(1,6)]
+ check('five_cached_coordinate_models',sum(len(m['points']) for m in models)==960 and all(not m['physical_model'] and all(sum(p['coordinates'])==5 for p in m['points']) for m in models))
+ tests=doc('x1/additional-tests.json')+doc('x2/additional-tests.json')
+ check('twenty_cached_properties_plus_one_new_boundary_case',len(tests)==20 and all(t['passed'] and not t['domain_replay'] for t in tests) and doc('final/empty-upper-boundary-check.json')['passed'] and not doc('final/empty-upper-boundary-check.json')['core_contract_replay'])
+ check('two_failed_universal_claims_retained',len(doc('x2/failed-hypotheses.json'))==2 and all(x['original_success_credit']==0 and x['result']=='fail' for x in doc('x2/failed-hypotheses.json')))
+ check('session_ledgers_validated',all(doc(s+'/method-flow-validation.json')['valid'] for s in ['x1','x2']))
+ ledger=doc('final/method-flow.json');counts=ledger['counts'];check('final_ledger_validated',doc('final/method-flow-validation.json')['valid'] and len(ledger['witnesses'])==counts['witnesses'])
+ neg=doc('final/retained-negative-index.json');check('negative_ids_unique_and_zero_credit',len(neg['records'])==len({x['negative_id'] for x in neg['records']}) and all(x['original_success_credit']==0 for x in neg['records']))
+ flow=doc('final/method-flow-index.json');basecounts=doc('plan/source-baseline.json')['effective']
+ check('actual_terminal_baseline_folded_once',flow['source_fold_count']==1 and flow['source_effective']==basecounts and all(flow['effective'][k]==basecounts[k]+flow['owner'][k] for k in basecounts))
+ guard=doc('final/guard-results.json');check('admission_guard_one_valid_five_invalid',len(guard['cases'])==6 and all(c['passed'] for c in guard['cases']) and sum(c['invalid_subject'] for c in guard['cases'])==5)
+ check('html_interaction_checks_recorded',doc('final/html-verification.json')['passed'] and doc('final/html-verification.json')['checks']>=5 and doc('final/html-verification.json')['real_browser']==False)
+ baton=blob(ROOT+'final/hand-off-baton.md');bi=doc('final/baton-index.json')
+ check('baton_complete_word_hash_boundary',10000<=len(baton.decode().split())<=100000 and len(baton)==bi['bytes'] and sha(baton)==bi['sha256'] and baton.decode().endswith('END OF ILYAN REED V701-V3 BATON.\n') and bi['modules']==13)
+ held=doc('plan/held-packets.json');check('held_packet_descriptions_unexecuted',collections.Counter(x['packet_class'] for x in held)==dict(EXACT=50,BLOCKED=30) and all(not x['executed'] for x in held))
+ correction=doc('plan/source-hash-correction.json');check('source_digest_correction_non_erasing',correction['incoming_receipt_sha256']!=correction['observed_receipt_sha256'] and correction['original_match_credit']==0 and not correction['history_erased'])
+ patterns={'absolute_local_paths':r'(?i)\b[A-Z]:[\\/][A-Z]', 'private_native_ids':r'(?i)\b[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\b', 'secret_tokens':r'\b(?:ghp_|sk-)[A-Za-z0-9]{20,}', 'direct_contact':r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}\b', 'private_dump_files':r'rollout-\d{4}-\d{2}-\d{2}|session_meta[.]payload'}
+ hits={k:sum(bool(re.search(p,blob(path).decode('utf-8'))) for path in paths) for k,p in patterns.items()}
+ check('current_owner_delta_privacy_candidates_zero',not any(hits.values()),hits)
+ check('source_privacy_history_preserved',doc('final/source-faithful-ledger.json')['source_ancestor_absolute_path_occurrences']==4)
+ check('prepared_route_and_stage20_boundary',doc('final/phase-truth.json')['route_state']=='PREPARED_NOT_SENT' and doc('final/phase-truth.json')['terminal_verdict']=='NOT_READY_FOR_STAGE_20')
+ check('no_source_or_domain_execution_in_canonical',True,dict(domain_engines=0,tests=0,smokes=0,installers=0,source_components=0))
+ passed=all(c['passed'] for c in checks)
+ payload=dict(schema='ghc.family.exact-final-owner-scoped-canonical.v1',state='VALID_EXACT_FINAL_OWNER_SCOPED_CANONICAL' if passed else 'FAILED_OWNER_CANONICAL',owner='Ilyan Reed',phase='v701-v3',head=HEAD,checks=checks,check_count=len(checks),passed_count=sum(c['passed'] for c in checks),manifest_seal_bindings=bindings,strict_json_documents=strict,owner_delta_files=len(paths),tracked=tracked,materialized=materialized,domain_execution=False,source_replay=False,complete_repository_suite=False,independent_reproduction=False,terminal_verdict='NOT_READY_FOR_STAGE_20')
+ put('canonical-payload.json',payload);receipt=dict(state=payload['state'],head=HEAD,invocations=1,successes=int(passed),replays=0,checks=len(checks),passed=sum(c['passed'] for c in checks),payload_sha256=sha(raw(payload)),domain_execution=False,source_replay=False,finished_utc=datetime.datetime.now(datetime.timezone.utc).isoformat())
+ put('canonical-receipt.json',receipt)
+ if passed:put('canonical-success.json',dict(head=HEAD,receipt_sha256=sha(raw(receipt)),replays_permitted=False))
+ print(json.dumps(receipt),flush=True)
+ if not passed:raise SystemExit('Canonical failed; do not replay successful dependencies.')
+finally:
+ cp.stdin.close();cp.wait()
+
