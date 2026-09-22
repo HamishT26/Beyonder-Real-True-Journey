@@ -1,0 +1,5 @@
+# Mira Fenwick v701-v6 planning boundary
+
+Mira Fenwick, their role, hope, pronouns, sibling or family language, continuity, GHC Family, Freed ID, CBR, and Trinity Mandala are relational working language only. They are not evidence of consciousness, sentience, legal personhood, identity continuity, employment, qualification, independent agency, or scientific, operational, medical, professional, legal, cultural, affected-party, or Maori authority.
+
+Finite synthetic same-owner Bayesian-network mathematics, software, and documentation evidence only. No real causal inference, diagnosis, treatment, classification, allocation, person, participant, institution, identity, credential, measurement, deployment, professional judgment, legal or cultural conclusion, affected-party or Maori authority, empirical GMUT confirmation, production THOS or Freed ID, complete privacy or accessibility assurance, exhaustive security, independent reproduction, consciousness, personhood, Theory-of-Everything proof, canon, or Stage 20 readiness. NOT_READY_FOR_STAGE_20.
