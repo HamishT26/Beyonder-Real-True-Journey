@@ -1,0 +1,111 @@
+"use strict";
+const fs=require('fs'),cp=require('child_process'),crypto=require('crypto'),assert=require('assert/strict');
+const B=process.argv[2],sha=b=>crypto.createHash('sha256').update(b).digest('hex');
+const python=String.raw`
+import json,sys
+from fractions import Fraction
+OPS=['walsh_transform','inverse_walsh','parseval_energy','spectral_correlation','closest_affine','nonlinearity','balancedness','autocorrelation','derivative_profile','affine_covariance','anf_coefficients','algebraic_degree','xor_convolution','bentness','correlation_immunity','linear_structures','restriction_spectrum','structural_bridge','observation_gap','authority_gate']
+def sign(b): return 1-2*b
+def parity(a): return a.bit_count()%2
+def walsh(f): return [sum(sign(v^parity(a&x)) for x,v in enumerate(f)) for a in range(len(f))]
+def frac(a,b):
+    q=Fraction(a,b)
+    return str(q.numerator)+'/'+str(q.denominator)
+def autoc(f): return [sum(sign(v^f[x^d]) for x,v in enumerate(f)) for d in range(len(f))]
+def coeff(f): return [sum(f[t] for t in range(len(f)) if t&s==t)%2 for s in range(len(f))]
+def insert_bit(x,j,b): return (x&((1<<j)-1))|((x>>j)<<(j+1))|(b<<j)
+def immune(n,f):
+    N=len(f); ones=sum(f); order=0
+    for k in range(1,n+1):
+        valid=True
+        for mask in range(1,N):
+            if mask.bit_count()!=k: continue
+            for value in range(N):
+                if value&~mask: continue
+                xs=[x for x in range(N) if x&mask==value]
+                if sum(f[x] for x in xs)*N!=ones*len(xs): valid=False
+        if not valid: break
+        order=k
+    return order
+def value(op,q):
+    n=q['n']; N=1<<n
+    if op=='inverse_walsh':
+        w=q['spectrum']; s=[sum(w[a]*sign(parity(a&x)) for a in range(N))//N for x in range(N)]
+        return {'truth':[(1-x)//2 for x in s],'signs':s,'boolean_inverse':all(abs(x)==1 for x in s)}
+    f=q['truth']; w=walsh(f)
+    if op=='walsh_transform': return {'walsh':w,'normalized':[frac(x,N) for x in w],'order':'little_endian_mask'}
+    if op=='parseval_energy': return {'squared_coefficients':[x*x for x in w],'sum_squares':sum(x*x for x in w),'expected':N*N,'normalized_sum':frac(sum(x*x for x in w),N*N)}
+    if op=='spectral_correlation':
+        c=sum(sign(a^b) for a,b in zip(f,q['other']))
+        return {'unnormalized':c,'uniform_average':frac(c,N),'spectral_product_sum':c*N,'pearson_claim':False}
+    if op in ['closest_affine','nonlinearity']:
+        rows=[{'mask':a,'constant':b,'distance':sum(v!=(parity(a&x)^b) for x,v in enumerate(f))} for a in range(N) for b in [0,1]]
+        d=min(r['distance'] for r in rows)
+        if op=='closest_affine': return {'minimum_distance':d,'minimizers':[r for r in rows if r['distance']==d],'all_affine_candidates_examined':2*N}
+        return {'minimum_hamming_distance':d,'maximum_absolute_walsh':max(abs(x) for x in w),'production_security_claim':False}
+    if op=='balancedness': return {'ones':sum(f),'zeros':N-sum(f),'walsh_zero':w[0],'balanced':2*sum(f)==N}
+    if op=='autocorrelation': return {'autocorrelation':autoc(f),'zero_direction':N,'normalization':'unnormalized_signed_sum'}
+    if op=='derivative_profile': return {'weights':[sum(v^f[x^d] for x,v in enumerate(f)) for d in range(N)],'zero_direction_included':True}
+    if op=='affine_covariance':
+        g=[f[x^q['shift']]^parity(q['linear_mask']&x)^q['constant'] for x in range(N)]
+        return {'transformed_truth':g,'transformed_walsh':walsh(g),'map':'input_xor_then_linear_output_xor'}
+    if op=='anf_coefficients': return {'coefficients':coeff(f),'monomial_masks':[i for i,a in enumerate(coeff(f)) if a],'field':'GF2'}
+    if op=='algebraic_degree':
+        support=[i for i,a in enumerate(coeff(f)) if a]
+        return {'degree':max((i.bit_count() for i in support),default=None),'zero_polynomial':not support,'degree_convention':'null_for_zero'}
+    if op=='xor_convolution':
+        g=[a^b for a,b in zip(f,q['other'])]
+        return {'xor_truth':g,'xor_walsh':walsh(g),'convolution_divisor':N}
+    if op=='bentness':
+        derivative_weights=[sum(v^f[x^d] for x,v in enumerate(f)) for d in range(1,N)]
+        bent=n%2==0 and all(2*x==N for x in derivative_weights)
+        return {'bent':bent,'even_dimension':n%2==0,'absolute_spectrum':sorted(set(abs(x) for x in w)),'cryptographic_deployment_approved':False}
+    if op=='correlation_immunity':
+        t=immune(n,f); balanced=2*sum(f)==N
+        return {'correlation_immunity_order':t,'balanced':balanced,'resiliency_order':t if balanced else None,'distribution':'uniform_declared_finite_cube'}
+    if op=='linear_structures':
+        rows=[]
+        for d in range(N):
+            ds=[v^f[x^d] for x,v in enumerate(f)]
+            if len(set(ds))==1: rows.append({'direction':d,'derivative_constant':ds[0]})
+        return {'structures':rows,'zero_direction_included':True}
+    if op=='restriction_spectrum':
+        g=[f[insert_bit(x,q['coordinate'],q['value'])] for x in range(N//2)]
+        return {'remaining_dimension':n-1,'restricted_truth':g,'restricted_walsh':walsh(g),'remaining_order':'original_order_without_fixed_coordinate'}
+    if op=='structural_bridge': return {'walsh':w,'analogy':'finite_character_decomposition','frequency_unit':'algebraic_mask_not_hertz','physical_mapping':None,'empirical_confirmation':False}
+    if op=='observation_gap': return {'model_dimension':n,'declared_truth':f,'observation_rows':0,'people':0,'physical_systems':0,'missing':['governed_observations','calibration','independent_comparison'],'empirical_confirmation':False}
+    if op=='authority_gate': return {'model_dimension':n,'declared_truth':f,'action':q['action'],'executed':False,'verified_authority':False,'required':['exact_governed_target','competent_affected_authority','consent_and_safety','recovery_and_review']}
+    raise ValueError(op)
+def envelope(op,q):
+    disposition={'structural_bridge':'represented','observation_gap':'open_gap','authority_gate':'exact_gate'}.get(op,'completed')
+    return {'ok':True,'outcome':disposition,'value':value(op,q),'evidence_class':'finite_synthetic_same_owner','authority':False,'external_calls':0}
+def request(op,n,f,index):
+    N=1<<n; q={'n':n,'truth':f}
+    if op=='inverse_walsh': q={'n':n,'spectrum':walsh(f)}
+    if op in ['spectral_correlation','xor_convolution']:
+        mask=sum(v<<x for x,v in enumerate(f)); other=((mask*13+29)^(((1<<N)-1)>>1))&((1<<N)-1)
+        q['other']=[(other>>x)&1 for x in range(N)]
+    if op=='affine_covariance': q.update(shift=(index*3+1)%N,linear_mask=(index*5+2)%N,constant=index%2)
+    if op=='restriction_spectrum': q.update(coordinate=index%n,value=(index//n)%2)
+    if op=='authority_gate': q['action']=['real_security_deployment','real_identity_decision','professional_classification'][index%3]
+    return {'op':op,'input':q}
+masks={2:[0,15,1,6,8,9,3,5,7,10],3:[0,255,1,7,23,105,150,128,170,232],4:[0,65535,1,65534,0x6996,0x9669,0xAAAA,0x8000,0xF888]}
+bentmask=sum((((x&1)*((x>>1)&1))^(((x>>2)&1)*((x>>3)&1)))<<x for x in range(16)); masks[4].append(bentmask)
+cases=[]
+for n,ms in masks.items():
+    assert len(set(ms))==10
+    for mask in ms: cases.append({'n':n,'mask':mask,'truth':[(mask>>x)&1 for x in range(1<<n)]})
+rows={}; smokes={}
+for oi,op in enumerate(OPS):
+    rows[op]=[]
+    for ci,c in enumerate(cases):
+        r=request(op,c['n'],c['truth'],ci)
+        rows[op].append({'case_index':ci+1,'case_dimension':c['n'],'case_mask':c['mask'],'request':r,'expected':envelope(op,r['input'])})
+    smoke_mask=(0x1357+oi*0x271)&0xffff
+    while smoke_mask in masks[4]: smoke_mask=(smoke_mask+1)&0xffff
+    r=request(op,4,[(smoke_mask>>x)&1 for x in range(16)],oi+41)
+    smokes[op]={'request':r,'expected':envelope(op,r['input'])}
+print(json.dumps({'ops':OPS,'cases':cases,'rows':rows,'smokes':smokes,'bent_mask':bentmask},separators=(',',':')))
+`;
+fs.writeFileSync(B+'/oracle-start.json',JSON.stringify({state:'STARTED_PLANNING_ONLY',payload_sha256:sha(Buffer.from(python)),production_executed:false,at:new Date().toISOString()})+'\n',{flag:'wx'});
+try{const r=cp.spawnSync('python',['-B','-X','utf8','-c',python],{encoding:'utf8',maxBuffer:12e6,env:{...process.env,PYTHONDONTWRITEBYTECODE:'1',PYTHONUTF8:'1'}});assert.equal(r.status,0,(r.stderr||'Oracle failed').slice(0,1500));const result=JSON.parse(r.stdout);assert.equal(result.ops.length,20);assert.equal(result.cases.length,30);fs.mkdirSync(B+'/oracle',{recursive:false});for(const op of result.ops){assert.equal(result.rows[op].length,30);fs.writeFileSync(B+'/oracle/'+op+'.json',JSON.stringify({operation:op,rows:result.rows[op],smoke:result.smokes[op]},null,2)+'\n',{flag:'wx'});}fs.writeFileSync(B+'/oracle/cases.json',JSON.stringify({cases:result.cases,bent_mask:result.bent_mask},null,2)+'\n',{flag:'wx'});fs.writeFileSync(B+'/oracle-success.json',JSON.stringify({state:'PLANNING_EXPECTATIONS_CLOSED',ops:result.ops,core_definitions:600,smoke_definitions:20,payload_sha256:sha(Buffer.from(python)),program_sha256:sha(fs.readFileSync(__filename)),production_executed:false,replays:0,at:new Date().toISOString()},null,2)+'\n',{flag:'wx'});console.log(JSON.stringify({state:'PLANNING_EXPECTATIONS_CLOSED',operations:20,core:600,smokes:20,bent_mask:result.bent_mask}));}catch(e){fs.writeFileSync(B+'/oracle-failure.json',JSON.stringify({original_success_credit:0,error:String(e.message),at:new Date().toISOString()},null,2)+'\n',{flag:'wx'});console.log(JSON.stringify({error:String(e.message).slice(0,1200)}));process.exitCode=1;}

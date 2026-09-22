@@ -1,0 +1,13 @@
+# Finite Boolean spectral contract
+
+Inputs use n=2,3,4 and exactly 2^n Boolean table values in little-endian coordinate order. All request and input fields are closed. No path, command, account, participant or real observation can be selected by a mathematical request. W(a)=sum_x (-1)^(f(x)+dot(a,x)); the normalized coefficient is W(a)/N. The inverse uses H(W)/N, and every reconstructed sign must be exactly plus or minus one. Signed spectra contain bounded integers; fractional, nonfinite, out-of-range or non-Boolean inverses are refused.
+
+Parseval uses sum W(a)^2=N^2. The uniform signed inner product is not asserted to be Pearson correlation. All closest affine masks and constants retain ties. Nonlinearity is finite Hamming distance, not a security rating. A derivative includes direction zero. Constant functions can have correlation-immunity order n while failing balancedness; resilience is null unless balanced. The zero ANF polynomial has degree null. Restrictions remove the fixed coordinate without reordering the others.
+
+Affine covariance uses h(x)=f(x xor d) xor dot(c,x) xor b, so W_h(a)=(-1)^(b+dot(a xor c,d)) W_f(a xor c). XOR sign-product spectra use frequency XOR convolution divided by N. Linear structures retain constant derivative values and zero direction. A flat spectrum is tested only in the admitted finite dimensions. These quantities have no measured physical frequency or energy units.
+
+The runtime wire is bounded to12000characters and depth24; duplicate decoded keys, non-JSON whitespace, trailing data and nonfinite numbers are refused. Only known admission errors become structured refusals; unexpected programming faults remain failures. Four malformed subjects per definition remain failed with zero credit, separately from their rejection checks. CFR and additional cross-operation predicates use cached observations without rerunning a closed domain tranche. Copy-from-reference work remains zero-credit source comparison.
+
+Iveren Brook, optional they/them, Evidence and Recovery Steward, and the hope of making assumptions, recoveries and handovers easier to inspect are relational working language only. No consciousness, sentience, personhood, identity continuity, employment, qualification, agency, empirical, professional, production, legal, cultural, affected-party or Maori authority follows. Maori concepts remain under Maori authority. Same-owner finite synthetic evidence is not independent reproduction, complete privacy or accessibility, exhaustive security, AGI/ASI, Theory-of-Everything proof, canon or Stage 20. NOT_READY_FOR_STAGE_20.
+
+EOF

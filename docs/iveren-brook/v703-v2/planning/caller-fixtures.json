@@ -1,0 +1,1896 @@
+{
+  "count": 20,
+  "rows": [
+    {
+      "operation": "walsh_transform",
+      "session": "x1",
+      "request": {
+        "op": "walsh_transform",
+        "input": {
+          "n": 4,
+          "truth": [
+            1,
+            1,
+            1,
+            0,
+            1,
+            0,
+            1,
+            0,
+            1,
+            1,
+            0,
+            0,
+            1,
+            0,
+            0,
+            0
+          ]
+        }
+      },
+      "expected": {
+        "ok": true,
+        "outcome": "completed",
+        "value": {
+          "walsh": [
+            0,
+            -8,
+            -8,
+            0,
+            -4,
+            4,
+            -4,
+            4,
+            -4,
+            -4,
+            4,
+            4,
+            0,
+            0,
+            0,
+            0
+          ],
+          "normalized": [
+            "0/1",
+            "-1/2",
+            "-1/2",
+            "0/1",
+            "-1/4",
+            "1/4",
+            "-1/4",
+            "1/4",
+            "-1/4",
+            "-1/4",
+            "1/4",
+            "1/4",
+            "0/1",
+            "0/1",
+            "0/1",
+            "0/1"
+          ],
+          "order": "little_endian_mask"
+        },
+        "evidence_class": "finite_synthetic_same_owner",
+        "authority": false,
+        "external_calls": 0
+      },
+      "invalid_request": {
+        "op": "walsh_transform",
+        "input": {
+          "n": 4,
+          "truth": [
+            2,
+            1,
+            1,
+            0,
+            1,
+            0,
+            1,
+            0,
+            1,
+            1,
+            0,
+            0,
+            1,
+            0,
+            0,
+            0
+          ]
+        }
+      },
+      "expected_refusal": {
+        "ok": false,
+        "outcome": "open_gap",
+        "error": "ADMISSION_REFUSED",
+        "reason": "truth_values",
+        "subject_success_credit": 0,
+        "authority": false,
+        "external_calls": 0
+      },
+      "fresh_from_core_requests": true
+    },
+    {
+      "operation": "inverse_walsh",
+      "session": "x1",
+      "request": {
+        "op": "inverse_walsh",
+        "input": {
+          "n": 4,
+          "spectrum": [
+            4,
+            -4,
+            4,
+            -4,
+            0,
+            0,
+            0,
+            0,
+            0,
+            8,
+            8,
+            0,
+            4,
+            4,
+            -4,
+            -4
+          ]
+        }
+      },
+      "expected": {
+        "ok": true,
+        "outcome": "completed",
+        "value": {
+          "truth": [
+            0,
+            0,
+            0,
+            1,
+            0,
+            0,
+            1,
+            1,
+            1,
+            0,
+            1,
+            0,
+            1,
+            0,
+            0,
+            0
+          ],
+          "signs": [
+            1,
+            1,
+            1,
+            -1,
+            1,
+            1,
+            -1,
+            -1,
+            -1,
+            1,
+            -1,
+            1,
+            -1,
+            1,
+            1,
+            1
+          ],
+          "boolean_inverse": true
+        },
+        "evidence_class": "finite_synthetic_same_owner",
+        "authority": false,
+        "external_calls": 0
+      },
+      "invalid_request": {
+        "op": "inverse_walsh",
+        "input": {
+          "n": 4,
+          "spectrum": [
+            0.5,
+            -4,
+            4,
+            -4,
+            0,
+            0,
+            0,
+            0,
+            0,
+            8,
+            8,
+            0,
+            4,
+            4,
+            -4,
+            -4
+          ]
+        }
+      },
+      "expected_refusal": {
+        "ok": false,
+        "outcome": "open_gap",
+        "error": "ADMISSION_REFUSED",
+        "reason": "spectrum_values",
+        "subject_success_credit": 0,
+        "authority": false,
+        "external_calls": 0
+      },
+      "fresh_from_core_requests": true
+    },
+    {
+      "operation": "parseval_energy",
+      "session": "x1",
+      "request": {
+        "op": "parseval_energy",
+        "input": {
+          "n": 4,
+          "truth": [
+            1,
+            0,
+            0,
+            1,
+            1,
+            1,
+            0,
+            0,
+            0,
+            0,
+            0,
+            1,
+            1,
+            0,
+            0,
+            0
+          ]
+        }
+      },
+      "expected": {
+        "ok": true,
+        "outcome": "completed",
+        "value": {
+          "squared_coefficients": [
+            16,
+            0,
+            16,
+            64,
+            0,
+            16,
+            64,
+            16,
+            16,
+            0,
+            16,
+            0,
+            0,
+            16,
+            0,
+            16
+          ],
+          "sum_squares": 256,
+          "expected": 256,
+          "normalized_sum": "1/1"
+        },
+        "evidence_class": "finite_synthetic_same_owner",
+        "authority": false,
+        "external_calls": 0
+      },
+      "invalid_request": {
+        "op": "parseval_energy",
+        "input": {
+          "n": 4,
+          "truth": [
+            2,
+            0,
+            0,
+            1,
+            1,
+            1,
+            0,
+            0,
+            0,
+            0,
+            0,
+            1,
+            1,
+            0,
+            0,
+            0
+          ]
+        }
+      },
+      "expected_refusal": {
+        "ok": false,
+        "outcome": "open_gap",
+        "error": "ADMISSION_REFUSED",
+        "reason": "truth_values",
+        "subject_success_credit": 0,
+        "authority": false,
+        "external_calls": 0
+      },
+      "fresh_from_core_requests": true
+    },
+    {
+      "operation": "spectral_correlation",
+      "session": "x1",
+      "request": {
+        "op": "spectral_correlation",
+        "input": {
+          "n": 4,
+          "truth": [
+            0,
+            1,
+            0,
+            1,
+            0,
+            1,
+            0,
+            1,
+            0,
+            1,
+            0,
+            1,
+            1,
+            0,
+            0,
+            0
+          ],
+          "other": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            1,
+            0,
+            1,
+            0,
+            1,
+            0,
+            0,
+            1,
+            0,
+            0
+          ]
+        }
+      },
+      "expected": {
+        "ok": true,
+        "outcome": "completed",
+        "value": {
+          "unnormalized": -6,
+          "uniform_average": "-3/8",
+          "spectral_product_sum": -96,
+          "pearson_claim": false
+        },
+        "evidence_class": "finite_synthetic_same_owner",
+        "authority": false,
+        "external_calls": 0
+      },
+      "invalid_request": {
+        "op": "spectral_correlation",
+        "input": {
+          "n": 4,
+          "truth": [
+            2,
+            1,
+            0,
+            1,
+            0,
+            1,
+            0,
+            1,
+            0,
+            1,
+            0,
+            1,
+            1,
+            0,
+            0,
+            0
+          ],
+          "other": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            1,
+            0,
+            1,
+            0,
+            1,
+            0,
+            0,
+            1,
+            0,
+            0
+          ]
+        }
+      },
+      "expected_refusal": {
+        "ok": false,
+        "outcome": "open_gap",
+        "error": "ADMISSION_REFUSED",
+        "reason": "truth_values",
+        "subject_success_credit": 0,
+        "authority": false,
+        "external_calls": 0
+      },
+      "fresh_from_core_requests": true
+    },
+    {
+      "operation": "closest_affine",
+      "session": "x1",
+      "request": {
+        "op": "closest_affine",
+        "input": {
+          "n": 4,
+          "truth": [
+            1,
+            1,
+            0,
+            1,
+            1,
+            0,
+            0,
+            0,
+            1,
+            0,
+            1,
+            1,
+            1,
+            0,
+            0,
+            0
+          ]
+        }
+      },
+      "expected": {
+        "ok": true,
+        "outcome": "completed",
+        "value": {
+          "minimum_distance": 4,
+          "minimizers": [
+            {
+              "mask": 3,
+              "constant": 1,
+              "distance": 4
+            },
+            {
+              "mask": 4,
+              "constant": 1,
+              "distance": 4
+            }
+          ],
+          "all_affine_candidates_examined": 32
+        },
+        "evidence_class": "finite_synthetic_same_owner",
+        "authority": false,
+        "external_calls": 0
+      },
+      "invalid_request": {
+        "op": "closest_affine",
+        "input": {
+          "n": 4,
+          "truth": [
+            2,
+            1,
+            0,
+            1,
+            1,
+            0,
+            0,
+            0,
+            1,
+            0,
+            1,
+            1,
+            1,
+            0,
+            0,
+            0
+          ]
+        }
+      },
+      "expected_refusal": {
+        "ok": false,
+        "outcome": "open_gap",
+        "error": "ADMISSION_REFUSED",
+        "reason": "truth_values",
+        "subject_success_credit": 0,
+        "authority": false,
+        "external_calls": 0
+      },
+      "fresh_from_core_requests": true
+    },
+    {
+      "operation": "nonlinearity",
+      "session": "x1",
+      "request": {
+        "op": "nonlinearity",
+        "input": {
+          "n": 4,
+          "truth": [
+            0,
+            0,
+            1,
+            1,
+            0,
+            0,
+            0,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            0,
+            0,
+            0
+          ]
+        }
+      },
+      "expected": {
+        "ok": true,
+        "outcome": "completed",
+        "value": {
+          "minimum_hamming_distance": 4,
+          "maximum_absolute_walsh": 8,
+          "production_security_claim": false
+        },
+        "evidence_class": "finite_synthetic_same_owner",
+        "authority": false,
+        "external_calls": 0
+      },
+      "invalid_request": {
+        "op": "nonlinearity",
+        "input": {
+          "n": 4,
+          "truth": [
+            2,
+            0,
+            1,
+            1,
+            0,
+            0,
+            0,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            0,
+            0,
+            0
+          ]
+        }
+      },
+      "expected_refusal": {
+        "ok": false,
+        "outcome": "open_gap",
+        "error": "ADMISSION_REFUSED",
+        "reason": "truth_values",
+        "subject_success_credit": 0,
+        "authority": false,
+        "external_calls": 0
+      },
+      "fresh_from_core_requests": true
+    },
+    {
+      "operation": "balancedness",
+      "session": "x1",
+      "request": {
+        "op": "balancedness",
+        "input": {
+          "n": 4,
+          "truth": [
+            1,
+            0,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            0,
+            0,
+            0,
+            0,
+            1,
+            0,
+            0
+          ]
+        }
+      },
+      "expected": {
+        "ok": true,
+        "outcome": "completed",
+        "value": {
+          "ones": 9,
+          "zeros": 7,
+          "walsh_zero": -2,
+          "balanced": false
+        },
+        "evidence_class": "finite_synthetic_same_owner",
+        "authority": false,
+        "external_calls": 0
+      },
+      "invalid_request": {
+        "op": "balancedness",
+        "input": {
+          "n": 4,
+          "truth": [
+            2,
+            0,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            0,
+            0,
+            0,
+            0,
+            1,
+            0,
+            0
+          ]
+        }
+      },
+      "expected_refusal": {
+        "ok": false,
+        "outcome": "open_gap",
+        "error": "ADMISSION_REFUSED",
+        "reason": "truth_values",
+        "subject_success_credit": 0,
+        "authority": false,
+        "external_calls": 0
+      },
+      "fresh_from_core_requests": true
+    },
+    {
+      "operation": "autocorrelation",
+      "session": "x1",
+      "request": {
+        "op": "autocorrelation",
+        "input": {
+          "n": 4,
+          "truth": [
+            0,
+            1,
+            1,
+            1,
+            0,
+            1,
+            1,
+            0,
+            0,
+            0,
+            1,
+            0,
+            0,
+            1,
+            0,
+            0
+          ]
+        }
+      },
+      "expected": {
+        "ok": true,
+        "outcome": "completed",
+        "value": {
+          "autocorrelation": [
+            16,
+            -4,
+            -4,
+            4,
+            4,
+            -4,
+            -4,
+            12,
+            4,
+            -4,
+            -12,
+            4,
+            4,
+            -12,
+            -4,
+            4
+          ],
+          "zero_direction": 16,
+          "normalization": "unnormalized_signed_sum"
+        },
+        "evidence_class": "finite_synthetic_same_owner",
+        "authority": false,
+        "external_calls": 0
+      },
+      "invalid_request": {
+        "op": "autocorrelation",
+        "input": {
+          "n": 4,
+          "truth": [
+            2,
+            1,
+            1,
+            1,
+            0,
+            1,
+            1,
+            0,
+            0,
+            0,
+            1,
+            0,
+            0,
+            1,
+            0,
+            0
+          ]
+        }
+      },
+      "expected_refusal": {
+        "ok": false,
+        "outcome": "open_gap",
+        "error": "ADMISSION_REFUSED",
+        "reason": "truth_values",
+        "subject_success_credit": 0,
+        "authority": false,
+        "external_calls": 0
+      },
+      "fresh_from_core_requests": true
+    },
+    {
+      "operation": "derivative_profile",
+      "session": "x1",
+      "request": {
+        "op": "derivative_profile",
+        "input": {
+          "n": 4,
+          "truth": [
+            1,
+            1,
+            1,
+            1,
+            1,
+            0,
+            1,
+            1,
+            0,
+            1,
+            1,
+            0,
+            0,
+            1,
+            0,
+            0
+          ]
+        }
+      },
+      "expected": {
+        "ok": true,
+        "outcome": "completed",
+        "value": {
+          "weights": [
+            0,
+            8,
+            8,
+            4,
+            4,
+            8,
+            8,
+            4,
+            12,
+            8,
+            8,
+            8,
+            12,
+            8,
+            8,
+            12
+          ],
+          "zero_direction_included": true
+        },
+        "evidence_class": "finite_synthetic_same_owner",
+        "authority": false,
+        "external_calls": 0
+      },
+      "invalid_request": {
+        "op": "derivative_profile",
+        "input": {
+          "n": 4,
+          "truth": [
+            2,
+            1,
+            1,
+            1,
+            1,
+            0,
+            1,
+            1,
+            0,
+            1,
+            1,
+            0,
+            0,
+            1,
+            0,
+            0
+          ]
+        }
+      },
+      "expected_refusal": {
+        "ok": false,
+        "outcome": "open_gap",
+        "error": "ADMISSION_REFUSED",
+        "reason": "truth_values",
+        "subject_success_credit": 0,
+        "authority": false,
+        "external_calls": 0
+      },
+      "fresh_from_core_requests": true
+    },
+    {
+      "operation": "affine_covariance",
+      "session": "x1",
+      "request": {
+        "op": "affine_covariance",
+        "input": {
+          "n": 4,
+          "truth": [
+            0,
+            0,
+            0,
+            0,
+            1,
+            0,
+            1,
+            0,
+            1,
+            0,
+            0,
+            1,
+            0,
+            1,
+            0,
+            0
+          ],
+          "shift": 7,
+          "linear_mask": 12,
+          "constant": 0
+        }
+      },
+      "expected": {
+        "ok": true,
+        "outcome": "completed",
+        "value": {
+          "transformed_truth": [
+            0,
+            1,
+            0,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            0,
+            1,
+            1,
+            0,
+            0,
+            1
+          ],
+          "transformed_walsh": [
+            -6,
+            6,
+            -2,
+            -6,
+            2,
+            6,
+            -2,
+            2,
+            -2,
+            2,
+            2,
+            6,
+            6,
+            2,
+            2,
+            -2
+          ],
+          "map": "input_xor_then_linear_output_xor"
+        },
+        "evidence_class": "finite_synthetic_same_owner",
+        "authority": false,
+        "external_calls": 0
+      },
+      "invalid_request": {
+        "op": "affine_covariance",
+        "input": {
+          "n": 4,
+          "truth": [
+            2,
+            0,
+            0,
+            0,
+            1,
+            0,
+            1,
+            0,
+            1,
+            0,
+            0,
+            1,
+            0,
+            1,
+            0,
+            0
+          ],
+          "shift": 7,
+          "linear_mask": 12,
+          "constant": 0
+        }
+      },
+      "expected_refusal": {
+        "ok": false,
+        "outcome": "open_gap",
+        "error": "ADMISSION_REFUSED",
+        "reason": "truth_values",
+        "subject_success_credit": 0,
+        "authority": false,
+        "external_calls": 0
+      },
+      "fresh_from_core_requests": true
+    },
+    {
+      "operation": "anf_coefficients",
+      "session": "x2",
+      "request": {
+        "op": "anf_coefficients",
+        "input": {
+          "n": 4,
+          "truth": [
+            1,
+            0,
+            0,
+            0,
+            0,
+            0,
+            1,
+            1,
+            1,
+            1,
+            0,
+            1,
+            0,
+            1,
+            0,
+            0
+          ]
+        }
+      },
+      "expected": {
+        "ok": true,
+        "outcome": "completed",
+        "value": {
+          "coefficients": [
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            0,
+            1,
+            0,
+            1,
+            0,
+            0,
+            0,
+            0,
+            1,
+            1
+          ],
+          "monomial_masks": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            7,
+            9,
+            14,
+            15
+          ],
+          "field": "GF2"
+        },
+        "evidence_class": "finite_synthetic_same_owner",
+        "authority": false,
+        "external_calls": 0
+      },
+      "invalid_request": {
+        "op": "anf_coefficients",
+        "input": {
+          "n": 4,
+          "truth": [
+            2,
+            0,
+            0,
+            0,
+            0,
+            0,
+            1,
+            1,
+            1,
+            1,
+            0,
+            1,
+            0,
+            1,
+            0,
+            0
+          ]
+        }
+      },
+      "expected_refusal": {
+        "ok": false,
+        "outcome": "open_gap",
+        "error": "ADMISSION_REFUSED",
+        "reason": "truth_values",
+        "subject_success_credit": 0,
+        "authority": false,
+        "external_calls": 0
+      },
+      "fresh_from_core_requests": true
+    },
+    {
+      "operation": "algebraic_degree",
+      "session": "x2",
+      "request": {
+        "op": "algebraic_degree",
+        "input": {
+          "n": 4,
+          "truth": [
+            0,
+            1,
+            0,
+            0,
+            1,
+            1,
+            0,
+            0,
+            0,
+            1,
+            1,
+            1,
+            0,
+            1,
+            0,
+            0
+          ]
+        }
+      },
+      "expected": {
+        "ok": true,
+        "outcome": "completed",
+        "value": {
+          "degree": 4,
+          "zero_polynomial": false,
+          "degree_convention": "null_for_zero"
+        },
+        "evidence_class": "finite_synthetic_same_owner",
+        "authority": false,
+        "external_calls": 0
+      },
+      "invalid_request": {
+        "op": "algebraic_degree",
+        "input": {
+          "n": 4,
+          "truth": [
+            2,
+            1,
+            0,
+            0,
+            1,
+            1,
+            0,
+            0,
+            0,
+            1,
+            1,
+            1,
+            0,
+            1,
+            0,
+            0
+          ]
+        }
+      },
+      "expected_refusal": {
+        "ok": false,
+        "outcome": "open_gap",
+        "error": "ADMISSION_REFUSED",
+        "reason": "truth_values",
+        "subject_success_credit": 0,
+        "authority": false,
+        "external_calls": 0
+      },
+      "fresh_from_core_requests": true
+    },
+    {
+      "operation": "xor_convolution",
+      "session": "x2",
+      "request": {
+        "op": "xor_convolution",
+        "input": {
+          "n": 4,
+          "truth": [
+            1,
+            1,
+            0,
+            0,
+            0,
+            1,
+            0,
+            1,
+            0,
+            0,
+            0,
+            0,
+            1,
+            1,
+            0,
+            0
+          ],
+          "other": [
+            1,
+            1,
+            0,
+            1,
+            1,
+            0,
+            0,
+            1,
+            1,
+            1,
+            1,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        }
+      },
+      "expected": {
+        "ok": true,
+        "outcome": "completed",
+        "value": {
+          "xor_truth": [
+            0,
+            0,
+            0,
+            1,
+            1,
+            1,
+            0,
+            0,
+            1,
+            1,
+            1,
+            0,
+            1,
+            1,
+            0,
+            0
+          ],
+          "xor_walsh": [
+            0,
+            0,
+            -8,
+            0,
+            0,
+            0,
+            8,
+            0,
+            4,
+            4,
+            4,
+            -4,
+            4,
+            4,
+            4,
+            -4
+          ],
+          "convolution_divisor": 16
+        },
+        "evidence_class": "finite_synthetic_same_owner",
+        "authority": false,
+        "external_calls": 0
+      },
+      "invalid_request": {
+        "op": "xor_convolution",
+        "input": {
+          "n": 4,
+          "truth": [
+            2,
+            1,
+            0,
+            0,
+            0,
+            1,
+            0,
+            1,
+            0,
+            0,
+            0,
+            0,
+            1,
+            1,
+            0,
+            0
+          ],
+          "other": [
+            1,
+            1,
+            0,
+            1,
+            1,
+            0,
+            0,
+            1,
+            1,
+            1,
+            1,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        }
+      },
+      "expected_refusal": {
+        "ok": false,
+        "outcome": "open_gap",
+        "error": "ADMISSION_REFUSED",
+        "reason": "truth_values",
+        "subject_success_credit": 0,
+        "authority": false,
+        "external_calls": 0
+      },
+      "fresh_from_core_requests": true
+    },
+    {
+      "operation": "bentness",
+      "session": "x2",
+      "request": {
+        "op": "bentness",
+        "input": {
+          "n": 4,
+          "truth": [
+            0,
+            0,
+            1,
+            0,
+            1,
+            0,
+            0,
+            0,
+            1,
+            1,
+            0,
+            0,
+            1,
+            1,
+            0,
+            0
+          ]
+        }
+      },
+      "expected": {
+        "ok": true,
+        "outcome": "completed",
+        "value": {
+          "bent": false,
+          "even_dimension": true,
+          "absolute_spectrum": [
+            0,
+            4,
+            8
+          ],
+          "cryptographic_deployment_approved": false
+        },
+        "evidence_class": "finite_synthetic_same_owner",
+        "authority": false,
+        "external_calls": 0
+      },
+      "invalid_request": {
+        "op": "bentness",
+        "input": {
+          "n": 4,
+          "truth": [
+            2,
+            0,
+            1,
+            0,
+            1,
+            0,
+            0,
+            0,
+            1,
+            1,
+            0,
+            0,
+            1,
+            1,
+            0,
+            0
+          ]
+        }
+      },
+      "expected_refusal": {
+        "ok": false,
+        "outcome": "open_gap",
+        "error": "ADMISSION_REFUSED",
+        "reason": "truth_values",
+        "subject_success_credit": 0,
+        "authority": false,
+        "external_calls": 0
+      },
+      "fresh_from_core_requests": true
+    },
+    {
+      "operation": "correlation_immunity",
+      "session": "x2",
+      "request": {
+        "op": "correlation_immunity",
+        "input": {
+          "n": 4,
+          "truth": [
+            1,
+            0,
+            1,
+            0,
+            0,
+            0,
+            0,
+            1,
+            1,
+            0,
+            1,
+            0,
+            1,
+            1,
+            0,
+            0
+          ]
+        }
+      },
+      "expected": {
+        "ok": true,
+        "outcome": "completed",
+        "value": {
+          "correlation_immunity_order": 0,
+          "balanced": false,
+          "resiliency_order": null,
+          "distribution": "uniform_declared_finite_cube"
+        },
+        "evidence_class": "finite_synthetic_same_owner",
+        "authority": false,
+        "external_calls": 0
+      },
+      "invalid_request": {
+        "op": "correlation_immunity",
+        "input": {
+          "n": 4,
+          "truth": [
+            2,
+            0,
+            1,
+            0,
+            0,
+            0,
+            0,
+            1,
+            1,
+            0,
+            1,
+            0,
+            1,
+            1,
+            0,
+            0
+          ]
+        }
+      },
+      "expected_refusal": {
+        "ok": false,
+        "outcome": "open_gap",
+        "error": "ADMISSION_REFUSED",
+        "reason": "truth_values",
+        "subject_success_credit": 0,
+        "authority": false,
+        "external_calls": 0
+      },
+      "fresh_from_core_requests": true
+    },
+    {
+      "operation": "linear_structures",
+      "session": "x2",
+      "request": {
+        "op": "linear_structures",
+        "input": {
+          "n": 4,
+          "truth": [
+            0,
+            1,
+            1,
+            0,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            0,
+            1,
+            1,
+            0,
+            0
+          ]
+        }
+      },
+      "expected": {
+        "ok": true,
+        "outcome": "completed",
+        "value": {
+          "structures": [
+            {
+              "direction": 0,
+              "derivative_constant": 0
+            }
+          ],
+          "zero_direction_included": true
+        },
+        "evidence_class": "finite_synthetic_same_owner",
+        "authority": false,
+        "external_calls": 0
+      },
+      "invalid_request": {
+        "op": "linear_structures",
+        "input": {
+          "n": 4,
+          "truth": [
+            2,
+            1,
+            1,
+            0,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            0,
+            1,
+            1,
+            0,
+            0
+          ]
+        }
+      },
+      "expected_refusal": {
+        "ok": false,
+        "outcome": "open_gap",
+        "error": "ADMISSION_REFUSED",
+        "reason": "truth_values",
+        "subject_success_credit": 0,
+        "authority": false,
+        "external_calls": 0
+      },
+      "fresh_from_core_requests": true
+    },
+    {
+      "operation": "restriction_spectrum",
+      "session": "x2",
+      "request": {
+        "op": "restriction_spectrum",
+        "input": {
+          "n": 4,
+          "truth": [
+            1,
+            1,
+            1,
+            0,
+            0,
+            1,
+            1,
+            0,
+            0,
+            1,
+            0,
+            1,
+            1,
+            1,
+            0,
+            0
+          ],
+          "coordinate": 1,
+          "value": 0
+        }
+      },
+      "expected": {
+        "ok": true,
+        "outcome": "completed",
+        "value": {
+          "remaining_dimension": 3,
+          "restricted_truth": [
+            1,
+            1,
+            0,
+            1,
+            0,
+            1,
+            1,
+            1
+          ],
+          "restricted_walsh": [
+            -4,
+            4,
+            0,
+            0,
+            0,
+            0,
+            -4,
+            -4
+          ],
+          "remaining_order": "original_order_without_fixed_coordinate"
+        },
+        "evidence_class": "finite_synthetic_same_owner",
+        "authority": false,
+        "external_calls": 0
+      },
+      "invalid_request": {
+        "op": "restriction_spectrum",
+        "input": {
+          "n": 4,
+          "truth": [
+            2,
+            1,
+            1,
+            0,
+            0,
+            1,
+            1,
+            0,
+            0,
+            1,
+            0,
+            1,
+            1,
+            1,
+            0,
+            0
+          ],
+          "coordinate": 1,
+          "value": 0
+        }
+      },
+      "expected_refusal": {
+        "ok": false,
+        "outcome": "open_gap",
+        "error": "ADMISSION_REFUSED",
+        "reason": "truth_values",
+        "subject_success_credit": 0,
+        "authority": false,
+        "external_calls": 0
+      },
+      "fresh_from_core_requests": true
+    },
+    {
+      "operation": "structural_bridge",
+      "session": "x2",
+      "request": {
+        "op": "structural_bridge",
+        "input": {
+          "n": 4,
+          "truth": [
+            0,
+            0,
+            0,
+            1,
+            1,
+            0,
+            1,
+            1,
+            0,
+            0,
+            1,
+            1,
+            1,
+            1,
+            0,
+            0
+          ]
+        }
+      },
+      "expected": {
+        "ok": true,
+        "outcome": "represented",
+        "value": {
+          "walsh": [
+            0,
+            0,
+            4,
+            -4,
+            4,
+            4,
+            8,
+            0,
+            0,
+            0,
+            4,
+            -4,
+            4,
+            4,
+            -8,
+            0
+          ],
+          "analogy": "finite_character_decomposition",
+          "frequency_unit": "algebraic_mask_not_hertz",
+          "physical_mapping": null,
+          "empirical_confirmation": false
+        },
+        "evidence_class": "finite_synthetic_same_owner",
+        "authority": false,
+        "external_calls": 0
+      },
+      "invalid_request": {
+        "op": "structural_bridge",
+        "input": {
+          "n": 4,
+          "truth": [
+            2,
+            0,
+            0,
+            1,
+            1,
+            0,
+            1,
+            1,
+            0,
+            0,
+            1,
+            1,
+            1,
+            1,
+            0,
+            0
+          ]
+        }
+      },
+      "expected_refusal": {
+        "ok": false,
+        "outcome": "open_gap",
+        "error": "ADMISSION_REFUSED",
+        "reason": "truth_values",
+        "subject_success_credit": 0,
+        "authority": false,
+        "external_calls": 0
+      },
+      "fresh_from_core_requests": true
+    },
+    {
+      "operation": "observation_gap",
+      "session": "x2",
+      "request": {
+        "op": "observation_gap",
+        "input": {
+          "n": 4,
+          "truth": [
+            1,
+            0,
+            0,
+            1,
+            0,
+            0,
+            1,
+            0,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            0,
+            0
+          ]
+        }
+      },
+      "expected": {
+        "ok": true,
+        "outcome": "open_gap",
+        "value": {
+          "model_dimension": 4,
+          "declared_truth": [
+            1,
+            0,
+            0,
+            1,
+            0,
+            0,
+            1,
+            0,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            0,
+            0
+          ],
+          "observation_rows": 0,
+          "people": 0,
+          "physical_systems": 0,
+          "missing": [
+            "governed_observations",
+            "calibration",
+            "independent_comparison"
+          ],
+          "empirical_confirmation": false
+        },
+        "evidence_class": "finite_synthetic_same_owner",
+        "authority": false,
+        "external_calls": 0
+      },
+      "invalid_request": {
+        "op": "observation_gap",
+        "input": {
+          "n": 4,
+          "truth": [
+            2,
+            0,
+            0,
+            1,
+            0,
+            0,
+            1,
+            0,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            0,
+            0
+          ]
+        }
+      },
+      "expected_refusal": {
+        "ok": false,
+        "outcome": "open_gap",
+        "error": "ADMISSION_REFUSED",
+        "reason": "truth_values",
+        "subject_success_credit": 0,
+        "authority": false,
+        "external_calls": 0
+      },
+      "fresh_from_core_requests": true
+    },
+    {
+      "operation": "authority_gate",
+      "session": "x2",
+      "request": {
+        "op": "authority_gate",
+        "input": {
+          "n": 4,
+          "truth": [
+            0,
+            1,
+            0,
+            1,
+            1,
+            1,
+            0,
+            1,
+            1,
+            0,
+            0,
+            0,
+            0,
+            0,
+            1,
+            0
+          ],
+          "action": "real_security_deployment"
+        }
+      },
+      "expected": {
+        "ok": true,
+        "outcome": "exact_gate",
+        "value": {
+          "model_dimension": 4,
+          "declared_truth": [
+            0,
+            1,
+            0,
+            1,
+            1,
+            1,
+            0,
+            1,
+            1,
+            0,
+            0,
+            0,
+            0,
+            0,
+            1,
+            0
+          ],
+          "action": "real_security_deployment",
+          "executed": false,
+          "verified_authority": false,
+          "required": [
+            "exact_governed_target",
+            "competent_affected_authority",
+            "consent_and_safety",
+            "recovery_and_review"
+          ]
+        },
+        "evidence_class": "finite_synthetic_same_owner",
+        "authority": false,
+        "external_calls": 0
+      },
+      "invalid_request": {
+        "op": "authority_gate",
+        "input": {
+          "n": 4,
+          "truth": [
+            2,
+            1,
+            0,
+            1,
+            1,
+            1,
+            0,
+            1,
+            1,
+            0,
+            0,
+            0,
+            0,
+            0,
+            1,
+            0
+          ],
+          "action": "real_security_deployment"
+        }
+      },
+      "expected_refusal": {
+        "ok": false,
+        "outcome": "open_gap",
+        "error": "ADMISSION_REFUSED",
+        "reason": "truth_values",
+        "subject_success_credit": 0,
+        "authority": false,
+        "external_calls": 0
+      },
+      "fresh_from_core_requests": true
+    }
+  ],
+  "production_observations": 0
+}
