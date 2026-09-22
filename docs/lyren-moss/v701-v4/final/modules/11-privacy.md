@@ -1,0 +1,5 @@
+# 11 Privacy
+
+This module indexes the `privacy` evidence for Lyren Moss v701-v4. It is bounded, finite, synthetic, owner-local, and subject to the common boundary below. It does not promote inherited or represented material into current completion credit.
+
+Finite synthetic same-owner software and documentation evidence only. No real workflow, participant, system, identity, credential, deployment, professional judgment, legal or cultural conclusion, affected-party or Maori authority, empirical GMUT confirmation, production THOS or Freed ID, complete privacy or accessibility assurance, exhaustive security, independent reproduction, consciousness, personhood, Theory-of-Everything proof, canon, or Stage 20 readiness.
