@@ -1,0 +1,61 @@
+"""Retain an over-budget preparation failure and correct only its document projection."""
+import sys,json,copy,hashlib,runpy,subprocess,re
+from pathlib import Path
+ROOT=Path(__file__).resolve().parent.parent;REPO=ROOT.parents[2];CONTROL=Path(sys.argv[1]);BANK=Path(sys.argv[2]);OLD='9225d28090c6fe9634e5972e8b46de89c9605f17'
+def raw(x):return (json.dumps(x,sort_keys=True,ensure_ascii=False,indent=2)+'\n').encode()
+def sha(b):return hashlib.sha256(b).hexdigest()
+def read(n):return json.loads((ROOT/n).read_text(encoding='utf-8'))
+def put(n,x):
+ p=(ROOT/n).resolve();assert p.is_relative_to(ROOT.resolve()) and n.startswith('final/')
+ p.parent.mkdir(parents=True,exist_ok=True);p.write_bytes(x.encode() if isinstance(x,str) else raw(x))
+def git(*args):return subprocess.check_output(['git','-C',str(REPO),'-c','maintenance.auto=false','-c','gc.auto=0',*args])
+assert git('rev-parse','HEAD').decode().strip()==OLD
+assert json.loads((BANK/'final-equality.json').read_text())['head']==OLD
+assert not (BANK/'canonical-invocation.json').exists()
+path='docs/ilyan-reed/v701-v3/final/method-flow.json'
+before=git('show',OLD+':'+path);original=json.loads(before);old_words=len(before.decode().split());assert old_words==189704
+ledger=copy.deepcopy(original);B=ledger['boundary'];marker='$ledger.boundary'
+for w in ledger['witnesses']:w['boundary']=marker
+ledger['boundary_reference_semantics']='Every witness boundary token $ledger.boundary refers exactly to this document top-level boundary string.'
+for a,b in zip(original['witnesses'],ledger['witnesses']):
+ expanded=copy.deepcopy(b);expanded['boundary']=ledger['boundary'];assert expanded==a
+mid='IR7013-M-WORD-BUDGET';nid='IR7013-DOC01';ids=[mid+'-W01',mid+'-W02']
+for wid,passed,procedure,observed in [(ids[0],False,'Review first final document against the inherited 100000-word ceiling',dict(words=old_words,limit=100000,prepared_final=OLD)),(ids[1],True,'Resolve repeated boundary references and preserve every prior witness','All prior witnesses preserve their exact meaning; all current documents meet the word ceiling.')]:
+ ledger['witnesses'].append(dict(witness_id=wid,method_id=mid,procedure=procedure,scope='final Method Flow document projection',expected='At most 100000 words without evidence erasure',observed=observed,result='pass' if passed else 'fail',same_owner_only=True,independent_reproduction=False,retained_negative_ids=[nid],boundary=marker))
+ledger['methods'].append(dict(method_id=mid,title='Non-erasing final document word-budget correction',failure_signature='Combined ledger exceeded the inherited per-document word ceiling',trigger_preconditions=['first final snapshot retained','no canonical invoked','exact prior witness comparison'],privacy_class='sanitized_public',approval_class='safe_now_owner_document_correction',candidate_workaround='Replace repeated witness boundary sentences by an explicit reference to the unchanged top-level boundary',validation_witness_ids=ids,recurrence_guard='Count words in every current phase file before terminal validation',rollback='Retain original prepared final in Git and mark a mismatching projection unavailable',recommendation_state='validated',supersedes=[],protected_gates=['evidence_nonerasure','authority','independent_reproduction','Stage_20'],retained_negative_ids=[nid],scope_boundary=B,execution_authority='owner_self_scoped_delta',repository_scan=False,module_scan=False,cross_lane_scan=False,unchanged_history_scan=False,sibling_lane_mutation=False,changed_file_allowlist=[path],module_allowlist=[],source_commit=OLD,final_commit='external_corrected_final_receipt',exact_pushed_head_required=True))
+mod=runpy.run_path(str(CONTROL/'ghc-family-method-flow-state/scripts/ghc_family_method_flow_state.py'));mod['refresh_counts'](ledger);validation=mod['validate_ledger'](ledger);assert validation['valid'],validation
+after=raw(ledger);new_words=len(after.decode().split());assert new_words<100000
+put('final/method-flow.json',ledger);put('final/method-flow-validation.json',validation)
+neg=read('final/retained-negative-index.json');assert not any(x['negative_id']==nid for x in neg['records'])
+neg['records'].append(dict(negative_id=nid,kind='document_word_budget_failure',original_success_credit=0,detail='First final ledger had 189704 whitespace words; original Git snapshot is retained.',source_prepared_final=OLD));neg['count']=len(neg['records']);put('final/retained-negative-index.json',neg)
+flow=read('final/method-flow-index.json');old_owner=copy.deepcopy(flow['owner'])
+owner=dict(methods=len(ledger['methods']),witnesses=len(ledger['witnesses']),passing_witnesses=sum(x['result']=='pass' for x in ledger['witnesses']),failed_witnesses=sum(x['result']=='fail' for x in ledger['witnesses']),retained_negatives=len(neg['records']),open_gaps=32,exact_gates=35)
+flow['owner']=owner;flow['effective']={k:flow['source_effective'][k]+owner[k] for k in owner};put('final/method-flow-index.json',flow)
+note=' The first final combined ledger exceeded the per-document word ceiling. Its committed bytes remain historical evidence. An additive correction replaces repeated witness boundary sentences with explicit references to the unchanged ledger boundary, while preserving every prior witness and adding this failure and recovery. No domain contract, successful test or canonical was replayed.'
+module=(ROOT/'final/modules/10.md').read_text();anchor='Recovery never erases the original observation.';assert anchor in module;new_module=module.replace(anchor,anchor+note);put('final/modules/10.md',new_module)
+baton=(ROOT/'final/hand-off-baton.md').read_text();assert module in baton;baton=baton.replace(module,new_module);put('final/hand-off-baton.md',baton)
+bi=read('final/baton-index.json');bi.update(words=len(baton.split()),bytes=len(baton.encode()),sha256=sha(baton.encode()));put('final/baton-index.json',bi)
+overview=(ROOT/'final/overview.md').read_text();overview=overview.replace(json.dumps(old_owner,sort_keys=True),json.dumps(owner,sort_keys=True));overview+='\nThe first final combined ledger exceeded the per-document word ceiling. The original prepared commit remains in history. The current ledger resolves every witness boundary reference to the unchanged top-level boundary, preserving all original witness fields and adding the failed budget check and its recovery.\n';put('final/overview.md',overview)
+truth=read('final/phase-truth.json');truth['prepared_final_retained']=OLD;truth['document_correction_without_domain_replay']=True;put('final/phase-truth.json',truth)
+source=read('final/source-faithful-ledger.json');source['owner_prepared_final_document_failure']=dict(commit=OLD,path=path,words=old_words,original_success_credit=0,corrected_current_projection=True,history_erased=False);put('final/source-faithful-ledger.json',source)
+checklist=read('final/complete-incomplete-checklist.json');checklist['completed'].append('non-erasing document word-budget correction');put('final/complete-incomplete-checklist.json',checklist)
+limits_path=CONTROL/'ghc-family-index/references/current-workflow-v12.json';limits_raw=limits_path.read_bytes();limits=json.loads(limits_raw)['limits']
+put('final/workload-compliance.json',dict(numeric_source='ghc-family-index/references/current-workflow-v12.json',source_sha256=sha(limits_raw),current_v15_route_and_activation_scope_control=True,limits=limits,observed=dict(inherited=300,new=600,safe_x1=300,safe_x2=300,candidate_x1=300,candidate_x2=300,CFR_x1=300,CFR_x2=300,local_skills_x1=10,local_skills_x2=10,paired_callers_x1=5,paired_callers_x2=5,x2_cached_property_tests=10,x2_paired_caller_tests=5,x2_curated_caller_tests=5,x2_test_count_excluding_metadata_validation=20,models=5,own_practices=8,next_practices=4,exact_packet_descriptions=50,blocked_packet_descriptions=30,curated_pairs_held=5,spend_usd=0),boundary=B))
+put('final/document-correction.json',dict(failure_id=nid,prepared_final=OLD,original_ledger_sha256=sha(before),original_words=old_words,current_words=new_words,previous_witnesses=len(original['witnesses']),preserved_previous_witnesses=len(original['witnesses']),boundary_resolution_equivalence=True,prior_methods_preserved=len(original['methods']),prior_negative_ids_preserved=641,domain_contract_replays=0,test_replays=0,canonical_invocations_before_correction=0,canonical_replays=0,owner=owner,boundary=B))
+# Rebuild inventory and byte seals only; successful domain and interface evidence remains unchanged.
+extras=['final/word-budget-review.json']
+allpaths=sorted(set([p.relative_to(ROOT).as_posix() for p in ROOT.rglob('*') if p.is_file()]+extras))
+put('final/allowlist.json',dict(paths=['docs/ilyan-reed/v701-v3/'+p for p in allpaths],scope='new owner phase additions with non-erasing final document correction'))
+word_rows=[]
+for p in sorted(ROOT.rglob('*')):
+ if not p.is_file() or p.name in {'word-budget-review.json','content-seal.json','manifest.json'}:continue
+ b=p.read_bytes();words=len(b.decode().split());assert words<=100000,(p.name,words)
+ word_rows.append(dict(path=p.relative_to(ROOT).as_posix(),words=words,bytes=len(b)))
+put('final/word-budget-review.json',dict(limit=100000,current_documents_within_limit=True,documents=word_rows,largest_current_document_words=max(x['words'] for x in word_rows),old_over_budget_snapshot_retained=OLD,seal_and_inventory_documents_are_bounded_metadata=True,boundary=B))
+privacy=read('final/privacy-review.json');privacy['owner_document_projection_corrected']=True;privacy['current_phase_files']=len(allpaths);put('final/privacy-review.json',privacy)
+files=sorted(p for p in ROOT.rglob('*') if p.is_file() and p.relative_to(ROOT).as_posix() not in {'final/content-seal.json','final/manifest.json'})
+put('final/content-seal.json',dict(excluded=['final/content-seal.json','final/manifest.json'],entries=[dict(path=p.relative_to(REPO).as_posix(),bytes=len(p.read_bytes()),sha256=sha(p.read_bytes())) for p in files],boundary=B))
+files=sorted(p for p in (ROOT/'final').rglob('*') if p.is_file() and p.name!='manifest.json')
+put('final/manifest.json',dict(byte_domain='exact_git_blob_utf8_lf',self_excluded=True,entries=[dict(path=p.relative_to(REPO).as_posix(),bytes=len(p.read_bytes()),sha256=sha(p.read_bytes())) for p in files]))
+print(json.dumps(dict(state='DOCUMENT_CORRECTION_PREPARED',ledger_words=new_words,owner=owner,effective=flow['effective'],baton_words=bi['words'],phase_files=len(allpaths),domain_replay=False,canonical_invoked=False)),flush=True)
+
