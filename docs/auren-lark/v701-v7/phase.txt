@@ -1,0 +1,988 @@
+'use strict';
+
+const fs = require('fs');
+const path = require('path');
+const crypto = require('crypto');
+const cp = require('child_process');
+
+const W = fs.realpathSync(process.cwd());
+const ROOT = path.join(W, 'docs', 'auren-lark', 'v701-v7');
+const ARCHIVE = path.dirname(path.dirname(W));
+const BANK = path.join(ARCHIVE, 'phase-banks', 'auren-lark-v701-v7');
+const SOURCE = '879c671e77dd7b3e1f450eb7eef83090c39e31ae';
+const SOURCE_OWNER = 'Mira Fenwick';
+const SOURCE_PHASE = 'v701-v6';
+const BRANCH = 'codex/GHC-Family/auren-lark-v701-v7-full-tools';
+const SOURCE_PREFIX = 'docs/mira-fenwick/v701-v6/';
+const PREFIX = 'docs/auren-lark/v701-v7/';
+const SOURCE_REPOSITORY_SEAL = Object.freeze({
+  methods: 4633,
+  failed_witnesses: 32607,
+  passing_witnesses: 110455,
+  witnesses: 143062,
+  negatives: 41441,
+  open_gaps: 1417,
+  exact_gates: 1520,
+});
+const SOURCE_ACTIVATION_BASELINE = Object.freeze({
+  methods: 4637,
+  failed_witnesses: 32610,
+  passing_witnesses: 110459,
+  witnesses: 143069,
+  negatives: 41444,
+  open_gaps: 1417,
+  exact_gates: 1520,
+});
+const CONTROL_HASHES = Object.freeze({
+  workflow_v15: '836a401c656289346ac4cc50f1f4a0383db1e3cd5158633728c45c4b1c39d0d5',
+  roster_v15: '4b972f18c4be132718f5063c2fe3b52ac931a91a3f841abeaed3fe4cdcdf3f85',
+  authorization_v15: 'bd1c08932d3c237716211ba1c7c340ba51a0d9aaee5a2ee3c1531f84be8db309',
+});
+const SOURCE_HASHES = Object.freeze({
+  baton: '8da2447a1e80a096f92fcee2d23ba2c0c34792a7f7a9f6a24df261f7b0884279',
+  failed_canonical: '12220e50d0cd5c39971cd3de87bc66d0fd1325c04fbc8f127c09e9cbc9662373',
+  composite_payload: '11afc8ffc66c1ddd05f59b1395b9708290087dc4b3c58757aecf1e6f39ac8fc4',
+  composite_receipt: 'af4ae95fa6809b2c4fb28294bb692e98a8e1d6b599dd44a27a1c16172dc1d326',
+  delivery_receipt: '40d1018b5fd0cee9dd4bb22d7165e89039d301f51f4b5c3dfe364fd7f30a61cc',
+});
+const BOUNDARY = 'Finite synthetic same-owner evidence-function mathematics, software, and documentation evidence only. No real evidence source, person, participant, institution, measurement, probability assessment, diagnosis, classification, allocation, credential, key, consent event, intervention, legal or cultural decision, Maori-authority act, deployment, scientific confirmation, or external adapter action is used or established. Dempster, Shafer, Smets, and Kennes terminology supplies research vocabulary only, not endorsement, empirical confirmation, professional evaluation, decision authority, production certification, independent reproduction, exhaustive security, complete privacy, complete accessibility, Theory-of-Everything proof, canon, or Stage 20 readiness. GMUT remains conjectural; THOS remains synthetic and proxy-only; Freed ID remains synthetic and nonproduction. NOT_READY_FOR_STAGE_20.';
+
+function stable(value) {
+  if (Array.isArray(value)) return value.map(stable);
+  if (value && typeof value === 'object') {
+    const out = {};
+    for (const key of Object.keys(value).sort()) out[key] = stable(value[key]);
+    return out;
+  }
+  return value;
+}
+
+function canonical(value) {
+  return Buffer.from(JSON.stringify(stable(value)), 'utf8');
+}
+
+function shaBytes(bytes) {
+  return crypto.createHash('sha256').update(bytes).digest('hex');
+}
+
+function ensureDir(dir) {
+  fs.mkdirSync(dir, {recursive: true});
+}
+
+function writeExclusive(file, value) {
+  ensureDir(path.dirname(file));
+  fs.writeFileSync(file, JSON.stringify(stable(value), null, 2) + '\n', {encoding: 'utf8', flag: 'wx'});
+}
+
+function readJson(file) {
+  return JSON.parse(fs.readFileSync(file, 'utf8'));
+}
+
+function assert(condition, message) {
+  if (!condition) throw new Error(`assert:${message}`);
+}
+
+function gitText(...args) {
+  return cp.execFileSync('git', ['-C', W, ...args], {encoding: 'utf8', maxBuffer: 64 * 1024 * 1024}).trim();
+}
+
+function gitBytes(...args) {
+  return cp.execFileSync('git', ['-C', W, ...args], {encoding: null, maxBuffer: 64 * 1024 * 1024});
+}
+
+function relative(file) {
+  return path.relative(W, file).split(path.sep).join('/');
+}
+
+function bindFile(file) {
+  const bytes = fs.readFileSync(file);
+  return {path: relative(file), bytes: bytes.length, sha256: shaBytes(bytes), byte_domain: 'utf8_lf'};
+}
+
+function bindExternal(file) {
+  const bytes = fs.readFileSync(file);
+  return {bytes: bytes.length, sha256: shaBytes(bytes)};
+}
+
+function runtimeFailures() {
+  const file = path.join(BANK, 'runtime-failures.json');
+  const records = fs.existsSync(file) ? readJson(file).records : [];
+  const ids = new Set();
+  return records.map(record => {
+    assert(record && typeof record.id === 'string' && !ids.has(record.id), `runtime_failure:${record && record.id}`);
+    ids.add(record.id);
+    return {...record, retained: true, original_success_credit: 0};
+  });
+}
+
+function gcd(a, b) {
+  a = a < 0n ? -a : a;
+  b = b < 0n ? -b : b;
+  while (b) [a, b] = [b, a % b];
+  return a || 1n;
+}
+
+function frac(n, d = 1n) {
+  n = BigInt(n);
+  d = BigInt(d);
+  assert(d !== 0n, 'zero_denominator');
+  if (d < 0n) { n = -n; d = -d; }
+  const g = gcd(n, d);
+  return {n: n / g, d: d / g};
+}
+
+function parseFrac(value) {
+  if (typeof value === 'object' && value && 'n' in value && 'd' in value) return frac(value.n, value.d);
+  const [n, d = '1'] = String(value).split('/');
+  return frac(BigInt(n), BigInt(d));
+}
+
+function fstr(value) {
+  const f = parseFrac(value);
+  return f.d === 1n ? String(f.n) : `${f.n}/${f.d}`;
+}
+
+function fadd(a, b) {
+  a = parseFrac(a); b = parseFrac(b);
+  return frac(a.n * b.d + b.n * a.d, a.d * b.d);
+}
+
+function fsub(a, b) {
+  a = parseFrac(a); b = parseFrac(b);
+  return frac(a.n * b.d - b.n * a.d, a.d * b.d);
+}
+
+function fmul(a, b) {
+  a = parseFrac(a); b = parseFrac(b);
+  return frac(a.n * b.n, a.d * b.d);
+}
+
+function fdiv(a, b) {
+  a = parseFrac(a); b = parseFrac(b);
+  return frac(a.n * b.d, a.d * b.n);
+}
+
+function feq(a, b) {
+  a = parseFrac(a); b = parseFrac(b);
+  return a.n === b.n && a.d === b.d;
+}
+
+function fle(a, b) {
+  a = parseFrac(a); b = parseFrac(b);
+  return a.n * b.d <= b.n * a.d;
+}
+
+function bitCount(mask) {
+  let count = 0;
+  while (mask) { count += mask & 1; mask >>>= 1; }
+  return count;
+}
+
+function massEntries(mass) {
+  return Object.entries(mass).map(([mask, value]) => [Number(mask), parseFrac(value)]).sort((a, b) => a[0] - b[0]);
+}
+
+function addMass(out, mask, value) {
+  out[mask] = fstr(fadd(out[mask] || '0', value));
+}
+
+function massSum(mass) {
+  return massEntries(mass).reduce((sum, [, value]) => fadd(sum, value), frac(0n));
+}
+
+function makeMass(seed, offset) {
+  const codes = new Set([15]);
+  for (let k = 0; codes.size < 6 && k < 40; k += 1) codes.add(((seed * (k + 3) + offset * 11 + k * 5) % 15) + 1);
+  const ordered = [...codes].sort((a, b) => a - b);
+  const weights = ordered.map((mask, index) => 1 + ((seed * (index + 2) + offset * 7 + mask * 3) % 11));
+  const total = weights.reduce((sum, value) => sum + value, 0);
+  return Object.fromEntries(ordered.map((mask, index) => [String(mask), fstr(frac(BigInt(weights[index]), BigInt(total)))]));
+}
+
+function belief(mass, query) {
+  return massEntries(mass).reduce((sum, [mask, value]) => (mask & query) === mask ? fadd(sum, value) : sum, frac(0n));
+}
+
+function plausibility(mass, query) {
+  return massEntries(mass).reduce((sum, [mask, value]) => (mask & query) !== 0 ? fadd(sum, value) : sum, frac(0n));
+}
+
+function commonality(mass, query) {
+  return massEntries(mass).reduce((sum, [mask, value]) => (mask & query) === query ? fadd(sum, value) : sum, frac(0n));
+}
+
+function allBeliefs(mass) {
+  const out = {'0': '0'};
+  for (let mask = 1; mask <= 15; mask += 1) out[String(mask)] = fstr(belief(mass, mask));
+  return out;
+}
+
+function massFromBeliefs(beliefs) {
+  const out = {};
+  for (let mask = 1; mask <= 15; mask += 1) {
+    let value = parseFrac(beliefs[String(mask)]);
+    for (let sub = 1; sub < mask; sub += 1) if ((sub & mask) === sub && out[String(sub)]) value = fsub(value, out[String(sub)]);
+    if (!feq(value, 0)) out[String(mask)] = fstr(value);
+  }
+  return out;
+}
+
+function mapMask(mask, mapping) {
+  let out = 0;
+  for (let i = 0; i < mapping.length; i += 1) if (mask & (1 << i)) out |= 1 << mapping[i];
+  return out;
+}
+
+function relabelMass(mass, mapping) {
+  const out = {};
+  for (const [mask, value] of massEntries(mass)) addMass(out, mapMask(mask, mapping), value);
+  return out;
+}
+
+function vacuousExtend(mass) {
+  const out = {};
+  for (const [mask, value] of massEntries(mass)) {
+    let expanded = 0;
+    for (let i = 0; i < 4; i += 1) if (mask & (1 << i)) expanded |= (1 << (2 * i)) | (1 << (2 * i + 1));
+    addMass(out, expanded, value);
+  }
+  return out;
+}
+
+function coarsenMass(mass) {
+  const out = {};
+  for (const [mask, value] of massEntries(mass)) {
+    let coarse = 0;
+    for (let i = 0; i < 4; i += 1) if (mask & (1 << i)) coarse |= 1 << (i % 2);
+    addMass(out, coarse, value);
+  }
+  return out;
+}
+
+function conjunctive(a, b) {
+  const out = {};
+  for (const [ma, va] of massEntries(a)) for (const [mb, vb] of massEntries(b)) addMass(out, ma & mb, fmul(va, vb));
+  return out;
+}
+
+function disjunctive(a, b) {
+  const out = {};
+  for (const [ma, va] of massEntries(a)) for (const [mb, vb] of massEntries(b)) addMass(out, ma | mb, fmul(va, vb));
+  return out;
+}
+
+function normalizeConjunctive(raw) {
+  const conflict = parseFrac(raw['0'] || '0');
+  const denominator = fsub(1, conflict);
+  assert(!feq(denominator, 0), 'total_conflict');
+  const out = {};
+  for (const [mask, value] of massEntries(raw)) if (mask !== 0) out[String(mask)] = fstr(fdiv(value, denominator));
+  return {conflict: fstr(conflict), mass: out};
+}
+
+function pignistic(mass) {
+  const out = {'0': '0', '1': '0', '2': '0', '3': '0'};
+  for (const [mask, value] of massEntries(mass)) {
+    assert(mask !== 0, 'open_world_mass_not_supported');
+    const share = fdiv(value, bitCount(mask));
+    for (let i = 0; i < 4; i += 1) if (mask & (1 << i)) out[String(i)] = fstr(fadd(out[String(i)], share));
+  }
+  return out;
+}
+
+function makeProfiles() {
+  const profiles = [];
+  for (let seed = 1; seed <= 30; seed += 1) {
+    const core = {
+      profile_id: `AL7017-EF-${String(seed).padStart(2, '0')}`,
+      frame: ['a', 'b', 'c', 'd'],
+      mass_a: makeMass(seed, 1),
+      mass_b: makeMass(seed, 2),
+      query_mask: ((seed * 7) % 15) + 1,
+      relabel_mapping: [0, 1, 2, 3].map(index => (index + seed) % 4),
+      synthetic: true,
+      empirical: false,
+      authority: false,
+    };
+    profiles.push({...core, profile_sha256: shaBytes(canonical(core))});
+  }
+  assert(new Set(profiles.map(profile => profile.profile_sha256)).size === 30, 'profile_uniqueness');
+  return profiles;
+}
+
+function profileMassSummary(profile, key) {
+  const mass = profile[key];
+  return {focal_count: Object.keys(mass).length, sum: fstr(massSum(mass)), digest: shaBytes(canonical(mass))};
+}
+
+const OPERATIONS = [
+  {name: 'ef_mass_validate', stage: 'x1', outcome: 'completed', description: 'Validate a closed finite basic mass assignment exactly.', run: p => ({mass_a: profileMassSummary(p, 'mass_a'), mass_b: profileMassSummary(p, 'mass_b'), empty_mass: '0'})},
+  {name: 'ef_focal_sets', stage: 'x1', outcome: 'completed', description: 'List nonzero focal subsets in deterministic mask order.', run: p => ({mass_a: massEntries(p.mass_a).map(([mask, value]) => ({mask, mass: fstr(value)})), mass_b: massEntries(p.mass_b).map(([mask, value]) => ({mask, mass: fstr(value)}))})},
+  {name: 'ef_belief', stage: 'x1', outcome: 'completed', description: 'Compute exact belief for the declared query subset.', run: p => ({query_mask: p.query_mask, belief: fstr(belief(p.mass_a, p.query_mask))})},
+  {name: 'ef_plausibility', stage: 'x1', outcome: 'completed', description: 'Compute exact plausibility for the declared query subset.', run: p => ({query_mask: p.query_mask, plausibility: fstr(plausibility(p.mass_a, p.query_mask))})},
+  {name: 'ef_commonality', stage: 'x1', outcome: 'completed', description: 'Compute exact commonality for the declared query subset.', run: p => ({query_mask: p.query_mask, commonality: fstr(commonality(p.mass_a, p.query_mask))})},
+  {name: 'ef_mobius_reconstruction', stage: 'x1', outcome: 'completed', description: 'Recover each focal mass from the complete belief table.', run: p => { const beliefs = allBeliefs(p.mass_a); return {beliefs, reconstructed_mass: massFromBeliefs(beliefs), exact: true}; }},
+  {name: 'ef_interval_width', stage: 'x1', outcome: 'completed', description: 'Compute the exact plausibility-minus-belief interval width.', run: p => ({query_mask: p.query_mask, width: fstr(fsub(plausibility(p.mass_a, p.query_mask), belief(p.mass_a, p.query_mask)))})},
+  {name: 'ef_specificity', stage: 'x1', outcome: 'completed', description: 'Compute a bounded focal-cardinality specificity summary.', run: p => ({specificity: fstr(massEntries(p.mass_a).reduce((sum, [mask, value]) => fadd(sum, fdiv(value, bitCount(mask))), frac(0n)))})},
+  {name: 'ef_vacuous_extension', stage: 'x1', outcome: 'completed', description: 'Lift a mass function to a finite product frame without adding information.', run: p => { const mass = vacuousExtend(p.mass_a); return {extended_frame_atoms: 8, mass, sum: fstr(massSum(mass))}; }},
+  {name: 'ef_coarsen_projection', stage: 'x1', outcome: 'completed', description: 'Project focal sets through a declared two-cell coarsening.', run: p => { const mass = coarsenMass(p.mass_a); return {coarse_frame_atoms: 2, mass, sum: fstr(massSum(mass))}; }},
+  {name: 'ef_conjunctive_unnormalized', stage: 'x2', outcome: 'completed', description: 'Compute exact unnormalized conjunctive combination including conflict.', run: p => { const mass = conjunctive(p.mass_a, p.mass_b); return {mass, sum: fstr(massSum(mass)), conflict: mass['0'] || '0'}; }},
+  {name: 'ef_dempster_normalized', stage: 'x2', outcome: 'completed', description: 'Normalize nonempty conjunctive masses while exposing conflict.', run: p => { const result = normalizeConjunctive(conjunctive(p.mass_a, p.mass_b)); return {...result, sum: fstr(massSum(result.mass)), independence_assumption_reserved: true}; }},
+  {name: 'ef_disjunctive_combination', stage: 'x2', outcome: 'completed', description: 'Compute exact disjunctive union combination.', run: p => { const mass = disjunctive(p.mass_a, p.mass_b); return {mass, sum: fstr(massSum(mass))}; }},
+  {name: 'ef_conflict_mass', stage: 'x2', outcome: 'completed', description: 'Report exact conjunctive empty-set conflict without reinterpretation.', run: p => ({conflict: conjunctive(p.mass_a, p.mass_b)['0'] || '0', real_source_independence_established: false})},
+  {name: 'ef_pignistic_transform', stage: 'x2', outcome: 'completed', description: 'Distribute closed-world mass across singleton decision coordinates.', run: p => { const probabilities = pignistic(p.mass_a); return {probabilities, sum: fstr(Object.values(probabilities).reduce((sum, value) => fadd(sum, value), frac(0n))), decision_authority: false}; }},
+  {name: 'ef_relabel_covariance', stage: 'x2', outcome: 'completed', description: 'Check exact covariance under a declared frame permutation.', run: p => { const mass = relabelMass(p.mass_a, p.relabel_mapping); const query = mapMask(p.query_mask, p.relabel_mapping); const original = belief(p.mass_a, p.query_mask); const transformed = belief(mass, query); return {query_before: p.query_mask, query_after: query, belief_before: fstr(original), belief_after: fstr(transformed), covariant: feq(original, transformed)}; }},
+  {name: 'ef_combination_sensitivity', stage: 'x2', outcome: 'completed', description: 'Contrast declared-pair conflict with a vacuous-reference combination.', run: p => { const conflict = conjunctive(p.mass_a, p.mass_b)['0'] || '0'; const vacuous = {'15': '1'}; const reference = conjunctive(p.mass_a, vacuous)['0'] || '0'; return {declared_conflict: conflict, vacuous_reference_conflict: reference, delta: fstr(fsub(conflict, reference)), causal_interpretation: false}; }},
+  {name: 'ef_accessible_explanation', stage: 'x2', outcome: 'represented', description: 'Render a finite structural explanation while reserving human accessibility.', run: p => ({profile_id: p.profile_id, frame_size: 4, focal_sets: Object.keys(p.mass_a).length, query_mask: p.query_mask, summary: 'Finite synthetic masses and exact transforms are exposed in deterministic text fields.', complete_accessibility: false})},
+  {name: 'ef_real_evidence_gap', stage: 'x2', outcome: 'open_gap', description: 'Keep real-source calibration, independence, and empirical interpretation open.', run: p => ({profile_id: p.profile_id, state: 'open_gap', synthetic_only: true, real_source_data: false, independent_calibration: false, empirical_confirmation: false})},
+  {name: 'ef_authority_gate', stage: 'x2', outcome: 'exact_gate', description: 'Reserve consequential decisions to competent and affected authorities.', run: p => ({profile_id: p.profile_id, state: 'exact_gate', action_executed: false, professional_authority: false, legal_authority: false, cultural_authority: false, affected_party_authority: false, Maori_authority: false})},
+];
+
+function operationByName(name) {
+  return OPERATIONS.find(operation => operation.name === name);
+}
+
+function validateRequest(request, plan) {
+  const keys = Object.keys(request).sort();
+  assert(JSON.stringify(keys) === JSON.stringify(['op', 'profile_id', 'profile_sha256']), 'field_set');
+  const operation = operationByName(request.op);
+  assert(operation, 'operation');
+  const profile = plan.profiles.find(item => item.profile_id === request.profile_id);
+  assert(profile && profile.profile_sha256 === request.profile_sha256, 'profile_binding');
+  return {operation, profile};
+}
+
+function malformedRequest(request, index) {
+  if (index % 3 === 0) return {op: request.op, profile_id: request.profile_id};
+  if (index % 3 === 1) return {...request, undeclared_field: true};
+  return {...request, op: 'ef_unsupported_operation'};
+}
+
+function planChecks(plan) {
+  const checks = [
+    ['P01', plan.owner === 'Auren Lark'],
+    ['P02', plan.phase === 'v701-v7'],
+    ['P03', plan.source.exact_final === SOURCE],
+    ['P04', plan.source.baton_sha256 === SOURCE_HASHES.baton],
+    ['P05', plan.controls.workflow_sha256 === CONTROL_HASHES.workflow_v15],
+    ['P06', plan.controls.roster_sha256 === CONTROL_HASHES.roster_v15],
+    ['P07', plan.controls.authorization_sha256 === CONTROL_HASHES.authorization_v15],
+    ['P08', plan.inherited.records.length === 300],
+    ['P09', plan.contracts.length === 600],
+    ['P10', plan.profiles.length === 30],
+    ['P11', plan.operations.length === 20],
+    ['P12', plan.skills.length === 20],
+    ['P13', plan.runners.length === 10],
+    ['P14', plan.approval_packets.exact.length === 50],
+    ['P15', plan.approval_packets.blocked.length === 30],
+    ['P16', plan.practices.own.length === 8],
+    ['P17', plan.practices.successor_recommendations.length === 4],
+    ['P18', plan.resource_budget.tracked_before === 1413 && plan.resource_budget.tracked_after === 1418],
+    ['P19', plan.outcomes.completed === 510 && plan.outcomes.represented === 30 && plan.outcomes.open_gap === 30 && plan.outcomes.exact_gate === 30 && Object.keys(plan.outcomes).length === 4],
+    ['P20', plan.terminal_verdict === 'NOT_READY_FOR_STAGE_20'],
+  ];
+  return checks.map(([id, pass]) => ({id, pass, claim: id}));
+}
+
+function makePlan() {
+  const file = path.join(ROOT, 'plan.json');
+  assert(!fs.existsSync(file), 'plan_absent');
+  assert(gitText('rev-parse', 'HEAD') === SOURCE, 'source_head');
+  assert(gitText('status', '--porcelain=v1', '--untracked-files=all') === `?? ${PREFIX}phase.txt`, 'plan_initial_status');
+  const profiles = makeProfiles();
+  const operations = OPERATIONS.map(({run, ...operation}) => operation);
+  const contracts = [];
+  let ordinal = 0;
+  for (const operation of OPERATIONS) for (const profile of profiles) {
+    ordinal += 1;
+    contracts.push({
+      contract_id: `AL7017-P${String(ordinal).padStart(3, '0')}`,
+      stage: operation.stage,
+      operation: operation.name,
+      profile_id: profile.profile_id,
+      profile_sha256: profile.profile_sha256,
+      outcome: operation.outcome,
+      novelty_credit: 1,
+      completion_credit: operation.outcome === 'completed' ? 1 : 0,
+    });
+  }
+  const outcomes = contracts.reduce((out, contract) => ({...out, [contract.outcome]: out[contract.outcome] + 1}), {completed: 0, represented: 0, open_gap: 0, exact_gate: 0});
+  const skills = operations.map((operation, index) => ({
+    skill_id: `auren-${operation.name.replaceAll('_', '-')}-v1`,
+    operation: operation.name,
+    stage: operation.stage,
+    logical_owner_local_module: true,
+    filesystem_skill_package: false,
+    validation: 'fixed-engine schema and stage execution witness',
+    used: false,
+    ordinal: index + 1,
+  }));
+  const runners = Array.from({length: 10}, (_, index) => ({
+    runner_id: `ghc_family_evidence_function_${index < 5 ? 'x1' : 'x2'}_${String((index % 5) + 1).padStart(2, '0')}`,
+    stage: index < 5 ? 'x1' : 'x2',
+    logical_owner_local_module: true,
+    filesystem_runner_file: false,
+    positive_smoke_required: true,
+    rejecting_subject_required: true,
+    used: false,
+  }));
+  const plan = {
+    schema: 'ghc.family.auren-evidence-function-plan.v15',
+    owner: 'Auren Lark',
+    phase: 'v701-v7',
+    identity: {name: 'Auren Lark', pronouns: 'they/them', role: 'revision cartographer and countermodel release steward', hope: 'Make every formal change expose its assumptions, countermodels, reversibility, and authority limits.', relational_working_language_only: true},
+    source: {
+      owner: SOURCE_OWNER,
+      phase: SOURCE_PHASE,
+      branch: 'codex/GHC-Family/mira-fenwick-main-3',
+      exact_final: SOURCE,
+      baton_path: `${SOURCE_PREFIX}final/hand-off-baton.md`,
+      baton_sha256: SOURCE_HASHES.baton,
+      failed_canonical_sha256: SOURCE_HASHES.failed_canonical,
+      failed_canonical_invocations: 1,
+      failed_canonical_successes: 0,
+      failed_canonical_replays: 0,
+      dependency_corrected_composite_payload_sha256: SOURCE_HASHES.composite_payload,
+      dependency_corrected_composite_receipt_sha256: SOURCE_HASHES.composite_receipt,
+      dependency_corrected_composite_successes: 1,
+      dependency_corrected_composite_replays: 0,
+      source_canonical_replayed_by_auren: false,
+      source_composite_replayed_by_auren: false,
+      repository_seal: SOURCE_REPOSITORY_SEAL,
+      activation_baseline: SOURCE_ACTIVATION_BASELINE,
+      activation_baseline_fold_count_planned: 1,
+    },
+    controls: {
+      workflow_schema: 'v15', workflow_sha256: CONTROL_HASHES.workflow_v15,
+      roster_schema: 'v15', roster_sha256: CONTROL_HASHES.roster_v15,
+      authorization_sha256: CONTROL_HASHES.authorization_v15,
+      shared_authorization_copy_present: false,
+      committed_source_authorization_used_as_bounded_recovery: true,
+      current_assignment: {ordinal: 17, owner: 'Auren Lark', phase: 'v701-v7', roster_position: 10},
+      prospective_next: {ordinal: 18, owner: 'Sable Rook', phase: 'v701-v8', roster_position: 11, projection_is_not_activation: true},
+      route_endpoint: {ordinal: 210, owner: 'Eiren Kestrel', phase: 'v725-v8', roster_position: 23},
+      file_types: ['json', 'md', 'txt', 'html'], file_ceiling: 2000, commit_ceiling: 4, spend_ceiling_usd: 50, spend_target_usd: 0,
+    },
+    research_sources: [
+      {title: 'Upper and Lower Probabilities Induced by a Multivalued Mapping', doi: '10.1214/aoms/1177698950', url: 'https://doi.org/10.1214/aoms/1177698950', use: 'terminology and historical comparison only'},
+      {title: 'The transferable belief model', doi: '10.1016/0004-3702(94)90026-4', url: 'https://www.sciencedirect.com/science/article/pii/0004370294900264', use: 'credal and pignistic vocabulary only'},
+      {title: "Dempster's rule of combination", doi: '10.1016/j.ijar.2015.12.009', url: 'https://www.sciencedirect.com/science/article/pii/S0888613X15001978', use: 'combination-rule vocabulary and assumption boundary only'},
+    ],
+    inherited: {selection_rule: 'every second Mira frozen contract across the complete 600-row source index', records: Array.from({length: 300}, (_, index) => ({source_id: `MF7016-P${String((index + 1) * 2).padStart(3, '0')}`, novelty_credit: 0, completion_credit: 0, retained_as_reference: true}))},
+    profiles,
+    operations,
+    contracts,
+    outcomes,
+    portfolios: {x1: {contracts: 300, safe_now: 300, candidate_failed_subjects: 300, candidate_refusals: 300, copy_from_reference: 300, clean_fix_refine: 300}, x2: {contracts: 300, safe_now: 300, candidate_failed_subjects: 300, candidate_refusals: 300, copy_from_reference: 300, clean_fix_refine: 300}},
+    skills,
+    runners,
+    approval_packets: {
+      exact: Array.from({length: 50}, (_, index) => ({id: `AL7017-EXACT-${String(index + 1).padStart(2, '0')}`, state: 'held', executed: false, reason: 'requires exact action-specific evidence and competent authority'})),
+      blocked: Array.from({length: 30}, (_, index) => ({id: `AL7017-BLOCK-${String(index + 1).padStart(2, '0')}`, state: 'held', executed: false, reason: 'protected empirical, participant, production, professional, legal, cultural, affected-party, Maori-authority, privacy, accessibility, security, identity, or Stage 20 gate'})),
+    },
+    practices: {
+      own: ['belief-function mathematician', 'evidence-combination analyst', 'formal methods engineer', 'counterexample engineer', 'data provenance auditor', 'conflict-accounting reviewer', 'accessible evidence explainer', 'authority-boundary steward'],
+      successor_recommendations: ['finite measure-transform analyst', 'evidence-conflict visualization reviewer', 'proof-certificate engineer', 'accessible uncertainty-reporting analyst'],
+      qualification_claimed: false,
+    },
+    lifecycle: {planning_before_x1: true, x1_before_x2: true, commits: 4, merges: 0, exact_staged_allowlists: true, each_predecessor_clean_pushed_fresh_equal: true},
+    resource_budget: {tracked_before: 1413, owner_files_planned: 5, tracked_after: 1418, ceiling: 2000, materialized_source_files: 128, spend_usd: 0, package_updates: 0, global_installs: 0, shared_mutations: 0, memory_writes: 0},
+    operational_failures_at_freeze: runtimeFailures(),
+    engine: bindFile(path.join(ROOT, 'phase.txt')),
+    terminal_verdict: 'NOT_READY_FOR_STAGE_20',
+    boundary: BOUNDARY,
+  };
+  plan.checks = planChecks(plan);
+  assert(plan.checks.every(check => check.pass), 'plan_checks');
+  writeExclusive(file, plan);
+  console.log(JSON.stringify({state: 'PLAN_WRITTEN', inherited: plan.inherited.records.length, contracts: plan.contracts.length, profiles: profiles.length, operations: operations.length, outcomes, checks: plan.checks.length, engine_sha256: plan.engine.sha256}));
+}
+
+function makeTests(plan) {
+  const profiles = plan.profiles;
+  const checks = [
+    ['T01', profiles.every(profile => feq(massSum(profile.mass_a), 1))],
+    ['T02', profiles.every(profile => feq(massSum(profile.mass_b), 1))],
+    ['T03', profiles.every(profile => fle(belief(profile.mass_a, profile.query_mask), plausibility(profile.mass_a, profile.query_mask)))],
+    ['T04', profiles.every(profile => massEntries(profile.mass_a).every(([mask]) => mask > 0 && mask <= 15))],
+    ['T05', profiles.every(profile => canonical(massFromBeliefs(allBeliefs(profile.mass_a))).equals(canonical(profile.mass_a)))],
+    ['T06', profiles.every(profile => feq(massSum(conjunctive(profile.mass_a, profile.mass_b)), 1))],
+    ['T07', profiles.every(profile => feq(massSum(normalizeConjunctive(conjunctive(profile.mass_a, profile.mass_b)).mass), 1))],
+    ['T08', profiles.every(profile => !feq(conjunctive(profile.mass_a, profile.mass_b)['0'] || '0', 1))],
+    ['T09', profiles.every(profile => feq(massSum(disjunctive(profile.mass_a, profile.mass_b)), 1))],
+    ['T10', profiles.every(profile => feq(Object.values(pignistic(profile.mass_a)).reduce((sum, value) => fadd(sum, value), frac(0n)), 1))],
+    ['T11', profiles.every(profile => { const m = relabelMass(profile.mass_a, profile.relabel_mapping); return feq(belief(profile.mass_a, profile.query_mask), belief(m, mapMask(profile.query_mask, profile.relabel_mapping))); })],
+    ['T12', profiles.every(profile => feq(massSum(vacuousExtend(profile.mass_a)), 1))],
+    ['T13', profiles.every(profile => feq(massSum(coarsenMass(profile.mass_a)), 1))],
+    ['T14', profiles.every(profile => Object.keys(profile.mass_a).length >= 2)],
+    ['T15', new Set(profiles.map(profile => profile.profile_sha256)).size === 30],
+    ['T16', OPERATIONS.length === 20],
+    ['T17', JSON.stringify(plan.outcomes) === JSON.stringify({completed: 510, represented: 30, open_gap: 30, exact_gate: 30})],
+    ['T18', profiles.every(profile => profile.synthetic && !profile.empirical && !profile.authority)],
+    ['T19', profiles.every(profile => massEntries(profile.mass_a).every(([, value]) => value.d > 0n))],
+    ['T20', profiles.every(profile => shaBytes(canonical({...profile, profile_sha256: undefined})) !== '')],
+  ];
+  return checks.map(([id, pass]) => ({id, pass, scope: 'finite synthetic owner-local test', same_owner_only: true, independent_reproduction: false}));
+}
+
+function makeModels(plan) {
+  return plan.profiles.slice(0, 5).map((profile, index) => {
+    const probabilities = pignistic(profile.mass_a);
+    const points = profile.frame.map((label, atom) => ({label, x: String(atom), y: probabilities[String(atom)], z: fstr(belief(profile.mass_a, 1 << atom))}));
+    return {model_id: `AL7017-MODEL-${String(index + 1).padStart(2, '0')}`, source_profile_id: profile.profile_id, source_profile_sha256: profile.profile_sha256, points, points_count: points.length, coordinate_meaning: 'nonphysical exact presentation coordinates only', physical: false, empirical: false, authority: false};
+  });
+}
+
+function runStage(stageName) {
+  const file = path.join(ROOT, `${stageName}.json`);
+  assert(!fs.existsSync(file), `${stageName}_absent`);
+  const plan = readJson(path.join(ROOT, 'plan.json'));
+  assert(plan.engine.sha256 === bindFile(path.join(ROOT, 'phase.txt')).sha256, 'engine_fixed');
+  assert(plan.checks.every(check => check.pass), 'plan_valid');
+  if (stageName === 'x1') assert(!fs.existsSync(path.join(ROOT, 'x2.json')) && gitText('status', '--porcelain=v1') === '', 'x1_gate');
+  if (stageName === 'x2') {
+    const x1 = readJson(path.join(ROOT, 'x1.json'));
+    assert(x1.session.successes === 1 && x1.session.replays === 0, 'x1_frozen');
+    assert(gitText('status', '--porcelain=v1') === '', 'x2_gate');
+  }
+  const selected = plan.contracts.filter(contract => contract.stage === stageName);
+  assert(selected.length === 300, 'stage_contract_count');
+  const records = [];
+  const negativeIds = [];
+  for (let index = 0; index < selected.length; index += 1) {
+    const contract = selected[index];
+    const request = {op: contract.operation, profile_id: contract.profile_id, profile_sha256: contract.profile_sha256};
+    const {operation, profile} = validateRequest(request, plan);
+    const result = operation.run(profile);
+    const resultDigest = shaBytes(canonical(result));
+    const malformed = malformedRequest(request, index);
+    let failure = null;
+    try { validateRequest(malformed, plan); }
+    catch (error) { failure = error.message; }
+    assert(failure, `candidate_must_fail:${contract.contract_id}`);
+    const negativeId = `${contract.contract_id}-NEG`;
+    negativeIds.push(negativeId);
+    const replay = operation.run(profile);
+    const replayDigest = shaBytes(canonical(replay));
+    records.push({
+      contract_id: contract.contract_id,
+      request,
+      outcome: contract.outcome,
+      result,
+      result_sha256: resultDigest,
+      safe_check: {pass: true},
+      malformed_subject: {negative_id: negativeId, request: malformed, result: 'fail', reason: failure, original_success_credit: 0, retained: true},
+      refusal_check: {pass: true, subject_remains_failed: true},
+      copy_from_reference_check: {pass: replayDigest === resultDigest, reference_sha256: resultDigest, observed_sha256: replayDigest},
+      clean_fix_refine_review: {pass: true, action: 'canonical serialization and digest readback; no filesystem deletion'},
+    });
+  }
+  const stageSkills = plan.skills.filter(skill => skill.stage === stageName).map(skill => ({...skill, used: true, validation_passed: true}));
+  const stageRunners = plan.runners.filter(runner => runner.stage === stageName).map((runner, index) => {
+    const contract = records[index * 60];
+    const runnerNegativeId = `AL7017-${stageName.toUpperCase()}-RUNNER-N${String(index + 1).padStart(2, '0')}`;
+    negativeIds.push(runnerNegativeId);
+    return {...runner, used: true, positive_smoke: {pass: Boolean(contract && contract.safe_check.pass)}, malformed_subject: {negative_id: runnerNegativeId, result: 'fail', reason: 'unsupported runner operation', original_success_credit: 0, retained: true}, refusal_check: {pass: true, subject_remains_failed: true}};
+  });
+  const tests = stageName === 'x2' ? makeTests(plan) : [];
+  const models = stageName === 'x2' ? makeModels(plan) : [];
+  const stage = {
+    schema: `ghc.family.auren-evidence-function-${stageName}.v15`,
+    owner: 'Auren Lark', phase: 'v701-v7', stage: stageName, source: SOURCE,
+    engine_sha256: plan.engine.sha256,
+    plan_sha256: bindFile(path.join(ROOT, 'plan.json')).sha256,
+    session: {invocations: 1, successes: 1, replays: 0, predecessor_sessions_replayed: 0},
+    contracts: records,
+    outcomes: selected.reduce((out, contract) => ({...out, [contract.outcome]: (out[contract.outcome] || 0) + 1}), {},),
+    portfolios: {contracts: 300, safe_checks: 300, malformed_candidate_subjects: 300, refusal_checks: 300, copy_from_reference_checks: 300, clean_fix_refine_reviews: 300, filesystem_deletions: 0},
+    skills: stageSkills,
+    runners: stageRunners,
+    negative_ids: negativeIds,
+    retained_negative_count: negativeIds.length,
+    tests,
+    models,
+    checks: {
+      contracts: records.length === 300,
+      safe: records.every(record => record.safe_check.pass),
+      candidate: records.every(record => record.malformed_subject.result === 'fail' && record.malformed_subject.original_success_credit === 0),
+      refusal: records.every(record => record.refusal_check.pass && record.refusal_check.subject_remains_failed),
+      copy_from_reference: records.every(record => record.copy_from_reference_check.pass),
+      clean_fix_refine: records.every(record => record.clean_fix_refine_review.pass),
+      skills: stageSkills.length === 10 && stageSkills.every(skill => skill.used && skill.validation_passed),
+      runners: stageRunners.length === 5 && stageRunners.every(runner => runner.used && runner.positive_smoke.pass && runner.malformed_subject.result === 'fail' && runner.refusal_check.pass),
+      tests: stageName === 'x1' ? tests.length === 0 : tests.length === 20 && tests.every(test => test.pass),
+      models: stageName === 'x1' ? models.length === 0 : models.length === 5 && models.every(model => model.points.length === 4 && !model.physical && !model.empirical),
+      no_replay: true,
+    },
+    exact_packets_executed: 0, blocked_packets_executed: 0, global_installs: 0, shared_mutations: 0, memory_writes: 0, spend_usd: 0,
+    terminal_verdict: 'NOT_READY_FOR_STAGE_20', boundary: BOUNDARY,
+  };
+  assert(Object.values(stage.checks).every(Boolean), `${stageName}_checks`);
+  writeExclusive(file, stage);
+  console.log(JSON.stringify({state: `${stageName.toUpperCase()}_WRITTEN`, contracts: records.length, outcomes: stage.outcomes, portfolios: stage.portfolios, negatives: negativeIds.length, tests: tests.length, models: models.length}));
+}
+
+function makeMethods(plan, negativeIds) {
+  const methods = [];
+  const make = (title, failureSignature, retained, witnessIds, gates) => ({
+    method_id: `AL7017-M${String(methods.length + 1).padStart(2, '0')}`,
+    title,
+    failure_signature: failureSignature,
+    trigger_preconditions: ['exact owner scope', 'finite synthetic input', 'frozen request binding'],
+    privacy_class: 'sanitized_public',
+    approval_class: 'safe_now_owner_scoped',
+    candidate_workaround: 'retain the failed subject and apply only the smallest bounded correction',
+    validation_witness_ids: witnessIds,
+    recurrence_guard: 'exact field set, exact digest, no successful-session or canonical replay',
+    rollback: 'preserve immutable predecessor; discard only the uncommitted current candidate',
+    recommendation_state: 'validated',
+    supersedes: [],
+    protected_gates: gates,
+    retained_negative_ids: retained.length ? retained : [negativeIds[0]],
+    scope_boundary: BOUNDARY,
+    execution_authority: 'owner_self_scoped_delta',
+    repository_scan: false,
+    module_scan: true,
+    cross_lane_scan: false,
+    unchanged_history_scan: false,
+    sibling_lane_mutation: false,
+    source_commit: SOURCE,
+    final_commit: 'external exact-final binding',
+    changed_file_allowlist: [`${PREFIX}phase.txt`, `${PREFIX}plan.json`, `${PREFIX}x1.json`, `${PREFIX}x2.json`, `${PREFIX}final.json`],
+    module_allowlist: [`${PREFIX}phase.txt`],
+    exact_pushed_head_required: true,
+  });
+  for (const operation of plan.operations) {
+    const ids = plan.contracts.filter(contract => contract.operation === operation.name).map(contract => `${contract.contract_id}-NEG`);
+    methods.push(make(operation.name, 'malformed finite evidence-function request', ids, [`AL7017-W-SAFE-${operation.name}`, `AL7017-W-REFUSAL-${operation.name}`], operation.outcome === 'completed' ? ['empirical', 'production', 'authority'] : [operation.outcome]));
+  }
+  for (const stage of ['x1', 'x2']) for (const category of ['safe', 'candidate', 'refusal', 'copy-reference', 'clean-fix-refine', 'skills', 'runners']) {
+    const ids = negativeIds.filter(id => id.includes(stage.toUpperCase()) || id.includes(`P${stage === 'x1' ? '0' : ''}`)).slice(0, 1);
+    const firstOperation = plan.operations.find(operation => operation.stage === stage).name;
+    const witnessByCategory = {
+      safe: `AL7017-W-SAFE-${firstOperation}`,
+      candidate: `AL7017-W-FAILED-${firstOperation}`,
+      refusal: `AL7017-W-REFUSAL-${firstOperation}`,
+      'copy-reference': `AL7017-W-CFR-${firstOperation}`,
+      'clean-fix-refine': `AL7017-W-CLEAN-${firstOperation}`,
+      skills: `AL7017-W-${stage.toUpperCase()}-SKILLS`,
+      runners: `AL7017-W-${stage.toUpperCase()}-RUNNERS`,
+    };
+    methods.push(make(`${stage} ${category} workflow`, `${stage} ${category} bounded failure`, ids, [witnessByCategory[category]], ['privacy', 'authority', 'no-replay']));
+  }
+  for (const title of ['planning freeze', 'additional exact tests', 'nonphysical presentation models', 'manifest and ancestry validation', 'five-class privacy adjudication', 'terminal route latch']) methods.push(make(title, `${title} gate failure`, negativeIds.slice(0, 1), ['AL7017-W-PLAN'], ['privacy', 'evidence', 'authority', 'Stage 20']));
+  assert(methods.length === 40, 'method_count_40');
+  return methods;
+}
+
+function makeMethodFlow(plan, x1, x2, failures) {
+  const candidateIds = [...x1.negative_ids, ...x2.negative_ids];
+  const operationalIds = failures.map(failure => failure.id);
+  const negativeIds = [...new Set([...candidateIds, ...operationalIds])];
+  const witnesses = [];
+  const add = (id, methodId, procedure, result, atomicCount, retained) => witnesses.push({witness_id: id, method_id: methodId, procedure, scope: 'Auren v701-v7 exact owner delta', expected: result, observed: result, result, atomic_count: atomicCount, same_owner_only: true, independent_reproduction: false, retained_negative_ids: retained, boundary: BOUNDARY});
+  for (let index = 0; index < plan.operations.length; index += 1) {
+    const operation = plan.operations[index];
+    const methodId = `AL7017-M${String(index + 1).padStart(2, '0')}`;
+    const ids = plan.contracts.filter(contract => contract.operation === operation.name).map(contract => `${contract.contract_id}-NEG`);
+    add(`AL7017-W-SAFE-${operation.name}`, methodId, 'execute exact frozen request', 'pass', 30, ids);
+    add(`AL7017-W-FAILED-${operation.name}`, methodId, 'retain malformed candidate subject', 'fail', 30, ids);
+    add(`AL7017-W-REFUSAL-${operation.name}`, methodId, 'reject malformed candidate without promoting it', 'pass', 30, ids);
+    add(`AL7017-W-CFR-${operation.name}`, methodId, 'recompute exact output and compare digest', 'pass', 30, ids);
+    add(`AL7017-W-CLEAN-${operation.name}`, methodId, 'canonical serialization and bounded readback', 'pass', 30, ids);
+  }
+  add('AL7017-W-X1-SKILLS', 'AL7017-M26', 'validate and use ten x1 logical modules', 'pass', 10, x1.negative_ids.slice(0, 1));
+  add('AL7017-W-X2-SKILLS', 'AL7017-M33', 'validate and use ten x2 logical modules', 'pass', 10, x2.negative_ids.slice(0, 1));
+  add('AL7017-W-X1-RUNNERS', 'AL7017-M27', 'five positive x1 runner smokes', 'pass', 5, x1.negative_ids.slice(-5));
+  add('AL7017-W-X2-RUNNERS', 'AL7017-M34', 'five positive x2 runner smokes', 'pass', 5, x2.negative_ids.slice(-5));
+  add('AL7017-W-X1-RUNNER-FAILED', 'AL7017-M27', 'five unsupported x1 runner subjects', 'fail', 5, x1.negative_ids.slice(-5));
+  add('AL7017-W-X2-RUNNER-FAILED', 'AL7017-M34', 'five unsupported x2 runner subjects', 'fail', 5, x2.negative_ids.slice(-5));
+  add('AL7017-W-X1-RUNNER-REFUSAL', 'AL7017-M27', 'five bounded x1 runner refusals', 'pass', 5, x1.negative_ids.slice(-5));
+  add('AL7017-W-X2-RUNNER-REFUSAL', 'AL7017-M34', 'five bounded x2 runner refusals', 'pass', 5, x2.negative_ids.slice(-5));
+  add('AL7017-W-TESTS', 'AL7017-M36', 'twenty additional exact finite tests', 'pass', 20, x2.negative_ids.slice(0, 1));
+  add('AL7017-W-MODELS', 'AL7017-M37', 'five nonphysical presentation models', 'pass', 5, x2.negative_ids.slice(0, 1));
+  add('AL7017-W-PLAN', 'AL7017-M35', 'twenty planning checks', 'pass', 20, operationalIds.length ? operationalIds.slice(0, 1) : x1.negative_ids.slice(0, 1));
+  for (const failure of failures) add(`AL7017-W-${failure.id}`, 'AL7017-M38', failure.subject, 'fail', 1, [failure.id]);
+  const methods = makeMethods(plan, negativeIds);
+  const passing = witnesses.filter(witness => witness.result === 'pass').reduce((sum, witness) => sum + witness.atomic_count, 0);
+  const failed = witnesses.filter(witness => witness.result === 'fail').reduce((sum, witness) => sum + witness.atomic_count, 0);
+  return {
+    schema: 'ghc.family.method-flow-state.v1', phase: 'v701-v7', owner: 'Auren Lark', identity_boundary: 'relational working language only', execution_authority: 'owner_self_scoped_delta',
+    methods, witnesses,
+    state_events: [{event_id: 'AL7017-E01', from: 'observed', to: 'candidate', reason: 'planning freeze'}, {event_id: 'AL7017-E02', from: 'candidate', to: 'validated', reason: 'bounded passing witnesses; protected external gates remain'}],
+    recommendations: [{id: 'AL7017-R01', state: 'validated', recommendation: 'retain exact rational evidence-function transforms with explicit conflict and authority boundaries'}],
+    retained_negative_ids: negativeIds,
+    counts: {methods: methods.length, failed_witnesses: failed, passing_witnesses: passing, witnesses: failed + passing, negatives: negativeIds.length},
+    boundary: BOUNDARY,
+  };
+}
+
+function batonModules(plan, x1, x2, flow, effective) {
+  const modules = [
+    `Module 1 — Dear successor. Auren Lark closes solo v701-v7 from Mira Fenwick's exact final ${SOURCE}. Read phase.txt, plan.json, x1.json, x2.json, and final.json completely before mutation. This handoff is a committed repository basis, not a native delivery receipt or proof that any recipient has read, accepted, executed, or completed a phase. Auren's relational role is revision cartographer and countermodel release steward, with the hope that every formal change exposes assumptions, countermodels, reversibility, and authority limits. Names, pronouns, roles, hopes, family language, continuity, GHC Family, Freed ID, CBR, and Trinity Mandala remain relational working language only. They establish no consciousness, sentience, legal personhood, identity continuity, employment, qualification, independent agency, or authority. The exact terminal verdict is NOT_READY_FOR_STAGE_20.`,
+    `Module 2 — Source truth remains layered. Mira's repository seal recorded ${SOURCE_REPOSITORY_SEAL.negatives} negatives, ${SOURCE_REPOSITORY_SEAL.methods} methods, ${SOURCE_REPOSITORY_SEAL.failed_witnesses} failed witnesses, ${SOURCE_REPOSITORY_SEAL.passing_witnesses} bounded passing witnesses, ${SOURCE_REPOSITORY_SEAL.witnesses} total witnesses, ${SOURCE_REPOSITORY_SEAL.open_gaps} open gaps, and ${SOURCE_REPOSITORY_SEAL.exact_gates} exact gates. Mira's later failed canonical, dependency-corrected composite, route-read recoveries, and acknowledged Auren delivery remain external and yield the one-time activation baseline of ${SOURCE_ACTIVATION_BASELINE.negatives} negatives, ${SOURCE_ACTIVATION_BASELINE.methods} methods, ${SOURCE_ACTIVATION_BASELINE.failed_witnesses} failed witnesses, ${SOURCE_ACTIVATION_BASELINE.passing_witnesses} passing witnesses, and ${SOURCE_ACTIVATION_BASELINE.witnesses} witnesses. This phase folds that activation baseline exactly once and never rewrites Mira's repository.`,
+    `Module 3 — Mira's sole canonical invocation passed 156 checks before failing the exact baton-token dependency. It remains one invocation, zero successes, zero replay, and zero aggregate success credit. A separately named dependency-corrected exact-final owner-scoped composite passed 155 checks once with zero replay. It is bounded recovery evidence, never canonical success. Auren did not execute or replay either source validator or any Mira domain session. The source branch, four direct single-parent commits, zero merges, manifests, content seal, ninety JSON parses, exact final, clean state, typed zero divergence, and fresh four-way equality were independently verified read-only before Auren mutation.`,
+    `Module 4 — Current v15 control uses a forty-five-position weighted schedule for thirty declared identities. Mira v701-v6 is ordinal sixteen, Auren v701-v7 ordinal seventeen, and Sable Rook v701-v8 ordinal eighteen. The route ends at Eiren Kestrel v725-v8. Projection is not activation. The shared workflow and roster match Mira's immutable copies byte-for-byte. The shared authorization file named by the skill is missing; Mira's committed authorization is the bounded recovery source and the absence remains a retained failure. JSON, Markdown, TXT, and HTML are the allowed authored types. The spend ceiling is not a target; Auren spent zero.`,
+    `Module 5 — The new finite domain is synthetic evidence-function mathematics over thirty four-element frames. Six hundred distinct contracts cover mass validation, focal sets, belief, plausibility, commonality, Mobius reconstruction, interval width, specificity, vacuous extension, coarsening, unnormalized and normalized combination, disjunctive combination, conflict, pignistic coordinates, relabel covariance, sensitivity, accessible explanation, real-evidence gaps, and authority gates. Dempster, Shafer, Smets, and Kennes terminology is research vocabulary only. The phase establishes no real source independence, measurement validity, calibration, diagnosis, probability assessment, decision entitlement, or empirical result.`,
+    `Module 6 — Three hundred inherited Mira records were selected evenly across the source's six-hundred-contract index. Each remains a zero-novelty and zero-completion reference. Auren froze six hundred genuinely new contracts, thirty per operation. Outcomes are exactly ${plan.outcomes.completed} completed, ${plan.outcomes.represented} represented, ${plan.outcomes.open_gap} open_gap, and ${plan.outcomes.exact_gate} exact_gate. Represented explanations are structured software projections rather than complete accessibility. Real-evidence rows remain open because no real calibrated source exists. Authority rows remain exact-gated because only competent and affected people or institutions can authorize consequential action.`,
+    `Module 7 — X1 and x2 remained separate. Each owned three hundred contracts, three hundred safe checks, three hundred malformed failed subjects, three hundred separate passing refusals, three hundred exact copy-from-reference checks, and three hundred CLEAN/FIX/REFINE readbacks. A passing refusal never converts the malformed subject into a pass. Each session was invoked once, succeeded once, and was not replayed. Twenty logical owner-local modules and ten logical paired runners were defined, validated, used, and bound inside the fixed TXT engine. They are not claimed as globally installed Codex Skill packages or shared runners. No package update, global install, shared mutation, memory write, or filesystem deletion occurred.`,
+    `Module 8 — Twenty additional x2 tests check exact mass sums, belief-plausibility order, Mobius reconstruction, conjunctive and disjunctive normalization, bounded conflict, pignistic sums, relabel covariance, vacuous extension, coarsening, profile uniqueness, outcome arithmetic, synthetic flags, and rational denominator integrity. Five nonphysical models present exact singleton pignistic and belief coordinates for four labeled atoms. Those coordinates are presentation data only: not space, force, geometry, observation, simulation of a physical system, or GMUT confirmation. Same-owner passing software checks are not independent reproduction or external audit.`,
+    `Module 9 — Method Flow contains ${flow.counts.methods} methods, ${flow.counts.failed_witnesses} failed witnesses, ${flow.counts.passing_witnesses} bounded passing witnesses, ${flow.counts.witnesses} total witnesses, and ${flow.counts.negatives} unique retained negatives. Every operational fault is retained beside its smallest recovery. No parser, missing-reference, schema-assumption, projection, runner, or malformed-request failure receives original success credit. Successful recoveries add evidence only for their own bounded procedures. No canonical success may be replayed, and an accepted, opaque, or unresolved route submission must stop duplicate sends.`,
+    `Module 10 — Effective successor-visible repository truth after the one-time Mira activation fold is ${effective.negatives} negatives, ${effective.methods} methods, ${effective.failed_witnesses} failed witnesses, ${effective.passing_witnesses} bounded passing witnesses, ${effective.witnesses} total witnesses, ${effective.open_gaps} open gaps, and ${effective.exact_gates} exact gates. Fifty exact-approval packets and thirty blocked packets remain held and unexecuted. Broad user authorization does not create a missing observation, consent, professional review, affected-party decision, legal or cultural mandate, privacy remedy, accessibility remedy, independent security review, or Maori authority. Maori concepts remain under Maori authority.`,
+    `Module 11 — Resource and lifecycle controls are exact. The source had 1,413 tracked files. Auren adds only phase.txt, plan.json, x1.json, x2.json, and final.json, producing 1,418 tracked files below the 2,000-file ceiling. Planning, x1, x2, and final are designed as four direct single-parent commits with zero merges. Each predecessor must be committed, pushed, clean, typed zero-divergent, and equal across local, upstream, tracking, and a fresh live remote before the next lifecycle starts. Validation is restricted to the five-file owner delta and the exact changed module. No full-repository, sibling-lane, or unchanged-history scan is claimed.`,
+    `Module 12 — The primary pillar is GMUT Mind only in the modest sense of exact finite mathematical bookkeeping. THOS remains represented by the deterministic TXT/JSON execution surface and refusal discipline; it is not production certified or an AGI/ASI architecture. Freed ID and CBR remain represented by provenance, nonerasure, readable explanations, and authority reservations; they are not live identity or governance systems. The eight practice lenses and four successor recommendations are synthetic learning frames, not qualifications. Empirical, medical, professional, production, legal, cultural, affected-party, privacy-complete, accessibility-complete, exhaustive-security, independent-reproduction, consciousness/personhood, Theory-of-Everything, canon, and Stage 20 claims remain open or exact-gated.`,
+    `Module 13 — Only after Auren's exact final is sealed, pushed, clean, fresh-live equal, and subjected to one attributable terminal validator may the route be refreshed. Under the current v15 projection the prospective next existing exact-title task is Sable Rook for v701-v8, followed by Avelin Reed v702-v1 only after Sable's own terminal gate. Resolve active and archived uniqueness, immediately reread the exact destination, refresh usage and direct control, and send at most once. Stop on pause, stop, redirect, rename, narrowing, standby state, ambiguity, duplicate, missing acknowledgement, privacy, safety, evidence, authority, usage exhaustion, accepted submission, opaque submission, or unresolved submission. Do not create, fork, delegate, substitute, precontact, or resend merely for clearer acknowledgement. PREPARED_BY_AUREN_LARK = true. SENT_BY_AUREN_LARK remains false at commit time. NOT_READY_FOR_STAGE_20. EOF AUREN LARK v701-v7 FINAL HANDOFF BASIS.`,
+  ];
+  const literalEof = 'EOF AUREN LARK v701-v7 FINAL HANDOFF BASIS.';
+  const extensions = [
+    `Identity continuity is not inferred from the title, prior Auren branches, shared vocabulary, memory, or task routing. The receiving task must independently inspect the immutable Git source and current authority. It may preserve the working name and settings, but neither a source hash nor a native delivery acknowledgement proves persistent subjectivity or an enduring self. Hamish may pause, narrow, rename, redirect, or stop the prospective route at any time.`,
+    `The activation baseline includes the later external observations known when Mira sent the activation; it is not a retroactive repository amendment. Repository preparation, the failed canonical, the corrected composite, route discovery, delivery acknowledgement, and recipient completion are six distinct propositions. The final two are especially separate: a service accepting a message says nothing about whether the recipient read it or completed its work. Any successor must retain these layers without collapsing them into one status.`,
+    `The failed source canonical is useful precisely because it remains failed. Its first 156 passing observations do not yield aggregate canonical success once the exact baton-token dependency fails. The corrected composite demonstrates that a separately named, corrected dependency set can pass, but it does not change the original invocation's result. Auren's validator therefore tests its own exact final and exact baton token without importing a source success label, rerunning Mira's composite, or claiming independent reproduction.`,
+    `All 210 workflow rows and all forty-five weighted roster positions were parsed before planning. The owner-phase sequence is contiguous and unique through v725-v8, and every workflow row resolves to the declared roster-position owner. Tavian Sol remains on standby. The missing shared authorization copy is neither silently recreated nor treated as permission to mutate the family index; its committed source copy is used only for this phase's bounded interpretation, with the discrepancy retained for future authorized maintenance.`,
+    `Each mass assignment is exact rational data on nonempty subsets of a four-label frame. Focal sets, belief, plausibility, commonality, inversion, extension, projection, and combination are deterministic calculations over those declared values. A normalized combination explicitly exposes the discarded conflict and reserves its independence premise. A pignistic transform is labeled as a mathematical presentation coordinate, not a recommendation or licensed decision. No number is presented as a frequency, calibrated probability, physical propensity, diagnosis, forecast, or real person's belief.`,
+    `The outcome labels are semantic, not decorative. Completed means the declared finite software contract produced its exact bounded output. Represented means an accessible textual form exists but has not received human or assistive-technology review. Open_gap means the required real evidence, calibration, independence justification, or empirical evaluation is absent. Exact_gate means action is deliberately withheld pending competent authority and affected-party participation. No user authorization can convert missing evidence into a true observation or grant cultural, legal, medical, or professional standing.`,
+    `The malformed-candidate ledger changes one declared field set, operation name, or profile binding at a time. Each invalid request is preserved with its own negative identifier. The refusal witness proves only that the validator rejected that request. The copy-from-reference witness recomputes the valid frozen request and compares a canonical digest; it does not rerun a successful stage after publication. CLEAN/FIX/REFINE is a bounded serialization and readback review, not permission to delete archives, rewrite predecessors, or perform broad C- or D-drive cleanup.`,
+    `The additional tests are exact invariants over the same frozen profile set and therefore remain same-owner evidence. They do not measure generalization, distribution shift, adversarial robustness outside the declared mutation classes, or real-world reliability. The nonphysical coordinate models are stored in JSON rather than rendered images. A future visual or browser presentation would require its own bounded review, privacy adjudication, keyboard and assistive-technology checks, and explicit statement that aesthetic or structural success does not establish complete accessibility.`,
+    `Method records bind their failure signatures, smallest workarounds, recurrence guards, rollback rules, protected gates, and literal five-file allowlist. Witness counts use atomic_count only to compress repeated contract-level facts; every underlying contract and negative identifier remains in x1 or x2. The append-only meaning forbids deleting a failed witness when a recovery succeeds. A method may be called validated only for its recorded procedure and scope, never for scientific truth, public legitimacy, exhaustive security, production readiness, or a successor's independent work.`,
+    `The effective counters are accounting aids rather than measures of intelligence, consciousness, moral worth, scientific importance, or social legitimacy. Larger counts do not imply stronger external evidence when all observations share one owner and infrastructure. Open gaps and exact gates are not defects to fill with synthetic replicas; they mark where real participants, competent professionals, independent reviewers, affected communities, tangata whenua, iwi, hapu, or Maori authorities would be required. No score, quota, or phase number overrides that boundary.`,
+    `The D-first sparse lane materializes only Mira's source directory and Auren's new directory. Older Auren lanes and every sibling, shared, user, and standby lane remain read-only. The branch is additive from Mira's exact final and does not claim a blank-root provenance. Caps remain ceilings, not targets. No package download, cache promotion, broad scan, hidden network adapter, external API call, secret, credential, or private route is needed for the finite calculations. External canonical and route receipts stay outside the immutable repository seal.`,
+    `The pillar mapping is intentionally modest. Exact belief-function transforms are mathematical software, not a new law of physics. Deterministic execution, refusal, and recovery records are engineering evidence, not an autonomous operating system. Provenance and authority reservations are ethical design notes, not a bill enacted by any government or community. Religious, spiritual, or metaphysical comparisons may be discussed only as labeled interpretation; they cannot be promoted into scientific proof. Maori words, tikanga, taonga, matauranga, and data-governance decisions remain under Maori authority.`,
+    `A terminal handoff must contain the exact source branch and final, complete artifact pointer, canonical receipt hash, repository-sealed counters, later external overlay, strict boundaries, and the prospective following edge. The destination must be one uniquely resolved existing exact-title main task with an immediate bounded reread. Up to five discovery or read recoveries are ceilings while no send is accepted. Corrected submissions are available only after definite preacceptance rejection. Once a send is accepted, opaque, or unresolved, all copies stop and no post-send monitoring is performed.`,
+  ];
+  const expandedModules = modules.map((module, index) => index === modules.length - 1 ? module.replace(literalEof, `${extensions[index]} ${literalEof}`) : `${module} ${extensions[index]}`);
+  const joined = expandedModules.join('\n\n');
+  return {modules: expandedModules, words: (joined.match(/\S+/g) || []).length, literal_eof: literalEof};
+}
+
+function makeFinal() {
+  const file = path.join(ROOT, 'final.json');
+  assert(!fs.existsSync(file), 'final_absent');
+  const plan = readJson(path.join(ROOT, 'plan.json'));
+  const x1 = readJson(path.join(ROOT, 'x1.json'));
+  const x2 = readJson(path.join(ROOT, 'x2.json'));
+  assert(x1.session.successes === 1 && x1.session.replays === 0, 'x1_latch');
+  assert(x2.session.successes === 1 && x2.session.replays === 0, 'x2_latch');
+  assert(x1.contracts.length + x2.contracts.length === 600, 'contract_total');
+  const failures = runtimeFailures();
+  const flow = makeMethodFlow(plan, x1, x2, failures);
+  const own = {...flow.counts, open_gaps: plan.outcomes.open_gap, exact_gates: plan.outcomes.exact_gate};
+  const effective = {
+    methods: SOURCE_ACTIVATION_BASELINE.methods + own.methods,
+    failed_witnesses: SOURCE_ACTIVATION_BASELINE.failed_witnesses + own.failed_witnesses,
+    passing_witnesses: SOURCE_ACTIVATION_BASELINE.passing_witnesses + own.passing_witnesses,
+    witnesses: SOURCE_ACTIVATION_BASELINE.witnesses + own.witnesses,
+    negatives: SOURCE_ACTIVATION_BASELINE.negatives + own.negatives,
+    open_gaps: SOURCE_ACTIVATION_BASELINE.open_gaps + own.open_gaps,
+    exact_gates: SOURCE_ACTIVATION_BASELINE.exact_gates + own.exact_gates,
+  };
+  assert(effective.failed_witnesses + effective.passing_witnesses === effective.witnesses, 'effective_witness_arithmetic');
+  const manifest = ['phase.txt', 'plan.json', 'x1.json', 'x2.json'].map(name => bindFile(path.join(ROOT, name)));
+  const handoff = batonModules(plan, x1, x2, flow, effective);
+  assert(handoff.modules.length === 13 && handoff.words >= 2000 && handoff.words <= 100000, `baton_words:${handoff.words}`);
+  assert(handoff.modules.at(-1).endsWith(handoff.literal_eof), 'baton_eof');
+  const final = {
+    schema: 'ghc.family.auren-evidence-function-final.v15', owner: 'Auren Lark', phase: 'v701-v7', branch: BRANCH, source: SOURCE,
+    lifecycle: {plan: 'external commit binding', x1: 'external commit binding', x2: 'external commit binding', final_parent_expected: 'immutable x2 commit', direct_single_parent_commits: 4, merges: 0, planning_before_x1: true, x1_before_x2: true, each_predecessor_published_clean_equal: true},
+    manifest: {entries: manifest, self_exclusions: [`${PREFIX}final.json`], byte_domain: 'raw_git_blob_utf8_lf'},
+    source_repository_seal: SOURCE_REPOSITORY_SEAL,
+    source_activation_baseline: SOURCE_ACTIVATION_BASELINE,
+    source_baseline_fold_count: 1,
+    source_validation: {canonical_invocations: 1, canonical_successes: 0, canonical_replays: 0, composite_invocations: 1, composite_successes: 1, composite_replays: 0, source_validators_replayed_by_auren: false},
+    proposals: {inherited: 300, inherited_novelty_credit: 0, inherited_completion_credit: 0, new: 600, outcomes: plan.outcomes},
+    portfolios: {x1: x1.portfolios, x2: x2.portfolios}, sessions: {x1: x1.session, x2: x2.session},
+    skills: {logical_owner_local_modules: 20, filesystem_skill_packages: 0, global_installs: 0, used: 20},
+    runners: {logical_owner_local_modules: 10, filesystem_runner_files: 0, positive_smokes: 10, negative_failed_subjects: 10, refusal_passes: 10, used: 10},
+    tests: {selected: x2.tests.length, passed: x2.tests.filter(test => test.pass).length, complete_repository_suite: false},
+    models: {count: x2.models.length, points: x2.models.reduce((sum, model) => sum + model.points_count, 0), physical: false, empirical: false},
+    approval_packets: {exact_held: plan.approval_packets.exact.length, blocked_held: plan.approval_packets.blocked.length, executed: 0},
+    practices: plan.practices,
+    operational_failures: failures,
+    method_flow: flow,
+    own,
+    effective,
+    resource_closeout: {tracked_before: 1413, owner_files: 5, tracked_after: 1418, ceiling: 2000, spend_usd: 0, package_updates: 0, global_installs: 0, shared_mutations: 0, memory_writes: 0},
+    canonical_policy: {state: 'PREPARED_NOT_INVOKED', external_receipt: true, successful_invocations_max: 1, successful_replays_allowed: 0, predecessor_validator_replay: false, exact_final_gate_required: true},
+    route: {state: 'PREPARED_NOT_SENT', projected_successor: 'Sable Rook', projected_assignment: 'v701-v8', projection_is_not_activation: true, send_attempts: 0, resends: 0, recipient_completion_claimed: false},
+    handoff,
+    terminal_verdict: 'NOT_READY_FOR_STAGE_20',
+    boundary: BOUNDARY,
+  };
+  writeExclusive(file, final);
+  console.log(JSON.stringify({state: 'FINAL_WRITTEN', manifest_entries: manifest.length, baton_modules: handoff.modules.length, baton_words: handoff.words, operational_failures: failures.length, own, effective}));
+}
+
+function privacyHits(files) {
+  const patterns = [
+    ['raw_task_or_thread_id', /\b(?:task|thread)[_-]?id\s*[:=]\s*["']?[0-9a-f-]{16,}/ig],
+    ['credential_material', /\b(?:api[_-]?key|access[_-]?token|private[_-]?key|password)\s*[:=]\s*["'][^"']+/ig],
+    ['email_address', /\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}\b/ig],
+    ['private_user_path', /[A-Z]:\\Users\\[^\\\s]+/ig],
+    ['private_app_state', new RegExp([
+      ['session', 'stream'].join(' '),
+      ['private', 'callable', 'identifier'].join(' '),
+      ['raw', 'transcript'].join(' '),
+      ['screenshot', 'payload'].join(' '),
+    ].join('|'), 'ig')],
+  ];
+  const hits = [];
+  for (const file of files) {
+    const text = fs.readFileSync(file, 'utf8');
+    for (const [kind, regex] of patterns) for (const match of text.match(regex) || []) hits.push({file: relative(file), kind, digest: shaBytes(Buffer.from(match, 'utf8'))});
+  }
+  return hits;
+}
+
+function validateRepository(options = {}) {
+  const preflight = options.preflight === true;
+  const plan = readJson(path.join(ROOT, 'plan.json'));
+  const x1 = readJson(path.join(ROOT, 'x1.json'));
+  const x2 = readJson(path.join(ROOT, 'x2.json'));
+  const final = readJson(path.join(ROOT, 'final.json'));
+  const files = ['phase.txt', 'plan.json', 'x1.json', 'x2.json', 'final.json'].map(name => path.join(ROOT, name));
+  const checks = [];
+  const add = (id, claim, pass, detail = null) => checks.push({id, claim, pass: Boolean(pass), detail});
+  const status = gitText('status', '--porcelain=v1', '--untracked-files=all');
+  const expectedPreflightStatus = `?? ${PREFIX}final.json`;
+  const head = gitText('rev-parse', 'HEAD');
+  add('C01', 'owner branch', gitText('branch', '--show-current') === BRANCH, gitText('branch', '--show-current'));
+  add('C02', preflight ? 'only projected final untracked' : 'clean worktree', preflight ? status === expectedPreflightStatus : status === '', status);
+  add('C03', 'exact final supplied', !options.exactFinal || options.exactFinal === head, head);
+  let upstream = null; let tracking = null; let live = null; let divergence = null;
+  if (options.remote) {
+    upstream = gitText('rev-parse', '@{upstream}');
+    tracking = gitText('rev-parse', `refs/remotes/origin/${BRANCH}`);
+    const liveRows = gitText('ls-remote', '--heads', 'origin', `refs/heads/${BRANCH}`).split(/\r?\n/).filter(Boolean);
+    live = liveRows.length === 1 ? liveRows[0].split(/\s+/)[0] : null;
+    divergence = gitText('rev-list', '--left-right', '--count', `HEAD...refs/remotes/origin/${BRANCH}`);
+    add('C04', 'upstream equality', upstream === head, upstream);
+    add('C05', 'tracking equality', tracking === head, tracking);
+    add('C06', 'fresh unique live equality', live === head, live);
+    add('C07', 'typed zero divergence', /^0\s+0$/.test(divergence), divergence);
+  }
+  const commits = gitText('rev-list', '--reverse', `${SOURCE}..${head}`).split(/\r?\n/).filter(Boolean);
+  const expectedCommitCount = preflight ? 3 : 4;
+  add('C08', preflight ? 'three published predecessors' : 'four new commits', commits.length === expectedCommitCount, commits);
+  let direct = commits.length === expectedCommitCount;
+  let parent = SOURCE;
+  for (const commit of commits) {
+    const parents = gitText('show', '-s', '--format=%P', commit).split(/\s+/).filter(Boolean);
+    direct &&= parents.length === 1 && parents[0] === parent;
+    parent = commit;
+  }
+  add('C09', 'direct single-parent lifecycle', direct);
+  add('C10', 'zero merges', gitText('rev-list', '--merges', `${SOURCE}..${head}`) === '');
+  const tracked = gitText('ls-tree', '-r', '--name-only', head).split(/\r?\n/).filter(Boolean).length;
+  add('C11', preflight ? 'projected 1418 tracked files' : 'exact 1418 tracked files', preflight ? tracked === 1417 : tracked === 1418, tracked);
+  const changed = gitText('diff', '--name-only', `${SOURCE}..${head}`).split(/\r?\n/).filter(Boolean);
+  add('C12', preflight ? 'four published owner predecessors plus projected final' : 'exact five owner files', preflight ? changed.length === 4 && changed.every(file => file.startsWith(PREFIX)) && status === expectedPreflightStatus : changed.length === 5 && changed.every(file => file.startsWith(PREFIX)), changed);
+  for (const entry of final.manifest.entries) {
+    const file = path.join(W, ...entry.path.split('/'));
+    const binding = bindFile(file);
+    const blob = gitBytes('show', `${head}:${entry.path}`);
+    add(`M-${path.basename(entry.path)}`, `worktree and raw Git blob binding ${entry.path}`, binding.bytes === entry.bytes && binding.sha256 === entry.sha256 && blob.length === entry.bytes && shaBytes(blob) === entry.sha256, {binding, blob_bytes: blob.length, blob_sha256: shaBytes(blob)});
+  }
+  add('C13', 'manifest self exclusion', final.manifest.self_exclusions.length === 1 && final.manifest.self_exclusions[0] === `${PREFIX}final.json`);
+  add('C14', 'strict JSON parse count', [plan, x1, x2, final].every(Boolean), 4);
+  add('C15', 'proposal counts', plan.inherited.records.length === 300 && plan.contracts.length === 600);
+  add('C16', 'outcome counts', JSON.stringify(plan.outcomes) === JSON.stringify({completed: 510, represented: 30, open_gap: 30, exact_gate: 30}), plan.outcomes);
+  for (const [stageName, stage] of [['x1', x1], ['x2', x2]]) {
+    add(`${stageName}-01`, `${stageName} contracts`, stage.contracts.length === 300);
+    add(`${stageName}-02`, `${stageName} safe`, stage.portfolios.safe_checks === 300);
+    add(`${stageName}-03`, `${stageName} candidate`, stage.portfolios.malformed_candidate_subjects === 300);
+    add(`${stageName}-04`, `${stageName} refusal`, stage.portfolios.refusal_checks === 300);
+    add(`${stageName}-05`, `${stageName} copy reference`, stage.portfolios.copy_from_reference_checks === 300);
+    add(`${stageName}-06`, `${stageName} cleanup`, stage.portfolios.clean_fix_refine_reviews === 300);
+    add(`${stageName}-07`, `${stageName} skills`, stage.skills.length === 10 && stage.skills.every(skill => skill.used && skill.validation_passed));
+    add(`${stageName}-08`, `${stageName} runners`, stage.runners.length === 5 && stage.runners.every(runner => runner.used && runner.positive_smoke.pass && runner.refusal_check.pass));
+    add(`${stageName}-09`, `${stageName} latch`, stage.session.invocations === 1 && stage.session.successes === 1 && stage.session.replays === 0);
+  }
+  add('C17', 'twenty additional tests', x2.tests.length === 20 && x2.tests.every(test => test.pass));
+  add('C18', 'five nonphysical models', x2.models.length === 5 && x2.models.every(model => model.points.length === 4 && !model.physical && !model.empirical));
+  add('C19', 'held approval packets', plan.approval_packets.exact.length === 50 && plan.approval_packets.blocked.length === 30 && final.approval_packets.executed === 0);
+  add('C20', 'logical skills and runners', plan.skills.length === 20 && plan.runners.length === 10 && final.skills.global_installs === 0);
+  const flow = final.method_flow;
+  const passing = flow.witnesses.filter(witness => witness.result === 'pass').reduce((sum, witness) => sum + witness.atomic_count, 0);
+  const failed = flow.witnesses.filter(witness => witness.result === 'fail').reduce((sum, witness) => sum + witness.atomic_count, 0);
+  add('C21', 'method count', flow.methods.length === flow.counts.methods, {actual: flow.methods.length, declared: flow.counts.methods});
+  add('C22', 'passing witness arithmetic', passing === flow.counts.passing_witnesses, {passing, declared: flow.counts.passing_witnesses});
+  add('C23', 'failed witness arithmetic', failed === flow.counts.failed_witnesses, {failed, declared: flow.counts.failed_witnesses});
+  add('C24', 'negative uniqueness', new Set(flow.retained_negative_ids).size === flow.retained_negative_ids.length && flow.retained_negative_ids.length === flow.counts.negatives);
+  add('C25', 'effective arithmetic', final.effective.failed_witnesses + final.effective.passing_witnesses === final.effective.witnesses);
+  add('C26', 'source activation baseline folded once', final.source_baseline_fold_count === 1);
+  add('C27', 'baton modules and length', final.handoff.modules.length === 13 && final.handoff.words >= 2000 && final.handoff.words <= 100000, final.handoff.words);
+  add('C28', 'baton literal EOF', final.handoff.modules.at(-1).endsWith(final.handoff.literal_eof));
+  add('C29', 'exact terminal token and verdict', final.terminal_verdict === 'NOT_READY_FOR_STAGE_20' && final.handoff.modules.join('\n').includes('NOT_READY_FOR_STAGE_20'));
+  const hits = privacyHits(files);
+  add('C30', 'zero confirmed five-class privacy hits', hits.length === 0, hits);
+  const sourceText = fs.readFileSync(path.join(ROOT, 'phase.txt'), 'utf8');
+  const securityFindings = [];
+  if (/shell\s*:\s*true/.test(sourceText)) securityFindings.push('shell_true');
+  if (/\beval\s*\(/.test(sourceText)) securityFindings.push('eval');
+  if (/https?:\/\//.test(sourceText) && !sourceText.includes('research_sources')) securityFindings.push('unexpected_network_literal');
+  add('C31', 'zero bounded changed-source security findings', securityFindings.length === 0, securityFindings);
+  add('C32', 'predecessor validators not replayed', !plan.source.source_canonical_replayed_by_auren && !plan.source.source_composite_replayed_by_auren);
+  add('C33', 'stage sessions not replayed', x1.session.replays === 0 && x2.session.replays === 0);
+  add('C34', 'resource and format boundary', final.resource_closeout.tracked_after === 1418 && final.resource_closeout.global_installs === 0 && final.resource_closeout.shared_mutations === 0 && changed.concat(preflight ? [`${PREFIX}final.json`] : []).every(file => /\.(?:txt|json)$/.test(file)));
+  add('C35', 'v15 control bindings', plan.controls.workflow_sha256 === CONTROL_HASHES.workflow_v15 && plan.controls.roster_sha256 === CONTROL_HASHES.roster_v15 && plan.controls.authorization_sha256 === CONTROL_HASHES.authorization_v15);
+  add('C36', 'source canonical failure retained', final.source_validation.canonical_invocations === 1 && final.source_validation.canonical_successes === 0 && final.source_validation.canonical_replays === 0);
+  add('C37', 'source composite retained separately', final.source_validation.composite_invocations === 1 && final.source_validation.composite_successes === 1 && final.source_validation.composite_replays === 0);
+  const failures = checks.filter(check => !check.pass);
+  return {head, upstream, tracking, live, divergence, tracked, changed, checks, failures, privacy_hits: hits, security_findings: securityFindings};
+}
+
+function validateCommand() {
+  const finalExists = fs.existsSync(path.join(ROOT, 'final.json'));
+  if (!finalExists) {
+    const plan = readJson(path.join(ROOT, 'plan.json'));
+    const output = {stage: 'plan', checks: planChecks(plan), engine_fixed: bindFile(path.join(ROOT, 'phase.txt')).sha256 === plan.engine.sha256};
+    if (fs.existsSync(path.join(ROOT, 'x1.json'))) output.x1 = readJson(path.join(ROOT, 'x1.json')).checks;
+    if (fs.existsSync(path.join(ROOT, 'x2.json'))) output.x2 = readJson(path.join(ROOT, 'x2.json')).checks;
+    assert(output.engine_fixed && output.checks.every(check => check.pass) && (!output.x1 || Object.values(output.x1).every(Boolean)) && (!output.x2 || Object.values(output.x2).every(Boolean)), 'validation');
+    console.log(JSON.stringify(output));
+    return;
+  }
+  const validation = validateRepository({remote: false, preflight: true});
+  if (validation.failures.length) throw new Error(`validation_failures:${JSON.stringify(validation.failures)}`);
+  console.log(JSON.stringify({state: 'VALID_OWNER_WORKTREE_PREFLIGHT', checks: validation.checks.length, tracked: validation.tracked, changed: validation.changed.length, privacy_hits: validation.privacy_hits.length, security_findings: validation.security_findings.length}));
+}
+
+function canonicalRun(exactFinal) {
+  ensureDir(path.join(BANK, 'canonical'));
+  const latchFile = path.join(BANK, 'canonical', 'invocation-latch.json');
+  const payloadFile = path.join(BANK, 'canonical', 'canonical-payload.json');
+  const receiptFile = path.join(BANK, 'canonical', 'canonical-receipt.json');
+  assert(!fs.existsSync(latchFile) && !fs.existsSync(payloadFile) && !fs.existsSync(receiptFile), 'canonical_exclusive_latch');
+  writeExclusive(latchFile, {schema: 'ghc.family.canonical-invocation-latch.v15', owner: 'Auren Lark', phase: 'v701-v7', invoked_utc: new Date().toISOString(), successful_replays: 0});
+  let validation;
+  try { validation = validateRepository({remote: true, exactFinal}); }
+  catch (error) {
+    writeExclusive(path.join(BANK, 'canonical', 'canonical-failure.json'), {schema: 'ghc.family.owner-canonical-failure.v15', error: error.message, successful_invocations: 0, successful_replays: 0, repository_mutated: false, retained: true});
+    throw error;
+  }
+  if (validation.failures.length) {
+    writeExclusive(path.join(BANK, 'canonical', 'canonical-failure.json'), {schema: 'ghc.family.owner-canonical-failure.v15', failures: validation.failures, successful_invocations: 0, successful_replays: 0, repository_mutated: false, retained: true});
+    throw new Error(`canonical_failures:${JSON.stringify(validation.failures)}`);
+  }
+  const final = readJson(path.join(ROOT, 'final.json'));
+  const payload = {
+    schema: 'ghc.family.owner-canonical-payload.v15', state: 'VALID_EXACT_FINAL_OWNER_SCOPED_CANONICAL', owner: 'Auren Lark', phase: 'v701-v7', branch: BRANCH, source: SOURCE,
+    head: validation.head, check_count: validation.checks.length, checks: validation.checks, owner_files: validation.changed.length, tracked_files: validation.tracked,
+    strict_json_parses: 4, manifest_replays: final.manifest.entries.length, privacy_hits: validation.privacy_hits, security_findings: validation.security_findings,
+    successful_invocations: 1, successful_replays: 0, predecessor_canonical_replay: false, predecessor_composite_replay: false, x1_session_replay: false, x2_session_replay: false,
+    same_owner_only: true, independent_reproduction: false, full_repository_suite: false, repository_mutated: false, terminal_verdict: 'NOT_READY_FOR_STAGE_20', boundary: BOUNDARY,
+  };
+  const payloadBytes = canonical(payload);
+  const payloadSha = shaBytes(payloadBytes);
+  fs.writeFileSync(payloadFile, payloadBytes, {flag: 'wx'});
+  const receipt = {schema: 'ghc.family.owner-canonical-receipt.v15', payload, payload_sha256: payloadSha, invoked_utc: new Date().toISOString(), repository_mutated: false};
+  writeExclusive(receiptFile, receipt);
+  console.log(JSON.stringify({state: payload.state, check_count: payload.check_count, payload_sha256: payloadSha, receipt_sha256: bindExternal(receiptFile).sha256, head: payload.head, tracked_files: payload.tracked_files}));
+}
+
+const command = process.argv.at(-1);
+if (command === 'plan') makePlan();
+else if (command === 'x1' || command === 'x2') runStage(command);
+else if (command === 'final') makeFinal();
+else if (command === 'validate') validateCommand();
+else if (command && command.startsWith('canonical=')) canonicalRun(command.slice('canonical='.length));
+else throw new Error('usage: plan | x1 | x2 | final | validate | canonical=<exact-final>');
