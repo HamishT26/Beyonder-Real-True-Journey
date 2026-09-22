@@ -1,0 +1,35 @@
+{
+  "schema": "ghc.family.precommit-failure-receipt.v1",
+  "owner": "Orin Thale",
+  "phase": "v702-v3",
+  "stage": "final-review",
+  "state": "VALID_DEPENDENCY_CORRECTED_FINAL_WITHOUT_FINAL_REPLAY",
+  "failures": [
+    {
+      "id": "OR7023-FINAL-REVIEW-N001",
+      "failure": "The first read-only final completeness projection normalized Windows relative paths with a two-backslash literal and falsely reported owner and delta manifest incompleteness.",
+      "recovery": "Normalized each path by splitting on the platform separator and verified that the final owner manifest has no missing or extra path.",
+      "original_success_credit": 0,
+      "recovered": true,
+      "retained": true,
+      "repository_mutated": false
+    },
+    {
+      "id": "OR7023-FINAL-REVIEW-N002",
+      "failure": "The next read-only delta projection trimmed the complete porcelain stream, stripping the leading worktree-status space from its first record and falsely dropping the first path character.",
+      "recovery": "Preserved record-prefix whitespace and compared the exact staged path set with the delta manifest without whole-stream trimming.",
+      "original_success_credit": 0,
+      "recovered": true,
+      "retained": true,
+      "repository_mutated": false
+    }
+  ],
+  "initial_final_sha256": "5c22e658c785512b136922d8ed46adeba016835ded801403056a7002540204cc",
+  "initial_owner_manifest_sha256": "c947e0b7801e2c9dbfc0f7eb9b30bdbb86e6c37e4a83bfcf73ba209a4488c70e",
+  "initial_delta_manifest_sha256": "932ac343e92266c8e1cd4d837f8fec5e33ea66c24d94c1c9a82aecde5164f325",
+  "final_invocations": 1,
+  "final_successes": 1,
+  "final_replays": 0,
+  "failure_erasure": false,
+  "boundary": "Same-owner finite exact synthetic software evidence only. No empirical, participant, professional, production, deployment, legal, cultural, Maori-authority, affected-party, privacy-complete, accessibility-complete, exhaustive-security, independent-reproduction, AGI/ASI, consciousness/personhood, Theory-of-Everything, canon, or Stage 20 credit. NOT_READY_FOR_STAGE_20."
+}
