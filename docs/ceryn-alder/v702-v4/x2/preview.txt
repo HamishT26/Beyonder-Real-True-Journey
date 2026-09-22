@@ -1,0 +1,4 @@
+'use strict';
+const http=require('http'),fs=require('fs');
+function serve(){const html=fs.readFileSync(__dirname+'/atlas.html');const server=http.createServer((req,res)=>{if(req.method!=='GET'||!['/','/atlas.html','/favicon.ico'].includes(req.url)){res.writeHead(404);res.end();return;}if(req.url==='/favicon.ico'){res.writeHead(204);res.end();return;}res.writeHead(200,{'Content-Type':'text/html; charset=utf-8','Cache-Control':'no-store','X-Content-Type-Options':'nosniff'});res.end(html);});server.listen(0,'127.0.0.1',()=>console.log(JSON.stringify({url:'http://127.0.0.1:'+server.address().port+'/atlas.html',scope:'single owner static page',pid:process.pid})));}
+module.exports={serve};

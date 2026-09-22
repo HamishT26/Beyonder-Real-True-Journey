@@ -1,0 +1,39 @@
+'use strict';
+const fs=require('fs'),path=require('path'),Q=require('../q.txt'),E=require('../executor.txt'),{ledger}=require('../ledger.txt');const root=path.resolve(__dirname,'..'),plan=JSON.parse(fs.readFileSync(root+'/plan.json')),results=[],witnesses=[];
+const V=a=>a.map(z=>Array.isArray(z)?z.map(String):[String(z),'0']);const ramp=V([1,2,3,4]),delta=V([1,0,0,0]),zeros=V([0,0,0,0]),F=V([[10,0],[-2,2],[-2,0],[-2,-2]]);
+const req=(operation,a=ramp,extra={})=>({operation,a,b:delta,shift:1,mask:[true,false,true,false],...extra});const value=(op,a,extra)=>E.run(req(op,a,extra)).value;const same=(a,b)=>Q.canonical(a)===Q.canonical(b);const assert=(ok,msg='ASSERTION')=>{if(!ok)throw Error(msg);};
+function t(i,fn){const record={id:'CA7024-T'+String(i).padStart(2,'0'),name:plan.tests[i-1],planned:true};try{record.evidence=fn();record.pass=true;}catch(e){record.pass=false;record.error=e.message;}results.push(record);fs.mkdirSync(__dirname+'/tests',{recursive:true});const p=__dirname+'/tests/'+record.id+'.json';if(fs.existsSync(p))throw Error('TEST_ALREADY_RECORDED');fs.writeFileSync(p,JSON.stringify(record,null,2)+'\n');witnesses.push({procedure:record.name,expected:'Declared exact property',observed:record.pass?'Property confirmed within fixture':record.error,result:record.pass?'pass':'fail',negative:record.pass?undefined:record.id+'-FAIL'});if(record.evidence?.failed_claim)witnesses.push({procedure:record.evidence.failed_claim,expected:record.evidence.expected_subject||'Valid bounded claim or request',observed:record.evidence.refuted_by||'Declared schema rejected the subject',result:'fail',negative:record.id+'-SUBJECT'});}
+function rejected(r,code){let observed='NO_REJECTION';try{E.run(r);}catch(e){observed=e.message;}assert(observed===code,observed);return{failed_claim:'Malformed additional-test request',original_credit:0,request:r,error:observed,refuted_by:observed};}
+function main(){if(fs.existsSync(__dirname+'/tests-latch.json'))throw Error('TEST_SET_ALREADY_INVOKED');fs.writeFileSync(__dirname+'/tests-latch.json',JSON.stringify({invocations:1,replays:0,planned:30})+'\n');
+t(1,()=>{const actual=value('dft');assert(same(actual,F));return{actual,expected:F};});
+t(2,()=>{const actual=value('dft',delta);assert(same(actual,V([1,1,1,1])));return{actual};});
+t(3,()=>{const actual=value('dft',V([2,2,2,2]));assert(same(actual,V([8,0,0,0])));return{actual};});
+t(4,()=>{const actual=value('dft',V([1,-1,1,-1]));assert(same(actual,V([0,0,4,0])));return{actual};});
+t(5,()=>{const actual=value('dft',V([[1,0],[0,1],[-1,0],[0,-1]]));assert(same(actual,V([0,4,0,0])));return{actual};});
+t(6,()=>{const actual=value('inverse',F);assert(same(actual,ramp));return{actual};});
+t(7,()=>{const actual=Q.out(E.butterfly(Q.vec(F).map(Q.cj)).map(Q.cj));assert(same(actual,V([4,8,12,16]))&&!same(actual,ramp));return{failed_claim:'Unnormalized forward and backward compose to identity',original_credit:0,actual,refuted_by:'Composition is four times the original vector.'};});
+t(8,()=>{const actual=value('parseval');assert(actual.time_energy==='30'&&actual.frequency_energy==='120'&&actual.equal);return{actual};});
+t(9,()=>{const actual=value('convolution',ramp,{b:delta});assert(same(actual,ramp));return{actual};});
+t(10,()=>{const a=V([0,0,0,1]),actual=value('convolution',a,{b:a});assert(same(actual,V([0,0,1,0]))&&!same(actual,zeros));return{failed_claim:'Four-point circular convolution is the first four coordinates of linear convolution',original_credit:0,actual,linear_nonzero_index:6,refuted_by:'Circular index wraps modulo four; index six maps to two.'};});
+t(11,()=>{const a=V([[1,0],[0,1],[0,0],[0,0]]),actual=value('correlation',a,{b:a});assert(same(actual,V([[2,0],[0,1],[0,0],[0,-1]])));return{actual};});
+t(12,()=>{const actual=value('shift_theorem');assert(same(actual.shifted_spectrum,V([[10,0],[2,2],[2,0],[2,-2]]))&&same(actual.shifted_spectrum,actual.phase_product));return{actual};});
+t(13,()=>{const actual=value('modulation');assert(same(actual.spectrum,V([[-2,-2],[10,0],[-2,2],[-2,0]])));return{actual};});
+t(14,()=>{const a=delta,mt=value('modulation',value('shift',a)).modulated,tm=value('shift',value('modulation',a).modulated),phase=Q.out(Q.vec(tm).map(z=>Q.cm(z,Q.ipow(1))));assert(same(mt,phase)&&!same(mt,tm));return{failed_claim:'Nonzero modulation and translation always commute exactly',original_credit:0,mt,tm,refuted_by:'The declared operators differ by the exact phase i.'};});
+t(15,()=>{const actual=value('circulant_action');assert(same(actual.action,ramp)&&same(actual.matrix[0],V([1,4,3,2])));return{actual};});
+t(16,()=>{const first=value('filter_projection'),second=value('filter_projection',first.projected);assert(same(first.projected,second.projected)&&same(first.projected,V([2,3,2,3])));return{first:first.projected,second:second.projected};});
+t(17,()=>{const actual=value('filter_projection');assert(actual.before_energy==='30'&&actual.after_energy==='26');return{before:'30',after:'26'};});
+t(18,()=>{const actual=value('filter_projection',ramp,{mask:[false,false,false,false]});assert(same(actual.projected,zeros)&&actual.after_energy==='0');return{actual};});
+t(19,()=>{const actual=value('filter_projection',ramp,{mask:[true,true,true,true]});assert(same(actual.projected,ramp)&&actual.after_energy==='30');return{actual};});
+t(20,()=>{const sum=Q.str(Q.add(Q.parse('1/2'),Q.parse('1/3'))),product=Q.sv(Q.cm(Q.cv(['1','1']),Q.cv(['1','-1'])));assert(sum==='5/6'&&same(product,['2','0']));return{sum,product};});
+t(21,()=>rejected(req('not_an_operation'),'UNKNOWN_OPERATION'));
+t(22,()=>rejected({...req('dft'),extra:true},'CLOSED_FIELDS'));
+t(23,()=>{const r=req('dft',structuredClone(ramp));r.a[0][0]='2/4';return rejected(r,'NONCANONICAL_RATIONAL');});
+t(24,()=>rejected(req('dft',ramp.slice(0,3)),'VECTOR_LENGTH'));
+t(25,()=>rejected(req('dft',ramp,{shift:4}),'SHIFT_BOUND'));
+t(26,()=>rejected(req('dft',ramp,{mask:[true,false,0,false]}),'MASK_SHAPE'));
+t(27,()=>{const r=req('dft',structuredClone(ramp));r.a[0][0]='1'.repeat(4097);return rejected(r,'RESOURCE_BOUND');});
+t(28,()=>{const original=E.run(req('dft')),tampered=structuredClone(original);tampered.value[0][0]='11';assert(Q.sha(tampered)!==Q.sha(original));return{failed_claim:'Tampered stored result retains the original result digest',original_credit:0,original,tampered,refuted_by:'SHA-256 binding differs.'};});
+t(29,()=>{const records=[];for(let i=1;i<=20;i++){const s=i<=10?'x1':'x2';records.push(...JSON.parse(fs.readFileSync(root+'/'+s+'/results-'+String(i).padStart(2,'0')+'.json')).contracts);}assert(records.length===600&&new Set(records.map(r=>r.malformed_subject.id)).size===600&&records.every(r=>r.malformed_subject.credit===0&&r.refusal.failed_subject_promoted===false&&r.clean_fix_refine.failed_subject_retained));return{retained:600,zero_credit_subjects:600,guard_promotions:0};});
+t(30,()=>{const a=value('accessibility_reservation'),o=value('observation_vacancy'),g=value('authority_gate');assert(!a.complete_accessibility&&!a.participant_evidence&&!o.measured&&o.physical_likelihood===null&&!g.competent_authority_evidence&&g.operation==='withheld');return{accessibility:a,observation:o,authority:g};});
+const summary={planned:30,executed:results.length,passed:results.filter(x=>x.pass).length,failed:results.filter(x=>!x.pass).length,retained_invalid_claims:results.filter(x=>x.evidence?.failed_claim).length,full_domain_replays:0,results};fs.writeFileSync(__dirname+'/tests-summary.json',JSON.stringify(summary,null,2)+'\n');fs.writeFileSync(__dirname+'/method-targeted-tests.json',JSON.stringify(ledger('CA7024-M-TESTS','Targeted identities and falsifiers',witnesses,'x2'),null,2)+'\n');console.log(JSON.stringify({executed:summary.executed,passed:summary.passed,failed:summary.failed,retained_invalid_claims:summary.retained_invalid_claims}));if(summary.failed)process.exitCode=1;}
+module.exports={main};
