@@ -1,0 +1,4 @@
+'use strict';
+const engine=require('../runtime/transport.txt');
+const allowed=["transport_row_kernel","transport_column_kernel"];
+module.exports=function(request){if(!request||!allowed.includes(request.op))throw Error('runner operation boundary');return engine.run(request)};
