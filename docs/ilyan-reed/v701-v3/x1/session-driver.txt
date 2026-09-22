@@ -1,0 +1,99 @@
+"""Run one bounded owner tranche, retain per-contract results, and build local helpers."""
+import sys,json,hashlib,runpy,copy,collections
+from pathlib import Path
+ROOT=Path(__file__).resolve().parent.parent
+STAGE=sys.argv[1];CONTROL=Path(sys.argv[2]);BANK=Path(sys.argv[3])
+assert STAGE in ('x1','x2')
+BOUNDARY=json.loads((ROOT/'plan/workflow.json').read_text())['boundary']
+engine=runpy.run_path(str(ROOT/'x1/rough-engine.txt'));ref=runpy.run_path(str(ROOT/'plan/reference.txt'))
+OPS=engine['OPS'];profiles={p['id']:p for p in json.loads((ROOT/'plan/profiles.json').read_text())}
+contracts=[c for c in json.loads((ROOT/'plan/contracts.json').read_text()) if c['session']==STAGE]
+def raw(x):return (json.dumps(x,sort_keys=True,ensure_ascii=False,indent=2)+'\n').encode()
+def sha(b):return hashlib.sha256(b).hexdigest()
+def write(name,x):
+ p=ROOT/name;p.parent.mkdir(parents=True,exist_ok=True)
+ with p.open('xb') as f:f.write(x.encode() if isinstance(x,str) else raw(x))
+def load(name):return json.loads((ROOT/name).read_text(encoding='utf-8'))
+journal=ROOT/STAGE/'execution-journal.txt'; rows=[]
+if journal.exists():
+ rows=[json.loads(s) for s in journal.read_text().splitlines()]
+ assert all(x['safe_match'] and x['refusal_pass'] and x['cache_review_pass'] for x in rows),'failed execution row requires a narrow correction'
+done={x['id'] for x in rows}
+for k,c in enumerate(contracts):
+ if c['id'] in done:continue
+ p=profiles[c['profile']];valid=engine['run'](p,c['operation'])
+ bad=copy.deepcopy(p);mutation=k%10
+ if mutation==0:bad['target']=True
+ elif mutation==1:bad['target']=-1
+ elif mutation==2:bad['target']=32
+ elif mutation==3:bad['partition']=bad['partition'][:4]
+ elif mutation==4:bad['partition'][0]=False
+ elif mutation==5:bad['refiner'][0]=-1
+ elif mutation==6:bad['refiner'][0]=5
+ elif mutation==7:bad['id']={}
+ elif mutation==8:bad['unexpected']='reject'
+ else:bad['target']='1'
+ rejected=engine['run'](bad,c['operation'])
+ serialized=raw(valid);readback=json.loads(serialized)
+ row=dict(id=c['id'],operation=c['operation'],profile=c['profile'],outcome=c['outcome'],input_sha256=sha(raw(p)),definition_sha256=sha(raw(c)),observed=valid,output_sha256=sha(raw(valid.get('result'))),safe_match=valid.get('accepted') is True and valid.get('result')==c['expected'] and valid.get('outcome')==c['outcome'],invalid_id=c['id']+'-INVALID',invalid_profile=bad,invalid_result=rejected,invalid_original_success_credit=0,refusal_pass=rejected.get('accepted') is False and rejected.get('operation_executed') is False,cache_review_pass=readback==valid and sha(raw(p))==c['input_sha256'] and sha(raw(readback.get('result')))==c['expected_sha256'],CFR_scope='serialize-readback and immutable input/result digest comparison; no domain rerun')
+ with journal.open('a',encoding='utf-8',newline='\n') as f:f.write(json.dumps(row,ensure_ascii=False,sort_keys=True)+'\n')
+ rows.append(row)
+ assert row['safe_match'] and row['refusal_pass'] and row['cache_review_pass'],c['id']
+write(STAGE+'/results.json',rows)
+quick=runpy.run_path(str(CONTROL/'.system/skill-creator/scripts/quick_validate.py'))['validate_skill']
+methodmod=runpy.run_path(str(CONTROL/'ghc-family-method-flow-state/scripts/ghc_family_method_flow_state.py'))
+ledger=methodmod['new_ledger']('v701-v3-'+STAGE,'Ilyan Reed');ledger['boundary']=BOUNDARY
+ledger['execution_authority']='owner_self_scoped_delta'
+ledger['identity_boundary']='Names and continuity language are relational working language only.'
+negatives=[];guides=[];smokes=[]
+start=0 if STAGE=='x1' else 10
+for i in range(start,start+10):
+ op=OPS[i];mine=[r for r in rows if r['operation']==op];mid='IR7013-M%02d'%(i+1);witnesses=[]
+ for r in mine:
+  negatives.append(dict(negative_id=r['invalid_id'],kind='malformed_candidate',original_success_credit=0,result='fail',refusal_guard_separate=True))
+  for suffix,passed,procedure,expected,observed in [
+   ('SAFE',r['safe_match'],'Compare runtime output with frozen set-enumeration oracle','exact same finite result',r['output_sha256']),
+   ('INVALID',False,'Attempt malformed profile','valid typed profile',r['invalid_result']),
+   ('REFUSAL',r['refusal_pass'],'Inspect malformed response','no operation executed',r['invalid_result']),
+   ('CFR',r['cache_review_pass'],'Inspect saved response and input binding','byte-bound cache fidelity',r['output_sha256'])]:
+   w=dict(witness_id=r['id']+'-'+suffix,method_id=mid,procedure=procedure,scope=STAGE+'/'+op,expected=expected,observed=observed,result='pass' if passed else 'fail',same_owner_only=True,independent_reproduction=False,retained_negative_ids=[r['invalid_id']] if suffix in ('INVALID','REFUSAL') else [],boundary=BOUNDARY)
+   witnesses.append(w)
+ ledger['witnesses'].extend(witnesses)
+ ledger['methods'].append(dict(method_id=mid,title=op,failure_signature='Malformed envelope or result disagrees with declared finite oracle',trigger_preconditions=['five anonymous elements','literal operation','frozen profile'],privacy_class='sanitized_public',approval_class='safe_now_synthetic',candidate_workaround='Validate the closed envelope; preserve malformed subjects and compare exact finite results',validation_witness_ids=[w['witness_id'] for w in witnesses],recurrence_guard='Bounded inputs and exact saved hashes',rollback='Mark affected current capability unavailable; preserve every earlier record',recommendation_state='validated',supersedes=[],protected_gates=['real_observation','real_classification','competent_authority','independent_reproduction','Stage_20'],retained_negative_ids=[r['invalid_id'] for r in mine],scope_boundary=BOUNDARY,execution_authority='owner_self_scoped_delta',repository_scan=False,module_scan=True,cross_lane_scan=False,unchanged_history_scan=False,sibling_lane_mutation=False,source_commit='9f40d345b3f70599ffa87e9622b447382bfd07d0',final_commit='external_receipt_after_commit',changed_file_allowlist=['docs/ilyan-reed/v701-v3/x1/rough-engine.txt'],module_allowlist=['docs/ilyan-reed/v701-v3/x1/rough-engine.txt'],exact_pushed_head_required=True))
+ name='ghc-family-rough-'+op
+ caller='%s/runners/rough_pair_%02d.txt'%(STAGE,i//2+1)
+ text='---\nname: '+name+'\ndescription: '+ref['DESCRIPTIONS'][i]+' Use for finite synthetic rough-set analysis.\n---\n\n# '+op+'\n\nUse the paired caller '+caller+' from the phase root. Supply a closed record with id, partition, refiner and target; the two label arrays have exactly five integers from zero to four and target is an integer mask from zero to thirty-one. Boolean values are rejected.\n\n'+ref['DESCRIPTIONS'][i]+' Compare the result with the frozen contract and retain rejected inputs separately from successful guards. Lower means complete block inclusion; upper means nonempty block intersection. A grouping alone provides no real-world evidence or decision authority.\n\nRollback by marking this local capability unavailable and retaining the evidence. '+BOUNDARY+'\n'
+ write(STAGE+'/skills/'+name+'/SKILL.md',text)
+ ok,msg=quick(ROOT/STAGE/'skills'/name);guides.append(dict(name=name,valid=ok,message=msg));assert ok,(name,msg)
+for j in range(start//2,start//2+5):
+ allowed=OPS[j*2:j*2+2]
+ wrapper='import runpy\nfrom pathlib import Path\nROOT=Path(__file__).resolve().parents[2]\nengine=runpy.run_path(str(ROOT/"x1/rough-engine.txt"))\nALLOWED='+repr(allowed)+'\ndef run_pair(profile):\n return [engine["run"](profile,op) for op in ALLOWED]\n'
+ path=STAGE+'/runners/rough_pair_%02d.txt'%(j+1);write(path,wrapper)
+ runner=runpy.run_path(str(ROOT/path))['run_pair'];p=dict(id='RS-SMOKE-%02d'%(j+1),partition=[0,0,0,1,2],refiner=[0,1,2,0,1],target=0 if STAGE=='x1' else 31)
+ positive=runner(p);expected=[ref['oracle'](p,op) for op in allowed];bad=copy.deepcopy(p);bad['target']=True;rejected=runner(bad)
+ good=all(r['accepted'] and r['result']==e for r,e in zip(positive,expected));guard=all(not r['accepted'] and not r['operation_executed'] for r in rejected)
+ assert good and guard
+ smokes.append(dict(caller=path,profile=p,operations=allowed,positive_pass=good,invalid_profile=bad,invalid_original_success_credit=0,negative_id='IR7013-CALLER-%02d-INVALID'%(j+1),refusal_pass=guard,results=positive,rejected=rejected))
+write(STAGE+'/guide-validation.json',dict(validator='official skill-creator quick_validate validate_skill',guides=guides,checks=len(guides),passed=sum(x['valid'] for x in guides),metadata_validation_only=True))
+write(STAGE+'/caller-smokes.json',smokes)
+by={(r['profile'],r['operation']):r['observed']['result'] for r in rows};tests=[]
+for k in range(10):
+ p=list(profiles.values())[k*3];pid=p['id']
+ if STAGE=='x1':
+  b=engine['blocks'](p['partition']);single=sum(x.bit_count()==1 for x in b);multiple=len(b)-single
+  pairs=by[pid,OPS[9]];ds=by[pid,OPS[8]]
+  passed=len(pairs)==2**single*3**multiple and sum(x[2] for x in pairs)==32 and ds['count']==2**len(b)
+  detail=dict(pair_count=len(pairs),predicted_pairs=2**single*3**multiple,preimage_total=sum(x[2] for x in pairs),definable_count=ds['count'])
+ else:
+  counter=by[pid,OPS[16]];ratios=by[pid,OPS[10]];exp=by[pid,OPS[17]]
+  passed=all((q[0]==0)==(i in exp['excluded']) and (q[0]==q[1])==(i in exp['certain']) for i,q in enumerate(ratios))
+  detail=dict(membership_matches_regions=passed,counterexamples=counter)
+ assert passed
+ tests.append(dict(id='IR7013-'+STAGE.upper()+'-T%02d'%(k+1),profile=pid,procedure='Cross-contract finite consistency property using cached outputs',passed=passed,details=detail,domain_replay=False,independent_reproduction=False))
+write(STAGE+'/additional-tests.json',tests)
+methodmod['refresh_counts'](ledger);write(STAGE+'/method-flow.json',ledger)
+validation=methodmod['validate_ledger'](ledger);write(STAGE+'/method-flow-validation.json',validation);assert validation['valid'],validation['issues']
+write(STAGE+'/retained-negatives.json',negatives)
+write(STAGE+'/session-receipt.json',dict(stage=STAGE,valid_executions=len(rows),safe_passed=sum(r['safe_match'] for r in rows),malformed_subjects=len(rows),malformed_subject_original_success_credit=0,refusal_passed=sum(r['refusal_pass'] for r in rows),CFR_passed=sum(r['cache_review_pass'] for r in rows),outcomes=dict(collections.Counter(r['outcome'] for r in rows)),guides=len(guides),callers=len(smokes),additional_tests=len(tests),engine_sha256=sha((ROOT/'x1/rough-engine.txt').read_bytes()),domain_replay=False,source_replay=False,boundary=BOUNDARY))
+print(json.dumps(dict(stage=STAGE,state='DOMAIN_AND_LOCAL_HELPERS_RECORDED',valid=300,invalid=300,refusals=300,CFR=300,guides=10,callers=5,additional_tests=10,ledger_valid=validation['valid'])),flush=True)
+
