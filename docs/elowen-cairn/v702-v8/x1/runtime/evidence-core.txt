@@ -1,0 +1,37 @@
+'use strict';
+function ensure(condition,message){if(!condition)throw Error(message);}
+function gcd(a,b){a=a<0n?-a:a;b=b<0n?-b:b;while(b){const t=a%b;a=b;b=t;}return a||1n;}
+function rational(n,d=1n){n=BigInt(n);d=BigInt(d);ensure(d!==0n,'zero denominator');if(d<0n){n=-n;d=-d;}const g=gcd(n,d);return {n:n/g,d:d/g};}
+function parseRational(value){ensure(typeof value==='string'&&/^-?(?:0|[1-9]\d*)(?:\/(?:[1-9]\d*))?$/.test(value),'exact rational string required');const [n,d='1']=value.split('/');return rational(BigInt(n),BigInt(d));}
+const plus=(a,b)=>rational(a.n*b.d+b.n*a.d,a.d*b.d),minus=(a,b)=>rational(a.n*b.d-b.n*a.d,a.d*b.d),times=(a,b)=>rational(a.n*b.n,a.d*b.d),over=(a,b)=>{ensure(b.n!==0n,'division by zero');return rational(a.n*b.d,a.d*b.n);},format=a=>a.d===1n?String(a.n):String(a.n)+'/'+String(a.d);
+const ZERO=()=>rational(0n),ONE=()=>rational(1n);
+function bits(mask){let n=0;for(let x=mask;x;x>>=1)n+=x&1;return n;}
+function validateFrame(frame){ensure(Array.isArray(frame)&&frame.length===3,'three-label frame required');ensure(frame.every(x=>typeof x==='string'&&x.length>0),'nonempty frame labels');ensure(new Set(frame).size===3,'unique frame labels required');}
+function validateKeys(request,allowed){const keys=Object.keys(request).sort(),expected=[...allowed].sort();ensure(JSON.stringify(keys)===JSON.stringify(expected),'closed request fields required');}
+function decodeMass(frame,input){validateFrame(frame);ensure(Array.isArray(input)&&input.length>0,'mass rows required');const values=Array.from({length:8},ZERO);const seen=new Set();let total=ZERO();for(const row of input){ensure(row&&Object.keys(row).sort().join(',')==='mask,value','closed mass row');ensure(Number.isInteger(row.mask)&&row.mask>=0&&row.mask<8,'mask outside frame');ensure(!seen.has(row.mask),'duplicate mass mask');seen.add(row.mask);const value=parseRational(row.value);ensure(value.n>=0n,'negative mass');values[row.mask]=value;total=plus(total,value);}ensure(total.n===1n&&total.d===1n,'mass must total one');return values;}
+function encodeMass(values){return values.map((value,mask)=>({mask,value:format(value)})).filter(row=>row.value!=='0');}
+function setValues(values,kind){const out=[];for(let A=0;A<8;A++){let value=ZERO();for(let B=0;B<8;B++){if(kind==='belief'&&(B&~A)===0)value=plus(value,values[B]);else if(kind==='plausibility'&&(B&A)!==0)value=plus(value,values[B]);else if(kind==='commonality'&&(A&~B)===0)value=plus(value,values[B]);}out.push({mask:A,value:format(value)});}return out;}
+function recoverMass(belief){const b=belief.map(row=>parseRational(row.value)),m=Array.from({length:8},ZERO);const order=Array.from({length:8},(_,i)=>i).sort((a,b)=>bits(a)-bits(b)||a-b);for(const A of order){let value=b[A];for(let B=0;B<8;B++)if(B!==A&&(B&~A)===0)value=minus(value,m[B]);m[A]=value;}return m;}
+function combine(left,right){const out=Array.from({length:8},ZERO);for(let A=0;A<8;A++)for(let B=0;B<8;B++)out[A&B]=plus(out[A&B],times(left[A],right[B]));return out;}
+function normalize(values){const conflict=values[0],den=minus(ONE(),conflict);ensure(den.n!==0n,'total conflict');const out=Array.from({length:8},ZERO);for(let mask=1;mask<8;mask++)out[mask]=over(values[mask],den);return {conflict,mass:out};}
+function duplicateKeyGuard(text){const stack=[];for(let i=0;i<text.length;){const ch=text[i];if(ch==='"'){let j=i+1,escaped=false;for(;j<text.length;j++){const c=text[j];if(escaped){escaped=false;continue;}if(c==='\\'){escaped=true;continue;}if(c==='"')break;}ensure(j<text.length,'unterminated string');let k=j+1;while(/\s/.test(text[k]||''))k++;if(text[k]===':'){const top=stack.at(-1);ensure(top instanceof Set,'key outside object');const key=JSON.parse(text.slice(i,j+1));ensure(!top.has(key),'duplicate JSON key');top.add(key);}i=j+1;continue;}if(ch==='{')stack.push(new Set());else if(ch==='[')stack.push(null);else if(ch==='}'||ch===']')stack.pop();ensure(stack.length<=12,'wire nesting limit');i++;}ensure(stack.length===0,'unbalanced JSON');}
+function parseWire(text){ensure(typeof text==='string','wire text required');ensure(Buffer.byteLength(text,'utf8')<=65536,'wire byte limit');duplicateKeyGuard(text);return JSON.parse(text);}
+function labels(frame,mask){return frame.filter((_,i)=>mask&(1<<i));}
+const allowed={
+  evidence_frame:['operation','frame','mass'],evidence_focal_sets:['operation','frame','mass'],evidence_belief:['operation','frame','mass'],evidence_plausibility:['operation','frame','mass'],evidence_commonality:['operation','frame','mass'],evidence_mobius_roundtrip:['operation','frame','mass'],evidence_vacuous:['operation','frame'],evidence_discount:['operation','frame','mass','alpha'],evidence_condition:['operation','frame','mass','condition_mask'],evidence_conjunctive:['operation','frame','mass','right_mass']
+};
+function execute(request){
+  ensure(request&&typeof request==='object'&&!Array.isArray(request),'request object required');const op=request.operation;ensure(allowed[op],'unsupported x1 operation');validateKeys(request,allowed[op]);validateFrame(request.frame);const frame=request.frame,base={operation:op,frame};const mass=request.mass?decodeMass(frame,request.mass):null;
+  if(op==='evidence_frame')return {...base,normalized_mass:encodeMass(mass),total:'1',empty_mass:format(mass[0])};
+  if(op==='evidence_focal_sets')return {...base,focal_sets:encodeMass(mass).map(row=>({mask:row.mask,labels:labels(frame,row.mask),mass:row.value}))};
+  if(op==='evidence_belief')return {...base,values:setValues(mass,'belief')};
+  if(op==='evidence_plausibility')return {...base,values:setValues(mass,'plausibility')};
+  if(op==='evidence_commonality')return {...base,values:setValues(mass,'commonality')};
+  if(op==='evidence_mobius_roundtrip'){const belief=setValues(mass,'belief'),recovered=recoverMass(belief);return {...base,belief,recovered_mass:encodeMass(recovered),roundtrip:JSON.stringify(encodeMass(recovered))===JSON.stringify(encodeMass(mass))};}
+  if(op==='evidence_vacuous')return {...base,mass:[{mask:7,value:'1'}],meaning:'all mass remains on the full declared frame'};
+  if(op==='evidence_discount'){const alpha=parseRational(request.alpha);ensure(alpha.n>=0n&&minus(ONE(),alpha).n>=0n,'alpha in [0,1]');const out=mass.map(value=>times(value,alpha));out[7]=plus(out[7],minus(ONE(),alpha));return {...base,alpha:request.alpha,mass:encodeMass(out)};}
+  if(op==='evidence_condition'){ensure(Number.isInteger(request.condition_mask)&&request.condition_mask>0&&request.condition_mask<8,'condition mask');const categorical=Array.from({length:8},ZERO);categorical[request.condition_mask]=ONE();const result=normalize(combine(mass,categorical));return {...base,condition_mask:request.condition_mask,conflict:format(result.conflict),mass:encodeMass(result.mass)};}
+  if(op==='evidence_conjunctive'){const right=decodeMass(frame,request.right_mass),out=combine(mass,right);return {...base,conflict:format(out[0]),mass:encodeMass(out)};}
+  throw Error('unreachable');
+}
+module.exports={execute,parseWire,internals:{rational,parseRational,plus,minus,times,over,format,decodeMass,encodeMass,setValues,recoverMass,combine,normalize,duplicateKeyGuard}};
