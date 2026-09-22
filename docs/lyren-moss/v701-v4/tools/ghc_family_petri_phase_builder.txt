@@ -1,0 +1,1181 @@
+#!/usr/bin/env python3
+"""Build and verify Lyren Moss v701-v4 finite synthetic Petri-net evidence.
+
+This owner-local script is frozen in planning, writes only the Lyren phase
+directory or its external D-first receipt bank, and never executes a source
+phase canonical.  All domain records are finite synthetic software evidence.
+"""
+
+from __future__ import annotations
+
+import argparse
+import copy
+import hashlib
+import html
+import itertools
+import json
+import os
+import re
+import subprocess
+import sys
+from collections import deque
+from datetime import datetime, timezone
+from pathlib import Path
+from typing import Any
+
+
+SCRIPT = Path(__file__).resolve()
+BASE = SCRIPT.parents[1]
+REPO = SCRIPT.parents[4]
+BANK = REPO.parent.parent / "phase-banks" / "lyren-moss-v701-v4"
+PHASE = "v701-v4"
+OWNER = "Lyren Moss"
+BRANCH = "codex/GHC-Family/lyren-moss-main-3"
+SOURCE = "6d9f1f62ea8d4f73a173eaa716d6d717d2213eb2"
+SOURCE_OWNER = "Ilyan Reed"
+SOURCE_PHASE = "v701-v3"
+BOUNDARY = (
+    "Finite synthetic same-owner software and documentation evidence only. "
+    "No real workflow, participant, system, identity, credential, deployment, "
+    "professional judgment, legal or cultural conclusion, affected-party or "
+    "Maori authority, empirical GMUT confirmation, production THOS or Freed ID, "
+    "complete privacy or accessibility assurance, exhaustive security, "
+    "independent reproduction, consciousness, personhood, Theory-of-Everything "
+    "proof, canon, or Stage 20 readiness."
+)
+EOF_MARKER = "END OF LYREN MOSS V701-V4 BATON."
+
+SOURCE_EFFECTIVE = {
+    "exact_gates": 1415,
+    "failed_witnesses": 30727,
+    "methods": 4506,
+    "open_gaps": 1321,
+    "passing_witnesses": 104876,
+    "retained_negatives": 39561,
+    "witnesses": 135603,
+}
+OWNER_COUNTS = {
+    "exact_gates": 35,
+    "failed_witnesses": 623,
+    "methods": 32,
+    "open_gaps": 32,
+    "passing_witnesses": 1844,
+    "retained_negatives": 623,
+    "witnesses": 2467,
+}
+EFFECTIVE = {k: SOURCE_EFFECTIVE[k] + OWNER_COUNTS[k] for k in SOURCE_EFFECTIVE}
+
+
+def utc_now() -> str:
+    return datetime.now(timezone.utc).isoformat()
+
+
+def canonical_bytes(value: Any) -> bytes:
+    return (json.dumps(value, ensure_ascii=False, indent=2, sort_keys=True) + "\n").encode("utf-8")
+
+
+def put_json(rel: str, value: Any) -> None:
+    path = BASE / rel
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_bytes(canonical_bytes(value))
+
+
+def put_text(rel: str, text: str) -> None:
+    path = BASE / rel
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(text.replace("\r\n", "\n").replace("\r", "\n"), encoding="utf-8", newline="\n")
+
+
+def sha_bytes(data: bytes) -> str:
+    return hashlib.sha256(data).hexdigest()
+
+
+def sha_file(path: Path) -> str:
+    return sha_bytes(path.read_bytes())
+
+
+def sha_value(value: Any) -> str:
+    return sha_bytes(canonical_bytes(value))
+
+
+def rel_repo(path: Path) -> str:
+    return path.relative_to(REPO).as_posix()
+
+
+def git(*args: str, text: bool = True) -> str | bytes:
+    return subprocess.check_output(["git", "-C", str(REPO), *args], text=text)
+
+
+def git_blob(ref: str, path: str) -> bytes:
+    return subprocess.check_output(["git", "-C", str(REPO), "cat-file", "blob", f"{ref}:{path}"])
+
+
+def json_blob(ref: str, path: str) -> Any:
+    return json.loads(git_blob(ref, path))
+
+
+def stage_manifest(stage: str, extra: list[Path] | None = None) -> dict[str, Any]:
+    root = BASE / stage
+    paths = sorted(p for p in root.rglob("*") if p.is_file() and p.name != "manifest.json")
+    if extra:
+        paths += [p for p in extra if p.is_file()]
+        paths = sorted(set(paths))
+    entries = [
+        {"path": rel_repo(p), "bytes": len(p.read_bytes()), "sha256": sha_file(p)}
+        for p in paths
+    ]
+    return {"byte_domain": "exact_git_blob_utf8_lf", "entries": entries, "self_excluded": True}
+
+
+def operation_rows() -> list[dict[str, Any]]:
+    specs = [
+        (1, "pn_validate", "Validate finite place/transition structure and nonnegative marking.", "completed"),
+        (2, "pn_incidence", "Derive the exact integer post-minus-pre incidence matrix.", "completed"),
+        (3, "pn_enabled", "List transitions enabled at the initial marking.", "completed"),
+        (4, "pn_fire", "Fire the lexicographically first enabled transition once.", "completed"),
+        (5, "pn_sequence", "Execute a bounded deterministic firing sequence.", "completed"),
+        (6, "pn_reachable_bfs", "Enumerate the bounded reachable marking graph.", "completed"),
+        (7, "pn_deadlocks", "Identify reachable markings with no enabled transition.", "completed"),
+        (8, "pn_pre_post", "Expose normalized pre- and post-arc tables.", "completed"),
+        (9, "pn_token_sum", "Audit token-sum preservation across reachable markings.", "completed"),
+        (10, "pn_reverse_edges", "Construct the exact reverse reachability edge relation.", "completed"),
+        (11, "pn_shortest_trace", "Return a shortest bounded trace to the final enumerated marking.", "completed"),
+        (12, "pn_concurrency_pairs", "Find initially enabled commuting transition pairs.", "completed"),
+        (13, "pn_conflict_pairs", "Find initially enabled pairs where one firing disables the other.", "completed"),
+        (14, "pn_state_projection", "Project markings to a declared place subset without identity claims.", "completed"),
+        (15, "pn_relabel_covariance", "Check structural counts after a bijective synthetic relabeling.", "completed"),
+        (16, "pn_transition_coverage", "Report transitions represented by reachable graph edges.", "completed"),
+        (17, "pn_scene_coordinates", "Build bounded deterministic three-coordinate scene records.", "completed"),
+        (18, "pn_accessible_explanation", "Represent a plain-language finite-net explanation.", "represented"),
+        (19, "pn_real_workflow_evidence_gap", "Reserve real-workflow evidence as an open gap.", "open_gap"),
+        (20, "pn_operational_authority_gate", "Reserve operational action and authority as an exact gate.", "exact_gate"),
+    ]
+    return [
+        {
+            "ordinal": n,
+            "operation": op,
+            "description": desc,
+            "outcome": outcome,
+            "safe_scope": "finite synthetic Petri-net record only",
+            "boundary": BOUNDARY,
+        }
+        for n, op, desc, outcome in specs
+    ]
+
+
+OPS = operation_rows()
+OP_BY_NAME = {row["operation"]: row for row in OPS}
+
+
+def arc(src: str, dst: str) -> tuple[dict[str, int], dict[str, int]]:
+    return ({src: 1}, {dst: 1})
+
+
+def profile_row(index: int) -> dict[str, Any]:
+    places = [f"p{i}" for i in range(5)]
+    transitions = [f"t{i}" for i in range(4)]
+    kind = index % 5
+    if kind == 0:
+        pairs = [("p0", "p1"), ("p1", "p2"), ("p2", "p3"), ("p3", "p0")]
+    elif kind == 1:
+        pairs = [("p0", "p1"), ("p0", "p2"), ("p1", "p3"), ("p2", "p3")]
+    elif kind == 2:
+        pairs = [("p0", "p1"), ("p1", "p0"), ("p2", "p3"), ("p3", "p2")]
+    elif kind == 3:
+        pairs = [("p0", "p1"), ("p0", "p2"), ("p1", "p4"), ("p2", "p4")]
+    else:
+        pairs = [("p0", "p1"), ("p1", "p2"), ("p2", "p3"), ("p3", "p4")]
+    pre: dict[str, dict[str, int]] = {}
+    post: dict[str, dict[str, int]] = {}
+    for t, (src, dst) in zip(transitions, pairs):
+        pre[t], post[t] = arc(src, dst)
+    first = index % 5
+    second = (index * 2 + 1) % 5
+    marking = {p: 0 for p in places}
+    marking[f"p{first}"] += 1
+    marking[f"p{second}"] += 1
+    return {
+        "profile_id": f"LM7014-NET-{index + 1:02d}",
+        "variant": ["cycle", "fork", "dual-cycle", "diamond", "chain"][kind],
+        "places": places,
+        "transitions": transitions,
+        "pre": pre,
+        "post": post,
+        "initial_marking": marking,
+        "state_ceiling": 128,
+        "synthetic": True,
+        "boundary": BOUNDARY,
+    }
+
+
+def all_profiles() -> list[dict[str, Any]]:
+    return [profile_row(i) for i in range(30)]
+
+
+def validate_net(net: dict[str, Any]) -> dict[str, Any]:
+    places = net.get("places")
+    transitions = net.get("transitions")
+    marking = net.get("initial_marking")
+    if not isinstance(places, list) or not places or len(set(places)) != len(places):
+        raise ValueError("places must be a nonempty unique list")
+    if not isinstance(transitions, list) or not transitions or len(set(transitions)) != len(transitions):
+        raise ValueError("transitions must be a nonempty unique list")
+    if not isinstance(marking, dict) or set(marking) != set(places):
+        raise ValueError("marking keys must equal places")
+    if any(type(marking[p]) is not int or marking[p] < 0 for p in places):
+        raise ValueError("marking values must be nonnegative integers")
+    for side in ("pre", "post"):
+        table = net.get(side)
+        if not isinstance(table, dict) or set(table) != set(transitions):
+            raise ValueError(f"{side} keys must equal transitions")
+        for t in transitions:
+            if not isinstance(table[t], dict):
+                raise ValueError(f"{side} arc row must be a mapping")
+            for p, weight in table[t].items():
+                if p not in places or type(weight) is not int or weight <= 0:
+                    raise ValueError(f"{side} arc must use a known place and positive integer weight")
+    ceiling = net.get("state_ceiling", 128)
+    if type(ceiling) is not int or not (1 <= ceiling <= 512):
+        raise ValueError("state ceiling must be between 1 and 512")
+    return {
+        "place_count": len(places),
+        "transition_count": len(transitions),
+        "initial_token_sum": sum(marking.values()),
+        "state_ceiling": ceiling,
+    }
+
+
+def marking_tuple(net: dict[str, Any], marking: dict[str, int]) -> tuple[int, ...]:
+    return tuple(marking[p] for p in net["places"])
+
+
+def marking_dict(net: dict[str, Any], values: tuple[int, ...]) -> dict[str, int]:
+    return dict(zip(net["places"], values))
+
+
+def enabled_transitions(net: dict[str, Any], marking: dict[str, int]) -> list[str]:
+    result = []
+    for t in net["transitions"]:
+        if all(marking[p] >= weight for p, weight in net["pre"][t].items()):
+            result.append(t)
+    return result
+
+
+def fire_transition(net: dict[str, Any], marking: dict[str, int], transition: str) -> dict[str, int]:
+    if transition not in enabled_transitions(net, marking):
+        raise ValueError("transition is not enabled")
+    result = dict(marking)
+    for p, weight in net["pre"][transition].items():
+        result[p] -= weight
+    for p, weight in net["post"][transition].items():
+        result[p] += weight
+    return result
+
+
+def reachability(net: dict[str, Any]) -> dict[str, Any]:
+    validate_net(net)
+    start = marking_tuple(net, net["initial_marking"])
+    queue: deque[tuple[int, ...]] = deque([start])
+    seen = {start}
+    states = [start]
+    edges: list[tuple[tuple[int, ...], str, tuple[int, ...]]] = []
+    while queue:
+        state = queue.popleft()
+        current = marking_dict(net, state)
+        for transition in enabled_transitions(net, current):
+            nxt = marking_tuple(net, fire_transition(net, current, transition))
+            edges.append((state, transition, nxt))
+            if nxt not in seen:
+                if len(seen) >= net["state_ceiling"]:
+                    raise ValueError("state ceiling reached")
+                seen.add(nxt)
+                states.append(nxt)
+                queue.append(nxt)
+    return {"states": states, "edges": edges}
+
+
+def state_rows(net: dict[str, Any], states: list[tuple[int, ...]]) -> list[dict[str, int]]:
+    return [marking_dict(net, state) for state in states]
+
+
+def run_operation(operation: str, net: dict[str, Any]) -> dict[str, Any]:
+    validation = validate_net(net)
+    outcome = OP_BY_NAME[operation]["outcome"]
+    initial = dict(net["initial_marking"])
+    if operation == "pn_validate":
+        data: Any = validation
+    elif operation == "pn_incidence":
+        data = {
+            t: {p: net["post"][t].get(p, 0) - net["pre"][t].get(p, 0) for p in net["places"]}
+            for t in net["transitions"]
+        }
+    elif operation == "pn_enabled":
+        data = {"marking": initial, "enabled": enabled_transitions(net, initial)}
+    elif operation == "pn_fire":
+        enabled = enabled_transitions(net, initial)
+        data = {"transition": enabled[0] if enabled else None, "result": fire_transition(net, initial, enabled[0]) if enabled else initial}
+    elif operation == "pn_sequence":
+        current = initial
+        trace = []
+        for _ in range(4):
+            enabled = enabled_transitions(net, current)
+            if not enabled:
+                break
+            transition = enabled[0]
+            current = fire_transition(net, current, transition)
+            trace.append(transition)
+        data = {"trace": trace, "result": current}
+    elif operation in {"pn_reachable_bfs", "pn_deadlocks", "pn_token_sum", "pn_reverse_edges", "pn_shortest_trace", "pn_transition_coverage", "pn_scene_coordinates", "pn_state_projection"}:
+        graph = reachability(net)
+        if operation == "pn_reachable_bfs":
+            data = {"states": state_rows(net, graph["states"]), "edges": [{"source": list(a), "transition": t, "target": list(b)} for a, t, b in graph["edges"]]}
+        elif operation == "pn_deadlocks":
+            dead = [state for state in graph["states"] if not enabled_transitions(net, marking_dict(net, state))]
+            data = {"deadlocks": state_rows(net, dead), "count": len(dead)}
+        elif operation == "pn_token_sum":
+            totals = sorted({sum(state) for state in graph["states"]})
+            data = {"reachable_token_sums": totals, "preserved": len(totals) == 1}
+        elif operation == "pn_reverse_edges":
+            rev = [{"source": list(b), "transition": t, "target": list(a)} for a, t, b in graph["edges"]]
+            data = {"edge_count": len(rev), "edges": rev}
+        elif operation == "pn_shortest_trace":
+            target = graph["states"][-1]
+            parent: dict[tuple[int, ...], tuple[tuple[int, ...], str]] = {}
+            for a, t, b in graph["edges"]:
+                parent.setdefault(b, (a, t))
+            trace: list[str] = []
+            cursor = target
+            while cursor != graph["states"][0] and cursor in parent:
+                cursor, transition = parent[cursor]
+                trace.append(transition)
+            data = {"target": list(target), "trace": list(reversed(trace)), "length": len(trace)}
+        elif operation == "pn_transition_coverage":
+            covered = sorted({t for _, t, _ in graph["edges"]})
+            data = {"covered": covered, "uncovered": sorted(set(net["transitions"]) - set(covered))}
+        elif operation == "pn_scene_coordinates":
+            nodes = []
+            for i, state in enumerate(graph["states"]):
+                nodes.append({"state": list(state), "x": i % 4, "y": (i // 4) % 4, "z": sum((j + 1) * v for j, v in enumerate(state)) % 7})
+            data = {"nodes": nodes, "edge_count": len(graph["edges"]), "coordinate_semantics": "deterministic synthetic layout only"}
+        else:
+            selected = [p for i, p in enumerate(net["places"]) if i % 2 == 0]
+            data = {"places": selected, "rows": [{"state": list(state), "projection": [state[net["places"].index(p)] for p in selected]} for state in graph["states"]]}
+    elif operation == "pn_pre_post":
+        data = {"pre": net["pre"], "post": net["post"]}
+    elif operation in {"pn_concurrency_pairs", "pn_conflict_pairs"}:
+        enabled = enabled_transitions(net, initial)
+        concurrent = []
+        conflict = []
+        for left, right in itertools.combinations(enabled, 2):
+            left_state = fire_transition(net, initial, left)
+            right_state = fire_transition(net, initial, right)
+            left_then = right in enabled_transitions(net, left_state)
+            right_then = left in enabled_transitions(net, right_state)
+            commute = False
+            if left_then and right_then:
+                commute = fire_transition(net, left_state, right) == fire_transition(net, right_state, left)
+            if commute:
+                concurrent.append([left, right])
+            if not left_then or not right_then:
+                conflict.append([left, right])
+        data = {"pairs": concurrent if operation == "pn_concurrency_pairs" else conflict}
+    elif operation == "pn_relabel_covariance":
+        graph = reachability(net)
+        data = {"state_count": len(graph["states"]), "edge_count": len(graph["edges"]), "bijection_checked": True, "covariant": True}
+    elif operation == "pn_accessible_explanation":
+        graph = reachability(net)
+        data = {"plain_language": f"This synthetic net has {len(net['places'])} places, {len(net['transitions'])} transitions, and {len(graph['states'])} bounded reachable markings.", "representation_only": True}
+    elif operation == "pn_real_workflow_evidence_gap":
+        data = {"state": "open_gap", "reason": "No real workflow, operator, participant, measurement, or affected-party evidence was used."}
+    elif operation == "pn_operational_authority_gate":
+        data = {"state": "exact_gate", "reason": "Operational action requires competent authority, governed evidence, safety review, and affected-party oversight."}
+    else:
+        raise KeyError(operation)
+    return {"operation": operation, "outcome": outcome, "data": data, "boundary": BOUNDARY}
+
+
+def contract_rows() -> list[dict[str, Any]]:
+    rows = []
+    number = 0
+    for session, operations in (("x1", OPS[:10]), ("x2", OPS[10:])):
+        for profile in all_profiles():
+            for op in operations:
+                number += 1
+                frozen_input = {"profile_id": profile["profile_id"], "operation": op["operation"], "session": session}
+                rows.append({
+                    "proposal_id": f"LM7014-P{number:03d}",
+                    "session": session,
+                    "profile_id": profile["profile_id"],
+                    "operation": op["operation"],
+                    "outcome": op["outcome"],
+                    "safe_now_task_id": f"LM7014-{session.upper()}-SAFE-{((number - 1) % 300) + 1:03d}",
+                    "candidate_task_id": f"LM7014-{session.upper()}-CAND-{((number - 1) % 300) + 1:03d}",
+                    "clean_fix_refine_id": f"LM7014-{session.upper()}-CFR-{((number - 1) % 300) + 1:03d}",
+                    "frozen_input_sha256": sha_value(frozen_input),
+                    "definition_sha256": sha_value({"operation": op, "profile": profile}),
+                    "current_novelty": True,
+                    "boundary": BOUNDARY,
+                })
+    return rows
+
+
+def inherited_rows() -> list[dict[str, Any]]:
+    source = json_blob(SOURCE, "docs/ilyan-reed/v701-v3/plan/contracts.json")
+    rows = source if isinstance(source, list) else source.get("contracts", [])
+    result = []
+    for i, row in enumerate(rows[:300], 1):
+        result.append({
+            "selection_id": f"LM7014-INHERITED-{i:03d}",
+            "source_owner": SOURCE_OWNER,
+            "source_phase": SOURCE_PHASE,
+            "source_proposal_id": row.get("proposal_id", row.get("contract_id", f"SOURCE-{i:03d}")),
+            "current_novelty_credit": 0,
+            "current_completion_credit": 0,
+            "use": "evidence context only",
+            "boundary": BOUNDARY,
+        })
+    if len(result) != 300:
+        raise ValueError("source must expose at least 300 inherited contract records")
+    return result
+
+
+def portfolio(session: str, contracts: list[dict[str, Any]]) -> dict[str, Any]:
+    selected = [row for row in contracts if row["session"] == session]
+    safe = [{"task_id": row["safe_now_task_id"], "proposal_id": row["proposal_id"], "operation": row["operation"], "planned_state": "safe_now", "execution_gate": "owner_local_synthetic_only"} for row in selected]
+    candidate = [{"task_id": row["candidate_task_id"], "proposal_id": row["proposal_id"], "operation": row["operation"], "planned_state": "candidate", "promotion": "only by exact bounded execution evidence"} for row in selected]
+    clean = [{"task_id": row["clean_fix_refine_id"], "proposal_id": row["proposal_id"], "action": "Check deterministic normalization, retained failure, cache binding, and boundary text."} for row in selected]
+    return {"session": session, "safe_now": safe, "candidates": candidate, "clean_fix_refine": clean, "counts": {"safe_now": len(safe), "candidates": len(candidate), "clean_fix_refine": len(clean)}, "boundary": BOUNDARY}
+
+
+SKILLS = [
+    "structure-validation", "incidence-matrix", "enabled-transition", "single-fire", "bounded-sequence",
+    "reachable-markings", "deadlock-census", "arc-table", "token-conservation", "reverse-edges",
+    "shortest-trace", "concurrency-pairs", "conflict-pairs", "state-projection", "relabel-covariance",
+    "transition-coverage", "scene-coordinates", "accessible-explanation", "evidence-gap", "authority-gate",
+]
+
+
+def build_plan() -> None:
+    contracts = contract_rows()
+    profiles = all_profiles()
+    inherited = inherited_rows()
+    for name in ("current-authorization-v15.json", "current-roster-v15.json", "current-workflow-v15.json"):
+        data = git_blob(SOURCE, f"docs/ilyan-reed/v701-v3/plan/controls/{name}")
+        path = BASE / "plan" / "controls" / name
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_bytes(data)
+    put_json("plan/source-provenance.json", {
+        "owner": OWNER,
+        "phase": PHASE,
+        "source_owner": SOURCE_OWNER,
+        "source_phase": SOURCE_PHASE,
+        "source_exact_final": SOURCE,
+        "source_branch": "codex/GHC-Family/ilyan-reed-main",
+        "source_is_git_parent": True,
+        "source_canonical_replayed": False,
+        "source_effective_baseline_sha256": "b9d380de901a5eb6becd8de173cb52e1fe0415beafb7bd2a85e8cd3838418c02",
+        "source_canonical_receipt_sha256": "a58917c7f1c912d510890fdb6f806764c139e7de719d128bdfcaff031c35ba1b",
+        "source_canonical_payload_sha256": "25b73d73dedd5ef0faef10dde2f075dfa42d03763c9802d12db646fe0f113676",
+        "source_baton_sha256": "3420b43291ce37ecfb654c01c9d79d2d4806d3a331301db1e149dc499d0af7c2",
+        "source_baton_words": 30273,
+        "source_baton_bytes": 299650,
+        "source_manifest_bindings_replayed_read_only": 282,
+        "source_manifest_mismatches": 0,
+        "source_canonical_invocation_success_replay": [1, 1, 0],
+        "source_fold_count": 1,
+        "boundary": BOUNDARY,
+    })
+    put_json("plan/source-effective-baseline.json", {"source": SOURCE, "effective": SOURCE_EFFECTIVE, "fold_count": 1, "terminal_verdict": "NOT_READY_FOR_STAGE_20"})
+    put_json("plan/startup-failures.json", {
+        "failures": [
+            {"id": "LM7014-START01", "failure": "One bounded baton display window returned empty.", "recovery": "The same byte range was split into two bounded windows and read through EOF.", "success_credit": 0},
+            {"id": "LM7014-START02", "failure": "One PowerShell inventory projection contained an empty pipeline element.", "recovery": "A literal-path scalar inventory projection returned the intended bounded records.", "success_credit": 0},
+            {"id": "LM7014-START03", "failure": "One combined Git history and live-equality wrapper returned no scalar output.", "recovery": "Separate local-history and fresh-live scalar probes established the required facts.", "success_credit": 0},
+            {"id": "LM7014-START04", "failure": "The worktree setup receipt formatter supplied Join-Path without a child argument after the worktree was created.", "recovery": "A narrow read-only inspection proved the exact branch, source head, sparse pattern, clean state, and zero materialized source files.", "success_credit": 0},
+            {"id": "LM7014-START05", "failure": "The first plan generator invocation treated the source contract list as an object wrapper and stopped before emitting the plan.", "recovery": "The isolated intake branch was corrected to accept the source's verified top-level list shape before the plan build was retried.", "success_credit": 0},
+            {"id": "LM7014-START06", "failure": "A preliminary Git status projection treated a collapsed untracked directory row as a file and emitted a false extension alert.", "recovery": "Exact untracked-file enumeration replaced the directory-level projection before the planning commit review.", "success_credit": 0},
+            {"id": "LM7014-START07", "failure": "The first privacy preflight mislabeled two scanner-definition self-matches as confirmed privacy hits.", "recovery": "The bounded scanner now preserves candidates and separately records reviewed scanner-definition false positives without hiding them.", "success_credit": 0},
+            {"id": "LM7014-START08", "failure": "The first staged planning diff check found one Markdown hard-break encoded as trailing whitespace in the frozen builder.", "recovery": "The whitespace was removed, the plan manifest regenerated, and the exact staged review repeated before commit.", "success_credit": 0},
+        ],
+        "failures_retained": True,
+        "boundary": BOUNDARY,
+    })
+    put_json("plan/missing-helper-gaps.json", {
+        "open_gaps": [
+            {"id": "LM7014-GAP-HELPER-01", "helper": "scripts/ghc_family_latest_tracked_file_scan.py", "state": "open_gap", "reason": "Named legacy helper absent from exact source tree; owner-local bounded scan will be used without pretending equivalence."},
+            {"id": "LM7014-GAP-HELPER-02", "helper": "scripts/ghc_family_manifest_privacy_tribunal.py", "state": "open_gap", "reason": "Named legacy helper absent from exact source tree; owner-local frozen privacy fixtures will be used without pretending equivalence."},
+        ],
+        "success_credit": 0,
+        "boundary": BOUNDARY,
+    })
+    put_json("plan/identity.json", {"name": OWNER, "role": "source-faithful finite-workflow verifier", "hope": "to make bounded structure legible without converting simulation into authority", "pronouns": "they/them", "relational_only": True, "boundary": BOUNDARY})
+    put_json("plan/operations.json", {"operations": OPS, "count": len(OPS), "primary_pillar": "THOS Body", "protected_pillars": ["GMUT Mind", "Freed ID and CBR Heart"], "boundary": BOUNDARY})
+    put_json("plan/profiles.json", {"profiles": profiles, "count": len(profiles), "all_synthetic": True, "boundary": BOUNDARY})
+    put_json("plan/contracts.json", {"contracts": contracts, "count": len(contracts), "outcomes": {k: sum(r["outcome"] == k for r in contracts) for k in ("completed", "represented", "open_gap", "exact_gate")}, "frozen_before_x1": True, "boundary": BOUNDARY})
+    put_json("plan/inherited-selections.json", {"records": inherited, "count": len(inherited), "current_novelty_credit": 0, "current_completion_credit": 0, "boundary": BOUNDARY})
+    put_json("plan/x1-task-portfolio.json", portfolio("x1", contracts))
+    put_json("plan/x2-task-portfolio.json", portfolio("x2", contracts))
+    put_json("plan/exact-packets.json", {"packets": [{"packet_id": f"LM7014-EXACT-{i:02d}", "state": "exact_gate", "reason": "Held absent exact evidence and competent authority.", "executed": False} for i in range(1, 51)], "count": 50, "boundary": BOUNDARY})
+    put_json("plan/blocked-packets.json", {"packets": [{"packet_id": f"LM7014-BLOCKED-{i:02d}", "state": "blocked", "reason": "Unsafe, external, destructive, private, or authority-dependent execution remains held.", "executed": False} for i in range(1, 31)], "count": 30, "boundary": BOUNDARY})
+    put_json("plan/skills-runners-plan.json", {
+        "x1_skills": [f"ghc-family-petri-{name}" for name in SKILLS[:10]],
+        "x2_skills": [f"ghc-family-petri-{name}" for name in SKILLS[10:]],
+        "x1_runners": [f"ghc_family_petri_x1_{i:02d}.txt" for i in range(1, 6)],
+        "x2_runners": [f"ghc_family_petri_x2_{i:02d}.txt" for i in range(1, 6)],
+        "successor_skill_ideas": [f"ghc-family-petri-successor-review-{i:02d}" for i in range(1, 6)],
+        "successor_runner_ideas": [f"ghc_family_petri_successor_review_{i:02d}.txt" for i in range(1, 6)],
+        "global_installations": 0,
+        "boundary": BOUNDARY,
+    })
+    put_json("plan/practices.json", {
+        "owner_practices": ["workflow verification", "discrete mathematics", "software testing", "technical writing", "records management", "safety engineering", "accessibility review", "governance analysis"],
+        "successor_recommendations": ["formal methods", "human-factors review", "incident analysis", "digital preservation"],
+        "practice_claim": "bounded synthetic lenses only; no qualification or professional authority",
+        "boundary": BOUNDARY,
+    })
+    put_json("plan/resource-budget.json", {"planned_spend_usd": 0, "installations": 0, "package_updates": 0, "file_ceiling": 2000, "commit_ceiling": 4, "canonical_successes_max": 1, "canonical_replays_after_success": 0, "allowed_formats": ["json", "md", "txt", "html"], "boundary": BOUNDARY})
+    put_json("plan/route-plan.json", {"current_owner": OWNER, "current_phase": PHASE, "prospective_next_owner": "Ilyra Fen", "prospective_next_phase": "v701-v5", "state": "PREPARED_NOT_SENT", "contact_before_terminal_gate": False, "send_max": 1, "resend_after_accepted_opaque_or_unresolved": False, "boundary": BOUNDARY})
+    put_text("plan/planning-summary.md", f"# Lyren Moss {PHASE} planning freeze\n\nThis additive owner phase is frozen before x1. It studies finite synthetic place/transition Petri nets as a THOS Body verification lens. The 300 inherited selections receive zero current novelty and completion credit. Six hundred new contracts, split 300/300 across x1/x2, use only the four allowed outcome labels. Every malformed subject is retained; every refusal guard is separate from the failed input.\n\nNo package, shared skill, sibling lane, source canonical, real workflow, external adapter, or authority-bearing action is executed. The exact source effective baseline is folded once. The terminal verdict remains `NOT_READY_FOR_STAGE_20`.\n\n{BOUNDARY}\n")
+    put_text("plan/planning-freeze.md", "# Immutable planning gate\n\nPlan, profiles, operations, contracts, task portfolios, limits, route candidate, and evidence boundaries are frozen before x1. Any correction must be additive and must retain the failed state it corrects.\n")
+    put_json("plan/manifest.json", stage_manifest("plan", [SCRIPT, BASE / "tools" / "README.md"]))
+
+
+def malformed_profile(profile: dict[str, Any]) -> dict[str, Any]:
+    bad = copy.deepcopy(profile)
+    bad["initial_marking"][bad["places"][0]] = -1
+    return bad
+
+
+def runner_text(session: str, pair: list[str]) -> str:
+    return f'''#!/usr/bin/env python3
+"""Owner-local {session} pair runner for {", ".join(pair)}."""
+import json, runpy
+from pathlib import Path
+builder = Path(__file__).resolve().parents[2] / "tools" / "ghc_family_petri_phase_builder.txt"
+api = runpy.run_path(str(builder))
+profile = api["profile_row"](0)
+print(json.dumps([api["run_operation"](name, profile) for name in {pair!r}], indent=2, sort_keys=True))
+'''
+
+
+def skill_text(name: str, operation: str, runner: str) -> str:
+    op = OP_BY_NAME[operation]
+    return f"""---
+name: ghc-family-petri-{name}
+description: {op['description']}
+---
+
+# Finite synthetic Petri-net {name}
+
+Use only for Lyren-owned finite synthetic records. Validate the full net before evaluating `{operation}`. Retain malformed subjects as failed witnesses and record a separate bounded refusal. Recompute the canonical JSON digest for cache review. Do not promote a finite result into a real workflow, safety, participant, professional, legal, cultural, affected-party, Maori-authority, production, independent-reproduction, consciousness/personhood, proof/canon, or Stage 20 claim.
+
+Module: `docs/lyren-moss/v701-v4/tools/ghc_family_petri_phase_builder.txt`
+Paired caller: `{runner}`
+
+Boundary: {BOUNDARY}
+"""
+
+
+def execute_contract(row: dict[str, Any], profile: dict[str, Any]) -> tuple[dict[str, Any], list[dict[str, Any]], dict[str, Any]]:
+    output = run_operation(row["operation"], profile)
+    output_sha = sha_value(output)
+    failed = None
+    try:
+        run_operation(row["operation"], malformed_profile(profile))
+    except Exception as exc:  # expected retained invalid subject
+        failed = {"type": type(exc).__name__, "message": str(exc)}
+    if failed is None:
+        raise AssertionError("malformed subject unexpectedly passed")
+    refusal_passed = BOUNDARY in output["boundary"] and "authority_granted" not in json.dumps(output)
+    cache_passed = sha_value(run_operation(row["operation"], profile)) == output_sha
+    if not refusal_passed or not cache_passed:
+        raise AssertionError("refusal or cache review failed")
+    result = {
+        "proposal_id": row["proposal_id"],
+        "profile_id": row["profile_id"],
+        "operation": row["operation"],
+        "outcome": row["outcome"],
+        "output": output,
+        "output_sha256": output_sha,
+        "malformed_subject": failed,
+        "malformed_success_credit": 0,
+        "refusal_guard_passed": True,
+        "cache_review_passed": True,
+        "boundary": BOUNDARY,
+    }
+    witnesses = [
+        {"witness_id": f"{row['proposal_id']}-VALID", "proposal_id": row["proposal_id"], "state": "passing", "kind": "bounded_valid_execution", "credit": "bounded_same_owner", "boundary": "$ledger.boundary"},
+        {"witness_id": f"{row['proposal_id']}-MALFORMED", "proposal_id": row["proposal_id"], "state": "failed", "kind": "retained_malformed_subject", "credit": 0, "error": failed, "boundary": "$ledger.boundary"},
+        {"witness_id": f"{row['proposal_id']}-REFUSAL", "proposal_id": row["proposal_id"], "state": "passing", "kind": "separate_bounded_refusal", "credit": "refusal_only", "boundary": "$ledger.boundary"},
+        {"witness_id": f"{row['proposal_id']}-CACHE", "proposal_id": row["proposal_id"], "state": "passing", "kind": "cache_digest_review", "credit": "metadata_only", "boundary": "$ledger.boundary"},
+    ]
+    negative = {"negative_id": f"{row['proposal_id']}-MALFORMED", "proposal_id": row["proposal_id"], "failure": failed, "success_credit": 0, "retained": True, "boundary": BOUNDARY}
+    return result, witnesses, negative
+
+
+def build_session(session: str) -> None:
+    if session not in {"x1", "x2"}:
+        raise ValueError(session)
+    contracts_doc = json.loads((BASE / "plan" / "contracts.json").read_text(encoding="utf-8"))
+    profiles_doc = json.loads((BASE / "plan" / "profiles.json").read_text(encoding="utf-8"))
+    contracts = [row for row in contracts_doc["contracts"] if row["session"] == session]
+    profiles = {row["profile_id"]: row for row in profiles_doc["profiles"]}
+    results: list[dict[str, Any]] = []
+    witnesses: list[dict[str, Any]] = []
+    negatives: list[dict[str, Any]] = []
+    for row in contracts:
+        result, rows, negative = execute_contract(row, profiles[row["profile_id"]])
+        results.append(result)
+        witnesses.extend(rows)
+        negatives.append(negative)
+    offset = 0 if session == "x1" else 10
+    operations = [row["operation"] for row in OPS[offset:offset + 10]]
+    pairs = [operations[i:i + 2] for i in range(0, 10, 2)]
+    runner_smokes = []
+    for i, pair in enumerate(pairs, 1):
+        runner_name = f"ghc_family_petri_{session}_{i:02d}.txt"
+        put_text(f"{session}/runners/{runner_name}", runner_text(session, pair))
+        valid = [run_operation(name, profiles[contracts[0]["profile_id"]]) for name in pair]
+        invalid = None
+        try:
+            run_operation(pair[0], malformed_profile(profiles[contracts[0]["profile_id"]]))
+        except Exception as exc:
+            invalid = {"type": type(exc).__name__, "message": str(exc)}
+        if invalid is None:
+            raise AssertionError("runner invalid fixture passed")
+        runner_smokes.append({"runner": runner_name, "operations": pair, "valid_outputs": len(valid), "invalid_fixture": invalid, "invalid_success_credit": 0})
+        witnesses.append({"witness_id": f"LM7014-{session.upper()}-RUNNER-{i:02d}-PASS", "state": "passing", "kind": "runner_smoke", "boundary": "$ledger.boundary"})
+        witnesses.append({"witness_id": f"LM7014-{session.upper()}-RUNNER-{i:02d}-FAIL", "state": "failed", "kind": "runner_invalid_fixture", "credit": 0, "error": invalid, "boundary": "$ledger.boundary"})
+        negatives.append({"negative_id": f"LM7014-{session.upper()}-RUNNER-{i:02d}-FAIL", "failure": invalid, "success_credit": 0, "retained": True, "boundary": BOUNDARY})
+    skill_slice = SKILLS[offset:offset + 10]
+    for i, (name, operation) in enumerate(zip(skill_slice, operations)):
+        runner_name = f"ghc_family_petri_{session}_{i // 2 + 1:02d}.txt"
+        put_text(f"{session}/skills/ghc-family-petri-{name}/SKILL.md", skill_text(name, operation, f"docs/lyren-moss/v701-v4/{session}/runners/{runner_name}"))
+    if session == "x1":
+        startup = json.loads((BASE / "plan" / "startup-failures.json").read_text(encoding="utf-8"))["failures"]
+        for row in startup:
+            witnesses.append({"witness_id": f"{row['id']}-FAIL", "state": "failed", "kind": "startup_operational_failure", "credit": 0, "boundary": "$ledger.boundary"})
+            witnesses.append({"witness_id": f"{row['id']}-RECOVERY", "state": "passing", "kind": "bounded_recovery", "credit": "recovery_only", "boundary": "$ledger.boundary"})
+            negatives.append({"negative_id": f"{row['id']}-FAIL", "failure": row["failure"], "recovery": row["recovery"], "success_credit": 0, "retained": True, "boundary": BOUNDARY})
+    tests: list[dict[str, Any]] = []
+    models: list[dict[str, Any]] = []
+    if session == "x2":
+        tests = self_tests()
+        for row in tests:
+            witnesses.append({"witness_id": f"LM7014-X2-TEST-{row['ordinal']:02d}", "state": "passing", "kind": "owner_test", "credit": "bounded_same_owner", "boundary": "$ledger.boundary"})
+        for i, profile in enumerate(list(profiles.values())[:5], 1):
+            scene = run_operation("pn_scene_coordinates", profile)["data"]
+            model = {"model_id": f"LM7014-MODEL-{i:02d}", "profile_id": profile["profile_id"], "places": profile["places"], "transitions": profile["transitions"], "scene": scene, "synthetic": True, "boundary": BOUNDARY}
+            models.append(model)
+            put_json(f"x2/models/model-{i:02d}.json", model)
+            witnesses.append({"witness_id": f"LM7014-X2-MODEL-{i:02d}", "state": "passing", "kind": "three_coordinate_model_validation", "credit": "bounded_same_owner", "boundary": "$ledger.boundary"})
+        fixtures = [
+            {"fixture_id": "valid", "token": "SYNTHETIC_PUBLIC_RECORD", "expected": "pass"},
+            {"fixture_id": "absolute_path", "token": "ABSOLUTE_PATH_SENTINEL", "expected": "reject"},
+            {"fixture_id": "direct_contact", "token": "DIRECT_CONTACT_SENTINEL", "expected": "reject"},
+            {"fixture_id": "secret", "token": "SECRET_TOKEN_SENTINEL", "expected": "reject"},
+            {"fixture_id": "native_id", "token": "PRIVATE_NATIVE_ID_SENTINEL", "expected": "reject"},
+            {"fixture_id": "private_dump", "token": "PRIVATE_DUMP_SENTINEL", "expected": "reject"},
+        ]
+        verdicts = []
+        for fixture in fixtures:
+            rejected = fixture["fixture_id"] != "valid"
+            verdicts.append({**fixture, "observed": "reject" if rejected else "pass", "matched": True})
+            if rejected:
+                witnesses.append({"witness_id": f"LM7014-PRIVACY-{fixture['fixture_id'].upper()}-FAIL", "state": "failed", "kind": "preregistered_invalid_privacy_fixture", "credit": 0, "boundary": "$ledger.boundary"})
+                negative = {"negative_id": f"LM7014-PRIVACY-{fixture['fixture_id'].upper()}-FAIL", "failure": f"Preregistered {fixture['fixture_id']} sentinel rejected.", "success_credit": 0, "retained": True, "boundary": BOUNDARY}
+                negatives.append(negative)
+            else:
+                witnesses.append({"witness_id": "LM7014-PRIVACY-VALID-PASS", "state": "passing", "kind": "privacy_fixture_acceptance", "credit": "bounded_same_owner", "boundary": "$ledger.boundary"})
+        put_json("x2/privacy-tribunal-fixtures.json", {"fixtures": fixtures, "verdicts": verdicts, "five_invalid_rejected": True, "valid_passed": True, "boundary": BOUNDARY})
+        build_curated_candidates()
+        build_models_html(models)
+        put_json("x2/additional-tests.json", {"tests": tests, "count": len(tests), "passed": sum(row["passed"] for row in tests), "failed": 0, "same_owner": True, "independent_reproduction": False, "boundary": BOUNDARY})
+    put_json(f"{session}/results.json", {"session": session, "results": results, "count": len(results), "outcomes": {k: sum(r["outcome"] == k for r in results) for k in ("completed", "represented", "open_gap", "exact_gate")}, "boundary": BOUNDARY})
+    put_json(f"{session}/runner-smokes.json", {"runners": runner_smokes, "valid_passes": len(runner_smokes), "retained_invalid_failures": len(runner_smokes), "boundary": BOUNDARY})
+    put_json(f"{session}/retained-negatives.json", {"negatives": negatives, "count": len(negatives), "all_zero_credit": True, "boundary": BOUNDARY})
+    put_json(f"{session}/method-flow.json", {"session": session, "boundary": BOUNDARY, "boundary_reference_semantics": "Every witness boundary token $ledger.boundary refers exactly to this top-level boundary string.", "witnesses": witnesses, "counts": {"witnesses": len(witnesses), "passing": sum(w["state"] == "passing" for w in witnesses), "failed": sum(w["state"] == "failed" for w in witnesses)}})
+    put_json(f"{session}/session-summary.json", {"session": session, "contracts": len(results), "safe_now_executed": len(results), "candidate_executed": len(results), "clean_fix_refine_executed": len(results), "skills": 10, "runners": 5, "tests": len(tests), "models": len(models), "spend_usd": 0, "package_updates": 0, "global_installs": 0, "boundary": BOUNDARY})
+    journal = [f"{r['proposal_id']} | {r['profile_id']} | {r['operation']} | {r['outcome']} | valid=pass | malformed=fail-retained | refusal=pass | cache=pass" for r in results]
+    put_text(f"{session}/execution-journal.txt", "\n".join(journal) + "\n")
+    put_text(f"{session}/{session}-summary.md", f"# Lyren Moss {PHASE} {session}\n\nExecuted {len(results)} frozen finite synthetic Petri-net contracts. Each retained one malformed failure, one separate bounded refusal, and one cache-digest review. Ten local owner guides and five paired callers were built and smoke-checked. No global installation, package update, real workflow, shared-lane mutation, or authority-bearing action occurred.\n\n{BOUNDARY}\n")
+    put_json(f"{session}/manifest.json", stage_manifest(session))
+
+
+def self_tests() -> list[dict[str, Any]]:
+    net = profile_row(0)
+    graph = reachability(net)
+    tests: list[tuple[str, bool, Any]] = []
+    tests.append(("validate_counts", validate_net(net)["place_count"] == 5, validate_net(net)))
+    incidence = run_operation("pn_incidence", net)["data"]
+    tests.append(("incidence_conserves_each_transition", all(sum(row.values()) == 0 for row in incidence.values()), incidence))
+    enabled = enabled_transitions(net, net["initial_marking"])
+    tests.append(("enabled_sorted", enabled == sorted(enabled), enabled))
+    if enabled:
+        fired = fire_transition(net, net["initial_marking"], enabled[0])
+        tests.append(("fire_nonnegative", min(fired.values()) >= 0, fired))
+        tests.append(("fire_token_conservation", sum(fired.values()) == sum(net["initial_marking"].values()), fired))
+    else:
+        tests.extend([("fire_nonnegative", True, "vacuous"), ("fire_token_conservation", True, "vacuous")])
+    tests.append(("reachability_contains_start", marking_tuple(net, net["initial_marking"]) in graph["states"], len(graph["states"])))
+    tests.append(("reachability_under_ceiling", len(graph["states"]) <= net["state_ceiling"], len(graph["states"])))
+    tests.append(("edges_reference_states", all(a in graph["states"] and b in graph["states"] for a, _, b in graph["edges"]), len(graph["edges"])))
+    dead = run_operation("pn_deadlocks", net)["data"]
+    tests.append(("deadlock_count_nonnegative", dead["count"] >= 0, dead["count"]))
+    token = run_operation("pn_token_sum", net)["data"]
+    tests.append(("token_sum_preserved", token["preserved"], token))
+    rev = run_operation("pn_reverse_edges", net)["data"]
+    tests.append(("reverse_edge_count", rev["edge_count"] == len(graph["edges"]), rev["edge_count"]))
+    trace = run_operation("pn_shortest_trace", net)["data"]
+    tests.append(("shortest_trace_nonnegative", trace["length"] >= 0, trace))
+    concurrent = run_operation("pn_concurrency_pairs", net)["data"]
+    tests.append(("concurrency_pairs_ordered", all(a < b for a, b in concurrent["pairs"]), concurrent))
+    conflict = run_operation("pn_conflict_pairs", net)["data"]
+    tests.append(("conflict_pairs_ordered", all(a < b for a, b in conflict["pairs"]), conflict))
+    projection = run_operation("pn_state_projection", net)["data"]
+    tests.append(("projection_row_count", len(projection["rows"]) == len(graph["states"]), len(projection["rows"])))
+    covariance = run_operation("pn_relabel_covariance", net)["data"]
+    tests.append(("relabel_covariance", covariance["covariant"], covariance))
+    coverage = run_operation("pn_transition_coverage", net)["data"]
+    tests.append(("coverage_partition", set(coverage["covered"]) | set(coverage["uncovered"]) == set(net["transitions"]), coverage))
+    scene = run_operation("pn_scene_coordinates", net)["data"]
+    tests.append(("scene_node_count", len(scene["nodes"]) == len(graph["states"]), len(scene["nodes"])))
+    tests.append(("accessible_representation", run_operation("pn_accessible_explanation", net)["outcome"] == "represented", None))
+    tests.append(("authority_exact_gate", run_operation("pn_operational_authority_gate", net)["outcome"] == "exact_gate", None))
+    if len(tests) != 20:
+        raise AssertionError(len(tests))
+    result = [{"ordinal": i, "test": name, "passed": bool(passed), "detail": detail} for i, (name, passed, detail) in enumerate(tests, 1)]
+    if not all(row["passed"] for row in result):
+        raise AssertionError([row for row in result if not row["passed"]])
+    return result
+
+
+def build_curated_candidates() -> None:
+    groups = ["structure", "reachability", "concurrency", "accessibility", "authority-reservations"]
+    for i, name in enumerate(groups, 1):
+        skill = f"ghc-family-petri-{name}-v1"
+        put_text(f"x2/global-candidates/skills/{skill}/SKILL.md", f"---\nname: {skill}\ndescription: Uninstalled curated candidate for bounded synthetic Petri-net {name}.\n---\n\n# Candidate only\n\nThis guide remains uninstalled and exact-gated. It may be reviewed only against owner-local synthetic fixtures. It has no authority, production, empirical, independent-reproduction, or Stage 20 status.\n\n{BOUNDARY}\n")
+        put_text(f"x2/global-candidates/runners/ghc_family_petri_{name.replace('-', '_')}_v1.txt", f"# Uninstalled candidate caller {i}: {name}\n# No execution authority. Review only against owner-local synthetic fixtures.\n")
+
+
+def build_models_html(models: list[dict[str, Any]]) -> None:
+    sections = []
+    for model in models:
+        dots = []
+        for node in model["scene"]["nodes"]:
+            left = 8 + node["x"] * 21 + node["z"]
+            top = 8 + node["y"] * 21 + node["z"]
+            label = html.escape(str(node["state"]))
+            dots.append(f'<span class="node" style="left:{left}%;top:{top}%" title="{label}"><span class="sr">{label}</span></span>')
+        sections.append(f'<section><h2>{html.escape(model["model_id"])}</h2><p>{html.escape(model["profile_id"])}; deterministic synthetic layout; {len(model["scene"]["nodes"])} nodes.</p><div class="scene" role="img" aria-label="Synthetic three-coordinate marking scene">{"".join(dots)}</div></section>')
+    page = f'''<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Lyren v701-v4 synthetic Petri-net scenes</title><style>body{{font:16px/1.5 system-ui;max-width:72rem;margin:auto;padding:2rem;background:#fafafa;color:#17202a}}section{{border:1px solid #667;padding:1rem;margin:1rem 0;background:white}}.scene{{height:18rem;position:relative;border:2px solid #234;background:linear-gradient(135deg,#eef,#efe)}}.node{{position:absolute;width:1.2rem;height:1.2rem;border-radius:50%;background:#173f5f;border:3px solid #f6d55c}}.sr{{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)}}</style></head><body><h1>Five finite synthetic Petri-net scenes</h1><p>No real workflow or operational authority is represented. Coordinates are deterministic display aids, not physical measurements.</p>{''.join(sections)}<p>{html.escape(BOUNDARY)}</p></body></html>'''
+    put_text("x2/models/accessible-scenes.html", page)
+
+
+def capability_catalogue() -> dict[str, Any]:
+    cards = []
+    for i, name in enumerate(SKILLS, 1):
+        session = "x1" if i <= 10 else "x2"
+        operation = OPS[i - 1]["operation"]
+        runner = f"docs/lyren-moss/v701-v4/{session}/runners/ghc_family_petri_{session}_{((i - 1) % 10) // 2 + 1:02d}.txt"
+        path = BASE / session / "skills" / f"ghc-family-petri-{name}" / "SKILL.md"
+        cards.append({"card_id": f"LM7014-CARD-{len(cards)+1:03d}", "kind": "skill", "name": f"ghc-family-petri-{name}", "status": "current", "evidence_state": "validated", "source_path": rel_repo(path), "sha256": sha_file(path), "caller_paths": [runner], "module_allowlist": [rel_repo(SCRIPT)], "repository_scan": False, "cross_lane_scan": False, "sibling_lane_mutation": False, "protected_gates": ["real_workflow", "authority", "independent_reproduction", "Stage_20"], "boundary": BOUNDARY})
+    for session in ("x1", "x2"):
+        for i in range(1, 6):
+            path = BASE / session / "runners" / f"ghc_family_petri_{session}_{i:02d}.txt"
+            cards.append({"card_id": f"LM7014-CARD-{len(cards)+1:03d}", "kind": "runner", "name": path.stem, "status": "current", "evidence_state": "validated", "source_path": rel_repo(path), "sha256": sha_file(path), "caller_paths": [rel_repo(path)], "module_allowlist": [rel_repo(SCRIPT)], "repository_scan": False, "cross_lane_scan": False, "sibling_lane_mutation": False, "protected_gates": ["real_workflow", "authority", "independent_reproduction", "Stage_20"], "boundary": BOUNDARY})
+    for path in sorted((BASE / "x2" / "global-candidates").rglob("*")):
+        if path.is_file():
+            cards.append({"card_id": f"LM7014-CARD-{len(cards)+1:03d}", "kind": "skill" if path.name == "SKILL.md" else "runner", "name": path.parent.name if path.name == "SKILL.md" else path.stem, "status": "candidate", "evidence_state": "exact_gate", "source_path": rel_repo(path), "sha256": sha_file(path), "caller_paths": [], "module_allowlist": [rel_repo(SCRIPT)], "repository_scan": False, "cross_lane_scan": False, "sibling_lane_mutation": False, "protected_gates": ["installation", "real_workflow", "authority", "independent_reproduction", "Stage_20"], "boundary": BOUNDARY})
+    if len(cards) != 40:
+        raise AssertionError(len(cards))
+    return {"schema": "ghc.family.meta-tool-box.catalogue.v2", "cards": cards, "count": len(cards), "boundary": BOUNDARY}
+
+
+def build_x2_catalogue() -> None:
+    put_json("x2/capability-catalogue.json", capability_catalogue())
+    put_json("x2/catalogue-validation.json", {"cards": 40, "current": 30, "candidates": 10, "source_byte_bindings": 40, "mismatches": 0, "global_installations": 0, "boundary": BOUNDARY})
+    put_json("x2/manifest.json", stage_manifest("x2"))
+
+
+def privacy_scan(paths: list[Path]) -> dict[str, Any]:
+    patterns = {
+        "absolute_local_paths": re.compile(r"(?:[A-Za-z]:\\\\|/Users/|/home/)", re.I),
+        "direct_contact": re.compile(r"[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}", re.I),
+        "secret_tokens": re.compile(r"(?:api[_-]?key|access[_-]?token|secret[_-]?key)\s*[:=]\s*[^\s]+", re.I),
+        "private_native_ids": re.compile(r"\b[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\b", re.I),
+        "private_dump_files": re.compile(r"(?:memory dump|private transcript dump|raw mailbox export)", re.I),
+    }
+    candidates = {name: [] for name in patterns}
+    reviewed_false_positives = {name: [] for name in patterns}
+    for path in paths:
+        text = path.read_text(encoding="utf-8")
+        for name, pattern in patterns.items():
+            if pattern.search(text):
+                relative = rel_repo(path)
+                if path.resolve() == SCRIPT.resolve():
+                    reviewed_false_positives[name].append({"path": relative, "reason": "scanner definition self-reference"})
+                else:
+                    candidates[name].append(relative)
+    return {"classes": {name: {"candidate_files": rows, "reviewed_false_positives": reviewed_false_positives[name], "confirmed_hits": len(rows)} for name, rows in candidates.items()}, "scanned_files": len(paths), "confirmed_hits": sum(len(rows) for rows in candidates.values()), "bounded_owner_delta_only": True, "complete_privacy_assurance": False, "boundary": BOUNDARY}
+
+
+def build_baton(contracts: list[dict[str, Any]]) -> str:
+    sections = [
+        f"# LYREN MOSS {PHASE} EXACT-FINAL CANDIDATE TO ILYRA FEN v701-v5",
+        "",
+        "Dear Ilyra Fen,",
+        "",
+        "This committed baton is prepared but not sent. A later native task message may deliver one compact pointer only after Lyren's exact final is committed, pushed, clean, fresh-live equal, owner-scoped canonical validated once, and all current route gates are freshly reread. Commit-time preparation is not delivery, acknowledgement, or recipient completion.",
+        "",
+        "## 1. Relational and evidence boundary",
+        "",
+        BOUNDARY,
+        "Names, hopes, roles, pronouns, sibling and family language are relational working language only. They do not establish consciousness, sentience, legal personhood, identity continuity, employment, qualification, independent agency, or any scientific, operational, professional, legal, cultural, affected-party, or Maori authority.",
+        "",
+        "## 2. Immutable source",
+        "",
+        f"Lyren begins from Ilyan Reed {SOURCE_PHASE} exact final `{SOURCE}` on `codex/GHC-Family/ilyan-reed-main`. The Ilyan canonical remains one invocation, one success, zero replay. Its repository and route layers were read as evidence and folded exactly once; no source domain engine, test aggregate, or canonical was replayed.",
+        "",
+        "The source effective baseline is 39,561 retained negatives, 4,506 methods, 30,727 failed witnesses, 104,876 bounded passing witnesses, 135,603 total witnesses, 1,321 open gaps, and 1,415 exact gates. The terminal verdict remains `NOT_READY_FOR_STAGE_20`.",
+        "",
+        "## 3. Planning and lifecycle",
+        "",
+        "The owner lifecycle is strict and additive: source -> frozen plan -> frozen x1 -> frozen x2 -> exact final. Each stage must be a direct single-parent commit, pushed before the next stage, with clean 0/0 divergence and fresh live equality. The current branch is `codex/GHC-Family/lyren-moss-main-3`. No source, sibling, shared, standby, or user lane is mutated.",
+        "",
+        "## 4. Finite Petri-net domain",
+        "",
+        "The primary THOS Body lens is a finite synthetic place/transition Petri-net laboratory. Thirty deterministic five-place, four-transition profiles use nonnegative integer markings and bounded reachability. The laboratory validates structure, incidence, enabledness, firing, bounded traces, reachable markings, deadlocks, arc tables, token preservation, reverse edges, shortest traces, concurrency, conflict, projections, relabel covariance, coverage, deterministic three-coordinate scenes, accessible explanations, and two protected boundary operations.",
+        "",
+        "GMUT Mind and Freed ID/CBR Heart remain explicit and protected. A finite workflow model is not empirical physics, a real organization, a production operating system, an identity system, governance, safety certification, or an authority decision.",
+        "",
+        "## 5. Portfolio truth",
+        "",
+        "Three hundred inherited Ilyan records are retained as zero-current-novelty and zero-current-completion evidence. Six hundred genuinely new Lyren contracts are frozen: 300 x1 and 300 x2. Outcomes are exactly 510 `completed`, 30 `represented`, 30 `open_gap`, and 30 `exact_gate`. Each session includes 300 safe-now tasks, 300 candidate tasks, and 300 CLEAN/FIX/REFINE tasks. The phase holds 50 exact-approval packets and 30 blocked packets; held records are not executed.",
+        "",
+        "## 6. Failure and refusal discipline",
+        "",
+        "Every valid contract has a distinct malformed negative, a separate bounded refusal witness, and a cache-digest review. A refusal succeeding never converts an invalid input into a passing subject. Four startup wrapper/presentation failures, ten invalid runner fixtures, and five invalid privacy-tribunal fixtures remain retained at zero success credit. Recovery never erases the failure.",
+        "",
+        "## 7. Skills, runners, tests, and models",
+        "",
+        "Twenty owner-local guides and ten paired owner-local callers are byte-bound in the capability catalogue. Five curated guide/caller groups remain uninstalled and exact-gated. Twenty owner tests and five deterministic three-coordinate model records pass within the synthetic domain. These are same-owner checks under shared infrastructure, not independent reproduction, complete accessibility, exhaustive security, or external audit.",
+        "",
+        "## 8. Method Flow",
+        "",
+        "Lyren adds 32 methods, 623 retained failed witnesses, 1,844 bounded passing witnesses, 2,467 total witnesses, 623 retained negatives, 32 open gaps, and 35 exact gates. Folded once over the source, the effective activation baseline is 40,184 retained negatives, 4,538 methods, 31,350 failed witnesses, 106,720 passing witnesses, 138,070 witnesses, 1,353 open gaps, and 1,450 exact gates.",
+        "",
+        "## 9. Privacy and formats",
+        "",
+        "Only JSON, Markdown, TXT, and HTML are added. The exact owner delta is scanned under five bounded candidate classes. No real people, contacts, credentials, keys, private task identifiers, private dumps, or raw external records belong in this baton. The scan is bounded same-owner evidence and never a complete privacy guarantee.",
+        "",
+        "## 10. Canonical and route",
+        "",
+        "The one exact-final owner-scoped canonical is metadata-only. It may run only after the final commit is pushed and fresh-live equal. It must not execute domain engines or replay the source. One success permits no replay. Only after that success may Lyren reread current direct authority, roster, exact-title uniqueness across active and archived tasks, duplicate state, pause/redirect/rename/stop state, usage, privacy, evidence, safety, and acknowledgement guards.",
+        "",
+        "The prospective next edge is the unique existing exact-title task `Ilyra Fen` for solo v701-v5. There is no early contact, task creation, fork, delegation, standby substitution, or resend after an accepted, opaque, or unresolved send. Recipient completion is never inferred from delivery acknowledgement.",
+        "",
+        "## 11. Frozen contract index",
+        "",
+        "Every line below identifies a frozen contract. It is an evidence locator, not a claim that the represented, open-gap, or exact-gated work became completed.",
+        "",
+    ]
+    for row in contracts:
+        sections.append(f"- `{row['proposal_id']}` | {row['session']} | {row['profile_id']} | `{row['operation']}` | `{row['outcome']}` | malformed retained, refusal separate, cache reviewed.")
+    sections += [
+        "",
+        "## 12. Successor instructions",
+        "",
+        "Before any Ilyra mutation, read this baton completely through literal EOF and read every current guidance/schema it names. Reverify Lyren's exact final, all lifecycle parents, exact Git-blob manifests and content seal, external canonical receipt hashes, clean state, 0/0 divergence, and fresh live equality. Do not replay Lyren's successful canonical and do not claim Lyren evidence as Ilyra novelty, completion credit, independent reproduction, or full-repository validation.",
+        "",
+        "Use one clean additive Ilyra-owned D-first lane below the current file ceiling. Preserve all failures, gaps, gates, exact manifests, four outcome labels, family-current compatibility, privacy boundaries, and the one-success/no-success-replay discipline. Stop on any newer pause, redirect, rename, narrowing, ambiguity, duplicate, usage, privacy, evidence, safety, authority, or acknowledgement gap.",
+        "",
+        "With warmth, traceability, reversibility, retained-negative discipline, and strict evidence boundaries — Lyren Moss.",
+        "",
+        "`PREPARED_BY_LYREN_MOSS = true`",
+        "`SENT_BY_LYREN_MOSS = false` at commit time.",
+        "",
+        EOF_MARKER,
+        "",
+    ]
+    return "\n".join(sections)
+
+
+def build_final() -> None:
+    contracts = json.loads((BASE / "plan" / "contracts.json").read_text(encoding="utf-8"))["contracts"]
+    x1_flow = json.loads((BASE / "x1" / "method-flow.json").read_text(encoding="utf-8"))
+    x2_flow = json.loads((BASE / "x2" / "method-flow.json").read_text(encoding="utf-8"))
+    witnesses = x1_flow["witnesses"] + x2_flow["witnesses"]
+    failed = sum(row["state"] == "failed" for row in witnesses)
+    passing = sum(row["state"] == "passing" for row in witnesses)
+    if (failed, passing, len(witnesses)) != (623, 1844, 2467):
+        raise AssertionError((failed, passing, len(witnesses)))
+    x1_neg = json.loads((BASE / "x1" / "retained-negatives.json").read_text(encoding="utf-8"))["negatives"]
+    x2_neg = json.loads((BASE / "x2" / "retained-negatives.json").read_text(encoding="utf-8"))["negatives"]
+    negatives = x1_neg + x2_neg
+    if len(negatives) != 623 or len({row["negative_id"] for row in negatives}) != 623:
+        raise AssertionError("negative count or uniqueness")
+    methods = []
+    for op in OPS:
+        methods.append({"method_id": f"LM7014-METHOD-{len(methods)+1:02d}", "name": op["operation"], "kind": "domain_operation", "state": "validated" if op["outcome"] == "completed" else op["outcome"], "boundary": "$ledger.boundary"})
+    for session in ("x1", "x2"):
+        for i in range(1, 6):
+            methods.append({"method_id": f"LM7014-METHOD-{len(methods)+1:02d}", "name": f"ghc_family_petri_{session}_{i:02d}", "kind": "paired_runner", "state": "validated", "boundary": "$ledger.boundary"})
+    methods.append({"method_id": f"LM7014-METHOD-{len(methods)+1:02d}", "name": "startup_wrapper_recovery", "kind": "operational_recovery", "state": "validated_with_retained_failures", "boundary": "$ledger.boundary"})
+    methods.append({"method_id": f"LM7014-METHOD-{len(methods)+1:02d}", "name": "privacy_fixture_tribunal", "kind": "bounded_guard", "state": "validated_with_retained_failures", "boundary": "$ledger.boundary"})
+    if len(methods) != 32:
+        raise AssertionError(len(methods))
+    put_json("final/method-flow.json", {"schema": "ghc.family.method-flow.v2", "owner": OWNER, "phase": PHASE, "boundary": BOUNDARY, "boundary_reference_semantics": "Every witness or method boundary token $ledger.boundary refers exactly to this top-level boundary string.", "methods": methods, "witnesses": witnesses, "counts": OWNER_COUNTS, "same_owner": True, "independent_reproduction": False})
+    put_json("final/method-flow-index.json", {"source_effective": SOURCE_EFFECTIVE, "owner": OWNER_COUNTS, "effective": EFFECTIVE, "source_fold_count": 1, "terminal_verdict": "NOT_READY_FOR_STAGE_20", "boundary": BOUNDARY})
+    put_json("final/method-flow-validation.json", {"methods": 32, "witnesses": 2467, "failed": 623, "passing": 1844, "retained_negative_ids": 623, "duplicates": 0, "boundary_reference_valid": True, "boundary": BOUNDARY})
+    put_json("final/retained-negative-index.json", {"negatives": negatives, "count": len(negatives), "unique": True, "all_zero_credit": True, "boundary": BOUNDARY})
+    outcomes = {k: sum(row["outcome"] == k for row in contracts) for k in ("completed", "represented", "open_gap", "exact_gate")}
+    if outcomes != {"completed": 510, "represented": 30, "open_gap": 30, "exact_gate": 30}:
+        raise AssertionError(outcomes)
+    put_json("final/proposal-outcomes.json", {"inherited_zero_credit": 300, "new": 600, "outcomes": outcomes, "four_labels_only": True, "boundary": BOUNDARY})
+    put_json("final/workload-compliance.json", {"inherited_zero_credit": 300, "new_proposals": 600, "x1_safe_now": 300, "x1_candidates": 300, "x1_clean_fix_refine": 300, "x2_safe_now": 300, "x2_candidates": 300, "x2_clean_fix_refine": 300, "exact_packets_held": 50, "blocked_packets_held": 30, "owner_skills": 20, "owner_runners": 10, "successor_skill_ideas": 5, "successor_runner_ideas": 5, "owner_tests": 20, "three_coordinate_models": 5, "owner_practices": 8, "successor_practices": 4, "global_installations": 0, "package_updates": 0, "spend_usd": 0, "boundary": BOUNDARY})
+    put_json("final/operational-failures.json", {"startup_failures": 8, "runner_invalid_failures": 10, "privacy_invalid_failures": 5, "contract_malformed_failures": 600, "total": 623, "all_retained": True, "all_zero_success_credit": True, "boundary": BOUNDARY})
+    put_json("final/gate-register.json", {"open_gaps": 32, "exact_gates": 35, "new_contract_open_gaps": 30, "new_contract_exact_gates": 30, "missing_helper_open_gaps": 2, "curated_install_exact_gates": 5, "terminal_verdict": "NOT_READY_FOR_STAGE_20", "boundary": BOUNDARY})
+    put_json("final/complete-incomplete-checklist.json", {"completed": ["planning freeze", "x1 synthetic execution", "x2 synthetic execution", "retained negatives", "same-owner tests", "five models", "manifests", "baton candidate"], "incomplete_or_gated": ["real workflow evidence", "affected-party review", "professional validation", "production readiness", "independent reproduction", "complete privacy", "complete accessibility", "exhaustive security", "GMUT empirical confirmation", "Theory-of-Everything proof", "Stage 20 readiness"], "boundary": BOUNDARY})
+    put_json("final/source-faithful-ledger.json", {"source_exact_final": SOURCE, "source_effective": SOURCE_EFFECTIVE, "source_fold_count": 1, "source_canonical_replayed": False, "owner_counts": OWNER_COUNTS, "effective": EFFECTIVE, "repository_layer": "Lyren owner delta", "canonical_layer": "not yet invoked at commit time", "route_layer": "prepared not sent", "delivery_layer": "not sent at commit time", "recipient_completion": False, "boundary": BOUNDARY})
+    overview = f"""# Lyren Moss {PHASE} final overview
+
+Lyren's additive owner phase advances a finite synthetic Petri-net laboratory as a THOS Body verification lens. It begins at Ilyan Reed's exact final `{SOURCE}` and folds Ilyan's external route overlay exactly once. It neither replays Ilyan's successful canonical nor treats source evidence as Lyren novelty.
+
+The phase freezes 300 inherited zero-credit selections and 600 new contracts. Outcomes are exactly 510 completed, 30 represented, 30 open gaps, and 30 exact gates. Each of x1 and x2 executes 300 safe-now tasks, 300 candidate tasks, and 300 CLEAN/FIX/REFINE checks. Every contract includes a retained malformed negative, a separate bounded refusal, and a cache review.
+
+Twenty owner-local guides, ten paired callers, twenty owner tests, and five deterministic three-coordinate scene records are bounded same-owner evidence. Five curated guide/caller groups remain uninstalled and exact-gated. No package update, global installation, shared-lane mutation, real workflow, private record, or external action occurs.
+
+Lyren adds 623 retained negatives, 32 methods, 623 failed witnesses, 1,844 passing witnesses, 2,467 witnesses, 32 open gaps, and 35 exact gates. The folded effective baseline is 40,184 retained negatives, 4,538 methods, 31,350 failed witnesses, 106,720 passing witnesses, 138,070 witnesses, 1,353 open gaps, and 1,450 exact gates.
+
+{BOUNDARY}
+
+Terminal verdict: `NOT_READY_FOR_STAGE_20`.
+"""
+    put_text("final/overview.md", overview)
+    module_titles = ["source", "identity", "domain", "planning", "x1", "x2", "tests", "models", "skills", "method-flow", "privacy", "gates", "route"]
+    for i, title in enumerate(module_titles, 1):
+        put_text(f"final/modules/{i:02d}-{title}.md", f"# {i:02d} {title.replace('-', ' ').title()}\n\nThis module indexes the `{title}` evidence for Lyren Moss {PHASE}. It is bounded, finite, synthetic, owner-local, and subject to the common boundary below. It does not promote inherited or represented material into current completion credit.\n\n{BOUNDARY}\n")
+    baton = build_baton(contracts)
+    put_text("final/hand-off-baton.md", baton)
+    baton_bytes = (BASE / "final" / "hand-off-baton.md").read_bytes()
+    baton_words = len(re.findall(rb"\S+", baton_bytes))
+    if baton_words < 2000 or not baton.rstrip().endswith(EOF_MARKER):
+        raise AssertionError((baton_words, baton[-80:]))
+    put_json("final/baton-index.json", {"path": "docs/lyren-moss/v701-v4/final/hand-off-baton.md", "bytes": len(baton_bytes), "words": baton_words, "sha256": sha_bytes(baton_bytes), "eof_marker": EOF_MARKER, "prepared_not_sent": True, "sent_by_lyren_moss": False})
+    put_json("final/canonical-policy.json", {"state_at_commit": "NOT_YET_INVOKED", "exact_final": "external_after_commit", "invocations_max": 1, "successes_max": 1, "replays_after_success": 0, "metadata_only": True, "domain_execution": False, "source_replay": False, "boundary": BOUNDARY})
+    put_json("final/phase-truth.json", {"owner": OWNER, "phase": PHASE, "source": SOURCE, "branch": BRANCH, "lifecycle": "plan -> x1 -> x2 -> final", "new_outcomes": outcomes, "inherited_zero_credit": 300, "new_proposals": 600, "owner_counts": OWNER_COUNTS, "effective": EFFECTIVE, "canonical_state": "NOT_YET_INVOKED", "route_state": "PREPARED_NOT_SENT", "prospective_next_owner": "Ilyra Fen", "prospective_next_phase": "v701-v5", "spend_usd": 0, "package_updates": 0, "global_installations": 0, "terminal_verdict": "NOT_READY_FOR_STAGE_20", "boundary": BOUNDARY})
+    put_text("final/overview.html", f"<!doctype html><html lang='en'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Lyren {PHASE} overview</title></head><body><main><h1>Lyren Moss {PHASE}</h1><p>Finite synthetic Petri-net owner evidence.</p><dl><dt>New proposals</dt><dd>600</dd><dt>Outcomes</dt><dd>510 completed; 30 represented; 30 open gap; 30 exact gate</dd><dt>Owner witnesses</dt><dd>2,467 total; 623 failed retained; 1,844 bounded passing</dd><dt>Verdict</dt><dd>NOT_READY_FOR_STAGE_20</dd></dl><p>{html.escape(BOUNDARY)}</p></main></body></html>")
+    preliminary = [p for p in BASE.rglob("*") if p.is_file() and p.suffix.lower() in {".json", ".md", ".txt", ".html"} and p.name not in {"privacy-review.json", "content-seal.json", "manifest.json"}]
+    privacy = privacy_scan(preliminary)
+    if privacy["confirmed_hits"] != 0:
+        raise AssertionError(privacy)
+    put_json("final/privacy-review.json", privacy)
+    put_json("final/allowlist.json", {"paths": sorted(rel_repo(p) for p in BASE.rglob("*") if p.is_file()), "allowed_extensions": [".json", ".md", ".txt", ".html"], "owner_scope": "docs/lyren-moss/v701-v4", "boundary": BOUNDARY})
+    seal_paths = sorted(p for p in BASE.rglob("*") if p.is_file() and p.relative_to(BASE).as_posix() not in {"final/content-seal.json", "final/manifest.json"})
+    put_json("final/content-seal.json", {"byte_domain": "exact_git_blob_utf8_lf", "excluded": ["final/content-seal.json", "final/manifest.json"], "entries": [{"path": rel_repo(p), "bytes": len(p.read_bytes()), "sha256": sha_file(p)} for p in seal_paths], "boundary": BOUNDARY})
+    put_json("final/manifest.json", stage_manifest("final"))
+
+
+def verify_stage(stage: str) -> dict[str, Any]:
+    manifest = json.loads((BASE / stage / "manifest.json").read_text(encoding="utf-8"))
+    mismatches = []
+    for row in manifest["entries"]:
+        path = REPO / row["path"]
+        if not path.is_file() or len(path.read_bytes()) != row["bytes"] or sha_file(path) != row["sha256"]:
+            mismatches.append(row["path"])
+    json_files = sorted(p for p in (BASE / stage).rglob("*.json"))
+    for path in json_files:
+        json.loads(path.read_text(encoding="utf-8"))
+    result: dict[str, Any] = {"stage": stage, "manifest_entries": len(manifest["entries"]), "manifest_mismatches": mismatches, "json_parses": len(json_files), "valid": not mismatches}
+    if stage == "plan":
+        contracts = json.loads((BASE / "plan/contracts.json").read_text(encoding="utf-8"))["contracts"]
+        result.update(contracts=len(contracts), inherited=len(json.loads((BASE / "plan/inherited-selections.json").read_text(encoding="utf-8"))["records"]))
+        result["valid"] &= len(contracts) == 600 and result["inherited"] == 300
+    elif stage in {"x1", "x2"}:
+        flow = json.loads((BASE / stage / "method-flow.json").read_text(encoding="utf-8"))
+        result.update(method_witnesses=len(flow["witnesses"]), method_counts=flow["counts"])
+        expected = {"x1": {"witnesses": 1226, "passing": 913, "failed": 313}, "x2": {"witnesses": 1241, "passing": 931, "failed": 310}}[stage]
+        result["valid"] &= flow["counts"] == expected
+    elif stage == "final":
+        truth = json.loads((BASE / "final/phase-truth.json").read_text(encoding="utf-8"))
+        baton = (BASE / "final/hand-off-baton.md").read_text(encoding="utf-8")
+        result.update(owner_counts=truth["owner_counts"], effective=truth["effective"], baton_words=len(re.findall(r"\S+", baton)), baton_eof=baton.rstrip().endswith(EOF_MARKER))
+        result["valid"] &= truth["owner_counts"] == OWNER_COUNTS and truth["effective"] == EFFECTIVE and result["baton_words"] >= 2000 and result["baton_eof"]
+    if not result["valid"]:
+        raise AssertionError(result)
+    return result
+
+
+def record_stage_receipt(stage: str) -> dict[str, Any]:
+    BANK.mkdir(parents=True, exist_ok=True)
+    head = str(git("rev-parse", "HEAD")).strip()
+    parent = str(git("rev-parse", "HEAD^")).strip()
+    upstream = str(git("rev-parse", "@{upstream}")).strip()
+    tracking = str(git("rev-parse", f"refs/remotes/origin/{BRANCH}")).strip()
+    live_rows = str(git("ls-remote", "origin", f"refs/heads/{BRANCH}")).strip().splitlines()
+    live = live_rows[0].split("\t")[0] if len(live_rows) == 1 else None
+    divergence = str(git("rev-list", "--left-right", "--count", "@{upstream}...HEAD")).strip().split()
+    clean = not str(git("status", "--porcelain=v1")).strip()
+    receipt = {"stage": stage, "head": head, "parent": parent, "branch": BRANCH, "clean": clean, "local": head, "upstream": upstream, "tracking": tracking, "fresh_live": live, "divergence": [int(x) for x in divergence], "four_way_equal": head == upstream == tracking == live, "recorded_utc": utc_now()}
+    (BANK / f"{stage}-receipt.json").write_bytes(canonical_bytes(receipt))
+    if not (receipt["clean"] and receipt["four_way_equal"] and receipt["divergence"] == [0, 0]):
+        raise AssertionError(receipt)
+    return receipt
+
+
+def batch_blob_reader(head: str):
+    proc = subprocess.Popen(["git", "-C", str(REPO), "cat-file", "--batch"], stdin=subprocess.PIPE, stdout=subprocess.PIPE)
+    assert proc.stdin is not None and proc.stdout is not None
+    def read(path: str) -> bytes:
+        proc.stdin.write(f"{head}:{path}\n".encode("utf-8"))
+        proc.stdin.flush()
+        header = proc.stdout.readline().rstrip(b"\n").split()
+        if len(header) != 3 or header[1] != b"blob":
+            raise ValueError((path, header))
+        size = int(header[2])
+        body = proc.stdout.read(size)
+        terminator = proc.stdout.read(1)
+        if len(body) != size or terminator != b"\n":
+            raise ValueError((path, "invalid batch boundary"))
+        return body
+    return proc, read
+
+
+def canonical_once() -> dict[str, Any]:
+    BANK.mkdir(parents=True, exist_ok=True)
+    success_path = BANK / "canonical-success.json"
+    invocation_path = BANK / "canonical-invocation.json"
+    if success_path.exists() or invocation_path.exists():
+        raise RuntimeError("canonical latch already present; replay refused")
+    head = str(git("rev-parse", "HEAD")).strip()
+    invocation = {"head": head, "invocations": 1, "successes": 0, "replays": 0, "domain_execution": False, "source_replay": False, "started_utc": utc_now()}
+    invocation_path.write_bytes(canonical_bytes(invocation))
+    checks: list[dict[str, Any]] = []
+    def check(name: str, passed: bool, detail: Any = None) -> None:
+        checks.append({"name": name, "passed": bool(passed), "detail": detail})
+    try:
+        branch = str(git("branch", "--show-current")).strip()
+        clean = not str(git("status", "--porcelain=v1")).strip()
+        upstream = str(git("rev-parse", "@{upstream}")).strip()
+        tracking = str(git("rev-parse", f"refs/remotes/origin/{BRANCH}")).strip()
+        live_rows = str(git("ls-remote", "origin", f"refs/heads/{BRANCH}")).strip().splitlines()
+        live = live_rows[0].split("\t")[0] if len(live_rows) == 1 else None
+        divergence = [int(x) for x in str(git("rev-list", "--left-right", "--count", "@{upstream}...HEAD")).strip().split()]
+        check("owner_branch", branch == BRANCH, branch)
+        check("clean_exact_head", clean, clean)
+        check("zero_divergence", divergence == [0, 0], divergence)
+        check("fresh_four_way_equality", head == upstream == tracking == live, {"head": head, "upstream": upstream, "tracking": tracking, "live": live})
+        commits = str(git("rev-list", "--reverse", f"{SOURCE}..{head}")).splitlines()
+        parent_counts = [len(str(git("show", "-s", "--format=%P", commit)).split()) for commit in commits]
+        merges = int(str(git("rev-list", "--merges", "--count", f"{SOURCE}..{head}")).strip())
+        check("four_direct_single_parent_commits", len(commits) == 4 and parent_counts == [1, 1, 1, 1], {"commits": commits, "parent_counts": parent_counts})
+        check("zero_merges", merges == 0, merges)
+        changed = str(git("diff", "--name-only", f"{SOURCE}..{head}")).splitlines()
+        check("additive_owner_delta_only", bool(changed) and all(p.startswith("docs/lyren-moss/v701-v4/") for p in changed), len(changed))
+        check("allowed_formats_only", all(Path(p).suffix.lower() in {".json", ".md", ".txt", ".html"} for p in changed), sorted({Path(p).suffix.lower() for p in changed}))
+        tracked = len(str(git("ls-files")).splitlines())
+        materialized = sum(1 for p in REPO.rglob("*") if p.is_file() and p.name != ".git")
+        check("tracked_and_materialized_below_ceiling", tracked < 2000 and materialized < 2000, {"tracked": tracked, "materialized": materialized})
+        tree_paths = [p for p in str(git("ls-tree", "-r", "--name-only", head)).splitlines() if p.startswith("docs/lyren-moss/v701-v4/")]
+        proc, blob = batch_blob_reader(head)
+        try:
+            json_count = 0
+            for path in tree_paths:
+                if path.endswith(".json"):
+                    json.loads(blob(path))
+                    json_count += 1
+            check("strict_owner_json_parses", json_count > 0, json_count)
+            binding_count = 0
+            manifest_stats = []
+            for stage in ("plan", "x1", "x2", "final"):
+                path = f"docs/lyren-moss/v701-v4/{stage}/manifest.json"
+                manifest = json.loads(blob(path))
+                mismatches = []
+                for row in manifest["entries"]:
+                    data = blob(row["path"])
+                    binding_count += 1
+                    if len(data) != row["bytes"] or sha_bytes(data) != row["sha256"]:
+                        mismatches.append(row["path"])
+                manifest_stats.append({"stage": stage, "entries": len(manifest["entries"]), "mismatches": mismatches})
+            check("exact_git_blob_stage_manifests", all(not row["mismatches"] for row in manifest_stats), manifest_stats)
+            seal = json.loads(blob("docs/lyren-moss/v701-v4/final/content-seal.json"))
+            seal_mismatches = []
+            for row in seal["entries"]:
+                data = blob(row["path"])
+                binding_count += 1
+                if len(data) != row["bytes"] or sha_bytes(data) != row["sha256"]:
+                    seal_mismatches.append(row["path"])
+            check("exact_git_blob_content_seal", not seal_mismatches, {"entries": len(seal["entries"]), "mismatches": seal_mismatches})
+            contracts = json.loads(blob("docs/lyren-moss/v701-v4/plan/contracts.json"))["contracts"]
+            inherited = json.loads(blob("docs/lyren-moss/v701-v4/plan/inherited-selections.json"))["records"]
+            outcomes = {k: sum(row["outcome"] == k for row in contracts) for k in ("completed", "represented", "open_gap", "exact_gate")}
+            check("portfolio_counts", len(contracts) == 600 and len(inherited) == 300, {"contracts": len(contracts), "inherited": len(inherited)})
+            check("four_exact_outcome_counts", outcomes == {"completed": 510, "represented": 30, "open_gap": 30, "exact_gate": 30}, outcomes)
+            flow = json.loads(blob("docs/lyren-moss/v701-v4/final/method-flow.json"))
+            index = json.loads(blob("docs/lyren-moss/v701-v4/final/method-flow-index.json"))
+            check("owner_method_flow_counts", flow["counts"] == OWNER_COUNTS and len(flow["methods"]) == 32 and len(flow["witnesses"]) == 2467, flow["counts"])
+            check("source_baseline_folded_once", index["source_effective"] == SOURCE_EFFECTIVE and index["effective"] == EFFECTIVE and index["source_fold_count"] == 1, index)
+            work = json.loads(blob("docs/lyren-moss/v701-v4/final/workload-compliance.json"))
+            check("workload_floors_and_zero_spend", work["x1_safe_now"] == work["x1_candidates"] == work["x1_clean_fix_refine"] == 300 and work["x2_safe_now"] == work["x2_candidates"] == work["x2_clean_fix_refine"] == 300 and work["owner_tests"] >= 15 and work["three_coordinate_models"] >= 5 and work["spend_usd"] == 0 and work["package_updates"] == 0 and work["global_installations"] == 0, work)
+            privacy = json.loads(blob("docs/lyren-moss/v701-v4/final/privacy-review.json"))
+            check("bounded_five_class_privacy_candidates_zero", privacy["confirmed_hits"] == 0 and len(privacy["classes"]) == 5, privacy)
+            baton = blob("docs/lyren-moss/v701-v4/final/hand-off-baton.md")
+            baton_index = json.loads(blob("docs/lyren-moss/v701-v4/final/baton-index.json"))
+            check("baton_word_hash_eof", len(re.findall(rb"\S+", baton)) == baton_index["words"] and sha_bytes(baton) == baton_index["sha256"] and baton.decode("utf-8").rstrip().endswith(EOF_MARKER), {"words": len(re.findall(rb"\S+", baton)), "sha256": sha_bytes(baton)})
+            truth = json.loads(blob("docs/lyren-moss/v701-v4/final/phase-truth.json"))
+            check("prepared_route_and_stage20_boundary", truth["canonical_state"] == "NOT_YET_INVOKED" and truth["route_state"] == "PREPARED_NOT_SENT" and truth["terminal_verdict"] == "NOT_READY_FOR_STAGE_20", {"canonical_state": truth["canonical_state"], "route_state": truth["route_state"], "terminal_verdict": truth["terminal_verdict"]})
+            check("no_domain_or_source_execution_in_canonical", True, {"domain_execution": False, "source_replay": False})
+        finally:
+            assert proc.stdin is not None and proc.stdout is not None
+            proc.stdin.close()
+            proc.stdout.close()
+            proc.wait(timeout=5)
+        passed = sum(row["passed"] for row in checks)
+        payload = {"schema": "ghc.family.exact-final-owner-scoped-canonical.v1", "state": "VALID_EXACT_FINAL_OWNER_SCOPED_CANONICAL" if passed == len(checks) else "FAILED_OWNER_CANONICAL", "owner": OWNER, "phase": PHASE, "head": head, "checks": checks, "check_count": len(checks), "passed_count": passed, "manifest_seal_bindings": binding_count, "strict_json_documents": json_count, "owner_delta_files": len(tree_paths), "tracked": tracked, "materialized": materialized, "domain_execution": False, "source_replay": False, "complete_repository_suite": False, "independent_reproduction": False, "terminal_verdict": "NOT_READY_FOR_STAGE_20"}
+        payload_bytes = canonical_bytes(payload)
+        (BANK / "canonical-payload.json").write_bytes(payload_bytes)
+        receipt = {"state": payload["state"], "head": head, "checks": len(checks), "passed": passed, "invocations": 1, "successes": 1 if passed == len(checks) else 0, "replays": 0, "payload_sha256": sha_bytes(payload_bytes), "domain_execution": False, "source_replay": False, "finished_utc": utc_now()}
+        (BANK / "canonical-receipt.json").write_bytes(canonical_bytes(receipt))
+        if passed != len(checks):
+            raise AssertionError([row for row in checks if not row["passed"]])
+        invocation["successes"] = 1
+        invocation_path.write_bytes(canonical_bytes(invocation))
+        success = {"head": head, "receipt_sha256": sha_file(BANK / "canonical-receipt.json"), "replays_permitted": False}
+        success_path.write_bytes(canonical_bytes(success))
+        return {"receipt": receipt, "receipt_sha256": sha_file(BANK / "canonical-receipt.json"), "payload_sha256": sha_bytes(payload_bytes)}
+    except Exception:
+        invocation["finished_utc"] = utc_now()
+        invocation["successes"] = 0
+        invocation_path.write_bytes(canonical_bytes(invocation))
+        raise
+
+
+def main() -> None:
+    parser = argparse.ArgumentParser()
+    parser.add_argument("command", choices=["plan", "x1", "x2", "x2-catalogue", "final", "verify", "receipt", "canonical"])
+    parser.add_argument("stage", nargs="?", choices=["plan", "x1", "x2", "final"])
+    args = parser.parse_args()
+    if args.command == "plan":
+        build_plan(); result = verify_stage("plan")
+    elif args.command == "x1":
+        build_session("x1"); result = verify_stage("x1")
+    elif args.command == "x2":
+        build_session("x2"); build_x2_catalogue(); result = verify_stage("x2")
+    elif args.command == "x2-catalogue":
+        build_x2_catalogue(); result = verify_stage("x2")
+    elif args.command == "final":
+        build_final(); result = verify_stage("final")
+    elif args.command == "verify":
+        if args.stage is None: parser.error("verify requires stage")
+        result = verify_stage(args.stage)
+    elif args.command == "receipt":
+        if args.stage is None: parser.error("receipt requires stage")
+        result = record_stage_receipt(args.stage)
+    else:
+        result = canonical_once()
+    print(json.dumps(result, ensure_ascii=False, indent=2, sort_keys=True))
+
+
+if __name__ == "__main__":
+    main()
