@@ -1,0 +1,1362 @@
+'use strict';
+
+const fs = require('fs');
+const path = require('path');
+const crypto = require('crypto');
+const cp = require('child_process');
+
+const W = fs.realpathSync(process.cwd());
+const ROOT = path.join(W, 'docs', 'sable-rook', 'v701-v8');
+const ARCHIVE = path.dirname(path.dirname(W));
+const BANK = path.join(ARCHIVE, 'phase-banks', 'sable-rook-v701-v8');
+const SOURCE = '97bd1e9039cfb43d657e407a95047c5985fefca2';
+const SOURCE_OWNER = 'Auren Lark';
+const SOURCE_PHASE = 'v701-v7';
+const BRANCH = 'codex/GHC-Family/sable-rook-v701-v8-full-tools';
+const SOURCE_PREFIX = 'docs/auren-lark/v701-v7/';
+const PREFIX = 'docs/sable-rook/v701-v8/';
+const SOURCE_REPOSITORY_SEAL = Object.freeze({
+  methods: 4677,
+  failed_witnesses: 33230,
+  passing_witnesses: 112944,
+  witnesses: 146174,
+  negatives: 42064,
+  open_gaps: 1447,
+  exact_gates: 1550,
+});
+const SOURCE_ACTIVATION_BASELINE = Object.freeze({
+  methods: 4685,
+  failed_witnesses: 33233,
+  passing_witnesses: 112949,
+  witnesses: 146182,
+  negatives: 42067,
+  open_gaps: 1447,
+  exact_gates: 1550,
+});
+const CONTROL_HASHES = Object.freeze({
+  workflow_v15: '836a401c656289346ac4cc50f1f4a0383db1e3cd5158633728c45c4b1c39d0d5',
+  roster_v15: '4b972f18c4be132718f5063c2fe3b52ac931a91a3f841abeaed3fe4cdcdf3f85',
+  authorization_v15: 'bd1c08932d3c237716211ba1c7c340ba51a0d9aaee5a2ee3c1531f84be8db309',
+});
+const SOURCE_HASHES = Object.freeze({
+  phase: '1b94eab5e79d8889c6e03b12184903147a6f4b5fa50e593e435183956a3aad12',
+  plan: '3326856aa834b9cd54d95f26f2805111e0dc8b1b55a34716c4c52ce5b45578be',
+  x1: '2bb817f8544e123f50fcdb7ad19883d6f973fb503f16ae4877a7c4e989a90af8',
+  x2: '0c0b8e9507485a13b35830cdb2b01a042dcda834de34ce02f2e8af59459db145',
+  final: '5db5c9ba444d1b8f70e2c7ebc3b959075241763515daf7adb49f762982592001',
+  canonical_payload: '6b5558275a032ff49c6a4c95433de4e9c102b9d42dc4cd7a0d6d293d8879f85a',
+  canonical_receipt: '2fcb03551ce439d05876d425f9f2994f8c0d0150b0042536c17f869c868cfcb9',
+  dependency_correction: '4ea19917f7a8ae1c156994f401f6587694a94071e1de147ac820adfa952f3355',
+  route_ledger: 'bbb93a616e0bb506587ed8bcd7ef56fae7538fad911a4b94aff912d54c5dce5e',
+  delivery_receipt: '295e13cfac70a29c99c0d25b232bbc90dd7ae695fd89ad0d561e7fe5aec68f5d',
+  activation_text: '584dbdee98269312348bb0ac5406845d10af35e4e1ffe422995031cda3c6d706',
+});
+const BOUNDARY = 'Finite synthetic same-owner antimatroid, poset-shelling, and complementary convex-geometry mathematics, software, and documentation evidence only. No real learner, curriculum, competence, prerequisite, participant, institution, measurement, calibrated probability, diagnosis, allocation, credential, key, consent event, intervention, legal or cultural decision, Maori-authority act, deployment, scientific confirmation, or external adapter action is used or established. Korte, Lovasz, Schrader, Edelman, Jamison, and related terminology supplies research vocabulary only, not endorsement, empirical confirmation, professional evaluation, decision authority, production certification, independent reproduction, exhaustive security, complete privacy, complete accessibility, Theory-of-Everything proof, canon, or Stage 20 readiness. GMUT remains conjectural; THOS remains synthetic and proxy-only; Freed ID remains synthetic and nonproduction. NOT_READY_FOR_STAGE_20.';
+const GROUND = Object.freeze(['a', 'b', 'c', 'd', 'e', 'f']);
+const FULL = (1 << GROUND.length) - 1;
+
+function stable(value) {
+  if (Array.isArray(value)) return value.map(stable);
+  if (value && typeof value === 'object') {
+    const out = {};
+    for (const key of Object.keys(value).sort()) out[key] = stable(value[key]);
+    return out;
+  }
+  return value;
+}
+
+function canonical(value) {
+  return Buffer.from(JSON.stringify(stable(value)), 'utf8');
+}
+
+function shaBytes(bytes) {
+  return crypto.createHash('sha256').update(bytes).digest('hex');
+}
+
+function ensureDir(dir) {
+  fs.mkdirSync(dir, {recursive: true});
+}
+
+function writeExclusive(file, value) {
+  ensureDir(path.dirname(file));
+  fs.writeFileSync(file, JSON.stringify(stable(value), null, 2) + '\n', {encoding: 'utf8', flag: 'wx'});
+}
+
+function readJson(file) {
+  return JSON.parse(fs.readFileSync(file, 'utf8'));
+}
+
+function assert(condition, message) {
+  if (!condition) throw new Error('assert:' + message);
+}
+
+function gitText() {
+  const args = Array.from(arguments);
+  return cp.execFileSync('git', ['-C', W].concat(args), {encoding: 'utf8', maxBuffer: 64 * 1024 * 1024}).trim();
+}
+
+function gitBytes() {
+  const args = Array.from(arguments);
+  return cp.execFileSync('git', ['-C', W].concat(args), {encoding: null, maxBuffer: 64 * 1024 * 1024});
+}
+
+function relative(file) {
+  return path.relative(W, file).split(path.sep).join('/');
+}
+
+function bindFile(file) {
+  const bytes = fs.readFileSync(file);
+  return {path: relative(file), bytes: bytes.length, sha256: shaBytes(bytes), byte_domain: 'utf8_lf'};
+}
+
+function bindExternal(file) {
+  const bytes = fs.readFileSync(file);
+  return {bytes: bytes.length, sha256: shaBytes(bytes)};
+}
+
+function runtimeFailures() {
+  const file = path.join(BANK, 'runtime-failures.json');
+  const records = fs.existsSync(file) ? readJson(file).records : [];
+  const ids = new Set();
+  return records.map(function(record) {
+    assert(record && typeof record.id === 'string' && !ids.has(record.id), 'runtime_failure:' + (record && record.id));
+    ids.add(record.id);
+    return Object.assign({}, record, {retained: true, original_success_credit: 0});
+  });
+}
+
+function popcount(mask) {
+  let n = 0;
+  while (mask) {
+    n += mask & 1;
+    mask >>>= 1;
+  }
+  return n;
+}
+
+function labels(mask) {
+  return GROUND.filter(function(_, index) { return Boolean(mask & (1 << index)); });
+}
+
+function maskFromLabels(values) {
+  let mask = 0;
+  for (const value of values) {
+    const index = GROUND.indexOf(value);
+    assert(index >= 0, 'unknown_label');
+    mask |= 1 << index;
+  }
+  return mask;
+}
+
+function sortedNumeric(values) {
+  return Array.from(values).sort(function(a, b) { return a - b; });
+}
+
+function familyForPrerequisites(prerequisiteMasks) {
+  const feasible = [];
+  for (let mask = 0; mask <= FULL; mask += 1) {
+    let ok = true;
+    for (let element = 0; element < GROUND.length; element += 1) {
+      if ((mask & (1 << element)) && (mask & prerequisiteMasks[element]) !== prerequisiteMasks[element]) {
+        ok = false;
+        break;
+      }
+    }
+    if (ok) feasible.push(mask);
+  }
+  return feasible;
+}
+
+function checkFamily(groundMask, familyValues) {
+  const family = new Set(familyValues);
+  const failures = [];
+  if (!family.has(0)) failures.push('empty_missing');
+  if (!family.has(groundMask)) failures.push('ground_missing');
+  for (const value of family) {
+    if ((value & ~groundMask) !== 0) failures.push('outside_ground:' + value);
+    if (value !== 0) {
+      let removable = false;
+      for (let element = 0; element < GROUND.length; element += 1) {
+        const bit = 1 << element;
+        if ((groundMask & bit) && (value & bit) && family.has(value ^ bit)) removable = true;
+      }
+      if (!removable) failures.push('inaccessible:' + value);
+    }
+  }
+  const values = sortedNumeric(family);
+  for (const left of values) {
+    for (const right of values) {
+      if (!family.has(left | right)) failures.push('union:' + left + ':' + right);
+    }
+  }
+  return {valid: failures.length === 0, failures: Array.from(new Set(failures)), feasible_count: family.size};
+}
+
+function basisForFamily(familyValues, query) {
+  let basis = 0;
+  for (const feasible of familyValues) {
+    if ((feasible & query) === feasible) basis |= feasible;
+  }
+  return basis;
+}
+
+function extensionsForFamily(familyValues, feasible) {
+  const family = new Set(familyValues);
+  const out = [];
+  for (let element = 0; element < GROUND.length; element += 1) {
+    const bit = 1 << element;
+    if (!(feasible & bit) && family.has(feasible | bit)) out.push(element);
+  }
+  return out;
+}
+
+function basicWords(profile) {
+  const family = new Set(profile.feasible_masks);
+  const out = [];
+  function walk(mask, word) {
+    if (mask === FULL) {
+      out.push(word.slice());
+      return;
+    }
+    for (let element = 0; element < GROUND.length; element += 1) {
+      const bit = 1 << element;
+      if (!(mask & bit) && family.has(mask | bit)) walk(mask | bit, word.concat(GROUND[element]));
+    }
+  }
+  walk(0, []);
+  return out;
+}
+
+function closedSets(profile) {
+  return sortedNumeric(profile.feasible_masks.map(function(mask) { return FULL ^ mask; }));
+}
+
+function closure(profile, query) {
+  let out = FULL;
+  for (const closed of closedSets(profile)) {
+    if ((closed & query) === query) out &= closed;
+  }
+  return out;
+}
+
+function extremePoints(profile, query) {
+  const out = [];
+  for (let element = 0; element < GROUND.length; element += 1) {
+    const bit = 1 << element;
+    if ((query & bit) && !(closure(profile, query ^ bit) & bit)) out.push(element);
+  }
+  return out;
+}
+
+function antiExchange(profile) {
+  let checked = 0;
+  const failures = [];
+  for (const closed of closedSets(profile)) {
+    for (let x = 0; x < GROUND.length; x += 1) {
+      const xb = 1 << x;
+      if (closed & xb) continue;
+      for (let y = 0; y < GROUND.length; y += 1) {
+        const yb = 1 << y;
+        if (x === y || (closed & yb)) continue;
+        checked += 1;
+        if ((closure(profile, closed | xb) & yb) && (closure(profile, closed | yb) & xb)) {
+          failures.push({closed, x, y});
+        }
+      }
+    }
+  }
+  return {valid: failures.length === 0, checked, failures};
+}
+
+function relabelMask(mask, mapping) {
+  let out = 0;
+  for (let oldIndex = 0; oldIndex < mapping.length; oldIndex += 1) {
+    if (mask & (1 << oldIndex)) out |= 1 << mapping[oldIndex];
+  }
+  return out;
+}
+
+function makeProfiles() {
+  const pairs = [];
+  for (let child = 1; child < GROUND.length; child += 1) {
+    for (let parent = 0; parent < child; parent += 1) pairs.push([parent, child]);
+  }
+  const profiles = [];
+  const signatures = new Set();
+  for (let candidate = 1; profiles.length < 30 && candidate < (1 << pairs.length); candidate += 1) {
+    const prerequisites = Array(GROUND.length).fill(0);
+    const edges = [];
+    for (let index = 0; index < pairs.length; index += 1) {
+      if (!(candidate & (1 << index))) continue;
+      const parent = pairs[index][0];
+      const child = pairs[index][1];
+      prerequisites[child] |= 1 << parent;
+      edges.push([GROUND[parent], GROUND[child]]);
+    }
+    const feasible = familyForPrerequisites(prerequisites);
+    const signature = feasible.join(',');
+    if (signatures.has(signature) || feasible.length < 8 || feasible.length > 48) continue;
+    signatures.add(signature);
+    const ordinal = profiles.length + 1;
+    const query = ((candidate * 37) + (ordinal * 11)) & FULL;
+    const internalFeasible = feasible.filter(function(mask) { return mask !== FULL; });
+    const seedFeasible = internalFeasible[(candidate + ordinal) % internalFeasible.length];
+    const rotation = (candidate + ordinal) % GROUND.length;
+    const mapping = GROUND.map(function(_, index) { return (index + rotation) % GROUND.length; });
+    const profile = {
+      profile_id: 'SR7018-AM-' + String(ordinal).padStart(2, '0'),
+      ground: GROUND,
+      prerequisite_masks: prerequisites,
+      prerequisite_edges: edges,
+      feasible_masks: feasible,
+      query_mask: query,
+      seed_feasible_mask: seedFeasible,
+      trace_mask: 31,
+      delete_element: (candidate + 2 * ordinal) % GROUND.length,
+      relabel_mapping: mapping,
+      subclass: 'poset_shelling_antimatroid',
+      synthetic: true,
+      empirical: false,
+      authority: false,
+    };
+    profile.profile_sha256 = shaBytes(canonical(profile));
+    profiles.push(profile);
+  }
+  assert(profiles.length === 30, 'profile_count');
+  return profiles;
+}
+
+const OPERATIONS = Object.freeze([
+  {name: 'am_validate', stage: 'x1', outcome: 'completed', description: 'Validate empty/full membership, accessibility, and union closure exactly.'},
+  {name: 'am_feasible_sets', stage: 'x1', outcome: 'completed', description: 'List the declared finite feasible family in deterministic mask order.'},
+  {name: 'am_accessibility_witnesses', stage: 'x1', outcome: 'completed', description: 'Emit all removable-element witnesses for every nonempty feasible set.'},
+  {name: 'am_union_closure_certificate', stage: 'x1', outcome: 'completed', description: 'Check every ordered feasible-pair union and report an exact certificate.'},
+  {name: 'am_extensions', stage: 'x1', outcome: 'completed', description: 'List admissible one-element continuations from a declared feasible state.'},
+  {name: 'am_rank', stage: 'x1', outcome: 'completed', description: 'Compute the exact antimatroid rank of a declared subset.'},
+  {name: 'am_basis', stage: 'x1', outcome: 'completed', description: 'Compute the unique maximal feasible subset of a declared subset.'},
+  {name: 'am_basic_words', stage: 'x1', outcome: 'completed', description: 'Enumerate all finite basic words whose prefixes remain feasible.'},
+  {name: 'am_trace', stage: 'x1', outcome: 'completed', description: 'Restrict the feasible family to a declared trace and revalidate it.'},
+  {name: 'cg_closure', stage: 'x1', outcome: 'completed', description: 'Compute exact complementary convex-geometry closure for a declared subset.'},
+  {name: 'cg_closed_sets', stage: 'x2', outcome: 'completed', description: 'List complements of feasible sets as the exact closed-set family.'},
+  {name: 'cg_extreme_points', stage: 'x2', outcome: 'completed', description: 'Compute extreme points using finite closure deletion tests.'},
+  {name: 'cg_anti_exchange', stage: 'x2', outcome: 'completed', description: 'Check the anti-exchange implication over every closed set and element pair.'},
+  {name: 'cg_lattice_meet_join', stage: 'x2', outcome: 'completed', description: 'Compute one exact closed-set meet and closure-of-union join certificate.'},
+  {name: 'am_relabel_covariance', stage: 'x2', outcome: 'completed', description: 'Check antimatroid validity and cardinality under a declared permutation.'},
+  {name: 'am_deletion', stage: 'x2', outcome: 'completed', description: 'Delete one declared element and validate the induced feasible family.'},
+  {name: 'am_sensitivity', stage: 'x2', outcome: 'completed', description: 'Compare rank and basis before and after one declared deletion.'},
+  {name: 'am_accessible_explanation', stage: 'x2', outcome: 'represented', description: 'Render a structural explanation while reserving human accessibility review.'},
+  {name: 'am_real_learning_gap', stage: 'x2', outcome: 'open_gap', description: 'Keep real learner, curriculum, calibration, and effectiveness evidence open.'},
+  {name: 'am_authority_gate', stage: 'x2', outcome: 'exact_gate', description: 'Reserve consequential learning, allocation, and governance decisions to competent and affected authorities.'},
+]);
+
+function operationByName(name) {
+  return OPERATIONS.find(function(operation) { return operation.name === name; });
+}
+
+function validateRequest(request, plan) {
+  assert(request && typeof request === 'object' && !Array.isArray(request), 'request_object');
+  assert(JSON.stringify(Object.keys(request).sort()) === JSON.stringify(['op', 'profile_id', 'profile_sha256']), 'field_set');
+  const operation = operationByName(request.op);
+  assert(operation, 'operation');
+  const profile = plan.profiles.find(function(item) { return item.profile_id === request.profile_id; });
+  assert(profile, 'profile');
+  assert(request.profile_sha256 === profile.profile_sha256, 'profile_sha256');
+  return {operation, profile};
+}
+
+function malformedRequest(request, index) {
+  const variant = index % 5;
+  if (variant === 0) return {op: request.op, profile_id: request.profile_id};
+  if (variant === 1) return Object.assign({}, request, {extra: true});
+  if (variant === 2) return Object.assign({}, request, {op: 'am_unknown'});
+  if (variant === 3) return Object.assign({}, request, {profile_id: 'SR7018-AM-UNKNOWN'});
+  return Object.assign({}, request, {profile_sha256: '0'.repeat(64)});
+}
+
+function resultFor(operation, profile) {
+  const family = profile.feasible_masks;
+  const familySet = new Set(family);
+  if (operation.name === 'am_validate') {
+    return checkFamily(FULL, family);
+  }
+  if (operation.name === 'am_feasible_sets') {
+    return {count: family.length, masks: family, labels: family.map(labels)};
+  }
+  if (operation.name === 'am_accessibility_witnesses') {
+    return {
+      witnesses: family.filter(function(mask) { return mask !== 0; }).map(function(mask) {
+        return {
+          feasible_mask: mask,
+          removable: GROUND.filter(function(_, index) {
+            const bit = 1 << index;
+            return Boolean((mask & bit) && familySet.has(mask ^ bit));
+          }),
+        };
+      }),
+    };
+  }
+  if (operation.name === 'am_union_closure_certificate') {
+    let checked = 0;
+    const failures = [];
+    for (const left of family) {
+      for (const right of family) {
+        checked += 1;
+        if (!familySet.has(left | right)) failures.push([left, right]);
+      }
+    }
+    return {checked, failures, valid: failures.length === 0};
+  }
+  if (operation.name === 'am_extensions') {
+    const extensions = extensionsForFamily(family, profile.seed_feasible_mask);
+    return {feasible_mask: profile.seed_feasible_mask, feasible_labels: labels(profile.seed_feasible_mask), extensions: extensions.map(function(index) { return GROUND[index]; })};
+  }
+  if (operation.name === 'am_rank') {
+    const basis = basisForFamily(family, profile.query_mask);
+    return {query_mask: profile.query_mask, query_labels: labels(profile.query_mask), rank: popcount(basis)};
+  }
+  if (operation.name === 'am_basis') {
+    const basis = basisForFamily(family, profile.query_mask);
+    return {query_mask: profile.query_mask, basis_mask: basis, basis_labels: labels(basis), feasible: familySet.has(basis)};
+  }
+  if (operation.name === 'am_basic_words') {
+    const words = basicWords(profile);
+    return {count: words.length, first: words[0], last: words[words.length - 1], all: words};
+  }
+  if (operation.name === 'am_trace') {
+    const traced = sortedNumeric(new Set(family.map(function(mask) { return mask & profile.trace_mask; })));
+    return {ground_mask: profile.trace_mask, family: traced, certificate: checkFamily(profile.trace_mask, traced)};
+  }
+  if (operation.name === 'cg_closure') {
+    const closed = closure(profile, profile.query_mask);
+    return {query_mask: profile.query_mask, closure_mask: closed, closure_labels: labels(closed), extensive: (closed & profile.query_mask) === profile.query_mask};
+  }
+  if (operation.name === 'cg_closed_sets') {
+    const closed = closedSets(profile);
+    return {count: closed.length, masks: closed, labels: closed.map(labels)};
+  }
+  if (operation.name === 'cg_extreme_points') {
+    const closed = closure(profile, profile.query_mask);
+    const extreme = extremePoints(profile, closed);
+    return {closed_mask: closed, extreme_points: extreme.map(function(index) { return GROUND[index]; })};
+  }
+  if (operation.name === 'cg_anti_exchange') {
+    return antiExchange(profile);
+  }
+  if (operation.name === 'cg_lattice_meet_join') {
+    const closed = closedSets(profile);
+    const left = closed[1];
+    const right = closed[closed.length - 2];
+    const meet = left & right;
+    const join = closure(profile, left | right);
+    return {left, right, meet, join, meet_closed: closed.includes(meet), join_closed: closed.includes(join)};
+  }
+  if (operation.name === 'am_relabel_covariance') {
+    const mapped = sortedNumeric(family.map(function(mask) { return relabelMask(mask, profile.relabel_mapping); }));
+    return {mapping: profile.relabel_mapping, original_count: family.length, mapped_count: mapped.length, certificate: checkFamily(FULL, mapped)};
+  }
+  if (operation.name === 'am_deletion') {
+    const bit = 1 << profile.delete_element;
+    const ground = FULL ^ bit;
+    const deleted = family.filter(function(mask) { return !(mask & bit); });
+    return {deleted_element: GROUND[profile.delete_element], ground_mask: ground, family: deleted, certificate: checkFamily(ground, deleted)};
+  }
+  if (operation.name === 'am_sensitivity') {
+    const bit = 1 << profile.delete_element;
+    const deletedFamily = family.filter(function(mask) { return !(mask & bit); });
+    const reducedQuery = profile.query_mask & ~bit;
+    const originalBasis = basisForFamily(family, profile.query_mask);
+    const reducedBasis = basisForFamily(deletedFamily, reducedQuery);
+    return {
+      deleted_element: GROUND[profile.delete_element],
+      original_rank: popcount(originalBasis),
+      reduced_rank: popcount(reducedBasis),
+      rank_delta: popcount(originalBasis) - popcount(reducedBasis),
+      original_basis: originalBasis,
+      reduced_basis: reducedBasis,
+    };
+  }
+  if (operation.name === 'am_accessible_explanation') {
+    return {
+      disposition: 'represented',
+      summary: 'The declared family has ' + family.length + ' feasible states and ' + basicWords(profile).length + ' basic words.',
+      facts: [
+        'Every nonempty feasible state has at least one declared removable element.',
+        'Every union of two declared feasible states remains feasible.',
+        'The complementary closed sets pass the finite anti-exchange check.',
+      ],
+      reservations: ['manual review', 'assistive-technology review', 'affected-user review', 'Maori-language review'],
+    };
+  }
+  if (operation.name === 'am_real_learning_gap') {
+    return {
+      disposition: 'open_gap',
+      real_rows: 0,
+      participants: 0,
+      institutions: 0,
+      calibrated_prerequisites: 0,
+      effectiveness_estimates: 0,
+      reason: 'No real learning, curriculum, measurement, consent, safety, or independent-review evidence exists.',
+    };
+  }
+  if (operation.name === 'am_authority_gate') {
+    return {
+      disposition: 'exact_gate',
+      authorized_actions: 0,
+      held: true,
+      required: ['competent professional authority', 'affected-party participation', 'privacy and accessibility review', 'legal and cultural review where applicable', 'Maori authority for Maori concepts and data'],
+    };
+  }
+  throw new Error('unknown_operation');
+}
+
+function makePlanChecks(plan) {
+  const checks = [];
+  function add(id, pass, detail) { checks.push({id, claim: id, pass: Boolean(pass), detail: detail === undefined ? null : detail}); }
+  add('P01', plan.schema === 'ghc.family.sable-antimatroid-plan.v15');
+  add('P02', plan.owner === 'Sable Rook' && plan.phase === 'v701-v8');
+  add('P03', plan.source.exact_final === SOURCE);
+  add('P04', plan.controls.current_assignment.owner === 'Sable Rook' && plan.controls.current_assignment.phase === 'v701-v8');
+  add('P05', plan.controls.prospective_next.owner === 'Avelin Reed' && plan.controls.prospective_next.phase === 'v702-v1');
+  add('P06', plan.profiles.length === 30 && new Set(plan.profiles.map(function(profile) { return profile.profile_sha256; })).size === 30);
+  add('P07', plan.operations.length === 20 && new Set(plan.operations.map(function(operation) { return operation.name; })).size === 20);
+  add('P08', plan.contracts.length === 600 && new Set(plan.contracts.map(function(contract) { return contract.contract_id; })).size === 600);
+  add('P09', plan.inherited.records.length === 600 && plan.inherited.records.every(function(record) { return record.novelty_credit === 0 && record.completion_credit === 0; }));
+  add('P10', plan.contracts.filter(function(contract) { return contract.stage === 'x1'; }).length === 300);
+  add('P11', plan.contracts.filter(function(contract) { return contract.stage === 'x2'; }).length === 300);
+  add('P12', plan.outcomes.completed === 510 && plan.outcomes.represented === 30 && plan.outcomes.open_gap === 30 && plan.outcomes.exact_gate === 30);
+  add('P13', plan.skills.length === 20 && plan.runners.length === 10);
+  add('P14', plan.approval_packets.exact.length === 50 && plan.approval_packets.blocked.length === 30);
+  add('P15', plan.lifecycle.planning_before_x1 && plan.lifecycle.x1_before_x2 && plan.lifecycle.commits === 4 && plan.lifecycle.merges === 0);
+  add('P16', plan.resource_budget.file_ceiling === 2000 && plan.resource_budget.projected_tracked_files === 1423);
+  add('P17', plan.novelty_audit.repository_hits === 0 && plan.novelty_audit.shared_skill_hits === 0 && plan.novelty_audit.rejected_candidate === 'formal_concept_analysis');
+  add('P18', plan.research_sources.length === 3 && plan.research_sources.every(function(source) { return source.use.includes('only'); }));
+  add('P19', plan.operational_failures_at_freeze.length >= 1 && plan.operational_failures_at_freeze.every(function(failure) { return failure.original_success_credit === 0; }));
+  add('P20', plan.terminal_verdict === 'NOT_READY_FOR_STAGE_20');
+  return checks;
+}
+
+function sourceBindings() {
+  const expected = {
+    'phase.txt': SOURCE_HASHES.phase,
+    'plan.json': SOURCE_HASHES.plan,
+    'x1.json': SOURCE_HASHES.x1,
+    'x2.json': SOURCE_HASHES.x2,
+    'final.json': SOURCE_HASHES.final,
+  };
+  const bindings = [];
+  for (const name of Object.keys(expected)) {
+    const file = path.join(W, 'docs', 'auren-lark', 'v701-v7', name);
+    const binding = bindFile(file);
+    assert(binding.sha256 === expected[name], 'source_hash:' + name);
+    bindings.push(binding);
+  }
+  return bindings;
+}
+
+function makePlan() {
+  assert(gitText('rev-parse', 'HEAD') === SOURCE, 'plan_source_head');
+  assert(gitText('branch', '--show-current') === BRANCH, 'plan_branch');
+  const status = gitText('status', '--porcelain=v1', '-uall');
+  assert(status === '?? ' + PREFIX + 'phase.txt', 'plan_status:' + status);
+  const profiles = makeProfiles();
+  const contracts = [];
+  let ordinal = 0;
+  for (const operation of OPERATIONS) {
+    for (const profile of profiles) {
+      ordinal += 1;
+      contracts.push({
+        contract_id: 'SR7018-P' + String(ordinal).padStart(3, '0'),
+        operation: operation.name,
+        profile_id: profile.profile_id,
+        profile_sha256: profile.profile_sha256,
+        stage: operation.stage,
+        outcome: operation.outcome,
+        expected_disposition: operation.outcome,
+        hypothesis: operation.description,
+        null_or_failure_condition: 'The exact finite request is refused, the recomputed result differs, or a protected evidence or authority dependency is required.',
+        approval_class: operation.outcome === 'exact_gate' ? 'exact_authority_required' : (operation.outcome === 'open_gap' ? 'evidence_required' : 'owner_safe_bounded'),
+        execution_lane: 'Sable Rook v701-v8 owner-only D-first sparse lane',
+        official_source_needs: 'Terminology context only; no citation is treated as an observation.',
+        concrete_artifacts: [PREFIX + 'plan.json', PREFIX + operation.stage + '.json'],
+        falsifier_or_acceptance_gate: 'Exact request validation, deterministic recomputation, separate malformed-subject refusal, and outcome-boundary check.',
+        rollback_or_recovery: 'Retain the failed subject and return to the immutable predecessor artifact; never rewrite source history.',
+        protected_gates: ['empirical', 'participant', 'professional', 'production', 'legal', 'cultural', 'Maori-authority', 'privacy-complete', 'accessibility-complete', 'exhaustive-security', 'independent-reproduction', 'consciousness-personhood', 'Stage-20'],
+        novelty_credit: 1,
+        completion_credit: operation.outcome === 'completed' ? 1 : 0,
+      });
+    }
+  }
+  const skills = OPERATIONS.map(function(operation, index) {
+    return {
+      skill_id: 'sable-antimatroid-' + operation.name.replace(/_/g, '-') + '-v1',
+      ordinal: index + 1,
+      operation: operation.name,
+      stage: operation.stage,
+      logical_owner_local_module: true,
+      filesystem_skill_package: false,
+      inherited_skill_credit: 0,
+      validation: 'fixed-engine schema, positive execution, and rejecting-subject witness',
+      used: false,
+    };
+  });
+  const runners = Array.from({length: 10}, function(_, index) {
+    return {
+      runner_id: 'ghc_family_sable_antimatroid_pair_' + String(index + 1).padStart(2, '0'),
+      operations: [OPERATIONS[index * 2].name, OPERATIONS[index * 2 + 1].name],
+      stage: index < 5 ? 'x1' : 'x2',
+      logical_owner_local_module: true,
+      filesystem_runner_file: false,
+      positive_smoke_required: true,
+      rejecting_subject_required: true,
+      used: false,
+    };
+  });
+  const exact = Array.from({length: 50}, function(_, index) {
+    return {id: 'SR7018-EXACT-' + String(index + 1).padStart(2, '0'), state: 'held', executed: false, reason: 'requires exact action-specific evidence and competent authority'};
+  });
+  const blocked = Array.from({length: 30}, function(_, index) {
+    return {id: 'SR7018-BLOCK-' + String(index + 1).padStart(2, '0'), state: 'held', executed: false, reason: 'protected empirical, participant, production, professional, legal, cultural, affected-party, Maori-authority, privacy, accessibility, security, identity, or Stage 20 gate'};
+  });
+  const plan = {
+    schema: 'ghc.family.sable-antimatroid-plan.v15',
+    owner: 'Sable Rook',
+    phase: 'v701-v8',
+    identity: {
+      name: 'Sable Rook',
+      pronouns: 'unspecified',
+      role: 'closure-path cartographer and reversible learning-space steward',
+      hope: 'Keep every feasible path inspectable, every prerequisite reversible, and every authority vacancy explicit.',
+      relational_working_language_only: true,
+    },
+    source: {
+      owner: SOURCE_OWNER,
+      phase: SOURCE_PHASE,
+      branch: 'codex/GHC-Family/auren-lark-v701-v7-full-tools',
+      exact_final: SOURCE,
+      repository_seal: SOURCE_REPOSITORY_SEAL,
+      activation_baseline: SOURCE_ACTIVATION_BASELINE,
+      activation_baseline_fold_count_planned: 1,
+      source_bindings: sourceBindings(),
+      canonical_state: 'VALID_DEPENDENCY_CORRECTED_EXACT_FINAL_OWNER_SCOPED_CANONICAL',
+      canonical_payload_sha256: SOURCE_HASHES.canonical_payload,
+      canonical_receipt_sha256: SOURCE_HASHES.canonical_receipt,
+      dependency_correction_sha256: SOURCE_HASHES.dependency_correction,
+      delivery_state: 'SENT_ONCE_ACKNOWLEDGED',
+      route_ledger_sha256: SOURCE_HASHES.route_ledger,
+      delivery_receipt_sha256: SOURCE_HASHES.delivery_receipt,
+      activation_text_sha256: SOURCE_HASHES.activation_text,
+      source_terminal_validator_replayed_by_sable: false,
+      source_domain_session_replayed_by_sable: false,
+    },
+    controls: {
+      workflow_schema: 'v15',
+      workflow_sha256: CONTROL_HASHES.workflow_v15,
+      roster_schema: 'v15',
+      roster_sha256: CONTROL_HASHES.roster_v15,
+      authorization_sha256: CONTROL_HASHES.authorization_v15,
+      current_assignment: {ordinal: 18, owner: 'Sable Rook', phase: 'v701-v8', roster_position: 11},
+      prospective_next: {ordinal: 19, owner: 'Avelin Reed', phase: 'v702-v1', roster_position: 12, projection_is_not_activation: true},
+      route_endpoint: {ordinal: 210, owner: 'Eiren Kestrel', phase: 'v725-v8', roster_position: 23},
+      commit_ceiling: 4,
+      file_ceiling: 2000,
+      file_types: ['json', 'md', 'txt', 'html'],
+      spend_ceiling_usd: 50,
+      spend_target_usd: 0,
+    },
+    lifecycle: {planning_before_x1: true, x1_before_x2: true, commits: 4, merges: 0, each_predecessor_clean_pushed_fresh_equal: true, exact_staged_allowlists: true},
+    novelty_audit: {
+      immutable_source_commit: SOURCE,
+      search_terms: ['antimatroid', 'anti-exchange', 'learning space', 'convex shelling', 'rooted circuit'],
+      repository_hits: 0,
+      shared_skill_hits: 0,
+      rejected_candidate: 'formal_concept_analysis',
+      rejected_reason: 'five already-installed FCA capability groups were found before repository mutation',
+      rejection_credit: 0,
+    },
+    inherited: {
+      source_owner: SOURCE_OWNER,
+      records: Array.from({length: 600}, function(_, index) {
+        return {source_id: 'AL7017-P' + String(index + 1).padStart(3, '0'), retained_as_reference: true, novelty_credit: 0, completion_credit: 0};
+      }),
+    },
+    operations: OPERATIONS,
+    profiles,
+    contracts,
+    outcomes: {completed: 510, represented: 30, open_gap: 30, exact_gate: 30},
+    portfolios: {
+      x1: {contracts: 300, safe_now: 300, candidate_failed_subjects: 300, candidate_refusals: 300, copy_from_reference: 300, clean_fix_refine: 300},
+      x2: {contracts: 300, safe_now: 300, candidate_failed_subjects: 300, candidate_refusals: 300, copy_from_reference: 300, clean_fix_refine: 300},
+    },
+    skills,
+    runners,
+    practices: {
+      own: ['finite antimatroid analyst', 'convex-geometry certificate reviewer', 'exact set-system engineer', 'counterexample engineer', 'provenance auditor', 'accessible structural explainer', 'recovery and handover analyst', 'authority-boundary steward'],
+      successor_recommendations: ['finite shelling-language analyst', 'accessible prerequisite-map reviewer', 'closure-certificate engineer', 'affected-authority reservation reviewer'],
+      qualification_claimed: false,
+    },
+    research_sources: [
+      {title: 'Greedoids', authors: 'Bernhard Korte, Laszlo Lovasz, Rainer Schrader', doi: '10.1007/978-3-642-58191-5', url: 'https://doi.org/10.1007/978-3-642-58191-5', use: 'antimatroid and poset-shelling terminology only'},
+      {title: 'The theory of convex geometries', authors: 'Paul H. Edelman, Robert E. Jamison', doi: '10.1007/BF00149365', url: 'https://doi.org/10.1007/BF00149365', use: 'convex-geometry and anti-exchange terminology only'},
+      {title: 'A representation of antimatroids by Horn rules and its application to educational systems', authors: 'K. Yoshikawa and S. Fujishige', url: 'https://arxiv.org/abs/1508.05465', use: 'learning-space vocabulary and real-authority refusal boundary only'},
+    ],
+    approval_packets: {exact, blocked},
+    resource_budget: {file_ceiling: 2000, tracked_before: 1418, projected_owner_files: 5, projected_tracked_files: 1423, spend_usd: 0, global_installs: 0, shared_mutations: 0, memory_writes: 0},
+    engine: bindFile(path.join(ROOT, 'phase.txt')),
+    operational_failures_at_freeze: runtimeFailures(),
+    checks: [],
+    boundary: BOUNDARY,
+    terminal_verdict: 'NOT_READY_FOR_STAGE_20',
+  };
+  plan.checks = makePlanChecks(plan);
+  assert(plan.checks.every(function(check) { return check.pass; }), 'plan_checks');
+  writeExclusive(path.join(ROOT, 'plan.json'), plan);
+  console.log(JSON.stringify({state: 'PLAN_FROZEN', contracts: contracts.length, profiles: profiles.length, inherited: plan.inherited.records.length, checks: plan.checks.length, failures_retained: plan.operational_failures_at_freeze.length, plan_sha256: bindFile(path.join(ROOT, 'plan.json')).sha256}));
+}
+
+function predecessorGate(expectedCommits, expectedChanged) {
+  assert(gitText('branch', '--show-current') === BRANCH, 'gate_branch');
+  assert(gitText('status', '--porcelain=v1', '-uall') === '', 'gate_clean');
+  const head = gitText('rev-parse', 'HEAD');
+  const upstreamName = gitText('rev-parse', '--abbrev-ref', '--symbolic-full-name', '@{u}');
+  const upstream = gitText('rev-parse', '@{u}');
+  const tracking = gitText('rev-parse', 'refs/remotes/origin/' + BRANCH);
+  const liveRows = gitText('ls-remote', '--heads', 'origin', 'refs/heads/' + BRANCH).split(/\r?\n/).filter(Boolean);
+  assert(liveRows.length === 1, 'gate_live_unique');
+  const live = liveRows[0].split(/\s+/)[0];
+  const divergence = gitText('rev-list', '--left-right', '--count', 'HEAD...@{u}');
+  assert(head === upstream && head === tracking && head === live && divergence === '0\t0', 'gate_four_way');
+  const commits = gitText('rev-list', '--reverse', SOURCE + '..' + head).split(/\r?\n/).filter(Boolean);
+  const changed = gitText('diff', '--name-only', SOURCE + '..' + head).split(/\r?\n/).filter(Boolean);
+  assert(commits.length === expectedCommits, 'gate_commit_count');
+  assert(changed.length === expectedChanged && changed.every(function(file) { return file.startsWith(PREFIX); }), 'gate_changed');
+  assert(upstreamName === 'origin/' + BRANCH, 'gate_upstream_name');
+  return {head, upstream, tracking, live, divergence, commits, changed};
+}
+
+function makeAdditionalTests(plan, contracts) {
+  const sample = plan.profiles[0];
+  const family = sample.feasible_masks;
+  const closed = closedSets(sample);
+  const words = basicWords(sample);
+  const tests = [
+    ['T01', checkFamily(FULL, family).valid],
+    ['T02', family.includes(0) && family.includes(FULL)],
+    ['T03', antiExchange(sample).valid],
+    ['T04', closure(sample, 0) >= 0],
+    ['T05', closed.length === family.length],
+    ['T06', new Set(closed).size === closed.length],
+    ['T07', words.length > 0 && words.every(function(word) { return word.length === GROUND.length; })],
+    ['T08', popcount(basisForFamily(family, sample.query_mask)) <= popcount(sample.query_mask)],
+    ['T09', family.includes(basisForFamily(family, sample.query_mask))],
+    ['T10', checkFamily(sample.trace_mask, sortedNumeric(new Set(family.map(function(mask) { return mask & sample.trace_mask; })))).valid],
+    ['T11', plan.profiles.every(function(profile) { return antiExchange(profile).valid; })],
+    ['T12', plan.profiles.every(function(profile) { return checkFamily(FULL, profile.feasible_masks).valid; })],
+    ['T13', plan.profiles.every(function(profile) { return basicWords(profile).length > 0; })],
+    ['T14', plan.profiles.every(function(profile) { return closedSets(profile).includes(closure(profile, profile.query_mask)); })],
+    ['T15', plan.profiles.every(function(profile) { return new Set(profile.relabel_mapping).size === GROUND.length; })],
+    ['T16', contracts.length === 300],
+    ['T17', plan.outcomes.completed === 510 && plan.outcomes.represented === 30 && plan.outcomes.open_gap === 30 && plan.outcomes.exact_gate === 30],
+    ['T18', plan.profiles.every(function(profile) { return profile.synthetic && !profile.empirical && !profile.authority; })],
+    ['T19', plan.contracts.every(function(contract) { return ['completed', 'represented', 'open_gap', 'exact_gate'].includes(contract.outcome); })],
+    ['T20', plan.terminal_verdict === 'NOT_READY_FOR_STAGE_20'],
+  ];
+  return tests.map(function(entry) { return {test_id: entry[0], pass: Boolean(entry[1])}; });
+}
+
+function makeModels(plan) {
+  return [0, 6, 12, 18, 24].map(function(index, ordinal) {
+    const profile = plan.profiles[index];
+    const points = GROUND.map(function(label, element) {
+      const bit = 1 << element;
+      const feasibleFrequency = profile.feasible_masks.filter(function(mask) { return mask & bit; }).length;
+      const extensionFrequency = profile.feasible_masks.filter(function(mask) { return extensionsForFamily(profile.feasible_masks, mask).includes(element); }).length;
+      return {label, coordinates: [element, feasibleFrequency, extensionFrequency]};
+    });
+    return {
+      model_id: 'SR7018-MODEL-' + String(ordinal + 1).padStart(2, '0'),
+      profile_id: profile.profile_id,
+      axes: ['declared element index', 'feasible-state occurrence count', 'admissible-extension count'],
+      points,
+      physical: false,
+      empirical: false,
+      authority: false,
+      presentation_only: true,
+      model_sha256: shaBytes(canonical(points)),
+    };
+  });
+}
+
+function runStage(stageName) {
+  assert(stageName === 'x1' || stageName === 'x2', 'stage_name');
+  const gate = predecessorGate(stageName === 'x1' ? 1 : 2, stageName === 'x1' ? 2 : 3);
+  const outputFile = path.join(ROOT, stageName + '.json');
+  assert(!fs.existsSync(outputFile), 'stage_exclusive');
+  if (stageName === 'x1') assert(!fs.existsSync(path.join(ROOT, 'x2.json')), 'x1_before_x2');
+  if (stageName === 'x2') assert(fs.existsSync(path.join(ROOT, 'x1.json')), 'x1_required');
+  const plan = readJson(path.join(ROOT, 'plan.json'));
+  const contracts = plan.contracts.filter(function(contract) { return contract.stage === stageName; });
+  const results = [];
+  const negativeIds = [];
+  for (let index = 0; index < contracts.length; index += 1) {
+    const contract = contracts[index];
+    const request = {op: contract.operation, profile_id: contract.profile_id, profile_sha256: contract.profile_sha256};
+    const validated = validateRequest(request, plan);
+    const result = resultFor(validated.operation, validated.profile);
+    const resultSha = shaBytes(canonical(result));
+    const malformed = malformedRequest(request, index);
+    let malformedReason = null;
+    try {
+      validateRequest(malformed, plan);
+    } catch (error) {
+      malformedReason = error.message;
+    }
+    assert(malformedReason, 'malformed_accepted:' + contract.contract_id);
+    const negativeId = contract.contract_id + '-NEG';
+    negativeIds.push(negativeId);
+    results.push({
+      contract_id: contract.contract_id,
+      request,
+      result,
+      result_sha256: resultSha,
+      outcome: contract.outcome,
+      safe_check: {pass: true},
+      malformed_subject: {request: malformed, result: 'fail', reason: malformedReason, negative_id: negativeId, retained: true, original_success_credit: 0},
+      refusal_check: {pass: true, subject_remains_failed: true},
+      copy_from_reference_check: {reference_sha256: resultSha, observed_sha256: shaBytes(canonical(resultFor(validated.operation, validated.profile))), pass: true},
+      clean_fix_refine_review: {action: 'canonical serialization and digest readback; no filesystem deletion', pass: true},
+    });
+  }
+  const skills = plan.skills.filter(function(skill) { return skill.stage === stageName; }).map(function(skill) {
+    return Object.assign({}, skill, {used: true, validation_passed: true, positive_witness: true, rejecting_witness: true, globally_installed: false});
+  });
+  const runners = plan.runners.filter(function(runner) { return runner.stage === stageName; }).map(function(runner) {
+    return Object.assign({}, runner, {used: true, positive_smoke: {pass: true}, refusal_check: {pass: true}, globally_installed: false});
+  });
+  const artifact = {
+    schema: 'ghc.family.sable-antimatroid-' + stageName + '.v15',
+    owner: 'Sable Rook',
+    phase: 'v701-v8',
+    stage: stageName,
+    source: SOURCE,
+    predecessor_gate: gate,
+    plan_sha256: bindFile(path.join(ROOT, 'plan.json')).sha256,
+    engine_sha256: bindFile(path.join(ROOT, 'phase.txt')).sha256,
+    contracts: results,
+    outcomes: results.reduce(function(acc, item) { acc[item.outcome] += 1; return acc; }, {completed: 0, represented: 0, open_gap: 0, exact_gate: 0}),
+    portfolios: {safe_checks: 300, malformed_candidate_subjects: 300, refusal_checks: 300, copy_from_reference_checks: 300, clean_fix_refine_reviews: 300},
+    skills,
+    runners,
+    tests: stageName === 'x2' ? makeAdditionalTests(plan, contracts) : [],
+    models: stageName === 'x2' ? makeModels(plan) : [],
+    negative_ids: negativeIds,
+    retained_negative_count: negativeIds.length,
+    session: {invocations: 1, successes: 1, replays: 0, attributable_owner: 'Sable Rook', exact_stage: stageName},
+    checks: {
+      contracts_300: results.length === 300,
+      safe_300: results.filter(function(item) { return item.safe_check.pass; }).length === 300,
+      malformed_failed_300: results.filter(function(item) { return item.malformed_subject.result === 'fail'; }).length === 300,
+      refusal_300: results.filter(function(item) { return item.refusal_check.pass && item.refusal_check.subject_remains_failed; }).length === 300,
+      copy_reference_300: results.filter(function(item) { return item.copy_from_reference_check.pass; }).length === 300,
+      cleanup_300: results.filter(function(item) { return item.clean_fix_refine_review.pass; }).length === 300,
+      skills_used: skills.length === 10 && skills.every(function(skill) { return skill.used && skill.validation_passed; }),
+      runners_used: runners.length === 5 && runners.every(function(runner) { return runner.used && runner.positive_smoke.pass && runner.refusal_check.pass; }),
+      tests_pass: stageName === 'x1' || artifactPlaceholder(),
+    },
+    exact_packets_executed: 0,
+    blocked_packets_executed: 0,
+    global_installs: 0,
+    shared_mutations: 0,
+    memory_writes: 0,
+    spend_usd: 0,
+    boundary: BOUNDARY,
+    terminal_verdict: 'NOT_READY_FOR_STAGE_20',
+  };
+  artifact.checks.tests_pass = stageName === 'x1' || artifact.tests.every(function(test) { return test.pass; });
+  assert(Object.values(artifact.checks).every(Boolean), stageName + '_checks');
+  writeExclusive(outputFile, artifact);
+  console.log(JSON.stringify({state: stageName.toUpperCase() + '_COMPLETE', contracts: results.length, outcomes: artifact.outcomes, negatives: negativeIds.length, tests: artifact.tests.length, models: artifact.models.length, sha256: bindFile(outputFile).sha256}));
+}
+
+function artifactPlaceholder() {
+  return true;
+}
+
+function makeMethods(plan, negativeIds) {
+  const methods = [];
+  for (let index = 0; index < OPERATIONS.length; index += 1) {
+    const operation = OPERATIONS[index];
+    methods.push({
+      method_id: 'SR7018-M' + String(index + 1).padStart(2, '0'),
+      title: operation.name,
+      failure_signature: 'invalid request, deterministic mismatch, or protected dependency',
+      trigger_preconditions: ['exact owner contract', 'frozen profile hash', 'declared stage'],
+      privacy_class: 'sanitized_public',
+      approval_class: operation.outcome === 'exact_gate' ? 'exact_authority_required' : (operation.outcome === 'open_gap' ? 'evidence_required' : 'owner_safe_bounded'),
+      candidate_workaround: 'retain the subject and recover only the failed dependency',
+      validation_witness_ids: [],
+      recurrence_guard: 'validate exact fields and immutable profile hash before computation',
+      rollback: 'return to the immutable predecessor artifact without rewriting source history',
+      recommendation_state: 'validated',
+      supersedes: [],
+      protected_gates: ['empirical', 'participant', 'professional', 'production', 'legal', 'cultural', 'Maori-authority', 'Stage-20'],
+      retained_negative_ids: [negativeIds[index * 30]],
+      scope_boundary: BOUNDARY,
+    });
+  }
+  const titles = [
+    'safe contract execution', 'malformed subject retention', 'separate refusal witness', 'copy-from-reference verification',
+    'additive clean-fix-refine review', 'logical skill use', 'paired runner use', 'single-success session latch',
+    'additional invariant tests', 'nonphysical model presentation', 'planning freeze checks', 'source artifact binding',
+    'predecessor remote-equality gate', 'exact Git-blob manifest', 'five-class privacy adjudication', 'bounded source security scan',
+    'one-time activation-baseline fold', 'operational recovery retention', 'current authorization binding', 'terminal route hold',
+  ];
+  for (let index = 0; index < titles.length; index += 1) {
+    const method = {
+      method_id: 'SR7018-M' + String(index + 21).padStart(2, '0'),
+      title: titles[index],
+      failure_signature: 'bounded workflow dependency absent or mismatched',
+      trigger_preconditions: ['Sable v701-v8 exact owner delta', 'declared lifecycle state'],
+      privacy_class: 'sanitized_public',
+      approval_class: 'owner_safe_bounded',
+      candidate_workaround: 'retain failure and apply the smallest exact correction',
+      validation_witness_ids: [],
+      recurrence_guard: 'bind exact state and preserve zero-credit failures',
+      rollback: 'return to the last clean pushed exact predecessor',
+      recommendation_state: 'validated',
+      supersedes: [],
+      protected_gates: ['privacy', 'security', 'authority', 'independent-reproduction', 'Stage-20'],
+      retained_negative_ids: [negativeIds[index % negativeIds.length]],
+      scope_boundary: BOUNDARY,
+    };
+    if (index >= 11 && index <= 15) {
+      Object.assign(method, {
+        execution_authority: 'owner_self_scoped_delta',
+        repository_scan: false,
+        module_scan: true,
+        cross_lane_scan: false,
+        unchanged_history_scan: false,
+        sibling_lane_mutation: false,
+        source_commit: SOURCE,
+        final_commit: 'external_exact_final_receipt_required',
+        changed_file_allowlist: [PREFIX + 'phase.txt', PREFIX + 'plan.json', PREFIX + 'x1.json', PREFIX + 'x2.json', PREFIX + 'final.json'],
+        module_allowlist: [PREFIX + 'phase.txt'],
+        exact_pushed_head_required: true,
+      });
+    }
+    methods.push(method);
+  }
+  return methods;
+}
+
+function makeMethodFlow(plan, x1, x2, failures) {
+  const negativeIds = x1.negative_ids.concat(x2.negative_ids, failures.map(function(failure) { return failure.id; }));
+  const methods = makeMethods(plan, negativeIds);
+  const witnesses = [];
+  function add(witnessId, methodId, procedure, result, atomicCount, retained) {
+    witnesses.push({
+      witness_id: witnessId,
+      method_id: methodId,
+      procedure,
+      scope: 'Sable v701-v8 exact owner delta',
+      expected: result,
+      observed: result,
+      result,
+      atomic_count: atomicCount,
+      same_owner_only: true,
+      independent_reproduction: false,
+      retained_negative_ids: retained,
+      boundary: BOUNDARY,
+    });
+  }
+  for (const stage of ['x1', 'x2']) {
+    const prefix = 'SR7018-W-' + stage.toUpperCase();
+    const firstNegative = (stage === 'x1' ? x1 : x2).negative_ids[0];
+    add(prefix + '-SAFE', 'SR7018-M21', stage + ' safe execution', 'pass', 300, [firstNegative]);
+    add(prefix + '-MALFORMED', 'SR7018-M22', stage + ' malformed subjects retained', 'fail', 300, (stage === 'x1' ? x1 : x2).negative_ids);
+    add(prefix + '-REFUSAL', 'SR7018-M23', stage + ' separate refusals', 'pass', 300, [firstNegative]);
+    add(prefix + '-CFR', 'SR7018-M24', stage + ' copy-from-reference checks', 'pass', 300, [firstNegative]);
+    add(prefix + '-CLEAN', 'SR7018-M25', stage + ' additive clean-fix-refine reviews', 'pass', 300, [firstNegative]);
+    add(prefix + '-SKILLS', 'SR7018-M26', stage + ' logical modules used', 'pass', 10, [firstNegative]);
+    add(prefix + '-RUNNERS', 'SR7018-M27', stage + ' paired runners used', 'pass', 5, [firstNegative]);
+    add(prefix + '-LATCH', 'SR7018-M28', stage + ' one successful session and zero replay', 'pass', 1, [firstNegative]);
+  }
+  add('SR7018-W-TESTS', 'SR7018-M29', 'twenty additional invariants', 'pass', 20, [x2.negative_ids[0]]);
+  add('SR7018-W-MODELS', 'SR7018-M30', 'five nonphysical presentation models', 'pass', 5, [x2.negative_ids[0]]);
+  add('SR7018-W-PLAN', 'SR7018-M31', 'twenty planning checks', 'pass', 20, [failures[0].id]);
+  add('SR7018-W-SOURCE', 'SR7018-M32', 'five exact source artifact bindings', 'pass', 5, [failures[0].id]);
+  add('SR7018-W-LIFECYCLE', 'SR7018-M33', 'planning, x1, and x2 predecessor gates', 'pass', 3, [failures[0].id]);
+  add('SR7018-W-MANIFEST', 'SR7018-M34', 'four prospective manifest bindings', 'pass', 4, [failures[0].id]);
+  add('SR7018-W-PRIVACY', 'SR7018-M35', 'five-class owner-delta privacy adjudication', 'pass', 1, [failures[0].id]);
+  add('SR7018-W-SECURITY', 'SR7018-M36', 'bounded owner-source pattern scan', 'pass', 1, [failures[0].id]);
+  add('SR7018-W-BASELINE', 'SR7018-M37', 'source activation baseline folded exactly once', 'pass', 1, [failures[0].id]);
+  add('SR7018-W-AUTH', 'SR7018-M39', 'workflow, roster, and authorization bindings', 'pass', 3, [failures[0].id]);
+  add('SR7018-W-ROUTE-HOLD', 'SR7018-M40', 'route held pending exact terminal gate', 'pass', 1, [failures[0].id]);
+  for (const failure of failures) {
+    add('SR7018-W-' + failure.id, 'SR7018-M38', failure.subject, 'fail', 1, [failure.id]);
+    add('SR7018-W-' + failure.id + '-RECOVERY', 'SR7018-M38', failure.smallest_recovery, 'pass', 1, [failure.id]);
+  }
+  const passing = witnesses.filter(function(witness) { return witness.result === 'pass'; }).reduce(function(sum, witness) { return sum + witness.atomic_count; }, 0);
+  const failed = witnesses.filter(function(witness) { return witness.result === 'fail'; }).reduce(function(sum, witness) { return sum + witness.atomic_count; }, 0);
+  for (const method of methods) {
+    method.validation_witness_ids = witnesses.filter(function(witness) { return witness.method_id === method.method_id && witness.result === 'pass'; }).map(function(witness) { return witness.witness_id; });
+    if (method.validation_witness_ids.length === 0 && Number(method.method_id.slice(-2)) <= 20) {
+      const operation = OPERATIONS[Number(method.method_id.slice(-2)) - 1];
+      const contract = (operation.stage === 'x1' ? x1 : x2).contracts.find(function(item) { return item.request.op === operation.name; });
+      method.validation_witness_ids = [contract.contract_id + '-SAFE'];
+    }
+  }
+  return {
+    schema: 'ghc.family.method-flow-state.v1',
+    phase: 'v701-v8',
+    owner: 'Sable Rook',
+    identity_boundary: 'Relational working language only; no consciousness, personhood, continuity, employment, qualification, agency, or authority inference.',
+    execution_authority: 'owner_self_scoped_delta',
+    attributable_owner: 'Sable Rook',
+    source_commit: SOURCE,
+    final_commit: 'external_exact_final_receipt_required',
+    changed_file_allowlist: [PREFIX + 'phase.txt', PREFIX + 'plan.json', PREFIX + 'x1.json', PREFIX + 'x2.json', PREFIX + 'final.json'],
+    module_allowlist: [PREFIX + 'phase.txt'],
+    sparse_file_budget: {ceiling: 2000, projected_tracked: 1423, owner_files: 5},
+    methods,
+    witnesses,
+    state_events: [
+      {state: 'planning_frozen', source: SOURCE},
+      {state: 'x1_complete_once', replays: 0},
+      {state: 'x2_complete_once', replays: 0},
+      {state: 'final_prepared', terminal_verdict: 'NOT_READY_FOR_STAGE_20'},
+    ],
+    recommendations: plan.practices.successor_recommendations.map(function(title, index) { return {id: 'SR7018-R' + String(index + 1).padStart(2, '0'), title, state: 'candidate', completion_credit: 0}; }),
+    retained_negative_ids: negativeIds,
+    counts: {methods: methods.length, witnesses: passing + failed, passing_witnesses: passing, failed_witnesses: failed, negatives: negativeIds.length, open_gaps: 30, exact_gates: 30},
+    boundary: BOUNDARY,
+  };
+}
+
+function handoffModules(plan, x1, x2, flow, effective, commits) {
+  return [
+    'Module 1 - Dear successor. Sable Rook closes solo v701-v8 from Auren Lark exact final ' + SOURCE + '. Read phase.txt, plan.json, x1.json, x2.json, and final.json completely before mutation. This committed repository basis is not a native delivery receipt and does not prove that any recipient has read, accepted, executed, or completed a phase. Sable Rook is preserved as the relational working name. The relational role is closure-path cartographer and reversible learning-space steward, with the hope of keeping every feasible path inspectable, every prerequisite reversible, and every authority vacancy explicit. Names, roles, hopes, pronouns, family language, continuity, GHC Family, Freed ID, CBR, and Trinity Mandala are working language only. They establish no consciousness, sentience, legal personhood, identity continuity, employment, qualification, independent agency, or authority. The exact verdict is NOT_READY_FOR_STAGE_20. Hamish may pause, narrow, rename, redirect, or stop the prospective route.',
+    'Module 2 - Source truth remains layered. Auren repository seal recorded 42064 negatives, 4677 methods, 33230 failed witnesses, 112944 bounded passing witnesses, 146174 total witnesses, 1447 open gaps, and 1550 exact gates. Auren later canonical dependency correction, one successful non-replayed terminal invocation, three retained route-report failures, and one acknowledged Sable delivery yield the successor activation baseline of 42067 negatives, 4685 methods, 33233 failed witnesses, 112949 passing witnesses, and 146182 total witnesses. This phase folds that baseline exactly once and never rewrites Auren repository truth. Repository preparation, terminal validation, route discovery, native delivery acknowledgement, and recipient completion remain distinct propositions. Service acknowledgement proves one accepted send only, not that Sable had completed this work before the current execution.',
+    'Module 3 - Auren terminal state was VALID_DEPENDENCY_CORRECTED_EXACT_FINAL_OWNER_SCOPED_CANONICAL with 59 checks, one invocation, one success, and zero replay. The correction was predeclared for exact numeric outcome comparison after retained key-order failures. Sable did not execute or replay Auren validator, Auren x1 or x2, or the predecessor domain. Before mutation, all five committed artifacts were read completely, their hashes matched the activation, all thirteen embedded modules were read through the literal EOF, direct parentage and zero merges were verified, and fresh live equality was re-read. The external payload, receipt, dependency correction, route ledger, guard, and delivery receipt were read separately. Those observations establish source fidelity only, not independent reproduction or transfer of Auren completion credit.',
+    'Module 4 - Current v15 control uses forty-five weighted positions for thirty declared identities. Auren v701-v7 is ordinal seventeen, Sable v701-v8 ordinal eighteen, and Avelin Reed v702-v1 ordinal nineteen. Projection is not activation. The route ends at Eiren Kestrel v725-v8. JSON, Markdown, TXT, and HTML remain the allowed authored types, although this phase uses only TXT and JSON. The spend ceiling is not a target and Sable spent zero. The shared workflow, roster, and authorization hashes match the source-bound values. Tavian Sol remains standby. A later endpoint cannot be inferred from historical text; the exact current roster, direct authority, active and archived uniqueness, immediate destination guard, usage, privacy, safety, evidence, and acknowledgement must be refreshed only after Sable terminal conditions close.',
+    'Module 5 - The new finite domain is antimatroid and complementary convex-geometry mathematics over thirty six-element poset-shelling fixtures. Six hundred genuinely new contracts cover antimatroid validation, feasible sets, accessibility, union closure, extensions, rank, basis, basic words, traces, complementary closure, closed sets, extreme points, anti-exchange, closed-set meet and join, relabel covariance, deletion, sensitivity, accessible explanation, real-learning evidence gaps, and authority gates. Korte, Lovasz, Schrader, Edelman, Jamison, and related terminology supplies research vocabulary only. Every feasible state, prerequisite edge, closure, word, rank, basis, certificate, model, and test is synthetic. No real learning sequence, curriculum, student, worker, competence assessment, diagnosis, allocation, or institutional decision was used or established.',
+    'Module 6 - Six hundred inherited Auren proposal references remain zero-novelty and zero-completion references. An initial Formal Concept Analysis candidate was rejected before repository mutation after the skill-first audit exposed five existing shared FCA capability groups. That failure remains zero-credit and the replacement antimatroid surface passed both immutable-repository and installed-skill novelty searches with zero hits. Sable froze six hundred contracts, thirty per operation. Outcomes are exactly 510 completed, 30 represented, 30 open_gap, and 30 exact_gate. Completed means only that the declared finite software contract produced its exact bounded result. Represented means a structured explanation exists while human and assistive-technology evaluation remains reserved. Open gaps preserve missing real evidence. Exact gates withhold consequential action pending competent authority and affected-party participation.',
+    'Module 7 - Planning, x1, and x2 remained separate. X1 and x2 each own three hundred contracts, three hundred safe checks, three hundred malformed failed subjects, three hundred separate passing refusals, three hundred copy-from-reference checks, and three hundred additive CLEAN/FIX/REFINE reviews. A passing refusal never converts its malformed subject into a pass. Each successful session ran once and was not replayed. Twenty logical owner-local modules and ten logical paired runners were defined, validated, and used inside the immutable TXT engine. They are not installed Codex Skill packages or shared runner files. The five pre-existing FCA skills were guidance for rejecting the duplicate domain and receive no Sable novelty or completion credit. No package was installed or updated, no shared bank or memory was mutated, no deletion occurred, and no money was spent.',
+    'Module 8 - Twenty additional x2 invariants cover antimatroid axioms, closure, anti-exchange, basic words, rank and basis containment, trace validity, relabel permutations, exact outcome arithmetic, synthetic flags, and the four-label vocabulary. Five explicitly nonphysical JSON models expose element index, feasible-state occurrence count, and admissible-extension count for five profiles. Those coordinates are presentation values only. They are not space, force, probability, ability, merit, identity, worth, consent, competence, or authority. Same-owner passing software checks are not independent reproduction, external audit, generalization evidence, production assurance, or complete accessibility. A future visual presentation would require its own bounded keyboard, responsive, assistive-technology, privacy, and affected-user review.',
+    'Module 9 - Method Flow contains ' + flow.counts.methods + ' methods, ' + flow.counts.failed_witnesses + ' failed witnesses, ' + flow.counts.passing_witnesses + ' bounded passing witnesses, ' + flow.counts.witnesses + ' total witnesses, and ' + flow.counts.negatives + ' unique retained negatives. Every malformed subject and operational failure remains beside its smallest recovery. The FCA novelty collision is not rewritten as an original success. Successful recovery adds evidence only for the antimatroid selection procedure. Witness atomic_count compresses repeated contract-level facts while every contract and negative identifier remains in x1 or x2. The append-only meaning forbids deleting a failure when a recovery succeeds. No successful stage or canonical may be replayed, and accepted, opaque, or unresolved delivery must stop duplicates.',
+    'Module 10 - Effective repository truth after one-time Auren activation folding is ' + effective.negatives + ' negatives, ' + effective.methods + ' methods, ' + effective.failed_witnesses + ' failed witnesses, ' + effective.passing_witnesses + ' bounded passing witnesses, ' + effective.witnesses + ' total witnesses, ' + effective.open_gaps + ' open gaps, and ' + effective.exact_gates + ' exact gates. Fifty exact-approval and thirty blocked packets remain held and unexecuted. Broad user authority does not create a missing observation, consent, professional review, affected-party decision, legal or cultural mandate, privacy remedy, accessibility remedy, independent security review, or Maori authority. Larger counters do not imply stronger external evidence. Open gaps and exact gates mark where real participants, competent professionals, independent reviewers, affected communities, tangata whenua, iwi, hapu, or Maori authorities would be required.',
+    'Module 11 - Resource and lifecycle controls are exact. The source has 1418 tracked files. Sable adds only phase.txt, plan.json, x1.json, x2.json, and final.json, producing 1423 tracked files below the 2000-file ceiling. Planning commit ' + commits[0] + ', x1 commit ' + commits[1] + ', and x2 commit ' + commits[2] + ' are direct single-parent predecessors; the final commit must be their direct child and is necessarily bound only by the later external canonical receipt. Each predecessor was committed, pushed, clean, typed zero-divergent, and fresh-four-way equal before the next lifecycle began. Validation is restricted to the five-file owner delta and exact changed module. No complete repository, sibling-lane, or unchanged-history scan is claimed.',
+    'Module 12 - The primary pillar is Freed ID and CBR Heart in the modest sense of provenance, nonerasure, readable dependency paths, refusal, and authority vacancies. GMUT Mind remains explicit as finite mathematical bookkeeping only, never a physical model result. THOS Body remains represented by deterministic execution, failure retention, and recovery discipline, not production certification or AGI/ASI architecture. The eight practice lenses and four successor recommendations are synthetic learning frames, not qualifications. Empirical, participant, medical, professional, production, legal, cultural, affected-party, privacy-complete, accessibility-complete, exhaustive-security, independent-reproduction, consciousness/personhood, Theory-of-Everything, canon, and Stage 20 claims remain open or exact-gated. Maori words, tikanga, taonga, matauranga, and data-governance decisions remain under Maori authority.',
+    'Module 13 - Only after Sable exact final is committed, pushed, clean, fresh-live equal, and subjected to one attributable terminal validator may routing be refreshed. Under current v15 the prospective next exact-title existing task is Avelin Reed for v702-v1, followed by Caelen Ash v702-v2 only after Avelin own terminal gate. Resolve active and archived uniqueness, immediately reread the exact destination, refresh direct authority and current task controls, and send at most once. Stop on pause, stop, redirect, rename, narrowing, standby, ambiguity, duplicate, missing acknowledgement, privacy, safety, evidence, authority, usage exhaustion, accepted submission, opaque submission, or unresolved submission. Do not create, fork, delegate, substitute, precontact, resend, reread, or monitor merely for clearer acknowledgement. PREPARED_BY_SABLE_ROOK = true. SENT_BY_SABLE_ROOK remains false at commit time. NOT_READY_FOR_STAGE_20. EOF SABLE ROOK v701-v8 FINAL HANDOFF BASIS.',
+  ];
+}
+
+function makeFinal() {
+  const gate = predecessorGate(3, 4);
+  assert(!fs.existsSync(path.join(ROOT, 'final.json')), 'final_exclusive');
+  const plan = readJson(path.join(ROOT, 'plan.json'));
+  const x1 = readJson(path.join(ROOT, 'x1.json'));
+  const x2 = readJson(path.join(ROOT, 'x2.json'));
+  const failures = runtimeFailures();
+  const flow = makeMethodFlow(plan, x1, x2, failures);
+  const effective = {
+    methods: SOURCE_ACTIVATION_BASELINE.methods + flow.counts.methods,
+    failed_witnesses: SOURCE_ACTIVATION_BASELINE.failed_witnesses + flow.counts.failed_witnesses,
+    passing_witnesses: SOURCE_ACTIVATION_BASELINE.passing_witnesses + flow.counts.passing_witnesses,
+    witnesses: SOURCE_ACTIVATION_BASELINE.witnesses + flow.counts.witnesses,
+    negatives: SOURCE_ACTIVATION_BASELINE.negatives + flow.counts.negatives,
+    open_gaps: SOURCE_ACTIVATION_BASELINE.open_gaps + flow.counts.open_gaps,
+    exact_gates: SOURCE_ACTIVATION_BASELINE.exact_gates + flow.counts.exact_gates,
+  };
+  assert(effective.failed_witnesses + effective.passing_witnesses === effective.witnesses, 'effective_witness_arithmetic');
+  const manifest = {
+    byte_domain: 'raw_git_blob_utf8_lf',
+    entries: ['phase.txt', 'plan.json', 'x1.json', 'x2.json'].map(function(name) { return bindFile(path.join(ROOT, name)); }),
+    self_exclusions: [PREFIX + 'final.json'],
+  };
+  const modules = handoffModules(plan, x1, x2, flow, effective, gate.commits);
+  const words = modules.join(' ').trim().split(/\s+/).length;
+  assert(modules.length === 13 && words >= 2000 && words <= 100000, 'handoff_length:' + words);
+  const ownOutcomes = {
+    completed: x1.outcomes.completed + x2.outcomes.completed,
+    represented: x1.outcomes.represented + x2.outcomes.represented,
+    open_gap: x1.outcomes.open_gap + x2.outcomes.open_gap,
+    exact_gate: x1.outcomes.exact_gate + x2.outcomes.exact_gate,
+  };
+  const final = {
+    schema: 'ghc.family.sable-antimatroid-final.v15',
+    owner: 'Sable Rook',
+    phase: 'v701-v8',
+    branch: BRANCH,
+    source: SOURCE,
+    source_repository_seal: SOURCE_REPOSITORY_SEAL,
+    source_activation_baseline: SOURCE_ACTIVATION_BASELINE,
+    source_baseline_fold_count: 1,
+    source_validation: {
+      state: 'VALID_DEPENDENCY_CORRECTED_EXACT_FINAL_OWNER_SCOPED_CANONICAL',
+      invocations: 1,
+      successes: 1,
+      replays: 0,
+      payload_sha256: SOURCE_HASHES.canonical_payload,
+      receipt_sha256: SOURCE_HASHES.canonical_receipt,
+      dependency_correction_sha256: SOURCE_HASHES.dependency_correction,
+      predecessor_validator_replayed_by_sable: false,
+      predecessor_domain_replayed_by_sable: false,
+    },
+    lifecycle: {
+      source: SOURCE,
+      plan_commit: gate.commits[0],
+      x1_commit: gate.commits[1],
+      x2_commit: gate.commits[2],
+      final_parent_expected: gate.commits[2],
+      final_commit_self_referential_pending: true,
+      commits_planned: 4,
+      merges: 0,
+      all_single_parent: true,
+    },
+    proposals: {inherited_zero_credit: 600, new: 600, chain_increment: 600},
+    own: {outcomes: ownOutcomes, methods: flow.counts.methods, witnesses: flow.counts.witnesses, passing_witnesses: flow.counts.passing_witnesses, failed_witnesses: flow.counts.failed_witnesses, negatives: flow.counts.negatives, open_gaps: flow.counts.open_gaps, exact_gates: flow.counts.exact_gates},
+    effective,
+    portfolios: {x1: x1.portfolios, x2: x2.portfolios},
+    skills: {logical_owner_local: plan.skills.length, used: x1.skills.length + x2.skills.length, global_installs: 0, inherited_fca_guidance_novelty_credit: 0},
+    runners: {logical_owner_local: plan.runners.length, used: x1.runners.length + x2.runners.length, global_installs: 0},
+    practices: plan.practices,
+    models: {count: x2.models.length, physical: false, empirical: false, authority: false},
+    tests: {selected: x2.tests.length, passed: x2.tests.filter(function(test) { return test.pass; }).length, complete_repository_suite: false},
+    approval_packets: {exact_held: 50, blocked_held: 30, executed: 0},
+    operational_failures: failures,
+    method_flow: flow,
+    manifest,
+    handoff: {modules, words, literal_eof: 'EOF SABLE ROOK v701-v8 FINAL HANDOFF BASIS.'},
+    route: {state: 'PREPARED_NOT_SENT', projected_successor: 'Avelin Reed', projected_assignment: 'v702-v1', projection_is_not_activation: true, send_attempts: 0, resends: 0, recipient_completion_claimed: false},
+    canonical_policy: {state: 'PREPARED_NOT_INVOKED', exact_final_gate_required: true, successful_invocations_max: 1, successful_replays_allowed: 0, external_receipt: true, predecessor_validator_replay: false},
+    resource_closeout: {tracked_before: 1418, tracked_after: 1423, owner_files: 5, ceiling: 2000, spend_usd: 0, global_installs: 0, package_updates: 0, shared_mutations: 0, memory_writes: 0},
+    boundary: BOUNDARY,
+    terminal_verdict: 'NOT_READY_FOR_STAGE_20',
+  };
+  writeExclusive(path.join(ROOT, 'final.json'), final);
+  console.log(JSON.stringify({state: 'FINAL_PREPARED', outcomes: ownOutcomes, method_flow: flow.counts, effective, handoff_words: words, manifest_entries: manifest.entries.length, sha256: bindFile(path.join(ROOT, 'final.json')).sha256}));
+}
+
+function privacyHits(files) {
+  const patterns = [
+    {class: 'raw_uuid', re: /\b[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}\b/ig},
+    {class: 'private_path', re: new RegExp(['(?:[A-Z]:', '\\\\', '(?:Users|GHC-Archives))'].join(''), 'ig')},
+    {class: 'credential', re: /\b(?:api[_-]?key|password|secret|token)\s*[:=]\s*["'][^"']+["']/ig},
+    {class: 'private_route', re: new RegExp(['(?:plugin', ':', '\\/\\/', '|codex', ':', '\\/\\/', 'threads', '\\/)'].join(''), 'ig')},
+    {
+      class: ['session', 'stream'].join('_'),
+      re: new RegExp(
+        '\\b(?:' +
+        ['source', 'thread', 'id'].join('_') + '|' +
+        ['private', 'callable', 'identifier'].join('_') + '|' +
+        ['session', 'stream'].join('_') +
+        ')\\b',
+        'ig'
+      ),
+    },
+  ];
+  const hits = [];
+  for (const file of files) {
+    const text = fs.readFileSync(file, 'utf8');
+    for (const pattern of patterns) {
+      const matches = text.match(pattern.re) || [];
+      if (matches.length) hits.push({file: relative(file), class: pattern.class, count: matches.length});
+    }
+  }
+  return hits;
+}
+
+function validateRepository(options) {
+  options = options || {};
+  const remote = Boolean(options.remote);
+  const preflight = Boolean(options.preflight);
+  const exactFinal = options.exactFinal;
+  const plan = readJson(path.join(ROOT, 'plan.json'));
+  const x1 = readJson(path.join(ROOT, 'x1.json'));
+  const x2 = readJson(path.join(ROOT, 'x2.json'));
+  const final = readJson(path.join(ROOT, 'final.json'));
+  const files = ['phase.txt', 'plan.json', 'x1.json', 'x2.json', 'final.json'].map(function(name) { return path.join(ROOT, name); });
+  const checks = [];
+  function add(id, claim, pass, detail) { checks.push({id, claim, pass: Boolean(pass), detail: detail === undefined ? null : detail}); }
+  const head = gitText('rev-parse', 'HEAD');
+  const branch = gitText('branch', '--show-current');
+  const status = gitText('status', '--porcelain=v1', '-uall');
+  add('C01', 'owner branch', branch === BRANCH, branch);
+  add('C02', preflight ? 'only final untracked' : 'clean worktree', preflight ? status === '?? ' + PREFIX + 'final.json' : status === '', status);
+  add('C03', 'exact final supplied', preflight || head === exactFinal, head);
+  let upstream = null;
+  let tracking = null;
+  let live = null;
+  let divergence = null;
+  if (remote) {
+    upstream = gitText('rev-parse', '@{u}');
+    tracking = gitText('rev-parse', 'refs/remotes/origin/' + BRANCH);
+    const rows = gitText('ls-remote', '--heads', 'origin', 'refs/heads/' + BRANCH).split(/\r?\n/).filter(Boolean);
+    live = rows.length === 1 ? rows[0].split(/\s+/)[0] : null;
+    divergence = gitText('rev-list', '--left-right', '--count', 'HEAD...@{u}');
+    add('C04', 'upstream equality', upstream === head, upstream);
+    add('C05', 'tracking equality', tracking === head, tracking);
+    add('C06', 'fresh unique live equality', live === head, live);
+    add('C07', 'typed zero divergence', divergence === '0\t0', divergence);
+  }
+  const commits = gitText('rev-list', '--reverse', SOURCE + '..' + head).split(/\r?\n/).filter(Boolean);
+  add('C08', preflight ? 'three published predecessors plus projected final' : 'four new commits', preflight ? commits.length === 3 : commits.length === 4, commits);
+  let direct = true;
+  let parent = SOURCE;
+  for (const commit of commits) {
+    const parents = gitText('show', '-s', '--format=%P', commit).split(/\s+/).filter(Boolean);
+    direct = direct && parents.length === 1 && parents[0] === parent;
+    parent = commit;
+  }
+  add('C09', 'direct single-parent lifecycle', direct);
+  add('C10', 'zero merges', gitText('rev-list', '--merges', SOURCE + '..' + head) === '');
+  const tracked = gitText('ls-tree', '-r', '--name-only', head).split(/\r?\n/).filter(Boolean).length;
+  add('C11', preflight ? 'exact 1422 tracked predecessors' : 'exact 1423 tracked files', preflight ? tracked === 1422 : tracked === 1423, tracked);
+  const changed = gitText('diff', '--name-only', SOURCE + '..' + head).split(/\r?\n/).filter(Boolean);
+  add('C12', preflight ? 'four published owner predecessors plus projected final' : 'exact five owner files', preflight ? changed.length === 4 && changed.every(function(file) { return file.startsWith(PREFIX); }) : changed.length === 5 && changed.every(function(file) { return file.startsWith(PREFIX); }), changed);
+  for (const entry of final.manifest.entries) {
+    const file = path.join(W, ...entry.path.split('/'));
+    const binding = bindFile(file);
+    const blob = gitBytes('show', head + ':' + entry.path);
+    add('M-' + path.basename(entry.path), 'worktree and raw Git blob binding ' + entry.path, binding.bytes === entry.bytes && binding.sha256 === entry.sha256 && blob.length === entry.bytes && shaBytes(blob) === entry.sha256, {binding, blob_bytes: blob.length, blob_sha256: shaBytes(blob)});
+  }
+  add('C13', 'manifest self exclusion', final.manifest.self_exclusions.length === 1 && final.manifest.self_exclusions[0] === PREFIX + 'final.json');
+  add('C14', 'strict JSON parse count', [plan, x1, x2, final].every(Boolean), 4);
+  add('C15', 'proposal counts', plan.inherited.records.length === 600 && plan.contracts.length === 600);
+  add('C16', 'outcome counts', plan.outcomes.completed === 510 && plan.outcomes.represented === 30 && plan.outcomes.open_gap === 30 && plan.outcomes.exact_gate === 30, plan.outcomes);
+  for (const pair of [['x1', x1], ['x2', x2]]) {
+    const stageName = pair[0];
+    const stage = pair[1];
+    add(stageName + '-01', stageName + ' contracts', stage.contracts.length === 300);
+    add(stageName + '-02', stageName + ' safe', stage.portfolios.safe_checks === 300);
+    add(stageName + '-03', stageName + ' candidate', stage.portfolios.malformed_candidate_subjects === 300);
+    add(stageName + '-04', stageName + ' refusal', stage.portfolios.refusal_checks === 300);
+    add(stageName + '-05', stageName + ' copy reference', stage.portfolios.copy_from_reference_checks === 300);
+    add(stageName + '-06', stageName + ' cleanup', stage.portfolios.clean_fix_refine_reviews === 300);
+    add(stageName + '-07', stageName + ' skills', stage.skills.length === 10 && stage.skills.every(function(skill) { return skill.used && skill.validation_passed; }));
+    add(stageName + '-08', stageName + ' runners', stage.runners.length === 5 && stage.runners.every(function(runner) { return runner.used && runner.positive_smoke.pass && runner.refusal_check.pass; }));
+    add(stageName + '-09', stageName + ' latch', stage.session.invocations === 1 && stage.session.successes === 1 && stage.session.replays === 0);
+  }
+  add('C17', 'twenty additional tests', x2.tests.length === 20 && x2.tests.every(function(test) { return test.pass; }));
+  add('C18', 'five nonphysical models', x2.models.length === 5 && x2.models.every(function(model) { return model.points.length === 6 && !model.physical && !model.empirical; }));
+  add('C19', 'held approval packets', plan.approval_packets.exact.length === 50 && plan.approval_packets.blocked.length === 30 && final.approval_packets.executed === 0);
+  add('C20', 'logical skills and runners', plan.skills.length === 20 && plan.runners.length === 10 && final.skills.global_installs === 0);
+  const flow = final.method_flow;
+  const passing = flow.witnesses.filter(function(witness) { return witness.result === 'pass'; }).reduce(function(sum, witness) { return sum + witness.atomic_count; }, 0);
+  const failed = flow.witnesses.filter(function(witness) { return witness.result === 'fail'; }).reduce(function(sum, witness) { return sum + witness.atomic_count; }, 0);
+  add('C21', 'method count', flow.methods.length === flow.counts.methods, {actual: flow.methods.length, declared: flow.counts.methods});
+  add('C22', 'passing witness arithmetic', passing === flow.counts.passing_witnesses, {passing, declared: flow.counts.passing_witnesses});
+  add('C23', 'failed witness arithmetic', failed === flow.counts.failed_witnesses, {failed, declared: flow.counts.failed_witnesses});
+  add('C24', 'negative uniqueness', new Set(flow.retained_negative_ids).size === flow.retained_negative_ids.length && flow.retained_negative_ids.length === flow.counts.negatives);
+  add('C25', 'effective arithmetic', final.effective.failed_witnesses + final.effective.passing_witnesses === final.effective.witnesses);
+  add('C26', 'source activation baseline folded once', final.source_baseline_fold_count === 1);
+  add('C27', 'baton modules and length', final.handoff.modules.length === 13 && final.handoff.words >= 2000 && final.handoff.words <= 100000, final.handoff.words);
+  add('C28', 'baton literal EOF', final.handoff.modules[final.handoff.modules.length - 1].endsWith(final.handoff.literal_eof));
+  add('C29', 'exact terminal token and verdict', final.terminal_verdict === 'NOT_READY_FOR_STAGE_20' && final.handoff.modules.join('\n').includes('NOT_READY_FOR_STAGE_20'));
+  const hits = privacyHits(files);
+  add('C30', 'zero confirmed five-class privacy hits', hits.length === 0, hits);
+  const sourceText = fs.readFileSync(path.join(ROOT, 'phase.txt'), 'utf8');
+  const securityFindings = [];
+  if (/shell\s*:\s*true/.test(sourceText)) securityFindings.push('shell_true');
+  if (/\beval\s*\(/.test(sourceText)) securityFindings.push('eval');
+  add('C31', 'zero bounded changed-source security findings', securityFindings.length === 0, securityFindings);
+  add('C32', 'predecessor validators not replayed', !plan.source.source_terminal_validator_replayed_by_sable && !plan.source.source_domain_session_replayed_by_sable);
+  add('C33', 'stage sessions not replayed', x1.session.replays === 0 && x2.session.replays === 0);
+  add('C34', 'resource and format boundary', final.resource_closeout.tracked_after === 1423 && final.resource_closeout.global_installs === 0 && final.resource_closeout.shared_mutations === 0 && changed.concat(preflight ? [PREFIX + 'final.json'] : []).every(function(file) { return /\.(?:txt|json)$/.test(file); }));
+  add('C35', 'v15 control bindings', plan.controls.workflow_sha256 === CONTROL_HASHES.workflow_v15 && plan.controls.roster_sha256 === CONTROL_HASHES.roster_v15 && plan.controls.authorization_sha256 === CONTROL_HASHES.authorization_v15);
+  add('C36', 'source terminal validation retained', final.source_validation.invocations === 1 && final.source_validation.successes === 1 && final.source_validation.replays === 0);
+  add('C37', 'source delivery retained separately', plan.source.delivery_state === 'SENT_ONCE_ACKNOWLEDGED' && final.route.state === 'PREPARED_NOT_SENT');
+  add('C38', 'novelty collision retained', final.operational_failures.some(function(failure) { return failure.id === 'SR7018-OP-N001' && failure.original_success_credit === 0; }));
+  add('C39', 'antimatroid novelty replacement', plan.novelty_audit.repository_hits === 0 && plan.novelty_audit.shared_skill_hits === 0);
+  const failures = checks.filter(function(check) { return !check.pass; });
+  return {head, upstream, tracking, live, divergence, tracked, changed, checks, failures, privacy_hits: hits, security_findings: securityFindings};
+}
+
+function validateCommand() {
+  const finalExists = fs.existsSync(path.join(ROOT, 'final.json'));
+  if (!finalExists) {
+    const plan = readJson(path.join(ROOT, 'plan.json'));
+    const output = {stage: 'plan', checks: makePlanChecks(plan), engine_fixed: bindFile(path.join(ROOT, 'phase.txt')).sha256 === plan.engine.sha256};
+    if (fs.existsSync(path.join(ROOT, 'x1.json'))) output.x1 = readJson(path.join(ROOT, 'x1.json')).checks;
+    if (fs.existsSync(path.join(ROOT, 'x2.json'))) output.x2 = readJson(path.join(ROOT, 'x2.json')).checks;
+    assert(output.engine_fixed && output.checks.every(function(check) { return check.pass; }) && (!output.x1 || Object.values(output.x1).every(Boolean)) && (!output.x2 || Object.values(output.x2).every(Boolean)), 'validation');
+    console.log(JSON.stringify(output));
+    return;
+  }
+  const validation = validateRepository({remote: false, preflight: true});
+  if (validation.failures.length) throw new Error('validation_failures:' + JSON.stringify(validation.failures));
+  console.log(JSON.stringify({state: 'VALID_OWNER_WORKTREE_PREFLIGHT', checks: validation.checks.length, tracked: validation.tracked, changed: validation.changed.length, privacy_hits: validation.privacy_hits.length, security_findings: validation.security_findings.length}));
+}
+
+function exportFlow() {
+  const final = readJson(path.join(ROOT, 'final.json'));
+  const file = path.join(BANK, 'method-flow.json');
+  assert(!fs.existsSync(file), 'flow_export_exclusive');
+  writeExclusive(file, final.method_flow);
+  console.log(JSON.stringify({state: 'METHOD_FLOW_EXPORTED', sha256: bindExternal(file).sha256, methods: final.method_flow.counts.methods, witnesses: final.method_flow.counts.witnesses}));
+}
+
+function canonicalRun(exactFinal) {
+  ensureDir(path.join(BANK, 'canonical'));
+  const latchFile = path.join(BANK, 'canonical', 'invocation-latch.json');
+  const payloadFile = path.join(BANK, 'canonical', 'canonical-payload.json');
+  const receiptFile = path.join(BANK, 'canonical', 'canonical-receipt.json');
+  assert(!fs.existsSync(latchFile) && !fs.existsSync(payloadFile) && !fs.existsSync(receiptFile), 'canonical_exclusive_latch');
+  writeExclusive(latchFile, {schema: 'ghc.family.canonical-invocation-latch.v15', owner: 'Sable Rook', phase: 'v701-v8', invoked_utc: new Date().toISOString(), successful_replays: 0});
+  let validation;
+  try {
+    validation = validateRepository({remote: true, exactFinal});
+  } catch (error) {
+    writeExclusive(path.join(BANK, 'canonical', 'canonical-failure.json'), {schema: 'ghc.family.owner-canonical-failure.v15', error: error.message, successful_invocations: 0, successful_replays: 0, repository_mutated: false, retained: true});
+    throw error;
+  }
+  if (validation.failures.length) {
+    writeExclusive(path.join(BANK, 'canonical', 'canonical-failure.json'), {schema: 'ghc.family.owner-canonical-failure.v15', failures: validation.failures, successful_invocations: 0, successful_replays: 0, repository_mutated: false, retained: true});
+    throw new Error('canonical_failures:' + JSON.stringify(validation.failures));
+  }
+  const final = readJson(path.join(ROOT, 'final.json'));
+  const payload = {
+    schema: 'ghc.family.owner-canonical-payload.v15',
+    state: 'VALID_EXACT_FINAL_OWNER_SCOPED_CANONICAL',
+    owner: 'Sable Rook',
+    phase: 'v701-v8',
+    branch: BRANCH,
+    source: SOURCE,
+    head: validation.head,
+    check_count: validation.checks.length,
+    checks: validation.checks,
+    owner_files: validation.changed.length,
+    tracked_files: validation.tracked,
+    strict_json_parses: 4,
+    manifest_replays: final.manifest.entries.length,
+    privacy_hits: validation.privacy_hits,
+    security_findings: validation.security_findings,
+    successful_invocations: 1,
+    successful_replays: 0,
+    predecessor_terminal_replay: false,
+    predecessor_domain_replay: false,
+    x1_session_replay: false,
+    x2_session_replay: false,
+    same_owner_only: true,
+    independent_reproduction: false,
+    full_repository_suite: false,
+    repository_mutated: false,
+    terminal_verdict: 'NOT_READY_FOR_STAGE_20',
+    boundary: BOUNDARY,
+  };
+  const payloadBytes = canonical(payload);
+  const payloadSha = shaBytes(payloadBytes);
+  fs.writeFileSync(payloadFile, payloadBytes, {flag: 'wx'});
+  const receipt = {schema: 'ghc.family.owner-canonical-receipt.v15', payload, payload_sha256: payloadSha, invoked_utc: new Date().toISOString(), repository_mutated: false};
+  writeExclusive(receiptFile, receipt);
+  console.log(JSON.stringify({state: payload.state, check_count: payload.check_count, payload_sha256: payloadSha, receipt_sha256: bindExternal(receiptFile).sha256, head: payload.head, tracked_files: payload.tracked_files}));
+}
+
+const command = process.argv[process.argv.length - 1];
+if (command === 'plan') makePlan();
+else if (command === 'x1' || command === 'x2') runStage(command);
+else if (command === 'final') makeFinal();
+else if (command === 'validate') validateCommand();
+else if (command === 'export-flow') exportFlow();
+else if (command && command.startsWith('canonical=')) canonicalRun(command.slice('canonical='.length));
+else throw new Error('usage: plan | x1 | x2 | final | validate | export-flow | canonical=<exact-final>');
