@@ -1,0 +1,46 @@
+'use strict';
+// Definition-side oracle: permutation determinants, explicit sets, and null-vector enumeration.
+const E=[0,1,2,3,4,5],FULL=63;
+const members=m=>new Set(E.filter(i=>Math.floor(m/(2**i))%2===1));
+const number=s=>[...s].reduce((a,i)=>a+2**i,0);
+const sym=(a,b)=>new Set([...new Set([...a,...b])].filter(i=>a.has(i)!==b.has(i)));
+const sorted=xs=>[...new Set(xs)].sort((a,b)=>a-b),serial=family=>sorted(family.map(number));
+const equal=(a,b)=>JSON.stringify(serial(a))===JSON.stringify(serial(b));
+function determinant(rows,indices){let sum=0;function visit(r,used){if(r===indices.length){sum=(sum+1)%2;return;}for(let c=0;c<indices.length;c++)if(!used.has(c)&&Math.floor(rows[indices[r]]/(2**indices[c]))%2===1){const next=new Set(used);next.add(c);visit(r+1,next);}}visit(0,new Set());return sum;}
+function normalFamily(rows){const out=[];for(let m=0;m<=FULL;m++)if(determinant(rows,[...members(m)]))out.push(m);return out;}
+function nullity(rows,subset){const indices=[...members(subset)];let zeros=0;for(let vector=0;vector<2**indices.length;vector++){let valid=true;for(const row of indices){let sum=0;for(let c=0;c<indices.length;c++)sum+=Math.floor(rows[row]/2**indices[c])%2*Math.floor(vector/2**c)%2;if(sum%2){valid=false;break;}}if(valid)zeros++;}return Math.log2(zeros);}
+function makeFixtures(){const matrices=[Array(6).fill(0),Array(6).fill(0),E.map(i=>2**i),[2,1,8,4,32,16],[34,5,10,20,40,17],E.map(i=>FULL-2**i),Array(6).fill(FULL)],twists=[0,2,0,1,3,21,42],fixtures=[],seen=new Set();let seed=7021001;
+ while(fixtures.length<30){const ordinal=fixtures.length;let rows,twist;if(ordinal<7){rows=matrices[ordinal];twist=twists[ordinal];}else{rows=Array(6).fill(0);for(let r=0;r<6;r++)for(let c=r;c<6;c++){seed=(Math.imul(seed,1664525)+1013904223)>>>0;if(seed>>>31){rows[r]+=2**c;if(c!==r)rows[c]+=2**r;}}twist=(ordinal*11+7)%64;}
+ const normal=normalFamily(rows),family=serial(normal.map(m=>sym(members(m),members(twist)))),key=family.join(',');if(seen.has(key)){if(ordinal<7)throw Error('duplicate explicit fixture');continue;}seen.add(key);fixtures.push({fixture_id:'AR7021-DM-'+String(ordinal+1).padStart(2,'0'),ground:E,matrix_rows:rows,initial_twist:twist,query:(ordinal*17+13)%64,element:ordinal%6,other_element:(ordinal+1)%6,mapping:E.map(i=>(i+(ordinal%5)+1)%6),reference_normal_family:normal,reference_family:family,synthetic:true,physical:false,empirical:false,authority:false});}
+ return fixtures;}
+function twist(F,A){return F.map(f=>sym(f,A));}
+function loop(F,e){const out=new Map(F.map(f=>[number(f),new Set(f)]));for(const f of F)if(!f.has(e)){const s=new Set(f);s.add(e);const k=number(s);if(out.has(k))out.delete(k);else out.set(k,s);}return[...out.values()];}
+function exchange(F){const values=new Set(serial(F)),failures=[];let checked=0;for(const a of F)for(const b of F){const difference=sym(a,b);for(const e of difference){checked++;let found=false;for(const f of difference)if(values.has(number(sym(a,new Set([e,f]))))){found=true;break;}if(!found)failures.push({left:number(a),right:number(b),element:e});}}return{valid:failures.length===0,checked,failures};}
+function ranks(F){const sizes=F.map(s=>s.size);return{minimum:Math.min(...sizes),maximum:Math.max(...sizes)};}
+function bases(F,upper){const rank=upper?ranks(F).maximum:ranks(F).minimum,B=F.filter(s=>s.size===rank),keys=new Set(serial(B));let checked=0;const failures=[];for(const a of B)for(const b of B)for(const e of a)if(!b.has(e)){checked++;let ok=false;for(const f of b)if(!a.has(f)){const s=new Set(a);s.delete(e);s.add(f);if(keys.has(number(s))){ok=true;break;}}if(!ok)failures.push({left:number(a),right:number(b),element:e});}return{rank,bases:serial(B),exchange:{valid:failures.length===0,checked,failures}};}
+function distance(F,Q){const ds=F.map(s=>sym(s,Q).size),minimum=Math.min(...ds);return{minimum,nearest_feasible_masks:serial(F.filter((s,i)=>ds[i]===minimum))};}
+function minor(F,e,contract,ground){const withE=F.filter(s=>s.has(e)),withoutE=F.filter(s=>!s.has(e)),isLoop=withE.length===0,isColoop=withoutE.length===0;let selected,rule;if(contract){selected=isLoop?withoutE:withE;rule=isLoop?'loop_delete_equivalent':'ordinary_contract';}else{selected=isColoop?withE:withoutE;rule=isColoop?'coloop_contract_equivalent':'ordinary_delete';}const family=selected.map(s=>new Set([...s].filter(i=>i!==e))),newGround=new Set([...ground].filter(i=>i!==e));return{family,ground:newGround,rule,isLoop,isColoop};}
+function perform(word,F,e){let f=F;for(const c of word)f=c==='t'?twist(f,new Set([e])):loop(f,e);return f;}
+function expected(op,p){const F=p.reference_family.map(members),Q=members(p.query),ground=new Set(E),rank=ranks(F),e=p.element;
+ if(op==='dm_feasible')return{ground:E,principal_feasible_masks:p.reference_normal_family,initial_twist:p.initial_twist,feasible_masks:serial(F),count:F.length,normal:F.some(s=>s.size===0)};
+ if(op==='dm_exchange_certificate')return exchange(F);
+ if(op==='dm_exchange_witness'){const a=F[0],b=F[F.length-1],diff=sym(a,b),keys=new Set(serial(F));return{left:number(a),right:number(b),allows_same_element:true,witnesses:[...diff].sort((x,y)=>x-y).map(element=>{const choices=[...diff].filter(f=>keys.has(number(sym(a,new Set([element,f]))))).sort((x,y)=>x-y);return{element,choices,result_masks:choices.map(f=>number(sym(a,new Set([element,f]))))};})};}
+ if(op==='dm_twist'){const t=twist(F,Q);return{twist_mask:p.query,feasible_masks:serial(t),involution_holds:equal(twist(t,Q),F)};}
+ if(op==='dm_dual'){const dual=twist(F,ground),r=ranks(dual);return{feasible_masks:serial(dual),lower_plus_dual_upper:rank.minimum+r.maximum,upper_plus_dual_lower:rank.maximum+r.minimum,dual_involution:equal(twist(dual,ground),F)};}
+ if(op==='dm_loop_complement'){const l=loop(F,e);return{element:e,feasible_masks:serial(l),involution_holds:equal(loop(l,e),F),exchange_valid:exchange(l).valid};}
+ if(op==='dm_width')return{min_size:rank.minimum,max_size:rank.maximum,width:rank.maximum-rank.minimum,size_histogram:E.concat(6).map(k=>F.filter(s=>s.size===k).length)};
+ if(op==='dm_parity'){const parities=sorted(F.map(s=>s.size%2));return{parities,uniform_parity:parities.length===1,parity:parities.length===1?parities[0]:null,feasible_sizes:sorted(F.map(s=>s.size))};}
+ if(op==='dm_distance')return{query:p.query,...distance(F,Q)};
+ if(op==='dm_lower_matroid')return bases(F,false);
+ if(op==='dm_upper_matroid')return bases(F,true);
+ if(op==='dm_deletion'||op==='dm_contraction'){const m=minor(F,e,op==='dm_contraction',ground);return{element:e,ground_mask:number(m.ground),feasible_masks:serial(m.family),rule:m.rule,is_loop:m.isLoop,is_coloop:m.isColoop,exchange_valid:exchange(m.family).valid};}
+ if(op==='dm_relabel'){const mapped=F.map(s=>new Set([...s].map(i=>p.mapping[i]))),inverse=E.map(i=>p.mapping.indexOf(i)),restored=mapped.map(s=>new Set([...s].map(i=>inverse[i]))),r=ranks(mapped);return{mapping:p.mapping,feasible_masks:serial(mapped),width_before:rank.maximum-rank.minimum,width_after:r.maximum-r.minimum,inverse_restored:equal(restored,F)};}
+ if(op==='dm_vertex_orbit'){const words=['','t','l','tl','lt','tlt'],orbit=words.map(word=>({word:word||'identity',feasible_masks:serial(perform(word,F,e))}));return{element:e,orbit,twist_twice:equal(perform('tt',F,e),F),loop_twice:equal(perform('ll',F,e),F),braid_equal:equal(perform('tlt',F,e),perform('ltl',F,e)),three_cycle_identity:equal(perform('tltltl',F,e),F),all_exchange_valid:words.every(w=>exchange(perform(w,F,e)).valid)};}
+ if(op==='dm_minor_commutation'){const d=minor(F,e,false,ground),dc=minor(d.family,p.other_element,true,d.ground),c=minor(F,p.other_element,true,ground),cd=minor(c.family,e,false,c.ground);return{delete_element:e,contract_element:p.other_element,ground_mask:number(dc.ground),delete_then_contract:serial(dc.family),contract_then_delete:serial(cd.family),commutes:equal(dc.family,cd.family)};}
+ if(op==='dm_nullity_distance'){const subset=number(sym(Q,members(p.initial_twist))),n=nullity(p.matrix_rows,subset),dist=distance(F,Q).minimum;return{query:p.query,principal_subset:subset,principal_size:members(subset).size,nullity:n,distance:dist,identity_holds:n===dist};}
+ if(op==='dm_explanation')return{disposition:'represented',feasible_count:F.length,minimum_size:rank.minimum,maximum_size:rank.maximum,uniform_parity:sorted(F.map(s=>s.size%2)).length===1,meaning:'Exact finite set-family description only.',human_review:false,assistive_technology_review:false};
+ if(op==='dm_observation_gap')return{disposition:'open_gap',real_observations:0,participants:0,calibrated_measurements:0,independent_reproductions:0,missing:['empirical domain','calibration','participant evidence','independent review']};
+ if(op==='dm_authority_gate')return{disposition:'exact_gate',held:true,authorized_actions:0,required:['competent authority','affected-party participation','privacy and accessibility review','legal and cultural review where applicable','Maori authority for Maori concepts and data']};
+ throw Error('unknown oracle operation');
+}
+module.exports={makeFixtures,expected,determinant,normalFamily};
