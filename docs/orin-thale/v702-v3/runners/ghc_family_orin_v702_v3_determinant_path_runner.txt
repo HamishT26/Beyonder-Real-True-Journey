@@ -1,0 +1,5 @@
+"use strict";
+const payload = JSON.parse(process.env.GHC_FIXTURE_JSON || "{}");
+const acceptedOperations = ["cf_adjacent_determinants","cf_stern_brocot_path"];
+const accepted = acceptedOperations.includes(payload.operation) && Number.isSafeInteger(payload.numerator) && Number.isSafeInteger(payload.denominator) && payload.numerator > 0 && payload.denominator > 0;
+process.stdout.write(JSON.stringify({ schema: "ghc.family.runner.smoke.v1", runner: "ghc_family_orin_v702_v3_determinant_path_runner.txt", operation: payload.operation || null, accepted, broader_authority_credit: 0 }));

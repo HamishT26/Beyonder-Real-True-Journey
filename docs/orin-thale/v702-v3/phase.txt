@@ -60,6 +60,16 @@ const PREFLIGHT_FAILURES = [
   repository_mutated: false,
 }));
 
+const LIFECYCLE_FAILURES = [{
+  id: `${PREFIX}-X1-N001`,
+  failure: "The first successful x1 result was serialized as pretty JSON and measured 144738 whitespace-delimited words, above the 100000-word document ceiling.",
+  recovery: "Preserved the exact parsed x1 semantics in compact JSON, retained the oversized digest and word count, rebuilt the x1 manifest, and did not replay x1 execution.",
+  original_success_credit: 0,
+  recovered: true,
+  retained: true,
+  repository_mutated: false,
+}];
+
 const FIXTURE_PAIRS = [
   [1, 2], [2, 3], [3, 5], [5, 8], [8, 13], [13, 21], [21, 34], [34, 55],
   [7, 3], [22, 7], [355, 113], [144, 89], [233, 144], [377, 233],
@@ -202,6 +212,13 @@ function writeExclusive(relativePath, value) {
   fs.mkdirSync(path.dirname(target), { recursive: true });
   const text = typeof value === "string" ? value : `${JSON.stringify(value, null, 2)}\n`;
   fs.writeFileSync(target, text, { flag: "wx" });
+}
+
+function writeCompactExclusive(relativePath, value) {
+  const target = path.join(BASE, ...relativePath.split("/"));
+  assert(!fs.existsSync(target), `exclusive output already exists: ${relativePath}`);
+  fs.mkdirSync(path.dirname(target), { recursive: true });
+  fs.writeFileSync(target, `${JSON.stringify(value)}\n`, { flag: "wx" });
 }
 
 function writeExternal(relativePath, value) {
@@ -1040,8 +1057,8 @@ function executeStage(stage) {
     tests = buildTests(plan, x1, provisionalX2);
     assert(tests.length === 20 && tests.every((test) => test.pass), "twenty x2 tests");
     models = buildModels(plan, x1, provisionalX2);
-    writeExclusive("tests.json", { schema: "ghc.family.orin.v702.v3.tests.v1", owner: OWNER, phase: PHASE, tests, passed: tests.filter((test) => test.pass).length, failed: tests.filter((test) => !test.pass).length, boundary: BOUNDARY });
-    writeExclusive("models.json", { schema: "ghc.family.orin.v702.v3.models.v1", owner: OWNER, phase: PHASE, models, boundary: BOUNDARY });
+    writeCompactExclusive("tests.json", { schema: "ghc.family.orin.v702.v3.tests.v1", owner: OWNER, phase: PHASE, tests, passed: tests.filter((test) => test.pass).length, failed: tests.filter((test) => !test.pass).length, boundary: BOUNDARY });
+    writeCompactExclusive("models.json", { schema: "ghc.family.orin.v702.v3.models.v1", owner: OWNER, phase: PHASE, models, boundary: BOUNDARY });
   }
 
   const methodFlow = contractMethodFlow(stage, definitions, records, skills, runners, tests, models);
@@ -1075,7 +1092,7 @@ function executeStage(stage) {
     incremental_spend_usd: 0,
     boundary: BOUNDARY,
   };
-  writeExclusive(`${stage}.json`, result);
+  writeCompactExclusive(`${stage}.json`, result);
   writeExclusive(`validation/${stage}-manifest.json`, manifest(`validation/${stage}-manifest.json`));
   writeExternal(`${stage}/success.json`, { owner: OWNER, phase: PHASE, stage, state: "VALID_OWNER_STAGE", invocations: 1, successes: 1, replays: 0, contracts: records.length, methods: methodFlow.counts.methods, witnesses: methodFlow.counts.witnesses, output_sha256: shaText(fs.readFileSync(path.join(BASE, `${stage}.json`))), utc: new Date().toISOString() });
   return result;
@@ -1115,10 +1132,20 @@ function closeoutMethodFlow(plan, x1, x2) {
   return finalizeMethodFlow(ledger);
 }
 
-function combineMethodFlows(planFlow, x1Flow, x2Flow, closeoutFlow) {
+function lifecycleCorrectionMethodFlow() {
+  const ledger = methodFlowSkeleton("x1-precommit-correction", SOURCE);
+  for (const failure of LIFECYCLE_FAILURES) {
+    const method = addMethod(ledger, `${failure.id}-METHOD`, failure.failure, [failure.id]);
+    addWitness(ledger, method, `${failure.id}-FAIL`, "fail", "Retained lifecycle serialization failure", "At most 100000 words", failure.failure, [failure.id]);
+    addWitness(ledger, method, `${failure.id}-RECOVERY`, "pass", "Dependency-corrected serialization without stage replay", failure.recovery, failure.recovery, [failure.id]);
+  }
+  return finalizeMethodFlow(ledger);
+}
+
+function combineMethodFlows(planFlow, x1Flow, correctionFlow, x2Flow, closeoutFlow) {
   const combined = methodFlowSkeleton("final", SOURCE, null);
-  combined.methods = [...planFlow.methods, ...x1Flow.methods, ...x2Flow.methods, ...closeoutFlow.methods];
-  combined.witnesses = [...planFlow.witnesses, ...x1Flow.witnesses, ...x2Flow.witnesses, ...closeoutFlow.witnesses];
+  combined.methods = [...planFlow.methods, ...x1Flow.methods, ...correctionFlow.methods, ...x2Flow.methods, ...closeoutFlow.methods];
+  combined.witnesses = [...planFlow.witnesses, ...x1Flow.witnesses, ...correctionFlow.witnesses, ...x2Flow.witnesses, ...closeoutFlow.witnesses];
   combined.state_events = [
     { state: "planning_frozen", replayed: false },
     { state: "x1_frozen", replayed: false },
@@ -1221,8 +1248,17 @@ function buildNegativeRegister(plan, x1, x2) {
     recovery: failure.recovery,
     recovery_does_not_erase_failure: true,
   }));
-  const records = [...startup, ...contractNegatives, ...runnerNegatives];
-  assert(records.length === 622, "retained-negative count");
+  const lifecycle = LIFECYCLE_FAILURES.map((failure) => ({
+    negative_id: failure.id,
+    class: "lifecycle-serialization-failure",
+    failure: failure.failure,
+    original_success_credit: 0,
+    retained: true,
+    recovery: failure.recovery,
+    recovery_does_not_erase_failure: true,
+  }));
+  const records = [...startup, ...lifecycle, ...contractNegatives, ...runnerNegatives];
+  assert(records.length === 623, "retained-negative count");
   return records;
 }
 
@@ -1266,7 +1302,8 @@ function buildFinal() {
   const x1 = readJson("x1.json");
   const x2 = readJson("x2.json");
   const closeoutFlow = closeoutMethodFlow(plan, x1, x2);
-  const methodFlow = combineMethodFlows(plan.method_flow, x1.method_flow, x2.method_flow, closeoutFlow);
+  const correctionFlow = lifecycleCorrectionMethodFlow();
+  const methodFlow = combineMethodFlows(plan.method_flow, x1.method_flow, correctionFlow, x2.method_flow, closeoutFlow);
   const own = {
     methods: methodFlow.counts.methods,
     witnesses: methodFlow.counts.witnesses,
@@ -1277,7 +1314,7 @@ function buildFinal() {
     exact_gates: 30,
     outcomes: plan.outcomes,
   };
-  assert(same(own, { methods: 50, witnesses: 3124, passing_witnesses: 2502, failed_witnesses: 622, negatives: 622, open_gaps: 30, exact_gates: 30, outcomes: plan.outcomes }), "owner final arithmetic");
+  assert(same(own, { methods: 51, witnesses: 3126, passing_witnesses: 2503, failed_witnesses: 623, negatives: 623, open_gaps: 30, exact_gates: 30, outcomes: plan.outcomes }), "owner final arithmetic");
   const effective = {
     methods: SOURCE_BASELINE.methods + own.methods,
     witnesses: SOURCE_BASELINE.witnesses + own.witnesses,
@@ -1310,7 +1347,7 @@ function buildFinal() {
     own,
     effective,
     method_flow: methodFlow,
-    operational_failures: plan.preflight_failures,
+    operational_failures: [...plan.preflight_failures, ...LIFECYCLE_FAILURES],
     retained_failures: negatives,
     skills: [...x1.skills, ...x2.skills],
     runners: [...x1.runners, ...x2.runners],
@@ -1331,14 +1368,14 @@ function buildFinal() {
     terminal_verdict: "NOT_READY_FOR_STAGE_20",
   };
 
-  writeExclusive("method-flow.json", methodFlow);
-  writeExclusive("retained-negative-register.json", { schema: "ghc.family.retained-negatives.v1", owner: OWNER, phase: PHASE, count: negatives.length, records: negatives, boundary: BOUNDARY });
-  writeExclusive("open-gap-register.json", { schema: "ghc.family.open-gaps.v1", owner: OWNER, phase: PHASE, inherited_count: SOURCE_BASELINE.open_gaps, phase_local_count: gaps.length, effective_count: effective.open_gaps, records: gaps, boundary: BOUNDARY });
-  writeExclusive("exact-gate-register.json", { schema: "ghc.family.exact-gates.v1", owner: OWNER, phase: PHASE, inherited_count: SOURCE_BASELINE.exact_gates, phase_local_count: gates.length, effective_count: effective.exact_gates, records: gates, boundary: BOUNDARY });
-  writeExclusive("complete-incomplete-ledger.json", { schema: "ghc.family.complete-incomplete.v1", owner: OWNER, phase: PHASE, completed: plan.outcomes.completed, represented: plan.outcomes.represented, open_gap: plan.outcomes.open_gap, exact_gate: plan.outcomes.exact_gate, only_authorized_labels: true, terminal_verdict: "NOT_READY_FOR_STAGE_20", boundary: BOUNDARY });
-  writeExclusive("catalogue.json", { schema: "ghc.family.meta-tool-catalogue.v1", owner: OWNER, phase: PHASE, count: catalogue.length, items: catalogue, boundary: BOUNDARY });
-  writeExclusive("flashcards.json", { schema: "ghc.family.four-tier-flashcards.v1", owner: OWNER, phase: PHASE, count: cards.length, cards, boundary: BOUNDARY });
-  writeExclusive("final.json", final);
+  writeCompactExclusive("method-flow.json", methodFlow);
+  writeCompactExclusive("retained-negative-register.json", { schema: "ghc.family.retained-negatives.v1", owner: OWNER, phase: PHASE, count: negatives.length, records: negatives, boundary: BOUNDARY });
+  writeCompactExclusive("open-gap-register.json", { schema: "ghc.family.open-gaps.v1", owner: OWNER, phase: PHASE, inherited_count: SOURCE_BASELINE.open_gaps, phase_local_count: gaps.length, effective_count: effective.open_gaps, records: gaps, boundary: BOUNDARY });
+  writeCompactExclusive("exact-gate-register.json", { schema: "ghc.family.exact-gates.v1", owner: OWNER, phase: PHASE, inherited_count: SOURCE_BASELINE.exact_gates, phase_local_count: gates.length, effective_count: effective.exact_gates, records: gates, boundary: BOUNDARY });
+  writeCompactExclusive("complete-incomplete-ledger.json", { schema: "ghc.family.complete-incomplete.v1", owner: OWNER, phase: PHASE, completed: plan.outcomes.completed, represented: plan.outcomes.represented, open_gap: plan.outcomes.open_gap, exact_gate: plan.outcomes.exact_gate, only_authorized_labels: true, terminal_verdict: "NOT_READY_FOR_STAGE_20", boundary: BOUNDARY });
+  writeCompactExclusive("catalogue.json", { schema: "ghc.family.meta-tool-catalogue.v1", owner: OWNER, phase: PHASE, count: catalogue.length, items: catalogue, boundary: BOUNDARY });
+  writeCompactExclusive("flashcards.json", { schema: "ghc.family.four-tier-flashcards.v1", owner: OWNER, phase: PHASE, count: cards.length, cards, boundary: BOUNDARY });
+  writeCompactExclusive("final.json", final);
   writeExclusive("reports/final-integrated-overview.md", buildFinalOverview(final));
   writeExclusive("handoff.md", buildHandoff(plan, final));
   writeExclusive("atlas.html", buildAtlas(plan));
@@ -1540,8 +1577,8 @@ function validateExact(ref) {
     add(`negative-retention:${record.contract_id}`, record.malformed_subject.result === "fail" && record.malformed_subject.original_success_credit === 0 && record.malformed_subject.retained && record.clean_fix_refine.original_failed_subject_retained, true, record.malformed_subject);
   }
   add("authorized-outcomes", same(plan.outcomes, { completed: 510, represented: 30, open_gap: 30, exact_gate: 30 }), { completed: 510, represented: 30, open_gap: 30, exact_gate: 30 }, plan.outcomes);
-  add("owner-method-flow", same(final.own, { methods: 50, witnesses: 3124, passing_witnesses: 2502, failed_witnesses: 622, negatives: 622, open_gaps: 30, exact_gates: 30, outcomes: plan.outcomes }), true, final.own);
-  add("effective-method-flow", same(final.effective, { methods: 4882, witnesses: 158682, passing_witnesses: 122971, failed_witnesses: 35711, negatives: 44545, open_gaps: 1567, exact_gates: 1670 }), true, final.effective);
+  add("owner-method-flow", same(final.own, { methods: 51, witnesses: 3126, passing_witnesses: 2503, failed_witnesses: 623, negatives: 623, open_gaps: 30, exact_gates: 30, outcomes: plan.outcomes }), true, final.own);
+  add("effective-method-flow", same(final.effective, { methods: 4883, witnesses: 158684, passing_witnesses: 122972, failed_witnesses: 35712, negatives: 44546, open_gaps: 1567, exact_gates: 1670 }), true, final.effective);
   add("tests-pass", x2.tests.length === 20 && x2.tests.every((test) => test.pass), "20/20", `${x2.tests.filter((test) => test.pass).length}/${x2.tests.length}`);
   add("models-bounded", x2.models.length === 5 && x2.models.every((model) => model.points === 30 && model.values.length === 30), "5 models x 30", x2.models.map((model) => model.values.length));
   add("flashcards", JSON.parse(blob(ref, `${BASE_REL}/flashcards.json`).toString("utf8")).count === 612, 612, JSON.parse(blob(ref, `${BASE_REL}/flashcards.json`).toString("utf8")).count);
@@ -1717,6 +1754,54 @@ function correctPlanningPrecommit() {
   return result;
 }
 
+function correctX1Precommit() {
+  const x1Path = path.join(BASE, "x1.json");
+  const manifestPath = path.join(BASE, "validation", "x1-manifest.json");
+  const initialBytes = fs.readFileSync(x1Path);
+  const initialManifestBytes = fs.readFileSync(manifestPath);
+  const initialWords = initialBytes.toString("utf8").trim().split(/\s+/).filter(Boolean).length;
+  assert(initialWords > 100000, "x1 correction requires retained word-cap failure");
+  const x1 = JSON.parse(initialBytes.toString("utf8"));
+  fs.writeFileSync(x1Path, `${JSON.stringify(x1)}\n`);
+  const correctedWords = fs.readFileSync(x1Path, "utf8").trim().split(/\s+/).filter(Boolean).length;
+  assert(correctedWords <= 100000, `corrected x1 word ceiling ${correctedWords}`);
+  fs.writeFileSync(path.join(BASE, "operational-failures.json"), `${JSON.stringify({ schema: "ghc.family.operational-failures.v1", owner: OWNER, phase: PHASE, records: [...PREFLIGHT_FAILURES, ...LIFECYCLE_FAILURES], boundary: BOUNDARY })}\n`);
+  writeCompactExclusive("validation/x1-correction-method-flow.json", lifecycleCorrectionMethodFlow());
+  writeExclusive("validation/x1-precommit-failure-receipt.json", {
+    schema: "ghc.family.precommit-failure-receipt.v1",
+    owner: OWNER,
+    phase: PHASE,
+    stage: "x1",
+    state: "VALID_DEPENDENCY_CORRECTED_X1_WITHOUT_EXECUTION_REPLAY",
+    failure: LIFECYCLE_FAILURES[0],
+    initial_x1_sha256: shaText(initialBytes),
+    initial_x1_words: initialWords,
+    corrected_x1_sha256: shaText(fs.readFileSync(x1Path)),
+    corrected_x1_words: correctedWords,
+    initial_manifest_sha256: shaText(initialManifestBytes),
+    x1_invocations: 1,
+    x1_successes: 1,
+    x1_replays: 0,
+    failure_erasure: false,
+    boundary: BOUNDARY,
+  });
+  const correctedManifest = manifest("validation/x1-manifest.json");
+  fs.writeFileSync(manifestPath, `${JSON.stringify(correctedManifest, null, 2)}\n`);
+  const result = {
+    state: "VALID_DEPENDENCY_CORRECTED_X1_WITHOUT_EXECUTION_REPLAY",
+    original_x1_words: initialWords,
+    corrected_x1_words: correctedWords,
+    method_flow: lifecycleCorrectionMethodFlow().counts,
+    manifest_entries: correctedManifest.entries.length,
+    x1_invocations: 1,
+    x1_successes: 1,
+    x1_replays: 0,
+    boundary: BOUNDARY,
+  };
+  writeExternal("x1/precommit-correction.json", result);
+  return result;
+}
+
 function main() {
   const mode = process.argv[2] || "selftest";
   let result;
@@ -1724,6 +1809,7 @@ function main() {
   else if (mode === "plan") result = runPlan();
   else if (mode === "plan-correct") result = correctPlanningPrecommit();
   else if (mode === "x1") result = executeStage("x1");
+  else if (mode === "x1-correct") result = correctX1Precommit();
   else if (mode === "x2") result = executeStage("x2");
   else if (mode === "final") {
     writeExternal("final/invocation.json", { owner: OWNER, phase: PHASE, state: "INVOKED", invocations: 1, replays: 0, head_before: git(["rev-parse", "HEAD"]), utc: new Date().toISOString() });
