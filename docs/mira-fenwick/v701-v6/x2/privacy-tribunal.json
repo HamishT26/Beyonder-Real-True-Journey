@@ -1,0 +1,650 @@
+{
+  "rows": [
+    {
+      "id": "MF7016-PRIV-N01",
+      "label": "unknown_field",
+      "request": {
+        "op": "bn_validate",
+        "input": {
+          "nodes": [
+            "a",
+            "b",
+            "c",
+            "d",
+            "e",
+            "f"
+          ],
+          "arcs": [
+            [
+              0,
+              1
+            ],
+            [
+              0,
+              2
+            ],
+            [
+              1,
+              2
+            ],
+            [
+              2,
+              3
+            ],
+            [
+              3,
+              4
+            ],
+            [
+              4,
+              5
+            ]
+          ],
+          "cpts": [
+            [
+              [
+                1,
+                5
+              ]
+            ],
+            [
+              [
+                3,
+                6
+              ],
+              [
+                4,
+                7
+              ]
+            ],
+            [
+              [
+                5,
+                7
+              ],
+              [
+                2,
+                5
+              ],
+              [
+                2,
+                6
+              ],
+              [
+                2,
+                7
+              ]
+            ],
+            [
+              [
+                3,
+                5
+              ],
+              [
+                3,
+                6
+              ]
+            ],
+            [
+              [
+                4,
+                6
+              ],
+              [
+                4,
+                7
+              ]
+            ],
+            [
+              [
+                5,
+                7
+              ],
+              [
+                4,
+                5
+              ]
+            ]
+          ],
+          "query": {
+            "source": 0,
+            "target": 5,
+            "conditioned": [
+              1
+            ]
+          },
+          "unexpected": true
+        }
+      },
+      "expected_error": "field_set",
+      "actual": {
+        "ok": false,
+        "error": "field_set",
+        "outcome": null,
+        "value": null,
+        "external_credit": false
+      },
+      "subject_result": "fail",
+      "refusal_result": "pass",
+      "pass": true,
+      "original_success_credit": 0
+    },
+    {
+      "id": "MF7016-PRIV-N02",
+      "label": "cycle",
+      "request": {
+        "op": "bn_validate",
+        "input": {
+          "nodes": [
+            "a",
+            "b",
+            "c",
+            "d",
+            "e",
+            "f"
+          ],
+          "arcs": [
+            [
+              0,
+              1
+            ],
+            [
+              0,
+              2
+            ],
+            [
+              1,
+              2
+            ],
+            [
+              2,
+              3
+            ],
+            [
+              3,
+              4
+            ],
+            [
+              4,
+              5
+            ],
+            [
+              5,
+              0
+            ]
+          ],
+          "cpts": [
+            [
+              [
+                1,
+                5
+              ]
+            ],
+            [
+              [
+                3,
+                6
+              ],
+              [
+                4,
+                7
+              ]
+            ],
+            [
+              [
+                5,
+                7
+              ],
+              [
+                2,
+                5
+              ],
+              [
+                2,
+                6
+              ],
+              [
+                2,
+                7
+              ]
+            ],
+            [
+              [
+                3,
+                5
+              ],
+              [
+                3,
+                6
+              ]
+            ],
+            [
+              [
+                4,
+                6
+              ],
+              [
+                4,
+                7
+              ]
+            ],
+            [
+              [
+                5,
+                7
+              ],
+              [
+                4,
+                5
+              ]
+            ]
+          ],
+          "query": {
+            "source": 0,
+            "target": 5,
+            "conditioned": [
+              1
+            ]
+          }
+        }
+      },
+      "expected_error": "cycle",
+      "actual": {
+        "ok": false,
+        "error": "cycle",
+        "outcome": null,
+        "value": null,
+        "external_credit": false
+      },
+      "subject_result": "fail",
+      "refusal_result": "pass",
+      "pass": true,
+      "original_success_credit": 0
+    },
+    {
+      "id": "MF7016-PRIV-N03",
+      "label": "invalid_cpt_arity",
+      "request": {
+        "op": "bn_validate",
+        "input": {
+          "nodes": [
+            "a",
+            "b",
+            "c",
+            "d",
+            "e",
+            "f"
+          ],
+          "arcs": [
+            [
+              0,
+              1
+            ],
+            [
+              0,
+              2
+            ],
+            [
+              1,
+              2
+            ],
+            [
+              2,
+              3
+            ],
+            [
+              3,
+              4
+            ],
+            [
+              4,
+              5
+            ]
+          ],
+          "cpts": [
+            [
+              [
+                1,
+                5
+              ]
+            ],
+            [
+              [
+                3,
+                6
+              ],
+              [
+                4,
+                7
+              ]
+            ],
+            [
+              [
+                5,
+                7
+              ],
+              [
+                2,
+                5
+              ],
+              [
+                2,
+                6
+              ],
+              [
+                2,
+                7
+              ]
+            ],
+            [
+              [
+                3,
+                5
+              ],
+              [
+                3,
+                6
+              ]
+            ],
+            [
+              [
+                4,
+                6
+              ],
+              [
+                4,
+                7
+              ]
+            ],
+            [
+              [
+                5,
+                7
+              ]
+            ]
+          ],
+          "query": {
+            "source": 0,
+            "target": 5,
+            "conditioned": [
+              1
+            ]
+          }
+        }
+      },
+      "expected_error": "cpt_arity",
+      "actual": {
+        "ok": false,
+        "error": "cpt_arity",
+        "outcome": null,
+        "value": null,
+        "external_credit": false
+      },
+      "subject_result": "fail",
+      "refusal_result": "pass",
+      "pass": true,
+      "original_success_credit": 0
+    },
+    {
+      "id": "MF7016-PRIV-N04",
+      "label": "non_interior_fraction",
+      "request": {
+        "op": "bn_validate",
+        "input": {
+          "nodes": [
+            "a",
+            "b",
+            "c",
+            "d",
+            "e",
+            "f"
+          ],
+          "arcs": [
+            [
+              0,
+              1
+            ],
+            [
+              0,
+              2
+            ],
+            [
+              1,
+              2
+            ],
+            [
+              2,
+              3
+            ],
+            [
+              3,
+              4
+            ],
+            [
+              4,
+              5
+            ]
+          ],
+          "cpts": [
+            [
+              [
+                0,
+                1
+              ]
+            ],
+            [
+              [
+                3,
+                6
+              ],
+              [
+                4,
+                7
+              ]
+            ],
+            [
+              [
+                5,
+                7
+              ],
+              [
+                2,
+                5
+              ],
+              [
+                2,
+                6
+              ],
+              [
+                2,
+                7
+              ]
+            ],
+            [
+              [
+                3,
+                5
+              ],
+              [
+                3,
+                6
+              ]
+            ],
+            [
+              [
+                4,
+                6
+              ],
+              [
+                4,
+                7
+              ]
+            ],
+            [
+              [
+                5,
+                7
+              ],
+              [
+                4,
+                5
+              ]
+            ]
+          ],
+          "query": {
+            "source": 0,
+            "target": 5,
+            "conditioned": [
+              1
+            ]
+          }
+        }
+      },
+      "expected_error": "fraction",
+      "actual": {
+        "ok": false,
+        "error": "fraction",
+        "outcome": null,
+        "value": null,
+        "external_credit": false
+      },
+      "subject_result": "fail",
+      "refusal_result": "pass",
+      "pass": true,
+      "original_success_credit": 0
+    },
+    {
+      "id": "MF7016-PRIV-N05",
+      "label": "unsorted_conditioning_set",
+      "request": {
+        "op": "bn_validate",
+        "input": {
+          "nodes": [
+            "a",
+            "b",
+            "c",
+            "d",
+            "e",
+            "f"
+          ],
+          "arcs": [
+            [
+              0,
+              1
+            ],
+            [
+              0,
+              2
+            ],
+            [
+              1,
+              2
+            ],
+            [
+              2,
+              3
+            ],
+            [
+              3,
+              4
+            ],
+            [
+              4,
+              5
+            ]
+          ],
+          "cpts": [
+            [
+              [
+                1,
+                5
+              ]
+            ],
+            [
+              [
+                3,
+                6
+              ],
+              [
+                4,
+                7
+              ]
+            ],
+            [
+              [
+                5,
+                7
+              ],
+              [
+                2,
+                5
+              ],
+              [
+                2,
+                6
+              ],
+              [
+                2,
+                7
+              ]
+            ],
+            [
+              [
+                3,
+                5
+              ],
+              [
+                3,
+                6
+              ]
+            ],
+            [
+              [
+                4,
+                6
+              ],
+              [
+                4,
+                7
+              ]
+            ],
+            [
+              [
+                5,
+                7
+              ],
+              [
+                4,
+                5
+              ]
+            ]
+          ],
+          "query": {
+            "source": 0,
+            "target": 5,
+            "conditioned": [
+              3,
+              1
+            ]
+          }
+        }
+      },
+      "expected_error": "conditioned",
+      "actual": {
+        "ok": false,
+        "error": "conditioned",
+        "outcome": null,
+        "value": null,
+        "external_credit": false
+      },
+      "subject_result": "fail",
+      "refusal_result": "pass",
+      "pass": true,
+      "original_success_credit": 0
+    }
+  ],
+  "count": 5,
+  "failed_subjects": 5,
+  "passing_refusals": 5,
+  "boundary": "Finite synthetic same-owner evidence only; no independent reproduction, external audit, production certification, complete privacy/accessibility, exhaustive security, authority, Theory-of-Everything proof, canon, or Stage 20 evidence."
+}

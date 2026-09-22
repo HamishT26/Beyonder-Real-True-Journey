@@ -1,0 +1,18 @@
+'use strict';
+const base=globalThis.base;if(!base)throw Error('base_required');
+const OPS=['bn_cpt_validation','bn_joint_distribution','bn_normalization','bn_marginal_query','bn_conditional_query','bn_relabel_covariance','bn_scene_coordinates','bn_accessible_explanation','bn_real_causal_gap','bn_authority_gate'];
+const OUTCOMES=Object.fromEntries(OPS.map(x=>[x,x==='bn_accessible_explanation'?'represented':x==='bn_real_causal_gap'?'open_gap':x==='bn_authority_gate'?'exact_gate':'completed']));
+function dispatch(req){try{if(!req||typeof req!=='object'||Array.isArray(req)||Object.keys(req).sort().join(',')!=='input,op')throw Error('request_field_set');if(!OPS.includes(req.op))throw Error('operation');base.validate(req.input);const inp=req.input,ps=base.parents(inp),cs=base.children(inp),q=inp.query,rows=base.joint(inp);let v;
+ if(req.op==='bn_cpt_validation')v=inp.nodes.map((_,i)=>({node:i,parents:ps[i],rows:inp.cpts[i].length,strict_interior:inp.cpts[i].every(x=>x[0]>0&&x[0]<x[1])}));
+ else if(req.op==='bn_joint_distribution')v=rows;
+ else if(req.op==='bn_normalization'){let total=[0n,1n];for(const x of rows)total=base.add(total,base.F(x.probability));v={sum:base.pair(total),normalized:total[0]===total[1]};}
+ else if(req.op==='bn_marginal_query'){let total=[0n,1n];for(const x of rows)if((x.mask>>q.target)&1)total=base.add(total,base.F(x.probability));v={target:q.target,value:1,probability:base.pair(total)};}
+ else if(req.op==='bn_conditional_query'){const evidence=m=>((m>>q.source)&1)===1&&q.conditioned.every(z=>((m>>z)&1)===0);let den=[0n,1n],num=[0n,1n];for(const x of rows)if(evidence(x.mask)){den=base.add(den,base.F(x.probability));if((x.mask>>q.target)&1)num=base.add(num,base.F(x.probability));}v={target:q.target,source_one:q.source,conditioned_zero:q.conditioned,probability:base.pair(base.div(num,den))};}
+ else if(req.op==='bn_relabel_covariance'){const n=inp.nodes.length,perm=Array.from({length:n},(_,i)=>n-1-i),mapped=rows.map(x=>{let m=0;for(let i=0;i<n;i++)m|=((x.mask>>i)&1)<<perm[i];return {mask:m,probability:x.probability};}).sort((a,b)=>a.mask-b.mask);let total=[0n,1n];for(const x of mapped)total=base.add(total,base.F(x.probability));v={permutation:perm,mapped_assignments:mapped.length,bijection:new Set(mapped.map(x=>x.mask)).size===(1<<n),total_mass:base.pair(total),preserved:total[0]===total[1]};}
+ else if(req.op==='bn_scene_coordinates'){const order=base.topo(inp),rank={};order.forEach((x,i)=>rank[x]=i);v={points:inp.nodes.map((node,i)=>({node,xyz:[rank[i],ps[i].length,base.closure(inp,i,false).length]})),axes:['topological rank','parent count','descendant count'],physical:false};}
+ else if(req.op==='bn_accessible_explanation')v={summary:String(inp.nodes.length)+' declared binary nodes, '+String(inp.arcs.length)+' declared arcs, and '+String(base.simplePaths(inp).length)+' undirected query paths.',facts:inp.nodes.map((node,i)=>'Node '+node+' has '+String(ps[i].length)+' parents and '+String(cs[i].length)+' children.'),causal_authority:false};
+ else if(req.op==='bn_real_causal_gap')v={missing:['intervention evidence','sampling design','latent-confounder assessment','affected-party review','independent reproduction'],finite_dag_is_real_causal_proof:false};
+ else v={closed:['medical','classification','allocation','legal','cultural','affected-party','Maori-authority'],release:false,finite_certificate_confers_authority:false};
+ return base.envelope(v,OUTCOMES[req.op]);
+ }catch(e){return base.rejected(e.message);}}
+module.exports={OPS,dispatch};
