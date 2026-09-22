@@ -1,0 +1,11 @@
+# Mira Fenwick v701-v6 final overview
+
+Mira's additive owner phase advances finite Bayesian-network structure, d-separation, exact rational inference, relabel covariance, accessible representation, and causal-evidence boundaries as a GMUT Mind formal-reasoning lens. It begins from Ilyra Fen v701-v5 exact final `0fdc6f83ff71d4c959f55cb406802cb06acd2894` and folds Ilyra's acknowledged delivery baseline exactly once. It never replays Ilyra's failed canonical or dependency-corrected composite or treats inherited evidence as Mira novelty.
+
+Three hundred inherited selections remain zero-credit context. Six hundred new contracts have outcomes exactly 510 completed, 30 represented, 30 open gaps, and 30 exact gates. Every malformed candidate remains a failure while its bounded refusal and cache check are separate passing witnesses. Both successful domain sessions ran once with zero replay.
+
+Twenty owner-local guides, ten owner-local paired runners, twenty additional tests, five malformed privacy/input fixtures, five nonphysical three-coordinate models, a 612-card deck, a 40-card capability catalogue, eight static HTML checks, and one ten-check Node DOM-state simulation are same-owner evidence only; the browser policy rejection has zero browser credit. Five curated candidate pairs remain uninstalled and exact-gated.
+
+Mira adds 623 retained negatives, 40 methods, 623 failed witnesses, 1862 bounded passing witnesses, 2485 witnesses, 32 open gaps, and 35 exact gates. The once-folded effective baseline is 41441 negatives, 4633 methods, 32607 failed witnesses, 110455 passing witnesses, 143062 witnesses, 1417 open gaps, and 1520 exact gates.
+
+Finite synthetic same-owner Bayesian-network mathematics, software, and documentation evidence only. No real causal inference, diagnosis, treatment, classification, allocation, person, participant, institution, identity, credential, measurement, deployment, professional judgment, legal or cultural conclusion, affected-party or Maori authority, empirical GMUT confirmation, production THOS or Freed ID, complete privacy or accessibility assurance, exhaustive security, independent reproduction, consciousness, personhood, Theory-of-Everything proof, canon, or Stage 20 readiness. NOT_READY_FOR_STAGE_20.
