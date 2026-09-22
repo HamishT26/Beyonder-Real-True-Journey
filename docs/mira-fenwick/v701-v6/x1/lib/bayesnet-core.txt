@@ -1,0 +1,39 @@
+'use strict';
+const OPS=['bn_validate','bn_topological_order','bn_parents','bn_children','bn_ancestors','bn_descendants','bn_markov_blanket','bn_path_inventory','bn_d_separation','bn_moral_ancestral_graph'];
+const OUTCOMES=Object.fromEntries(OPS.map(x=>[x,'completed']));
+const isInt=x=>Number.isSafeInteger(x);
+function gcd(a,b){a=a<0n?-a:a;b=b<0n?-b:b;while(b){const t=a%b;a=b;b=t;}return a;}
+function norm(n,d){n=BigInt(n);d=BigInt(d);if(d===0n)throw Error('zero_denominator');if(d<0n){n=-n;d=-d;}const g=gcd(n,d);return [n/g,d/g];}
+const F=x=>norm(x[0],x[1]),add=(a,b)=>norm(a[0]*b[1]+b[0]*a[1],a[1]*b[1]),sub=(a,b)=>norm(a[0]*b[1]-b[0]*a[1],a[1]*b[1]),mul=(a,b)=>norm(a[0]*b[0],a[1]*b[1]),div=(a,b)=>norm(a[0]*b[1],a[1]*b[0]),pair=x=>[Number(x[0]),Number(x[1])];
+function parents(inp){const out=Array.from({length:inp.nodes.length},()=>[]);for(const [p,c] of inp.arcs)out[c].push(p);return out;}
+function children(inp){const out=Array.from({length:inp.nodes.length},()=>[]);for(const [p,c] of inp.arcs)out[p].push(c);return out;}
+function topo(inp){const ps=parents(inp),cs=children(inp),ind=ps.map(x=>x.length),ready=[];for(let i=0;i<ind.length;i++)if(ind[i]===0)ready.push(i);const out=[];while(ready.length){const v=ready.shift();out.push(v);for(const c of cs[v]){ind[c]--;if(ind[c]===0){ready.push(c);ready.sort((a,b)=>a-b);}}}if(out.length!==inp.nodes.length)throw Error('cycle');return out;}
+function closure(inp,start,reverse=false){const g=reverse?parents(inp):children(inp),seen=new Set(),stack=[...g[start]];while(stack.length){const v=stack.pop();if(seen.has(v))continue;seen.add(v);stack.push(...g[v]);}return [...seen].sort((a,b)=>a-b);}
+function skeleton(inp){const s=new Set(inp.arcs.map(([a,b])=>String(Math.min(a,b))+','+String(Math.max(a,b))));return [...s].map(x=>x.split(',').map(Number)).sort((a,b)=>a[0]-b[0]||a[1]-b[1]);}
+function simplePaths(inp){const s=inp.query.source,t=inp.query.target,adj=Object.fromEntries(inp.nodes.map((_,i)=>[i,new Set()]));for(const [a,b] of skeleton(inp)){adj[a].add(b);adj[b].add(a);}const out=[];function walk(v,path){if(v===t){out.push([...path]);return;}for(const u of [...adj[v]].sort((a,b)=>a-b))if(!path.includes(u))walk(u,[...path,u]);}walk(s,[s]);return out.sort((a,b)=>{for(let i=0;i<Math.min(a.length,b.length);i++)if(a[i]!==b[i])return a[i]-b[i];return a.length-b.length;});}
+function ancestralMoral(inp){const ps=parents(inp),seeds=[inp.query.source,inp.query.target,...inp.query.conditioned],anc=new Set(seeds),stack=[...seeds];while(stack.length){const v=stack.pop();for(const p of ps[v])if(!anc.has(p)){anc.add(p);stack.push(p);}}const es=new Set();for(const [p,c] of inp.arcs)if(anc.has(p)&&anc.has(c))es.add(String(Math.min(p,c))+','+String(Math.max(p,c)));for(const c of [...anc].sort((a,b)=>a-b)){const q=ps[c].filter(p=>anc.has(p));for(let i=0;i<q.length;i++)for(let j=i+1;j<q.length;j++)es.add(String(Math.min(q[i],q[j]))+','+String(Math.max(q[i],q[j])));}return {nodes:[...anc].sort((a,b)=>a-b),edges:[...es].map(x=>x.split(',').map(Number)).sort((a,b)=>a[0]-b[0]||a[1]-b[1])};}
+function dsep(inp){const m=ancestralMoral(inp),blocked=new Set(inp.query.conditioned),adj={};for(const i of m.nodes)if(!blocked.has(i))adj[i]=new Set();for(const [a,b] of m.edges)if(adj[a]&&adj[b]){adj[a].add(b);adj[b].add(a);}const seen=new Set(),stack=adj[inp.query.source]?[inp.query.source]:[];while(stack.length){const v=stack.pop();if(seen.has(v))continue;seen.add(v);for(const u of [...adj[v]].sort((a,b)=>b-a))if(!seen.has(u))stack.push(u);}const active=seen.has(inp.query.target);return {ancestral_nodes:m.nodes,moral_edges:m.edges,conditioned:inp.query.conditioned,active_after_removal:active,d_separated:!active};}
+function joint(inp){const n=inp.nodes.length,ps=parents(inp),out=[];for(let mask=0;mask<(1<<n);mask++){let pr=[1n,1n];for(let i=0;i<n;i++){let idx=0;for(let j=0;j<ps[i].length;j++)idx|=((mask>>ps[i][j])&1)<<j;const p1=F(inp.cpts[i][idx]);pr=mul(pr,((mask>>i)&1)?p1:sub([1n,1n],p1));}out.push({mask,probability:pair(pr)});}return out;}
+function validate(inp){
+ if(!inp||typeof inp!=='object'||Array.isArray(inp)||Object.keys(inp).sort().join(',')!=='arcs,cpts,nodes,query')throw Error('field_set');
+ const nodes=inp.nodes,arcs=inp.arcs,cpts=inp.cpts,q=inp.query;if(!Array.isArray(nodes)||nodes.length!==6||new Set(nodes).size!==6||nodes.some(x=>typeof x!=='string'||x.length!==1||!/^[a-z]$/.test(x)))throw Error('nodes');
+ if(!Array.isArray(arcs)||arcs.length<5||arcs.length>15||arcs.some(e=>!Array.isArray(e)||e.length!==2||e.some(v=>!isInt(v)||v<0||v>=6)||e[0]===e[1]))throw Error('arcs');
+ const sorted=[...arcs].sort((a,b)=>a[0]-b[0]||a[1]-b[1]);if(JSON.stringify(arcs)!==JSON.stringify(sorted)||new Set(arcs.map(JSON.stringify)).size!==arcs.length)throw Error('arc_order');topo(inp);
+ const ps=parents(inp);if(!Array.isArray(cpts)||cpts.length!==6)throw Error('cpts');for(let i=0;i<6;i++){const t=cpts[i];if(!Array.isArray(t)||t.length!==(1<<ps[i].length))throw Error('cpt_arity');for(const f of t)if(!Array.isArray(f)||f.length!==2||f.some(x=>!isInt(x))||f[1]<=0||!(f[0]>0&&f[0]<f[1]))throw Error('fraction');}
+ if(!q||typeof q!=='object'||Array.isArray(q)||Object.keys(q).sort().join(',')!=='conditioned,source,target')throw Error('query');if(!isInt(q.source)||!isInt(q.target)||q.source<0||q.source>=6||q.target<0||q.target>=6||q.source===q.target)throw Error('query_nodes');if(!Array.isArray(q.conditioned)||JSON.stringify(q.conditioned)!==JSON.stringify([...new Set(q.conditioned)].sort((a,b)=>a-b))||q.conditioned.some(v=>!isInt(v)||v<0||v>=6||v===q.source||v===q.target))throw Error('conditioned');return true;
+}
+const envelope=(value,outcome='completed')=>({ok:true,error:null,outcome,value,external_credit:false}),rejected=error=>({ok:false,error:String(error),outcome:null,value:null,external_credit:false});
+function dispatch(req){try{if(!req||typeof req!=='object'||Array.isArray(req)||Object.keys(req).sort().join(',')!=='input,op')throw Error('request_field_set');if(!OPS.includes(req.op))throw Error('operation');validate(req.input);const inp=req.input,ps=parents(inp),cs=children(inp),q=inp.query;let v;
+ if(req.op==='bn_validate')v={node_count:6,arc_count:inp.arcs.length,query_valid:true,acyclic:true};
+ else if(req.op==='bn_topological_order')v=topo(inp);
+ else if(req.op==='bn_parents')v=ps.map((x,i)=>({node:i,parents:x}));
+ else if(req.op==='bn_children')v=cs.map((x,i)=>({node:i,children:x}));
+ else if(req.op==='bn_ancestors')v=inp.nodes.map((_,i)=>({node:i,ancestors:closure(inp,i,true)}));
+ else if(req.op==='bn_descendants')v=inp.nodes.map((_,i)=>({node:i,descendants:closure(inp,i,false)}));
+ else if(req.op==='bn_markov_blanket')v=inp.nodes.map((_,i)=>{const cp=new Set();for(const c of cs[i])for(const p of ps[c])if(p!==i)cp.add(p);return {node:i,blanket:[...new Set([...ps[i],...cs[i],...cp])].sort((a,b)=>a-b)};});
+ else if(req.op==='bn_path_inventory')v={source:q.source,target:q.target,paths:simplePaths(inp)};
+ else if(req.op==='bn_d_separation')v=dsep(inp);
+ else {const m=ancestralMoral(inp);v={nodes:m.nodes,edges:m.edges,conditioned:q.conditioned};}
+ return envelope(v,OUTCOMES[req.op]);
+ }catch(e){return rejected(e.message);}}
+module.exports={OPS,dispatch,rejected,validate,parents,children,topo,closure,simplePaths,ancestralMoral,dsep,joint,F,add,sub,mul,div,pair,envelope};
