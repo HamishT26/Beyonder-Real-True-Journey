@@ -1,0 +1,8 @@
+#!/usr/bin/env python3
+"""Owner-local x2 pair runner for pn_conflict_pairs, pn_state_projection."""
+import json, runpy
+from pathlib import Path
+builder = Path(__file__).resolve().parents[2] / "tools" / "ghc_family_petri_phase_builder.txt"
+api = runpy.run_path(str(builder))
+profile = api["profile_row"](0)
+print(json.dumps([api["run_operation"](name, profile) for name in ['pn_conflict_pairs', 'pn_state_projection']], indent=2, sort_keys=True))
