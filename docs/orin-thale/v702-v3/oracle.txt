@@ -1,0 +1,296 @@
+"use strict";
+
+// Independent, finite, exact-rational oracle for Orin Thale v702-v3.
+// This is a bounded software witness only. It is not empirical, professional,
+// production, legal, cultural, Maori-authority, or Stage 20 evidence.
+
+function gcd(a, b) {
+  a = Math.abs(a);
+  b = Math.abs(b);
+  while (b !== 0) {
+    const r = a % b;
+    a = b;
+    b = r;
+  }
+  return a;
+}
+
+function reducedPair(n, d) {
+  if (!Number.isSafeInteger(n) || !Number.isSafeInteger(d) || n <= 0 || d <= 0) {
+    throw new Error("INVALID_POSITIVE_REDUCED_RATIONAL");
+  }
+  const g = gcd(n, d);
+  return [n / g, d / g];
+}
+
+function continuedFraction(n, d) {
+  [n, d] = reducedPair(n, d);
+  const coefficients = [];
+  while (d !== 0) {
+    const quotient = Math.floor(n / d);
+    coefficients.push(quotient);
+    const remainder = n - quotient * d;
+    n = d;
+    d = remainder;
+  }
+  if (coefficients.length > 1 && coefficients.at(-1) === 1) {
+    coefficients[coefficients.length - 2] += 1;
+    coefficients.pop();
+  }
+  return coefficients;
+}
+
+function convergents(coefficients) {
+  let p2 = 0;
+  let p1 = 1;
+  let q2 = 1;
+  let q1 = 0;
+  const rows = [];
+  coefficients.forEach((a, index) => {
+    const p = a * p1 + p2;
+    const q = a * q1 + q2;
+    rows.push({ index, coefficient: a, numerator: p, denominator: q });
+    p2 = p1;
+    p1 = p;
+    q2 = q1;
+    q1 = q;
+  });
+  return rows;
+}
+
+function extendedGcd(a, b) {
+  let oldR = a;
+  let r = b;
+  let oldS = 1;
+  let s = 0;
+  let oldT = 0;
+  let t = 1;
+  while (r !== 0) {
+    const q = Math.floor(oldR / r);
+    [oldR, r] = [r, oldR - q * r];
+    [oldS, s] = [s, oldS - q * s];
+    [oldT, t] = [t, oldT - q * t];
+  }
+  return { gcd: oldR, s: oldS, t: oldT };
+}
+
+function euclideanTrace(n, d) {
+  const trace = [];
+  let dividend = n;
+  let divisor = d;
+  let step = 0;
+  while (divisor !== 0) {
+    const quotient = Math.floor(dividend / divisor);
+    const remainder = dividend - quotient * divisor;
+    trace.push({ step, dividend, divisor, quotient, remainder });
+    dividend = divisor;
+    divisor = remainder;
+    step += 1;
+  }
+  return trace;
+}
+
+function multiply2x2(a, b) {
+  return [
+    [a[0][0] * b[0][0] + a[0][1] * b[1][0], a[0][0] * b[0][1] + a[0][1] * b[1][1]],
+    [a[1][0] * b[0][0] + a[1][1] * b[1][0], a[1][0] * b[0][1] + a[1][1] * b[1][1]],
+  ];
+}
+
+function continuantMatrix(coefficients) {
+  let matrix = [[1, 0], [0, 1]];
+  for (const coefficient of coefficients) {
+    matrix = multiply2x2(matrix, [[coefficient, 1], [1, 0]]);
+  }
+  return matrix;
+}
+
+function sternBrocotPath(n, d) {
+  [n, d] = reducedPair(n, d);
+  let a = n;
+  let b = d;
+  let path = "";
+  const runs = [];
+  while (a !== b) {
+    if (a > b) {
+      const count = Math.floor((a - 1) / b);
+      path += "R".repeat(count);
+      runs.push({ direction: "R", count });
+      a -= count * b;
+    } else {
+      const count = Math.floor((b - 1) / a);
+      path += "L".repeat(count);
+      runs.push({ direction: "L", count });
+      b -= count * a;
+    }
+  }
+  return { path, runs };
+}
+
+function sternBrocotBounds(path) {
+  let left = [0, 1];
+  let right = [1, 0];
+  for (const direction of path) {
+    const mediant = [left[0] + right[0], left[1] + right[1]];
+    if (direction === "L") {
+      right = mediant;
+    } else if (direction === "R") {
+      left = mediant;
+    } else {
+      throw new Error("INVALID_STERN_BROCOT_DIRECTION");
+    }
+  }
+  const target = [left[0] + right[0], left[1] + right[1]];
+  return { left, right, target };
+}
+
+function compareFractions(a, b) {
+  return Math.sign(a[0] * b[1] - b[0] * a[1]);
+}
+
+function reduceError(numerator, denominator) {
+  if (numerator === 0) return { numerator: 0, denominator: 1 };
+  const g = gcd(numerator, denominator);
+  return { numerator: numerator / g, denominator: denominator / g };
+}
+
+function boundedBestApproximation(n, d, bound) {
+  let best = null;
+  for (let q = 1; q <= bound; q += 1) {
+    for (let p = 0; p <= Math.ceil((n * q) / d) + 1; p += 1) {
+      if (gcd(p, q) !== 1) continue;
+      const errorNumerator = Math.abs(n * q - p * d);
+      const errorDenominator = d * q;
+      const candidate = { p, q, errorNumerator, errorDenominator };
+      if (!best) {
+        best = candidate;
+        continue;
+      }
+      const comparison = errorNumerator * best.errorDenominator - best.errorNumerator * errorDenominator;
+      if (comparison < 0 || (comparison === 0 && (q < best.q || (q === best.q && p < best.p)))) {
+        best = candidate;
+      }
+    }
+  }
+  return {
+    numerator: best.p,
+    denominator: best.q,
+    error: reduceError(best.errorNumerator, best.errorDenominator),
+    maximum_denominator: bound,
+  };
+}
+
+function semiconvergents(coefficients) {
+  let p2 = 0;
+  let p1 = 1;
+  let q2 = 1;
+  let q1 = 0;
+  const rows = [];
+  coefficients.forEach((a, index) => {
+    for (let t = 1; t < a; t += 1) {
+      rows.push({
+        coefficient_index: index,
+        multiplier: t,
+        numerator: t * p1 + p2,
+        denominator: t * q1 + q2,
+      });
+    }
+    const p = a * p1 + p2;
+    const q = a * q1 + q2;
+    p2 = p1;
+    p1 = p;
+    q2 = q1;
+    q1 = q;
+  });
+  return rows;
+}
+
+function operationValue(operation, n, d) {
+  const pair = reducedPair(n, d);
+  n = pair[0];
+  d = pair[1];
+  const coefficients = continuedFraction(n, d);
+  const rows = convergents(coefficients);
+  const matrix = continuantMatrix(coefficients);
+  const pathData = sternBrocotPath(n, d);
+  const bounds = sternBrocotBounds(pathData.path);
+  const bezout = extendedGcd(n, d);
+
+  switch (operation) {
+    case "cf_normalize":
+      return { numerator: n, denominator: d, gcd: 1, sign: "positive" };
+    case "cf_euclidean_trace":
+      return { trace: euclideanTrace(n, d), terminal_gcd: 1 };
+    case "cf_simple_expansion":
+      return { coefficients, canonical_terminal: coefficients.length === 1 || coefficients.at(-1) > 1 };
+    case "cf_convergents":
+      return { convergents: rows, reconstructs_target: rows.at(-1).numerator === n && rows.at(-1).denominator === d };
+    case "cf_continuant_matrix":
+      return { matrix, numerator: matrix[0][0], denominator: matrix[1][0], determinant: matrix[0][0] * matrix[1][1] - matrix[0][1] * matrix[1][0] };
+    case "cf_bezout_certificate":
+      return { s: bezout.s, t: bezout.t, gcd: bezout.gcd, identity_value: bezout.s * n + bezout.t * d };
+    case "cf_adjacent_determinants":
+      return {
+        determinants: rows.slice(1).map((row, index) => row.numerator * rows[index].denominator - rows[index].numerator * row.denominator),
+        absolute_unit: rows.slice(1).every((row, index) => Math.abs(row.numerator * rows[index].denominator - rows[index].numerator * row.denominator) === 1),
+      };
+    case "cf_stern_brocot_path":
+      return { path: pathData.path, runs: pathData.runs, length: pathData.path.length };
+    case "cf_stern_brocot_bounds":
+      return { ...bounds, reconstructs_target: bounds.target[0] === n && bounds.target[1] === d };
+    case "cf_farey_parents":
+      return { left: bounds.left, right: bounds.right, determinant: bounds.right[0] * bounds.left[1] - bounds.left[0] * bounds.right[1] };
+    case "cf_mediant_certificate":
+      return { parents: [bounds.left, bounds.right], mediant: bounds.target, target: [n, d], matches: bounds.target[0] === n && bounds.target[1] === d };
+    case "cf_best_bounded_approximation": {
+      const bound = Math.max(2, Math.min(40, Math.floor(d / 2)));
+      return boundedBestApproximation(n, d, bound);
+    }
+    case "cf_semiconvergents":
+      return { semiconvergents: semiconvergents(coefficients), count: semiconvergents(coefficients).length };
+    case "cf_modular_inverse": {
+      const inverse = ((bezout.s % d) + d) % d;
+      return { modulus: d, residue: n % d, inverse, product_modulus: (n * inverse) % d };
+    }
+    case "cf_continuant_reversal": {
+      const reversed = continuantMatrix([...coefficients].reverse());
+      return { coefficients, reversed_coefficients: [...coefficients].reverse(), forward_numerator: matrix[0][0], reversed_numerator: reversed[0][0], invariant: matrix[0][0] === reversed[0][0] };
+    }
+    case "cf_reciprocal_duality": {
+      const reciprocal = continuedFraction(d, n);
+      return { coefficients, reciprocal_coefficients: reciprocal, original: [n, d], reciprocal: [d, n], exact_product_numerator: n * d, exact_product_denominator: d * n };
+    }
+    case "cf_convergent_interval": {
+      const previous = rows.length > 1 ? [rows.at(-2).numerator, rows.at(-2).denominator] : [Math.max(0, n - 1), d];
+      const target = [n, d];
+      const lower = compareFractions(previous, target) <= 0 ? previous : target;
+      const upper = compareFractions(previous, target) <= 0 ? target : previous;
+      return { lower, upper, target, contains_target: compareFractions(lower, target) <= 0 && compareFractions(target, upper) <= 0 };
+    }
+    case "cf_accessible_explanation":
+      return { disposition: "represented", certificate_kind: "finite exact rational", human_review: false, assistive_technology_review: false, authority_credit: 0 };
+    case "cf_observation_gap":
+      return { disposition: "open_gap", real_observations: 0, real_participants: 0, empirical_credit: 0, gap_open: true };
+    case "cf_authority_gate":
+      return { disposition: "exact_gate", held: true, authorized_actions: 0, professional_credit: 0, legal_credit: 0, cultural_credit: 0, maori_authority_credit: 0 };
+    default:
+      throw new Error("UNKNOWN_OPERATION");
+  }
+}
+
+function evaluate(request) {
+  if (!request || typeof request !== "object") throw new Error("INVALID_REQUEST");
+  const value = operationValue(request.operation, request.numerator, request.denominator);
+  return {
+    operation: request.operation,
+    fixture_id: request.fixture_id,
+    value,
+    evidence_scope: "finite exact synthetic software witness",
+    broader_authority_credit: 0,
+  };
+}
+
+module.exports = {
+  schema: "ghc.family.orin.v702.v3.oracle.v1",
+  evaluate,
+};
