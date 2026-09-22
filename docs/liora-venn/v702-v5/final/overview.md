@@ -1,0 +1,33 @@
+# Liora Venn v702-v5 — exact dyadic-sampling certificates
+
+This phase completed a bounded exact-arithmetic laboratory for length-eight rational sequences, dyadic polyphase extraction, alias folds, cyclic convolution, boxcar averaging and first differences. Six hundred frozen contracts use twenty mechanism families and thirty explicit fixtures. Outcomes are exactly 510 `completed`, 30 `represented`, 30 `open_gap`, and 30 `exact_gate`. These are finite software and mathematical results, not observations of an apparatus, validation of a physical theory, production identity evidence, professional advice, or authority. The terminal verdict remains **NOT_READY_FOR_STAGE_20**.
+
+## Exact results
+
+Even and odd polyphase extraction preserve complementary coordinate sets. Interleaving both components reconstructs the original length-eight vector exactly. Keeping only the even component and inserting zeroes does not reconstruct a vector with nonzero odd coordinates; that failed claim remains a retained counterexample. The sum-fold sends coordinates separated by four into one coordinate. Consequently the two distinct basis vectors at positions zero and four have the same folded image. This is an exact non-identifiability witness for the declared finite map, not evidence about a measured sampling system.
+
+Circular convolution uses indices modulo eight. Two impulses at coordinate seven convolve to an impulse at coordinate six, showing the wrap that distinguishes this operation from ordinary unbounded linear convolution. A two-tap cyclic boxcar preserves constant sequences and produces exact half values on the declared impulse fixture. The cyclic first-difference annihilates constants and its eight entries sum to zero. All arithmetic uses reduced rational strings; no floating-point tolerance decides an accepted result.
+
+## Lifecycle and retained failures
+
+Planning, X1, X2, and final are separate lifecycle commits. Planning froze all definitions before production execution. X1 and X2 each ran one 300-contract tranche and neither successful tranche was replayed. Every contract retains a malformed denominator-zero subject at zero credit and a separate passing refusal guard. Ten paired runners also retain an out-of-scope subject and refusal. Thirty targeted tests passed; eight explicit false or malformed subjects remain failed.
+
+Twenty-three owner-operational failures are retained across startup, guide-read ordering, asset construction, context projection, shell quoting, privacy review, and sanitation accounting. Each recovery is narrower than the failed operation. The X1 guide-order failure was corrected by complete EOF reads without domain or caller replay. X2 paused before caller smoke so all ten guides were read first. A failed asset wrapper persisted its test and model dependencies; later continuations did not rerun those persisted components. Raw local stack paths discovered in four derived smoke files were sanitized in the current tree while the immutable X1 commit remains historical evidence of the failure.
+
+## Tools, models, and interface
+
+Twenty owner-local skills passed the installed Skill Creator validator and were read completely. Ten paired TXT callers passed accepting and rejecting smokes. Five curated groups and five copied compatibility guides form a forty-card catalogue. A 612-card context deck contains one owner anchor, three pillar cards, eight practice cards and six hundred contract cards. The current four-tier interface accepted a structural projection containing only `id`, `parent`, and `tier`; its earlier refusal of rich records remains retained.
+
+Five exact-coordinate model tables contain six hundred points total. Their axes are fixture index, coordinate index and exact rational value. The HTML atlas embeds all data locally, supplies semantic selectors and an exact table, and makes no network request. Eleven static interface checks passed. There was no native browser session, screenshot, image, participant evaluation, assistive-technology review, responsive-layout study, or complete accessibility claim.
+
+## Source and evidence boundary
+
+Ceryn Alder v702-v4 at `a073741b08d9042cafe793a7c0af77414ab230f5` is immutable source. Its 600 contract definitions remain six source-faithful shards with zero Liora novelty, execution, completion, or authority credit. Its exact-final canonical was not replayed. The activation baseline folds Ceryn's external terminal read overlay exactly once. Liora's repository accounting adds 34 methods, 3,810 witnesses, 3,169 bounded passes, 641 retained failures and 641 negatives, producing effective totals of 4950 methods, 166235 witnesses, 129258 bounded passes, 36977 failures, 45811 negatives, 1627 open gaps and 1730 exact gates.
+
+GMUT remains a typed scalar-tensor and effective-field-theory research-model family. Nothing here supplies a physical datum, apparatus, sample clock, likelihood, posterior, parameter constraint, detected force, empirical confirmation, quantum completion, ultraviolet completion or Theory of Everything. THOS remains proxy software without governed real participants or operators, preregistered matched comparisons, safety monitoring, appropriate statistics and independent review. Freed ID remains synthetic and nonproduction without real standards-conformant keys and proofs, live issuance, resolution, status, revocation, interoperability, privacy and independent security review, recovery evidence, trust governance and affected-party oversight. CBR, professional decisions, consent, remedy, legal or cultural interpretation, affected-party legitimacy, Maori wording, Maori data governance and Maori authority remain exact-gated to competent and affected people, tangata whenua, iwi, hapu and Maori authorities.
+
+## Closeout state
+
+The full repository suite was not run. Same-owner checks are not independent reproduction. The repository route remains **PREPARED_NOT_SENT**. After the exact final is committed, pushed, clean and fresh-four-way equal, one metadata-only canonical may bind it. Only a successful non-replayed receipt permits fresh exact-title successor discovery. Tamar Vey v702-v6 remains prospective until that gate; preparation, canonical success, delivery acknowledgement and recipient completion are separate states.
+
+Same-owner finite synthetic software only. GMUT remains a research-model family; THOS remains proxy-only; Freed ID remains nonproduction. No physical confirmation, identity, professional, public, legal, cultural, affected-party or Maori authority, independent reproduction, AGI/ASI, consciousness, personhood or Stage 20 credit. NOT_READY_FOR_STAGE_20.
