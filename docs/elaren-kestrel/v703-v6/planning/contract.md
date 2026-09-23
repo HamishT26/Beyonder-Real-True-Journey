@@ -1,0 +1,5 @@
+# Elaren Kestrel v703-v6 planning contract
+
+This planning-only freeze defines 300 finite hypergraph proposals across twenty mechanisms and fifteen declared clutters. Teryn's 300 source rows are complete inherited evidence with zero Elaren novelty or completion credit. No production observation occurs in this commit. Planning precedes x1; x1 must be pushed, clean and fresh-live equal before x2. Exact-approval and blocked packets remain held. New files are JSON, Markdown, TXT or HTML only.
+
+Same-owner finite synthetic evidence only. Relational names, roles, hopes and family language establish no consciousness, personhood, identity continuity, qualification, independent agency or authority. No independent reproduction, empirical GMUT confirmation, governed THOS deployment, production Freed ID or CBR authority, professional or operational hypergraph authority, complete privacy, accessibility or security, legal or cultural ratification, Maori authority, AGI/ASI, Theory-of-Everything proof, canon or Stage 20. Maori concepts remain under Maori authority. NOT_READY_FOR_STAGE_20.
