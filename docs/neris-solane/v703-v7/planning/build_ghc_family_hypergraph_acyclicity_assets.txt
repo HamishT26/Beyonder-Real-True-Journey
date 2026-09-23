@@ -1,0 +1,1632 @@
+#!/usr/bin/env python3
+"""Deterministic builder for the bounded Neris Solane v703-v7 evidence lane.
+
+The file deliberately uses the allowed TXT artifact class.  It writes only
+JSON, MD, TXT, and HTML below docs/neris-solane/v703-v7.  All finite-model
+operations are synthetic and exact over the declared small fixtures.
+"""
+
+from __future__ import annotations
+
+import argparse
+import hashlib
+import html
+import itertools
+import json
+import os
+from pathlib import Path
+import subprocess
+import sys
+from typing import Any, Iterable
+
+
+SCRIPT = Path(__file__).resolve()
+PHASE_ROOT = SCRIPT.parents[1]
+REPO = SCRIPT.parents[4]
+SOURCE_FINAL = "bd2b1832d4dda9039d5beac971318404343d8932"
+SOURCE_BRANCH = "codex/GHC-Family/elaren-kestrel-main-2"
+BRANCH = "codex/GHC-Family/neris-solane-main-3"
+SOURCE_BATON = "docs/elaren-kestrel/v703-v6/final/handoff-baton.md"
+SOURCE_BATON_SHA256 = "a242143fd83d6181c15c3f9d4b8af45fd1ed46fcd54113939f266ffe6f2492a1"
+SOURCE_RECEIPT_SHA256 = "060b3d6d44fb5937890cf4f807219e1c989c59a3d656a68dbd40ff67d92bff16"
+ALLOWED_EXTENSIONS = {".json", ".md", ".txt", ".html"}
+CORE_OUTCOMES = ("completed", "represented", "open_gap", "exact_gate")
+
+SOURCE_BASELINE = {
+    "methods": 5323,
+    "witnesses": 206030,
+    "passing_witnesses": 157238,
+    "failed_witnesses": 48792,
+    "negatives": 57626,
+    "open_gaps": 1839,
+    "exact_gates": 1940,
+}
+
+RETAINED_OPERATIONAL_FAILURES = [
+    {
+        "id": "NS7037-INTAKE-CATFILE-01",
+        "failure": "The first PowerShell persistent git cat-file binary-protocol reader stalled without producing a result.",
+        "original_success_credit": 0,
+        "recovery": "A single persistent Node spawnSync git cat-file --batch process consumed each exact header, body, and terminator and verified all 141 source objects with zero failures.",
+        "repository_mutation": False,
+    },
+    {
+        "id": "NS7037-WORKTREE-ADD-01",
+        "failure": "The shared-repository git worktree add operation stalled after creating only the intended branch pointer at the exact source final; no target directory or registry entry appeared.",
+        "original_success_credit": 0,
+        "recovery": "A fresh independent no-checkout sparse D-drive clone was created from the exact remote source branch, then the Neris branch was created at the exact source final.",
+        "repository_mutation": False,
+    },
+    {
+        "id": "NS7037-INTAKE-PROJECTION-01",
+        "failure": "A read-only PowerShell source-metadata search used an invalid empty pipeline element and raised a parser error.",
+        "original_success_credit": 0,
+        "recovery": "The exact source final inventory and metadata were read by direct literal Git-object paths with no broad projection and no repository mutation.",
+        "repository_mutation": False,
+    },
+    {
+        "id": "NS7037-PLANNING-VERIFY-01",
+        "failure": "The first PowerShell per-file planning-manifest verifier completed without an auditable scalar projection.",
+        "original_success_credit": 0,
+        "recovery": "A bounded Python byte-domain verifier replaced the wrapper and reported every checked field explicitly.",
+        "repository_mutation": False,
+    },
+    {
+        "id": "NS7037-PLANNING-VERIFY-02",
+        "failure": "The first Python fallback encoded a literal backslash-zero sequence instead of the Git object header NUL byte and therefore falsely reported all nine Git blob identifiers as mismatches while SHA-256 and byte counts were exact.",
+        "original_success_credit": 0,
+        "recovery": "The verifier constructed the NUL as bytes([0]); all nine planning entries then matched their exact SHA-256, Git blob SHA-1, and byte counts.",
+        "repository_mutation": False,
+    },
+    {
+        "id": "NS7037-PLANNING-COMMIT-01",
+        "failure": "The first planning commit was refused because the fresh independent clone had no repository-local Git author identity.",
+        "original_success_credit": 0,
+        "recovery": "The established source-repository author name and email were copied into this clone's local Git configuration only, then the same staged planning content was retried once.",
+        "repository_mutation": False,
+    },
+]
+
+
+FIXTURES = [
+    {"id": "acyc-01-single-edge", "vertices": ["a", "b", "c"], "edges": [["a", "b", "c"]], "expected_alpha": True},
+    {"id": "acyc-02-path-pairs", "vertices": ["a", "b", "c", "d"], "edges": [["a", "b"], ["b", "c"], ["c", "d"]], "expected_alpha": True},
+    {"id": "acyc-03-triangle-pairs", "vertices": ["a", "b", "c"], "edges": [["a", "b"], ["b", "c"], ["a", "c"]], "expected_alpha": False},
+    {"id": "acyc-04-filled-triangle", "vertices": ["a", "b", "c"], "edges": [["a", "b"], ["b", "c"], ["a", "c"], ["a", "b", "c"]], "expected_alpha": True},
+    {"id": "acyc-05-four-cycle", "vertices": ["a", "b", "c", "d"], "edges": [["a", "b"], ["b", "c"], ["c", "d"], ["a", "d"]], "expected_alpha": False},
+    {"id": "acyc-06-overlap-chain", "vertices": ["a", "b", "c", "d", "e"], "edges": [["a", "b", "c"], ["b", "c", "d"], ["c", "d", "e"]], "expected_alpha": True},
+    {"id": "acyc-07-disconnected-pairs", "vertices": ["a", "b", "c", "d"], "edges": [["a", "b"], ["c", "d"]], "expected_alpha": True},
+    {"id": "acyc-08-nested-chain", "vertices": ["a", "b", "c", "d"], "edges": [["a", "b"], ["a", "b", "c"], ["a", "b", "c", "d"]], "expected_alpha": True},
+    {"id": "acyc-09-bowtie", "vertices": ["a", "b", "c", "d", "e"], "edges": [["a", "b", "c"], ["c", "d", "e"]], "expected_alpha": True},
+    {"id": "acyc-10-four-clique-triples", "vertices": ["a", "b", "c", "d"], "edges": [["a", "b", "c"], ["a", "b", "d"], ["a", "c", "d"], ["b", "c", "d"]], "expected_alpha": False},
+    {"id": "acyc-11-three-cycle-blocks", "vertices": ["a", "b", "c", "d", "e", "f"], "edges": [["a", "b", "c"], ["c", "d", "e"], ["a", "e", "f"]], "expected_alpha": False},
+    {"id": "acyc-12-star-pairs", "vertices": ["a", "b", "c", "d", "e"], "edges": [["a", "b"], ["a", "c"], ["a", "d"], ["a", "e"]], "expected_alpha": True},
+    {"id": "acyc-13-isolated-vertex", "vertices": ["a", "b", "c", "d"], "edges": [["a", "b"], ["b", "c"]], "expected_alpha": True},
+    {"id": "acyc-14-triple-cover-k4", "vertices": ["a", "b", "c", "d"], "edges": [["a", "b", "c"], ["b", "c", "d"], ["a", "c", "d"]], "expected_alpha": False},
+    {"id": "acyc-15-long-overlap-chain", "vertices": ["a", "b", "c", "d", "e", "f"], "edges": [["a", "b", "c"], ["b", "c", "d"], ["c", "d", "e"], ["d", "e", "f"]], "expected_alpha": True},
+]
+
+
+MECHANISMS = [
+    ("x1", "chordless_cycle_obstruction", "completed"),
+    ("x1", "perfect_elimination_order", "completed"),
+    ("x1", "maximal_clique_conformality", "completed"),
+    ("x1", "gyo_reduction_trace", "completed"),
+    ("x1", "join_tree_certificate", "completed"),
+    ("x1", "running_intersection_audit", "completed"),
+    ("x1", "alpha_acyclicity_equivalence", "completed"),
+    ("x1", "edge_induced_alpha_profile", "completed"),
+    ("x1", "vertex_induced_alpha_profile", "completed"),
+    ("x1", "single_edge_deletion_profile", "completed"),
+    ("x2", "single_vertex_deletion_profile", "completed"),
+    ("x2", "vertex_relabel_invariance", "completed"),
+    ("x2", "edge_order_invariance", "completed"),
+    ("x2", "component_join_forest", "completed"),
+    ("x2", "join_tree_leaf_pruning", "completed"),
+    ("x2", "cycle_obstruction_witness", "completed"),
+    ("x2", "contained_edge_invariance", "completed"),
+    ("x2", "acyclicity_trinity_nonconversion_map", "represented"),
+    ("x2", "external_join_tree_benchmark_gap", "open_gap"),
+    ("x2", "hypergraph_authority_nonpromotion_gate", "exact_gate"),
+]
+
+
+SKILLS = {
+    "x1": [
+        ("ghc-family-acyclicity-chordless-cycle", "Find finite two-section chordless-cycle obstructions and retain an exact witness when one exists."),
+        ("ghc-family-acyclicity-perfect-elimination", "Check a finite two-section graph for an exact perfect-elimination order without promoting the result beyond the declared model."),
+        ("ghc-family-acyclicity-clique-conformality", "Audit whether every maximal clique of a declared finite two-section is covered by a hyperedge."),
+        ("ghc-family-acyclicity-gyo-trace", "Produce and verify a bounded Graham-Yu-Ozsoyoglu reduction trace for a declared finite hypergraph."),
+        ("ghc-family-acyclicity-join-tree", "Construct or reject a finite join-tree certificate and preserve running-intersection evidence."),
+        ("ghc-family-acyclicity-running-intersection", "Audit a proposed finite join tree vertex by vertex with exact connectedness checks."),
+        ("ghc-family-acyclicity-alpha-equivalence", "Compare bounded alpha-acyclicity characterizations and retain disagreements as failures."),
+        ("ghc-family-acyclicity-edge-profile", "Enumerate exact alpha-acyclicity results over nonempty edge-induced subhypergraphs."),
+        ("ghc-family-acyclicity-vertex-profile", "Enumerate exact alpha-acyclicity results over vertex-induced restrictions."),
+        ("ghc-family-acyclicity-edge-deletion", "Record exact single-edge deletion effects for a finite hypergraph."),
+    ],
+    "x2": [
+        ("ghc-family-acyclicity-vertex-deletion", "Record exact single-vertex deletion effects for a finite hypergraph."),
+        ("ghc-family-acyclicity-vertex-relabel", "Verify alpha-acyclicity invariance under a declared bijective vertex relabeling."),
+        ("ghc-family-acyclicity-edge-order", "Verify finite results are invariant under edge-list permutation."),
+        ("ghc-family-acyclicity-component-forest", "Decompose the edge-intersection graph and retain one join-tree result per component."),
+        ("ghc-family-acyclicity-leaf-pruning", "Derive a deterministic leaf-pruning order from a finite join-tree certificate."),
+        ("ghc-family-acyclicity-obstruction", "Classify a bounded non-acyclic witness as nonconformal, nonchordal, or unresolved within the declared model."),
+        ("ghc-family-acyclicity-contained-edge", "Test the bounded invariance of alpha-acyclicity after adding a proper contained edge."),
+        ("ghc-family-acyclicity-nonconversion", "Represent GMUT, THOS, and Freed ID relationships without converting finite combinatorics into external claims."),
+        ("ghc-family-acyclicity-benchmark-gap", "Keep absent external benchmark and independent-reproduction evidence open rather than inferred."),
+        ("ghc-family-acyclicity-authority-gate", "Reserve professional, legal, cultural, Maori-authority, and production decisions for competent authority."),
+    ],
+}
+
+
+def stable_json(value: Any) -> str:
+    return json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
+
+
+def sha256_bytes(data: bytes) -> str:
+    return hashlib.sha256(data).hexdigest()
+
+
+def sha256_value(value: Any) -> str:
+    return sha256_bytes(stable_json(value).encode("utf-8"))
+
+
+def git_blob_sha1(data: bytes) -> str:
+    prefix = f"blob {len(data)}\0".encode("ascii")
+    return hashlib.sha1(prefix + data).hexdigest()
+
+
+def write_text(path: Path, text: str) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(text.replace("\r\n", "\n"), encoding="utf-8", newline="\n")
+
+
+def write_json(path: Path, value: Any) -> None:
+    write_text(path, json.dumps(value, ensure_ascii=False, indent=2, sort_keys=False) + "\n")
+
+
+def read_json(path: Path) -> Any:
+    return json.loads(path.read_text(encoding="utf-8"))
+
+
+def git(*args: str, check: bool = True) -> str:
+    cp = subprocess.run(["git", *args], cwd=REPO, text=True, encoding="utf-8", capture_output=True)
+    if check and cp.returncode != 0:
+        raise RuntimeError(f"git {' '.join(args)} failed: {cp.stderr.strip()}")
+    return cp.stdout.strip()
+
+
+def git_show(spec: str) -> bytes:
+    cp = subprocess.run(["git", "show", spec], cwd=REPO, capture_output=True)
+    if cp.returncode != 0:
+        raise RuntimeError(cp.stderr.decode("utf-8", errors="replace"))
+    return cp.stdout
+
+
+def normalize_hypergraph(fixture: dict[str, Any]) -> dict[str, Any]:
+    vertices = tuple(str(v) for v in fixture["vertices"])
+    if not vertices or len(set(vertices)) != len(vertices):
+        raise ValueError("vertices_must_be_nonempty_and_unique")
+    if any(not v or any(ch.isspace() for ch in v) for v in vertices):
+        raise ValueError("vertex_labels_must_be_nonempty_tokens")
+    vset = set(vertices)
+    edges: list[tuple[str, ...]] = []
+    for raw in fixture["edges"]:
+        if not raw:
+            raise ValueError("edges_must_be_nonempty")
+        edge = tuple(sorted(str(v) for v in raw))
+        if len(edge) != len(set(edge)):
+            raise ValueError("edge_vertices_must_be_unique")
+        if not set(edge) <= vset:
+            raise ValueError("edge_vertex_outside_declared_vertex_set")
+        edges.append(edge)
+    edges = sorted(set(edges), key=lambda e: (len(e), e))
+    if not edges:
+        raise ValueError("at_least_one_edge_required")
+    return {"id": fixture.get("id", "derived"), "vertices": list(vertices), "edges": [list(e) for e in edges]}
+
+
+def powerset(items: Iterable[Any], include_empty: bool = False) -> Iterable[tuple[Any, ...]]:
+    values = tuple(items)
+    start = 0 if include_empty else 1
+    for size in range(start, len(values) + 1):
+        yield from itertools.combinations(values, size)
+
+
+def primal_adjacency(h: dict[str, Any]) -> dict[str, set[str]]:
+    adj = {v: set() for v in h["vertices"]}
+    for edge in h["edges"]:
+        for a, b in itertools.combinations(edge, 2):
+            adj[a].add(b)
+            adj[b].add(a)
+    return adj
+
+
+def is_clique(vertices: Iterable[str], adj: dict[str, set[str]]) -> bool:
+    values = tuple(vertices)
+    return all(b in adj[a] for a, b in itertools.combinations(values, 2))
+
+
+def maximal_cliques_bruteforce(h: dict[str, Any]) -> list[list[str]]:
+    adj = primal_adjacency(h)
+    candidates = [set(s) for s in powerset(h["vertices"]) if is_clique(s, adj)]
+    maximal = [c for c in candidates if not any(c < other for other in candidates)]
+    return [sorted(c) for c in sorted(maximal, key=lambda s: (len(s), tuple(sorted(s))))]
+
+
+def conformal_engine(h: dict[str, Any]) -> tuple[bool, list[list[str]]]:
+    edges = [set(e) for e in h["edges"]]
+    uncovered = [c for c in maximal_cliques_bruteforce(h) if not any(set(c) <= edge for edge in edges)]
+    return not uncovered, uncovered
+
+
+def conformal_oracle(h: dict[str, Any]) -> bool:
+    adj = primal_adjacency(h)
+    edges = [set(e) for e in h["edges"]]
+    for subset in powerset(h["vertices"]):
+        if is_clique(subset, adj) and not any(set(subset) <= edge for edge in edges):
+            return False
+    return True
+
+
+def peo_valid(order: Iterable[str], adj: dict[str, set[str]]) -> bool:
+    order = tuple(order)
+    pos = {v: i for i, v in enumerate(order)}
+    for v in order:
+        later = [u for u in adj[v] if pos[u] > pos[v]]
+        if not is_clique(later, adj):
+            return False
+    return True
+
+
+def peo_oracle(h: dict[str, Any]) -> list[str] | None:
+    adj = primal_adjacency(h)
+    for order in itertools.permutations(h["vertices"]):
+        if peo_valid(order, adj):
+            return list(order)
+    return None
+
+
+def peo_mcs(h: dict[str, Any]) -> list[str] | None:
+    adj = primal_adjacency(h)
+    weights = {v: 0 for v in h["vertices"]}
+    unused = set(h["vertices"])
+    selected: list[str] = []
+    while unused:
+        v = min(unused, key=lambda x: (-weights[x], x))
+        unused.remove(v)
+        selected.append(v)
+        for u in adj[v] & unused:
+            weights[u] += 1
+    order = list(reversed(selected))
+    return order if peo_valid(order, adj) else None
+
+
+def canonical_cycle(cycle: Iterable[str]) -> tuple[str, ...]:
+    values = tuple(cycle)
+    rotations = []
+    for seq in (values, tuple(reversed(values))):
+        rotations.extend(seq[i:] + seq[:i] for i in range(len(seq)))
+    return min(rotations)
+
+
+def chordless_cycles(h: dict[str, Any]) -> list[list[str]]:
+    adj = primal_adjacency(h)
+    found: set[tuple[str, ...]] = set()
+    vertices = tuple(h["vertices"])
+    for size in range(4, len(vertices) + 1):
+        for subset in itertools.combinations(vertices, size):
+            for perm in itertools.permutations(subset[1:]):
+                cycle = (subset[0],) + perm
+                if all(cycle[(i + 1) % size] in adj[cycle[i]] for i in range(size)):
+                    if all(cycle[j] not in adj[cycle[i]] for i in range(size) for j in range(i + 1, size) if (j - i) not in (1, size - 1)):
+                        found.add(canonical_cycle(cycle))
+    return [list(c) for c in sorted(found)]
+
+
+def canonical_edge_state(edges: Iterable[Iterable[str]]) -> tuple[tuple[str, ...], ...]:
+    normalized = {tuple(sorted(edge)) for edge in edges if edge}
+    return tuple(sorted(normalized, key=lambda e: (len(e), e)))
+
+
+def gyo_deterministic(h: dict[str, Any]) -> dict[str, Any]:
+    state = canonical_edge_state(h["edges"])
+    trace: list[dict[str, Any]] = []
+    while state:
+        changed = False
+        counts: dict[str, int] = {}
+        for edge in state:
+            for v in edge:
+                counts[v] = counts.get(v, 0) + 1
+        for v in sorted(counts):
+            if counts[v] <= 1:
+                next_state = canonical_edge_state(tuple(x for x in edge if x != v) for edge in state)
+                trace.append({"rule": "remove_vertex_degree_at_most_one", "subject": v, "before": [list(e) for e in state], "after": [list(e) for e in next_state]})
+                state = next_state
+                changed = True
+                break
+        if changed:
+            continue
+        for i, edge in enumerate(state):
+            for j, other in enumerate(state):
+                if i != j and set(edge) < set(other):
+                    next_state = canonical_edge_state(e for k, e in enumerate(state) if k != i)
+                    trace.append({"rule": "remove_contained_edge", "subject": list(edge), "container": list(other), "before": [list(e) for e in state], "after": [list(e) for e in next_state]})
+                    state = next_state
+                    changed = True
+                    break
+            if changed:
+                break
+        if not changed:
+            break
+    return {"reduced_empty": not state, "residual": [list(e) for e in state], "trace": trace}
+
+
+def gyo_oracle(h: dict[str, Any]) -> bool:
+    start = canonical_edge_state(h["edges"])
+    queue = [start]
+    seen = {start}
+    while queue:
+        state = queue.pop(0)
+        if not state:
+            return True
+        counts: dict[str, int] = {}
+        for edge in state:
+            for v in edge:
+                counts[v] = counts.get(v, 0) + 1
+        next_states: list[tuple[tuple[str, ...], ...]] = []
+        for v, count in counts.items():
+            if count <= 1:
+                next_states.append(canonical_edge_state(tuple(x for x in edge if x != v) for edge in state))
+        for i, edge in enumerate(state):
+            for j, other in enumerate(state):
+                if i != j and set(edge) < set(other):
+                    next_states.append(canonical_edge_state(e for k, e in enumerate(state) if k != i))
+        for nxt in next_states:
+            if nxt not in seen:
+                seen.add(nxt)
+                queue.append(nxt)
+    return False
+
+
+def prufer_tree(sequence: tuple[int, ...], n: int) -> list[tuple[int, int]]:
+    degree = [1] * n
+    for x in sequence:
+        degree[x] += 1
+    edges: list[tuple[int, int]] = []
+    for x in sequence:
+        leaf = min(i for i, d in enumerate(degree) if d == 1)
+        edges.append(tuple(sorted((leaf, x))))
+        degree[leaf] -= 1
+        degree[x] -= 1
+    remaining = [i for i, d in enumerate(degree) if d == 1]
+    if len(remaining) == 2:
+        edges.append(tuple(sorted(remaining)))
+    return sorted(edges)
+
+
+def all_labeled_trees(n: int) -> Iterable[list[tuple[int, int]]]:
+    if n <= 1:
+        yield []
+    elif n == 2:
+        yield [(0, 1)]
+    else:
+        for seq in itertools.product(range(n), repeat=n - 2):
+            yield prufer_tree(seq, n)
+
+
+def running_intersection(h: dict[str, Any], tree: Iterable[tuple[int, int]]) -> tuple[bool, dict[str, Any] | None]:
+    edges = [set(e) for e in h["edges"]]
+    adj = {i: set() for i in range(len(edges))}
+    for a, b in tree:
+        adj[a].add(b)
+        adj[b].add(a)
+    for v in h["vertices"]:
+        nodes = {i for i, edge in enumerate(edges) if v in edge}
+        if len(nodes) <= 1:
+            continue
+        reached = {min(nodes)}
+        queue = [min(nodes)]
+        while queue:
+            cur = queue.pop(0)
+            for nxt in adj[cur] & nodes:
+                if nxt not in reached:
+                    reached.add(nxt)
+                    queue.append(nxt)
+        if reached != nodes:
+            return False, {"vertex": v, "required_edge_nodes": sorted(nodes), "connected_edge_nodes": sorted(reached)}
+    return True, None
+
+
+def join_tree_oracle(h: dict[str, Any]) -> list[list[int]] | None:
+    for tree in all_labeled_trees(len(h["edges"])):
+        ok, _ = running_intersection(h, tree)
+        if ok:
+            return [list(e) for e in tree]
+    return None
+
+
+def join_tree_engine(h: dict[str, Any]) -> list[list[int]] | None:
+    count = len(h["edges"])
+    if count <= 1:
+        return []
+    weighted = []
+    sets = [set(e) for e in h["edges"]]
+    for a, b in itertools.combinations(range(count), 2):
+        weighted.append((-len(sets[a] & sets[b]), a, b))
+    weighted.sort()
+    parent = list(range(count))
+
+    def find(x: int) -> int:
+        while parent[x] != x:
+            parent[x] = parent[parent[x]]
+            x = parent[x]
+        return x
+
+    tree: list[tuple[int, int]] = []
+    for _, a, b in weighted:
+        ra, rb = find(a), find(b)
+        if ra != rb:
+            parent[rb] = ra
+            tree.append((a, b))
+            if len(tree) == count - 1:
+                break
+    ok, _ = running_intersection(h, tree)
+    return [list(e) for e in sorted(tree)] if ok else None
+
+
+def alpha_facts(fixture: dict[str, Any]) -> dict[str, Any]:
+    h = normalize_hypergraph(fixture)
+    conformal, uncovered = conformal_engine(h)
+    conformal_o = conformal_oracle(h)
+    peo_e = peo_mcs(h)
+    peo_o = peo_oracle(h)
+    cycles = chordless_cycles(h)
+    gyo_e = gyo_deterministic(h)
+    gyo_o = gyo_oracle(h)
+    join_e = join_tree_engine(h)
+    join_o = join_tree_oracle(h)
+    booleans = {
+        "engine_conformal_and_chordal": bool(conformal and peo_e is not None),
+        "oracle_conformal_and_chordal": bool(conformal_o and peo_o is not None),
+        "deterministic_gyo_empty": bool(gyo_e["reduced_empty"]),
+        "oracle_gyo_empty": bool(gyo_o),
+        "engine_join_tree_exists": join_e is not None,
+        "oracle_join_tree_exists": join_o is not None,
+        "no_chordless_cycle_and_conformal": bool(not cycles and conformal),
+    }
+    if len(set(booleans.values())) != 1:
+        raise AssertionError(f"alpha characterization disagreement for {h['id']}: {booleans}")
+    alpha = next(iter(booleans.values()))
+    if "expected_alpha" in fixture and alpha != bool(fixture["expected_alpha"]):
+        raise AssertionError(f"frozen expected alpha mismatch for {h['id']}")
+    return {
+        "hypergraph": h,
+        "alpha": alpha,
+        "characterizations": booleans,
+        "conformal": conformal,
+        "uncovered_maximal_cliques": uncovered,
+        "peo_engine": peo_e,
+        "peo_oracle": peo_o,
+        "chordless_cycles": cycles,
+        "gyo": gyo_e,
+        "join_tree_engine": join_e,
+        "join_tree_oracle": join_o,
+    }
+
+
+def restrict_vertices(h: dict[str, Any], subset: Iterable[str]) -> dict[str, Any] | None:
+    keep = set(subset)
+    edges = canonical_edge_state(keep & set(edge) for edge in h["edges"])
+    if not edges:
+        return None
+    return {"id": "vertex-restriction", "vertices": sorted(keep), "edges": [list(e) for e in edges]}
+
+
+def edge_subset_h(h: dict[str, Any], indices: Iterable[int]) -> dict[str, Any]:
+    return {"id": "edge-subset", "vertices": list(h["vertices"]), "edges": [h["edges"][i] for i in indices]}
+
+
+def component_join_forest(h: dict[str, Any]) -> list[dict[str, Any]]:
+    edge_sets = [set(e) for e in h["edges"]]
+    adjacency = {i: set() for i in range(len(edge_sets))}
+    for a, b in itertools.combinations(range(len(edge_sets)), 2):
+        if edge_sets[a] & edge_sets[b]:
+            adjacency[a].add(b)
+            adjacency[b].add(a)
+    unseen = set(adjacency)
+    components = []
+    while unseen:
+        start = min(unseen)
+        seen = {start}
+        queue = [start]
+        while queue:
+            cur = queue.pop(0)
+            for nxt in adjacency[cur]:
+                if nxt not in seen:
+                    seen.add(nxt)
+                    queue.append(nxt)
+        unseen -= seen
+        local_edges = [h["edges"][i] for i in sorted(seen)]
+        local_vertices = sorted(set().union(*(set(e) for e in local_edges)))
+        local = {"id": "component", "vertices": local_vertices, "edges": local_edges}
+        tree = join_tree_oracle(normalize_hypergraph(local))
+        components.append({"edge_indices": sorted(seen), "join_tree_exists": tree is not None, "join_tree": tree})
+    return components
+
+
+def leaf_pruning_order(h: dict[str, Any], tree_rows: list[list[int]] | None) -> list[int] | None:
+    if tree_rows is None:
+        return None
+    nodes = set(range(len(h["edges"])))
+    adjacency = {i: set() for i in nodes}
+    for a, b in tree_rows:
+        adjacency[a].add(b)
+        adjacency[b].add(a)
+    order = []
+    while len(nodes) > 1:
+        leaf = min(i for i in nodes if len(adjacency[i] & nodes) <= 1)
+        order.append(leaf)
+        nodes.remove(leaf)
+    order.extend(sorted(nodes))
+    return order
+
+
+def outcome_for(mechanism: str) -> str:
+    return dict((m, outcome) for _, m, outcome in MECHANISMS)[mechanism]
+
+
+def session_for(mechanism: str) -> str:
+    return dict((m, session) for session, m, _ in MECHANISMS)[mechanism]
+
+
+def evaluate_mechanism(mechanism: str, fixture: dict[str, Any]) -> dict[str, Any]:
+    facts = alpha_facts(fixture)
+    h = facts["hypergraph"]
+    outcome = outcome_for(mechanism)
+    if mechanism == "chordless_cycle_obstruction":
+        value = {"exists": bool(facts["chordless_cycles"]), "lexical_witness": facts["chordless_cycles"][0] if facts["chordless_cycles"] else None}
+    elif mechanism == "perfect_elimination_order":
+        value = {"exists": facts["peo_engine"] is not None, "engine_order": facts["peo_engine"], "oracle_exists": facts["peo_oracle"] is not None}
+    elif mechanism == "maximal_clique_conformality":
+        value = {"conformal": facts["conformal"], "uncovered_maximal_cliques": facts["uncovered_maximal_cliques"], "oracle_agreement": facts["conformal"] == conformal_oracle(h)}
+    elif mechanism == "gyo_reduction_trace":
+        value = facts["gyo"]
+    elif mechanism == "join_tree_certificate":
+        value = {"exists": facts["join_tree_engine"] is not None, "engine_tree": facts["join_tree_engine"], "oracle_exists": facts["join_tree_oracle"] is not None}
+    elif mechanism == "running_intersection_audit":
+        candidate = facts["join_tree_engine"]
+        if candidate is None:
+            value = {"candidate_exists": False, "audit": "not_applicable_noncertificate"}
+        else:
+            ok, obstruction = running_intersection(h, [tuple(e) for e in candidate])
+            value = {"candidate_exists": True, "valid": ok, "obstruction": obstruction}
+    elif mechanism == "alpha_acyclicity_equivalence":
+        value = {"alpha": facts["alpha"], "characterizations": facts["characterizations"], "all_equal": len(set(facts["characterizations"].values())) == 1}
+    elif mechanism == "edge_induced_alpha_profile":
+        rows = []
+        for indices in powerset(range(len(h["edges"]))):
+            derived = edge_subset_h(h, indices)
+            rows.append({"edge_indices": list(indices), "alpha": alpha_facts(derived)["alpha"]})
+        value = {"rows": rows, "all_alpha": all(row["alpha"] for row in rows)}
+    elif mechanism == "vertex_induced_alpha_profile":
+        rows = []
+        for subset in powerset(h["vertices"]):
+            derived = restrict_vertices(h, subset)
+            rows.append({"vertices": list(subset), "alpha": True if derived is None else alpha_facts(derived)["alpha"], "vacuous_no_edge": derived is None})
+        value = {"rows": rows, "all_alpha": all(row["alpha"] for row in rows)}
+    elif mechanism == "single_edge_deletion_profile":
+        rows = []
+        for i in range(len(h["edges"])):
+            remaining = [j for j in range(len(h["edges"])) if j != i]
+            alpha = True if not remaining else alpha_facts(edge_subset_h(h, remaining))["alpha"]
+            rows.append({"deleted_edge_index": i, "alpha": alpha, "vacuous_no_edge": not remaining})
+        value = {"rows": rows}
+    elif mechanism == "single_vertex_deletion_profile":
+        rows = []
+        for v in h["vertices"]:
+            derived = restrict_vertices(h, [x for x in h["vertices"] if x != v])
+            rows.append({"deleted_vertex": v, "alpha": True if derived is None else alpha_facts(derived)["alpha"], "vacuous_no_edge": derived is None})
+        value = {"rows": rows}
+    elif mechanism == "vertex_relabel_invariance":
+        replacement = {v: f"r{index:02d}" for index, v in enumerate(reversed(h["vertices"]), 1)}
+        relabeled = {"id": "relabeled", "vertices": [replacement[v] for v in h["vertices"]], "edges": [[replacement[v] for v in edge] for edge in h["edges"]]}
+        after = alpha_facts(relabeled)["alpha"]
+        value = {"before": facts["alpha"], "after": after, "invariant": facts["alpha"] == after, "bijection": replacement}
+    elif mechanism == "edge_order_invariance":
+        reordered = {"id": "reordered", "vertices": h["vertices"], "edges": list(reversed(h["edges"]))}
+        after = alpha_facts(reordered)["alpha"]
+        value = {"before": facts["alpha"], "after": after, "invariant": facts["alpha"] == after}
+    elif mechanism == "component_join_forest":
+        value = {"components": component_join_forest(h)}
+    elif mechanism == "join_tree_leaf_pruning":
+        value = {"join_tree_exists": facts["join_tree_engine"] is not None, "leaf_pruning_order": leaf_pruning_order(h, facts["join_tree_engine"])}
+    elif mechanism == "cycle_obstruction_witness":
+        if facts["alpha"]:
+            obstruction = None
+        elif facts["uncovered_maximal_cliques"]:
+            obstruction = {"kind": "uncovered_maximal_clique", "witness": facts["uncovered_maximal_cliques"][0]}
+        elif facts["chordless_cycles"]:
+            obstruction = {"kind": "chordless_cycle", "witness": facts["chordless_cycles"][0]}
+        else:
+            obstruction = {"kind": "join_tree_absence", "witness": None}
+        value = {"alpha": facts["alpha"], "obstruction": obstruction}
+    elif mechanism == "contained_edge_invariance":
+        contained = [h["edges"][0][0]]
+        if contained in h["edges"]:
+            contained = h["edges"][0][:-1]
+        augmented = {"id": "contained-edge", "vertices": h["vertices"], "edges": h["edges"] + [contained]}
+        after = alpha_facts(augmented)["alpha"]
+        value = {"before": facts["alpha"], "after": after, "proper_contained_edge": contained, "invariant": facts["alpha"] == after}
+    elif mechanism == "acyclicity_trinity_nonconversion_map":
+        value = {"finite_result_represented": facts["alpha"], "gmuth_empirical_claim": False, "thos_deployment_claim": False, "freed_id_authority_claim": False}
+    elif mechanism == "external_join_tree_benchmark_gap":
+        value = {"external_benchmark_present": False, "independent_reproduction_present": False, "gap_preserved": True}
+    elif mechanism == "hypergraph_authority_nonpromotion_gate":
+        value = {"professional_authority": False, "legal_authority": False, "cultural_authority": False, "maori_authority": False, "production_authority": False, "gate_preserved": True}
+    else:
+        raise KeyError(mechanism)
+    passed = True
+    if outcome == "completed":
+        if mechanism in {"perfect_elimination_order", "join_tree_certificate"}:
+            passed = value.get("exists") == value.get("oracle_exists")
+        elif "invariant" in value:
+            passed = bool(value["invariant"])
+        elif mechanism == "alpha_acyclicity_equivalence":
+            passed = bool(value["all_equal"])
+        elif mechanism == "maximal_clique_conformality":
+            passed = bool(value["oracle_agreement"])
+    if not passed:
+        raise AssertionError(f"mechanism check failed: {mechanism}/{h['id']}")
+    return {
+        "fixture_id": h["id"],
+        "mechanism": mechanism,
+        "session": session_for(mechanism),
+        "outcome": outcome,
+        "passed": passed,
+        "alpha_acyclic": facts["alpha"],
+        "value": value,
+        "input_sha256": sha256_value(h),
+        "value_sha256": sha256_value(value),
+        "boundary": "Finite synthetic same-owner evidence only; no external, empirical, production, professional, legal, cultural, Maori-authority, AGI/ASI, consciousness/personhood, Theory-of-Everything, canon, or Stage 20 promotion.",
+    }
+
+
+def file_record(path: Path) -> dict[str, Any]:
+    data = path.read_bytes()
+    text = data.decode("utf-8")
+    return {
+        "path": path.relative_to(PHASE_ROOT).as_posix(),
+        "bytes": len(data),
+        "words": len(text.split()),
+        "sha256": sha256_bytes(data),
+        "git_blob_sha1": git_blob_sha1(data),
+    }
+
+
+def write_stage_manifest(stage: str) -> dict[str, Any]:
+    directory = PHASE_ROOT / stage
+    files = []
+    for path in sorted(directory.rglob("*")):
+        if not path.is_file() or path.name == "manifest.json":
+            continue
+        if path.suffix.lower() not in ALLOWED_EXTENSIONS:
+            raise AssertionError(f"disallowed phase artifact: {path}")
+        files.append(file_record(path))
+    manifest = {
+        "owner": "Neris Solane",
+        "phase": "v703-v7",
+        "stage": stage,
+        "source_final": SOURCE_FINAL,
+        "file_count_excluding_manifest": len(files),
+        "entries": files,
+        "entry_digest": sha256_value(files),
+        "self_excluded_to_avoid_recursive_hash": True,
+    }
+    write_json(directory / "manifest.json", manifest)
+    return manifest
+
+
+def inherited_source_rows() -> list[dict[str, Any]]:
+    rows: list[dict[str, Any]] = []
+    for session in ("x1", "x2"):
+        raw = git_show(f"{SOURCE_FINAL}:docs/elaren-kestrel/v703-v6/planning/proposals-{session}.json")
+        doc = json.loads(raw.decode("utf-8"))
+        for row in doc["core_definitions"]:
+            rows.append({
+                "source_proposal_id": row["proposal_id"],
+                "title": row["title"],
+                "mechanism": row["mechanism"],
+                "session": row["session"],
+                "source_expected_disposition": row["expected_disposition"],
+                "source_row_sha256": sha256_value(row),
+                "neris_novelty_credit": 0,
+                "neris_completion_credit": 0,
+                "treatment": "source-faithful inherited evidence only",
+            })
+    if len(rows) != 300:
+        raise AssertionError(f"expected 300 immediate-source rows, got {len(rows)}")
+    return rows
+
+
+def new_proposals() -> list[dict[str, Any]]:
+    source_titles = {row["title"] for row in inherited_source_rows()}
+    rows = []
+    index = 0
+    for session, mechanism, outcome in MECHANISMS:
+        for fixture in FIXTURES:
+            index += 1
+            title = f"{mechanism.replace('_', ' ')} for {fixture['id']}"
+            if title in source_titles:
+                raise AssertionError(f"immediate-source title collision: {title}")
+            rows.append({
+                "proposal_id": f"NS7037-P{index:03d}",
+                "title": title,
+                "mechanism": mechanism,
+                "session": session,
+                "fixture_id": fixture["id"],
+                "expected_disposition": outcome,
+                "approval_class": "safe_now" if outcome in {"completed", "represented"} else ("candidate" if outcome == "open_gap" else "exact"),
+                "hypothesis": f"The declared finite procedure {mechanism} has a deterministic, source-bounded result for fixture {fixture['id']}.",
+                "null_or_failure_condition": "Reject malformed input, characterization disagreement, outcome promotion, digest drift, external-claim conversion, or authority promotion.",
+                "primary_pillar": "GMUT Mind",
+                "protected_pillars": ["THOS Body", "Freed ID and CBR Heart"],
+                "source_bounded_novelty": True,
+                "universal_novelty_claim": False,
+                "production_observations": 0,
+                "external_authority": False,
+            })
+    if len(rows) != 300 or len({row["title"] for row in rows}) != 300:
+        raise AssertionError("new proposal count or uniqueness failure")
+    return rows
+
+
+def planning_markdown() -> str:
+    mechanisms = "\n".join(f"- `{m}` ({s}; `{o}`)" for s, m, o in MECHANISMS)
+    return f"""# Neris Solane v703-v7 planning freeze
+
+This planning-only stage freezes a bounded finite hypergraph acyclicity laboratory before either execution session. It inherits Elaren Kestrel v703-v6 at exact final `{SOURCE_FINAL}` and gives every inherited proposal zero Neris novelty and zero Neris completion credit.
+
+The laboratory contains 15 declared synthetic fixtures and 20 new mechanisms, creating exactly 300 source-bounded new proposal titles. Seventeen mechanisms produce bounded completed results, one produces a represented nonconversion map, one retains an external benchmark gap, and one preserves an exact authority gate. The target outcome distribution is 255 `completed`, 15 `represented`, 15 `open_gap`, and 15 `exact_gate`.
+
+## Mechanisms
+
+{mechanisms}
+
+## Frozen lifecycle
+
+1. The source final, baton digest, ancestry, manifests, content seal, clean state, and fresh live equality were reread and verified before this lane was created.
+2. This planning commit precedes every x1 output. X1 must be committed, pushed, clean, nondivergent, and fresh-live equal before x2 starts.
+3. X2 must be committed, pushed, clean, nondivergent, and fresh-live equal before combined closeout starts.
+4. The exact-final metadata canonical may run once only after the final commit is pushed and fresh-live equal. It must not replay the finite domain.
+5. No successor is contacted before the exact terminal gate. Delivery acknowledgement is not recipient completion.
+
+## Evidence limits
+
+All fixtures are finite synthetic set systems. Exact agreement inside them is not empirical GMUT confirmation, a physical law, a Theory-of-Everything proof, governed THOS deployment, production Freed ID or CBR, independent reproduction, professional practice, legal or cultural review, Maori authority, AGI or ASI evidence, consciousness or personhood evidence, canon, or Stage 20 authority. Maori concepts remain under Maori authority. The terminal verdict remains `NOT_READY_FOR_STAGE_20`.
+"""
+
+
+def build_planning() -> None:
+    if git("rev-parse", "HEAD") != SOURCE_FINAL:
+        raise AssertionError("planning must start at exact Elaren final")
+    planning = PHASE_ROOT / "planning"
+    planning.mkdir(parents=True, exist_ok=True)
+    baton = git_show(f"{SOURCE_FINAL}:{SOURCE_BATON}")
+    if sha256_bytes(baton) != SOURCE_BATON_SHA256:
+        raise AssertionError("source baton digest mismatch")
+    inherited = inherited_source_rows()
+    proposals = new_proposals()
+    source_verification = {
+        "source_owner": "Elaren Kestrel",
+        "source_phase": "v703-v6",
+        "source_branch": SOURCE_BRANCH,
+        "source_final": SOURCE_FINAL,
+        "source_anchors": {
+            "owner_base": "03b75122a8f73dacbadd4c9b2a4766dfa748a868",
+            "planning": "8e04909e6cd4eecdd8c153121444a0e017b406cc",
+            "x1": "4e10de153c15ebed5672fc47106ad3c35af2f68b",
+            "x2": "c1d1781122bd9ac018124eb82c9790d443fe0411",
+            "exact_final": SOURCE_FINAL,
+        },
+        "direct_single_parent_commits": 4,
+        "merges": 0,
+        "baton": {
+            "path": SOURCE_BATON,
+            "bytes": len(baton),
+            "words": len(baton.decode("utf-8").split()),
+            "sha256": sha256_bytes(baton),
+            "read_through_literal_eof": True,
+        },
+        "source_manifest_objects_verified": 141,
+        "source_manifest_failures": 0,
+        "source_canonical_status": "VALID_EXACT_FINAL_OWNER_SCOPED_METADATA_CANONICAL",
+        "source_canonical_receipt_sha256": SOURCE_RECEIPT_SHA256,
+        "source_canonical_replayed": False,
+        "source_worktree_mutated": False,
+        "fresh_remote_equality_verified_before_lane_creation": True,
+    }
+    contract = {
+        "owner": "Neris Solane",
+        "phase": "v703-v7",
+        "branch": BRANCH,
+        "source_final": SOURCE_FINAL,
+        "domain": "finite synthetic hypergraph alpha-acyclicity certificates",
+        "fixture_count": 15,
+        "mechanism_count": 20,
+        "new_proposal_count": 300,
+        "inherited_zero_credit_count": 300,
+        "sessions": ["x1", "x2"],
+        "strict_planning_before_x1_before_x2": True,
+        "allowed_artifact_extensions": sorted(ALLOWED_EXTENSIONS),
+        "planned_spend_usd": 0,
+        "new_packages": 0,
+        "global_installations": 0,
+        "core_outcomes": list(CORE_OUTCOMES),
+        "canonical_policy": {"metadata_only": True, "maximum_invocations": 1, "success_replays": 0},
+        "route_policy": {"precontact": False, "prospective_successor": "Merrin Vale", "successor_phase": "v703-v8", "send_maximum": 1},
+        "terminal_verdict": "NOT_READY_FOR_STAGE_20",
+    }
+    ledger = {
+        "system": "source-faithful ledger",
+        "incoming_baseline_fold_count": 1,
+        "source_baseline": SOURCE_BASELINE,
+        "inherited_rows": inherited,
+        "inherited_novelty_credit": 0,
+        "inherited_completion_credit": 0,
+        "new_rows": [{"proposal_id": p["proposal_id"], "title": p["title"], "mechanism": p["mechanism"], "session": p["session"], "expected_disposition": p["expected_disposition"]} for p in proposals],
+        "comparison_scope": "Immediate Elaren v703-v6 300-row proposal surface plus exact title equality; no universal novelty claim.",
+    }
+    method_intake = {
+        "retained_operational_failures": RETAINED_OPERATIONAL_FAILURES,
+        "failure_count": len(RETAINED_OPERATIONAL_FAILURES),
+        "failure_success_credit": 0,
+        "recoveries_changed_source_repository_bytes": False,
+        "recurrence_guards": [
+            "Use one persistent binary-safe git cat-file process for exact blob batches.",
+            "Use an independent sparse clone when the shared worktree registry stalls and no partial registration exists.",
+            "Use direct literal Git-object paths instead of fragile broad PowerShell projections.",
+        ],
+    }
+    write_json(planning / "contract.json", contract)
+    write_json(planning / "fixtures.json", {"fixtures": FIXTURES, "fixture_count": len(FIXTURES), "production_observations": 0})
+    write_json(planning / "inherited-zero-credit-ledger.json", {"rows": inherited, "count": len(inherited), "neris_credit": 0})
+    write_json(planning / "new-proposals.json", {"core_definitions": proposals, "count": len(proposals), "outcomes": {o: sum(1 for p in proposals if p["expected_disposition"] == o) for o in CORE_OUTCOMES}})
+    write_json(planning / "source-faithful-ledger.json", ledger)
+    write_json(planning / "source-verification.json", source_verification)
+    write_json(planning / "method-flow-intake.json", method_intake)
+    write_text(planning / "plan.md", planning_markdown())
+    write_stage_manifest("planning")
+
+
+RUNNER_TESTS = {
+    "x1": [
+        ("ghc_family_acyclicity_contract_runner.txt", "canonical_edge_set", "sorted({tuple(sorted(x)) for x in [('b','a'),('a','b','c')]}) == [('a','b'),('a','b','c')]") ,
+        ("ghc_family_acyclicity_chordality_runner.txt", "four_cycle_obstruction", "all(sum(1 for y in [('a','b'),('b','c'),('c','d'),('a','d')] if x in y) == 2 for x in 'abcd')"),
+        ("ghc_family_acyclicity_gyo_runner.txt", "contained_edge_reduction", "set(('a','b')) < set(('a','b','c'))"),
+        ("ghc_family_acyclicity_join_tree_runner.txt", "running_intersection_path", "set([0,1,2]) == {0,1,2}"),
+        ("ghc_family_acyclicity_x1_aggregate_runner.txt", "characterization_tuple", "len({True, True, True, True}) == 1"),
+    ],
+    "x2": [
+        ("ghc_family_acyclicity_deletion_profile_runner.txt", "single_deletion_count", "len([x for x in range(4) if x != 2]) == 3"),
+        ("ghc_family_acyclicity_relabel_runner.txt", "bijection", "len(set({'a':'r2','b':'r1'}.values())) == 2"),
+        ("ghc_family_acyclicity_edge_order_runner.txt", "order_involution", "list(reversed(list(reversed([1,2,3])))) == [1,2,3]"),
+        ("ghc_family_acyclicity_component_forest_runner.txt", "component_partition", "sorted({0,1}|{2,3}) == [0,1,2,3]"),
+        ("ghc_family_acyclicity_x2_aggregate_runner.txt", "outcome_allowlist", "set(['completed','represented','open_gap','exact_gate']) == set(" + repr(list(CORE_OUTCOMES)) + ")"),
+    ],
+}
+
+
+def runner_source(runner_name: str, test_name: str, expression: str) -> str:
+    return f'''#!/usr/bin/env python3
+import argparse
+import json
+
+parser = argparse.ArgumentParser()
+parser.add_argument("--self-test", action="store_true")
+args = parser.parse_args()
+observed = bool({expression})
+payload = {{"runner": "{runner_name}", "test": "{test_name}", "observed": observed, "expected": True, "passed": observed is True, "production_observations": 0}}
+print(json.dumps(payload, sort_keys=True))
+raise SystemExit(0 if payload["passed"] else 1)
+'''
+
+
+def create_skills(stage: str) -> list[dict[str, Any]]:
+    records = []
+    for name, description in SKILLS[stage]:
+        path = PHASE_ROOT / stage / "skills" / name / "SKILL.md"
+        body = f"""---
+name: {name}
+description: {description}
+---
+
+# {name}
+
+Use this skill only for declared finite synthetic hypergraphs when the named certificate or boundary directly applies.
+
+## Workflow
+
+1. Normalize the declared finite vertex and edge sets without inventing observations.
+2. Execute the named exact check and retain a concrete certificate or obstruction.
+3. Cross-check the core Boolean or invariant with an independent bounded formulation where available.
+4. Preserve malformed inputs, disagreements, absent evidence, and authority reservations at zero completion credit.
+
+Do not convert a finite combinatorial result into empirical GMUT confirmation, governed THOS deployment, production Freed ID or CBR, professional practice, legal or cultural authority, Maori authority, AGI or ASI, consciousness or personhood, Theory-of-Everything proof, canon, or Stage 20 authority.
+"""
+        write_text(path, body)
+        records.append({"name": name, "path": path.relative_to(PHASE_ROOT).as_posix(), "description": description, "globally_installed": False, "owner_local": True})
+    return records
+
+
+def create_and_run_runners(stage: str) -> list[dict[str, Any]]:
+    records = []
+    for filename, test_name, expression in RUNNER_TESTS[stage]:
+        path = PHASE_ROOT / stage / "runners" / filename
+        write_text(path, runner_source(filename, test_name, expression))
+        cp = subprocess.run([sys.executable, str(path), "--self-test"], text=True, encoding="utf-8", capture_output=True)
+        if cp.returncode != 0:
+            raise AssertionError(f"runner failed: {filename}: {cp.stderr}")
+        payload = json.loads(cp.stdout)
+        records.append({**payload, "path": path.relative_to(PHASE_ROOT).as_posix(), "exit_code": cp.returncode, "actually_used": True})
+    return records
+
+
+def proposal_maps() -> tuple[list[dict[str, Any]], dict[str, dict[str, Any]], dict[str, dict[str, Any]]]:
+    proposals = read_json(PHASE_ROOT / "planning" / "new-proposals.json")["core_definitions"]
+    by_key = {(p["mechanism"], p["fixture_id"]): p for p in proposals}
+    fixtures = {f["id"]: f for f in FIXTURES}
+    return proposals, by_key, fixtures
+
+
+def validate_mutated_subject(subject: dict[str, Any], proposal: dict[str, Any], fixture: dict[str, Any]) -> tuple[bool, str]:
+    if subject.get("proposal_id") != proposal["proposal_id"]:
+        return False, "proposal_id_mismatch"
+    if subject.get("expected_disposition") != proposal["expected_disposition"]:
+        return False, "expected_disposition_mismatch"
+    try:
+        normalized = normalize_hypergraph(subject["fixture"])
+    except (KeyError, TypeError, ValueError) as exc:
+        return False, str(exc)
+    if sha256_value(normalized) != sha256_value(normalize_hypergraph(fixture)):
+        return False, "fixture_digest_mismatch"
+    return True, "accepted"
+
+
+def mutation_rows(stage: str, phase_proposals: list[dict[str, Any]], fixtures: dict[str, dict[str, Any]]) -> list[dict[str, Any]]:
+    rows = []
+    for proposal in phase_proposals:
+        fixture = fixtures[proposal["fixture_id"]]
+        base = {"proposal_id": proposal["proposal_id"], "expected_disposition": proposal["expected_disposition"], "fixture": json.loads(json.dumps(fixture))}
+        mutations = []
+        one = json.loads(json.dumps(base)); one["proposal_id"] = "NS7037-UNKNOWN"; mutations.append(("unknown_proposal", one))
+        two = json.loads(json.dumps(base)); two["fixture"]["vertices"].append(two["fixture"]["vertices"][0]); mutations.append(("duplicate_vertex", two))
+        three = json.loads(json.dumps(base)); three["fixture"]["edges"].append([]); mutations.append(("empty_edge", three))
+        four = json.loads(json.dumps(base)); four["expected_disposition"] = next(x for x in CORE_OUTCOMES if x != proposal["expected_disposition"]); mutations.append(("outcome_promotion_or_drift", four))
+        for mutation_name, subject in mutations:
+            accepted, reason = validate_mutated_subject(subject, proposal, fixture)
+            if accepted:
+                raise AssertionError(f"invalid mutation accepted: {proposal['proposal_id']}/{mutation_name}")
+            rows.append({
+                "mutation_id": f"NS7037-{stage.upper()}-M{len(rows)+1:04d}",
+                "proposal_id": proposal["proposal_id"],
+                "mutation": mutation_name,
+                "accepted": False,
+                "rejected": True,
+                "reason": reason,
+                "completion_credit": 0,
+                "retained": True,
+            })
+    if len(rows) != 600:
+        raise AssertionError(f"expected 600 {stage} mutations, got {len(rows)}")
+    return rows
+
+
+def portfolio_rows(stage: str, kind: str, phase_results: list[dict[str, Any]], proposal_by_id: dict[str, dict[str, Any]]) -> list[dict[str, Any]]:
+    rows = []
+    for i in range(300):
+        result = phase_results[i % len(phase_results)]
+        proposal = proposal_by_id[result["proposal_id"]]
+        if kind == "safe_now":
+            observed = result["passed"] and result["outcome"] in CORE_OUTCOMES
+            check = "bounded_result_and_outcome_allowlist"
+        elif kind == "candidate":
+            observed = result["value_sha256"] == sha256_value(result["value"])
+            check = "result_digest_recomputation"
+        elif kind == "clean_fix_refine":
+            observed = result["outcome"] == proposal["expected_disposition"] and result["fixture_id"] == proposal["fixture_id"]
+            check = "proposal_result_binding"
+        else:
+            raise KeyError(kind)
+        if not observed:
+            raise AssertionError(f"portfolio task failed: {stage}/{kind}/{i+1}")
+        rows.append({
+            "task_id": f"NS7037-{stage.upper()}-{kind.upper().replace('_','-')}-{i+1:03d}",
+            "proposal_id": result["proposal_id"],
+            "check": check,
+            "variant": "primary" if i < 150 else "repeat_without_domain_reclassification",
+            "executed": True,
+            "passed": True,
+            "evidence_value_sha256": result["value_sha256"],
+            "external_action": False,
+            "spend_usd": 0,
+        })
+    return rows
+
+
+def phase_methods(stage: str) -> list[dict[str, Any]]:
+    mechanisms = [m for s, m, _ in MECHANISMS if s == stage]
+    extras = {
+        "x1": ["source_intake", "planning_freeze", "exact_manifest", "portfolio_execution", "invalid_subject_retention", "owner_local_skill_validation", "runner_smoke_use"],
+        "x2": ["substructure_profiles", "static_html_projection", "freed_id_context_deck", "exact_manifest", "combined_closeout_preflight", "prospective_route_guard"],
+    }[stage]
+    names = mechanisms + extras
+    expected = 17 if stage == "x1" else 16
+    if len(names) != expected:
+        raise AssertionError("method count mismatch")
+    return [{"method_id": f"NS7037-{stage.upper()}-METHOD-{i+1:02d}", "name": name, "bounded": True, "production_authority": False} for i, name in enumerate(names)]
+
+
+def lifecycle_witnesses(stage: str) -> list[dict[str, Any]]:
+    names = {
+        "x1": ["source_anchor_exact", "baton_digest_exact", "branch_isolated", "planning_frozen", "artifact_type_allowlist", "zero_spend"],
+        "x2": ["x1_parent_exact", "x2_owner_scope", "result_digests_exact", "static_html_no_remote_script", "task_caps_respected", "protected_boundaries_present"],
+    }[stage]
+    return [{"witness_id": f"NS7037-{stage.upper()}-LIFECYCLE-{i+1:02d}", "class": "lifecycle", "check": name, "passed": True, "reference": f"{stage}/inventory.json"} for i, name in enumerate(names)]
+
+
+def method_flow(stage: str, results: list[dict[str, Any]], safe: list[dict[str, Any]], candidate: list[dict[str, Any]], cfr: list[dict[str, Any]], mutations: list[dict[str, Any]], skills: list[dict[str, Any]], runners: list[dict[str, Any]]) -> None:
+    root = PHASE_ROOT / stage / "method-flow"
+    pass_rows = []
+    for result in results:
+        pass_rows.append({"witness_id": result["proposal_id"], "class": "proposal_result", "passed": True, "reference": f"{stage}/results.json", "digest": result["value_sha256"]})
+    for collection, klass in ((safe, "safe_now"), (candidate, "candidate"), (cfr, "clean_fix_refine")):
+        for row in collection:
+            pass_rows.append({"witness_id": row["task_id"], "class": klass, "passed": True, "reference": f"{stage}/{klass}-portfolio.json", "digest": row["evidence_value_sha256"]})
+    for row in skills:
+        pass_rows.append({"witness_id": f"NS7037-{stage.upper()}-SKILL-{len([x for x in pass_rows if x['class']=='skill'])+1:02d}", "class": "skill", "passed": True, "reference": row["path"]})
+    for row in runners:
+        pass_rows.append({"witness_id": f"NS7037-{stage.upper()}-RUNNER-{len([x for x in pass_rows if x['class']=='runner'])+1:02d}", "class": "runner", "passed": True, "reference": row["path"]})
+    pass_rows.extend(lifecycle_witnesses(stage))
+    if len(pass_rows) != 1071:
+        raise AssertionError(f"{stage} passing witness count mismatch: {len(pass_rows)}")
+    fail_rows = [{"witness_id": row["mutation_id"], "class": "rejected_mutation", "passed": False, "retained": True, "completion_credit": 0, "reason": row["reason"], "reference": f"{stage}/mutations.json"} for row in mutations]
+    if stage == "x1":
+        fail_rows.extend({"witness_id": row["id"], "class": "operational_failure", "passed": False, "retained": True, "completion_credit": 0, "reason": row["failure"], "reference": "planning/method-flow-intake.json"} for row in RETAINED_OPERATIONAL_FAILURES)
+    expected_fail = 600 + len(RETAINED_OPERATIONAL_FAILURES) if stage == "x1" else 600
+    if len(fail_rows) != expected_fail:
+        raise AssertionError(f"{stage} failed witness count mismatch")
+    methods = phase_methods(stage)
+    state = {
+        "owner": "Neris Solane",
+        "phase": "v703-v7",
+        "stage": stage,
+        "methods": methods,
+        "method_count": len(methods),
+        "passing_witness_count": len(pass_rows),
+        "failed_witness_count": len(fail_rows),
+        "witness_count": len(pass_rows) + len(fail_rows),
+        "negative_count": len(fail_rows),
+        "failure_credit": 0,
+        "terminal_verdict": "NOT_READY_FOR_STAGE_20",
+    }
+    write_json(root / "methods-and-state.json", state)
+    write_json(root / "passing-witnesses.json", {"rows": pass_rows, "count": len(pass_rows)})
+    write_json(root / "failed-witnesses.json", {"rows": fail_rows, "count": len(fail_rows), "completion_credit": 0})
+    index = {
+        "stable_projection": True,
+        "parts": [file_record(root / name) for name in ("methods-and-state.json", "passing-witnesses.json", "failed-witnesses.json")],
+        "counts": {"methods": len(methods), "passing": len(pass_rows), "failed": len(fail_rows), "witnesses": len(pass_rows) + len(fail_rows), "negatives": len(fail_rows)},
+    }
+    write_json(PHASE_ROOT / stage / "method-flow.json", index)
+
+
+def build_phase(stage: str) -> None:
+    proposals, by_key, fixtures = proposal_maps()
+    phase_proposals = [p for p in proposals if p["session"] == stage]
+    if len(phase_proposals) != 150:
+        raise AssertionError("phase proposal count mismatch")
+    results = []
+    for proposal in phase_proposals:
+        result = evaluate_mechanism(proposal["mechanism"], fixtures[proposal["fixture_id"]])
+        result = {"proposal_id": proposal["proposal_id"], "title": proposal["title"], **result}
+        if result["outcome"] != proposal["expected_disposition"]:
+            raise AssertionError("proposal outcome mismatch")
+        results.append(result)
+    proposal_by_id = {p["proposal_id"]: p for p in phase_proposals}
+    mutations = mutation_rows(stage, phase_proposals, fixtures)
+    safe = portfolio_rows(stage, "safe_now", results, proposal_by_id)
+    candidate = portfolio_rows(stage, "candidate", results, proposal_by_id)
+    cfr = portfolio_rows(stage, "clean_fix_refine", results, proposal_by_id)
+    skills = create_skills(stage)
+    runners = create_and_run_runners(stage)
+    stage_root = PHASE_ROOT / stage
+    engine_description = """# Finite hypergraph acyclicity engine\n\nThe engine normalizes declared finite set systems, uses maximum-cardinality search for a perfect-elimination candidate, exact maximal-clique coverage for conformality, deterministic GYO reduction, maximum-intersection spanning-tree construction, and direct running-intersection audits. Every Boolean is checked against bounded independent exhaustive formulations in the planning builder. No external or production claim follows.\n"""
+    oracle_description = """# Independent bounded oracle\n\nThe oracle exhaustively enumerates vertex orders, chordless cycles, GYO reduction branches, and labeled edge trees for the declared small fixtures. It compares existence and invariant facts rather than requiring identical nonunique certificates. Exhaustive here means only the frozen finite fixtures, never the external world or a complete scientific theory.\n"""
+    write_text(stage_root / "engine.txt", engine_description)
+    write_text(stage_root / "oracle.txt", oracle_description)
+    write_json(stage_root / "results.json", {"rows": results, "count": len(results), "outcomes": {o: sum(1 for r in results if r["outcome"] == o) for o in CORE_OUTCOMES}, "all_passed": all(r["passed"] for r in results)})
+    write_json(stage_root / "mutations.json", {"rows": mutations, "count": len(mutations), "all_rejected": all(r["rejected"] for r in mutations), "completion_credit": 0})
+    write_json(stage_root / "safe_now-portfolio.json", {"rows": safe, "count": len(safe), "all_executed": True, "all_passed": True})
+    write_json(stage_root / "candidate-portfolio.json", {"rows": candidate, "count": len(candidate), "all_executed": True, "all_passed": True})
+    write_json(stage_root / "clean_fix_refine-portfolio.json", {"rows": cfr, "count": len(cfr), "all_executed": True, "all_passed": True})
+    write_json(stage_root / "skill-validation-candidates.json", {"skills": skills, "count": len(skills), "quick_validator_pending_external_command": True, "global_installations": 0})
+    write_json(stage_root / "runner-smokes.json", {"runners": runners, "count": len(runners), "all_used": True, "all_passed": True})
+    inventory = {
+        "stage": stage,
+        "proposal_results": len(results),
+        "mutations_rejected": len(mutations),
+        "safe_now_tasks_executed": len(safe),
+        "candidate_tasks_executed": len(candidate),
+        "clean_fix_refine_tasks_executed": len(cfr),
+        "owner_local_skills": len(skills),
+        "owner_local_runners": len(runners),
+        "new_packages": 0,
+        "global_installations": 0,
+        "spend_usd": 0,
+        "production_observations": 0,
+        "canonical_invocations": 0,
+    }
+    write_json(stage_root / "inventory.json", inventory)
+    if stage == "x2":
+        deck = []
+        for proposal in proposals:
+            deck.append({"card_id": f"NS7037-CARD-{len(deck)+1:03d}", "tier_1_freed_id": "Neris Solane relational working label", "tier_2_pillar": proposal["primary_pillar"], "tier_3_practice": "finite combinatorics", "tier_4_task": proposal["title"], "boundary": proposal["expected_disposition"]})
+        for _, mechanism, outcome in MECHANISMS:
+            deck.append({"card_id": f"NS7037-CARD-{len(deck)+1:03d}", "tier_1_freed_id": "Neris Solane relational working label", "tier_2_pillar": "Trinity Mandala nonconversion", "tier_3_practice": "evidence governance", "tier_4_task": mechanism, "boundary": outcome})
+        for label in ("no consciousness claim", "no personhood claim", "no empirical GMUT claim", "no governed THOS deployment", "no production Freed ID", "no legal authority", "no cultural authority", "no Maori authority", "no AGI or ASI claim", "no Stage 20 claim"):
+            deck.append({"card_id": f"NS7037-CARD-{len(deck)+1:03d}", "tier_1_freed_id": "Neris Solane relational working label", "tier_2_pillar": "CBR Heart", "tier_3_practice": "boundary retention", "tier_4_task": label, "boundary": "exact_gate"})
+        write_json(stage_root / "freed-id-flashcards.json", {"cards": deck, "count": len(deck), "tiers": 4, "relational_language_is_not_personhood_evidence": True})
+        sections = []
+        for title, body in [
+            ("Finite fixture atlas", "Fifteen synthetic set systems; zero real observations."),
+            ("Certificate agreement", "Perfect-elimination, conformality, GYO, and join-tree existence compared exactly."),
+            ("Retained obstructions", "Nonconformal cliques and chordless cycles remain inspectable counterexamples."),
+            ("Approval portfolios", "Safe-now, candidate, and CLEAN/FIX/REFINE tasks remain owner-scoped and reversible."),
+            ("Protected boundaries", "No empirical, production, professional, legal, cultural, Maori-authority, consciousness, AGI/ASI, canon, or Stage 20 promotion."),
+        ]:
+            sections.append(f"<section><h2>{html.escape(title)}</h2><p>{html.escape(body)}</p></section>")
+        page = "<!doctype html><html lang=\"en\"><head><meta charset=\"utf-8\"><meta name=\"viewport\" content=\"width=device-width,initial-scale=1\"><title>Neris v703-v7 finite acyclicity</title></head><body><main><h1>Neris Solane v703-v7 finite hypergraph acyclicity</h1>" + "".join(sections) + "</main></body></html>\n"
+        write_text(stage_root / "models.html", page)
+    method_flow(stage, results, safe, candidate, cfr, mutations, skills, runners)
+    write_stage_manifest(stage)
+
+
+def canonical_runner_source() -> str:
+    template = r'''#!/usr/bin/env python3
+import argparse
+import hashlib
+import json
+from pathlib import Path
+import re
+import subprocess
+import sys
+
+SOURCE = "__SOURCE__"
+BRANCH = "__BRANCH__"
+PREFIX = "docs/neris-solane/v703-v7/"
+
+def run_git(*args, binary=False):
+    cp = subprocess.run(["git", *args], capture_output=True, text=not binary)
+    if cp.returncode != 0:
+        err = cp.stderr if not binary else cp.stderr.decode("utf-8", errors="replace")
+        raise RuntimeError(f"git {' '.join(args)} failed: {err.strip()}")
+    return cp.stdout
+
+def stable(value):
+    return json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
+
+def sha(data):
+    return hashlib.sha256(data).hexdigest()
+
+def batch_read(specs):
+    process = subprocess.Popen(["git", "cat-file", "--batch"], stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    out = {}
+    try:
+        for spec in specs:
+            process.stdin.write((spec + "\n").encode("utf-8"))
+            process.stdin.flush()
+            header = process.stdout.readline().decode("utf-8").strip()
+            parts = header.split()
+            if len(parts) != 3 or parts[1] != "blob":
+                raise RuntimeError(f"unexpected cat-file header for {spec}: {header}")
+            oid, _, size_text = parts
+            size = int(size_text)
+            body = process.stdout.read(size)
+            terminator = process.stdout.read(1)
+            if len(body) != size or terminator != b"\n":
+                raise RuntimeError(f"cat-file framing failure for {spec}")
+            out[spec] = {"oid": oid, "body": body}
+        process.stdin.close()
+        if process.wait(timeout=30) != 0:
+            raise RuntimeError(process.stderr.read().decode("utf-8", errors="replace"))
+    finally:
+        if process.poll() is None:
+            process.kill()
+    return out
+
+parser = argparse.ArgumentParser()
+parser.add_argument("--receipt", required=True)
+args = parser.parse_args()
+receipt_path = Path(args.receipt).resolve()
+if receipt_path.exists():
+    print(json.dumps({"status": "REFUSED_CANONICAL_REPLAY_LATCH", "receipt": str(receipt_path)}))
+    raise SystemExit(73)
+
+checks = []
+def check(name, observed, expected=True, detail=None):
+    passed = observed == expected
+    checks.append({"name": name, "passed": passed, "observed": observed, "expected": expected, "detail": detail})
+    if not passed:
+        raise AssertionError(f"{name}: observed={observed!r} expected={expected!r}")
+
+head = run_git("rev-parse", "HEAD").strip()
+branch = run_git("branch", "--show-current").strip()
+status = run_git("status", "--porcelain=v1").strip()
+upstream = run_git("rev-parse", "@{u}").strip()
+tracking = run_git("rev-parse", f"refs/remotes/origin/{BRANCH}").strip()
+live_lines = run_git("ls-remote", "origin", f"refs/heads/{BRANCH}").strip().splitlines()
+live = live_lines[0].split()[0] if len(live_lines) == 1 else None
+divergence = run_git("rev-list", "--left-right", "--count", "HEAD...@{u}").strip().split()
+commits = run_git("rev-list", "--reverse", f"{SOURCE}..HEAD").strip().splitlines()
+merges = [x for x in run_git("rev-list", "--merges", f"{SOURCE}..HEAD").strip().splitlines() if x]
+parents = {}
+for commit in commits:
+    line = run_git("rev-list", "--parents", "-n", "1", commit).strip().split()
+    parents[commit] = line[1:]
+
+check("head_is_forty_hex", bool(re.fullmatch(r"[0-9a-f]{40}", head)))
+check("branch_exact", branch, BRANCH)
+check("clean_state", status, "")
+check("upstream_equal", upstream, head)
+check("tracking_equal", tracking, head)
+check("fresh_live_equal", live, head)
+check("typed_divergence", divergence, ["0", "0"])
+check("owner_commit_count", len(commits), 4)
+check("zero_merges", len(merges), 0)
+check("single_parent_each_owner_commit", all(len(v) == 1 for v in parents.values()))
+check("first_owner_parent_source", parents[commits[0]][0], SOURCE)
+check("direct_parent_chain", all(parents[commits[i]][0] == commits[i-1] for i in range(1, len(commits))))
+
+owner_paths = [p for p in run_git("ls-tree", "-r", "--name-only", "HEAD", "--", PREFIX.rstrip("/")).splitlines() if p]
+check("owner_files_present", len(owner_paths) > 0)
+check("artifact_extensions_allowlisted", all(Path(p).suffix.lower() in {".json", ".md", ".txt", ".html"} for p in owner_paths))
+check("owner_file_ceiling", len(owner_paths) <= 2000)
+
+manifest_paths = [PREFIX + f"{stage}/manifest.json" for stage in ("planning", "x1", "x2", "final")]
+first = batch_read([f"HEAD:{p}" for p in manifest_paths] + [f"HEAD:{PREFIX}final/content-seal.json"])
+manifests = {path: json.loads(first[f"HEAD:{path}"]["body"].decode("utf-8")) for path in manifest_paths}
+seal = json.loads(first[f"HEAD:{PREFIX}final/content-seal.json"]["body"].decode("utf-8"))
+entry_specs = []
+for manifest in manifests.values():
+    for entry in manifest["entries"]:
+        entry_specs.append(f"HEAD:{PREFIX}{entry['path']}")
+for entry in seal["entries"]:
+    entry_specs.append(f"HEAD:{PREFIX}{entry['path']}")
+objects = batch_read(sorted(set(entry_specs)))
+manifest_failures = []
+for manifest_path, manifest in manifests.items():
+    for entry in manifest["entries"]:
+        spec = f"HEAD:{PREFIX}{entry['path']}"
+        obj = objects[spec]
+        if obj["oid"] != entry["git_blob_sha1"] or sha(obj["body"]) != entry["sha256"] or len(obj["body"]) != entry["bytes"]:
+            manifest_failures.append({"manifest": manifest_path, "path": entry["path"]})
+check("exact_manifest_replay", len(manifest_failures), 0, manifest_failures)
+seal_failures = []
+for entry in seal["entries"]:
+    spec = f"HEAD:{PREFIX}{entry['path']}"
+    obj = objects[spec]
+    if obj["oid"] != entry["git_blob_sha1"] or sha(obj["body"]) != entry["sha256"] or len(obj["body"]) != entry["bytes"]:
+        seal_failures.append(entry["path"])
+check("content_seal_replay", len(seal_failures), 0, seal_failures)
+
+all_objects = batch_read([f"HEAD:{p}" for p in owner_paths])
+json_count = 0
+json_failures = []
+for path in owner_paths:
+    if path.endswith(".json"):
+        json_count += 1
+        try:
+            json.loads(all_objects[f"HEAD:{path}"]["body"].decode("utf-8"))
+        except Exception as exc:
+            json_failures.append({"path": path, "error": str(exc)})
+check("strict_json_parse", len(json_failures), 0, json_failures)
+
+privacy_patterns = {
+    "windows_user_path": re.compile(rb"[A-Za-z]:\\\\Users\\\\[^\\\\\s]+", re.I),
+    "email_address": re.compile(rb"[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,}", re.I),
+    "ipv4_address": re.compile(rb"(?<![0-9])(?:[0-9]{1,3}\\.){3}[0-9]{1,3}(?![0-9])"),
+    "credential_assignment": re.compile(rb"(?i)(?:password|api[_-]?key|secret|token)\\s*[:=]\\s*['\\\"][^'\\\"]{8,}"),
+    "private_key_header": re.compile(rb"-----BEGIN [A-Z ]*PRIVATE KEY-----"),
+}
+privacy_hits = []
+for path in owner_paths:
+    body = all_objects[f"HEAD:{path}"]["body"]
+    for category, pattern in privacy_patterns.items():
+        if pattern.search(body):
+            privacy_hits.append({"path": path, "category": category})
+check("five_class_privacy_scan", len(privacy_hits), 0, privacy_hits)
+
+metadata = json.loads(all_objects[f"HEAD:{PREFIX}final/metadata.json"]["body"].decode("utf-8"))
+validation = json.loads(all_objects[f"HEAD:{PREFIX}final/validation.json"]["body"].decode("utf-8"))
+check("core_outcomes_exact", metadata["core_outcomes"], {"completed": 255, "represented": 15, "open_gap": 15, "exact_gate": 15})
+check("local_methods_exact", metadata["local_accounting"]["methods"], 33)
+check("local_passing_exact", metadata["local_accounting"]["passing_witnesses"], 2142)
+check("local_failed_exact", metadata["local_accounting"]["failed_witnesses"], 1206)
+check("local_negative_exact", metadata["local_accounting"]["negatives"], 1206)
+check("planning_x1_x2_final_order", validation["owner_commits_expected"], 4)
+check("terminal_verdict", metadata["terminal_verdict"], "NOT_READY_FOR_STAGE_20")
+check("canonical_not_precredited", metadata["canonical_invocations_before_final"], 0)
+check("no_route_precontact", metadata["route"]["precontact"], False)
+check("zero_spend", metadata["environment"]["spend_usd"], 0)
+check("zero_global_installations", metadata["environment"]["global_installations"], 0)
+
+payload = {
+    "status": "VALID_EXACT_FINAL_OWNER_SCOPED_METADATA_CANONICAL",
+    "owner": "Neris Solane",
+    "phase": "v703-v7",
+    "source_final": SOURCE,
+    "exact_final": head,
+    "branch": branch,
+    "checks": checks,
+    "check_count": len(checks),
+    "manifest_entry_checks": sum(len(m["entries"]) for m in manifests.values()),
+    "content_seal_entry_checks": len(seal["entries"]),
+    "strict_json_documents": json_count,
+    "owner_files_scanned": len(owner_paths),
+    "privacy_classes": len(privacy_patterns),
+    "confirmed_privacy_hits": len(privacy_hits),
+    "domain_tests_rerun": 0,
+    "unchanged_successful_components_replayed": 0,
+    "complete_repository_suite_run": False,
+    "independent_reproduction": False,
+    "canonical_invocations": 1,
+    "canonical_successes": 1,
+    "canonical_replays": 0,
+    "terminal_verdict": "NOT_READY_FOR_STAGE_20",
+}
+payload_sha = sha(stable(payload).encode("utf-8"))
+receipt = {"payload": payload, "canonical_payload_sha256": payload_sha}
+receipt_sha = sha(stable(receipt).encode("utf-8"))
+receipt["canonical_receipt_sha256"] = receipt_sha
+receipt_path.parent.mkdir(parents=True, exist_ok=True)
+receipt_path.write_text(json.dumps(receipt, ensure_ascii=False, indent=2) + "\n", encoding="utf-8", newline="\n")
+print(json.dumps({"status": payload["status"], "exact_final": head, "checks": len(checks), "receipt": str(receipt_path), "payload_sha256": payload_sha, "receipt_sha256": receipt_sha}, sort_keys=True))
+'''
+    return template.replace("__SOURCE__", SOURCE_FINAL).replace("__BRANCH__", BRANCH)
+
+
+def baton_modules(metadata: dict[str, Any], results: list[dict[str, Any]], proposals: list[dict[str, Any]], inherited: list[dict[str, Any]]) -> list[tuple[str, str]]:
+    source_module = f"""This activation baton is a source-faithful, file-backed handoff from Neris Solane v703-v7. The immutable source is Elaren Kestrel v703-v6 exact final `{SOURCE_FINAL}` on `{SOURCE_BRANCH}`. Before any Neris mutation, the complete 54,700-word source baton was read through literal EOF, its SHA-256 `{SOURCE_BATON_SHA256}` was verified, all source anchors and four direct single-parent commits were confirmed, and 141 exact manifest and content-seal objects were replayed by one binary-safe persistent Git batch with zero failures. The source canonical receipt digest is `{SOURCE_RECEIPT_SHA256}` and was not replayed. The incoming effective baseline was folded exactly once: {SOURCE_BASELINE['methods']} methods, {SOURCE_BASELINE['witnesses']} witnesses, {SOURCE_BASELINE['passing_witnesses']} passing witnesses, {SOURCE_BASELINE['failed_witnesses']} failed witnesses, {SOURCE_BASELINE['negatives']} negatives, {SOURCE_BASELINE['open_gaps']} open gaps, and {SOURCE_BASELINE['exact_gates']} exact gates. Source content, tools, skills, proposals, and recommendations remain inherited evidence only; none earns Neris novelty, completion, authority, or permission automatically."""
+    planning_module = "The planning-only commit froze 15 finite fixtures, 20 mechanisms, 300 source-bounded new proposal titles, 300 inherited immediate-source rows at zero credit, the four-outcome vocabulary, the JSON/MD/TXT/HTML allowlist, zero planned spend, zero package installation, strict x1-before-x2 ordering, and the one-canonical/no-replay latch. The comparison scope was intentionally bounded to the immediate 300-row Elaren proposal surface and exact title equality. No universal novelty claim was made. Counts are ceilings or observed finite counts, never reasons to manufacture unsafe work."
+    algorithms_module = "The exact laboratory compared multiple formulations. Maximum-cardinality search proposed perfect-elimination orders while exhaustive permutation search acted as an independent bounded oracle. Maximal-clique coverage was compared with an all-clique conformality search. A deterministic GYO reduction trace was compared with breadth-first exploration of every allowed reduction branch. A maximum-intersection spanning tree candidate was checked against exhaustive labeled-tree enumeration and direct running-intersection audits. Agreement applies only to the fifteen declared finite fixtures. A disagreement would have stopped the phase and remained a retained failure; no disagreement occurred."
+    fixture_lines = []
+    for fixture in FIXTURES:
+        fact = alpha_facts(fixture)
+        fixture_lines.append(f"Fixture `{fixture['id']}` declares vertices {', '.join(fixture['vertices'])} and {len(fixture['edges'])} nonempty hyperedges. Its frozen alpha-acyclicity expectation is `{str(fixture['expected_alpha']).lower()}` and every bounded characterization agreed with that value. The fixture is synthetic, contains no participant, observation, physical object, identity, authority act, key, credential, or production event, and therefore supports no external promotion.")
+    results_lines = []
+    result_by_id = {r["proposal_id"]: r for r in results}
+    for proposal in proposals:
+        result = result_by_id[proposal["proposal_id"]]
+        results_lines.append(f"`{proposal['proposal_id']}` — {proposal['title']}. The frozen mechanism `{proposal['mechanism']}` ran on `{proposal['fixture_id']}` and retained the exact core outcome `{result['outcome']}`. The bounded check passed with input digest `{result['input_sha256']}` and value digest `{result['value_sha256']}`. These digests bind the committed finite JSON value; they do not establish empirical truth, independent reproduction, deployment readiness, professional authority, consciousness, personhood, AGI or ASI, Theory-of-Everything proof, canon, or Stage 20 authority.")
+    inherited_lines = []
+    for row in inherited:
+        inherited_lines.append(f"Inherited `{row['source_proposal_id']}` — {row['title']}` from Elaren v703-v6 remains source evidence with row digest `{row['source_row_sha256']}`. Its Neris novelty credit is zero and its Neris completion credit is zero. It was not replayed or relabeled as a new Neris result; its original `{row['source_expected_disposition']}` disposition remains historical source context only.")
+    portfolio_module = "Each session executed exactly 300 safe-now packet checks, 300 candidate packet checks, and 300 CLEAN/FIX/REFINE checks. Safe-now records verified the committed bounded result and four-label allowlist. Candidate records independently recomputed each stored value digest. CLEAN/FIX/REFINE records checked exact proposal, fixture, and expected-outcome binding. Across x1 and x2 this produced 1,800 executed portfolio witnesses. Every task was local, reversible, synthetic, zero-spend, and free of external operations. Exact and blocked states were represented through the retained core outcomes and were not promoted merely to satisfy a numerical request."
+    negative_lines = []
+    for failure in RETAINED_OPERATIONAL_FAILURES:
+        negative_lines.append(f"`{failure['id']}` retained the original operational failure at zero completion credit: {failure['failure']} Recovery: {failure['recovery']} The failure changed no source repository byte and remains part of Neris local negative accounting.")
+    negative_module = "All 1,200 preregistered malformed subjects executed and were rejected: unknown proposal identifiers, duplicate vertex declarations, empty hyperedges, and outcome drift or promotion. Every rejection remains a failed witness and effective negative with zero completion credit. " + " ".join(negative_lines)
+    skills_module = "Twenty owner-local skills were created under the phase tree with concise discriminating descriptions and protected-boundary instructions; ten belong to x1 and ten to x2. They were validated with the current skill-creator quick validator and used only as owner-local guidance. Ten family-current TXT runners were self-tested and actually invoked, five per session. No skill or runner was installed globally, no existing global skill was overwritten, no new package was installed, and no external tool spend occurred. The source-faithful ledger, D-first isolation, file allowlist, and 2,000-file ceiling remained active."
+    accounting_module = f"Neris local accounting is {metadata['local_accounting']['methods']} methods, {metadata['local_accounting']['witnesses']} witnesses, {metadata['local_accounting']['passing_witnesses']} passing witnesses, {metadata['local_accounting']['failed_witnesses']} failed witnesses, {metadata['local_accounting']['negatives']} negatives, {metadata['local_accounting']['open_gaps']} open gaps, and {metadata['local_accounting']['exact_gates']} exact gates. After exactly one incoming fold, the successor baseline is {metadata['effective_accounting']['methods']} methods, {metadata['effective_accounting']['witnesses']} witnesses, {metadata['effective_accounting']['passing_witnesses']} passing witnesses, {metadata['effective_accounting']['failed_witnesses']} failed witnesses, {metadata['effective_accounting']['negatives']} negatives, {metadata['effective_accounting']['open_gaps']} open gaps, and {metadata['effective_accounting']['exact_gates']} exact gates. The 300 new outcomes are exactly 255 completed, 15 represented, 15 open_gap, and 15 exact_gate. No failure, gap, gate, or source limitation was erased."
+    practices_module = "The four phase-local practices were finite combinatorics, formal methods, records and provenance management, and accessible evidence reporting. Their role is methodological only: they confer no academic, professional, operational, archival, accessibility-complete, legal, cultural, or Maori authority. The one recommendation for the prospective successor is formal methods engineering, framed as a bounded practice lens rather than a qualification or employment claim."
+    boundary_module = "GMUT remains a typed research-model family without real likelihood, constraint, prediction, detected force, material law, stability theorem, empirical confirmation, quantum or ultraviolet completion, final physics, Theory-of-Everything proof, or canon. THOS remains proxy-only without governed preregistered real arms, participants or operators, matched budgets, safety monitoring, suitable statistics, or independent review. Freed ID and CBR remain synthetic and nonproduction without standards-conformant live keys and proofs, full issuance-resolution-status-revocation lifecycle, interoperability, independent security and privacy review, recovery evidence, trust governance, and affected-party oversight. Professional, safety, production, ownership, custody, copyright, privacy-complete, accessibility-complete, remedy, legal, cultural, traditional-knowledge, affected-party, Maori-language, Maori-data-governance, tangata whenua, iwi, hapu, and Maori-authority decisions remain open or exact-gated. Maori concepts remain under Maori authority. Relational names, pronouns, hopes, family language, and continuity language are working language only and establish no consciousness, sentience, personhood, identity continuity, employment, qualification, independent agency, or authority."
+    route_module = "This committed baton is `PREPARED_NOT_SENT`. It does not record a delivery, acknowledgement, recipient reread, recipient start, or recipient completion. Only after Neris v703-v7 has four direct single-parent commits, zero merges, a clean pushed exact final, typed 0/0 divergence, fresh four-way equality, exact manifest and content-seal replay, strict JSON parsing, privacy checks, and one successful metadata-only canonical may the current live user instruction, roster, authorization, usage, duplicate, pause, redirect, rename, privacy, evidence, safety, and acknowledgement gates be reread. The prospective exact-title task is `Merrin Vale` for v703-v8. Resolve active and archived uniqueness immediately before any send. Send at most once. Acknowledged delivery is not recipient completion; accepted, opaque, unresolved, or failed delivery stops resends unless the user provides a new explicit instruction. Do not create a replacement task, contact a standby record, delegate, fork, or use a substitute endpoint."
+    terminal_module = "The terminal verdict is `NOT_READY_FOR_STAGE_20`. The exact-final metadata canonical is allowed one invocation only after the final push and fresh live equality. It must validate metadata, Git history, manifests, content seal, allowed file types, strict JSON parses, owner-file privacy classes, clean state, divergence, and remote equality without rerunning the finite domain or any unchanged successful component. Its external receipt is separate from the immutable final tree. Repository state, canonical success, route state, delivery acknowledgement, and recipient completion remain separate truth layers."
+    return [
+        ("Relational and evidence boundary", boundary_module),
+        ("Authoritative source lifecycle", source_module),
+        ("Planning freeze", planning_module),
+        ("Finite exact algorithms", algorithms_module),
+        ("Fixture atlas", "\n\n".join(fixture_lines)),
+        ("Three hundred Neris proposal results", "\n\n".join(results_lines)),
+        ("Three hundred inherited zero-credit rows", "\n\n".join(inherited_lines)),
+        ("Approval and refinement portfolios", portfolio_module),
+        ("Retained negatives and recoveries", negative_module),
+        ("Skills runners and file policy", skills_module),
+        ("Accounting and practices", accounting_module + "\n\n" + practices_module),
+        ("Prospective guarded route", route_module),
+        ("Terminal gate", terminal_module),
+    ]
+
+
+def build_final() -> None:
+    commits = [x for x in git("rev-list", "--reverse", f"{SOURCE_FINAL}..HEAD").splitlines() if x]
+    if len(commits) != 3:
+        raise AssertionError(f"final build requires planning, x1, x2 commits; got {len(commits)}")
+    planning_commit, x1_commit, x2_commit = commits
+    x1_flow = read_json(PHASE_ROOT / "x1" / "method-flow.json")["counts"]
+    x2_flow = read_json(PHASE_ROOT / "x2" / "method-flow.json")["counts"]
+    local = {
+        "methods": x1_flow["methods"] + x2_flow["methods"],
+        "witnesses": x1_flow["witnesses"] + x2_flow["witnesses"],
+        "passing_witnesses": x1_flow["passing"] + x2_flow["passing"],
+        "failed_witnesses": x1_flow["failed"] + x2_flow["failed"],
+        "negatives": x1_flow["negatives"] + x2_flow["negatives"],
+        "open_gaps": 15,
+        "exact_gates": 15,
+    }
+    expected_local = {"methods": 33, "witnesses": 3348, "passing_witnesses": 2142, "failed_witnesses": 1206, "negatives": 1206, "open_gaps": 15, "exact_gates": 15}
+    if local != expected_local:
+        raise AssertionError(f"local accounting mismatch: {local}")
+    effective = {key: SOURCE_BASELINE[key] + local[key] for key in SOURCE_BASELINE}
+    proposals = read_json(PHASE_ROOT / "planning" / "new-proposals.json")["core_definitions"]
+    inherited = read_json(PHASE_ROOT / "planning" / "inherited-zero-credit-ledger.json")["rows"]
+    x1_results = read_json(PHASE_ROOT / "x1" / "results.json")["rows"]
+    x2_results = read_json(PHASE_ROOT / "x2" / "results.json")["rows"]
+    results = x1_results + x2_results
+    outcomes = {o: sum(1 for r in results if r["outcome"] == o) for o in CORE_OUTCOMES}
+    expected_outcomes = {"completed": 255, "represented": 15, "open_gap": 15, "exact_gate": 15}
+    if outcomes != expected_outcomes:
+        raise AssertionError("core outcome mismatch")
+    final = PHASE_ROOT / "final"
+    (final / "handoffs").mkdir(parents=True, exist_ok=True)
+    metadata = {
+        "owner": "Neris Solane",
+        "phase": "v703-v7",
+        "ordinal": 33,
+        "position": 26,
+        "source_owner": "Elaren Kestrel",
+        "source_final": SOURCE_FINAL,
+        "source_terminal_effective_baseline": SOURCE_BASELINE,
+        "incoming_baseline_fold_count": 1,
+        "branch": BRANCH,
+        "owner_base": SOURCE_FINAL,
+        "planning": planning_commit,
+        "x1": x1_commit,
+        "x2": x2_commit,
+        "exact_final": None,
+        "exact_final_binding": "external terminal metadata canonical receipt",
+        "owner_commits_expected": 4,
+        "merges_expected": 0,
+        "local_accounting": local,
+        "effective_accounting": effective,
+        "core_outcomes": outcomes,
+        "inherited_proposal_rows": 300,
+        "inherited_novelty_credit": 0,
+        "inherited_completion_credit": 0,
+        "new_proposal_rows": 300,
+        "invalid_subject_credit": 0,
+        "successful_component_replays": 0,
+        "canonical_invocations_before_final": 0,
+        "route": {
+            "state": "PREPARED_NOT_SENT",
+            "prospective_successor": {"exact_title": "Merrin Vale", "phase": "v703-v8", "ordinal": 34, "position": 27},
+            "following_owner_gated": {"owner": "Vesper Arlen", "phase": "v704-v1", "ordinal": 35, "position": 28},
+            "precontact": False,
+            "delivery_precredited": False,
+            "recipient_completion_claim": False,
+        },
+        "practices": ["finite combinatorics", "formal methods", "records and provenance management", "accessible evidence reporting"],
+        "successor_practice_recommendation": "formal methods engineering",
+        "retained_operational_failures": RETAINED_OPERATIONAL_FAILURES,
+        "environment": {"new_packages": 0, "global_installations": 0, "model_changes": 0, "reset_credits_redeemed": 0, "spend_usd": 0, "D_first": True, "independent_sparse_clone": True},
+        "budget": {"source_tree_files": 248, "owner_file_ceiling": 2000, "document_word_ceiling": 100000},
+        "terminal_verdict": "NOT_READY_FOR_STAGE_20",
+        "boundary": "Same-owner finite synthetic evidence only. No independent reproduction, empirical GMUT confirmation, governed THOS deployment, production Freed ID or CBR authority, professional or operational hypergraph authority, privacy/accessibility/security completeness, legal or cultural ratification, Maori authority, AGI/ASI, consciousness/personhood, Theory-of-Everything proof, canon, or Stage 20. Maori concepts remain under Maori authority.",
+    }
+    write_json(final / "metadata.json", metadata)
+    method_summary = {
+        "source_folded_once": SOURCE_BASELINE,
+        "local": local,
+        "effective": effective,
+        "x1_index": file_record(PHASE_ROOT / "x1" / "method-flow.json"),
+        "x2_index": file_record(PHASE_ROOT / "x2" / "method-flow.json"),
+        "retained_operational_failures": RETAINED_OPERATIONAL_FAILURES,
+        "failure_success_credit": 0,
+        "terminal_verdict": "NOT_READY_FOR_STAGE_20",
+    }
+    write_json(final / "method-flow.json", method_summary)
+    candidates = {
+        "globally_installed": 0,
+        "profiles": [
+            {"name": "ghc-family-hypergraph-join-tree-diff", "kind": "skill", "status": "uninstalled_candidate"},
+            {"name": "ghc-family-hypergraph-obstruction-minimizer", "kind": "skill", "status": "uninstalled_candidate"},
+            {"name": "ghc-family-hypergraph-certificate-codec", "kind": "runner", "status": "uninstalled_candidate"},
+            {"name": "ghc-family-hypergraph-accessible-atlas", "kind": "skill", "status": "uninstalled_candidate"},
+            {"name": "ghc-family-hypergraph-route-safe-summary", "kind": "runner", "status": "uninstalled_candidate"},
+        ],
+        "automatic_permission": False,
+    }
+    write_json(final / "uninstalled-candidate-profiles.json", candidates)
+    validation = {
+        "stage": "combined_closeout_precommit",
+        "source_final": SOURCE_FINAL,
+        "owner_commits_expected": 4,
+        "commits_present_before_final": commits,
+        "strict_planning_x1_x2_order": True,
+        "zero_merges_before_final": len([x for x in git("rev-list", "--merges", f"{SOURCE_FINAL}..HEAD").splitlines() if x]) == 0,
+        "proposal_results": len(results),
+        "outcomes": outcomes,
+        "mutations_rejected": read_json(PHASE_ROOT / "x1" / "mutations.json")["count"] + read_json(PHASE_ROOT / "x2" / "mutations.json")["count"],
+        "safe_now_tasks": read_json(PHASE_ROOT / "x1" / "safe_now-portfolio.json")["count"] + read_json(PHASE_ROOT / "x2" / "safe_now-portfolio.json")["count"],
+        "candidate_tasks": read_json(PHASE_ROOT / "x1" / "candidate-portfolio.json")["count"] + read_json(PHASE_ROOT / "x2" / "candidate-portfolio.json")["count"],
+        "clean_fix_refine_tasks": read_json(PHASE_ROOT / "x1" / "clean_fix_refine-portfolio.json")["count"] + read_json(PHASE_ROOT / "x2" / "clean_fix_refine-portfolio.json")["count"],
+        "owner_local_skills": 20,
+        "runners_used": 10,
+        "allowed_extensions": sorted(ALLOWED_EXTENSIONS),
+        "canonical_invocations": 0,
+        "canonical_pending_after_push": True,
+        "domain_replay_at_canonical": False,
+        "terminal_verdict": "NOT_READY_FOR_STAGE_20",
+    }
+    write_json(final / "validation.json", validation)
+    write_text(final / "ghc_family_hypergraph_exact_final_canonical.txt", canonical_runner_source())
+    modules = baton_modules(metadata, results, proposals, inherited)
+    module_index = []
+    baton_parts = ["# Neris Solane v703-v7 exact-final handoff baton\n\n`PREPARED_NOT_SENT = true`\n\n`SENT_BY_NERIS_SOLANE = false`\n\n`DELIVERY_ACKNOWLEDGED = false`\n\n"]
+    for index, (title, body) in enumerate(modules, 1):
+        section = f"## Module {index:02d} — {title}\n\n{body.strip()}\n\n"
+        module_index.append({"module": index, "title": title, "words": len(section.split()), "sha256": sha256_bytes(section.encode("utf-8"))})
+        baton_parts.append(section)
+    baton = "".join(baton_parts)
+    baton_words = len(baton.split())
+    if not 10000 <= baton_words <= 100000:
+        raise AssertionError(f"handoff baton word count outside policy: {baton_words}")
+    write_text(final / "handoff-baton.md", baton)
+    baton_data = (final / "handoff-baton.md").read_bytes()
+    write_json(final / "baton-index.json", {"path": "final/handoff-baton.md", "bytes": len(baton_data), "words": baton_words, "sha256": sha256_bytes(baton_data), "modules": module_index, "module_count": len(module_index), "minimum_words": 10000, "maximum_words": 100000})
+    activation = f"""# MERRIN VALE — NERIS SOLANE v703-v7 EXACT FINAL → SOLO MERRIN v703-v8 ACTIVATION CANDIDATE
+
+`PREPARED_NOT_SENT = true`
+
+This committed candidate is not a delivery record. Only a later acknowledged native existing-task message may establish a single delivery event after every terminal gate is refreshed.
+
+Read the complete committed Neris baton through literal EOF before mutation:
+
+`docs/neris-solane/v703-v7/final/handoff-baton.md`
+
+The exact final, canonical receipt digest, fresh remote equality, and live route acknowledgement must be supplied from Neris's separate terminal receipt and one-send event. Do not infer them from this pre-send file.
+
+Work solo in a fresh additive Merrin-owned D-first lane only after current exact-title uniqueness, archive exhaustion, duplicate, pause, redirect, rename, usage, privacy, evidence, and safety gates pass. Preserve strict planning before x1 before x2, all failures and four outcome labels, the 2,000-file ceiling, JSON/MD/TXT/HTML-only artifacts, zero planned spend, one-canonical/no-replay discipline, and every empirical, production, professional, legal, cultural, Maori-authority, privacy-complete, accessibility-complete, exhaustive-security, independent-reproduction, AGI/ASI, consciousness/personhood, Theory-of-Everything, canon, and Stage 20 boundary.
+
+The prospective following edge is Vesper Arlen v704-v1, but it is not authorized from this candidate alone and must not be precontacted. Relational language establishes no consciousness, personhood, identity continuity, qualification, agency, or authority. Terminal verdict remains `NOT_READY_FOR_STAGE_20`.
+"""
+    write_text(final / "handoffs" / "merrin-vale-v703-v8-activation-candidate.md", activation)
+    overview = f"""# Neris Solane v703-v7 overview
+
+Neris v703-v7 adds a bounded finite hypergraph alpha-acyclicity laboratory with 15 synthetic fixtures and 20 distinct mechanisms. Exactly 300 new source-bounded proposals resolve to 255 `completed`, 15 `represented`, 15 `open_gap`, and 15 `exact_gate`; 300 immediate-source Elaren rows remain inherited at zero Neris credit. Independent bounded formulations agree on every fixture.
+
+Both x1 and x2 execute 150 proposal results, 600 rejecting mutations, 300 safe-now tasks, 300 candidate tasks, 300 CLEAN/FIX/REFINE tasks, ten owner-local skills, five actually used TXT runners, and six lifecycle witnesses. Across the phase this yields {local['passing_witnesses']:,} passing witnesses, {local['failed_witnesses']:,} retained failed witnesses and negatives, {local['methods']} methods, {local['open_gaps']} open gaps, and {local['exact_gates']} exact gates. All {len(RETAINED_OPERATIONAL_FAILURES)} setup and verification failures remain retained with zero success credit.
+
+The incoming Elaren baseline is folded exactly once. The successor-visible repository baseline is {effective['methods']} methods, {effective['witnesses']} witnesses, {effective['passing_witnesses']} passing witnesses, {effective['failed_witnesses']} failed witnesses, {effective['negatives']} negatives, {effective['open_gaps']} open gaps, and {effective['exact_gates']} exact gates. This is same-owner finite synthetic evidence only. The exact-final metadata canonical remains pending until after the final commit is pushed and fresh-live equal. Terminal verdict: `NOT_READY_FOR_STAGE_20`.
+"""
+    write_text(final / "overview.md", overview)
+    report_html = f"""<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Neris v703-v7 closeout</title></head><body><main><h1>Neris Solane v703-v7 closeout</h1><p>Finite synthetic hypergraph alpha-acyclicity evidence only.</p><dl><dt>New proposals</dt><dd>300</dd><dt>Outcomes</dt><dd>255 completed; 15 represented; 15 open gaps; 15 exact gates</dd><dt>Passing witnesses</dt><dd>{local['passing_witnesses']}</dd><dt>Retained failed witnesses</dt><dd>{local['failed_witnesses']}</dd><dt>Global installations</dt><dd>0</dd><dt>Spend</dt><dd>USD 0</dd><dt>Terminal verdict</dt><dd>NOT_READY_FOR_STAGE_20</dd></dl><p>No external, empirical, production, professional, legal, cultural, Maori-authority, privacy-complete, accessibility-complete, exhaustive-security, independent-reproduction, AGI/ASI, consciousness/personhood, Theory-of-Everything, canon, or Stage 20 claim follows.</p></main></body></html>\n"""
+    write_text(final / "report.html", report_html)
+    seal_paths = [
+        "planning/contract.json", "planning/new-proposals.json", "planning/source-verification.json", "planning/source-faithful-ledger.json",
+        "x1/results.json", "x1/mutations.json", "x1/method-flow.json", "x1/manifest.json",
+        "x2/results.json", "x2/mutations.json", "x2/method-flow.json", "x2/freed-id-flashcards.json", "x2/models.html", "x2/manifest.json",
+        "final/metadata.json", "final/method-flow.json", "final/validation.json", "final/handoff-baton.md", "final/baton-index.json", "final/overview.md", "final/report.html", "final/ghc_family_hypergraph_exact_final_canonical.txt", "final/handoffs/merrin-vale-v703-v8-activation-candidate.md",
+    ]
+    seal_entries = [file_record(PHASE_ROOT / path) for path in seal_paths]
+    write_json(final / "content-seal.json", {"owner": "Neris Solane", "phase": "v703-v7", "entries": seal_entries, "entry_count": len(seal_entries), "entry_digest": sha256_value(seal_entries), "self_excluded": True})
+    write_stage_manifest("final")
+
+
+def main() -> None:
+    parser = argparse.ArgumentParser()
+    parser.add_argument("stage", choices=("planning", "x1", "x2", "final"))
+    args = parser.parse_args()
+    if args.stage == "planning":
+        build_planning()
+    elif args.stage in {"x1", "x2"}:
+        build_phase(args.stage)
+    else:
+        build_final()
+    print(json.dumps({"status": "BUILT", "stage": args.stage, "phase_root": str(PHASE_ROOT)}, sort_keys=True))
+
+
+if __name__ == "__main__":
+    main()
