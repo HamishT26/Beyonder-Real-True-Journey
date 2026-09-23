@@ -1,0 +1,5 @@
+"use strict";
+const fs=require("fs"),{run}=require("../engine.txt");
+const input=JSON.parse(fs.readFileSync(0,"utf8"));
+const allowed=["minimal_path_sets","minimal_cut_sets"];
+if(!allowed.includes(input.operation)){process.stdout.write(JSON.stringify({ok:false,error:"CALLER_SCOPE_REFUSED",authority:false}));}else process.stdout.write(JSON.stringify(run(input)));

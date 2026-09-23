@@ -1,0 +1,54 @@
+"use strict";
+// Runtime: disjoint-set connectivity and state-polynomial accumulation.
+const ops=['network_contract','operational_state_table','success_state_census','reliability_power_coeffs','reliability_bernstein_coeffs','exact_point_reliability','minimal_path_sets','minimal_cut_sets','path_inclusion_exclusion','cut_failure_polynomial','conditional_edge_reliability','birnbaum_importance','reliability_derivative','russo_identity','pivotal_edge_census','shapley_pivotal_allocation','uniform_parameter_mean','trinity_nonconversion_bridge','external_measurement_gap','authority_reservation'];
+function fraction(n,d=1n){n=BigInt(n);d=BigInt(d);let a=n<0n?-n:n,b=d;while(b){[a,b]=[b,a%b];}return [n/a,d/a];}
+const plus=(a,b)=>fraction(a[0]*b[1]+b[0]*a[1],a[1]*b[1]),times=(a,b)=>fraction(a[0]*b[0],a[1]*b[1]),text=q=>q[0]+'/'+q[1],pop=x=>{let c=0;while(x){c+=x&1;x>>=1;}return c;};
+const comb=(n,k)=>{let r=1;for(let j=0;j<k;j++)r=r*(n-j)/(j+1);return r;};
+const keys=(x,expected)=>x&&typeof x==='object'&&!Array.isArray(x)&&Object.keys(x).sort().join('|')===expected.slice().sort().join('|');
+function refusal(reason){return {ok:false,outcome:'open_gap',error:'ADMISSION_REFUSED',reason,subject_success_credit:0,authority:false,external_calls:0};}
+function run(req){
+ if(!keys(req,['operation','input']))return refusal('request_fields');if(!ops.includes(req.operation))return refusal('operation');const g=req.input;
+ if(!keys(g,['id','n','edges','s','t','p']))return refusal('input_fields');
+ if(typeof g.p!=='string'||! /^(0|[1-9][0-9]{0,3})\/[1-9][0-9]{0,3}$/.test(g.p))return refusal('probability');const [pn,pd]=g.p.split('/').map(BigInt);if(pn>pd)return refusal('probability');
+ if(typeof g.id!=='string'||!/^[a-z0-9-]{1,40}$/.test(g.id)||!Number.isInteger(g.n)||g.n<2||g.n>5||!Array.isArray(g.edges)||g.edges.length<1||g.edges.length>6||![g.s,g.t].every(v=>Number.isInteger(v)&&v>=0&&v<g.n)||g.s===g.t)return refusal('graph');
+ if(g.edges.some(e=>!Array.isArray(e)||e.length!==2||!e.every(v=>Number.isInteger(v)&&v>=0&&v<g.n)||e[0]>=e[1])||new Set(g.edges.map(e=>e.join(','))).size!==g.edges.length)return refusal('graph');
+ const m=g.edges.length,full=(1<<m)-1;
+ function roots(mask){const par=Array.from({length:g.n},(_,i)=>i);const root=v=>{while(par[v]!==v)v=par[v];return v;};g.edges.forEach(([u,v],i)=>{if(mask&(1<<i))par[root(u)]=root(v);});return par.map((_,i)=>root(i));}
+ if(new Set(roots(full)).size!==1)return refusal('graph');
+ const outcome=ops.indexOf(req.operation)<17?'completed':{trinity_nonconversion_bridge:'represented',external_measurement_gap:'open_gap',authority_reservation:'exact_gate'}[req.operation];
+ let value;const wrap=()=>({ok:true,operation:req.operation,outcome,value,authority:false,external_calls:0});
+ if(req.operation==='trinity_nonconversion_bridge'){value={representation:'finite edge-state connection model',conversion_to_empirical_evidence:false};return wrap();}
+ if(req.operation==='external_measurement_gap'){value={missing:'independent observed edge failures and validated dependence model',closed:false};return wrap();}
+ if(req.operation==='authority_reservation'){value={release:false,required:'competent infrastructure, affected-party, legal and cultural authority'};return wrap();}
+ const states=Array.from({length:full+1},(_,mask)=>{let r=roots(mask);return +(r[g.s]===r[g.t]);}),counts=Array(m+1).fill(0),poly=Array(m+1).fill(0);
+ states.forEach((v,mask)=>{if(!v)return;const k=pop(mask);counts[k]++;for(let j=0;j<=m-k;j++)poly[k+j]+=comb(m-k,j)*(j%2?-1:1);});
+ const weight=(k,n)=>fraction(pn**BigInt(k)*(pd-pn)**BigInt(n-k),pd**BigInt(n));
+ const evalPoly=c=>{let acc=fraction(0);for(let i=c.length-1;i>=0;i--)acc=plus(times(acc,fraction(pn,pd)),fraction(c[i]));return acc;};
+ const minPath=()=>states.flatMap((v,mask)=>v&&g.edges.every((_,i)=>!(mask&(1<<i))||!states[mask^(1<<i)])?[mask]:[]);
+ switch(req.operation){
+ case 'network_contract':value={vertices:g.n,edges:m,terminals:[g.s,g.t],independent_edges:true};break;
+ case 'operational_state_table':value=states;break;
+ case 'success_state_census':value=counts;break;
+ case 'reliability_power_coeffs':value=poly;break;
+ case 'reliability_bernstein_coeffs':value=counts.map((c,k)=>text(fraction(c,comb(m,k))));break;
+ case 'exact_point_reliability':{let q=fraction(0);states.forEach((v,mask)=>{if(v)q=plus(q,weight(pop(mask),m));});value=text(q);break;}
+ case 'minimal_path_sets':value=minPath();break;
+ case 'minimal_cut_sets':value=Array.from({length:full},(_,i)=>i+1).filter(mask=>!states[full^mask]&&g.edges.every((_,i)=>!(mask&(1<<i))||states[full^(mask^(1<<i))]));break;
+ case 'path_inclusion_exclusion':{const ps=minPath(),c=Array(m+1).fill(0);for(let set=1;set<(1<<ps.length);set++){let mask=0;ps.forEach((p,i)=>{if(set&(1<<i))mask|=p;});c[pop(mask)]+=pop(set)%2?1:-1;}value=c;break;}
+ case 'cut_failure_polynomial':value=poly.map((c,k)=>(k===0?1:0)-c);break;
+ case 'reliability_derivative':value=poly.slice(1).map((c,i)=>(i+1)*c);break;
+ case 'uniform_parameter_mean':{let q=fraction(0);counts.forEach((c,k)=>{q=plus(q,fraction(c,(m+1)*comb(m,k)));});value=text(q);break;}
+ default:{
+ const conditional=[],hist=[],importance=[];
+ for(let e=0;e<m;e++){let down=fraction(0),up=fraction(0),piv=fraction(0),h=Array(m).fill(0);for(let mask=0;mask<=full;mask++){if(mask&(1<<e))continue;let k=pop(mask),w=weight(k,m-1);if(states[mask])down=plus(down,w);if(states[mask|(1<<e)])up=plus(up,w);if(!states[mask]&&states[mask|(1<<e)]){piv=plus(piv,w);h[k]++;}}conditional.push([text(down),text(up)]);hist.push(h);importance.push(piv);}
+ if(req.operation==='conditional_edge_reliability')value=conditional;
+ else if(req.operation==='birnbaum_importance')value=importance.map(text);
+ else if(req.operation==='pivotal_edge_census')value=hist;
+ else if(req.operation==='russo_identity')value={derivative:text(evalPoly(poly.slice(1).map((c,i)=>(i+1)*c))),sum_importance:text(importance.reduce(plus,fraction(0)))};
+ else if(req.operation==='shapley_pivotal_allocation')value=hist.map(h=>text(h.reduce((q,c,k)=>plus(q,fraction(c,m*comb(m-1,k))),fraction(0))));
+ else throw Error('unhandled operation');
+ }
+ }
+ return wrap();
+}
+module.exports={run,ops};
