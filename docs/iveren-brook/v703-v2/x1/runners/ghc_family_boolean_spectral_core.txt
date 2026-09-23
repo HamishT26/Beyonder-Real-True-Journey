@@ -1,0 +1,68 @@
+'use strict';
+// Finite synthetic Boolean certificates. No paths, commands or network requests are admitted.
+class AdmissionError extends Error { constructor(reason){super(reason);this.reason=reason;} }
+const refuse=reason=>({ok:false,outcome:'open_gap',error:'ADMISSION_REFUSED',reason,subject_success_credit:0,authority:false,external_calls:0});
+const fail=reason=>{throw new AdmissionError(reason);};
+function strictJSON(wire){
+ if(typeof wire!=='string'||wire.length>12000)fail('wire_length');
+ let i=0;
+ const ws=()=>{while(i<wire.length&&' \t\r\n'.includes(wire[i]))i++;};
+ function str(){const start=i++;while(i<wire.length){const c=wire[i++];if(c==='"'){try{return JSON.parse(wire.slice(start,i));}catch{fail('wire_syntax');}}if(c==='\\'){if(i>=wire.length)fail('wire_syntax');i++;}}fail('wire_syntax');}
+ function value(depth){
+  if(depth>24)fail('wire_depth');ws();const c=wire[i];
+  if(c==='"')return str();
+  if(c==='{'||c==='['){const object=c==='{',end=object?'}':']',result=object?Object.create(null):[],seen=new Set();i++;ws();if(wire[i]===end){i++;return result;}
+   for(;;){ws();let key;if(object){if(wire[i]!=='"')fail('wire_syntax');key=str();if(seen.has(key))fail('duplicate_key');seen.add(key);ws();if(wire[i++]!==':')fail('wire_syntax');}
+    const v=value(depth+1);if(object)result[key]=v;else result.push(v);ws();if(wire[i]===end){i++;return result;}if(wire[i++]!==',')fail('wire_syntax');}
+  }
+  for(const [token,v] of [['true',true],['false',false],['null',null]])if(wire.startsWith(token,i)){i+=token.length;return v;}
+  const m=/-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?/y;m.lastIndex=i;const hit=m.exec(wire);if(!hit)fail('wire_syntax');i=m.lastIndex;const n=Number(hit[0]);if(!Number.isFinite(n))fail('nonfinite_number');return n;
+ }
+ const result=value(0);ws();if(i!==wire.length)fail('wire_syntax');return result;
+}
+const object=x=>x!==null&&typeof x==='object'&&!Array.isArray(x);
+function fields(x,keys,reason){if(!object(x)||Object.keys(x).length!==keys.length||keys.some(k=>!Object.prototype.hasOwnProperty.call(x,k)))fail(reason);}
+function integer(x,lo,hi,reason){if(!Number.isSafeInteger(x)||x<lo||x>hi)fail(reason);}
+function vector(x,N,spectrum=false){if(!Array.isArray(x)||x.length!==N)fail('vector_length');if(x.some(v=>!Number.isSafeInteger(v)||(spectrum?Math.abs(v)>N:(v!==0&&v!==1))))fail(spectrum?'spectrum_values':'truth_values');}
+function admit(wire,specs){
+ const r=strictJSON(wire);fields(r,['op','input'],'request_fields');if(typeof r.op!=='string'||!Object.hasOwn(specs,r.op))fail('unknown_operation');
+ const extras=specs[r.op],inverse=r.op==='inverse_walsh';fields(r.input,['n',inverse?'spectrum':'truth',...extras],'input_fields');integer(r.input.n,2,4,'dimension');const N=2**r.input.n;
+ vector(r.input[inverse?'spectrum':'truth'],N,inverse);
+ if(extras.includes('other'))vector(r.input.other,N);
+ for(const k of ['shift','linear_mask'])if(extras.includes(k))integer(r.input[k],0,N-1,'mask');
+ if(extras.includes('constant'))integer(r.input.constant,0,1,'constant');
+ if(extras.includes('coordinate'))integer(r.input.coordinate,0,r.input.n-1,'coordinate');
+ if(extras.includes('value'))integer(r.input.value,0,1,'fixed_value');
+ if(extras.includes('action')&&!['real_security_deployment','real_identity_decision','professional_classification'].includes(r.input.action))fail('action');
+ return r;
+}
+const parity=x=>{let p=0;while(x){p^=x&1;x>>>=1;}return p;};
+const weight=x=>{let n=0;while(x){n+=x&1;x>>>=1;}return n;};
+function hadamard(values){const out=values.slice();for(let width=1;width<out.length;width*=2)for(let base=0;base<out.length;base+=2*width)for(let j=0;j<width;j++){const a=out[base+j],b=out[base+j+width];out[base+j]=a+b;out[base+j+width]=a-b;}return out;}
+const walsh=truth=>hadamard(truth.map(x=>1-2*x));
+const gcd=(a,b)=>b?gcd(b,a%b):a;
+function rational(a,b){if(!Number.isSafeInteger(a)||!Number.isSafeInteger(b)||b===0)throw Error('Internal rational domain');if(b<0){a=-a;b=-b;}const d=gcd(Math.abs(a),b);return `${a/d}/${b/d}`;}
+function divide(a,b){if(!Number.isSafeInteger(a)||!Number.isSafeInteger(b)||b===0||a%b!==0)throw Error('Internal nonintegral certificate');return a/b;}
+const autocorrelation=truth=>hadamard(walsh(truth).map(x=>x*x)).map(x=>divide(x,truth.length));
+const envelope=(value,outcome='completed')=>({ok:true,outcome,value,evidence_class:'finite_synthetic_same_owner',authority:false,external_calls:0});
+const specs={walsh_transform:[],inverse_walsh:[],parseval_energy:[],spectral_correlation:['other'],closest_affine:[],nonlinearity:[],balancedness:[],autocorrelation:[],derivative_profile:[],affine_covariance:['shift','linear_mask','constant']};
+function calculate(op,a){
+ const N=2**a.n;
+ if(op==='inverse_walsh'){const transformed=hadamard(a.spectrum);if(transformed.some(x=>x!==N&&x!==-N))fail('non_boolean_inverse');const signs=transformed.map(x=>x/N);return envelope({truth:signs.map(x=>(1-x)/2),signs,boolean_inverse:true});}
+ const W=walsh(a.truth);
+ switch(op){
+  case 'walsh_transform':return envelope({walsh:W,normalized:W.map(x=>rational(x,N)),order:'little_endian_mask'});
+  case 'parseval_energy':{const squared=W.map(x=>x*x),sum=squared.reduce((x,y)=>x+y,0);return envelope({squared_coefficients:squared,sum_squares:sum,expected:N*N,normalized_sum:rational(sum,N*N)});}
+  case 'spectral_correlation':{const V=walsh(a.other),sum=W.reduce((s,x,i)=>s+x*V[i],0),raw=divide(sum,N);return envelope({unnormalized:raw,uniform_average:rational(raw,N),spectral_product_sum:sum,pearson_claim:false});}
+  case 'closest_affine':{const distances=[];for(let mask=0;mask<N;mask++)for(let constant=0;constant<2;constant++)distances.push({mask,constant,distance:divide(N-(1-2*constant)*W[mask],2)});const min=Math.min(...distances.map(x=>x.distance));return envelope({minimum_distance:min,minimizers:distances.filter(x=>x.distance===min),all_affine_candidates_examined:2*N});}
+  case 'nonlinearity':{const max=Math.max(...W.map(Math.abs));return envelope({minimum_hamming_distance:divide(N-max,2),maximum_absolute_walsh:max,production_security_claim:false});}
+  case 'balancedness':{const ones=divide(N-W[0],2);return envelope({ones,zeros:N-ones,walsh_zero:W[0],balanced:W[0]===0});}
+  case 'autocorrelation':return envelope({autocorrelation:autocorrelation(a.truth),zero_direction:N,normalization:'unnormalized_signed_sum'});
+  case 'derivative_profile':return envelope({weights:autocorrelation(a.truth).map(x=>divide(N-x,2)),zero_direction_included:true});
+  case 'affine_covariance':return envelope({transformed_truth:a.truth.map((_,x)=>a.truth[x^a.shift]^parity(a.linear_mask&x)^a.constant),transformed_walsh:W.map((_,mask)=>(1-2*(a.constant^parity((mask^a.linear_mask)&a.shift)))*W[mask^a.linear_mask]),map:'input_xor_then_linear_output_xor'});
+  default:throw Error('Internal operation dispatch');
+ }
+}
+function runWire(wire){try{const r=admit(wire,specs);return calculate(r.op,r.input);}catch(e){if(e instanceof AdmissionError)return refuse(e.reason);throw e;}}
+module.exports={AdmissionError,refuse,fail,strictJSON,admit,parity,weight,hadamard,walsh,rational,divide,autocorrelation,envelope,specs,runWire};
+if(require.main===module){const fs=require('fs');const wire=process.argv.length===3?process.argv[2]:fs.readFileSync(0,'utf8');process.stdout.write(JSON.stringify(runWire(wire))+'\n');}
