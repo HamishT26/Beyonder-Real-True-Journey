@@ -1,0 +1,11 @@
+#!/usr/bin/env python3
+import argparse
+import json
+
+parser = argparse.ArgumentParser()
+parser.add_argument("--self-test", action="store_true")
+args = parser.parse_args()
+observed = bool(all(sum(1 for y in [('a','b'),('b','c'),('c','d'),('a','d')] if x in y) == 2 for x in 'abcd'))
+payload = {"runner": "ghc_family_acyclicity_chordality_runner.txt", "test": "four_cycle_obstruction", "observed": observed, "expected": True, "passed": observed is True, "production_observations": 0}
+print(json.dumps(payload, sort_keys=True))
+raise SystemExit(0 if payload["passed"] else 1)

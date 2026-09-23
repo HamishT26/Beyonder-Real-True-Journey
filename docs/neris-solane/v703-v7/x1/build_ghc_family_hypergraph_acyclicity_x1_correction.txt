@@ -1,0 +1,44 @@
+#!/usr/bin/env python3
+"""Additive x1 correction wrapper; the planning builder remains immutable."""
+
+from pathlib import Path
+import runpy
+
+
+HERE = Path(__file__).resolve()
+PHASE_ROOT = HERE.parents[1]
+BUILDER = PHASE_ROOT / "planning" / "build_ghc_family_hypergraph_acyclicity_assets.txt"
+namespace = runpy.run_path(str(BUILDER), run_name="ghc_family_acyclicity_frozen_builder")
+
+
+def active_vertices(h):
+    return sorted(set().union(*(set(edge) for edge in h["edges"])))
+
+
+def corrected_maximal_cliques(h):
+    adjacency = namespace["primal_adjacency"](h)
+    candidates = [
+        set(subset)
+        for subset in namespace["powerset"](active_vertices(h))
+        if namespace["is_clique"](subset, adjacency)
+    ]
+    maximal = [candidate for candidate in candidates if not any(candidate < other for other in candidates)]
+    return [sorted(candidate) for candidate in sorted(maximal, key=lambda value: (len(value), tuple(sorted(value))))]
+
+
+def corrected_conformal_oracle(h):
+    adjacency = namespace["primal_adjacency"](h)
+    edges = [set(edge) for edge in h["edges"]]
+    for subset in namespace["powerset"](active_vertices(h)):
+        if namespace["is_clique"](subset, adjacency) and not any(set(subset) <= edge for edge in edges):
+            return False
+    return True
+
+
+namespace["maximal_cliques_bruteforce"] = corrected_maximal_cliques
+namespace["conformal_oracle"] = corrected_conformal_oracle
+function_globals = namespace["alpha_facts"].__globals__
+function_globals["maximal_cliques_bruteforce"] = corrected_maximal_cliques
+function_globals["conformal_oracle"] = corrected_conformal_oracle
+namespace["build_phase"]("x1")
+print('{"status":"BUILT_WITH_ACTIVE_SUPPORT_CORRECTION","stage":"x1"}')
