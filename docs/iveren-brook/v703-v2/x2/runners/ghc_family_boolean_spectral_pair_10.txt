@@ -1,0 +1,6 @@
+'use strict';
+const core=require('./ghc_family_boolean_spectral_extension.txt');
+const allowed=["observation_gap","authority_gate"];
+function run(wire){try{const r=core.strictJSON(wire);if(!r||!allowed.includes(r.op))return core.refuse('unknown_operation');return core.runWire(wire);}catch(e){if(e instanceof core.AdmissionError)return core.refuse(e.reason);throw e;}}
+module.exports={run};
+if(require.main===module){const fs=require('fs');const wire=process.argv.length===3?process.argv[2]:fs.readFileSync(0,'utf8');process.stdout.write(JSON.stringify(run(wire))+'\n');}

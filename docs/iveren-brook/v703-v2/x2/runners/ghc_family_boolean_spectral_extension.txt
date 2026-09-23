@@ -1,0 +1,24 @@
+'use strict';
+// Additive x2 extension. The frozen x1 implementation is imported without edits.
+const base=require('../../x1/runners/ghc_family_boolean_spectral_core.txt');
+const {admit,AdmissionError,refuse,walsh,weight,divide,autocorrelation,envelope}=base;
+const specs={anf_coefficients:[],algebraic_degree:[],xor_convolution:['other'],bentness:[],correlation_immunity:[],linear_structures:[],restriction_spectrum:['coordinate','value'],structural_bridge:[],observation_gap:[],authority_gate:['action']};
+function anf(truth){const c=truth.slice();for(let bit=1;bit<c.length;bit<<=1)for(let mask=0;mask<c.length;mask++)if(mask&bit)c[mask]^=c[mask^bit];return c;}
+function calculate(op,a){const N=2**a.n;
+ switch(op){
+  case 'anf_coefficients':{const coefficients=anf(a.truth);return envelope({coefficients,monomial_masks:coefficients.flatMap((v,i)=>v?[i]:[]),field:'GF2'});}
+  case 'algebraic_degree':{const support=anf(a.truth).flatMap((v,i)=>v?[i]:[]);return envelope({degree:support.length?Math.max(...support.map(weight)):null,zero_polynomial:support.length===0,degree_convention:'null_for_zero'});}
+  case 'xor_convolution':{const W=walsh(a.truth),V=walsh(a.other);return envelope({xor_truth:a.truth.map((x,i)=>x^a.other[i]),xor_walsh:W.map((_,mask)=>divide(W.reduce((s,x,b)=>s+x*V[mask^b],0),N)),convolution_divisor:N});}
+  case 'bentness':{const W=walsh(a.truth);return envelope({bent:a.n%2===0&&W.every(x=>x*x===N),even_dimension:a.n%2===0,absolute_spectrum:[...new Set(W.map(Math.abs))].sort((x,y)=>x-y),cryptographic_deployment_approved:false});}
+  case 'correlation_immunity':{const W=walsh(a.truth),nonzero=W.flatMap((x,i)=>i>0&&x!==0?[i]:[]),order=nonzero.length?Math.min(...nonzero.map(weight))-1:a.n,balanced=W[0]===0;return envelope({correlation_immunity_order:order,balanced,resiliency_order:balanced?order:null,distribution:'uniform_declared_finite_cube'});}
+  case 'linear_structures':return envelope({structures:autocorrelation(a.truth).flatMap((x,d)=>Math.abs(x)===N?[{direction:d,derivative_constant:x===N?0:1}]:[]),zero_direction_included:true});
+  case 'restriction_spectrum':{const W=walsh(a.truth),bit=1<<a.coordinate,embed=r=>(r&(bit-1))|((r>>>a.coordinate)<<(a.coordinate+1)),indices=Array.from({length:N/2},(_,r)=>embed(r));return envelope({remaining_dimension:a.n-1,restricted_truth:indices.map(x=>a.truth[x|(a.value<<a.coordinate)]),restricted_walsh:indices.map(x=>divide(W[x]+(1-2*a.value)*W[x|bit],2)),remaining_order:'original_order_without_fixed_coordinate'});}
+  case 'structural_bridge':return envelope({walsh:walsh(a.truth),analogy:'finite_character_decomposition',frequency_unit:'algebraic_mask_not_hertz',physical_mapping:null,empirical_confirmation:false},'represented');
+  case 'observation_gap':return envelope({model_dimension:a.n,declared_truth:a.truth.slice(),observation_rows:0,people:0,physical_systems:0,missing:['governed_observations','calibration','independent_comparison'],empirical_confirmation:false},'open_gap');
+  case 'authority_gate':return envelope({model_dimension:a.n,declared_truth:a.truth.slice(),action:a.action,executed:false,verified_authority:false,required:['exact_governed_target','competent_affected_authority','consent_and_safety','recovery_and_review']},'exact_gate');
+  default:throw Error('Internal extension dispatch');
+ }
+}
+function runWire(wire){try{const r=admit(wire,specs);return calculate(r.op,r.input);}catch(e){if(e instanceof AdmissionError)return refuse(e.reason);throw e;}}
+module.exports={...base,specs,runWire};
+if(require.main===module){const fs=require('fs');const wire=process.argv.length===3?process.argv[2]:fs.readFileSync(0,'utf8');process.stdout.write(JSON.stringify(runWire(wire))+'\n');}
