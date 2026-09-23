@@ -1,0 +1,75 @@
+'use strict';
+const crypto=require('crypto');
+const stable=x=>x===null||typeof x!=='object'?JSON.stringify(x):Array.isArray(x)?'['+x.map(stable).join(',')+']':'{'+Object.keys(x).sort().map(k=>JSON.stringify(k)+':'+stable(x[k])).join(',')+'}';
+const hash=x=>crypto.createHash('sha256').update(stable(x)).digest('hex');
+const eq=(a,b)=>stable(a)===stable(b);
+const rows=x=>[...new Map(x.map(r=>[JSON.stringify(r),r])).values()].sort((a,b)=>JSON.stringify(a).localeCompare(JSON.stringify(b)));
+const orderRelations=f=>[...f.relations].sort((a,b)=>a.relation_id.localeCompare(b.relation_id));
+const fail=code=>{const e=new Error(code);e.code=code;throw e;};
+function keys(o,allowed){if(!o||Array.isArray(o)||typeof o!=='object')fail('OBJECT_REQUIRED');if(Object.keys(o).some(k=>!allowed.includes(k))||allowed.some(k=>!(k in o)))fail('FIELD_SET');}
+function admit(request,ops){
+ keys(request,['contract_id','operation','fixture']);
+ if(typeof request.contract_id!=='string'||!/^[-A-Za-z0-9_]{1,96}$/.test(request.contract_id))fail('REQUEST_ID');
+ if(!ops.includes(request.operation))fail('OPERATION');
+ const f=request.fixture;keys(f,['fixture_id','variables','domain','relations','join_tree','costs','expected_solution_count','synthetic']);
+ if(typeof f.fixture_id!=='string'||!/^[-A-Za-z0-9_]{1,96}$/.test(f.fixture_id)||f.synthetic!==true)fail('SYNTHETIC_BOUNDARY');
+ if(!Array.isArray(f.variables)||f.variables.length<1||f.variables.length>5||new Set(f.variables).size!==f.variables.length||f.variables.some(x=>typeof x!=='string'||!/^[a-z]$/.test(x)))fail('VARIABLES');
+ if(!eq(f.domain,[0,1]))fail('DOMAIN');
+ if(!Array.isArray(f.relations)||f.relations.length<1||f.relations.length>5)fail('RELATION_BOUND');
+ const ids=new Set();
+ for(const r of f.relations){keys(r,['relation_id','scope','rows']);if(typeof r.relation_id!=='string'||!/^r[0-9]+$/.test(r.relation_id)||ids.has(r.relation_id))fail('RELATION_ID');ids.add(r.relation_id);
+  if(!Array.isArray(r.scope)||r.scope.length<1||r.scope.length>5||new Set(r.scope).size!==r.scope.length||r.scope.some(v=>!f.variables.includes(v)))fail('SCOPE');
+  if(!Array.isArray(r.rows)||r.rows.length>32)fail('ROW_BOUND');
+  for(const t of r.rows)if(!Array.isArray(t)||t.length!==r.scope.length||t.some(v=>v!==0&&v!==1))fail('ROW_DOMAIN');
+  if(new Set(r.rows.map(JSON.stringify)).size!==r.rows.length)fail('DUPLICATE_ROW');
+ }
+ if(!Number.isInteger(f.expected_solution_count)||f.expected_solution_count<0||f.expected_solution_count>2**f.variables.length)fail('EXPECTED_COUNT');
+ keys(f.costs,f.variables);for(const v of f.variables)if(!Array.isArray(f.costs[v])||f.costs[v].length!==2||f.costs[v].some(c=>!Number.isInteger(c)||c<1||c>5))fail('COST_BOUND');
+ if(f.join_tree!==null)checkTree(f);
+ return f;
+}
+function checkTree(f){
+ const n=f.relations.length,t=f.join_tree;
+ if(!Array.isArray(t)||t.length!==n-1)fail('TREE_SIZE');
+ const adj=Array.from({length:n},()=>[]),edgeSet=new Set();
+ for(const e of t){if(!Array.isArray(e)||e.length!==2||e.some(v=>!Number.isInteger(v)||v<0||v>=n)||e[0]===e[1])fail('TREE_EDGE');const k=[...e].sort((a,b)=>a-b).join(',');if(edgeSet.has(k))fail('TREE_DUPLICATE');edgeSet.add(k);adj[e[0]].push(e[1]);adj[e[1]].push(e[0]);}
+ function connected(wanted){if(wanted.length<2)return true;const seen=new Set([wanted[0]]),queue=[wanted[0]],allowed=new Set(wanted);for(let j=0;j<queue.length;j++)for(const v of adj[queue[j]])if(allowed.has(v)&&!seen.has(v)){seen.add(v);queue.push(v);}return seen.size===wanted.length;}
+ if(!connected(Array.from({length:n},(_,j)=>j)))fail('TREE_DISCONNECTED');
+ for(const v of f.variables)if(!connected(f.relations.map((r,j)=>r.scope.includes(v)?j:-1).filter(j=>j>=0)))fail('RUNNING_INTERSECTION');
+ return adj;
+}
+function project(r,scope){const indexes=scope.map(v=>r.scope.indexOf(v));return rows(r.rows.map(t=>indexes.map(j=>t[j])));}
+function semi(a,b){const shared=a.scope.filter(v=>b.scope.includes(v)),ai=shared.map(v=>a.scope.indexOf(v)),bi=shared.map(v=>b.scope.indexOf(v));const support=new Set(b.rows.map(t=>JSON.stringify(bi.map(j=>t[j]))));return {...a,rows:a.rows.filter(t=>support.has(JSON.stringify(ai.map(j=>t[j]))))};}
+function join(f,relations=f.relations){
+ let partial=[{}],known=[];
+ for(const r of relations){const shared=r.scope.filter(v=>known.includes(v)),ri=shared.map(v=>r.scope.indexOf(v)),index=new Map();
+  for(const t of r.rows){const k=JSON.stringify(ri.map(j=>t[j]));if(!index.has(k))index.set(k,[]);index.get(k).push(t);}
+  const next=[];for(const a of partial){for(const t of index.get(JSON.stringify(shared.map(v=>a[v])))||[]){const b={...a};r.scope.forEach((v,j)=>b[v]=t[j]);next.push(b);}}partial=next;known=[...new Set([...known,...r.scope])];
+ }
+ for(const v of f.variables.filter(v=>!known.includes(v)))partial=partial.flatMap(a=>[0,1].map(x=>({...a,[v]:x})));
+ return rows(partial.map(a=>f.variables.map(v=>a[v])));
+}
+function supported(f,solutions){return orderRelations(f).map(r=>({relation_id:r.relation_id,rows:rows(solutions.map(s=>r.scope.map(v=>s[f.variables.indexOf(v)])))}));}
+function pairwise(f){const rr=orderRelations(f),checks=[];for(let i=0;i<rr.length;i++)for(let j=i+1;j<rr.length;j++){const a=rr[i],b=rr[j],scope=a.scope.filter(v=>b.scope.includes(v)).sort(),pa=project(a,scope),pb=project(b,scope);checks.push({left:a.relation_id,right:b.relation_id,shared_scope:scope,equal:eq(pa,pb),left_only:pa.filter(t=>!pb.some(s=>eq(t,s))),right_only:pb.filter(t=>!pa.some(s=>eq(t,s)))});}return{consistent:checks.every(x=>x.equal),checks};}
+function fixed(f){let rr=orderRelations(f).map(r=>({...r,rows:rows(r.rows)})),changed=true,removed=0;
+ while(changed){changed=false;for(let i=0;i<rr.length;i++)for(let j=0;j<rr.length;j++)if(i!==j){const s=semi(rr[i],rr[j]);if(s.rows.length<rr[i].rows.length){removed+=rr[i].rows.length-s.rows.length;changed=true;rr[i]=s;}}}
+ return{relations:rr.map(r=>({relation_id:r.relation_id,rows:rows(r.rows)})),removed,removed_tuples:orderRelations(f).map((r,i)=>({relation_id:r.relation_id,rows:rows(r.rows.filter(t=>!rr[i].rows.some(s=>eq(t,s))))})),termination_removal_bound:f.relations.reduce((n,r)=>n+r.rows.length,0)};
+}
+function permutations(a){if(!a.length)return[[]];return a.flatMap((x,i)=>permutations(a.filter((_,j)=>j!==i)).map(p=>[x,...p]));}
+const operations=['rc_profile','rc_join','rc_pairwise','rc_semijoin_step','rc_semijoin_fixpoint','rc_supported_tuples','rc_dangling_tuples','rc_consistency_gap','rc_join_order','rc_tuple_provenance'];
+function value(op,f){
+ const rr=orderRelations(f);
+ if(op==='rc_profile'){const active=new Set(rr.flatMap(r=>r.scope));return{variable_count:f.variables.length,relation_count:rr.length,total_rows:rr.reduce((n,r)=>n+r.rows.length,0),scope_sizes:rr.map(r=>({relation_id:r.relation_id,size:r.scope.length})),isolated_variables:f.variables.filter(v=>!active.has(v)).sort()};}
+ if(op==='rc_join')return{variables:f.variables,assignments:join(f)};
+ if(op==='rc_pairwise')return pairwise(f);
+ if(op==='rc_semijoin_step')return{steps:rr.flatMap(a=>rr.filter(b=>a!==b).map(b=>({left:a.relation_id,right:b.relation_id,rows:rows(semi(a,b).rows)})))};
+ if(op==='rc_semijoin_fixpoint')return fixed(f);
+ if(op==='rc_supported_tuples')return{relations:supported(f,join(f))};
+ if(op==='rc_dangling_tuples'){const sup=supported(f,join(f));return{relations:rr.map((r,i)=>({relation_id:r.relation_id,rows:rows(r.rows.filter(t=>!sup[i].rows.some(s=>eq(t,s))))}))};}
+ if(op==='rc_consistency_gap'){const sol=join(f),sup=supported(f,sol),fx=fixed(f);return{solution_count:sol.length,nonempty_join:sol.length>0,pairwise_consistent:pairwise(f).consistent,globally_consistent:rr.every((r,i)=>eq(rows(r.rows),sup[i].rows)),semijoin_stable:fx.removed===0,globally_unsupported_tuples:rr.reduce((n,r,i)=>n+r.rows.length-sup[i].rows.length,0)};}
+ if(op==='rc_join_order'){const sol=join(f),orders=permutations(rr);for(const p of orders)if(!eq(sol,join(f,p)))fail('JOIN_ORDER_DISAGREEMENT');return{orders_checked:orders.length,variables:f.variables,assignments:sol};}
+ if(op==='rc_tuple_provenance')return{assignments:join(f).map(s=>({values:s,supports:rr.map(r=>({relation_id:r.relation_id,row_index:r.rows.findIndex(t=>r.scope.every((v,j)=>t[j]===s[f.variables.indexOf(v)]))}))}))};
+ fail('OPERATION');
+}
+function run(request){try{const f=admit(request,operations),v=value(request.operation,f);return{ok:true,contract_id:request.contract_id,operation:request.operation,input_sha256:hash(request),core_outcome:'completed',value:v};}catch(e){if(!e.code)throw e;return{ok:false,contract_id:typeof request?.contract_id==='string'?request.contract_id:null,error:e.code,original_completion_credit:0};}}
+module.exports={stable,hash,eq,rows,admit,checkTree,project,semi,join,supported,pairwise,fixed,permutations,operations,value,run};

@@ -1,0 +1,34 @@
+'use strict';
+// Independent expected values use complete assignments and nested tuple comparisons.
+// They do not import the production join, projection, index or reduction implementation.
+function canon(rs){const table={};for(const r of rs)table[JSON.stringify(r)]=r;return Object.keys(table).sort().map(k=>table[k]);}
+function same(a,b){return JSON.stringify(a)===JSON.stringify(b);}
+function enumerate(f,selected=f.relations){
+ const accepted=[];for(let mask=0;mask<2**f.variables.length;mask++){const a=f.variables.map((_,i)=>(mask>>i)&1);let good=true;
+  for(const r of selected){let found=false;for(const t of r.rows){let match=true;for(let j=0;j<r.scope.length;j++)if(t[j]!==a[f.variables.indexOf(r.scope[j])])match=false;if(match)found=true;}if(!found)good=false;}
+  if(good)accepted.push(a);
+ }return canon(accepted);
+}
+const ordered=f=>f.relations.slice().sort((a,b)=>a.relation_id.localeCompare(b.relation_id));
+function supportPairs(a,b){return a.rows.filter(t=>b.rows.some(u=>a.scope.every((v,i)=>!b.scope.includes(v)||t[i]===u[b.scope.indexOf(v)])));}
+function marginal(r,scope){const out=[];for(const t of r.rows){const row=[];for(const v of scope)row.push(t[r.scope.indexOf(v)]);out.push(row);}return canon(out);}
+function globalSupport(f){const sol=enumerate(f);return ordered(f).map(r=>{const out=[];for(const t of r.rows){if(sol.some(a=>r.scope.every((v,i)=>a[f.variables.indexOf(v)]===t[i])))out.push(t);}return{relation_id:r.relation_id,rows:canon(out)};});}
+function oraclePairwise(f){const rr=ordered(f),checks=[];for(let i=0;i<rr.length;i++)for(let j=i+1;j<rr.length;j++){const a=rr[i],b=rr[j],scope=a.scope.filter(v=>b.scope.indexOf(v)>=0).sort(),left=marginal(a,scope),right=marginal(b,scope);checks.push({left:a.relation_id,right:b.relation_id,shared_scope:scope,equal:supportPairs(a,b).length===a.rows.length&&supportPairs(b,a).length===b.rows.length,left_only:left.filter(t=>!right.some(u=>same(t,u))),right_only:right.filter(t=>!left.some(u=>same(t,u)))});}return{consistent:checks.every(c=>c.equal),checks};}
+function oracleFixed(f){let rr=ordered(f).map(r=>({...r,rows:canon(r.rows)})),again=true;const initial=rr.reduce((n,r)=>n+r.rows.length,0);
+ while(again){const next=rr.map((r,i)=>({...r,rows:r.rows.filter(t=>rr.every((s,j)=>j===i||supportPairs({...r,rows:[t]},s).length===1))}));again=next.some((r,i)=>r.rows.length!==rr[i].rows.length);rr=next;}
+ return{relations:rr.map(r=>({relation_id:r.relation_id,rows:r.rows})),removed:initial-rr.reduce((n,r)=>n+r.rows.length,0),removed_tuples:ordered(f).map((r,i)=>({relation_id:r.relation_id,rows:canon(r.rows.filter(t=>!rr[i].rows.some(s=>same(t,s))))})),termination_removal_bound:initial};
+}
+function expected(op,f){const rr=ordered(f);
+ if(op==='rc_profile'){const isolated=[];for(const v of f.variables)if(!rr.some(r=>r.scope.includes(v)))isolated.push(v);return{variable_count:f.variables.length,relation_count:rr.length,total_rows:rr.map(r=>r.rows.length).reduce((a,b)=>a+b,0),scope_sizes:rr.map(r=>({relation_id:r.relation_id,size:r.scope.length})),isolated_variables:isolated.sort()};}
+ if(op==='rc_join')return{variables:f.variables,assignments:enumerate(f)};
+ if(op==='rc_pairwise')return oraclePairwise(f);
+ if(op==='rc_semijoin_step')return{steps:rr.flatMap(a=>rr.filter(b=>a!==b).map(b=>({left:a.relation_id,right:b.relation_id,rows:canon(supportPairs(a,b))})))};
+ if(op==='rc_semijoin_fixpoint')return oracleFixed(f);
+ if(op==='rc_supported_tuples')return{relations:globalSupport(f)};
+ if(op==='rc_dangling_tuples'){const sup=globalSupport(f);return{relations:rr.map((r,i)=>({relation_id:r.relation_id,rows:canon(r.rows.filter(t=>!sup[i].rows.some(s=>same(t,s))))}))};}
+ if(op==='rc_consistency_gap'){const sol=enumerate(f),sup=globalSupport(f),fx=oracleFixed(f);return{solution_count:sol.length,nonempty_join:sol.length!==0,pairwise_consistent:oraclePairwise(f).consistent,globally_consistent:rr.every((r,i)=>sup[i].rows.length===r.rows.length),semijoin_stable:fx.removed===0,globally_unsupported_tuples:rr.reduce((n,r,i)=>n+r.rows.length-sup[i].rows.length,0)};}
+ if(op==='rc_join_order'){let n=1;for(let j=2;j<=rr.length;j++)n*=j;return{orders_checked:n,variables:f.variables,assignments:enumerate(f)};}
+ if(op==='rc_tuple_provenance')return{assignments:enumerate(f).map(a=>({values:a,supports:rr.map(r=>{let index=-1;for(let j=0;j<r.rows.length;j++){if(r.scope.every((v,k)=>r.rows[j][k]===a[f.variables.indexOf(v)]))index=j;}return{relation_id:r.relation_id,row_index:index};})}))};
+ throw Error('Unknown oracle operation');
+}
+module.exports={canon,same,enumerate,ordered,supportPairs,marginal,globalSupport,oraclePairwise,oracleFixed,expected};
