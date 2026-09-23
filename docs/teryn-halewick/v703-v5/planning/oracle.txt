@@ -1,0 +1,23 @@
+"use strict";
+// Planning reference only: simple-path union via inclusion-exclusion and BFS.
+const gcd=(a,b)=>b?gcd(b,a%b):a<0n?-a:a;
+const Q=(n,d=1n)=>{n=BigInt(n);d=BigInt(d);if(!d)throw Error('zero denominator');if(d<0n){n=-n;d=-d;}let g=gcd(n,d);return [n/g,d/g];};
+const add=(a,b)=>Q(a[0]*b[1]+b[0]*a[1],a[1]*b[1]),mul=(a,b)=>Q(a[0]*b[0],a[1]*b[1]),str=a=>a[0]+'/'+a[1],sum=a=>a.reduce(add,Q(0)),pc=n=>n.toString(2).replaceAll('0','').length;
+const choose=(n,k)=>{let a=1;for(let j=1;j<=k;j++)a=a*(n-j+1)/j;return a;};
+const fact=n=>n<2?1:n*fact(n-1);
+function reference(g){
+ const m=g.edges.length,full=(1<<m)-1,p=Q(...g.p.split('/'));
+ const connected=mask=>{const seen=new Set([g.s]),todo=[g.s];while(todo.length){let v=todo.shift();g.edges.forEach(([a,b],i)=>{if(!(mask&(1<<i)))return;let w=a===v?b:b===v?a:null;if(w!==null&&!seen.has(w)){seen.add(w);todo.push(w);}});}return seen.has(g.t);};
+ const paths=[];function walk(v,seen,mask){if(v===g.t){paths.push(mask);return;}g.edges.forEach(([a,b],i)=>{let w=a===v?b:b===v?a:null;if(w!==null&&!seen.has(w))walk(w,new Set([...seen,w]),mask|(1<<i));});}walk(g.s,new Set([g.s]),0);paths.sort((a,b)=>a-b);
+ const coeff=Array(m+1).fill(0);for(let sub=1;sub<(1<<paths.length);sub++){let union=0;paths.forEach((x,i)=>{if(sub&(1<<i))union|=x;});coeff[pc(union)]+=pc(sub)%2?1:-1;}
+ const states=Array.from({length:1<<m},(_,mask)=>connected(mask)?1:0),counts=Array(m+1).fill(0);states.forEach((v,mask)=>counts[pc(mask)]+=v);
+ const cuts=[];for(let mask=1;mask<=full;mask++)if(!connected(full^mask)&&g.edges.every((_,i)=>!(mask&(1<<i))||connected(full^(mask^(1<<i)))))cuts.push(mask);
+ const evalPoly=c=>c.reduce((a,x,i)=>add(a,mul(Q(x),Q(p[0]**BigInt(i),p[1]**BigInt(i)))),Q(0));
+ const weight=(k,n)=>Q(p[0]**BigInt(k)*(p[1]-p[0])**BigInt(n-k),p[1]**BigInt(n));
+ const conditional=[],pivotal=[];for(let e=0;e<m;e++){let c=[Q(0),Q(0)],hist=Array(m).fill(0);for(let mask=0;mask<=full;mask++){if(mask&(1<<e))continue;let k=pc(mask);for(let x=0;x<2;x++)if(connected(mask|(x<<e)))c[x]=add(c[x],weight(k,m-1));if(!connected(mask)&&connected(mask|(1<<e)))hist[k]++;}conditional.push(c.map(str));pivotal.push(hist);}
+ const importance=conditional.map(([a,b])=>{let x=Q(...a.split('/')),y=Q(...b.split('/'));return str(add(y,Q(-x[0],x[1])));});
+ const derivative=coeff.slice(1).map((c,i)=>c*(i+1)),d=evalPoly(derivative);
+ const allocation=pivotal.map(h=>str(sum(h.map((n,k)=>Q(n*fact(k)*fact(m-k-1),fact(m))))));
+ return {network_contract:{vertices:g.n,edges:m,terminals:[g.s,g.t],independent_edges:true},operational_state_table:states,success_state_census:counts,reliability_power_coeffs:coeff,reliability_bernstein_coeffs:counts.map((c,k)=>str(Q(c,choose(m,k)))),exact_point_reliability:str(evalPoly(coeff)),minimal_path_sets:paths,minimal_cut_sets:cuts,path_inclusion_exclusion:coeff,cut_failure_polynomial:coeff.map((c,k)=>(k===0?1:0)-c),conditional_edge_reliability:conditional,birnbaum_importance:importance,reliability_derivative:derivative,russo_identity:{derivative:str(d),sum_importance:str(sum(importance.map(x=>Q(...x.split('/')))))},pivotal_edge_census:pivotal,shapley_pivotal_allocation:allocation,uniform_parameter_mean:str(sum(coeff.map((c,k)=>Q(c,k+1)))),trinity_nonconversion_bridge:{representation:'finite edge-state connection model',conversion_to_empirical_evidence:false},external_measurement_gap:{missing:'independent observed edge failures and validated dependence model',closed:false},authority_reservation:{release:false,required:'competent infrastructure, affected-party, legal and cultural authority'}};
+}
+module.exports={reference};
