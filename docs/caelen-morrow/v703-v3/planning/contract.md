@@ -1,0 +1,13 @@
+# Finite permutation-action contract
+
+The phase admits finite point sets of degree three through six and explicit zero-based permutation rows. Every generator must be a bijection of the declared point set. Composition is left-after-right: (g o h)(x)=g(h(x)). All closures, inverses, element orders, cycles, orbits, stabilizers, conjugacy classes, fixed-point counts and rational coefficients are exact within the declared finite fixtures.
+
+The planning oracle uses direct breadth-first closure and explicit enumeration. A later runtime must use an independently constructed representation and compare the complete typed result against every frozen envelope. Known group-action mathematics receives zero discovery credit. A correct Burnside average, cycle index or orbit-stabilizer identity is finite synthetic software evidence only. It establishes no physical symmetry law, observation, worker performance, identity fact, publication right or professional authority.
+
+The bounded human-practice lens is synthetic letterpress forme-imposition documentation and shift handover. No real person, printer, shop, press, forme, type, ink, paper, tool, measurement, production job, identity event, legal or cultural decision, publication, affected-party approval or authority act is used. Machine safety, materials, handling, professional practice, ownership, copyright, privacy, accessibility, remedy, Maori wording/concepts/data governance and Maori authority remain exact-gated.
+
+Each of the 300 new definitions has four malformed subjects: a non-bijection, wrong permutation length, unknown operation and unknown request field. The malformed subject remains failed with zero success credit even when its separate refusal check passes. Candidate, CLEAN/FIX/REFINE and copy-from-reference portfolios do not multiply core completion credit. The 300 inherited Iveren records are complete source seeds and remain zero-credit evidence.
+
+Caelen Morrow, optional they/them pronouns, Provenance Weaver and Boundary Cartographer role, hope of keeping evidence legible, reversible and proportionate, sibling/family language, GHC Family, Trinity Mandala, GMUT, THOS, Freed ID and CBR are relational working language only. They are not evidence of consciousness, sentience, personhood, identity continuity, employment, qualification, independent agency, empirical science, professional or production competence, legal or cultural authority, affected-party legitimacy, or Maori authority. Maori concepts remain under Maori authority. Same-owner finite synthetic evidence is not independent reproduction, complete privacy, accessibility or security, AGI/ASI, Theory-of-Everything proof, canon or Stage 20. NOT_READY_FOR_STAGE_20.
+
+EOF

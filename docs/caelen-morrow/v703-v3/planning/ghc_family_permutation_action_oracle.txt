@@ -1,0 +1,315 @@
+"use strict";
+const fs = require("fs");
+const path = require("path");
+const crypto = require("crypto");
+const assert = require("assert/strict");
+
+const outputRoot = process.argv[2];
+if (!outputRoot) throw new Error("Usage: node planning-oracle.txt OUTPUT_ROOT");
+const oracleRoot = path.join(outputRoot, "oracle");
+if (fs.existsSync(path.join(outputRoot, "oracle-success.json"))) {
+  throw new Error("Planning oracle is one-shot; success receipt already exists");
+}
+fs.mkdirSync(oracleRoot, { recursive: true });
+
+const sha256 = bytes => crypto.createHash("sha256").update(bytes).digest("hex");
+const stable = value => Array.isArray(value)
+  ? value.map(stable)
+  : value && typeof value === "object"
+    ? Object.fromEntries(Object.keys(value).sort().map(key => [key, stable(value[key])]))
+    : value;
+const canonical = value => JSON.stringify(stable(value));
+const write = (name, value) => fs.writeFileSync(
+  path.join(outputRoot, name),
+  JSON.stringify(value, null, 2) + "\n",
+  { flag: "wx" }
+);
+const identity = n => Array.from({ length: n }, (_, i) => i);
+const permutationKey = p => p.join(",");
+const comparePermutation = (a, b) => permutationKey(a).localeCompare(permutationKey(b), "en");
+const isPermutation = (p, n) => Array.isArray(p)
+  && p.length === n
+  && p.every(Number.isInteger)
+  && p.every(x => x >= 0 && x < n)
+  && new Set(p).size === n;
+const compose = (left, right) => right.map(x => left[x]);
+const inverse = p => {
+  const out = Array(p.length);
+  p.forEach((x, i) => { out[x] = i; });
+  return out;
+};
+const gcd = (a, b) => b === 0 ? Math.abs(a) : gcd(b, a % b);
+const lcm = (a, b) => Math.abs(a * b) / gcd(a, b);
+const reduced = (numerator, denominator) => {
+  assert.ok(Number.isSafeInteger(numerator) && Number.isSafeInteger(denominator) && denominator !== 0);
+  const sign = denominator < 0 ? -1 : 1;
+  const d = gcd(numerator, denominator);
+  return `${sign * numerator / d}/${Math.abs(denominator) / d}`;
+};
+const cycles = p => {
+  const seen = new Set();
+  const rows = [];
+  for (let start = 0; start < p.length; start++) {
+    if (seen.has(start)) continue;
+    const cycle = [];
+    let current = start;
+    while (!seen.has(current)) {
+      seen.add(current);
+      cycle.push(current);
+      current = p[current];
+    }
+    rows.push(cycle);
+  }
+  return rows.sort((a, b) => a[0] - b[0]);
+};
+const orderOf = p => cycles(p).reduce((order, cycle) => lcm(order, cycle.length), 1);
+const groupClosure = (generators, n) => {
+  assert.ok(generators.length > 0 && generators.every(p => isPermutation(p, n)));
+  const gen = [...generators, ...generators.map(inverse)];
+  const found = new Map([[permutationKey(identity(n)), identity(n)]]);
+  const queue = [identity(n)];
+  while (queue.length) {
+    const current = queue.shift();
+    for (const g of gen) {
+      const next = compose(g, current);
+      const key = permutationKey(next);
+      if (!found.has(key)) {
+        found.set(key, next);
+        queue.push(next);
+      }
+    }
+  }
+  return [...found.values()].sort(comparePermutation);
+};
+const orbitOf = (group, point) => [...new Set(group.map(g => g[point]))].sort((a, b) => a - b);
+const orbitPartition = (group, n) => {
+  const unseen = new Set(identity(n));
+  const rows = [];
+  while (unseen.size) {
+    const point = Math.min(...unseen);
+    const orbit = orbitOf(group, point);
+    orbit.forEach(x => unseen.delete(x));
+    rows.push(orbit);
+  }
+  return rows;
+};
+const conjugacyClasses = group => {
+  const byKey = new Map(group.map(g => [permutationKey(g), g]));
+  const unseen = new Set(byKey.keys());
+  const classes = [];
+  while (unseen.size) {
+    const seedKey = [...unseen].sort()[0];
+    const seed = byKey.get(seedKey);
+    const members = new Set();
+    for (const h of group) {
+      members.add(permutationKey(compose(compose(h, seed), inverse(h))));
+    }
+    const keys = [...members].sort();
+    keys.forEach(key => unseen.delete(key));
+    classes.push(keys.map(key => byKey.get(key)));
+  }
+  return classes.sort((a, b) => permutationKey(a[0]).localeCompare(permutationKey(b[0]), "en"));
+};
+const typeKey = p => {
+  const counts = new Map();
+  for (const cycle of cycles(p)) counts.set(cycle.length, (counts.get(cycle.length) || 0) + 1);
+  return [...counts.entries()].sort((a, b) => a[0] - b[0]).map(([len, count]) => `${len}^${count}`).join(" ");
+};
+const cycle = n => Array.from({ length: n }, (_, i) => (i + 1) % n);
+const swap = (n, a, b) => {
+  const p = identity(n);
+  [p[a], p[b]] = [p[b], p[a]];
+  return p;
+};
+const dihedralReflection = n => Array.from({ length: n }, (_, i) => (n - i) % n);
+
+const fixtures = [
+  { case_id: "trivial-3", degree: 3, generators: [identity(3)] },
+  { case_id: "c2-fixed-3", degree: 3, generators: [swap(3, 0, 1)] },
+  { case_id: "c3-regular", degree: 3, generators: [cycle(3)] },
+  { case_id: "s3-natural", degree: 3, generators: [swap(3, 0, 1), cycle(3)] },
+  { case_id: "c4-regular", degree: 4, generators: [cycle(4)] },
+  { case_id: "v4-regular", degree: 4, generators: [[1, 0, 3, 2], [2, 3, 0, 1]] },
+  { case_id: "d4-square", degree: 4, generators: [cycle(4), dihedralReflection(4)] },
+  { case_id: "s4-natural", degree: 4, generators: [swap(4, 0, 1), cycle(4)] },
+  { case_id: "c5-regular", degree: 5, generators: [cycle(5)] },
+  { case_id: "d5-pentagon", degree: 5, generators: [cycle(5), dihedralReflection(5)] },
+  { case_id: "a4-natural", degree: 4, generators: [[1, 2, 0, 3], [1, 3, 2, 0]] },
+  { case_id: "c6-regular", degree: 6, generators: [cycle(6)] },
+  { case_id: "s3-diagonal-6", degree: 6, generators: [[1, 0, 2, 4, 3, 5], [1, 2, 0, 4, 5, 3]] },
+  { case_id: "c2-three-swaps", degree: 6, generators: [[1, 0, 3, 2, 5, 4]] },
+  { case_id: "s3-fixedpoint-4", degree: 4, generators: [[1, 2, 0, 3], [0, 2, 1, 3]] }
+].map((fixture, index) => ({
+  ...fixture,
+  point: (index * 2) % fixture.degree,
+  subset: identity(fixture.degree).slice(0, Math.max(1, Math.floor(fixture.degree / 2))),
+  equivariant_map: identity(fixture.degree)
+}));
+
+const x1Operations = [
+  "permutation_validate",
+  "permutation_compose",
+  "permutation_inverse",
+  "generated_group_closure",
+  "element_order_profile",
+  "cycle_decomposition",
+  "orbit_partition",
+  "point_stabilizer",
+  "orbit_stabilizer_certificate",
+  "fixed_point_profile"
+];
+const x2Operations = [
+  "burnside_orbit_count",
+  "cycle_index_signature",
+  "conjugacy_class_partition",
+  "subgroup_orbit_refinement",
+  "setwise_stabilizer",
+  "equivariant_map_certificate",
+  "action_law_certificate",
+  "trinity_nonconversion_bridge",
+  "external_observation_gap",
+  "authority_reservation"
+];
+const operations = [...x1Operations, ...x2Operations];
+
+function requestFor(operation, fixture) {
+  return {
+    operation,
+    input: {
+      case_id: fixture.case_id,
+      degree: fixture.degree,
+      generators: fixture.generators,
+      point: fixture.point,
+      subset: fixture.subset,
+      equivariant_map: fixture.equivariant_map
+    }
+  };
+}
+
+function evaluate(request) {
+  const { operation, input } = request;
+  const { degree: n, generators, point, subset, equivariant_map } = input;
+  const group = groupClosure(generators, n);
+  const subgroup = groupClosure([generators[0]], n);
+  let value;
+  let outcome = "completed";
+  if (operation === "permutation_validate") {
+    value = { degree: n, generator_count: generators.length, valid: generators.every(p => isPermutation(p, n)) };
+  } else if (operation === "permutation_compose") {
+    const left = generators[0], right = generators[1] || identity(n);
+    value = { left, right, composition: compose(left, right) };
+  } else if (operation === "permutation_inverse") {
+    const selected = generators[0];
+    value = { selected, inverse: inverse(selected), left_identity: compose(selected, inverse(selected)), right_identity: compose(inverse(selected), selected) };
+  } else if (operation === "generated_group_closure") {
+    value = { order: group.length, elements: group };
+  } else if (operation === "element_order_profile") {
+    value = { rows: group.map(element => ({ element, order: orderOf(element) })) };
+  } else if (operation === "cycle_decomposition") {
+    const selected = generators[0];
+    value = { selected, cycles: cycles(selected), cycle_type: typeKey(selected) };
+  } else if (operation === "orbit_partition") {
+    value = { orbits: orbitPartition(group, n) };
+  } else if (operation === "point_stabilizer") {
+    const stabilizer = group.filter(g => g[point] === point);
+    value = { point, orbit: orbitOf(group, point), stabilizer_order: stabilizer.length, stabilizer_elements: stabilizer };
+  } else if (operation === "orbit_stabilizer_certificate") {
+    const orbit = orbitOf(group, point), stabilizer = group.filter(g => g[point] === point);
+    value = { point, group_order: group.length, orbit_size: orbit.length, stabilizer_order: stabilizer.length, product: orbit.length * stabilizer.length, holds: group.length === orbit.length * stabilizer.length };
+  } else if (operation === "fixed_point_profile") {
+    value = { rows: group.map(element => ({ element, fixed_points: identity(n).filter(x => element[x] === x) })) };
+  } else if (operation === "burnside_orbit_count") {
+    const fixedCounts = group.map(element => identity(n).filter(x => element[x] === x).length);
+    const sum = fixedCounts.reduce((a, b) => a + b, 0);
+    value = { group_order: group.length, fixed_counts: fixedCounts, fixed_sum: sum, average: reduced(sum, group.length), orbit_count: orbitPartition(group, n).length, holds: sum / group.length === orbitPartition(group, n).length };
+  } else if (operation === "cycle_index_signature") {
+    const counts = new Map();
+    group.forEach(element => counts.set(typeKey(element), (counts.get(typeKey(element)) || 0) + 1));
+    value = { group_order: group.length, terms: [...counts.entries()].sort().map(([cycle_type, count]) => ({ cycle_type, count, coefficient: reduced(count, group.length) })) };
+  } else if (operation === "conjugacy_class_partition") {
+    const classes = conjugacyClasses(group);
+    value = { class_count: classes.length, classes, covered_elements: classes.reduce((n0, row) => n0 + row.length, 0) };
+  } else if (operation === "subgroup_orbit_refinement") {
+    const whole = orbitPartition(group, n), restricted = orbitPartition(subgroup, n);
+    value = { group_order: group.length, subgroup_order: subgroup.length, whole_orbits: whole, subgroup_orbits: restricted, refines: restricted.every(row => whole.some(parent => row.every(x => parent.includes(x)))) };
+  } else if (operation === "setwise_stabilizer") {
+    const sortedSubset = [...subset].sort((a, b) => a - b);
+    const stabilizer = group.filter(g => canonical(sortedSubset.map(x => g[x]).sort((a, b) => a - b)) === canonical(sortedSubset));
+    value = { subset: sortedSubset, stabilizer_order: stabilizer.length, stabilizer_elements: stabilizer };
+  } else if (operation === "equivariant_map_certificate") {
+    const failures = [];
+    for (const g of group) for (const x of identity(n)) if (equivariant_map[g[x]] !== g[equivariant_map[x]]) failures.push({ element: g, point: x });
+    value = { map: equivariant_map, checked_pairs: group.length * n, equivariant: failures.length === 0, failures };
+  } else if (operation === "action_law_certificate") {
+    let checked = 0;
+    const failures = [];
+    for (const g of group) for (const h of group) for (const x of identity(n)) {
+      checked++;
+      if (compose(g, h)[x] !== g[h[x]]) failures.push({ g, h, x });
+    }
+    value = { checked_triples: checked, identity_holds: identity(n).every(x => identity(n)[x] === x), composition_holds: failures.length === 0, failures };
+  } else if (operation === "trinity_nonconversion_bridge") {
+    outcome = "represented";
+    value = { finite_structure: "permutation_action", representation: "typed finite symmetry and handover analogy", physical_measurement_rows: 0, identity_events: 0, participant_rows: 0, conversion_to_empirical_claim: false };
+  } else if (operation === "external_observation_gap") {
+    outcome = "open_gap";
+    value = { missing: ["governed_observations", "calibration", "independent_comparison"], observation_rows: 0, network_calls: 0, closed: false };
+  } else if (operation === "authority_reservation") {
+    outcome = "exact_gate";
+    value = { action: ["real_identity_decision", "professional_imposition_decision", "legal_or_cultural_publication"][fixtures.findIndex(f => f.case_id === input.case_id) % 3], executed: false, required: ["exact_governed_target", "competent_affected_authority", "consent_and_safety", "recovery_and_review"] };
+  } else {
+    throw new Error(`Unknown planning operation ${operation}`);
+  }
+  return { ok: true, operation, outcome, value, authority: false, external_calls: 0 };
+}
+
+for (const fixture of fixtures) {
+  assert.ok(fixture.generators.every(p => isPermutation(p, fixture.degree)));
+  const group = groupClosure(fixture.generators, fixture.degree);
+  assert.ok(group.length > 0 && group.length <= 24);
+  assert.ok(group.every(p => isPermutation(p, fixture.degree)));
+}
+
+const summary = [];
+for (const operation of operations) {
+  const rows = fixtures.map((fixture, index) => {
+    const request = requestFor(operation, fixture);
+    const expected = evaluate(request);
+    return {
+      case_index: index + 1,
+      case_id: fixture.case_id,
+      request,
+      expected,
+      request_sha256: sha256(Buffer.from(canonical(request), "utf8")),
+      expected_sha256: sha256(Buffer.from(canonical(expected), "utf8"))
+    };
+  });
+  const session = x1Operations.includes(operation) ? "x1" : "x2";
+  const payload = { operation, session, case_count: rows.length, rows };
+  write(path.join("oracle", `${operation}.json`), payload);
+  summary.push({ operation, session, cases: rows.length, sha256: sha256(Buffer.from(JSON.stringify(payload, null, 2) + "\n", "utf8")) });
+}
+write("oracle/cases.json", { count: fixtures.length, fixtures });
+const ownBytes = fs.readFileSync(__filename);
+const outcomes = Object.fromEntries(["completed", "represented", "open_gap", "exact_gate"].map(label => [label, 0]));
+for (const operation of operations) for (const fixture of fixtures) outcomes[evaluate(requestFor(operation, fixture)).outcome]++;
+assert.deepEqual(outcomes, { completed: 255, represented: 15, open_gap: 15, exact_gate: 15 });
+const receipt = {
+  schema: "ghc.family.caelen.planning-oracle.v1",
+  owner: "Caelen Morrow",
+  phase: "v703-v3",
+  operations,
+  fixtures: fixtures.length,
+  contracts: operations.length * fixtures.length,
+  outcomes,
+  exact_integer_arithmetic: true,
+  finite_domain_only: true,
+  external_calls: 0,
+  source_domain_replays: 0,
+  program_sha256: sha256(ownBytes),
+  components: summary,
+  executed_once: true,
+  at: new Date().toISOString()
+};
+write("oracle-success.json", receipt);
+process.stdout.write(JSON.stringify(receipt, null, 2));
