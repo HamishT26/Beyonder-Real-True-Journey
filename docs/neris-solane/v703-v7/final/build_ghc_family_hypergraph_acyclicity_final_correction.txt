@@ -1,0 +1,129 @@
+#!/usr/bin/env python3
+"""Combined closeout with active-support correction and external overlay binding."""
+
+import hashlib
+import json
+from pathlib import Path
+import runpy
+
+
+HERE = Path(__file__).resolve()
+PHASE_ROOT = HERE.parents[1]
+BUILDER = PHASE_ROOT / "planning" / "build_ghc_family_hypergraph_acyclicity_assets.txt"
+OVERLAY = Path(r"D:\GHC-Archives\phase-receipts\neris-solane\v703-v7\operational-overlay.json")
+namespace = runpy.run_path(str(BUILDER), run_name="ghc_family_acyclicity_frozen_builder")
+
+
+def active_vertices(h):
+    return sorted(set().union(*(set(edge) for edge in h["edges"])))
+
+
+def corrected_maximal_cliques(h):
+    adjacency = namespace["primal_adjacency"](h)
+    candidates = [
+        set(subset)
+        for subset in namespace["powerset"](active_vertices(h))
+        if namespace["is_clique"](subset, adjacency)
+    ]
+    maximal = [candidate for candidate in candidates if not any(candidate < other for other in candidates)]
+    return [sorted(candidate) for candidate in sorted(maximal, key=lambda value: (len(value), tuple(sorted(value))))]
+
+
+def corrected_conformal_oracle(h):
+    adjacency = namespace["primal_adjacency"](h)
+    edges = [set(edge) for edge in h["edges"]]
+    for subset in namespace["powerset"](active_vertices(h)):
+        if namespace["is_clique"](subset, adjacency) and not any(set(subset) <= edge for edge in edges):
+            return False
+    return True
+
+
+function_globals = namespace["alpha_facts"].__globals__
+function_globals["maximal_cliques_bruteforce"] = corrected_maximal_cliques
+function_globals["conformal_oracle"] = corrected_conformal_oracle
+
+overlay_data = json.loads(OVERLAY.read_text(encoding="utf-8"))
+overlay_bytes = OVERLAY.read_bytes()
+overlay_sha256 = hashlib.sha256(overlay_bytes).hexdigest()
+original_baton_modules = namespace["baton_modules"]
+
+
+def corrected_baton_modules(metadata, results, proposals, inherited):
+    modules = original_baton_modules(metadata, results, proposals, inherited)
+    overlay_text = (
+        f" After the immutable planning commit, {len(overlay_data['failures'])} additional operational failures were retained in a separate zero-credit external overlay at "
+        f"`{OVERLAY}` with SHA-256 `{overlay_sha256}`. Its delta is {overlay_data['overlay_delta']['methods']} methods, "
+        f"{overlay_data['overlay_delta']['witnesses']} witnesses, {overlay_data['overlay_delta']['failed_witnesses']} failed witnesses, and "
+        f"{overlay_data['overlay_delta']['negatives']} negatives, with zero passing-witness, gap, gate, or completion credit. "
+        "The repository-sealed counts and this external overlay must never be flattened."
+    )
+    return [(title, body + overlay_text if title == "Retained negatives and recoveries" else body) for title, body in modules]
+
+
+function_globals["baton_modules"] = corrected_baton_modules
+namespace["build_final"]()
+
+final = PHASE_ROOT / "final"
+pointer = {
+    "layer": "external_zero_credit_operational_overlay",
+    "absolute_path": str(OVERLAY),
+    "sha256": overlay_sha256,
+    "bytes": len(overlay_bytes),
+    "failure_count": len(overlay_data["failures"]),
+    "delta": overlay_data["overlay_delta"],
+    "completion_credit": 0,
+    "flatten_with_repository_counts": False,
+}
+namespace["write_json"](final / "external-operational-overlay-pointer.json", pointer)
+
+metadata_path = final / "metadata.json"
+metadata = namespace["read_json"](metadata_path)
+metadata["external_zero_credit_operational_overlay"] = pointer
+metadata["successor_visible_effective_accounting"] = {
+    key: metadata["effective_accounting"][key] + pointer["delta"].get(key, 0)
+    for key in metadata["effective_accounting"]
+}
+namespace["write_json"](metadata_path, metadata)
+
+flow_path = final / "method-flow.json"
+flow = namespace["read_json"](flow_path)
+flow["external_zero_credit_operational_overlay"] = pointer
+flow["successor_visible_effective"] = metadata["successor_visible_effective_accounting"]
+namespace["write_json"](flow_path, flow)
+
+validation_path = final / "validation.json"
+validation = namespace["read_json"](validation_path)
+validation["external_overlay_failures"] = pointer["failure_count"]
+validation["external_overlay_sha256"] = pointer["sha256"]
+validation["external_overlay_completion_credit"] = 0
+namespace["write_json"](validation_path, validation)
+
+overview_path = final / "overview.md"
+overview = overview_path.read_text(encoding="utf-8")
+visible = metadata["successor_visible_effective_accounting"]
+overview += (
+    "\n## External zero-credit overlay\n\n"
+    f"A separately hashed external overlay retains {pointer['failure_count']} post-planning operational failures at zero completion credit. "
+    f"The live successor-visible baseline is {visible['methods']} methods, {visible['witnesses']} witnesses, "
+    f"{visible['passing_witnesses']} passing witnesses, {visible['failed_witnesses']} failed witnesses, "
+    f"{visible['negatives']} negatives, {visible['open_gaps']} open gaps, and {visible['exact_gates']} exact gates. "
+    "Repository-sealed and external-overlay layers remain separate.\n"
+)
+namespace["write_text"](overview_path, overview)
+
+seal_path = final / "content-seal.json"
+seal = namespace["read_json"](seal_path)
+seal_paths = [entry["path"] for entry in seal["entries"]]
+if "final/external-operational-overlay-pointer.json" not in seal_paths:
+    seal_paths.append("final/external-operational-overlay-pointer.json")
+seal_entries = [namespace["file_record"](PHASE_ROOT / path) for path in seal_paths]
+namespace["write_json"](seal_path, {
+    "owner": "Neris Solane",
+    "phase": "v703-v7",
+    "entries": seal_entries,
+    "entry_count": len(seal_entries),
+    "entry_digest": namespace["sha256_value"](seal_entries),
+    "self_excluded": True,
+})
+namespace["write_stage_manifest"]("final")
+print(json.dumps({"status": "FINAL_BUILT_WITH_ACTIVE_SUPPORT_CORRECTION", "external_overlay_sha256": overlay_sha256}, sort_keys=True))

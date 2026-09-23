@@ -1,0 +1,199 @@
+#!/usr/bin/env python3
+import argparse
+import hashlib
+import json
+from pathlib import Path
+import re
+import subprocess
+import sys
+
+SOURCE = "bd2b1832d4dda9039d5beac971318404343d8932"
+BRANCH = "codex/GHC-Family/neris-solane-main-3"
+PREFIX = "docs/neris-solane/v703-v7/"
+
+def run_git(*args, binary=False):
+    cp = subprocess.run(["git", *args], capture_output=True, text=not binary)
+    if cp.returncode != 0:
+        err = cp.stderr if not binary else cp.stderr.decode("utf-8", errors="replace")
+        raise RuntimeError(f"git {' '.join(args)} failed: {err.strip()}")
+    return cp.stdout
+
+def stable(value):
+    return json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
+
+def sha(data):
+    return hashlib.sha256(data).hexdigest()
+
+def batch_read(specs):
+    process = subprocess.Popen(["git", "cat-file", "--batch"], stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    out = {}
+    try:
+        for spec in specs:
+            process.stdin.write((spec + "\n").encode("utf-8"))
+            process.stdin.flush()
+            header = process.stdout.readline().decode("utf-8").strip()
+            parts = header.split()
+            if len(parts) != 3 or parts[1] != "blob":
+                raise RuntimeError(f"unexpected cat-file header for {spec}: {header}")
+            oid, _, size_text = parts
+            size = int(size_text)
+            body = process.stdout.read(size)
+            terminator = process.stdout.read(1)
+            if len(body) != size or terminator != b"\n":
+                raise RuntimeError(f"cat-file framing failure for {spec}")
+            out[spec] = {"oid": oid, "body": body}
+        process.stdin.close()
+        if process.wait(timeout=30) != 0:
+            raise RuntimeError(process.stderr.read().decode("utf-8", errors="replace"))
+    finally:
+        if process.poll() is None:
+            process.kill()
+    return out
+
+parser = argparse.ArgumentParser()
+parser.add_argument("--receipt", required=True)
+args = parser.parse_args()
+receipt_path = Path(args.receipt).resolve()
+if receipt_path.exists():
+    print(json.dumps({"status": "REFUSED_CANONICAL_REPLAY_LATCH", "receipt": str(receipt_path)}))
+    raise SystemExit(73)
+
+checks = []
+def check(name, observed, expected=True, detail=None):
+    passed = observed == expected
+    checks.append({"name": name, "passed": passed, "observed": observed, "expected": expected, "detail": detail})
+    if not passed:
+        raise AssertionError(f"{name}: observed={observed!r} expected={expected!r}")
+
+head = run_git("rev-parse", "HEAD").strip()
+branch = run_git("branch", "--show-current").strip()
+status = run_git("status", "--porcelain=v1").strip()
+upstream = run_git("rev-parse", "@{u}").strip()
+tracking = run_git("rev-parse", f"refs/remotes/origin/{BRANCH}").strip()
+live_lines = run_git("ls-remote", "origin", f"refs/heads/{BRANCH}").strip().splitlines()
+live = live_lines[0].split()[0] if len(live_lines) == 1 else None
+divergence = run_git("rev-list", "--left-right", "--count", "HEAD...@{u}").strip().split()
+commits = run_git("rev-list", "--reverse", f"{SOURCE}..HEAD").strip().splitlines()
+merges = [x for x in run_git("rev-list", "--merges", f"{SOURCE}..HEAD").strip().splitlines() if x]
+parents = {}
+for commit in commits:
+    line = run_git("rev-list", "--parents", "-n", "1", commit).strip().split()
+    parents[commit] = line[1:]
+
+check("head_is_forty_hex", bool(re.fullmatch(r"[0-9a-f]{40}", head)))
+check("branch_exact", branch, BRANCH)
+check("clean_state", status, "")
+check("upstream_equal", upstream, head)
+check("tracking_equal", tracking, head)
+check("fresh_live_equal", live, head)
+check("typed_divergence", divergence, ["0", "0"])
+check("owner_commit_count", len(commits), 4)
+check("zero_merges", len(merges), 0)
+check("single_parent_each_owner_commit", all(len(v) == 1 for v in parents.values()))
+check("first_owner_parent_source", parents[commits[0]][0], SOURCE)
+check("direct_parent_chain", all(parents[commits[i]][0] == commits[i-1] for i in range(1, len(commits))))
+
+owner_paths = [p for p in run_git("ls-tree", "-r", "--name-only", "HEAD", "--", PREFIX.rstrip("/")).splitlines() if p]
+check("owner_files_present", len(owner_paths) > 0)
+check("artifact_extensions_allowlisted", all(Path(p).suffix.lower() in {".json", ".md", ".txt", ".html"} for p in owner_paths))
+check("owner_file_ceiling", len(owner_paths) <= 2000)
+
+manifest_paths = [PREFIX + f"{stage}/manifest.json" for stage in ("planning", "x1", "x2", "final")]
+first = batch_read([f"HEAD:{p}" for p in manifest_paths] + [f"HEAD:{PREFIX}final/content-seal.json"])
+manifests = {path: json.loads(first[f"HEAD:{path}"]["body"].decode("utf-8")) for path in manifest_paths}
+seal = json.loads(first[f"HEAD:{PREFIX}final/content-seal.json"]["body"].decode("utf-8"))
+entry_specs = []
+for manifest in manifests.values():
+    for entry in manifest["entries"]:
+        entry_specs.append(f"HEAD:{PREFIX}{entry['path']}")
+for entry in seal["entries"]:
+    entry_specs.append(f"HEAD:{PREFIX}{entry['path']}")
+objects = batch_read(sorted(set(entry_specs)))
+manifest_failures = []
+for manifest_path, manifest in manifests.items():
+    for entry in manifest["entries"]:
+        spec = f"HEAD:{PREFIX}{entry['path']}"
+        obj = objects[spec]
+        if obj["oid"] != entry["git_blob_sha1"] or sha(obj["body"]) != entry["sha256"] or len(obj["body"]) != entry["bytes"]:
+            manifest_failures.append({"manifest": manifest_path, "path": entry["path"]})
+check("exact_manifest_replay", len(manifest_failures), 0, manifest_failures)
+seal_failures = []
+for entry in seal["entries"]:
+    spec = f"HEAD:{PREFIX}{entry['path']}"
+    obj = objects[spec]
+    if obj["oid"] != entry["git_blob_sha1"] or sha(obj["body"]) != entry["sha256"] or len(obj["body"]) != entry["bytes"]:
+        seal_failures.append(entry["path"])
+check("content_seal_replay", len(seal_failures), 0, seal_failures)
+
+all_objects = batch_read([f"HEAD:{p}" for p in owner_paths])
+json_count = 0
+json_failures = []
+for path in owner_paths:
+    if path.endswith(".json"):
+        json_count += 1
+        try:
+            json.loads(all_objects[f"HEAD:{path}"]["body"].decode("utf-8"))
+        except Exception as exc:
+            json_failures.append({"path": path, "error": str(exc)})
+check("strict_json_parse", len(json_failures), 0, json_failures)
+
+privacy_patterns = {
+    "windows_user_path": re.compile(rb"[A-Za-z]:\\\\Users\\\\[^\\\\\s]+", re.I),
+    "email_address": re.compile(rb"[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,}", re.I),
+    "ipv4_address": re.compile(rb"(?<![0-9])(?:[0-9]{1,3}\\.){3}[0-9]{1,3}(?![0-9])"),
+    "credential_assignment": re.compile(rb"(?i)(?:password|api[_-]?key|secret|token)\\s*[:=]\\s*['\\\"][^'\\\"]{8,}"),
+    "private_key_header": re.compile(rb"-----BEGIN [A-Z ]*PRIVATE KEY-----"),
+}
+privacy_hits = []
+for path in owner_paths:
+    body = all_objects[f"HEAD:{path}"]["body"]
+    for category, pattern in privacy_patterns.items():
+        if pattern.search(body):
+            privacy_hits.append({"path": path, "category": category})
+check("five_class_privacy_scan", len(privacy_hits), 0, privacy_hits)
+
+metadata = json.loads(all_objects[f"HEAD:{PREFIX}final/metadata.json"]["body"].decode("utf-8"))
+validation = json.loads(all_objects[f"HEAD:{PREFIX}final/validation.json"]["body"].decode("utf-8"))
+check("core_outcomes_exact", metadata["core_outcomes"], {"completed": 255, "represented": 15, "open_gap": 15, "exact_gate": 15})
+check("local_methods_exact", metadata["local_accounting"]["methods"], 33)
+check("local_passing_exact", metadata["local_accounting"]["passing_witnesses"], 2142)
+check("local_failed_exact", metadata["local_accounting"]["failed_witnesses"], 1206)
+check("local_negative_exact", metadata["local_accounting"]["negatives"], 1206)
+check("planning_x1_x2_final_order", validation["owner_commits_expected"], 4)
+check("terminal_verdict", metadata["terminal_verdict"], "NOT_READY_FOR_STAGE_20")
+check("canonical_not_precredited", metadata["canonical_invocations_before_final"], 0)
+check("no_route_precontact", metadata["route"]["precontact"], False)
+check("zero_spend", metadata["environment"]["spend_usd"], 0)
+check("zero_global_installations", metadata["environment"]["global_installations"], 0)
+
+payload = {
+    "status": "VALID_EXACT_FINAL_OWNER_SCOPED_METADATA_CANONICAL",
+    "owner": "Neris Solane",
+    "phase": "v703-v7",
+    "source_final": SOURCE,
+    "exact_final": head,
+    "branch": branch,
+    "checks": checks,
+    "check_count": len(checks),
+    "manifest_entry_checks": sum(len(m["entries"]) for m in manifests.values()),
+    "content_seal_entry_checks": len(seal["entries"]),
+    "strict_json_documents": json_count,
+    "owner_files_scanned": len(owner_paths),
+    "privacy_classes": len(privacy_patterns),
+    "confirmed_privacy_hits": len(privacy_hits),
+    "domain_tests_rerun": 0,
+    "unchanged_successful_components_replayed": 0,
+    "complete_repository_suite_run": False,
+    "independent_reproduction": False,
+    "canonical_invocations": 1,
+    "canonical_successes": 1,
+    "canonical_replays": 0,
+    "terminal_verdict": "NOT_READY_FOR_STAGE_20",
+}
+payload_sha = sha(stable(payload).encode("utf-8"))
+receipt = {"payload": payload, "canonical_payload_sha256": payload_sha}
+receipt_sha = sha(stable(receipt).encode("utf-8"))
+receipt["canonical_receipt_sha256"] = receipt_sha
+receipt_path.parent.mkdir(parents=True, exist_ok=True)
+receipt_path.write_text(json.dumps(receipt, ensure_ascii=False, indent=2) + "\n", encoding="utf-8", newline="\n")
+print(json.dumps({"status": payload["status"], "exact_final": head, "checks": len(checks), "receipt": str(receipt_path), "payload_sha256": payload_sha, "receipt_sha256": receipt_sha}, sort_keys=True))
