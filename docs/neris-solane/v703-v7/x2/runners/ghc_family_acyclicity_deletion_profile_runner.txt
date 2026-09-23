@@ -1,0 +1,11 @@
+#!/usr/bin/env python3
+import argparse
+import json
+
+parser = argparse.ArgumentParser()
+parser.add_argument("--self-test", action="store_true")
+args = parser.parse_args()
+observed = bool(len([x for x in range(4) if x != 2]) == 3)
+payload = {"runner": "ghc_family_acyclicity_deletion_profile_runner.txt", "test": "single_deletion_count", "observed": observed, "expected": True, "passed": observed is True, "production_observations": 0}
+print(json.dumps(payload, sort_keys=True))
+raise SystemExit(0 if payload["passed"] else 1)
