@@ -1,0 +1,50 @@
+"use strict";
+const runtime=(function engineRuntime(){
+ const ops=["hypergraph_contract","incidence_matrix","vertex_degrees","edge_size_profile","primal_adjacency","dual_intersection_adjacency","berge_components","independent_set_census","maximal_independent_sets","matching_number","transversal_census","minimal_transversals","transversal_number","blocker_duality","cover_independence_duality","transversal_polynomial","weighted_transversal_minimum","trinity_nonconversion_bridge","external_observation_gap","authority_reservation"];
+ const outcomes=Object.fromEntries(ops.map((x,i)=>[x,i<17?"completed":i===17?"represented":i===18?"open_gap":"exact_gate"]));
+ const pop=x=>{let c=0;while(x){c+=x&1;x>>=1;}return c;};
+ const arr=(m,n)=>{const a=[];for(let i=0;i<n;i++)if(m&(1<<i))a.push(i);return a;};
+ const stable=v=>Array.isArray(v)?v.map(stable):v&&typeof v==="object"?Object.fromEntries(Object.keys(v).sort().map(k=>[k,stable(v[k])])):v;
+ const txt=v=>JSON.stringify(stable(v));
+ const canonical=(ms,n)=>ms.map(m=>arr(m,n)).sort((a,b)=>a.length-b.length||a.join(",").localeCompare(b.join(",")));
+ const refusal=reason=>({ok:false,outcome:"open_gap",error:"ADMISSION_REFUSED",reason,subject_success_credit:0,authority:false,external_calls:0});
+ function run(req){
+  if(!req||typeof req!=="object"||Array.isArray(req)||Object.keys(req).sort().join("|")!=="input|operation")return refusal("request_fields");
+  if(!ops.includes(req.operation))return refusal("operation");const g=req.input;
+  if(!g||typeof g!=="object"||Array.isArray(g)||Object.keys(g).sort().join("|")!=="edges|id|n|weights")return refusal("input_fields");
+  if(typeof g.id!=="string"||!/^[a-z0-9-]{1,60}$/.test(g.id)||!Number.isInteger(g.n)||g.n<1||g.n>6||!Array.isArray(g.edges)||g.edges.length<1||g.edges.length>8||!Array.isArray(g.weights)||g.weights.length!==g.n||g.weights.some(w=>!Number.isInteger(w)||w<1||w>100))return refusal("hypergraph");
+  if(g.edges.some(e=>!Array.isArray(e)||e.length<1||e.length>g.n||e.some(v=>!Number.isInteger(v)||v<0||v>=g.n)||new Set(e).size!==e.length||e.some((v,i)=>i&&e[i-1]>=v)))return refusal("hypergraph");
+  const edgeKeys=g.edges.map(e=>e.join(","));if(new Set(edgeKeys).size!==edgeKeys.length)return refusal("hypergraph");
+  const es=g.edges.map(e=>e.reduce((m,v)=>m|(1<<v),0));for(let i=0;i<es.length;i++)for(let j=0;j<es.length;j++)if(i!==j&&(es[i]&es[j])===es[i])return refusal("hypergraph");
+  const subs=(pred)=>{const z=[];for(let m=0;m<(1<<g.n);m++)if(pred(m))z.push(m);return z;};
+  const ts=subs(m=>es.every(e=>(e&m)!==0));
+  const mins=ts.filter(m=>arr(m,g.n).every(v=>!ts.includes(m^(1<<v))));
+  const inds=subs(m=>es.every(e=>(e&m)!==e));
+  const maxinds=inds.filter(m=>arr(((1<<g.n)-1)^m,g.n).every(v=>!inds.includes(m|(1<<v))));
+  const adj=Array.from({length:g.n},()=>Array(g.n).fill(0));for(const e of g.edges)for(let i=0;i<e.length;i++)for(let j=i+1;j<e.length;j++)adj[e[i]][e[j]]=adj[e[j]][e[i]]=1;
+  let value,op=req.operation;
+  if(op==="hypergraph_contract")value={vertices:g.n,edge_count:g.edges.length,clutter:true,weights:g.weights};
+  else if(op==="incidence_matrix")value=g.edges.map(e=>Array.from({length:g.n},(_,v)=>e.includes(v)?1:0));
+  else if(op==="vertex_degrees")value=Array.from({length:g.n},(_,v)=>g.edges.reduce((s,e)=>s+(e.includes(v)?1:0),0));
+  else if(op==="edge_size_profile"){value=Array(g.n+1).fill(0);g.edges.forEach(e=>value[e.length]++);}
+  else if(op==="primal_adjacency")value=adj;
+  else if(op==="dual_intersection_adjacency"){value=Array.from({length:es.length},()=>Array(es.length).fill(0));for(let i=0;i<es.length;i++)for(let j=i+1;j<es.length;j++)if(es[i]&es[j])value[i][j]=value[j][i]=1;}
+  else if(op==="berge_components"){const seen=new Set();value=[];for(let s=0;s<g.n;s++)if(!seen.has(s)){const q=[s],c=[];seen.add(s);while(q.length){const v=q.shift();c.push(v);for(let u=0;u<g.n;u++)if(adj[v][u]&&!seen.has(u)){seen.add(u);q.push(u);}}value.push(c.sort((a,b)=>a-b));}}
+  else if(op==="independent_set_census"){value=Array(g.n+1).fill(0);inds.forEach(m=>value[pop(m)]++);}
+  else if(op==="maximal_independent_sets")value=canonical(maxinds,g.n);
+  else if(op==="matching_number"){let best=0,sets=[];for(let m=0;m<(1<<es.length);m++){let used=0,ok=true;for(let i=0;i<es.length;i++)if(m&(1<<i)){if(used&es[i]){ok=false;break;}used|=es[i];}if(ok){const k=pop(m);if(k>best){best=k;sets=[];}if(k===best)sets.push(arr(m,es.length));}}value={number:best,matchings:sets};}
+  else if(op==="transversal_census")value={total:ts.length,sets:canonical(ts,g.n)};
+  else if(op==="minimal_transversals")value=canonical(mins,g.n);
+  else if(op==="transversal_number"){const k=Math.min(...mins.map(pop));value={number:k,minimizers:canonical(mins.filter(m=>pop(m)===k),g.n)};}
+  else if(op==="blocker_duality"){const blocker=canonical(mins,g.n),bes=blocker.map(e=>e.reduce((m,v)=>m|(1<<v),0)),bts=subs(m=>bes.every(e=>(e&m)!==0)),bmins=bts.filter(m=>arr(m,g.n).every(v=>!bts.includes(m^(1<<v)))),dual=canonical(bmins,g.n),original=canonical(es,g.n);value={blocker,dual,equals_clutter:txt(dual)===txt(original)};}
+  else if(op==="cover_independence_duality"){const tau=Math.min(...mins.map(pop)),alpha=Math.max(...inds.map(pop));value={transversal_number:tau,independence_number:alpha,sum:tau+alpha,vertices:g.n};}
+  else if(op==="transversal_polynomial"){value=Array(g.n+1).fill(0);ts.forEach(m=>value[pop(m)]++);}
+  else if(op==="weighted_transversal_minimum"){let w=Infinity,b=[];for(const m of ts){const z=arr(m,g.n).reduce((s,v)=>s+g.weights[v],0);if(z<w){w=z;b=[];}if(z===w)b.push(m);}value={weight:w,minimizers:canonical(b,g.n)};}
+  else if(op==="trinity_nonconversion_bridge")value={representation:"finite clutter and transversal model",conversion_to_empirical_evidence:false};
+  else if(op==="external_observation_gap")value={missing:"governed observations, domain model and affected-party review",closed:false};
+  else if(op==="authority_reservation")value={release:false,required:"competent operational, affected-party, legal and cultural authority"};
+  return {ok:true,operation:op,outcome:outcomes[op],value,authority:false,external_calls:0};
+ }
+ return {run,ops};
+})();
+module.exports=runtime;
