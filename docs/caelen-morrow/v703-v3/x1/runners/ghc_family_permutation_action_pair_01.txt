@@ -1,0 +1,5 @@
+"use strict";
+const core=require('./ghc_family_permutation_action_core.txt');
+const allowed=["permutation_validate","permutation_compose"];
+function run(payload){if(!payload||Object.keys(payload).sort().join(',')!=='left,right')throw Error('PAIR_PAYLOAD');if(payload.left.operation!==allowed[0]||payload.right.operation!==allowed[1])throw Error('PAIR_OPERATION');return {left:core.evaluate(payload.left,'x1'),right:core.evaluate(payload.right,'x1')};}
+module.exports={allowed,run};
