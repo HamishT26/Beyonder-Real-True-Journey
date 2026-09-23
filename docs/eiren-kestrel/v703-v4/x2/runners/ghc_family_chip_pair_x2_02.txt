@@ -1,0 +1,8 @@
+"use strict";
+module.exports = function(payload){
+  if(!payload || !Array.isArray(payload.rows)) return {ok:false,error:"ROWS_REQUIRED",subject_success_credit:0};
+  const allowed=["spanning_tree_enumeration","laplacian_cofactor_determinant"];
+  if(payload.rows.some(row=>!allowed.includes(row.operation))) return {ok:false,error:"OPERATION_REFUSED",subject_success_credit:0};
+  if(payload.rows.some(row=>row.matches_expected!==true)) return {ok:false,error:"EVIDENCE_MISMATCH",subject_success_credit:0};
+  return {ok:true,pair_id:"ghc_family_chip_pair_x2_02",rows:payload.rows.length,operations:allowed};
+};
