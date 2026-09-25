@@ -1,0 +1,2046 @@
+{
+  "source": "99edb436fc7a6c16c4b0700713c96fa09ff5505c",
+  "source_path": "docs/talen-briar/v704-v3/planning/proposals/mdp_bellman_values.json",
+  "source_blob_sha256": "29f6eb1c6d655f2fa4b32da8b5d27a00022cd9bc0e56c37784e794e24eec710e",
+  "records": [
+    {
+      "source_proposal_id": "TB7043-P091",
+      "source_record": {
+        "proposal_id": "TB7043-P091",
+        "operation": "mdp_bellman_values",
+        "session": "x1",
+        "profile_id": "F01",
+        "definition": "Compute optimal values at every remaining horizon.",
+        "request": {
+          "op": "mdp_bellman_values",
+          "input": {
+            "states": [
+              "s0",
+              "s1",
+              "s2"
+            ],
+            "transition": [
+              [
+                [
+                  "1",
+                  "0",
+                  "0"
+                ],
+                [
+                  "0",
+                  "1",
+                  "0"
+                ]
+              ],
+              [
+                [
+                  "0",
+                  "0",
+                  "1"
+                ],
+                [
+                  "0",
+                  "1",
+                  "0"
+                ]
+              ],
+              [
+                [
+                  "0",
+                  "0",
+                  "1"
+                ],
+                [
+                  "0",
+                  "0",
+                  "1"
+                ]
+              ]
+            ],
+            "rewards": [
+              [
+                "2",
+                "0"
+              ],
+              [
+                "0",
+                "3"
+              ],
+              [
+                "6",
+                "6"
+              ]
+            ],
+            "terminal": [
+              "0",
+              "0",
+              "0"
+            ],
+            "discount": "1",
+            "horizon": 3,
+            "policy": [
+              0,
+              1,
+              0
+            ],
+            "initial": [
+              "1",
+              "0",
+              "0"
+            ],
+            "shift": "1"
+          }
+        },
+        "expected": {
+          "ok": true,
+          "op": "mdp_bellman_values",
+          "outcome": "completed",
+          "value": {
+            "remaining_horizons": [
+              0,
+              1,
+              2,
+              3
+            ],
+            "values": [
+              [
+                "0",
+                "0",
+                "0"
+              ],
+              [
+                "2",
+                "3",
+                "6"
+              ],
+              [
+                "4",
+                "6",
+                "12"
+              ],
+              [
+                "6",
+                "12",
+                "18"
+              ]
+            ]
+          },
+          "external_credit": false,
+          "scope": "finite_synthetic_same_owner"
+        },
+        "request_sha256": "83a2901372c7d9d4314c9ca4034659c89d664abc25e7b3da811bb9b11e7decc6",
+        "expected_sha256": "e1e86feaae40fb1a7215f6ddb05173f5c8f7acb43cf2ffefc82ebe3d5d141b72",
+        "expected_execution_disposition": "completed",
+        "falsifier": "Any full-envelope mismatch, accepted malformed subject, input mutation, false exact certificate or evidence promotion.",
+        "current_novelty_scope": "New owner contract; standard algorithms are not claimed as discoveries.",
+        "external_credit": false,
+        "boundary": "Finite synthetic same-owner software and mathematical evidence only. No real process, person, observation, measurement, identity, credential, deployment, empirical GMUT confirmation, production THOS or Freed ID, independent reproduction, professional, legal, cultural, affected-party or Maori authority, complete privacy or accessibility, exhaustive security, AGI or ASI, consciousness, personhood, continuity, Theory-of-Everything proof, canon or Stage 20 claim. NOT_READY_FOR_STAGE_20."
+      },
+      "canonical_record_sha256": "0940beaf488874345f5aedc85548fa12c7f4b7e32fa3c6e21e75211b6f9ac96f",
+      "novelty_credit": 0,
+      "completion_credit": 0
+    },
+    {
+      "source_proposal_id": "TB7043-P092",
+      "source_record": {
+        "proposal_id": "TB7043-P092",
+        "operation": "mdp_bellman_values",
+        "session": "x1",
+        "profile_id": "F02",
+        "definition": "Compute optimal values at every remaining horizon.",
+        "request": {
+          "op": "mdp_bellman_values",
+          "input": {
+            "states": [
+              "s0",
+              "s1",
+              "s2"
+            ],
+            "transition": [
+              [
+                [
+                  "0",
+                  "0",
+                  "1"
+                ],
+                [
+                  "0",
+                  "1",
+                  "0"
+                ]
+              ],
+              [
+                [
+                  "0",
+                  "1",
+                  "0"
+                ],
+                [
+                  "0",
+                  "1",
+                  "0"
+                ]
+              ],
+              [
+                [
+                  "0",
+                  "0",
+                  "1"
+                ],
+                [
+                  "0",
+                  "0",
+                  "1"
+                ]
+              ]
+            ],
+            "rewards": [
+              [
+                "5",
+                "0"
+              ],
+              [
+                "4",
+                "4"
+              ],
+              [
+                "0",
+                "0"
+              ]
+            ],
+            "terminal": [
+              "0",
+              "0",
+              "0"
+            ],
+            "discount": "1",
+            "horizon": 3,
+            "policy": [
+              0,
+              1,
+              0
+            ],
+            "initial": [
+              "1",
+              "0",
+              "0"
+            ],
+            "shift": "1"
+          }
+        },
+        "expected": {
+          "ok": true,
+          "op": "mdp_bellman_values",
+          "outcome": "completed",
+          "value": {
+            "remaining_horizons": [
+              0,
+              1,
+              2,
+              3
+            ],
+            "values": [
+              [
+                "0",
+                "0",
+                "0"
+              ],
+              [
+                "5",
+                "4",
+                "0"
+              ],
+              [
+                "5",
+                "8",
+                "0"
+              ],
+              [
+                "8",
+                "12",
+                "0"
+              ]
+            ]
+          },
+          "external_credit": false,
+          "scope": "finite_synthetic_same_owner"
+        },
+        "request_sha256": "82accfa9d9760accac04aabab3bfe649e72442c8af6d58bfa4aeeaca1f6b6c3c",
+        "expected_sha256": "7aa4095dbe2ddadf20024471250681d47c957c4f01b205a8fd4c908cc668785f",
+        "expected_execution_disposition": "completed",
+        "falsifier": "Any full-envelope mismatch, accepted malformed subject, input mutation, false exact certificate or evidence promotion.",
+        "current_novelty_scope": "New owner contract; standard algorithms are not claimed as discoveries.",
+        "external_credit": false,
+        "boundary": "Finite synthetic same-owner software and mathematical evidence only. No real process, person, observation, measurement, identity, credential, deployment, empirical GMUT confirmation, production THOS or Freed ID, independent reproduction, professional, legal, cultural, affected-party or Maori authority, complete privacy or accessibility, exhaustive security, AGI or ASI, consciousness, personhood, continuity, Theory-of-Everything proof, canon or Stage 20 claim. NOT_READY_FOR_STAGE_20."
+      },
+      "canonical_record_sha256": "cc8a4a0e387b7fe73f421b4b05ecf9020aebdd7d638d1477d8f27a6182ac13a2",
+      "novelty_credit": 0,
+      "completion_credit": 0
+    },
+    {
+      "source_proposal_id": "TB7043-P093",
+      "source_record": {
+        "proposal_id": "TB7043-P093",
+        "operation": "mdp_bellman_values",
+        "session": "x1",
+        "profile_id": "F03",
+        "definition": "Compute optimal values at every remaining horizon.",
+        "request": {
+          "op": "mdp_bellman_values",
+          "input": {
+            "states": [
+              "s0",
+              "s1",
+              "s2"
+            ],
+            "transition": [
+              [
+                [
+                  "1",
+                  "0",
+                  "0"
+                ],
+                [
+                  "1",
+                  "0",
+                  "0"
+                ]
+              ],
+              [
+                [
+                  "0",
+                  "1",
+                  "0"
+                ],
+                [
+                  "0",
+                  "1",
+                  "0"
+                ]
+              ],
+              [
+                [
+                  "0",
+                  "0",
+                  "1"
+                ],
+                [
+                  "0",
+                  "0",
+                  "1"
+                ]
+              ]
+            ],
+            "rewards": [
+              [
+                "1",
+                "1"
+              ],
+              [
+                "2",
+                "2"
+              ],
+              [
+                "3",
+                "3"
+              ]
+            ],
+            "terminal": [
+              "0",
+              "0",
+              "0"
+            ],
+            "discount": "1/2",
+            "horizon": 3,
+            "policy": [
+              0,
+              1,
+              0
+            ],
+            "initial": [
+              "1",
+              "0",
+              "0"
+            ],
+            "shift": "1"
+          }
+        },
+        "expected": {
+          "ok": true,
+          "op": "mdp_bellman_values",
+          "outcome": "completed",
+          "value": {
+            "remaining_horizons": [
+              0,
+              1,
+              2,
+              3
+            ],
+            "values": [
+              [
+                "0",
+                "0",
+                "0"
+              ],
+              [
+                "1",
+                "2",
+                "3"
+              ],
+              [
+                "3/2",
+                "3",
+                "9/2"
+              ],
+              [
+                "7/4",
+                "7/2",
+                "21/4"
+              ]
+            ]
+          },
+          "external_credit": false,
+          "scope": "finite_synthetic_same_owner"
+        },
+        "request_sha256": "822be6e0d7838345c408bf44e4f2c2722fdf21ab1293bc29439aa875e3a96b45",
+        "expected_sha256": "df28c15b94e0f577f00f96b4e665e20200e265485919fbd2af221a044d9c61e0",
+        "expected_execution_disposition": "completed",
+        "falsifier": "Any full-envelope mismatch, accepted malformed subject, input mutation, false exact certificate or evidence promotion.",
+        "current_novelty_scope": "New owner contract; standard algorithms are not claimed as discoveries.",
+        "external_credit": false,
+        "boundary": "Finite synthetic same-owner software and mathematical evidence only. No real process, person, observation, measurement, identity, credential, deployment, empirical GMUT confirmation, production THOS or Freed ID, independent reproduction, professional, legal, cultural, affected-party or Maori authority, complete privacy or accessibility, exhaustive security, AGI or ASI, consciousness, personhood, continuity, Theory-of-Everything proof, canon or Stage 20 claim. NOT_READY_FOR_STAGE_20."
+      },
+      "canonical_record_sha256": "1a2241aa13eb32c9b437745b86b30a80428de780e85235210b8c5f7caf21d61e",
+      "novelty_credit": 0,
+      "completion_credit": 0
+    },
+    {
+      "source_proposal_id": "TB7043-P094",
+      "source_record": {
+        "proposal_id": "TB7043-P094",
+        "operation": "mdp_bellman_values",
+        "session": "x1",
+        "profile_id": "F04",
+        "definition": "Compute optimal values at every remaining horizon.",
+        "request": {
+          "op": "mdp_bellman_values",
+          "input": {
+            "states": [
+              "s0",
+              "s1",
+              "s2"
+            ],
+            "transition": [
+              [
+                [
+                  "0",
+                  "1",
+                  "0"
+                ],
+                [
+                  "0",
+                  "0",
+                  "1"
+                ]
+              ],
+              [
+                [
+                  "0",
+                  "0",
+                  "1"
+                ],
+                [
+                  "1",
+                  "0",
+                  "0"
+                ]
+              ],
+              [
+                [
+                  "1",
+                  "0",
+                  "0"
+                ],
+                [
+                  "0",
+                  "1",
+                  "0"
+                ]
+              ]
+            ],
+            "rewards": [
+              [
+                "2",
+                "0"
+              ],
+              [
+                "0",
+                "1"
+              ],
+              [
+                "1",
+                "0"
+              ]
+            ],
+            "terminal": [
+              "0",
+              "5",
+              "-2"
+            ],
+            "discount": "1",
+            "horizon": 2,
+            "policy": [
+              0,
+              1,
+              0
+            ],
+            "initial": [
+              "1",
+              "0",
+              "0"
+            ],
+            "shift": "1"
+          }
+        },
+        "expected": {
+          "ok": true,
+          "op": "mdp_bellman_values",
+          "outcome": "completed",
+          "value": {
+            "remaining_horizons": [
+              0,
+              1,
+              2
+            ],
+            "values": [
+              [
+                "0",
+                "5",
+                "-2"
+              ],
+              [
+                "7",
+                "1",
+                "5"
+              ],
+              [
+                "5",
+                "8",
+                "8"
+              ]
+            ]
+          },
+          "external_credit": false,
+          "scope": "finite_synthetic_same_owner"
+        },
+        "request_sha256": "aec774d412d9abe31c0bd1a7745a90b545d54c9f9b48bd40d462ab840ee2815a",
+        "expected_sha256": "1b169063bc99be17af0b8a38fc5fc938ce4fcfdd61e4f353c89762bc0e929d00",
+        "expected_execution_disposition": "completed",
+        "falsifier": "Any full-envelope mismatch, accepted malformed subject, input mutation, false exact certificate or evidence promotion.",
+        "current_novelty_scope": "New owner contract; standard algorithms are not claimed as discoveries.",
+        "external_credit": false,
+        "boundary": "Finite synthetic same-owner software and mathematical evidence only. No real process, person, observation, measurement, identity, credential, deployment, empirical GMUT confirmation, production THOS or Freed ID, independent reproduction, professional, legal, cultural, affected-party or Maori authority, complete privacy or accessibility, exhaustive security, AGI or ASI, consciousness, personhood, continuity, Theory-of-Everything proof, canon or Stage 20 claim. NOT_READY_FOR_STAGE_20."
+      },
+      "canonical_record_sha256": "6305847a335b9025f45e71aac9e6140428dd49263cf286f51719240eb7d71e01",
+      "novelty_credit": 0,
+      "completion_credit": 0
+    },
+    {
+      "source_proposal_id": "TB7043-P095",
+      "source_record": {
+        "proposal_id": "TB7043-P095",
+        "operation": "mdp_bellman_values",
+        "session": "x1",
+        "profile_id": "F05",
+        "definition": "Compute optimal values at every remaining horizon.",
+        "request": {
+          "op": "mdp_bellman_values",
+          "input": {
+            "states": [
+              "s0",
+              "s1",
+              "s2"
+            ],
+            "transition": [
+              [
+                [
+                  "0",
+                  "0",
+                  "1"
+                ],
+                [
+                  "0",
+                  "1",
+                  "0"
+                ]
+              ],
+              [
+                [
+                  "0",
+                  "1",
+                  "0"
+                ],
+                [
+                  "0",
+                  "1",
+                  "0"
+                ]
+              ],
+              [
+                [
+                  "0",
+                  "0",
+                  "1"
+                ],
+                [
+                  "0",
+                  "0",
+                  "1"
+                ]
+              ]
+            ],
+            "rewards": [
+              [
+                "5",
+                "0"
+              ],
+              [
+                "4",
+                "4"
+              ],
+              [
+                "0",
+                "0"
+              ]
+            ],
+            "terminal": [
+              "0",
+              "0",
+              "0"
+            ],
+            "discount": "1/4",
+            "horizon": 3,
+            "policy": [
+              0,
+              1,
+              0
+            ],
+            "initial": [
+              "1",
+              "0",
+              "0"
+            ],
+            "shift": "1"
+          }
+        },
+        "expected": {
+          "ok": true,
+          "op": "mdp_bellman_values",
+          "outcome": "completed",
+          "value": {
+            "remaining_horizons": [
+              0,
+              1,
+              2,
+              3
+            ],
+            "values": [
+              [
+                "0",
+                "0",
+                "0"
+              ],
+              [
+                "5",
+                "4",
+                "0"
+              ],
+              [
+                "5",
+                "5",
+                "0"
+              ],
+              [
+                "5",
+                "21/4",
+                "0"
+              ]
+            ]
+          },
+          "external_credit": false,
+          "scope": "finite_synthetic_same_owner"
+        },
+        "request_sha256": "666ebad8985bd68546b255a4298547309b7b68dbc272e6c419bea49aa71c5dc8",
+        "expected_sha256": "9481ebb757a28d5083ab902d94e694e91a82b821b6f9cce86ce5c3dada1ca706",
+        "expected_execution_disposition": "completed",
+        "falsifier": "Any full-envelope mismatch, accepted malformed subject, input mutation, false exact certificate or evidence promotion.",
+        "current_novelty_scope": "New owner contract; standard algorithms are not claimed as discoveries.",
+        "external_credit": false,
+        "boundary": "Finite synthetic same-owner software and mathematical evidence only. No real process, person, observation, measurement, identity, credential, deployment, empirical GMUT confirmation, production THOS or Freed ID, independent reproduction, professional, legal, cultural, affected-party or Maori authority, complete privacy or accessibility, exhaustive security, AGI or ASI, consciousness, personhood, continuity, Theory-of-Everything proof, canon or Stage 20 claim. NOT_READY_FOR_STAGE_20."
+      },
+      "canonical_record_sha256": "2b4d7a599f9676d738219e59dccaf35fffba02deee1b6963a053a2d2ea9ae31d",
+      "novelty_credit": 0,
+      "completion_credit": 0
+    },
+    {
+      "source_proposal_id": "TB7043-P096",
+      "source_record": {
+        "proposal_id": "TB7043-P096",
+        "operation": "mdp_bellman_values",
+        "session": "x1",
+        "profile_id": "F06",
+        "definition": "Compute optimal values at every remaining horizon.",
+        "request": {
+          "op": "mdp_bellman_values",
+          "input": {
+            "states": [
+              "s0",
+              "s1",
+              "s2"
+            ],
+            "transition": [
+              [
+                [
+                  "1",
+                  "0",
+                  "0"
+                ],
+                [
+                  "1",
+                  "0",
+                  "0"
+                ]
+              ],
+              [
+                [
+                  "0",
+                  "1",
+                  "0"
+                ],
+                [
+                  "0",
+                  "1",
+                  "0"
+                ]
+              ],
+              [
+                [
+                  "0",
+                  "0",
+                  "1"
+                ],
+                [
+                  "0",
+                  "0",
+                  "1"
+                ]
+              ]
+            ],
+            "rewards": [
+              [
+                "1",
+                "0"
+              ],
+              [
+                "3",
+                "2"
+              ],
+              [
+                "20",
+                "19"
+              ]
+            ],
+            "terminal": [
+              "0",
+              "0",
+              "0"
+            ],
+            "discount": "1",
+            "horizon": 3,
+            "policy": [
+              0,
+              1,
+              0
+            ],
+            "initial": [
+              "1",
+              "0",
+              "0"
+            ],
+            "shift": "1"
+          }
+        },
+        "expected": {
+          "ok": true,
+          "op": "mdp_bellman_values",
+          "outcome": "completed",
+          "value": {
+            "remaining_horizons": [
+              0,
+              1,
+              2,
+              3
+            ],
+            "values": [
+              [
+                "0",
+                "0",
+                "0"
+              ],
+              [
+                "1",
+                "3",
+                "20"
+              ],
+              [
+                "2",
+                "6",
+                "40"
+              ],
+              [
+                "3",
+                "9",
+                "60"
+              ]
+            ]
+          },
+          "external_credit": false,
+          "scope": "finite_synthetic_same_owner"
+        },
+        "request_sha256": "39fab213373417d99fdeef5b363897ebbf214aab09f95aea0f3ac0f407c7837b",
+        "expected_sha256": "ab1814e7c113cc8a1fcb49db0a7c1219df62a2deffe9a168350a54a09b07d57c",
+        "expected_execution_disposition": "completed",
+        "falsifier": "Any full-envelope mismatch, accepted malformed subject, input mutation, false exact certificate or evidence promotion.",
+        "current_novelty_scope": "New owner contract; standard algorithms are not claimed as discoveries.",
+        "external_credit": false,
+        "boundary": "Finite synthetic same-owner software and mathematical evidence only. No real process, person, observation, measurement, identity, credential, deployment, empirical GMUT confirmation, production THOS or Freed ID, independent reproduction, professional, legal, cultural, affected-party or Maori authority, complete privacy or accessibility, exhaustive security, AGI or ASI, consciousness, personhood, continuity, Theory-of-Everything proof, canon or Stage 20 claim. NOT_READY_FOR_STAGE_20."
+      },
+      "canonical_record_sha256": "980b495f95995b9c515217624b920b09571f8f1ce2d51cd19ac1166729257838",
+      "novelty_credit": 0,
+      "completion_credit": 0
+    },
+    {
+      "source_proposal_id": "TB7043-P097",
+      "source_record": {
+        "proposal_id": "TB7043-P097",
+        "operation": "mdp_bellman_values",
+        "session": "x1",
+        "profile_id": "F07",
+        "definition": "Compute optimal values at every remaining horizon.",
+        "request": {
+          "op": "mdp_bellman_values",
+          "input": {
+            "states": [
+              "s0",
+              "s1",
+              "s2"
+            ],
+            "transition": [
+              [
+                [
+                  "1/2",
+                  "1/2",
+                  "0"
+                ],
+                [
+                  "0",
+                  "1/2",
+                  "1/2"
+                ]
+              ],
+              [
+                [
+                  "0",
+                  "2/3",
+                  "1/3"
+                ],
+                [
+                  "1/3",
+                  "0",
+                  "2/3"
+                ]
+              ],
+              [
+                [
+                  "1/2",
+                  "0",
+                  "1/2"
+                ],
+                [
+                  "0",
+                  "1/2",
+                  "1/2"
+                ]
+              ]
+            ],
+            "rewards": [
+              [
+                "3",
+                "0"
+              ],
+              [
+                "-1",
+                "4"
+              ],
+              [
+                "2",
+                "1"
+              ]
+            ],
+            "terminal": [
+              "1",
+              "0",
+              "2"
+            ],
+            "discount": "2/3",
+            "horizon": 3,
+            "policy": [
+              0,
+              1,
+              0
+            ],
+            "initial": [
+              "1",
+              "0",
+              "0"
+            ],
+            "shift": "1"
+          }
+        },
+        "expected": {
+          "ok": true,
+          "op": "mdp_bellman_values",
+          "outcome": "completed",
+          "value": {
+            "remaining_horizons": [
+              0,
+              1,
+              2,
+              3
+            ],
+            "values": [
+              [
+                "1",
+                "0",
+                "2"
+              ],
+              [
+                "10/3",
+                "46/9",
+                "3"
+              ],
+              [
+                "157/27",
+                "164/27",
+                "37/9"
+              ],
+              [
+                "188/27",
+                "1730/243",
+                "430/81"
+              ]
+            ]
+          },
+          "external_credit": false,
+          "scope": "finite_synthetic_same_owner"
+        },
+        "request_sha256": "5f258c308bdd53b1d1e9e98d72f1dcb5e321cf94f6b3bd9d9fda1d044394e277",
+        "expected_sha256": "9c5a1af6bc904769e4dfc7caefc11d7c411d6e42b682eeaaebfed120a6982b82",
+        "expected_execution_disposition": "completed",
+        "falsifier": "Any full-envelope mismatch, accepted malformed subject, input mutation, false exact certificate or evidence promotion.",
+        "current_novelty_scope": "New owner contract; standard algorithms are not claimed as discoveries.",
+        "external_credit": false,
+        "boundary": "Finite synthetic same-owner software and mathematical evidence only. No real process, person, observation, measurement, identity, credential, deployment, empirical GMUT confirmation, production THOS or Freed ID, independent reproduction, professional, legal, cultural, affected-party or Maori authority, complete privacy or accessibility, exhaustive security, AGI or ASI, consciousness, personhood, continuity, Theory-of-Everything proof, canon or Stage 20 claim. NOT_READY_FOR_STAGE_20."
+      },
+      "canonical_record_sha256": "7cf521c38c58f1f888ff375d9c513cb8fa21757fa81e2ffcbd28afe5d0873ad0",
+      "novelty_credit": 0,
+      "completion_credit": 0
+    },
+    {
+      "source_proposal_id": "TB7043-P098",
+      "source_record": {
+        "proposal_id": "TB7043-P098",
+        "operation": "mdp_bellman_values",
+        "session": "x1",
+        "profile_id": "F08",
+        "definition": "Compute optimal values at every remaining horizon.",
+        "request": {
+          "op": "mdp_bellman_values",
+          "input": {
+            "states": [
+              "s0",
+              "s1",
+              "s2"
+            ],
+            "transition": [
+              [
+                [
+                  "0",
+                  "1",
+                  "0"
+                ],
+                [
+                  "0",
+                  "0",
+                  "1"
+                ]
+              ],
+              [
+                [
+                  "0",
+                  "0",
+                  "1"
+                ],
+                [
+                  "1",
+                  "0",
+                  "0"
+                ]
+              ],
+              [
+                [
+                  "1",
+                  "0",
+                  "0"
+                ],
+                [
+                  "0",
+                  "1",
+                  "0"
+                ]
+              ]
+            ],
+            "rewards": [
+              [
+                "-4",
+                "-2"
+              ],
+              [
+                "-3",
+                "-1"
+              ],
+              [
+                "-2",
+                "-5"
+              ]
+            ],
+            "terminal": [
+              "-1",
+              "-2",
+              "-3"
+            ],
+            "discount": "1/2",
+            "horizon": 3,
+            "policy": [
+              0,
+              1,
+              0
+            ],
+            "initial": [
+              "1",
+              "0",
+              "0"
+            ],
+            "shift": "1"
+          }
+        },
+        "expected": {
+          "ok": true,
+          "op": "mdp_bellman_values",
+          "outcome": "completed",
+          "value": {
+            "remaining_horizons": [
+              0,
+              1,
+              2,
+              3
+            ],
+            "values": [
+              [
+                "-1",
+                "-2",
+                "-3"
+              ],
+              [
+                "-7/2",
+                "-3/2",
+                "-5/2"
+              ],
+              [
+                "-13/4",
+                "-11/4",
+                "-15/4"
+              ],
+              [
+                "-31/8",
+                "-21/8",
+                "-29/8"
+              ]
+            ]
+          },
+          "external_credit": false,
+          "scope": "finite_synthetic_same_owner"
+        },
+        "request_sha256": "45fc9cd9bffbf5fe3724928fb096456a077ab7d58c186a15393547611b945de3",
+        "expected_sha256": "cc14d7093f3ae59d3f5b25f2d40cad09fab8a601e33b7a6ad2c1dc998e4d988a",
+        "expected_execution_disposition": "completed",
+        "falsifier": "Any full-envelope mismatch, accepted malformed subject, input mutation, false exact certificate or evidence promotion.",
+        "current_novelty_scope": "New owner contract; standard algorithms are not claimed as discoveries.",
+        "external_credit": false,
+        "boundary": "Finite synthetic same-owner software and mathematical evidence only. No real process, person, observation, measurement, identity, credential, deployment, empirical GMUT confirmation, production THOS or Freed ID, independent reproduction, professional, legal, cultural, affected-party or Maori authority, complete privacy or accessibility, exhaustive security, AGI or ASI, consciousness, personhood, continuity, Theory-of-Everything proof, canon or Stage 20 claim. NOT_READY_FOR_STAGE_20."
+      },
+      "canonical_record_sha256": "1ae83af155edcb8a76314b8cf01d4efbe6e6c50753726eda23675470dd757719",
+      "novelty_credit": 0,
+      "completion_credit": 0
+    },
+    {
+      "source_proposal_id": "TB7043-P099",
+      "source_record": {
+        "proposal_id": "TB7043-P099",
+        "operation": "mdp_bellman_values",
+        "session": "x1",
+        "profile_id": "F09",
+        "definition": "Compute optimal values at every remaining horizon.",
+        "request": {
+          "op": "mdp_bellman_values",
+          "input": {
+            "states": [
+              "s0",
+              "s1",
+              "s2"
+            ],
+            "transition": [
+              [
+                [
+                  "1",
+                  "0",
+                  "0"
+                ],
+                [
+                  "0",
+                  "1",
+                  "0"
+                ]
+              ],
+              [
+                [
+                  "0",
+                  "0",
+                  "1"
+                ],
+                [
+                  "0",
+                  "1",
+                  "0"
+                ]
+              ],
+              [
+                [
+                  "0",
+                  "0",
+                  "1"
+                ],
+                [
+                  "0",
+                  "0",
+                  "1"
+                ]
+              ]
+            ],
+            "rewards": [
+              [
+                "0",
+                "1"
+              ],
+              [
+                "0",
+                "-1"
+              ],
+              [
+                "5",
+                "5"
+              ]
+            ],
+            "terminal": [
+              "0",
+              "0",
+              "0"
+            ],
+            "discount": "1",
+            "horizon": 3,
+            "policy": [
+              0,
+              1,
+              0
+            ],
+            "initial": [
+              "1",
+              "0",
+              "0"
+            ],
+            "shift": "1"
+          }
+        },
+        "expected": {
+          "ok": true,
+          "op": "mdp_bellman_values",
+          "outcome": "completed",
+          "value": {
+            "remaining_horizons": [
+              0,
+              1,
+              2,
+              3
+            ],
+            "values": [
+              [
+                "0",
+                "0",
+                "0"
+              ],
+              [
+                "1",
+                "0",
+                "5"
+              ],
+              [
+                "1",
+                "5",
+                "10"
+              ],
+              [
+                "6",
+                "10",
+                "15"
+              ]
+            ]
+          },
+          "external_credit": false,
+          "scope": "finite_synthetic_same_owner"
+        },
+        "request_sha256": "d8287e94a40b092710248f8bd244bb7d975fd1c0b865ff12ef5a7ec342352e20",
+        "expected_sha256": "18a6884dee3909ad081f31e6f70d9e128be5da28de5f3a88f8fd75bb0c4b62ba",
+        "expected_execution_disposition": "completed",
+        "falsifier": "Any full-envelope mismatch, accepted malformed subject, input mutation, false exact certificate or evidence promotion.",
+        "current_novelty_scope": "New owner contract; standard algorithms are not claimed as discoveries.",
+        "external_credit": false,
+        "boundary": "Finite synthetic same-owner software and mathematical evidence only. No real process, person, observation, measurement, identity, credential, deployment, empirical GMUT confirmation, production THOS or Freed ID, independent reproduction, professional, legal, cultural, affected-party or Maori authority, complete privacy or accessibility, exhaustive security, AGI or ASI, consciousness, personhood, continuity, Theory-of-Everything proof, canon or Stage 20 claim. NOT_READY_FOR_STAGE_20."
+      },
+      "canonical_record_sha256": "cd9aa03fbff11c08043663c5c52980fd14b15a4f4dc222ffe6d8f3f57f630441",
+      "novelty_credit": 0,
+      "completion_credit": 0
+    },
+    {
+      "source_proposal_id": "TB7043-P100",
+      "source_record": {
+        "proposal_id": "TB7043-P100",
+        "operation": "mdp_bellman_values",
+        "session": "x1",
+        "profile_id": "F10",
+        "definition": "Compute optimal values at every remaining horizon.",
+        "request": {
+          "op": "mdp_bellman_values",
+          "input": {
+            "states": [
+              "s0",
+              "s1",
+              "s2"
+            ],
+            "transition": [
+              [
+                [
+                  "1",
+                  "0",
+                  "0"
+                ],
+                [
+                  "0",
+                  "1",
+                  "0"
+                ]
+              ],
+              [
+                [
+                  "0",
+                  "1",
+                  "0"
+                ],
+                [
+                  "0",
+                  "1",
+                  "0"
+                ]
+              ],
+              [
+                [
+                  "0",
+                  "0",
+                  "1"
+                ],
+                [
+                  "0",
+                  "0",
+                  "1"
+                ]
+              ]
+            ],
+            "rewards": [
+              [
+                "1",
+                "3"
+              ],
+              [
+                "0",
+                "0"
+              ],
+              [
+                "-1",
+                "-1"
+              ]
+            ],
+            "terminal": [
+              "0",
+              "0",
+              "0"
+            ],
+            "discount": "1",
+            "horizon": 3,
+            "policy": [
+              0,
+              1,
+              0
+            ],
+            "initial": [
+              "1",
+              "0",
+              "0"
+            ],
+            "shift": "1"
+          }
+        },
+        "expected": {
+          "ok": true,
+          "op": "mdp_bellman_values",
+          "outcome": "completed",
+          "value": {
+            "remaining_horizons": [
+              0,
+              1,
+              2,
+              3
+            ],
+            "values": [
+              [
+                "0",
+                "0",
+                "0"
+              ],
+              [
+                "3",
+                "0",
+                "-1"
+              ],
+              [
+                "4",
+                "0",
+                "-2"
+              ],
+              [
+                "5",
+                "0",
+                "-3"
+              ]
+            ]
+          },
+          "external_credit": false,
+          "scope": "finite_synthetic_same_owner"
+        },
+        "request_sha256": "645431f738c0091dd95d579508c6e1b5a347b4b75d9d1645357807bf346800a3",
+        "expected_sha256": "7f8f0ad690183777d3dac4b17a4d19d3c7c045815cc73fb6cbf1768b299e6db7",
+        "expected_execution_disposition": "completed",
+        "falsifier": "Any full-envelope mismatch, accepted malformed subject, input mutation, false exact certificate or evidence promotion.",
+        "current_novelty_scope": "New owner contract; standard algorithms are not claimed as discoveries.",
+        "external_credit": false,
+        "boundary": "Finite synthetic same-owner software and mathematical evidence only. No real process, person, observation, measurement, identity, credential, deployment, empirical GMUT confirmation, production THOS or Freed ID, independent reproduction, professional, legal, cultural, affected-party or Maori authority, complete privacy or accessibility, exhaustive security, AGI or ASI, consciousness, personhood, continuity, Theory-of-Everything proof, canon or Stage 20 claim. NOT_READY_FOR_STAGE_20."
+      },
+      "canonical_record_sha256": "f092658d4ce7e4ec33dfc4139ecfb0482daebcd03f1015873f1252ee4de6e906",
+      "novelty_credit": 0,
+      "completion_credit": 0
+    },
+    {
+      "source_proposal_id": "TB7043-P101",
+      "source_record": {
+        "proposal_id": "TB7043-P101",
+        "operation": "mdp_bellman_values",
+        "session": "x1",
+        "profile_id": "F11",
+        "definition": "Compute optimal values at every remaining horizon.",
+        "request": {
+          "op": "mdp_bellman_values",
+          "input": {
+            "states": [
+              "s0",
+              "s1",
+              "s2"
+            ],
+            "transition": [
+              [
+                [
+                  "0",
+                  "0",
+                  "1"
+                ],
+                [
+                  "0",
+                  "1",
+                  "0"
+                ]
+              ],
+              [
+                [
+                  "0",
+                  "1",
+                  "0"
+                ],
+                [
+                  "0",
+                  "1",
+                  "0"
+                ]
+              ],
+              [
+                [
+                  "0",
+                  "0",
+                  "1"
+                ],
+                [
+                  "0",
+                  "0",
+                  "1"
+                ]
+              ]
+            ],
+            "rewards": [
+              [
+                "4",
+                "0"
+              ],
+              [
+                "3",
+                "3"
+              ],
+              [
+                "0",
+                "0"
+              ]
+            ],
+            "terminal": [
+              "0",
+              "0",
+              "0"
+            ],
+            "discount": "1",
+            "horizon": 3,
+            "policy": [
+              0,
+              1,
+              0
+            ],
+            "initial": [
+              "1",
+              "0",
+              "0"
+            ],
+            "shift": "1"
+          }
+        },
+        "expected": {
+          "ok": true,
+          "op": "mdp_bellman_values",
+          "outcome": "completed",
+          "value": {
+            "remaining_horizons": [
+              0,
+              1,
+              2,
+              3
+            ],
+            "values": [
+              [
+                "0",
+                "0",
+                "0"
+              ],
+              [
+                "4",
+                "3",
+                "0"
+              ],
+              [
+                "4",
+                "6",
+                "0"
+              ],
+              [
+                "6",
+                "9",
+                "0"
+              ]
+            ]
+          },
+          "external_credit": false,
+          "scope": "finite_synthetic_same_owner"
+        },
+        "request_sha256": "8e087f6ec7db419fd31f67d09ce8527bd2589bf4d1e3c7a9a669e7666cd1c162",
+        "expected_sha256": "0f324cefc85939843258e0023132d9daf9faffbc1694dce4ca7e37a0fbe04f89",
+        "expected_execution_disposition": "completed",
+        "falsifier": "Any full-envelope mismatch, accepted malformed subject, input mutation, false exact certificate or evidence promotion.",
+        "current_novelty_scope": "New owner contract; standard algorithms are not claimed as discoveries.",
+        "external_credit": false,
+        "boundary": "Finite synthetic same-owner software and mathematical evidence only. No real process, person, observation, measurement, identity, credential, deployment, empirical GMUT confirmation, production THOS or Freed ID, independent reproduction, professional, legal, cultural, affected-party or Maori authority, complete privacy or accessibility, exhaustive security, AGI or ASI, consciousness, personhood, continuity, Theory-of-Everything proof, canon or Stage 20 claim. NOT_READY_FOR_STAGE_20."
+      },
+      "canonical_record_sha256": "bfcfed41ffcc970099e0b4ba3505ee04ef5d5326433c38f16b80ea97b1aee992",
+      "novelty_credit": 0,
+      "completion_credit": 0
+    },
+    {
+      "source_proposal_id": "TB7043-P102",
+      "source_record": {
+        "proposal_id": "TB7043-P102",
+        "operation": "mdp_bellman_values",
+        "session": "x1",
+        "profile_id": "F12",
+        "definition": "Compute optimal values at every remaining horizon.",
+        "request": {
+          "op": "mdp_bellman_values",
+          "input": {
+            "states": [
+              "s0",
+              "s1",
+              "s2"
+            ],
+            "transition": [
+              [
+                [
+                  "1",
+                  "0",
+                  "0"
+                ],
+                [
+                  "1",
+                  "0",
+                  "0"
+                ]
+              ],
+              [
+                [
+                  "0",
+                  "1",
+                  "0"
+                ],
+                [
+                  "0",
+                  "1",
+                  "0"
+                ]
+              ],
+              [
+                [
+                  "0",
+                  "0",
+                  "1"
+                ],
+                [
+                  "0",
+                  "0",
+                  "1"
+                ]
+              ]
+            ],
+            "rewards": [
+              [
+                "1/3",
+                "2/7"
+              ],
+              [
+                "5/8",
+                "3/5"
+              ],
+              [
+                "-1/9",
+                "-1/8"
+              ]
+            ],
+            "terminal": [
+              "0",
+              "0",
+              "0"
+            ],
+            "discount": "3/4",
+            "horizon": 2,
+            "policy": [
+              0,
+              1,
+              0
+            ],
+            "initial": [
+              "1",
+              "0",
+              "0"
+            ],
+            "shift": "1"
+          }
+        },
+        "expected": {
+          "ok": true,
+          "op": "mdp_bellman_values",
+          "outcome": "completed",
+          "value": {
+            "remaining_horizons": [
+              0,
+              1,
+              2
+            ],
+            "values": [
+              [
+                "0",
+                "0",
+                "0"
+              ],
+              [
+                "1/3",
+                "5/8",
+                "-1/9"
+              ],
+              [
+                "7/12",
+                "35/32",
+                "-7/36"
+              ]
+            ]
+          },
+          "external_credit": false,
+          "scope": "finite_synthetic_same_owner"
+        },
+        "request_sha256": "f6b4082cb713e0580c843c9c84f002c2785320e15e288fcce875612a8c985bf9",
+        "expected_sha256": "74e82f6789af6b74e32ad74f3850bf080c6314ba86d7efb80aba9973f1403d86",
+        "expected_execution_disposition": "completed",
+        "falsifier": "Any full-envelope mismatch, accepted malformed subject, input mutation, false exact certificate or evidence promotion.",
+        "current_novelty_scope": "New owner contract; standard algorithms are not claimed as discoveries.",
+        "external_credit": false,
+        "boundary": "Finite synthetic same-owner software and mathematical evidence only. No real process, person, observation, measurement, identity, credential, deployment, empirical GMUT confirmation, production THOS or Freed ID, independent reproduction, professional, legal, cultural, affected-party or Maori authority, complete privacy or accessibility, exhaustive security, AGI or ASI, consciousness, personhood, continuity, Theory-of-Everything proof, canon or Stage 20 claim. NOT_READY_FOR_STAGE_20."
+      },
+      "canonical_record_sha256": "04365087f4cdee406236306e048b3cff1638ec05437cbef49b6a8a21aec1d08e",
+      "novelty_credit": 0,
+      "completion_credit": 0
+    },
+    {
+      "source_proposal_id": "TB7043-P103",
+      "source_record": {
+        "proposal_id": "TB7043-P103",
+        "operation": "mdp_bellman_values",
+        "session": "x1",
+        "profile_id": "F13",
+        "definition": "Compute optimal values at every remaining horizon.",
+        "request": {
+          "op": "mdp_bellman_values",
+          "input": {
+            "states": [
+              "s0",
+              "s1",
+              "s2"
+            ],
+            "transition": [
+              [
+                [
+                  "1/2",
+                  "1/2",
+                  "0"
+                ],
+                [
+                  "1/2",
+                  "1/2",
+                  "0"
+                ]
+              ],
+              [
+                [
+                  "0",
+                  "1/2",
+                  "1/2"
+                ],
+                [
+                  "0",
+                  "1/2",
+                  "1/2"
+                ]
+              ],
+              [
+                [
+                  "1/2",
+                  "0",
+                  "1/2"
+                ],
+                [
+                  "1/2",
+                  "0",
+                  "1/2"
+                ]
+              ]
+            ],
+            "rewards": [
+              [
+                "1",
+                "1"
+              ],
+              [
+                "0",
+                "0"
+              ],
+              [
+                "2",
+                "2"
+              ]
+            ],
+            "terminal": [
+              "1",
+              "1",
+              "1"
+            ],
+            "discount": "1/2",
+            "horizon": 3,
+            "policy": [
+              0,
+              1,
+              0
+            ],
+            "initial": [
+              "1",
+              "0",
+              "0"
+            ],
+            "shift": "1"
+          }
+        },
+        "expected": {
+          "ok": true,
+          "op": "mdp_bellman_values",
+          "outcome": "completed",
+          "value": {
+            "remaining_horizons": [
+              0,
+              1,
+              2,
+              3
+            ],
+            "values": [
+              [
+                "1",
+                "1",
+                "1"
+              ],
+              [
+                "3/2",
+                "1/2",
+                "5/2"
+              ],
+              [
+                "3/2",
+                "3/4",
+                "3"
+              ],
+              [
+                "25/16",
+                "15/16",
+                "25/8"
+              ]
+            ]
+          },
+          "external_credit": false,
+          "scope": "finite_synthetic_same_owner"
+        },
+        "request_sha256": "cd64f4610f3b4a1fe30401aead30987012561185df659e338b9513c0d577652f",
+        "expected_sha256": "32cfb7771e9bdf68a069b5404c6494cd802788c005f3fbd3005725e98b8a3fe0",
+        "expected_execution_disposition": "completed",
+        "falsifier": "Any full-envelope mismatch, accepted malformed subject, input mutation, false exact certificate or evidence promotion.",
+        "current_novelty_scope": "New owner contract; standard algorithms are not claimed as discoveries.",
+        "external_credit": false,
+        "boundary": "Finite synthetic same-owner software and mathematical evidence only. No real process, person, observation, measurement, identity, credential, deployment, empirical GMUT confirmation, production THOS or Freed ID, independent reproduction, professional, legal, cultural, affected-party or Maori authority, complete privacy or accessibility, exhaustive security, AGI or ASI, consciousness, personhood, continuity, Theory-of-Everything proof, canon or Stage 20 claim. NOT_READY_FOR_STAGE_20."
+      },
+      "canonical_record_sha256": "0570f8aa74b0048aa805ad55ac206cf85c43f1bc3b5a7d5a7a8ac273e7c01f90",
+      "novelty_credit": 0,
+      "completion_credit": 0
+    },
+    {
+      "source_proposal_id": "TB7043-P104",
+      "source_record": {
+        "proposal_id": "TB7043-P104",
+        "operation": "mdp_bellman_values",
+        "session": "x1",
+        "profile_id": "F14",
+        "definition": "Compute optimal values at every remaining horizon.",
+        "request": {
+          "op": "mdp_bellman_values",
+          "input": {
+            "states": [
+              "s0",
+              "s1",
+              "s2"
+            ],
+            "transition": [
+              [
+                [
+                  "1/2",
+                  "1/2",
+                  "0"
+                ],
+                [
+                  "0",
+                  "1/2",
+                  "1/2"
+                ]
+              ],
+              [
+                [
+                  "0",
+                  "2/3",
+                  "1/3"
+                ],
+                [
+                  "1/3",
+                  "0",
+                  "2/3"
+                ]
+              ],
+              [
+                [
+                  "1/2",
+                  "0",
+                  "1/2"
+                ],
+                [
+                  "0",
+                  "1/2",
+                  "1/2"
+                ]
+              ]
+            ],
+            "rewards": [
+              [
+                "0",
+                "3"
+              ],
+              [
+                "2",
+                "1"
+              ],
+              [
+                "4",
+                "-1"
+              ]
+            ],
+            "terminal": [
+              "1",
+              "-1",
+              "2"
+            ],
+            "discount": "1",
+            "horizon": 3,
+            "policy": [
+              0,
+              1,
+              0
+            ],
+            "initial": [
+              "1/2",
+              "1/3",
+              "1/6"
+            ],
+            "shift": "1"
+          }
+        },
+        "expected": {
+          "ok": true,
+          "op": "mdp_bellman_values",
+          "outcome": "completed",
+          "value": {
+            "remaining_horizons": [
+              0,
+              1,
+              2,
+              3
+            ],
+            "values": [
+              [
+                "1",
+                "-1",
+                "2"
+              ],
+              [
+                "7/2",
+                "8/3",
+                "11/2"
+              ],
+              [
+                "85/12",
+                "35/6",
+                "17/2"
+              ],
+              [
+                "61/6",
+                "325/36",
+                "283/24"
+              ]
+            ]
+          },
+          "external_credit": false,
+          "scope": "finite_synthetic_same_owner"
+        },
+        "request_sha256": "69b6cb4b80c0a1f56b4057bd1e52213809c4b374fe1e6fca05cddd08ec0fb138",
+        "expected_sha256": "c02e7de87b769e4cde063edd3df26698c2212f2a3810064f300cadcaa7d39b04",
+        "expected_execution_disposition": "completed",
+        "falsifier": "Any full-envelope mismatch, accepted malformed subject, input mutation, false exact certificate or evidence promotion.",
+        "current_novelty_scope": "New owner contract; standard algorithms are not claimed as discoveries.",
+        "external_credit": false,
+        "boundary": "Finite synthetic same-owner software and mathematical evidence only. No real process, person, observation, measurement, identity, credential, deployment, empirical GMUT confirmation, production THOS or Freed ID, independent reproduction, professional, legal, cultural, affected-party or Maori authority, complete privacy or accessibility, exhaustive security, AGI or ASI, consciousness, personhood, continuity, Theory-of-Everything proof, canon or Stage 20 claim. NOT_READY_FOR_STAGE_20."
+      },
+      "canonical_record_sha256": "f7a99e8612cad4173dab913fc11538fe9ad175fedcf23598cd3064ac3fadc7ff",
+      "novelty_credit": 0,
+      "completion_credit": 0
+    },
+    {
+      "source_proposal_id": "TB7043-P105",
+      "source_record": {
+        "proposal_id": "TB7043-P105",
+        "operation": "mdp_bellman_values",
+        "session": "x1",
+        "profile_id": "F15",
+        "definition": "Compute optimal values at every remaining horizon.",
+        "request": {
+          "op": "mdp_bellman_values",
+          "input": {
+            "states": [
+              "s0",
+              "s1",
+              "s2"
+            ],
+            "transition": [
+              [
+                [
+                  "0",
+                  "1",
+                  "0"
+                ],
+                [
+                  "0",
+                  "0",
+                  "1"
+                ]
+              ],
+              [
+                [
+                  "0",
+                  "0",
+                  "1"
+                ],
+                [
+                  "1",
+                  "0",
+                  "0"
+                ]
+              ],
+              [
+                [
+                  "1",
+                  "0",
+                  "0"
+                ],
+                [
+                  "0",
+                  "1",
+                  "0"
+                ]
+              ]
+            ],
+            "rewards": [
+              [
+                "1",
+                "0"
+              ],
+              [
+                "2",
+                "0"
+              ],
+              [
+                "3",
+                "0"
+              ]
+            ],
+            "terminal": [
+              "-10",
+              "1",
+              "-2"
+            ],
+            "discount": "1",
+            "horizon": 2,
+            "policy": [
+              0,
+              1,
+              0
+            ],
+            "initial": [
+              "1",
+              "0",
+              "0"
+            ],
+            "shift": "1"
+          }
+        },
+        "expected": {
+          "ok": true,
+          "op": "mdp_bellman_values",
+          "outcome": "completed",
+          "value": {
+            "remaining_horizons": [
+              0,
+              1,
+              2
+            ],
+            "values": [
+              [
+                "-10",
+                "1",
+                "-2"
+              ],
+              [
+                "2",
+                "0",
+                "1"
+              ],
+              [
+                "1",
+                "3",
+                "5"
+              ]
+            ]
+          },
+          "external_credit": false,
+          "scope": "finite_synthetic_same_owner"
+        },
+        "request_sha256": "24d011a2a6b74fd8f59dab2eea46a5f65fbf9640dad6a2c183c045e97d3ebb6e",
+        "expected_sha256": "b4d15b20233d9241c19e32b1ca93586a9e2db75c0908fbae54c1947dbc2a5588",
+        "expected_execution_disposition": "completed",
+        "falsifier": "Any full-envelope mismatch, accepted malformed subject, input mutation, false exact certificate or evidence promotion.",
+        "current_novelty_scope": "New owner contract; standard algorithms are not claimed as discoveries.",
+        "external_credit": false,
+        "boundary": "Finite synthetic same-owner software and mathematical evidence only. No real process, person, observation, measurement, identity, credential, deployment, empirical GMUT confirmation, production THOS or Freed ID, independent reproduction, professional, legal, cultural, affected-party or Maori authority, complete privacy or accessibility, exhaustive security, AGI or ASI, consciousness, personhood, continuity, Theory-of-Everything proof, canon or Stage 20 claim. NOT_READY_FOR_STAGE_20."
+      },
+      "canonical_record_sha256": "3e0c887dcb927bd28a7e84e0caac3cda59f39b53ebe267669672962f5382f26b",
+      "novelty_credit": 0,
+      "completion_credit": 0
+    }
+  ],
+  "source_execution_replayed": false,
+  "boundary": "Finite synthetic same-owner mathematical and software evidence. No empirical GMUT confirmation, production THOS or Freed ID, independent reproduction, real participant evidence, identity, consciousness, personhood, professional, legal, cultural, affected-party or Maori authority, complete privacy or accessibility, exhaustive security, AGI, ASI or Theory-of-Everything proof. NOT_READY_FOR_STAGE_20."
+}

@@ -1,0 +1,9 @@
+# Talen v704-v3 (2) frozen plan
+
+Build finite rectangular-uncertainty decision contracts with exact rational arithmetic, 300 new contracts and 300 inherited zero-credit records. A minimizing vertex is chosen after each action and may change by state, action and time. Compare recursive Python expectations with a separate bottom-up Node implementation. Preserve terminal payoff, action ties, vertex ties and all evidence dispositions.
+
+Freeze planning before x1; push and verify each checkpoint before the dependent session. Each session has 400 safe requests, 300 malformed candidate subjects with separate refusal checks, and 300 restoration checks. Additional tests are 15 and 30. Build 20 local skills, 10 paired callers, five curated robust groups, a whole-inventory discovery hub, ten new advisory hooks, fifteen nonphysical three-coordinate models, fifteen bounded law hypotheses and fifteen unresolved-problem probes.
+
+The newest direct request authorizes additive global installation, current workflow updates, one memory extension and selected stable tool updates with rollback. Source and sibling work stays read-only. Exact and blocked packets remain distinct from execution. Publish a complete 174-row projection including this remaster and 173 future numbered runs through Eiren v725-v8. Native task tools are restored; the only outgoing activation is Ilyra v704-v4 after this final gate.
+
+Finite synthetic same-owner mathematical and software evidence. No empirical GMUT confirmation, production THOS or Freed ID, independent reproduction, real participant evidence, identity, consciousness, personhood, professional, legal, cultural, affected-party or Maori authority, complete privacy or accessibility, exhaustive security, AGI, ASI or Theory-of-Everything proof. NOT_READY_FOR_STAGE_20.

@@ -1,0 +1,70 @@
+from fractions import Fraction as F
+from functools import lru_cache
+import json,hashlib,copy
+
+def sha(b):return hashlib.sha256(b).hexdigest()
+
+def canon(d):return json.dumps(d,sort_keys=True,separators=(',',':'),ensure_ascii=False).encode('utf8')
+
+def emit(v):
+ if isinstance(v,F):return str(v)
+ if isinstance(v,(list,tuple)):return [emit(x) for x in v]
+ if isinstance(v,dict):return {k:emit(x) for k,x in v.items()}
+ return v
+
+@lru_cache(maxsize=4096)
+def values(key):
+ d=json.loads(key);n=len(d['states']);H=d['horizon'];P=[[[[F(x) for x in row] for row in act] for act in state] for state in d['vertices']];r=[[F(x) for x in row] for row in d['rewards']];z=[F(x) for x in d['terminal']];g=F(d['discount']);pi=d['policy']
+ @lru_cache(None)
+ def at(kind,h,s):
+  if h==0:return z[s]
+  action_scores=[]
+  for act in range(2):
+   vv=[r[s][act]+g*sum((row[j]*at(kind,h-1,j) for j in range(n)),F(0)) for row in P[s][act]]
+   action_scores.append((min if kind in ['L','PL'] else max)(vv))
+  return action_scores[pi[s]] if kind in ['PL','PU'] else max(action_scores)
+ layers={k:[[at(k,h,s) for s in range(n)] for h in range(H+1)] for k in ['L','U','PL','PU']}
+ Q=[[[r[s][act]+g*min(sum((row[j]*layers['L'][h-1][j] for j in range(n)),F(0)) for row in P[s][act]) for act in range(2)] for s in range(n)] for h in range(1,H+1)]
+ ties=[[[act for act in range(2) if Q[h-1][s][act]==layers['L'][h][s]] for s in range(n)] for h in range(1,H+1)]
+ return n,H,P,r,z,g,pi,layers,Q,ties
+
+def reference(op,d):
+ n,H,P,r,z,g,pi,V,Q,ties=values(canon(d).decode())
+ if op=='robust_validate':v={'states':n,'actions':2,'vertices_per_row':2,'horizon':H,'rectangular':True}
+ elif op=='vertex_span':v={'lower':[[[min(row[j] for row in act) for j in range(n)] for act in state] for state in P],'upper':[[[max(row[j] for row in act) for j in range(n)] for act in state] for state in P],'coordinate_box_is_not_declared_set':True}
+ elif op=='support_bounds':v={'possible':[[[d['states'][j] for j in range(n) if any(row[j]>0 for row in act)] for act in state] for state in P],'certain':[[[d['states'][j] for j in range(n) if all(row[j]>0 for row in act)] for act in state] for state in P]}
+ elif op=='row_total_variation':v={'distance':[[sum((abs(act[0][j]-act[1][j]) for j in range(n)),F(0))/2 for act in state] for state in P]}
+ elif op=='one_step_interval':
+  intervals=[[[r[s][act]+g*sum((row[j]*z[j] for j in range(n)),F(0)) for row in P[s][act]] for act in range(2)] for s in range(n)]
+  v={'lower':[[min(x) for x in state] for state in intervals],'upper':[[max(x) for x in state] for state in intervals],'terminal_only_continuation':True}
+ elif op=='policy_lower_value':v={'policy':pi,'layers':V['PL'],'value':V['PL'][H]}
+ elif op=='policy_upper_value':v={'policy':pi,'layers':V['PU'],'value':V['PU'][H]}
+ elif op=='robust_bellman':v={'layers':V['L'],'value':V['L'][H],'order':'max_action_min_vertex'}
+ elif op=='optimistic_bellman':v={'layers':V['U'],'value':V['U'][H],'order':'max_action_max_vertex'}
+ elif op=='robust_action_sets':v={'remaining_horizon_action_sets':ties,'unique':all(len(t)==1 for layer in ties for t in layer)}
+ elif op=='robust_policy':v={'remaining_horizon_policy':[[t[0] for t in layer] for layer in ties],'all_action_sets':ties,'selection':'lowest_index_display_representative'}
+ elif op=='worst_vertex_sets':
+  layers=[]
+  for h in range(1,H+1):
+   layer=[]
+   for s in range(n):
+    act=ties[h-1][s][0];vv=[g*sum((row[j]*V['L'][h-1][j] for j in range(n)),F(0)) for row in P[s][act]];layer.append({'action':act,'vertex_indices':[i for i,x in enumerate(vv) if x==min(vv)]})
+   layers.append(layer)
+  v={'layers':layers,'adversary_may_change_at_each_step':True}
+ elif op=='robust_policy_regret':v={'by_state':[V['L'][H][s]-V['PL'][H][s] for s in range(n)],'initial':sum((F(d['initial'][s])*(V['L'][H][s]-V['PL'][H][s]) for s in range(n)),F(0))}
+ elif op=='ambiguity_width':v={'layers':[[V['U'][h][s]-V['L'][h][s] for s in range(n)] for h in range(H+1)],'model_uncertainty_not_confidence_interval':True}
+ elif op=='robust_reward_shift':
+  q=copy.deepcopy(d);c=F(d['shift']);q['rewards']=[[str(F(x)+c) for x in row] for row in d['rewards']];vv=values(canon(q).decode())[7];inc=c*sum((g**t for t in range(H)),F(0));v={'predicted_increment':inc,'lower_deltas':[vv['L'][H][s]-V['L'][H][s] for s in range(n)],'upper_deltas':[vv['U'][H][s]-V['U'][H][s] for s in range(n)]}
+ elif op=='robust_relabel_covariance':
+  order=list(reversed(range(n)));q=copy.deepcopy(d)
+  for k in ['states','rewards','terminal','policy','initial']:q[k]=[d[k][i] for i in order]
+  q['vertices']=[[[[row[j] for j in order] for row in act] for act in d['vertices'][i]] for i in order];vv=values(canon(q).decode())[7]
+  restored={k:[[row[n-1-s] for s in range(n)] for row in vv[k]] for k in ['L','U']};v={'state_permutation':order,'restored_lower':restored['L'],'restored_upper':restored['U'],'equal':restored['L']==V['L'] and restored['U']==V['U']}
+ elif op=='discount_zero_certificate':
+  q=copy.deepcopy(d);q['discount']='0';vv=values(canon(q).decode())[7];v={'lower':vv['L'],'upper':vv['U'],'equal':vv['L']==vv['U'],'horizon_zero_keeps_terminal':True}
+ elif op=='uncertainty_model':v={'axes':['remaining_steps','state_index','value'],'points':[{'side':side,'state':d['states'][s],'xyz':[F(h),F(s),V[k][h][s]]} for side,k in [('lower','L'),('upper','U')] for h in range(H+1) for s in range(n)],'physical':False}
+ elif op=='robust_evidence_gap':v={'missing':['empirical_transition_calibration','uncertainty_set_coverage','independent_reproduction'],'rectangular_assumption_observed':False}
+ elif op=='robust_authority_gate':v={'release_authorized':False,'missing':['affected_party_consent','competent_review','production_safety_and_rollback'],'live_actions':0}
+ else:raise ValueError(op)
+ outcome={'uncertainty_model':'represented','robust_evidence_gap':'open_gap','robust_authority_gate':'exact_gate'}.get(op,'completed')
+ return {'ok':True,'op':op,'outcome':outcome,'value':emit(v),'external_credit':False,'scope':'finite_synthetic_rectangular_uncertainty'}
