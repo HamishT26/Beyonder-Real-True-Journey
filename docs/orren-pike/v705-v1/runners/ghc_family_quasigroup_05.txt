@@ -1,0 +1,3 @@
+'use strict';
+const fs=require('fs'),r=require('../code/runtime.cjs');const allowed=["right_translation_cycles", "subquasigroups"];
+const q=JSON.parse(fs.readFileSync(0,'utf8'));const one=x=>x&&allowed.includes(x.operation)?r.evaluate(x):{ok:false,error:'RUNNER_OPERATION'};process.stdout.write(JSON.stringify(Array.isArray(q)?q.map(one):one(q))+'\n');
