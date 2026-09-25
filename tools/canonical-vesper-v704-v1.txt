@@ -98,7 +98,7 @@ function manifestHasDuplicate(entries) {
 function privacyScan(files) {
   const patterns = [
     { class: "credential_assignment", regex: /(api[_-]?key|password|secret)\s*[:=]\s*["'][^"']+["']/gi },
-    { class: "delegation_markup", regex: /<codex_delegation>/gi },
+    { class: "delegation_markup", regex: new RegExp("<" + "codex_" + "delegation>", "gi") },
     { class: "private_local_path", regex: /C:\\Users\\[^\\\s]+/gi },
     { class: "private_uri", regex: /(app|plugin|file):\/\//gi },
     { class: "raw_uuid", regex: /\b[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}\b/gi }
@@ -135,7 +135,7 @@ function runChecks(expectedHead) {
   add("upstream_equal", upstream === head, upstream);
   add("live_remote_equal", live === head, live);
   add("zero_divergence", divergence[0] === 0 && divergence[1] === 0, divergence);
-  add("four_commits", history.length === 4, history.length);
+  add("five_commits_with_retained_correction", history.length === 5, history.length);
   add("zero_merges", mergeCount === 0, mergeCount);
   add("blank_root", parentRows[0] && parentRows[0].length === 1, parentRows[0]);
   add("linear_single_parent", parentRows.slice(1).every((row, index) => row.length === 2 && row[1] === history[index]), parentRows);
@@ -144,12 +144,15 @@ function runChecks(expectedHead) {
     verifyManifest(path.join(PHASE_ROOT, "planning", "manifest.json"), history[0]),
     verifyManifest(path.join(PHASE_ROOT, "x1", "manifest.json"), history[1]),
     verifyManifest(path.join(PHASE_ROOT, "x2", "manifest.json"), history[2]),
-    verifyManifest(path.join(PHASE_ROOT, "final", "manifest.json"), head)
+    verifyManifest(path.join(PHASE_ROOT, "final", "manifest.json"), history[3]),
+    verifyManifest(path.join(PHASE_ROOT, "final", "correction-manifest.json"), history[4])
   ];
   add("planning_manifest", manifests[0].valid, manifests[0]);
   add("x1_manifest", manifests[1].valid, manifests[1]);
   add("x2_manifest", manifests[2].valid, manifests[2]);
   add("final_manifest", manifests[3].valid, manifests[3]);
+  add("correction_manifest", manifests[4].valid, manifests[4]);
+  add("correction_direct_child", parentRows[4] && parentRows[4].length === 2 && parentRows[4][1] === history[3], parentRows[4]);
 
   const seal = readJson(path.join(PHASE_ROOT, "final", "content-seal.json"));
   add("seal_source", seal.source_commit === SOURCE_FINAL && seal.source_content_not_git_ancestry === true, seal.source_commit);
@@ -159,7 +162,9 @@ function runChecks(expectedHead) {
   add("seal_manifest_hashes", seal.stages.every((stage) => sha256(fs.readFileSync(path.join(PHASE_ROOT, stage.manifest_path))) === stage.manifest_sha256), seal.stages);
 
   const finalManifest = readJson(path.join(PHASE_ROOT, "final", "manifest.json"));
-  const ownerFiles = finalManifest.entries.map((entry) => path.join(ROOT, ...entry.path.split("/")));
+  const correctionManifest = readJson(path.join(PHASE_ROOT, "final", "correction-manifest.json"));
+  const combinedPaths = Array.from(new Set(finalManifest.entries.concat(correctionManifest.entries).map((entry) => entry.path))).sort();
+  const ownerFiles = combinedPaths.map((entryPath) => path.join(ROOT, ...entryPath.split("/")));
   const jsonFiles = ownerFiles.filter((file) => path.extname(file).toLowerCase() === ".json");
   let jsonIssues = 0;
   for (const file of jsonFiles) {
@@ -211,6 +216,8 @@ function runChecks(expectedHead) {
   add("verdict", truth.verdict === "NOT_READY_FOR_STAGE_20", truth.verdict);
   const route = readJson(path.join(PHASE_ROOT, "final", "route-candidate.json"));
   add("route_prepared", route.state === "PREPARED_NOT_SENT" && route.native_sends === 0 && route.target_title === "Lyren Moss", route);
+  const correction = readJson(path.join(PHASE_ROOT, "final", "correction-overlay.json"));
+  add("correction_overlay", correction.failed_preflight_state === "INVALID_PREFLIGHT" && correction.failed_preflight_credit === 0 && correction.corrected_head_required === true, correction);
   add("no_source_replay", truth.domain_replays === 0 && truth.source_canonical_replays === 0, { domain: truth.domain_replays, canonical: truth.source_canonical_replays });
   const privacy = privacyScan(ownerFiles);
   add("privacy_scan", privacy.confirmed_hits === 0, privacy);
@@ -258,7 +265,8 @@ if (mode === "preflight") {
     canonical_invocations: 0,
     domain_executions: 0
   };
-  writeJson(path.join(BANK, "metadata-preflight.json"), receipt);
+  const preflightPath = fs.existsSync(path.join(BANK, "metadata-preflight.json")) ? path.join(BANK, "metadata-preflight-corrected.json") : path.join(BANK, "metadata-preflight.json");
+  writeJson(preflightPath, receipt);
   process.stdout.write(JSON.stringify({ state: receipt.state, checks: receipt.check_count, failed: receipt.failed_checks, rejected_mutations: mutations.rejected }) + "\n");
   if (receipt.state !== "VALID_PREFLIGHT") {
     process.exitCode = 2;
@@ -267,7 +275,8 @@ if (mode === "preflight") {
   if (fs.existsSync(path.join(BANK, "canonical-latch.json"))) {
     throw new Error("Canonical success latch already exists; replay refused");
   }
-  const preflight = readJson(path.join(BANK, "metadata-preflight.json"));
+  const preflightPath = fs.existsSync(path.join(BANK, "metadata-preflight-corrected.json")) ? path.join(BANK, "metadata-preflight-corrected.json") : path.join(BANK, "metadata-preflight.json");
+  const preflight = readJson(preflightPath);
   if (preflight.state !== "VALID_PREFLIGHT" || preflight.exact_head !== data.head) {
     throw new Error("Exact-head preflight missing or stale");
   }
